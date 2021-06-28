@@ -23,6 +23,7 @@ export const PATH = {
   RESET_PASSWORD: "/reset-password/:link",
   REGISTER_FROM_PROFILE: "/register-from-profile",
   REGISTER_FROM_MY_PROFILE: "/register-from-my-profile",
+  TERMS_OF_PAYMENT:"/terms-of-payment/:id",
   PATIENT: {
     PA: "/patients",
     DETAILS: "/patients/:patient_id"
@@ -54,6 +55,24 @@ export const PATH = {
   CONSENT:"/consent"
 };
 
+export const AGORA_CALL_NOTIFICATION_TYPES = {
+  START_CALL: "START_CALL",
+  MISSED_CALL: "MISSED_CALL"
+}
+
+export const NOTIFICATION_STAGES = {
+  CREATE: "Create",
+  START: "Start",
+  RESCHEDULED: "Rescheduled",
+  UPDATE: "Update",
+  PRIOR: "Prior",
+  DELETE: "Delete",
+  SHARE: "Share",
+  EDIT_NOTES: "Edit_Notes",
+  APPROVED: "Approve",
+  RESPONSE_ADDED:"Response_added"
+};
+
 export const HTTP_CODE_SERVER_ERROR = 500;
 
 export const CHAT_MESSAGE_DETAILS = {
@@ -70,7 +89,7 @@ export const TEXT_KEY = "text";
 export const TIME_KEY = "time";
 
 
-export const NOON = "3";
+
 export const AFTER_WAKEUP = "1";
 export const BEFORE_BREAKFAST = "2";
 export const AFTER_BREAKFAST = "3";
@@ -83,6 +102,10 @@ export const BEFORE_DINNER = "9";
 export const WITH_DINNER = "10";
 export const AFTER_DINNER = "11";
 export const BEFORE_SLEEP = "12";
+
+
+export const NOON = "13";
+
 
 export const MEDICATION_TIMING = {
   [AFTER_WAKEUP]: {
@@ -132,11 +155,7 @@ export const MEDICATION_TIMING = {
   [BEFORE_SLEEP]: {
     [TEXT_KEY]: "Before Sleeping",
     [TIME_KEY]: "11:00pm"
-  },
-  [NOON]: {
-    [TEXT_KEY]: "Noon",
-    [TIME_KEY]: "12:00pm"
-  },
+  }
 };
 
 
@@ -258,7 +277,15 @@ export const DRAWER = {
   MISSED_VITAL:"MISSED_VITAL",
   CREATE_CAREPLAN_TEMPLATE:"CREATE_CAREPLAN_TEMPLATE",
   EDIT_CAREPLAN_TEMPLATE:"EDIT_CAREPLAN_TEMPLATE",
-  ADD_MEDICINES:"ADD_MEDICINES"
+  ADD_MEDICINES:"ADD_MEDICINES",
+  ADD_FOOD_ITEM:"ADD_FOOD_ITEM",
+  ADD_DIET:"ADD_DIET",
+  EDIT_DIET:"EDIT_DIET",
+  DIET_RESPONSE:"DIET_RESPONSE",
+  ADD_WORKOUT:"ADD_WORKOUT",
+  EDIT_WORKOUT:"EDIT_WORKOUT",
+  WORKOUT_RESPONSE:"WORKOUT_RESPONSE",
+  WORKOUT_RESPONSE_DETALS:"WORKOUT_RESPONSE_DETALS"
 };
 
 export const USER_CATEGORY = {
@@ -398,7 +425,9 @@ export const EVENT_TYPE = {
   ARTICLE: "article",
   MEDICATION_REMINDER: "medication-reminder",
   SYMPTOMS: "symptoms",
-  VITALS: "vitals"
+  VITALS: "vitals",
+  DIET:"diet",
+  WORKOUT:"workout"
 };
 
 export const EVENT_STATUS = {
@@ -706,6 +735,11 @@ export const BODY_SIDE = {
   1: "FRONT",
   2: "BACK"
 };
+
+export const BODY_SIDE_TEXT  ={
+  1: "Front",
+  2: "Back"
+}
 export const PARTS = {
   HEAD: "HEAD",
   RIGHT_EYE: "RIGHT_EYE",
@@ -1792,7 +1826,9 @@ export const ACCOUNT_STATUS = {
 export const DELETE_TEMPLATE_RELATED_TYPE={
   MEDICATION:"medication",
   APPOINTMENT:"appointment",
-  VITAL:"vital"
+  VITAL:"vital",
+  DIET:"diet",
+  WORKOUT:"workout"
 }
 
 
@@ -1823,3 +1859,16 @@ export const LOCAL_STORAGE = {
 
 export const ASCEND = "ascend";
 export const DESCEND = "descend";
+
+export const TYPE_SYMPTOMS="Symptoms";
+export const TYPE_APPOINTMENTS="Appointments";
+export const TYPE_VITALS = "vitals";
+export const TYPE_USER_MESSAGE = "UserMessage";
+export const TYPE_DIETS="diets";
+export const TYPE_WORKOUTS="workouts";
+
+export const VIDEO_TYPES = {
+  URL: "url",
+  UPLOAD: "upload",
+  NONE: "none"
+};

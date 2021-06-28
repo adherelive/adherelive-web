@@ -3,12 +3,12 @@ import UserDeviceService from "../../../services/userDevices/userDevice.service"
 import UserDeviceWrapper from "../../../ApiWrapper/mobile/userDevice";
 import {AGORA_CALL_NOTIFICATION_TYPES, USER_CATEGORY} from "../../../../constant";
 
+import moment from "moment";
+
 class StartJob extends AgoraJob {
     constructor(data) {
         super(data);
     }
-
-    getInAppTemplate = () => {};
 
     getPushAppTemplate = async () => {
         const {getAgoraData, getNotificationUrl} = this;
@@ -62,6 +62,44 @@ class StartJob extends AgoraJob {
 
         return templateData;
     };
+
+    getInAppTemplate = () => {
+        
+    }
+    // getInAppTemplate = () => {
+    //     const { getAgoraData } = this;
+    //     const {
+    //       actor: {
+    //         id: actorId,
+    //         details: { name, category: actorCategory } = {}
+    //       } = {},
+    //       event_type,
+    //       roomId
+    //     } = getAgoraData() || {};
+
+    //     const participants = roomId.split(`-${process.config.twilio.CHANNEL_SERVER}-`);
+    
+    //     const templateData = [];
+
+    //     const currentTime = new moment().utc().toISOString();
+    //     const now = moment();
+    //     const currentTimeStamp = now.unix();
+
+    //     for (const participant of participants) {
+    //       if (participant !== `${actorId}`) {
+    //         templateData.push({
+    //             actor: actorId,
+    //             object: `${participant}`,
+    //             foreign_id: `${roomId}`,
+    //             verb: `start_call:${currentTimeStamp}`,
+    //             event: event_type,
+    //             time: `${currentTime}`,
+    //             create_time: `${currentTime}`
+    //         });
+    //       }
+    //     }
+    //     return templateData;
+    //   };
 
 }
 

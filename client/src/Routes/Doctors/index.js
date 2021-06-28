@@ -74,6 +74,12 @@ const TermsOfService = lazy(() =>
   )
 );
 
+const TermsOfPayment = lazy(() =>
+  import(
+    /* webpackChunkName: "TermsOfPayment" */ "../../Containers/Pages/termsOfPayment"
+  )
+);
+
 const PrivacyPolicy = lazy(() =>
   import(
     /* webpackChunkName: "PrivacyPolicyAuthPage" */ "../../Containers/Pages/PrivacyPolicy"
@@ -98,6 +104,62 @@ const PatientDetailsComp = props => {
   return <PatientDetails patient_id={patient_id} />;
 };
 
+const RegisterProfileComp = props => {
+  return <RegisterProfile {...props} /> ;
+}
+
+const ChatFullScreenComp = props => {
+  return <ChatFullScreen { ...props } />;
+}
+
+const TestTwilioVideoComp = props => {
+  return <TestTwilioVideo {...props} /> ;
+}
+
+const TwilioVideoComp = props => {
+  return <TwilioVideo {...props}/> ;
+}
+
+const RegisterQualificationsComp = props => {
+  return <RegisterQualifications {...props} /> ;
+}
+
+const RegisterClinicsComp = props => {
+  return <RegisterClinics {...props} /> ;
+}
+
+const DoctorProfilePageComp = props => {
+  return <DoctorProfilePage {...props} />;
+}
+
+const DoctorSettingsPageComp = props => {
+  return <DoctorSettingsPage {...props} /> ;
+}
+
+const TermsOfServiceComp = props => {
+  return <TermsOfService {...props} />;
+}
+
+const TermsOfPaymentComp = props => {
+  return <TermsOfPayment {...props}/>;
+}
+
+const PrivacyPolicyComp = props => {
+  return <PrivacyPolicy {...props} />;
+}
+
+const TemplatePageComp = props => {
+  return <TemplatePage {...props}/> ;
+}
+
+const DoctorTransactionPageComp = props => {
+  return <DoctorTransactionPage {...props} /> ;
+}
+
+const DashboardComp = props => {
+  return <Dashboard {...props} />;
+}
+
 const SideMenuComp = props => {
   const { location: { pathname = "" } = {} } = props;
   // console.log("102938138932 sidemenu component --> ", {props});
@@ -107,7 +169,9 @@ const SideMenuComp = props => {
       pathname.includes("terms-of-service") ||
       pathname.includes("privacy-policy") ||
       pathname.includes("video") ||
-      pathname.includes("sign-in")
+      pathname.includes("sign-in") ||
+      pathname.includes("terms-of-payment")
+
     )
   ) {
     return <SideMenu {...props} />;
@@ -140,7 +204,8 @@ class Doctors extends Component {
       pathname.includes("patient-consulting") ||
       pathname.includes("terms-of-service") ||
       pathname.includes("privacy-policy") ||
-      pathname.includes("sign-in")
+      pathname.includes("sign-in") ||
+      pathname.includes("terms-of-payment")
     );
     const { authRedirection } = this.props;
     return (
@@ -167,12 +232,12 @@ class Doctors extends Component {
                 <Route
                   exact
                   path={PATH.REGISTER_PROFILE}
-                  component={RegisterProfile}
+                  component={RegisterProfileComp}
                 />
                 <Route
                   exact
                   path={PATH.PATIENT_CONSULTING}
-                  component={ChatFullScreen}
+                  component={ChatFullScreenComp}
                 />
                 {/* <Route
                   exact
@@ -182,89 +247,95 @@ class Doctors extends Component {
                 <Route
                   exact
                   path={PATH.TEST_PATIENT_CONSULTING_VIDEO}
-                  component={TestTwilioVideo}
+                  component={TestTwilioVideoComp}
                 />
                 <Route
                   exact
                   path={PATH.PATIENT_CONSULTING_VIDEO}
-                  component={TwilioVideo}
+                  component={TwilioVideoComp}
                 />
                 <Route
                   exact
                   path={PATH.REGISTER_QUALIFICATIONS}
-                  component={RegisterQualifications}
+                  component={RegisterQualificationsComp}
                 />
 
                 <Route
                 exact
                 path={`${PATH.REGISTER_FROM_MY_PROFILE}${PATH.REGISTER_QUALIFICATIONS}`}
-                component={RegisterQualifications}
+                component={RegisterQualificationsComp}
                 />
 
                 <Route
                   exact
                   path={PATH.REGISTER_CLINICS}
-                  component={RegisterClinics}
+                  component={RegisterClinicsComp}
                 />
 
                 <Route
                   exact
                   path={`${PATH.REGISTER_FROM_MY_PROFILE}${PATH.REGISTER_CLINICS}`}
-                  component={RegisterClinics}
+                  component={RegisterClinicsComp}
                 />
 
                 <Route
                   exact
                   path={PATH.PROFILE}
-                  component={DoctorProfilePage}
+                  component={DoctorProfilePageComp}
                 />
 
                 <Route
                   exact
                   path={PATH.SETTINGS}
-                  component={DoctorSettingsPage}
+                  component={DoctorSettingsPageComp}
                 />
 
                 <Route
                   exact
                   path={PATH.CONSULTATION_FEE}
-                  component={DoctorSettingsPage}
+                  component={DoctorSettingsPageComp}
                 />
 
                 <Route
                   exact
                   path={PATH.BILLING}
-                  component={DoctorSettingsPage}
+                  component={DoctorSettingsPageComp}
                 />
 
                 <Route
                   exact
                   path={PATH.PAYMENT_DETAILS}
-                  component={DoctorSettingsPage}
+                  component={DoctorSettingsPageComp}
                 />
 
                 <Route
                     exact
                     path={PATH.TERMS_OF_SERVICE}
-                    component={TermsOfService}
+                    component={TermsOfServiceComp}
+                />
+                
+                <Route
+                  exact
+                  path={PATH.TERMS_OF_PAYMENT}
+                  component={TermsOfPaymentComp}
                 />
                 <Route
                     exact
                     path={PATH.PRIVACY_POLICY}
-                    component={PrivacyPolicy}
+                    component={PrivacyPolicyComp}
                 />
 
                 <Route
                     exact
                     path={PATH.TEMPLATES}
-                    component={TemplatePage}
+                    component={TemplatePageComp}
                 />
 
 
                 <Route
                  exact
                  path={PATH.DOCTOR.TRANSACTION_DETAILS}
-                 component={DoctorTransactionPage}
+                 component={DoctorTransactionPageComp}
                 />
 
                 
@@ -273,7 +344,7 @@ class Doctors extends Component {
                   path={PATH.DASHBOARD}
                   component={Dashboard}
                 /> */}
-                <Route exact path="/" component={Dashboard} />
+                <Route exact path="/" component={DashboardComp} />
                 <Route path="" component={BlankState} />
               </Switch>
             </div>

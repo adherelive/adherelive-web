@@ -8,7 +8,8 @@ import {createCareplanTemplate } from "../../modules/carePlanTemplates";
 // import { createReminder, updateReminder } from "../../modules/reminder"; // write to add to database
 const mapStateToProps = state => {
   const {
-    drawer: { visible, loading, data: { type, payload = {} } = {} }, vital_templates, repeat_intervals
+    drawer: { visible, loading, data: { type, payload = {} } = {} }, vital_templates, repeat_intervals,
+    exercise_contents={}
   } = state;
 
   
@@ -18,7 +19,8 @@ const mapStateToProps = state => {
     loading,
     payload,
     vital_templates,
-    repeat_intervals
+    repeat_intervals,
+    exercise_contents
   };
 };
 

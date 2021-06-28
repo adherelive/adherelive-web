@@ -66,6 +66,16 @@ const messages = defineMessages({
         description: "",
         defaultMessage: "Please fill all medication details."
     },
+    dietError: {
+        id: "app.allTemplatesAddDrawer.dietError",
+        description: "",
+        defaultMessage: "Please fill all diet details."
+    },
+    workoutError: {
+        id: "app.allTemplatesAddDrawer.workoutError",
+        description: "",
+        defaultMessage: "Please fill all workout details."
+    },
     submit: {
         id: "app.allTemplatesAddDrawer.submit",
         description: "",
@@ -181,7 +191,22 @@ const messages = defineMessages({
         id: "app.allTemplatesAddDrawer.sosMessage",
         description: "",
         defaultMessage: "Take Whenever Required"
-    }
+    },
+    diets: {
+        id: "app.allTemplatesAddDrawer.diets",
+        description: "",
+        defaultMessage: "Diets"
+    },
+    workouts:{
+        id: "app.allTemplatesAddDrawer.workouts",
+        description: "",
+        defaultMessage: "Workouts"
+    },
+    dietNameExist: {
+        id: "app.allTemplatesAddDrawer.dietNameExist",
+        description: "",
+        defaultMessage: "A diet with this name already exist in this template."
+    },
 });
 
 export default messages;

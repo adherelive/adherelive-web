@@ -27,7 +27,7 @@ export const db = (database) => {
             },
             type: {
                 type: DataTypes.ENUM,
-                values: [ACTION_TYPE.MEDICATION, ACTION_TYPE.EXERCISE, ACTION_TYPE.DIET],
+                values: [ACTION_TYPE.MEDICATION, ACTION_TYPE.WORKOUT, ACTION_TYPE.DIET],
                 allowNull: false
             },
             frequency_per_day: {

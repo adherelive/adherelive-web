@@ -43,6 +43,12 @@ import userFavourites from "./userFavourites";
 import agoraRouter from "./agora";
 import adhocRouter from "./adhoc";
 import userRoles from "./userRoles";
+import foodItemsRouter from "./foodItems";
+import mealTemplateRouter from "./mealTemplate";
+import dietRouter from "./diet";
+import portionRouter from "./portion";
+import exerciseRouter from "./exercises";
+import workoutRouter from "./workouts";
 
 router.use(async function(req, res, next) {
   try {
@@ -150,5 +156,11 @@ router.use("/favourites",userFavourites);
 router.use("/agora", agoraRouter);
 router.use("/adhoc", adhocRouter);
 router.use("/user-roles",userRoles);
+router.use("/food-items",foodItemsRouter);
+router.use("/meal/templates",mealTemplateRouter);
+router.use("/diet",dietRouter);
+router.use("/portions",portionRouter);
+router.use("/exercises", exerciseRouter);
+router.use("/workout", workoutRouter);
 
 module.exports = router;

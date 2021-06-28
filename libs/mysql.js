@@ -10,6 +10,7 @@ import * as Actions from "../app/models/actions";
 import * as Adherence from "../app/models/adherence";
 import * as Appointments from "../app/models/appointments";
 import * as Articles from "../app/models/articles";
+import * as AccountDetails from "../app/models/accountDetails";
 
 import * as CarePlans from "../app/models/carePlan";
 import * as CarePlanAppointments from "../app/models/carePlanAppointments";
@@ -23,23 +24,34 @@ import * as Course from "../app/models/course";
 
 import * as Degree from "../app/models/degree";
 import * as Diet from "../app/models/diet";
+import * as DietResponse from "../app/models/dietResponses";
+import * as DietFoodGroupMapping from "../app/models/dietFoodGroupMapping";
 import * as Disease from "../app/models/disease";
 import * as DoctorClinics from "../app/models/doctorClinics";
 import * as DoctorQualifications from "../app/models/doctorQualifications";
 import * as DoctorRegistrations from "../app/models/doctorRegistrations";
 import * as Doctors from "../app/models/doctors";
 import * as DoctorPatientFeaturesMapping from "../app/models/doctorPatientFeatureMapping";
+import * as DoctorProviderMapping from "../app/models/doctorProviderMapping";
 
 import * as EmailLogger from "../app/models/emailLogger";
-import * as Exercise from "../app/models/exercise";
 import * as EventHistory from "../app/models/eventHistory";
+import * as Exercise from "../app/models/exercise";
+import * as ExerciseDetails from "../app/models/exerciseDetails";
+import * as ExerciseGroup from "../app/models/exerciseGroup";
+import * as ExerciseContent from "../app/models/exerciseContents";
 
 import * as FeatureDetails from "../app/models/featureDetails";
 import * as Features from "../app/models/features";
+import * as FoodItems from "../app/models/foodItems";
+import * as FoodItemDetails from "../app/models/foodItemDetails";
+import * as FoodGroups from "../app/models/foodGroups";
 
 import * as Medications from "../app/models/medicationReminders";
 import * as Medicines from "../app/models/medicines";
 import * as MemberSpecialities from "../app/models/memberSpecialities";
+import * as MealTemplates from "../app/models/mealTemplates";
+import * as MealTemplateFoodItemMapping from "../app/models/mealTemplateFoodItemMapping";
 
 import * as OtpVerifications from "../app/models/otpVerifications";
 
@@ -51,6 +63,9 @@ import * as ProductPlans from "../app/models/productPlans";
 import * as ProviderMembers from "../app/models/providerMembers";
 import * as Providers from "../app/models/providers";
 import * as PaymentProducts from "../app/models/paymentProducts";
+import * as PatientPaymentConsentMapping from "../app/models/patientPaymentConsentMapping";
+import * as ProviderTermsMapping from "../app/models/providerTermsMappings";
+import * as Portions from "../app/models/portions";
 
 import * as RegionFeatures from "../app/models/regionFeatures";
 import * as RegionProviders from "../app/models/regionProviders";
@@ -58,19 +73,24 @@ import * as Regions from "../app/models/regions";
 import * as RegistrationCouncils from "../app/models/registrationCouncil";
 import * as Reminders from "../app/models/reminders";
 import * as Reports from "../app/models/reports";
+import * as ExerciseRepetitions from "../app/models/exerciseRepetition";
 
 import * as ScheduleEvents from "../app/models/scheduleEvents";
 import * as Severity from "../app/models/severity";
 import * as Speciality from "../app/models/specialities";
 import * as Subscriptions from "../app/models/subscriptions";
 import * as Symptoms from "../app/models/symptoms";
+import * as SimilarFoodMapping from "../app/models/similarFoodMapping";
 
 import * as TemplateAppointments from "../app/models/templateAppointments";
 import * as TemplateMedications from "../app/models/templateMedications";
 import * as TemplateVitals from "../app/models/templateVitals";
+import * as TemplateDiets from "../app/models/templateDiets";
+import * as TemplateWorkouts from "../app/models/templateWorkouts";
 import * as TreatmentConditionMapping from "../app/models/treatmentConditionMapping";
 import * as Treatments from "../app/models/treatments";
 import * as Transactions from "../app/models/transactions";
+import * as TermsAndConditions from "../app/models/termsAndConditions";
 
 import * as UploadDocuments from "../app/models/uploadDocuments";
 import * as UserCategoryPermissions from "../app/models/userCategoryPermissions";
@@ -83,10 +103,13 @@ import * as UserRoles from "../app/models/userRoles";
 
 import * as Vitals from "../app/models/vitals";
 import * as VitalTemplates from "../app/models/vitalTemplates";
-import * as Watchlist from "../app/models/doctor_patient_watchlist";
 
-import * as AccountDetails from "../app/models/accountDetails";
-import * as DoctorProviderMapping from "../app/models/doctorProviderMapping";
+import * as Watchlist from "../app/models/doctor_patient_watchlist";
+import * as Workouts from "../app/models/workout";
+import * as WorkoutResponses from "../app/models/workoutResponses";
+import * as WorkoutExerciseGroupMapping from "../app/models/workoutExerciseGroupMapping";
+import * as WorkoutTemplates from "../app/models/workoutTemplate";
+import * as WorkoutTemplateExerciseMapping from "../app/models/workoutTemplateExerciseMapping";
 
 
 // Models List...
@@ -110,6 +133,8 @@ const models = [
 
   Degree,
   Diet,
+  DietResponse,
+  DietFoodGroupMapping,
   Disease,
   DoctorClinics,
   DoctorQualifications,
@@ -119,18 +144,27 @@ const models = [
   DoctorPatientFeaturesMapping,
 
   EmailLogger,
-  Exercise,
   EventHistory,
+  Exercise,
+  ExerciseDetails,
+  ExerciseRepetitions,
+  ExerciseGroup,
+  ExerciseContent,
 
   FeatureDetails,
   Features,
+  FoodItems,
+  FoodGroups,
+  FoodItemDetails,
 
   Medications,
   Medicines,
   MemberSpecialities,
+  MealTemplates,
+  MealTemplateFoodItemMapping,
 
   ScheduleEvents,
-
+  
   OtpVerifications,
 
   PatientCareTakers,
@@ -141,6 +175,9 @@ const models = [
   Providers,
   ProviderMembers,
   PaymentProducts,
+  PatientPaymentConsentMapping,
+  ProviderTermsMapping,
+  Portions,
 
   RegionFeatures,
   RegionProviders,
@@ -153,13 +190,17 @@ const models = [
   Speciality,
   Subscriptions,
   Symptoms,
+  SimilarFoodMapping,
 
   TemplateAppointments,
   TemplateMedications,
   TemplateVitals,
+  TemplateDiets,
+  TemplateWorkouts,
   TreatmentConditionMapping,
   Treatments,
   Transactions,
+  TermsAndConditions,
 
   UploadDocuments,
   UserCategoryPermissions,
@@ -173,7 +214,12 @@ const models = [
   Vitals,
   VitalTemplates,
 
-  Watchlist
+  Watchlist,
+  Workouts,
+  WorkoutResponses,
+  WorkoutExerciseGroupMapping,
+  WorkoutTemplates,
+  WorkoutTemplateExerciseMapping
 ];
 
 class Database {

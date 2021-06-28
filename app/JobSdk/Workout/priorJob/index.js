@@ -1,0 +1,101 @@
+import WorkoutJob from "../";
+import moment from "moment";
+import { EVENT_TYPE, NOTIFICATION_VERB } from "../../../../constant";
+import UserDeviceService from "../../../services/userDevices/userDevice.service";
+import UserDeviceWrapper from "../../../ApiWrapper/mobile/userDevice";
+
+class PriorJob extends WorkoutJob {
+  constructor(data) {
+    super(data);
+  }
+
+  getPushAppTemplate = async () => {
+    const { getWorkoutData } = this;
+    const {
+      details: {
+        workouts = {},
+        workout_id = null,
+        participants = [],
+        actor: {
+          id: actorId
+        } = {}
+      } = {},
+    } = getWorkoutData() || {};
+
+    const templateData = [];
+    const playerIds = [];
+    const userIds = [];
+
+    participants.forEach(participant => {
+      if (participant !== actorId) {
+        userIds.push(participant);
+      }
+    });
+
+    const userDevices = await UserDeviceService.getAllDeviceByData({
+      user_id: userIds,
+    });
+
+    if (userDevices.length > 0) {
+      for (const device of userDevices) {
+        const userDevice = await UserDeviceWrapper({ data: device });
+        playerIds.push(userDevice.getOneSignalDeviceId());
+      }
+    }
+
+    let workoutName = "";
+    if(workout_id) {
+      const {basic_info: {name} = {}} = workouts[workout_id] || {};
+      workoutName = name;
+    }
+
+    templateData.push({
+      small_icon: process.config.app.icon_android,
+      app_id: process.config.one_signal.app_id,
+      headings: { en: `Upcoming Workout Reminder` },
+      contents: {
+        en: `${workoutName} is starting in ${process.config.app.workout_prior_time}. Tap here to know more!`,
+      },
+      include_player_ids: [...playerIds],
+      priority: 10,
+      android_channel_id: process.config.one_signal.urgent_channel_id,
+      data: { url: `/${NOTIFICATION_VERB.WORKOUT_PRIOR}`, params: getWorkoutData() },
+    });
+
+    return templateData;
+  };
+
+  getInAppTemplate = () => {
+    const { getWorkoutData } = this;
+    const {
+      details: {
+        participants = [],
+        actor: {
+          id: actorId
+        } = {},
+      } = {},
+      id,
+    } = getWorkoutData() || {};
+
+    const templateData = [];
+    const currentTime = new moment().utc();
+    const currentTimeStamp = currentTime.unix();
+    for (const participant of participants) {
+      if (participant !== actorId) {
+        templateData.push({
+            actor: actorId,
+            object: `${participant}`,
+            foreign_id: `${id}`,
+            verb: `${NOTIFICATION_VERB.WORKOUT_PRIOR}:${currentTimeStamp}`,
+            event: EVENT_TYPE.WORKOUT,
+            time: currentTime,
+            create_time: `${currentTime}`
+        });
+      }
+    }
+
+    return templateData;
+  };
+}
+
+export default PriorJob;

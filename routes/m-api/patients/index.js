@@ -3,8 +3,16 @@ const router = express.Router();
 import Authenticated from "../middlewares/auth";
 import isPatient from "../middlewares/patients";
 import PatientController from "../../../app/controllers/mControllers/patients/patients.controller";
+import DietController from "../../../app/controllers/mControllers/diet/diet.controller";
 
 router.post("/", isPatient, Authenticated, PatientController.mUpdatePatient);
+
+
+router.post(
+  "/consents/payments",
+  Authenticated,
+  PatientController.acceptPaymentsTerms
+);
 
 router.post(
   "/:id/consents/request",
@@ -16,6 +24,12 @@ router.post(
   "/consents/verify",
   Authenticated,
   PatientController.patientConsentVerification
+);
+
+router.get(
+  "/payment-links",
+  Authenticated,
+  PatientController.getAllRelatedDoctorPaymentLinks
 );
 
 router.get("/", Authenticated, PatientController.searchPatient);
@@ -60,6 +74,12 @@ router.get(
     "/:patient_id/reports",
     Authenticated,
     PatientController.getPatientReports
+);
+
+router.get(
+  "/diet",
+  Authenticated,
+  DietController.getPatientDiets
 );
 
 router.get(

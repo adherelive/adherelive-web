@@ -96,17 +96,19 @@ const radiologyTypeFavorites = async (userTypeData, types) => {
 
             for(const subTypeId of subTypesIds) {
                 const {[subTypeId]: { index = null, items = [], name: subTypeName = ""} = {}} = typeData || {};
-
                 let updatedItems = [];
+                let favoriteItems = [];
+                let nonFavoriteItems = [];
                 for(const [idx, type] of items.entries()) {
                     let favoriteId = null;
                     if(favIndicesList.indexOf(`${id}-${index}-${idx}`) !== -1) {
                         favoriteId = favoriteIndices[`${id}-${index}-${idx}`]
+                        favoriteItems.push({name: type, favorite_id: favoriteId})
+                    } else {
+                        nonFavoriteItems.push({name: type, favorite_id: null})
                     }
-
-                    updatedItems.push({name: type, favorite_id: favoriteId})
                 }
-
+                updatedItems = [...favoriteItems, ...nonFavoriteItems]
                 typeData = {...typeData, [subTypeId]: {name: subTypeName, index, items: updatedItems}}
 
             }

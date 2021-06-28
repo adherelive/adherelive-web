@@ -72,7 +72,7 @@ class DeleteJob extends MedicationJob {
         const now = moment();
         const currentTimeStamp = now.unix();
         for (const participant of participants) {
-            // if (participant !== actorId) {
+            if (participant !== actorId) {
             templateData.push({
                 actor: actorId,
                 actorRoleId: user_role_id,
@@ -84,7 +84,7 @@ class DeleteJob extends MedicationJob {
                 time: currentTime,
                 create_time: `${currentTime}`
             });
-            // }
+            }
         }
 
         return templateData;

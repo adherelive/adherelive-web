@@ -24,6 +24,8 @@ import doctor_registrations from "./doctorRegistrations";
 import template_appointments from "./templateAppointments";
 import template_medications from "./templateMedications";
 import template_vitals from "./templateVitals"
+import template_diets from "./templateDiets";
+import template_workouts from "./templateWorkouts";
 import care_plan_templates from "./carePlanTemplates";
 import upload_documents from "./uploadDocuments";
 import show_template_drawer from "./showDrawer";
@@ -51,6 +53,29 @@ import favourites_data from "./favouritesData";
 import agora from "./agora";
 import user_roles from "./userRoles";
 import emails from "./emails";
+import terms_and_conditions from "./termsAndConditions";
+import notification_redirect from "./notificationRedirect";
+import portions from "./portions";
+import food_items from "./foodItems";
+import food_item_details from "./foodItemDetails";
+import searched_food_items from "./searchedFoodItems";
+import searched_food_item_details from "./searchedFoodItemDetails";
+import diets from "./diets";
+import latest_created_food from "./latestCreatedFood";
+import diet_food_group_mappings from "./dietFoodGroupMappings";
+import diet_responses from "./dietReponses";
+import repetitions from "./repetitions";
+import exercises from "./exercises";
+import exercise_details from "./exerciseDetails";
+import searched_exercises from "./searchedExercises";
+import searched_exercise_details from "./searchedExerciseDetails";
+import latest_created_exercise from "./latestCreatedExercise";
+import workouts from "./workouts";
+import all_workout_details from "./allWorkoutDetails";
+import exercise_contents from "./exerciseContents";
+import workout_responses from "./workoutResponses";
+import exercise_groups from "./exerciseGroups";
+import workout_exercise_groups from "./workoutExerciseGroups";
 
 const rootReducer = combineReducers({
   auth,
@@ -78,6 +103,8 @@ const rootReducer = combineReducers({
   template_appointments,
   template_medications,
   template_vitals,
+  template_diets,
+  template_workouts,
   care_plan_templates,
   show_template_drawer,
   colleges,
@@ -103,7 +130,30 @@ const rootReducer = combineReducers({
   favourites_data,
   agora,
   user_roles,
-  emails
+  emails,
+  terms_and_conditions,
+  notification_redirect,
+  portions,
+  food_items,
+  food_item_details,
+  searched_food_items,
+  searched_food_item_details,
+  diets,
+  latest_created_food,
+  diet_food_group_mappings,
+  diet_responses,
+  repetitions,
+  exercises,
+  exercise_details,
+  searched_exercises,
+  searched_exercise_details,
+  latest_created_exercise,
+  workouts,
+  all_workout_details,
+  exercise_contents,
+  workout_responses,
+  exercise_groups,
+  workout_exercise_groups
 });
 
 export default (state, action) => {

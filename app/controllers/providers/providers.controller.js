@@ -20,6 +20,8 @@ import carePlanService from "../../services/carePlan/carePlan.service";
 import userPreferenceService from "../../services/userPreferences/userPreference.service";
 import UserRoleService from "../../services/userRoles/userRoles.service";
 import DoctorService from "../../services/doctor/doctor.service";
+import providerTermsMappingService from "../../services/providerTermsMapping/providerTermsMappings.service";
+import tacService from "../../services/termsAndConditions/termsAndConditions.service";
 
 import UserWrapper from "../../ApiWrapper/web/user";
 import DoctorWrapper from "../../ApiWrapper/web/doctor";
@@ -38,6 +40,7 @@ import PatientWrapper from "../../ApiWrapper/web/patient";
 import CarePlanWrapper from "../../ApiWrapper/web/carePlan";
 import UserRoleWrapper from "../../ApiWrapper/web/userRoles";
 
+import TACWrapper from "../../ApiWrapper/web/termsAndConditions";
 // import * as PaymentHelper from "../payments/helper";
 
 // import bcrypt from "bcrypt";
@@ -45,7 +48,8 @@ import UserRoleWrapper from "../../ApiWrapper/web/userRoles";
 import {
   DOCUMENT_PARENT_TYPE,
   EVENT_TYPE, SIGN_IN_CATEGORY,
-  USER_CATEGORY
+  USER_CATEGORY,
+  TERMS_AND_CONDITIONS_TYPES
 } from "../../../constant";
 import ScheduleEventService from "../../services/scheduleEvents/scheduleEvent.service";
 import { Sequelize } from "sequelize";
@@ -766,6 +770,7 @@ class ProvidersController extends Controller {
 
           // ui details
           icon,
+          banner,
 
             // account details
             account_type,
@@ -839,12 +844,31 @@ class ProvidersController extends Controller {
         address,
         activated_on,
         details: {
-          icon: getFilePath(icon)
+          icon: getFilePath(icon),
+          banner:getFilePath(banner)
         },
         user_id: userData.getId(),
+        details: {
+          icon: getFilePath(icon),
+          banner:getFilePath(banner)
+        },
       });
       const providerData = await ProviderWrapper(provider);
 
+      // crate provider temrs mapping record
+
+      const tacId = await tacService.getByData({
+        terms_type:TERMS_AND_CONDITIONS_TYPES.DEFAULT_TERMS_OF_PAYMENT
+      });
+
+      const tacData= await TACWrapper(tacId);
+
+      const providerTermsMapping = await providerTermsMappingService.create({
+        provider_id:providerData.getProviderId(),
+        terms_and_conditions_id:tacData.getId()
+      });
+
+      
       // add provider account
       let providerAccountData = {};
 
@@ -908,6 +932,10 @@ class ProvidersController extends Controller {
         mobile_number,
         address,
 
+        // customizations
+        icon,
+        banner,
+
         // account details
         account_type,
         customer_name,
@@ -915,9 +943,6 @@ class ProvidersController extends Controller {
         ifsc_code,
         upi_id,
         use_as_main,
-
-        // customizations
-        icon,
 
         // razorpay accounts
         razorpay_account_id,
@@ -949,8 +974,10 @@ class ProvidersController extends Controller {
         address,
         details: {
           ...previousProvider.getDetails(),
-          icon: getFilePath(icon)
+          icon: getFilePath(icon),
+          banner: getFilePath(banner)
         }
+
       }, id);
 
       const updatedProvider = await ProviderWrapper(null, id);

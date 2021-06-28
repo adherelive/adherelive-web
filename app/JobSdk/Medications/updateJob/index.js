@@ -5,92 +5,92 @@ import UserDeviceWrapper from "../../../ApiWrapper/mobile/userDevice";
 import { EVENT_TYPE } from "../../../../constant";
 
 class UpdateJob extends MedicationJob {
-    constructor(data) {
-        super(data);
+  constructor(data) {
+    super(data);
+  }
+
+  getPushAppTemplate = async () => {
+    const { getMedicationData } = this;
+    const {
+      participants = [],
+      actor: {
+        id: actorId,
+        details: { name, category: actorCategory } = {},
+      } = {},
+      event_id = null,
+    } = getMedicationData() || {};
+
+    const templateData = [];
+    const playerIds = [];
+    const userIds = [];
+
+    participants.forEach((participant) => {
+      if (participant !== actorId) {
+        userIds.push(participant);
+      }
+    });
+
+    const userDevices = await UserDeviceService.getAllDeviceByData({
+      user_id: userIds,
+    });
+
+    if (userDevices.length > 0) {
+      for (const device of userDevices) {
+        const userDevice = await UserDeviceWrapper({ data: device });
+        playerIds.push(userDevice.getOneSignalDeviceId());
+      }
     }
 
-    getPushAppTemplate = async () => {
-        const { getMedicationData } = this;
-        const {
-            participants = [],
-            actor: {
-                id: actorId,
-                details: { name, category: actorCategory } = {}
-            } = {},
-            event_id = null
-        } = getMedicationData() || {};
+    templateData.push({
+      small_icon: process.config.app.icon_android,
+      app_id: process.config.one_signal.app_id, // TODO: add the same in pushNotification handler in notificationSdk
+      headings: { en: `Medication Update` },
+      contents: {
+        en: `${name}(${actorCategory}) has updated a medication. Tap here to know more!`,
+      },
+      include_player_ids: [...playerIds],
+      priority: 10,
+      android_channel_id: process.config.one_signal.urgent_channel_id,
+      data: { url: "/medications", params: getMedicationData() },
+    });
 
-        const templateData = [];
-        const playerIds = [];
-        const userIds = [];
+    return templateData;
+  };
 
-        participants.forEach(participant => {
-            if (participant !== actorId) {
-                userIds.push(participant);
-            }
-        });
+  getInAppTemplate = () => {
+    const { getMedicationData } = this;
+    const {
+      participants = [],
+      actor: {
+        id: actorId,
+        user_role_id,
+        details: { name, category: actorCategory } = {},
+      } = {},
+      event_id,
+    } = getMedicationData() || {};
 
-        const userDevices = await UserDeviceService.getAllDeviceByData({
-            user_id: userIds
-        });
-
-        if (userDevices.length > 0) {
-            for (const device of userDevices) {
-                const userDevice = await UserDeviceWrapper({ data: device });
-                playerIds.push(userDevice.getOneSignalDeviceId());
-            }
-        }
-
+    const templateData = [];
+    const currentTime = new moment().utc().toISOString();
+    const now = moment();
+    const currentTimeStamp = now.unix();
+    for (const participant of participants) {
+      if (participant !== actorId) {
         templateData.push({
-            small_icon: process.config.app.icon_android,
-            app_id: process.config.one_signal.app_id, // TODO: add the same in pushNotification handler in notificationSdk
-            headings: { en: `Medication Update` },
-            contents: {
-                en: `${name}(${actorCategory}) has updated a medication. Tap here to know more!`
-            },
-            include_player_ids: [...playerIds],
-            priority: 10,
-            android_channel_id: process.config.one_signal.urgent_channel_id,
-            data: { url: "/medications", params: getMedicationData() }
+          actor: actorId,
+          actorRoleId: user_role_id,
+          object: `${participant}`,
+          foreign_id: `${event_id}`,
+          verb: `medication_update:${currentTimeStamp}`,
+          event: EVENT_TYPE.MEDICATION_REMINDER,
+          // message: `${name}(${actorCategory}) has created a medication reminder`,
+          time: currentTime,
+          create_time: `${currentTime}`,
         });
+      }
+    }
 
-        return templateData;
-    };
-
-    getInAppTemplate = () => {
-        const { getMedicationData } = this;
-        const {
-            participants = [],
-            actor: {
-                id: actorId,
-                user_role_id,
-                details: { name, category: actorCategory } = {}
-            } = {},
-            event_id
-        } = getMedicationData() || {};
-
-        const templateData = [];
-        const currentTime = new moment().utc().toISOString();
-        const now = moment();
-        const currentTimeStamp = now.unix();
-        for (const participant of participants) {
-            // if (participant !== actorId) {
-            templateData.push({
-                actor: actorId,
-                actorRoleId: user_role_id,
-                object: `${participant}`,
-                foreign_id: `${event_id}`,
-                verb: `medication_update:${currentTimeStamp}`,
-                event: EVENT_TYPE.MEDICATION_REMINDER,
-                // message: `${name}(${actorCategory}) has created a medication reminder`,
-                time: currentTime,
-                create_time: `${currentTime}`
-            });
-            // }
-        }
-
-        return templateData;
-    };
+    return templateData;
+  };
 }
 
 export default UpdateJob;

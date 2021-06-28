@@ -1,12 +1,14 @@
 "use strict";
 import {DataTypes} from "sequelize";
-import {ACTIONS} from "./actions";
+import { TABLE_NAME as carePlanTableName } from "./carePlan";
+import { TABLE_NAME as dietFoodGroupMappingTableName } from "./dietFoodGroupMapping";
 
-export const DIET = "diet";
+
+export const TABLE_NAME = "diet";
 
 export const db = (database) => {
     database.define(
-        DIET,
+        TABLE_NAME,
         {
             id: {
                 allowNull: false,
@@ -14,69 +16,46 @@ export const db = (database) => {
                 primaryKey: true,
                 type: DataTypes.INTEGER
             },
-            action_id: {
+            name: {
+                type: DataTypes.STRING(1000),
+                allowNull: false,
+            },
+            total_calories : {
+                type : DataTypes.FLOAT
+            },
+            start_date: {
+                type: DataTypes.DATE
+            },
+            end_date: {
+                type: DataTypes.DATE 
+            },
+            care_plan_id: {
                 type: DataTypes.INTEGER,
                 allowNull: false,
-                references: {
-                    model: {
-                        tableName: ACTIONS,
-                    },
-                    key: 'id'
-                }
             },
-            type: {
-                type: DataTypes.STRING,
-                allowNull: false
-            },
-            description: {
-                type: DataTypes.STRING(1000),
-                allowNull: false
-            },
-            condition: {
-                type: DataTypes.STRING,
-                allowNull: false
-            },
-            default_frequency: {
-                type: DataTypes.STRING,
-                allowNull: false
-            },
-            restriction_age: {
-                type: DataTypes.STRING,
-                allowNull: false
-            },
-            content_reference: {
-                type: DataTypes.STRING,
-                allowNull: false
+            details: {
+                type: DataTypes.JSON 
             },
         },
         {
             underscored: true,
             paranoid: true,
             freezeTableName: true,
-            getterMethods: {
-                getBasicInfo() {
-                    return {
-                        id: this.id,
-                        action_id: this.action_id,
-                        type: this.type,
-                        description: this.description,
-                        condition: this.condition,
-                        default_frequency: this.default_frequency,
-                        restriction_age: this.restriction_age,
-                        content_reference: this.content_reference,
-                    };
-                }
-            }
         }
     );
 };
 
 export const associate = (database) => {
-    const {diet, actions} = database.models || {};
 
     // associations here (if any) ...
-    diet.belongsTo(actions, {
-        foreignKey: "action_id",
-        targetKey: "id"
+    database.models[TABLE_NAME].hasOne(database.models[carePlanTableName], {
+        foreignKey: "id",
+        sourceKey: "care_plan_id"
     });
+
+    database.models[TABLE_NAME].hasMany(database.models[dietFoodGroupMappingTableName], {
+        foreignKey:"diet_id",
+        sourceKey:"id"
+    });
+    
 };

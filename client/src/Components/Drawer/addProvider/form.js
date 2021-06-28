@@ -8,8 +8,8 @@ import Button from "antd/es/button";
 import Tooltip from "antd/es/tooltip";
 import confirm from "antd/es/modal/confirm";
 
-import messages from "./message";
 import Customization from "./customization";
+import messages from "./message";
 
 import {
     EyeTwoTone,
@@ -311,6 +311,7 @@ class AddProviderForm extends Component {
 
       <Customization {...this.props}/>
 
+      <Customization {...this.props}/>
       {/* <-------------------------- ACCOUNT DETAILS --------------------------------------->*/}
 
       <div className="fwbolder fs18 mb20 mt20 flex align-center justify-space-between">

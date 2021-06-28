@@ -23,7 +23,7 @@ class OtpVerificationService {
                     // TODO: change on deployment
                     ...data,
                     updated_at: {
-                        [Op.gte]: moment().subtract(2, 'minutes').toDate()
+                        [Op.gte]: moment().subtract(process.config.app.otp_live_minutes, 'minutes').toDate()
                     }
                 },
             });
@@ -36,7 +36,6 @@ class OtpVerificationService {
     delete = async (data) => {
         try {
             const {otp, user_id} = data;
-            console.log("moment now ---> ", moment().toDate());
             const otpDetails = await Database.getModel(TABLE_NAME).destroy({
                 where: {
                     user_id,

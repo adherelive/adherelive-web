@@ -2,6 +2,7 @@ import React, { Component, Fragment } from "react";
 import { injectIntl } from "react-intl";
 
 import iconUpload from "./iconUpload";
+import bannerUpload from "./bannerUpload";
 
 import messages from "../message";
 
@@ -21,6 +22,7 @@ class Customization extends Component {
         </span>
 
         {iconUpload.render(this.props)}
+        {bannerUpload.render(this.props)}
       </Fragment>
     );
   }

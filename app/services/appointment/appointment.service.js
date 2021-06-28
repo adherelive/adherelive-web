@@ -106,7 +106,8 @@ class AppointmentService {
               participant_one_type: USER_CATEGORY.PATIENT
             }
           ]
-        }
+        },
+        order: [["start_time", "DESC"]]
       });
       return appointments;
     } catch (error) {

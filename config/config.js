@@ -15,7 +15,17 @@ module.exports = () => {
       default_currency: process.env.DEFAULT_CURRENCY,
       medicine_data: process.env.MEDICINE_INSTANCE,
       careplan_activation_reschedule_hours: process.env.CAREPLAN_ACTIVATION_RESCHEDULE_HOURS,
-      icon_android: process.env.ANDROID_ICON_NAME
+      icon_android: process.env.ANDROID_ICON_NAME,
+      otp_live_minutes: process.env.OTP_LIVE_MINUTES,
+      appointment_prior_time: process.env.APPOINTMENT_PRIOR_NOTIFY_MINUTES,
+      sms_hash: process.env.SMS_HASH,
+      diet_prior_time: process.env.DIET_PRIOR_NOTIFY_MINUTES,
+      event_reschedule_time: process.env.EVENT_RESCHEDULE_NOTIFY_MINUTES,
+      sms_hash: process.env.SMS_HASH,
+      inactivity_days_no: process.env.INACTIVITY_DAYS_NO,
+      workout_prior_time: process.env.WORKOUT_PRIOR_NOTIFY_MINUTES,
+      workout_start_hours: process.env.WORKOUT_START_HOURS,
+      workout_start_minutes: process.env.WORKOUT_START_MINUTES,
     },
     algolia: {
       app_id: process.env.ALGOLIA_APP_ID,
@@ -85,6 +95,12 @@ module.exports = () => {
       MINIO_ENDPOINT: process.env.MINIO_ENDPOINT,
       MINIO_BUCKET_NAME: process.env.MINIO_BUCKET_NAME,
       MINIO_S3_HOST: process.env.S3_HOST
+    },
+    firebase: {
+      api_key: process.env.FIREBASE_API_KEY,
+      app_id: process.env.FIREBASE_APP_ID,
+      measurement_id: process.env.FIREBASE_MEASUREMENT_ID,
+      project_id: process.env.FIREBASE_PROJECT_ID,
     },
     s3: {
       EXPIRY_TIME: process.env.EXPIRY_TIME

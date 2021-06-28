@@ -66,23 +66,34 @@ class PatientDetailsDrawer extends Component {
 
   componentDidUpdate(prevProps) {
    
-    const { payload: { patient_id } = {}, getMedications, care_plans = {} ,getAppointments} = this.props;
+    const { payload: { patient_id } = {}, getMedications, care_plans = {} ,getAppointments, appointments={} ,getPatientMissedEvents , auth:{authenticated_user = null} = {},doctors = {}} = this.props;
+    // console.log("67182736812368761283761287",{props:this.props});
     const { payload: { patient_id: prev_patient_id } = {} } = prevProps;
     let carePlanId = 1;
     let carePlanMedicationIds = [];
     let appointmentsListIds = []; 
+    let currentDocId = null ; 
     
+    for(let each in doctors ){
+      const doc = doctors[each] || {};
+      const {basic_info : { user_id = null } = {} } = doc || {};
+      if( authenticated_user.toString() === user_id.toString() ){
+        currentDocId=each;
+        break;
+      }
+    }
+
     for (let carePlan of Object.values(care_plans)) {
-      // console.log("careplan id for loop");
-      let { basic_info: { id = 1, patient_id : patientId = 1 }, medication_ids = [], appointment_ids = [] } = carePlan;
-      if (parseInt(patient_id) === parseInt(patientId)) {
+      let { basic_info: { id = 1, patient_id : patientId = 1 , doctor_id = null }, medication_ids = [], appointment_ids = [] } = carePlan;
+      if (parseInt(patient_id) === parseInt(patientId) && parseInt(doctor_id) === parseInt(currentDocId) ) {
         carePlanId = id;
         carePlanMedicationIds = medication_ids;
         appointmentsListIds = appointment_ids;
       }
     }
     
-    if (patient_id && patient_id !== prev_patient_id) {
+    
+    if (patient_id !== prev_patient_id ) {
       this.handleGetMissedEvents(patient_id);
       getMedications(patient_id);
       getAppointments(patient_id);
@@ -168,23 +179,37 @@ class PatientDetailsDrawer extends Component {
 
     const { appointmentsListIds } = this.state;
 
-    const { appointments = {} } = this.props;
+    const { appointments = {}, doctors = {} } = this.props;
+    const {formatMessage} = this;
     const appointmentList = appointmentsListIds.map(id => {
       const {
         basic_info: {
           start_date,
           start_time,
           end_time,
-          details: { type_description = ""  } = {}
-        } = {}
+          details: { type_description = ""  } = {},
+        } = {},
+        organizer: {id: organizer_id} = {},
       } = appointments[id] || {};
+
+      let docName = "";
+
+      for(const doctorId in doctors) {
+        const {basic_info: {full_name, user_id} = {}} = doctors[doctorId] || {};
+        if(user_id === organizer_id) {
+          docName = full_name;
+        }
+      }
+
       let td = moment(start_time);
        return (
         <div key={id} className="flex justify-space-between align-center mb10">
           <div className="pointer tab-color fw600 wp35 tooltip">{type_description.length > 0 ? type_description : " "}
 
             <span className="tooltiptext">{start_date}</span></div>
-          <div className="wp35 tal">{start_time ? td.utc().format('HH:mm') : '--' }</div>
+
+            <div className="wp40 tal">{formatMessage({...messages.appointmentDocName}, {name: docName})}</div>
+          <div className="wp30 tar">{start_time ? td.format('hh:mm A') : '--' }</div>
 
           <div className="wp20 tar">{ start_date ? moment( start_date).format("DD MMM") : "--"}</div>
         </div>
@@ -448,7 +473,7 @@ class PatientDetailsDrawer extends Component {
     }
   };
 
-  formatMessage = data => this.props.intl.formatMessage(data);
+  formatMessage = (data, other = {}) => this.props.intl.formatMessage(data, other);
 
   onClose = () => {
     const { close } = this.props;

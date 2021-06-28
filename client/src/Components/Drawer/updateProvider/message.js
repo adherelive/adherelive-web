@@ -205,7 +205,12 @@ const messages = defineMessages({
     id: "app.updateProvider.reset",
     description: "",
     defaultMessage: "Reset"
-  }
+  },
+  bannerUploadText: {
+    id: "app.updateProvider.banner.text",
+    description: "",
+    defaultMessage: "Banner"
+  },
   
 });
 

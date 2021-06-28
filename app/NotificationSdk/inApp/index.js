@@ -52,7 +52,7 @@ class AppNotification {
 
             return result;
         } catch (err) {
-            Log.debug("sendAppNotification 500 error", err);
+            Log.debug("inapp sendAppNotification 500 error", err);
         }
     };
 }

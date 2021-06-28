@@ -102,6 +102,7 @@ class StartJob extends MedicationJob {
     const now = moment();
     const currentTimeStamp = now.unix();
     for (const participant of participants) {
+      if (participant !== actorId) {
       templateData.push({
         actor: actorId,
         actorRoleId: user_role_id,
@@ -112,6 +113,7 @@ class StartJob extends MedicationJob {
         time: start_time,
         start_time: start_time
       });
+    }
     }
     console.log("Returning templateData: ", templateData);
     return templateData;

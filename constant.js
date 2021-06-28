@@ -1,7 +1,7 @@
 export const ACTION_TYPE = {
   FOLLOWUP: "followup",
   MEDICATION: "medication",
-  EXERCISE: "exercise",
+  WORKOUT: "workout",
   DIET: "diet",
   MATERIAL_DELIVERY: "material_delivery"
 };
@@ -22,6 +22,8 @@ export const EVENT_TYPE = {
   MEDICATION_REMINDER: "medication-reminder",
   CARE_PLAN_ACTIVATION: "careplan-activation",
   APPOINTMENT_TIME_ASSIGNMENT: "appointment-time-assignment",
+  DIET: "diet",
+  WORKOUT: "workout",
   ALL: "all",
 };
 
@@ -76,6 +78,16 @@ export const DAYS_MOBILE = [
   FRIDAY,
   SATURDAY
 ];
+
+export const DAYS_INTEGER = {
+  [SUNDAY]: 0,
+  [MONDAY]: 1,
+  [TUESDAY]: 2,
+  [WEDNESDAY]: 3,
+  [THURSDAY]: 4,
+  [FRIDAY]: 5,
+  [SATURDAY]: 6
+};
 
 export const SEVERITY = {
   MILD: "MILD",
@@ -245,9 +257,18 @@ export const NOTIFICATION_VERB = {
   MRL_GENERATION: "MRL_GENERATION",
   VITAL_CREATE: "VITAL_CREATE",
   VITAL_START: "VITAL_START",
+  VITAL_RESPONSE: "vital_response",
   CARE_PLAN_CREATE: "CAREPLAN_CREATE",
   DEACTIVATE_DOCTOR: "DEACTIVATE_DOCTOR",
-  ACTIVATE_DOCTOR:"ACTIVATE_DOCTOR"
+  ACTIVATE_DOCTOR:"ACTIVATE_DOCTOR",
+  DIET_CREATION: "diet_create",
+  DIET_START: "diet_start",
+  DIET_PRIOR: "diet_prior",
+  DIET_RESPONSE: "diet_response",  
+  WORKOUT_CREATION: "workout_create",
+  WORKOUT_START: "workout_start",
+  WORKOUT_PRIOR: "workout_prior",
+  WORKOUT_RESPONSE: "workout_response"
 };
 
 export const NOTIFICATION_STAGES = {
@@ -259,7 +280,8 @@ export const NOTIFICATION_STAGES = {
   DELETE: "Delete",
   SHARE: "Share",
   EDIT_NOTES: "Edit_Notes",
-  APPROVED: "Approve"
+  APPROVED: "Approve",
+  RESPONSE_ADDED: "Response_added"
 };
 
 export const NOTIFICATION_URLS = {
@@ -348,7 +370,11 @@ export const DB_TABLES = {
   USER_DEVICES: "user_devices",
   SYMPTOMS: "symptoms",
   VITAL_TEMPLATES: "vital_templates",
-  VITALS: "vitals"
+  VITALS: "vitals",
+  FOOD_ITEMS:"food_items",
+  PORTIONS:"portions",
+  FOOD_GROUPS:"food_groups",
+  DIET_FOOD_GROUP_MAPPINGS:"diet_food_group_mappings"
 };
 
 export const ARTICLE_TYPE = {
@@ -371,7 +397,9 @@ export const DOCUMENT_PARENT_TYPE = {
   SYMPTOM_VIDEO: "symptom_video",
   APPOINTMENT_DOC: "appointment_doc",
   REPORT: "report",
-  PRESCRIPTION_PDF: "prescription_pdf"
+  PRESCRIPTION_PDF: "prescription_pdf",
+  DIET_RESPONSE: "diet_response",
+  EXERCISE_CONTENT: "exercise_content"
 };
 
 export const ONBOARDING_STATUS = {
@@ -402,7 +430,8 @@ export const EVENT_STATUS = {
   COMPLETED: "completed",
   EXPIRED: "expired",
   CANCELLED: "cancelled",
-  STARTED: "started"
+  STARTED: "started",
+  PRIOR: "prior"
 };
 
 export const EMAIL_TEMPLATE_NAME = {
@@ -635,8 +664,14 @@ export const FEATURE_TYPE = {
   MEDICATION: "medication",
   VITAL: "vital",
   TERMS_OF_SERVICE: "terms_of_service",
-  PRIVACY_POLICY: "privacy_policy"
+  PRIVACY_POLICY: "privacy_policy",
+  TERMS_OF_PAYMENT:"terms_of_payment"
 };
+
+export const TERMS_AND_CONDITIONS_TYPES = {
+  TERMS_OF_PAYMENT:"terms_of_payment",
+  DEFAULT_TERMS_OF_PAYMENT:"default_terms_of_payment"
+}
 
 export const BLANK_STATE = "";
 
@@ -660,12 +695,14 @@ export const CATEGORY_ONE = {
   index: "1",
   name:"",
   items: [
-    {name: "CAPSULE", defaultUnit: MG, id: 1},
-    {name: "SUSPENSION", defaultUnit: MG, id: 2},
-    {name: "GELS", defaultUnit: ML, id: 3},
-    {name:"LOTIONS", defaultUnit: ML, id: 4},
-    {name:"LINIMENTS", defaultUnit: ML, id: 5},
-    {name: "LOZENGES", defaultUnit: MG, id: 6}
+    {name: "TABLET", defaultUnit: MG, id: 1},
+    {name: "SYRUP", defaultUnit: ML, id: 2},
+    {name: "CAPSULE", defaultUnit: MG, id: 3},
+    {name: "SUSPENSION", defaultUnit: MG, id: 4},
+    {name: "GELS", defaultUnit: ML, id: 5},
+    {name:"LOTIONS", defaultUnit: ML, id: 6},
+    {name:"LINIMENTS", defaultUnit: ML, id: 7},
+    {name: "LOZENGES", defaultUnit: MG, id: 8}
   ]
 };
 
@@ -673,10 +710,10 @@ export const CATEGORY_TWO = {
   index: "2",
   name:"",
   items: [
-    {name:"SPRAY", defaultUnit: ML, id: 7},
-    {name:"NEBULISER", defaultUnit: MG, id: 8},
-    {name:"CREAM", defaultUnit: ML, id: 9},
-    {name:"OINTMENT", defaultUnit: ML, id: 10},
+    {name:"SPRAY", defaultUnit: ML, id: 9},
+    {name:"NEBULISER", defaultUnit: MG, id: 10},
+    {name:"CREAM", defaultUnit: ML, id: 11},
+    {name:"OINTMENT", defaultUnit: ML, id: 12},
   ],
 };
 
@@ -685,9 +722,9 @@ export const CATEGORY_THREE = {
   index: "3",
   name:"",
   items: [
-    {name:"RECTAL SUPPOSITORY", defaultUnit: MG, id: 11},
-    {name:"RECTAL ENEMA", defaultUnit: MG, id: 12},
-    {name:"PESSARIES OF VAGINAL", defaultUnit: MG, id: 13},
+    {name:"RECTAL SUPPOSITORY", defaultUnit: MG, id: 13},
+    {name:"RECTAL ENEMA", defaultUnit: MG, id: 14},
+    {name:"PESSARIES OF VAGINAL", defaultUnit: MG, id: 15},
   ],
 };
 
@@ -695,7 +732,7 @@ export const CATEGORY_FOUR = {
   index: "4",
   name:"",
   items: [
-    {name:"INHALER", defaultUnit: ML, id: 14},
+    {name:"INHALER", defaultUnit: ML, id: 16},
   ],
 };
 
@@ -703,10 +740,10 @@ export const CATEGORY_FIVE = {
   index: "5",
   name:"INJECTION",
   items: [
-    {name:"I/D INTRDERMAL", defaultUnit: ML, id: 15},
-    {name:"S/C SUBCUTANEOUS", defaultUnit: ML, id: 16},
-    {name:"I/M INTRAMUSCULAR", defaultUnit: ML, id: 17},
-    {name:"I/V INTRAVENOUS", defaultUnit: ML, id: 18},
+    {name:"I/D INTRDERMAL", defaultUnit: ML, id: 17},
+    {name:"S/C SUBCUTANEOUS", defaultUnit: ML, id: 18},
+    {name:"I/M INTRAMUSCULAR", defaultUnit: ML, id: 19},
+    {name:"I/V INTRAVENOUS", defaultUnit: ML, id: 20},
   ],
 };
 
@@ -896,6 +933,7 @@ export const CONSENT_TYPE = {
 };
 
 export const S3_DOWNLOAD_FOLDER = "s3Downloads";
+export const S3_DOWNLOAD_FOLDER_PROVIDER = "s3Downloads/provider";
 export const PRESCRIPTION_PDF_FOLDER = "prescriptionPdfs";
 
 export const FEATURES = {
@@ -1537,4 +1575,20 @@ export const DIAGNOSIS_TYPE = {
     id: "2",
     text:"probable"
   }
+}
+
+export const DAYS_TEXT = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
+
+export const DIET_RESPONSE_STATUS = {
+  DONE: "DONE",
+  SKIPPED: "SKIPPED",
+  EXPIRED: "EXPIRED",
+  PARTIALLY_DONE: "PARTIALLY_DONE"
+}
+
+export const WORKOUT_RESPONSE_STATUS = {
+  DONE: "DONE",
+  SKIPPED: "SKIPPED",
+  EXPIRED: "EXPIRED",
+  PARTIALLY_DONE: "PARTIALLY_DONE"
 }

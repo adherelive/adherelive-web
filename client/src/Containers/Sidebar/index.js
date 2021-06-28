@@ -1,4 +1,6 @@
 import { connect } from "react-redux";
+import { withRouter } from "react-router-dom";
+
 import SideBar from "../../Components/Sidebar";
 import { switchUserRole } from "../../modules/userRoles";
 import {authCategorySelector} from "../../modules/doctors/selectors";
@@ -35,4 +37,6 @@ const mapDispatchToProps = (dispatch) => {
   };
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(SideBar);
+export default withRouter(
+  connect(mapStateToProps, mapDispatchToProps)(SideBar)
+);

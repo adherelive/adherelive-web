@@ -506,6 +506,21 @@ const messages = defineMessages({
         description: "",
         defaultMessage: "Reports"
     },
+    food_items:{
+        id: "app.patient_profile.food.items",
+        description: "",
+        defaultMessage: "Food Items"
+    },
+    diet:{
+        id: "app.patient_profile.diet",
+        description: "",
+        defaultMessage: "Diet"
+    },
+    workout:{
+        id: "app.patient_profile.workout",
+        description: "",
+        defaultMessage: "Workout"
+    },
     prescription:{
         id: "app.patient_profile.prescription",
         description: "",

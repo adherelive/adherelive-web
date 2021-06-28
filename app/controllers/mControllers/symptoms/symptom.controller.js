@@ -23,13 +23,14 @@ import {
   USER_CATEGORY,
   ALLOWED_VIDEO_EXTENSIONS,
   EVENT_TYPE,
-  MESSAGE_TYPES
+  EVENT_STATUS,
+  MESSAGE_TYPES,
 } from "../../../../constant";
 import { getFilePath } from "../../../helper/filePath";
 import carePlanService from "../../../services/carePlan/carePlan.service";
 
-
 import ChatJob from "../../../JobSdk/Chat/observer";
+import SymptomsJob from "../../../JobSdk/Symptoms/observer";
 import NotificationSdk from "../../../NotificationSdk";
 
 const Log = new Logger("MOBILE > SYMPTOM > CONTROLLER");
@@ -48,7 +49,8 @@ class SymptomController extends Controller {
       const {
         body,
         params: { patient_id } = {},
-        userDetails: { userId, userRoleId } = {}
+        // userDetails: { userId, userRoleId } = {}
+        userDetails: { userId,  userRoleId, userData: { category } = {},} = {},
       } = req;
       const {
         care_plan_id,
@@ -58,8 +60,11 @@ class SymptomController extends Controller {
         text = "",
         audios = [],
         photos = [],
-        videos = []
+        videos = [],
       } = body || {};
+
+
+      const patientData = await PatientWrapper(null, patient_id);
 
       const symptomData = await SymptomService.create({
         patient_id,
@@ -67,9 +72,9 @@ class SymptomController extends Controller {
         config: {
           duration,
           parts,
-          side
+          side,
         },
-        text
+        text,
       });
 
       const symptom = await SymptomWrapper(symptomData);
@@ -82,14 +87,14 @@ class SymptomController extends Controller {
         const { name, file } = audio || {};
         const audioExists = await UploadDocumentService.getDocumentByName({
           name,
-          parent_id: symptom.getSymptomId()
+          parent_id: symptom.getSymptomId(),
         });
         if (!audioExists) {
           const addDocument = await UploadDocumentService.addDocument({
             parent_type: DOCUMENT_PARENT_TYPE.SYMPTOM_AUDIO,
             parent_id: symptom.getSymptomId(),
             document: getFilePath(file),
-            name
+            name,
           });
           const document = await DocumentWrapper(addDocument);
           uploadDocumentData[
@@ -103,14 +108,14 @@ class SymptomController extends Controller {
         const { name, file } = photo || {};
         const audioExists = await UploadDocumentService.getDocumentByName({
           name,
-          parent_id: symptom.getSymptomId()
+          parent_id: symptom.getSymptomId(),
         });
         if (!audioExists) {
           const addDocument = await UploadDocumentService.addDocument({
             parent_type: DOCUMENT_PARENT_TYPE.SYMPTOM_PHOTO,
             parent_id: symptom.getSymptomId(),
             document: getFilePath(file),
-            name
+            name,
           });
           const document = await DocumentWrapper(addDocument);
           uploadDocumentData[
@@ -124,14 +129,14 @@ class SymptomController extends Controller {
         const { name, file } = video || {};
         const videoExists = await UploadDocumentService.getDocumentByName({
           name,
-          parent_id: symptom.getSymptomId()
+          parent_id: symptom.getSymptomId(),
         });
         if (!videoExists) {
           const addDocument = await UploadDocumentService.addDocument({
             parent_type: DOCUMENT_PARENT_TYPE.SYMPTOM_VIDEO,
             parent_id: symptom.getSymptomId(),
             document: getFilePath(file),
-            name
+            name,
           });
           const document = await DocumentWrapper(addDocument);
           uploadDocumentData[
@@ -142,52 +147,120 @@ class SymptomController extends Controller {
 
       const carePlans = await carePlanService.getMultipleCarePlanByData({
         expired_on: null,
-        patient_id
+        patient_id,
       });
+
+      let allUniqueDoctorsToNotifyData = {};
+      let doctorLatestCareplanData = {};
 
       for (const carePlanData of carePlans) {
         const carePlan = await CarePlanWrapper(carePlanData);
         const doctorId = carePlan.getDoctorId();
         const doctorRoleId = carePlan.getUserRoleId();
         const doctorData = await DoctorWrapper(null, doctorId);
-        const patientData = await PatientWrapper(null, patient_id);
+        
 
         const chatJSON = JSON.stringify({
           ...(await symptom.getAllInfo()),
           upload_documents: {
-            ...uploadDocumentData
+            ...uploadDocumentData,
           },
           symptom_id: symptom.getSymptomId(),
-          type: EVENT_TYPE.SYMPTOMS
+          type: EVENT_TYPE.SYMPTOMS,
         });
 
-        const twilioMsg = await twilioService.addSymptomMessage(
-          doctorRoleId,
-          userRoleId,
-          chatJSON
-        );
+        // const twilioMsg = await twilioService.addSymptomMessage(
+        //   doctorData.getUserId(),
+        //   patientData.getUserId(),
+        //   chatJSON
+        // );
 
-        const eventData = {
-          participants: [doctorData.getUserId(), patientData.getUserId()],
-          participant_role_ids: [doctorRoleId, userRoleId],
+        // const eventData = {
+        //   participants: [doctorData.getUserId(), patientData.getUserId()],
+        //   actor: {
+        //     id: patientData.getUserId(),
+        //     details: {
+        //       name: patientData.getFullName(),
+        //       category: USER_CATEGORY.PATIENT
+        //     }
+        //   },
+        //   details: {
+        //     message: `A new symptom is added.`
+        //   }
+        // };
+
+        if (
+          Object.keys(allUniqueDoctorsToNotifyData).indexOf(
+            doctorData.getUserId()
+          ) === -1
+        ) {
+          allUniqueDoctorsToNotifyData[doctorData.getUserId()] = {
+            eventData: {
+              participants: [doctorData.getUserId(), patientData.getUserId()],
+              actor: {
+                id: patientData.getUserId(),
+                details: {
+                  name: patientData.getFullName(),
+                  category: USER_CATEGORY.PATIENT,
+                },
+              },
+              details: {
+                message: `A new symptom is added.`,
+              },
+            },
+            twilio: {
+              doctor: doctorData.getUserId(),
+              patient: patientData.getUserId(),
+              content: chatJSON,
+            },
+          };
+
+          doctorLatestCareplanData[doctorData.getUserId()] = carePlan.getCarePlanId();
+        }
+
+        // const chatJob = ChatJob.execute(
+        //   MESSAGE_TYPES.USER_MESSAGE,
+        //   eventData
+        // );
+        // await NotificationSdk.execute(chatJob);
+      }
+
+      if (Object.keys(allUniqueDoctorsToNotifyData).length > 0) {
+
+        const allDoctorIds = Object.keys(allUniqueDoctorsToNotifyData).map((id) => {
+          return(parseInt(id, 10))
+        })
+
+        const symptomNotificationData = {
+          participants : [userId, ...allDoctorIds],
           actor: {
-            id: patientData.getUserId(),
-            user_role_id: userRoleId,
-            details: {
-              name: patientData.getFullName(),
-              category: USER_CATEGORY.PATIENT
-            }
+            id: userId,
+            details: { name: patientData.getFullName(), category }
           },
-          details: {
-            message: `A new symptom is added.`
-          }
-        };
-  
-        const chatJob = ChatJob.execute(
-          MESSAGE_TYPES.USER_MESSAGE,
-          eventData
+          patient_id,
+          care_plan_id_data: doctorLatestCareplanData,
+          event_id: symptom.getSymptomId()
+        }
+
+        const symptomJob = SymptomsJob.execute(
+          EVENT_STATUS.SCHEDULED,
+          symptomNotificationData
         );
-        await NotificationSdk.execute(chatJob);
+        await NotificationSdk.execute(symptomJob);
+
+        for (const doctorId in allUniqueDoctorsToNotifyData) {
+          // const chatJob = ChatJob.execute(
+          //   MESSAGE_TYPES.USER_MESSAGE,
+          //   allUniqueDoctorsToNotifyData[doctorId].eventData
+          // );
+          // await NotificationSdk.execute(chatJob);
+
+          // twilio
+          const { doctor, patient, content } =
+            allUniqueDoctorsToNotifyData[doctorId].twilio || {};
+
+          await twilioService.addSymptomMessage(doctor, patient, content);
+        }
       }
 
       return raiseSuccess(
@@ -196,7 +269,7 @@ class SymptomController extends Controller {
         {
           ...(await symptom.getAllInfo()),
           ...(await symptom.getReferenceInfo()),
-          symptom_ids: [symptom.getSymptomId()]
+          symptom_ids: [symptom.getSymptomId()],
         },
         "Symptom added successfully"
       );
@@ -220,7 +293,7 @@ class SymptomController extends Controller {
         200,
         {
           file,
-          name
+          name,
         },
         "Symptom audio added successfully"
       );
@@ -237,7 +310,7 @@ class SymptomController extends Controller {
 
       const {
         file: videoFile,
-        userDetails: { userId, userData: { category } = {} } = {}
+        userDetails: { userId, userData: { category } = {} } = {},
       } = req;
 
       if (category === USER_CATEGORY.PATIENT) {
@@ -255,7 +328,7 @@ class SymptomController extends Controller {
             200,
             {
               file,
-              name
+              name,
             },
             "Symptom video added successfully"
           );
@@ -297,7 +370,7 @@ class SymptomController extends Controller {
         200,
         {
           file,
-          name
+          name,
         },
         "Symptom photo added successfully"
       );
@@ -329,7 +402,7 @@ class SymptomController extends Controller {
             users,
             upload_documents,
             patients,
-            doctors
+            doctors,
           } = await symptom.getReferenceInfo();
           symptomData = { ...symptomData, ...symptoms };
           userData = { ...userData, ...users };
@@ -344,20 +417,20 @@ class SymptomController extends Controller {
         200,
         {
           symptoms: {
-            ...symptomData
+            ...symptomData,
           },
           upload_documents: {
-            ...documentData
+            ...documentData,
           },
           users: {
-            ...userData
+            ...userData,
           },
           doctors: {
-            ...doctorData
+            ...doctorData,
           },
           patients: {
-            ...patientData
-          }
+            ...patientData,
+          },
         },
         "Symptom details fetched successfully"
       );

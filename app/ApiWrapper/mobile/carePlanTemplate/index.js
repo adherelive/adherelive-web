@@ -10,6 +10,8 @@ import TemplateMedicationWrapper from "../../../ApiWrapper/mobile/templateMedica
 import MedicineWrapper from "../../../ApiWrapper/mobile/medicine";
 import TemplateVitalWrapper from "../../mobile/templateVital";
 import VitalTemplateWrapper from "../../mobile/vitalTemplates";
+import TemplateDietWrapper from "../templateDiet";
+import TemplateWorkoutWrapper from "../templateWorkout";
 
 class CarePlanTemplateWrapper extends BaseCarePlanTemplate {
   constructor(data) {
@@ -26,7 +28,7 @@ class CarePlanTemplateWrapper extends BaseCarePlanTemplate {
       condition_id,
       user_id,
       details = {},
-      createdAt = null
+      createdAt = null,
     } = _data || {};
 
     return {
@@ -36,10 +38,10 @@ class CarePlanTemplateWrapper extends BaseCarePlanTemplate {
         treatment_id,
         severity_id,
         condition_id,
-        user_id
+        user_id,
       },
       details,
-      created_at: createdAt
+      created_at: createdAt,
     };
   };
 
@@ -52,7 +54,7 @@ class CarePlanTemplateWrapper extends BaseCarePlanTemplate {
       severity_id,
       condition_id,
       user_id,
-      details = {}
+      details = {},
     } = _data || {};
 
     return {
@@ -64,11 +66,11 @@ class CarePlanTemplateWrapper extends BaseCarePlanTemplate {
             treatment_id,
             severity_id,
             condition_id,
-            user_id
+            user_id,
           },
-          details
-        }
-      }
+          details,
+        },
+      },
     };
   };
 
@@ -78,8 +80,9 @@ class CarePlanTemplateWrapper extends BaseCarePlanTemplate {
       getBasic,
       getTemplateAppointments,
       getTemplateMedications,
-        getTemplateVitals,
-      _data
+      getTemplateVitals,
+      getTemplateDiets,
+      getTemplateWorkouts,
     } = this;
 
     let templateAppointments = [];
@@ -115,9 +118,11 @@ class CarePlanTemplateWrapper extends BaseCarePlanTemplate {
     let vitalTemplateIds = [];
 
     const allVitals = getTemplateVitals();
-    if(allVitals.length > 0){
-      for(let index = 0; index < allVitals.length; index++) {
-        const templateVital = await TemplateVitalWrapper({data: allVitals[index]});
+    if (allVitals.length > 0) {
+      for (let index = 0; index < allVitals.length; index++) {
+        const templateVital = await TemplateVitalWrapper({
+          data: allVitals[index],
+        });
         templateVitals[templateVital.getId()] = templateVital.getBasicInfo();
         templateVitalIds.push(templateVital.getId());
         vitalTemplateIds.push(templateVital.getVitalTemplateId());
@@ -127,20 +132,79 @@ class CarePlanTemplateWrapper extends BaseCarePlanTemplate {
     // get vital templates
     let vitalTemplates = {};
 
-    const allVitalTemplates = await vitalTemplateService.getAllByData({
-      id: vitalTemplateIds
-    }) || [];
+    const allVitalTemplates =
+      (await vitalTemplateService.getAllByData({
+        id: vitalTemplateIds,
+      })) || [];
 
-    if(allVitalTemplates.length > 0) {
-      for(let index = 0; index < allVitalTemplates.length; index++) {
-        const vitalTemplate = await VitalTemplateWrapper({data: allVitalTemplates[index]});
-        vitalTemplates[vitalTemplate.getVitalTemplateId()] = vitalTemplate.getBasicInfo();
+    if (allVitalTemplates.length > 0) {
+      for (let index = 0; index < allVitalTemplates.length; index++) {
+        const vitalTemplate = await VitalTemplateWrapper({
+          data: allVitalTemplates[index],
+        });
+        vitalTemplates[
+          vitalTemplate.getVitalTemplateId()
+        ] = vitalTemplate.getBasicInfo();
+      }
+    }
+
+    // diet_templates
+    let templateDietIds = [];
+    let allTemplateDiets = {};
+    let allPortions = {};
+    let allFoodItemDetails = {};
+    let allFoodItems = {};
+
+    const allDiets = getTemplateDiets() || [];
+    if (allDiets.length > 0) {
+      for (let index = 0; index < allDiets.length; index++) {
+        const templateDiet = await TemplateDietWrapper({
+          data: allDiets[index],
+        });
+        const {
+          template_diets,
+          portions,
+          food_item_details,
+          food_items,
+        } = await templateDiet.getReferenceInfo();
+        allTemplateDiets = { ...allTemplateDiets, ...template_diets };
+        allFoodItemDetails = { ...allFoodItemDetails, ...food_item_details };
+        allFoodItems = { ...allFoodItems, ...food_items };
+        allPortions = { ...allPortions, ...portions };
+        templateDietIds.push(templateDiet.getId());
+      }
+    }
+
+    // workout_templates
+    let templateWorkoutIds = [];
+    let allTemplateWorkouts = {};
+    let allRepetitions = {};
+    let allExerciseDetails = {};
+    let allExercises = {};
+
+    const allWorkouts = getTemplateWorkouts() || [];
+    if (allWorkouts.length > 0) {
+      for (let index = 0; index < allWorkouts.length; index++) {
+        const templateWorkout = await TemplateWorkoutWrapper({
+          data: allWorkouts[index],
+        });
+        const {
+          template_workouts,
+          repetitions,
+          exercise_details,
+          exercises,
+        } = await templateWorkout.getReferenceInfo();
+        allTemplateWorkouts = { ...allTemplateWorkouts, ...template_workouts };
+        allExerciseDetails = { ...allExerciseDetails, ...exercise_details };
+        allExercises = { ...allExercises, ...exercises };
+        allRepetitions = {...allRepetitions, ...repetitions};
+        templateWorkoutIds.push(templateWorkout.getId());
       }
     }
 
 
     const medicineData = await medicineService.getMedicineByData({
-      id: medicineIds
+      id: medicineIds,
     });
 
     for (const medicine of medicineData) {
@@ -154,25 +218,37 @@ class CarePlanTemplateWrapper extends BaseCarePlanTemplate {
           ...this.getBasicInfo(),
           template_appointment_ids: appointmentIds,
           template_medication_ids: medicationIds,
-          template_vital_ids: templateVitalIds
-        }
+          template_vital_ids: templateVitalIds,
+          template_diet_ids: templateDietIds,
+          template_workout_ids: templateWorkoutIds,
+        },
       },
       template_appointments: {
-        ...templateAppointments
+        ...templateAppointments,
       },
       template_medications: {
-        ...templateMedications
+        ...templateMedications,
       },
       template_vitals: {
         ...templateVitals,
       },
+      template_diets: allTemplateDiets,
+      food_items: allFoodItems,
+      food_item_details: allFoodItemDetails,
+      portions: allPortions,
+
+      template_workouts: allTemplateWorkouts,
+      exercise_details: allExerciseDetails,
+      exercises: allExercises,
+      repetitions: allRepetitions,
+
       medicines: {
-        ...medicines
+        ...medicines,
       },
       vital_templates: {
         ...vitalTemplates,
       },
-      care_plan_template_id: this.getCarePlanTemplateId()
+      care_plan_template_id: this.getCarePlanTemplateId(),
     };
   };
 }

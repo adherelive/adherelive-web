@@ -1,8 +1,8 @@
 import React, { Component, Fragment } from "react";
 import { injectIntl } from "react-intl";
-import { DeleteTwoTone, LoadingOutlined } from "@ant-design/icons";
+import { DeleteTwoTone, LoadingOutlined , EyeTwoTone} from "@ant-design/icons";
 import uuid from "react-uuid";
-import { Input, DatePicker, Upload, message, Spin } from "antd";
+import { Input, DatePicker, Upload, message, Spin , Button } from "antd";
 
 import Select from "antd/es/select";
 import { REQUEST_TYPE, PATH, USER_CATEGORY } from "../../constant";
@@ -18,6 +18,7 @@ import throttle from "lodash-es/throttle";
 import moment from "moment";
 import { withRouter } from "react-router-dom";
 import messages from "./messages";
+import Modal from "antd/es/modal";
 
 const MALE = "m";
 const FEMALE = "f";
@@ -47,27 +48,32 @@ class QualificationRegister extends Component {
       fetchingColleges: false,
       councils: {},
       fetchingCouncils: false,
-      doctor_id: ""
+      doctor_id: "",
+      viewModalVisible: false,
+      viewModalSrc: "",
+      searchedDegreeText : "",
+      searchSpecialityText : "",
+      searchedCounciText : ""
     };
 
-    this.handleDegreeSearch = throttle(
-      this.handleDegreeSearch.bind(this),
-      2000
-    );
+    // this.handleDegreeSearch = throttle(
+    //   this.handleDegreeSearch.bind(this),
+    //   2000
+    // );
 
-    this.handleCollegeSearch = throttle(
-      this.handleCollegeSearch.bind(this),
-      2000
-    );
-    this.handleCouncilSearch = throttle(
-      this.handleCouncilSearch.bind(this),
-      2000
-    );
+    // this.handleCollegeSearch = throttle(
+    //   this.handleCollegeSearch.bind(this),
+    //   2000
+    // );
+    // this.handleCouncilSearch = throttle(
+    //   this.handleCouncilSearch.bind(this),
+    //   2000
+    // );
 
-    this.handleSpecialitySearch = throttle(
-      this.handleSpecialitySearch.bind(this),
-      2000
-    );
+    // this.handleSpecialitySearch = throttle(
+    //   this.handleSpecialitySearch.bind(this),
+    //   2000
+    // );
   }
 
   componentDidMount() {
@@ -109,7 +115,7 @@ class QualificationRegister extends Component {
 
       if (parseInt(user_id) === parseInt(authenticated_user)) {
         docGender = gender;
-        docSpeciality = speciality_id;
+        docSpeciality = speciality_id ? speciality_id.toString() : speciality_id;
         doctorId = id;
         docQualificationIds = doctor_qualification_ids;
         docRegistrationIds = doctor_registration_ids;
@@ -125,7 +131,7 @@ class QualificationRegister extends Component {
           doctor_registration_ids = []
         } = doctors[doctor_id] || {};
         docGender = gender;
-        docSpeciality = speciality_id;
+        docSpeciality = speciality_id ? speciality_id.toString() : speciality_id;
         doctorId = id;
         docQualificationIds = doctor_qualification_ids;
         docRegistrationIds = doctor_registration_ids;
@@ -286,7 +292,7 @@ class QualificationRegister extends Component {
   };
 
   setSpeciality = value => {
-    this.setState({ speciality_id: value });
+    this.setState({ speciality_id: value.toString() });
   };
 
   formatMessage = data => this.props.intl.formatMessage(data);
@@ -360,6 +366,17 @@ class QualificationRegister extends Component {
     }
     return options;
   };
+
+  setCustomDegree = (key) =>  {
+    let { education = {} } = this.state;
+    let newEducation = education;
+
+    const {searchedDegreeText:value = ''} = this.state;
+
+    newEducation[key].degree_id = value;
+    this.setState({ education: newEducation });
+  };
+
 
   setDegree = key => value => {
     let { education = {} } = this.state;
@@ -843,7 +860,7 @@ class QualificationRegister extends Component {
         // newEducation[key].photo.forEach((file, index) => {
         for (let file of newEducation[key].photo) {
           if (typeof file == "string") {
-            if (file.localeCompare(pic)) {
+            if (file.localeCompare(pic) === 0 ) {
               deleteIndex = index;
             }
           } else {
@@ -891,7 +908,7 @@ class QualificationRegister extends Component {
         // newRegistration[key].photo.forEach((file, index) => {
         for (let file of newRegistration[key].photo) {
           if (typeof file == "string") {
-            if (file.localeCompare(pic)) {
+            if (file.localeCompare(pic) === 0) {
               deleteIndex = index;
             }
           } else {
@@ -1109,7 +1126,7 @@ class QualificationRegister extends Component {
     });
   };
 
-  async handleDegreeSearch(data) {
+   handleDegreeSearch = key => async (data) =>  {
     try {
       if (data) {
         const { searchDegree } = this.props;
@@ -1117,12 +1134,6 @@ class QualificationRegister extends Component {
         const response = await searchDegree(data);
         const { status } = response;
         if (status) {
-          // const { degrees = {} } = responseData;
-          // const degreeList = {};
-          // Object.keys(degrees).forEach(id => {
-          //   degreeList[id] = degrees[id];
-          // });
-          // this.setState({ degrees: degreeList, fetchingDegrees: false });
           this.setState({ fetchingDegrees: false });
         } else {
           this.setState({ fetchingDegrees: false });
@@ -1130,6 +1141,11 @@ class QualificationRegister extends Component {
       } else {
         this.setState({ fetchingDegrees: false });
       }
+      this.setState({searchedDegreeText:data});
+      
+      await this.setCustomDegree(key);
+
+
     } catch (err) {
       console.log("err", err);
       message.error(this.formatMessage(messages.somethingWentWrong));
@@ -1137,7 +1153,7 @@ class QualificationRegister extends Component {
     }
   }
 
-  async handleSpecialitySearch(data = "") {
+   handleSpecialitySearch = async(data = "") => {
     try {
       // if (data) {
       const { searchSpecialities } = this.props;
@@ -1152,6 +1168,12 @@ class QualificationRegister extends Component {
       // } else {
       //   this.setState({ fetchingSpeciality: false });
       // }
+      if(data.length){
+        this.setState({searchSpecialityText:data});
+      
+        await this.setCustomSpeciality();
+      }
+
     } catch (err) {
       console.log("err", err);
       message.warn("Something wen't wrong. Please try again later");
@@ -1159,12 +1181,21 @@ class QualificationRegister extends Component {
     }
   }
 
+  setCustomSpeciality = () => {
+
+    const {searchSpecialityText:value = '' } = this.state;
+
+
+    this.setState({ speciality_id: value });
+
+  }
+
   callHandleCollegeSearch = key => data => {
     this.handleCollegeSearch({ key, data });
   };
 
   // handleCollegeSearch =  (key) => async (data) => {
-  async handleCollegeSearch({ key, data }) {
+   handleCollegeSearch = async({ key, data }) => {
     try {
       if (data) {
         const { searchCollege } = this.props;
@@ -1206,7 +1237,7 @@ class QualificationRegister extends Component {
     }
   }
 
-  async handleCouncilSearch(data) {
+  handleCouncilSearch = (key) => async(data) => {
     try {
       if (data) {
         const { searchCouncil } = this.props;
@@ -1228,12 +1259,40 @@ class QualificationRegister extends Component {
       } else {
         this.setState({ fetchingCouncils: false });
       }
+      this.setState({searchedCounciText:data});
+      
+      await this.setCustomCouncil(key);
     } catch (err) {
       console.log("err", err);
       message.error(this.formatMessage(messages.somethingWentWrong));
       this.setState({ fetchingCouncils: false });
     }
   }
+
+  setCustomCouncil = (key) =>  {
+    let { registration = {} , searchedCounciText = '' } = this.state;
+    let newRegistration = registration;
+    newRegistration[key].registration_council_id = searchedCounciText;
+    this.setState({ registration: newRegistration });
+  };
+
+  handleDocumentViewOpen = src => () => {
+  
+    this.setState({
+      viewModalVisible: true,
+      viewModalSrc: src
+    });
+
+    
+    
+  };
+
+  handleDocumentViewClose = () => {
+    this.setState({
+      viewModalVisible: false,
+      viewModalSrc: ""
+    });
+  };
 
   renderEducation = () => {
     let { education = {}, educationKeys = [], fileList = [], uploadProgress = false } = this.state;
@@ -1283,7 +1342,7 @@ class QualificationRegister extends Component {
                 )}
               </div>
               <Select
-                onSearch={this.handleDegreeSearch}
+                onSearch={this.handleDegreeSearch(key)}
                 notFoundContent={
                   this.state.fetchingDegrees ? (
                     <Spin size="small" />
@@ -1291,6 +1350,7 @@ class QualificationRegister extends Component {
                     this.formatMessage(messages.noMatch)
                   )
                 }
+                showSearch
                 className="form-inputs"
                 placeholder={this.formatMessage(messages.selectDegree)}
                 showSearch
@@ -1350,6 +1410,7 @@ class QualificationRegister extends Component {
               {/* <Input
                 placeholder="Year"
                 className={"form-inputs"}
+
                 value={year}
                 onChange={e => this.setYear(key, e)}
               /> */}
@@ -1372,13 +1433,19 @@ class QualificationRegister extends Component {
                     <div key={`qualification-${index}`} className={"qualification-avatar-uploader"}>
                       <img src={pic} className="wp100 hp100 br4" />
                       <div className="overlay"></div>
-                      <div className="button">
+                      <div className="absolute tp45 l0 wp100 flex justify-center align-space-evenly doc-container ">
                         {" "}
                         <DeleteTwoTone
-                          className={"del"}
+                          className={"del doc-opt"}
                           onClick={this.handleRemoveList(key, pic)}
                           twoToneColor="#fff"
                         />{" "}
+                        <EyeTwoTone
+                          className="w20"
+                          className={"del doc-opt pointer"}
+                          onClick={this.handleDocumentViewOpen(pic)}
+                          twoToneColor="#fff"
+                        />
                       </div>
                     </div>
                   );
@@ -1476,7 +1543,7 @@ class QualificationRegister extends Component {
                 onChange={e => this.setRegCouncil(key, e)}
               /> */}
               <Select
-                onSearch={this.handleCouncilSearch}
+                onSearch={this.handleCouncilSearch(key)}
                 notFoundContent={
                   this.state.fetchingCouncils ? (
                     <Spin size="small" />
@@ -1539,13 +1606,19 @@ class QualificationRegister extends Component {
                     <div key={`registration-${index}`} className={"qualification-avatar-uploader"}>
                       <img src={pic} className="wp100 hp100 br4" />
                       <div className="overlay"></div>
-                      <div className="button">
+                      <div className="absolute tp45 l0 wp100 flex justify-center align-space-evenly doc-container">
                         {" "}
                         <DeleteTwoTone
-                          className={"del"}
+                          className={"del doc-opt "}
                           onClick={this.handleRemoveListRegistration(key, pic)}
                           twoToneColor="#fff"
                         />{" "}
+                        <EyeTwoTone
+                          className="w20"
+                          className={"del doc-opt pointer"}
+                          onClick={this.handleDocumentViewOpen(pic)}
+                          twoToneColor="#fff"
+                        />
                       </div>
                     </div>
                   );
@@ -1595,6 +1668,7 @@ class QualificationRegister extends Component {
     } = this.state;
     let newEducation = Object.values(education);
     let newRegistration = Object.values(registration);
+    
     if (!speciality_id) {
       message.error(this.formatMessage(messages.specialityError));
       return false;
@@ -1807,7 +1881,7 @@ class QualificationRegister extends Component {
           className="form-inputs"
           placeholder="Select Speciality"
           showSearch
-          value={`${speciality_id ? speciality_id : ""}`}
+          value={`${speciality_id ? speciality_id.toString() : ""}`}
           onChange={this.setSpeciality}
           // onFocus={() => handleMedicineSearch("")}
           autoComplete="off"
@@ -1896,6 +1970,10 @@ class QualificationRegister extends Component {
   render() {
     const { authenticated_category = "" } = this.props;
 
+    const { viewModalVisible, viewModalSrc } = this.state;
+
+    const {handleDocumentViewClose } = this;
+
     return (
       <Fragment>
         {/* <SideMenu {...this.props} /> */}
@@ -1924,6 +2002,25 @@ class QualificationRegister extends Component {
             </div>
           </div>
         </div>
+        <Modal
+          visible={viewModalVisible}
+          closable
+          mask
+          maskClosable
+          onCancel={handleDocumentViewClose}
+          width={`50%`}
+          footer={[
+            <Button key="back" onClick={handleDocumentViewClose}>
+              Close
+            </Button>
+          ]}
+        >
+          <img
+            src={viewModalSrc}
+            alt="qualification document"
+            className="wp100"
+          />
+        </Modal>
       </Fragment>
     );
   }

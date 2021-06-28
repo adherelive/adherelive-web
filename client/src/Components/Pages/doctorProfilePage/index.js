@@ -25,7 +25,8 @@ import {
   DeleteTwoTone,
   CheckOutlined,
   CloseOutlined,
-  PlusCircleOutlined
+  PlusCircleOutlined,
+  EyeTwoTone
 } from "@ant-design/icons";
 import moment from "moment";
 import messages from "./messages";
@@ -151,8 +152,8 @@ class DoctorProfilePage extends Component {
     let verified_doctor = false;
 
     if (
-      authPermissions.length &&
-      authenticated_category !== USER_CATEGORY.PROVIDER
+      authPermissions.length ||
+      authenticated_category === USER_CATEGORY.PROVIDER
     ) {
       verified_doctor = true;
     }
@@ -205,13 +206,16 @@ class DoctorProfilePage extends Component {
       registration_numbers: {},
       clinic_names: {},
       active: true,
-      user_id: null
+      user_id: null,
+      viewModalVisible: false,
+      viewModalSrc: "",
+      searchSpecialityText:''
     };
 
-    this.handleSpecialitySearch = throttle(
-      this.handleSpecialitySearch.bind(this),
-      2000
-    );
+    // this.handleSpecialitySearch = throttle(
+    //   this.handleSpecialitySearch.bind(this),
+    //   2000
+    // );
 
     this.handleCollegeSearch = throttle(
       this.handleCollegeSearch.bind(this),
@@ -1779,7 +1783,7 @@ class DoctorProfilePage extends Component {
     }
   };
 
-  async handleSpecialitySearch(data = "") {
+  handleSpecialitySearch = async (data = "") => {
     try {
       // if (data) {
       const { searchSpecialities } = this.props;
@@ -1794,6 +1798,8 @@ class DoctorProfilePage extends Component {
       // } else {
       //   this.setState({ fetchingSpeciality: false });
       // }
+
+      this.setState({searchSpecialityText:data});
     } catch (err) {
       console.log("err", err);
       message.warn("Something went wrong, please try again later");
@@ -1801,7 +1807,7 @@ class DoctorProfilePage extends Component {
     }
   }
 
-  async handleCouncilSearch(data) {
+   handleCouncilSearch=async(data) => {
     try {
       if (data) {
         const { searchCouncil } = this.props;
@@ -1831,15 +1837,32 @@ class DoctorProfilePage extends Component {
   }
   getSpecialityOption = () => {
     const { specialities = {} } = this.props;
+    const {searchSpecialityText = ''} = this.state;
 
-    return Object.keys(specialities).map(id => {
+    let options = [];
+
+   
+
+    options.push( Object.keys(specialities).map(id => {
       const { basic_info: { name } = {} } = specialities[id] || {};
       return (
         <Option key={id} value={id}>
           {name}
         </Option>
       );
-    });
+    })
+    );
+
+    options.push(
+      <Option key={searchSpecialityText} value={searchSpecialityText}>
+      {`${this.formatMessage(messages.addSpeciality)}${" "}"${searchSpecialityText}"`}
+      </Option>
+    )
+   
+
+    return options;
+
+
   };
 
   renderSpecialities = () => {
@@ -1871,10 +1894,10 @@ class DoctorProfilePage extends Component {
           optionFilterProp="children"
           style={{ width: "250px", height: "auto", margin: "0" }}
           autoFocus
-          filterOption={(input, option) =>
-            option.props.children.toLowerCase().indexOf(input.toLowerCase()) >=
-            0
-          }
+          // filterOption={(input, option) =>
+          //   option.props.children.toLowerCase().indexOf(input.toLowerCase()) >=
+          //   0
+          // }
         >
           {this.getSpecialityOption()}
         </Select>
@@ -2235,6 +2258,24 @@ class DoctorProfilePage extends Component {
     this.setState({ modalVisible: true, selectedDocumentId: id });
   };
 
+  handleDocumentViewOpen = src => () => {
+  
+    this.setState({
+      viewModalVisible: true,
+      viewModalSrc: src
+    });
+
+    
+    
+  };
+
+  handleDocumentViewClose = () => {
+    this.setState({
+      viewModalVisible: false,
+      viewModalSrc: ""
+    });
+  };
+
   getDoctorRegistrationDetails = () => {
     const uploadButton = (
       <div>
@@ -2320,7 +2361,7 @@ class DoctorProfilePage extends Component {
                 {upload_document_ids.map(id => {
                   const { basic_info: { document, parent_id } = {} } =
                     upload_documents[id] || {};
-                  if (verified_doctor) {
+                  // if (verified_doctor) {
                     // const documentType =
                     //   document.substring(document.length - 3) || null;
                     
@@ -2348,43 +2389,39 @@ class DoctorProfilePage extends Component {
                       } else {
                         return (
                           <div
-                            key={`q-${id}`}
-                            className="w100 h100 mr6 mt6 mb6 pointer"
-                            onClick={handlePictureModal(id)}
-                          >
-                            <img
-                              src={document}
-                              className="w100 h100 br5"
-                              alt={`qualification document ${id}`}
-                            />
-                          </div>
-                        );
-                      }
-                    }
-                  } else {
-                    return (
-                      <div
                         key={document}
                         className={"qualification-avatar-uploader"}
                       >
                         <img src={document} className="wp100 hp100 br4" />
                         <div className="overlay"></div>
-                        <div className="button">
+                        <div className="absolute tp45 l0 wp100 flex justify-center align-space-evenly doc-container ">
                           {" "}
                           <DeleteTwoTone
-                            className={"del"}
+                            className={"del doc-opt"}
                             onClick={this.handleRemoveListRegistration(
                               parent_id,
                               document
                             )}
                             twoToneColor="#fff"
                           />{" "}
+                           <EyeTwoTone
+                            className="w20"
+                            className={"del doc-opt pointer"}
+                            onClick={this.handleDocumentViewOpen(document)}
+                            twoToneColor="#fff"
+                          />
                         </div>
                       </div>
-                    );
-                  }
+                        );
+                      }
+                    }
+                  // } else {
+                    // return (
+                      
+                    // );
+                  // }
                 })}
-                {!verified_doctor && upload_document_ids.length < 3 && (
+                {verified_doctor && upload_document_ids.length < 3 && (
                   <Upload
                     multiple={true}
                     // beforeUpload={this.handleBeforeUpload(key)}
@@ -2609,25 +2646,11 @@ class DoctorProfilePage extends Component {
                 {upload_document_ids.map(id => {
                   const { basic_info: { document, parent_id } = {} } =
                     upload_documents[id] || {};
-                  if (!verified_doctor) {
-                    return (
-                      <div
-                        key={document}
-                        className={"qualification-avatar-uploader"}
-                      >
-                        <img src={document} className="wp100 hp100 br4" />
-                        <div className="overlay"></div>
-                        <div className="button">
-                          {" "}
-                          <DeleteTwoTone
-                            className={"del"}
-                            onClick={this.handleRemoveList(parent_id, document)}
-                            twoToneColor="#fff"
-                          />{" "}
-                        </div>
-                      </div>
-                    );
-                  } else {
+                  // if (!verified_doctor) {
+                    // return (
+                      
+                    // );
+                  // } else {
                     // const documentType =
                     //   document.substring(document.length - 3) || null;
                     const arr = document.split("?")[0];
@@ -2652,23 +2675,45 @@ class DoctorProfilePage extends Component {
                         );
                       } else {
                         return (
+                          // <div
+                          //   key={`q-${id}`}
+                          //   className="w100 h100 mr6 mt6 mb6 pointer"
+                          //   onClick={handlePictureModal(id)}
+                          // >
+                          //   <img
+                          //     src={document}
+                          //     className="w100 h100 br5"
+                          //     alt={`qualification document ${id}`}
+                          //   />
+                          // </div>
+                          
                           <div
-                            key={`q-${id}`}
-                            className="w100 h100 mr6 mt6 mb6 pointer"
-                            onClick={handlePictureModal(id)}
-                          >
-                            <img
-                              src={document}
-                              className="w100 h100 br5"
-                              alt={`qualification document ${id}`}
-                            />
-                          </div>
+                        key={document}
+                        className={"qualification-avatar-uploader"}
+                      >
+                        <img src={document} className="wp100 hp100 br4" />
+                        <div className="overlay"></div>
+                        <div className="absolute tp45 l0 wp100 flex justify-center align-space-evenly doc-container ">
+                          {" "}
+                          <DeleteTwoTone
+                            className={"del doc-opt"}
+                            onClick={this.handleRemoveList(parent_id, document)}
+                            twoToneColor="#fff"
+                          />{" "}
+                          <EyeTwoTone
+                            className="w20"
+                            className={"del doc-opt pointer"}
+                            onClick={this.handleDocumentViewOpen(document)}
+                            twoToneColor="#fff"
+                          />
+                        </div>
+                      </div>
                         );
                       }
                     }
-                  }
+                  // }
                 })}
-                {!verified_doctor && upload_document_ids.length < 3 && (
+                {verified_doctor && upload_document_ids.length < 3 && (
                   <Upload
                     multiple={true}
                     // beforeUpload={this.handleBeforeUpload(key)}
@@ -3070,6 +3115,9 @@ class DoctorProfilePage extends Component {
       doctor_registration_ids = []
     } = doctors[doctor_user_id] || {};
 
+    const { viewModalVisible, viewModalSrc } = this.state;
+
+    const {handleDocumentViewClose } = this;
     if (loading) {
       return <PageLoading />;
     }
@@ -3188,6 +3236,27 @@ class DoctorProfilePage extends Component {
         {getModalDetails()}
 
         {getProfilePicModal()}
+
+        <Modal
+          visible={viewModalVisible}
+          closable
+          mask
+          maskClosable
+          onCancel={handleDocumentViewClose}
+          width={`50%`}
+          footer={[
+            <Button key="back" onClick={handleDocumentViewClose}>
+              Close
+            </Button>
+          ]}
+        >
+          <img
+            src={viewModalSrc}
+            alt="qualification document"
+            className="wp100"
+          />
+        </Modal>
+
       </Fragment>
     );
   }

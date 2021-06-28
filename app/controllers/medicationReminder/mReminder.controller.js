@@ -473,7 +473,7 @@ class MReminderController extends Controller {
 
       // 2. send sqs message to create new
       const eventScheduleData = {
-        patient_id: participant_id,
+        patient_id: patient.getUserId(),
         type: EVENT_TYPE.MEDICATION_REMINDER,
         event_id: medicationApiDetails.getMReminderId(),
         details: medicationApiDetails.getDetails(),
@@ -547,7 +547,7 @@ class MReminderController extends Controller {
       let timings = {};
 
 
-      if(parseInt(patient_id) !== 0) {
+      if(parseInt(patient_id)) {
         const patient = await PatientWrapper(null, patient_id);
         const timingPreference = await userPreferenceService.getPreferenceByData({
           user_id: patient.getUserId()
@@ -591,7 +591,8 @@ class MReminderController extends Controller {
         "create medication basic details"
       );
     } catch (error) {
-      return raiseServerError(res, 500, error.message, "something went wrong");
+      Logger.debug("Get m-reminder details error ----> ", error);
+      return raiseServerError(res);
     }
   };
 

@@ -17,6 +17,7 @@ class SmsManager {
 
     this.sns.setSMSAttributes({
       attributes: {
+        'DefaultSenderID':'ADHERE-LIVE',
         'DefaultSMSType': 'Transactional',
       }
     });
