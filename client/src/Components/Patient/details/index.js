@@ -1,11 +1,13 @@
 import React, { Component, Fragment } from "react";
 import { injectIntl } from "react-intl";
+import { connect } from "getstream";
 import messages from "./message";
 import edit_image from "../../../Assets/images/edit.svg";
 import { getUploadAppointmentDocumentUrl } from "../../../Helper/urls/appointments";
 import { doRequest } from "../../../Helper/network";
 import { generatePrescriptionUrl } from "../../../Helper/urls/patients";
 import ShareIcon from "../../../Assets/images/redirect3x.png";
+import NotificationDrawer from "../../../Containers/Drawer/notificationDrawer";
 
 import config from "../../../config";
 
@@ -22,7 +24,8 @@ import {
   FEATURES,
   USER_CATEGORY,
   HOST,
-  PATH
+  PATH,
+  TYPE_APPOINTMENTS, TYPE_SYMPTOMS, TYPE_VITALS, TYPE_DIETS,TYPE_WORKOUTS
 } from "../../../constant";
 import { Tabs, Table, Dropdown, Spin, message, Button } from "antd";
 import Modal from "antd/es/modal";
@@ -44,12 +47,19 @@ import SymptomsDrawer from "../../../Containers/Drawer/symptomsDrawer";
 import EditMedicationReminder from "../../../Containers/Drawer/editMedicationReminder";
 import AddReportDrawer from "../../../Containers/Drawer/addReport";
 import EditReportDrawer from "../../../Containers/Drawer/editReport";
-
+import AddFoodItem from "../../../Containers/Drawer/addFoodItem";
+import AddDietDrawer from "../../../Containers/Drawer/addDiet";
+import EditDietDrawer from "../../../Containers/Drawer/editDiet";
+import DietResponseDrawer from "../../../Containers/Drawer/dietResponseDrawer";
+import WorkoutResponseDrawer from "../../../Containers/Drawer/workoutResponseDrawer";
+import AddWorkoutDrawer from "../../../Containers/Drawer/addWorkout"
+import EditWorkoutDrawer from "../../../Containers/Drawer/editWorkout";
 // TABLES
 import VitalTable from "../../../Containers/Vitals/table";
 import MedicationTable from "../../../Containers/Medications/table";
 import ReportTable from "../../../Containers/Reports/table";
-
+import DietTable from "../../../Containers/Diets/table";
+import WorkoutTable from "../../../Containers/Workouts/table";
 import PatientAlerts from "../../../Containers/Patient/common/patientAlerts";
 
 import PatientCarePlans from "./common/patientProfileCarePlans";
@@ -92,6 +102,14 @@ const PATIENT_TABS = {
   REPORTS: {
     name: "Reports",
     key: "5"
+  },
+  DIETS: {
+    name: "Diets",
+    key: "6"
+  },
+  WORKOUTS:{
+    name: "Workouts",
+    key: "7"
   }
 };
 
@@ -176,7 +194,6 @@ const columns_appointments = [
     dataIndex: "organizer",
     key: "organizer",
     width: "20%",
-
     ellipsis: true
   },
   {
@@ -505,7 +522,6 @@ const PatientTreatmentCard = ({
 }) => {
   const time = moment().format("Do MMMM YYYY, hh:mm a");
 
-  console.log("1897312 config", { config });
   return (
     <div className="treatment mt20 tal bg-faint-grey">
       <div className="header-div flex align-center justify-space-between">
@@ -651,7 +667,8 @@ class PatientDetails extends Component {
       uploadDocsAppointmentId: null,
       allAppointmentDocs: {},
       symptom_dates: [],
-      report_ids: []
+      report_ids: [],
+      activeKey:"1"
     };
   }
 
@@ -697,6 +714,13 @@ class PatientDetails extends Component {
           } = {}
         } = payload;
 
+        const {notification_redirect : {care_plan_id = null} = {} } = this.props;
+
+        if(care_plan_id){
+          current_careplan_id=care_plan_id;
+        }
+
+
         // const { basic_info: { id: carePlanTemplateId = 0 } } = care_plan_templates[Object.keys(care_plan_templates)[0]];
 
         let carePlanTemplateExists =
@@ -716,6 +740,9 @@ class PatientDetails extends Component {
       }
     });
 
+      
+
+
     getMedications(patient_id);
     getAppointmentsDetails();
     getAppointments(patient_id);
@@ -733,8 +760,89 @@ class PatientDetails extends Component {
         carePlanTemplateId = care_plan_template_id;
       }
     }
-    this.setState({ carePlanTemplateId });
+
+    const {notification_redirect : {type : tab = ''} = {} } =this.props;
+    let activeKey = "1";
+    if(tab && tab === TYPE_SYMPTOMS ){
+      activeKey="3";
+    }else if(tab && tab === TYPE_APPOINTMENTS){
+      activeKey="2";
+    } else if(tab && tab === TYPE_VITALS) {
+      activeKey = "4";
+    }else if(tab && tab === TYPE_DIETS ) {
+      activeKey = "6";
+    }else if(tab && tab === TYPE_WORKOUTS){
+      activeKey = "7";
+    }
+
+
+    this.setState({ carePlanTemplateId , activeKey });
+
+    // in app notification seen count
+    this.initiateInAppNotificationObj();
   }
+
+  componentDidUpdate = (prevProps,prevState) => {
+    const {notification_redirect : {care_plan_id = null , type : tab = '' } = {} , care_plans = {}  } = this.props;
+    const {notification_redirect : {care_plan_id : prev_care_plan_id = null , type : prev_tab = ''} = {}} = prevProps ; 
+    let {activeKey = "1" , selectedCarePlanId : careplanId = null  } = this.state;
+    let cpId = careplanId;
+
+    if( care_plan_id && (care_plan_id !== prev_care_plan_id  || tab !== prev_tab ) ){
+
+        if(tab && tab === TYPE_SYMPTOMS ){
+          activeKey="3";
+        }else if(tab && tab === TYPE_APPOINTMENTS){
+          activeKey="2";
+        }
+
+        const { patient_id = '' } = this.props;
+        const {basic_info : { patient_id : pId = '' } = {} } = care_plans[care_plan_id] || {} ;
+
+        // console.log("823468273648723467328",{patient_id,pId});
+        if(patient_id.toString() === pId.toString() ){
+          cpId = care_plan_id;
+        }
+
+      this.setState({selectedCarePlanId : cpId , activeKey });
+
+    }
+
+  }
+
+  initiateInAppNotificationObj = () => {
+    const { notificationToken, feedId } = this.props;
+    const {updateUnseenNotificationData} = this;
+
+    if (notificationToken || feedId) {
+        let clientFeed = connect(
+          config.GETSTREAM_API_KEY,
+            notificationToken,
+            config.GETSTREAM_APP_ID
+        );
+
+        this.client = clientFeed;
+    }
+    
+    updateUnseenNotificationData();
+  };
+
+  getFeedData = async() => {
+    const {feedId}=this.props;
+    const limit = config.REACT_APP_NOTIFICATION_ONE_TIME_LIMIT;
+    let clientFeed = this.client.feed("notification", feedId);
+
+    const data = await clientFeed.get({ limit });
+    return data;
+  }
+
+
+  updateUnseenNotificationData = async () => {
+    const {setUnseenNotificationCount} = this.props;
+    const data = await this.getFeedData();
+    const { unseen = 0 } = data || {};
+    setUnseenNotificationCount(unseen);
+  };
 
   fetchSymptomsData = async () => {
     try {
@@ -831,11 +939,13 @@ class PatientDetails extends Component {
         organizer: { id: organizer_id } = {},
         active_event_id = null
       } = appointments[id] || {};
-      const { basic_info: { user_name = "" } = {} } = users[organizer_id] || {};
+      // const { basic_info: { user_name = "", full_name } = {} } = users[organizer_id] || {};
+
+      // console.log("1230990830912 users", {organizer_id, users, full_name});
       return {
         // organizer: organizer_type === "doctor" ? doctors[organizer_id] : patients[organizer_id].
         key: id,
-        organizer: user_name ? user_name : docName,
+        organizer: `Dr. ${docName}`,
         date: `${moment(start_date).format("LL")}`,
         time: `${
           start_time
@@ -954,6 +1064,8 @@ class PatientDetails extends Component {
     this.setState({ selectedKeys: selectedKeys[0] });
   };
 
+  
+
   formatMessage = data => this.props.intl.formatMessage(data);
 
   getMenu = () => {
@@ -963,7 +1075,9 @@ class PatientDetails extends Component {
       handleSymptoms,
       handleVitals,
       handleAddCareplan,
-      handleAddReports
+      handleAddReports,
+      handleAddDiet,
+      handleAddWorkout
     } = this;
     const { authPermissions = [], authenticated_category } = this.props;
     return (
@@ -1002,6 +1116,21 @@ class PatientDetails extends Component {
             <div>{this.formatMessage(messages.reports)}</div>
           </Menu.Item>
         )}
+        
+
+        {(authenticated_category === USER_CATEGORY.DOCTOR && authPermissions.includes(PERMISSIONS.ADD_CAREPLAN) ) && (
+            <Menu.Item onClick={handleAddDiet}>
+              <div>{this.formatMessage(messages.diet)}</div>
+            </Menu.Item>
+          )}
+
+        {(authenticated_category === USER_CATEGORY.DOCTOR && authPermissions.includes(PERMISSIONS.ADD_CAREPLAN) ) && (
+            <Menu.Item onClick={this.handleAddWorkout}
+             >
+              <div>{this.formatMessage(messages.workout)}</div>
+            </Menu.Item>
+        )}
+       
       </Menu>
     );
   };
@@ -1018,6 +1147,29 @@ class PatientDetails extends Component {
       patient_id
     });
   };
+  
+
+
+  handleAddDiet= e => {
+
+    const { openAddDietDrawer, patient_id } = this.props;
+
+    openAddDietDrawer({
+      patient_id
+    });
+
+  }
+
+
+  handleAddWorkout= e => {
+
+    const { openAddWorkoutDrawer, patient_id } = this.props;
+
+    openAddWorkoutDrawer({
+      patient_id
+    });
+
+  }
 
   handleAddCareplan = e => {
     const { openAddCareplanDrawer, patient_id } = this.props;
@@ -1933,6 +2085,11 @@ class PatientDetails extends Component {
     );
   };
 
+  setActiveKey = (value) => {
+    this.setState({activeKey:value});
+  }
+
+ 
   render() {
     let {
       patients,
@@ -2029,6 +2186,8 @@ class PatientDetails extends Component {
     let cPAppointmentIds = [];
     let cPMedicationIds = [];
     let vitalIds = [];
+    let dietIds = [];
+    let workoutIds = [];
 
     for (let carePlan of Object.values(care_plans)) {
       let {
@@ -2044,12 +2203,16 @@ class PatientDetails extends Component {
         let {
           appointment_ids = [],
           medication_ids = [],
-          vital_ids = []
+          vital_ids = [],
+          diet_ids = [],
+          workout_ids = []
         } = carePlan;
 
         cPAppointmentIds = appointment_ids;
         cPMedicationIds = medication_ids;
         vitalIds = vital_ids;
+        dietIds = diet_ids;
+        workoutIds = workout_ids;
         carePlanId = selectedCarePlanId;
       }
     }
@@ -2117,13 +2280,16 @@ class PatientDetails extends Component {
       showUseTemplate = false;
     }
 
+
     let showTabs =
       cPAppointmentIds.length ||
       cPMedicationIds.length ||
       vitalIds.length ||
+      dietIds.length || 
+      workoutIds.length ||
       symptom_dates.length ||
       report_ids.length ||
-      reportsExist
+      reportsExist 
         ? true
         : false;
 
@@ -2179,6 +2345,9 @@ class PatientDetails extends Component {
 
     const {basic_info : {user_role_id = null } = {} } = care_plans[selectedCarePlanId];
 
+    // let defaultActiveKeyValue = "1";
+    const  {activeKey = "1"}=this.state;
+    
     return (
       <Fragment>
         <div className="pt10 pr10 pb10 pl10">
@@ -2291,8 +2460,12 @@ class PatientDetails extends Component {
               {showTabs && (
                 <div className="flex-grow-1 direction-column align-center">
                   <div className="patient-tab mt20">
-                    <Tabs defaultActiveKey="1">
-                      <TabPane tab="Medication" key="1">
+                    <Tabs
+                    //  defaultActiveKey={defaultActiveKeyValue}
+                     onChange={this.setActiveKey}
+                     activeKey={activeKey}
+                    >
+                      <TabPane tab="Medication" key="1"  >
                         {cPMedicationIds.length > 0 ||
                         cPAppointmentIds.length > 0 ? (
                           <MedicationTable
@@ -2362,6 +2535,26 @@ class PatientDetails extends Component {
                       >
                         <ReportTable patientId={patient_id} />
                       </TabPane>
+                      <TabPane
+                        tab={PATIENT_TABS.DIETS["name"]}
+                        key={PATIENT_TABS.DIETS["key"]}
+                      >
+                        <DietTable
+                         patientId={patient_id}
+                         carePlanId={carePlanId}
+                         isOtherCarePlan={isOtherCarePlan}
+                        />
+                      </TabPane>
+                      <TabPane
+                        tab={PATIENT_TABS.WORKOUTS["name"]}
+                        key={PATIENT_TABS.WORKOUTS["key"]}
+                      >
+                        <WorkoutTable
+                         patientId={patient_id}
+                         carePlanId={carePlanId}
+                         isOtherCarePlan={isOtherCarePlan}
+                        />
+                      </TabPane>
                     </Tabs>
                   </div>
                 </div>
@@ -2386,6 +2579,9 @@ class PatientDetails extends Component {
               <AddAppointmentDrawer carePlanId={carePlanId} />
               <AddCareplanDrawer patientId={patient_id} />
               <AddReportDrawer />
+              <AddFoodItem/>
+              <AddDietDrawer carePlanId={carePlanId} />
+              <AddWorkoutDrawer carePlanId={carePlanId}   />
 
               {templateDrawerVisible && (
                 <TemplateDrawer
@@ -2435,7 +2631,11 @@ class PatientDetails extends Component {
           <SymptomsDrawer />
           <VitalTimelineDrawer />
           <MedicationTimelineDrawer />
+          <DietResponseDrawer/>
+          <WorkoutResponseDrawer/>
           <EditPatientDrawer />
+          <EditDietDrawer carePlanId={carePlanId} />
+          <EditWorkoutDrawer carePlanId={carePlanId} />
         </div>
         <Modal
           visible={showOtpModal}
@@ -2455,6 +2655,9 @@ class PatientDetails extends Component {
             onCancel={this.closeAppointmentDocsModal}
           />
         )}
+        
+        <NotificationDrawer  />
+
       </Fragment>
     );
   }

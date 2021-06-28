@@ -335,6 +335,7 @@ class AppointmentController extends Controller {
         provider_id,
         provider_name,
         details: {
+          care_plan_id,
           treatment_id,
           reason,
           type,
@@ -472,6 +473,9 @@ class AppointmentController extends Controller {
         appointment_id
       );
 
+      // careplan id for appointment
+      const {care_plan_id = null} = await carePlanAppointmentService.getSingleCarePlanAppointmentByData({appointment_id}) || {};
+
       const oldAppointmentData = await AppointmentWrapper(oldAppointment);
 
       // check for date, start_time, end_time change
@@ -533,6 +537,7 @@ class AppointmentController extends Controller {
         provider_id,
         provider_name,
         details: {
+          care_plan_id,
           treatment_id,
           reason,
           type,

@@ -11,7 +11,5 @@ export default class Provider {
         return this._data.get("user_id");
     };
 
-    getDetails = () => {
-        return this._data.get("details");
-    };
+    getDetails = () => this._data.get("details") || {};
 }

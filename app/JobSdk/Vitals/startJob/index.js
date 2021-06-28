@@ -18,11 +18,11 @@ class StartJob extends VitalJob {
       participants = [],
       actor: {
         id: actorId,
-        details: { name, category: actorCategory } = {}
+        details: { name, category: actorCategory } = {},
       } = {},
       vital_templates,
       vital_templates: { basic_info: { name: vitalName = "" } = {} } = {},
-      eventId = null
+      eventId = null,
     } = _data.getDetails() || {};
 
     const templateData = [];
@@ -32,14 +32,14 @@ class StartJob extends VitalJob {
     const vitals = await VitalWrapper({ id: _data.getEventId() });
     const { vitals: latestVital } = await vitals.getAllInfo();
 
-    participants.forEach(participant => {
+    participants.forEach((participant) => {
       if (participant !== actorId) {
         userIds.push(participant);
       }
     });
 
     const userDevices = await UserDeviceService.getAllDeviceByData({
-      user_id: userIds
+      user_id: userIds,
     });
 
     if (userDevices.length > 0) {
@@ -54,7 +54,7 @@ class StartJob extends VitalJob {
       app_id: process.config.one_signal.app_id, // TODO: add the same in pushNotification handler in notificationSdk
       headings: { en: `${vitalName} Reminder` },
       contents: {
-        en: `Tap here to update your ${vitalName}`
+        en: `Tap here to update your ${vitalName}`,
       },
       // buttons: [{ id: "yes", text: "Yes" }, { id: "no", text: "No" }],
       include_player_ids: [...playerIds],
@@ -64,8 +64,8 @@ class StartJob extends VitalJob {
         url: "/vitals",
         vital: latestVital[_data.getEventId()],
         vital_template: vital_templates,
-        type: "modal"
-      }
+        type: "modal",
+      },
     });
 
     return templateData;
@@ -78,25 +78,25 @@ class StartJob extends VitalJob {
       details: { participants = [], actor: { id: actorId, user_role_id } = {} },
       id = null,
       start_time = null,
-      event_id = null
+      event_id = null,
     } = data.getAllInfo() || {};
 
     const templateData = [];
     const now = moment();
     const currentTimeStamp = now.unix();
     for (const participant of participants) {
-      // if (participant !== actorId) {
-      templateData.push({
-        actor: actorId,
-        actorRoleId: user_role_id,
-        object: `${participant}`,
-        foreign_id: `${event_id}`,
-        verb: `vital_start:${currentTimeStamp}`,
-        event: EVENT_TYPE.VITALS,
-        time: start_time,
-        start_time: start_time
-      });
-      // }
+      if (participant !== actorId) {
+        templateData.push({
+          actor: actorId,
+          actorRoleId: user_role_id,
+          object: `${participant}`,
+          foreign_id: `${event_id}`,
+          verb: `vital_start:${currentTimeStamp}`,
+          event: EVENT_TYPE.VITALS,
+          time: start_time,
+          start_time: start_time,
+        });
+      }
     }
 
     return templateData;

@@ -73,6 +73,12 @@ router.post(
     EventController.markEventCancelled
 );
 
+router.post(
+  "/:id/reschedule",
+  Authenticate,
+  EventController.reschedule
+)
+
 router.delete(
     "/:id/vitals/response",
     Authenticate,

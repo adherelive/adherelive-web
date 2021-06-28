@@ -49,6 +49,20 @@ class CouncilService {
             throw error;
         }
     }
+
+    create = async data => {
+        try {
+
+            const council = await Database.getModel(TABLE_NAME).create(
+                data
+              );
+              return council;
+
+        } catch(error) {
+            throw error;
+        }
+    };
+
 }
 
 export default new CouncilService();

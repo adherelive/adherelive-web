@@ -17,6 +17,7 @@ import SymptomBotMessage from "./symptomBotMessage";
 import VitalBotMessage from "./vitalBotMessages";
 import { Form, Input, Button, Spin, Avatar, Upload, Modal } from "antd";
 import moment from "moment";
+import {isJSON} from "../../Helper/common";
 
 class botMessage extends Component {
   constructor(props) {
@@ -26,6 +27,9 @@ class botMessage extends Component {
     getBotMessage = () => {
         const { body : this_body ,message,patientDp,vital_repeat_intervals} = this.props;
       
+        if(!isJSON(this_body)) {
+          return null;
+        }
         const body = JSON.parse(this_body);
         const {type} = body;
         if(type === CHAT_MESSAGE_TYPE.SYMPTOM){

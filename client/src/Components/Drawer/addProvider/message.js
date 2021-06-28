@@ -131,6 +131,11 @@ const messages = defineMessages({
     description: "",
     defaultMessage: "Upload"
   },
+  bannerUploadText: {
+    id: "app.addProvider.banner.text",
+    description: "",
+    defaultMessage: "Banner"
+  },
 
   // errors
   valid_email_text: {

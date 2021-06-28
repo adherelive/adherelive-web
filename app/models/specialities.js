@@ -19,6 +19,11 @@ export const db = (database) => {
             },
             description: {
                 type: DataTypes.STRING(1000),
+            },
+            user_created: {
+                type: DataTypes.INTEGER,
+                allowNull: true,
+                defaultValue:null
             }
         },
         {

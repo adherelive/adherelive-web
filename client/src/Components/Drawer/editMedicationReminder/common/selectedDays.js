@@ -77,7 +77,7 @@ class SelectedDays extends Component {
   setRepeatEveryDay = e => {
     e.preventDefault();
     const {
-      form: { setFieldsValue,validateFields,getFieldsValue },
+      form: { setFieldsValue,validateFields },
       enableSubmit
     } = this.props;
     this.setState({ selectedDays: DAYS });
@@ -89,7 +89,7 @@ class SelectedDays extends Component {
   setRepeatAlternateDay = e => {
     e.preventDefault();
     const {
-      form: { setFieldsValue,validateFields,getFieldsValue },
+      form: { setFieldsValue,validateFields },
       enableSubmit
     } = this.props;
     this.setState({ selectedDays: ALTERNATE_DAYS });

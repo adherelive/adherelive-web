@@ -1,6 +1,6 @@
 import AppointmentJob from "../";
 import moment from "moment";
-import { EVENT_TYPE } from "../../../../constant";
+import { APPOINTMENT_TYPE, EVENT_TYPE } from "../../../../constant";
 import UserDeviceService from "../../../services/userDevices/userDevice.service";
 import UserDeviceWrapper from "../../../ApiWrapper/mobile/userDevice";
 
@@ -23,25 +23,34 @@ class PriorJob extends AppointmentJob {
   getPushAppTemplate = async () => {
     const { getAppointmentData } = this;
     const {
-      participants = [],
-      actor: {
-        id: actorId,
-        details: { name, category: actorCategory } = {}
-      } = {}
+      details: {
+        participants = [],
+        actor: {
+          id: actorId,
+          details: { name, category: actorCategory } = {},
+        } = {},
+        basic_info: {
+          details: {
+            type = "",
+            type_description = "",
+            radiology_type = "",
+          } = {},
+        } = {},
+      } = {},
     } = getAppointmentData() || {};
 
     const templateData = [];
     const playerIds = [];
     const userIds = [];
 
-    participants.forEach(participant => {
-      if (participant !== actorId) {
-        userIds.push(participant);
-      }
-    });
+    // participants.forEach(participant => {
+    //   if (participant !== actorId) {
+    //     userIds.push(participant);
+    //   }
+    // });
 
     const userDevices = await UserDeviceService.getAllDeviceByData({
-      user_id: userIds
+      user_id: participants,
     });
 
     if (userDevices.length > 0) {
@@ -51,20 +60,22 @@ class PriorJob extends AppointmentJob {
       }
     }
 
-    // if (participant !== actorId) { // todo: add actor after testing (deployment)
+    const { title: appointmentType = "" } = APPOINTMENT_TYPE[type] || {};
+
     templateData.push({
       small_icon: process.config.app.icon_android,
-      app_id: process.config.one_signal.app_id, // TODO: add the same in pushNotification handler in notificationSdk
-      headings: { en: `Appointment Created` },
+      app_id: process.config.one_signal.app_id,
+      headings: { en: `Upcoming Appointment Reminder` },
       contents: {
-        en: `An appointment with ${name}(${actorCategory}) is about to start in 10 minutes`
+        en: `An appointment ${appointmentType}-${type_description}${
+          radiology_type ? `-${radiology_type}` : ""
+        } is about to start soon. Tap here to know more!`,
       },
       include_player_ids: [...playerIds],
       priority: 10,
-      android_channel_id: process.config.one_signal.urgent_channel_id
-      // data: { url: "/", params: "" }
+      android_channel_id: process.config.one_signal.urgent_channel_id,
+      data: { url: "/appointments", params: "", content: getAppointmentData() },
     });
-    // }
 
     return templateData;
   };
@@ -78,7 +89,7 @@ class PriorJob extends AppointmentJob {
         user_role_id,
         details: { name, category: actorCategory } = {}
       } = {},
-      appointmentId
+      id,
     } = getAppointmentData() || {};
 
     const templateData = [];
@@ -89,11 +100,12 @@ class PriorJob extends AppointmentJob {
         actor: actorId,
         actorRoleId: user_role_id,
         object: `${participant}`,
-        foreign_id: `${appointmentId}`,
-        verb: "appointment_create",
+        foreign_id: `${id}`,
+        verb: "appointment_prior",
         // message: `${name}(${actorCategory}) has created an appointment with you`,
         event: EVENT_TYPE.APPOINTMENT,
-        time: currentTime
+        time: currentTime,
+        create_time: `${currentTime}`
       });
       // }
     }

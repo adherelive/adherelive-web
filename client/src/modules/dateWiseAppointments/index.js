@@ -1,4 +1,4 @@
-function dateWseAppointmentsReducer(state, data) {
+function dateWiseAppointmentsReducer(state, data) {
     const {date_wise_appointments} = data || {};
 
     if(date_wise_appointments) {
@@ -15,7 +15,7 @@ function dateWseAppointmentsReducer(state, data) {
     const { type, data } = action;
     switch (type) {
       default:
-        return dateWseAppointmentsReducer(state,data);
+        return dateWiseAppointmentsReducer(state,data);
     }
   };
   

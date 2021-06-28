@@ -184,7 +184,19 @@ class CarePlanService {
     }
   }
 
-  getDistinctPatientCounts = async(userRoleId) => {
+  getAllDoctors = async (data) => {
+    try {
+      const carePlan = await Database.getModel(TABLE_NAME).findAll({
+        where: data,
+        attributes: ["doctor_id"]
+      });
+      return carePlan;
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  getDistinctPatientCounts = async(doctorId) => {
     try {
       const carePlan = await Database.getModel(TABLE_NAME).count({
         where: {

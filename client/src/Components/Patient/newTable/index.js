@@ -56,19 +56,19 @@ class patientTable extends Component{
 
     formatMessage = (data) => this.props.intl.formatMessage(data);
 
-    async componentDidMount(){
+    componentDidMount(){
         this.handleGetPatients();
 
     }
 
-    async componentDidUpdate(prevProps,prevState){
+    componentDidUpdate(prevProps,prevState){
         const {currentTab : prev_currentTab = '' }=prevProps;
         const {currentTab = '' } =this.props;
 
 
 
         if(currentTab !== prev_currentTab){
-            await this.handleGetPatients(true);
+            this.handleGetPatients(true);
             // await this.setState({tabChanged:true});
         }
         // else if(tabChanged && currentTab === prev_currentTab ){

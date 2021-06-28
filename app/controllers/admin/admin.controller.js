@@ -10,12 +10,21 @@ import featuresMappingService from "../../services/doctorPatientFeatureMapping/d
 import documentService from "../../services/uploadDocuments/uploadDocuments.service";
 import minioService from "../../services/minio/minio.service";
 import userRoleService from "../../services/userRoles/userRoles.service";
+import userService from "../../services/user/user.service";
+import providerService from "../../services/provider/provider.service";
+import providerTermsMappingService from "../../services/providerTermsMapping/providerTermsMappings.service";
+import tacService from "../../services/termsAndConditions/termsAndConditions.service";
 
 import FeatureDetailsWrapper from "../../ApiWrapper/web/featureDetails";
 import DoctorWrapper from "../../ApiWrapper/web/doctor";
 import CarePlanWrapper from "../../ApiWrapper/web/carePlan";
 import DocumentWrapper from "../../ApiWrapper/web/uploadDocument";
 import UserRoleWrapper from "../../ApiWrapper/web/userRoles";
+import UserWrapper from "../../ApiWrapper/web/user";
+import ProviderWrapper from "../../ApiWrapper/web/provider";
+import TACWrapper from "../../ApiWrapper/web/termsAndConditions";
+
+import {USER_CATEGORY , TERMS_AND_CONDITIONS_TYPES} from "../../../constant"
 
 const Log = new Logger("ADMIN > CONTROLLER");
 
@@ -138,6 +147,78 @@ class AdminController extends Controller {
       return raiseServerError(res);
     }
   };
+
+  updateProviderTermsMappingForExistingUsers = async (req, res) => {
+    const { raiseSuccess, raiseServerError } = this;
+    try {
+      let mappingData = [];
+      const users = await userService.getUserByData({category: [USER_CATEGORY.PROVIDER]});
+
+      if (users && users.length) {
+        for (const user of users) {
+          const userWrapper = await UserWrapper(user);
+          const provider = await providerService.getProviderByData({user_id: userWrapper.getId()});
+          const providerWrapper = await ProviderWrapper(provider)
+          mappingData.push({provider_id: providerWrapper.getProviderId(), terms_and_conditions_id:  2})
+        }
+      }
+      if(mappingData && mappingData.length) {
+        const response = await providerTermsMappingService.bulkCreate(mappingData)
+      }
+      
+      return raiseSuccess(res, 200, {}, "Updated terms and conditions for existing providers.");
+    } catch (error) {
+      Log.debug("updateProviderTermsMappingForExistingUsers 500 error", error);
+      return raiseServerError(res);
+    }
+  };
+
+  getTermsAndConditions = async (req,res)=> {
+    const { raiseSuccess, raiseServerError ,raiseClientError} = this;
+    try {
+      const { params: { id = null } = {} } = req;
+      let record = null ;
+
+      if(id.toString() === "0"){
+        record = await tacService.getByData({terms_type:TERMS_AND_CONDITIONS_TYPES.DEFAULT_TERMS_OF_PAYMENT});  
+      }else{
+        record = await tacService.getByData({id});
+      }
+
+      if(!record){
+        return raiseClientError(
+          res,
+          422,
+          {},
+          "No Matching record Found"
+        )
+      }
+
+      const tacDetails = await TACWrapper(record); 
+      let tacApidata = {};
+      if(id.toString() === "0" ){
+        tacApidata["0"]=tacDetails.getBasicInfo();
+      }else{
+        tacApidata[tacDetails.getId()]=tacDetails.getBasicInfo();
+
+      }
+
+      return raiseSuccess(
+        res,
+        200,
+        {
+          terms_and_conditions:{
+            ...tacApidata
+          }
+        },
+        "Details fetched successfully"
+      );
+    } catch (error) {
+      Log.debug("getTermsOfPayment 500 error", error);
+      return raiseServerError(res);
+    }
+  };
+
 }
 
 export default new AdminController();

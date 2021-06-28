@@ -183,11 +183,6 @@ class EditMedicationReminder extends Component {
         const endDate = values[endDateField.field_name];
         const repeatDays = values[repeatDaysField.field_name];
 
-        console.log("1823127 before", {
-          startDate,
-          endDate,
-          diff: endDate.diff(startDate, "days"),
-        });
         const {
           medicine_id,
           quantity,
@@ -243,14 +238,6 @@ class EditMedicationReminder extends Component {
         } else if (endDate && moment(endDate).isBefore(moment(startDate))) {
           message.error("Please select valid dates for medication");
         } else if (editMedication) {
-          console.log("1823127 after", {
-            startDate: data_to_submit.start_date,
-            endDate: data_to_submit.end_date,
-            diff: moment(data_to_submit.end_date).diff(
-              moment(data_to_submit.start_date),
-              "days"
-            ),
-          });
           editMedication(data_to_submit);
         } else if (addMedication) {
           addMedication(data_to_submit);

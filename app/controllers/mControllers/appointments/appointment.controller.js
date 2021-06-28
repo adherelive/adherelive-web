@@ -127,6 +127,7 @@ class MobileAppointmentController extends Controller {
         provider_id,
         provider_name,
         details: {
+          care_plan_id,
           treatment_id,
           reason,
           type,
@@ -297,6 +298,9 @@ class MobileAppointmentController extends Controller {
       const { id: participant_two_id, category: participant_two_type } =
         participant_two || {};
 
+        // careplan id for appointment
+      const {care_plan_id = null} = await carePlanAppointmentService.getSingleCarePlanAppointmentByData({appointment_id}) || {};
+
       const oldAppointment = await appointmentService.getAppointmentById(id);
 
       const oldAppointmentData = await MAppointmentWrapper(oldAppointment);
@@ -363,6 +367,7 @@ class MobileAppointmentController extends Controller {
         provider_id,
         provider_name,
         details: {
+          care_plan_id,
           treatment_id,
           reason,
           type,

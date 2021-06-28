@@ -3,16 +3,20 @@ import { withRouter } from "react-router-dom";
 import NotificationDrawer from "../../Components/Drawer/notification";
 import { close } from "../../modules/drawer";
 import { DRAWER } from "../../constant";
-import { open } from "../../modules/drawer";
-import { getMedications } from "../../modules/medications";
 import { getNotification } from "../../modules/notifications";
-import { getAppointments, addAppointment, addCarePlanAppointment } from "../../modules/appointments";
+import { doNotificationRedirect } from "../../modules/notificationRedirect";
+import { setUnseenNotificationCount }  from "../../modules/pages/NotificationCount";
 
 const mapStateToProps = state => {
     const {
         drawer: { visible, loading, data: { type, payload = {} } = {} },
         patients, treatments, care_plans, static_templates, providers, doctors, auth,
-        notifications, appointments, medications, medicines
+        notifications, appointments, medications, medicines,
+        schedule_events, symptoms = {},
+        notification_redirect = {},
+        diets={},
+        diet_food_group_mappings = {},
+        workouts={}
     } = state
     return {
         visible: visible && type === DRAWER.NOTIFICATIONS,
@@ -28,14 +32,23 @@ const mapStateToProps = state => {
         notifications,
         appointments,
         medications,
-        medicines
+        medicines,
+        schedule_events,
+        symptoms,
+        notification_redirect,
+        diets,
+        diet_food_group_mappings,
+        workouts
     };
 };
 
 const mapDispatchToProps = dispatch => {
     return {
         close: () => dispatch(close()),
-        getNotification: (activities) => dispatch(getNotification(activities))
+        getNotification: (activities) => dispatch(getNotification(activities)),
+        doNotificationRedirect: (payload) => dispatch(doNotificationRedirect(payload)),
+        setUnseenNotificationCount : (count) => dispatch(setUnseenNotificationCount(count))
+
     };
 };
 

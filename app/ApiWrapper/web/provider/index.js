@@ -13,10 +13,10 @@ class ProviderWrapper extends BaseProvider {
 
   getBasicInfo = () => {
     const { _data } = this;
-    const { id, name, address, city, state, user_id, activated_on, details } =
+    const { id, name, address, city, state, user_id, activated_on, details = {} } =
       _data || {};
 
-      const {icon} = details || {};
+      const {icon , banner } = details || {};
 
     return {
       basic_info: {
@@ -29,7 +29,8 @@ class ProviderWrapper extends BaseProvider {
       },
       details: {
         ...details,
-        icon: completePath(icon)
+        icon: completePath(icon),
+        banner: completePath(banner),
       },
       activated_on
     };
@@ -37,10 +38,10 @@ class ProviderWrapper extends BaseProvider {
 
   getAllInfo = async () => {
     const { _data } = this;
-    const { id, name, address, city, state, user_id, activated_on, details } =
+    const { id, name, address, city, state, user_id, activated_on, details = {} } =
       _data || {};
 
-      const {icon} = details || {};
+      const {icon , banner} = details || {};
 
     const providerDoctors = await doctorProviderMappingService.getDoctorProviderMappingByData(
       { provider_id: id }
@@ -63,10 +64,11 @@ class ProviderWrapper extends BaseProvider {
       },
       details: {
         ...details,
-        icon: completePath(icon)
+        icon: completePath(icon),
+        banner: completePath(banner)
       },
       activated_on,
-      doctor_ids
+      doctor_ids,
     };
   };
 

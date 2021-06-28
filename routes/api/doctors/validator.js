@@ -117,7 +117,7 @@ const addQualificationRegistrationForm = Joi.object().keys({
   gender: Joi.string()
     .required()
     .label("Gender is required"),
-  speciality_id: Joi.number()
+  speciality_id: Joi.string()
     .required()
     .label("Speciality is required"),
   doctor_id: Joi.number()
@@ -136,7 +136,7 @@ const addQualificationRegistrationForm = Joi.object().keys({
           .allow("", null)
       }),
       degree_id: Joi.string()
-        .regex(/^\d+$/)
+        // .regex(/^\d+$/)
         .required("Degree is required"),
       photos: Joi.array().items(
         Joi.string()
@@ -164,7 +164,7 @@ const addQualificationRegistrationForm = Joi.object().keys({
         .required()
         .label("Please enter valid registration number"),
       registration_council_id: Joi.string()
-        .regex(/^\d+$/)
+        // .regex(/^\d+$/)
         .required()
         .label("Registration Council is required"),
       year: Joi.number()
@@ -189,7 +189,7 @@ const addQualificationStepForm = Joi.object().keys({
   gender: Joi.string()
     .required()
     .label("Gender is required"),
-  speciality_id: Joi.number()
+  speciality_id: Joi.string()
     .required()
     .label("Speciality is required"),
   doctor_id: Joi.number()
@@ -207,7 +207,7 @@ const addQualificationStepForm = Joi.object().keys({
         .allow("", null)
     }),
     degree_id: Joi.string()
-      .regex(/^\d+$/)
+      // .regex(/^\d+$/)
       .required("Degree is required"),
     year: Joi.number()
       .max(3000)
@@ -227,7 +227,7 @@ const addRegistrationStepForm = Joi.object().keys({
   gender: Joi.string()
     .required()
     .label("Gender is required"),
-  speciality_id: Joi.number()
+  speciality_id: Joi.string()
     .required()
     .label("Speciality is required"),
   doctor_id: Joi.number()
@@ -249,7 +249,7 @@ const addRegistrationStepForm = Joi.object().keys({
           .allow("", null)
       }),
       degree_id: Joi.string()
-        .regex(/^\d+$/)
+        // .regex(/^\d+$/)
         .required("Degree is required"),
       year: Joi.number()
         .max(3000)
@@ -273,7 +273,7 @@ const addRegistrationStepForm = Joi.object().keys({
       .required()
       .label("Please enter valid registration number"),
     registration_council_id: Joi.string()
-      .regex(/^\d+$/)
+      // .regex(/^\d+$/)
       .required()
       .label("Registration Council is required"),
     year: Joi.number()

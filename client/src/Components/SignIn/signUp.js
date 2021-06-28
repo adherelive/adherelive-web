@@ -2,7 +2,7 @@ import React, { Component, Fragment } from "react";
 // import { injectIntl, FormattedMessage } from "react-intl";
 import { Button, Input, Form, message, Checkbox } from "antd";
 
-import TOSModal from "../../Containers/Modal/TOSConfirm";
+import PPModal from "../../Containers/Modal/PPConfirm";
 import { injectIntl } from "react-intl";
 import messages from "./message";
 import { PATH } from "../../constant";
@@ -84,7 +84,7 @@ class SignUp extends Component {
     const { readTermsOfService } = this.state;
     const { updateReadTermsOfService } = this;
     return (
-      <div className="flex justify-space-between mb20">
+      <div className="flex mb20">
         {/* <div classname='fs12 medium dark-sky-blue mt4 tar'>Forgot Password?</div> */}
         <Checkbox
           checked={readTermsOfService}
@@ -92,11 +92,11 @@ class SignUp extends Component {
         ></Checkbox>
 
         <div className="slate-grey mt-10 fs12 p10 medium">
-          <span>{this.formatMessage(messages.agreeText)}</span>{" "}
-          <a href={TOS_PAGE_URL} target={"_blank"}>
+          <span>{this.formatMessage(messages.agreeSignupPPText)}</span>{" "}
+          {/* <a href={TOS_PAGE_URL} target={"_blank"}>
             {this.formatMessage(messages.termsOfService)}
-          </a>{" "}
-          <span>{this.formatMessage(messages.andText)}</span>{" "}
+          </a>{" "} */}
+          {/* <span>{this.formatMessage(messages.andText)}</span>{" "} */}
           <a href={PRIVACY_PAGE_URL} target={"_blank"}>
             {this.formatMessage(messages.privacyPolicy)}
           </a>
@@ -202,7 +202,7 @@ class SignUp extends Component {
           </FormItem>
         </Form>
         {openTOSModal && (
-          <TOSModal
+          <PPModal
             checked={readTermsOfService}
             visible={openTOSModal}
             onAccept={modalAcceptTOS}

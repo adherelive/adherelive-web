@@ -18,11 +18,14 @@ const mapStateToProps = state => {
     care_plan_templates={},
     template_appointments={},
     template_medications={},
+    template_diets = {},
+    template_workouts={},
     template_vitals={},
     vital_templates={},
     medicines={},
     pages: { care_plan_template_ids = [] } = {},
-    repeat_intervals={}
+    repeat_intervals={},
+    exercise_contents={}
   } = state;
 
   
@@ -37,11 +40,14 @@ const mapStateToProps = state => {
     care_plan_templates,
     template_appointments,
     template_medications,
+    template_diets ,
+    template_workouts,
     template_vitals,
     vital_templates,
     medicines,
     care_plan_template_ids,
-    repeat_intervals
+    repeat_intervals,
+    exercise_contents
   };
 };
 

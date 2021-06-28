@@ -23,7 +23,6 @@ export default class Symptom {
 
     getCreatedDate = () => {
         const createDate = this._data.get("created_at");
-        console.log("123786182 createDate ---> ", createDate);
         return moment(createDate).utc().format("YYYY-MM-DD")
     }
 

@@ -82,6 +82,12 @@ import doctorsService from "../../../services/doctors/doctors.service";
 import doctorPatientWatchlistService from "../../../services/doctorPatientWatchlist/doctorPatientWatchlist.service";
 
 
+import specialityService from "../../../services/speciality/speciality.service";
+import SpecialityWrapper from "../../../ApiWrapper/mobile/speciality";
+// import DegreeWrapper from "../../../ApiWrapper/mobile/degree";
+// import degreeService from "../../../services/degree/degree.service";
+
+
 const Logger = new Log("M-API DOCTOR CONTROLLER");
 
 class MobileDoctorController extends Controller {
@@ -241,15 +247,16 @@ class MobileDoctorController extends Controller {
       const doctor = await doctorService.getDoctorByData({ user_id: userId });
 
       // name split
-      let patientName = name.trim().split(" ");
-      let first_name = patientName[0] || null;
-      let middle_name = patientName.length == 3 ? patientName[1] : null;
-      let last_name =
-          patientName.length == 3
-              ? patientName[2]
-              : patientName.length == 2
-              ? patientName[1]
-              : null;
+      const {first_name, middle_name, last_name} = getSeparateName(name);
+      // let patientName = name.trim().split(" ");
+      // let first_name = patientName[0] || null;
+      // let middle_name = patientName.length == 3 ? patientName[1] : null;
+      // let last_name =
+      //     patientName.length == 3
+      //         ? patientName[2]
+      //         : patientName.length == 2
+      //         ? patientName[1]
+      //         : null;
 
       if (userExists.length > 0) {
         // todo: find alternative to userExists[0]
@@ -526,11 +533,17 @@ class MobileDoctorController extends Controller {
     const { raiseServerError, raiseSuccess } = this;
     try {
       const {
-        speciality_id = "",
+        speciality_id : specialityId = "",
         gender = "",
         qualification_details = [],
         registration_details = []
       } = req.body;
+
+      let degreeData = {};
+      let councilData = {};
+      let specialityData = {};
+
+      let speciality_id = null ; 
 
       const { userDetails: { userId: user_id } = {} } = req;
 
@@ -540,6 +553,31 @@ class MobileDoctorController extends Controller {
       const doctor = await doctorService.getDoctorByData({ user_id });
       const doctorData = await DoctorWrapper(doctor);
       // let doctor_id = doctor.get("id");
+
+      const isNotANumber = isNaN(specialityId);
+      if(isNotANumber){
+        const speciality = await specialityService.getSpecialityByData({name:specialityId});
+
+        if(speciality){
+          const specialityData= await SpecialityWrapper(speciality);
+          speciality_id = specialityData.getSpecialityId();
+        }else{
+          const newSpeciality = await specialityService.create({name:specialityId,user_created:user_id});
+          const newSpecialityData= await SpecialityWrapper(newSpeciality);
+          speciality_id = newSpecialityData.getSpecialityId();
+        }
+
+      }else{
+        speciality_id = specialityId;
+      }
+
+        
+      const speciality = await specialityService.getSpecialityByData({id:speciality_id});
+      const speWrapper = await SpecialityWrapper(speciality);
+      specialityData[
+        speWrapper.getSpecialityId()
+      ] = speWrapper.getBasicInfo();
+
 
       const doctorUpdate = await doctorService.updateDoctor(
         {
@@ -555,13 +593,42 @@ class MobileDoctorController extends Controller {
       let newQualifications = [];
       for (const item of qualification_details) {
         const {
-          degree_id = "",
+          degree_id : degreeId = "",
           year = "",
           college_name = "",
           college_id = "",
           photos = [],
           id = 0
         } = item;
+
+       // -- add degree
+       let degree_id = null ; 
+
+       const isDegreeNotANumber = isNaN(degreeId);
+       if(isDegreeNotANumber){
+         const degree = await degreeService.getByData({name:degreeId});
+ 
+         if(degree){
+           const degreeData= await DegreeWrapper(degree);
+           degree_id = degreeData.getDegreeId();
+         }else{
+           const newDegree = await degreeService.create({name:degreeId,user_created:user_id});
+           const newDegreeData= await DegreeWrapper(newDegree);
+           degree_id = newDegreeData.getDegreeId();
+         }
+ 
+       }else{
+         degree_id = degreeId;
+       }
+
+       let degree = await degreeService.getByData({id:degree_id});
+       
+       const degreeWrapper = await DegreeWrapper(degree);
+         degreeData[
+           degreeWrapper.getDegreeId()
+         ] = degreeWrapper.getBasicInfo();
+
+
         if (id && id !== "0") {
           let collegeId = college_id;
           if (college_name) {
@@ -628,11 +695,37 @@ class MobileDoctorController extends Controller {
       for (const item of registration_details) {
         const {
           number,
-          registration_council_id,
+          registration_council_id : regCouncilId,
           year,
           expiry_date,
           id = 0
         } = item;
+
+        let registration_council_id = null ;
+
+       // -- add council
+      
+       const isCouncilNotANumber = isNaN(regCouncilId);
+       if(isCouncilNotANumber){
+         const council = await councilService.getByData({name:regCouncilId});
+ 
+         if(council){
+           const councilData= await CouncilWrapper(council);
+           registration_council_id = councilData.getCouncilId();
+         }else{
+           const newCouncil = await councilService.create({name:regCouncilId,user_created:user_id});
+           const newCouncilData= await CouncilWrapper(newCouncil);
+           registration_council_id = newCouncilData.getCouncilId();
+         }
+ 
+       }else{
+        registration_council_id = regCouncilId;
+       }
+
+       const council = await councilService.getByData({id:registration_council_id});
+       const councilWrapper = await CouncilWrapper(council);
+       councilData[councilWrapper.getCouncilId()]=councilWrapper.getBasicInfo();
+ 
         if (id && id !== "0") {
           const registration = await registrationService.updateRegistration(
             {
@@ -751,6 +844,18 @@ class MobileDoctorController extends Controller {
         };
       }
 
+
+
+      
+      // const speciality = await specialityService.getSpecialityByData({id:speciality_id});
+      // let specialityData = {};
+      // const speWrapper = await SpecialityWrapper(speciality);
+      // specialityData[
+      //   speWrapper.getSpecialityId()
+      // ] = speWrapper.getBasicInfo();
+
+     
+
       return this.raiseSuccess(
         res,
         200,
@@ -773,7 +878,16 @@ class MobileDoctorController extends Controller {
             ...uploadDocumentsData
           },
           doctor_qualification_ids,
-          doctor_registration_ids
+          doctor_registration_ids,
+          degrees: {
+            ...degreeData
+          },
+          specialities:{
+            ...specialityData
+          },
+          councils : {
+            ...councilData
+          }
         },
         "qualifications updated successfully"
       );
@@ -848,11 +962,41 @@ class MobileDoctorController extends Controller {
   updateQualificationStep = async (req, res) => {
     const { raiseServerError, raiseSuccess } = this;
     try {
-      const { gender = "", speciality_id = "", qualification = {} } = req.body;
+      const { gender = "", speciality_id : specialityId = "", qualification = {} } = req.body;
       const { userDetails: { userId } = {} } = req;
+
+      let speciality_id = null ;
+      let specialityData = {};
+      let degreeData = {};
+      let degreeIds = [];
 
       let doctor = await doctorService.getDoctorByData({ user_id: userId });
       const doctorData = await DoctorWrapper(doctor);
+
+      const isNotANumber = isNaN(specialityId);
+      if(isNotANumber){
+
+        const speciality = await specialityService.getSpecialityByData({name:specialityId});
+
+        if(speciality){
+          const specialityData= await SpecialityWrapper(speciality);
+          speciality_id = specialityData.getSpecialityId();
+        }else{
+          const newSpeciality = await specialityService.create({name:specialityId,user_created:userId});
+          const newSpecialityData= await SpecialityWrapper(newSpeciality);
+          speciality_id = newSpecialityData.getSpecialityId();
+        }
+
+      }else{
+        speciality_id = specialityId;
+      }
+
+
+      const speciality = await specialityService.getSpecialityByData({id:speciality_id});
+      const speWrapper = await SpecialityWrapper(speciality);
+      specialityData[
+        speWrapper.getSpecialityId()
+      ] = speWrapper.getBasicInfo();
 
       if (gender && speciality_id) {
         const updatedDoctor = await doctorService.updateDoctor(
@@ -864,7 +1008,7 @@ class MobileDoctorController extends Controller {
         );
       }
       const {
-        degree_id = "",
+        degree_id :degreeId = "",
         year = "",
         college_name = "",
         college_id = "",
@@ -883,6 +1027,27 @@ class MobileDoctorController extends Controller {
         );
       }
 
+      let degree_id = null ;
+
+      // -- add degree
+      
+      const isDegreeNotANumber = isNaN(degreeId);
+      if(isDegreeNotANumber){
+        const degree = await degreeService.getByData({name:degreeId});
+
+        if(degree){
+          const degreeData= await DegreeWrapper(degree);
+          degree_id = degreeData.getDegreeId();
+        }else{
+          const newDegree = await degreeService.create({name:degreeId,user_created:userId});
+          const newDegreeData= await DegreeWrapper(newDegree);
+          degree_id = newDegreeData.getDegreeId();
+        }
+
+      }else{
+        degree_id = degreeId;
+      }
+
       if (!id) {
         let collegeId = college_id;
         if (college_name) {
@@ -894,6 +1059,8 @@ class MobileDoctorController extends Controller {
           const collegeWrapper = await CollegeWrapper(college);
           collegeId = collegeWrapper.getCollegeId();
         }
+
+      
 
         docQualification = await qualificationService.addQualification({
           doctor_id: doctorData.getDoctorId(),
@@ -983,6 +1150,7 @@ class MobileDoctorController extends Controller {
         doctor_qualification_ids.push(
           qualificationData.getDoctorQualificationId()
         );
+        degreeIds.push(qualificationData.getDegreeId())
 
         const uploadDocuments = await uploadDocumentService.getDoctorQualificationDocuments(
           DOCUMENT_PARENT_TYPE.DOCTOR_QUALIFICATION,
@@ -1013,6 +1181,16 @@ class MobileDoctorController extends Controller {
         ] = collegeWrapper.getBasicInfo();
       }
 
+      for(let index =0; index< degreeIds.length; index++) {
+        const degreeIdValue = degreeIds[index];
+        const degreeDataValue = await degreeService.getByData({id: degreeIdValue});
+        if(degreeDataValue) {
+          const degreeWrapper = await DegreeWrapper(degreeDataValue);
+          degreeData = {...degreeData, [degreeWrapper.getDegreeId()]: degreeWrapper.getBasicInfo()}
+        }
+      }
+
+
       return raiseSuccess(
         res,
         200,
@@ -1033,7 +1211,14 @@ class MobileDoctorController extends Controller {
           },
           colleges: {
             ...collegeData
+          },
+          degrees: {
+            ...degreeData
+          },
+          specialities:{
+            ...specialityData
           }
+
         },
         "qualification details updated successfully"
       );
@@ -1049,10 +1234,44 @@ class MobileDoctorController extends Controller {
       const { body, userDetails: { userId } = {} } = req;
       const {
         gender = "",
-        speciality_id = "",
+        speciality_id :specialityId= "",
         qualifications = [],
         registration = {}
       } = body || {};
+
+      let specialityData = {},degreeData = {};
+      let councilData = {};
+      let councilIds = [];
+
+      let speciality_id = null;
+      // -- add speciality
+
+      const isNotANumber = isNaN(specialityId);
+      if(isNotANumber){
+
+        const speciality = await specialityService.getSpecialityByData({name:specialityId});
+
+        if(speciality){
+          const specialityData= await SpecialityWrapper(speciality);
+          speciality_id = specialityData.getSpecialityId();
+        }else{
+          const newSpeciality = await specialityService.create({name:specialityId,user_created:userId});
+          const newSpecialityData= await SpecialityWrapper(newSpeciality);
+          speciality_id = newSpecialityData.getSpecialityId();
+        }
+
+      }else{
+        speciality_id = specialityId;
+      }
+
+      const speciality = await specialityService.getSpecialityByData({id:speciality_id});
+      const speWrapper = await SpecialityWrapper(speciality);
+      specialityData[
+        speWrapper.getSpecialityId()
+      ] = speWrapper.getBasicInfo();
+
+
+      
 
       const doctor = await doctorService.getDoctorByData({ user_id: userId });
       const doctorData = await DoctorWrapper(doctor);
@@ -1067,13 +1286,44 @@ class MobileDoctorController extends Controller {
       if (qualifications.length > 0) {
         for (const qualification of qualifications) {
           const {
-            degree_id = "",
+            degree_id :degreeId= "",
             year = "",
             college_name = "",
             college_id = "",
             id = 0,
             photos = []
           } = qualification || {};
+
+
+          let degree_id = null ;
+
+          // -- add degree
+          
+          const isDegreeNotANumber = isNaN(degreeId);
+          if(isDegreeNotANumber){
+            const degree = await degreeService.getByData({name:degreeId});
+
+            if(degree){
+              const degreeData= await DegreeWrapper(degree);
+              degree_id = degreeData.getDegreeId();
+            }else{
+              const newDegree = await degreeService.create({name:degreeId,user_created:userId});
+              const newDegreeData= await DegreeWrapper(newDegree);
+              degree_id = newDegreeData.getDegreeId();
+            }
+
+          }else{
+            degree_id = degreeId;
+          }
+
+
+        let degree = await degreeService.getByData({id:degree_id});
+        const degreeWrapper = await DegreeWrapper(degree);
+          degreeData[
+            degreeWrapper.getDegreeId()
+        ] = degreeWrapper.getBasicInfo();
+
+
           if (!id) {
             let collegeId = college_id;
             if (college_name !== "") {
@@ -1135,12 +1385,33 @@ class MobileDoctorController extends Controller {
       // REGISTRATION
       const {
         number = "",
-        registration_council_id = "",
+        registration_council_id: regCouncilId = "",
         year: registration_year = "",
         expiry_date = "",
         id = 0,
         photos: registration_photos = []
       } = registration || {};
+
+      let registration_council_id = null ;
+
+       // -- add council
+      
+       const isCouncilNotANumber = isNaN(regCouncilId);
+       if(isCouncilNotANumber){
+         const council = await councilService.getByData({name:regCouncilId});
+ 
+         if(council){
+           const councilData= await CouncilWrapper(council);
+           registration_council_id = councilData.getCouncilId();
+         }else{
+           const newCouncil = await councilService.create({name:regCouncilId,user_created:userId});
+           const newCouncilData= await CouncilWrapper(newCouncil);
+           registration_council_id = newCouncilData.getCouncilId();
+         }
+ 
+       }else{
+        registration_council_id = regCouncilId;
+       }
 
       if (!id) {
         const docRegistration = await registrationService.addRegistration({
@@ -1255,6 +1526,8 @@ class MobileDoctorController extends Controller {
           registrationData.getDoctorRegistrationId()
         );
 
+        councilIds.push(registrationData.getCouncilId())
+
         for (const uploadDocument of uploadDocuments) {
           const uploadDocumentData = await UploadDocumentWrapper(
             uploadDocument
@@ -1270,6 +1543,16 @@ class MobileDoctorController extends Controller {
         };
       }
 
+      for(let index =0; index< councilIds.length; index++) {
+        const councilIdValue = councilIds[index];
+        const councilDataValue = await councilService.getByData({id: councilIdValue});
+        if(councilDataValue) {
+          const councilWrapper = await CouncilWrapper(councilDataValue);
+          councilData = {...councilData, [councilWrapper.getCouncilId()]: councilWrapper.getBasicInfo()}
+        }
+      }
+
+    
       return raiseSuccess(
         res,
         200,
@@ -1291,6 +1574,15 @@ class MobileDoctorController extends Controller {
           },
           upload_documents: {
             ...uploadDocumentsData
+          },
+          registration_councils : {
+            ...councilData
+          },
+          degrees : {
+            ...degreeData
+          },
+          specialities:{
+            ...specialityData
           }
         },
         "Registration details updated successfully"
@@ -1807,15 +2099,16 @@ class MobileDoctorController extends Controller {
       const { basic_info: prevBasicInfo } =
         initialPatientData.getBasicInfo() || {};
 
-      let patientName = name.trim().split(" ");
-      let first_name = patientName[0];
-      let middle_name = patientName.length == 3 ? patientName[1] : "";
-      let last_name =
-        patientName.length == 3
-          ? patientName[2]
-          : patientName.length == 2
-          ? patientName[1]
-          : "";
+        const {first_name, middle_name, last_name} = getSeparateName(name);
+      // let patientName = name.trim().split(" ");
+      // let first_name = patientName[0];
+      // let middle_name = patientName.length == 3 ? patientName[1] : "";
+      // let last_name =
+      //   patientName.length == 3
+      //     ? patientName[2]
+      //     : patientName.length == 2
+      //     ? patientName[1]
+      //     : "";
 
       const birth_date = moment(date_of_birth);
       const age = getAge(date_of_birth);
@@ -2094,6 +2387,7 @@ class MobileDoctorController extends Controller {
           watchlist: getWatchListPatients,
           sortByName,
           userRoleId,
+          nameOrder: sortByName? true: false,
           createdAtOrder: sortByName? false: true
         }
         const allPatients = await carePlanService.getPaginatedDataOfPatients(data);

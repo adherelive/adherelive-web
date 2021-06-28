@@ -1,8 +1,7 @@
 import PatientDetails from "../../Components/Patient/details";
 import { connect } from "react-redux";
 import { withRouter } from "react-router-dom";
-import { open } from "../../modules/drawer";
-import { close } from "../../modules/drawer";
+import { open,close } from "../../modules/drawer";
 import { getMedications } from "../../modules/medications";
 import {
   getAppointments,
@@ -25,7 +24,7 @@ import { getSymptomTimeLine } from "../../modules/symptoms";
 import {fetchReports} from "../../modules/reports";
 import { getVitalOccurence } from "../../modules/vital_occurence";
 import { searchVital } from "../../modules/vital_templates";
-
+import { setUnseenNotificationCount }  from "../../modules/pages/NotificationCount";
 
 const mapStateToProps = (state, ownProps) => {
   const {
@@ -39,12 +38,14 @@ const mapStateToProps = (state, ownProps) => {
     treatments = {},
     conditions = {},
     template_medications = {},
+    template_diets = {},
+    template_workouts = {},
     template_appointments = {},
     template_vitals = {},
     care_plan_templates = {},
     severity = {},
     show_template_drawer = {},
-    auth: { authPermissions = [], authenticated_user = 1,authenticated_category, auth_role } = {},
+    auth: { authPermissions = [], authenticated_user = 1,authenticated_category, auth_role, notificationToken = '' , feedId = '' } = {},
     chats,
     drawer,
     pages: { care_plan_template_ids = [] } = {},
@@ -57,7 +58,10 @@ const mapStateToProps = (state, ownProps) => {
     repeat_intervals={},
     vital_templates={},
     user_roles = {},
-    providers = {}
+    providers = {},
+    notification_redirect={},
+    diets = {},
+    exercise_contents={}
   } = state;
 
   // const { id } = ownprops;
@@ -86,6 +90,8 @@ const mapStateToProps = (state, ownProps) => {
     care_plan_templates,
     template_appointments,
     template_medications,
+    template_diets,
+    template_workouts,
     template_vitals,
     show_template_drawer,
     currentCarePlanId,
@@ -104,7 +110,12 @@ const mapStateToProps = (state, ownProps) => {
     repeat_intervals,
     vital_templates,
     user_roles,
-    providers
+    providers,
+    notification_redirect,
+    notificationToken,
+    feedId,
+    diets,
+    exercise_contents
   };
 };
 
@@ -152,7 +163,9 @@ const mapDispatchToProps = dispatch => {
     fetchPatientReports: (id)  => dispatch(fetchReports(id)),
     getVitalOccurence: () => dispatch(getVitalOccurence()),
     searchVital: data => dispatch(searchVital(data)),
-
+    setUnseenNotificationCount : (count) => dispatch(setUnseenNotificationCount(count)),
+    openAddDietDrawer:(payload) => dispatch(open({ type: DRAWER.ADD_DIET,payload })),
+    openAddWorkoutDrawer:(payload) => dispatch(open({ type: DRAWER.ADD_WORKOUT,payload })),
   };
 };
 
