@@ -256,7 +256,7 @@ class AgoraVideo extends Component {
 
   startVideoCall = async () => {
     const {
-      auth: { authenticated_user } = {},
+      auth: { authenticated_user , auth_role = null  } = {},
       startCall,
       room_id,
     } = this.props;
@@ -278,7 +278,8 @@ class AgoraVideo extends Component {
         appId,
         channel,
         token,
-        authenticated_user
+        auth_role
+        // authenticated_user
       );
       await this.publishTrack();
       this.setState({ selfUid: uid });
