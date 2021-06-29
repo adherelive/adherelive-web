@@ -26,7 +26,7 @@ import { getAllDietsForDoctor } from "../../modules/diets";
 const mapStateToProps = state => {
   const {
     graphs,
-    auth: { authPermissions = [], authenticated_user = 1 , notificationToken = '' , feedId = '' , doctor_provider_id = ''  } = {},
+    auth: { authPermissions = [], authenticated_user = 1  , auth_role = null, notificationToken = '' , feedId = '' , doctor_provider_id = ''  } = {},
     treatments = {},
     conditions = {},
     pages: { ui_features = {} ,dashboard ={}} = {},
@@ -59,7 +59,8 @@ const mapStateToProps = state => {
     features_mappings,
     dashboard,
     doctor_provider_id,
-    providers
+    providers,
+    auth_role
   };
 };
 

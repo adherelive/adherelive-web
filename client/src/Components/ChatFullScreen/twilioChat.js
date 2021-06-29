@@ -796,10 +796,12 @@ class TwilioChat extends Component {
     } = this.props;
 
     const {
-      [patientId]: { basic_info: { user_id: patientUserId = null } = {} } = {}
+      [patientId]: { basic_info: { user_id: patientUserId = null } = {} , user_role_id : patientRoleId = null  } = {}
     } = patients;
 
-    const data = { message, receiver_id: patientUserId}
+    
+    const data = { message, receiver_id: patientUserId , receiver_role_id : patientRoleId }
+
 
     const resp = raiseChatNotification(data)
   }

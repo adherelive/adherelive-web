@@ -85,6 +85,7 @@ import UserPreferenceService from "../../services/userPreferences/userPreference
 import userRolesService from "../../services/userRoles/userRoles.service";
 import doctorPatientWatchlistService from "../../services/doctorPatientWatchlist/doctorPatientWatchlist.service";
 import { getSeparateName } from "../../helper/common";
+import userPreferenceService from "../../services/userPreferences/userPreference.service";
 // import doctor from "../../ApiWrapper/web/doctor";
 // import college from "../../ApiWrapper/web/college";
 
@@ -622,7 +623,6 @@ class DoctorController extends Controller {
           const docUserId = await userData.getId();
 
           const provider = await providerService.getProviderByData({user_id:userId});
-          console.log("8743652347235472888 ======>>>>>>>>>",{provider,docUserId});
 
           if(provider){
             const providerData = await ProviderWrapper(provider);
@@ -642,17 +642,30 @@ class DoctorController extends Controller {
               );
             }else{
 
+              // -- create new user role
               const newUserRole = await userRolesService.create({
                 user_identity:docUserId,
                 linked_id:provider_id,
                 linked_with:USER_CATEGORY.PROVIDER
               });
-
+              
               const roleData = await UserRoleWrapper(newUserRole);
               let user_roles = {};
               user_roles[roleData.getId()]=await roleData.getAllInfo();
               const doctor = await doctorService.getDoctorByUserId(docUserId);
               const doctorData = await DoctorWrapper(doctor);
+              // -- create new user ref
+              const userPreference = await userPreferenceService.addUserPreference({
+                user_id:docUserId,
+                details:{"charts": ["1", "2", "3"]},
+                user_role_id:roleData.getId()
+              });
+
+              // -- create new doc provider mapping
+              const mappingData = { doctor_id: doctorData.getDoctorId(), provider_id: provider_id };
+              const response = await doctorProviderMappingService.createDoctorProviderMapping(
+                mappingData
+              );
 
               return raiseSuccess(
                 res,
@@ -684,10 +697,13 @@ class DoctorController extends Controller {
           raiseSuccess,
           raiseClientError
         );
+
         return resp;
       }
 
-      console.log("78234554273468234632458327");
+
+      console.log("3268235467325462534716313817931");
+
 
       const doctorName = name.split(" ");
       const user_data_to_update = {
