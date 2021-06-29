@@ -8,11 +8,13 @@ import { DRAWER } from "../../constant";
 const mapStateToProps = state => {
   const {
       diets = {},
+      auth : { auth_role = null } = {},
       care_plans = {}
     } = state;
 
   return {
     diets,
+    auth_role,
     care_plans
   };
 };

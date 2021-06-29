@@ -91,9 +91,10 @@ class DietTable extends Component {
 
     openEditDrawer = (diet_id) => (e) => {
         e.preventDefault();
-        const {openEditDietDrawer, isOtherCarePlan, patientId ,carePlanId , diets = {} } = this.props;
+        const {openEditDietDrawer, isOtherCarePlan, patientId ,auth_role =null ,care_plans = {},carePlanId , diets = {} } = this.props;
         const { details : { repeat_days = [] } = {} } = diets[diet_id];
-        if(!isOtherCarePlan) {
+        const {basic_info : { user_role_id = null } = {} } = care_plans[carePlanId] || {};
+        if(!isOtherCarePlan && user_role_id.toString() === auth_role.toString()) {
             openEditDietDrawer({diet_id, patient_id: patientId,careplan_id:carePlanId,repeat_days});
         }   
     };
