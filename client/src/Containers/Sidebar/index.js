@@ -4,6 +4,7 @@ import { withRouter } from "react-router-dom";
 import SideBar from "../../Components/Sidebar";
 import { switchUserRole } from "../../modules/userRoles";
 import {authCategorySelector} from "../../modules/doctors/selectors";
+
 const mapStateToProps = (state) => {
   const { auth, users, doctors, user_roles, pages: {user_role_ids = []} = {}, providers } = state;
   const {
