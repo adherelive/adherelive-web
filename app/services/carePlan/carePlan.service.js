@@ -196,7 +196,7 @@ class CarePlanService {
     }
   }
 
-  getDistinctPatientCounts = async(doctorId) => {
+  getDistinctPatientCounts = async(userRoleId) => {
     try {
       const carePlan = await Database.getModel(TABLE_NAME).count({
         where: {

@@ -2386,7 +2386,6 @@ class MobileDoctorController extends Controller {
           watchlistPatientIds,
           watchlist: getWatchListPatients,
           sortByName,
-          userRoleId,
           nameOrder: sortByName? true: false,
           createdAtOrder: sortByName? false: true
         }
