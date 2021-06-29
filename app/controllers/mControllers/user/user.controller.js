@@ -720,13 +720,16 @@ class MobileUserController extends Controller {
             apiUserRoleDetails = await UserRolesWrapper(role);
             userRolesData[apiUserRoleDetails.getId()] = apiUserRoleDetails.getBasicInfo();
 
-            providerWrapper = await ProvidersWrapper(
+            if(apiUserRoleDetails.getLinkedId()) {
+              providerWrapper = await ProvidersWrapper(
                 null,
                 apiUserRoleDetails.getLinkedId()
-            );
-            providerApiData[
-              providerWrapper.getProviderId()
-            ] = await providerWrapper.getAllInfo();
+              );
+              providerApiData[
+                providerWrapper.getProviderId()
+              ] = await providerWrapper.getAllInfo();
+            }
+            
           });
         } else {
           apiUserDetails = await MUserWrapper(null, userId);
@@ -735,13 +738,15 @@ class MobileUserController extends Controller {
           apiUserRoleDetails = await UserRolesWrapper(null, userRoleId);
           userRolesData[apiUserRoleDetails.getId()] = apiUserRoleDetails.getBasicInfo();
 
-          providerWrapper = await ProvidersWrapper(
-            null,
-            apiUserRoleDetails.getLinkedId()
-          );
-          providerApiData[
-            providerWrapper.getProviderId()
-          ] = await providerWrapper.getAllInfo();
+          if(apiUserRoleDetails.getLinkedId()) {
+            providerWrapper = await ProvidersWrapper(
+              null,
+              apiUserRoleDetails.getLinkedId()
+            );
+            providerApiData[
+              providerWrapper.getProviderId()
+            ] = await providerWrapper.getAllInfo();
+          }
           // Logger.debug("userApiData --> ", apiUserDetails.isActivated());
         }
 
@@ -2270,12 +2275,12 @@ class MobileUserController extends Controller {
       //     }
       // );
 
-      // const appNotification = new AppNotification();
+      const appNotification = new AppNotification();
 
       const notificationToken = appNotification.getUserToken(
-          `${userId}`
+          `${userRoleId}`
       );
-      const feedId = base64.encode(`${userId}`);
+      const feedId = base64.encode(`${userRoleId}`);
 
       const userRef = await userService.getUserData({ id: userId });
 
@@ -2293,8 +2298,6 @@ class MobileUserController extends Controller {
         ...(await apiUserDetails.getReferenceInfo()),
         auth_user: apiUserDetails.getId(),
         auth_user_role: userRoleId,
-        // notificationToken: notificationToken,
-        // feedId,
         notificationToken: notificationToken,
         feedId,
         hasConsent: apiUserDetails.getConsent(),
