@@ -182,13 +182,13 @@ export const checkUserCanRegister = async(email, creatorId = null) => {
 
 export const createNewUser = async (email, password = null, creatorId= null) => {
   try {
-    const userExits = await userService.getUserByEmail({ email });
+    const userExists = await userService.getUserByEmail({ email });
     const canRegister = await checkUserCanRegister(email, creatorId);
 
     if(!canRegister) {
-      const userExitsError = new Error();
-      userExitsError.code = 11000;
-      throw userExitsError;
+      const userExistsError = new Error();
+      userExistsError.code = 11000;
+      throw userExistsError;
     }
 
     let hash = null;
@@ -197,7 +197,7 @@ export const createNewUser = async (email, password = null, creatorId= null) => 
       hash = await bcrypt.hash(password, salt);
     }
     const link = uuidv4();
-    if(!userExits) {
+    if(!userExists) {
       const user = await userService.addUser({
         email,
         password: hash,
@@ -206,7 +206,8 @@ export const createNewUser = async (email, password = null, creatorId= null) => 
         onboarded: false
         // system_generated_password
       });
-    } else if(!userExits.get("password") && password){
+    } else if(!userExists.get("password") && password){
+      /* this check if for doctors(added via providers) logging in for 1st time */
       const updatedUser = await userService.updateUser({
         password: hash
       }, userExits.get("id"));
