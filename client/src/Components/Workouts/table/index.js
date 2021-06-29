@@ -93,9 +93,10 @@ class WorkoutTable extends Component {
 
     openEditDrawer = (workout_id) => (e) => {
         e.preventDefault();
-        const {openEditWorkoutDrawer, isOtherCarePlan, patientId ,carePlanId , workouts = {} } = this.props;
+        const {openEditWorkoutDrawer, isOtherCarePlan, patientId , auth_role =null ,care_plans = {}, carePlanId , workouts = {} } = this.props;
         const { details : { repeat_days = [] } = {} } = workouts[workout_id];
-        if(!isOtherCarePlan) {
+        const {basic_info : { user_role_id = null } = {} } = care_plans[carePlanId] || {};
+        if(!isOtherCarePlan && user_role_id.toString() === auth_role.toString()) {
             openEditWorkoutDrawer({workout_id, patient_id: patientId,careplan_id:carePlanId,repeat_days});
         }   
     };

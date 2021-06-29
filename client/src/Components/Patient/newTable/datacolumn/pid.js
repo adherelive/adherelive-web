@@ -104,10 +104,10 @@ class Watchlist extends Component {
 
     const { patientData: 
          { age, gender = "" } = {},
-         auth_role }
+         auth_role=null }
            = this.props || {};
 
-    const  watchlist_patient_ids =  watchlist_ids[auth_role.toString()] || [];      
+    const  watchlist_patient_ids = auth_role && watchlist_ids[auth_role.toString()] || [];      
 
     const isAdded = watchlist_patient_ids.includes(id);
 

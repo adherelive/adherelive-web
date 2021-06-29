@@ -2035,8 +2035,11 @@ class PatientDetails extends Component {
   getUseTemplateComponent = (
     isOtherCarePlan,
     noMedication,
-    firstTemplateName
+    firstTemplateName,
+    user_role_id,
+    auth_role
   ) => {
+    console.log("38972168738712638712638716237821",{auth_role,str:auth_role.toString()});
     const { formatMessage } = this;
     return (
       <div className="flex flex-grow-1 direction-column justify-center hp100 align-center">
@@ -2045,7 +2048,10 @@ class PatientDetails extends Component {
           {formatMessage(messages.nothing_to_show)}
         </div>
         {/* {showUseTemplate && (carePlanTemplateId || carePlanTemplateExists) ? ( */}
-        {!isOtherCarePlan && (
+        {!isOtherCarePlan 
+        && user_role_id.toString() === auth_role.toString()  
+        &&
+        (
           <div
             className="use-template-button"
             onClick={this.showTemplateDrawer}
@@ -2443,7 +2449,9 @@ class PatientDetails extends Component {
             </div>
 
             <div className="wp80 direction-column align-center pt10 pr24 pb20 pl24 ola123">
-              {!isOtherCarePlan && user_role_id.toString() === auth_role.toString() && <PatientAlerts patientId={patient_id} />}
+              {!isOtherCarePlan 
+              && user_role_id.toString() === auth_role.toString() 
+              && <PatientAlerts patientId={patient_id} />}
 
               {/* <div className="last-visit-alerts" >*/}
               {/*   <div className="last-visit-h-container" >*/}
@@ -2460,7 +2468,9 @@ class PatientDetails extends Component {
                 getUseTemplateComponent(
                   isOtherCarePlan,
                   noMedication,
-                  firstTemplateName
+                  firstTemplateName,
+                  user_role_id,
+                  auth_role
                 )}
               {showTabs && (
                 <div className="flex-grow-1 direction-column align-center">
@@ -2483,7 +2493,9 @@ class PatientDetails extends Component {
                             {getUseTemplateComponent(
                               isOtherCarePlan,
                               noMedication,
-                              firstTemplateName
+                              firstTemplateName,
+                              user_role_id,
+                              auth_role
                             )}
                           </div>
                         )}
@@ -2515,7 +2527,9 @@ class PatientDetails extends Component {
                             {getUseTemplateComponent(
                               isOtherCarePlan,
                               noMedication,
-                              firstTemplateName
+                              firstTemplateName,
+                              user_role_id,
+                              auth_role
                             )}
                           </div>
                         )}
