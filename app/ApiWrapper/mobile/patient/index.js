@@ -68,13 +68,11 @@ class MPatientWrapper extends BasePatient {
     getAllInfo = async () => {
         const {_data, getBasicInfo, getPatientId} = this;
 
-        const carePlans = await carePlanService.getMultipleCarePlanByData({patient_id: getPatientId()});
+        const order = [["created_at","DESC"]];
+        const data={patient_id: getPatientId()};
+        let carePlan = await carePlanService.getSingleCarePlanByData(data,order);
 
-        let carePlanId = null;
-
-        for(const carePlan of carePlans) {
-            carePlanId = carePlan.get("id");
-        }
+        const carePlanId = carePlan.get("id") || null;
 
         const { user_id =null } = _data || {};
         let user_role_id = null ;
@@ -90,6 +88,7 @@ class MPatientWrapper extends BasePatient {
             user_role_id
         }
     };
+
 
     getReferenceInfo = async () => {
         const {_data, getBasicInfo, getPatientId} = this;

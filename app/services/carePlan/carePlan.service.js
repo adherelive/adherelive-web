@@ -84,7 +84,7 @@ class CarePlanService {
     }
   };
 
-  getSingleCarePlanByData = async data => {
+  getSingleCarePlanByData = async (data,order=[["created_at","ASC"]]) => {
     try {
       const carePlan = await Database.getModel(TABLE_NAME).findOne({
         where: data,
@@ -104,8 +104,9 @@ class CarePlanService {
               // required: true
             }
            }
-        ]
-      });
+        ],
+        order     
+       });
       return carePlan;
     } catch (error) {
       throw error;

@@ -71,19 +71,13 @@ class PatientWrapper extends BasePatient {
     getAllInfo = async () => {
         const {_data, getBasicInfo, getPatientId} = this;
 
-        const carePlans = await carePlanService.getMultipleCarePlanByData({patient_id: getPatientId()});
+        // const carePlans = await carePlanService.getMultipleCarePlanByData({patient_id: getPatientId()});
+        const order = [["created_at","DESC"]];
+        const data={patient_id: getPatientId()};
+        let carePlan = await carePlanService.getSingleCarePlanByData(data,order);
 
-        let carePlanId = null;
-        // let appointmentIds = [];
-        // let medicationIds = [];
-        // let vitalIds = [];
-
-        // const {count: symptoms} = await symptomService.getSymptomCount({patient_id: getPatientId()});
-
-        for(const carePlan of carePlans) {
-            carePlanId = carePlan.get("id");
-        }
-
+        const carePlanId = carePlan.get("id") || null;
+    
         const { user_id =null } = _data || {};
         let user_role_id = null ;
         const userRole = await userRolesService.getFirstUserRole(user_id);
