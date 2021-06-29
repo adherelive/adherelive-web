@@ -53,6 +53,7 @@ import TreatmentWrapper from "../../ApiWrapper/web/treatments";
 import DoctorPatientWatchlistWrapper from "../../ApiWrapper/web/doctorPatientWatchlist";
 
 import ProviderWrapper from "../../ApiWrapper/web/provider";
+import UserRoleWrapper from "../../ApiWrapper/web/userRoles";
 
 import Log from "../../../libs/log";
 import moment from "moment";
@@ -78,6 +79,7 @@ import { checkAndCreateDirectory, getSeparateName } from "../../helper/common";
 // helpers
 import * as carePlanHelper from "../carePlans/carePlanHelper";
 import { getDoctorCurrentTime } from "../../helper/getUserTime";
+import userRolesService from "../../services/userRoles/userRoles.service";
 
 const path = require("path");
 
@@ -2195,8 +2197,10 @@ class PatientController extends Controller {
           for(let index = 0; index < patientsForDoctor.length; index++) {
             const {care_plan_id, care_plan_details, care_plan_created_at, care_plan_expired_on,care_plan_activated_on, ...patient} = patientsForDoctor[index] || {};
             patient["care_plan_id"]=care_plan_id;
-
-            // Logger.debug("7394246723647263472364239741",{patient:{...patient}});
+            const { id = null } = {...patient};
+            const patientData = await PatientWrapper(null,id);
+            const {user_role_id = null } = await  patientData.getAllInfo();
+            patient["user_role_id"]=user_role_id;
 
             rowData.push({
               care_plans: {

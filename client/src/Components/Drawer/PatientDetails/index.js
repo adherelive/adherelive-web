@@ -222,7 +222,8 @@ class PatientDetailsDrawer extends Component {
 
   openChatTab = () => {
 
-    const { payload: { patient_id } = {}, setPatientForChat, openPopUp } = this.props;
+    const { payload: { patient_id } = {}, setPatientForChat, openPopUp , patients } = this.props;
+
     setPatientForChat(patient_id).then(() => {
       openPopUp()
     }

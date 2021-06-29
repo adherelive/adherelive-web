@@ -438,7 +438,7 @@ class SideMenu extends Component {
         <Menu.ItemGroup key="ACCOUNT" title={formatMessage(messages.accounts_text)}>
           {getUserRoles()}
         </Menu.ItemGroup>
-        <Menu.Divider />
+        {/* <Menu.Divider /> */}
 
         {/* <Menu.Divider /> */}
         {/* <Menu.Item className="p10" key={PRIVACY_POLICY}>
@@ -446,16 +446,16 @@ class SideMenu extends Component {
             {this.formatMessage(messages.privacy_policy_text)}
           </a>
         </Menu.Item> */}
-        {/* <Menu.Divider />
+        <Menu.Divider />
         <Menu.Item className="pl24 pr80" key={PROFILE}>Profile
         </Menu.Item>
-        <Menu.Divider />*/}
+        <Menu.Divider />
         {/* <Menu.Item className="pl24 pr80" key={SETTINGS}>
           Settings
         </Menu.Item> */}
-        {/* <Menu.Item className="pl24 pr80" key={TEMPLATES}>
+        <Menu.Item className="pl24 pr80" key={TEMPLATES}>
           {this.formatMessage(messages.templates)}
-        </Menu.Item> */}
+        </Menu.Item>
         {/* <Menu.Divider /> */}
 
         <Menu.Item className="p10" key={LOG_OUT}>
