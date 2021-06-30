@@ -695,8 +695,6 @@ class Profileregister extends Component {
         const { authenticated_user = '',authenticated_category = '', users, getDoctorQualificationRegisterData } = this.props;
         const {existingDoctor = false , existingDoctorId = null }=this.state;
 
-        console.log("92386487234687234623742",{existingDoctorId,state:this.state});
-        
         return (
             <Fragment>
                 {/* <SideMenu {...this.props} /> */}

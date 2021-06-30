@@ -369,8 +369,8 @@ class SideMenu extends Component {
       authDoctor,
     } = this.props;
     const {
-      getOnboardedByDetails,
-      handleManageAccount,
+      // getOnboardedByDetails,
+      // handleManageAccount,
       getProviderIcon,
       formatMessage,
     } = this;
@@ -394,8 +394,8 @@ class SideMenu extends Component {
 
       return (
         // <Fragment>
-          <Menu.Item key={`${ACCOUNT}.${id}`} className="pointer">
-            <div className={"flex align-center mt10 mb10"}>
+          <Menu.Item key={`${ACCOUNT}.${id}`} className="pointer black-85">
+            <div className={`flex align-center mt10 mb10`}>
               {getProviderIcon("w50 h50", id)}
               <div className="flex direction-column align-start ml10">
                 <div className={"fs20 fw700"}>{addedVia}</div>
@@ -417,6 +417,7 @@ class SideMenu extends Component {
   };
 
   menu = () => {
+    const {auth_role} = this.props;
     const { getUserRoles, getDoctorDetails, formatMessage } = this;
     return (
       <Menu
@@ -429,6 +430,7 @@ class SideMenu extends Component {
           minWidth: 300,
         }}
         key={"sub"}
+        defaultSelectedKeys={[`${ACCOUNT}.${auth_role}`]}
         onClick={this.handleItemSelect}
       >
         {getDoctorDetails()}
