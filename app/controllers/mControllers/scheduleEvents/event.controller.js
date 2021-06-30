@@ -637,9 +637,8 @@ class EventController extends Controller {
     const { raiseSuccess, raiseServerError } = this;
     try {
       Log.debug("req.params", req.params);
-      const { params: { patient_id } = {} ,userDetails : { userData: { category } = {}  } = {} } = req;
+      const { params: { patient_id } = {} ,userDetails : { userData: { category } = {}, userRoleId = null } = {} } = req;
       const EventService = new eventService();
-      const { userRoleId = null }  = userDetails ;
       let carePlan = null , vital_ids = [],appointment_ids =[], medication_ids = [] ;
 
       const carePlanData = await CarePlanService.getSingleCarePlanByData({
