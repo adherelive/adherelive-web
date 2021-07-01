@@ -88,7 +88,7 @@ class CreateJob extends AppointmentJob {
     const now = moment();
     const currentTimeStamp = now.unix();
     for (const participant of participants) {
-      if (participant !== actorId) {
+      if (participant !== user_role_id) {
       templateData.push({
         actor: actorId,
         actorRoleId: user_role_id,

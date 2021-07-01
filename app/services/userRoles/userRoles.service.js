@@ -29,7 +29,17 @@ class UserRolesService {
   getSingleUserRoleByData = async data => {
     try {
       const userRoles = await Database.getModel(TABLE_NAME).findOne({
-        where: data
+        where: data,
+        // include: [
+        //   {
+        //     model: Database.getModel(userTableName),
+        //     include: [
+        //       Database.getModel(doctorTableName),
+        //       Database.getModel(patientTableName),
+        //       Database.getModel(providerTableName),
+        //     ],
+        //   }
+        // ],
       });
       return userRoles;
     } catch (error) {

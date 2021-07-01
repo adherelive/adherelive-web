@@ -50,7 +50,7 @@ class SymptomController extends Controller {
         body,
         params: { patient_id } = {},
         // userDetails: { userId, userRoleId } = {}
-        userDetails: { userId,  userRoleId, userData: { category } = {},} = {},
+        userDetails: { userId,  userRoleId, userRoleData, userData: { category } = {},} = {},
       } = req;
       const {
         care_plan_id,
@@ -191,14 +191,15 @@ class SymptomController extends Controller {
 
         if (
           Object.keys(allUniqueDoctorsToNotifyData).indexOf(
-            doctorData.getUserId()
+            doctorRoleId
           ) === -1
         ) {
-          allUniqueDoctorsToNotifyData[doctorData.getUserId()] = {
+          allUniqueDoctorsToNotifyData[doctorRoleId] = {
             eventData: {
-              participants: [doctorData.getUserId(), patientData.getUserId()],
+              participants: [doctorRoleId, userRoleId],
               actor: {
                 id: patientData.getUserId(),
+                user_role_id: userRoleId,
                 details: {
                   name: patientData.getFullName(),
                   category: USER_CATEGORY.PATIENT,
@@ -209,13 +210,13 @@ class SymptomController extends Controller {
               },
             },
             twilio: {
-              doctor: doctorData.getUserId(),
-              patient: patientData.getUserId(),
+              doctor: doctorRoleId,
+              patient: userRoleId,
               content: chatJSON,
             },
           };
 
-          doctorLatestCareplanData[doctorData.getUserId()] = carePlan.getCarePlanId();
+          doctorLatestCareplanData[doctorRoleId] = carePlan.getCarePlanId();
         }
 
         // const chatJob = ChatJob.execute(
@@ -231,10 +232,14 @@ class SymptomController extends Controller {
           return(parseInt(id, 10))
         })
 
+        const {providers, user_roles} = userRoleData || {};
+
         const symptomNotificationData = {
-          participants : [userId, ...allDoctorIds],
+          participants : [userRoleId, ...allDoctorIds],
           actor: {
             id: userId,
+            user_role_id: userRoleId,
+            providers, user_roles,
             details: { name: patientData.getFullName(), category }
           },
           patient_id,
