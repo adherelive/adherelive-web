@@ -67,7 +67,7 @@ import { EVENTS, Proxy_Sdk } from "../../proxySdk";
 import generatePDF from "../../helper/generateCarePlanPdf";
 import { downloadFileFromS3 } from "../user/userHelper";
 import { getFilePath } from "../../helper/filePath";
-import { checkAndCreateDirectory } from "../../helper/common";
+import { checkAndCreateDirectory, getSeparateName } from "../../helper/common";
 
 // helpers
 import * as carePlanHelper from "../carePlans/carePlanHelper";
@@ -122,11 +122,13 @@ class PatientController extends Controller {
         console.log("file urlll: ", process.config.minio.MINI);
       }
 
+      const {first_name, middle_name, last_name} = getSeparateName(name);
+
       const patientData = {
         user_id: userId,
-        first_name: splitName[0],
-        middle_name: splitName.length > 2 ? splitName[2] : null,
-        last_name: splitName.length > 1 ? splitName[1] : null,
+        first_name,
+        middle_name,
+        last_name,
         details: {
           // todo: profile_pic
         },

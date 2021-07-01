@@ -60,7 +60,8 @@ class updateProviderDrawer extends Component {
           upi_id='',
           razorpay_account_id='',
           razorpay_account_name='',
-          icon = ""
+          icon = "",
+          banner = ''
         } = values;
 
 
@@ -79,7 +80,8 @@ class updateProviderDrawer extends Component {
           upi_id,
           razorpay_account_id,
           razorpay_account_name ,
-          icon
+          icon,
+          banner
           }
        
           try {

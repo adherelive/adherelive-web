@@ -42,6 +42,7 @@ const addProviderSchema = Joi.object().keys({
 
     // custom ui
     icon: Joi.string().optional().allow(null, ''),
+    banner: Joi.string().optional().allow(null, ''),
 
   // account details
     razorpay_account_id: Joi.string().optional().allow("", null),
@@ -107,6 +108,7 @@ const updateProviderSchema = Joi.object().keys({
 
     // custom ui
     icon: Joi.string().optional().allow(null, ''),
+    banner: Joi.string().optional().allow(null, ''),
 
     // account details
     razorpay_account_id: Joi.string().optional().allow("", null),

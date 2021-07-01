@@ -736,6 +736,7 @@ class ProvidersController extends Controller {
 
           // ui details
           icon,
+          banner,
 
             // account details
             account_type,
@@ -804,7 +805,8 @@ class ProvidersController extends Controller {
         activated_on,
         user_id: userData.getId(),
         details: {
-          icon: getFilePath(icon)
+          icon: getFilePath(icon),
+          banner:getFilePath(banner)
         },
       });
       const providerData = await ProviderWrapper(provider);
@@ -888,6 +890,7 @@ class ProvidersController extends Controller {
 
         // customizations
         icon,
+        banner,
 
         // account details
         account_type,
@@ -927,7 +930,8 @@ class ProvidersController extends Controller {
         address,
         details: {
           ...previousProvider.getDetails(),
-          icon: getFilePath(icon)
+          icon: getFilePath(icon),
+          banner: getFilePath(banner)
         }
 
       }, id);

@@ -191,6 +191,26 @@ const messages = defineMessages({
         description: "",
         defaultMessage: "By signing in you agree to our"
     },
+    signup:{
+        id: "app.signIn.agree.signup",
+        description: "",
+        defaultMessage: "Signup"
+    },
+    login:{
+        id: "app.signIn.agree.login",
+        description: "",
+        defaultMessage: "Login"
+    },
+    newToAdhere:{
+        id: "app.signIn.agree.newToAdhere",
+        description: "",
+        defaultMessage: "New to Adhere?"
+    },
+    alreadyAUser:{
+        id: "app.signIn.agree.alreadyAUser",
+        description: "",
+        defaultMessage: "Already a user?"
+    },
 });
 
 export default messages;

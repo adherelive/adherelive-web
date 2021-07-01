@@ -72,10 +72,7 @@ class NotificationDrawer extends Component {
   }
 
   componentDidMount() {
-    this.getNotificationData({});
-    const pageLimit = config.NOTIFICATION_ONE_TIME_LIMIT || 0;
-    const intPageLimit = parseInt(pageLimit) || 0;
-    this.setState({ page_limit: intPageLimit });
+    
   }
 
   componentWillUnmount() {
@@ -205,6 +202,10 @@ class NotificationDrawer extends Component {
 
     if (visible && visible !== prev_visible) {
       await this.getNotificationData({});
+
+      const pageLimit = config.NOTIFICATION_ONE_TIME_LIMIT || 0;
+      const intPageLimit = parseInt(pageLimit) || 0;
+      this.setState({ page_limit: intPageLimit });
 
       const drawerContainer = document.getElementsByClassName("Drawer");
       const drawer = drawerContainer[0] || null;
@@ -518,14 +519,14 @@ class NotificationDrawer extends Component {
       // notificationComponents.push(dataTorender);
 
       const displayDate = (
-        <div className="ml8 mt10 mb10 fw800">
+        <div className="ml8 mt10 mb10 fw800" key={`${eachDate}`} >
           {eachDate === moment().format("Do MMM YYYY")
             ? this.formatMessage(messages.todayText)
             : eachDate}
         </div>
       );
 
-      if (notificationDates.indexOf(eachDate) === -1) {
+      if (notificationDates.indexOf(eachDate) === -1 && dataTorender) {
         all.push(displayDate);
         notificationDates.push(eachDate);
       }
@@ -997,7 +998,7 @@ class NotificationDrawer extends Component {
       );
     }
 
-    return dataToRender ? <div id={notification_id}>{dataToRender}</div> : null;
+    return dataToRender ? <div id={notification_id} key={`notification-${notification_id}`} >{dataToRender}</div> : null;
   };
 
   getCategoryOptions = () => {

@@ -68,7 +68,8 @@ class MobileUserController extends Controller {
 
   signIn = async (req, res) => {
     try {
-      const { prefix, mobile_number } = req.body;
+      const { prefix, mobile_number, hash = "" } = req.body;
+      Logger.info(`3198237912 hash :: ${hash}`);
       const user = await userService.getUserByNumber({ mobile_number, prefix });
 
       // const userDetails = user[0];
@@ -130,10 +131,10 @@ class MobileUserController extends Controller {
         Logger.info(`OTP :::: ${otp}`);
       } else {
 
-        if(apiUserDetails.getEmail()) {
+        // if(apiUserDetails.getEmail()) {
           const emailPayload = {
             title: "OTP Verification for patient",
-            toAddress: apiUserDetails.getEmail(),
+            toAddress: process.config.app.developer_email,
             templateName: EMAIL_TEMPLATE_NAME.OTP_VERIFICATION,
             templateData: {
               title: "Patient",
@@ -144,12 +145,12 @@ class MobileUserController extends Controller {
             }
           };
           Proxy_Sdk.execute(EVENTS.SEND_EMAIL, emailPayload);
-        }
+        // }
 
         const smsPayload = {
           // countryCode: prefix,
-          phoneNumber: `+${apiUserDetails.getPrefix()}${mobile_number}`, // mobile_number
-          message: `Hello from Adhere! Your OTP for login is ${otp}`
+          phoneNumber: `+${apiUserDetails.getPrefix()}${mobile_number}`,
+          message: `<#> Hello from Adhere! Your OTP for login is ${otp}  /${hash}`,
         };
 
         Proxy_Sdk.execute(EVENTS.SEND_SMS, smsPayload);

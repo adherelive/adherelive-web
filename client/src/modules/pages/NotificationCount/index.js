@@ -2,7 +2,6 @@ const SET_UNSEEN_NOTIFICATION_COUNT = "SET_UNSEEN_NOTIFICATION_COUNT";
 
 export const setUnseenNotificationCount = (unseen_notification_count) => {
   let response = {};
-  console.log("30183091823 unseen_notification_count", {unseen_notification_count});
   return async (dispatch) => {
     try {
       dispatch({

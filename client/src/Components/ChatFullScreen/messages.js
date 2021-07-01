@@ -200,6 +200,16 @@ const messages = defineMessages({
     description: "",
     defaultMessage: "Adhere.Live"
   },
+  LocalNetworkIssue: {
+    id: "app.video.call.local.network.issue",
+    description: "",
+    defaultMessage: "Slow internet connection. Please check your internet settings"
+  },
+  RemoteNetworkIssue: {
+    id: "app.video.call.remote.network.issue",
+    description: "",
+    defaultMessage: "{name} has either disconnected or internet connection is down."
+  }
 });
 
 export default messages;

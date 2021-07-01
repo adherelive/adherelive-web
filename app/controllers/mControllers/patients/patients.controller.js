@@ -79,7 +79,7 @@ import { EVENTS, Proxy_Sdk } from "../../../proxySdk";
 import generatePDF from "../../../helper/generateCarePlanPdf";
 import { downloadFileFromS3 } from "../user/userHelper";
 import { getFilePath } from "../../../helper/filePath";
-import { checkAndCreateDirectory } from "../../../helper/common";
+import { checkAndCreateDirectory, getSeparateName } from "../../../helper/common";
 import {getDoctorCurrentTime} from "../../../helper/getUserTime";
 import * as carePlanHelper from "../carePlans/carePlanHelper";
 
@@ -206,11 +206,13 @@ class MPatientController extends Controller {
       const { basic_info: prevBasicInfo } =
         initialPatientData.getBasicInfo() || {};
 
+      const {first_name, middle_name, last_name} = getSeparateName(name) || {};
+
       const patientData = {
         user_id: userId,
-        first_name: splitName[0],
-        middle_name: splitName.length > 2 ? splitName[2] : "",
-        last_name: splitName.length > 1 ? splitName[1] : "",
+        first_name,
+        middle_name,
+        last_name,
         ...prevBasicInfo,
         details: {
           // todo: profile_pic
@@ -1209,7 +1211,7 @@ class MPatientController extends Controller {
         const smsPayload = {
           // countryCode: prefix,
           phoneNumber: `+${prefix}${mobile_number}`, // mobile_number
-          message: `Hello from Adhere! Your OTP for Consent Request is ${otp}`
+          message: `<#> Hello from Adhere! Your OTP for Consent Request is ${otp}`
         };
 
         Proxy_Sdk.execute(EVENTS.SEND_SMS, smsPayload);

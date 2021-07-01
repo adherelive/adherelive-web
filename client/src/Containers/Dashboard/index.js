@@ -25,7 +25,7 @@ import { setUnseenNotificationCount }  from "../../modules/pages/NotificationCou
 const mapStateToProps = state => {
   const {
     graphs,
-    auth: { authPermissions = [], authenticated_user = 1 , notificationToken = '' , feedId = '' } = {},
+    auth: { authPermissions = [], authenticated_user = 1 , notificationToken = '' , feedId = '' , doctor_provider_id = ''  } = {},
     treatments = {},
     conditions = {},
     pages: { ui_features = {} ,dashboard ={}} = {},
@@ -36,7 +36,8 @@ const mapStateToProps = state => {
     patients,
     doctors = {},
     features = {},
-    features_mappings = {}
+    features_mappings = {},
+    providers = {}
   } = state;
   return {
     notificationToken,
@@ -55,7 +56,9 @@ const mapStateToProps = state => {
     ui_features,
     features,
     features_mappings,
-    dashboard
+    dashboard,
+    doctor_provider_id,
+    providers
   };
 };
 
