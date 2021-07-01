@@ -47,8 +47,10 @@ import carePlanAppointmentService from "../../../services/carePlanAppointment/ca
 import providerTermsMappingService from "../../../services/providerTermsMapping/providerTermsMappings.service";
 import patientPaymentConsentMappingService from "../../../services/patientPaymentConsentMapping/patientPaymentConsentMapping.service";
 import doctorProviderMappingService from "../../../services/doctorProviderMapping/doctorProviderMapping.service";
+import userRolesService from '../../../services/userRoles/userRoles.service';
 
 import UserWrapper from "../../../ApiWrapper/mobile/user";
+import UserRolesWrapper from "../../../ApiWrapper/mobile/userRoles";
 import CarePlanWrapper from "../../../ApiWrapper/mobile/carePlan";
 import CarePlanTemplateWrapper from "../../../ApiWrapper/mobile/carePlanTemplate";
 import AppointmentWrapper from "../../../ApiWrapper/mobile/appointments";
@@ -1579,7 +1581,7 @@ class MPatientController extends Controller {
     try {
       const { care_plan_id = null } = req.params;
       const {
-        userDetails: { userId = null, userData: { category = "" } = {} } = {},
+        userDetails: { userId = null, userRoleId = null, userData: { category = "" } = {} } = {},
       } = req;
 
       const carePlanId = parseInt(care_plan_id);
@@ -1587,6 +1589,7 @@ class MPatientController extends Controller {
       let dataForPdf = {};
 
       let usersData = {};
+      let userRolesData = {};
       let qualifications = {};
       let degrees = {};
       let registrationsData = {};
@@ -1601,6 +1604,17 @@ class MPatientController extends Controller {
 
       const carePlan = await carePlanService.getCarePlanById(carePlanId);
       const carePlanData = await CarePlanWrapper(carePlan);
+
+      const doctorUserRoleId = carePlanData.getUserRoleId();
+
+      if(`${doctorUserRoleId}` !== `${userRoleId}` && category !== USER_CATEGORY.PATIENT) {
+        return raiseClientError(res, 422, {}, "You don't have the rights to access this prescription.");
+      }
+      const userRoles = await userRolesService.getSingleUserRoleByData({id: doctorUserRoleId});
+      if(userRoles) {
+        const userRolesWrapper = await UserRolesWrapper(userRoles);
+        userRolesData = {...userRolesData, [doctorUserRoleId]:  userRolesWrapper.getBasicInfo()}
+      }
 
       const carePlanCreatedDate = carePlanData.getCreatedAt();
       const carePlanPatientId = carePlanData.getPatientId();
@@ -1787,7 +1801,7 @@ class MPatientController extends Controller {
       }
 
       // provider data
-      const { provider_id = null } = doctors[doctor_id] || {};
+      const { [doctorUserRoleId]: { basic_info: {linked_id: provider_id = null} = {}} = {} } = userRolesData || {};
 
       let providerData = {};
 

@@ -24,12 +24,14 @@ import qualificationService from "../../services/doctorQualifications/doctorQual
 import doctorRegistrationService from "../../services/doctorRegistration/doctorRegistration.service";
 import treatmentService from "../../services/treatment/treatment.service";
 import doctorPatientWatchlistService from "../../services/doctorPatientWatchlist/doctorPatientWatchlist.service";
+import userRolesService from '../../services/userRoles/userRoles.service';
 
 import providerService from "../../services/provider/provider.service";
 import ExerciseContentService from "../../services/exerciseContents/exerciseContent.service";
 
 // WRAPPERS --------------------------------
 import ExerciseContentWrapper from "../../ApiWrapper/web/exerciseContents";
+import UserRolesWrapper from "../../ApiWrapper/web/userRoles";
 import VitalWrapper from "../../ApiWrapper/web/vitals";
 import UserWrapper from "../../ApiWrapper/web/user";
 import CarePlanWrapper from "../../ApiWrapper/web/carePlan";
@@ -53,7 +55,6 @@ import TreatmentWrapper from "../../ApiWrapper/web/treatments";
 import DoctorPatientWatchlistWrapper from "../../ApiWrapper/web/doctorPatientWatchlist";
 
 import ProviderWrapper from "../../ApiWrapper/web/provider";
-import UserRoleWrapper from "../../ApiWrapper/web/userRoles";
 
 import Log from "../../../libs/log";
 import moment from "moment";
@@ -79,7 +80,6 @@ import { checkAndCreateDirectory, getSeparateName } from "../../helper/common";
 // helpers
 import * as carePlanHelper from "../carePlans/carePlanHelper";
 import { getDoctorCurrentTime } from "../../helper/getUserTime";
-import userRolesService from "../../services/userRoles/userRoles.service";
 
 const path = require("path");
 
@@ -1773,13 +1773,14 @@ class PatientController extends Controller {
     const { raiseSuccess, raiseClientError, raiseServerError } = this;
     try {
       const { care_plan_id = null } = req.params;
-      const { userDetails: { userId, userData: { category } = {} } = {} } = req;
+      const { userDetails: { userId, userRoleId = null, userData: { category } = {} } = {} } = req;
 
       // const carePlanId = parseInt(care_plan_id);
 
       let dataForPdf = {};
 
       let usersData = {};
+      let userRolesData = {};
       let qualifications = {};
       let degrees = {};
       let registrationsData = {};
@@ -1795,6 +1796,17 @@ class PatientController extends Controller {
       const carePlan = await carePlanService.getCarePlanById(care_plan_id);
       const carePlanData = await CarePlanWrapper(carePlan);
       const curr_patient_id = carePlanData.getPatientId();
+
+      const doctorUserRoleId = carePlanData.getUserRoleId();
+
+      if(`${doctorUserRoleId}` !== `${userRoleId}` && category !== USER_CATEGORY.PATIENT) {
+        return raiseClientError(res, 422, {}, "You don't have the rights to access this prescription.");
+      }
+      const userRoles = await userRolesService.getSingleUserRoleByData({id: doctorUserRoleId});
+      if(userRoles) {
+        const userRolesWrapper = await UserRolesWrapper(userRoles);
+        userRolesData = {...userRolesData, [doctorUserRoleId]:  userRolesWrapper.getBasicInfo()}
+      }
 
       Logger.info(`curr_patient_id : ${curr_patient_id}`);
 
@@ -1983,7 +1995,7 @@ class PatientController extends Controller {
       }
 
       // provider data
-      const { provider_id = null } = doctors[doctor_id] || {};
+      const { [doctorUserRoleId]: { basic_info: {linked_id: provider_id = null} = {}} = {} } = userRolesData || {};
 
       let providerData = {};
 
