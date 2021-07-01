@@ -39,8 +39,6 @@ import MissedAppointmentsDrawer from "../../Containers/Drawer/missedAppointment"
 import MissedVitalsDrawer from "../../Containers/Drawer/missedVital";
 import MissedMedicationsDrawer from "../../Containers/Drawer/missedMedication";
 
-import BlankState from "../Common/BlankState";
-
 // helpers...
 import { getRoomId } from "../../Helper/twilio";
 const { GETSTREAM_API_KEY, GETSTREAM_APP_ID } = config;
@@ -99,7 +97,7 @@ class Dashboard extends Component {
     };
   }
 
-  componentDidMount() {
+  async componentDidMount() {
     const {  authPermissions = [] } = this.props;
     const {
       searchMedicine,
@@ -113,8 +111,6 @@ class Dashboard extends Component {
     } = this.props;
 
     this.setState({loading:true});
-
-
 
     closePopUp();
     let doctorUserId = ""; //user_id of doctor
@@ -571,6 +567,20 @@ class Dashboard extends Component {
     this.setState({currentTab: tab});
   };
 
+  getProviderBanner = () => {
+    const {providers ={} , doctor_provider_id = null } = this.props;
+    const { details : { banner = '' } = {} } = providers[doctor_provider_id] || {};
+
+    if(!doctor_provider_id || !banner){
+      return null;
+    }
+    
+    return (
+      <div>
+        <img src={banner} alt="provider-banner" style={{height:"80px",width:"auto"}} />
+      </div>
+    )
+  }
 
 
   render() {
@@ -609,7 +619,7 @@ class Dashboard extends Component {
       twilio: { patientId: chatPatientId = 1 }
     } = this.props;
 
-    const { formatMessage, renderChartTabs, getVerifyModal , changeTab } = this;
+    const { formatMessage, renderChartTabs, getVerifyModal , changeTab , getProviderBanner } = this;
 
     let {
       basic_info: {
@@ -634,6 +644,14 @@ class Dashboard extends Component {
     } = this.state;
 
     const roomId = getRoomId(doctorUserId, patientUserId);
+
+    let bannerFlag=true;
+    const {providers ={} , doctor_provider_id = null } = this.props;
+    const { details : { banner = '' } = {} } = providers[doctor_provider_id] || {};
+
+    if(!doctor_provider_id || !banner){
+     bannerFlag=false;
+    }
     
     if (Object.keys(graphs).length === 0 || loading || docName === TABLE_DEFAULT_BLANK_FIELD) {
       return (
@@ -650,18 +668,27 @@ class Dashboard extends Component {
           <div
             className={`flex direction-row justify-space-between align-center`}
           >
+            
+            {bannerFlag 
+            ?
+             getProviderBanner() 
+            :
+            (
+              <div className={bannerFlag ? "mt14" : ""}> 
             {docName !== "" ? (
-              <div className="fs28 fw700">
-                {formatMessage(messages.welcome)}, {docName}
-              </div>
-            ) : (
-              <div className="fs28 fw700">
-                {formatMessage(messages.dashboard)}
-              </div>
-            )}
+                <div className="fs28 fw700">
+                  {formatMessage(messages.welcome)}, {docName}
+                </div>
+              ) : (
+                <div className="fs28 fw700">
+                  {formatMessage(messages.dashboard)}
+                </div>
+              )}
+          </div> 
+            ) }
             {(authPermissions.includes(PERMISSIONS.ADD_PATIENT) ||
               authPermissions.includes(PERMISSIONS.EDIT_GRAPH)) && (
-              <div className="flex direction-row justify-space-between align-center w500 mr20">
+              <div className="flex direction-row justify-space-between align-center w500">
                 <SearchPatient />
 
                 <Dropdown
@@ -680,7 +707,26 @@ class Dashboard extends Component {
                 </Dropdown>
               </div>
             )}
+            
           </div>
+
+          {
+            bannerFlag 
+            &&
+            (
+              <div className="mt14" > 
+            {docName !== "" ? (
+                <div className="fs28 fw700">
+                  {formatMessage(messages.welcome)}, {docName}
+                </div>
+              ) : (
+                <div className="fs28 fw700">
+                  {formatMessage(messages.dashboard)}
+                </div>
+              )}
+          </div>
+            )
+          }  
 
           <section className="horizontal-scroll-wrapper pr10 mt10">
             {renderChartTabs()}

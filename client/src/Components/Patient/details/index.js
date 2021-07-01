@@ -920,11 +920,13 @@ class PatientDetails extends Component {
         organizer: { id: organizer_id } = {},
         active_event_id = null
       } = appointments[id] || {};
-      const { basic_info: { user_name = "" } = {} } = users[organizer_id] || {};
+      // const { basic_info: { user_name = "", full_name } = {} } = users[organizer_id] || {};
+
+      // console.log("1230990830912 users", {organizer_id, users, full_name});
       return {
         // organizer: organizer_type === "doctor" ? doctors[organizer_id] : patients[organizer_id].
         key: id,
-        organizer: user_name ? user_name : docName,
+        organizer: `Dr. ${docName}`,
         date: `${moment(start_date).format("LL")}`,
         time: `${
           start_time

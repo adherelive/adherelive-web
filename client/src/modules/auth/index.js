@@ -197,7 +197,6 @@ export const signIn = (payload) => {
 };
 
 export const uploadDocument = (payload) => {
-  console.log("912739172 payload", payload);
   let response = {};
   return async dispatch => {
     try {
@@ -560,7 +559,7 @@ export const getInitialData = () => {
         // const {  users } = response.payload.data;
 
         let { users = {}, auth_user = "", auth_category = "", permissions = [], notificationToken = '', feedId = '' , 
-        doctor_provider_id } = data;
+        doctor_provider_id, firebase_keys = {} } = data;
         // let authUser = Object.values(users).length ? Object.values(users)[0] : {};
 
         let authRedirection = setAuthRedirect(users[auth_user], true);
@@ -572,6 +571,7 @@ export const getInitialData = () => {
             users,
             authenticatedUser: auth_user,
             authRedirection,
+            firebase_keys,
             authCategory: auth_category,
             authPermissions: permissions,
             notificationToken,
@@ -655,6 +655,7 @@ export default (state = AUTH_INITIAL_STATE, action = {}) => {
       return {
         authenticated: true,
         authenticated_category: payload.authCategory,
+        firebase_keys: payload.firebase_keys,
         authenticated_user: payload.authenticatedUser,
         authRedirection: payload.authRedirection,
         authPermissions: payload.authPermissions,

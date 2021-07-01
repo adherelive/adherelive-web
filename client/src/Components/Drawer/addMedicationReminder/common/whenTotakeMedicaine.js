@@ -788,7 +788,7 @@ class WhenToTakeMedication extends Component {
 
         {getFormItems()}
 
-        {keys.length !== 0 && (
+        {/* {keys.length !== 0 && (
           <RadioGroup
             className="flex justify-content-end radio-formulation mb10"
             buttonStyle="solid"
@@ -809,7 +809,7 @@ class WhenToTakeMedication extends Component {
               After Meals
             </RadioButton>
           </RadioGroup>
-        )}
+        )} */}
       </Fragment>
     );
     // }

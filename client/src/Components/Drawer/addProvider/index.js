@@ -93,8 +93,9 @@ class addProviderDrawer extends Component {
           ifsc_code='',
           upi_id='',
           razorpay_account_id='',
-          razorpay_account_name='',
-          icon = "",
+          razorpay_account_name='' ,
+          icon = '',
+          banner = ''
         } = values;
 
 
@@ -112,8 +113,9 @@ class addProviderDrawer extends Component {
           ifsc_code,
           upi_id,
           razorpay_account_id,
-          razorpay_account_name,
-          icon
+          razorpay_account_name ,
+          icon,
+          banner
           };
 
           try {

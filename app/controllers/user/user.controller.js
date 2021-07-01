@@ -544,8 +544,7 @@ class UserController extends Controller {
     }
   }
 
-  onAppStart = async (req, res, next) => {
-    let response;
+  onAppStart = async (req, res) => {
     try {
       if (req.userDetails.exists) {
         const {
@@ -769,6 +768,14 @@ class UserController extends Controller {
         const notificationToken = appNotification.getUserToken(`${userId}`);
         const feedId = base64.encode(`${userId}`);
 
+        // firebase keys
+        const firebase_keys = {
+          apiKey: process.config.firebase.api_key,
+          appId: process.config.firebase.app_id,
+          measurementId: process.config.firebase.measurement_id,
+          projectId: process.config.firebase.project_id
+        };
+
         let response = {
           ...referenceData,
           users: {
@@ -785,6 +792,7 @@ class UserController extends Controller {
           },
           notificationToken: notificationToken,
           feedId: `${userId}`,
+          firebase_keys,
           severity: {
             ...severityApiDetails
           },

@@ -24,8 +24,7 @@ class SearchPatient extends Component{
         }
         
 
-        this.handlePatientSearch = throttle(this.handlePatientSearch.bind(this), 1000); 
-        this.handlePatientSearch = debounce(this.handlePatientSearch.bind(this), 50); 
+        this.handlePatientSearch = debounce(this.handlePatientSearch.bind(this), 200); 
 
     }
 

@@ -169,23 +169,37 @@ class PatientDetailsDrawer extends Component {
 
     const { appointmentsListIds } = this.state;
 
-    const { appointments = {} } = this.props;
+    const { appointments = {}, doctors = {} } = this.props;
+    const {formatMessage} = this;
     const appointmentList = appointmentsListIds.map(id => {
       const {
         basic_info: {
           start_date,
           start_time,
           end_time,
-          details: { type_description = ""  } = {}
-        } = {}
+          details: { type_description = ""  } = {},
+        } = {},
+        organizer: {id: organizer_id} = {},
       } = appointments[id] || {};
+
+      let docName = "";
+
+      for(const doctorId in doctors) {
+        const {basic_info: {full_name, user_id} = {}} = doctors[doctorId] || {};
+        if(user_id === organizer_id) {
+          docName = full_name;
+        }
+      }
+
       let td = moment(start_time);
        return (
         <div key={id} className="flex justify-space-between align-center mb10">
           <div className="pointer tab-color fw600 wp35 tooltip">{type_description.length > 0 ? type_description : " "}
 
             <span className="tooltiptext">{start_date}</span></div>
-          <div className="wp35 tal">{start_time ? td.utc().format('HH:mm') : '--' }</div>
+
+            <div className="wp40 tal">{formatMessage({...messages.appointmentDocName}, {name: docName})}</div>
+          <div className="wp30 tar">{start_time ? td.format('hh:mm A') : '--' }</div>
 
           <div className="wp20 tar">{ start_date ? moment( start_date).format("DD MMM") : "--"}</div>
         </div>
@@ -449,7 +463,7 @@ class PatientDetailsDrawer extends Component {
     }
   };
 
-  formatMessage = data => this.props.intl.formatMessage(data);
+  formatMessage = (data, other = {}) => this.props.intl.formatMessage(data, other);
 
   onClose = () => {
     const { close } = this.props;

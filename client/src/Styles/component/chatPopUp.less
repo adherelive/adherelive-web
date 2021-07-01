@@ -313,17 +313,57 @@
 }
 
 .media-container {
-  background-color: inherit;
-  height: auto;
-  width: 90%;
-  margin: 20px auto;
-  .symptom-image {
-    max-width: 100%;
-    min-width: 100%;
+    background-color: inherit;
     height: auto;
-    object-fit: fill;
-    margin: 0px;
+    width: 90%;
+    margin: 20px auto;
+    position: relative;
+    .symptom-image {
+      max-width: 100%;
+      min-width: 100%;
+      height: auto;
+      object-fit: fill;
+      margin: 0px;
+    }
   }
+
+.media-container:hover .button {
+  opacity: 1;
+  // display: block;
+}
+.media-container:hover .overlay {
+  display: block;
+  background: rgba(0, 0, 0, 0.5);
+}
+
+.audio-overlay{
+  display: block;
+  background-color: transparent;
+}
+
+.media-container:hover .doc-opt {
+  visibility: visible;
+}  
+
+.media-doc-container{
+  position: absolute;
+  right: 20px;
+  color: white;
+  top: 18px;
+  display: flex;
+  flex-direction: row-reverse;
+  // align-items: center;
+  // justify-content: space-evenly;
+  .doc-opt{
+    visibility: hidden;
+  
+  }
+}
+  
+.download-icon{
+  position: absolute;
+  top: 10%;
+  right: 0;
 }
 
 .symptom-audio-container {

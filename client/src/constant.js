@@ -724,6 +724,11 @@ export const BODY_SIDE = {
   1: "FRONT",
   2: "BACK"
 };
+
+export const BODY_SIDE_TEXT  ={
+  1: "Front",
+  2: "Back"
+}
 export const PARTS = {
   HEAD: "HEAD",
   RIGHT_EYE: "RIGHT_EYE",

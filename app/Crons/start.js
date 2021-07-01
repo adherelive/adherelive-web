@@ -37,7 +37,6 @@ class StartCron {
       const { getScheduleData } = this;
       const scheduleEvents = await getScheduleData();
 
-      Log.debug("Schedule events got are: ", scheduleEvents);
       let count = 0;
       if (scheduleEvents.length > 0) {
         for (const scheduleEvent of scheduleEvents) {
