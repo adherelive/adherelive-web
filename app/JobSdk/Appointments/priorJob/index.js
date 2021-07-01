@@ -1,7 +1,10 @@
 import AppointmentJob from "../";
 import moment from "moment";
 import { APPOINTMENT_TYPE, EVENT_TYPE } from "../../../../constant";
+
+import UserRoleService from "../../../services/userRoles/userRoles.service";
 import UserDeviceService from "../../../services/userDevices/userDevice.service";
+
 import UserDeviceWrapper from "../../../ApiWrapper/mobile/userDevice";
 
 class PriorJob extends AppointmentJob {
@@ -48,6 +51,17 @@ class PriorJob extends AppointmentJob {
     //     userIds.push(participant);
     //   }
     // });
+
+    const userRoles = await UserRoleService.findAndCountAll({
+      where: {
+        id: participants
+      }
+    }) || [];
+
+    for(const userRole of userRoles) {
+      const {user_identity} = userRole || {};
+      userIds.push(user_identity);
+    }
 
     const userDevices = await UserDeviceService.getAllDeviceByData({
       user_id: participants,
