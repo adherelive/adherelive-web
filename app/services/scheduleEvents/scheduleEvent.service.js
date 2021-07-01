@@ -433,7 +433,7 @@ class ScheduleEventService {
     }
   };
 
-  getAllEventStatusByData = async ({ appointment, medication, vital }) => {
+  getAllEventStatusByData = async ({ appointment, medication, vital, diet, workout }) => {
     try {
       return await Database.getModel(TABLE_NAME).findAll({
         where: {
@@ -447,6 +447,7 @@ class ScheduleEventService {
             {
               ...vital,
             },
+            diet, workout
           ],
         },
         attributes: ["status"],
