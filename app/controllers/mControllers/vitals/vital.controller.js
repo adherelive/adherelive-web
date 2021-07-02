@@ -59,7 +59,6 @@ class VitalController extends Controller {
         userDetails: {
           userId,
           userRoleId,
-          userRoleData,
           userData: { category } = {},
           userCategoryData = {},
         } = {},
@@ -95,8 +94,6 @@ class VitalController extends Controller {
 
         const { user_role_id: patientUserRoleId } = await patient.getAllInfo();
 
-        const { providers, user_roles } = userRoleData;
-
         const eventScheduleData = {
           type: EVENT_TYPE.VITALS,
           patient_id: patient.getPatientId(),
@@ -113,8 +110,6 @@ class VitalController extends Controller {
             user_role_id: userRoleId,
             category,
             userCategoryData,
-            providers,
-            user_roles,
           },
           vital_templates: vital_templates[vitals.getVitalTemplateId()],
         };
@@ -169,7 +164,6 @@ class VitalController extends Controller {
         userDetails: {
           userId,
           userRoleId,
-          userRoleData,
           userData: { category } = {},
           userCategoryData = {},
         } = {},
@@ -204,8 +198,6 @@ class VitalController extends Controller {
 
         const { user_role_id: patientUserRoleId } = await patient.getAllInfo();
 
-        const { providers, user_roles } = userRoleData;
-
         const eventScheduleData = {
           type: EVENT_TYPE.VITALS,
           patient_id: patient.getUserId(),
@@ -222,8 +214,6 @@ class VitalController extends Controller {
             user_role_id: userRoleId,
             category,
             userCategoryData,
-            providers,
-            user_roles,
           },
           vital_templates: vitalTemplates.getBasicInfo(),
         };
@@ -338,7 +328,6 @@ class VitalController extends Controller {
         params: { id } = {},
         userDetails: {
           userRoleId,
-          userRoleData,
           userData: { category } = {},
         } = {},
         body: { response } = {},
@@ -375,8 +364,6 @@ class VitalController extends Controller {
           value: rest,
           createdTime,
         });
-
-        Log.debug("182978312 prevResponse", prevResponse);
 
         const updateEvent = await EventService.update(
           {
@@ -459,8 +446,6 @@ class VitalController extends Controller {
             name: patientData.getFullName(),
             category: USER_CATEGORY.PATIENT,
           },
-          providers,
-          user_roles,
         },
         vital_templates: vitalTemplate.getBasicInfo(),
       };
