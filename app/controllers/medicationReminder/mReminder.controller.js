@@ -166,8 +166,8 @@ class MReminderController extends Controller {
           user_role_id: userRoleId,
           details: { name: full_name, category }
         },
-        participant_one: patient.getUserId(),
-        participant_two: userId
+        // participant_one: patient.getUserId(),
+        // participant_two: userId
       };
 
       const QueueService = new queueService();
@@ -351,8 +351,8 @@ class MReminderController extends Controller {
           user_role_id: userRoleId,
           details: { name: full_name, category }
         },
-        participant_one: patient.getUserId(),
-        participant_two: userId
+        // participant_one: patient.getUserId(),
+        // participant_two: userId
       };
 
       if(when_to_take_abbr_int !== WHEN_TO_TAKE_ABBREVATIONS.SOS) {
@@ -487,8 +487,8 @@ class MReminderController extends Controller {
           user_role_id: userRoleId,
           details: { name: full_name, category }
         },
-        participant_one: patient.getUserId(),
-        participant_two: userId
+        // participant_one: patient.getUserId(),
+        // participant_two: userId
       };
       
       const when_to_take_abbr_int = when_to_take_abbr? parseInt(when_to_take_abbr, 10): when_to_take_abbr;

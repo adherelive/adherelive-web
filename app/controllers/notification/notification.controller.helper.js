@@ -706,6 +706,7 @@ const dietNotification = async (data) => {
     const {
       data: {
         actor,
+        actorRoleId,
         foreign_id,
         id,
         // object,
@@ -784,6 +785,7 @@ const dietNotification = async (data) => {
         type: DIET,
         stage,
         actor,
+        actor_role_id:actorRoleId,
         verb,
         start_time: notification_start_time,
         create_time: notification_create_time,
@@ -810,6 +812,7 @@ const workoutNotification = async (data) => {
     const {
       data: {
         actor,
+        actorRoleId,
         foreign_id,
         id,
         // object,
@@ -885,6 +888,7 @@ const workoutNotification = async (data) => {
         type: WORKOUT,
         stage,
         actor,
+        actor_role_id:actorRoleId,
         verb,
         start_time: notification_start_time,
         create_time: notification_create_time,

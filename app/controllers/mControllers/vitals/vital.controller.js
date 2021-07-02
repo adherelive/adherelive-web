@@ -427,7 +427,6 @@ class VitalController extends Controller {
       //   eventData
       // );
       // await NotificationSdk.execute(chatJob);
-      const { providers, user_roles } = userRoleData;
 
       const eventScheduleData = {
         type: EVENT_TYPE.VITALS,
