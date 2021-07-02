@@ -5,6 +5,12 @@ import adhocController from "../../../app/controllers/adhoc/adhoc.controller";
 import Authenticated from "../middleware/auth";
 
 router.post(
+    "/purge/sqs",
+    Authenticated,
+    adhocController.purgeSqsQueue
+);
+
+router.post(
     "/populate-user-roles",
     Authenticated,
     adhocController.migrateAllUsersToUserRoles
