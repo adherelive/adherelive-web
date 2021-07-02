@@ -38,11 +38,11 @@ class CreateJob extends SymptomsJob {
       }
     });
 
-    const userRoles = await UserRoleService.findAndCountAll({
+    const {rows: userRoles = []} = await UserRoleService.findAndCountAll({
       where: {
         id: userRoleIds
       }
-    }) || [];
+    }) || {};
 
     for(const userRole of userRoles) {
       const {user_identity} = userRole || {};

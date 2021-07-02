@@ -48,11 +48,11 @@ class StartJob extends AppointmentJob {
     //   }
     // });
 
-    const userRoles = await UserRoleService.findAndCountAll({
+    const {rows: userRoles = []} = await UserRoleService.findAndCountAll({
       where: {
         id: participants
       }
-    }) || [];
+    }) || {};
 
     for(const userRole of userRoles) {
       const {user_identity} = userRole || {};
