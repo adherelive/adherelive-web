@@ -47,6 +47,7 @@ class WorkoutController extends Controller {
 
       const {
         userId,
+        userRoleId,
         userData: { category } = {},
         userCategoryData: { basic_info: { full_name = "" } = {} } = {},
       } = userDetails || {};
@@ -96,6 +97,8 @@ class WorkoutController extends Controller {
       const patientId = await careplanWrapper.getPatientId();
       const patient = await PatientWrapper(null, patientId);
 
+      const {user_role_id: patientRoleId} = await patient.getAllInfo();
+
       const eventScheduleData = {
         patient_user_id: patient.getUserId(),
         type: EVENT_TYPE.WORKOUT,
@@ -103,9 +106,10 @@ class WorkoutController extends Controller {
         // status: EVENT_STATUS.SCHEDULED,
         start_date,
         end_date,
-        participants: [userId, patient.getUserId()],
+        participants: [userRoleId, patientRoleId],
         actor: {
           id: userId,
+          user_role_id: userRoleId,
           details: { name: full_name, category },
         },
       };
@@ -148,6 +152,7 @@ class WorkoutController extends Controller {
 
       const {
         userId,
+        userRoleId,
         userData: { category } = {},
         userCategoryData: { basic_info: { full_name = "" } = {} } = {},
       } = userDetails || {};
@@ -223,15 +228,18 @@ class WorkoutController extends Controller {
         const patientId = await careplanWrapper.getPatientId();
         const patient = await PatientWrapper(null, patientId);
 
+        const { user_role_id: patientRoleId } = await patient.getAllInfo();
+
         const eventScheduleData = {
           patient_user_id: patient.getUserId(),
           type: EVENT_TYPE.WORKOUT,
           event_id: workout_id,
           start_date,
           end_date,
-          participants: [userId, patient.getUserId()],
+          participants: [userRoleId, patientRoleId],
           actor: {
             id: userId,
+            user_role_id: userRoleId,
             details: { name: full_name, category },
           },
         };
