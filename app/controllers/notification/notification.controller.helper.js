@@ -910,6 +910,7 @@ const symptomsNotification = async (data) => {
     const {
       data: {
         actor,
+        actorRoleId,
         foreign_id,
         id,
         object,
@@ -950,6 +951,7 @@ const symptomsNotification = async (data) => {
         type: SYMPTOMS,
         stage: NOTIFICATION_STAGES.CREATE,
         actor,
+        actor_role_id: actorRoleId,
         verb,
         start_time: notification_start_time,
         create_time: notification_create_time,
