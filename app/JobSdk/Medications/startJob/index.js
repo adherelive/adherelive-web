@@ -1,7 +1,8 @@
 import MedicationJob from "../";
 import moment from "moment";
-import { EVENT_TYPE, NOTIFICATION_VERB } from "../../../../constant";
+import { EVENT_TYPE, NOTIFICATION_VERB, DEFAULT_PROVIDER } from "../../../../constant";
 
+import ProviderService from "../../../services/provider/provider.service";
 import UserRoleService from "../../../services/userRoles/userRoles.service";
 import UserDeviceService from "../../../services/userDevices/userDevice.service";
 import UserDeviceWrapper from "../../../ApiWrapper/mobile/userDevice";
@@ -48,9 +49,23 @@ class StartJob extends MedicationJob {
       }
     }) || {};
 
+    let providerId = null;
     for(const userRole of userRoles) {
-      const {user_identity} = userRole || {};
+      const {id, user_identity, linked_id} = userRole || {};
       userIds.push(user_identity);
+
+      if(id === user_role_id) {
+        if(linked_id) {
+          providerId = linked_id;
+        }
+      }
+    }
+
+    let providerName = DEFAULT_PROVIDER;
+    if(providerId) {
+      const provider = await ProviderService.getProviderByData({id: providerId});
+      const {name} = provider || {};
+      providerName = name;
     }
     const userDevices = await UserDeviceService.getAllDeviceByData({
       user_id: userIds
@@ -69,7 +84,7 @@ class StartJob extends MedicationJob {
     templateData.push({
       small_icon: process.config.app.icon_android,
       app_id: process.config.one_signal.app_id, // TODO: add the same in pushNotification handler in notificationSdk
-      headings: { en: `Medication Reminder` },
+      headings: { en: `Medication Reminder (${providerName})` },
       contents: {
         en: `${critical ? "!IMPORTANT!" : ""} Time to take ${
           medicineName.length > 10

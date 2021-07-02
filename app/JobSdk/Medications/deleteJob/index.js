@@ -1,10 +1,11 @@
 import MedicationJob from "../";
 import moment from "moment";
 
+import ProviderService from "../../../services/provider/provider.service";
 import UserRoleService from "../../../services/userRoles/userRoles.service";
 import UserDeviceService from "../../../services/userDevices/userDevice.service";
 import UserDeviceWrapper from "../../../ApiWrapper/mobile/userDevice";
-import { EVENT_TYPE } from "../../../../constant";
+import { EVENT_TYPE, DEFAULT_PROVIDER} from "../../../../constant";
 
 class DeleteJob extends MedicationJob {
     constructor(data) {
@@ -39,9 +40,23 @@ class DeleteJob extends MedicationJob {
           }
         }) || {};
     
+        let providerId = null;
         for(const userRole of userRoles) {
-          const {user_identity} = userRole || {};
-          userIds.push(user_identity);
+            const {id, user_identity, linked_id} = userRole || {};
+            userIds.push(user_identity);
+
+            if(id === user_role_id) {
+                if(linked_id) {
+                  providerId = linked_id;
+                }
+            }
+        }
+
+        let providerName = DEFAULT_PROVIDER;
+        if(providerId) {
+            const provider = await ProviderService.getProviderByData({id: providerId});
+            const {name} = provider || {};
+            providerName = name;
         }
 
         const userDevices = await UserDeviceService.getAllDeviceByData({
@@ -58,7 +73,7 @@ class DeleteJob extends MedicationJob {
         templateData.push({
             small_icon: process.config.app.icon_android,
             app_id: process.config.one_signal.app_id, // TODO: add the same in pushNotification handler in notificationSdk
-            headings: { en: `Medication Delete` },
+            headings: { en: `Medication Delete (${providerName})` },
             contents: {
                 en: `${name}(${actorCategory}) has deleted a medication. Tap here to know more!`
             },

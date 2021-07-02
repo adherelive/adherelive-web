@@ -1,8 +1,9 @@
 import WorkoutJob from "../";
 import moment from "moment";
-import { EVENT_TYPE, NOTIFICATION_VERB } from "../../../../constant";
+import { EVENT_TYPE, NOTIFICATION_VERB, DEFAULT_PROVIDER } from "../../../../constant";
 
 import UserRoleService from "../../../services/userRoles/userRoles.service";
+import ProviderService from "../../../services/provider/provider.service";
 import UserDeviceService from "../../../services/userDevices/userDevice.service";
 import UserDeviceWrapper from "../../../ApiWrapper/mobile/userDevice";
 
@@ -44,9 +45,23 @@ class StartJob extends WorkoutJob {
       }
     }) || {};
 
+    let providerId = null;
     for(const userRole of userRoles) {
-      const {user_identity} = userRole || {};
+      const {id, user_identity, linked_id} = userRole || {};
       userIds.push(user_identity);
+
+      if(id === user_role_id) {
+        if(linked_id) {
+          providerId = linked_id;
+        }
+      }
+    }
+
+    let providerName = DEFAULT_PROVIDER;
+    if(providerId) {
+      const provider = await ProviderService.getProviderByData({id: providerId});
+      const {name} = provider || {};
+      providerName = name;
     }
 
     const userDevices = await UserDeviceService.getAllDeviceByData({
@@ -69,14 +84,10 @@ class StartJob extends WorkoutJob {
     templateData.push({
       small_icon: process.config.app.icon_android,
       app_id: process.config.one_signal.app_id,
-      headings: { en: `Workout Reminder` },
+      headings: { en: `Workout Reminder (${providerName})` },
       contents: {
         en: `Time to do ${workoutName}. Tap here to know more!`
       },
-      // buttons: [
-      //   { id: "yes", text: "YES"},
-      //   { id: "no", text: "NO" }
-      // ],
       include_player_ids: [...playerIds],
       priority: 10,
       android_channel_id: process.config.one_signal.urgent_channel_id,
