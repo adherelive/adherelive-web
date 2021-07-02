@@ -98,6 +98,7 @@ class CreateJob extends SymptomsJob {
       if (participant !== user_role_id) {
         templateData.push({
             actor: actorId,
+            actorRoleId: user_role_id,
             object: `${participant}`,
             foreign_id: `${event_id}`,
             verb: `symptoms_create:${currentTimeStamp}`,

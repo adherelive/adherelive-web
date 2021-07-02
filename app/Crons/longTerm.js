@@ -7,13 +7,29 @@ import medicationService from "../services/medicationReminder/mReminder.service"
 import vitalService from "../services/vitals/vital.service";
 import EventService from "../services/scheduleEvents/scheduleEvent.service";
 import QueueService from "../services/awsQueue/queue.service";
+import userRoleService from "../services/userRoles/userRoles.service";
+import patientsService from "../services/patients/patients.service";
 
 // wrappers
 import VitalWrapper from "../ApiWrapper/mobile/vitals";
+import PatientWrapper from "../ApiWrapper/mobile/patient";
 
 const Log = new Logger("LONG_TERM > CRONS");
 
 class LongTerm {
+  getuserFromRole = async (roleId) => {
+    try {
+        const userRoles = await userRoleService.findOne({id: roleId});
+
+        const {user_identity} = userRoles || {};
+
+        return user_identity;
+    } catch(error) {
+      Log.debug("getuserFromRole error", error);
+      throw error;
+    }
+  };
+
   getMedications = async () => {
     try {
       let medicationIds = [];
@@ -76,16 +92,22 @@ class LongTerm {
 
       const { id: actorId } = actor || {};
 
-      let patientId = null;
+      let patientUserRoleId = null;
       for (const participant of participants) {
-        if (participant !== actorId) {
-          patientId = participant;
+        if (participant !== user_role_id) {
+          patientUserRoleId = participant;
           break;
         }
       }
 
+      const patientUserId = await this.getuserFromRole(patientUserRoleId);
+
+      // const patientData = await patientsService.getPatientByUserId(patientUserId);
+
+      // const patient = await PatientWrapper(patientData);
+
       const eventScheduleData = {
-        patient_id: patientId,
+        patient_id: patientUserId,
         type: EVENT_TYPE.MEDICATION_REMINDER,
         event_id: medicationId,
         details,
@@ -97,7 +119,7 @@ class LongTerm {
         when_to_take,
         participants,
         actor,
-        participant_one: patientId,
+        participant_one: patientUserId,
         participant_two: actorId,
       };
 
@@ -126,29 +148,35 @@ class LongTerm {
       const { details: { actor, participants = [] } = {} } =
         scheduleEvent || {};
 
-      const { details, details: { when_to_take } = {} } = vital || {};
-
       const vitals = await VitalWrapper({data: vital});
 
-      const { id: actorId } = actor || {};
+      const { id: actorId, user_role_id } = actor || {};
 
-      let patientId = null;
+      let patientUserRoleId = null;
       for (const participant of participants) {
-        if (participant !== actorId) {
-          patientId = participant;
+        if (participant !== user_role_id) {
+          patientUserRoleId = participant;
           break;
         }
       }
+
+      const patientUserId = await this.getuserFromRole(patientUserRoleId);
+
+      const patientData = await patientsService.getPatientByUserId(patientUserId);
+
+      const {id: patientId} = patientData || {};
+
+      // const patient = await PatientWrapper(patientData);
 
       const {vital_templates} = await vitals.getReferenceInfo();
 
       const eventScheduleData = {
         type: EVENT_TYPE.VITALS,
-        patient_id: patient.getPatientId(),
-        patientUserId: patient.getUserId(),
+        patient_id: patientId,
+        patientUserId,
         event_id: vitalId,
         event_type: EVENT_TYPE.VITALS,
-        critical,
+        critical: false,
         start_date: moment().utc().toISOString(),
         end_date: null,
         details: vitals.getBasicInfo(),
@@ -160,7 +188,7 @@ class LongTerm {
       const queueService = new QueueService();
       await queueService.sendMessage(eventScheduleData);
     } catch (error) {
-      Log.debug("createMedicationEvents error", error);
+      Log.debug("createVitalEvents error", error);
       throw error;
     }
   };
@@ -192,26 +220,26 @@ class LongTerm {
       }
 
       // vitals
-      // const vitalIds = await this.getVitals();
+      const vitalIds = await this.getVitals();
 
-      // Log.debug("vitalIds", vitalIds);
+      Log.debug("vitalIds", vitalIds);
 
-      // if (vitalIds.length > 0) {
-      //   for (const vitalId of vitalIds) {
-      //     const scheduleEvents =
-      //       (await eventService.getAllEventByData({
-      //         event_id: vitalId,
-      //         event_type: EVENT_TYPE.VITALS,
-      //         status: EVENT_STATUS.PENDING,
-      //       })) || [];
+      if (vitalIds.length > 0) {
+        for (const vitalId of vitalIds) {
+          const scheduleEvents =
+            (await eventService.getAllEventByData({
+              event_id: vitalId,
+              event_type: EVENT_TYPE.VITALS,
+              status: EVENT_STATUS.PENDING,
+            })) || [];
 
-      //     Log.debug("scheduleEvents", scheduleEvents.length);
+          Log.debug("scheduleEvents", scheduleEvents.length);
 
-      //     if (scheduleEvents.length === 0) {
-      //       await this.createVitalEvents(vitalId);
-      //     }
-      //   }
-      // }
+          if (scheduleEvents.length === 0) {
+            await this.createVitalEvents(vitalId);
+          }
+        }
+      }
     } catch (error) {
       Log.debug("observer error", error);
       throw error;
