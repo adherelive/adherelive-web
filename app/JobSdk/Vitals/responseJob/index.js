@@ -1,8 +1,9 @@
 import VitalJob from "../";
 import moment from "moment";
-import { EVENT_TYPE, NOTIFICATION_VERB } from "../../../../constant";
+import { DEFAULT_PROVIDER, EVENT_TYPE, NOTIFICATION_VERB } from "../../../../constant";
 
 import UserRoleService from "../../../services/userRoles/userRoles.service";
+import ProviderService from "../../../services/provider/provider.service";
 import UserDeviceService from "../../../services/userDevices/userDevice.service";
 
 import UserDeviceWrapper from "../../../ApiWrapper/mobile/userDevice";
@@ -19,6 +20,7 @@ class ResponseJob extends VitalJob {
       participants = [],
       actor: {
         id: actorId,
+        user_role_id,
         details: { name, category: actorCategory } = {}
       } = {},
       vital_templates,
@@ -32,23 +34,38 @@ class ResponseJob extends VitalJob {
     const playerIds = [];
     const userIds = [];
 
-    const userRoleIds = [];
-
-    participants.forEach(participant => {
-      if (participant !== user_role_id) {
-        userRoleIds.push(participant);
-      }
-    });
+    // participants.forEach(participant => {
+    //   if (participant !== user_role_id) {
+    //     userRoleIds.push(participant);
+    //   }
+    // });
 
     const {rows: userRoles = []} = await UserRoleService.findAndCountAll({
       where: {
-        id: userRoleIds
+        id: participants
       }
     }) || {};
 
+    let providerId = null;
+
     for(const userRole of userRoles) {
-      const {user_identity} = userRole || {};
-      userIds.push(user_identity);
+      const {id, user_identity, linked_id} = userRole || {};
+      if(id !== user_role_id) {
+        userIds.push(user_identity);
+      } 
+      else {
+        if(linked_id) {
+          providerId = linked_id;
+        }
+      }
+    }
+
+    // provider
+    let providerName = DEFAULT_PROVIDER;
+    if(providerId) {
+      const provider = await ProviderService.getProviderByData({id: providerId});
+      const {name} = provider || {};
+      providerName = name;
     }
 
     const userDevices = await UserDeviceService.getAllDeviceByData({

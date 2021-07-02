@@ -50,7 +50,7 @@ class SymptomController extends Controller {
         body,
         params: { patient_id } = {},
         // userDetails: { userId, userRoleId } = {}
-        userDetails: { userId,  userRoleId, userRoleData, userData: { category } = {},} = {},
+        userDetails: { userId,  userRoleId, userData: { category } = {},} = {},
       } = req;
       const {
         care_plan_id,
@@ -232,14 +232,11 @@ class SymptomController extends Controller {
           return(parseInt(id, 10))
         })
 
-        const {providers, user_roles} = userRoleData || {};
-
         const symptomNotificationData = {
           participants : [userRoleId, ...allDoctorIds],
           actor: {
             id: userId,
             user_role_id: userRoleId,
-            providers, user_roles,
             details: { name: patientData.getFullName(), category }
           },
           patient_id,

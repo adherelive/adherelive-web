@@ -79,7 +79,6 @@ class MobileAppointmentController extends Controller {
       const {
         userId,
         userRoleId,
-        userRoleData,
         userData: { category } = {},
         userCategoryId,
         userCategoryData: { basic_info: { full_name } = {} } = {}
@@ -165,8 +164,6 @@ class MobileAppointmentController extends Controller {
           break;
       }
 
-      const {providers, user_roles} = userRoleData || {};
-
       const eventScheduleData = {
         type: EVENT_TYPE.APPOINTMENT,
         event_id: appointmentData.getAppointmentId(),
@@ -179,7 +176,6 @@ class MobileAppointmentController extends Controller {
         actor: {
           id: userId,
           user_role_id: userRoleId,
-          providers, user_roles,
           details: { name: full_name, category }
         }
       };
@@ -296,7 +292,6 @@ class MobileAppointmentController extends Controller {
       const {
         userId,
         userRoleId,
-        userRoleData,
         userData: { category } = {},
         userCategoryId,
         userCategoryData: { basic_info: { full_name } = {} } = {}
@@ -425,7 +420,6 @@ class MobileAppointmentController extends Controller {
         event_type: EVENT_TYPE.APPOINTMENT
       });
 
-      const {providers, user_roles} = userRoleData || {};
       // 2. new sqs for updated appointment
       const eventScheduleData = {
         type: EVENT_TYPE.APPOINTMENT,
@@ -439,7 +433,6 @@ class MobileAppointmentController extends Controller {
         actor: {
           id: userId,
           user_role_id: userRoleId,
-          providers, user_roles,
           details: { name: full_name, category }
         }
       };
