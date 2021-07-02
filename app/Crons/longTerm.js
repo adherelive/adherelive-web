@@ -19,7 +19,9 @@ const Log = new Logger("LONG_TERM > CRONS");
 class LongTerm {
   getuserFromRole = async (roleId) => {
     try {
-        const userRoles = await userRoleService.findOne({id: roleId});
+        const userRoles = await userRoleService.findOne({
+          where: {id: roleId}
+        });
 
         const {user_identity} = userRoles || {};
 
@@ -55,10 +57,10 @@ class LongTerm {
     try {
       let vitalIds = [];
       const allVitals =
-        (await getAllByData.getAllByData({ end_date: null })) || [];
+        (await vitalService.getAllByData({ end_date: null })) || [];
 
       if (allVitals.length > 0) {
-        for (const vital of allvitals) {
+        for (const vital of allVitals) {
           const { id } = vital || {};
           vitalIds.push(id);
         }
@@ -185,6 +187,8 @@ class LongTerm {
         vital_templates: vital_templates[vitals.getVitalTemplateId()],
       };
 
+      // Log.debug("eventScheduleData", eventScheduleData);
+
       const queueService = new QueueService();
       await queueService.sendMessage(eventScheduleData);
     } catch (error) {
@@ -233,7 +237,7 @@ class LongTerm {
               status: EVENT_STATUS.PENDING,
             })) || [];
 
-          Log.debug("scheduleEvents", scheduleEvents.length);
+          Log.debug("vitalIds scheduleEvents", scheduleEvents.length);
 
           if (scheduleEvents.length === 0) {
             await this.createVitalEvents(vitalId);
