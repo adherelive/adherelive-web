@@ -86,6 +86,7 @@ class MobileMReminderController extends Controller {
       } = body;
       const {
         userId,
+        userRoleId,
         userData: { category } = {},
         userCategoryData: { basic_info: { full_name = "" } = {} } = {}
       } = userDetails || {};
@@ -154,10 +155,13 @@ class MobileMReminderController extends Controller {
         categoryData = await DoctorWrapper(doctor);
       }
 
+      const {user_role_id: patientRoleId} = await patient.getAllInfo();
+
       const eventData = {
-        participants: [userId, patient.getUserId()],
+        participants: [userRoleId, patientRoleId],
         actor: {
           id: userId,
+          user_role_id: userRoleId,
           details: {
             name: categoryData.getName(),
             category
@@ -328,8 +332,10 @@ class MobileMReminderController extends Controller {
         categoryData = await DoctorWrapper(doctor);
       }
 
+      const {user_role_id: patientRoleId} = await patient.getAllInfo();
+
       const eventData = {
-        participants: [userId, patient.getUserId()],
+        participants: [userRoleId, patientRoleId],
         actor: {
           id: userId,
           user_role_id: userRoleId,
@@ -356,7 +362,7 @@ class MobileMReminderController extends Controller {
           start_date,
           end_date,
           when_to_take,
-          participants: [userId, patient.getUserId()],
+          participants: [userRoleId, patientRoleId],
           actor: {
             id: userId,
             user_role_id: userRoleId,
@@ -614,6 +620,7 @@ class MobileMReminderController extends Controller {
       });
 
       const patient = await PatientWrapper(null, participant_id);
+      const {user_role_id: patientRoleId} = await patient.getAllInfo();
 
       // 2. update new sqs message
       const eventScheduleData = {
@@ -625,7 +632,7 @@ class MobileMReminderController extends Controller {
         start_date,
         end_date,
         when_to_take,
-        participants: [userId, patient.getUserId()],
+        participants: [userRoleId, patientRoleId],
         actor: {
           id: userId,
           user_role_id: userRoleId,
@@ -690,12 +697,14 @@ class MobileMReminderController extends Controller {
       });
 
       const patient = await PatientWrapper(null, medication.getParticipant());
+      const {user_role_id: patientRoleId} = await patient.getAllInfo();
+
 
       const eventScheduleData = {
         type: EVENT_TYPE.MEDICATION_REMINDER,
         event_id: medication.getMReminderId(),
         details: medication.getDetails(),
-        participants: [userId, patient.getUserId()],
+        participants: [userRoleId, patientRoleId],
         actor: {
           id: userId,
           user_role_id: userRoleId,

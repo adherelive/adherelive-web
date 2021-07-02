@@ -72,6 +72,7 @@ class DietResponseController extends Controller {
         body = {},
         userDetails: {
           userId,
+          userRoleId,
           userData: { category } = {},
           userCategoryData: { basic_info: { full_name } = {} } = {},
         } = {},
@@ -113,6 +114,8 @@ class DietResponseController extends Controller {
         // get doctor for diet
         const diet = await DietWrapper({ id: diet_id });
         const carePlan = await CareplanWrapper(null, diet.getCareplanId());
+        const doctorRoleId = carePlan.getUserRoleId();
+
         const doctor = await DoctorWrapper(null, carePlan.getDoctorId());
 
         const dietResponse = await DietResponseWrapper({
@@ -120,9 +123,10 @@ class DietResponseController extends Controller {
         });
 
         const dietJob = DietJob.execute(NOTIFICATION_STAGES.RESPONSE_ADDED, {
-          participants: [userId, doctor.getUserId()],
+          participants: [userRoleId, doctorRoleId],
           actor: {
             id: userId,
+            user_role_id: userRoleId,
             details: {name: full_name, category},
           },
           id: dietResponseId,

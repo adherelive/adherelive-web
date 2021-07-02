@@ -1,8 +1,11 @@
 import MedicationJob from "../";
 import moment from "moment";
+
+import ProviderService from "../../../services/provider/provider.service";
+import UserRoleService from "../../../services/userRoles/userRoles.service";
 import UserDeviceService from "../../../services/userDevices/userDevice.service";
 import UserDeviceWrapper from "../../../ApiWrapper/mobile/userDevice";
-import { EVENT_TYPE } from "../../../../constant";
+import { EVENT_TYPE, DEFAULT_PROVIDER} from "../../../../constant";
 
 class UpdateJob extends MedicationJob {
   constructor(data) {
@@ -15,6 +18,7 @@ class UpdateJob extends MedicationJob {
       participants = [],
       actor: {
         id: actorId,
+        user_role_id,
         details: { name, category: actorCategory } = {},
       } = {},
       event_id = null,
@@ -23,12 +27,38 @@ class UpdateJob extends MedicationJob {
     const templateData = [];
     const playerIds = [];
     const userIds = [];
+    const userRoleIds = [];
 
-    participants.forEach((participant) => {
-      if (participant !== actorId) {
-        userIds.push(participant);
+    participants.forEach(participant => {
+      if (participant !== user_role_id) {
+        userRoleIds.push(participant);
       }
     });
+
+    const {rows: userRoles = []} = await UserRoleService.findAndCountAll({
+      where: {
+        id: userRoleIds
+      }
+    }) || {};
+
+    let providerId = null;
+    for(const userRole of userRoles) {
+      const {id, user_identity, linked_id} = userRole || {};
+      userIds.push(user_identity);
+
+      if(id === user_role_id) {
+        if(linked_id) {
+          providerId = linked_id;
+        }
+      }
+    }
+
+    let providerName = DEFAULT_PROVIDER;
+    if(providerId) {
+      const provider = await ProviderService.getProviderByData({id: providerId});
+      const {name} = provider || {};
+      providerName = name;
+    }
 
     const userDevices = await UserDeviceService.getAllDeviceByData({
       user_id: userIds,
@@ -44,7 +74,7 @@ class UpdateJob extends MedicationJob {
     templateData.push({
       small_icon: process.config.app.icon_android,
       app_id: process.config.one_signal.app_id, // TODO: add the same in pushNotification handler in notificationSdk
-      headings: { en: `Medication Update` },
+      headings: { en: `Medication Update (${providerName})` },
       contents: {
         en: `${name}(${actorCategory}) has updated a medication. Tap here to know more!`,
       },
@@ -74,7 +104,7 @@ class UpdateJob extends MedicationJob {
     const now = moment();
     const currentTimeStamp = now.unix();
     for (const participant of participants) {
-      if (participant !== actorId) {
+      if (participant !== user_role_id) {
         templateData.push({
           actor: actorId,
           actorRoleId: user_role_id,
