@@ -263,7 +263,6 @@ class AppointmentController extends Controller {
       const {
         userId,
         userRoleId,
-        userRoleData,
         userData: { category } = {},
         userCategoryId,
         userCategoryData: { basic_info: { full_name } = {} } = {}
@@ -379,8 +378,6 @@ class AppointmentController extends Controller {
 
       const appointmentApiData = await new AppointmentWrapper(appointment);
 
-      const {providers, user_roles} = userRoleData || {};
-
       const eventScheduleData = {
         type: EVENT_TYPE.APPOINTMENT,
         event_id: appointmentApiData.getAppointmentId(),
@@ -393,8 +390,6 @@ class AppointmentController extends Controller {
         actor: {
           id: userId,
           user_role_id: userRoleId,
-          providers,
-          user_roles,
           details: { name: full_name, category }
         }
       };
@@ -465,7 +460,6 @@ class AppointmentController extends Controller {
       const {
         userId,
         userRoleId,
-        userRoleData,
         userData: { category } = {},
         userCategoryId,
         userCategoryData: { basic_info: { full_name } = {} } = {}
@@ -595,8 +589,6 @@ class AppointmentController extends Controller {
         event_type: EVENT_TYPE.APPOINTMENT
       });
 
-      const {providers, user_roles} = userRoleData || {};
-
       // 2. send sqs for updated
       const eventScheduleData = {
         type: EVENT_TYPE.APPOINTMENT,
@@ -610,8 +602,6 @@ class AppointmentController extends Controller {
         actor: {
           id: userId,
           user_role_id: userRoleId,
-          providers,
-          user_roles,
           details: { name: full_name, category }
         }
       };

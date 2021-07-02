@@ -1,9 +1,10 @@
 import VitalJob from "../";
 import moment from "moment";
 import { getFullName } from "../../../helper/common";
-import { EVENT_TYPE } from "../../../../constant";
+import { DEFAULT_PROVIDER, EVENT_TYPE } from "../../../../constant";
 
 import UserRoleService from "../../../services/userRoles/userRoles.service";
+import ProviderService from "../../../services/provider/provider.service";
 import UserDeviceService from "../../../services/userDevices/userDevice.service";
 
 import UserDeviceWrapper from "../../../ApiWrapper/mobile/userDevice";
@@ -19,6 +20,7 @@ class CreateJob extends VitalJob {
       participants = [],
       actor: {
         id: actorId,
+        user_role_id,
         userCategoryData: {
           basic_info: { first_name, middle_name, last_name } = {}
         } = {},
@@ -34,22 +36,40 @@ class CreateJob extends VitalJob {
 
     const userRoleIds = [];
 
-    participants.forEach(participant => {
-      if (participant !== user_role_id) {
-        userRoleIds.push(participant);
-      }
-    });
+    // participants.forEach(participant => {
+    //   if (participant !== user_role_id) {
+    //     userRoleIds.push(participant);
+    //   }
+    // });
 
     const {rows: userRoles = []} = await UserRoleService.findAndCountAll({
       where: {
-        id: userRoleIds
+        id: participants
       }
     }) || {};
 
+    let providerId = null;
+
     for(const userRole of userRoles) {
-      const {user_identity} = userRole || {};
-      userIds.push(user_identity);
+      const {id, user_identity, linked_id} = userRole || {};
+      if(id !== user_role_id) {
+        userIds.push(user_identity);
+      } 
+      else {
+        if(linked_id) {
+          providerId = linked_id;
+        }
+      }
     }
+
+    // provider
+    let providerName = DEFAULT_PROVIDER;
+    if(providerId) {
+      const provider = await ProviderService.getProviderByData({id: providerId});
+      const {name} = provider || {};
+      providerName = name;
+    }
+
 
     const userDevices = await UserDeviceService.getAllDeviceByData({
       user_id: userIds
@@ -65,7 +85,7 @@ class CreateJob extends VitalJob {
     templateData.push({
       small_icon: process.config.app.icon_android,
       app_id: process.config.one_signal.app_id, // TODO: add the same in pushNotification handler in notificationSdk
-      headings: { en: `Vital Added` },
+      headings: { en: `Vital Added (${providerName})` },
       contents: {
         en: `${getFullName({
           first_name,
