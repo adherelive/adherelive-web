@@ -2,6 +2,7 @@ import VitalJob from "../";
 import moment from "moment";
 import { EVENT_TYPE, NOTIFICATION_VERB } from "../../../../constant";
 
+import UserRoleService from "../../../services/userRoles/userRoles.service";
 import UserDeviceService from "../../../services/userDevices/userDevice.service";
 
 import UserDeviceWrapper from "../../../ApiWrapper/mobile/userDevice";
@@ -31,11 +32,24 @@ class ResponseJob extends VitalJob {
     const playerIds = [];
     const userIds = [];
 
+    const userRoleIds = [];
+
     participants.forEach(participant => {
-      if (participant !== actorId) {
-        userIds.push(participant);
+      if (participant !== user_role_id) {
+        userRoleIds.push(participant);
       }
     });
+
+    const {rows: userRoles = []} = await UserRoleService.findAndCountAll({
+      where: {
+        id: userRoleIds
+      }
+    }) || {};
+
+    for(const userRole of userRoles) {
+      const {user_identity} = userRole || {};
+      userIds.push(user_identity);
+    }
 
     const userDevices = await UserDeviceService.getAllDeviceByData({
       user_id: userIds
@@ -71,7 +85,7 @@ class ResponseJob extends VitalJob {
     const { getData } = this;
     const data = getData();
     const {
-      participants = [], actor: { id: actorId } = {},
+      participants = [], actor: { id: actorId, user_role_id } = {},
       event_id = null,
       id = null
     } = data || {};
@@ -82,9 +96,10 @@ class ResponseJob extends VitalJob {
     const currentTime = new moment().utc().toISOString();
     const currentTimeStamp = now.unix();
     for (const participant of participants) {
-      if (participant !== actorId) {
+      if (participant !== user_role_id) {
         templateData.push({
           actor: actorId,
+          actorRoleId: user_role_id,
           object: `${participant}`,
           foreign_id: `${id}`,
           verb: `${NOTIFICATION_VERB.VITAL_RESPONSE}:${currentTimeStamp}`,
