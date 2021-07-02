@@ -650,8 +650,8 @@ class CarePlanController extends Controller {
               start_date: medication.getStartDate(),
               end_date: medication.getEndDate(),
               when_to_take,
-              participant_one: patient.getUserId(),
-              participant_two: organizer_id,
+              // participant_one: patient.getUserId(),
+              // participant_two: organizer_id,
               actor
             });
           }
