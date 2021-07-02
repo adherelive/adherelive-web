@@ -707,18 +707,17 @@ class NotificationDrawer extends Component {
       stage === NOTIFICATION_STAGES.CREATE &&
       (category === CATEGORY.VITAL || category == CATEGORY.ALL)
     ) {
-      const { actor = null } = notification || {};
+      const { actor_role_id = null } = notification || {};
       const {
         details: {
-          actor: {} = {},
           basic_info: { care_plan_id } = {},
           vital_templates: { basic_info: { name: vitalName } = {} } = {},
         } = {},
       } = schedule_events[foreign_id] || {};
 
       Object.keys(patients).forEach((id) => {
-        const { basic_info: { user_id } = {} } = patients[id] || {};
-        if (`${user_id}` === `${actor}`) {
+        const { basic_info: { user_id } = {} , user_role_id = null  } = patients[id] || {};
+        if (`${user_role_id}` === `${actor_role_id}`) {
           patient_id = id;
         }
       });
@@ -859,12 +858,12 @@ class NotificationDrawer extends Component {
       type === USER_MESSAGE &&
       (category === CATEGORY.USER_MESSAGES || category == CATEGORY.ALL)
     ) {
-      const { actor = null, message = "" } = notification || {};
+      const { actor_role_id = null, message = "" } = notification || {};
       // patient_id = actor_category_id;
 
       Object.keys(patients).forEach((id) => {
-        const { basic_info: { user_id } = {} } = patients[id] || {};
-        if (`${user_id}` === `${actor}`) {
+        const { basic_info: { user_id } = {} , user_role_id = null } = patients[id] || {};
+        if (`${user_role_id}` === `${actor_role_id}`) {
           patient_id = id;
         }
       });
@@ -902,14 +901,14 @@ class NotificationDrawer extends Component {
       type === EVENT_TYPE.SYMPTOMS &&
       (category === CATEGORY.SYMPTOMS || category == CATEGORY.ALL)
     ) {
-      const { actor = "", stage = "", foreign_id = null } = notification || {};
+      const { actor_role_id = "", stage = "", foreign_id = null } = notification || {};
       const { symptoms = {} } = this.props;
       const { text: symptomText = "", basic_info: { care_plan_id } = {} } =
         symptoms[foreign_id] || {};
 
       Object.keys(patients).forEach((id) => {
-        const { basic_info: { user_id } = {} } = patients[id] || {};
-        if (`${user_id}` === `${actor}`) {
+        const { basic_info: { user_id } = {} , user_role_id = null  } = patients[id] || {};
+        if (`${user_role_id}` === `${actor_role_id}`) {
           patient_id = id;
         }
       });
@@ -977,7 +976,8 @@ class NotificationDrawer extends Component {
       type === AGORA_CALL_NOTIFICATION_TYPES.MISSED_CALL &&
       (category === CATEGORY.CALL || category == CATEGORY.ALL)
     ) {
-      const { actor = null, foreign_id = null, participantData } =
+      
+      const { actor , actor_role_id = null, foreign_id = null, participantData } =
         notification || {};
       let patientId = null;
 
@@ -1027,7 +1027,7 @@ class NotificationDrawer extends Component {
     ){
       const { diets = {} , diet_food_group_mappings = {} } = this.props;
       let patient_id = null;
-      const { actor = "", stage = "", foreign_id = null , diet_id = null } = notification || {};
+      const { actor_role_id = "", stage = "", foreign_id = null , diet_id = null } = notification || {};
       const {  basic_info: { name : diet_name = '',  care_plan_id = null } = {} , diet_food_group_mapping_ids = [] } =
       diets[diet_id] || {};
       
@@ -1037,8 +1037,8 @@ class NotificationDrawer extends Component {
       const { text : time_text = '' } = timeObj || {};
 
       Object.keys(patients).forEach((id) => {
-        const { basic_info: { user_id } = {} } = patients[id] || {};
-        if (`${user_id}` === `${actor}`) {
+        const { basic_info: { user_id } = {} , user_role_id = null } = patients[id] || {};
+        if (`${user_role_id}` === `${actor_role_id}`) {
           patient_id = id;
         }
       });
@@ -1080,13 +1080,13 @@ class NotificationDrawer extends Component {
     ){
       const { workouts = {} } = this.props;
       let patient_id = null;
-      const { actor = "", stage = "", foreign_id = null ,workout_id = null } = notification || {};
+      const { actor_role_id = "", stage = "", foreign_id = null ,workout_id = null } = notification || {};
       const {  basic_info: { name : workout_name = '',  care_plan_id = null } = {}  } =
       workouts[workout_id] || {};
       
       Object.keys(patients).forEach((id) => {
-        const { basic_info: { user_id } = {} } = patients[id] || {};
-        if (`${user_id}` === `${actor}`) {
+        const { basic_info: { user_id } = {} , user_role_id = null } = patients[id] || {};
+        if (`${user_role_id}` === `${actor_role_id}`) {
           patient_id = id;
         }
       });
