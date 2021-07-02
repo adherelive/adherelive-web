@@ -70,7 +70,7 @@ class StartJob extends AppointmentJob {
       }
     }
 
-    for (const participant of participants) {
+    // for (const participant of participants) {
       // if (participant !== actorId) { // todo: add actor after testing (deployment)
 
       templateData.push({
@@ -87,7 +87,7 @@ class StartJob extends AppointmentJob {
         data: { url: "/appointments", params: getAppointmentData() }
       });
       // }
-    }
+    // }
 
     return templateData;
   };
