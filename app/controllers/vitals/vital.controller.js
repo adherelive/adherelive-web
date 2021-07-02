@@ -40,7 +40,7 @@ class VitalController extends Controller {
         Log.debug("req.body --->", req.body);
         try {
             const {
-                userDetails: {userId, userRoleId, userData: {category} = {}, userCategoryData = {}} = {},
+                userDetails: {userId, userRoleId, userRoleData, userData: {category} = {}, userCategoryData = {}} = {},
                 body : {
                     care_plan_id,
                 vital_template_id,
@@ -75,6 +75,10 @@ class VitalController extends Controller {
                 const doctor = await DoctorWrapper(null, carePlan.getDoctorId());
                 const patient = await PatientWrapper(null, carePlan.getPatientId());
 
+                const {user_role_id: patientUserRoleId} = await patient.getAllInfo();
+
+                const {providers, user_roles} = userRoleData;
+
                 const eventScheduleData = {
                     type: EVENT_TYPE.VITALS,
                     patient_id: patient.getPatientId(),
@@ -85,12 +89,13 @@ class VitalController extends Controller {
                     start_date,
                     end_date,
                     details: vitals.getBasicInfo(),
-                    participants: [doctor.getUserId(), patient.getUserId()],
+                    participants: [userRoleId, patientUserRoleId],
                     actor: {
                         id: userId,
                         user_role_id: userRoleId,
                         category,
-                        userCategoryData
+                        userCategoryData,
+                        providers, user_roles
                     },
                     vital_templates: vitalTemplates.getBasicInfo()
                 };
@@ -135,7 +140,7 @@ class VitalController extends Controller {
         Log.debug("req.params --->", req.params);
         try {
             const {
-                userDetails: {userId, userRoleId, userData: {category} = {}, userCategoryData = {}} = {},
+                userDetails: {userId, userRoleId, userRoleData, userData: {category} = {}, userCategoryData = {}} = {},
                 body,
                 body: {start_date, end_date} = {},
                 params: {id} = {}
@@ -164,6 +169,10 @@ class VitalController extends Controller {
                 const doctor = await DoctorWrapper(null, carePlan.getDoctorId());
                 const patient = await PatientWrapper(null, carePlan.getPatientId());
 
+                const {user_role_id: patientUserRoleId} = await patient.getAllInfo();
+
+                const {providers, user_roles} = userRoleData;
+
                 const eventScheduleData = {
                     type: EVENT_TYPE.VITALS,
                     patient_id: patient.getUserId(),
@@ -174,12 +183,13 @@ class VitalController extends Controller {
                     start_date,
                     end_date,
                     details: vitals.getBasicInfo(),
-                    participants: [doctor.getUserId(), patient.getUserId()],
+                    participants: [userRoleId, patientUserRoleId],
                     actor: {
                         id: userId,
                         user_role_id: userRoleId,
                         category,
-                        userCategoryData
+                        userCategoryData,
+                        providers, user_roles
                     },
                     vital_templates: vitalTemplates.getBasicInfo()
                 };
