@@ -229,6 +229,7 @@ class DietController extends Controller {
       Logger.debug("create request", body);
       const {
         userId,
+        userRoleId,
         userData: { category } = {},
         userCategoryData: { basic_info: { full_name = "" } = {} } = {},
       } = userDetails || {};
@@ -275,6 +276,8 @@ class DietController extends Controller {
       const careplanWrapper = await CareplanWrapper(null, carePlanId);
       const patientId = await careplanWrapper.getPatientId();
       const patient = await PatientWrapper(null, patientId);
+      const {user_role_id: patientRoleId} = await patient.getAllInfo();
+
 
       const eventScheduleData = {
         patient_id: patient.getUserId(),
@@ -283,9 +286,10 @@ class DietController extends Controller {
         status: EVENT_STATUS.SCHEDULED,
         start_date,
         end_date,
-        participants: [userId, patient.getUserId()],
+        participants: [userRoleId, patientRoleId],
         actor: {
           id: userId,
+          user_role_id: userRoleId,
           details: { name: full_name, category },
         },
       };
@@ -421,6 +425,7 @@ class DietController extends Controller {
         body = {},
         userDetails: {
           userId,
+          userRoleId,
           userData: { category } = {},
           userCategoryData: { basic_info: { full_name = "" } = {} } = {},
         } = {},
@@ -491,6 +496,8 @@ class DietController extends Controller {
       const careplanWrapper = await CareplanWrapper(null, care_plan_id);
       const patientId = await careplanWrapper.getPatientId();
       const patient = await PatientWrapper(null, patientId);
+      const {user_role_id: patientRoleId} = await patient.getAllInfo();
+
 
       const eventScheduleData = {
         patient_id: patient.getUserId(),
@@ -499,9 +506,10 @@ class DietController extends Controller {
         status: EVENT_STATUS.SCHEDULED,
         start_date,
         end_date,
-        participants: [userId, patient.getUserId()],
+        participants: [userRoleId, patientRoleId],
         actor: {
           id: userId,
+          user_role_id: userRoleId,
           details: { name: full_name, category },
         },
       };

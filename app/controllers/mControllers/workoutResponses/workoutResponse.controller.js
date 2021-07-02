@@ -41,6 +41,7 @@ class WorkoutResponseController extends Controller {
         body = {},
         userDetails: {
           userId,
+          userRoleId,
           userData: { category } = {},
           userCategoryData: { basic_info: { full_name } = {} } = {},
         } = {},
@@ -126,6 +127,8 @@ class WorkoutResponseController extends Controller {
         // get doctor for workout
         const workout = await WorkoutWrapper({ id: workout_id });
         const carePlan = await CareplanWrapper(null, workout.getCareplanId());
+
+        const doctorRoleId = carePlan.getUserRoleId();
         const doctor = await DoctorWrapper(null, carePlan.getDoctorId());
 
         const workoutResponse = await WorkoutResponseWrapper({
@@ -135,9 +138,10 @@ class WorkoutResponseController extends Controller {
         const workoutJob = WorkoutJob.execute(
           NOTIFICATION_STAGES.RESPONSE_ADDED,
           {
-            participants: [userId, doctor.getUserId()],
+            participants: [userRoleId, doctorRoleId],
             actor: {
               id: userId,
+              user_role_id: userRoleId,
               details: { name: full_name, category },
             },
             id: workoutResponseId,
