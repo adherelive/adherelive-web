@@ -19,7 +19,6 @@ import EventWrapper from "../../../ApiWrapper/common/scheduleEvents";
 import CarePlanWrapper from "../../../ApiWrapper/mobile/carePlan";
 import DoctorWrapper from "../../../ApiWrapper/mobile/doctor";
 import PatientWrapper from "../../../ApiWrapper/mobile/patient";
-import UserRoleWrapper from "../../../ApiWrapper/mobile/userRoles";
 
 import JobSdk from "../../../JobSdk";
 import NotificationSdk from "../../../NotificationSdk";
@@ -428,8 +427,6 @@ class VitalController extends Controller {
       //   eventData
       // );
       // await NotificationSdk.execute(chatJob);
-      const userRoleData = await UserRoleWrapper(null,userRoleId);
-      const { providers, user_roles } = userRoleData;
 
       const eventScheduleData = {
         type: EVENT_TYPE.VITALS,
