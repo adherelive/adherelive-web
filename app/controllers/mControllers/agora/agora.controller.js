@@ -67,7 +67,7 @@ class AgoraController extends Controller {
                 event_type: AGORA_CALL_NOTIFICATION_TYPES.MISSED_CALL,
                 details: {},
                 roomId,
-                participants: [userId, participantTwoId],
+                participants: [doctorRoleId, patientRoleId],
                 actor: {
                     id: userId,
                     user_role_id: userRoleId,

@@ -313,8 +313,7 @@ class NotificationController extends Controller {
 
 
       const eventData = {
-        participants: [userId, receiver_id],
-        participant_role_ids: [userRoleId, receiver_role_id],
+        participants: [userRoleId, receiver_role_id],
         actor: {
           id: userId,
           user_role_id: userRoleId,
