@@ -29,12 +29,31 @@ class DoctorAccountDetails extends Component{
         this.handleGetAccountDetails();
     }
 
+    isDoctorRoleAssociatedWithProvider = () => {
+      const {auth: {auth_role} = {}, user_roles = {}} = this.props;
+      const {basic_info: {linked_with, linked_id} = {}} = user_roles[auth_role] || {};
+  
+      if(linked_id) {
+        return linked_id;
+      }
+      return false;
+    }
+
     formatMessage = data => this.props.intl.formatMessage(data);
 
     async handleGetAccountDetails() {
         try {
           const { getAccountDetails } = this.props;
-          const response = await getAccountDetails();
+          const provider_id = this.isDoctorRoleAssociatedWithProvider() || null;
+          let response = {};
+        
+          if(provider_id){
+            const is_provider_created=true;
+            response = await getAccountDetails(is_provider_created,provider_id);
+    
+          }else{
+            response = await getAccountDetails();
+          }
           const {
             status,
             payload: { data: { users = {}, account_details = {} } = {} } = {},
@@ -57,7 +76,8 @@ class DoctorAccountDetails extends Component{
         const { account_details } = this.props;
         let details = [];
 
-    
+        const providerid = this.isDoctorRoleAssociatedWithProvider() || null;
+        
         const accountDetails = Object.keys(account_details).map(account_id => {
             const {
                 basic_info: {
@@ -153,6 +173,11 @@ class DoctorAccountDetails extends Component{
                   </span>
                 </div>
                   
+                {
+                  !providerid
+                  &&
+
+                
                 <div className="flex  align-center justify-space-evenly wp100 mb10">
                
                   <Tooltip placement={"bottom"} title={this.formatMessage(messages.editAccount)}
@@ -179,6 +204,7 @@ class DoctorAccountDetails extends Component{
                   />
                   </Tooltip>
                 </div>
+                }
               </div>
             );
         });
@@ -258,6 +284,10 @@ class DoctorAccountDetails extends Component{
 
 
     getAddAccountDetailsDisplay = () => {
+    const providerid = this.isDoctorRoleAssociatedWithProvider();
+    if(providerid){
+      return null;
+    }
 
     return (
         <Button
@@ -302,6 +332,7 @@ class DoctorAccountDetails extends Component{
 
 
     render(){
+      // console.log("38271638726137612736721",{props:this.props});
         return (
             <div>{this.getPaymentDetails()}</div>
         )

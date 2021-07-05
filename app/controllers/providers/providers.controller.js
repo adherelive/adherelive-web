@@ -882,7 +882,9 @@ class ProvidersController extends Controller {
           use_as_main,
           upi_id,
           razorpay_account_id,
-          razorpay_account_name
+          razorpay_account_name,
+          prefix,
+          account_mobile_number:mobile_number,
         });
 
         if(Object.keys(accountData).length > 0) {
@@ -999,7 +1001,9 @@ class ProvidersController extends Controller {
           ifsc_code,
           upi_id,
           razorpay_account_id,
-          razorpay_account_name
+          razorpay_account_name,
+          prefix,
+          account_mobile_number:mobile_number,
         });
 
         await accountDetailsService.update(accountData, account.getId());
@@ -1022,7 +1026,9 @@ class ProvidersController extends Controller {
             use_as_main,
             upi_id,
             razorpay_account_id,
-            razorpay_account_name
+            razorpay_account_name,
+            prefix,
+            account_mobile_number:mobile_number,
           });
 
           if(Object.keys(accountData).length > 0) {

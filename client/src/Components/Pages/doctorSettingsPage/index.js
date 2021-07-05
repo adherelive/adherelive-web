@@ -261,6 +261,11 @@ class DoctorSettingsPage extends Component {
 
   getAddAccountDetailsDisplay = () => {
 
+    const providerid = this.isDoctorRoleAssociatedWithProvider();
+    if(providerid){
+      return null;
+    }
+
     return (
       <Button
         type="dashed"
@@ -284,7 +289,21 @@ class DoctorSettingsPage extends Component {
   async handleGetAccountDetails() {
     try {
       const { getAccountDetails } = this.props;
-      const response = await getAccountDetails();
+      const provider_id = this.isDoctorRoleAssociatedWithProvider() || null;
+      let response = {};
+
+      console.log("83827163871873671638712",{provider_id});
+
+
+      if(provider_id){
+        const is_provider_created=true;
+        response = await getAccountDetails(is_provider_created,provider_id);
+
+      }else{
+        
+        response = await getAccountDetails();
+      }
+
       const {
         status,
         payload: { data: { users = {}, account_details = {} } = {} } = {},
@@ -300,7 +319,7 @@ class DoctorSettingsPage extends Component {
         // const {basic_info : {id='',customer_name='',account_number='',ifsc_code='',account_type='',account_mobile_number='',in_use=false,prefix='',upi_id=null} = {} } = Object.values(account_details)[0] || {};
       }
     } catch (err) {
-      console.log("err ", err);
+      console.log("83827163871873671638712 err ", err);
       message.warn(this.formatMessage(messages.somethingWentWrong));
     }
   }
@@ -500,6 +519,8 @@ class DoctorSettingsPage extends Component {
     const { account_details } = this.state;
     let details = [];
 
+    const providerid = this.isDoctorRoleAssociatedWithProvider() || null;
+
     const accountDetails = Object.keys(account_details).map(account_id => {
         const {
             basic_info: {
@@ -594,6 +615,10 @@ class DoctorSettingsPage extends Component {
               </span>
             </div>
               
+          {
+            !providerid
+            &&
+              
             <div className="flex  align-center justify-space-evenly wp100 mb10">
            
               <Tooltip placement={"bottom"} title={this.formatMessage(messages.editAccount)}
@@ -618,6 +643,7 @@ class DoctorSettingsPage extends Component {
               />
               </Tooltip>
             </div>
+            }
           </div>
         );
     });

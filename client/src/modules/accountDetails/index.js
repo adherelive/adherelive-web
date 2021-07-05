@@ -1,7 +1,7 @@
 import {doRequest} from "../../Helper/network";
 import {REQUEST_TYPE} from "../../constant";
 import {getDoctorAccountDetailsUrl} from "../../Helper/urls/doctor";
-import {accountDetailsUrl,updateAccountDetailsUrl} from "../../Helper/urls/accounts";
+import {accountDetailsUrl,updateAccountDetailsUrl,accountDetailsForCreatedByProviderUrl} from "../../Helper/urls/accounts";
 
 export const GET_DOCTOR_ACCOUNT_DETAILS_START =
   "GET_DOCTOR_ACCOUNT_DETAILS_START";
@@ -57,15 +57,23 @@ export const getDoctorAccountDetails = id => {
   };
 };
 
-export const getAccountDetails = () => {
+export const getAccountDetails = (is_provider_created=false,provider_id=null) => {
   let response = {};
   return async dispatch => {
     try {
       dispatch({ type: GET_ACCOUNT_DETAILS });
-      response = await doRequest({
-        method: REQUEST_TYPE.GET,
-        url: accountDetailsUrl(),
-      });
+      if(!is_provider_created){
+        response = await doRequest({
+          method: REQUEST_TYPE.GET,
+          url: accountDetailsUrl(),
+        });
+      }else{
+        response = await doRequest({
+          method: REQUEST_TYPE.GET,
+          url: accountDetailsForCreatedByProviderUrl(provider_id),
+        });
+      }
+     
 
       const { status, payload: { data, error } = {} } = response || {};
       if (status === true) {

@@ -27,7 +27,7 @@ const mapStateToProps = state => {
 const mapDispatchToProps = dispatch => {
   return {
     close: () => dispatch(close()),
-    getAccountDetails: () => dispatch(getAccountDetails()),
+    getAccountDetails: (is_provider_created=false,provider_id=null) => dispatch(getAccountDetails(is_provider_created,provider_id)),
     updateAccountDetails : (id,payload) => dispatch(updateAccountDetails(id,payload))
 
   };
