@@ -7,7 +7,7 @@ import ProviderService from "../../../services/provider/provider.service";
 import UserDeviceService from "../../../services/userDevices/userDevice.service";
 import UserDeviceWrapper from "../../../ApiWrapper/mobile/userDevice";
 import {getRoomId} from "../../../helper/common";
-import { USER_CATEGORY } from "../../../../constant";
+import { USER_CATEGORY ,DEFAULT_PROVIDER } from "../../../../constant";
 
 class UserMessageJob extends ChatJob {
     constructor(data) {
