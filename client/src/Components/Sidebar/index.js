@@ -12,6 +12,7 @@ import {
   FileOutlined,
   ProfileOutlined,
   AccountBookOutlined,
+  WalletOutlined
 } from "@ant-design/icons";
 import messages from "./messages";
 import config from "../../config";
@@ -30,10 +31,11 @@ const CALENDER = "calender";
 const TOS_PP_EDITOR = "tos-pp-editor";
 const PRIVACY_POLICY = "privacy_policy";
 const ALL_PROVIDERS = "providers";
-const TRANSACTION_DETAILS = "transaction_details";
+const TRANSACTION_DETAILS = "transaction-details";
 const TEMPLATES = "templates";
 const MEDICINES = "medicines";
 const ACCOUNT = "account";
+const PROVIDER_PAYMENT_DETAILS = "provider_payment_details";
 
 const ADD_ACCOUNT = "add_account";
 
@@ -152,6 +154,11 @@ class SideMenu extends Component {
           history.push(PATH.PROVIDER.TRANSACTION_DETAILS);
         }
         break;
+      case PROVIDER_PAYMENT_DETAILS :
+        if (authenticated_category === USER_CATEGORY.PROVIDER) {
+          history.push(PATH.PROVIDER.PAYMENT_DETAILS);
+        }
+        break;
       case LOG_OUT:
         handleLogout();
         break;
@@ -246,6 +253,11 @@ class SideMenu extends Component {
             history.push(PATH.PROVIDER.TRANSACTION_DETAILS);
           } else if (authenticated_category === USER_CATEGORY.DOCTOR) {
             history.push(PATH.DOCTOR.TRANSACTION_DETAILS);
+          }
+          break;
+        case PROVIDER_PAYMENT_DETAILS :
+          if (authenticated_category === USER_CATEGORY.PROVIDER) {
+            history.push(PATH.PROVIDER.PAYMENT_DETAILS);
           }
           break;
         case MEDICINES:
@@ -730,6 +742,20 @@ class SideMenu extends Component {
             </Tooltip>
           </MenuItem>
         ) : null}
+
+      {authenticated_category === USER_CATEGORY.PROVIDER ? (
+          <MenuItem
+            className="flex direction-column justify-center align-center p0"
+            key={PROVIDER_PAYMENT_DETAILS}
+          >
+            <Tooltip
+              placement="right"
+              title={this.formatMessage(messages.paymentDetailsHeader)}
+            >
+              <WalletOutlined  style={{ color: "#fff" }}  />
+            </Tooltip>
+          </MenuItem>
+      ) : null}
 
         {authenticated_category === USER_CATEGORY.ADMIN ? (
           <MenuItem
