@@ -274,7 +274,6 @@ class DietController extends Controller {
         patient_id: patient.getUserId(),
         type: EVENT_TYPE.DIET,
         event_id: dietWrapper.getId(),
-        status: EVENT_STATUS.SCHEDULED,
         start_date,
         end_date,
         participants: [userRoleId, patientRoleId],
