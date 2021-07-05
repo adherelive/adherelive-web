@@ -91,10 +91,10 @@ class MobileAccountsController extends Controller {
       const { userDetails: { userId } = {} } = req;
       Logger.debug("6564546787654678787678965678",req.query);
 
-      const { query: { all_accounts = 0 , is_provider_created = 0 , provider_id = null } = {} } = req;
+      const { query: { all_accounts = 0 ,  provider_id = null } = {} } = req;
       const get_all_accounts = all_accounts == 0 ? false : true;
 
-      if(is_provider_created && provider_id){
+      if(provider_id){
         
     
           let accountWrapperDetails = {}, providerApiData = {} , allUsers = {} ;

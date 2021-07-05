@@ -81,6 +81,14 @@ const ProviderTransactionPage = lazy(() =>
     )
 );
 
+const PaymentDetailsPage = lazy(() => 
+    import(
+      /* webpackChunkName: "ProviderPaymentDetailsPage" */ "../../Containers/ProviderAccountDetails"
+
+    )
+);
+
+
 
 const ProviderDoctorDetailsComp = props => {
   const { match: { params: { id } = {} } = {} } = props;
@@ -195,6 +203,11 @@ class ProviderDoctor extends Component {
                  component={ProviderTransactionPage}
                 />
 
+                <Route
+                exact
+                path={PATH.PROVIDER.PAYMENT_DETAILS}
+                component={PaymentDetailsPage}
+                />
 
                 <Route path={PATH.LANDING_PAGE} component={ProviderDoctorPage} />
                 {/* <Route path={""} component={BlankState} /> */}

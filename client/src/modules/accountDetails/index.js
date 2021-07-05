@@ -57,12 +57,12 @@ export const getDoctorAccountDetails = id => {
   };
 };
 
-export const getAccountDetails = (is_provider_created=false,provider_id=null) => {
+export const getAccountDetails = (provider_id=null) => {
   let response = {};
   return async dispatch => {
     try {
       dispatch({ type: GET_ACCOUNT_DETAILS });
-      if(!is_provider_created){
+      if(!provider_id){
         response = await doRequest({
           method: REQUEST_TYPE.GET,
           url: accountDetailsUrl(),

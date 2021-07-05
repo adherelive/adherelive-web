@@ -3,7 +3,7 @@ export const accountDetailsUrl = () => {
 }
 
 export const accountDetailsForCreatedByProviderUrl = (provider_id) => {
-    return `/accounts?all_accounts=1&is_provider_created=1&provider_id=${provider_id}`
+    return `/accounts?all_accounts=1&provider_id=${provider_id}`
 }
 
 

@@ -40,7 +40,7 @@ const mapDispatchToProps = dispatch => {
       openEditRazorpayAccountDetailsDrawer: payload =>
       dispatch(open({ type: DRAWER.EDIT_RAZORPAY_ACCOUNT_DETAILS ,payload })), 
       addAccountDetails: payload => dispatch(addAccountDetails(payload)),
-      getAccountDetails: (is_provider_created=false,provider_id=null) => dispatch(getAccountDetails(is_provider_created,provider_id)),
+      getAccountDetails: (provider_id=null) => dispatch(getAccountDetails(provider_id)),
       deleteAccountDetails : (id) => dispatch(deleteAccountDetails(id)),
       updateAccountDetails : (id,payload) => dispatch(updateAccountDetails(id,payload))
     } 

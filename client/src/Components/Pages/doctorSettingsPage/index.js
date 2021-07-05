@@ -161,7 +161,6 @@ class DoctorSettingsPage extends Component {
   };
 
   getConsultationFeesHeader = () => {
-    // const { id, doctors, users } = this.props;
     const { formatMessage, handleBack } = this;
 
     return (
@@ -174,7 +173,6 @@ class DoctorSettingsPage extends Component {
   };
 
   getBillingHeader = () => {
-    // const { id, doctors, users } = this.props;
     const { formatMessage, handleBack } = this;
 
     return (
@@ -296,8 +294,7 @@ class DoctorSettingsPage extends Component {
 
 
       if(provider_id){
-        const is_provider_created=true;
-        response = await getAccountDetails(is_provider_created,provider_id);
+        response = await getAccountDetails(provider_id);
 
       }else{
         
@@ -708,10 +705,6 @@ class DoctorSettingsPage extends Component {
     const {
       selectedKey,
     } = this.state;
-    const { getPaymentDetails ,sidebar} = this;
-    const { noDoctorPaymentProducts } = this.state;
-    const {doctors = {} } = this.props;
-
     return (
 
     <div className="wp100" >
@@ -728,7 +721,6 @@ class DoctorSettingsPage extends Component {
 
         {selectedKey === PAYMENT_DETAILS && (
           <div className="wp100 ml10 mr10 flex direction-column justify-space-between mw635">
-            {/* {getPaymentDetails()} */}
             <DoctorAccountDetails/>
           </div>
         )}
@@ -751,12 +743,10 @@ class DoctorSettingsPage extends Component {
     const {
       selectedKey,
     } = this.state;
-    const { getPaymentDetails ,sidebar} = this;
+    const { sidebar} = this;
     const { noDoctorPaymentProducts } = this.state;
-    const {doctors = {} } = this.props;
     const provider_id = this.isDoctorRoleAssociatedWithProvider();
 
-    // console.log("56456786546789",provider_id);
     
 
     return (
@@ -792,7 +782,7 @@ class DoctorSettingsPage extends Component {
         <div className="wp100 p20 flex flex-wrap">
           {/************************* SIDEBAR *************************/}
 
-          <div className="wp30" >{this.sidebar()}</div>
+          <div className="wp30" >{sidebar()}</div>
 
           {/************************* SIDEBAR RELATED CONTENTS *************************/}
           <div className="wp70" >{this.sidebarRelatedContent()}</div>

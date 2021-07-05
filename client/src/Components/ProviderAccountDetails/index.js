@@ -1,15 +1,11 @@
 import React , {Component,Fragment} from "react";
 import { injectIntl } from "react-intl";
 import Button from "antd/es/button";
-import Tooltip from "antd/es/tooltip";
-import { DeleteTwoTone } from "@ant-design/icons";
 import message from "antd/es/message";
 import { TABLE_DEFAULT_BLANK_FIELD} from "../../constant";
 import messages from "./messages";
-import confirm from "antd/es/modal/confirm";
-import edit_image from "../../Assets/images/edit.svg";
 
-class DoctorAccountDetails extends Component{
+class ProviderAccountDetails extends Component{
     constructor(props){
         super(props);
         this.state={
@@ -29,30 +25,25 @@ class DoctorAccountDetails extends Component{
         this.handleGetAccountDetails();
     }
 
-    isDoctorRoleAssociatedWithProvider = () => {
-      const {auth: {auth_role} = {}, user_roles = {}} = this.props;
-      const {basic_info: {linked_with, linked_id} = {}} = user_roles[auth_role] || {};
-  
-      if(linked_id) {
-        return linked_id;
-      }
-      return false;
-    }
 
     formatMessage = data => this.props.intl.formatMessage(data);
 
     async handleGetAccountDetails() {
         try {
-          const { getAccountDetails } = this.props;
-          const provider_id = this.isDoctorRoleAssociatedWithProvider() || null;
-          let response = {};
-        
-          if(provider_id){
-            response = await getAccountDetails(provider_id);
-    
-          }else{
-            response = await getAccountDetails();
+          const { getAccountDetails , providers = {} , authenticated_user = {} } = this.props;
+          let provider_id =  null;
+
+          for(let each in providers){
+            const {basic_info:{user_id = null } = {} } = providers[each] || {};
+            if(user_id.toString() === authenticated_user.toString()){
+              provider_id=each;
+              break;
+            }
           }
+        
+          const response = await getAccountDetails(provider_id);
+    
+        
           const {
             status,
             payload: { data: { users = {}, account_details = {} } = {} } = {},
@@ -75,7 +66,6 @@ class DoctorAccountDetails extends Component{
         const { account_details } = this.props;
         let details = [];
 
-        const providerid = this.isDoctorRoleAssociatedWithProvider() || null;
         
         const accountDetails = Object.keys(account_details).map(account_id => {
             const {
@@ -172,38 +162,7 @@ class DoctorAccountDetails extends Component{
                   </span>
                 </div>
                   
-                {
-                  !providerid
-                  &&
-
                 
-                <div className="flex  align-center justify-space-evenly wp100 mb10">
-               
-                  <Tooltip placement={"bottom"} title={this.formatMessage(messages.editAccount)}
-                  className="account-details-edit">
-                     <div className="flex align-center justify-space-between w60 pointer"
-                      onClick={this.displayEditRazorpayAccountDetails(id)} 
-                     >
-                       
-                        <div className="flex direction-column  align-center justify-center" >
-                        <img src={edit_image} className="pointer edit-patient-icon" />
-                        </div>
-                        <div className="flex direction-column  align-center justify-center dark-sky-blue" >
-                        <span className="fs18 " >{this.formatMessage(messages.editAccount)}</span>
-                        </div>
-                     </div>
-                  </Tooltip>
-                  {/* </div> */}
-                  <Tooltip className="absolute t10 r10 account-details-delete"  title={this.formatMessage(messages.deleteAccount)}>
-                  <DeleteTwoTone
-                    className={"pointer align-self-start "}
-                    onClick={this.handleDelete(id)}
-                    twoToneColor="#707070"
-                    style={{ fontSize: "18px" }}
-                  />
-                  </Tooltip>
-                </div>
-                }
               </div>
             );
         });
@@ -214,128 +173,36 @@ class DoctorAccountDetails extends Component{
       };
     
 
-  displayEditRazorpayAccountDetails = account_detail_id => (e) => {
-    e.preventDefault();
-    console.log("328794682374672983042",{account_detail_id});
-    const { openEditRazorpayAccountDetailsDrawer } = this.props;
-    openEditRazorpayAccountDetailsDrawer({account_detail_id});
-  };
-
-  handleDelete = id => (e) => {
-    e.preventDefault();
-    const { warnNote } = this;
-
-
-    confirm({
-      title: `${this.formatMessage(messages.warnNote)}`,
-      content: (
-        <div>
-          {warnNote()}
-        </div>
-      ),
-      onOk: async () => {
-        try {
-                  const { deleteAccountDetails } = this.props;
-                  const response = await deleteAccountDetails(id);
-            
-                  const {
-                    status,
-                    payload: { data: { users = {}, account_details = {} } = {} } = {},
-                    statusCode
-                  } = response || {};
-            
-                  if (status && Object.keys(account_details).length === 0) {
-                    this.setState({
-                      noAccountDetails: true
-                    });
-                  }
-            
-                  if (status) {
-                    this.setState({ account_details });
-                    message.success(
-                      this.formatMessage(messages.accountDetailsDeleteSuccess)
-                    );
-                  }
-                } catch (err) {
-                  console.log("err ", err);
-                  message.warn(this.formatMessage(messages.somethingWentWrong));
-                }
-      },
-      onCancel() { }
-    });
-  };
-
-  warnNote = () => {
-    return (
-      <div className="pt16">
-        <p>
-          <span className="fw600">{"Note"}</span>
-          {` :${this.formatMessage(messages.irreversibleWarn)} `}
-        </p>
-      </div>
-    );
-  };
-
-  displayRazorpayAccountDetails = () => {
-    const { openRazorpayAccountDetailsDrawer } = this.props;
-    openRazorpayAccountDetailsDrawer();
-  };
-
-
-    getAddAccountDetailsDisplay = () => {
-    const providerid = this.isDoctorRoleAssociatedWithProvider();
-    if(providerid){
-      return null;
-    }
-
-    return (
-        <Button
-        type="dashed"
-        className="p10 hauto w400 flex  align-center justify-center"
-        onClick={this.displayRazorpayAccountDetails}
-        icon={"plus"}
-        value={this.formatMessage(messages.addAccountDetails)}
-        >
-
-        <div className="mr10 flex direction-column align-center justify-center hp100">
-            <span className="fs20 fw700">
-            {this.formatMessage(messages.addAccountDetails)}
-            </span>
-        </div>
-        </Button>
-    );
-    };
-
-
     getPaymentDetails = () => {
         const { noAccountDetails } = this.state;
     
         if (noAccountDetails) {
-          // add custom message here centered
           return (<div className="flex align-center justify-center mt40">
-          {this.getAddAccountDetailsDisplay()}
+          {this.formatMessage(messages.noPaymentDetailsHeader)}
         </div>);
         }
     
         return (
           <Fragment>
-            <div className="flex align-center justify-center mt40">
-              {this.getAddAccountDetailsDisplay()}
+             <div className="wp100 flex direction-column">
+                <div className="p18 fs30 fw700 ">{this.formatMessage(messages.paymentDetailsHeader)}</div>
+                <div className="wp100 flex flex-wrap">
+                  {this.getAddedAccountDetails()}
+                </div>
             </div>
-            <div className="wp100 flex flex-wrap">
-              {this.getAddedAccountDetails()}
-            </div>
+
+           
+          
           </Fragment>
         );
       };
 
 
     render(){
-      // console.log("38271638726137612736721",{props:this.props});
         return (
             <div>{this.getPaymentDetails()}</div>
         )
     }
 }
 
-export default injectIntl(DoctorAccountDetails)
+export default injectIntl(ProviderAccountDetails)
