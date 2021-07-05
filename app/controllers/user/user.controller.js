@@ -787,7 +787,7 @@ class UserController extends Controller {
 
         const appNotification = new AppNotification();
 
-        const notificationToken = appNotification.getUserToken(`${userId}`);
+        const notificationToken = appNotification.getUserToken(`${userRoleId}`);
         const feedId = base64.encode(`${userId}`);
 
         // firebase keys
@@ -813,7 +813,7 @@ class UserController extends Controller {
             ...carePlanApiData
           },
           notificationToken: notificationToken,
-          feedId: `${userId}`,
+          feedId: `${userRoleId}`,
           firebase_keys,
           severity: {
             ...severityApiDetails
