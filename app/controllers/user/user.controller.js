@@ -777,7 +777,8 @@ class UserController extends Controller {
 
         const appNotification = new AppNotification();
 
-        const notificationToken = appNotification.getUserToken(`${userId}`);
+        const notificationToken = appNotification.getUserToken(`${userRoleId}`);
+        const feedId = base64.encode(`${userId}`);
 
         // firebase keys
         const firebase_keys = {
