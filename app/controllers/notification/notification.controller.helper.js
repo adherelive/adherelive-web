@@ -674,6 +674,12 @@ const callNotification = async (data) => {
       }
     }
 
+    let type = AGORA_CALL_NOTIFICATION_TYPES.MISSED_CALL;
+
+    if(verb.includes(AGORA_CALL_NOTIFICATION_TYPES.START_CALL.toLowerCase())){
+      type= AGORA_CALL_NOTIFICATION_TYPES.START_CALL
+    }
+
     let notification_data = {
         [`${id}`]: {
           is_read,
@@ -682,7 +688,7 @@ const callNotification = async (data) => {
           time,
           event_id: null,
           notification_id: id,
-          type: AGORA_CALL_NOTIFICATION_TYPES.MISSED_CALL,
+          type,
           actor,
           actor_role_id: actorRoleId,
           verb,
@@ -1002,8 +1008,6 @@ export const getDataForNotification = async (data) => {
         case USER_MESSAGE:
           return await chatMessageNotification(data);
         case AGORA_CALL_NOTIFICATION_TYPES.MISSED_CALL:
-          const res = await callNotification(data);
-          console.log("989387482748723487239847238",{res}); 
           return await callNotification(data);
         case AGORA_CALL_NOTIFICATION_TYPES.START_CALL:
           return await callNotification(data);
