@@ -7,13 +7,16 @@ import {getVitals} from "../../modules/vitals";
 import {DRAWER} from "../../constant";
 
 const mapStateToProps = state => {
-  const {vitals = {}, vital_templates = {}, pages: {vital_ids = []} = {}, care_plans = {}} = state;
+  const {vitals = {}, vital_templates = {}, pages: {vital_ids = []} = {}, care_plans = {},     
+   auth : { auth_role = null } = {},
+} = state;
 
   return {
       vitals,
       vital_templates,
       vital_ids,
       care_plans,
+      auth_role
   };
 };
 
@@ -31,6 +34,7 @@ const mergeProps = (stateProps, dispatchProps, ownProps) => {
         vital_templates,
         vital_ids,
         care_plans,
+        auth_role
     } = stateProps;
 
     const {
@@ -47,7 +51,8 @@ const mergeProps = (stateProps, dispatchProps, ownProps) => {
         care_plans: care_plans[carePlanId],
         vitalResponseDrawer,
         editVitalDrawer,
-        getPatientVitals: getPatientVitals(carePlanId)
+        getPatientVitals: getPatientVitals(carePlanId),
+        auth_role
     };
 };
 

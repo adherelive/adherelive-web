@@ -74,7 +74,7 @@ class MedicationTable extends Component {
     openResponseDrawer = (id) => (e) => {
 
         e.preventDefault();
-        const {medicationResponseDrawer, isOtherCarePlan,  auth_role =null ,care_plans = {} ,carePlanId=null } = this.props;
+        const {medicationResponseDrawer, isOtherCarePlan,  auth_role =null ,care_plans = {}  } = this.props;
         const {basic_info : { user_role_id = null } = {} } = care_plans || {};
         if(!isOtherCarePlan && user_role_id.toString() === auth_role.toString()) {
             medicationResponseDrawer({id, loading: true});
