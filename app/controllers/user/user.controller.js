@@ -603,22 +603,12 @@ class UserController extends Controller {
                 userCategoryApiWrapper.getDoctorId()
               ] = allInfo;
 
-              
 
-
-
-
-
-
-              const doctorProvider = await doctorProviderMappingService.getProviderForDoctor(
-                userCategoryId
-              );
-
-              if (doctorProvider) {
-                const doctorProviderWrapper = await DoctorProviderMappingWrapper(
-                  doctorProvider
-                );
-                const providerId = doctorProviderWrapper.getProviderId();
+              const record = await userRolesService.getSingleUserRoleByData({id:userRoleId});
+              const {linked_with = '',linked_id = null } = record || {};
+              if (linked_with === USER_CATEGORY.PROVIDER ) {
+                
+                const providerId = linked_id;
                 doctorProviderId=providerId;
                 const providerWrapper = await ProvidersWrapper(
                   null,

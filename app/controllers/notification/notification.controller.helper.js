@@ -657,15 +657,17 @@ const callNotification = async (data) => {
       group_id,
     } = data;
 
-    const userIds = getRoomUsers(foreign_id) || [];
-
+    const userRoleIds = getRoomUsers(foreign_id) || [];
     let participantData = {};
-    if (userIds.length > 0) {
-      for (let index = 0; index < userIds.length; index++) {
-        const user = (await userService.getUser(userIds[index])) || null;
+    if (userRoleIds.length > 0) {
+      for (let index = 0; index < userRoleIds.length; index++) {
+        const userRoleId = userRoleIds[index] || null;
+        const userRoleWrapper = await UserRoleWrapper(null,userRoleId);
+        const userId = await userRoleWrapper.getUserId();
+        const user = (await userService.getUser(userId)) || null;
         const userWrapper = await UserWrapper(user.get());
         const { doctor_id, patient_id } = await userWrapper.getReferenceInfo();
-        participantData[`${userIds[index]}`] = {
+        participantData[`${userRoleIds[index]}`] = {
           doctor_id,
           patient_id,
         };
@@ -990,6 +992,9 @@ export const getDataForNotification = async (data) => {
 
     Log.debug("event", event);
 
+    // console.log("989387482748723487239847238 ===>>>>>>>>>>> ",{event}); 
+
+
     if (category === USER_CATEGORY.DOCTOR) {
       switch (event) {
         case APPOINTMENT:
@@ -997,6 +1002,8 @@ export const getDataForNotification = async (data) => {
         case USER_MESSAGE:
           return await chatMessageNotification(data);
         case AGORA_CALL_NOTIFICATION_TYPES.MISSED_CALL:
+          const res = await callNotification(data);
+          console.log("989387482748723487239847238",{res}); 
           return await callNotification(data);
         case AGORA_CALL_NOTIFICATION_TYPES.START_CALL:
           return await callNotification(data);

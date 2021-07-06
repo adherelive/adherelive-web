@@ -341,7 +341,7 @@ class NotificationController extends Controller {
         "Notification sent successfully."
       );
 
-    } catch(err) {
+    } catch(error) {
       Log.debug("raiseChatNotification 500 error", error);
       return raiseServerError(res);
     }
