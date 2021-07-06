@@ -72,16 +72,19 @@ class MedicationTable extends Component {
     };
 
     openResponseDrawer = (id) => (e) => {
+
         e.preventDefault();
-        // console.log("INSIDE OPEN RESPONSE DRAWER ------------------>",this.props);
-        const {medicationResponseDrawer} = this.props;
-        medicationResponseDrawer({id, loading: true});
+        const {medicationResponseDrawer, isOtherCarePlan,  auth_role =null ,care_plans = {} ,carePlanId=null } = this.props;
+        const {basic_info : { user_role_id = null } = {} } = care_plans || {};
+        if(!isOtherCarePlan && user_role_id.toString() === auth_role.toString()) {
+            medicationResponseDrawer({id, loading: true});
+        } 
+      
     };
 
     openEditDrawer = (id) => (e) => {
         e.preventDefault();
         const {editMedicationDrawer, isOtherCarePlan, patientId , auth_role =null ,care_plans = {}} = this.props;
-        // console.log("82634782364726347263487264783",{props:this.props});
         const {basic_info : { user_role_id = null } = {} } = care_plans || {};
         if(!isOtherCarePlan && user_role_id.toString() === auth_role.toString()) {
             editMedicationDrawer({id, patient_id: patientId, loading: true});
