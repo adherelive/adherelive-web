@@ -62,7 +62,7 @@ class ChatFullScreen extends Component {
   }
 
   componentDidUpdate(prevProps,prevState){
-    const {notification_redirect : {patient_id = null} = {} ,patients = {} , authenticated_user = 1 , doctors = {} } =this.props;
+    const {notification_redirect : {patient_id = null} = {} ,patients = {} , authenticated_user = 1 , doctors = {} , resetNotificationRedirect } =this.props;
     const {notification_redirect : { patient_id : prev_patient_id = null } = {} } = prevProps ; 
     if(patient_id !== prev_patient_id){
 
@@ -86,7 +86,10 @@ class ChatFullScreen extends Component {
           roomId,
           patientUserId: patientUserId,
           patientId: patient_id
-    });
+      });
+
+      resetNotificationRedirect();
+
     }
   }
 

@@ -672,7 +672,8 @@ class PatientDetails extends Component {
     };
   }
 
-  componentDidMount() {
+
+  handleInititalData = async (redirect_patient_id = null) => {
     let {
       getMedications,
       getAppointments,
@@ -686,8 +687,15 @@ class PatientDetails extends Component {
       currentCarePlanId,
       getLastVisitAlerts,
       searchMedicine,
-      show_template_drawer = {}
+      show_template_drawer = {},
+      resetNotificationRedirect,
+      notification_redirect={}
     } = this.props;
+
+    if(redirect_patient_id){
+      patient_id = redirect_patient_id;
+    }
+
 
     const { show: showTd = false } = show_template_drawer;
     // let isCarePlanDataPresent = currentCarePlanId ? true : false;
@@ -701,7 +709,8 @@ class PatientDetails extends Component {
     this.fetchVitalDetails();
 
     // if (showTd) {
-    getPatientCarePlanDetails(patient_id).then(response => {
+    const response = await getPatientCarePlanDetails(patient_id);
+    
       let { status = false, payload = {} } = response;
       if (status) {
         let {
@@ -714,7 +723,7 @@ class PatientDetails extends Component {
           } = {}
         } = payload;
 
-        const {notification_redirect : {care_plan_id = null} = {} } = this.props;
+        const {notification_redirect : {care_plan_id  = null} = {} } = this.props;
 
         if(care_plan_id){
           current_careplan_id=care_plan_id;
@@ -738,7 +747,6 @@ class PatientDetails extends Component {
           selectedCarePlanId: current_careplan_id
         });
       }
-    });
 
       
 
@@ -782,31 +790,32 @@ class PatientDetails extends Component {
     this.initiateInAppNotificationObj();
   }
 
-  componentDidUpdate = (prevProps,prevState) => {
-    const {notification_redirect : {care_plan_id = null , type : tab = '' } = {} , care_plans = {}  } = this.props;
-    const {notification_redirect : {care_plan_id : prev_care_plan_id = null , type : prev_tab = ''} = {}} = prevProps ; 
-    let {activeKey = "1" , selectedCarePlanId : careplanId = null  } = this.state;
-    let cpId = careplanId;
+   async componentDidMount() {
 
-    if( care_plan_id && (care_plan_id !== prev_care_plan_id  || tab !== prev_tab ) ){
-
-        if(tab && tab === TYPE_SYMPTOMS ){
-          activeKey="3";
-        }else if(tab && tab === TYPE_APPOINTMENTS){
-          activeKey="2";
-        }
-
-        const { patient_id = '' } = this.props;
-        const {basic_info : { patient_id : pId = '' } = {} } = care_plans[care_plan_id] || {} ;
-
-        // console.log("823468273648723467328",{patient_id,pId});
-        if(patient_id.toString() === pId.toString() ){
-          cpId = care_plan_id;
-        }
-
-      this.setState({selectedCarePlanId : cpId , activeKey });
-
+    const {resetNotificationRedirect , notification_redirect = {} } = this.props;
+    await this.handleInititalData();
+    if(Object.keys(notification_redirect).length){
+      resetNotificationRedirect();
     }
+  }
+
+  componentDidUpdate = async (prevProps,prevState) => {
+    const {notification_redirect = {},notification_redirect : {care_plan_id = null , type : tab = '' , patient_id : redirected_p_id = null  } = {} , care_plans = {},resetNotificationRedirect  } = this.props;
+    const {notification_redirect : {care_plan_id : prev_care_plan_id = null , type : prev_tab = '' , patient_id : prev_redirected_p_id = null  } = {}} = prevProps ; 
+
+  if( (redirected_p_id && redirected_p_id !== prev_redirected_p_id)
+      ||
+      (care_plan_id && care_plan_id !== prev_care_plan_id)  
+      || 
+      (tab && tab !== prev_tab  )
+    ){
+
+    await this.handleInititalData(redirected_p_id);
+    if(Object.keys(notification_redirect).length){
+      resetNotificationRedirect();
+    }
+  }
+    
 
   }
 
@@ -2120,6 +2129,8 @@ class PatientDetails extends Component {
       auth_role = null
     } = this.props;
 
+
+
     const {
       loading,
       templateDrawerVisible = false,
@@ -2134,6 +2145,7 @@ class PatientDetails extends Component {
       symptom_dates = [],
       report_ids = []
     } = this.state;
+
 
     const {
       formatMessage,

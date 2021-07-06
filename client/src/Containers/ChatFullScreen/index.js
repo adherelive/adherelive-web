@@ -2,6 +2,7 @@ import { withRouter } from "react-router-dom";
 import ChatFullScreen from "../../Components/ChatFullScreen";
 import { connect } from "react-redux";
 import { getAllFeatures } from "../../modules/featuresMappings";
+import { resetNotificationRedirect } from "../../modules/notificationRedirect";
 
 const mapStateToProps = state => {
   const {
@@ -28,7 +29,9 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => {
   return {
-    getAllFeatures: () => dispatch(getAllFeatures())
+    getAllFeatures: () => dispatch(getAllFeatures()),
+    resetNotificationRedirect:() => dispatch(resetNotificationRedirect())
+
   };
 };
 
