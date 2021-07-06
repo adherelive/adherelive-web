@@ -96,42 +96,44 @@ class StartJob extends AgoraJob {
     };
 
     getInAppTemplate = () => {
-        
-    }
-    // getInAppTemplate = () => {
-    //     const { getAgoraData } = this;
-    //     const {
-    //       actor: {
-    //         id: actorId,
-    //         details: { name, category: actorCategory } = {}
-    //       } = {},
-    //       event_type,
-    //       roomId
-    //     } = getAgoraData() || {};
 
-    //     const participants = roomId.split(`-${process.config.twilio.CHANNEL_SERVER}-`);
+        const { getAgoraData } = this;
+        const {
+          actor: {
+            id: actorId,
+            user_role_id,
+            details: { name, category: actorCategory } = {}
+          } = {},
+          event_id,
+          event_type,
+          roomId
+        } = getAgoraData() || {};
+
+
+        const participants = roomId.split(`-${process.config.twilio.CHANNEL_SERVER}-`);
     
-    //     const templateData = [];
+        const templateData = [];
 
-    //     const currentTime = new moment().utc().toISOString();
-    //     const now = moment();
-    //     const currentTimeStamp = now.unix();
+        const currentTime = new moment().utc().toISOString();
+        const now = moment();
+        const currentTimeStamp = now.unix();
 
-    //     for (const participant of participants) {
-    //       if (participant !== `${actorId}`) {
-    //         templateData.push({
-    //             actor: actorId,
-    //             object: `${participant}`,
-    //             foreign_id: `${roomId}`,
-    //             verb: `start_call:${currentTimeStamp}`,
-    //             event: event_type,
-    //             time: `${currentTime}`,
-    //             create_time: `${currentTime}`
-    //         });
-    //       }
-    //     }
-    //     return templateData;
-    //   };
+        for (const participant of participants) {
+          if (participant !== `${user_role_id}`) {
+            templateData.push({
+                actor: actorId,
+                actorRoleId: user_role_id,
+                object: `${participant}`,
+                foreign_id: `${roomId}`,
+                verb: `start_call:${currentTimeStamp}`,
+                event: event_type,
+                time: `${currentTime}`,
+                create_time: `${currentTime}`
+            });
+          }
+        }
+        return templateData;
+    };
 
 }
 

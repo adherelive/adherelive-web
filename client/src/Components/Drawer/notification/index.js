@@ -246,7 +246,7 @@ class NotificationDrawer extends Component {
     for (let each in notifications) {
       const { type = "", notification_id = "", is_read = false } =
         notifications[each] || {};
-      if (type === AGORA_CALL_NOTIFICATION_TYPES.MISSED_CALL && !is_read) {
+      if ((type === AGORA_CALL_NOTIFICATION_TYPES.MISSED_CALL || type === AGORA_CALL_NOTIFICATION_TYPES.START_CALL ) && !is_read) {
         missedCallNotificationIds.push(notification_id);
       }
     }
@@ -973,7 +973,7 @@ class NotificationDrawer extends Component {
         </div>
       );
     } else if (
-      type === AGORA_CALL_NOTIFICATION_TYPES.MISSED_CALL &&
+      (type === AGORA_CALL_NOTIFICATION_TYPES.MISSED_CALL || type === AGORA_CALL_NOTIFICATION_TYPES.START_CALL ) &&
       (category === CATEGORY.CALL || category == CATEGORY.ALL)
     ) {
       
@@ -982,20 +982,24 @@ class NotificationDrawer extends Component {
       let patientId = null;
 
       Object.keys(participantData).forEach((participantId) => {
-        if (participantId !== actor) {
-          const { patient_id } = participantData[actor] || {};
+        if (participantId !== actor_role_id) {
+          const { patient_id } = participantData[actor_role_id] || {};
           patientId = patient_id;
         } else {
           const { doctor_id, patient_id } =
             participantData[participantId] || {};
           patientId = patient_id;
         }
-        // console.log("374264762374972931",{participantId,actor,participantData,pData:patients[patientId],patientId});
       });
 
       const { basic_info: { full_name = "" } = {} } = patients[patientId] || {};
 
-      title = `${this.formatMessage(messages.missedCallHeading)}`;
+      if(type === AGORA_CALL_NOTIFICATION_TYPES.MISSED_CALL){
+        title = `${this.formatMessage(messages.missedCallHeading)}`;
+      }else{
+        title = `${this.formatMessage(messages.startedCallHeading)}`;
+
+      }
 
       dataToRender = (
         <div
@@ -1014,7 +1018,13 @@ class NotificationDrawer extends Component {
             <div className="wp75">
               <div className="fs16 medium">{title}</div>
               <div className="fs14">
-                {this.formatMessage(messages.missedCallMessage)} {full_name}
+                {
+                type === AGORA_CALL_NOTIFICATION_TYPES.MISSED_CALL
+                ?
+                this.formatMessage({...messages.missedCallMessage},{full_name})
+                :
+                this.formatMessage({...messages.callStartedMessage},{full_name}) 
+                }
               </div>
               <div className="fs14">{time}</div>
             </div>

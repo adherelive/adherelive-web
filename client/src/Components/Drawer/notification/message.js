@@ -41,10 +41,20 @@ const messages = defineMessages({
         description: "",
         defaultMessage: "Missed Call"
     },
+    startedCallHeading: {
+        id: "app.notifications.startedCallHeading",
+        description: "",
+        defaultMessage: "Call Started"
+    },
     missedCallMessage: {
         id: "app.notifications.missedCallMessage",
         description: "",
-        defaultMessage: "You missed a call from"
+        defaultMessage: "You missed a call from {full_name}"
+    },
+    callStartedMessage: {
+        id: "app.notifications.callStartedMessage",
+        description: "",
+        defaultMessage: "Call started with {full_name}"
     },
     reminderText: {
         id: "app.notifications.reminderText",
