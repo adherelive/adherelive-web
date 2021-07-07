@@ -83,10 +83,12 @@ class DietTable extends Component {
 
     openResponseDrawer = (diet_id) => (e) => {
         e.preventDefault();
-        const { diets = {} } = this.props;
+        const {openDietResponseDrawer, isOtherCarePlan, auth_role =null ,care_plans = {},carePlanId , diets = {} } = this.props;
         const { basic_info : {name = ''} = {} } = diets[diet_id] || {};
-        const {openDietResponseDrawer} = this.props;
-        openDietResponseDrawer({diet_id, diet_name:name, loading: true});
+        const {basic_info : { user_role_id = null } = {} } = care_plans[carePlanId] || {};
+        if(!isOtherCarePlan && user_role_id.toString() === auth_role.toString()) {
+            openDietResponseDrawer({diet_id, diet_name:name, loading: true});
+        }  
     };
 
     openEditDrawer = (diet_id) => (e) => {

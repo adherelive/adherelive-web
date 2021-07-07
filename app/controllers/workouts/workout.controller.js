@@ -370,7 +370,7 @@ class WorkoutController extends Controller {
       } else if (category === USER_CATEGORY.DOCTOR) {
         getAllCareplanQuery = {
           patient_id,
-          doctor_id: userCategoryId,
+          // doctor_id: userCategoryId,
         };
       }
 

@@ -336,11 +336,11 @@ class NotificationDrawer extends Component {
     // }
   };
 
-  handlePatientDetailsRedirect = (patient_id) => () => {
-    const { history, close } = this.props;
-    history.push(`/patients/${patient_id}`);
-    close();
-  };
+  // handlePatientDetailsRedirect = (patient_id) => () => {
+  //   const { history, close } = this.props;
+  //   history.push(`/patients/${patient_id}`);
+  //   close();
+  // };
 
   handlePatientDetailsRedirectSymptoms = (
     patient_id,
@@ -355,10 +355,12 @@ class NotificationDrawer extends Component {
     });
     const { activityGroupId = {} } = this.state;
     const groupId = activityGroupId[notification_id] || null;
-    this.readNotification(groupId, notification_id);
-
-    history.push(`/patients/${patient_id}`);
-    close();
+    if(patient_id){
+      this.readNotification(groupId, notification_id);
+      history.push(`/patients/${patient_id}`);
+      close();
+    }
+    
   };
 
   // handleMissedCallClick = async (notification_id) => {
@@ -382,9 +384,12 @@ class NotificationDrawer extends Component {
 
     const { activityGroupId = {} } = this.state;
     const groupId = activityGroupId[notification_id] || null;
-    this.readNotification(groupId, notification_id);
-    history.push(`/patients/${patient_id}`);
-    close();
+    if(patient_id){
+      this.readNotification(groupId, notification_id);
+      history.push(`/patients/${patient_id}`);
+      close();
+    }
+    
   };
 
 
@@ -402,9 +407,12 @@ class NotificationDrawer extends Component {
 
     const { activityGroupId = {} } = this.state;
     const groupId = activityGroupId[notification_id] || null;
-    this.readNotification(groupId, notification_id);
-    history.push(`/patients/${patient_id}`);
-    close();
+    if(patient_id){
+      this.readNotification(groupId, notification_id);
+      history.push(`/patients/${patient_id}`);
+      close();
+    }
+    
   };
 
   handlePatientDetailsRedirectWorkouts = (
@@ -421,9 +429,12 @@ class NotificationDrawer extends Component {
 
     const { activityGroupId = {} } = this.state;
     const groupId = activityGroupId[notification_id] || null;
-    this.readNotification(groupId, notification_id);
-    history.push(`/patients/${patient_id}`);
-    close();
+    if(patient_id){
+      this.readNotification(groupId, notification_id);
+      history.push(`/patients/${patient_id}`);
+      close();
+    }
+    
   };
 
 
@@ -436,10 +447,12 @@ class NotificationDrawer extends Component {
     });
     const { activityGroupId = {} } = this.state;
     const groupId = activityGroupId[notification_id] || null;
-    this.readNotification(groupId, notification_id);
-
-    history.push(`/patient-consulting/${patient_id}`);
-    close();
+    if(patient_id){
+      this.readNotification(groupId, notification_id);
+      history.push(`/patient-consulting/${patient_id}`);
+      close();
+    }
+    
   };
 
   getDurationflag = (noti_time) => {
@@ -620,9 +633,12 @@ class NotificationDrawer extends Component {
 
     const { activityGroupId = {} } = this.state;
     const groupId = activityGroupId[notification_id] || null;
-    readNotification(groupId, notification_id);
-    history.push(`/patients/${patient_id}`);
-    close();
+    if(patient_id){
+      readNotification(groupId, notification_id);
+      history.push(`/patients/${patient_id}`);
+      close();
+    }
+    
   };
 
   handleMissedCallRedirect = ({ foreign_id, notification_id }) => async (e) => {
