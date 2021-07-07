@@ -193,7 +193,9 @@ class ChatForm extends Component {
       for (let i = 0; i < this.state.fileList.length; ++i) {
         const formData = new FormData();
         formData.append("file", this.state.fileList[i]);
-        const respo = await this.props.channel.sendMessage(formData);
+        const respo = await this.props.channel.sendMessage(formData, {
+          sender_id: authenticated_user,
+        });
 
         raiseChatNotificationFunc(
           this.props.formatMessage(messages.newDocumentUploadedNotify)
@@ -326,7 +328,6 @@ class ChatPopUp extends Component {
     }
   }
   tick = async () => {
-    console.log("897987 tick called78934793");
     const { authenticated_user } = this.props;
     const members = this.channel ? await this.channel.getMembers() : [];
     let other_user_online = false;
@@ -383,7 +384,6 @@ class ChatPopUp extends Component {
   };
 
   initChat = () => {
-    console.log("846328756839658932", this.channelName, this.state.token);
     this.chatClient = new Chat(this.state.token);
     this.chatClient
       .initialize()
@@ -852,7 +852,7 @@ class ChatPopUp extends Component {
 
   render() {
     const { ChatForm } = this;
-    const { chatMessages, roomId } = this.props;
+    const { chatMessages, roomId, authenticated_user } = this.props;
     const {
       messagesLoading = false,
       other_user_online = false,
@@ -930,6 +930,7 @@ class ChatPopUp extends Component {
                   channel={this.channel}
                   formatMessage={this.formatMessage}
                   raiseChatNotificationFunc={this.raiseChatNotificationFunc}
+                  authenticated_user={authenticated_user}
                 />
               </div>
             </div>
