@@ -94,10 +94,14 @@ class MobileAccountsController extends Controller {
       const { query: { all_accounts = 0 ,  provider_id = null } = {} } = req;
       const get_all_accounts = all_accounts == 0 ? false : true;
 
+      let accountDetails = {};
+      let accountWrapperDetails = {};
+      let accountWrapper = null;
+
       if(provider_id){
         
     
-          let accountWrapperDetails = {}, providerApiData = {} , allUsers = {},accountWrapper = null ;
+          let providerApiData = {} , allUsers = {} ;
 
           const providerWrapper = await ProviderWrapper(null,provider_id);
           providerApiData[providerWrapper.getProviderId()] = providerWrapper.getBasicInfo();
@@ -152,9 +156,7 @@ class MobileAccountsController extends Controller {
         
       }
 
-      let accountDetails = {};
-      let accountWrapperDetails = {};
-      let accountWrapper = null;
+      
       if (get_all_accounts) {
         accountDetails = await accountDetailsService.getAllAccountsForUser(
           userId
