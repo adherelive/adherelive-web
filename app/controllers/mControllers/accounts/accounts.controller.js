@@ -115,7 +115,7 @@ class MobileAccountsController extends Controller {
 
           if (accountDetails && accountDetails.length) {
             for (const account of accountDetails) {
-              accountWrapper = await AccountsWrapper(account);
+              accountWrapper = await MAccountsWrapper(account);
               accountWrapperDetails[
                 accountWrapper.getId()
               ] = accountWrapper.getBasicInfo();
@@ -164,7 +164,7 @@ class MobileAccountsController extends Controller {
 
         if (accountDetails) {
           for (const account of accountDetails) {
-            accountWrapper = await AccountsWrapper(account);
+            accountWrapper = await MAccountsWrapper(account);
             accountWrapperDetails[
               accountWrapper.getId()
             ] = accountWrapper.getBasicInfo();
@@ -177,7 +177,7 @@ class MobileAccountsController extends Controller {
         );
 
         if (accountDetails) {
-          accountWrapper = await AccountsWrapper(accountDetails);
+          accountWrapper = await MAccountsWrapper(accountDetails);
           accountWrapperDetails[
             accountWrapper.getId()
           ] = accountWrapper.getBasicInfo();
