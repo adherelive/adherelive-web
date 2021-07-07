@@ -88,7 +88,6 @@ class MobileAccountsController extends Controller {
     const { raiseSuccess, raiseClientError, raiseServerError } = this;
     try {
       const { userDetails: { userId } = {} } = req;
-      Logger.debug("6564546787654678787678965678",req.query);
 
       const { query: { all_accounts = 0 , provider_id = null } = {} } = req;
       const get_all_accounts = all_accounts == 0 ? false : true;
@@ -96,7 +95,7 @@ class MobileAccountsController extends Controller {
       if(provider_id){
         
     
-          let accountWrapperDetails = {}, providerApiData = {} , allUsers = {} ;
+          let accountWrapperDetails = {}, providerApiData = {} , allUsers = {} , accountWrapper = null ;
 
           const providerWrapper = await ProviderWrapper(null,provider_id);
           providerApiData[providerWrapper.getProviderId()] = providerWrapper.getBasicInfo();
