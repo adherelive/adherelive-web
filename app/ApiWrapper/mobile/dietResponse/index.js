@@ -49,7 +49,11 @@ class DietResponseWrapper extends BaseDietResponse {
     getReferenceInfo = async () => {
         const {getId, isDocumentUploaded, getScheduleEventId, getAllInfo} = this;
 
-        const scheduleEvent = await EventWrapper(null, getScheduleEventId());
+        let scheduleEventData = {};
+        if(getScheduleEventId()) {
+            const scheduleEvent = await EventWrapper(null, getScheduleEventId());
+            scheduleEventData[getScheduleEventId()] = scheduleEvent.getAllInfo();
+        }
 
         let allUploadDocuments = {};
         if(isDocumentUploaded()) {
@@ -69,9 +73,7 @@ class DietResponseWrapper extends BaseDietResponse {
                 [getId()]: await getAllInfo()
             },
             upload_documents: allUploadDocuments,
-            schedule_events: {
-                [getScheduleEventId()]: scheduleEvent.getAllInfo()
-            },
+            schedule_events: scheduleEventData,
             diet_response_id: getId()
         }
     };
