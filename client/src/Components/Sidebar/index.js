@@ -669,7 +669,7 @@ class SideMenu extends Component {
             </Tooltip>
           </MenuItem>
         )}
-        {authenticated_category !== USER_CATEGORY.ADMIN && (
+        {authenticated_category === USER_CATEGORY.DOCTOR && (
           <MenuItem
             className="flex direction-column justify-center align-center p0"
             key={NOTIFICATIONS}

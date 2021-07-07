@@ -7,7 +7,6 @@ import { getUploadAppointmentDocumentUrl } from "../../../Helper/urls/appointmen
 import { doRequest } from "../../../Helper/network";
 import { generatePrescriptionUrl } from "../../../Helper/urls/patients";
 import ShareIcon from "../../../Assets/images/redirect3x.png";
-import NotificationDrawer from "../../../Containers/Drawer/notificationDrawer";
 
 import config from "../../../config";
 
@@ -2687,7 +2686,6 @@ class PatientDetails extends Component {
           />
         )}
         
-        <NotificationDrawer  />
 
       </Fragment>
     );
