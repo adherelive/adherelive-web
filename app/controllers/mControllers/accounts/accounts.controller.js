@@ -97,7 +97,7 @@ class MobileAccountsController extends Controller {
       if(provider_id){
         
     
-          let accountWrapperDetails = {}, providerApiData = {} , allUsers = {} ;
+          let accountWrapperDetails = {}, providerApiData = {} , allUsers = {},accountWrapper ;
 
           const providerWrapper = await ProviderWrapper(null,provider_id);
           providerApiData[providerWrapper.getProviderId()] = providerWrapper.getBasicInfo();
