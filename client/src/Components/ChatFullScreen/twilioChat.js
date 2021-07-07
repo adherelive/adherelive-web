@@ -133,7 +133,7 @@ class ChatForm extends Component {
       event.preventDefault();
     }
 
-    const {raiseChatNotificationFunc}=this.props;
+    const {raiseChatNotificationFunc, authenticated_user}=this.props;
     let trimmedMessage = this.state.newMessage.trim();
     if (this.state.newMessage.length > 0 && trimmedMessage.length > 0) {
       const message = this.state.newMessage;
@@ -142,7 +142,9 @@ class ChatForm extends Component {
       const {channel = null } = this.props;
 
       if(channel){
-        const resp = await channel.sendMessage(message);
+        const resp = await channel.sendMessage(message, {
+          sender_id: authenticated_user
+        });
       }
 
       if(message){
@@ -516,9 +518,15 @@ class TwilioChat extends Component {
     const { authenticated_user } = this.props;
 
     for (let messageData of messages) {
+      const {
+        index,
+        attributes: { sender_id } = {},
+        author,
+      } = messageData.state;
       if (
-        messageData.state.index <= otherUserLastConsumedMessageIndex &&
-        messageData.state.author === `${authenticated_user}`
+        index <= otherUserLastConsumedMessageIndex &&
+        (sender_id === `${authenticated_user}` ||
+          author === `${authenticated_user}`)
       ) {
         messageData.received = true;
         messageData.sent = true;
