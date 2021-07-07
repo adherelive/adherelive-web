@@ -13,7 +13,7 @@ export default class DietResponses {
     }
 
     getScheduleEventId = () => {
-        return this._data.schedule_event_id || null;
+        return this._data.schedule_event_id;
     }
 
     getStatus = () => {

@@ -648,14 +648,15 @@ class DietController extends Controller {
           const event = await EventWrapper(scheduleEvent);
 
        
-          const resp_record = await dietResponsesService.getByData({
+          const dietResponseData = await dietResponsesService.getByData({
             diet_id:id,
             schedule_event_id:event.getScheduleEventId()
-          });
+          }) || null;
 
-          if(resp_record){
+          let allDietResponseData = {};
 
-            const dietResponse = await DietResponseWrapper({data:resp_record});
+          if(dietResponseData) {
+            const dietResponse = await DietResponseWrapper({data:dietResponseData});
 
             const {
               diet_responses,
@@ -663,22 +664,20 @@ class DietController extends Controller {
               diet_response_id,
             } = await dietResponse.getReferenceInfo() || {};
             
-            let  eventData = {
-              ...(await event.getAllInfo()),
-              diet_responses,
-              upload_documents,
-              diet_response_id
-            };
-  
-  
-            if (dateWiseDietData.hasOwnProperty(event.getDate())) {
-              dateWiseDietData[event.getDate()].push({...eventData});
-            } else {
-              dateWiseDietData[event.getDate()] = [];
-              dateWiseDietData[event.getDate()].push({...eventData});
-              timelineDates.push(event.getDate());
-            }
-            
+            allDietResponseData = {diet_responses, upload_documents, diet_response_id};
+          }
+
+          let  eventData = {
+            ...(await event.getAllInfo()),
+            ...allDietResponseData,
+          };
+
+          if (dateWiseDietData.hasOwnProperty(event.getDate())) {
+            dateWiseDietData[event.getDate()].push({...eventData});
+          } else {
+            dateWiseDietData[event.getDate()] = [];
+            dateWiseDietData[event.getDate()].push({...eventData});
+            timelineDates.push(event.getDate());
           }
 
          

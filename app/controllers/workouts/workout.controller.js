@@ -683,11 +683,6 @@ class WorkoutController extends Controller {
             where: {schedule_event_id: event.getScheduleEventId()}
           });
 
-          console.log(
-            "1230983129 event.getScheduleEventId()",
-            event.getScheduleEventId(), totalWorkoutResponses, workoutResponses
-          );
-
           let allWorkoutResponses = {};
           let allWorkoutResponseIds = [];
 
