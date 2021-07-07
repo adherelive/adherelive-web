@@ -27,29 +27,23 @@ class UpdateJob extends MedicationJob {
     const templateData = [];
     const playerIds = [];
     const userIds = [];
-    const userRoleIds = [];
-
-    participants.forEach(participant => {
-      if (participant !== user_role_id) {
-        userRoleIds.push(participant);
-      }
-    });
 
     const {rows: userRoles = []} = await UserRoleService.findAndCountAll({
       where: {
-        id: userRoleIds
+        id: participants
       }
     }) || {};
 
     let providerId = null;
     for(const userRole of userRoles) {
       const {id, user_identity, linked_id} = userRole || {};
-      userIds.push(user_identity);
 
       if(id === user_role_id) {
         if(linked_id) {
           providerId = linked_id;
         }
+      } else {
+        userIds.push(user_identity);
       }
     }
 

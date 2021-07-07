@@ -26,9 +26,11 @@ class ResponseJob extends DietJob {
     const playerIds = [];
     const userIds = [];
     const userRoleIds = [];
+    let doctorRoleId = null;
 
     participants.forEach(participant => {
       if (participant !== user_role_id) {
+        doctorRoleId = participant;
         userRoleIds.push(participant);
       }
     });
@@ -67,7 +69,7 @@ class ResponseJob extends DietJob {
       android_channel_id: process.config.one_signal.urgent_channel_id,
       data: {
         url: `/${NOTIFICATION_VERB.DIET_RESPONSE}`,
-        params: this.getDietData()
+        params: {...this.getDietData(), doctorRoleId}
       }
     });
 

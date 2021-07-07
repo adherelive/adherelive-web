@@ -42,8 +42,8 @@ class UserMessageJob extends ChatJob {
         const userRoleIds = [];
 
         participants.forEach(participant => {
+           userRoleIds.push(participant);
         if (participant !== actorRoleId) {
-            userRoleIds.push(participant);
             if(!doctorRoleId) {
                 doctorRoleId = participant
             } else if(!patientRoleId) {
@@ -60,14 +60,14 @@ class UserMessageJob extends ChatJob {
 
         let providerId = null;
         for(const userRole of userRoles) {
-        const {id, user_identity, linked_id} = userRole || {};
-        userIds.push(user_identity);
-
-        if(id === actorRoleId) {
-            if(linked_id) {
-            providerId = linked_id;
+            const {id, user_identity, linked_id} = userRole || {};
+            if(id === actorRoleId) {
+                if(linked_id) {
+                    providerId = linked_id;
+                }
+            } else {
+                userIds.push(user_identity);
             }
-        }
         }
 
         let providerName = DEFAULT_PROVIDER;
@@ -102,7 +102,8 @@ class UserMessageJob extends ChatJob {
             android_group:`adhere.live`,
             // android_group_message: {en: "You have $[notif_count] new messages"},
             android_channel_id: process.config.one_signal.urgent_channel_id,
-            data: { url: `/chat-message`, params: {...getData(), doctorUserId: doctorRoleId, patientUserId: patientRoleId, roomId }}
+            data: { url: `/chat-message`, params: {...getData(), doctorUserId: doctorRoleId, 
+                patientUserId: patientRoleId, roomId, actorId }}
         });
         // }
 

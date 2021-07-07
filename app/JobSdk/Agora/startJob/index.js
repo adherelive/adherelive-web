@@ -31,39 +31,32 @@ class StartJob extends AgoraJob {
         const playerIds = [];
         const userIds = [];
 
-        const userRoleIds = [];
-
-        participants.forEach(participant => {
-        if (participant !== user_role_id) {
-            userRoleIds.push(participant);
-        }
-        });
-
         const {rows: userRoles = []} = await UserRoleService.findAndCountAll({
         where: {
-            id: userRoleIds
+            id: participants
         }
         }) || {};
 
         let providerId = null;
         for(const userRole of userRoles) {
-        const {id, user_identity, linked_id} = userRole || {};
-        userIds.push(user_identity);
+            const {id, user_identity, linked_id} = userRole || {};
+            
 
-        if(id === user_role_id) {
-            if(linked_id) {
-            providerId = linked_id;
+            if(id === user_role_id) {
+                if(linked_id) {
+                    providerId = linked_id;
+                }
+            } else {
+                userIds.push(user_identity);
             }
-        }
         }
 
         let providerName = DEFAULT_PROVIDER;
         if(providerId) {
-        const provider = await ProviderService.getProviderByData({id: providerId});
-        const {name} = provider || {};
-        providerName = name;
+            const provider = await ProviderService.getProviderByData({id: providerId});
+            const {name} = provider || {};
+            providerName = name;
         }
-
 
         const userDevices = await UserDeviceService.getAllDeviceByData({
             user_id: userIds
