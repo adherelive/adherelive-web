@@ -9,7 +9,7 @@ export default class WorkoutResponses {
     }
 
     getScheduleEventId = () => {
-        return this._data.schedule_event_id || null;
+        return this._data.schedule_event_id;
     }
 
     getExerciseGroupId = () => this._data.exercise_group_id;

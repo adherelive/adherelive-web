@@ -648,26 +648,29 @@ class DietController extends Controller {
           const event = await EventWrapper(scheduleEvent);
 
        
-          const resp_record = await dietResponsesService.getByData({
+          const dietResponseData = await dietResponsesService.getByData({
             diet_id:id,
             schedule_event_id:event.getScheduleEventId()
-          });
+          }) || null;
 
-          const dietResponse = await DietResponseWrapper({data:resp_record});
+          let allDietResponseData = {};
 
-          const {
-            diet_responses,
-            upload_documents,
-            diet_response_id,
-          } = await dietResponse.getReferenceInfo() || {};
-          
+          if(dietResponseData) {
+            const dietResponse = await DietResponseWrapper({data:dietResponseData});
+
+            const {
+              diet_responses,
+              upload_documents,
+              diet_response_id,
+            } = await dietResponse.getReferenceInfo() || {};
+            
+            allDietResponseData = {diet_responses, upload_documents, diet_response_id};
+          }
+
           let  eventData = {
             ...(await event.getAllInfo()),
-            diet_responses,
-            upload_documents,
-            diet_response_id
+            ...allDietResponseData,
           };
-
 
           if (dateWiseDietData.hasOwnProperty(event.getDate())) {
             dateWiseDietData[event.getDate()].push({...eventData});

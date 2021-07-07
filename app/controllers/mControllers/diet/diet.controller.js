@@ -66,7 +66,10 @@ class DietController extends Controller {
       const patient_id = careplanWrapper.getPatientId();
 
       //other doctor's diet as food item and details only visible to creator doc
-      if (userCategoryId.toString() !== doctor_id.toString() && userCategoryId !== patient_id) {
+      if (
+        userCategoryId.toString() !== doctor_id.toString() &&
+        userCategoryId !== patient_id
+      ) {
         return raiseClientError(
           res,
           422,
@@ -276,8 +279,7 @@ class DietController extends Controller {
       const careplanWrapper = await CareplanWrapper(null, carePlanId);
       const patientId = await careplanWrapper.getPatientId();
       const patient = await PatientWrapper(null, patientId);
-      const {user_role_id: patientRoleId} = await patient.getAllInfo();
-
+      const { user_role_id: patientRoleId } = await patient.getAllInfo();
 
       const eventScheduleData = {
         patient_id: patient.getUserId(),
@@ -496,8 +498,7 @@ class DietController extends Controller {
       const careplanWrapper = await CareplanWrapper(null, care_plan_id);
       const patientId = await careplanWrapper.getPatientId();
       const patient = await PatientWrapper(null, patientId);
-      const {user_role_id: patientRoleId} = await patient.getAllInfo();
-
+      const { user_role_id: patientRoleId } = await patient.getAllInfo();
 
       const eventScheduleData = {
         patient_id: patient.getUserId(),
@@ -727,66 +728,72 @@ class DietController extends Controller {
         .utc()
         .toISOString();
 
-        const dietService = new DietService();
-        const dietResponsesService = new DietResponsesService();
+      const dietService = new DietService();
+      const dietResponsesService = new DietResponsesService();
 
+      const dietExists = (await dietService.findOne({ id })) || null;
 
-        const dietExists = (await dietService.findOne({ id })) || null;
+      if (!dietExists) {
+        return raiseClientError(
+          res,
+          422,
+          {},
+          "Please select a valid diet id to get timeline"
+        );
+      }
 
-
-        if(!dietExists){
-          return raiseClientError(res, 422, {}, "Please select a valid diet id to get timeline");
-        }
-
-      const diet = await DietWrapper({id});
+      const diet = await DietWrapper({ id });
 
       const completeEvents = await eventService.getAllPassedByData({
         event_id: id,
         event_type: EVENT_TYPE.DIET,
         date: diet.getStartDate(),
         sort: "DESC",
-        paranoid:false
+        paranoid: false,
       });
 
-      let dateWiseDietData = {}  ;
+      let dateWiseDietData = {};
 
       const timelineDates = [];
 
       if (completeEvents.length > 0) {
-
         for (const scheduleEvent of completeEvents) {
           const event = await EventWrapper(scheduleEvent);
 
-       
-          const resp_record = await dietResponsesService.getByData({
-            diet_id:id,
-            schedule_event_id:event.getScheduleEventId()
+          const dietResponseData = await dietResponsesService.getByData({
+            diet_id: id,
+            schedule_event_id: event.getScheduleEventId(),
           });
 
-          const dietResponse = await DietResponseWrapper({data:resp_record});
+          let allDietResponseData = {};
 
-          const {
-            diet_responses,
-            upload_documents,
-            diet_response_id,
-          } = await dietResponse.getReferenceInfo() || {};
-          
-          let  eventData = {
-            ...(await event.getAllInfo()),
-            diet_responses,
-            upload_documents,
-            diet_response_id
-          };
+          if (dietResponseData) {
+            const dietResponse = await DietResponseWrapper({
+              data: dietResponseData,
+            });
 
+            const { diet_responses, upload_documents, diet_response_id } =
+              (await dietResponse.getReferenceInfo()) || {};
 
-          if (dateWiseDietData.hasOwnProperty(event.getDate())) {
-            dateWiseDietData[event.getDate()].push({...eventData});
-          } else {
-            dateWiseDietData[event.getDate()] = [];
-            dateWiseDietData[event.getDate()].push({...eventData});
-            timelineDates.push(event.getDate());
+            allDietResponseData = {
+              diet_responses,
+              upload_documents,
+              diet_response_id,
+            };
           }
 
+          let eventData = {
+            ...(await event.getAllInfo()),
+            ...allDietResponseData,
+          };
+
+          if (dateWiseDietData.hasOwnProperty(event.getDate())) {
+            dateWiseDietData[event.getDate()].push({ ...eventData });
+          } else {
+            dateWiseDietData[event.getDate()] = [];
+            dateWiseDietData[event.getDate()].push({ ...eventData });
+            timelineDates.push(event.getDate());
+          }
         }
 
         return raiseSuccess(
@@ -794,9 +801,9 @@ class DietController extends Controller {
           200,
           {
             diet_timeline: {
-              ...dateWiseDietData
+              ...dateWiseDietData,
             },
-            diet_date_ids: timelineDates
+            diet_date_ids: timelineDates,
           },
           "Diet responses fetched successfully"
         );
