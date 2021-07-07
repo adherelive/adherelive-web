@@ -653,29 +653,35 @@ class DietController extends Controller {
             schedule_event_id:event.getScheduleEventId()
           });
 
-          const dietResponse = await DietResponseWrapper({data:resp_record});
+          if(resp_record){
 
-          const {
-            diet_responses,
-            upload_documents,
-            diet_response_id,
-          } = await dietResponse.getReferenceInfo() || {};
-          
-          let  eventData = {
-            ...(await event.getAllInfo()),
-            diet_responses,
-            upload_documents,
-            diet_response_id
-          };
+            const dietResponse = await DietResponseWrapper({data:resp_record});
 
-
-          if (dateWiseDietData.hasOwnProperty(event.getDate())) {
-            dateWiseDietData[event.getDate()].push({...eventData});
-          } else {
-            dateWiseDietData[event.getDate()] = [];
-            dateWiseDietData[event.getDate()].push({...eventData});
-            timelineDates.push(event.getDate());
+            const {
+              diet_responses,
+              upload_documents,
+              diet_response_id,
+            } = await dietResponse.getReferenceInfo() || {};
+            
+            let  eventData = {
+              ...(await event.getAllInfo()),
+              diet_responses,
+              upload_documents,
+              diet_response_id
+            };
+  
+  
+            if (dateWiseDietData.hasOwnProperty(event.getDate())) {
+              dateWiseDietData[event.getDate()].push({...eventData});
+            } else {
+              dateWiseDietData[event.getDate()] = [];
+              dateWiseDietData[event.getDate()].push({...eventData});
+              timelineDates.push(event.getDate());
+            }
+            
           }
+
+         
 
         }
 
