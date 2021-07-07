@@ -46,27 +46,28 @@ class ResponseJob extends VitalJob {
       }
     }) || {};
 
-    let providerId = null;
+    let doctorRoleId = null;
 
     for(const userRole of userRoles) {
       const {id, user_identity, linked_id} = userRole || {};
       if(id !== user_role_id) {
         userIds.push(user_identity);
+        doctorRoleId = id;
       } 
-      else {
-        if(linked_id) {
-          providerId = linked_id;
-        }
-      }
+      // else {
+      //   if(linked_id) {
+      //     providerId = linked_id;
+      //   }
+      // }
     }
 
     // provider
-    let providerName = DEFAULT_PROVIDER;
-    if(providerId) {
-      const provider = await ProviderService.getProviderByData({id: providerId});
-      const {name} = provider || {};
-      providerName = name;
-    }
+    // let providerName = DEFAULT_PROVIDER;
+    // if(providerId) {
+    //   const provider = await ProviderService.getProviderByData({id: providerId});
+    //   const {name} = provider || {};
+    //   providerName = name;
+    // }
 
     const userDevices = await UserDeviceService.getAllDeviceByData({
       user_id: userIds
@@ -91,7 +92,7 @@ class ResponseJob extends VitalJob {
       android_channel_id: process.config.one_signal.urgent_channel_id,
       data: {
         url: "/vital_response",
-        params: {vital, vital_id: event_id, vital_templates, patient_id}
+        params: {vital, vital_id: event_id, vital_templates, patient_id, actorId, doctorRoleId}
       }
     });
 

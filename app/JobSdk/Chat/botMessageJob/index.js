@@ -43,8 +43,8 @@ class BotMessageJob extends ChatJob {
         const userRoleIds = [];
 
         participants.forEach(participant => {
-        if (participant !== actorRoleId) {
             userRoleIds.push(participant);
+        if (participant !== actorRoleId) {
             if(!doctorRoleId) {
                 doctorRoleId = participant
             } else if(!patientRoleId) {
@@ -62,20 +62,20 @@ class BotMessageJob extends ChatJob {
         let providerId = null;
         for(const userRole of userRoles) {
         const {id, user_identity, linked_id} = userRole || {};
-        userIds.push(user_identity);
-
-        if(id === actorRoleId) {
-            if(linked_id) {
-            providerId = linked_id;
+            if(id === actorRoleId) {
+                if(linked_id) {
+                providerId = linked_id;
+                }
+            }else {
+                userIds.push(user_identity);
             }
-        }
         }
 
         let providerName = DEFAULT_PROVIDER;
         if(providerId) {
-        const provider = await ProviderService.getProviderByData({id: providerId});
-        const {name} = provider || {};
-        providerName = name;
+            const provider = await ProviderService.getProviderByData({id: providerId});
+            const {name} = provider || {};
+            providerName = name;
         }
 
 
@@ -103,7 +103,8 @@ class BotMessageJob extends ChatJob {
             priority: 10,
             android_group:"adhere.live",
             android_channel_id: process.config.one_signal.urgent_channel_id,
-            data: { url: `/chat-message`, params: {...getData(), doctorUserId: doctorRoleId, patientUserId: patientRoleId, roomId }}
+            data: { url: `/chat-message`, params: {...getData(), doctorUserId: doctorRoleId,
+                 patientUserId: patientRoleId, roomId, actorId }}
         });
         // }
 

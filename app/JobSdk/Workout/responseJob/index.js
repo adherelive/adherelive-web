@@ -28,9 +28,11 @@ class ResponseJob extends WorkoutJob {
     const playerIds = [];
     const userIds = [];
     const userRoleIds = [];
+    let doctorRoleId = null;
 
     participants.forEach(participant => {
       if (participant !== user_role_id) {
+        doctorRoleId = participant;
         userRoleIds.push(participant);
       }
     });
@@ -76,7 +78,7 @@ class ResponseJob extends WorkoutJob {
       android_channel_id: process.config.one_signal.urgent_channel_id,
       data: {
         url: `/${NOTIFICATION_VERB.WORKOUT_RESPONSE}`,
-        params: this.getWorkoutData()
+        params: {...this.getWorkoutData(), doctorRoleId}
       }
     });
 

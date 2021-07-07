@@ -4,7 +4,7 @@ import {DEFAULT_PROVIDER, EVENT_TYPE, USER_CATEGORY} from "../../../../constant"
 
 import UserRoleService from "../../../services/userRoles/userRoles.service";
 import UserDeviceService from "../../../services/userDevices/userDevice.service";
-import ProviderService from "../../../services/provider/provider.service";
+// import ProviderService from "../../../services/provider/provider.service";
 
 import UserDeviceWrapper from "../../../ApiWrapper/mobile/userDevice";
 
@@ -37,27 +37,29 @@ class CreateJob extends SymptomsJob {
       }
     }) || {};
 
-    let providerId = null;
+    // let providerId = null;
+    let doctorRoleId = null;
 
     for(const userRole of userRoles) {
       const {id, user_identity, linked_id} = userRole || {};
       if(id !== user_role_id) {
+        doctorRoleId = id;
         userIds.push(user_identity);
       } 
-      else {
-        if(linked_id) {
-          providerId = linked_id;
-        }
-      }
+      // else {
+      //   if(linked_id) {
+      //     providerId = linked_id;
+      //   }
+      // }
     }
 
     // provider
-    let providerName = DEFAULT_PROVIDER;
-    if(providerId) {
-      const provider = await ProviderService.getProviderByData({id: providerId});
-      const {name} = provider || {};
-      providerName = name;
-    }
+    // let providerName = DEFAULT_PROVIDER;
+    // if(providerId) {
+    //   const provider = await ProviderService.getProviderByData({id: providerId});
+    //   const {name} = provider || {};
+    //   providerName = name;
+    // }
 
     const userDevices = await UserDeviceService.getAllDeviceByData({
       user_id: userIds
@@ -82,7 +84,7 @@ class CreateJob extends SymptomsJob {
       priority: 10,
       android_channel_id: process.config.one_signal.urgent_channel_id,
       data: { url: "/symptoms-add", params: { actorId, symptom_id: event_id,
-         care_plan_id_data, patient_id } }
+         care_plan_id_data, patient_id, doctorRoleId } }
     });
 
     return templateData;
