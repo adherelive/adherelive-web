@@ -385,6 +385,7 @@ class SideMenu extends Component {
       // handleManageAccount,
       getProviderIcon,
       formatMessage,
+      getProviderUserRoleIcon
     } = this;
 
    return user_role_ids.map((id) => {
@@ -408,7 +409,8 @@ class SideMenu extends Component {
         // <Fragment>
           <Menu.Item key={`${ACCOUNT}.${id}`} className="pointer black-85">
             <div className={`flex align-center mt10 mb10`}>
-              {getProviderIcon("w50 h50", id)}
+              {linked_id && getProviderUserRoleIcon("w50 h50", linked_id)}
+              {/* {getProviderIcon("w50 h50", id)} */}
               <div className="flex direction-column align-start ml10">
                 <div className={"fs20 fw700"}>{addedVia}</div>
                 <div className="fs14 fw500">{email}</div>
@@ -518,6 +520,37 @@ class SideMenu extends Component {
     //   );
     // }
   };
+
+  getProviderUserRoleIcon = (className = "w35 h35",linked_id=null) => {
+    const { providers = {} } = this.props;
+    let src = '';
+    const provider = providers[linked_id];
+
+    if(!provider){
+      return null;
+    }
+
+    const { basic_info: { name = ''} = {}, details: { icon = '' } = {} } =
+    provider || {};
+    
+    src = icon;
+
+    if(src.length){
+      return  <img alt={"Provider Icon"} src={icon} className={className} />;
+    }else{
+      return (
+        <div
+          className={`${className} br5 bg-grey flex justify-center align-center`}
+        >
+          {name
+            .split(" ")
+            .map((word) => word.charAt(0).toUpperCase())
+            .join(" ")}
+        </div>
+      );
+    }
+
+  }
 
 
 
