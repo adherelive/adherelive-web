@@ -310,7 +310,6 @@ class AddProviderForm extends Component {
       </FormItem>
 
       <Customization {...this.props}/>
-
       {/* <-------------------------- ACCOUNT DETAILS --------------------------------------->*/}
 
       <div className="fwbolder fs18 mb20 mt20 flex align-center justify-space-between">
