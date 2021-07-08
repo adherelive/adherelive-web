@@ -25,11 +25,12 @@ import MedicineBoxFilled from "@ant-design/icons/MedicineBoxFilled";
 import AlertFilled from "@ant-design/icons/AlertFilled";
 import ClockCircleFilled from "@ant-design/icons/ClockCircleFilled";
 import CoffeeOutlined from "@ant-design/icons/CoffeeOutlined";
-import FireOutlined from "@ant-design/icons/FireOutlined";
 import Loading from "../../Common/Loading";
 import { throttle } from "lodash";
 import { getPatientConsultingVideoUrl } from "../../../Helper/url/patients";
 import workout_icon from "../../../Assets/images/workout_icon.png";
+import vital_icon from "../../../Assets/images/vital.png";
+
 // import { getNotifications } from "../../../Helper/urls/notifications";
 const { Option } = Select;
 const APPOINTMENT = "appointment";
@@ -754,7 +755,9 @@ class NotificationDrawer extends Component {
         >
           <div className="flex align-center justify-space-between">
             <div className="wp20 flex align-center justify-center">
-              <MessageFilled className="dark-sky-blue fs28" />
+              {/* <MessageFilled className="dark-sky-blue fs28" /> */}
+              <img src={vital_icon} 
+              className="pointer h45 w45 " />
             </div>
             <div className="wp75">
               <div className="fs16 medium">
