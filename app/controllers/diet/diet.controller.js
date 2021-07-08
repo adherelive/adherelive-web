@@ -680,6 +680,8 @@ class DietController extends Controller {
             timelineDates.push(event.getDate());
           }
 
+         
+
         }
 
         return raiseSuccess(

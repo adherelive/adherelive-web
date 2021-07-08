@@ -370,7 +370,7 @@ class AppointmentController extends Controller {
       let carePlanApiData = {};
 
       carePlanApiData[carePlanApiWrapper.getCarePlanId()] = {
-        ...carePlanApiWrapper.getBasicInfo(),
+        ...(await carePlanApiWrapper.getAllInfo()),
         ...carePlanSeverityDetails,
         medication_ids: carePlanMedicationIds,
         appointment_ids: carePlanAppointmentIds
