@@ -2612,8 +2612,6 @@ class PatientDetails extends Component {
                 carePlanId={carePlanId}
               />
 
-              <EditReportDrawer patient_id={patient_id} />
-
               <AddVitals carePlanId={carePlanId} />
               <EditVitals />
               <AddAppointmentDrawer carePlanId={carePlanId} />
@@ -2641,6 +2639,9 @@ class PatientDetails extends Component {
               />
             </Fragment>
           )}
+
+          <EditReportDrawer patient_id={patient_id} />
+
           {popUpVisible && (
             <div
               className={
