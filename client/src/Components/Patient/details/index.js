@@ -506,6 +506,7 @@ const PatientCard = ({
 };
 
 const PatientTreatmentCard = ({
+  isOtherCarePlan,
   formatMessage,
   treatment_name,
   treatment_condition,
@@ -517,15 +518,21 @@ const PatientTreatmentCard = ({
   treatment_diagnosis_type,
   treatment_clinical_notes,
   treatment_symptoms,
-  selectedCarePlanId
+  selectedCarePlanId,
+  auth_role,
+  user_role_id
 }) => {
   const time = moment().format("Do MMMM YYYY, hh:mm a");
+
+
+  const isPrescriptionOfCurrentDoc = !isOtherCarePlan && user_role_id.toString() === auth_role.toString();
+    
 
   return (
     <div className="treatment mt20 tal bg-faint-grey">
       <div className="header-div flex align-center justify-space-between">
         <h3>{formatMessage(messages.treatment_details)}</h3>
-        {selectedCarePlanId ? (
+        {selectedCarePlanId && isPrescriptionOfCurrentDoc ? (
           <a
             href={`${config.WEB_URL}${generatePrescriptionUrl(
               selectedCarePlanId
@@ -2422,6 +2429,7 @@ class PatientDetails extends Component {
               />
 
               <PatientTreatmentCard
+                isOtherCarePlan={isOtherCarePlan}
                 selectedCarePlanId={selectedCarePlanId}
                 formatMessage={formatMessage}
                 treatment_name={treatment ? treatment : "--"}
@@ -2456,6 +2464,8 @@ class PatientDetails extends Component {
                 treatment_symptoms={
                   carePlan_symptoms ? carePlan_symptoms : "--"
                 }
+                auth_role={auth_role}
+                user_role_id = {user_role_id}
               />
             </div>
 
