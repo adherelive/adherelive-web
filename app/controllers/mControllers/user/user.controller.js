@@ -25,7 +25,7 @@ import doctorService from "../../../services/doctors/doctors.service";
 import UserVerificationServices from "../../../services/userVerifications/userVerifications.services";
 import otpVerificationService from "../../../services/otpVerification/otpVerification.service";
 import doctorProviderMappingService from "../../../services/doctorProviderMapping/doctorProviderMapping.service";
-import userRolesService from '../../../services/userRoles/userRoles.service';
+import userRolesService from "../../../services/userRoles/userRoles.service";
 
 import DoctorPatientWatchlistWrapper from "../../../ApiWrapper/mobile/doctorPatientWatchlist";
 import doctorPatientWatchlistService from "../../../services/doctorPatientWatchlist/doctorPatientWatchlist.service";
@@ -35,7 +35,7 @@ import { v4 as uuidv4 } from "uuid";
 import {
   EMAIL_TEMPLATE_NAME,
   USER_CATEGORY,
-  VERIFICATION_TYPE
+  VERIFICATION_TYPE,
 } from "../../../../constant";
 import { Proxy_Sdk, EVENTS } from "../../../proxySdk";
 const errMessage = require("../../../../config/messages.json").errMessages;
@@ -101,15 +101,15 @@ class MobileUserController extends Controller {
 
       // delete previous generated otp if generated within time limit
       const previousOtp = await otpVerificationService.delete({
-        user_id: apiUserDetails.getId()
+        user_id: apiUserDetails.getId(),
       });
 
       const patientOtpVerification = await otpVerificationService.create({
         user_id: apiUserDetails.getId(),
-        otp
+        otp,
       });
 
-      if(process.config.app.env === "development") {
+      if (process.config.app.env === "development") {
         const emailPayload = {
           title: "OTP Verification for patient",
           toAddress: process.config.app.developer_email,
@@ -119,27 +119,26 @@ class MobileUserController extends Controller {
             mainBodyText: "OTP for adhere patient login is",
             subBodyText: otp,
             host: process.config.WEB_URL,
-            contactTo: process.config.app.support_email
-          }
+            contactTo: process.config.app.support_email,
+          },
         };
         Proxy_Sdk.execute(EVENTS.SEND_EMAIL, emailPayload);
         Logger.info(`OTP :::: ${otp}`);
       } else {
-
         // if(apiUserDetails.getEmail()) {
-          const emailPayload = {
-            title: "OTP Verification for patient",
-            toAddress: process.config.app.developer_email,
-            templateName: EMAIL_TEMPLATE_NAME.OTP_VERIFICATION,
-            templateData: {
-              title: "Patient",
-              mainBodyText: "OTP for adhere patient login is",
-              subBodyText: otp,
-              host: process.config.WEB_URL,
-              contactTo: process.config.app.support_email
-            }
-          };
-          Proxy_Sdk.execute(EVENTS.SEND_EMAIL, emailPayload);
+        const emailPayload = {
+          title: "OTP Verification for patient",
+          toAddress: process.config.app.developer_email,
+          templateName: EMAIL_TEMPLATE_NAME.OTP_VERIFICATION,
+          templateData: {
+            title: "Patient",
+            mainBodyText: "OTP for adhere patient login is",
+            subBodyText: otp,
+            host: process.config.WEB_URL,
+            contactTo: process.config.app.support_email,
+          },
+        };
+        Proxy_Sdk.execute(EVENTS.SEND_EMAIL, emailPayload);
         // }
 
         const smsPayload = {
@@ -179,7 +178,7 @@ class MobileUserController extends Controller {
         res,
         200,
         {
-          user_id: apiUserDetails.getId()
+          user_id: apiUserDetails.getId(),
         },
         "OTP sent successfully"
       );
@@ -189,9 +188,11 @@ class MobileUserController extends Controller {
     } catch (error) {
       console.log("error sign in  --> ", error);
 
-       // notification
-       const crashJob = await AdhocJob.execute("crash", {apiName: "signIn(patient)"});
-       Proxy_Sdk.execute(EVENTS.SEND_EMAIL, crashJob.getEmailTemplate());
+      // notification
+      const crashJob = await AdhocJob.execute("crash", {
+        apiName: "signIn(patient)",
+      });
+      Proxy_Sdk.execute(EVENTS.SEND_EMAIL, crashJob.getEmailTemplate());
 
       return this.raiseServerError(res);
     }
@@ -204,7 +205,7 @@ class MobileUserController extends Controller {
 
       const otpDetails = await otpVerificationService.getOtpByData({
         otp,
-        user_id
+        user_id,
       });
 
       Logger.debug("otpDetails --> ", otpDetails);
@@ -217,15 +218,17 @@ class MobileUserController extends Controller {
 
         const userData = await MUserWrapper(userDetails.get());
         let permissions = {
-          permissions: []
+          permissions: [],
         };
 
         if (userData.isActivated()) {
           permissions = await userData.getPermissions();
         }
 
-        const userRole = await userRolesService.getFirstUserRole(userData.getId());
-        if(!userRole) {
+        const userRole = await userRolesService.getFirstUserRole(
+          userData.getId()
+        );
+        if (!userRole) {
           return this.raiseClientError(res, 422, {}, "User doesn't exists");
         }
         const userRoleWrapper = await UserRolesWrapper(userRole);
@@ -234,11 +237,11 @@ class MobileUserController extends Controller {
         const secret = process.config.TOKEN_SECRET_KEY;
         const accessToken = await jwt.sign(
           {
-            userRoleId
+            userRoleId,
           },
           secret,
           {
-            expiresIn
+            expiresIn,
           }
         );
 
@@ -256,14 +259,14 @@ class MobileUserController extends Controller {
             feedId,
             users: {
               [userData.getId()]: {
-                ...userData.getBasicInfo()
-              }
+                ...userData.getBasicInfo(),
+              },
             },
             auth_user: userData.getId(),
             auth_user_role: userRoleId,
             auth_category: userData.getCategory(),
             hasConsent: userData.getConsent(),
-            ...permissions
+            ...permissions,
           },
           "Signed in successfully"
         );
@@ -293,14 +296,14 @@ class MobileUserController extends Controller {
         return this.raiseClientError(res, 422, {}, "Email doesn't exists");
       }
 
-      if(user.get("category") !== USER_CATEGORY.DOCTOR) {
+      if (user.get("category") !== USER_CATEGORY.DOCTOR) {
         return this.raiseClientError(res, 422, {}, "Unauthorized");
       }
 
       // TODO: UNCOMMENT below code after signup done for password check or seeder
 
       const userRole = await userRolesService.getFirstUserRole(user.get("id"));
-      if(!userRole) {
+      if (!userRole) {
         return this.raiseClientError(res, 422, {}, "User doesn't exists");
       }
       const userRoleWrapper = await UserRolesWrapper(userRole);
@@ -324,7 +327,7 @@ class MobileUserController extends Controller {
 
           const updateUser = await userService.updateUser(
             {
-              password: hash
+              password: hash,
             },
             user.get("id")
           );
@@ -335,25 +338,23 @@ class MobileUserController extends Controller {
         const secret = process.config.TOKEN_SECRET_KEY;
         const accessToken = await jwt.sign(
           {
-            userRoleId
+            userRoleId,
           },
           secret,
           {
-            expiresIn
+            expiresIn,
           }
         );
 
         const appNotification = new AppNotification();
 
-        const notificationToken = appNotification.getUserToken(
-          `${userRoleId}`
-        );
+        const notificationToken = appNotification.getUserToken(`${userRoleId}`);
         const feedId = base64.encode(`${userRoleId}`);
 
         const apiUserDetails = await MUserWrapper(user.get());
 
         let permissions = {
-          permissions: []
+          permissions: [],
         };
 
         if (apiUserDetails.isActivated()) {
@@ -369,14 +370,14 @@ class MobileUserController extends Controller {
             feedId,
             users: {
               [apiUserDetails.getId()]: {
-                ...apiUserDetails.getBasicInfo()
-              }
+                ...apiUserDetails.getBasicInfo(),
+              },
             },
             auth_user: apiUserDetails.getId(),
             auth_user_role: userRoleId,
             auth_category: apiUserDetails.getCategory(),
             hasConsent: apiUserDetails.getConsent(),
-            ...permissions
+            ...permissions,
           },
           "Signed in successfully"
         );
@@ -387,7 +388,9 @@ class MobileUserController extends Controller {
       console.log("error sign in  --> ", error);
 
       // notification
-      const crashJob = await AdhocJob.execute("crash", {apiName: "signIn(doctor)"});
+      const crashJob = await AdhocJob.execute("crash", {
+        apiName: "signIn(doctor)",
+      });
       Proxy_Sdk.execute(EVENTS.SEND_EMAIL, crashJob.getEmailTemplate());
 
       return this.raiseServerError(res);
@@ -399,8 +402,13 @@ class MobileUserController extends Controller {
     try {
       const { password, email, readTermsOfService = false } = req.body;
 
-      if(!readTermsOfService) {
-        return raiseClientError(res, 422, {}, "Please read our Terms of Service before signing up");
+      if (!readTermsOfService) {
+        return raiseClientError(
+          res,
+          422,
+          {},
+          "Please read our Terms of Service before signing up"
+        );
       }
 
       // Email check part
@@ -408,13 +416,17 @@ class MobileUserController extends Controller {
       if (userExits !== null) {
         let canRegister = false;
         const existingUserCategory = userExits.get("category");
-        if(existingUserCategory === USER_CATEGORY.DOCTOR) {
-          const existingUserRole = await userRolesService.getAllByData({user_identity: userExits.get("id")});
+        if (existingUserCategory === USER_CATEGORY.DOCTOR) {
+          const existingUserRole = await userRolesService.getAllByData({
+            user_identity: userExits.get("id"),
+          });
 
-          if(existingUserRole && existingUserRole.length) {
-            for(let i=0; i< existingUserRole.length; i++) {
-              const existingRoleWrapper = await UserRolesWrapper(existingUserRole[i]);
-              if(!existingRoleWrapper.getLinkedId()) {
+          if (existingUserRole && existingUserRole.length) {
+            for (let i = 0; i < existingUserRole.length; i++) {
+              const existingRoleWrapper = await UserRolesWrapper(
+                existingUserRole[i]
+              );
+              if (!existingRoleWrapper.getLinkedId()) {
                 canRegister = false;
                 break;
               } else {
@@ -423,7 +435,7 @@ class MobileUserController extends Controller {
             }
           }
         }
-        if(!canRegister) {
+        if (!canRegister) {
           return raiseClientError(
             res,
             422,
@@ -433,10 +445,11 @@ class MobileUserController extends Controller {
         }
       }
 
-      let userRoleId = null, userId;
+      let userRoleId = null,
+        userId;
       const salt = await bcrypt.genSalt(Number(process.config.saltRounds));
       const hash = await bcrypt.hash(password, salt);
-      if(!userExits) {
+      if (!userExits) {
         // add user and doctor only in the case when there is
         // not any existing account.
         const user = await userService.addUser({
@@ -445,51 +458,52 @@ class MobileUserController extends Controller {
           sign_in_type: "basic",
           category: USER_CATEGORY.DOCTOR,
           onboarded: true,
-          verified: true
+          verified: true,
         });
 
         userId = user.get("id");
         if (user) {
           await doctorService.addDoctor({
-            user_id: userId
+            user_id: userId,
           });
         }
       } else {
-        userId = userExits.get("id")
-        if(!userExits.get("password")) {
-          const updatedUser = await userService.updateUser({
-            password: hash
-          }, userId);
+        userId = userExits.get("id");
+        if (!userExits.get("password")) {
+          const updatedUser = await userService.updateUser(
+            {
+              password: hash,
+            },
+            userId
+          );
         }
       }
-      
+
       const userRole = await userRolesService.create({
         user_identity: userId,
         linked_id: null,
-        linked_with: null
-      })
+        linked_with: null,
+      });
 
-      if(userRole) {
+      if (userRole) {
         const userRoleWrapper = await UserRolesWrapper(userRole);
         userRoleId = userRoleWrapper.getId();
       }
-      
+
       const expiresIn = process.config.TOKEN_EXPIRE_TIME; // expires in 30 day
       const secret = process.config.TOKEN_SECRET_KEY;
       const accessToken = await jwt.sign(
         {
-          userRoleId
+          userRoleId,
         },
         secret,
         {
-          expiresIn
+          expiresIn,
         }
       );
 
       const appNotification = new AppNotification();
-      const notificationToken = appNotification.getUserToken(
-        `${userRoleId}`
-      );
+      const notificationToken = appNotification.getUserToken(`${userRoleId}`);
       const feedId = base64.encode(`${userRoleId}`);
       const apiUserDetails = await MUserWrapper(null, userId);
 
@@ -502,12 +516,12 @@ class MobileUserController extends Controller {
           feedId,
           users: {
             [apiUserDetails.getId()]: {
-              ...apiUserDetails.getBasicInfo()
-            }
+              ...apiUserDetails.getBasicInfo(),
+            },
           },
           auth_user: apiUserDetails.getId(),
           auth_user_role: userRoleId,
-          auth_category: apiUserDetails.getCategory()
+          auth_category: apiUserDetails.getCategory(),
         },
         "Sign up successful"
       );
@@ -536,7 +550,7 @@ class MobileUserController extends Controller {
       let response = new Response(true, 200);
       response.setMessage("Sign in successful!");
       response.setData({
-        accessToken: res.body.access_token
+        accessToken: res.body.access_token,
       });
       return res.status(response.getStatusCode()).send(response.getResponse());
     } catch (err) {
@@ -554,7 +568,7 @@ class MobileUserController extends Controller {
           userId,
           userRoleId,
           userData,
-          userData: { category, has_consent } = {}
+          userData: { category, has_consent } = {},
         } = req.userDetails;
 
         const userApiWrapper = await MUserWrapper(userData);
@@ -574,7 +588,7 @@ class MobileUserController extends Controller {
         let treatmentIds = [];
         let conditionIds = [];
 
-        const serverConstants = getServerSpecificConstants()
+        const serverConstants = getServerSpecificConstants();
 
         switch (category) {
           case USER_CATEGORY.PATIENT:
@@ -588,10 +602,10 @@ class MobileUserController extends Controller {
               ] = userCategoryApiData.getBasicInfo();
 
               careplanData = await carePlanService.getCarePlanByData({
-                patient_id: userCategoryId
+                patient_id: userCategoryId,
               });
 
-              await careplanData.forEach(async carePlan => {
+              await careplanData.forEach(async (carePlan) => {
                 const carePlanApiWrapper = await MCarePlanWrapper(carePlan);
                 doctorIds.push(carePlanApiWrapper.getDoctorId());
                 carePlanApiData[
@@ -601,7 +615,7 @@ class MobileUserController extends Controller {
                 const {
                   severity_id,
                   treatment_id,
-                  condition_id
+                  condition_id,
                 } = carePlanApiWrapper.getCarePlanDetails();
                 treatmentIds.push(treatment_id);
                 conditionIds.push(condition_id);
@@ -613,16 +627,18 @@ class MobileUserController extends Controller {
 
             // Logger.debug("----DOCTOR-----", userCategoryData);
             if (userCategoryData) {
-
               userCategoryApiData = await MDoctorWrapper(userCategoryData);
               userCategoryId = userCategoryApiData.getDoctorId();
 
-
               let watchlist_patient_ids = [];
-              const watchlistRecords = await doctorPatientWatchlistService.getAllByData({user_role_id:userRoleId});
-              if(watchlistRecords && watchlistRecords.length){
-                for(let i = 0 ; i<watchlistRecords.length ; i++){
-                  const watchlistWrapper = await DoctorPatientWatchlistWrapper(watchlistRecords[i]);
+              const watchlistRecords = await doctorPatientWatchlistService.getAllByData(
+                { user_role_id: userRoleId }
+              );
+              if (watchlistRecords && watchlistRecords.length) {
+                for (let i = 0; i < watchlistRecords.length; i++) {
+                  const watchlistWrapper = await DoctorPatientWatchlistWrapper(
+                    watchlistRecords[i]
+                  );
                   const patientId = await watchlistWrapper.getPatientId();
                   watchlist_patient_ids.push(patientId);
                 }
@@ -631,20 +647,17 @@ class MobileUserController extends Controller {
               let allInfo = {};
               allInfo = await userCategoryApiData.getAllInfo();
               delete allInfo.watchlist_patient_ids;
-              allInfo['watchlist_patient_ids']=watchlist_patient_ids;
-              
+              allInfo["watchlist_patient_ids"] = watchlist_patient_ids;
 
-              userCatApiData[
-                userCategoryApiData.getDoctorId()
-              ] = allInfo;
+              userCatApiData[userCategoryApiData.getDoctorId()] = allInfo;
 
               careplanData = await carePlanService.getCarePlanByData({
-                user_role_id : userRoleId
+                user_role_id: userRoleId,
               });
 
               // Logger.debug("careplan mobile doctor", careplanData);
 
-              await careplanData.forEach(async carePlan => {
+              await careplanData.forEach(async (carePlan) => {
                 const carePlanApiWrapper = await MCarePlanWrapper(carePlan);
                 patientIds.push(carePlanApiWrapper.getPatientId());
                 carePlanApiData[
@@ -654,7 +667,7 @@ class MobileUserController extends Controller {
                 const {
                   severity_id,
                   treatment_id,
-                  condition_id
+                  condition_id,
                 } = carePlanApiWrapper.getCarePlanDetails();
                 treatmentIds.push(treatment_id);
                 conditionIds.push(condition_id);
@@ -664,7 +677,7 @@ class MobileUserController extends Controller {
           default:
             // todo--: why this as default
             userCategoryData = await patientService.getPatientByData({
-              user_id: userId
+              user_id: userId,
             });
             userCategoryApiData = await MPatientWrapper(userCategoryData);
             userCategoryId = userCategoryApiData.getPatientId();
@@ -673,13 +686,13 @@ class MobileUserController extends Controller {
         // Logger.debug("doctor ids --> ", doctorIds);
 
         const doctorData = await doctorService.getDoctorByData({
-          id: doctorIds
+          id: doctorIds,
         });
 
         let doctorApiDetails = {};
 
         if (doctorData) {
-          await doctorData.forEach(async doctor => {
+          await doctorData.forEach(async (doctor) => {
             const doctorWrapper = await MDoctorWrapper(doctor);
             doctorApiDetails[
               doctorWrapper.getDoctorId()
@@ -691,11 +704,11 @@ class MobileUserController extends Controller {
         let patientApiDetails = {};
 
         const patientData = await patientService.getPatientByData({
-          id: patientIds
+          id: patientIds,
         });
 
         if (patientData) {
-          await patientData.forEach(async patient => {
+          await patientData.forEach(async (patient) => {
             const patientWrapper = await MPatientWrapper(patient);
             patientApiDetails[
               patientWrapper.getPatientId()
@@ -710,42 +723,54 @@ class MobileUserController extends Controller {
 
         if (userIds.length > 1) {
           const allUserData = await userService.getUserByData({ id: userIds });
-          await allUserData.forEach(async user => {
+          await allUserData.forEach(async (user) => {
             apiUserDetails = await MUserWrapper(user.get());
             userApiData[apiUserDetails.getId()] = apiUserDetails.getBasicInfo();
           });
 
-          const allUserRolesData = await userRolesService.getByData({user_identity: userIds});
-          await allUserRolesData.forEach(async role => {
-            apiUserRoleDetails = await UserRolesWrapper(role);
-            userRolesData[apiUserRoleDetails.getId()] = apiUserRoleDetails.getBasicInfo();
+          const allUserRolesData = await userRolesService.getByData({
+            user_identity: userIds,
+          });
 
-            if(apiUserRoleDetails.getLinkedId()) {
+          for(let index = 0; index < allUserRolesData.length; index++) {
+            apiUserRoleDetails = await UserRolesWrapper(allUserRolesData[index]);
+
+            userRolesData[
+              apiUserRoleDetails.getId()
+            ] = apiUserRoleDetails.getBasicInfo();
+
+            if (apiUserRoleDetails.getLinkedId()) {
               providerWrapper = await ProvidersWrapper(
                 null,
                 apiUserRoleDetails.getLinkedId()
               );
-              providerApiData[
-                providerWrapper.getProviderId()
-              ] = await providerWrapper.getAllInfo();
+              providerApiData = {
+                ...providerApiData,
+                [providerWrapper.getProviderId()]: await providerWrapper.getAllInfo(),
+              };
             }
-            
-          });
+          }
         } else {
           apiUserDetails = await MUserWrapper(null, userId);
           userApiData[apiUserDetails.getId()] = apiUserDetails.getBasicInfo();
 
           apiUserRoleDetails = await UserRolesWrapper(null, userRoleId);
-          userRolesData[apiUserRoleDetails.getId()] = apiUserRoleDetails.getBasicInfo();
+          userRolesData[
+            apiUserRoleDetails.getId()
+          ] = apiUserRoleDetails.getBasicInfo();
 
-          if(apiUserRoleDetails.getLinkedId()) {
+          if (apiUserRoleDetails.getLinkedId()) {
             providerWrapper = await ProvidersWrapper(
               null,
               apiUserRoleDetails.getLinkedId()
             );
-            providerApiData[
-              providerWrapper.getProviderId()
-            ] = await providerWrapper.getAllInfo();
+            providerApiData = {
+              ...providerApiData,
+              [providerWrapper.getProviderId()]: await providerWrapper.getAllInfo(),
+            };
+            // providerApiData[
+            //   providerWrapper.getProviderId()
+            // ] = await providerWrapper.getAllInfo();
           }
           // Logger.debug("userApiData --> ", apiUserDetails.isActivated());
         }
@@ -779,7 +804,7 @@ class MobileUserController extends Controller {
         // conditions
         let conditionApiDetails = {};
         const conditionDetails = await conditionService.getAllByData({
-          id: conditionIds
+          id: conditionIds,
         });
         conditionIds = [];
 
@@ -792,7 +817,7 @@ class MobileUserController extends Controller {
         }
 
         let permissions = {
-          permissions: []
+          permissions: [],
         };
 
         if (userApiWrapper.isActivated()) {
@@ -809,32 +834,32 @@ class MobileUserController extends Controller {
 
         const dataToSend = {
           users: {
-            ...userApiData
+            ...userApiData,
           },
           user_roles: {
-            ...userRolesData
+            ...userRolesData,
           },
           [`${category}s`]: {
-            ...userCatApiData
+            ...userCatApiData,
           },
           [category === USER_CATEGORY.DOCTOR ? "patients" : "doctors"]:
             category === USER_CATEGORY.DOCTOR
               ? { ...patientApiDetails }
               : { ...doctorApiDetails },
           care_plans: {
-            ...carePlanApiData
+            ...carePlanApiData,
           },
           providers: {
-            ...providerApiData
+            ...providerApiData,
           },
           severity: {
-            ...severityApiDetails
+            ...severityApiDetails,
           },
           conditions: {
-            ...conditionApiDetails
+            ...conditionApiDetails,
           },
           treatments: {
-            ...treatmentApiDetails
+            ...treatmentApiDetails,
           },
           ...referenceData,
           ...permissions,
@@ -846,7 +871,7 @@ class MobileUserController extends Controller {
           auth_category: category,
           auth_user_role: userRoleId,
           hasConsent: has_consent,
-          server_constants: serverConstants
+          server_constants: serverConstants,
         };
 
         return this.raiseSuccess(res, 200, { ...dataToSend }, "basic info");
@@ -922,7 +947,7 @@ class MobileUserController extends Controller {
         res,
         200,
         {
-          files
+          files,
         },
         "files uploaded successfully"
       );
@@ -943,7 +968,7 @@ class MobileUserController extends Controller {
         category,
         mobile_number,
         prefix,
-        onboarding_status: ONBOARDING_STATUS.PROFILE_REGISTERED
+        onboarding_status: ONBOARDING_STATUS.PROFILE_REGISTERED,
       };
       console.log("USERRRRRRRR1111111", user_data_to_update);
       console.log("REQUESTTTTTTTT BODYYYYYY", req.body);
@@ -964,13 +989,11 @@ class MobileUserController extends Controller {
       if (doctorExist) {
         let doctor_data = {
           city,
-          profile_pic: profile_pic
-            ? getFilePath(profile_pic)
-            : null,
+          profile_pic: profile_pic ? getFilePath(profile_pic) : null,
           first_name,
           middle_name,
           last_name,
-          address: city
+          address: city,
         };
         let doctor_id = doctorExist.get("id");
         doctor = await doctorService.updateDoctor(doctor_data, doctor_id);
@@ -979,13 +1002,11 @@ class MobileUserController extends Controller {
         let doctor_data = {
           user_id,
           city,
-          profile_pic: profile_pic
-            ? getFilePath(profile_pic)
-            : null,
+          profile_pic: profile_pic ? getFilePath(profile_pic) : null,
           first_name,
           middle_name,
           last_name,
-          address: city
+          address: city,
         };
         doctor = await doctorService.addDoctor(doctor_data);
         console.log("DOCTORRRRRELSEEEEE", doctor, doctor.getBasicInfo);
@@ -998,7 +1019,7 @@ class MobileUserController extends Controller {
         res,
         200,
         {
-          doctor
+          doctor,
         },
         "doctor profile updated successfully"
       );
@@ -1027,7 +1048,7 @@ class MobileUserController extends Controller {
         email: eMail = "",
         category: docCategory = "",
         mobile_number: mobNo = "",
-        prefix: pre = ""
+        prefix: pre = "",
       } = userInfo;
 
       email = eMail;
@@ -1045,7 +1066,7 @@ class MobileUserController extends Controller {
           middle_name = "",
           last_name = "",
           city: docCity = "",
-          profile_pic: docPic = ""
+          profile_pic: docPic = "",
         } = docInfo || {};
 
         name = `${first_name} ${middle_name ? `${middle_name} ` : ""}${
@@ -1061,9 +1082,7 @@ class MobileUserController extends Controller {
         );
 
         city = docCity;
-        profile_pic = docPic
-          ? completePath(docPic)
-          : docPic;
+        profile_pic = docPic ? completePath(docPic) : docPic;
       }
 
       const profileData = {
@@ -1073,7 +1092,7 @@ class MobileUserController extends Controller {
         mobile_number,
         prefix,
         profile_pic,
-        email
+        email,
       };
 
       // console.log('FINAL+++================>',profileData);
@@ -1082,7 +1101,7 @@ class MobileUserController extends Controller {
         res,
         200,
         {
-          profileData
+          profileData,
         },
         " get doctor profile successfull"
       );
@@ -1100,14 +1119,14 @@ class MobileUserController extends Controller {
       registration_council = "",
       registration_year = "",
       qualification_details = [],
-      registration_details = []
+      registration_details = [],
     } = req.body;
 
     const { userDetails: { userId: user_id } = {} } = req;
     try {
       let user = userService.getUserById(user_id);
       let user_data_to_update = {
-        onboarding_status: ONBOARDING_STATUS.QUALIFICATION_REGISTERED
+        onboarding_status: ONBOARDING_STATUS.QUALIFICATION_REGISTERED,
       };
       let doctor = await doctorService.getDoctorByUserId(user_id);
       let doctor_id = doctor.get("id");
@@ -1116,7 +1135,7 @@ class MobileUserController extends Controller {
         registration_number,
         registration_council,
         registration_year,
-        speciality
+        speciality,
       };
       let updatedDoctor = await doctorService.updateDoctor(
         doctor_data,
@@ -1133,7 +1152,7 @@ class MobileUserController extends Controller {
           year = "",
           college = "",
           photos = [],
-          id = 0
+          id = 0,
         } = item;
         console.log("QUALIFICATIONS ITEMMMMMMMMMMMMMMMM", item, id);
         if (id && id != "0") {
@@ -1147,7 +1166,7 @@ class MobileUserController extends Controller {
             doctor_id,
             degree,
             year,
-            college
+            college,
           });
           console.log("QUALIFICATIONS ITEMMMMMMMMMMMMMMMM", qualification);
         }
@@ -1192,7 +1211,7 @@ class MobileUserController extends Controller {
             number,
             year,
             council,
-            expiry_date
+            expiry_date,
           });
           console.log("REGISTRATION ITEMMMMMMMMMMMMMMMM", registration);
         }
@@ -1262,7 +1281,7 @@ class MobileUserController extends Controller {
           doctorRegistrationWrapper.getDoctorRegistrationId()
         );
 
-        await registrationDocuments.forEach(async document => {
+        await registrationDocuments.forEach(async (document) => {
           const uploadDocumentWrapper = await MUploadDocumentWrapper(document);
           uploadDocumentApiDetails[
             uploadDocumentWrapper.getUploadDocumentId()
@@ -1278,7 +1297,7 @@ class MobileUserController extends Controller {
           doctorRegistrationWrapper.getDoctorRegistrationId()
         ] = {
           ...doctorRegistrationWrapper.getBasicInfo(),
-          upload_document_ids
+          upload_document_ids,
         };
 
         upload_document_ids = [];
@@ -1295,11 +1314,11 @@ class MobileUserController extends Controller {
         {
           qualificationData,
           registration_details: {
-            ...doctorRegistrationApiDetails
+            ...doctorRegistrationApiDetails,
           },
           upload_documents: {
-            ...uploadDocumentApiDetails
-          }
+            ...uploadDocumentApiDetails,
+          },
         },
         " get doctor qualification successfull"
       );
@@ -1347,7 +1366,7 @@ class MobileUserController extends Controller {
         200,
         {
           files: files,
-          qualification_id
+          qualification_id,
         },
         "doctor qualification updated successfully"
       );
@@ -1413,7 +1432,7 @@ class MobileUserController extends Controller {
           doctor_id,
           degree,
           year,
-          college
+          college,
         });
         qualification_id = docQualification.get("id");
 
@@ -1433,7 +1452,7 @@ class MobileUserController extends Controller {
               parent_id: qualification_id,
               document: photo.includes(process.config.minio.MINIO_BUCKET_NAME)
                 ? getFilePath(photo)
-                : photo
+                : photo,
             });
           }
         }
@@ -1459,7 +1478,7 @@ class MobileUserController extends Controller {
               parent_id: qualification_id,
               document: photo.includes(process.config.minio.MINIO_BUCKET_NAME)
                 ? getFilePath(photo)
-                : photo
+                : photo,
             });
           }
           // let qualificationDoc = await documentService.addDocument({ doctor_id, parent_type: DOCUMENT_PARENT_TYPE.DOCTOR_QUALIFICATION, parent_id: qualification_id, document: photo })
@@ -1471,7 +1490,7 @@ class MobileUserController extends Controller {
         res,
         200,
         {
-          qualification_id
+          qualification_id,
         },
         "qualifications updated successfully"
       );
@@ -1498,25 +1517,25 @@ class MobileUserController extends Controller {
         doctor
       );
 
-      clinics.forEach(async item => {
+      clinics.forEach(async (item) => {
         let { name = "", location = "", time_slots = [] } = item;
 
         const details = {
-          time_slots
+          time_slots,
         };
 
         let clinic = await clinicService.addClinic({
           doctor_id,
           name,
           location,
-          details
+          details,
         });
       });
 
       let updateUser = await userService.updateUser(
         {
           onboarded: true,
-          onboarding_status: ONBOARDING_STATUS.CLINIC_REGISTERED
+          onboarding_status: ONBOARDING_STATUS.CLINIC_REGISTERED,
         },
         user_id
       );
@@ -1537,7 +1556,7 @@ class MobileUserController extends Controller {
       prefix = "",
       treatment_id = "1",
       severity_id = "1",
-      condition_id = "1"
+      condition_id = "1",
     } = req.body;
     const { userId: user_id = 1 } = req.params;
     try {
@@ -1550,12 +1569,12 @@ class MobileUserController extends Controller {
         password: hash,
         sign_in_type: "basic",
         category: "patient",
-        onboarded: false
+        onboarded: false,
       });
 
       let newUId = user.get("id");
 
-       const {first_name, middle_name, last_name} = getSeparateName(name);
+      const { first_name, middle_name, last_name } = getSeparateName(name);
 
       // let patientName = name.split(" ");
       // let first_name = patientName[0];
@@ -1578,7 +1597,7 @@ class MobileUserController extends Controller {
         user_id: newUId,
         birth_date,
         age,
-        uid
+        uid,
       });
 
       let doctor = await doctorService.getDoctorByUserId(user_id);
@@ -1601,14 +1620,14 @@ class MobileUserController extends Controller {
         doctor_id,
         care_plan_template_id,
         details,
-        expired_on: moment()
+        expired_on: moment(),
       });
 
       let carePlanNew = await carePlanService.getSingleCarePlanByData({
         patient_id,
         doctor_id,
         care_plan_template_id,
-        details
+        details,
       });
       const carePlanId = carePlanNew.get("id");
 
@@ -1639,7 +1658,7 @@ class MobileUserController extends Controller {
         res,
         200,
         {
-          files: files
+          files: files,
         },
         "doctor qualification updated successfully"
       );
@@ -1660,7 +1679,7 @@ class MobileUserController extends Controller {
         gender = "",
         speciality = "",
         qualifications = [],
-        registration = {}
+        registration = {},
       } = body || {};
 
       let doctor = await doctorService.getDoctorByUserId(userId);
@@ -1693,7 +1712,7 @@ class MobileUserController extends Controller {
               doctor_id,
               degree,
               year,
-              college
+              college,
             });
             qualification_id = docQualification.get("id");
 
@@ -1719,7 +1738,7 @@ class MobileUserController extends Controller {
                     process.config.minio.MINIO_BUCKET_NAME
                   )
                     ? getFilePath(photo)
-                    : photo
+                    : photo,
                 });
               }
             }
@@ -1747,7 +1766,7 @@ class MobileUserController extends Controller {
                     process.config.minio.MINIO_BUCKET_NAME
                   )
                     ? getFilePath(photo)
-                    : photo
+                    : photo,
                 });
               }
             }
@@ -1762,7 +1781,7 @@ class MobileUserController extends Controller {
         year: registration_year = "",
         expiry_date = "",
         id: registration_id = 0,
-        photos: registration_photos = []
+        photos: registration_photos = [],
       } = registration || {};
       parent_type = DOCUMENT_PARENT_TYPE.DOCTOR_REGISTRATION;
       parent_id = registration_id;
@@ -1775,7 +1794,7 @@ class MobileUserController extends Controller {
           number,
           council,
           year: registration_year,
-          expiry_date: moment(expiry_date)
+          expiry_date: moment(expiry_date),
         });
 
         registrationId = docRegistration.get("id");
@@ -1794,7 +1813,7 @@ class MobileUserController extends Controller {
               parent_id: docRegistration.get("id"),
               document: photo.includes(process.config.minio.MINIO_BUCKET_NAME)
                 ? getFilePath(photo)
-                : photo
+                : photo,
             });
           }
         }
@@ -1805,7 +1824,7 @@ class MobileUserController extends Controller {
             number,
             council,
             year: registration_year,
-            expiry_date: moment(expiry_date)
+            expiry_date: moment(expiry_date),
           },
           registration_id
         );
@@ -1825,7 +1844,7 @@ class MobileUserController extends Controller {
               parent_id: registration_id,
               document: photo.includes(process.config.minio.MINIO_BUCKET_NAME)
                 ? getFilePath(photo)
-                : photo
+                : photo,
             });
           }
         }
@@ -1835,7 +1854,7 @@ class MobileUserController extends Controller {
         res,
         200,
         {
-          registration_id: registrationId
+          registration_id: registrationId,
         },
         "registrations updated successfully"
       );
@@ -1906,7 +1925,7 @@ class MobileUserController extends Controller {
           doctorRegistrationWrapper.getDoctorRegistrationId()
         );
 
-        await registrationDocuments.forEach(async document => {
+        await registrationDocuments.forEach(async (document) => {
           const uploadDocumentWrapper = await MUploadDocumentWrapper(document);
           uploadDocumentApiDetails[
             uploadDocumentWrapper.getUploadDocumentId()
@@ -1922,7 +1941,7 @@ class MobileUserController extends Controller {
           doctorRegistrationWrapper.getDoctorRegistrationId()
         ] = {
           ...doctorRegistrationWrapper.getBasicInfo(),
-          upload_document_ids
+          upload_document_ids,
         };
 
         upload_document_ids = [];
@@ -1938,8 +1957,8 @@ class MobileUserController extends Controller {
         200,
         {
           doctor_registrations: {
-            ...doctorRegistrationApiDetails
-          }
+            ...doctorRegistrationApiDetails,
+          },
         },
         "doctor registration data fetched successfully"
       );
@@ -1956,7 +1975,7 @@ class MobileUserController extends Controller {
       const { email } = req.body;
       const allUsersWithEmail = await userService.getUserByData({
         email,
-        category: USER_CATEGORY.DOCTOR
+        category: USER_CATEGORY.DOCTOR,
       });
 
       if (allUsersWithEmail && allUsersWithEmail.length) {
@@ -1971,7 +1990,7 @@ class MobileUserController extends Controller {
           user_id: userWrapper.getId(),
           request_id: link,
           status: "pending",
-          type: VERIFICATION_TYPE.FORGOT_PASSWORD
+          type: VERIFICATION_TYPE.FORGOT_PASSWORD,
         });
         // let uId = userInfo.get("id");
 
@@ -1992,9 +2011,9 @@ class MobileUserController extends Controller {
             mainBodyText: "Thank you for requesting password reset",
             subBodyText: "Please click below to reset your account password",
             buttonText: "Reset Password",
-            contactTo: "patientEngagement@adhere.com"
+            contactTo: "patientEngagement@adhere.com",
           },
-          templateName: EMAIL_TEMPLATE_NAME.FORGOT_PASSWORD
+          templateName: EMAIL_TEMPLATE_NAME.FORGOT_PASSWORD,
         };
 
         console.log("91397138923 emailPayload -------------->", emailPayload);
@@ -2046,11 +2065,11 @@ class MobileUserController extends Controller {
         const secret = process.config.TOKEN_SECRET_KEY;
         const accessToken = await jwt.sign(
           {
-            userId: linkVerificationData.getUserId()
+            userId: linkVerificationData.getUserId(),
           },
           secret,
           {
-            expiresIn
+            expiresIn,
           }
         );
 
@@ -2061,9 +2080,9 @@ class MobileUserController extends Controller {
             accessToken,
             users: {
               [userData.getId()]: {
-                ...userData.getBasicInfo()
-              }
-            }
+                ...userData.getBasicInfo(),
+              },
+            },
           },
           "Email verified for password reset"
         );
@@ -2086,7 +2105,7 @@ class MobileUserController extends Controller {
     try {
       const {
         userDetails: { userId },
-        body: { new_password, confirm_password } = {}
+        body: { new_password, confirm_password } = {},
       } = req;
 
       if (new_password !== confirm_password) {
@@ -2102,7 +2121,7 @@ class MobileUserController extends Controller {
 
       const updateUser = await userService.updateUser(
         {
-          password: hash
+          password: hash,
           // system_generated_password: false
         },
         userId
@@ -2115,8 +2134,8 @@ class MobileUserController extends Controller {
         200,
         {
           users: {
-            [updatedUser.getId()]: updatedUser.getBasicInfo()
-          }
+            [updatedUser.getId()]: updatedUser.getBasicInfo(),
+          },
         },
         "Password reset successful. Please login to continue"
       );
@@ -2149,11 +2168,11 @@ class MobileUserController extends Controller {
         const secret = process.config.TOKEN_SECRET_KEY;
         const accessToken = await jwt.sign(
           {
-            userId: linkVerificationData.getUserId()
+            userId: linkVerificationData.getUserId(),
           },
           secret,
           {
-            expiresIn
+            expiresIn,
           }
         );
 
@@ -2164,9 +2183,9 @@ class MobileUserController extends Controller {
             accessToken,
             users: {
               [userData.getId()]: {
-                ...userData.getBasicInfo()
-              }
-            }
+                ...userData.getBasicInfo(),
+              },
+            },
           },
           "Email verified for password reset"
         );
@@ -2188,7 +2207,7 @@ class MobileUserController extends Controller {
     try {
       const {
         body: { new_password, confirm_password } = {},
-        userDetails: { userId, userData: { category } = {} } = {}
+        userDetails: { userId, userData: { category } = {} } = {},
       } = req;
 
       if (new_password !== confirm_password) {
@@ -2199,7 +2218,7 @@ class MobileUserController extends Controller {
 
       const updateUser = await userService.updateUser(
         {
-          password: hash
+          password: hash,
           // system_generated_password: false
         },
         userId
@@ -2228,11 +2247,11 @@ class MobileUserController extends Controller {
         200,
         {
           users: {
-            [updatedUser.getId()]: updatedUser.getBasicInfo()
+            [updatedUser.getId()]: updatedUser.getBasicInfo(),
           },
           [`${category}s`]: {
-            ...categoryData
-          }
+            ...categoryData,
+          },
         },
         "Password updated successfully"
       );
@@ -2242,25 +2261,34 @@ class MobileUserController extends Controller {
     }
   };
 
-  giveConsent = async (req,res) => {
-    const {raiseClientError} = this;
-    try{
-      const {userDetails: {userId, userRoleId} = {}, body: {agreeConsent} = {}} = req;
+  giveConsent = async (req, res) => {
+    const { raiseClientError } = this;
+    try {
+      const {
+        userDetails: { userId, userRoleId } = {},
+        body: { agreeConsent } = {},
+      } = req;
 
-      Logger.info(`1897389172 agreeConsent :: ${agreeConsent} | userId : ${userId}`);
+      Logger.info(
+        `1897389172 agreeConsent :: ${agreeConsent} | userId : ${userId}`
+      );
 
-      if(!agreeConsent) {
-        return raiseClientError(res, 422, {}, "Cannot proceed without accepting Terms of Service");
+      if (!agreeConsent) {
+        return raiseClientError(
+          res,
+          422,
+          {},
+          "Cannot proceed without accepting Terms of Service"
+        );
       }
 
       //update
       await userService.updateUser(
-          {
-            has_consent: agreeConsent
-          },
-          userId
+        {
+          has_consent: agreeConsent,
+        },
+        userId
       );
-
 
       // const expiresIn = process.config.TOKEN_EXPIRE_TIME; // expires in 30 day
 
@@ -2277,9 +2305,7 @@ class MobileUserController extends Controller {
 
       const appNotification = new AppNotification();
 
-      const notificationToken = appNotification.getUserToken(
-          `${userRoleId}`
-      );
+      const notificationToken = appNotification.getUserToken(`${userRoleId}`);
       const feedId = base64.encode(`${userRoleId}`);
 
       const userRef = await userService.getUserData({ id: userId });
@@ -2301,7 +2327,7 @@ class MobileUserController extends Controller {
         notificationToken: notificationToken,
         feedId,
         hasConsent: apiUserDetails.getConsent(),
-        auth_category: apiUserDetails.getCategory()
+        auth_category: apiUserDetails.getCategory(),
       };
 
       // res.cookie("accessToken", accessToken, {
@@ -2312,18 +2338,16 @@ class MobileUserController extends Controller {
       // });
 
       return this.raiseSuccess(
-          res,
-          200,
-          { ...dataToSend },
-          "Initial data retrieved successfully"
+        res,
+        200,
+        { ...dataToSend },
+        "Initial data retrieved successfully"
       );
-
-
-    }catch(error){
+    } catch (error) {
       Logger.debug("giveConsent 500 error ----> ", error);
       return this.raiseServerError(res);
     }
-  }
+  };
 }
 
 export default new MobileUserController();
