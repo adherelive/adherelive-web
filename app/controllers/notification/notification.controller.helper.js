@@ -657,19 +657,27 @@ const callNotification = async (data) => {
       group_id,
     } = data;
 
-    const userIds = getRoomUsers(foreign_id) || [];
-
+    const userRoleIds = getRoomUsers(foreign_id) || [];
     let participantData = {};
-    if (userIds.length > 0) {
-      for (let index = 0; index < userIds.length; index++) {
-        const user = (await userService.getUser(userIds[index])) || null;
+    if (userRoleIds.length > 0) {
+      for (let index = 0; index < userRoleIds.length; index++) {
+        const userRoleId = userRoleIds[index] || null;
+        const userRoleWrapper = await UserRoleWrapper(null,userRoleId);
+        const userId = await userRoleWrapper.getUserId();
+        const user = (await userService.getUser(userId)) || null;
         const userWrapper = await UserWrapper(user.get());
         const { doctor_id, patient_id } = await userWrapper.getReferenceInfo();
-        participantData[`${userIds[index]}`] = {
+        participantData[`${userRoleIds[index]}`] = {
           doctor_id,
           patient_id,
         };
       }
+    }
+
+    let type = AGORA_CALL_NOTIFICATION_TYPES.MISSED_CALL;
+
+    if(verb.includes(AGORA_CALL_NOTIFICATION_TYPES.START_CALL.toLowerCase())){
+      type= AGORA_CALL_NOTIFICATION_TYPES.START_CALL
     }
 
     let notification_data = {
@@ -680,7 +688,7 @@ const callNotification = async (data) => {
           time,
           event_id: null,
           notification_id: id,
-          type: AGORA_CALL_NOTIFICATION_TYPES.MISSED_CALL,
+          type,
           actor,
           actor_role_id: actorRoleId,
           verb,
@@ -706,6 +714,7 @@ const dietNotification = async (data) => {
     const {
       data: {
         actor,
+        actorRoleId,
         foreign_id,
         id,
         // object,
@@ -784,6 +793,7 @@ const dietNotification = async (data) => {
         type: DIET,
         stage,
         actor,
+        actor_role_id:actorRoleId,
         verb,
         start_time: notification_start_time,
         create_time: notification_create_time,
@@ -810,6 +820,7 @@ const workoutNotification = async (data) => {
     const {
       data: {
         actor,
+        actorRoleId,
         foreign_id,
         id,
         // object,
@@ -885,6 +896,7 @@ const workoutNotification = async (data) => {
         type: WORKOUT,
         stage,
         actor,
+        actor_role_id:actorRoleId,
         verb,
         start_time: notification_start_time,
         create_time: notification_create_time,
@@ -910,6 +922,7 @@ const symptomsNotification = async (data) => {
     const {
       data: {
         actor,
+        actorRoleId,
         foreign_id,
         id,
         object,
@@ -950,6 +963,7 @@ const symptomsNotification = async (data) => {
         type: SYMPTOMS,
         stage: NOTIFICATION_STAGES.CREATE,
         actor,
+        actor_role_id: actorRoleId,
         verb,
         start_time: notification_start_time,
         create_time: notification_create_time,
@@ -983,6 +997,9 @@ export const getDataForNotification = async (data) => {
     const { category, data: { event } = {} } = data;
 
     Log.debug("event", event);
+
+    // console.log("989387482748723487239847238 ===>>>>>>>>>>> ",{event}); 
+
 
     if (category === USER_CATEGORY.DOCTOR) {
       switch (event) {

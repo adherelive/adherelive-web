@@ -63,7 +63,12 @@ class WorkoutResponseWrapper extends BaseWorkoutResponse {
   getReferenceInfo = async () => {
     const { getId, getScheduleEventId, getAllInfo } = this;
 
-    const scheduleEvent = await EventWrapper(null, getScheduleEventId());
+    let scheduleEventData = {};
+    if(!getScheduleEventId()) {
+      const scheduleEvent = await EventWrapper(null, getScheduleEventId());
+      scheduleEventData[getScheduleEventId()] = scheduleEvent.getAllInfo();
+    }
+
 
     // let allUploadDocuments = {};
     // if(isDocumentUploaded()) {
@@ -83,9 +88,7 @@ class WorkoutResponseWrapper extends BaseWorkoutResponse {
         [getId()]: getAllInfo(),
       },
       // upload_documents: allUploadDocuments,
-      schedule_events: {
-        [getScheduleEventId()]: scheduleEvent.getAllInfo(),
-      },
+      schedule_events: scheduleEventData,
       workout_response_id: getId(),
     };
   };

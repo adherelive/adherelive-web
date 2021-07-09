@@ -957,11 +957,15 @@ class DoctorController extends Controller {
               degree_id = degreeId;
             }
 
-            let degree = await degreeService.getByData({id:degree_id});
-            const degreeWrapper = await DegreeWrapper(degree);
-            degreeData[
-              degreeWrapper.getDegreeId()
-            ] = degreeWrapper.getBasicInfo();
+            let degree = null;
+            if(degree_id){
+              degree=await degreeService.getByData({id:degree_id})
+              const degreeWrapper = await DegreeWrapper(degree);
+              degreeData[
+                degreeWrapper.getDegreeId()
+              ] = degreeWrapper.getBasicInfo();
+            }
+            
 
             let collegeId = college_id;
             if (college_name !== "") {
@@ -1058,11 +1062,14 @@ class DoctorController extends Controller {
             }else{
              registration_council_id = regCouncilId;
             }
-      
-            const council = await councilService.getByData({id:registration_council_id});
-            const councilWrapper = await CouncilWrapper(council);
-            councilData[councilWrapper.getCouncilId()]=councilWrapper.getBasicInfo();
 
+            let council = null;
+            if(registration_council_id){
+              council = await councilService.getByData({id:registration_council_id});
+              const councilWrapper = await CouncilWrapper(council);
+              councilData[councilWrapper.getCouncilId()]=councilWrapper.getBasicInfo();
+            }
+      
 
             if (number) {
               updateDataRegistration["number"] = number;

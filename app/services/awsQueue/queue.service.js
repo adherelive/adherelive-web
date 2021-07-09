@@ -9,7 +9,7 @@ export default class QueueService {
     AWS.config.update({
       accessKeyId: process.config.aws.access_key_id,
       secretAccessKey: process.config.aws.access_key,
-      region: process.config.aws.region
+      region: process.config.aws.region,
     });
     this.sqs = new AWS.SQS();
   }
@@ -19,8 +19,8 @@ export default class QueueService {
       QueueName: name,
       Attributes: {
         DelaySeconds: "60",
-        MessageRetentionPeriod: "86400"
-      }
+        MessageRetentionPeriod: "86400",
+      },
     };
 
     this.sqs.createQueue(params, (err, data) => {
@@ -59,7 +59,7 @@ export default class QueueService {
         MessageBody: stringData,
         // MessageDeduplicationId: "TheWhistler",  // Required for FIFO queues
         // MessageGroupId: "Group1",  // Required for FIFO queues
-        QueueUrl: this.getQueueUrl()
+        QueueUrl: this.getQueueUrl(),
       };
 
       const response = await this.sqs.sendMessage(params).promise();
@@ -81,7 +81,7 @@ export default class QueueService {
           Id: `${moment().format("x")}-${index}`,
           DelaySeconds: 5,
           MessageAttributes: {},
-          MessageBody: stringData
+          MessageBody: stringData,
           // QueueUrl: this.getQueueUrl(queueName)
         };
         formattedData.push(params);
@@ -89,7 +89,7 @@ export default class QueueService {
 
       const params = {
         Entries: formattedData,
-        QueueUrl: this.getQueueUrl()
+        QueueUrl: this.getQueueUrl(),
       };
 
       const response = await this.sqs.sendMessageBatch(params).promise();
@@ -109,7 +109,7 @@ export default class QueueService {
         MaxNumberOfMessages: 10,
         WaitTimeSeconds: 10,
         MessageAttributeNames: ["All"],
-        QueueUrl: this.getQueueUrl()
+        QueueUrl: this.getQueueUrl(),
       };
 
       const response = await this.sqs.receiveMessage(params).promise();
@@ -121,11 +121,11 @@ export default class QueueService {
     }
   };
 
-  deleteMessage = async ReceiptHandle => {
+  deleteMessage = async (ReceiptHandle) => {
     try {
       const params = {
         QueueUrl: await this.getQueueUrl(),
-        ReceiptHandle
+        ReceiptHandle,
       };
 
       const response = await this.sqs.deleteMessage(params).promise();
@@ -133,6 +133,23 @@ export default class QueueService {
       return response;
     } catch (error) {
       console.log("receiveMessage 500 error", error);
+    }
+  };
+
+  purgeQueue = async (queueName) => {
+    try {
+      const params = {
+        QueueUrl: await this.getQueueUrl(),
+      };
+
+      if (process.config.sqs.queue_name === queueName) {
+        const response = await this.sqs.purgeQueue(params).promise();
+        return response;
+      } else {
+        return null;
+      }
+    } catch (error) {
+      console.log("purgeQueue 500 error", error);
     }
   };
 }

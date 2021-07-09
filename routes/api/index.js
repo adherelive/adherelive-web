@@ -75,7 +75,7 @@ router.use(async function(req, res, next) {
       if(userRoleDetails) {
         const userRole = await UserRoleWrapper(userRoleDetails);
         userId = userRole.getUserId();
-        userRoleId = decodedUserRoleId;
+        userRoleId = parseInt(decodedUserRoleId);
         userRoleData = userRole.getBasicInfo();
       } else {
         req.userDetails = {

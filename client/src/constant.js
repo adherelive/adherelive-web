@@ -41,13 +41,14 @@ export const PATH = {
     ROOT: "/provider",
     DOCTORS: {
       DETAILS: "/doctors/:id",
-      PAYMENT_PRODUCTS: "/doctors/:id/payment_products"
+      PAYMENT_PRODUCTS: "/doctors/:id/payment-products"
     },
     CALENDER: "/calender",
-    TRANSACTION_DETAILS:"/transaction_details"
+    TRANSACTION_DETAILS:"/transaction-details",
+    PAYMENT_DETAILS:"/payment-details"
   },
   DOCTOR:{
-    TRANSACTION_DETAILS:"/transaction_details"
+    TRANSACTION_DETAILS:"/transaction-details"
   },
   TERMS_OF_SERVICE: "/terms-of-service",
   PRIVACY_POLICY: "/privacy-policy",

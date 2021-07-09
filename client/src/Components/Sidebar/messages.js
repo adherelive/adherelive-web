@@ -86,4 +86,9 @@ export default defineMessages({
         description:"",
         defaultMessage:"Linked Provider Icon"
     },
+    paymentDetailsHeader: {
+        id: "app.dashboard.sidebar.menu.payment.details",
+        description: "",
+        defaultMessage: "Payment Details"
+      },
 });
