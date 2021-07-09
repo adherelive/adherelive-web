@@ -75,7 +75,9 @@ class TemplateDrawer extends Component {
             showAddWorkoutInner:false,
             showTemplateNameModal: false,
             showAreYouSureModal: false,
-            templateEdited: false
+            templateEdited: false,
+            isDietVisible:false,
+            isWorkoutVisible:false
         };
     }
 
@@ -559,6 +561,12 @@ class TemplateDrawer extends Component {
     }
 
     showInnerForm = (innerFormType, innerFormKey) => () => {
+
+        if( innerFormType === EVENT_TYPE.DIET ){
+            this.setState({isDietVisible:true});
+        }else if(innerFormType === EVENT_TYPE.WORKOUT ){
+            this.setState({isWorkoutVisible:true});
+        }
         this.setState({ innerFormType, innerFormKey, showInner: true });
     }
 
@@ -652,16 +660,26 @@ class TemplateDrawer extends Component {
         this.setState({showAddVitalInner:false});
     }
     showAddDiet = () => {
-        this.setState({showAddDietInner:true});
+        this.setState({
+            showAddDietInner:true,
+            isDietVisible:true
+        });
     }
     closeAddDiet = () => {
-        this.setState({showAddDietInner:false});
+        this.setState({
+            showAddDietInner:false,
+            isDietVisible:false
+        });
     }
     showAddWorkout = () => {
-        this.setState({showAddWorkoutInner :true});
+        this.setState({
+            showAddWorkoutInner :true,
+            isWorkoutVisible:true });
     }
     closeAddWorkout = () => {
-        this.setState({showAddWorkoutInner:false});
+        this.setState({
+            showAddWorkoutInner:false,
+            isWorkoutVisible:false });
     }
 
     deleteMedication = key => () => {
@@ -1715,12 +1733,30 @@ class TemplateDrawer extends Component {
     };
 
     onCloseInner = () => {
-        this.setState({ showInner: false })
+        this.setState({ 
+            showInner: false,
+            isDietVisible:false,
+            isWorkoutVisible:false })
     };
 
     render() {
         const { visible, patientId, patients, carePlan, submit, care_plan_templates } = this.props;
-        let { showInner, innerFormType, innerFormKey, medications, appointments, vitals={}, diets = {}, workouts = {}, showAddAppointmentInner, showAddMedicationInner,showAddVitalInner, showAddDietInner, showAddWorkoutInner, carePlanTemplateId } = this.state;
+        let { showInner, 
+            innerFormType, 
+            innerFormKey, 
+            medications, 
+            appointments, 
+            vitals={}, 
+            diets = {}, 
+            workouts = {}, 
+            showAddAppointmentInner, 
+            showAddMedicationInner,
+            showAddVitalInner, 
+            showAddDietInner, 
+            showAddWorkoutInner, 
+            carePlanTemplateId,
+            isDietVisible=false,
+            isWorkoutVisible=false  } = this.state;
         let { basic_info: { name: carePlanName = '' } = {} } = care_plan_templates[carePlanTemplateId] || {};
         const { onClose, renderTemplateDetails } = this;
         let medicationData = innerFormKey && innerFormType == EVENT_TYPE.MEDICATION_REMINDER ? medications[innerFormKey] : {};
@@ -1763,16 +1799,16 @@ class TemplateDrawer extends Component {
                         carePlan={carePlan} />}
                    
                     {innerFormKey && innerFormType == EVENT_TYPE.VITALS && <EditVitalDrawer vitalData={vitalData} vitalVisible={showInner} editVital={this.editVital} hideVital={this.onCloseInner} deleteVitalOfTemplate={this.deleteEntry} />}
-                    {innerFormKey && innerFormType == EVENT_TYPE.DIET && <EditDietDrawer dietData={dietData} dietVisible={showInner} editTemplateDiet={this.editDiet} hideDiet={this.onCloseInner} deleteDietOfTemplate = {this.deleteEntry}  />  }
-                    {innerFormKey && innerFormType == EVENT_TYPE.WORKOUT && <EditWorkoutDrawer workoutData={workoutData} workoutVisible={showInner} editTemplateWorkout={this.editWorkout} hideWorkout={this.onCloseInner} deleteWorkoutOfTemplate = {this.deleteEntry}  />  }
+                    {innerFormKey && innerFormType == EVENT_TYPE.DIET && <EditDietDrawer dietData={dietData} dietVisible={showInner} editTemplateDiet={this.editDiet} hideDiet={this.onCloseInner} deleteDietOfTemplate = {this.deleteEntry} isDietVisible={isDietVisible} />  }
+                    {innerFormKey && innerFormType == EVENT_TYPE.WORKOUT && <EditWorkoutDrawer workoutData={workoutData} workoutVisible={showInner} editTemplateWorkout={this.editWorkout} hideWorkout={this.onCloseInner} deleteWorkoutOfTemplate={this.deleteEntry} isWorkoutVisible={isWorkoutVisible} />  }
 
                     
                     {showAddMedicationInner && <EditMedicationReminder medicationVisible={showAddMedicationInner} addMedication={this.addMedication} hideMedication={this.closeAddMedication} />}
                     {showAddAppointmentInner && <EditAppointmentDrawer appointmentVisible={showAddAppointmentInner} addAppointment={this.addAppointment} hideAppointment={this.closeAddAppointment} patientId={patientId} patients={patients} carePlan={carePlan} />}
                   
                     {showAddVitalInner && <EditVitalDrawer vitalVisible={showAddVitalInner} addVital={this.addVital} hideVital={this.closeAddVital} />} 
-                    {showAddDietInner && <EditDietDrawer dietVisible={showAddDietInner} addTemplateDiet={this.addDiet} hideDiet={this.closeAddDiet}   />}
-                    {showAddWorkoutInner && <EditWorkoutDrawer workoutVisible={showAddWorkoutInner} addTemplateWorkout={this.addWorkout} hideWorkout={this.closeAddWorkout}   />}
+                    {showAddDietInner && <EditDietDrawer dietVisible={showAddDietInner} addTemplateDiet={this.addDiet} hideDiet={this.closeAddDiet} isDietVisible={isDietVisible}  />}
+                    {showAddWorkoutInner && <EditWorkoutDrawer workoutVisible={showAddWorkoutInner} addTemplateWorkout={this.addWorkout} hideWorkout={this.closeAddWorkout}  isWorkoutVisible={isWorkoutVisible} />}
 
                     <div className='add-patient-footer'>
                         <Button onClick={this.onClose} style={{ marginRight: 8 }}>

@@ -49,12 +49,24 @@ class EditDiet extends Component{
 
     async componentDidUpdate(prevProps,prevState){
       
-      const { visible = false  } = this.props;
-      const { visible : prev_visible = false } = prevProps;
+      const { isDietVisible = false,visible = false,dietData={}  } = this.props;
+      const { isDietVisible:prev_isDietVisible=false,visible : prev_visible = false } = prevProps;
       if(visible && visible !== prev_visible){
 
         await this.getDietDetails();
 
+      }
+
+      if(isDietVisible && isDietVisible !== prev_isDietVisible ){
+
+        const {total_calories,details:{ diet_food_groups = {} }={}}=dietData || {};
+
+        
+        this.setState({
+          completeData:{...diet_food_groups},
+          initialFormData:{},
+          total_calories
+        });
       }
 
 
