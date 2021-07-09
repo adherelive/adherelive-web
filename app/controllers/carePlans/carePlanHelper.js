@@ -558,10 +558,12 @@ export const getCarePlanSeverityDetails = async (carePlanId) => {
   let carePlanTemplate = {};
 
   const templateId = carePlanApiWrapper.getCarePlanTemplateId();
-  if (templateId) {
+  if(templateId){
     carePlanTemplate = await carePlanTemplateService.getCarePlanTemplateById(
       templateId
     );
+  }
+  if (templateId && carePlanTemplate) {
     treatment = carePlanTemplate.get("treatment_id")
       ? carePlanTemplate.get("treatment_id")
       : "";
