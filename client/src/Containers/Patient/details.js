@@ -26,6 +26,8 @@ import { getVitalOccurence } from "../../modules/vital_occurence";
 import { searchVital } from "../../modules/vital_templates";
 import { setUnseenNotificationCount }  from "../../modules/pages/NotificationCount";
 import { resetNotificationRedirect } from "../../modules/notificationRedirect";
+import {getAllTemplatesForDoctor} from "../../modules/carePlanTemplates";
+
 
 const mapStateToProps = (state, ownProps) => {
   const {
@@ -167,7 +169,9 @@ const mapDispatchToProps = dispatch => {
     setUnseenNotificationCount : (count) => dispatch(setUnseenNotificationCount(count)),
     openAddDietDrawer:(payload) => dispatch(open({ type: DRAWER.ADD_DIET,payload })),
     openAddWorkoutDrawer:(payload) => dispatch(open({ type: DRAWER.ADD_WORKOUT,payload })),
-    resetNotificationRedirect:() => dispatch(resetNotificationRedirect())
+    resetNotificationRedirect:() => dispatch(resetNotificationRedirect()),
+    getAllTemplatesForDoctor:()=>dispatch(getAllTemplatesForDoctor())
+
   };
 };
 

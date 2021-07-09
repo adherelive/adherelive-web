@@ -1264,7 +1264,13 @@ class TemplatePageCreateDrawer extends Component{
 
                 <div className='wp100 flex align-center justify-space-between'>
                     <div className='form-category-headings-ap align-self-start'>{this.formatMessage(messages.diets)}</div>
-                    <div className='add-more' onClick={this.showAddDiet}>{this.formatMessage(messages.addMore)}</div>
+                    {
+                        dietKeys.length>0
+                        ?
+                        <div className='add-more' onClick={this.showAddDiet}>{this.formatMessage(messages.addMore)}</div>
+                        :
+                        <div className='add-more' onClick={this.showAddDiet}>{this.formatMessage(messages.add)}</div>
+                    }
                 </div>
                 {
 
@@ -1301,7 +1307,13 @@ class TemplatePageCreateDrawer extends Component{
                     
                 <div className='wp100 flex align-center justify-space-between'>
                 <div className='form-category-headings-ap align-self-start'>{this.formatMessage(messages.workouts)}</div>
-                <div className='add-more' onClick={this.showAddWorkout}>{this.formatMessage(messages.addMore)}</div>
+                {
+                        workoutKeys.length>0
+                        ?
+                        <div className='add-more' onClick={this.showAddWorkout}>{this.formatMessage(messages.addMore)}</div>
+                        :
+                        <div className='add-more' onClick={this.showAddWorkout}>{this.formatMessage(messages.add)}</div>
+                }
                 </div>
                 {
 

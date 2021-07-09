@@ -798,8 +798,9 @@ class PatientDetails extends Component {
 
    async componentDidMount() {
 
-    const {resetNotificationRedirect , notification_redirect = {} } = this.props;
+    const {resetNotificationRedirect , notification_redirect = {} ,getAllTemplatesForDoctor} = this.props;
     await this.handleInititalData();
+    await getAllTemplatesForDoctor();
     if(Object.keys(notification_redirect).length){
       resetNotificationRedirect();
     }
@@ -1343,9 +1344,7 @@ class PatientDetails extends Component {
     }
   };
 
-  onCloseTemplate = () => {
-    this.setState({ templateDrawerVisible: false });
-  };
+
 
   showTemplateDrawer = () => {
     this.setState({ templateDrawerVisible: true });
@@ -1525,7 +1524,10 @@ class PatientDetails extends Component {
     });
   };
 
-  onCloseTemplate = () => {
+
+  onCloseTemplate = async() => {
+    const{getAllTemplatesForDoctor}=this.props;
+    await getAllTemplatesForDoctor();
     this.setState({ templateDrawerVisible: false });
   };
 
