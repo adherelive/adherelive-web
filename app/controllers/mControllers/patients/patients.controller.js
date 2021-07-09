@@ -2066,6 +2066,7 @@ class MPatientController extends Controller {
     try {
       const { userDetails: { userId } = {} } = req;
       let doctorIds = [];
+      let doctorRoleIds = [];
       let providerTermsMapping = {};
       let paymentConsentsMapping = {};
       let providerApiData = {};
@@ -2073,6 +2074,7 @@ class MPatientController extends Controller {
       let userIds = [];
       let patientId = null;
       let usersData = {};
+      let userRoles = {};
       let paymentProducts = {};
 
       const paymentProductService = new PaymentProductService();
@@ -2089,7 +2091,89 @@ class MPatientController extends Controller {
         await careplanData.forEach(async (carePlan) => {
           const carePlanApiWrapper = await CarePlanWrapper(carePlan);
           doctorIds.push(carePlanApiWrapper.getDoctorId());
+          doctorRoleIds.push(carePlanApiWrapper.getUserRoleId());
         });
+      }
+
+      for (const id of doctorRoleIds) {
+          const userRoleDetailWrapper = await UserRolesWrapper(null, id);
+          userRoles[
+            userRoleDetailWrapper.getId()
+          ] = userRoleDetailWrapper.getBasicInfo();
+      }
+
+      if(doctorRoleIds && doctorRoleIds.length) {
+        for (let index = 0; index < doctorRoleIds.length; index++) {
+          const roleId = doctorRoleIds[index];
+          const doctorPaymentProductData = await paymentProductService.getAllCreatorTypeProducts(
+            {
+              creator_role_id: roleId,
+              creator_type: USER_CATEGORY.DOCTOR,
+              for_user_type: USER_CATEGORY.DOCTOR,
+              for_user_role_id: roleId,
+            }
+          );
+
+          for (const paymentProduct of doctorPaymentProductData) {
+            const doctorPaymentProductWrapper = await PaymentProductWrapper(
+              paymentProduct
+            );
+            paymentProducts[
+              doctorPaymentProductWrapper.getId()
+            ] = doctorPaymentProductWrapper.getBasicInfo();
+          }
+
+          const {[roleId]: {basic_info: {linked_id: providerId = null} = {}} = {}} = userRoles || {};
+          if (providerId) {
+            const providerWrapper = await ProviderWrapper(null, providerId);
+            userIds.push(providerWrapper.getUserId());
+            providerApiData[providerId] = await providerWrapper.getAllInfo();
+
+
+            const providerUserRole = await userRolesService.getFirstUserRole(providerWrapper.getUserId());
+            let providerUserRoleId = null ;
+            if(providerUserRole){
+              const providerUserRoleWrapper = await UserRolesWrapper(providerUserRole);
+              providerUserRoleId = await providerUserRoleWrapper.getId();
+
+              userRoles[
+                providerUserRoleId
+              ] = providerUserRoleWrapper.getBasicInfo();
+            }
+            const providerPaymentProductData = await paymentProductService.getAllCreatorTypeProducts(
+              {
+                creator_role_id: providerUserRoleId, // change to provider roleId
+                creator_type: USER_CATEGORY.PROVIDER,
+                for_user_type: USER_CATEGORY.DOCTOR,
+                for_user_role_id: roleId,
+              }
+            );
+
+            for (const paymentProduct of providerPaymentProductData) {
+              const providerPaymentProductWrapper = await PaymentProductWrapper(
+                paymentProduct
+              );
+              paymentProducts[
+                providerPaymentProductWrapper.getId()
+              ] = providerPaymentProductWrapper.getBasicInfo();
+            }
+
+            const termsMapping = await providerTermsMappingService.getSingleEntityByData(
+              { provider_id: providerId }
+            );
+
+            if(termsMapping) {
+              const providerTermsWrapper = await ProviderTermsMappingWrapper(
+                termsMapping
+              );
+  
+              providerTermsMapping[
+                providerTermsWrapper.getId()
+              ] = providerTermsWrapper.getBasicInfo();
+            }
+          }
+
+        }
       }
 
       if (doctorIds && doctorIds.length > 0) {
@@ -2113,69 +2197,6 @@ class MPatientController extends Controller {
               consentWrapper.getId()
             ] = consentWrapper.getBasicInfo();
           }
-
-          const doctorPaymentProductData = await paymentProductService.getAllCreatorTypeProducts(
-            {
-              creator_id: doctor.getDoctorId(),
-              creator_type: USER_CATEGORY.DOCTOR,
-              for_user_type: USER_CATEGORY.DOCTOR,
-              for_user_id: doctor.getDoctorId(),
-            }
-          );
-
-          for (const paymentProduct of doctorPaymentProductData) {
-            const doctorPaymentProductWrapper = await PaymentProductWrapper(
-              paymentProduct
-            );
-            paymentProducts[
-              doctorPaymentProductWrapper.getId()
-            ] = doctorPaymentProductWrapper.getBasicInfo();
-          }
-
-          const doctorProvider = await doctorProviderMappingService.getProviderForDoctor(
-            doctor.getDoctorId()
-          );
-
-          if (doctorProvider) {
-            const doctorProviderWrapper = await DoctorProviderMappingWrapper(
-              doctorProvider
-            );
-
-            const providerId = doctorProviderWrapper.getProviderId();
-            const providerWrapper = await ProviderWrapper(null, providerId);
-
-            userIds.push(providerWrapper.getUserId());
-            providerApiData[providerId] = await providerWrapper.getAllInfo();
-
-            const providerPaymentProductData = await paymentProductService.getAllCreatorTypeProducts(
-              {
-                creator_id: providerId,
-                creator_type: USER_CATEGORY.PROVIDER,
-                for_user_type: USER_CATEGORY.DOCTOR,
-                for_user_id: doctor.getDoctorId(),
-              }
-            );
-
-            for (const paymentProduct of providerPaymentProductData) {
-              const providerPaymentProductWrapper = await PaymentProductWrapper(
-                paymentProduct
-              );
-              paymentProducts[
-                providerPaymentProductWrapper.getId()
-              ] = providerPaymentProductWrapper.getBasicInfo();
-            }
-
-            const termsMapping = await providerTermsMappingService.getSingleEntityByData(
-              { provider_id: providerId }
-            );
-            const providerTermsWrapper = await ProviderTermsMappingWrapper(
-              termsMapping
-            );
-
-            providerTermsMapping[
-              providerTermsWrapper.getId()
-            ] = providerTermsWrapper.getBasicInfo();
-          }
         }
       }
 
@@ -2195,6 +2216,7 @@ class MPatientController extends Controller {
         200,
         {
           users: usersData,
+          user_roles: userRoles,
           doctors: doctorData,
           providers: providerApiData,
           provider_terms_mappings: providerTermsMapping,

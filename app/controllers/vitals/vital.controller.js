@@ -75,6 +75,8 @@ class VitalController extends Controller {
                 const doctor = await DoctorWrapper(null, carePlan.getDoctorId());
                 const patient = await PatientWrapper(null, carePlan.getPatientId());
 
+                const {user_role_id: patientUserRoleId} = await patient.getAllInfo();
+
                 const eventScheduleData = {
                     type: EVENT_TYPE.VITALS,
                     patient_id: patient.getPatientId(),
@@ -85,12 +87,12 @@ class VitalController extends Controller {
                     start_date,
                     end_date,
                     details: vitals.getBasicInfo(),
-                    participants: [doctor.getUserId(), patient.getUserId()],
+                    participants: [userRoleId, patientUserRoleId],
                     actor: {
                         id: userId,
                         user_role_id: userRoleId,
                         category,
-                        userCategoryData
+                        userCategoryData,
                     },
                     vital_templates: vitalTemplates.getBasicInfo()
                 };
@@ -164,6 +166,8 @@ class VitalController extends Controller {
                 const doctor = await DoctorWrapper(null, carePlan.getDoctorId());
                 const patient = await PatientWrapper(null, carePlan.getPatientId());
 
+                const {user_role_id: patientUserRoleId} = await patient.getAllInfo();
+
                 const eventScheduleData = {
                     type: EVENT_TYPE.VITALS,
                     patient_id: patient.getUserId(),
@@ -174,12 +178,12 @@ class VitalController extends Controller {
                     start_date,
                     end_date,
                     details: vitals.getBasicInfo(),
-                    participants: [doctor.getUserId(), patient.getUserId()],
+                    participants: [userRoleId, patientUserRoleId],
                     actor: {
                         id: userId,
                         user_role_id: userRoleId,
                         category,
-                        userCategoryData
+                        userCategoryData,
                     },
                     vital_templates: vitalTemplates.getBasicInfo()
                 };

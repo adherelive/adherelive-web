@@ -13,7 +13,8 @@ const mapStateToProps = state => {
         users={},
         payment_products={},
         auth: { authPermissions = [], authenticated_user = 1 ,authenticated_category} = {},
-        account_details={}
+        account_details={},
+        user_roles={}
     } = state;
 
     const auth_doctor_id = authDoctorSelector(state);
@@ -27,7 +28,8 @@ const mapStateToProps = state => {
         authPermissions,
         authenticated_user,
         authenticated_category,
-        account_details
+        account_details,
+        user_roles
     };
 };
 
@@ -38,7 +40,7 @@ const mapDispatchToProps = dispatch => {
       openEditRazorpayAccountDetailsDrawer: payload =>
       dispatch(open({ type: DRAWER.EDIT_RAZORPAY_ACCOUNT_DETAILS ,payload })), 
       addAccountDetails: payload => dispatch(addAccountDetails(payload)),
-      getAccountDetails: () => dispatch(getAccountDetails()),
+      getAccountDetails: (provider_id=null) => dispatch(getAccountDetails(provider_id)),
       deleteAccountDetails : (id) => dispatch(deleteAccountDetails(id)),
       updateAccountDetails : (id,payload) => dispatch(updateAccountDetails(id,payload))
     } 

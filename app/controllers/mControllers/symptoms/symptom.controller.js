@@ -191,14 +191,15 @@ class SymptomController extends Controller {
 
         if (
           Object.keys(allUniqueDoctorsToNotifyData).indexOf(
-            doctorData.getUserId()
+            doctorRoleId
           ) === -1
         ) {
-          allUniqueDoctorsToNotifyData[doctorData.getUserId()] = {
+          allUniqueDoctorsToNotifyData[doctorRoleId] = {
             eventData: {
-              participants: [doctorData.getUserId(), patientData.getUserId()],
+              participants: [doctorRoleId, userRoleId],
               actor: {
                 id: patientData.getUserId(),
+                user_role_id: userRoleId,
                 details: {
                   name: patientData.getFullName(),
                   category: USER_CATEGORY.PATIENT,
@@ -209,13 +210,13 @@ class SymptomController extends Controller {
               },
             },
             twilio: {
-              doctor: doctorData.getUserId(),
-              patient: patientData.getUserId(),
+              doctor: doctorRoleId,
+              patient: userRoleId,
               content: chatJSON,
             },
           };
 
-          doctorLatestCareplanData[doctorData.getUserId()] = carePlan.getCarePlanId();
+          doctorLatestCareplanData[doctorRoleId] = carePlan.getCarePlanId();
         }
 
         // const chatJob = ChatJob.execute(
@@ -232,9 +233,10 @@ class SymptomController extends Controller {
         })
 
         const symptomNotificationData = {
-          participants : [userId, ...allDoctorIds],
+          participants : [userRoleId, ...allDoctorIds],
           actor: {
             id: userId,
+            user_role_id: userRoleId,
             details: { name: patientData.getFullName(), category }
           },
           patient_id,

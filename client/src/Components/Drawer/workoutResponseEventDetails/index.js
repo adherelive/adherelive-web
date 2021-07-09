@@ -101,7 +101,7 @@ class WorkoutReponseEventDetailsDrawer extends Component {
                  <div>
                     {`${sets}x${" "}${repetition_value}${" "}${type}`}<span className="grey-dot" >&bull;</span>{`${calorific_value ? calorific_value : "--"} Cal`}  
                  </div>
-                <div>{`Note: ${notes}`}</div>
+                <div>{ notes.length ? `Note: ${notes}` : null }</div>
 
              
              </div>

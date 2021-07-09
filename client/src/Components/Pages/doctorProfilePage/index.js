@@ -3083,7 +3083,7 @@ class DoctorProfilePage extends Component {
   navigateToConsultationFee = () => {
     const { history } = this.props;
     const { id } = this.props;
-    history.push(`/doctors/${id}/payment_products`);
+    history.push(`/doctors/${id}/payment-products`);
   };
 
   render() {

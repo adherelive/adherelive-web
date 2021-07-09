@@ -1,6 +1,10 @@
 import DietJob from "../";
 import moment from "moment";
-import { EVENT_TYPE, NOTIFICATION_VERB } from "../../../../constant";
+import { EVENT_TYPE, NOTIFICATION_VERB, DEFAULT_PROVIDER } from "../../../../constant";
+
+import UserRoleService from "../../../services/userRoles/userRoles.service";
+
+import ProviderService from "../../../services/provider/provider.service";
 import UserDeviceService from "../../../services/userDevices/userDevice.service";
 import UserDeviceWrapper from "../../../ApiWrapper/mobile/userDevice";
 
@@ -18,6 +22,7 @@ class StartJob extends DietJob {
         participants = [],
         actor: {
           id: actorId,
+          user_role_id,
           // details: { name, category: actorCategory } = {}
         } = {}
       },
@@ -28,11 +33,31 @@ class StartJob extends DietJob {
     const playerIds = [];
     const userIds = [];
 
-    participants.forEach(participant => {
-      if (participant !== actorId) {
-        userIds.push(participant);
+    const {rows: userRoles = []} = await UserRoleService.findAndCountAll({
+      where: {
+        id: participants
       }
-    });
+    }) || {};
+
+    let providerId = null;
+    for(const userRole of userRoles) {
+      const {id, user_identity, linked_id} = userRole || {};
+     
+      if(id === user_role_id) {
+        if(linked_id) {
+          providerId = linked_id;
+        }
+      }else {
+        userIds.push(user_identity);
+      }
+    }
+
+    let providerName = DEFAULT_PROVIDER;
+    if(providerId) {
+      const provider = await ProviderService.getProviderByData({id: providerId});
+      const {name} = provider || {};
+      providerName = name;
+    }
 
     const userDevices = await UserDeviceService.getAllDeviceByData({
       user_id: userIds
@@ -55,14 +80,10 @@ class StartJob extends DietJob {
     templateData.push({
       small_icon: process.config.app.icon_android,
       app_id: process.config.one_signal.app_id,
-      headings: { en: `Diet Reminder` },
+      headings: { en: `Diet Reminder (${providerName})` },
       contents: {
         en: `Please update your ${dietName} response. Tap here to proceed!`
       },
-      // buttons: [
-      //   { id: "yes", text: "YES"},
-      //   { id: "no", text: "NO" }
-      // ],
       include_player_ids: [...playerIds],
       priority: 10,
       android_channel_id: process.config.one_signal.urgent_channel_id,
@@ -79,6 +100,7 @@ class StartJob extends DietJob {
         participants = [],
         actor: {
           id: actorId,
+          user_role_id,
           details: { name, category: actorCategory } = {}
         } = {}
       },
@@ -90,9 +112,10 @@ class StartJob extends DietJob {
     const now = moment();
     const currentTimeStamp = now.unix();
     for (const participant of participants) {
-      if (participant !== actorId) {
+      if (participant !== user_role_id) {
         templateData.push({
             actor: actorId,
+            actorRoleId: user_role_id,
             object: `${participant}`,
             foreign_id: `${id}`,
             verb: `${NOTIFICATION_VERB.DIET_START}:${currentTimeStamp}`,

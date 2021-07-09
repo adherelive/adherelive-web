@@ -9,6 +9,7 @@ import {
 import SideMenu from "../../Containers/Sidebar";
 import BlankState from "../../Components/Common/BlankState";
 import { PATH } from "../../constant";
+import NotificationDrawer from "../../Containers/Drawer/notificationDrawer";
 
 const PatientDetails = lazy(() =>
   import(
@@ -180,6 +181,12 @@ const SideMenuComp = props => {
   }
 };
 
+const NotificationDrawerComponent = props => {
+
+    return <NotificationDrawer {...props} />;
+ 
+};
+
 class Doctors extends Component {
   constructor(props) {
     super(props);
@@ -348,6 +355,7 @@ class Doctors extends Component {
                 <Route path="" component={BlankState} />
               </Switch>
             </div>
+            <NotificationDrawerComponent {...this.props} />
           </div>
         </Router>
       </Fragment>

@@ -3,10 +3,12 @@ import moment from "moment";
 
 import {MESSAGE_TYPES} from "../../../../constant"
 
+import UserRoleService from "../../../services/userRoles/userRoles.service";
+import ProviderService from "../../../services/provider/provider.service";
 import UserDeviceService from "../../../services/userDevices/userDevice.service";
 import UserDeviceWrapper from "../../../ApiWrapper/mobile/userDevice";
 import {getRoomId} from "../../../helper/common";
-import { USER_CATEGORY } from "../../../../constant";
+import { USER_CATEGORY, DEFAULT_PROVIDER } from "../../../../constant";
 
 class BotMessageJob extends ChatJob {
     constructor(data) {
@@ -26,7 +28,6 @@ class BotMessageJob extends ChatJob {
                 details: { name, category: actorCategory } = {}
             } = {},
             participants = [],
-            participant_role_ids = [],
             details: {
                 message = ""
             }
@@ -39,17 +40,44 @@ class BotMessageJob extends ChatJob {
         const playerIds = [];
         const userIds = [];
 
-        // non actor participants are added for notification
-        participant_role_ids.forEach(participant => {
-            if (participant !== actorId) {
-                if(!doctorRoleId) {
-                    doctorRoleId = participant
-                } else if(!patientRoleId) {
-                    patientRoleId = participant
-                }
-                userIds.push(participant);
+        const userRoleIds = [];
+
+        participants.forEach(participant => {
+            userRoleIds.push(participant);
+        if (participant !== actorRoleId) {
+            if(!doctorRoleId) {
+                doctorRoleId = participant
+            } else if(!patientRoleId) {
+                patientRoleId = participant
             }
+        }
         });
+
+        const {rows: userRoles = []} = await UserRoleService.findAndCountAll({
+        where: {
+            id: userRoleIds
+        }
+        }) || {};
+
+        let providerId = null;
+        for(const userRole of userRoles) {
+        const {id, user_identity, linked_id} = userRole || {};
+            if(id === actorRoleId) {
+                if(linked_id) {
+                providerId = linked_id;
+                }
+            }else {
+                userIds.push(user_identity);
+            }
+        }
+
+        let providerName = DEFAULT_PROVIDER;
+        if(providerId) {
+            const provider = await ProviderService.getProviderByData({id: providerId});
+            const {name} = provider || {};
+            providerName = name;
+        }
+
 
         const userDevices = await UserDeviceService.getAllDeviceByData({
             user_id: userIds
@@ -63,21 +91,20 @@ class BotMessageJob extends ChatJob {
         }
 
         const roomId = getRoomId(doctorRoleId, patientRoleId)
-        const now = new Date()
 
         templateData.push({
             small_icon: process.config.app.icon_android,
             app_id: process.config.one_signal.app_id,
-            headings: { en: `New Message` },
+            headings: { en: `New Message (${providerName})` },
             contents: {
                 en: `${name}: ${message}`
             },
             include_player_ids: [...playerIds],
             priority: 10,
             android_group:"adhere.live",
-            // android_group_message: {en: `You have $[notif_count] new messages from ${name}`},
             android_channel_id: process.config.one_signal.urgent_channel_id,
-            data: { url: `/chat-message`, params: {...getData(), doctorUserId: doctorRoleId, patientUserId: patientRoleId, roomId }}
+            data: { url: `/chat-message`, params: {...getData(), doctorUserId: doctorRoleId,
+                 patientUserId: patientRoleId, roomId, actorId }}
         });
         // }
 
@@ -92,12 +119,7 @@ class BotMessageJob extends ChatJob {
                 user_role_id,
                 details: { name, category: actorCategory } = {}
             } = {},
-            participants = [],
-            // doctor_id,
-            // patient_id,
-            details: {
-                // message = ""
-            }
+            participants = []
         } = getData() || {};
 
         const templateData = [];
@@ -105,7 +127,7 @@ class BotMessageJob extends ChatJob {
         const now = moment();
         const currentTimeStamp = now.unix();
         for (const participant of participants) {
-            if (participant !== actorId) {
+            if (participant !== user_role_id) {
                 templateData.push({
                     actor: actorId,
                     actorRoleId: user_role_id,

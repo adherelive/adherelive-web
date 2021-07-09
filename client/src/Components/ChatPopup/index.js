@@ -7,7 +7,7 @@ import {
   // Avatar,
   Upload,
   // Modal,
-  message
+  message,
 } from "antd";
 // import moment from "moment";
 import Chat from "twilio-chat";
@@ -31,7 +31,7 @@ import {
   // USER_ADHERE_BOT,
   // CHAT_MESSAGE_TYPE,
   FEATURES,
-  USER_CATEGORY
+  USER_CATEGORY,
 } from "../../constant";
 import ChatMessageDetails from "./chatMessageDetails";
 
@@ -53,7 +53,7 @@ const Header = ({
   otherTyping = false,
   formatMessage,
   videoCallBlocked,
-  getMenu
+  getMenu,
 }) => {
   // let pic = patientName ?
   //     <Avatar src={patientDp}>{patientName[0]}</Avatar> : <Avatar src={patientDp} icon="user" />
@@ -65,7 +65,9 @@ const Header = ({
             className="doctor-name-chat-header-popup pointer"
             onClick={onHeaderClick}
           >
-            {patientName.length > 10 ? `${patientName.substring(0, 11)}..` : patientName}
+            {patientName.length > 10
+              ? `${patientName.substring(0, 11)}..`
+              : patientName}
           </div>
           <div className="doctor-name-chat-header-online-popup ml10">
             {otherTyping
@@ -116,8 +118,6 @@ const Header = ({
           className="callIcon-header-PopUp mr20"
           onClick={close}
         />
-
-       
       </div>
     </div>
   );
@@ -128,7 +128,7 @@ const MinimizedHeader = ({
   patientName,
   isOnline = false,
   onHeaderClick,
-  close
+  close,
 }) => {
   return (
     <div className="chat-patientListheader-PopUp-minimized">
@@ -159,41 +159,47 @@ class ChatForm extends Component {
     super();
     this.state = {
       newMessage: "",
-      fileList: []
+      fileList: [],
     };
   }
 
-  onMessageChanged = event => {
+  onMessageChanged = (event) => {
     this.setState({ newMessage: event.target.value });
   };
 
-  sendMessage = async(event) => {
+  sendMessage = async (event) => {
     if (event) {
       event.preventDefault();
     }
-    const {raiseChatNotificationFunc}=this.props;
+    const { raiseChatNotificationFunc, authenticated_user } = this.props;
     let trimmedMessage = this.state.newMessage.trim();
     if (this.state.newMessage.length > 0 && trimmedMessage.length > 0) {
       const message = this.state.newMessage;
       this.setState({ newMessage: "" });
-      
-      const {channel = null } = this.props;
 
-      if(channel){
-        const resp = await channel.sendMessage(message);
+      const { channel = null } = this.props;
+
+      if (channel) {
+        const resp = await channel.sendMessage(message, {
+          sender_id: authenticated_user,
+        });
       }
 
-      if(message){
-        raiseChatNotificationFunc(message)
+      if (message) {
+        raiseChatNotificationFunc(message);
       }
     }
     if (this.state.fileList.length > 0) {
       for (let i = 0; i < this.state.fileList.length; ++i) {
         const formData = new FormData();
         formData.append("file", this.state.fileList[i]);
-        const respo = await this.props.channel.sendMessage(formData);
+        const respo = await this.props.channel.sendMessage(formData, {
+          sender_id: authenticated_user,
+        });
 
-        raiseChatNotificationFunc(this.props.formatMessage(messages.newDocumentUploadedNotify))
+        raiseChatNotificationFunc(
+          this.props.formatMessage(messages.newDocumentUploadedNotify)
+        );
       }
       this.setState({ fileList: [] });
     }
@@ -203,9 +209,9 @@ class ChatForm extends Component {
     this.sendMessage();
   };
 
-  beforeUpload = file => {
-    this.setState(state => ({
-      fileList: [...state.fileList, file]
+  beforeUpload = (file) => {
+    this.setState((state) => ({
+      fileList: [...state.fileList, file],
     }));
     return true;
   };
@@ -271,7 +277,7 @@ class ChatPopUp extends Component {
       message_numbers: 0,
 
       chatBlocked: false,
-      videoCallBlocked: false
+      videoCallBlocked: false,
     };
     this.channelName = "test";
   }
@@ -288,7 +294,7 @@ class ChatPopUp extends Component {
   componentDidMount = async () => {
     // this.getToken();
     const {
-      twilio: { chatToken = "" }
+      twilio: { chatToken = "" },
     } = this.props;
     this.setState({ token: chatToken }, this.getToken);
     // this.scrollToBottom();
@@ -322,21 +328,20 @@ class ChatPopUp extends Component {
     }
   }
   tick = async () => {
-    console.log("897987 tick called78934793");
     const { authenticated_user } = this.props;
     const members = this.channel ? await this.channel.getMembers() : [];
     let other_user_online = false;
     let otherUserLastConsumedMessageIndex = 0;
 
     await Promise.all(
-      members.map(async mem => {
+      members.map(async (mem) => {
         if (mem.identity !== `${authenticated_user}`) {
           const other_user = await mem.getUser();
 
           other_user_online = other_user.online;
           otherUserLastConsumedMessageIndex = mem.lastConsumedMessageIndex;
 
-          other_user.on("updated", obj => {
+          other_user.on("updated", (obj) => {
             console.log("user_updated", obj);
           });
         }
@@ -345,16 +350,16 @@ class ChatPopUp extends Component {
     if (otherUserLastConsumedMessageIndex) {
       this.setState({
         other_user_online,
-        otherUserLastConsumedMessageIndex
+        otherUserLastConsumedMessageIndex,
       });
     } else {
       this.setState({
-        other_user_online
+        other_user_online,
       });
     }
   };
 
-  formatMessage = data => this.props.intl.formatMessage(data);
+  formatMessage = (data) => this.props.intl.formatMessage(data);
 
   getToken = () => {
     const {
@@ -362,7 +367,7 @@ class ChatPopUp extends Component {
       roomId,
       // },
       fetchChatAccessToken,
-      authenticated_user
+      authenticated_user,
     } = this.props;
     this.channelName = roomId ? roomId : "test";
     // fetchChatAccessToken(authenticated_user).then(result => {
@@ -379,17 +384,16 @@ class ChatPopUp extends Component {
   };
 
   initChat = () => {
-    console.log("846328756839658932", this.channelName, this.state.token);
     this.chatClient = new Chat(this.state.token);
     this.chatClient
       .initialize()
       .then(this.clientInitiated.bind(this))
-      .catch(err => {
+      .catch((err) => {
         console.log("79873973892 twilio chat connection error --> ", err);
       });
   };
 
-  checkOtherTyping = obj => {
+  checkOtherTyping = (obj) => {
     const { authenticated_user = 1 } = this.props;
     const { identity = null } = obj;
     if (identity !== `${authenticated_user}`) {
@@ -397,7 +401,7 @@ class ChatPopUp extends Component {
     }
   };
 
-  otherTypingStopped = obj => {
+  otherTypingStopped = (obj) => {
     const { authenticated_user = 1 } = this.props;
     const { identity = null } = obj;
     if (identity !== `${authenticated_user}`) {
@@ -410,19 +414,19 @@ class ChatPopUp extends Component {
     this.setState({ chatReady: true }, () => {
       this.chatClient
         .getChannelByUniqueName(this.channelName)
-        .then(channel => {
+        .then((channel) => {
           if (channel) {
             return (this.channel = channel);
           }
         })
-        .catch(err => {
+        .catch((err) => {
           if (err.body.code === 50300) {
             return this.chatClient.createChannel({
-              uniqueName: this.channelName
+              uniqueName: this.channelName,
             });
           }
         })
-        .then(channel => {
+        .then((channel) => {
           this.channel = channel;
           window.channel = channel;
           if (channel.channelState.status !== "joined") {
@@ -434,7 +438,7 @@ class ChatPopUp extends Component {
         .then(async () => {
           this.channel.getMessages().then(this.messagesLoaded);
           this.channel.on("messageAdded", this.messageAdded);
-          this.channel.on("typingStarted", obj => {
+          this.channel.on("typingStarted", (obj) => {
             // console.log("typing started:::::::::::::: ", obj);
             this.checkOtherTyping(obj);
             // const { identity = null } = obj;
@@ -443,22 +447,22 @@ class ChatPopUp extends Component {
             //     this.setState({ other_typing: true });
             // }
           });
-          this.channel.on("typingEnded", obj => {
+          this.channel.on("typingEnded", (obj) => {
             // console.log("typing stopped: :::::: ", obj);
             this.otherTypingStopped(obj);
           });
           const members = await this.channel.getMembers();
 
-          members.map(async mem => {
+          members.map(async (mem) => {
             if (mem.identity !== `${authenticated_user}`) {
               const other_user = await mem.getUser();
 
               this.setState({
                 other_user_online: other_user.online,
-                otherUserLastConsumedMessageIndex: mem.lastConsumedMessageIndex
+                otherUserLastConsumedMessageIndex: mem.lastConsumedMessageIndex,
               });
 
-              other_user.on("updated", obj => {
+              other_user.on("updated", (obj) => {
                 console.log("user_updated", obj);
               });
             }
@@ -467,13 +471,19 @@ class ChatPopUp extends Component {
     });
   };
 
-  updateMessageRecieved = messages => {
+  updateMessageRecieved = (messages) => {
     const { otherUserLastConsumedMessageIndex } = this.state;
     const { authenticated_user } = this.props;
     for (let messageData of messages) {
+      const {
+        index,
+        attributes: { sender_id } = {},
+        author,
+      } = messageData.state;
       if (
-        messageData.state.index <= otherUserLastConsumedMessageIndex &&
-        messageData.state.author === `${authenticated_user}`
+        index <= otherUserLastConsumedMessageIndex &&
+        (sender_id === `${authenticated_user}` ||
+          author === `${authenticated_user}`)
       ) {
         messageData.received = true;
         messageData.sent = true;
@@ -482,13 +492,13 @@ class ChatPopUp extends Component {
     return messages;
   };
 
-  messagesLoaded = messagePage => {
+  messagesLoaded = (messagePage) => {
     let messages = this.updateMessageRecieved(messagePage.items);
     const { roomId, addMessageOfChat } = this.props;
     addMessageOfChat(roomId, messages);
     this.setState(
       {
-        messagesLoading: false
+        messagesLoading: false,
         // messages: messagePage.items,
         // messages
       },
@@ -496,7 +506,7 @@ class ChatPopUp extends Component {
     );
   };
 
-  messageAdded = message => {
+  messageAdded = (message) => {
     const { roomId, addMessageOfChat } = this.props;
     addMessageOfChat(roomId, message);
     // this.setState((prevState, props) => {
@@ -508,12 +518,12 @@ class ChatPopUp extends Component {
     this.channel.setAllMessagesConsumed();
   };
 
-  logOut = event => {
+  logOut = (event) => {
     event.preventDefault();
     this.setState({
       token: "",
       chatReady: false,
-      messages: []
+      messages: [],
     });
     this.chatClient.shutdown();
     this.channel = null;
@@ -689,7 +699,7 @@ class ChatPopUp extends Component {
     this.setState({ chatBlocked, videoCallBlocked });
   };
 
-  getFeatureId = featureName => {
+  getFeatureId = (featureName) => {
     const { features = {} } = this.props;
     const featuresIds = Object.keys(features);
 
@@ -731,7 +741,7 @@ class ChatPopUp extends Component {
     return menuList;
   };
 
-  getMenuItemData = key => {
+  getMenuItemData = (key) => {
     const { chatBlocked, videoCallBlocked } = this.state;
     let label = "";
     switch (key) {
@@ -741,7 +751,7 @@ class ChatPopUp extends Component {
           : this.formatMessage(messages.blockChatMessage);
         return {
           label: label,
-          pressHandler: this.toggleChatPermission
+          pressHandler: this.toggleChatPermission,
         };
       case MENU_ITEMS.TOGGLE_VIDEO_CALL_PERMISSION:
         label = videoCallBlocked
@@ -749,7 +759,7 @@ class ChatPopUp extends Component {
           : this.formatMessage(messages.blockVideoCall);
         return {
           label: label,
-          pressHandler: this.toggleVideoCallPermission
+          pressHandler: this.toggleVideoCallPermission,
         };
       default:
         return;
@@ -795,7 +805,7 @@ class ChatPopUp extends Component {
     const block = videoCallBlocked ? false : true;
 
     const response = await this.props.toggleVideoPermission(patientId, {
-      block
+      block,
     });
 
     const { status = false, payload = {} } = response;
@@ -821,28 +831,35 @@ class ChatPopUp extends Component {
     const {
       patientId = null,
       patients = {},
-      raiseChatNotification
+      raiseChatNotification,
     } = this.props;
 
     const {
-      [patientId]: { basic_info: { user_id: patientUserId = null } = {} , user_role_id : patientRoleId = null } = {}
+      [patientId]: {
+        basic_info: { user_id: patientUserId = null } = {},
+        user_role_id: patientRoleId = null,
+      } = {},
     } = patients;
 
-    const data = { message, receiver_id: patientUserId , receiver_role_id : patientRoleId}
+    const data = {
+      message,
+      receiver_id: patientUserId,
+      receiver_role_id: patientRoleId,
+    };
 
-    const resp = raiseChatNotification(data)
-  }
+    const resp = raiseChatNotification(data);
+  };
 
   render() {
     const { ChatForm } = this;
-    const { chatMessages, roomId } = this.props;
+    const { chatMessages, roomId, authenticated_user } = this.props;
     const {
       messagesLoading = false,
       other_user_online = false,
       other_typing = false,
       otherUserLastConsumedMessageIndex,
       chatBlocked,
-      videoCallBlocked
+      videoCallBlocked,
     } = this.state;
     const { ...props } = this.props;
     const {
@@ -852,7 +869,7 @@ class ChatPopUp extends Component {
       minimizePopUp,
       maximizePopUp,
       closePopUp,
-      maximizeChat
+      maximizeChat,
     } = this.props;
     if (minimized) {
       return (
@@ -913,6 +930,7 @@ class ChatPopUp extends Component {
                   channel={this.channel}
                   formatMessage={this.formatMessage}
                   raiseChatNotificationFunc={this.raiseChatNotificationFunc}
+                  authenticated_user={authenticated_user}
                 />
               </div>
             </div>

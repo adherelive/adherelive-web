@@ -21,7 +21,6 @@ import AddPatientDrawer from "../Drawer/addPatient";
 import Loading from "../Common/Loading";
 import { withRouter } from "react-router-dom";
 import Donut from "../Common/graphs/donut";
-import NotificationDrawer from "../../Containers/Drawer/notificationDrawer";
 import GraphsModal from "./graphsModal";
 import { getPatientConsultingVideoUrl } from "../../Helper/url/patients";
 import { getPatientConsultingUrl } from "../../Helper/url/patients";
@@ -862,7 +861,6 @@ const roomId = getRoomId(doctorRoleId, patientRoleId);
             selectedGraphs={graphsToShow}
           />
         )}
-        <NotificationDrawer  />
 
         <MissedAppointmentsDrawer/>
 

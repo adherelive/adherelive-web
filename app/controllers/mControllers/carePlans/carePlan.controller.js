@@ -248,6 +248,8 @@ class CarePlanController extends Controller {
       const carePlanStartTime = new moment.utc();
       const carePlanEndTime = new moment.utc(carePlanStartTime).add(2, "hours");
       const patient = await PatientWrapper(null, patient_id);
+      const {user_role_id: patientRoleId} = await patient.getAllInfo();
+
 
       carePlanScheduleData = {
         ...carePlanScheduleData,
@@ -257,7 +259,7 @@ class CarePlanController extends Controller {
         start_time: carePlanStartTime,
         end_time: carePlanEndTime,
         details: JSON.stringify(medicationsData),
-        participants: [userId, patient.getUserId()],
+        participants: [userRoleId, patientRoleId],
         actor: {
           id: userId,
           user_role_id: userRoleId,
@@ -650,8 +652,8 @@ class CarePlanController extends Controller {
               start_date: medication.getStartDate(),
               end_date: medication.getEndDate(),
               when_to_take,
-              participant_one: patient.getUserId(),
-              participant_two: organizer_id,
+              // participant_one: patient.getUserId(),
+              // participant_two: organizer_id,
               actor
             });
           }

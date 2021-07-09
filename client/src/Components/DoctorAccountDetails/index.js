@@ -8,12 +8,14 @@ import { TABLE_DEFAULT_BLANK_FIELD} from "../../constant";
 import messages from "./messages";
 import confirm from "antd/es/modal/confirm";
 import edit_image from "../../Assets/images/edit.svg";
+import Loading from "../Common/Loading";
 
 class DoctorAccountDetails extends Component{
     constructor(props){
         super(props);
         this.state={
-            noAccountDetails: true
+            noAccountDetails: true,
+            loading:false
         }
     }
 
@@ -29,12 +31,31 @@ class DoctorAccountDetails extends Component{
         this.handleGetAccountDetails();
     }
 
+    isDoctorRoleAssociatedWithProvider = () => {
+      const {auth: {auth_role} = {}, user_roles = {}} = this.props;
+      const {basic_info: {linked_with, linked_id} = {}} = user_roles[auth_role] || {};
+  
+      if(linked_id) {
+        return linked_id;
+      }
+      return false;
+    }
+
     formatMessage = data => this.props.intl.formatMessage(data);
 
     async handleGetAccountDetails() {
         try {
           const { getAccountDetails } = this.props;
-          const response = await getAccountDetails();
+          this.setState({loading:true});
+          const provider_id = this.isDoctorRoleAssociatedWithProvider() || null;
+          let response = {};
+        
+          if(provider_id){
+            response = await getAccountDetails(provider_id);
+    
+          }else{
+            response = await getAccountDetails();
+          }
           const {
             status,
             payload: { data: { users = {}, account_details = {} } = {} } = {},
@@ -47,8 +68,11 @@ class DoctorAccountDetails extends Component{
             });
     
           }
+
+          this.setState({loading:false});
         } catch (err) {
           console.log("err ", err);
+          this.setState({loading:false});
           message.warn(this.formatMessage(messages.somethingWentWrong));
         }
       }
@@ -57,7 +81,8 @@ class DoctorAccountDetails extends Component{
         const { account_details } = this.props;
         let details = [];
 
-    
+        const providerid = this.isDoctorRoleAssociatedWithProvider() || null;
+        
         const accountDetails = Object.keys(account_details).map(account_id => {
             const {
                 basic_info: {
@@ -153,6 +178,11 @@ class DoctorAccountDetails extends Component{
                   </span>
                 </div>
                   
+                {
+                  !providerid
+                  &&
+
+                
                 <div className="flex  align-center justify-space-evenly wp100 mb10">
                
                   <Tooltip placement={"bottom"} title={this.formatMessage(messages.editAccount)}
@@ -179,6 +209,7 @@ class DoctorAccountDetails extends Component{
                   />
                   </Tooltip>
                 </div>
+                }
               </div>
             );
         });
@@ -258,6 +289,20 @@ class DoctorAccountDetails extends Component{
 
 
     getAddAccountDetailsDisplay = () => {
+    const providerid = this.isDoctorRoleAssociatedWithProvider();
+
+    const { noAccountDetails = true } = this.state;
+
+    if(providerid){
+      if(noAccountDetails){
+        return (<div className="flex align-center justify-center ">
+          {this.formatMessage(messages.noPaymentDetailsHeader)}
+        </div>)
+      }else{
+        return null;
+
+      }
+    }
 
     return (
         <Button
@@ -279,29 +324,34 @@ class DoctorAccountDetails extends Component{
 
 
     getPaymentDetails = () => {
-        const { noAccountDetails } = this.state;
+        const { noAccountDetails =true} = this.state;
     
-        if (noAccountDetails) {
-          // add custom message here centered
-          return (<div className="flex align-center justify-center mt40">
-          {this.getAddAccountDetailsDisplay()}
-        </div>);
-        }
     
         return (
           <Fragment>
             <div className="flex align-center justify-center mt40">
               {this.getAddAccountDetailsDisplay()}
             </div>
-            <div className="wp100 flex flex-wrap">
-              {this.getAddedAccountDetails()}
-            </div>
+            {
+              !noAccountDetails
+              &&
+              <div className="wp100 flex flex-wrap">
+                {this.getAddedAccountDetails()}
+              </div>
+            }
+           
           </Fragment>
         );
       };
 
 
     render(){
+      const {loading=false}=this.state;
+
+      if (loading) {
+        return <Loading />;
+      }
+      // console.log("38271638726137612736721",{props:this.props});
         return (
             <div>{this.getPaymentDetails()}</div>
         )

@@ -11,6 +11,11 @@ const messages = defineMessages({
     description: "",
     defaultMessage: "Consultation Fees"
   },
+  noPaymentDetailsHeader: {
+    id: "app.account.details.no.payment.details",
+    description: "",
+    defaultMessage: "No Payment Details Added yet"
+  },
   doctorBillingHeader: {
     id: "app.account.details.billig.header",
     description: "",

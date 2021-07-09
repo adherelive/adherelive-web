@@ -83,16 +83,21 @@ class VitalTable extends Component {
 
     openResponseDrawer = (id) => (e) => {
         e.preventDefault();
-        const {vitalResponseDrawer} = this.props;
-        vitalResponseDrawer({id, loading: true});
+        const {vitalResponseDrawer, isOtherCarePlan,  auth_role =null ,care_plans = {}  } = this.props;
+        const {basic_info : { user_role_id = null } = {} } = care_plans || {};
+        if(!isOtherCarePlan && user_role_id.toString() === auth_role.toString()) {
+            vitalResponseDrawer({id, loading: true});
+        } 
+        
     };
 
     openEditDrawer = (id) => (e) => {
         e.preventDefault();
-        const {editVitalDrawer, isOtherCarePlan} = this.props;
-        if(!isOtherCarePlan) {
+        const {editVitalDrawer, isOtherCarePlan,  auth_role =null ,care_plans = {}, carePlanId , workouts = {} } = this.props;
+        const {basic_info : { user_role_id = null } = {} } = care_plans || {};
+        if(!isOtherCarePlan && user_role_id.toString() === auth_role.toString()) {
             editVitalDrawer({id, loading: true});
-        }
+        }         
     };
 
     formatMessage = data => this.props.intl.formatMessage(data);

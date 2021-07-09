@@ -48,6 +48,7 @@ class WorkoutController extends Controller {
 
       const {
         userId,
+        userRoleId,
         userData: { category } = {},
         userCategoryData: { basic_info: { full_name = "" } = {} } = {},
       } = userDetails || {};
@@ -96,6 +97,7 @@ class WorkoutController extends Controller {
       const careplanWrapper = await CareplanWrapper(null, carePlanId);
       const patientId = await careplanWrapper.getPatientId();
       const patient = await PatientWrapper(null, patientId);
+      const {user_role_id: patientRoleId} = await patient.getAllInfo();
 
       const eventScheduleData = {
         patient_user_id: patient.getUserId(),
@@ -104,15 +106,15 @@ class WorkoutController extends Controller {
         // status: EVENT_STATUS.SCHEDULED,
         start_date,
         end_date,
-        participants: [userId, patient.getUserId()],
+        participants: [userRoleId, patientRoleId],
         actor: {
           id: userId,
+          user_role_id: userRoleId,
           details: { name: full_name, category },
         },
       };
 
       const queueService = new QueueService();
-
       const sqsResponse = await queueService.sendMessage(eventScheduleData);
 
       Log.debug("sqsResponse ---> ", sqsResponse);
@@ -149,6 +151,7 @@ class WorkoutController extends Controller {
 
       const {
         userId,
+        userRoleId,
         userData: { category } = {},
         userCategoryData: { basic_info: { full_name = "" } = {} } = {},
       } = userDetails || {};
@@ -223,6 +226,7 @@ class WorkoutController extends Controller {
         const careplanWrapper = await CareplanWrapper(null, care_plan_id);
         const patientId = await careplanWrapper.getPatientId();
         const patient = await PatientWrapper(null, patientId);
+        const {user_role_id: patientRoleId} = await patient.getAllInfo();
 
         const eventScheduleData = {
           patient_user_id: patient.getUserId(),
@@ -230,9 +234,10 @@ class WorkoutController extends Controller {
           event_id: workout_id,
           start_date,
           end_date,
-          participants: [userId, patient.getUserId()],
+          participants: [userRoleId, patientRoleId],
           actor: {
             id: userId,
+            user_role_id: userRoleId,
             details: { name: full_name, category },
           },
         };
@@ -365,7 +370,7 @@ class WorkoutController extends Controller {
       } else if (category === USER_CATEGORY.DOCTOR) {
         getAllCareplanQuery = {
           patient_id,
-          doctor_id: userCategoryId,
+          // doctor_id: userCategoryId,
         };
       }
 
@@ -677,11 +682,6 @@ class WorkoutController extends Controller {
           } = await workoutResponseService.findAndCountAll({
             where: {schedule_event_id: event.getScheduleEventId()}
           });
-
-          console.log(
-            "1230983129 event.getScheduleEventId()",
-            event.getScheduleEventId(), totalWorkoutResponses, workoutResponses
-          );
 
           let allWorkoutResponses = {};
           let allWorkoutResponseIds = [];

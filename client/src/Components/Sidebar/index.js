@@ -12,6 +12,7 @@ import {
   FileOutlined,
   ProfileOutlined,
   AccountBookOutlined,
+  WalletOutlined
 } from "@ant-design/icons";
 import messages from "./messages";
 import config from "../../config";
@@ -30,10 +31,11 @@ const CALENDER = "calender";
 const TOS_PP_EDITOR = "tos-pp-editor";
 const PRIVACY_POLICY = "privacy_policy";
 const ALL_PROVIDERS = "providers";
-const TRANSACTION_DETAILS = "transaction_details";
+const TRANSACTION_DETAILS = "transaction-details";
 const TEMPLATES = "templates";
 const MEDICINES = "medicines";
 const ACCOUNT = "account";
+const PROVIDER_PAYMENT_DETAILS = "provider_payment_details";
 
 const ADD_ACCOUNT = "add_account";
 
@@ -152,6 +154,11 @@ class SideMenu extends Component {
           history.push(PATH.PROVIDER.TRANSACTION_DETAILS);
         }
         break;
+      case PROVIDER_PAYMENT_DETAILS :
+        if (authenticated_category === USER_CATEGORY.PROVIDER) {
+          history.push(PATH.PROVIDER.PAYMENT_DETAILS);
+        }
+        break;
       case LOG_OUT:
         handleLogout();
         break;
@@ -246,6 +253,11 @@ class SideMenu extends Component {
             history.push(PATH.PROVIDER.TRANSACTION_DETAILS);
           } else if (authenticated_category === USER_CATEGORY.DOCTOR) {
             history.push(PATH.DOCTOR.TRANSACTION_DETAILS);
+          }
+          break;
+        case PROVIDER_PAYMENT_DETAILS :
+          if (authenticated_category === USER_CATEGORY.PROVIDER) {
+            history.push(PATH.PROVIDER.PAYMENT_DETAILS);
           }
           break;
         case MEDICINES:
@@ -373,6 +385,7 @@ class SideMenu extends Component {
       // handleManageAccount,
       getProviderIcon,
       formatMessage,
+      getProviderUserRoleIcon
     } = this;
 
    return user_role_ids.map((id) => {
@@ -396,7 +409,8 @@ class SideMenu extends Component {
         // <Fragment>
           <Menu.Item key={`${ACCOUNT}.${id}`} className="pointer black-85">
             <div className={`flex align-center mt10 mb10`}>
-              {getProviderIcon("w50 h50", id)}
+              {linked_id && getProviderUserRoleIcon("w50 h50", linked_id)}
+              {/* {getProviderIcon("w50 h50", id)} */}
               <div className="flex direction-column align-start ml10">
                 <div className={"fs20 fw700"}>{addedVia}</div>
                 <div className="fs14 fw500">{email}</div>
@@ -506,6 +520,37 @@ class SideMenu extends Component {
     //   );
     // }
   };
+
+  getProviderUserRoleIcon = (className = "w35 h35",linked_id=null) => {
+    const { providers = {} } = this.props;
+    let src = '';
+    const provider = providers[linked_id];
+
+    if(!provider){
+      return null;
+    }
+
+    const { basic_info: { name = ''} = {}, details: { icon = '' } = {} } =
+    provider || {};
+    
+    src = icon;
+
+    if(src.length){
+      return  <img alt={"Provider Icon"} src={icon} className={className} />;
+    }else{
+      return (
+        <div
+          className={`${className} br5 bg-grey flex justify-center align-center`}
+        >
+          {name
+            .split(" ")
+            .map((word) => word.charAt(0).toUpperCase())
+            .join(" ")}
+        </div>
+      );
+    }
+
+  }
 
 
 
@@ -657,7 +702,7 @@ class SideMenu extends Component {
             </Tooltip>
           </MenuItem>
         )}
-        {authenticated_category !== USER_CATEGORY.ADMIN && (
+        {authenticated_category === USER_CATEGORY.DOCTOR && (
           <MenuItem
             className="flex direction-column justify-center align-center p0"
             key={NOTIFICATIONS}
@@ -730,6 +775,20 @@ class SideMenu extends Component {
             </Tooltip>
           </MenuItem>
         ) : null}
+
+      {authenticated_category === USER_CATEGORY.PROVIDER ? (
+          <MenuItem
+            className="flex direction-column justify-center align-center p0"
+            key={PROVIDER_PAYMENT_DETAILS}
+          >
+            <Tooltip
+              placement="right"
+              title={this.formatMessage(messages.paymentDetailsHeader)}
+            >
+              <WalletOutlined  style={{ color: "#fff" }}  />
+            </Tooltip>
+          </MenuItem>
+      ) : null}
 
         {authenticated_category === USER_CATEGORY.ADMIN ? (
           <MenuItem

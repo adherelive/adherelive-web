@@ -16,7 +16,7 @@ class ProviderWrapper extends BaseProvider {
     const { id, name, address, city, state, user_id, activated_on, details = {} } =
       _data || {};
 
-      const {icon} = details || {};
+      const {icon, banner} = details || {};
 
     return {
       basic_info: {
@@ -30,6 +30,7 @@ class ProviderWrapper extends BaseProvider {
       details: {
         ...details,
         icon: completePath(icon),
+        banner: completePath(banner),
       },
       activated_on
     };

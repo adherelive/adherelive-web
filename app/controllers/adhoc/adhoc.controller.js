@@ -22,6 +22,7 @@ import Logger from "../../../libs/log";
 import carePlanService from "../../services/carePlan/carePlan.service";
 import userPreferenceService from "../../services/userPreferences/userPreference.service";
 import doctorPatientWatchlistService from "../../services/doctorPatientWatchlist/doctorPatientWatchlist.service";
+import QueueService from "../../services/awsQueue/queue.service";
 
 const Log = new Logger("WEB > ADHOC > CONTROLLER");
 
@@ -214,6 +215,24 @@ class AdhocController extends Controller {
             return this.raiseServerError(res, 500, {}, "Error in test api.");
         }
     }
+
+    purgeSqsQueue = async (req, res) => {
+        try {
+            const {body: {queue_name} = {}} = req;
+
+            const queueService = new QueueService();
+            const isDelete = await queueService.purgeQueue(queue_name);
+
+            if(isDelete) {
+                return this.raiseSuccess(res, 200, {}, "queue cleared successfully");
+            } else {
+                return this.raiseClientError(res, 422, {}, "Check queue name and try again");
+            }
+        } catch(error) {
+            Log.debug("purgeSqsQueue 500", error);
+            return this.raiseServerError(res);
+        }
+    };
 }
 
 export default new AdhocController();

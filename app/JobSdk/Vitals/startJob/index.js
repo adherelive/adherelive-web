@@ -1,7 +1,9 @@
 import VitalJob from "../";
 import moment from "moment";
-import { EVENT_TYPE } from "../../../../constant";
+import { DEFAULT_PROVIDER, EVENT_TYPE } from "../../../../constant";
 
+import UserRoleService from "../../../services/userRoles/userRoles.service";
+import ProviderService from "../../../services/provider/provider.service";
 import UserDeviceService from "../../../services/userDevices/userDevice.service";
 
 import UserDeviceWrapper from "../../../ApiWrapper/mobile/userDevice";
@@ -18,6 +20,7 @@ class StartJob extends VitalJob {
       participants = [],
       actor: {
         id: actorId,
+        user_role_id,
         details: { name, category: actorCategory } = {},
       } = {},
       vital_templates,
@@ -32,11 +35,39 @@ class StartJob extends VitalJob {
     const vitals = await VitalWrapper({ id: _data.getEventId() });
     const { vitals: latestVital } = await vitals.getAllInfo();
 
-    participants.forEach((participant) => {
-      if (participant !== actorId) {
-        userIds.push(participant);
+    // participants.forEach(participant => {
+    //   if (participant !== user_role_id) {
+    //     userRoleIds.push(participant);
+    //   }
+    // });
+
+    const {rows: userRoles = []} = await UserRoleService.findAndCountAll({
+      where: {
+        id: participants
       }
-    });
+    }) || {};
+
+    let providerId = null;
+
+    for(const userRole of userRoles) {
+      const {id, user_identity, linked_id} = userRole || {};
+      if(id !== user_role_id) {
+        userIds.push(user_identity);
+      } 
+      else {
+        if(linked_id) {
+          providerId = linked_id;
+        }
+      }
+    }
+
+    // provider
+    let providerName = DEFAULT_PROVIDER;
+    if(providerId) {
+      const provider = await ProviderService.getProviderByData({id: providerId});
+      const {name} = provider || {};
+      providerName = name;
+    }
 
     const userDevices = await UserDeviceService.getAllDeviceByData({
       user_id: userIds,
@@ -85,7 +116,7 @@ class StartJob extends VitalJob {
     const now = moment();
     const currentTimeStamp = now.unix();
     for (const participant of participants) {
-      if (participant !== actorId) {
+      if (participant !== user_role_id) {
         templateData.push({
           actor: actorId,
           actorRoleId: user_role_id,

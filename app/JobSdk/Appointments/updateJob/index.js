@@ -2,7 +2,10 @@ import AppointmentJob from "../";
 import moment from "moment";
 import { EVENT_TYPE, USER_CATEGORY } from "../../../../constant";
 
+import UserRoleService from "../../../services/userRoles/userRoles.service";
+import ProviderService from "../../../services/provider/provider.service";
 import UserDeviceService from "../../../services/userDevices/userDevice.service";
+
 import UserDeviceWrapper from "../../../ApiWrapper/mobile/userDevice";
 
 class UpdateJob extends AppointmentJob {
@@ -20,6 +23,7 @@ class UpdateJob extends AppointmentJob {
       participants = [],
       actor: {
         id: actorId,
+        user_role_id,
         details: { name, category: actorCategory } = {},
       } = {},
     } = getAppointmentData() || {};
@@ -28,11 +32,33 @@ class UpdateJob extends AppointmentJob {
     const playerIds = [];
     const userIds = [];
 
-    participants.forEach((participant) => {
-      if (participant !== actorId) {
-        userIds.push(participant);
+    const {rows: userRoles = []} = await UserRoleService.findAndCountAll({
+      where: {
+        id: participants
       }
-    });
+    }) || {};
+
+    let providerId = null;
+
+    for(const userRole of userRoles) {
+      const {id, user_identity, linked_id} = userRole || {};
+      if(id !== user_role_id) {
+        userIds.push(user_identity);
+      } 
+      else {
+        if(linked_id) {
+          providerId = linked_id;
+        }
+      }
+    }
+
+    // provider
+    let providerName = DEFAULT_PROVIDER;
+    if(providerId) {
+      const provider = await ProviderService.getProviderByData({id: providerId});
+      const {name} = provider || {};
+      providerName = name;
+    }
 
     const userDevices =
       (await UserDeviceService.getAllDeviceByData({
@@ -51,7 +77,7 @@ class UpdateJob extends AppointmentJob {
     templateData.push({
       small_icon: process.config.app.icon_android,
       app_id: process.config.one_signal.app_id, // TODO: add the same in pushNotification handler in notificationSdk
-      headings: { en: `Appointment Update` },
+      headings: { en: `Appointment Update (${providerName})` },
       contents: {
         en: `${
           actorCategory === USER_CATEGORY.DOCTOR ? "Dr." : ""
@@ -85,7 +111,7 @@ class UpdateJob extends AppointmentJob {
     const now = moment();
     const currentTimeStamp = now.unix();
     for (const participant of participants) {
-      if (participant !== actorId) {
+      if (participant !== user_role_id) {
         templateData.push({
           actor: actorId,
           actorRoleId: user_role_id,

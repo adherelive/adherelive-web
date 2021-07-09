@@ -218,6 +218,7 @@ class DietController extends Controller {
 
       const {
         userId,
+        userRoleId,
         userData: { category } = {},
         userCategoryData: { basic_info: { full_name = "" } = {} } = {},
       } = userDetails || {};
@@ -266,17 +267,19 @@ class DietController extends Controller {
       const careplanWrapper = await CareplanWrapper(null, carePlanId);
       const patientId = await careplanWrapper.getPatientId();
       const patient = await PatientWrapper(null, patientId);
+      const {user_role_id: patientRoleId} = await patient.getAllInfo();
+
 
       const eventScheduleData = {
         patient_id: patient.getUserId(),
         type: EVENT_TYPE.DIET,
         event_id: dietWrapper.getId(),
-        status: EVENT_STATUS.SCHEDULED,
         start_date,
         end_date,
-        participants: [userId, patient.getUserId()],
+        participants: [userRoleId, patientRoleId],
         actor: {
           id: userId,
+          user_role_id: userRoleId,
           details: { name: full_name, category },
         },
       };
@@ -412,6 +415,7 @@ class DietController extends Controller {
         body = {},
         userDetails: {
           userId,
+          userRoleId,
           userData: { category } = {},
           userCategoryData: { basic_info: { full_name = "" } = {} } = {},
         } = {},
@@ -484,6 +488,8 @@ class DietController extends Controller {
       const careplanWrapper = await CareplanWrapper(null, care_plan_id);
       const patientId = await careplanWrapper.getPatientId();
       const patient = await PatientWrapper(null, patientId);
+      const {user_role_id: patientRoleId} = await patient.getAllInfo();
+
 
       const eventScheduleData = {
         patient_id: patient.getUserId(),
@@ -492,9 +498,10 @@ class DietController extends Controller {
         status: EVENT_STATUS.SCHEDULED,
         start_date,
         end_date,
-        participants: [userId, patient.getUserId()],
+        participants: [userRoleId, patientRoleId],
         actor: {
           id: userId,
+          user_role_id: userRoleId,
           details: { name: full_name, category },
         },
       };
@@ -641,26 +648,29 @@ class DietController extends Controller {
           const event = await EventWrapper(scheduleEvent);
 
        
-          const resp_record = await dietResponsesService.getByData({
+          const dietResponseData = await dietResponsesService.getByData({
             diet_id:id,
             schedule_event_id:event.getScheduleEventId()
-          });
+          }) || null;
 
-          const dietResponse = await DietResponseWrapper({data:resp_record});
+          let allDietResponseData = {};
 
-          const {
-            diet_responses,
-            upload_documents,
-            diet_response_id,
-          } = await dietResponse.getReferenceInfo() || {};
-          
+          if(dietResponseData) {
+            const dietResponse = await DietResponseWrapper({data:dietResponseData});
+
+            const {
+              diet_responses,
+              upload_documents,
+              diet_response_id,
+            } = await dietResponse.getReferenceInfo() || {};
+            
+            allDietResponseData = {diet_responses, upload_documents, diet_response_id};
+          }
+
           let  eventData = {
             ...(await event.getAllInfo()),
-            diet_responses,
-            upload_documents,
-            diet_response_id
+            ...allDietResponseData,
           };
-
 
           if (dateWiseDietData.hasOwnProperty(event.getDate())) {
             dateWiseDietData[event.getDate()].push({...eventData});
@@ -669,6 +679,8 @@ class DietController extends Controller {
             dateWiseDietData[event.getDate()].push({...eventData});
             timelineDates.push(event.getDate());
           }
+
+         
 
         }
 
