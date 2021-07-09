@@ -67,7 +67,9 @@ class TemplatePageCreateDrawer extends Component{
             deleteDietKeys:[],
             deleteWorkoutKeys:[],
             templateEdited:false,
-            submitting:false
+            submitting:false,
+            isDietVisible:false,
+            isWorkoutVisible:false
 
         };
     }
@@ -412,11 +414,23 @@ class TemplatePageCreateDrawer extends Component{
 
 
     showInnerForm = (innerFormType, innerFormKey) => () => {
+
+        if( innerFormType === EVENT_TYPE.DIET ){
+            this.setState({isDietVisible:true});
+        }else if(innerFormType === EVENT_TYPE.WORKOUT ){
+            this.setState({isWorkoutVisible:true});
+        }
+
         this.setState({ innerFormType, innerFormKey, showInner: true });
+
     }
 
     onCloseInner = () => {
-        this.setState({ showInner: false })
+        this.setState({ 
+            showInner: false ,
+            isDietVisible:false,
+            isWorkoutVisible:false
+        });
     };
 
     showAddMedication = () => {
@@ -444,19 +458,26 @@ class TemplatePageCreateDrawer extends Component{
     }
 
     showAddDiet = () => {
-        this.setState({ showAddDietInner: true });
+        this.setState({ showAddDietInner: true ,
+            isDietVisible:true
+        });
     }
 
     closeAddDiet = () => {
-        this.setState({ showAddDietInner: false });
+        this.setState({ showAddDietInner: false,
+            isDietVisible:false });
     }
 
     showAddWorkout = () => {
-        this.setState({ showAddWorkoutInner: true });
+        this.setState({ 
+            showAddWorkoutInner: true ,
+            isWorkoutVisible:true });
     }
 
     closeAddWorkout = () => {
-        this.setState({ showAddWorkoutInner: false });
+        this.setState({ 
+            showAddWorkoutInner: false,
+            isWorkoutVisible:false });
     }
 
     async handleDeleteTemplateMed(key) {
@@ -818,7 +839,7 @@ class TemplatePageCreateDrawer extends Component{
     onSubmit = async () => {
     
         let { medications = {}, appointments = {},vitals={}, diets = {}, workouts = {} , name = '' } = this.state;
-        const {updateCareplanTemplate,close} = this.props;
+        const {updateCareplanTemplate,close,getAllTemplatesForDoctor} = this.props;
         let medicationsData = Object.values(medications);
         let appointmentsData = Object.values(appointments);
         let vitalsData = Object.values(vitals);
@@ -895,6 +916,7 @@ class TemplatePageCreateDrawer extends Component{
                         deleteWorkoutKeys:[],
                         templateEdited:false
                     })
+                    await getAllTemplatesForDoctor();
                     close();
                 }else{
                     message.error(res_msg);
@@ -924,7 +946,7 @@ class TemplatePageCreateDrawer extends Component{
     
       handleCloseWarning = () => {
         const { warnNote } = this;
-        const {close}=this.props;
+        const {close,getAllTemplatesForDoctor}=this.props;
     
         confirm({
           title: `${this.formatMessage(messages.closeMessage)}`,
@@ -968,15 +990,15 @@ class TemplatePageCreateDrawer extends Component{
                 deleteWorkoutKeys:[],
                 templateEdited:false
             })
-    
+            await getAllTemplatesForDoctor();
             close();
           },
           onCancel() { }
         });
     };
 
-    onClose = ()=> {
-        const{close}=this.props;
+    onClose = async ()=> {
+        const{close,getAllTemplatesForDoctor}=this.props;
         const {name ='',medicationKeys=[],appointmentKeys=[],vitalKeys=[],dietKeys=[], workoutKeys=[], templateEdited=false}=this.state;
         if(templateEdited){
             this.handleCloseWarning();
@@ -1017,6 +1039,7 @@ class TemplatePageCreateDrawer extends Component{
             deleteWorkoutKeys:[],
             templateEdited:false
         })
+        await getAllTemplatesForDoctor();
 
         close();
 
@@ -1241,7 +1264,13 @@ class TemplatePageCreateDrawer extends Component{
 
                 <div className='wp100 flex align-center justify-space-between'>
                     <div className='form-category-headings-ap align-self-start'>{this.formatMessage(messages.diets)}</div>
-                    <div className='add-more' onClick={this.showAddDiet}>{this.formatMessage(messages.addMore)}</div>
+                    {
+                        dietKeys.length>0
+                        ?
+                        <div className='add-more' onClick={this.showAddDiet}>{this.formatMessage(messages.addMore)}</div>
+                        :
+                        <div className='add-more' onClick={this.showAddDiet}>{this.formatMessage(messages.add)}</div>
+                    }
                 </div>
                 {
 
@@ -1278,7 +1307,13 @@ class TemplatePageCreateDrawer extends Component{
                     
                 <div className='wp100 flex align-center justify-space-between'>
                 <div className='form-category-headings-ap align-self-start'>{this.formatMessage(messages.workouts)}</div>
-                <div className='add-more' onClick={this.showAddWorkout}>{this.formatMessage(messages.addMore)}</div>
+                {
+                        workoutKeys.length>0
+                        ?
+                        <div className='add-more' onClick={this.showAddWorkout}>{this.formatMessage(messages.addMore)}</div>
+                        :
+                        <div className='add-more' onClick={this.showAddWorkout}>{this.formatMessage(messages.add)}</div>
+                }
                 </div>
                 {
 
@@ -1996,7 +2031,10 @@ class TemplatePageCreateDrawer extends Component{
     render() {
         let { showInner, innerFormType, innerFormKey, medications, showAddMedicationInner,
             appointments, vitals , diets , workouts, showAddAppointmentInner  , showAddVitalInner , showAddDietInner, showAddWorkoutInner, name ,templateEdited=false,
-            submitting=false } = this.state;
+            submitting=false,
+            isDietVisible=false,
+            isWorkoutVisible=false
+         } = this.state;
         const { onClose, renderTemplateDetails } = this;
         let medicationData = innerFormKey && innerFormType == EVENT_TYPE.MEDICATION_REMINDER ? medications[innerFormKey] : {};
    
@@ -2075,6 +2113,7 @@ class TemplatePageCreateDrawer extends Component{
                         editTemplateDiet={this.editDiet}
                         hideDiet={this.onCloseInner} 
                         deleteDietOfTemplate={this.deleteEntry}
+                        isDietVisible={isDietVisible}
                     />
                     }
                 
@@ -2085,6 +2124,7 @@ class TemplatePageCreateDrawer extends Component{
                         editTemplateWorkout={this.editWorkout}
                         hideWorkout={this.onCloseInner} 
                         deleteWorkoutOfTemplate={this.deleteEntry}
+                        isWorkoutVisible={isWorkoutVisible}
                     />
                     }
                     
@@ -2104,9 +2144,9 @@ class TemplatePageCreateDrawer extends Component{
                     {showAddVitalInner && <EditVitalDrawer vitalVisible={showAddVitalInner} addVital={this.addVital} hideVital={this.closeAddVital} />} 
 
                   
-                    {showAddDietInner && <EditDietDrawer dietVisible={showAddDietInner} addTemplateDiet={this.addDiet} hideDiet={this.closeAddDiet} />} 
+                    {showAddDietInner && <EditDietDrawer dietVisible={showAddDietInner} addTemplateDiet={this.addDiet} hideDiet={this.closeAddDiet} isDietVisible={isDietVisible} />} 
 
-                    {showAddWorkoutInner && <EditWorkoutDrawer workoutVisible={showAddWorkoutInner} addTemplateWorkout={this.addWorkout} hideWorkout={this.closeAddWorkout} />} 
+                    {showAddWorkoutInner && <EditWorkoutDrawer workoutVisible={showAddWorkoutInner} addTemplateWorkout={this.addWorkout} hideWorkout={this.closeAddWorkout} isWorkoutVisible={isWorkoutVisible} />} 
 
 
                     <div className='add-patient-footer'>

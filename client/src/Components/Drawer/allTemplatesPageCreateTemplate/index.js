@@ -55,7 +55,10 @@ class TemplatePageCreateDrawer extends Component{
             showAddDietInner:false,
             showAddWorkoutInner:false,
             showAreYouSureModal: false,
-            submitting:false
+            submitting:false,
+            isDietVisible:false,
+            isWorkoutVisible:false
+
         };
     }
 
@@ -65,11 +68,21 @@ class TemplatePageCreateDrawer extends Component{
 
 
     showInnerForm = (innerFormType, innerFormKey) => () => {
+
+        if( innerFormType === EVENT_TYPE.DIET ){
+            this.setState({isDietVisible:true});
+        }else if(innerFormType === EVENT_TYPE.WORKOUT ){
+            this.setState({isWorkoutVisible:true});
+        }
         this.setState({ innerFormType, innerFormKey, showInner: true });
     }
 
     onCloseInner = () => {
-        this.setState({ showInner: false })
+        this.setState({ 
+            showInner: false,
+            isDietVisible:false,
+            isWorkoutVisible:false
+        })
     };
 
     showAddMedication = () => {
@@ -97,19 +110,27 @@ class TemplatePageCreateDrawer extends Component{
     }
 
     showAddDiet = () => {
-        this.setState({ showAddDietInner: true });
+        this.setState({ 
+            showAddDietInner: true,
+            isDietVisible:true });
     }
 
     closeAddDiet = () => {
-        this.setState({ showAddDietInner: false });
+        this.setState({ 
+            showAddDietInner: false,
+            isDietVisible:false });
     }
 
     showAddWorkout = () => {
-        this.setState({ showAddWorkoutInner: true });
+        this.setState({ 
+            showAddWorkoutInner: true,
+            isWorkoutVisible:true });
     }
 
     closeAddWorkout = () => {
-        this.setState({ showAddWorkoutInner: false });
+        this.setState({ 
+            showAddWorkoutInner: false,
+            isWorkoutVisible:false  });
     }
 
     deleteMedication = key => () => {
@@ -1336,7 +1357,9 @@ class TemplatePageCreateDrawer extends Component{
     render() {
         let { showInner, innerFormType, innerFormKey, medications, showAddMedicationInner,
             appointments, vitals , diets, workouts, showAddAppointmentInner  , showAddVitalInner , showAddDietInner , showAddWorkoutInner, name ,
-            submitting=false , medicationKeys=[],appointmentKeys=[],vitalKeys=[] ,dietKeys = [] , workoutKeys = [] } = this.state;
+            submitting=false , medicationKeys=[],appointmentKeys=[],vitalKeys=[] ,dietKeys = [] , workoutKeys = [] ,
+            isDietVisible=false ,
+            isWorkoutVisible=false } = this.state;
         const { onClose, renderTemplateDetails} = this;
         let medicationData = innerFormKey && innerFormType == EVENT_TYPE.MEDICATION_REMINDER ? medications[innerFormKey] : {};
    
@@ -1416,6 +1439,7 @@ class TemplatePageCreateDrawer extends Component{
                         editTemplateDiet={this.editDiet}
                         hideDiet={this.onCloseInner} 
                         deleteDietOfTemplate={this.deleteEntry}
+                        isDietVisible={isDietVisible}
                     />
                     }
 
@@ -1426,6 +1450,7 @@ class TemplatePageCreateDrawer extends Component{
                         editTemplateWorkout={this.editWorkout}
                         hideWorkout={this.onCloseInner} 
                         deleteWorkoutOfTemplate={this.deleteEntry}
+                        isWorkoutVisible={isWorkoutVisible}
                     />
                     }
 
@@ -1446,9 +1471,9 @@ class TemplatePageCreateDrawer extends Component{
                   
                     {showAddVitalInner && <EditVitalDrawer vitalVisible={showAddVitalInner} addVital={this.addVital} hideVital={this.closeAddVital} />}
 
-                    {showAddDietInner && <EditDietDrawer dietVisible={showAddDietInner} addTemplateDiet={this.addDiet} hideDiet={this.closeAddDiet} />} 
+                    {showAddDietInner && <EditDietDrawer dietVisible={showAddDietInner} addTemplateDiet={this.addDiet} hideDiet={this.closeAddDiet} isDietVisible={isDietVisible} />} 
 
-                    {showAddWorkoutInner && <EditWorkoutDrawer workoutVisible={showAddWorkoutInner} addTemplateWorkout={this.addWorkout} hideWorkout={this.closeAddWorkout} />} 
+                    {showAddWorkoutInner && <EditWorkoutDrawer workoutVisible={showAddWorkoutInner} addTemplateWorkout={this.addWorkout} hideWorkout={this.closeAddWorkout} isWorkoutVisible={isWorkoutVisible} />} 
 
                     
                     <Footer

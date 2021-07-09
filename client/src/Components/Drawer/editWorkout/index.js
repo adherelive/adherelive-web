@@ -54,10 +54,26 @@ class EditWorkout extends Component{
 
     async componentDidUpdate(prevProps,prevState){
       
-      const { visible = false  } = this.props;
-      const { visible : prev_visible = false } = prevProps;
+      const { isWorkoutVisible = false,visible = false ,workoutData ={} } = this.props;
+      const { isWorkoutVisible:prev_isWorkoutVisible=false,visible : prev_visible = false } = prevProps;
+      
       if(visible && visible !== prev_visible){
         await this.getWorkoutDetails();
+      }
+
+      if(isWorkoutVisible && isWorkoutVisible !== prev_isWorkoutVisible ){
+        const {time : data_time = null ,total_calories,details:{ workout_exercise_groups = {} }={}}=workoutData || {};
+
+        const { all_workout_details : {  days = [] , start_time : {hours = '' ,minutes = '' } = {} } = {}  }= this.props;
+        const time = data_time ? data_time : moment(`${hours}:${minutes}`,'HH:mm A').toISOString();
+
+
+        this.setState({
+          completeData:[...workout_exercise_groups],
+          initialFormData:{},
+          total_calories,
+          time
+        });
       }
 
 
