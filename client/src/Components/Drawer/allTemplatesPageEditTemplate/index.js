@@ -839,7 +839,7 @@ class TemplatePageCreateDrawer extends Component{
     onSubmit = async () => {
     
         let { medications = {}, appointments = {},vitals={}, diets = {}, workouts = {} , name = '' } = this.state;
-        const {updateCareplanTemplate,close} = this.props;
+        const {updateCareplanTemplate,close,getAllTemplatesForDoctor} = this.props;
         let medicationsData = Object.values(medications);
         let appointmentsData = Object.values(appointments);
         let vitalsData = Object.values(vitals);
@@ -916,6 +916,7 @@ class TemplatePageCreateDrawer extends Component{
                         deleteWorkoutKeys:[],
                         templateEdited:false
                     })
+                    await getAllTemplatesForDoctor();
                     close();
                 }else{
                     message.error(res_msg);
@@ -945,7 +946,7 @@ class TemplatePageCreateDrawer extends Component{
     
       handleCloseWarning = () => {
         const { warnNote } = this;
-        const {close}=this.props;
+        const {close,getAllTemplatesForDoctor}=this.props;
     
         confirm({
           title: `${this.formatMessage(messages.closeMessage)}`,
@@ -989,15 +990,15 @@ class TemplatePageCreateDrawer extends Component{
                 deleteWorkoutKeys:[],
                 templateEdited:false
             })
-    
+            await getAllTemplatesForDoctor();
             close();
           },
           onCancel() { }
         });
     };
 
-    onClose = ()=> {
-        const{close}=this.props;
+    onClose = async ()=> {
+        const{close,getAllTemplatesForDoctor}=this.props;
         const {name ='',medicationKeys=[],appointmentKeys=[],vitalKeys=[],dietKeys=[], workoutKeys=[], templateEdited=false}=this.state;
         if(templateEdited){
             this.handleCloseWarning();
@@ -1038,6 +1039,7 @@ class TemplatePageCreateDrawer extends Component{
             deleteWorkoutKeys:[],
             templateEdited:false
         })
+        await getAllTemplatesForDoctor();
 
         close();
 
