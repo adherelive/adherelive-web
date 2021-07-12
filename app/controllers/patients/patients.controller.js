@@ -53,6 +53,7 @@ import DegreeWrapper from "../../ApiWrapper/web/degree";
 import CouncilWrapper from "../../ApiWrapper/web/council";
 import TreatmentWrapper from "../../ApiWrapper/web/treatments";
 import DoctorPatientWatchlistWrapper from "../../ApiWrapper/web/doctorPatientWatchlist";
+import WorkoutWrapper from "../../ApiWrapper/web/workouts";
 
 import ProviderWrapper from "../../ApiWrapper/web/provider";
 
@@ -332,7 +333,7 @@ class PatientController extends Controller {
         repetitionData = {};
 
       // for vitals
-      let vitalTemplateData = {};
+      let vitalTemplateData = {} , allWorkoutsForDocAndPatientData={} ;
 
       if (carePlans.length > 0) {
         const {
@@ -359,6 +360,34 @@ class PatientController extends Controller {
 
         // latest care plan id
         latestCarePlanId = current_careplan_id;
+
+
+
+        const currentCarePlan = await CarePlanWrapper(null,latestCarePlanId);
+        const current_careplan_doctor_id = await currentCarePlan.getDoctorId();
+        const {count = 0 , rows = []} = await carePlanService.findAndCountAll({
+          where:{doctor_id:current_careplan_doctor_id,patient_id:patient_id},
+          attributes:['id']
+        });
+
+
+
+        if(count>0){
+          for(let each in rows){
+            const {id:careplan_id = null } = rows[each] || {};
+            const eachCareplanWrapper = await CarePlanWrapper(null,careplan_id);
+            if(eachCareplanWrapper){
+              const {workout_ids = []} = await eachCareplanWrapper.getAllInfo();
+            
+              for(let id of workout_ids){
+                const workoutWrapper = await WorkoutWrapper({id});
+                allWorkoutsForDocAndPatientData[workoutWrapper.getId()] = await workoutWrapper.getBasicInfo() 
+              }
+            }
+   
+          }
+        }
+
 
         // doctors
         doctorData = { ...doctorData, ...doctors };
@@ -817,6 +846,7 @@ class PatientController extends Controller {
           schedule_events: {
             ...scheduleEventData,
           },
+          workouts:{ ...allWorkoutsForDocAndPatientData }
         },
         "Patient care plan details fetched successfully"
       );

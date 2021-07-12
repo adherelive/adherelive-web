@@ -31,6 +31,19 @@ class AddExercise extends Component{
       await this.getAllWorkoutDetails();
     }
 
+    async componentDidUpdate(prevProps,prevState){
+      
+      const {visible = false  } = this.props;
+      const { visible : prev_visible = false } = prevProps;
+      
+      if(visible && visible !== prev_visible){
+        await this.getAllWorkoutDetails();
+        
+      }
+
+
+    }
+
 
     getAllWorkoutDetails = async() => {
       try{
@@ -45,6 +58,7 @@ class AddExercise extends Component{
         }else{
           const { all_workout_details : {  days = [] , start_time : {hours = '' ,minutes = '' } = {} } = {}  }= this.props;
           const time = moment(`${hours}:${minutes}`,'HH:mm A').toISOString();
+          console.log("984681263816312",{props:this.props});
           this.setState({days,time});
         }
 
@@ -74,7 +88,9 @@ class AddExercise extends Component{
         this.setState({
           completeData : [],
           total_calories:0,
-          submitting:false
+          submitting:false,
+          days:[],
+          time:''
         });
         
         resetFields();
@@ -118,15 +134,49 @@ class AddExercise extends Component{
 
       const validated = this.validateExerciseData();
 
+   
       if(!validated){
         return;
       }
-
-
-      const {addWorkout , carePlanId : care_plan_id = null } = this.props;
+      
+      const {
+        addWorkout , 
+        workouts,
+        carePlanId : care_plan_id = null , 
+        doctors = {} , 
+        auth_role ,  
+        care_plans = {} , 
+        auth_doctor_id = null , 
+        patientId = null } = this.props;
       const {completeData : workout_exercise_groups = [] ,total_calories = 0 , time = '' } = this.state;
 
+      let patientAllWorkoutIds = [];
+      const { care_plan_ids = {} } = doctors[auth_doctor_id] || null;
+      const current_user_role_careplan_ids = care_plan_ids[auth_role] || [];
+      for(let careplanId of current_user_role_careplan_ids ){
+        const { basic_info : { doctor_id =null , patient_id = null } = {} , workout_ids = [] } = care_plans[careplanId];
+
+        if(patient_id.toString() === patientId.toString() && doctor_id.toString() === auth_doctor_id.toString() ){
+          workout_ids.forEach(id => {
+            patientAllWorkoutIds.push(id);
+          });
+        }
+      }
+
+      for(let workoutId of patientAllWorkoutIds){
+        const {time :eachTime =null}=workouts[workoutId] || {};
+        const fomattedTime = moment(time).toISOString();
+        const formattedEachTime = moment(eachTime).toISOString();
+        if(fomattedTime === formattedEachTime){
+          message.error(this.formatMessage(messages.timeError));
+          return;
+        }
+      }
+
+    
+
       const fomattedTime = moment(time).toISOString();
+
 
 
       validateFields(async (err, values) => {

@@ -29,6 +29,7 @@ import ConditionWrapper from "../../../ApiWrapper/mobile/conditions";
 import UserPreferenceWrapper from "../../../ApiWrapper/mobile/userPreference";
 import ReportWrapper from "../../../ApiWrapper/mobile/reports";
 import PaymentProductWrapper from "../../../ApiWrapper/mobile/paymentProducts";
+import WorkoutWrapper from "../../../ApiWrapper/mobile/workouts";
 
 import { randomString } from "../../../../libs/helper";
 import Log from "../../../../libs/log";
@@ -452,7 +453,7 @@ class MPatientController extends Controller {
         repetitionData = {};
 
       // for vitals
-      let vitalTemplateData = {};
+      let vitalTemplateData = {} , allWorkoutsForDocAndPatientData={} ;
 
       // get all careplans attached to patient
       const carePlans =
@@ -485,6 +486,35 @@ class MPatientController extends Controller {
 
         // latest care plan id
         latestCarePlanId = current_careplan_id;
+
+
+
+        const currentCarePlan = await CarePlanWrapper(null,latestCarePlanId);
+        const current_careplan_doctor_id = await currentCarePlan.getDoctorId();
+        const {count = 0 , rows = []} = await carePlanService.findAndCountAll({
+          where:{doctor_id:current_careplan_doctor_id,patient_id:patient_id},
+          attributes:['id']
+        });
+
+
+
+        if(count>0){
+          for(let each in rows){
+            const {id:careplan_id = null } = rows[each] || {};
+            const eachCareplanWrapper = await CarePlanWrapper(null,careplan_id);
+            if(eachCareplanWrapper){
+              const {workout_ids = []} = await eachCareplanWrapper.getAllInfo();
+            
+              for(let id of workout_ids){
+                const workoutWrapper = await WorkoutWrapper({id});
+                allWorkoutsForDocAndPatientData[workoutWrapper.getId()] = await workoutWrapper.getBasicInfo() 
+              }
+            }
+   
+          }
+        }
+
+
 
         // doctors
         doctorData = { ...doctorData, ...doctors };
@@ -918,6 +948,7 @@ class MPatientController extends Controller {
           schedule_events: {
             ...scheduleEventData,
           },
+          workouts:{ ...allWorkoutsForDocAndPatientData }
         },
         "Patient care plan details fetched successfully"
       );

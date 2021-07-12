@@ -176,9 +176,12 @@ class EditWorkout extends Component{
         } = this.formRef;
         
         this.setState({
-            completeData : [],
-            total_calories:0,
-            submitting:false
+          completeData : [],
+          total_calories:0,
+          submitting:false,
+          days:[],
+          time:'',
+          deletedExerciseGroupIds:[]
         });
         
         resetFields();
@@ -218,7 +221,7 @@ class EditWorkout extends Component{
         },
       } = this.formRef;
     
-      const {updateWorkout , carePlanId : care_plan_id = null , payload 
+      const {updateWorkout , payload 
         ,  addTemplateWorkout = null , editTemplateWorkout =null
       } = this.props;
       const { time = '', completeData : workout_exercise_groups = {} ,total_calories = 0 ,deletedExerciseGroupIds = [] } = this.state;
@@ -229,6 +232,44 @@ class EditWorkout extends Component{
         return;
       }
 
+
+      const {
+        workouts,
+        carePlanId : care_plan_id = null , 
+        doctors = {} , 
+        auth_role ,  
+        care_plans = {} , 
+        auth_doctor_id = null , 
+        patientId = null } = this.props;
+
+      let patientAllWorkoutIds = [];
+      const { care_plan_ids = {} } = doctors[auth_doctor_id] || null;
+      const current_user_role_careplan_ids = care_plan_ids[auth_role] || [];
+      for(let careplanId of current_user_role_careplan_ids ){
+
+        const { basic_info : { doctor_id =null , patient_id = null } = {} , workout_ids = [] } = care_plans[careplanId];
+
+        if(patient_id.toString() === patientId.toString() && doctor_id.toString() === auth_doctor_id.toString() ){
+          workout_ids.forEach(id => {
+            patientAllWorkoutIds.push(id);
+          });
+        }
+      }
+
+      for(let workoutId of patientAllWorkoutIds){
+        const {time :eachTime =null }=workouts[workoutId];
+        const fomattedTime = moment(time).toISOString();
+        const formattedEachTime = moment(eachTime).toISOString();
+
+
+        if(workoutId.toString() !== workout_id.toString() && fomattedTime === formattedEachTime){
+          message.error(this.formatMessage(messages.timeError));
+          return;
+        }
+
+      }
+
+  
 
     
       const fomattedTime = moment(time).toISOString();

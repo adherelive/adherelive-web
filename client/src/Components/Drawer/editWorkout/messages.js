@@ -106,6 +106,11 @@ const messages = defineMessages({
         description: "",
         defaultMessage: "Workout Time"
     },
+    timeError:{
+        id: "app.edit.workout.add.workout.timeError",
+        description: "",
+        defaultMessage: "Workout for this patient of time added already exists"
+    }
 });
 
 export default messages;

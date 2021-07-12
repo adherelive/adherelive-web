@@ -11,10 +11,11 @@ import {
     , getWorkoutDetails
 } from "../../modules/workouts";
 import { getPatientCarePlanDetails } from "../../modules/carePlans";
+import {authDoctorSelector} from "../../modules/doctors/selectors"
 
 const mapStateToProps = state => {
     const { auth} = state;
-    const { authenticated_user, authenticated_category } = auth;
+    const { authenticated_user, authenticated_category,auth_role } = auth;
     const {
         drawer: { visible, loading, data: { type, payload = {} } = {} },
         repetitions, 
@@ -23,23 +24,33 @@ const mapStateToProps = state => {
         exercise_details,
         searched_exercises,
         searched_exercise_details,
-        all_workout_details={}
+        all_workout_details={},
+        doctors,
+        patients,
+        workouts={}
     } = state;
 
+    const auth_doctor_id = authDoctorSelector(state);
+    
 
     return {
         authenticated_user,
         authenticated_category,
+        auth_role,
         visible: visible && type === DRAWER.EDIT_WORKOUT,
         loading,
         payload,
         repetitions,
         care_plans,
+        doctors,
+        patients,
         exercises,
         exercise_details,
         searched_exercises,
         searched_exercise_details,
-        all_workout_details
+        all_workout_details,
+        auth_doctor_id,
+        workouts
     };
 };
 
