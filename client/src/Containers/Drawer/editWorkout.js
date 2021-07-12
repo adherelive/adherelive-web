@@ -11,7 +11,6 @@ import {
     , getWorkoutDetails
 } from "../../modules/workouts";
 import { getPatientCarePlanDetails } from "../../modules/carePlans";
-import {authDoctorSelector} from "../../modules/doctors/selectors"
 
 const mapStateToProps = state => {
     const { auth} = state;
@@ -25,12 +24,8 @@ const mapStateToProps = state => {
         searched_exercises,
         searched_exercise_details,
         all_workout_details={},
-        doctors,
-        patients,
-        workouts={}
     } = state;
 
-    const auth_doctor_id = authDoctorSelector(state);
     
 
     return {
@@ -42,15 +37,11 @@ const mapStateToProps = state => {
         payload,
         repetitions,
         care_plans,
-        doctors,
-        patients,
         exercises,
         exercise_details,
         searched_exercises,
         searched_exercise_details,
         all_workout_details,
-        auth_doctor_id,
-        workouts
     };
 };
 

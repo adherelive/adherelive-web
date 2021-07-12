@@ -1,6 +1,7 @@
 import Controller from "../../index";
 
 import Logger from "../../../../libs/log";
+import moment from "moment";
 
 // services
 import WorkoutService from "../../../services/workouts/workout.service";
@@ -64,6 +65,48 @@ class WorkoutController extends Controller {
         workout_exercise_groups = [],
       } = body;
 
+
+
+      const careplanWrapper = await CareplanWrapper(null, care_plan_id);
+      const current_careplan_doctor_id = await careplanWrapper.getDoctorId();
+      const patientId = await careplanWrapper.getPatientId();
+      const patient = await PatientWrapper(null, patientId);
+      const {user_role_id: patientRoleId} = await patient.getAllInfo();
+
+      const {count = 0 , rows = []} = await carePlanService.findAndCountAll({
+        where:{doctor_id:current_careplan_doctor_id,patient_id:patientId},
+        attributes:['id']
+      });
+
+      if(count>0){
+        for(let each in rows){
+          const {id:careplan_id = null } = rows[each] || {};
+          const eachCareplanWrapper = await CareplanWrapper(null,careplan_id);
+          if(eachCareplanWrapper){
+            const {workout_ids = []} = await eachCareplanWrapper.getAllInfo();
+          
+            for(let id of workout_ids){
+              const workoutWrapper = await WorkoutWrapper({id});
+              const workoutTime = await workoutWrapper.getTime();
+              const fomattedTime = moment(time).toISOString();
+              const formattedWorkoutTime = moment(workoutTime).toISOString();
+              if(fomattedTime === formattedWorkoutTime){
+                return raiseClientError(
+                  res,
+                  422,
+                  {},
+                  `Workout for this patient with same time already exists`
+                );
+                
+              }
+            }
+          }
+ 
+        }
+      }
+
+
+
       const workoutService = new WorkoutService();
 
       const workoutExists =
@@ -92,12 +135,6 @@ class WorkoutController extends Controller {
       const workout = await WorkoutWrapper({ id: workout_id });
 
       const carePlanId = workout.getCareplanId();
-
-      const careplanWrapper = await CareplanWrapper(null, carePlanId);
-      const patientId = await careplanWrapper.getPatientId();
-      const patient = await PatientWrapper(null, patientId);
-
-      const {user_role_id: patientRoleId} = await patient.getAllInfo();
 
       const eventScheduleData = {
         patient_user_id: patient.getUserId(),
@@ -172,6 +209,43 @@ class WorkoutController extends Controller {
         delete_exercise_group_ids = [],
       } = body;
 
+      const careplanWrapper = await CareplanWrapper(null, care_plan_id);
+      const current_careplan_doctor_id = await careplanWrapper.getDoctorId();
+      const patientId = await careplanWrapper.getPatientId();
+
+      const {count = 0 , rows = []} = await carePlanService.findAndCountAll({
+        where:{doctor_id:current_careplan_doctor_id,patient_id:patientId},
+        attributes:['id']
+      });
+
+      if(count>0){
+        for(let each in rows){
+          const {id:careplan_id = null } = rows[each] || {};
+          const eachCareplanWrapper = await CareplanWrapper(null,careplan_id);
+          if(eachCareplanWrapper){
+            const {workout_ids = []} = await eachCareplanWrapper.getAllInfo();
+          
+            for(let id of workout_ids){
+              const workoutWrapper = await WorkoutWrapper({id});
+              const workoutTime = await workoutWrapper.getTime();
+              const fomattedTime = moment(time).toISOString();
+              const formattedWorkoutTime = moment(workoutTime).toISOString();
+              if(id.toString() !== workout_id.toString() && fomattedTime === formattedWorkoutTime){
+                return raiseClientError(
+                  res,
+                  422,
+                  {},
+                  `Workout for this patient with same time already exists`
+                );
+                
+              }
+            }
+          }
+ 
+        }
+      }
+
+      
       const workoutService = new WorkoutService();
 
       const workoutExists =

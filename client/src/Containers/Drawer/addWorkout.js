@@ -6,7 +6,6 @@ import { open } from "../../modules/drawer";
 import { DRAWER } from "../../constant";
 import { getWorkoutDetails , addWorkout } from "../../modules/workouts";
 import { addExercise } from "../../modules/exercises";
-import {authDoctorSelector} from "../../modules/doctors/selectors"
 
 // import { addDiet } from "../../modules/diets";
 
@@ -17,18 +16,14 @@ const mapStateToProps = state => {
         drawer: { visible, loading, data: { type, payload = {} } = {} },
         repetitions, 
         care_plans,
-        doctors,
-        patients,
         exercises,
         exercise_details,
         searched_exercises,
         searched_exercise_details,
         all_workout_details = {},
-        workouts={}
     } = state;
 
 
-    const auth_doctor_id = authDoctorSelector(state);
     
     return {
         authenticated_user,
@@ -39,15 +34,11 @@ const mapStateToProps = state => {
         payload,
         repetitions,
         care_plans,
-        doctors,
-        patients,
         exercises,
         exercise_details,
         searched_exercises,
         searched_exercise_details,
         all_workout_details,
-        auth_doctor_id,
-        workouts
     };
 };
 
