@@ -566,8 +566,8 @@ export const VERIFICATION_TYPE = {
 export const NO_MEDICATION = "1";
 export const NO_APPOINTMENT = "2";
 export const NO_ACTION = "3";
-// export const TEST_ONE = "5";
-// export const TEST_TWO = "6";
+export const NO_DIET = "4";
+export const NO_WORKOUT = "5";
 
 export const CHART_LIMIT = 4;
 
@@ -589,6 +589,14 @@ export const CHART_DETAILS = {
   [NO_ACTION]: {
     type: "no_action",
     name: "Missed Action",
+  },
+  [NO_DIET]: {
+    type: "no_diet",
+    name: "Missed Diet",
+  },
+  [NO_WORKOUT]: {
+    type: "no_workout",
+    name: "Missed Workout",
   }
   // [TEST_ONE]: {
   //   type: "test_one",

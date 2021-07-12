@@ -3,7 +3,10 @@ import Log from "../../../libs/log";
 import {
     NO_MEDICATION,
     NO_APPOINTMENT,
-    NO_ACTION, USER_CATEGORY,
+    NO_ACTION, 
+    NO_DIET,
+    NO_WORKOUT,
+    USER_CATEGORY,
     CHART_DETAILS,
 } from "../../../constant";
 
@@ -123,6 +126,14 @@ class GraphController extends Controller {
                 [NO_ACTION]: {
                   type: "no_action",
                   name: "Missed Action",
+                },
+                [NO_DIET]: {
+                    type: "no_diet",
+                    name: "Missed Diet",
+                },
+                [NO_WORKOUT]: {
+                    type: "no_workout",
+                    name: "Missed Workout",
                 }
               };
             
@@ -198,7 +209,7 @@ class GraphController extends Controller {
                       await userPreferenceService.addUserPreference({
                           user_id,
                           details: {
-                              charts: ["1","2","3"]
+                              charts: ["1","2","3","4","5"]
                           }
                       });
                   }

@@ -1,6 +1,14 @@
 import Controller from "../../";
 import Log from "../../../../libs/log";
-import {CHART_DETAILS, CHART_LIMIT} from "../../../../constant";
+import {
+    NO_MEDICATION,
+    NO_APPOINTMENT,
+    NO_ACTION, 
+    NO_DIET,
+    NO_WORKOUT,
+    USER_CATEGORY,
+    CHART_DETAILS,
+} from "../../../../constant";
 
 import userPreferenceService from "../../../services/userPreferences/userPreference.service";
 
@@ -116,6 +124,14 @@ class GraphController extends Controller {
                 [NO_ACTION]: {
                   type: "no_action",
                   name: "Missed Action",
+                },
+                [NO_DIET]: {
+                    type: "no_diet",
+                    name: "Missed Diet",
+                },
+                [NO_WORKOUT]: {
+                    type: "no_workout",
+                    name: "Missed Workout",
                 }
               };
             

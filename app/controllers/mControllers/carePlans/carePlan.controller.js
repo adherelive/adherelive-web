@@ -404,7 +404,7 @@ class CarePlanController extends Controller {
       } = await carePlanHelper.createDiet({
         data: dietData,
         carePlanId: care_plan_id,
-        authUser: { category, userId, userCategoryData },
+        authUser: { category, userId, userCategoryData, userRoleId },
         patientId: carePlanData.getPatientId(),
       });
 
@@ -421,7 +421,7 @@ class CarePlanController extends Controller {
       } = await carePlanHelper.createWorkout({
         data: workoutData,
         carePlanId: care_plan_id,
-        authUser: { category, userId, userCategoryData },
+        authUser: { category, userId, userCategoryData, userRoleId },
         patientId: carePlanData.getPatientId(),
       });
 

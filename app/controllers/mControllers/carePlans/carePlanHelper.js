@@ -308,6 +308,8 @@ export const createDiet = async ({
       userId: authUserId,
       category: authCategory,
       userCategoryData: { basic_info: { full_name } = {} },
+      userCategoryData: authUserCategoryData,
+      userRoleId: authUserRole
     } = authUser || {};
 
     // patient
@@ -381,6 +383,9 @@ export const createDiet = async ({
           participants: [authUserId, patient.getUserId()],
           actor: {
             id: authUserId,
+            user_role_id: authUserRole,
+            category: authCategory,
+            userCategoryData: authUserCategoryData,
             details: { name: full_name, category: authCategory },
           },
         });
@@ -428,6 +433,8 @@ export const createWorkout = async ({
       userId: authUserId,
       category: authCategory,
       userCategoryData: { basic_info: { full_name } = {} },
+      userCategoryData: authUserCategoryData,
+      userRoleId: authUserRole,
     } = authUser || {};
 
     // patient
@@ -503,6 +510,9 @@ export const createWorkout = async ({
           participants: [authUserId, patient.getUserId()],
           actor: {
             id: authUserId,
+            user_role_id: authUserRole,
+            category: authCategory,
+            userCategoryData: authUserCategoryData,
             details: { name: full_name, category: authCategory },
           },
         });

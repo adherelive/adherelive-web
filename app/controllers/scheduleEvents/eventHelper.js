@@ -73,6 +73,8 @@ const getAllDataForDoctors = async ({doctor_id, category = USER_CATEGORY.PROVIDE
         let appointmentIds = [];
         let medicationIds = [];
         let vitalIds = [];
+        let dietIds = [];
+        let workoutIds = [];
 
         // extract all event_ids from careplan attached to doctor
         for (let i = 0; i < carePlans.length; i++) {
@@ -80,12 +82,16 @@ const getAllDataForDoctors = async ({doctor_id, category = USER_CATEGORY.PROVIDE
             const {
                 appointment_ids,
                 medication_ids,
-                vital_ids
+                vital_ids,
+                diet_ids,
+                workout_ids
             } = await carePlan.getAllInfo();
 
             appointmentIds = [...appointmentIds, ...appointment_ids];
             medicationIds = [...medicationIds, ...medication_ids];
             vitalIds = [...vitalIds, ...vital_ids];
+            dietIds = [ ...dietIds, ...diet_ids];
+            workoutIds = [ ...workoutIds, ...workout_ids ];
         }
 
         // fetch all schedule events in latest -> last order for each event_ids collected
@@ -94,7 +100,9 @@ const getAllDataForDoctors = async ({doctor_id, category = USER_CATEGORY.PROVIDE
             (await eventService.getMissedByData({
                 appointment_ids: appointmentIds,
                 medication_ids: medicationIds,
-                vital_ids: vitalIds
+                vital_ids: vitalIds,
+                diet_ids: dietIds,
+                workout_ids: workoutIds
             })) || [];
 
         return [
@@ -145,6 +153,14 @@ const getFormattedData = async (events = [], category = USER_CATEGORY.DOCTOR) =>
     let vital_critical_ids = [];
     let vital_non_critical_ids = [];
 
+    let diets = {};
+    let diet_critical_ids = [];
+    let diet_non_critical_ids = [];
+
+    let workouts = {};
+    let workout_critical_ids = [];
+    let workout_non_critical_ids = [];
+
     let patientIds = [];
 
     for (let i = 0; i < events.length; i++) {
@@ -152,16 +168,25 @@ const getFormattedData = async (events = [], category = USER_CATEGORY.DOCTOR) =>
         const {
             start_time,
             end_time,
+            details,
             details: {
                 medicines,
                 patient_id,
                 medications: {participant_id} = {},
                 vital_templates: {basic_info: {name: vital_name} = {}} = {},
                 participant_one = {},
-                participant_two = {}
+                participant_two = {},
+                diets : event_diets = {},
+                workouts : event_workouts = {},
+                workout_id = null, 
+                diet_id = null,
+                participants=[],
+                actor={}
             } = {},
             critical
         } = event.getAllInfo();
+
+
 
         switch (event.getEventType()) {
             case EVENT_TYPE.MEDICATION_REMINDER:
@@ -229,6 +254,10 @@ const getFormattedData = async (events = [], category = USER_CATEGORY.DOCTOR) =>
                 break;
             case EVENT_TYPE.VITALS:
 
+                if (category === USER_CATEGORY.PROVIDER) {
+                        patientIds.push(patient_id);
+                }
+
                 if (!(event.getEventId() in vitals)) {
                     const timings = {};
                     timings[event.getDate()] = [];
@@ -261,6 +290,93 @@ const getFormattedData = async (events = [], category = USER_CATEGORY.DOCTOR) =>
                         : null;
                 }
                 break;
+
+
+            case EVENT_TYPE.DIET:
+
+                const {user_role_id=null} = actor || {};
+
+                let patientId = null;
+                for(let pId of participants){
+                    if(pId.toString() !== user_role_id.toString() ){
+                        patientId=pId;
+                        break;
+                    }
+                }
+
+                const { basic_info:{name :diet_name =''}={} } = event_diets[diet_id] || {};
+                if (!(event.getEventId() in diets)) {
+                    if (category === USER_CATEGORY.PROVIDER) {
+                        patientIds.push(patientId);
+                    }
+                    const timings = {};
+                    timings[event.getDate()] = [];
+                    timings[event.getDate()].push({start_time, end_time});
+                    diets[event.getEventId()] = {  diet_name, participant_id:patientId , timings};
+                } else {
+                    const {timings} = diets[event.getEventId()] || {};
+                    if (!Object.keys(timings).includes(event.getDate())) {
+                        timings[event.getDate()] = [];
+                    }
+                    timings[event.getDate()].push({start_time, end_time});
+                    diets[event.getEventId()] = {...diets[event.getEventId()], timings};
+                }
+
+                // critical | non_critical
+                if (event.getCriticalValue()) {
+                    diet_critical_ids.indexOf(event.getEventId()) === -1
+                        ? diet_critical_ids.push(event.getEventId())
+                        : null;
+                } else {
+                    diet_non_critical_ids.indexOf(event.getEventId()) === -1
+                        ? diet_non_critical_ids.push(event.getEventId())
+                        : null;
+                }
+                break;
+
+
+            case EVENT_TYPE.WORKOUT:
+
+                const {user_role_id : workout_user_role_id=null} = actor || {};
+
+                let workoutPatientId = null;
+                for(let pId of participants){
+                    if(pId.toString() !== workout_user_role_id.toString() ){
+                        workoutPatientId=pId;
+                        break;
+                    }
+                }
+
+                const { basic_info : { name : workout_name = '' } = {} } = event_workouts[workout_id] || {};
+                if (!(event.getEventId() in workouts)) {
+                    if (category === USER_CATEGORY.PROVIDER) {
+                        patientIds.push(workoutPatientId);
+                    }
+                    const timings = {};
+                    timings[event.getDate()] = [];
+                    timings[event.getDate()].push({start_time, end_time});
+                    workouts[event.getEventId()] = { workout_name, participant_id:workoutPatientId , timings};
+                } else {
+                    const {timings} = workouts[event.getEventId()] || {};
+                    if (!Object.keys(timings).includes(event.getDate())) {
+                        timings[event.getDate()] = [];
+                    }
+                    timings[event.getDate()].push({start_time, end_time});
+                    workouts[event.getEventId()] = {...workouts[event.getEventId()], timings};
+                }
+
+                // critical | non_critical
+                if (event.getCriticalValue()) {
+                    workout_critical_ids.indexOf(event.getEventId()) === -1
+                        ? workout_critical_ids.push(event.getEventId())
+                        : null;
+                } else {
+                    workout_non_critical_ids.indexOf(event.getEventId()) === -1
+                        ? workout_non_critical_ids.push(event.getEventId())
+                        : null;
+                }
+                break;
+    
 
         }
     }
@@ -300,6 +416,21 @@ const getFormattedData = async (events = [], category = USER_CATEGORY.DOCTOR) =>
         vital_ids: {
             critical: vital_critical_ids,
             non_critical: vital_non_critical_ids,
+        },
+
+         // diets
+         missed_diets: diets,
+         diet_ids: {
+             critical: diet_critical_ids,
+             non_critical: diet_non_critical_ids,
+         },
+
+
+          // actions (vitals)
+        missed_workouts: workouts,
+        workout_ids: {
+            critical: workout_critical_ids,
+            non_critical: workout_non_critical_ids,
         },
 
         // for provider related api call

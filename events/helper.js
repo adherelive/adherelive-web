@@ -228,6 +228,7 @@ export const handleDiet = async (data) => {
       end_date = null,
       participants = [],
       actor = {},
+      critical = false,
     } = data || {};
 
     const dietWrapper = await DietWrapper({ id: event_id });
@@ -338,6 +339,7 @@ export const handleDiet = async (data) => {
 
         scheduleEventArr.push({
           event_id,
+          critical,
           date: moment(allDays[i]).toISOString(),
           start_time: moment(startTime).toISOString(),
           end_time: moment(startTime).toISOString(),
@@ -375,6 +377,7 @@ export const handleWorkout = async (workout) => {
       end_date = null,
       participants = [],
       actor = {},
+      critical = false,
     } = workout || {};
 
     Log.debug("workout", workout);
@@ -418,6 +421,7 @@ export const handleWorkout = async (workout) => {
 
       allEvents.push({
         event_id,
+        critical,
         event_type: EVENT_TYPE.WORKOUT,
         date,
         start_time: startTime,
