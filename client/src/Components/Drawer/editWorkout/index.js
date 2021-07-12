@@ -176,12 +176,11 @@ class EditWorkout extends Component{
         } = this.formRef;
         
         this.setState({
-          completeData : [],
-          total_calories:0,
-          submitting:false,
-          days:[],
-          time:'',
-          deletedExerciseGroupIds:[]
+            completeData : [],
+            total_calories:0,
+            submitting:false,
+            time:'',
+            deletedExerciseGroupIds:[]
         });
         
         resetFields();
@@ -221,7 +220,7 @@ class EditWorkout extends Component{
         },
       } = this.formRef;
     
-      const {updateWorkout , payload 
+      const {updateWorkout , carePlanId : care_plan_id = null , payload 
         ,  addTemplateWorkout = null , editTemplateWorkout =null
       } = this.props;
       const { time = '', completeData : workout_exercise_groups = {} ,total_calories = 0 ,deletedExerciseGroupIds = [] } = this.state;
@@ -233,8 +232,6 @@ class EditWorkout extends Component{
       }
 
 
-      const {
-        carePlanId : care_plan_id = null } = this.props;
     
       const fomattedTime = moment(time).toISOString();
 
