@@ -58,7 +58,6 @@ class AddExercise extends Component{
         }else{
           const { all_workout_details : {  days = [] , start_time : {hours = '' ,minutes = '' } = {} } = {}  }= this.props;
           const time = moment(`${hours}:${minutes}`,'HH:mm A').toISOString();
-          console.log("984681263816312",{props:this.props});
           this.setState({days,time});
         }
 
@@ -89,7 +88,6 @@ class AddExercise extends Component{
           completeData : [],
           total_calories:0,
           submitting:false,
-          days:[],
           time:''
         });
         
@@ -134,19 +132,15 @@ class AddExercise extends Component{
 
       const validated = this.validateExerciseData();
 
-   
       if(!validated){
         return;
       }
-      
-      const {
-        addWorkout , 
-        carePlanId : care_plan_id = null } = this.props;
+
+
+      const {addWorkout , carePlanId : care_plan_id = null } = this.props;
       const {completeData : workout_exercise_groups = [] ,total_calories = 0 , time = '' } = this.state;
 
-
       const fomattedTime = moment(time).toISOString();
-
 
 
       validateFields(async (err, values) => {
