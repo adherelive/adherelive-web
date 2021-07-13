@@ -37,15 +37,140 @@ export const providerChart = async (req) => {
     try {
         const {userDetails: {userRoleId, userCategoryId: provider_id} = {}} = req;
         Log.info(`PROVIDER ID (provider_id) : ${provider_id}`);
-
         // get all doctors attached to provider
-        const doctorData = await doctorProviderMappingService.getAllDoctorIds(provider_id) || [];
+        // const doctorData = await doctorProviderMappingService.getAllDoctorIds(provider_id) || [];
 
-        Log.debug("doctorData", doctorData);
-        const doctorIds = doctorData.map(data => data.doctor_id);
-        Log.debug("doctorIds", doctorData);
-        return await getAllDataForDoctors({doctor_id, doctorIds, user_role_id: userRoleId, category: USER_CATEGORY.PROVIDER});
+        // Log.debug("doctorData", doctorData);
+        // const doctorIds = doctorData.map(data => data.doctor_id);
+
+        // Log.debug("doctorIds", doctorData);
+        let  allDoctorsData = {},
+        missed_medications={},
+        missed_appointments={},
+        missed_vitals={},
+        missed_diets={},
+        missed_workouts={},
+        medication_ids=[],
+        appointment_ids=[],
+        vital_ids=[],
+        diet_ids=[],
+        workout_ids=[]
+        ;
+
+        const {count = 0 ,rows = []} = await userRoleService.findAndCountAll({
+            where:{
+                linked_id:provider_id
+            },
+            attributes:['id']
+        });
+
+
+        if(count){
+            for(let each in rows){
+                const { id : user_role_id } = rows[each] || {};
+                const [response, responseMessage] = await getAllDataForDoctors({doctor_id:null, doctorIds:[], user_role_id, category: USER_CATEGORY.PROVIDER});
+                const {
+                    missed_medications: p_missed_medications={},
+                    medication_ids: {
+                        critical:p_medication_ids_critical=[],
+                        non_critical:p_medication_ids_non_critical=[]
+                    }={},
+                    missed_appointments: p_missed_appointments={},
+                    appointment_ids:{
+                        critical:p_appointment_ids_critical=[],
+                        non_critical:p_appointment_ids_non_critical=[]
+                    }={},
+                    missed_vitals: p_missed_vitals={},
+                    vital_ids:{
+                        critical:p_vital_ids_critical=[],
+                        non_critical:p_vital_ids_non_critical=[]
+                    }={},
+                    missed_diets: p_missed_diets={},
+                    diet_ids:{
+                        critical:p_diet_ids_critical=[],
+                        non_critical:p_diet_ids_non_critical=[]
+                    }={},
+                    missed_workouts: p_missed_workouts={},
+                    workout_ids: {
+                        critical:p_workout_ids_critical=[],
+                        non_critical:p_workout_ids_non_critical=[]
+                    }={},
+                    patients: p_patients={}
+                }=response || {};
+
+                const {
+                    missed_medications={},
+                    medication_ids: {
+                        critical:medication_ids_critical=[],
+                        non_critical:medication_ids_non_critical=[]
+                    }={},
+                    missed_appointments={},
+                    appointment_ids:{
+                        critical:appointment_ids_critical=[],
+                        non_critical:appointment_ids_non_critical=[]
+                    } = {},
+                    missed_vitals={},
+                    vital_ids:{
+                        critical:vital_ids_critical=[],
+                        non_critical:vital_ids_non_critical=[]
+                    }={},
+                    missed_diets={},
+                    diet_ids:{
+                        critical:diet_ids_critical=[],
+                        non_critical:diet_ids_non_critical=[]
+                    }={},
+                    missed_workouts={},
+                    workout_ids: {
+                        critical:workout_ids_critical=[],
+                        non_critical:workout_ids_non_critical=[]
+                    }={},
+                    patients={}
+                }=allDoctorsData || {};
+
+
+                allDoctorsData = {
+                    missed_medications:{...missed_medications, ...p_missed_medications},
+                    missed_appointments:{...missed_appointments,...p_missed_appointments},
+                    missed_vitals:{...missed_vitals,...p_missed_vitals},
+                    missed_diets:{...missed_diets,...p_missed_diets},
+                    missed_workouts:{...missed_workouts,...p_missed_workouts},
+
+                    medication_ids:{
+                        'critical':[...medication_ids_critical,...p_medication_ids_critical],
+                        'non_critical':[...medication_ids_non_critical,...p_medication_ids_non_critical]
+                    } ,
+                    appointment_ids:{
+                        'critical':[...appointment_ids_critical,...p_appointment_ids_critical],
+                        'non_critical':[...appointment_ids_non_critical,...p_appointment_ids_non_critical]
+                    } ,
+                    vital_ids:{
+                        'critical':[...vital_ids_critical,...p_vital_ids_critical],
+                        'non_critical':[...vital_ids_non_critical,...p_vital_ids_non_critical]
+                    } ,
+                    diet_ids:{
+                        'critical':[...diet_ids_critical,...p_diet_ids_critical],
+                        'non_critical':[...diet_ids_non_critical,...p_diet_ids_non_critical]
+                    } ,
+                    workout_ids:{
+                        'critical':[...workout_ids_critical,...p_workout_ids_critical],
+                        'non_critical':[...workout_ids_non_critical,...p_workout_ids_non_critical]
+                    } ,
+                    patients:{...patients,...p_patients}
+                }
+              
+
+                console.log("32462374627427423",{user_role_id,allDoctorsData,response});
+
+            }
+        }
+
+
+        return [
+            { ...allDoctorsData },
+            "Missed events fetched successfully"
+        ];
     } catch (error) {
+        Log.debug("8234872364862 providerChart catch error", error);
         throw error;
     }
 };

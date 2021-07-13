@@ -4,7 +4,9 @@ import {
   PERMISSIONS,
   MISSED_MEDICATION,
   MISSED_APPOINTMENTS,
-  MISSED_ACTIONS } from "../../../constant";
+  MISSED_ACTIONS ,
+  MISSED_DIET,
+  MISSED_WORKOUT} from "../../../constant";
 
 
 
@@ -30,6 +32,7 @@ const CHART_MISSED_MEDICATION = "Missed Medication";
 const CHART_MISSED_APPOINTMENT = "Missed Appointment";
 const CHART_MISSED_ACTION = "Missed Action";
 const CHART_MISSED_DIET = "Missed Diet";
+const CHART_MISSED_WORKOUT = "Missed Workout";
 
 
 class ProviderDoctorPage extends Component {
@@ -117,26 +120,37 @@ class ProviderDoctorPage extends Component {
       } else if (name === CHART_MISSED_MEDICATION) {
         const {openMissedMedicationDrawer} = this.props;
         openMissedMedicationDrawer();
-      } else if (name === CHART_MISSED_DIET) {
-        const {openMissedMedicationDrawer} = this.props;
-        openMissedMedicationDrawer();
+      }else if (name === CHART_MISSED_DIET) {
+        const {openMissedDietDrawer} = this.props;
+          openMissedDietDrawer();
+      }
+      else if (name === CHART_MISSED_WORKOUT ) {
+        const {openMissedWorkoutDrawer} = this.props;
+        openMissedWorkoutDrawer();
       }
     };
 
     renderChartTabs = () => {
-      const { graphs,dashboard={} } = this.props;
+      const { graphs,dashboard={},
+     } = this.props;
 
-      const {missed_medications={},medication_ids={},
-      missed_appointments={},appointment_ids={},
-      missed_vitals={},vital_ids={}} = dashboard;
+      const {medication_ids={},
+      appointment_ids={},
+      vital_ids={},
+      diet_ids={},
+      workout_ids={}} = dashboard;
 
       const {critical:medication_critical=[],non_critical:medication_non_critical=[]}=medication_ids;
       const {critical:vital_critical=[],non_critical:vital_non_critical=[]}=vital_ids;
       const {critical:appointment_critical=[],non_critical:appointment_non_critical=[]}=appointment_ids;
+      const {critical:diet_critical=[],non_critical:diet_non_critical=[]}=diet_ids;
+      const {critical:workout_critical=[],non_critical:workout_non_critical=[]}=workout_ids;
+
       const medication_total = medication_critical.length+medication_non_critical.length;
       const vital_total = vital_critical.length+vital_non_critical.length;
       const appointment_total = appointment_critical.length+appointment_non_critical.length;
-  
+      const diet_total = diet_critical.length + diet_non_critical.length;
+      const workout_total = workout_critical.length + workout_non_critical.length;
 
   
       const { graphsToShow, graphLoading } = this.state;
@@ -167,6 +181,12 @@ class ProviderDoctorPage extends Component {
         } else if(type === MISSED_ACTIONS){
            total = vital_total;
            critical = vital_critical.length;
+        } else if(type === MISSED_DIET){
+            total = diet_total;
+            critical = diet_critical.length;
+        } else if(type === MISSED_WORKOUT ){
+            total = workout_total;
+            critical = workout_critical.length;
         }
   
         return (

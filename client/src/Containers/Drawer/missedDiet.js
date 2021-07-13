@@ -8,7 +8,7 @@ import { DRAWER } from "../../constant";
 
 const mapStateToProps = state => {
   const {
-    auth: { authPermissions = [], authenticated_user = 1 } = {},
+    auth: { authPermissions = [], authenticated_user = 1 , authenticated_category } = {},
     drawer: { visible, loading, data: { type, payload = {} } = {} },
     patients={},
       pages: {dashboard: {missed_diets, diet_ids} = {}}
@@ -16,6 +16,7 @@ const mapStateToProps = state => {
   
   return {
     visible: visible && type === DRAWER.MISSED_DIET,
+    authenticated_category,
     loading,
     payload,
     authPermissions,

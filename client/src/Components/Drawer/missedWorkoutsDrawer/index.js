@@ -8,6 +8,7 @@ import {
 import MissedWorkoutCard from "../../Cards/patient/missedWorkout";
 
 import messages from "./message";
+import { USER_CATEGORY } from "../../../constant";
 
 class MissedWorkoutsDrawer extends Component {
   constructor(props) {
@@ -33,6 +34,12 @@ class MissedWorkoutsDrawer extends Component {
 
 
   handlePatientDetailsRedirect = patient_id => e => {
+    const {authenticated_category}=this.props;
+
+    if(authenticated_category === USER_CATEGORY.PROVIDER){
+      return;
+    }
+
     const { history } = this.props;
     this.onClose();
     history.push(`/patients/${patient_id}`);

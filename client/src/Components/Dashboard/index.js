@@ -335,12 +335,12 @@ class Dashboard extends Component {
       openMissedMedicationDrawer();
     } else if (name === CHART_MISSED_DIET) {
       const {openMissedDietDrawer} = this.props;
-      openMissedDietDrawer();
-  }
-  else if (name === CHART_MISSED_WORKOUT ) {
-    const {openMissedWorkoutDrawer} = this.props;
-    openMissedWorkoutDrawer();
-  }
+        openMissedDietDrawer();
+    }
+    else if (name === CHART_MISSED_WORKOUT ) {
+      const {openMissedWorkoutDrawer} = this.props;
+      openMissedWorkoutDrawer();
+    }
   };
 
 

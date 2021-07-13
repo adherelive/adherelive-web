@@ -6,6 +6,7 @@ import {
   Spin,
 } from "antd";
 import MissedMedicationCard from "../../Cards/patient/missedMedication";
+import {USER_CATEGORY} from "../../../constant";
 
 import messages from "./message";
 
@@ -66,6 +67,12 @@ class MissedMedicationsDrawer extends Component {
   // };
 
   handlePatientDetailsRedirect = patient_id => e => {
+    const {authenticated_category}=this.props;
+
+    if(authenticated_category === USER_CATEGORY.PROVIDER){
+      return;
+    }
+
     const { history } = this.props;
     this.onClose();
     history.push(`/patients/${patient_id}`);
