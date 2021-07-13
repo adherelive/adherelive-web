@@ -379,8 +379,6 @@ export const createDiet = async ({
           actor: {
             id: authUserId,
             user_role_id: authUserRole,
-            category: authCategory,
-            userCategoryData: authUserCategoryData,
             details: { name: full_name, category: authCategory },
           },
         });
@@ -506,8 +504,6 @@ export const createWorkout = async ({
           actor: {
             id: authUserId,
             user_role_id: authUserRole,
-            category: authCategory,
-            userCategoryData: authUserCategoryData,
             details: { name: full_name, category: authCategory },
           },
         });

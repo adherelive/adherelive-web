@@ -44,18 +44,7 @@ export const providerChart = async (req) => {
         // const doctorIds = doctorData.map(data => data.doctor_id);
 
         // Log.debug("doctorIds", doctorData);
-        let  allDoctorsData = {},
-        missed_medications={},
-        missed_appointments={},
-        missed_vitals={},
-        missed_diets={},
-        missed_workouts={},
-        medication_ids=[],
-        appointment_ids=[],
-        vital_ids=[],
-        diet_ids=[],
-        workout_ids=[]
-        ;
+        let  allDoctorsData = {} ;
 
         const {count = 0 ,rows = []} = await userRoleService.findAndCountAll({
             where:{
