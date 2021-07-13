@@ -36,6 +36,26 @@ const messages = defineMessages({
         description: "",
         defaultMessage: "Completed Vital"
     },
+    missed_diet: {
+        id: "app.patients.common.alert.missed.diet",
+        description: "",
+        defaultMessage: "Missed Diet"
+    },
+    completed_diet: {
+        id: "app.patients.common.alert.completed.diet",
+        description: "",
+        defaultMessage: "Completed Diet"
+    },
+    missed_workout: {
+        id: "app.patients.common.alert.missed.workout",
+        description: "",
+        defaultMessage: "Missed Workout"
+    },
+    completed_workout: {
+        id: "app.patients.common.alert.completed.workout",
+        description: "",
+        defaultMessage: "Completed Workout"
+    },
     symptom_added_text: {
         id: "app.patients.common.alert.symptom.added.text",
         description: "",

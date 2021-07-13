@@ -29,7 +29,7 @@ class EventController extends Controller {
       Log.debug("req.params", req.params);
       const { params: { patient_id } = {}, userDetails: { userRoleId =null , userData: {category}, userCategoryId} = {} } = req;
       const EventService = new eventService();
-      let carePlan = null , vital_ids = [] , appointment_ids =[] , medication_ids = [] ;
+      let carePlan = null , vital_ids = [] , appointment_ids =[] , medication_ids = [] , diet_ids = [] , workout_ids = []  ;
 
       const carePlanData = await CarePlanService.getSingleCarePlanByData({
         patient_id,
@@ -38,12 +38,15 @@ class EventController extends Controller {
 
       if(carePlanData){
         carePlan = await CarePlanWrapper(carePlanData);
-        const { vital_ids :cPvital_ids = [], appointment_ids :cPappointment_ids = [], medication_ids :cPmedication_ids = [] } =
+        const { vital_ids :cPvital_ids = [], appointment_ids :cPappointment_ids = [], medication_ids :cPmedication_ids = [] , 
+          diet_ids : cPdiet_ids = [], workout_ids : cPworkout_ids = [] } =
           (await carePlan.getAllInfo()) || {};
         
         vital_ids = cPvital_ids;
         appointment_ids = cPappointment_ids ;
         medication_ids = cPmedication_ids;  
+        diet_ids = cPdiet_ids;
+        workout_ids = cPworkout_ids;
       }
 
       let symptomData = {};
@@ -95,10 +98,32 @@ class EventController extends Controller {
         sort: "DESC"
       });
 
+      const dietEvents = await EventService.getLastVisitData({
+        event_id: diet_ids,
+        event_type: EVENT_TYPE.DIET,
+        date: moment()
+          .subtract(7, "days")
+          .utc()
+          .toISOString(),
+        sort: "DESC"
+      });
+
+      const workoutEvents = await EventService.getLastVisitData({
+        event_id: workout_ids,
+        event_type: EVENT_TYPE.WORKOUT,
+        date: moment()
+          .subtract(7, "days")
+          .utc()
+          .toISOString(),
+        sort: "DESC"
+      });
+
       let scheduleEvents = [
         ...vitalEvents,
         ...appointmentEvents,
-        ...medicationEvents
+        ...medicationEvents,
+        ...dietEvents,
+        ...workoutEvents
       ];
 
       if (scheduleEvents.length > 0) {

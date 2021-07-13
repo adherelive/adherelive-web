@@ -113,8 +113,48 @@ class PatientAlerts extends Component {
     };
 
 
+    getDiets = ({data, time}) => {
+        const {intl: {formatMessage} = {}} = this.props;
+        const {status} = data || {};
+        const {details:{diets = {} , diet_id = null } = {}} = data || {};
+        const { basic_info:{name=''}={} }=diets[diet_id] || {}
+        return (
+            <div key={`diet-${time}`} className="wp100 flex align-center pt10 pb10 pl6 pr6 tal">
+                {status === EVENT_STATUS.EXPIRED ? (
+                    <div className="wp30 pl16 fw600 bl-warning-red">{formatMessage(messages.missed_diet)}</div>
+                ) : (
+                    <div className="wp30 pl16 fw600 bl-green">{formatMessage(messages.completed_diet)}</div>
+                )}
+                <div className="wp50 fw600">{`${moment(time).format("DD MMM, YYYY")} (${moment(time).format("LT")})`}</div>
+                <div className="wp20 fw500 word-wrap">{`(${name})`}</div>
+            </div>
+
+           
+        );
+    };
+
+
+
+    getWorkouts = ({data, time}) => {
+        const {intl: {formatMessage} = {}} = this.props;
+        const {status} = data || {};
+        const {details:{workouts = {} , workout_id = null } = {}} = data || {};
+        const { basic_info:{name=''}={} }=workouts[workout_id] || {}
+        return (
+            <div key={`workout-${time}`} className="wp100 flex align-center pt10 pb10 pl6 pr6 tal">
+            {status === EVENT_STATUS.EXPIRED ? (
+                <div className="wp30 pl16 fw600 bl-warning-red">{formatMessage(messages.missed_workout)}</div>
+            ) : (
+                <div className="wp30 pl16 fw600 bl-green">{formatMessage(messages.completed_workout)}</div>
+            )}
+            <div className="wp50 fw600">{`${moment(time).format("DD MMM, YYYY")} (${moment(time).format("LT")})`}</div>
+            <div className="wp20 fw500 word-wrap">{`(${name})`}</div>
+        </div>
+        );
+    };
+
     getScheduleEvent = ({data, time}) => {
-        const {getMedication, getVitals, getAppointment} = this;
+        const {getMedication, getVitals, getAppointment , getDiets , getWorkouts} = this;
         const {event_type} = data || {};
 
         switch(event_type) {
@@ -124,6 +164,10 @@ class PatientAlerts extends Component {
                 return getAppointment({data, time});
             case EVENT_TYPE.VITALS:
                 return getVitals({data, time});
+            case EVENT_TYPE.DIET:
+                return getDiets ({data, time});
+            case EVENT_TYPE.WORKOUT:
+                return getWorkouts({data, time});
 
         }
     }
