@@ -11,6 +11,8 @@ import {
 import MissedAppointmentsDrawer from "../../../Containers/Drawer/missedAppointment";
 import MissedVitalsDrawer from "../../../Containers/Drawer/missedVital";
 import MissedMedicationsDrawer from "../../../Containers/Drawer/missedMedication";
+import MissedDietsDrawer from "../../../Containers/Drawer/missedDiet";
+import MissedWorkoutsDrawer from "../../../Containers/Drawer/missedWorkout";
 
 // antd components
 import Button from "antd/es/button";
@@ -27,6 +29,7 @@ import Donut from "../../Common/graphs/donut";
 const CHART_MISSED_MEDICATION = "Missed Medication";
 const CHART_MISSED_APPOINTMENT = "Missed Appointment";
 const CHART_MISSED_ACTION = "Missed Action";
+const CHART_MISSED_DIET = "Missed Diet";
 
 
 class ProviderDoctorPage extends Component {
@@ -112,6 +115,9 @@ class ProviderDoctorPage extends Component {
         const {openMissedVitalDrawer} = this.props;
         openMissedVitalDrawer();
       } else if (name === CHART_MISSED_MEDICATION) {
+        const {openMissedMedicationDrawer} = this.props;
+        openMissedMedicationDrawer();
+      } else if (name === CHART_MISSED_DIET) {
         const {openMissedMedicationDrawer} = this.props;
         openMissedMedicationDrawer();
       }
@@ -267,6 +273,10 @@ class ProviderDoctorPage extends Component {
         <MissedVitalsDrawer/>
 
         <MissedMedicationsDrawer />
+
+        <MissedDietsDrawer/>
+
+        <MissedWorkoutsDrawer/>
 
            
    </div>

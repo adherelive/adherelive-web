@@ -16,6 +16,8 @@ import EventWrapper from "../../ApiWrapper/common/scheduleEvents";
 import PatientWrapper from "../../ApiWrapper/web/patient";
 import DoctorWrapper from "../../ApiWrapper/web/doctor";
 import UserRoleWrapper from "../../ApiWrapper/web/userRoles";
+import DietWrapper from "../../ApiWrapper/web/diet";
+import WorkoutWrppaer from "../../ApiWrapper/web/workouts";
 
 export const doctorChart = async req => {
     try {
@@ -180,8 +182,6 @@ const getFormattedData = async (events = [], category = USER_CATEGORY.DOCTOR) =>
                 workouts : event_workouts = {},
                 workout_id = null, 
                 diet_id = null,
-                participants=[],
-                actor={}
             } = {},
             critical
         } = event.getAllInfo();
@@ -294,15 +294,10 @@ const getFormattedData = async (events = [], category = USER_CATEGORY.DOCTOR) =>
 
             case EVENT_TYPE.DIET:
 
-                const {user_role_id=null} = actor || {};
-
-                let patientId = null;
-                for(let pId of participants){
-                    if(pId.toString() !== user_role_id.toString() ){
-                        patientId=pId;
-                        break;
-                    }
-                }
+                const dietWrapper = await DietWrapper({id:diet_id});
+                const careplan_id = await dietWrapper.getCareplanId();
+                const careplanWrapper = await CarePlanWrapper(null,careplan_id);
+                const patientId = await careplanWrapper.getPatientId();
 
                 const { basic_info:{name :diet_name =''}={} } = event_diets[diet_id] || {};
                 if (!(event.getEventId() in diets)) {
@@ -312,7 +307,7 @@ const getFormattedData = async (events = [], category = USER_CATEGORY.DOCTOR) =>
                     const timings = {};
                     timings[event.getDate()] = [];
                     timings[event.getDate()].push({start_time, end_time});
-                    diets[event.getEventId()] = {  diet_name, participant_id:patientId , timings};
+                    diets[event.getEventId()] = {  diet_name, participant_id:patientId , timings, critical};
                 } else {
                     const {timings} = diets[event.getEventId()] || {};
                     if (!Object.keys(timings).includes(event.getDate())) {
@@ -336,16 +331,12 @@ const getFormattedData = async (events = [], category = USER_CATEGORY.DOCTOR) =>
 
 
             case EVENT_TYPE.WORKOUT:
+        
+                const workoutWrapper = await WorkoutWrppaer({id:workout_id});
+                const workout_careplan_id = await workoutWrapper.getCareplanId();
+                const workoutCareplanWrapper = await CarePlanWrapper(null,workout_careplan_id);
+                const workoutPatientId = await workoutCareplanWrapper.getPatientId();
 
-                const {user_role_id : workout_user_role_id=null} = actor || {};
-
-                let workoutPatientId = null;
-                for(let pId of participants){
-                    if(pId.toString() !== workout_user_role_id.toString() ){
-                        workoutPatientId=pId;
-                        break;
-                    }
-                }
 
                 const { basic_info : { name : workout_name = '' } = {} } = event_workouts[workout_id] || {};
                 if (!(event.getEventId() in workouts)) {
@@ -355,7 +346,7 @@ const getFormattedData = async (events = [], category = USER_CATEGORY.DOCTOR) =>
                     const timings = {};
                     timings[event.getDate()] = [];
                     timings[event.getDate()].push({start_time, end_time});
-                    workouts[event.getEventId()] = { workout_name, participant_id:workoutPatientId , timings};
+                    workouts[event.getEventId()] = { workout_name, participant_id:workoutPatientId , timings, critical};
                 } else {
                     const {timings} = workouts[event.getEventId()] || {};
                     if (!Object.keys(timings).includes(event.getDate())) {

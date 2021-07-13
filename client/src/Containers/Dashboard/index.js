@@ -91,7 +91,11 @@ const mapDispatchToProps = dispatch => {
     dispatch(open({ type: DRAWER.MISSED_VITAL})),
     getAllMissedScheduleEvents: () => dispatch(getAllMissedScheduleEvents()),
     setUnseenNotificationCount : (count) => dispatch(setUnseenNotificationCount(count)),
-    getAllDietsForDoctor:() => dispatch(getAllDietsForDoctor())
+    getAllDietsForDoctor:() => dispatch(getAllDietsForDoctor()),
+    openMissedDietDrawer: () =>
+    dispatch(open({ type: DRAWER.MISSED_DIET})),
+    openMissedWorkoutDrawer: () =>
+    dispatch(open({ type: DRAWER.MISSED_WORKOUT})),
   };
 };
 
