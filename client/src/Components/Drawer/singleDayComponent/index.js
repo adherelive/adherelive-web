@@ -2,7 +2,8 @@ import React , { Component , Fragment } from "react";
 import { injectIntl } from "react-intl";
 import {
     WAKE_UP ,
-    MEAL_TIMINGS
+    MEAL_TIMINGS,
+    PATIENT_MEAL_TIMINGS
   } from "../../../constant";
 
 import AddFoodGroupDrawer from "../../../Containers/Drawer/addFoodGroup";
@@ -210,8 +211,12 @@ class DayDiet extends Component{
     getTimingOptions = () => {
       
       let options = [];
-      const {  completeData : singleDayData  , timings = {}} = this.props;
-        console.log("68723648263846284623 =====>>> ",{timings});
+      let {  completeData : singleDayData  , timings = {} } = this.props;
+
+        if(Object.keys(timings).length === 0){
+          timings=PATIENT_MEAL_TIMINGS; // default 
+        }
+
        for(let each of ALL_TIMINGS){
          const { text = '',time='' } = timings[each] || {};
          const formattedTime =  moment(time).format("hh:mm A");
