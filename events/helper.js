@@ -29,6 +29,8 @@ import {
   WITH_LUNCH,
   WITH_DINNER,
   WITH_BREAKFAST,
+  PATIENT_MEAL_TIMINGS,
+  MID_MORNING,
 } from "../constant";
 
 import FeatureDetailWrapper from "../app/ApiWrapper/web/featureDetails";
@@ -294,7 +296,7 @@ export const handleDiet = async (data) => {
       const { mappingIds = [] } = timeData || {};
       // const day_text = DAYS_TEXT[day];
       const repeat_days = details_repeat_days || [];
-      const { text = "" } = MEDICATION_TIMING[time];
+      const { text = "" } = PATIENT_MEAL_TIMINGS[time];
 
       let eventDetails = {
         repeat_days,
@@ -331,11 +333,7 @@ export const handleDiet = async (data) => {
       const allDays = rrule.all();
       const patientPreference = await getUserPreferences(patient_id);
       for (let i = 0; i < allDays.length; i++) {
-        const startTime = updateMedicationTiming(
-          allDays[i],
-          time,
-          patientPreference
-        );
+        const startTime = getDietTimings(allDays[i], time, patientPreference);
 
         scheduleEventArr.push({
           event_id,
@@ -821,6 +819,13 @@ const getBreakfast = (timings) => {
   return { hours, minutes };
 };
 
+const getMidMorning = (timings) => {
+  const { value } = timings[MID_MORNING] || {};
+  const hours = moment(value).hours();
+  const minutes = moment(value).minutes();
+  return { hours, minutes };
+};
+
 const getLunch = (timings) => {
   const { value } = timings[LUNCH] || {};
   const hours = moment(value).hours();
@@ -847,6 +852,55 @@ const getSleep = (timings) => {
   const hours = moment(value).hours();
   const minutes = moment(value).minutes();
   return { hours, minutes };
+};
+
+const getDietTimings = (date, timing, patientPreference) => {
+  switch (timing) {
+    case WAKE_UP:
+      const { hours: wakeupHour, minutes: wakeupMinute } =
+        getWakeUp(patientPreference) || {};
+      return moment(date)
+        .set("hours", wakeupHour)
+        .set("minutes", wakeupMinute);
+    case BREAKFAST:
+      const { hours: breakfastHour, minutes: breakfastMinute } =
+        getBreakfast(patientPreference) || {};
+      return moment(date)
+        .set("hours", breakfastHour)
+        .set("minutes", breakfastMinute);
+    case MID_MORNING:
+      const { hours: midMorningHour, minutes: midMorningMinute } =
+        getMidMorning(patientPreference) || {};
+      return moment(date)
+        .set("hours", midMorningHour)
+        .set("minutes", midMorningMinute);
+    case LUNCH:
+      const { hours: lunchHour, minutes: lunchMinute } =
+        getLunch(patientPreference) || {};
+      return moment(date)
+        .set("hours", lunchHour)
+        .set("minutes", lunchMinute);
+    case EVENING:
+      const { hours: eveningHour, minutes: eveningMinute } =
+        getEvening(patientPreference) || {};
+      return moment(date)
+        .set("hours", eveningHour)
+        .set("minutes", eveningMinute);
+    case DINNER:
+      const { hours: dinnerHour, minutes: dinnerMinute } =
+        getLunch(patientPreference) || {};
+      return moment(date)
+        .set("hours", dinnerHour)
+        .set("minutes", dinnerMinute);
+    case SLEEP:
+      const { hours: sleepHour, minutes: sleepMinute } =
+        getLunch(patientPreference) || {};
+      return moment(date)
+        .set("hours", sleepHour)
+        .set("minutes", sleepMinute);
+    default:
+      return moment(date);
+  }
 };
 
 const updateMedicationTiming = (date, timing, patientPreference) => {

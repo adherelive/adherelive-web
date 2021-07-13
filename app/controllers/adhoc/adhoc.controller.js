@@ -306,7 +306,9 @@ class AdhocController extends Controller {
               timings
           } = {}} = patientPreference || {};
 
-          const newTimings = {...timings, [MID_MORNING]: PATIENT_MEAL_TIMINGS[MID_MORNING]};
+          const {value} = PATIENT_MEAL_TIMINGS[MID_MORNING];
+
+          const newTimings = {...timings, [MID_MORNING]: {value}};
 
           await userPreferenceService.updateUserPreferenceData({
               details: {timings: newTimings}

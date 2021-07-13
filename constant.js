@@ -903,28 +903,45 @@ export const SLEEP = "6";
 // added 12/7/21
 export const MID_MORNING = "7";
 
+export const MEAL_TIMINGS = [
+  WAKE_UP,
+  BREAKFAST,
+  MID_MORNING,
+  LUNCH,
+  EVENING,
+  DINNER,
+  SLEEP
+];
+
 export const PATIENT_MEAL_TIMINGS = {
   [WAKE_UP]: {
     value: "2020-09-24T08:00:00+05:30",
+    text: "Wake Up"
   },
   [BREAKFAST]: {
     value: "2020-09-24T09:00:00+05:30",
+    text: "Breakfast"
   },
   [LUNCH]: {
     value: "2020-09-24T13:00:00+05:30",
+    text: "Lunch"
   },
   [EVENING]: {
     value: "2020-09-24T16:00:00+05:30",
+    text: "Evening Snacks"
   },
   [DINNER]: {
     value: "2020-09-24T20:00:00+05:30",
+    text: "Dinner"
   },
   [SLEEP]: {
     value: "2020-09-24T23:00:00+05:30",
+    text: "Sleep"
   },
   // added 12/7/21
   [MID_MORNING]: {
     value: "2020-09-24T11:00:00+05:30",
+    text: "Mid Morning"
   },
 };
 
