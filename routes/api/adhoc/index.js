@@ -22,5 +22,11 @@ router.post(
     adhocController.testApi
 );
 
+router.post(
+    "/patient/update-timings",
+    Authenticated,
+    adhocController.updatePatientTimings
+);
+
   
 module.exports = router;

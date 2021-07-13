@@ -28,6 +28,7 @@ import {
   MEDICATION_TIMING,
   WITH_LUNCH,
   WITH_DINNER,
+  WITH_BREAKFAST,
 } from "../constant";
 
 import FeatureDetailWrapper from "../app/ApiWrapper/web/featureDetails";
@@ -384,7 +385,7 @@ export const handleWorkout = async (workout) => {
 
     const workoutInstance = await WorkoutWrapper({ id: event_id });
 
-    const { workouts = {} } = await workoutInstance.getReferenceInfo() || {};
+    const { workouts = {} } = (await workoutInstance.getReferenceInfo()) || {};
     const { repeat_days } = workoutInstance.getDetails();
 
     const rrule = new RRule({
@@ -532,7 +533,6 @@ export const handleVitals = async (vital) => {
       }
     } else {
       for (let i = 0; i < allDays.length; i++) {
-        
         const { value: wakeUpTime } = timings[WAKE_UP];
         const { value: sleepTime } = timings[SLEEP];
 
@@ -748,8 +748,8 @@ export const handleAppointmentsTimeAssignment = async (appointment) => {
       actor: {
         id: participant_one_id,
         user_role_id,
-        category: participant_one_type
-      }
+        category: participant_one_type,
+      },
     };
 
     const sqsResponse = await QueueService.sendMessage(eventScheduleData);
