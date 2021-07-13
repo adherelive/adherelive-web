@@ -31,6 +31,19 @@ class AddExercise extends Component{
       await this.getAllWorkoutDetails();
     }
 
+    async componentDidUpdate(prevProps,prevState){
+      
+      const {visible = false  } = this.props;
+      const { visible : prev_visible = false } = prevProps;
+      
+      if(visible && visible !== prev_visible){
+        await this.getAllWorkoutDetails();
+        
+      }
+
+
+    }
+
 
     getAllWorkoutDetails = async() => {
       try{
@@ -74,7 +87,8 @@ class AddExercise extends Component{
         this.setState({
           completeData : [],
           total_calories:0,
-          submitting:false
+          submitting:false,
+          time:''
         });
         
         resetFields();

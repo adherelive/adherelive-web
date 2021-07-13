@@ -5,7 +5,8 @@ import { addDietUrl ,
     getDietDetailsByIdUrl , 
     updateDietUrl ,
     getAllDietsForDoctorUrl,
-    getDietTimelineUrl } from "../../Helper/urls/diet";
+    getDietTimelineUrl,
+    getPatientPreferenceDietDetailsUrl } from "../../Helper/urls/diet";
 
 export const ADD_DIET_START = "ADD_DIET_START";
 export const ADD_DIET_COMPLETED = "ADD_DIET_COMPLETED";
@@ -35,6 +36,11 @@ export const GET_DIET_TIMELINE_START = "GET_DIET_TIMELINE_START";
 export const GET_DIET_TIMELINE_COMPLETED = "GET_DIET_TIMELINE_COMPLETED";
 export const GET_DIET_TIMELINE_FAILED = "GET_DIET_TIMELINE_FAILED";
 
+export const GET_PATEINT_PREFERENCE_DIET_DETAILS_START = "GET_PATEINT_PREFERENCE_DIET_DETAILS_START";
+export const GET_PATEINT_PREFERENCE_DIET_DETAILS_COMPLETED = "GET_PATEINT_PREFERENCE_DIET_DETAILS_COMPLETED";
+export const GET_PATEINT_PREFERENCE_DIET_DETAILS_FAILED = "GET_PATEINT_PREFERENCE_DIET_DETAILS_FAILED";
+
+
 export const addDiet = (payload) => {
     let response = {};
     return async dispatch => {
@@ -63,6 +69,34 @@ export const addDiet = (payload) => {
         return response;
     }
 };
+
+export const getPatientPreferenceDietDetails = (patient_id) => {
+    let response = {};
+    return async dispatch => {
+        try {
+            response = await doRequest({
+                method: REQUEST_TYPE.GET,
+                url: getPatientPreferenceDietDetailsUrl(patient_id)
+            });
+
+            const { status, payload: { data, message = "" } = {} } = response || {};
+            if (status === true) {
+                dispatch({
+                    type: GET_PATEINT_PREFERENCE_DIET_DETAILS_COMPLETED,
+                    data
+                });
+            } else {
+                dispatch({
+                    type: GET_PATEINT_PREFERENCE_DIET_DETAILS_FAILED,
+                    message
+                });
+            }
+        } catch (error) {
+            console.log("GET_PATEINT_PREFERENCE_DIET_DETAILS MODULE catch error -> ", error);
+        }
+        return response;
+    }
+}
 
 export const updateDiet = (payload,diet_id) => {
     let response = {};

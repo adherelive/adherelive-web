@@ -178,7 +178,9 @@ class EditWorkout extends Component{
         this.setState({
             completeData : [],
             total_calories:0,
-            submitting:false
+            submitting:false,
+            time:'',
+            deletedExerciseGroupIds:[]
         });
         
         resetFields();

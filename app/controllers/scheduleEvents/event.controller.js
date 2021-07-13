@@ -334,12 +334,20 @@ class EventController extends Controller {
       let vitalCritical = [];
       let vitalNonCritical = [];
 
+      let dietCritical = [];
+      let dietNonCritical = [];
+
+      let workoutCritical = [];
+      let workoutNonCritical = [];
+
       for (let index = 0; index < carePlans.length; index++) {
         const carePlan = await CarePlanWrapper(carePlans[index]);
         const {
           appointment_ids,
           medication_ids,
-          vital_ids
+          vital_ids,
+          diet_ids,
+          workout_ids
         } = await carePlan.getAllInfo();
 
         // get appointment count
@@ -419,6 +427,65 @@ class EventController extends Controller {
             vitalNonCritical.push(id);
           }
         }
+
+
+        // get diets count 
+        for (let id of diet_ids) {
+          const criticalDiet =
+            (await EventService.getCount({
+              event_type: EVENT_TYPE.DIET,
+              event_id: id,
+              status: EVENT_STATUS.EXPIRED,
+              critical: true
+            })) || 0;
+
+          const nonCriticalDiet =
+            (await EventService.getCount({
+              event_type: EVENT_TYPE.DIET,
+              event_id: id,
+              status: EVENT_STATUS.EXPIRED,
+              critical: false
+            })) || 0;
+
+          console.log("864283648276487264872647862",{id,criticalDiet,nonCriticalDiet});
+
+
+          if (criticalDiet > 0) {
+            dietCritical.push(id);
+          }
+          if (nonCriticalDiet > 0) {
+            dietNonCritical.push(id);
+          }
+        }
+
+
+         // get workouts count 
+         for (let id of workout_ids) {
+          const criticalWorkout =
+            (await EventService.getCount({
+              event_type: EVENT_TYPE.WORKOUT,
+              event_id: id,
+              status: EVENT_STATUS.EXPIRED,
+              critical: true
+            })) || 0;
+
+          const nonCriticalWorkout =
+            (await EventService.getCount({
+              event_type: EVENT_TYPE.WORKOUT,
+              event_id: id,
+              status: EVENT_STATUS.EXPIRED,
+              critical: false
+            })) || 0;
+
+          if (criticalWorkout > 0) {
+            workoutCritical.push(id);
+          }
+          if (nonCriticalWorkout > 0) {
+            workoutNonCritical.push(id);
+          }
+        }
+
+        
       }
 
       // symptoms
@@ -441,6 +508,14 @@ class EventController extends Controller {
           missed_vitals: {
             critical: vitalCritical.length,
             non_critical: vitalNonCritical.length
+          },
+          missed_diets: {
+            critical: dietCritical.length,
+            non_critical: dietNonCritical.length
+          },
+          missed_workouts: {
+            critical: workoutCritical.length,
+            non_critical: workoutNonCritical.length
           },
           missed_symptoms: {
             critical: 0,

@@ -4,7 +4,7 @@ const message = defineMessages({
   add_food_group: {
     id: "app.drawer.add.food.group.title",
     description: "",
-    defaultMessage: "Add Food Group"
+    defaultMessage: "Add Food Item"
   },
   food_item: {
     id: "app.drawer.add.food.group.name",

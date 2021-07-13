@@ -1,19 +1,8 @@
 import React , { Component , Fragment } from "react";
 import { injectIntl } from "react-intl";
 import {
-    MEDICATION_TIMING,
-    AFTER_WAKEUP,
-    BEFORE_BREAKFAST,
-    AFTER_BREAKFAST,
-    BEFORE_LUNCH,
-    WITH_LUNCH,
-    AFTER_LUNCH,
-    BEFORE_EVENING_SNACK,
-    AFTER_EVENING_SNACK,
-    BEFORE_DINNER,
-    WITH_DINNER ,
-    AFTER_DINNER ,
-    BEFORE_SLEEP 
+    WAKE_UP ,
+    MEAL_TIMINGS
   } from "../../../constant";
 
 import AddFoodGroupDrawer from "../../../Containers/Drawer/addFoodGroup";
@@ -22,9 +11,9 @@ import PlusOutlined from "@ant-design/icons/PlusOutlined"
 import messages from "./messages";
 import edit_image from "../../../Assets/images/edit.svg";
 import DeleteOutlined from "@ant-design/icons/DeleteOutlined";
+import moment from "moment";
 
-const ALL_TIMINGS = [AFTER_WAKEUP,BEFORE_BREAKFAST,AFTER_BREAKFAST,BEFORE_LUNCH,WITH_LUNCH,AFTER_LUNCH,
-    BEFORE_EVENING_SNACK,AFTER_EVENING_SNACK,BEFORE_DINNER,WITH_DINNER,AFTER_DINNER,BEFORE_SLEEP];    
+const ALL_TIMINGS = MEAL_TIMINGS;    
 
 
 class DayDiet extends Component{
@@ -32,7 +21,7 @@ class DayDiet extends Component{
         super(props);
       
         this.state={
-            selectedTime:AFTER_WAKEUP,
+            selectedTime:WAKE_UP,
             addFoodGroupDrawerVisible:false,
             editFoodGroupDrawerVisible:false,
             editFoodGroupDetails:{},
@@ -221,10 +210,11 @@ class DayDiet extends Component{
     getTimingOptions = () => {
       
       let options = [];
-      const {  completeData : singleDayData } = this.props;
-      
+      const {  completeData : singleDayData  , timings = {}} = this.props;
+        console.log("68723648263846284623 =====>>> ",{timings});
        for(let each of ALL_TIMINGS){
-         const { text = '' } = MEDICATION_TIMING[each];
+         const { text = '',time='' } = timings[each] || {};
+         const formattedTime =  moment(time).format("hh:mm A");
          
          const singleTimeData =  singleDayData[each] || [] ;
          let allFoodItems = [];
@@ -313,7 +303,11 @@ class DayDiet extends Component{
  
          options.push(
            <div className="tal wp100 mt20 " >
-             <div className="fs14 fw700 mb10" >{text}</div>
+             <div className="fs14 fw700 mb10" > {
+             this.props.intl.formatMessage({...messages.timeOptions},
+              {
+               text,formattedTime
+              })}</div>
              <div className="b-light-grey wp100 mh40 flex direction-column align-center p10 br4 " >
  
                    <div className=" pointer tab-color tal fw700 wp100 " 

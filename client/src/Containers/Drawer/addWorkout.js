@@ -6,11 +6,12 @@ import { open } from "../../modules/drawer";
 import { DRAWER } from "../../constant";
 import { getWorkoutDetails , addWorkout } from "../../modules/workouts";
 import { addExercise } from "../../modules/exercises";
+
 // import { addDiet } from "../../modules/diets";
 
 const mapStateToProps = state => {
     const { auth } = state;
-    const { authenticated_user, authenticated_category } = auth;
+    const { authenticated_user, authenticated_category,auth_role } = auth;
     const {
         drawer: { visible, loading, data: { type, payload = {} } = {} },
         repetitions, 
@@ -19,13 +20,15 @@ const mapStateToProps = state => {
         exercise_details,
         searched_exercises,
         searched_exercise_details,
-        all_workout_details = {}
+        all_workout_details = {},
     } = state;
 
 
+    
     return {
         authenticated_user,
         authenticated_category,
+        auth_role,
         visible: visible && type === DRAWER.ADD_WORKOUT,
         loading,
         payload,
@@ -35,7 +38,7 @@ const mapStateToProps = state => {
         exercise_details,
         searched_exercises,
         searched_exercise_details,
-        all_workout_details
+        all_workout_details,
     };
 };
 
