@@ -19,6 +19,7 @@ class EditDiet extends Component{
             submitting:false,
             initialFormData:{},
             loading:false,
+            timings:{},
             deletedFoodGroupIds:[]
         }
 
@@ -52,8 +53,9 @@ class EditDiet extends Component{
       const { isDietVisible = false,visible = false,dietData={}  } = this.props;
       const { isDietVisible:prev_isDietVisible=false,visible : prev_visible = false } = prevProps;
       if(visible && visible !== prev_visible){
-
+        await this.setPatientPreferenceTimings();
         await this.getDietDetails();
+        
 
       }
 
@@ -70,6 +72,31 @@ class EditDiet extends Component{
       }
 
 
+    }
+
+
+    setPatientPreferenceTimings = async() => {
+      try{
+        this.setState({loading:true});
+        const {getPatientPreferenceDietDetails , payload : {patient_id = null } = {}}=this.props;
+        const response = await getPatientPreferenceDietDetails(patient_id);
+        const {status,payload:{data:resp_data={},message:resp_msg=''} ={} } = response;
+        if(!status){
+          message.error(resp_msg);
+       
+        }else{
+          const { timings = {} } = resp_data || {};  
+          this.setState({ timings });
+        }
+
+      
+        this.setState({loading:false});
+
+      }catch(error){
+
+        this.setState({loading:false});
+        console.log("error => ",error);
+      }
     }
 
     setDeletedFoodGroupId = (id) => {
@@ -168,6 +195,7 @@ class EditDiet extends Component{
           submitting:false,
           initialFormData:{},
           loading:false,
+          timings:{},
           deletedFoodGroupIds:[]
         });
         
@@ -326,7 +354,7 @@ class EditDiet extends Component{
     getDietComponent = () => {
 
       const {setFinalDayData , setNewTotalCal ,setDeletedFoodGroupId } = this;
-      const { completeData = {} , total_calories=0 } = this.state;
+      const { completeData = {} , total_calories=0,timings={} } = this.state;
       
       return (
           <div>
@@ -341,6 +369,7 @@ class EditDiet extends Component{
                 setDeletedFoodGroupId={setDeletedFoodGroupId}
                 completeData = {completeData}
                 total_calories={total_calories}
+                timings={timings}
                 {...this.props}
             />
           </div>

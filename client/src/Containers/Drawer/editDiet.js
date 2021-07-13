@@ -5,7 +5,7 @@ import { close } from "../../modules/drawer";
 import { DRAWER } from "../../constant";
 import { getPortions } from "../../modules/portions";
 import { addFoodItem} from "../../modules/foodItems";
-import { updateDiet , getSingleDietData, deleteDiet } from "../../modules/diets";
+import { updateDiet , getSingleDietData, deleteDiet , getPatientPreferenceDietDetails } from "../../modules/diets";
 import { getPatientCarePlanDetails } from "../../modules/carePlans";
 
 const mapStateToProps = state => {
@@ -46,7 +46,7 @@ const mapDispatchToProps = dispatch => {
         getSingleDietData : (id) => dispatch(getSingleDietData(id)),
         deleteDiet : (id) => dispatch(deleteDiet(id)),
         getPatientCarePlanDetails: (patientId) => dispatch(getPatientCarePlanDetails(patientId)),
-
+        getPatientPreferenceDietDetails : (patient_id) => dispatch(getPatientPreferenceDietDetails(patient_id))
     };
 };
 

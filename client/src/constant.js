@@ -1876,3 +1876,21 @@ export const VIDEO_TYPES = {
   UPLOAD: "upload",
   NONE: "none"
 };
+
+
+export const WAKE_UP = "1";
+export const BREAKFAST = "2";
+export const LUNCH = "3";
+export const EVENING = "4";
+export const DINNER = "5";
+export const SLEEP = "6";
+export const MID_MORNING = "7";
+export const MEAL_TIMINGS = [
+  WAKE_UP,
+  BREAKFAST,
+  MID_MORNING,
+  LUNCH,
+  EVENING,
+  DINNER,
+  SLEEP
+];

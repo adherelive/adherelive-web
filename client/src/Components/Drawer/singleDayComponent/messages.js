@@ -16,6 +16,11 @@ const messages = defineMessages({
         description: "",
         defaultMessage: "Note"
     },
+    timeOptions: {
+        id: "app.single.day.comp.timeOptions",
+        description: "",
+        defaultMessage: "{text} ({formattedTime})"
+    },
 });
 
 export default messages;
