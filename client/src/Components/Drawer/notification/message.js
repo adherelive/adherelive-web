@@ -159,7 +159,7 @@ const messages = defineMessages({
     workoutResponseAdded: {
         id: "app.notifications.workoutResponseAdded",
         description: "",
-        defaultMessage: "{full_name} captured diet for {workout_name} "
+        defaultMessage: "{full_name} captured workout for {workout_name}"
     },
 });
 

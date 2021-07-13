@@ -223,6 +223,8 @@ export const SYMPTOMS = "symptoms";
 export const MISSED_MEDICATION = "no_medication";
 export const MISSED_APPOINTMENTS = "no_appointment";
 export const MISSED_ACTIONS = "no_action";
+export const MISSED_DIET = "no_diet";
+export const MISSED_WORKOUT = "no_workout";
 
 export const MISSED_MEDICATION_TEXT = "Missed Medication";
 export const MISSED_ACTION_TEXT = "Missed Actions";
@@ -286,7 +288,9 @@ export const DRAWER = {
   ADD_WORKOUT:"ADD_WORKOUT",
   EDIT_WORKOUT:"EDIT_WORKOUT",
   WORKOUT_RESPONSE:"WORKOUT_RESPONSE",
-  WORKOUT_RESPONSE_DETALS:"WORKOUT_RESPONSE_DETALS"
+  WORKOUT_RESPONSE_DETALS:"WORKOUT_RESPONSE_DETALS",
+  MISSED_DIET:"MISSED_DIET",
+  MISSED_WORKOUT:"MISSED_WORKOUT",
 };
 
 export const USER_CATEGORY = {
@@ -471,16 +475,16 @@ export const SEVERITY_STATUS = {
 export const NO_MEDICATION = "1";
 export const NO_APPOINTMENT = "2";
 export const NO_ACTION = "3";
-// export const TEST_ONE = "5";
-// export const TEST_TWO = "6";
+export const NO_DIET = "4";
+export const NO_WORKOUT = "5";
 
 export const CHART_TITLE = {
   // [NO_ADHERENCE]: "Adherence",
   [NO_MEDICATION]: "Missed Medication",
   [NO_APPOINTMENT]: "Missed Appointments",
-  [NO_ACTION]: "Missed Actions"
-  // [TEST_ONE]: 'Test One',
-  // [TEST_TWO]: 'Test Two'
+  [NO_ACTION]: "Missed Actions",
+  [NO_DIET]: "Missed Diet",
+  [NO_WORKOUT]: "Missed Workout"
 };
 
 export const GRAPH_COLORS = {
@@ -515,25 +519,24 @@ export const GRAPH_COLORS = {
       dark: "bg-dark-blue",
       light: "bg-light-blue"
     }
+  },
+  [NO_DIET]: {
+    dark: "#A0522D",
+    light: "#F5DEB3",
+    className: {
+      dark: "bg-dark-brown",
+      light: "bg-light-brown"
+    }
+
+  },
+  [NO_WORKOUT]: {
+    dark: "#00FF7F",
+    light: "#90EE90",
+    className: {
+      dark: "bg-spring-green",
+      light: "bg-light-green"
+    }
   }
-  // [TEST_ONE]: {
-  //   dark: "#A0522D",
-  //   light: "#F5DEB3",
-  //   className: {
-  //     dark: "bg-dark-brown",
-  //     light: "bg-light-brown"
-  //   }
-
-  // },
-
-  // [TEST_TWO]: {
-  //   dark: "#00FF7F",
-  //   light: "#90EE90",
-  //   className: {
-  //     dark: "bg-spring-green",
-  //     light: "bg-light-green"
-  //   }
-  // }
 };
 
 export const GRAPH_TYPE = {
@@ -1873,3 +1876,21 @@ export const VIDEO_TYPES = {
   UPLOAD: "upload",
   NONE: "none"
 };
+
+
+export const WAKE_UP = "1";
+export const BREAKFAST = "2";
+export const LUNCH = "3";
+export const EVENING = "4";
+export const DINNER = "5";
+export const SLEEP = "6";
+export const MID_MORNING = "7";
+export const MEAL_TIMINGS = [
+  WAKE_UP,
+  BREAKFAST,
+  MID_MORNING,
+  LUNCH,
+  EVENING,
+  DINNER,
+  SLEEP
+];

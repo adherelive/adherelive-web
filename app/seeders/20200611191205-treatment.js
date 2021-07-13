@@ -25,6 +25,16 @@ module.exports = {
               created_at: new Date(),
               updated_at: new Date()
           },
+          {
+            name: "Diet & Nutrition",
+            created_at: new Date(),
+            updated_at: new Date()
+        },
+        {
+            name: "Exercise & Lifestyle",
+            created_at: new Date(),
+            updated_at: new Date()
+        },
           // {
           //     name: "Saline",
           //     created_at: new Date(),

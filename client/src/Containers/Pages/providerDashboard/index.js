@@ -38,6 +38,10 @@ const mapDispatchToProps = dispatch => {
     dispatch(open({ type: DRAWER.MISSED_APPOINTMENT})),
     openMissedVitalDrawer: () =>
     dispatch(open({ type: DRAWER.MISSED_VITAL})),
+    openMissedDietDrawer: () =>
+    dispatch(open({ type: DRAWER.MISSED_DIET})),
+    openMissedWorkoutDrawer: () =>
+    dispatch(open({ type: DRAWER.MISSED_WORKOUT})),
 
   };
 };

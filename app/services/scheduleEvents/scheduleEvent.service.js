@@ -332,7 +332,7 @@ class ScheduleEventService {
 
   getMissedByData = async (data) => {
     try {
-      const { vital_ids, appointment_ids, medication_ids } = data;
+      const { vital_ids, appointment_ids, medication_ids , diet_ids , workout_ids } = data;
       return await Database.getModel(TABLE_NAME).findAll({
         where: {
           date: {
@@ -358,6 +358,14 @@ class ScheduleEventService {
             {
               event_id: vital_ids,
               event_type: EVENT_TYPE.VITALS,
+            },
+            {
+              event_id: diet_ids,
+              event_type: EVENT_TYPE.DIET,
+            },
+            {
+              event_id: workout_ids,
+              event_type: EVENT_TYPE.WORKOUT,
             },
           ],
           status: EVENT_STATUS.EXPIRED,
