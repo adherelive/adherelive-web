@@ -42,11 +42,11 @@ import MReminderWrapper from "../../../ApiWrapper/mobile/medicationReminder";
 import medicineService from "../../../services/medicine/medicine.service";
 import MedicineApiWrapper from "../../../ApiWrapper/mobile/medicine";
 import carePlanService from "../../../services/carePlan/carePlan.service";
-import carePlanMedicationService from "../../../services/carePlanMedication/carePlanMedication.service";
-import carePlanAppointmentService from "../../../services/carePlanAppointment/carePlanAppointment.service";
+// import carePlanMedicationService from "../../../services/carePlanMedication/carePlanMedication.service";
+// import carePlanAppointmentService from "../../../services/carePlanAppointment/carePlanAppointment.service";
 import providerTermsMappingService from "../../../services/providerTermsMapping/providerTermsMappings.service";
 import patientPaymentConsentMappingService from "../../../services/patientPaymentConsentMapping/patientPaymentConsentMapping.service";
-import doctorProviderMappingService from "../../../services/doctorProviderMapping/doctorProviderMapping.service";
+// import doctorProviderMappingService from "../../../services/doctorProviderMapping/doctorProviderMapping.service";
 import userRolesService from '../../../services/userRoles/userRoles.service';
 
 import UserWrapper from "../../../ApiWrapper/mobile/user";
@@ -54,16 +54,16 @@ import UserRolesWrapper from "../../../ApiWrapper/mobile/userRoles";
 import CarePlanWrapper from "../../../ApiWrapper/mobile/carePlan";
 import CarePlanTemplateWrapper from "../../../ApiWrapper/mobile/carePlanTemplate";
 import AppointmentWrapper from "../../../ApiWrapper/mobile/appointments";
-import TemplateMedicationWrapper from "../../../ApiWrapper/mobile/templateMedication";
-import TemplateAppointmentWrapper from "../../../ApiWrapper/mobile/templateAppointment";
+// import TemplateMedicationWrapper from "../../../ApiWrapper/mobile/templateMedication";
+// import TemplateAppointmentWrapper from "../../../ApiWrapper/mobile/templateAppointment";
 import SymptomWrapper from "../../../ApiWrapper/mobile/symptoms";
 import ProviderWrapper from "../../../ApiWrapper/mobile/provider";
 import ProviderTermsMappingWrapper from "../../../ApiWrapper/mobile/providerTermsMappings";
 import PatientConsentMappingWrapper from "../../../ApiWrapper/mobile/patientPaymentConsentMapping";
-import DoctorProviderMappingWrapper from "../../../ApiWrapper/web/doctorProviderMapping";
+// import DoctorProviderMappingWrapper from "../../../ApiWrapper/web/doctorProviderMapping";
 
-import templateMedicationService from "../../../services/templateMedication/templateMedication.service";
-import templateAppointmentService from "../../../services/templateAppointment/templateAppointment.service";
+// import templateMedicationService from "../../../services/templateMedication/templateMedication.service";
+// import templateAppointmentService from "../../../services/templateAppointment/templateAppointment.service";
 import carePlanTemplateService from "../../../services/carePlanTemplate/carePlanTemplate.service";
 import SymptomService from "../../../services/symptom/symptom.service";
 import qualificationService from "../../../services/doctorQualifications/doctorQualification.service";
@@ -115,7 +115,6 @@ class MPatientController extends Controller {
       }
 
       if (Object.keys(timings).length > 0) {
-        const { value } = timings["1"];
         const prevUserPreference = await UserPreferenceService.getPreferenceByData(
           { user_id: userId }
         );
