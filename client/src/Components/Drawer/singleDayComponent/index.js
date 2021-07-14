@@ -105,7 +105,7 @@ class DayDiet extends Component{
 
          timeData[food_group_index] = {
            ...editedFoodGroupData,
-           [similar.length && 'similar']:similar.length && similar
+           ...similar.length && { 'similar': similar }
           };
 
        }

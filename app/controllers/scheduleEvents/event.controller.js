@@ -33,7 +33,7 @@ class EventController extends Controller {
 
       const carePlanData = await CarePlanService.getSingleCarePlanByData({
         patient_id,
-        [category === USER_CATEGORY.DOCTOR && 'user_role_id' ] : category === USER_CATEGORY.DOCTOR && userRoleId 
+        ...category === USER_CATEGORY.DOCTOR && { 'user_role_id': userRoleId }
       });
 
       if(carePlanData){
@@ -127,26 +127,41 @@ class EventController extends Controller {
       ];
 
       if (scheduleEvents.length > 0) {
+
+
+        scheduleEvents.sort((activityA, activityB) => {
+          const { updatedAt: a } = activityA || {};
+          const { updatedAt: b } = activityB || {};
+          if (moment(a).isBefore(moment(b))) return 1;
+          if (moment(a).isAfter(moment(b))) return -1;
+          return 0;
+        });
+
         const allIds = [];
 
         let scheduleEventData = {};
-        for (const scheduleEvent of scheduleEvents) {
-          const event = await EventWrapper(scheduleEvent);
-          scheduleEventData[event.getScheduleEventId()] = event.getAllInfo();
-          allIds.push(event.getScheduleEventId());
-        }
+        // for (const scheduleEvent of scheduleEvents) {
+        //   const event = await EventWrapper(scheduleEvent);
+        //   scheduleEventData[event.getScheduleEventId()] = event.getAllInfo();
+        //   allIds.push(event.getScheduleEventId());
+        // }
 
         for (const [key, event] of [
-          ...scheduleEvents,
-          ...latestSymptom
+          ...latestSymptom,
+          ...scheduleEvents
         ].entries()) {
           lastVisitData.push({
             event_type: event.get("event_type")
               ? "schedule_events"
               : "symptoms",
             id: event.get("id"),
-            updatedAt: event.get("start_time")
+            updatedAt: event.get("event_type")
+            ? event.get("start_time")
+            : event.get("created_at"),
           });
+          // console.log("328742347234723847234823")
+          const eventWrapper = await EventWrapper(event);
+          scheduleEventData[eventWrapper.getScheduleEventId()] = eventWrapper.getAllInfo();
 
           if (key === 3) {
             break;

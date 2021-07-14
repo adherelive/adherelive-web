@@ -175,10 +175,12 @@ class PatientAlerts extends Component {
     getEvents = () => {
         const {schedule_events} = this.props;
         const {last_visit} = this.state;
+        console.log("7263423847628346872347238",{last_visit});
 
         const events = last_visit.map(details => {
            const {event_type, id, updatedAt} = details || {};
 
+           
             switch(event_type) {
                 case EVENT_TYPE.SYMPTOMS:
                     return this.getSymptom({time: updatedAt, id});
