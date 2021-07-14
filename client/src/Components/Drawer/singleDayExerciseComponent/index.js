@@ -327,7 +327,6 @@ class DayWorkout extends Component{
 
 
     render() {
-      console.log("8767576861283768127631 &&&&&&&&& ",{state:this.state});
       const {  
         addExerciseGroupDrawerVisible = false ,
         editExerciseGroupDrawerVisible,

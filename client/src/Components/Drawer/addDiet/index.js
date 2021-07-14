@@ -7,6 +7,7 @@ import message from "antd/es/message";
 import DietFieldsForm from "./form";
 import Form from "antd/es/form";
 import Footer from "../footer";
+import Loading from "../../Common/Loading";
 
 class AddDiet extends Component{
     constructor(props){
@@ -14,7 +15,9 @@ class AddDiet extends Component{
         this.state={
             completeData : {},
             total_calories:0,
-            submitting:false
+            submitting:false,
+            timings:{},
+            loading:false
         }
 
         this.FormWrapper = Form.create({ onFieldsChange: this.onFormFieldChanges })(
@@ -28,6 +31,40 @@ class AddDiet extends Component{
       await this.getAllPortions();
     }
 
+
+    async componentDidUpdate(prevProps){
+      const {visible = false} = this.props;
+      const {visible : prev_visible = false} = prevProps;
+
+      if(visible && visible != prev_visible){
+        await this.setPatientPreferenceTimings();
+      }
+    }
+
+
+    setPatientPreferenceTimings = async() => {
+      try{
+        this.setState({loading:true});
+        const {getPatientPreferenceDietDetails , payload : {patient_id = null } = {}}=this.props;
+        const response = await getPatientPreferenceDietDetails(patient_id);
+        const {status,payload:{data:resp_data={},message:resp_msg=''} ={} } = response;
+        if(!status){
+          message.error(resp_msg);
+       
+        }else{
+          const { timings = {} } = resp_data || {};  
+          this.setState({ timings });
+        }
+
+      
+        this.setState({loading:false});
+
+      }catch(error){
+
+        this.setState({loading:false});
+        console.log("error => ",error);
+      }
+    }
 
     getAllPortions = async() => {
       try{
@@ -64,7 +101,9 @@ class AddDiet extends Component{
         
         this.setState({
           completeData : {},
-          total_calories:0
+          total_calories:0,
+          timings:{},
+          loading:false
         });
         
         resetFields();
@@ -205,7 +244,7 @@ class AddDiet extends Component{
     getDietComponent = () => {
 
       const {setFinalDayData , setNewTotalCal } = this;
-      const { completeData = {} , total_calories=0 } = this.state;
+      const { completeData = {} , total_calories=0 ,timings={}} = this.state;
 
       // console.log("82374723648273648723647832 ==========>>>>>> ",{total_calories});
       
@@ -221,6 +260,7 @@ class AddDiet extends Component{
                 setNewTotalCal={setNewTotalCal}
                 completeData = {completeData}
                 total_calories={total_calories}
+                timings={timings}
                 {...this.props}
             />
           </div>
@@ -237,8 +277,9 @@ class AddDiet extends Component{
         getDietComponent,
         FormWrapper } = this;
       const { visible = false  } = this.props;
-      const {submitting = false }=this.state;
+      const {submitting = false ,loading=false }=this.state;
 
+    
        
     return (
         <Fragment>
@@ -256,13 +297,22 @@ class AddDiet extends Component{
             visible={visible} 
             width={`30%`}
           >
+            {
+              loading
+              ?
+                (<div className="hvh100 flex direction-column align-center justify-center" >
+                  <Loading className={"wp100"} />
+                </div>)
+
+              :
               
-              <FormWrapper
-                 wrappedComponentRef={setFormRef}
+             (<div className="wp100" >
+                <FormWrapper
+                  wrappedComponentRef={setFormRef}
                   {...this.props}
                   getDietComponent={getDietComponent}
                 />
-                
+
                 <Footer
                   onSubmit={this.handleSubmit}
                   onClose={onClose}
@@ -271,6 +321,12 @@ class AddDiet extends Component{
                   cancelComponent={null}
                   submitting={submitting}
                 />
+             </div>
+              )
+
+              }
+                
+               
 
           </Drawer>
         </Fragment>

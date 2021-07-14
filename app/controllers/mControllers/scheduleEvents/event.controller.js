@@ -512,12 +512,20 @@ class EventController extends Controller {
       let vitalCritical = [];
       let vitalNonCritical = [];
 
+      let dietCritical = [];
+      let dietNonCritical = [];
+
+      let workoutCritical = [];
+      let workoutNonCritical = [];
+
       for (let index = 0; index < carePlans.length; index++) {
         const carePlan = await CarePlanWrapper(carePlans[index]);
         const {
           appointment_ids,
           medication_ids,
           vital_ids,
+          diet_ids,
+          workout_ids
         } = await carePlan.getAllInfo();
 
         // get appointment count
@@ -597,6 +605,62 @@ class EventController extends Controller {
             vitalNonCritical.push(id);
           }
         }
+
+
+
+        // get diets count 
+        for (let id of diet_ids) {
+          const criticalDiet =
+            (await EventService.getCount({
+              event_type: EVENT_TYPE.DIET,
+              event_id: id,
+              status: EVENT_STATUS.EXPIRED,
+              critical: true
+            })) || 0;
+
+          const nonCriticalDiet =
+            (await EventService.getCount({
+              event_type: EVENT_TYPE.DIET,
+              event_id: id,
+              status: EVENT_STATUS.EXPIRED,
+              critical: false
+            })) || 0;
+
+          if (criticalDiet > 0) {
+            dietCritical.push(id);
+          }
+          if (nonCriticalDiet > 0) {
+            dietNonCritical.push(id);
+          }
+        }
+
+
+         // get workouts count 
+         for (let id of workout_ids) {
+          const criticalWorkout =
+            (await EventService.getCount({
+              event_type: EVENT_TYPE.WORKOUT,
+              event_id: id,
+              status: EVENT_STATUS.EXPIRED,
+              critical: true
+            })) || 0;
+
+          const nonCriticalWorkout =
+            (await EventService.getCount({
+              event_type: EVENT_TYPE.WORKOUT,
+              event_id: id,
+              status: EVENT_STATUS.EXPIRED,
+              critical: false
+            })) || 0;
+
+          if (criticalWorkout > 0) {
+            workoutCritical.push(id);
+          }
+          if (nonCriticalWorkout > 0) {
+            workoutNonCritical.push(id);
+          }
+        }
+
       }
 
       // symptoms
@@ -620,6 +684,14 @@ class EventController extends Controller {
             critical: vitalCritical.length,
             non_critical: vitalNonCritical.length,
           },
+          missed_diets: {
+            critical: dietCritical.length,
+            non_critical: dietNonCritical.length
+          },
+          missed_workouts: {
+            critical: workoutCritical.length,
+            non_critical: workoutNonCritical.length
+          },
           missed_symptoms: {
             critical: 0,
             non_critical: symptomsCount,
@@ -639,21 +711,23 @@ class EventController extends Controller {
       Log.debug("req.params", req.params);
       const { params: { patient_id } = {} ,userDetails : { userData: { category } = {}, userRoleId = null } = {} } = req;
       const EventService = new eventService();
-      let carePlan = null , vital_ids = [],appointment_ids =[], medication_ids = [] ;
+      let carePlan = null , vital_ids = [],appointment_ids =[], medication_ids = [] , diet_ids = [] , workout_ids = []  ;
 
       const carePlanData = await CarePlanService.getSingleCarePlanByData({
         patient_id,
-        [category === USER_CATEGORY.DOCTOR && 'user_role_id' ] : category === USER_CATEGORY.DOCTOR && userRoleId 
+        ...category === USER_CATEGORY.DOCTOR && { 'user_role_id': userRoleId }
       });
 
       if(carePlanData){
         carePlan = await CarePlanWrapper(carePlanData);
-        const { vital_ids:cPvital_ids = [], appointment_ids:cPappointment_ids = [], medication_ids :cPmedication_ids= [] } =
+        const { vital_ids:cPvital_ids = [], appointment_ids:cPappointment_ids = [], medication_ids :cPmedication_ids= [] , diet_ids : cPdiet_ids= [], workout_ids :cPworkout_ids= []  } =
           (await carePlan.getAllInfo()) || {};
           
           vital_ids = cPvital_ids;
           appointment_ids = cPappointment_ids ;
           medication_ids = cPmedication_ids;
+          diet_ids = cPdiet_ids;
+          workout_ids = cPworkout_ids;
       }
      
 
@@ -706,25 +780,57 @@ class EventController extends Controller {
         sort: "DESC",
       });
 
+      const dietEvents = await EventService.getLastVisitData({
+        event_id: diet_ids,
+        event_type: EVENT_TYPE.DIET,
+        date: moment()
+          .subtract(7, "days")
+          .utc()
+          .toISOString(),
+        sort: "DESC",
+      });
+
+      const workoutEvents = await EventService.getLastVisitData({
+        event_id: workout_ids,
+        event_type: EVENT_TYPE.WORKOUT,
+        date: moment()
+          .subtract(7, "days")
+          .utc()
+          .toISOString(),
+        sort: "DESC",
+      });
+
       let scheduleEvents = [
         ...vitalEvents,
         ...appointmentEvents,
         ...medicationEvents,
+        ...dietEvents,
+        ...workoutEvents
       ];
 
       if (scheduleEvents.length > 0) {
+        
+        scheduleEvents.sort((activityA, activityB) => {
+          const { updatedAt: a } = activityA || {};
+          const { updatedAt: b } = activityB || {};
+          if (moment(a).isBefore(moment(b))) return 1;
+          if (moment(a).isAfter(moment(b))) return -1;
+          return 0;
+        });
+        
         const allIds = [];
-
         let scheduleEventData = {};
-        for (const scheduleEvent of scheduleEvents) {
-          const event = await EventWrapper(scheduleEvent);
-          scheduleEventData[event.getScheduleEventId()] = event.getAllInfo();
-          allIds.push(event.getScheduleEventId());
-        }
+
+       
+        // for (const scheduleEvent of scheduleEvents) {
+        //   const event = await EventWrapper(scheduleEvent);
+        //   scheduleEventData[event.getScheduleEventId()] = event.getAllInfo();
+        //   allIds.push(event.getScheduleEventId());
+        // }
 
         for (const [key, event] of [
-          ...scheduleEvents,
           ...latestSymptom,
+          ...scheduleEvents,
         ].entries()) {
           lastVisitData.push({
             event_type: event.get("event_type")
@@ -735,6 +841,9 @@ class EventController extends Controller {
               ? event.get("start_time")
               : event.get("created_at"),
           });
+
+          const eventWrapper = await EventWrapper(event);
+          scheduleEventData[eventWrapper.getScheduleEventId()] = eventWrapper.getAllInfo();
 
           if (key === 3) {
             break;

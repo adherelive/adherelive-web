@@ -6,7 +6,7 @@ import { open } from "../../modules/drawer";
 import { DRAWER } from "../../constant";
 import { getPortions } from "../../modules/portions";
 import { addFoodItem} from "../../modules/foodItems";
-import { addDiet } from "../../modules/diets";
+import { addDiet , getPatientPreferenceDietDetails } from "../../modules/diets";
 
 const mapStateToProps = state => {
     const { auth} = state;
@@ -42,7 +42,8 @@ const mapDispatchToProps = dispatch => {
         close: () => dispatch(close()),
         getPortions : () => dispatch(getPortions()),
         addFoodItem : (data) => dispatch(addFoodItem(data)),
-        addDiet : (data) => dispatch(addDiet(data))  
+        addDiet : (data) => dispatch(addDiet(data))  ,
+        getPatientPreferenceDietDetails : (patient_id) => dispatch(getPatientPreferenceDietDetails(patient_id))
     };
 };
 

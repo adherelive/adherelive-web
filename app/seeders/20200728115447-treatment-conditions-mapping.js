@@ -89,6 +89,18 @@ module.exports = {
         created_at: new Date(),
         updated_at: new Date()
       },
+      {
+        condition_id: "1",
+        treatment_id: "5",
+        created_at: new Date(),
+        updated_at: new Date()
+      },
+      {
+        condition_id: "1",
+        treatment_id: "6",
+        created_at: new Date(),
+        updated_at: new Date()
+      },
     ]);
   },
 

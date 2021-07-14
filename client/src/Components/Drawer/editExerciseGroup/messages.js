@@ -4,7 +4,7 @@ const message = defineMessages({
   add_exercise_group: {
     id: "app.drawer.edit.exercise.group.title",
     description: "",
-    defaultMessage: "Edit Exercise Group"
+    defaultMessage: "Edit Exercise"
   },
   exercise: {
     id: "app.drawer.edit.exercise.group.name",

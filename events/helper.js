@@ -28,6 +28,9 @@ import {
   MEDICATION_TIMING,
   WITH_LUNCH,
   WITH_DINNER,
+  WITH_BREAKFAST,
+  PATIENT_MEAL_TIMINGS,
+  MID_MORNING,
 } from "../constant";
 
 import FeatureDetailWrapper from "../app/ApiWrapper/web/featureDetails";
@@ -228,6 +231,7 @@ export const handleDiet = async (data) => {
       end_date = null,
       participants = [],
       actor = {},
+      critical = false,
     } = data || {};
 
     const dietWrapper = await DietWrapper({ id: event_id });
@@ -293,7 +297,7 @@ export const handleDiet = async (data) => {
       const { mappingIds = [] } = timeData || {};
       // const day_text = DAYS_TEXT[day];
       const repeat_days = details_repeat_days || [];
-      const { text = "" } = MEDICATION_TIMING[time];
+      const { text = "" } = PATIENT_MEAL_TIMINGS[time];
 
       let eventDetails = {
         repeat_days,
@@ -330,14 +334,11 @@ export const handleDiet = async (data) => {
       const allDays = rrule.all();
       const patientPreference = await getUserPreferences(patient_id);
       for (let i = 0; i < allDays.length; i++) {
-        const startTime = updateMedicationTiming(
-          allDays[i],
-          time,
-          patientPreference
-        );
+        const startTime = getDietTimings(allDays[i], time, patientPreference);
 
         scheduleEventArr.push({
           event_id,
+          critical,
           date: moment(allDays[i]).toISOString(),
           start_time: moment(startTime).toISOString(),
           end_time: moment(startTime).toISOString(),
@@ -375,13 +376,14 @@ export const handleWorkout = async (workout) => {
       end_date = null,
       participants = [],
       actor = {},
+      critical = false,
     } = workout || {};
 
     Log.debug("workout", workout);
 
     const workoutInstance = await WorkoutWrapper({ id: event_id });
 
-    const { workouts = {} } = await workoutInstance.getReferenceInfo() || {};
+    const { workouts = {} } = (await workoutInstance.getReferenceInfo()) || {};
     const { repeat_days } = workoutInstance.getDetails();
 
     const rrule = new RRule({
@@ -418,6 +420,7 @@ export const handleWorkout = async (workout) => {
 
       allEvents.push({
         event_id,
+        critical,
         event_type: EVENT_TYPE.WORKOUT,
         date,
         start_time: startTime,
@@ -528,7 +531,6 @@ export const handleVitals = async (vital) => {
       }
     } else {
       for (let i = 0; i < allDays.length; i++) {
-        
         const { value: wakeUpTime } = timings[WAKE_UP];
         const { value: sleepTime } = timings[SLEEP];
 
@@ -744,8 +746,8 @@ export const handleAppointmentsTimeAssignment = async (appointment) => {
       actor: {
         id: participant_one_id,
         user_role_id,
-        category: participant_one_type
-      }
+        category: participant_one_type,
+      },
     };
 
     const sqsResponse = await QueueService.sendMessage(eventScheduleData);
@@ -821,6 +823,13 @@ const getBreakfast = (timings) => {
   return { hours, minutes };
 };
 
+const getMidMorning = (timings) => {
+  const { value } = timings[MID_MORNING] || {};
+  const hours = moment(value).hours();
+  const minutes = moment(value).minutes();
+  return { hours, minutes };
+};
+
 const getLunch = (timings) => {
   const { value } = timings[LUNCH] || {};
   const hours = moment(value).hours();
@@ -847,6 +856,55 @@ const getSleep = (timings) => {
   const hours = moment(value).hours();
   const minutes = moment(value).minutes();
   return { hours, minutes };
+};
+
+const getDietTimings = (date, timing, patientPreference) => {
+  switch (timing) {
+    case WAKE_UP:
+      const { hours: wakeupHour, minutes: wakeupMinute } =
+        getWakeUp(patientPreference) || {};
+      return moment(date)
+        .set("hours", wakeupHour)
+        .set("minutes", wakeupMinute);
+    case BREAKFAST:
+      const { hours: breakfastHour, minutes: breakfastMinute } =
+        getBreakfast(patientPreference) || {};
+      return moment(date)
+        .set("hours", breakfastHour)
+        .set("minutes", breakfastMinute);
+    case MID_MORNING:
+      const { hours: midMorningHour, minutes: midMorningMinute } =
+        getMidMorning(patientPreference) || {};
+      return moment(date)
+        .set("hours", midMorningHour)
+        .set("minutes", midMorningMinute);
+    case LUNCH:
+      const { hours: lunchHour, minutes: lunchMinute } =
+        getLunch(patientPreference) || {};
+      return moment(date)
+        .set("hours", lunchHour)
+        .set("minutes", lunchMinute);
+    case EVENING:
+      const { hours: eveningHour, minutes: eveningMinute } =
+        getEvening(patientPreference) || {};
+      return moment(date)
+        .set("hours", eveningHour)
+        .set("minutes", eveningMinute);
+    case DINNER:
+      const { hours: dinnerHour, minutes: dinnerMinute } =
+        getLunch(patientPreference) || {};
+      return moment(date)
+        .set("hours", dinnerHour)
+        .set("minutes", dinnerMinute);
+    case SLEEP:
+      const { hours: sleepHour, minutes: sleepMinute } =
+        getLunch(patientPreference) || {};
+      return moment(date)
+        .set("hours", sleepHour)
+        .set("minutes", sleepMinute);
+    default:
+      return moment(date);
+  }
 };
 
 const updateMedicationTiming = (date, timing, patientPreference) => {

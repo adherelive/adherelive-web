@@ -523,7 +523,7 @@ class AgoraVideo extends Component {
     const { startVideoCall, leaveCall, formatMessage } = this;
 
     return (
-      <div className={`${isStart && "ml24"}`}>
+      <div className={`${isStart ? "ml24" : null }`}>
         {!isStart ? (
           // <Tooltip title={formatMessage(messages.startCall)} placement={"top"}>
           //   <img

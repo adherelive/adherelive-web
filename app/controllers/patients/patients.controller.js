@@ -835,7 +835,7 @@ class PatientController extends Controller {
 
       const carePlanData = await carePlanService.getSingleCarePlanByData({
         patient_id,
-        [category === USER_CATEGORY.DOCTOR && 'user_role_id'] : category === USER_CATEGORY.DOCTOR && userRoleId
+        ...category === USER_CATEGORY.DOCTOR && { 'user_role_id': userRoleId }
       });
       const carePlan = await CarePlanWrapper(carePlanData);
 

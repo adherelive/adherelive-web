@@ -22,3 +22,7 @@ export const getAllDietsForDoctorUrl = () => {
 export const getDietTimelineUrl = (id) => {
     return `/diet/${id}/timeline`;
 };
+
+export const getPatientPreferenceDietDetailsUrl = (patient_id) => {
+    return `/diet/details/patients/${patient_id}`;
+};

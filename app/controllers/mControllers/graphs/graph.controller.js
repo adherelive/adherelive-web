@@ -1,6 +1,14 @@
 import Controller from "../../";
 import Log from "../../../../libs/log";
-import {CHART_DETAILS, CHART_LIMIT} from "../../../../constant";
+import {
+    NO_MEDICATION,
+    NO_APPOINTMENT,
+    NO_ACTION, 
+    NO_DIET,
+    NO_WORKOUT,
+    USER_CATEGORY,
+    CHART_DETAILS,
+} from "../../../../constant";
 
 import userPreferenceService from "../../../services/userPreferences/userPreference.service";
 
@@ -95,9 +103,9 @@ class GraphController extends Controller {
             // const {params: {id} = {}, userDetails: {userId} = {}} = req;
             const {body: {chart_ids = []} = {}} = req;
             const { body, userDetails } = req;
-            const { userId, userData: { category  } = {} ,userCategoryData : { basic_info: { id :doctorId } ={} } = {} } = userDetails || {};
+            const { userId,userRoleId, userData: { category  } = {} ,userCategoryData : { basic_info: { id :doctorId } ={} } = {} } = userDetails || {};
             // console.log('CHART IDSSSSSSSSSSSSS==========================>',chart_ids);
-            const userPreferenceData = await userPreferenceService.getPreferenceByData({user_id: userId});
+            const userPreferenceData = await userPreferenceService.getPreferenceByData({user_role_id:userRoleId});
             const userPreference = await UserPreferenceWrapper(userPreferenceData);
 
             let chartData = {};
@@ -116,6 +124,14 @@ class GraphController extends Controller {
                 [NO_ACTION]: {
                   type: "no_action",
                   name: "Missed Action",
+                },
+                [NO_DIET]: {
+                    type: "no_diet",
+                    name: "Missed Diet",
+                },
+                [NO_WORKOUT]: {
+                    type: "no_workout",
+                    name: "Missed Workout",
                 }
               };
             

@@ -18,11 +18,11 @@ import DietJob from "../../JobSdk/Diet/observer";
 import NotificationSdk from "../../NotificationSdk";
 
 import * as medicationHelper from "../medicationReminder/medicationHelper";
-import { getTimeWiseDietFoodGroupMappings } from "./dietHelper";
+import * as DietHelper from "./dietHelper";
 
 import Log from "../../../libs/log";
 
-import { EVENT_TYPE, EVENT_STATUS, DAYS, MEDICATION_TIMING } from "../../../constant";
+import { EVENT_TYPE, EVENT_STATUS, DAYS, MEDICATION_TIMING, PATIENT_MEAL_TIMINGS } from "../../../constant";
 import carePlanService from "../../services/carePlan/carePlan.service";
 
 const Logger = new Log("WEB DIET CONTROLLER");
@@ -79,7 +79,7 @@ class DietController extends Controller {
         food_item_details = {},
       } = referenceInfo || {};
 
-      const timeWise = await getTimeWiseDietFoodGroupMappings({
+      const timeWise = await DietHelper.getTimeWiseDietFoodGroupMappings({
         diet_food_group_mappings,
       });
 
@@ -312,7 +312,7 @@ class DietController extends Controller {
   };
 
   getDetails = async (req, res) => {
-    const { raiseSuccess, raiseClientError, raiseServerError } = this;
+    const { raiseSuccess, raiseServerError } = this;
     try {
       const { params } = req;
       Logger.debug("getDetails request params", params);
@@ -331,21 +331,23 @@ class DietController extends Controller {
         const options = await UserPreferenceWrapper(timingPreference);
         const { timings: userTimings = {} } = options.getAllDetails();
 
-        const medicationTimings = medicationHelper.getTimings(userTimings);
+        // const medicationTimings = medicationHelper.getTimings(userTimings);
 
-        medicationTimings.sort((activityA, activityB) => {
-          const { time: a } = activityA || {};
-          const { time: b } = activityB || {};
-          if (moment(a).isBefore(moment(b))) return -1;
+        // medicationTimings.sort((activityA, activityB) => {
+        //   const { time: a } = activityA || {};
+        //   const { time: b } = activityB || {};
+        //   if (moment(a).isBefore(moment(b))) return -1;
 
-          if (moment(a).isAfter(moment(b))) return 1;
-        });
+        //   if (moment(a).isAfter(moment(b))) return 1;
+        // });
 
-        medicationTimings.forEach((timing, index) => {
-          timings[`${index + 1}`] = timing;
-        });
+        // medicationTimings.forEach((timing, index) => {
+        //   timings[`${index + 1}`] = timing;
+        // });
+        timings = DietHelper.getTimings(userTimings);
       } else {
-        timings = MEDICATION_TIMING;
+        timings = DietHelper.getTimings(PATIENT_MEAL_TIMINGS);
+        // timings = MEDICATION_TIMING;
       }
 
       return raiseSuccess(

@@ -3,7 +3,10 @@ import Log from "../../../libs/log";
 import {
     NO_MEDICATION,
     NO_APPOINTMENT,
-    NO_ACTION, USER_CATEGORY,
+    NO_ACTION, 
+    NO_DIET,
+    NO_WORKOUT,
+    USER_CATEGORY,
     CHART_DETAILS,
 } from "../../../constant";
 
@@ -12,6 +15,7 @@ import ProviderService from "../../services/provider/provider.service";
 
 import UserPreferenceWrapper from "../../ApiWrapper/web/userPreference";
 import ProviderWrapper from "../../ApiWrapper/web/provider";
+import userRolesService from "../../services/userRoles/userRoles.service";
 
 
 const Logger = new Log("WEB GRAPH CONTROLLER");
@@ -103,8 +107,8 @@ class GraphController extends Controller {
             // const {params: {id} = {}, userDetails: {userId} = {}} = req;
             const {body: {chart_ids = []} = {}} = req;
             const { userDetails } = req;
-            const { userId, userData: { category  } = {} ,userCategoryData : { basic_info: { id :doctorId } ={} } = {} } = userDetails || {};
-            const userPreferenceData = await userPreferenceService.getPreferenceByData({user_id: userId});
+            const { userId,userRoleId, userData: { category  } = {} ,userCategoryData : { basic_info: { id :doctorId } ={} } = {} } = userDetails || {};
+            const userPreferenceData = await userPreferenceService.getPreferenceByData({user_role_id:userRoleId});
             const userPreference = await UserPreferenceWrapper(userPreferenceData);
 
             let chartData = {};
@@ -123,6 +127,14 @@ class GraphController extends Controller {
                 [NO_ACTION]: {
                   type: "no_action",
                   name: "Missed Action",
+                },
+                [NO_DIET]: {
+                    type: "no_diet",
+                    name: "Missed Diet",
+                },
+                [NO_WORKOUT]: {
+                    type: "no_workout",
+                    name: "Missed Workout",
                 }
               };
             
@@ -190,15 +202,20 @@ class GraphController extends Controller {
 
                   const {user_id} = await provider.getReferenceInfo();
 
+                  const userRole = await userRolesService.getFirstUserRole(user_id);
+
+                  const { id : user_role_id = null } = userRole || {};
+
                   const userPreferenceExists = await userPreferenceService.getPreferenceByData({
-                      user_id
+                    user_role_id
                   }) || null;
 
                   if(!userPreferenceExists) {
                       await userPreferenceService.addUserPreference({
                           user_id,
+                          user_role_id,
                           details: {
-                              charts: ["1","2","3"]
+                              charts: ["1","2","3","4","5"]
                           }
                       });
                   }

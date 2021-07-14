@@ -8,7 +8,9 @@ import {
   FEATURES,
   MISSED_MEDICATION,
   MISSED_APPOINTMENTS,
-  MISSED_ACTIONS
+  MISSED_ACTIONS,
+  MISSED_DIET,
+  MISSED_WORKOUT
 } from "../../constant";
 import Tabs from "antd/es/tabs";
 // import Patients from "../../Containers/Patient/paginatedTable";
@@ -37,6 +39,8 @@ import SearchPatient from "../../Containers/SearchPatient";
 import MissedAppointmentsDrawer from "../../Containers/Drawer/missedAppointment";
 import MissedVitalsDrawer from "../../Containers/Drawer/missedVital";
 import MissedMedicationsDrawer from "../../Containers/Drawer/missedMedication";
+import MissedDietsDrawer from "../../Containers/Drawer/missedDiet";
+import MissedWorkoutsDrawer from "../../Containers/Drawer/missedWorkout";
 
 // helpers...
 import { getRoomId } from "../../Helper/twilio";
@@ -47,6 +51,8 @@ const { TabPane } = Tabs;
 const CHART_MISSED_MEDICATION = "Missed Medication";
 const CHART_MISSED_APPOINTMENT = "Missed Appointment";
 const CHART_MISSED_ACTION = "Missed Action";
+const CHART_MISSED_DIET = "Missed Diet";
+const CHART_MISSED_WORKOUT = "Missed Workout";
 
 export const CURRENT_TAB = {
   ALL_PATIENTS:"1",
@@ -327,6 +333,13 @@ class Dashboard extends Component {
     } else if (name === CHART_MISSED_MEDICATION) {
       const {openMissedMedicationDrawer} = this.props;
       openMissedMedicationDrawer();
+    } else if (name === CHART_MISSED_DIET) {
+      const {openMissedDietDrawer} = this.props;
+        openMissedDietDrawer();
+    }
+    else if (name === CHART_MISSED_WORKOUT ) {
+      const {openMissedWorkoutDrawer} = this.props;
+      openMissedWorkoutDrawer();
     }
   };
 
@@ -336,14 +349,21 @@ class Dashboard extends Component {
     const {
       medication_ids={},
       appointment_ids={},
-      vital_ids={}}=dashboard;
+      vital_ids={},
+      diet_ids={},
+      workout_ids={}
+    }=dashboard;
     const {critical:medication_critical=[],non_critical:medication_non_critical=[]}=medication_ids;
     const {critical:vital_critical=[],non_critical:vital_non_critical=[]}=vital_ids;
     const {critical:appointment_critical=[],non_critical:appointment_non_critical=[]}=appointment_ids;
+    const {critical:diet_critical=[],non_critical:diet_non_critical=[]}=diet_ids;
+    const {critical:workout_critical=[],non_critical:workout_non_critical=[]}=workout_ids;
+
     const medication_total = medication_critical.length+medication_non_critical.length;
     const vital_total = vital_critical.length+vital_non_critical.length;
     const appointment_total = appointment_critical.length+appointment_non_critical.length;
-
+    const diet_total = diet_critical.length + diet_non_critical.length;
+    const workout_total = workout_critical.length + workout_non_critical.length;
 
 
     const { graphsToShow, graphLoading } = this.state;
@@ -376,7 +396,15 @@ class Dashboard extends Component {
      } else if(type === MISSED_ACTIONS){
         total = vital_total;
         critical = vital_critical.length;
+     } else if(type === MISSED_DIET){
+      total = diet_total;
+      critical = diet_critical.length;
+     } else if(type === MISSED_WORKOUT ){
+        total = workout_total;
+        critical = workout_critical.length;
      }
+
+   
 
       return (
         <div key={`donut-div-${id}`} onClick={() => this.chartClicked(name)}>
@@ -867,6 +895,10 @@ const roomId = getRoomId(doctorRoleId, patientRoleId);
         <MissedVitalsDrawer/>
 
         <MissedMedicationsDrawer />
+        
+        <MissedDietsDrawer />
+
+        <MissedWorkoutsDrawer/>
 
 
         {authPermissions.length === 0 ? (

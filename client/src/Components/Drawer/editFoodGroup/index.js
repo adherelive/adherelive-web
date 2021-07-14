@@ -117,7 +117,7 @@ class EditFoodGroup extends Component {
           notes,
           prev_calorific_val,
           prev_serving,
-          [food_group_id && 'food_group_id'] : food_group_id && food_group_id
+          ...food_group_id && { 'food_group_id': food_group_id }
         };
 
         const updateData={

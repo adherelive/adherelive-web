@@ -103,11 +103,11 @@ const PATIENT_TABS = {
     key: "5"
   },
   DIETS: {
-    name: "Diets",
+    name: "Diet",
     key: "6"
   },
   WORKOUTS:{
-    name: "Workouts",
+    name: "Workout",
     key: "7"
   }
 };
@@ -2050,11 +2050,13 @@ class PatientDetails extends Component {
   };
 
   getUseTemplateComponent = (
-    isOtherCarePlan,
-    noMedication,
-    firstTemplateName,
-    user_role_id,
-    auth_role
+    {isOtherCarePlan,
+      noMedication,
+      firstTemplateName,
+      user_role_id,
+      auth_role,
+      message
+    }
   ) => {
     console.log("38972168738712638712638716237821",{auth_role,str:auth_role.toString()});
     const { formatMessage } = this;
@@ -2062,7 +2064,7 @@ class PatientDetails extends Component {
       <div className="flex flex-grow-1 direction-column justify-center hp100 align-center">
         <img src={noMedication} className="w200 h200" />
         <div className="fs20 fw700">
-          {formatMessage(messages.nothing_to_show)}
+          {message}
         </div>
         {/* {showUseTemplate && (carePlanTemplateId || carePlanTemplateExists) ? ( */}
         {!isOtherCarePlan 
@@ -2471,7 +2473,7 @@ class PatientDetails extends Component {
               />
             </div>
 
-            <div className="wp80 direction-column align-center pt10 pr24 pb20 pl24 ola123">
+            <div className="wp80 direction-column align-center pt10 pr24 pb20 pl24 ">
               {!isOtherCarePlan 
               && user_role_id.toString() === auth_role.toString() 
               && <PatientAlerts patientId={patient_id} />}
@@ -2487,14 +2489,20 @@ class PatientDetails extends Component {
               {/*       */}
               {/*</div>*/}
 
-              {!showTabs &&
+              
+             <div className="mt40" >
+             {!showTabs &&
                 getUseTemplateComponent(
+                 {
                   isOtherCarePlan,
                   noMedication,
                   firstTemplateName,
                   user_role_id,
-                  auth_role
+                  auth_role,
+                  message:this.formatMessage(messages.no_show)
+                 }
                 )}
+             </div>
               {showTabs && (
                 <div className="flex-grow-1 direction-column align-center">
                   <div className="patient-tab mt20">
@@ -2504,8 +2512,7 @@ class PatientDetails extends Component {
                      activeKey={activeKey}
                     >
                       <TabPane tab="Medication" key="1"  >
-                        {cPMedicationIds.length > 0 ||
-                        cPAppointmentIds.length > 0 ? (
+                        {cPMedicationIds.length > 0  ? (
                           <MedicationTable
                             patientId={patient_id}
                             carePlanId={carePlanId}
@@ -2514,17 +2521,20 @@ class PatientDetails extends Component {
                         ) : (
                           <div className="mt20">
                             {getUseTemplateComponent(
+                             {
                               isOtherCarePlan,
                               noMedication,
                               firstTemplateName,
                               user_role_id,
-                              auth_role
+                              auth_role,
+                              message:this.formatMessage(messages.no_medication)
+                             }
                             )}
                           </div>
                         )}
                       </TabPane>
                       <TabPane tab="Appointments" key="2">
-                        {cPMedicationIds.length > 0 ||
+                        {
                         cPAppointmentIds.length > 0 ? (
                           <Table
                             columns={
@@ -2548,11 +2558,14 @@ class PatientDetails extends Component {
                         ) : (
                           <div className="mt20">
                             {getUseTemplateComponent(
-                              isOtherCarePlan,
-                              noMedication,
-                              firstTemplateName,
-                              user_role_id,
-                              auth_role
+                              {
+                                isOtherCarePlan,
+                                noMedication,
+                                firstTemplateName,
+                                user_role_id,
+                                auth_role,
+                                message:this.formatMessage(messages.no_appointment)
+                              }
                             )}
                           </div>
                         )}
@@ -2565,11 +2578,29 @@ class PatientDetails extends Component {
                         tab={PATIENT_TABS.ACTIONS["name"]}
                         key={PATIENT_TABS.ACTIONS["key"]}
                       >
-                        <VitalTable
-                          patientId={patient_id}
-                          carePlanId={carePlanId}
-                          isOtherCarePlan={isOtherCarePlan}
-                        />
+
+                        {vitalIds.length > 0  ? (
+                           <VitalTable
+                           patientId={patient_id}
+                           carePlanId={carePlanId}
+                           isOtherCarePlan={isOtherCarePlan}
+                          />
+                        ) : (
+                          <div className="mt20">
+                            {getUseTemplateComponent(
+                             {
+                              isOtherCarePlan,
+                              noMedication,
+                              firstTemplateName,
+                              user_role_id,
+                              auth_role,
+                              message:this.formatMessage(messages.no_vital)
+                             }
+                            )}
+                          </div>
+                        )}
+
+                      
                       </TabPane>
                       <TabPane
                         tab={PATIENT_TABS.REPORTS["name"]}
@@ -2581,21 +2612,54 @@ class PatientDetails extends Component {
                         tab={PATIENT_TABS.DIETS["name"]}
                         key={PATIENT_TABS.DIETS["key"]}
                       >
-                        <DietTable
-                         patientId={patient_id}
-                         carePlanId={carePlanId}
-                         isOtherCarePlan={isOtherCarePlan}
-                        />
+                        {dietIds.length > 0  ? (
+                           <DietTable
+                           patientId={patient_id}
+                           carePlanId={carePlanId}
+                           isOtherCarePlan={isOtherCarePlan}
+                          />
+                        ) : (
+                          <div className="mt20">
+                            {getUseTemplateComponent(
+                             {
+                              isOtherCarePlan,
+                              noMedication,
+                              firstTemplateName,
+                              user_role_id,
+                              auth_role,
+                              message:this.formatMessage(messages.no_diet)
+                             }
+                            )}
+                          </div>
+                        )}
+
+                        
                       </TabPane>
                       <TabPane
                         tab={PATIENT_TABS.WORKOUTS["name"]}
                         key={PATIENT_TABS.WORKOUTS["key"]}
                       >
-                        <WorkoutTable
-                         patientId={patient_id}
-                         carePlanId={carePlanId}
-                         isOtherCarePlan={isOtherCarePlan}
-                        />
+                        {workoutIds.length > 0  ? (
+                           <WorkoutTable
+                           patientId={patient_id}
+                           carePlanId={carePlanId}
+                           isOtherCarePlan={isOtherCarePlan}
+                          />
+                        ) : (
+                          <div className="mt20">
+                            {getUseTemplateComponent(
+                             {
+                              isOtherCarePlan,
+                              noMedication,
+                              firstTemplateName,
+                              user_role_id,
+                              auth_role,
+                              message:this.formatMessage(messages.no_workout)
+                             }
+                            )}
+                          </div>
+                        )}
+
                       </TabPane>
                     </Tabs>
                   </div>
@@ -2621,7 +2685,7 @@ class PatientDetails extends Component {
               <AddReportDrawer />
               <AddFoodItem/>
               <AddDietDrawer carePlanId={carePlanId} />
-              <AddWorkoutDrawer carePlanId={carePlanId}   />
+              <AddWorkoutDrawer carePlanId={carePlanId}  patientId={patient_id} />
 
               {templateDrawerVisible && (
                 <TemplateDrawer
@@ -2678,7 +2742,7 @@ class PatientDetails extends Component {
           <WorkoutResponseDrawer/>
           <EditPatientDrawer />
           <EditDietDrawer carePlanId={carePlanId} />
-          <EditWorkoutDrawer carePlanId={carePlanId} />
+          <EditWorkoutDrawer carePlanId={carePlanId} patientId={patient_id} />
         </div>
         <Modal
           visible={showOtpModal}
