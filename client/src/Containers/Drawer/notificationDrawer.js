@@ -16,7 +16,8 @@ const mapStateToProps = state => {
         notification_redirect = {},
         diets={},
         diet_food_group_mappings = {},
-        workouts={}
+        workouts={},
+        diet_responses={}
     } = state
     return {
         visible: visible && type === DRAWER.NOTIFICATIONS,
@@ -38,7 +39,8 @@ const mapStateToProps = state => {
         notification_redirect,
         diets,
         diet_food_group_mappings,
-        workouts
+        workouts,
+        diet_responses
     };
 };
 
