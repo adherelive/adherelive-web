@@ -2473,7 +2473,7 @@ class PatientDetails extends Component {
               />
             </div>
 
-            <div className="wp80 direction-column align-center pt10 pr24 pb20 pl24 ola123">
+            <div className="wp80 direction-column align-center pt10 pr24 pb20 pl24 ">
               {!isOtherCarePlan 
               && user_role_id.toString() === auth_role.toString() 
               && <PatientAlerts patientId={patient_id} />}
@@ -2490,7 +2490,8 @@ class PatientDetails extends Component {
               {/*</div>*/}
 
               
-              {!showTabs &&
+             <div className="mt40" >
+             {!showTabs &&
                 getUseTemplateComponent(
                  {
                   isOtherCarePlan,
@@ -2501,6 +2502,7 @@ class PatientDetails extends Component {
                   message:this.formatMessage(messages.no_show)
                  }
                 )}
+             </div>
               {showTabs && (
                 <div className="flex-grow-1 direction-column align-center">
                   <div className="patient-tab mt20">

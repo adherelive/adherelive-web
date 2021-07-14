@@ -29,21 +29,24 @@ class EventController extends Controller {
       Log.debug("req.params", req.params);
       const { params: { patient_id } = {}, userDetails: { userRoleId =null , userData: {category}, userCategoryId} = {} } = req;
       const EventService = new eventService();
-      let carePlan = null , vital_ids = [] , appointment_ids =[] , medication_ids = [] ;
+      let carePlan = null , vital_ids = [] , appointment_ids =[] , medication_ids = [] , diet_ids = [] , workout_ids = []  ;
 
       const carePlanData = await CarePlanService.getSingleCarePlanByData({
         patient_id,
-        [category === USER_CATEGORY.DOCTOR && 'user_role_id' ] : category === USER_CATEGORY.DOCTOR && userRoleId 
+        ...category === USER_CATEGORY.DOCTOR && { 'user_role_id': userRoleId }
       });
 
       if(carePlanData){
         carePlan = await CarePlanWrapper(carePlanData);
-        const { vital_ids :cPvital_ids = [], appointment_ids :cPappointment_ids = [], medication_ids :cPmedication_ids = [] } =
+        const { vital_ids :cPvital_ids = [], appointment_ids :cPappointment_ids = [], medication_ids :cPmedication_ids = [] , 
+          diet_ids : cPdiet_ids = [], workout_ids : cPworkout_ids = [] } =
           (await carePlan.getAllInfo()) || {};
         
         vital_ids = cPvital_ids;
         appointment_ids = cPappointment_ids ;
         medication_ids = cPmedication_ids;  
+        diet_ids = cPdiet_ids;
+        workout_ids = cPworkout_ids;
       }
 
       let symptomData = {};
@@ -95,33 +98,70 @@ class EventController extends Controller {
         sort: "DESC"
       });
 
+      const dietEvents = await EventService.getLastVisitData({
+        event_id: diet_ids,
+        event_type: EVENT_TYPE.DIET,
+        date: moment()
+          .subtract(7, "days")
+          .utc()
+          .toISOString(),
+        sort: "DESC"
+      });
+
+      const workoutEvents = await EventService.getLastVisitData({
+        event_id: workout_ids,
+        event_type: EVENT_TYPE.WORKOUT,
+        date: moment()
+          .subtract(7, "days")
+          .utc()
+          .toISOString(),
+        sort: "DESC"
+      });
+
       let scheduleEvents = [
         ...vitalEvents,
         ...appointmentEvents,
-        ...medicationEvents
+        ...medicationEvents,
+        ...dietEvents,
+        ...workoutEvents
       ];
 
       if (scheduleEvents.length > 0) {
+
+
+        scheduleEvents.sort((activityA, activityB) => {
+          const { updatedAt: a } = activityA || {};
+          const { updatedAt: b } = activityB || {};
+          if (moment(a).isBefore(moment(b))) return 1;
+          if (moment(a).isAfter(moment(b))) return -1;
+          return 0;
+        });
+
         const allIds = [];
 
         let scheduleEventData = {};
-        for (const scheduleEvent of scheduleEvents) {
-          const event = await EventWrapper(scheduleEvent);
-          scheduleEventData[event.getScheduleEventId()] = event.getAllInfo();
-          allIds.push(event.getScheduleEventId());
-        }
+        // for (const scheduleEvent of scheduleEvents) {
+        //   const event = await EventWrapper(scheduleEvent);
+        //   scheduleEventData[event.getScheduleEventId()] = event.getAllInfo();
+        //   allIds.push(event.getScheduleEventId());
+        // }
 
         for (const [key, event] of [
-          ...scheduleEvents,
-          ...latestSymptom
+          ...latestSymptom,
+          ...scheduleEvents
         ].entries()) {
           lastVisitData.push({
             event_type: event.get("event_type")
               ? "schedule_events"
               : "symptoms",
             id: event.get("id"),
-            updatedAt: event.get("start_time")
+            updatedAt: event.get("event_type")
+            ? event.get("start_time")
+            : event.get("created_at"),
           });
+          // console.log("328742347234723847234823")
+          const eventWrapper = await EventWrapper(event);
+          scheduleEventData[eventWrapper.getScheduleEventId()] = eventWrapper.getAllInfo();
 
           if (key === 3) {
             break;

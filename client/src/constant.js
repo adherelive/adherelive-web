@@ -1894,3 +1894,34 @@ export const MEAL_TIMINGS = [
   DINNER,
   SLEEP
 ];
+
+export const PATIENT_MEAL_TIMINGS = {
+  [WAKE_UP]: {
+    time: "2020-09-24T08:00:00+05:30",
+    text: "Immediately After Wakeup"
+  },
+  [BREAKFAST]: {
+    time: "2020-09-24T09:00:00+05:30",
+    text: "Breakfast"
+  },
+  [LUNCH]: {
+    time: "2020-09-24T13:00:00+05:30",
+    text: "Lunch"
+  },
+  [EVENING]: {
+    time: "2020-09-24T16:00:00+05:30",
+    text: "Evening"
+  },
+  [DINNER]: {
+    time: "2020-09-24T20:00:00+05:30",
+    text: "Dinner"
+  },
+  [SLEEP]: {
+    time: "2020-09-24T23:00:00+05:30",
+    text: "Before Sleep"
+  },
+  [MID_MORNING]: {
+    time: "2020-09-24T11:00:00+05:30",
+    text: "Mid Morning"
+  },
+};

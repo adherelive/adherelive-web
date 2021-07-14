@@ -255,7 +255,7 @@ class AddExerciseGroup extends Component {
           onClose={ onClose}
           visible={visible}
           width={'35%'}
-          title={"Add Exercise Group"}
+          title={"Add Exercise"}
       
         >
           <FormWrapper wrappedComponentRef={setFormRef} {...this.props}

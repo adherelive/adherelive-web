@@ -138,7 +138,7 @@ class EditExerciseGroup extends Component {
           notes,
           prev_calorific_val,
           prev_sets,
-          [exercise_group_id && 'exercise_group_id'] : exercise_group_id && exercise_group_id
+          ...exercise_group_id && { 'exercise_group_id': exercise_group_id }
         };
 
         const updateData={

@@ -340,7 +340,7 @@ class AppointmentController extends Controller {
           type,
           type_description,
           critical,
-          [type === RADIOLOGY && "radiology_type" ]:type === RADIOLOGY && radiology_type 
+          ...type === RADIOLOGY && { 'radiology_type': radiology_type }
         }
       };
 

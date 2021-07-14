@@ -16,7 +16,8 @@ import {
   TYPE_USER_MESSAGE,
   APPOINTMENT_TYPE_TITLE,
   MEDICATION_TIMING,
-  TYPE_WORKOUTS
+  TYPE_WORKOUTS,
+  PATIENT_MEAL_TIMINGS
   // WHEN_TO_TAKE_ABBR_TYPES,
 } from "../../../constant";
 import VideoCameraFilled from "@ant-design/icons/VideoCameraFilled";
@@ -1055,16 +1056,13 @@ class NotificationDrawer extends Component {
       type === EVENT_TYPE.DIET &&
       (category === CATEGORY.DIET || category == CATEGORY.ALL)
     ){
-      const { diets = {} , diet_food_group_mappings = {} } = this.props;
+      const { diets = {} ,schedule_events={}, diet_responses = {} } = this.props;
       let patient_id = null;
-      const { actor_role_id = "", stage = "", foreign_id = null , diet_id = null } = notification || {};
-      const {  basic_info: { name : diet_name = '',  care_plan_id = null } = {} , diet_food_group_mapping_ids = [] } =
+      const { actor_role_id = "", stage = "", foreign_id = null , diet_id = null  } = notification || {};
+      const { basic_info:{schedule_event_id = null} = {}  } = diet_responses[foreign_id] || {} ;
+      const {details : { time_text = [] } = {} } = schedule_events[schedule_event_id] || {};
+      const {  basic_info: { name : diet_name = '',  care_plan_id = null } = {}  } =
       diets[diet_id] || {};
-      
-      const mappingsId = diet_food_group_mapping_ids[0] || null;
-      const {basic_info : {time : diet_time = ''} = {} } = diet_food_group_mappings[mappingsId] || {};
-      const timeObj = MEDICATION_TIMING[diet_time] || {};
-      const { text : time_text = '' } = timeObj || {};
 
       Object.keys(patients).forEach((id) => {
         const { basic_info: { user_id } = {} , user_role_id = null } = patients[id] || {};

@@ -114,7 +114,7 @@ const messages = defineMessages({
     no_show: {
         id: "app.patient_profile.no_show",
         description: "Patient Profile Header",
-        defaultMessage: "No Medications, Appointments, Reports, Symptoms, Vitals, Diets or Workouts to Show"
+        defaultMessage: "No Medications, Appointments, Reports, Symptoms, Actions, Diets or Workouts to Show"
     },
     no_appointment: {
         id: "app.patient_profile.no_appointment",
@@ -129,7 +129,7 @@ const messages = defineMessages({
     no_vital: {
         id: "app.patient_profile.no_vital",
         description: "Patient Profile Header",
-        defaultMessage: "No Vitals to Show"
+        defaultMessage: "No Actions to Show"
     },
     no_diet: {
         id: "app.patient_profile.no_diet",
