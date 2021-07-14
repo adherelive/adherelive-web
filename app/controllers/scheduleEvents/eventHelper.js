@@ -421,7 +421,7 @@ const getFormattedData = async (events = [], category = USER_CATEGORY.DOCTOR) =>
                     const timings = {};
                     timings[event.getDate()] = [];
                     timings[event.getDate()].push({start_time, end_time});
-                    diets[event.getEventId()] = {  diet_name, participant_id:patientId , timings, critical};
+                    diets[event.getEventId()] = {  diet_name, patient_id:patientId , timings, critical};
                 } else {
                     const {timings} = diets[event.getEventId()] || {};
                     if (!Object.keys(timings).includes(event.getDate())) {
@@ -460,7 +460,7 @@ const getFormattedData = async (events = [], category = USER_CATEGORY.DOCTOR) =>
                     const timings = {};
                     timings[event.getDate()] = [];
                     timings[event.getDate()].push({start_time, end_time});
-                    workouts[event.getEventId()] = { workout_name, participant_id:workoutPatientId , timings, critical};
+                    workouts[event.getEventId()] = { workout_name, patient_id:workoutPatientId , timings, critical};
                 } else {
                     const {timings} = workouts[event.getEventId()] || {};
                     if (!Object.keys(timings).includes(event.getDate())) {
