@@ -36,6 +36,9 @@ export const db = (database) => {
             details: {
                 type: DataTypes.JSON 
             },
+            expired_on: {
+                type: DataTypes.DATE,
+            },
         },
         {
             underscored: true,

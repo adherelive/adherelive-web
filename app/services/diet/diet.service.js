@@ -8,6 +8,7 @@ import { TABLE_NAME as similiarFoodMappingTableName } from "../../models/similar
 import { TABLE_NAME as foodGroupTableName } from "../../models/foodGroups";
 import { TABLE_NAME as scheduleEventTableName } from "../../models/scheduleEvents";
 import { DAYS_INTEGER, EVENT_TYPE } from "../../../constant";
+import moment from "moment";
 
 const DEFAULT_ORDER = [["created_at", "DESC"]];
 
@@ -365,58 +366,59 @@ class DietService {
     const transaction = await Database.initTransaction();
     try {
       // diet food group mappings
-      const { count: totalFoodGroupMappings, rows: allFoodGroupMappings = [] } =
-        (await Database.getModel(dietFoodGroupMappingTableName).findAndCountAll(
-          {
-            where: {
-              diet_id: id,
-            },
-            attributes: ["id", "food_group_id"],
-            transaction,
-          }
-        )) || {};
+      
+      // const { count: totalFoodGroupMappings, rows: allFoodGroupMappings = [] } =
+      //   (await Database.getModel(dietFoodGroupMappingTableName).findAndCountAll(
+      //     {
+      //       where: {
+      //         diet_id: id,
+      //       },
+      //       attributes: ["id", "food_group_id"],
+      //       transaction,
+      //     }
+      //   )) || {};
 
-      if (totalFoodGroupMappings) {
-        let foodGroupIds = [];
-        let dietFoodGroupMappingIds = [];
-        for (let index = 0; index < totalFoodGroupMappings; index++) {
-          const { id: diet_food_group_mapping_id, food_group_id } =
-            allFoodGroupMappings[index] || {};
-          foodGroupIds.push(food_group_id);
-          dietFoodGroupMappingIds.push(diet_food_group_mapping_id);
-        }
+      // if (totalFoodGroupMappings) {
+      //   let foodGroupIds = [];
+      //   let dietFoodGroupMappingIds = [];
+      //   for (let index = 0; index < totalFoodGroupMappings; index++) {
+      //     const { id: diet_food_group_mapping_id, food_group_id } =
+      //       allFoodGroupMappings[index] || {};
+      //     foodGroupIds.push(food_group_id);
+      //     dietFoodGroupMappingIds.push(diet_food_group_mapping_id);
+      //   }
 
-        // delete similar mappings (if any)
-        await Database.getModel(similiarFoodMappingTableName).destroy({
-          where: {
-            [Op.or]: [
-              {
-                related_to_id: dietFoodGroupMappingIds,
-              },
-              {
-                secondary_id: dietFoodGroupMappingIds,
-              },
-            ],
-          },
-          transaction,
-        });
+      //   // delete similar mappings (if any)
+      //   await Database.getModel(similiarFoodMappingTableName).destroy({
+      //     where: {
+      //       [Op.or]: [
+      //         {
+      //           related_to_id: dietFoodGroupMappingIds,
+      //         },
+      //         {
+      //           secondary_id: dietFoodGroupMappingIds,
+      //         },
+      //       ],
+      //     },
+      //     transaction,
+      //   });
 
-        // delete all food groups
-        await Database.getModel(foodGroupTableName).destroy({
-          where: {
-            id: foodGroupIds,
-          },
-          transaction,
-        });
+      //   // delete all food groups
+      //   await Database.getModel(foodGroupTableName).destroy({
+      //     where: {
+      //       id: foodGroupIds,
+      //     },
+      //     transaction,
+      //   });
 
-        // delete food group mappings
-        await Database.getModel(dietFoodGroupMappingTableName).destroy({
-          where: {
-            id: dietFoodGroupMappingIds,
-          },
-          transaction,
-        });
-      }
+      //   // delete food group mappings
+      //   await Database.getModel(dietFoodGroupMappingTableName).destroy({
+      //     where: {
+      //       id: dietFoodGroupMappingIds,
+      //     },
+      //     transaction,
+      //   });
+      // }
 
       // delete all schedule event created
       await Database.getModel(scheduleEventTableName).destroy({
@@ -428,12 +430,20 @@ class DietService {
 
       // todo: delete all diet responses and it's uploaded documents (if needed)
 
-      await Database.getModel(TABLE_NAME).destroy({
+      await Database.getModel(TABLE_NAME).update({expired_on:moment()},{
         where: {
-          id,
+            id,
         },
-        transaction,
+        transaction
       });
+
+      // await Database.getModel(TABLE_NAME).destroy({
+      //   where: {
+      //     id,
+      //   },
+      //   transaction,
+      // });
+
       await transaction.commit();
       return true;
     } catch (err) {
