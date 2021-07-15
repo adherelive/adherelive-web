@@ -6,6 +6,11 @@ const messages = defineMessages({
         description: "",
         defaultMessage: "Edit Workout"
     },
+    viewDetails: {
+        id: "app.edit.workout.viewDetails",
+        description: "",
+        defaultMessage: "Workout Details"
+    },
     addWorkoutText: {
         id: "app.edit.workout.addWorkoutTextext",
         description: "",

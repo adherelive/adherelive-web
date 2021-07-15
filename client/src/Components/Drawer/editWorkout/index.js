@@ -20,7 +20,8 @@ class EditWorkout extends Component{
             submitting:false,
             days:[],
             time:'',
-            deletedExerciseGroupIds:[]
+            deletedExerciseGroupIds:[],
+            expired_on:null
         }
 
         this.FormWrapper = Form.create({ onFieldsChange: this.onFormFieldChanges })(
@@ -110,7 +111,8 @@ class EditWorkout extends Component{
             time = '',
             total_calories='',
             start_date='',
-            end_date='',} = workouts[workout_id] || {};
+            end_date='',
+            expired_on=null} = workouts[workout_id] || {};
 
           const initialFormData = {
             name,
@@ -124,7 +126,8 @@ class EditWorkout extends Component{
             completeData:[...workout_exercise_groups],
             initialFormData,
             care_plan_id,total_calories,
-            time
+            time,
+            expired_on
           });
 
         }
@@ -180,7 +183,8 @@ class EditWorkout extends Component{
             total_calories:0,
             submitting:false,
             time:'',
-            deletedExerciseGroupIds:[]
+            deletedExerciseGroupIds:[],
+            expired_on:null
         });
         
         resetFields();
@@ -332,7 +336,7 @@ class EditWorkout extends Component{
     getWorkoutComponent = () => {
 
       const { setFinalDayData , setNewTotalCal ,setDeletedExerciseGroupId  } = this;
-      const { completeData = {} , total_calories=0  } = this.state;
+      const { completeData = {} , total_calories=0 ,expired_on=null } = this.state;
       
       return (
           <div>
@@ -342,6 +346,7 @@ class EditWorkout extends Component{
               </div>
             
             <SingleDayExerciseComponent 
+                expired_on={expired_on}
                 setFinalDayData={setFinalDayData}
                 setNewTotalCal={setNewTotalCal}
                 setDeletedExerciseGroupId={setDeletedExerciseGroupId}
@@ -448,12 +453,17 @@ class EditWorkout extends Component{
         FormWrapper } = this;
       const { visible = false  } = this.props;
       const { workoutVisible = false , hideWorkout = null,addTemplateWorkout =null, editTemplateWorkout = null }=this.props;
-      const {submitting = false , initialFormData = {} ,loading = false , days = [], time = ''  }=this.state;
+      const {submitting = false , initialFormData = {} ,loading = false , days = [], time = '' ,expired_on=null }=this.state;
 
     return (
         <Fragment>
           <Drawer
-            title={(editTemplateWorkout === null && addTemplateWorkout === null )
+            title={
+              expired_on
+              ?
+              formatMessage(messages.viewDetails)
+              :
+              (editTemplateWorkout === null && addTemplateWorkout === null )
               ?formatMessage(messages.editWorkout)
               :addTemplateWorkout ? formatMessage(messages.addWorkoutText) :  formatMessage(messages.editWorkout)
           }
@@ -489,15 +499,19 @@ class EditWorkout extends Component{
             (
              <div className="wp100" >
                 <FormWrapper
-                 wrappedComponentRef={setFormRef}
-                  {...this.props}
+                  expired_on={expired_on}
+                  wrappedComponentRef={setFormRef}
                   days={days}
                   setTime={setTime}
                   time={time}
                   getWorkoutComponent={getWorkoutComponent}
                   initialFormData={initialFormData}
+                  {...this.props}
                 />
                 
+                {
+                  !expired_on
+                  &&
                 <Footer
                   className="flex justify-space-between"
                   onSubmit={this.handleSubmit}
@@ -507,6 +521,8 @@ class EditWorkout extends Component{
                   cancelComponent={getDeleteButton()}
                   submitting={submitting}
                 />
+                }
+                
              </div>
             )
             

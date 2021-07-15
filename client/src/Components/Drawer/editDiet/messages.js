@@ -6,6 +6,11 @@ const messages = defineMessages({
         description: "",
         defaultMessage: "Edit Diet"
     },
+    viewDetails: {
+        id: "app.edit.diet.viewDetails",
+        description: "",
+        defaultMessage: "Diet Details"
+    },
     addDietText: {
         id: "app.edit.diet.addDietTextext",
         description: "",

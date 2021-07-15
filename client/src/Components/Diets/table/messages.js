@@ -36,10 +36,20 @@ const messages = defineMessages({
     description: "",
     defaultMessage: "Edit"
   },
+  view: {
+    id: "app.diets.table.diets.view",
+    description: "",
+    defaultMessage: "View"
+  },
   response_timeline: {
     id: "app.diets.table.diets.responseTimeline",
     description: "",
     defaultMessage: "Response Timeline"
+  },
+  deactivated: {
+    id: "app.diets.table.diets.deactivated",
+    description: "",
+    defaultMessage: "Deactivated"
   },
 });
 

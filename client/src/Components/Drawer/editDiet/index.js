@@ -20,7 +20,8 @@ class EditDiet extends Component{
             initialFormData:{},
             loading:false,
             timings:{},
-            deletedFoodGroupIds:[]
+            deletedFoodGroupIds:[],
+            expired_on:null
         }
 
         this.FormWrapper = Form.create({ onFieldsChange: this.onFormFieldChanges })(
@@ -129,9 +130,11 @@ class EditDiet extends Component{
               name='',
               total_calories='',
               start_date='',
-              end_date=''
+              end_date='',
             } = {} , 
-            details : {  not_to_do = '' } = {} } = diets[diet_id] || {};
+            details : {  not_to_do = '' } = {},
+            expired_on=null 
+            } = diets[diet_id] || {};
 
           const initialFormData = {
             name,
@@ -143,7 +146,8 @@ class EditDiet extends Component{
           this.setState({
             completeData:{...diet_food_groups},
             initialFormData,
-            care_plan_id,total_calories
+            care_plan_id,total_calories,
+            expired_on
           });
 
         }
@@ -196,7 +200,8 @@ class EditDiet extends Component{
           initialFormData:{},
           loading:false,
           timings:{},
-          deletedFoodGroupIds:[]
+          deletedFoodGroupIds:[],
+          expired_on:null
         });
         
         resetFields();
@@ -354,7 +359,7 @@ class EditDiet extends Component{
     getDietComponent = () => {
 
       const {setFinalDayData , setNewTotalCal ,setDeletedFoodGroupId } = this;
-      const { completeData = {} , total_calories=0,timings={} } = this.state;
+      const { completeData = {} , total_calories=0,timings={} , expired_on=null } = this.state;
       
       return (
           <div>
@@ -370,6 +375,7 @@ class EditDiet extends Component{
                 completeData = {completeData}
                 total_calories={total_calories}
                 timings={timings}
+                expired_on={expired_on}
                 {...this.props}
             />
           </div>
@@ -470,12 +476,17 @@ class EditDiet extends Component{
         FormWrapper } = this;
       const { visible = false  } = this.props;
       const { dietVisible = false , hideDiet = null,addTemplateDiet =null, editTemplateDiet = null }=this.props;
-      const {submitting = false , initialFormData = {} ,loading = false }=this.state;
+      const {submitting = false , initialFormData = {} ,loading = false ,expired_on=null}=this.state;
 
     return (
         <Fragment>
           <Drawer
-            title={(editTemplateDiet === null && addTemplateDiet === null )
+            title={
+              expired_on
+              ?
+              formatMessage(messages.viewDetails)
+              :
+              (editTemplateDiet === null && addTemplateDiet === null )
               ?formatMessage(messages.editDiet)
               :addTemplateDiet ? formatMessage(messages.addDietText) :  formatMessage(messages.editDiet)
           }
@@ -515,9 +526,13 @@ class EditDiet extends Component{
                   {...this.props}
                   getDietComponent={getDietComponent}
                   initialFormData={initialFormData}
+                  expired_on={expired_on}
                 />
                 
-                <Footer
+                {
+                  !expired_on
+                  &&
+                  <Footer
                   className="flex justify-space-between"
                   onSubmit={this.handleSubmit}
                   onClose={onClose}
@@ -526,6 +541,7 @@ class EditDiet extends Component{
                   cancelComponent={getDeleteButton()}
                   submitting={submitting}
                 />
+                }
              </div>
             )
             

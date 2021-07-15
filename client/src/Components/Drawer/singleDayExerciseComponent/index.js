@@ -103,7 +103,7 @@ class DayWorkout extends Component{
     getTimingOptions = () => {
 
       let options = [] , allExerciseItems = [];
-      const {  completeData = [] ,time = moment() , exercise_details = {} } = this.props;
+      const {  completeData = [] ,time = moment() , exercise_details = {} , expired_on=null } = this.props;
 
   
       for(let i = 0;i<completeData.length;i++){
@@ -147,21 +147,25 @@ class DayWorkout extends Component{
          options.push(
            <div className="tal wp100 mt10 mb10 " >
              <div className="b-light-grey wp100 mh40 flex direction-column align-center p10 br4 " >
- 
-                   <div className=" pointer tab-color tal fw700 wp100 flex justify-space-between" 
-                     onClick={this.openAddExerciseGroupDrawer} 
-                   >
-                       <div>
-                       <PlusOutlined
-                         className="pointer tab-color"
-                         title="Add More"
-                       />
-                       <span className="ml10" >{this.formatMessage(messages.addExercise)}</span>
-                       </div>
+                  {
+                    !expired_on
+                    &&
+                    <div className=" pointer tab-color tal fw700 wp100 flex justify-space-between" 
+                      onClick={this.openAddExerciseGroupDrawer} 
+                    >
+                        <div>
+                        <PlusOutlined
+                          className="pointer tab-color"
+                          title="Add More"
+                        />
+                        <span className="ml10" >{this.formatMessage(messages.addExercise)}</span>
+                        </div>
 
-                      
-                       
-                   </div>   
+                        
+                        
+                    </div> 
+                  }
+                     
  
                    <div className=" wp100 flex flex-wrap max-w-100p " >
                      {allExerciseItems.length ? allExerciseItems : null}
@@ -259,7 +263,7 @@ class DayWorkout extends Component{
 
         const { handleOpenEditExerciseGroupDrawer } = this;
 
-        const { exercises , exercise_details , repetitions } = this.props;
+        const { exercises , exercise_details , repetitions , expired_on = null  } = this.props;
 
         const {
           basic_info : { 
@@ -280,6 +284,9 @@ class DayWorkout extends Component{
                 <div className="flex algin-center justify-center " > 
                   
                   <div className="flex direction-column algin-center justify-center" >
+                    {
+                      !expired_on
+                      &&
                       <img
                         src={edit_image}
                         className="edit-patient-icon flex direction-column align-center justify-center pointer"
@@ -294,16 +301,22 @@ class DayWorkout extends Component{
                            })
                         }
                       />
+                    }
+                      
                   </div>  
                   <div className="flex direction-column algin-center justify-center" >
-
+                    {
+                      !expired_on
+                      &&
                       <DeleteOutlined
                         className={"pointer align-self-end ml10 "}
                         onClick={
                           this.handleDeleteExerciseGroup({exercise_group_index})
-                         }
+                        }
                         style={{ fontSize: "18px", color: "#6d7278" }}
                       />
+                    }
+                     
                   </div>
 
                 
