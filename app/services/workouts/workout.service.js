@@ -7,6 +7,7 @@ import { TABLE_NAME as repetitionTableName } from "../../models/exerciseRepetiti
 import { TABLE_NAME as workoutExerciseGroupMappingTableName } from "../../models/workoutExerciseGroupMapping";
 import {TABLE_NAME as scheduleEventTableName} from "../../models/scheduleEvents";
 import { EVENT_TYPE } from "../../../constant";
+import moment from "moment";
 
 const DEFAULT_ORDER = [["created_at", "DESC"]];
 
