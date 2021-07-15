@@ -173,7 +173,7 @@ class WorkoutController extends Controller {
             [careplanWrapper.getCarePlanId()]: await careplanWrapper.getAllInfo(),
           },
         },
-        "Diet created successfully."
+        "Workout created successfully."
       );
     } catch (error) {
       Log.debug("create 500", error);
@@ -357,9 +357,15 @@ class WorkoutController extends Controller {
       }
 
       const isDeleted = await workoutService.delete({ id });
-
+      let workoutApiData={};
       if (isDeleted) {
-        return raiseSuccess(res, 200, {}, "Workout deleted successfully");
+        const workoutWrapper = await WorkoutWrapper({id});
+        workoutApiData[workoutWrapper.getId()] = workoutWrapper.getBasicInfo();
+        return raiseSuccess(res, 200, {
+          workouts:{
+            ...workoutApiData
+          }
+        }, "Workout deleted successfully");
       } else {
         return raiseClientError(
           res,

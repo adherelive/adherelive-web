@@ -36,6 +36,16 @@ const messages = defineMessages({
     description: "",
     defaultMessage: "Edit"
   },
+  deactivated: {
+    id: "app.workouts.table.workouts.deactivated",
+    description: "",
+    defaultMessage: "Deactivated"
+  },
+  view: {
+    id: "app.workouts.table.workouts.view",
+    description: "",
+    defaultMessage: "View"
+  },
   response_timeline: {
     id: "app.workouts.table.workouts.responseTimeline",
     description: "",

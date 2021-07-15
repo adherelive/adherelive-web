@@ -110,7 +110,10 @@ class DietFieldsFrom extends Component {
       handleCheckDays
     } = this;
 
-    const { initialFormData = {} , editTemplateDiet=null} = this.props;
+
+    let disabled=false;
+
+    const { initialFormData = {} , editTemplateDiet=null,expired_on=null} = this.props;
     let { name = '', start_date : str_start_date='',end_date : str_end_date = null , not_to_do = ''} = initialFormData || {};
     let start_date = str_start_date ?  moment(str_start_date) : moment();
     let end_date = str_end_date ? moment(str_end_date) : null;
@@ -139,6 +142,10 @@ class DietFieldsFrom extends Component {
     }
 
 
+    if(expired_on !== null){
+      disabled=true;
+    }
+
 
     return (
         <Form className="fw700 wp100 pb30 Form">
@@ -159,6 +166,7 @@ class DietFieldsFrom extends Component {
                   <Input
                     placeholder={this.formatMessage(messages.addDietName)}
                     className={"form-inputs"}
+                    disabled={disabled}
                   />
                 )}
               </FormItem>
@@ -176,9 +184,12 @@ class DietFieldsFrom extends Component {
                          className=
                             {`pointer ${selectedDays.length === 7 ? "tab-color" : "null" }`}
                             onClick = {
+                              !disabled ? 
                               selectedDays.length === 7 ?
                               this.unSetSameForAllDays :
                               this.setSameForAllDays
+                              :
+                              null
                             }
                           >Same for all days</div>
                       </div>
@@ -192,14 +203,16 @@ class DietFieldsFrom extends Component {
                             message:this.formatMessage(messages.requiredRepeatDays)
                           }
                         ]
-                      })(<Input />)}
+                      })(<Input 
+                        disabled={disabled}
+                      />)}
                     </FormItem>
                     <div className="flex-shrink-1 flex justify-space-evenly select-days mt10">
                       {DAYS.map(tag => (
                         <CheckableTag
                           key={tag}
                           checked={selectedDays.indexOf(tag) > -1}
-                          onChange={checked => handleCheckDays(tag, checked)}
+                          onChange={ !disabled ? checked => handleCheckDays(tag, checked) : null }
                         >
                           {tag}
                         </CheckableTag>
@@ -232,6 +245,7 @@ class DietFieldsFrom extends Component {
                   <DatePicker
                     className="wp100 h53"
                     disabledDate={this.disabledStartDate}
+                    disabled={disabled}
                   />
                 )}
               </FormItem>
@@ -248,6 +262,7 @@ class DietFieldsFrom extends Component {
                     <DatePicker
                       className="wp100 h53"
                       disabledDate={this.disabledStartDate}
+                      disabled={disabled}
                     />
                   )}
                 </FormItem>
@@ -264,7 +279,7 @@ class DietFieldsFrom extends Component {
                 })(
                   <TextArea
                     className="mb20"
-                    
+                    disabled={disabled}
                   />
                 )}
               </FormItem>

@@ -751,6 +751,7 @@ const dietNotification = async (data) => {
       // foreign id = schedule event id
 
       const scheduleEvent = await scheduleEventService.getEventByData({
+        paranoid:false,
         id: parseInt(foreign_id, 10),
       });
       const scheduleEventWrapper = await EventWrapper(scheduleEvent);
@@ -856,6 +857,7 @@ const workoutNotification = async (data) => {
       // foreign id = schedule event id
 
       const scheduleEvent = await scheduleEventService.getEventByData({
+        paranoid:false,
         id: parseInt(foreign_id, 10),
       });
       const scheduleEventWrapper = await EventWrapper(scheduleEvent);

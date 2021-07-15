@@ -18,7 +18,9 @@ export default props => {
       render: data => {
         const { workoutData } = data || {};
         return (
-          <Name workoutData={workoutData} />
+          <Name 
+          workoutData={workoutData}
+          formatMessage={formatMessage} />
         );
       }
     },
@@ -51,8 +53,12 @@ export default props => {
 
       render: ({
           openEditDrawer, formatMessage, 
-          id}) => <Edit formatMessage={formatMessage} id={id} 
+          id,
+          workoutData
+        }) => <Edit formatMessage={formatMessage} 
+          id={id} 
           action={openEditDrawer}
+          workoutData={workoutData}
           />
     }
   ];

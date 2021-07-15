@@ -16,9 +16,11 @@ export default props => {
       title: formatMessage(messages.name),
       ...TABLE_COLUMN.NAME,
       render: data => {
-        const { dietData } = data || {};
+        const { dietData,formatMessage } = data || {};
         return (
-          <Name dietData={dietData} />
+          <Name 
+            dietData={dietData} 
+            formatMessage={formatMessage} />
         );
       }
     },
@@ -51,8 +53,12 @@ export default props => {
 
       render: ({
           openEditDrawer, formatMessage, 
-          id}) => <Edit formatMessage={formatMessage} id={id} 
+          id,
+          dietData
+        }) => <Edit formatMessage={formatMessage} 
+          id={id} 
           action={openEditDrawer}
+          dietData={dietData}
           />
     }
   ];
