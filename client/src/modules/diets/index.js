@@ -318,7 +318,8 @@ export default (state = {}, action) => {
         case GET_CAREPLAN_DIETS_COMPLETED:
             return dietReducer(state,data);
         case DELETE_DIET_COMPLETED:
-            return deleteDietReducer(state,data); // delete diet reducer
+            // return deleteDietReducer(state,data); // delete diet reducer
+            return dietReducer(state,data);
         default:
             return dietReducer(state, data);
     }

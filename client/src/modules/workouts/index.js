@@ -331,7 +331,8 @@ export default (state = {}, action) => {
         case GET_WORKOUT_DETAILS_FOR_RESPONSE_COMPLETED:
             return workoutsReducer(state,data);
         case DELETE_WORKOUT_COMPLETED:
-            return deleteWorkoutReducer(state,data); // delete reducer
+            // return deleteWorkoutReducer(state,data); // delete reducer
+            return workoutsReducer(state,data);
         default:
             return workoutsReducer(state,data);
     }

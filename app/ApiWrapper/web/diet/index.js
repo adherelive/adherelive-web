@@ -22,7 +22,8 @@ class DietWrapper extends BaseDiet {
             start_date,
             end_date,
             care_plan_id,
-            details
+            details,
+            expired_on
         } = _data || {};
 
         return {
@@ -34,7 +35,8 @@ class DietWrapper extends BaseDiet {
             end_date,
             care_plan_id,
             },
-            details
+            details,
+            expired_on
         };
     };
 

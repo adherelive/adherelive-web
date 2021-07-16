@@ -153,7 +153,7 @@ class WorkoutFieldsFrom extends Component {
 
   getTimeOption = () => {
     const {showTimeKeeper=false} = this.state;
-    const { time = moment() } = this.props;
+    const { time = moment() , expired_on = null } = this.props;
     const formattedTime =time ? moment(time).format("hh:mm A") : moment().format("hh:mm A");
 
     return (
@@ -166,11 +166,16 @@ class WorkoutFieldsFrom extends Component {
               {formattedTime}
              </div>  
              <div className="flex direction-column align-center justify-center " >
-              <img
-                  src={edit_image}
-                  className="ml20 edit-patient-icon flex direction-column align-center justify-center pointer"
-                  onClick={this.viewTimeKeeper}
-                />
+               {
+                 !expired_on
+                 &&
+                  <img
+                    src={edit_image}
+                    className="ml20 edit-patient-icon flex direction-column align-center justify-center pointer"
+                    onClick={this.viewTimeKeeper}
+                  />
+               }
+              
              </div>  
               
            </div>
@@ -189,14 +194,14 @@ class WorkoutFieldsFrom extends Component {
     } = this.props;
 
     const { selectedDays = [] } = this.state;
-
+    let disabled= false;
     const {
       formatMessage,
       handleCheckDays,
       getTimeOption
     } = this;
 
-    const { initialFormData = {} , editTemplateWorkout=null , days = []} = this.props;
+    const { initialFormData = {} , editTemplateWorkout=null , days = [] , expired_on=null } = this.props;
     let { name = '', start_date : str_start_date='',end_date : str_end_date = null , not_to_do = ''} = initialFormData || {};
     let start_date = str_start_date ?  moment(str_start_date) : moment();
     let end_date = str_end_date ? moment(str_end_date) : null;
@@ -226,6 +231,9 @@ class WorkoutFieldsFrom extends Component {
  
     }
 
+    if(expired_on !== null ){
+      disabled = true;
+    }
 
 
     return (
@@ -247,6 +255,7 @@ class WorkoutFieldsFrom extends Component {
                   <Input
                     placeholder={this.formatMessage(messages.addWorkoutName)}
                     className={"form-inputs"}
+                    disabled={disabled}
                   />
                 )}
               </FormItem>
@@ -264,9 +273,12 @@ class WorkoutFieldsFrom extends Component {
                          className=
                             {`pointer ${selectedDays.length === 7 ? "tab-color" : "null" }`}
                             onClick = {
+                              !disabled 
+                              ? 
                               selectedDays.length === 7 ?
                               this.unSetSameForAllDays :
                               this.setSameForAllDays
+                              : null
                             }
                           >Same for all days</div>
                       </div>
@@ -280,14 +292,16 @@ class WorkoutFieldsFrom extends Component {
                             message:this.formatMessage(messages.requiredRepeatDays)
                           }
                         ]
-                      })(<Input />)}
+                      })(<Input
+                        disabled={disabled}
+                         />)}
                     </FormItem>
                     <div className="flex-shrink-1 flex justify-space-evenly select-days mt10">
                       {days.map(tag => (
                         <CheckableTag
                           key={tag}
                           checked={selectedDays.indexOf(tag) > -1}
-                          onChange={checked => handleCheckDays(tag, checked)}
+                          onChange={ !disabled ? checked => handleCheckDays(tag, checked) : null }
                         >
                           {tag}
                         </CheckableTag>
@@ -325,6 +339,7 @@ class WorkoutFieldsFrom extends Component {
                   <DatePicker
                     className="wp100 h53"
                     disabledDate={this.disabledStartDate}
+                    disabled={disabled}
                   />
                 )}
               </FormItem>
@@ -341,6 +356,7 @@ class WorkoutFieldsFrom extends Component {
                     <DatePicker
                       className="wp100 h53"
                       disabledDate={this.disabledStartDate}
+                      disabled={disabled}
                     />
                   )}
                 </FormItem>
@@ -357,7 +373,7 @@ class WorkoutFieldsFrom extends Component {
                 })(
                   <TextArea
                     className="mb20"
-                    
+                    disabled={disabled}
                   />
                 )}
               </FormItem>

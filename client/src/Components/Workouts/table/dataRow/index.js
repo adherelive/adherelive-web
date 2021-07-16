@@ -10,7 +10,8 @@ export default data => {
   return {
     key: id,
     [TABLE_COLUMN.NAME.dataIndex]: {
-        workoutData
+        workoutData,
+        formatMessage
     },
     [TABLE_COLUMN.DURATION.dataIndex]: {
         workoutData
@@ -28,6 +29,7 @@ export default data => {
     },
     [TABLE_COLUMN.EDIT.dataIndex]: {
       id,
+      workoutData,
       openEditDrawer,
       formatMessage
     },

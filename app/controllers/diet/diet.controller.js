@@ -545,9 +545,15 @@ class DietController extends Controller {
       }
 
       const isDeleted = await dietService.delete(id);
-
+      let dietApiData={};
       if(isDeleted) {
-        return raiseSuccess(res, 200, {}, "Diet deleted successfully");
+        const dietWrapper = await DietWrapper({id});
+        dietApiData[dietWrapper.getId()] = dietWrapper.getBasicInfo();
+        return raiseSuccess(res, 200, {
+          diets:{
+            ...dietApiData
+          }
+        }, "Diet deleted successfully");
       } else {
         return raiseClientError(res, 422, {}, "Please select a valid diet to delete");
       }

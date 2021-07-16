@@ -14,4 +14,9 @@ export default class Workout {
     getDetails = () => this._data.details || {};
 
     getExerciseGroups = () => this._data.exercise_groups || [];
+
+    getExpiredOn = () => {
+        return this._data.expired_on;
+    };
+    
 }

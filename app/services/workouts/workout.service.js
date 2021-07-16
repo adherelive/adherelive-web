@@ -7,6 +7,7 @@ import { TABLE_NAME as repetitionTableName } from "../../models/exerciseRepetiti
 import { TABLE_NAME as workoutExerciseGroupMappingTableName } from "../../models/workoutExerciseGroupMapping";
 import {TABLE_NAME as scheduleEventTableName} from "../../models/scheduleEvents";
 import { EVENT_TYPE } from "../../../constant";
+import moment from "moment";
 
 const DEFAULT_ORDER = [["created_at", "DESC"]];
 
@@ -204,41 +205,41 @@ export default class WorkoutService {
       ? continuedTransaction
       : await Database.initTransaction();
     try {
-      const {
-        count: totalExerciseGroupMappings,
-        rows: allExerciseGroupMappings = [],
-      } = await Database.getModel(
-        workoutExerciseGroupMappingTableName
-      ).findAndCountAll({
-        where: {
-          workout_id: id,
-        },
-        attributes: ["exercise_group_id"],
-      });
+      // const {
+      //   count: totalExerciseGroupMappings,
+      //   rows: allExerciseGroupMappings = [],
+      // } = await Database.getModel(
+      //   workoutExerciseGroupMappingTableName
+      // ).findAndCountAll({
+      //   where: {
+      //     workout_id: id,
+      //   },
+      //   attributes: ["exercise_group_id"],
+      // });
 
-      let exerciseGroupIds = [];
-      if (totalExerciseGroupMappings) {
-        for (let index = 0; index < allExerciseGroupMappings.length; index++) {
-          const { exercise_group_id } = allExerciseGroupMappings[index] || {};
-          exerciseGroupIds.push(exercise_group_id);
-        }
-      }
+      // let exerciseGroupIds = [];
+      // if (totalExerciseGroupMappings) {
+      //   for (let index = 0; index < allExerciseGroupMappings.length; index++) {
+      //     const { exercise_group_id } = allExerciseGroupMappings[index] || {};
+      //     exerciseGroupIds.push(exercise_group_id);
+      //   }
+      // }
 
-      // exercise groups
-      await Database.getModel(exerciseGroupTableName).destroy({
-        where: {
-          id: exerciseGroupIds,
-        },
-        transaction,
-      });
+      // // exercise groups
+      // await Database.getModel(exerciseGroupTableName).destroy({
+      //   where: {
+      //     id: exerciseGroupIds,
+      //   },
+      //   transaction,
+      // });
 
-      // workout exercise group mappings
-      await Database.getModel(workoutExerciseGroupMappingTableName).destroy({
-        where: {
-          workout_id: id,
-        },
-        transaction,
-      });
+      // // workout exercise group mappings
+      // await Database.getModel(workoutExerciseGroupMappingTableName).destroy({
+      //   where: {
+      //     workout_id: id,
+      //   },
+      //   transaction,
+      // });
 
       // schedule event created
       await Database.getModel(scheduleEventTableName).destroy({
@@ -249,11 +250,18 @@ export default class WorkoutService {
         transaction,
       });
 
-      // data for workout delete
-      await Database.getModel(TABLE_NAME).destroy({
-        where: { id },
-        transaction,
+      await Database.getModel(TABLE_NAME).update({expired_on:moment()},{
+        where: {
+            id,
+        },
+        transaction
       });
+
+      // data for workout delete
+      // await Database.getModel(TABLE_NAME).destroy({
+      //   where: { id },
+      //   transaction,
+      // });
 
       await transaction.commit();
       return true;

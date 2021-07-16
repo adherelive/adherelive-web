@@ -211,7 +211,7 @@ class DayDiet extends Component{
     getTimingOptions = () => {
       
       let options = [];
-      let {  completeData : singleDayData  , timings = {} } = this.props;
+      let {  completeData : singleDayData  , timings = {} , expired_on=null } = this.props;
 
         if(Object.keys(timings).length === 0){
           timings=PATIENT_MEAL_TIMINGS; // default 
@@ -289,14 +289,19 @@ class DayDiet extends Component{
                   <div className="food-group" >
                     { foodGroupComponent }
                     { allSimilarComponents }
-                    <div className="flex direction-column algin-center justify-center or-before-line" >
-                      <div 
-                        className="or-button fs12 pointer flex drection-column align-center justify-center ml20" 
-                        onClick={this.addSimilarFoodGroup({food_group_index,time:each})}
-                        >
-                          {this.formatMessage(messages.orText).toUpperCase()}
+                    {
+                      !expired_on
+                      &&
+                      <div className="flex direction-column algin-center justify-center or-before-line" >
+                        <div 
+                          className="or-button fs12 pointer flex drection-column align-center justify-center ml20" 
+                          onClick={this.addSimilarFoodGroup({food_group_index,time:each})}
+                          >
+                            {this.formatMessage(messages.orText).toUpperCase()}
+                        </div>
                       </div>
-                    </div>
+                    }
+                    
                   </div>
                 </div>
               )
@@ -314,17 +319,23 @@ class DayDiet extends Component{
                text,formattedTime
               })}</div>
              <div className="b-light-grey wp100 mh40 flex direction-column align-center p10 br4 " >
+
+                  {
+                    !expired_on
+                    &&
+                      <div className=" pointer tab-color tal fw700 wp100 " 
+                        onClick={this.handleTimingSelect(each)} 
+                      >
+                        <PlusOutlined
+                          className="pointer tab-color"
+                          title="Add More"
+                        />
+                        <span className="ml10" >{this.formatMessage(messages.addFoodItem)}</span>
+                        
+                      </div>  
+                  }
  
-                   <div className=" pointer tab-color tal fw700 wp100 " 
-                     onClick={this.handleTimingSelect(each)} 
-                   >
-                       <PlusOutlined
-                         className="pointer tab-color"
-                         title="Add More"
-                       />
-                       <span className="ml10" >{this.formatMessage(messages.addFoodItem)}</span>
-                       
-                   </div>    
+                    
  
                    <div className=" wp100 flex flex-wrap max-w-100p " >
                      {allFoodItems.length ? allFoodItems : null}
@@ -492,7 +503,7 @@ class DayDiet extends Component{
 
         const { handleOpenEditFoodGroupDrawer } = this;
 
-        const { food_items , food_item_details , portions } = this.props;
+        const { food_items , food_item_details , portions,expired_on=null } = this.props;
         const {basic_info : { 
             food_item_id = null ,
             portion_size=null
@@ -514,36 +525,45 @@ class DayDiet extends Component{
                 <div className="flex algin-center justify-center " > 
                   
                   <div className="flex direction-column algin-center justify-center" >
+                    {
+                      !expired_on
+                      &&
                       <img
-                        src={edit_image}
-                        className="edit-patient-icon flex direction-column align-center justify-center pointer"
-                        onClick={
-                          handleOpenEditFoodGroupDrawer({
-                            food_group_index,
-                            serving,
-                            detail_id:food_item_detail_id,
-                            food_item_id,
-                            notes,
-                            time,
-                            similar_index,
-                            food_group_id
-                           })
-                        }
-                      />
+                      src={edit_image}
+                      className="edit-patient-icon flex direction-column align-center justify-center pointer"
+                      onClick={
+                        handleOpenEditFoodGroupDrawer({
+                          food_group_index,
+                          serving,
+                          detail_id:food_item_detail_id,
+                          food_item_id,
+                          notes,
+                          time,
+                          similar_index,
+                          food_group_id
+                         })
+                      }
+                    />
+                    }
+                    
                   </div>  
                   <div className="flex direction-column algin-center justify-center" >
-
-                      <DeleteOutlined
-                        className={"pointer align-self-end ml10 "}
-                        onClick={
-                          similar_index === null
-                          ?
-                          this.handleDeleteFoodGroup({food_group_index,time})
-                          :
-                          this.handleDeleteSimilarFoodGroup({food_group_index,time,similar_index})
-                        }
-                        style={{ fontSize: "18px", color: "#6d7278" }}
-                      />
+                      {
+                        !expired_on
+                        &&
+                        <DeleteOutlined
+                          className={"pointer align-self-end ml10 "}
+                          onClick={
+                            similar_index === null
+                            ?
+                            this.handleDeleteFoodGroup({food_group_index,time})
+                            :
+                            this.handleDeleteSimilarFoodGroup({food_group_index,time,similar_index})
+                          }
+                          style={{ fontSize: "18px", color: "#6d7278" }}
+                        />
+                      }
+                      
                   </div>
 
                 

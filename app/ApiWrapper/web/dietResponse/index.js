@@ -2,6 +2,7 @@ import { DOCUMENT_PARENT_TYPE } from "../../../../constant";
 import BaseDietResponse from "../../../services/dietResponses";
 import DietResponsesService from "../../../services/dietResponses/dietResponses.service";
 import uploadDocumentsService from "../../../services/uploadDocuments/uploadDocuments.service";
+import ScheduleEventService from "../../../services/scheduleEvents/scheduleEvent.service";
 
 import EventWrapper from "../../common/scheduleEvents";
 import DocumentWrapper from "../uploadDocument";
@@ -48,11 +49,16 @@ class DietResponseWrapper extends BaseDietResponse {
 
     getReferenceInfo = async () => {
         const {getId, isDocumentUploaded, getScheduleEventId, getAllInfo} = this;
+        const scheduleEventService = new ScheduleEventService();
 
         let scheduleEventData = {};
         if(getScheduleEventId()) {
-            const scheduleEvent = await EventWrapper(null, getScheduleEventId());
-            scheduleEventData[getScheduleEventId()] = scheduleEvent.getAllInfo();
+            const schduleEventRecord = await scheduleEventService.getEventByData({paranoid:false,id:getScheduleEventId()});
+            if(schduleEventRecord){
+                const scheduleEvent = await EventWrapper(schduleEventRecord);
+                scheduleEventData[getScheduleEventId()] = scheduleEvent.getAllInfo();
+            }
+            
         }
 
 

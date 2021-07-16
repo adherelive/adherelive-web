@@ -36,4 +36,9 @@ export default class Diet {
         return this._data.diet_food_group_mappings;
     } 
 
+    getExpiredOn = () => {
+        return this._data.expired_on;
+    };
+
+
 }
