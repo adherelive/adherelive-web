@@ -25,7 +25,8 @@ import doctorRegistrationService from "../../services/doctorRegistration/doctorR
 import treatmentService from "../../services/treatment/treatment.service";
 import doctorPatientWatchlistService from "../../services/doctorPatientWatchlist/doctorPatientWatchlist.service";
 import userRolesService from '../../services/userRoles/userRoles.service';
-
+import DietService from "../../services/diet/diet.service"; 
+import PortionServiceService from "../../services/portions/portions.service";
 import providerService from "../../services/provider/provider.service";
 import ExerciseContentService from "../../services/exerciseContents/exerciseContent.service";
 
@@ -53,8 +54,12 @@ import DegreeWrapper from "../../ApiWrapper/web/degree";
 import CouncilWrapper from "../../ApiWrapper/web/council";
 import TreatmentWrapper from "../../ApiWrapper/web/treatments";
 import DoctorPatientWatchlistWrapper from "../../ApiWrapper/web/doctorPatientWatchlist";
+import DietWrapper from "../../ApiWrapper/web/diet";
 
 import ProviderWrapper from "../../ApiWrapper/web/provider";
+import PortionWrapper from "../../ApiWrapper/web/portions";
+
+import * as DietHelper from "../diet/dietHelper";
 
 import Log from "../../../libs/log";
 import moment from "moment";
@@ -1774,7 +1779,7 @@ class PatientController extends Controller {
     try {
       const { care_plan_id = null } = req.params;
       const { userDetails: { userId, userRoleId = null, userData: { category } = {} } = {} } = req;
-
+      const dietService = new DietService();
       // const carePlanId = parseInt(care_plan_id);
 
       let dataForPdf = {};
@@ -1816,6 +1821,8 @@ class PatientController extends Controller {
         details: { condition_id = null } = {},
         medication_ids = [],
         appointment_ids = [],
+        diet_ids = [],
+        workout_ids = []
       } = await carePlanData.getAllInfo();
 
       const conditionData = await conditionService.getByData({
@@ -1888,6 +1895,157 @@ class PatientController extends Controller {
               start_date: startDate
             });
           }
+        }
+      }
+
+
+      let dietApiData = {},dietIds=[];
+
+
+
+      // diet 
+      for (const id of diet_ids) {
+        const diet = await dietService.getByData({id})
+
+        if (diet) {
+          const dietData = await dietService.findOne({ id });
+          const dietWrapper = await DietWrapper({ data: dietData });
+          const expired_on = await dietWrapper.getExpiredOn();
+          
+          if(expired_on){
+            continue;
+          }
+
+          const referenceInfo = await dietWrapper.getReferenceInfo();
+    
+          let dietApidata = {},
+            dietBasicInfo = {};
+    
+          dietBasicInfo[dietWrapper.getId()] = await dietWrapper.getBasicInfo();
+    
+          const {
+            diet_food_group_mappings = {},
+            food_groups = {},
+            food_items = {},
+            food_item_details = {},
+          } = referenceInfo || {};
+    
+          const timeWise = await DietHelper.getTimeWiseDietFoodGroupMappings({
+            diet_food_group_mappings,
+          });
+    
+          for (let eachTime in timeWise) {
+            const { mappingIds = [] } = timeWise[eachTime] || {};
+    
+            for (let ele of mappingIds) {
+              let primary = null,
+                related_diet_food_group_mapping_ids = [];
+    
+              if (Array.isArray(ele)) {
+                ele.sort(function(a, b) {
+                  return a - b;
+                });
+    
+                primary = ele[0] || null;
+                related_diet_food_group_mapping_ids = ele.slice(1);
+              } else {
+                primary = ele;
+              }
+    
+              let currentfodmattedData = {};
+    
+              // const related_diet_food_group_mapping_ids = mappingIds.slice(1);
+              let similarFoodGroups = [],
+                notes = "";
+    
+              const current_mapping = diet_food_group_mappings[primary] || {};
+              const {
+                basic_info: { time = "", food_group_id = null } = {},
+              } = current_mapping;
+              const {
+                basic_info: { food_item_detail_id = null, serving = null } = {},
+                details = {},
+              } = food_groups[food_group_id] || {};
+              const { basic_info: { portion_id = null } = {} } =
+                food_item_details[food_item_detail_id] || {};
+    
+              if (details) {
+                const { notes: detail_notes = "" } = details;
+                notes = detail_notes;
+              }
+              if (related_diet_food_group_mapping_ids.length) {
+                for (
+                  let i = 0;
+                  i < related_diet_food_group_mapping_ids.length;
+                  i++
+                ) {
+                  const similarMappingId = related_diet_food_group_mapping_ids[i];
+    
+                  const {
+                    basic_info: {
+                      food_group_id: similar_food_group_id = null,
+                    } = {},
+                  } = diet_food_group_mappings[similarMappingId] || {};
+                  const {
+                    basic_info: {
+                      food_item_detail_id: similar_food_item_detail_id = null,
+                      serving: similar_serving = null,
+                    } = {},
+                    details: similar_details = {},
+                  } = food_groups[similar_food_group_id] || {};
+    
+                  const {
+                    basic_info: { portion_id: similar_portion_id = null } = {},
+                  } = food_item_details[similar_food_item_detail_id] || {};
+    
+                  let similar_notes = "";
+                  if (similar_details) {
+                    const { notes = "" } = similar_details || {};
+                    similar_notes = notes;
+                  }
+    
+                  const similarData = {
+                    serving: similar_serving,
+                    portion_id: similar_portion_id,
+                    food_item_detail_id: similar_food_item_detail_id,
+                    food_group_id: similar_food_group_id,
+                    notes: similar_notes,
+                  };
+    
+                  similarFoodGroups.push(similarData);
+                  // delete diet_food_group_mappings[similarMappingId];
+                }
+              }
+    
+              currentfodmattedData = {
+                serving,
+                portion_id,
+                food_group_id,
+                notes,
+                food_item_detail_id,
+                similar: [...similarFoodGroups],
+              };
+    
+              const currentDietDataForTime = dietApidata[time] || [];
+              currentDietDataForTime.push(currentfodmattedData);
+    
+              dietApidata[`${time}`] = [...currentDietDataForTime];
+            }
+          }
+    
+              dietApiData[id]={
+                diets: {
+                  ...dietBasicInfo,
+                },
+                diet_food_groups: {
+                  ...dietApidata,
+                },
+                food_items,
+                food_item_details
+              }
+      
+
+              dietIds.push(id);
         }
       }
 
@@ -2020,6 +2178,16 @@ class PatientController extends Controller {
         usersData = { ...usersData, ...users };
       }
 
+      const portionServiceService = new PortionServiceService();
+      const allPortions = await portionServiceService.getAll();
+      let portionApiData = {};
+      
+      for(let each in allPortions){
+        const portion = allPortions[each] || {};
+        const portionWrapper = await PortionWrapper({data:portion});
+        portionApiData[portionWrapper.getId()] = portionWrapper.getBasicInfo();
+      }
+
       dataForPdf = {
         users: { ...usersData },
         medications,
@@ -2031,6 +2199,7 @@ class PatientController extends Controller {
         },
         doctors,
         degrees,
+        portions:{...portionApiData},
         conditions,
         providers: providerData,
         providerIcon,
@@ -2042,6 +2211,8 @@ class PatientController extends Controller {
         patients: {
           ...{ [patientData.getPatientId()]: patientData.getBasicInfo() },
         },
+        diets_formatted_data:{...dietApiData},
+        diet_ids:dietIds,
         currentTime: getDoctorCurrentTime(doctorUserId).format(
           "Do MMMM YYYY, hh:mm a"
         ),
