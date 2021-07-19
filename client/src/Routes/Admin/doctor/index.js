@@ -39,6 +39,12 @@ const TermsOfService = lazy(() =>
   )
 );
 
+const TermsOfPayment = lazy(() =>
+  import(
+    /* webpackChunkName: "TermsOfPayment" */ "../../../Containers/Pages/termsOfPayment"
+  )
+);
+
 const PrivacyPolicy = lazy(() =>
   import(
     /* webpackChunkName: "PrivacyPolicyPage" */ "../../../Containers/Pages/PrivacyPolicy"
@@ -57,7 +63,8 @@ const SideMenuComp = props => {
     !(
       pathname.includes("patient-consulting") ||
       pathname.includes("terms-of-service") ||
-      pathname.includes("privacy-policy")
+      pathname.includes("privacy-policy") || 
+      pathname.includes("terms-of-payment")
     )
   ) {
     return <SideMenu {...props} />;
@@ -84,7 +91,8 @@ class AdminDoctor extends Component {
     const isSideMenuVisible = !(
       pathname.includes("patient-consulting") ||
       pathname.includes("terms-of-service") ||
-      pathname.includes("privacy-policy")
+      pathname.includes("privacy-policy") || 
+      pathname.includes("terms-of-payment")
     );
     return (
       <Fragment>
@@ -98,6 +106,13 @@ class AdminDoctor extends Component {
                   path={PATH.TERMS_OF_SERVICE}
                   component={TermsOfService}
                 />
+
+                <Route
+                  exact
+                  path={PATH.TERMS_OF_PAYMENT}
+                  component={TermsOfPayment}
+                />
+
                 <Route
                   exact
                   path={PATH.PRIVACY_POLICY}

@@ -85,17 +85,17 @@ class StartJob extends VitalJob {
     const now = moment();
     const currentTimeStamp = now.unix();
     for (const participant of participants) {
-      // if (participant !== actorId) {
-      templateData.push({
-        actor: actorId,
-        object: `${participant}`,
-        foreign_id: `${event_id}`,
-        verb: `vital_start:${currentTimeStamp}`,
-        event: EVENT_TYPE.VITALS,
-        time: start_time,
-        start_time: start_time
-      });
-      // }
+      if (participant !== actorId) {
+        templateData.push({
+          actor: actorId,
+          object: `${participant}`,
+          foreign_id: `${event_id}`,
+          verb: `vital_start:${currentTimeStamp}`,
+          event: EVENT_TYPE.VITALS,
+          time: start_time,
+          start_time: start_time
+        });
+      }
     }
 
     return templateData;

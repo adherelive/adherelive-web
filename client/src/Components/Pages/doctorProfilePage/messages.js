@@ -6,6 +6,11 @@ const messages = defineMessages({
         description: "",
         defaultMessage: "Doctor Details"
     },
+    addSpeciality: {
+        id: "app.profile.doctors.doctorProfileUpdate.addSpeciality",
+        description: "",
+        defaultMessage: 'Add Speciality'
+    },
     cityError: {
         id: "app.profile.doctors.doctorProfileUpdate.cityError",
         description: "",

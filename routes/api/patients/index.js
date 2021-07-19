@@ -20,6 +20,12 @@ router.post(
 );
 
 router.post(
+    "/consents/payments",
+    Authenticated,
+    PatientController.acceptPaymentsTerms
+);
+
+router.post(
     "/consents/verify",
     Authenticated,
     PatientController.patientConsentVerification

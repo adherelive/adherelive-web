@@ -1,6 +1,7 @@
 import React, { Component, Fragment } from "react";
 import { injectIntl } from "react-intl";
 import messages from "./message";
+import { connect } from "getstream";
 import {
   PERMISSIONS,
   TABLE_DEFAULT_BLANK_FIELD,
@@ -38,10 +39,9 @@ import MissedAppointmentsDrawer from "../../Containers/Drawer/missedAppointment"
 import MissedVitalsDrawer from "../../Containers/Drawer/missedVital";
 import MissedMedicationsDrawer from "../../Containers/Drawer/missedMedication";
 
-import BlankState from "../Common/BlankState";
-
 // helpers...
 import { getRoomId } from "../../Helper/twilio";
+const { GETSTREAM_API_KEY, GETSTREAM_APP_ID } = config;
 
 const { TabPane } = Tabs;
 
@@ -97,10 +97,121 @@ class Dashboard extends Component {
     };
   }
 
+  async componentDidMount() {
+    const {  authPermissions = [] } = this.props;
+    const {
+      searchMedicine,
+      getGraphs,
+      doctors = {},
+      authenticated_user,
+      closePopUp,
+      fetchChatAccessToken,
+      getAllFeatures,
+      getAllMissedScheduleEvents
+    } = this.props;
+
+    this.setState({loading:true});
+
+    closePopUp();
+    let doctorUserId = ""; //user_id of doctor
+    for (let doc of Object.values(doctors)) {
+      let { basic_info: { user_id, id = 1 } = {} } = doc;
+      if (parseInt(user_id) === parseInt(authenticated_user)) {
+        doctorUserId = authenticated_user;
+      }
+    }
+    this.setState({ graphLoading: true, doctorUserId });
+    getGraphs().then(response => {
+      const {
+        status,
+        payload: { data: { user_preferences: { charts = [] } = {} } = {} } = {}
+      } = response;
+      if (status) {
+        this.setState({ graphsToShow: [...charts], graphLoading: false ,loading:false });
+      }else{
+        this.setState({loading:false});
+      }
+    });
+
+    if (authPermissions.length === 0) {
+      this.setState({ showModal: true });
+    }
+    fetchChatAccessToken(authenticated_user);
+    searchMedicine("");
+    getAllFeatures();
+    getAllMissedScheduleEvents();
+    this.initiateInAppNotificationObj();
+  }
+
+  // initiateInAppNotificationObj = () => {
+  //   const { notificationToken, feedId, } = this.props;
+  //   if (notificationToken || feedId) {
+  //       let client = connect(
+  //           GETSTREAM_API_KEY,
+  //           notificationToken,
+  //           GETSTREAM_APP_ID
+  //       );
+
+  //       this.client = clientFeed;
+    
+  //   }
+    
+  //   this.updateUnseenNotificationData();
+  // };
+
+  // getFeedData = async() => {
+  //   let clientFeed = this.client.feed("notification", atob(this.feedId));
+  //   const data = await clientFeed.get({ limit: 30 });
+  //   return data;
+  // }
+
+
+  // updateUnseenNotificationData = async () => {
+  //   const data = await this.getFeedData();
+  //   const { unseen = 0 } = data || {};
+  //   this.props.updateUnseenInAppNotificationCount(unseen);
+  // };  
+
+  initiateInAppNotificationObj = () => {
+    const { notificationToken, feedId } = this.props;
+    const {updateUnseenNotificationData} = this;
+
+    if (notificationToken || feedId) {
+        let clientFeed = connect(
+            GETSTREAM_API_KEY,
+            notificationToken,
+            GETSTREAM_APP_ID
+        );
+
+        this.client = clientFeed;
+    }
+    
+    updateUnseenNotificationData();
+  };
+
+
+
+  getFeedData = async() => {
+    const {feedId}=this.props;
+    const limit = config.REACT_APP_NOTIFICATION_ONE_TIME_LIMIT;
+    let clientFeed = this.client.feed("notification", feedId);
+
+    const data = await clientFeed.get({ limit });
+    return data;
+  }
+
+
+  updateUnseenNotificationData = async () => {
+    const data = await this.getFeedData();
+    const { unseen = 0 } = data || {};
+    const {setUnseenNotificationCount} = this.props;
+    setUnseenNotificationCount(unseen);
+  };
+
+
 
   changeTabState = ({currentTab,type,value}) => {
 
-    console.log("362575427356423648236427",{currentTab,type,value});
     let prevState = '';
     if(currentTab === CURRENT_TAB.ALL_PATIENTS){
       const { allPatientsTab= {}}=this.state;
@@ -168,52 +279,7 @@ class Dashboard extends Component {
   }
   
 
-  componentDidMount() {
-    const {  authPermissions = [] } = this.props;
-    const {
-      searchMedicine,
-      getGraphs,
-      doctors = {},
-      authenticated_user,
-      closePopUp,
-      fetchChatAccessToken,
-      getAllFeatures,
-      getAllMissedScheduleEvents
-    } = this.props;
-
-    this.setState({loading:true});
-
-
-
-    closePopUp();
-    let doctorUserId = ""; //user_id of doctor
-    for (let doc of Object.values(doctors)) {
-      let { basic_info: { user_id, id = 1 } = {} } = doc;
-      if (parseInt(user_id) === parseInt(authenticated_user)) {
-        doctorUserId = user_id;
-      }
-    }
-    this.setState({ graphLoading: true, doctorUserId: 1 });
-    getGraphs().then(response => {
-      const {
-        status,
-        payload: { data: { user_preferences: { charts = [] } = {} } = {} } = {}
-      } = response;
-      if (status) {
-        this.setState({ graphsToShow: [...charts], graphLoading: false ,loading:false });
-      }else{
-        this.setState({loading:false});
-      }
-    });
-
-    if (authPermissions.length === 0) {
-      this.setState({ showModal: true });
-    }
-    fetchChatAccessToken(authenticated_user);
-    searchMedicine("");
-    getAllFeatures();
-    getAllMissedScheduleEvents();
-  }
+  
 
   getMenu = () => {
     const { authPermissions = [] } = this.props;
@@ -501,6 +567,20 @@ class Dashboard extends Component {
     this.setState({currentTab: tab});
   };
 
+  getProviderBanner = () => {
+    const {providers ={} , doctor_provider_id = null } = this.props;
+    const { details : { banner = '' } = {} } = providers[doctor_provider_id] || {};
+
+    if(!doctor_provider_id || !banner){
+      return null;
+    }
+    
+    return (
+      <div>
+        <img src={banner} alt="provider-banner" style={{height:"80px",width:"auto"}} />
+      </div>
+    )
+  }
 
 
   render() {
@@ -539,7 +619,7 @@ class Dashboard extends Component {
       twilio: { patientId: chatPatientId = 1 }
     } = this.props;
 
-    const { formatMessage, renderChartTabs, getVerifyModal , changeTab } = this;
+    const { formatMessage, renderChartTabs, getVerifyModal , changeTab , getProviderBanner } = this;
 
     let {
       basic_info: {
@@ -564,6 +644,14 @@ class Dashboard extends Component {
     } = this.state;
 
     const roomId = getRoomId(doctorUserId, patientUserId);
+
+    let bannerFlag=true;
+    const {providers ={} , doctor_provider_id = null } = this.props;
+    const { details : { banner = '' } = {} } = providers[doctor_provider_id] || {};
+
+    if(!doctor_provider_id || !banner){
+     bannerFlag=false;
+    }
     
     if (Object.keys(graphs).length === 0 || loading || docName === TABLE_DEFAULT_BLANK_FIELD) {
       return (
@@ -580,18 +668,27 @@ class Dashboard extends Component {
           <div
             className={`flex direction-row justify-space-between align-center`}
           >
+            
+            {bannerFlag 
+            ?
+             getProviderBanner() 
+            :
+            (
+              <div className={bannerFlag ? "mt14" : ""}> 
             {docName !== "" ? (
-              <div className="fs28 fw700">
-                {formatMessage(messages.welcome)}, {docName}
-              </div>
-            ) : (
-              <div className="fs28 fw700">
-                {formatMessage(messages.dashboard)}
-              </div>
-            )}
+                <div className="fs28 fw700">
+                  {formatMessage(messages.welcome)}, {docName}
+                </div>
+              ) : (
+                <div className="fs28 fw700">
+                  {formatMessage(messages.dashboard)}
+                </div>
+              )}
+          </div> 
+            ) }
             {(authPermissions.includes(PERMISSIONS.ADD_PATIENT) ||
               authPermissions.includes(PERMISSIONS.EDIT_GRAPH)) && (
-              <div className="flex direction-row justify-space-between align-center w500 mr20">
+              <div className="flex direction-row justify-space-between align-center w500">
                 <SearchPatient />
 
                 <Dropdown
@@ -610,7 +707,26 @@ class Dashboard extends Component {
                 </Dropdown>
               </div>
             )}
+            
           </div>
+
+          {
+            bannerFlag 
+            &&
+            (
+              <div className="mt14" > 
+            {docName !== "" ? (
+                <div className="fs28 fw700">
+                  {formatMessage(messages.welcome)}, {docName}
+                </div>
+              ) : (
+                <div className="fs28 fw700">
+                  {formatMessage(messages.dashboard)}
+                </div>
+              )}
+          </div>
+            )
+          }  
 
           <section className="horizontal-scroll-wrapper pr10 mt10">
             {renderChartTabs()}
@@ -726,7 +842,7 @@ class Dashboard extends Component {
             selectedGraphs={graphsToShow}
           />
         )}
-        <NotificationDrawer visible={visible} />
+        <NotificationDrawer  />
 
         <MissedAppointmentsDrawer/>
 

@@ -81,18 +81,18 @@ class UpdateJob extends AppointmentJob {
         const now = moment();
         const currentTimeStamp = now.unix();
         for (const participant of participants) {
-            // if (participant !== actorId) {
-            templateData.push({
-                actor: actorId,
-                object: `${participant}`,
-                foreign_id: `${event_id}`,
-                verb: `appointment_update:${currentTimeStamp}`,
-                // message: `${name}(${actorCategory}) has created an appointment with you`,
-                event: EVENT_TYPE.APPOINTMENT,
-                time: `${currentTime}`,
-                create_time: `${currentTime}`
-            });
-            // }
+            if (participant !== actorId) {
+                templateData.push({
+                    actor: actorId,
+                    object: `${participant}`,
+                    foreign_id: `${event_id}`,
+                    verb: `appointment_update:${currentTimeStamp}`,
+                    // message: `${name}(${actorCategory}) has created an appointment with you`,
+                    event: EVENT_TYPE.APPOINTMENT,
+                    time: `${currentTime}`,
+                    create_time: `${currentTime}`
+                });
+            }
         }
         return templateData;
     };

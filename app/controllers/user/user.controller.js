@@ -69,6 +69,7 @@ import LinkVerificationWrapper from "../../ApiWrapper/mobile/userVerification";
 
 import AppNotification from "../../NotificationSdk/inApp";
 import AdhocJob from "../../JobSdk/Adhoc/observer";
+import { getSeparateName } from "../../helper/common";
 
 const Logger = new Log("WEB USER CONTROLLER");
 
@@ -543,8 +544,7 @@ class UserController extends Controller {
     }
   }
 
-  onAppStart = async (req, res, next) => {
-    let response;
+  onAppStart = async (req, res) => {
     try {
       if (req.userDetails.exists) {
         const {
@@ -768,6 +768,14 @@ class UserController extends Controller {
         const notificationToken = appNotification.getUserToken(`${userId}`);
         const feedId = base64.encode(`${userId}`);
 
+        // firebase keys
+        const firebase_keys = {
+          apiKey: process.config.firebase.api_key,
+          appId: process.config.firebase.app_id,
+          measurementId: process.config.firebase.measurement_id,
+          projectId: process.config.firebase.project_id
+        };
+
         let response = {
           ...referenceData,
           users: {
@@ -784,6 +792,7 @@ class UserController extends Controller {
           },
           notificationToken: notificationToken,
           feedId: `${userId}`,
+          firebase_keys,
           severity: {
             ...severityApiDetails
           },
@@ -1889,15 +1898,17 @@ class UserController extends Controller {
 
       let newUId = user.get("id");
 
-      let patientName = name.split(" ");
-      let first_name = patientName[0];
-      let middle_name = patientName.length == 3 ? patientName[1] : "";
-      let last_name =
-        patientName.length == 3
-          ? patientName[2]
-          : patientName.length == 2
-          ? patientName[1]
-          : "";
+      const {first_name, middle_name, last_name} = getSeparateName(name);
+
+      // let patientName = name.split(" ");
+      // let first_name = patientName[0];
+      // let middle_name = patientName.length == 3 ? patientName[1] : "";
+      // let last_name =
+      //   patientName.length == 3
+      //     ? patientName[2]
+      //     : patientName.length == 2
+      //     ? patientName[1]
+      //     : "";
 
       let uid = uuidv4();
       let birth_date = moment(date_of_birth);

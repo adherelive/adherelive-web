@@ -777,7 +777,12 @@ class WhenToTakeMedication extends Component {
 
     if(!existingWhenToTake) {
       if(!whenToTake) {
-        whenToTake = WHEN_TO_TAKE_ABBR_TYPES.OD;  
+        const keys = this.getKeys() || [];
+        if(keys.length) {
+          whenToTake = `${keys.length}`;
+        } else {
+          whenToTake = WHEN_TO_TAKE_ABBR_TYPES.SOS
+        }
       }
     } else {
       whenToTake = existingWhenToTake;
@@ -876,7 +881,7 @@ class WhenToTakeMedication extends Component {
 
         {getFormItems()}
 
-        {keys.length !== 0 && (
+        {/* {keys.length !== 0 && (
           <RadioGroup
             className="flex justify-content-end radio-formulation mb10"
             buttonStyle="solid"
@@ -897,7 +902,7 @@ class WhenToTakeMedication extends Component {
               After Meals
             </RadioButton>
           </RadioGroup>
-        )}
+        )} */}
       </Fragment>
     );
     // }

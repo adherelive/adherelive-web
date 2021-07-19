@@ -80,6 +80,11 @@ const messages = defineMessages({
     id: "app.addConsultationFee.ConsultationFeeEditSuccess",
     description: "",
     defaultMessage: "Consultation Fee edited successfully"
+  },
+  razorpayLink: {
+    id: "app.addConsultationFee.razorpayLink",
+    description: "",
+    defaultMessage: "Razorpay Link"
   }
 });
 

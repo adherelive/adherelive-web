@@ -5,6 +5,7 @@ import schedule from "node-schedule";
 
 import Start from "../app/Crons/start";
 import Passed from "../app/Crons/passed";
+import Prior from "../app/Crons/prior";
 import RenewSubscription from "../app/Crons/renewSubscription";
 import activePatient from "../app/Crons/activePatient";
 import RemoveDocuments from "../app/Crons/removeDocuments";
@@ -29,7 +30,7 @@ const app = express();
 
 // CRONS RUNNING EVERY 1 MINUTE
 const cron = schedule.scheduleJob("*/1 * * * *", async () => {
-    // await Prior.getPriorEvents();
+    await Prior.runObserver();
     await Passed.runObserver();
     await Start.runObserver();
 });

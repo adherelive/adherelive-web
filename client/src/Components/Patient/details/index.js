@@ -1,11 +1,13 @@
 import React, { Component, Fragment } from "react";
 import { injectIntl } from "react-intl";
+import { connect } from "getstream";
 import messages from "./message";
 import edit_image from "../../../Assets/images/edit.svg";
 import { getUploadAppointmentDocumentUrl } from "../../../Helper/urls/appointments";
 import { doRequest } from "../../../Helper/network";
 import { generatePrescriptionUrl } from "../../../Helper/urls/patients";
 import ShareIcon from "../../../Assets/images/redirect3x.png";
+import NotificationDrawer from "../../../Containers/Drawer/notificationDrawer";
 
 import config from "../../../config";
 
@@ -22,7 +24,8 @@ import {
   FEATURES,
   USER_CATEGORY,
   HOST,
-  PATH
+  PATH,
+  TYPE_APPOINTMENTS, TYPE_SYMPTOMS, TYPE_VITALS
 } from "../../../constant";
 import { Tabs, Table, Dropdown, Spin, message, Button } from "antd";
 import Modal from "antd/es/modal";
@@ -504,7 +507,6 @@ const PatientTreatmentCard = ({
 }) => {
   const time = moment().format("Do MMMM YYYY, hh:mm a");
 
-  console.log("1897312 config", { config });
   return (
     <div className="treatment mt20 tal bg-faint-grey">
       <div className="header-div flex align-center justify-space-between">
@@ -650,7 +652,8 @@ class PatientDetails extends Component {
       uploadDocsAppointmentId: null,
       allAppointmentDocs: {},
       symptom_dates: [],
-      report_ids: []
+      report_ids: [],
+      activeKey:"1"
     };
   }
 
@@ -696,6 +699,13 @@ class PatientDetails extends Component {
           } = {}
         } = payload;
 
+        const {notification_redirect : {care_plan_id = null} = {} } = this.props;
+
+        if(care_plan_id){
+          current_careplan_id=care_plan_id;
+        }
+
+
         // const { basic_info: { id: carePlanTemplateId = 0 } } = care_plan_templates[Object.keys(care_plan_templates)[0]];
 
         let carePlanTemplateExists =
@@ -715,6 +725,9 @@ class PatientDetails extends Component {
       }
     });
 
+      
+
+
     getMedications(patient_id);
     getAppointmentsDetails();
     getAppointments(patient_id);
@@ -732,8 +745,85 @@ class PatientDetails extends Component {
         carePlanTemplateId = care_plan_template_id;
       }
     }
-    this.setState({ carePlanTemplateId });
+
+    const {notification_redirect : {type : tab = ''} = {} } =this.props;
+    let activeKey = "1";
+    if(tab && tab === TYPE_SYMPTOMS ){
+      activeKey="3";
+    }else if(tab && tab === TYPE_APPOINTMENTS){
+      activeKey="2";
+    } else if(tab && tab === TYPE_VITALS) {
+      activeKey = "4";
+    }
+
+
+    this.setState({ carePlanTemplateId , activeKey });
+
+    // in app notification seen count
+    this.initiateInAppNotificationObj();
   }
+
+  componentDidUpdate = (prevProps,prevState) => {
+    const {notification_redirect : {care_plan_id = null , type : tab = '' } = {} , care_plans = {}  } = this.props;
+    const {notification_redirect : {care_plan_id : prev_care_plan_id = null , type : prev_tab = ''} = {}} = prevProps ; 
+    let {activeKey = "1" , selectedCarePlanId : careplanId = null  } = this.state;
+    let cpId = careplanId;
+
+    if( care_plan_id && (care_plan_id !== prev_care_plan_id  || tab !== prev_tab ) ){
+
+        if(tab && tab === TYPE_SYMPTOMS ){
+          activeKey="3";
+        }else if(tab && tab === TYPE_APPOINTMENTS){
+          activeKey="2";
+        }
+
+        const { patient_id = '' } = this.props;
+        const {basic_info : { patient_id : pId = '' } = {} } = care_plans[care_plan_id] || {} ;
+
+        // console.log("823468273648723467328",{patient_id,pId});
+        if(patient_id.toString() === pId.toString() ){
+          cpId = care_plan_id;
+        }
+
+      this.setState({selectedCarePlanId : cpId , activeKey });
+
+    }
+
+  }
+
+  initiateInAppNotificationObj = () => {
+    const { notificationToken, feedId } = this.props;
+    const {updateUnseenNotificationData} = this;
+
+    if (notificationToken || feedId) {
+        let clientFeed = connect(
+          config.GETSTREAM_API_KEY,
+            notificationToken,
+            config.GETSTREAM_APP_ID
+        );
+
+        this.client = clientFeed;
+    }
+    
+    updateUnseenNotificationData();
+  };
+
+  getFeedData = async() => {
+    const {feedId}=this.props;
+    const limit = config.REACT_APP_NOTIFICATION_ONE_TIME_LIMIT;
+    let clientFeed = this.client.feed("notification", feedId);
+
+    const data = await clientFeed.get({ limit });
+    return data;
+  }
+
+
+  updateUnseenNotificationData = async () => {
+    const {setUnseenNotificationCount} = this.props;
+    const data = await this.getFeedData();
+    const { unseen = 0 } = data || {};
+    setUnseenNotificationCount(unseen);
+  };
 
   fetchSymptomsData = async () => {
     try {
@@ -830,11 +920,13 @@ class PatientDetails extends Component {
         organizer: { id: organizer_id } = {},
         active_event_id = null
       } = appointments[id] || {};
-      const { basic_info: { user_name = "" } = {} } = users[organizer_id] || {};
+      // const { basic_info: { user_name = "", full_name } = {} } = users[organizer_id] || {};
+
+      // console.log("1230990830912 users", {organizer_id, users, full_name});
       return {
         // organizer: organizer_type === "doctor" ? doctors[organizer_id] : patients[organizer_id].
         key: id,
-        organizer: user_name ? user_name : docName,
+        organizer: `Dr. ${docName}`,
         date: `${moment(start_date).format("LL")}`,
         time: `${
           start_time
@@ -1936,6 +2028,10 @@ class PatientDetails extends Component {
     );
   };
 
+  setActiveKey = (value) => {
+    this.setState({activeKey:value});
+  }
+
   render() {
     let {
       patients,
@@ -2178,6 +2274,9 @@ class PatientDetails extends Component {
 
     console.log("289371283 patient_id detailsPage ", { patient_id });
 
+    // let defaultActiveKeyValue = "1";
+    const  {activeKey = "1"}=this.state;
+    
     return (
       <Fragment>
         <div className="pt10 pr10 pb10 pl10">
@@ -2287,8 +2386,12 @@ class PatientDetails extends Component {
               {showTabs && (
                 <div className="flex-grow-1 direction-column align-center">
                   <div className="patient-tab mt20">
-                    <Tabs defaultActiveKey="1">
-                      <TabPane tab="Medication" key="1">
+                    <Tabs
+                    //  defaultActiveKey={defaultActiveKeyValue}
+                     onChange={this.setActiveKey}
+                     activeKey={activeKey}
+                    >
+                      <TabPane tab="Medication" key="1"  >
                         {cPMedicationIds.length > 0 ||
                         cPAppointmentIds.length > 0 ? (
                           <MedicationTable
@@ -2451,6 +2554,9 @@ class PatientDetails extends Component {
             onCancel={this.closeAppointmentDocsModal}
           />
         )}
+        
+        <NotificationDrawer  />
+
       </Fragment>
     );
   }

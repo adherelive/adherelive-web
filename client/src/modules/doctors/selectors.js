@@ -18,3 +18,19 @@ export const authDoctorSelector = createSelector(
         return authDoctorId;
     }
 )
+
+export const authCategorySelector = createSelector(
+    doctorSelector,
+    authSelector,
+    (doctors, auth) => {
+        let authDoctorId = null;
+        Object.keys(doctors).forEach(index => {
+           const {basic_info: {id, user_id} = {} } = doctors[index] || {};
+           if(user_id === auth.authenticated_user) {
+               authDoctorId = id;
+           }
+        });
+
+        return doctors[authDoctorId];
+    }
+);

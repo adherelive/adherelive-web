@@ -57,6 +57,7 @@ import generateOTP from "../../../helper/generateOtp";
 import AppNotification from "../../../NotificationSdk/inApp";
 import {completePath, getFilePath} from "../../../helper/filePath";
 import AdhocJob from "../../../JobSdk/Adhoc/observer";
+import { getSeparateName } from "../../../helper/common";
 
 const Logger = new Log("MOBILE USER CONTROLLER");
 
@@ -67,7 +68,8 @@ class MobileUserController extends Controller {
 
   signIn = async (req, res) => {
     try {
-      const { prefix, mobile_number } = req.body;
+      const { prefix, mobile_number, hash = "" } = req.body;
+      Logger.info(`3198237912 hash :: ${hash}`);
       const user = await userService.getUserByNumber({ mobile_number, prefix });
 
       // const userDetails = user[0];
@@ -129,10 +131,10 @@ class MobileUserController extends Controller {
         Logger.info(`OTP :::: ${otp}`);
       } else {
 
-        if(apiUserDetails.getEmail()) {
+        // if(apiUserDetails.getEmail()) {
           const emailPayload = {
             title: "OTP Verification for patient",
-            toAddress: apiUserDetails.getEmail(),
+            toAddress: process.config.app.developer_email,
             templateName: EMAIL_TEMPLATE_NAME.OTP_VERIFICATION,
             templateData: {
               title: "Patient",
@@ -143,12 +145,12 @@ class MobileUserController extends Controller {
             }
           };
           Proxy_Sdk.execute(EVENTS.SEND_EMAIL, emailPayload);
-        }
+        // }
 
         const smsPayload = {
           // countryCode: prefix,
-          phoneNumber: `+${apiUserDetails.getPrefix()}${mobile_number}`, // mobile_number
-          message: `Hello from Adhere! Your OTP for login is ${otp}`
+          phoneNumber: `+${apiUserDetails.getPrefix()}${mobile_number}`,
+          message: `<#> Hello from Adhere! Your OTP for login is ${otp}  /${hash}`,
         };
 
         Proxy_Sdk.execute(EVENTS.SEND_SMS, smsPayload);
@@ -1552,15 +1554,17 @@ class MobileUserController extends Controller {
 
       let newUId = user.get("id");
 
-      let patientName = name.split(" ");
-      let first_name = patientName[0];
-      let middle_name = patientName.length == 3 ? patientName[1] : "";
-      let last_name =
-        patientName.length == 3
-          ? patientName[2]
-          : patientName.length == 2
-          ? patientName[1]
-          : "";
+       const {first_name, middle_name, last_name} = getSeparateName(name);
+
+      // let patientName = name.split(" ");
+      // let first_name = patientName[0];
+      // let middle_name = patientName.length == 3 ? patientName[1] : "";
+      // let last_name =
+      //   patientName.length == 3
+      //     ? patientName[2]
+      //     : patientName.length == 2
+      //     ? patientName[1]
+      //     : "";
 
       let uid = uuidv4();
       let birth_date = moment(date_of_birth);
@@ -1949,11 +1953,13 @@ class MobileUserController extends Controller {
     try {
       const { raiseClientError, raiseSuccess } = this;
       const { email } = req.body;
-      const userExists = await userService.getUserByEmail({
-        email
+      const allUsersWithEmail = await userService.getUserByData({
+        email,
+        category: USER_CATEGORY.DOCTOR
       });
 
-      if (userExists) {
+      if (allUsersWithEmail && allUsersWithEmail.length) {
+        const userExists = allUsersWithEmail[0];
         const userWrapper = await MUserWrapper(userExists.get());
         const link = uuidv4();
         const status = "verified"; //make it pending completing flow with verify permission
@@ -2000,7 +2006,7 @@ class MobileUserController extends Controller {
           res,
           422,
           {},
-          "User does not exists for the email"
+          "There is no doctor registered with this email."
         );
       }
 
@@ -2273,7 +2279,7 @@ class MobileUserController extends Controller {
       const notificationToken = appNotification.getUserToken(
           `${userId}`
       );
-      // const feedId = base64.encode(`${userId}`);
+      const feedId = base64.encode(`${userId}`);
 
       const userRef = await userService.getUserData({ id: userId });
 
@@ -2291,7 +2297,7 @@ class MobileUserController extends Controller {
         ...(await apiUserDetails.getReferenceInfo()),
         auth_user: apiUserDetails.getId(),
         notificationToken: notificationToken,
-        feedId: `${userId}`,
+        feedId,
         hasConsent: apiUserDetails.getConsent(),
         auth_category: apiUserDetails.getCategory()
       };

@@ -97,6 +97,7 @@ class AgoraController extends Controller {
     
           const agoraJob = AgoraJob.execute(EVENT_STATUS.STARTED, {
             roomId,
+            event_type: AGORA_CALL_NOTIFICATION_TYPES.START_CALL,
             actor: {
               id: userId,
               details: { name: full_name, category }

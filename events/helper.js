@@ -25,7 +25,9 @@ import {
   FRIDAY,
   SATURDAY,
   SUNDAY,
-  MEDICATION_TIMING
+  MEDICATION_TIMING,
+  WITH_LUNCH,
+  WITH_DINNER,
 } from "../constant";
 import FeatureDetailWrapper from "../app/ApiWrapper/web/featureDetails";
 import { RRule } from "rrule";
@@ -49,11 +51,11 @@ const Log = new Logger("EVENT > HELPER");
 
 const scheduleService = new ScheduleService();
 
-const getUserPreferences = async user_id => {
+const getUserPreferences = async (user_id) => {
   try {
     Log.info(`user_id : ${user_id}`);
     const userPreference = await UserPreferenceService.getPreferenceByData({
-      user_id
+      user_id,
     });
     const { timings = {} } = userPreference.get("details") || {};
     return timings;
@@ -62,7 +64,7 @@ const getUserPreferences = async user_id => {
   }
 };
 
-export const handleAppointments = async appointment => {
+export const handleAppointments = async (appointment) => {
   try {
     const {
       event_id,
@@ -71,7 +73,7 @@ export const handleAppointments = async appointment => {
       details,
       critical,
       participants,
-      actor
+      actor,
     } = appointment || {};
 
     const rrule = new RRule({
@@ -79,7 +81,7 @@ export const handleAppointments = async appointment => {
       count: 1,
       dtstart: moment(start_time)
         .utc()
-        .toDate()
+        .toDate(),
     });
 
     Log.debug("rrule ----> ", rrule.all());
@@ -95,8 +97,8 @@ export const handleAppointments = async appointment => {
       details: {
         ...details,
         participants,
-        actor
-      }
+        actor,
+      },
     };
 
     let response = false;
@@ -114,8 +116,9 @@ export const handleAppointments = async appointment => {
   }
 };
 
-export const handleMedications = async data => {
+export const handleMedications = async (data) => {
   try {
+    console.log("123803821 data ", data);
     const {
       patient_id,
       event_id,
@@ -128,8 +131,8 @@ export const handleMedications = async data => {
         medicine_id,
         when_to_take,
         repeat_days = [],
-        critical = false
-      } = {}
+        critical = false,
+      } = {},
     } = data || {};
 
     Log.debug("repeat days before --> ", { details, data });
@@ -147,7 +150,7 @@ export const handleMedications = async data => {
             .add(1, "month")
             .utc()
             .toDate(),
-      byweekday: repeatDays(repeat_days)
+      byweekday: repeatDays(repeat_days),
     });
 
     const allDays = rrule.all();
@@ -161,7 +164,8 @@ export const handleMedications = async data => {
 
     Log.debug("213971203 createMedicationSchedule -->", {
       medicine_id,
-      data: medicine.getBasicInfo()
+      data: medicine.getBasicInfo(),
+      when_to_take
     });
 
     for (let i = 0; i < allDays.length; i++) {
@@ -171,6 +175,11 @@ export const handleMedications = async data => {
           timing,
           patientPreference
         );
+
+        Log.debug("21397193871379832203 createMedicationSchedule -->", {
+          startTime,
+          text: MEDICATION_TIMING[timing]
+        });
 
         scheduleEventArr.push({
           event_id,
@@ -185,8 +194,8 @@ export const handleMedications = async data => {
             actor,
             medicines: medicine.getBasicInfo(),
             when_to_take_data: MEDICATION_TIMING[timing], // TODO: to be changed(included in) to patient preference data
-            medications: medication.getBasicInfo()
-          }
+            medications: medication.getBasicInfo(),
+          },
         });
       }
     }
@@ -206,7 +215,7 @@ export const handleMedications = async data => {
   }
 };
 
-export const handleVitals = async vital => {
+export const handleVitals = async (vital) => {
   try {
     const {
       patient_id,
@@ -216,17 +225,17 @@ export const handleVitals = async vital => {
       end_date,
       details,
       details: {
-        details: { repeat_days, repeat_interval_id, critical = false }
+        details: { repeat_days, repeat_interval_id, critical = false },
       } = {},
       participants = [],
       actor = {},
-      vital_templates = {}
+      vital_templates = {},
     } = vital || {};
 
     const timings = await getUserPreferences(patientUserId);
 
     const vitalData = await FeatureDetailService.getDetailsByData({
-      feature_type: FEATURE_TYPE.VITAL
+      feature_type: FEATURE_TYPE.VITAL,
     });
 
     const vitalDetails = await FeatureDetailWrapper(vitalData);
@@ -241,7 +250,7 @@ export const handleVitals = async vital => {
         : moment(start_date)
             .add(1, "month") // TODO: drive from env
             .toDate(),
-      byweekday: repeatDays(repeat_days)
+      byweekday: repeatDays(repeat_days),
     });
     const allDays = rrule.all();
 
@@ -282,8 +291,8 @@ export const handleVitals = async vital => {
             participants,
             actor,
             vital_templates,
-            eventId: event_id
-          }
+            eventId: event_id,
+          },
         });
       }
     } else {
@@ -334,8 +343,8 @@ export const handleVitals = async vital => {
               actor,
               vital_templates,
               eventId: event_id,
-              patient_id
-            }
+              patient_id,
+            },
           });
           // const scheduleData = {
           //     event_id,
@@ -375,7 +384,7 @@ export const handleVitals = async vital => {
   }
 };
 
-export const handleAppointmentsTimeAssignment = async appointment => {
+export const handleAppointmentsTimeAssignment = async (appointment) => {
   try {
     const QueueService = new queueService();
     const { event_id, start_time, end_time } = appointment;
@@ -385,7 +394,7 @@ export const handleAppointmentsTimeAssignment = async appointment => {
     const {
       basic_info: { details: { critical = null } = {} } = {},
       participant_one = {},
-      participant_two = {}
+      participant_two = {},
     } = appointmentData.getBasicInfo() || {};
 
     const { id: participant_two_id, category: participant_two_type } =
@@ -404,11 +413,11 @@ export const handleAppointmentsTimeAssignment = async appointment => {
       end_time,
       {
         participant_one_id,
-        participant_one_type
+        participant_one_type,
       },
       {
         participant_two_id,
-        participant_two_type
+        participant_two_type,
       }
     );
 
@@ -435,7 +444,7 @@ export const handleAppointmentsTimeAssignment = async appointment => {
           .add("minutes", step + timeDifference);
 
         const one_minute_late_start_time = moment(startTime).add({
-          minutes: 1
+          minutes: 1,
         });
 
         const getAppointment = await appointmentService.checkTimeSlot(
@@ -443,11 +452,11 @@ export const handleAppointmentsTimeAssignment = async appointment => {
           endTime,
           {
             participant_one_id,
-            participant_one_type
+            participant_one_type,
           },
           {
             participant_two_id,
-            participant_two_type
+            participant_two_type,
           }
         );
 
@@ -485,7 +494,7 @@ export const handleAppointmentsTimeAssignment = async appointment => {
       start_time: appointment_start_time,
       end_time: appointment_end_time,
       start_date: appointment_start_time,
-      end_date: appointment_end_time
+      end_date: appointment_end_time,
     };
     const updatedAppointment = await appointmentService.updateAppointment(
       appointmentData.getAppointmentId(),
@@ -502,8 +511,8 @@ export const handleAppointmentsTimeAssignment = async appointment => {
       participants: [participant_one_id, participant_two_id],
       actor: {
         id: participant_one_id,
-        category: participant_one_type
-      }
+        category: participant_one_type,
+      },
     };
 
     const sqsResponse = await QueueService.sendMessage(eventScheduleData);
@@ -515,7 +524,7 @@ export const handleAppointmentsTimeAssignment = async appointment => {
   }
 };
 
-export const handleCarePlans = async data => {
+export const handleCarePlans = async (data) => {
   try {
     const {
       medication_ids,
@@ -526,7 +535,7 @@ export const handleCarePlans = async data => {
       end_time,
       details,
       actor = {},
-      participants = []
+      participants = [],
     } = data || {};
 
     // const patientPreference = await getUserPreferences(patient_id);
@@ -542,8 +551,8 @@ export const handleCarePlans = async data => {
         medications: details,
         medication_ids,
         actor,
-        participants
-      }
+        participants,
+      },
     };
 
     Log.debug(
@@ -565,42 +574,42 @@ export const handleCarePlans = async data => {
   }
 };
 
-const getWakeUp = timings => {
+const getWakeUp = (timings) => {
   const { value } = timings[WAKE_UP] || {};
   const hours = moment(value).hours();
   const minutes = moment(value).minutes();
   return { hours, minutes };
 };
 
-const getBreakfast = timings => {
+const getBreakfast = (timings) => {
   const { value } = timings[BREAKFAST] || {};
   const hours = moment(value).hours();
   const minutes = moment(value).minutes();
   return { hours, minutes };
 };
 
-const getLunch = timings => {
+const getLunch = (timings) => {
   const { value } = timings[LUNCH] || {};
   const hours = moment(value).hours();
   const minutes = moment(value).minutes();
   return { hours, minutes };
 };
 
-const getEvening = timings => {
+const getEvening = (timings) => {
   const { value } = timings[EVENING] || {};
   const hours = moment(value).hours();
   const minutes = moment(value).minutes();
   return { hours, minutes };
 };
 
-const getDinner = timings => {
+const getDinner = (timings) => {
   const { value } = timings[DINNER] || {};
   const hours = moment(value).hours();
   const minutes = moment(value).minutes();
   return { hours, minutes };
 };
 
-const getSleep = timings => {
+const getSleep = (timings) => {
   const { value } = timings[SLEEP] || {};
   const hours = moment(value).hours();
   const minutes = moment(value).minutes();
@@ -608,6 +617,7 @@ const getSleep = timings => {
 };
 
 const updateMedicationTiming = (date, timing, patientPreference) => {
+  console.log("139812832739871 date, timing, patientPreference", {date, timing, patientPreference});
   switch (timing) {
     case AFTER_WAKEUP:
       const { hours: awh, minutes: awm } = getWakeUp(patientPreference) || {};
@@ -634,6 +644,11 @@ const updateMedicationTiming = (date, timing, patientPreference) => {
         .set("hours", blh)
         .set("minutes", blm)
         .subtract(30, "minutes");
+    case WITH_LUNCH:
+      const { hours: wlh, minutes: wlm } = getLunch(patientPreference) || {};
+      return moment(date)
+        .set("hours", wlh)
+        .set("minutes", wlm);
     case AFTER_LUNCH:
       const { hours: alh, minutes: alm } = getLunch(patientPreference) || {};
       return moment(date)
@@ -658,6 +673,11 @@ const updateMedicationTiming = (date, timing, patientPreference) => {
         .set("hours", bdh)
         .set("minutes", bdm)
         .subtract(30, "minutes");
+    case WITH_DINNER:
+      const { hours: wdh, minutes: wdm } = getDinner(patientPreference) || {};
+      return moment(date)
+        .set("hours", wdh)
+        .set("minutes", wdm);
     case AFTER_DINNER:
       const { hours: adh, minutes: adm } = getDinner(patientPreference) || {};
       return moment(date)
@@ -674,7 +694,7 @@ const updateMedicationTiming = (date, timing, patientPreference) => {
   }
 };
 
-const repeatDays = days => {
+const repeatDays = (days) => {
   let daysArr = [];
   Log.debug("repeatDays  ---> ", days);
   for (const day of days) {

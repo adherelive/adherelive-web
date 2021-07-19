@@ -132,13 +132,21 @@ class ChatForm extends Component {
     if (event) {
       event.preventDefault();
     }
+
+    const {raiseChatNotificationFunc}=this.props;
     let trimmedMessage = this.state.newMessage.trim();
     if (this.state.newMessage.length > 0 && trimmedMessage.length > 0) {
       const message = this.state.newMessage;
       this.setState({ newMessage: "" });
-      const resp = await this.props.channel.sendMessage(message);
+      
+      const {channel = null } = this.props;
+
+      if(channel){
+        const resp = await channel.sendMessage(message);
+      }
+
       if(message){
-        this.props.raiseChatNotification(message)
+        raiseChatNotificationFunc(message)
       }
     }
     if (this.state.fileList.length > 0) {
@@ -146,7 +154,7 @@ class ChatForm extends Component {
         const formData = new FormData();
         formData.append("file", this.state.fileList[i]);
         const respo = await this.props.channel.sendMessage(formData);
-        this.props.raiseChatNotification(this.props.formatMessage(messages.newDocumentUploadedNotify))
+        raiseChatNotificationFunc(this.props.formatMessage(messages.newDocumentUploadedNotify))
       }
       this.setState({ fileList: [] });
     }
@@ -174,7 +182,7 @@ class ChatForm extends Component {
   };
 
   sendPaymentMessage = (data) => async(e) => {
-    const {authenticated_user, authenticated_category} = this.props;
+    const {authenticated_user, authenticated_category , raiseChatNotificationFunc} = this.props;
     e.preventDefault();
     const { name, type, amount, productId } = data || {};
     const response = await this.props.channel.sendMessage(
@@ -194,7 +202,7 @@ class ChatForm extends Component {
     );
 
     const notificationMessage = this.props.formatMessage(messages.newPaymentAddedNotify, {name})
-    this.props.raiseChatNotification(notificationMessage)
+    raiseChatNotificationFunc(notificationMessage)
 
     this.setState({ viewConsultationModal: false });
   };
@@ -779,10 +787,12 @@ class TwilioChat extends Component {
     }
   };
 
-  raiseChatNotification = (message) => {
+  raiseChatNotificationFunc = (message) => {
+
     const {
       patientId = null,
-      patients = {}
+      patients = {},
+      raiseChatNotification
     } = this.props;
 
     const {
@@ -791,7 +801,7 @@ class TwilioChat extends Component {
 
     const data = { message, receiver_id: patientUserId}
 
-    const resp = this.props.raiseChatNotification(data)
+    const resp = raiseChatNotification(data)
   }
 
   render() {
@@ -871,7 +881,7 @@ class TwilioChat extends Component {
                 channel={this.channel}
                 formatMessage={this.formatMessage}
                 getDoctorConsultations={getDoctorConsultations}
-                raiseChatNotification={this.raiseChatNotification}
+                raiseChatNotificationFunc={this.raiseChatNotificationFunc}
                 {...this.props}
               />
             </div>

@@ -23,6 +23,7 @@ export const PATH = {
   RESET_PASSWORD: "/reset-password/:link",
   REGISTER_FROM_PROFILE: "/register-from-profile",
   REGISTER_FROM_MY_PROFILE: "/register-from-my-profile",
+  TERMS_OF_PAYMENT:"/terms-of-payment/:id",
   PATIENT: {
     PA: "/patients",
     DETAILS: "/patients/:patient_id"
@@ -52,6 +53,23 @@ export const PATH = {
   PRIVACY_POLICY: "/privacy-policy",
   TEMPLATES:"/templates",
   CONSENT:"/consent"
+};
+
+export const AGORA_CALL_NOTIFICATION_TYPES = {
+  START_CALL: "START_CALL",
+  MISSED_CALL: "MISSED_CALL"
+}
+
+export const NOTIFICATION_STAGES = {
+  CREATE: "Create",
+  START: "Start",
+  RESCHEDULED: "Rescheduled",
+  UPDATE: "Update",
+  PRIOR: "Prior",
+  DELETE: "Delete",
+  SHARE: "Share",
+  EDIT_NOTES: "Edit_Notes",
+  APPROVED: "Approve"
 };
 
 export const HTTP_CODE_SERVER_ERROR = 500;
@@ -706,6 +724,11 @@ export const BODY_SIDE = {
   1: "FRONT",
   2: "BACK"
 };
+
+export const BODY_SIDE_TEXT  ={
+  1: "Front",
+  2: "Back"
+}
 export const PARTS = {
   HEAD: "HEAD",
   RIGHT_EYE: "RIGHT_EYE",
@@ -1823,3 +1846,8 @@ export const LOCAL_STORAGE = {
 
 export const ASCEND = "ascend";
 export const DESCEND = "descend";
+
+export const TYPE_SYMPTOMS="Symptoms";
+export const TYPE_APPOINTMENTS="Appointments";
+export const TYPE_VITALS = "vitals";
+export const TYPE_USER_MESSAGE = "UserMessage";

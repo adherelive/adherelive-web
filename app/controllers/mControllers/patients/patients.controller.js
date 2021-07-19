@@ -11,6 +11,7 @@ import DoctorService from "../../../services/doctor/doctor.service";
 import doctorRegistrationService from "../../../services/doctorRegistration/doctorRegistration.service";
 import conditionService from "../../../services/condition/condition.service";
 import ReportService from "../../../services/reports/report.service";
+import PaymentProductService from "../../../services/paymentProducts/paymentProduct.service";
 
 // WRAPPERS ------------
 import VitalWrapper from "../../../ApiWrapper/mobile/vitals";
@@ -24,6 +25,7 @@ import CouncilWrapper from "../../../ApiWrapper/mobile/council";
 import ConditionWrapper from "../../../ApiWrapper/mobile/conditions";
 import UserPreferenceWrapper from "../../../ApiWrapper/mobile/userPreference";
 import ReportWrapper from "../../../ApiWrapper/mobile/reports";
+import PaymentProductWrapper from "../../../ApiWrapper/mobile/paymentProducts";
 
 import { randomString } from "../../../../libs/helper";
 import Log from "../../../../libs/log";
@@ -39,6 +41,10 @@ import MedicineApiWrapper from "../../../ApiWrapper/mobile/medicine";
 import carePlanService from "../../../services/carePlan/carePlan.service";
 import carePlanMedicationService from "../../../services/carePlanMedication/carePlanMedication.service";
 import carePlanAppointmentService from "../../../services/carePlanAppointment/carePlanAppointment.service";
+import providerTermsMappingService from "../../../services/providerTermsMapping/providerTermsMappings.service";
+import patientPaymentConsentMappingService from "../../../services/patientPaymentConsentMapping/patientPaymentConsentMapping.service";
+import doctorProviderMappingService from "../../../services/doctorProviderMapping/doctorProviderMapping.service"
+
 import UserWrapper from "../../../ApiWrapper/mobile/user";
 import CarePlanWrapper from "../../../ApiWrapper/mobile/carePlan";
 import CarePlanTemplateWrapper from "../../../ApiWrapper/mobile/carePlanTemplate";
@@ -46,6 +52,10 @@ import AppointmentWrapper from "../../../ApiWrapper/mobile/appointments";
 import TemplateMedicationWrapper from "../../../ApiWrapper/mobile/templateMedication";
 import TemplateAppointmentWrapper from "../../../ApiWrapper/mobile/templateAppointment";
 import SymptomWrapper from "../../../ApiWrapper/mobile/symptoms";
+import ProviderWrapper from "../../../ApiWrapper/mobile/provider";
+import ProviderTermsMappingWrapper from "../../../ApiWrapper/mobile/providerTermsMappings";
+import PatientConsentMappingWrapper from "../../../ApiWrapper/mobile/patientPaymentConsentMapping";
+import DoctorProviderMappingWrapper from "../../../ApiWrapper/web/doctorProviderMapping";
 
 import templateMedicationService from "../../../services/templateMedication/templateMedication.service";
 import templateAppointmentService from "../../../services/templateAppointment/templateAppointment.service";
@@ -59,7 +69,9 @@ import {
   EMAIL_TEMPLATE_NAME,
   USER_CATEGORY,
   S3_DOWNLOAD_FOLDER,
-  PRESCRIPTION_PDF_FOLDER
+  PRESCRIPTION_PDF_FOLDER,
+  S3_DOWNLOAD_FOLDER_PROVIDER,
+  CONSULTATION
 } from "../../../../constant";
 import generateOTP from "../../../helper/generateOtp";
 import otpVerificationService from "../../../services/otpVerification/otpVerification.service";
@@ -67,7 +79,7 @@ import { EVENTS, Proxy_Sdk } from "../../../proxySdk";
 import generatePDF from "../../../helper/generateCarePlanPdf";
 import { downloadFileFromS3 } from "../user/userHelper";
 import { getFilePath } from "../../../helper/filePath";
-import { checkAndCreateDirectory } from "../../../helper/common";
+import { checkAndCreateDirectory, getSeparateName } from "../../../helper/common";
 import {getDoctorCurrentTime} from "../../../helper/getUserTime";
 import * as carePlanHelper from "../carePlans/carePlanHelper";
 
@@ -194,11 +206,13 @@ class MPatientController extends Controller {
       const { basic_info: prevBasicInfo } =
         initialPatientData.getBasicInfo() || {};
 
+      const {first_name, middle_name, last_name} = getSeparateName(name) || {};
+
       const patientData = {
         user_id: userId,
-        first_name: splitName[0],
-        middle_name: splitName.length > 2 ? splitName[2] : "",
-        last_name: splitName.length > 1 ? splitName[1] : "",
+        first_name,
+        middle_name,
+        last_name,
         ...prevBasicInfo,
         details: {
           // todo: profile_pic
@@ -244,7 +258,7 @@ class MPatientController extends Controller {
   getPatientAppointments = async (req, res) => {
     const { raiseServerError, raiseSuccess } = this;
     try {
-      const { params: { id } = {}, userDetails: { userId } = {} } = req;
+      const { params: { id } = {} } = req;
 
       const appointmentList = await appointmentService.getAppointmentForPatient(
         id
@@ -253,7 +267,7 @@ class MPatientController extends Controller {
       let appointmentApiData = {};
       let scheduleEventData = {};
       let appointmentDocuments = {};
-      let appointment_ids = [];
+      let appointmentIds = [];
 
       for (const appointment of appointmentList) {
         const appointmentWrapper = await AppointmentWrapper(appointment);
@@ -261,8 +275,10 @@ class MPatientController extends Controller {
         const {
           appointments,
           schedule_events,
-          appointment_docs
+          appointment_docs,
+          appointment_id
         } = await appointmentWrapper.getReferenceInfo();
+        appointmentIds.push(appointment_id);
         appointmentApiData = { ...appointmentApiData, ...appointments };
         scheduleEventData = { ...scheduleEventData, ...schedule_events };
         appointmentDocuments = { ...appointmentDocuments, ...appointment_docs };
@@ -281,9 +297,9 @@ class MPatientController extends Controller {
           appointment_docs: {
             ...appointmentDocuments
           },
-          appointment_ids: Object.keys(appointmentApiData)
+          appointment_ids: appointmentIds
         },
-        `appointment data for patient: ${id} fetched successfully`
+        `Appointment data for patient: ${id} fetched successfully`
       );
     } catch (error) {
       Logger.debug("getPatientAppointments 500 error", error);
@@ -821,7 +837,10 @@ class MPatientController extends Controller {
           // DATA FORMATTED FOR DATE ORDER
           const symptomDetails = await symptom.getDateWiseInfo();
           const { upload_documents } = await symptom.getReferenceInfo();
-          symptomDates.push(symptom.getCreatedDate());
+
+          if(symptomDates.indexOf(symptom.getCreatedDate()) === -1) {
+            symptomDates.push(symptom.getCreatedDate());
+          }
           uploadDocumentData = { ...uploadDocumentData, ...upload_documents };
           if (dateWiseSymptoms.hasOwnProperty(symptom.getCreatedDate())) {
             dateWiseSymptoms[symptom.getCreatedDate()].push(symptomDetails);
@@ -1192,7 +1211,7 @@ class MPatientController extends Controller {
         const smsPayload = {
           // countryCode: prefix,
           phoneNumber: `+${prefix}${mobile_number}`, // mobile_number
-          message: `Hello from Adhere! Your OTP for Consent Request is ${otp}`
+          message: `<#> Hello from Adhere! Your OTP for Consent Request is ${otp}`
         };
 
         Proxy_Sdk.execute(EVENTS.SEND_SMS, smsPayload);
@@ -1499,7 +1518,7 @@ class MPatientController extends Controller {
             medicines = {
               ...medicines,
               ...{
-                [medicineWrapper.getMedicineId()]: medicineWrapper.getBasicInfo()
+                [medicineWrapper.getMedicineId()]: medicineWrapper.getAllInfo()
               }
             };
           }
@@ -1512,6 +1531,7 @@ class MPatientController extends Controller {
 
       const now = moment();
       let nextAppointment = null;
+      let suggestedInvestigations = [];
       for (const appointmentId of appointment_ids) {
         const appointment = await appointmentService.getAppointmentById(
           appointmentId
@@ -1530,8 +1550,37 @@ class MPatientController extends Controller {
               nextAppointment = startDateObj;
             }
           }
+
+          const {type} = appointmentWrapper.getDetails() || {};
+
+          if(type !== CONSULTATION) {
+            const {type_description = "", radiology_type = ""} = appointmentWrapper.getDetails() || {};
+            suggestedInvestigations.push({
+              type,
+              type_description,
+              radiology_type,
+              start_date: startDate
+            });
+          }
         }
       }
+
+        // sort suggested investigations
+        const sortedInvestigations = suggestedInvestigations.sort((a, b) => {
+          const {start_date : aStartDate} = a || {};
+          const {start_date : bStartDate} = b || {};
+  
+          if(moment(bStartDate).diff(moment(aStartDate), "minutes") > 0) {
+            return 1;
+          } else {
+            return -1;
+          }
+        });
+  
+        // Logger.debug(
+        //   "98273917312 sortedInvestigations ",
+        //   sortedInvestigations
+        // );
 
       if (nextAppointment) {
         nextAppointmentDuration =
@@ -1616,6 +1665,34 @@ class MPatientController extends Controller {
         }
       }
 
+      // provider data
+      const {provider_id = null} = doctors[doctor_id] || {};
+
+      let providerData = {};
+
+      let providerIcon = "";
+      if(provider_id) {
+        const providerWrapper = await ProviderWrapper(null, provider_id);
+        const {providers, users} = await providerWrapper.getReferenceInfo();
+
+        const {details: {icon = null} = {}} = providers[provider_id] || {};
+        checkAndCreateDirectory(S3_DOWNLOAD_FOLDER_PROVIDER);
+
+     
+      if(icon) {
+        providerIcon = `${S3_DOWNLOAD_FOLDER_PROVIDER}/provider-${provider_id}-icon.jpeg`;
+        
+        const downloadProviderImage = await downloadFileFromS3(
+          getFilePath(icon),
+          providerIcon
+        );
+      }
+      
+
+        providerData = {...providerData, ...providers};
+        usersData = {...usersData, ...users};
+      }
+
       dataForPdf = {
         users: { ...usersData },
         medications,
@@ -1626,10 +1703,13 @@ class MPatientController extends Controller {
           }
         },
         doctors,
+        doctor_id,
         degrees,
+        providerIcon,
         conditions,
         registrations: registrationsData,
         creationDate: carePlanCreatedDate,
+        suggestedInvestigations: sortedInvestigations,
         nextAppointmentDuration,
         patients: {
           ...{ [patientData.getPatientId()]: patientData.getBasicInfo() }
@@ -1755,6 +1835,218 @@ class MPatientController extends Controller {
       return raiseServerError(res);
     }
   };
+
+  acceptPaymentsTerms = async (req,res) => {
+    const {raiseClientError} = this;
+    try{
+      const {userDetails: {userId} = {}, body: {acceptTerms , provider_terms_mapping_id = null,
+         doctor_id = null } = {}} = req;
+
+      if(!acceptTerms) {
+        return raiseClientError(res, 422, {}, "Cannot proceed further without accepting Terms of Payments");
+      }
+
+      const patient = await patientService.getPatientByUserId(userId);
+
+      const patientApiWrapper = await PatientWrapper(patient);
+      const patientId = patientApiWrapper.getPatientId();
+
+      const {id = null} = await patientPaymentConsentMappingService.findOne({
+        where : {
+          patient_id:patientId,
+          provider_terms_mapping_id,
+          doctor_id
+        },
+        attributes:["id"]
+      }) || {} ;
+
+      let patientPaymentConsentApiData = {},userPaymentLinkDetails = {};;
+      
+
+      if(id){
+        //update
+
+        const record = await patientPaymentConsentMappingService.update({
+          payment_terms_accepted:acceptTerms
+        },
+        id);
+
+        const patientPaymentConsent = await PatientConsentMappingWrapper(null,id);
+        patientPaymentConsentApiData[patientPaymentConsent.getId()]=await patientPaymentConsent.getBasicInfo();
+
+      }else{
+        //create 
+        
+        const record = await patientPaymentConsentMappingService.create({
+          provider_terms_mapping_id,
+          patient_id:patientId,
+          doctor_id,
+          payment_terms_accepted:acceptTerms
+        });
+
+        const patientPaymentConsent = await PatientConsentMappingWrapper(record);
+        patientPaymentConsentApiData[patientPaymentConsent.getId()]=await patientPaymentConsent.getBasicInfo();
+      }
+
+   
+      return this.raiseSuccess(
+          res,
+          200,
+          { 
+            patient_payments_consent_mappings : {
+              ...patientPaymentConsentApiData
+            },
+           },
+          "Payment terms changed successfully."
+      );
+
+
+    }catch(error){
+      Logger.debug("acceptPaymentsTerms 500 error ----> ", error);
+      return this.raiseServerError(res);
+    }
+  }
+
+
+
+  getAllRelatedDoctorPaymentLinks = async(req, res) => {
+    const {raiseClientError} = this;
+    try{
+      const {userDetails: {userId} = {}} = req;
+      let doctorIds = [];
+      let providerTermsMapping = {};
+      let paymentConsentsMapping = {};
+      let providerApiData = {};
+      let doctorData = {};
+      let userIds = [];
+      let patientId = null;
+      let usersData = {};
+      let paymentProducts = {};
+
+      const paymentProductService = new PaymentProductService();
+
+      const patientData = await patientService.getPatientByUserId(userId);
+      if (patientData) {
+          const patientApiWrapper = await PatientWrapper(patientData);
+          patientId = patientApiWrapper.getPatientId();
+
+          const careplanData = await carePlanService.getCarePlanByData({
+            patient_id: patientId
+          });
+
+          await careplanData.forEach(async carePlan => {
+            const carePlanApiWrapper = await CarePlanWrapper(carePlan);
+            doctorIds.push(carePlanApiWrapper.getDoctorId());
+          });
+      }
+
+
+      if (doctorIds && doctorIds.length > 0) {
+        const allDoctors =
+          (await DoctorService.getAllDoctorByData({
+            id: doctorIds
+          })) || [];
+
+        for (let index = 0; index < allDoctors.length; index++) {
+          const doctor = await DoctorWrapper(allDoctors[index]);
+          doctorData[doctor.getDoctorId()] = await doctor.getAllInfo();
+          userIds.push(doctor.getUserId());
+
+          const paymentConsent = await patientPaymentConsentMappingService.getAllByData({doctor_id: doctor.getDoctorId(), 
+            patient_id: patientId});
+
+          for(const consent of paymentConsent) {
+            const consentWrapper = await PatientConsentMappingWrapper(consent);
+            paymentConsentsMapping[consentWrapper.getId()] = consentWrapper.getBasicInfo();
+          }
+
+          const doctorPaymentProductData = await paymentProductService.getAllCreatorTypeProducts(
+            {
+              creator_id: doctor.getDoctorId(),
+              creator_type: USER_CATEGORY.DOCTOR,
+              for_user_type: USER_CATEGORY.DOCTOR,
+              for_user_id: doctor.getDoctorId()
+            }
+          );
+
+          for(const paymentProduct of doctorPaymentProductData) {
+            const doctorPaymentProductWrapper = await PaymentProductWrapper(paymentProduct);
+            paymentProducts[doctorPaymentProductWrapper.getId()] = doctorPaymentProductWrapper.getBasicInfo();
+          }
+          
+          const doctorProvider = await doctorProviderMappingService.getProviderForDoctor(
+            doctor.getDoctorId()
+          );
+  
+          if (doctorProvider) {
+            const doctorProviderWrapper = await DoctorProviderMappingWrapper(
+              doctorProvider
+            );
+  
+            const providerId = doctorProviderWrapper.getProviderId();
+            const providerWrapper = await ProviderWrapper(
+              null,
+              providerId
+            );
+  
+            userIds.push(providerWrapper.getUserId());
+            providerApiData[
+              providerId
+            ] = await providerWrapper.getAllInfo();
+
+            const providerPaymentProductData = await paymentProductService.getAllCreatorTypeProducts(
+              {
+                creator_id: providerId,
+                creator_type: USER_CATEGORY.PROVIDER,
+                for_user_type: USER_CATEGORY.DOCTOR,
+                for_user_id: doctor.getDoctorId()
+              }
+            );
+  
+            for(const paymentProduct of providerPaymentProductData) {
+              const providerPaymentProductWrapper = await PaymentProductWrapper(paymentProduct);
+              paymentProducts[providerPaymentProductWrapper.getId()] = providerPaymentProductWrapper.getBasicInfo();
+            }
+
+
+            const termsMapping = await providerTermsMappingService.getSingleEntityByData({provider_id: providerId});
+            const providerTermsWrapper = await ProviderTermsMappingWrapper(termsMapping);
+
+            providerTermsMapping[providerTermsWrapper.getId()] = providerTermsWrapper.getBasicInfo()
+          }
+        }
+      }
+
+      for(const id of userIds) {
+        const userDetails = await userService.getUserById(id);
+
+        if(userDetails) {
+          const userDetailWrapper = await UserWrapper(userDetails);
+          usersData[userDetailWrapper.getId()] = userDetailWrapper.getBasicInfo()
+        }
+
+      }
+
+      return this.raiseSuccess(
+        res,
+        200,
+        { 
+          users: usersData,
+          doctors: doctorData,
+          providers: providerApiData,
+          provider_terms_mappings:  providerTermsMapping,
+          patient_payments_consent_mappings: paymentConsentsMapping,
+          payment_products: paymentProducts
+        },
+        "Payment links data fetched successfully."
+       );
+
+    } catch(error) {
+      Logger.debug("getAllRelatedDoctorPaymentLinks 500 error ----> ", error);
+      return this.raiseServerError(res);
+    }
+  }
+
 }
 
 export default new MPatientController();

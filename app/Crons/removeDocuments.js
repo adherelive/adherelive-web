@@ -58,6 +58,9 @@ class RemoveDocuments {
             const totalFiles = files.length;
             if ( files && totalFiles ) {
                 for(let i = 0; i < totalFiles; i++ ) {
+                    if(files[i] === "provider") {
+                        continue;
+                    }
                     readFiles(`${path}/${files[i]}`, files[i], upload, uploadFolderName)
                 }
         
@@ -71,7 +74,7 @@ class RemoveDocuments {
 
   readFiles = (file, fileName, upload, awsFolder) => {
     try{
-        Log.info("File got to read is: ", file, fileName)
+        Log.info(`File got to read is: file = ${file}, fileName = ${fileName}`);
         const { deleteFile, uploadOnAWS } = this;
         fs.readFile(file, function (err, data) {
             if (err) { throw err }
@@ -136,7 +139,7 @@ class RemoveDocuments {
       const prescriptionPdfsPresent = await checkIfAnyLocalDocumentExists(PRESCRIPTION_PDF_FOLDER);
       const s3ImagesPresent = await checkIfAnyLocalDocumentExists(S3_DOWNLOAD_FOLDER);
       
-      Log.info("Check values are: ", prescriptionPdfsPresent, s3ImagesPresent)
+      Log.info(`Check values are: prescriptionPdfsPresent = ${prescriptionPdfsPresent} s3ImagesPresent = ${s3ImagesPresent}`);
       
       if(prescriptionPdfsPresent) {
           this.readDirectory(PRESCRIPTION_PDF_FOLDER)

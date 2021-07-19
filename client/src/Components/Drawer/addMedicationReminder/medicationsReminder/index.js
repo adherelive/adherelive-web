@@ -128,7 +128,6 @@ class AddMedicationReminder extends Component {
 
     validateFields(async (err, values) => {
       if (!err) {
-        console.log('8326589623895723956832', values);
         const { when_to_take_abbr = "", when_to_take = [], keys = [] } = values || {};
         let data_to_submit = {};
         const startTime = values[startTimeField.field_name];

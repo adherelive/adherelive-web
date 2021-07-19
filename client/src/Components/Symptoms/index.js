@@ -111,8 +111,7 @@ class SymptomsTab extends Component {
     };
 
     render() {
-        let { symptoms = {} } = this.props;
-        const { carePlanTemplateIds = [], currentTab = TABS.TIMELINE } = this.state;
+        const { currentTab = TABS.TIMELINE } = this.state;
         return (
             <div className="pt10 pr10 pb10 pl10 wp100 hp100">
                 <Tabs activeKey={currentTab} renderTabBar={this.renderTabBar}>

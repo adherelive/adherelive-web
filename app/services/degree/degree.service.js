@@ -49,6 +49,19 @@ class DegreeService {
             throw error;
         }
     };
+
+    create = async data => {
+        try {
+
+            const degree = await Database.getModel(TABLE_NAME).create(
+                data
+              );
+              return degree;
+
+        } catch(error) {
+            throw error;
+        }
+    };
 }
 
 export default new DegreeService();

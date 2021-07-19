@@ -31,7 +31,6 @@ export default class SubscriptionService {
                 include: [
                     {
                         model: Database.getModel(paymentProductTableName),
-                        as: paymentProductTableName,
                         exclude: ["created_at","updated_at"]
                     }
                 ]

@@ -116,6 +116,26 @@ const messages = defineMessages({
     description: "",
     defaultMessage: "This will remove all the account details"
   },
+  customization: {
+    id: "app.addProvider.customization",
+    description: "",
+    defaultMessage: "Customizations"
+  },
+  iconUpload: {
+    id: "app.addProvider.icon.upload",
+    description: "",
+    defaultMessage: "Logo"
+  },
+  iconUploadText: {
+    id: "app.addProvider.icon.upload.text",
+    description: "",
+    defaultMessage: "Upload"
+  },
+  bannerUploadText: {
+    id: "app.addProvider.banner.text",
+    description: "",
+    defaultMessage: "Banner"
+  },
 
   // errors
   valid_email_text: {

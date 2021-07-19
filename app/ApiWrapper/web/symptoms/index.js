@@ -79,8 +79,16 @@ class SymptomWrapper extends BaseSymptom {
         getSymptomId()
       )) || [];
 
+    const videos =  
+    (await DocumentService.getDoctorQualificationDocuments(
+      DOCUMENT_PARENT_TYPE.SYMPTOM_VIDEO,
+      getSymptomId()
+    )) || []; 
+
+
     const audioDocumentIds = audios.map(audio => audio.get("id"));
     const imageDocumentIds = photos.map(photo => photo.get("id"));
+    const videoDocumentIds = videos.map(video => video.get("id"));
 
     return {
       symptoms: {
@@ -88,6 +96,7 @@ class SymptomWrapper extends BaseSymptom {
           ...getBasicInfo(),
           image_document_ids: imageDocumentIds,
           audio_document_ids: audioDocumentIds,
+          video_document_ids: videoDocumentIds,
           snapshot: ""
         }
       }
@@ -125,7 +134,14 @@ class SymptomWrapper extends BaseSymptom {
         getSymptomId()
       )) || [];
 
-    for (const docs of [...audios, ...photos]) {
+    const videos =
+    (await DocumentService.getDoctorQualificationDocuments(
+      DOCUMENT_PARENT_TYPE.SYMPTOM_VIDEO,
+      getSymptomId()
+    )) || [];
+  
+
+    for (const docs of [...audios, ...photos, ...videos]) {
       const doc = await DocumentWrapper(docs);
       documentData[doc.getUploadDocumentId()] = doc.getBasicInfo();
     }

@@ -67,7 +67,7 @@ export const db = database => {
           if (value) {
             this.setDataValue(
               "last_name",
-              value.charAt(0).toUpperCase() + value.slice(1)
+              value.split(" ").map(text => text.charAt(0).toUpperCase() + text.slice(1)).join(" ")
             );
           } else {
             this.setDataValue("last_name", null);
@@ -101,6 +101,10 @@ export const db = database => {
       },
       details: {
         type: DataTypes.JSON
+      },
+      payment_terms_accepted: {
+        type: DataTypes.BOOLEAN,
+        defaultValue: false
       },
       full_name: {
         type: DataTypes.VIRTUAL,

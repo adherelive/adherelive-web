@@ -36,7 +36,8 @@ class addNewConsultationDrawer extends Component {
       consultationFeeId: null,
       consultation:"",
       payload: null,
-      submitting:false
+      submitting:false,
+      razorpay_link:''
     };
   }
 
@@ -60,8 +61,10 @@ class addNewConsultationDrawer extends Component {
       const {payload :{basic_info = {} } } = this.props;
       const {payload : updatedPayload ={}} = this.props;
       if(basic_info){
-        const {payload :{basic_info : {name = "", amount = "", type = "", id = null} = {}} = {} } = 
-        this.props;
+        let {payload :{razorpay_link : provider_doc_razorpay_link = '',basic_info : {razorpay_link = '' , name = "", amount = "", type = "", id = null} = {}} = {} } = 
+        this.props;       
+        
+        razorpay_link = razorpay_link ? razorpay_link :  provider_doc_razorpay_link;
 
         if(id){
           this.setState({
@@ -70,6 +73,7 @@ class addNewConsultationDrawer extends Component {
             newConsultationType: type,
             payload: updatedPayload,
             consultationFeeId: id,
+            razorpay_link
           })
 
           if(type){
@@ -95,6 +99,12 @@ class addNewConsultationDrawer extends Component {
       this.setState({ newConsultationFee: e.target.value });
     }
   };
+
+  setRazorpayLink = e => {
+    const { value } = e.target;
+      this.setState({ razorpay_link: e.target.value });
+    
+  }
 
  
 
@@ -192,7 +202,8 @@ class addNewConsultationDrawer extends Component {
       newConsultationTypeText = "",
       newConsultationFee = "",
       consultationFeeId = null,
-      consultation=""
+      consultation="",
+      razorpay_link = ''
     } = this.state;
 
     return (
@@ -260,6 +271,19 @@ class addNewConsultationDrawer extends Component {
                 onChange={this.setFee}
                 disabled={provider_id}
               />
+
+              <div className="form-headings flex align-center justify-start">
+                {this.formatMessage(messages.razorpayLink)}
+              </div>
+
+              <Input
+                className={"form-inputs-ap"}
+                value={razorpay_link}
+                onChange={this.setRazorpayLink}
+                disabled={provider_id}
+                type="string"
+              />
+
             </div>
           ) : null}
         </div>
@@ -293,7 +317,8 @@ class addNewConsultationDrawer extends Component {
       newConsultationName = "",
       newConsultationType = "",
       newConsultationFee = "",
-      consultationFeeId = null
+      consultationFeeId = null,
+      razorpay_link=''
     } = this.state;
     const validate = this.validateData();
     const { submit } = this.props;
@@ -303,7 +328,8 @@ class addNewConsultationDrawer extends Component {
       let toSubmitData = {
         name: newConsultationName,
         type: newConsultationType,
-        amount: newConsultationFee
+        amount: newConsultationFee,
+        razorpay_link
       };
 
       if (doctor_id) {
@@ -361,7 +387,8 @@ class addNewConsultationDrawer extends Component {
       newConsultationFee: "",
       fetchingAdminPayments: false,
       consultation : "",
-      consultationFeeId: null
+      consultationFeeId: null,
+      razorpay_link:''
     });
     close();
   };

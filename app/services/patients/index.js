@@ -23,4 +23,7 @@ export default class Patient {
     getFullName = () => {
         return this._data.get("full_name");
     }
+
+    getPaymentsTermsAccepted = () => this._data.payment_terms_accepted;
+
 }

@@ -18,6 +18,8 @@ import councilService from "../../services/council/council.service";
 import appointmentService from "../../services/appointment/appointment.service";
 import carePlanService from "../../services/carePlan/carePlan.service";
 import userPreferenceService from "../../services/userPreferences/userPreference.service";
+import providerTermsMappingService from "../../services/providerTermsMapping/providerTermsMappings.service";
+import tacService from "../../services/termsAndConditions/termsAndConditions.service";
 
 import UserWrapper from "../../ApiWrapper/web/user";
 import DoctorWrapper from "../../ApiWrapper/web/doctor";
@@ -34,7 +36,7 @@ import UploadDocumentWrapper from "../../ApiWrapper/web/uploadDocument";
 import AppointmentWrapper from "../../ApiWrapper/web/appointments";
 import PatientWrapper from "../../ApiWrapper/web/patient";
 import CarePlanWrapper from "../../ApiWrapper/web/carePlan";
-
+import TACWrapper from "../../ApiWrapper/web/termsAndConditions";
 // import * as PaymentHelper from "../payments/helper";
 
 // import bcrypt from "bcrypt";
@@ -42,7 +44,8 @@ import CarePlanWrapper from "../../ApiWrapper/web/carePlan";
 import {
   DOCUMENT_PARENT_TYPE,
   EVENT_TYPE, SIGN_IN_CATEGORY,
-  USER_CATEGORY
+  USER_CATEGORY,
+  TERMS_AND_CONDITIONS_TYPES
 } from "../../../constant";
 import ScheduleEventService from "../../services/scheduleEvents/scheduleEvent.service";
 import { Sequelize } from "sequelize";
@@ -52,6 +55,7 @@ import bcrypt from "bcrypt";
 import * as ProviderHelper from "./helper";
 import accountDetailsService from "../../services/accountDetails/accountDetails.service";
 import AccountsWrapper from "../../ApiWrapper/web/accountsDetails";
+import { getFilePath } from "../../helper/filePath";
 
 // import { generatePassword } from "../helper/passwordGenerator";
 
@@ -730,6 +734,10 @@ class ProvidersController extends Controller {
           mobile_number,
           address,
 
+          // ui details
+          icon,
+          banner,
+
             // account details
             account_type,
             customer_name,
@@ -796,9 +804,27 @@ class ProvidersController extends Controller {
         address,
         activated_on,
         user_id: userData.getId(),
+        details: {
+          icon: getFilePath(icon),
+          banner:getFilePath(banner)
+        },
       });
       const providerData = await ProviderWrapper(provider);
 
+      // crate provider temrs mapping record
+
+      const tacId = await tacService.getByData({
+        terms_type:TERMS_AND_CONDITIONS_TYPES.DEFAULT_TERMS_OF_PAYMENT
+      });
+
+      const tacData= await TACWrapper(tacId);
+
+      const providerTermsMapping = await providerTermsMappingService.create({
+        provider_id:providerData.getProviderId(),
+        terms_and_conditions_id:tacData.getId()
+      });
+
+      
       // add provider account
       let providerAccountData = {};
 
@@ -862,6 +888,10 @@ class ProvidersController extends Controller {
         mobile_number,
         address,
 
+        // customizations
+        icon,
+        banner,
+
         // account details
         account_type,
         customer_name,
@@ -897,7 +927,13 @@ class ProvidersController extends Controller {
       // update provider
       await providerService.updateProvider({
         name,
-        address
+        address,
+        details: {
+          ...previousProvider.getDetails(),
+          icon: getFilePath(icon),
+          banner: getFilePath(banner)
+        }
+
       }, id);
 
       const updatedProvider = await ProviderWrapper(null, id);

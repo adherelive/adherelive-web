@@ -37,7 +37,6 @@ class StartCron {
       const { getScheduleData } = this;
       const scheduleEvents = await getScheduleData();
 
-      Log.debug("Schedule events got are: ", scheduleEvents);
       let count = 0;
       if (scheduleEvents.length > 0) {
         for (const scheduleEvent of scheduleEvents) {
@@ -119,7 +118,7 @@ class StartCron {
       // });
       // NotificationSdk.execute(job);
     } catch (error) {
-      Log.debug("handleVitalStart 500 error ---->", error);
+      Log.debug("handleAppointmentStart 500 error ---->", error);
     }
   };
 

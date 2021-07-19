@@ -51,6 +51,8 @@ import * as ProductPlans from "../app/models/productPlans";
 import * as ProviderMembers from "../app/models/providerMembers";
 import * as Providers from "../app/models/providers";
 import * as PaymentProducts from "../app/models/paymentProducts";
+import * as PatientPaymentConsentMapping from "../app/models/patientPaymentConsentMapping";
+import * as ProviderTermsMapping from "../app/models/providerTermsMappings";
 
 import * as RegionFeatures from "../app/models/regionFeatures";
 import * as RegionProviders from "../app/models/regionProviders";
@@ -71,6 +73,7 @@ import * as TemplateVitals from "../app/models/templateVitals";
 import * as TreatmentConditionMapping from "../app/models/treatmentConditionMapping";
 import * as Treatments from "../app/models/treatments";
 import * as Transactions from "../app/models/transactions";
+import * as TermsAndConditions from "../app/models/termsAndConditions";
 
 import * as UploadDocuments from "../app/models/uploadDocuments";
 import * as UserCategoryPermissions from "../app/models/userCategoryPermissions";
@@ -140,6 +143,8 @@ const models = [
   Providers,
   ProviderMembers,
   PaymentProducts,
+  PatientPaymentConsentMapping,
+  ProviderTermsMapping,
 
   RegionFeatures,
   RegionProviders,
@@ -159,6 +164,7 @@ const models = [
   TreatmentConditionMapping,
   Treatments,
   Transactions,
+  TermsAndConditions,
 
   UploadDocuments,
   UserCategoryPermissions,

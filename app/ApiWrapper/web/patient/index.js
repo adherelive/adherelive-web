@@ -11,7 +11,6 @@ import UserWrapper from "../../web/user";
 class PatientWrapper extends BasePatient {
     constructor(data) {
         super(data);
-        console.log("PATIENT WRAPPER DATA",data);
     }
 
 
@@ -34,6 +33,7 @@ class PatientWrapper extends BasePatient {
             details,
             dob,
             uid,
+            payment_terms_accepted,
             createdAt:created_at
         } = _data || {};
         // console.log("346236542783642534623548723648",{created_at,_data});
@@ -58,6 +58,7 @@ class PatientWrapper extends BasePatient {
                 address,
                 uid,
             },
+            payment_terms_accepted,
             activated_on,
             details: updatedDetails,
             dob,

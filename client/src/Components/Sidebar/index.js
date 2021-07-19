@@ -11,6 +11,8 @@ import {CalendarTwoTone, FileOutlined,ProfileOutlined , AccountBookOutlined} fro
 import messages from "./messages";
 import config from "../../config";
 
+import { getAbbreviation } from "../../Helper/common";
+
 const { Item: MenuItem } = Menu || {};
 
 
@@ -255,10 +257,42 @@ class SideMenu extends Component {
     );
   };
 
+  getProviderIcon = (className = "w35 h35", userRoleId = null) => {
+    const { providers, doctor_provider_id } = this.props;
+
+    if (doctor_provider_id) {
+      const { basic_info: { name } = {}, details: { icon } = {} } =
+        providers[doctor_provider_id] || {};
+
+      if (icon) {
+        return <img alt={"Provider Icon"} src={icon} className={className} />;
+      } else {
+        return (
+          <div
+            className={`${className} br5 bg-grey flex justify-center align-center`}
+          >
+            {name
+              .split(" ")
+              .map((word) => word.charAt(0).toUpperCase())
+              .join(" ")}
+          </div>
+          // <div className={"bg-grey br50 w30 h30"}>{name.split(" ").map(word => word.charAt(0).toUpperCase()).join(" ")}</div>
+        );
+      }
+    } 
+    // else {
+    //   const {basic_info: {full_name} = {}} = authDoctor || {};
+    //   return (
+    //     <div className={`${className} br5 bg-grey flex justify-center align-center`}>{""}</div>
+    //   );
+    // }
+  };
+
+
 
   render() {
-    const { selectedKeys } = this.state;
-    const { handleItemSelect } = this;
+    // const { selectedKeys } = this.state;
+    const { getProviderIcon, handleItemSelect } = this;
 
     const {
       authenticated_user = 0,
@@ -267,6 +301,11 @@ class SideMenu extends Component {
       authenticated_category,
         intl: {formatMessage} = {}
     } = this.props;
+    const {doctor_provider_id =null , notification_count = {} } = this.props ; 
+
+    const { unseen_notification_count : count = 0 } = notification_count || {};
+    const unseen_notification_count = parseInt(count);
+    // console.log("2934y98237498238423 COUNTTTTTTTTTT",{unseen_notification_count});
     let dp = "";
     let initials = "";
 
@@ -295,7 +334,6 @@ class SideMenu extends Component {
         .join("");
     }
 
-    const {doctor_provider_id =null } = this.props ; 
 
     return (
       <Menu
@@ -323,13 +361,16 @@ class SideMenu extends Component {
 
           <MenuItem
             key={SUB_MENU}
-            className="flex direction-column justify-center align-center p0"
+            // className="flex direction-column justify-center align-center p0"
           >
+            <div className={`flex direction-column ${doctor_provider_id ? "justify-space-between bw-cool-grey" : "justify-end"} align-center hp100 p10 br5`}>
+            {getProviderIcon()}
             <Dropdown overlay={this.menu} overlayClassName="relative">
-              <div className="flex direction-column justify-center align-center wp250 hp100">
+              <div className="flex direction-column justify-center align-center wp250">
                 {initials ? <Avatar src={dp}>{initials}</Avatar> : <Avatar icon="user" />}
               </div>
             </Dropdown>
+            </div>
           </MenuItem>
         ) : (
           <MenuItem
@@ -351,8 +392,12 @@ class SideMenu extends Component {
             key={NOTIFICATIONS}
         >
           <Tooltip placement="right" title={this.formatMessage(messages.notifications)}>
-            <Icon type="bell" theme="twoTone" twoToneColor='white'/>
+              <Icon type="bell" theme="twoTone" twoToneColor='white'  />
+              {/* className={`${unseen_notification_count>0 && "noti-icon"}`} */}
           </Tooltip>
+          {unseen_notification_count ? (<div className="fs10 notification-count flex align-center justify-center">
+                {unseen_notification_count}
+              </div>) : null}
         </MenuItem>}
 
         {authenticated_category === USER_CATEGORY.PROVIDER

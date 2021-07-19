@@ -381,7 +381,6 @@ class TestAgoraVideo extends Component {
   render() {
     const {audioLevel}=this.state;
     const {getHeader,getAudioVideoSection,getStartCallSection}=this;
-    console.log("237642354623542387 @@@@@@@@@@@@",{localStorage});
 
     return (
       <div className="ml-vp4 flex direction-column hp100 wp100">

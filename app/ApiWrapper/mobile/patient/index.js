@@ -27,6 +27,7 @@ class MPatientWrapper extends BasePatient {
             activated_on,
             details,
             uid,
+            payment_terms_accepted,
             createdAt:created_at
         } = _data || {};
         const {profile_pic} = details || {};
@@ -51,6 +52,7 @@ class MPatientWrapper extends BasePatient {
                 address,
                 uid
             },
+            payment_terms_accepted,
             activated_on,
             dob,
             details: updatedDetails,
