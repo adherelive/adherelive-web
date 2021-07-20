@@ -1053,29 +1053,42 @@ function printCarePlanData(
   // checkAndAddNewPage(doc);
 
 
+  if(!medicationsList.length>0 ){
+    medicationYLevel = generalExaminationEndLevel + NORMAL_FONT_SIZE + 12;
+  }
 
-  const dietBlockLevelEnd = printDiet(
+  const dietBlockLevelEnd = 
+  Object.keys(diets_formatted_data).length
+    ?
+  printDiet(
     doc,
     medicationYLevel,
     portions,
     diets_formatted_data,
     diet_ids
-  );
+  ) : 
+  null;
 
   const dietYLevel = 
   dietBlockLevelEnd 
   ? dietBlockLevelEnd + NORMAL_FONT_SIZE + 12 
-  : medicationYLevel + NORMAL_FONT_SIZE + 12;
+  : 
+  medicationYLevel ;
 
-  const workoutBlockLevelEnd = printWorkout(
-    doc,
-    dietYLevel,
-    repetitions,
-    workouts_formatted_data,
-    workout_ids
-  );
+  const workoutBlockLevelEnd = 
+  Object.keys(workouts_formatted_data).length
+  ?
+    printWorkout(
+      doc,
+      dietYLevel,
+      repetitions,
+      workouts_formatted_data,
+      workout_ids
+    ) :
+  null;
+  
 
-  let docYLevel = workoutBlockLevelEnd;
+  let docYLevel = workoutBlockLevelEnd ? workoutBlockLevelEnd : medicationYLevel ;
 
 
 
