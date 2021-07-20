@@ -2095,6 +2095,7 @@ class MPatientController extends Controller {
           "Do MMMM YYYY, hh:mm a"
         ),
       };
+      
 
       checkAndCreateDirectory(PRESCRIPTION_PDF_FOLDER);
       const pdfFileName = await generatePDF(dataForPdf, doctorSignImage);
