@@ -1088,7 +1088,10 @@ function printCarePlanData(
   null;
   
 
-  let docYLevel = workoutBlockLevelEnd ? workoutBlockLevelEnd : medicationYLevel ;
+  let docYLevel = workoutBlockLevelEnd 
+  ? workoutBlockLevelEnd 
+  : dietBlockLevelEnd ? dietBlockLevelEnd
+  : medicationYLevel ;
 
 
 
