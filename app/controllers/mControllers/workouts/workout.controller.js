@@ -74,7 +74,11 @@ class WorkoutController extends Controller {
       const {user_role_id: patientRoleId} = await patient.getAllInfo();
 
       const {count = 0 , rows = []} = await carePlanService.findAndCountAll({
-        where:{doctor_id:current_careplan_doctor_id,patient_id:patientId},
+        where:{
+          doctor_id:current_careplan_doctor_id,
+          patient_id:patientId,
+          user_role_id:userRoleId
+        },
         attributes:['id']
       });
 
@@ -214,7 +218,11 @@ class WorkoutController extends Controller {
       const patientId = await careplanWrapper.getPatientId();
 
       const {count = 0 , rows = []} = await carePlanService.findAndCountAll({
-        where:{doctor_id:current_careplan_doctor_id,patient_id:patientId},
+        where:{
+          doctor_id:current_careplan_doctor_id,
+          patient_id:patientId,
+          user_role_id:userRoleId
+        },
         attributes:['id']
       });
 
