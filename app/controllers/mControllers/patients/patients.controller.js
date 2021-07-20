@@ -13,7 +13,10 @@ import conditionService from "../../../services/condition/condition.service";
 import ReportService from "../../../services/reports/report.service";
 import PaymentProductService from "../../../services/paymentProducts/paymentProduct.service";
 import ExerciseContentService from "../../../services/exerciseContents/exerciseContent.service";
-
+import WorkoutService from "../../../services/workouts/workout.service";
+import RepetitionService from "../../../services/exerciseRepetitions/repetition.service";
+import PortionServiceService from "../../../services/portions/portions.service";
+import DietService from "../../../services/diet/diet.service";
 
 // WRAPPERS ------------
 import ExerciseContentWrapper from "../../../ApiWrapper/mobile/exerciseContents";
@@ -29,6 +32,12 @@ import ConditionWrapper from "../../../ApiWrapper/mobile/conditions";
 import UserPreferenceWrapper from "../../../ApiWrapper/mobile/userPreference";
 import ReportWrapper from "../../../ApiWrapper/mobile/reports";
 import PaymentProductWrapper from "../../../ApiWrapper/mobile/paymentProducts";
+import PortionWrapper from "../../../ApiWrapper/mobile/portions";
+import WorkoutWrapper from "../../../ApiWrapper/mobile/workouts";
+import DietWrapper from "../../../ApiWrapper/mobile/diet";
+
+import * as DietHelper from "../../diet/dietHelper";
+
 
 import { randomString } from "../../../../libs/helper";
 import Log from "../../../../libs/log";
@@ -1583,6 +1592,9 @@ class MPatientController extends Controller {
         userDetails: { userId = null, userRoleId = null, userData: { category = "" } = {} } = {},
       } = req;
 
+      const dietService = new DietService();
+      const workoutService = new WorkoutService();
+
       const carePlanId = parseInt(care_plan_id);
 
       let dataForPdf = {};
@@ -1622,6 +1634,8 @@ class MPatientController extends Controller {
         details: { condition_id = null } = {},
         medication_ids = [],
         appointment_ids = [],
+        diet_ids = [],
+        workout_ids = []
       } = await carePlanData.getAllInfo();
 
       const conditionData = await conditionService.getByData({
@@ -1696,6 +1710,206 @@ class MPatientController extends Controller {
           }
         }
       }
+
+      let dietApiData = {},dietIds=[] , workoutApiData = {}, workoutIds=[];
+
+
+
+      // diet 
+      for (const id of diet_ids) {
+        const diet = await dietService.getByData({id})
+
+        if (diet) {
+          const dietData = await dietService.findOne({ id });
+          const dietWrapper = await DietWrapper({ data: dietData });
+          const expired_on = await dietWrapper.getExpiredOn();
+          
+          if(expired_on){
+            continue;
+          }
+
+          const referenceInfo = await dietWrapper.getReferenceInfo();
+    
+          let dietFoodGroupsApidata = {},
+            dietBasicInfo = {};
+    
+          dietBasicInfo[dietWrapper.getId()] = await dietWrapper.getBasicInfo();
+    
+          const {
+            diet_food_group_mappings = {},
+            food_groups = {},
+            food_items = {},
+            food_item_details = {},
+          } = referenceInfo || {};
+    
+          const timeWise = await DietHelper.getTimeWiseDietFoodGroupMappings({
+            diet_food_group_mappings,
+          });
+    
+          for (let eachTime in timeWise) {
+            const { mappingIds = [] } = timeWise[eachTime] || {};
+    
+            for (let ele of mappingIds) {
+              let primary = null,
+                related_diet_food_group_mapping_ids = [];
+    
+              if (Array.isArray(ele)) {
+                ele.sort(function(a, b) {
+                  return a - b;
+                });
+    
+                primary = ele[0] || null;
+                related_diet_food_group_mapping_ids = ele.slice(1);
+              } else {
+                primary = ele;
+              }
+    
+              let currentfodmattedData = {};
+    
+              // const related_diet_food_group_mapping_ids = mappingIds.slice(1);
+              let similarFoodGroups = [],
+                notes = "";
+    
+              const current_mapping = diet_food_group_mappings[primary] || {};
+              const {
+                basic_info: { time = "", food_group_id = null } = {},
+              } = current_mapping;
+              const {
+                basic_info: { food_item_detail_id = null, serving = null } = {},
+                details = {},
+              } = food_groups[food_group_id] || {};
+              const { basic_info: { portion_id = null } = {} } =
+                food_item_details[food_item_detail_id] || {};
+    
+              if (details) {
+                const { notes: detail_notes = "" } = details;
+                notes = detail_notes;
+              }
+              if (related_diet_food_group_mapping_ids.length) {
+                for (
+                  let i = 0;
+                  i < related_diet_food_group_mapping_ids.length;
+                  i++
+                ) {
+                  const similarMappingId = related_diet_food_group_mapping_ids[i];
+    
+                  const {
+                    basic_info: {
+                      food_group_id: similar_food_group_id = null,
+                    } = {},
+                  } = diet_food_group_mappings[similarMappingId] || {};
+                  const {
+                    basic_info: {
+                      food_item_detail_id: similar_food_item_detail_id = null,
+                      serving: similar_serving = null,
+                    } = {},
+                    details: similar_details = {},
+                  } = food_groups[similar_food_group_id] || {};
+    
+                  const {
+                    basic_info: { portion_id: similar_portion_id = null } = {},
+                  } = food_item_details[similar_food_item_detail_id] || {};
+    
+                  let similar_notes = "";
+                  if (similar_details) {
+                    const { notes = "" } = similar_details || {};
+                    similar_notes = notes;
+                  }
+    
+                  const similarData = {
+                    serving: similar_serving,
+                    portion_id: similar_portion_id,
+                    food_item_detail_id: similar_food_item_detail_id,
+                    food_group_id: similar_food_group_id,
+                    notes: similar_notes,
+                  };
+    
+                  similarFoodGroups.push(similarData);
+                  // delete diet_food_group_mappings[similarMappingId];
+                }
+              }
+    
+              currentfodmattedData = {
+                serving,
+                portion_id,
+                food_group_id,
+                notes,
+                food_item_detail_id,
+                similar: [...similarFoodGroups],
+              };
+    
+              const currentDietDataForTime = dietFoodGroupsApidata[time] || [];
+              currentDietDataForTime.push(currentfodmattedData);
+    
+              dietFoodGroupsApidata[`${time}`] = [...currentDietDataForTime];
+            }
+          }
+    
+              dietApiData[id]={
+                diets: {
+                  ...dietBasicInfo,
+                },
+                diet_food_groups: {
+                  ...dietFoodGroupsApidata,
+                },
+                food_items,
+                food_item_details
+              }
+      
+
+              dietIds.push(id);
+        }
+      }
+
+
+      for(const id of workout_ids){
+        const workout = await workoutService.findOne({id});
+
+        if(workout){
+          const workoutWrapper = await WorkoutWrapper({data:workout});
+          const expired_on = await workoutWrapper.getExpiredOn();
+          if(expired_on){
+            continue;
+          } 
+
+          let workout_exercise_groups = [];
+          const {
+            exercises,
+            exercise_groups,
+            exercise_details,
+          } = await workoutWrapper.getReferenceInfo();
+
+          for (const exerciseGroupId of Object.keys(exercise_groups)) {
+            const {
+              basic_info: { id: exercise_group_id, exercise_detail_id } = {},
+              sets,
+              details = {},
+            } = exercise_groups[exerciseGroupId] || {};
+    
+            const { basic_info: { exercise_id } = {} } =
+              exercise_details[exercise_detail_id] || {};
+    
+    
+            workout_exercise_groups.push({
+              exercise_group_id,
+              exercise_detail_id,
+              sets,
+              ...details,
+            });
+          }
+          
+
+          workoutApiData[workoutWrapper.getId()] = 
+          {
+            ...(await workoutWrapper.getReferenceInfo()),
+            workout_exercise_groups
+          };
+
+          workoutIds.push(workoutWrapper.getId());
+
+        }
+      }
+
 
       // sort suggested investigations
       const sortedInvestigations = suggestedInvestigations.sort((a, b) => {
@@ -1825,6 +2039,30 @@ class MPatientController extends Controller {
         usersData = { ...usersData, ...users };
       }
 
+      const portionServiceService = new PortionServiceService();
+      const allPortions = await portionServiceService.getAll();
+      let portionApiData = {};
+      
+      for(let each in allPortions){
+        const portion = allPortions[each] || {};
+        const portionWrapper = await PortionWrapper({data:portion});
+        portionApiData[portionWrapper.getId()] = portionWrapper.getBasicInfo();
+      }
+
+      const repetitionService = new RepetitionService();
+      let repetitionApiData = {};
+
+      const { count, rows: repetitions = [] } =
+        (await repetitionService.findAndCountAll()) || {};
+      if (count) {
+
+        for (let index = 0; index < repetitions.length; index++) {
+          const { id, type } = repetitions[index] || {};
+          repetitionApiData[id] = { id, type };
+        }
+
+      }
+
       dataForPdf = {
         users: { ...usersData },
         medications,
@@ -1834,9 +2072,12 @@ class MPatientController extends Controller {
             ...carePlanData.getBasicInfo(),
           },
         },
+        providers: providerData,
         doctors,
         doctor_id,
         degrees,
+        portions:{...portionApiData},
+        repetitions:{...repetitionApiData},
         providerIcon,
         conditions,
         registrations: registrationsData,
@@ -1846,6 +2087,10 @@ class MPatientController extends Controller {
         patients: {
           ...{ [patientData.getPatientId()]: patientData.getBasicInfo() },
         },
+        diets_formatted_data:{...dietApiData},
+        workouts_formatted_data:{...workoutApiData},
+        workout_ids:workoutIds,
+        diet_ids:dietIds,
         currentTime: getDoctorCurrentTime(doctorUserId).format(
           "Do MMMM YYYY, hh:mm a"
         ),
