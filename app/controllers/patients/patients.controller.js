@@ -27,8 +27,10 @@ import doctorPatientWatchlistService from "../../services/doctorPatientWatchlist
 import userRolesService from '../../services/userRoles/userRoles.service';
 import DietService from "../../services/diet/diet.service"; 
 import PortionServiceService from "../../services/portions/portions.service";
+import RepetitionService from "../../services/exerciseRepetitions/repetition.service";
 import providerService from "../../services/provider/provider.service";
 import ExerciseContentService from "../../services/exerciseContents/exerciseContent.service";
+import WorkoutService from "../../services/workouts/workout.service";
 
 // WRAPPERS --------------------------------
 import ExerciseContentWrapper from "../../ApiWrapper/web/exerciseContents";
@@ -55,9 +57,10 @@ import CouncilWrapper from "../../ApiWrapper/web/council";
 import TreatmentWrapper from "../../ApiWrapper/web/treatments";
 import DoctorPatientWatchlistWrapper from "../../ApiWrapper/web/doctorPatientWatchlist";
 import DietWrapper from "../../ApiWrapper/web/diet";
-
 import ProviderWrapper from "../../ApiWrapper/web/provider";
 import PortionWrapper from "../../ApiWrapper/web/portions";
+import WorkoutWrapper from "../../ApiWrapper/web/workouts";
+
 
 import * as DietHelper from "../diet/dietHelper";
 
@@ -1780,6 +1783,7 @@ class PatientController extends Controller {
       const { care_plan_id = null } = req.params;
       const { userDetails: { userId, userRoleId = null, userData: { category } = {} } = {} } = req;
       const dietService = new DietService();
+      const workoutService = new WorkoutService();
       // const carePlanId = parseInt(care_plan_id);
 
       let dataForPdf = {};
@@ -1899,7 +1903,7 @@ class PatientController extends Controller {
       }
 
 
-      let dietApiData = {},dietIds=[];
+      let dietApiData = {},dietIds=[] , workoutApiData = {}, workoutIds=[];
 
 
 
@@ -1918,7 +1922,7 @@ class PatientController extends Controller {
 
           const referenceInfo = await dietWrapper.getReferenceInfo();
     
-          let dietApidata = {},
+          let dietFoodGroupsApidata = {},
             dietBasicInfo = {};
     
           dietBasicInfo[dietWrapper.getId()] = await dietWrapper.getBasicInfo();
@@ -2026,10 +2030,10 @@ class PatientController extends Controller {
                 similar: [...similarFoodGroups],
               };
     
-              const currentDietDataForTime = dietApidata[time] || [];
+              const currentDietDataForTime = dietFoodGroupsApidata[time] || [];
               currentDietDataForTime.push(currentfodmattedData);
     
-              dietApidata[`${time}`] = [...currentDietDataForTime];
+              dietFoodGroupsApidata[`${time}`] = [...currentDietDataForTime];
             }
           }
     
@@ -2038,7 +2042,7 @@ class PatientController extends Controller {
                   ...dietBasicInfo,
                 },
                 diet_food_groups: {
-                  ...dietApidata,
+                  ...dietFoodGroupsApidata,
                 },
                 food_items,
                 food_item_details
@@ -2046,6 +2050,55 @@ class PatientController extends Controller {
       
 
               dietIds.push(id);
+        }
+      }
+
+
+      for(const id of workout_ids){
+        const workout = await workoutService.findOne({id});
+
+        if(workout){
+          const workoutWrapper = await WorkoutWrapper({data:workout});
+          const expired_on = await workoutWrapper.getExpiredOn();
+          if(expired_on){
+            continue;
+          } 
+
+          let workout_exercise_groups = [];
+          const {
+            exercises,
+            exercise_groups,
+            exercise_details,
+          } = await workoutWrapper.getReferenceInfo();
+
+          for (const exerciseGroupId of Object.keys(exercise_groups)) {
+            const {
+              basic_info: { id: exercise_group_id, exercise_detail_id } = {},
+              sets,
+              details = {},
+            } = exercise_groups[exerciseGroupId] || {};
+    
+            const { basic_info: { exercise_id } = {} } =
+              exercise_details[exercise_detail_id] || {};
+    
+    
+            workout_exercise_groups.push({
+              exercise_group_id,
+              exercise_detail_id,
+              sets,
+              ...details,
+            });
+          }
+          
+
+          workoutApiData[workoutWrapper.getId()] = 
+          {
+            ...(await workoutWrapper.getReferenceInfo()),
+            workout_exercise_groups
+          };
+
+          workoutIds.push(workoutWrapper.getId());
+
         }
       }
 
@@ -2188,6 +2241,20 @@ class PatientController extends Controller {
         portionApiData[portionWrapper.getId()] = portionWrapper.getBasicInfo();
       }
 
+      const repetitionService = new RepetitionService();
+      let repetitionApiData = {};
+
+      const { count, rows: repetitions = [] } =
+        (await repetitionService.findAndCountAll()) || {};
+      if (count) {
+
+        for (let index = 0; index < repetitions.length; index++) {
+          const { id, type } = repetitions[index] || {};
+          repetitionApiData[id] = { id, type };
+        }
+
+      }
+
       dataForPdf = {
         users: { ...usersData },
         medications,
@@ -2200,6 +2267,7 @@ class PatientController extends Controller {
         doctors,
         degrees,
         portions:{...portionApiData},
+        repetitions:{...repetitionApiData},
         conditions,
         providers: providerData,
         providerIcon,
@@ -2212,6 +2280,8 @@ class PatientController extends Controller {
           ...{ [patientData.getPatientId()]: patientData.getBasicInfo() },
         },
         diets_formatted_data:{...dietApiData},
+        workouts_formatted_data:{...workoutApiData},
+        workout_ids:workoutIds,
         diet_ids:dietIds,
         currentTime: getDoctorCurrentTime(doctorUserId).format(
           "Do MMMM YYYY, hh:mm a"

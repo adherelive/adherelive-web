@@ -6,3 +6,9 @@ export const getDoctorCurrentTime = (doctorUserId) => {
 
     return moment().tz("Asia/Kolkata");
 };
+
+
+export const getConvertedTime = ({time,userId}) => {
+  
+    return moment(time).tz("Asia/Kolkata");
+};

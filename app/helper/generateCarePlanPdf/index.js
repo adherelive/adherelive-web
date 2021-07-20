@@ -8,7 +8,7 @@ import {
 } from "../../../constant";
 import moment from "moment";
 import PDFDocument from "pdfkit";
-
+import {getConvertedTime} from "../getUserTime/index";
 // const PDFDocument = require("pdfkit");
 const fs = require("fs");
 // const moment = require("moment");
@@ -57,8 +57,11 @@ export default async (pdfData, signatureImage) => {
         suggestedInvestigations = [],
         providerIcon,
         portions,
+        repetitions,
         diets_formatted_data,
-        diet_ids
+        diet_ids,
+        workouts_formatted_data,
+        workout_ids
       } = pdfData;
       const doc = new PDFDocument({ size:"A4",margin: DOC_MARGIN, bufferPages: true });
 
@@ -106,6 +109,7 @@ export default async (pdfData, signatureImage) => {
 
 
       const suggestedInvestigationXLevelEnd = printCarePlanData(
+      {
         doc,
         horizontalLineLevel,
         care_plans,
@@ -116,9 +120,12 @@ export default async (pdfData, signatureImage) => {
         comorbidities,
         suggestedInvestigations,
         portions,
+        repetitions,
         diets_formatted_data,
-        diet_ids
-      );
+        diet_ids,
+        workouts_formatted_data,
+        workout_ids
+      });
 
       // generateHr(doc, doc.y + 17);
 
@@ -164,7 +171,7 @@ function getPdfName(pdfData) {
 
 function printDiet (
   doc,
-  addressEndRowLevel,
+  medicationYLevel,
   portions,
   diets_formatted_data,
   diet_ids
@@ -173,30 +180,31 @@ function printDiet (
   doc
   .font(BOLD_FONT)
   .fontSize(BOLD_FONT_SIZE)
-  .text("DIET", DOC_MARGIN, addressEndRowLevel);
+  .text("DIET", DOC_MARGIN, medicationYLevel);
 
 
     const dietsHeaderEnds = doc.y;
 
+    const serialNoXStart = DOC_MARGIN;
+    const dietNameXStart = DOC_MARGIN + 40;
+    const dietDetailsTimeXStart = DOC_MARGIN + 120;
+    const dietDetailsDataXStart = DOC_MARGIN + 180;
+    const startDateXStart = DOC_MARGIN + 380;
+    const endDateXStart = DOC_MARGIN + 450;
 
       doc
     .fillColor("#4a90e2")
     .fontSize(NORMAL_FONT_SIZE)
     .font(BOLD_FONT)
-    .text("S.No.", DOC_MARGIN, dietsHeaderEnds + 20, {
-      continued: true,
-    })
+    .text("S.No.", serialNoXStart, dietsHeaderEnds + 20)
     .font(BOLD_FONT)
-    .text("Diet Name", DOC_MARGIN + 5, dietsHeaderEnds + 20,
-    { continued: true })
+    .text("Diet Name", dietNameXStart, dietsHeaderEnds + 20)
     .font(BOLD_FONT)
-    .text("Details", DOC_MARGIN + 20, dietsHeaderEnds + 20,
-    { continued: true })
+    .text("Details",dietDetailsTimeXStart, dietsHeaderEnds + 20)
     .font(BOLD_FONT)
-    .text("Start Date", DOC_MARGIN + 220, dietsHeaderEnds + 20,
-    { continued: true })
+    .text("Start Date",startDateXStart, dietsHeaderEnds + 20)
     .font(BOLD_FONT)
-    .text("End Date", DOC_MARGIN + 240, dietsHeaderEnds + 20)
+    .text("End Date", endDateXStart, dietsHeaderEnds + 20)
     
 
     // generateHr(doc, dietsHeaderEnds+10);
@@ -207,7 +215,7 @@ function printDiet (
 
     for(let each in diets_formatted_data){
 
-      if(doc.y + (5 * SHORT_FONT_SIZE) > PAGE_END_LIMIT) {
+      if(doc.y + (3 * SHORT_FONT_SIZE) > PAGE_END_LIMIT) {
         doc.addPage();
         singleDietDetailYLevel = DOC_MARGIN;
       }
@@ -233,20 +241,21 @@ function printDiet (
       formattedEndDate = moment(end_date).format("MMM Do YY");
      }
 
-  
+
+     
     
      doc
      .fillColor("#212b36")
      .fontSize(SHORT_FONT_SIZE)
      .font(MEDIUM_FONT)
-     .text(`${dietCount}`, DOC_MARGIN, basicDetailsYLevel, {
-       continued: true,
-     })
-     .text(`${diet_name}`, DOC_MARGIN+ 40, basicDetailsYLevel,{continued: true})
-     .text(`${formattedStartDate}`, DOC_MARGIN+310, basicDetailsYLevel, {
-      continued: true,
+     .text(`${dietCount}.`, serialNoXStart, basicDetailsYLevel)
+     .text(`${diet_name}`, dietNameXStart, basicDetailsYLevel,{
+      width:dietDetailsTimeXStart-dietNameXStart,
     })
-    .text(`${formattedEndDate}`, DOC_MARGIN+ 345, basicDetailsYLevel)
+     .text(`${formattedStartDate}`, startDateXStart, basicDetailsYLevel, {
+      width:endDateXStart-startDateXStart,
+    })
+    .text(`${formattedEndDate}`, endDateXStart, basicDetailsYLevel)
 
 
 
@@ -259,8 +268,9 @@ function printDiet (
        doc
        .fillColor("#212b36")
        .font(MEDIUM_FONT)
-       .text(`${timeText}`,DOC_MARGIN+115, singleDietDetailYLevel + 20, {
-          width:150,
+       .text(`${timeText}`,dietDetailsTimeXStart, singleDietDetailYLevel + 20, {
+          width:dietDetailsDataXStart-dietDetailsTimeXStart,
+          // continued:true
        })
 
 
@@ -316,9 +326,9 @@ function printDiet (
          doc
         .fillColor("#212b36")
         .font(MEDIUM_FONT)
-        .text(`${singleData}`, DOC_MARGIN+180 , singleDietDetailYLevel + 20
+        .text(`${singleData}`,dietDetailsDataXStart, singleDietDetailYLevel + 20
         ,{
-          width:150
+          width:startDateXStart-dietDetailsDataXStart,
           }
         )
 
@@ -343,16 +353,30 @@ function printDiet (
         
      doc
      .fillColor("#212b36")
-     .font(MEDIUM_FONT)
-     .text(`Repeat Days${" "}-${" "}${repeat_days}`, DOC_MARGIN+115 , singleDietDetailYLevel + 20
+     .font(BOLD_FONT)
+     .text(`Repeat Days${" "}${"-"}`, dietDetailsTimeXStart , singleDietDetailYLevel + 20
      ,{
-       width:150
+       width:startDateXStart-dietDetailsTimeXStart,
+       continued:true
        }
      )
      .font(MEDIUM_FONT)
-     .text(`What Not to Do${" "}-${" "}${not_to_do ? not_to_do : '--'}`, DOC_MARGIN+115 , singleDietDetailYLevel + 40
+     .text(`${repeat_days}`, dietDetailsTimeXStart+10 , singleDietDetailYLevel + 20
      ,{
-       width:150
+       width:startDateXStart-dietDetailsTimeXStart
+       }
+     )
+     .font(BOLD_FONT)
+     .text(`What Not to Do${" "}${"-"}`, dietDetailsTimeXStart, singleDietDetailYLevel + 40
+     ,{
+       width:startDateXStart-dietDetailsTimeXStart,
+       continued:true
+       }
+     )
+     .font(MEDIUM_FONT)
+     .text(`${not_to_do ? not_to_do : '--'}`, dietDetailsTimeXStart+10 , singleDietDetailYLevel + 40
+     ,{
+       width:startDateXStart-dietDetailsTimeXStart
        }
      )
 
@@ -374,6 +398,196 @@ function printDiet (
 
 
 }
+
+function printWorkout (
+  doc,
+  dietYLevel,
+  repetitions,
+  workouts_formatted_data,
+  workout_ids
+){
+
+
+  const serialNoXStart = DOC_MARGIN;
+  const workoutNameXStart = DOC_MARGIN + 40;
+  const workoutTimeXStart = DOC_MARGIN + 160;
+  const workoutDetailsDataXStart = DOC_MARGIN + 230;
+  const startDateXStart = DOC_MARGIN + 380;
+  const endDateXStart = DOC_MARGIN + 450;
+
+
+  doc
+  .font(BOLD_FONT)
+  .fontSize(BOLD_FONT_SIZE)
+  .text("WORKOUT", DOC_MARGIN, dietYLevel);
+
+
+    const workoutsHeaderEnds = doc.y;
+
+
+      doc
+    .fillColor("#4a90e2")
+    .fontSize(NORMAL_FONT_SIZE)
+    .font(BOLD_FONT)
+    .text("S.No.", serialNoXStart, workoutsHeaderEnds + 20)
+    .font(BOLD_FONT)
+    .text("Workout Name", workoutNameXStart, workoutsHeaderEnds + 20)
+    .font(BOLD_FONT)
+    .text("Time", workoutTimeXStart, workoutsHeaderEnds + 20)
+    .font(BOLD_FONT)
+    .text("Details", workoutDetailsDataXStart, workoutsHeaderEnds + 20)
+    .font(BOLD_FONT)
+    .text("Start Date",startDateXStart, workoutsHeaderEnds + 20)
+    .font(BOLD_FONT)
+    .text("End Date",endDateXStart, workoutsHeaderEnds + 20)
+    
+
+    let workoutCount=1;
+    let singleWorkoutDetailYLevel=doc.y;
+
+    for(let each in workouts_formatted_data){
+
+      if(doc.y + (3 * SHORT_FONT_SIZE) > PAGE_END_LIMIT) {
+        doc.addPage();
+        singleWorkoutDetailYLevel = DOC_MARGIN;
+      }
+
+    
+      const { 
+        workouts={},
+        exercises={},
+        exercise_details={},
+        workout_exercise_groups={}
+     } = workouts_formatted_data[each];
+
+     const { basic_info : { name:workout_name } ={} , details : {
+      not_to_do = '',repeat_days = []
+     } = {},
+     time : workoutTime = '',start_date=null,end_date=null }=workouts[Object.keys(workouts)[0]] || {};
+
+     let basicDetailsYLevel=singleWorkoutDetailYLevel + 20,formattedStartDate='--',formattedEndDate='--';
+     
+     if(start_date){
+      formattedStartDate = moment(start_date).format("MMM Do YY");
+     }
+     if(end_date){
+      formattedEndDate = moment(end_date).format("MMM Do YY");
+     }
+
+     const formattedTime = getConvertedTime({time:workoutTime}).format("hh:mm A");
+     doc
+     .fillColor("#212b36")
+     .fontSize(SHORT_FONT_SIZE)
+     .font(MEDIUM_FONT)
+     .text(`${workoutCount}.`, serialNoXStart, basicDetailsYLevel)
+     .text(`${workout_name}`, workoutNameXStart, basicDetailsYLevel,{
+      width:workoutTimeXStart-workoutNameXStart
+      })
+     .text(`${formattedTime}`, workoutTimeXStart, basicDetailsYLevel,{
+       width:workoutDetailsDataXStart-workoutTimeXStart,
+      })
+     .text(`${formattedStartDate}`, startDateXStart, basicDetailsYLevel, {
+      width:endDateXStart-startDateXStart,
+      })
+    .text(`${formattedEndDate}`, endDateXStart, basicDetailsYLevel)
+
+
+
+     for(let each in workout_exercise_groups){
+
+       const exerciseGroupArrayForEach = workout_exercise_groups[each] || [];
+
+        const {
+          exercise_detail_id=null,
+          notes='',
+          repetition_id=null,
+          sets=null
+        } = exerciseGroupArrayForEach || {};
+
+        const { basic_info:{ exercise_id = null,repetition_value = null }={}}=exercise_details[exercise_detail_id] || {};
+        const { basic_info : { name : exercise_name = '' } = {} } = exercises[exercise_id] || {};
+        const {  type :repetition_type = '' } = repetitions[repetition_id] || {};
+
+        let singleData=`${sets}x${" "}${repetition_value}${" "}${repetition_type}${" "}${exercise_name}`;
+ 
+        if(doc.y + (3 * SHORT_FONT_SIZE) > PAGE_END_LIMIT) {
+          doc.addPage();
+          singleWorkoutDetailYLevel = DOC_MARGIN;
+        }
+
+         doc
+        .fillColor("#212b36")
+        .font(MEDIUM_FONT)
+        .text(`${singleData}`,workoutDetailsDataXStart, singleWorkoutDetailYLevel + 20
+        ,{
+          width:startDateXStart-workoutDetailsDataXStart,
+          }
+        )
+
+      
+
+        if(doc.y + (3 * SHORT_FONT_SIZE) > PAGE_END_LIMIT) {
+          doc.addPage();
+          singleWorkoutDetailYLevel = DOC_MARGIN;
+        }
+
+        singleWorkoutDetailYLevel=doc.y;
+
+
+     }
+
+
+     singleWorkoutDetailYLevel=doc.y;
+
+       
+     doc
+     .fillColor("#212b36")
+     .font(BOLD_FONT)
+     .text(`Repeat Days${" "}${"-"}`, workoutDetailsDataXStart , singleWorkoutDetailYLevel + 20
+     ,{
+       width:startDateXStart-workoutDetailsDataXStart,
+       continued:true
+       }
+     )
+     .font(MEDIUM_FONT)
+     .text(`${repeat_days}`, workoutDetailsDataXStart+10 , singleWorkoutDetailYLevel + 20
+     ,{
+       width:startDateXStart-workoutDetailsDataXStart
+       }
+     )
+     .font(BOLD_FONT)
+     .text(`What Not to Do${" "}${"-"}`, workoutDetailsDataXStart, singleWorkoutDetailYLevel + 40
+     ,{
+       width:startDateXStart-workoutDetailsDataXStart,
+       continued:true
+       }
+     )
+     .font(MEDIUM_FONT)
+     .text(`${not_to_do ? not_to_do : '--'}`, workoutDetailsDataXStart+10 , singleWorkoutDetailYLevel + 40
+     ,{
+       width:startDateXStart-workoutDetailsDataXStart
+       }
+     )
+
+     generateHr(doc, singleWorkoutDetailYLevel+60);
+
+
+     singleWorkoutDetailYLevel=doc.y;
+
+     workoutCount++;
+
+     if(doc.y + (3 * SHORT_FONT_SIZE) > PAGE_END_LIMIT) {
+      doc.addPage();
+      singleWorkoutDetailYLevel = DOC_MARGIN;
+    }
+
+    }
+
+    return doc.y + 10;
+
+
+}
+
 
 function printDoctorBlockData(
   doc,
@@ -596,7 +810,7 @@ function printPatientBlockData(
 }
 
 function printCarePlanData(
-  doc,
+ { doc,
   horizontalLineLevel,
   care_plans,
   conditions,
@@ -606,8 +820,11 @@ function printCarePlanData(
   comorbidities,
   suggestedInvestigations,
   portions,
+  repetitions,
   diets_formatted_data,
-  diet_ids
+  diet_ids,
+  workouts_formatted_data,
+  workout_ids}
 ) {
   const { diagnosis, condition, symptoms, clinicalNotes } = formatCarePlanData(
     care_plans,
@@ -846,7 +1063,18 @@ function printCarePlanData(
     diet_ids
   );
 
-  let docYLevel = dietBlockLevelEnd;
+  const dietYLevel = dietBlockLevelEnd + NORMAL_FONT_SIZE + 12;
+
+  const workoutBlockLevelEnd = printWorkout(
+    doc,
+    dietYLevel,
+    repetitions,
+    workouts_formatted_data,
+    workout_ids
+  );
+
+  let docYLevel = workoutBlockLevelEnd;
+
 
 
   doc
