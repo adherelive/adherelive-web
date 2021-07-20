@@ -83,6 +83,9 @@ export const db = (database) => {
       updated_at: {
         type: DataTypes.DATE,
       },
+      deleted_at: {
+        type: DataTypes.DATE,
+      },
     },
     {
       underscored: true,
