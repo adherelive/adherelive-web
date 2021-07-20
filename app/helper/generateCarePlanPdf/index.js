@@ -318,7 +318,7 @@ function printDiet (
         }
 
 
-        if(doc.y + (3 * SHORT_FONT_SIZE) > PAGE_END_LIMIT) {
+        if(doc.y + (3 * MEDIUM_FONT) > PAGE_END_LIMIT) {
           doc.addPage();
           singleDietDetailYLevel = DOC_MARGIN;
         }
@@ -500,17 +500,16 @@ function printWorkout (
         const {
           exercise_detail_id=null,
           notes='',
-          repetition_id=null,
           sets=null
         } = exerciseGroupArrayForEach || {};
 
-        const { basic_info:{ exercise_id = null,repetition_value = null }={}}=exercise_details[exercise_detail_id] || {};
+        const { basic_info:{ exercise_id = null,repetition_value = null ,repetition_id=null}={}}=exercise_details[exercise_detail_id] || {};
         const { basic_info : { name : exercise_name = '' } = {} } = exercises[exercise_id] || {};
         const {  type :repetition_type = '' } = repetitions[repetition_id] || {};
 
-        let singleData=`${sets}x${" "}${repetition_value}${" "}${repetition_type}${" "}${exercise_name}`;
+        let singleData=`${sets}${" "}set${" "}x${" "}${repetition_value}${" "}${repetition_type}${" "}${exercise_name}`;
  
-        if(doc.y + (3 * SHORT_FONT_SIZE) > PAGE_END_LIMIT) {
+        if(doc.y + (3 * MEDIUM_FONT) > PAGE_END_LIMIT) {
           doc.addPage();
           singleWorkoutDetailYLevel = DOC_MARGIN;
         }
@@ -1063,7 +1062,10 @@ function printCarePlanData(
     diet_ids
   );
 
-  const dietYLevel = dietBlockLevelEnd + NORMAL_FONT_SIZE + 12;
+  const dietYLevel = 
+  dietBlockLevelEnd 
+  ? dietBlockLevelEnd + NORMAL_FONT_SIZE + 12 
+  : medicationYLevel + NORMAL_FONT_SIZE + 12;
 
   const workoutBlockLevelEnd = printWorkout(
     doc,
