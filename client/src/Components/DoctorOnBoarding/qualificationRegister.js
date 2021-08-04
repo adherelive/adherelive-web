@@ -138,7 +138,7 @@ class QualificationRegister extends Component {
         this.setState({ doctor_id: doctorId });
       }
 
-      if (authenticated_category === USER_CATEGORY.DOCTOR) {
+      if (authenticated_category === USER_CATEGORY.DOCTOR || authenticated_category === USER_CATEGORY.HSP) {
         await getDoctorQualificationRegisterData({ doctor_id: id });
       }
     }
@@ -1824,7 +1824,7 @@ class QualificationRegister extends Component {
               } else {
                 history.replace(`${PATH.REGISTER_CLINICS}/${doctor_id}`);
               }
-            }else if(authenticated_category === USER_CATEGORY.DOCTOR && window.location.href.includes(PATH.REGISTER_FROM_MY_PROFILE) ) {
+            }else if( (authenticated_category === USER_CATEGORY.DOCTOR || authenticated_category === USER_CATEGORY.HSP) && window.location.href.includes(PATH.REGISTER_FROM_MY_PROFILE) ) {
               history.replace(PATH.PROFILE);
               return;
             }
@@ -1850,7 +1850,7 @@ class QualificationRegister extends Component {
         history.replace(`${PATH.REGISTER_PROFILE}/${doctor_id}`);
       }
     }
-    else if(authenticated_category === USER_CATEGORY.DOCTOR && window.location.href.includes(PATH.REGISTER_FROM_MY_PROFILE) ) {
+    else if( ( authenticated_category === USER_CATEGORY.DOCTOR || authenticated_category === USER_CATEGORY.HSP ) && window.location.href.includes(PATH.REGISTER_FROM_MY_PROFILE) ) {
       history.replace(PATH.PROFILE);
       return;
     }
@@ -1980,7 +1980,7 @@ class QualificationRegister extends Component {
         <div className="registration-container">
           {authenticated_category === USER_CATEGORY.PROVIDER ? (
             <div className="header">
-              {this.formatMessage(messages.createDoctorProfile)}
+              {this.formatMessage(messages.createNewProfile)}
             </div>
           ) : (
             <div className="header">

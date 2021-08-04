@@ -21,7 +21,7 @@ class EditWorkout extends Component{
             days:[],
             time:'',
             deletedExerciseGroupIds:[],
-            expired_on:null
+            canOnlyView:false
         }
 
         this.FormWrapper = Form.create({ onFieldsChange: this.onFormFieldChanges })(
@@ -90,8 +90,8 @@ class EditWorkout extends Component{
 
     getWorkoutDetails = async() => {
       try{
-        const {getSingleWorkoutDetails , payload = {}}=this.props;
-        const {care_plan_id ,workout_id = null} = payload || {};
+        const {getSingleWorkoutDetails , payload = {} , updateWorkoutTotalCalories}=this.props;
+        const {care_plan_id ,workout_id = null, canViewDetails=false} = payload || {};
 
         this.setState({ loading:true });
 
@@ -101,8 +101,7 @@ class EditWorkout extends Component{
         if(!status){
           message.warn(resp_msg);
         }else{
-
-          const {workouts = {} , workout_exercise_groups = {} } = data || {};
+          const {workouts = {} , workout_exercise_groups = {} ,exercise_groups_total_calories=0} = data || {};
 
           const { basic_info : {
               name='',
@@ -113,6 +112,16 @@ class EditWorkout extends Component{
             start_date='',
             end_date='',
             expired_on=null} = workouts[workout_id] || {};
+
+          if(total_calories !== exercise_groups_total_calories ){
+
+            const updateCaloriesResponse = await updateWorkoutTotalCalories({workout_id,total_calories:exercise_groups_total_calories});
+            const {status:updateCalories_status, payload: {message : updateCalories_resp_msg = '' } = {} } = updateCaloriesResponse || {};
+
+            if(!updateCalories_status){
+              message.warn(updateCalories_resp_msg);
+            }
+          }
 
           const initialFormData = {
             name,
@@ -125,10 +134,14 @@ class EditWorkout extends Component{
           this.setState({
             completeData:[...workout_exercise_groups],
             initialFormData,
-            care_plan_id,total_calories,
-            time,
-            expired_on
+            care_plan_id,
+            total_calories:exercise_groups_total_calories,
+            time
           });
+
+          if( expired_on || canViewDetails ){
+            this.setState({canOnlyView:true});
+          }
 
         }
 
@@ -184,7 +197,7 @@ class EditWorkout extends Component{
             submitting:false,
             time:'',
             deletedExerciseGroupIds:[],
-            expired_on:null
+            canOnlyView:false
         });
         
         resetFields();
@@ -336,7 +349,7 @@ class EditWorkout extends Component{
     getWorkoutComponent = () => {
 
       const { setFinalDayData , setNewTotalCal ,setDeletedExerciseGroupId  } = this;
-      const { completeData = {} , total_calories=0 ,expired_on=null } = this.state;
+      const { completeData = {} , total_calories=0 ,canOnlyView=false } = this.state;
       
       return (
           <div>
@@ -346,7 +359,7 @@ class EditWorkout extends Component{
               </div>
             
             <SingleDayExerciseComponent 
-                expired_on={expired_on}
+                canOnlyView={canOnlyView}
                 setFinalDayData={setFinalDayData}
                 setNewTotalCal={setNewTotalCal}
                 setDeletedExerciseGroupId={setDeletedExerciseGroupId}
@@ -453,13 +466,13 @@ class EditWorkout extends Component{
         FormWrapper } = this;
       const { visible = false  } = this.props;
       const { workoutVisible = false , hideWorkout = null,addTemplateWorkout =null, editTemplateWorkout = null }=this.props;
-      const {submitting = false , initialFormData = {} ,loading = false , days = [], time = '' ,expired_on=null }=this.state;
+      const {submitting = false , initialFormData = {} ,loading = false , days = [], time = '' ,canOnlyView=false }=this.state;
 
     return (
         <Fragment>
           <Drawer
             title={
-              expired_on
+              canOnlyView
               ?
               formatMessage(messages.viewDetails)
               :
@@ -499,7 +512,7 @@ class EditWorkout extends Component{
             (
              <div className="wp100" >
                 <FormWrapper
-                  expired_on={expired_on}
+                  canOnlyView={canOnlyView}
                   wrappedComponentRef={setFormRef}
                   days={days}
                   setTime={setTime}
@@ -510,7 +523,7 @@ class EditWorkout extends Component{
                 />
                 
                 {
-                  !expired_on
+                  !canOnlyView
                   &&
                 <Footer
                   className="flex justify-space-between"

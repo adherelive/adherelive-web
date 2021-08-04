@@ -2,10 +2,12 @@ import { TABLE_COLUMN } from "../helper";
 
 export default data => {
   const { id,
-     openResponseDrawer,
-     openEditDrawer,
+    openResponseDrawer,
+    openEditDrawer,
     dietData,
-     formatMessage } = data;
+    formatMessage,
+    canViewDetails = false
+  } = data;
 
   return {
     key: id,
@@ -31,7 +33,8 @@ export default data => {
       id,
       dietData,
       openEditDrawer,
-      formatMessage
+      formatMessage,
+      canViewDetails
     },
   };
 };

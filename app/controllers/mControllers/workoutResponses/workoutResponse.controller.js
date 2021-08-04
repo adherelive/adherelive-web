@@ -372,7 +372,7 @@ class WorkoutResponseController extends Controller {
 
         auth = {
           creator_id: doctorIds,
-          creator_type: USER_CATEGORY.DOCTOR,
+          creator_type: [USER_CATEGORY.DOCTOR,USER_CATEGORY.HSP],
         };
       }
 
@@ -401,6 +401,10 @@ class WorkoutResponseController extends Controller {
         exercise_groups,
         exercise_details,
       } = await workout.getReferenceInfo();
+
+      const workoutCareplanId = await workout.getCareplanId();
+      const careplanWrapper = await CareplanWrapper(null,workoutCareplanId);
+      const careplanCreatorId = careplanWrapper.getDoctorId();
 
       // exercise contents
       const exerciseContentService = new ExerciseContentService();
@@ -463,6 +467,9 @@ class WorkoutResponseController extends Controller {
         const workoutResponseId =
           allWorkoutResponseExerciseGroups[exercise_group_id] || null;
 
+          const isContentAuthCreated = false;
+
+
           if(exerciseContentId){
             const exerciseContentWrapper = await ExerciseContentWrapper({
               id:exerciseContentId
@@ -471,13 +478,22 @@ class WorkoutResponseController extends Controller {
             exerciseContentData[
               exerciseContentWrapper.getId()
             ] = exerciseContentWrapper.getBasicInfo();
+
+
+            const { creator_id }  = exerciseContentWrapper.getBasicInfo();
+            
+            if( creator_id.toString() === careplanCreatorId.toString() ){
+              isContentAuthCreated=true;
+            }
+
+
           }
           
         workout_exercise_groups.push({
           exercise_group_id,
           exercise_detail_id,
           sets,
-          exercise_content_id: exerciseContentId,
+          exercise_content_id: isContentAuthCreated ? exerciseContentId : null ,
           workout_response_id: workoutResponseId,
           ...details,
         });

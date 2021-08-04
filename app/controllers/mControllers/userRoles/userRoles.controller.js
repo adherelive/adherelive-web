@@ -139,9 +139,7 @@ class UserRoleController extends Controller {
         const userRef = await userService.getUserData({ id: user.get("id") });
         const apiUserDetails = await UserWrapper(userRef.get());
   
-        let permissions = {
-          permissions: []
-        };
+        let permissions = [];
   
         if (apiUserDetails.isActivated()) {
           permissions = await apiUserDetails.getPermissions();
@@ -160,7 +158,7 @@ class UserRoleController extends Controller {
           auth_user_role: userRoleId,
           auth_category: apiUserDetails.getCategory(),
           hasConsent: apiUserDetails.getConsent(),
-          ...permissions
+          permissions
         };
   
         return raiseSuccess(

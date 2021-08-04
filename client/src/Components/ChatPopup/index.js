@@ -768,7 +768,7 @@ class ChatPopUp extends Component {
 
   toggleChatPermission = async () => {
     const { authenticated_category, patientId } = this.props;
-    if (authenticated_category !== USER_CATEGORY.DOCTOR) {
+    if (authenticated_category !== USER_CATEGORY.DOCTOR && authenticated_category !== USER_CATEGORY.HSP) {
       return;
     }
 
@@ -797,7 +797,7 @@ class ChatPopUp extends Component {
 
   toggleVideoCallPermission = async () => {
     const { authenticated_category, patientId } = this.props;
-    if (authenticated_category !== USER_CATEGORY.DOCTOR) {
+    if (authenticated_category !== USER_CATEGORY.DOCTOR && authenticated_category !== USER_CATEGORY.HSP) {
       return;
     }
 

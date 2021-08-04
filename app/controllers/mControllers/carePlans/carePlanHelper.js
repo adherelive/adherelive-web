@@ -82,7 +82,7 @@ export const getCareplanData = async ({
       // Log.debug("7123731 careplan --> ", careplan.getCreatedAt());
       // Log.debug("71237312 careplan --> ", moment(currentCareplanTime));
       if (
-        userCategory === USER_CATEGORY.DOCTOR &&
+        (userCategory === USER_CATEGORY.DOCTOR || userCategory === USER_CATEGORY.HSP) &&
         user_role_id.toString() === userRoleId.toString()
       ) {
         // if(userCategory === USER_CATEGORY.DOCTOR && doctorId === doctor_id) {
@@ -324,6 +324,7 @@ export const createDiet = async ({
           start_date,
           end_date,
           total_calories = null,
+          duration = null,
           details: {
             repeat_days = [],
             not_to_do = "",
@@ -331,10 +332,17 @@ export const createDiet = async ({
           } = {},
         } = data[index];
 
+        let startDate = start_date;
+        let endDate = end_date;
+        if(duration) {
+          startDate = moment().utc().toISOString();
+          endDate = moment().add('days', duration).utc().toISOString();
+        }
+
         const dietId = await dietService.create({
           name,
-          start_date,
-          end_date,
+          start_date: startDate,
+          end_date: endDate,
           total_calories,
           diet_food_groups,
           details: { not_to_do, repeat_days },
@@ -448,6 +456,7 @@ export const createWorkout = async ({
           end_date,
           total_calories = null,
           time,
+          duration = null,
           details: {
             repeat_days = [],
             not_to_do = "",
@@ -455,11 +464,18 @@ export const createWorkout = async ({
           } = {},
         } = data[index];
 
+        let startDate = start_date;
+        let endDate = end_date;
+        if(duration) {
+          startDate = moment().utc().toISOString();
+          endDate = moment().add('days', duration).utc().toISOString();
+        }
+
         const workoutId = await workoutService.create({
           name,
           time,
-          start_date,
-          end_date,
+          start_date: startDate,
+          end_date: endDate,
           total_calories,
           workout_exercise_groups,
           details: { not_to_do, repeat_days },

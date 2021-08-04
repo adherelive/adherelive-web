@@ -283,7 +283,9 @@ class EditAppointment extends Component {
       editAppointment,
       addAppointment,
       appointmentVisible = false,
-      hideAppointment } = this.props;
+      hideAppointment ,
+      payload:{canViewDetails=false}={}
+    } = this.props;
     const { disabledSubmit , submitting=false } = this.state;
     const {
       onClose,
@@ -318,7 +320,10 @@ class EditAppointment extends Component {
           onClose={editAppointment || addAppointment ? hideAppointment : onClose}
           visible={editAppointment || addAppointment ? appointmentVisible : visible} // todo: change as per prop -> "visible", -- WIP --
           width={'35%'}
-          title={editAppointment ? formatMessage(messages.appointment) : addAppointment ? "Add Appointment" : formatMessage(messages.edit_appointment)}
+          title={
+            canViewDetails
+            ? formatMessage(messages.viewDetails)
+            : editAppointment ? formatMessage(messages.appointment) : addAppointment ? "Add Appointment" : formatMessage(messages.edit_appointment)}
         // headerStyle={{
         //     display:"flex",
         //     justifyContent:"space-between",
@@ -332,15 +337,22 @@ class EditAppointment extends Component {
             /> */}
           {/* </div> */}
 
-          <Footer
-            className="flex justify-space-between"
-            onSubmit={handleSubmit}
-            onClose={editAppointment || addAppointment ? hideAppointment : onClose}
-            submitText={formatMessage(messages.submit_text)}
-            submitButtonProps={submitButtonProps}
-            cancelComponent={getDeleteButton()}
-            submitting={submitting}
-          />
+            {
+              !canViewDetails
+              &&
+              (
+                <Footer
+                  className="flex justify-space-between"
+                  onSubmit={handleSubmit}
+                  onClose={editAppointment || addAppointment ? hideAppointment : onClose}
+                  submitText={formatMessage(messages.submit_text)}
+                  submitButtonProps={submitButtonProps}
+                  cancelComponent={getDeleteButton()}
+                  submitting={submitting}
+                />
+              )
+            }
+          
         </Drawer>
       </Fragment>
     );

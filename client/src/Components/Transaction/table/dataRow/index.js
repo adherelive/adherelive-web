@@ -40,7 +40,7 @@ export default data => {
           transactionData,transaction_ids
       }
     };
-  }else if(authenticated_category === USER_CATEGORY.DOCTOR){
+  }else if(authenticated_category === USER_CATEGORY.DOCTOR || authenticated_category === USER_CATEGORY.HSP){
     return {
       key: id,
       [TABLE_COLUMN.ID.dataIndex]: {

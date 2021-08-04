@@ -182,6 +182,11 @@ const messages = defineMessages({
         description: "",
         defaultMessage: "Workouts"
     },
+    medicationAccessError: {
+        id: "app.medicationTemplate.medicationAccessError",
+        description: "",
+        defaultMessage: "You are unauthorized to access medication."
+    },
 });
 
 export default messages;

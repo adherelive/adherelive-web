@@ -241,6 +241,13 @@ class FoodItemController extends Controller {
                         &&
                     ItemDetailsWrapper.getCreatorId() === userCategoryId
                     )
+                    ||
+                    (ItemDetailsWrapper.getCreatorType() === USER_CATEGORY.HSP 
+                        &&
+                    category == USER_CATEGORY.HSP
+                        &&
+                    ItemDetailsWrapper.getCreatorId() === userCategoryId
+                    )
 
                 ){
                     canUpdateFoodItemDetails=true;

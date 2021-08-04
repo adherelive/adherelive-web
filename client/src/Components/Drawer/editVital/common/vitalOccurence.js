@@ -55,7 +55,7 @@ class VitalOccurence extends Component {
     const {
       form: { getFieldDecorator, getFieldError, isFieldTouched },
       repeat_intervals,
-      payload: { id:vital_id}={},
+      payload: { id:vital_id, canViewDetails = false }={},
       vitals
     } = this.props;
     const { details : { repeat_interval_id } = {} } = vitals[vital_id] || {};
@@ -110,6 +110,7 @@ class VitalOccurence extends Component {
                 .indexOf(input.toLowerCase()) >= 0
             }
             getPopupContainer={getParentNode}
+            disabled={canViewDetails}
           >
             {options}
           </Select>

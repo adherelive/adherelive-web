@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import { injectIntl } from "react-intl";
 import { Table, Icon, Empty } from "antd";
 import generateRow from "./datarow";
-// import { PERMISSIONS } from '../../../constant'
+// import { USER_PERMISSIONS } from '../../../constant'
 import getColumn from "./header";
 import messages from "./messages"; 
 import message from "antd/es/message";
@@ -108,7 +108,7 @@ class ConsultationFeeTable extends Component {
     
     return (
       <Table
-        // onRow={authPermissions.includes(PERMISSIONS.VIEW_PATIENT) ? onRow : null}
+        // onRow={authPermissions.includes(USER_PERMISSIONS.PATIENTS.VIEW) ? onRow : null}
         rowClassName={() => "pointer"}
         // loading={loading === true ? getLoadingComponent() : false}
         columns={getColumn({

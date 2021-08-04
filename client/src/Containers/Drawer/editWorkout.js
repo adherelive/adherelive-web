@@ -8,7 +8,8 @@ import {
     updateWorkout, 
     getSingleWorkoutDetails
     , deleteWorkout 
-    , getWorkoutDetails
+    , getWorkoutDetails,
+    updateWorkoutTotalCalories
 } from "../../modules/workouts";
 import { getPatientCarePlanDetails } from "../../modules/carePlans";
 
@@ -54,7 +55,7 @@ const mapDispatchToProps = dispatch => {
         getSingleWorkoutDetails : (id) => dispatch(getSingleWorkoutDetails(id)),
         deleteWorkout : (id) => dispatch(deleteWorkout(id)),
         getPatientCarePlanDetails: (patientId) => dispatch(getPatientCarePlanDetails(patientId)),
-
+        updateWorkoutTotalCalories : ({workout_id,total_calories}) => dispatch(updateWorkoutTotalCalories({workout_id,total_calories}))
     };
 };
 

@@ -207,6 +207,11 @@ const messages = defineMessages({
         description: "",
         defaultMessage: "A diet with this name already exist in this template."
     },
+    medicationAccessError: {
+        id: "app.allTemplatesAddDrawer.medicationAccessError",
+        description: "",
+        defaultMessage: "You are unauthorized to access medication."
+    },
 });
 
 export default messages;

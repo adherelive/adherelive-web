@@ -85,7 +85,7 @@ export default props => {
       },
      
     ];
-  }else if(authenticated_category === USER_CATEGORY.DOCTOR){
+  }else if(authenticated_category === USER_CATEGORY.DOCTOR || authenticated_category === USER_CATEGORY.HSP){
     return [
       {
         title: formatMessage(messages.transaction_id),

@@ -70,7 +70,7 @@ export const formatTransactionTableData = data => {
   const { id: requestor_id = null, category: requestor_cat = "" } = requestor;
   const { id: payee_id = null, category: payee_cat = "" } = payee;
 
-  if (requestor_cat === USER_CATEGORY.DOCTOR) {
+  if (requestor_cat === USER_CATEGORY.DOCTOR || requestor_cat === USER_CATEGORY.HSP) {
     doctorId = requestor_id;
     patientId = payee_id;
   } else {

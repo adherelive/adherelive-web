@@ -36,6 +36,11 @@ const messages = defineMessages({
     description: "",
     defaultMessage: "No Medication Data added yet"
   },
+  view: {
+    id: "app.medication.table.workouts.view",
+    description: "",
+    defaultMessage: "View"
+  },
 });
 
 export default messages;

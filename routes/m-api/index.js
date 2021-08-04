@@ -96,6 +96,8 @@ router.use(async (req, res, next) => {
         userCategoryData,
         userCategoryId
       };
+
+      req.permissions = await user.getPermissions();
     } else {
       req.userDetails = {
         exists: false

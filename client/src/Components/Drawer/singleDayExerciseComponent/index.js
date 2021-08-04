@@ -103,7 +103,7 @@ class DayWorkout extends Component{
     getTimingOptions = () => {
 
       let options = [] , allExerciseItems = [];
-      const {  completeData = [] ,time = moment() , exercise_details = {} , expired_on=null } = this.props;
+      const {  completeData = [] ,time = moment() , exercise_details = {} , canOnlyView=false } = this.props;
 
   
       for(let i = 0;i<completeData.length;i++){
@@ -148,7 +148,7 @@ class DayWorkout extends Component{
            <div className="tal wp100 mt10 mb10 " >
              <div className="b-light-grey wp100 mh40 flex direction-column align-center p10 br4 " >
                   {
-                    !expired_on
+                    !canOnlyView
                     &&
                     <div className=" pointer tab-color tal fw700 wp100 flex justify-space-between" 
                       onClick={this.openAddExerciseGroupDrawer} 
@@ -263,7 +263,7 @@ class DayWorkout extends Component{
 
         const { handleOpenEditExerciseGroupDrawer } = this;
 
-        const { exercises , exercise_details , repetitions , expired_on = null  } = this.props;
+        const { exercises , exercise_details , repetitions , canOnlyView = false  } = this.props;
 
         const {
           basic_info : { 
@@ -285,7 +285,7 @@ class DayWorkout extends Component{
                   
                   <div className="flex direction-column algin-center justify-center" >
                     {
-                      !expired_on
+                      !canOnlyView
                       &&
                       <img
                         src={edit_image}
@@ -306,7 +306,7 @@ class DayWorkout extends Component{
                   </div>  
                   <div className="flex direction-column algin-center justify-center" >
                     {
-                      !expired_on
+                      !canOnlyView
                       &&
                       <DeleteOutlined
                         className={"pointer align-self-end ml10 "}

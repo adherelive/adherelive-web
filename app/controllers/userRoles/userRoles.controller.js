@@ -144,13 +144,13 @@ class UserRoleController extends Controller {
 
       const apiUserDetails = await UserWrapper(userRef.get());
 
-      let permissions = {
-        permissions: [],
-      };
+      // let permissions = {
+      //   permissions: [],
+      // };
 
-      if (apiUserDetails.isActivated()) {
-        permissions = await apiUserDetails.getPermissions();
-      }
+      // if (apiUserDetails.isActivated()) {
+      //   permissions = await apiUserDetails.getPermissions();
+      // }
 
       const dataToSend = {
         ...(await apiUserDetails.getReferenceData()),

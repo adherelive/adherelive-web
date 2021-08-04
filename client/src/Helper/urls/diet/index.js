@@ -6,6 +6,10 @@ export const updateDietUrl = (diet_id) => {
     return `/diet/${diet_id}`;
 }
 
+export const updateDietTotalCaloriesUrl = (diet_id,total_calories) => {
+    return `/diet/update-calories?id=${diet_id}&total_calories=${total_calories}`;
+}
+
 export const getDietsForCareplanUrl = (care_plan_id) => {
     return `/diet?care_plan_id=${care_plan_id}`;
 };

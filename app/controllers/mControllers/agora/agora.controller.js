@@ -25,7 +25,7 @@ class AgoraController extends Controller {
                 userRoleId,
                 userData: { category } = {}} = {}} = req;
             let doctorRoleId = null, patientRoleId = null;
-            if(category === USER_CATEGORY.DOCTOR) {
+            if(category === USER_CATEGORY.DOCTOR || category === USER_CATEGORY.HSP) {
                 doctorRoleId = userRoleId;
                 patientRoleId = id;
             } else if (category === USER_CATEGORY.PATIENT) {
@@ -51,7 +51,7 @@ class AgoraController extends Controller {
                  userCategoryData: { basic_info: { full_name } = {} } = {}} = {}} = req;
 
             let doctorRoleId = null, patientRoleId = null;
-            if(category === USER_CATEGORY.DOCTOR) {
+            if(category === USER_CATEGORY.DOCTOR || category === USER_CATEGORY.HSP) {
                 doctorRoleId = userRoleId;
                 patientRoleId = id;
             } else if (category === USER_CATEGORY.PATIENT) {
@@ -59,7 +59,7 @@ class AgoraController extends Controller {
                 patientRoleId = userRoleId;
             }
             const roomId = agoraService.getRoomId(doctorRoleId, patientRoleId);
-            const participantTwoId = category === USER_CATEGORY.DOCTOR? patientRoleId: doctorRoleId;
+            const participantTwoId = (category === USER_CATEGORY.DOCTOR || category === USER_CATEGORY.HSP )? patientRoleId: doctorRoleId;
 
             const eventScheduleData = {
                 type: AGORA_CALL_NOTIFICATION_TYPES.MISSED_CALL,

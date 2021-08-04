@@ -1090,7 +1090,7 @@ class AddAppointmentForm extends Component {
           {getFieldDecorator(REASON, {
             rules: [
               {
-                pattern: new RegExp(/^[a-zA-Z][a-zA-Z\s]*$/),
+                // pattern: new RegExp(/^[a-zA-Z][a-zA-Z\s]*$/),
                 message: formatMessage(messages.error_valid_purpose)
               }
             ]

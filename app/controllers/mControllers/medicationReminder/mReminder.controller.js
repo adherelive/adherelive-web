@@ -64,7 +64,7 @@ class MobileMReminderController extends Controller {
 
   create = async (req, res) => {
     try {
-      const { body, userDetails, params: { patient_id } = {} } = req;
+      const { body, userDetails } = req;
       // todo: get patient_id from url
       const {
         start_date,
@@ -82,7 +82,8 @@ class MobileMReminderController extends Controller {
         description,
         start_time,
         critical = false,
-        care_plan_id = null
+        care_plan_id = null,
+        patient_id = null
       } = body;
       const {
         userId,
@@ -150,7 +151,7 @@ class MobileMReminderController extends Controller {
       const patient = await PatientWrapper(null, patient_id);
 
       let categoryData = null;
-      if (category === USER_CATEGORY.DOCTOR) {
+      if (category === USER_CATEGORY.DOCTOR || category === USER_CATEGORY.HSP) {
         const doctor = await doctorService.getDoctorByData({ user_id: userId });
         categoryData = await DoctorWrapper(doctor);
       }
@@ -226,7 +227,7 @@ class MobileMReminderController extends Controller {
 
   createCarePlanMedication = async (req, res) => {
     try {
-      const { body, userDetails, params: { patient_id } = {} } = req;
+      const { body, userDetails } = req;
 
       // todo: get patient_id from url
       const {
@@ -246,7 +247,8 @@ class MobileMReminderController extends Controller {
         start_time,
         critical = false,
         care_plan_id = 0,
-        when_to_take_abbr= null
+        when_to_take_abbr= null,
+        patient_id
       } = body;
       const {
         userId,
@@ -327,7 +329,7 @@ class MobileMReminderController extends Controller {
       const patient = await PatientWrapper(null, patient_id);
 
       let categoryData = null;
-      if (category === USER_CATEGORY.DOCTOR) {
+      if (category === USER_CATEGORY.DOCTOR || category === USER_CATEGORY.HSP) {
         const doctor = await doctorService.getDoctorByData({ user_id: userId });
         categoryData = await DoctorWrapper(doctor);
       }

@@ -10,7 +10,7 @@ import WorkoutResponseWrapper from "../../ApiWrapper/web/workoutResponse";
 import WorkoutWrapper from "../../ApiWrapper/web/workouts";
 import EventWrapper from "../../ApiWrapper/common/scheduleEvents";
 import ExerciseContentWrapper from "../../ApiWrapper/web/exerciseContents";
-
+import CareplanWrapper from "../../ApiWrapper/web/carePlan";
 import Logger from "../../../libs/log";
 
 const Log = new Logger("WEB > WORKOUT_RESPONSE > CONTROLLER");
@@ -61,6 +61,9 @@ class WorkoutResponseController extends Controller {
         const workout = await WorkoutWrapper({ id: event.getEventId() });
 
         const { exercises, exercise_groups, exercise_details } = await workout.getReferenceInfo();
+        const workoutCareplanId = await workout.getCareplanId();
+        const careplanWrapper = await CareplanWrapper(null,workoutCareplanId);
+        const careplanCreatorId = careplanWrapper.getDoctorId();
 
         // exercise contents
         const exerciseContentService = new ExerciseContentService();
@@ -126,6 +129,8 @@ class WorkoutResponseController extends Controller {
           const workoutResponseId =
             allWorkoutResponseExerciseGroups[exercise_group_id] || null;
 
+          const isContentAuthCreated = false;
+
           if(exerciseContentId){
             const exerciseContentWrapper = await ExerciseContentWrapper({
               id:exerciseContentId
@@ -134,13 +139,20 @@ class WorkoutResponseController extends Controller {
             exerciseContentData[
               exerciseContentWrapper.getId()
             ] = exerciseContentWrapper.getBasicInfo();
+
+            const { creator_id }  = exerciseContentWrapper.getBasicInfo();
+            
+            if( creator_id.toString() === careplanCreatorId.toString() ){
+              isContentAuthCreated=true;
+            }
+
           }
 
           workout_exercise_groups.push({
             exercise_group_id,
             exercise_detail_id,
             sets,
-            exercise_content_id: exerciseContentId,
+            exercise_content_id: isContentAuthCreated ? exerciseContentId : null ,
             workout_response_id: workoutResponseId,
             ...details,
           });

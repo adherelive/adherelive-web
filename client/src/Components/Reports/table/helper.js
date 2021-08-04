@@ -28,7 +28,7 @@ export const formatReportData = ({id, reports, patients, doctors, upload_documen
 
   const patientData = patients[patient_id] || {};
 
-  const uploaderData = uploaderCategory === USER_CATEGORY.DOCTOR ? doctors[uploaderId] : patients[uploaderId];
+  const uploaderData = (uploaderCategory === USER_CATEGORY.DOCTOR || uploaderCategory === USER_CATEGORY.HSP ) ? doctors[uploaderId] : patients[uploaderId];
 
     // documents
     let documentData = {};

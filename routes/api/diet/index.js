@@ -37,6 +37,12 @@ router.get(
 );
 
 router.post(
+    "/update-calories",
+    Authenticate,
+    Diet.updateTotalCalories
+);
+
+router.post(
     "/:id",
     Authenticate,
     Diet.update

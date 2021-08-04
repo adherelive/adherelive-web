@@ -25,6 +25,9 @@ class TransactionController extends Controller {
                 case USER_CATEGORY.DOCTOR:
                     responseData = await TransactionHelper.getDoctorTransactions(req) || {};
                     break;
+                case USER_CATEGORY.HSP:
+                    responseData = await TransactionHelper.getDoctorTransactions(req) || {};
+                    break;
                 default:
                     break;
             }

@@ -102,6 +102,7 @@ export const USER_CATEGORY = {
   PROVIDER: "provider",
   ADMIN: "admin",
   CARE_TAKER: "care_taker",
+  HSP: "hsp",
 };
 
 export const REQUEST_TYPE = {
@@ -598,7 +599,7 @@ export const CHART_DETAILS = {
   [NO_WORKOUT]: {
     type: "no_workout",
     name: "Missed Workout",
-  }
+  },
   // [TEST_ONE]: {
   //   type: "test_one",
   //   name: "Test One",
@@ -918,38 +919,38 @@ export const MEAL_TIMINGS = [
   LUNCH,
   EVENING,
   DINNER,
-  SLEEP
+  SLEEP,
 ];
 
 export const PATIENT_MEAL_TIMINGS = {
   [WAKE_UP]: {
     value: "2020-09-24T08:00:00+05:30",
-    text: "Wake Up"
+    text: "Wake Up",
   },
   [BREAKFAST]: {
     value: "2020-09-24T09:00:00+05:30",
-    text: "Breakfast"
+    text: "Breakfast",
   },
   [LUNCH]: {
     value: "2020-09-24T13:00:00+05:30",
-    text: "Lunch"
+    text: "Lunch",
   },
   [EVENING]: {
     value: "2020-09-24T16:00:00+05:30",
-    text: "Evening Snacks"
+    text: "Evening Snacks",
   },
   [DINNER]: {
     value: "2020-09-24T20:00:00+05:30",
-    text: "Dinner"
+    text: "Dinner",
   },
   [SLEEP]: {
     value: "2020-09-24T23:00:00+05:30",
-    text: "Sleep"
+    text: "Sleep",
   },
   // added 12/7/21
   [MID_MORNING]: {
     value: "2020-09-24T11:00:00+05:30",
-    text: "Mid Morning"
+    text: "Mid Morning",
   },
 };
 
@@ -990,6 +991,7 @@ export const USER_FAV_USER_CATEGORY = [
   USER_CATEGORY.ADMIN,
   USER_CATEGORY.CARE_TAKER,
   USER_CATEGORY.PROVIDER,
+  USER_CATEGORY.HSP
 ];
 
 export const FAVOURITE_TYPE = {
@@ -1609,3 +1611,5 @@ export const WORKOUT_RESPONSE_STATUS = {
 };
 
 export const DEFAULT_PROVIDER = "self";
+
+export const DOCTOR_TYPE_PROFILES = [USER_CATEGORY.DOCTOR, USER_CATEGORY.HSP];

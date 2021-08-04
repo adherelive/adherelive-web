@@ -102,7 +102,7 @@ class SelectedDays extends Component {
     const {
       form: { getFieldDecorator, getFieldValue},
       medications,
-      payload: { id: medication_id } = {}
+      payload: { id: medication_id , canViewDetails=false } = {}
     } = this.props;
 
     const { basic_info: { details: { repeat_days } = {} } = {} } = medications[medication_id] || {};
@@ -165,14 +165,14 @@ class SelectedDays extends Component {
               }
             ],
             initialValue: selectedDays.join(",")
-          })(<Input />)}
+          })(<Input  disabled={canViewDetails} />)}
         </FormItem>
         <div className="flex-shrink-1 flex justify-space-evenly select-days">
           {DAYS.map(tag => (
             <CheckableTag
               key={tag}
               checked={selectedDays.indexOf(tag) > -1}
-              onChange={checked => handleCheckDays(tag, checked)}
+              onChange={!canViewDetails ? checked => handleCheckDays(tag, checked) : null }
             >
               {tag}
             </CheckableTag>
@@ -182,6 +182,7 @@ class SelectedDays extends Component {
         className="flex justify-content-end radio-formulation mt10 mb24"
         buttonStyle="solid"
         value={selectedDaysRadio}
+        disabled={canViewDetails}
       >
         <RadioButton value={1} onClick={this.setRepeatEveryDay} >{this.formatMessage(messages.everyday)}</RadioButton>
         <RadioButton value={2} onClick={this.setRepeatAlternateDay}>{this.formatMessage(messages.alternate)}</RadioButton>

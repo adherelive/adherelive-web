@@ -109,7 +109,7 @@ class EndDate extends Component {
       disabledEndDate,
       purpose,
       vitals,
-      payload: { id: vital_id } = {}
+      payload: { id: vital_id , canViewDetails = false } = {}
     } = this.props;
     const { formatMessage, openCalendar, getInitialValue, calendarComp } = this;
     let { end_date = '' } = vitals[vital_id] || {};
@@ -139,7 +139,7 @@ class EndDate extends Component {
                 showToday={false}
                 // suffixIcon={calendarComp()}
                 disabled={
-                  getFieldError(repeatIntervalField.field_name) !== undefined
+                  getFieldError(repeatIntervalField.field_name) !== undefined || canViewDetails
                 }
                 // allowClear={false}
                 disabledDate={disabledEndDate}

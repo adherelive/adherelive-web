@@ -258,7 +258,8 @@ class EditVital extends Component {
       addVital,
       hideVital,
       vitalVisible = false,
-      vitalData = {}
+      vitalData = {},
+      payload:{canViewDetails=false}={}
     } = this.props;
 
     const {
@@ -295,20 +296,31 @@ class EditVital extends Component {
         }}
         className="ant-drawer"
         // title={formatMessage(messages.title)}
-        title={editVital ? formatMessage(messages.vital) : addVital ? formatMessage(messages.addVital) : formatMessage(messages.title)}
+        title={
+          canViewDetails
+          ? formatMessage(messages.viewDetails)
+          :
+          editVital ? formatMessage(messages.vital) : addVital ? formatMessage(messages.addVital) : formatMessage(messages.title)}
 
       >
         <FormWrapper wrappedComponentRef={setFormRef} enableSubmit={this.enableSubmit} {...this.props} />
-        <Footer
-          className="flex justify-space-between"
-          onSubmit={handleSubmit}
-          onClose={onClose}
-          submitText={formatMessage(messages.update_button_text)}
-          submitButtonProps={submitButtonProps}
-          cancelComponent={getDeleteButton()}
-          enableSubmit={this.enableSubmit}
-          submitting={submitting}
-        />
+        {
+          !canViewDetails
+          &&
+          (
+            <Footer
+              className="flex justify-space-between"
+              onSubmit={handleSubmit}
+              onClose={onClose}
+              submitText={formatMessage(messages.update_button_text)}
+              submitButtonProps={submitButtonProps}
+              cancelComponent={getDeleteButton()}
+              enableSubmit={this.enableSubmit}
+              submitting={submitting}
+            />
+          )
+        }
+        
       </Drawer>
     );
   }

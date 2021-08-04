@@ -39,7 +39,7 @@ export const db = database => {
             },
             uploader_type: {
                 type: DataTypes.ENUM,
-                values: [USER_CATEGORY.DOCTOR, USER_CATEGORY.PATIENT],
+                values: [USER_CATEGORY.DOCTOR, USER_CATEGORY.PATIENT, USER_CATEGORY.HSP],
                 allowNull: false,
             },
             created_at: {

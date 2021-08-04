@@ -1,6 +1,6 @@
 import AppointmentJob from "../";
 import moment from "moment";
-import { EVENT_TYPE, USER_CATEGORY } from "../../../../constant";
+import { DEFAULT_PROVIDER,EVENT_TYPE, USER_CATEGORY } from "../../../../constant";
 
 import UserRoleService from "../../../services/userRoles/userRoles.service";
 import ProviderService from "../../../services/provider/provider.service";
@@ -80,7 +80,7 @@ class UpdateJob extends AppointmentJob {
       headings: { en: `Appointment Update (${providerName})` },
       contents: {
         en: `${
-          actorCategory === USER_CATEGORY.DOCTOR ? "Dr." : ""
+          actorCategory === USER_CATEGORY.DOCTOR || actorCategory === USER_CATEGORY.HSP ? "Dr." : ""
         }${name} updated an appointment with you. Tap here to know more!`,
       },
       include_player_ids: [...playerIds],

@@ -355,11 +355,14 @@ class addNewConsultationDrawer extends Component {
 
   async handleSubmit(data) {
     try {
-      const { addDoctorPaymentProduct, setIsUpdated } = this.props;
+      const { addDoctorPaymentProduct, setIsUpdated ,doctors = {}, users = {} , user_roles = {} , auth_role = null } = this.props;
       const { close } = this.props;
 
       this.setState({submitting:true});
-
+      const {doctor_id = null}=data;
+      const {basic_info:{user_id}={}}=doctors[doctor_id] || {};
+      const { category = null } = users[user_id] || {};
+      data["for_user_type"]=category;
       const response = await addDoctorPaymentProduct(data);
       const { consultationFeeId = null } = this.state;
       const {

@@ -5,7 +5,9 @@ import { GENDER, PATIENT_BOX_CONTENT,MISSED_MEDICATION, MISSED_ACTIONS ,DIAGNOSI
   MISSED_MEDICATION_TEXT,
   MISSED_ACTION_TEXT,
   MISSED_APPOINTMENT_TEXT,
-  MISSED_SYMPTOM_TEXT} from "../../../constant";
+  MISSED_SYMPTOM_TEXT,
+  USER_PERMISSIONS,
+  MISSED_APPOINTMENTS} from "../../../constant";
 import messages from "./message";
 import moment from "moment";
 import message from "antd/es/message";
@@ -189,17 +191,23 @@ class PatientDetailsDrawer extends Component {
           end_time,
           details: { type_description = ""  } = {},
         } = {},
-        organizer: {id: organizer_id} = {},
+        organizer,organizer: {id: organizer_id} = {},
       } = appointments[id] || {};
 
       let docName = "";
 
-      for(const doctorId in doctors) {
-        const {basic_info: {full_name, user_id} = {}} = doctors[doctorId] || {};
-        if(user_id === organizer_id) {
-          docName = full_name;
-        }
-      }
+      console.log("324242347298472983748274923748237489",{organizer,organizer_id,doctors});
+
+      // for(const doctorId in doctors) {
+      //   const {basic_info: {full_name, user_id} = {}} = doctors[doctorId] || {};
+      //   if(user_id === organizer_id) {
+      //     docName = full_name;
+      //   }
+
+      // }
+
+      const {basic_info: {full_name, user_id} = {}} = doctors[organizer_id] || {};
+      docName = full_name;
 
       let td = moment(start_time);
        return (
@@ -241,7 +249,12 @@ class PatientDetailsDrawer extends Component {
 
   getPatientDetailContent = () => {
     const { auth = {}, treatments = {}, doctors = {}, conditions = {},
-     severity: severities = {}, providers, patients, payload, care_plans, users = {}} = this.props;
+     severity: severities = {}, 
+     providers, 
+     patients, 
+     payload, 
+     care_plans, 
+     users = {}} = this.props;
 
     const {
       formatMessage,
@@ -251,7 +264,7 @@ class PatientDetailsDrawer extends Component {
       getAppointmentList
     } = this;
 
-    const {authenticated_user} = auth || {};
+    const {authenticated_user,authPermissions = []} = auth || {};
 
     let doctorId = null;
 
@@ -342,8 +355,9 @@ class PatientDetailsDrawer extends Component {
 
           {/*boxes*/}
 
-          <div className="mt20">
+          <div className=" mt20 flex flex-wrap wp100">
             {Object.keys(PATIENT_BOX_CONTENT).map(id => {
+
               let critical=0;
               let non_critical=0;
               let total=0;
@@ -375,7 +389,18 @@ class PatientDetailsDrawer extends Component {
               return (
                 <div
                   key={id}
-                  className={`mt10 ${id === MISSED_MEDICATION || id === MISSED_ACTIONS ? "ml16" : ""} mwp45 maxwp48 h100 br5 bg-${PATIENT_BOX_CONTENT[id]["background_color"]} br-${PATIENT_BOX_CONTENT[id]["border_color"]} float-l flex flex-1 direction-column justify-space-between`}
+                  className={
+                    `mt10 ${id === MISSED_MEDICATION || id === MISSED_ACTIONS ? "ml16" : ""} mwp45 maxwp48  h100 br5 bg-${PATIENT_BOX_CONTENT[id]["background_color"]} br-${PATIENT_BOX_CONTENT[id]["border_color"]} float-l flex flex-1 direction-column justify-space-between`
+                   }
+
+                  
+                  // className={`mt10 ${id === MISSED_MEDICATION || 
+                  //   id === MISSED_ACTIONS 
+                  //   ? 
+                  //   authPermissions.includes(USER_PERMISSIONS.MEDICATIONS.ADD) ?   "ml16" : null
+                  //   : null
+                  //   }
+                  //    mwp45 maxwp48 h100 br5 bg-${PATIENT_BOX_CONTENT[id]["background_color"]} br-${PATIENT_BOX_CONTENT[id]["border_color"]} float-l flex flex-1 direction-column justify-space-between`}
                 >
                   <div className="ml10 mt10 fs16 fw600">
                     {PATIENT_BOX_CONTENT[id]["text"]}
@@ -450,13 +475,16 @@ class PatientDetailsDrawer extends Component {
 
           {/*medications*/}
 
-          <div className="mt20 black-85 wp100">
-            <div className="mt10 mb10 fs18 fw600">
-              {formatMessage(messages.medications)}
-            </div>
+            <div className="mt20 black-85 wp100">
+              <div className="mt10 mb10 fs18 fw600">
+                {formatMessage(messages.medications)}
+              </div>
 
-            {getMedicationList()}
-          </div>
+              {getMedicationList()}
+            </div>
+            
+          
+          
           
           {/*appointments*/}
 
