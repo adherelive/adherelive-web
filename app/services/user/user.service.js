@@ -276,6 +276,24 @@ class UserService {
       throw err;
     }
   };
+
+  searchMail = async (value) => {
+    try {
+      const matchingUsers = await Database.getModel(TABLE_NAME).findAll(
+        {
+          where: {
+            email: {
+              [Op.like]: `${value}%`
+            }
+          },
+          paranoid: false
+        }
+      );
+      return matchingUsers;
+    } catch (err) {
+      throw err;
+    }
+  }
 }
 
 export default new UserService();

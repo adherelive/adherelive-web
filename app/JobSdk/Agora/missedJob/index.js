@@ -1,8 +1,10 @@
 import AgoraJob from "../index";
 
+import UserRoleService from "../../../services/userRoles/userRoles.service";
+import ProviderService from "../../../services/provider/provider.service";
 import UserDeviceService from "../../../services/userDevices/userDevice.service";
 import UserDeviceWrapper from "../../../ApiWrapper/mobile/userDevice";
-import {AGORA_CALL_NOTIFICATION_TYPES, USER_CATEGORY} from "../../../../constant";
+import {AGORA_CALL_NOTIFICATION_TYPES, USER_CATEGORY, DEFAULT_PROVIDER} from "../../../../constant";
 
 
 
@@ -20,6 +22,7 @@ class MissedJob extends AgoraJob {
             roomId,
             actor: {
                 id: actorId,
+                user_role_id,
                 details: {name:full_name, category}
             }
         } = getAgoraData() || {};
@@ -30,11 +33,30 @@ class MissedJob extends AgoraJob {
         const playerIds = [];
         const userIds = [];
 
-        participants.forEach(participant => {
-            if (participant !== `${actorId}`) {
-                userIds.push(participant);
+        const {rows: userRoles = []} = await UserRoleService.findAndCountAll({
+        where: {
+            id: participants
+        }
+        }) || {};
+
+        let providerId = null;
+        for(const userRole of userRoles) {
+            const {id, user_identity, linked_id} = userRole || {};
+            if(id === user_role_id) {
+                if(linked_id) {
+                    providerId = linked_id;
+                }
+            } else {
+                userIds.push(user_identity);
             }
-        });
+        }
+
+        let providerName = DEFAULT_PROVIDER;
+        if(providerId) {
+            const provider = await ProviderService.getProviderByData({id: providerId});
+            const {name} = provider || {};
+            providerName = name;
+        }
 
         const userDevices = await UserDeviceService.getAllDeviceByData({
             user_id: userIds
@@ -52,7 +74,7 @@ class MissedJob extends AgoraJob {
         templateData.push({
             small_icon: process.config.app.icon_android,
             app_id: process.config.one_signal.app_id,
-            headings: { en: `Missed call` },
+            headings: { en: `Missed call (${providerName})` },
             contents: {
               en: `You missed a call from ${category === USER_CATEGORY.DOCTOR ? "Dr. " : ""}${full_name}.`
             },
@@ -69,9 +91,9 @@ class MissedJob extends AgoraJob {
     getInAppTemplate = () => {
         const { getAgoraData } = this;
         const {
-        //   participants = [],
           actor: {
             id: actorId,
+            user_role_id,
             details: { name, category: actorCategory } = {}
           } = {},
           event_id,
@@ -88,9 +110,10 @@ class MissedJob extends AgoraJob {
         const currentTimeStamp = now.unix();
 
         for (const participant of participants) {
-          if (participant !== `${actorId}`) {
+          if (participant !== `${user_role_id}`) {
             templateData.push({
                 actor: actorId,
+                actorRoleId: user_role_id,
                 object: `${participant}`,
                 foreign_id: `${event_id}`,
                 verb: `missed_call:${currentTimeStamp}`,

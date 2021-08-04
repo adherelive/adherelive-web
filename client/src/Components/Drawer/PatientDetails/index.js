@@ -66,16 +66,26 @@ class PatientDetailsDrawer extends Component {
 
   componentDidUpdate(prevProps) {
    
-    const { payload: { patient_id } = {}, getMedications, care_plans = {} ,getAppointments, appointments={} ,getPatientMissedEvents} = this.props;
+    const { payload: { patient_id } = {}, getMedications, care_plans = {} ,getAppointments, appointments={} ,getPatientMissedEvents , auth:{authenticated_user = null} = {},doctors = {}} = this.props;
+    // console.log("67182736812368761283761287",{props:this.props});
     const { payload: { patient_id: prev_patient_id } = {} } = prevProps;
     let carePlanId = 1;
     let carePlanMedicationIds = [];
     let appointmentsListIds = []; 
+    let currentDocId = null ; 
     
+    for(let each in doctors ){
+      const doc = doctors[each] || {};
+      const {basic_info : { user_id = null } = {} } = doc || {};
+      if( authenticated_user.toString() === user_id.toString() ){
+        currentDocId=each;
+        break;
+      }
+    }
+
     for (let carePlan of Object.values(care_plans)) {
-      // console.log("careplan id for loop");
-      let { basic_info: { id = 1, patient_id : patientId = 1 }, medication_ids = [], appointment_ids = [] } = carePlan;
-      if (parseInt(patient_id) === parseInt(patientId)) {
+      let { basic_info: { id = 1, patient_id : patientId = 1 , doctor_id = null }, medication_ids = [], appointment_ids = [] } = carePlan;
+      if (parseInt(patient_id) === parseInt(patientId) && parseInt(doctor_id) === parseInt(currentDocId) ) {
         carePlanId = id;
         carePlanMedicationIds = medication_ids;
         appointmentsListIds = appointment_ids;
@@ -83,7 +93,7 @@ class PatientDetailsDrawer extends Component {
     }
     
     
-    if (patient_id !== prev_patient_id) {
+    if (patient_id !== prev_patient_id ) {
       this.handleGetMissedEvents(patient_id);
       getMedications(patient_id);
       getAppointments(patient_id);
@@ -212,7 +222,8 @@ class PatientDetailsDrawer extends Component {
 
   openChatTab = () => {
 
-    const { payload: { patient_id } = {}, setPatientForChat, openPopUp } = this.props;
+    const { payload: { patient_id } = {}, setPatientForChat, openPopUp , patients } = this.props;
+
     setPatientForChat(patient_id).then(() => {
       openPopUp()
     }

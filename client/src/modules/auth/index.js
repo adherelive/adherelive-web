@@ -11,24 +11,26 @@ export const SIGNING = "SIGNING";
 export const SIGNING_COMPLETED = "SIGNING_COMPLETED";
 export const SIGNING_COMPLETED_WITH_ERROR = "SIGNING_COMPLETED_WITH_ERROR";
 
-
 export const FORGOT_PASSWORD = "FORGOT_PASSWORD";
 export const FORGOT_PASSWORD_COMPLETED = "FORGOT_PASSWORD_COMPLETED";
-export const FORGOT_PASSWORD_COMPLETED_WITH_ERROR = "FORGOT_PASSWORD_COMPLETED_WITH_ERROR";
-
+export const FORGOT_PASSWORD_COMPLETED_WITH_ERROR =
+  "FORGOT_PASSWORD_COMPLETED_WITH_ERROR";
 
 export const VERIFY_FORGOT_PASSWORD_LINK = "VERIFY_FORGOT_PASSWORD_LINK";
-export const VERIFY_FORGOT_PASSWORD_LINK_COMPLETED = "VERIFY_FORGOT_PASSWORD_LINK_COMPLETED";
-export const VERIFY_FORGOT_PASSWORD_LINK_COMPLETED_WITH_ERROR = "VERIFY_FORGOT_PASSWORD_LINK_COMPLETED_WITH_ERROR";
-
+export const VERIFY_FORGOT_PASSWORD_LINK_COMPLETED =
+  "VERIFY_FORGOT_PASSWORD_LINK_COMPLETED";
+export const VERIFY_FORGOT_PASSWORD_LINK_COMPLETED_WITH_ERROR =
+  "VERIFY_FORGOT_PASSWORD_LINK_COMPLETED_WITH_ERROR";
 
 export const RESET_PASSWORD = "RESET_PASSWORD";
 export const RESET_PASSWORD_COMPLETED = "RESET_PASSWORD_COMPLETED";
-export const RESET_PASSWORD_COMPLETED_WITH_ERROR = "RESET_PASSWORD_COMPLETED_WITH_ERROR";
+export const RESET_PASSWORD_COMPLETED_WITH_ERROR =
+  "RESET_PASSWORD_COMPLETED_WITH_ERROR";
 
 export const VERIFY_USER = "VERIFY_USER";
 export const VERIFY_USER_COMPLETED = "VERIFY_USER_COMPLETED";
-export const VERIFY_USER_COMPLETED_WITH_ERROR = "VERIFY_USER_COMPLETED_WITH_ERROR";
+export const VERIFY_USER_COMPLETED_WITH_ERROR =
+  "VERIFY_USER_COMPLETED_WITH_ERROR";
 
 export const GOOGLE_SIGNING = "GOOGLE_SIGNING";
 export const GOOGLE_SIGNING_COMPLETED = "GOOGLE_SIGNING_COMPLETED";
@@ -74,7 +76,8 @@ export const GOOGLE_SIGNOUT = "GOOGLE_SIGNOUT";
 
 export const COMMON_UPLOAD_DOCUMENT = "COMMON_UPLOAD_DOCUMENT";
 export const COMMON_UPLOAD_DOCUMENT_FAILED = "COMMON_UPLOAD_DOCUMENT_FAILED";
-export const COMMON_UPLOAD_DOCUMENT_COMPLETED = "COMMON_UPLOAD_DOCUMENT_COMPLETED";
+export const COMMON_UPLOAD_DOCUMENT_COMPLETED =
+  "COMMON_UPLOAD_DOCUMENT_COMPLETED";
 
 export const AUTH_INITIAL_STATE = {
   authenticated: false,
@@ -88,7 +91,7 @@ function setAuthRedirect(user, isInitial = false) {
     onboarding_status = "",
     category = USER_CATEGORY.DOCTOR,
   } = user;
-  let authRedirect = '';
+  let authRedirect = "";
   if (!onboarded && category == USER_CATEGORY.DOCTOR) {
     if (onboarding_status == ONBOARDING_STATUS.PROFILE_REGISTERED) {
       authRedirect = PATH.REGISTER_QUALIFICATIONS;
@@ -103,14 +106,16 @@ function setAuthRedirect(user, isInitial = false) {
     if (!isInitial) {
       authRedirect = PATH.LANDING_PAGE;
     }
-  } else if (category === USER_CATEGORY.ADMIN || category === USER_CATEGORY.PROVIDER) {
+  } else if (
+    category === USER_CATEGORY.ADMIN ||
+    category === USER_CATEGORY.PROVIDER
+  ) {
     if (!isInitial) {
       authRedirect = PATH.ADMIN.DOCTORS.ROOT;
     }
   }
   return authRedirect;
 }
-
 
 function setAuthRedirectSignIn(user, isInitial = false) {
   // let userData = Object.values(user).length ? Object.values(user)[0] : [];
@@ -121,7 +126,7 @@ function setAuthRedirectSignIn(user, isInitial = false) {
     category = USER_CATEGORY.DOCTOR,
   } = user;
 
-  let authRedirect = '/';
+  let authRedirect = "/";
   if (!onboarded && category == USER_CATEGORY.DOCTOR) {
     if (onboarding_status == ONBOARDING_STATUS.PROFILE_REGISTERED) {
       authRedirect = PATH.REGISTER_QUALIFICATIONS;
@@ -132,11 +137,11 @@ function setAuthRedirectSignIn(user, isInitial = false) {
     } else {
       authRedirect = PATH.REGISTER_PROFILE;
     }
-  }  else if (category === USER_CATEGORY.PROVIDER) {
+  } else if (category === USER_CATEGORY.PROVIDER) {
     if (!isInitial) {
       authRedirect = PATH.LANDING_PAGE;
     }
-  }  else if (category === USER_CATEGORY.ADMIN ) {
+  } else if (category === USER_CATEGORY.ADMIN) {
     if (!isInitial) {
       authRedirect = PATH.ADMIN.DOCTORS.ROOT;
     }
@@ -156,7 +161,6 @@ export const signIn = (payload) => {
         data: payload,
       });
 
-
       const { status, payload: { error = "", data = {} } = {} } =
         response || {};
 
@@ -166,10 +170,16 @@ export const signIn = (payload) => {
           payload: { error },
         });
       } else if (status === true) {
-        const { users = {}, auth_user = "", auth_category = "", permissions = [], notificationToken = '',
-          feedId = '' } = data;
+        const {
+          users = {},
+          auth_user = "",
+          auth_category = "",
+          permissions = [],
+          notificationToken = "",
+          feedId = "",
+        } = data;
 
-         const {has_consent=false} =  users[auth_user] || {};
+        const { has_consent = false } = users[auth_user] || {};
         // let authUser = Object.values(users).length ? Object.values(users)[0] : {};
         let authRedirection = setAuthRedirectSignIn(users[auth_user]);
 
@@ -180,9 +190,10 @@ export const signIn = (payload) => {
             authenticatedUser: auth_user,
             authRedirection,
             authCategory: auth_category,
-            authPermissions: permissions, notificationToken,
+            authPermissions: permissions,
+            notificationToken,
             feedId,
-            hasConsent:has_consent
+            hasConsent: has_consent,
           },
           data,
         });
@@ -198,18 +209,17 @@ export const signIn = (payload) => {
 
 export const uploadDocument = (payload) => {
   let response = {};
-  return async dispatch => {
+  return async (dispatch) => {
     try {
       dispatch({ type: COMMON_UPLOAD_DOCUMENT });
 
       response = await doRequest({
         method: REQUEST_TYPE.POST,
         url: Auth.uploadDocument(),
-        data: payload
+        data: payload,
       });
 
-      const { status, payload: { error = "" } = {} } =
-        response || {};
+      const { status, payload: { error = "" } = {} } = response || {};
 
       if (status === false) {
         dispatch({
@@ -219,16 +229,15 @@ export const uploadDocument = (payload) => {
       } else if (status === true) {
         dispatch({
           type: COMMON_UPLOAD_DOCUMENT_COMPLETED,
-          payload: {}
+          payload: {},
         });
       }
-    } catch(error) {
+    } catch (error) {
       console.log("auth uploadDocument error", error);
     }
     return response;
   };
 };
-
 
 export const forgotPassword = (payload) => {
   let response = {};
@@ -251,11 +260,16 @@ export const forgotPassword = (payload) => {
           payload: { error },
         });
       } else if (status === true) {
-        const { users = {}, auth_user = "", auth_category = "", permissions = [] } = data;
+        const {
+          users = {},
+          auth_user = "",
+          auth_category = "",
+          permissions = [],
+        } = data;
 
         dispatch({
           type: FORGOT_PASSWORD_COMPLETED,
-          payload: {}
+          payload: {},
         });
       }
     } catch (err) {
@@ -276,7 +290,6 @@ export const verifyForgotPasswordLink = (link) => {
       response = await doRequest({
         method: REQUEST_TYPE.POST,
         url: Auth.verifyResetPasswordLinkUrl(link),
-
       });
 
       const { status, payload: { error = "", data = {} } = {} } =
@@ -288,11 +301,9 @@ export const verifyForgotPasswordLink = (link) => {
           payload: { error },
         });
       } else if (status === true) {
-
-
         dispatch({
           type: VERIFY_FORGOT_PASSWORD_LINK_COMPLETED,
-          payload: {}
+          payload: {},
         });
       }
     } catch (err) {
@@ -304,7 +315,6 @@ export const verifyForgotPasswordLink = (link) => {
   };
 };
 
-
 export const resetPassword = (payload) => {
   let response = {};
   return async (dispatch) => {
@@ -314,7 +324,7 @@ export const resetPassword = (payload) => {
       response = await doRequest({
         method: REQUEST_TYPE.POST,
         url: Auth.resetPasswordUrl(),
-        data: payload
+        data: payload,
       });
 
       const { status, payload: { error = "", data = {} } = {} } =
@@ -326,11 +336,9 @@ export const resetPassword = (payload) => {
           payload: { error },
         });
       } else if (status === true) {
-
-
         dispatch({
           type: RESET_PASSWORD_COMPLETED,
-          payload: {}
+          payload: {},
         });
       }
     } catch (err) {
@@ -342,8 +350,6 @@ export const resetPassword = (payload) => {
   };
 };
 
-
-
 export const verifyUser = (link) => {
   let response = {};
   return async (dispatch) => {
@@ -352,7 +358,7 @@ export const verifyUser = (link) => {
 
       response = await doRequest({
         method: REQUEST_TYPE.GET,
-        url: Auth.getVerifyUserUrl(link)
+        url: Auth.getVerifyUserUrl(link),
       });
 
       const { status, payload: { error = "", data = {} } = {} } =
@@ -364,11 +370,16 @@ export const verifyUser = (link) => {
           payload: { error },
         });
       } else if (status === true) {
-        let { users = {}, auth_user = '', auth_category = '', permissions = [] } = data;
+        let {
+          users = {},
+          auth_user = "",
+          auth_category = "",
+          permissions = [],
+        } = data;
         // let authUser = Object.values(users).length ? Object.values(users)[0] : {};
 
         let authRedirection = setAuthRedirect(users[auth_user]);
-        const {has_consent = false} = users[auth_user] || {};
+        const { has_consent = false } = users[auth_user] || {};
         dispatch({
           type: VALIDATING_LINK_COMPLETED,
           payload: {
@@ -377,9 +388,9 @@ export const verifyUser = (link) => {
             authRedirection,
             authCategory: auth_category,
             authPermissions: permissions,
-            hasConsent:has_consent
+            hasConsent: has_consent,
           },
-          data
+          data,
         });
       }
     } catch (err) {
@@ -480,14 +491,14 @@ export const googleSignIn = (data) => {
         const { lastUrl = false } = data;
         const { _id, users } = response.payload.data;
         let authRedirection = "/";
-        const {has_consent=false} = users[_id] || {};
+        const { has_consent = false } = users[_id] || {};
         dispatch({
           type: GOOGLE_SIGNING_COMPLETED,
           payload: {
             users: response.payload.data.users,
             authenticatedUser: _id,
             authRedirection,
-            hasConsent:has_consent
+            hasConsent: has_consent,
           },
         });
       }
@@ -518,14 +529,14 @@ export const facebookSignIn = (data) => {
         const { lastUrl = false } = data || {};
         const { _id, users = {} } = response.payload.data || {};
         let authRedirection = "/";
-        const {has_consent=false}  = users[_id] || {};
+        const { has_consent = false } = users[_id] || {};
         dispatch({
           type: FACEBOOK_SIGNING_COMPLETED,
           payload: {
             users,
             authenticatedUser: _id,
             authRedirection,
-            hasConsent:has_consent
+            hasConsent: has_consent,
           },
         });
       }
@@ -555,30 +566,38 @@ export const getInitialData = () => {
           payload: { error },
         });
       } else if (status === true) {
-        // const {lastUrl = false} = data;
-        // const {  users } = response.payload.data;
-
-        let { users = {}, auth_user = "", auth_category = "", permissions = [], notificationToken = '', feedId = '' , 
-        doctor_provider_id, firebase_keys = {} } = data;
+        let {
+          users = {},
+          auth_user = "",
+          auth_category = "",
+          permissions = [],
+          notificationToken = "",
+          feedId = "",
+          doctor_provider_id,
+          auth_role,
+          firebase_keys = {},
+        } = data;
         // let authUser = Object.values(users).length ? Object.values(users)[0] : {};
 
         let authRedirection = setAuthRedirect(users[auth_user], true);
-        const {has_consent=false} = users[auth_user] || {};
+        const { has_consent = false } = users[auth_user] || {};
 
         dispatch({
           type: GETTING_INITIAL_DATA_COMPLETED,
           payload: {
             users,
             authenticatedUser: auth_user,
+            auth_role,
             authRedirection,
             firebase_keys,
             authCategory: auth_category,
             authPermissions: permissions,
             notificationToken,
             feedId,
-            hasConsent:has_consent,
-            [doctor_provider_id ? "doctor_provider_id" :'']:
-            doctor_provider_id ? doctor_provider_id : null
+            hasConsent: has_consent,
+            [doctor_provider_id ? "doctor_provider_id" : ""]: doctor_provider_id
+              ? doctor_provider_id
+              : null,
           },
           data,
         });
@@ -600,7 +619,7 @@ export const giveUserConsent = (payload) => {
       response = await doRequest({
         method: REQUEST_TYPE.POST,
         url: Auth.giveUserConsentUrl(),
-        data:payload
+        data: payload,
       });
 
       const { status, payload: { error = "", data = {} } = {} } =
@@ -612,11 +631,17 @@ export const giveUserConsent = (payload) => {
           payload: { error },
         });
       } else if (status === true) {
-        const { users = {}, auth_user = "", auth_category = "", permissions = [], notificationToken = '',
-          feedId = '' } = data;
+        const {
+          users = {},
+          auth_user = "",
+          auth_category = "",
+          permissions = [],
+          notificationToken = "",
+          feedId = "",
+        } = data;
         // let authUser = Object.values(users).length ? Object.values(users)[0] : {};
         let authRedirection = setAuthRedirectSignIn(users[auth_user]);
-        const {has_consent = false} = users[auth_user] ||{};
+        const { has_consent = false } = users[auth_user] || {};
 
         dispatch({
           type: GIVE_USER_CONSENT_COMPLETED,
@@ -625,9 +650,10 @@ export const giveUserConsent = (payload) => {
             authenticatedUser: auth_user,
             authRedirection,
             authCategory: auth_category,
-            authPermissions: permissions, notificationToken,
+            authPermissions: permissions,
+            notificationToken,
             feedId,
-            hasConsent:has_consent
+            hasConsent: has_consent,
           },
           data,
         });
@@ -650,19 +676,25 @@ export default (state = AUTH_INITIAL_STATE, action = {}) => {
   const { type, payload } = action;
   switch (type) {
     case GETTING_INITIAL_DATA_COMPLETED:
-      console.log("893648752647923784662364723084978 ################################### :::::::",{payload,IDDDDDDDDDDDDD: payload.doctor_provider_id});
+      console.log(
+        "893648752647923784662364723084978 ################################### :::::::",
+        { payload, IDDDDDDDDDDDDD: payload.doctor_provider_id }
+      );
 
       return {
         authenticated: true,
         authenticated_category: payload.authCategory,
         firebase_keys: payload.firebase_keys,
         authenticated_user: payload.authenticatedUser,
+        auth_role: payload.auth_role,
         authRedirection: payload.authRedirection,
         authPermissions: payload.authPermissions,
         notificationToken: payload.notificationToken,
         feedId: payload.feedId,
-        hasConsent:payload.hasConsent,
-        "doctor_provider_id": payload.doctor_provider_id ? payload.doctor_provider_id : null
+        hasConsent: payload.hasConsent,
+        doctor_provider_id: payload.doctor_provider_id
+          ? payload.doctor_provider_id
+          : null,
       };
 
     case VALIDATING_LINK_COMPLETED:
@@ -672,8 +704,8 @@ export default (state = AUTH_INITIAL_STATE, action = {}) => {
         authenticated_category: payload.authCategory,
         authRedirection: payload.authRedirection,
         authPermissions: payload.authPermissions,
-        hasConsent:payload.hasConsent
-      }
+        hasConsent: payload.hasConsent,
+      };
 
     case GETTING_INITIAL_DATA_COMPLETED_WITH_ERROR:
       return {
@@ -685,7 +717,7 @@ export default (state = AUTH_INITIAL_STATE, action = {}) => {
         authenticated: true,
         authenticated_user: payload.authenticatedUser,
         authRedirection: payload.authRedirection,
-        hasConsent:payload.hasConsent
+        hasConsent: payload.hasConsent,
       };
     case GOOGLE_SIGNING_COMPLETED_WITH_ERROR:
       return {
@@ -697,7 +729,7 @@ export default (state = AUTH_INITIAL_STATE, action = {}) => {
         authenticated: true,
         authenticated_user: payload.authenticatedUser,
         authRedirection: payload.authRedirection,
-        hasConsent:payload.hasConsent
+        hasConsent: payload.hasConsent,
       };
     case FACEBOOK_SIGNING_COMPLETED_WITH_ERROR:
       return {
@@ -711,7 +743,6 @@ export default (state = AUTH_INITIAL_STATE, action = {}) => {
         authRedirection: "/sign-in",
       };
     case SIGNING_COMPLETED:
-
       return {
         authenticated: true,
         authenticated_category: payload.authCategory,
@@ -720,7 +751,7 @@ export default (state = AUTH_INITIAL_STATE, action = {}) => {
         authPermissions: payload.authPermissions,
         notificationToken: payload.notificationToken,
         feedId: payload.feedId,
-        hasConsent:payload.hasConsent
+        hasConsent: payload.hasConsent,
       };
     case GIVE_USER_CONSENT_COMPLETED:
       return {
@@ -731,8 +762,8 @@ export default (state = AUTH_INITIAL_STATE, action = {}) => {
         authPermissions: payload.authPermissions,
         notificationToken: payload.notificationToken,
         feedId: payload.feedId,
-        hasConsent:payload.hasConsent
-      };  
+        hasConsent: payload.hasConsent,
+      };
     default:
       return state;
   }

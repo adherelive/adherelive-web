@@ -321,7 +321,8 @@ class UpdateProviderForm extends Component {
       </FormItem>
 
       <Customization {...this.props} />
-      
+
+
       {/* <---------------------------------- ACCOUNT DETAILS ------------------------------------> */}
 
 

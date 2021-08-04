@@ -35,4 +35,14 @@ export default class CarePlanTemplate {
         const {template_vitals = []} = this._data;
         return template_vitals;
     }
+
+    getTemplateDiets = () => {
+        const {template_diets = []} = this._data;
+        return template_diets;
+    };
+
+    getTemplateWorkouts = () => {
+        const {template_workouts = []} = this._data;
+        return template_workouts;
+    };
 }

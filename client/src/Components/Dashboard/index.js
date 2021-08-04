@@ -8,7 +8,9 @@ import {
   FEATURES,
   MISSED_MEDICATION,
   MISSED_APPOINTMENTS,
-  MISSED_ACTIONS
+  MISSED_ACTIONS,
+  MISSED_DIET,
+  MISSED_WORKOUT
 } from "../../constant";
 import Tabs from "antd/es/tabs";
 // import Patients from "../../Containers/Patient/paginatedTable";
@@ -21,7 +23,6 @@ import AddPatientDrawer from "../Drawer/addPatient";
 import Loading from "../Common/Loading";
 import { withRouter } from "react-router-dom";
 import Donut from "../Common/graphs/donut";
-import NotificationDrawer from "../../Containers/Drawer/notificationDrawer";
 import GraphsModal from "./graphsModal";
 import { getPatientConsultingVideoUrl } from "../../Helper/url/patients";
 import { getPatientConsultingUrl } from "../../Helper/url/patients";
@@ -38,6 +39,8 @@ import SearchPatient from "../../Containers/SearchPatient";
 import MissedAppointmentsDrawer from "../../Containers/Drawer/missedAppointment";
 import MissedVitalsDrawer from "../../Containers/Drawer/missedVital";
 import MissedMedicationsDrawer from "../../Containers/Drawer/missedMedication";
+import MissedDietsDrawer from "../../Containers/Drawer/missedDiet";
+import MissedWorkoutsDrawer from "../../Containers/Drawer/missedWorkout";
 
 // helpers...
 import { getRoomId } from "../../Helper/twilio";
@@ -48,6 +51,8 @@ const { TabPane } = Tabs;
 const CHART_MISSED_MEDICATION = "Missed Medication";
 const CHART_MISSED_APPOINTMENT = "Missed Appointment";
 const CHART_MISSED_ACTION = "Missed Action";
+const CHART_MISSED_DIET = "Missed Diet";
+const CHART_MISSED_WORKOUT = "Missed Workout";
 
 export const CURRENT_TAB = {
   ALL_PATIENTS:"1",
@@ -141,7 +146,24 @@ class Dashboard extends Component {
     getAllFeatures();
     getAllMissedScheduleEvents();
     this.initiateInAppNotificationObj();
+    
   }
+
+  // handleGetAllDietsForDoctor = async() => {
+  //   try{
+  //     const { getAllDietsForDoctor } = this.props;
+  //     const response = await getAllDietsForDoctor();
+  //     const { status, payload: { message : resp_msg = ''  } = {}  } =
+  //           response || {};
+
+  //     if(!status){
+  //       message.warn(resp_msg);
+
+  //     }
+  //   }catch(error){
+  //     console.log("error ===========>>>",{error});
+  //   }
+  // }
 
   // initiateInAppNotificationObj = () => {
   //   const { notificationToken, feedId, } = this.props;
@@ -311,6 +333,13 @@ class Dashboard extends Component {
     } else if (name === CHART_MISSED_MEDICATION) {
       const {openMissedMedicationDrawer} = this.props;
       openMissedMedicationDrawer();
+    } else if (name === CHART_MISSED_DIET) {
+      const {openMissedDietDrawer} = this.props;
+        openMissedDietDrawer();
+    }
+    else if (name === CHART_MISSED_WORKOUT ) {
+      const {openMissedWorkoutDrawer} = this.props;
+      openMissedWorkoutDrawer();
     }
   };
 
@@ -320,14 +349,21 @@ class Dashboard extends Component {
     const {
       medication_ids={},
       appointment_ids={},
-      vital_ids={}}=dashboard;
+      vital_ids={},
+      diet_ids={},
+      workout_ids={}
+    }=dashboard;
     const {critical:medication_critical=[],non_critical:medication_non_critical=[]}=medication_ids;
     const {critical:vital_critical=[],non_critical:vital_non_critical=[]}=vital_ids;
     const {critical:appointment_critical=[],non_critical:appointment_non_critical=[]}=appointment_ids;
+    const {critical:diet_critical=[],non_critical:diet_non_critical=[]}=diet_ids;
+    const {critical:workout_critical=[],non_critical:workout_non_critical=[]}=workout_ids;
+
     const medication_total = medication_critical.length+medication_non_critical.length;
     const vital_total = vital_critical.length+vital_non_critical.length;
     const appointment_total = appointment_critical.length+appointment_non_critical.length;
-
+    const diet_total = diet_critical.length + diet_non_critical.length;
+    const workout_total = workout_critical.length + workout_non_critical.length;
 
 
     const { graphsToShow, graphLoading } = this.state;
@@ -360,7 +396,15 @@ class Dashboard extends Component {
      } else if(type === MISSED_ACTIONS){
         total = vital_total;
         critical = vital_critical.length;
+     } else if(type === MISSED_DIET){
+      total = diet_total;
+      critical = diet_critical.length;
+     } else if(type === MISSED_WORKOUT ){
+        total = workout_total;
+        critical = workout_critical.length;
      }
+
+   
 
       return (
         <div key={`donut-div-${id}`} onClick={() => this.chartClicked(name)}>
@@ -469,13 +513,15 @@ class Dashboard extends Component {
     }
     const {
       patients,
-      twilio: { patientId: chatPatientId = 1 }
+      twilio: { patientId: chatPatientId = 1 } = {},
+      auth_role : doctorRoleId = null 
     } = this.props;
     const { doctorUserId } = this.state;
-    let { basic_info: { user_id: patientUserId = "" } = {} } = patients[
+    let { basic_info: { user_id: patientUserId = "" } = {} , user_role_id : patientRoleId = null  } = patients[
       chatPatientId
     ];
-    const roomId = getRoomId(doctorUserId, patientUserId);
+
+    const roomId = getRoomId(doctorRoleId, patientRoleId);
 
     window.open(
       `${config.WEB_URL}/test${getPatientConsultingVideoUrl(roomId)}`,
@@ -616,7 +662,8 @@ class Dashboard extends Component {
       chats: { minimized = false, visible: popUpVisible = false },
       drawer: { visible: drawerVisible = false } = {},
       ui_features: { showVerifyModal = false } = {},
-      twilio: { patientId: chatPatientId = 1 }
+      twilio: { patientId: chatPatientId = 1 },
+      auth_role : doctorRoleId = null
     } = this.props;
 
     const { formatMessage, renderChartTabs, getVerifyModal , changeTab , getProviderBanner } = this;
@@ -628,6 +675,7 @@ class Dashboard extends Component {
         middle_name = "",
         last_name = ""
       } = {},
+      user_role_id :  patientRoleId = null,
       details: { profile_pic: patientDp = "" } = {}
     } = patients[chatPatientId] || {};
 
@@ -643,7 +691,7 @@ class Dashboard extends Component {
       watchlistTab
     } = this.state;
 
-    const roomId = getRoomId(doctorUserId, patientUserId);
+const roomId = getRoomId(doctorRoleId, patientRoleId);
 
     let bannerFlag=true;
     const {providers ={} , doctor_provider_id = null } = this.props;
@@ -659,7 +707,6 @@ class Dashboard extends Component {
         <Loading className={"wp100"} />
       </div>);
     }
-
 
     return (
       <Fragment>
@@ -842,13 +889,16 @@ class Dashboard extends Component {
             selectedGraphs={graphsToShow}
           />
         )}
-        <NotificationDrawer  />
 
         <MissedAppointmentsDrawer/>
 
         <MissedVitalsDrawer/>
 
         <MissedMedicationsDrawer />
+        
+        <MissedDietsDrawer />
+
+        <MissedWorkoutsDrawer/>
 
 
         {authPermissions.length === 0 ? (

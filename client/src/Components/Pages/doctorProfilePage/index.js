@@ -355,6 +355,7 @@ class DoctorProfilePage extends Component {
       this.setState({
         loading: false
       });
+      console.log("72833257423646238748236482634823",{error});
       message.warn("Something went wrong, please try again later");
     }
   };
@@ -2079,11 +2080,11 @@ class DoctorProfilePage extends Component {
       let { profile_pic = "", profile_pic_url = "" } = this.state;
       let p_pic = profile_pic !== "" ? profile_pic : profile_pic_url;
 
-      if (profile_pic === "") {
+      if (profile_pic === "" && p_pic.length) {
         this.setState({ profile_pic: p_pic });
       }
 
-      if (profile_pic_url === "") {
+      if (profile_pic_url === "" && p_pic.length ) {
         this.setState({ profile_pic_url: p_pic });
       }
 
@@ -3082,7 +3083,7 @@ class DoctorProfilePage extends Component {
   navigateToConsultationFee = () => {
     const { history } = this.props;
     const { id } = this.props;
-    history.push(`/doctors/${id}/payment_products`);
+    history.push(`/doctors/${id}/payment-products`);
   };
 
   render() {

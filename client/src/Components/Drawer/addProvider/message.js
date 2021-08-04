@@ -183,7 +183,6 @@ const messages = defineMessages({
     description: "",
     defaultMessage: "Address is required"
   },
-  
 });
 
 export default messages;

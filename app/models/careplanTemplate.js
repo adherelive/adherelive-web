@@ -7,6 +7,8 @@ import {TABLE_NAME as userTableName} from "./users";
 import {TABLE_NAME as appointmentTemplateTableName} from "./templateAppointments";
 import {TABLE_NAME as medicationTemplateTableName} from "./templateMedications";
 import {TABLE_NAME as vitalTemplateTableName} from "./templateVitals";
+import {TABLE_NAME as dietTemplateTableName} from "./templateDiets";
+import {TABLE_NAME as workoutTemplateTableName} from "./templateWorkouts";
 
 export const TABLE_NAME = "care_plan_templates";
 
@@ -118,6 +120,16 @@ export const associate = database => {
   });
 
   database.models[TABLE_NAME].hasMany(database.models[vitalTemplateTableName], {
+    foreignKey: "care_plan_template_id",
+    sourceKey: "id"
+  });
+
+  database.models[TABLE_NAME].hasMany(database.models[dietTemplateTableName], {
+    foreignKey: "care_plan_template_id",
+    sourceKey: "id"
+  });
+
+  database.models[TABLE_NAME].hasMany(database.models[workoutTemplateTableName], {
     foreignKey: "care_plan_template_id",
     sourceKey: "id"
   });

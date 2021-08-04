@@ -1,12 +1,12 @@
-import {Op} from "sequelize";
-import {TABLE_NAME} from "../../models/scheduleEvents";
+import { Op } from "sequelize";
+import { TABLE_NAME } from "../../models/scheduleEvents";
 // import {TABLE_NAME as eventHistoryTableName} from "../../models/eventHistory";
-import {EVENT_STATUS, EVENT_TYPE} from "../../../constant";
+import { EVENT_STATUS, EVENT_TYPE } from "../../../constant";
 import Database from "../../../libs/mysql";
 import moment from "moment";
 
 class ScheduleEventService {
-  create = async data => {
+  create = async (data) => {
     try {
       const scheduleEvents = await Database.getModel(TABLE_NAME).create(data);
       return scheduleEvents;
@@ -15,7 +15,7 @@ class ScheduleEventService {
     }
   };
 
-  bulkCreate = async data => {
+  bulkCreate = async (data) => {
     try {
       const scheduleEvents = await Database.getModel(TABLE_NAME).bulkCreate(
         data
@@ -31,12 +31,12 @@ class ScheduleEventService {
     try {
       const scheduleEvents = await Database.getModel(TABLE_NAME).update(data, {
         where: {
-          id
+          id,
         },
         transaction,
-          // returning: true,
-          raw: true,
-          individualHooks: true
+        // returning: true,
+        raw: true,
+        individualHooks: true,
       });
       await transaction.commit();
       return scheduleEvents;
@@ -46,10 +46,11 @@ class ScheduleEventService {
     }
   };
 
-  getEventByData = async data => {
+  getEventByData = async ({paranoid = true, ...data}) => {
     try {
       const scheduleEvent = await Database.getModel(TABLE_NAME).findOne({
-        where: data
+        where: data,
+        paranoid
       });
       return scheduleEvent;
     } catch (error) {
@@ -58,14 +59,14 @@ class ScheduleEventService {
   };
 
   getAllEventByData = async (data) => {
-      try {
-          const scheduleEvent = await Database.getModel(TABLE_NAME).findAll({
-              where: data
-          });
-          return scheduleEvent;
-      } catch (error) {
-          throw error;
-      }
+    try {
+      const scheduleEvent = await Database.getModel(TABLE_NAME).findAll({
+        where: data,
+      });
+      return scheduleEvent;
+    } catch (error) {
+      throw error;
+    }
   };
 
   getAllPreviousByData = async (data = {}) => {
@@ -75,11 +76,11 @@ class ScheduleEventService {
         where: {
           event_id,
           date: {
-            [Op.lte]: date
+            [Op.lte]: date,
           },
-            event_type
+          event_type,
         },
-        order: [["date", "ASC"]]
+        order: [["date", "ASC"]],
       });
       return scheduleEvent;
     } catch (error) {
@@ -100,14 +101,14 @@ class ScheduleEventService {
               moment(date).startOf("day"),
               moment()
                 .utc()
-                .toISOString()
-            ]
+                .toISOString(),
+            ],
           },
           status: {
-            [Op.not]: [EVENT_STATUS.PENDING, EVENT_STATUS.SCHEDULED]
-          }
+            [Op.not]: [EVENT_STATUS.PENDING, EVENT_STATUS.SCHEDULED],
+          },
         },
-        order: [["start_time", sort]]
+        order: [["start_time", sort]],
       });
       return scheduleEvent;
     } catch (error) {
@@ -117,7 +118,13 @@ class ScheduleEventService {
 
   getAllPassedByData = async (data = {}) => {
     try {
-      const { event_id, event_type = "", date, sort = "ASC" } = data;
+      const {
+        event_id,
+        event_type = "",
+        date,
+        sort = "ASC",
+        paranoid = true,
+      } = data;
       const scheduleEvent = await Database.getModel(TABLE_NAME).findAll({
         where: {
           event_id,
@@ -127,14 +134,19 @@ class ScheduleEventService {
               moment(date).startOf("day"),
               moment()
                 .utc()
-                .toISOString()
-            ]
+                .toISOString(),
+            ],
           },
           status: {
-            [Op.not]: [EVENT_STATUS.PENDING, EVENT_STATUS.PRIOR, EVENT_STATUS.SCHEDULED]
-          }
+            [Op.not]: [
+              EVENT_STATUS.PENDING,
+              EVENT_STATUS.PRIOR,
+              EVENT_STATUS.SCHEDULED,
+            ],
+          },
         },
-        order: [["start_time", sort]]
+        paranoid,
+        order: [["start_time", sort]],
       });
       return scheduleEvent;
     } catch (error) {
@@ -150,23 +162,30 @@ class ScheduleEventService {
           event_id,
           event_type,
           [Op.or]: [
-            {start_time: {
-              [Op.between]: [
-                moment(date).startOf("day"),
-                moment()
-                  .utc()
-                  .toISOString()
-              ]
-            }},
             {
-              status: EVENT_STATUS.COMPLETED
-            }
+              start_time: {
+                [Op.between]: [
+                  moment(date).startOf("day"),
+                  moment()
+                    .utc()
+                    .toISOString(),
+                ],
+              },
+            },
+            {
+              status: EVENT_STATUS.COMPLETED,
+            },
           ],
           status: {
-            [Op.or]: [EVENT_STATUS.COMPLETED, EVENT_STATUS.EXPIRED, EVENT_STATUS.CANCELLED, EVENT_STATUS.STARTED]
-          }
+            [Op.or]: [
+              EVENT_STATUS.COMPLETED,
+              EVENT_STATUS.EXPIRED,
+              EVENT_STATUS.CANCELLED,
+              EVENT_STATUS.STARTED,
+            ],
+          },
         },
-        order: [["start_time", sort]]
+        order: [["start_time", sort]],
       });
       return scheduleEvent;
     } catch (error) {
@@ -174,15 +193,21 @@ class ScheduleEventService {
     }
   };
 
-  getPriorEventByData = async time => {
+  getPriorEventByData = async (time, event_type = null) => {
     try {
       const scheduleEvent = await Database.getModel(TABLE_NAME).findAll({
         where: {
           start_time: {
-            [Op.between]: [moment().utc().toDate(), time]
+            [Op.between]: [
+              moment()
+                .utc()
+                .toDate(),
+              time,
+            ],
           },
-          status: EVENT_STATUS.PENDING
-        }
+          event_type,
+          status: EVENT_STATUS.PENDING,
+        },
       });
       return scheduleEvent;
     } catch (error) {
@@ -190,15 +215,15 @@ class ScheduleEventService {
     }
   };
 
-  getStartEventByData = async time => {
+  getStartEventByData = async (time) => {
     try {
       const scheduleEvent = await Database.getModel(TABLE_NAME).findAll({
         where: {
           start_time: {
-            [Op.between]: [moment(time).startOf("day"), time]
+            [Op.between]: [moment(time).startOf("day"), time],
           },
-          status: [EVENT_STATUS.PENDING, EVENT_STATUS.PRIOR]
-        }
+          status: [EVENT_STATUS.PENDING, EVENT_STATUS.PRIOR],
+        },
       });
       return scheduleEvent;
     } catch (error) {
@@ -206,15 +231,19 @@ class ScheduleEventService {
     }
   };
 
-  getPassedEventData = async time => {
+  getPassedEventData = async (time) => {
     try {
       const scheduleEvent = await Database.getModel(TABLE_NAME).findAll({
         where: {
           start_time: {
-            [Op.between]: [moment(time).subtract(1, "year"), time]
+            [Op.between]: [moment(time).subtract(1, "year"), time],
           },
-          status: [EVENT_STATUS.SCHEDULED, EVENT_STATUS.PENDING, EVENT_STATUS.PRIOR]
-        }
+          status: [
+            EVENT_STATUS.SCHEDULED,
+            EVENT_STATUS.PENDING,
+            EVENT_STATUS.PRIOR,
+          ],
+        },
       });
       return scheduleEvent;
     } catch (error) {
@@ -233,16 +262,16 @@ class ScheduleEventService {
     }
   };
 
-  getAllPastData = async data => {
+  getAllPastData = async (data) => {
     try {
       const { event_id, startDate, date } = data;
       const scheduleEvent = await Database.getModel(TABLE_NAME).findAll({
         where: {
           event_id,
           start_time: {
-            [Op.between]: [moment(startDate).startOf("day"), date]
-          }
-        }
+            [Op.between]: [moment(startDate).startOf("day"), date],
+          },
+        },
       });
       return scheduleEvent;
     } catch (error) {
@@ -250,95 +279,129 @@ class ScheduleEventService {
     }
   };
 
-    getUpcomingByData = async (data) => {
-        try {
-            const {vital_ids = [], appointment_ids = [], medication_ids = [], startLimit, endLimit} = data;
-            const scheduleEvent = await Database.getModel(TABLE_NAME).findAll({
-                offset: startLimit,
-                limit: endLimit,
-                where: {
-                    start_time: {
-                        [Op.gt]: moment().utc().toISOString(),
-                    },
-                    [Op.or]: [
-                        {
-                            event_id: appointment_ids,
-                            event_type: EVENT_TYPE.APPOINTMENT
-                        },
-                        {
-                            event_id: medication_ids,
-                            event_type: EVENT_TYPE.MEDICATION_REMINDER
-                        },
-                        {
-                            event_id: vital_ids,
-                            event_type: EVENT_TYPE.VITALS
-                        }
-                    ]
-                },
-                order: [
-                    ['start_time','ASC']
-                ]
-            });
-            return scheduleEvent;
-        } catch(error) {
-            throw error;
-        }
-    };
+  getUpcomingByData = async (data) => {
+    try {
+      const {
+        vital_ids = [],
+        appointment_ids = [],
+        medication_ids = [],
+        diet_ids = [],
+        workout_ids = [],
+        startLimit,
+        endLimit,
+      } = data;
+      const scheduleEvent = await Database.getModel(TABLE_NAME).findAll({
+        offset: startLimit,
+        limit: endLimit,
+        where: {
+          start_time: {
+            [Op.gt]: moment()
+              .utc()
+              .toISOString(),
+          },
+          [Op.or]: [
+            {
+              event_id: appointment_ids,
+              event_type: EVENT_TYPE.APPOINTMENT,
+            },
+            {
+              event_id: medication_ids,
+              event_type: EVENT_TYPE.MEDICATION_REMINDER,
+            },
+            {
+              event_id: vital_ids,
+              event_type: EVENT_TYPE.VITALS,
+            },
+            {
+              event_id: diet_ids,
+              event_type: EVENT_TYPE.DIET,
+            },
+            {
+              event_id: workout_ids,
+              event_type: EVENT_TYPE.WORKOUT,
+            },
+          ],
+        },
+        order: [["start_time", "ASC"]],
+      });
+      return scheduleEvent;
+    } catch (error) {
+      throw error;
+    }
+  };
 
-    getMissedByData = async (data) => {
-        try {
-            const {vital_ids, appointment_ids, medication_ids} = data;
-            return await Database.getModel(TABLE_NAME).findAll({
-                where: {
-                    date: {
-                      [Op.between]: [moment().utc().subtract(7, "days").toDate(), moment().utc().toDate()]
-                    },
-                    [Op.or]: [
-                        {
-                            event_id: appointment_ids,
-                            event_type: EVENT_TYPE.APPOINTMENT
-                        },
-                        {
-                            event_id: medication_ids,
-                            event_type: EVENT_TYPE.MEDICATION_REMINDER
-                        },
-                        {
-                            event_id: vital_ids,
-                            event_type: EVENT_TYPE.VITALS
-                        }
-                    ],
-                    status: EVENT_STATUS.EXPIRED
-                },
-                order: [
-                    ['start_time','DESC']
-                ]
-            });
-        } catch(error) {
-            throw error;
-        }
-    };
+  getMissedByData = async (data) => {
+    try {
+      const { vital_ids, appointment_ids, medication_ids , diet_ids , workout_ids } = data;
+      return await Database.getModel(TABLE_NAME).findAll({
+        where: {
+          date: {
+            [Op.between]: [
+              moment()
+                .utc()
+                .subtract(7, "days")
+                .toDate(),
+              moment()
+                .utc()
+                .toDate(),
+            ],
+          },
+          [Op.or]: [
+            {
+              event_id: appointment_ids,
+              event_type: EVENT_TYPE.APPOINTMENT,
+            },
+            {
+              event_id: medication_ids,
+              event_type: EVENT_TYPE.MEDICATION_REMINDER,
+            },
+            {
+              event_id: vital_ids,
+              event_type: EVENT_TYPE.VITALS,
+            },
+            {
+              event_id: diet_ids,
+              event_type: EVENT_TYPE.DIET,
+            },
+            {
+              event_id: workout_ids,
+              event_type: EVENT_TYPE.WORKOUT,
+            },
+          ],
+          status: EVENT_STATUS.EXPIRED,
+        },
+        order: [["start_time", "DESC"]],
+      });
+    } catch (error) {
+      throw error;
+    }
+  };
 
-    getPageEventByData = async (data) => {
-        try {
-            const {eventIds, startLimit, endLimit, event_type} = data;
-            const scheduleEvent = await Database.getModel(TABLE_NAME).findAll({
-                offset: startLimit,
-                limit: endLimit,
-                where: {
-                    event_id: eventIds,
-                    event_type
-                },
-                order: [
-                    ['start_time','ASC']
-                ]
-            });
-            return scheduleEvent;
-        } catch(error) {
-            throw error;
-        }
-    };
+  getPageEventByData = async (data) => {
+    try {
+      const { eventIds, startLimit, endLimit, event_type } = data;
+      const scheduleEvent = await Database.getModel(TABLE_NAME).findAll({
+        offset: startLimit,
+        limit: endLimit,
+        where: {
+          event_id: eventIds,
+          event_type,
+        },
+        order: [["start_time", "ASC"]],
+      });
+      return scheduleEvent;
+    } catch (error) {
+      throw error;
+    }
+  };
 
-  getPendingEventsData = async ({appointments, medications, vitals}) => {
+  getPendingEventsData = async ({
+    appointments,
+    medications,
+    vitals,
+    diets,
+    workouts,
+  }) => {
     try {
       const scheduleEvent = await Database.getModel(TABLE_NAME).findAll({
         where: {
@@ -346,23 +409,31 @@ class ScheduleEventService {
             [Op.gt]: [
               moment()
                 .utc()
-                .toISOString()
-            ]
+                .toISOString(),
+            ],
           },
-          status: [EVENT_STATUS.PENDING, EVENT_STATUS.PRIOR,  EVENT_STATUS.SCHEDULED],
-            [Op.or]: [
-                {
-                    ...appointments,
-                },
-                {
-                    ...medications,
-                },
-                {
-                    ...vitals,
-                }
-            ]
+          status: [
+            EVENT_STATUS.PENDING,
+            EVENT_STATUS.PRIOR,
+            EVENT_STATUS.SCHEDULED,
+          ],
+          [Op.or]: [
+            {
+              ...appointments,
+            },
+            {
+              ...medications,
+            },
+            {
+              ...vitals,
+            },
+            {
+              ...diets,
+            },
+            { ...workouts },
+          ],
         },
-        order: [["start_time", "ASC"]]
+        order: [["start_time", "ASC"]],
       });
       return scheduleEvent;
     } catch (error) {
@@ -370,38 +441,39 @@ class ScheduleEventService {
     }
   };
 
-  getAllEventStatusByData = async ({appointment, medication, vital}) => {
-      try {
-          return await Database.getModel(TABLE_NAME).findAll({
-              where: {
-                  [Op.or]: [
-                      {
-                          ...appointment
-                      },
-                      {
-                          ...medication
-                      },
-                      {
-                          ...vital
-                      }
-                  ]
-              },
-              attributes: ["status"],
-              raw: true
-          });
-      } catch (error) {
-          throw error;
-      }
+  getAllEventStatusByData = async ({ appointment, medication, vital, diet, workout }) => {
+    try {
+      return await Database.getModel(TABLE_NAME).findAll({
+        where: {
+          [Op.or]: [
+            {
+              ...appointment,
+            },
+            {
+              ...medication,
+            },
+            {
+              ...vital,
+            },
+            diet, workout
+          ],
+        },
+        attributes: ["status"],
+        raw: true,
+      });
+    } catch (error) {
+      throw error;
+    }
   };
-    getCount = async (data) => {
-      try {
-          return await Database.getModel(TABLE_NAME).count({
-              where: data
-          });
-      } catch(error) {
-          throw error;
-      }
-    };
+  getCount = async (data) => {
+    try {
+      return await Database.getModel(TABLE_NAME).count({
+        where: data,
+      });
+    } catch (error) {
+      throw error;
+    }
+  };
 }
 
 export default ScheduleEventService;

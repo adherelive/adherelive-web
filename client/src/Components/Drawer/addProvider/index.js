@@ -77,7 +77,6 @@ class addProviderDrawer extends Component {
     } = formRef;
 
     validateFields(async (err, values) => {
-
       if (!err) {
         let {
           name='',

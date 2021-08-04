@@ -23,7 +23,7 @@ class MobileFeatureController extends Controller {
     const { raiseServerError, raiseSuccess } = this;
     try {
       const {
-        userDetails: { userData: { category } = {}, userCategoryId } = {}
+        userDetails: { userRoleId = null , userData: { category } = {}, userCategoryId } = {}
       } = req;
 
       let featureMappings = {};
@@ -48,7 +48,7 @@ class MobileFeatureController extends Controller {
         case USER_CATEGORY.DOCTOR:
           careplanData =
             (await carePlanService.getCarePlanByData({
-              doctor_id: userCategoryId
+              user_role_id:userRoleId
             })) || [];
 
           for (let index = 0; index < careplanData.length; index++) {

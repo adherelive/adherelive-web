@@ -127,7 +127,7 @@ class MUserWrapper extends BaseUser {
 
       if (!isEmpty(patient)) {
         const patientData = await PatientWrapper(patient);
-        patients[patientData.getPatientId()] = patientData.getBasicInfo();
+        patients[patientData.getPatientId()] = await patientData.getAllInfo();
         patient_id = patientData.getPatientId();
       }
 

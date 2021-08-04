@@ -14,7 +14,11 @@ const mapStateToProps = state => {
         patients, treatments, care_plans, static_templates, providers, doctors, auth,
         notifications, appointments, medications, medicines,
         schedule_events, symptoms = {},
-        notification_redirect = {}
+        notification_redirect = {},
+        diets={},
+        diet_food_group_mappings = {},
+        workouts={},
+        diet_responses={}
     } = state
     return {
         visible: visible && type === DRAWER.NOTIFICATIONS,
@@ -33,7 +37,11 @@ const mapStateToProps = state => {
         medicines,
         schedule_events,
         symptoms,
-        notification_redirect
+        notification_redirect,
+        diets,
+        diet_food_group_mappings,
+        workouts,
+        diet_responses
     };
 };
 

@@ -111,6 +111,36 @@ const messages = defineMessages({
         description: "Patient Profile Header",
         defaultMessage: "No Medications or Appointments to Show"
     },
+    no_show: {
+        id: "app.patient_profile.no_show",
+        description: "Patient Profile Header",
+        defaultMessage: "No Medications, Appointments, Reports, Symptoms, Actions, Diets or Workouts to Show"
+    },
+    no_appointment: {
+        id: "app.patient_profile.no_appointment",
+        description: "Patient Profile Header",
+        defaultMessage: "No Appointments to Show"
+    },
+    no_medication: {
+        id: "app.patient_profile.no_medication",
+        description: "Patient Profile Header",
+        defaultMessage: "No Medications to Show"
+    },
+    no_vital: {
+        id: "app.patient_profile.no_vital",
+        description: "Patient Profile Header",
+        defaultMessage: "No Actions to Show"
+    },
+    no_diet: {
+        id: "app.patient_profile.no_diet",
+        description: "Patient Profile Header",
+        defaultMessage: "No Diet to Show"
+    },
+    no_workout: {
+        id: "app.patient_profile.no_workout",
+        description: "Patient Profile Header",
+        defaultMessage: "No Workout to Show"
+    },
     somethingWentWrong: {
         id: "app.patient_profile.somethingWentWrong",
         description: "Patient Profile Header",
@@ -505,6 +535,21 @@ const messages = defineMessages({
         id: "app.patient_profile.reports",
         description: "",
         defaultMessage: "Reports"
+    },
+    food_items:{
+        id: "app.patient_profile.food.items",
+        description: "",
+        defaultMessage: "Food Items"
+    },
+    diet:{
+        id: "app.patient_profile.diet",
+        description: "",
+        defaultMessage: "Diet"
+    },
+    workout:{
+        id: "app.patient_profile.workout",
+        description: "",
+        defaultMessage: "Workout"
     },
     prescription:{
         id: "app.patient_profile.prescription",

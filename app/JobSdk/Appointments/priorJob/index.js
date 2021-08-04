@@ -1,7 +1,15 @@
 import AppointmentJob from "../";
 import moment from "moment";
-import { APPOINTMENT_TYPE, EVENT_TYPE } from "../../../../constant";
+import {
+  DEFAULT_PROVIDER,
+  APPOINTMENT_TYPE,
+  EVENT_TYPE,
+} from "../../../../constant";
+
+import UserRoleService from "../../../services/userRoles/userRoles.service";
+import ProviderService from "../../../services/provider/provider.service";
 import UserDeviceService from "../../../services/userDevices/userDevice.service";
+
 import UserDeviceWrapper from "../../../ApiWrapper/mobile/userDevice";
 
 class PriorJob extends AppointmentJob {
@@ -44,11 +52,37 @@ class PriorJob extends AppointmentJob {
     const userIds = [];
 
     // participants.forEach(participant => {
-    //   if (participant !== actorId) {
-    //     userIds.push(participant);
+    //   if (participant !== user_role_id) {
+    //     userRoleIds.push(participant);
     //   }
     // });
 
+    const { rows: userRoles = [] } =
+      (await UserRoleService.findAndCountAll({
+        where: {
+          id: participants,
+        },
+      })) || {};
+
+    let providerId = null;
+
+    for (const userRole of userRoles) {
+      const { user_identity, linked_id } = userRole || {};
+      userIds.push(user_identity);
+      if (linked_id) {
+        providerId = linked_id;
+      }
+    }
+
+    // provider
+    let providerName = DEFAULT_PROVIDER;
+    if (providerId) {
+      const provider = await ProviderService.getProviderByData({
+        id: providerId,
+      });
+      const { name } = provider || {};
+      providerName = name;
+    }
     const userDevices = await UserDeviceService.getAllDeviceByData({
       user_id: participants,
     });
@@ -65,7 +99,7 @@ class PriorJob extends AppointmentJob {
     templateData.push({
       small_icon: process.config.app.icon_android,
       app_id: process.config.one_signal.app_id,
-      headings: { en: `Upcoming Appointment Reminder` },
+      headings: { en: `Upcoming Appointment Reminder (${providerName})` },
       contents: {
         en: `An appointment ${appointmentType}-${type_description}${
           radiology_type ? `-${radiology_type}` : ""
@@ -83,12 +117,11 @@ class PriorJob extends AppointmentJob {
   getInAppTemplate = () => {
     const { getAppointmentData } = this;
     const {
-      details: {
-        participants = [],
-        actor: {
-          id: actorId,
-          details: { name, category: actorCategory } = {},
-        } = {},
+      participants = [],
+      actor: {
+        id: actorId,
+        user_role_id,
+        details: { name, category: actorCategory } = {},
       } = {},
       id,
     } = getAppointmentData() || {};
@@ -99,13 +132,14 @@ class PriorJob extends AppointmentJob {
       // if (participant !== actorId) {
       templateData.push({
         actor: actorId,
+        actorRoleId: user_role_id,
         object: `${participant}`,
         foreign_id: `${id}`,
         verb: "appointment_prior",
         // message: `${name}(${actorCategory}) has created an appointment with you`,
         event: EVENT_TYPE.APPOINTMENT,
         time: currentTime,
-        create_time: `${currentTime}`
+        create_time: `${currentTime}`,
       });
       // }
     }

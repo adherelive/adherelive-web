@@ -3,6 +3,7 @@ const router = express.Router();
 import Authenticated from "../middlewares/auth";
 import isPatient from "../middlewares/patients";
 import PatientController from "../../../app/controllers/mControllers/patients/patients.controller";
+import DietController from "../../../app/controllers/mControllers/diet/diet.controller";
 
 router.post("/", isPatient, Authenticated, PatientController.mUpdatePatient);
 
@@ -73,6 +74,12 @@ router.get(
     "/:patient_id/reports",
     Authenticated,
     PatientController.getPatientReports
+);
+
+router.get(
+  "/diet",
+  Authenticated,
+  DietController.getPatientDiets
 );
 
 router.get(

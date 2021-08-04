@@ -49,7 +49,7 @@ class SelectedDays extends Component {
       : selectedDays.filter(t => t !== tag);
     this.setState({ selectedDays: nextSelectedTags });
     const {
-      form: { setFieldsValue, validateFields ,getFieldsValue}
+      form: { setFieldsValue, validateFields }
     } = this.props;
     setFieldsValue({ [FIELD_NAME]: nextSelectedTags.join(",") });
     validateFields();
@@ -58,7 +58,7 @@ class SelectedDays extends Component {
   setRepeatEveryDay = e => {
     e.preventDefault();
     const {
-      form: { setFieldsValue,validateFields,getFieldsValue }
+      form: { setFieldsValue,validateFields}
     } = this.props;
     this.setState({ selectedDays: DAYS });
     setFieldsValue({ [FIELD_NAME]: DAYS.join(",") });
@@ -68,7 +68,7 @@ class SelectedDays extends Component {
   setRepeatAlternateDay = e => {
     e.preventDefault();
     const {
-      form: { setFieldsValue,validateFields,getFieldsValue }
+      form: { setFieldsValue,validateFields}
     } = this.props;
     this.setState({ selectedDays: ALTERNATE_DAYS });
     setFieldsValue({ [FIELD_NAME]: ALTERNATE_DAYS.join(",") });

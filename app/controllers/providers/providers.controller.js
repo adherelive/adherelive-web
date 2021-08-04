@@ -18,6 +18,8 @@ import councilService from "../../services/council/council.service";
 import appointmentService from "../../services/appointment/appointment.service";
 import carePlanService from "../../services/carePlan/carePlan.service";
 import userPreferenceService from "../../services/userPreferences/userPreference.service";
+import UserRoleService from "../../services/userRoles/userRoles.service";
+import DoctorService from "../../services/doctor/doctor.service";
 import providerTermsMappingService from "../../services/providerTermsMapping/providerTermsMappings.service";
 import tacService from "../../services/termsAndConditions/termsAndConditions.service";
 
@@ -36,6 +38,8 @@ import UploadDocumentWrapper from "../../ApiWrapper/web/uploadDocument";
 import AppointmentWrapper from "../../ApiWrapper/web/appointments";
 import PatientWrapper from "../../ApiWrapper/web/patient";
 import CarePlanWrapper from "../../ApiWrapper/web/carePlan";
+import UserRoleWrapper from "../../ApiWrapper/web/userRoles";
+
 import TACWrapper from "../../ApiWrapper/web/termsAndConditions";
 // import * as PaymentHelper from "../payments/helper";
 
@@ -80,7 +84,7 @@ class ProvidersController extends Controller {
   getAll = async (req, res) => {
     const { raiseSuccess, raiseServerError } = this;
     try {
-      const { userDetails: { userId } = {} } = req;
+      const { userDetails: { userId , userRoleId = null } = {} } = req;
 
       const providerData = await providerService.getProviderByData({
         user_id: userId
@@ -89,15 +93,35 @@ class ProvidersController extends Controller {
       const providerId = provider.getProviderId();
 
       let doctorIds = [];
-      const doctorProviderMapping = await doctorProviderMappingService.getDoctorProviderMappingByData(
-        { provider_id: providerId }
-      );
+      // const doctorProviderMapping = await doctorProviderMappingService.getDoctorProviderMappingByData(
+      //   { provider_id: providerId }
+      // );
 
-      for (const mappingData of doctorProviderMapping) {
-        const mappingWrapper = await DoctorProviderMappingWrapper(mappingData);
-        const doctorId = mappingWrapper.getDoctorId();
-        doctorIds.push(doctorId);
+      const UserRoles =
+       await UserRoleService.getAllByData({linked_id:providerId , linked_with:USER_CATEGORY.PROVIDER});
+
+      if(UserRoles && UserRoles.length){
+        for(let i = 0 ; i < UserRoles.length ; i++){
+          const UserRole = UserRoles[i];
+          const userRoleWrapper = await UserRoleWrapper(UserRole);
+          const DoctorUserId = await userRoleWrapper.getUserId();
+          const doctor = await DoctorService.getDoctorByData({user_id:DoctorUserId});
+          if(doctor){
+            const doctorWrapper = await DoctorWrapper(doctor);
+            const doctorId = await doctorWrapper.getDoctorId();
+            doctorIds.push(doctorId);
+          }
+        }
       }
+
+      // console.log("938479287498237948723984738472 ==================>>>>>>>",{doctorIds});
+
+
+      // for (const mappingData of doctorProviderMapping) {
+      //   const mappingWrapper = await DoctorProviderMappingWrapper(mappingData);
+      //   const doctorId = mappingWrapper.getDoctorId();
+      //   doctorIds.push(doctorId);
+      // }
 
       console.log("doctor ids got are: ", doctorIds);
 
@@ -414,22 +438,24 @@ class ProvidersController extends Controller {
 
       let patientIds = [];
       let doctorIds = [];
-      const doctorProviderMapping = await doctorProviderMappingService.getDoctorProviderMappingByData(
-        { provider_id: providerId }
-      );
 
-      for (const mappingData of doctorProviderMapping) {
-        const mappingWrapper = await DoctorProviderMappingWrapper(mappingData);
-        const doctorId = mappingWrapper.getDoctorId();
-        const doctorDetails = await DoctorWrapper(null, doctorId);
+      const UserRoles =
+      await UserRoleService.getAllByData({linked_id:providerId , linked_with:USER_CATEGORY.PROVIDER});
 
-        const doctorUserId = doctorDetails.getUserId();
-        const doctorUserData = await UserWrapper(null, doctorUserId);
+     if(UserRoles && UserRoles.length){
+       for(let i = 0 ; i < UserRoles.length ; i++){
+         const UserRole = UserRoles[i];
+         const userRoleWrapper = await UserRoleWrapper(UserRole);
+         const DoctorUserId = await userRoleWrapper.getUserId();
+         const doctor = await DoctorService.getDoctorByData({user_id:DoctorUserId});
+         if(doctor){
+           const doctorWrapper = await DoctorWrapper(doctor);
+           const doctorId = await doctorWrapper.getDoctorId();
+           doctorIds.push(doctorId);
+         }
+       }
+     }
 
-        userApiDetails[doctorUserId] = doctorUserData.getBasicInfo();
-        doctorApiDetails[doctorId] = doctorDetails.getBasicInfo();
-        doctorIds.push(doctorId);
-      }
 
       for (const doctorId of doctorIds) {
         let appointmentList = [];
@@ -541,15 +567,23 @@ class ProvidersController extends Controller {
       let dateWiseAppointmentDetails = {};
 
       let doctorIds = [];
-      const doctorProviderMapping = await doctorProviderMappingService.getDoctorProviderMappingByData(
-        { provider_id: providerId }
-      );
 
-      for (const mappingData of doctorProviderMapping) {
-        const mappingWrapper = await DoctorProviderMappingWrapper(mappingData);
-        const doctorId = mappingWrapper.getDoctorId();
-        doctorIds.push(doctorId);
-      }
+      const UserRoles =
+      await UserRoleService.getAllByData({linked_id:providerId , linked_with:USER_CATEGORY.PROVIDER});
+
+     if(UserRoles && UserRoles.length){
+       for(let i = 0 ; i < UserRoles.length ; i++){
+         const UserRole = UserRoles[i];
+         const userRoleWrapper = await UserRoleWrapper(UserRole);
+         const DoctorUserId = await userRoleWrapper.getUserId();
+         const doctor = await DoctorService.getDoctorByData({user_id:DoctorUserId});
+         if(doctor){
+           const doctorWrapper = await DoctorWrapper(doctor);
+           const doctorId = await doctorWrapper.getDoctorId();
+           doctorIds.push(doctorId);
+         }
+       }
+     }
 
       for (const doctorId of doctorIds) {
         const appointmentList = await appointmentService.getMonthAppointmentCountForDoctor(
@@ -789,12 +823,18 @@ class ProvidersController extends Controller {
 
       const userData = await UserWrapper(user.get());
 
+      const providerUserId = await userData.getId();
+      const userRole = await UserRoleService.create({user_identity:providerUserId});
+      const userRoleWrapper = await UserRoleWrapper(userRole);
+      const newUserRoleId = await userRoleWrapper.getId();
+
       // add user preference
       await userPreferenceService.addUserPreference({
           user_id: userData.getId(),
           details: {
             charts: ["1", "2", "3"]
-          }
+          },
+          user_role_id:newUserRoleId
       });
 
 
@@ -803,6 +843,10 @@ class ProvidersController extends Controller {
         name,
         address,
         activated_on,
+        details: {
+          icon: getFilePath(icon),
+          banner:getFilePath(banner)
+        },
         user_id: userData.getId(),
         details: {
           icon: getFilePath(icon),
@@ -838,7 +882,9 @@ class ProvidersController extends Controller {
           use_as_main,
           upi_id,
           razorpay_account_id,
-          razorpay_account_name
+          razorpay_account_name,
+          prefix,
+          account_mobile_number:mobile_number,
         });
 
         if(Object.keys(accountData).length > 0) {
@@ -955,7 +1001,9 @@ class ProvidersController extends Controller {
           ifsc_code,
           upi_id,
           razorpay_account_id,
-          razorpay_account_name
+          razorpay_account_name,
+          prefix,
+          account_mobile_number:mobile_number,
         });
 
         await accountDetailsService.update(accountData, account.getId());
@@ -978,7 +1026,9 @@ class ProvidersController extends Controller {
             use_as_main,
             upi_id,
             razorpay_account_id,
-            razorpay_account_name
+            razorpay_account_name,
+            prefix,
+            account_mobile_number:mobile_number,
           });
 
           if(Object.keys(accountData).length > 0) {

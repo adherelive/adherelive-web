@@ -9,7 +9,8 @@ import {
 } from "react-router-dom";
 import BlankState from "../../Components/Common/BlankState";
 import { PATH } from "../../constant";
-import SideMenu from "../../Components/Sidebar";
+// import SideMenu from "../../Components/Sidebar";
+import SideMenu from "../../Containers/Sidebar";
 
 // FOR DOCTOR TODO: can be in separate doctors folder for easy management
 const ProviderDoctorPage = lazy(() =>
@@ -79,6 +80,14 @@ const ProviderTransactionPage = lazy(() =>
 
     )
 );
+
+const PaymentDetailsPage = lazy(() => 
+    import(
+      /* webpackChunkName: "ProviderPaymentDetailsPage" */ "../../Containers/ProviderAccountDetails"
+
+    )
+);
+
 
 
 const ProviderDoctorDetailsComp = props => {
@@ -194,6 +203,11 @@ class ProviderDoctor extends Component {
                  component={ProviderTransactionPage}
                 />
 
+                <Route
+                exact
+                path={PATH.PROVIDER.PAYMENT_DETAILS}
+                component={PaymentDetailsPage}
+                />
 
                 <Route path={PATH.LANDING_PAGE} component={ProviderDoctorPage} />
                 {/* <Route path={""} component={BlankState} /> */}

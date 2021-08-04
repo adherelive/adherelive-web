@@ -4,10 +4,11 @@ import {
   DOSE_UNIT,
   WHEN_TO_TAKE_ABBREVATIONS,
   APPOINTMENT_TYPE,
+  PATIENT_MEAL_TIMINGS
 } from "../../../constant";
 import moment from "moment";
 import PDFDocument from "pdfkit";
-
+import {getConvertedTime} from "../getUserTime/index";
 // const PDFDocument = require("pdfkit");
 const fs = require("fs");
 // const moment = require("moment");
@@ -55,6 +56,12 @@ export default async (pdfData, signatureImage) => {
         currentTime = "",
         suggestedInvestigations = [],
         providerIcon,
+        portions,
+        repetitions,
+        diets_formatted_data,
+        diet_ids,
+        workouts_formatted_data,
+        workout_ids
       } = pdfData;
       const doc = new PDFDocument({ size:"A4",margin: DOC_MARGIN, bufferPages: true });
 
@@ -100,7 +107,9 @@ export default async (pdfData, signatureImage) => {
 
       // generateHr(doc, horizontalLineLevel + 17);
 
+
       const suggestedInvestigationXLevelEnd = printCarePlanData(
+      {
         doc,
         horizontalLineLevel,
         care_plans,
@@ -109,8 +118,14 @@ export default async (pdfData, signatureImage) => {
         medicines,
         allergies,
         comorbidities,
-        suggestedInvestigations
-      );
+        suggestedInvestigations,
+        portions,
+        repetitions,
+        diets_formatted_data,
+        diet_ids,
+        workouts_formatted_data,
+        workout_ids
+      });
 
       // generateHr(doc, doc.y + 17);
 
@@ -121,6 +136,7 @@ export default async (pdfData, signatureImage) => {
       //   doc.y
       // );
 
+ 
       printFooter(doc, signatureImage, nextAppointmentDuration, currentTime);
       doc.end();
     } catch (err) {
@@ -152,6 +168,425 @@ function getPdfName(pdfData) {
   // const now = new Date();
   return `${carePlanId}-${diagnosis}-${doctorName}-${moment().format("DD-MM-YY-hh-mm-ss")}`;
 }
+
+function printDiet (
+  doc,
+  medicationYLevel,
+  portions,
+  diets_formatted_data,
+  diet_ids
+){
+
+  doc
+  .font(BOLD_FONT)
+  .fontSize(BOLD_FONT_SIZE)
+  .text("DIET", DOC_MARGIN, medicationYLevel);
+
+
+    const dietsHeaderEnds = doc.y;
+
+    const serialNoXStart = DOC_MARGIN;
+    const dietNameXStart = DOC_MARGIN + 40;
+    const dietDetailsTimeXStart = DOC_MARGIN + 120;
+    const dietDetailsDataXStart = DOC_MARGIN + 180;
+    const startDateXStart = DOC_MARGIN + 380;
+    const endDateXStart = DOC_MARGIN + 450;
+
+      doc
+    .fillColor("#4a90e2")
+    .fontSize(NORMAL_FONT_SIZE)
+    .font(BOLD_FONT)
+    .text("S.No.", serialNoXStart, dietsHeaderEnds + 20)
+    .font(BOLD_FONT)
+    .text("Diet Name", dietNameXStart, dietsHeaderEnds + 20)
+    .font(BOLD_FONT)
+    .text("Details",dietDetailsTimeXStart, dietsHeaderEnds + 20)
+    .font(BOLD_FONT)
+    .text("Start Date",startDateXStart, dietsHeaderEnds + 20)
+    .font(BOLD_FONT)
+    .text("End Date", endDateXStart, dietsHeaderEnds + 20)
+    
+
+    // generateHr(doc, dietsHeaderEnds+10);
+
+
+    let dietCount=1;
+    let singleDietDetailYLevel=doc.y;
+
+    for(let each in diets_formatted_data){
+
+      if(doc.y + (3 * SHORT_FONT_SIZE) > PAGE_END_LIMIT) {
+        doc.addPage();
+        singleDietDetailYLevel = DOC_MARGIN;
+      }
+
+    
+      const { 
+        diets={},
+        diet_food_groups={},
+        food_items={},
+        food_item_details={}
+     } = diets_formatted_data[each];
+
+     const { basic_info : { name:diet_name,start_date=null,end_date=null } ={} , details : {
+      not_to_do = '',repeat_days = []
+     } = {}}=diets[Object.keys(diets)[0]] || {};
+
+     let basicDetailsYLevel=singleDietDetailYLevel + 20,formattedStartDate='--',formattedEndDate='--';
+     
+     if(start_date){
+      formattedStartDate = moment(start_date).format("MMM Do YY");
+     }
+     if(end_date){
+      formattedEndDate = moment(end_date).format("MMM Do YY");
+     }
+
+
+     
+    
+     doc
+     .fillColor("#212b36")
+     .fontSize(SHORT_FONT_SIZE)
+     .font(MEDIUM_FONT)
+     .text(`${dietCount}.`, serialNoXStart, basicDetailsYLevel)
+     .text(`${diet_name}`, dietNameXStart, basicDetailsYLevel,{
+      width:dietDetailsTimeXStart-dietNameXStart,
+    })
+     .text(`${formattedStartDate}`, startDateXStart, basicDetailsYLevel, {
+      width:endDateXStart-startDateXStart,
+    })
+    .text(`${formattedEndDate}`, endDateXStart, basicDetailsYLevel)
+
+
+
+     for(let time in diet_food_groups){
+
+       const foodGroupArrayForTime = diet_food_groups[time] || [];
+
+       const timeObj=PATIENT_MEAL_TIMINGS[time];
+       const timeText = timeObj["text"];
+       doc
+       .fillColor("#212b36")
+       .font(MEDIUM_FONT)
+       .text(`${timeText}`,dietDetailsTimeXStart, singleDietDetailYLevel + 20, {
+          width:dietDetailsDataXStart-dietDetailsTimeXStart,
+          // continued:true
+       })
+
+
+       for(let foodGroup of foodGroupArrayForTime){
+       
+        const {
+          food_group_id=null,
+          food_item_detail_id=null,
+          notes='',
+          portion_id=null,
+          serving=null,
+          similar=[]
+        } = foodGroup || {};
+
+
+        const { basic_info:{ food_item_id = null,portion_size = null }={}}=food_item_details[food_item_detail_id] || {};
+        const { basic_info : { name : food_name = '' } = {} }= food_items[food_item_id] || {};
+        const { basic_info: { name :portion_type = ''} = {} } = portions[portion_id] || {};
+
+    
+
+        let singleData=`${serving}x${" "}${portion_size}${" "}${portion_type}${" "}${food_name}`;
+ 
+
+        for(let i in similar){
+
+
+          const eachSimilar = similar[i] || {};
+
+          const {
+            food_group_id=null,
+            food_item_detail_id=null,
+            notes='',
+            portion_id=null,
+            serving=null
+          } = eachSimilar || {};
+
+          const { basic_info:{ food_item_id = null,portion_size = null } = {} } = food_item_details[food_item_detail_id] || {};
+          const { basic_info : { name : food_name = '' } = {} } = food_items[food_item_id] || {};
+          const { basic_info: { name : portion_type = ''} = {} } = portions[portion_id] || {};
+          
+          singleData = singleData +`${" "}/${" "}${serving}x${" "}${portion_size}${" "}${portion_type}${" "}${food_name}`;
+
+
+        }
+
+
+        if(doc.y + (3 * MEDIUM_FONT) > PAGE_END_LIMIT) {
+          doc.addPage();
+          singleDietDetailYLevel = DOC_MARGIN;
+        }
+
+         doc
+        .fillColor("#212b36")
+        .font(MEDIUM_FONT)
+        .text(`${singleData}`,dietDetailsDataXStart, singleDietDetailYLevel + 20
+        ,{
+          width:startDateXStart-dietDetailsDataXStart,
+          }
+        )
+
+      
+
+        if(doc.y + (3 * SHORT_FONT_SIZE) > PAGE_END_LIMIT) {
+          doc.addPage();
+          singleDietDetailYLevel = DOC_MARGIN;
+        }
+
+        singleDietDetailYLevel=doc.y;
+
+
+       }
+       
+
+     }
+
+
+     singleDietDetailYLevel=doc.y;
+
+        
+     doc
+     .fillColor("#212b36")
+     .font(BOLD_FONT)
+     .text(`Repeat Days${" "}${"-"}`, dietDetailsTimeXStart , singleDietDetailYLevel + 20
+     ,{
+       width:startDateXStart-dietDetailsTimeXStart,
+       continued:true
+       }
+     )
+     .font(MEDIUM_FONT)
+     .text(`${repeat_days}`, dietDetailsTimeXStart+10 , singleDietDetailYLevel + 20
+     ,{
+       width:startDateXStart-dietDetailsTimeXStart
+       }
+     )
+     .font(BOLD_FONT)
+     .text(`What Not to Do${" "}${"-"}`, dietDetailsTimeXStart, singleDietDetailYLevel + 40
+     ,{
+       width:startDateXStart-dietDetailsTimeXStart,
+       continued:true
+       }
+     )
+     .font(MEDIUM_FONT)
+     .text(`${not_to_do ? not_to_do : '--'}`, dietDetailsTimeXStart+10 , singleDietDetailYLevel + 40
+     ,{
+       width:startDateXStart-dietDetailsTimeXStart
+       }
+     )
+
+     generateHr(doc, singleDietDetailYLevel+60);
+
+
+     singleDietDetailYLevel=doc.y;
+
+     dietCount++;
+
+     if(doc.y + (3 * SHORT_FONT_SIZE) > PAGE_END_LIMIT) {
+      doc.addPage();
+      singleDietDetailYLevel = DOC_MARGIN;
+    }
+
+    }
+
+    return doc.y + 10;
+
+
+}
+
+function printWorkout (
+  doc,
+  dietYLevel,
+  repetitions,
+  workouts_formatted_data,
+  workout_ids
+){
+
+
+  const serialNoXStart = DOC_MARGIN;
+  const workoutNameXStart = DOC_MARGIN + 40;
+  const workoutTimeXStart = DOC_MARGIN + 160;
+  const workoutDetailsDataXStart = DOC_MARGIN + 230;
+  const startDateXStart = DOC_MARGIN + 380;
+  const endDateXStart = DOC_MARGIN + 450;
+
+
+  doc
+  .font(BOLD_FONT)
+  .fontSize(BOLD_FONT_SIZE)
+  .text("WORKOUT", DOC_MARGIN, dietYLevel);
+
+
+    const workoutsHeaderEnds = doc.y;
+
+
+      doc
+    .fillColor("#4a90e2")
+    .fontSize(NORMAL_FONT_SIZE)
+    .font(BOLD_FONT)
+    .text("S.No.", serialNoXStart, workoutsHeaderEnds + 20)
+    .font(BOLD_FONT)
+    .text("Workout Name", workoutNameXStart, workoutsHeaderEnds + 20)
+    .font(BOLD_FONT)
+    .text("Time", workoutTimeXStart, workoutsHeaderEnds + 20)
+    .font(BOLD_FONT)
+    .text("Details", workoutDetailsDataXStart, workoutsHeaderEnds + 20)
+    .font(BOLD_FONT)
+    .text("Start Date",startDateXStart, workoutsHeaderEnds + 20)
+    .font(BOLD_FONT)
+    .text("End Date",endDateXStart, workoutsHeaderEnds + 20)
+    
+
+    let workoutCount=1;
+    let singleWorkoutDetailYLevel=doc.y;
+
+    for(let each in workouts_formatted_data){
+
+      if(doc.y + (3 * SHORT_FONT_SIZE) > PAGE_END_LIMIT) {
+        doc.addPage();
+        singleWorkoutDetailYLevel = DOC_MARGIN;
+      }
+
+    
+      const { 
+        workouts={},
+        exercises={},
+        exercise_details={},
+        workout_exercise_groups={}
+     } = workouts_formatted_data[each];
+
+     const { basic_info : { name:workout_name } ={} , details : {
+      not_to_do = '',repeat_days = []
+     } = {},
+     time : workoutTime = '',start_date=null,end_date=null }=workouts[Object.keys(workouts)[0]] || {};
+
+     let basicDetailsYLevel=singleWorkoutDetailYLevel + 20,formattedStartDate='--',formattedEndDate='--';
+     
+     if(start_date){
+      formattedStartDate = moment(start_date).format("MMM Do YY");
+     }
+     if(end_date){
+      formattedEndDate = moment(end_date).format("MMM Do YY");
+     }
+
+     const formattedTime = getConvertedTime({time:workoutTime}).format("hh:mm A");
+     doc
+     .fillColor("#212b36")
+     .fontSize(SHORT_FONT_SIZE)
+     .font(MEDIUM_FONT)
+     .text(`${workoutCount}.`, serialNoXStart, basicDetailsYLevel)
+     .text(`${workout_name}`, workoutNameXStart, basicDetailsYLevel,{
+      width:workoutTimeXStart-workoutNameXStart
+      })
+     .text(`${formattedTime}`, workoutTimeXStart, basicDetailsYLevel,{
+       width:workoutDetailsDataXStart-workoutTimeXStart,
+      })
+     .text(`${formattedStartDate}`, startDateXStart, basicDetailsYLevel, {
+      width:endDateXStart-startDateXStart,
+      })
+    .text(`${formattedEndDate}`, endDateXStart, basicDetailsYLevel)
+
+
+
+     for(let each in workout_exercise_groups){
+
+       const exerciseGroupArrayForEach = workout_exercise_groups[each] || [];
+
+        const {
+          exercise_detail_id=null,
+          notes='',
+          sets=null
+        } = exerciseGroupArrayForEach || {};
+
+        const { basic_info:{ exercise_id = null,repetition_value = null ,repetition_id=null}={}}=exercise_details[exercise_detail_id] || {};
+        const { basic_info : { name : exercise_name = '' } = {} } = exercises[exercise_id] || {};
+        const {  type :repetition_type = '' } = repetitions[repetition_id] || {};
+
+        let singleData=`${sets}${" "}set${" "}x${" "}${repetition_value}${" "}${repetition_type}${" "}${exercise_name}`;
+ 
+        if(doc.y + (3 * MEDIUM_FONT) > PAGE_END_LIMIT) {
+          doc.addPage();
+          singleWorkoutDetailYLevel = DOC_MARGIN;
+        }
+
+         doc
+        .fillColor("#212b36")
+        .font(MEDIUM_FONT)
+        .text(`${singleData}`,workoutDetailsDataXStart, singleWorkoutDetailYLevel + 20
+        ,{
+          width:startDateXStart-workoutDetailsDataXStart,
+          }
+        )
+
+      
+
+        if(doc.y + (3 * SHORT_FONT_SIZE) > PAGE_END_LIMIT) {
+          doc.addPage();
+          singleWorkoutDetailYLevel = DOC_MARGIN;
+        }
+
+        singleWorkoutDetailYLevel=doc.y;
+
+
+     }
+
+
+     singleWorkoutDetailYLevel=doc.y;
+
+       
+     doc
+     .fillColor("#212b36")
+     .font(BOLD_FONT)
+     .text(`Repeat Days${" "}${"-"}`, workoutDetailsDataXStart , singleWorkoutDetailYLevel + 20
+     ,{
+       width:startDateXStart-workoutDetailsDataXStart,
+       continued:true
+       }
+     )
+     .font(MEDIUM_FONT)
+     .text(`${repeat_days}`, workoutDetailsDataXStart+10 , singleWorkoutDetailYLevel + 20
+     ,{
+       width:startDateXStart-workoutDetailsDataXStart
+       }
+     )
+     .font(BOLD_FONT)
+     .text(`What Not to Do${" "}${"-"}`, workoutDetailsDataXStart, singleWorkoutDetailYLevel + 40
+     ,{
+       width:startDateXStart-workoutDetailsDataXStart,
+       continued:true
+       }
+     )
+     .font(MEDIUM_FONT)
+     .text(`${not_to_do ? not_to_do : '--'}`, workoutDetailsDataXStart+10 , singleWorkoutDetailYLevel + 40
+     ,{
+       width:startDateXStart-workoutDetailsDataXStart
+       }
+     )
+
+     generateHr(doc, singleWorkoutDetailYLevel+60);
+
+
+     singleWorkoutDetailYLevel=doc.y;
+
+     workoutCount++;
+
+     if(doc.y + (3 * SHORT_FONT_SIZE) > PAGE_END_LIMIT) {
+      doc.addPage();
+      singleWorkoutDetailYLevel = DOC_MARGIN;
+    }
+
+    }
+
+    return doc.y + 10;
+
+
+}
+
 
 function printDoctorBlockData(
   doc,
@@ -374,7 +809,7 @@ function printPatientBlockData(
 }
 
 function printCarePlanData(
-  doc,
+ { doc,
   horizontalLineLevel,
   care_plans,
   conditions,
@@ -382,7 +817,13 @@ function printCarePlanData(
   medicines,
   allergies,
   comorbidities,
-  suggestedInvestigations
+  suggestedInvestigations,
+  portions,
+  repetitions,
+  diets_formatted_data,
+  diet_ids,
+  workouts_formatted_data,
+  workout_ids}
 ) {
   const { diagnosis, condition, symptoms, clinicalNotes } = formatCarePlanData(
     care_plans,
@@ -603,7 +1044,7 @@ function printCarePlanData(
         medicationYLevelEnd > doc.y ? medicationYLevelEnd : doc.y;
       generateHr(doc, horizontalLineY + 5);
 
-      medicationYLevel = medicationYLevelEnd + NORMAL_FONT_SIZE;
+      medicationYLevel = medicationYLevelEnd + NORMAL_FONT_SIZE + 12;
 
       // checkAndAddNewPage(doc);
     }
@@ -611,7 +1052,48 @@ function printCarePlanData(
 
   // checkAndAddNewPage(doc);
 
-  let docYLevel = medicationYLevel;
+
+  if(!medicationsList.length>0 ){
+    medicationYLevel = generalExaminationEndLevel + NORMAL_FONT_SIZE + 12;
+  }
+
+  const dietBlockLevelEnd = 
+  Object.keys(diets_formatted_data).length
+    ?
+  printDiet(
+    doc,
+    medicationYLevel,
+    portions,
+    diets_formatted_data,
+    diet_ids
+  ) : 
+  null;
+
+  const dietYLevel = 
+  dietBlockLevelEnd 
+  ? dietBlockLevelEnd + NORMAL_FONT_SIZE + 12 
+  : 
+  medicationYLevel ;
+
+  const workoutBlockLevelEnd = 
+  Object.keys(workouts_formatted_data).length
+  ?
+    printWorkout(
+      doc,
+      dietYLevel,
+      repetitions,
+      workouts_formatted_data,
+      workout_ids
+    ) :
+  null;
+  
+
+  let docYLevel = workoutBlockLevelEnd 
+  ? workoutBlockLevelEnd 
+  : dietBlockLevelEnd ? dietBlockLevelEnd
+  : medicationYLevel ;
+
+
 
   doc
     .font(BOLD_FONT)

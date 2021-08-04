@@ -1,7 +1,10 @@
 import AgoraJob from "../index";
+
+import UserRoleService from "../../../services/userRoles/userRoles.service";
+import ProviderService from "../../../services/provider/provider.service";
 import UserDeviceService from "../../../services/userDevices/userDevice.service";
 import UserDeviceWrapper from "../../../ApiWrapper/mobile/userDevice";
-import {AGORA_CALL_NOTIFICATION_TYPES, USER_CATEGORY} from "../../../../constant";
+import {AGORA_CALL_NOTIFICATION_TYPES, USER_CATEGORY, DEFAULT_PROVIDER} from "../../../../constant";
 
 import moment from "moment";
 
@@ -17,6 +20,7 @@ class StartJob extends AgoraJob {
             roomId,
             actor: {
                 id: actorId,
+                user_role_id,
                 details: {name:full_name, category}
             }
         } = getAgoraData() || {};
@@ -27,11 +31,32 @@ class StartJob extends AgoraJob {
         const playerIds = [];
         const userIds = [];
 
-        participants.forEach(participant => {
-            if (participant !== `${actorId}`) {
-                userIds.push(participant);
+        const {rows: userRoles = []} = await UserRoleService.findAndCountAll({
+        where: {
+            id: participants
+        }
+        }) || {};
+
+        let providerId = null;
+        for(const userRole of userRoles) {
+            const {id, user_identity, linked_id} = userRole || {};
+            
+
+            if(id === user_role_id) {
+                if(linked_id) {
+                    providerId = linked_id;
+                }
+            } else {
+                userIds.push(user_identity);
             }
-        });
+        }
+
+        let providerName = DEFAULT_PROVIDER;
+        if(providerId) {
+            const provider = await ProviderService.getProviderByData({id: providerId});
+            const {name} = provider || {};
+            providerName = name;
+        }
 
         const userDevices = await UserDeviceService.getAllDeviceByData({
             user_id: userIds
@@ -51,7 +76,7 @@ class StartJob extends AgoraJob {
             app_id: process.config.one_signal.app_id,
             // content_available: true,
             include_player_ids: [...playerIds],
-            headings: { en: `Call on Adhere` },
+            headings: { en: `Call on Adhere (${providerName})` },
             contents: {
                 en: `${category === USER_CATEGORY.DOCTOR ? "Dr. " : ""}${full_name} is calling you!`
             },
@@ -64,42 +89,44 @@ class StartJob extends AgoraJob {
     };
 
     getInAppTemplate = () => {
-        
-    }
-    // getInAppTemplate = () => {
-    //     const { getAgoraData } = this;
-    //     const {
-    //       actor: {
-    //         id: actorId,
-    //         details: { name, category: actorCategory } = {}
-    //       } = {},
-    //       event_type,
-    //       roomId
-    //     } = getAgoraData() || {};
 
-    //     const participants = roomId.split(`-${process.config.twilio.CHANNEL_SERVER}-`);
+        const { getAgoraData } = this;
+        const {
+          actor: {
+            id: actorId,
+            user_role_id,
+            details: { name, category: actorCategory } = {}
+          } = {},
+          event_id,
+          event_type,
+          roomId
+        } = getAgoraData() || {};
+
+
+        const participants = roomId.split(`-${process.config.twilio.CHANNEL_SERVER}-`);
     
-    //     const templateData = [];
+        const templateData = [];
 
-    //     const currentTime = new moment().utc().toISOString();
-    //     const now = moment();
-    //     const currentTimeStamp = now.unix();
+        const currentTime = new moment().utc().toISOString();
+        const now = moment();
+        const currentTimeStamp = now.unix();
 
-    //     for (const participant of participants) {
-    //       if (participant !== `${actorId}`) {
-    //         templateData.push({
-    //             actor: actorId,
-    //             object: `${participant}`,
-    //             foreign_id: `${roomId}`,
-    //             verb: `start_call:${currentTimeStamp}`,
-    //             event: event_type,
-    //             time: `${currentTime}`,
-    //             create_time: `${currentTime}`
-    //         });
-    //       }
-    //     }
-    //     return templateData;
-    //   };
+        for (const participant of participants) {
+          if (participant !== `${user_role_id}`) {
+            templateData.push({
+                actor: actorId,
+                actorRoleId: user_role_id,
+                object: `${participant}`,
+                foreign_id: `${roomId}`,
+                verb: `start_call:${currentTimeStamp}`,
+                event: event_type,
+                time: `${currentTime}`,
+                create_time: `${currentTime}`
+            });
+          }
+        }
+        return templateData;
+    };
 
 }
 

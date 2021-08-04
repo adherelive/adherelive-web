@@ -49,12 +49,14 @@ class MedicationTable extends Component {
             medicines,
             isOtherCarePlan,
             intl: {formatMessage} = {},
+            care_plans
         } = this.props;
 
-        const {medication_ids} = this.state;
+        const {medication_ids = [] } =care_plans || {};
+
+        // const {medication_ids} = this.state;
 
         const {openResponseDrawer, openEditDrawer} = this;
-
 
         return medication_ids.map((id) => {
             return generateRow({
@@ -70,24 +72,29 @@ class MedicationTable extends Component {
     };
 
     openResponseDrawer = (id) => (e) => {
+
         e.preventDefault();
-        // console.log("INSIDE OPEN RESPONSE DRAWER ------------------>",this.props);
-        const {medicationResponseDrawer} = this.props;
-        medicationResponseDrawer({id, loading: true});
+        const {medicationResponseDrawer, isOtherCarePlan,  auth_role =null ,care_plans = {}  } = this.props;
+        const {basic_info : { user_role_id = null } = {} } = care_plans || {};
+        if(!isOtherCarePlan && user_role_id.toString() === auth_role.toString()) {
+            medicationResponseDrawer({id, loading: true});
+        } 
+      
     };
 
     openEditDrawer = (id) => (e) => {
         e.preventDefault();
-        const {editMedicationDrawer, isOtherCarePlan, patientId} = this.props;
-        console.log("1237182 patientId --> ", {patientId});
-        if(!isOtherCarePlan) {
+        const {editMedicationDrawer, isOtherCarePlan, patientId , auth_role =null ,care_plans = {}} = this.props;
+        const {basic_info : { user_role_id = null } = {} } = care_plans || {};
+        if(!isOtherCarePlan && user_role_id.toString() === auth_role.toString()) {
             editMedicationDrawer({id, patient_id: patientId, loading: true});
-        }   //TODOj
+        }   
     };
 
     formatMessage = data => this.props.intl.formatMessage(data);
 
     render() {
+        console.log("238423749823794729847293",{props:this.props});
         const locale = {
             emptyText: this.formatMessage(messages.emptyMedicationTable)
           };

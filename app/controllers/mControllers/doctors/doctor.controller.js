@@ -16,6 +16,7 @@ import doctorRegistrationService from "../../../services/doctorRegistration/doct
 import uploadDocumentService from "../../../services/uploadDocuments/uploadDocuments.service";
 import featuresService from "../../../services/features/features.service";
 import doctorPatientFeatureMappingService from "../../../services/doctorPatientFeatureMapping/doctorPatientFeatureMapping.service";
+import userRolesService from "../../../services/userRoles/userRoles.service";
 
 // m-api wrappers
 import PatientWrapper from "../../../ApiWrapper/mobile/patient";
@@ -28,6 +29,7 @@ import QualificationWrapper from "../../../ApiWrapper/mobile/doctorQualification
 import RegistrationWrapper from "../../../ApiWrapper/mobile/doctorRegistration";
 import UploadDocumentWrapper from "../../../ApiWrapper/mobile/uploadDocument";
 import FeatureMappingWrapper from "../../../ApiWrapper/mobile/doctorPatientFeatureMapping";
+import UserRoleWrapper from "../../../ApiWrapper/mobile/userRoles";
 
 import Log from "../../../../libs/log";
 import {
@@ -61,6 +63,9 @@ import collegeService from "../../../services/college/college.service";
 import CollegeWrapper from "../../../ApiWrapper/mobile/college";
 import councilService from "../../../services/council/council.service";
 import CouncilWrapper from "../../../ApiWrapper/mobile/council";
+import DoctorPatientWatchlistWrapper from "../../../ApiWrapper/mobile/doctorPatientWatchlist";
+
+
 import templateMedicationService from "../../../services/templateMedication/templateMedication.service";
 import TemplateMedicationWrapper from "../../../ApiWrapper/mobile/templateMedication";
 import templateAppointmentService from "../../../services/templateAppointment/templateAppointment.service";
@@ -74,6 +79,14 @@ import { getSeparateName } from "../../../helper/common";
 import { EVENTS, Proxy_Sdk } from "../../../proxySdk";
 import UserPreferenceService from "../../../services/userPreferences/userPreference.service";
 import doctorsService from "../../../services/doctors/doctors.service";
+import doctorPatientWatchlistService from "../../../services/doctorPatientWatchlist/doctorPatientWatchlist.service";
+
+
+import specialityService from "../../../services/speciality/speciality.service";
+import SpecialityWrapper from "../../../ApiWrapper/mobile/speciality";
+// import DegreeWrapper from "../../../ApiWrapper/mobile/degree";
+// import degreeService from "../../../services/degree/degree.service";
+
 
 import specialityService from "../../../services/speciality/speciality.service";
 import SpecialityWrapper from "../../../ApiWrapper/mobile/speciality";
@@ -213,7 +226,7 @@ class MobileDoctorController extends Controller {
         symptoms = "",
         address = ""
       } = req.body;
-      const { userDetails: { userId, userData: { category } = {} } = {} } = req;
+      const { userDetails: { userRoleId = null ,  userId, userData: { category } = {} } = {} } = req;
 
       const userExists = await userService.getPatientByMobile(mobile_number);
 
@@ -323,11 +336,18 @@ class MobileDoctorController extends Controller {
           address
         });
 
+        const patientWrapper = await PatientWrapper(patient);
+        const patientUserId = await patientWrapper.getUserId();
+        const userRole = await userRolesService.create({user_identity:patientUserId});
+        const userRoleWrapper = await UserRoleWrapper(userRole);
+        const newUserRoleId = await userRoleWrapper.getId();
+
         await UserPreferenceService.addUserPreference({
           user_id: newUserId,
           details: {
             timings: PATIENT_MEAL_TIMINGS
-          }
+          },
+          user_role_id:newUserRoleId
         });
 
         const uid = getReferenceId(patient.get("id"));
@@ -380,6 +400,7 @@ class MobileDoctorController extends Controller {
         doctor_id: doctor.get("id"),
         care_plan_template_id,
         details,
+        user_role_id:userRoleId,
         created_at: moment()
       });
 
@@ -1962,7 +1983,7 @@ class MobileDoctorController extends Controller {
     const { raiseSuccess, raiseClientError, raiseServerError } = this;
     try {
       const { patient_id = 0 } = req.params;
-      const { userDetails: { userId } = {} } = req;
+      const { userDetails: { userId, userRoleId } = {} } = req;
 
       const patient = await PatientWrapper(null, patient_id);
       const doctor = await doctorsService.getDoctorByUserId(parseInt(userId));
@@ -1971,7 +1992,8 @@ class MobileDoctorController extends Controller {
         const newWatchlistRecord = await doctorService.createNewWatchlistRecord(
           {
             patient_id: parseInt(patient_id),
-            doctor_id: doctor.get("id")
+            doctor_id: doctor.get("id"),
+            user_role_id: userRoleId
           }
         );
 
@@ -2007,7 +2029,7 @@ class MobileDoctorController extends Controller {
     const { raiseSuccess, raiseClientError, raiseServerError } = this;
     try {
       const { patient_id = 0 } = req.params;
-      const { userDetails: { userId } = {} } = req;
+      const { userDetails: { userId, userRoleId } = {} } = req;
 
       const patient = await PatientWrapper(null, patient_id);
       const doctor = await doctorsService.getDoctorByUserId(parseInt(userId));
@@ -2015,7 +2037,8 @@ class MobileDoctorController extends Controller {
         const deletedWatchlistRecord = await doctorService.deleteWatchlistRecord(
           {
             patient_id: parseInt(patient_id),
-            doctor_id: doctor.get("id")
+            doctor_id: doctor.get("id"),
+            user_role_id: userRoleId
           }
         );
 
@@ -2315,7 +2338,7 @@ class MobileDoctorController extends Controller {
     const { raiseSuccess, raiseClientError, raiseServerError } = this;
     try { 
       const {
-        userDetails: { userId } = {},
+        userDetails: { userId , userRoleId = null  } = {},
         query = {}
       } = req;
 
@@ -2326,8 +2349,11 @@ class MobileDoctorController extends Controller {
       const offsetLimit = parseInt(limit, 10) * parseInt(offset, 10);
       const endLimit = parseInt(limit, 10);
 
+      const userRoleWrapper = await UserRoleWrapper(null,userRoleId);
+      const userIdentity = await userRoleWrapper.getUserId();
+
       const doctor = await doctorService.getDoctorByData({
-        user_id: userId
+        user_id: userIdentity
       });
 
       const getWatchListPatients = parseInt(watchlist, 10) === 0? 0: 1;
@@ -2341,14 +2367,20 @@ class MobileDoctorController extends Controller {
 
         
         const doctorAllInfo = await doctorData.getAllInfo();
-        const { watchlist_patient_ids = []} = doctorAllInfo || {};
-        watchlistPatientIds = watchlist_patient_ids;
+        const watchlistRecords = await doctorPatientWatchlistService.getAllByData({user_role_id:userRoleId});
+        if(watchlistRecords && watchlistRecords.length){
+          for(let i = 0 ; i<watchlistRecords.length ; i++){
+            const watchlistWrapper = await DoctorPatientWatchlistWrapper(watchlistRecords[i]);
+            const patientId = await watchlistWrapper.getPatientId();
+            watchlistPatientIds.push(patientId);
+          }
+        }
       }
 
       if(getWatchListPatients) {
-        count = await carePlanService.getWatchlistedDistinctPatientCounts(doctorId, watchlistPatientIds);
+        count = await carePlanService.getWatchlistedDistinctPatientCounts( watchlistPatientIds,userRoleId);
       } else {
-        count = await carePlanService.getDistinctPatientCounts(doctorId);
+        count = await carePlanService.getDistinctPatientCounts(userRoleId);
       }
 
       if(count > 0) {
@@ -2356,6 +2388,7 @@ class MobileDoctorController extends Controller {
           offset: offsetLimit,
           limit: endLimit,
           doctorId,
+          userRoleId,
           watchlistPatientIds,
           watchlist: getWatchListPatients,
           sortByName,

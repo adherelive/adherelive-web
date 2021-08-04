@@ -1,5 +1,3 @@
-import {completePath, getFilePath} from "../../helper/filePath";
-
 const { OAuth2Client } = require("google-auth-library");
 const moment = require("moment");
 const jwt = require("jsonwebtoken");
@@ -12,7 +10,6 @@ import Log from "../../../libs/log";
 // import fs from "fs";
 const Response = require("../helper/responseFormat");
 import userService from "../../services/user/user.service";
-// import doctorService from "../../services/doctor/doctor.service";
 import patientService from "../../services/patients/patients.service";
 import carePlanService from "../../services/carePlan/carePlan.service";
 import treatmentService from "../../services/treatment/treatment.service";
@@ -20,31 +17,27 @@ import severityService from "../../services/severity/severity.service";
 import conditionService from "../../services/condition/condition.service";
 import providerService from "../../services/provider/provider.service";
 import doctorProviderMappingService from "../../services/doctorProviderMapping/doctorProviderMapping.service";
+import userRolesService from '../../services/userRoles/userRoles.service';
+import doctorPatientWatchlistService from "../../services/doctorPatientWatchlist/doctorPatientWatchlist.service";
+
 
 import UserWrapper from "../../ApiWrapper/web/user";
 import DoctorWrapper from "../../ApiWrapper/web/doctor";
 import PatientWrapper from "../../ApiWrapper/web/patient";
 import CarePlanWrapper from "../../ApiWrapper/web/carePlan";
-import DoctorRegistrationWrapper from "../../ApiWrapper/web/doctorRegistration";
 import TreatmentWrapper from "../../ApiWrapper/web/treatments";
 import SeverityWrapper from "../../ApiWrapper/web/severity";
 import ConditionWrapper from "../../ApiWrapper/web/conditions";
 import ProvidersWrapper from "../../ApiWrapper/web/provider";
 import DoctorProviderMappingWrapper from "../../ApiWrapper/web/doctorProviderMapping";
+import UserRolesWrapper from "../../ApiWrapper/web/userRoles";
+import DoctorPatientWatchlistWrapper from "../../ApiWrapper/web/doctorPatientWatchlist";
+
 
 import doctorService from "../../services/doctors/doctors.service";
-// import patientService from "../../services/patients/patients.service";
-import qualificationService from "../../services/doctorQualifications/doctorQualification.service";
-import clinicService from "../../services/doctorClinics/doctorClinics.service";
-import documentService from "../../services/uploadDocuments/uploadDocuments.service";
-import registrationService from "../../services/doctorRegistration/doctorRegistration.service";
-import carePlanTemplateService from "../../services/carePlanTemplate/carePlanTemplate.service";
-// import userPreferenceService from "../../services/userPreferences/userPreference.service";
-// import userWrapper from "../../ApiWrapper/web/user";
 import UserVerificationServices from "../../services/userVerifications/userVerifications.services";
 import Controller from "../index";
 import {
-  doctorQualificationData,
   uploadImageS3,
   createNewUser
 } from "./userHelper";
@@ -53,17 +46,11 @@ import constants from "../../../config/constants";
 import {
   EMAIL_TEMPLATE_NAME,
   USER_CATEGORY,
-  DOCUMENT_PARENT_TYPE,
-  ONBOARDING_STATUS,
   VERIFICATION_TYPE
 } from "../../../constant";
 import { Proxy_Sdk, EVENTS } from "../../proxySdk";
 // import  EVENTS from "../../proxySdk/proxyEvents";
 const errMessage = require("../../../config/messages.json").errMessages;
-import UploadDocumentWrapper from "../../ApiWrapper/web/uploadDocument";
-import uploadDocumentService from "../../services/uploadDocuments/uploadDocuments.service";
-import careplanMedicationService from "../../services/carePlanMedication/carePlanMedication.service";
-import atob from "atob";
 import { getCarePlanSeverityDetails } from "../carePlans/carePlanHelper";
 import LinkVerificationWrapper from "../../ApiWrapper/mobile/userVerification";
 
@@ -87,7 +74,7 @@ class UserController extends Controller {
         return this.raiseClientError(res, 422, {}, "Please read our Terms of Service before signing up");
       }
 
-      const newUser = await createNewUser(email, password);
+      const newUser = await createNewUser(email, password, null);
 
       return raiseSuccess(
           res,
@@ -96,17 +83,19 @@ class UserController extends Controller {
           "Signed up successfully. Please check your email to proceed"
       );
     } catch (err) {
-      console.log("signup err,", err);
+      Logger.debug("signup 500", err);
       if (err.code && err.code == 11000) {
-        let response = new Response(false, 400);
-        response.setError(errMessage.EMAIL_ALREADY_EXISTS);
-        // response.setMessage(errMessage.EMAIL_ALREADY_EXISTS);
-        return res.status(400).json(response.getResponse());
+        return raiseClientError(res, 400, errMessage.EMAIL_ALREADY_EXISTS);
+        // let response = new Response(false, 400);
+        // response.setError(errMessage.EMAIL_ALREADY_EXISTS);
+        // // response.setMessage(errMessage.EMAIL_ALREADY_EXISTS);
+        // return res.status(400).json(response.getResponse());
       } else {
-        let response = new Response(false, 500);
-        response.setError(errMessage.INTERNAL_SERVER_ERROR);
-        // response.setMessage(errMessage.INTERNAL_SERVER_ERROR);
-        return res.status(500).json(response.getResponse());
+        return raiseServerError(res);
+        // let response = new Response(false, 500);
+        // response.setError(errMessage.INTERNAL_SERVER_ERROR);
+        // // response.setMessage(errMessage.INTERNAL_SERVER_ERROR);
+        // return res.status(500).json(response.getResponse());
       }
     }
   }
@@ -203,12 +192,17 @@ class UserController extends Controller {
         email
       });
 
-      Logger.debug("983675754629384652479238094862387",{user});
-
-      
       if (!user) {
         return this.raiseClientError(res, 422, user, "Email doesn't exists");
       }
+
+      const userRole = await userRolesService.getFirstUserRole(user.get("id"));
+      if(!userRole) {
+        return this.raiseClientError(res, 422, {}, "User doesn't exists");
+      }
+
+      const userRoleWrapper = await UserRolesWrapper(userRole);
+      const userRoleId = userRoleWrapper.getId();
 
       // let verified = user.get("verified");
       //
@@ -260,7 +254,7 @@ class UserController extends Controller {
         const secret = process.config.TOKEN_SECRET_KEY;
         const accessToken = await jwt.sign(
           {
-            userId: user.get("id")
+            userRoleId
           },
           secret,
           {
@@ -271,9 +265,9 @@ class UserController extends Controller {
         const appNotification = new AppNotification();
 
         const notificationToken = appNotification.getUserToken(
-          `${user.get("id")}`
+          `${userRoleId}`
         );
-        const feedId = base64.encode(`${user.get("id")}`);
+        const feedId = base64.encode(`${userRoleId}`);
 
         // Logger.debug("notificationToken --> ", notificationToken);
         // Logger.debug("feedId --> ", feedId);
@@ -288,7 +282,6 @@ class UserController extends Controller {
 
         if (apiUserDetails.isActivated()) {
           permissions = await apiUserDetails.getPermissions();
-          Logger.debug("675546767890876678", apiUserDetails.getBasicInfo());
         }
 
         const dataToSend = {
@@ -298,8 +291,9 @@ class UserController extends Controller {
           // ...permissions,
           ...(await apiUserDetails.getReferenceData()),
           auth_user: apiUserDetails.getId(),
+          auth_user_role: userRoleId,
           notificationToken: notificationToken,
-          feedId: `${user.get("id")}`,
+          feedId,
           auth_category: apiUserDetails.getCategory(),
           hasConsent: apiUserDetails.getConsent(),
         };
@@ -348,7 +342,7 @@ class UserController extends Controller {
   giveConsent = async (req,res) => {
     const {raiseClientError} = this;
     try{
-      const {userDetails: {userId} = {}, body: {agreeConsent} = {}} = req;
+      const {userDetails: {userId, userRoleId} = {}, body: {agreeConsent} = {}} = req;
 
       Logger.info(`1897389172 agreeConsent :: ${agreeConsent} | userId : ${userId}`);
 
@@ -370,7 +364,7 @@ class UserController extends Controller {
       const secret = process.config.TOKEN_SECRET_KEY;
       const accessToken = await jwt.sign(
           {
-            userId
+            userRoleId
           },
           secret,
           {
@@ -381,9 +375,9 @@ class UserController extends Controller {
       const appNotification = new AppNotification();
 
       const notificationToken = appNotification.getUserToken(
-          `${userId}`
+          `${userRoleId}`
       );
-      // const feedId = base64.encode(`${userId}`);
+      const feedId = base64.encode(`${userRoleId}`);
 
       const userRef = await userService.getUserData({ id: userId });
 
@@ -400,8 +394,9 @@ class UserController extends Controller {
       const dataToSend = {
         ...(await apiUserDetails.getReferenceInfo()),
         auth_user: apiUserDetails.getId(),
+        auth_user_role: userRoleId,
         notificationToken: notificationToken,
-        feedId: `${userId}`,
+        feedId,
         hasConsent: apiUserDetails.getConsent(),
         auth_category: apiUserDetails.getCategory()
       };
@@ -549,6 +544,7 @@ class UserController extends Controller {
       if (req.userDetails.exists) {
         const {
           userId,
+          userRoleId,
           userData,
           userData: { category } = {},
           userCategoryData: uC = {}
@@ -587,20 +583,32 @@ class UserController extends Controller {
             if (userCategoryData) {
               userCategoryApiWrapper = await DoctorWrapper(userCategoryData);
 
+              let watchlist_patient_ids = [];
+              const watchlistRecords = await doctorPatientWatchlistService.getAllByData({user_role_id:userRoleId});
+              if(watchlistRecords && watchlistRecords.length){
+                for(let i = 0 ; i<watchlistRecords.length ; i++){
+                  const watchlistWrapper = await DoctorPatientWatchlistWrapper(watchlistRecords[i]);
+                  const patientId = await watchlistWrapper.getPatientId();
+                  watchlist_patient_ids.push(patientId);
+                }
+              }
+
+              let allInfo = {};
+              allInfo = await userCategoryApiWrapper.getAllInfo();
+              delete allInfo.watchlist_patient_ids;
+              allInfo['watchlist_patient_ids']=watchlist_patient_ids;
+
               userCategoryId = userCategoryApiWrapper.getDoctorId();
               userCaregoryApiData[
                 userCategoryApiWrapper.getDoctorId()
-              ] = await userCategoryApiWrapper.getAllInfo();
+              ] = allInfo;
 
-              const doctorProvider = await doctorProviderMappingService.getProviderForDoctor(
-                userCategoryId
-              );
 
-              if (doctorProvider) {
-                const doctorProviderWrapper = await DoctorProviderMappingWrapper(
-                  doctorProvider
-                );
-                const providerId = doctorProviderWrapper.getProviderId();
+              const record = await userRolesService.getSingleUserRoleByData({id:userRoleId});
+              const {linked_with = '',linked_id = null } = record || {};
+              if (linked_with === USER_CATEGORY.PROVIDER ) {
+                
+                const providerId = linked_id;
                 doctorProviderId=providerId;
                 const providerWrapper = await ProvidersWrapper(
                   null,
@@ -612,8 +620,10 @@ class UserController extends Controller {
               }
 
               careplanData = await carePlanService.getCarePlanByData({
-                doctor_id: userCategoryId
+                user_role_id:userRoleId
               });
+
+              console.log("3284688234682348723648723",{careplanData,L:careplanData.length});
 
               for (const carePlan of careplanData) {
                 const carePlanApiWrapper = await CarePlanWrapper(carePlan);
@@ -623,7 +633,8 @@ class UserController extends Controller {
                 const {
                   appointment_ids = [],
                   medication_ids = [],
-                  vital_ids = []
+                  vital_ids = [],
+                  diet_ids = []
                 } = await carePlanApiWrapper.getAllInfo();
 
                 let carePlanSeverityDetails = await getCarePlanSeverityDetails(
@@ -644,7 +655,8 @@ class UserController extends Controller {
                     ...carePlanSeverityDetails,
                     medication_ids,
                     appointment_ids,
-                    vital_ids
+                    vital_ids,
+                    diet_ids
                   };
               }
             }
@@ -765,7 +777,7 @@ class UserController extends Controller {
 
         const appNotification = new AppNotification();
 
-        const notificationToken = appNotification.getUserToken(`${userId}`);
+        const notificationToken = appNotification.getUserToken(`${userRoleId}`);
         const feedId = base64.encode(`${userId}`);
 
         // firebase keys
@@ -791,7 +803,7 @@ class UserController extends Controller {
             ...carePlanApiData
           },
           notificationToken: notificationToken,
-          feedId: `${userId}`,
+          feedId: `${userRoleId}`,
           firebase_keys,
           severity: {
             ...severityApiDetails
@@ -808,6 +820,7 @@ class UserController extends Controller {
           condition_ids: conditionIds,
           auth_user: userId,
           auth_category: category,
+          auth_role: userRoleId,
           [category === USER_CATEGORY.DOCTOR  ? "doctor_provider_id" : ""]:
             category === USER_CATEGORY.DOCTOR
             ? doctorProviderId
@@ -850,11 +863,14 @@ class UserController extends Controller {
   uploadImage = async (req, res) => {
     const { userDetails, body } = req;
     const { userId = "3" } = userDetails || {};
-    console.log("BODYYYYYYYYYYYYYYYY", req.file);
     const file = req.file;
+
+    const {type} = body || {};
+
+    Logger.debug("file", file);
     // const fileExt= file.originalname.replace(/\s+/g, '');
     try {
-      let files = await uploadImageS3(userId, file);
+      let files = await uploadImageS3(userId, file, type);
       return this.raiseSuccess(
         res,
         200,

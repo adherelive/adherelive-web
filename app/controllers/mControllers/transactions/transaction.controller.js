@@ -7,6 +7,7 @@ import TransactionService from "../../../services/transactions/transaction.servi
 import SubscriptionService from "../../../services/subscriptions/subscription.service";
 import accountDetailService from "../../../services/accountDetails/accountDetails.service";
 import doctorProviderMappingService from "../../../services/doctorProviderMapping/doctorProviderMapping.service";
+import userRolesService from "../../../services/userRoles/userRoles.service";
 
 // WRAPPERS ...
 import PaymentProductWrapper from "../../../ApiWrapper/mobile/paymentProducts";
@@ -41,9 +42,8 @@ class TransactionController extends Controller {
       const {
         body: { payment_product_id, currency, isUpi = false },
         userDetails: {
-          userId,
-          userData: { category } = {},
-          userCategoryId
+          userRoleId,
+          userData: { category } = {}
         } = {}
       } = req;
 
@@ -53,35 +53,18 @@ class TransactionController extends Controller {
 
       const transactionService = new TransactionService();
 
-      let requestorId = paymentProduct.getCreatorId();
+      let requestorId = paymentProduct.getCreatorRoleId();
       let requestorType = paymentProduct.getCreatorType();
-
-      // todo-v: change for provider | in order to create order for razorpay
-      if (paymentProduct.getForUserType() === USER_CATEGORY.DOCTOR) {
-        // check for provider added doctor
-
-        const doctorProvider = await doctorProviderMappingService.getProviderForDoctor(
-          paymentProduct.getCreatorId()
-        );
-
-        if (doctorProvider) {
-          const doctorProviderWrapper = await DoctorProviderMappingWrapper(
-            doctorProvider
-          );
-          requestorId = doctorProviderWrapper.getProviderId();
-          requestorType = USER_CATEGORY.PROVIDER;
-        }
-      }
 
       if (isUpi) {
         const generateTransaction = await transactionService.createTransaction({
           payment_product_id,
-          transaction_id: generateTransactionId(userId),
+          transaction_id: generateTransactionId(userRoleId),
           mode: UPI,
           amount: paymentProduct.getAmount(),
           requestor_id: requestorId,
           requestor_type: requestorType,
-          payee_id: userCategoryId,
+          payee_id: userRoleId,
           payee_type: category
           // transaction_response: {
           //     order_id
@@ -93,11 +76,14 @@ class TransactionController extends Controller {
         });
 
         const requestor_id = transactions.getRequestorId();
+        const requestorRole = await userRolesService.findOne({
+          where: {id: requestor_id},
+          attributes: ["user_identity"]
+        }) || null;
 
-        const doctor = await DoctorWrapper(null, requestor_id);
-
+        const { user_identity = null} = requestorRole || {};
         const accountDetails = await accountDetailService.getCurrentAccountByUserId(
-          doctor.getUserId()
+          user_identity
         );
         const accountDetialsWrapper = await AccountDetailsWrapper(
           accountDetails
@@ -135,12 +121,12 @@ class TransactionController extends Controller {
           const generateTransaction = await transactionService.createTransaction(
             {
               payment_product_id,
-              transaction_id: generateTransactionId(userId),
+              transaction_id: generateTransactionId(userRoleId),
               mode: CHECKOUT,
               amount: paymentProduct.getAmount(),
               requestor_id: requestorId,
               requestor_type: requestorType,
-              payee_id: userCategoryId,
+              payee_id: userRoleId,
               payee_type: category,
               transaction_response: {
                 order_id: id
@@ -198,7 +184,8 @@ class TransactionController extends Controller {
         userDetails: {
           userId,
           userData: { category } = {},
-          userCategoryId
+          userCategoryId,
+          userRoleId
         } = {}
       } = req;
       const oldTransaction = await TransactionWrapper({ id });
@@ -274,7 +261,7 @@ class TransactionController extends Controller {
           // check if subscription already exists
           const subscriptionExists = await subscriptionService.getByData({
             payment_product_id,
-            subscriber_id: userCategoryId,
+            subscriber_id: userRoleId,
             subscriber_type: category
           });
 
@@ -305,7 +292,7 @@ class TransactionController extends Controller {
             const addSubscription = await subscriptionService.createSubscription(
               {
                 payment_product_id,
-                subscriber_id: userCategoryId,
+                subscriber_id: userRoleId,
                 subscriber_type: category,
                 activated_on: moment().toISOString(),
                 renew_on: moment()
@@ -331,23 +318,14 @@ class TransactionController extends Controller {
 
         switch (transaction.getRequestorType()) {
           case USER_CATEGORY.DOCTOR:
-            const doctor = await DoctorWrapper(
-              null,
-              transaction.getRequestorId()
-            );
-            accountUserId = doctor.getUserId();
-            // const accountDetails = await accountDetailService.getCurrentAccountByUserId(
-            //   doctor.getUserId()
-            // );
-            // const account = await AccountDetailsWrapper(accountDetails);
-            // accountId = account.getRazorpayAccountId();
-            break;
           case USER_CATEGORY.PROVIDER:
-            const provider = await ProviderWrapper(
-              null,
-              transaction.getRequestorId()
-            );
-            accountUserId = provider.getUserId();
+            const requestor_id = transaction.getRequestorId();
+            const requestorRole = await userRolesService.findOne({
+              where: {id: requestor_id},
+              attributes: ["user_identity"]
+            }) || null;
+            const { user_identity = null} = requestorRole || {};
+            accountUserId = user_identity;
             break;
           default:
             break;

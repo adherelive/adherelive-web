@@ -47,7 +47,6 @@ class Field extends Component {
 
   getInitial = () => {
     const {provider_id, providers = {}, form: {setFieldsValue} = {}} = this.props;
-
     const {details: {icon = null} = {}} = providers[provider_id] || {};
 
     if(provider_id) {

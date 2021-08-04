@@ -42,7 +42,7 @@ class ToggleLogin extends Component {
   };
 
   render() {
-    const { signIn, getInitialData } = this.props;
+    const { signIn, getInitialData, getUserRoles } = this.props;
     const { formatMessage  } = this;
     return (
       
@@ -133,6 +133,7 @@ class ToggleLogin extends Component {
                     <SignInForm
                       signIn={signIn}
                       getInitialData={getInitialData}
+                      getUserRoles={getUserRoles}
                       redirectToForgotPassword={this.redirectToForgotPassword}
                     />
                     <div className="flex direction-column justify-space-between align-center">

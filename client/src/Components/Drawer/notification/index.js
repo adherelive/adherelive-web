@@ -12,8 +12,12 @@ import {
   TYPE_SYMPTOMS,
   TYPE_APPOINTMENTS,
   TYPE_VITALS,
+  TYPE_DIETS,
   TYPE_USER_MESSAGE,
   APPOINTMENT_TYPE_TITLE,
+  MEDICATION_TIMING,
+  TYPE_WORKOUTS,
+  PATIENT_MEAL_TIMINGS
   // WHEN_TO_TAKE_ABBR_TYPES,
 } from "../../../constant";
 import VideoCameraFilled from "@ant-design/icons/VideoCameraFilled";
@@ -21,9 +25,14 @@ import MessageFilled from "@ant-design/icons/MessageFilled";
 import MedicineBoxFilled from "@ant-design/icons/MedicineBoxFilled";
 import AlertFilled from "@ant-design/icons/AlertFilled";
 import ClockCircleFilled from "@ant-design/icons/ClockCircleFilled";
+import ClockCircleOutlined from "@ant-design/icons/ClockCircleOutlined";
+import CoffeeOutlined from "@ant-design/icons/CoffeeOutlined";
 import Loading from "../../Common/Loading";
 import { throttle } from "lodash";
 import { getPatientConsultingVideoUrl } from "../../../Helper/url/patients";
+import workout_icon from "../../../Assets/images/workout_icon.png";
+import vital_icon from "../../../Assets/images/vital.png";
+
 // import { getNotifications } from "../../../Helper/urls/notifications";
 const { Option } = Select;
 const APPOINTMENT = "appointment";
@@ -41,13 +50,15 @@ const CATEGORY = {
   USER_MESSAGES: "User Messages",
   CALL: "Call",
   VITAL: "Vital",
+  DIET:"Diet",
+  WORKOUT:"Workout"
 };
 
 const DURATION = {
   ALL: "All",
   CURRENT_MONTH: "Current Month",
   PREVIOUS_MONTH: "Previous Month",
-  BEFORE_THREE_MONTHS: "Last Three Months",
+  BEFORE_THREE_MONTHS: "Last Three Months", // excluding current month, past three
 };
 
 const { Item: FormItem } = Form;
@@ -112,7 +123,7 @@ class NotificationDrawer extends Component {
 
       await this.clientFeed.get({ limit, offset }).then(async (data) => {
         const { results = [] } = data || {};
-
+        console.log("8687263876128631321",{data,results});
         if (results.length) {
           await this.getNotificationFromActivities(data);
           this.setMissedCallNoti();
@@ -159,7 +170,6 @@ class NotificationDrawer extends Component {
             0 &&
           !no_notification_remaining
         ) {
-          //&& !no_notification_remaining
           await getNotificationData({ loadMore: true });
         } else {
           this.setState({ no_notification_remaining: true });
@@ -168,30 +178,7 @@ class NotificationDrawer extends Component {
         console.log("handle load more on scroll catch error", error);
       }
 
-      //   if (notificationToken || feedId) {
-      //     let client = connect(
-      //       GETSTREAM_API_KEY,
-      //       notificationToken,
-      //       GETSTREAM_APP_ID
-      //     );
-
-      //     let clientFeed = client.feed("notification", feedId);
-
-      //     this.setState({ loading: true });
-
-      //     clientFeed.get({ limit: newCount }).then(async (data) => {
-      //       await this.getNotificationFromActivities(data);
-      //       this.setMissedCallNoti();
-      //     });
-
-      //     clientFeed.get({ mark_seen: true }).then((data) => {
-      //       clientFeed.get({ limit: newCount }).then((data) => {
-      //         // this.getNotificationFromActivities(data);
-      //       });
-      //     });
-
-      //     this.setState({ loading: false });
-      //   }
+     
     }
   };
 
@@ -262,7 +249,7 @@ class NotificationDrawer extends Component {
     for (let each in notifications) {
       const { type = "", notification_id = "", is_read = false } =
         notifications[each] || {};
-      if (type === AGORA_CALL_NOTIFICATION_TYPES.MISSED_CALL && !is_read) {
+      if ((type === AGORA_CALL_NOTIFICATION_TYPES.MISSED_CALL || type === AGORA_CALL_NOTIFICATION_TYPES.START_CALL ) && !is_read) {
         missedCallNotificationIds.push(notification_id);
       }
     }
@@ -352,11 +339,11 @@ class NotificationDrawer extends Component {
     // }
   };
 
-  handlePatientDetailsRedirect = (patient_id) => () => {
-    const { history, close } = this.props;
-    history.push(`/patients/${patient_id}`);
-    close();
-  };
+  // handlePatientDetailsRedirect = (patient_id) => () => {
+  //   const { history, close } = this.props;
+  //   history.push(`/patients/${patient_id}`);
+  //   close();
+  // };
 
   handlePatientDetailsRedirectSymptoms = (
     patient_id,
@@ -371,10 +358,12 @@ class NotificationDrawer extends Component {
     });
     const { activityGroupId = {} } = this.state;
     const groupId = activityGroupId[notification_id] || null;
-    this.readNotification(groupId, notification_id);
-
-    history.push(`/patients/${patient_id}`);
-    close();
+    if(patient_id){
+      this.readNotification(groupId, notification_id);
+      history.push(`/patients/${patient_id}`);
+      close();
+    }
+    
   };
 
   // handleMissedCallClick = async (notification_id) => {
@@ -398,10 +387,59 @@ class NotificationDrawer extends Component {
 
     const { activityGroupId = {} } = this.state;
     const groupId = activityGroupId[notification_id] || null;
-    this.readNotification(groupId, notification_id);
-    history.push(`/patients/${patient_id}`);
-    close();
+    if(patient_id){
+      this.readNotification(groupId, notification_id);
+      history.push(`/patients/${patient_id}`);
+      close();
+    }
+    
   };
+
+
+   handlePatientDetailsRedirectDiets = (
+    patient_id,
+    care_plan_id,
+    notification_id
+  ) => async () => {
+    const { history, close, doNotificationRedirect } = this.props;
+    const resp = await doNotificationRedirect({
+      type: TYPE_DIETS,
+      patient_id,
+      care_plan_id,
+    });
+
+    const { activityGroupId = {} } = this.state;
+    const groupId = activityGroupId[notification_id] || null;
+    if(patient_id){
+      this.readNotification(groupId, notification_id);
+      history.push(`/patients/${patient_id}`);
+      close();
+    }
+    
+  };
+
+  handlePatientDetailsRedirectWorkouts = (
+    patient_id,
+    care_plan_id,
+    notification_id
+  ) => async () => {
+    const { history, close, doNotificationRedirect } = this.props;
+    const resp = await doNotificationRedirect({
+      type:TYPE_WORKOUTS ,
+      patient_id,
+      care_plan_id,
+    });
+
+    const { activityGroupId = {} } = this.state;
+    const groupId = activityGroupId[notification_id] || null;
+    if(patient_id){
+      this.readNotification(groupId, notification_id);
+      history.push(`/patients/${patient_id}`);
+      close();
+    }
+    
+  };
+
 
   handlePatientChatFullScreen = (patient_id, notification_id) => async () => {
     const { history, close, doNotificationRedirect } = this.props;
@@ -412,10 +450,12 @@ class NotificationDrawer extends Component {
     });
     const { activityGroupId = {} } = this.state;
     const groupId = activityGroupId[notification_id] || null;
-    this.readNotification(groupId, notification_id);
-
-    history.push(`/patient-consulting/${patient_id}`);
-    close();
+    if(patient_id){
+      this.readNotification(groupId, notification_id);
+      history.push(`/patient-consulting/${patient_id}`);
+      close();
+    }
+    
   };
 
   getDurationflag = (noti_time) => {
@@ -497,6 +537,7 @@ class NotificationDrawer extends Component {
 
     for (let each in notifications) {
       const notification = notifications[each] || {};
+      console.log("876876238682368762782782",{notification});
       const {
         time: date = "",
         is_read = false,
@@ -595,9 +636,12 @@ class NotificationDrawer extends Component {
 
     const { activityGroupId = {} } = this.state;
     const groupId = activityGroupId[notification_id] || null;
-    readNotification(groupId, notification_id);
-    history.push(`/patients/${patient_id}`);
-    close();
+    if(patient_id){
+      readNotification(groupId, notification_id);
+      history.push(`/patients/${patient_id}`);
+      close();
+    }
+    
   };
 
   handleMissedCallRedirect = ({ foreign_id, notification_id }) => async (e) => {
@@ -682,18 +726,17 @@ class NotificationDrawer extends Component {
       stage === NOTIFICATION_STAGES.CREATE &&
       (category === CATEGORY.VITAL || category == CATEGORY.ALL)
     ) {
-      const { actor = null } = notification || {};
+      const { actor_role_id = null } = notification || {};
       const {
         details: {
-          actor: {} = {},
           basic_info: { care_plan_id } = {},
           vital_templates: { basic_info: { name: vitalName } = {} } = {},
         } = {},
       } = schedule_events[foreign_id] || {};
 
       Object.keys(patients).forEach((id) => {
-        const { basic_info: { user_id } = {} } = patients[id] || {};
-        if (`${user_id}` === `${actor}`) {
+        const { basic_info: { user_id } = {} , user_role_id = null  } = patients[id] || {};
+        if (`${user_role_id}` === `${actor_role_id}`) {
           patient_id = id;
         }
       });
@@ -714,7 +757,9 @@ class NotificationDrawer extends Component {
         >
           <div className="flex align-center justify-space-between">
             <div className="wp20 flex align-center justify-center">
-              <MessageFilled className="dark-sky-blue fs28" />
+              <ClockCircleOutlined className="dark-sky-blue fs28" />
+              {/* <img src={vital_icon} 
+              className="pointer h45 w45 " /> */}
             </div>
             <div className="wp75">
               <div className="fs16 medium">
@@ -834,12 +879,12 @@ class NotificationDrawer extends Component {
       type === USER_MESSAGE &&
       (category === CATEGORY.USER_MESSAGES || category == CATEGORY.ALL)
     ) {
-      const { actor = null, message = "" } = notification || {};
+      const { actor_role_id = null, message = "" } = notification || {};
       // patient_id = actor_category_id;
 
       Object.keys(patients).forEach((id) => {
-        const { basic_info: { user_id } = {} } = patients[id] || {};
-        if (`${user_id}` === `${actor}`) {
+        const { basic_info: { user_id } = {} , user_role_id = null } = patients[id] || {};
+        if (`${user_role_id}` === `${actor_role_id}`) {
           patient_id = id;
         }
       });
@@ -877,14 +922,14 @@ class NotificationDrawer extends Component {
       type === EVENT_TYPE.SYMPTOMS &&
       (category === CATEGORY.SYMPTOMS || category == CATEGORY.ALL)
     ) {
-      const { actor = "", stage = "", foreign_id = null } = notification || {};
+      const { actor_role_id = "", stage = "", foreign_id = null } = notification || {};
       const { symptoms = {} } = this.props;
       const { text: symptomText = "", basic_info: { care_plan_id } = {} } =
         symptoms[foreign_id] || {};
 
       Object.keys(patients).forEach((id) => {
-        const { basic_info: { user_id } = {} } = patients[id] || {};
-        if (`${user_id}` === `${actor}`) {
+        const { basic_info: { user_id } = {} , user_role_id = null  } = patients[id] || {};
+        if (`${user_role_id}` === `${actor_role_id}`) {
           patient_id = id;
         }
       });
@@ -949,28 +994,33 @@ class NotificationDrawer extends Component {
         </div>
       );
     } else if (
-      type === AGORA_CALL_NOTIFICATION_TYPES.MISSED_CALL &&
+      (type === AGORA_CALL_NOTIFICATION_TYPES.MISSED_CALL || type === AGORA_CALL_NOTIFICATION_TYPES.START_CALL ) &&
       (category === CATEGORY.CALL || category == CATEGORY.ALL)
     ) {
-      const { actor = null, foreign_id = null, participantData } =
+      
+      const { actor , actor_role_id = null, foreign_id = null, participantData } =
         notification || {};
       let patientId = null;
 
       Object.keys(participantData).forEach((participantId) => {
-        if (participantId !== actor) {
-          const { patient_id } = participantData[actor] || {};
+        if (participantId !== actor_role_id) {
+          const { patient_id } = participantData[actor_role_id] || {};
           patientId = patient_id;
         } else {
           const { doctor_id, patient_id } =
             participantData[participantId] || {};
           patientId = patient_id;
         }
-        // console.log("374264762374972931",{participantId,actor,participantData,pData:patients[patientId],patientId});
       });
 
       const { basic_info: { full_name = "" } = {} } = patients[patientId] || {};
 
-      title = `${this.formatMessage(messages.missedCallHeading)}`;
+      if(type === AGORA_CALL_NOTIFICATION_TYPES.MISSED_CALL){
+        title = `${this.formatMessage(messages.missedCallHeading)}`;
+      }else{
+        title = `${this.formatMessage(messages.startedCallHeading)}`;
+
+      }
 
       dataToRender = (
         <div
@@ -989,13 +1039,119 @@ class NotificationDrawer extends Component {
             <div className="wp75">
               <div className="fs16 medium">{title}</div>
               <div className="fs14">
-                {this.formatMessage(messages.missedCallMessage)} {full_name}
+                {
+                type === AGORA_CALL_NOTIFICATION_TYPES.MISSED_CALL
+                ?
+                this.formatMessage({...messages.missedCallMessage},{full_name})
+                :
+                this.formatMessage({...messages.callStartedMessage},{full_name}) 
+                }
               </div>
               <div className="fs14">{time}</div>
             </div>
           </div>
         </div>
       );
+    }else if (
+      type === EVENT_TYPE.DIET &&
+      (category === CATEGORY.DIET || category == CATEGORY.ALL)
+    ){
+      const { diets = {} ,schedule_events={}, diet_responses = {} } = this.props;
+      let patient_id = null;
+      const { actor_role_id = "", stage = "", foreign_id = null , diet_id = null  } = notification || {};
+      const { basic_info:{schedule_event_id = null} = {}  } = diet_responses[foreign_id] || {} ;
+      const {details : { time_text = [] } = {} } = schedule_events[schedule_event_id] || {};
+      const {  basic_info: { name : diet_name = '',  care_plan_id = null } = {}  } =
+      diets[diet_id] || {};
+
+      Object.keys(patients).forEach((id) => {
+        const { basic_info: { user_id } = {} , user_role_id = null } = patients[id] || {};
+        if (`${user_role_id}` === `${actor_role_id}`) {
+          patient_id = id;
+        }
+      });
+
+      const { basic_info: { full_name = "" } = {} } = patients[patient_id] || {};
+      title = `${this.formatMessage(messages.dietHeading)}`;
+
+      dataToRender = (
+        <div
+          className={`drawer-block pointer ${
+            !is_read ? "bg-lighter-blue" : null
+          }`}
+          onClick={this.handlePatientDetailsRedirectDiets(
+            patient_id,
+            care_plan_id,
+            notification_id
+          )}
+        >
+          <div className=" flex align-center justify-space-between">
+            <div className="wp20 flex align-center justify-center">
+              <CoffeeOutlined className="dark-sky-blue fs28" />
+            </div>
+            <div className="wp75">
+              <div className="fs16 medium">{title}</div>
+              <div className="fs14">{formatMessage(
+                  { ...messages.dietResponseAdded },
+                  { full_name,diet_name,time_text }
+                )}
+              </div>
+              <div className="fs14">{time}</div>
+            </div>
+          </div>
+        </div>
+      );
+
+    }else if (
+      type === EVENT_TYPE.WORKOUT &&
+      (category === CATEGORY.WORKOUT || category == CATEGORY.ALL)
+    ){
+      const { workouts = {} } = this.props;
+      let patient_id = null;
+      const { actor_role_id = "", stage = "", foreign_id = null ,workout_id = null } = notification || {};
+      const {  basic_info: { name : workout_name = '',  care_plan_id = null } = {}  } =
+      workouts[workout_id] || {};
+      
+      Object.keys(patients).forEach((id) => {
+        const { basic_info: { user_id } = {} , user_role_id = null } = patients[id] || {};
+        if (`${user_role_id}` === `${actor_role_id}`) {
+          patient_id = id;
+        }
+      });
+
+      const { basic_info: { full_name = "" } = {} } = patients[patient_id] || {};
+      title = `${this.formatMessage(messages.workoutHeading)}`;
+
+      dataToRender = (
+        <div
+          className={`drawer-block pointer ${
+            !is_read ? "bg-lighter-blue" : null
+          }`}
+          onClick={this.handlePatientDetailsRedirectWorkouts(
+            patient_id,
+            care_plan_id,
+            notification_id
+          )}
+        >
+          <div className=" flex align-center justify-space-between">
+            <div className="wp20 flex align-center justify-center">
+              <img src={workout_icon} 
+              className="pointer h45 w45 " />
+              
+            </div>
+            <div className="wp75">
+              <div className="fs16 medium">{title}</div>
+              <div className="fs14">{formatMessage(
+                  { ...messages.workoutResponseAdded },
+                  { full_name,workout_name }
+                )}
+              </div>
+              <div className="fs14">{time}</div>
+            </div>
+          </div>
+        </div>
+      );
+
     }
 
     return dataToRender ? <div id={notification_id} key={`notification-${notification_id}`} >{dataToRender}</div> : null;

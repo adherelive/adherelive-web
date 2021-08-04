@@ -418,7 +418,6 @@ class QualificationRegister extends Component {
       doctor_id = ""
     } = this.state;
 
-    console.log("324868736427842340003724 QUALLLLLLLLLll",{docs,files,key,state:this.state});
     this.setState({ docs: [...docs, ...files], uploadProgress: false }, async () => {
 
       const { docs, education } = this.state;
@@ -1298,8 +1297,6 @@ class QualificationRegister extends Component {
   renderEducation = () => {
     let { education = {}, educationKeys = [], fileList = [], uploadProgress = false } = this.state;
 
-    console.log("08109380192 education, educationKeys", {education, educationKeys, fileList});
-
     const uploadButton = (
       <div>
         {uploadProgress ? <LoadingOutlined /> : <img src={plus} className={"w22 h22"}/>}
@@ -1432,9 +1429,6 @@ class QualificationRegister extends Component {
               </div>
               <div className="qualification-photo-uploads">
                 {photos.map((pic, index) => {
-
-                  // console.log("324868736427842340003724 PICCCCC",{pic});
-
                   return (
                     <div key={`qualification-${index}`} className={"qualification-avatar-uploader"}>
                       <img src={pic} className="wp100 hp100 br4" />

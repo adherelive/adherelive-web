@@ -19,6 +19,9 @@ import Button from "antd/es/button";
 import EditMedicationReminder from "../../../Containers/Drawer/editMedicationReminder";
 import EditAppointmentDrawer from "../../../Containers/Drawer/editAppointment";
 import EditVitalDrawer from "../../../Containers/Drawer/editVitals";
+import EditDietDrawer from "../../../Containers/Drawer/editDiet";
+import EditWorkoutDrawer from "../../../Containers/Drawer/editWorkout";
+
 import confirm from "antd/es/modal/confirm";
 import TabletIcon from "../../../Assets/images/tabletIcon3x.png";
 import InjectionIcon from "../../../Assets/images/injectionIcon3x.png";
@@ -36,25 +39,37 @@ class TemplatePageCreateDrawer extends Component{
             medications: {},
             appointments:{},
             vitals:{},
+            diets:{},
+            workouts:{},
             medicationKeys: [],
             appointmentKeys:[],
             vitalKeys:[],
+            dietKeys:[],
+            workoutKeys:[],
             innerFormKey: '',
             innerFormType: '',
             name: '',
             showAddMedicationInner: false,
             showAddAppointmentInner: false,
             showAddVitalInner: false,
+            showAddDietInner:false,
+            showAddWorkoutInner:false,
             showAreYouSureModal: false,
             carePlanTemplateId:null,
             appointmentIds:{},
             medicationIds:{},
             vitalIds:{},
+            dietIds:{},
+            workoutIds:{},
             deleteMedicationKeys:[],
             deleteAppointmentKeys:[],
             deleteVitalKeys:[],
+            deleteDietKeys:[],
+            deleteWorkoutKeys:[],
             templateEdited:false,
-            submitting:false
+            submitting:false,
+            isDietVisible:false,
+            isWorkoutVisible:false
 
         };
     }
@@ -72,28 +87,41 @@ class TemplatePageCreateDrawer extends Component{
             let templateAppointments = {};
             let templateMedications = {};
             let templateVitals = {};
+            let templateDiets = {};
+            let templateWorkouts = {};
             let templateAppointmentIDs = [];
             let templateMedicationIDs = [];
             let templateVitalIDs = [];
+            let templateDietIDs = [];
+            let templateWorkoutIDs = [];
             let newMedicsKeys = [];
             let newAppointsKeys = [];
             let newVitalKeys = [];
+            let newDietKeys = [];
+            let newWorkoutKeys = [];
             let newMedics = {};
             let newAppoints = {};
             let newVitals = {};
+            let newDiets = {};
+            let newWorkouts = {};
             let appointmentIdsTemp =[];
             let medicationIdsTemp =[];
             let vitalIdsTemp =[];
+            let dietIdsTemp=[];
+            let workoutIdsTemp=[];
             let appointmentIds={};
             let medicationIds={};
             let vitalIds={};
-
+            let dietIds={};
+            let workoutIds = {};
 
             const {
             care_plan_templates={},
             template_appointments={},
             template_vitals={},
-            template_medications={}} = this.props;
+            template_medications={},
+            template_diets = {},
+            template_workouts = {}  } = this.props;
 
             const {
                 basic_info :{
@@ -102,7 +130,9 @@ class TemplatePageCreateDrawer extends Component{
                 } ={},
                 template_appointment_ids=[],
                 template_medication_ids=[],
-                template_vital_ids=[]
+                template_vital_ids=[],
+                template_diet_ids=[],
+                template_workout_ids=[],
             } = care_plan_templates[careplanTemplateID] || {};
 
 
@@ -232,6 +262,71 @@ class TemplatePageCreateDrawer extends Component{
                
             }
 
+            for (let dId of template_diet_ids ){
+                const {basic_info : 
+                    { id : dietId, care_plan_template_id = 0 , id = 0 , name = '' } = {},
+                total_calories = null , duration=null ,
+                details : {
+                        repeat_days=[], not_to_do = '', diet_food_groups = {}
+                } = {} } = template_diets[dId] || {};
+
+            
+                // const s_date=moment().toISOString();
+                // const e_date=moment().add(parseInt(duration), 'days').toISOString();
+
+                // if(duration === null){
+                //     e_date = null;
+                // }
+                
+                templateDiets[dId] = {
+                    id:dietId,
+                    care_plan_template_id,
+                    name,
+                    total_calories,
+                    duration,
+                    details:{
+                        repeat_days,
+                        not_to_do,
+                        diet_food_groups
+                    }
+                };
+
+                dietIdsTemp[dId] = dietId;
+            }
+
+
+
+            for (let wId of template_workout_ids ){
+                
+                const {basic_info : 
+                    { id : workoutId, care_plan_template_id = 0 , id = 0 , name = '' } = {},
+                total_calories = null , duration=null ,
+                time=null,
+                details : {
+                        repeat_days=[], not_to_do = '', workout_exercise_groups = {}
+                } = {} } = template_workouts[wId] || {};
+                templateWorkouts[wId] = {
+                    id:workoutId,
+                    care_plan_template_id,
+                    name,
+                    total_calories,
+                    duration,
+                    time,
+                    details:{
+                        repeat_days,
+                        not_to_do,
+                        workout_exercise_groups
+                    }
+                };
+
+                console.log("757567686478621371623712",{templateWorkouts,template_workout_ids,W:template_workouts[wId]});
+
+                workoutIdsTemp[wId] = workoutId;
+            }
+
+
+
+
             if (Object.keys(templateMedications).length) {
                 for (let mId of Object.keys(templateMedications)) {
                     let key = uuid();
@@ -259,23 +354,55 @@ class TemplatePageCreateDrawer extends Component{
             }
 
 
+            if(Object.keys(templateDiets).length){
+                for(let dId of Object.keys(templateDiets)){
+                    let key = uuid();
+                    newDiets[key] = templateDiets[dId];
+                    newDietKeys.push(key);
+                    dietIds[key] = dietIdsTemp[dId];
+                }
+            }
+
+            console.log("757567686478621371623712 -==>> ",{templateWorkouts});
+
+
+            if(Object.keys(templateWorkouts).length){
+                for(let wId of Object.keys(templateWorkouts)){
+                    let key = uuid();
+                    newWorkouts[key] = templateWorkouts[wId];
+                    newWorkoutKeys.push(key);
+                    workoutIds[key] = workoutIdsTemp[wId];
+                }
+            }
+
+            console.log("757567686478621371623712 @@@@@@@@@@@ ",{newWorkouts,newWorkoutKeys,workoutIds});
+
             this.setState({
                 name:careplanTemplateName,
                 carePlanTemplateId:careplanTemplateID,
                 medications: newMedics,
                 appointments: newAppoints,
                 vitals:newVitals,
+                diets:newDiets,
+                workouts:newWorkouts,
                 appointmentKeys: newAppointsKeys,
                 medicationKeys: newMedicsKeys,
                 vitalKeys:newVitalKeys,
+                dietKeys:newDietKeys,
+                workoutKeys:newWorkoutKeys,
                 templateAppointmentIDs,
                 templateMedicationIDs,
                 templateVitalIDs,
+                templateDietIDs,
+                templateWorkoutIDs,
                 templateEdited: false,
                 medicationIds,
                 appointmentIds,
-                vitalIds
-            });
+                vitalIds,
+                dietIds,
+                workoutIds
+            },() => {            console.log("757567686478621371623712 ####### ",{state:this.state});
+        });
      
         }
       
@@ -287,11 +414,23 @@ class TemplatePageCreateDrawer extends Component{
 
 
     showInnerForm = (innerFormType, innerFormKey) => () => {
+
+        if( innerFormType === EVENT_TYPE.DIET ){
+            this.setState({isDietVisible:true});
+        }else if(innerFormType === EVENT_TYPE.WORKOUT ){
+            this.setState({isWorkoutVisible:true});
+        }
+
         this.setState({ innerFormType, innerFormKey, showInner: true });
+
     }
 
     onCloseInner = () => {
-        this.setState({ showInner: false })
+        this.setState({ 
+            showInner: false ,
+            isDietVisible:false,
+            isWorkoutVisible:false
+        });
     };
 
     showAddMedication = () => {
@@ -316,6 +455,29 @@ class TemplatePageCreateDrawer extends Component{
 
     closeAddVital = () => {
         this.setState({ showAddVitalInner: false });
+    }
+
+    showAddDiet = () => {
+        this.setState({ showAddDietInner: true ,
+            isDietVisible:true
+        });
+    }
+
+    closeAddDiet = () => {
+        this.setState({ showAddDietInner: false,
+            isDietVisible:false });
+    }
+
+    showAddWorkout = () => {
+        this.setState({ 
+            showAddWorkoutInner: true ,
+            isWorkoutVisible:true });
+    }
+
+    closeAddWorkout = () => {
+        this.setState({ 
+            showAddWorkoutInner: false,
+            isWorkoutVisible:false });
     }
 
     async handleDeleteTemplateMed(key) {
@@ -402,13 +564,73 @@ class TemplatePageCreateDrawer extends Component{
     }
 
 
+    async handleDeleteTemplateDiet(key){
+        const {deleteCareplanTemplateRelated} = this.props;
+        const {carePlanTemplateId = null,dietIds={}}=this.state;
+        try{
+            const other_id = dietIds[key] || null; 
+            const response = await deleteCareplanTemplateRelated({
+                careplan_template_id:carePlanTemplateId,
+                other_id,
+                other_type:DELETE_TEMPLATE_RELATED_TYPE.DIET
+            });
+
+            const {status,statusCode,payload:{data={},message:msg=''} = {} } = response;
+            if(status){
+                let { deleteDietKeys=[] } = this.state;
+                delete dietIds[key];
+                deleteDietKeys.splice(deleteDietKeys.indexOf(key),1);
+                this.setState({ deleteDietKeys ,dietIds});
+                // message.success(msg);
+            }else{
+                message.warn(msg);
+            }
+
+        }catch(error){
+            console.log("deleteDietError ===>",error);
+            message.warn(error);
+        }
+    }
+
+    async handleDeleteTemplateWorkout(key){
+        const {deleteCareplanTemplateRelated} = this.props;
+        const {carePlanTemplateId = null,workoutIds={}}=this.state;
+        try{
+            const other_id = workoutIds[key] || null; 
+            const response = await deleteCareplanTemplateRelated({
+                careplan_template_id:carePlanTemplateId,
+                other_id,
+                other_type:DELETE_TEMPLATE_RELATED_TYPE.WORKOUT
+            });
+
+            const {status,statusCode,payload:{data={},message:msg=''} = {} } = response;
+            if(status){
+                let { deleteWorkoutKeys=[] } = this.state;
+                delete workoutIds[key];
+                deleteWorkoutKeys.splice(deleteWorkoutKeys.indexOf(key),1);
+                this.setState({ deleteWorkoutKeys ,workoutIds});
+                // message.success(msg);
+            }else{
+                message.warn(msg);
+            }
+
+        }catch(error){
+            console.log("deleteWorkoutError ===>",error);
+            message.warn(error);
+        }
+    }
+
+
+
     deleteEntry = () => {
         let { appointments = {}, appointmentKeys = [],
          medications = {}, medicationKeys = [],
          vitals = {},vitalKeys=[],
+         diets = {} , dietKeys = [],
+         workouts = {} , workoutKeys = [],
          innerFormType = '', innerFormKey = '',
-         medicationIds={},appointmentIds={},vitalIds={},
-         deleteMedicationKeys,deleteAppointmentKeys,deleteVitalKeys } = this.state;
+         medicationIds={},appointmentIds={},vitalIds={},dietIds={}, workoutIds={},
+         deleteMedicationKeys = [],deleteAppointmentKeys = [],deleteVitalKeys =[],deleteDietKeys=[],deleteWorkoutKeys=[] } = this.state;
 
         const key =innerFormKey;
         if(medicationIds[key]){
@@ -417,6 +639,10 @@ class TemplatePageCreateDrawer extends Component{
             deleteAppointmentKeys.push(key);
         }else if (vitalIds[key]){
             deleteVitalKeys.push(key);
+        }else if (dietIds[key]){
+            deleteDietKeys.push(key);
+        }else if (workoutIds[key]){
+            deleteWorkoutKeys.push(key);
         }
 
         if (innerFormType == EVENT_TYPE.MEDICATION_REMINDER) {
@@ -428,18 +654,22 @@ class TemplatePageCreateDrawer extends Component{
         }else if (innerFormType == EVENT_TYPE.VITALS){
             delete vitals[innerFormKey];
             vitalKeys.splice(vitalKeys.indexOf(innerFormKey), 1);
+        }else if (innerFormType == EVENT_TYPE.DIET){
+            delete diets[innerFormKey];
+            dietKeys.splice(dietKeys.indexOf(innerFormKey), 1);
+        }else if (innerFormType == EVENT_TYPE.WORKOUT){
+            delete workouts[innerFormKey];
+            workoutKeys.splice(workoutKeys.indexOf(innerFormKey), 1);
         }
 
         this.setState({ appointments, appointmentKeys,
              medications, medicationKeys,
              vitals,vitalKeys,
+             diets,dietKeys,
+             workouts,workoutKeys,
              templateEdited: true });
         this.onCloseInner();
     }
-
-
-    
-
 
 
     setTemplateName = (event) => {
@@ -447,7 +677,7 @@ class TemplatePageCreateDrawer extends Component{
     }
 
 
-    validateData = (medicationsData, appointmentsData, vitalsData,name) => {
+    validateData = (medicationsData, appointmentsData, vitalsData, dietData,workoutData, name) => {
 
         if(!name){
             message.error(this.formatMessage(messages.giveName));
@@ -557,6 +787,49 @@ class TemplatePageCreateDrawer extends Component{
             
         }
 
+        for (let diet of dietData) {
+    
+            const {
+                id = null,
+                care_plan_template_id= null,
+                name='',
+                total_calories=0,
+                duration = null ,
+                details :{
+                    repeat_days=[],
+                    not_to_do='',
+                    diet_food_groups={}
+                } = {}
+            } = diet;
+
+            if ( repeat_days.length === 0 || !name || Object.keys(diet_food_groups).length === 0 ) {
+
+                message.error(this.formatMessage(messages.dietError));
+
+                return false;
+            }
+        
+        }
+
+        for (let workout of workoutData) {
+    
+            const {
+                name='',
+                time=null,
+                details :{
+                    repeat_days=[],
+                    workout_exercise_groups={}
+                } = {}
+            } = workout;
+
+            if (!time ||  repeat_days.length === 0 || !name || Object.keys(workout_exercise_groups).length === 0 ) {
+
+                message.error(this.formatMessage(messages.workoutError));
+
+                return false;
+            }
+        
+        }
         return true;
     }
 
@@ -565,23 +838,25 @@ class TemplatePageCreateDrawer extends Component{
 
     onSubmit = async () => {
     
-        let { medications = {}, appointments = {},vitals={}, name = '' } = this.state;
-        const {updateCareplanTemplate,close} = this.props;
+        let { medications = {}, appointments = {},vitals={}, diets = {}, workouts = {} , name = '' } = this.state;
+        const {updateCareplanTemplate,close,getAllTemplatesForDoctor} = this.props;
         let medicationsData = Object.values(medications);
         let appointmentsData = Object.values(appointments);
         let vitalsData = Object.values(vitals);
-        
+        let dietData = Object.values(diets);
+        let workoutData = Object.values(workouts);
 
-
-        let validate = this.validateData(medicationsData, appointmentsData,vitalsData,name);
+        let validate = this.validateData(medicationsData, appointmentsData,vitalsData, dietData,workoutData, name);
         if (validate) {
             try{
-                const {deleteAppointmentKeys=[],deleteMedicationKeys=[],deleteVitalKeys=[] , carePlanTemplateId=null} = this.state;
+                const {deleteAppointmentKeys=[],deleteMedicationKeys=[],deleteVitalKeys=[] , deleteDietKeys=[], deleteWorkoutKeys = [], carePlanTemplateId=null} = this.state;
                 const deleteMedArr=deleteMedicationKeys;
                 const deleteAppArr = deleteAppointmentKeys;
                 const deleteVitalArr = deleteVitalKeys;
+                const deleteDietArr = deleteDietKeys;
+                const deleteWorkoutArr = deleteWorkoutKeys;
                 this.setState({submitting:true});
-                const response  = await updateCareplanTemplate(carePlanTemplateId,{medicationsData, appointmentsData,vitalsData, name });
+                const response  = await updateCareplanTemplate(carePlanTemplateId,{medicationsData, appointmentsData,vitalsData, dietData, workoutData, name });
 
                 const {payload : {data = {} , message : res_msg = ''} , status, statusCode } = response || {};
                 if (status){
@@ -597,31 +872,51 @@ class TemplatePageCreateDrawer extends Component{
                         this.handleDeleteTemplateVital(key);
                     }
 
+                    for(let key of deleteDietArr){
+                        this.handleDeleteTemplateDiet(key);
+                    }
+
+                    for(let key of deleteWorkoutArr){
+                        this.handleDeleteTemplateWorkout(key);
+                    }
+
+
                     message.success(res_msg);
                     this.setState ({
                         showInner: false,
                         medications: {},
                         appointments:{},
                         vitals:{},
+                        diets:{},
+                        workouts:{},
                         medicationKeys: [],
                         appointmentKeys:[],
                         vitalKeys:[],
+                        dietKeys:[],
+                        workoutKeys:[],
                         innerFormKey: '',
                         innerFormType: '',
                         name: '',
                         showAddMedicationInner: false,
                         showAddAppointmentInner: false,
                         showAddVitalInner: false,
+                        showAddDietInner:false,
+                        showAddWorkoutInner:false,
                         showAreYouSureModal: false,
                         carePlanTemplateId:null,
                         appointmentIds:{},
                         medicationIds:{},
                         vitalIds:{},
+                        dietIds:{},
+                        workoutIds:{},
                         deleteMedicationKeys:[],
                         deleteAppointmentKeys:[],
                         deleteVitalKeys:[],
+                        deleteDietKeys:[],
+                        deleteWorkoutKeys:[],
                         templateEdited:false
                     })
+                    await getAllTemplatesForDoctor();
                     close();
                 }else{
                     message.error(res_msg);
@@ -651,7 +946,7 @@ class TemplatePageCreateDrawer extends Component{
     
       handleCloseWarning = () => {
         const { warnNote } = this;
-        const {close}=this.props;
+        const {close,getAllTemplatesForDoctor}=this.props;
     
         confirm({
           title: `${this.formatMessage(messages.closeMessage)}`,
@@ -666,35 +961,45 @@ class TemplatePageCreateDrawer extends Component{
                 medications: {},
                 appointments:{},
                 vitals:{},
+                diets:{},
+                workouts:{},
                 medicationKeys: [],
                 appointmentKeys:[],
                 vitalKeys:[],
+                dietKeys:[],
+                workoutKeys:[],
                 innerFormKey: '',
                 innerFormType: '',
                 name: '',
                 showAddMedicationInner: false,
                 showAddAppointmentInner: false,
                 showAddVitalInner: false,
+                showAddDietInner:false,
+                showAddWorkoutInner:false,
                 showAreYouSureModal: false,
                 carePlanTemplateId:null,
                 appointmentIds:{},
                 medicationIds:{},
                 vitalIds:{},
+                dietIds:{},
+                workoutIds:{},
                 deleteMedicationKeys:[],
                 deleteAppointmentKeys:[],
                 deleteVitalKeys:[],
+                deleteDietKeys:[],
+                deleteWorkoutKeys:[],
                 templateEdited:false
             })
-    
+            await getAllTemplatesForDoctor();
             close();
           },
           onCancel() { }
         });
     };
 
-    onClose = ()=> {
-        const{close}=this.props;
-        const {name ='',medicationKeys=[],appointmentKeys=[],vitalKeys=[],templateEdited=false}=this.state;
+    onClose = async ()=> {
+        const{close,getAllTemplatesForDoctor}=this.props;
+        const {name ='',medicationKeys=[],appointmentKeys=[],vitalKeys=[],dietKeys=[], workoutKeys=[], templateEdited=false}=this.state;
         if(templateEdited){
             this.handleCloseWarning();
             return;
@@ -705,25 +1010,36 @@ class TemplatePageCreateDrawer extends Component{
             medications: {},
             appointments:{},
             vitals:{},
+            diets:{},
+            workouts:{},
             medicationKeys: [],
             appointmentKeys:[],
             vitalKeys:[],
+            dietKeys:[],
+            workoutKeys:[],
             innerFormKey: '',
             innerFormType: '',
             name: '',
             showAddMedicationInner: false,
             showAddAppointmentInner: false,
             showAddVitalInner: false,
+            showAddDietInner:false,
+            showAddWorkoutInner:false,
             showAreYouSureModal: false,
             carePlanTemplateId:null,
             appointmentIds:{},
             medicationIds:{},
             vitalIds:{},
+            dietIds:{},
+            workoutIds:{},
             deleteMedicationKeys:[],
             deleteAppointmentKeys:[],
             deleteVitalKeys:[],
+            deleteDietKeys:[],
+            deleteWorkoutKeys:[],
             templateEdited:false
         })
+        await getAllTemplatesForDoctor();
 
         close();
 
@@ -732,8 +1048,8 @@ class TemplatePageCreateDrawer extends Component{
 
     renderTemplateDetails = () => {
         const { 
-            medications = {}, appointments = {},vitals = {},
-            medicationKeys = [], appointmentKeys = [],vitalKeys=[], 
+            medications = {}, appointments = {},vitals = {}, diets = {}, workouts = {},
+            medicationKeys = [], appointmentKeys = [],vitalKeys=[], dietKeys = [], workoutKeys = [], 
             carePlanTemplateIds = [] ,name =''} = this.state;
 
         const { care_plan_templates = {}  , repeat_intervals = {} , vital_templates = {} , medicines ={}} = this.props;
@@ -939,6 +1255,92 @@ class TemplatePageCreateDrawer extends Component{
                                     </div>
                                     <div className='drawer-block-description'>{vital_repeat}</div>
                                     <div className='drawer-block-description'>{`Repeat: ${repeat_days}`}</div>
+                                </div>
+                              
+                            </div>
+                        );
+                    })
+                }
+
+                <div className='wp100 flex align-center justify-space-between'>
+                    <div className='form-category-headings-ap align-self-start'>{this.formatMessage(messages.diets)}</div>
+                    {
+                        dietKeys.length>0
+                        ?
+                        <div className='add-more' onClick={this.showAddDiet}>{this.formatMessage(messages.addMore)}</div>
+                        :
+                        <div className='add-more' onClick={this.showAddDiet}>{this.formatMessage(messages.add)}</div>
+                    }
+                </div>
+                {
+
+                    dietKeys.map(key => {
+                        const {
+                            name='',
+                            total_calories=0,
+                            details :{
+                                repeat_days=[],
+                            } = {}
+                        } = diets[key] || {};
+                        
+                        const repeat = repeat_days.length ? repeat_days.toString() : '';
+
+
+
+                        return (
+
+                            <div className='flex wp100 flex-grow-1 align-center' key={key}>
+                                <div className='drawer-block' >
+
+                                    <div className='flex direction-row justify-space-between align-center'>
+                                        <div className='form-headings-ap'>{name}</div>
+                                        <Icon type="edit" className='ml20' style={{ color: '#4a90e2' }} theme="filled" onClick={this.showInnerForm(EVENT_TYPE.DIET, key)} />
+                                    </div>
+                                    <div className='drawer-block-description'>{`${total_calories ? total_calories : '--' }${" "}Cal`}</div>
+                                    <div className='drawer-block-description'>{`Repeat: ${repeat}`}</div>
+                                </div>
+                              
+                            </div>
+                        );
+                    })
+                }
+                    
+                <div className='wp100 flex align-center justify-space-between'>
+                <div className='form-category-headings-ap align-self-start'>{this.formatMessage(messages.workouts)}</div>
+                {
+                        workoutKeys.length>0
+                        ?
+                        <div className='add-more' onClick={this.showAddWorkout}>{this.formatMessage(messages.addMore)}</div>
+                        :
+                        <div className='add-more' onClick={this.showAddWorkout}>{this.formatMessage(messages.add)}</div>
+                }
+                </div>
+                {
+
+                    workoutKeys.map(key => {
+                        const {
+                            name='',
+                            total_calories=0,
+                            details :{
+                                repeat_days=[],
+                            } = {}
+                        } = workouts[key] || {};
+                        
+                        const repeat = repeat_days.length ? repeat_days.toString() : '';
+
+
+
+                        return (
+
+                            <div className='flex wp100 flex-grow-1 align-center' key={key}>
+                                <div className='drawer-block' >
+
+                                    <div className='flex direction-row justify-space-between align-center'>
+                                        <div className='form-headings-ap'>{name}</div>
+                                        <Icon type="edit" className='ml20' style={{ color: '#4a90e2' }} theme="filled" onClick={this.showInnerForm(EVENT_TYPE.WORKOUT, key)} />
+                                    </div>
+                                    <div className='drawer-block-description'>{`${total_calories ? total_calories : '--' }${" "}Cal`}</div>
+                                    <div className='drawer-block-description'>{`Repeat: ${repeat}`}</div>
                                 </div>
                               
                             </div>
@@ -1310,6 +1712,235 @@ class TemplatePageCreateDrawer extends Component{
         });
     }
 
+    addDiet = (data) => {
+
+        let { diets = {}, dietKeys = [] } = this.state;
+
+        const {
+            name = '',
+            repeat_days = [],
+            total_calories=0,
+            diet_food_groups={},
+            start_date = "",
+            end_date = "",
+            not_to_do='',
+        } = data;
+      
+        let key = uuid();
+
+        let dietNameExists = false;
+        for (let diet of Object.values(diets)) {
+            let { name: existing_name = '' } = diet;
+            if (name === existing_name ) {
+                dietNameExists = true;
+            }
+        }
+
+        let duration = moment(end_date).diff(moment(start_date),'days') || null;
+        if(!end_date){
+            duration=null;
+        }
+
+        
+
+        if (dietNameExists) {
+            message.error(this.formatMessage(messages.dietNameExist));
+        } else {
+            dietKeys.push(key);
+            diets[key] = {
+                name ,
+                total_calories,
+                duration,
+                details:{
+                    repeat_days,
+                    not_to_do,
+                    diet_food_groups
+                }
+            };
+
+            
+            this.setState({ diets, dietKeys, templateEdited: true }, () => {
+                this.closeAddDiet();
+            });
+        }
+    }
+
+    editDiet = (data) => {
+        let { diets = {}, innerFormKey = '' ,dietIds = [] } = this.state;
+
+        const {
+            name = '',
+            repeat_days = [],
+            total_calories=0,
+            diet_food_groups={},
+            start_date = "",
+            end_date = "",
+            not_to_do='',
+        } = data;
+
+        let dietNameExists = false;
+        for (let dietKey in diets) {
+            const diet = diets[dietKey];
+            let { name: existing_name = '' } = diet;
+            if (name === existing_name && dietKey !== innerFormKey ) {
+                dietNameExists = true;
+
+            }
+        }
+
+        let duration = moment(end_date).diff(moment(start_date),'days') || null;
+        if(!end_date){
+            duration=null;
+        }
+
+        if (dietNameExists) {
+            message.error(this.formatMessage(messages.dietNameExist));
+        } else {
+
+            const newDiet  = {
+                name ,
+                total_calories,
+                duration,
+                details:{
+                    repeat_days,
+                    not_to_do,
+                    diet_food_groups
+                }
+            };
+
+            
+            if(dietIds[innerFormKey]){
+                const id = dietIds[innerFormKey];
+                newDiet["id"]=id;
+            }
+    
+            diets[innerFormKey] = newDiet;
+            this.setState({ diets, templateEdited: true }, () => {
+                this.onCloseInner();
+            });
+            
+
+         
+        }   
+
+    }
+
+    addWorkout = (data) => {
+
+        let { workouts = {}, workoutKeys = [] } = this.state;
+
+        const {
+            name = '',
+            repeat_days = [],
+            total_calories=0,
+            workout_exercise_groups={},
+            start_date = "",
+            end_date = "",
+            not_to_do='',
+            time=null,
+        } = data;
+      
+        let key = uuid();
+
+        let workoutNameExists = false;
+        for (let workout of Object.values(workouts)) {
+            let { name: existing_name = '' } = workout;
+            if (name === existing_name ) {
+                workoutNameExists = true;
+            }
+        }
+
+        let duration = moment(end_date).diff(moment(start_date),'days') || null;
+        if(!end_date){
+            duration=null;
+        }
+
+        
+
+        if (workoutNameExists) {
+            message.error(this.formatMessage(messages.workoutNameExist));
+        } else {
+            workoutKeys.push(key);
+            workouts[key] = {
+                name ,
+                total_calories,
+                duration,
+                time,
+                details:{
+                    repeat_days,
+                    not_to_do,
+                    workout_exercise_groups
+                }
+            };
+
+            
+            this.setState({ workouts, workoutKeys, templateEdited: true }, () => {
+                this.closeAddWorkout();
+            });
+        }
+    }
+
+    editWorkout = (data) => {
+        let { workouts = {}, innerFormKey = '' ,workoutIds = [] } = this.state;
+
+        const {
+            name = '',
+            repeat_days = [],
+            total_calories=0,
+            workout_exercise_groups={},
+            start_date = "",
+            end_date = "",
+            not_to_do='',
+            time=null
+        } = data;
+
+        let workoutNameExists = false;
+        for (let workoutKey in workouts) {
+            const workout = workouts[workoutKey];
+            let { name: existing_name = '' } = workout;
+            if (name === existing_name && workoutKey !== innerFormKey ) {
+                workoutNameExists = true;
+
+            }
+        }
+
+        let duration = moment(end_date).diff(moment(start_date),'days') || null;
+        if(!end_date){
+            duration=null;
+        }
+
+        if (workoutNameExists) {
+            message.error(this.formatMessage(messages.workoutNameExist));
+        } else {
+
+            const newWorkout  = {
+                name ,
+                total_calories,
+                duration,
+                time,
+                details:{
+                    repeat_days,
+                    not_to_do,
+                    workout_exercise_groups
+                }
+            };
+
+            
+            if(workoutIds[innerFormKey]){
+                const id = workoutIds[innerFormKey];
+                newWorkout["id"]=id;
+            }
+    
+            workouts[innerFormKey] = newWorkout;
+            this.setState({ workouts, templateEdited: true }, () => {
+                this.onCloseInner();
+            });
+         
+        }   
+
+    }
+
+
     warnNoteTemplateDelete = () => {
         return (
           <div className="pt16">
@@ -1361,23 +1992,33 @@ class TemplatePageCreateDrawer extends Component{
                 medications: {},
                 appointments:{},
                 vitals:{},
+                diets:{},
+                workouts:{},
                 medicationKeys: [],
                 appointmentKeys:[],
                 vitalKeys:[],
+                dietKeys:[],
+                workoutKeys:[],
                 innerFormKey: '',
                 innerFormType: '',
                 name: '',
                 showAddMedicationInner: false,
                 showAddAppointmentInner: false,
                 showAddVitalInner: false,
+                showAddDietInner: false,
+                showAddWorkoutInner:false,
                 showAreYouSureModal: false,
                 carePlanTemplateId:null,
                 appointmentIds:{},
                 medicationIds:{},
                 vitalIds:{},
+                dietIds:{},
+                workoutIds:{},
                 deleteMedicationKeys:[],
                 deleteAppointmentKeys:[],
                 deleteVitalKeys:[],
+                deleteDietKeys:[],
+                deleteWorkoutKeys:[],
                 templateEdited:false
             })
     
@@ -1389,13 +2030,22 @@ class TemplatePageCreateDrawer extends Component{
 
     render() {
         let { showInner, innerFormType, innerFormKey, medications, showAddMedicationInner,
-            appointments, vitals ,showAddAppointmentInner  , showAddVitalInner ,name ,templateEdited=false,
-            submitting=false } = this.state;
+            appointments, vitals , diets , workouts, showAddAppointmentInner  , showAddVitalInner , showAddDietInner, showAddWorkoutInner, name ,templateEdited=false,
+            submitting=false,
+            isDietVisible=false,
+            isWorkoutVisible=false
+         } = this.state;
         const { onClose, renderTemplateDetails } = this;
         let medicationData = innerFormKey && innerFormType == EVENT_TYPE.MEDICATION_REMINDER ? medications[innerFormKey] : {};
    
         let appointmentData = innerFormKey && innerFormType == EVENT_TYPE.APPOINTMENT ? appointments[innerFormKey] : {};
-        let vitalData = innerFormKey && innerFormType == EVENT_TYPE.VITALS ? vitals[innerFormKey] : {} ; 
+        let vitalData = innerFormKey && innerFormType == EVENT_TYPE.VITALS ? vitals[innerFormKey] : {} ;
+        let dietData = innerFormKey && innerFormType == EVENT_TYPE.DIET ? diets[innerFormKey] : {} ; 
+        let workoutData = innerFormKey && innerFormType == EVENT_TYPE.WORKOUT ? workouts[innerFormKey] : {} ; 
+
+        console.log("42364872634872638476283746237",{state:this.state,workoutData});
+
+
         const {visible = false , close}=this.props;
 
         if(medicationData){
@@ -1455,7 +2105,28 @@ class TemplatePageCreateDrawer extends Component{
                     hideVital={this.onCloseInner} 
                     deleteVitalOfTemplate={this.deleteEntry} />}
 
+
+                    {innerFormKey && innerFormType == EVENT_TYPE.DIET && 
+                    <EditDietDrawer
+                        dietData={dietData} 
+                        dietVisible={showInner} 
+                        editTemplateDiet={this.editDiet}
+                        hideDiet={this.onCloseInner} 
+                        deleteDietOfTemplate={this.deleteEntry}
+                        isDietVisible={isDietVisible}
+                    />
+                    }
                 
+                    {innerFormKey && innerFormType == EVENT_TYPE.WORKOUT && 
+                    <EditWorkoutDrawer
+                        workoutData={workoutData} 
+                        workoutVisible={showInner} 
+                        editTemplateWorkout={this.editWorkout}
+                        hideWorkout={this.onCloseInner} 
+                        deleteWorkoutOfTemplate={this.deleteEntry}
+                        isWorkoutVisible={isWorkoutVisible}
+                    />
+                    }
                     
                     {/* add */}
                     {showAddMedicationInner &&
@@ -1473,7 +2144,10 @@ class TemplatePageCreateDrawer extends Component{
                     {showAddVitalInner && <EditVitalDrawer vitalVisible={showAddVitalInner} addVital={this.addVital} hideVital={this.closeAddVital} />} 
 
                   
-                  
+                    {showAddDietInner && <EditDietDrawer dietVisible={showAddDietInner} addTemplateDiet={this.addDiet} hideDiet={this.closeAddDiet} isDietVisible={isDietVisible} />} 
+
+                    {showAddWorkoutInner && <EditWorkoutDrawer workoutVisible={showAddWorkoutInner} addTemplateWorkout={this.addWorkout} hideWorkout={this.closeAddWorkout} isWorkoutVisible={isWorkoutVisible} />} 
+
 
                     <div className='add-patient-footer'>
                         <Button onClick={this.handleTemplateDelete} 

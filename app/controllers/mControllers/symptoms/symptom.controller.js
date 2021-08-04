@@ -15,7 +15,7 @@ import PatientWrapper from "../../../ApiWrapper/mobile/patient";
 import {
   uploadAudio,
   uploadImage,
-  uploadVideo
+  uploadVideo,
 } from "./symptom.controller.helper";
 import Logger from "../../../../libs/log";
 import {
@@ -49,7 +49,8 @@ class SymptomController extends Controller {
       const {
         body,
         params: { patient_id } = {},
-        userDetails: { userId,  userData: { category } = {},} = {},
+        // userDetails: { userId, userRoleId } = {}
+        userDetails: { userId,  userRoleId, userData: { category } = {},} = {},
       } = req;
       const {
         care_plan_id,
@@ -155,6 +156,7 @@ class SymptomController extends Controller {
       for (const carePlanData of carePlans) {
         const carePlan = await CarePlanWrapper(carePlanData);
         const doctorId = carePlan.getDoctorId();
+        const doctorRoleId = carePlan.getUserRoleId();
         const doctorData = await DoctorWrapper(null, doctorId);
         
 
@@ -189,14 +191,15 @@ class SymptomController extends Controller {
 
         if (
           Object.keys(allUniqueDoctorsToNotifyData).indexOf(
-            doctorData.getUserId()
+            doctorRoleId
           ) === -1
         ) {
-          allUniqueDoctorsToNotifyData[doctorData.getUserId()] = {
+          allUniqueDoctorsToNotifyData[doctorRoleId] = {
             eventData: {
-              participants: [doctorData.getUserId(), patientData.getUserId()],
+              participants: [doctorRoleId, userRoleId],
               actor: {
                 id: patientData.getUserId(),
+                user_role_id: userRoleId,
                 details: {
                   name: patientData.getFullName(),
                   category: USER_CATEGORY.PATIENT,
@@ -207,13 +210,13 @@ class SymptomController extends Controller {
               },
             },
             twilio: {
-              doctor: doctorData.getUserId(),
-              patient: patientData.getUserId(),
+              doctor: doctorRoleId,
+              patient: userRoleId,
               content: chatJSON,
             },
           };
 
-          doctorLatestCareplanData[doctorData.getUserId()] = carePlan.getCarePlanId();
+          doctorLatestCareplanData[doctorRoleId] = carePlan.getCarePlanId();
         }
 
         // const chatJob = ChatJob.execute(
@@ -230,9 +233,10 @@ class SymptomController extends Controller {
         })
 
         const symptomNotificationData = {
-          participants : [userId, ...allDoctorIds],
+          participants : [userRoleId, ...allDoctorIds],
           actor: {
             id: userId,
+            user_role_id: userRoleId,
             details: { name: patientData.getFullName(), category }
           },
           patient_id,

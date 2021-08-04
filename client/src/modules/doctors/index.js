@@ -15,13 +15,18 @@ import {
   patientWatchlistUrl,
   updatePatientAndCareplanUrl,
   deactivateDoctorURL,
-  activateDoctorURL
+  activateDoctorURL,
+  searchDoctorEmailUrl
 } from "../../Helper/urls/doctor";
 
 
 import { getAllDoctorsForProviderUrl } from "../../Helper/urls/provider";
 
 import { accountDetailsUrl } from "../../Helper/urls/accounts";
+
+export const SEARCH_DOCTOR_START = "SEARCH_DOCTOR_START";
+export const SEARCH_DOCTOR_COMPLETE = "SEARCH_DOCTOR_COMPLETE";
+export const SEARCH_DOCTOR_FAILED = "SEARCH_DOCTOR_FAILED";
 
 export const GET_DOCTOR_DETAILS_START = "GET_DOCTOR_DETAILS_START";
 export const GET_DOCTOR_DETAILS_COMPLETE = "GET_DOCTOR_DETAILS_COMPLETE";
@@ -106,6 +111,37 @@ export const DEACTIVATE_DOCTOR_FAILED = "DEACTIVATE_DOCTOR_FAILED";
 export const ACTIVATE_DOCTOR_START = "ACTIVATE_DOCTOR_START";
 export const ACTIVATE_DOCTOR_COMPLETE = "ACTIVATE_DOCTOR_COMPLETE";
 export const ACTIVATE_DOCTOR_FAILED = "ACTIVATE_DOCTOR_FAILED";
+
+export const searchDoctorEmail = (email) => {
+  let response = {};
+  return async dispatch => {
+    try {
+      dispatch({ type: SEARCH_DOCTOR_START });
+      response = await doRequest({
+        method: REQUEST_TYPE.GET,
+        url: searchDoctorEmailUrl(email)
+      });
+
+      const { status, payload: { data, error } = {} } = response || {};
+
+      if (status === true) {
+        dispatch({
+          type: SEARCH_DOCTOR_COMPLETE,
+          data: data,
+          payload: data
+        });
+      } else {
+        dispatch({
+          type: SEARCH_DOCTOR_FAILED,
+          error
+        });
+      }
+    } catch (error) {
+      console.log("SEARCH_DOCTOR ERROR --> ", error);
+    }
+    return response;
+  };
+}
 
 export const updateDoctor = (user_id, updateData) => {
   let response = {};

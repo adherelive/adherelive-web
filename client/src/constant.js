@@ -41,13 +41,14 @@ export const PATH = {
     ROOT: "/provider",
     DOCTORS: {
       DETAILS: "/doctors/:id",
-      PAYMENT_PRODUCTS: "/doctors/:id/payment_products"
+      PAYMENT_PRODUCTS: "/doctors/:id/payment-products"
     },
     CALENDER: "/calender",
-    TRANSACTION_DETAILS:"/transaction_details"
+    TRANSACTION_DETAILS:"/transaction-details",
+    PAYMENT_DETAILS:"/payment-details"
   },
   DOCTOR:{
-    TRANSACTION_DETAILS:"/transaction_details"
+    TRANSACTION_DETAILS:"/transaction-details"
   },
   TERMS_OF_SERVICE: "/terms-of-service",
   PRIVACY_POLICY: "/privacy-policy",
@@ -69,7 +70,8 @@ export const NOTIFICATION_STAGES = {
   DELETE: "Delete",
   SHARE: "Share",
   EDIT_NOTES: "Edit_Notes",
-  APPROVED: "Approve"
+  APPROVED: "Approve",
+  RESPONSE_ADDED:"Response_added"
 };
 
 export const HTTP_CODE_SERVER_ERROR = 500;
@@ -88,7 +90,7 @@ export const TEXT_KEY = "text";
 export const TIME_KEY = "time";
 
 
-export const NOON = "3";
+
 export const AFTER_WAKEUP = "1";
 export const BEFORE_BREAKFAST = "2";
 export const AFTER_BREAKFAST = "3";
@@ -101,6 +103,10 @@ export const BEFORE_DINNER = "9";
 export const WITH_DINNER = "10";
 export const AFTER_DINNER = "11";
 export const BEFORE_SLEEP = "12";
+
+
+export const NOON = "13";
+
 
 export const MEDICATION_TIMING = {
   [AFTER_WAKEUP]: {
@@ -150,11 +156,7 @@ export const MEDICATION_TIMING = {
   [BEFORE_SLEEP]: {
     [TEXT_KEY]: "Before Sleeping",
     [TIME_KEY]: "11:00pm"
-  },
-  [NOON]: {
-    [TEXT_KEY]: "Noon",
-    [TIME_KEY]: "12:00pm"
-  },
+  }
 };
 
 
@@ -221,6 +223,8 @@ export const SYMPTOMS = "symptoms";
 export const MISSED_MEDICATION = "no_medication";
 export const MISSED_APPOINTMENTS = "no_appointment";
 export const MISSED_ACTIONS = "no_action";
+export const MISSED_DIET = "no_diet";
+export const MISSED_WORKOUT = "no_workout";
 
 export const MISSED_MEDICATION_TEXT = "Missed Medication";
 export const MISSED_ACTION_TEXT = "Missed Actions";
@@ -276,7 +280,17 @@ export const DRAWER = {
   MISSED_VITAL:"MISSED_VITAL",
   CREATE_CAREPLAN_TEMPLATE:"CREATE_CAREPLAN_TEMPLATE",
   EDIT_CAREPLAN_TEMPLATE:"EDIT_CAREPLAN_TEMPLATE",
-  ADD_MEDICINES:"ADD_MEDICINES"
+  ADD_MEDICINES:"ADD_MEDICINES",
+  ADD_FOOD_ITEM:"ADD_FOOD_ITEM",
+  ADD_DIET:"ADD_DIET",
+  EDIT_DIET:"EDIT_DIET",
+  DIET_RESPONSE:"DIET_RESPONSE",
+  ADD_WORKOUT:"ADD_WORKOUT",
+  EDIT_WORKOUT:"EDIT_WORKOUT",
+  WORKOUT_RESPONSE:"WORKOUT_RESPONSE",
+  WORKOUT_RESPONSE_DETALS:"WORKOUT_RESPONSE_DETALS",
+  MISSED_DIET:"MISSED_DIET",
+  MISSED_WORKOUT:"MISSED_WORKOUT",
 };
 
 export const USER_CATEGORY = {
@@ -416,7 +430,9 @@ export const EVENT_TYPE = {
   ARTICLE: "article",
   MEDICATION_REMINDER: "medication-reminder",
   SYMPTOMS: "symptoms",
-  VITALS: "vitals"
+  VITALS: "vitals",
+  DIET:"diet",
+  WORKOUT:"workout"
 };
 
 export const EVENT_STATUS = {
@@ -459,16 +475,16 @@ export const SEVERITY_STATUS = {
 export const NO_MEDICATION = "1";
 export const NO_APPOINTMENT = "2";
 export const NO_ACTION = "3";
-// export const TEST_ONE = "5";
-// export const TEST_TWO = "6";
+export const NO_DIET = "4";
+export const NO_WORKOUT = "5";
 
 export const CHART_TITLE = {
   // [NO_ADHERENCE]: "Adherence",
   [NO_MEDICATION]: "Missed Medication",
   [NO_APPOINTMENT]: "Missed Appointments",
-  [NO_ACTION]: "Missed Actions"
-  // [TEST_ONE]: 'Test One',
-  // [TEST_TWO]: 'Test Two'
+  [NO_ACTION]: "Missed Actions",
+  [NO_DIET]: "Missed Diet",
+  [NO_WORKOUT]: "Missed Workout"
 };
 
 export const GRAPH_COLORS = {
@@ -503,25 +519,24 @@ export const GRAPH_COLORS = {
       dark: "bg-dark-blue",
       light: "bg-light-blue"
     }
+  },
+  [NO_DIET]: {
+    dark: "#A0522D",
+    light: "#F5DEB3",
+    className: {
+      dark: "bg-dark-brown",
+      light: "bg-light-brown"
+    }
+
+  },
+  [NO_WORKOUT]: {
+    dark: "#00FF7F",
+    light: "#90EE90",
+    className: {
+      dark: "bg-spring-green",
+      light: "bg-light-green"
+    }
   }
-  // [TEST_ONE]: {
-  //   dark: "#A0522D",
-  //   light: "#F5DEB3",
-  //   className: {
-  //     dark: "bg-dark-brown",
-  //     light: "bg-light-brown"
-  //   }
-
-  // },
-
-  // [TEST_TWO]: {
-  //   dark: "#00FF7F",
-  //   light: "#90EE90",
-  //   className: {
-  //     dark: "bg-spring-green",
-  //     light: "bg-light-green"
-  //   }
-  // }
 };
 
 export const GRAPH_TYPE = {
@@ -1815,7 +1830,9 @@ export const ACCOUNT_STATUS = {
 export const DELETE_TEMPLATE_RELATED_TYPE={
   MEDICATION:"medication",
   APPOINTMENT:"appointment",
-  VITAL:"vital"
+  VITAL:"vital",
+  DIET:"diet",
+  WORKOUT:"workout"
 }
 
 
@@ -1851,3 +1868,60 @@ export const TYPE_SYMPTOMS="Symptoms";
 export const TYPE_APPOINTMENTS="Appointments";
 export const TYPE_VITALS = "vitals";
 export const TYPE_USER_MESSAGE = "UserMessage";
+export const TYPE_DIETS="diets";
+export const TYPE_WORKOUTS="workouts";
+
+export const VIDEO_TYPES = {
+  URL: "url",
+  UPLOAD: "upload",
+  NONE: "none"
+};
+
+
+export const WAKE_UP = "1";
+export const BREAKFAST = "2";
+export const LUNCH = "3";
+export const EVENING = "4";
+export const DINNER = "5";
+export const SLEEP = "6";
+export const MID_MORNING = "7";
+export const MEAL_TIMINGS = [
+  WAKE_UP,
+  BREAKFAST,
+  MID_MORNING,
+  LUNCH,
+  EVENING,
+  DINNER,
+  SLEEP
+];
+
+export const PATIENT_MEAL_TIMINGS = {
+  [WAKE_UP]: {
+    time: "2020-09-24T08:00:00+05:30",
+    text: "Immediately After Wakeup"
+  },
+  [BREAKFAST]: {
+    time: "2020-09-24T09:00:00+05:30",
+    text: "Breakfast"
+  },
+  [LUNCH]: {
+    time: "2020-09-24T13:00:00+05:30",
+    text: "Lunch"
+  },
+  [EVENING]: {
+    time: "2020-09-24T16:00:00+05:30",
+    text: "Evening"
+  },
+  [DINNER]: {
+    time: "2020-09-24T20:00:00+05:30",
+    text: "Dinner"
+  },
+  [SLEEP]: {
+    time: "2020-09-24T23:00:00+05:30",
+    text: "Before Sleep"
+  },
+  [MID_MORNING]: {
+    time: "2020-09-24T11:00:00+05:30",
+    text: "Mid Morning"
+  },
+};

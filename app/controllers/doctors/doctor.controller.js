@@ -46,15 +46,17 @@ import ClinicWrapper from "../../ApiWrapper/web/doctorClinic";
 import CollegeWrapper from "../../ApiWrapper/web/college";
 import CouncilWrapper from "../../ApiWrapper/web/council";
 import AccountDetailsWrapper from "../../ApiWrapper/web/accountsDetails";
-// import ProviderWrapper from "../../ApiWrapper/web/provider";
+import ProviderWrapper from "../../ApiWrapper/web/provider";
 import FeatureMappingWrapper from "../../ApiWrapper/web/doctorPatientFeatureMapping";
 import TreatmentWrapper from "../../ApiWrapper/web/treatments";
+import UserRoleWrapper from "../../ApiWrapper/web/userRoles";
 import SpecialityWrapper from "../../ApiWrapper/web/speciality";
 
 import AuthJob from "../../JobSdk/Auth/observer";
 import NotificationSdk from "../../NotificationSdk";
 // import { createNewUser } from "../user/userHelper";
 // import { generatePassword } from "../helper/passwordGenerator";
+import DoctorPatientWatchlistWrapper from "../../ApiWrapper/web/doctorPatientWatchlist";
 
 import { addProviderDoctor } from "./providerHelper";
 
@@ -80,7 +82,10 @@ import { uploadImageS3 } from "../user/userHelper";
 import { EVENTS, Proxy_Sdk } from "../../proxySdk";
 import UserVerificationServices from "../../services/userVerifications/userVerifications.services";
 import UserPreferenceService from "../../services/userPreferences/userPreference.service";
+import userRolesService from "../../services/userRoles/userRoles.service";
+import doctorPatientWatchlistService from "../../services/doctorPatientWatchlist/doctorPatientWatchlist.service";
 import { getSeparateName } from "../../helper/common";
+import userPreferenceService from "../../services/userPreferences/userPreference.service";
 // import doctor from "../../ApiWrapper/web/doctor";
 // import college from "../../ApiWrapper/web/college";
 
@@ -592,7 +597,7 @@ class DoctorController extends Controller {
   addDoctor = async (req, res) => {
     const { raiseSuccess, raiseClientError, raiseServerError } = this;
     try {
-      const { userDetails: { userId } = {} } = req;
+      const { userDetails: { userId , userRoleId } = {} } = req;
 
       const {
         name,
@@ -603,8 +608,87 @@ class DoctorController extends Controller {
         profile_pic,
         signature_pic,
         is_provider,
-        email
+        email,
+        existing=false,
+        existingDoctorId=null
       } = req.body;
+
+
+      if(is_provider && existing){
+
+        const user = await userService.getUserByEmail({email});
+
+        if(user){
+          const userData = await UserWrapper(user);
+          const docUserId = await userData.getId();
+
+          const provider = await providerService.getProviderByData({user_id:userId});
+
+          if(provider){
+            const providerData = await ProviderWrapper(provider);
+            const provider_id = await providerData.getProviderId() || null;
+            const userRole = await userRolesService.getSingleUserRoleByData({
+              user_identity:docUserId,
+              linked_id:provider_id,
+              linked_with:USER_CATEGORY.PROVIDER
+            });
+
+            if(userRole){
+              return this.raiseClientError(
+                res,
+                422,
+                {},
+                "This email id is already linked with this provider."
+              );
+            }else{
+
+              // -- create new user role
+              const newUserRole = await userRolesService.create({
+                user_identity:docUserId,
+                linked_id:provider_id,
+                linked_with:USER_CATEGORY.PROVIDER
+              });
+              
+              const roleData = await UserRoleWrapper(newUserRole);
+              let user_roles = {};
+              user_roles[roleData.getId()]=await roleData.getAllInfo();
+              const doctor = await doctorService.getDoctorByUserId(docUserId);
+              const doctorData = await DoctorWrapper(doctor);
+              // -- create new user ref
+              const userPreference = await userPreferenceService.addUserPreference({
+                user_id:docUserId,
+                details:{"charts": ["1", "2", "3"]},
+                user_role_id:roleData.getId()
+              });
+
+              // -- create new doc provider mapping
+              const mappingData = { doctor_id: doctorData.getDoctorId(), provider_id: provider_id };
+              const response = await doctorProviderMappingService.createDoctorProviderMapping(
+                mappingData
+              );
+
+              return raiseSuccess(
+                res,
+                200,
+                {
+                  user_roles,
+                  users: {
+                    [userData.getId()]: userData.getBasicInfo()
+                  },
+                  doctors: {
+                    [doctorData.getDoctorId()]: doctorData.getBasicInfo()
+                  }
+                },
+                "Doctor liked with provider successfully."
+              );
+
+            }
+          }
+          
+        }
+        
+      }
+
 
       if (is_provider) {
         const resp = await addProviderDoctor(
@@ -613,8 +697,13 @@ class DoctorController extends Controller {
           raiseSuccess,
           raiseClientError
         );
+
         return resp;
       }
+
+
+      console.log("3268235467325462534716313817931");
+
 
       const doctorName = name.split(" ");
       const user_data_to_update = {
@@ -868,11 +957,15 @@ class DoctorController extends Controller {
               degree_id = degreeId;
             }
 
-            let degree = await degreeService.getByData({id:degree_id});
-            const degreeWrapper = await DegreeWrapper(degree);
-            degreeData[
-              degreeWrapper.getDegreeId()
-            ] = degreeWrapper.getBasicInfo();
+            let degree = null;
+            if(degree_id){
+              degree=await degreeService.getByData({id:degree_id})
+              const degreeWrapper = await DegreeWrapper(degree);
+              degreeData[
+                degreeWrapper.getDegreeId()
+              ] = degreeWrapper.getBasicInfo();
+            }
+            
 
             let collegeId = college_id;
             if (college_name !== "") {
@@ -969,11 +1062,14 @@ class DoctorController extends Controller {
             }else{
              registration_council_id = regCouncilId;
             }
-      
-            const council = await councilService.getByData({id:registration_council_id});
-            const councilWrapper = await CouncilWrapper(council);
-            councilData[councilWrapper.getCouncilId()]=councilWrapper.getBasicInfo();
 
+            let council = null;
+            if(registration_council_id){
+              council = await councilService.getByData({id:registration_council_id});
+              const councilWrapper = await CouncilWrapper(council);
+              councilData[councilWrapper.getCouncilId()]=councilWrapper.getBasicInfo();
+            }
+      
 
             if (number) {
               updateDataRegistration["number"] = number;
@@ -1098,7 +1194,7 @@ class DoctorController extends Controller {
         address = ""
       } = req.body;
 
-      const { userDetails: { userId, userData: { category } = {} } = {} } = req;
+      const { userDetails: { userRoleId = null , userId, userData: { category } = {} } = {} } = req;
 
       const userExists = await userService.getPatientByMobile(mobile_number) || [];
 
@@ -1120,8 +1216,6 @@ class DoctorController extends Controller {
       if (symptoms) {
         carePlanOtherDetails["symptoms"] = symptoms;
       }
-
-      Logger.debug("1789173127 userExists.length ---> ", userExists.length);
 
       const doctor = await doctorService.getDoctorByData({ user_id: userId });
 
@@ -1162,7 +1256,6 @@ class DoctorController extends Controller {
           },
           patient_id
         );
-        Logger.debug("Patient updateResponse ", updateResponse);
 
         patientData = await PatientWrapper(null, patient_id);
       } else {
@@ -1211,11 +1304,18 @@ class DoctorController extends Controller {
           address
         });
 
+        const patientWrapper = await PatientWrapper(patient);
+        const patientUserId = await patientWrapper.getUserId();
+        const userRole = await userRolesService.create({user_identity:patientUserId});
+        const userRoleWrapper = await UserRoleWrapper(userRole);
+        const newUserRoleId = await userRoleWrapper.getId();
+
         await UserPreferenceService.addUserPreference({
           user_id: newUserId,
           details: {
             timings: PATIENT_MEAL_TIMINGS
-          }
+          },
+          user_role_id:newUserRoleId
         });
 
         const uid = getReferenceId(patient.get("id"));
@@ -1268,11 +1368,12 @@ class DoctorController extends Controller {
         doctor_id: doctor.get("id"),
         care_plan_template_id,
         details,
+        user_role_id:userRoleId,
         created_at: moment()
       });
 
       const carePlanData = await CarePlanWrapper(carePlan);
-      const care_plan_id = await carePlanData.getCarePlanId();
+      // const care_plan_id = await carePlanData.getCarePlanId();
 
       let templateMedicationData = {};
       let templateAppointmentData = {};
@@ -1754,7 +1855,6 @@ class DoctorController extends Controller {
         res,
         200,
         {
-          // doctor
           users: {
             [updatedUserData.getId()]: updatedUserData.getBasicInfo()
           },
@@ -3038,7 +3138,7 @@ class DoctorController extends Controller {
     const { raiseSuccess, raiseClientError, raiseServerError } = this;
     try {
       const { patient_id = 0 } = req.params;
-      const { userDetails: { userId } = {} } = req;
+      const { userDetails: { userRoleId = null ,  userId } = {} } = req;
 
       const patient = await PatientWrapper(null, patient_id);
       const doctor = await doctorsService.getDoctorByUserId(parseInt(userId));
@@ -3047,7 +3147,8 @@ class DoctorController extends Controller {
         const newWatchlistRecord = await doctorService.createNewWatchlistRecord(
           {
             patient_id: parseInt(patient_id),
-            doctor_id: doctor.get("id")
+            doctor_id: doctor.get("id"),
+            user_role_id:userRoleId
           }
         );
 
@@ -3083,7 +3184,7 @@ class DoctorController extends Controller {
     const { raiseSuccess, raiseClientError, raiseServerError } = this;
     try {
       const { patient_id = 0 } = req.params;
-      const { userDetails: { userId } = {} } = req;
+      const { userDetails: { userId , userRoleId = null } = {} } = req;
 
       const patient = await PatientWrapper(null, patient_id);
       const doctor = await doctorsService.getDoctorByUserId(parseInt(userId));
@@ -3091,7 +3192,8 @@ class DoctorController extends Controller {
         const deletedWatchlistRecord = await doctorService.deleteWatchlistRecord(
           {
             patient_id: parseInt(patient_id),
-            doctor_id: doctor.get("id")
+            doctor_id: doctor.get("id"),
+            user_role_id:userRoleId
           }
         );
 
@@ -3453,7 +3555,7 @@ class DoctorController extends Controller {
     const { raiseSuccess, raiseClientError, raiseServerError } = this;
     try { 
       const {
-        userDetails: { userId } = {},
+        userDetails: { userId , userRoleId = null  } = {},
         query = {}
       } = req;
 
@@ -3487,14 +3589,22 @@ class DoctorController extends Controller {
 
       let doctorId = null, patients = {}, paginatedPatientData = {}, watchlistPatientIds = [], count = 0, patientIds = [];
 
+
       if(doctor) {
         const doctorData = await DoctorWrapper(doctor);
         doctorId = doctorData.getDoctorId();
 
         
         const doctorAllInfo = await doctorData.getAllInfo();
-        const { watchlist_patient_ids = []} = doctorAllInfo || {};
-        watchlistPatientIds = watchlist_patient_ids;
+        const watchlistRecords = await doctorPatientWatchlistService.getAllByData({user_role_id:userRoleId});
+        if(watchlistRecords && watchlistRecords.length){
+          for(let i = 0 ; i<watchlistRecords.length ; i++){
+            const watchlistWrapper = await DoctorPatientWatchlistWrapper(watchlistRecords[i]);
+            const patientId = await watchlistWrapper.getPatientId();
+            watchlistPatientIds.push(patientId);
+          }
+        }
+    
       }
 
       if(getWatchListPatients) {
@@ -3643,6 +3753,67 @@ class DoctorController extends Controller {
     }
   }
 
+
+  searchDoctor = async(req,res) => {
+    const { raiseSuccess, raiseClientError, raiseServerError } = this;
+    try {
+      const {
+        query: { email = null } = {},
+        userDetails: { userId : user_id , userRoleId } = {},
+        body = {}
+      } = req;
+
+      const matchingUsers = await userService.searchMail(email);
+      let users = {}, doctors = {} , user_roles = {},emails = {} ;
+
+
+      if(matchingUsers && matchingUsers.length){
+        for(let i = 0 ; i  < matchingUsers.length ; i++ ){
+          const each = matchingUsers[i];
+          const userData = await UserWrapper(each);
+          const userId = await userData.getId();
+          const matchingDoctor =   await doctorService.findOne({where: {user_id: userId}, 
+            attributes: ["id"]}) || null;
+
+          if(matchingDoctor){
+            const { id :docId } = matchingDoctor || {};
+            const doctorData = await DoctorWrapper(null,docId);
+            users[userId] = await userData.getBasicInfo();
+            const doctorId = await doctorData.getDoctorId();
+            doctors[doctorId] = await doctorData.getAllInfo();
+            const userRole = await userRolesService.getFirstUserRole(userId);
+            const userRoleData = await UserRoleWrapper(userRole);
+            user_roles[userRoleData.getId()] = await userRoleData.getBasicInfo();
+            emails[doctorId]=await userData.getEmail();
+          }
+        }
+
+        return raiseSuccess(
+          res,
+          200,
+          {
+            users,
+            doctors,
+            user_roles,
+            emails
+          },
+          "Matching Users found  successfully."
+        );
+
+      }else{
+        return raiseClientError(
+          res,
+          422,
+          {},
+          "No Matching Doctors found."
+        );
+      }
+
+    } catch (error) {
+      Logger.debug("searchEmail 500 ERROR", error);
+      return raiseServerError(res);
+    }
+  }
 
 }
 

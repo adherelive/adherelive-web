@@ -4,7 +4,10 @@ const router = express.Router();
 import jwt from "jsonwebtoken";
 
 import userService from "../../app/services/user/user.service";
+import userRolesService from "../../app/services/userRoles/userRoles.service";
+
 import UserWrapper from "../../app/ApiWrapper/web/user";
+import UserRoleWrapper from "../../app/ApiWrapper/mobile/userRoles";
 
 import Logger from "../../libs/log";
 const Log = new Logger("API > INDEX");
@@ -38,10 +41,18 @@ import reportRouter from "./reports";
 import transactionRouter from "./transactions";
 import userFavourites from "./userFavourites";
 import agoraRouter from "./agora";
+import adhocRouter from "./adhoc";
+import userRoles from "./userRoles";
+import foodItemsRouter from "./foodItems";
+import mealTemplateRouter from "./mealTemplate";
+import dietRouter from "./diet";
+import portionRouter from "./portion";
+import exerciseRouter from "./exercises";
+import workoutRouter from "./workouts";
 
 router.use(async function(req, res, next) {
   try {
-    let accessToken;
+    let accessToken, userId = null, userRoleId, userRoleData;
     const { cookies = {} } = req;
     if (cookies.accessToken) {
       accessToken = cookies.accessToken;
@@ -55,40 +66,60 @@ router.use(async function(req, res, next) {
       accessToken = aT;
     }
 
-    if (accessToken) {
-      const secret = process.config.TOKEN_SECRET_KEY;
-      const decodedAccessToken = await jwt.verify(accessToken, secret);
-      const { userId = null } = decodedAccessToken || {};
+    const secret = process.config.TOKEN_SECRET_KEY;
 
-      const userData = await userService.getUser(userId);
-      const user = await UserWrapper(userData);
-      const { userCategoryData = {}, userCategoryId } =
-        (await user.getCategoryInfo()) || {};
-      if (user) {
-        req.userDetails = {
-          exists: true,
-          userId: userId,
-          userData: userData.getBasicInfo,
-          userCategoryData,
-          userCategoryId
-        };
+    if (accessToken) {
+      const decodedAccessToken = await jwt.verify(accessToken, secret);
+      const { userRoleId: decodedUserRoleId = null, userId: decodedUserTokenUserId = null } = decodedAccessToken || {};
+      const userRoleDetails = await userRolesService.getSingleUserRoleByData({id: decodedUserRoleId});
+      if(userRoleDetails) {
+        const userRole = await UserRoleWrapper(userRoleDetails);
+        userId = userRole.getUserId();
+        userRoleId = parseInt(decodedUserRoleId);
+        userRoleData = userRole.getBasicInfo();
       } else {
         req.userDetails = {
-          exists: false.use()
+          exists: false
         };
+        next();
+        return;
       }
+    } else {
+      req.userDetails = {
+        exists: false
+      };
+      next();
+      return;
+    }
+
+    const userData = await userService.getUser(userId);
+    if (userData) {
+      const user = await UserWrapper(userData);
+      const { userCategoryData, userCategoryId } =
+        (await user.getCategoryInfo()) || {};
+      req.userDetails = {
+        exists: true,
+        userRoleId,
+        userRoleData,
+        userId,
+        userData: userData.getBasicInfo,
+        userCategoryData,
+        userCategoryId
+      };
     } else {
       req.userDetails = {
         exists: false
       };
     }
     next();
+    return;
   } catch (err) {
     Log.debug("API INDEX CATCH ERROR ", err);
     req.userDetails = {
       exists: false
     };
     next();
+    return;
   }
 });
 
@@ -122,6 +153,14 @@ router.use("/features", featuresRouter);
 router.use("/reports", reportRouter);
 router.use("/transactions", transactionRouter);
 router.use("/favourites",userFavourites);
-router.use("/agora", agoraRouter)
+router.use("/agora", agoraRouter);
+router.use("/adhoc", adhocRouter);
+router.use("/user-roles",userRoles);
+router.use("/food-items",foodItemsRouter);
+router.use("/meal/templates",mealTemplateRouter);
+router.use("/diet",dietRouter);
+router.use("/portions",portionRouter);
+router.use("/exercises", exerciseRouter);
+router.use("/workout", workoutRouter);
 
 module.exports = router;

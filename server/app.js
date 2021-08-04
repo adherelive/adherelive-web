@@ -10,6 +10,8 @@ import RenewSubscription from "../app/Crons/renewSubscription";
 import activePatient from "../app/Crons/activePatient";
 import RemoveDocuments from "../app/Crons/removeDocuments";
 
+import LongTerm from "../app/Crons/longTerm";
+
 import ApiRouter from "../routes/api";
 import mApiRouter from "../routes/m-api";
 
@@ -33,6 +35,7 @@ const cron = schedule.scheduleJob("*/1 * * * *", async () => {
     await Prior.runObserver();
     await Passed.runObserver();
     await Start.runObserver();
+    await activePatient.runObserver();
 });
 
 const perDayUtcRule = new schedule.RecurrenceRule();
@@ -45,7 +48,7 @@ const removeDocumentPerDayCron = schedule.scheduleJob(perDayUtcRule, async() => 
 
 // CRONS RUNNING EVERY 1 HOUR
 const perHourCron = schedule.scheduleJob("0 0 */1 * * *", async () => {
-   await activePatient.runObserver();
+   await LongTerm.observer();
 });
 
 // CRONS RUNNING AT START OF EVERY MONTH

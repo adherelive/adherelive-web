@@ -5,12 +5,16 @@ function missedEventReducer(state, data) {
   const {
     missed_medications = {},
     missed_appointments = {},
-    missed_vitals = {}
+    missed_vitals = {},
+    missed_diets = {},
+    missed_workouts = {}
   } = data || {};
   if (
     Object.keys(missed_medications).length > 0 ||
     Object.keys(missed_appointments).length > 0 ||
-    Object.keys(missed_vitals).length > 0
+    Object.keys(missed_vitals).length > 0 || 
+    Object.keys(missed_diets).length > 0 ||
+    Object.keys(missed_workouts).length > 0
   ) {
     return {
       ...state,

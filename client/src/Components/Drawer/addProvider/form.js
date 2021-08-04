@@ -309,7 +309,6 @@ class AddProviderForm extends Component {
       )}
       </FormItem>
 
-
       <Customization {...this.props}/>
       {/* <-------------------------- ACCOUNT DETAILS --------------------------------------->*/}
 

@@ -26,7 +26,6 @@ export default async (req, res, next) => {
         if (accessToken) {
             const secret = process.config.TOKEN_SECRET_KEY;
             const decodedAccessToken = await jwt.verify(accessToken, secret);
-            console.log(decodedAccessToken);
             const access_token = decodedAccessToken.accessToken;
         } else {
             const response = new Response(false, 401);

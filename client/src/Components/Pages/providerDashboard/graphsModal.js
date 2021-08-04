@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import { injectIntl } from "react-intl";
 import { 
     CHART_TITLE,
-    NO_ACTION, NO_APPOINTMENT, NO_MEDICATION, 
+    NO_ACTION, NO_APPOINTMENT, NO_MEDICATION, NO_DIET, NO_WORKOUT
 } from "../../../constant";
 
 import { Button, Checkbox, Modal } from "antd";
@@ -10,7 +10,7 @@ import { Button, Checkbox, Modal } from "antd";
 
 
 const graphs = [
-     NO_ACTION, NO_APPOINTMENT, NO_MEDICATION,
+     NO_ACTION, NO_APPOINTMENT, NO_MEDICATION,NO_DIET,NO_WORKOUT
     ];
 
 class GraphsModal extends Component {

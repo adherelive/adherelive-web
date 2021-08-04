@@ -10,7 +10,6 @@ const userDeviceSchema = Joi.object().keys({
 export const addUserDeviceSchema = (req, res, next) => {
     const { body: data = {} } = req;
     const isValid = userDeviceSchema.validate(data);
-    console.log("8931791 isValid ---> ", isValid);
     if (isValid && isValid.error != null) {
         return validationError(res, isValid);
     }

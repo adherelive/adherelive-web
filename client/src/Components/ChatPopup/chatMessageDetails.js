@@ -483,7 +483,7 @@ class ChatMessageDetails extends Component {
 
     const messageToRender = [];
     messageArr.forEach((message, index) => {
-      const { state: { author, body } = {} } = message || {};
+      const { state: { attributes : {sender_id} = {}, author, body } = {} } = message || {};
 
       const prevMessage = messageArr[index - 1] || null;
 
@@ -525,7 +525,7 @@ class ChatMessageDetails extends Component {
         return;
       }
 
-      if (author === `${authenticated_user}`) {
+      if ((sender_id && sender_id === `${authenticated_user}`) || author === `${authenticated_user}`) {
         // RIGHT
 
         // media types here
