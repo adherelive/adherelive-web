@@ -239,7 +239,7 @@ const appointmentNotification = async (data, category) => {
     const verbString = verb.split(":")[0];
 
     if (
-      category === USER_CATEGORY.DOCTOR &&
+      (category === USER_CATEGORY.DOCTOR || category === USER_CATEGORY.HSP) &&
       verbString.toUpperCase() === APPOINTMENT_CREATE
     ) {
       return {};
@@ -393,7 +393,7 @@ const vitalsNotification = async (data, category) => {
     let vitalTemplateData = {};
 
     const verbString = verb.split(":")[0];
-    if (category === USER_CATEGORY.DOCTOR && verbString !== VITAL_RESPONSE) {
+    if ((category === USER_CATEGORY.DOCTOR || category === USER_CATEGORY.HSP) && verbString !== VITAL_RESPONSE) {
       return {};
     }
 
@@ -1003,7 +1003,7 @@ export const getDataForNotification = async (data) => {
     // console.log("989387482748723487239847238 ===>>>>>>>>>>> ",{event}); 
 
 
-    if (category === USER_CATEGORY.DOCTOR) {
+    if (category === USER_CATEGORY.DOCTOR || category === USER_CATEGORY.HSP) {
       switch (event) {
         case APPOINTMENT:
           return await appointmentNotification(data, category);

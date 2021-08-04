@@ -14,17 +14,19 @@ const mapStateToProps = state => {
     user_roles= {},
     drawer: { visible, loading, data: { type, payload = {} } = {} },
       doctors,
+      users 
   } = state;
 
   const auth_doctor_id = authDoctorSelector(state);
-
   return {
     auth_role,
     user_roles,
+    auth_doctor_id,
     visible: visible && type === DRAWER.ADD_CONSULTATION_FEE,
     loading,
     payload,
-    doctors: doctors[auth_doctor_id] || {}
+    doctors,
+    users 
   };
 };
 

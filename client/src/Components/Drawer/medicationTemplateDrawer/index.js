@@ -2,7 +2,18 @@ import React, { Component, Fragment } from "react";
 import { injectIntl } from "react-intl";
 import { Drawer, Icon, Select, Input, message, Button, TimePicker, Modal } from "antd";
 
-import {WHEN_TO_TAKE_ABBR_TYPES, MEDICATION_TIMING,DAYS,DAYS_TEXT_NUM_SHORT, EVENT_TYPE, MEDICATION_TIMING_HOURS, MEDICATION_TIMING_MINUTES, TABLET, SYRUP, RADIOLOGY } from "../../../constant";
+import {WHEN_TO_TAKE_ABBR_TYPES, 
+    MEDICATION_TIMING,
+    DAYS,
+    DAYS_TEXT_NUM_SHORT, 
+    EVENT_TYPE, 
+    MEDICATION_TIMING_HOURS, 
+    MEDICATION_TIMING_MINUTES, 
+    TABLET, 
+    SYRUP, 
+    RADIOLOGY,
+    USER_CATEGORY
+ } from "../../../constant";
 import moment from "moment";
 import EditMedicationReminder from "../../../Containers/Drawer/editMedicationReminder";
 import EditAppointmentDrawer from "../../../Containers/Drawer/editAppointment";
@@ -141,7 +152,7 @@ class TemplateDrawer extends Component {
 
             for (let mId of template_medication_ids) {
                 let newMedication = {};
-                let { basic_info: { id = 0, care_plan_template_id = 0, medicine_id = 0 } = {}, schedule_data = {} } = template_medications[mId];
+                let { basic_info: { id = 0, care_plan_template_id = 0, medicine_id = 0 } = {}, schedule_data = {} } = template_medications[mId] || {};
                 newMedication.id = id;
                 newMedication.schedule_data = schedule_data;
                 newMedication.care_plan_template_id = care_plan_template_id;
@@ -356,7 +367,7 @@ class TemplateDrawer extends Component {
 
             for (let mId of template_medication_ids) {
                 let newMedication = {};
-                let { basic_info: { id = 0, care_plan_template_id = 0, medicine_id = 0 } = {}, schedule_data = {} } = template_medications[mId];
+                let { basic_info: { id = 0, care_plan_template_id = 0, medicine_id = 0 } = {}, schedule_data = {} } = template_medications[mId] || {};
                 newMedication.id = id;
                 newMedication.schedule_data = schedule_data;
                 newMedication.care_plan_template_id = care_plan_template_id;
@@ -1168,7 +1179,16 @@ class TemplateDrawer extends Component {
 
     onSubmit = () => {
     
-        const { submit, patientId, carePlan: { basic_info: {id: carePlanId} = {}, treatment_id = 1, severity_id = 1, condition_id = 1 } = {} } = this.props;
+        const { submit, 
+            patientId, 
+            carePlan: { 
+                basic_info: {id: carePlanId} = {}, 
+                treatment_id = 1, 
+                severity_id = 1, 
+                condition_id = 1 
+            } = {} ,
+            authenticated_category
+        } = this.props;
         let { medications = {}, appointments = {},vitals={}, diets = {} , workouts = {} ,  name = '', createTemplate = false } = this.state;
         let medicationsData = Object.values(medications);
         let appointmentsData = Object.values(appointments);
@@ -1240,6 +1260,11 @@ class TemplateDrawer extends Component {
         }
 
         /////
+
+        if(authenticated_category === USER_CATEGORY.HSP && Object.keys(medications).length ){
+            message.error(this.formatMessage(messages.medicationAccessError));
+            return;
+        }
 
         let validate = this.validateData(medicationsData, appointmentsData,vitalData,dietData, workoutData);
         if (validate) {

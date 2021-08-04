@@ -127,7 +127,7 @@ class AdminDoctorDetails extends Component {
       <div className="wp100 mb20 fs28 fw700 flex justify-space-between align-center">
         <div className="flex flex-start align-center">
           <ArrowLeftOutlined onClick={handleBack} className="mr10" />
-          <div>{formatMessage(messages.doctor_details_header_text)}</div>
+          <div>{formatMessage(messages.profile_details)}</div>
         </div>
 
         {getFooter()}

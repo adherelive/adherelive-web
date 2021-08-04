@@ -82,7 +82,7 @@ export const getCareplanData = async ({
 
       // get latest careplan id
       if (
-        userCategory === USER_CATEGORY.DOCTOR &&
+        (userCategory === USER_CATEGORY.DOCTOR || userCategory === USER_CATEGORY.HSP) &&
         user_role_id.toString() === userRoleId.toString()
       ) {
         // if(userCategory === USER_CATEGORY.DOCTOR && doctorId === doctor_id) {

@@ -7,7 +7,9 @@ import {
     updateWorkoutUrl,
     getWorkoutsForPatientDetailsUrl,
     getWorkoutTimelineUrl,
-    getWorkoutScheduleEventDetailsUrl} from "../../Helper/urls/workout";
+    getWorkoutScheduleEventDetailsUrl,
+    updateWorkoutTotalCaloriesUrl
+} from "../../Helper/urls/workout";
 
 export const GET_WORKOUT_DETAILS_START = "GET_WORKOUT_DETAILS_START";
 export const GET_WORKOUT_DETAILS_COMPLETED = "GET_WORKOUT_DETAILS_COMPLETED";
@@ -42,6 +44,9 @@ export const GET_WORKOUT_DETAILS_FOR_RESPONSE_START = "GET_WORKOUT_DETAILS_FOR_R
 export const GET_WORKOUT_DETAILS_FOR_RESPONSE_COMPLETED = "GET_WORKOUT_DETAILS_FOR_RESPONSE_COMPLETED";
 export const GET_WORKOUT_DETAILS_FOR_RESPONSE_FAILED = "GET_WORKOUT_DETAILS_FOR_RESPONSE_FAILED";
 
+export const UPDATE_WORKOUT_TOTAL_CALORIES_START = "UPDATE_WORKOUT_TOTAL_CALORIES_START";
+export const UPDATE_WORKOUT_TOTAL_CALORIES_COMPLETED = "UPDATE_WORKOUT_TOTAL_CALORIES_COMPLETED";
+export const UPDATE_WORKOUT_TOTAL_CALORIES_FAILED = "UPDATE_WORKOUT_TOTAL_CALORIES_FAILED";
 
 export const getWorkoutDetails = () => {
     let response = {};
@@ -230,6 +235,37 @@ export const deleteWorkout = (id)  => {
         return response;
     }
 };
+
+export const updateWorkoutTotalCalories = ({workout_id,total_calories}) => {
+    let response = {};
+    return async dispatch => {
+        try {
+            dispatch({type: UPDATE_WORKOUT_TOTAL_CALORIES_START});
+            response = await doRequest({
+                method: REQUEST_TYPE.POST,
+                url: updateWorkoutTotalCaloriesUrl(workout_id,total_calories)
+            });
+
+            const { status, payload: { data, message = "" } = {} } = response || {};
+
+            if (status === true) {
+                dispatch({
+                    type: UPDATE_WORKOUT_TOTAL_CALORIES_COMPLETED,
+                    data
+                });
+            } else {
+                dispatch({
+                    type: UPDATE_WORKOUT_TOTAL_CALORIES_FAILED,
+                    message
+                });
+            }
+        } catch (error) {
+            console.log("UPDATE WORKOUT TOTAL CALORIES MODULE catch error -> ", error);
+        }
+        return response;
+    }
+};
+
 
 export const getWorkoutTimeline = (workoutId) => {
     let response = {};

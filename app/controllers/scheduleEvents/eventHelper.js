@@ -33,6 +33,21 @@ export const doctorChart = async req => {
     }
 };
 
+
+export const hspChart = async req => {
+    try {
+        const {userDetails: {userRoleId, userCategoryId: doctor_id} = {}} = req;
+        Log.info(`DOCTOR ID (doctor_id) : ${doctor_id}`);
+
+
+        return await getAllDataForDoctors({doctor_id, user_role_id: userRoleId,category:USER_CATEGORY.HSP});
+
+    } catch (error) {
+        Log.debug("doctorChart catch error", error);
+        throw error;
+    }
+};
+
 export const providerChart = async (req) => {
     try {
         const {userDetails: {userRoleId, userCategoryId: provider_id} = {}} = req;
@@ -196,11 +211,11 @@ const getAllDataForDoctors = async ({doctor_id, category = USER_CATEGORY.PROVIDE
         for (let i = 0; i < carePlans.length; i++) {
             const carePlan = await CarePlanWrapper(carePlans[i]);
             const {
-                appointment_ids,
-                medication_ids,
-                vital_ids,
-                diet_ids,
-                workout_ids
+                appointment_ids = [],
+                medication_ids = [],
+                vital_ids = [],
+                diet_ids = [],
+                workout_ids = []
             } = await carePlan.getAllInfo();
 
             appointmentIds = [...appointmentIds, ...appointment_ids];
@@ -304,6 +319,11 @@ const getFormattedData = async (events = [], category = USER_CATEGORY.DOCTOR) =>
 
         switch (event.getEventType()) {
             case EVENT_TYPE.MEDICATION_REMINDER:
+
+                if(category === USER_CATEGORY.HSP){
+                    continue;
+                }
+
                 if (!(event.getEventId() in medications)) {
                     if (category === USER_CATEGORY.PROVIDER) {
                         patientIds.push(participant_id);

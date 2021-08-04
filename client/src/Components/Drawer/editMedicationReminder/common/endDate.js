@@ -117,6 +117,7 @@ class EndDate extends Component {
       // medications,
       // medicationData = {},
       // payload: { id: medication_id } = {}
+      payload:{canViewDetails=false}={}
     } = this.props;
     const { formatMessage, openCalendar, getInitialValue, calendarComp } = this;
 
@@ -162,7 +163,7 @@ class EndDate extends Component {
                 showToday={false}
                 // suffixIcon={calendarComp()}
                 disabled={
-                  getFieldError(repeatIntervalField.field_name) !== undefined
+                  getFieldError(repeatIntervalField.field_name) !== undefined || canViewDetails
                 }
                 // allowClear={false}
                 disabledDate={disabledEndDate}

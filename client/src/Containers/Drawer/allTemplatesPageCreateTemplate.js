@@ -8,6 +8,7 @@ import {createCareplanTemplate,getAllTemplatesForDoctor } from "../../modules/ca
 // import { createReminder, updateReminder } from "../../modules/reminder"; // write to add to database
 const mapStateToProps = state => {
   const {
+    auth:{ authPermissions = [], authenticated_category } = {},
     drawer: { visible, loading, data: { type, payload = {} } = {} }, vital_templates, repeat_intervals,
     exercise_contents={}
   } = state;
@@ -15,6 +16,8 @@ const mapStateToProps = state => {
   
 
   return {
+    authPermissions,
+    authenticated_category,
     visible: visible && type === DRAWER.CREATE_CAREPLAN_TEMPLATE,
     loading,
     payload,

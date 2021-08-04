@@ -1,7 +1,6 @@
 import React, {Component} from "react";
 import {injectIntl} from "react-intl";
 import generateRow from "./dataRow";
-// import {PERMISSIONS} from "../../../constant";
 import getColumn from "./header";
 import Table from "antd/es/table";
 import messages from "./messages";
@@ -49,12 +48,17 @@ class MedicationTable extends Component {
             medicines,
             isOtherCarePlan,
             intl: {formatMessage} = {},
-            care_plans
+            care_plans, 
+            auth_role =null
         } = this.props;
 
         const {medication_ids = [] } =care_plans || {};
 
-        // const {medication_ids} = this.state;
+        const {basic_info : { user_role_id = null } = {} } = care_plans || {};
+        let canViewDetails=true;
+        if(!isOtherCarePlan && user_role_id.toString() === auth_role.toString()) {
+            canViewDetails=false;
+        }
 
         const {openResponseDrawer, openEditDrawer} = this;
 
@@ -66,7 +70,8 @@ class MedicationTable extends Component {
                 openEditDrawer,
                 formatMessage,
                 isOtherCarePlan,
-                medicines
+                medicines,
+                canViewDetails
             });
         });
     };
@@ -74,11 +79,14 @@ class MedicationTable extends Component {
     openResponseDrawer = (id) => (e) => {
 
         e.preventDefault();
-        const {medicationResponseDrawer, isOtherCarePlan,  auth_role =null ,care_plans = {}  } = this.props;
+        const {medicationResponseDrawer, isOtherCarePlan,  auth_role =null ,care_plans = {}} = this.props;
         const {basic_info : { user_role_id = null } = {} } = care_plans || {};
+        let canViewDetails=true;
         if(!isOtherCarePlan && user_role_id.toString() === auth_role.toString()) {
-            medicationResponseDrawer({id, loading: true});
-        } 
+            canViewDetails=false;
+        }
+        medicationResponseDrawer({id, loading: true});
+        
       
     };
 
@@ -86,15 +94,19 @@ class MedicationTable extends Component {
         e.preventDefault();
         const {editMedicationDrawer, isOtherCarePlan, patientId , auth_role =null ,care_plans = {}} = this.props;
         const {basic_info : { user_role_id = null } = {} } = care_plans || {};
+        let canViewDetails=true;
         if(!isOtherCarePlan && user_role_id.toString() === auth_role.toString()) {
-            editMedicationDrawer({id, patient_id: patientId, loading: true});
-        }   
+            canViewDetails=false;
+        }
+
+        editMedicationDrawer({id, patient_id: patientId, loading: true,canViewDetails});
+        
     };
 
     formatMessage = data => this.props.intl.formatMessage(data);
 
     render() {
-        console.log("238423749823794729847293",{props:this.props});
+        // console.log("238423749823794729847293",{props:this.props});
         const locale = {
             emptyText: this.formatMessage(messages.emptyMedicationTable)
           };

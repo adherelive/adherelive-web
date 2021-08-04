@@ -7,17 +7,17 @@ import EyeFilled from "@ant-design/icons/EyeFilled";
 export default props => {
   const {
        action,
-        id, formatMessage } = props || {};
+        id, formatMessage , canViewDetails = false } = props || {};
   const { workoutData: { expired_on = null } ={} } = props || {};
 
   return (
-    <Tooltip placement="bottom" title={ expired_on ? formatMessage(messages.view) : formatMessage(messages.edit)}>
+    <Tooltip placement="bottom" title={ expired_on || canViewDetails ? formatMessage(messages.view) : formatMessage(messages.edit)}>
       <div className="p10" 
       onClick={action(id)}
       >
         <div className="flex align-center justify-center">
           { 
-            expired_on
+            expired_on || canViewDetails
             ?
             <EyeFilled
               className="w20"

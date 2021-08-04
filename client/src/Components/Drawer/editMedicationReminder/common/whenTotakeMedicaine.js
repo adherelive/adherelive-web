@@ -406,7 +406,7 @@ class WhenToTakeMedication extends Component {
     const {
       form,
       medications,
-      payload: { id: medication_id } = {},
+      payload: { id: medication_id ,canViewDetails=false } = {},
       medicationData = {},
       addMedication,
       editMedication
@@ -505,6 +505,7 @@ class WhenToTakeMedication extends Component {
                     onSelect={value => handleSelect(value, k)}
                     onDeselect={handleDeselect}
                     suffixIcon={null}
+                    disabled={canViewDetails}
                   >
                     {this.getUnitOption(k)}
                   </Select>
@@ -734,7 +735,7 @@ class WhenToTakeMedication extends Component {
   getWhenToTakeButtons = () => {
     const { form: { getFieldDecorator } = {} ,  payload = {},medications, medicationData : templateMedication = null } = this.props;
     const { WHEN_TO_TAKE_BUTTONS = {}, getRadioOptions } = this;
-    const {id :medication_id= null}=payload || {};
+    const {id :medication_id= null ,canViewDetails = false }=payload || {};
     const {basic_info:{details:{when_to_take_abbr : existingWhenToTake=null}={}}={}} = medications[medication_id] || {};
 
     let whenToTake = null;
@@ -810,6 +811,7 @@ class WhenToTakeMedication extends Component {
             <RadioGroup
               className="flex justify-content-end radio-formulation flex-wrap"
               buttonStyle="solid"
+              disabled={canViewDetails}
             >
               {getRadioOptions()}
             </RadioGroup>

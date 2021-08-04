@@ -1,10 +1,10 @@
 import express from "express";
 import Authenticate from "../middleware/auth";
-import Authorize from "../middleware/authorize";
 // import * as validator from "./validator";
 
 import CarePlanTemplate from "../../../app/controllers/carePlanTemplate/carePlanTemplate.controller";
-import { USER_CATEGORY } from "../../../constant";
+import isAllowed from "../../middlewares/permissions";
+import PERMISSIONS from "../../../config/permissions";
 
 
 const router = express.Router();
@@ -12,14 +12,14 @@ const router = express.Router();
 router.get(
     "/",
     Authenticate,
-    Authorize(USER_CATEGORY.DOCTOR),
+    isAllowed(PERMISSIONS.CARE_PLAN_TEMPLATE.VIEW),
     CarePlanTemplate.getAllForDoctor
 );
 
 router.post(
     "/",
     Authenticate,
-    Authorize(USER_CATEGORY.DOCTOR),
+    isAllowed(PERMISSIONS.CARE_PLAN_TEMPLATE.ADD),
     // validator.validateCareplanTemplateData,
     CarePlanTemplate.create
 );
@@ -27,14 +27,14 @@ router.post(
 router.post(
     "/duplicate/:id",
     Authenticate,
-    Authorize(USER_CATEGORY.DOCTOR),
+    isAllowed(PERMISSIONS.CARE_PLAN_TEMPLATE.DUPLICATE ),
     CarePlanTemplate.duplicate
 );
 
 router.post(
     "/:id",
     Authenticate,
-    Authorize(USER_CATEGORY.DOCTOR),
+    isAllowed(PERMISSIONS.CARE_PLAN_TEMPLATE.UPDATE ),
     CarePlanTemplate.update
 );
 
@@ -42,7 +42,7 @@ router.delete(
     "/:id",
     Authenticate,
     // todo-v: add validator IMP
-    Authorize(USER_CATEGORY.DOCTOR),
+    isAllowed(PERMISSIONS.CARE_PLAN_TEMPLATE.DELETE ),
     CarePlanTemplate.delete
 );
 

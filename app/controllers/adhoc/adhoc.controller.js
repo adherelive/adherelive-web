@@ -1,3 +1,5 @@
+import Controller from "../";
+
 // services
 import userService from "../../services/user/user.service";
 import userRolesService from "../../services/userRoles/userRoles.service";
@@ -15,8 +17,9 @@ import UserPreferenceWrapper from "../../ApiWrapper/web/userPreference";
 import PaymentProductsWrapper from "../../ApiWrapper/web/paymentProducts";
 import WatchlistWrapper from "../../ApiWrapper/web/doctorPatientWatchlist";
 
+import permissions from "../../../config/permissions";
+import * as PermissionHelper from "../../helper/userCategoryPermisssions";
 import { getLinkDetails, getUserDetails } from "./adhoc.helper";
-import Controller from "../";
 import Logger from "../../../libs/log";
 import carePlanService from "../../services/carePlan/carePlan.service";
 import userPreferenceService from "../../services/userPreferences/userPreference.service";
@@ -24,6 +27,9 @@ import doctorPatientWatchlistService from "../../services/doctorPatientWatchlist
 import QueueService from "../../services/awsQueue/queue.service";
 import patientsService from "../../services/patients/patients.service";
 import { MID_MORNING, PATIENT_MEAL_TIMINGS } from "../../../constant";
+import permissionService from "../../services/permission/permission.service";
+import userPermissionService from "../../services/userPermission/userPermission.service";
+import { USER_CATEGORY_ARRAY } from "../../models/users";
 
 const Log = new Logger("WEB > ADHOC > CONTROLLER");
 
@@ -302,26 +308,114 @@ class AdhocController extends Controller {
             },
           });
 
-          const {id : preferenceId, details: {
-              timings
-          } = {}} = patientPreference || {};
+          const { id: preferenceId, details: { timings } = {} } =
+            patientPreference || {};
 
-          const {value} = PATIENT_MEAL_TIMINGS[MID_MORNING];
+          const { value } = PATIENT_MEAL_TIMINGS[MID_MORNING];
 
-          const newTimings = {...timings, [MID_MORNING]: {value}};
+          const newTimings = { ...timings, [MID_MORNING]: { value } };
 
-          await userPreferenceService.updateUserPreferenceData({
-              details: {timings: newTimings}
-          }, preferenceId);
+          await userPreferenceService.updateUserPreferenceData(
+            {
+              details: { timings: newTimings },
+            },
+            preferenceId
+          );
         }
 
-        return this.raiseSuccess(res, 200, {}, "All patient mid morning timings updated successfully");
+        return this.raiseSuccess(
+          res,
+          200,
+          {},
+          "All patient mid morning timings updated successfully"
+        );
       } else {
-        return this.raiseSuccess(res, 201, {}, "No patient present for the timing update");
+        return this.raiseSuccess(
+          res,
+          201,
+          {},
+          "No patient present for the timing update"
+        );
       }
     } catch (error) {
       Log.debug("updatePatientTimings 500", error);
       return this.raiseServerError(res);
+    }
+  };
+
+  updatePermissions = async (req, res) => {
+    const { raiseSuccess, raiseServerError } = this;
+    try {
+      let permissionsData = [];
+
+      let userPermissionsData = [];
+
+      for (const feature of Object.keys(permissions)) {
+        const featurePermissions = permissions[feature];
+
+        for (const permission of Object.keys(featurePermissions)) {
+          permissionsData.push({
+            type: featurePermissions[permission],
+          });
+        }
+      }
+
+      // delete previous user permissions
+      const isPreviousUserPermissionsDeleted = await userPermissionService.deleteAll();
+
+      // delete previous permissions
+      if (isPreviousUserPermissionsDeleted) {
+        const isPreviousPermissionDeleted = await permissionService.deleteAll();
+
+        if (isPreviousPermissionDeleted) {
+          // bulkCreate new permissions
+          const createdPermissions =
+            (await permissionService.bulkCreate(permissionsData)) || [];
+
+          if (createdPermissions.length > 0) {
+            for (const category of USER_CATEGORY_ARRAY) {
+              const categoryPermissions =
+                PermissionHelper.getPermissions(category) || [];
+
+              Log.debug("102398123 updatePermissions", {
+                category,
+                categoryPermissions,
+              });
+
+              for (let createdPermission of createdPermissions) {
+                const { id, type } = createdPermission || {};
+                if (categoryPermissions.includes(type)) {
+                  console.log("1293023 createdPermission", {
+                    category,
+                    id,
+                    type,
+                  });
+                  userPermissionsData.push({
+                    category,
+                    permission_id: id,
+                  });
+                }
+              }
+            }
+
+            // bulkCreate new user permissions
+            const createdUserPermissions =
+              (await userPermissionService.bulkCreate(userPermissionsData)) || [];
+
+            if (createdUserPermissions.length > 0) {
+              return raiseSuccess(
+                res,
+                200,
+                {},
+                "Permissions updated successfully"
+              );
+            }
+          }
+        }
+      }
+    } catch (error) {
+      Log.debug("updatePermissions 500", error);
+      return raiseServerError(res);
     }
   };
 }

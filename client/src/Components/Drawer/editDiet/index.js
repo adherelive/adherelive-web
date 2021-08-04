@@ -21,7 +21,7 @@ class EditDiet extends Component{
             loading:false,
             timings:{},
             deletedFoodGroupIds:[],
-            expired_on:null
+            canOnlyView:false
         }
 
         this.FormWrapper = Form.create({ onFieldsChange: this.onFormFieldChanges })(
@@ -112,8 +112,8 @@ class EditDiet extends Component{
 
     getDietDetails = async() => {
       try{
-        const {getSingleDietData , payload = {}}=this.props;
-        const {care_plan_id ,diet_id = null} = payload || {};
+        const {getSingleDietData , payload = {} ,updateDietTotalCalories }=this.props;
+        const {care_plan_id ,diet_id = null, canViewDetails=false } = payload || {};
 
         this.setState({ loading:true });
 
@@ -124,7 +124,8 @@ class EditDiet extends Component{
           message.warn(resp_msg);
         }else{
 
-          const {diets = {} , diet_food_groups = {} } = data || {};
+          const {diets = {} , diet_food_groups = {} , food_groups_total_calories = 0 } = data || {};
+
 
           const { basic_info : {
               name='',
@@ -136,19 +137,35 @@ class EditDiet extends Component{
             expired_on=null 
             } = diets[diet_id] || {};
 
+            if( total_calories !== food_groups_total_calories ){
+              const updateCalResponse = await updateDietTotalCalories({total_calories:food_groups_total_calories,diet_id});
+              
+              const {status:updateCalStatus, payload: { message : updateCal_resp_msg = '' } = {} } = updateCalResponse || {};
+              if(!updateCalStatus){
+                message.warn(updateCal_resp_msg);
+              }
+
+            }
+
+
           const initialFormData = {
             name,
             start_date,
             end_date,
             not_to_do
           };
+
           
           this.setState({
             completeData:{...diet_food_groups},
             initialFormData,
-            care_plan_id,total_calories,
-            expired_on
+            care_plan_id,
+            total_calories:food_groups_total_calories
           });
+
+          if( expired_on || canViewDetails ){
+            this.setState({canOnlyView:true});
+          }
 
         }
 
@@ -201,7 +218,7 @@ class EditDiet extends Component{
           loading:false,
           timings:{},
           deletedFoodGroupIds:[],
-          expired_on:null
+          canOnlyView:false
         });
         
         resetFields();
@@ -359,7 +376,7 @@ class EditDiet extends Component{
     getDietComponent = () => {
 
       const {setFinalDayData , setNewTotalCal ,setDeletedFoodGroupId } = this;
-      const { completeData = {} , total_calories=0,timings={} , expired_on=null } = this.state;
+      const { completeData = {} , total_calories=0,timings={} ,canOnlyView=false } = this.state;
       
       return (
           <div>
@@ -375,7 +392,7 @@ class EditDiet extends Component{
                 completeData = {completeData}
                 total_calories={total_calories}
                 timings={timings}
-                expired_on={expired_on}
+                canOnlyView={canOnlyView}
                 {...this.props}
             />
           </div>
@@ -476,13 +493,13 @@ class EditDiet extends Component{
         FormWrapper } = this;
       const { visible = false  } = this.props;
       const { dietVisible = false , hideDiet = null,addTemplateDiet =null, editTemplateDiet = null }=this.props;
-      const {submitting = false , initialFormData = {} ,loading = false ,expired_on=null}=this.state;
+      const {submitting = false , initialFormData = {} ,loading = false ,canOnlyView=false}=this.state;
 
     return (
         <Fragment>
           <Drawer
             title={
-              expired_on
+              canOnlyView
               ?
               formatMessage(messages.viewDetails)
               :
@@ -526,11 +543,11 @@ class EditDiet extends Component{
                   {...this.props}
                   getDietComponent={getDietComponent}
                   initialFormData={initialFormData}
-                  expired_on={expired_on}
+                  canOnlyView={canOnlyView}
                 />
                 
                 {
-                  !expired_on
+                  !canOnlyView
                   &&
                   <Footer
                   className="flex justify-space-between"

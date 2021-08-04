@@ -76,7 +76,7 @@ class MissedJob extends AgoraJob {
             app_id: process.config.one_signal.app_id,
             headings: { en: `Missed call (${providerName})` },
             contents: {
-              en: `You missed a call from ${category === USER_CATEGORY.DOCTOR ? "Dr. " : ""}${full_name}.`
+              en: `You missed a call from ${category === USER_CATEGORY.DOCTOR || category === USER_CATEGORY.HSP ? "Dr. " : ""}${full_name}.`
             },
             include_player_ids: [...playerIds],
             priority: 10,

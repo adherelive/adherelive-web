@@ -78,7 +78,7 @@ class StartJob extends AgoraJob {
             include_player_ids: [...playerIds],
             headings: { en: `Call on Adhere (${providerName})` },
             contents: {
-                en: `${category === USER_CATEGORY.DOCTOR ? "Dr. " : ""}${full_name} is calling you!`
+                en: `${category === USER_CATEGORY.DOCTOR || category === USER_CATEGORY.HSP ? "Dr. " : ""}${full_name} is calling you!`
             },
             priority: 10,
             android_channel_id: process.config.one_signal.urgent_channel_id,

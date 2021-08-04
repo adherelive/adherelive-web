@@ -10,7 +10,8 @@ import {
     MEDICATION_TIMING_MINUTES,
     TABLET,
     SYRUP,
-    MEDICINE_UNITS
+    MEDICINE_UNITS,
+    USER_CATEGORY
 } from "../../../constant";
 import moment from "moment";
 import message from "antd/es/message";
@@ -839,12 +840,19 @@ class TemplatePageCreateDrawer extends Component{
     onSubmit = async () => {
     
         let { medications = {}, appointments = {},vitals={}, diets = {}, workouts = {} , name = '' } = this.state;
-        const {updateCareplanTemplate,close,getAllTemplatesForDoctor} = this.props;
+        const {updateCareplanTemplate,close,getAllTemplatesForDoctor, authenticated_category } = this.props;
         let medicationsData = Object.values(medications);
         let appointmentsData = Object.values(appointments);
         let vitalsData = Object.values(vitals);
         let dietData = Object.values(diets);
         let workoutData = Object.values(workouts);
+
+
+        if(authenticated_category === USER_CATEGORY.HSP && Object.keys(medications).length ){
+            
+            message.error(this.formatMessage(messages.medicationAccessError));
+            return;
+        }
 
         let validate = this.validateData(medicationsData, appointmentsData,vitalsData, dietData,workoutData, name);
         if (validate) {

@@ -1,7 +1,7 @@
 import React, { Component , Fragment } from "react";
 import {injectIntl} from "react-intl";
 import {
-  PERMISSIONS,
+  USER_PERMISSIONS,
   MISSED_MEDICATION,
   MISSED_APPOINTMENTS,
   MISSED_ACTIONS ,
@@ -92,12 +92,12 @@ class ProviderDoctorPage extends Component {
         const { authPermissions = [] } = this.props;
         return (
           <Menu>
-            {authPermissions.includes(PERMISSIONS.ADD_DOCTOR) && (
+            {authPermissions.includes(USER_PERMISSIONS.DOCTORS.ADD) && (
               <Menu.Item onClick={this.addDoctor}>
-                <div className="tac" >{this.formatMessage(messages.addDoctor)}</div>
+                <div className="tac" >{this.formatMessage(messages.addDoctorOrHSP)}</div>
               </Menu.Item>
             )}
-            {authPermissions.includes(PERMISSIONS.EDIT_GRAPH) && (
+            {authPermissions.includes(USER_PERMISSIONS.GRAPHS.UPDATE) && (
               <Menu.Item 
               onClick={this.showEditGraphModal}
               >
@@ -249,8 +249,8 @@ class ProviderDoctorPage extends Component {
                   {this.formatMessage(messages.welcome)}
                 </div>
               )}
-              {(authPermissions.includes(PERMISSIONS.ADD_DOCTOR) ||
-               authPermissions.includes(PERMISSIONS.EDIT_GRAPH)) && (
+              {(authPermissions.includes(USER_PERMISSIONS.DOCTORS.ADD) ||
+               authPermissions.includes(USER_PERMISSIONS.GRAPHS.UPDATE)) && (
                 <div className="flex direction-row justify-space-between align-center">
 
                   <Dropdown

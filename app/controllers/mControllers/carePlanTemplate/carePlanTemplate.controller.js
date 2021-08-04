@@ -20,6 +20,8 @@ import {
   EVENT_LONG_TERM_VALUE,
 } from "../../../../constant";
 
+import PERMISSIONS from "../../../../config/permissions";
+
 const Log = new Logger("MOBILE > CAREPLAN_TEMPLATE > CONTROLLER");
 
 class CarePlanTemplateController extends Controller {
@@ -31,7 +33,7 @@ class CarePlanTemplateController extends Controller {
     const { raiseSuccess, raiseClientError, raiseServerError } = this;
     try {
       const { body } = req;
-      const { userDetails: { userId , userData: { category } = {} , userCategoryId } = {} } = req;
+      const { userDetails: { userId , userData: { category } = {} , userCategoryId } = {} , permissions = [] } = req;
 
       const {
         medicationsData,
@@ -44,9 +46,19 @@ class CarePlanTemplateController extends Controller {
 
       Log.info(`name : ${name}`);
 
+      if(!permissions.includes(PERMISSIONS.MEDICATIONS.ADD) && medicationsData.length > 0) {
+        return raiseClientError(
+          res,
+          422,
+          {},
+          `Medication creation is not allowed. Please remove the same to continue`
+        );
+      }
+
       const existingTemplate =
         (await carePlanTemplateService.getSingleTemplateByData({
           name,
+          user_id:userId
         })) || null;
 
       if (!existingTemplate) {
@@ -55,7 +67,7 @@ class CarePlanTemplateController extends Controller {
             name,
             user_id: userId,
             template_appointments: appointmentsData,
-            template_medications: medicationsData,
+            ...(permissions.includes(PERMISSIONS.MEDICATIONS.TEMPLATE)) && {template_medications: medicationsData},
             template_vitals: vitalsData,
             template_diets: dietData,
             template_workouts: workoutData,
@@ -134,7 +146,7 @@ class CarePlanTemplateController extends Controller {
           res,
           422,
           {},
-          `Template already present for name ${name}. Please use different to continue`
+          `Template already present for name ${name} for this user. Please use different to continue`
         );
       }
     } catch (error) {
@@ -146,7 +158,7 @@ class CarePlanTemplateController extends Controller {
   getAllForDoctor = async (req, res) => {
     const { raiseSuccess, raiseServerError } = this;
     try {
-      const { userDetails: { userId , userData: { category } = {} , userCategoryId } = {} } = req;
+      const { userDetails: { userId , userData: { category } = {} , userCategoryId } = {} , permissions = [] } = req;
 
       const allCareplanTemplates =
         (await carePlanTemplateService.getAllTemplatesForDoctor({
@@ -201,14 +213,21 @@ class CarePlanTemplateController extends Controller {
             ...templateAppointment,
             ...template_appointments,
           };
-          templateMedication = {
-            ...templateMedication,
-            ...template_medications,
-          };
+
+          if(permissions.includes(PERMISSIONS.MEDICATIONS.TEMPLATE)){
+            templateMedication = {
+              ...templateMedication,
+              ...template_medications,
+            };
+          }
+         
           templateVital = { ...templateVital, ...template_vitals };
 
           vitalTemplates = { ...vitalTemplates, ...vital_templates };
-          medicineData = { ...medicineData, ...medicines };
+
+          if(permissions.includes(PERMISSIONS.MEDICATIONS.TEMPLATE)){
+            medicineData = { ...medicineData, ...medicines };
+          }
 
           allTemplateDiets = { ...allTemplateDiets, ...template_diets };
           allFoodItems = { ...allFoodItems, ...food_items };
@@ -264,8 +283,9 @@ class CarePlanTemplateController extends Controller {
             template_appointments: {
               ...templateAppointment,
             },
-            template_medications: {
-              ...templateMedication,
+              ...(permissions.includes(PERMISSIONS.MEDICATIONS.TEMPLATE))  && { template_medications: {
+                ...templateMedication,
+              }
             },
             template_vitals: {
               ...templateVital,
@@ -284,9 +304,11 @@ class CarePlanTemplateController extends Controller {
             vital_templates: {
               ...vitalTemplates,
             },
-            medicines: {
-              ...medicineData,
-            },
+            ...(permissions.includes(PERMISSIONS.MEDICATIONS.TEMPLATE)) && {
+              medicines: {
+                ...medicineData,
+              }
+            } ,
             care_plan_template_ids: carePlanTemplateIds,
           },
           "Templates fetched successfully"
@@ -304,7 +326,7 @@ class CarePlanTemplateController extends Controller {
     const { raiseSuccess, raiseClientError, raiseServerError } = this;
     try {
       const { params: { id } = {} } = req;
-      const { userDetails: { userId , userData: { category } = {} , userCategoryId } = {} } = req;
+      const { userDetails: { userId , userData: { category } = {} , userCategoryId } = {}, permissions=[] } = req;
 
 
       Log.info(`careplan template id to duplicate : ${id}`);
@@ -356,17 +378,24 @@ class CarePlanTemplateController extends Controller {
         });
 
         // medications
-        const medicationData = template_medication_ids.map((id) => {
-          const {
-            basic_info: { medicine_id },
-            schedule_data,
-          } = template_medications[id] || {};
+        let medicationData = {};
 
-          return {
-            medicine_id,
-            schedule_data,
-          };
-        });
+        if(permissions.includes(PERMISSIONS.MEDICATIONS.TEMPLATE)){
+
+          medicationData = template_medication_ids.map((id) => {
+            const {
+              basic_info: { medicine_id },
+              schedule_data,
+            } = template_medications[id] || {};
+
+            return {
+              medicine_id,
+              schedule_data,
+            };
+          });
+
+        }
+       
 
         // vitals (ACTIONS)
         const vitalData = template_vital_ids.map((id) => {
@@ -426,7 +455,7 @@ class CarePlanTemplateController extends Controller {
           condition_id,
           user_id: userId,
           template_appointments: appointmentData,
-          template_medications: medicationData,
+          ...(permissions.includes(PERMISSIONS.MEDICATIONS.TEMPLATE)) && { template_medications: medicationData },
           template_vitals: vitalData,
           template_diets: dietData,
           template_workouts: workoutData,
@@ -436,6 +465,7 @@ class CarePlanTemplateController extends Controller {
         const existingTemplate =
           (await carePlanTemplateService.getSingleTemplateByData({
             name: duplicateName,
+            user_id:userId
           })) || null;
 
         let isDuplicate = false;
@@ -522,7 +552,7 @@ class CarePlanTemplateController extends Controller {
             res,
             422,
             {},
-            `Template already present with name ${duplicateName}. Change that to continue`
+            `Template already present with name ${duplicateName} for this user. Change that to continue`
           );
         }
       } else {
@@ -542,7 +572,7 @@ class CarePlanTemplateController extends Controller {
   update = async (req, res) => {
     const { raiseSuccess, raiseClientError, raiseServerError } = this;
     try {
-      const { params: { id: careplanTemplateId } = {}, body = {} } = req;
+      const { params: { id: careplanTemplateId } = {}, body = {} , permissions = [] } = req;
       Log.info(`careplan template id : ${careplanTemplateId}`);
       Log.debug("request body", body);
 
@@ -566,9 +596,18 @@ class CarePlanTemplateController extends Controller {
         name,
       } = body;
 
+      if(!permissions.includes(PERMISSIONS.MEDICATIONS.ADD) && medicationsData.length > 0) {
+        return raiseClientError(
+          res,
+          422,
+          {},
+          `Medication creation is not allowed. Please remove the same to continue`
+        );
+      }
+
       // check for existing template names
       const existingTemplate =
-        (await carePlanTemplateService.getSingleTemplateByData({ name })) ||
+        (await carePlanTemplateService.getSingleTemplateByData({ name , user_id:userId })) ||
         null;
 
       let isDuplicate = false;
@@ -607,7 +646,7 @@ class CarePlanTemplateController extends Controller {
         }
 
         // template medications
-        if (medicationsData.length > 0) {
+        if ( (permissions.includes(PERMISSIONS.MEDICATIONS.TEMPLATE)) && medicationsData.length > 0) {
           for (let index = 0; index < medicationsData.length; index++) {
             const { id = null, ...rest } = medicationsData[index] || {};
             if (id) {
@@ -741,7 +780,7 @@ class CarePlanTemplateController extends Controller {
           res,
           422,
           {},
-          `Template already present with name ${name}`
+          `Template already present with name ${name} for this user.`
         );
       }
     } catch (error) {
@@ -762,6 +801,7 @@ class CarePlanTemplateController extends Controller {
           diet = null,
           workout = null,
         } = {},
+        permissions = []
       } = req;
 
       Log.info(
@@ -787,7 +827,7 @@ class CarePlanTemplateController extends Controller {
         }
 
         // medication
-        if (medication) {
+        if ( permissions.includes(PERMISSIONS.MEDICATIONS.TEMPLATE) && medication) {
           await templateMedicationService.deleteMedication({
             id: medication,
           });

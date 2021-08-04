@@ -99,6 +99,7 @@ import {
 } from "../../../helper/common";
 import { getDoctorCurrentTime } from "../../../helper/getUserTime";
 import * as carePlanHelper from "../carePlans/carePlanHelper";
+import PERMISSIONS from "../../../../config/permissions";
 
 const path = require("path");
 
@@ -1388,7 +1389,7 @@ class MPatientController extends Controller {
 
         let authDoctor = null;
 
-        if (category === USER_CATEGORY.DOCTOR) {
+        if (category === USER_CATEGORY.DOCTOR || category === USER_CATEGORY.HSP) {
           authDoctor = await DoctorService.getDoctorByData({ user_id: userId });
         }
 
@@ -1590,6 +1591,7 @@ class MPatientController extends Controller {
       const { care_plan_id = null } = req.params;
       const {
         userDetails: { userId = null, userRoleId = null, userData: { category = "" } = {} } = {},
+        permissions = []
       } = req;
 
       const dietService = new DietService();
@@ -1646,33 +1648,36 @@ class MPatientController extends Controller {
         conditions[condition_id] = condition.getBasicInfo();
       }
 
-      for (const medicationId of medication_ids) {
-        const medication = await medicationReminderService.getMedication({
-          id: medicationId,
-        });
-
-        if (medication) {
-          const medicationWrapper = await MReminderWrapper(medication);
-          const medicineId = medicationWrapper.getMedicineId();
-          const medicineData = await medicineService.getMedicineByData({
-            id: medicineId,
+      if(permissions.includes(PERMISSIONS.MEDICATIONS.ADD)){
+        for (const medicationId of medication_ids) {
+          const medication = await medicationReminderService.getMedication({
+            id: medicationId,
           });
-
-          for (const medicine of medicineData) {
-            const medicineWrapper = await MedicineApiWrapper(medicine);
-            medicines = {
-              ...medicines,
-              ...{
-                [medicineWrapper.getMedicineId()]: medicineWrapper.getAllInfo(),
-              },
+  
+          if (medication) {
+            const medicationWrapper = await MReminderWrapper(medication);
+            const medicineId = medicationWrapper.getMedicineId();
+            const medicineData = await medicineService.getMedicineByData({
+              id: medicineId,
+            });
+  
+            for (const medicine of medicineData) {
+              const medicineWrapper = await MedicineApiWrapper(medicine);
+              medicines = {
+                ...medicines,
+                ...{
+                  [medicineWrapper.getMedicineId()]: medicineWrapper.getAllInfo(),
+                },
+              };
+            }
+            medications = {
+              ...medications,
+              ...{ [medicationId]: medicationWrapper.getBasicInfo() },
             };
           }
-          medications = {
-            ...medications,
-            ...{ [medicationId]: medicationWrapper.getBasicInfo() },
-          };
         }
       }
+     
 
       const now = moment();
       let nextAppointment = null;
@@ -1937,7 +1942,7 @@ class MPatientController extends Controller {
 
       let patientUserId = userId;
       let patient = null;
-      if (category === USER_CATEGORY.DOCTOR) {
+      if (category === USER_CATEGORY.DOCTOR || category === USER_CATEGORY.HSP ) {
         patient = await patientService.getPatientById({
           id: carePlanPatientId,
         });
@@ -1947,7 +1952,17 @@ class MPatientController extends Controller {
 
       const patientData = await PatientWrapper(patient);
 
-      if (category === USER_CATEGORY.DOCTOR) {
+      const timingPreference = await UserPreferenceService.getPreferenceByData(
+        {
+          user_id: patientData.getUserId(),
+        }
+      );
+      const userPrefOptions = await UserPreferenceWrapper(timingPreference);
+      const { timings: userTimings = {} } = userPrefOptions.getAllDetails();
+      const timings = DietHelper.getTimings(userTimings);
+
+
+      if (category === USER_CATEGORY.DOCTOR || category === USER_CATEGORY.HSP) {
         patientUserId = patientData.getUserId();
       }
 
@@ -2065,8 +2080,8 @@ class MPatientController extends Controller {
 
       dataForPdf = {
         users: { ...usersData },
-        medications,
-        medicines,
+        ...(permissions.includes(PERMISSIONS.MEDICATIONS.ADD)) && {medications},
+        ...(permissions.includes(PERMISSIONS.MEDICATIONS.ADD)) && {medicines},
         care_plans: {
           [carePlanData.getCarePlanId()]: {
             ...carePlanData.getBasicInfo(),
@@ -2091,6 +2106,7 @@ class MPatientController extends Controller {
         workouts_formatted_data:{...workoutApiData},
         workout_ids:workoutIds,
         diet_ids:dietIds,
+        timings,
         currentTime: getDoctorCurrentTime(doctorUserId).format(
           "Do MMMM YYYY, hh:mm a"
         ),
@@ -2171,7 +2187,7 @@ class MPatientController extends Controller {
 
         // collect other doctor ids
         if (
-          report.getUploaderType() === USER_CATEGORY.DOCTOR &&
+          (report.getUploaderType() === USER_CATEGORY.DOCTOR || report.getUploaderType() === USER_CATEGORY.HSP  ) &&
           report.getUploaderId() !== userCategoryId
         ) {
           doctorIds.push(report.getUploaderId());
@@ -2353,8 +2369,8 @@ class MPatientController extends Controller {
           const doctorPaymentProductData = await paymentProductService.getAllCreatorTypeProducts(
             {
               creator_role_id: roleId,
-              creator_type: USER_CATEGORY.DOCTOR,
-              for_user_type: USER_CATEGORY.DOCTOR,
+              creator_type: [USER_CATEGORY.DOCTOR, USER_CATEGORY.HSP],
+              for_user_type: [USER_CATEGORY.DOCTOR, USER_CATEGORY.HSP],
               for_user_role_id: roleId,
             }
           );
@@ -2389,7 +2405,7 @@ class MPatientController extends Controller {
               {
                 creator_role_id: providerUserRoleId, // change to provider roleId
                 creator_type: USER_CATEGORY.PROVIDER,
-                for_user_type: USER_CATEGORY.DOCTOR,
+                for_user_type: [USER_CATEGORY.DOCTOR, USER_CATEGORY.HSP],
                 for_user_role_id: roleId,
               }
             );

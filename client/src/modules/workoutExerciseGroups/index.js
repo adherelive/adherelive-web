@@ -8,7 +8,12 @@ function workoutExerciseGroupsReducer(state, data) {
             ...workout_exercise_groups,
         ];
     } else {
-        return state;
+        if(Object.keys(state).length === 0){
+            return []
+        }else{
+            return state;
+        }
+        
     }
 }
 

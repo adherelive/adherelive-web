@@ -106,7 +106,7 @@ class VitalName extends Component {
     const {
       form: { getFieldDecorator,setFieldsValue, getFieldError, isFieldTouched },
       setFormulation,
-      payload: { id:vital_id}={},
+      payload: { id:vital_id , canViewDetails = false }={},
       vitals,
       vital_templates
     } = this.props;
@@ -146,7 +146,7 @@ class VitalName extends Component {
             }
             onChange={vitalData ? handleVitalChange : null}
             getPopupContainer={getParentNode}
-            disabled={vitalData ? false : true}
+            disabled={canViewDetails ||  (!canViewDetails && vitalData ? false : true)}
           >
             {vitalData ? getVitalsOption() : null}
           </Select>

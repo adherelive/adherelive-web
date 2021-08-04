@@ -3,7 +3,7 @@ import { injectIntl } from "react-intl";
 import { 
     CHART_TITLE,
     NO_ACTION, NO_APPOINTMENT, NO_MEDICATION, 
-    NO_DIET, NO_WORKOUT
+    NO_DIET, NO_WORKOUT, USER_CATEGORY
 } from "../../constant";
 
 import { Button, Checkbox, Modal } from "antd";
@@ -72,7 +72,7 @@ class GraphsModal extends Component {
     render() {
         const { selectedGraphs = [] } = this.state;
 
-        const { visible } = this.props;
+        const { visible ,authenticated_category} = this.props;
         return (
             <Modal
                 visible={visible}
@@ -91,6 +91,7 @@ class GraphsModal extends Component {
                 <div className='location-container'>
                     {
                         graphs.map(graph => {
+
                             return (
                                 <div key={graph} className='flex justify-space-between wp100 mb8 mt4'>
                                     <div className='flex pointer'>

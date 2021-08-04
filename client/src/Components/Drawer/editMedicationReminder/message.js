@@ -6,6 +6,11 @@ export default defineMessages({
     description: "",
     defaultMessage: "Schedule New"
   },
+  viewHeader:{
+    id: "app.event.viewHeader",
+    description: "",
+    defaultMessage: "Medication Details"
+  },
   cancel: {
     id: "app.event.cancel",
     description: "",

@@ -1,7 +1,7 @@
 import { TABLE_COLUMN, formatAppointmentTableData } from "../helper";
 
 export default data => {
-  const { id, openResponseDrawer, openEditDrawer, formatMessage } = data;
+  const { id, openResponseDrawer, openEditDrawer, formatMessage , canViewDetails = false } = data;
   const formattedData = formatAppointmentTableData(data);
   const { vitalData, vitalTemplateData } =
     formattedData || {};
@@ -24,7 +24,8 @@ export default data => {
     [TABLE_COLUMN.EDIT.dataIndex]: {
       id,
       openEditDrawer,
-      formatMessage
+      formatMessage,
+      canViewDetails
     },
   };
 };

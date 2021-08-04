@@ -5,7 +5,9 @@ export default data => {
      openResponseDrawer,
      openEditDrawer,
      workoutData,
-     formatMessage } = data;
+     formatMessage,
+     canViewDetails=false
+     } = data;
 
   return {
     key: id,
@@ -31,7 +33,8 @@ export default data => {
       id,
       workoutData,
       openEditDrawer,
-      formatMessage
+      formatMessage,
+      canViewDetails
     },
   };
 };

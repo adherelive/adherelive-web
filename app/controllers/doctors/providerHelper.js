@@ -119,7 +119,7 @@ export const addProviderDoctor = async (
       }
     } else {
       // const password = generatePassword();
-      doctorUserId = await createNewUser(email, null, providerId);
+      doctorUserId = await createNewUser(email, null, providerId, category);
     }
 
     let doctor = {};

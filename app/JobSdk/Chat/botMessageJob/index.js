@@ -33,7 +33,7 @@ class BotMessageJob extends ChatJob {
             }
         } = getData() || {};
 
-        let doctorRoleId = actorCategory === USER_CATEGORY.DOCTOR? actorRoleId: null;
+        let doctorRoleId = (actorCategory === USER_CATEGORY.DOCTOR || actorCategory === USER_CATEGORY.HSP)? actorRoleId: null;
         let patientRoleId = actorCategory === USER_CATEGORY.PATIENT? actorRoleId: null;
 
         const templateData = [];

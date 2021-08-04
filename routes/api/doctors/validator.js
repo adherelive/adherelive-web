@@ -13,7 +13,7 @@ const addDoctorForm = Joi.object().keys({
     .label("Please enter your city"),
   category: Joi.string()
     .required()
-    .valid(USER_CATEGORY.DOCTOR)
+    .valid(USER_CATEGORY.DOCTOR,USER_CATEGORY.HSP)
     .label("Please select correct category"),
   mobile_number: Joi.string()
     .min(10)

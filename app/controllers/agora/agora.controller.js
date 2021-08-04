@@ -29,6 +29,10 @@ class AgoraController extends Controller {
             if(category === USER_CATEGORY.DOCTOR) {
                 doctorRoleId = userRoleId;
                 patientRoleId = id;
+            }
+            else if(category === USER_CATEGORY.HSP) {
+              doctorRoleId = userRoleId;
+              patientRoleId = id;
             } else if (category === USER_CATEGORY.PATIENT) {
                 doctorRoleId = id;
                 patientRoleId = userRoleId;

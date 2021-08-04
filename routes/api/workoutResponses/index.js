@@ -10,7 +10,7 @@ const router = express.Router();
 router.get(
     "/",
     Authenticate,
-    Authorize(USER_CATEGORY.DOCTOR),
+    Authorize(USER_CATEGORY.DOCTOR,USER_CATEGORY.HSP),
     WorkoutResponse.get
 );
 

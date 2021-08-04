@@ -567,6 +567,16 @@ const messages = defineMessages({
         defaultMessage:
             "You can not call this user as call feature is blocked for this user."
     },  
+    edit: {
+        id: "app.appointment.table.edit",
+        description: "",
+        defaultMessage: "Edit"
+    },
+    view: {
+        id: "app.appointment.table.view",
+        description: "",
+        defaultMessage: "View"
+    },
 
 });
 

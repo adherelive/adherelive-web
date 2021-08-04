@@ -112,6 +112,7 @@ class WorkoutReponseEventDetailsDrawer extends Component {
         let allDetails = [];
         const {  exercise_groups = {} , workout_exercise_groups = [] , exercise_details = {}, exercises = {} } = this.props;
         const {  workout_responses = {} }=this.state;
+        console.log("8732648264826846238742",{workout_responses,workout_exercise_groups});
         for(let each in workout_responses){
             let content_id=null;
             const response = workout_responses[each] || {};

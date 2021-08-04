@@ -44,7 +44,7 @@ export const getProviderTransactions = async req => {
         paymentProductIds.push(paymentProduct.getId());
 
         // get for_user data
-        if(paymentProduct.getForUserType() === USER_CATEGORY.DOCTOR) {
+        if(paymentProduct.getForUserType() === USER_CATEGORY.DOCTOR || paymentProduct.getForUserType() === USER_CATEGORY.HSP ) {
           const roleId = paymentProduct.getForUserRoleId();
           const creatorRoleId = paymentProduct.getCreatorRoleId();
           
@@ -190,7 +190,7 @@ export const getDoctorTransactions = async req => {
 
     const allPaymentProducts = await paymentProductService.getAllCreatorTypeProducts({
       creator_role_id: userRoleId,
-      creator_type: USER_CATEGORY.DOCTOR
+      creator_type: [USER_CATEGORY.DOCTOR,USER_CATEGORY.HSP]
     }) || [];
 
     let userRoleData = {};
@@ -203,7 +203,7 @@ export const getDoctorTransactions = async req => {
         paymentProductIds.push(paymentProduct.getId());
 
         // get for_user data
-        if(paymentProduct.getForUserType() === USER_CATEGORY.DOCTOR) {
+        if(paymentProduct.getForUserType() === USER_CATEGORY.DOCTOR || paymentProduct.getForUserType() === USER_CATEGORY.HSP) {
           const roleId = paymentProduct.getForUserRoleId();
           const creatorRoleId = paymentProduct.getCreatorRoleId();
           

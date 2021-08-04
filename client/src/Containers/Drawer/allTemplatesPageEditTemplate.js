@@ -31,6 +31,7 @@ const mapStateToProps = state => {
   
 
   return {
+    authPermissions,
     visible: visible && type === DRAWER.EDIT_CAREPLAN_TEMPLATE,
     loading,
     payload,

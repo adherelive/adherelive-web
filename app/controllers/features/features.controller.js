@@ -58,6 +58,19 @@ class FeatureController extends Controller {
             otherUserCategoryIds.push(carePlanApiWrapper.getPatientId());
           }
           break;
+        case USER_CATEGORY.HSP:
+          careplanData =
+            (await carePlanService.getCarePlanByData({
+              user_role_id:userRoleId
+            })) || [];
+
+          for (let index = 0; index < careplanData.length; index++) {
+            const carePlanApiWrapper = await CarePlanWrapper(
+              careplanData[index]
+            );
+            otherUserCategoryIds.push(carePlanApiWrapper.getPatientId());
+          }
+          break;
       }
 
       for (const otherUserCategoryId of otherUserCategoryIds) {
@@ -66,7 +79,7 @@ class FeatureController extends Controller {
             ? userCategoryId
             : otherUserCategoryId;
         const doctorId =
-          category === USER_CATEGORY.DOCTOR
+          (category === USER_CATEGORY.DOCTOR || category === USER_CATEGORY.HSP )
             ? userCategoryId
             : otherUserCategoryId;
         const patientFeatures = await doctorPatientFeatureMappingService.getByData(

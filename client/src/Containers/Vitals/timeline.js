@@ -5,7 +5,7 @@ import {getVitalTimeline, editVitalResponse, deleteVitalResponse} from "../../mo
 
 const mapStateToProps = state => {
     const {
-        drawer: { visible, data: { type, payload : {id, loading} = {} } = {} },
+        drawer: { visible, data: { type, payload : {id, loading,canViewDetails=false} = {} } = {} },
         vitals = {},
         vital_templates = {},
         schedule_events = {}
@@ -16,6 +16,7 @@ const mapStateToProps = state => {
         vitals,
         vital_templates,
         schedule_events,
+        canViewDetails
     };
 };
 
@@ -33,7 +34,8 @@ const mergeProps = (stateProps, dispatchProps, ownProps) => {
         loading,
         vitals,
         vital_templates,
-        vital_ids
+        vital_ids,
+        canViewDetails
     } = stateProps;
 
     const {
@@ -53,7 +55,8 @@ const mergeProps = (stateProps, dispatchProps, ownProps) => {
         editVitalDrawer,
         editVitalResponse,
         deleteVitalResponse,
-        getVitalTimeline: getVitalTimeline(id)
+        getVitalTimeline: getVitalTimeline(id),
+        canViewDetails
     };
 };
 

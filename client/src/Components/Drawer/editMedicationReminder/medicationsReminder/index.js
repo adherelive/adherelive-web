@@ -365,6 +365,7 @@ class EditMedicationReminder extends Component {
       hideMedication,
       loading = false,
       intl: { formatMessage },
+      payload={}
     } = this.props;
     const {
       onClose,
@@ -385,6 +386,9 @@ class EditMedicationReminder extends Component {
       medicineValue = "",
       newMedicineId = null,
     } = this.state;
+
+    const { canViewDetails = false } = payload || {};
+
     const { addNewMedicine } = this.props;
 
     return (
@@ -401,6 +405,10 @@ class EditMedicationReminder extends Component {
         }}
         className="ant-drawer"
         title={
+          canViewDetails
+          ?
+          formatMessage(messages.viewHeader)
+          :
           editMedication
             ? formatMessage(messages.medication)
             : addMedication
@@ -425,15 +433,22 @@ class EditMedicationReminder extends Component {
           setNewMedicineId={this.setNewMedicineId}
         />
 
-        <Footer
-          className="flex justify-space-between"
-          onSubmit={handleSubmit}
-          onClose={editMedication || addMedication ? hideMedication : onClose}
-          submitText={formatMessage(messages.update_button_text)}
-          submitButtonProps={submitButtonProps}
-          cancelComponent={getDeleteButton()}
-          submitting={submitting}
-        />
+        {
+          !canViewDetails
+          &&
+          (
+            <Footer
+            className="flex justify-space-between"
+            onSubmit={handleSubmit}
+            onClose={editMedication || addMedication ? hideMedication : onClose}
+            submitText={formatMessage(messages.update_button_text)}
+            submitButtonProps={submitButtonProps}
+            cancelComponent={getDeleteButton()}
+            submitting={submitting}
+          />
+          )
+        }
+       
       </Drawer>
     );
   }

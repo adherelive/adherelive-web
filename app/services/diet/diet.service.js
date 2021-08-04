@@ -956,6 +956,28 @@ class DietService {
       throw error;
     }
   };
+
+  updateDietTotalCalories = async ({total_calories,diet_id}) => {
+    const transaction = await Database.initTransaction();
+    try {
+    
+      await Database.getModel(TABLE_NAME).update({total_calories,diet_id}, {
+        where: {
+          id: diet_id,
+        },
+        raw: true,
+        transaction,
+      });
+
+      await transaction.commit();
+      return true;
+    } catch (error) {
+      await transaction.rollback();
+      console.log("732452365462354623642783 >>>>>>>>>> >>>. ", { error });
+      throw error;
+    }
+  };
+
 }
 
 export default DietService;

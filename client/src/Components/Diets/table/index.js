@@ -57,11 +57,19 @@ class DietTable extends Component {
         const {
             isOtherCarePlan,
             intl: {formatMessage} = {},
-            diets={}
+            diets={},
+            auth_role =null ,
+            care_plans = {},
+            carePlanId = null
         } = this.props;
 
         const {diet_ids = []} = this.state;
 
+        const {basic_info : { user_role_id = null } = {} } = care_plans[carePlanId] || {};
+        let canViewDetails=true;
+        if(!isOtherCarePlan && user_role_id.toString() === auth_role.toString()) {
+            canViewDetails=false;
+        }
 
         const {
             openResponseDrawer, 
@@ -77,6 +85,7 @@ class DietTable extends Component {
                 openEditDrawer,
                 formatMessage,
                 isOtherCarePlan,
+                canViewDetails
             });
         });
     };
@@ -86,9 +95,12 @@ class DietTable extends Component {
         const {openDietResponseDrawer, isOtherCarePlan, auth_role =null ,care_plans = {},carePlanId , diets = {} } = this.props;
         const { basic_info : {name = ''} = {} } = diets[diet_id] || {};
         const {basic_info : { user_role_id = null } = {} } = care_plans[carePlanId] || {};
+        let canViewDetails=true;
         if(!isOtherCarePlan && user_role_id.toString() === auth_role.toString()) {
-            openDietResponseDrawer({diet_id, diet_name:name, loading: true});
-        }  
+            canViewDetails=false;
+        }
+        openDietResponseDrawer({diet_id, diet_name:name, loading: true});
+        
     };
 
     openEditDrawer = (diet_id) => (e) => {
@@ -96,9 +108,12 @@ class DietTable extends Component {
         const {openEditDietDrawer, isOtherCarePlan, patientId ,auth_role =null ,care_plans = {},carePlanId , diets = {} } = this.props;
         const { details : { repeat_days = [] } = {} } = diets[diet_id];
         const {basic_info : { user_role_id = null } = {} } = care_plans[carePlanId] || {};
+        let canViewDetails=true;
         if(!isOtherCarePlan && user_role_id.toString() === auth_role.toString()) {
-            openEditDietDrawer({diet_id, patient_id: patientId,careplan_id:carePlanId,repeat_days});
-        }   
+            canViewDetails=false;
+        }
+        openEditDietDrawer({diet_id, patient_id: patientId,careplan_id:carePlanId,repeat_days,canViewDetails});
+           
     };
 
     formatMessage = data => this.props.intl.formatMessage(data);

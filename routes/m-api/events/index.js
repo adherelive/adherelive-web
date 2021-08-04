@@ -22,12 +22,12 @@ router.get(
   MobileMedicationReminder.getMedicationDetails
 );
 
-router.post(
-  "/medication/:patient_id",
-  Authenticate,
-  validator.validateMedicationReminderData,
-  MobileMedicationReminder.createCarePlanMedication
-);
+// router.post(
+//   "/medication/:patient_id",
+//   Authenticate,
+//   validator.validateMedicationReminderData,
+//   MobileMedicationReminder.createCarePlanMedication
+// );
 
 router.get(
   "/missed",

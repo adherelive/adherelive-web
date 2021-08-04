@@ -35,7 +35,7 @@ class RenewSubscription {
                     const {basic_info: {amount, name, type, creator_id, creator_type} = {}} = payment_products[payment_product_id] || {};
 
                     let doctorUserRoleId = null;
-                    if(creator_type === USER_CATEGORY.DOCTOR) {
+                    if(creator_type === USER_CATEGORY.DOCTOR || creator_type === USER_CATEGORY.HSP ) {
                         doctorUserRoleId = creator_id;
                     }
 

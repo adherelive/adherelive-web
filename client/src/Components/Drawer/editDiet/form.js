@@ -113,7 +113,7 @@ class DietFieldsFrom extends Component {
 
     let disabled=false;
 
-    const { initialFormData = {} , editTemplateDiet=null,expired_on=null} = this.props;
+    const { initialFormData = {} , editTemplateDiet=null,canOnlyView=false} = this.props;
     let { name = '', start_date : str_start_date='',end_date : str_end_date = null , not_to_do = ''} = initialFormData || {};
     let start_date = str_start_date ?  moment(str_start_date) : moment();
     let end_date = str_end_date ? moment(str_end_date) : null;
@@ -142,7 +142,7 @@ class DietFieldsFrom extends Component {
     }
 
 
-    if(expired_on !== null){
+    if(canOnlyView){
       disabled=true;
     }
 

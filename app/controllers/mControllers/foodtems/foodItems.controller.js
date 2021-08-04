@@ -255,9 +255,13 @@ class FoodItemController extends Controller {
           data: matchingDetailsForPortionAndUser,
         });
         if (
-          ItemDetailsWrapper.getCreatorType() === USER_CATEGORY.DOCTOR &&
+          (ItemDetailsWrapper.getCreatorType() === USER_CATEGORY.DOCTOR &&
           category == USER_CATEGORY.DOCTOR &&
-          ItemDetailsWrapper.getCreatorId() === userCategoryId
+          ItemDetailsWrapper.getCreatorId() === userCategoryId)
+          ||
+          (ItemDetailsWrapper.getCreatorType() === USER_CATEGORY.HSP &&
+          category == USER_CATEGORY.HSP &&
+          ItemDetailsWrapper.getCreatorId() === userCategoryId)
         ) {
           canUpdateFoodItemDetails = true;
         } else {

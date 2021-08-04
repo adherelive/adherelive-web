@@ -32,6 +32,7 @@ class PaymentController extends Controller {
        *
        * */
       const { body, userDetails: { userData: {category}, userRoleId } = {} } = req;
+      const { for_user_type = USER_CATEGORY.DOCTOR } = body;
       const dataToAdd = PaymentHelper.getFormattedData(body);
       const paymentProductService = new PaymentProductService();
 
@@ -66,7 +67,7 @@ class PaymentController extends Controller {
               creator_role_id: userRoleId,
               creator_type: category,
               for_user_role_id: doctorUserRoleId,
-              for_user_type: USER_CATEGORY.DOCTOR,
+              for_user_type:  category ,
               product_user_type: "patient" // todo: change to constant in model
             }
           );
@@ -104,7 +105,7 @@ class PaymentController extends Controller {
       const paymentProductService = new PaymentProductService();
       const doctorPaymentProductData = await paymentProductService.getAllCreatorTypeProducts(
         {
-          for_user_type: USER_CATEGORY.DOCTOR,
+          for_user_type: [USER_CATEGORY.DOCTOR,USER_CATEGORY.HSP],
           for_user_role_id: userRoleId,
           product_user_type: "patient"
         }

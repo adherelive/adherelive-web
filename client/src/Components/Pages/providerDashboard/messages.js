@@ -6,6 +6,11 @@ const messages = defineMessages({
     description: "",
     defaultMessage: "Doctor"
   },
+  addDoctorOrHSP: {
+    id: "app.provider.dashboard.addDoctorOrHSP",
+    description: "",
+    defaultMessage: "Doctor/HSP"
+  },
   welcome: {
     id: "app.provider.dashboard.provider",
     description: "",
@@ -20,6 +25,11 @@ const messages = defineMessages({
     id: "app.provider.dashboard.doctors",
     description: "",
     defaultMessage: "Doctors"
+  },
+  profiles:{
+    id: "app.provider.dashboard.profiles",
+    description: "",
+    defaultMessage: "Profiles"
   },
   graphs: {
     id: "app.provider.dashboard.graphs",

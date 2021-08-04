@@ -62,7 +62,7 @@ class StartDate extends Component {
       purpose,
       medications,
       medicationData = {},
-      payload: { id: medication_id } = {}
+      payload: { id: medication_id , canViewDetails = false } = {}
     } = this.props;
     const {  getInitialValue } = this;
     // const repeat = getFieldValue(repeatTypeField.field_name);
@@ -93,7 +93,7 @@ class StartDate extends Component {
                 className={`full-width ${FIELD_NAME} ant-date-custom-med wp100 edit-apoint-start-date`}
                 format="DD/MM/YYYY, ddd"
                 showToday={false}
-                disabled={purpose === EVENT_ACTION.EDIT_NOTES}
+                disabled={purpose === EVENT_ACTION.EDIT_NOTES || canViewDetails}
                 disabledDate={disabledStartDate}
                 // suffixIcon={calendarComp()}
                 allowClear={false}

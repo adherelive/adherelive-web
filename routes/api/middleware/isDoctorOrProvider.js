@@ -5,6 +5,7 @@ export const isDoctorOrProvider = (req, res, next) => {
   const { userDetails: { userData: { category } = {} } = {} } = req;
   if (
     category !== USER_CATEGORY.DOCTOR &&
+    category !== USER_CATEGORY.HSP &&
     category !== USER_CATEGORY.PROVIDER
   ) {
     return raiseClientError(res, 401, {}, "UNAUTHORIZED");

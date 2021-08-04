@@ -54,11 +54,12 @@ export default props => {
       render: ({
           openEditDrawer, formatMessage, 
           id,
-          dietData
+          dietData,canViewDetails
         }) => <Edit formatMessage={formatMessage} 
           id={id} 
           action={openEditDrawer}
           dietData={dietData}
+          canViewDetails={canViewDetails}
           />
     }
   ];

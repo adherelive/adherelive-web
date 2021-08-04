@@ -52,7 +52,7 @@ class MedicineQuantity extends Component {
   };
 
   render() {
-    const { form, medications, payload: { id: medication_id } = {}, medicationData = {} } = this.props;
+    const { form, medications, payload: { id: medication_id , canViewDetails = false } = {}, medicationData = {} } = this.props;
     const {
       getFieldDecorator,
       getFieldError,
@@ -92,6 +92,7 @@ class MedicineQuantity extends Component {
               <RadioGroup
                 size="small"
                 className="flex justify-content-end"
+                disabled={canViewDetails}
               >
                 <RadioButton value={1.0} onClick={onRadioChange}>+1.0</RadioButton>
                 <RadioButton value={0.50} onClick={onRadioChange}>+0.50</RadioButton>
@@ -114,7 +115,11 @@ class MedicineQuantity extends Component {
               }
             ],
             initialValue: quantity ? quantity : 1
-          })(<InputNumber min={0.01} style={{ width: "100%" }} />)}
+          })(<InputNumber 
+              min={0.01} 
+              style={{ width: "100%" }}
+              disabled={canViewDetails}  
+            />)}
         </FormItem>
       </Fragment>
     );
