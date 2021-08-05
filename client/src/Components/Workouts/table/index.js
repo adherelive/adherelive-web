@@ -59,11 +59,19 @@ class WorkoutTable extends Component {
         const {
             isOtherCarePlan,
             intl: {formatMessage} = {},
-            workouts={}
+            workouts={},
+            auth_role =null ,
+            care_plans = {}, 
+            carePlanId=null
         } = this.props;
 
         const {workout_ids = []} = this.state;
 
+        const {basic_info : { user_role_id = null } = {} } = care_plans[carePlanId] || {};
+        let canViewDetails=true;
+        if(!isOtherCarePlan && user_role_id.toString() === auth_role.toString()) {
+            canViewDetails=false;
+        }  
 
         const {
             openResponseDrawer, 
@@ -79,6 +87,7 @@ class WorkoutTable extends Component {
                 openEditDrawer,
                 formatMessage,
                 isOtherCarePlan,
+                canViewDetails
             });
         });
     };
@@ -86,13 +95,15 @@ class WorkoutTable extends Component {
     openResponseDrawer = (workout_id) => (e) => {
 
         e.preventDefault();
-        const {openWorkoutResponseDrawer, isOtherCarePlan,  auth_role =null ,care_plans = {}, carePlanId , workouts = {} } = this.props;
+        const {openWorkoutResponseDrawer, isOtherCarePlan, auth_role =null ,care_plans = {}, carePlanId , workouts = {} } = this.props;
         const { basic_info : {name = ''} = {} } = workouts[workout_id] || {};
         const {basic_info : { user_role_id = null } = {} } = care_plans[carePlanId] || {};
+        let canViewDetails=true;
         if(!isOtherCarePlan && user_role_id.toString() === auth_role.toString()) {
-            openWorkoutResponseDrawer({workout_id, workout_name:name, loading: true});
-        }  
-        
+            canViewDetails=false;
+        }            
+        openWorkoutResponseDrawer({workout_id, workout_name:name, loading: true});
+      
     };
 
     openEditDrawer = (workout_id) => (e) => {
@@ -100,9 +111,12 @@ class WorkoutTable extends Component {
         const {openEditWorkoutDrawer, isOtherCarePlan, patientId , auth_role =null ,care_plans = {}, carePlanId , workouts = {} } = this.props;
         const { details : { repeat_days = [] } = {} } = workouts[workout_id];
         const {basic_info : { user_role_id = null } = {} } = care_plans[carePlanId] || {};
+        let canViewDetails=true;
         if(!isOtherCarePlan && user_role_id.toString() === auth_role.toString()) {
-            openEditWorkoutDrawer({workout_id, patient_id: patientId,careplan_id:carePlanId,repeat_days});
-        }   
+            canViewDetails=false;
+        }            
+        openEditWorkoutDrawer({workout_id, patient_id: patientId,careplan_id:carePlanId,repeat_days,canViewDetails});
+        
     };
 
     formatMessage = data => this.props.intl.formatMessage(data);

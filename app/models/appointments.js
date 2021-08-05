@@ -16,14 +16,14 @@ export const db = database => {
       },
       participant_one_type: {
         type: DataTypes.ENUM,
-        values: [USER_CATEGORY.DOCTOR, USER_CATEGORY.PATIENT]
+        values: [USER_CATEGORY.DOCTOR, USER_CATEGORY.PATIENT,USER_CATEGORY.HSP]
       },
       participant_one_id: {
         type: DataTypes.INTEGER
       },
       participant_two_type: {
         type: DataTypes.ENUM,
-        values: [USER_CATEGORY.DOCTOR, USER_CATEGORY.PATIENT]
+        values: [USER_CATEGORY.DOCTOR, USER_CATEGORY.PATIENT,USER_CATEGORY.HSP]
       },
       participant_two_id: {
         type: DataTypes.INTEGER
@@ -33,7 +33,8 @@ export const db = database => {
         values: [
           USER_CATEGORY.DOCTOR,
           USER_CATEGORY.PATIENT,
-          USER_CATEGORY.CARE_TAKER
+          USER_CATEGORY.CARE_TAKER,
+          USER_CATEGORY.HSP
         ]
       },
       organizer_id: {

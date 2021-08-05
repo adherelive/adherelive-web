@@ -34,6 +34,7 @@ import queueService from "../../../services/awsQueue/queue.service";
 import ScheduleEventService from "../../../services/scheduleEvents/scheduleEvent.service";
 import moment from "moment";
 import * as carePlanHelper from "./carePlanHelper";
+import PERMISSIONS from "../../../../config/permissions";
 
 import Logger from "../../../../libs/log";
 
@@ -61,10 +62,19 @@ class CarePlanController extends Controller {
         createTemplate = false,
       } = req.body;
 
-      const { userDetails } = req;
+      const { userDetails , permissions = [] } = req;
       const { userId, userRoleId, userData: { category } = {}, userCategoryId, userCategoryData } =
         userDetails || {};
       const QueueService = new queueService();
+
+      if(!permissions.includes(PERMISSIONS.MEDICATIONS.ADD) && medicationsData.length > 0) {
+        return raiseClientError(
+          res,
+          422,
+          {},
+          `Medication creation is not allowed. Please remove the same to continue`
+        );
+      }
 
       if (!care_plan_id) {
         return raiseClientError(
@@ -176,10 +186,8 @@ class CarePlanController extends Controller {
             participant_one_id: userCategoryId,
             participant_two_type,
             participant_two_id,
-            organizer_type:
-              Object.keys(organizer).length > 0 ? organizer.category : category,
-            organizer_id:
-              Object.keys(organizer).length > 0 ? organizer.id : userCategoryId,
+            organizer_type:category,
+            organizer_id:userCategoryId,
             description,
             start_date: date,
             end_date: date,
@@ -250,22 +258,23 @@ class CarePlanController extends Controller {
       const patient = await PatientWrapper(null, patient_id);
       const {user_role_id: patientRoleId} = await patient.getAllInfo();
 
-
-      carePlanScheduleData = {
-        ...carePlanScheduleData,
-        type: EVENT_TYPE.CARE_PLAN_ACTIVATION,
-        event_id: care_plan_id,
-        critical: false,
-        start_time: carePlanStartTime,
-        end_time: carePlanEndTime,
-        details: JSON.stringify(medicationsData),
-        participants: [userRoleId, patientRoleId],
-        actor: {
-          id: userId,
-          user_role_id: userRoleId,
-          category
-        }
-      };
+      if(permissions.includes(PERMISSIONS.MEDICATIONS.ADD)){
+        carePlanScheduleData = {
+          ...carePlanScheduleData,
+          type: EVENT_TYPE.CARE_PLAN_ACTIVATION,
+          event_id: care_plan_id,
+          critical: false,
+          start_time: carePlanStartTime,
+          end_time: carePlanEndTime,
+          details: JSON.stringify(medicationsData),
+          participants: [userRoleId, patientRoleId],
+          actor: {
+            id: userId,
+            user_role_id: userRoleId,
+            category
+          }
+        };
+      }
 
       // const sqsResponseforCareplan = await QueueService.sendMessage(
       //   carePlanScheduleData
@@ -278,7 +287,7 @@ class CarePlanController extends Controller {
 
       let medicineApiDetails = {};
 
-      if (medicationsData.length > 0) {
+      if ( permissions.includes(PERMISSIONS.MEDICATIONS.ADD) && medicationsData.length > 0) {
         for (const medication of medicationsData) {
           const {
             schedule_data: {
@@ -373,10 +382,12 @@ class CarePlanController extends Controller {
       }
 
       carePlanScheduleData = {
-        ...carePlanScheduleData,
-        medication_ids,
+        ...( permissions.includes(PERMISSIONS.MEDICATIONS.ADD) ) &&
+          {...carePlanScheduleData,
+            medication_ids
+          }
       };
-
+      
       // vitals ----------------------------------------
       const {
         vitals,
@@ -435,7 +446,7 @@ class CarePlanController extends Controller {
           condition_id,
           user_id: userId,
           template_appointments: [...appointmentsArr],
-          template_medications: [...medicationsArr],
+          ...(permissions.includes(PERMISSIONS.MEDICATIONS.ADD) ) && {template_medications: [...medicationsArr]},
           template_vitals: [...carePlanTemplateVitals],
           template_diets: [...carePlanTemplateDiets],
           template_workouts: [...carePlanTemplateWorkouts],
@@ -471,7 +482,7 @@ class CarePlanController extends Controller {
             [carePlanData.getCarePlanId()]: {
               ...carePlanData.getBasicInfo(),
               appointment_ids,
-              medication_ids,
+              ...(permissions.includes(PERMISSIONS.MEDICATIONS.ADD) ) && {medication_ids},
               vital_ids,
               diet_ids,
               workout_ids,
@@ -480,9 +491,12 @@ class CarePlanController extends Controller {
           appointments: {
             ...appointmentApiDetails,
           },
-          medications: {
-            ...medicationApiDetails,
-          },
+          ...(permissions.includes(PERMISSIONS.MEDICATIONS.ADD) ) && {
+            medications: {
+              ...medicationApiDetails,
+            }
+          }
+          ,
           vitals,
           vital_templates,
 
@@ -805,13 +819,13 @@ class CarePlanController extends Controller {
   getPatientCarePlanDetails = async (req, res) => {
     const { patientId: patient_id = 1 } = req.params;
     try {
-      const { userDetails: { userId , userRoleId = null ,userData: { category } = {} } = {} } = req;
+      const { userDetails: { userId , userRoleId = null ,userData: { category } = {} , permissions = [] } = {} } = req;
 
       let show = false;
 
       let carePlan = await carePlanService.getSingleCarePlanByData({
         patient_id,
-        ...category === USER_CATEGORY.DOCTOR && { 'user_role_id': userRoleId }
+        ...(category === USER_CATEGORY.DOCTOR || category === USER_CATEGORY.HSP) && { 'user_role_id': userRoleId }
 
       });
 
@@ -858,7 +872,7 @@ class CarePlanController extends Controller {
         templateAppointments = await templateAppointmentService.getAppointmentsByCarePlanTemplateId(
           carePlanTemplateId
         );
-        if (templateMedications.length) {
+        if ( permissions.includes(PERMISSIONS.MEDICATIONS.VIEW) && templateMedications.length) {
           for (let medication of templateMedications) {
             let newMedication = {};
             newMedication.id = medication.get("id");
@@ -893,7 +907,12 @@ class CarePlanController extends Controller {
         }
       }
 
-      let medicationsOfTemplate = formattedTemplateMedications;
+      let medicationsOfTemplate = {};
+
+      if( permissions.includes(PERMISSIONS.MEDICATIONS.VIEW) ){
+        medicationsOfTemplate = formattedTemplateMedications;
+
+      }
       let appointmentsOfTemplate = formattedTemplateAppointments;
 
       let carePlanMedicationsExists = carePlanMedications
@@ -938,7 +957,7 @@ class CarePlanController extends Controller {
         {
           care_plans: { ...carePlanApiData },
           show,
-          medicationsOfTemplate,
+          ...( permissions.includes(PERMISSIONS.MEDICATIONS.VIEW) && {medicationsOfTemplate} ),
           appointmentsOfTemplate,
           carePlanMedications,
           carePlanAppointments,

@@ -103,7 +103,7 @@ class ClinicRegister extends Component {
         await getDoctorProfileDetails(id);
       }
 
-      if (authenticated_category === USER_CATEGORY.DOCTOR) {
+      if (authenticated_category === USER_CATEGORY.DOCTOR || authenticated_category === USER_CATEGORY.HSP) {
         await getDoctorProfileDetails(id);
       }
     }
@@ -517,7 +517,7 @@ class ClinicRegister extends Component {
               history.replace(PATH.LANDING_PAGE);
             }
           } else if (
-            authenticated_category === USER_CATEGORY.DOCTOR &&
+            ( authenticated_category === USER_CATEGORY.DOCTOR || authenticated_category === USER_CATEGORY.HSP ) &&
             window.location.href.includes(PATH.REGISTER_FROM_MY_PROFILE)
           ) {
             history.replace(PATH.PROFILE);
@@ -558,7 +558,7 @@ class ClinicRegister extends Component {
         history.replace(`${PATH.REGISTER_QUALIFICATIONS}/${doctor_id}`);
       }
     } else if (
-      authenticated_category === USER_CATEGORY.DOCTOR &&
+      (authenticated_category === USER_CATEGORY.DOCTOR || authenticated_category === USER_CATEGORY.HSP) &&
       window.location.href.includes(PATH.REGISTER_FROM_MY_PROFILE)
     ) {
       history.replace(PATH.PROFILE);
@@ -628,7 +628,7 @@ class ClinicRegister extends Component {
         <div className="registration-container">
           {authenticated_category === USER_CATEGORY.PROVIDER ? (
             <div className="header">
-              {this.formatMessage(messages.createDoctorProfile)}
+              {this.formatMessage(messages.createNewProfile)}
             </div>
           ) : (
             <div className="header">

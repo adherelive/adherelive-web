@@ -276,20 +276,17 @@ class UserController extends Controller {
 
         const apiUserDetails = await UserWrapper(userRef.get());
 
-        let permissions = {
-          permissions: []
-        };
+        let permissions = [];
 
         if (apiUserDetails.isActivated()) {
           permissions = await apiUserDetails.getPermissions();
         }
 
         const dataToSend = {
-          // users: {
-          //   [apiUserDetails.getId()]: apiUserDetails.getBasicInfo(),
-          // },
-          // ...permissions,
-          ...(await apiUserDetails.getReferenceData()),
+          users: {
+            [apiUserDetails.getId()]: apiUserDetails.getBasicInfo(),
+          },
+          permissions,
           auth_user: apiUserDetails.getId(),
           auth_user_role: userRoleId,
           notificationToken: notificationToken,
@@ -623,8 +620,6 @@ class UserController extends Controller {
                 user_role_id:userRoleId
               });
 
-              console.log("3284688234682348723648723",{careplanData,L:careplanData.length});
-
               for (const carePlan of careplanData) {
                 const carePlanApiWrapper = await CarePlanWrapper(carePlan);
                 patientIds.push(carePlanApiWrapper.getPatientId());
@@ -654,6 +649,85 @@ class UserController extends Controller {
                     ...carePlanApiWrapper.getBasicInfo(),
                     ...carePlanSeverityDetails,
                     medication_ids,
+                    appointment_ids,
+                    vital_ids,
+                    diet_ids
+                  };
+              }
+            }
+            break;
+          case USER_CATEGORY.HSP:
+            userCategoryData = await doctorService.getDoctorByUserId(userId);
+            if (userCategoryData) {
+              userCategoryApiWrapper = await DoctorWrapper(userCategoryData);
+
+              let watchlist_patient_ids = [];
+              const watchlistRecords = await doctorPatientWatchlistService.getAllByData({user_role_id:userRoleId});
+              if(watchlistRecords && watchlistRecords.length){
+                for(let i = 0 ; i<watchlistRecords.length ; i++){
+                  const watchlistWrapper = await DoctorPatientWatchlistWrapper(watchlistRecords[i]);
+                  const patientId = await watchlistWrapper.getPatientId();
+                  watchlist_patient_ids.push(patientId);
+                }
+              }
+
+              let allInfo = {};
+              allInfo = await userCategoryApiWrapper.getAllInfo();
+              delete allInfo.watchlist_patient_ids;
+              allInfo['watchlist_patient_ids']=watchlist_patient_ids;
+
+              userCategoryId = userCategoryApiWrapper.getDoctorId();
+              userCaregoryApiData[
+                userCategoryApiWrapper.getDoctorId()
+              ] = allInfo;
+
+
+              const record = await userRolesService.getSingleUserRoleByData({id:userRoleId});
+              const {linked_with = '',linked_id = null } = record || {};
+              if (linked_with === USER_CATEGORY.PROVIDER ) {
+                
+                const providerId = linked_id;
+                doctorProviderId=providerId;
+                const providerWrapper = await ProvidersWrapper(
+                  null,
+                  providerId
+                );
+                providerApiData[
+                  providerId
+                ] = await providerWrapper.getAllInfo();
+              }
+
+              careplanData = await carePlanService.getCarePlanByData({
+                user_role_id:userRoleId
+              });
+
+              for (const carePlan of careplanData) {
+                const carePlanApiWrapper = await CarePlanWrapper(carePlan);
+                patientIds.push(carePlanApiWrapper.getPatientId());
+                const carePlanId = carePlanApiWrapper.getCarePlanId();
+
+                const {
+                  appointment_ids = [],
+                  vital_ids = [],
+                  diet_ids = []
+                } = await carePlanApiWrapper.getAllInfo();
+
+                let carePlanSeverityDetails = await getCarePlanSeverityDetails(
+                  carePlanId
+                );
+
+                const {
+                  treatment_id,
+                  severity_id,
+                  condition_id
+                } = carePlanApiWrapper.getCarePlanDetails();
+                treatmentIds.push(treatment_id);
+                conditionIds.push(condition_id);
+                carePlanApiData[carePlanApiWrapper.getCarePlanId()] =
+                  // carePlanApiWrapper.getBasicInfo();
+                  {
+                    ...carePlanApiWrapper.getBasicInfo(),
+                    ...carePlanSeverityDetails,
                     appointment_ids,
                     vital_ids,
                     diet_ids
@@ -755,23 +829,16 @@ class UserController extends Controller {
           ] = conditionWrapper.getBasicInfo();
         }
 
-        let permissions = {
-          permissions: []
-        };
+        let permissions = [];
 
         if (authUserDetails.isActivated()) {
           permissions = await authUserDetails.getPermissions();
         }
-
-        Logger.debug(
-          "authUserDetails.isActivated() --> ",
-          authUserDetails.isActivated()
-        );
         // Logger.debug("permissions --> ", permissions);
 
         // speciality temp todo
         let referenceData = {};
-        if (category === USER_CATEGORY.DOCTOR && userCategoryApiWrapper) {
+        if ( (category === USER_CATEGORY.DOCTOR || category === USER_CATEGORY.HSP ) && userCategoryApiWrapper) {
           referenceData = await userCategoryApiWrapper.getReferenceInfo();
         }
 
@@ -814,15 +881,15 @@ class UserController extends Controller {
           conditions: {
             ...conditionApiDetails
           },
-          ...permissions,
+          permissions,
           severity_ids: severityIds,
           treatment_ids: treatmentIds,
           condition_ids: conditionIds,
           auth_user: userId,
           auth_category: category,
           auth_role: userRoleId,
-          [category === USER_CATEGORY.DOCTOR  ? "doctor_provider_id" : ""]:
-            category === USER_CATEGORY.DOCTOR
+          [category === USER_CATEGORY.DOCTOR || category === USER_CATEGORY.HSP  ? "doctor_provider_id" : ""]:
+            category === USER_CATEGORY.DOCTOR || category === USER_CATEGORY.HSP
             ? doctorProviderId
             : "",  
         };

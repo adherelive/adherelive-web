@@ -318,6 +318,7 @@ class TransactionController extends Controller {
 
         switch (transaction.getRequestorType()) {
           case USER_CATEGORY.DOCTOR:
+          case USER_CATEGORY.HSP:
           case USER_CATEGORY.PROVIDER:
             const requestor_id = transaction.getRequestorId();
             const requestorRole = await userRolesService.findOne({

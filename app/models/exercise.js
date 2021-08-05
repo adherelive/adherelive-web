@@ -28,6 +28,7 @@ export const db = (database) => {
           USER_CATEGORY.DOCTOR,
           USER_CATEGORY.PROVIDER,
           USER_CATEGORY.ADMIN,
+          USER_CATEGORY.HSP
         ],
         defaultValue: USER_CATEGORY.ADMIN,
       },

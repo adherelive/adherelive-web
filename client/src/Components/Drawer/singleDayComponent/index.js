@@ -211,7 +211,7 @@ class DayDiet extends Component{
     getTimingOptions = () => {
       
       let options = [];
-      let {  completeData : singleDayData  , timings = {} , expired_on=null } = this.props;
+      let {  completeData : singleDayData  , timings = {} , canOnlyView=false } = this.props;
 
         if(Object.keys(timings).length === 0){
           timings=PATIENT_MEAL_TIMINGS; // default 
@@ -290,7 +290,7 @@ class DayDiet extends Component{
                     { foodGroupComponent }
                     { allSimilarComponents }
                     {
-                      !expired_on
+                      !canOnlyView
                       &&
                       <div className="flex direction-column algin-center justify-center or-before-line" >
                         <div 
@@ -321,7 +321,7 @@ class DayDiet extends Component{
              <div className="b-light-grey wp100 mh40 flex direction-column align-center p10 br4 " >
 
                   {
-                    !expired_on
+                    !canOnlyView
                     &&
                       <div className=" pointer tab-color tal fw700 wp100 " 
                         onClick={this.handleTimingSelect(each)} 
@@ -503,7 +503,7 @@ class DayDiet extends Component{
 
         const { handleOpenEditFoodGroupDrawer } = this;
 
-        const { food_items , food_item_details , portions,expired_on=null } = this.props;
+        const { food_items , food_item_details , portions,canOnlyView=false } = this.props;
         const {basic_info : { 
             food_item_id = null ,
             portion_size=null
@@ -526,7 +526,7 @@ class DayDiet extends Component{
                   
                   <div className="flex direction-column algin-center justify-center" >
                     {
-                      !expired_on
+                      !canOnlyView
                       &&
                       <img
                       src={edit_image}
@@ -549,7 +549,7 @@ class DayDiet extends Component{
                   </div>  
                   <div className="flex direction-column algin-center justify-center" >
                       {
-                        !expired_on
+                        !canOnlyView
                         &&
                         <DeleteOutlined
                           className={"pointer align-self-end ml10 "}

@@ -3,14 +3,14 @@ import { injectIntl } from "react-intl";
 import messages from "./message";
 import { connect } from "getstream";
 import {
-  PERMISSIONS,
   TABLE_DEFAULT_BLANK_FIELD,
   FEATURES,
   MISSED_MEDICATION,
   MISSED_APPOINTMENTS,
   MISSED_ACTIONS,
   MISSED_DIET,
-  MISSED_WORKOUT
+  MISSED_WORKOUT,
+  USER_PERMISSIONS
 } from "../../constant";
 import Tabs from "antd/es/tabs";
 // import Patients from "../../Containers/Patient/paginatedTable";
@@ -44,6 +44,7 @@ import MissedWorkoutsDrawer from "../../Containers/Drawer/missedWorkout";
 
 // helpers...
 import { getRoomId } from "../../Helper/twilio";
+
 const { GETSTREAM_API_KEY, GETSTREAM_APP_ID } = config;
 
 const { TabPane } = Tabs;
@@ -307,12 +308,12 @@ class Dashboard extends Component {
     const { authPermissions = [] } = this.props;
     return (
       <Menu>
-        {authPermissions.includes(PERMISSIONS.ADD_PATIENT) && (
+        {authPermissions.includes(USER_PERMISSIONS.PATIENTS.ADD) && (
           <Menu.Item onClick={this.showAddPatientDrawer}>
             <div>{this.formatMessage(messages.patients)}</div>
           </Menu.Item>
         )}
-        {authPermissions.includes(PERMISSIONS.EDIT_GRAPH) && (
+        {authPermissions.includes(USER_PERMISSIONS.GRAPHS.UPDATE) && (
           <Menu.Item onClick={this.showEditGraphModal}>
             <div>{this.formatMessage(messages.graphs)}</div>
           </Menu.Item>
@@ -663,7 +664,8 @@ class Dashboard extends Component {
       drawer: { visible: drawerVisible = false } = {},
       ui_features: { showVerifyModal = false } = {},
       twilio: { patientId: chatPatientId = 1 },
-      auth_role : doctorRoleId = null
+      auth_role : doctorRoleId = null,
+      authenticated_category
     } = this.props;
 
     const { formatMessage, renderChartTabs, getVerifyModal , changeTab , getProviderBanner } = this;
@@ -733,8 +735,8 @@ const roomId = getRoomId(doctorRoleId, patientRoleId);
               )}
           </div> 
             ) }
-            {(authPermissions.includes(PERMISSIONS.ADD_PATIENT) ||
-              authPermissions.includes(PERMISSIONS.EDIT_GRAPH)) && (
+            {(authPermissions.includes(USER_PERMISSIONS.PATIENTS.ADD) ||
+              authPermissions.includes(USER_PERMISSIONS.GRAPHS.UPDATE)) && (
               <div className="flex direction-row justify-space-between align-center w500">
                 <SearchPatient />
 
@@ -887,6 +889,7 @@ const roomId = getRoomId(doctorRoleId, patientRoleId);
             handleCancel={this.hideEditGraphModal}
             handleOk={this.editDisplayGraphs}
             selectedGraphs={graphsToShow}
+            authenticated_category={authenticated_category}
           />
         )}
 

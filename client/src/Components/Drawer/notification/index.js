@@ -350,11 +350,13 @@ class NotificationDrawer extends Component {
     care_plan_id,
     notification_id
   ) => async () => {
+    const intCPId = parseInt(care_plan_id);
+    const intPatientId = parseInt(patient_id);
     const { history, close, doNotificationRedirect } = this.props;
     const resp = await doNotificationRedirect({
       type: TYPE_SYMPTOMS,
-      patient_id,
-      care_plan_id,
+      patient_id:intPatientId,
+      care_plan_id:intCPId,
     });
     const { activityGroupId = {} } = this.state;
     const groupId = activityGroupId[notification_id] || null;
@@ -378,11 +380,13 @@ class NotificationDrawer extends Component {
     care_plan_id,
     notification_id
   ) => async () => {
+    const intCPId = parseInt(care_plan_id);
+    const intPatientId = parseInt(patient_id);
     const { history, close, doNotificationRedirect } = this.props;
     const resp = await doNotificationRedirect({
       type: TYPE_APPOINTMENTS,
-      patient_id,
-      care_plan_id,
+      patient_id:intPatientId,
+      care_plan_id:intCPId,
     });
 
     const { activityGroupId = {} } = this.state;
@@ -401,11 +405,13 @@ class NotificationDrawer extends Component {
     care_plan_id,
     notification_id
   ) => async () => {
+    const intCPId = parseInt(care_plan_id);
+    const intPatientId = parseInt(patient_id);
     const { history, close, doNotificationRedirect } = this.props;
     const resp = await doNotificationRedirect({
       type: TYPE_DIETS,
-      patient_id,
-      care_plan_id,
+      patient_id:intPatientId,
+      care_plan_id:intCPId,
     });
 
     const { activityGroupId = {} } = this.state;
@@ -423,11 +429,13 @@ class NotificationDrawer extends Component {
     care_plan_id,
     notification_id
   ) => async () => {
+    const intCPId = parseInt(care_plan_id);
+    const intPatientId = parseInt(patient_id);
     const { history, close, doNotificationRedirect } = this.props;
     const resp = await doNotificationRedirect({
       type:TYPE_WORKOUTS ,
-      patient_id,
-      care_plan_id,
+      patient_id:intPatientId,
+      care_plan_id:intCPId,
     });
 
     const { activityGroupId = {} } = this.state;
@@ -625,13 +633,15 @@ class NotificationDrawer extends Component {
   handleVitalRedirect = (patient_id, care_plan_id, notification_id) => async (
     e
   ) => {
+    const intCPId = parseInt(care_plan_id);
+    const intPatientId = parseInt(patient_id);
     e.preventDefault();
     const { history, close, doNotificationRedirect } = this.props;
     const { readNotification } = this;
     const resp = await doNotificationRedirect({
       type: TYPE_VITALS,
-      patient_id,
-      care_plan_id,
+      patient_id:intPatientId,
+      care_plan_id:intCPId,
     });
 
     const { activityGroupId = {} } = this.state;

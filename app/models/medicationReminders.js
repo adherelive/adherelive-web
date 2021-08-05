@@ -21,7 +21,11 @@ export const db = (database) => {
             },
             organizer_type: {
                 type: DataTypes.ENUM,
-                values: [USER_CATEGORY.DOCTOR, USER_CATEGORY.PATIENT, USER_CATEGORY.CARE_TAKER]
+                values: [
+                    USER_CATEGORY.DOCTOR, 
+                    USER_CATEGORY.PATIENT, 
+                    USER_CATEGORY.CARE_TAKER
+                ]
             },
             organizer_id: {
                 type: DataTypes.INTEGER,

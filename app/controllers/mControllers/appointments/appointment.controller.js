@@ -9,7 +9,8 @@ import {
   S3_DOWNLOAD_FOLDER,
   NOTIFICATION_STAGES,
   RADIOLOGY,
-  FAVOURITE_TYPE
+  FAVOURITE_TYPE,
+  APPOINTMENT_TYPE
 } from "../../../../constant";
 import moment from "moment";
 
@@ -115,10 +116,8 @@ class MobileAppointmentController extends Controller {
         participant_one_id: userCategoryId,
         participant_two_type,
         participant_two_id,
-        organizer_type:
-          Object.keys(organizer).length > 0 ? organizer.category : category,
-        organizer_id:
-          Object.keys(organizer).length > 0 ? organizer.id : userCategoryId,
+        organizer_type:category,
+        organizer_id:userCategoryId,
         description,
         start_date: moment(date),
         end_date: moment(date),
@@ -300,7 +299,7 @@ class MobileAppointmentController extends Controller {
         participant_two || {};
 
         // careplan id for appointment
-      const {care_plan_id = null} = await carePlanAppointmentService.getSingleCarePlanAppointmentByData({appointment_id}) || {};
+      const {care_plan_id = null} = await carePlanAppointmentService.getSingleCarePlanAppointmentByData({appointment_id: id}) || {};
 
       const oldAppointment = await appointmentService.getAppointmentById(id);
 
@@ -357,9 +356,8 @@ class MobileAppointmentController extends Controller {
         participant_one_id: userCategoryId,
         participant_two_type,
         participant_two_id,
-        organizer_type:
-          Object.keys(organizer).length > 0 ? organizer.category : category,
-        organizer_id: Object.keys(organizer).length > 0 ? organizer.id : userId,
+        organizer_type:category,
+        organizer_id: userCategoryId,
         description,
         start_date: moment(date),
         end_date: moment(date),
@@ -531,6 +529,20 @@ class MobileAppointmentController extends Controller {
         featureDetails = prevVersionsAppointmentData.getFeatureDetails();
       }
 
+      const {appointment_type ={}} = featureDetails;
+      if(category === USER_CATEGORY.HSP){
+        let hspAppointmentType = {};
+        for(let each in appointment_type ){
+          const { title = '' } = appointment_type[each];
+          const { title : radiologyTitle } = APPOINTMENT_TYPE[RADIOLOGY];
+          if(title === radiologyTitle ){
+            continue;
+          }
+          hspAppointmentType[each]=appointment_type[each];
+        }
+        featureDetails["appointment_type"]={...hspAppointmentType};
+      }
+
       return raiseSuccess(
         res,
         200,
@@ -618,6 +630,13 @@ class MobileAppointmentController extends Controller {
               user_id: userId
             });
             userCategoryData = await DoctorWrapper(doctor);
+            userCategoryId = userCategoryData.getDoctorId();
+            break;
+          case USER_CATEGORY.HSP:
+            const hspDoctor = await doctorService.getDoctorByData({
+              user_id: userId
+            });
+            userCategoryData = await DoctorWrapper(hspDoctor);
             userCategoryId = userCategoryData.getDoctorId();
             break;
           case USER_CATEGORY.PATIENT:
@@ -749,6 +768,13 @@ class MobileAppointmentController extends Controller {
             userCategoryData = await DoctorWrapper(doctor);
             userCategoryId = userCategoryData.getDoctorId();
             break;
+          case USER_CATEGORY.HSP:
+            const hspDoctor = await doctorService.getDoctorByData({
+              user_id: userId
+            });
+            userCategoryData = await DoctorWrapper(hspDoctor);
+            userCategoryId = userCategoryData.getDoctorId();
+            break;
           case USER_CATEGORY.PATIENT:
             const patient = await patientService.getPatientByUserId(userId);
             userCategoryData = await PatientWrapper(patient);
@@ -842,6 +868,13 @@ class MobileAppointmentController extends Controller {
               user_id: userId
             });
             userCategoryData = await DoctorWrapper(doctor);
+            userCategoryId = userCategoryData.getDoctorId();
+            break;
+          case USER_CATEGORY.HSP:
+            const hspDoctor = await doctorService.getDoctorByData({
+              user_id: userId
+            });
+            userCategoryData = await DoctorWrapper(hspDoctor);
             userCategoryId = userCategoryData.getDoctorId();
             break;
           case USER_CATEGORY.PATIENT:

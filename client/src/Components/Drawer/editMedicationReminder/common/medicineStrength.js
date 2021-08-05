@@ -36,7 +36,7 @@ class MedicationStrength extends Component {
   };
 
   render() {
-    const { form, medications, payload: { id: medication_id } = {}, medicationData = {} } = this.props;
+    const { form, medications, payload: { id: medication_id } = {}, medicationData = {} , payload : { canViewDetails = false } = {} } = this.props;
     const {
       getFieldDecorator,
       getFieldError,
@@ -74,7 +74,7 @@ class MedicationStrength extends Component {
               }
             ],
             initialValue: strength ? strength : null
-          })(<InputNumber min={1} style={{ width: "100%" }} />)}
+          })(<InputNumber min={1} style={{ width: "100%" }} disabled={canViewDetails} />)}
         </FormItem>
       </Fragment>
     );

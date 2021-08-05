@@ -30,7 +30,7 @@ class PaymentController extends Controller {
 
       let doctorRoleId = userRoleId;
 
-      const { doctor_id = null } = body || {};
+      const { doctor_id = null , for_user_type = USER_CATEGORY.DOCTOR } = body || {};
 
       if (doctor_id) {
         if (category !== USER_CATEGORY.PROVIDER) {
@@ -80,7 +80,7 @@ class PaymentController extends Controller {
             creator_role_id: userRoleId,
             creator_type: category,
             for_user_role_id: doctorRoleId,
-            for_user_type: USER_CATEGORY.DOCTOR,
+            for_user_type: doctor_id ? for_user_type : category ,
             product_user_type: "patient" // todo: change to constant in model
           }
         );
@@ -183,7 +183,7 @@ class PaymentController extends Controller {
       const paymentProductService = new PaymentProductService();
       const doctorPaymentProductData = await paymentProductService.getAllCreatorTypeProducts(
         {
-          for_user_type: USER_CATEGORY.DOCTOR,
+          for_user_type: [USER_CATEGORY.DOCTOR,USER_CATEGORY.HSP],
           for_user_role_id: doctorRoleId,
           product_user_type: "patient"
         }

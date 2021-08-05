@@ -469,6 +469,9 @@ class EventController extends Controller {
         case USER_CATEGORY.DOCTOR:
           [response, responseMessage] = await EventHelper.doctorChart(req);
           break;
+        case USER_CATEGORY.HSP:
+          [response, responseMessage] = await EventHelper.hspChart(req);
+          break;
         // case USER_CATEGORY.PROVIDER:
         //   [response, responseMessage] = await EventHelper.providerChart(
         //       req
@@ -497,7 +500,7 @@ class EventController extends Controller {
         (await CarePlanService.getMultipleCarePlanByData({
           patient_id,
           // doctor_id: category === USER_CATEGORY.DOCTOR ? userCategoryId : "",
-          user_role_id: category === USER_CATEGORY.DOCTOR ? userRoleId : null,
+          user_role_id: (category === USER_CATEGORY.DOCTOR || category === USER_CATEGORY.HSP ) ? userRoleId : null,
           // doctor_id: category === USER_CATEGORY.DOCTOR ? userCategoryId : "", (revious before conflict resolve)
         })) || [];
 
@@ -715,7 +718,7 @@ class EventController extends Controller {
 
       const carePlanData = await CarePlanService.getSingleCarePlanByData({
         patient_id,
-        ...category === USER_CATEGORY.DOCTOR && { 'user_role_id': userRoleId }
+        ...(category === USER_CATEGORY.DOCTOR || category === USER_CATEGORY.HSP) && { 'user_role_id': userRoleId }
       });
 
       if(carePlanData){

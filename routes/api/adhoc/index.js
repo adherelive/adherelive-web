@@ -28,5 +28,11 @@ router.post(
     adhocController.updatePatientTimings
 );
 
+router.post(
+    "/permissions",
+    Authenticated,
+    adhocController.updatePermissions
+);
+
   
 module.exports = router;

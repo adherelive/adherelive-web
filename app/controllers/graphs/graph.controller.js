@@ -162,7 +162,9 @@ class GraphController extends Controller {
                 details: updatedDetails
             }, userPreference.getUserPreferenceId());
 
-            const updatedUserPreference = await UserPreferenceWrapper(null, userPreference.getUserPreferenceId());
+            const updatedUserPreferenceData = await userPreferenceService.getPreferenceByData({user_role_id:userRoleId});
+
+            const updatedUserPreference = await UserPreferenceWrapper(updatedUserPreferenceData);
 
             updatedChart.forEach(chart => {
                 chartData[chart] = CHART_DETAILS[chart];

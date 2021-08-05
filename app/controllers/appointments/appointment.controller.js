@@ -15,7 +15,8 @@ import {
   NOTIFICATION_STAGES,
   RADIOLOGY,
   FAVOURITE_TYPE,
-  MEDICAL_TEST
+  MEDICAL_TEST,
+  APPOINTMENT_TYPE
 } from "../../../constant";
 import moment from "moment";
 
@@ -117,6 +118,14 @@ class AppointmentController extends Controller {
           userCategoryId = doctorData.getDoctorId();
           participantTwoId = doctorData.getUserId();
           break;
+        case USER_CATEGORY.HSP:
+          const hspDoctor = await doctorService.getDoctorByData({
+            user_id: userId
+          });
+          const hspDoctorData = await DoctorWrapper(hspDoctor);
+          userCategoryId = hspDoctorData.getDoctorId();
+          participantTwoId = hspDoctorData.getUserId();
+          break;
         case USER_CATEGORY.PATIENT:
           const patient = await patientService.getPatientByUserId(userId);
           const patientData = await PatientWrapper(patient);
@@ -154,12 +163,11 @@ class AppointmentController extends Controller {
 
       const appointment_data = {
         participant_one_type: category,
-        participant_one_id: userId,
+        participant_one_id: userCategoryId,
         participant_two_type,
         participant_two_id,
-        organizer_type:
-          Object.keys(organizer).length > 0 ? organizer.category : category,
-        organizer_id: Object.keys(organizer).length > 0 ? organizer.id : userId,
+        organizer_type:category,
+        organizer_id: userCategoryId,
         description,
         start_date: moment(date),
         end_date: moment(date),
@@ -194,7 +202,7 @@ class AppointmentController extends Controller {
         start_time,
         end_time,
         details: appointmentApiData.getBasicInfo(),
-        participants: [userId, participantTwoId],
+        participants: [userRoleId, participantTwoId],
         actor: {
           id: userId,
           user_role_id: userRoleId,
@@ -323,9 +331,8 @@ class AppointmentController extends Controller {
         participant_one_id: userCategoryId,
         participant_two_type,
         participant_two_id,
-        organizer_type:
-          Object.keys(organizer).length > 0 ? organizer.category : category,
-        organizer_id: Object.keys(organizer).length > 0 ? organizer.id : userId,
+        organizer_type: category,
+        organizer_id:userCategoryId,
         description,
         start_date: moment(date),
         end_date: moment(date),
@@ -523,10 +530,8 @@ class AppointmentController extends Controller {
         participant_one_id: userCategoryId,
         participant_two_type,
         participant_two_id,
-        organizer_type:
-          Object.keys(organizer).length > 0 ? organizer.category : category,
-        organizer_id:
-          Object.keys(organizer).length > 0 ? organizer.id : userCategoryId,
+        organizer_type: category,
+        organizer_id: userCategoryId,
         description,
         start_date: moment(date),
         end_date: moment(date),
@@ -727,7 +732,6 @@ class AppointmentController extends Controller {
       const appointmentData = await FeatureDetailsWrapper(appointmentDetails);
 
       let featureDetails = appointmentData.getFeatureDetails();
-
       const {type_description, radiology_type_data} =  featureDetails || {};
 
       const userTypeData = {
@@ -738,6 +742,19 @@ class AppointmentController extends Controller {
       const updatedTypeDescriptionWithFavourites = await AppointmentHelper.getFavoriteInDetails(userTypeData, type_description, FAVOURITE_TYPE.MEDICAL_TESTS);
 
       featureDetails = {...featureDetails, ...{type_description: updatedTypeDescriptionWithFavourites}}
+      const {appointment_type ={}} = featureDetails;
+      if(category === USER_CATEGORY.HSP){
+        let hspAppointmentType = {};
+        for(let each in appointment_type ){
+          const { title = '' } = appointment_type[each];
+          const { title : radiologyTitle } = APPOINTMENT_TYPE[RADIOLOGY];
+          if(title === radiologyTitle ){
+            continue;
+          }
+          hspAppointmentType[each]=appointment_type[each];
+        }
+        featureDetails["appointment_type"]={...hspAppointmentType};
+      }
 
       const updatedRadiologyDataWithFavourites = await AppointmentHelper.getFavoriteInDetails(userTypeData, radiology_type_data, FAVOURITE_TYPE.RADIOLOGY);
 
@@ -1018,6 +1035,13 @@ class AppointmentController extends Controller {
             userCategoryData = await DoctorWrapper(doctor);
             userCategoryId = userCategoryData.getDoctorId();
             break;
+          case USER_CATEGORY.HSP:
+            const hspDoctor = await doctorService.getDoctorByData({
+              user_id: userId
+            });
+            userCategoryData = await DoctorWrapper(hspDoctor);
+            userCategoryId = userCategoryData.getDoctorId();
+            break;
           case USER_CATEGORY.PATIENT:
             const patient = await patientService.getPatientByUserId(userId);
             userCategoryData = await PatientWrapper(patient);
@@ -1109,6 +1133,13 @@ class AppointmentController extends Controller {
               user_id: userId
             });
             userCategoryData = await DoctorWrapper(doctor);
+            userCategoryId = userCategoryData.getDoctorId();
+            break;
+          case USER_CATEGORY.HSP:
+            const hspDoctor = await doctorService.getDoctorByData({
+              user_id: userId
+            });
+            userCategoryData = await DoctorWrapper(hspDoctor);
             userCategoryId = userCategoryData.getDoctorId();
             break;
           case USER_CATEGORY.PATIENT:

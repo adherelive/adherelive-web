@@ -368,6 +368,11 @@ class ChatMessageDetails extends Component {
           doctors[id] || {};
         authorName = getFullName({ first_name, middle_name, last_name });
         break;
+      case USER_CATEGORY.HSP:
+        const { basic_info: { first_name : hsp_first_name, middle_name: hsp_middle_name, last_name: hsp_last_name } = {} } =
+          doctors[id] || {};
+        authorName = getFullName({ first_name:hsp_first_name, middle_name:hsp_middle_name, last_name:hsp_last_name });
+        break;
       case USER_CATEGORY.PATIENT:
         const {
           basic_info: {

@@ -16,7 +16,8 @@ const RadioGroup = Radio.Group;
 
 export default props => {
   const {
-    form: { getFieldValue }
+    form: { getFieldValue },
+    payload : { canViewDetails = false } ={}
   } = props;
   
   let start = getFieldValue(startDate.field_name);
@@ -69,6 +70,7 @@ export default props => {
         className="flex justify-content-end radio-formulation mt-20 mb24"
         buttonStyle="solid"
         value={selectedRadio}
+        disabled={canViewDetails}
       >
         <RadioButton value={1} onClick={props.setEndDateOneWeek} >{props.formatMessage(messages.oneWeek)}</RadioButton>
         <RadioButton value={2} onClick={props.setEndDateTwoWeek}>{props.formatMessage(messages.twoWeeks)}</RadioButton>

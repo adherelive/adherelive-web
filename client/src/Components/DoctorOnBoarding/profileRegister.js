@@ -70,15 +70,12 @@ class Profileregister extends Component {
       
         const { doctors } = this.props;
 
-        const doctor_user_category = USER_CATEGORY.DOCTOR; 
 
         const { basic_info: { email = '', mobile_number = '', prefix: newPrefix = '' } = {}, category = '' } = users[authenticated_user] || {};
-
         await getDoctorQualificationRegisterData();
 
-        this.setState({category : doctor_user_category});
-        if(authenticated_category === USER_CATEGORY.DOCTOR){
-            this.setState({ email, mobile_number, category : doctor_user_category, prefix: newPrefix ? newPrefix : '91' });
+        if(authenticated_category === USER_CATEGORY.DOCTOR || authenticated_category === USER_CATEGORY.HSP){
+            this.setState({ email, mobile_number, category , prefix: newPrefix ? newPrefix : '91' });
             for (let doctor of Object.values(doctors)) {
                 const { basic_info: { user_id = 0, first_name = '', middle_name = '', last_name = '', profile_pic = '',signature_pic='', address = '', city=''} ,city : city_temp = '' } = doctor || {};
                 if (parseInt(user_id) === parseInt(authenticated_user)) {
@@ -107,7 +104,6 @@ class Profileregister extends Component {
         try{
             const {getDoctorDetails} = this.props;
             const response = await getDoctorDetails(doctor_id);
-            const doctor_user_category = USER_CATEGORY.DOCTOR; 
 
             const { status, payload: { data, message } = {} } = response;
             if(status){
@@ -123,12 +119,12 @@ class Profileregister extends Component {
                     final_city = city
                 }
     
-                this.setState({ email, mobile_number, category : doctor_user_category, prefix: newPrefix ? newPrefix : '91', doctor_id });
+                this.setState({ email, mobile_number, category , prefix: newPrefix ? newPrefix : '91', doctor_id });
        
                
                 let name = first_name ? `${first_name} ${middle_name ? `${middle_name} ` : ""}${last_name ? `${last_name} ` : ""}` : '';
                 this.setState({ name, city:final_city, profile_pic_url_saved: profile_pic, profile_pic, signature_pic_url_saved : signature_pic , signature_pic});
-          
+                
                
             }else{
                 
@@ -144,7 +140,7 @@ class Profileregister extends Component {
                     final_city = city
                 }
 
-                this.setState({ email, mobile_number, category : doctor_user_category, prefix: newPrefix ? newPrefix : '91' });
+                this.setState({ email, mobile_number, category , prefix: newPrefix ? newPrefix : '91' });
     
             
                 let name = first_name ? `${first_name} ${middle_name ? `${middle_name} ` : ""}${last_name ? `${last_name} ` : ""}` : '';
@@ -190,8 +186,8 @@ class Profileregister extends Component {
 
     getCategoryOptions = () => {
         const genderes = [
-            { name: "Doctor", value: "doctor" },
-            { name: "Patient", value: "patient" }
+            { name: "Doctor", value: USER_CATEGORY.DOCTOR },
+            { name: "HSP", value: USER_CATEGORY.HSP }
         ];
         let options = [];
 
@@ -577,7 +573,7 @@ class Profileregister extends Component {
         return (
             <div className='form-block'>
                 <div className='form-headings'>{this.formatMessage(messages.profileType)}</div>
-                <Select className='form-inputs' onChange={this.setCategory} value={category} disabled={true}>
+                <Select className='form-inputs' onChange={this.setCategory} value={category} >
                     {this.getCategoryOptions()}
                 </Select>
                 <div className='form-headings mb6'>{this.formatMessage(messages.profilePicture)}</div>
@@ -632,7 +628,7 @@ class Profileregister extends Component {
                     onSearch={this.searchEmail}
                     onSelect={this.setEmail}
                     placeholder={this.formatMessage(messages.email)}
-                    disabled={authenticated_category === USER_CATEGORY.DOCTOR ?  true : false}
+                    disabled={(authenticated_category === USER_CATEGORY.DOCTOR || authenticated_category === USER_CATEGORY.HSP) ?  true : false}
                     showSearch
                     value={email}
                     notFoundContent={searchingMail 
@@ -701,7 +697,7 @@ class Profileregister extends Component {
                 <div className='registration-container'>
                     {
                         authenticated_category === USER_CATEGORY.PROVIDER ? 
-                        <div className='header'>{this.formatMessage(messages.createDoctorProfile)}</div>
+                        <div className='header'>{this.formatMessage(messages.createNewProfile)}</div>
                         :
                         <div className='header'>{this.formatMessage(messages.createProfile)}</div>
 

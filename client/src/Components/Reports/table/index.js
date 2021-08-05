@@ -1,7 +1,6 @@
 import React, {Component, Fragment} from "react";
 import {injectIntl} from "react-intl";
 import generateRow from "./dataRow";
-// import {PERMISSIONS} from "../../../constant";
 import getColumn from "./header";
 import Table from "antd/es/table";
 

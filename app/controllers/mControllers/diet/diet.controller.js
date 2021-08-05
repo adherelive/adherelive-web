@@ -82,7 +82,8 @@ class DietController extends Controller {
       const referenceInfo = await dietWrapper.getReferenceInfo();
 
       let dietApidata = {},
-        dietBasicInfo = {};
+        dietBasicInfo = {},
+        dietFoodGroupsTotalCalories = 0;;
 
       dietBasicInfo[dietWrapper.getId()] = await dietWrapper.getBasicInfo();
 
@@ -137,13 +138,20 @@ class DietController extends Controller {
             basic_info: { food_item_detail_id = null, serving = null } = {},
             details = {},
           } = food_groups[food_group_id] || {};
-          const { basic_info: { portion_id = null } = {} } =
+          const { basic_info: { portion_id = null ,calorific_value = 0} = {} } =
             food_item_details[food_item_detail_id] || {};
 
           if (details) {
             const { notes: detail_notes = "" } = details;
             notes = detail_notes;
           }
+
+
+          if(serving){
+            dietFoodGroupsTotalCalories=dietFoodGroupsTotalCalories+(serving*calorific_value);
+          }
+
+
           if (related_diet_food_group_mapping_ids.length) {
             for (
               let i = 0;
@@ -166,13 +174,17 @@ class DietController extends Controller {
               } = food_groups[similar_food_group_id] || {};
 
               const {
-                basic_info: { portion_id: similar_portion_id = null } = {},
+                basic_info: { portion_id: similar_portion_id = null ,  calorific_value  : similar_calorific_value = 0  } = {},
               } = food_item_details[similar_food_item_detail_id] || {};
 
               let similar_notes = "";
               if (similar_details) {
                 const { notes = "" } = similar_details || {};
                 similar_notes = notes;
+              }
+
+              if(similar_serving){
+                dietFoodGroupsTotalCalories=dietFoodGroupsTotalCalories+(similar_serving*similar_calorific_value);
               }
 
               const similarData = {
@@ -217,6 +229,7 @@ class DietController extends Controller {
           food_items,
           food_item_details,
           portions,
+          food_groups_total_calories:dietFoodGroupsTotalCalories
         },
         "Diet Data fetched successfully"
       );
@@ -830,6 +843,51 @@ class DietController extends Controller {
       return raiseServerError(res);
     }
   };
+
+  updateTotalCalories = async (req, res) => {
+    const { raiseSuccess, raiseClientError, raiseServerError } = this;
+    try {
+      const {
+        query = {}
+      } = req;
+
+      const { id: diet_id = null , total_calories = 0 } = query;
+
+      const dietService = new DietService();
+
+      const diet = await dietService.getByData({ id: diet_id });
+
+      if (!diet) {
+        return raiseClientError(res, 422, {}, `No Matching Diet Details Found`);
+      }
+
+
+      const isUpdated = await dietService.updateDietTotalCalories({
+        diet_id,
+        total_calories
+      });
+
+      let dietsApiData = {};
+
+      const dietWrapper = await DietWrapper({ id: diet_id });
+      dietsApiData[dietWrapper.getId()] = await dietWrapper.getBasicInfo();
+
+      return raiseSuccess(
+        res,
+        200,
+        {
+          diets: {
+            ...dietsApiData,
+          },
+        },
+        "Diet total calories updated successfully"
+      );
+    } catch (error) {
+      Logger.debug("diet total calories updateeeee 500 error", error);
+      return raiseServerError(res);
+    }
+  };
+
 }
 
 export default new DietController();

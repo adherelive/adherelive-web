@@ -1,7 +1,7 @@
 import React, { Component, Fragment } from "react";
 import { injectIntl } from "react-intl";
 import { Menu, Tooltip, message, Avatar, Icon, Dropdown } from "antd";
-import { PATH, USER_CATEGORY, PERMISSIONS } from "../../constant";
+import { PATH, USER_CATEGORY, USER_PERMISSIONS } from "../../constant";
 import confirm from "antd/es/modal/confirm";
 
 import Logo from "../../Assets/images/logo3x.png";
@@ -116,12 +116,12 @@ class SideMenu extends Component {
       case LOGO:
       case DASHBOARD:
         if (authenticated_category === USER_CATEGORY.ADMIN) {
-          if (authPermissions.includes(PERMISSIONS.VERIFIED_ACCOUNT)) {
+          if (authPermissions.includes(USER_PERMISSIONS.ACCOUNT.VERIFIED)) {
             history.push(PATH.ADMIN.DOCTORS.ROOT);
           }
         } else {
           if (
-            authPermissions.includes(PERMISSIONS.VERIFIED_ACCOUNT) ||
+            authPermissions.includes(USER_PERMISSIONS.ACCOUNT.VERIFIED) ||
             onboarded
           ) {
             history.push(PATH.LANDING_PAGE);
@@ -142,12 +142,12 @@ class SideMenu extends Component {
         }
         break;
       case NOTIFICATIONS:
-        if (authPermissions.includes(PERMISSIONS.VERIFIED_ACCOUNT)) {
+        if (authPermissions.includes(USER_PERMISSIONS.ACCOUNT.VERIFIED)) {
           openAppointmentDrawer({ doctorUserId: authenticated_user });
         }
         break;
       case CALENDER:
-        if (authPermissions.includes(PERMISSIONS.ADD_DOCTOR)) {
+        if (authPermissions.includes(USER_PERMISSIONS.DOCTORS.ADD)) {
           history.push(PATH.PROVIDER.CALENDER);
         }
         break;
@@ -207,12 +207,12 @@ class SideMenu extends Component {
         case LOGO:
         case DASHBOARD:
           if (authenticated_category === USER_CATEGORY.ADMIN) {
-            if (authPermissions.includes(PERMISSIONS.VERIFIED_ACCOUNT)) {
+            if (authPermissions.includes(USER_PERMISSIONS.ACCOUNT.VERIFIED)) {
               history.push(PATH.ADMIN.DOCTORS.ROOT);
             }
           } else {
             if (
-              authPermissions.includes(PERMISSIONS.VERIFIED_ACCOUNT) ||
+              authPermissions.includes(USER_PERMISSIONS.ACCOUNT.VERIFIED) ||
               onboarded
             ) {
               history.push(PATH.LANDING_PAGE);
@@ -233,12 +233,12 @@ class SideMenu extends Component {
           }
           break;
         case NOTIFICATIONS:
-          if (authPermissions.includes(PERMISSIONS.VERIFIED_ACCOUNT)) {
+          if (authPermissions.includes(USER_PERMISSIONS.ACCOUNT.VERIFIED)) {
             openAppointmentDrawer({ doctorUserId: authenticated_user });
           }
           break;
         case CALENDER:
-          if (authPermissions.includes(PERMISSIONS.ADD_DOCTOR)) {
+          if (authPermissions.includes(USER_PERMISSIONS.DOCTORS.ADD)) {
             history.push(PATH.PROVIDER.CALENDER);
           }
           break;
@@ -253,7 +253,7 @@ class SideMenu extends Component {
         case TRANSACTION_DETAILS:
           if (authenticated_category === USER_CATEGORY.PROVIDER) {
             history.push(PATH.PROVIDER.TRANSACTION_DETAILS);
-          } else if (authenticated_category === USER_CATEGORY.DOCTOR) {
+          } else if (authenticated_category === USER_CATEGORY.DOCTOR || authenticated_category === USER_CATEGORY.HSP) {
             history.push(PATH.DOCTOR.TRANSACTION_DETAILS);
           }
           break;
@@ -268,7 +268,7 @@ class SideMenu extends Component {
           }
           break;
         case TEMPLATES:
-          if (authenticated_category === USER_CATEGORY.DOCTOR) {
+          if (authenticated_category === USER_CATEGORY.DOCTOR || authenticated_category === USER_CATEGORY.HSP) {
             history.push(PATH.TEMPLATES);
           }
           break;
@@ -537,7 +537,7 @@ class SideMenu extends Component {
     
     src = icon;
 
-    if(src.length){
+    if(src && src.length){
       return  <img alt={"Provider Icon"} src={icon} className={className} />;
     }else{
       return (
@@ -673,7 +673,7 @@ class SideMenu extends Component {
             <img alt={"Dashboard Icon"} src={dashboardIcon} />
           </Tooltip>
         </MenuItem>
-        {authenticated_category == USER_CATEGORY.DOCTOR ? (
+        {(authenticated_category == USER_CATEGORY.DOCTOR || authenticated_category === USER_CATEGORY.HSP) ? (
           <MenuItem
             key={SUB_MENU}
             // className="flex direction-column justify-center align-center p0"
@@ -704,7 +704,7 @@ class SideMenu extends Component {
             </Tooltip>
           </MenuItem>
         )}
-        {authenticated_category === USER_CATEGORY.DOCTOR && (
+        { (authenticated_category === USER_CATEGORY.DOCTOR || authenticated_category === USER_CATEGORY.HSP) && (
           <MenuItem
             className="flex direction-column justify-center align-center p0"
             key={NOTIFICATIONS}
@@ -761,7 +761,7 @@ class SideMenu extends Component {
         ) : null}
 
         {authenticated_category === USER_CATEGORY.PROVIDER ||
-        (authenticated_category === USER_CATEGORY.DOCTOR &&
+        ( (authenticated_category === USER_CATEGORY.DOCTOR || authenticated_category === USER_CATEGORY.HSP) &&
           linked_id === null &&
           Object.keys(doctors).length > 0) ? (
           <MenuItem

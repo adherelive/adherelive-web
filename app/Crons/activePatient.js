@@ -20,7 +20,7 @@ class ActivePatient {
     try {
       // const providerService = new ProviderService();
       const providers = (await ProviderService.getAll()) || [];
-      Log.debug("providers", providers);
+      // Log.debug("providers", providers);
       return providers;
     } catch (error) {
       Log.debug("getAllProviders catch error", error);
@@ -44,7 +44,7 @@ class ActivePatient {
           doctorIds = [...doctorIds, doctor_id];
         });
       }
-      Log.debug("doctor IDS", doctorIds);
+      // Log.debug("doctor IDS", doctorIds);
 
       return doctorIds;
     } catch (error) {
@@ -68,7 +68,7 @@ class ActivePatient {
         carePlanData[carePlan.getCarePlanId()] = await carePlan.getAllInfo();
         carePlanIds.push(carePlan.getCarePlanId());
       }
-      Log.debug("careplan IDS", carePlanIds);
+      // Log.debug("careplan IDS", carePlanIds);
       return { carePlanData, carePlanIds };
     } catch (error) {
       Log.debug("getAllCareplans catch error", error);
@@ -81,8 +81,6 @@ class ActivePatient {
       const { carePlanData, carePlanIds } = await this.getAllCareplans();
 
       const eventService = new ScheduleEventService();
-
-      console.log("19298091283 carePlanData", carePlanData);
 
       for (let id of carePlanIds) {
         const {

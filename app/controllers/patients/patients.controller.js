@@ -31,7 +31,7 @@ import RepetitionService from "../../services/exerciseRepetitions/repetition.ser
 import providerService from "../../services/provider/provider.service";
 import ExerciseContentService from "../../services/exerciseContents/exerciseContent.service";
 import WorkoutService from "../../services/workouts/workout.service";
-
+import userPreferenceService from "../../services/userPreferences/userPreference.service";
 // WRAPPERS --------------------------------
 import ExerciseContentWrapper from "../../ApiWrapper/web/exerciseContents";
 import UserRolesWrapper from "../../ApiWrapper/web/userRoles";
@@ -60,7 +60,7 @@ import DietWrapper from "../../ApiWrapper/web/diet";
 import ProviderWrapper from "../../ApiWrapper/web/provider";
 import PortionWrapper from "../../ApiWrapper/web/portions";
 import WorkoutWrapper from "../../ApiWrapper/web/workouts";
-
+import UserPreferenceWrapper from "../../ApiWrapper/web/userPreference";
 
 import * as DietHelper from "../diet/dietHelper";
 
@@ -84,7 +84,7 @@ import generatePDF from "../../helper/generateCarePlanPdf";
 import { downloadFileFromS3 } from "../user/userHelper";
 import { getFilePath } from "../../helper/filePath";
 import { checkAndCreateDirectory, getSeparateName } from "../../helper/common";
-
+import PERMISSIONS from "../../../config/permissions";
 // helpers
 import * as carePlanHelper from "../carePlans/carePlanHelper";
 import { getDoctorCurrentTime } from "../../helper/getUserTime";
@@ -843,7 +843,7 @@ class PatientController extends Controller {
 
       const carePlanData = await carePlanService.getSingleCarePlanByData({
         patient_id,
-        ...category === USER_CATEGORY.DOCTOR && { 'user_role_id': userRoleId }
+        ...(category === USER_CATEGORY.DOCTOR || category === USER_CATEGORY.HSP) && { 'user_role_id': userRoleId }
       });
       const carePlan = await CarePlanWrapper(carePlanData);
 
@@ -1507,7 +1507,7 @@ class PatientController extends Controller {
 
         let authDoctor = null;
 
-        if (category === USER_CATEGORY.DOCTOR) {
+        if (category === USER_CATEGORY.DOCTOR || category === USER_CATEGORY.HSP) {
           authDoctor = await doctorService.getDoctorByData({ user_id: userId });
         }
 
@@ -1732,7 +1732,7 @@ class PatientController extends Controller {
 
         // collect other doctor ids
         if (
-          report.getUploaderType() === USER_CATEGORY.DOCTOR &&
+          (report.getUploaderType() === USER_CATEGORY.DOCTOR || report.getUploaderType() === USER_CATEGORY.HSP ) &&
           report.getUploaderId() !== userCategoryId
         ) {
           doctorIds.push(report.getUploaderId());
@@ -1781,7 +1781,7 @@ class PatientController extends Controller {
     const { raiseSuccess, raiseClientError, raiseServerError } = this;
     try {
       const { care_plan_id = null } = req.params;
-      const { userDetails: { userId, userRoleId = null, userData: { category } = {} } = {} } = req;
+      const { userDetails: { userId, userRoleId = null, userData: { category } = {} } = {}  , permissions = [] } = req;
       const dietService = new DietService();
       const workoutService = new WorkoutService();
       // const carePlanId = parseInt(care_plan_id);
@@ -1837,33 +1837,39 @@ class PatientController extends Controller {
         conditions[condition_id] = condition.getBasicInfo();
       }
 
-      for (const medicationId of medication_ids) {
-        const medication = await medicationReminderService.getMedication({
-          id: medicationId,
-        });
 
-        if (medication) {
-          const medicationWrapper = await MReminderWrapper(medication);
-          const medicineId = medicationWrapper.getMedicineId();
-          const medicineData = await medicineService.getMedicineByData({
-            id: medicineId,
+      console.log("92389274927349274892793",{permissions,medication_ids});
+
+      if(permissions.includes(PERMISSIONS.MEDICATIONS.ADD)){
+        for (const medicationId of medication_ids) {
+          const medication = await medicationReminderService.getMedication({
+            id: medicationId,
           });
-
-          for (const medicine of medicineData) {
-            const medicineWrapper = await MedicineApiWrapper(medicine);
-            medicines = {
-              ...medicines,
-              ...{
-                [medicineWrapper.getMedicineId()]: medicineWrapper.getAllInfo(),
-              },
+  
+          if (medication) {
+            const medicationWrapper = await MReminderWrapper(medication);
+            const medicineId = medicationWrapper.getMedicineId();
+            const medicineData = await medicineService.getMedicineByData({
+              id: medicineId,
+            });
+  
+            for (const medicine of medicineData) {
+              const medicineWrapper = await MedicineApiWrapper(medicine);
+              medicines = {
+                ...medicines,
+                ...{
+                  [medicineWrapper.getMedicineId()]: medicineWrapper.getAllInfo(),
+                },
+              };
+            }
+            medications = {
+              ...medications,
+              ...{ [medicationId]: medicationWrapper.getBasicInfo() },
             };
           }
-          medications = {
-            ...medications,
-            ...{ [medicationId]: medicationWrapper.getBasicInfo() },
-          };
         }
       }
+      
 
       const now = moment();
       let nextAppointment = null;
@@ -2128,13 +2134,22 @@ class PatientController extends Controller {
 
       let patient = null;
 
-      if (category === USER_CATEGORY.DOCTOR) {
+      if (category === USER_CATEGORY.DOCTOR || category === USER_CATEGORY.HSP ) {
         patient = await patientService.getPatientById({ id: curr_patient_id });
       } else {
         patient = await patientService.getPatientByUserId(userId);
       }
 
       const patientData = await PatientWrapper(patient);
+
+      const timingPreference = await userPreferenceService.getPreferenceByData(
+        {
+          user_id: patientData.getUserId(),
+        }
+      );
+      const userPrefOptions = await UserPreferenceWrapper(timingPreference);
+      const { timings: userTimings = {} } = userPrefOptions.getAllDetails();
+      const timings = DietHelper.getTimings(userTimings);
 
       const { doctors, doctor_id } = await carePlanData.getReferenceInfo();
 
@@ -2188,7 +2203,7 @@ class PatientController extends Controller {
       } = doctors;
 
       let user_ids = [doctorUserId, userId];
-      if (category === USER_CATEGORY.DOCTOR) {
+      if (category === USER_CATEGORY.DOCTOR || category === USER_CATEGORY.HSP ) {
         const curr_data = await patientData.getAllInfo();
         const { basic_info: { user_id: curr_p_user_id = "" } = {} } =
           curr_data || {};
@@ -2257,8 +2272,8 @@ class PatientController extends Controller {
 
       dataForPdf = {
         users: { ...usersData },
-        medications,
-        medicines,
+        ...(permissions.includes(PERMISSIONS.MEDICATIONS.ADD)) && {medications},
+        ...(permissions.includes(PERMISSIONS.MEDICATIONS.ADD)) && {medicines},
         care_plans: {
           [carePlanData.getCarePlanId()]: {
             ...carePlanData.getBasicInfo(),
@@ -2283,6 +2298,7 @@ class PatientController extends Controller {
         workouts_formatted_data:{...workoutApiData},
         workout_ids:workoutIds,
         diet_ids:dietIds,
+        timings,
         currentTime: getDoctorCurrentTime(doctorUserId).format(
           "Do MMMM YYYY, hh:mm a"
         ),
@@ -2349,7 +2365,7 @@ class PatientController extends Controller {
       let count = null;
       let treatments = {};
 
-      if (category === USER_CATEGORY.DOCTOR) {
+      if (category === USER_CATEGORY.DOCTOR || category === USER_CATEGORY.HSP) {
         let watchlistQuery = "";
         const doctor = await doctorService.getDoctorByData({
           user_id: userId,

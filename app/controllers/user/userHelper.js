@@ -23,7 +23,10 @@ import {
   USER_CATEGORY,
   DOCUMENT_PARENT_TYPE,
   ONBOARDING_STATUS,
-  VERIFICATION_TYPE
+  VERIFICATION_TYPE,
+  NO_MEDICATION,
+  NO_APPOINTMENT,
+  NO_ACTION
 } from "../../../constant";
 import {completePath} from "../../helper/filePath";
 
@@ -157,7 +160,7 @@ export const checkUserCanRegister = async(email, creatorId = null) => {
 
     let canRegister = false;
     const existingUserCategory = userExits.get("category");
-    if(existingUserCategory === USER_CATEGORY.DOCTOR) {
+    if(existingUserCategory === USER_CATEGORY.DOCTOR || existingUserCategory === USER_CATEGORY.HSP) {
       const existingUserRole = await userRolesService.getAllByData({user_identity: userExits.get("id")});
 
       if(existingUserRole && existingUserRole.length) {
@@ -180,7 +183,7 @@ export const checkUserCanRegister = async(email, creatorId = null) => {
   }
 }
 
-export const createNewUser = async (email, password = null, creatorId= null) => {
+export const createNewUser = async (email, password = null, creatorId= null,category = USER_CATEGORY.DOCTOR) => {
   try {
     const userExists = await userService.getUserByEmail({ email });
     const canRegister = await checkUserCanRegister(email, creatorId);
@@ -202,7 +205,7 @@ export const createNewUser = async (email, password = null, creatorId= null) => 
         email,
         password: hash,
         sign_in_type: "basic",
-        category: "doctor",
+        category:category ? category : USER_CATEGORY.DOCTOR,
         onboarded: false
         // system_generated_password
       });
@@ -228,7 +231,12 @@ export const createNewUser = async (email, password = null, creatorId= null) => 
       await userPreferenceService.addUserPreference({
         user_id: userInfo.get("id"),
         details: {
-          charts: ["1", "2", "3"]
+          charts:
+          // category === USER_CATEGORY.DOCTOR
+          // ? 
+          [NO_MEDICATION, NO_APPOINTMENT , NO_ACTION ] 
+          // :
+          // [NO_APPOINTMENT , NO_ACTION] 
         },
         user_role_id: userRoleId
       });

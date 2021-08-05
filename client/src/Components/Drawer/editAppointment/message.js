@@ -484,6 +484,11 @@ const message = defineMessages({
     description: "",
     defaultMessage: "Choose Provider"
   },
+  viewDetails: {
+    id: "app.drawer.edit.appointment.viewDetails",
+    description: "",
+    defaultMessage: "Appointment Details"
+  },
 });
 
 export default message;

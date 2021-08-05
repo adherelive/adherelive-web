@@ -387,6 +387,45 @@ class WorkoutController extends Controller {
     }
   };
 
+
+  updateTotalCalories = async (req, res) => {
+    const { raiseSuccess, raiseClientError, raiseServerError } = this;
+    try {
+      const { query,  userDetails } = req;
+      Log.debug("request query, body", { query });
+
+      const { id: workout_id , total_calories = 0 } = query || {};
+
+      const workoutService = new WorkoutService();
+
+      const workoutExists =
+        (await workoutService.findOne({ id: workout_id })) || null;
+
+      if (!workoutExists) {
+        return raiseClientError(
+          res,
+          422,
+          {},
+          `No Matching Workout Details Found`
+        );
+      }
+
+      const isUpdated = await workoutService.updateWorkotTotalCalories({total_calories,workout_id});
+
+      const workout = await WorkoutWrapper({ id: workout_id });
+      return raiseSuccess(
+        res,
+        200,
+        { ...(await workout.getReferenceInfo()) },
+        "Workout Total Calories updated successfully"
+      );
+      
+    } catch (error) {
+      Log.debug("update cal 500", error);
+      return raiseServerError(res);
+    }
+  };
+
   details = async (req, res) => {
     const { raiseSuccess, raiseServerError } = this;
     try {
@@ -441,7 +480,7 @@ class WorkoutController extends Controller {
       const { patient_id = null } = query || {};
       const { userData: { category } = {}, userCategoryId } = userDetails;
 
-      if (category === USER_CATEGORY.DOCTOR && !patient_id) {
+      if ( ( category === USER_CATEGORY.DOCTOR || category === USER_CATEGORY.HSP ) && !patient_id) {
         return raiseClientError(
           res,
           422,
@@ -456,7 +495,7 @@ class WorkoutController extends Controller {
         getAllCareplanQuery = {
           patient_id: userCategoryId,
         };
-      } else if (category === USER_CATEGORY.DOCTOR) {
+      } else if (category === USER_CATEGORY.DOCTOR || category === USER_CATEGORY.HSP ) {
         getAllCareplanQuery = {
           patient_id,
           // doctor_id: userCategoryId,
@@ -594,7 +633,7 @@ class WorkoutController extends Controller {
 
         auth = {
           creator_id: doctorIds,
-          creator_type: USER_CATEGORY.DOCTOR,
+          creator_type: [USER_CATEGORY.DOCTOR,USER_CATEGORY.HSP],
         };
       }
 
@@ -628,6 +667,8 @@ class WorkoutController extends Controller {
 
       let allExerciseContents = {};
       let allExerciseContentMappings = {};
+      let workoutExerciseGroupsTotalCalories = 0;
+
       if (totalExerciseContent) {
         for (let index = 0; index < exerciseContents.length; index++) {
           const exerciseContent = await ExerciseContentWrapper({
@@ -682,12 +723,17 @@ class WorkoutController extends Controller {
       for (const exerciseGroupId of Object.keys(exercise_groups)) {
         const {
           basic_info: { id: exercise_group_id, exercise_detail_id } = {},
-          sets,
+          sets=null,
           details = {},
         } = exercise_groups[exerciseGroupId] || {};
 
-        const { basic_info: { exercise_id } = {} } =
+
+        const { basic_info: { exercise_id  } = {} , calorific_value = 0 } =
           exercise_details[exercise_detail_id] || {};
+
+        if(sets){
+          workoutExerciseGroupsTotalCalories = workoutExerciseGroupsTotalCalories+(sets*calorific_value);
+        }
 
         const exerciseContentId =
           allExerciseContentMappings[exercise_id] || null;
@@ -714,6 +760,7 @@ class WorkoutController extends Controller {
           exercise_contents: allExerciseContents,
           workout_responses: allWorkoutResponses,
           schedule_events: allScheduleEvents,
+          exercise_groups_total_calories:workoutExerciseGroupsTotalCalories
         },
         "Workout details fetched successfully"
       );

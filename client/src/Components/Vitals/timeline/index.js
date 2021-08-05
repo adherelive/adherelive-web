@@ -149,7 +149,7 @@ class VitalTimeline extends Component {
   };
 
   getEventsForDay = events => {
-    const { intl: { formatMessage } = {} } = this.props;
+    const { intl: { formatMessage } = {} , canViewDetails = false } = this.props;
     const { getVitalTemplate, openEditVitalResponseModal, handleDeleteVitalResponse } = this;
 
     return events.map(event => {
@@ -182,7 +182,11 @@ class VitalTimeline extends Component {
                             >{`${label}: ${value[fieldId]} ${placeholder}`}</div>
                         );
                       })}
-                      <div className="edit-delete-vitals flex align-center"> {/*edit-delete-vitals*/}
+                      {
+                        !canViewDetails
+                        &&
+                        (
+                          <div className="edit-delete-vitals flex align-center"> {/*edit-delete-vitals*/}
                         {/*  EDIT  */}
                         {/*<div onClick={openEditVitalResponseModal({response: res,event, id, index: responseIndex})}>*/}
                           <Button type={"secondary"} onClick={openEditVitalResponseModal({response: res,event, id, index: responseIndex})}>{this.formatMessage(messages.edit_response_btn)}</Button>
@@ -192,7 +196,10 @@ class VitalTimeline extends Component {
                         {/*<div onClick={handleDeleteVitalResponse({id, index: responseIndex})}>*/}
                           <Button type={"danger"} ghost className="ml10 fs14 no-border" onClick={handleDeleteVitalResponse({id, index: responseIndex})}>{this.formatMessage(messages.delete_response_btn)}</Button>
                         {/*</div>*/}
-                      </div>
+                        </div>
+                        )
+                      }
+                      
                     {/*</div>*/}
                   </TimelineItem>}
                   </Fragment>

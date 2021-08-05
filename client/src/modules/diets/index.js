@@ -6,7 +6,9 @@ import { addDietUrl ,
     updateDietUrl ,
     getAllDietsForDoctorUrl,
     getDietTimelineUrl,
-    getPatientPreferenceDietDetailsUrl } from "../../Helper/urls/diet";
+    getPatientPreferenceDietDetailsUrl,
+    updateDietTotalCaloriesUrl
+ } from "../../Helper/urls/diet";
 
 export const ADD_DIET_START = "ADD_DIET_START";
 export const ADD_DIET_COMPLETED = "ADD_DIET_COMPLETED";
@@ -40,6 +42,9 @@ export const GET_PATEINT_PREFERENCE_DIET_DETAILS_START = "GET_PATEINT_PREFERENCE
 export const GET_PATEINT_PREFERENCE_DIET_DETAILS_COMPLETED = "GET_PATEINT_PREFERENCE_DIET_DETAILS_COMPLETED";
 export const GET_PATEINT_PREFERENCE_DIET_DETAILS_FAILED = "GET_PATEINT_PREFERENCE_DIET_DETAILS_FAILED";
 
+export const UPDATE_DIET_TOTAL_CALORIES_START = "UPDATE_DIET_TOTAL_CALORIES_START";
+export const UPDATE_DIET_TOTAL_CALORIES_COMPLETED = "UPDATE_DIET_TOTAL_CALORIES_COMPLETED";
+export const UPDATE_DIET_TOTAL_CALORIES_FAILED = "UPDATE_DIET_TOTAL_CALORIES_FAILED";
 
 export const addDiet = (payload) => {
     let response = {};
@@ -122,6 +127,34 @@ export const updateDiet = (payload,diet_id) => {
             }
         } catch (error) {
             console.log("UPDATE DIET MODULE catch error -> ", error);
+        }
+        return response;
+    }
+};
+
+export const updateDietTotalCalories = ({total_calories,diet_id}) => {
+    let response = {};
+    return async dispatch => {
+        try {
+            response = await doRequest({
+                method: REQUEST_TYPE.POST,
+                url: updateDietTotalCaloriesUrl(diet_id,total_calories)
+            });
+
+            const { status, payload: { data, message = "" } = {} } = response || {};
+            if (status === true) {
+                dispatch({
+                    type:UPDATE_DIET_TOTAL_CALORIES_COMPLETED ,
+                    data
+                });
+            } else {
+                dispatch({
+                    type: UPDATE_DIET_TOTAL_CALORIES_FAILED ,
+                    message
+                });
+            }
+        } catch (error) {
+            console.log("UPDATE_DIET_TOTAL_CALORIES MODULE catch error -> ", error);
         }
         return response;
     }

@@ -431,5 +431,10 @@ export default defineMessages({
     description: "",
     defaultMessage: "Please Fill All Details"
   },
+  viewDetails: {
+    id: "app.vital.edit.viewDetails",
+    description: "",
+    defaultMessage: "Vital Details"
+},
 
 });

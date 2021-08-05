@@ -8,13 +8,14 @@ import { doRequest } from "../../../Helper/network";
 import { generatePrescriptionUrl } from "../../../Helper/urls/patients";
 import ShareIcon from "../../../Assets/images/redirect3x.png";
 import NotificationDrawer from "../../../Containers/Drawer/notificationDrawer";
+import EyeFilled from "@ant-design/icons/EyeFilled";
 
 import config from "../../../config";
 
 import {
   REQUEST_TYPE,
   GENDER,
-  PERMISSIONS,
+  USER_PERMISSIONS,
   TABLET,
   SYRUP,
   PARTS,
@@ -193,21 +194,21 @@ const columns_appointments = [
     title: "Organizer",
     dataIndex: "organizer",
     key: "organizer",
-    width: "20%",
+    width: "30%",
     ellipsis: true
   },
   {
     title: "Date",
     dataIndex: "date",
     key: "date",
-    width: "20%",
+    width: "30%",
     ellipsis: true
   },
   {
     title: "Timing",
     dataIndex: "time",
     key: "time",
-    width: "22%"
+    width: "30%",
   },
   {
     title: "Description",
@@ -216,7 +217,6 @@ const columns_appointments = [
     width: "30%",
     ellipsis: true
   },
-
   {
     title: "",
     dataIndex: "markComplete",
@@ -263,7 +263,59 @@ const columns_appointments = [
         </div>
       );
     }
-  }
+  },
+  {
+    title: "",
+    dataIndex: "edit",
+    key: "edit",
+    width: "30%",
+    ellipsis: true,
+    render: (
+      {
+        id,
+        onRowAppointment,
+        carePlan,
+        formatMessage,
+        auth_role,
+        isOtherCarePlan
+      }
+    ) => {
+      const { basic_info : { user_role_id = null } = {} } = carePlan || {};
+      let canViewDetails=true;
+      if(!isOtherCarePlan && user_role_id.toString() === auth_role.toString()) {
+          canViewDetails=false;
+      }
+      return (
+        // <Tooltip placement="bottom" title={
+        //    canViewDetails ? formatMessage(messages.view) : formatMessage(messages.edit)
+        // }
+        //    >
+          <div className="p10"
+           onClick={onRowAppointment({id,carePlan})}
+           >
+              <Tooltip placement="bottom" title={
+           canViewDetails ? formatMessage(messages.view) : formatMessage(messages.edit)
+        }
+           >
+            <div className="pointer flex justify-center align-center">
+            { 
+                canViewDetails
+                ?
+                <EyeFilled
+                  className="w20"
+                  className={"del doc-opt"}
+                  style={{ fontSize: '18px', color:"#1890ff" }}
+                />
+                :
+                <img src={edit_image} alt="edit button" />
+              }
+            </div>
+        </Tooltip>
+
+          </div>
+      );
+    }
+  },
 ];
 
 const columns_appointments_non_editable = [
@@ -293,14 +345,15 @@ const columns_appointments_non_editable = [
     key: "description",
     width: "30%",
     ellipsis: true
-  },
-  {
-    title: "Adherence",
-    dataIndex: "Adherence",
-    key: "adherence",
-    width: "30%",
-    ellipsis: true
   }
+  // ,
+  // {
+  //   title: "Adherence",
+  //   dataIndex: "Adherence",
+  //   key: "adherence",
+  //   width: "30%",
+  //   ellipsis: true
+  // }
 ];
 
 const PatientProfileHeader = ({ formatMessage, getMenu, showAddButton , selectedCarePlanId , auth_role , user_role_id }) => {
@@ -696,12 +749,16 @@ class PatientDetails extends Component {
       searchMedicine,
       show_template_drawer = {},
       resetNotificationRedirect,
-      notification_redirect={}
+      notification_redirect={},
+      authenticated_category
     } = this.props;
+
 
     if(redirect_patient_id){
       patient_id = redirect_patient_id;
     }
+
+    const { isOtherCarePlan = false } = this.state;
 
 
     const { show: showTd = false } = show_template_drawer;
@@ -731,6 +788,7 @@ class PatientDetails extends Component {
         } = payload;
 
         const {notification_redirect : {care_plan_id  = null} = {} } = this.props;
+        console.log("32486238476283746823648236487236",{care_plan_id,current_careplan_id});
 
         if(care_plan_id){
           current_careplan_id=care_plan_id;
@@ -778,6 +836,12 @@ class PatientDetails extends Component {
 
     const {notification_redirect : {type : tab = ''} = {} } =this.props;
     let activeKey = "1";
+
+    if(authenticated_category === USER_CATEGORY.HSP){
+        activeKey = "2";
+      }
+
+
     if(tab && tab === TYPE_SYMPTOMS ){
       activeKey="3";
     }else if(tab && tab === TYPE_APPOINTMENTS){
@@ -808,8 +872,23 @@ class PatientDetails extends Component {
   }
 
   componentDidUpdate = async (prevProps,prevState) => {
-    const {notification_redirect = {},notification_redirect : {care_plan_id = null , type : tab = '' , patient_id : redirected_p_id = null  } = {} , care_plans = {},resetNotificationRedirect  } = this.props;
-    const {notification_redirect : {care_plan_id : prev_care_plan_id = null , type : prev_tab = '' , patient_id : prev_redirected_p_id = null  } = {}} = prevProps ; 
+    const {notification_redirect = {},
+    notification_redirect : 
+      {care_plan_id = null , 
+        type : tab = '' , 
+        patient_id : redirected_p_id = null  
+      } = {} , 
+    care_plans = {},
+    resetNotificationRedirect,
+    authenticated_category
+    } = this.props;
+
+    const {notification_redirect : 
+      {care_plan_id : prev_care_plan_id = null , 
+        type : prev_tab = '' , 
+        patient_id : prev_redirected_p_id = null  
+      } = {}
+    } = prevProps ; 
 
   if( (redirected_p_id && redirected_p_id !== prev_redirected_p_id)
       ||
@@ -822,6 +901,11 @@ class PatientDetails extends Component {
     if(Object.keys(notification_redirect).length){
       resetNotificationRedirect();
     }
+  }
+
+  const { activeKey = "1" , isOtherCarePlan = false } = this.state;
+  if( activeKey === "1" && authenticated_category === USER_CATEGORY.HSP && !isOtherCarePlan ){
+      this.setState({activeKey:"2"});
   }
     
 
@@ -933,14 +1017,18 @@ class PatientDetails extends Component {
       users = {},
       // doctors = {},
       // patients = {},
-      schedule_events = {}
+      schedule_events = {},
+      auth_role=null
     } = this.props;
 
     const {
       markAppointmentComplete,
       formatMessage,
-      uploadAppointmentDocs
+      uploadAppointmentDocs,
+      onRowAppointment
     } = this;
+
+    const { isOtherCarePlan = false } = this.state;
 
     let { appointment_ids = [] } = carePlan;
     let formattedAppointments = appointment_ids.map(id => {
@@ -980,7 +1068,16 @@ class PatientDetails extends Component {
           markAppointmentComplete,
           formatMessage,
           uploadAppointmentDocs
+        },
+        edit:{
+          id,
+          onRowAppointment,
+          carePlan,
+          formatMessage,
+          auth_role,
+          isOtherCarePlan
         }
+        
       };
     });
     formattedAppointments.sort(function(a, b) {
@@ -1099,12 +1196,12 @@ class PatientDetails extends Component {
     const { authPermissions = [], authenticated_category } = this.props;
     return (
       <Menu>
-        {authPermissions.includes(PERMISSIONS.ADD_MEDICATION) && (
+        {authPermissions.includes(USER_PERMISSIONS.MEDICATIONS.ADD) && (
           <Menu.Item onClick={handleMedicationReminder}>
             <div>{this.formatMessage(messages.medications)}</div>
           </Menu.Item>
         )}
-        {authPermissions.includes(PERMISSIONS.ADD_APPOINTMENT) && (
+        {authPermissions.includes(USER_PERMISSIONS.APPOINTMENTS.ADD ) && (
           <Menu.Item onClick={handleAppointment}>
             <div>{this.formatMessage(messages.appointments)}</div>
           </Menu.Item>
@@ -1112,36 +1209,35 @@ class PatientDetails extends Component {
         {/* <Menu.Item onClick={handleSymptoms}>
           <div>{this.formatMessage(messages.symptoms)}</div>
         </Menu.Item> */}
-        {authPermissions.includes(PERMISSIONS.ADD_ACTION) && (
+        {/* {authPermissions.includes(USER_PERMISSIONS.VITALS.ADD ) && (
           <Menu.Item>
             <div>{this.formatMessage(messages.actions)}</div>
           </Menu.Item>
-        )}
-        {authPermissions.includes(PERMISSIONS.ADD_MEDICATION) && (
+        )} */}
+        {authPermissions.includes(USER_PERMISSIONS.VITALS.ADD ) && (
           <Menu.Item onClick={handleVitals}>
             <div>{this.formatMessage(messages.vitals)}</div>
           </Menu.Item>
         )}
-        {authPermissions.includes(PERMISSIONS.ADD_CAREPLAN) && (
+        {authPermissions.includes(USER_PERMISSIONS.CARE_PLAN.ADD ) && (
           <Menu.Item onClick={handleAddCareplan}>
             <div>{this.formatMessage(messages.newTreatmentPlan)}</div>
           </Menu.Item>
         )}
-        {(authenticated_category === USER_CATEGORY.DOCTOR ||
-          authenticated_category === USER_CATEGORY.PATIENT) && (
+        {authPermissions.includes(USER_PERMISSIONS.REPORTS.ADD ) && (
           <Menu.Item onClick={handleAddReports}>
             <div>{this.formatMessage(messages.reports)}</div>
           </Menu.Item>
         )}
         
 
-        {(authenticated_category === USER_CATEGORY.DOCTOR && authPermissions.includes(PERMISSIONS.ADD_CAREPLAN) ) && (
+        {( authPermissions.includes(USER_PERMISSIONS.DIETS.ADD ) ) && (
             <Menu.Item onClick={handleAddDiet}>
               <div>{this.formatMessage(messages.diet)}</div>
             </Menu.Item>
           )}
 
-        {(authenticated_category === USER_CATEGORY.DOCTOR && authPermissions.includes(PERMISSIONS.ADD_CAREPLAN) ) && (
+        {( authPermissions.includes(USER_PERMISSIONS.WORKOUTS.ADD ) ) && (
             <Menu.Item onClick={this.handleAddWorkout}
              >
               <div>{this.formatMessage(messages.workout)}</div>
@@ -1350,18 +1446,28 @@ class PatientDetails extends Component {
   showTemplateDrawer = () => {
     this.setState({ templateDrawerVisible: true });
   };
-  onRowClickAppointment = key => event => {
-    const { openEditAppointmentDrawer, patient_id } = this.props;
-    openEditAppointmentDrawer({ id: key, patient_id });
-    //this.props.history.push(getGetFacilitiesUrl(key));
-  };
+ 
 
-  onRowAppointment = (record, rowIndex) => {
-    const { onRowClickAppointment } = this;
-    const { key } = record;
-    return {
-      onClick: onRowClickAppointment(key)
-    };
+  // onRowAppointment = ({id,carePlan}) => () => {
+  //   console.log("38248274826384628423");
+  //   const { onRowClickAppointment } = this;
+  //   return {
+  //     onClick: onRowClickAppointment({id,carePlan})
+  //   };
+  // };
+
+  onRowAppointment = ({id,carePlan}) => () => {
+    console.log("38248274826384628423");
+
+    const { openEditAppointmentDrawer, patient_id, auth_role =null   } = this.props;
+    const {isOtherCarePlan = false } = this.state;
+    const {basic_info : { user_role_id = null } = {} } = carePlan || {};
+    let canViewDetails=true;
+    if(!isOtherCarePlan && user_role_id.toString() === auth_role.toString()) {
+        canViewDetails=false;
+    }
+      
+    openEditAppointmentDrawer({ id, patient_id,canViewDetails });
   };
 
   onRowClickMedication = key => event => {
@@ -1535,19 +1641,8 @@ class PatientDetails extends Component {
   showTemplateDrawer = () => {
     this.setState({ templateDrawerVisible: true });
   };
-  onRowClickAppointment = key => event => {
-    const { openEditAppointmentDrawer, patient_id } = this.props;
-    openEditAppointmentDrawer({ id: key, patient_id });
-    //this.props.history.push(getGetFacilitiesUrl(key));
-  };
+ 
 
-  onRowAppointment = (record, rowIndex) => {
-    const { onRowClickAppointment } = this;
-    const { key } = record;
-    return {
-      onClick: onRowClickAppointment(key)
-    };
-  };
 
   onRowClickMedication = key => event => {
     const { openEditMedicationDrawer, patient_id } = this.props;
@@ -2137,7 +2232,8 @@ class PatientDetails extends Component {
       symptoms = {},
       authenticated_user = null,
       reports = {},
-      auth_role = null
+      auth_role = null,
+      authenticated_category
     } = this.props;
 
 
@@ -2180,6 +2276,9 @@ class PatientDetails extends Component {
     // const AppointmentLocale = {
     //   emptyText: this.formatMessage(messages.emptyAppointmentTable)
     // };
+
+    console.log("872364726472634786237 =>>>>>>>>>>>>>>> ",{selectedCarePlanId,state:this.state});
+
 
     if (loading || !selectedCarePlanId) {
       return (
@@ -2359,16 +2458,16 @@ class PatientDetails extends Component {
     console.log("2347632645327453287648273648723",{props:this.props});
 
     let showAddButton =
-      (authPermissions.includes(PERMISSIONS.ADD_APPOINTMENT) ||
-        authPermissions.includes(PERMISSIONS.ADD_MEDICATION) ||
-        authPermissions.includes(PERMISSIONS.ADD_ACTION) ||
-        authPermissions.includes(PERMISSIONS.ADD_CAREPLAN)) &&
+      (authPermissions.includes(USER_PERMISSIONS.APPOINTMENTS.ADD ) ||
+        authPermissions.includes(USER_PERMISSIONS.MEDICATIONS.ADD ) ||
+        authPermissions.includes(USER_PERMISSIONS.VITALS.ADD ) ||
+        authPermissions.includes(USER_PERMISSIONS.CARE_PLAN.ADD )) &&
       !isOtherCarePlan;
 
     let docName = doctor_first_name
       ? `${doctor_first_name} ${
           doctor_middle_name ? `${doctor_middle_name} ` : ""
-        }${doctor_last_name}`
+        }${doctor_last_name ? `${doctor_last_name}` : ""}`
       : "--";
 
     const {
@@ -2380,8 +2479,8 @@ class PatientDetails extends Component {
     const {basic_info : {user_role_id = null } = {} } = care_plans[selectedCarePlanId];
 
     // let defaultActiveKeyValue = "1";
-    const  {activeKey = "1"}=this.state;
-    
+    let  { activeKey = "1" } = this.state;
+
     return (
       <Fragment>
         <div className="pt10 pr10 pb10 pl10">
@@ -2511,8 +2610,15 @@ class PatientDetails extends Component {
                     //  defaultActiveKey={defaultActiveKeyValue}
                      onChange={this.setActiveKey}
                      activeKey={activeKey}
-                    >
-                      <TabPane tab="Medication" key="1"  >
+                    > 
+                      {
+                       (
+                        authenticated_category === USER_CATEGORY.DOCTOR
+                        ||
+                        (authenticated_category === USER_CATEGORY.HSP && isOtherCarePlan ) 
+                       )
+                       &&
+                       <TabPane tab="Medication" key="1"  >
                         {cPMedicationIds.length > 0  ? (
                           <MedicationTable
                             patientId={patient_id}
@@ -2534,27 +2640,22 @@ class PatientDetails extends Component {
                           </div>
                         )}
                       </TabPane>
+                      }
+                      
                       <TabPane tab="Appointments" key="2">
                         {
                         cPAppointmentIds.length > 0 ? (
                           <Table
                             columns={
-                              !isOtherCarePlan &&
-                              authPermissions.includes(
-                                PERMISSIONS.EDIT_APPOINTMENT
-                              )
-                                ? columns_appointments
-                                : columns_appointments_non_editable
+                              // !isOtherCarePlan &&
+                              // authPermissions.includes(
+                              // USER_PERMISSIONS.APPOINTMENTS.UPDATE
+                              // )
+                              // ?
+                               columns_appointments
+                              // : columns_appointments_non_editable
                             }
                             dataSource={getAppointmentsData(carePlan, docName)}
-                            onRow={
-                              !isOtherCarePlan &&
-                              authPermissions.includes(
-                                PERMISSIONS.EDIT_APPOINTMENT
-                              )
-                                ? onRowAppointment
-                                : null
-                            }
                           />
                         ) : (
                           <div className="mt20">
@@ -2674,13 +2775,8 @@ class PatientDetails extends Component {
                 patientId={patient_id}
                 carePlanId={carePlanId}
               />
-              <EditMedicationReminder
-                patientId={patient_id}
-                carePlanId={carePlanId}
-              />
 
               <AddVitals carePlanId={carePlanId} />
-              <EditVitals />
               <AddAppointmentDrawer carePlanId={carePlanId} />
               <AddCareplanDrawer patientId={patient_id} />
               <AddReportDrawer />
@@ -2700,14 +2796,10 @@ class PatientDetails extends Component {
                   {...this.props}
                 />
               )}
-              <EditAppointmentDrawer
-                carePlan={carePlan}
-                carePlanId={carePlanId}
-              />
+            
             </Fragment>
           )}
 
-          <EditReportDrawer patient_id={patient_id} />
 
           {popUpVisible && (
             <div
@@ -2741,9 +2833,20 @@ class PatientDetails extends Component {
           <MedicationTimelineDrawer />
           <DietResponseDrawer/>
           <WorkoutResponseDrawer/>
+          <EditMedicationReminder
+            patientId={patient_id}
+            carePlanId={carePlanId}
+          />
+          <EditVitals />
           <EditPatientDrawer />
-          <EditDietDrawer carePlanId={carePlanId} />
+          <EditDietDrawer carePlanId={carePlanId}/>
+          <EditReportDrawer patient_id={patient_id} />
           <EditWorkoutDrawer carePlanId={carePlanId} patientId={patient_id} />
+          <EditAppointmentDrawer
+                carePlan={carePlan}
+                carePlanId={carePlanId}
+          />
+          
         </div>
         <Modal
           visible={showOtpModal}

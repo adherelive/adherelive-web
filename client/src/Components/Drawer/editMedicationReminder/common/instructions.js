@@ -30,7 +30,7 @@ class Formulation extends Component {
     render() {
         const { form,
             medicationData = {},
-            payload: { id: medication_id } = {},
+            payload: { id: medication_id , canViewDetails=false } = {},
             medications } = this.props;
         const {
             getFieldDecorator,
@@ -65,6 +65,7 @@ class Formulation extends Component {
                             maxLength={1000}
                             placeholder={this.formatMessage(messages.enterInstruction)}
                             rows={4}
+                            disabled={canViewDetails}
                         />
                     )}
                 </FormItem>

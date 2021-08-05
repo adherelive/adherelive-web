@@ -271,6 +271,26 @@ export default class WorkoutService {
     }
   };
 
+
+  updateWorkotTotalCalories = async ({
+    workout_id,
+    total_calories
+  }) => {
+    const transaction =  await Database.initTransaction();
+    try {
+
+      await Database.getModel(TABLE_NAME).update({workout_id,total_calories},{
+        where: { id: workout_id },
+        transaction,
+      });
+      await transaction.commit();
+      return true;
+    } catch (error) {
+      await transaction.rollback();
+      throw error;
+    }
+  };
+
   findOne = async (data) => {
     try {
       return await Database.getModel(TABLE_NAME).findOne({

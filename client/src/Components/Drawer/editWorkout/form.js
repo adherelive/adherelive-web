@@ -153,7 +153,7 @@ class WorkoutFieldsFrom extends Component {
 
   getTimeOption = () => {
     const {showTimeKeeper=false} = this.state;
-    const { time = moment() , expired_on = null } = this.props;
+    const { time = moment() , canOnlyView = false } = this.props;
     const formattedTime =time ? moment(time).format("hh:mm A") : moment().format("hh:mm A");
 
     return (
@@ -167,7 +167,7 @@ class WorkoutFieldsFrom extends Component {
              </div>  
              <div className="flex direction-column align-center justify-center " >
                {
-                 !expired_on
+                 !canOnlyView
                  &&
                   <img
                     src={edit_image}
@@ -201,7 +201,7 @@ class WorkoutFieldsFrom extends Component {
       getTimeOption
     } = this;
 
-    const { initialFormData = {} , editTemplateWorkout=null , days = [] , expired_on=null } = this.props;
+    const { initialFormData = {} , editTemplateWorkout=null , days = [] , canOnlyView=false } = this.props;
     let { name = '', start_date : str_start_date='',end_date : str_end_date = null , not_to_do = ''} = initialFormData || {};
     let start_date = str_start_date ?  moment(str_start_date) : moment();
     let end_date = str_end_date ? moment(str_end_date) : null;
@@ -231,7 +231,7 @@ class WorkoutFieldsFrom extends Component {
  
     }
 
-    if(expired_on !== null ){
+    if(canOnlyView){
       disabled = true;
     }
 

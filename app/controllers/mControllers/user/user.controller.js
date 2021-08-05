@@ -26,6 +26,7 @@ import UserVerificationServices from "../../../services/userVerifications/userVe
 import otpVerificationService from "../../../services/otpVerification/otpVerification.service";
 import doctorProviderMappingService from "../../../services/doctorProviderMapping/doctorProviderMapping.service";
 import userRolesService from "../../../services/userRoles/userRoles.service";
+import userPreferenceService from "../../../services/userPreferences/userPreference.service";
 
 import DoctorPatientWatchlistWrapper from "../../../ApiWrapper/mobile/doctorPatientWatchlist";
 import doctorPatientWatchlistService from "../../../services/doctorPatientWatchlist/doctorPatientWatchlist.service";
@@ -33,7 +34,11 @@ import doctorPatientWatchlistService from "../../../services/doctorPatientWatchl
 import { getServerSpecificConstants } from "./userHelper";
 import { v4 as uuidv4 } from "uuid";
 import {
+  DOCTOR_TYPE_PROFILES,
   EMAIL_TEMPLATE_NAME,
+  NO_ACTION,
+  NO_APPOINTMENT,
+  NO_MEDICATION,
   USER_CATEGORY,
   VERIFICATION_TYPE,
 } from "../../../../constant";
@@ -217,9 +222,7 @@ class MobileUserController extends Controller {
         );
 
         const userData = await MUserWrapper(userDetails.get());
-        let permissions = {
-          permissions: [],
-        };
+        let permissions = [];
 
         if (userData.isActivated()) {
           permissions = await userData.getPermissions();
@@ -266,7 +269,7 @@ class MobileUserController extends Controller {
             auth_user_role: userRoleId,
             auth_category: userData.getCategory(),
             hasConsent: userData.getConsent(),
-            ...permissions,
+            permissions,
           },
           "Signed in successfully"
         );
@@ -296,7 +299,10 @@ class MobileUserController extends Controller {
         return this.raiseClientError(res, 422, {}, "Email doesn't exists");
       }
 
-      if (user.get("category") !== USER_CATEGORY.DOCTOR) {
+      if (
+        user.get("category") !== USER_CATEGORY.DOCTOR &&
+        user.get("category") !== USER_CATEGORY.HSP
+      ) {
         return this.raiseClientError(res, 422, {}, "Unauthorized");
       }
 
@@ -377,7 +383,7 @@ class MobileUserController extends Controller {
             auth_user_role: userRoleId,
             auth_category: apiUserDetails.getCategory(),
             hasConsent: apiUserDetails.getConsent(),
-            ...permissions,
+            permissions,
           },
           "Signed in successfully"
         );
@@ -416,7 +422,10 @@ class MobileUserController extends Controller {
       if (userExits !== null) {
         let canRegister = false;
         const existingUserCategory = userExits.get("category");
-        if (existingUserCategory === USER_CATEGORY.DOCTOR) {
+        if (
+          existingUserCategory === USER_CATEGORY.DOCTOR ||
+          existingUserCategory === USER_CATEGORY.HSP
+        ) {
           const existingUserRole = await userRolesService.getAllByData({
             user_identity: userExits.get("id"),
           });
@@ -506,6 +515,15 @@ class MobileUserController extends Controller {
       const notificationToken = appNotification.getUserToken(`${userRoleId}`);
       const feedId = base64.encode(`${userRoleId}`);
       const apiUserDetails = await MUserWrapper(null, userId);
+
+      await userPreferenceService.addUserPreference({
+        user_id: userId,
+        details: {
+          charts:
+          [NO_MEDICATION, NO_APPOINTMENT , NO_ACTION ] 
+        },
+        user_role_id: userRoleId
+      });
 
       return raiseSuccess(
         res,
@@ -623,6 +641,7 @@ class MobileUserController extends Controller {
             }
             break;
           case USER_CATEGORY.DOCTOR:
+          case USER_CATEGORY.HSP:
             userCategoryData = await doctorService.getDoctorByUserId(userId);
 
             // Logger.debug("----DOCTOR-----", userCategoryData);
@@ -674,6 +693,59 @@ class MobileUserController extends Controller {
               });
             }
             break;
+          // case USER_CATEGORY.HSP:
+          //   userCategoryData = await doctorService.getDoctorByUserId(userId);
+
+          //   // Logger.debug("----DOCTOR-----", userCategoryData);
+          //   if (userCategoryData) {
+          //     userCategoryApiData = await MDoctorWrapper(userCategoryData);
+          //     userCategoryId = userCategoryApiData.getDoctorId();
+
+          //     let watchlist_patient_ids = [];
+          //     const watchlistRecords = await doctorPatientWatchlistService.getAllByData(
+          //       { user_role_id: userRoleId }
+          //     );
+          //     if (watchlistRecords && watchlistRecords.length) {
+          //       for (let i = 0; i < watchlistRecords.length; i++) {
+          //         const watchlistWrapper = await DoctorPatientWatchlistWrapper(
+          //           watchlistRecords[i]
+          //         );
+          //         const patientId = await watchlistWrapper.getPatientId();
+          //         watchlist_patient_ids.push(patientId);
+          //       }
+          //     }
+
+          //     let allInfo = {};
+          //     allInfo = await userCategoryApiData.getAllInfo();
+          //     delete allInfo.watchlist_patient_ids;
+          //     allInfo["watchlist_patient_ids"] = watchlist_patient_ids;
+
+          //     userCatApiData[userCategoryApiData.getDoctorId()] = allInfo;
+
+          //     careplanData = await carePlanService.getCarePlanByData({
+          //       user_role_id: userRoleId,
+          //     });
+
+          //     // Logger.debug("careplan mobile doctor", careplanData);
+
+          //     await careplanData.forEach(async (carePlan) => {
+          //       const carePlanApiWrapper = await MCarePlanWrapper(carePlan);
+          //       patientIds.push(carePlanApiWrapper.getPatientId());
+          //       carePlanApiData[
+          //         carePlanApiWrapper.getCarePlanId()
+          //       ] = carePlanApiWrapper.getBasicInfo();
+
+          //       const {
+          //         severity_id,
+          //         treatment_id,
+          //         condition_id,
+          //       } = carePlanApiWrapper.getCarePlanDetails();
+          //       treatmentIds.push(treatment_id);
+          //       conditionIds.push(condition_id);
+          //     });
+          //   }
+          //   break;
+
           default:
             // todo--: why this as default
             userCategoryData = await patientService.getPatientByData({
@@ -732,8 +804,10 @@ class MobileUserController extends Controller {
             user_identity: userIds,
           });
 
-          for(let index = 0; index < allUserRolesData.length; index++) {
-            apiUserRoleDetails = await UserRolesWrapper(allUserRolesData[index]);
+          for (let index = 0; index < allUserRolesData.length; index++) {
+            apiUserRoleDetails = await UserRolesWrapper(
+              allUserRolesData[index]
+            );
 
             userRolesData[
               apiUserRoleDetails.getId()
@@ -816,9 +890,7 @@ class MobileUserController extends Controller {
           ] = conditionWrapper.getBasicInfo();
         }
 
-        let permissions = {
-          permissions: [],
-        };
+        let permissions = [];
 
         if (userApiWrapper.isActivated()) {
           permissions = await userApiWrapper.getPermissions();
@@ -826,11 +898,39 @@ class MobileUserController extends Controller {
 
         // speciality temp todo
         let referenceData = {};
-        if (userCategoryApiData && category === USER_CATEGORY.DOCTOR) {
+        if (
+          userCategoryApiData &&
+          (category === USER_CATEGORY.DOCTOR || category === USER_CATEGORY.HSP)
+        ) {
           referenceData = await userCategoryApiData.getReferenceInfo();
         }
 
         Logger.debug("Reference data ---> ", referenceData);
+
+        let authData = {};
+
+        switch (category) {
+          case USER_CATEGORY.DOCTOR:
+          case USER_CATEGORY.HSP:
+            authData = {
+              doctors: userCatApiData,
+              patients: patientApiDetails,
+            };
+            break;
+          case USER_CATEGORY.PATIENT:
+            authData = {
+              patients: userCatApiData,
+              doctors: doctorApiDetails,
+            };
+            break;
+          default:
+            authData = {
+              [`${category}s`]: userCatApiData,
+              patients: patientApiDetails,
+              doctors: doctorApiDetails,
+            };
+            break;
+        }
 
         const dataToSend = {
           users: {
@@ -839,13 +939,20 @@ class MobileUserController extends Controller {
           user_roles: {
             ...userRolesData,
           },
-          [`${category}s`]: {
-            ...userCatApiData,
-          },
-          [category === USER_CATEGORY.DOCTOR ? "patients" : "doctors"]:
-            category === USER_CATEGORY.DOCTOR
-              ? { ...patientApiDetails }
-              : { ...doctorApiDetails },
+          // [`${category}s`]: {
+          //   ...userCatApiData,
+          // },
+          // [DOCTOR_TYPE_PROFILES.includes(category)
+          //   ? "patients"
+          //   : "doctors"]: DOCTOR_TYPE_PROFILES.includes(category)
+          //   ? { ...patientApiDetails }
+          //   : { ...doctorApiDetails },
+          // [category === USER_CATEGORY.DOCTOR ? "patients" : "doctors"]:
+          // category === USER_CATEGORY.DOCTOR
+          //   ? { ...patientApiDetails }
+          //   : { ...doctorApiDetails },
+          ...authData,
+          // patients: patientApiDetails,
           care_plans: {
             ...carePlanApiData,
           },
@@ -862,7 +969,7 @@ class MobileUserController extends Controller {
             ...treatmentApiDetails,
           },
           ...referenceData,
-          ...permissions,
+          permissions,
 
           severity_ids: severityIds,
           condition_ids: conditionIds,
@@ -1975,7 +2082,7 @@ class MobileUserController extends Controller {
       const { email } = req.body;
       const allUsersWithEmail = await userService.getUserByData({
         email,
-        category: USER_CATEGORY.DOCTOR,
+        category: [USER_CATEGORY.DOCTOR, USER_CATEGORY.HSP],
       });
 
       if (allUsersWithEmail && allUsersWithEmail.length) {
@@ -2238,6 +2345,13 @@ class MobileUserController extends Controller {
           const doctor = await doctorService.getDoctorByUserId(userId);
           const doctorData = await MDoctorWrapper(doctor);
           categoryData[doctorData.getDoctorId()] = doctorData.getBasicInfo();
+          break;
+        case USER_CATEGORY.HSP:
+          const hspDoctor = await doctorService.getDoctorByUserId(userId);
+          const hspDoctorData = await MDoctorWrapper(hspDoctor);
+          categoryData[
+            hspDoctorData.getDoctorId()
+          ] = hspDoctorData.getBasicInfo();
           break;
         default:
       }

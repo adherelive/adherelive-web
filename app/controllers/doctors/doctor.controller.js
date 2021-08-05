@@ -51,7 +51,7 @@ import FeatureMappingWrapper from "../../ApiWrapper/web/doctorPatientFeatureMapp
 import TreatmentWrapper from "../../ApiWrapper/web/treatments";
 import UserRoleWrapper from "../../ApiWrapper/web/userRoles";
 import SpecialityWrapper from "../../ApiWrapper/web/speciality";
-
+import UserPreferenceWrapper from "../../ApiWrapper/web/userPreference";
 import AuthJob from "../../JobSdk/Auth/observer";
 import NotificationSdk from "../../NotificationSdk";
 // import { createNewUser } from "../user/userHelper";
@@ -70,7 +70,10 @@ import {
   USER_CATEGORY,
   VERIFICATION_TYPE,
   PATIENT_MEAL_TIMINGS,
-  FEATURES, NOTIFICATION_VERB
+  FEATURES, NOTIFICATION_VERB,
+  NO_MEDICATION,
+  NO_APPOINTMENT,
+  NO_ACTION
 } from "../../../constant";
 import { getFilePath , completePath } from "../../helper/filePath";
 import getReferenceId from "../../helper/referenceIdGenerator";
@@ -122,7 +125,7 @@ class DoctorController extends Controller {
       }
 
       const userDetails = await userService.getUserByData({
-        category: USER_CATEGORY.DOCTOR
+        category: [USER_CATEGORY.DOCTOR,USER_CATEGORY.HSP]
       });
 
       await userDetails.forEach(async user => {
@@ -649,6 +652,7 @@ class DoctorController extends Controller {
                 linked_with:USER_CATEGORY.PROVIDER
               });
               
+              const existingUserCategory = await userData.getCategory();
               const roleData = await UserRoleWrapper(newUserRole);
               let user_roles = {};
               user_roles[roleData.getId()]=await roleData.getAllInfo();
@@ -657,7 +661,13 @@ class DoctorController extends Controller {
               // -- create new user ref
               const userPreference = await userPreferenceService.addUserPreference({
                 user_id:docUserId,
-                details:{"charts": ["1", "2", "3"]},
+                details:{"charts":
+                  // existingUserCategory === USER_CATEGORY.DOCTOR
+                  // ? 
+                  [NO_MEDICATION, NO_APPOINTMENT , NO_ACTION ] 
+                  // :
+                  // [NO_APPOINTMENT , NO_ACTION] 
+                },
                 user_role_id:roleData.getId()
               });
 
@@ -701,11 +711,7 @@ class DoctorController extends Controller {
         return resp;
       }
 
-
-      console.log("3268235467325462534716313817931");
-
-
-      const doctorName = name.split(" ");
+      // const doctorName = name.split(" ");
       const user_data_to_update = {
         category,
         mobile_number,
@@ -732,28 +738,26 @@ class DoctorController extends Controller {
 
       let doctorUserId = userId;
 
-      Logger.debug("Doctor user id is: ", doctorUserId);
-
       let doctor = {};
       let doctorExist = await doctorService.getDoctorByData({
         user_id: doctorUserId
       });
-      let first_name = doctorName[0];
-      let middle_name = doctorName.length === 3 ? doctorName[1] : "";
-      let last_name =
-        doctorName.length === 3
-          ? doctorName[2]
-          : doctorName.length === 2
-          ? doctorName[1]
-          : "";
+      // let first_name = doctorName[0];
+      // let middle_name = doctorName.length === 3 ? doctorName[1] : "";
+      // let last_name =
+      //   doctorName.length === 3
+      //     ? doctorName[2]
+      //     : doctorName.length === 2
+      //     ? doctorName[1]
+      //     : "";
+
+      const {first_name, middle_name, last_name} = getSeparateName(name);
 
       if (doctorExist) {
         let doctor_data = {
           city,
-          profile_pic: profile_pic ? getFilePath(profile_pic) : null,
-          signature_pic: signature_pic
-            ? getFilePath(profile_pic)
-            : null,
+          profile_pic: getFilePath(profile_pic),
+          signature_pic: getFilePath(profile_pic),
           first_name,
           middle_name,
           last_name
@@ -780,6 +784,25 @@ class DoctorController extends Controller {
       const updatedUser = await userService.getUserById(doctorUserId);
 
       const userData = await UserWrapper(updatedUser.get());
+      const userPreference = await userPreferenceService.getPreferenceByData({user_id:doctorUserId});
+      if(userPreference){
+        const userPreferenceWrapper = await UserPreferenceWrapper(userPreference) || null;
+        const userPreferenceId = userPreferenceWrapper.getUserPreferenceId();
+        // if(category === USER_CATEGORY.HSP ){
+        //   const updatedUserPreference = await userPreferenceService.updateUserPreferenceData({
+        //     details:{"charts": [NO_APPOINTMENT , NO_ACTION]}
+        //   },
+        //   userPreferenceId
+        //   );
+        // }else if (category === USER_CATEGORY.DOCTOR){
+          // const updatedUserPreference = await userPreferenceService.updateUserPreferenceData({
+          //   details:{"charts": [NO_MEDICATION, NO_APPOINTMENT , NO_ACTION]}
+          // },
+          // userPreferenceId
+          // );
+        // }
+      }
+    
 
       const updatedDoctor = await doctorService.getDoctorByData({
         user_id: doctorUserId
@@ -1475,7 +1498,9 @@ class DoctorController extends Controller {
             [userData.getId()]: userData.getBasicInfo()
           },
           patients: {
-            [patientData.getPatientId()]: patientData.getBasicInfo()
+            [patientData.getPatientId()]: {
+              ...(await patientData.getAllInfo())
+            }
           },
           care_plans: {
             [carePlanData.getCarePlanId()]: carePlanData.getBasicInfo()

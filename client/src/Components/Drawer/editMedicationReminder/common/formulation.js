@@ -101,7 +101,7 @@ class Formulation extends Component {
   render() {
     const {
       form,
-      payload: { id: medication_id } = {},
+      payload: { id: medication_id,canViewDetails=false } = {},
       medications,
       medicationData = {}
     } = this.props;
@@ -145,6 +145,7 @@ class Formulation extends Component {
               // }
               getPopupContainer={this.getParentNode}
               onSelect={handleSelect}
+              disabled={canViewDetails}
             >
               {getFormulationOptions()}
             </Select>
