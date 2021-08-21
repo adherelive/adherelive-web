@@ -748,7 +748,6 @@ class ChatMessageDetails extends Component {
   };
 
   render() {
-    console.log("342423432432",{props:this.props});
     const {
       // authenticated_user,
       // users,

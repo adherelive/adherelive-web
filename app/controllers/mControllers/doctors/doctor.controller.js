@@ -89,13 +89,6 @@ import SpecialityWrapper from "../../../ApiWrapper/mobile/speciality";
 // import DegreeWrapper from "../../../ApiWrapper/mobile/degree";
 // import degreeService from "../../../services/degree/degree.service";
 
-
-import specialityService from "../../../services/speciality/speciality.service";
-import SpecialityWrapper from "../../../ApiWrapper/mobile/speciality";
-// import DegreeWrapper from "../../../ApiWrapper/mobile/degree";
-// import degreeService from "../../../services/degree/degree.service";
-
-
 const Logger = new Log("M-API DOCTOR CONTROLLER");
 
 class MobileDoctorController extends Controller {

@@ -18,8 +18,6 @@ import messages from "./messages";
 import config from "../../config";
 import { getAbbreviation } from "../../Helper/common";
 
-import { getAbbreviation } from "../../Helper/common";
-
 const { Item: MenuItem } = Menu || {};
 
 const LOGO = "logo";

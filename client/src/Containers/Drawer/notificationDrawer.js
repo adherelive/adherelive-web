@@ -7,7 +7,6 @@ import { getNotification } from "../../modules/notifications";
 import { doNotificationRedirect } from "../../modules/notificationRedirect";
 import { setUnseenNotificationCount }  from "../../modules/pages/NotificationCount";
 
-
 const mapStateToProps = state => {
     const {
         drawer: { visible, loading, data: { type, payload = {} } = {} },

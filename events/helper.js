@@ -908,7 +908,6 @@ const getDietTimings = (date, timing, patientPreference) => {
 };
 
 const updateMedicationTiming = (date, timing, patientPreference) => {
-  console.log("139812832739871 date, timing, patientPreference", {date, timing, patientPreference});
   switch (timing) {
     case AFTER_WAKEUP:
       const { hours: awh, minutes: awm } = getWakeUp(patientPreference) || {};

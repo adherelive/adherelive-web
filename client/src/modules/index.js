@@ -77,7 +77,6 @@ import workout_responses from "./workoutResponses";
 import exercise_groups from "./exerciseGroups";
 import workout_exercise_groups from "./workoutExerciseGroups";
 
-
 const rootReducer = combineReducers({
   auth,
   users,

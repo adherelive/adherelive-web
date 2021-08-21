@@ -382,9 +382,6 @@ const vitalsNotification = async (data, category) => {
       group_id,
     } = data;
 
-
-
-
     let eventData = {};
 
     // let userData = {};
@@ -1046,7 +1043,6 @@ export const getDataForNotification = async (data) => {
         case WORKOUT:
           return await workoutNotification(data);
       }
-    }
     }
   } catch (error) {
     Log.debug("getDataForNotification 500 error", error);
