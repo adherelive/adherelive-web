@@ -88,4 +88,8 @@ app.use(express.static(path.join(__dirname, "../public")));
 app.use("/api", ApiRouter);
 app.use("/m-api", mApiRouter);
 
+app.get("/*", (req, res) => {
+  res.sendFile(path.resolve("public/index.html"));
+});
+
 module.exports = app;
