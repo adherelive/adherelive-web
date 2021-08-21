@@ -90,7 +90,9 @@ class ToggleLogin extends Component {
                             <div className="login-text">
                               <div className="fs16 medium">
                                 {" "}
-                                Remote Care Enablement “For the Provider, by the Provider, to their Patients”{" "}
+                                Remote Care Enablement "For the Provider, by the Provider, to their Patients"
+                                Subscription based health care service delivery.
+                                {" "}
                               </div>
                             </div>
                             <div className="learn-more-text ">
