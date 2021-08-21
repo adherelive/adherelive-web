@@ -83,9 +83,7 @@ class ToggleSignUp extends Component {
                                 <div className="login-text  ">
                                   <div className="fs16 medium tar">
                                     {" "}
-                                    Fusce vehicula dolor arcu, sit amet blandit dolor
-                                    mollis nec. Donec viverra eleifend lacus, vitae
-                                    ullamcorper metus.{" "}
+                                    Remote Care Enablement “For the Provider, by the Provider, to their Patients”{" "}
                                   </div>
                                 </div>
                               </div>
