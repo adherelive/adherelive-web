@@ -1,8 +1,10 @@
 {
   "ExpandedNodes": [
     "",
-    "\\app",
-    "\\app\\models",
+    "\\client",
+    "\\client\\src",
+    "\\client\\src\\Components",
+    "\\client\\src\\Components\\SignIn",
     "\\events"
   ],
   "SelectedNode": "\\events\\sqsObserver.js",
