@@ -211,7 +211,11 @@ const messages = defineMessages({
     description: "",
     defaultMessage: "Banner"
   },
-  
+  prescriptionDetails: {
+    id: "app.updateProvider.prescriptionDetails",
+    description: "",
+    defaultMessage: "Prescription Details"
+  },
 });
 
 export default messages;

@@ -31,7 +31,7 @@ class CriticalMedication extends Component {
     };
 
     render() {
-        const { form, medications, payload: { id: medication_id } = {}, medicationData = {} } = this.props;
+        const { form, medications, payload: { id: medication_id , canViewDetails = false } = {}, medicationData = {} } = this.props;
         const {
             getFieldDecorator,
             getFieldError,
@@ -62,7 +62,9 @@ class CriticalMedication extends Component {
                         valuePropName: 'checked',
                         initialValue: critical ? critical : false
                     })(
-                        <Checkbox >Critical Medication</Checkbox>)}
+                        <Checkbox
+                        disabled={canViewDetails}
+                         >Critical Medication</Checkbox>)}
                 </FormItem>
             </Fragment>
         );

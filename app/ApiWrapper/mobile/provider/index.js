@@ -1,10 +1,10 @@
+import { completePath } from "../../../helper/filePath";
 import BaseProvider from "../../../services/provider";
 import providerService from "../../../services/provider/provider.service";
 import doctorProviderMappingService from "../../../services/doctorProviderMapping/doctorProviderMapping.service";
 
 import DoctorProviderMappingWrapper from "../../web/doctorProviderMapping";
 import UserWrapper from "../../web/user";
-import { completePath } from "../../../helper/filePath";
 
 class ProviderWrapper extends BaseProvider {
   constructor(data) {
@@ -16,7 +16,7 @@ class ProviderWrapper extends BaseProvider {
     const { id, name, address, city, state, user_id, activated_on, details = {} } =
       _data || {};
 
-      const {icon} = details || {};
+      const {icon, banner} = details || {};
 
     return {
       basic_info: {
@@ -29,7 +29,8 @@ class ProviderWrapper extends BaseProvider {
       },
       details: {
         ...details,
-        icon: completePath(icon)
+        icon: completePath(icon),
+        banner: completePath(banner),
       },
       activated_on
     };
@@ -37,19 +38,20 @@ class ProviderWrapper extends BaseProvider {
 
   getAllInfo = async () => {
     const { _data } = this;
-    const { id, name, address, city, state, user_id, activated_on } =
+    const { id, name, address, city, state, user_id, activated_on, details } =
       _data || {};
-  
+
+      const {icon} = details || {};
+
     const providerDoctors = await doctorProviderMappingService.getDoctorProviderMappingByData(
       { provider_id: id }
     );
-  
+
     const doctor_ids = [];
     for (const doctor of providerDoctors) {
       const providerDoctorsWrapper = await DoctorProviderMappingWrapper(doctor);
       doctor_ids.push(providerDoctorsWrapper.getDoctorId());
     }
-  
     return {
       basic_info: {
         id,
@@ -58,6 +60,10 @@ class ProviderWrapper extends BaseProvider {
         address,
         city,
         state
+      },
+      details: {
+        ...details,
+        icon: completePath(icon)
       },
       activated_on,
       doctor_ids

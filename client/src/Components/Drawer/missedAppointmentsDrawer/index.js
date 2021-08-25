@@ -68,6 +68,12 @@ class MissedAppointmentsDrawer extends Component {
 
 
     handlePatientDetailsRedirect = patient_id => e =>  {
+        const {authenticated_category}=this.props;
+
+        if(authenticated_category === USER_CATEGORY.PROVIDER){
+          return;
+        }
+  
         const { history} = this.props;
         this.onClose();
         history.push(`/patients/${patient_id}`);

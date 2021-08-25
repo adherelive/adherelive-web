@@ -11,15 +11,13 @@ export default class PaymentProduct {
         return this._data.type;
     };
 
-    getCreatorId = () => {
-        return this._data.creator_id;
-    };
+    getCreatorRoleId = () => { return this._data.creator_role_id };
 
     getCreatorType = () => {
         return this._data.creator_type;
     };
 
-    getForUserId = () => this._data.for_user_id;
+    getForUserRoleId = () => { return this._data.for_user_role_id };
 
     getForUserType = () => this._data.for_user_type;
 

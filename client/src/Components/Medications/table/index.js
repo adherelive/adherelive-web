@@ -1,7 +1,6 @@
 import React, {Component} from "react";
 import {injectIntl} from "react-intl";
 import generateRow from "./dataRow";
-// import {PERMISSIONS} from "../../../constant";
 import getColumn from "./header";
 import Table from "antd/es/table";
 import messages from "./messages";
@@ -49,12 +48,19 @@ class MedicationTable extends Component {
             medicines,
             isOtherCarePlan,
             intl: {formatMessage} = {},
+            care_plans, 
+            auth_role =null
         } = this.props;
 
-        const {medication_ids} = this.state;
+        const {medication_ids = [] } =care_plans || {};
+
+        const {basic_info : { user_role_id = null } = {} } = care_plans || {};
+        let canViewDetails=true;
+        if(!isOtherCarePlan && user_role_id.toString() === auth_role.toString()) {
+            canViewDetails=false;
+        }
 
         const {openResponseDrawer, openEditDrawer} = this;
-
 
         return medication_ids.map((id) => {
             return generateRow({
@@ -64,30 +70,43 @@ class MedicationTable extends Component {
                 openEditDrawer,
                 formatMessage,
                 isOtherCarePlan,
-                medicines
+                medicines,
+                canViewDetails
             });
         });
     };
 
     openResponseDrawer = (id) => (e) => {
+
         e.preventDefault();
-        // console.log("INSIDE OPEN RESPONSE DRAWER ------------------>",this.props);
-        const {medicationResponseDrawer} = this.props;
+        const {medicationResponseDrawer, isOtherCarePlan,  auth_role =null ,care_plans = {}} = this.props;
+        const {basic_info : { user_role_id = null } = {} } = care_plans || {};
+        let canViewDetails=true;
+        if(!isOtherCarePlan && user_role_id.toString() === auth_role.toString()) {
+            canViewDetails=false;
+        }
         medicationResponseDrawer({id, loading: true});
+        
+      
     };
 
     openEditDrawer = (id) => (e) => {
         e.preventDefault();
-        const {editMedicationDrawer, isOtherCarePlan, patientId} = this.props;
-        console.log("1237182 patientId --> ", {patientId});
-        if(!isOtherCarePlan) {
-            editMedicationDrawer({id, patient_id: patientId, loading: true});
-        }   //TODOj
+        const {editMedicationDrawer, isOtherCarePlan, patientId , auth_role =null ,care_plans = {}} = this.props;
+        const {basic_info : { user_role_id = null } = {} } = care_plans || {};
+        let canViewDetails=true;
+        if(!isOtherCarePlan && user_role_id.toString() === auth_role.toString()) {
+            canViewDetails=false;
+        }
+
+        editMedicationDrawer({id, patient_id: patientId, loading: true,canViewDetails});
+        
     };
 
     formatMessage = data => this.props.intl.formatMessage(data);
 
     render() {
+        // console.log("238423749823794729847293",{props:this.props});
         const locale = {
             emptyText: this.formatMessage(messages.emptyMedicationTable)
           };

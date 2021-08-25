@@ -201,7 +201,37 @@ const messages = defineMessages({
         id: "app.allTemplatesEditDrawer.sosMessage",
         description: "",
         defaultMessage: "Take Whenever Required"
-    }
+    },
+    dietError: {
+        id: "app.allTemplatesEditDrawer.dietError",
+        description: "",
+        defaultMessage: "Please fill all diet details."
+    },
+    workoutError: {
+        id: "app.allTemplatesEditDrawer.workoutError",
+        description: "",
+        defaultMessage: "Please fill all workout details."
+    },
+    diets: {
+        id: "app.allTemplatesEditDrawer.diets",
+        description: "",
+        defaultMessage: "Diets"
+    },
+    workouts: {
+        id: "app.allTemplatesEditDrawer.workouts",
+        description: "",
+        defaultMessage: "Workouts"
+    },
+    dietNameExist: {
+        id: "app.allTemplatesEditDrawer.dietNameExist",
+        description: "",
+        defaultMessage: "A diet with this name already exist in this template."
+    },
+    medicationAccessError: {
+        id: "app.allTemplatesEditDrawer.medicationAccessError",
+        description: "",
+        defaultMessage: "You are unauthorized to access medication."
+    },
 });
 
 export default messages;

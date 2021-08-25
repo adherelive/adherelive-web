@@ -9,6 +9,7 @@ import {
 import SideMenu from "../../Containers/Sidebar";
 import BlankState from "../../Components/Common/BlankState";
 import { PATH } from "../../constant";
+import NotificationDrawer from "../../Containers/Drawer/notificationDrawer";
 
 const PatientDetails = lazy(() =>
   import(
@@ -168,7 +169,8 @@ const SideMenuComp = props => {
       pathname.includes("patient-consulting") ||
       pathname.includes("terms-of-service") ||
       pathname.includes("privacy-policy") ||
-      pathname.includes("video") || 
+      pathname.includes("video") ||
+      pathname.includes("sign-in") ||
       pathname.includes("terms-of-payment")
 
     )
@@ -177,6 +179,12 @@ const SideMenuComp = props => {
   } else {
     return null;
   }
+};
+
+const NotificationDrawerComponent = props => {
+
+    return <NotificationDrawer {...props} />;
+ 
 };
 
 class Doctors extends Component {
@@ -203,6 +211,7 @@ class Doctors extends Component {
       pathname.includes("patient-consulting") ||
       pathname.includes("terms-of-service") ||
       pathname.includes("privacy-policy") ||
+      pathname.includes("sign-in") ||
       pathname.includes("terms-of-payment")
     );
     const { authRedirection } = this.props;
@@ -237,11 +246,11 @@ class Doctors extends Component {
                   path={PATH.PATIENT_CONSULTING}
                   component={ChatFullScreenComp}
                 />
-                <Route
+                {/* <Route
                   exact
                   path={PATH.PATIENT_CONSULTING}
-                  component={ChatFullScreenComp}
-                />
+                  component={ChatFullScreen}
+                /> */}
                 <Route
                   exact
                   path={PATH.TEST_PATIENT_CONSULTING_VIDEO}
@@ -346,6 +355,7 @@ class Doctors extends Component {
                 <Route path="" component={BlankState} />
               </Switch>
             </div>
+            <NotificationDrawerComponent {...this.props} />
           </div>
         </Router>
       </Fragment>

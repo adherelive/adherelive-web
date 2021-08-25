@@ -7,6 +7,8 @@ export const getUserDetails = data => {
       return patients[id];
     case USER_CATEGORY.DOCTOR:
       return doctors[id];
+    case USER_CATEGORY.HSP:
+      return doctors[id];
     case USER_CATEGORY.CARE_TAKER:
       return care_takers[id];
     default:

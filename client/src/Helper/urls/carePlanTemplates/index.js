@@ -30,3 +30,11 @@ export const deleteCareplanTemplateAppointment = (careplan_template_id,other_id)
 export const deleteCareplanTemplateVital = (careplan_template_id,other_id)   => {
     return `/care-plan-templates/${careplan_template_id}?vital=${other_id}`
 }
+
+export const deleteCareplanTemplateDiet = (careplan_template_id,other_id)   => {
+    return `/care-plan-templates/${careplan_template_id}?diet=${other_id}`
+}
+
+export const deleteCareplanTemplateWorkout = (careplan_template_id,other_id)   => {
+    return `/care-plan-templates/${careplan_template_id}?workout=${other_id}`
+}

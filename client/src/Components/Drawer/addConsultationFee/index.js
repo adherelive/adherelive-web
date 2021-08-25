@@ -194,8 +194,18 @@ class addNewConsultationDrawer extends Component {
     }
   };
 
+  isDoctorRoleAssociatedWithProvider = () => {
+    const {auth_role, user_roles} = this.props;
+    const {basic_info: {linked_with, linked_id} = {}} = user_roles[auth_role] || {};
+
+    if(linked_id) {
+      return linked_id;
+    }
+    return false;
+  }
+
   renderAddNewConsultationFee = () => {
-    const {doctors: {provider_id} = {}} = this.props;
+    const provider_id = this.isDoctorRoleAssociatedWithProvider();
     const {
       newConsultationName = "",
       newConsultationType = "",
@@ -345,11 +355,14 @@ class addNewConsultationDrawer extends Component {
 
   async handleSubmit(data) {
     try {
-      const { addDoctorPaymentProduct, setIsUpdated } = this.props;
+      const { addDoctorPaymentProduct, setIsUpdated ,doctors = {}, users = {} , user_roles = {} , auth_role = null } = this.props;
       const { close } = this.props;
 
       this.setState({submitting:true});
-
+      const {doctor_id = null}=data;
+      const {basic_info:{user_id}={}}=doctors[doctor_id] || {};
+      const { category = null } = users[user_id] || {};
+      data["for_user_type"]=category;
       const response = await addDoctorPaymentProduct(data);
       const { consultationFeeId = null } = this.state;
       const {

@@ -96,6 +96,11 @@ const messages = defineMessages({
     description: "",
     defaultMessage: 'Create Doctor Profile'
   },
+  createNewProfile: {
+    id: "app.doctorOnBoarding.createNewProfile",
+    description: "",
+    defaultMessage: 'Create New Profile'
+  },
   createProfile: {
     id: "app.doctorOnBoarding.createProfile",
     description: "",
@@ -405,7 +410,12 @@ const messages = defineMessages({
     id: "app.doctorOnBoarding.timingSameForTheDay",
     description: "",
     defaultMessage: 'Cannot have same start time or end time for the day'
-  }
+  },
+  mailInUse: {
+    id: "app.doctorOnBoarding.mailInUse",
+    description: "",
+    defaultMessage: 'This email is used by an existing doctor/hsp. Using it will link the doctor to your account.'
+  },
 
 
 

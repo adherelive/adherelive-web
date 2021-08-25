@@ -77,7 +77,6 @@ class addProviderDrawer extends Component {
     } = formRef;
 
     validateFields(async (err, values) => {
-
       if (!err) {
         let {
           name='',
@@ -95,7 +94,8 @@ class addProviderDrawer extends Component {
           razorpay_account_id='',
           razorpay_account_name='' ,
           icon = '',
-          banner = ''
+          banner = '',
+          prescription_details = ''
         } = values;
 
 
@@ -115,7 +115,8 @@ class addProviderDrawer extends Component {
           razorpay_account_id,
           razorpay_account_name ,
           icon,
-          banner
+          banner,
+          prescription_details
           };
 
           try {

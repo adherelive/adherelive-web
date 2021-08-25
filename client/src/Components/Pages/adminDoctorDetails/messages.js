@@ -6,6 +6,11 @@ const messages = defineMessages({
     description: "",
     defaultMessage: "Doctor Details"
   },
+  profile_details: {
+    id: "app.admin.profile.details.header.text",
+    description: "",
+    defaultMessage: "Profile Details"
+  },
   basic_details_text: {
     id: "app.admin.doctors.details.basic.details.text",
     description: "",

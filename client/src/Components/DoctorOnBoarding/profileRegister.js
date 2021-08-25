@@ -1,6 +1,6 @@
 import React, { Component, Fragment } from "react";
 import { injectIntl } from "react-intl";
-import { Tabs, Button, Steps, Col, Select, Input, InputNumber, Upload, Modal, TimePicker, Icon, message } from "antd";
+import { Tabs, Button, Steps, Col, Select, Input, InputNumber, Upload, Modal, TimePicker, Icon, message ,Spin} from "antd";
 import SideMenu from "./sidebar";
 import { REQUEST_TYPE, PATH,USER_CATEGORY } from '../../constant';
 import UploadSteps from './steps';
@@ -29,7 +29,6 @@ import france from '../../Assets/images/france.png';
 import messages from "./messages";
 
 
-
 const { Option } = Select;
 
 
@@ -48,7 +47,10 @@ class Profileregister extends Component {
             signature_pic : '',
             signature_pic_url : '',
             signature_pic_url_saved : '',
-            loading: ''
+            loading: '',
+            searchingMail:false,
+            existingDoctor:false,
+            existingDoctorId:null
         };
     }
 
@@ -68,15 +70,12 @@ class Profileregister extends Component {
       
         const { doctors } = this.props;
 
-        const doctor_user_category = USER_CATEGORY.DOCTOR; 
 
         const { basic_info: { email = '', mobile_number = '', prefix: newPrefix = '' } = {}, category = '' } = users[authenticated_user] || {};
-
         await getDoctorQualificationRegisterData();
 
-        this.setState({category : doctor_user_category});
-        if(authenticated_category === USER_CATEGORY.DOCTOR){
-            this.setState({ email, mobile_number, category : doctor_user_category, prefix: newPrefix ? newPrefix : '91' });
+        if(authenticated_category === USER_CATEGORY.DOCTOR || authenticated_category === USER_CATEGORY.HSP){
+            this.setState({ email, mobile_number, category , prefix: newPrefix ? newPrefix : '91' });
             for (let doctor of Object.values(doctors)) {
                 const { basic_info: { user_id = 0, first_name = '', middle_name = '', last_name = '', profile_pic = '',signature_pic='', address = '', city=''} ,city : city_temp = '' } = doctor || {};
                 if (parseInt(user_id) === parseInt(authenticated_user)) {
@@ -105,7 +104,6 @@ class Profileregister extends Component {
         try{
             const {getDoctorDetails} = this.props;
             const response = await getDoctorDetails(doctor_id);
-            const doctor_user_category = USER_CATEGORY.DOCTOR; 
 
             const { status, payload: { data, message } = {} } = response;
             if(status){
@@ -121,12 +119,12 @@ class Profileregister extends Component {
                     final_city = city
                 }
     
-                this.setState({ email, mobile_number, category : doctor_user_category, prefix: newPrefix ? newPrefix : '91', doctor_id });
+                this.setState({ email, mobile_number, category , prefix: newPrefix ? newPrefix : '91', doctor_id });
        
                
                 let name = first_name ? `${first_name} ${middle_name ? `${middle_name} ` : ""}${last_name ? `${last_name} ` : ""}` : '';
                 this.setState({ name, city:final_city, profile_pic_url_saved: profile_pic, profile_pic, signature_pic_url_saved : signature_pic , signature_pic});
-          
+                
                
             }else{
                 
@@ -142,7 +140,7 @@ class Profileregister extends Component {
                     final_city = city
                 }
 
-                this.setState({ email, mobile_number, category : doctor_user_category, prefix: newPrefix ? newPrefix : '91' });
+                this.setState({ email, mobile_number, category , prefix: newPrefix ? newPrefix : '91' });
     
             
                 let name = first_name ? `${first_name} ${middle_name ? `${middle_name} ` : ""}${last_name ? `${last_name} ` : ""}` : '';
@@ -175,12 +173,11 @@ class Profileregister extends Component {
         this.setState({ prefix: value });
     };
 
-    setEmail = e => {
-        this.setState({ email: e.target.value });
+    setEmail = value => {
+        this.setState({ email: value , existingDoctor : true});
+        message.info(this.formatMessage(messages.mailInUse))
     };
-
-
-
+    
     formatMessage = data => this.props.intl.formatMessage(data);
 
     setCity = e => {
@@ -189,8 +186,8 @@ class Profileregister extends Component {
 
     getCategoryOptions = () => {
         const genderes = [
-            { name: "Doctor", value: "doctor" },
-            { name: "Patient", value: "patient" }
+            { name: "Doctor", value: USER_CATEGORY.DOCTOR },
+            { name: "HSP", value: USER_CATEGORY.HSP }
         ];
         let options = [];
 
@@ -334,6 +331,8 @@ class Profileregister extends Component {
 
     onNextClick = () => {
         const { history, authenticated_user = 1 } = this.props;
+        const {existingDoctor = false , existingDoctorId = null  } = this.state;
+
         // const { basic_info: { id = "" } = {} } = users[authenticated_user] || {};
         const validate = this.validateData();
         if (validate) {
@@ -341,18 +340,34 @@ class Profileregister extends Component {
             const { name = '', email = '', mobile_number = '', category = '', city = '', prefix = '', profile_pic_url = '', profile_pic_url_saved = '' , signature_pic_url ='',signature_pic_url_saved ='', doctor_id = null } = this.state;
             const data = { name, email, mobile_number, category, city, prefix, profile_pic: profile_pic_url ? profile_pic_url : profile_pic_url_saved , signature_pic :  signature_pic_url ? signature_pic_url : signature_pic_url_saved };
             if (authenticated_category === USER_CATEGORY.PROVIDER ){
+
+                // if(existingDoctor){
+                //     history.replace(PATH.LANDING_PAGE);
+                //     return;
+                // }
+                
                 data["is_provider"] = true;
                 data["doctor_id"] = doctor_id;
+                data["existing"]=existingDoctor;
+                data["existingDoctorId"]=existingDoctorId;
 
             } 
             doctorProfileRegister(data).then(response => {
                 console.log(" 32453454RESPONSE FOR DOC PROFILE REGISTER ===>",response);
                 const { status, statusCode, payload: {  message : res_message ='',data: { doctors : response_doctors = {} } = {} } = {} } = response;
+
+                // console.log("98326472647623742634732",{response});
                 if (status) {
                     message.success(this.formatMessage(messages.doctorAddSuccess));
 
                     const {basic_info : {id : doctor_id = null} = {}} = Object.values(response_doctors)[0] || {};
                     if(authenticated_category === USER_CATEGORY.PROVIDER){
+                        console.log("98326472647623742634732 =>>>",{existingDoctor});
+                        if(existingDoctor){
+                            history.replace(PATH.LANDING_PAGE);
+                            return;
+                        }
+
                         this.handleSendPasswordMail(doctor_id);
                         history.replace(`${PATH.REGISTER_QUALIFICATIONS}/${doctor_id}`);
                     }
@@ -421,6 +436,95 @@ class Profileregister extends Component {
         }
     };
 
+        searchEmail = async (email) => {
+            try{
+
+                
+                const {searchDoctorEmail } = this.props;
+                this.setState({searchingMail:true});
+                const response = await searchDoctorEmail(email);
+                const { status, statusCode, payload: {  message : res_message =''} = {} } = response || {};
+
+                if(!status && statusCode !== 422 ){
+                    message.error(res_message);
+                }
+                this.setState({searchingMail:false});
+
+                if(email.length){
+                    this.setState({email});
+                }
+
+            }catch(error){
+                this.setState({searchingMail:false});
+                console.log("error ===>",error);
+            }
+
+        }
+
+        setEmailMatchingDoctor = (id) => () => {
+            this.setState({existingDoctorId:id});
+        }
+
+
+        getEmailOptions = () => {
+            const { emails = {} } = this.props;
+
+            return Object.keys(emails).map(id => {
+                const email = emails[id];
+            return (
+                <Option key={id} value={email} 
+                onClick={this.setEmailMatchingDoctor(id)}
+                 >
+                {email}
+                </Option>
+            );
+            });
+        };
+
+
+        onEmailBlur = async (value) => {
+            try{
+                const {searchDoctorEmail } = this.props;
+                const {email : mailId = ''  }=this.state;
+                const typed_email=mailId.trim(); 
+                let flag=false , selectedId = null ;
+                if(typed_email.length){
+                    const response = await searchDoctorEmail(typed_email);
+                    const {payload : {data : {emails = {} } = {} } = {} } = response || {};
+                    if(Object.keys(emails).length){
+                        for(let i in emails){
+                            const each = emails[i];
+                            // console.log("983264573542654326 ===>",{typed_email,each});
+
+                            if(typed_email === each){
+                                message.info(this.formatMessage(messages.mailInUse))
+                                selectedId = i ;
+                                flag=true;
+                                break;
+                            }
+                        }
+                    }
+
+                }
+
+                if(flag){
+                    this.setState({existingDoctor:true , existingDoctorId: selectedId });
+                }else{
+                    
+                    this.setState({existingDoctor:false , existingDoctorId:typed_email });
+                }
+
+
+
+            }catch(error){
+                console.log("error",error);
+            }
+
+
+
+        }
+
+        
     renderProfileForm = () => {
         let { name = '', email = '', mobile_number = '', category = '', prefix = '', profile_pic_url_saved = '' , signature_pic_url_saved ='',city='' } = this.state;
         const { authenticated_user = '',authenticated_category = '', users, getDoctorQualificationRegisterData } = this.props;
@@ -464,11 +568,12 @@ class Profileregister extends Component {
                 <img src={plus} className={"w22 h22"} />
             </div>
         );
-        const { profile_pic , signature_pic } = this.state;
+        const { profile_pic , signature_pic,searchingMail=false } = this.state;
+
         return (
             <div className='form-block'>
                 <div className='form-headings'>{this.formatMessage(messages.profileType)}</div>
-                <Select className='form-inputs' onChange={this.setCategory} value={category} disabled={true}>
+                <Select className='form-inputs' onChange={this.setCategory} value={category} >
                     {this.getCategoryOptions()}
                 </Select>
                 <div className='form-headings mb6'>{this.formatMessage(messages.profilePicture)}</div>
@@ -517,13 +622,32 @@ class Profileregister extends Component {
                 />
 
                 <div className='form-headings'>{this.formatMessage(messages.email)}</div>
-                <Input
+
+                <Select
+                    className="form-inputs"
+                    onSearch={this.searchEmail}
+                    onSelect={this.setEmail}
                     placeholder={this.formatMessage(messages.email)}
+                    disabled={(authenticated_category === USER_CATEGORY.DOCTOR || authenticated_category === USER_CATEGORY.HSP) ?  true : false}
+                    showSearch
                     value={email}
-                    disabled={authenticated_category === USER_CATEGORY.DOCTOR ?  true : false}
-                    className={"form-inputs"}
-                    onChange={this.setEmail}
-                />
+                    notFoundContent={searchingMail 
+                    ? <Spin size="small" /> 
+                    : email.length ?  'No match found' : null }
+                    autoComplete="off"
+                    optionFilterProp="children"
+                    filterOption={(input, option) =>
+                    option.props.children
+                        .toLowerCase()
+                        .indexOf(input.toLowerCase()) >= 0
+                    }
+                    onBlur={this.onEmailBlur}
+                
+                >
+                    {this.getEmailOptions()}
+
+                </Select>    
+
 
                 <div className='form-headings'>{this.formatMessage(messages.city)}</div>
                 <PlacesAutocomplete
@@ -565,14 +689,15 @@ class Profileregister extends Component {
 
     render() {
         const { authenticated_user = '',authenticated_category = '', users, getDoctorQualificationRegisterData } = this.props;
-        
+        const {existingDoctor = false , existingDoctorId = null }=this.state;
+
         return (
             <Fragment>
                 {/* <SideMenu {...this.props} /> */}
                 <div className='registration-container'>
                     {
                         authenticated_category === USER_CATEGORY.PROVIDER ? 
-                        <div className='header'>{this.formatMessage(messages.createDoctorProfile)}</div>
+                        <div className='header'>{this.formatMessage(messages.createNewProfile)}</div>
                         :
                         <div className='header'>{this.formatMessage(messages.createProfile)}</div>
 

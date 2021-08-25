@@ -1,4 +1,5 @@
 import UserWrapper from "../../app/ApiWrapper/mobile/user";
+import UserRoleWrapper from "../../app/ApiWrapper/mobile/userRoles";
 
 const express = require("express");
 const router = express.Router();
@@ -13,6 +14,9 @@ import mCarePlanRouter from "./carePlans";
 import chartRouter from "./graphs";
 
 import userService from "../../app/services/user/user.service";
+import userRolesService from "../../app/services/userRoles/userRoles.service";
+
+
 import jwt from "jsonwebtoken";
 
 import collegeRouter from "./college";
@@ -34,50 +38,80 @@ import featuresRouter from "./features";
 import reportRouter from "./reports";
 import userFavourites from "./userFavourites";
 import agoraRouter from "./agora";
+import adhocRouter from "./adhoc";
+import userRoles from "./userRoles";
+import foodItemsRouter from "./foodItems";
+import mealTemplateRouter from "./mealTemplate";
+import dietRouter from "./diet";
+import portionRouter from "./portion";
+import exerciseRouter from "./exercises";
+import workoutRouter from "./workouts";
 
 router.use(async (req, res, next) => {
   try {
-    let accessToken;
+    let accessToken, userId = null, userRoleId, userRoleData;
     const { authorization = "" } = req.headers || {};
     const bearer = authorization.split(" ");
     if (bearer.length === 2) {
       accessToken = bearer[1];
     }
 
-    if (accessToken) {
-      const secret = process.config.TOKEN_SECRET_KEY;
-      const decodedAccessToken = await jwt.verify(accessToken, secret);
-      const { userId = null } = decodedAccessToken || {};
+    const secret = process.config.TOKEN_SECRET_KEY;
 
-      const userData = await userService.getUser(userId);
-      const user = await UserWrapper(userData);
-      const { userCategoryData, userCategoryId } =
-        (await user.getCategoryInfo()) || {};
-      if (user) {
-        req.userDetails = {
-          exists: true,
-          userId: decodedAccessToken.userId,
-          userData: userData.getBasicInfo,
-          userCategoryData,
-          userCategoryId
-        };
+    if (accessToken) {
+      const decodedAccessToken = await jwt.verify(accessToken, secret);
+      const { userRoleId: decodedUserRoleId = null } = decodedAccessToken || {};
+      const userRoleDetails = await userRolesService.getSingleUserRoleByData({id: decodedUserRoleId});
+      if(userRoleDetails) {
+        const userRole = await UserRoleWrapper(userRoleDetails);
+        userId = userRole.getUserId();
+        userRoleId = parseInt(decodedUserRoleId);;
+        userRoleData = userRole.getBasicInfo();
       } else {
         req.userDetails = {
           exists: false
         };
+        next();
+        return;
       }
+    } else {
+      req.userDetails = {
+        exists: false
+      };
+      next();
+      return;
+    }
+
+    const userData = await userService.getUser(userId);
+    if (userData) {
+      const user = await UserWrapper(userData);
+      const { userCategoryData, userCategoryId } =
+        (await user.getCategoryInfo()) || {};
+      req.userDetails = {
+        exists: true,
+        userRoleId,
+        userRoleData,
+        userId,
+        userData: userData.getBasicInfo,
+        userCategoryData,
+        userCategoryId
+      };
+
+      req.permissions = await user.getPermissions();
     } else {
       req.userDetails = {
         exists: false
       };
     }
     next();
+    return;
   } catch (err) {
     console.log("89127381723 err -->", err);
     req.userDetails = {
       exists: false
     };
     next();
+    return;
   }
 });
 
@@ -110,5 +144,13 @@ router.use("/accounts", accountsRouter);
 router.use("/features", featuresRouter);
 router.use("/reports", reportRouter);
 router.use("/favourites",userFavourites);
+router.use("/adhoc", adhocRouter);
+router.use("/user-roles", userRoles);
+router.use("/food-items",foodItemsRouter);
+router.use("/meal/templates",mealTemplateRouter);
+router.use("/diet",dietRouter);
+router.use("/portions",portionRouter);
+router.use("/exercises", exerciseRouter);
+router.use("/workout", workoutRouter);
 
 module.exports = router;

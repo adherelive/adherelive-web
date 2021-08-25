@@ -25,7 +25,7 @@ const mapStateToProps = state => {
      } = {},
     chats = {},
     users,
-    auth: { authPermissions = [], authenticated_user } = {},
+    auth: { authPermissions = [], authenticated_user ,auth_role} = {},
     care_plans
   } = state;
 
@@ -48,8 +48,8 @@ const mapStateToProps = state => {
     authenticated_user,
     paginated_patients:paginated_watchlist_patients,
     search_treatments_patients:patient_table_search_watchlist_patients,
-    search_diagnosis_patients:patient_table_search_watchlist_patients
-
+    search_diagnosis_patients:patient_table_search_watchlist_patients,
+    auth_role
   };
 };
 

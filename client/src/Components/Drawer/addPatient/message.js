@@ -31,6 +31,11 @@ const messages = defineMessages({
         description: "",
         defaultMessage: "Gender"
     },
+    pid: {
+        id: "app.addPatient.pid",
+        description: "",
+        defaultMessage: "Patient ID"
+    },
     dob: {
         id: "app.addPatient.dob",
         description: "",

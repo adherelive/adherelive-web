@@ -66,6 +66,16 @@ const messages = defineMessages({
         description: "",
         defaultMessage: "Please fill all medication details."
     },
+    dietError: {
+        id: "app.medicationTemplate.dietError",
+        description: "",
+        defaultMessage: "Please fill all diet details."
+    },
+    workoutError: {
+        id: "app.medicationTemplate.workoutError",
+        description: "",
+        defaultMessage: "Please fill all workout details."
+    },
     submit: {
         id: "app.medicationTemplate.submit",
         description: "",
@@ -147,10 +157,35 @@ const messages = defineMessages({
         description: "",
         defaultMessage: "An action for this vital already exist in this template."
     },
+    dietNameExist: {
+        id: "app.medicationTemplate.dietNameExist",
+        description: "",
+        defaultMessage: "A diet with this name already exist in this template."
+    },
+    workoutNameExist: {
+        id: "app.medicationTemplate.workoutNameExist",
+        description: "",
+        defaultMessage: "A workout with this name already exist in this template."
+    },
     sosMessage:{
         id: "app.medicationTemplate.sosMessage",
         description: "",
         defaultMessage: "Take Whenever Required"
+    },
+    diets: {
+        id: "app.medicationTemplate.diets",
+        description: "",
+        defaultMessage: "Diets"
+    },
+    workouts: {
+        id: "app.medicationTemplate.workouts",
+        description: "",
+        defaultMessage: "Workouts"
+    },
+    medicationAccessError: {
+        id: "app.medicationTemplate.medicationAccessError",
+        description: "",
+        defaultMessage: "You are unauthorized to access medication."
     },
 });
 

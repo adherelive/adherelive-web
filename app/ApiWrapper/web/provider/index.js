@@ -30,7 +30,7 @@ class ProviderWrapper extends BaseProvider {
       details: {
         ...details,
         icon: completePath(icon),
-        banner: completePath(banner)
+        banner: completePath(banner),
       },
       activated_on
     };

@@ -41,10 +41,20 @@ const messages = defineMessages({
         description: "",
         defaultMessage: "Missed Call"
     },
+    startedCallHeading: {
+        id: "app.notifications.startedCallHeading",
+        description: "",
+        defaultMessage: "Call Started"
+    },
     missedCallMessage: {
         id: "app.notifications.missedCallMessage",
         description: "",
-        defaultMessage: "You missed a call from"
+        defaultMessage: "You missed a call from {full_name}"
+    },
+    callStartedMessage: {
+        id: "app.notifications.callStartedMessage",
+        description: "",
+        defaultMessage: "Call started with {full_name}"
     },
     reminderText: {
         id: "app.notifications.reminderText",
@@ -130,7 +140,27 @@ const messages = defineMessages({
         id: "app.notifications.noMoreNotificationsDisplay",
         description: "",
         defaultMessage: "No More Notifications to display"
-    }
+    },
+    dietResponseAdded: {
+        id: "app.notifications.dietResponseAdded",
+        description: "",
+        defaultMessage: "{full_name} captured diet for {diet_name} - {time_text} "
+    },
+    dietHeading:{
+        id: "app.notifications.dietHeading",
+        description: "",
+        defaultMessage: "Diet Captured"
+    },
+    workoutHeading:{
+        id: "app.notifications.workoutHeadingetHeading",
+        description: "",
+        defaultMessage: "Workout Captured"
+    },
+    workoutResponseAdded: {
+        id: "app.notifications.workoutResponseAdded",
+        description: "",
+        defaultMessage: "{full_name} captured workout for {workout_name}"
+    },
 });
 
 export default messages;

@@ -15,7 +15,8 @@ import {
   NOTIFICATION_STAGES,
   RADIOLOGY,
   FAVOURITE_TYPE,
-  MEDICAL_TEST
+  MEDICAL_TEST,
+  APPOINTMENT_TYPE
 } from "../../../constant";
 import moment from "moment";
 
@@ -89,7 +90,7 @@ class AppointmentController extends Controller {
         // participant_one_type = "",
         // participant_one_id = "",
       } = body;
-      const { userId, userData: { category } = {} } = userDetails || {};
+      const { userId, userRoleId, userData: { category } = {} } = userDetails || {};
       const { id: participant_two_id, category: participant_two_type } =
         participant_two || {};
 
@@ -116,6 +117,14 @@ class AppointmentController extends Controller {
           const doctorData = await DoctorWrapper(doctor);
           userCategoryId = doctorData.getDoctorId();
           participantTwoId = doctorData.getUserId();
+          break;
+        case USER_CATEGORY.HSP:
+          const hspDoctor = await doctorService.getDoctorByData({
+            user_id: userId
+          });
+          const hspDoctorData = await DoctorWrapper(hspDoctor);
+          userCategoryId = hspDoctorData.getDoctorId();
+          participantTwoId = hspDoctorData.getUserId();
           break;
         case USER_CATEGORY.PATIENT:
           const patient = await patientService.getPatientByUserId(userId);
@@ -154,12 +163,11 @@ class AppointmentController extends Controller {
 
       const appointment_data = {
         participant_one_type: category,
-        participant_one_id: userId,
+        participant_one_id: userCategoryId,
         participant_two_type,
         participant_two_id,
-        organizer_type:
-          Object.keys(organizer).length > 0 ? organizer.category : category,
-        organizer_id: Object.keys(organizer).length > 0 ? organizer.id : userId,
+        organizer_type:category,
+        organizer_id: userCategoryId,
         description,
         start_date: moment(date),
         end_date: moment(date),
@@ -194,9 +202,10 @@ class AppointmentController extends Controller {
         start_time,
         end_time,
         details: appointmentApiData.getBasicInfo(),
-        participants: [userId, participantTwoId],
+        participants: [userRoleId, participantTwoId],
         actor: {
           id: userId,
+          user_role_id: userRoleId,
           category
         }
       };
@@ -261,6 +270,7 @@ class AppointmentController extends Controller {
       } = body;
       const {
         userId,
+        userRoleId,
         userData: { category } = {},
         userCategoryId,
         userCategoryData: { basic_info: { full_name } = {} } = {}
@@ -271,19 +281,20 @@ class AppointmentController extends Controller {
       let participantTwoId = null;
 
       switch (participant_two_type) {
-        case USER_CATEGORY.DOCTOR:
-          const doctor = await doctorService.getDoctorByData({
-            id: participant_two_type
-          });
-          const doctorData = await DoctorWrapper(doctor);
-          participantTwoId = doctorData.getUserId();
-          break;
+        // case USER_CATEGORY.DOCTOR:
+        //   const doctor = await doctorService.getDoctorByData({
+        //     id: participant_two_type
+        //   });
+        //   const doctorData = await DoctorWrapper(doctor);
+        //   participantTwoId = doctorData.getUserRoleId();
+        //   break;
         case USER_CATEGORY.PATIENT:
           const patient = await patientService.getPatientById({
             id: participant_two_id
           });
           const patientData = await PatientWrapper(patient);
-          participantTwoId = patientData.getUserId();
+          const {user_role_id} = await patientData.getAllInfo();
+          participantTwoId = user_role_id;
           break;
         default:
           break;
@@ -315,16 +326,13 @@ class AppointmentController extends Controller {
       }
 
 
-      Logger.debug("827354523879472634237238473 TYPE",{type,TYPETYPE:typeof(type)});
-
       const appointment_data = {
         participant_one_type: category,
         participant_one_id: userCategoryId,
         participant_two_type,
         participant_two_id,
-        organizer_type:
-          Object.keys(organizer).length > 0 ? organizer.category : category,
-        organizer_id: Object.keys(organizer).length > 0 ? organizer.id : userId,
+        organizer_type: category,
+        organizer_id:userCategoryId,
         description,
         start_date: moment(date),
         end_date: moment(date),
@@ -339,7 +347,7 @@ class AppointmentController extends Controller {
           type,
           type_description,
           critical,
-          [type === RADIOLOGY && "radiology_type" ]:type === RADIOLOGY && radiology_type 
+          ...type === RADIOLOGY && { 'radiology_type': radiology_type }
         }
       };
 
@@ -369,7 +377,7 @@ class AppointmentController extends Controller {
       let carePlanApiData = {};
 
       carePlanApiData[carePlanApiWrapper.getCarePlanId()] = {
-        ...carePlanApiWrapper.getBasicInfo(),
+        ...(await carePlanApiWrapper.getAllInfo()),
         ...carePlanSeverityDetails,
         medication_ids: carePlanMedicationIds,
         appointment_ids: carePlanAppointmentIds
@@ -385,10 +393,10 @@ class AppointmentController extends Controller {
         start_time,
         end_time,
         details: appointmentApiData.getBasicInfo(),
-        participants: [userId, participantTwoId],
+        participants: [userRoleId, participantTwoId],
         actor: {
           id: userId,
-          // todo add actor name
+          user_role_id: userRoleId,
           details: { name: full_name, category }
         }
       };
@@ -458,6 +466,7 @@ class AppointmentController extends Controller {
 
       const {
         userId,
+        userRoleId,
         userData: { category } = {},
         userCategoryId,
         userCategoryData: { basic_info: { full_name } = {} } = {}
@@ -521,10 +530,8 @@ class AppointmentController extends Controller {
         participant_one_id: userCategoryId,
         participant_two_type,
         participant_two_id,
-        organizer_type:
-          Object.keys(organizer).length > 0 ? organizer.category : category,
-        organizer_id:
-          Object.keys(organizer).length > 0 ? organizer.id : userCategoryId,
+        organizer_type: category,
+        organizer_id: userCategoryId,
         description,
         start_date: moment(date),
         end_date: moment(date),
@@ -559,19 +566,20 @@ class AppointmentController extends Controller {
       let participantTwoId = null;
 
       switch (participant_two_type) {
-        case USER_CATEGORY.DOCTOR:
-          const doctor = await doctorService.getDoctorByData({
-            id: participant_two_id
-          });
-          const doctorData = await DoctorWrapper(doctor);
-          participantTwoId = doctorData.getUserId();
-          break;
+        // case USER_CATEGORY.DOCTOR:
+        //   const doctor = await doctorService.getDoctorByData({
+        //     id: participant_two_id
+        //   });
+        //   const doctorData = await DoctorWrapper(doctor);
+        //   participantTwoId = doctorData.getUserId();
+        //   break;
         case USER_CATEGORY.PATIENT:
           const patient = await patientService.getPatientById({
             id: participant_two_id
           });
           const patientData = await PatientWrapper(patient);
-          participantTwoId = patientData.getUserId();
+          const {user_role_id} = await patientData.getAllInfo();
+          participantTwoId = user_role_id;
           break;
         default:
           break;
@@ -595,9 +603,10 @@ class AppointmentController extends Controller {
         start_time,
         end_time,
         details: appointmentApiData.getBasicInfo(),
-        participants: [userId, participantTwoId],
+        participants: [userRoleId, participantTwoId],
         actor: {
           id: userId,
+          user_role_id: userRoleId,
           details: { name: full_name, category }
         }
       };
@@ -723,7 +732,6 @@ class AppointmentController extends Controller {
       const appointmentData = await FeatureDetailsWrapper(appointmentDetails);
 
       let featureDetails = appointmentData.getFeatureDetails();
-
       const {type_description, radiology_type_data} =  featureDetails || {};
 
       const userTypeData = {
@@ -734,6 +742,19 @@ class AppointmentController extends Controller {
       const updatedTypeDescriptionWithFavourites = await AppointmentHelper.getFavoriteInDetails(userTypeData, type_description, FAVOURITE_TYPE.MEDICAL_TESTS);
 
       featureDetails = {...featureDetails, ...{type_description: updatedTypeDescriptionWithFavourites}}
+      const {appointment_type ={}} = featureDetails;
+      if(category === USER_CATEGORY.HSP){
+        let hspAppointmentType = {};
+        for(let each in appointment_type ){
+          const { title = '' } = appointment_type[each];
+          const { title : radiologyTitle } = APPOINTMENT_TYPE[RADIOLOGY];
+          if(title === radiologyTitle ){
+            continue;
+          }
+          hspAppointmentType[each]=appointment_type[each];
+        }
+        featureDetails["appointment_type"]={...hspAppointmentType};
+      }
 
       const updatedRadiologyDataWithFavourites = await AppointmentHelper.getFavoriteInDetails(userTypeData, radiology_type_data, FAVOURITE_TYPE.RADIOLOGY);
 
@@ -762,6 +783,7 @@ class AppointmentController extends Controller {
       const { body, userDetails } = req;
 
       const {
+        userRoleId=null,
         userId,
         userData: { category } = {},
         userCategoryData: { basic_info: { id: doctorId } = {} } = {}
@@ -775,7 +797,7 @@ class AppointmentController extends Controller {
       const scheduleEventService = new ScheduleEventService();
 
       docAllCareplanData = await carePlanService.getCarePlanByData({
-        doctor_id: doctorId
+        user_role_id:userRoleId
       });
 
       // Logger.debug("786756465789",docAllCareplanData);
@@ -1013,6 +1035,13 @@ class AppointmentController extends Controller {
             userCategoryData = await DoctorWrapper(doctor);
             userCategoryId = userCategoryData.getDoctorId();
             break;
+          case USER_CATEGORY.HSP:
+            const hspDoctor = await doctorService.getDoctorByData({
+              user_id: userId
+            });
+            userCategoryData = await DoctorWrapper(hspDoctor);
+            userCategoryId = userCategoryData.getDoctorId();
+            break;
           case USER_CATEGORY.PATIENT:
             const patient = await patientService.getPatientByUserId(userId);
             userCategoryData = await PatientWrapper(patient);
@@ -1104,6 +1133,13 @@ class AppointmentController extends Controller {
               user_id: userId
             });
             userCategoryData = await DoctorWrapper(doctor);
+            userCategoryId = userCategoryData.getDoctorId();
+            break;
+          case USER_CATEGORY.HSP:
+            const hspDoctor = await doctorService.getDoctorByData({
+              user_id: userId
+            });
+            userCategoryData = await DoctorWrapper(hspDoctor);
             userCategoryId = userCategoryData.getDoctorId();
             break;
           case USER_CATEGORY.PATIENT:

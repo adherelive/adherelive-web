@@ -2,10 +2,11 @@ import { withRouter } from "react-router-dom";
 import ChatFullScreen from "../../Components/ChatFullScreen";
 import { connect } from "react-redux";
 import { getAllFeatures } from "../../modules/featuresMappings";
+import { resetNotificationRedirect } from "../../modules/notificationRedirect";
 
 const mapStateToProps = state => {
   const {
-    auth: { authPermissions = [], authenticated_user = 1 } = {},
+    auth: { authPermissions = [], authenticated_user = 1 , auth_role = null } = {},
     users = {},
     patients = {},
     doctors = {},
@@ -21,13 +22,16 @@ const mapStateToProps = state => {
     authenticated_user,
     features,
     features_mappings,
-    notification_redirect
+    notification_redirect,
+    auth_role
   };
 };
 
 const mapDispatchToProps = dispatch => {
   return {
-    getAllFeatures: () => dispatch(getAllFeatures())
+    getAllFeatures: () => dispatch(getAllFeatures()),
+    resetNotificationRedirect:() => dispatch(resetNotificationRedirect())
+
   };
 };
 

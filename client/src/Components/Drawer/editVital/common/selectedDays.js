@@ -34,7 +34,9 @@ class SelectedDays extends Component {
 
   componentDidMount() {
     const {
-      form: { validateFields }
+      form: { validateFields },
+      payload:{id =null} = {},
+      vitals = {}
     } = this.props;
     validateFields();
 
@@ -47,6 +49,11 @@ class SelectedDays extends Component {
       const {details : {repeat_days : vital_repeat_days_new = []} ={}} = vitalData || {};
       existing_repeat_days = vital_repeat_days_new;
       this.setState({selectedDays:existing_repeat_days})
+    }
+    
+    const {details : {repeat_days = [] } = {} } = vitals[id] || {};
+    if(repeat_days && repeat_days.length){
+      this.setState({selectedDays:repeat_days});
     }
 
   }
@@ -161,7 +168,7 @@ class SelectedDays extends Component {
     } = this.props;
 
     const  {selectedDays} = this.state;
-    const {vitalData = {}} = this.props;
+    const {vitalData = {} , payload : { canViewDetails = false } = {} } = this.props;
     let{repeat_days : existing_repeat_days =''}=vitalData||{};
     if(!existing_repeat_days){
       const {details : {repeat_days : vital_repeat_days_new = []} ={}} = vitalData || {};
@@ -186,14 +193,16 @@ class SelectedDays extends Component {
               }
             ],
             initialValue: existing_repeat_days ? existing_repeat_days : selectedDays
-          })(<Input />)}
+          })(<Input 
+            disabled={canViewDetails}
+          />)}
         </FormItem>
         <div className="flex-shrink-1 flex justify-space-evenly select-days">
           {DAYS.map(tag => (
             <CheckableTag
               key={tag}
               checked={selectedDays.indexOf(tag) > -1}
-              onChange={checked => handleCheckDays(tag, checked)}
+              onChange={!canViewDetails ? checked => handleCheckDays(tag, checked) : null}
             >
               {tag}
             </CheckableTag>
@@ -204,6 +213,7 @@ class SelectedDays extends Component {
         className="flex justify-content-end radio-formulation mt10 mb24"
         buttonStyle="solid"
         value={this.getselectedDayRadio()}
+        disabled={canViewDetails}
       >
         <RadioButton value={1} onClick={this.setRepeatEveryDay} >{this.formatMessage(messages.everyday)}</RadioButton>
         <RadioButton value={2} onClick={this.setRepeatAlternateDay}>{this.formatMessage(messages.alternate)}</RadioButton>

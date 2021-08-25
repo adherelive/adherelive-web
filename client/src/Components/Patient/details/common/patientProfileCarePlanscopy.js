@@ -3,7 +3,6 @@ import { injectIntl } from "react-intl";
 import messages from "../message";
 import {
   GENDER,
-  PERMISSIONS,
   TABLET,
   SYRUP,
   PARTS,

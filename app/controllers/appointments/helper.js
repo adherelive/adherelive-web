@@ -86,8 +86,6 @@ const radiologyTypeFavorites = async (userTypeData, types) => {
 
         const favIndicesList = Object.keys(favoriteIndices);
 
-        console.log("013812309821 types", {types});
-
         for(const typeId of Object.keys(types)) {
 
             const {[typeId]: { data = {}, id = null, name: typeName} = {}} = types || {};

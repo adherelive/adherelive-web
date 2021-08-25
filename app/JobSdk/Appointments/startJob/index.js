@@ -1,8 +1,11 @@
 import AppointmentJob from "../";
 import moment from "moment";
-import { EVENT_TYPE } from "../../../../constant";
+import { DEFAULT_PROVIDER, EVENT_TYPE } from "../../../../constant";
 
+import UserRoleService from "../../../services/userRoles/userRoles.service";
+import ProviderService from "../../../services/provider/provider.service";
 import UserDeviceService from "../../../services/userDevices/userDevice.service";
+
 import UserDeviceWrapper from "../../../ApiWrapper/mobile/userDevice";
 
 class StartJob extends AppointmentJob {
@@ -28,6 +31,7 @@ class StartJob extends AppointmentJob {
         participants = [],
         actor: {
           id: actorId,
+          user_role_id,
           details: { name, category: actorCategory } = {}
         } = {}
       }
@@ -37,11 +41,37 @@ class StartJob extends AppointmentJob {
     const playerIds = [];
     const userIds = [];
 
-    participants.forEach(participant => {
-      if (participant !== actorId) {
-        userIds.push(participant);
+    // const userRoleIds = [];
+
+    // participants.forEach(participant => {
+    //   if (participant !== user_role_id) {
+    //     userRoleIds.push(participant);
+    //   }
+    // });
+
+    const {rows: userRoles = []} = await UserRoleService.findAndCountAll({
+      where: {
+        id: participants
       }
-    });
+    }) || {};
+
+    let providerId = null;
+
+    for(const userRole of userRoles) {
+      const {user_identity, linked_id} = userRole || {};
+        userIds.push(user_identity);
+        if(linked_id) {
+          providerId = linked_id;
+        }
+    }
+
+    // provider
+    let providerName = DEFAULT_PROVIDER;
+    if(providerId) {
+      const provider = await ProviderService.getProviderByData({id: providerId});
+      const {name} = provider || {};
+      providerName = name;
+    }
 
     const userDevices = await UserDeviceService.getAllDeviceByData({
       user_id: userIds
@@ -54,13 +84,13 @@ class StartJob extends AppointmentJob {
       }
     }
 
-    for (const participant of participants) {
+    // for (const participant of participants) {
       // if (participant !== actorId) { // todo: add actor after testing (deployment)
 
       templateData.push({
         small_icon: process.config.app.icon_android,
         app_id: process.config.one_signal.app_id, // TODO: add the same in pushNotification handler in notificationSdk
-        headings: { en: `Appointment Started` },
+        headings: { en: `Appointment Started (${providerName})` },
         contents: {
           en: `Appointment with ${name}(${actorCategory}) is started! Tap here to join`
         },
@@ -71,7 +101,7 @@ class StartJob extends AppointmentJob {
         data: { url: "/appointments", params: getAppointmentData() }
       });
       // }
-    }
+    // }
 
     return templateData;
   };
@@ -83,6 +113,7 @@ class StartJob extends AppointmentJob {
         participants = [],
         actor: {
           id: actorId,
+          user_role_id,
           details: { name, category: actorCategory } = {}
         } = {}
       },
@@ -96,6 +127,7 @@ class StartJob extends AppointmentJob {
     for (const participant of participants) {
       templateData.push({
         actor: actorId,
+        actorRoleId: user_role_id,
         object: `${participant}`,
         foreign_id: `${id}`,
         verb: `appointment_start:${currentTimeStamp}`,

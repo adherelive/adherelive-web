@@ -2,7 +2,7 @@ import { TABLE_COLUMN, formatPatientTableData } from "../helper";
 
 export default data => {
   const { id,addToWatchlist, onRowClick,removePatientFromWatchlist,
-    currentTab,handleGetPatients,tabChanged , offset , paginatedPatientData} = data;
+    currentTab,handleGetPatients,tabChanged , offset , paginatedPatientData , auth_role} = data;
 
 
   const formattedData = formatPatientTableData(data);
@@ -21,7 +21,8 @@ export default data => {
       handleGetPatients,
       tabChanged,
       offset,
-      paginatedPatientData
+      paginatedPatientData,
+      auth_role
     },
     [TABLE_COLUMN.DIAGNOSIS.dataIndex]: {
       // patientData

@@ -11,6 +11,26 @@ export default defineMessages({
         description: "",
         defaultMessage: "Privacy Policy"
     },
+    settings_text: {
+        id: "app.dashboard.sidebar.menu.settings",
+        description: "",
+        defaultMessage: "Settings"
+    },
+    accounts_text: {
+        id: "app.dashboard.sidebar.menu.accounts.text",
+        description: "",
+        defaultMessage: "Accounts"
+    },
+    self_text: {
+        id: "app.dashboard.sidebar.menu.self.text",
+        description: "",
+        defaultMessage: "Self"
+    },
+    sign_out_text: {
+        id: "app.dashboard.sidebar.menu.sign.out.text",
+        description: "",
+        defaultMessage: "Sign Out"
+    },
     all_providers: {
         id: "app.dashboard.sidebar.menu.all.providers",
         description: "",
@@ -50,5 +70,25 @@ export default defineMessages({
         id:"app.dashboard.sidebar.menu.medicine.text",
         description:"",
         defaultMessage:"All Medicines"
-    }
+    },
+    selfAccount: {
+        id:"app.dashboard.sidebar.menu.self.account.text",
+        description:"",
+        defaultMessage:"self"
+    },
+    manageAccount: {
+        id:"app.dashboard.sidebar.menu.manage.account.text",
+        description:"",
+        defaultMessage:"Manage Account"
+    },
+    providerIcon: {
+        id:"app.dashboard.sidebar.menu.provider.icon",
+        description:"",
+        defaultMessage:"Linked Provider Icon"
+    },
+    paymentDetailsHeader: {
+        id: "app.dashboard.sidebar.menu.payment.details",
+        description: "",
+        defaultMessage: "Payment Details"
+      },
 });

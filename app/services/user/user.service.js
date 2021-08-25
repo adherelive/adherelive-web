@@ -4,7 +4,7 @@ import { Op } from "sequelize";
 
 // TABLES
 import { TABLE_NAME } from "../../models/users";
-import { TABLE_NAME as permissionTableName } from "../../models/permissions";
+// import { TABLE_NAME as permissionTableName } from "../../models/permissions";
 import { TABLE_NAME as doctorTableName } from "../../models/doctors";
 import { TABLE_NAME as patientTableName } from "../../models/patients";
 import { TABLE_NAME as userDeviceTableName } from "../../models/userDevices";
@@ -62,6 +62,9 @@ class UserService {
             },
             {
               category: USER_CATEGORY.PROVIDER
+            },
+            {
+              category: USER_CATEGORY.HSP
             }
           ]
         }
@@ -214,7 +217,6 @@ class UserService {
     try {
       const user = await Database.getModel(TABLE_NAME).findOne({
         where: data,
-        include: [Database.getModel(permissionTableName)]
       });
       return user;
     } catch (error) {
@@ -276,6 +278,24 @@ class UserService {
       throw err;
     }
   };
+
+  searchMail = async (value) => {
+    try {
+      const matchingUsers = await Database.getModel(TABLE_NAME).findAll(
+        {
+          where: {
+            email: {
+              [Op.like]: `${value}%`
+            }
+          },
+          paranoid: false
+        }
+      );
+      return matchingUsers;
+    } catch (err) {
+      throw err;
+    }
+  }
 }
 
 export default new UserService();

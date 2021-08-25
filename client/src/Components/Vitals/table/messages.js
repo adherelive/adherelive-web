@@ -26,6 +26,11 @@ const messages = defineMessages({
     description: "",
     defaultMessage: "Edit"
   },
+  view: {
+    id: "app.vital.table.workouts.view",
+    description: "",
+    defaultMessage: "View"
+  },
   emptyVitalTable: {
     id: "app.vital.table.emptyVitalTable",
     description: "",

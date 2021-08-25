@@ -1,18 +1,18 @@
-import EventController from "../../../app/controllers/scheduleEvents/event.controller";
-
 const express = require("express");
 const router = express.Router();
 
 import Authenticate from "../middleware/auth";
-import Appointment from "../../../app/controllers/appointments/appointment.controller";
-import MedicationReminder from "../../../app/controllers/medicationReminder/mReminder.controller";
-import * as validator from "./validator";
+import EventController from "../../../app/controllers/scheduleEvents/event.controller";
 
-router.get(
-    "/medication/:patient_id/details",
-    Authenticate,
-    MedicationReminder.getMedicationDetails
-);
+// import Appointment from "../../../app/controllers/appointments/appointment.controller";
+// import MedicationReminder from "../../../app/controllers/medicationReminder/mReminder.controller";
+// import * as validator from "./validator";
+
+// router.get(
+//     "/medication/:patient_id/details",
+//     Authenticate,
+//     MedicationReminder.getMedicationDetails
+// );
 
 router.get(
     "/missed",
@@ -32,19 +32,19 @@ router.get(
     EventController.getAllEvents
 );
 
-router.post(
-    "/medication-reminder/:patient_id",
-    Authenticate,
-    validator.validateMedicationReminderData,
-    MedicationReminder.create
-);
+// router.post(
+//     "/medication-reminder/:patient_id",
+//     Authenticate,
+//     validator.validateMedicationReminderData,
+//     MedicationReminder.create
+// );
 
-router.post(
-    "/medication-reminder/:patient_id/:carePlanId",
-    Authenticate,
-    validator.validateMedicationReminderData,
-    MedicationReminder.createCarePlanMedication
-);
+// router.post(
+//     "/medication-reminder/:patient_id/:carePlanId",
+//     Authenticate,
+//     validator.validateMedicationReminderData,
+//     MedicationReminder.createCarePlanMedication
+// );
 
 router.post(
     "/:id/complete",

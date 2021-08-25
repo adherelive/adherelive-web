@@ -21,18 +21,25 @@ class AgoraController extends Controller {
 
     generateVideoAccessToken = async (req, res) => {
         try {
-            const {params: {id = null} = {}, userDetails: {userId, userData: { category } = {}} = {}} = req;
-            let doctorUserId = null, patientUserId = null;
-            if(category === USER_CATEGORY.DOCTOR) {
-                doctorUserId = userId;
-                patientUserId = id;
-            } else if (category === USER_CATEGORY.PATIENT) {
-                doctorUserId = id;
-                patientUserId = userId;
-            }
-            const channelName = agoraService.getRoomId(doctorUserId, patientUserId);
+            const {params: {id = null} = {}, userDetails: {
+               userRoleId,
+               userData: { category } = {}} = {}} = req;
 
-            const token = await agoraService.videoTokenGenerator(userId, channelName);
+            let doctorRoleId = null, patientRoleId = null;
+            if(category === USER_CATEGORY.DOCTOR) {
+                doctorRoleId = userRoleId;
+                patientRoleId = id;
+            }
+            else if(category === USER_CATEGORY.HSP) {
+              doctorRoleId = userRoleId;
+              patientRoleId = id;
+            } else if (category === USER_CATEGORY.PATIENT) {
+                doctorRoleId = id;
+                patientRoleId = userRoleId;
+            }
+            const channelName = agoraService.getRoomId(doctorRoleId, patientRoleId);
+
+            const token = await agoraService.videoTokenGenerator(userRoleId, channelName);
 
             return this.raiseSuccess(res, 200, { token: token}, "Created new video token with userId");
         } catch (error) {
@@ -44,6 +51,7 @@ class AgoraController extends Controller {
     missedCall = async(req, res) => {
         try {
             const {body: { roomId } = {}, userDetails: {userId,
+                 userRoleId,
                  userData: { category } = {},
                  userCategoryData: { basic_info: { full_name } = {} } = {}} = {}} = req;
 
@@ -64,9 +72,9 @@ class AgoraController extends Controller {
                 event_type: AGORA_CALL_NOTIFICATION_TYPES.MISSED_CALL,
                 details: {},
                 roomId,
-                // participants: [userId, participantTwoId],
                 actor: {
                     id: userId,
+                    user_role_id: userRoleId,
                     details: { name: full_name, category }
                 }
             };
@@ -90,6 +98,7 @@ class AgoraController extends Controller {
             body: { roomId } = {},
             userDetails: {
               userId,
+              userRoleId,
               userData: { category } = {},
               userCategoryData: { basic_info: { full_name } = {} } = {}
             } = {}
@@ -100,6 +109,7 @@ class AgoraController extends Controller {
             event_type: AGORA_CALL_NOTIFICATION_TYPES.START_CALL,
             actor: {
               id: userId,
+              user_role_id: userRoleId,
               details: { name: full_name, category }
             }
           });

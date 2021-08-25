@@ -41,6 +41,13 @@ export const addProviderDoctor = async (
       return raiseClientError(res, 401, {}, "UNAUTHORIZED");
     }
 
+    const providerData = await providerService.getProviderByData({
+      user_id: userId
+    });
+    
+    const provider = await ProviderWrapper(providerData);
+    const providerId = provider.getProviderId();
+
     let prevDoctor = null,
       prevDoctorData = null;
 
@@ -103,7 +110,7 @@ export const addProviderDoctor = async (
     let doctorUserId = null;
 
     const doctorUserDetails = await userService.getUserByEmail({ email });
-    if (doctorUserDetails) {
+    if (doctorUserDetails && doctor_id) {
       const doctorUserWrapper = await UserWrapper(doctorUserDetails);
       doctorUserId = doctorUserWrapper.getId();
 
@@ -112,7 +119,7 @@ export const addProviderDoctor = async (
       }
     } else {
       // const password = generatePassword();
-      doctorUserId = await createNewUser(email);
+      doctorUserId = await createNewUser(email, null, providerId, category);
     }
 
     let doctor = {};
@@ -170,11 +177,6 @@ export const addProviderDoctor = async (
     const doctorData = await DoctorWrapper(updatedDoctor);
 
     if (!doctorExist) {
-      const providerData = await providerService.getProviderByData({
-        user_id: userId
-      });
-      const provider = await ProviderWrapper(providerData);
-      const providerId = provider.getProviderId();
       const doctorId = doctorData.getDoctorId();
 
       if (providerId) {

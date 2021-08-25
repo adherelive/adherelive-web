@@ -35,4 +35,8 @@ export default class CarePlan {
     getExpiredOn = () => {
         return this._data.get("expired_on");
     };
+
+    getUserRoleId = () => {
+        return this._data.get("user_role_id");
+    };
 }

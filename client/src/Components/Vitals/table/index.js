@@ -1,7 +1,6 @@
 import React, {Component} from "react";
 import {injectIntl} from "react-intl";
 import generateRow from "./dataRow";
-import {PERMISSIONS} from "../../../constant";
 import getColumn from "./header";
 import Table from "antd/es/table";
 import messages from "./messages";
@@ -56,13 +55,23 @@ class VitalTable extends Component {
     getDataSource = () => {
         const {
             vitals,
+            care_plans,
             vital_templates,
             intl: {formatMessage} = {},
-            isOtherCarePlan
+            isOtherCarePlan,
+            auth_role =null 
         } = this.props;
-        const {vital_ids} = this.state;
-        const {openResponseDrawer, openEditDrawer} = this;
+        // const {vital_ids} = this.state;
 
+        console.log("23943278648726348723",{props:this.props});
+        const {vital_ids = [] } =care_plans || {};
+        const {openResponseDrawer, openEditDrawer} = this;
+        const {basic_info : { user_role_id = null } = {} } = care_plans || {};
+
+        let canViewDetails=true;
+        if(!isOtherCarePlan && user_role_id.toString() === auth_role.toString()) {
+            canViewDetails=false;
+        }  
 
         return vital_ids.map((id) => {
             return generateRow({
@@ -72,23 +81,35 @@ class VitalTable extends Component {
                 openResponseDrawer,
                 openEditDrawer,
                 formatMessage,
-                isOtherCarePlan
+                isOtherCarePlan,
+                canViewDetails
             });
         });
     };
 
     openResponseDrawer = (id) => (e) => {
         e.preventDefault();
-        const {vitalResponseDrawer} = this.props;
-        vitalResponseDrawer({id, loading: true});
+        const {vitalResponseDrawer, isOtherCarePlan,  auth_role =null ,care_plans = {} } = this.props;
+        const {basic_info : { user_role_id = null } = {} } = care_plans || {};
+        let canViewDetails=true;
+        if(!isOtherCarePlan && user_role_id.toString() === auth_role.toString()) {
+            canViewDetails=false;
+        }         
+        vitalResponseDrawer({id, loading: true,canViewDetails});
+
+        
     };
 
     openEditDrawer = (id) => (e) => {
         e.preventDefault();
-        const {editVitalDrawer, isOtherCarePlan} = this.props;
-        if(!isOtherCarePlan) {
-            editVitalDrawer({id, loading: true});
-        }
+        const {editVitalDrawer, isOtherCarePlan,  auth_role =null ,care_plans = {} } = this.props;
+        const {basic_info : { user_role_id = null } = {} } = care_plans || {};
+        let canViewDetails=true;
+        if(!isOtherCarePlan && user_role_id.toString() === auth_role.toString()) {
+            canViewDetails=false;
+        }         
+        editVitalDrawer({id, loading: true,canViewDetails});
+
     };
 
     formatMessage = data => this.props.intl.formatMessage(data);

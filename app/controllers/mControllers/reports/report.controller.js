@@ -129,28 +129,32 @@ class ReportController extends Controller {
         patient_id
       }) || {};
 
-      const report = await ReportWrapper({data: allReports[0]});
-      let doctors = {};
-
-      if(category === USER_CATEGORY.DOCTOR && userCategoryId === report.getUploaderId()) {
-        const doctor = await DoctorWrapper(null, report.getUploaderId());
-        doctors[doctor.getDoctorId()] = await doctor.getAllInfo();
+      if(allReports.length > 0) {
+        const report = await ReportWrapper({data: allReports[0]});
+        let doctors = {};
+  
+        if((category === USER_CATEGORY.DOCTOR || category === USER_CATEGORY.HSP) && userCategoryId === report.getUploaderId()) {
+          const doctor = await DoctorWrapper(null, report.getUploaderId());
+          doctors[doctor.getDoctorId()] = await doctor.getAllInfo();
+        }
+  
+  
+  
+        return raiseSuccess(
+            res,
+            200,
+            {
+              report_count: count,
+              ...await report.getReferenceInfo(),
+              doctors: {
+                ...doctors
+              }
+            },
+            "Latest report fetched successfully"
+        );
+      } else {
+        return raiseSuccess(res, 201, {}, "No reports added yet");
       }
-
-
-
-      return raiseSuccess(
-          res,
-          200,
-          {
-            report_count: count,
-            ...await report.getReferenceInfo(),
-            doctors: {
-              ...doctors
-            }
-          },
-          "Latest report fetched successfully"
-      );
 
     } catch(error) {
       Log.debug("latestReport 500 error", error);

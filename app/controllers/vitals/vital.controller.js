@@ -40,7 +40,7 @@ class VitalController extends Controller {
         Log.debug("req.body --->", req.body);
         try {
             const {
-                userDetails: {userId, userData: {category} = {}, userCategoryData = {}} = {},
+                userDetails: {userId, userRoleId, userData: {category} = {}, userCategoryData = {}} = {},
                 body : {
                     care_plan_id,
                 vital_template_id,
@@ -75,6 +75,8 @@ class VitalController extends Controller {
                 const doctor = await DoctorWrapper(null, carePlan.getDoctorId());
                 const patient = await PatientWrapper(null, carePlan.getPatientId());
 
+                const {user_role_id: patientUserRoleId} = await patient.getAllInfo();
+
                 const eventScheduleData = {
                     type: EVENT_TYPE.VITALS,
                     patient_id: patient.getPatientId(),
@@ -85,11 +87,12 @@ class VitalController extends Controller {
                     start_date,
                     end_date,
                     details: vitals.getBasicInfo(),
-                    participants: [doctor.getUserId(), patient.getUserId()],
+                    participants: [userRoleId, patientUserRoleId],
                     actor: {
                         id: userId,
+                        user_role_id: userRoleId,
                         category,
-                        userCategoryData
+                        userCategoryData,
                     },
                     vital_templates: vitalTemplates.getBasicInfo()
                 };
@@ -134,7 +137,7 @@ class VitalController extends Controller {
         Log.debug("req.params --->", req.params);
         try {
             const {
-                userDetails: {userId, userData: {category} = {}, userCategoryData = {}} = {},
+                userDetails: {userId, userRoleId, userData: {category} = {}, userCategoryData = {}} = {},
                 body,
                 body: {start_date, end_date} = {},
                 params: {id} = {}
@@ -163,6 +166,8 @@ class VitalController extends Controller {
                 const doctor = await DoctorWrapper(null, carePlan.getDoctorId());
                 const patient = await PatientWrapper(null, carePlan.getPatientId());
 
+                const {user_role_id: patientUserRoleId} = await patient.getAllInfo();
+
                 const eventScheduleData = {
                     type: EVENT_TYPE.VITALS,
                     patient_id: patient.getUserId(),
@@ -173,11 +178,12 @@ class VitalController extends Controller {
                     start_date,
                     end_date,
                     details: vitals.getBasicInfo(),
-                    participants: [doctor.getUserId(), patient.getUserId()],
+                    participants: [userRoleId, patientUserRoleId],
                     actor: {
                         id: userId,
+                        user_role_id: userRoleId,
                         category,
-                        userCategoryData
+                        userCategoryData,
                     },
                     vital_templates: vitalTemplates.getBasicInfo()
                 };
@@ -354,7 +360,7 @@ class VitalController extends Controller {
     
           const { body, userDetails } = req;
     
-          const { userId, userData: { category  } = {} ,userCategoryData : { basic_info: { id :doctorId } ={} } = {} } = userDetails || {};
+          const { userRoleId = null , userId, userData: { category  } = {} ,userCategoryData : { basic_info: { id :doctorId } ={} } = {} } = userDetails || {};
     
     
           let docAllCareplanData = [];
@@ -366,7 +372,7 @@ class VitalController extends Controller {
     
           
           docAllCareplanData = await carePlanService.getCarePlanByData({
-            doctor_id: doctorId
+            user_role_id : userRoleId
           });
     
           // Logger.debug("786756465789",docAllCareplanData);

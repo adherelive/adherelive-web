@@ -217,8 +217,10 @@ class patientTable extends Component{
           tabChanged,
           search_treatments_patients,
           search_diagnosis_patients,
-          tabState
+          tabState,
+          auth_role
         } = this.props;
+
 
 
         const {
@@ -238,8 +240,14 @@ class patientTable extends Component{
           }
         });
 
-        const {watchlist_patient_ids = []} = doctors[doctor_id] || {};
+        let watchlist_patient_ids = [];
+
+        const {watchlist_ids = []} = doctors[doctor_id] || {};
         
+        if(auth_role){
+            watchlist_patient_ids = watchlist_ids[auth_role.toString()] || [];
+        }
+
 
 
         const {currentTab=CURRENT_TAB.ALL_PATIENTS 
@@ -277,7 +285,8 @@ class patientTable extends Component{
             tabChanged,
             handleGetPatients,
             currentTab,
-            offset
+            offset,
+            auth_role
           };
 
         

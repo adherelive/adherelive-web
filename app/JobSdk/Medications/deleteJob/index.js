@@ -1,8 +1,11 @@
 import MedicationJob from "../";
 import moment from "moment";
+
+import ProviderService from "../../../services/provider/provider.service";
+import UserRoleService from "../../../services/userRoles/userRoles.service";
 import UserDeviceService from "../../../services/userDevices/userDevice.service";
 import UserDeviceWrapper from "../../../ApiWrapper/mobile/userDevice";
-import { EVENT_TYPE } from "../../../../constant";
+import { EVENT_TYPE, DEFAULT_PROVIDER} from "../../../../constant";
 
 class DeleteJob extends MedicationJob {
     constructor(data) {
@@ -15,6 +18,7 @@ class DeleteJob extends MedicationJob {
             participants = [],
             actor: {
                 id: actorId,
+                user_role_id,
                 details: { name, category: actorCategory } = {}
             } = {},
         } = getMedicationData() || {};
@@ -22,12 +26,32 @@ class DeleteJob extends MedicationJob {
         const templateData = [];
         const playerIds = [];
         const userIds = [];
-
-        participants.forEach(participant => {
-            if (participant !== actorId) {
-                userIds.push(participant);
+    
+        const {rows: userRoles = []} = await UserRoleService.findAndCountAll({
+          where: {
+            id: participants
+          }
+        }) || {};
+    
+        let providerId = null;
+        for(const userRole of userRoles) {
+            const {id, user_identity, linked_id} = userRole || {};
+            
+            if(id === user_role_id) {
+                if(linked_id) {
+                  providerId = linked_id;
+                }
+            }else {
+                userIds.push(user_identity);
             }
-        });
+        }
+
+        let providerName = DEFAULT_PROVIDER;
+        if(providerId) {
+            const provider = await ProviderService.getProviderByData({id: providerId});
+            const {name} = provider || {};
+            providerName = name;
+        }
 
         const userDevices = await UserDeviceService.getAllDeviceByData({
             user_id: userIds
@@ -43,7 +67,7 @@ class DeleteJob extends MedicationJob {
         templateData.push({
             small_icon: process.config.app.icon_android,
             app_id: process.config.one_signal.app_id, // TODO: add the same in pushNotification handler in notificationSdk
-            headings: { en: `Medication Delete` },
+            headings: { en: `Medication Delete (${providerName})` },
             contents: {
                 en: `${name}(${actorCategory}) has deleted a medication. Tap here to know more!`
             },
@@ -62,6 +86,7 @@ class DeleteJob extends MedicationJob {
             participants = [],
             actor: {
                 id: actorId,
+                user_role_id,
             } = {},
             event_id
         } = getMedicationData() || {};
@@ -71,9 +96,10 @@ class DeleteJob extends MedicationJob {
         const now = moment();
         const currentTimeStamp = now.unix();
         for (const participant of participants) {
-            if (participant !== actorId) {
+            if (participant !== user_role_id) {
             templateData.push({
                 actor: actorId,
+                actorRoleId: user_role_id,
                 object: `${participant}`,
                 foreign_id: `${event_id}`,
                 verb: `medication_delete:${currentTimeStamp}`,

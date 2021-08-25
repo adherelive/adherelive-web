@@ -271,7 +271,7 @@ class patientTable extends Component{
                     onChange: (page, pageSize) => {
                         onPageChange(page, pageSize);
                     },
-                    [tabChanged && 'current'] : tabChanged && 1
+                    ...tabChanged && { 'current': 1 }
                     
                 }}
                 locale={patientLocale}

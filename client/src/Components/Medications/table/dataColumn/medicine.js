@@ -3,7 +3,6 @@ import TabletIcon from "../../../../Assets/images/tabletIcon3x.png";
 import InjectionIcon from "../../../../Assets/images/injectionIcon3x.png";
 import SyrupIcon from "../../../../Assets/images/pharmacy.png";
 import {
-    PERMISSIONS,
     TABLET,
     SYRUP,
     MEDICINE_FORM_TYPE

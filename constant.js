@@ -1,15 +1,15 @@
 export const ACTION_TYPE = {
   FOLLOWUP: "followup",
   MEDICATION: "medication",
-  EXERCISE: "exercise",
+  WORKOUT: "workout",
   DIET: "diet",
-  MATERIAL_DELIVERY: "material_delivery"
+  MATERIAL_DELIVERY: "material_delivery",
 };
 
 export const ACTIVITY_TYPE = {
   FOLLOWUP: "followup",
   MEDICATION: "medication",
-  SYMPTOM: "symptom"
+  SYMPTOM: "symptom",
 };
 
 export const EVENT_TYPE = {
@@ -22,9 +22,10 @@ export const EVENT_TYPE = {
   MEDICATION_REMINDER: "medication-reminder",
   CARE_PLAN_ACTIVATION: "careplan-activation",
   APPOINTMENT_TIME_ASSIGNMENT: "appointment-time-assignment",
+  DIET: "diet",
+  WORKOUT: "workout",
   ALL: "all",
 };
-
 
 export const VITALFIELD = {
   TEMPERATURE_UNIT: "temperatureUnit",
@@ -33,13 +34,13 @@ export const VITALFIELD = {
   PULSE: "pulse",
   BLOOD_PRESSURE: "bloodPressure",
   TEMPERATURE_UNIT_C: "c",
-  TEMPERATURE_UNIT_F: "f"
+  TEMPERATURE_UNIT_F: "f",
 };
 
 export const ACTIVITY_MODE = {
   CALL: "call",
   VISIT: "visit",
-  CHAT: "chat"
+  CHAT: "chat",
 };
 
 export const REPEAT_TYPE = {
@@ -47,7 +48,7 @@ export const REPEAT_TYPE = {
   DAILY: "daily",
   WEEKLY: "weekly",
   MONTHLY: "monthly",
-  YEARLY: "yearly"
+  YEARLY: "yearly",
 };
 
 export const SUN = "Sun";
@@ -74,15 +75,25 @@ export const DAYS_MOBILE = [
   WEDNESDAY,
   THURSDAY,
   FRIDAY,
-  SATURDAY
+  SATURDAY,
 ];
+
+export const DAYS_INTEGER = {
+  [SUNDAY]: 0,
+  [MONDAY]: 1,
+  [TUESDAY]: 2,
+  [WEDNESDAY]: 3,
+  [THURSDAY]: 4,
+  [FRIDAY]: 5,
+  [SATURDAY]: 6,
+};
 
 export const SEVERITY = {
   MILD: "MILD",
   MODERATE: "MODERATE",
   SEVERE: "SEVERE",
   VERY_SEVERE: "VERY_SEVERE",
-  FATAL: "FATAL"
+  FATAL: "FATAL",
 };
 
 export const USER_CATEGORY = {
@@ -90,14 +101,15 @@ export const USER_CATEGORY = {
   PATIENT: "patient",
   PROVIDER: "provider",
   ADMIN: "admin",
-  CARE_TAKER: "care_taker"
+  CARE_TAKER: "care_taker",
+  HSP: "hsp",
 };
 
 export const REQUEST_TYPE = {
   POST: "post",
   GET: "get",
   PUT: "put",
-  DELETE: "delete"
+  DELETE: "delete",
 };
 
 export const EVENT_IS = {
@@ -113,14 +125,14 @@ export const EVENT_IS = {
   UPDATED: "UPDATED",
   SHARE: "SHARE",
   DELETE: "DELETE",
-  APPROVED: "APPROVED"
+  APPROVED: "APPROVED",
 };
 
 export const ACTIVITY_LOG_STATUS = {
   PENDING: "pending",
   CANCELLED: "cancelled",
   COMPLETED: "completed",
-  EXPIRED: "expired"
+  EXPIRED: "expired",
 };
 
 export const DEFAULT = "default";
@@ -130,16 +142,16 @@ export const GRANTS = {
     CREATE: "create_programs",
     UPDATE: "update_programs",
     VIEW: "view_programs",
-    INVITE: "invite_programs"
+    INVITE: "invite_programs",
   },
   EVENT: {
     CREATE: "create_events",
     UPDATE: "update_events",
     VIEW: "view_events",
-    CANCEL: "cancel_events"
+    CANCEL: "cancel_events",
   },
   PASSWORD: {
-    UPDATE: "update_passwords"
+    UPDATE: "update_passwords",
     //VIEW: "view_password",
   },
   USERS: {
@@ -149,44 +161,44 @@ export const GRANTS = {
     UPDATE_DOCTOR: "update_doctors",
     UPDATE_CARE_COACH: "update_careCoaches",
     VERIFY_PATIENT: "verify_patients",
-    DISCHARGE_PATIENT: "discharge_patients"
+    DISCHARGE_PATIENT: "discharge_patients",
   },
   MEDICATION: {
     CREATE: "create_medications",
     UPDATE: "update_medications",
-    VIEW: "view_medications"
+    VIEW: "view_medications",
   },
   ADVERSE_EVENT: {
     CREATE: "create_adverseEvents",
-    VIEW: "view_adverseEvents"
+    VIEW: "view_adverseEvents",
   },
   PRODUCT: {
     CREATE: "create_products",
     UPDATE: "update_products",
-    VIEW: "view_products"
+    VIEW: "view_products",
   },
   INSURANCE_PROVIDER: {
     VIEW: "view_insuranceProviders",
-    UPDATE: "update_insuranceProviders"
+    UPDATE: "update_insuranceProviders",
   },
   HOSPITAL: {
     VIEW: "view_hospitals",
-    UPDATE: "update_hospitals"
+    UPDATE: "update_hospitals",
   },
   TWILIO: {
     CREATE: "create_twilios", //Create API gives us token no need for View Permission
-    UPDATE: "update_twilios"
+    UPDATE: "update_twilios",
   },
   SURVEY: {
     CREATE: "create_surveys",
     UPDATE: "update_surveys",
     VIEW: "view_surveys",
-    END: "end_surveys"
+    END: "end_surveys",
   },
   OTP: {
     SEND: "send_otps",
-    VERIFY: "verify_otps"
-  }
+    VERIFY: "verify_otps",
+  },
 };
 
 export const NOTIFICATION_VERB = {
@@ -248,7 +260,15 @@ export const NOTIFICATION_VERB = {
   VITAL_RESPONSE: "vital_response",
   CARE_PLAN_CREATE: "CAREPLAN_CREATE",
   DEACTIVATE_DOCTOR: "DEACTIVATE_DOCTOR",
-  ACTIVATE_DOCTOR:"ACTIVATE_DOCTOR"
+  ACTIVATE_DOCTOR: "ACTIVATE_DOCTOR",
+  DIET_CREATION: "diet_create",
+  DIET_START: "diet_start",
+  DIET_PRIOR: "diet_prior",
+  DIET_RESPONSE: "diet_response",
+  WORKOUT_CREATION: "workout_create",
+  WORKOUT_START: "workout_start",
+  WORKOUT_PRIOR: "workout_prior",
+  WORKOUT_RESPONSE: "workout_response",
 };
 
 export const NOTIFICATION_STAGES = {
@@ -261,7 +281,7 @@ export const NOTIFICATION_STAGES = {
   SHARE: "Share",
   EDIT_NOTES: "Edit_Notes",
   APPROVED: "Approve",
-  RESPONSE_ADDED: "Response_added"
+  RESPONSE_ADDED: "Response_added",
 };
 
 export const NOTIFICATION_URLS = {
@@ -275,20 +295,20 @@ export const NOTIFICATION_URLS = {
   SURVEY: "/survey",
   ARTICLE: "/article",
   SIGN_UP: "sign-up",
-  FORGOT_PASSWORD: "forgot-password"
+  FORGOT_PASSWORD: "forgot-password",
 };
 
 export const OPTION_TYPE = {
   TEXT: "TEXT",
   STAR: "STAR",
   RADIO: "RADIO",
-  CHECKBOX: "CHECKBOX"
+  CHECKBOX: "CHECKBOX",
 };
 
 export const FIELD_TYPE = {
   INPUT: "input",
   RADIO: "radio",
-  DATE: "date"
+  DATE: "date",
 };
 
 export const DB_TABLES = {
@@ -350,19 +370,23 @@ export const DB_TABLES = {
   USER_DEVICES: "user_devices",
   SYMPTOMS: "symptoms",
   VITAL_TEMPLATES: "vital_templates",
-  VITALS: "vitals"
+  VITALS: "vitals",
+  FOOD_ITEMS: "food_items",
+  PORTIONS: "portions",
+  FOOD_GROUPS: "food_groups",
+  DIET_FOOD_GROUP_MAPPINGS: "diet_food_group_mappings",
 };
 
 export const ARTICLE_TYPE = {
   VIDEO: "video",
   IMAGE: "image",
-  PDF: "pdf"
+  PDF: "pdf",
 };
 
 export const CURRENCY = {
   INR: "INR",
   AUD: "AUD",
-  USD: "USD"
+  USD: "USD",
 };
 
 export const DOCUMENT_PARENT_TYPE = {
@@ -373,7 +397,9 @@ export const DOCUMENT_PARENT_TYPE = {
   SYMPTOM_VIDEO: "symptom_video",
   APPOINTMENT_DOC: "appointment_doc",
   REPORT: "report",
-  PRESCRIPTION_PDF: "prescription_pdf"
+  PRESCRIPTION_PDF: "prescription_pdf",
+  DIET_RESPONSE: "diet_response",
+  EXERCISE_CONTENT: "exercise_content",
 };
 
 export const ONBOARDING_STATUS = {
@@ -382,20 +408,20 @@ export const ONBOARDING_STATUS = {
   CLINIC_REGISTERED: "CLINIC_registered",
   PATIENT: {
     PASSWORD_UPDATE: "password_update",
-    PROFILE_REGISTERED: "profile_registration"
-  }
+    PROFILE_REGISTERED: "profile_registration",
+  },
 };
 
 export const SIGN_IN_CATEGORY = {
   BASIC: "basic",
   GOOGLE: "google",
-  FACEBOOK: "facebook"
+  FACEBOOK: "facebook",
 };
 
 export const GENDER = {
   MALE: "m",
   FEMALE: "f",
-  OTHER: "o"
+  OTHER: "o",
 };
 
 export const EVENT_STATUS = {
@@ -405,7 +431,7 @@ export const EVENT_STATUS = {
   EXPIRED: "expired",
   CANCELLED: "cancelled",
   STARTED: "started",
-  PRIOR: "prior"
+  PRIOR: "prior",
 };
 
 export const EMAIL_TEMPLATE_NAME = {
@@ -414,14 +440,14 @@ export const EMAIL_TEMPLATE_NAME = {
   INVITATION: "invitation",
   VERIFIED_DOCTOR: "verifiedDoctor",
   OTP_VERIFICATION: "otpVerification",
-  SERVER_CRASH:"serverCrash",
+  SERVER_CRASH: "serverCrash",
 };
 
 export const OBJECT_NAME = {
   USER: "user",
   APPOINTMENT: "appointments",
   MEDICATION: "medications",
-  MEDICINE: "medicines"
+  MEDICINE: "medicines",
 };
 
 export const EVERYDAY = "1";
@@ -431,16 +457,16 @@ export const ALTERNATE_START_TOMORROW = "3";
 export const CUSTOM_REPEAT_OPTIONS = {
   [EVERYDAY]: {
     key: "everyday",
-    text: "Everyday"
+    text: "Everyday",
   },
   [ALTERNATE_START_TODAY]: {
     key: "alternate_today",
-    text: "Alternate start today"
+    text: "Alternate start today",
   },
   [ALTERNATE_START_TOMORROW]: {
     key: "alternate_tomorrow",
-    text: "Alternate start tomorrow"
-  }
+    text: "Alternate start tomorrow",
+  },
 };
 
 export const DOSE_AMOUNT = ["2", "8", "100", "200", "500"];
@@ -450,11 +476,11 @@ export const ML = "2";
 
 export const DOSE_UNIT = {
   [MG]: {
-    text: "mg"
+    text: "mg",
   },
   [ML]: {
-    text: "ml"
-  }
+    text: "ml",
+  },
 };
 
 export const TEXT_KEY = "text";
@@ -473,75 +499,77 @@ export const WITH_DINNER = "10";
 export const AFTER_DINNER = "11";
 export const BEFORE_SLEEP = "12";
 
+export const DIET_TIMINGS = {};
+
 export const MEDICATION_TIMING = {
   [AFTER_WAKEUP]: {
     [TEXT_KEY]: "After Wake Up",
-    [TIME_KEY]: "2020-09-24T02:30:00.000Z"
+    [TIME_KEY]: "2020-09-24T02:30:00.000Z",
   },
   [BEFORE_BREAKFAST]: {
     [TEXT_KEY]: "Before Breakfast",
-    [TIME_KEY]:"2020-09-24T03:00:00.000Z"
+    [TIME_KEY]: "2020-09-24T03:00:00.000Z",
   },
   [AFTER_BREAKFAST]: {
     [TEXT_KEY]: "After Breakfast",
-    [TIME_KEY]: "2020-09-24T04:00:00.000Z"
+    [TIME_KEY]: "2020-09-24T04:00:00.000Z",
   },
   [BEFORE_LUNCH]: {
     [TEXT_KEY]: "Before Lunch",
-    [TIME_KEY]: "2020-09-24T07:00:00.000Z"
+    [TIME_KEY]: "2020-09-24T07:00:00.000Z",
   },
   [WITH_LUNCH]: {
     [TEXT_KEY]: "With Lunch",
-    [TIME_KEY]: "2020-09-24T07:30:00.000Z"
+    [TIME_KEY]: "2020-09-24T07:30:00.000Z",
   },
   [AFTER_LUNCH]: {
     [TEXT_KEY]: "After Lunch",
-    [TIME_KEY]: "2020-09-24T08:00:00.000Z"
+    [TIME_KEY]: "2020-09-24T08:00:00.000Z",
   },
   [BEFORE_EVENING_SNACK]: {
     [TEXT_KEY]: "Before Evening Snacks",
-    [TIME_KEY]: "2020-09-24T10:00:00.000Z"
+    [TIME_KEY]: "2020-09-24T10:00:00.000Z",
   },
   [AFTER_EVENING_SNACK]: {
     [TEXT_KEY]: "After Evening Snacks",
-    [TIME_KEY]: "2020-09-24T11:00:00.000Z"
+    [TIME_KEY]: "2020-09-24T11:00:00.000Z",
   },
   [BEFORE_DINNER]: {
     [TEXT_KEY]: "Before Dinner",
-    [TIME_KEY]: "2020-09-24T14:00:00.000Z"
+    [TIME_KEY]: "2020-09-24T14:00:00.000Z",
   },
   [WITH_DINNER]: {
     [TEXT_KEY]: "With Dinner",
-    [TIME_KEY]: "2020-09-24T14:30:00.000Z"
+    [TIME_KEY]: "2020-09-24T14:30:00.000Z",
   },
   [AFTER_DINNER]: {
     [TEXT_KEY]: "After Dinner",
-    [TIME_KEY]: "2020-09-24T15:00:00.000Z"
+    [TIME_KEY]: "2020-09-24T15:00:00.000Z",
   },
   [BEFORE_SLEEP]: {
     [TEXT_KEY]: "Before Sleeping",
-    [TIME_KEY]: "2020-09-24T17:30:00.000Z"
-  }
+    [TIME_KEY]: "2020-09-24T17:30:00.000Z",
+  },
 };
 
 export const MEDICINE_TYPE = {
   TABLET: "tablet",
   INJECTION: "injection",
-  SYRUP: "syrup"
+  SYRUP: "syrup",
 };
 
 export const VERIFICATION_TYPE = {
   FORGOT_PASSWORD: "forgot_password",
   SIGN_UP: "sign_up",
-  PATIENT_SIGN_UP: "patient_sign_up"
+  PATIENT_SIGN_UP: "patient_sign_up",
 };
 
 // export const NO_ADHERENCE = "1";
 export const NO_MEDICATION = "1";
 export const NO_APPOINTMENT = "2";
 export const NO_ACTION = "3";
-// export const TEST_ONE = "5";
-// export const TEST_TWO = "6";
+export const NO_DIET = "4";
+export const NO_WORKOUT = "5";
 
 export const CHART_LIMIT = 4;
 
@@ -555,21 +583,23 @@ export const CHART_DETAILS = {
   [NO_MEDICATION]: {
     type: "no_medication",
     name: "Missed Medication",
-    critical: 25,
-    total: 80
   },
   [NO_APPOINTMENT]: {
     type: "no_appointment",
     name: "Missed Appointment",
-    critical: 5,
-    total: 40
   },
   [NO_ACTION]: {
     type: "no_action",
     name: "Missed Action",
-    critical: 30,
-    total: 120
-  }
+  },
+  [NO_DIET]: {
+    type: "no_diet",
+    name: "Missed Diet",
+  },
+  [NO_WORKOUT]: {
+    type: "no_workout",
+    name: "Missed Workout",
+  },
   // [TEST_ONE]: {
   //   type: "test_one",
   //   name: "Test One",
@@ -593,7 +623,7 @@ export const PERMISSIONS = {
   ADD_MEDICATION: "ADD_MEDICATION",
   EDIT_MEDICATION: "EDIT_MEDICATION",
 
-  ADD_CARE_PLAN_TEMPLATE: "ADD_CARE_PLAN_TEMPLATE"
+  ADD_CARE_PLAN_TEMPLATE: "ADD_CARE_PLAN_TEMPLATE",
 };
 
 export const USER_REFERENCE_ID_SIZE = 4;
@@ -605,7 +635,7 @@ const YEAR = "3";
 export const AGE_TYPE = {
   [DAY]: "d",
   [MONTH]: "m",
-  [YEAR]: "y"
+  [YEAR]: "y",
 };
 
 /*------------------------------- APPOINTMENT DETAILS ---------------------------------*/
@@ -616,26 +646,26 @@ export const RADIOLOGY = "3";
 
 export const APPOINTMENT_TYPE = {
   [MEDICAL_TEST]: {
-    title: "Medical Test"
+    title: "Medical Test",
   },
   [CONSULTATION]: {
-    title: "Consultation"
+    title: "Consultation",
   },
   [RADIOLOGY]: {
-    title: "Radiology"
-  }
+    title: "Radiology",
+  },
 };
 
 export const APPOINTMENT_TYPE_DESCRIPTION = {
   [MEDICAL_TEST]: {
-    options: [{}]
+    options: [{}],
   },
   [CONSULTATION]: {
-    title: "Consultation"
+    title: "Consultation",
   },
   [RADIOLOGY]: {
-    title: "Radiology"
-  }
+    title: "Radiology",
+  },
 };
 
 export const FEATURE_TYPE = {
@@ -645,13 +675,13 @@ export const FEATURE_TYPE = {
   VITAL: "vital",
   TERMS_OF_SERVICE: "terms_of_service",
   PRIVACY_POLICY: "privacy_policy",
-  TERMS_OF_PAYMENT:"terms_of_payment"
+  TERMS_OF_PAYMENT: "terms_of_payment",
 };
 
 export const TERMS_AND_CONDITIONS_TYPES = {
-  TERMS_OF_PAYMENT:"terms_of_payment",
-  DEFAULT_TERMS_OF_PAYMENT:"default_terms_of_payment"
-}
+  TERMS_OF_PAYMENT: "terms_of_payment",
+  DEFAULT_TERMS_OF_PAYMENT: "default_terms_of_payment",
+};
 
 export const BLANK_STATE = "";
 
@@ -666,82 +696,79 @@ const INJECTION = "3";
 export const MEDICINE_FORM_TYPE = {
   [TABLET]: { name: "tablet" },
   [SYRUP]: { name: "syrup" },
-  [INJECTION]: { name: "injection" }
+  [INJECTION]: { name: "injection" },
 };
 
 // MEDICINE FORMULATION ----------------------------------------------
 
 export const CATEGORY_ONE = {
   index: "1",
-  name:"",
+  name: "",
   items: [
-    {name: "TABLET", defaultUnit: MG, id: 1},
-    {name: "SYRUP", defaultUnit: ML, id: 2},
-    {name: "CAPSULE", defaultUnit: MG, id: 3},
-    {name: "SUSPENSION", defaultUnit: MG, id: 4},
-    {name: "GELS", defaultUnit: ML, id: 5},
-    {name:"LOTIONS", defaultUnit: ML, id: 6},
-    {name:"LINIMENTS", defaultUnit: ML, id: 7},
-    {name: "LOZENGES", defaultUnit: MG, id: 8}
-  ]
+    { name: "TABLET", defaultUnit: MG, id: 1 },
+    { name: "SYRUP", defaultUnit: ML, id: 2 },
+    { name: "CAPSULE", defaultUnit: MG, id: 3 },
+    { name: "SUSPENSION", defaultUnit: MG, id: 4 },
+    { name: "GELS", defaultUnit: ML, id: 5 },
+    { name: "LOTIONS", defaultUnit: ML, id: 6 },
+    { name: "LINIMENTS", defaultUnit: ML, id: 7 },
+    { name: "LOZENGES", defaultUnit: MG, id: 8 },
+  ],
 };
 
 export const CATEGORY_TWO = {
   index: "2",
-  name:"",
+  name: "",
   items: [
-    {name:"SPRAY", defaultUnit: ML, id: 9},
-    {name:"NEBULISER", defaultUnit: MG, id: 10},
-    {name:"CREAM", defaultUnit: ML, id: 11},
-    {name:"OINTMENT", defaultUnit: ML, id: 12},
+    { name: "SPRAY", defaultUnit: ML, id: 9 },
+    { name: "NEBULISER", defaultUnit: MG, id: 10 },
+    { name: "CREAM", defaultUnit: ML, id: 11 },
+    { name: "OINTMENT", defaultUnit: ML, id: 12 },
   ],
 };
 
-
 export const CATEGORY_THREE = {
   index: "3",
-  name:"",
+  name: "",
   items: [
-    {name:"RECTAL SUPPOSITORY", defaultUnit: MG, id: 13},
-    {name:"RECTAL ENEMA", defaultUnit: MG, id: 14},
-    {name:"PESSARIES OF VAGINAL", defaultUnit: MG, id: 15},
+    { name: "RECTAL SUPPOSITORY", defaultUnit: MG, id: 13 },
+    { name: "RECTAL ENEMA", defaultUnit: MG, id: 14 },
+    { name: "PESSARIES OF VAGINAL", defaultUnit: MG, id: 15 },
   ],
 };
 
 export const CATEGORY_FOUR = {
   index: "4",
-  name:"",
-  items: [
-    {name:"INHALER", defaultUnit: ML, id: 16},
-  ],
+  name: "",
+  items: [{ name: "INHALER", defaultUnit: ML, id: 16 }],
 };
 
 export const CATEGORY_FIVE = {
   index: "5",
-  name:"INJECTION",
+  name: "INJECTION",
   items: [
-    {name:"I/D INTRDERMAL", defaultUnit: ML, id: 17},
-    {name:"S/C SUBCUTANEOUS", defaultUnit: ML, id: 18},
-    {name:"I/M INTRAMUSCULAR", defaultUnit: ML, id: 19},
-    {name:"I/V INTRAVENOUS", defaultUnit: ML, id: 20},
+    { name: "I/D INTRDERMAL", defaultUnit: ML, id: 17 },
+    { name: "S/C SUBCUTANEOUS", defaultUnit: ML, id: 18 },
+    { name: "I/M INTRAMUSCULAR", defaultUnit: ML, id: 19 },
+    { name: "I/V INTRAVENOUS", defaultUnit: ML, id: 20 },
   ],
 };
 
 export const MEDICINE_FORMULATION = {
   [CATEGORY_ONE.index]: {
-    ...CATEGORY_ONE
+    ...CATEGORY_ONE,
   },
   [CATEGORY_TWO.index]: {
-    ...CATEGORY_TWO
+    ...CATEGORY_TWO,
   },
   [CATEGORY_THREE.index]: {
-    ...CATEGORY_THREE
+    ...CATEGORY_THREE,
   },
   [CATEGORY_FOUR.index]: {
-    ...CATEGORY_FOUR
+    ...CATEGORY_FOUR,
   },
   [CATEGORY_FIVE.index]: {
-    ...CATEGORY_FIVE
+    ...CATEGORY_FIVE,
   },
 };
 
@@ -856,12 +883,12 @@ export const PARTS_GRAPH = {
   [LEFT_HAMSTRING]: { name: "Left Hamstring" },
   [RIGHT_HAMSTRING]: { name: "Right Hamstring" },
   [LEFT_CALF]: { name: "Left Calf" },
-  [RIGHT_CALF]: { name: "Right Calf" }
+  [RIGHT_CALF]: { name: "Right Calf" },
 };
 
 export const BODY_VIEW = {
   FRONT: "1",
-  BACK: "2"
+  BACK: "2",
 };
 
 export const REPEAT_INTERVAL = {
@@ -870,7 +897,7 @@ export const REPEAT_INTERVAL = {
   TWO_HOUR: "TWO_HOUR",
   FOUR_HOUR: "FOUR_HOUR",
   SIX_HOUR: "SIX_HOUR",
-  TWELVE_HOUR: "TWELVE_HOUR"
+  TWELVE_HOUR: "TWELVE_HOUR",
 };
 
 export const MP4 = "mp4";
@@ -882,34 +909,57 @@ export const LUNCH = "3";
 export const EVENING = "4";
 export const DINNER = "5";
 export const SLEEP = "6";
+// added 12/7/21
+export const MID_MORNING = "7";
+
+export const MEAL_TIMINGS = [
+  WAKE_UP,
+  BREAKFAST,
+  MID_MORNING,
+  LUNCH,
+  EVENING,
+  DINNER,
+  SLEEP,
+];
 
 export const PATIENT_MEAL_TIMINGS = {
   [WAKE_UP]: {
-    value: "2020-09-24T08:00:00+05:30"
+    value: "2020-09-24T08:00:00+05:30",
+    text: "Wake Up",
   },
   [BREAKFAST]: {
-    value: "2020-09-24T09:00:00+05:30"
+    value: "2020-09-24T09:00:00+05:30",
+    text: "Breakfast",
   },
   [LUNCH]: {
-    value: "2020-09-24T13:00:00+05:30"
+    value: "2020-09-24T13:00:00+05:30",
+    text: "Lunch",
   },
   [EVENING]: {
-    value: "2020-09-24T16:00:00+05:30"
+    value: "2020-09-24T16:00:00+05:30",
+    text: "Evening Snacks",
   },
   [DINNER]: {
-    value: "2020-09-24T20:00:00+05:30"
+    value: "2020-09-24T20:00:00+05:30",
+    text: "Dinner",
   },
   [SLEEP]: {
-    value: "2020-09-24T23:00:00+05:30"
-  }
+    value: "2020-09-24T23:00:00+05:30",
+    text: "Sleep",
+  },
+  // added 12/7/21
+  [MID_MORNING]: {
+    value: "2020-09-24T11:00:00+05:30",
+    text: "Mid Morning",
+  },
 };
 
 export const OFFLINE_SYNC_DATA_TASKS = {
-  SYNC_EVENTS_DATA: "event_sync_data"
+  SYNC_EVENTS_DATA: "event_sync_data",
 };
 
 export const CONSENT_TYPE = {
-  CARE_PLAN: "CARE_PLAN"
+  CARE_PLAN: "CARE_PLAN",
 };
 
 export const S3_DOWNLOAD_FOLDER = "s3Downloads";
@@ -919,52 +969,49 @@ export const PRESCRIPTION_PDF_FOLDER = "prescriptionPdfs";
 export const FEATURES = {
   CHAT: "Chat",
   VIDEO_CALL: "Video Call",
-  AUDIO_CALL: "Audio Call"
+  AUDIO_CALL: "Audio Call",
 };
 
 export const EVENT_LONG_TERM_VALUE = null;
 
 export const TEMPLATE_DUPLICATE_TEXT = " Copy";
 export const MESSAGE_TYPES = {
-  USER_MESSAGE:"USER_MESSAGE",
-  BOT_MESSAGE:"BOT_MESSAGE"
+  USER_MESSAGE: "USER_MESSAGE",
+  BOT_MESSAGE: "BOT_MESSAGE",
 };
 
 export const AGORA_CALL_NOTIFICATION_TYPES = {
   START_CALL: "START_CALL",
-  MISSED_CALL: "MISSED_CALL"
-}
+  MISSED_CALL: "MISSED_CALL",
+};
 
-
-export const USER_FAV_USER_CATEGORY=[
+export const USER_FAV_USER_CATEGORY = [
   USER_CATEGORY.PATIENT,
   USER_CATEGORY.DOCTOR,
   USER_CATEGORY.ADMIN,
   USER_CATEGORY.CARE_TAKER,
-  USER_CATEGORY.PROVIDER
-]
-
+  USER_CATEGORY.PROVIDER,
+  USER_CATEGORY.HSP
+];
 
 export const FAVOURITE_TYPE = {
   MEDICINE: "medicine",
   MEDICAL_TESTS: "medical_tests",
-  RADIOLOGY: "radiology"
+  RADIOLOGY: "radiology",
 };
 
-export const USER_FAV_ALL_TYPES=[
+export const USER_FAV_ALL_TYPES = [
   FAVOURITE_TYPE.MEDICINE,
   FAVOURITE_TYPE.MEDICAL_TESTS,
-  FAVOURITE_TYPE.RADIOLOGY
-]
-
+  FAVOURITE_TYPE.RADIOLOGY,
+];
 
 export const WHEN_TO_TAKE_ABBREVATIONS = {
   OD: 1,
   BD: 2,
   TDS: 3,
-  SOS: 4
+  SOS: 4,
 };
-
 
 export const RADIOLOGY_SUB_TYPES = {
   CT_SCAN: "CT SCAN",
@@ -973,25 +1020,25 @@ export const RADIOLOGY_SUB_TYPES = {
   XRAY: "X-RAY",
   MRI: "MRI",
   ECHO_AND_DOPPLER: "ECHO AND DOPPLER",
-  CT_ANGIO: "CT ANGIO"
-}
+  CT_ANGIO: "CT ANGIO",
+};
 
 export const RADIOLOGY_SUB_CATEGORY_DATA = {
-  "1": {name: RADIOLOGY_SUB_TYPES.CT_SCAN, id: 1},
-  "2": {name: RADIOLOGY_SUB_TYPES.NUCLEAR_MEDICINE, id: 2},
-  "3": {name: RADIOLOGY_SUB_TYPES.ULTRASOUND, id: 3 },
-  "4": {name: RADIOLOGY_SUB_TYPES.XRAY, id: 4},
-  "5": {name: RADIOLOGY_SUB_TYPES.MRI, id: 5},
-  "6": {name: RADIOLOGY_SUB_TYPES.ECHO_AND_DOPPLER, id: 6},
-  "7": {name: RADIOLOGY_SUB_TYPES.CT_ANGIO, id: 7}
-}
+  "1": { name: RADIOLOGY_SUB_TYPES.CT_SCAN, id: 1 },
+  "2": { name: RADIOLOGY_SUB_TYPES.NUCLEAR_MEDICINE, id: 2 },
+  "3": { name: RADIOLOGY_SUB_TYPES.ULTRASOUND, id: 3 },
+  "4": { name: RADIOLOGY_SUB_TYPES.XRAY, id: 4 },
+  "5": { name: RADIOLOGY_SUB_TYPES.MRI, id: 5 },
+  "6": { name: RADIOLOGY_SUB_TYPES.ECHO_AND_DOPPLER, id: 6 },
+  "7": { name: RADIOLOGY_SUB_TYPES.CT_ANGIO, id: 7 },
+};
 
 export const RADIOLOGY_CATEGORY_DATA = {
   [RADIOLOGY_SUB_TYPES.CT_SCAN]: {
     "1": {
       index: 1,
       name: "",
-      items:  [
+      items: [
         "CECT ANY OTHER SPECIFIC REGION",
         "CECT HEAD",
         "CECT CHEST",
@@ -1018,8 +1065,8 @@ export const RADIOLOGY_CATEGORY_DATA = {
         "CT ANGIOGRAPHY",
         "CONTRAST CT SCAN",
         "CECT WHOLE ABDOMEN",
-        "CECT UPPER ABDOMEN"
-      ]
+        "CECT UPPER ABDOMEN",
+      ],
     },
     "2": {
       index: 2,
@@ -1032,23 +1079,18 @@ export const RADIOLOGY_CATEGORY_DATA = {
         "HEAD - SELLA TURCICA-AXIAL /or CORONAL (EACH)- PLAIN",
         "HEAD - SELLA TURCICA-AXIAL /or CORONAL (EACH)- CONTRAST",
         "HEAD - SELLA TURCICA-AXIAL + CORONAL - PLAIN",
-        "HEAD - SELLA TURCICA-AXIAL+ CORONAL -CONTRAST"
-      ]
+        "HEAD - SELLA TURCICA-AXIAL+ CORONAL -CONTRAST",
+      ],
     },
     "3": {
       index: 3,
       name: "EAR",
-      items: [
-        "EAR + HRCT - PLAIN",
-        "EAR + HRCT - CONTRAST"
-      ]
+      items: ["EAR + HRCT - PLAIN", "EAR + HRCT - CONTRAST"],
     },
     "4": {
       index: 4,
       name: "ORBIT",
-      items: [
-        "ORBIT AXIAL & CORONAL (CONTRAST)"
-      ]
+      items: ["ORBIT AXIAL & CORONAL (CONTRAST)"],
     },
     "5": {
       index: 5,
@@ -1059,15 +1101,13 @@ export const RADIOLOGY_CATEGORY_DATA = {
         "PNS - AXIAL /or/ CORONAL (EACH) - PLAIN",
         "PNS - AXIAL /or/ CORONAL (EACH) - CONTRAST",
         "PNS - AXIAL & CORONAL - PLAIN",
-        "PNS - AXIAL & CORONAL - CONTRAST"
-      ]
+        "PNS - AXIAL & CORONAL - CONTRAST",
+      ],
     },
     "6": {
       index: 6,
       name: "DENTAL",
-      items: [
-        "DENTA SCAN (PLAIN)"
-      ]
+      items: ["DENTA SCAN (PLAIN)"],
     },
     "7": {
       index: 7,
@@ -1076,8 +1116,8 @@ export const RADIOLOGY_CATEGORY_DATA = {
         "NECK (PLAIN)",
         "NECK (CONTRAST)",
         "NECK & UPPER CHEST (PLAIN)",
-        "NECK & UPPER CHEST (CONTRAST)"
-      ]
+        "NECK & UPPER CHEST (CONTRAST)",
+      ],
     },
     "8": {
       index: 8,
@@ -1092,8 +1132,8 @@ export const RADIOLOGY_CATEGORY_DATA = {
         "CHEST + PULMONARY ANGIO + HRCT CHEST (PLAIN)",
         "CHEST + PULMONARY ANGIO + HRCT CHEST (CONTRAST)",
         "CHEST - HRCT + CECT + BRONCHOSCOPY (PLAIN)",
-        "CHEST - HRCT + CECT + BRONCHOSCOPY (CONTRAST)"
-      ]
+        "CHEST - HRCT + CECT + BRONCHOSCOPY (CONTRAST)",
+      ],
     },
     "9": {
       index: 9,
@@ -1104,8 +1144,8 @@ export const RADIOLOGY_CATEGORY_DATA = {
         "SPINE - DORSO LUMBAR (PLAIN)",
         "SPINE - DORSO LUMBAR (CONTRAST)",
         "SPINE - LUMBO SACRAL (LS) - CONTRAST",
-        "SPINE - SACROILIAC JOINTS"
-      ]
+        "SPINE - SACROILIAC JOINTS",
+      ],
     },
     "10": {
       index: 10,
@@ -1119,8 +1159,8 @@ export const RADIOLOGY_CATEGORY_DATA = {
         "ABDOMEN - WHOLE ABDOMEN WITH ABDOMINAL ANGIOGRAPHY (CONTRAST)",
         "ABDOMEN - UPPER ABDOMEN WITH BI- PHASIC/TRIPHASIC LIVER (CONTRAST",
         "ABDOMEN - WHOLE ABDOMEN WITH BI-PHASIC/ TRIPHASIC LIVER (CONTRAST)",
-        "ABDOMEN - WHOLE ABDOMEN WITH ABDOMINAL ANGIO (CONTRAST)"
-      ]
+        "ABDOMEN - WHOLE ABDOMEN WITH ABDOMINAL ANGIO (CONTRAST)",
+      ],
     },
     "11": {
       index: 11,
@@ -1130,9 +1170,9 @@ export const RADIOLOGY_CATEGORY_DATA = {
         "EXTREMITIES AND JOINTS (CONTRAST)",
         "EXTREMITIES - MUSCULOSKELETAL (PER REGION) - PLAIN",
         "EXTREMITIES - MUSCULOSKELETAL (PER REGION) - CONTRAST",
-        "CT BONY PART WITH 3-D RECONSTRUCTIONS"
-      ]
-    }
+        "CT BONY PART WITH 3-D RECONSTRUCTIONS",
+      ],
+    },
   },
   [RADIOLOGY_SUB_TYPES.NUCLEAR_MEDICINE]: {
     "1": {
@@ -1181,8 +1221,8 @@ export const RADIOLOGY_CATEGORY_DATA = {
         "Bone Scan SPECT",
         "Whole Body Bone Scan",
         "Samarium Therapy",
-        "Salivary Gland Scan"
-      ]
+        "Salivary Gland Scan",
+      ],
     },
   },
   [RADIOLOGY_SUB_TYPES.ULTRASOUND]: {
@@ -1207,8 +1247,8 @@ export const RADIOLOGY_CATEGORY_DATA = {
         "USG TVS",
         "USG ABDOMEN + TVS",
         "U/S OTHERS (Small Parts, Superficial)",
-        "U/S FOLLICULAR STUDY (SINGLE DAY)"
-      ]
+        "U/S FOLLICULAR STUDY (SINGLE DAY)",
+      ],
     },
     "2": {
       index: 2,
@@ -1243,8 +1283,8 @@ export const RADIOLOGY_CATEGORY_DATA = {
         "USG TRANSVAGINAL SONOGRAPHY (TVS)",
         "USG WHOLE ABDOMEN WITH FILM",
         "USG GUIDED FNAC",
-        "USG HRS ALL PARTS"
-      ]
+        "USG HRS ALL PARTS",
+      ],
     },
   },
   [RADIOLOGY_SUB_TYPES.XRAY]: {
@@ -1286,8 +1326,8 @@ export const RADIOLOGY_CATEGORY_DATA = {
         "XRAY SHOULDER - LATERAL VIEW",
         "XRAY WHOLE SPINE",
         "XRAY TM JOINTS - RIGHT OBLIQUE VIEW",
-        "XRAY TM JOINTS - LEFT OBLIQUE VIEW"
-      ]
+        "XRAY TM JOINTS - LEFT OBLIQUE VIEW",
+      ],
     },
     "2": {
       index: 2,
@@ -1330,8 +1370,8 @@ export const RADIOLOGY_CATEGORY_DATA = {
         "XRAY THIGH/ LEG - LATERAL VIEW",
         "XRAY KNEE JOINT AP & LATERAL VIEWS",
         "XRAY KNEE JOINT AP VIEW",
-        "XRAY KNEE JOINT AP & LATERAL VIEWS (ERECT STANDING)"
-      ]
+        "XRAY KNEE JOINT AP & LATERAL VIEWS (ERECT STANDING)",
+      ],
     },
     "3": {
       index: 3,
@@ -1343,16 +1383,13 @@ export const RADIOLOGY_CATEGORY_DATA = {
         "XRAY FOOT AP VIEW",
         "XRAY FOOT LATERAL VIEW",
         "XRAY MASTOIDS (BOTH) SHULLER'S VIEW",
-        "XRAY STYLOID PROCESS"
-      ]
+        "XRAY STYLOID PROCESS",
+      ],
     },
     "4": {
       index: 4,
       name: "MAMMOGRAPHY",
-      items: [
-        "MAMMOGRAM (BOTH BREASTS )",
-        "MAMMOGRRAM (ONE BREAST)"
-      ]
+      items: ["MAMMOGRAM (BOTH BREASTS )", "MAMMOGRRAM (ONE BREAST)"],
     },
     "5": {
       index: 5,
@@ -1363,8 +1400,8 @@ export const RADIOLOGY_CATEGORY_DATA = {
         "TEMPORO MANDIBULAR JOINT",
         "SUBMENTOVERTEX",
         "REVERSE TOWNE'S VIEW",
-        "OBLIQUE LATERAL - BODY"
-      ]
+        "OBLIQUE LATERAL - BODY",
+      ],
     },
     "6": {
       index: 6,
@@ -1372,8 +1409,8 @@ export const RADIOLOGY_CATEGORY_DATA = {
       items: [
         "DEXA - TWO SITES",
         "DEXA - THREE SITES",
-        "WHOLE BODY DEXA including BODY FAT ANALYSIS"
-      ]
+        "WHOLE BODY DEXA including BODY FAT ANALYSIS",
+      ],
     },
     "7": {
       index: 7,
@@ -1384,7 +1421,7 @@ export const RADIOLOGY_CATEGORY_DATA = {
         "XRAY BARIUM MEAL",
         "XRAY BARIUM MEAL FOLLOW THRU.",
         "XRAY BARIUM SWALLOW",
-      ]
+      ],
     },
   },
   [RADIOLOGY_SUB_TYPES.MRI]: {
@@ -1401,8 +1438,8 @@ export const RADIOLOGY_CATEGORY_DATA = {
         "MRI + MRA",
         "MR VENOGRAPHY",
         "MRI + MR VENOGRAPHY",
-        "MRI PITUITARY GLAND"
-      ]
+        "MRI PITUITARY GLAND",
+      ],
     },
     "2": {
       index: 2,
@@ -1456,8 +1493,8 @@ export const RADIOLOGY_CATEGORY_DATA = {
         "HEAD + MRA + NECK",
         "HEAD + MRS",
         "HEAD + MRV",
-        "HEAD EPILEPSY"
-      ]
+        "HEAD EPILEPSY",
+      ],
     },
   },
   [RADIOLOGY_SUB_TYPES.ECHO_AND_DOPPLER]: {
@@ -1472,8 +1509,8 @@ export const RADIOLOGY_CATEGORY_DATA = {
         "COLOUR DOPPLER (VENOUS) - ONE LEG",
         "COLOUR DOPPLER (VENOUS) - BOTH LEG",
         "COLOUR DOPPLER (ARTERY/VENOUS) - ONE LEG",
-        "COLOUR DOPPLER (ARTERY/VENOUS) - BOTH LEG"
-      ]
+        "COLOUR DOPPLER (ARTERY/VENOUS) - BOTH LEG",
+      ],
     },
   },
   [RADIOLOGY_SUB_TYPES.CT_ANGIO]: {
@@ -1488,71 +1525,91 @@ export const RADIOLOGY_CATEGORY_DATA = {
         "ANGIOGRAPHY - PERIPHERAL ANGIOGRAPHY (LOWER LIMB)-CONTRAST",
         "ANGIOGRAPHY - PERIPHERAL ANGIOGRAPHY (UPPER LIMB)-CONTRAST",
         "ANGIOGRAPHY - RENAL ANGIOGRAPHY + UROGRAPHY (CONTRAST)",
-        "ANGIOGRAPHY - CORONARY"
-      ]
+        "ANGIOGRAPHY - CORONARY",
+      ],
     },
-  }
-}
+  },
+};
 
 export const RADIOLOGY_DATA = {
   "1": {
     id: 1,
     name: RADIOLOGY_SUB_TYPES.CT_SCAN,
-    data : {
-      ...RADIOLOGY_CATEGORY_DATA[RADIOLOGY_SUB_TYPES.CT_SCAN]
-    }
+    data: {
+      ...RADIOLOGY_CATEGORY_DATA[RADIOLOGY_SUB_TYPES.CT_SCAN],
+    },
   },
   "2": {
     id: 2,
     name: RADIOLOGY_SUB_TYPES.NUCLEAR_MEDICINE,
-    data : {
-      ...RADIOLOGY_CATEGORY_DATA[RADIOLOGY_SUB_TYPES.NUCLEAR_MEDICINE]
-    }
+    data: {
+      ...RADIOLOGY_CATEGORY_DATA[RADIOLOGY_SUB_TYPES.NUCLEAR_MEDICINE],
+    },
   },
   "3": {
     id: 3,
     name: RADIOLOGY_SUB_TYPES.ULTRASOUND,
-    data : {
-      ...RADIOLOGY_CATEGORY_DATA[RADIOLOGY_SUB_TYPES.ULTRASOUND]
-    }
+    data: {
+      ...RADIOLOGY_CATEGORY_DATA[RADIOLOGY_SUB_TYPES.ULTRASOUND],
+    },
   },
   "4": {
     id: 4,
     name: RADIOLOGY_SUB_TYPES.XRAY,
-    data : {
-      ...RADIOLOGY_CATEGORY_DATA[RADIOLOGY_SUB_TYPES.XRAY]
-    }
+    data: {
+      ...RADIOLOGY_CATEGORY_DATA[RADIOLOGY_SUB_TYPES.XRAY],
+    },
   },
   "5": {
     id: 5,
     name: RADIOLOGY_SUB_TYPES.MRI,
-    data : {
-      ...RADIOLOGY_CATEGORY_DATA[RADIOLOGY_SUB_TYPES.MRI]
-    }
+    data: {
+      ...RADIOLOGY_CATEGORY_DATA[RADIOLOGY_SUB_TYPES.MRI],
+    },
   },
   "6": {
     id: 6,
     name: RADIOLOGY_SUB_TYPES.ECHO_AND_DOPPLER,
-    data : {
-      ...RADIOLOGY_CATEGORY_DATA[RADIOLOGY_SUB_TYPES.ECHO_AND_DOPPLER]
-    }
+    data: {
+      ...RADIOLOGY_CATEGORY_DATA[RADIOLOGY_SUB_TYPES.ECHO_AND_DOPPLER],
+    },
   },
   "7": {
     id: 7,
     name: RADIOLOGY_SUB_TYPES.CT_ANGIO,
-    data : {
-      ...RADIOLOGY_CATEGORY_DATA[RADIOLOGY_SUB_TYPES.CT_ANGIO]
-    }
+    data: {
+      ...RADIOLOGY_CATEGORY_DATA[RADIOLOGY_SUB_TYPES.CT_ANGIO],
+    },
   },
-}
+};
 
 export const DIAGNOSIS_TYPE = {
   FINAL: {
     id: "1",
-    text:"final"
+    text: "final",
   },
   PROBABLE: {
     id: "2",
-    text:"probable"
-  }
-}
+    text: "probable",
+  },
+};
+
+export const DAYS_TEXT = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
+
+export const DIET_RESPONSE_STATUS = {
+  DONE: "DONE",
+  SKIPPED: "SKIPPED",
+  EXPIRED: "EXPIRED",
+  PARTIALLY_DONE: "PARTIALLY_DONE",
+};
+
+export const WORKOUT_RESPONSE_STATUS = {
+  DONE: "DONE",
+  SKIPPED: "SKIPPED",
+  EXPIRED: "EXPIRED",
+  PARTIALLY_DONE: "PARTIALLY_DONE",
+};
+
+export const DEFAULT_PROVIDER = "self";
+
+export const DOCTOR_TYPE_PROFILES = [USER_CATEGORY.DOCTOR, USER_CATEGORY.HSP];

@@ -51,6 +51,11 @@ const messages = defineMessages({
     description: "",
     defaultMessage: "Doctors"
   },
+  profiles: {
+    id: "app.doctor.table.profiles.title",
+    description: "",
+    defaultMessage: "Profiles"
+  },
   active_header : {
     id: "app.doctor.tableactive.header",
     description: "",
@@ -70,6 +75,11 @@ const messages = defineMessages({
     id: "app.doctor.table.emptyDoctorTable",
     description: "",
     defaultMessage: "No Doctors added for the user yet"
+  },
+  typeText:{
+    id: "app.doctor.table.typeText",
+    description: "",
+    defaultMessage: "Type : {category}"
   },
 });
 

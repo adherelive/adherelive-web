@@ -92,18 +92,13 @@ class MReminderController extends Controller {
       } = body;
       const {
         userId,
+        userRoleId,
         userData: { category } = {},
         userCategoryData: { basic_info: { full_name = "" } = {} } = {}
       } = userDetails || {};
 
       const medicineDetails = await medicineService.getMedicineById(
         medicine_id
-      );
-
-      console.log(
-        "medicineDetails **********--------> ",
-        description,
-        start_time
       );
 
       const medicineApiWrapper = await MedicineWrapper(medicineDetails);
@@ -149,6 +144,7 @@ class MReminderController extends Controller {
       );
 
       const patient = await PatientWrapper(null, patient_id);
+      const {user_role_id: patientRoleId} = await patient.getAllInfo();
 
       const eventScheduleData = {
         patient_id: patient.getUserId(),
@@ -159,13 +155,14 @@ class MReminderController extends Controller {
         start_date,
         end_date,
         when_to_take,
-        participants: [userId, patient.getUserId()],
+        participants: [userRoleId, patientRoleId],
         actor: {
           id: userId,
+          user_role_id: userRoleId,
           details: { name: full_name, category }
         },
-        participant_one: patient.getUserId(),
-        participant_two: userId
+        // participant_one: patient.getUserId(),
+        // participant_two: userId
       };
 
       const QueueService = new queueService();
@@ -265,6 +262,7 @@ class MReminderController extends Controller {
 
       const {
         userId,
+        userRoleId,
         userData: { category } = {},
         userCategoryData: { basic_info: { full_name = "" } = {} } = {}
       } = userDetails || {};
@@ -323,13 +321,14 @@ class MReminderController extends Controller {
       let carePlanApiData = {};
 
       carePlanApiData[carePlanApiWrapper.getCarePlanId()] = {
-        ...carePlanApiWrapper.getBasicInfo(),
+        ...(await carePlanApiWrapper.getAllInfo()),
         ...carePlanSeverityDetails,
         medication_ids: carePlanMedicationIds,
         appointment_ids: carePlanAppointmentIds
       };
 
       const patient = await PatientWrapper(null, patient_id);
+      const {user_role_id: patientRoleId} = await patient.getAllInfo();
 
       const when_to_take_abbr_int = when_to_take_abbr? parseInt(when_to_take_abbr, 10): when_to_take_abbr;
 
@@ -342,13 +341,14 @@ class MReminderController extends Controller {
         start_date,
         end_date,
         when_to_take,
-        participants: [userId, patient.getUserId()],
+        participants: [userRoleId, patientRoleId],
         actor: {
           id: userId,
+          user_role_id: userRoleId,
           details: { name: full_name, category }
         },
-        participant_one: patient.getUserId(),
-        participant_two: userId
+        // participant_one: patient.getUserId(),
+        // participant_two: userId
       };
 
       if(when_to_take_abbr_int !== WHEN_TO_TAKE_ABBREVATIONS.SOS) {
@@ -408,6 +408,7 @@ class MReminderController extends Controller {
       } = body;
       const {
         userId,
+        userRoleId,
         userData: { category } = {},
         userCategoryData: { basic_info: { full_name } = {} } = {}
       } = userDetails || {};
@@ -450,7 +451,7 @@ class MReminderController extends Controller {
       );
 
       const updatedMedicationDetails = await medicationReminderService.getMedication(
-        { participant_id }
+        { id }
       );
 
       const medicationApiDetails = await MedicationWrapper(
@@ -458,6 +459,7 @@ class MReminderController extends Controller {
       );
 
       const patient = await PatientWrapper(null, participant_id);
+      const {user_role_id: patientRoleId} = await patient.getAllInfo();
 
       // 1. delete previous created events
       const scheduleEventService = new ScheduleEventService();
@@ -476,13 +478,14 @@ class MReminderController extends Controller {
         start_date,
         end_date,
         when_to_take,
-        participants: [userId, patient.getUserId()],
+        participants: [userRoleId, patientRoleId],
         actor: {
           id: userId,
+          user_role_id: userRoleId,
           details: { name: full_name, category }
         },
-        participant_one: patient.getUserId(),
-        participant_two: userId
+        // participant_one: patient.getUserId(),
+        // participant_two: userId
       };
       
       const when_to_take_abbr_int = when_to_take_abbr? parseInt(when_to_take_abbr, 10): when_to_take_abbr;
@@ -541,7 +544,7 @@ class MReminderController extends Controller {
       let timings = {};
 
 
-      if(parseInt(patient_id) !== 0) {
+      if(parseInt(patient_id)) {
         const patient = await PatientWrapper(null, patient_id);
         const timingPreference = await userPreferenceService.getPreferenceByData({
           user_id: patient.getUserId()
@@ -630,7 +633,7 @@ class MReminderController extends Controller {
   delete = async (req, res) => {
     const { raiseSuccess, raiseServerError } = this;
     try {
-      const { params: { id } = {}, userDetails: {userId, userData: {category} = {}, userCategoryData: {basic_info: {full_name} = {}} = {}} = {}} = req;
+      const { params: { id } = {}, userDetails: {userId, userRoleId, userData: {category} = {}, userCategoryData: {basic_info: {full_name} = {}} = {}} = {}} = req;
 
       const medication = await MedicationWrapper(null, id);
       const carePlanMedicationDetails = await carePlanMedicationService.deleteCarePlanMedicationByMedicationId(
@@ -650,13 +653,16 @@ class MReminderController extends Controller {
 
       const patient = await PatientWrapper(null, medication.getParticipant());
 
+      const {user_role_id: patientRoleId} = await patient.getAllInfo();
+
       const eventScheduleData = {
         type: EVENT_TYPE.MEDICATION_REMINDER,
         event_id: medication.getMReminderId(),
         details: medication.getDetails(),
-        participants: [userId, patient.getUserId()],
+        participants: [userRoleId, patientRoleId],
         actor: {
           id: userId,
+          user_role_id: userRoleId,
           details: { name: full_name, category }
         },
       };
@@ -674,121 +680,122 @@ class MReminderController extends Controller {
     }
   };
 
-  getAllMissedMedications = async (req, res) => {
-    const { raiseSuccess, raiseServerError } = this;
-    try {
-      /*
-       * flow:
-       * get careplans for auth user (doctor)
-       * from careplans, fetch all medication | appointment | vital ids
-       *
-       * for the same ids, fetch scheduleEvents based on event_id and event_type that are expired
-       *
-       * then proceed with the filter of critical and non critical based on critical column in schedule events 0 -> false 1 -> true
-       *
-       * other:
-       *   follow snake casing for response as followed across the apis
-       *
-       *
-       * */
+  // getAllMissedMedications = async (req, res) => {
+  //   const { raiseSuccess, raiseServerError } = this;
+  //   try {
+  //     /*
+  //      * flow:
+  //      * get careplans for auth user (doctor)
+  //      * from careplans, fetch all medication | appointment | vital ids
+  //      *
+  //      * for the same ids, fetch scheduleEvents based on event_id and event_type that are expired
+  //      *
+  //      * then proceed with the filter of critical and non critical based on critical column in schedule events 0 -> false 1 -> true
+  //      *
+  //      * other:
+  //      *   follow snake casing for response as followed across the apis
+  //      *
+  //      *
+  //      * */
 
-      const { body, userDetails } = req;
+  //     const { body, userDetails } = req;
 
-      const {
-        userId,
-        userData: { category } = {},
-        userCategoryData: { basic_info: { id: doctorId } = {} } = {}
-      } = userDetails || {};
+  //     const {
+  //       userRoleId = null ,
+  //       userId,
+  //       userData: { category } = {},
+  //       userCategoryData: { basic_info: { id: doctorId } = {} } = {}
+  //     } = userDetails || {};
 
-      let docAllCareplanData = [];
-      let medicationApiData = {};
-      let flag = true;
-      let criticalMedicationEventIds = [];
-      let nonCriticalMedicationEventIds = [];
-      const scheduleEventService = new ScheduleEventService();
+  //     let docAllCareplanData = [];
+  //     let medicationApiData = {};
+  //     let flag = true;
+  //     let criticalMedicationEventIds = [];
+  //     let nonCriticalMedicationEventIds = [];
+  //     const scheduleEventService = new ScheduleEventService();
 
-      docAllCareplanData = await carePlanService.getCarePlanByData({
-        doctor_id: doctorId
-      });
+  //     docAllCareplanData = await carePlanService.getCarePlanByData({
+  //       user_role_id : userRoleId
+  //     });
 
-      // Logger.debug("786756465789",docAllCareplanData);
+  //     // Logger.debug("786756465789",docAllCareplanData);
 
-      for (let carePlan of docAllCareplanData) {
-        const carePlanApiWrapper = await CarePlanWrapper(carePlan);
-        const { medication_ids } = await carePlanApiWrapper.getAllInfo();
+  //     for (let carePlan of docAllCareplanData) {
+  //       const carePlanApiWrapper = await CarePlanWrapper(carePlan);
+  //       const { medication_ids } = await carePlanApiWrapper.getAllInfo();
 
-        for (let mId of medication_ids) {
-          // Logger.debug("87657898763545",medication_ids);
+  //       for (let mId of medication_ids) {
+  //         // Logger.debug("87657898763545",medication_ids);
 
-          let expiredMedicationsList = await scheduleEventService.getAllEventByData(
-            {
-              event_type: EVENT_TYPE.MEDICATION_REMINDER,
-              status: EVENT_STATUS.EXPIRED,
-              event_id: mId
-            }
-          );
+  //         let expiredMedicationsList = await scheduleEventService.getAllEventByData(
+  //           {
+  //             event_type: EVENT_TYPE.MEDICATION_REMINDER,
+  //             status: EVENT_STATUS.EXPIRED,
+  //             event_id: mId
+  //           }
+  //         );
 
-          for (let medication of expiredMedicationsList) {
-            const medicationEventWrapper = await EventWrapper(medication);
-            // Logger.debug("8976756576890",medicationEventWrapper);
+  //         for (let medication of expiredMedicationsList) {
+  //           const medicationEventWrapper = await EventWrapper(medication);
+  //           // Logger.debug("8976756576890",medicationEventWrapper);
 
-            if (medicationEventWrapper.getCriticalValue()) {
-              if (
-                !criticalMedicationEventIds.includes(
-                  medicationEventWrapper.getEventId()
-                )
-              ) {
-                criticalMedicationEventIds.push(
-                  medicationEventWrapper.getEventId()
-                );
-              }
-            } else {
-              if (
-                !nonCriticalMedicationEventIds.includes(
-                  medicationEventWrapper.getEventId()
-                )
-              ) {
-                nonCriticalMedicationEventIds.push(
-                  medicationEventWrapper.getEventId()
-                );
-              }
-            }
+  //           if (medicationEventWrapper.getCriticalValue()) {
+  //             if (
+  //               !criticalMedicationEventIds.includes(
+  //                 medicationEventWrapper.getEventId()
+  //               )
+  //             ) {
+  //               criticalMedicationEventIds.push(
+  //                 medicationEventWrapper.getEventId()
+  //               );
+  //             }
+  //           } else {
+  //             if (
+  //               !nonCriticalMedicationEventIds.includes(
+  //                 medicationEventWrapper.getEventId()
+  //               )
+  //             ) {
+  //               nonCriticalMedicationEventIds.push(
+  //                 medicationEventWrapper.getEventId()
+  //               );
+  //             }
+  //           }
 
-            medicationApiData[
-              medicationEventWrapper.getEventId()
-            ] = medicationEventWrapper.getDetails();
-          }
-        }
-      }
+  //           medicationApiData[
+  //             medicationEventWrapper.getEventId()
+  //           ] = medicationEventWrapper.getDetails();
+  //         }
+  //       }
+  //     }
 
-      if (
-        Object.keys(medicationApiData).length === 0 &&
-        medicationApiData.constructor === Object
-      ) {
-        flag = false;
-      }
+  //     if (
+  //       Object.keys(medicationApiData).length === 0 &&
+  //       medicationApiData.constructor === Object
+  //     ) {
+  //       flag = false;
+  //     }
 
-      if (flag === true) {
-        return raiseSuccess(
-          res,
-          200,
-          {
-            missed_medication_events: {
-              ...medicationApiData
-            },
-            critical_medication_event_ids: criticalMedicationEventIds,
-            non_critical_medication_event_ids: nonCriticalMedicationEventIds
-          },
-          `Missed medications fetched successfully`
-        );
-      } else {
-        return raiseSuccess(res, 201, {}, "No Missed Medications");
-      }
-    } catch (error) {
-      Logger.debug("getMedicationDetails 500 error ", error);
-      return raiseServerError(res);
-    }
-  };
+  //     if (flag === true) {
+  //       return raiseSuccess(
+  //         res,
+  //         200,
+  //         {
+  //           missed_medication_events: {
+  //             ...medicationApiData
+  //           },
+  //           critical_medication_event_ids: criticalMedicationEventIds,
+  //           non_critical_medication_event_ids: nonCriticalMedicationEventIds
+  //         },
+  //         `Missed medications fetched successfully`
+  //       );
+  //     } else {
+  //       return raiseSuccess(res, 201, {}, "No Missed Medications");
+  //     }
+  //   } catch (error) {
+  //     Logger.debug("getMedicationDetails 500 error ", error);
+  //     return raiseServerError(res);
+  //   }
+  // };
 
   getMedicationResponseTimeline = async (req, res) => {
     const { raiseSuccess, raiseClientError, raiseServerError } = this;

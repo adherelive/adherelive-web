@@ -6,8 +6,8 @@ import {
   withRouter
 } from "react-router-dom";
 import { PATH } from "../../../constant";
-import SideMenu from "../../../Components/Sidebar";
-import BlankState from "../../../Components/Common/BlankState";
+import SideMenu from "../../../Containers/Sidebar";
+// import BlankState from "../../../Components/Common/BlankState";
 
 const AdminDoctorPage = lazy(() =>
   import(

@@ -4,15 +4,17 @@ import {
   DOSE_UNIT,
   WHEN_TO_TAKE_ABBREVATIONS,
   APPOINTMENT_TYPE,
+  PATIENT_MEAL_TIMINGS,
 } from "../../../constant";
 import moment from "moment";
 import PDFDocument from "pdfkit";
-
+import { getConvertedTime } from "../getUserTime/index";
 // const PDFDocument = require("pdfkit");
 const fs = require("fs");
 // const moment = require("moment");
 
 const DOC_MARGIN = 30;
+const DOC_WIDTH_MARGIN = 550;
 const BOLD_FONT_SIZE = 16;
 const NORMAL_FONT_SIZE = 12;
 const MEDICINE_FONT_SIZE = 16;
@@ -24,7 +26,9 @@ const MAX_WIDTH = 100;
 const DISTANCE_BETWEEN_ROWS = 15;
 const DEFAULT_REVIEW_AFTER = "2 weeks";
 
-const PAGE_END_LIMIT = 750;
+const PAGE_END_LIMIT = 760;
+
+let pageCount = 1;
 
 const LABEL_COLOR = "black";
 const VALUE_COLOR = "#7f8c8d";
@@ -54,13 +58,32 @@ export default async (pdfData, signatureImage) => {
         nextAppointmentDuration = null,
         currentTime = "",
         suggestedInvestigations = [],
-        providerIcon,
+        providerIcon = null,
+        portions = {},
+        repetitions = {},
+        diets_formatted_data = {},
+        diet_ids = [],
+        workouts_formatted_data = {},
+        workout_ids = [],
+        timings = {},
+        providerPrescriptionDetails: pdfproviderPrescriptionDetails = "",
       } = pdfData;
-      const doc = new PDFDocument({ size:"A4",margin: DOC_MARGIN, bufferPages: true });
+      const doc = new PDFDocument({
+        size: "A4",
+        margin: DOC_MARGIN,
+        bufferPages: true,
+      });
 
+      let providerPrescriptionDetails = pdfproviderPrescriptionDetails.length
+        ? pdfproviderPrescriptionDetails
+        : "";
       const { allergies, comorbidities } = formatPatientData(patients, users);
 
       const fileName = getPdfName(pdfData);
+
+      doc.on("pageAdded", () => {
+        addPageFooter(doc, providerPrescriptionDetails);
+      });
 
       const stream = doc.pipe(
         fs.createWriteStream(`${PRESCRIPTION_PDF_FOLDER}/${fileName}.pdf`)
@@ -80,7 +103,8 @@ export default async (pdfData, signatureImage) => {
         registrations,
         providers,
         doctor_id,
-        providerIcon
+        providerIcon,
+        providerPrescriptionDetails
       );
 
       const addressEndRowLevel = printPatientBlockData(
@@ -100,7 +124,7 @@ export default async (pdfData, signatureImage) => {
 
       // generateHr(doc, horizontalLineLevel + 17);
 
-      const suggestedInvestigationXLevelEnd = printCarePlanData(
+      const suggestedInvestigationXLevelEnd = printCarePlanData({
         doc,
         horizontalLineLevel,
         care_plans,
@@ -109,8 +133,9 @@ export default async (pdfData, signatureImage) => {
         medicines,
         allergies,
         comorbidities,
-        suggestedInvestigations
-      );
+        suggestedInvestigations,
+        providerPrescriptionDetails,
+      });
 
       // generateHr(doc, doc.y + 17);
 
@@ -121,7 +146,97 @@ export default async (pdfData, signatureImage) => {
       //   doc.y
       // );
 
-      printFooter(doc, signatureImage, nextAppointmentDuration, currentTime);
+      const footerYLevelEnd = printFooter(
+        doc,
+        signatureImage,
+        nextAppointmentDuration,
+        currentTime,
+        providerPrescriptionDetails
+      );
+
+      if (pageCount === 1) {
+        addPageFooter(doc, providerPrescriptionDetails);
+      }
+
+      if (
+        Object.keys(diets_formatted_data).length ||
+        Object.keys(workouts_formatted_data).length
+      ) {
+        addPageAndNumber(doc);
+        doc
+          .font(BOLD_FONT)
+          .fontSize(BOLD_FONT_SIZE)
+          .text("ADVICE", DOC_MARGIN, DOC_MARGIN);
+      }
+
+      const dietStartLevel = doc.y + 10;
+
+      const dietBlockLevelEnd = Object.keys(diets_formatted_data).length
+        ? printDiet(
+            doc,
+            dietStartLevel,
+            portions,
+            diets_formatted_data,
+            timings,
+            diet_ids
+          )
+        : null;
+
+      // const dietYLevel =
+      // dietBlockLevelEnd
+      // ? dietBlockLevelEnd + NORMAL_FONT_SIZE + 12
+      // :
+      // footerYLevelEnd + NORMAL_FONT_SIZE + 12 ;
+
+      let workoutBlockLevelEnd = doc.y;
+      let workoutStartLevel = doc.y;
+
+      if (Object.keys(workouts_formatted_data).length) {
+        if (Object.keys(diets_formatted_data).length) {
+          addPageAndNumber(doc);
+          workoutStartLevel = DOC_MARGIN;
+        }
+
+        workoutBlockLevelEnd = printWorkout(
+          doc,
+          workoutStartLevel,
+          repetitions,
+          workouts_formatted_data,
+          workout_ids
+        );
+      }
+
+      if (doc.y + 3 * MEDIUM_FONT > PAGE_END_LIMIT) {
+        addPageAndNumber(doc);
+        singleDietDetailYLevel = DOC_MARGIN;
+      }
+
+      // if(providerPrescriptionDetails){
+      //   doc
+      //   .fontSize(NORMAL_FONT_SIZE)
+      //   .fillColor("#212b36")
+      //   .font(BOLD_FONT)
+      //   .text("Provider Details",DOC_MARGIN,  doc.y + 20)
+      //   .font(MEDIUM_FONT)
+      //   .text(`${providerPrescriptionDetails}`, DOC_MARGIN,
+      //   doc.y + 20)
+      // }
+
+      doc
+        .fontSize(SHORT_FONT_SIZE)
+        .text(
+          "Note: This prescription is generated on Adhere.",
+          DOC_MARGIN,
+          doc.y + 20
+        );
+
+      // doc
+      // .font(MEDIUM_FONT)
+      // .text(`${pageCount}`, DOC_MARGIN, height-25)
+
+      // printProviderPrescriptionDetails(doc);
+
+      pageCount = 1;
       doc.end();
     } catch (err) {
       console.log("Error got in the generation of pdf is: ", err);
@@ -150,7 +265,596 @@ function getPdfName(pdfData) {
   const { diagnosis, carePlanId } = formatCarePlanData(care_plans, conditions);
 
   // const now = new Date();
-  return `${carePlanId}-${diagnosis}-${doctorName}-${moment().format("DD-MM-YY-hh-mm-ss")}`;
+  return `${carePlanId}-${diagnosis}-${doctorName}-${moment().format(
+    "DD-MM-YY-hh-mm-ss"
+  )}`;
+}
+
+function printDiet(
+  doc,
+  medicationYLevel,
+  portions,
+  diets_formatted_data,
+  timings,
+  diet_ids
+) {
+  doc
+    .font(BOLD_FONT)
+    .fontSize(BOLD_FONT_SIZE)
+    .text("DIET", DOC_MARGIN, medicationYLevel);
+
+  const dietsHeaderEnds = doc.y;
+
+  const serialNoXStart = DOC_MARGIN;
+  const dietNameXStart = DOC_MARGIN + 40;
+  const dietDetailsTimeXStart = DOC_MARGIN + 120;
+  const dietDetailsDataXStart = DOC_MARGIN + 200;
+  const startDateXStart = DOC_MARGIN + 430;
+  const endDateXStart = DOC_MARGIN + 560;
+
+  doc
+    .fillColor("#4a90e2")
+    .fontSize(NORMAL_FONT_SIZE)
+    .font(BOLD_FONT)
+    .text("S.No.", serialNoXStart, dietsHeaderEnds + 20)
+    .font(BOLD_FONT)
+    .text("Diet Name", dietNameXStart, dietsHeaderEnds + 20)
+    .font(BOLD_FONT)
+    .text("Time", dietDetailsTimeXStart, dietsHeaderEnds + 20)
+    .font(BOLD_FONT)
+    .text("Details", dietDetailsDataXStart, dietsHeaderEnds + 20)
+    .font(BOLD_FONT)
+    .text("Duration", startDateXStart, dietsHeaderEnds + 20)
+    .font(BOLD_FONT);
+  // .text("End Date", endDateXStart, dietsHeaderEnds + 20)
+
+  // generateHr(doc, dietsHeaderEnds+10);
+
+  let dietCount = 1;
+  let singleDietDetailYLevel = doc.y;
+
+  for (let each in diets_formatted_data) {
+    if (doc.y + 3 * SHORT_FONT_SIZE > PAGE_END_LIMIT) {
+      addPageAndNumber(doc);
+      singleDietDetailYLevel = DOC_MARGIN;
+    }
+
+    const {
+      diets = {},
+      diet_food_groups = {},
+      food_items = {},
+      food_item_details = {},
+    } = diets_formatted_data[each];
+
+    const {
+      basic_info: {
+        name: diet_name,
+        start_date = null,
+        end_date = null,
+        total_calories = 0,
+      } = {},
+      details: { not_to_do = "", repeat_days = [] } = {},
+    } = diets[Object.keys(diets)[0]] || {};
+
+    let basicDetailsYLevel = singleDietDetailYLevel + 20,
+      formattedStartDate = "--",
+      formattedEndDate = "--";
+
+    if (start_date) {
+      formattedStartDate = moment(start_date);
+    }
+    if (end_date) {
+      formattedEndDate = moment(end_date);
+    }
+
+    let duration = null;
+    let durationText = "";
+    if (end_date) {
+      duration = formattedEndDate.diff(formattedStartDate, "days");
+      durationText = `${duration}${" "}days`;
+      if (duration >= 7) {
+        const weeks = Math.floor(duration / 7) || 0;
+        const days = duration % 7 || 0;
+        durationText = `${
+          weeks > 0 ? `${weeks}${" "}${weeks > 1 ? "weeks" : "week"}${" "}` : ""
+        }${days > 0 ? `${days}${" "}${days > 1 ? "days" : "day"}` : ""} `;
+      }
+    }
+
+    doc
+      .fillColor("#212b36")
+      .fontSize(SHORT_FONT_SIZE)
+      .font(MEDIUM_FONT)
+      .text(`${dietCount}.`, serialNoXStart, basicDetailsYLevel)
+      .text(`${diet_name}`, dietNameXStart, basicDetailsYLevel, {
+        width: dietDetailsTimeXStart - dietNameXStart,
+      })
+      .text(
+        `${!end_date ? "Long Term" : durationText}`,
+        startDateXStart,
+        basicDetailsYLevel,
+        {
+          width: endDateXStart - startDateXStart,
+        }
+      );
+    // .text(`${formattedEndDate}`, endDateXStart, basicDetailsYLevel)
+
+    for (let time in diet_food_groups) {
+      const foodGroupArrayForTime = diet_food_groups[time] || [];
+
+      const timeObj = Object.keys(timings).length
+        ? timings[time]
+        : PATIENT_MEAL_TIMINGS[time];
+      const { text: timeText = "", time: timeVal = "" } = timeObj || {};
+      const formattedTime = moment(timeVal).format("hh:mm A");
+      doc
+        .fillColor("#212b36")
+        .font(MEDIUM_FONT)
+        .text(
+          `${timeText}${" "}(${formattedTime})${" "}`,
+          dietDetailsTimeXStart,
+          singleDietDetailYLevel + 20,
+          {
+            width: dietDetailsDataXStart - dietDetailsTimeXStart,
+            // continued:true
+          }
+        );
+
+      for (let foodGroup of foodGroupArrayForTime) {
+        const {
+          food_group_id = null,
+          food_item_detail_id = null,
+          notes = "",
+          portion_id = null,
+          serving = null,
+          similar = [],
+        } = foodGroup || {};
+
+        const {
+          basic_info: { food_item_id = null, portion_size = null } = {},
+        } = food_item_details[food_item_detail_id] || {};
+        const { basic_info: { name: food_name = "" } = {} } =
+          food_items[food_item_id] || {};
+        const { basic_info: { name: portion_type = "" } = {} } =
+          portions[portion_id] || {};
+
+        let singleData = `${serving}x${" "}${portion_size}${" "}${portion_type}${" "}${food_name}${
+          similar.length > 0 && notes.length ? `${" "}(${notes})${" "}` : ""
+        }`;
+
+        for (let i in similar) {
+          const eachSimilar = similar[i] || {};
+
+          const {
+            food_group_id = null,
+            food_item_detail_id = null,
+            notes = "",
+            portion_id = null,
+            serving = null,
+          } = eachSimilar || {};
+
+          const {
+            basic_info: { food_item_id = null, portion_size = null } = {},
+          } = food_item_details[food_item_detail_id] || {};
+          const { basic_info: { name: food_name = "" } = {} } =
+            food_items[food_item_id] || {};
+          const { basic_info: { name: portion_type = "" } = {} } =
+            portions[portion_id] || {};
+
+          singleData =
+            singleData +
+            `${" "}/${" "}${serving}x${" "}${portion_size}${" "}${portion_type}${" "}${food_name}${
+              notes.length ? `${" "}(${notes})${" "}` : ""
+            }`;
+        }
+
+        if (doc.y + 3 * MEDIUM_FONT > PAGE_END_LIMIT) {
+          addPageAndNumber(doc);
+          singleDietDetailYLevel = DOC_MARGIN;
+        }
+
+        doc
+          .fillColor("#212b36")
+          .font(MEDIUM_FONT)
+          .text(
+            `${singleData}`,
+            dietDetailsDataXStart,
+            singleDietDetailYLevel + 20,
+            {
+              width: startDateXStart - dietDetailsDataXStart,
+            }
+          );
+
+        singleDietDetailYLevel = doc.y;
+
+        similar.length === 0 && notes.length
+          ? doc
+              .fillColor("#212b36")
+              .font(BOLD_FONT)
+              .text(
+                `Instructions:${" "}`,
+                dietDetailsDataXStart,
+                singleDietDetailYLevel + 5,
+                {
+                  width: startDateXStart - dietDetailsDataXStart,
+                  continued: true,
+                }
+              )
+              .font(MEDIUM_FONT)
+              .text(
+                `${notes}`,
+                dietDetailsDataXStart,
+                singleDietDetailYLevel + 5,
+                {
+                  width: startDateXStart - dietDetailsDataXStart,
+                }
+              )
+          : null;
+
+        if (doc.y + 3 * SHORT_FONT_SIZE > PAGE_END_LIMIT) {
+          addPageAndNumber(doc);
+          singleDietDetailYLevel = DOC_MARGIN;
+        }
+
+        singleDietDetailYLevel = doc.y;
+      }
+
+      singleDietDetailYLevel = doc.y + 20;
+    }
+
+    singleDietDetailYLevel = doc.y;
+
+    doc
+      .fillColor("#212b36")
+      .font(BOLD_FONT)
+      .text(
+        `Repeat Days${" "}${"-"}`,
+        dietDetailsTimeXStart,
+        singleDietDetailYLevel + 20,
+        {
+          width: startDateXStart - dietDetailsTimeXStart,
+          continued: true,
+        }
+      )
+      .font(MEDIUM_FONT)
+      .text(
+        `${repeat_days}`,
+        dietDetailsTimeXStart + 10,
+        singleDietDetailYLevel + 20,
+        {
+          width: startDateXStart - dietDetailsTimeXStart,
+        }
+      );
+
+    singleDietDetailYLevel = doc.y;
+
+    doc
+      .font(BOLD_FONT)
+      .text(
+        `What Not to Do${" "}${"-"}`,
+        dietDetailsTimeXStart,
+        singleDietDetailYLevel + 10,
+        {
+          width: startDateXStart - dietDetailsTimeXStart,
+          continued: true,
+        }
+      )
+      .font(MEDIUM_FONT)
+      .text(
+        `${not_to_do ? not_to_do : "--"}`,
+        dietDetailsTimeXStart + 10,
+        singleDietDetailYLevel + 10,
+        {
+          width: startDateXStart - dietDetailsTimeXStart,
+        }
+      );
+
+    singleDietDetailYLevel = doc.y;
+
+    doc
+      .font(BOLD_FONT)
+      .text(
+        `Total Calories${" "}${"-"}`,
+        dietDetailsTimeXStart,
+        singleDietDetailYLevel + 10,
+        {
+          width: startDateXStart - dietDetailsTimeXStart,
+          continued: true,
+        }
+      )
+      .font(MEDIUM_FONT)
+      .text(
+        `${total_calories}${" "}Cal`,
+        dietDetailsTimeXStart + 10,
+        singleDietDetailYLevel + 10,
+        {
+          width: startDateXStart - dietDetailsTimeXStart,
+        }
+      );
+
+    singleDietDetailYLevel = doc.y;
+
+    generateHr(doc, singleDietDetailYLevel + 10);
+
+    singleDietDetailYLevel = doc.y;
+
+    dietCount++;
+
+    if (doc.y + 3 * SHORT_FONT_SIZE > PAGE_END_LIMIT) {
+      addPageAndNumber(doc);
+      singleDietDetailYLevel = DOC_MARGIN;
+    }
+  }
+
+  return doc.y + 20;
+}
+
+function printWorkout(
+  doc,
+  dietYLevel,
+  repetitions,
+  workouts_formatted_data,
+  workout_ids
+) {
+  const serialNoXStart = DOC_MARGIN;
+  const workoutNameXStart = DOC_MARGIN + 40;
+  const workoutTimeXStart = DOC_MARGIN + 160;
+  const workoutDetailsDataXStart = DOC_MARGIN + 230;
+  const startDateXStart = DOC_MARGIN + 430;
+  const endDateXStart = DOC_MARGIN + 560;
+
+  doc
+    .font(BOLD_FONT)
+    .fontSize(BOLD_FONT_SIZE)
+    .text("WORKOUT", DOC_MARGIN, dietYLevel);
+
+  const workoutsHeaderEnds = doc.y;
+
+  doc
+    .fillColor("#4a90e2")
+    .fontSize(NORMAL_FONT_SIZE)
+    .font(BOLD_FONT)
+    .text("S.No.", serialNoXStart, workoutsHeaderEnds + 20)
+    .font(BOLD_FONT)
+    .text("Workout Name", workoutNameXStart, workoutsHeaderEnds + 20)
+    .font(BOLD_FONT)
+    .text("Time", workoutTimeXStart, workoutsHeaderEnds + 20)
+    .font(BOLD_FONT)
+    .text("Details", workoutDetailsDataXStart, workoutsHeaderEnds + 20)
+    .font(BOLD_FONT)
+    .text("Duration", startDateXStart, workoutsHeaderEnds + 20)
+    .font(BOLD_FONT);
+  // .text("End Date",endDateXStart, workoutsHeaderEnds + 20)
+
+  let workoutCount = 1;
+  let singleWorkoutDetailYLevel = doc.y;
+
+  for (let each in workouts_formatted_data) {
+    if (doc.y + 3 * SHORT_FONT_SIZE > PAGE_END_LIMIT) {
+      addPageAndNumber(doc);
+      singleWorkoutDetailYLevel = DOC_MARGIN;
+    }
+
+    const {
+      workouts = {},
+      exercises = {},
+      exercise_details = {},
+      workout_exercise_groups = {},
+    } = workouts_formatted_data[each];
+
+    const {
+      basic_info: { name: workout_name } = {},
+      details: { not_to_do = "", repeat_days = [] } = {},
+      time: workoutTime = "",
+      start_date = null,
+      end_date = null,
+      total_calories = 0,
+    } = workouts[Object.keys(workouts)[0]] || {};
+
+    let basicDetailsYLevel = singleWorkoutDetailYLevel + 20,
+      formattedStartDate = "--",
+      formattedEndDate = "--";
+
+    if (start_date) {
+      formattedStartDate = moment(start_date);
+    }
+    if (end_date) {
+      formattedEndDate = moment(end_date);
+    }
+
+    let duration = null;
+    let durationText = "";
+    if (end_date) {
+      duration = formattedEndDate.diff(formattedStartDate, "days");
+      durationText = `${duration}${" "}days`;
+      if (duration >= 7) {
+        const weeks = Math.floor(duration / 7) || 0;
+        const days = duration % 7 || 0;
+        durationText = `${
+          weeks > 0 ? `${weeks}${" "}${weeks > 1 ? "weeks" : "week"}${" "}` : ""
+        }${days > 0 ? `${days}${" "}${days > 1 ? "days" : "day"}` : ""} `;
+      }
+    }
+
+    const formattedTime = getConvertedTime({ time: workoutTime }).format(
+      "hh:mm A"
+    );
+    doc
+      .fillColor("#212b36")
+      .fontSize(SHORT_FONT_SIZE)
+      .font(MEDIUM_FONT)
+      .text(`${workoutCount}.`, serialNoXStart, basicDetailsYLevel)
+      .text(`${workout_name}`, workoutNameXStart, basicDetailsYLevel, {
+        width: workoutTimeXStart - workoutNameXStart,
+      })
+      .text(`${formattedTime}`, workoutTimeXStart, basicDetailsYLevel, {
+        width: workoutDetailsDataXStart - workoutTimeXStart,
+      })
+      .text(
+        `${!end_date ? "Long Term" : durationText}`,
+        startDateXStart,
+        basicDetailsYLevel,
+        {
+          width: endDateXStart - startDateXStart,
+        }
+      );
+    // .text(`${formattedEndDate}`, endDateXStart, basicDetailsYLevel)
+
+    for (let each in workout_exercise_groups) {
+      const exerciseGroupArrayForEach = workout_exercise_groups[each] || [];
+
+      const { exercise_detail_id = null, notes = "", sets = null } =
+        exerciseGroupArrayForEach || {};
+
+      const {
+        basic_info: {
+          exercise_id = null,
+          repetition_value = null,
+          repetition_id = null,
+        } = {},
+      } = exercise_details[exercise_detail_id] || {};
+      const { basic_info: { name: exercise_name = "" } = {} } =
+        exercises[exercise_id] || {};
+      const { type: repetition_type = "" } = repetitions[repetition_id] || {};
+
+      let singleData = `${sets}${" "}set${" "}x${" "}${repetition_value}${" "}${repetition_type}${" "}${exercise_name}`;
+
+      if (doc.y + 3 * MEDIUM_FONT > PAGE_END_LIMIT) {
+        addPageAndNumber(doc);
+        singleWorkoutDetailYLevel = DOC_MARGIN;
+      }
+
+      doc
+        .fillColor("#212b36")
+        .font(MEDIUM_FONT)
+        .text(
+          `${singleData}`,
+          workoutDetailsDataXStart,
+          singleWorkoutDetailYLevel + 20,
+          {
+            width: startDateXStart - workoutDetailsDataXStart,
+          }
+        );
+
+      singleWorkoutDetailYLevel = doc.y;
+
+      notes.length
+        ? doc
+            .fillColor("#212b36")
+            .font(BOLD_FONT)
+            .text(
+              `Instructions:${" "}`,
+              workoutDetailsDataXStart,
+              singleWorkoutDetailYLevel + 5,
+              {
+                width: startDateXStart - workoutDetailsDataXStart,
+                continued: true,
+              }
+            )
+            .font(MEDIUM_FONT)
+            .text(
+              `${notes}`,
+              workoutDetailsDataXStart,
+              singleWorkoutDetailYLevel + 5,
+              {
+                width: startDateXStart - workoutDetailsDataXStart,
+              }
+            )
+        : null;
+
+      if (doc.y + 3 * SHORT_FONT_SIZE > PAGE_END_LIMIT) {
+        addPageAndNumber(doc);
+        singleWorkoutDetailYLevel = DOC_MARGIN;
+      }
+
+      singleWorkoutDetailYLevel = doc.y;
+    }
+
+    singleWorkoutDetailYLevel = doc.y;
+
+    doc
+      .fillColor("#212b36")
+      .font(BOLD_FONT)
+      .text(
+        `Repeat Days${" "}${"-"}`,
+        workoutDetailsDataXStart,
+        singleWorkoutDetailYLevel + 20,
+        {
+          width: startDateXStart - workoutDetailsDataXStart,
+          continued: true,
+        }
+      )
+      .font(MEDIUM_FONT)
+      .text(
+        `${repeat_days}`,
+        workoutDetailsDataXStart + 10,
+        singleWorkoutDetailYLevel + 20,
+        {
+          width: startDateXStart - workoutDetailsDataXStart,
+        }
+      );
+
+    singleWorkoutDetailYLevel = doc.y;
+
+    doc
+      .font(BOLD_FONT)
+      .text(
+        `What Not to Do${" "}${"-"}`,
+        workoutDetailsDataXStart,
+        singleWorkoutDetailYLevel + 10,
+        {
+          width: startDateXStart - workoutDetailsDataXStart,
+          continued: true,
+        }
+      )
+      .font(MEDIUM_FONT)
+      .text(
+        `${not_to_do ? not_to_do : "--"}`,
+        workoutDetailsDataXStart + 10,
+        singleWorkoutDetailYLevel + 10,
+        {
+          width: startDateXStart - workoutDetailsDataXStart,
+        }
+      );
+
+    singleWorkoutDetailYLevel = doc.y;
+
+    doc
+      .font(BOLD_FONT)
+      .text(
+        `Total Calories${" "}${"-"}`,
+        workoutDetailsDataXStart,
+        singleWorkoutDetailYLevel + 10,
+        {
+          width: startDateXStart - workoutDetailsDataXStart,
+          continued: true,
+        }
+      )
+      .font(MEDIUM_FONT)
+      .text(
+        `${total_calories}${" "}Cal`,
+        workoutDetailsDataXStart + 10,
+        singleWorkoutDetailYLevel + 10,
+        {
+          width: startDateXStart - workoutDetailsDataXStart,
+        }
+      );
+
+    singleWorkoutDetailYLevel = doc.y;
+
+    generateHr(doc, singleWorkoutDetailYLevel + 10);
+
+    singleWorkoutDetailYLevel = doc.y;
+
+    workoutCount++;
+
+    if (doc.y + 3 * SHORT_FONT_SIZE > PAGE_END_LIMIT) {
+      addPageAndNumber(doc);
+      singleWorkoutDetailYLevel = DOC_MARGIN;
+    }
+  }
+
+  return doc.y + 20;
 }
 
 function printDoctorBlockData(
@@ -161,7 +865,8 @@ function printDoctorBlockData(
   registrations,
   providers,
   doctor_id,
-  providerIcon
+  providerIcon,
+  providerPrescriptionDetails
 ) {
   const {
     name: doctorName = "",
@@ -173,6 +878,7 @@ function printDoctorBlockData(
     prefix = "",
     providerLogo = "",
     providerName = "",
+    providerAddress = ""
   } = formatDoctorsData(
     doctors,
     users,
@@ -182,46 +888,118 @@ function printDoctorBlockData(
     doctor_id
   );
 
-  const doctorBlockStartX = doc.x;
+  let doctorBlockStartX = doc.x;
+
+  let doctorBlockStartY = doc.y;
+
+  if (providerIcon) {
+    doc.image(`${providerIcon}`, DOC_MARGIN, doctorBlockStartY, {
+      width: 80,
+      height: 80,
+    });
+
+    doctorBlockStartX = doc.x + 100;
+
+    doc
+    .fontSize(BOLD_FONT_SIZE)
+    .font(MEDIUM_FONT)
+    .text(`${providerName}`, doctorBlockStartX, doctorBlockStartY);
+
+    doc
+    .fontSize(NORMAL_FONT_SIZE)
+    .font(MEDIUM_FONT)
+    .text(`${providerAddress}`, doctorBlockStartX, doc.y);
+  }
+
+  
 
   doc
     .fillColor("#3f76cd")
     .fontSize(BOLD_FONT_SIZE)
     .font(BOLD_FONT)
-    .text(`Dr. ${doctorName}`, DOC_MARGIN);
+    .text(`Dr. ${doctorName}`, doctorBlockStartX, doc.y);
 
   const doctorNameEndsY = doc.y;
+  // const providerDetailsStart = doc.x + 250;
+  // const providerDetailsEnd = doc.x + 380;
 
   // temp | remove after provider logo
   // doc.rect(400, doctorBlockStartX, 100, 100).fill("#ecf0f1");
   // doc.image(`${imageUrl}`, 400, doctorBlockStartX, { width: 120, height: 40 });
   // .text("\n");
   const fullDegree = degree ? `${degree}, MBBS` : "MBBS";
+
   doc
     .fontSize(NORMAL_FONT_SIZE)
     .fillColor("#212b36")
     .font(MEDIUM_FONT)
     .text(`${fullDegree}`, doc.x, doctorNameEndsY)
     .font(REGULAR_FONT)
-    .text(`Registration Number: ${registrationNumber}`)
-    .text(`Email: ${doctorEmail}`)
-    .text(`Phone: +${prefix}-${doctorMobileNumber}`)
-    .text(`Address: ${city}`);
+    .text(`Registration Number: ${registrationNumber}`, doc.x, doc.y)
+    .text(`Email: ${doctorEmail}`, doc.x, doc.y)
+    .text(`Phone: +${prefix}-${doctorMobileNumber}`, doc.x, doc.y)
+    .text(`Address: ${city}`, doc.x, doc.y);
 
-  // doc
-  //   .rect(0, 0, 700, doc.y + 10)
-  //   .fillOpacity(0.5)
-  //   .fill(DOC_BLOCK_BG_COLOR);
-  generateHr(doc, doc.y + 10);
+  let doctorDetailsEnd = doc.y;
 
-  if (providerIcon) {
-    doc.image(`${providerIcon}`, 480, doctorBlockStartX, {
+  // const providerDetailsHeight = doctorDetailsEnd - doctorNameEndsY;
+  // let textFontSize = NORMAL_FONT_SIZE;
+
+  // doc.fontSize(textFontSize);
+
+  // let height = doc.heightOfString(providerPrescriptionDetails, {
+  //   lineGap: 0,
+  //   width: providerDetailsEnd - providerDetailsStart,
+  // });
+
+  if (providerPrescriptionDetails) {
+    let fontSize =
+    NORMAL_FONT_SIZE - 2 * Math.ceil(providerPrescriptionDetails.length / 150);
+
+    doc
+      .font(REGULAR_FONT)
+      .fontSize(fontSize)
+      .text(`${providerPrescriptionDetails}`, DOC_MARGIN + 30, doc.y + 5, {
+        width: 500 - 30,
+        height: 30,
+      });
+
+
+      doctorDetailsEnd = doc.y;
+
+    // while (height > providerDetailsHeight && textFontSize > 1) {
+    //   textFontSize = textFontSize - 1;
+    //   doc.fontSize(textFontSize);
+    //   height = doc.heightOfString(providerPrescriptionDetails, {
+    //     lineGap: 0,
+    //     width: providerDetailsEnd - providerDetailsStart,
+    //   });
+    // }
+
+    // doc
+    //   .fontSize(textFontSize)
+    //   .fillColor("#212b36")
+    //   .text(
+    //     `${providerPrescriptionDetails}`,
+    //     providerDetailsStart,
+    //     doctorNameEndsY,
+    //     {
+    //       width: providerDetailsEnd - providerDetailsStart,
+    //       height: providerDetailsHeight,
+    //     }
+    //   );
+  }
+
+  // generateHr(doc, doc.y + 10);
+
+  // if (providerIcon) {
+    doc.image(`${__dirname}/qr-code.png`, 480, doctorBlockStartY, {
       width: 80,
       height: 80,
     });
-  }
+  // }
 
-  return doc.y;
+  return doctorDetailsEnd;
 }
 
 function printPatientBlockData(
@@ -245,6 +1023,7 @@ function printPatientBlockData(
     weight = null,
     mobile_number = "",
     prefix = "",
+    uid = "",
   } = formatPatientData(patients, users);
 
   doc
@@ -255,7 +1034,9 @@ function printPatientBlockData(
     })
     .font(REGULAR_FONT)
     .text(`${patientName}`, DOC_MARGIN + 10, doctorBlockEndRowLevel + 20),
-    { continued: true };
+    {
+      continued: true,
+    };
 
   doc
     .fontSize(NORMAL_FONT_SIZE)
@@ -302,13 +1083,20 @@ function printPatientBlockData(
   doc
     .fontSize(NORMAL_FONT_SIZE)
     .font(BOLD_FONT)
-    .text("Address :", DOC_MARGIN, mobileNumberEnds + 10, { continued: true })
+    .text("Patient ID: ", DOC_MARGIN, mobileNumberEnds + 10, {
+      continued: true,
+    })
     .font(REGULAR_FONT)
-    .text(
-      `${address ? address : "--"}`,
-      DOC_MARGIN + 10,
-      mobileNumberEnds + 10
-    );
+    .text(uid, DOC_MARGIN + 10, mobileNumberEnds + 10);
+
+  const patientIdEnds = doc.y;
+
+  doc
+    .fontSize(NORMAL_FONT_SIZE)
+    .font(BOLD_FONT)
+    .text("Address :", DOC_MARGIN, patientIdEnds + 10, { continued: true })
+    .font(REGULAR_FONT)
+    .text(`${address ? address : "--"}`, DOC_MARGIN + 10, patientIdEnds + 10);
 
   // doc
   //   .fillColor("black")
@@ -373,7 +1161,7 @@ function printPatientBlockData(
   return doc.y + 10;
 }
 
-function printCarePlanData(
+function printCarePlanData({
   doc,
   horizontalLineLevel,
   care_plans,
@@ -382,8 +1170,9 @@ function printCarePlanData(
   medicines,
   allergies,
   comorbidities,
-  suggestedInvestigations
-) {
+  suggestedInvestigations,
+  providerPrescriptionDetails,
+}) {
   const { diagnosis, condition, symptoms, clinicalNotes } = formatCarePlanData(
     care_plans,
     conditions
@@ -494,7 +1283,6 @@ function printCarePlanData(
     medicationYLevel = doc.y + 10;
 
     for (const [index, medicationData] of medicationsList.entries()) {
-
       const {
         description,
         medicineName,
@@ -512,14 +1300,16 @@ function printCarePlanData(
 
       const medicineData = `(${medicineType}) ${medicineName} `;
 
-
       // .fontSize(MEDICINE_FONT_SIZE)
       // .text(`${index + 1}.`, currentMedicationXLevel, medicationYLevel)
       // .fontSize(SHORT_FONT_SIZE)
       // .text("Rx", doc.x + 20, doc.y - (MEDICINE_FONT_SIZE + 5))
 
-      if(doc.y + (3 * SHORT_FONT_SIZE) > PAGE_END_LIMIT) {
-        doc.addPage();
+      if (doc.y + 3 * SHORT_FONT_SIZE > PAGE_END_LIMIT) {
+        if (pageCount === 1) {
+          addPageFooter(doc, providerPrescriptionDetails);
+        }
+        addPageAndNumber(doc);
         medicationYLevel = DOC_MARGIN;
       }
 
@@ -528,10 +1318,10 @@ function printCarePlanData(
         .fontSize(SHORT_FONT_SIZE)
         .font(MEDIUM_FONT)
         .text(`${index + 1}.`, serialNoXStart, medicationYLevel)
-        .text(`${medicineData}`, medicineXStart, medicationYLevel,   {
+        .text(`${medicineData}`, medicineXStart, medicationYLevel, {
           width: dosageXStart - medicineXStart,
         })
-        .text(`${genericName}`, medicineXStart, doc.y,   {
+        .text(`${genericName}`, medicineXStart, doc.y, {
           width: dosageXStart - medicineXStart,
         })
         .text(
@@ -548,7 +1338,7 @@ function printCarePlanData(
       // console.log("30183012093 medicationYLevelEnd, medicationYLevel",{medicationYLevelEnd, medicationYLevel, condition: (medicationYLevel - medicationYLevelEnd) > NORMAL_FONT_SIZE});
 
       // if((medicationYLevel - medicationYLevelEnd) > NORMAL_FONT_SIZE) {
-      //   // doc.addPage();
+      //   // addPageAndNumber(doc);
 
       //   const {start, count} = doc.bufferedPageRange();
       //   console.log("183129837129 count, start", {count, start});
@@ -559,17 +1349,15 @@ function printCarePlanData(
       // const {start, count} = doc.bufferedPageRange();
       //   console.log("1833129837129 count, start", {count, start});
 
-
       doc
         .text(`${strength}`, dosageXStart, medicationYLevel)
         .text(`${quantity ? quantity : "-"}`, quantityXStart, medicationYLevel)
-        .text(`${dosage}`, frequencyXStart, medicationYLevel,
-        {
+        .text(`${dosage}`, frequencyXStart, medicationYLevel, {
           width: timingFrequencyXStart - frequencyXStart,
-        }
-        );
+        });
 
-        doc.text(`${timings}`, timingFrequencyXStart, medicationYLevel)
+      doc
+        .text(`${timings}`, timingFrequencyXStart, medicationYLevel)
         // .text(
         //   `${frequency}`,
         //   timingFrequencyXStart,
@@ -577,13 +1365,13 @@ function printCarePlanData(
         // )
         .text(`${duration} day(s)`, timingFrequencyXStart, doc.y);
 
-        // if((medicationYLevel - doc.y) > NORMAL_FONT_SIZE) {
-        //   // doc.addPage();
-  
-        //   const {start, count} = doc.bufferedPageRange();
-        //   console.log("183129837129 count, start", {count, start});
-        //   doc.switchToPage(start);
-        // }
+      // if((medicationYLevel - doc.y) > NORMAL_FONT_SIZE) {
+      //   // addPageAndNumber(doc);
+
+      //   const {start, count} = doc.bufferedPageRange();
+      //   console.log("183129837129 count, start", {count, start});
+      //   doc.switchToPage(start);
+      // }
       // .fontSize(NORMAL_FONT_SIZE - 1)
       // .text(
       //   `${strength}, ${
@@ -598,20 +1386,32 @@ function printCarePlanData(
       //   console.log("183129837129 count, start", {count, start});
       //   doc.switchToPage(start);
       // }
-      
       const horizontalLineY =
         medicationYLevelEnd > doc.y ? medicationYLevelEnd : doc.y;
       generateHr(doc, horizontalLineY + 5);
 
-      medicationYLevel = medicationYLevelEnd + NORMAL_FONT_SIZE;
+      medicationYLevel = medicationYLevelEnd + NORMAL_FONT_SIZE + 12;
 
       // checkAndAddNewPage(doc);
     }
+
+    // if(doc.y > PAGE_END_LIMIT) {
+    //   addPageAndNumber(doc);
+    // }
   }
 
   // checkAndAddNewPage(doc);
 
-  let docYLevel = medicationYLevel;
+  if (!medicationsList.length > 0) {
+    medicationYLevel = generalExaminationEndLevel + NORMAL_FONT_SIZE + 12;
+  }
+
+  let docYLevel =
+    // workoutBlockLevelEnd
+    // ? workoutBlockLevelEnd
+    // : dietBlockLevelEnd ? dietBlockLevelEnd
+    // :
+    medicationYLevel;
 
   doc
     .font(BOLD_FONT)
@@ -631,18 +1431,106 @@ function printCarePlanData(
         DOC_MARGIN,
         doc.y + 5
       );
+
+    if (doc.y > PAGE_END_LIMIT) {
+      if (pageCount === 1) {
+        addPageFooter(doc, providerPrescriptionDetails);
+      }
+      addPageAndNumber(doc);
+    }
   }
 
   const suggestedInvestigationXLevelEnd = doc.x;
   return suggestedInvestigationXLevelEnd;
 }
 
-function printFooter(doc, imageUrl, nextAppointmentDuration, currentTime) {
+function addPageAndNumber(doc) {
+  //  const {page : { height = 0  }  = {}} = doc;
 
+  //  doc
+  //  .font(MEDIUM_FONT)
+  //  .text(`${pageCount}`, DOC_MARGIN, height-45)
+
+  //  printProviderPrescriptionDetails(doc);
+
+  doc.addPage();
+  // pageCount+=1;
+}
+
+function addPageFooter(doc, providerPrescriptionDetails = "") {
+  let initialDocY = doc.y;
+
+  doc
+    .font(REGULAR_FONT)
+    .fontSize(SHORT_FONT_SIZE)
+    .text(`Page ${pageCount}`, DOC_WIDTH_MARGIN - 20, PAGE_END_LIMIT + 35);
+  // pageCount+=1;
+  printProviderPrescriptionDetails(doc, providerPrescriptionDetails);
+
+  doc.y = initialDocY;
+  pageCount += 1;
+}
+
+function printProviderPrescriptionDetails(doc, providerPrescriptionDetails) {
+  // let textFontSize = NORMAL_FONT_SIZE;
+  // const providerDetailsStart = DOC_MARGIN;
+  // const providerDetailsEnd =DOC_MARGIN+500;
+  // const providerDetailsHeight = 30;
+
+  // const {page : { height = 0 , width = 0 }  = {}} = doc;
+
+  // let prescription = "";
+  // if(providerPrescriptionDetails.length) {
+  //   prescription = providerPrescriptionDetails;
+  // }
+
+  let fontSize =
+    SHORT_FONT_SIZE - 2 * Math.ceil(providerPrescriptionDetails.length / 150);
+
+  doc
+    .font(REGULAR_FONT)
+    .fontSize(fontSize)
+    .text(`${providerPrescriptionDetails}`, DOC_MARGIN, PAGE_END_LIMIT + 35, {
+      width: 500 - DOC_MARGIN,
+      height: 30,
+    });
+
+  //   let strHeight=doc.heightOfString(providerPrescriptionDetails, {lineGap: 0, width: providerDetailsEnd-providerDetailsStart});
+
+  //   if(providerPrescriptionDetails){
+
+  //    while(strHeight>providerDetailsHeight && textFontSize > 1){
+  //      textFontSize = textFontSize-1;
+  //      doc
+  //      .fontSize(fontSize);
+  //      strHeight=doc.heightOfString(providerPrescriptionDetails, {lineGap: 0, width: providerDetailsEnd-providerDetailsStart});
+
+  //    }
+
+  //    doc
+  //    .fontSize(textFontSize)
+  //    .fillColor("#212b36")
+  //    .text(`${providerPrescriptionDetails}`, providerDetailsStart,PAGE_END_LIMIT + 30,{
+  //      width:providerDetailsEnd-providerDetailsStart,
+  //      height:providerDetailsHeight
+  //    })
+  //  }
+}
+
+function printFooter(
+  doc,
+  imageUrl,
+  nextAppointmentDuration,
+  currentTime,
+  providerPrescriptionDetails
+) {
   // checkAndAddNewPage(doc);
 
-  if(doc.y > PAGE_END_LIMIT) {
-    doc.addPage();
+  if (doc.y > PAGE_END_LIMIT) {
+    if (pageCount === 1) {
+      addPageFooter(doc, providerPrescriptionDetails);
+    }
+    addPageAndNumber(doc);
     // medicationYLevel = DOC_MARGIN;
   }
 
@@ -660,30 +1548,40 @@ function printFooter(doc, imageUrl, nextAppointmentDuration, currentTime) {
       // footerStartLevel
     );
 
-    if(doc.y > (PAGE_END_LIMIT - 50)) {
-      doc.addPage();
-      // medicationYLevel = DOC_MARGIN;
+  const signaturePictureHeight = 40;
+
+  if (doc.y > PAGE_END_LIMIT - signaturePictureHeight) {
+    if (pageCount === 1) {
+      addPageFooter(doc, providerPrescriptionDetails);
     }
+    addPageAndNumber(doc);
+  }
 
   try {
-    doc.image(`${imageUrl}`, 400, doc.y + 10, { width: 120, height: 40 });
+    doc.image(`${imageUrl}`, 400, doc.y + 10, {
+      width: 120,
+      height: signaturePictureHeight,
+    });
   } catch (err) {
     console.log("ERROR in signature pic", err);
+  }
+
+  if (doc.y + 3 * SMALLEST_FONT_SIZE > PAGE_END_LIMIT) {
+    if (pageCount === 1) {
+      addPageFooter(doc);
+    }
+    addPageAndNumber(doc);
   }
 
   doc
     .fontSize(SMALLEST_FONT_SIZE - 2)
     .text(`${currentTime}`, 400, doc.y + 60)
     .fontSize(SMALLEST_FONT_SIZE)
-    .text("RMPs Signature & Stamp", 400, doc.y + 10);
+    .text("RMPs Signature & Stamp", 400, doc.y + 5);
 
-  generateHr(doc, doc.y + NORMAL_FONT_SIZE);
+  // generateHr(doc, doc.y + NORMAL_FONT_SIZE);
 
-  doc.text(
-    "Note: This prescription is generated on Adhere.",
-    DOC_MARGIN,
-    doc.y + 15
-  );
+  return doc.y + 10;
 }
 
 function formatCarePlanData(carePlans, conditions) {
@@ -713,8 +1611,9 @@ function formatCarePlanData(carePlans, conditions) {
         } = {},
       },
     } = carePlans;
+
     diagnosis = description;
-    symptoms = symptom;
+    symptoms = symptom ? symptom : "";
     clinicalNotes = clinical_notes;
   }
 
@@ -726,7 +1625,7 @@ function formatDoctorsData(
   users,
   degrees,
   registrations,
-  providers,
+  providers = {},
   doctor_id
 ) {
   // const doctorsIds = Object.keys(doctors);
@@ -758,17 +1657,20 @@ function formatDoctorsData(
 
   let providerLogo = "";
   let providerName = "";
+  let providerAddress = "";
 
   let mobileNumber = mobile_number;
   let prefixToShow = prefix;
-  if (provider_id) {
+
+  console.log("19823871237 providers", providers);
+
+  if (Object.keys(providers).length > 0) {
     const {
-      [provider_id]: {
-        basic_info: { user_id: providerUserId, name } = {},
+        basic_info: { user_id: providerUserId, name, address } = {},
         details: { icon: providerIcon } = {},
-      } = {},
     } = providers || {};
     providerName = name;
+    providerAddress = address;
     providerLogo = providerIcon;
 
     const { basic_info: { mobile_number, prefix } = {} } =
@@ -822,6 +1724,7 @@ function formatDoctorsData(
     prefix: prefixToShow,
     providerLogo,
     providerName,
+    providerAddress,
   };
 }
 
@@ -843,6 +1746,7 @@ function formatPatientData(patients, users) {
         weight = "",
         user_id = null,
         full_name = "",
+        uid = "",
       } = {},
       details: { allergies = "", comorbidities = "" } = {},
     } = {},
@@ -867,6 +1771,7 @@ function formatPatientData(patients, users) {
     comorbidities,
     mobile_number,
     prefix,
+    uid,
   };
 }
 
@@ -1035,5 +1940,7 @@ const reStyleText = (text) => {
 };
 
 const checkAndAddNewPage = (doc) => {
-  if (doc.y > PAGE_END_LIMIT){ doc.addPage(); }
+  if (doc.y > PAGE_END_LIMIT) {
+    addPageAndNumber(doc);
+  }
 };

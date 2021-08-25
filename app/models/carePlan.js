@@ -5,6 +5,7 @@ import {TABLE_NAME as patientTableName} from "./patients";
 import {TABLE_NAME as carePlanTemplateTableName} from "./careplanTemplate";
 import {TABLE_NAME as carePlanAppointmentTableName} from "./carePlanAppointments";
 import {TABLE_NAME as carePlanMedicationTableName} from "./carePlanMedications";
+import {TABLE_NAME as userRolesTableName } from "./userRoles";
 
 export const TABLE_NAME = "care_plans";
 
@@ -57,6 +58,16 @@ export const db = (database) => {
             renew_on: {
                 type: DataTypes.DATE,
             },
+            user_role_id:{
+                type: DataTypes.INTEGER,
+                allowNull: true,
+                references: {
+                    model: {
+                        tableName: userRolesTableName ,
+                    },
+                    key: 'id'
+                }
+            },
             expired_on: {
                 type: DataTypes.DATE,
             },
@@ -98,6 +109,11 @@ export const associate = (database) => {
         targetKey: "id",
         // foreignKey: "user_id",
         // targetKey: "id"
+    });
+
+    database.models[TABLE_NAME].belongsTo(database.models[userRolesTableName], {
+        foreignKey: "user_role_id",
+        targetKey: "id",
     });
 
     database.models[TABLE_NAME].hasOne(database.models[doctorTableName], {

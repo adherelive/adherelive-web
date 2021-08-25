@@ -36,7 +36,7 @@ export default props => {
       
       render: data => {
         const { patientData, addToWatchlist ,doctorData, onRowClick,removePatientFromWatchlist ,
-           currentTab,handleGetPatients,tabChanged , offset , paginatedPatientData , 
+           currentTab,handleGetPatients,tabChanged , offset , paginatedPatientData , auth_role
             } = data || {};
            
         return <PID onRowClick={onRowClick} patientData={patientData}
@@ -47,6 +47,7 @@ export default props => {
           tabChanged={tabChanged}
           offset={offset}
           paginatedPatientData={paginatedPatientData}
+          auth_role={auth_role}
           />;
       },
       sorter: () => null,
