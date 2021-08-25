@@ -2,6 +2,7 @@ import React, { Component, Fragment } from "react";
 import { injectIntl } from "react-intl";
 import { Drawer,message,Spin } from "antd";
 import MissedVitalCard from "../../Cards/patient/missedVital";
+import {USER_CATEGORY} from "../../../constant";
 
 import messages from "./message";
 
@@ -61,6 +62,12 @@ class MissedMedicationsDrawer extends Component {
 
 
     handlePatientDetailsRedirect = patient_id => e => {
+        const {authenticated_category}=this.props;
+
+        if(authenticated_category === USER_CATEGORY.PROVIDER){
+          return;
+        }
+    
       const { history} = this.props;
       this.onClose();
       history.push(`/patients/${patient_id}`);

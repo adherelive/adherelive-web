@@ -5,6 +5,9 @@ import {TABLE_NAME} from "../../models/careplanTemplate";
 import {TABLE_NAME as appointmentTemplateTableName} from "../../models/templateAppointments";
 import {TABLE_NAME as medicationTemplateTableName} from "../../models/templateMedications";
 import {TABLE_NAME as vitalTemplateTableName} from "../../models/templateVitals";
+import {TABLE_NAME as dietTemplateTableName} from "../../models/templateDiets";
+import {TABLE_NAME as workoutTemplateTableName} from "../../models/templateWorkouts";
+
 import {TABLE_NAME as conditionTableName} from "../../models/conditions";
 import {TABLE_NAME as severityTableName} from "../../models/severity";
 import {TABLE_NAME as treatmentTableName} from "../../models/treatments";
@@ -29,7 +32,9 @@ class CarePlanTemplateService {
               required: true
             }
           },
-          Database.getModel(vitalTemplateTableName)
+          Database.getModel(vitalTemplateTableName),
+          Database.getModel(dietTemplateTableName),
+          Database.getModel(workoutTemplateTableName),
         ]
       });
       return carePlanTemplate;
@@ -45,6 +50,8 @@ class CarePlanTemplateService {
           Database.getModel(appointmentTemplateTableName),
           Database.getModel(medicationTemplateTableName),
           Database.getModel(vitalTemplateTableName),
+          Database.getModel(dietTemplateTableName),
+          Database.getModel(workoutTemplateTableName),
         ]
       });
       return carePlanTemplate;
@@ -64,6 +71,8 @@ class CarePlanTemplateService {
           Database.getModel(appointmentTemplateTableName),
           Database.getModel(medicationTemplateTableName),
           Database.getModel(vitalTemplateTableName),
+          Database.getModel(dietTemplateTableName),
+          Database.getModel(workoutTemplateTableName),
         ],
       });
       await transaction.commit();
@@ -99,6 +108,8 @@ class CarePlanTemplateService {
             }
           },
           Database.getModel(vitalTemplateTableName),
+          Database.getModel(dietTemplateTableName),
+          Database.getModel(workoutTemplateTableName),
         ]
       });
       return carePlanTemplate;
@@ -135,7 +146,9 @@ class CarePlanTemplateService {
               required: true
             }
           },
-            Database.getModel(vitalTemplateTableName)
+            Database.getModel(vitalTemplateTableName),
+            Database.getModel(dietTemplateTableName),
+            Database.getModel(workoutTemplateTableName),
         ],
         order: [["updated_at", "DESC"]]
       });
@@ -202,7 +215,9 @@ class CarePlanTemplateService {
               required: true
             }
           },
-          Database.getModel(vitalTemplateTableName)
+          Database.getModel(vitalTemplateTableName),
+          Database.getModel(dietTemplateTableName),
+          Database.getModel(workoutTemplateTableName),
         ],
         order: [["updated_at", "DESC"]]
       });

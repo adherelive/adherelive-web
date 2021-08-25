@@ -6,11 +6,11 @@ import * as PaymentHelper from "./helper";
 
 // SERVICES...
 import PaymentProductService from "../../services/paymentProducts/paymentProduct.service";
-import doctorProviderMappingService from "../../services/doctorProviderMapping/doctorProviderMapping.service";
+import userRolesService from "../../services/userRoles/userRoles.service";
+import doctorService from "../../services/doctor/doctor.service"
 
 // WRAPPERS...
 import PaymentProductWrapper from "../../ApiWrapper/web/paymentProducts";
-import DoctorProviderMappingWrapper from "../../ApiWrapper/web/doctorProviderMapping";
 import { USER_CATEGORY } from "../../../constant";
 
 const Log = new Logger("WEB > CONTROLLER > PAYMENTS");
@@ -25,19 +25,33 @@ class PaymentController extends Controller {
     try {
       const {
         body,
-        userDetails: { userCategoryId, userData: { category = "" } = {} } = {}
+        userDetails: { userCategoryId, userRoleId, userData: { category = "" } = {} } = {}
       } = req;
 
-      let doctorId = userCategoryId;
+      let doctorRoleId = userRoleId;
 
-      const { doctor_id = null } = body || {};
+      const { doctor_id = null , for_user_type = USER_CATEGORY.DOCTOR } = body || {};
 
       if (doctor_id) {
         if (category !== USER_CATEGORY.PROVIDER) {
           return raiseClientError(res, 401, {}, "UNAUTHORIZED");
         }
 
-        doctorId = doctor_id;
+        const doctor = await doctorService.findOne({where: {id: doctor_id}, attributes: ["user_id"]}) || null;
+        const {user_id: doctorUserId = null} = doctor || {};
+        const userRole = await userRolesService.findOne({where: {
+          user_identity: doctorUserId,
+          linked_id: userCategoryId,
+          linked_with: USER_CATEGORY.PROVIDER
+         },
+         attributes: ["id"]
+       }) || null;
+
+        if (!userRole) {
+        return raiseClientError(res, 401, {}, "UNAUTHORIZED");
+        }
+        const {id: doctor_role_id = null} = userRole || {};
+        doctorRoleId = doctor_role_id;
       }
 
       const dataToAdd = PaymentHelper.getFormattedData(body);
@@ -63,10 +77,10 @@ class PaymentController extends Controller {
         const paymentProductData = await paymentProductService.addDoctorProduct(
           {
             ...dataToAdd,
-            creator_id: userCategoryId,
+            creator_role_id: userRoleId,
             creator_type: category,
-            for_user_id: doctorId,
-            for_user_type: USER_CATEGORY.DOCTOR,
+            for_user_role_id: doctorRoleId,
+            for_user_type: doctor_id ? for_user_type : category ,
             product_user_type: "patient" // todo: change to constant in model
           }
         );
@@ -109,9 +123,9 @@ class PaymentController extends Controller {
   removeDoctorPaymentProduct = async (req, res) => {
     const { raiseSuccess, raiseClientError, raiseServerError } = this;
     try {
-      const { body, userDetails: { userCategoryId } = {} } = req;
+      const { body } = req;
 
-      const {id} = req.body;
+      const {id} = body || {};
 
       const paymentProductService = new PaymentProductService();
       const deletedDoctorProduct = await paymentProductService.deleteDoctorProduct(
@@ -119,9 +133,6 @@ class PaymentController extends Controller {
           id: id
         }
       );
-
-      // let doctorData = {};
-
       return raiseSuccess(res, 200, {}, "doctor product record destroyed");
     } catch (error) {
       Log.debug("83901283091298 delete doctor product error", error);
@@ -135,18 +146,34 @@ class PaymentController extends Controller {
       const {
         userDetails: {
           userCategoryId,
+          userRoleId,
           userData: { category = "" } = {}
         } = {},
         query: { doctor_id = null } = {}
       } = req;
 
-      let doctorId = userCategoryId;
+      let doctorRoleId = userRoleId;
 
       if (doctor_id) {
         if (category !== USER_CATEGORY.PROVIDER) {
           return raiseClientError(res, 401, {}, "UNAUTHORIZED");
         }
-        doctorId = doctor_id;
+
+        const doctor = await doctorService.findOne({where: {id: doctor_id}, attributes: ["user_id"]}) || null;
+        const {user_id: doctorUserId = null} = doctor || {};
+        const userRole = await userRolesService.findOne({where: {
+          user_identity: doctorUserId,
+          linked_id: userCategoryId,
+          linked_with: USER_CATEGORY.PROVIDER
+         },
+         attributes: ["id"]
+       }) || null;
+
+        if (!userRole) {
+        return raiseClientError(res, 401, {}, "UNAUTHORIZED");
+        }
+        const {id: doctor_role_id = null} = userRole || {};
+        doctorRoleId = doctor_role_id;
       }
 
       if (category === USER_CATEGORY.PROVIDER && !doctor_id) {
@@ -156,37 +183,13 @@ class PaymentController extends Controller {
       const paymentProductService = new PaymentProductService();
       const doctorPaymentProductData = await paymentProductService.getAllCreatorTypeProducts(
         {
-          for_user_type: USER_CATEGORY.DOCTOR,
-          for_user_id: doctorId,
+          for_user_type: [USER_CATEGORY.DOCTOR,USER_CATEGORY.HSP],
+          for_user_role_id: doctorRoleId,
           product_user_type: "patient"
         }
       ) || [];
 
       let paymentProductData = [...doctorPaymentProductData];
-
-      // const doctorProvider = await doctorProviderMappingService.getProviderForDoctor(
-      //   doctorId
-      // );
-
-      // console.log("doctor provider is: ", doctorProvider)
-      // if (doctorProvider) {
-      //   const doctorProviderWrapper = await DoctorProviderMappingWrapper(
-      //     doctorProvider
-      //   );
-      //   const providerId = doctorProviderWrapper.getProviderId();
-
-      //   console.log("Provider id is: ", providerId)
-
-      //   const providerPaymentProductData = await paymentProductService.getAllCreatorTypeProducts(
-      //     {
-      //       creator_type: USER_CATEGORY.PROVIDER,
-      //       creator_id: providerId,
-      //       product_user_type: "patient"
-      //     }
-      //   );
-
-      //   paymentProductData = [...paymentProductData, ...providerPaymentProductData];
-      // }
 
       if (paymentProductData.length > 0) {
         let paymentProducts = {};

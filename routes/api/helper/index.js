@@ -44,4 +44,10 @@ export const validationError = (res, isValid) => {
   }
 };
 
+export const validationErrorMessage = (res, message) => {
+  const response = new Response(false, 422);
+  response.setMessage(message ? message : errMessage.CLIENT_ERROR);
+  return res.status(response.getStatusCode()).json(response.getResponse());
+};
+
 export default {};

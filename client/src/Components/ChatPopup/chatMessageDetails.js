@@ -368,6 +368,11 @@ class ChatMessageDetails extends Component {
           doctors[id] || {};
         authorName = getFullName({ first_name, middle_name, last_name });
         break;
+      case USER_CATEGORY.HSP:
+        const { basic_info: { first_name : hsp_first_name, middle_name: hsp_middle_name, last_name: hsp_last_name } = {} } =
+          doctors[id] || {};
+        authorName = getFullName({ first_name:hsp_first_name, middle_name:hsp_middle_name, last_name:hsp_last_name });
+        break;
       case USER_CATEGORY.PATIENT:
         const {
           basic_info: {
@@ -483,7 +488,7 @@ class ChatMessageDetails extends Component {
 
     const messageToRender = [];
     messageArr.forEach((message, index) => {
-      const { state: { author, body } = {} } = message || {};
+      const { state: { attributes : {sender_id} = {}, author, body } = {} } = message || {};
 
       const prevMessage = messageArr[index - 1] || null;
 
@@ -525,7 +530,7 @@ class ChatMessageDetails extends Component {
         return;
       }
 
-      if (author === `${authenticated_user}`) {
+      if ((sender_id && sender_id === `${authenticated_user}`) || author === `${authenticated_user}`) {
         // RIGHT
 
         // media types here

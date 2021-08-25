@@ -355,6 +355,7 @@ class DoctorProfilePage extends Component {
       this.setState({
         loading: false
       });
+      console.log("72833257423646238748236482634823",{error});
       message.warn("Something went wrong, please try again later");
     }
   };
@@ -1983,7 +1984,7 @@ class DoctorProfilePage extends Component {
         <div className="wp100 mb20 fs28 fw700 flex justify-space-between align-center">
           <div className="flex flex-start align-center">
             <ArrowLeftOutlined onClick={handleBack} className="mr10" />
-            <div>{formatMessage(messages.doctor_details_header_text)}</div>
+            <div>{formatMessage(messages.profile_details)}</div>
           </div>
 
           {/*<div>*/}
@@ -2079,11 +2080,11 @@ class DoctorProfilePage extends Component {
       let { profile_pic = "", profile_pic_url = "" } = this.state;
       let p_pic = profile_pic !== "" ? profile_pic : profile_pic_url;
 
-      if (profile_pic === "") {
+      if (p_pic && profile_pic === "" && p_pic.length) {
         this.setState({ profile_pic: p_pic });
       }
 
-      if (profile_pic_url === "") {
+      if (p_pic && profile_pic_url === "" && p_pic.length ) {
         this.setState({ profile_pic_url: p_pic });
       }
 
@@ -3034,7 +3035,7 @@ class DoctorProfilePage extends Component {
       doctors
     } = this.props;
 
-    if (authenticated_category === USER_CATEGORY.DOCTOR) {
+    if (authenticated_category === USER_CATEGORY.DOCTOR || authenticated_category === USER_CATEGORY.HSP) {
       history.replace(
         `${PATH.REGISTER_FROM_MY_PROFILE}${PATH.REGISTER_QUALIFICATIONS}`
       );
@@ -3055,7 +3056,7 @@ class DoctorProfilePage extends Component {
       doctors
     } = this.props;
 
-    if (authenticated_category === USER_CATEGORY.DOCTOR) {
+    if (authenticated_category === USER_CATEGORY.DOCTOR || authenticated_category === USER_CATEGORY.HSP) {
       history.replace(
         `${PATH.REGISTER_FROM_MY_PROFILE}${PATH.REGISTER_CLINICS}`
       );
@@ -3082,7 +3083,7 @@ class DoctorProfilePage extends Component {
   navigateToConsultationFee = () => {
     const { history } = this.props;
     const { id } = this.props;
-    history.push(`/doctors/${id}/payment_products`);
+    history.push(`/doctors/${id}/payment-products`);
   };
 
   render() {

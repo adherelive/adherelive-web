@@ -25,13 +25,15 @@ class NotificationController extends Controller {
   getNotifications = async (req, res) => {
     const { raiseSuccess, raiseServerError } = this;
     try {
-      const { body: { activities } = {}, userDetails: { userId,  userData: { category } = {}} = {} } = req;
+      const { body: { activities } = {}, userDetails: { userId, userRoleId, userData: { category } = {} } = {} } = req;
+
       const notificationIds = [];
 
-      const scheduleEventService = new ScheduleEventService();
+      // const scheduleEventService = new ScheduleEventService();
 
       let notificationData = {};
       let userData = {};
+      let userRoleData = {};
       let doctorData = {};
       let patientData = {};
       let appointmentData = {};
@@ -42,6 +44,27 @@ class NotificationController extends Controller {
       let scheduleEventsData = {};
       let symptomsData = {};
       let vitalTemplatesData = {};
+      
+      // diets
+      let dietData = {};
+      let dietFoodGroupMappingData = {};
+      let foodGroupData = {};
+      let foodItemDetailData = {};
+      let foodItemData = {};
+      let portionData = {};
+      let dietResponseData = {};
+
+      // workouts
+      let workoutData = {};
+      // let dietFoodGroupMappingData = {};
+      let exerciseGroupData = {};
+      let exerciseDetailData = {};
+      let exerciseData = {};
+      let repetitionData = {};
+      let workoutResponseData = {};
+
+      let uploadDocumentsData = {};
+
       for (let key in activities) {
         const { activity: activityData, is_read, group_id } = activities[key];
 
@@ -51,6 +74,7 @@ class NotificationController extends Controller {
         const details = await getDataForNotification({
           data: activityData[0] || {},
           loggedInUser: userId,
+          loggedInUserRole: userRoleId,
           is_read: is_read,
           group_id,
           category
@@ -65,10 +89,26 @@ class NotificationController extends Controller {
           medicines = {},
           vitals = {},
           care_plans = {},
+          user_roles = {},
           symptoms = {},
           appointments = {},
           schedule_events = {},
-          vital_templates = {}
+          vital_templates = {},
+          diet_responses = null,
+          upload_documents = null,
+          diets = null,
+          diet_food_group_mappings = null,
+          food_groups = null,
+          food_item_details = null,
+          food_items = null,
+          portions = null,
+
+          workouts = null,
+          exercise_groups = null,
+          exercise_details = null,
+          exercises = null,
+          repetitions = null,
+          workout_responses = null,
         } = details || {};
 
         // for (let each in appointments){
@@ -130,6 +170,7 @@ class NotificationController extends Controller {
 
         notificationData = { ...notificationData, ...notifications };
         userData = { ...userData, ...users };
+        userRoleData = {...userRoleData, ...user_roles}
         doctorData = { ...doctorData, ...doctors };
         patientData = { ...patientData, ...patients };
         appointmentData = { ...appointmentData, ...appointments };
@@ -140,6 +181,62 @@ class NotificationController extends Controller {
         scheduleEventsData = { ...scheduleEventsData, ...schedule_events};
         symptomsData = {...symptomsData, ...symptoms};
         vitalTemplatesData = {...vitalTemplatesData, ...vital_templates};
+
+        if(diets) {
+          dietData = {...dietData, ...diets};
+        }
+
+        if(diet_food_group_mappings) {
+          dietFoodGroupMappingData = {...dietFoodGroupMappingData, ...diet_food_group_mappings};
+        }
+
+        if(food_groups) {
+          foodGroupData = {...foodGroupData, ...food_groups};
+        }
+
+        if(food_item_details) {
+          foodItemDetailData = {...foodItemDetailData, ...food_item_details};
+        }
+
+        if(food_items) {
+          foodItemData = {...foodItemData, ...food_items};
+        }
+
+        if(portions) {
+          portionData = {...portionData, ...portions};
+        }
+
+        if(diet_responses) {
+          dietResponseData = {...dietResponseData, ...diet_responses};
+        }
+
+        if(upload_documents) {
+          uploadDocumentsData = {...uploadDocumentsData, ...upload_documents};
+        }
+
+        if(workouts) {
+          workoutData = {...workoutData, ...workouts};
+        }
+
+        if(exercise_groups) {
+          exerciseGroupData = {...exerciseGroupData, ...exercise_groups};
+        }
+
+        if(exercise_details) {
+          exerciseDetailData = {...exerciseDetailData, ...exercise_details};
+        }
+
+        if(exercises) {
+          exerciseData = {...exerciseData, ...exercises};
+        }
+
+        if(repetitions) {
+          repetitionData = {...repetitionData, ...repetitions};
+        }
+
+        if(workout_responses) {
+          workoutResponseData = {...workoutResponseData, ...workout_responses};
+        }
       }
 
       return raiseSuccess(
@@ -147,6 +244,7 @@ class NotificationController extends Controller {
         200,
         {
           users: userData,
+          user_roles: userRoleData,
           doctors: doctorData,
           patients: patientData,
           notifications: notificationData,
@@ -158,17 +256,40 @@ class NotificationController extends Controller {
           care_plans: carePlansData,
           schedule_events:scheduleEventsData,
           symptoms: symptomsData,
+
+          // diets
+          diets: dietData,
+          diet_food_group_mappings: dietFoodGroupMappingData,
+          food_groups: foodGroupData,
+          food_item_details: foodItemDetailData,
+          food_items: foodItemData,
+          portions: portionData,
+          diet_responses: dietResponseData,
+          upload_documents: uploadDocumentsData,
+
+          // workouts
+          workouts: workoutData,
+          exercise_groups: exerciseGroupData,
+          exercise_details: exerciseDetailData,
+          exercises: exerciseData,
+          repetitions: repetitionData,
+          workout_responses: workoutResponseData,
+
           // ids
           notification_ids: Object.keys(notificationData),
           doctor_ids: Object.keys(doctorData),
           patient_ids: Object.keys(patientData),
           appointment_ids: Object.keys(appointmentData),
           user_ids: Object.keys(userData),
+          user_role_ids: Object.keys(userRoleData),
           medicine_ids: Object.keys(medicineData),
           medication_ids: Object.keys(medicationData),
           vitals_ids: Object.keys(vitalsData),
           care_plan_ids: Object.keys(carePlansData),
-          symptom_ids: Object.keys(symptomsData)
+          symptom_ids: Object.keys(symptomsData),
+          diet_response_ids: Object.keys(dietResponseData),
+          workout_response_ids: Object.keys(workoutResponseData),
+          upload_document_ids: Object.keys(uploadDocumentsData),
         },
         "Notification data fetched successfully"
       );
@@ -181,19 +302,21 @@ class NotificationController extends Controller {
   raiseChatNotification = async(req, res) => {
     const { raiseSuccess, raiseServerError } = this;
     try{
-      const { body: { message = "", receiver_id = "" } = {}, userDetails  = {} } = req || {};
+      const { body: { message = "", receiver_id = "", receiver_role_id = "" } = {}, userDetails  = {} } = req || {};
 
       const {
         userId,
+        userRoleId,
         userData: { category } = {},
         userCategoryData: { basic_info: { full_name = "" } = {} } = {}
       } = userDetails || {};
 
 
       const eventData = {
-        participants: [userId, receiver_id],
+        participants: [userRoleId, receiver_role_id],
         actor: {
           id: userId,
+          user_role_id: userRoleId,
           details: {
             name: full_name,
             category
@@ -218,7 +341,7 @@ class NotificationController extends Controller {
         "Notification sent successfully."
       );
 
-    } catch(err) {
+    } catch(error) {
       Log.debug("raiseChatNotification 500 error", error);
       return raiseServerError(res);
     }

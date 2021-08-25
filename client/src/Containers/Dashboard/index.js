@@ -21,11 +21,12 @@ import { DRAWER } from "../../constant";
 import { open } from "../../modules/drawer";
 import { getAllMissedScheduleEvents } from "../../modules/scheduleEvents";
 import { setUnseenNotificationCount }  from "../../modules/pages/NotificationCount";
+import { getAllDietsForDoctor } from "../../modules/diets";
 
 const mapStateToProps = state => {
   const {
     graphs,
-    auth: { authPermissions = [], authenticated_user = 1 , notificationToken = '' , feedId = '' , doctor_provider_id = ''  } = {},
+    auth: {authenticated_category, authPermissions = [], authenticated_user = 1  , auth_role = null, notificationToken = '' , feedId = '' , doctor_provider_id = ''  } = {},
     treatments = {},
     conditions = {},
     pages: { ui_features = {} ,dashboard ={}} = {},
@@ -41,6 +42,7 @@ const mapStateToProps = state => {
   } = state;
   return {
     notificationToken,
+    authenticated_category,
     feedId,
     graphs,
     treatments,
@@ -58,7 +60,8 @@ const mapStateToProps = state => {
     features_mappings,
     dashboard,
     doctor_provider_id,
-    providers
+    providers,
+    auth_role
   };
 };
 
@@ -88,7 +91,12 @@ const mapDispatchToProps = dispatch => {
     openMissedVitalDrawer: () =>
     dispatch(open({ type: DRAWER.MISSED_VITAL})),
     getAllMissedScheduleEvents: () => dispatch(getAllMissedScheduleEvents()),
-    setUnseenNotificationCount : (count) => dispatch(setUnseenNotificationCount(count))
+    setUnseenNotificationCount : (count) => dispatch(setUnseenNotificationCount(count)),
+    getAllDietsForDoctor:() => dispatch(getAllDietsForDoctor()),
+    openMissedDietDrawer: () =>
+    dispatch(open({ type: DRAWER.MISSED_DIET})),
+    openMissedWorkoutDrawer: () =>
+    dispatch(open({ type: DRAWER.MISSED_WORKOUT})),
   };
 };
 

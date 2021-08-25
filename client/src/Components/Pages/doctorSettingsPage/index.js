@@ -161,7 +161,6 @@ class DoctorSettingsPage extends Component {
   };
 
   getConsultationFeesHeader = () => {
-    // const { id, doctors, users } = this.props;
     const { formatMessage, handleBack } = this;
 
     return (
@@ -174,7 +173,6 @@ class DoctorSettingsPage extends Component {
   };
 
   getBillingHeader = () => {
-    // const { id, doctors, users } = this.props;
     const { formatMessage, handleBack } = this;
 
     return (
@@ -199,6 +197,9 @@ class DoctorSettingsPage extends Component {
   };
 
   noConsultationFeeDisplay = () => {
+    const provider_id = this.isDoctorRoleAssociatedWithProvider() || null;
+
+    
     return (
       <div className="w700 mb20 flex direction-column align-center justify-center">
         <div className="br-lightgrey h200 w200 br4"></div>
@@ -209,6 +210,9 @@ class DoctorSettingsPage extends Component {
           {this.formatMessage(messages.notAddedFeesYet)}
         </div>
 
+      {
+        provider_id === null
+        ?
         <div className=" mt20">
           <Button type="primary" onClick={this.displayAddDoctorPaymentProduct}>
             <span className="w200 fs20">
@@ -217,6 +221,10 @@ class DoctorSettingsPage extends Component {
             {/* Add */}
           </Button>
         </div>
+        :
+        null
+      }
+        
       </div>
     );
   };
@@ -251,6 +259,11 @@ class DoctorSettingsPage extends Component {
 
   getAddAccountDetailsDisplay = () => {
 
+    const providerid = this.isDoctorRoleAssociatedWithProvider();
+    if(providerid){
+      return null;
+    }
+
     return (
       <Button
         type="dashed"
@@ -274,7 +287,20 @@ class DoctorSettingsPage extends Component {
   async handleGetAccountDetails() {
     try {
       const { getAccountDetails } = this.props;
-      const response = await getAccountDetails();
+      const provider_id = this.isDoctorRoleAssociatedWithProvider() || null;
+      let response = {};
+
+      console.log("83827163871873671638712",{provider_id});
+
+
+      if(provider_id){
+        response = await getAccountDetails(provider_id);
+
+      }else{
+        
+        response = await getAccountDetails();
+      }
+
       const {
         status,
         payload: { data: { users = {}, account_details = {} } = {} } = {},
@@ -290,7 +316,7 @@ class DoctorSettingsPage extends Component {
         // const {basic_info : {id='',customer_name='',account_number='',ifsc_code='',account_type='',account_mobile_number='',in_use=false,prefix='',upi_id=null} = {} } = Object.values(account_details)[0] || {};
       }
     } catch (err) {
-      console.log("err ", err);
+      console.log("83827163871873671638712 err ", err);
       message.warn(this.formatMessage(messages.somethingWentWrong));
     }
   }
@@ -490,6 +516,8 @@ class DoctorSettingsPage extends Component {
     const { account_details } = this.state;
     let details = [];
 
+    const providerid = this.isDoctorRoleAssociatedWithProvider() || null;
+
     const accountDetails = Object.keys(account_details).map(account_id => {
         const {
             basic_info: {
@@ -584,6 +612,10 @@ class DoctorSettingsPage extends Component {
               </span>
             </div>
               
+          {
+            !providerid
+            &&
+              
             <div className="flex  align-center justify-space-evenly wp100 mb10">
            
               <Tooltip placement={"bottom"} title={this.formatMessage(messages.editAccount)}
@@ -608,6 +640,7 @@ class DoctorSettingsPage extends Component {
               />
               </Tooltip>
             </div>
+            }
           </div>
         );
     });
@@ -672,11 +705,6 @@ class DoctorSettingsPage extends Component {
     const {
       selectedKey,
     } = this.state;
-    const { getPaymentDetails ,sidebar} = this;
-    const { noDoctorPaymentProducts } = this.state;
-    const {doctors = {} } = this.props;
-    const {provider_id} = Object.values(doctors)[0];
-
     return (
 
     <div className="wp100" >
@@ -693,7 +721,6 @@ class DoctorSettingsPage extends Component {
 
         {selectedKey === PAYMENT_DETAILS && (
           <div className="wp100 ml10 mr10 flex direction-column justify-space-between mw635">
-            {/* {getPaymentDetails()} */}
             <DoctorAccountDetails/>
           </div>
         )}
@@ -702,16 +729,24 @@ class DoctorSettingsPage extends Component {
     
   }
 
+  isDoctorRoleAssociatedWithProvider = () => {
+    const {auth: {auth_role} = {}, user_roles = {}} = this.props;
+    const {basic_info: {linked_with, linked_id} = {}} = user_roles[auth_role] || {};
+
+    if(linked_id) {
+      return linked_id;
+    }
+    return false;
+  }
+
   render() {
     const {
       selectedKey,
     } = this.state;
-    const { getPaymentDetails ,sidebar} = this;
+    const { sidebar} = this;
     const { noDoctorPaymentProducts } = this.state;
-    const {doctors = {} } = this.props;
-    const {provider_id} = Object.values(doctors)[0];
+    const provider_id = this.isDoctorRoleAssociatedWithProvider();
 
-    // console.log("56456786546789",provider_id);
     
 
     return (
@@ -747,7 +782,7 @@ class DoctorSettingsPage extends Component {
         <div className="wp100 p20 flex flex-wrap">
           {/************************* SIDEBAR *************************/}
 
-          <div className="wp30" >{this.sidebar()}</div>
+          <div className="wp30" >{sidebar()}</div>
 
           {/************************* SIDEBAR RELATED CONTENTS *************************/}
           <div className="wp70" >{this.sidebarRelatedContent()}</div>

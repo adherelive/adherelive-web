@@ -465,7 +465,8 @@ class Medicine extends Component{
         const {
             form: { getFieldDecorator, getFieldError, isFieldTouched,getFieldValue },
             setFormulation,
-            favourite_medicine_ids=[]
+            favourite_medicine_ids=[],
+            payload : { canViewDetails = false } = {}
           } = this.props;
         
         // console.log("45238646283743284 =================>>>>>>>>",{props:this.props});  
@@ -486,6 +487,7 @@ class Medicine extends Component{
             onDropdownVisibleChange={this.onDropdownVisibleChange}
             onSelect={this.onOptionSelect}
             value={medicine_id}
+            disabled={canViewDetails}
             >
                 {this.getOptions()}
     

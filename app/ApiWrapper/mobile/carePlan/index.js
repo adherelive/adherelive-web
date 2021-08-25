@@ -1,10 +1,12 @@
 import BaseCarePlan from "../../../services/carePlan";
 import carePlanService from "../../../services/carePlan/carePlan.service";
-import carePlanAppointmentService from "../../../services/carePlanAppointment/carePlanAppointment.service";
-import carePlanMedicationService from "../../../services/carePlanMedication/carePlanMedication.service";
+// import carePlanAppointmentService from "../../../services/carePlanAppointment/carePlanAppointment.service";
+// import carePlanMedicationService from "../../../services/carePlanMedication/carePlanMedication.service";
 import VitalService from "../../../services/vitals/vital.service";
+import DietService from "../../../services/diet/diet.service";
+import WorkoutService from "../../../services/workouts/workout.service";
 
-import CarePlanAppointmentWrapper from "../../../ApiWrapper/mobile/carePlanAppointment";
+// import CarePlanAppointmentWrapper from "../../../ApiWrapper/mobile/carePlanAppointment";
 import DoctorWrapper from "../../web/doctor";
 
 class CarePlanWrapper extends BaseCarePlan {
@@ -23,7 +25,8 @@ class CarePlanWrapper extends BaseCarePlan {
       activated_on,
       renew_on,
       expired_on,
-      care_plan_template_id
+      care_plan_template_id,
+      user_role_id
     } = _data || {};
 
     return {
@@ -32,12 +35,13 @@ class CarePlanWrapper extends BaseCarePlan {
         name,
         doctor_id,
         patient_id,
-        care_plan_template_id
+        care_plan_template_id,
+        user_role_id
       },
       details,
       activated_on,
       renew_on,
-      expired_on
+      expired_on,
     };
   };
 
@@ -46,36 +50,74 @@ class CarePlanWrapper extends BaseCarePlan {
     const { care_plan_appointments = [], care_plan_medications = [] } =
       _data || {};
 
-    const vitals = await VitalService.getAllByData({
-      care_plan_id: getCarePlanId()
-    }) || [];
+    const vitals =
+      (await VitalService.getAllByData({
+        care_plan_id: getCarePlanId(),
+      })) || [];
 
     const vitalIds = [];
     if (vitals.length > 0) {
-      vitals.forEach(vital => {
+      vitals.forEach((vital) => {
         vitalIds.push(vital.get("id"));
       });
     }
+
+    const dietService = new DietService();
+    const { rows: diets = [] } =
+      (await dietService.findAndCountAll({
+        where: { care_plan_id: getCarePlanId() },
+        attributes: ["id"],
+      })) || {};
+
+    const dietIds = [];
+
+    if (diets.length > 0) {
+      diets.forEach((diet) => {
+        if (dietIds.indexOf(diet.id) === -1) {
+          dietIds.push(diet.id);
+        }
+      });
+    }
+
+    const workoutService = new WorkoutService();
+    const { rows: workouts = [] } =
+      (await workoutService.findAndCountAll({
+        where: { care_plan_id: getCarePlanId() },
+        attributes: ["id"],
+      })) || {};
+
+    const workoutIds = [];
+
+    if (workouts.length > 0) {
+      workouts.forEach((workout) => {
+        if (workoutIds.indexOf(workout.id) === -1) {
+          workoutIds.push(workout.id);
+        }
+      });
+    }
+
     return {
       ...getBasicInfo(),
-      appointment_ids: care_plan_appointments.map(appointment =>
+      appointment_ids: care_plan_appointments.map((appointment) =>
         appointment.get("appointment_id")
       ),
-      medication_ids: care_plan_medications.map(medication =>
+      medication_ids: care_plan_medications.map((medication) =>
         medication.get("medication_id")
       ),
-      vital_ids: vitalIds
+      vital_ids: vitalIds,
+      diet_ids: dietIds,
+      workout_ids: workoutIds
     };
   };
 
   getReferenceInfo = async () => {
-    const {_data, getCarePlanId, getAllInfo} = this;
-    const {doctor, patient} = _data || {};
+    const { _data, getCarePlanId, getAllInfo } = this;
+    const { doctor, patient } = _data || {};
 
     let doctorData = {};
     let doctor_id = null;
 
-    if(doctor) {
+    if (doctor) {
       const doctors = await DoctorWrapper(doctor);
       doctorData[doctors.getDoctorId()] = await doctors.getAllInfo();
       doctor_id = doctors.getDoctorId();
@@ -86,9 +128,9 @@ class CarePlanWrapper extends BaseCarePlan {
         [getCarePlanId()]: await getAllInfo(),
       },
       doctors: {
-        ...doctorData
+        ...doctorData,
       },
-      doctor_id
+      doctor_id,
     };
   };
 }

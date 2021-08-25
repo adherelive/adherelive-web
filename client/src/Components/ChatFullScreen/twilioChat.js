@@ -133,7 +133,7 @@ class ChatForm extends Component {
       event.preventDefault();
     }
 
-    const {raiseChatNotificationFunc}=this.props;
+    const {raiseChatNotificationFunc, authenticated_user}=this.props;
     let trimmedMessage = this.state.newMessage.trim();
     if (this.state.newMessage.length > 0 && trimmedMessage.length > 0) {
       const message = this.state.newMessage;
@@ -142,7 +142,9 @@ class ChatForm extends Component {
       const {channel = null } = this.props;
 
       if(channel){
-        const resp = await channel.sendMessage(message);
+        const resp = await channel.sendMessage(message, {
+          sender_id: authenticated_user
+        });
       }
 
       if(message){
@@ -516,9 +518,15 @@ class TwilioChat extends Component {
     const { authenticated_user } = this.props;
 
     for (let messageData of messages) {
+      const {
+        index,
+        attributes: { sender_id } = {},
+        author,
+      } = messageData.state;
       if (
-        messageData.state.index <= otherUserLastConsumedMessageIndex &&
-        messageData.state.author === `${authenticated_user}`
+        index <= otherUserLastConsumedMessageIndex &&
+        (sender_id === `${authenticated_user}` ||
+          author === `${authenticated_user}`)
       ) {
         messageData.received = true;
         messageData.sent = true;
@@ -728,7 +736,7 @@ class TwilioChat extends Component {
 
   toggleChatPermission = async () => {
     const { authenticated_category, patientId } = this.props;
-    if (authenticated_category !== USER_CATEGORY.DOCTOR) {
+    if (authenticated_category !== USER_CATEGORY.DOCTOR && authenticated_category !== USER_CATEGORY.HSP) {
       return;
     }
 
@@ -757,7 +765,7 @@ class TwilioChat extends Component {
 
   toggleVideoCallPermission = async () => {
     const { authenticated_category, patientId } = this.props;
-    if (authenticated_category !== USER_CATEGORY.DOCTOR) {
+    if (authenticated_category !== USER_CATEGORY.DOCTOR && authenticated_category !== USER_CATEGORY.HSP) {
       return;
     }
 
@@ -796,10 +804,12 @@ class TwilioChat extends Component {
     } = this.props;
 
     const {
-      [patientId]: { basic_info: { user_id: patientUserId = null } = {} } = {}
+      [patientId]: { basic_info: { user_id: patientUserId = null } = {} , user_role_id : patientRoleId = null  } = {}
     } = patients;
 
-    const data = { message, receiver_id: patientUserId}
+    
+    const data = { message, receiver_id: patientUserId , receiver_role_id : patientRoleId }
+
 
     const resp = raiseChatNotification(data)
   }

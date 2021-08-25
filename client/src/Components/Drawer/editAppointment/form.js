@@ -838,7 +838,7 @@ class EditAppointmentForm extends Component {
       appointmentData,
       patientId,
       carePlan = {},
-      payload: { id: appointment_id, patient_id } = {},
+      payload: { id: appointment_id, patient_id, canViewDetails = false } = {},
     } = this.props;
     const {radiologyTypeSelected = null} = this.state;
     // const { fetchingPatients, typeDescription } = this.state;
@@ -964,6 +964,7 @@ class EditAppointmentForm extends Component {
               placeholder={formatMessage(messages.placeholderAppointmentType)}
               onSelect={this.handleTypeSelect}
               autoFocus={true}
+              disabled={canViewDetails}
 
             >
               {this.getTypeOption()}
@@ -1005,7 +1006,7 @@ class EditAppointmentForm extends Component {
                 <Select
                   onChange={this.handleTypeDescriptionSelect}
                   onDropdownVisibleChange={this.DescDropDownVisibleChange}
-                  disabled={!appointmentType}
+                  disabled={!appointmentType || canViewDetails}
                   notFoundContent={"No match found"}
                   className="drawer-select"
                   placeholder={formatMessage(messages.placeholderTypeDesc)}
@@ -1062,7 +1063,7 @@ class EditAppointmentForm extends Component {
                 <Select
                   onChange={this.handleTypeDescriptionSelect}
                   onDropdownVisibleChange={this.DescDropDownVisibleChange}
-                  disabled={!appointmentType}
+                  disabled={!appointmentType || canViewDetails}
                   notFoundContent={"No match found"}
                   className="drawer-select"
                   placeholder={formatMessage(messages.placeholderTypeDesc)}
@@ -1103,7 +1104,7 @@ class EditAppointmentForm extends Component {
             )(
                 <Select
                   onDropdownVisibleChange={this.RadiologyDropDownVisibleChange}
-                  disabled={radiologyTypeSelected === null}
+                  disabled={radiologyTypeSelected === null || canViewDetails}
                   notFoundContent={"No match found"}
                   className="drawer-select radiology-type-select"
                   placeholder={formatMessage(messages.placeholderRadiologyTypeDesc)}
@@ -1161,6 +1162,7 @@ class EditAppointmentForm extends Component {
                   .toLowerCase()
                   .indexOf(input.toLowerCase()) >= 0
               }
+              disabled={canViewDetails}
 
             >
               {this.getProviderOption()}
@@ -1178,7 +1180,10 @@ class EditAppointmentForm extends Component {
             valuePropName: 'checked',
             initialValue: critical
           })(
-            <Checkbox className=''>{formatMessage(messages.criticalAppointment)}</Checkbox>)}
+            <Checkbox 
+            disabled={canViewDetails}
+
+            >{formatMessage(messages.criticalAppointment)}</Checkbox>)}
         </FormItem>
 
 
@@ -1208,6 +1213,7 @@ class EditAppointmentForm extends Component {
               onBlur={handleDateSelect(currentDate)}
               // suffixIcon={calendarComp()}
               disabledDate={disabledDate}
+              disabled={canViewDetails}
             // getCalendarContainer={this.getParentNode}
             />
           )}
@@ -1245,8 +1251,11 @@ class EditAppointmentForm extends Component {
                 //   className="wp100 ant-time-custom"
                 // // getPopupContainer={this.getParentNode}
                 // />
-                <Dropdown overlay={getTimePicker(START_TIME)}>
-                <div className="p10 br-brown-grey br5 wp100 h50 flex align-center justify-space-between pointer">
+                <Dropdown
+                 overlay={getTimePicker(START_TIME)}
+                 disabled={canViewDetails}
+                 >
+                <div className={`p10 br-brown-grey br5 wp100 h50 flex align-center justify-space-between pointer ${canViewDetails ? "disabled-field-form" : null } `}>
                   <div>{getStartTime()}</div>
                   <ClockCircleOutlined />
                 </div>
@@ -1285,8 +1294,11 @@ class EditAppointmentForm extends Component {
                 //   className="wp100 ant-time-custom"
                 // // getPopupContainer={this.getParentNode}
                 // />
-                <Dropdown overlay={getTimePicker(END_TIME)}>
-                <div className="p10 br-brown-grey br5 wp100 h50 flex align-center justify-space-between pointer">
+                <Dropdown 
+                overlay={getTimePicker(END_TIME)}
+                disabled={canViewDetails}
+                >
+                <div className={`p10 br-brown-grey br5 wp100 h50 flex align-center justify-space-between pointer ${canViewDetails ? "disabled-field-form" : null } `}>
                   <div>{getEndTime()}</div>
                   <ClockCircleOutlined />
                 </div>
@@ -1343,7 +1355,7 @@ class EditAppointmentForm extends Component {
             rules: [
 
               {
-                pattern: new RegExp(/^[a-zA-Z][a-zA-Z\s]*$/),
+                // pattern: new RegExp(/^[a-zA-Z][a-zA-Z\s]*$/),
                 message: formatMessage(messages.error_valid_purpose)
               }
             ],
@@ -1353,6 +1365,7 @@ class EditAppointmentForm extends Component {
               autoFocus
               className='mt4'
               placeholder={formatMessage(messages.purpose_text_placeholder)}
+              disabled={canViewDetails}
             />
           )}
         </FormItem>
@@ -1379,6 +1392,7 @@ class EditAppointmentForm extends Component {
               maxLength={1000}
               placeholder={formatMessage(messages.description_text_placeholder)}
               rows={4}
+              disabled={canViewDetails}
             />
           )}
         </FormItem>

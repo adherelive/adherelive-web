@@ -21,18 +21,20 @@ class AgoraController extends Controller {
 
     generateVideoAccessToken = async (req, res) => {
         try {
-            const {params: {id = null} = {}, userDetails: {userId, userData: { category } = {}} = {}} = req;
-            let doctorUserId = null, patientUserId = null;
-            if(category === USER_CATEGORY.DOCTOR) {
-                doctorUserId = userId;
-                patientUserId = id;
+            const {params: {id = null} = {}, userDetails: {
+                userRoleId,
+                userData: { category } = {}} = {}} = req;
+            let doctorRoleId = null, patientRoleId = null;
+            if(category === USER_CATEGORY.DOCTOR || category === USER_CATEGORY.HSP) {
+                doctorRoleId = userRoleId;
+                patientRoleId = id;
             } else if (category === USER_CATEGORY.PATIENT) {
-                doctorUserId = id;
-                patientUserId = userId;
+                doctorRoleId = id;
+                patientRoleId = userRoleId;
             }
-            const channelName = agoraService.getRoomId(doctorUserId, patientUserId);
+            const channelName = agoraService.getRoomId(doctorRoleId, patientRoleId);
 
-            const token = await agoraService.videoTokenGenerator(userId, channelName);
+            const token = await agoraService.videoTokenGenerator(userRoleId, channelName);
 
             return this.raiseSuccess(res, 200, { token: token}, "Created new video token with userId");
         } catch (error) {
@@ -44,19 +46,20 @@ class AgoraController extends Controller {
     missedCall = async(req, res) => {
         try {
             const {params: {id = null} = {}, userDetails: {userId,
+                 userRoleId,
                  userData: { category } = {},
                  userCategoryData: { basic_info: { full_name } = {} } = {}} = {}} = req;
 
-            let doctorUserId = null, patientUserId = null;
-            if(category === USER_CATEGORY.DOCTOR) {
-                doctorUserId = userId;
-                patientUserId = id;
+            let doctorRoleId = null, patientRoleId = null;
+            if(category === USER_CATEGORY.DOCTOR || category === USER_CATEGORY.HSP) {
+                doctorRoleId = userRoleId;
+                patientRoleId = id;
             } else if (category === USER_CATEGORY.PATIENT) {
-                doctorUserId = id;
-                patientUserId = userId;
+                doctorRoleId = id;
+                patientRoleId = userRoleId;
             }
-            const roomId = agoraService.getRoomId(doctorUserId, patientUserId);
-            const participantTwoId = category === USER_CATEGORY.DOCTOR? patientUserId: doctorUserId;
+            const roomId = agoraService.getRoomId(doctorRoleId, patientRoleId);
+            const participantTwoId = (category === USER_CATEGORY.DOCTOR || category === USER_CATEGORY.HSP )? patientRoleId: doctorRoleId;
 
             const eventScheduleData = {
                 type: AGORA_CALL_NOTIFICATION_TYPES.MISSED_CALL,
@@ -64,9 +67,10 @@ class AgoraController extends Controller {
                 event_type: AGORA_CALL_NOTIFICATION_TYPES.MISSED_CALL,
                 details: {},
                 roomId,
-                participants: [userId, participantTwoId],
+                participants: [doctorRoleId, patientRoleId],
                 actor: {
                     id: userId,
+                    user_role_id: userRoleId,
                     details: { name: full_name, category }
                 }
             };
@@ -90,6 +94,7 @@ class AgoraController extends Controller {
             body: { roomId } = {},
             userDetails: {
               userId,
+              userRoleId,
               userData: { category } = {},
               userCategoryData: { basic_info: { full_name } = {} } = {}
             } = {}
@@ -100,6 +105,7 @@ class AgoraController extends Controller {
             event_type: AGORA_CALL_NOTIFICATION_TYPES.START_CALL,
             actor: {
               id: userId,
+              user_role_id: userRoleId,
               details: { name: full_name, category }
             }
           });

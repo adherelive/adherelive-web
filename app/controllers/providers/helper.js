@@ -8,7 +8,9 @@ export const validateAccountData = ({
   use_as_main,
   upi_id,
   razorpay_account_id,
-  razorpay_account_name
+  razorpay_account_name,
+  prefix,
+  account_mobile_number
 }) => {
   let data = {};
 
@@ -43,6 +45,15 @@ export const validateAccountData = ({
 
   if (!isEmpty(razorpay_account_name)) {
     data["razorpay_account_name"] = razorpay_account_name;
+  }
+
+  if(prefix){
+    data["prefix"] = prefix;
+  }
+
+  if(account_mobile_number){
+    data["account_mobile_number"] = account_mobile_number;
+
   }
 
   return data;

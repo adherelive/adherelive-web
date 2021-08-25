@@ -10,6 +10,7 @@ import {DRAWER} from "../../../constant";
 const mapStateToProps = state => {
   const { 
         auth,
+        user_roles= {},
         users = {},
         doctors = {},
         auth: { authPermissions = [], authenticated_user = 1 ,authenticated_category} = {},
@@ -23,7 +24,8 @@ const mapStateToProps = state => {
     authPermissions,
     authenticated_user,
     authenticated_category,
-    account_details
+    account_details,
+    user_roles
   };
 };
 
@@ -42,7 +44,7 @@ const mapDispatchToProps = dispatch => {
     openEditRazorpayAccountDetailsDrawer: payload =>
     dispatch(open({ type: DRAWER.EDIT_RAZORPAY_ACCOUNT_DETAILS })), 
     addAccountDetails: payload => dispatch(addAccountDetails(payload)),
-    getAccountDetails: () => dispatch(getAccountDetails()),
+    getAccountDetails: (provider_id=null) => dispatch(getAccountDetails(provider_id)),
     deleteAccountDetails : (id) => dispatch(deleteAccountDetails(id)),
     updateAccountDetails : (id,payload) => dispatch(updateAccountDetails(id,payload))
   };

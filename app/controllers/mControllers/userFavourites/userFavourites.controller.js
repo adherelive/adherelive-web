@@ -101,8 +101,6 @@ class UserFavouritesController extends Controller {
            marked_favourite_type:type
          }
 
-         Log.debug("283745237842354236984723",{userDetails:req.userDetails,data,type,req});
-
         const favourites = await UserFavouritesService.getAllFavourites(data);
 
         let favourites_data = {};
@@ -141,10 +139,8 @@ class UserFavouritesController extends Controller {
         {
           favourites_data,
           user_data:userData,
-          [type===FAVOURITE_TYPE.MEDICINE && "favourite_medicine_ids"]:
-          type===FAVOURITE_TYPE.MEDICINE && favourite_medicine_ids,
-          [type === FAVOURITE_TYPE.MEDICAL_TESTS && "favourite_medical_test_ids"]:
-          type === FAVOURITE_TYPE.MEDICAL_TESTS && favourite_medical_test_ids
+          ...type===FAVOURITE_TYPE.MEDICINE && { 'favourite_medicine_ids': favourite_medicine_ids },
+          ...type === FAVOURITE_TYPE.MEDICAL_TESTS && { 'favourite_medical_test_ids': favourite_medical_test_ids }
         },
         "Get User Favourites successful"
         );

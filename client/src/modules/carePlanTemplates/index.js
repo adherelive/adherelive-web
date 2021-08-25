@@ -7,7 +7,9 @@ import {
     deleteCareplanTemplateMedication,
     deleteCareplanTemplateAppointment,
     deleteCareplanTemplateVital,
-    updateCareplanTemplateUrl
+    deleteCareplanTemplateDiet,
+    updateCareplanTemplateUrl,
+    deleteCareplanTemplateWorkout
      } from "../../Helper/urls/carePlanTemplates";
 
 import {getAllTemplatesUrl} from "../../Helper/urls/carePlanTemplates";
@@ -178,6 +180,10 @@ export const deleteCareplanTemplateRelated = ({careplan_template_id,other_id,oth
                 url = deleteCareplanTemplateAppointment(careplan_template_id,other_id);
             }else if (other_type === DELETE_TEMPLATE_RELATED_TYPE.VITAL){
                 url = deleteCareplanTemplateVital(careplan_template_id,other_id);
+            }else if (other_type === DELETE_TEMPLATE_RELATED_TYPE.DIET){
+                url = deleteCareplanTemplateDiet(careplan_template_id,other_id);
+            }else if (other_type === DELETE_TEMPLATE_RELATED_TYPE.WORKOUT){
+                url = deleteCareplanTemplateWorkout(careplan_template_id,other_id);
             }
 
             dispatch({ type: DELETE_CAREPLAN_TEMPLATE_RELATED_START });

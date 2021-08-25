@@ -1,8 +1,9 @@
-import MedicationReminder from "../../../app/controllers/medicationReminder/mReminder.controller";
-
 const express = require("express");
 const router = express.Router();
 import {isDoctor} from "../middleware/doctor";
+
+import isAllowed from "../../middlewares/permissions";
+import PERMISSIONS from "../../../config/permissions";
 
 
 import Authenticate from "../middleware/auth";
@@ -11,17 +12,18 @@ import * as validator from "./validator";
 
 
 
-router.get(
-    "/missed",
-    Authenticate,
-    isDoctor,
-    Medication.getAllMissedMedications
-);
+// router.get(
+//     "/missed",
+//     Authenticate,
+//     isDoctor,
+//     Medication.getAllMissedMedications
+// );
 
 
 router.get(
     "/:id",
     Authenticate,
+    isAllowed(PERMISSIONS.MEDICATIONS.VIEW),
     Medication.getMedicationForId
 );
 
@@ -35,13 +37,15 @@ router.get(
 router.post(
     "/treatment/:patient_id/:carePlanId",
     Authenticate,
+    isAllowed(PERMISSIONS.MEDICATIONS.ADD),
     validator.validateMedicationReminderData,
-    MedicationReminder.createCarePlanMedication
+    Medication.createCarePlanMedication
 );
 
 router.post(
     "/:id",
     Authenticate,
+    isAllowed(PERMISSIONS.MEDICATIONS.UPDATE),
     validator.validateMedicationReminderData,
     Medication.update
 );
@@ -49,12 +53,14 @@ router.post(
 router.delete(
     "/:id",
     Authenticate,
+    isAllowed(PERMISSIONS.MEDICATIONS.DELETE),
     Medication.delete
 );
 
 router.get(
     "/:id/timeline",
     Authenticate,
+    isAllowed(PERMISSIONS.MEDICATIONS.VIEW_TIMELINE),
     Medication.getMedicationResponseTimeline
 );
 

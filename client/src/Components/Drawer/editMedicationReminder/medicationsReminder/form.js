@@ -516,7 +516,8 @@ class EditMedicationReminderForm extends Component {
 
     const {
       form: { getFieldValue,setFieldsValue },
-      enableSubmit
+      enableSubmit,
+      payload : { canViewDetails = false } = {}
     } = this.props;
 
     const otherUser = this.getOtherUser();
@@ -580,6 +581,7 @@ class EditMedicationReminderForm extends Component {
                 buttonStyle="solid"
                 size="small"
                 className="mg-ml flex justify-content-end"
+                disabled={canViewDetails}
               >
                 <RadioButton value={MEDICINE_UNITS.ML} className={medicineUnit !== MEDICINE_UNITS.ML ? `unselected-text no-shadow` : 'no-shadow'} onClick={setUnit} checked={medicineUnit === MEDICINE_UNITS.ML} disabled={medicineUnit !== MEDICINE_UNITS.ML}  >ml</RadioButton>
                 <RadioButton value={MEDICINE_UNITS.MG} className={medicineUnit !== MEDICINE_UNITS.MG ? `unselected-text no-shadow` : 'no-shadow'} onClick={setUnit} checked={medicineUnit === MEDICINE_UNITS.MG} disabled={medicineUnit !== MEDICINE_UNITS.MG} >mg</RadioButton>

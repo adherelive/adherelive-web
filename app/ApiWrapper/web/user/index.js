@@ -11,8 +11,9 @@ import permissionService from "../../../services/permission/permission.service";
 import DoctorWrapper from "../doctor";
 import PatientWrapper from "../patient";
 import ProviderWrapper from "../provider";
-
 import PermissionWrapper from "../permission";
+
+import * as PermissionHelper from "../../../helper/userCategoryPermisssions";
 
 class UserWrapper extends BaseUser {
   constructor(data) {
@@ -103,33 +104,30 @@ class UserWrapper extends BaseUser {
         permissionData.push(type);
       }
 
-      return {
-        permissions: permissionData
-      };
+      return permissionData;
     } catch (error) {
       throw error;
     }
   };
 
   getReferenceData = async () => {
-    const { getPermissionData, getBasicInfo, getId, isActivated } = this;
+    const { getPermissions, getBasicInfo, getId, isActivated } = this;
 
-    const permissions = getPermissionData();
-    let userPermissions = [];
-    console.log("10938103913 permissions ---> ", permissions);
+    // const permissions = getPermissionData();
+    // let userPermissions = [];
+    // console.log("10938103913 permissions ---> ", permissions);
+
+    let permissions = [];
 
     if (isActivated()) {
-      for (const permission of permissions) {
-        const permissionData = await PermissionWrapper(permission);
-        userPermissions.push(permissionData.getPermissionType());
-      }
+     permissions = await getPermissions();
     }
 
     return {
       users: {
         [getId()]: getBasicInfo()
       },
-      permissions: userPermissions
+      permissions
     };
   };
 
@@ -155,7 +153,7 @@ class UserWrapper extends BaseUser {
 
     if (!isEmpty(patient)) {
       const patientData = await PatientWrapper(patient);
-      patients[patientData.getPatientId()] = patientData.getBasicInfo();
+      patients[patientData.getPatientId()] = await patientData.getAllInfo();
       patient_id = patientData.getPatientId();
     }
 

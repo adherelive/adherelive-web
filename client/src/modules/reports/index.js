@@ -10,6 +10,21 @@ import {
     updateReportUrl
 } from "../../Helper/urls/report";
 
+export const ADD_REPORT_START = "ADD_REPORT_START";
+export const ADD_REPORT_COMPLETE = "ADD_REPORT_COMPLETE";
+export const ADD_REPORT_FAILED = "ADD_REPORT_FAILED";
+
+export const GET_ALL_REPORTS_START = "GET_ALL_REPORTS_START";
+export const GET_ALL_REPORTS_COMPLETE = "GET_ALL_REPORTS_COMPLETE";
+export const GET_ALL_REPORTS_FAILED = "GET_ALL_REPORTS_FAILED";
+
+export const DELETE_REPORT_START = "DELETE_REPORT_START";
+export const DELETE_REPORT_COMPLETE = "DELETE_REPORT_COMPLETE";
+export const DELETE_REPORT_FAILED = "DELETE_REPORT_FAILED";
+
+export const UPDATE_REPORT_START = "UPDATE_REPORT_START";
+export const UPDATE_REPORT_COMPLETE = "UPDATE_REPORT_COMPLETE";
+export const UPDATE_REPORT_FAILED = "UPDATE_REPORT_FAILED";
 
 export const UPLOAD_REPORT_START = "UPLOAD_REPORT_START";
 export const UPLOAD_REPORT_COMPLETE = "UPLOAD_REPORT_COMPLETE";
@@ -44,21 +59,7 @@ export const fetchReports = (patientId) => {
       return response;
     };
 };
-export const ADD_REPORT_START = "ADD_REPORT_START";
-export const ADD_REPORT_COMPLETE = "ADD_REPORT_COMPLETE";
-export const ADD_REPORT_FAILED = "ADD_REPORT_FAILED";
 
-export const GET_ALL_REPORTS_START = "GET_ALL_REPORTS_START";
-export const GET_ALL_REPORTS_COMPLETE = "GET_ALL_REPORTS_COMPLETE";
-export const GET_ALL_REPORTS_FAILED = "GET_ALL_REPORTS_FAILED";
-
-export const DELETE_REPORT_START = "DELETE_REPORT_START";
-export const DELETE_REPORT_COMPLETE = "DELETE_REPORT_COMPLETE";
-export const DELETE_REPORT_FAILED = "DELETE_REPORT_FAILED";
-
-export const UPDATE_REPORT_START = "UPDATE_REPORT_START";
-export const UPDATE_REPORT_COMPLETE = "UPDATE_REPORT_COMPLETE";
-export const UPDATE_REPORT_FAILED = "UPDATE_REPORT_FAILED";
 
 export const uploadReport = (patient_id,payload) => {
     let response = {};
@@ -74,9 +75,7 @@ export const uploadReport = (patient_id,payload) => {
         const { status, payload: { data, error } = {} } = response || {};
 
         if (status == true) {
-
             dispatch({type: UPLOAD_REPORT_COMPLETE, data});
-
         } else {
           dispatch({
             type: UPLOAD_REPORT_FAILED,

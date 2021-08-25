@@ -6,6 +6,8 @@ import DoctorWrapper from "../../mobile/doctor";
 import PatientWrapper from "../../mobile/patient";
 import isEmpty from "lodash/isEmpty";
 
+import * as PermissionHelper from "../../../helper/userCategoryPermisssions";
+
 class MUserWrapper extends BaseUser {
   constructor(data) {
     super(data);
@@ -25,7 +27,7 @@ class MUserWrapper extends BaseUser {
       verified,
       onboarded,
       onboarding_status,
-        has_consent
+      has_consent,
       // system_generated_password
     } = _data || {};
     return {
@@ -34,7 +36,7 @@ class MUserWrapper extends BaseUser {
         user_name,
         email,
         mobile_number,
-        prefix
+        prefix,
       },
       verified,
       onboarded,
@@ -43,7 +45,7 @@ class MUserWrapper extends BaseUser {
       sign_in_type,
       category,
       activated_on,
-      has_consent
+      has_consent,
     };
   };
 
@@ -70,15 +72,7 @@ class MUserWrapper extends BaseUser {
         permissionData.push(type);
       }
 
-      console.log(
-        "permissionsData  ------------> ",
-        permissionsData,
-        permission_ids
-      );
-
-      return {
-        permissions: permissionData
-      };
+      return permissionData;
     } catch (error) {
       throw error;
     }
@@ -92,13 +86,13 @@ class MUserWrapper extends BaseUser {
       const doctorData = await DoctorWrapper(doctor);
       return {
         userCategoryData: doctorData.getBasicInfo(),
-        userCategoryId: doctorData.getDoctorId()
+        userCategoryId: doctorData.getDoctorId(),
       };
     } else if (patient) {
       const patientData = await PatientWrapper(patient);
       return {
         userCategoryData: patientData.getBasicInfo(),
-        userCategoryId: patientData.getPatientId()
+        userCategoryId: patientData.getPatientId(),
       };
     }
   };
@@ -108,8 +102,6 @@ class MUserWrapper extends BaseUser {
       const { getId, getBasicInfo, _data } = this;
 
       const { doctor, patient } = _data;
-
-      console.log("19031298 doctor, patient ----------->", doctor, patient);
 
       const doctors = {};
       const patients = {};
@@ -127,18 +119,18 @@ class MUserWrapper extends BaseUser {
 
       if (!isEmpty(patient)) {
         const patientData = await PatientWrapper(patient);
-        patients[patientData.getPatientId()] = patientData.getBasicInfo();
+        patients[patientData.getPatientId()] = await patientData.getAllInfo();
         patient_id = patientData.getPatientId();
       }
 
       return {
         users: {
-          [getId()]: getBasicInfo()
+          [getId()]: getBasicInfo(),
         },
         doctors,
         patients,
         patient_id,
-        doctor_id
+        doctor_id,
       };
     } catch (error) {
       throw error;

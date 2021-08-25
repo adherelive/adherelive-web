@@ -50,7 +50,17 @@ export default props => {
       title: "",
       ...TABLE_COLUMN.EDIT,
 
-      render: ({openEditDrawer, formatMessage, id}) => <EditButton formatMessage={formatMessage} id={id} action={openEditDrawer}/>
+      render: ({
+        openEditDrawer, 
+        formatMessage, 
+        id, 
+        canViewDetails})  =>  <EditButton 
+                                formatMessage={formatMessage} 
+                                id={id} action={openEditDrawer} 
+                                canViewDetails={canViewDetails}
+                              />
+       
+       
     }
   ];
 };

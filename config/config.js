@@ -19,7 +19,13 @@ module.exports = () => {
       otp_live_minutes: process.env.OTP_LIVE_MINUTES,
       appointment_prior_time: process.env.APPOINTMENT_PRIOR_NOTIFY_MINUTES,
       sms_hash: process.env.SMS_HASH,
-      inactivity_days_no: process.env.INACTIVITY_DAYS_NO
+      diet_prior_time: process.env.DIET_PRIOR_NOTIFY_MINUTES,
+      event_reschedule_time: process.env.EVENT_RESCHEDULE_NOTIFY_MINUTES,
+      sms_hash: process.env.SMS_HASH,
+      inactivity_days_no: process.env.INACTIVITY_DAYS_NO,
+      workout_prior_time: process.env.WORKOUT_PRIOR_NOTIFY_MINUTES,
+      workout_start_hours: process.env.WORKOUT_START_HOURS,
+      workout_start_minutes: process.env.WORKOUT_START_MINUTES,
     },
     algolia: {
       app_id: process.env.ALGOLIA_APP_ID,

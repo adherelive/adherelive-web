@@ -30,6 +30,7 @@ class SignIn extends Component {
       form: { validateFields },
       signIn,
       getInitialData,
+      getUserRoles,
       history
     } = this.props;
     
@@ -45,6 +46,7 @@ class SignIn extends Component {
             message.success(this.formatMessage(messages.loginSuccessfull), 4);
             if(hasConsent){
               getInitialData();
+              getUserRoles();
             }else{
               history.push(PATH.CONSENT);
             }

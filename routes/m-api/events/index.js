@@ -22,12 +22,12 @@ router.get(
   MobileMedicationReminder.getMedicationDetails
 );
 
-router.post(
-  "/medication/:patient_id",
-  Authenticate,
-  validator.validateMedicationReminderData,
-  MobileMedicationReminder.createCarePlanMedication
-);
+// router.post(
+//   "/medication/:patient_id",
+//   Authenticate,
+//   validator.validateMedicationReminderData,
+//   MobileMedicationReminder.createCarePlanMedication
+// );
 
 router.get(
   "/missed",
@@ -72,6 +72,12 @@ router.post(
     Authenticate,
     EventController.markEventCancelled
 );
+
+router.post(
+  "/:id/reschedule",
+  Authenticate,
+  EventController.reschedule
+)
 
 router.delete(
     "/:id/vitals/response",

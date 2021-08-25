@@ -41,6 +41,9 @@ const addPatientForm = Joi.object().keys({
   name: Joi.string()
     .optional()
     .allow("", null),
+  patient_uid: Joi.string()
+    .optional()
+    .allow("", null),
   gender: Joi.string()
     .length(1)
     .optional()

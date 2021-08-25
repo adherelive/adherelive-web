@@ -196,7 +196,7 @@ class TestAgoraVideo extends Component {
     let selfData = {};
 
     // selfUid
-    if (authenticated_category === USER_CATEGORY.DOCTOR) {
+    if (authenticated_category === USER_CATEGORY.DOCTOR || authenticated_category === USER_CATEGORY.HSP) {
       Object.keys(doctors).forEach(id => {
         const { basic_info: { user_id } = {} } = doctors[id] || {};
         if (`${user_id}` === doctorUserId) {

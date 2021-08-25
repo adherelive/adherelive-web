@@ -31,15 +31,15 @@ class PaymentController extends Controller {
        *
        *
        * */
-      const { body, userDetails: { userData: {category}, userCategoryId } = {} } = req;
-
+      const { body, userDetails: { userData: {category}, userRoleId } = {} } = req;
+      const { for_user_type = USER_CATEGORY.DOCTOR } = body;
       const dataToAdd = PaymentHelper.getFormattedData(body);
       const paymentProductService = new PaymentProductService();
 
       let paymentProducts = {};
 
       // for user type in provider
-      let doctorId = userCategoryId;
+      let doctorUserRoleId = userRoleId;
 
       for (let i = 0; i < dataToAdd.length; i++) {
         const { id = null, ...rest } = dataToAdd[i] || {};
@@ -64,10 +64,10 @@ class PaymentController extends Controller {
           const paymentProductData = await paymentProductService.addDoctorProduct(
             {
               ...rest,
-              creator_id: userCategoryId,
+              creator_role_id: userRoleId,
               creator_type: category,
-              for_user_id: doctorId,
-              for_user_type: USER_CATEGORY.DOCTOR,
+              for_user_role_id: doctorUserRoleId,
+              for_user_type:  category ,
               product_user_type: "patient" // todo: change to constant in model
             }
           );
@@ -100,39 +100,18 @@ class PaymentController extends Controller {
   getAllDoctorPaymentProduct = async (req, res) => {
     const { raiseSuccess, raiseClientError, raiseServerError } = this;
     try {
-      const { userDetails: { userCategoryId } = {} } = req;
+      const { userDetails: { userRoleId } = {} } = req;
 
       const paymentProductService = new PaymentProductService();
       const doctorPaymentProductData = await paymentProductService.getAllCreatorTypeProducts(
         {
-          for_user_type: USER_CATEGORY.DOCTOR,
-          for_user_id: userCategoryId,
+          for_user_type: [USER_CATEGORY.DOCTOR,USER_CATEGORY.HSP],
+          for_user_role_id: userRoleId,
           product_user_type: "patient"
         }
       );
 
       let paymentProductData = [...doctorPaymentProductData];
-
-      // const doctorProvider = await doctorProviderMappingService.getProviderForDoctor(
-      //   userCategoryId
-      // );
-
-      // if (doctorProvider) {
-      //   const doctorProviderWrapper = await DoctorProviderMappingWrapper(
-      //     doctorProvider
-      //   );
-      //   const providerId = doctorProviderWrapper.getProviderId();
-
-      //   const providerPaymentProductData = await paymentProductService.getAllCreatorTypeProducts(
-      //     {
-      //       creator_type: USER_CATEGORY.PROVIDER,
-      //       creator_id: providerId,
-      //       product_user_type: "patient"
-      //     }
-      //   );
-
-      //   paymentProductData = [...paymentProductData, ...providerPaymentProductData];
-      // }
 
       if (paymentProductData.length > 0) {
         let paymentProducts = {};
@@ -218,8 +197,6 @@ class PaymentController extends Controller {
     const { raiseSuccess, raiseClientError, raiseServerError } = this;
     try {
       const {
-        body,
-        userDetails: { userCategoryId } = {},
         params: { id = 0 } = {}
       } = req;
 
