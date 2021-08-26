@@ -1698,13 +1698,13 @@ class PatientDetails extends Component {
     });
   };
 
-  maximizeChat = () => {
-    const { patient_id } = this.props;
-    window.open(
-      `${config.WEB_URL}${getPatientConsultingUrl(patient_id)}`,
-      "_blank"
-    );
-  };
+  // maximizeChat = () => {
+  //   const { patient_id } = this.props;
+  //   window.open(
+  //     `${config.WEB_URL}${getPatientConsultingUrl(patient_id)}`,
+  //     "_blank"
+  //   );
+  // };
 
   consentConfirmModal = () => {
     const { intl: { formatMessage } = {} } = this.props;
