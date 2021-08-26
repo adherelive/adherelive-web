@@ -1161,7 +1161,6 @@ class NotificationDrawer extends Component {
           </div>
         </div>
       );
-
     }
 
     return dataToRender ? <div id={notification_id} key={`notification-${notification_id}`} >{dataToRender}</div> : null;

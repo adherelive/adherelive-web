@@ -56,6 +56,7 @@ class AdhocController extends Controller {
             linked_id,
             linked_with,
           });
+
         }
       }
 
@@ -98,7 +99,6 @@ class AdhocController extends Controller {
             },
             attributes: ["id"],
           })) || null;
-        console.log("01823712 userRole", userRole);
         userPreferenceArr.push({
           id: userPreference.getUserPreferenceId(),
           user_id: userPreference.getUserId(),
@@ -109,8 +109,6 @@ class AdhocController extends Controller {
       const updateResponse = await userPreferenceService.bulkUpdate({
         data: userPreferenceArr,
       });
-
-      Log.debug("0283193 userPreferences", updateResponse);
 
       //-- add test-provider record to user-pref table
 
@@ -162,13 +160,18 @@ class AdhocController extends Controller {
             paymentProduct.getForUserType(),
             paymentProduct.getForUserRoleId()
           )) || {};
-        const forUserRoleId =
-          (await userRoleService.findOne({
-            where: {
-              user_identity: forUserId,
-            },
-            attributes: ["id"],
-          })) || null;
+
+          let forUserRoleId = null;
+
+          if(forUserId) {
+            forUserRoleId =
+            (await userRoleService.findOne({
+              where: {
+                user_identity: forUserId,
+              },
+              attributes: ["id"],
+            })) || null;
+          }
 
         const { user_id: creatorUserId } =
           (await getUserDetails(
@@ -176,24 +179,30 @@ class AdhocController extends Controller {
             paymentProduct.getCreatorRoleId()
           )) || {};
 
-        const creatorRoleId =
+          let creatorRoleId = null;
+
+          if(creatorUserId) {
+            creatorRoleId =
           (await userRoleService.findOne({
             where: {
               user_identity: creatorUserId,
             },
             attributes: ["id"],
           })) || null;
+          }
 
-        const { id: for_user_role_id = 0 } = forUserRoleId || {};
-        const { id: creator_role_id = null } = creatorRoleId || {};
+        if (forUserRoleId && creatorRoleId) {
+          const { id: for_user_role_id = 0 } = forUserRoleId || {};
+          const { id: creator_role_id = null } = creatorRoleId || {};
 
-        const paymentProductUpdateResponse = await paymentProductService.updateDoctorProduct(
-          {
-            for_user_role_id,
-            creator_role_id,
-          },
-          paymentProduct.getId()
-        );
+          const paymentProductUpdateResponse = await paymentProductService.updateDoctorProduct(
+            {
+              for_user_role_id,
+              creator_role_id,
+            },
+            paymentProduct.getId()
+          );
+        }
       }
 
       // -- doctor patient watchlist
@@ -400,7 +409,8 @@ class AdhocController extends Controller {
 
             // bulkCreate new user permissions
             const createdUserPermissions =
-              (await userPermissionService.bulkCreate(userPermissionsData)) || [];
+              (await userPermissionService.bulkCreate(userPermissionsData)) ||
+              [];
 
             if (createdUserPermissions.length > 0) {
               return raiseSuccess(

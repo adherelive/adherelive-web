@@ -223,6 +223,7 @@ class MobileDoctorController extends Controller {
       const {
         mobile_number = "",
         name = "",
+        patient_uid = "",
         gender = "",
         date_of_birth = "",
         prefix = "",
@@ -371,7 +372,7 @@ class MobileDoctorController extends Controller {
           user_role_id: newUserRoleId,
         });
 
-        const uid = getReferenceId(patient.get("id"));
+        const uid = patient_uid ? patient_uid : getReferenceId(patient.get("id"));
 
         await patientsService.update({ uid }, patient.get("id"));
         patientData = await PatientWrapper(null, patient.get("id"));
@@ -2118,6 +2119,7 @@ class MobileDoctorController extends Controller {
       const {
         mobile_number = "",
         name = "",
+        patient_uid = "",
         gender = "",
         date_of_birth = "",
         prefix = "",
@@ -2177,6 +2179,7 @@ class MobileDoctorController extends Controller {
         first_name,
         middle_name,
         last_name,
+        uid: patient_uid
       };
 
       const updatedPatient = await patientService.update(

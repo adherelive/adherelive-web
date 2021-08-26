@@ -1817,8 +1817,6 @@ class PatientController extends Controller {
         userRolesData = {...userRolesData, [doctorUserRoleId]:  userRolesWrapper.getBasicInfo()}
       }
 
-      Logger.info(`curr_patient_id : ${curr_patient_id}`);
-
       const carePlanCreatedDate = carePlanData.getCreatedAt();
 
       const {
@@ -1836,9 +1834,6 @@ class PatientController extends Controller {
         const condition = await ConditionWrapper(conditionData);
         conditions[condition_id] = condition.getBasicInfo();
       }
-
-
-      console.log("92389274927349274892793",{permissions,medication_ids});
 
       if(permissions.includes(PERMISSIONS.MEDICATIONS.ADD)){
         for (const medicationId of medication_ids) {
@@ -2226,13 +2221,14 @@ class PatientController extends Controller {
       let providerData = {};
 
       let providerIcon = "";
+      let providerPrescriptionDetails = "";
       if (provider_id) {
         const providerWrapper = await ProviderWrapper(null, provider_id);
         const { providers, users } = await providerWrapper.getReferenceInfo();
 
-        const { details: { icon = null } = {} } = providers[provider_id] || {};
+        const { details: { icon = null , prescription_details = '' } = {} } = providers[provider_id] || {};
         checkAndCreateDirectory(S3_DOWNLOAD_FOLDER_PROVIDER);
-
+        providerPrescriptionDetails = prescription_details;
         if (icon) {
           providerIcon = `${S3_DOWNLOAD_FOLDER_PROVIDER}/provider-${provider_id}-icon.jpeg`;
 
@@ -2242,7 +2238,7 @@ class PatientController extends Controller {
           );
         }
 
-        providerData = { ...providerData, ...providers };
+        providerData = { ...providers[provider_id] };
         usersData = { ...usersData, ...users };
       }
 
@@ -2286,6 +2282,7 @@ class PatientController extends Controller {
         conditions,
         providers: providerData,
         providerIcon,
+        providerPrescriptionDetails,
         doctor_id,
         registrations: registrationsData,
         creationDate: carePlanCreatedDate,
@@ -2314,7 +2311,7 @@ class PatientController extends Controller {
       return res.sendFile(pdfFile, options);
     } catch (err) {
       Logger.debug(
-        "3467238468327462387463287 Error got in the generate prescription: ",
+        "Error got in the generate prescription: ",
         err
       );
       return raiseServerError(res);

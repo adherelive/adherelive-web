@@ -183,6 +183,11 @@ const messages = defineMessages({
     description: "",
     defaultMessage: "Address is required"
   },
+  prescriptionDetails:{
+    id: "app.addProvider.prescriptionDetails",
+    description: "",
+    defaultMessage: "Prescription Details"
+  },
 });
 
 export default messages;

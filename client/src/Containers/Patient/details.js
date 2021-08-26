@@ -28,6 +28,7 @@ import { setUnseenNotificationCount }  from "../../modules/pages/NotificationCou
 import { resetNotificationRedirect } from "../../modules/notificationRedirect";
 import {getAllTemplatesForDoctor} from "../../modules/carePlanTemplates";
 
+
 const mapStateToProps = (state, ownProps) => {
   const {
     users = {},

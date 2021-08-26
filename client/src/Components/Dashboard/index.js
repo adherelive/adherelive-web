@@ -758,6 +758,8 @@ const roomId = getRoomId(doctorRoleId, patientRoleId);
             )}
             
           </div>
+            )
+          {/* }   */}
 
           {
             bannerFlag 

@@ -1200,6 +1200,7 @@ class DoctorController extends Controller {
       const {
         mobile_number = "",
         name = "",
+        patient_uid = "",
         gender = "",
         date_of_birth = "",
         prefix = "",
@@ -1341,7 +1342,7 @@ class DoctorController extends Controller {
           user_role_id:newUserRoleId
         });
 
-        const uid = getReferenceId(patient.get("id"));
+        const uid = patient_uid ? patient_uid : getReferenceId(patient.get("id"));
 
         await patientsService.update({ uid }, patient.get("id"));
         patientData = await PatientWrapper(null, patient.get("id"));
@@ -1420,6 +1421,8 @@ class DoctorController extends Controller {
       });
 
       const mobileUrl = `${process.config.WEB_URL}/${process.config.app.mobile_verify_link}/${link}`;
+
+      Logger.debug("109312983912 universalLink", universalLink);
 
       const smsPayload = {
         // countryCode: prefix,
@@ -3316,6 +3319,7 @@ class DoctorController extends Controller {
       const {
         // mobile_number = "",
         name = "",
+        patient_uid = "",
         gender = "",
         date_of_birth = "",
         // prefix = "",
@@ -3368,6 +3372,7 @@ class DoctorController extends Controller {
           allergies,
           comorbidities
         },
+        uid: patient_uid,
         first_name,
         middle_name,
         last_name,

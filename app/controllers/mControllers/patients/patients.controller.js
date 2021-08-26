@@ -2050,7 +2050,7 @@ class MPatientController extends Controller {
           );
         }
 
-        providerData = { ...providerData, ...providers };
+        providerData = { ...providers[provider_id] };
         usersData = { ...usersData, ...users };
       }
 

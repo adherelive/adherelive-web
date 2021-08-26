@@ -7,7 +7,6 @@ import { getUploadAppointmentDocumentUrl } from "../../../Helper/urls/appointmen
 import { doRequest } from "../../../Helper/network";
 import { generatePrescriptionUrl } from "../../../Helper/urls/patients";
 import ShareIcon from "../../../Assets/images/redirect3x.png";
-import NotificationDrawer from "../../../Containers/Drawer/notificationDrawer";
 import EyeFilled from "@ant-design/icons/EyeFilled";
 
 import config from "../../../config";
@@ -816,6 +815,9 @@ class PatientDetails extends Component {
       
 
 
+      
+
+
     getMedications(patient_id);
     getAppointmentsDetails();
     getAppointments(patient_id);
@@ -1616,13 +1618,13 @@ class PatientDetails extends Component {
     return patient_id;
   };
 
-  maximizeChat = () => {
-    const { patient_id } = this.props;
-    window.open(
-      `${config.WEB_URL}${getPatientConsultingUrl(patient_id)}`,
-      "_blank"
-    );
-  };
+  // maximizeChat = () => {
+  //   const { patient_id } = this.props;
+  //   window.open(
+  //     `${config.WEB_URL}${getPatientConsultingUrl(patient_id)}`,
+  //     "_blank"
+  //   );
+  // };
 
   handleSymptoms = e => {
     const { openSymptomsDrawer, patient_id } = this.props;
@@ -1698,13 +1700,13 @@ class PatientDetails extends Component {
     });
   };
 
-  maximizeChat = () => {
-    const { patient_id } = this.props;
-    window.open(
-      `${config.WEB_URL}${getPatientConsultingUrl(patient_id)}`,
-      "_blank"
-    );
-  };
+  // maximizeChat = () => {
+  //   const { patient_id } = this.props;
+  //   window.open(
+  //     `${config.WEB_URL}${getPatientConsultingUrl(patient_id)}`,
+  //     "_blank"
+  //   );
+  // };
 
   consentConfirmModal = () => {
     const { intl: { formatMessage } = {} } = this.props;

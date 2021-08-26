@@ -11,6 +11,7 @@ import messages from "./messages";
 import NotificationDrawer from "../../Containers/Drawer/notificationDrawer";
 
 
+
 class ChatFullScreen extends Component {
   constructor(props) {
     super(props);

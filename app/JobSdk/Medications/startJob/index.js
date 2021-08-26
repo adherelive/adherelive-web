@@ -132,7 +132,6 @@ class StartJob extends MedicationJob {
       });
     }
     }
-
     return templateData;
   };
 }

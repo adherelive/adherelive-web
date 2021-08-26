@@ -783,6 +783,9 @@ class ProvidersController extends Controller {
             // razorpay accounts
           razorpay_account_id,
           razorpay_account_name,
+
+          // prescription details
+          prescription_details
         } = {}
       } = req;
 
@@ -850,7 +853,8 @@ class ProvidersController extends Controller {
         user_id: userData.getId(),
         details: {
           icon: getFilePath(icon),
-          banner:getFilePath(banner)
+          banner:getFilePath(banner),
+          prescription_details
         },
       });
       const providerData = await ProviderWrapper(provider);
@@ -949,6 +953,9 @@ class ProvidersController extends Controller {
         // razorpay accounts
         razorpay_account_id,
         razorpay_account_name,
+
+        // prescription details
+        prescription_details
       } = body || {};
 
       const existingProvider = await providerService.getProviderByData({
@@ -977,7 +984,8 @@ class ProvidersController extends Controller {
         details: {
           ...previousProvider.getDetails(),
           icon: getFilePath(icon),
-          banner: getFilePath(banner)
+          banner: getFilePath(banner),
+          prescription_details
         }
 
       }, id);
