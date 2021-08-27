@@ -239,80 +239,13 @@ class DoctorWrapper extends BaseDoctor {
       getDoctorId()
     );
 
-        for(let i = 0; i <watchlistRecords.length ; i++ ){
-          const watchlistWrapper = await DoctorPatientWatchlistWrapper(watchlistRecords[i]);
-          const patient_id = await watchlistWrapper.getPatientId();
-          curreRoleIdPatientIds.push(patient_id);
-        }
-
-        watchlistPatientIds[userRoleId] = [...curreRoleIdPatientIds];
-      }
-
-
-      const {rows: doctorCarePlans} = await carePlanService.findAndCountAll({
-        where: {
-          [Op.or]: [
-            {user_role_id: userRoleIds[index]},
-            {patient_id: patientIds}
-          ]
-        },
-        order: [["expired_on","ASC"]],
-        attributes: ["id"]
-      }) || [];
-
-      carePlanIds[userRoleIds[index]] = [...new Set(doctorCarePlans.map(carePlan => carePlan.id))];
+    let providerId = null;
+    if (doctorProvider) {
+      const doctorProviderWrapper = await DoctorProviderMappingWrapper(
+        doctorProvider
+      );
+      providerId = doctorProviderWrapper.getProviderId();
     }
-
-    // const carePlansDoctor =
-    //   (await carePlanService.getMultipleCarePlanByData({
-    //     user_role_id:userRoleId
-    //   })) || [];
-    // const carePlansPatient =
-    // await carePlanService.findAndCountAll({
-    //   where: {
-    //     patient_id: patientIds,
-    //   },
-    //   attributes: ["id"]
-    // }) || [];
-
-    // careplanPatientIds = carePlansPatient.map(careplan => careplan.id);
-
-    // const carePlanIds = [];
-
-    // Object.keys(carePlanIds).forEach(roleId => {
-    //   const temp = carePlanIds[roleId] || [];
-    //   carePlanIds[roleId] = [...new Set([...temp, ...careplanPatientIds])];
-    // });
-
-    // let carePlans = [...carePlansDoctor, ...carePlansPatient];
-
-    // if (carePlans.length > 0) {
-    //   carePlans.sort((carePlanA, carePlanB) => {
-    //     if (carePlanA.get("expired_on")) {
-    //       return -1;
-    //     } else {
-    //       return 1;
-    //     }
-    //   });
-
-    //   for (const carePlanData of carePlans) {
-    //     const carePlan = await CarePlanWrapper(carePlanData);
-    //     if (!carePlanIds.includes(carePlan.getCarePlanId()))
-    //       carePlanIds.push(carePlan.getCarePlanId());
-    //   }
-    // }
-
-    // const doctorProvider = await doctorProviderMappingService.getProviderForDoctor(
-    //   getDoctorId()
-    // );
-
-    // let providerId = null;
-    // if (doctorProvider) {
-    //   const doctorProviderWrapper = await DoctorProviderMappingWrapper(
-    //     doctorProvider
-    //   );
-    //   providerId = doctorProviderWrapper.getProviderId();
-    // }
 
     return {
       basic_info: {

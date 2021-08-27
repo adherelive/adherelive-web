@@ -12,25 +12,25 @@ services:
       - ./:/usr/src/app
       - ./.node_env:/usr/src/app/.env
     links:
-      # - mysql
+      - mysql
       - minio1
       - minio2
       - minio3
       - minio4
 
-  # mysql:
-    # image: mysql:latest
-    # ports:
-      # - 3306:3306
-    # expose:
-      # - 3306
-    # volumes:
-      # - mysql:/var/lib/mysql
-    # environment:
-      # - MYSQL_ROOT_PASSWORD=pass
-      # - MYSQL_DATABASE=adhere
-      # - MYSQL_USER=user
-      # - MYSQL_PASSWORD=7864783jB4b23h1hTe912eAQ129eu*1n29e119i12n
+  mysql:
+    image: mysql:latest
+    ports:
+      - 3306:3306
+    expose:
+      - 3306
+    volumes:
+      - mysql:/var/lib/mysql
+    environment:
+      - MYSQL_ROOT_PASSWORD=pass
+      - MYSQL_DATABASE=adhere
+      - MYSQL_USER=user
+      - MYSQL_PASSWORD=7864783jB4b23h1hTe912eAQ129eu*1n29e119i12n
 
   minio1:
     image: minio/minio
