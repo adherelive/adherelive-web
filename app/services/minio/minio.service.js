@@ -68,7 +68,7 @@ class MinioService {
           JSON.stringify(policy)
         );
 
-        // Adhere logo for email
+        // AdhereLive logo for email
         // after upload (to access) : https://{DOMAIN}/{BUCKET_NAME}/logo.png
         fs.readFile(`${__dirname}/../../../other/logo.png`, (err, data) => {
                if (!err) {
