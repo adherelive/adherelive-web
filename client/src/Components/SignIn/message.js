@@ -3,113 +3,113 @@ import { defineMessages } from "react-intl";
 const messages = defineMessages({
     loginSuccessfull: {
         id: "app.signIn.loginSuccessfull",
-        description: "Edit button in Patient Card",
+        description: "Logged in successfully",
         defaultMessage: "Logged in successfully"
     },
     enterPassword: {
         id: "app.signIn.enterPassword",
-        description: "Edit button in Patient Card",
+        description: "Enter your password",
         defaultMessage: "Enter your password"
     },
     emailDoesNotxist: {
         id: "app.signIn.emailDoesNotxist",
-        description: "Edit button in Patient Card",
+        description: "Email does not exist!",
         defaultMessage: "Email does not exist!"
     },
     invalidCredentials: {
         id: "app.signIn.invalidCredentials",
-        description: "Edit button in Patient Card",
+        description: "Invalid Credentials",
         defaultMessage: "Invalid Credentials"
     },
     somethingWentWrong: {
         id: "app.signIn.somethingWentWrong",
-        description: "Edit button in Patient Card",
+        description: "Something went wrong.",
         defaultMessage: "Something went wrong."
     },
     pleaseFillDetails: {
         id: "app.signIn.pleaseFillDetails",
-        description: "Edit button in Patient Card",
+        description: "Please fill both Username and Password",
         defaultMessage: "Please fill both Username and Password"
     },
     email: {
         id: "app.signIn.email",
-        description: "Edit button in Patient Card",
+        description: "Email ID",
         defaultMessage: "Email"
     },
     password: {
         id: "app.signIn.password",
-        description: "Edit button in Patient Card",
+        description: "Password",
         defaultMessage: "Password"
     },
     forgotPassword: {
         id: "app.signIn.forgotPassword",
-        description: "Edit button in Patient Card",
+        description: "Forgot Password?",
         defaultMessage: "Forgot Password?"
     },
     enterEmail: {
         id: "app.signIn.enterEmail",
-        description: "Edit button in Patient Card",
+        description: "Please enter email",
         defaultMessage: "Please enter email"
     },
     login: {
         id: "app.signIn.login",
-        description: "Edit button in Patient Card",
+        description: "Log in",
         defaultMessage: "Log in"
     },
     enterValidEmail: {
         id: "app.signIn.enterValidEmail",
-        description: "Edit button in Patient Card",
+        description: "Please enter a valid email!",
         defaultMessage: "Please enter a valid email!"
     },
     createAccount: {
         id: "app.signIn.createAccount",
-        description: "Edit button in Patient Card",
+        description: "Create Account",
         defaultMessage: "Create Account"
     },
     agreeText: {
         id: "app.signIn.agreeText",
-        description: "Edit button in Patient Card",
+        description: "By signing up you agree to our",
         defaultMessage: "By signing up you agree to our"
     },
     createPassword: {
         id: "app.signIn.createPassword",
-        description: "Edit button in Patient Card",
+        description: "Create a Password",
         defaultMessage: "Create a Password"
     },
     workEmail: {
         id: "app.signIn.workEmail",
-        description: "Edit button in Patient Card",
+        description: "Your Work Email",
         defaultMessage: "Your Work Email"
     },
     verifyEmail: {
         id: "app.signIn.verifyEmail",
-        description: "Edit button in Patient Card",
+        description: "Please go to your email to verify your account.",
         defaultMessage: "Please go to your email to verify your account."
     },
     linkExpired: {
         id: "app.signIn.linkExpired",
-        description: "Edit button in Patient Card",
+        description: "This verification link has expired!",
         defaultMessage: 'This verification link has expired!'
     },
     appName: {
         id: "app.signIn.appName",
-        description: "Edit button in Patient Card",
+        description: "Application Name",
         defaultMessage: 'Adhere.Live'
     },
     nowAvailable: {
         id: "app.signIn.nowAvailable",
-        description: "Edit button in Patient Card",
+        description: "Now Available!",
         defaultMessage: 'NOW AVAILABLE'
     },
     customDashboard: {
         id: "app.signIn.customDashboard",
-        description: "Edit button in Patient Card",
-        defaultMessage: 'Custom Dashboard'
+        description: "Custom Dashboard",
+        defaultMessage: 'One Platform with all the Solutions'
     },
     metrics: {
         id: "app.signIn.metrics",
-        description: "Edit button in Patient Card",
-        defaultMessage: 'Now see the metrics that really helps you'
+        description: "Metrics",
+        defaultMessage: 'All the metrics that really help the Doctor and the Patient'
     },
     learnMore: {
         id: "app.signIn.learnMore",
