@@ -571,5 +571,5 @@ components:
             read:patients: allows reading resources
     api_key:
       type: apiKey
-      name: adherelive_api_key
+      name: adhere_api_key
       in: header
