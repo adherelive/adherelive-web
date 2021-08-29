@@ -36,7 +36,7 @@ class TermsOfService extends Component {
         return (
             <div className="wp100 p10 fs18">
                 <div className="wp100 flex align-center mt10 mb36">
-                    <img alt="adherelive-logo" src={CompanyIcon} className='company-logo' />
+                    <img alt="adhere-logo" src={CompanyIcon} className='company-logo' />
                     <div className='pl10 fs28 fw700 italic'>{this.formatMessage(messages.appName)}</div>
                 </div>
                 <ReactMarkdown>
