@@ -454,7 +454,7 @@ class MobileDoctorController extends Controller {
       const smsPayload = {
         // countryCode: prefix,
         phoneNumber: `+${prefix}${mobile_number}`, // mobile_number
-        message: `Hello from Adhere! Please click the link to verify your number. ${universalLink}`,
+        message: `Hello from AdhereLive! Please click the link to verify your number. ${universalLink}`,
       };
 
       // if(process.config.app.env === "development") {
@@ -466,11 +466,11 @@ class MobileDoctorController extends Controller {
           title: "Patient",
           link: universalLink,
           inviteCard: "",
-          mainBodyText: "We are really happy to welcome you onboard.",
+          mainBodyText: "We are happy to welcome you onboard.",
           subBodyText: "Please verify your account",
           buttonText: "Verify",
           host: process.config.WEB_URL,
-          contactTo: "patientEngagement@adhere.com",
+          contactTo: "customersupport@adhere.live",
         },
       };
       Proxy_Sdk.execute(EVENTS.SEND_EMAIL, emailPayload);

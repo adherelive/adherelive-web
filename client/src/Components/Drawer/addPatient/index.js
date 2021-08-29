@@ -315,7 +315,7 @@ class PatientDetailsDrawer extends Component {
         patient_full_name === "" ||
         patient_full_name === null
       ) {
-        full_name = `Adhere patient ${id}`;
+        full_name = `AdhereLive Patient: ${id}`;
       }
       options.push(
         <Option

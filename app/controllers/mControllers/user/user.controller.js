@@ -121,7 +121,7 @@ class MobileUserController extends Controller {
           templateName: EMAIL_TEMPLATE_NAME.OTP_VERIFICATION,
           templateData: {
             title: "Patient",
-            mainBodyText: "OTP for adhere patient login is",
+            mainBodyText: "OTP for the AdhereLive patient login is",
             subBodyText: otp,
             host: process.config.WEB_URL,
             contactTo: process.config.app.support_email,
@@ -137,7 +137,7 @@ class MobileUserController extends Controller {
           templateName: EMAIL_TEMPLATE_NAME.OTP_VERIFICATION,
           templateData: {
             title: "Patient",
-            mainBodyText: "OTP for adhere patient login is",
+              mainBodyText: "OTP for the AdhereLive patient login is",
             subBodyText: otp,
             host: process.config.WEB_URL,
             contactTo: process.config.app.support_email,
@@ -149,7 +149,7 @@ class MobileUserController extends Controller {
         const smsPayload = {
           // countryCode: prefix,
           phoneNumber: `+${apiUserDetails.getPrefix()}${mobile_number}`,
-          message: `<#> Hello from Adhere! Your OTP for login is ${otp}  /${hash}`,
+          message: `<#> Hello from AdhereLive! Your OTP for login is ${otp}  /${hash}`,
         };
 
         Proxy_Sdk.execute(EVENTS.SEND_SMS, smsPayload);
@@ -161,7 +161,7 @@ class MobileUserController extends Controller {
       //   templateName: EMAIL_TEMPLATE_NAME.OTP_VERIFICATION,
       //   templateData: {
       //     title: "Patient",
-      //     mainBodyText: "OTP for adhere patient login is",
+      //     mainBodyText: "OTP for the AdhereLive patient login is",
       //     subBodyText: otp,
       //     host: process.config.WEB_URL,
       //     contactTo: process.config.app.support_email
@@ -2108,7 +2108,7 @@ class MobileUserController extends Controller {
 
         const emailPayload = {
           toAddress: email,
-          title: "Adhere Reset Password",
+          title: "AdhereLive: Reset your password",
           templateData: {
             email,
             link: process.config.app.reset_password + link,
@@ -2118,7 +2118,7 @@ class MobileUserController extends Controller {
             mainBodyText: "Thank you for requesting password reset",
             subBodyText: "Please click below to reset your account password",
             buttonText: "Reset Password",
-            contactTo: "patientEngagement@adhere.com",
+            contactTo: "customersupport@adhere.live",
           },
           templateName: EMAIL_TEMPLATE_NAME.FORGOT_PASSWORD,
         };

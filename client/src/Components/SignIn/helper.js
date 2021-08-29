@@ -76,7 +76,7 @@ class SignIn extends Component {
                         <div className='text-white fs28 medium italic'>Adhere.Live</div>
                         
                         <div className="flex direction-row align-center">
-                        <div className='text-white fs16 mr16 '>New to Adhere?</div>
+                        <div className='text-white fs16 mr16 '>New to AdhereLive?</div>
                         <div className='signup-button medium pointer' onClick={this.toggleLogin}>{login?'Signup':'Login'}</div>
                         </div>
                     </div>

@@ -119,7 +119,7 @@ const messages = defineMessages({
     whyChoose: {
         id: "app.signIn.whyChoose",
         description: "Edit button in Patient Card",
-        defaultMessage: 'Why choose Adhere.live?'
+        defaultMessage: 'Why choose Adhere.Live?'
     },
     contactUsStart: {
         id: "app.signIn.contactUsStart",
@@ -179,7 +179,7 @@ const messages = defineMessages({
     adhereAssociation: {
         id: "app.signUp.adhereAssociation",
         description: "",
-        defaultMessage: 'Adhere in association with'
+        defaultMessage: 'AdhereLive in association with'
     },
     agreeSignupPPText:{
         id: "app.signIn.agree.signup.PPText",
@@ -204,7 +204,7 @@ const messages = defineMessages({
     newToAdhere:{
         id: "app.signIn.agree.newToAdhere",
         description: "",
-        defaultMessage: "New to Adhere?"
+        defaultMessage: "New to AdhereLive?"
     },
     alreadyAUser:{
         id: "app.signIn.agree.alreadyAUser",

@@ -79,7 +79,6 @@ class SignIn extends Component {
             </div>
           </div>
                 {
-
                 }
           {
             login

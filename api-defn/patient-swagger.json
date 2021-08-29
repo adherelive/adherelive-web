@@ -6,7 +6,7 @@
     "description": "# Description \n This API offers a collection of operations for the provision of Health related information from the database and is designed to support intelligent workflow solutions.\n ## Common Status Codes \n |**Response Status Code**       | **Description**                                                  | \n |------------------------       | ---------------                                                  | \n |**200 OK**                     | Standard status code for successful HTTP requests.               | \n |**201 Created**                | A new resource has been created successfully.                    | \n |**400 Bad Request**            | Request is invalid due to syntax, validation errors, etc.        | \n |**401 Unauthorized**           | An authentication error occurred.                                | \n |**403 Forbidden**              | Access to resource is forbidden.                                 | \n |**404 Not Found**              | The requested resource could not be found.                       | \n |**405 Method Not Allowed**     | The method used is not supported for the requested resource.     | \n |**415 Unsupported Media Type** | Content-Type header with an unsupported media type was provided. | \n |**429 Too Many Requests**      | The user has sent too many requests beyond the throttling limit. | \n |**500 Internal Server Error**  | An unexpected internal error occurred.                           | \n |**503 Service Unavailable**    | The service is temporarily unavailable.                          | \n ",
     "termsOfService": "http://adhere.live/terms/",
     "contact": {
-      "email": "development@adhere.live"
+      "email": "info@adhere.live"
     }
   },
   "host": "api.adhere.live",
@@ -16,7 +16,7 @@
       "name": "adherence",
       "description": "Hospital Patient Adherence System",
       "externalDocs": {
-        "description": "Contact Us for more information",
+        "description": "Contact us for more information",
         "url": "http://adhere.live/contactus"
       }
     },
@@ -26,7 +26,7 @@
     },
     {
       "name": "patient",
-      "description": "INformation about the Patient and his Medication",
+      "description": "Information about the Patient and his medication",
       "externalDocs": {
         "description": "Mobile application, which informs the patient about his medication careplan",
         "url": "http://adhere.live/patient"
@@ -40,7 +40,7 @@
   "securityDefinitions": {
     "adhere_auth": {
       "type": "oauth2",
-      "description": "Adhere OAuth2 Provider",
+      "description": "AdhereLive OAuth2 Provider",
       "authorizationUrl": "http://adhere.live/oauth/dialog",
       "flow": "implicit",
       "scopes": {
@@ -50,7 +50,7 @@
     },
     "api_key": {
       "type": "apiKey",
-      "name": "adhere_api_key",
+      "name": "adherelive_api_key",
       "in": "header"
     }
   },
@@ -99,7 +99,7 @@
             "in": "path",
             "name": "ProviderID",
             "type": "string",
-            "description": "THe logged in ID of the Provider for which the Clinician belongs to",
+            "description": "The logged in ID of the Provider for which the Clinician belongs to",
             "required": true
           }
         ],
@@ -672,7 +672,7 @@
     }
   },
   "externalDocs": {
-    "description": "Find out more about Adhere",
+    "description": "Find out more about AdhereLive",
     "url": "http://adhere.live"
   }
 }

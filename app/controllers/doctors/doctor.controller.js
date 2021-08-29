@@ -424,9 +424,9 @@ class DoctorController extends Controller {
           title: "Doctor",
           link: process.config.WEB_URL,
           inviteCard: "",
-          mainBodyText: `Greetings from Adhere! We are really happy to inform you that your account has been verified.`,
+          mainBodyText: `Greetings from AdhereLive! We are happy to inform you that your account has been verified.`,
           subBodyText:
-            "To enable Add Patient option on your Dashboard, please click on verify and login via email and password for the account",
+            "To enable Add Patient option on your Dashboard, please click on verify and login via the Email and password for the account",
           buttonText: "Welcome",
           host: process.config.WEB_URL,
           contactTo: "info@adhere.live"
@@ -442,10 +442,10 @@ class DoctorController extends Controller {
             [userWrapper.getId()]: userWrapper.getBasicInfo()
           }
         },
-        "doctor verified successfully"
+        "Doctor verified successfully"
       );
     } catch (error) {
-      Logger.debug("VERIFY DOCTOR 500 error", error);
+      Logger.debug("Verify Doctor - 500 Error", error);
       return raiseServerError(res);
     }
   };
@@ -1427,7 +1427,7 @@ class DoctorController extends Controller {
       const smsPayload = {
         // countryCode: prefix,
         phoneNumber: `+${prefix}${mobile_number}`, // mobile_number
-        message: `Hello from Adhere! Please click the link to verify your number. ${universalLink}`
+        message: `Hello from AdhereLive! Please click the link to verify your number. ${universalLink}`
       };
 
       // if(process.config.app.env === "development") {
@@ -1439,11 +1439,11 @@ class DoctorController extends Controller {
           title: "Patient",
           link: universalLink,
           inviteCard: "",
-          mainBodyText: "We are really happy to welcome you onboard.",
+          mainBodyText: "We are happy to welcome you onboard.",
           subBodyText: "Please verify your account",
           buttonText: "Verify",
           host: process.config.WEB_URL,
-          contactTo: "patientEngagement@adhere.com"
+          contactTo: "customersupport@adhere.live"
         }
       };
       Proxy_Sdk.execute(EVENTS.SEND_EMAIL, emailPayload);

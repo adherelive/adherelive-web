@@ -2084,17 +2084,17 @@ class UserController extends Controller {
 
         const emailPayload = {
           toAddress: email,
-          title: "Adhere Reset Password",
+          title: "AdhereLive: Reset your password",
           templateData: {
             email,
             link: process.config.app.reset_password + link,
             host: process.config.WEB_URL,
             title: "Doctor",
             inviteCard: "",
-            mainBodyText: "Thank you for requesting password reset",
+            mainBodyText: "Thank you for requesting the password reset",
             subBodyText: "Please click below to reset your account password",
             buttonText: "Reset Password",
-            contactTo: "patientEngagement@adhere.com"
+            contactTo: "customersupport@adhere.live"
           },
           templateName: EMAIL_TEMPLATE_NAME.FORGOT_PASSWORD
         };
