@@ -2091,7 +2091,7 @@ class UserController extends Controller {
             host: process.config.WEB_URL,
             title: "Doctor",
             inviteCard: "",
-            mainBodyText: "Thank you for requesting the password reset",
+            mainBodyText: "Thank you for requesting a password reset",
             subBodyText: "Please click below to reset your account password",
             buttonText: "Reset Password",
             contactTo: "customersupport@adhere.live"
@@ -2120,7 +2120,7 @@ class UserController extends Controller {
         "Thanks! If there is an account associated with the email, we will send the password reset link to it"
       );
     } catch (error) {
-      Logger.debug("forgot password 500 error", error);
+      Logger.debug("Forgot Password - 500 Error", error);
       return raiseServerError(res);
     }
   };

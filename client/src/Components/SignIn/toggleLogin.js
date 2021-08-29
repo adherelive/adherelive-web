@@ -90,8 +90,15 @@ class ToggleLogin extends Component {
                             <div className="login-text">
                               <div className="fs16 medium">
                                 {" "}
-                                Remote Care Enablement "For the Provider, by the Provider, to their Patients"
-                                Subscription based health care service delivery.
+                                        Remote Care Enablement "For the Provider, by the Provider, to their Patients" <br />
+                                        Subscription based health care service delivery.
+                                    <ul>
+                                        <li> Reach and serve more patients. </li>
+                                        <li> Remotely deliver services such as prescribe medication, upload medical reports, monitor vitals/symptoms and many more  </li>
+                                        <li> Secured tele chat and tele consult to track patient’s health  </li>
+                                        <li> Get referrals from other providers, allied health professionals and patients  </li>
+                                        <li> Progressively increase earnings </li>
+                                    </ul>
                                 {" "}
                               </div>
                             </div>

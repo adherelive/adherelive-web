@@ -57,7 +57,7 @@ class SignIn extends Component {
           <div className="mt40 wp100 mt24 flex justify-space-between align-center direction-row ">
             <div className="flex direction-row align-center">
               <img
-                alt="adhere-logo"
+                alt="adherelive-logo"
                 src={CompanyIcon}
                 className="company-logo"
               />
