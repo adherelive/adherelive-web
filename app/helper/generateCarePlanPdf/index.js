@@ -225,7 +225,7 @@ export default async (pdfData, signatureImage) => {
       doc
         .fontSize(SHORT_FONT_SIZE)
         .text(
-          "Note: This prescription is generated on Adhere.",
+          "Note: This prescription is generated on AdhereLive platform.",
           DOC_MARGIN,
           doc.y + 20
         );
@@ -239,7 +239,7 @@ export default async (pdfData, signatureImage) => {
       pageCount = 1;
       doc.end();
     } catch (err) {
-      console.log("Error got in the generation of pdf is: ", err);
+      console.log("Error in the generation of the prescription: ", err);
       resolve(null);
     }
   });
