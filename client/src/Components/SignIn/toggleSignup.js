@@ -85,16 +85,6 @@ class ToggleSignUp extends Component {
                                     {" "}
                                         <b> Remote Care Enablement "For the Provider, by the Provider, to their Patients" </b> <br />
                                         <b> Subscription based health care service delivery. </b> <br /> <br />
-
-                                        <b><u>How it Works</u></b>
-                                        <ul>
-                                            <li> Develop a team of clinicians and para-clinicians </li>
-                                            <li> Get onboarded (within minutes) and undergo <br /> 1 to 2-hour instructor led training on the platform and process </li>
-                                            <li> Select the plan you can offer <br /> Remote monitoring and digital treatment management OR <br /> Full package with
-                                                 physical services <br /> such as medication delivery, sample collection, testing, <br /> ambulance, and priority in admission queue. </li>
-                                            <li> Start on boarding patients and delivering services to save lives! </li>
-                                        </ul>
-
                                     {" "}
                                   </div>
                                 </div>

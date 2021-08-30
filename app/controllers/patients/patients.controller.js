@@ -1799,7 +1799,7 @@ class PatientController extends Controller {
       let nextAppointmentDuration = null;
 
       if (!care_plan_id) {
-        return raiseClientError(res, 422, {}, "Invalid Care plan.");
+        return raiseClientError(res, 422, {}, "Invalid Care Plan.");
       }
 
       const carePlan = await carePlanService.getCarePlanById(care_plan_id);
@@ -1903,10 +1903,7 @@ class PatientController extends Controller {
         }
       }
 
-
-      let dietApiData = {},dietIds=[] , workoutApiData = {}, workoutIds=[];
-
-
+      let dietApiData = {}, dietIds=[], workoutApiData = {}, workoutIds=[];
 
       // diet 
       for (const id of diet_ids) {
@@ -2038,19 +2035,18 @@ class PatientController extends Controller {
             }
           }
     
-              dietApiData[id]={
-                diets: {
-                  ...dietBasicInfo,
-                },
-                diet_food_groups: {
-                  ...dietFoodGroupsApidata,
-                },
-                food_items,
-                food_item_details
-              }
-      
+          dietApiData[id]={
+            diets: {
+              ...dietBasicInfo,
+            },
+            diet_food_groups: {
+              ...dietFoodGroupsApidata,
+            },
+            food_items,
+            food_item_details
+          }
 
-              dietIds.push(id);
+          dietIds.push(id);
         }
       }
 
@@ -2091,7 +2087,6 @@ class PatientController extends Controller {
             });
           }
           
-
           workoutApiData[workoutWrapper.getId()] = 
           {
             ...(await workoutWrapper.getReferenceInfo()),
@@ -2311,7 +2306,7 @@ class PatientController extends Controller {
       return res.sendFile(pdfFile, options);
     } catch (err) {
       Logger.debug(
-        "Error got in the generate prescription: ",
+        "Error while generating the prescription: ",
         err
       );
       return raiseServerError(res);
@@ -2326,7 +2321,6 @@ class PatientController extends Controller {
       const {userId, userRoleId, userData: {category} = {}, userCategoryId} = userDetails || {};
 
       /*
-      
       userId (auth) [DOCTOR]
 
       SORT
@@ -2338,7 +2332,6 @@ class PatientController extends Controller {
       treatment
 
       doctors -> careplans -> patients
-      
       */
 
       const {
@@ -2386,8 +2379,8 @@ class PatientController extends Controller {
           watchlistQuery = `AND carePlan.user_role_id = ${userRoleId} AND carePlan.patient_id IN (${watchlist_patient_ids})`;
           // let { watchlist_patient_ids = [] } = doctorAllInfo || {};
           // watchlist_patient_ids = watchlist_patient_ids.length
-            // ? watchlist_patient_ids
-            // : null; // if no patient id watchlisted , check patinetIds for (null) as watchlist_patient_ids=[]
+          //   ? watchlist_patient_ids
+          //   : null; // if no patient id watchlisted , check patinetIds for (null) as watchlist_patient_ids=[]
           // watchlistQuery = `AND carePlan.doctor_id = ${userCategoryId} AND carePlan.patient_id IN (${watchlist_patient_ids})`;
         }
 

@@ -123,92 +123,92 @@ const messages = defineMessages({
     },
     contactUsStart: {
         id: "app.signIn.contactUsStart",
-        description: "Edit button in Patient Card",
+        description: "Contact Us Login",
         defaultMessage: 'For any help or assistance, feel free to'
     },
     contactUs: {
         id: "app.signIn.contactUs",
-        description: "",
+        description: "Contact Us",
         defaultMessage: 'Contact Us'
     },
     loginToDashboard: {
         id: "app.signIn.loginToDashboard",
-        description: "Edit button in Patient Card",
+        description: "Login to Dashboard",
         defaultMessage: 'Login to Dashboard'
     },
     enterCredentials: {
         id: "app.signIn.enterCredentials",
-        description: "Edit button in Patient Card",
+        description: "Enter Your Credentials",
         defaultMessage: 'Enter Your Credentials'
     },
     issue: {
         id: "app.signIn.issue",
-        description: "Edit button in Patient Card",
+        description: "Facing an issue?",
         defaultMessage: 'Facing an issue?'
     },
     contactSupport: {
         id: "app.signIn.contactSupport",
-        description: "Edit button in Patient Card",
+        description: "Contact Support",
         defaultMessage: 'Contact Support'
     },
     signUp: {
         id: "app.signIn.signUp",
-        description: "Edit button in Patient Card",
+        description: "Sign Up",
         defaultMessage: 'Sign Up'
     },
     continue: {
         id: "app.signIn.continue",
-        description: "Edit button in Patient Card",
+        description: "Create a password to continue",
         defaultMessage: 'Create a password to continue'
     },
     termsOfService: {
         id: "app.signUp.termsOfService",
-        description: "",
+        description: "Terms Of Service",
         defaultMessage: 'Terms Of Service'
     },
     andText: {
         id: "app.signUp.andText",
-        description: "",
+        description: "And Text",
         defaultMessage: 'and'
     },
     privacyPolicy: {
         id: "app.signUp.privacyPolicy",
-        description: "",
+        description: "Privacy Policy",
         defaultMessage: 'Privacy Policy'
     },
     adhereAssociation: {
         id: "app.signUp.adhereAssociation",
-        description: "",
+        description: "Association",
         defaultMessage: 'AdhereLive in association with'
     },
     agreeSignupPPText:{
         id: "app.signIn.agree.signup.PPText",
-        description: "",
+        description: "Signup Privacy Policy Text",
         defaultMessage: "By signing up you agree to our"
     },
     agreeSigninPPText:{
         id: "app.signIn.agree.signin.PPText",
-        description: "",
+        description: "Signin Privacy Policy Text",
         defaultMessage: "By signing in you agree to our"
     },
     signup:{
         id: "app.signIn.agree.signup",
-        description: "",
+        description: "Signup Agree",
         defaultMessage: "Signup"
     },
     login:{
         id: "app.signIn.agree.login",
-        description: "",
+        description: "Login Agree",
         defaultMessage: "Login"
     },
     newToAdhere:{
         id: "app.signIn.agree.newToAdhere",
-        description: "",
+        description: "New to AdhereLive",
         defaultMessage: "New to AdhereLive?"
     },
     alreadyAUser:{
         id: "app.signIn.agree.alreadyAUser",
-        description: "",
+        description: "Already a User",
         defaultMessage: "Already a user?"
     },
 });

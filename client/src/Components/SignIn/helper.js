@@ -134,8 +134,8 @@ class SignIn extends Component {
                             </Button>
                             <div className="flex justify-space-between direction-column mt10 align-end">
                                 {/* <span className="login-form-forgot inline-flex">
-                  <Link to="/forgot-password">Forgot password?</Link>
-                </span> */}
+                                    <Link to="/forgot-password">Forgot password?</Link>
+                                    </span> */}
                                 {/*              <p>*/}
                                 {/*                  Or{" "}*/}
                                 {/*                  <span>*/}

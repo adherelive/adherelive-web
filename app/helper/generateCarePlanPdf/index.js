@@ -225,7 +225,7 @@ export default async (pdfData, signatureImage) => {
       doc
         .fontSize(SHORT_FONT_SIZE)
         .text(
-          "Note: Prescription generated on AdhereLive platform.",
+          "Note: This prescription is generated on the AdhereLive platform.",
           DOC_MARGIN,
           doc.y + 20
         );
