@@ -2146,9 +2146,13 @@ class UserController extends Controller {
         const expiresIn = process.config.TOKEN_EXPIRE_TIME; // expires in 30 day
 
         const secret = process.config.TOKEN_SECRET_KEY;
+
+        const userRole = await userRolesService.getFirstUserRole(linkVerificationData.getUserId());
+
+        const {id: userRoleId} = userRole || {};
         const accessToken = await jwt.sign(
           {
-            userId: linkVerificationData.getUserId()
+            userRoleId
           },
           secret,
           {
