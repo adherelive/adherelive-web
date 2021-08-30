@@ -12,15 +12,15 @@ class AddPatientJob extends AuthJob {
 
         const templateData = [
             {
-                title: "Mobile Patient Verification mail",
+                title: "AdhereLive: Patient Verification",
                 toAddress: process.config.app.developer_email,
                 templateName: EMAIL_TEMPLATE_NAME.INVITATION,
                 templateData: {
                     title: "Patient",
                     link: universalLink,
                     inviteCard: "",
-                    mainBodyText: "We are really happy to welcome you onboard.",
-                    subBodyText: "Please verify your account",
+                    mainBodyText: "We are happy to welcome you onboard the AdhereLive platform",
+                    subBodyText: "Please verify your account by clicking on the 'Verify' button below",
                     buttonText: "Verify",
                     host: process.config.WEB_URL,
                     contactTo: process.config.app.support_email

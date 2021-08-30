@@ -116,12 +116,12 @@ class MobileUserController extends Controller {
 
       if (process.config.app.env === "development") {
         const emailPayload = {
-          title: "OTP Verification for patient",
+          title: "AdhereLive: OTP verification for Dev Patient",
           toAddress: process.config.app.developer_email,
           templateName: EMAIL_TEMPLATE_NAME.OTP_VERIFICATION,
           templateData: {
             title: "Patient",
-            mainBodyText: "OTP for the AdhereLive patient login is",
+            mainBodyText: "OTP for the patient login is",
             subBodyText: otp,
             host: process.config.WEB_URL,
             contactTo: process.config.app.support_email,
@@ -132,12 +132,12 @@ class MobileUserController extends Controller {
       } else {
         // if(apiUserDetails.getEmail()) {
         const emailPayload = {
-          title: "OTP Verification for patient",
+          title: "AdhereLive: OTP verification for Patient",
           toAddress: process.config.app.developer_email,
           templateName: EMAIL_TEMPLATE_NAME.OTP_VERIFICATION,
           templateData: {
             title: "Patient",
-              mainBodyText: "OTP for the AdhereLive patient login is",
+              mainBodyText: "OTP for the patient login is",
             subBodyText: otp,
             host: process.config.WEB_URL,
             contactTo: process.config.app.support_email,
@@ -149,19 +149,19 @@ class MobileUserController extends Controller {
         const smsPayload = {
           // countryCode: prefix,
           phoneNumber: `+${apiUserDetails.getPrefix()}${mobile_number}`,
-          message: `<#> Hello from AdhereLive! Your OTP for login is ${otp}  /${hash}`,
+          message: `<#> Hello from AdhereLive! Your OTP for login is ${otp} /${hash}`,
         };
 
         Proxy_Sdk.execute(EVENTS.SEND_SMS, smsPayload);
       }
 
       // const emailPayload = {
-      //   title: "OTP Verification for patient",
+      //   title: "AdhereLive: OTP verification for Patient",
       //   toAddress: process.config.app.developer_email,
       //   templateName: EMAIL_TEMPLATE_NAME.OTP_VERIFICATION,
       //   templateData: {
       //     title: "Patient",
-      //     mainBodyText: "OTP for the AdhereLive patient login is",
+      //     mainBodyText: "OTP for the patient login is",
       //     subBodyText: otp,
       //     host: process.config.WEB_URL,
       //     contactTo: process.config.app.support_email
