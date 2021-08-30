@@ -1311,7 +1311,7 @@ class MPatientController extends Controller {
           templateName: EMAIL_TEMPLATE_NAME.OTP_VERIFICATION,
           templateData: {
             title: "Patient",
-            mainBodyText: "OTP for adhere patient consent is",
+            mainBodyText: "OTP for the AdhereLive patient consent is",
             subBodyText: otp,
             host: process.config.WEB_URL,
             contactTo: process.config.app.support_email,
@@ -1326,7 +1326,7 @@ class MPatientController extends Controller {
             templateName: EMAIL_TEMPLATE_NAME.OTP_VERIFICATION,
             templateData: {
               title: "Patient",
-              mainBodyText: "OTP for adhere patient consent is",
+              mainBodyText: "OTP for the AdhereLive patient consent is",
               subBodyText: otp,
               host: process.config.WEB_URL,
               contactTo: process.config.app.support_email,
@@ -1338,7 +1338,7 @@ class MPatientController extends Controller {
         const smsPayload = {
           // countryCode: prefix,
           phoneNumber: `+${prefix}${mobile_number}`, // mobile_number
-          message: `<#> Hello from Adhere! Your OTP for Consent Request is ${otp}`,
+          message: `<#> Hello from AdhereLive! Your OTP for consent request is ${otp}`,
         };
 
         Proxy_Sdk.execute(EVENTS.SEND_SMS, smsPayload);

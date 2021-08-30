@@ -382,9 +382,6 @@ const vitalsNotification = async (data, category) => {
       group_id,
     } = data;
 
-
-
-
     let eventData = {};
 
     // let userData = {};

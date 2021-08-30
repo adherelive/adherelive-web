@@ -80,18 +80,18 @@ class ToggleSignUp extends Component {
 
                             <div className="wp100 " >
                               <div className="flex direction-row-reverse" >
-                                <div className="login-text  ">
+                                <div className="login-text">
                                   <div className="fs16 medium tar">
                                     {" "}
-                                    Fusce vehicula dolor arcu, sit amet blandit dolor
-                                    mollis nec. Donec viverra eleifend lacus, vitae
-                                    ullamcorper metus.{" "}
+                                        <b> Remote Care Enablement "For the Provider, by the Provider, to their Patients" </b> <br />
+                                        <b> Subscription based health care service delivery. </b> <br /> <br />
+                                    {" "}
                                   </div>
                                 </div>
                               </div>
                               
                             </div>
-                            <div className="learn-more-text  ">
+                            <div className="learn-more-text">
                               <div className="dark-sky-blue fs18 medium mr4">
                                 {formatMessage(messages.learnMore)}
                               </div>

@@ -393,7 +393,7 @@ class ProvidersController extends Controller {
       //     subBodyText: "Please verify your account",
       //     buttonText: "Verify",
       //     host: process.config.WEB_URL,
-      //     contactTo: "patientEngagement@adhere.com"
+      //     contactTo: "customersupport@adhere.live"
       //   }
       // };
 
@@ -420,7 +420,7 @@ class ProvidersController extends Controller {
           res,
           402,
           {},
-          "Please enter correct date value"
+          "Please enter the correct date value"
         );
       }
 

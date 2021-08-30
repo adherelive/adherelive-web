@@ -76,7 +76,7 @@ class StartJob extends AgoraJob {
             app_id: process.config.one_signal.app_id,
             // content_available: true,
             include_player_ids: [...playerIds],
-            headings: { en: `Call on Adhere (${providerName})` },
+            headings: { en: `Call on AdhereLive: (${providerName})` },
             contents: {
                 en: `${category === USER_CATEGORY.DOCTOR || category === USER_CATEGORY.HSP ? "Dr. " : ""}${full_name} is calling you!`
             },

@@ -44,6 +44,7 @@ import MissedWorkoutsDrawer from "../../Containers/Drawer/missedWorkout";
 
 // helpers...
 import { getRoomId } from "../../Helper/twilio";
+
 const { GETSTREAM_API_KEY, GETSTREAM_APP_ID } = config;
 
 const { TabPane } = Tabs;
@@ -757,7 +758,7 @@ const roomId = getRoomId(doctorRoleId, patientRoleId);
             )}
             
           </div>
-            )
+
           {/* }   */}
 
           {
