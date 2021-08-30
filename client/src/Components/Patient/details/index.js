@@ -2481,8 +2481,8 @@ class PatientDetails extends Component {
     const {basic_info : {user_role_id = null } = {} } = care_plans[selectedCarePlanId];
 
     // let defaultActiveKeyValue = "1";
-    let  { activeKey = "1" } = this.state;
-
+    const  {activeKey = "1"}=this.state;
+    
     return (
       <Fragment>
         <div className="pt10 pr10 pb10 pl10">

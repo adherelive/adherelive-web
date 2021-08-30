@@ -17,7 +17,7 @@ class PatientOtpJob extends AuthJob {
                 templateName: EMAIL_TEMPLATE_NAME.OTP_VERIFICATION,
                 templateData: {
                     title: "Patient",
-                    mainBodyText: "OTP for adhere patient login is",
+                    mainBodyText: "OTP for the AdhereLive patient login is",
                     subBodyText: otp,
                     host: process.config.WEB_URL,
                     contactTo: process.config.app.support_email
@@ -35,7 +35,7 @@ class PatientOtpJob extends AuthJob {
         const templateData = [
             {
                 phoneNumber: `+${prefix}${phoneNumber}`,
-                message:`Hello from Adhere! Your One Time Password is ${otp}`
+                message:`Hello from AdhereLive! Your One Time Password is ${otp}`
             }
         ];
 

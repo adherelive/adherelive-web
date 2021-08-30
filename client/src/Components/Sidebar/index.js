@@ -64,9 +64,9 @@ class SideMenu extends Component {
       const response = await logOut();
       const { status } = response || {};
       if (status === true) {
-        message.success("signed out successfully");
+        message.success("Signed out successfully from AdhereLive platform");
       } else {
-        message.warn("something went wrong. Please try again later");
+        message.warn("Something has gone wrong. Please try again later");
       }
     } catch (error) {}
   };
@@ -76,7 +76,7 @@ class SideMenu extends Component {
       <div className="pt16">
         <p className="red">
           <span className="fw600">{"Note"}</span>
-          {" : Doctor onboard information is not yet completed"}
+          {" : Doctor onboarding information is not yet completed"}
         </p>
       </div>
     );
@@ -85,7 +85,7 @@ class SideMenu extends Component {
   handleRedirect = ({ key }) => {
     try {
       confirm({
-        title: `Are you sure you want to leave?`,
+        title: `Are you sure you wish to leave?`,
         content: <div>{this.warnNote()}</div>,
         onOk: async () => {
           this.handleItemSelectForRedirect({ key });

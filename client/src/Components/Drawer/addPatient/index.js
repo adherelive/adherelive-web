@@ -315,7 +315,7 @@ class PatientDetailsDrawer extends Component {
         patient_full_name === "" ||
         patient_full_name === null
       ) {
-        full_name = `Adhere patient ${id}`;
+        full_name = `AdhereLive Patient: ${id}`;
       }
       options.push(
         <Option
@@ -825,8 +825,8 @@ class PatientDetailsDrawer extends Component {
           addonBefore={prefixSelector}
           className={"form-inputs-ap"}
           placeholder={this.formatMessage(messages.phoneNo)}
-          minLength={10}
-          maxLength={10}
+          minLength={6}
+          maxLength={12}
           value={mobile_number}
           onChange={this.setNumber}
           addonAfter={fetchingPatients ? spin : null}

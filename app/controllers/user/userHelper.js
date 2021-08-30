@@ -262,7 +262,7 @@ export const createNewUser = async (email, password = null, creatorId= null,cate
         subBodyText: "Please verify your account",
         buttonText: "Verify",
         host: process.config.WEB_URL,
-        contactTo: "patientEngagement@adhere.com"
+        contactTo: "customersupport@adhere.live"
       }
     };
 

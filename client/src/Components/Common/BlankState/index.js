@@ -21,7 +21,7 @@ const ERROR_CODE = 404;
 
 const getHeader = ({ intl: { formatMessage } = {} }) => (
   <div className={"ml10 mt10 flex align-center"}>
-    <img alt="adhere-logo" src={CompanyIcon} className="company-logo" />
+    <img alt="adherelive-logo" src={CompanyIcon} className="company-logo" />
     <span className={"ml4 fs22 fw600"}>
       {formatMessage(messages.companyName)}
     </span>
