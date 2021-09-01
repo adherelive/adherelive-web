@@ -93,6 +93,7 @@ const medicationNotification = async (data) => {
     let userRoleData = {};
     let doctorData = {};
     let patientData = {};
+    let allScheduleEvents = {};
     let participants = [];
     let eventId = null;
     let responseTaken = false;
@@ -109,6 +110,10 @@ const medicationNotification = async (data) => {
         event_id = null,
         details: { status = null } = {},
       } = scheduleEventData;
+      const scheduleEventWrapper = await EventWrapper(scheduleEventData);
+      allScheduleEvents = {
+        [scheduleEventWrapper.getScheduleEventId()]: scheduleEventWrapper.getAllInfo(),
+      };
       eventId = event_id;
       if (status) {
         responseTaken = true;
@@ -194,7 +199,8 @@ const medicationNotification = async (data) => {
         users: userData,
         doctors: doctorData,
         patients: patientData,
-        user_roles: userRoleData
+        user_roles: userRoleData,
+        schedule_events: allScheduleEvents,
       };
     }
   } catch (error) {

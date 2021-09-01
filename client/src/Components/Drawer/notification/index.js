@@ -121,7 +121,7 @@ class NotificationDrawer extends Component {
         this.setState({ loading: true });
       }
 
-      await this.clientFeed.get({ limit, offset }).then(async (data) => {
+      await this.clientFeed.get().then(async (data) => {
         const { results = [] } = data || {};
         console.log("8687263876128631321",{data,results});
         if (results.length) {
