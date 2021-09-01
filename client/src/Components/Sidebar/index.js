@@ -44,19 +44,19 @@ const PRIVACY_PAGE_URL = `${config.WEB_URL}${PATH.PRIVACY_POLICY}`;
 const SIDEBAR_NAVIGATION = {
   SUB_MENU: {
     SETTINGS: "SETTINGS",
-    PRIVACY_POLICY: "PRIVACY_POLICY",
-  },
+    PRIVACY_POLICY: "PRIVACY_POLICY"
+  }
 };
 
 class SideMenu extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      selectedKeys: "",
+      selectedKeys: ""
     };
   }
 
-  formatMessage = (message) => this.props.intl.formatMessage(message);
+  formatMessage = message => this.props.intl.formatMessage(message);
 
   handleLogout = async () => {
     const { logOut } = this.props;
@@ -64,9 +64,9 @@ class SideMenu extends Component {
       const response = await logOut();
       const { status } = response || {};
       if (status === true) {
-        message.success("signed out successfully");
+        message.success("Signed out successfully from AdhereLive platform");
       } else {
-        message.warn("something went wrong. Please try again later");
+        message.warn("Something has gone wrong. Please try again later");
       }
     } catch (error) {}
   };
@@ -76,7 +76,7 @@ class SideMenu extends Component {
       <div className="pt16">
         <p className="red">
           <span className="fw600">{"Note"}</span>
-          {" : Doctor onboard information is not yet completed"}
+          {" : Doctor onboarding information is not yet completed"}
         </p>
       </div>
     );
@@ -85,12 +85,12 @@ class SideMenu extends Component {
   handleRedirect = ({ key }) => {
     try {
       confirm({
-        title: `Are you sure you want to leave?`,
+        title: `Are you sure you wish to leave?`,
         content: <div>{this.warnNote()}</div>,
         onOk: async () => {
           this.handleItemSelectForRedirect({ key });
         },
-        onCancel() {},
+        onCancel() {}
       });
     } catch (error) {
       console.log("err --->", error);
@@ -104,7 +104,7 @@ class SideMenu extends Component {
       authenticated_category,
       authenticated_user,
       authPermissions = [],
-      openAppointmentDrawer,
+      openAppointmentDrawer
     } = this.props;
     const { handleLogout } = this;
     const current_user = users[authenticated_user];
@@ -154,7 +154,7 @@ class SideMenu extends Component {
           history.push(PATH.PROVIDER.TRANSACTION_DETAILS);
         }
         break;
-      case PROVIDER_PAYMENT_DETAILS :
+      case PROVIDER_PAYMENT_DETAILS:
         if (authenticated_category === USER_CATEGORY.PROVIDER) {
           history.push(PATH.PROVIDER.PAYMENT_DETAILS);
         }
@@ -179,7 +179,7 @@ class SideMenu extends Component {
       authenticated_user,
       authPermissions = [],
       openAppointmentDrawer,
-      switchUserRole,
+      switchUserRole
     } = this.props;
     const { handleLogout } = this;
     const current_user = users[authenticated_user];
@@ -251,11 +251,14 @@ class SideMenu extends Component {
         case TRANSACTION_DETAILS:
           if (authenticated_category === USER_CATEGORY.PROVIDER) {
             history.push(PATH.PROVIDER.TRANSACTION_DETAILS);
-          } else if (authenticated_category === USER_CATEGORY.DOCTOR || authenticated_category === USER_CATEGORY.HSP) {
+          } else if (
+            authenticated_category === USER_CATEGORY.DOCTOR ||
+            authenticated_category === USER_CATEGORY.HSP
+          ) {
             history.push(PATH.DOCTOR.TRANSACTION_DETAILS);
           }
           break;
-        case PROVIDER_PAYMENT_DETAILS :
+        case PROVIDER_PAYMENT_DETAILS:
           if (authenticated_category === USER_CATEGORY.PROVIDER) {
             history.push(PATH.PROVIDER.PAYMENT_DETAILS);
           }
@@ -266,7 +269,10 @@ class SideMenu extends Component {
           }
           break;
         case TEMPLATES:
-          if (authenticated_category === USER_CATEGORY.DOCTOR || authenticated_category === USER_CATEGORY.HSP) {
+          if (
+            authenticated_category === USER_CATEGORY.DOCTOR ||
+            authenticated_category === USER_CATEGORY.HSP
+          ) {
             history.push(PATH.TEMPLATES);
           }
           break;
@@ -283,7 +289,7 @@ class SideMenu extends Component {
     }
   };
 
-  getOnboardedByDetails = (provider_id) => {
+  getOnboardedByDetails = provider_id => {
     const { providers } = this.props;
     const { formatMessage } = this;
 
@@ -303,7 +309,7 @@ class SideMenu extends Component {
     }
   };
 
-  handleManageAccount = (e) => {
+  handleManageAccount = e => {
     e.preventDefault();
     e.stopPropagation();
 
@@ -312,7 +318,7 @@ class SideMenu extends Component {
     // history.push();
   };
 
-  handleNavigate = (path) => (e) => {
+  handleNavigate = path => e => {
     e.preventDefault();
     const { history } = this.props;
     switch (path) {
@@ -335,9 +341,9 @@ class SideMenu extends Component {
 
     let doctorId = null;
 
-    Object.keys(doctors).forEach((id) => {
+    Object.keys(doctors).forEach(id => {
       const { basic_info: { user_id } = {} } = doctors[id] || {};
-      if(user_id === user_identity) {
+      if (user_id === user_identity) {
         doctorId = id;
       }
     });
@@ -378,7 +384,7 @@ class SideMenu extends Component {
       doctors,
       providers,
       authenticated_user,
-      authDoctor,
+      authDoctor
     } = this.props;
     const {
       // getOnboardedByDetails,
@@ -388,7 +394,7 @@ class SideMenu extends Component {
       getProviderUserRoleIcon
     } = this;
 
-   return user_role_ids.map((id) => {
+    return user_role_ids.map(id => {
       const { basic_info: { user_identity, linked_id } = {} } =
         user_roles[id] || {};
 
@@ -407,17 +413,17 @@ class SideMenu extends Component {
 
       return (
         // <Fragment>
-          <Menu.Item key={`${ACCOUNT}.${id}`} className="pointer black-85">
-            <div className={`flex align-center mt10 mb10`}>
-              {linked_id && getProviderUserRoleIcon("w50 h50", linked_id)}
-              {/* {getProviderIcon("w50 h50", id)} */}
-              <div className="flex direction-column align-start ml10">
-                <div className={"fs20 fw700"}>{addedVia}</div>
-                <div className="fs14 fw500">{email}</div>
-              </div>
+        <Menu.Item key={`${ACCOUNT}.${id}`} className="pointer black-85">
+          <div className={`flex align-center mt10 mb10`}>
+            {linked_id && getProviderUserRoleIcon("w50 h50", linked_id)}
+            {/* {getProviderIcon("w50 h50", id)} */}
+            <div className="flex direction-column align-start ml10">
+              <div className={"fs20 fw700"}>{addedVia}</div>
+              <div className="fs14 fw500">{email}</div>
             </div>
-          </Menu.Item>
-          // <Menu.Divider />
+          </div>
+        </Menu.Item>
+        // <Menu.Divider />
         // </Fragment>
       );
     });
@@ -431,7 +437,7 @@ class SideMenu extends Component {
   };
 
   menu = () => {
-    const {auth_role} = this.props;
+    const { auth_role } = this.props;
     const { getUserRoles, getDoctorDetails, formatMessage } = this;
     return (
       <Menu
@@ -441,7 +447,7 @@ class SideMenu extends Component {
           position: "absolute",
           bottom: 10,
           left: 50,
-          minWidth: 300,
+          minWidth: 300
         }}
         key={"sub"}
         defaultSelectedKeys={[`${ACCOUNT}.${auth_role}`]}
@@ -451,7 +457,10 @@ class SideMenu extends Component {
         <Menu.Divider />
 
         {/* <span className="p10">{formatMessage(messages.accounts_text)}</span> */}
-        <Menu.ItemGroup key="ACCOUNT" title={formatMessage(messages.accounts_text)}>
+        <Menu.ItemGroup
+          key="ACCOUNT"
+          title={formatMessage(messages.accounts_text)}
+        >
           {getUserRoles()}
         </Menu.ItemGroup>
         {/* <Menu.Divider /> */}
@@ -463,7 +472,8 @@ class SideMenu extends Component {
           </a>
         </Menu.Item> */}
         <Menu.Divider />
-        <Menu.Item className="pl24 pr80" key={PROFILE}>Profile
+        <Menu.Item className="pl24 pr80" key={PROFILE}>
+          Profile
         </Menu.Item>
         <Menu.Divider />
         {/* <Menu.Item className="pl24 pr80" key={SETTINGS}>
@@ -477,7 +487,7 @@ class SideMenu extends Component {
         <Menu.Item className="p10" key={LOG_OUT}>
           <div className="wp100 flex justify-center align-center">
             <span className="pt6 pb6 pl10 pr10 bw-cool-grey br5 wp50 tac">
-            {formatMessage(messages.sign_out_text)}
+              {formatMessage(messages.sign_out_text)}
             </span>
           </div>
         </Menu.Item>
@@ -486,7 +496,13 @@ class SideMenu extends Component {
   };
 
   getProviderIcon = (className = "w35 h35", userRoleId = null) => {
-    const { auth_role, user_roles, providers, authDoctor, doctor_provider_id } = this.props;
+    const {
+      auth_role,
+      user_roles,
+      providers,
+      authDoctor,
+      doctor_provider_id
+    } = this.props;
 
     let currentUserRoleId = auth_role;
     if (userRoleId) {
@@ -506,13 +522,13 @@ class SideMenu extends Component {
           >
             {name
               .split(" ")
-              .map((word) => word.charAt(0).toUpperCase())
+              .map(word => word.charAt(0).toUpperCase())
               .join(" ")}
           </div>
           // <div className={"bg-grey br50 w30 h30"}>{name.split(" ").map(word => word.charAt(0).toUpperCase()).join(" ")}</div>
         );
       }
-    } 
+    }
     // else {
     //   const {basic_info: {full_name} = {}} = authDoctor || {};
     //   return (
@@ -521,38 +537,35 @@ class SideMenu extends Component {
     // }
   };
 
-  getProviderUserRoleIcon = (className = "w35 h35",linked_id=null) => {
+  getProviderUserRoleIcon = (className = "w35 h35", linked_id = null) => {
     const { providers = {} } = this.props;
-    let src = '';
+    let src = "";
     const provider = providers[linked_id];
 
-    if(!provider){
+    if (!provider) {
       return null;
     }
 
-    const { basic_info: { name = ''} = {}, details: { icon = '' } = {} } =
-    provider || {};
-    
+    const { basic_info: { name = "" } = {}, details: { icon = "" } = {} } =
+      provider || {};
+
     src = icon;
 
-    if(src && src.length){
-      return  <img alt={"Provider Icon"} src={icon} className={className} />;
-    }else{
+    if (src && src.length) {
+      return <img alt={"Provider Icon"} src={icon} className={className} />;
+    } else {
       return (
         <div
           className={`${className} br5 bg-grey flex justify-center align-center`}
         >
           {name
             .split(" ")
-            .map((word) => word.charAt(0).toUpperCase())
+            .map(word => word.charAt(0).toUpperCase())
             .join(" ")}
         </div>
       );
     }
-
-  }
-
-
+  };
 
   // render() {
   //   // const { selectedKeys } = this.state;
@@ -607,14 +620,15 @@ class SideMenu extends Component {
       user_roles,
       authenticated_category,
       intl: { formatMessage } = {},
-      doctor_provider_id =null , notification_count = {}
+      doctor_provider_id = null,
+      notification_count = {}
     } = this.props;
 
     const { handleItemSelect, getProviderIcon } = this;
 
-    const {basic_info: {linked_id} = {}} = user_roles[auth_role] || {};
+    const { basic_info: { linked_id } = {} } = user_roles[auth_role] || {};
 
-    const { unseen_notification_count : count = 0 } = notification_count || {};
+    const { unseen_notification_count: count = 0 } = notification_count || {};
     const unseen_notification_count = parseInt(count);
     // console.log("2934y98237498238423 COUNTTTTTTTTTT",{unseen_notification_count});
     let dp = "";
@@ -626,8 +640,8 @@ class SideMenu extends Component {
           user_id = 0,
           profile_pic = "",
           first_name = " ",
-          last_name = " ",
-        } = {},
+          last_name = " "
+        } = {}
       } = doctor;
 
       if (user_id === authenticated_user) {
@@ -642,7 +656,7 @@ class SideMenu extends Component {
     if (user_name) {
       initials = user_name
         .split(" ")
-        .map((n) => (n && n.length > 0 && n[0] ? n[0].toUpperCase() : ""))
+        .map(n => (n && n.length > 0 && n[0] ? n[0].toUpperCase() : ""))
         .join("");
     }
 
@@ -671,18 +685,29 @@ class SideMenu extends Component {
             <img alt={"Dashboard Icon"} src={dashboardIcon} />
           </Tooltip>
         </MenuItem>
-        {(authenticated_category == USER_CATEGORY.DOCTOR || authenticated_category === USER_CATEGORY.HSP) ? (
+        {authenticated_category == USER_CATEGORY.DOCTOR ||
+        authenticated_category === USER_CATEGORY.HSP ? (
           <MenuItem
             key={SUB_MENU}
             // className="flex direction-column justify-center align-center p0"
           >
-            <div className={`flex direction-column ${doctor_provider_id ? "justify-space-between bw-cool-grey" : "justify-end"} align-center hp100 p10 br5`}>
-            {getProviderIcon()}
-            <Dropdown overlay={this.menu} overlayClassName="relative">
-              <div className="flex direction-column justify-center align-center wp250">
-                {initials ? <Avatar src={dp}>{initials}</Avatar> : <Avatar icon="user" />}
-              </div>
-            </Dropdown>
+            <div
+              className={`flex direction-column ${
+                doctor_provider_id
+                  ? "justify-space-between bw-cool-grey"
+                  : "justify-end"
+              } align-center hp100 p10 br5`}
+            >
+              {getProviderIcon()}
+              <Dropdown overlay={this.menu} overlayClassName="relative">
+                <div className="flex direction-column justify-center align-center wp250">
+                  {initials ? (
+                    <Avatar src={dp}>{initials}</Avatar>
+                  ) : (
+                    <Avatar icon="user" />
+                  )}
+                </div>
+              </Dropdown>
             </div>
           </MenuItem>
         ) : (
@@ -702,19 +727,26 @@ class SideMenu extends Component {
             </Tooltip>
           </MenuItem>
         )}
-        { (authenticated_category === USER_CATEGORY.DOCTOR || authenticated_category === USER_CATEGORY.HSP) && (
+        {(authenticated_category === USER_CATEGORY.DOCTOR ||
+          authenticated_category === USER_CATEGORY.HSP) && (
           <MenuItem
             className="flex direction-column justify-center align-center p0"
             key={NOTIFICATIONS}
-        >
-          <Tooltip placement="right" title={this.formatMessage(messages.notifications)}>
-              <Icon type="bell" theme="twoTone" twoToneColor='white'  />
+          >
+            <Tooltip
+              placement="right"
+              title={this.formatMessage(messages.notifications)}
+            >
+              <Icon type="bell" theme="twoTone" twoToneColor="white" />
               {/* className={`${unseen_notification_count>0 && "noti-icon"}`} */}
-          </Tooltip>
-          {unseen_notification_count ? (<div className="fs10 notification-count flex align-center justify-center">
+            </Tooltip>
+            {unseen_notification_count ? (
+              <div className="fs10 notification-count flex align-center justify-center">
                 {unseen_notification_count}
-              </div>) : null}
-        </MenuItem>)}
+              </div>
+            ) : null}
+          </MenuItem>
+        )}
 
         {authenticated_category === USER_CATEGORY.PROVIDER ? (
           <MenuItem
@@ -759,7 +791,8 @@ class SideMenu extends Component {
         ) : null}
 
         {authenticated_category === USER_CATEGORY.PROVIDER ||
-        ( (authenticated_category === USER_CATEGORY.DOCTOR || authenticated_category === USER_CATEGORY.HSP) &&
+        ((authenticated_category === USER_CATEGORY.DOCTOR ||
+          authenticated_category === USER_CATEGORY.HSP) &&
           linked_id === null &&
           Object.keys(doctors).length > 0) ? (
           <MenuItem
@@ -776,7 +809,7 @@ class SideMenu extends Component {
           </MenuItem>
         ) : null}
 
-      {authenticated_category === USER_CATEGORY.PROVIDER ? (
+        {authenticated_category === USER_CATEGORY.PROVIDER ? (
           <MenuItem
             className="flex direction-column justify-center align-center p0"
             key={PROVIDER_PAYMENT_DETAILS}
@@ -785,10 +818,10 @@ class SideMenu extends Component {
               placement="right"
               title={this.formatMessage(messages.paymentDetailsHeader)}
             >
-              <WalletOutlined  style={{ color: "#fff" }}  />
+              <WalletOutlined style={{ color: "#fff" }} />
             </Tooltip>
           </MenuItem>
-      ) : null}
+        ) : null}
 
         {authenticated_category === USER_CATEGORY.ADMIN ? (
           <MenuItem

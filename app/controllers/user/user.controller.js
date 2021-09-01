@@ -17,9 +17,8 @@ import severityService from "../../services/severity/severity.service";
 import conditionService from "../../services/condition/condition.service";
 import providerService from "../../services/provider/provider.service";
 import doctorProviderMappingService from "../../services/doctorProviderMapping/doctorProviderMapping.service";
-import userRolesService from '../../services/userRoles/userRoles.service';
+import userRolesService from "../../services/userRoles/userRoles.service";
 import doctorPatientWatchlistService from "../../services/doctorPatientWatchlist/doctorPatientWatchlist.service";
-
 
 import UserWrapper from "../../ApiWrapper/web/user";
 import DoctorWrapper from "../../ApiWrapper/web/doctor";
@@ -33,14 +32,10 @@ import DoctorProviderMappingWrapper from "../../ApiWrapper/web/doctorProviderMap
 import UserRolesWrapper from "../../ApiWrapper/web/userRoles";
 import DoctorPatientWatchlistWrapper from "../../ApiWrapper/web/doctorPatientWatchlist";
 
-
 import doctorService from "../../services/doctors/doctors.service";
 import UserVerificationServices from "../../services/userVerifications/userVerifications.services";
 import Controller from "../index";
-import {
-  uploadImageS3,
-  createNewUser
-} from "./userHelper";
+import { uploadImageS3, createNewUser } from "./userHelper";
 import { v4 as uuidv4 } from "uuid";
 import constants from "../../../config/constants";
 import {
@@ -65,22 +60,29 @@ class UserController extends Controller {
     super();
   }
 
-  signUp= async (req, res) => {
-    const {raiseClientError, raiseServerError, raiseSuccess} = this;
+  signUp = async (req, res) => {
+    const { raiseClientError, raiseServerError, raiseSuccess } = this;
     try {
-        const {body: {password, email, readTermsOfService = false} = {}} = req;
+      const {
+        body: { password, email, readTermsOfService = false } = {}
+      } = req;
 
-      if(!readTermsOfService) {
-        return this.raiseClientError(res, 422, {}, "Please read our Terms of Service before signing up");
+      if (!readTermsOfService) {
+        return this.raiseClientError(
+          res,
+          422,
+          {},
+          "Please read our Terms of Service before signing up"
+        );
       }
 
       const newUser = await createNewUser(email, password, null);
 
       return raiseSuccess(
-          res,
-          200,
-          {},
-          "Signed up successfully. Please check your email to proceed"
+        res,
+        200,
+        {},
+        "Signed up successfully. Please check your email to proceed"
       );
     } catch (err) {
       Logger.debug("signup 500", err);
@@ -98,19 +100,21 @@ class UserController extends Controller {
         // return res.status(500).json(response.getResponse());
       }
     }
-  }
+  };
 
   verifyUser = async (req, res) => {
-    const {raiseSuccess, raiseClientError, raiseServerError} = this;
+    const { raiseSuccess, raiseClientError, raiseServerError } = this;
     try {
-      const {params: {link} = {}} = req;
+      const { params: { link } = {} } = req;
       Logger.info(`(request)(param) LINK :: ${link}`);
-      const verifications = await UserVerificationServices.getRequestByLink(link);
+      const verifications = await UserVerificationServices.getRequestByLink(
+        link
+      );
 
-      const {user_id: userId} = verifications.get("") || {};
+      const { user_id: userId } = verifications.get("") || {};
 
       const userData = await userService.getUserById(userId);
-      const {verified: isVerified} = userData.get("") || {};
+      const { verified: isVerified } = userData.get("") || {};
 
       if (!isVerified) {
         await UserVerificationServices.updateVerification(
@@ -119,7 +123,7 @@ class UserController extends Controller {
         );
 
         // let activated_on = moment();
-        const user = await userService.updateUser({verified: true}, userId);
+        const user = await userService.updateUser({ verified: true }, userId);
 
         const expiresIn = process.config.TOKEN_EXPIRE_TIME; // expires in 30 day
 
@@ -137,9 +141,7 @@ class UserController extends Controller {
 
         const appNotification = new AppNotification();
 
-        const notificationToken = appNotification.getUserToken(
-          `${userId}`
-        );
+        const notificationToken = appNotification.getUserToken(`${userId}`);
         // const feedId = base64.encode(`${userId}`);
 
         const apiUserDetails = await UserWrapper(null, userId);
@@ -197,7 +199,7 @@ class UserController extends Controller {
       }
 
       const userRole = await userRolesService.getFirstUserRole(user.get("id"));
-      if(!userRole) {
+      if (!userRole) {
         return this.raiseClientError(res, 422, {}, "User doesn't exists");
       }
 
@@ -264,9 +266,7 @@ class UserController extends Controller {
 
         const appNotification = new AppNotification();
 
-        const notificationToken = appNotification.getUserToken(
-          `${userRoleId}`
-        );
+        const notificationToken = appNotification.getUserToken(`${userRoleId}`);
         const feedId = base64.encode(`${userRoleId}`);
 
         // Logger.debug("notificationToken --> ", notificationToken);
@@ -284,7 +284,7 @@ class UserController extends Controller {
 
         const dataToSend = {
           users: {
-            [apiUserDetails.getId()]: apiUserDetails.getBasicInfo(),
+            [apiUserDetails.getId()]: apiUserDetails.getBasicInfo()
           },
           permissions,
           auth_user: apiUserDetails.getId(),
@@ -292,7 +292,7 @@ class UserController extends Controller {
           notificationToken: notificationToken,
           feedId,
           auth_category: apiUserDetails.getCategory(),
-          hasConsent: apiUserDetails.getConsent(),
+          hasConsent: apiUserDetails.getConsent()
         };
 
         res.cookie("accessToken", accessToken, {
@@ -329,51 +329,58 @@ class UserController extends Controller {
       Logger.debug("signIn 500 error ----> ", error);
 
       // notification
-      const crashJob = await AdhocJob.execute("crash", {apiName: "signIn"});
+      const crashJob = await AdhocJob.execute("crash", { apiName: "signIn" });
       Proxy_Sdk.execute(EVENTS.SEND_EMAIL, crashJob.getEmailTemplate());
 
       return this.raiseServerError(res);
     }
   };
 
-  giveConsent = async (req,res) => {
-    const {raiseClientError} = this;
-    try{
-      const {userDetails: {userId, userRoleId} = {}, body: {agreeConsent} = {}} = req;
+  giveConsent = async (req, res) => {
+    const { raiseClientError } = this;
+    try {
+      const {
+        userDetails: { userId, userRoleId } = {},
+        body: { agreeConsent } = {}
+      } = req;
 
-      Logger.info(`1897389172 agreeConsent :: ${agreeConsent} | userId : ${userId}`);
+      Logger.info(
+        `1897389172 agreeConsent :: ${agreeConsent} | userId : ${userId}`
+      );
 
-      if(!agreeConsent) {
-        return raiseClientError(res, 422, {}, "Cannot proceed without accepting Terms of Service");
+      if (!agreeConsent) {
+        return raiseClientError(
+          res,
+          422,
+          {},
+          "Cannot proceed without accepting Terms of Service"
+        );
       }
 
       //update
       await userService.updateUser(
-          {
-            has_consent: agreeConsent
-          },
-          userId
+        {
+          has_consent: agreeConsent
+        },
+        userId
       );
-
 
       const expiresIn = process.config.TOKEN_EXPIRE_TIME; // expires in 30 day
 
       const secret = process.config.TOKEN_SECRET_KEY;
       const accessToken = await jwt.sign(
-          {
-            userRoleId
-          },
-          secret,
-          {
-            expiresIn
-          }
+        {
+          userRoleId
+        },
+        secret,
+        {
+          expiresIn
+        }
       );
 
       const appNotification = new AppNotification();
 
-      const notificationToken = appNotification.getUserToken(
-          `${userRoleId}`
-      );
+      const notificationToken = appNotification.getUserToken(`${userRoleId}`);
       const feedId = base64.encode(`${userRoleId}`);
 
       const userRef = await userService.getUserData({ id: userId });
@@ -400,24 +407,22 @@ class UserController extends Controller {
 
       res.cookie("accessToken", accessToken, {
         expires: new Date(
-            Date.now() + process.config.INVITE_EXPIRE_TIME * 86400000
+          Date.now() + process.config.INVITE_EXPIRE_TIME * 86400000
         ),
         httpOnly: true
       });
 
       return this.raiseSuccess(
-          res,
-          200,
-          { ...dataToSend },
-          "Initial data retrieved successfully"
+        res,
+        200,
+        { ...dataToSend },
+        "Initial data retrieved successfully"
       );
-
-
-    }catch(error){
+    } catch (error) {
       Logger.debug("giveConsent 500 error ----> ", error);
       return this.raiseServerError(res);
     }
-  }
+  };
 
   async signInGoogle(req, res) {
     const authCode = req.body.tokenId;
@@ -569,7 +574,7 @@ class UserController extends Controller {
 
         let treatmentIds = [];
         let conditionIds = [];
-        let doctorProviderId=null;
+        let doctorProviderId = null;
 
         switch (category) {
           case USER_CATEGORY.PATIENT:
@@ -581,10 +586,14 @@ class UserController extends Controller {
               userCategoryApiWrapper = await DoctorWrapper(userCategoryData);
 
               let watchlist_patient_ids = [];
-              const watchlistRecords = await doctorPatientWatchlistService.getAllByData({user_role_id:userRoleId});
-              if(watchlistRecords && watchlistRecords.length){
-                for(let i = 0 ; i<watchlistRecords.length ; i++){
-                  const watchlistWrapper = await DoctorPatientWatchlistWrapper(watchlistRecords[i]);
+              const watchlistRecords = await doctorPatientWatchlistService.getAllByData(
+                { user_role_id: userRoleId }
+              );
+              if (watchlistRecords && watchlistRecords.length) {
+                for (let i = 0; i < watchlistRecords.length; i++) {
+                  const watchlistWrapper = await DoctorPatientWatchlistWrapper(
+                    watchlistRecords[i]
+                  );
                   const patientId = await watchlistWrapper.getPatientId();
                   watchlist_patient_ids.push(patientId);
                 }
@@ -593,20 +602,20 @@ class UserController extends Controller {
               let allInfo = {};
               allInfo = await userCategoryApiWrapper.getAllInfo();
               delete allInfo.watchlist_patient_ids;
-              allInfo['watchlist_patient_ids']=watchlist_patient_ids;
+              allInfo["watchlist_patient_ids"] = watchlist_patient_ids;
 
               userCategoryId = userCategoryApiWrapper.getDoctorId();
               userCaregoryApiData[
                 userCategoryApiWrapper.getDoctorId()
               ] = allInfo;
 
-
-              const record = await userRolesService.getSingleUserRoleByData({id:userRoleId});
-              const {linked_with = '',linked_id = null } = record || {};
-              if (linked_with === USER_CATEGORY.PROVIDER ) {
-                
+              const record = await userRolesService.getSingleUserRoleByData({
+                id: userRoleId
+              });
+              const { linked_with = "", linked_id = null } = record || {};
+              if (linked_with === USER_CATEGORY.PROVIDER) {
                 const providerId = linked_id;
-                doctorProviderId=providerId;
+                doctorProviderId = providerId;
                 const providerWrapper = await ProvidersWrapper(
                   null,
                   providerId
@@ -617,7 +626,7 @@ class UserController extends Controller {
               }
 
               careplanData = await carePlanService.getCarePlanByData({
-                user_role_id:userRoleId
+                user_role_id: userRoleId
               });
 
               for (const carePlan of careplanData) {
@@ -662,10 +671,14 @@ class UserController extends Controller {
               userCategoryApiWrapper = await DoctorWrapper(userCategoryData);
 
               let watchlist_patient_ids = [];
-              const watchlistRecords = await doctorPatientWatchlistService.getAllByData({user_role_id:userRoleId});
-              if(watchlistRecords && watchlistRecords.length){
-                for(let i = 0 ; i<watchlistRecords.length ; i++){
-                  const watchlistWrapper = await DoctorPatientWatchlistWrapper(watchlistRecords[i]);
+              const watchlistRecords = await doctorPatientWatchlistService.getAllByData(
+                { user_role_id: userRoleId }
+              );
+              if (watchlistRecords && watchlistRecords.length) {
+                for (let i = 0; i < watchlistRecords.length; i++) {
+                  const watchlistWrapper = await DoctorPatientWatchlistWrapper(
+                    watchlistRecords[i]
+                  );
                   const patientId = await watchlistWrapper.getPatientId();
                   watchlist_patient_ids.push(patientId);
                 }
@@ -674,20 +687,20 @@ class UserController extends Controller {
               let allInfo = {};
               allInfo = await userCategoryApiWrapper.getAllInfo();
               delete allInfo.watchlist_patient_ids;
-              allInfo['watchlist_patient_ids']=watchlist_patient_ids;
+              allInfo["watchlist_patient_ids"] = watchlist_patient_ids;
 
               userCategoryId = userCategoryApiWrapper.getDoctorId();
               userCaregoryApiData[
                 userCategoryApiWrapper.getDoctorId()
               ] = allInfo;
 
-
-              const record = await userRolesService.getSingleUserRoleByData({id:userRoleId});
-              const {linked_with = '',linked_id = null } = record || {};
-              if (linked_with === USER_CATEGORY.PROVIDER ) {
-                
+              const record = await userRolesService.getSingleUserRoleByData({
+                id: userRoleId
+              });
+              const { linked_with = "", linked_id = null } = record || {};
+              if (linked_with === USER_CATEGORY.PROVIDER) {
                 const providerId = linked_id;
-                doctorProviderId=providerId;
+                doctorProviderId = providerId;
                 const providerWrapper = await ProvidersWrapper(
                   null,
                   providerId
@@ -698,7 +711,7 @@ class UserController extends Controller {
               }
 
               careplanData = await carePlanService.getCarePlanByData({
-                user_role_id:userRoleId
+                user_role_id: userRoleId
               });
 
               for (const carePlan of careplanData) {
@@ -838,14 +851,17 @@ class UserController extends Controller {
 
         // speciality temp todo
         let referenceData = {};
-        if ( (category === USER_CATEGORY.DOCTOR || category === USER_CATEGORY.HSP ) && userCategoryApiWrapper) {
+        if (
+          (category === USER_CATEGORY.DOCTOR ||
+            category === USER_CATEGORY.HSP) &&
+          userCategoryApiWrapper
+        ) {
           referenceData = await userCategoryApiWrapper.getReferenceInfo();
         }
 
         const appNotification = new AppNotification();
 
         const notificationToken = appNotification.getUserToken(`${userRoleId}`);
-        const feedId = base64.encode(`${userId}`);
 
         // firebase keys
         const firebase_keys = {
@@ -888,10 +904,12 @@ class UserController extends Controller {
           auth_user: userId,
           auth_category: category,
           auth_role: userRoleId,
-          [category === USER_CATEGORY.DOCTOR || category === USER_CATEGORY.HSP  ? "doctor_provider_id" : ""]:
+          [category === USER_CATEGORY.DOCTOR || category === USER_CATEGORY.HSP
+            ? "doctor_provider_id"
+            : ""]:
             category === USER_CATEGORY.DOCTOR || category === USER_CATEGORY.HSP
-            ? doctorProviderId
-            : "",  
+              ? doctorProviderId
+              : ""
         };
 
         if (category !== USER_CATEGORY.PROVIDER) {
@@ -932,7 +950,7 @@ class UserController extends Controller {
     const { userId = "3" } = userDetails || {};
     const file = req.file;
 
-    const {type} = body || {};
+    const { type } = body || {};
 
     Logger.debug("file", file);
     // const fileExt= file.originalname.replace(/\s+/g, '');
@@ -989,9 +1007,7 @@ class UserController extends Controller {
       if (doctorExist) {
         let doctor_data = {
           city,
-          profile_pic: profile_pic
-            ? getFilePath(profile_pic)
-            : null,
+          profile_pic: profile_pic ? getFilePath(profile_pic) : null,
           first_name,
           middle_name,
           last_name,
@@ -1004,9 +1020,7 @@ class UserController extends Controller {
         let doctor_data = {
           user_id,
           city,
-          profile_pic: profile_pic
-            ? getFilePath(profile_pic)
-            : null,
+          profile_pic: profile_pic ? getFilePath(profile_pic) : null,
           first_name,
           middle_name,
           last_name,
@@ -1088,9 +1102,7 @@ class UserController extends Controller {
         }`;
 
         city = docCity;
-        profile_pic = docPic
-          ? completePath(docPic)
-          : null;
+        profile_pic = docPic ? completePath(docPic) : null;
       }
 
       const profileData = {
@@ -1981,7 +1993,7 @@ class UserController extends Controller {
 
       let newUId = user.get("id");
 
-      const {first_name, middle_name, last_name} = getSeparateName(name);
+      const { first_name, middle_name, last_name } = getSeparateName(name);
 
       // let patientName = name.split(" ");
       // let first_name = patientName[0];
@@ -2084,17 +2096,17 @@ class UserController extends Controller {
 
         const emailPayload = {
           toAddress: email,
-          title: "Adhere Reset Password",
+          title: "AdhereLive: Reset your password",
           templateData: {
             email,
             link: process.config.app.reset_password + link,
             host: process.config.WEB_URL,
             title: "Doctor",
             inviteCard: "",
-            mainBodyText: "Thank you for requesting password reset",
+            mainBodyText: "Thank you for requesting a password reset",
             subBodyText: "Please click below to reset your account password",
             buttonText: "Reset Password",
-            contactTo: "patientEngagement@adhere.com"
+            contactTo: "customersupport@adhere.live"
           },
           templateName: EMAIL_TEMPLATE_NAME.FORGOT_PASSWORD
         };
@@ -2120,7 +2132,7 @@ class UserController extends Controller {
         "Thanks! If there is an account associated with the email, we will send the password reset link to it"
       );
     } catch (error) {
-      Logger.debug("forgot password 500 error", error);
+      Logger.debug("Forgot Password - 500 Error", error);
       return raiseServerError(res);
     }
   };
@@ -2146,9 +2158,15 @@ class UserController extends Controller {
         const expiresIn = process.config.TOKEN_EXPIRE_TIME; // expires in 30 day
 
         const secret = process.config.TOKEN_SECRET_KEY;
+
+        const userRole = await userRolesService.getFirstUserRole(
+          linkVerificationData.getUserId()
+        );
+
+        const { id: userRoleId } = userRole || {};
         const accessToken = await jwt.sign(
           {
-            userId: linkVerificationData.getUserId()
+            userRoleId
           },
           secret,
           {
