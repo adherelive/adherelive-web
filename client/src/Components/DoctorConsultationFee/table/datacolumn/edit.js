@@ -16,7 +16,6 @@ export default props => {
 
   const {data : {razorpay_link = '', creator_type='' , basic_info={},doctors: {provider_id} = {} } ={}} =props;
 
-  
   const handleEdit = (id) => (e) =>{
     e.preventDefault();
     const {data ={}}=props;

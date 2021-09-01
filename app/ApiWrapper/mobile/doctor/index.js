@@ -210,18 +210,18 @@ class MDoctorWrapper extends BaseDoctor {
     //   }
     // }
 
-    const doctorProvider = await doctorProviderMappingService.getProviderForDoctor(
-      id
-    );
+    // const doctorProvider = await doctorProviderMappingService.getProviderForDoctor(
+    //   id
+    // );
 
-    let providerId = null;
+    // let providerId = null;
 
-    if (doctorProvider) {
-      const doctorProviderWrapper = await DoctorProviderMappingWrapper(
-        doctorProvider
-      );
-      providerId = doctorProviderWrapper.getProviderId();
-    }
+    // if (doctorProvider) {
+    //   const doctorProviderWrapper = await DoctorProviderMappingWrapper(
+    //     doctorProvider
+    //   );
+    //   providerId = doctorProviderWrapper.getProviderId();
+    // }
 
     return {
       basic_info: {
@@ -241,7 +241,7 @@ class MDoctorWrapper extends BaseDoctor {
       activated_on,
       care_plan_ids: carePlanIds,
       watchlist_patient_ids,
-      provider_id: providerId,
+      // provider_id: providerId,
       watchlist_ids:watchlistPatientIds
 
     };

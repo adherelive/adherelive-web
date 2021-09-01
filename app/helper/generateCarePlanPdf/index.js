@@ -467,7 +467,7 @@ function printDiet(
 
         singleDietDetailYLevel = doc.y;
 
-        similar.length === 0 && notes.length
+        (similar && notes && similar.length === 0 && notes.length)
           ? doc
               .fillColor("#212b36")
               .font(BOLD_FONT)
@@ -1393,6 +1393,13 @@ function printCarePlanData({
       medicationYLevel = medicationYLevelEnd + NORMAL_FONT_SIZE + 12;
 
       // checkAndAddNewPage(doc);
+
+      if (doc.y > PAGE_END_LIMIT) {
+        if (pageCount === 1) {
+          addPageFooter(doc, providerPrescriptionDetails);
+        }
+        // addPageAndNumber(doc);
+      }
     }
 
     // if(doc.y > PAGE_END_LIMIT) {

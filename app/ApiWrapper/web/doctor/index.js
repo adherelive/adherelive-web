@@ -235,17 +235,17 @@ class DoctorWrapper extends BaseDoctor {
     //   }
     // }
 
-    const doctorProvider = await doctorProviderMappingService.getProviderForDoctor(
-      getDoctorId()
-    );
+    // const doctorProvider = await doctorProviderMappingService.getProviderForDoctor(
+    //   getDoctorId()
+    // );
 
-    let providerId = null;
-    if (doctorProvider) {
-      const doctorProviderWrapper = await DoctorProviderMappingWrapper(
-        doctorProvider
-      );
-      providerId = doctorProviderWrapper.getProviderId();
-    }
+    // let providerId = null;
+    // if (doctorProvider) {
+    //   const doctorProviderWrapper = await DoctorProviderMappingWrapper(
+    //     doctorProvider
+    //   );
+    //   providerId = doctorProviderWrapper.getProviderId();
+    // }
 
     return {
       basic_info: {
@@ -267,7 +267,7 @@ class DoctorWrapper extends BaseDoctor {
       watchlist_patient_ids,
       razorpay_account_id,
       watchlist_ids:watchlistPatientIds,
-      provider_id: providerId
+      // provider_id: providerId
     };
   };
 }
