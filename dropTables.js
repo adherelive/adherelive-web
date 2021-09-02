@@ -2,22 +2,21 @@
 const Config = require("./config/config");
 Config();
 
-const rollback = import("./libs/mysql").then(module => {
-    module.default.query('SET FOREIGN_KEY_CHECKS = 0')
-        .then(function(){
-            return module.default.sync({ force: true });
-        })
-        .then(function(){
-            return module.default.query('SET FOREIGN_KEY_CHECKS = 1')
-        })
-        .then(function(){
-            console.log('Database synchronised.');
-        }, function(err){
-            console.log(err);
-        });
-}).catch(err => {
-    console.log("db rollback error : ", err);
-});
+import map from "lodash/map";
+import { models } from "./libs/mysql";
+
+const rollback = async () => {
+  return await Promise.all(
+    map(models, key => {
+      console.log("1823982 key --> ", key.db);
+      if (["sequelize", "Sequelize"].includes(key)) return null;
+
+      return key.db.destroy({ where: {}, force: true });
+    })
+  );
+};
+
+rollback();
 // import database from "./libs/mysql";
 //
 // export default {};

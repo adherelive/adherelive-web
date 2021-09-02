@@ -6,4 +6,6 @@ import MobilMedicine from "../../../app/controllers/mControllers/medicines/medic
 
 router.get("/", Authenticate, MobilMedicine.searchMedicine);
 
+router.post("/", Authenticate, MobilMedicine.addMedicine);
+
 module.exports = router;

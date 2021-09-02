@@ -11,7 +11,8 @@ import repeatIntervalField from "../common/repeatInterval";
 import repeatDaysField from "../common/selectedDays";
 import startDateField from "../common/startDate";
 import endDateField from "../common/endDate";
-import chooseMedicationField from "../common/medicationStage";
+import chooseMedicationField from "../common/medicine";
+
 import medicineStrengthField from "../common/medicineStrength";
 import criticalMedicationField from "../common/criticalMedication";
 import medicineStrengthUnitField from "../common/medicationStrengthUnit";
@@ -22,18 +23,21 @@ import formulation from "../common/formulation";
 
 import messages from "../message";
 import { hasErrors, isNumber } from "../../../../Helper/validation";
-import { REPEAT_TYPE, USER_CATEGORY, DAYS_NUMBER, TABLET, MEDICINE_UNITS } from "../../../../constant";
+import {
+  REPEAT_TYPE,
+  USER_CATEGORY,
+  DAYS_NUMBER,
+  TABLET,
+  MEDICINE_UNITS
+} from "../../../../constant";
 const InputGroup = Input.Group;
 const { Item: FormItem } = Form;
 
-const UNIT_FIELD = 'unit';
+const UNIT_FIELD = "unit";
 
+const UNIT_ML = "ml";
 
-
-const UNIT_ML = 'ml';
-
-const UNIT_MG = 'mg';
-
+const UNIT_MG = "mg";
 
 const RadioButton = Radio.Button;
 const RadioGroup = Radio.Group;
@@ -83,15 +87,14 @@ class AddMedicationReminderForm extends Component {
       });
     }
   }
-  
-  
+
   scrollToTop = () => {
-    let antForm= document.getElementsByClassName('Form')[0];
+    let antForm = document.getElementsByClassName("Form")[0];
     let antDrawerBody = antForm.parentNode;
-    let antDrawerWrapperBody=antDrawerBody.parentNode;
+    let antDrawerWrapperBody = antDrawerBody.parentNode;
     antDrawerBody.scrollIntoView(true);
     antDrawerWrapperBody.scrollTop -= 200;
-  }
+  };
 
   formatMessage = data => this.props.intl.formatMessage(data);
 
@@ -110,7 +113,6 @@ class AddMedicationReminderForm extends Component {
 
     let repeat = getFieldValue(repeatField.field_name);
 
-
     let selectedDays = getFieldValue(repeatDaysField.field_name);
     let repeatInterval = getFieldValue(repeatIntervalField.field_name);
 
@@ -123,7 +125,9 @@ class AddMedicationReminderForm extends Component {
     // }
 
     const startDate = getFieldValue(startDateField.field_name);
-    let startDateDay = startDate ? moment(startDate).format('ddd') : moment().format('ddd');
+    let startDateDay = startDate
+      ? moment(startDate).format("ddd")
+      : moment().format("ddd");
     let startDayNumber = DAYS_NUMBER[startDateDay];
     let dayDiffPos = 0;
     let dayDiffNeg = 0;
@@ -132,19 +136,27 @@ class AddMedicationReminderForm extends Component {
       // if (selectedDays.length === 1) {
       //   selectedDays = [selectedDays];
       // }
-      selectedDays = selectedDays.split(',');
+      selectedDays = selectedDays.split(",");
       for (let day of selectedDays) {
         let dayNo = DAYS_NUMBER[day];
         let dayDiff = dayNo - startDayNumber;
 
-        dayDiffPos = dayDiffPos === 0 && dayDiff > 0 ? dayDiff : dayDiff > 0 && dayDiff < dayDiffPos ? dayDiff : dayDiffPos;
-        dayDiffNeg = dayDiffNeg === 0 && dayDiff < 0 ? dayDiff : dayDiff < 0 && Math.abs(dayDiff) > Math.abs(dayDiffNeg) ? dayDiff : dayDiffNeg;
+        dayDiffPos =
+          dayDiffPos === 0 && dayDiff > 0
+            ? dayDiff
+            : dayDiff > 0 && dayDiff < dayDiffPos
+            ? dayDiff
+            : dayDiffPos;
+        dayDiffNeg =
+          dayDiffNeg === 0 && dayDiff < 0
+            ? dayDiff
+            : dayDiff < 0 && Math.abs(dayDiff) > Math.abs(dayDiffNeg)
+            ? dayDiff
+            : dayDiffNeg;
       }
 
       daysToAdd = dayDiffPos ? dayDiffPos : 7 + dayDiffNeg;
-
     }
-
 
     let newEndDate;
 
@@ -175,11 +187,10 @@ class AddMedicationReminderForm extends Component {
     }
 
     if (!newEndDate) {
-
       newEndDate = startDateCopy;
     }
 
-    return moment(newEndDate).add(daysToAdd, 'days');
+    return moment(newEndDate).add(daysToAdd, "days");
   };
 
   adjustEndDate = repeatValue => {
@@ -224,7 +235,7 @@ class AddMedicationReminderForm extends Component {
     validateFields([startTimeField.field_name]);
   };
 
-  onChangeEventStartTime = startTime => { };
+  onChangeEventStartTime = startTime => {};
 
   onStartDateChange = currentDate => {
     const {
@@ -249,11 +260,11 @@ class AddMedicationReminderForm extends Component {
     }
   };
 
-  onEndDateChange = () => { };
+  onEndDateChange = () => {};
 
-  onStartTimeChange = () => { };
+  onStartTimeChange = () => {};
 
-  onEndTimeChange = () => { };
+  onEndTimeChange = () => {};
 
   onEventDurationChange = (start, end) => {
     const {
@@ -340,16 +351,16 @@ class AddMedicationReminderForm extends Component {
           [startDateField.field_name]:
             startDate && startDate !== null
               ? startDate
-                .clone()
-                .startOf("day")
-                .toISOString()
+                  .clone()
+                  .startOf("day")
+                  .toISOString()
               : startDate,
           [endDateField.field_name]:
             endDate && endDate !== null
               ? endDate
-                .clone()
-                .endOf("day")
-                .toISOString()
+                  .clone()
+                  .endOf("day")
+                  .toISOString()
               : endDate
         };
 
@@ -358,7 +369,6 @@ class AddMedicationReminderForm extends Component {
             ...data_to_submit,
             [repeatDaysField.field_name]: repeatDays.split(",")
           };
-
         }
         try {
           const response = await addMedicationReminder(data_to_submit);
@@ -368,8 +378,7 @@ class AddMedicationReminderForm extends Component {
           } else {
             message.error(msg);
           }
-        } catch (error) {
-        }
+        } catch (error) {}
       }
     });
   };
@@ -454,7 +463,7 @@ class AddMedicationReminderForm extends Component {
     } = this.props;
 
     const startDate = getFieldValue(startDateField.field_name);
-    let newEndDate = moment(startDate).add(1, 'week');
+    let newEndDate = moment(startDate).add(1, "week");
     setFieldsValue({
       [endDateField.field_name]: newEndDate
     });
@@ -467,7 +476,7 @@ class AddMedicationReminderForm extends Component {
     } = this.props;
 
     const startDate = getFieldValue(startDateField.field_name);
-    let newEndDate = moment(startDate).add(2, 'week');
+    let newEndDate = moment(startDate).add(2, "week");
     setFieldsValue({
       [endDateField.field_name]: newEndDate
     });
@@ -484,38 +493,38 @@ class AddMedicationReminderForm extends Component {
     });
   };
 
-  setFormulation = (value) => {
-    const {
-      form: { setFieldsValue },
-      medicines
-    } = this.props;
-    // const { basic_info: { type = '' } = {} } = medicines[value] || {};
-
-    setFieldsValue({
-      [formulation.field_name]: TABLET
-    });
-  };
-
+  // setFormulation = (value) => {
+  //   const {
+  //     form: { setFieldsValue },
+  //     medicines
+  //   } = this.props;
+  //   // const { basic_info: { type = '' } = {} } = medicines[value] || {};
+  //
+  //   setFieldsValue({
+  //     [formulation.field_name]: TABLET
+  //   });
+  // };
 
   setUnitByMedicineType = unit => {
     const {
       form: { setFieldsValue }
     } = this.props;
     setFieldsValue({ [UNIT_FIELD]: unit });
+  };
 
-  }
-
-  setStrength = (e) =>{
+  setStrength = e => {
     e.preventDefault();
     const {
-      form: { setFieldsValue, getFieldValue,validateFields },
+      form: { setFieldsValue, getFieldValue, validateFields },
       enableSubmit
     } = this.props;
     const currentValue = getFieldValue(medicineStrengthField.field_name) || 0.0;
-    setFieldsValue({ [medicineStrengthField.field_name]: (parseFloat(currentValue) + parseFloat(e.target.value)) });
+    setFieldsValue({
+      [medicineStrengthField.field_name]:
+        parseFloat(currentValue) + parseFloat(e.target.value)
+    });
     validateFields([medicineStrengthField.field_name]);
-
-  }
+  };
 
   render() {
     const {
@@ -528,7 +537,8 @@ class AddMedicationReminderForm extends Component {
       setFormulation,
       setUnit,
       setEndDateOneWeek,
-      setEndDateTwoWeek, setEndDateLongTime,
+      setEndDateTwoWeek,
+      setEndDateLongTime,
       setStrength
     } = this;
 
@@ -543,13 +553,14 @@ class AddMedicationReminderForm extends Component {
 
     let medicineUnit = getFieldValue(medicineStrengthUnitField.field_name);
 
-
-
     let endTime;
 
     if (startTime && startTime.isValid) {
       endTime = startTime.clone().add("minutes", 3);
     }
+
+    const currentMLCalibValue =
+      getFieldValue(medicineStrengthField.field_name) || 0.0;
 
     // const startDate = getFieldValue(startDateField.field_name);
 
@@ -567,10 +578,9 @@ class AddMedicationReminderForm extends Component {
             ...this.state
           })} */}
 
-          {chooseMedicationField.render({ ...this.props, otherUser, setFormulation })}
+          {chooseMedicationField.render({ ...this.props, otherUser })}
           {criticalMedicationField.render(this.props)}
           {formulation.render(this.props)}
-
 
           {/* <div className="flex align-items-end justify-content-space-between">
             <label
@@ -583,12 +593,8 @@ class AddMedicationReminderForm extends Component {
           </div> */}
 
           <div className="flex align-items-end justify-content-space-between">
-            <div className='flex direction-row flex-grow-1'>
-              <label
-                htmlFor="dose"
-                className="form-label"
-                title="Dose"
-              >
+            <div className="flex direction-row flex-grow-1">
+              <label htmlFor="dose" className="form-label" title="Dose">
                 {formatMessage(messages.dose)}
               </label>
 
@@ -603,10 +609,80 @@ class AddMedicationReminderForm extends Component {
                 size="small"
                 className="mg-ml flex justify-content-end"
               >
-                <RadioButton value={MEDICINE_UNITS.ML} className={medicineUnit !== MEDICINE_UNITS.ML ? `unselected-text no-shadow` : 'no-shadow'} onClick={setUnit} checked={medicineUnit === MEDICINE_UNITS.ML} disabled={medicineUnit !== MEDICINE_UNITS.ML} >ml</RadioButton>
-                <RadioButton value={MEDICINE_UNITS.MG} className={medicineUnit !== MEDICINE_UNITS.MG ? `unselected-text no-shadow` : 'no-shadow'} onClick={setUnit} checked={medicineUnit === MEDICINE_UNITS.MG} disabled={medicineUnit !== MEDICINE_UNITS.MG} >mg</RadioButton>
-                {medicineUnit !== 'ml' && (<RadioButton value={50} className={medicineUnit !== MEDICINE_UNITS.MG ? `unselected-text no-shadow` : 'no-shadow'} onClick={setStrength} checked={medicineUnit === MEDICINE_UNITS.MG} disabled={medicineUnit !== MEDICINE_UNITS.MG} >+50</RadioButton>)}
-
+                <RadioButton
+                  value={MEDICINE_UNITS.ML}
+                  className={
+                    medicineUnit !== MEDICINE_UNITS.ML
+                      ? `unselected-text no-shadow`
+                      : "no-shadow"
+                  }
+                  onClick={setUnit}
+                  checked={medicineUnit === MEDICINE_UNITS.ML}
+                  disabled={medicineUnit !== MEDICINE_UNITS.ML}
+                >
+                  ml
+                </RadioButton>
+                <RadioButton
+                  value={MEDICINE_UNITS.MG}
+                  className={
+                    medicineUnit !== MEDICINE_UNITS.MG
+                      ? `unselected-text no-shadow`
+                      : "no-shadow"
+                  }
+                  onClick={setUnit}
+                  checked={medicineUnit === MEDICINE_UNITS.MG}
+                  disabled={medicineUnit !== MEDICINE_UNITS.MG}
+                >
+                  mg
+                </RadioButton>
+                {medicineUnit !== MEDICINE_UNITS.MG && (
+                  <RadioButton
+                    value={5}
+                    className={
+                      medicineUnit !== MEDICINE_UNITS.ML
+                        ? `unselected-text no-shadow`
+                        : "no-shadow"
+                    }
+                    onClick={setStrength}
+                    checked={medicineUnit === MEDICINE_UNITS.ML}
+                    disabled={medicineUnit !== MEDICINE_UNITS.ML}
+                  >
+                    +5
+                  </RadioButton>
+                )}
+                {medicineUnit !== MEDICINE_UNITS.MG && (
+                  <RadioButton
+                    value={-5}
+                    className={
+                      medicineUnit !== MEDICINE_UNITS.ML
+                        ? `unselected-text no-shadow`
+                        : "no-shadow"
+                    }
+                    onClick={setStrength}
+                    checked={medicineUnit === MEDICINE_UNITS.ML}
+                    disabled={
+                      medicineUnit !== MEDICINE_UNITS.ML ||
+                      currentMLCalibValue <= 5
+                    }
+                  >
+                    -5
+                  </RadioButton>
+                )}
+                {medicineUnit !== MEDICINE_UNITS.ML && (
+                  <RadioButton
+                    value={50}
+                    className={
+                      medicineUnit !== MEDICINE_UNITS.MG
+                        ? `unselected-text no-shadow`
+                        : "no-shadow"
+                    }
+                    onClick={setStrength}
+                    checked={medicineUnit === MEDICINE_UNITS.MG}
+                    disabled={medicineUnit !== MEDICINE_UNITS.MG}
+                  >
+                    +50
+                  </RadioButton>
+                )}
               </RadioGroup>
             </div>
           </div>
@@ -616,10 +692,13 @@ class AddMedicationReminderForm extends Component {
             {medicineStrengthUnitField.render(this.props)}
           </InputGroup>
 
-          {medicineUnit !== 'ml' && (<div id="quantity">{medicineQuantityField.render(this.props)}</div>)}
-          
-          
-          <div id="timing">{whenToTakeMedicineField.render(this.props)}</div>
+          {medicineUnit !== MEDICINE_UNITS.ML && (
+            <div id="quantity">{medicineQuantityField.render(this.props)}</div>
+          )}
+
+          {/*<div id="timing"></div>*/}
+
+          {whenToTakeMedicineField.render(this.props)}
 
           <RepeatFields
             {...this.props}

@@ -1,7 +1,8 @@
-'use strict';
+"use strict";
 
-import {FEATURE_TYPE} from "../constant";
-import {TABLE_NAME} from "../app/models/featureDetails";
+import { FEATURE_TYPE } from "../constant";
+import { TABLE_NAME } from "../app/models/featureDetails";
+import { DataTypes } from "sequelize";
 
 module.exports = {
   up: (queryInterface, Sequelize) => {
@@ -17,7 +18,7 @@ module.exports = {
         values: [...Object.values(FEATURE_TYPE)]
       },
       details: {
-        type: Sequelize.JSON,
+        type: Sequelize.JSON
       },
       created_at: {
         allowNull: false,

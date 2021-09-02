@@ -33,7 +33,10 @@ class TwilioController extends Controller {
   generateTwilioVideoAccessToken = async (req, res) => {
     const { raiseSuccess, raiseServerError } = this;
     try {
-      const userId = req.query.userId ? req.query.userId : null;
+      const {
+        userDetails: { userRoleId }
+      } = req;
+      const userId = userRoleId ? userRoleId : null;
       const identity = userId ? userId : faker.name.findName();
 
       const token = await twilioService.videoTokenGenerator(identity);
@@ -42,7 +45,7 @@ class TwilioController extends Controller {
         res,
         200,
         { identity: identity, token: token },
-        "Created new video token with userId"
+        "Created new video token"
       );
     } catch (error) {
       Log.debug("generateTwilioVideoAccessToken 500 error", error);
@@ -81,12 +84,21 @@ class TwilioController extends Controller {
     try {
       const allChannels = await twilioService.deleteAllMessages();
 
-      return raiseSuccess(
-          res,
-          200,
-          { },
-          "DELETED ALL CHAT MESSAGES"
-      );
+      return raiseSuccess(res, 200, {}, "DELETED ALL CHAT MESSAGES");
+    } catch (error) {
+      Log.debug("deleteChat 500 error", error);
+      return raiseServerError(res);
+    }
+  };
+
+  getAllChats = async (req, res) => {
+    const { raiseSuccess, raiseServerError } = this;
+    try {
+      const allChannels = await twilioService.getAllMessages();
+
+      Log.debug("all Channels", allChannels);
+
+      return raiseSuccess(res, 200, {}, "GET ALL CHAT MESSAGES");
     } catch (error) {
       Log.debug("deleteChat 500 error", error);
       return raiseServerError(res);

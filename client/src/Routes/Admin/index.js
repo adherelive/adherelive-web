@@ -1,10 +1,5 @@
 import React, { lazy, Component } from "react";
-import {
-  
-  withRouter
-} from "react-router-dom";
-// import SideMenu from "../../Components/Sidebar";
-// import BlankState from "../../Containers/BlankState";
+import { withRouter } from "react-router-dom";
 
 const AdminDoctors = lazy(() =>
   import(/* webpackChunkName: "AdminDoctorRouter" */ "./doctor")
@@ -28,7 +23,7 @@ class Admin extends Component {
 
   render() {
     // const {authRedirection} = this.props;
-    return <AdminDoctors {...this.props}/>;
+    return <AdminDoctors {...this.props} />;
   }
 }
 

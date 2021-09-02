@@ -4,10 +4,12 @@ import NotificationController from "../../../app/controllers/notification/notifi
 
 const router = express.Router();
 
+router.post("/", Authenticate, NotificationController.getNotifications);
+
 router.post(
-    "/",
-    Authenticate,
-    NotificationController.getNotifications
+  "/chat-notfication",
+  Authenticate,
+  NotificationController.raiseChatNotification
 );
 
 module.exports = router;

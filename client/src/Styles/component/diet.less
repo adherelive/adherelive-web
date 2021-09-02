@@ -1,0 +1,73 @@
+.grey-dot {
+  color: #a6a8a9;
+  margin-left: 5px;
+  margin-right: 5px;
+}
+
+.or-before-line {
+  position: relative;
+}
+
+.or-before-line::before {
+  display: inline-block;
+  position: absolute;
+  top: calc(50% + 18px - 1.5px);
+  right: 0;
+  content: "";
+  border-top: 0.5px solid @light-grey;
+  width: 30px;
+  margin: 0 30px;
+  transform: translateY(-1rem);
+}
+
+.or-button {
+  border-radius: 50%;
+  border: 1px solid #1890ff;
+  height: 30px;
+  width: 30px;
+  position: relative;
+  color: black;
+}
+
+.similar-before-line {
+  position: relative;
+}
+
+.similar-before-line::before {
+  display: inline-block;
+  position: absolute;
+  top: calc(50% + 18px - 1.5px);
+  right: 100%;
+  content: "";
+  border-top: 0.5px solid @light-grey;
+  width: 23px;
+  margin: 0px;
+  transform: translateY(-1rem);
+}
+
+.multiply::after {
+  content: "X";
+  position: absolute;
+  right: 0;
+  top: 0;
+  margin-right: -20px;
+  top: calc(50% + 10px);
+}
+
+.food-group-container {
+  margin-top: 10px;
+  margin-bottom: 10px;
+  width: 100%;
+  height: 100px;
+  overflow: hidden;
+  // border:1px solid black;
+  padding-top: 10px;
+}
+
+.food-group {
+  height: 128px;
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  overflow-x: scroll;
+}

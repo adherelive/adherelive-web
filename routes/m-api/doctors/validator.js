@@ -14,11 +14,11 @@ const updateDoctorSchema = Joi.object().keys({
     .required()
     .label("Category cannot be empty"),
   mobile_number: Joi.string()
-    .min(6)
-    .max(20)
+    .min(10)
+    .max(10)
     .regex(/^\d+$/)
     .required()
-    .label("Mobile number cannot be empty"),
+    .label("Please enter correct mobile number"),
   prefix: Joi.string()
     .required()
     .regex(/^\d+$/)
@@ -33,12 +33,15 @@ const updateDoctorSchema = Joi.object().keys({
 
 const addPatientForm = Joi.object().keys({
   mobile_number: Joi.string()
-    .min(6)
-    .max(20)
+    .min(10)
+    .max(10)
     .regex(/^\d+$/)
     .required()
     .label("Please enter correct mobile number"),
   name: Joi.string()
+    .optional()
+    .allow("", null),
+  patient_uid: Joi.string()
     .optional()
     .allow("", null),
   gender: Joi.string()
@@ -89,14 +92,11 @@ const addPatientForm = Joi.object().keys({
   symptoms: Joi.string()
     .trim()
     .optional()
-    .allow("",null),
+    .allow("", null),
   address: Joi.string()
     .optional()
     .allow("", null)
 });
-
-
-
 
 const validDOB = date => {
   return moment().diff(date, "d") <= 0;

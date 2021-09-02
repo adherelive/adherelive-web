@@ -2,26 +2,28 @@ import React, { Component, Fragment } from "react";
 import { injectIntl } from "react-intl";
 import message from "antd/es/message";
 import Button from "antd/es/button";
-import Modal from "antd/es/modal";
-import uuid from "react-uuid";
-import { Avatar, Upload, Input, Select, Spin, DatePicker, Icon } from "antd";
-import throttle from "lodash-es/throttle";
-import { doRequest } from "../../../Helper/network";
+import { Select } from "antd";
 import plus from "../../../Assets/images/plus.png";
 import edit_image from "../../../Assets/images/edit.svg";
-import { DeleteTwoTone, PlusOutlined } from "@ant-design/icons";
+import { DeleteTwoTone } from "@ant-design/icons";
 import confirm from "antd/es/modal/confirm";
 
 // todo: import any component from antd using this format
 import Tooltip from "antd/es/tooltip";
 
-import {CONSULTATION_FEE, BILLING, PAYMENT_DETAILS, TABLE_DEFAULT_BLANK_FIELD} from "../../../constant";
+import {
+  CONSULTATION_FEE,
+  BILLING,
+  PAYMENT_DETAILS,
+  TABLE_DEFAULT_BLANK_FIELD
+} from "../../../constant";
 
 import AddConsultationFeeDrawer from "../../../Containers/Drawer/addConsultationFee";
 import AddAccountDetailsDrawer from "../../../Containers/Drawer/addAccountDetailsDrawer";
 import EditAccountDetailsDrawer from "../../../Containers/Drawer/editAccountDetailsDrawer";
 
-import ConsultationFeeTable from "./consultationFeeTable/index";
+import DoctorConsultationFeeTable from "../../../Containers/DoctorConsultationFee";
+import DoctorAccountDetails from "../../../Containers/DoctorAccountDetails";
 
 import {
   BarChartOutlined,
@@ -29,10 +31,8 @@ import {
   WalletOutlined
 } from "@ant-design/icons";
 
-import moment from "moment";
 import messages from "./messages";
 import { PATH, CONSULTATION_FEE_TYPE_TEXT } from "../../../constant";
-import { PageLoading } from "../../../Helper/loading/pageLoading";
 import { withRouter } from "react-router-dom";
 
 const { Option } = Select;
@@ -94,6 +94,8 @@ class DoctorSettingsPage extends Component {
         payload: { data: { payment_products = {} } = {} } = {},
         statusCode
       } = response || {};
+
+      console.log("RESPONSEEEEEEEEEEEEEEEE ====>", response);
       if (status && statusCode === 200) {
         this.setState({
           fetchingDoctorPayments: false,
@@ -143,19 +145,27 @@ class DoctorSettingsPage extends Component {
     openConsultationFeeDrawer();
   };
 
+  displayEditDoctorPaymentProduct = id => () => {
+    const { openConsultationFeeDrawer } = this.props;
+    const { doctorPaymentProducts } = this.state;
+    const { [id]: paymentData } = doctorPaymentProducts;
+    console.log("8723562837462375468327453287", { id, paymentData });
+    openConsultationFeeDrawer(paymentData);
+  };
+
   displayRazorpayAccountDetails = () => {
     const { openRazorpayAccountDetailsDrawer } = this.props;
     openRazorpayAccountDetailsDrawer();
   };
 
-  displayEditRazorpayAccountDetails = fetchedAccountDetails_id => () => {
+  displayEditRazorpayAccountDetails = fetchedAccountDetails_id => e => {
+    e.preventDefault();
     const { openEditRazorpayAccountDetailsDrawer } = this.props;
     this.setState({ editDetailsSelectedID: fetchedAccountDetails_id });
     openEditRazorpayAccountDetailsDrawer();
   };
 
   getConsultationFeesHeader = () => {
-    // const { id, doctors, users } = this.props;
     const { formatMessage, handleBack } = this;
 
     return (
@@ -168,7 +178,6 @@ class DoctorSettingsPage extends Component {
   };
 
   getBillingHeader = () => {
-    // const { id, doctors, users } = this.props;
     const { formatMessage, handleBack } = this;
 
     return (
@@ -193,6 +202,8 @@ class DoctorSettingsPage extends Component {
   };
 
   noConsultationFeeDisplay = () => {
+    const provider_id = this.isDoctorRoleAssociatedWithProvider() || null;
+
     return (
       <div className="w700 mb20 flex direction-column align-center justify-center">
         <div className="br-lightgrey h200 w200 br4"></div>
@@ -203,14 +214,19 @@ class DoctorSettingsPage extends Component {
           {this.formatMessage(messages.notAddedFeesYet)}
         </div>
 
-        <div className=" mt20">
-          <Button type="primary" onClick={this.displayAddDoctorPaymentProduct}>
-            <span className="w200 fs20">
-              {this.formatMessage(messages.addFee)}
-            </span>
-            {/* Add */}
-          </Button>
-        </div>
+        {provider_id === null ? (
+          <div className=" mt20">
+            <Button
+              type="primary"
+              onClick={this.displayAddDoctorPaymentProduct}
+            >
+              <span className="w200 fs20">
+                {this.formatMessage(messages.addFee)}
+              </span>
+              {/* Add */}
+            </Button>
+          </div>
+        ) : null}
       </div>
     );
   };
@@ -244,6 +260,10 @@ class DoctorSettingsPage extends Component {
   }
 
   getAddAccountDetailsDisplay = () => {
+    const providerid = this.isDoctorRoleAssociatedWithProvider();
+    if (providerid) {
+      return null;
+    }
 
     return (
       <Button
@@ -268,7 +288,17 @@ class DoctorSettingsPage extends Component {
   async handleGetAccountDetails() {
     try {
       const { getAccountDetails } = this.props;
-      const response = await getAccountDetails();
+      const provider_id = this.isDoctorRoleAssociatedWithProvider() || null;
+      let response = {};
+
+      console.log("83827163871873671638712", { provider_id });
+
+      if (provider_id) {
+        response = await getAccountDetails(provider_id);
+      } else {
+        response = await getAccountDetails();
+      }
+
       const {
         status,
         payload: { data: { users = {}, account_details = {} } = {} } = {},
@@ -284,7 +314,7 @@ class DoctorSettingsPage extends Component {
         // const {basic_info : {id='',customer_name='',account_number='',ifsc_code='',account_type='',account_mobile_number='',in_use=false,prefix='',upi_id=null} = {} } = Object.values(account_details)[0] || {};
       }
     } catch (err) {
-      console.log("err ", err);
+      console.log("83827163871873671638712 err ", err);
       message.warn(this.formatMessage(messages.somethingWentWrong));
     }
   }
@@ -389,37 +419,20 @@ class DoctorSettingsPage extends Component {
       doctorPaymentProducts
     } = this.state;
 
+    const { displayEditDoctorPaymentProduct } = this;
+
     return (
-      <div className="wp70 flex direction-column justify-space-between">
+      <div className="wp100 flex direction-column justify-space-between">
         <div>
           {noDoctorPaymentProducts ? (
-            <div>{this.noConsultationFeeDisplay()}</div>
+            <div className="flex align-center justify-center ">
+              {this.noConsultationFeeDisplay()}
+            </div>
           ) : (
             <div className="flex direction-column align-center justify-center">
               {/* {this.displayDoctorPaymentProducts()} */}
 
-              <ConsultationFeeTable
-                doctorPaymentProducts={doctorPaymentProducts}
-                deleteDoctorProduct={this.deleteDoctorProduct}
-              />
-
-              <div className=" mt20 mr300 wp100 flex  justify-end">
-                <Button
-                  type="ghost"
-                  className=" p10 w200 hauto flex  align-center justify-center"
-                  onClick={this.displayAddDoctorPaymentProduct}
-                >
-                  <div className="flex direction-column align-center justify-center hp100">
-                    <img src={plus} className={"w22 h22 mr10 "} />
-                  </div>
-                  <div className="flex direction-column align-center justify-center hp100">
-                    <span className="fs22 fw700">
-                      {" "}
-                      {this.formatMessage(messages.addMore)}
-                    </span>
-                  </div>
-                </Button>
-              </div>
+              <DoctorConsultationFeeTable />
             </div>
           )}
         </div>
@@ -427,59 +440,48 @@ class DoctorSettingsPage extends Component {
     );
   };
 
-
-  deleteAccountDetails = (id) => () => {
-
+  deleteAccountDetails = id => () => {
     this.handleDelete(id);
-
-}
-
-
+  };
 
   handleDelete = id => {
     // e.preventDefault();
     const { warnNote } = this;
 
-
     confirm({
       title: `${this.formatMessage(messages.warnNote)}`,
-      content: (
-        <div>
-          {warnNote()}
-        </div>
-      ),
+      content: <div>{warnNote()}</div>,
       onOk: async () => {
         try {
-                  const { deleteAccountDetails } = this.props;
-                  const response = await deleteAccountDetails(id);
-            
-                  const {
-                    status,
-                    payload: { data: { users = {}, account_details = {} } = {} } = {},
-                    statusCode
-                  } = response || {};
-            
-                  if (status && Object.keys(account_details).length === 0) {
-                    this.setState({
-                      noAccountDetails: true
-                    });
-                  }
-            
-                  if (status) {
-                    this.setState({ account_details });
-                    message.success(
-                      this.formatMessage(messages.accountDetailsDeleteSuccess)
-                    );
-                  }
-                } catch (err) {
-                  console.log("err ", err);
-                  message.warn(this.formatMessage(messages.somethingWentWrong));
-                }
+          const { deleteAccountDetails } = this.props;
+          const response = await deleteAccountDetails(id);
+
+          const {
+            status,
+            payload: { data: { users = {}, account_details = {} } = {} } = {},
+            statusCode
+          } = response || {};
+
+          if (status && Object.keys(account_details).length === 0) {
+            this.setState({
+              noAccountDetails: true
+            });
+          }
+
+          if (status) {
+            this.setState({ account_details });
+            message.success(
+              this.formatMessage(messages.accountDetailsDeleteSuccess)
+            );
+          }
+        } catch (err) {
+          console.log("err ", err);
+          message.warn(this.formatMessage(messages.somethingWentWrong));
+        }
       },
-      onCancel() { }
+      onCancel() {}
     });
   };
-
 
   warnNote = () => {
     return (
@@ -492,140 +494,151 @@ class DoctorSettingsPage extends Component {
     );
   };
 
-
-
-
   getAddedAccountDetails = () => {
     const { account_details } = this.state;
     let details = [];
 
+    const providerid = this.isDoctorRoleAssociatedWithProvider() || null;
+
     const accountDetails = Object.keys(account_details).map(account_id => {
-        const {
-            basic_info: {
-                id,
-                customer_name,
-                account_number,
-                ifsc_code,
-                account_type,
-                account_mobile_number,
-                prefix,
-                upi_id,
-                in_use = false,
-            } = {}
-        } = account_details[account_id] || {};
+      const {
+        basic_info: {
+          id,
+          customer_name,
+          account_number,
+          ifsc_code,
+          account_type,
+          account_mobile_number,
+          prefix,
+          upi_id,
+          in_use = false
+        } = {}
+      } = account_details[account_id] || {};
 
-        return (
-          <div
-            className={`relative br5 wp30 ml20 mt20 flex direction-column justify-center ${
-              in_use ? "bg-lighter-blue" : "bg-lighter-grey"
-            } account-details `}
-            key={`account-detail-${id}`}
-          >
-            {/* customer_name */}
-            <div className="mt10 ml10 flex direction-column align-start wp90">
-              <span className="fs14">
-                {this.formatMessage(messages.linkedAccountName)}
+      return (
+        <div
+          className={`relative br5 wp30 ml20 mt20 flex direction-column justify-center ${
+            in_use ? "bg-lighter-blue" : "bg-lighter-grey"
+          } account-details `}
+          key={`account-detail-${id}`}
+        >
+          {/* customer_name */}
+          <div className="mt10 ml10 flex direction-column align-start wp90">
+            <span className="fs14">
+              {this.formatMessage(messages.linkedAccountName)}
+            </span>
+
+            <span className="fs18 fw700">
+              <span>
+                {customer_name ? customer_name : TABLE_DEFAULT_BLANK_FIELD}
               </span>
+            </span>
+          </div>
 
-              <span className="fs18 fw700">
-                <span>
-                  {customer_name ? customer_name : TABLE_DEFAULT_BLANK_FIELD}
-                </span>
+          {/* mobile_number */}
+          <div className="mt10 mb10 ml10 flex direction-column align-start wp90">
+            <span className="fs14">
+              {this.formatMessage(messages.contactNumber)}
+            </span>
+
+            <span className="fs18 fw700">
+              <span>
+                {`+${prefix ? prefix : TABLE_DEFAULT_BLANK_FIELD}-${
+                  account_mobile_number
+                    ? account_mobile_number
+                    : TABLE_DEFAULT_BLANK_FIELD
+                }`}
               </span>
-            </div>
+            </span>
+          </div>
 
-            {/* mobile_number */}
-            <div className="mt10 mb10 ml10 flex direction-column align-start wp90">
-              <span className="fs14">
-                {this.formatMessage(messages.contactNumber)}
+          {/* account_number */}
+          <div className="mt10 mb10 ml10 flex direction-column align-start wp90">
+            <span className="fs14">
+              {this.formatMessage(messages.accountNumber)}
+            </span>
+
+            <span className="fs18 fw700">
+              <span>
+                {account_number ? account_number : TABLE_DEFAULT_BLANK_FIELD}
               </span>
+            </span>
+          </div>
 
-              <span className="fs18 fw700">
-                <span>
-                  {`+${prefix ? prefix : TABLE_DEFAULT_BLANK_FIELD}-${
-                    account_mobile_number
-                      ? account_mobile_number
-                      : TABLE_DEFAULT_BLANK_FIELD
-                  }`}
-                </span>
+          {/* ifsc_code */}
+          <div className="mt10 mb10 ml10 flex direction-column align-start wp90">
+            <span className="fs14">{this.formatMessage(messages.ifsc)}</span>
+
+            <span className="fs18 fw700">
+              <span>{ifsc_code ? ifsc_code : TABLE_DEFAULT_BLANK_FIELD}</span>
+            </span>
+          </div>
+
+          {/* account_type */}
+          <div className="mt10 mb10 ml10 flex direction-column align-start wp90">
+            <span className="fs14">
+              {this.formatMessage(messages.accountType)}
+            </span>
+
+            <span className="fs18 fw700">
+              <span>
+                {account_type ? account_type : TABLE_DEFAULT_BLANK_FIELD}
               </span>
-            </div>
+            </span>
+          </div>
 
-            {/* account_number */}
-            <div className="mt10 mb10 ml10 flex direction-column align-start wp90">
-              <span className="fs14">
-                {this.formatMessage(messages.accountNumber)}
-              </span>
+          {/* upi_id */}
+          <div className="mt10 mb10 ml10 flex direction-column align-start wp90">
+            <span className="fs14">{this.formatMessage(messages.upiId)}</span>
 
-              <span className="fs18 fw700">
-                <span>
-                  {account_number ? account_number : TABLE_DEFAULT_BLANK_FIELD}
-                </span>
-              </span>
-            </div>
+            <span className="fs18 fw700">
+              <span>{upi_id ? upi_id : TABLE_DEFAULT_BLANK_FIELD}</span>
+            </span>
+          </div>
 
-            {/* ifsc_code */}
-            <div className="mt10 mb10 ml10 flex direction-column align-start wp90">
-              <span className="fs14">{this.formatMessage(messages.ifsc)}</span>
-
-              <span className="fs18 fw700">
-                <span>{ifsc_code ? ifsc_code : TABLE_DEFAULT_BLANK_FIELD}</span>
-              </span>
-            </div>
-
-            {/* account_type */}
-            <div className="mt10 mb10 ml10 flex direction-column align-start wp90">
-              <span className="fs14">{this.formatMessage(messages.accountType)}</span>
-
-              <span className="fs18 fw700">
-                <span>
-                  {account_type ? account_type : TABLE_DEFAULT_BLANK_FIELD}
-                </span>
-              </span>
-            </div>
-
-            {/* upi_id */}
-            <div className="mt10 mb10 ml10 flex direction-column align-start wp90">
-              <span className="fs14">{this.formatMessage(messages.upiId)}</span>
-
-              <span className="fs18 fw700">
-                <span>{upi_id ? upi_id : TABLE_DEFAULT_BLANK_FIELD}</span>
-              </span>
-            </div>
-              
+          {!providerid && (
             <div className="flex  align-center justify-space-evenly wp100 mb10">
-           
-              <Tooltip placement={"bottom"} title={this.formatMessage(messages.editAccount)}
-              className="account-details-edit">
-                 <div className="flex align-center justify-space-between w60 pointer" onClick={this.displayEditRazorpayAccountDetails(id)} >
-                   
-                    <div className="flex direction-column  align-center justify-center" >
-                    <img src={edit_image} className="pointer edit-patient-icon" />
-                    </div>
-                    <div className="flex direction-column  align-center justify-center dark-sky-blue" >
-                    <span className="fs18 " >{this.formatMessage(messages.editAccount)}</span>
-                    </div>
-                 </div>
+              <Tooltip
+                placement={"bottom"}
+                title={this.formatMessage(messages.editAccount)}
+                className="account-details-edit"
+              >
+                <div
+                  className="flex align-center justify-space-between w60 pointer"
+                  onClick={this.displayEditRazorpayAccountDetails(id)}
+                >
+                  <div className="flex direction-column  align-center justify-center">
+                    <img
+                      src={edit_image}
+                      className="pointer edit-patient-icon"
+                    />
+                  </div>
+                  <div className="flex direction-column  align-center justify-center dark-sky-blue">
+                    <span className="fs18 ">
+                      {this.formatMessage(messages.editAccount)}
+                    </span>
+                  </div>
+                </div>
               </Tooltip>
               {/* </div> */}
-              <Tooltip className="absolute t10 r10 account-details-delete"  title={this.formatMessage(messages.deleteAccount)}>
-              <DeleteTwoTone
-                className={"pointer align-self-start "}
-                onClick={this.deleteAccountDetails(id)}
-                twoToneColor="#707070"
-                style={{ fontSize: "18px" }}
-              />
+              <Tooltip
+                className="absolute t10 r10 account-details-delete"
+                title={this.formatMessage(messages.deleteAccount)}
+              >
+                <DeleteTwoTone
+                  className={"pointer align-self-start "}
+                  onClick={this.deleteAccountDetails(id)}
+                  twoToneColor="#707070"
+                  style={{ fontSize: "18px" }}
+                />
               </Tooltip>
             </div>
-          </div>
-        );
+          )}
+        </div>
+      );
     });
 
     return accountDetails;
-
-   
-   
-
   };
 
   getPaymentDetails = () => {
@@ -633,9 +646,11 @@ class DoctorSettingsPage extends Component {
 
     if (noAccountDetails) {
       // add custom message here centered
-      return (<div className="flex align-center justify-center mt40">
-      {this.getAddAccountDetailsDisplay()}
-    </div>);
+      return (
+        <div className="flex align-center justify-center mt40">
+          {this.getAddAccountDetailsDisplay()}
+        </div>
+      );
     }
 
     return (
@@ -644,67 +659,115 @@ class DoctorSettingsPage extends Component {
           {this.getAddAccountDetailsDisplay()}
         </div>
         <div className="wp100 flex flex-wrap">
-          {this.getAddedAccountDetails()}
+          {/* {this.getAddedAccountDetails()} */}
+          <DoctorAccountDetails />
         </div>
       </Fragment>
     );
   };
 
+  sidebar = () => {
+    return (
+      <div className="br5 bg-grey h250 p20 wp100 flex direction-column mw270 ">
+        <div
+          className="fs20 fw700 mb14 h-cursor-p"
+          onClick={this.handleItemSelect(CONSULTATION_FEE)}
+        >
+          {this.getConsultationFeesHeader()}
+        </div>
+        <div
+          className="fs20 fw700 mb14 h-cursor-p"
+          onClick={this.handleItemSelect(BILLING)}
+        >
+          {this.getBillingHeader()}
+        </div>
+        <div
+          className="fs20 fw700 mb14 h-cursor-p"
+          onClick={this.handleItemSelect(PAYMENT_DETAILS)}
+        >
+          {this.getPaymentDetailsHeader()}
+        </div>
+      </div>
+    );
+  };
+
+  sidebarRelatedContent = () => {
+    const { selectedKey } = this.state;
+    return (
+      <div className="wp100">
+        {selectedKey === CONSULTATION_FEE && this.consultationFeeDisplay()}
+
+        {selectedKey === BILLING && (
+          <div className="wp100 flex direction-column justify-space-between">
+            <div className="flex direction-column align-center justify-center fs20 fw600">
+              {this.formatMessage(messages.billingDisplay)}
+            </div>
+          </div>
+        )}
+
+        {selectedKey === PAYMENT_DETAILS && (
+          <div className="wp100 ml10 mr10 flex direction-column justify-space-between mw635">
+            <DoctorAccountDetails />
+          </div>
+        )}
+      </div>
+    );
+  };
+
+  isDoctorRoleAssociatedWithProvider = () => {
+    const { auth: { auth_role } = {}, user_roles = {} } = this.props;
+    const { basic_info: { linked_with, linked_id } = {} } =
+      user_roles[auth_role] || {};
+
+    if (linked_id) {
+      return linked_id;
+    }
+    return false;
+  };
+
   render() {
-    const {
-      noDoctorPaymentProducts,
-      selectedKey,
-      doctorPaymentProducts
-    } = this.state;
-    const { getPaymentDetails } = this;
+    const { selectedKey } = this.state;
+    const { sidebar } = this;
+    const { noDoctorPaymentProducts } = this.state;
+    const provider_id = this.isDoctorRoleAssociatedWithProvider();
 
     return (
       <Fragment>
         {/************************* HEADER *************************/}
-        <div className="wp100 ml20 mt20 fs28 fw700 flex justify-start align-center">
+        {/* <div className="wp100 ml20 mt20 fs28 fw700 flex justify-start align-center">
           {this.formatMessage(messages.doctor_settings_header_text)}
-        </div>
+        </div> */}
 
-        {/************************* SIDEBAR *************************/}
-        <div className="wp100 p20 flex ">
-          <div className="br5 bg-grey h250 p20 wp30 flex direction-column ">
-            <div
-              className="fs20 fw700 mb14 h-cursor-p"
-              onClick={this.handleItemSelect(CONSULTATION_FEE)}
-            >
-              {this.getConsultationFeesHeader()}
-            </div>
-            <div
-              className="fs20 fw700 mb14 h-cursor-p"
-              onClick={this.handleItemSelect(BILLING)}
-            >
-              {this.getBillingHeader()}
-            </div>
-            <div
-              className="fs20 fw700 mb14 h-cursor-p"
-              onClick={this.handleItemSelect(PAYMENT_DETAILS)}
-            >
-              {this.getPaymentDetailsHeader()}
-            </div>
+        <div className="wp100 pt20  mb20 fs28 fw700 flex justify-space-between align-center">
+          <div className="ml20 flex flex-start align-center">
+            {this.formatMessage(messages.doctor_settings_header_text)}
           </div>
 
-          {/************************* SIDEBAR RELATED CONTENTS *************************/}
-          {selectedKey === CONSULTATION_FEE && this.consultationFeeDisplay()}
-
-
-          {selectedKey === BILLING && (
-            <div className="wp70 flex direction-column justify-space-between">
-              <div className="flex direction-column align-center justify-center">
-              {this.formatMessage(messages.billingDisplay)}
+          {!noDoctorPaymentProducts &&
+            selectedKey === CONSULTATION_FEE &&
+            !provider_id && (
+              <div className="flex flex-end align-center">
+                <Button
+                  type="primary"
+                  className="ml10 mr20 add-button "
+                  icon={"plus"}
+                  onClick={this.displayAddDoctorPaymentProduct}
+                >
+                  <span className="fs16">
+                    {this.formatMessage(messages.addMore)}
+                  </span>
+                </Button>
               </div>
-            </div>
-          )}
+            )}
+        </div>
 
-          {selectedKey === PAYMENT_DETAILS && (
-            <div className="wp70 ml10 mr10 flex direction-column justify-space-between">
-              {getPaymentDetails()}
-            </div>
-          )}
+        <div className="wp100 p20 flex flex-wrap">
+          {/************************* SIDEBAR *************************/}
+
+          <div className="wp30">{sidebar()}</div>
+
+          {/************************* SIDEBAR RELATED CONTENTS *************************/}
+          <div className="wp70">{this.sidebarRelatedContent()}</div>
         </div>
 
         <AddConsultationFeeDrawer

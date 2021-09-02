@@ -4,37 +4,51 @@ import MobileAppointment from "../../../app/controllers/mControllers/appointment
 import Authenticate from "../middlewares/auth";
 import * as validator from "./validator";
 
-router.get(
-    "/details",
-    Authenticate,
-    MobileAppointment.getAppointmentDetails
-);
+const multer = require("multer");
+const storage = multer.memoryStorage();
+const upload = multer({ dest: "../../../app/public/", storage: storage });
+
+router.get("/details", Authenticate, MobileAppointment.getAppointmentDetails);
 
 router.get(
-    "/:patient_id",
-    Authenticate,
-    MobileAppointment.getAppointmentForPatient
-);
-
-router.post(
-    "/",
-    Authenticate,
-    validator.validateAppointmentFormData,
-    MobileAppointment.create
-);
-
-
-router.post(
-    "/:id",
-    Authenticate,
-    validator.validateAppointmentFormData,
-    MobileAppointment.update
+  "/:document_id/download-doc",
+  Authenticate,
+  MobileAppointment.downloadAppointmentDoc
 );
 
 router.delete(
-    "/:id",
-    Authenticate,
-    MobileAppointment.delete
+  "/:document_id/delete-doc",
+  Authenticate,
+  MobileAppointment.deleteAppointmentDoc
 );
+
+router.post(
+  "/:appointment_id/upload-doc",
+  Authenticate,
+  upload.single("files"),
+  MobileAppointment.uploadAppointmentDoc
+);
+
+router.get(
+  "/:patient_id",
+  Authenticate,
+  MobileAppointment.getAppointmentForPatient
+);
+
+router.post(
+  "/",
+  Authenticate,
+  validator.validateAppointmentFormData,
+  MobileAppointment.create
+);
+
+router.post(
+  "/:id",
+  Authenticate,
+  validator.validateAppointmentFormData,
+  MobileAppointment.update
+);
+
+router.delete("/:id", Authenticate, MobileAppointment.delete);
 
 module.exports = router;

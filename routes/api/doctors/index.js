@@ -2,8 +2,10 @@
 import express from "express";
 import Authenticate from "../middleware/auth";
 import { isDoctor } from "../middleware/doctor";
+import { isDoctorOrProvider } from "../middleware/isDoctorOrProvider";
 import DoctorController from "../../../app/controllers/doctors/doctor.controller";
 import PaymentController from "../../../app/controllers/payments/payment.controller";
+import CarePlanTemplate from "../../../app/controllers/carePlanTemplate/carePlanTemplate.controller";
 import * as validator from "./validator";
 
 const router = express.Router();
@@ -17,6 +19,8 @@ router.post(
   validator.validateAddDoctorData,
   DoctorController.addDoctor
 );
+
+router.get("/search-mail", Authenticate, DoctorController.searchDoctor);
 
 router.post(
   "/upload",
@@ -82,17 +86,21 @@ router.delete(
 
 router.post(
   "/patients",
-  // Authenticate,
+  Authenticate,
   validator.validateAddPatientData,
   DoctorController.addPatient
 );
 
-router.post("/watchlist/:patient_id", DoctorController.addPatientToWatchlist);
+router.post(
+  "/watchlist/:patient_id",
+  Authenticate,
+  DoctorController.addPatientToWatchlist
+);
 
 router.post(
   "/consultations",
   Authenticate,
-  isDoctor,
+  isDoctorOrProvider,
   // validator.validatePaymentProduct,
   PaymentController.addDoctorPaymentProduct
 );
@@ -102,14 +110,14 @@ router.post(
   Authenticate,
   validator.validateAddPatientData,
   DoctorController.updatePatientAndCareplan
-)
+);
 
-router.delete(            
-    "/consultations",
-    Authenticate,
-    isDoctor,
-    // validator.validatePaymentProduct,
-    PaymentController.removeDoctorPaymentProduct
+router.delete(
+  "/consultations",
+  Authenticate,
+  isDoctorOrProvider,
+  // validator.validatePaymentProduct,
+  PaymentController.removeDoctorPaymentProduct
 );
 
 router.post(
@@ -127,12 +135,16 @@ router.delete(
   DoctorController.removePatientFromWatchlist
 );
 
-router.get("/", Authenticate, DoctorController.getAllDoctorDetails);
+router.get(
+  "/patients",
+  Authenticate,
+  DoctorController.getPaginatedDataForPatients
+);
 
 router.get(
   "/consultations",
   Authenticate,
-  isDoctor,
+  isDoctorOrProvider,
   PaymentController.getAllDoctorPaymentProduct
 );
 
@@ -140,6 +152,22 @@ router.get(
   "/consultations/default",
   Authenticate,
   PaymentController.getAllAdminPaymentProduct
+);
+
+router.get(
+  "/treatment/templates",
+  Authenticate,
+  CarePlanTemplate.getAllForDoctor
+);
+
+router.get("/:doctor_id", Authenticate, DoctorController.getAllDoctorDetails);
+
+router.delete("/:doctor_id", Authenticate, DoctorController.deactivateDoctor);
+
+router.post(
+  "/activate/:user_id",
+  Authenticate,
+  DoctorController.activateDoctor
 );
 
 module.exports = router;

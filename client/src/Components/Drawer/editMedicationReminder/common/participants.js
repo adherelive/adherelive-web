@@ -143,7 +143,9 @@ class Participants extends Component {
     let options = [];
     const doctors = members.filter(member => {
       const { basicInfo: { category } = {} } = member || {};
-      return category === USER_CATEGORY.DOCTOR;
+      return (
+        category === USER_CATEGORY.DOCTOR || category === USER_CATEGORY.HSP
+      );
     });
     const patients = members.filter(member => {
       const { basicInfo: { category } = {}, status } = member || {};
@@ -198,7 +200,7 @@ class Participants extends Component {
         category = memberCategory;
       }
     });
-    if (category === USER_CATEGORY.DOCTOR) {
+    if (category === USER_CATEGORY.DOCTOR || category === USER_CATEGORY.HSP) {
       setFieldsValue({
         [activityTypeField.field_name]: APPOINTMENT_TYPE.FOLLOWUP,
         [activityModeField.field_name]: ACTIVITY_TYPE.CHAT

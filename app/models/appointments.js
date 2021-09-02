@@ -1,6 +1,5 @@
 "use strict";
 import { DataTypes } from "sequelize";
-import { TABLE_NAME as providerTableName } from "./providers";
 import { USER_CATEGORY } from "../../constant";
 
 export const TABLE_NAME = "appointments";
@@ -17,14 +16,14 @@ export const db = database => {
       },
       participant_one_type: {
         type: DataTypes.ENUM,
-        values: [USER_CATEGORY.DOCTOR, USER_CATEGORY.PATIENT]
+        values: [USER_CATEGORY.DOCTOR, USER_CATEGORY.PATIENT, USER_CATEGORY.HSP]
       },
       participant_one_id: {
         type: DataTypes.INTEGER
       },
       participant_two_type: {
         type: DataTypes.ENUM,
-        values: [USER_CATEGORY.DOCTOR, USER_CATEGORY.PATIENT]
+        values: [USER_CATEGORY.DOCTOR, USER_CATEGORY.PATIENT, USER_CATEGORY.HSP]
       },
       participant_two_id: {
         type: DataTypes.INTEGER
@@ -34,7 +33,8 @@ export const db = database => {
         values: [
           USER_CATEGORY.DOCTOR,
           USER_CATEGORY.PATIENT,
-          USER_CATEGORY.CARE_TAKER
+          USER_CATEGORY.CARE_TAKER,
+          USER_CATEGORY.HSP
         ]
       },
       organizer_id: {
@@ -42,12 +42,6 @@ export const db = database => {
       },
       provider_id: {
         type: DataTypes.INTEGER,
-        references: {
-          model: {
-            tableName: providerTableName
-          },
-          key: "id"
-        },
         allowNull: true
       },
       provider_name: {
@@ -58,10 +52,10 @@ export const db = database => {
         type: DataTypes.STRING(1000)
       },
       start_date: {
-        type: DataTypes.DATE
+        type: DataTypes.DATEONLY
       },
       end_date: {
-        type: DataTypes.DATE
+        type: DataTypes.DATEONLY
       },
       start_time: {
         type: DataTypes.DATE,

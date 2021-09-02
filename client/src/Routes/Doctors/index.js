@@ -6,9 +6,10 @@ import {
   Redirect,
   withRouter
 } from "react-router-dom";
-import SideMenu from "../../Components/Sidebar";
-// import BlankState from "../../Containers/BlankState";
+import SideMenu from "../../Containers/Sidebar";
+import BlankState from "../../Components/Common/BlankState";
 import { PATH } from "../../constant";
+import NotificationDrawer from "../../Containers/Drawer/notificationDrawer";
 
 const PatientDetails = lazy(() =>
   import(
@@ -21,37 +22,165 @@ const Dashboard = lazy(() =>
 );
 
 const RegisterProfile = lazy(() =>
-  import(/* webpackChunkName: "RegisterProfile" */ "../../Containers/DoctorOnBoarding/profileRegister")
+  import(
+    /* webpackChunkName: "RegisterProfile" */ "../../Containers/DoctorOnBoarding/profileRegister"
+  )
 );
 
 const RegisterQualifications = lazy(() =>
-  import(/* webpackChunkName: "RegisterQualifications" */ "../../Containers/DoctorOnBoarding/qualificationRegister")
+  import(
+    /* webpackChunkName: "RegisterQualifications" */ "../../Containers/DoctorOnBoarding/qualificationRegister"
+  )
 );
 
 const RegisterClinics = lazy(() =>
-  import(/* webpackChunkName: "RegisterClinics" */ "../../Containers/DoctorOnBoarding/clinicRegister")
+  import(
+    /* webpackChunkName: "RegisterClinics" */ "../../Containers/DoctorOnBoarding/clinicRegister"
+  )
 );
 
 const ChatFullScreen = lazy(() =>
-  import(/* webpackChunkName: "ChatFullScreen" */ "../../Containers/ChatFullScreen")
+  import(
+    /* webpackChunkName: "ChatFullScreen" */ "../../Containers/ChatFullScreen"
+  )
 );
 
 const TwilioVideo = lazy(() =>
-  import(/* webpackChunkName: "TwilioVideo" */ "../../Containers/ChatFullScreen/twilioVideo")
+  import(
+    /* webpackChunkName: "TwilioVideo" */ "../../Containers/ChatFullScreen/agoraVideo"
+  )
+);
+
+const TestTwilioVideo = lazy(() =>
+  import(
+    /* webpackChunkName: "TwilioVideo" */ "../../Containers/ChatFullScreen/testAgoraVideo"
+  )
 );
 
 const DoctorProfilePage = lazy(() =>
-  import(/* webpackChunkName: "AdminDoctorTable" */ "../../Containers/Pages/doctorProfilePage")
+  import(
+    /* webpackChunkName: "DoctorProfilePage" */ "../../Containers/Pages/doctorProfilePage"
+  )
 );
 
-const DoctorSettingsePage = lazy(() =>
-  import(/* webpackChunkName: "DoctorSettingsePage" */ "../../Containers/Pages/doctorSettingsPage")  
+const DoctorSettingsPage = lazy(() =>
+  import(
+    /* webpackChunkName: "DoctorSettingsPage" */ "../../Containers/Pages/doctorSettingsPage"
+  )
 );
 
+const TermsOfService = lazy(() =>
+  import(
+    /* webpackChunkName: "TermsOfServiceAuthPage" */ "../../Containers/Pages/TermsOfService"
+  )
+);
+
+const TermsOfPayment = lazy(() =>
+  import(
+    /* webpackChunkName: "TermsOfPayment" */ "../../Containers/Pages/termsOfPayment"
+  )
+);
+
+const PrivacyPolicy = lazy(() =>
+  import(
+    /* webpackChunkName: "PrivacyPolicyAuthPage" */ "../../Containers/Pages/PrivacyPolicy"
+  )
+);
+
+const TemplatePage = lazy(() =>
+  import(
+    /* webpackChunkName: "TemplatePage" */ "../../Containers/Pages/doctorTemplateSettingsPage"
+  )
+);
+
+const DoctorTransactionPage = lazy(() =>
+  import(
+    /* webpackChunkName: "DoctorTransactionPage" */ "../../Containers/Pages/doctorTransactionPage"
+  )
+);
 
 const PatientDetailsComp = props => {
   const { match: { params: { patient_id } = {} } = {} } = props;
   return <PatientDetails patient_id={patient_id} />;
+};
+
+const RegisterProfileComp = props => {
+  return <RegisterProfile {...props} />;
+};
+
+const ChatFullScreenComp = props => {
+  return <ChatFullScreen {...props} />;
+};
+
+const TestTwilioVideoComp = props => {
+  return <TestTwilioVideo {...props} />;
+};
+
+const TwilioVideoComp = props => {
+  return <TwilioVideo {...props} />;
+};
+
+const RegisterQualificationsComp = props => {
+  return <RegisterQualifications {...props} />;
+};
+
+const RegisterClinicsComp = props => {
+  return <RegisterClinics {...props} />;
+};
+
+const DoctorProfilePageComp = props => {
+  return <DoctorProfilePage {...props} />;
+};
+
+const DoctorSettingsPageComp = props => {
+  return <DoctorSettingsPage {...props} />;
+};
+
+const TermsOfServiceComp = props => {
+  return <TermsOfService {...props} />;
+};
+
+const TermsOfPaymentComp = props => {
+  return <TermsOfPayment {...props} />;
+};
+
+const PrivacyPolicyComp = props => {
+  return <PrivacyPolicy {...props} />;
+};
+
+const TemplatePageComp = props => {
+  return <TemplatePage {...props} />;
+};
+
+const DoctorTransactionPageComp = props => {
+  return <DoctorTransactionPage {...props} />;
+};
+
+const DashboardComp = props => {
+  return <Dashboard {...props} />;
+};
+
+const SideMenuComp = props => {
+  const { location: { pathname = "" } = {} } = props;
+  // console.log("102938138932 sidemenu component --> ", {props});
+  if (
+    !(
+      pathname.includes("patient-consulting") ||
+      pathname.includes("terms-of-service") ||
+      pathname.includes("privacy-policy") ||
+      pathname.includes("video") ||
+      pathname.includes("sign-in") ||
+      pathname.includes("terms-of-payment")
+    )
+  ) {
+    return <SideMenu {...props} />;
+  } else {
+    return null;
+  }
+};
+
+const NotificationDrawerComponent = props => {
+  return <NotificationDrawer {...props} />;
 };
 
 class Doctors extends Component {
@@ -73,20 +202,35 @@ class Doctors extends Component {
   render() {
     // const {authRedirection} = this.props;
     const { redirecting = false } = this.state;
-    let { location: { pathname = '' } = {} } = this.props;
-    let isNotChatComponent = pathname.includes('patient-consulting') ? false : true;
+    let { location: { pathname = "" } = {} } = this.props;
+    let isNotChatComponent = !(
+      pathname.includes("patient-consulting") ||
+      pathname.includes("terms-of-service") ||
+      pathname.includes("privacy-policy") ||
+      pathname.includes("sign-in") ||
+      pathname.includes("terms-of-payment")
+    );
     const { authRedirection } = this.props;
     return (
       <Fragment>
         <Router>
           <div className="App flex" style={{ overflow: "hidden" }}>
-            {isNotChatComponent && (<SideMenu {...this.props} />)}
-            <div className={isNotChatComponent ? `container` : 'container-chat-page '}>
+            <SideMenuComp {...this.props} />
+            <div
+              className={
+                isNotChatComponent
+                  ? pathname.includes("video")
+                    ? "video-page"
+                    : `container`
+                  : "container-chat-page"
+              }
+            >
               <Switch>
-                {redirecting && redirecting.length > 0 && (<Redirect to={authRedirection} />)}
+                {redirecting && redirecting.length > 0 && (
+                  <Redirect to={authRedirection} />
+                )}
                 {/* {!onboarded &&category=="doctor" && <Redirect to={PATH.REGISTER_PROFILE} />} */}
                 {/*{this.state.redirecting && <Redirect to={this.state.redirecting}/>}*/}
-
                 <Route
                   exact
                   path={PATH.PATIENT.DETAILS}
@@ -95,61 +239,109 @@ class Doctors extends Component {
                 <Route
                   exact
                   path={PATH.REGISTER_PROFILE}
-                  component={RegisterProfile}
+                  component={RegisterProfileComp}
                 />
                 <Route
                   exact
                   path={PATH.PATIENT_CONSULTING}
-                  component={ChatFullScreen}
+                  component={ChatFullScreenComp}
                 />
-                <Route
+                {/* <Route
                   exact
                   path={PATH.PATIENT_CONSULTING}
                   component={ChatFullScreen}
+                /> */}
+                <Route
+                  exact
+                  path={PATH.TEST_PATIENT_CONSULTING_VIDEO}
+                  component={TestTwilioVideoComp}
                 />
                 <Route
                   exact
                   path={PATH.PATIENT_CONSULTING_VIDEO}
-                  component={TwilioVideo}
+                  component={TwilioVideoComp}
                 />
                 <Route
                   exact
                   path={PATH.REGISTER_QUALIFICATIONS}
-                  component={RegisterQualifications}
+                  component={RegisterQualificationsComp}
                 />
+
+                <Route
+                  exact
+                  path={`${PATH.REGISTER_FROM_MY_PROFILE}${PATH.REGISTER_QUALIFICATIONS}`}
+                  component={RegisterQualificationsComp}
+                />
+
                 <Route
                   exact
                   path={PATH.REGISTER_CLINICS}
-                  component={RegisterClinics}
+                  component={RegisterClinicsComp}
                 />
+
+                <Route
+                  exact
+                  path={`${PATH.REGISTER_FROM_MY_PROFILE}${PATH.REGISTER_CLINICS}`}
+                  component={RegisterClinicsComp}
+                />
+
                 <Route
                   exact
                   path={PATH.PROFILE}
-                  component={DoctorProfilePage}
+                  component={DoctorProfilePageComp}
                 />
 
                 <Route
                   exact
                   path={PATH.SETTINGS}
-                  component={DoctorSettingsePage}
+                  component={DoctorSettingsPageComp}
                 />
 
                 <Route
                   exact
                   path={PATH.CONSULTATION_FEE}
-                  component={DoctorSettingsePage}
+                  component={DoctorSettingsPageComp}
                 />
 
                 <Route
                   exact
                   path={PATH.BILLING}
-                  component={DoctorSettingsePage}
+                  component={DoctorSettingsPageComp}
                 />
 
-              <Route
+                <Route
                   exact
                   path={PATH.PAYMENT_DETAILS}
-                  component={DoctorSettingsePage}
+                  component={DoctorSettingsPageComp}
+                />
+
+                <Route
+                  exact
+                  path={PATH.TERMS_OF_SERVICE}
+                  component={TermsOfServiceComp}
+                />
+
+                <Route
+                  exact
+                  path={PATH.TERMS_OF_PAYMENT}
+                  component={TermsOfPaymentComp}
+                />
+                <Route
+                  exact
+                  path={PATH.PRIVACY_POLICY}
+                  component={PrivacyPolicyComp}
+                />
+
+                <Route
+                  exact
+                  path={PATH.TEMPLATES}
+                  component={TemplatePageComp}
+                />
+
+                <Route
+                  exact
+                  path={PATH.DOCTOR.TRANSACTION_DETAILS}
+                  component={DoctorTransactionPageComp}
                 />
 
                 {/* <Route
@@ -157,10 +349,11 @@ class Doctors extends Component {
                   path={PATH.DASHBOARD}
                   component={Dashboard}
                 /> */}
-                <Route exact path="/" component={Dashboard} />
-                <Route path="" component={Dashboard} />
+                <Route exact path="/" component={DashboardComp} />
+                <Route path="" component={BlankState} />
               </Switch>
             </div>
+            <NotificationDrawerComponent {...this.props} />
           </div>
         </Router>
       </Fragment>

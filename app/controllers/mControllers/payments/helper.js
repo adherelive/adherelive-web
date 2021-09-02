@@ -1,32 +1,34 @@
 import isEmpty from "lodash/isEmpty";
 
 export const getFormattedData = (data = {}) => {
-    const {payment_products = []} = data;
+  const { payment_products = [] } = data;
 
-    let updatedPaymentProducts = [];
-    payment_products.forEach(product => {
-        const {name, type, amount, id} = product || {};
+  let updatedPaymentProducts = [];
+  payment_products.forEach(product => {
+    const { name, type, amount, id, razorpay_link = "" } = product || {};
 
-        let details = {};
+    let details = {};
 
-        if(!isEmpty(id)) {
-            details.id = id;
-        }
+    if (!isEmpty(id)) {
+      details.id = id;
+    }
 
-        if(!isEmpty(name)) {
-            details.name = name;
-        }
+    if (!isEmpty(name)) {
+      details.name = name;
+    }
 
-        if(!isEmpty(type)) {
-            details.type = type;
-        }
+    if (!isEmpty(type)) {
+      details.type = type;
+    }
 
-        if(!isEmpty(amount)) {
-            details.amount = amount;
-        }
+    if (!isEmpty(amount)) {
+      details.amount = amount;
+    }
 
-        updatedPaymentProducts.push(details);
-    });
+    details.razorpay_link = razorpay_link;
 
-    return updatedPaymentProducts;
+    updatedPaymentProducts.push(details);
+  });
+
+  return updatedPaymentProducts;
 };

@@ -1,81 +1,61 @@
 "use strict";
-import {DataTypes} from "sequelize";
-import {ACTIONS} from "./actions";
+import { DataTypes } from "sequelize";
+// import {TABLE_NAME as exerciseUserCreatedMappingTableName} from "./exerciseUserCreatedMapping";
+import { TABLE_NAME as exerciseDetailsTableName } from "./exerciseDetails";
+import { USER_CATEGORY } from "../../constant";
 
-export const EXERCISES = "exercises";
+export const TABLE_NAME = "exercises";
 
-export const db = (database) => {
-    database.define(
-        EXERCISES,
-        {
-            id: {
-                allowNull: false,
-                autoIncrement: true,
-                primaryKey: true,
-                type: DataTypes.INTEGER
-            },
-            action_id: {
-                type: DataTypes.INTEGER,
-                allowNull: false,
-                references: {
-                    model: {
-                        tableName: ACTIONS,
-                    },
-                    key: 'id'
-                }
-            },
-            type: {
-                type: DataTypes.STRING,
-                allowNull: false
-            },
-            description: {
-                type: DataTypes.STRING(1000),
-                allowNull: false
-            },
-            condition: {
-                type: DataTypes.STRING,
-                allowNull: false
-            },
-            default_frequency: {
-                type: DataTypes.STRING,
-                allowNull: false
-            },
-            restriction_age: {
-                type: DataTypes.STRING,
-                allowNull: false
-            },
-            content_reference: {
-                type: DataTypes.STRING,
-                allowNull: false
-            },
-        },
-        {
-            underscored: true,
-            paranoid: true,
-            getterMethods: {
-                getBasicInfo() {
-                    return {
-                        id: this.id,
-                        action_id: this.action_id,
-                        type: this.type,
-                        description: this.description,
-                        condition: this.condition,
-                        default_frequency: this.default_frequency,
-                        restriction_age: this.restriction_age,
-                        content_reference: this.content_reference,
-                    };
-                }
-            }
-        }
-    );
+export const db = database => {
+  database.define(
+    TABLE_NAME,
+    {
+      id: {
+        type: DataTypes.INTEGER,
+        primaryKey: true,
+        autoIncrement: true
+      },
+      name: {
+        type: DataTypes.STRING(1000),
+        allowNull: false
+      },
+      creator_id: {
+        type: DataTypes.INTEGER
+      },
+      creator_type: {
+        type: DataTypes.ENUM,
+        values: [
+          USER_CATEGORY.DOCTOR,
+          USER_CATEGORY.PROVIDER,
+          USER_CATEGORY.ADMIN,
+          USER_CATEGORY.HSP
+        ],
+        defaultValue: USER_CATEGORY.ADMIN
+      }
+    },
+    {
+      underscored: true,
+      paranoid: true
+    }
+  );
 };
 
-export const associate = (database) => {
-    const {exercises, actions} = database.models || {};
+export const associate = database => {
+  // database.models[TABLE_NAME].hasOne(database.models[repetitionTableName], {
+  //   foreignKey: "default_repetition_id",
+  //   targetKey: "id",
+  // });
 
-    // associations here (if any) ...
-    exercises.belongsTo(actions, {
-        foreignKey: "action_id",
-        targetKey: "id"
-    });
+  // database.models[TABLE_NAME].hasOne(database.models[exerciseUserCreatedMappingTableName], {
+  //   foreignKey: "exercise_id",
+  //   targetKey: "id"
+  // });
+
+  database.models[TABLE_NAME].hasMany(
+    database.models[exerciseDetailsTableName],
+    {
+      foreignKey: "exercise_id",
+      sourceKey: "id"
+    }
+  );
 };

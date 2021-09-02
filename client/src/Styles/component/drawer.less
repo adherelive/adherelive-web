@@ -199,7 +199,7 @@
   margin-left: -16px;
   justify-content: flex-start;
   .ant-radio-button-wrapper {
-    position: relative;
+    //position: relative;
     display: flex;
     flex-direction: row;
     justify-content: center;
@@ -223,10 +223,9 @@
     border-radius: 4px;
   }
 
-  .ant-radio-settings-page{
+  .ant-radio-settings-page {
     height: 90px;
   }
-
 }
 
 .critical-checkbox {
@@ -302,7 +301,7 @@
   justify-content: center;
   align-items: center;
   border-radius: 4px;
-  background-color: #528ff0;
+  background-color: @lighter-sky-blue;
   height: 50px;
   cursor: pointer;
 }
@@ -355,5 +354,23 @@
 .human-body-drawer {
   .ant-drawer-wrapper-body {
     overflow: unset;
+  }
+}
+
+.ant-fullcalendar-year-select,
+.ant-fullcalendar-month-select {
+  .ant-select-selection--single {
+    height: 32px;
+  }
+  .ant-select-selection__rendered {
+    line-height: 30px;
+  }
+}
+
+.add-new-medicine-button-div {
+  height: 50px;
+  .add-new-medicine-button {
+    height: 100%;
+    width: 100%;
   }
 }

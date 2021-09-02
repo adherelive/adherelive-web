@@ -32,11 +32,11 @@ export default class QueueService {
     });
   };
 
-  getQueueUrl = (name = "test_queue") => {
+  getQueueUrl = () => {
     return `${process.config.sqs.domain_url}/${process.config.sqs.account_id}/${process.config.sqs.queue_name}`;
   };
 
-  sendMessage = async (queueName = "test_queue", data) => {
+  sendMessage = async data => {
     try {
       const stringData = JSON.stringify(data);
 
@@ -70,9 +70,11 @@ export default class QueueService {
     }
   };
 
-  sendBatchMessage = async (queueName = "test_queue", dataArr) => {
+  sendBatchMessage = async dataArr => {
     try {
       const formattedData = [];
+
+      console.log("18231873 data --> ", dataArr);
       dataArr.forEach((data, index) => {
         const stringData = JSON.stringify(data);
         const params = {
@@ -98,9 +100,9 @@ export default class QueueService {
     }
   };
 
-  receiveMessage = async (QueueName = "test_queue") => {
+  receiveMessage = async () => {
     try {
-      Log.info(`queue url : ${this.getQueueUrl("test_queue")}`);
+      Log.info(`queue url : ${this.getQueueUrl()}`);
 
       const params = {
         AttributeNames: ["SentTimestamp"],
@@ -131,6 +133,23 @@ export default class QueueService {
       return response;
     } catch (error) {
       console.log("receiveMessage 500 error", error);
+    }
+  };
+
+  purgeQueue = async queueName => {
+    try {
+      const params = {
+        QueueUrl: await this.getQueueUrl()
+      };
+
+      if (process.config.sqs.queue_name === queueName) {
+        const response = await this.sqs.purgeQueue(params).promise();
+        return response;
+      } else {
+        return null;
+      }
+    } catch (error) {
+      console.log("purgeQueue 500 error", error);
     }
   };
 }

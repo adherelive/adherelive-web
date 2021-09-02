@@ -11,7 +11,7 @@ import CarePlanWrapper from "../carePlan";
 
 import Logger from "../../../../libs/log";
 import DocumentService from "../../../services/uploadDocuments/uploadDocuments.service";
-import {ACTIVITY_TYPE, DOCUMENT_PARENT_TYPE} from "../../../../constant";
+import { ACTIVITY_TYPE, DOCUMENT_PARENT_TYPE } from "../../../../constant";
 import DocumentWrapper from "../uploadDocument";
 const Log = new Logger("API_WRAPPER > WEB > SYMPTOMS");
 
@@ -54,12 +54,12 @@ class SymptomWrapper extends BaseSymptom {
     const imageDocumentIds = photos.map(photo => photo.get("id"));
 
     return {
-        data: {
-            ...await this.getBasicInfo(),
-            image_document_ids: imageDocumentIds,
-            audio_document_ids: audioDocumentIds
-        },
-        type: ACTIVITY_TYPE.SYMPTOM,
+      data: {
+        ...(await this.getBasicInfo()),
+        image_document_ids: imageDocumentIds,
+        audio_document_ids: audioDocumentIds
+      },
+      type: ACTIVITY_TYPE.SYMPTOM,
       createdAt: getUnformattedCreateDate()
     };
   };
@@ -79,8 +79,15 @@ class SymptomWrapper extends BaseSymptom {
         getSymptomId()
       )) || [];
 
+    const videos =
+      (await DocumentService.getDoctorQualificationDocuments(
+        DOCUMENT_PARENT_TYPE.SYMPTOM_VIDEO,
+        getSymptomId()
+      )) || [];
+
     const audioDocumentIds = audios.map(audio => audio.get("id"));
     const imageDocumentIds = photos.map(photo => photo.get("id"));
+    const videoDocumentIds = videos.map(video => video.get("id"));
 
     return {
       symptoms: {
@@ -88,6 +95,7 @@ class SymptomWrapper extends BaseSymptom {
           ...getBasicInfo(),
           image_document_ids: imageDocumentIds,
           audio_document_ids: audioDocumentIds,
+          video_document_ids: videoDocumentIds,
           snapshot: ""
         }
       }
@@ -125,7 +133,13 @@ class SymptomWrapper extends BaseSymptom {
         getSymptomId()
       )) || [];
 
-    for (const docs of [...audios, ...photos]) {
+    const videos =
+      (await DocumentService.getDoctorQualificationDocuments(
+        DOCUMENT_PARENT_TYPE.SYMPTOM_VIDEO,
+        getSymptomId()
+      )) || [];
+
+    for (const docs of [...audios, ...photos, ...videos]) {
       const doc = await DocumentWrapper(docs);
       documentData[doc.getUploadDocumentId()] = doc.getBasicInfo();
     }
@@ -141,8 +155,8 @@ class SymptomWrapper extends BaseSymptom {
         [patients.getPatientId()]: patients.getBasicInfo()
       },
       doctors: {
-        [doctors.getDoctorId()]: doctors.getBasicInfo()
-      },
+        [doctors.getDoctorId()]: await doctors.getAllInfo()
+      }
       // care_plans: {
       //   [carePlans.getCarePlanId()]: carePlans.getBasicInfo()
       // }

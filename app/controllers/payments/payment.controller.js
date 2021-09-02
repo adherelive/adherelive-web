@@ -6,6 +6,8 @@ import * as PaymentHelper from "./helper";
 
 // SERVICES...
 import PaymentProductService from "../../services/paymentProducts/paymentProduct.service";
+import userRolesService from "../../services/userRoles/userRoles.service";
+import doctorService from "../../services/doctor/doctor.service";
 
 // WRAPPERS...
 import PaymentProductWrapper from "../../ApiWrapper/web/paymentProducts";
@@ -21,24 +23,88 @@ class PaymentController extends Controller {
   addDoctorPaymentProduct = async (req, res) => {
     const { raiseSuccess, raiseClientError, raiseServerError } = this;
     try {
-      const { body, userDetails: { userCategoryId } = {} } = req;
+      const {
+        body,
+        userDetails: {
+          userCategoryId,
+          userRoleId,
+          userData: { category = "" } = {}
+        } = {}
+      } = req;
+
+      let doctorRoleId = userRoleId;
+
+      const { doctor_id = null, for_user_type = USER_CATEGORY.DOCTOR } =
+        body || {};
+
+      if (doctor_id) {
+        if (category !== USER_CATEGORY.PROVIDER) {
+          return raiseClientError(res, 401, {}, "UNAUTHORIZED");
+        }
+
+        const doctor =
+          (await doctorService.findOne({
+            where: { id: doctor_id },
+            attributes: ["user_id"]
+          })) || null;
+        const { user_id: doctorUserId = null } = doctor || {};
+        const userRole =
+          (await userRolesService.findOne({
+            where: {
+              user_identity: doctorUserId,
+              linked_id: userCategoryId,
+              linked_with: USER_CATEGORY.PROVIDER
+            },
+            attributes: ["id"]
+          })) || null;
+
+        if (!userRole) {
+          return raiseClientError(res, 401, {}, "UNAUTHORIZED");
+        }
+        const { id: doctor_role_id = null } = userRole || {};
+        doctorRoleId = doctor_role_id;
+      }
 
       const dataToAdd = PaymentHelper.getFormattedData(body);
-
       const paymentProductService = new PaymentProductService();
-      const paymentProductData = await paymentProductService.addDoctorProduct({
-        ...dataToAdd,
-        creator_id: userCategoryId,
-        creator_type: USER_CATEGORY.DOCTOR,
-        product_user_type: "patient" // todo: change to constant in model
-      });
 
-      if (paymentProductData) {
-        let paymentProducts = {};
+      const { id = null, ...rest } = dataToAdd || {};
 
-        const paymentProduct = await PaymentProductWrapper({
-          data: paymentProductData
+      let paymentProduct = null;
+
+      if (id) {
+        // update
+        const updatePaymentProductData = await paymentProductService.updateDoctorProduct(
+          {
+            ...rest
+          },
+          id
+        );
+
+        paymentProduct = await PaymentProductWrapper({
+          id
         });
+      } else {
+        const paymentProductData = await paymentProductService.addDoctorProduct(
+          {
+            ...dataToAdd,
+            creator_role_id: userRoleId,
+            creator_type: category,
+            for_user_role_id: doctorRoleId,
+            for_user_type: doctor_id ? for_user_type : category,
+            product_user_type: "patient" // todo: change to constant in model
+          }
+        );
+
+        if (paymentProductData) {
+          paymentProduct = await PaymentProductWrapper({
+            data: paymentProductData
+          });
+        }
+      }
+
+      if (paymentProduct) {
+        let paymentProducts = {};
         paymentProducts[paymentProduct.getId()] = paymentProduct.getBasicInfo();
 
         return raiseSuccess(
@@ -65,55 +131,81 @@ class PaymentController extends Controller {
     }
   };
 
-  removeDoctorPaymentProduct = async(req,res) => {
-
+  removeDoctorPaymentProduct = async (req, res) => {
     const { raiseSuccess, raiseClientError, raiseServerError } = this;
     try {
-      const { body, userDetails: { userCategoryId } = {} } = req;
+      const { body } = req;
 
-      const {id,name,type,amount} = req.body;
+      const { id } = body || {};
 
       const paymentProductService = new PaymentProductService();
-      const deletedDoctorProduct = await paymentProductService.deleteDoctorProduct({
-       id:id,
-       name:name,
-       type:type,
-       amount:amount
-      });
-      
-      // let doctorData = {};
-
-      return raiseSuccess(
-        res,
-        200,
-        {},
-        "doctor product record destroyed"
+      const deletedDoctorProduct = await paymentProductService.deleteDoctorProduct(
+        {
+          id: id
+        }
       );
-      
-
-      
-    }catch (error) {
+      return raiseSuccess(res, 200, {}, "doctor product record destroyed");
+    } catch (error) {
       Log.debug("83901283091298 delete doctor product error", error);
       return raiseServerError(res);
     }
-
   };
-
-
 
   getAllDoctorPaymentProduct = async (req, res) => {
     const { raiseSuccess, raiseClientError, raiseServerError } = this;
     try {
-      const { userDetails: { userCategoryId } = {} } = req;
+      const {
+        userDetails: {
+          userCategoryId,
+          userRoleId,
+          userData: { category = "" } = {}
+        } = {},
+        query: { doctor_id = null } = {}
+      } = req;
+
+      let doctorRoleId = userRoleId;
+
+      if (doctor_id) {
+        if (category !== USER_CATEGORY.PROVIDER) {
+          return raiseClientError(res, 401, {}, "UNAUTHORIZED");
+        }
+
+        const doctor =
+          (await doctorService.findOne({
+            where: { id: doctor_id },
+            attributes: ["user_id"]
+          })) || null;
+        const { user_id: doctorUserId = null } = doctor || {};
+        const userRole =
+          (await userRolesService.findOne({
+            where: {
+              user_identity: doctorUserId,
+              linked_id: userCategoryId,
+              linked_with: USER_CATEGORY.PROVIDER
+            },
+            attributes: ["id"]
+          })) || null;
+
+        if (!userRole) {
+          return raiseClientError(res, 401, {}, "UNAUTHORIZED");
+        }
+        const { id: doctor_role_id = null } = userRole || {};
+        doctorRoleId = doctor_role_id;
+      }
+
+      if (category === USER_CATEGORY.PROVIDER && !doctor_id) {
+        return raiseClientError(res, 402, {}, "Invalid doctor");
+      }
 
       const paymentProductService = new PaymentProductService();
-      const paymentProductData = await paymentProductService.getAllCreatorTypeProducts(
-        {
-          creator_type: USER_CATEGORY.DOCTOR,
-          creator_id: userCategoryId,
+      const doctorPaymentProductData =
+        (await paymentProductService.getAllCreatorTypeProducts({
+          for_user_type: [USER_CATEGORY.DOCTOR, USER_CATEGORY.HSP],
+          for_user_role_id: doctorRoleId,
           product_user_type: "patient"
-        }
-      );
+        })) || [];
+
+      let paymentProductData = [...doctorPaymentProductData];
 
       if (paymentProductData.length > 0) {
         let paymentProducts = {};
@@ -146,7 +238,7 @@ class PaymentController extends Controller {
         );
       }
     } catch (error) {
-      Log.debug("getAllAdminPaymentProduct 500 error", error);
+      Log.debug("getAllDoctorPaymentProduct 500 error", error);
       return raiseServerError(res);
     }
   };

@@ -387,7 +387,6 @@ const message = defineMessages({
     id: "app.drawer.add.appointment.appointmentTypeDescription",
     description: "",
     defaultMessage: "Description"
-
   },
   econsulting: {
     id: "add.event.econsulting",
@@ -419,6 +418,76 @@ const message = defineMessages({
     description: "",
     defaultMessage: "No match found"
   },
+  radiology: {
+    id: "app.drawer.edit.appointment.radiology",
+    description: "",
+    defaultMessage: "Radiology"
+  },
+  radiologyTypeDesc: {
+    id: "app.drawer.edit.appointment.radiologyTypeDesc",
+    description: "",
+    defaultMessage: "Radiology Type Description"
+  },
+  error_radio_type_required: {
+    id: "app.drawer.edit.appointment.error_radio_type_required",
+    description: "",
+    defaultMessage: "Radiology Type Description Required"
+  },
+  markFav: {
+    id: "app.drawer.edit.appointment.markFav",
+    description: "",
+    defaultMessage: "Mark favourite"
+  },
+  unMarkFav: {
+    id: "app.drawer.edit.appointment.unMarkFav",
+    description: "",
+    defaultMessage: "Un-check"
+  },
+  somethingWentWrong: {
+    id: "app.drawer.edit.appointment.somethingWentWrong",
+    description: "",
+    defaultMessage: "Something went wrong, please try again"
+  },
+  fillMandatory: {
+    id: "app.drawer.edit.appointment.fillMandatory",
+    description: "",
+    defaultMessage: "Please fill all mandatory details."
+  },
+  pastTimeError: {
+    id: "app.drawer.edit.appointment.pastTimeError",
+    description: "",
+    defaultMessage: "Cannot create appointment for past time."
+  },
+  validTimingError: {
+    id: "app.drawer.edit.appointment.validTimingError",
+    description: "",
+    defaultMessage: "Please select valid timings for appointment."
+  },
+  placeholderAppointmentType: {
+    id: "app.drawer.edit.appointment.placeholderAppointmentType",
+    description: "",
+    defaultMessage: "Choose Appointment Type"
+  },
+  placeholderTypeDesc: {
+    id: "app.drawer.edit.appointment.placeholderTypeDesc",
+    description: "",
+    defaultMessage: "Choose Type Description"
+  },
+  placeholderRadiologyTypeDesc: {
+    id: "app.drawer.edit.appointment.placeholderRadiologyTypeDesc",
+    description: "",
+    defaultMessage: "Choose Radiology Type Description"
+  },
+  placeholderProvider: {
+    id: "app.drawer.edit.appointment.placeholderProvider",
+    description: "",
+    defaultMessage: "Choose Provider"
+  },
+  viewDetails: {
+    id: "app.drawer.edit.appointment.viewDetails",
+    description: "",
+    defaultMessage: "Appointment Details"
+  }
 });
 
 export default message;

@@ -1,10 +1,18 @@
 import BaseAppointment from "../../../services/appointment";
 
 import appointmentService from "../../../services/appointment/appointment.service";
+import careplanAppointmentService from "../../../services/carePlanAppointment/carePlanAppointment.service";
 import ScheduleEventService from "../../../services/scheduleEvents/scheduleEvent.service";
+import documentService from "../../../services/uploadDocuments/uploadDocuments.service";
 
 import EventWrapper from "../../common/scheduleEvents";
-import {EVENT_STATUS, EVENT_TYPE} from "../../../../constant";
+
+import UploadDocumentWrapper from "../../web/uploadDocument";
+import {
+  EVENT_STATUS,
+  EVENT_TYPE,
+  DOCUMENT_PARENT_TYPE
+} from "../../../../constant";
 
 class AppointmentWrapper extends BaseAppointment {
   constructor(data) {
@@ -23,13 +31,13 @@ class AppointmentWrapper extends BaseAppointment {
       organizer_type,
       description,
       details,
-        provider_id,
-        provider_name,
+      provider_id,
+      provider_name,
       start_date,
       end_date,
       rr_rule = "",
       start_time,
-      end_time,
+      end_time
     } = _data || {};
     return {
       basic_info: {
@@ -39,31 +47,29 @@ class AppointmentWrapper extends BaseAppointment {
         start_date,
         end_date,
         start_time,
-        end_time,
+        end_time
       },
       participant_one: {
         id: participant_one_id,
-        category: participant_one_type,
+        category: participant_one_type
       },
       participant_two: {
         id: participant_two_id,
-        category: participant_two_type,
+        category: participant_two_type
       },
       organizer: {
         id: organizer_id,
-        category: organizer_type,
+        category: organizer_type
       },
       rr_rule,
       provider_id,
-      provider_name,
+      provider_name
     };
   };
 
   getAllInfo = async () => {
-    const {getBasicInfo, getAppointmentId, _data} = this;
-    const {id} = _data;
-
-    // console.log("817389127", {data: this._data.get("id"), func: getAppointmentId()});
+    const { getBasicInfo, _data } = this;
+    const { id } = _data;
 
     const scheduleEventService = new ScheduleEventService();
     const scheduleEventData = await scheduleEventService.getAllEventByData({
@@ -74,31 +80,60 @@ class AppointmentWrapper extends BaseAppointment {
     let activeEventId = null;
     let scheduleData = {};
 
-    if(scheduleEventData.length > 0) {
-      for(let i = 0; i < scheduleEventData.length; i++) {
+    if (scheduleEventData.length > 0) {
+      for (let i = 0; i < scheduleEventData.length; i++) {
         const scheduleEvent = await EventWrapper(scheduleEventData[i]);
-        if(scheduleEvent.getStatus() === EVENT_STATUS.SCHEDULED) {
+        if (scheduleEvent.getStatus() === EVENT_STATUS.SCHEDULED) {
           activeEventId = scheduleEvent.getScheduleEventId();
-          scheduleData[scheduleEvent.getScheduleEventId()] = scheduleEvent.getAllInfo();
         }
+        scheduleData[
+          scheduleEvent.getScheduleEventId()
+        ] = scheduleEvent.getAllInfo();
       }
     }
+
+    let uploadDocumentsData = {};
+    let uploadDocumentIds = [];
+    const uploadDocuments = await documentService.getDoctorQualificationDocuments(
+      DOCUMENT_PARENT_TYPE.APPOINTMENT_DOC,
+      id
+    );
+
+    for (const uploadDocument of uploadDocuments) {
+      const uploadDocumentData = await UploadDocumentWrapper(uploadDocument);
+      uploadDocumentsData[
+        uploadDocumentData.getUploadDocumentId()
+      ] = uploadDocumentData.getBasicInfo();
+      uploadDocumentIds.push(uploadDocumentData.getUploadDocumentId());
+    }
+
+    // care_plan_id
+    const { care_plan_id = null } =
+      (await careplanAppointmentService.getCareplanByAppointment({
+        appointment_id: id
+      })) || {};
 
     return {
       appointments: {
         [`${id}`]: {
           ...getBasicInfo(),
-          active_event_id: activeEventId
+          active_event_id: activeEventId,
+          appointment_document_ids: uploadDocumentIds,
+          care_plan_id
         }
       },
       schedule_events: {
         ...scheduleData
-      }
+      },
+      upload_documents: {
+        ...uploadDocumentsData
+      },
+      appointment_id: id
     };
   };
 
   getReferenceInfo = async () => {
-    const {getAllInfo} = this;
+    const { getAllInfo } = this;
 
     return getAllInfo();
   };

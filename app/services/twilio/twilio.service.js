@@ -29,7 +29,6 @@ class TwilioService {
   };
 
   async chatTokenGenerator(identity, deviceId) {
-
     const token = new AccessToken(accountSid, apiKey, apiSecret);
     token.identity = identity;
 
@@ -75,6 +74,17 @@ class TwilioService {
   addSymptomMessage = async (doctor, patient, message) => {
     try {
       const client = require("twilio")(accountSid, authToken);
+
+      const channelExists = await client.chat
+        .services(process.config.twilio.TWILIO_CHAT_SERVICE_SID)
+        .channels(this.getRoomId(doctor, patient));
+
+      if (!channelExists) {
+        const newChannel = await client.chat
+          .services(process.config.twilio.TWILIO_CHAT_SERVICE_SID)
+          .channel.create(this.getRoomId(doctor, patient));
+      }
+
       const channel = await client.chat
         .services(process.config.twilio.TWILIO_CHAT_SERVICE_SID)
         .channels(this.getRoomId(doctor, patient));
@@ -104,28 +114,66 @@ class TwilioService {
     try {
       const client = require("twilio")(accountSid, authToken);
       const channel = await client.chat
-          .services(process.config.twilio.TWILIO_CHAT_SERVICE_SID)
-          .channels(this.getRoomId(doctor, patient));
+        .services(process.config.twilio.TWILIO_CHAT_SERVICE_SID)
+        .channels(this.getRoomId(doctor, patient));
 
       // issue: http for development
       // link: https://support.twilio.com/hc/en-us/articles/360007130274-Requirements-for-Connecting-to-the-Twilio-REST-API-and-Troubleshooting-Common-Issues
       channel.messages
-          .create({
-            from: `${doctor}`,
-            body: message
-          })
-          .then(response => {
-            console.log("User message sent!", response);
-          })
-          .catch(err => {
-            console.error("Failed to send message");
-            console.error(err);
-          });
+        .create({
+          from: `${doctor}`,
+          body: message
+        })
+        .then(response => {
+          console.log("User message sent!", response);
+        })
+        .catch(err => {
+          console.error("Failed to send message");
+          console.error(err);
+        });
 
       Logger.debug("channel -> ", channel);
-    } catch(error) {
+    } catch (error) {
       Logger.debug("addUserMessage 500 error", error);
       throw error;
+    }
+  };
+
+  getAllMessages = async () => {
+    try {
+      const client = require("twilio")(accountSid, authToken);
+      const channel = await client.chat
+        .services(process.config.twilio.TWILIO_CHAT_SERVICE_SID)
+        .channels.list()
+        .then(channels => {
+          console.log("channels ----> ", channels, channels.length);
+          return channels;
+        })
+        .then(channels => {
+          let channelsName = [];
+          let friendlyNames = [];
+          let channelData = {};
+          for (let i = 0; i < channels.length; i++) {
+            const { sid, uniqueName, friendlyName } = channels[i] || {};
+
+            if (
+              uniqueName &&
+              uniqueName.includes(process.config.twilio.CHANNEL_SERVER)
+            ) {
+              channelsName.push(uniqueName);
+              friendlyNames.push(friendlyName);
+              channelData[uniqueName] = channels[i];
+            }
+            console.log("DELETED CHANNEL NAMES AND COUNT", {
+              channelsName,
+              count: channelsName.length,
+              friendlyNames: friendlyNames,
+              channelData
+            });
+          }
+        });
+    } catch (error) {
+      Logger.debug("addSymptom message 500 error", error);
     }
   };
 
@@ -140,17 +188,30 @@ class TwilioService {
           return channels;
         })
         .then(channels => {
+          let channelsName = [];
           for (let i = 0; i < channels.length; i++) {
-            const deleteChannel = client.chat
-              .services(process.config.twilio.TWILIO_CHAT_SERVICE_SID)
-              .channels(`${channels[i].sid}`)
-              .remove()
-              .then(response => {
-                console.log("delete success response", response);
-              })
-              .catch(err => {
-                console.log("delete catch error", err);
-              });
+            const { sid, uniqueName } = channels[i] || {};
+
+            if (
+              uniqueName &&
+              uniqueName.includes(process.config.twilio.CHANNEL_SERVER)
+            ) {
+              const deleteChannel = client.chat
+                .services(process.config.twilio.TWILIO_CHAT_SERVICE_SID)
+                .channels(sid)
+                .remove()
+                .then(response => {
+                  console.log("delete success response", response);
+                  channelsName.push(uniqueName);
+                })
+                .catch(err => {
+                  console.log("delete catch error", err);
+                });
+            }
+            console.log("DELETED CHANNEL NAMES AND COUNT", {
+              channelsName,
+              count: channelsName.length
+            });
           }
         });
 

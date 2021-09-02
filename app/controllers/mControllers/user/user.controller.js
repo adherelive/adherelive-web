@@ -14,30 +14,32 @@ import MPatientWrapper from "../../../ApiWrapper/mobile/patient";
 import MUserWrapper from "../../../ApiWrapper/mobile/user";
 import MDoctorWrapper from "../../../ApiWrapper/mobile/doctor";
 import MCarePlanWrapper from "../../../ApiWrapper/mobile/carePlan";
-import MUploadDocumentWrapper from "../../../ApiWrapper/mobile/uploadDocument";
-import MDoctorRegistrationWrapper from "../../../ApiWrapper/mobile/doctorRegistration";
 import LinkVerificationWrapper from "../../../ApiWrapper/mobile/userVerification";
+import DoctorProviderMappingWrapper from "../../../ApiWrapper/web/doctorProviderMapping";
+import ProvidersWrapper from "../../../ApiWrapper/web/provider";
 
 import userService from "../../../services/user/user.service";
 import patientService from "../../../services/patients/patients.service";
 import carePlanService from "../../../services/carePlan/carePlan.service";
 import doctorService from "../../../services/doctors/doctors.service";
-import qualificationService from "../../../services/doctorQualifications/doctorQualification.service";
-import clinicService from "../../../services/doctorClinics/doctorClinics.service";
-import documentService from "../../../services/uploadDocuments/uploadDocuments.service";
 import UserVerificationServices from "../../../services/userVerifications/userVerifications.services";
-import registrationService from "../../../services/doctorRegistration/doctorRegistration.service";
-import uploadDocumentService from "../../../services/uploadDocuments/uploadDocuments.service";
 import otpVerificationService from "../../../services/otpVerification/otpVerification.service";
-import carePlanTemplateService from "../../../services/carePlanTemplate/carePlanTemplate.service";
+import doctorProviderMappingService from "../../../services/doctorProviderMapping/doctorProviderMapping.service";
+import userRolesService from "../../../services/userRoles/userRoles.service";
+import userPreferenceService from "../../../services/userPreferences/userPreference.service";
 
-import { doctorQualificationData, uploadImageS3 } from "./userHelper";
+import DoctorPatientWatchlistWrapper from "../../../ApiWrapper/mobile/doctorPatientWatchlist";
+import doctorPatientWatchlistService from "../../../services/doctorPatientWatchlist/doctorPatientWatchlist.service";
+
+import { getServerSpecificConstants } from "./userHelper";
 import { v4 as uuidv4 } from "uuid";
 import {
+  DOCTOR_TYPE_PROFILES,
   EMAIL_TEMPLATE_NAME,
+  NO_ACTION,
+  NO_APPOINTMENT,
+  NO_MEDICATION,
   USER_CATEGORY,
-  DOCUMENT_PARENT_TYPE,
-  ONBOARDING_STATUS,
   VERIFICATION_TYPE
 } from "../../../../constant";
 import { Proxy_Sdk, EVENTS } from "../../../proxySdk";
@@ -49,9 +51,13 @@ import MSeverityWrapper from "../../../ApiWrapper/mobile/severity";
 import conditionService from "../../../services/condition/condition.service";
 import MConditionWrapper from "../../../ApiWrapper/mobile/conditions";
 import UserWrapper from "../../../ApiWrapper/web/user";
+import UserRolesWrapper from "../../../ApiWrapper/mobile/userRoles";
+import DoctorWrapper from "../../../ApiWrapper/mobile/doctor";
 
 import generateOTP from "../../../helper/generateOtp";
 import AppNotification from "../../../NotificationSdk/inApp";
+import AdhocJob from "../../../JobSdk/Adhoc/observer";
+import { getSeparateName } from "../../../helper/common";
 
 const Logger = new Log("MOBILE USER CONTROLLER");
 
@@ -62,7 +68,8 @@ class MobileUserController extends Controller {
 
   signIn = async (req, res) => {
     try {
-      const { prefix, mobile_number } = req.body;
+      const { prefix, mobile_number, hash = "" } = req.body;
+      Logger.info(`3198237912 hash :: ${hash}`);
       const user = await userService.getUserByNumber({ mobile_number, prefix });
 
       // const userDetails = user[0];
@@ -107,27 +114,60 @@ class MobileUserController extends Controller {
         otp
       });
 
-      const emailPayload = {
-        title: "OTP Verification for patient",
-        toAddress: process.config.app.developer_email,
-        templateName: EMAIL_TEMPLATE_NAME.OTP_VERIFICATION,
-        templateData: {
-          title: "Patient",
-          mainBodyText: "OTP for adhere patient login is",
-          subBodyText: otp,
-          host: process.config.WEB_URL,
-          contactTo: process.config.app.support_email
-        }
-      };
-      Proxy_Sdk.execute(EVENTS.SEND_EMAIL, emailPayload);
+      if (process.config.app.env === "development") {
+        const emailPayload = {
+          title: "OTP Verification for patient",
+          toAddress: process.config.app.developer_email,
+          templateName: EMAIL_TEMPLATE_NAME.OTP_VERIFICATION,
+          templateData: {
+            title: "Patient",
+            mainBodyText: "OTP for the AdhereLive patient login is",
+            subBodyText: otp,
+            host: process.config.WEB_URL,
+            contactTo: process.config.app.support_email
+          }
+        };
+        Proxy_Sdk.execute(EVENTS.SEND_EMAIL, emailPayload);
+        Logger.info(`OTP :::: ${otp}`);
+      } else {
+        // if(apiUserDetails.getEmail()) {
+        const emailPayload = {
+          title: "OTP Verification for patient",
+          toAddress: process.config.app.developer_email,
+          templateName: EMAIL_TEMPLATE_NAME.OTP_VERIFICATION,
+          templateData: {
+            title: "Patient",
+            mainBodyText: "OTP for the AdhereLive patient login is",
+            subBodyText: otp,
+            host: process.config.WEB_URL,
+            contactTo: process.config.app.support_email
+          }
+        };
+        Proxy_Sdk.execute(EVENTS.SEND_EMAIL, emailPayload);
+        // }
 
-      // const smsPayload = {
-      //   // countryCode: prefix,
-      //   phoneNumber: `+${apiUserDetails.getPrefix()}${mobile_number}`, // mobile_number
-      //   message: `Hello from Adhere! Your OTP for login is ${otp}`
+        const smsPayload = {
+          // countryCode: prefix,
+          phoneNumber: `+${apiUserDetails.getPrefix()}${mobile_number}`,
+          message: `<#> Hello from AdhereLive! Your OTP for login is ${otp}  /${hash}`
+        };
+
+        Proxy_Sdk.execute(EVENTS.SEND_SMS, smsPayload);
+      }
+
+      // const emailPayload = {
+      //   title: "OTP Verification for patient",
+      //   toAddress: process.config.app.developer_email,
+      //   templateName: EMAIL_TEMPLATE_NAME.OTP_VERIFICATION,
+      //   templateData: {
+      //     title: "Patient",
+      //     mainBodyText: "OTP for the AdhereLive patient login is",
+      //     subBodyText: otp,
+      //     host: process.config.WEB_URL,
+      //     contactTo: process.config.app.support_email
+      //   }
       // };
-      //
-      // Proxy_Sdk.execute(EVENTS.SEND_SMS, smsPayload);
+      // Proxy_Sdk.execute(EVENTS.SEND_EMAIL, emailPayload);
 
       // let permissions = {
       //   permissions: []
@@ -152,6 +192,13 @@ class MobileUserController extends Controller {
       // }
     } catch (error) {
       console.log("error sign in  --> ", error);
+
+      // notification
+      const crashJob = await AdhocJob.execute("crash", {
+        apiName: "signIn(patient)"
+      });
+      Proxy_Sdk.execute(EVENTS.SEND_EMAIL, crashJob.getEmailTemplate());
+
       return this.raiseServerError(res);
     }
   };
@@ -174,21 +221,26 @@ class MobileUserController extends Controller {
           otpDetails[0].get("user_id")
         );
 
-        const userData = await UserWrapper(userDetails.get());
-        let permissions = {
-          permissions: []
-        };
+        const userData = await MUserWrapper(userDetails.get());
+        let permissions = [];
 
         if (userData.isActivated()) {
           permissions = await userData.getPermissions();
         }
 
+        const userRole = await userRolesService.getFirstUserRole(
+          userData.getId()
+        );
+        if (!userRole) {
+          return this.raiseClientError(res, 422, {}, "User doesn't exists");
+        }
+        const userRoleWrapper = await UserRolesWrapper(userRole);
+        const userRoleId = userRoleWrapper.getId();
         const expiresIn = process.config.TOKEN_EXPIRE_TIME; // expires in 30 day
-
         const secret = process.config.TOKEN_SECRET_KEY;
         const accessToken = await jwt.sign(
           {
-            userId: userData.getId()
+            userRoleId
           },
           secret,
           {
@@ -197,9 +249,8 @@ class MobileUserController extends Controller {
         );
 
         const appNotification = new AppNotification();
-
-        const notificationToken = appNotification.getUserToken(`${user_id}`);
-        const feedId = base64.encode(`${user_id}`);
+        const notificationToken = appNotification.getUserToken(`${userRoleId}`);
+        const feedId = base64.encode(`${userRoleId}`);
 
         Logger.debug("userData ----> ", userData.isActivated());
         return raiseSuccess(
@@ -215,86 +266,10 @@ class MobileUserController extends Controller {
               }
             },
             auth_user: userData.getId(),
+            auth_user_role: userRoleId,
             auth_category: userData.getCategory(),
-            ...permissions
-          },
-          "Signed in successfully"
-        );
-      } else {
-        return this.raiseClientError(
-          res,
-          422,
-          {},
-          "OTP not correct. Please try again"
-        );
-      }
-    } catch (error) {
-      Logger.debug("verifyOtp 500 error", error);
-      raiseServerError(res);
-    }
-  };
-
-  verifyOtp = async (req, res) => {
-    const { raiseServerError, raiseSuccess } = this;
-    try {
-      const { otp, user_id } = req.body;
-
-      const otpDetails = await otpVerificationService.getOtpByData({
-        otp,
-        user_id
-      });
-
-      Logger.debug("otpDetails --> ", otpDetails);
-
-      if (otpDetails.length > 0) {
-        const destroyOtp = await otpVerificationService.delete({ user_id });
-        const userDetails = await userService.getUserById(
-          otpDetails[0].get("user_id")
-        );
-
-        const userData = await UserWrapper(userDetails.get());
-        let permissions = {
-          permissions: []
-        };
-
-        if (userData.isActivated()) {
-          permissions = await userData.getPermissions();
-        }
-
-        const expiresIn = process.config.TOKEN_EXPIRE_TIME; // expires in 30 day
-
-        const secret = process.config.TOKEN_SECRET_KEY;
-        const accessToken = await jwt.sign(
-          {
-            userId: userData.getId()
-          },
-          secret,
-          {
-            expiresIn
-          }
-        );
-
-        const appNotification = new AppNotification();
-
-        const notificationToken = appNotification.getUserToken(`${user_id}`);
-        const feedId = base64.encode(`${user_id}`);
-
-        Logger.debug("userData ----> ", userData.isActivated());
-        return raiseSuccess(
-          res,
-          200,
-          {
-            accessToken,
-            notificationToken,
-            feedId,
-            users: {
-              [userData.getId()]: {
-                ...userData.getBasicInfo()
-              }
-            },
-            auth_user: userData.getId(),
-            auth_category: userData.getCategory(),
-            ...permissions
+            hasConsent: userData.getConsent(),
+            permissions
           },
           "Signed in successfully"
         );
@@ -315,6 +290,7 @@ class MobileUserController extends Controller {
   doctorSignIn = async (req, res) => {
     try {
       const { email, password } = req.body;
+
       const user = await userService.getUserByEmail({ email });
 
       // const userDetails = user[0];
@@ -323,18 +299,52 @@ class MobileUserController extends Controller {
         return this.raiseClientError(res, 422, {}, "Email doesn't exists");
       }
 
+      if (
+        user.get("category") !== USER_CATEGORY.DOCTOR &&
+        user.get("category") !== USER_CATEGORY.HSP
+      ) {
+        return this.raiseClientError(res, 422, {}, "Unauthorized");
+      }
+
       // TODO: UNCOMMENT below code after signup done for password check or seeder
-      const passwordMatch = await bcrypt.compare(
-        password,
-        user.get("password")
-      );
-      if (passwordMatch) {
+
+      const userRole = await userRolesService.getFirstUserRole(user.get("id"));
+      if (!userRole) {
+        return this.raiseClientError(res, 422, {}, "User doesn't exists");
+      }
+      const userRoleWrapper = await UserRolesWrapper(userRole);
+      const userRoleId = userRoleWrapper.getId();
+
+      let passwordMatch = false;
+
+      const providerDoctorFirstLogin =
+        !user.get("password") && user.get("verified") ? true : false;
+
+      if (user.get("password")) {
+        passwordMatch = await bcrypt.compare(password, user.get("password"));
+      }
+
+      const doLogin = passwordMatch || providerDoctorFirstLogin ? true : false;
+
+      if (doLogin) {
+        if (providerDoctorFirstLogin) {
+          const salt = await bcrypt.genSalt(Number(process.config.saltRounds));
+          const hash = await bcrypt.hash(password, salt);
+
+          const updateUser = await userService.updateUser(
+            {
+              password: hash
+            },
+            user.get("id")
+          );
+        }
+
         const expiresIn = process.config.TOKEN_EXPIRE_TIME; // expires in 30 day
 
         const secret = process.config.TOKEN_SECRET_KEY;
         const accessToken = await jwt.sign(
           {
-            userId: user.get("id")
+            userRoleId
           },
           secret,
           {
@@ -344,10 +354,8 @@ class MobileUserController extends Controller {
 
         const appNotification = new AppNotification();
 
-        const notificationToken = appNotification.getUserToken(
-          `${user.get("id")}`
-        );
-        const feedId = base64.encode(`${user.get("id")}`);
+        const notificationToken = appNotification.getUserToken(`${userRoleId}`);
+        const feedId = base64.encode(`${userRoleId}`);
 
         const apiUserDetails = await MUserWrapper(user.get());
 
@@ -372,8 +380,10 @@ class MobileUserController extends Controller {
               }
             },
             auth_user: apiUserDetails.getId(),
+            auth_user_role: userRoleId,
             auth_category: apiUserDetails.getCategory(),
-            ...permissions
+            hasConsent: apiUserDetails.getConsent(),
+            permissions
           },
           "Signed in successfully"
         );
@@ -382,49 +392,118 @@ class MobileUserController extends Controller {
       }
     } catch (error) {
       console.log("error sign in  --> ", error);
-      return this.raiseServerError(res, 500, error, error.message);
+
+      // notification
+      const crashJob = await AdhocJob.execute("crash", {
+        apiName: "signIn(doctor)"
+      });
+      Proxy_Sdk.execute(EVENTS.SEND_EMAIL, crashJob.getEmailTemplate());
+
+      return this.raiseServerError(res);
     }
   };
 
   signUp = async (req, res) => {
-    const {raiseClientError, raiseSuccess, raiseServerError} = this;
+    const { raiseClientError, raiseSuccess, raiseServerError } = this;
     try {
-      const { password, email } = req.body;
-      const userExits = await userService.getUserByEmail({ email });
+      const { password, email, readTermsOfService = false } = req.body;
 
-      if (userExits !== null) {
+      if (!readTermsOfService) {
         return raiseClientError(
           res,
-          11000,
-          errMessage.EMAIL_ALREADY_EXISTS,
-          errMessage.EMAIL_ALREADY_EXISTS.message
+          422,
+          {},
+          "Please read our Terms of Service before signing up"
         );
       }
 
+      // Email check part
+      const userExits = await userService.getUserByEmail({ email });
+      if (userExits !== null) {
+        let canRegister = false;
+        const existingUserCategory = userExits.get("category");
+        if (
+          existingUserCategory === USER_CATEGORY.DOCTOR ||
+          existingUserCategory === USER_CATEGORY.HSP
+        ) {
+          const existingUserRole = await userRolesService.getAllByData({
+            user_identity: userExits.get("id")
+          });
+
+          if (existingUserRole && existingUserRole.length) {
+            for (let i = 0; i < existingUserRole.length; i++) {
+              const existingRoleWrapper = await UserRolesWrapper(
+                existingUserRole[i]
+              );
+              if (!existingRoleWrapper.getLinkedId()) {
+                canRegister = false;
+                break;
+              } else {
+                canRegister = true;
+              }
+            }
+          }
+        }
+        if (!canRegister) {
+          return raiseClientError(
+            res,
+            422,
+            errMessage.EMAIL_ALREADY_EXISTS,
+            errMessage.EMAIL_ALREADY_EXISTS.message
+          );
+        }
+      }
+
+      let userRoleId = null,
+        userId;
       const salt = await bcrypt.genSalt(Number(process.config.saltRounds));
       const hash = await bcrypt.hash(password, salt);
+      if (!userExits) {
+        // add user and doctor only in the case when there is
+        // not any existing account.
+        const user = await userService.addUser({
+          email,
+          password: hash,
+          sign_in_type: "basic",
+          category: USER_CATEGORY.DOCTOR,
+          onboarded: true,
+          verified: true
+        });
 
-      const user = await userService.addUser({
-        email,
-        password: hash,
-        sign_in_type: "basic",
-        category: USER_CATEGORY.DOCTOR,
-        onboarded: true,
-        verified: true
+        userId = user.get("id");
+        if (user) {
+          await doctorService.addDoctor({
+            user_id: userId
+          });
+        }
+      } else {
+        userId = userExits.get("id");
+        if (!userExits.get("password")) {
+          const updatedUser = await userService.updateUser(
+            {
+              password: hash
+            },
+            userId
+          );
+        }
+      }
+
+      const userRole = await userRolesService.create({
+        user_identity: userId,
+        linked_id: null,
+        linked_with: null
       });
 
-      if(user) {
-        await doctorService.addDoctor({
-          user_id: user.get("id")
-        });
+      if (userRole) {
+        const userRoleWrapper = await UserRolesWrapper(userRole);
+        userRoleId = userRoleWrapper.getId();
       }
 
       const expiresIn = process.config.TOKEN_EXPIRE_TIME; // expires in 30 day
-
       const secret = process.config.TOKEN_SECRET_KEY;
       const accessToken = await jwt.sign(
         {
-          userId: user.get("id")
+          userRoleId
         },
         secret,
         {
@@ -433,13 +512,17 @@ class MobileUserController extends Controller {
       );
 
       const appNotification = new AppNotification();
+      const notificationToken = appNotification.getUserToken(`${userRoleId}`);
+      const feedId = base64.encode(`${userRoleId}`);
+      const apiUserDetails = await MUserWrapper(null, userId);
 
-      const notificationToken = appNotification.getUserToken(
-        `${user.get("id")}`
-      );
-      const feedId = base64.encode(`${user.get("id")}`);
-
-      const apiUserDetails = await MUserWrapper(user.get());
+      await userPreferenceService.addUserPreference({
+        user_id: userId,
+        details: {
+          charts: [NO_MEDICATION, NO_APPOINTMENT, NO_ACTION]
+        },
+        user_role_id: userRoleId
+      });
 
       return raiseSuccess(
         res,
@@ -454,6 +537,7 @@ class MobileUserController extends Controller {
             }
           },
           auth_user: apiUserDetails.getId(),
+          auth_user_role: userRoleId,
           auth_category: apiUserDetails.getCategory()
         },
         "Sign up successful"
@@ -494,37 +578,34 @@ class MobileUserController extends Controller {
   }
 
   onAppStart = async (req, res, next) => {
-    console.log(
-      "--------------------CHALK-------------------",
-      req.userDetails
-    );
     let response;
     try {
       if (req.userDetails.exists) {
         const {
           userId,
+          userRoleId,
           userData,
-          userData: { category } = {}
+          userData: { category, has_consent } = {}
         } = req.userDetails;
-        // const user = await userService.getUserById(userId);
 
         const userApiWrapper = await MUserWrapper(userData);
 
-        // const userDetails = user[0];
-        // Logger.debug("category", userData);
         let userCategoryData = {};
         let userApiData = {};
         let userCatApiData = {};
+        let userRolesData = {};
         let carePlanApiData = {};
+        let providerApiData = {};
         let userCategoryApiData = null;
         let userCategoryId = "";
         let careplanData = [];
         let doctorIds = [];
         let patientIds = [];
         let userIds = [userId];
-
         let treatmentIds = [];
         let conditionIds = [];
+
+        const serverConstants = getServerSpecificConstants();
 
         switch (category) {
           case USER_CATEGORY.PATIENT:
@@ -540,8 +621,6 @@ class MobileUserController extends Controller {
               careplanData = await carePlanService.getCarePlanByData({
                 patient_id: userCategoryId
               });
-
-              // Logger.debug("careplan mobile patient", careplanData);
 
               await careplanData.forEach(async carePlan => {
                 const carePlanApiWrapper = await MCarePlanWrapper(carePlan);
@@ -561,6 +640,7 @@ class MobileUserController extends Controller {
             }
             break;
           case USER_CATEGORY.DOCTOR:
+          case USER_CATEGORY.HSP:
             userCategoryData = await doctorService.getDoctorByUserId(userId);
 
             // Logger.debug("----DOCTOR-----", userCategoryData);
@@ -568,12 +648,29 @@ class MobileUserController extends Controller {
               userCategoryApiData = await MDoctorWrapper(userCategoryData);
               userCategoryId = userCategoryApiData.getDoctorId();
 
-              userCatApiData[
-                userCategoryApiData.getDoctorId()
-              ] = await userCategoryApiData.getAllInfo();
+              let watchlist_patient_ids = [];
+              const watchlistRecords = await doctorPatientWatchlistService.getAllByData(
+                { user_role_id: userRoleId }
+              );
+              if (watchlistRecords && watchlistRecords.length) {
+                for (let i = 0; i < watchlistRecords.length; i++) {
+                  const watchlistWrapper = await DoctorPatientWatchlistWrapper(
+                    watchlistRecords[i]
+                  );
+                  const patientId = await watchlistWrapper.getPatientId();
+                  watchlist_patient_ids.push(patientId);
+                }
+              }
+
+              let allInfo = {};
+              allInfo = await userCategoryApiData.getAllInfo();
+              delete allInfo.watchlist_patient_ids;
+              allInfo["watchlist_patient_ids"] = watchlist_patient_ids;
+
+              userCatApiData[userCategoryApiData.getDoctorId()] = allInfo;
 
               careplanData = await carePlanService.getCarePlanByData({
-                doctor_id: userCategoryId
+                user_role_id: userRoleId
               });
 
               // Logger.debug("careplan mobile doctor", careplanData);
@@ -595,7 +692,61 @@ class MobileUserController extends Controller {
               });
             }
             break;
+          // case USER_CATEGORY.HSP:
+          //   userCategoryData = await doctorService.getDoctorByUserId(userId);
+
+          //   // Logger.debug("----DOCTOR-----", userCategoryData);
+          //   if (userCategoryData) {
+          //     userCategoryApiData = await MDoctorWrapper(userCategoryData);
+          //     userCategoryId = userCategoryApiData.getDoctorId();
+
+          //     let watchlist_patient_ids = [];
+          //     const watchlistRecords = await doctorPatientWatchlistService.getAllByData(
+          //       { user_role_id: userRoleId }
+          //     );
+          //     if (watchlistRecords && watchlistRecords.length) {
+          //       for (let i = 0; i < watchlistRecords.length; i++) {
+          //         const watchlistWrapper = await DoctorPatientWatchlistWrapper(
+          //           watchlistRecords[i]
+          //         );
+          //         const patientId = await watchlistWrapper.getPatientId();
+          //         watchlist_patient_ids.push(patientId);
+          //       }
+          //     }
+
+          //     let allInfo = {};
+          //     allInfo = await userCategoryApiData.getAllInfo();
+          //     delete allInfo.watchlist_patient_ids;
+          //     allInfo["watchlist_patient_ids"] = watchlist_patient_ids;
+
+          //     userCatApiData[userCategoryApiData.getDoctorId()] = allInfo;
+
+          //     careplanData = await carePlanService.getCarePlanByData({
+          //       user_role_id: userRoleId,
+          //     });
+
+          //     // Logger.debug("careplan mobile doctor", careplanData);
+
+          //     await careplanData.forEach(async (carePlan) => {
+          //       const carePlanApiWrapper = await MCarePlanWrapper(carePlan);
+          //       patientIds.push(carePlanApiWrapper.getPatientId());
+          //       carePlanApiData[
+          //         carePlanApiWrapper.getCarePlanId()
+          //       ] = carePlanApiWrapper.getBasicInfo();
+
+          //       const {
+          //         severity_id,
+          //         treatment_id,
+          //         condition_id,
+          //       } = carePlanApiWrapper.getCarePlanDetails();
+          //       treatmentIds.push(treatment_id);
+          //       conditionIds.push(condition_id);
+          //     });
+          //   }
+          //   break;
+
           default:
+            // todo--: why this as default
             userCategoryData = await patientService.getPatientByData({
               user_id: userId
             });
@@ -638,6 +789,8 @@ class MobileUserController extends Controller {
         }
 
         let apiUserDetails = {};
+        let apiUserRoleDetails = {};
+        let providerWrapper = {};
 
         if (userIds.length > 1) {
           const allUserData = await userService.getUserByData({ id: userIds });
@@ -645,10 +798,53 @@ class MobileUserController extends Controller {
             apiUserDetails = await MUserWrapper(user.get());
             userApiData[apiUserDetails.getId()] = apiUserDetails.getBasicInfo();
           });
+
+          const allUserRolesData = await userRolesService.getByData({
+            user_identity: userIds
+          });
+
+          for (let index = 0; index < allUserRolesData.length; index++) {
+            apiUserRoleDetails = await UserRolesWrapper(
+              allUserRolesData[index]
+            );
+
+            userRolesData[
+              apiUserRoleDetails.getId()
+            ] = apiUserRoleDetails.getBasicInfo();
+
+            if (apiUserRoleDetails.getLinkedId()) {
+              providerWrapper = await ProvidersWrapper(
+                null,
+                apiUserRoleDetails.getLinkedId()
+              );
+              providerApiData = {
+                ...providerApiData,
+                [providerWrapper.getProviderId()]: await providerWrapper.getAllInfo()
+              };
+            }
+          }
         } else {
           apiUserDetails = await MUserWrapper(null, userId);
           userApiData[apiUserDetails.getId()] = apiUserDetails.getBasicInfo();
 
+          apiUserRoleDetails = await UserRolesWrapper(null, userRoleId);
+          userRolesData[
+            apiUserRoleDetails.getId()
+          ] = apiUserRoleDetails.getBasicInfo();
+
+          if (apiUserRoleDetails.getLinkedId()) {
+            providerWrapper = await ProvidersWrapper(
+              null,
+              apiUserRoleDetails.getLinkedId()
+            );
+            providerApiData = {
+              ...providerApiData,
+              [providerWrapper.getProviderId()]: await providerWrapper.getAllInfo()
+            };
+            // providerApiData[
+            //   providerWrapper.getProviderId()
+            // ] = await providerWrapper.getAllInfo();
+          }
           // Logger.debug("userApiData --> ", apiUserDetails.isActivated());
         }
 
@@ -693,9 +889,7 @@ class MobileUserController extends Controller {
           ] = conditionWrapper.getBasicInfo();
         }
 
-        let permissions = {
-          permissions: []
-        };
+        let permissions = [];
 
         if (userApiWrapper.isActivated()) {
           permissions = await userApiWrapper.getPermissions();
@@ -703,25 +897,66 @@ class MobileUserController extends Controller {
 
         // speciality temp todo
         let referenceData = {};
-        if (userCategoryApiData && category === USER_CATEGORY.DOCTOR) {
+        if (
+          userCategoryApiData &&
+          (category === USER_CATEGORY.DOCTOR || category === USER_CATEGORY.HSP)
+        ) {
           referenceData = await userCategoryApiData.getReferenceInfo();
         }
 
         Logger.debug("Reference data ---> ", referenceData);
 
+        let authData = {};
+
+        switch (category) {
+          case USER_CATEGORY.DOCTOR:
+          case USER_CATEGORY.HSP:
+            authData = {
+              doctors: userCatApiData,
+              patients: patientApiDetails
+            };
+            break;
+          case USER_CATEGORY.PATIENT:
+            authData = {
+              patients: userCatApiData,
+              doctors: doctorApiDetails
+            };
+            break;
+          default:
+            authData = {
+              [`${category}s`]: userCatApiData,
+              patients: patientApiDetails,
+              doctors: doctorApiDetails
+            };
+            break;
+        }
+
         const dataToSend = {
           users: {
             ...userApiData
           },
-          [`${category}s`]: {
-            ...userCatApiData
+          user_roles: {
+            ...userRolesData
           },
-          [category === USER_CATEGORY.DOCTOR ? "patients" : "doctors"]:
-            category === USER_CATEGORY.DOCTOR
-              ? { ...patientApiDetails }
-              : { ...doctorApiDetails },
+          // [`${category}s`]: {
+          //   ...userCatApiData,
+          // },
+          // [DOCTOR_TYPE_PROFILES.includes(category)
+          //   ? "patients"
+          //   : "doctors"]: DOCTOR_TYPE_PROFILES.includes(category)
+          //   ? { ...patientApiDetails }
+          //   : { ...doctorApiDetails },
+          // [category === USER_CATEGORY.DOCTOR ? "patients" : "doctors"]:
+          // category === USER_CATEGORY.DOCTOR
+          //   ? { ...patientApiDetails }
+          //   : { ...doctorApiDetails },
+          ...authData,
+          // patients: patientApiDetails,
           care_plans: {
             ...carePlanApiData
+          },
+          providers: {
+            ...providerApiData
           },
           severity: {
             ...severityApiDetails
@@ -733,13 +968,16 @@ class MobileUserController extends Controller {
             ...treatmentApiDetails
           },
           ...referenceData,
-          ...permissions,
+          permissions,
 
           severity_ids: severityIds,
           condition_ids: conditionIds,
           treatment_ids: treatmentIds,
           auth_user: userId,
-          auth_category: category
+          auth_category: category,
+          auth_user_role: userRoleId,
+          hasConsent: has_consent,
+          server_constants: serverConstants
         };
 
         return this.raiseSuccess(res, 200, { ...dataToSend }, "basic info");
@@ -815,9 +1053,7 @@ class MobileUserController extends Controller {
         res,
         200,
         {
-          files: [
-            `${process.config.minio.MINIO_S3_HOST}/${process.config.minio.MINIO_BUCKET_NAME}${files[0]}`
-          ]
+          files
         },
         "files uploaded successfully"
       );
@@ -859,9 +1095,7 @@ class MobileUserController extends Controller {
       if (doctorExist) {
         let doctor_data = {
           city,
-          profile_pic: profile_pic
-            ? profile_pic.split(process.config.minio.MINIO_BUCKET_NAME)[1]
-            : null,
+          profile_pic: profile_pic ? getFilePath(profile_pic) : null,
           first_name,
           middle_name,
           last_name,
@@ -874,9 +1108,7 @@ class MobileUserController extends Controller {
         let doctor_data = {
           user_id,
           city,
-          profile_pic: profile_pic
-            ? profile_pic.split(process.config.minio.MINIO_BUCKET_NAME)[1]
-            : null,
+          profile_pic: profile_pic ? getFilePath(profile_pic) : null,
           first_name,
           middle_name,
           last_name,
@@ -956,9 +1188,7 @@ class MobileUserController extends Controller {
         );
 
         city = docCity;
-        profile_pic = docPic
-          ? `${process.config.minio.MINIO_S3_HOST}/${process.config.minio.MINIO_BUCKET_NAME}${docPic}`
-          : docPic;
+        profile_pic = docPic ? completePath(docPic) : docPic;
       }
 
       const profileData = {
@@ -1256,13 +1486,12 @@ class MobileUserController extends Controller {
     const { qualificationId = 1 } = req.params;
     let { document = "" } = req.body;
     try {
-      console.log("DOCUMNENTTTTTTTTTT", req.body, document);
       let parent_type = DOCUMENT_PARENT_TYPE.DOCTOR_QUALIFICATION;
       let parent_id = qualificationId;
       const documentToCheck = document.includes(
         process.config.minio.MINIO_BUCKET_NAME
       )
-        ? document.split(process.config.minio.MINIO_BUCKET_NAME)[1]
+        ? getFilePath(document)
         : document;
       let documentToDelete = await documentService.getDocumentByData(
         parent_type,
@@ -1270,12 +1499,6 @@ class MobileUserController extends Controller {
         documentToCheck
       );
 
-      console.log(
-        "DOCUMNENTTTTTTTTTT1111111",
-        req.body,
-        document,
-        documentToDelete
-      );
       await documentToDelete.destroy();
       return this.raiseSuccess(
         res,
@@ -1293,8 +1516,6 @@ class MobileUserController extends Controller {
     let { gender = "", speciality = "", qualification = {} } = req.body;
     const { userId = 1 } = req.params;
     try {
-      console.log("REGISTER QUALIFICATIONNNNNNNNN", qualification);
-
       let user = userService.getUserById(userId);
       let doctor = await doctorService.getDoctorByUserId(userId);
       let doctor_id = doctor.get("id");
@@ -1336,7 +1557,7 @@ class MobileUserController extends Controller {
               parent_type: DOCUMENT_PARENT_TYPE.DOCTOR_QUALIFICATION,
               parent_id: qualification_id,
               document: photo.includes(process.config.minio.MINIO_BUCKET_NAME)
-                ? photo.split(process.config.minio.MINIO_BUCKET_NAME)[1]
+                ? getFilePath(photo)
                 : photo
             });
           }
@@ -1362,7 +1583,7 @@ class MobileUserController extends Controller {
               parent_type: DOCUMENT_PARENT_TYPE.DOCTOR_QUALIFICATION,
               parent_id: qualification_id,
               document: photo.includes(process.config.minio.MINIO_BUCKET_NAME)
-                ? photo.split(process.config.minio.MINIO_BUCKET_NAME)[1]
+                ? getFilePath(photo)
                 : photo
             });
           }
@@ -1459,15 +1680,17 @@ class MobileUserController extends Controller {
 
       let newUId = user.get("id");
 
-      let patientName = name.split(" ");
-      let first_name = patientName[0];
-      let middle_name = patientName.length == 3 ? patientName[1] : "";
-      let last_name =
-        patientName.length == 3
-          ? patientName[2]
-          : patientName.length == 2
-          ? patientName[1]
-          : "";
+      const { first_name, middle_name, last_name } = getSeparateName(name);
+
+      // let patientName = name.split(" ");
+      // let first_name = patientName[0];
+      // let middle_name = patientName.length == 3 ? patientName[1] : "";
+      // let last_name =
+      //   patientName.length == 3
+      //     ? patientName[2]
+      //     : patientName.length == 2
+      //     ? patientName[1]
+      //     : "";
 
       let uid = uuidv4();
       let birth_date = moment(date_of_birth);
@@ -1620,7 +1843,7 @@ class MobileUserController extends Controller {
                   document: photo.includes(
                     process.config.minio.MINIO_BUCKET_NAME
                   )
-                    ? photo.split(process.config.minio.MINIO_BUCKET_NAME)[1]
+                    ? getFilePath(photo)
                     : photo
                 });
               }
@@ -1648,7 +1871,7 @@ class MobileUserController extends Controller {
                   document: photo.includes(
                     process.config.minio.MINIO_BUCKET_NAME
                   )
-                    ? photo.split(process.config.minio.MINIO_BUCKET_NAME)[1]
+                    ? getFilePath(photo)
                     : photo
                 });
               }
@@ -1695,7 +1918,7 @@ class MobileUserController extends Controller {
               parent_type: DOCUMENT_PARENT_TYPE.DOCTOR_REGISTRATION,
               parent_id: docRegistration.get("id"),
               document: photo.includes(process.config.minio.MINIO_BUCKET_NAME)
-                ? photo.split(process.config.minio.MINIO_BUCKET_NAME)[1]
+                ? getFilePath(photo)
                 : photo
             });
           }
@@ -1726,7 +1949,7 @@ class MobileUserController extends Controller {
               parent_type: DOCUMENT_PARENT_TYPE.DOCTOR_REGISTRATION,
               parent_id: registration_id,
               document: photo.includes(process.config.minio.MINIO_BUCKET_NAME)
-                ? photo.split(process.config.minio.MINIO_BUCKET_NAME)[1]
+                ? getFilePath(photo)
                 : photo
             });
           }
@@ -1756,7 +1979,7 @@ class MobileUserController extends Controller {
       const documentToCheck = document.includes(
         process.config.minio.MINIO_BUCKET_NAME
       )
-        ? document.split(process.config.minio.MINIO_BUCKET_NAME)[1]
+        ? getFilePath(document)
         : document;
       let parent_type = DOCUMENT_PARENT_TYPE.DOCTOR_REGISTRATION;
       let documentToDelete = await documentService.getDocumentByData(
@@ -1856,11 +2079,13 @@ class MobileUserController extends Controller {
     try {
       const { raiseClientError, raiseSuccess } = this;
       const { email } = req.body;
-      const userExists = await userService.getUserByEmail({
-        email
+      const allUsersWithEmail = await userService.getUserByData({
+        email,
+        category: [USER_CATEGORY.DOCTOR, USER_CATEGORY.HSP]
       });
 
-      if (userExists) {
+      if (allUsersWithEmail && allUsersWithEmail.length) {
+        const userExists = allUsersWithEmail[0];
         const userWrapper = await MUserWrapper(userExists.get());
         const link = uuidv4();
         const status = "verified"; //make it pending completing flow with verify permission
@@ -1882,17 +2107,17 @@ class MobileUserController extends Controller {
 
         const emailPayload = {
           toAddress: email,
-          title: "Adhere Reset Password",
+          title: "AdhereLive: Reset your password",
           templateData: {
             email,
             link: process.config.app.reset_password + link,
             host: process.config.WEB_URL,
             title: "Doctor",
             inviteCard: "",
-            mainBodyText: "Thank you for requesting password reset",
+            mainBodyText: "Thank you for requesting a password reset",
             subBodyText: "Please click below to reset your account password",
             buttonText: "Reset Password",
-            contactTo: "patientEngagement@adhere.com"
+            contactTo: "customersupport@adhere.live"
           },
           templateName: EMAIL_TEMPLATE_NAME.FORGOT_PASSWORD
         };
@@ -1907,7 +2132,7 @@ class MobileUserController extends Controller {
           res,
           422,
           {},
-          "User does not exists for the email"
+          "There is no doctor registered with this email."
         );
       }
 
@@ -1918,7 +2143,7 @@ class MobileUserController extends Controller {
         "Thanks! If there is an account associated with the email, we will send the password reset link to it"
       );
     } catch (error) {
-      Logger.debug("forgot password 500 error", error);
+      Logger.debug("Forgot Password - 500 Error", error);
       return raiseServerError(res);
     }
   };
@@ -1941,12 +2166,17 @@ class MobileUserController extends Controller {
           null,
           linkVerificationData.getUserId()
         );
+        const userRole = await userRolesService.getFirstUserRole(
+          linkVerificationData.getUserId()
+        );
         const expiresIn = process.config.TOKEN_EXPIRE_TIME; // expires in 30 day
 
         const secret = process.config.TOKEN_SECRET_KEY;
+
+        const { id: userRoleId } = userRole || {};
         const accessToken = await jwt.sign(
           {
-            userId: linkVerificationData.getUserId()
+            userRoleId
           },
           secret,
           {
@@ -1989,6 +2219,10 @@ class MobileUserController extends Controller {
         body: { new_password, confirm_password } = {}
       } = req;
 
+      if (new_password !== confirm_password) {
+        return raiseClientError(res, 422, {}, "Password does not match");
+      }
+
       const user = await userService.getUserById(userId);
       Logger.debug("user -------------->", user);
       const userData = await UserWrapper(user.get());
@@ -1999,6 +2233,7 @@ class MobileUserController extends Controller {
       const updateUser = await userService.updateUser(
         {
           password: hash
+          // system_generated_password: false
         },
         userId
       );
@@ -2082,18 +2317,21 @@ class MobileUserController extends Controller {
   updatePassword = async (req, res) => {
     try {
       const {
-        body: { password, confirm_password } = {},
+        body: { new_password, confirm_password } = {},
         userDetails: { userId, userData: { category } = {} } = {}
       } = req;
 
-      if (password !== confirm_password) {
+      if (new_password !== confirm_password) {
         return this.raiseClientError(res, 422, {}, "Password does not match");
       }
       const salt = await bcrypt.genSalt(Number(process.config.saltRounds));
-      const hash = await bcrypt.hash(password, salt);
+      const hash = await bcrypt.hash(new_password, salt);
 
       const updateUser = await userService.updateUser(
-        { password: hash },
+        {
+          password: hash
+          // system_generated_password: false
+        },
         userId
       );
 
@@ -2111,6 +2349,13 @@ class MobileUserController extends Controller {
           const doctor = await doctorService.getDoctorByUserId(userId);
           const doctorData = await MDoctorWrapper(doctor);
           categoryData[doctorData.getDoctorId()] = doctorData.getBasicInfo();
+          break;
+        case USER_CATEGORY.HSP:
+          const hspDoctor = await doctorService.getDoctorByUserId(userId);
+          const hspDoctorData = await MDoctorWrapper(hspDoctor);
+          categoryData[
+            hspDoctorData.getDoctorId()
+          ] = hspDoctorData.getBasicInfo();
           break;
         default:
       }
@@ -2130,6 +2375,94 @@ class MobileUserController extends Controller {
       );
     } catch (error) {
       Logger.debug("updatePassword 500 error", error);
+      return this.raiseServerError(res);
+    }
+  };
+
+  giveConsent = async (req, res) => {
+    const { raiseClientError } = this;
+    try {
+      const {
+        userDetails: { userId, userRoleId } = {},
+        body: { agreeConsent } = {}
+      } = req;
+
+      Logger.info(
+        `1897389172 agreeConsent :: ${agreeConsent} | userId : ${userId}`
+      );
+
+      if (!agreeConsent) {
+        return raiseClientError(
+          res,
+          422,
+          {},
+          "Cannot proceed without accepting Terms of Service"
+        );
+      }
+
+      //update
+      await userService.updateUser(
+        {
+          has_consent: agreeConsent
+        },
+        userId
+      );
+
+      // const expiresIn = process.config.TOKEN_EXPIRE_TIME; // expires in 30 day
+
+      // const secret = process.config.TOKEN_SECRET_KEY;
+      // const accessToken = await jwt.sign(
+      //     {
+      //       userRoleId
+      //     },
+      //     secret,
+      //     {
+      //       expiresIn
+      //     }
+      // );
+
+      const appNotification = new AppNotification();
+
+      const notificationToken = appNotification.getUserToken(`${userRoleId}`);
+      const feedId = base64.encode(`${userRoleId}`);
+
+      const userRef = await userService.getUserData({ id: userId });
+
+      const apiUserDetails = await MUserWrapper(userRef.get());
+
+      // let permissions = {
+      //   permissions: []
+      // };
+
+      // if (apiUserDetails.isActivated()) {
+      //   permissions = await apiUserDetails.getPermissions();
+      // }
+
+      const dataToSend = {
+        ...(await apiUserDetails.getReferenceInfo()),
+        auth_user: apiUserDetails.getId(),
+        auth_user_role: userRoleId,
+        notificationToken: notificationToken,
+        feedId,
+        hasConsent: apiUserDetails.getConsent(),
+        auth_category: apiUserDetails.getCategory()
+      };
+
+      // res.cookie("accessToken", accessToken, {
+      //   expires: new Date(
+      //       Date.now() + process.config.INVITE_EXPIRE_TIME * 86400000
+      //   ),
+      //   httpOnly: true
+      // });
+
+      return this.raiseSuccess(
+        res,
+        200,
+        { ...dataToSend },
+        "Initial data retrieved successfully"
+      );
+    } catch (error) {
+      Logger.debug("giveConsent 500 error ----> ", error);
       return this.raiseServerError(res);
     }
   };

@@ -29,7 +29,7 @@ const messages = defineMessages({
   notAddedFeesYet: {
     id: "app.admin.doctors.settings.no.fees.added",
     description: "",
-    defaultMessage: "You have not added any fees yet"
+    defaultMessage: "Please add consultation fee in order to charge patients"
   },
   addFee: {
     id: "app.admin.doctors.settings.add.fee",
@@ -105,7 +105,7 @@ const messages = defineMessages({
     id: "app.admin.doctors.settings.edit.account.text",
     description: "",
     defaultMessage: "Edit"
-  }, 
+  },
   deleteAccount: {
     id: "app.admin.doctors.settings.delete.account.text",
     description: "",
@@ -114,13 +114,15 @@ const messages = defineMessages({
   billingDisplay: {
     id: "app.admin.doctors.settings.delete.billingDisplay",
     description: "",
-    defaultMessage: "Billing Display"
-  },  warnNote :{
+    defaultMessage: "No billing details yet"
+  },
+  warnNote: {
     id: "app.admin.doctors.settings.delete.warnNote",
     description: "",
-    defaultMessage: "There might be payment settlements attached to this account. Please be sure before removing these Account Details."
+    defaultMessage:
+      "There might be payment settlements attached to this account. Please be sure before removing these Account Details."
   },
-  irreversibleWarn :{
+  irreversibleWarn: {
     id: "app.admin.doctors.settings.delete.irreversibleWarn",
     description: "",
     defaultMessage: "This delete is irreversible"

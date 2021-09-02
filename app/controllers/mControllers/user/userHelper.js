@@ -12,6 +12,7 @@ import {
   DOCUMENT_PARENT_TYPE,
   ONBOARDING_STATUS
 } from "../../../../constant";
+import { completePath } from "../../../helper/filePath";
 
 export const doctorQualificationData = async userId => {
   try {
@@ -111,8 +112,8 @@ export const uploadImageS3 = async (userId, file) => {
     hash = String(hash);
 
     const folder = "adhere";
-    // const file_name = hash.substring(4) + "_Education_"+fileExt;
-    const file_name = hash.substring(4) + "/" + imageName + "/" + fileExt;
+    // const file_name = hash.substring(4) + "/" + imageName + "/" + fileExt;
+    const file_name = `${folder}/${hash.substring(4)}/${imageName}/${fileExt}`;
 
     const metaData = {
       "Content-Type":
@@ -121,17 +122,19 @@ export const uploadImageS3 = async (userId, file) => {
 
     console.log("816575641 ---------------> ", file_name);
 
-    const file_link =
-      process.config.minio.MINIO_S3_HOST +
-      "/" +
-      process.config.minio.MINIO_BUCKET_NAME +
-      "/" +
-      file_name;
-    const fileUrl = folder + "/" + file_name;
+    // const file_link =
+    //   process.config.minio.MINIO_S3_HOST +
+    //   "/" +
+    //   process.config.minio.MINIO_BUCKET_NAME +
+    //   "/" +
+    //   file_name;
+
+    // const fileUrl = `${folder}/${file_name}`;
+    const fileUrl = "/" + file_name;
     await minioService.saveBufferObject(file.buffer, file_name, metaData);
 
     // console.log("file urlll: ", process.config.minio.MINI);
-    let files = [file_link];
+    let files = [completePath(fileUrl)];
     return files;
   } catch (error) {
     console.log(" UPLOAD  CATCH ERROR ", error);
@@ -151,4 +154,24 @@ export const downloadFileFromS3 = async (objectName, filePath) => {
     console.log("Error got in downloading file from s3: ", err);
     return false;
   }
+};
+
+export const getServerSpecificConstants = () => {
+  const server_constants = {
+    GETSTREAM_API_KEY: process.config.getstream.key,
+    GETSTREAM_APP_ID: process.config.getstream.appId,
+
+    TWILIO_CHANNEL_SERVER: process.config.twilio.CHANNEL_SERVER,
+
+    AGORA_APP_ID: process.config.agora.app_id,
+
+    RAZORPAY_KEY: process.config.razorpay.key,
+
+    ALGOLIA_APP_ID: process.config.algolia.app_id,
+    ALGOLIA_APP_KEY: process.config.algolia.app_key,
+    ALGOLIA_MEDICINE_INDEX: process.config.algolia.medicine_index,
+    ONE_SIGNAL_APP_ID: process.config.one_signal.app_id
+  };
+
+  return server_constants;
 };

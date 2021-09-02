@@ -1,6 +1,6 @@
-'use strict';
+"use strict";
 
-import {TABLE_NAME} from "../models/treatmentConditionMapping";
+import { TABLE_NAME } from "../models/treatmentConditionMapping";
 
 module.exports = {
   up: (queryInterface, Sequelize) => {
@@ -47,48 +47,60 @@ module.exports = {
         created_at: new Date(),
         updated_at: new Date()
       },
+      // {
+      //   condition_id: "3",
+      //   treatment_id: "5",
+      //   created_at: new Date(),
+      //   updated_at: new Date()
+      // },
       {
-        condition_id: "3",
+        condition_id: "4",
+        treatment_id: "1",
+        created_at: new Date(),
+        updated_at: new Date()
+      },
+      {
+        condition_id: "4",
+        treatment_id: "2",
+        created_at: new Date(),
+        updated_at: new Date()
+      },
+      {
+        condition_id: "5",
+        treatment_id: "1",
+        created_at: new Date(),
+        updated_at: new Date()
+      },
+      {
+        condition_id: "5",
+        treatment_id: "2",
+        created_at: new Date(),
+        updated_at: new Date()
+      },
+      {
+        condition_id: "6",
+        treatment_id: "1",
+        created_at: new Date(),
+        updated_at: new Date()
+      },
+      {
+        condition_id: "6",
+        treatment_id: "2",
+        created_at: new Date(),
+        updated_at: new Date()
+      },
+      {
+        condition_id: "1",
         treatment_id: "5",
         created_at: new Date(),
         updated_at: new Date()
       },
       {
-        condition_id: "4",
-        treatment_id: "1",
+        condition_id: "1",
+        treatment_id: "6",
         created_at: new Date(),
         updated_at: new Date()
-      },
-      {
-        condition_id: "4",
-        treatment_id: "2",
-        created_at: new Date(),
-        updated_at: new Date()
-      },
-      {
-        condition_id: "5",
-        treatment_id: "1",
-        created_at: new Date(),
-        updated_at: new Date()
-      },
-      {
-        condition_id: "5",
-        treatment_id: "2",
-        created_at: new Date(),
-        updated_at: new Date()
-      },
-      {
-        condition_id: "6",
-        treatment_id: "1",
-        created_at: new Date(),
-        updated_at: new Date()
-      },
-      {
-        condition_id: "6",
-        treatment_id: "2",
-        created_at: new Date(),
-        updated_at: new Date()
-      },
+      }
     ]);
   },
 

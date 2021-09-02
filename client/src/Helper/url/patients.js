@@ -7,7 +7,7 @@ export const getPatientConsultingUrl = id => {
 };
 
 export const getPatientConsultingVideoUrl = id => {
-  return `/patient-consulting-video/${id}`;
+  return `/patient/consulting/video/${id}`;
 };
 
 export const getPatientLastVisitAlertUrl = id => {

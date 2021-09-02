@@ -42,15 +42,18 @@ class VitalName extends Component {
   async handleVitalSearch(data) {
     try {
       // if (data) {
-        const { searchVital } = this.props;
-        this.setState({ fetchingVitals: true });
-        const response = await searchVital(data);
-        const { status, payload: { data: responseData, message } = {} } = response;
-        if (status) {
-          this.setState({ fetchingVitals: false });
-        } else {
-          this.setState({ fetchingVitals: false });
-        }
+      const { searchVital } = this.props;
+      this.setState({ fetchingVitals: true });
+      const response = await searchVital(data);
+      const {
+        status,
+        payload: { data: responseData, message } = {}
+      } = response;
+      if (status) {
+        this.setState({ fetchingVitals: false });
+      } else {
+        this.setState({ fetchingVitals: false });
+      }
       // } else {
       //   this.setState({ fetchingVitals: false });
       // }
@@ -59,10 +62,10 @@ class VitalName extends Component {
       message.warn("Something wen't wrong. Please try again later");
       this.setState({ fetchingVitals: false });
     }
-  };
+  }
 
   handleVitals = () => {
-    const {searchVital} = this.props;
+    const { searchVital } = this.props;
     searchVital("");
   };
 
@@ -74,7 +77,12 @@ class VitalName extends Component {
 
     const { fetchingVitals } = this.state;
 
-    const { getVitalsOption, getParentNode, handleVitalSearch, handleVitals } = this;
+    const {
+      getVitalsOption,
+      getParentNode,
+      handleVitalSearch,
+      handleVitals
+    } = this;
 
     return (
       <FormItem>
@@ -87,9 +95,11 @@ class VitalName extends Component {
           // ]
         })(
           <Select
-              onFocus={handleVitals}
+            onFocus={handleVitals}
             onSearch={handleVitalSearch}
-            notFoundContent={fetchingVitals ? <Spin size="small" /> : 'No match found'}
+            notFoundContent={
+              fetchingVitals ? <Spin size="small" /> : "No match found"
+            }
             className="drawer-select"
             placeholder="Select Vital"
             showSearch
@@ -102,7 +112,6 @@ class VitalName extends Component {
                 .indexOf(input.toLowerCase()) >= 0
             }
             getPopupContainer={getParentNode}
-
           >
             {getVitalsOption()}
           </Select>

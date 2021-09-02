@@ -104,11 +104,10 @@ class EndDate extends Component {
     const { formatMessage, openCalendar, getInitialValue, calendarComp } = this;
 
     return (
-      <div className="flex align-center">
+      <div className="flex flex-grow-1 row align-items-center">
         <div className="wp100">
-          <div className='flex  row mb-4'>
+          <div className="flex  row mb-4">
             <span className="form-label">To</span>
-           
           </div>
           <FormItem className="wp100">
             {getFieldDecorator(FIELD_NAME, {
@@ -138,7 +137,7 @@ class EndDate extends Component {
         </div>
       </div>
     );
-    
+
     // return (
     //   <div className="flex align-center">
     //     <div className="pl8 wp100">

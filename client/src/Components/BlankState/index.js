@@ -2,7 +2,9 @@ import React, { Component } from "react";
 // import AppHeader from "../../Containers/Header";
 import "./style.less";
 import { injectIntl } from "react-intl";
-import messages from './messages';
+import messages from "./messages";
+
+import { PATH } from "../../constant";
 
 class BlankState extends Component {
   componentDidMount() {
@@ -19,7 +21,7 @@ class BlankState extends Component {
     e.preventDefault();
     // this.props.resetUnauthorizedError();
 
-    this.props.history.replace("/");
+    this.props.history.push(PATH.LANDING_PAGE);
   };
 
   // componentWillUnmount() {
@@ -27,9 +29,7 @@ class BlankState extends Component {
   // }
 
   render() {
-    const {
-      intl: { formatMessage } = {}
-    } = this.props;
+    const { intl: { formatMessage } = {} } = this.props;
     return (
       <div className="eror-page-container">
         <div
@@ -42,8 +42,5 @@ class BlankState extends Component {
     );
   }
 }
-
-
-
 
 export default injectIntl(BlankState);

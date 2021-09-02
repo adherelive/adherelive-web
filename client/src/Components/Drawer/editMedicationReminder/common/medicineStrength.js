@@ -1,10 +1,15 @@
 import React, { Component, Fragment } from "react";
 import { injectIntl } from "react-intl";
-import { InputNumber, Form } from "antd";
+
+// antd models
+import InputNumber from "antd/es/input-number";
+import Form from "antd/es/form";
 
 const { Item: FormItem } = Form;
 
 const FIELD_NAME = "strength";
+const MAXIMUM_LENGTH = 10000;
+
 class MedicationStrength extends Component {
   componentDidMount() {
     const {
@@ -31,7 +36,13 @@ class MedicationStrength extends Component {
   };
 
   render() {
-    const { form, medications, payload: { id: medication_id } = {}, medicationData = {} } = this.props;
+    const {
+      form,
+      medications,
+      payload: { id: medication_id } = {},
+      medicationData = {},
+      payload: { canViewDetails = false } = {}
+    } = this.props;
     const {
       getFieldDecorator,
       getFieldError,
@@ -39,7 +50,8 @@ class MedicationStrength extends Component {
       //getFieldValue
     } = form;
 
-    let { basic_info: { details: { strength } = {} } = {} } = medications[medication_id] || {};
+    let { basic_info: { details: { strength } = {} } = {} } =
+      medications[medication_id] || {};
 
     let { schedule_data: { strength: dose = 0 } = {} } = medicationData;
     if (dose) {
@@ -50,7 +62,6 @@ class MedicationStrength extends Component {
     return (
       <Fragment>
         <FormItem
-
           className="flex-1 align-self-end wp100"
           validateStatus={error ? "error" : ""}
           // className='wp80'
@@ -64,11 +75,18 @@ class MedicationStrength extends Component {
               },
               {
                 type: "number",
-                message: "Medicine Strength should be a number"
+                max: MAXIMUM_LENGTH,
+                message: "Please enter valid strength"
               }
             ],
             initialValue: strength ? strength : null
-          })(<InputNumber min={1} style={{ width: "100%" }} />)}
+          })(
+            <InputNumber
+              min={1}
+              style={{ width: "100%" }}
+              disabled={canViewDetails}
+            />
+          )}
         </FormItem>
       </Fragment>
     );
@@ -80,5 +98,6 @@ const Field = injectIntl(MedicationStrength);
 
 export default {
   field_name: FIELD_NAME,
+  maximum_length: MAXIMUM_LENGTH,
   render: props => <Field {...props} />
 };

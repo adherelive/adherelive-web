@@ -4,22 +4,19 @@ import {
   REQUEST_TYPE,
   USER_CATEGORY,
   PATH,
-  ONBOARDING_STATUS,
+  ONBOARDING_STATUS
 } from "../../constant";
 import { doRequest } from "../../Helper/network";
-
 
 export const GET_GRAPHS = "GET_GRAPHS";
 export const GET_GRAPHS_COMPLETED = "GET_GRAPHS_COMPLETED";
 export const GET_GRAPHS_COMPLETED_WITH_ERROR =
   "GET_GRAPHS_COMPLETED_WITH_ERROR";
 
-
 export const UPDATE_GRAPHS = "UPDATE_GRAPHS";
 export const UPDATE_GRAPHS_COMPLETED = "UPDATE_GRAPHS_COMPLETED";
 export const UPDATE_GRAPHS_COMPLETED_WITH_ERROR =
   "UPDATE_GRAPHS_COMPLETED_WITH_ERROR";
-
 
 function graphReducer(state, data) {
   const { charts } = data || {};
@@ -33,10 +30,9 @@ function graphReducer(state, data) {
   }
 }
 
-
 export const getGraphs = () => {
   let response = {};
-  return async (dispatch) => {
+  return async dispatch => {
     try {
       dispatch({ type: GET_GRAPHS });
 
@@ -45,19 +41,20 @@ export const getGraphs = () => {
         url: Graphs.getGraphsUrl()
       });
 
-      const { status, payload: { error = "", data: { charts = {} } = {} } = {} } =
-        response || {};
+      const {
+        status,
+        payload: { error = "", data: { charts = {} } = {} } = {}
+      } = response || {};
 
       if (status === false) {
         dispatch({
           type: GET_GRAPHS_COMPLETED_WITH_ERROR,
-          payload: { error },
+          payload: { error }
         });
       } else if (status === true) {
-
         dispatch({
           type: GET_GRAPHS_COMPLETED,
-          data: { charts },
+          data: { charts }
         });
       }
     } catch (err) {
@@ -67,33 +64,34 @@ export const getGraphs = () => {
 
     return response;
   };
-}
+};
 
-export const updateGraphs = (payload) => {
+export const updateGraphs = payload => {
   let response = {};
-  return async (dispatch) => {
+  return async dispatch => {
     try {
       dispatch({ type: UPDATE_GRAPHS });
 
       response = await doRequest({
         method: REQUEST_TYPE.POST,
         url: Graphs.addGraphsUrl(),
-        data:payload
+        data: payload
       });
 
-      const { status, payload: { error = "", data: { charts = {} } = {} } = {} } =
-        response || {};
+      const {
+        status,
+        payload: { error = "", data: { charts = {} } = {} } = {}
+      } = response || {};
 
       if (status === false) {
         dispatch({
           type: UPDATE_GRAPHS_COMPLETED_WITH_ERROR,
-          payload: { error },
+          payload: { error }
         });
       } else if (status === true) {
-
         dispatch({
           type: UPDATE_GRAPHS_COMPLETED,
-          data: { charts },
+          data: { charts }
         });
       }
     } catch (err) {
@@ -103,13 +101,12 @@ export const updateGraphs = (payload) => {
 
     return response;
   };
-}
+};
 
 export default (state = GRAPH_INITIAL_STATE, action) => {
   const { data, type } = action;
   switch (type) {
     default:
-
       return graphReducer(state, data);
   }
 };

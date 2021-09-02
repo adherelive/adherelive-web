@@ -4,7 +4,9 @@ import { withRouter } from "react-router-dom";
 import {
   getDoctorDetails,
   verifyDoctor,
-  addRazorpayId
+  addRazorpayId,
+  deactivateDoctor,
+  activateDoctor
 } from "../../../modules/doctors";
 import { getDoctorAccountDetails } from "../../../modules/accountDetails";
 // import {verifyDoctor} from "../../../modules/doctors";
@@ -48,7 +50,9 @@ const mapDispatchToProps = dispatch => {
     verifyDoctor: id => dispatch(verifyDoctor(id)),
     getDoctorDetails: id => () => dispatch(getDoctorDetails(id)),
     addRazorpayId: (id, payload) => dispatch(addRazorpayId(id, payload)),
-    getDoctorAccountDetails: id => () => dispatch(getDoctorAccountDetails(id))
+    getDoctorAccountDetails: id => () => dispatch(getDoctorAccountDetails(id)),
+    deactivateDoctor: doctor_id => dispatch(deactivateDoctor(doctor_id)),
+    activateDoctor: user_id => dispatch(activateDoctor(user_id))
   };
 };
 const mergePropsToState = (stateProps, dispatchProps, ownProps) => {
@@ -71,7 +75,9 @@ const mergePropsToState = (stateProps, dispatchProps, ownProps) => {
     getDoctorDetails,
     verifyDoctor,
     addRazorpayId,
-    getDoctorAccountDetails
+    getDoctorAccountDetails,
+    deactivateDoctor,
+    activateDoctor
   } = dispatchProps;
   const { id } = ownProps;
 
@@ -96,7 +102,9 @@ const mergePropsToState = (stateProps, dispatchProps, ownProps) => {
     councils,
     specialities,
     getDoctorDetails: getDoctorAllDetails,
-    getDoctorAccountDetails: getCurrentDoctorAccountDetails
+    getDoctorAccountDetails: getCurrentDoctorAccountDetails,
+    deactivateDoctor,
+    activateDoctor
   };
 };
 

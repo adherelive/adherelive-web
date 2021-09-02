@@ -1,12 +1,11 @@
 import React, { Component, Fragment } from "react";
 import { Select, Form } from "antd";
-import dropDownIcon from "../../../../Assets/images/material-icons-black-arrow-drop-down.svg";
 import { injectIntl } from "react-intl";
-import { MEDICINE_UNITS, MEDICINE_TYPE } from '../../../../constant';
-import chooseMedicationField from "./medicationStage";
+import { MEDICINE_UNITS, MEDICINE_TYPE } from "../../../../constant";
+// import chooseMedicationField from "./medicationStage";
+import chooseMedicationField from "./medicine";
 
 const FIELD_NAME = "unit";
-
 
 const units = [
   { key: "mg", value: "mg" },
@@ -42,22 +41,24 @@ class MedicationStrengthUnit extends Component {
   };
 
   getInitialValue = () => {
-    const { purpose, event: { data = {} } = {},
+    const {
+      purpose,
+      event: { data = {} } = {},
       form: { getFieldValue },
-      medicines } = this.props;
+      medicines
+    } = this.props;
     let medicine = getFieldValue(chooseMedicationField.field_name);
-    let { basic_info: { type: medType = '' } = {} } = medicines[medicine] || {};
+    let { basic_info: { type: medType = "" } = {} } = medicines[medicine] || {};
 
     let initialValue = MEDICINE_UNITS.MG;
 
     if (medType === MEDICINE_TYPE.INJECTION) {
-      initialValue = MEDICINE_UNITS.ML
+      initialValue = MEDICINE_UNITS.ML;
     }
 
     if (purpose) {
       initialValue = data[FIELD_NAME];
     }
-
 
     return initialValue;
   };
@@ -76,10 +77,7 @@ class MedicationStrengthUnit extends Component {
 
     return (
       <Fragment>
-        <FormItem
-          validateStatus={error ? "error" : ""}
-          help={error || ""}
-        >
+        <FormItem validateStatus={error ? "error" : ""} help={error || ""}>
           {getFieldDecorator(FIELD_NAME, {
             rules: [
               {

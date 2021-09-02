@@ -24,6 +24,11 @@ export const TABLE_COLUMN = {
     key: "ADDRESS",
     dataIndex: "ADDRESS",
     width: 300
+  },
+  ACTIVE: {
+    key: "ACTIVE",
+    dataIndex: "ACTIVE",
+    width: 300
   }
 };
 
@@ -31,7 +36,7 @@ export const formatDoctorTableData = data => {
   const { id, users, doctors, specialities } = data || {};
 
   const doctorData = doctors[id] || {};
-  const {basic_info: {user_id, speciality_id} = {}} = doctors[id] || {};
+  const { basic_info: { user_id, speciality_id } = {} } = doctors[id] || {};
   const userData = users[user_id] || {};
   const specialityData = specialities[speciality_id] || {};
 

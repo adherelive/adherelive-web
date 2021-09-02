@@ -1,16 +1,24 @@
+import { doRequest } from "../../Helper/network";
+import { REQUEST_TYPE } from "../../constant";
+import {
+  getAddPatientUrl,
+  searchPatientFromNumUrl,
+  getRequestConsentUrl,
+  getConsentVerifyUrl,
+  searchPatientForDoctorUrl,
+  addCareplanForPatientUrl
+} from "../../Helper/urls/patients";
 
-import {doRequest} from "../../Helper/network";
-import {REQUEST_TYPE} from "../../constant";
-import {getAddPatientUrl,searchPatientFromNumUrl, getRequestConsentUrl, getConsentVerifyUrl,searchPatientForDoctorUrl,addCareplanForPatientUrl} from '../../Helper/urls/patients'
+import { getPatientMissedEventsUrl } from "../../Helper/urls/event";
 
 export const ADD_PATIENT = "ADD_PATIENT";
 export const ADD_PATIENT_COMPLETED = "ADD_PATIENT_COMPLETED";
 export const ADD_PATIENT_COMPLETED_WITH_ERROR =
   "ADD_PATIENT_COMPLETED_WITH_ERROR";
 
- export const SEARCH_PATIENT="SEARCH_PATIENT";
- export const SEARCH_PATIENT_COMPLETE = "SEARCH_PATIENT_COMPLETE";
- export const SEARCH_PATIENT_FAILED = "SEARCH_PATIENT_FAILED";
+export const SEARCH_PATIENT = "SEARCH_PATIENT";
+export const SEARCH_PATIENT_COMPLETE = "SEARCH_PATIENT_COMPLETE";
+export const SEARCH_PATIENT_FAILED = "SEARCH_PATIENT_FAILED";
 
 export const REQUEST_CONSENT_OTP_START = "REQUEST_CONSENT_OTP_START";
 export const REQUEST_CONSENT_OTP_COMPLETED = "REQUEST_CONSENT_OTP_COMPLETED";
@@ -20,50 +28,62 @@ export const CONSENT_VERIFY_START = "CONSENT_VERIFY_START";
 export const CONSENT_VERIFY_COMPLETED = "CONSENT_VERIFY_COMPLETED";
 export const CONSENT_VERIFY_FAILED = "CONSENT_VERIFY_FAILED";
 
-
-export const SEARCH_PATIENT_FOR_DOCTOR="SEARCH_PATIENT_FOR_DOCTOR";
-export const SEARCH_PATIENT_FOR_DOCTOR_COMPLETE = "SEARCH_PATIENT_FOR_DOCTOR_COMPLETE";
-export const SEARCH_PATIENT_FOR_DOCTOR_FAILED = "SEARCH_PATIENT_FOR_DOCTOR_FAILED";
+export const SEARCH_PATIENT_FOR_DOCTOR = "SEARCH_PATIENT_FOR_DOCTOR";
+export const SEARCH_PATIENT_FOR_DOCTOR_COMPLETE =
+  "SEARCH_PATIENT_FOR_DOCTOR_COMPLETE";
+export const SEARCH_PATIENT_FOR_DOCTOR_FAILED =
+  "SEARCH_PATIENT_FOR_DOCTOR_FAILED";
 
 export const ADD_NEW_CAREPLAN = "ADD_NEW_CAREPLAN";
 export const ADD_NEW_CAREPLAN_COMPLETE = "ADD_NEW_CAREPLAN_COMPLETE";
-export const ADD_NEW_CAREPLAN_FAILED =  "ADD_NEW_CAREPLAN_FAILED"; 
+export const ADD_NEW_CAREPLAN_FAILED = "ADD_NEW_CAREPLAN_FAILED";
 
- export const requestConsent = (id) => {
-   let response = {};
-   return async (dispatch) => {
-     try {
-       dispatch({ type: REQUEST_CONSENT_OTP_START });
+export const GET_PATIENT_MISSED_EVENTS_START =
+  "GET_PATIENT_MISSED_EVENTS_START";
+export const GET_PATIENT_MISSED_EVENTS_COMPLETED =
+  "GET_PATIENT_MISSED_EVENTS_COMPLETED";
+export const GET_PATIENT_MISSED_EVENTS_FAILED =
+  "GET_PATIENT_MISSED_EVENTS_FAILED";
 
-       response = await doRequest({
-         method: REQUEST_TYPE.POST,
-         url: getRequestConsentUrl(id),
-       });
+export const GENERATE_PRESCRIPTION_START = "GENERATE_PRESCRIPTION_START";
+export const GENERATE_PRESCRIPTION_COMPLETED =
+  "GENERATE_PRESCRIPTION_COMPLETED";
+export const GENERATE_PRESCRIPTION_FAILED = "GENERATE_PRESCRIPTION_FAILED";
 
-       const { status } =
-       response || {};
-
-       if (status === true) {
-         dispatch({
-           type: REQUEST_CONSENT_OTP_COMPLETED,
-         });
-       } else {
-         dispatch({
-           type:REQUEST_CONSENT_OTP_FAILED,
-         });
-       }
-     } catch (err) {
-       console.log("err requestConsent", err);
-       throw err;
-     }
-
-     return response;
-   };
- };
-
-export const consentVerify = (payload) => {
+export const requestConsent = id => {
   let response = {};
-  return async (dispatch) => {
+  return async dispatch => {
+    try {
+      dispatch({ type: REQUEST_CONSENT_OTP_START });
+
+      response = await doRequest({
+        method: REQUEST_TYPE.POST,
+        url: getRequestConsentUrl(id)
+      });
+
+      const { status } = response || {};
+
+      if (status === true) {
+        dispatch({
+          type: REQUEST_CONSENT_OTP_COMPLETED
+        });
+      } else {
+        dispatch({
+          type: REQUEST_CONSENT_OTP_FAILED
+        });
+      }
+    } catch (err) {
+      console.log("err requestConsent", err);
+      throw err;
+    }
+
+    return response;
+  };
+};
+
+export const consentVerify = payload => {
+  let response = {};
+  return async dispatch => {
     try {
       dispatch({ type: CONSENT_VERIFY_START });
 
@@ -73,8 +93,7 @@ export const consentVerify = (payload) => {
         data: payload
       });
 
-      const { status, payload: {data} = {} } =
-      response || {};
+      const { status, payload: { data } = {} } = response || {};
 
       if (status === true) {
         dispatch({
@@ -83,7 +102,7 @@ export const consentVerify = (payload) => {
         });
       } else {
         dispatch({
-          type:CONSENT_VERIFY_FAILED,
+          type: CONSENT_VERIFY_FAILED
         });
       }
     } catch (err) {
@@ -95,17 +114,16 @@ export const consentVerify = (payload) => {
   };
 };
 
-
-export const addPatient =(payload)=>{
+export const addPatient = payload => {
   let response = {};
-  return async (dispatch) => {
+  return async dispatch => {
     try {
       dispatch({ type: ADD_PATIENT });
 
       response = await doRequest({
         method: REQUEST_TYPE.POST,
         url: getAddPatientUrl(),
-        data:payload
+        data: payload
       });
 
       const { status, payload: { error = "", data = {} } = {} } =
@@ -114,13 +132,13 @@ export const addPatient =(payload)=>{
       if (status === false) {
         dispatch({
           type: ADD_PATIENT_COMPLETED_WITH_ERROR,
-          payload: { error },
+          payload: { error }
         });
       } else if (status === true) {
         // const { patients = {} } = data;
         dispatch({
-          type:ADD_PATIENT_COMPLETED,
-          data: data,
+          type: ADD_PATIENT_COMPLETED,
+          data: data
         });
       }
     } catch (err) {
@@ -130,12 +148,12 @@ export const addPatient =(payload)=>{
 
     return response;
   };
-}
+};
 
-export const searchPatientFromNum = (value) => {
+export const searchPatientFromNum = value => {
   let response = {};
-  return async (dispatch) => {
-    try{
+  return async dispatch => {
+    try {
       dispatch({ type: SEARCH_PATIENT });
 
       response = await doRequest({
@@ -149,29 +167,27 @@ export const searchPatientFromNum = (value) => {
       if (status === false) {
         dispatch({
           type: SEARCH_PATIENT_FAILED,
-          payload: { error },
+          payload: { error }
         });
       } else if (status === true) {
-        dispatch({
-          type:SEARCH_PATIENT_COMPLETE,
-          data: data,
-        });
+        // dispatch({
+        //   type:SEARCH_PATIENT_COMPLETE,
+        //   data: data,
+        // });
       }
-
-
-    }catch(error){
+    } catch (error) {
       console.log("error search patient", error);
       throw error;
     }
 
     return response;
   };
-}
+};
 
-export const searchPatientForDoctor = (value) => {
+export const searchPatientForDoctor = value => {
   let response = {};
-  return async (dispatch) => {
-    try{
+  return async dispatch => {
+    try {
       dispatch({ type: SEARCH_PATIENT_FOR_DOCTOR });
 
       response = await doRequest({
@@ -185,34 +201,33 @@ export const searchPatientForDoctor = (value) => {
       if (status === false) {
         dispatch({
           type: SEARCH_PATIENT_FOR_DOCTOR_FAILED,
-          payload: { error },
+          payload: { error }
         });
       } else if (status === true) {
         dispatch({
-          type:SEARCH_PATIENT_FOR_DOCTOR_COMPLETE,
-          data: data,
+          type: SEARCH_PATIENT_FOR_DOCTOR_COMPLETE,
+          data: data
         });
       }
-
-    }catch(error){
+    } catch (error) {
       console.log("error search patient", error);
       throw error;
     }
 
     return response;
   };
-}
+};
 
-export const addCareplanForPatient = (id,payload) => {
+export const addCareplanForPatient = (id, payload) => {
   let response = {};
-  return async (dispatch) => {
+  return async dispatch => {
     try {
       dispatch({ type: ADD_NEW_CAREPLAN });
 
       response = await doRequest({
         method: REQUEST_TYPE.POST,
         url: addCareplanForPatientUrl(id),
-        data:payload
+        data: payload
       });
 
       const { status, payload: { error = "", data = {} } = {} } =
@@ -221,13 +236,13 @@ export const addCareplanForPatient = (id,payload) => {
       if (status === false) {
         dispatch({
           type: ADD_NEW_CAREPLAN_FAILED,
-          payload: { error },
+          payload: { error }
         });
       } else if (status === true) {
         // const { patients = {} } = data;
         dispatch({
-          type:ADD_NEW_CAREPLAN_COMPLETE,
-          data: data,
+          type: ADD_NEW_CAREPLAN_COMPLETE,
+          data: data
         });
       }
     } catch (err) {
@@ -237,11 +252,43 @@ export const addCareplanForPatient = (id,payload) => {
 
     return response;
   };
-} 
+};
+
+export const getPatientMissedEvents = patient_id => {
+  let response = {};
+  return async dispatch => {
+    try {
+      dispatch({ type: GET_PATIENT_MISSED_EVENTS_START });
+
+      response = await doRequest({
+        method: REQUEST_TYPE.GET,
+        url: getPatientMissedEventsUrl(patient_id)
+      });
+
+      const { status, payload: { data } = {} } = response || {};
+
+      if (status === true) {
+        dispatch({
+          type: GET_PATIENT_MISSED_EVENTS_COMPLETED,
+          data
+        });
+      } else {
+        dispatch({
+          type: GET_PATIENT_MISSED_EVENTS_FAILED
+        });
+      }
+    } catch (err) {
+      console.log("GET_PATIENT_MISSED_EVENTS_START err consentVerify", err);
+      throw err;
+    }
+
+    return response;
+  };
+};
 
 function patientReducer(state, data) {
-  const {patients} = data || {};
-  if(patients) {
+  const { patients } = data || {};
+  if (patients) {
     return {
       // ...PATIENT_INITIAL_STATE,
       ...state,
@@ -257,8 +304,8 @@ export default (state = {}, action) => {
   switch (type) {
     default:
       return patientReducer(state, data);
-      // return {
-      //   ...PATIENT_INITIAL_STATE
-      // };
+    // return {
+    //   ...PATIENT_INITIAL_STATE
+    // };
   }
 };

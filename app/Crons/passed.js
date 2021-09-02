@@ -1,28 +1,23 @@
 import Logger from "../../libs/log";
 import moment from "moment";
 
-import {
-  EVENT_STATUS,
-  EVENT_TYPE,
-  FEATURE_TYPE,
-  NOTIFICATION_STAGES
-} from "../../constant";
+import { EVENT_STATUS, EVENT_TYPE, FEATURE_TYPE } from "../../constant";
 
 // SERVICES ---------------
 import ScheduleEventService from "../services/scheduleEvents/scheduleEvent.service";
+import FeatureDetailService from "../services/featureDetails/featureDetails.service";
 
 // WRAPPERS ---------------
 import ScheduleEventWrapper from "../ApiWrapper/common/scheduleEvents";
-
-// import JobSdk from "../JobSdk";
-// import NotificationSdk from "../NotificationSdk";
-import FeatureDetailService from "../services/featureDetails/featureDetails.service";
 import FeatureDetailWrapper from "../ApiWrapper/mobile/featureDetails";
 
 const Log = new Logger("CRON > PASSED");
 
 class PassedCron {
-  constructor() {}
+  constructor() {
+    this.RESCHEDULE_INTERVAL = 10;
+    this.RESCHEDULE_DURATION = 30;
+  }
 
   getScheduleData = async () => {
     const scheduleEventService = new ScheduleEventService();
@@ -62,6 +57,12 @@ class PassedCron {
             case EVENT_TYPE.CARE_PLAN_ACTIVATION:
               await this.handleCarePlanPassed(event);
               break;
+            case EVENT_TYPE.DIET:
+              await this.handleDietPassed(event);
+              break;
+            case EVENT_TYPE.WORKOUT:
+              await this.handleWorkoutPassed(event);
+              break;
             default:
               break;
           }
@@ -70,6 +71,52 @@ class PassedCron {
       Log.info(`92313 count : ${count} / ${scheduleEvents.length}`);
     } catch (error) {
       Log.debug("scheduleEvents 500 error ---->", error);
+    }
+  };
+
+  handleDietPassed = async event => {
+    try {
+      const scheduleEventService = new ScheduleEventService();
+      const currentTime = moment()
+        .utc()
+        .toDate();
+
+      if (
+        moment(currentTime).diff(event.getStartTime(), "minutes") >=
+        this.RESCHEDULE_DURATION
+      ) {
+        await scheduleEventService.update(
+          {
+            status: EVENT_STATUS.EXPIRED
+          },
+          event.getScheduleEventId()
+        );
+      }
+    } catch (error) {
+      Log.debug("handleDietPassed 500 error ---->", error);
+    }
+  };
+
+  handleWorkoutPassed = async event => {
+    try {
+      const scheduleEventService = new ScheduleEventService();
+      const currentTime = moment()
+        .utc()
+        .toDate();
+
+      if (
+        moment(currentTime).diff(event.getStartTime(), "minutes") >=
+        this.RESCHEDULE_DURATION
+      ) {
+        await scheduleEventService.update(
+          {
+            status: EVENT_STATUS.EXPIRED
+          },
+          event.getScheduleEventId()
+        );
+      }
+    } catch (error) {
+      Log.debug("handleWorkoutPassed 500 error ---->", error);
     }
   };
 
@@ -120,7 +167,42 @@ class PassedCron {
         .utc()
         .toDate();
 
-      if (moment(currentTime).diff(event.getStartTime(), "hours") >= 1) {
+      console.log("937123873289 ", {
+        condition:
+          moment(currentTime).diff(event.updatedAt(), "minutes") ===
+          this.RESCHEDULE_INTERVAL,
+        currentTime,
+        eventTime: event.updatedAt(),
+        diff: moment(currentTime).diff(event.updatedAt(), "minutes"),
+        type_diff: typeof moment(currentTime).diff(
+          event.updatedAt(),
+          "minutes"
+        ),
+        type_INTERVAL: typeof this.RESCHEDULE_INTERVAL
+      });
+
+      const diff = moment(currentTime).diff(event.updatedAt(), "minutes");
+
+      if (diff === this.RESCHEDULE_INTERVAL) {
+        const updateEventStatus = await scheduleEventService.update(
+          {
+            status: EVENT_STATUS.PENDING
+          },
+          event.getScheduleEventId()
+        );
+      }
+
+      console.log("12738123 expired diff", {
+        count: moment(currentTime).diff(event.getStartTime(), "minutes"),
+        condition:
+          moment(currentTime).diff(event.getStartTime(), "minutes") >
+          this.RESCHEDULE_DURATION
+      });
+
+      if (
+        moment(currentTime).diff(event.getStartTime(), "minutes") >
+        this.RESCHEDULE_DURATION
+      ) {
         const updateEventStatus = await scheduleEventService.update(
           {
             status: EVENT_STATUS.EXPIRED
@@ -140,7 +222,10 @@ class PassedCron {
         .utc()
         .toDate();
 
-      if (moment(currentTime).diff(event.getEndTime(), "hours") > process.config.app.appointment_wait_time_hours) {
+      if (
+        moment(currentTime).diff(event.getEndTime(), "hours") >
+        process.config.app.appointment_wait_time_hours
+      ) {
         const updateEventStatus = await scheduleEventService.update(
           {
             status: EVENT_STATUS.EXPIRED
@@ -163,7 +248,11 @@ class PassedCron {
       const carePlanStartTime = new moment.utc();
       const carePlanEndTime = new moment.utc(carePlanStartTime).add(2, "hours");
 
-      if (moment(currentTime).diff(event.getStartTime(), "hours") >= 2) {
+      // console.log("8712368126316283 ", {currentTime, eventStart: event.getStartTime(), num: moment(currentTime).diff(event.getStartTime(), "hours"), condition: moment(currentTime).diff(event.getStartTime(), "hours") >= process.config.app.careplan_activation_reschedule_hours, diff: process.config.app.careplan_activation_reschedule_hours});
+      if (
+        moment(currentTime).diff(event.getStartTime(), "hours") >=
+        process.config.app.careplan_activation_reschedule_hours
+      ) {
         const updateEventStatus = await scheduleEventService.update(
           {
             status: EVENT_STATUS.PENDING,

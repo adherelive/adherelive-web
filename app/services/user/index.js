@@ -1,44 +1,46 @@
 import userService from "./user.service";
 
 export default class User {
-    constructor(data) {
-        this._data = data;
-    }
+  constructor(data) {
+    this._data = data;
+  }
 
-    getExistingData() {
-        return this._data;
-    }
+  getExistingData() {
+    return this._data;
+  }
 
-    getId = () => {
-        return this._data.id;
-    }
+  getId = () => {
+    return this._data.id;
+  };
 
-    getUserId() {
-        return this._data.user_id;
-    }
+  getConsent = () => this._data.has_consent;
 
-    getCategory = () => {
-        return this._data.category;
-    }
+  getUserId() {
+    return this._data.user_id;
+  }
 
-    getPassword = () => {
-        return this._data.password;
-    }
+  getCategory = () => {
+    return this._data.category;
+  };
 
-    getEmail = () => {
-        return this._data.email;
-    };
+  getPassword = () => {
+    return this._data.password;
+  };
 
-    isActivated = () => {
-        const {verified, activated_on} = this._data || {};
-        return verified && activated_on !== null;
-    };
+  getEmail = () => {
+    return this._data.email;
+  };
 
-    getPermissionData = () => {
-        return this._data.permissions;
-    }
+  isActivated = () => {
+    const { verified, activated_on } = this._data || {};
+    return verified && activated_on !== null;
+  };
 
-    getPrefix = () => {
-        return this._data.prefix;
-    };
+  getPermissionData = () => {
+    return this._data.permissions;
+  };
+
+  getPrefix = () => {
+    return this._data.prefix;
+  };
 }

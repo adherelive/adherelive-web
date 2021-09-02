@@ -13,23 +13,45 @@ module.exports = () => {
       support_email: process.env.SUPPORT_EMAIL,
       appointment_wait_time_hours: process.env.APPOINTMENT_WAIT_TIME_HOURS,
       default_currency: process.env.DEFAULT_CURRENCY,
+      medicine_data: process.env.MEDICINE_INSTANCE,
+      careplan_activation_reschedule_hours:
+        process.env.CAREPLAN_ACTIVATION_RESCHEDULE_HOURS,
+      icon_android: process.env.ANDROID_ICON_NAME,
+      otp_live_minutes: process.env.OTP_LIVE_MINUTES,
+      appointment_prior_time: process.env.APPOINTMENT_PRIOR_NOTIFY_MINUTES,
+      sms_hash: process.env.SMS_HASH,
+      diet_prior_time: process.env.DIET_PRIOR_NOTIFY_MINUTES,
+      event_reschedule_time: process.env.EVENT_RESCHEDULE_NOTIFY_MINUTES,
+      sms_hash: process.env.SMS_HASH,
+      inactivity_days_no: process.env.INACTIVITY_DAYS_NO,
+      workout_prior_time: process.env.WORKOUT_PRIOR_NOTIFY_MINUTES,
+      workout_start_hours: process.env.WORKOUT_START_HOURS,
+      workout_start_minutes: process.env.WORKOUT_START_MINUTES
+    },
+    algolia: {
+      app_id: process.env.ALGOLIA_APP_ID,
+      app_key: process.env.ALGOLIA_APP_KEY,
+      backend_key: process.env.ALGOLIA_BACKEND_KEY,
+      medicine_index: process.env.ALGOLIA_MEDICINE_INDEX,
+      object_id_prefix: process.env.ALGOLIA_OBJECT_ID_PREFIX
     },
     razorpay: {
       key: process.env.RAZORPAY_KEY,
-      secret: process.env.RAZORPAY_SECRET,
+      secret: process.env.RAZORPAY_SECRET
     },
     event: {
       count: process.env.EVENT_FETCH_COUNT
     },
     email: {
       USER: process.env.SENDGRID_USER,
-      KEY: process.env.SENDGRID_PASSWORD,
-      FROM: process.env.SENDGRID_FROM_ADDRESS
+      KEY: process.env.SENDGRID_API_KEY,
+      FROM: process.env.SENDGRID_FROM_ADDRESS,
+      FROM_NAME: process.env.SENDGRID_FROM_NAME
     },
     sqs: {
       domain_url: process.env.SQS_DOMAIN_URL,
       account_id: process.env.AWS_ACCCOUNT_ID,
-      queue_name: process.env.SQS_QUEUE_NAME,
+      queue_name: process.env.SQS_QUEUE_NAME
     },
     db: {
       connection: process.env.DB_CONNECTION,
@@ -43,7 +65,8 @@ module.exports = () => {
     },
     getstream: {
       key: process.env.GETSTREAM_API_KEY,
-      secretKey: process.env.GETSTREAM_API_SECRET
+      secretKey: process.env.GETSTREAM_API_SECRET,
+      appId: process.env.GETSTREAM_APP_ID
     },
     aws: {
       access_key: process.env.AWS_ACCESS_KEY,
@@ -62,7 +85,7 @@ module.exports = () => {
       TWILIO_API_SECRET: process.env.TWILIO_API_SECRET,
       TWILIO_CHAT_SERVICE_SID: process.env.TWILIO_CHAT_SERVICE_SID,
       TWILIO_AUTH_TOKEN: process.env.TWILIO_AUTH_TOKEN,
-      CHANNEL_SERVER: process.env.TWILIO_CHANNEL_SERVER,
+      CHANNEL_SERVER: process.env.TWILIO_CHANNEL_SERVER
     },
     saltRounds: process.env.SALT_ROUNDS,
     minio: {
@@ -73,6 +96,15 @@ module.exports = () => {
       MINIO_ENDPOINT: process.env.MINIO_ENDPOINT,
       MINIO_BUCKET_NAME: process.env.MINIO_BUCKET_NAME,
       MINIO_S3_HOST: process.env.S3_HOST
+    },
+    firebase: {
+      api_key: process.env.FIREBASE_API_KEY,
+      app_id: process.env.FIREBASE_APP_ID,
+      measurement_id: process.env.FIREBASE_MEASUREMENT_ID,
+      project_id: process.env.FIREBASE_PROJECT_ID
+    },
+    s3: {
+      EXPIRY_TIME: process.env.EXPIRY_TIME
     },
     GOOGLE_KEYS: {
       CLIENT_ID: process.env.GOOGLE_CLIENT_ID,
@@ -96,6 +128,11 @@ module.exports = () => {
     one_signal: {
       app_id: process.env.ONE_SIGNAL_APP_ID,
       key: process.env.ONE_SIGNAL_KEY,
+      urgent_channel_id: process.env.URGENT_CHANNEL_ID
+    },
+    agora: {
+      app_id: process.env.AGORA_APP_ID,
+      app_certificate: process.env.AGORA_APP_CERTIFICATE
     },
     cookieKey: process.env.COOKIE_KEY,
     PORT: process.env.WEB_SERVER_PORT,
@@ -114,7 +151,9 @@ module.exports = () => {
     INVITE_EXPIRE_TIME: process.env.INVITE_EXPIRE_TIME,
     MSG91_AUTH_KEY: process.env.MSG91_AUTH_KEY,
     MSG91_SMS_URL: process.env.MSG91_SMS_URL,
-    MSG91_SENDER: process.env.MSG91_SENDER
+    MSG91_SENDER: process.env.MSG91_SENDER,
+    ADMIN_MEDICINE_ONE_PAGE_LIMIT: process.env.ADMIN_MEDICINE_ONE_PAGE_LIMIT,
+    PATIENT_LIST_SIZE_LIMIT: process.env.PATIENT_LIST_SIZE_LIMIT
   };
 };
 

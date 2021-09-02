@@ -18,18 +18,10 @@ export default class PaymentProductService {
     }
   };
 
-  getAllCreatorTypeProducts = async ({
-    creator_type = USER_CATEGORY.ADMIN,
-    creator_id = null,
-    product_user_type = "patient"
-  }) => {
+  getAllCreatorTypeProducts = async data => {
     try {
       const paymentProducts = await Database.getModel(TABLE_NAME).findAll({
-        where: {
-          creator_type,
-          creator_id,
-          product_user_type
-        },
+        where: data,
         raw: true
       });
       return paymentProducts;
@@ -58,7 +50,7 @@ export default class PaymentProductService {
         },
         transaction
       });
-      transaction.commit();
+      await transaction.commit();
       return paymentProduct;
     } catch (error) {
       transaction.rollback();
@@ -66,19 +58,11 @@ export default class PaymentProductService {
     }
   };
 
-  deleteDoctorProduct = async ({
-    id = null,
-    name = "",
-    type = "",
-    amount = null
-  }) => {
+  deleteDoctorProduct = async ({ id = null }) => {
     try {
       const deletedDoctorProduct = await Database.getModel(TABLE_NAME).destroy({
         where: {
-          id,
-          name,
-          type,
-          amount
+          id
         }
       });
       //   Logger.debug("7657890765",deletedDoctorProduct);
@@ -97,6 +81,14 @@ export default class PaymentProductService {
         }
       });
       return deletedDoctorProduct;
+    } catch (error) {
+      throw error;
+    }
+  };
+
+  getAll = async () => {
+    try {
+      return await Database.getModel(TABLE_NAME).findAll();
     } catch (error) {
       throw error;
     }

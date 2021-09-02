@@ -142,7 +142,7 @@ module.exports = {
         updated_at: new Date()
       },
       {
-        name: "Fluid Intake/Outtake (Urine)",
+        name: "Fluid Intake/Output (Urine)",
         unit: "",
         details: JSON.stringify({
           template: [
@@ -209,6 +209,32 @@ module.exports = {
         created_at: new Date(),
         updated_at: new Date()
       },
+      {
+        name: "Peak expiratory flow volume",
+        unit: "ml",
+        details: JSON.stringify({
+          template: [
+            {
+              id: "C1989A61-1515-4248-98B4-984774FFF531",
+              element: "NumberInput",
+              text: "Number Input",
+              placeholder: "ml",
+              required: false,
+              canHaveAnswer: true,
+              canHavePageBreakBefore: true,
+              canHaveAlternateForm: true,
+              canHaveDisplayHorizontal: true,
+              canHaveOptionCorrect: true,
+              canHaveOptionValue: true,
+              field_name: "number_input_9580A8A2-DC82-4FD8-B210-BA383CD21E2D",
+              label: "Peak expiratory flow volume",
+              dirty: false
+            }
+          ]
+        }),
+        created_at: new Date(),
+        updated_at: new Date()
+      }
     ]);
   },
 

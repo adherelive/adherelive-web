@@ -53,10 +53,10 @@ export const db = database => {
         type: DataTypes.ENUM,
         values: TRANSACTION_MODES
       },
-        amount: {
-            type: DataTypes.INTEGER,
-            allowNull: false,
-        },
+      amount: {
+        type: DataTypes.INTEGER,
+        allowNull: false
+      },
       requestor_id: {
         type: DataTypes.INTEGER
       },
@@ -79,6 +79,10 @@ export const db = database => {
         type: DataTypes.ENUM,
         values: TRANSACTION_STATUS,
         defaultValue: STATUS.PENDING
+      },
+      updated_at: {
+        allowNull: false,
+        type: DataTypes.DATE
       }
     },
     {
@@ -90,8 +94,8 @@ export const db = database => {
 
 export const associate = database => {
   // associations here (if any) ...
-    database.models[TABLE_NAME].hasOne(database.models[paymentProductTableName], {
-        foreignKey: "id",
-        sourceKey: "payment_product_id"
-    });
+  database.models[TABLE_NAME].hasOne(database.models[paymentProductTableName], {
+    foreignKey: "id",
+    sourceKey: "payment_product_id"
+  });
 };

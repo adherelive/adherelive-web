@@ -25,8 +25,14 @@ import {
   FRIDAY,
   SATURDAY,
   SUNDAY,
-  MEDICATION_TIMING
+  MEDICATION_TIMING,
+  WITH_LUNCH,
+  WITH_DINNER,
+  WITH_BREAKFAST,
+  PATIENT_MEAL_TIMINGS,
+  MID_MORNING
 } from "../constant";
+
 import FeatureDetailWrapper from "../app/ApiWrapper/web/featureDetails";
 import { RRule } from "rrule";
 import moment from "moment";
@@ -44,6 +50,11 @@ import queueService from "../app/services/awsQueue/queue.service";
 import MedicineWrapper from "../app/ApiWrapper/mobile/medicine";
 import MedicationWrapper from "../app/ApiWrapper/mobile/medicationReminder";
 import AppointmentWrapper from "../app/ApiWrapper/mobile/appointments";
+import DietWrapper from "../app/ApiWrapper/mobile/diet";
+import WorkoutWrapper from "../app/ApiWrapper/mobile/workouts";
+
+import { getTimeWiseDietFoodGroupMappings } from "../app/controllers/diet/dietHelper";
+import SimilarFoodMappingService from "../app/services/similarFoodMapping/similarFoodMapping.service";
 
 const Log = new Logger("EVENT > HELPER");
 
@@ -116,23 +127,22 @@ export const handleAppointments = async appointment => {
 
 export const handleMedications = async data => {
   try {
+    console.log("123803821 data ", data);
     const {
       patient_id,
       event_id,
       start_date,
       end_date,
+      participants = [],
+      actor = {},
       details,
       details: {
         medicine_id,
         when_to_take,
         repeat_days = [],
-        critical = false,
-        participants = [],
-        actors = {}
+        critical = false
       } = {}
     } = data || {};
-
-    Log.debug("repeat days before --> ", { details, data });
 
     const rrule = new RRule({
       freq: RRule.WEEKLY,
@@ -161,7 +171,8 @@ export const handleMedications = async data => {
 
     Log.debug("213971203 createMedicationSchedule -->", {
       medicine_id,
-      data: medicine.getBasicInfo()
+      data: medicine.getBasicInfo(),
+      when_to_take
     });
 
     for (let i = 0; i < allDays.length; i++) {
@@ -171,6 +182,11 @@ export const handleMedications = async data => {
           timing,
           patientPreference
         );
+
+        Log.debug("21397193871379832203 createMedicationSchedule -->", {
+          startTime,
+          text: MEDICATION_TIMING[timing]
+        });
 
         scheduleEventArr.push({
           event_id,
@@ -182,10 +198,10 @@ export const handleMedications = async data => {
           details: {
             ...details,
             participants,
-            actors,
+            actor,
             medicines: medicine.getBasicInfo(),
             when_to_take_data: MEDICATION_TIMING[timing], // TODO: to be changed(included in) to patient preference data
-            medications: medication.getExistingData()
+            medications: medication.getBasicInfo()
           }
         });
       }
@@ -203,6 +219,233 @@ export const handleMedications = async data => {
     return response;
   } catch (error) {
     Log.debug("schedule events medication 500 error", error);
+  }
+};
+
+export const handleDiet = async data => {
+  try {
+    const {
+      patient_id,
+      event_id,
+      start_date,
+      end_date = null,
+      participants = [],
+      actor = {},
+      critical = false
+    } = data || {};
+
+    const dietWrapper = await DietWrapper({ id: event_id });
+    const details = (await dietWrapper.getDetails()) || {};
+    const { repeat_days: details_repeat_days = [] } = details || {};
+
+    const dietFoodGroupMappings = dietWrapper.getDietFoodGroupMappings() || [];
+
+    let foodGroupRelations = {};
+    if (dietFoodGroupMappings.length > 0) {
+      const similarFoodMappingService = new SimilarFoodMappingService();
+
+      let allSimilarIds = [];
+
+      for (let index = 0; index < dietFoodGroupMappings.length; index++) {
+        const { id, time } = dietFoodGroupMappings[index] || {};
+
+        const {
+          rows: similarFoodGroupMappings = []
+        } = await similarFoodMappingService.findAndCountAll({
+          where: { related_to_id: id },
+          attributes: ["secondary_id"]
+        });
+
+        let similarIds = [];
+
+        if (similarFoodGroupMappings.length > 0) {
+          similarIds = similarFoodGroupMappings.map(
+            similarFoodGroupMapping => similarFoodGroupMapping.secondary_id
+          );
+        }
+
+        if (allSimilarIds.indexOf(id) !== -1) {
+          continue;
+        }
+
+        if (foodGroupRelations.hasOwnProperty(time)) {
+          const timeSpecificRelations = foodGroupRelations[time] || {};
+          foodGroupRelations[time] = {
+            ...timeSpecificRelations,
+            [id]: similarIds
+          };
+        } else {
+          foodGroupRelations[time] = {
+            [id]: similarIds
+          };
+        }
+
+        allSimilarIds = [...allSimilarIds, ...similarIds];
+      }
+    }
+
+    const referenceInfo = await dietWrapper.getReferenceInfo();
+    const { diet_food_group_mappings = {}, diets = {} } = referenceInfo || {};
+    const timeWiseData = await getTimeWiseDietFoodGroupMappings({
+      diet_food_group_mappings
+    });
+    const allScheduleEvents = [],
+      scheduleEventArr = [];
+
+    for (let time in timeWiseData) {
+      const timeData = timeWiseData[time] || {};
+      const { mappingIds = [] } = timeData || {};
+      // const day_text = DAYS_TEXT[day];
+      const repeat_days = details_repeat_days || [];
+      const { text = "" } = PATIENT_MEAL_TIMINGS[time];
+
+      let eventDetails = {
+        repeat_days,
+        time_text: text,
+        time,
+        mapping_ids: mappingIds,
+        foodGroupRelations: foodGroupRelations[time] || {},
+        diet_id: dietWrapper.getId(),
+        diets
+      };
+      const eventScheduleDataDetails = { details: eventDetails };
+      allScheduleEvents.push(eventScheduleDataDetails);
+    }
+
+    for (let each in allScheduleEvents) {
+      const { details, details: { repeat_days = [], time } = {} } =
+        allScheduleEvents[each] || {};
+
+      const rrule = new RRule({
+        freq: RRule.WEEKLY,
+        dtstart: moment(start_date)
+          .utc()
+          .toDate(),
+        until: end_date
+          ? moment(end_date)
+              .utc()
+              .toDate()
+          : moment(start_date)
+              .add(1, "month")
+              .utc()
+              .toDate(),
+        byweekday: repeatDays(repeat_days)
+      });
+      const allDays = rrule.all();
+      const patientPreference = await getUserPreferences(patient_id);
+      for (let i = 0; i < allDays.length; i++) {
+        const startTime = getDietTimings(allDays[i], time, patientPreference);
+
+        scheduleEventArr.push({
+          event_id,
+          critical,
+          date: moment(allDays[i]).toISOString(),
+          start_time: moment(startTime).toISOString(),
+          end_time: moment(startTime).toISOString(),
+          event_type: EVENT_TYPE.DIET,
+          details: {
+            ...details,
+            participants,
+            actor
+          }
+        });
+      }
+    }
+
+    const schedule = await scheduleService.bulkCreate(scheduleEventArr);
+    let response = false;
+    if (schedule) {
+      Log.debug("schedule events created for diet", true);
+      response = true;
+    } else {
+      Log.debug("schedule events failed for diet", false);
+    }
+
+    return response;
+  } catch (error) {
+    Log.debug("schedule events DIET 500 error", error);
+  }
+};
+
+export const handleWorkout = async workout => {
+  try {
+    const {
+      patient_user_id,
+      event_id,
+      start_date,
+      end_date = null,
+      participants = [],
+      actor = {},
+      critical = false
+    } = workout || {};
+
+    Log.debug("workout", workout);
+
+    const workoutInstance = await WorkoutWrapper({ id: event_id });
+
+    const { workouts = {} } = (await workoutInstance.getReferenceInfo()) || {};
+    const { repeat_days } = workoutInstance.getDetails();
+
+    const rrule = new RRule({
+      freq: RRule.WEEKLY,
+      dtstart: moment(start_date)
+        .utc()
+        .toDate(),
+      until: end_date
+        ? moment(end_date)
+            .utc()
+            .toDate()
+        : moment(start_date)
+            .add(1, "month")
+            .utc()
+            .toDate(),
+      byweekday: repeatDays(repeat_days)
+    });
+    const allDays = rrule.all();
+
+    let allEvents = [];
+
+    const time = workoutInstance.getTime();
+
+    const hour = moment(time).hours();
+    const minutes = moment(time).minutes();
+
+    for (let index = 0; index < allDays.length; index++) {
+      const date = allDays[index];
+
+      const startTime = moment(date)
+        .hours(hour)
+        .minutes(minutes)
+        .toISOString();
+
+      allEvents.push({
+        event_id,
+        critical,
+        event_type: EVENT_TYPE.WORKOUT,
+        date,
+        start_time: startTime,
+        end_time: startTime,
+        details: {
+          workouts,
+          workout_id: workoutInstance.getId(),
+          participants,
+          actor
+        }
+      });
+    }
+
+    const schedule = await scheduleService.bulkCreate(allEvents);
+    let response = false;
+    if (schedule) {
+      Log.debug("schedule events created for workout");
+      response = true;
+    } else {
+      Log.debug("schedule events failed for workout");
+    }
+
+    return response;
+  } catch (error) {
+    Log.debug("schedule events WORKOUT 500 error", error);
   }
 };
 
@@ -378,7 +621,7 @@ export const handleVitals = async vital => {
 export const handleAppointmentsTimeAssignment = async appointment => {
   try {
     const QueueService = new queueService();
-    const { event_id, start_time, end_time } = appointment;
+    const { event_id, start_time, end_time, user_role_id } = appointment;
 
     const appointmentData = await AppointmentWrapper(null, event_id);
 
@@ -502,14 +745,12 @@ export const handleAppointmentsTimeAssignment = async appointment => {
       participants: [participant_one_id, participant_two_id],
       actor: {
         id: participant_one_id,
+        user_role_id,
         category: participant_one_type
       }
     };
 
-    const sqsResponse = await QueueService.sendMessage(
-      "test_queue",
-      eventScheduleData
-    );
+    const sqsResponse = await QueueService.sendMessage(eventScheduleData);
 
     Log.debug("sqsResponse ---> ", sqsResponse);
     return true;
@@ -521,6 +762,7 @@ export const handleAppointmentsTimeAssignment = async appointment => {
 export const handleCarePlans = async data => {
   try {
     const {
+      medication_ids,
       patient_id,
       critical,
       event_id,
@@ -542,6 +784,7 @@ export const handleCarePlans = async data => {
       event_type: EVENT_TYPE.CARE_PLAN_ACTIVATION,
       details: {
         medications: details,
+        medication_ids,
         actor,
         participants
       }
@@ -580,6 +823,13 @@ const getBreakfast = timings => {
   return { hours, minutes };
 };
 
+const getMidMorning = timings => {
+  const { value } = timings[MID_MORNING] || {};
+  const hours = moment(value).hours();
+  const minutes = moment(value).minutes();
+  return { hours, minutes };
+};
+
 const getLunch = timings => {
   const { value } = timings[LUNCH] || {};
   const hours = moment(value).hours();
@@ -608,7 +858,61 @@ const getSleep = timings => {
   return { hours, minutes };
 };
 
+const getDietTimings = (date, timing, patientPreference) => {
+  switch (timing) {
+    case WAKE_UP:
+      const { hours: wakeupHour, minutes: wakeupMinute } =
+        getWakeUp(patientPreference) || {};
+      return moment(date)
+        .set("hours", wakeupHour)
+        .set("minutes", wakeupMinute);
+    case BREAKFAST:
+      const { hours: breakfastHour, minutes: breakfastMinute } =
+        getBreakfast(patientPreference) || {};
+      return moment(date)
+        .set("hours", breakfastHour)
+        .set("minutes", breakfastMinute);
+    case MID_MORNING:
+      const { hours: midMorningHour, minutes: midMorningMinute } =
+        getMidMorning(patientPreference) || {};
+      return moment(date)
+        .set("hours", midMorningHour)
+        .set("minutes", midMorningMinute);
+    case LUNCH:
+      const { hours: lunchHour, minutes: lunchMinute } =
+        getLunch(patientPreference) || {};
+      return moment(date)
+        .set("hours", lunchHour)
+        .set("minutes", lunchMinute);
+    case EVENING:
+      const { hours: eveningHour, minutes: eveningMinute } =
+        getEvening(patientPreference) || {};
+      return moment(date)
+        .set("hours", eveningHour)
+        .set("minutes", eveningMinute);
+    case DINNER:
+      const { hours: dinnerHour, minutes: dinnerMinute } =
+        getLunch(patientPreference) || {};
+      return moment(date)
+        .set("hours", dinnerHour)
+        .set("minutes", dinnerMinute);
+    case SLEEP:
+      const { hours: sleepHour, minutes: sleepMinute } =
+        getLunch(patientPreference) || {};
+      return moment(date)
+        .set("hours", sleepHour)
+        .set("minutes", sleepMinute);
+    default:
+      return moment(date);
+  }
+};
+
 const updateMedicationTiming = (date, timing, patientPreference) => {
+  console.log("139812832739871 date, timing, patientPreference", {
+    date,
+    timing,
+    patientPreference
+  }); // TODO: Added
   switch (timing) {
     case AFTER_WAKEUP:
       const { hours: awh, minutes: awm } = getWakeUp(patientPreference) || {};
@@ -635,6 +939,11 @@ const updateMedicationTiming = (date, timing, patientPreference) => {
         .set("hours", blh)
         .set("minutes", blm)
         .subtract(30, "minutes");
+    case WITH_LUNCH:
+      const { hours: wlh, minutes: wlm } = getLunch(patientPreference) || {};
+      return moment(date)
+        .set("hours", wlh)
+        .set("minutes", wlm);
     case AFTER_LUNCH:
       const { hours: alh, minutes: alm } = getLunch(patientPreference) || {};
       return moment(date)
@@ -659,6 +968,11 @@ const updateMedicationTiming = (date, timing, patientPreference) => {
         .set("hours", bdh)
         .set("minutes", bdm)
         .subtract(30, "minutes");
+    case WITH_DINNER:
+      const { hours: wdh, minutes: wdm } = getDinner(patientPreference) || {};
+      return moment(date)
+        .set("hours", wdh)
+        .set("minutes", wdm);
     case AFTER_DINNER:
       const { hours: adh, minutes: adm } = getDinner(patientPreference) || {};
       return moment(date)

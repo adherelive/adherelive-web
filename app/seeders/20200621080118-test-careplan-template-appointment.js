@@ -13,7 +13,7 @@ module.exports = {
         details: JSON.stringify({
           description: "Please fast before 12 hours",
           appointment_type: "1",
-          type_description: "Telephone",
+          type_description: "Blood Test",
           critical: false
         }),
         created_at: new Date(),
@@ -27,7 +27,7 @@ module.exports = {
         details: JSON.stringify({
           description: "We will do a checkup in the morning too.",
           appointment_type: "1",
-          type_description: "Telephone",
+          type_description: "Blood Test",
           critical: true
         }),
         created_at: new Date(),

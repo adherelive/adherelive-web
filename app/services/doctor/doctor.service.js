@@ -2,15 +2,24 @@ import Database from "../../../libs/mysql";
 import { TABLE_NAME } from "../../models/doctors";
 import { TABLE_NAME as watchlistTableName } from "../../models/doctor_patient_watchlist";
 import { TABLE_NAME as specialityTableName } from "../../models/specialities";
+import { TABLE_NAME as userTableName } from "../../models/users";
+import { Op } from "sequelize";
+
+const DEFAULT_ORDER = [["created_at", "DESC"]];
 
 class DoctorService {
-  getDoctorByData = async data => {
+  getDoctorByData = async (data, paranoid = true) => {
     try {
-      const doctor = await Database.getModel(TABLE_NAME).findOne({
+      return await Database.getModel(TABLE_NAME).findOne({
         where: data,
-        include: Database.getModel(specialityTableName)
+        include: [
+          {
+            model: Database.getModel(userTableName),
+            paranoid
+          },
+          Database.getModel(specialityTableName)
+        ]
       });
-      return doctor;
     } catch (error) {
       throw error;
     }
@@ -20,7 +29,10 @@ class DoctorService {
     try {
       const doctor = await Database.getModel(TABLE_NAME).findAll({
         where: data,
-        include: Database.getModel(specialityTableName)
+        include: [
+          Database.getModel(userTableName),
+          Database.getModel(specialityTableName)
+        ]
       });
       return doctor;
     } catch (error) {
@@ -103,13 +115,14 @@ class DoctorService {
   deleteWatchlistRecord = async watchlist_data => {
     const transaction = await Database.initTransaction();
     try {
-      const { patient_id, doctor_id } = watchlist_data;
+      const { patient_id, doctor_id, user_role_id } = watchlist_data;
       const deletedWatchlistDetails = await Database.getModel(
         watchlistTableName
       ).destroy({
         where: {
           patient_id,
-          doctor_id
+          doctor_id,
+          user_role_id
         }
       });
       await transaction.commit();
@@ -129,6 +142,111 @@ class DoctorService {
         include: Database.getModel(specialityTableName)
       });
       return doctor;
+    } catch (error) {
+      throw error;
+    }
+  };
+
+  getAllDoctorsOnly = async () => {
+    try {
+      const doctors = await Database.getModel(TABLE_NAME).findAll();
+      return doctors;
+    } catch (err) {
+      throw err;
+    }
+  };
+
+  // search = async data => {
+  //   try {
+  //     const doctor = await Database.getModel(TABLE_NAME).findAll({
+  //       where: {
+  //         [Op.or]: [
+  //           {
+  //             first_name: {
+  //               [Op.like]: `%${data}%`
+  //             }
+  //           },
+  //           {
+  //             last_name: {
+  //               [Op.like]: `%${data}%`
+  //             }
+  //           },
+  //           {
+  //             middle_name: {
+  //               [Op.like]: `%${data}%`
+  //             }
+  //           }
+  //         ]
+
+  //       }
+  //     });
+  //     return doctor;
+  //   } catch (error) {
+  //     throw error;
+  //   }
+  // };
+
+  search = async value => {
+    try {
+      let firstName = value;
+      let middleName = value;
+      let lastName = value;
+      const name = value.split(" ");
+
+      if (name.length > 1) {
+        if (name.length === 2) {
+          firstName = name[0];
+          middleName = name[1];
+        } else {
+          firstName = name[0];
+          middleName = name[1];
+          lastName = name[2];
+        }
+      }
+
+      const doctor = await Database.getModel(TABLE_NAME).findAll({
+        where: {
+          [Op.or]: [
+            {
+              first_name: {
+                [Op.like]: `%${firstName}%`
+              }
+            },
+            {
+              middle_name: {
+                [Op.or]: [
+                  { [Op.like]: `%${middleName}%` },
+                  { [Op.like]: `%${firstName}%` }
+                ]
+              }
+            },
+            {
+              last_name: {
+                [Op.like]: `%${lastName}%`
+              }
+            }
+          ]
+        }
+      });
+      console.log("329847562389462364872384122 ===============>", {
+        doctor,
+        value
+      });
+
+      return doctor;
+    } catch (error) {
+      throw error;
+    }
+  };
+
+  findOne = async ({ where, order = DEFAULT_ORDER, attributes }) => {
+    try {
+      return await Database.getModel(TABLE_NAME).findOne({
+        where,
+        order,
+        attributes,
+        raw: true
+      });
     } catch (error) {
       throw error;
     }

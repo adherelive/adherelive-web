@@ -5,6 +5,9 @@ import { EVENT_STATUS, EVENT_TYPE, NOTIFICATION_STAGES } from "../../constant";
 
 // SERVICES ---------------
 import ScheduleEventService from "../services/scheduleEvents/scheduleEvent.service";
+import medicationService from "../services/medicationReminder/mReminder.service";
+import DietService from "../services/diet/diet.service";
+import WorkoutService from "../services/workouts/workout.service";
 
 // WRAPPERS ---------------
 import ScheduleEventWrapper from "../ApiWrapper/common/scheduleEvents";
@@ -14,6 +17,8 @@ import NotificationSdk from "../NotificationSdk";
 import AppointmentJob from "../JobSdk/Appointments/observer";
 import MedicationJob from "../JobSdk/Medications/observer";
 import CarePlanJob from "../JobSdk/CarePlan/observer";
+import DietJob from "../JobSdk/Diet/observer";
+import WorkoutJob from "../JobSdk/Workout/observer";
 
 const Log = new Logger("CRON > START");
 
@@ -36,7 +41,6 @@ class StartCron {
       const { getScheduleData } = this;
       const scheduleEvents = await getScheduleData();
 
-      Log.debug("Schedule events got are: ", scheduleEvents);
       let count = 0;
       if (scheduleEvents.length > 0) {
         for (const scheduleEvent of scheduleEvents) {
@@ -55,6 +59,12 @@ class StartCron {
             case EVENT_TYPE.CARE_PLAN_ACTIVATION:
               await this.handleCarePlanStart(event);
               break;
+            case EVENT_TYPE.DIET:
+              await this.handleDietStart(event);
+              break;
+            case EVENT_TYPE.WORKOUT:
+              await this.handleWorkoutStart(event);
+              break;
             default:
               break;
           }
@@ -63,7 +73,6 @@ class StartCron {
       Log.info(`START count : ${count} / ${scheduleEvents.length}`);
     } catch (error) {
       Log.debug("scheduleEvents 500 error ---->", error);
-      // Log.errLog(500, "getPriorEvents", error.getMessage());
     }
   };
 
@@ -119,7 +128,7 @@ class StartCron {
       // });
       // NotificationSdk.execute(job);
     } catch (error) {
-      Log.debug("handleVitalStart 500 error ---->", error);
+      Log.debug("handleAppointmentStart 500 error ---->", error);
     }
   };
 
@@ -128,23 +137,35 @@ class StartCron {
       const eventId = event.getEventId();
       const scheduleEventId = event.getScheduleEventId();
       const scheduleEventService = new ScheduleEventService();
-      const updateEventStatus = await scheduleEventService.update(
-        {
-          status: EVENT_STATUS.SCHEDULED
-        },
-        scheduleEventId
-      );
 
-      const eventScheduleData = await scheduleEventService.getEventByData({
-        id: scheduleEventId
-      });
+      const medication = await medicationService.getMedication({ id: eventId });
 
-      const medicationJob = MedicationJob.execute(
-        EVENT_STATUS.STARTED,
-        eventScheduleData
-      );
+      if (medication) {
+        const updateEventStatus = await scheduleEventService.update(
+          {
+            status: EVENT_STATUS.SCHEDULED
+          },
+          scheduleEventId
+        );
 
-      await NotificationSdk.execute(medicationJob);
+        const eventScheduleData = await scheduleEventService.getEventByData({
+          id: scheduleEventId
+        });
+
+        const medicationJob = MedicationJob.execute(
+          EVENT_STATUS.STARTED,
+          eventScheduleData
+        );
+
+        await NotificationSdk.execute(medicationJob);
+      } else {
+        const cancelledEvent = await scheduleEventService.update(
+          {
+            status: EVENT_STATUS.CANCELLED
+          },
+          scheduleEventId
+        );
+      }
 
       // const job = JobSdk.execute({
       //     eventType: EVENT_TYPE.MEDICATION_REMINDER,
@@ -154,6 +175,85 @@ class StartCron {
       // NotificationSdk.execute(job);
     } catch (error) {
       Log.debug("handleVitalStart 500 error ---->", error);
+    }
+  };
+
+  handleDietStart = async event => {
+    try {
+      const eventId = event.getEventId();
+      const scheduleEventId = event.getScheduleEventId();
+      const scheduleEventService = new ScheduleEventService();
+      const dietService = new DietService();
+
+      const dietExists = (await dietService.findOne({ id: eventId })) || null;
+
+      if (dietExists) {
+        await scheduleEventService.update(
+          {
+            status: EVENT_STATUS.SCHEDULED
+          },
+          scheduleEventId
+        );
+
+        const eventScheduleData = await scheduleEventService.getEventByData({
+          id: scheduleEventId
+        });
+
+        const dietJob = DietJob.execute(
+          EVENT_STATUS.STARTED,
+          eventScheduleData
+        );
+        await NotificationSdk.execute(dietJob);
+      } else {
+        await scheduleEventService.update(
+          {
+            status: EVENT_STATUS.CANCELLED
+          },
+          scheduleEventId
+        );
+      }
+    } catch (error) {
+      Log.debug("handleDietStart 500 error", error);
+    }
+  };
+
+  handleWorkoutStart = async event => {
+    try {
+      const eventId = event.getEventId();
+      const scheduleEventId = event.getScheduleEventId();
+      const scheduleEventService = new ScheduleEventService();
+      const workoutService = new WorkoutService();
+
+      const workoutExists =
+        (await workoutService.findOne({ id: eventId })) || null;
+
+      if (workoutExists) {
+        await scheduleEventService.update(
+          {
+            status: EVENT_STATUS.SCHEDULED
+          },
+          scheduleEventId
+        );
+
+        const eventScheduleData = await scheduleEventService.getEventByData({
+          id: scheduleEventId
+        });
+
+        const workoutJob = WorkoutJob.execute(
+          EVENT_STATUS.STARTED,
+          eventScheduleData
+        );
+        await NotificationSdk.execute(workoutJob);
+      } else {
+        await scheduleEventService.update(
+          {
+            status: EVENT_STATUS.CANCELLED
+          },
+          scheduleEventId
+        );
+      }
+    } catch (error) {
+      Log.debug("handleWorkoutStart 500 error", error);
     }
   };
 

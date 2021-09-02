@@ -1,21 +1,17 @@
-export const searchVitals = (data) => {
-    return `/vitals?value=${data}`;
+export const searchVitals = data => {
+  return `/vitals?value=${data}`;
 };
 export const getVitalOccurenceUrl = () => {
-    return `/vitals/details`;
+  return `/vitals/details`;
 };
 export const getAddVitalURL = () => {
-    return `/vitals`;
+  return `/vitals`;
 };
 
-export const getVitalTimelineURL = (id) => {
-    return `/vitals/${id}/timeline`;
+export const getVitalTimelineURL = id => {
+  return `/vitals/${id}/timeline`;
 };
 
-export const getUpdateVitalURL = (id) => {
-    return `/vitals/${id}`;
+export const getUpdateVitalURL = id => {
+  return `/vitals/${id}`;
 };
-
-export const getMissedVitalsForDoctorUrl = () => {
-    return `/vitals/missed`;
-  }

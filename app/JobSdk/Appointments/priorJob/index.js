@@ -1,83 +1,151 @@
 import AppointmentJob from "../";
 import moment from "moment";
-import {EVENT_TYPE, USER_CATEGORY} from "../../../../constant";
+import {
+  DEFAULT_PROVIDER,
+  APPOINTMENT_TYPE,
+  EVENT_TYPE
+} from "../../../../constant";
+
+import UserRoleService from "../../../services/userRoles/userRoles.service";
+import ProviderService from "../../../services/provider/provider.service";
+import UserDeviceService from "../../../services/userDevices/userDevice.service";
+
+import UserDeviceWrapper from "../../../ApiWrapper/mobile/userDevice";
 
 class PriorJob extends AppointmentJob {
-    constructor(data) {
-        super(data);
+  constructor(data) {
+    super(data);
+  }
+
+  getEmailTemplate = () => {
+    const { getAppointmentData } = this;
+    const { details: {} = {} } = getAppointmentData() || {};
+
+    const templateData = [];
+
+    return templateData;
+  };
+
+  getSmsTemplate = () => {};
+
+  getPushAppTemplate = async () => {
+    const { getAppointmentData } = this;
+    const {
+      details: {
+        participants = [],
+        actor: {
+          id: actorId,
+          details: { name, category: actorCategory } = {}
+        } = {},
+        basic_info: {
+          details: {
+            type = "",
+            type_description = "",
+            radiology_type = ""
+          } = {}
+        } = {}
+      } = {}
+    } = getAppointmentData() || {};
+
+    const templateData = [];
+    const playerIds = [];
+    const userIds = [];
+
+    // participants.forEach(participant => {
+    //   if (participant !== user_role_id) {
+    //     userRoleIds.push(participant);
+    //   }
+    // });
+
+    const { rows: userRoles = [] } =
+      (await UserRoleService.findAndCountAll({
+        where: {
+          id: participants
+        }
+      })) || {};
+
+    let providerId = null;
+
+    for (const userRole of userRoles) {
+      const { user_identity, linked_id } = userRole || {};
+      userIds.push(user_identity);
+      if (linked_id) {
+        providerId = linked_id;
+      }
     }
 
-    getEmailTemplate = () => {
-        const { getAppointmentData } = this;
-        const { details: {} = {} } = getAppointmentData() || {};
+    // provider
+    let providerName = DEFAULT_PROVIDER;
+    if (providerId) {
+      const provider = await ProviderService.getProviderByData({
+        id: providerId
+      });
+      const { name } = provider || {};
+      providerName = name;
+    }
+    const userDevices = await UserDeviceService.getAllDeviceByData({
+      user_id: participants
+    });
 
-        const templateData = [];
+    if (userDevices.length > 0) {
+      for (const device of userDevices) {
+        const userDevice = await UserDeviceWrapper({ data: device });
+        playerIds.push(userDevice.getOneSignalDeviceId());
+      }
+    }
 
-        return templateData;
-    };
+    const { title: appointmentType = "" } = APPOINTMENT_TYPE[type] || {};
 
-    getSmsTemplate = () => {};
+    templateData.push({
+      small_icon: process.config.app.icon_android,
+      app_id: process.config.one_signal.app_id,
+      headings: { en: `Upcoming appointment reminder (${providerName})` },
+      contents: {
+        en: `An appointment ${appointmentType}-${type_description}${
+          radiology_type ? `-${radiology_type}` : ""
+        } is about to start soon. Tap here to know more!`
+      },
+      include_player_ids: [...playerIds],
+      priority: 10,
+      android_channel_id: process.config.one_signal.urgent_channel_id,
+      data: { url: "/appointments", params: "", content: getAppointmentData() }
+    });
 
-    getPushAppTemplate = () => {
-        const { getAppointmentData } = this;
-        const {
-            participants = [],
-            actor: {
-                id: actorId,
-                details: { name, category: actorCategory } = {}
-            } = {}
-        } = getAppointmentData() || {};
+    return templateData;
+  };
 
-        const templateData = [];
+  getInAppTemplate = () => {
+    const { getAppointmentData } = this;
+    const {
+      participants = [],
+      actor: {
+        id: actorId,
+        user_role_id,
+        details: { name, category: actorCategory } = {}
+      } = {},
+      id
+    } = getAppointmentData() || {};
 
-        for (const participant of participants) {
-            // if (participant !== actorId) { // todo: add actor after testing (deployment)
-            templateData.push({
-                app_id: process.config.one_signal.app_id, // TODO: add the same in pushNotification handler in notificationSdk
-                headings: { en: `Appointment Created` },
-                contents: {
-                    en: `${name}(${actorCategory}) has created an appointment with you`
-                },
-                // buttons: [{ id: "yes", text: "Yes" }, { id: "no", text: "No" }],
-                include_player_ids: [...participants],
-                priority: 10,
-                // data: { url: "/", params: "" }
-            });
-            // }
-        }
+    const templateData = [];
+    const currentTime = new moment().utc();
+    for (const participant of participants) {
+      // if (participant !== actorId) {
+      templateData.push({
+        actor: actorId,
+        actorRoleId: user_role_id,
+        object: `${participant}`,
+        foreign_id: `${id}`,
+        verb: "appointment_prior",
+        // message: `${name}(${actorCategory}) has created an appointment with you`,
+        event: EVENT_TYPE.APPOINTMENT,
+        time: currentTime,
+        create_time: `${currentTime}`
+      });
+      // }
+    }
 
-        return templateData;
-    };
-
-    getInAppTemplate = () => {
-        const { getAppointmentData } = this;
-        const {
-            participants = [],
-            actor: {
-                id: actorId,
-                details: { name, category: actorCategory } = {}
-            } = {},
-            appointmentId
-        } = getAppointmentData() || {};
-
-        const templateData = [];
-        const currentTime = new moment().utc();
-        for (const participant of participants) {
-            // if (participant !== actorId) {
-            templateData.push({
-                actor: actorId,
-                object: `${participant}`,
-                foreign_id: `${appointmentId}`,
-                verb: "appointment_create",
-                // message: `${name}(${actorCategory}) has created an appointment with you`,
-                event: EVENT_TYPE.APPOINTMENT,
-                time: currentTime
-            });
-            // }
-        }
-
-        return templateData;
-    };
+    return templateData;
+  };
 }
 
 export default PriorJob;

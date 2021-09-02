@@ -85,6 +85,16 @@ const messages = defineMessages({
     id: "app.drawer.patient.details.symptoms",
     description: "",
     defaultMessage: "Symptoms"
+  },
+  somethingWentWrong: {
+    id: "app.drawer.patient.details.somethingWentWrong",
+    description: "",
+    defaultMessage: "Something went wrong"
+  },
+  appointmentDocName: {
+    id: "app.drawer.patient.details.appointmentDocName",
+    description: "",
+    defaultMessage: "By Dr.{name}"
   }
 });
 

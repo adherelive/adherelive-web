@@ -2,7 +2,6 @@ const AWS = require("aws-sdk");
 const log = require("../../../libs/log")("communications ---> smsManger");
 const axios = require("axios");
 
-
 class SmsManager {
   constructor() {
     AWS.config.update({
@@ -17,7 +16,8 @@ class SmsManager {
 
     this.sns.setSMSAttributes({
       attributes: {
-        'DefaultSMSType': 'Transactional',
+        DefaultSenderID: "ADHERE-LIVE",
+        DefaultSMSType: "Transactional"
       }
     });
   }
@@ -37,7 +37,6 @@ class SmsManager {
       log.info("Sms payload successfully transformed!!");
 
       log.info(`Sending SMS...!!`);
-      console.log("smspayload: ", smsData);
 
       // let options = {
       //   method: "POST",
@@ -76,18 +75,35 @@ class SmsManager {
       //   });
       // console.log("smsPublishResponse ----", smsPublishResponse);
 
-      let smsPublishResponse = await this.sns
-        .publish(smsData, (err, data) => {
-          console.log("smsData ----", smsData);
-          if (err) {
-            log.info("sending sms error ------->>>>", err);
-          }
-          if (data) {
-            log.info("sms sent...........!!", data);
-          }
+      let smsSent = false;
+
+      await this.sns
+        .publish(smsData)
+        .promise()
+        .then(data => {
+          log.info("sms sent...........!!", data);
+          smsSent = true;
         })
-        .promise();
-      return smsPublishResponse;
+        .catch(error => {
+          log.info("sending sms error ------->>>>", error);
+          smsSent = false;
+        });
+
+      return smsSent;
+
+      // return await this.sns
+      //   .publish(smsData, (err, data) => {
+      //     console.log("88127313 sendSms : smsData inside ", smsData);
+      //     console.log("88127313 sendSms : data inside ", data);
+      //     if (err) {
+      //       log.info("sending sms error ------->>>>", err);
+      //     }
+      //     if (data) {
+      //       log.info("sms sent...........!!", data);
+      //     }
+      //   })
+      //   .promise();
+      // return smsPublishResponse;
     } catch (err) {
       console.log("err ----", err);
       log.info("sending sms error ------->>>>", err);

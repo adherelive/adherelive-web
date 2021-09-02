@@ -1,31 +1,33 @@
 export default class UserPreference {
-    constructor(data) {
-        this._data = data;
-    }
+  constructor(data) {
+    this._data = data;
+  }
 
-    getUserPreferenceId = () => {
-        return this._data.get("id");
-    };
+  getUserPreferenceId = () => {
+    return this._data.get("id");
+  };
 
-    getAllDetails = () => {
-        return this._data.get("details");
-    };
+  getUserId = () => this._data.get("user_id");
 
-    getChartDetails = () => {
-      const details =  this._data.get("details");
-      const {charts} = details || {};
-      return charts;
-    };
+  getAllDetails = () => {
+    return this._data.get("details");
+  };
 
-    allowEmail = () => {
-        const details =  this._data.get("details");
-      const {emailNotification} = details || {};
-      return emailNotification;
-    };
+  getChartDetails = () => {
+    const details = this._data.get("details");
+    const { charts } = details || {};
+    return charts;
+  };
 
-    allowSms = () => {
-        const details =  this._data.get("details");
-        const {smsNotification} = details || {};
-        return smsNotification;
-    };
+  allowEmail = () => {
+    const details = this._data.get("details");
+    const { emailNotification } = details || {};
+    return emailNotification;
+  };
+
+  allowSms = () => {
+    const details = this._data.get("details");
+    const { smsNotification } = details || {};
+    return smsNotification;
+  };
 }

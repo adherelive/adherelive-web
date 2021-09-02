@@ -3,8 +3,9 @@ import { Drawer, Form, message } from "antd";
 import { injectIntl } from "react-intl";
 
 import moment from "moment";
-import { MEDICINE_UNITS } from "../../../../constant";
+import { MEDICINE_UNITS, WHEN_TO_TAKE_ABBR_TYPES } from "../../../../constant";
 import AddMedicationReminderForm from "./form";
+import AddMedicineDrawer from "../../../../Containers/Drawer/addMedicine";
 
 import participants from "../common/participants";
 
@@ -22,9 +23,15 @@ class AddMedicationReminder extends Component {
     this.state = {
       disabledOk: true,
       fieldChanged: false,
-      members: []
+      members: [],
+      submitting: false,
+      medicineDrawerVisible: false,
+      medicineValue: "",
+      newMedicineId: null
     };
-    this.FormWrapper = Form.create({ onFieldsChange: this.onFormFieldChanges })(AddMedicationReminderForm);
+    this.FormWrapper = Form.create({ onFieldsChange: this.onFormFieldChanges })(
+      AddMedicationReminderForm
+    );
   }
 
   componentDidMount() {
@@ -45,6 +52,14 @@ class AddMedicationReminder extends Component {
     if (disabledOk !== isError && isFieldsTouched()) {
       this.setState({ disabledOk: isError, fieldChanged: true });
     }
+  };
+
+  openMedicineDrawer = () => {
+    this.setState({ medicineDrawerVisible: true });
+  };
+
+  closeMedicineDrawer = () => {
+    this.setState({ medicineDrawerVisible: false });
   };
 
   handleCancel = e => {
@@ -94,8 +109,6 @@ class AddMedicationReminder extends Component {
     const { close } = this.props;
     close();
   };
-  
- 
 
   handleSubmit = async () => {
     const {
@@ -115,17 +128,23 @@ class AddMedicationReminder extends Component {
 
     validateFields(async (err, values) => {
       if (!err) {
-        console.log('8326589623895723956832', values);
-        const { when_to_take = [], keys = [] } = values || {};
+        const { when_to_take_abbr = "", when_to_take = [], keys = [] } =
+          values || {};
         let data_to_submit = {};
         const startTime = values[startTimeField.field_name];
         const startDate = values[startDateField.field_name];
         const endDate = values[endDateField.field_name];
         const repeatDays = values[repeatDaysField.field_name];
-        const { medicine_id, quantity, strength, unit, critical,formulation: medicine_type, special_instruction: description } = values || {};
-       
-       
-       
+        const {
+          medicine_id,
+          quantity,
+          strength,
+          unit,
+          critical,
+          formulation: medicine_type,
+          special_instruction: description
+        } = values || {};
+
         data_to_submit = {
           medicine_id,
           quantity,
@@ -135,110 +154,65 @@ class AddMedicationReminder extends Component {
           description,
           critical,
           when_to_take: keys.map(id => when_to_take[id]) || [],
+          when_to_take_abbr,
           // when_to_take: when_to_take.map(id => `${id}`),
           id: patient_id,
 
           repeat: "weekly",
 
-          [startTimeField.field_name]:startTime && startTime !== null ? startTime.startOf("minute").toISOString(): startTime,
-          
-          [startDateField.field_name]:startDate && startDate !== null ? startDate.clone().toISOString():startDate,
-          
-          [endDateField.field_name]:endDate && endDate !== null? endDate.clone().toISOString():endDate
+          [startTimeField.field_name]:
+            startTime && startTime !== null
+              ? startTime.startOf("minute").toISOString()
+              : startTime,
+
+          [startDateField.field_name]:
+            startDate && startDate !== null
+              ? startDate.clone().toISOString()
+              : startDate,
+
+          [endDateField.field_name]:
+            endDate && endDate !== null
+              ? endDate.clone().toISOString()
+              : endDate
         };
 
         if (repeatDays) {
-          
           data_to_submit = {
             ...data_to_submit,
             [repeatDaysField.field_name]: repeatDays.split(",")
           };
-
         }
-        
-       // ---------------------------------->>
-       // to check if after selecting dates and then days, if days fall within the dates
-         
-        // if(repeatDays && startDate && endDate) {
-         
-        //   console.log(typeof(repeatDays));
-        //   const daysArray=[];
-        //   let day="";
-        //   for(let i=0;i<repeatDays.length;i++){
-           
-        //     if(repeatDays[i]=="," || i==repeatDays.length-1){
-        //       daysArray.push(day);
-        //       day="";
-        //     }
-        //     else{
-        //       day =day+repeatDays[i];
-        //     }
-        //   }
-         
-        //   const findDayNumber={
-        //     "Mon":1,
-        //     "Tue":2,
-        //     "Wed":3,
-        //     "Thu":4,
-        //     "Fri":5,
-        //     "Sat":6,
-        //     "Sun":7,
-        //   }
-         
-        //   let flag =true;
-         
-        //   for(let i=0;i<daysArray.length;i++){
-           
-        //       let repeatDaysNumber = findDayNumber[daysArray[i]];
-        //       const startDateNumber = startDate._d.getDay();
-        //       const endDateNumber = endDate._d.getDay();
-             
-        //       if(repeatDaysNumber<startDateNumber && repeatDaysNumber>=startDateNumber && repeatDaysNumber <=endDateNumber )
-        //       {
-        //         continue;
-        //       }
-        //       else if(repeatDaysNumber>startDateNumber && (repeatDaysNumber>=startDateNumber || repeatDaysNumber <=endDateNumber) )
-        //       {
-        //         continue;
-        //       }
-        //       else if(startDateNumber  ==  endDateNumber){
-               
-        //         continue;
-               
-        //       }else{
-               
-        //         flag = false;
-        //         break;
-        //       }
-        //   }
-        //   if(flag == false){
-        //     message.warn('Please select valid dates for medication');
-        //   }
-        // }
-       
-      // ------------------------ <<<<<<<<<<<<<<<<<<<<<<<
-  
-      
-    
-      
-        
-        if (!medicine_id || !unit || (unit === MEDICINE_UNITS.MG && !quantity) || !strength || !when_to_take || !startDate) {
 
-          message.error('Please fill all details.')
-        }
-        else if (endDate && moment(endDate).isBefore(moment(startDate))) {
-          message.error('Please select valid dates for medication')
+        if (
+          !medicine_id ||
+          !unit ||
+          (unit === MEDICINE_UNITS.MG && !quantity) ||
+          !strength ||
+          (when_to_take_abbr !== WHEN_TO_TAKE_ABBR_TYPES.SOS &&
+            !when_to_take) ||
+          !startDate
+        ) {
+          message.error("Please fill all details.");
+        } else if (endDate && moment(endDate).isBefore(moment(startDate))) {
+          message.error("Please select valid dates for medication");
         } else {
           try {
-            const response = await addCarePlanMedicationReminder(data_to_submit, carePlanId);
+            this.setState({ submitting: true });
+            const response = await addCarePlanMedicationReminder(
+              data_to_submit,
+              carePlanId
+            );
             const { status, payload: { message: msg } = {} } = response;
             if (status === true) {
+              this.setState({ submitting: false });
               message.success(msg);
               // getMedications(patient_id);
             } else {
+              this.setState({ submitting: false });
               message.error(msg);
             }
           } catch (error) {
+            this.setState({ submitting: false });
             console.log("add medication reminder ui error -----> ", error);
           }
         }
@@ -250,6 +224,14 @@ class AddMedicationReminder extends Component {
         // });
       }
     });
+  };
+
+  setMedicineVal = value => {
+    this.setState({ medicineValue: value });
+  };
+
+  setNewMedicineId = id => {
+    this.setState({ newMedicineId: id });
   };
 
   render() {
@@ -264,22 +246,26 @@ class AddMedicationReminder extends Component {
     //   disabled: disabledSubmit,
     //   loading: loading
     // };
-    const { members } = this.state;
+    const {
+      members,
+      submitting = false,
+      medicineDrawerVisible = false,
+      medicineValue = "",
+      newMedicineId = null
+    } = this.state;
+    const { addNewMedicine } = this.props;
 
-    
     return (
       <Drawer
-        width={'35%'}
+        width={"35%"}
         onClose={onClose}
         visible={visible}
-
         // closeIcon={<img src={backArrow} />}
         headerStyle={{
           position: "sticky",
           zIndex: "9999",
           top: "0px"
         }}
-     
         maskClosable={false}
         destroyOnClose={true}
         className="ant-drawer"
@@ -288,13 +274,26 @@ class AddMedicationReminder extends Component {
         <FormWrapper
           wrappedComponentRef={setFormRef}
           {...this.props}
+          openAddMedicineDrawer={this.openMedicineDrawer}
+          setMedicineVal={this.setMedicineVal}
+          newMedicineId={newMedicineId}
         />
+
+        <AddMedicineDrawer
+          visible={medicineDrawerVisible}
+          close={this.closeMedicineDrawer}
+          input={medicineValue}
+          // addNewMedicine={addNewMedicine}
+          setNewMedicineId={this.setNewMedicineId}
+        />
+
         <Footer
           onSubmit={handleSubmit}
           onClose={onClose}
           submitText={formatMessage(messages.add_button_text)}
           submitButtonProps={{}}
           cancelComponent={null}
+          submitting={submitting}
         />
       </Drawer>
     );

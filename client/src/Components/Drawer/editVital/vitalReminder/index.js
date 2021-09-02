@@ -9,7 +9,7 @@ import Button from "antd/es/button";
 
 import EditVitalForm from "./form";
 
-import { MEDICINE_UNITS } from '../../../../constant'
+import { MEDICINE_UNITS } from "../../../../constant";
 import messages from "../message";
 import Footer from "../../footer";
 import startTimeField from "../common/startTime";
@@ -19,6 +19,7 @@ import repeatDaysField from "../common/selectedDays";
 import moment from "moment";
 import instructions from "../common/instructions";
 import vitalOccurence from "../common/vitalOccurence";
+import vitalNameField from "../common/vitalName";
 
 class EditVital extends Component {
   constructor(props) {
@@ -28,6 +29,7 @@ class EditVital extends Component {
       disabledOk: true,
       fieldChanged: false,
       members: [],
+      submitting: false
     };
     this.FormWrapper = Form.create({ onFieldsChange: this.onFormFieldChanges })(
       EditVitalForm
@@ -42,9 +44,9 @@ class EditVital extends Component {
 
   enableSubmit = () => {
     this.setState({ disabledOk: false });
-  }
+  };
 
-  handleCancel = (e) => {
+  handleCancel = e => {
     if (e) {
       e.preventDefault();
     }
@@ -52,9 +54,9 @@ class EditVital extends Component {
     close();
   };
 
-  formatMessage = (data) => this.props.intl.formatMessage(data);
+  formatMessage = data => this.props.intl.formatMessage(data);
 
-  setFormRef = (formRef) => {
+  setFormRef = formRef => {
     this.formRef = formRef;
     if (formRef) {
       this.setState({ formRef: true });
@@ -63,32 +65,35 @@ class EditVital extends Component {
 
   onClose = () => {
     const { close } = this.props;
-    this.setState({
-      disabledOk: true,
-    }, () => {
-      close();
-
-    });
+    this.setState(
+      {
+        disabledOk: true
+      },
+      () => {
+        close();
+      }
+    );
     // close();
   };
 
   handleSubmit = async () => {
-    const {
+    let {
       // form: { validateFields },
       updateVital,
-      getMedications,
-      addMedication,
-      patientId,
-      editMedication,
+      editVital,
+      addVital,
       close,
-      payload: { id: vital_id } = {},
+      payload: { id: vital_id } = {}
     } = this.props;
+
     const { formRef = {}, formatMessage } = this;
     const {
       props: {
-        form: { validateFields },
-      },
+        form: { validateFields }
+      }
     } = formRef;
+
+    const { vitalData = {} } = this.props;
 
     validateFields(async (err, values) => {
       if (!err) {
@@ -99,49 +104,58 @@ class EditVital extends Component {
         const repeatDays = values[repeatDaysField.field_name];
         const description = values[instructions.field_name];
         const repeat_interval_id = values[vitalOccurence.field_name];
+        const vital_template_id = values[vitalNameField.field_name]
+          ? values[vitalNameField.field_name]
+          : "";
+
         data_to_submit = {
-          id: vital_id,
+          id: vital_id ? vital_id : "",
+          vital_template_id: vital_template_id ? vital_template_id : "",
           repeat_interval_id,
           description,
           [startDateField.field_name]:
             startDate && startDate !== null
-              ? startDate
-                .clone()
-                .toISOString()
+              ? startDate.clone().toISOString()
               : startDate,
           [endDateField.field_name]:
             endDate && endDate !== null
-              ? endDate
-                .clone()
-                .toISOString()
-              : endDate,
+              ? endDate.clone().toISOString()
+              : endDate
         };
+
         if (repeatDays) {
           data_to_submit = {
             ...data_to_submit,
-            [repeatDaysField.field_name]: repeatDays,
+            [repeatDaysField.field_name]: repeatDays
           };
         }
         if (!startDate || !repeat_interval_id || !repeatDays) {
+          message.error("Please fill all details.");
+        } else if (endDate && moment(endDate).isBefore(moment(startDate))) {
+          message.error("Please select valid dates for vitals");
+        } else if (editVital) {
+          console.log("18923172 data within", { data: data_to_submit });
+          editVital(data_to_submit);
+        } else if (addVital) {
+          addVital(data_to_submit);
+        } else {
+          try {
+            this.setState({ submitting: true });
+            const response = await updateVital(data_to_submit);
+            const { status, payload: { message: msg } = {} } = response;
+            if (status === true) {
+              message.success(msg);
+              close();
+            } else {
+              message.error(msg);
+            }
 
-          message.error('Please fill all details.')
-        }
-        else if (endDate && moment(endDate).isBefore(moment(startDate))) {
-          message.error('Please select valid dates for vitals')
-        }
-        try {
-          const response = await updateVital(data_to_submit);
-          const { status, payload: { message: msg } = {} } = response;
-          if (status === true) {
-            message.success(msg);
-            close();
-          } else {
-            message.error(msg);
+            this.setState({ submitting: false });
+          } catch (error) {
+            this.setState({ submitting: false });
+            console.log("add vital reminder ui error -----> ", error);
           }
-        } catch (error) {
-          console.log("add medication reminder ui error -----> ", error);
         }
-        
       } else {
         message.error(formatMessage(messages.fill_all_details));
       }
@@ -159,13 +173,13 @@ class EditVital extends Component {
     );
   };
 
-  handleDelete = (e) => {
+  handleDelete = e => {
     e.preventDefault();
     const {
       payload: { id, patient_id } = {},
       patients,
       medicines,
-      medications,
+      medications
     } = this.props;
     const { warnNote } = this;
 
@@ -178,11 +192,15 @@ class EditVital extends Component {
     confirm({
       title: `Are you sure you want to delete medication of ${name} for ${first_name} ${
         middle_name ? `${middle_name} ` : ""
-        }${last_name ? last_name : ""}?`,
+      }${last_name ? last_name : ""}?`,
       content: <div>{warnNote()}</div>,
       onOk: async () => {
         this.setState({ loading: true });
-        const { deleteMedication, getMedications, getPatientCarePlanDetails } = this.props;
+        const {
+          deleteMedication,
+          getMedications,
+          getPatientCarePlanDetails
+        } = this.props;
         const response = await deleteMedication(id);
         const { status } = response || {};
         if (status === true) {
@@ -190,17 +208,17 @@ class EditVital extends Component {
           getMedications(patient_id);
         }
       },
-      onCancel() { },
+      onCancel() {}
     });
   };
 
   getDeleteButton = () => {
     const { handleDelete } = this;
-    const { loading, deleteMedicationOfTemplate, hideMedication, addMedication } = this.props;
+    const { loading, deleteVitalOfTemplate, hideVital, addVital } = this.props;
 
-    if (addMedication) {
+    if (addVital) {
       return (
-        <Button onClick={hideMedication} style={{ marginRight: 8 }}>
+        <Button onClick={hideVital} style={{ marginRight: 8 }}>
           Cancel
         </Button>
       );
@@ -211,47 +229,53 @@ class EditVital extends Component {
         type={"danger"}
         ghost
         className="fs14 no-border style-delete"
-        onClick={deleteMedicationOfTemplate ? deleteMedicationOfTemplate : handleDelete}
+        onClick={deleteVitalOfTemplate ? deleteVitalOfTemplate : handleDelete}
         loading={loading}
-        disabled={true}
+        disabled={deleteVitalOfTemplate ? false : true}
       >
         <div className="flex align-center delete-text">
           <div className="ml4">Delete</div>
         </div>
       </Button>
-
     );
   };
 
   render() {
     const {
       visible,
-      medicationVisible,
-      editMedication,
-      addMedication,
-      hideMedication,
       loading = false,
       intl: { formatMessage },
+      editVital,
+      addVital,
+      hideVital,
+      vitalVisible = false,
+      vitalData = {},
+      payload: { canViewDetails = false } = {}
     } = this.props;
+
     const {
       onClose,
       setFormRef,
       FormWrapper,
       handleSubmit,
-      getDeleteButton,
+      getDeleteButton
     } = this;
-    const { disabledOk } = this.state;
+    const { disabledOk, submitting = false } = this.state;
+
+    const enableSubmit = () => {
+      this.setState({ disabledOk: true });
+    };
 
     const submitButtonProps = {
       disabled: disabledOk,
-      loading: loading,
+      loading: loading
     };
 
     return (
       <Drawer
+        onClose={editVital || addVital ? hideVital : onClose}
+        visible={editVital || addVital ? vitalVisible : visible}
         width={"35%"}
-        onClose={onClose}
-        visible={visible}
         destroyOnClose={true}
         maskClosable={false}
         headerStyle={{
@@ -260,17 +284,34 @@ class EditVital extends Component {
           top: "0px"
         }}
         className="ant-drawer"
-        title={formatMessage(messages.title)}
+        // title={formatMessage(messages.title)}
+        title={
+          canViewDetails
+            ? formatMessage(messages.viewDetails)
+            : editVital
+            ? formatMessage(messages.vital)
+            : addVital
+            ? formatMessage(messages.addVital)
+            : formatMessage(messages.title)
+        }
       >
-        <FormWrapper wrappedComponentRef={setFormRef} enableSubmit={this.enableSubmit} {...this.props} />
-        <Footer
-          className="flex justify-space-between"
-          onSubmit={handleSubmit}
-          onClose={onClose}
-          submitText={formatMessage(messages.update_button_text)}
-          submitButtonProps={submitButtonProps}
-          cancelComponent={getDeleteButton()}
+        <FormWrapper
+          wrappedComponentRef={setFormRef}
+          enableSubmit={this.enableSubmit}
+          {...this.props}
         />
+        {!canViewDetails && (
+          <Footer
+            className="flex justify-space-between"
+            onSubmit={handleSubmit}
+            onClose={onClose}
+            submitText={formatMessage(messages.update_button_text)}
+            submitButtonProps={submitButtonProps}
+            cancelComponent={getDeleteButton()}
+            enableSubmit={this.enableSubmit}
+            submitting={submitting}
+          />
+        )}
       </Drawer>
     );
   }

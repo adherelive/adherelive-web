@@ -11,7 +11,7 @@ import CarePlanWrapper from "../../../ApiWrapper/web/carePlan";
 import moment from "moment";
 import eventService from "../../../services/scheduleEvents/scheduleEvent.service";
 import EventWrapper from "../../common/scheduleEvents";
-import {EVENT_STATUS, EVENT_TYPE, FEATURE_TYPE} from "../../../../constant";
+import { EVENT_STATUS, EVENT_TYPE, FEATURE_TYPE } from "../../../../constant";
 import FeatureDetailService from "../../../services/featureDetails/featureDetails.service";
 import FeatureDetailWrapper from "../featureDetails";
 
@@ -24,7 +24,6 @@ class VitalWrapper extends BaseVital {
 
   getBasicInfo = () => {
     const { _data } = this;
-    Log.debug("4563452342134566564532423",_data);
     const {
       id,
       vital_template_id,
@@ -32,7 +31,7 @@ class VitalWrapper extends BaseVital {
       start_date,
       end_date,
       details,
-      description,
+      description
     } = _data || {};
 
     return {
@@ -68,8 +67,6 @@ class VitalWrapper extends BaseVital {
     let remaining = 0;
     let latestPendingEventId;
 
-    Log.debug("7761283 scheduleEvents --> ", scheduleEvents);
-
     const vitalData = await FeatureDetailService.getDetailsByData({
       feature_type: FEATURE_TYPE.VITAL
     });
@@ -77,22 +74,22 @@ class VitalWrapper extends BaseVital {
     const vitalDetails = await FeatureDetailWrapper(vitalData);
     const { repeat_intervals = {} } = vitalDetails.getFeatureDetails() || {};
 
-        const scheduleEventIds = [];
-        for(const events of scheduleEvents) {
-            const scheduleEvent = await EventWrapper(events);
-            const x = scheduleEvent.getAllInfo();
-          // Log.debug("28739812372 scheduleEvent.getAllInfo() ---> ", x.details.details.repeat_interval_id);
-            if(scheduleEvent.getEventType() === EVENT_TYPE.VITALS) {
-              scheduleEventIds.push(scheduleEvent.getScheduleEventId());
+    const scheduleEventIds = [];
+    for (const events of scheduleEvents) {
+      const scheduleEvent = await EventWrapper(events);
+      const x = scheduleEvent.getAllInfo();
+      // Log.debug("28739812372 scheduleEvent.getAllInfo() ---> ", x.details.details.repeat_interval_id);
+      if (scheduleEvent.getEventType() === EVENT_TYPE.VITALS) {
+        scheduleEventIds.push(scheduleEvent.getScheduleEventId());
 
-              if(scheduleEvent.getStatus() === EVENT_STATUS.PENDING || scheduleEvent.getStatus() === EVENT_STATUS.SCHEDULED) {
-                if(!latestPendingEventId) {
-                  latestPendingEventId = scheduleEvent.getScheduleEventId();
-                }
-                remaining++;
-              }
-            }
+        if (scheduleEvent.getStatus() !== EVENT_STATUS.COMPLETED) {
+          if (!latestPendingEventId) {
+            latestPendingEventId = scheduleEvent.getScheduleEventId();
+          }
+          remaining++;
         }
+      }
+    }
 
     return {
       vitals: {
@@ -106,21 +103,35 @@ class VitalWrapper extends BaseVital {
   };
 
   getReferenceInfo = async () => {
-    const { _data } = this;
+    const { _data, getAllInfo, getVitalTemplateId } = this;
     const { vital_template, care_plan } = _data || {};
 
     const vitalTemplateData = {};
     const carePlanData = {};
 
-    const vitalTemplates = await VitalTemplateWrapper({ data: vital_template });
+    let wrapperQuery = {};
+    if (vital_template) {
+      wrapperQuery = {
+        data: vital_template
+      };
+    } else {
+      wrapperQuery = {
+        id: getVitalTemplateId()
+      };
+    }
+
+    const vitalTemplates = await VitalTemplateWrapper(wrapperQuery);
     vitalTemplateData[
       vitalTemplates.getVitalTemplateId()
     ] = vitalTemplates.getBasicInfo();
 
-    const carePlans = await CarePlanWrapper(care_plan);
-    carePlanData[carePlans.getCarePlanId()] = await carePlans.getAllInfo();
+    if (care_plan) {
+      const carePlans = await CarePlanWrapper(care_plan);
+      carePlanData[carePlans.getCarePlanId()] = await carePlans.getAllInfo();
+    }
 
     return {
+      ...(await getAllInfo()),
       vital_templates: {
         ...vitalTemplateData
       },

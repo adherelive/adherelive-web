@@ -1,0 +1,32 @@
+.grey-dot {
+  color: #a6a8a9;
+  margin-left: 5px;
+  margin-right: 5px;
+}
+
+.multiply::after {
+  content: "X";
+  position: absolute;
+  right: 0;
+  top: 0;
+  margin-right: -20px;
+  top: calc(50% + 10px);
+}
+
+.exercise-group-container {
+  margin-top: 10px;
+  margin-bottom: 10px;
+  width: 100%;
+  height: 100px;
+  overflow: hidden;
+  // border:1px solid black;
+  padding-top: 10px;
+}
+
+.exercise-group {
+  height: 128px;
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  overflow-x: scroll;
+}

@@ -46,9 +46,13 @@ export const syncMedicationReminderStatus = async (
   }
 };
 
-export const syncVitalsResponseData = async (event_data, createdTime, res) => {
+export const syncVitalsResponseData = async (
+  event_data,
+  createdTime,
+  res,
+  userRoleId
+) => {
   try {
-    console.log("Going to sync vitals response data: ", event_data);
     const eventService = new EventService();
     const { vital_id = null, data = {} } = event_data;
 
@@ -68,24 +72,26 @@ export const syncVitalsResponseData = async (event_data, createdTime, res) => {
 
     console.log(`event.getStatus() ${event.getStatus()}`);
 
+    let { response: prevResponse = [] } = event.getDetails() || {};
+
+    prevResponse.unshift({
+      value: rest,
+      createdTime
+    });
+
     const updateEvent = await eventService.update(
       {
         details: {
           ...event.getDetails(),
-          response: {
-            value: rest,
-            createdTime
-          }
+          response: prevResponse
         },
         status: EVENT_STATUS.COMPLETED
       },
       event_id
     );
 
-    console.log("above the careplan extraction part:;:");
-
     const carePlan = await CarePlanWrapper(null, vital.getCarePlanId());
-
+    const doctorRoleId = carePlan.getUserRoleId();
     const doctorData = await DoctorWrapper(null, carePlan.getDoctorId());
     const patientData = await PatientWrapper(null, carePlan.getPatientId());
 
@@ -97,11 +103,9 @@ export const syncVitalsResponseData = async (event_data, createdTime, res) => {
       }${vitalTemplate.getUnit()}   `;
     }
 
-    console.log("Above the twilio msg part: ");
-
     const twilioMsg = await twilioService.addSymptomMessage(
-      doctorData.getUserId(),
-      patientData.getUserId(),
+      doctorRoleId,
+      userRoleId,
       customMessage
     );
 
@@ -110,7 +114,6 @@ export const syncVitalsResponseData = async (event_data, createdTime, res) => {
     });
 
     const eventApiDetails = await EventWrapper(updatedEventDetails);
-    console.log("Will return data");
 
     return {
       syncEventApiDetails: eventApiDetails,

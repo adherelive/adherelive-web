@@ -1,10 +1,11 @@
 import { Op } from "sequelize";
 import Database from "../../../libs/mysql";
+import moment from "moment";
 
-import {TABLE_NAME} from "../../models/symptoms";
-import {TABLE_NAME as doctorTableName} from "../../models/doctors";
-import {TABLE_NAME as patientTableName} from "../../models/patients";
-import {TABLE_NAME as carePlanTableName} from "../../models/carePlan";
+import { TABLE_NAME } from "../../models/symptoms";
+import { TABLE_NAME as doctorTableName } from "../../models/doctors";
+import { TABLE_NAME as patientTableName } from "../../models/patients";
+import { TABLE_NAME as carePlanTableName } from "../../models/carePlan";
 
 class SymptomService {
   create = async data => {
@@ -31,6 +32,29 @@ class SymptomService {
         ]
       });
       return symptom;
+    } catch (error) {
+      throw error;
+    }
+  };
+
+  getCount = async data => {
+    try {
+      return await Database.getModel(TABLE_NAME).count({
+        where: {
+          ...data,
+          created_at: {
+            [Op.between]: [
+              moment()
+                .utc()
+                .subtract(7, "days")
+                .toISOString(),
+              moment()
+                .utc()
+                .toISOString()
+            ]
+          }
+        }
+      });
     } catch (error) {
       throw error;
     }

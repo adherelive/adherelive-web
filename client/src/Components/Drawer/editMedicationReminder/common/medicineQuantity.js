@@ -1,7 +1,11 @@
 import React, { Component, Fragment } from "react";
 import { injectIntl } from "react-intl";
-import { InputNumber, Form, Radio } from "antd";
 import messages from "../message";
+
+// antd models
+import InputNumber from "antd/es/input-number";
+import Form from "antd/es/form";
+import Radio from "antd/es/radio";
 
 const RadioButton = Radio.Button;
 const RadioGroup = Radio.Group;
@@ -9,6 +13,7 @@ const RadioGroup = Radio.Group;
 const { Item: FormItem } = Form;
 
 const FIELD_NAME = "quantity";
+const MAXIMUM_LENGTH = 10000;
 
 class MedicineQuantity extends Component {
   componentDidMount() {
@@ -33,7 +38,9 @@ class MedicineQuantity extends Component {
       enableSubmit
     } = this.props;
     const currentValue = getFieldValue(FIELD_NAME) || 0.0;
-    setFieldsValue({ [FIELD_NAME]: (parseFloat(currentValue) + parseFloat(e.target.value)) });
+    setFieldsValue({
+      [FIELD_NAME]: parseFloat(currentValue) + parseFloat(e.target.value)
+    });
     enableSubmit();
   };
 
@@ -47,7 +54,12 @@ class MedicineQuantity extends Component {
   };
 
   render() {
-    const { form, medications, payload: { id: medication_id } = {}, medicationData = {} } = this.props;
+    const {
+      form,
+      medications,
+      payload: { id: medication_id, canViewDetails = false } = {},
+      medicationData = {}
+    } = this.props;
     const {
       getFieldDecorator,
       getFieldError,
@@ -57,8 +69,9 @@ class MedicineQuantity extends Component {
 
     const { onRadioChange, formatMessage, getInitialValue } = this;
 
-    let { basic_info: { details: { quantity } = {} } = {} } = medications[medication_id] || {};
-    let { schedule_data: { quantity: quant = '' } = {} } = medicationData;
+    let { basic_info: { details: { quantity } = {} } = {} } =
+      medications[medication_id] || {};
+    let { schedule_data: { quantity: quant = "" } = {} } = medicationData;
     if (quant) {
       quantity = parseFloat(quant);
     }
@@ -68,12 +81,8 @@ class MedicineQuantity extends Component {
     return (
       <Fragment>
         <div className="flex align-items-end justify-content-space-between">
-          <div className='flex direction-row flex-grow-1'>
-            <label
-              htmlFor="quantity"
-              className="form-label"
-              title="Quantity"
-            >
+          <div className="flex direction-row flex-grow-1">
+            <label htmlFor="quantity" className="form-label" title="Quantity">
               {formatMessage(messages.quantity)}
             </label>
 
@@ -83,16 +92,21 @@ class MedicineQuantity extends Component {
               
             </div> */}
           <div className="flex-grow-0">
-           
-              <RadioGroup
-                size="small"
-                className="flex justify-content-end"
-              >
-                <RadioButton value={1.0} onClick={onRadioChange}>+1.0</RadioButton>
-                <RadioButton value={0.50} onClick={onRadioChange}>+0.50</RadioButton>
-                <RadioButton value={0.25} onClick={onRadioChange}>+0.25</RadioButton>
-              </RadioGroup>
-           
+            <RadioGroup
+              size="small"
+              className="flex justify-content-end"
+              disabled={canViewDetails}
+            >
+              <RadioButton value={1.0} onClick={onRadioChange}>
+                +1.0
+              </RadioButton>
+              <RadioButton value={0.5} onClick={onRadioChange}>
+                +0.50
+              </RadioButton>
+              <RadioButton value={0.25} onClick={onRadioChange}>
+                +0.25
+              </RadioButton>
+            </RadioGroup>
           </div>
         </div>
         <FormItem
@@ -104,11 +118,18 @@ class MedicineQuantity extends Component {
             rules: [
               {
                 type: "number",
-                message: "Quantity should be a number"
+                max: MAXIMUM_LENGTH,
+                message: "Please enter valid quantity"
               }
             ],
-            initialValue: quantity ? quantity : null
-          })(<InputNumber min={0.01} style={{ width: "100%" }} />)}
+            initialValue: quantity ? quantity : 1
+          })(
+            <InputNumber
+              min={0.01}
+              style={{ width: "100%" }}
+              disabled={canViewDetails}
+            />
+          )}
         </FormItem>
       </Fragment>
     );
@@ -120,5 +141,6 @@ const Field = injectIntl(MedicineQuantity);
 
 export default {
   field_name: FIELD_NAME,
+  maximum_length: MAXIMUM_LENGTH,
   render: props => <Field {...props} />
 };
