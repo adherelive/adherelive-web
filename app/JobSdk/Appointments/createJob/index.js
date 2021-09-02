@@ -92,7 +92,7 @@ class CreateJob extends AppointmentJob {
       app_id: process.config.one_signal.app_id, // TODO: add the same in pushNotification handler in notificationSdk
       headings: { en: `Appointment Created (${providerName})` },
       contents: {
-        en: `${actorCategory === USER_CATEGORY.DOCTOR || actorCategory === USER_CATEGORY.HSP ? "Dr." : ""}${name} created an appointment with you. Tap here to know more!`
+        en: `${actorCategory === USER_CATEGORY.DOCTOR || actorCategory === USER_CATEGORY.HSP ? "Dr. " : ""}${name} created an appointment for you. Tap here to know more!`
       },
       include_player_ids: [...playerIds],
       priority: 10,

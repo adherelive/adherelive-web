@@ -70,7 +70,7 @@ class UpdateJob extends MedicationJob {
       app_id: process.config.one_signal.app_id, // TODO: add the same in pushNotification handler in notificationSdk
       headings: { en: `Medication Update (${providerName})` },
       contents: {
-        en: `${name}(${actorCategory}) has updated a medication. Tap here to know more!`,
+          en: `Your ${actorCategory} ${name} has updated a medication. Tap here to know more!`,
       },
       include_player_ids: [...playerIds],
       priority: 10,

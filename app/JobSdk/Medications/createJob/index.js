@@ -70,7 +70,7 @@ class CreateJob extends MedicationJob {
       app_id: process.config.one_signal.app_id, // TODO: add the same in pushNotification handler in notificationSdk
       headings: { en: `Medication Created (${providerName})` },
       contents: {
-        en: `${name}(${actorCategory}) has created a medication reminder with you. Tap here to know more!`,
+          en: `Your ${actorCategory} ${name} has created a medication reminder. Tap here to know more!`,
       },
       // buttons: [{ id: "yes", text: "Yes" }, { id: "no", text: "No" }],
       include_player_ids: [...playerIds],
