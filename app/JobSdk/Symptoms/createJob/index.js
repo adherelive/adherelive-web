@@ -78,7 +78,7 @@ class CreateJob extends SymptomsJob {
       app_id: process.config.one_signal.app_id,
       headings: { en: `Symptom Added` },
       contents: {
-        en: `${name} added a new symptom.`
+          en: `${name} added a new symptom.`
       },
       include_player_ids: [...playerIds],
       priority: 10,

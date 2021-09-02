@@ -72,9 +72,9 @@ class CreateJob extends CarePlanJob {
     templateData.push({
       small_icon: process.config.app.icon_android,
       app_id: process.config.one_signal.app_id, // TODO: add the same in pushNotification handler in notificationSdk
-      headings: { en: `New careplan created! (${providerName})` },
+      headings: { en: `New CarePlan created! (${providerName})` },
       contents: {
-        en: `Did you buy the required medicines for the new careplan?`
+        en: `Did you buy the required medicines for the new CarePlan?`
       },
       buttons: [
         { id: "yes", text: "Yes" },
