@@ -208,6 +208,7 @@ export default async (pdfData, signatureImage) => {
 
       if (doc.y + 3 * MEDIUM_FONT > PAGE_END_LIMIT) {
         addPageAndNumber(doc);
+        let singleDietDetailYLevel = 0;
         singleDietDetailYLevel = DOC_MARGIN;
       }
 
