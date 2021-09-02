@@ -1,7 +1,7 @@
 swagger: '2.0'
 info:
   version: 0.1.0
-  title: AdhereLive API
+  title: Adherence Live API
   description: |-
     # Description 
      This API offers a collection of operations for the provision of Health related information from the database and is designed to support intelligent workflow solutions.
@@ -22,7 +22,7 @@ info:
      
   termsOfService: 'http://adhere.live/terms/'
   contact:
-    email: info@adhere.live
+    email: development@adhere.live
 host: api.adhere.live
 basePath: /api/v0.1
 tags:
@@ -485,5 +485,5 @@ definitions:
       message:
         type: string
 externalDocs:
-  description: Find out more about AdhereLive
+  description: Find out more about Adhere
   url: 'http://adhere.live'

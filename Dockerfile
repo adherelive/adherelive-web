@@ -5,7 +5,6 @@ COPY package.json /usr/src/app
 COPY package-lock.json /usr/src/app
 COPY client/package.json /usr/src/app/client
 COPY client/package-lock.json /usr/src/app/client
-# COPY .node_env /usr/src/app/.env
 RUN npm run postinstall && npm cache clean --force --loglevel=error
 COPY ./client/. /usr/src/app/client/
 RUN npm run build && rm -rf client
