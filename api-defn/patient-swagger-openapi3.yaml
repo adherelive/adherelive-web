@@ -1,6 +1,6 @@
 openapi: 3.0.1
 info:
-  title: AdhereLive API
+  title: Adherence Live API
   description: "# Description \n This API offers a collection of operations for the\
     \ provision of Health related information from the database and is designed to\
     \ support intelligent workflow solutions.\n ## Common Status Codes \n 
@@ -19,7 +19,7 @@ info:
     \ |**503 Service Unavailable**    | The service is temporarily unavailable.                          | \n "
   termsOfService: http://adhere.live/terms/
   contact:
-    email: info@adhere.live
+    email: development@adhere.live
   version: 0.1.0
 externalDocs:
   description: Find out more about Adhere
@@ -562,7 +562,7 @@ components:
   securitySchemes:
     adhere_auth:
       type: oauth2
-      description: AdhereLive OAuth2 Provider
+      description: Adhere OAuth2 Provider
       flows:
         implicit:
           authorizationUrl: http://adhere.live/oauth/dialog
