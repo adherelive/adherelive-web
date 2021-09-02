@@ -15,7 +15,7 @@ class UserConsent extends Component {
     super(props);
     this.state = {
       value: "",
-      checked: false,
+      checked: false
     };
   }
 
@@ -35,15 +35,15 @@ class UserConsent extends Component {
     }
   }
 
-  formatMessage = (data) => this.props.intl.formatMessage(data);
+  formatMessage = data => this.props.intl.formatMessage(data);
 
-  markChecked = (e) => {
+  markChecked = e => {
     e.preventDefault();
     const { checked } = this.state;
     this.setState({ checked: !checked });
   };
 
-  handleGiveConsent = async (e) => {
+  handleGiveConsent = async e => {
     e.preventDefault();
     try {
       const { giveUserConsent, history, getInitialData } = this.props;
@@ -52,7 +52,7 @@ class UserConsent extends Component {
       const {
         status,
         statusCode,
-        payload: { data = {}, message: resp_msg = "" } = {},
+        payload: { data = {}, message: resp_msg = "" } = {}
       } = response || {};
       // console.log("37825412761907858734 CONSENT RES",{response});
       if (status) {
@@ -76,7 +76,7 @@ class UserConsent extends Component {
           <div className="mt40 wp100 mt24 flex justify-space-between align-center direction-row ">
             <div className="flex direction-row align-center">
               <img
-                alt="adhere-logo"
+                alt="adherelive-logo"
                 src={CompanyIcon}
                 className="company-logo"
               />
@@ -101,7 +101,7 @@ class UserConsent extends Component {
                 <Checkbox
                   checked={checked}
                   onClick={this.markChecked}
-                //   className="mt20"
+                  //   className="mt20"
                 >
                   <span className="fs20 fw600 ml12">
                     {this.formatMessage(messages.giveConsent)}

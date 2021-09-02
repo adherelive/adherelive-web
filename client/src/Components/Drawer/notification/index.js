@@ -50,15 +50,15 @@ const CATEGORY = {
   USER_MESSAGES: "User Messages",
   CALL: "Call",
   VITAL: "Vital",
-  DIET:"Diet",
-  WORKOUT:"Workout"
+  DIET: "Diet",
+  WORKOUT: "Workout"
 };
 
 const DURATION = {
   ALL: "All",
   CURRENT_MONTH: "Current Month",
   PREVIOUS_MONTH: "Previous Month",
-  BEFORE_THREE_MONTHS: "Last Three Months", // excluding current month, past three
+  BEFORE_THREE_MONTHS: "Last Three Months" // excluding current month, past three
 };
 
 const { Item: FormItem } = Form;
@@ -74,7 +74,7 @@ class NotificationDrawer extends Component {
       missedCallNotificationIds: [],
       drawerNode: null,
       page_limit: 0,
-      no_notification_remaining: false,
+      no_notification_remaining: false
     };
     this.client = null;
     this.clientFeed = null;
@@ -82,9 +82,7 @@ class NotificationDrawer extends Component {
     this.handleScroll = throttle(this.handleScroll.bind(this), 1000);
   }
 
-  componentDidMount() {
-    
-  }
+  componentDidMount() {}
 
   componentWillUnmount() {
     const { drawerNode = null } = this.state;
@@ -96,12 +94,12 @@ class NotificationDrawer extends Component {
 
   getNotificationData = async ({
     limit = config.NOTIFICATION_ONE_TIME_LIMIT,
-    loadMore = false,
+    loadMore = false
   }) => {
     const {
       auth: { notificationToken = "", feedId = "" } = {},
       notifications = {},
-      visible = false,
+      visible = false
     } = this.props;
 
     if (notificationToken || feedId) {
@@ -121,16 +119,16 @@ class NotificationDrawer extends Component {
         this.setState({ loading: true });
       }
 
-      await this.clientFeed.get({ limit, offset }).then(async (data) => {
+      await this.clientFeed.get().then(async data => {
         const { results = [] } = data || {};
-        console.log("8687263876128631321",{data,results});
+        console.log("8687263876128631321", { data, results });
         if (results.length) {
           await this.getNotificationFromActivities(data);
           this.setMissedCallNoti();
 
           if (visible) {
-            await this.clientFeed.get({ mark_seen: true }).then((data) => {
-              this.clientFeed.get({ limit }).then((data) => {
+            await this.clientFeed.get({ mark_seen: true }).then(data => {
+              this.clientFeed.get({ limit }).then(data => {
                 // this.getNotificationFromActivities(data);
               });
             });
@@ -141,20 +139,20 @@ class NotificationDrawer extends Component {
           this.setState({
             loading: false,
             loadMore: false,
-            no_notification_remaining: false,
+            no_notification_remaining: false
           });
         } else {
           this.setState({
             loading: false,
             loadMore: false,
-            no_notification_remaining: true,
+            no_notification_remaining: true
           });
         }
       });
     }
   };
 
-  handleScroll = async (event) => {
+  handleScroll = async event => {
     const target = event.target;
     const { no_notification_remaining = false } = this.state;
     const { notifications = {} } = this.props;
@@ -177,8 +175,6 @@ class NotificationDrawer extends Component {
       } catch (error) {
         console.log("handle load more on scroll catch error", error);
       }
-
-     
     }
   };
 
@@ -249,14 +245,18 @@ class NotificationDrawer extends Component {
     for (let each in notifications) {
       const { type = "", notification_id = "", is_read = false } =
         notifications[each] || {};
-      if ((type === AGORA_CALL_NOTIFICATION_TYPES.MISSED_CALL || type === AGORA_CALL_NOTIFICATION_TYPES.START_CALL ) && !is_read) {
+      if (
+        (type === AGORA_CALL_NOTIFICATION_TYPES.MISSED_CALL ||
+          type === AGORA_CALL_NOTIFICATION_TYPES.START_CALL) &&
+        !is_read
+      ) {
         missedCallNotificationIds.push(notification_id);
       }
     }
     this.setState({ missedCallNotificationIds });
   };
 
-  getNotificationFromActivities = async (data) => {
+  getNotificationFromActivities = async data => {
     try {
       const { getNotification, updateUnseenNotification } = this.props;
       let activities = [];
@@ -264,7 +264,7 @@ class NotificationDrawer extends Component {
       let groupId = {};
       const { results = [], unseen } = data;
 
-      results.forEach((result) => {
+      results.forEach(result => {
         const { activities: response = [], is_read, is_seen, id } = result;
         let activityData = {};
         activityData.activity = response;
@@ -285,7 +285,7 @@ class NotificationDrawer extends Component {
       });
       this.setState({
         notifications: activitiesId,
-        activityGroupId: groupId,
+        activityGroupId: groupId
       });
 
       const res = await getNotification({ activities });
@@ -311,7 +311,7 @@ class NotificationDrawer extends Component {
 
     this.clientFeed
       .get({ mark_read: [groupId], limit: page_limit })
-      .then((data) => {
+      .then(data => {
         // this.clientFeed.get({ limit: page_limit }).then((data) => {
         //   // console.log("2934y98237498238423 data-=-=-=-=-=-=-=-=-=-=-==-=-=>", {activity_id,data});
         //   this.getNotificationFromActivities(data);
@@ -320,7 +320,7 @@ class NotificationDrawer extends Component {
     // }
   };
 
-  markAllSeen = (e) => {
+  markAllSeen = e => {
     const { auth: { notificationToken = "", feedId = "" } = {} } = this.props;
     const { page_limit = 0 } = this.state;
     // if (notificationToken || feedId) {
@@ -331,8 +331,8 @@ class NotificationDrawer extends Component {
     //   );
 
     // this.clientFeed = this.client.feed("notification", feedId);
-    this.clientFeed.get({ mark_seen: true }).then((data) => {
-      this.clientFeed.get({ limit: page_limit }).then((data) => {
+    this.clientFeed.get({ mark_seen: true }).then(data => {
+      this.clientFeed.get({ limit: page_limit }).then(data => {
         // this.getNotificationFromActivities(data);
       });
     });
@@ -355,17 +355,16 @@ class NotificationDrawer extends Component {
     const { history, close, doNotificationRedirect } = this.props;
     const resp = await doNotificationRedirect({
       type: TYPE_SYMPTOMS,
-      patient_id:intPatientId,
-      care_plan_id:intCPId,
+      patient_id: intPatientId,
+      care_plan_id: intCPId
     });
     const { activityGroupId = {} } = this.state;
     const groupId = activityGroupId[notification_id] || null;
-    if(patient_id){
+    if (patient_id) {
       this.readNotification(groupId, notification_id);
       history.push(`/patients/${patient_id}`);
       close();
     }
-    
   };
 
   // handleMissedCallClick = async (notification_id) => {
@@ -385,22 +384,20 @@ class NotificationDrawer extends Component {
     const { history, close, doNotificationRedirect } = this.props;
     const resp = await doNotificationRedirect({
       type: TYPE_APPOINTMENTS,
-      patient_id:intPatientId,
-      care_plan_id:intCPId,
+      patient_id: intPatientId,
+      care_plan_id: intCPId
     });
 
     const { activityGroupId = {} } = this.state;
     const groupId = activityGroupId[notification_id] || null;
-    if(patient_id){
+    if (patient_id) {
       this.readNotification(groupId, notification_id);
       history.push(`/patients/${patient_id}`);
       close();
     }
-    
   };
 
-
-   handlePatientDetailsRedirectDiets = (
+  handlePatientDetailsRedirectDiets = (
     patient_id,
     care_plan_id,
     notification_id
@@ -410,18 +407,17 @@ class NotificationDrawer extends Component {
     const { history, close, doNotificationRedirect } = this.props;
     const resp = await doNotificationRedirect({
       type: TYPE_DIETS,
-      patient_id:intPatientId,
-      care_plan_id:intCPId,
+      patient_id: intPatientId,
+      care_plan_id: intCPId
     });
 
     const { activityGroupId = {} } = this.state;
     const groupId = activityGroupId[notification_id] || null;
-    if(patient_id){
+    if (patient_id) {
       this.readNotification(groupId, notification_id);
       history.push(`/patients/${patient_id}`);
       close();
     }
-    
   };
 
   handlePatientDetailsRedirectWorkouts = (
@@ -433,40 +429,37 @@ class NotificationDrawer extends Component {
     const intPatientId = parseInt(patient_id);
     const { history, close, doNotificationRedirect } = this.props;
     const resp = await doNotificationRedirect({
-      type:TYPE_WORKOUTS ,
-      patient_id:intPatientId,
-      care_plan_id:intCPId,
+      type: TYPE_WORKOUTS,
+      patient_id: intPatientId,
+      care_plan_id: intCPId
     });
 
     const { activityGroupId = {} } = this.state;
     const groupId = activityGroupId[notification_id] || null;
-    if(patient_id){
+    if (patient_id) {
       this.readNotification(groupId, notification_id);
       history.push(`/patients/${patient_id}`);
       close();
     }
-    
   };
-
 
   handlePatientChatFullScreen = (patient_id, notification_id) => async () => {
     const { history, close, doNotificationRedirect } = this.props;
     const resp = await doNotificationRedirect({
       type: TYPE_USER_MESSAGE,
       patient_id,
-      care_plan_id: null,
+      care_plan_id: null
     });
     const { activityGroupId = {} } = this.state;
     const groupId = activityGroupId[notification_id] || null;
-    if(patient_id){
+    if (patient_id) {
       this.readNotification(groupId, notification_id);
       history.push(`/patient-consulting/${patient_id}`);
       close();
     }
-    
   };
 
-  getDurationflag = (noti_time) => {
+  getDurationflag = noti_time => {
     const { duration = DURATION.ALL } = this.state;
 
     let flag = false;
@@ -520,7 +513,7 @@ class NotificationDrawer extends Component {
     return flag;
   };
 
-  getNextKey = (currentKey) => {
+  getNextKey = currentKey => {
     const { notifications = {} } = this.props;
     let keys = Object.keys(notifications);
     let idIndex = keys.indexOf(currentKey);
@@ -545,13 +538,13 @@ class NotificationDrawer extends Component {
 
     for (let each in notifications) {
       const notification = notifications[each] || {};
-      console.log("876876238682368762782782",{notification});
+      console.log("876876238682368762782782", { notification });
       const {
         time: date = "",
         is_read = false,
         stage = "",
         type = "",
-        start_time = "",
+        start_time = ""
       } = notification;
       const dataTorender = this.getSingleNotification(notification) || null;
       let eachDate = moment(date).format("Do MMM YYYY");
@@ -568,7 +561,7 @@ class NotificationDrawer extends Component {
       // notificationComponents.push(dataTorender);
 
       const displayDate = (
-        <div className="ml8 mt10 mb10 fw800" key={`${eachDate}`} >
+        <div className="ml8 mt10 mb10 fw800" key={`${eachDate}`}>
           {eachDate === moment().format("Do MMM YYYY")
             ? this.formatMessage(messages.todayText)
             : eachDate}
@@ -611,8 +604,8 @@ class NotificationDrawer extends Component {
     patient_id,
     care_plan_id,
     notification_id,
-    foreign_id,
-  }) => async (e) => {
+    foreign_id
+  }) => async e => {
     e.preventDefault();
     const { history, close, doNotificationRedirect } = this.props;
     const { readNotification } = this;
@@ -620,7 +613,7 @@ class NotificationDrawer extends Component {
       type: type,
       foreign_id,
       patient_id,
-      care_plan_id,
+      care_plan_id
     });
 
     const { activityGroupId = {} } = this.state;
@@ -630,9 +623,11 @@ class NotificationDrawer extends Component {
     close();
   };
 
-  handleVitalRedirect = (patient_id, care_plan_id, notification_id) => async (
-    e
-  ) => {
+  handleVitalRedirect = (
+    patient_id,
+    care_plan_id,
+    notification_id
+  ) => async e => {
     const intCPId = parseInt(care_plan_id);
     const intPatientId = parseInt(patient_id);
     e.preventDefault();
@@ -640,21 +635,20 @@ class NotificationDrawer extends Component {
     const { readNotification } = this;
     const resp = await doNotificationRedirect({
       type: TYPE_VITALS,
-      patient_id:intPatientId,
-      care_plan_id:intCPId,
+      patient_id: intPatientId,
+      care_plan_id: intCPId
     });
 
     const { activityGroupId = {} } = this.state;
     const groupId = activityGroupId[notification_id] || null;
-    if(patient_id){
+    if (patient_id) {
       readNotification(groupId, notification_id);
       history.push(`/patients/${patient_id}`);
       close();
     }
-    
   };
 
-  handleMissedCallRedirect = ({ foreign_id, notification_id }) => async (e) => {
+  handleMissedCallRedirect = ({ foreign_id, notification_id }) => async e => {
     e.preventDefault();
     const { close } = this.props;
     const { activityGroupId = {} } = this.state;
@@ -670,17 +664,17 @@ class NotificationDrawer extends Component {
     );
   };
 
-  getSingleNotification = (notification) => {
+  getSingleNotification = notification => {
     const {
       appointments = {},
       patients = {},
-      schedule_events = {},
+      schedule_events = {}
     } = this.props;
     const { category = CATEGORY.ALL } = this.state;
     const {
       handleVitalRedirect,
       handleMissedCallRedirect,
-      formatMessage,
+      formatMessage
     } = this;
 
     let date = "";
@@ -704,7 +698,7 @@ class NotificationDrawer extends Component {
       foreign_id = "",
       stage = "",
       time: noti_time = "",
-      start_time = "",
+      start_time = ""
     } = notification || {};
     let currentNotiDate = moment(noti_time).format("Do MMM YYYY");
 
@@ -740,12 +734,13 @@ class NotificationDrawer extends Component {
       const {
         details: {
           basic_info: { care_plan_id } = {},
-          vital_templates: { basic_info: { name: vitalName } = {} } = {},
-        } = {},
+          vital_templates: { basic_info: { name: vitalName } = {} } = {}
+        } = {}
       } = schedule_events[foreign_id] || {};
 
-      Object.keys(patients).forEach((id) => {
-        const { basic_info: { user_id } = {} , user_role_id = null  } = patients[id] || {};
+      Object.keys(patients).forEach(id => {
+        const { basic_info: { user_id } = {}, user_role_id = null } =
+          patients[id] || {};
         if (`${user_role_id}` === `${actor_role_id}`) {
           patient_id = id;
         }
@@ -804,10 +799,10 @@ class NotificationDrawer extends Component {
       const {
         basic_info: {
           start_time = "",
-          details: { reason = "", type = "", type_description = "" } = {},
+          details: { reason = "", type = "", type_description = "" } = {}
         } = {},
         participant_two: { id: patId = "" } = {},
-        care_plan_id = null,
+        care_plan_id = null
       } = appointments[foreignId] || {};
 
       const { title: appt_title = "" } =
@@ -892,8 +887,9 @@ class NotificationDrawer extends Component {
       const { actor_role_id = null, message = "" } = notification || {};
       // patient_id = actor_category_id;
 
-      Object.keys(patients).forEach((id) => {
-        const { basic_info: { user_id } = {} , user_role_id = null } = patients[id] || {};
+      Object.keys(patients).forEach(id => {
+        const { basic_info: { user_id } = {}, user_role_id = null } =
+          patients[id] || {};
         if (`${user_role_id}` === `${actor_role_id}`) {
           patient_id = id;
         }
@@ -932,13 +928,15 @@ class NotificationDrawer extends Component {
       type === EVENT_TYPE.SYMPTOMS &&
       (category === CATEGORY.SYMPTOMS || category == CATEGORY.ALL)
     ) {
-      const { actor_role_id = "", stage = "", foreign_id = null } = notification || {};
+      const { actor_role_id = "", stage = "", foreign_id = null } =
+        notification || {};
       const { symptoms = {} } = this.props;
       const { text: symptomText = "", basic_info: { care_plan_id } = {} } =
         symptoms[foreign_id] || {};
 
-      Object.keys(patients).forEach((id) => {
-        const { basic_info: { user_id } = {} , user_role_id = null  } = patients[id] || {};
+      Object.keys(patients).forEach(id => {
+        const { basic_info: { user_id } = {}, user_role_id = null } =
+          patients[id] || {};
         if (`${user_role_id}` === `${actor_role_id}`) {
           patient_id = id;
         }
@@ -1004,15 +1002,19 @@ class NotificationDrawer extends Component {
         </div>
       );
     } else if (
-      (type === AGORA_CALL_NOTIFICATION_TYPES.MISSED_CALL || type === AGORA_CALL_NOTIFICATION_TYPES.START_CALL ) &&
+      (type === AGORA_CALL_NOTIFICATION_TYPES.MISSED_CALL ||
+        type === AGORA_CALL_NOTIFICATION_TYPES.START_CALL) &&
       (category === CATEGORY.CALL || category == CATEGORY.ALL)
     ) {
-      
-      const { actor , actor_role_id = null, foreign_id = null, participantData } =
-        notification || {};
+      const {
+        actor,
+        actor_role_id = null,
+        foreign_id = null,
+        participantData
+      } = notification || {};
       let patientId = null;
 
-      Object.keys(participantData).forEach((participantId) => {
+      Object.keys(participantData).forEach(participantId => {
         if (participantId !== actor_role_id) {
           const { patient_id } = participantData[actor_role_id] || {};
           patientId = patient_id;
@@ -1025,11 +1027,10 @@ class NotificationDrawer extends Component {
 
       const { basic_info: { full_name = "" } = {} } = patients[patientId] || {};
 
-      if(type === AGORA_CALL_NOTIFICATION_TYPES.MISSED_CALL){
+      if (type === AGORA_CALL_NOTIFICATION_TYPES.MISSED_CALL) {
         title = `${this.formatMessage(messages.missedCallHeading)}`;
-      }else{
+      } else {
         title = `${this.formatMessage(messages.startedCallHeading)}`;
-
       }
 
       dataToRender = (
@@ -1039,7 +1040,7 @@ class NotificationDrawer extends Component {
           }`}
           onClick={handleMissedCallRedirect({
             foreign_id,
-            notification_id,
+            notification_id
           })}
         >
           <div className=" flex align-center justify-space-between">
@@ -1049,39 +1050,54 @@ class NotificationDrawer extends Component {
             <div className="wp75">
               <div className="fs16 medium">{title}</div>
               <div className="fs14">
-                {
-                type === AGORA_CALL_NOTIFICATION_TYPES.MISSED_CALL
-                ?
-                this.formatMessage({...messages.missedCallMessage},{full_name})
-                :
-                this.formatMessage({...messages.callStartedMessage},{full_name}) 
-                }
+                {type === AGORA_CALL_NOTIFICATION_TYPES.MISSED_CALL
+                  ? this.formatMessage(
+                      { ...messages.missedCallMessage },
+                      { full_name }
+                    )
+                  : this.formatMessage(
+                      { ...messages.callStartedMessage },
+                      { full_name }
+                    )}
               </div>
               <div className="fs14">{time}</div>
             </div>
           </div>
         </div>
       );
-    }else if (
+    } else if (
       type === EVENT_TYPE.DIET &&
       (category === CATEGORY.DIET || category == CATEGORY.ALL)
-    ){
-      const { diets = {} ,schedule_events={}, diet_responses = {} } = this.props;
+    ) {
+      const {
+        diets = {},
+        schedule_events = {},
+        diet_responses = {}
+      } = this.props;
       let patient_id = null;
-      const { actor_role_id = "", stage = "", foreign_id = null , diet_id = null  } = notification || {};
-      const { basic_info:{schedule_event_id = null} = {}  } = diet_responses[foreign_id] || {} ;
-      const {details : { time_text = [] } = {} } = schedule_events[schedule_event_id] || {};
-      const {  basic_info: { name : diet_name = '',  care_plan_id = null } = {}  } =
-      diets[diet_id] || {};
+      const {
+        actor_role_id = "",
+        stage = "",
+        foreign_id = null,
+        diet_id = null
+      } = notification || {};
+      const { basic_info: { schedule_event_id = null } = {} } =
+        diet_responses[foreign_id] || {};
+      const { details: { time_text = [] } = {} } =
+        schedule_events[schedule_event_id] || {};
+      const { basic_info: { name: diet_name = "", care_plan_id = null } = {} } =
+        diets[diet_id] || {};
 
-      Object.keys(patients).forEach((id) => {
-        const { basic_info: { user_id } = {} , user_role_id = null } = patients[id] || {};
+      Object.keys(patients).forEach(id => {
+        const { basic_info: { user_id } = {}, user_role_id = null } =
+          patients[id] || {};
         if (`${user_role_id}` === `${actor_role_id}`) {
           patient_id = id;
         }
       });
 
-      const { basic_info: { full_name = "" } = {} } = patients[patient_id] || {};
+      const { basic_info: { full_name = "" } = {} } =
+        patients[patient_id] || {};
       title = `${this.formatMessage(messages.dietHeading)}`;
 
       dataToRender = (
@@ -1101,9 +1117,10 @@ class NotificationDrawer extends Component {
             </div>
             <div className="wp75">
               <div className="fs16 medium">{title}</div>
-              <div className="fs14">{formatMessage(
+              <div className="fs14">
+                {formatMessage(
                   { ...messages.dietResponseAdded },
-                  { full_name,diet_name,time_text }
+                  { full_name, diet_name, time_text }
                 )}
               </div>
               <div className="fs14">{time}</div>
@@ -1111,25 +1128,32 @@ class NotificationDrawer extends Component {
           </div>
         </div>
       );
-
-    }else if (
+    } else if (
       type === EVENT_TYPE.WORKOUT &&
       (category === CATEGORY.WORKOUT || category == CATEGORY.ALL)
-    ){
+    ) {
       const { workouts = {} } = this.props;
       let patient_id = null;
-      const { actor_role_id = "", stage = "", foreign_id = null ,workout_id = null } = notification || {};
-      const {  basic_info: { name : workout_name = '',  care_plan_id = null } = {}  } =
-      workouts[workout_id] || {};
-      
-      Object.keys(patients).forEach((id) => {
-        const { basic_info: { user_id } = {} , user_role_id = null } = patients[id] || {};
+      const {
+        actor_role_id = "",
+        stage = "",
+        foreign_id = null,
+        workout_id = null
+      } = notification || {};
+      const {
+        basic_info: { name: workout_name = "", care_plan_id = null } = {}
+      } = workouts[workout_id] || {};
+
+      Object.keys(patients).forEach(id => {
+        const { basic_info: { user_id } = {}, user_role_id = null } =
+          patients[id] || {};
         if (`${user_role_id}` === `${actor_role_id}`) {
           patient_id = id;
         }
       });
 
-      const { basic_info: { full_name = "" } = {} } = patients[patient_id] || {};
+      const { basic_info: { full_name = "" } = {} } =
+        patients[patient_id] || {};
       title = `${this.formatMessage(messages.workoutHeading)}`;
 
       dataToRender = (
@@ -1145,15 +1169,14 @@ class NotificationDrawer extends Component {
         >
           <div className=" flex align-center justify-space-between">
             <div className="wp20 flex align-center justify-center">
-              <img src={workout_icon} 
-              className="pointer h45 w45 " />
-              
+              <img src={workout_icon} className="pointer h45 w45 " />
             </div>
             <div className="wp75">
               <div className="fs16 medium">{title}</div>
-              <div className="fs14">{formatMessage(
+              <div className="fs14">
+                {formatMessage(
                   { ...messages.workoutResponseAdded },
-                  { full_name,workout_name }
+                  { full_name, workout_name }
                 )}
               </div>
               <div className="fs14">{time}</div>
@@ -1163,7 +1186,11 @@ class NotificationDrawer extends Component {
       );
     }
 
-    return dataToRender ? <div id={notification_id} key={`notification-${notification_id}`} >{dataToRender}</div> : null;
+    return dataToRender ? (
+      <div id={notification_id} key={`notification-${notification_id}`}>
+        {dataToRender}
+      </div>
+    ) : null;
   };
 
   getCategoryOptions = () => {
@@ -1199,11 +1226,11 @@ class NotificationDrawer extends Component {
   formatMessage = (data, ...rest) =>
     this.props.intl.formatMessage(data, rest[0]);
 
-  setCategory = (value) => {
+  setCategory = value => {
     this.setState({ category: value });
   };
 
-  setDuration = (value) => {
+  setDuration = value => {
     this.setState({ duration: value });
   };
 
@@ -1211,7 +1238,7 @@ class NotificationDrawer extends Component {
     try {
       const {
         missedCallNotificationIds = [],
-        activityGroupId = {},
+        activityGroupId = {}
       } = this.state;
       const { readNotification } = this;
 
@@ -1235,7 +1262,7 @@ class NotificationDrawer extends Component {
 
     this.setState({
       category: CATEGORY.ALL,
-      duration: DURATION.ALL,
+      duration: DURATION.ALL
     });
 
     setUnseenNotificationCount(0);
@@ -1256,7 +1283,7 @@ class NotificationDrawer extends Component {
       getCategoryOptions,
       setDuration,
       getDurationOptions,
-      formatMessage,
+      formatMessage
     } = this;
 
     return (
@@ -1325,7 +1352,7 @@ class NotificationDrawer extends Component {
         headerStyle={{
           position: "sticky",
           zIndex: "9999",
-          top: "0px",
+          top: "0px"
         }}
         onClose={this.onClose}
         visible={visible}
