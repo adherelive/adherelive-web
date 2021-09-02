@@ -6,7 +6,7 @@
     "description": "# Description \n This API offers a collection of operations for the provision of Health related information from the database and is designed to support intelligent workflow solutions.\n ## Common Status Codes \n |**Response Status Code**       | **Description**                                                  | \n |------------------------       | ---------------                                                  | \n |**200 OK**                     | Standard status code for successful HTTP requests.               | \n |**201 Created**                | A new resource has been created successfully.                    | \n |**400 Bad Request**            | Request is invalid due to syntax, validation errors, etc.        | \n |**401 Unauthorized**           | An authentication error occurred.                                | \n |**403 Forbidden**              | Access to resource is forbidden.                                 | \n |**404 Not Found**              | The requested resource could not be found.                       | \n |**405 Method Not Allowed**     | The method used is not supported for the requested resource.     | \n |**415 Unsupported Media Type** | Content-Type header with an unsupported media type was provided. | \n |**429 Too Many Requests**      | The user has sent too many requests beyond the throttling limit. | \n |**500 Internal Server Error**  | An unexpected internal error occurred.                           | \n |**503 Service Unavailable**    | The service is temporarily unavailable.                          | \n ",
     "termsOfService": "http://adhere.live/terms/",
     "contact": {
-      "email": "info@adhere.live"
+      "email": "development@adhere.live"
     }
   },
   "host": "api.adhere.live",
@@ -16,7 +16,7 @@
       "name": "adherence",
       "description": "Hospital Patient Adherence System",
       "externalDocs": {
-        "description": "Contact us for more information",
+        "description": "Contact Us for more information",
         "url": "http://adhere.live/contactus"
       }
     },
@@ -26,18 +26,21 @@
     },
     {
       "name": "patient",
-      "description": "Information about the Patient and his medication",
+      "description": "INformation about the Patient and his Medication",
       "externalDocs": {
         "description": "Mobile application, which informs the patient about his medication careplan",
         "url": "http://adhere.live/patient"
       }
     }
   ],
-  "schemes": ["https", "http"],
+  "schemes": [
+    "https",
+    "http"
+  ],
   "securityDefinitions": {
     "adhere_auth": {
       "type": "oauth2",
-      "description": "AdhereLive OAuth2 Provider",
+      "description": "Adhere OAuth2 Provider",
       "authorizationUrl": "http://adhere.live/oauth/dialog",
       "flow": "implicit",
       "scopes": {
@@ -54,12 +57,20 @@
   "paths": {
     "/dashboards/graphs/{number}/{ClinicianID}/{ProviderID}": {
       "get": {
-        "tags": ["Adhere Live, Dashboard"],
+        "tags": [
+          "Adhere Live, Dashboard"
+        ],
         "summary": "Fetch all the values for the graphs/analytics to be displayed on the main page",
         "description": "The top graphs to be shown on the dashboard page. The number is the total graphs that will be fetched and displayed on the dashboard page.",
         "operationId": "getAllGraphs",
-        "consumes": ["application/json", "application/xml"],
-        "produces": ["application/json", "application/xml"],
+        "consumes": [
+          "application/json",
+          "application/xml"
+        ],
+        "produces": [
+          "application/json",
+          "application/xml"
+        ],
         "parameters": [
           {
             "$ref": "#/parameters/HDR-Client-Id"
@@ -88,7 +99,7 @@
             "in": "path",
             "name": "ProviderID",
             "type": "string",
-            "description": "The logged in ID of the Provider for which the Clinician belongs to",
+            "description": "THe logged in ID of the Provider for which the Clinician belongs to",
             "required": true
           }
         ],
@@ -126,19 +137,30 @@
         },
         "security": [
           {
-            "adhere_auth": ["write:patients", "read:patients"]
+            "adhere_auth": [
+              "write:patients",
+              "read:patients"
+            ]
           }
         ]
       }
     },
     "/dashboards/patients/{number}/{ClinicianID}/{ProviderID}": {
       "get": {
-        "tags": ["Adhere Live, Dashboard"],
+        "tags": [
+          "Adhere Live, Dashboard"
+        ],
         "summary": "Fetch all the patients for a particular Clinician and Provider",
         "description": "We shall be displaying only a set of 5 patients at one time. The additional patients shall be fetched when the user clicks on the NEXT button in pagination.",
         "operationId": "getAllPatients",
-        "consumes": ["application/json", "application/xml"],
-        "produces": ["application/json", "application/xml"],
+        "consumes": [
+          "application/json",
+          "application/xml"
+        ],
+        "produces": [
+          "application/json",
+          "application/xml"
+        ],
         "parameters": [
           {
             "$ref": "#/parameters/HDR-Client-Id"
@@ -205,19 +227,30 @@
         },
         "security": [
           {
-            "adhere_auth": ["write:patients", "read:patients"]
+            "adhere_auth": [
+              "write:patients",
+              "read:patients"
+            ]
           }
         ]
       }
     },
     "/patient": {
       "post": {
-        "tags": ["Adhere Live, Patient"],
+        "tags": [
+          "Adhere Live, Patient"
+        ],
         "summary": "Add a new patient",
         "description": "Create a New Patient in the Database",
         "operationId": "addPatient",
-        "consumes": ["application/json", "application/xml"],
-        "produces": ["application/json", "application/xml"],
+        "consumes": [
+          "application/json",
+          "application/xml"
+        ],
+        "produces": [
+          "application/json",
+          "application/xml"
+        ],
         "parameters": [
           {
             "$ref": "#/parameters/HDR-Client-Id"
@@ -248,17 +281,28 @@
         },
         "security": [
           {
-            "adhere_auth": ["write:patients", "read:patients"]
+            "adhere_auth": [
+              "write:patients",
+              "read:patients"
+            ]
           }
         ]
       },
       "put": {
-        "tags": ["Adhere Live, Patient"],
+        "tags": [
+          "Adhere Live, Patient"
+        ],
         "summary": "Update an existing patient",
         "description": "Update the existing Patient record in Database for a Clinician",
         "operationId": "updatePatient",
-        "consumes": ["application/json", "application/xml"],
-        "produces": ["application/json", "application/xml"],
+        "consumes": [
+          "application/json",
+          "application/xml"
+        ],
+        "produces": [
+          "application/json",
+          "application/xml"
+        ],
         "parameters": [
           {
             "$ref": "#/parameters/HDR-Client-Id"
@@ -295,19 +339,30 @@
         },
         "security": [
           {
-            "adhere_auth": ["write:patients", "read:patients"]
+            "adhere_auth": [
+              "write:patients",
+              "read:patients"
+            ]
           }
         ]
       }
     },
     "/patient/{patientId}": {
       "get": {
-        "tags": ["Adhere Live, Patient"],
+        "tags": [
+          "Adhere Live, Patient"
+        ],
         "summary": "Retrive information about an existing patient",
         "description": "Get the information for a Patient from the Database, this will be a multiple patient ID record?",
         "operationId": "getPatient",
-        "consumes": ["application/json", "application/xml"],
-        "produces": ["application/json", "application/xml"],
+        "consumes": [
+          "application/json",
+          "application/xml"
+        ],
+        "produces": [
+          "application/json",
+          "application/xml"
+        ],
         "parameters": [
           {
             "$ref": "#/parameters/HDR-Client-Id"
@@ -360,7 +415,10 @@
         },
         "security": [
           {
-            "adhere_auth": ["write:patients", "read:patients"]
+            "adhere_auth": [
+              "write:patients",
+              "read:patients"
+            ]
           }
         ]
       }
@@ -454,7 +512,10 @@
         "status": {
           "type": "string",
           "description": "patient status for a Clinician",
-          "enum": ["individual", "withProvider"]
+          "enum": [
+            "individual",
+            "withProvider"
+          ]
         }
       },
       "xml": {
@@ -463,7 +524,9 @@
     },
     "Graphs": {
       "type": "object",
-      "required": ["totalGraphs"],
+      "required": [
+        "totalGraphs"
+      ],
       "properties": {
         "totalGraphs": {
           "type": "integer",
@@ -560,7 +623,11 @@
         "status": {
           "type": "string",
           "description": "patient status for a Clinician",
-          "enum": ["current", "previous", "notAPatient"]
+          "enum": [
+            "current",
+            "previous",
+            "notAPatient"
+          ]
         }
       },
       "xml": {
@@ -605,7 +672,7 @@
     }
   },
   "externalDocs": {
-    "description": "Find out more about AdhereLive",
+    "description": "Find out more about Adhere",
     "url": "http://adhere.live"
   }
 }
