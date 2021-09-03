@@ -271,14 +271,14 @@ export const createNewUser = async (
     let uId = userInfo.get("id");
 
     const emailPayload = {
-      title: "Verification mail",
+      title: "AdhereLive: Verification Mail",
       toAddress: email,
       templateName: EMAIL_TEMPLATE_NAME.WELCOME,
       templateData: {
         title: "Doctor",
         link: process.config.WEB_URL + process.config.app.invite_link + link,
         inviteCard: "",
-        mainBodyText: "We are really happy that you chose us.",
+        mainBodyText: "We are happy that you chose the AdhereLive platform.",
         subBodyText: "Please verify your account",
         buttonText: "Verify",
         host: process.config.WEB_URL,
