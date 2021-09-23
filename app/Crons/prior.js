@@ -38,7 +38,8 @@ class PriorCron {
         .toDate()
     );
     const scheduleEvents =
-      (await this.scheduleEventService.getPriorEventByData(priorTime, type)) || [];
+      (await this.scheduleEventService.getPriorEventByData(priorTime, type)) ||
+      [];
     Log.debug("scheduleEvents ---> ", scheduleEvents);
     return scheduleEvents || [];
   };
@@ -81,7 +82,6 @@ class PriorCron {
           return this.handleWorkoutPrior(event.getAllInfo());
         }
       }
-      
     } catch (error) {
       Log.debug("prior runObserver catch error", error);
     }

@@ -30,9 +30,7 @@ class DoctorWrapper extends BaseDoctor {
 
     if (speciality) {
       const specialityDetails = await SpecialityWrapper(speciality);
-      specialityData[
-        specialityDetails.getSpecialityId()
-      ] = specialityDetails.getBasicInfo();
+      specialityData[specialityDetails.getSpecialityId()] = specialityDetails.getBasicInfo();
     }
 
     if (user) {
@@ -142,13 +140,12 @@ class DoctorWrapper extends BaseDoctor {
     }
 
     // get all user roles
-    const { rows: userRoles } =
-      (await userRoleService.findAndCountAll({
-        where: {
-          user_identity: this.getUserId()
-        },
-        attributes: ["id"]
-      })) || [];
+    const {rows: userRoles} = await userRoleService.findAndCountAll({
+      where: {
+        user_identity: this.getUserId()
+      },
+      attributes: ["id"]
+    }) || [];
 
     const userRoleIds = userRoles.map(userRole => userRole.id);
 
@@ -169,16 +166,13 @@ class DoctorWrapper extends BaseDoctor {
         }
       }
 
-      const watchlistRecords = await DoctorPatientWatchlistService.getAllByData(
-        { user_role_id: userRoleIds[index] }
-      );
+      const watchlistRecords = await DoctorPatientWatchlistService.getAllByData({user_role_id:userRoleIds[index]});
       const userRoleId = userRoleIds[index];
       let curreRoleIdPatientIds = [];
-      if (watchlistRecords && watchlistRecords.length) {
-        for (let i = 0; i < watchlistRecords.length; i++) {
-          const watchlistWrapper = await DoctorPatientWatchlistWrapper(
-            watchlistRecords[i]
-          );
+      if(watchlistRecords && watchlistRecords.length){
+
+        for(let i = 0; i <watchlistRecords.length ; i++ ){
+          const watchlistWrapper = await DoctorPatientWatchlistWrapper(watchlistRecords[i]);
           const patient_id = await watchlistWrapper.getPatientId();
           curreRoleIdPatientIds.push(patient_id);
         }
@@ -186,21 +180,20 @@ class DoctorWrapper extends BaseDoctor {
         watchlistPatientIds[userRoleId] = [...curreRoleIdPatientIds];
       }
 
-      const { rows: doctorCarePlans } =
-        (await carePlanService.findAndCountAll({
-          where: {
-            [Op.or]: [
-              { user_role_id: userRoleIds[index] },
-              { patient_id: patientIds }
-            ]
-          },
-          order: [["expired_on", "ASC"]],
-          attributes: ["id"]
-        })) || [];
 
-      carePlanIds[userRoleIds[index]] = [
-        ...new Set(doctorCarePlans.map(carePlan => carePlan.id))
-      ];
+      const {rows: doctorCarePlans} = await carePlanService.findAndCountAll({
+        where: {
+          [Op.or]: [
+            {user_role_id: userRoleIds[index]},
+            {patient_id: patientIds}
+          ]
+        },
+        order: [["expired_on","ASC"]],
+        attributes: ["id"],
+        userRoleId:userRoleIds[index]
+      }) || [];
+
+      carePlanIds[userRoleIds[index]] = [...new Set(doctorCarePlans.map(carePlan => carePlan.id))];
     }
 
     // const carePlansDoctor =

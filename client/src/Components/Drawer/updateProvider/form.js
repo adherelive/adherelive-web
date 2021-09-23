@@ -260,38 +260,54 @@ class UpdateProviderForm extends Component {
             initialValue: mobile_number,
           })(
             <Input
-              addonBefore={prefixSelector}
-              minLength={6}
-              maxLength={20}
-              type="number"
-              style={{ borderColor: "red" }}
-            />
-          )}
-        </FormItem>
+            addonBefore={prefixSelector}
+            minLength={6}
+            maxLength={20}
+            type="number"
+            style={{borderColor:"red"}}
 
-        <FormItem
-          validateStatus={fieldsError[ADDRESS] ? "error" : ""}
-          help={fieldsError[ADDRESS] || ""}
-          label={formatMessage(messages.address)}
-          className="mb0I"
-        >
-          {getFieldDecorator(ADDRESS, {
-            initialValue: address,
-          })(<Input type="string" />)}
-        </FormItem>
+          />
+        )}
+      </FormItem>
 
-        <Customization {...this.props} />
 
-        {/* <---------------------------------- ACCOUNT DETAILS ------------------------------------> */}
+      
 
-        <div className="fwbolder fs18 mb20 mt20 flex align-center justify-space-between">
-          <span>{formatMessage(messages.accountDetails)}</span>
-          <Tooltip title={formatMessage(messages.resetAccountFields)}>
-            <Button type="ghost" onClick={this.handleCloseWarning}>
-              {formatMessage(messages.reset)}
-            </Button>
-          </Tooltip>
-        </div>
+    
+      <FormItem
+        validateStatus={fieldsError[ADDRESS] ? "error" : ""}
+        help={fieldsError[ADDRESS] || ""}
+        label={formatMessage(messages.address)}
+        className="mb0I"
+      >
+      {getFieldDecorator(ADDRESS, {
+        initialValue:address
+      })
+      (
+          <Input
+          type="string"
+          />
+      )}
+      </FormItem>
+
+      <Customization {...this.props} />
+
+
+      {/* <---------------------------------- ACCOUNT DETAILS ------------------------------------> */}
+
+
+      <div className="fwbolder fs18 mb20 mt20 flex align-center justify-space-between">
+        <span>{formatMessage(messages.accountDetails)}</span>
+        <Tooltip 
+        title={formatMessage(messages.resetAccountFields)}
+         >
+          <Button
+           type="ghost"
+           onClick={this.handleCloseWarning}
+           >{formatMessage(messages.reset)}</Button>
+        </Tooltip>
+ 
+      </div>
 
         {/* account type */}
         <FormItem
