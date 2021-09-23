@@ -17,7 +17,7 @@ import severityService from "../../services/severity/severity.service";
 import conditionService from "../../services/condition/condition.service";
 import providerService from "../../services/provider/provider.service";
 import doctorProviderMappingService from "../../services/doctorProviderMapping/doctorProviderMapping.service";
-import userRolesService from "../../services/userRoles/userRoles.service";
+import userRolesService from '../../services/userRoles/userRoles.service';
 import doctorPatientWatchlistService from "../../services/doctorPatientWatchlist/doctorPatientWatchlist.service";
 
 import UserWrapper from "../../ApiWrapper/web/user";
@@ -141,7 +141,9 @@ class UserController extends Controller {
 
         const appNotification = new AppNotification();
 
-        const notificationToken = appNotification.getUserToken(`${userId}`);
+        const notificationToken = appNotification.getUserToken(
+          `${userId}`
+        );
         // const feedId = base64.encode(`${userId}`);
 
         const apiUserDetails = await UserWrapper(null, userId);
@@ -266,7 +268,9 @@ class UserController extends Controller {
 
         const appNotification = new AppNotification();
 
-        const notificationToken = appNotification.getUserToken(`${userRoleId}`);
+        const notificationToken = appNotification.getUserToken(
+          `${userRoleId}`
+        );
         const feedId = base64.encode(`${userRoleId}`);
 
         // Logger.debug("notificationToken --> ", notificationToken);
@@ -344,17 +348,10 @@ class UserController extends Controller {
         body: { agreeConsent } = {}
       } = req;
 
-      Logger.info(
-        `1897389172 agreeConsent :: ${agreeConsent} | userId : ${userId}`
-      );
+      Logger.info(`1897389172 agreeConsent :: ${agreeConsent} | userId : ${userId}`);
 
-      if (!agreeConsent) {
-        return raiseClientError(
-          res,
-          422,
-          {},
-          "Cannot proceed without accepting Terms of Service"
-        );
+      if(!agreeConsent) {
+        return raiseClientError(res, 422, {}, "Cannot proceed without accepting Terms of Service");
       }
 
       //update
@@ -380,7 +377,9 @@ class UserController extends Controller {
 
       const appNotification = new AppNotification();
 
-      const notificationToken = appNotification.getUserToken(`${userRoleId}`);
+      const notificationToken = appNotification.getUserToken(
+          `${userRoleId}`
+      );
       const feedId = base64.encode(`${userRoleId}`);
 
       const userRef = await userService.getUserData({ id: userId });
@@ -905,12 +904,10 @@ class UserController extends Controller {
           auth_user: userId,
           auth_category: category,
           auth_role: userRoleId,
-          [category === USER_CATEGORY.DOCTOR || category === USER_CATEGORY.HSP
-            ? "doctor_provider_id"
-            : ""]:
+          [category === USER_CATEGORY.DOCTOR || category === USER_CATEGORY.HSP  ? "doctor_provider_id" : ""]:
             category === USER_CATEGORY.DOCTOR || category === USER_CATEGORY.HSP
               ? doctorProviderId
-              : ""
+              : "",
         };
 
         if (category !== USER_CATEGORY.PROVIDER) {

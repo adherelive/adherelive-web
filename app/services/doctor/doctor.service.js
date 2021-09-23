@@ -4,7 +4,7 @@ import { TABLE_NAME as watchlistTableName } from "../../models/doctor_patient_wa
 import { TABLE_NAME as specialityTableName } from "../../models/specialities";
 import { TABLE_NAME as userTableName } from "../../models/users";
 import { Op } from "sequelize";
-
+import {separateNameForSearch} from "../../helper/common/index";
 const DEFAULT_ORDER = [["created_at","DESC"]];
 
 class DoctorService {
@@ -246,6 +246,51 @@ class DoctorService {
       throw error;
     }
   };
+
+  searchByName  = async ({value,limit}) => {
+    try {
+
+      const {
+         firstName,  middleName, lastName
+      } = separateNameForSearch(value);
+
+
+      const doctor = await Database.getModel(TABLE_NAME).findAll({
+        where: {
+            
+              [Op.or]: [
+                {
+                  first_name: {
+                    [Op.like]: `%${firstName}%`
+                  }
+                },
+                {
+                  middle_name: {
+                    [Op.like]: `%${middleName}%`
+                  }
+                },
+                {
+                  last_name: {
+                    [Op.like]: `%${lastName}%`
+                  }
+                }
+              ]
+            
+        },
+        include: [
+          {
+            model: Database.getModel(userTableName)
+          }
+        ],
+        limit
+      });
+
+      return doctor;
+    } catch (err) {
+      throw err;
+    }
+  };
+
 }
 
 export default new DoctorService();

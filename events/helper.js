@@ -81,7 +81,7 @@ export const handleAppointments = async (appointment) => {
       end_time,
       details,
       critical,
-      participants,
+      // participants,
       actor,
     } = appointment || {};
 
@@ -105,7 +105,7 @@ export const handleAppointments = async (appointment) => {
       event_type: EVENT_TYPE.APPOINTMENT,
       details: {
         ...details,
-        participants,
+        // participants,
         actor,
       },
     };

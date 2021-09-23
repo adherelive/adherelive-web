@@ -104,7 +104,7 @@ class VitalController extends Controller {
           start_date,
           end_date,
           details: vitals.getBasicInfo(),
-          participants: [userRoleId, patientUserRoleId],
+          participants: [userRoleId, patientUserRoleId, ...carePlan.getCareplnSecondaryProfiles()],
           actor: {
             id: userId,
             user_role_id: userRoleId,
@@ -208,7 +208,7 @@ class VitalController extends Controller {
           start_date,
           end_date,
           details: vitals.getBasicInfo(),
-          participants: [userRoleId, patientUserRoleId],
+          participants: [userRoleId, patientUserRoleId, ...carePlan.getCareplnSecondaryProfiles()],
           actor: {
             id: userId,
             user_role_id: userRoleId,
@@ -403,8 +403,7 @@ class VitalController extends Controller {
       });
 
       const twilioMsg = await twilioService.addSymptomMessage(
-        doctorRoleId,
-        userRoleId,
+        carePlan.getChannelId(),
         chatJSON
       );
 
@@ -436,8 +435,8 @@ class VitalController extends Controller {
         event_id: vital.getVitalId(),
         event_type: EVENT_TYPE.VITALS,
         vital: vital.getBasicInfo(),
-        participants: [doctorRoleId, userRoleId],
-        participant_role_ids: [doctorRoleId, userRoleId],
+        participants: [doctorRoleId, userRoleId, ...carePlan.getCareplnSecondaryProfiles()],
+        // participant_role_ids: [doctorRoleId, userRoleId, ...carePlan.getCareplnSecondaryProfiles()],
         actor: {
           id: patientData.getUserId(),
           user_role_id: userRoleId,

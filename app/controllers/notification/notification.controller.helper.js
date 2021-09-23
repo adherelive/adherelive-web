@@ -65,7 +65,7 @@ const { USER_MESSAGE } = MESSAGE_TYPES;
 
 const Log = new Logger("WEB > NOTIFICATION > CONTROLLER > HELPER");
 
-const medicationNotification = async data => {
+const medicationNotification = async (data) => {
   try {
     const scheduleEventService = new ScheduleEventService();
     const {
@@ -519,7 +519,7 @@ const vitalsNotification = async (data, category) => {
   }
 };
 
-const carePlanNotification = async data => {
+const carePlanNotification = async (data) => {
   try {
     Log.debug("carePlanNotification data", data);
     const scheduleEventService = new ScheduleEventService();
@@ -609,7 +609,7 @@ const carePlanNotification = async data => {
   }
 };
 
-const chatMessageNotification = async data => {
+const chatMessageNotification = async (data) => {
   try {
     Log.debug("chatMessageNotification data", data);
     const {
@@ -656,7 +656,7 @@ const chatMessageNotification = async data => {
   }
 };
 
-const callNotification = async data => {
+const callNotification = async (data) => {
   try {
     Log.debug("callNotification data", data);
     const {
@@ -937,7 +937,7 @@ const workoutNotification = async data => {
   }
 };
 
-const symptomsNotification = async data => {
+const symptomsNotification = async (data) => {
   try {
     Log.debug("symptomsNotification data", data);
     const {
@@ -1013,7 +1013,7 @@ const symptomsNotification = async data => {
   }
 };
 
-export const getDataForNotification = async data => {
+export const getDataForNotification = async (data) => {
   try {
     const { category, data: { event } = {} } = data;
 

@@ -33,8 +33,7 @@ class AddPatientJob extends AuthJob {
 
   getSmsTemplate = () => {
     const { getData } = this;
-    const { details: { prefix, phoneNumber, universalLink } = {} } =
-      getData() || {};
+    const {details: {prefix, phoneNumber, universalLink} = {}} = getData() || {};
 
     const templateData = [
       {

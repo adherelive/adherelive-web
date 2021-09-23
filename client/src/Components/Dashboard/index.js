@@ -194,9 +194,9 @@ class Dashboard extends Component {
 
     if (notificationToken || feedId) {
       let clientFeed = connect(
-        GETSTREAM_API_KEY,
+        config.GETSTREAM_API_KEY,
         notificationToken,
-        GETSTREAM_APP_ID
+        config.GETSTREAM_APP_ID
       );
 
       this.client = clientFeed;
@@ -499,16 +499,19 @@ class Dashboard extends Component {
     }
     const {
       patients,
-      twilio: { patientId: chatPatientId = 1 } = {},
-      auth_role: doctorRoleId = null
+      twilio: { care_plan_id: currentCareplanId = 1 } = {},
+      auth_role : doctorRoleId = null,
+      care_plans
     } = this.props;
     const { doctorUserId } = this.state;
-    let {
-      basic_info: { user_id: patientUserId = "" } = {},
-      user_role_id: patientRoleId = null
-    } = patients[chatPatientId];
+    // let { basic_info: { user_id: patientUserId = "" } = {} , user_role_id : patientRoleId = null  } = patients[
+    //   chatPatientId
+    // ];
 
-    const roomId = getRoomId(doctorRoleId, patientRoleId);
+    // const roomId = getRoomId(doctorRoleId, patientRoleId);
+    const {channel_id: roomId} = care_plans[currentCareplanId] || {};
+
+    console.log("123921083 roomId", roomId);
 
     window.open(
       `${config.WEB_URL}/test${getPatientConsultingVideoUrl(roomId)}`,
@@ -596,14 +599,13 @@ class Dashboard extends Component {
     showVerifyModal(false);
   };
 
-  changeTab = tab => {
-    this.setState({ currentTab: tab });
+  changeTab = (tab) => {
+    this.setState({currentTab: tab});
   };
 
   getProviderBanner = () => {
-    const { providers = {}, doctor_provider_id = null } = this.props;
-    const { details: { banner = "" } = {} } =
-      providers[doctor_provider_id] || {};
+    const {providers ={} , doctor_provider_id = null } = this.props;
+    const { details : { banner = '' } = {} } = providers[doctor_provider_id] || {};
 
     if (!doctor_provider_id || !banner) {
       return null;
@@ -611,32 +613,14 @@ class Dashboard extends Component {
 
     return (
       <div>
-        <img
-          src={banner}
-          alt="provider-banner"
-          style={{ height: "80px", width: "auto" }}
-        />
+        <img src={banner} alt="provider-banner" style={{height:"80px",width:"auto"}} />
       </div>
     );
   };
 
   render() {
-    const { doctors = {}, authenticated_user } = this.props;
-    let doctorID = null;
-    let docName = "";
-    Object.keys(doctors).forEach(id => {
-      const { basic_info: { user_id } = {} } = doctors[id] || {};
-
-      if (user_id === authenticated_user) {
-        doctorID = id;
-      }
-    });
-    const { basic_info: { full_name } = {} } = doctors[doctorID] || {};
-    docName = full_name ? `Dr. ${full_name}` : TABLE_DEFAULT_BLANK_FIELD;
-
-    // console.log("198237837128 getCookie", this.getCookie("accessToken"));
-
     const {
+      doctors = {}, authenticated_user,
       graphs,
       treatments,
       conditions,
@@ -646,18 +630,36 @@ class Dashboard extends Component {
       chats: { minimized = false, visible: popUpVisible = false },
       drawer: { visible: drawerVisible = false } = {},
       ui_features: { showVerifyModal = false } = {},
-      twilio: { patientId: chatPatientId = 1 },
-      auth_role: doctorRoleId = null,
-      authenticated_category
+      twilio: { patientId: chatPatientId = 1, care_plan_id },
+      auth_role : doctorRoleId = null,
+      authenticated_category,
+      care_plans,
     } = this.props;
 
+    let doctorID = null;
+    let docName = "";
+    Object.keys(doctors).forEach(id => {
+      const { basic_info: { user_id } = {} } = doctors[id] || {};
+
+      if (user_id === authenticated_user) {
+        doctorID = id;
+      }
+    });
     const {
-      formatMessage,
-      renderChartTabs,
-      getVerifyModal,
-      changeTab,
-      getProviderBanner
-    } = this;
+      basic_info: {
+          full_name
+      } = {}
+    } = doctors[doctorID] || {};
+    docName = full_name
+      ? `Dr. ${full_name}`
+      : TABLE_DEFAULT_BLANK_FIELD;
+
+    // console.log("198237837128 getCookie", this.getCookie("accessToken"));
+
+
+    
+
+    const { formatMessage, renderChartTabs, getVerifyModal , changeTab , getProviderBanner } = this;
 
     let {
       basic_info: {
@@ -682,27 +684,23 @@ class Dashboard extends Component {
       watchlistTab
     } = this.state;
 
-    const roomId = getRoomId(doctorRoleId, patientRoleId);
+// const roomId = getRoomId(doctorRoleId, patientRoleId);
 
-    let bannerFlag = true;
-    const { providers = {}, doctor_provider_id = null } = this.props;
-    const { details: { banner = "" } = {} } =
-      providers[doctor_provider_id] || {};
+    const {channel_id: roomId} = care_plans[care_plan_id] || {};
+
+    let bannerFlag=true;
+    const {providers ={} , doctor_provider_id = null } = this.props;
+    const { details : { banner = '' } = {} } = providers[doctor_provider_id] || {};
 
     if (!doctor_provider_id || !banner) {
       bannerFlag = false;
     }
-
-    if (
-      Object.keys(graphs).length === 0 ||
-      loading ||
-      docName === TABLE_DEFAULT_BLANK_FIELD
-    ) {
+    
+    if (Object.keys(graphs).length === 0 || loading || docName === TABLE_DEFAULT_BLANK_FIELD) {
       return (
-        <div className="hvh100 flex direction-column align-center justify-center">
-          <Loading className={"wp100"} />
-        </div>
-      );
+      <div className="hvh100 flex direction-column align-center justify-center" >
+        <Loading className={"wp100"} />
+      </div>);
     }
 
     return (
@@ -711,21 +709,24 @@ class Dashboard extends Component {
           <div
             className={`flex direction-row justify-space-between align-center`}
           >
-            {bannerFlag ? (
-              getProviderBanner()
-            ) : (
-              <div className={bannerFlag ? "mt14" : ""}>
-                {docName !== "" ? (
-                  <div className="fs28 fw700">
-                    {formatMessage(messages.welcome)}, {docName}
-                  </div>
-                ) : (
-                  <div className="fs28 fw700">
-                    {formatMessage(messages.dashboard)}
-                  </div>
-                )}
-              </div>
-            )}
+            
+            {bannerFlag 
+            ?
+             getProviderBanner() 
+            :
+            (
+              <div className={bannerFlag ? "mt14" : ""}> 
+            {docName !== "" ? (
+                <div className="fs28 fw700">
+                  {formatMessage(messages.welcome)}, {docName}
+                </div>
+              ) : (
+                <div className="fs28 fw700">
+                  {formatMessage(messages.dashboard)}
+                </div>
+              )}
+          </div> 
+            ) }
             {(authPermissions.includes(USER_PERMISSIONS.PATIENTS.ADD) ||
               authPermissions.includes(USER_PERMISSIONS.GRAPHS.UPDATE)) && (
               <div className="flex direction-row justify-space-between align-center w500">
@@ -748,6 +749,8 @@ class Dashboard extends Component {
               </div>
             )}
           </div>
+            
+          {/* }   */}
 
           {/* }   */}
 

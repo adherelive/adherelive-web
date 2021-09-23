@@ -10,6 +10,14 @@ import PERMISSIONS from "../../../config/permissions";
 const router = express.Router();
 
 // router.post('/create-medications-and-appointments/:carePlanId',
+
+router.post(
+    "/profile",
+    Authenticated,
+    isAllowed(PERMISSIONS.CARE_PLAN.ADD_PROFILE),
+    CarePlanController.addProfile
+  );
+
 router.post('/:carePlanId',
     Authenticated,
     // Authorize(USER_CATEGORY.DOCTOR),

@@ -4,6 +4,8 @@ export default class ScheduleEvent {
         this._data = data;
     }
 
+    getData = () => this._data.get();
+
     getEventType = () => {
         return this._data.get("event_type");
     };

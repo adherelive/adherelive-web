@@ -1,5 +1,4 @@
 import Controller from "../../index";
-import appointmentService from "../../../services/appointment/appointment.service";
 import {
   EVENT_STATUS,
   EVENT_TYPE,
@@ -14,20 +13,7 @@ import {
 } from "../../../../constant";
 import moment from "moment";
 
-import MAppointmentWrapper from "../../../ApiWrapper/mobile/appointments";
-import DoctorWrapper from "../../../ApiWrapper/mobile/doctor";
-import PatientWrapper from "../../../ApiWrapper/mobile/patient";
-import CarePlanAppointmentWrapper from "../../../ApiWrapper/mobile/carePlanAppointment";
-import EventWrapper from "../../../ApiWrapper/common/scheduleEvents";
-
-import carePlanAppointmentService from "../../../services/carePlanAppointment/carePlanAppointment.service";
-import doctorService from "../../../services/doctor/doctor.service";
-import patientService from "../../../services/patients/patients.service";
-import ScheduleEventService from "../../../services/scheduleEvents/scheduleEvent.service";
-
 import Log from "../../../../libs/log";
-import featureDetailService from "../../../services/featureDetails/featureDetails.service";
-import FeatureDetailsWrapper from "../../../ApiWrapper/mobile/featureDetails";
 import AppointmentJob from "../../../JobSdk/Appointments/observer";
 import NotificationSdk from "../../../NotificationSdk";
 import { uploadImageS3 } from "../user/userHelper";
@@ -38,13 +24,25 @@ import { checkAndCreateDirectory } from "../../../helper/common";
 const path = require("path");
 
 // SERVICES...
+import appointmentService from "../../../services/appointment/appointment.service";
 import queueService from "../../../services/awsQueue/queue.service";
 import documentService from "../../../services/uploadDocuments/uploadDocuments.service";
+import carePlanAppointmentService from "../../../services/carePlanAppointment/carePlanAppointment.service";
+import doctorService from "../../../services/doctor/doctor.service";
+import patientService from "../../../services/patients/patients.service";
+import ScheduleEventService from "../../../services/scheduleEvents/scheduleEvent.service";
+import featureDetailService from "../../../services/featureDetails/featureDetails.service";
 
 // WRAPPERS...
-import ProviderWrapper from "../../../ApiWrapper/mobile/provider";
+// import ProviderWrapper from "../../../ApiWrapper/mobile/provider";
 import UploadDocumentWrapper from "../../../ApiWrapper/mobile/uploadDocument";
-
+import MAppointmentWrapper from "../../../ApiWrapper/mobile/appointments";
+import DoctorWrapper from "../../../ApiWrapper/mobile/doctor";
+import PatientWrapper from "../../../ApiWrapper/mobile/patient";
+import CarePlanAppointmentWrapper from "../../../ApiWrapper/mobile/carePlanAppointment";
+import CarePlanWrapper from "../../../ApiWrapper/mobile/carePlan";
+// import EventWrapper from "../../../ApiWrapper/common/scheduleEvents";
+import FeatureDetailsWrapper from "../../../ApiWrapper/mobile/featureDetails";
 
 import * as AppointmentHelper from "./helper";
 
@@ -163,6 +161,8 @@ class MobileAppointmentController extends Controller {
           break;
       }
 
+      const carePlan = await CarePlanWrapper(null, care_plan_id);
+
       const eventScheduleData = {
         type: EVENT_TYPE.APPOINTMENT,
         event_id: appointmentData.getAppointmentId(),
@@ -171,7 +171,7 @@ class MobileAppointmentController extends Controller {
         start_time,
         end_time,
         details: appointmentData.getBasicInfo(),
-        participants: [userRoleId, participantTwoId],
+        participants: [userRoleId, participantTwoId, ...carePlan.getCareplnSecondaryProfiles()],
         actor: {
           id: userId,
           user_role_id: userRoleId,
@@ -418,6 +418,8 @@ class MobileAppointmentController extends Controller {
         event_type: EVENT_TYPE.APPOINTMENT
       });
 
+      const carePlan = await CarePlanWrapper(null, care_plan_id);
+
       // 2. new sqs for updated appointment
       const eventScheduleData = {
         type: EVENT_TYPE.APPOINTMENT,
@@ -427,7 +429,7 @@ class MobileAppointmentController extends Controller {
         start_time,
         end_time,
         details: appointmentApiData.getBasicInfo(),
-        participants: [userRoleId, participantTwoId],
+        participants: [userRoleId, participantTwoId, ...carePlan.getCareplnSecondaryProfiles()],
         actor: {
           id: userId,
           user_role_id: userRoleId,

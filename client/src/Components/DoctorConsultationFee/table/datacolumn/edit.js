@@ -23,7 +23,7 @@ export default props => {
     } = {}
   } = props;
 
-  const handleEdit = id => e => {
+  const handleEdit = (id) => (e) =>{
     e.preventDefault();
     const { data = {} } = props;
     const { openConsultationFeeDrawer } = data || {};

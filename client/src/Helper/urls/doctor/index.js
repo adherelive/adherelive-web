@@ -117,3 +117,8 @@ export const getPatientsPaginatedUrl = ({offset,watchlist,sort_by_name,created_a
 export const searchDoctorEmailUrl = email => {
   return `/doctors/search-mail?email=${email}`
 }
+
+
+export const searchDoctorNameUrl = name => {
+  return `/doctors/search-name?name=${name}`
+}

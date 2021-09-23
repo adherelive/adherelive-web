@@ -9,6 +9,9 @@ import carePlanAppointmentService from "../../services/carePlanAppointment/careP
 import templateMedicationService from "../../services/templateMedication/templateMedication.service";
 import templateAppointmentService from "../../services/templateAppointment/templateAppointment.service";
 import medicineService from "../../services/medicine/medicine.service";
+import careplanSecondaryDoctorMappingService from "../../services/careplanSecondaryDoctorMappings/careplanSecondaryDoctorMappings.service";
+import twilioService from "../../services/twilio/twilio.service";
+
 import {
   getCarePlanAppointmentIds,
   getCarePlanMedicationIds,
@@ -20,6 +23,7 @@ import {
   EVENT_TYPE,
   USER_CATEGORY,
 } from "../../../constant";
+import UserRoleWrapper from "../../ApiWrapper/web/userRoles";
 import doctorService from "../../services/doctor/doctor.service";
 import DoctorWrapper from "../../ApiWrapper/web/doctor";
 import PatientWrapper from "../../ApiWrapper/web/patient";
@@ -645,6 +649,73 @@ class CarePlanController extends Controller {
     } catch (error) {
       console.log("GET PATIENT DETAILS ERROR --> ", error);
       return this.raiseServerError(res, 500, error);
+    }
+  };
+
+  addProfile = async (req, res) => {
+    const { raiseSuccess, raiseClientError, raiseServerError } = this;
+    try {
+        const {body: {user_role_id, care_plan_id} = {}} = req;
+
+        const { userDetails } = req;
+        const { userCategoryData : { basic_info: { id :doctorId } ={} } = {} } = userDetails || {};
+       
+        const carePlanId = care_plan_id;
+        const dataToAdd = {
+          care_plan_id, 
+          secondary_doctor_role_id: user_role_id
+        };
+        const existingMapping = await careplanSecondaryDoctorMappingService.getByData(dataToAdd) || null;
+
+        if(!existingMapping) {
+          const createdMapping = await careplanSecondaryDoctorMappingService.create(dataToAdd) || null;
+
+          if(createdMapping) {
+            const carePlan = await CarePlanWrapper(null, care_plan_id);
+            const addUserToChat = await twilioService.addMember(carePlan.getChannelId(), user_role_id);
+
+      
+            let carePlanAppointmentIds = await getCarePlanAppointmentIds(carePlanId);
+            let carePlanMedicationIds = await getCarePlanMedicationIds(carePlanId);
+            let carePlanSeverityDetails = await getCarePlanSeverityDetails(
+              carePlanId
+            );
+            const carePlanApiWrapper = await CarePlanWrapper(null,carePlanId);
+      
+            let carePlanApiData = {};
+      
+            const { vital_ids } = await carePlanApiWrapper.getAllInfo();
+            const { doctors = {} , providers = {} , user_roles = {},secondary_doctor_user_role_ids=[] }=await carePlan.getAllInfo();
+      
+            carePlanApiData[carePlanApiWrapper.getCarePlanId()] = {
+              ...carePlanApiWrapper.getBasicInfo(),
+              ...carePlanSeverityDetails,
+              carePlanMedicationIds,
+              carePlanAppointmentIds,
+              vital_ids,
+              secondary_doctor_user_role_ids
+            };
+
+            // if(addUserToChat) {
+            //   return raiseSuccess(res, 200, {}, "Profile added successfully");
+            // } else {
+            //   await careplanSecondaryDoctorMappingService.delete(dataToAdd) || null;
+            // }
+            return raiseSuccess(res, 200, {
+              care_plans: { ...carePlanApiData },
+              doctors,
+              providers,
+              user_roles
+            }, "Profile added successfully");
+          } else {
+            return raiseClientError(res, 422, {}, "Please check details entered");
+          }
+        } else {
+          return raiseClientError(res, 201, {}, "Profile already added in the treatment");
+        }
+    } catch(error) {
+      Log.debug("addProfile 500 ERROR", error);
+      return raiseServerError(res);
     }
   };
 }
