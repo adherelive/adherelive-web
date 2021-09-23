@@ -28,7 +28,7 @@ import {
   NO_APPOINTMENT,
   NO_ACTION
 } from "../../../constant";
-import { completePath } from "../../helper/filePath";
+import {completePath} from "../../helper/filePath";
 
 export const doctorQualificationData = async userId => {
   try {
@@ -84,7 +84,9 @@ export const doctorQualificationData = async userId => {
         );
 
         for (let document of documents) {
-          photos.push(completePath(document.get("document")));
+          photos.push(
+              completePath(document.get("document"))
+          );
         }
 
         qualificationData.photos = photos;
@@ -131,9 +133,7 @@ export const uploadImageS3 = async (userId, file, folder = "other") => {
     //         "application/	application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
     // };
     const fileUrl = "/" + file_name;
-    (await minioService.saveBufferObject(file.buffer, file_name, {
-      "Content-Type": file.mimetype
-    }));
+    await minioService.saveBufferObject(file.buffer, file_name, {"Content-Type": file.mimetype});
 
     // console.log("file urlll: ", process.config.minio.MINI);
     // const file_link =
@@ -149,34 +149,24 @@ export const uploadImageS3 = async (userId, file, folder = "other") => {
   }
 };
 
-export const checkUserCanRegister = async (email, creatorId = null) => {
+export const checkUserCanRegister = async(email, creatorId = null) => {
   // creator id will come when doctor is being added by provider. In this provider id will come in that case.
-  try {
+  try{
     const userExits = await userService.getUserByEmail({ email });
 
-    if (!userExits) {
+    if(!userExits) {
       return true;
     }
 
     let canRegister = false;
     const existingUserCategory = userExits.get("category");
-    if (
-      existingUserCategory === USER_CATEGORY.DOCTOR ||
-      existingUserCategory === USER_CATEGORY.HSP
-    ) {
-      const existingUserRole = await userRolesService.getAllByData({
-        user_identity: userExits.get("id")
-      });
+    if(existingUserCategory === USER_CATEGORY.DOCTOR || existingUserCategory === USER_CATEGORY.HSP) {
+      const existingUserRole = await userRolesService.getAllByData({user_identity: userExits.get("id")});
 
-      if (existingUserRole && existingUserRole.length) {
-        for (let i = 0; i < existingUserRole.length; i++) {
-          const existingRoleWrapper = await UserRolesWrapper(
-            existingUserRole[i]
-          );
-          if (
-            (creatorId && creatorId === existingRoleWrapper.getLinkedId()) ||
-            (!creatorId && !existingRoleWrapper.getLinkedId())
-          ) {
+      if(existingUserRole && existingUserRole.length) {
+        for(let i=0; i< existingUserRole.length; i++) {
+          const existingRoleWrapper = await UserRolesWrapper(existingUserRole[i]);
+          if((creatorId && creatorId === existingRoleWrapper.getLinkedId())|| (!creatorId && !existingRoleWrapper.getLinkedId())) {
             // If provider is adding then there should not be same email registered with same doctor.
             // else if there is self registration then there should not be another self account with same email.
             canRegister = false;
@@ -188,17 +178,17 @@ export const checkUserCanRegister = async (email, creatorId = null) => {
       }
     }
     return canRegister;
-  } catch (err) {
+  } catch(err) {
     return false;
   }
-};
+}
 
 export const createNewUser = async (email, password = null, creatorId= null,category = USER_CATEGORY.DOCTOR) => {
   try {
     const userExists = await userService.getUserByEmail({ email });
     const canRegister = await checkUserCanRegister(email, creatorId);
 
-    if (!canRegister) {
+    if(!canRegister) {
       const userExistsError = new Error();
       userExistsError.code = 11000;
       throw userExistsError;
@@ -210,46 +200,43 @@ export const createNewUser = async (email, password = null, creatorId= null,cate
       hash = await bcrypt.hash(password, salt);
     }
     const link = uuidv4();
-    if (!userExists) {
+    if(!userExists) {
       const user = await userService.addUser({
         email,
         password: hash,
         sign_in_type: "basic",
-        category: category ? category : USER_CATEGORY.DOCTOR,
+        category:category ? category : USER_CATEGORY.DOCTOR,
         onboarded: false
         // system_generated_password
       });
-    } else if (!userExists.get("password") && password) {
+    } else if(!userExists.get("password") && password){
       /* this check if for doctors(added via providers) logging in for 1st time */
-      const updatedUser = await userService.updateUser(
-        {
-          password: hash
-        },
-        userExits.get("id")
-      );
+      const updatedUser = await userService.updateUser({
+        password: hash
+      }, userExits.get("id"));
     }
 
     const userInfo = await userService.getUserByEmail({ email });
     let userRoleId = null;
 
     const userRole = await userRolesService.create({
-      user_identity: userInfo.get("id"),
-      linked_id: creatorId ? creatorId : null,
-      linked_with: creatorId ? USER_CATEGORY.PROVIDER : null
-    });
+      user_identity:  userInfo.get("id"),
+      linked_id: creatorId? creatorId: null,
+      linked_with: creatorId? USER_CATEGORY.PROVIDER: null
+    })
 
-    if (userRole) {
+    if(userRole) {
       const userRoleWrapper = await UserRolesWrapper(userRole);
       userRoleId = userRoleWrapper.getId();
       await userPreferenceService.addUserPreference({
         user_id: userInfo.get("id"),
         details: {
           charts:
-            // category === USER_CATEGORY.DOCTOR
-            // ?
-            [NO_MEDICATION, NO_APPOINTMENT, NO_ACTION]
+          // category === USER_CATEGORY.DOCTOR
+          // ? 
+          [NO_MEDICATION, NO_APPOINTMENT , NO_ACTION ] 
           // :
-          // [NO_APPOINTMENT , NO_ACTION]
+          // [NO_APPOINTMENT , NO_ACTION] 
         },
         user_role_id: userRoleId
       });
@@ -264,14 +251,14 @@ export const createNewUser = async (email, password = null, creatorId= null,cate
     let uId = userInfo.get("id");
 
     const emailPayload = {
-      title: "AdhereLive: Verification Mail",
+      title: "Verification mail",
       toAddress: email,
       templateName: EMAIL_TEMPLATE_NAME.WELCOME,
       templateData: {
         title: "Doctor",
         link: process.config.WEB_URL + process.config.app.invite_link + link,
         inviteCard: "",
-        mainBodyText: "We are happy that you chose the AdhereLive platform.",
+        mainBodyText: "We are really happy that you chose us.",
         subBodyText: "Please verify your account",
         buttonText: "Verify",
         host: process.config.WEB_URL,
