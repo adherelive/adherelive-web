@@ -4,7 +4,7 @@ import {
   getCarePlanMedicationIds,
   getCarePlanSeverityDetails
 } from "../carePlans/carePlanHelper";
-import { Proxy_Sdk, EVENTS } from "../../proxySdk";
+import { Proxy_Sdk } from "../../proxySdk";
 import {
   EVENT_STATUS,
   EVENT_TYPE,
@@ -15,7 +15,7 @@ import {
   NOTIFICATION_STAGES,
   RADIOLOGY,
   FAVOURITE_TYPE,
-  MEDICAL_TEST,
+  // MEDICAL_TEST,
   APPOINTMENT_TYPE
 } from "../../../constant";
 import moment from "moment";
@@ -46,9 +46,9 @@ import FeatureDetailsWrapper from "../../ApiWrapper/web/featureDetails";
 import DoctorWrapper from "../../ApiWrapper/web/doctor";
 import PatientWrapper from "../../ApiWrapper/web/patient";
 import UploadDocumentWrapper from "../../ApiWrapper/web/uploadDocument";
-
-import eventService from "../../services/scheduleEvents/scheduleEvent.service";
 import EventWrapper from "../../ApiWrapper/common/scheduleEvents";
+
+// import eventService from "../../services/scheduleEvents/scheduleEvent.service";
 
 import { uploadImageS3 } from "../user/userHelper";
 import { getFilePath } from "../../helper/filePath";
@@ -393,7 +393,7 @@ class AppointmentController extends Controller {
         start_time,
         end_time,
         details: appointmentApiData.getBasicInfo(),
-        participants: [userRoleId, participantTwoId],
+        participants: [userRoleId, participantTwoId, ...carePlanApiWrapper.getCareplnSecondaryProfiles()],
         actor: {
           id: userId,
           user_role_id: userRoleId,
@@ -594,6 +594,8 @@ class AppointmentController extends Controller {
         event_type: EVENT_TYPE.APPOINTMENT
       });
 
+      const carePlan = await CarePlanWrapper(null, care_plan_id);
+
       // 2. send sqs for updated
       const eventScheduleData = {
         type: EVENT_TYPE.APPOINTMENT,
@@ -603,7 +605,7 @@ class AppointmentController extends Controller {
         start_time,
         end_time,
         details: appointmentApiData.getBasicInfo(),
-        participants: [userRoleId, participantTwoId],
+        participants: [userRoleId, participantTwoId, ...carePlan.getCareplnSecondaryProfiles()],
         actor: {
           id: userId,
           user_role_id: userRoleId,

@@ -98,10 +98,10 @@ class ProvidersController extends Controller {
       //   { provider_id: providerId }
       // );
 
-      const UserRoles = await UserRoleService.getAllByData({
+      const UserRoles = (await UserRoleService.getAllByData({
         linked_id: providerId,
         linked_with: USER_CATEGORY.PROVIDER
-      });
+      }));
 
       if (UserRoles && UserRoles.length) {
         for (let i = 0; i < UserRoles.length; i++) {
@@ -443,10 +443,10 @@ class ProvidersController extends Controller {
       let patientIds = [];
       let doctorIds = [];
 
-      const UserRoles = await UserRoleService.getAllByData({
+      const UserRoles = (await UserRoleService.getAllByData({
         linked_id: providerId,
         linked_with: USER_CATEGORY.PROVIDER
-      });
+      }));
 
       if (UserRoles && UserRoles.length) {
         for (let i = 0; i < UserRoles.length; i++) {
@@ -575,10 +575,10 @@ class ProvidersController extends Controller {
 
       let doctorIds = [];
 
-      const UserRoles = await UserRoleService.getAllByData({
+      const UserRoles = (await UserRoleService.getAllByData({
         linked_id: providerId,
         linked_with: USER_CATEGORY.PROVIDER
-      });
+      }));
 
       if (UserRoles && UserRoles.length) {
         for (let i = 0; i < UserRoles.length; i++) {
@@ -823,9 +823,7 @@ class ProvidersController extends Controller {
         );
       }
 
-      const activated_on = moment()
-        .utc()
-        .toISOString();
+      const activated_on = moment().utc().toISOString();
 
       // create user
       const salt = await bcrypt.genSalt(Number(process.config.saltRounds));
@@ -846,9 +844,9 @@ class ProvidersController extends Controller {
       const userData = await UserWrapper(user.get());
 
       const providerUserId = await userData.getId();
-      const userRole = await UserRoleService.create({
+      const userRole = (await UserRoleService.create({
         user_identity: providerUserId
-      });
+      }));
       const userRoleWrapper = await UserRoleWrapper(userRole);
       const newUserRoleId = await userRoleWrapper.getId();
 
@@ -911,10 +909,10 @@ class ProvidersController extends Controller {
         });
 
         if (Object.keys(accountData).length > 0) {
-          const accountDetails = await accountDetailsService.addAccountDetails({
+          const accountDetails = (await accountDetailsService.addAccountDetails({
             ...accountData,
             user_id: userData.getId()
-          });
+          }));
 
           const providerAccount = await AccountsWrapper(accountDetails);
           providerAccountData[
@@ -991,14 +989,14 @@ class ProvidersController extends Controller {
       // update user
       const salt = await bcrypt.genSalt(Number(process.config.saltRounds));
 
-      await userService.updateUser(
+      (await userService.updateUser(
         {
           email,
           prefix,
           mobile_number
         },
         previousProvider.getUserId()
-      );
+      ));
 
       // update provider
       await providerService.updateProvider(

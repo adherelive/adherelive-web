@@ -45,10 +45,10 @@ class DoctorWrapper extends BaseDoctor {
         [getDoctorId()]: await getAllInfo()
       },
       specialities: {
-        ...specialityData
+        ...specialityData,
       },
       users: {
-        ...userData
+        ...userData,
       }
     };
   };
@@ -68,7 +68,7 @@ class DoctorWrapper extends BaseDoctor {
       activated_on,
       profile_pic,
       signature_pic,
-      full_name
+      full_name,
     } = _data || {};
     return {
       basic_info: {
@@ -85,7 +85,7 @@ class DoctorWrapper extends BaseDoctor {
         signature_pic: completePath(signature_pic)
       },
       qualifications,
-      activated_on
+      activated_on,
     };
   };
 
@@ -273,7 +273,7 @@ class DoctorWrapper extends BaseDoctor {
       care_plan_ids: carePlanIds,
       watchlist_patient_ids,
       razorpay_account_id,
-      watchlist_ids: watchlistPatientIds
+      watchlist_ids: watchlistPatientIds,
       // provider_id: providerId
     };
   };

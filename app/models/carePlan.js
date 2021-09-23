@@ -6,6 +6,7 @@ import {TABLE_NAME as carePlanTemplateTableName} from "./careplanTemplate";
 import {TABLE_NAME as carePlanAppointmentTableName} from "./carePlanAppointments";
 import {TABLE_NAME as carePlanMedicationTableName} from "./carePlanMedications";
 import {TABLE_NAME as userRolesTableName } from "./userRoles";
+import { TABLE_NAME as careplanSecondaryDoctorMappingsTableName } from "./careplanSecondaryDoctorMappings";
 
 export const TABLE_NAME = "care_plans";
 
@@ -67,6 +68,9 @@ export const db = (database) => {
                     },
                     key: 'id'
                 }
+            },
+            channel_id: {
+                type: DataTypes.STRING,
             },
             expired_on: {
                 type: DataTypes.DATE,
@@ -130,4 +134,11 @@ export const associate = (database) => {
         foreignKey:"care_plan_id",
         sourceKey:"id"
     });
+
+    database.models[TABLE_NAME].hasMany(database.models[careplanSecondaryDoctorMappingsTableName], {
+        foreignKey:"care_plan_id",
+        sourceKey:"id"
+    });
+
+
 };

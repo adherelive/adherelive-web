@@ -29,9 +29,7 @@ class StartJob extends AgoraJob {
       }
     } = getAgoraData() || {};
 
-    const participants = roomId.split(
-      `-${process.config.twilio.CHANNEL_SERVER}-`
-    );
+        const participants = roomId.split(`-${process.config.twilio.CHANNEL_SERVER}-`);
 
     const templateData = [];
     const playerIds = [];
@@ -87,11 +85,7 @@ class StartJob extends AgoraJob {
       include_player_ids: [...playerIds],
       headings: { en: `Call on AdhereLive: (${providerName})` },
       contents: {
-        en: `${
-          category === USER_CATEGORY.DOCTOR || category === USER_CATEGORY.HSP
-            ? "Dr. "
-            : ""
-        }${full_name} is calling you!`
+                en: `${category === USER_CATEGORY.DOCTOR || category === USER_CATEGORY.HSP ? "Dr. " : ""}${full_name} is calling you!`
       },
       priority: 10,
       android_channel_id: process.config.one_signal.urgent_channel_id,
@@ -114,9 +108,8 @@ class StartJob extends AgoraJob {
       roomId
     } = getAgoraData() || {};
 
-    const participants = roomId.split(
-      `-${process.config.twilio.CHANNEL_SERVER}-`
-    );
+
+    const participants = roomId.split(`-${process.config.twilio.CHANNEL_SERVER}-`);
 
     const templateData = [];
 

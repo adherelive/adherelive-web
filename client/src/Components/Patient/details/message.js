@@ -71,6 +71,11 @@ const messages = defineMessages({
         description: "Header in treatment Provider",
         defaultMessage: "Provider"
     },
+    hospital: {
+        id: "app.patient_profile.hospital",
+        description: "Hospital in treatment Provider",
+        defaultMessage: "Hospital"
+    },
     alerts_last_visit: {
         id: "app.patient_profile.alerts_last_visit",
         description: "Header in Alerts from last visit card",
@@ -551,6 +556,11 @@ const messages = defineMessages({
         description: "",
         defaultMessage: "Workout"
     },
+    secondary_doctor:{
+        id: "app.patient_profile.secondary_doctor",
+        description: "",
+        defaultMessage: "Doctor"
+    },
     prescription:{
         id: "app.patient_profile.prescription",
         description: "",
@@ -576,6 +586,11 @@ const messages = defineMessages({
         id: "app.appointment.table.view",
         description: "",
         defaultMessage: "View"
+    },
+    providers: {
+        id: "app.appointment.table.providers",
+        description: "",
+        defaultMessage: "Providers"
     },
 
 });

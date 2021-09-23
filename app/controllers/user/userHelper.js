@@ -124,18 +124,16 @@ export const uploadImageS3 = async (userId, file, folder = "other") => {
     hash = String(hash);
 
     // const file_name = hash.substring(4) + "_Education_"+fileExt;
-    const file_name = `${folder}/${userId}/${hash.substring(
-      4
-    )}/${imageName}/${fileExt}`;
+    const file_name = `${folder}/${userId}/${hash.substring(4)}/${imageName}/${fileExt}`;
 
     //   const metaData = {
     //     "Content-Type":
     //         "application/	application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
     // };
     const fileUrl = "/" + file_name;
-    await minioService.saveBufferObject(file.buffer, file_name, {
+    (await minioService.saveBufferObject(file.buffer, file_name, {
       "Content-Type": file.mimetype
-    });
+    }));
 
     // console.log("file urlll: ", process.config.minio.MINI);
     // const file_link =
@@ -195,12 +193,7 @@ export const checkUserCanRegister = async (email, creatorId = null) => {
   }
 };
 
-export const createNewUser = async (
-  email,
-  password = null,
-  creatorId = null,
-  category = USER_CATEGORY.DOCTOR
-) => {
+export const createNewUser = async (email, password = null, creatorId= null,category = USER_CATEGORY.DOCTOR) => {
   try {
     const userExists = await userService.getUserByEmail({ email });
     const canRegister = await checkUserCanRegister(email, creatorId);

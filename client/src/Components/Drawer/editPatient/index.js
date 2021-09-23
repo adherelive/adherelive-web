@@ -440,7 +440,7 @@ class EditPatientDrawer extends Component {
     }
   }
 
-  setWeight = e => {
+    setWeight = (e) => {
     const { value } = e.target;
     const reg = /^-?\d*(\.\d*)?$/;
     if (value === "") {
@@ -467,7 +467,7 @@ class EditPatientDrawer extends Component {
     }
   };
 
-  setPid = e => {
+    setPid = (e) => {
     const { value } = e.target;
     this.setState({ patient_uid: value.trim() });
   };
@@ -480,7 +480,7 @@ class EditPatientDrawer extends Component {
     this.setState({ date_of_birth: moment(e.target.value) });
   };
 
-  setHeight = e => {
+    setHeight = (e) => {
     const { value } = e.target;
     const reg = /^-?\d*(\.\d*)?$/;
     if (value === "") {
@@ -499,7 +499,7 @@ class EditPatientDrawer extends Component {
     }
   };
 
-  setAddress = e => {
+    setAddress = (e) => {
     e.preventDefault();
     const address = e.target.value;
     if (address.length > 0) {
@@ -508,19 +508,12 @@ class EditPatientDrawer extends Component {
   };
 
   renderEditPatient = () => {
-    const {
-      payload = {},
-      doctors = {},
-      authenticated_user = null
-    } = this.props;
-    const { carePlanData } = payload || {};
-    const { basic_info: { doctor_id = null } = {} } = carePlanData || {};
-    const { basic_info: { user_id: doctor_user_id = null } = {} } =
-      doctors[doctor_id] || {};
-    const isTreatmentDisabled =
-      authenticated_user &&
-      doctor_user_id &&
-      authenticated_user === doctor_user_id;
+
+        const {payload = {},doctors = {},authenticated_user=null}=this.props;
+        const {carePlanData} = payload || {};
+        const {basic_info : {doctor_id= null,} = {} } =  carePlanData || {};
+        const {basic_info : {user_id : doctor_user_id = null} = {}} = doctors[doctor_id] || {};
+        const isTreatmentDisabled = (authenticated_user && doctor_user_id && authenticated_user === doctor_user_id)
 
     let dtToday = new Date();
 
@@ -717,27 +710,9 @@ class EditPatientDrawer extends Component {
             // onChange={this.setGender}
             // disabled={true}
           >
-            <Radio.Button
-              checked={gender === MALE}
-              value={MALE}
-              onClick={this.setGender(MALE)}
-            >
-              M
-            </Radio.Button>
-            <Radio.Button
-              checked={gender === FEMALE}
-              value={FEMALE}
-              onClick={this.setGender(FEMALE)}
-            >
-              F
-            </Radio.Button>
-            <Radio.Button
-              checked={gender === OTHER}
-              value={OTHER}
-              onClick={this.setGender(OTHER)}
-            >
-              O
-            </Radio.Button>
+                        <Radio.Button checked ={gender === MALE} value={MALE} onClick={this.setGender(MALE)}>M</Radio.Button>
+                        <Radio.Button checked ={gender === FEMALE} value={FEMALE} onClick={this.setGender(FEMALE)}>F</Radio.Button>
+                        <Radio.Button checked ={gender === OTHER} value={OTHER} onClick={this.setGender(OTHER)}>O</Radio.Button>
           </Radio.Group>
         </div>
 
@@ -927,8 +902,7 @@ class EditPatientDrawer extends Component {
           autoComplete="off"
           optionFilterProp="children"
           filterOption={(input, option) =>
-            option.props.children.toLowerCase().indexOf(input.toLowerCase()) >=
-            0
+            option.props.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
           }
           disabled={!isTreatmentDisabled}
         >
@@ -945,19 +919,12 @@ class EditPatientDrawer extends Component {
           value={severity}
           onChange={this.setSeverity}
           onSearch={this.handleSeveritySearch}
-          notFoundContent={
-            this.state.fetchingSeverity ? (
-              <Spin size="small" />
-            ) : (
-              "No match found"
-            )
-          }
+                    notFoundContent={this.state.fetchingSeverity ? <Spin size="small" /> : 'No match found'}
           showSearch
           autoComplete="off"
           optionFilterProp="children"
           filterOption={(input, option) =>
-            option.props.children.toLowerCase().indexOf(input.toLowerCase()) >=
-            0
+            option.props.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
           }
           disabled={!isTreatmentDisabled}
         >
@@ -974,13 +941,7 @@ class EditPatientDrawer extends Component {
           placeholder="Select Treatment"
           value={treatment}
           onChange={this.setTreatment}
-          notFoundContent={
-            this.state.fetchingTreatment ? (
-              <Spin size="small" />
-            ) : (
-              "No match found"
-            )
-          }
+          notFoundContent={this.state.fetchingTreatment ? <Spin size="small" /> : 'No match found'}
           showSearch
           // onSearch={this.handleTreatmentSearch}
           autoComplete="off"
@@ -1015,11 +976,7 @@ class EditPatientDrawer extends Component {
     if (!prefix) {
       message.error(this.formatMessage(messages.prefixError));
       return false;
-    } else if (
-      mobile_number.length < 6 ||
-      mobile_number.length > 20 ||
-      !mobile_number
-    ) {
+        } else if (mobile_number.length < 6 || mobile_number.length > 20 || !mobile_number) {
       message.error(this.formatMessage(messages.mobNoError));
       return false;
     } else if (!date_of_birth) {
@@ -1027,9 +984,7 @@ class EditPatientDrawer extends Component {
       return false;
     } else if (
       date_of_birth &&
-      (age < 0 || age > 140 || moment(date_of_birth).isAfter(moment()))
-    ) {
-      //handle case of newBorn
+        else if (date_of_birth && (age < 0 || age > 140 || moment(date_of_birth).isAfter(moment()))) {  //handle case of newBorn
 
       message.error(this.formatMessage(messages.validdobError));
       return false;

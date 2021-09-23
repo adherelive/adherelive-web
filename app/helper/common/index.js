@@ -53,7 +53,31 @@ export const fileExists = filePath => fs.existsSync(filePath);
 
 export const getRoomId = (doctor, patient) => {
   // console.log("21380138012 config", config, process.env);
-  return`${doctor}-${process.config.twilio.CHANNEL_SERVER}-${patient}`;
+  // return`${doctor}-${process.config.twilio.CHANNEL_SERVER}-${patient}`;
+  return `careplan-${doctor}-${patient}-${process.config.twilio.CHANNEL_SERVER}`;
 };
 
 export const getRoomUsers = (room = "") => room.split(`-${process.config.twilio.CHANNEL_SERVER}-`);
+
+export const separateNameForSearch = (value) => {
+  let firstName = value;
+  let middleName = value;
+  let lastName = value;
+  const name = value.split(" ");
+
+  if (name.length > 1) {
+    if (name.length === 2) {
+      firstName = name[0];
+      middleName = name[1];
+    } else {
+      const [first = null, middle = null, ...rest] = name || [];
+      firstName = name[0];
+      middleName = name[1];
+      // lastName = name[2];
+      lastName = rest.length > 1 ? rest.join(" ") : null;
+
+    }
+  }
+
+  return { firstName,middleName,lastName };
+}

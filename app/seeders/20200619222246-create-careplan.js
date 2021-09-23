@@ -14,6 +14,7 @@ module.exports = {
           severity_id: 1,
           condition_id: 1
         }),
+        user_role_id: 1,
         activated_on: new Date(),
         renew_on: new Date(),
         created_at: new Date(),
@@ -26,6 +27,7 @@ module.exports = {
         details: JSON.stringify({
           treatment_id: 2,
         }),
+        user_role_id: 1,
         activated_on: new Date(),
         renew_on: new Date(),
         created_at: new Date(),
@@ -40,6 +42,7 @@ module.exports = {
           severity_id: 2,
           condition_id: 5
         }),
+        user_role_id: 2,
         activated_on: new Date(),
         renew_on: new Date(),
         created_at: new Date(),
@@ -52,6 +55,7 @@ module.exports = {
         details: JSON.stringify({
           treatment_id: 3,
         }),
+        user_role_id: 2,
         activated_on: new Date(),
         renew_on: new Date(),
         created_at: new Date(),
@@ -65,6 +69,7 @@ module.exports = {
           treatment_id: 1,
           condition_id: 7
         }),
+        user_role_id: 1,
         activated_on: new Date(),
         renew_on: new Date(),
         created_at: new Date(),

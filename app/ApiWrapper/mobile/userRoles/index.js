@@ -48,42 +48,41 @@ class MUserRoleWrapper extends BaseUserRole {
     getAllInfo = async () => {
         const { _data: {id, linked_id, linked_with} = {}, getBasicInfo, getUser } = this;
     
-        // const { doctor } = getUser() || {};
+        const { doctor } = getUser() || {};
 
         let doctors = {};
         let admins = {};
         let providers = {};
         let patients = {};
     
-        // if (doctor.id) {
-        //   const doctorWrapper = await DoctorWrapper(doctor);
-        //   doctors = { ...doctors, [doctor.id]: await doctorWrapper.getAllInfo() };
+        if (doctor && doctor.id) {
+          const doctorWrapper = await DoctorWrapper(doctor);
+          doctors = { ...doctors, [doctor.id]: await doctorWrapper.getAllInfo() };
     
-        //   let provider_id = null;
-        //   if (linked_with === USER_CATEGORY.PROVIDER && linked_id) {
+          if (linked_with === USER_CATEGORY.PROVIDER && linked_id) {
     
-        //     const providerData = await ProviderWrapper(null, linked_id);
+            const providerData = await ProviderWrapper(null, linked_id);
     
-        //     // user_category_data = {
-        //     //     ...user_category_data ,
-        //     //     linked_provider_id:provider_id,
-        //     //     provider : { [provider_id] : { ...providerAllInfo} }
-        //     //  };
-        //     providers = { [linked_id]: await providerData.getAllInfo() };
-        //   }
-        // }
+            // user_category_data = {
+            //     ...user_category_data ,
+            //     linked_provider_id:provider_id,
+            //     provider : { [provider_id] : { ...providerAllInfo} }
+            //  };
+            providers = { [linked_id]: await providerData.getAllInfo() };
+          }
+        }
 
-        if (linked_with === USER_CATEGORY.PROVIDER && linked_id) {
+        // if (linked_with === USER_CATEGORY.PROVIDER && linked_id) {
     
-          const providerData = await ProviderWrapper(null, linked_id);
+          // const providerData = await ProviderWrapper(null, linked_id);
   
           // user_category_data = {
           //     ...user_category_data ,
           //     linked_provider_id:provider_id,
           //     provider : { [provider_id] : { ...providerAllInfo} }
           //  };
-          providers = { [linked_id]: providerData.getBasicInfo() };
-        }
+          // providers = { [linked_id]: providerData.getBasicInfo() };
+        // }
     
         // switch (getUserRoleUserCategoryType) {
         //     case USER_CATEGORY.PROVIDER:

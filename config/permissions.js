@@ -18,7 +18,8 @@ export default {
   CARE_PLAN: {
     ADD: "ADD_CARE_PLAN",
     UPDATE: "UPDATE_CARE_PLAN",
-    VIEW: "VIEW_CARE_PLAN"
+    VIEW: "VIEW_CARE_PLAN",
+    ADD_PROFILE: "ADD_PROFILE"
   },
 
   CARE_PLAN_TEMPLATE: {

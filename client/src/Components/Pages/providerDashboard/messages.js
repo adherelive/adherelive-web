@@ -11,6 +11,11 @@ const messages = defineMessages({
     description: "",
     defaultMessage: "Doctor/HSP"
   },
+  addProviderOrHSP: {
+    id: "app.provider.dashboard.addProviderOrHSP",
+    description: "",
+    defaultMessage: "Provider"
+  },
   welcome: {
     id: "app.provider.dashboard.provider",
     description: "",

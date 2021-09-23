@@ -38,7 +38,8 @@ const mapStateToProps = state => {
     doctors = {},
     features = {},
     features_mappings = {},
-    providers = {}
+    providers = {},
+    care_plans = {},
   } = state;
   return {
     notificationToken,
@@ -61,7 +62,8 @@ const mapStateToProps = state => {
     dashboard,
     doctor_provider_id,
     providers,
-    auth_role
+    auth_role,
+    care_plans
   };
 };
 
