@@ -134,7 +134,7 @@ class WorkoutResponseController extends Controller {
         const workoutResponseId =
           allWorkoutResponseExerciseGroups[exercise_group_id] || null;
 
-        let isContentAuthCreated = false;
+        const isContentAuthCreated = false;
 
         if (exerciseContentId) {
           const exerciseContentWrapper = await ExerciseContentWrapper({

@@ -1195,6 +1195,9 @@ class EditPatientDrawer extends Component {
     if (visible !== true) {
       return null;
     }
+
+    console.log("821387612873618276387126387", { state: this.state });
+
     return (
       <Fragment>
         <Drawer

@@ -195,7 +195,21 @@ class DoctorWrapper extends BaseDoctor {
             ]
           },
           order: [["expired_on", "ASC"]],
-          attributes: ["id"]
+          attributes: ["id"],
+          userRoleId: userRoleIds[index]
+        })) || [];
+
+      const { rows: doctorCarePlans } =
+        (await carePlanService.findAndCountAll({
+          where: {
+            [Op.or]: [
+              { user_role_id: userRoleIds[index] },
+              { patient_id: patientIds }
+            ]
+          },
+          order: [["expired_on", "ASC"]],
+          attributes: ["id"],
+          userRoleId: userRoleIds[index]
         })) || [];
 
       carePlanIds[userRoleIds[index]] = [

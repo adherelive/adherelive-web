@@ -4,48 +4,55 @@ import ConditionWrapper from "../../ApiWrapper/web/conditions";
 
 import Log from "../../../libs/log";
 
-const Logger  = new Log("WEB DEGREE CONTROLLER");
+const Logger = new Log("WEB DEGREE CONTROLLER");
 
 class ConditionController extends Controller {
-    constructor() {
-        super();
-    }
+  constructor() {
+    super();
+  }
 
-    search = async (req, res) => {
-        const {raiseSuccess, raiseClientError, raiseServerError} = this;
-        try {
-            const {query} = req;
-            const {value} = query || {};
+  search = async (req, res) => {
+    const { raiseSuccess, raiseClientError, raiseServerError } = this;
+    try {
+      const { query } = req;
+      const { value } = query || {};
 
-            // Logger.debug("value in req", value);
+      // Logger.debug("value in req", value);
 
-            const conditionDetails = await conditionService.search(value);
+      const conditionDetails = await conditionService.search(value);
 
-            if(conditionDetails.length > 0) {
-                let conditionApiData = {};
-                for(const condition of conditionDetails) {
-                    const conditionWrapper = await new ConditionWrapper(condition);
-                    conditionApiData[conditionWrapper.getConditionId()] = conditionWrapper.getBasicInfo();
-                }
-
-                return raiseSuccess(
-                    res,
-                    200,
-                    {
-                        conditions: {
-                            ...conditionApiData
-                        }
-                    },
-                    "Conditions fetched successfully"
-                );
-            } else {
-                return raiseClientError(res, 422, {}, `No condition found with name including ${value}`)
-            }
-        } catch(error) {
-            Logger.debug("condition search 500 error", error);
-            return raiseServerError(res);
+      if (conditionDetails.length > 0) {
+        let conditionApiData = {};
+        for (const condition of conditionDetails) {
+          const conditionWrapper = await new ConditionWrapper(condition);
+          conditionApiData[
+            conditionWrapper.getConditionId()
+          ] = conditionWrapper.getBasicInfo();
         }
-    };
+
+        return raiseSuccess(
+          res,
+          200,
+          {
+            conditions: {
+              ...conditionApiData
+            }
+          },
+          "Conditions fetched successfully"
+        );
+      } else {
+        return raiseClientError(
+          res,
+          422,
+          {},
+          `No condition found with name including ${value}`
+        );
+      }
+    } catch (error) {
+      Logger.debug("condition search 500 error", error);
+      return raiseServerError(res);
+    }
+  };
 }
 
 export default new ConditionController();

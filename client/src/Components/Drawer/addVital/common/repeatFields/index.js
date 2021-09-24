@@ -7,48 +7,47 @@ import selectedDays from "../selectedDays";
 // import { REPEAT_TYPE } from "../../../../../constant";
 import { Radio } from "antd";
 import moment from "moment";
-import messages from '../../message';
-import { ALTERNATE_DAYS, DAYS } from "../../../../../constant"
+import messages from "../../message";
+import { ALTERNATE_DAYS, DAYS } from "../../../../../constant";
 
 const RadioButton = Radio.Button;
 const RadioGroup = Radio.Group;
-
 
 export default props => {
   const {
     form: { getFieldValue }
   } = props;
-  
+
   let start = getFieldValue(startDate.field_name);
   let end = getFieldValue(endDate.field_name);
   let selectedDaysValue = getFieldValue(selectedDays.field_name);
   let selectedDaysArray = [];
   let selectedDaysRadio = 2;
-  if(selectedDaysValue){
-    if(Array.isArray(selectedDaysValue)){
+  if (selectedDaysValue) {
+    if (Array.isArray(selectedDaysValue)) {
       selectedDaysArray = selectedDaysValue;
-    }else{
-      selectedDaysArray = selectedDaysValue.split(',');
+    } else {
+      selectedDaysArray = selectedDaysValue.split(",");
     }
-    if(selectedDaysArray.length == 7){
+    if (selectedDaysArray.length == 7) {
       selectedDaysRadio = 1;
-    }else if(selectedDaysArray.length == 4){
-      ALTERNATE_DAYS.map(value=>{
-        if(!selectedDaysArray.includes(value)){
+    } else if (selectedDaysArray.length == 4) {
+      ALTERNATE_DAYS.map(value => {
+        if (!selectedDaysArray.includes(value)) {
           selectedDaysRadio = null;
         }
-      })
-    }else{
+      });
+    } else {
       selectedDaysRadio = null;
     }
-  }else{
+  } else {
     selectedDaysRadio = null;
   }
-  let diff = end ? moment(end).diff(moment(start), 'days') : 1;
+  let diff = end ? moment(end).diff(moment(start), "days") : 1;
   let selectedRadio = end ? null : 3;
-  if( diff == 7 ){
+  if (diff == 7) {
     selectedRadio = 1;
-  } else if( diff == 14 ){
+  } else if (diff == 14) {
     selectedRadio = 2;
   }
 
@@ -62,10 +61,14 @@ export default props => {
         buttonStyle="solid"
         value={selectedDaysRadio}
       >
-        <RadioButton value={1} onClick={props.setRepeatEveryDay} >{props.formatMessage(messages.everyday)}</RadioButton>
-        <RadioButton value={2} onClick={props.setRepeatAlternateDay}>{props.formatMessage(messages.alternate)}</RadioButton>
+        <RadioButton value={1} onClick={props.setRepeatEveryDay}>
+          {props.formatMessage(messages.everyday)}
+        </RadioButton>
+        <RadioButton value={2} onClick={props.setRepeatAlternateDay}>
+          {props.formatMessage(messages.alternate)}
+        </RadioButton>
       </RadioGroup>
-      
+
       <div className="flex align-items-center justify-content-space-between">
         {startDate.render(props)}
 
@@ -76,11 +79,16 @@ export default props => {
         buttonStyle="solid"
         value={selectedRadio}
       >
-        <RadioButton value={1} onClick={props.setEndDateOneWeek} >{props.formatMessage(messages.oneWeek)}</RadioButton>
-        <RadioButton value={2} onClick={props.setEndDateTwoWeek}>{props.formatMessage(messages.twoWeeks)}</RadioButton>
-        <RadioButton value={3} onClick={props.setEndDateLongTime}>{props.formatMessage(messages.longterm)}</RadioButton>
+        <RadioButton value={1} onClick={props.setEndDateOneWeek}>
+          {props.formatMessage(messages.oneWeek)}
+        </RadioButton>
+        <RadioButton value={2} onClick={props.setEndDateTwoWeek}>
+          {props.formatMessage(messages.twoWeeks)}
+        </RadioButton>
+        <RadioButton value={3} onClick={props.setEndDateLongTime}>
+          {props.formatMessage(messages.longterm)}
+        </RadioButton>
       </RadioGroup>
-
     </Fragment>
   );
 };

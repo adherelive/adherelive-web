@@ -5,22 +5,13 @@ import agoraController from "../../../app/controllers/mControllers/agora/agora.c
 import Authenticated from "../middlewares/auth";
 
 router.get(
-    "/video-token/:id",
-    Authenticated,
-    agoraController.generateVideoAccessToken
+  "/video-token/:id",
+  Authenticated,
+  agoraController.generateVideoAccessToken
 );
 
+router.get("/missed-call/:id", Authenticated, agoraController.missedCall);
 
-router.get(
-  "/missed-call/:id",
-  Authenticated,
-  agoraController.missedCall
-)
+router.post("/start", Authenticated, agoraController.startCall);
 
-router.post(
-  "/start",
-  Authenticated,
-  agoraController.startCall
-);
-  
 module.exports = router;

@@ -1,8 +1,8 @@
-'use strict';
+"use strict";
 
-import {USER_CATEGORY} from "../constant";
-import {TABLE_NAME} from "../app/models/userCategoryPermissions";
-import {TABLE_NAME as permissionTableName} from "../app/models/permissions";
+import { USER_CATEGORY } from "../constant";
+import { TABLE_NAME } from "../app/models/userCategoryPermissions";
+import { TABLE_NAME as permissionTableName } from "../app/models/permissions";
 
 module.exports = {
   up: (queryInterface, Sequelize) => {
@@ -15,16 +15,22 @@ module.exports = {
       },
       category: {
         type: Sequelize.ENUM,
-        values: [USER_CATEGORY.PATIENT, USER_CATEGORY.DOCTOR, USER_CATEGORY.ADMIN, USER_CATEGORY.CARE_TAKER, USER_CATEGORY.PROVIDER],
+        values: [
+          USER_CATEGORY.PATIENT,
+          USER_CATEGORY.DOCTOR,
+          USER_CATEGORY.ADMIN,
+          USER_CATEGORY.CARE_TAKER,
+          USER_CATEGORY.PROVIDER
+        ]
       },
       permission_id: {
         type: Sequelize.INTEGER,
         allowNull: false,
         references: {
           model: {
-            tableName: permissionTableName,
+            tableName: permissionTableName
           },
-          key: 'id'
+          key: "id"
         }
       },
       created_at: {

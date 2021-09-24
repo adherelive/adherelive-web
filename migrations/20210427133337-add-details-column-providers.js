@@ -1,6 +1,6 @@
-'use strict';
+"use strict";
 
-import {TABLE_NAME} from "../app/models/providers";
+import { TABLE_NAME } from "../app/models/providers";
 
 module.exports = {
   up: (queryInterface, Sequelize) => {
@@ -12,8 +12,6 @@ module.exports = {
   },
 
   down: (queryInterface, Sequelize) => {
-    return Promise.all([
-      queryInterface.removeColumn(TABLE_NAME, "details")
-    ]);
+    return Promise.all([queryInterface.removeColumn(TABLE_NAME, "details")]);
   }
 };

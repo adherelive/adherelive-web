@@ -1,19 +1,22 @@
 import { withRouter } from "react-router-dom";
 import { connect } from "react-redux";
-import {getAllMissedScheduleEvents} from "../../modules/scheduleEvents";
+import { getAllMissedScheduleEvents } from "../../modules/scheduleEvents";
 import MissedVitalDrawer from "../../Components/Drawer/missedVitalsDrawer";
 import { close } from "../../modules/drawer";
 import { DRAWER } from "../../constant";
 
-
 const mapStateToProps = state => {
   const {
-    auth: { authPermissions = [], authenticated_user = 1, authenticated_category } = {},
+    auth: {
+      authPermissions = [],
+      authenticated_user = 1,
+      authenticated_category
+    } = {},
     drawer: { visible, loading, data: { type, payload = {} } = {} },
-    patients={},
-      pages: {dashboard: {missed_vitals, vital_ids} = {}} = {}
+    patients = {},
+    pages: { dashboard: { missed_vitals, vital_ids } = {} } = {}
   } = state;
-  
+
   return {
     visible: visible && type === DRAWER.MISSED_VITAL,
     loading,

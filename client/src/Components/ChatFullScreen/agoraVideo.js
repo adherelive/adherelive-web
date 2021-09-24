@@ -22,7 +22,7 @@ import "firebase/analytics";
 import * as FirebaseHelper from "../../Helper/firebase";
 
 export const AGORA_CONNECTION_STATE = {
-  RECONNECTING: "RECONNECTING",
+  RECONNECTING: "RECONNECTING"
 };
 
 const NETWORK_QUALITY = {
@@ -34,7 +34,7 @@ const NETWORK_QUALITY = {
   VBAD: 5,
   DOWN: 6,
   UNSUPPORTED: 7,
-  DETECTING: 8,
+  DETECTING: 8
 };
 
 const ERROR_TYPES = {
@@ -43,7 +43,7 @@ const ERROR_TYPES = {
   SHARE_VIDEO: "SHARE_VIDEO",
   NETWORK_ISSUE: "NETWORK_ISSUE",
   START_CALL: "START_CALL",
-  END_CALL: "END_CALL",
+  END_CALL: "END_CALL"
 };
 
 class AgoraVideo extends Component {
@@ -55,7 +55,7 @@ class AgoraVideo extends Component {
       localAudioTrack: null,
       localVideoTrack: null,
       remoteAudioTrack: null,
-      remoteVideoTrack: null,
+      remoteVideoTrack: null
     };
 
     this.state = {
@@ -66,13 +66,13 @@ class AgoraVideo extends Component {
       isStart: false,
       remoteAdded: false,
       remoteDisconnect: false,
-      networkIssueFor: null,
+      networkIssueFor: null
     };
 
     const {
       auth: {
-        firebase_keys: { apiKey, appId, projectId, measurementId } = {},
-      } = {},
+        firebase_keys: { apiKey, appId, projectId, measurementId } = {}
+      } = {}
     } = props;
 
     const firebaseConfig = {
@@ -82,7 +82,7 @@ class AgoraVideo extends Component {
       appId,
       apiKey,
       projectId,
-      measurementId,
+      measurementId
     };
 
     firebase.initializeApp(firebaseConfig);
@@ -144,7 +144,7 @@ class AgoraVideo extends Component {
     return {
       appId: config.AGORA_APP_ID,
       channel: room_id,
-      token: video_token,
+      token: video_token
     };
   };
 
@@ -161,7 +161,7 @@ class AgoraVideo extends Component {
       this.setState({
         remoteAdded: true,
         remoteUid: user.uid,
-        networkIssueFor: null,
+        networkIssueFor: null
       });
 
       // If the subscribed track is video.
@@ -182,19 +182,19 @@ class AgoraVideo extends Component {
       }
     });
 
-    this.rtc.client.on("user-unpublished", (user) => {
+    this.rtc.client.on("user-unpublished", user => {
       const playerContainer = document.getElementById(user.uid);
       playerContainer && playerContainer.remove();
       this.setState({ remoteAdded: false });
     });
 
-    this.rtc.client.on("exception", (error) => {
+    this.rtc.client.on("exception", error => {
       console.log("29810321 error", error);
       FirebaseHelper.logEvent({
         client: this.analytics,
         type: ERROR_TYPES.ERROR_CALLBACK,
         user: authenticated_user,
-        channel: room_id,
+        channel: room_id
       });
     });
 
@@ -209,7 +209,7 @@ class AgoraVideo extends Component {
             client: this.analytics,
             type: ERROR_TYPES.NETWORK_ISSUE,
             user: authenticated_user,
-            channel: room_id,
+            channel: room_id
           });
         }
 
@@ -226,21 +226,21 @@ class AgoraVideo extends Component {
       }
     );
 
-    this.rtc.client.on("connection-state-change", (data) => {
+    this.rtc.client.on("connection-state-change", data => {
       if (data === AGORA_CONNECTION_STATE.RECONNECTING) {
         // this.setState({networkIssue: true});
         FirebaseHelper.logEvent({
           client: this.analytics,
           type: ERROR_TYPES.NETWORK_ISSUE,
           user: authenticated_user,
-          channel: room_id,
+          channel: room_id
         });
       } else {
         // this.setState({networkIssue: false});
       }
     });
 
-    this.rtc.client.on("user-left", (user) => {
+    this.rtc.client.on("user-left", user => {
       this.setState({ networkIssueFor: `${user.uid}` });
     });
   };
@@ -250,15 +250,15 @@ class AgoraVideo extends Component {
     this.rtc.localVideoTrack = await AgoraRTC.createCameraVideoTrack();
     await this.rtc.client.publish([
       this.rtc.localAudioTrack,
-      this.rtc.localVideoTrack,
+      this.rtc.localVideoTrack
     ]);
   };
 
   startVideoCall = async () => {
     const {
-      auth: { authenticated_user , auth_role = null  } = {},
+      auth: { authenticated_user, auth_role = null } = {},
       startCall,
-      room_id,
+      room_id
     } = this.props;
     try {
       const urlParams = new URLSearchParams(window.location.search);
@@ -308,7 +308,7 @@ class AgoraVideo extends Component {
         client: this.analytics,
         type: ERROR_TYPES.START_CALL,
         user: authenticated_user,
-        channel: room_id,
+        channel: room_id
       });
     }
   };
@@ -317,7 +317,7 @@ class AgoraVideo extends Component {
     const {
       auth: { authenticated_user } = {},
       missedCall,
-      room_id,
+      room_id
     } = this.props;
     try {
       const { remoteAdded } = this.state;
@@ -325,7 +325,7 @@ class AgoraVideo extends Component {
       await this.rtc.localVideoTrack.close();
       await this.rtc.localAudioTrack.close();
 
-      this.rtc.client.remoteUsers.forEach((user) => {
+      this.rtc.client.remoteUsers.forEach(user => {
         const playerContainer = document.getElementById(user.uid);
         playerContainer && playerContainer.remove();
       });
@@ -352,7 +352,7 @@ class AgoraVideo extends Component {
         client: this.analytics,
         type: ERROR_TYPES.END_CALL,
         user: authenticated_user,
-        channel: room_id,
+        channel: room_id
       });
     }
   };
@@ -373,7 +373,7 @@ class AgoraVideo extends Component {
           client: this.analytics,
           type: ERROR_TYPES.SHARE_VIDEO,
           user: authenticated_user,
-          channel: room_id,
+          channel: room_id
         });
       }
     }
@@ -389,7 +389,7 @@ class AgoraVideo extends Component {
         client: this.analytics,
         type: ERROR_TYPES.SHARE_VIDEO,
         user: authenticated_user,
-        channel: room_id,
+        channel: room_id
       });
     }
   };
@@ -404,7 +404,7 @@ class AgoraVideo extends Component {
         client: this.analytics,
         type: ERROR_TYPES.SHARE_AUDIO,
         user: authenticated_user,
-        channel: room_id,
+        channel: room_id
       });
     }
   };
@@ -422,7 +422,7 @@ class AgoraVideo extends Component {
         client: this.analytics,
         type: ERROR_TYPES.SHARE_AUDIO,
         user: authenticated_user,
-        channel: room_id,
+        channel: room_id
       });
     }
   };
@@ -432,7 +432,7 @@ class AgoraVideo extends Component {
       room_id,
       doctors,
       patients,
-      auth: { authenticated_category } = {},
+      auth: { authenticated_category } = {}
     } = this.props;
 
     const patientUserId = getPatientFromRoomId(room_id);
@@ -442,15 +442,18 @@ class AgoraVideo extends Component {
     let selfData = {};
 
     // selfUid
-    if (authenticated_category === USER_CATEGORY.DOCTOR || authenticated_category === USER_CATEGORY.HSP ) {
-      Object.keys(doctors).forEach((id) => {
+    if (
+      authenticated_category === USER_CATEGORY.DOCTOR ||
+      authenticated_category === USER_CATEGORY.HSP
+    ) {
+      Object.keys(doctors).forEach(id => {
         const { basic_info: { user_id } = {} } = doctors[id] || {};
         if (`${user_id}` === doctorUserId) {
           selfData = doctors[id] || {};
         }
       });
 
-      Object.keys(patients).forEach((id) => {
+      Object.keys(patients).forEach(id => {
         const { basic_info: { user_id } = {} } = patients[id] || {};
         if (`${user_id}` === patientUserId) {
           remoteData = patients[id] || {};
@@ -523,7 +526,7 @@ class AgoraVideo extends Component {
     const { startVideoCall, leaveCall, formatMessage } = this;
 
     return (
-      <div className={`${isStart ? "ml24" : null }`}>
+      <div className={`${isStart ? "ml24" : null}`}>
         {!isStart ? (
           // <Tooltip title={formatMessage(messages.startCall)} placement={"top"}>
           //   <img
@@ -561,7 +564,7 @@ class AgoraVideo extends Component {
     }
 
     const {
-      remoteData: { basic_info: { full_name } = {} } = {},
+      remoteData: { basic_info: { full_name } = {} } = {}
     } = getVideoParticipants();
 
     const isRemote = networkIssueFor !== `${authenticated_user}` ? true : false;
@@ -586,14 +589,14 @@ class AgoraVideo extends Component {
       getVideoButtons,
       getAudioButtons,
       getCallButtons,
-      getNetworkIssueCard,
+      getNetworkIssueCard
     } = this;
 
     const {
       remoteData: {
         basic_info: { full_name } = {},
-        details: { profile_pic } = {},
-      } = {},
+        details: { profile_pic } = {}
+      } = {}
     } = getVideoParticipants();
 
     return (
@@ -623,7 +626,7 @@ class AgoraVideo extends Component {
                   <span>
                     {formatMessage(
                       {
-                        ...messages.waitingForPatient,
+                        ...messages.waitingForPatient
                       },
                       { name: full_name }
                     )}

@@ -1,5 +1,6 @@
 import * as constants from "../../../../config/constants";
 import Controller from "../../";
+
 const moment = require("moment");
 const jwt = require("jsonwebtoken");
 const request = require("request");
@@ -43,6 +44,7 @@ import {
   VERIFICATION_TYPE
 } from "../../../../constant";
 import { Proxy_Sdk, EVENTS } from "../../../proxySdk";
+
 const errMessage = require("../../../../config/messages.json").errMessages;
 import treatmentService from "../../../services/treatment/treatment.service";
 import MTreatmentWrapper from "../../../ApiWrapper/mobile/treatments";
@@ -577,7 +579,7 @@ class MobileUserController extends Controller {
     }
   }
 
-  onAppStart = async (req, res, next) => {
+  onAppStart = async (req, res) => {
     let response;
     try {
       if (req.userDetails.exists) {
@@ -627,7 +629,7 @@ class MobileUserController extends Controller {
                 doctorIds.push(carePlanApiWrapper.getDoctorId());
                 carePlanApiData[
                   carePlanApiWrapper.getCarePlanId()
-                ] = carePlanApiWrapper.getBasicInfo();
+                ] = await carePlanApiWrapper.getAllInfo();
 
                 const {
                   severity_id,
@@ -680,7 +682,7 @@ class MobileUserController extends Controller {
                 patientIds.push(carePlanApiWrapper.getPatientId());
                 carePlanApiData[
                   carePlanApiWrapper.getCarePlanId()
-                ] = carePlanApiWrapper.getBasicInfo();
+                ] = await carePlanApiWrapper.getAllInfo();
 
                 const {
                   severity_id,

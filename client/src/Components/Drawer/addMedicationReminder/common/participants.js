@@ -143,7 +143,9 @@ class Participants extends Component {
     let options = [];
     const doctors = members.filter(member => {
       const { basicInfo: { category } = {} } = member || {};
-      return (category === USER_CATEGORY.DOCTOR || category === USER_CATEGORY.HSP);
+      return (
+        category === USER_CATEGORY.DOCTOR || category === USER_CATEGORY.HSP
+      );
     });
     const patients = members.filter(member => {
       const { basicInfo: { category } = {}, status } = member || {};
@@ -252,7 +254,8 @@ class Participants extends Component {
       <Fragment>
         <div>
           {(USER_CATEGORY.CARE_COACH === "PATIENT" ||
-            (category  === USER_CATEGORY.DOCTOR || category  === USER_CATEGORY.HSP) ) && (
+            category === USER_CATEGORY.DOCTOR ||
+            category === USER_CATEGORY.HSP) && (
             <FormItem
               label={`${
                 eventMode === EVENT_TYPE.APPOINTMENT

@@ -1,10 +1,6 @@
 import React, { Component, Fragment } from "react";
 import { injectIntl } from "react-intl";
-import {
-  Drawer,
-  message,
-  Spin,
-} from "antd";
+import { Drawer, message, Spin } from "antd";
 import MissedWorkoutCard from "../../Cards/patient/missedWorkout";
 
 import messages from "./message";
@@ -17,7 +13,7 @@ class MissedWorkoutsDrawer extends Component {
       missed_workouts: {},
       criticalWorkoutIds: [],
       nonCriticalWorkoutIds: [],
-      fetching:false
+      fetching: false
     };
   }
 
@@ -32,11 +28,10 @@ class MissedWorkoutsDrawer extends Component {
     close();
   };
 
-
   handlePatientDetailsRedirect = patient_id => e => {
-    const {authenticated_category}=this.props;
+    const { authenticated_category } = this.props;
 
-    if(authenticated_category === USER_CATEGORY.PROVIDER){
+    if (authenticated_category === USER_CATEGORY.PROVIDER) {
       return;
     }
 
@@ -47,41 +42,41 @@ class MissedWorkoutsDrawer extends Component {
 
   getWorkoutList = () => {
     const { patients = {}, missed_workouts = {} } = this.props;
-    const { handlePatientDetailsRedirect,formatMessage } = this;
+    const { handlePatientDetailsRedirect, formatMessage } = this;
 
     const workoutList = [];
     const criticalList = [];
     const nonCriticalList = [];
 
     Object.keys(missed_workouts).forEach(id => {
-      const {critical, participant_id, workout_name = '', timings} = missed_workouts[id] || {};
+      const { critical, participant_id, workout_name = "", timings } =
+        missed_workouts[id] || {};
 
-      const {basic_info: {id: patientId, full_name} = {}} = patients[participant_id] || {};
+      const { basic_info: { id: patientId, full_name } = {} } =
+        patients[participant_id] || {};
 
       if (critical) {
         criticalList.push(
-            <MissedWorkoutCard
-                formatMessage={formatMessage}
-                name={full_name}
-                time={timings}
-                workout_name={workout_name}
-                onClick={handlePatientDetailsRedirect(patientId)}
-            />
+          <MissedWorkoutCard
+            formatMessage={formatMessage}
+            name={full_name}
+            time={timings}
+            workout_name={workout_name}
+            onClick={handlePatientDetailsRedirect(patientId)}
+          />
         );
       } else {
         nonCriticalList.push(
-            <MissedWorkoutCard
-                formatMessage={this.formatMessage}
-                name={full_name}
-                time={timings}
-                workout_name={workout_name}
-                onClick={handlePatientDetailsRedirect(patientId)}
-            />
+          <MissedWorkoutCard
+            formatMessage={this.formatMessage}
+            name={full_name}
+            time={timings}
+            workout_name={workout_name}
+            onClick={handlePatientDetailsRedirect(patientId)}
+          />
         );
       }
     });
-
-  
 
     workoutList.push(
       <div>
@@ -92,7 +87,9 @@ class MissedWorkoutsDrawer extends Component {
           {criticalList.length > 0 ? (
             criticalList
           ) : (
-            <div className="mt10 mb10">{this.formatMessage(messages.no_critical_missed)}</div>
+            <div className="mt10 mb10">
+              {this.formatMessage(messages.no_critical_missed)}
+            </div>
           )}
         </div>
         <div>
@@ -102,7 +99,9 @@ class MissedWorkoutsDrawer extends Component {
           {nonCriticalList.length > 0 ? (
             nonCriticalList
           ) : (
-            <div className="mt10 mb10">{this.formatMessage(messages.no_non_critical_missed)}</div>
+            <div className="mt10 mb10">
+              {this.formatMessage(messages.no_non_critical_missed)}
+            </div>
           )}
         </div>
       </div>
@@ -111,12 +110,12 @@ class MissedWorkoutsDrawer extends Component {
   };
 
   render() {
-    const {visible=false} = this.props;
-    const {fetching} = this.state;
+    const { visible = false } = this.props;
+    const { fetching } = this.state;
 
     if (visible !== true) {
       return null;
-  }
+    }
     return (
       <Fragment>
         <Drawer
@@ -128,14 +127,12 @@ class MissedWorkoutsDrawer extends Component {
           width={`30%`}
         >
           <div className="mt20 black-85 wp100">
-            {fetching
-            ?
-            <Spin size="small" className="flex align-center justify-center"/>
-            :
-            this.getWorkoutList()
-            }
+            {fetching ? (
+              <Spin size="small" className="flex align-center justify-center" />
+            ) : (
+              this.getWorkoutList()
+            )}
           </div>
-
         </Drawer>
       </Fragment>
     );

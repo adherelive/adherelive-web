@@ -48,11 +48,10 @@ class MedicationStage extends Component {
   componentDidUpdate(prevProps, prevState) {
     console.log("PREV PROPS =====>", prevProps);
     console.log("Prosssssssssss ----->", this.props);
-
   }
 
   Hits = ({ hits }) => {
-    console.log("7654678743576890", {hits, length: hits.length});
+    console.log("7654678743576890", { hits, length: hits.length });
 
     // let list = [];
     // for(let hit of hits){
@@ -139,6 +138,8 @@ class MedicationStage extends Component {
       </form>
     );
   };
+
+  CustomSearchBox = connectSearchBox(this.SearchBox);
 
   getStagesOption = () => {
     const { medicines = {} } = this.props;
@@ -268,8 +269,6 @@ class MedicationStage extends Component {
     this.setState({ searching_medicine: true });
   };
 
-  CustomSearchBox = connectSearchBox(this.SearchBox);
-
   render() {
     const {
       form: { getFieldDecorator, getFieldError, isFieldTouched },
@@ -291,7 +290,6 @@ class MedicationStage extends Component {
 
     // const error = isFieldTouched(FIELD_NAME) && getFieldError(FIELD_NAME);
     const { CustomSearchBox } = this;
-
 
     return (
       <FormItem>

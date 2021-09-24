@@ -1,16 +1,12 @@
-
 import { doRequest } from "../../Helper/network";
 import { REQUEST_TYPE } from "../../constant";
-import {
-    getTACUrl
-} from "../../Helper/urls/otherDetails";
+import { getTACUrl } from "../../Helper/urls/otherDetails";
 
 export const GET_TAC_START = "GET_TAC_START";
 export const GET_TAC_COMPLETE = "GET_TAC_COMPLETE";
 export const GET_TAC_FAILED = "GET_TAC_FAILED";
 
-
-export const getTAC = (id) => {
+export const getTAC = id => {
   let response = {};
   return async dispatch => {
     try {
@@ -29,14 +25,14 @@ export const getTAC = (id) => {
       } else {
         dispatch({
           type: GET_TAC_FAILED,
-          error,
+          error
         });
       }
     } catch (error) {
       console.log("GET TAC ERROR --> ", error);
     }
     return response;
-  }
+  };
 };
 
 function tacReducer(state, data) {

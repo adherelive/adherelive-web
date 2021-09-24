@@ -30,6 +30,6 @@ module.exports = () => {
     DEFAULT_PASSWORD: process.env.DEFAULT_PASSWORD,
     S3_BUCKET_URL: process.env.S3_BUCKET_URL,
     UTC_OFFSET_STR: process.env.UTC_OFFSET_STR,
-    DB_ENCRYPTION_KEY: process.env.DB_ENCRYPTION_KEY,
+    DB_ENCRYPTION_KEY: process.env.DB_ENCRYPTION_KEY
   };
 };

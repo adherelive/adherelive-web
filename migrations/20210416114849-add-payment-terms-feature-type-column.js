@@ -5,9 +5,9 @@ import { FEATURE_TYPE } from "../constant";
 module.exports = {
   up: (queryInterface, Sequelize) => {
     return Promise.all([
-      queryInterface.changeColumn(TABLE_NAME, "feature_type",  {
+      queryInterface.changeColumn(TABLE_NAME, "feature_type", {
         type: Sequelize.ENUM,
-        values: [...Object.values(FEATURE_TYPE)],
+        values: [...Object.values(FEATURE_TYPE)]
       })
     ]);
   },

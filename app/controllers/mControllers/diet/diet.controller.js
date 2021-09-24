@@ -609,13 +609,14 @@ class DietController extends Controller {
 
     try {
       const { userDetails = {} } = req;
-      const { userCategoryId = null } = userDetails || {};
+      const { userCategoryId = null, userRoleId = null } = userDetails || {};
 
       let allDietsApiWrapper = {};
 
       const allCareplansForDoctor =
         (await carePlanService.getCarePlanByData({
           doctor_id: userCategoryId
+          // user_role_id: userRoleId,
         })) || [];
       const dietService = new DietService();
       if (allCareplansForDoctor.length) {

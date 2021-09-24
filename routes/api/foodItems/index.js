@@ -16,21 +16,15 @@ router.post(
 );
 
 router.post(
-    "/:id",
-    Authenticate,
-    isDoctor,
-    Validator.update,
-    FoodItemController.update
-  );
-
-router.get(
-  "/",
+  "/:id",
   Authenticate,
   isDoctor,
-  FoodItemController.search
+  Validator.update,
+  FoodItemController.update
 );
 
+router.get("/", Authenticate, isDoctor, FoodItemController.search);
 
-  // get all & on permission basis
+// get all & on permission basis
 
 module.exports = router;

@@ -298,7 +298,7 @@ class CarePlanTemplateController extends Controller {
             template_workouts: allTemplateWorkouts,
             exercise_details: allExerciseDetails,
             exercises: allExercises,
-            //exercise_contents:exerciseContentData,
+            exercise_contents: exerciseContentData,
             repetitions: allRepetitions,
             exercise_contents: allExerciseContents,
 

@@ -91,23 +91,22 @@ export const getScheduleEventsUrl = () => {
   return `/schedule-events`;
 };
 
-export const getAppointmentCompleteUrl = (id) => {
+export const getAppointmentCompleteUrl = id => {
   return `/events/${id}/complete`;
 };
 
-
 export const getAllMissedScheduleEventsUrl = () => {
   return `/events/missed`;
-}
+};
 
-export const getPatientMissedEventsUrl = (patient_id) => {
-  return `/events/missed/${patient_id}`
-}
+export const getPatientMissedEventsUrl = patient_id => {
+  return `/events/missed/${patient_id}`;
+};
 
-export const getEditVitalResponseUrl = ({id, index}) => {
+export const getEditVitalResponseUrl = ({ id, index }) => {
   return `/events/${id}/vitals/response?index=${index}`;
 };
 
-export const getDeleteVitalResponseUrl = ({id, index}) => {
+export const getDeleteVitalResponseUrl = ({ id, index }) => {
   return `/events/${id}/vitals/response?index=${index}`;
 };

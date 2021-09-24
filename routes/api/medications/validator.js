@@ -31,7 +31,7 @@ const medicationReminderFormSchema = Joi.object().keys({
   unit: Joi.string().required(),
   quantity: Joi.number().optional(),
   when_to_take_abbr: Joi.number().optional(),
-  when_to_take: Joi.array().when('when_to_take_abbr', {
+  when_to_take: Joi.array().when("when_to_take_abbr", {
     is: Joi.exist(),
     then: Joi.when("when_to_take_abbr", {
       is: WHEN_TO_TAKE_ABBREVATIONS.SOS,
@@ -41,7 +41,7 @@ const medicationReminderFormSchema = Joi.object().keys({
     otherwise: Joi.required()
   }),
   repeat: Joi.string().required(),
-  repeat_days: Joi.array().when('when_to_take_abbr', {
+  repeat_days: Joi.array().when("when_to_take_abbr", {
     is: Joi.exist(),
     then: Joi.when("when_to_take_abbr", {
       is: WHEN_TO_TAKE_ABBREVATIONS.SOS,
@@ -50,14 +50,27 @@ const medicationReminderFormSchema = Joi.object().keys({
     }),
     otherwise: Joi.required()
   }),
-  repeat_interval: Joi.number().optional().allow(""),
+  repeat_interval: Joi.number()
+    .optional()
+    .allow(""),
   start_date: Joi.date().required(),
-  end_date: Joi.date().optional().allow("", null),
-  medicine_id: Joi.number().optional().allow(""),
+  end_date: Joi.date()
+    .optional()
+    .allow("", null),
+  medicine_id: Joi.number()
+    .optional()
+    .allow(""),
   medicine_type: Joi.number().required(),
-  participant_id: Joi.number().optional().allow(""),
-  critical: Joi.boolean().optional().allow(""),
-  description: Joi.string().max(500, 'utf-8').optional().allow("", null)
+  participant_id: Joi.number()
+    .optional()
+    .allow(""),
+  critical: Joi.boolean()
+    .optional()
+    .allow(""),
+  description: Joi.string()
+    .max(500, "utf-8")
+    .optional()
+    .allow("", null)
 });
 
 const validateStartTime = startTime => {
@@ -66,7 +79,10 @@ const validateStartTime = startTime => {
 };
 
 const validateTimeInterval = (startTime, endTime) => {
-  console.log("397913717239 moment(startTime) < moment(endTime) --> ", moment(startTime) < moment(endTime));
+  console.log(
+    "397913717239 moment(startTime) < moment(endTime) --> ",
+    moment(startTime) < moment(endTime)
+  );
   return moment(startTime) < moment(endTime);
 };
 
@@ -86,7 +102,12 @@ export const validateMedicationReminderData = (req, res, next) => {
   //     // return res.status(422).json(response.getResponse());
   // }
   if (end_date && !validateTimeInterval(start_date, end_date)) {
-    return raiseClientError(res, 422, {}, "start date should be less than end date");
+    return raiseClientError(
+      res,
+      422,
+      {},
+      "start date should be less than end date"
+    );
     // const response = new Response(false, 422);
     // response.setError({ error: "start time should be less than end time" });
     // return res.status(422).json(response.getResponse());

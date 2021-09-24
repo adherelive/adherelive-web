@@ -14,36 +14,34 @@ export default props => {
     formatMessage
   } = props || {};
 
-  console.log("103712398 type", {type});
+  console.log("103712398 type", { type });
 
   return (
-      <div
-          className="flex align-center"
+    <div className="flex align-center">
+      <Tooltip
+        title={
+          type === TABLET || type === "tablets"
+            ? formatMessage(messages.tablet)
+            : type === SYRUP
+            ? formatMessage(messages.syrup)
+            : formatMessage(messages.syringe)
+        }
+        className="flex align-center justify-start"
       >
-        <Tooltip
-            title={
-              type === TABLET || type === "tablets"
-                  ? formatMessage(messages.tablet)
-                  : type === SYRUP
-                  ? formatMessage(messages.syrup)
-                  : formatMessage(messages.syringe)
-            }
-            className="flex align-center justify-start"
-        >
         <img
-            className="w20 mr10"
-            src={
-              type === TABLET || type === "tablets"
-                  ? TabletIcon
-                  : type === SYRUP
-                  ? SyrupIcon
-                  : InjectionIcon
-            }
-            alt="medicine icon"
+          className="w20 mr10"
+          src={
+            type === TABLET || type === "tablets"
+              ? TabletIcon
+              : type === SYRUP
+              ? SyrupIcon
+              : InjectionIcon
+          }
+          alt="medicine icon"
         />
 
-          <span className="fs14 fw600 italic">{type.toUpperCase()}</span>
-        </Tooltip>
-      </div>
+        <span className="fs14 fw600 italic">{type.toUpperCase()}</span>
+      </Tooltip>
+    </div>
   );
 };

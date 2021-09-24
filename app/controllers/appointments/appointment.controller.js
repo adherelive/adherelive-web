@@ -4,7 +4,7 @@ import {
   getCarePlanMedicationIds,
   getCarePlanSeverityDetails
 } from "../carePlans/carePlanHelper";
-import { Proxy_Sdk, EVENTS } from "../../proxySdk";
+import { Proxy_Sdk } from "../../proxySdk";
 import {
   EVENT_STATUS,
   EVENT_TYPE,
@@ -15,7 +15,7 @@ import {
   NOTIFICATION_STAGES,
   RADIOLOGY,
   FAVOURITE_TYPE,
-  MEDICAL_TEST,
+  // MEDICAL_TEST,
   APPOINTMENT_TYPE
 } from "../../../constant";
 import moment from "moment";
@@ -46,9 +46,9 @@ import FeatureDetailsWrapper from "../../ApiWrapper/web/featureDetails";
 import DoctorWrapper from "../../ApiWrapper/web/doctor";
 import PatientWrapper from "../../ApiWrapper/web/patient";
 import UploadDocumentWrapper from "../../ApiWrapper/web/uploadDocument";
-
-import eventService from "../../services/scheduleEvents/scheduleEvent.service";
 import EventWrapper from "../../ApiWrapper/common/scheduleEvents";
+
+// import eventService from "../../services/scheduleEvents/scheduleEvent.service";
 
 import { uploadImageS3 } from "../user/userHelper";
 import { getFilePath } from "../../helper/filePath";
@@ -58,6 +58,7 @@ import { downloadFileFromS3 } from "../mControllers/user/userHelper";
 
 // HELPERS...
 import * as AppointmentHelper from "./helper";
+
 const FILE_NAME = "WEB APPOINTMENT CONTROLLER";
 
 const Logger = new Log(FILE_NAME);
@@ -90,7 +91,8 @@ class AppointmentController extends Controller {
         // participant_one_type = "",
         // participant_one_id = "",
       } = body;
-      const { userId, userRoleId, userData: { category } = {} } = userDetails || {};
+      const { userId, userRoleId, userData: { category } = {} } =
+        userDetails || {};
       const { id: participant_two_id, category: participant_two_type } =
         participant_two || {};
 
@@ -166,7 +168,7 @@ class AppointmentController extends Controller {
         participant_one_id: userCategoryId,
         participant_two_type,
         participant_two_id,
-        organizer_type:category,
+        organizer_type: category,
         organizer_id: userCategoryId,
         description,
         start_date: moment(date),
@@ -264,7 +266,7 @@ class AppointmentController extends Controller {
         provider_id = null,
         provider_name = null,
         critical = false,
-        radiology_type="",
+        radiology_type = ""
         // participant_one_type = "",
         // participant_one_id = "",
       } = body;
@@ -293,7 +295,7 @@ class AppointmentController extends Controller {
             id: participant_two_id
           });
           const patientData = await PatientWrapper(patient);
-          const {user_role_id} = await patientData.getAllInfo();
+          const { user_role_id } = await patientData.getAllInfo();
           participantTwoId = user_role_id;
           break;
         default:
@@ -325,14 +327,13 @@ class AppointmentController extends Controller {
         );
       }
 
-
       const appointment_data = {
         participant_one_type: category,
         participant_one_id: userCategoryId,
         participant_two_type,
         participant_two_id,
         organizer_type: category,
-        organizer_id:userCategoryId,
+        organizer_id: userCategoryId,
         description,
         start_date: moment(date),
         end_date: moment(date),
@@ -347,7 +348,7 @@ class AppointmentController extends Controller {
           type,
           type_description,
           critical,
-          ...type === RADIOLOGY && { 'radiology_type': radiology_type }
+          ...(type === RADIOLOGY && { radiology_type: radiology_type })
         }
       };
 
@@ -393,7 +394,11 @@ class AppointmentController extends Controller {
         start_time,
         end_time,
         details: appointmentApiData.getBasicInfo(),
-        participants: [userRoleId, participantTwoId],
+        participants: [
+          userRoleId,
+          participantTwoId,
+          ...carePlanApiWrapper.getCareplnSecondaryProfiles()
+        ],
         actor: {
           id: userId,
           user_role_id: userRoleId,
@@ -461,7 +466,7 @@ class AppointmentController extends Controller {
         critical = false,
         // participant_one_type = "",
         // participant_one_id = "",
-        radiology_type="",
+        radiology_type = ""
       } = body;
 
       const {
@@ -479,7 +484,10 @@ class AppointmentController extends Controller {
       );
 
       // careplan id for appointment
-      const {care_plan_id = null} = await carePlanAppointmentService.getSingleCarePlanAppointmentByData({appointment_id}) || {};
+      const { care_plan_id = null } =
+        (await carePlanAppointmentService.getSingleCarePlanAppointmentByData({
+          appointment_id
+        })) || {};
 
       const oldAppointmentData = await AppointmentWrapper(oldAppointment);
 
@@ -578,7 +586,7 @@ class AppointmentController extends Controller {
             id: participant_two_id
           });
           const patientData = await PatientWrapper(patient);
-          const {user_role_id} = await patientData.getAllInfo();
+          const { user_role_id } = await patientData.getAllInfo();
           participantTwoId = user_role_id;
           break;
         default:
@@ -594,6 +602,8 @@ class AppointmentController extends Controller {
         event_type: EVENT_TYPE.APPOINTMENT
       });
 
+      const carePlan = await CarePlanWrapper(null, care_plan_id);
+
       // 2. send sqs for updated
       const eventScheduleData = {
         type: EVENT_TYPE.APPOINTMENT,
@@ -603,7 +613,11 @@ class AppointmentController extends Controller {
         start_time,
         end_time,
         details: appointmentApiData.getBasicInfo(),
-        participants: [userRoleId, participantTwoId],
+        participants: [
+          userRoleId,
+          participantTwoId,
+          ...carePlan.getCareplnSecondaryProfiles()
+        ],
         actor: {
           id: userId,
           user_role_id: userRoleId,
@@ -724,7 +738,9 @@ class AppointmentController extends Controller {
   getAppointmentDetails = async (req, res) => {
     const { raiseSuccess, raiseServerError } = this;
     try {
-      const {userDetails: {userData: {category}, userCategoryId} = {}} = req;
+      const {
+        userDetails: { userData: { category }, userCategoryId } = {}
+      } = req;
       const appointmentDetails = await featureDetailService.getDetailsByData({
         feature_type: FEATURE_TYPE.APPOINTMENT
       });
@@ -732,34 +748,47 @@ class AppointmentController extends Controller {
       const appointmentData = await FeatureDetailsWrapper(appointmentDetails);
 
       let featureDetails = appointmentData.getFeatureDetails();
-      const {type_description, radiology_type_data} =  featureDetails || {};
+      const { type_description, radiology_type_data } = featureDetails || {};
 
       const userTypeData = {
         id: userCategoryId,
-        category,
+        category
       };
 
-      const updatedTypeDescriptionWithFavourites = await AppointmentHelper.getFavoriteInDetails(userTypeData, type_description, FAVOURITE_TYPE.MEDICAL_TESTS);
+      const updatedTypeDescriptionWithFavourites = await AppointmentHelper.getFavoriteInDetails(
+        userTypeData,
+        type_description,
+        FAVOURITE_TYPE.MEDICAL_TESTS
+      );
 
-      featureDetails = {...featureDetails, ...{type_description: updatedTypeDescriptionWithFavourites}}
-      const {appointment_type ={}} = featureDetails;
-      if(category === USER_CATEGORY.HSP){
+      featureDetails = {
+        ...featureDetails,
+        ...{ type_description: updatedTypeDescriptionWithFavourites }
+      };
+      const { appointment_type = {} } = featureDetails;
+      if (category === USER_CATEGORY.HSP) {
         let hspAppointmentType = {};
-        for(let each in appointment_type ){
-          const { title = '' } = appointment_type[each];
-          const { title : radiologyTitle } = APPOINTMENT_TYPE[RADIOLOGY];
-          if(title === radiologyTitle ){
+        for (let each in appointment_type) {
+          const { title = "" } = appointment_type[each];
+          const { title: radiologyTitle } = APPOINTMENT_TYPE[RADIOLOGY];
+          if (title === radiologyTitle) {
             continue;
           }
-          hspAppointmentType[each]=appointment_type[each];
+          hspAppointmentType[each] = appointment_type[each];
         }
-        featureDetails["appointment_type"]={...hspAppointmentType};
+        featureDetails["appointment_type"] = { ...hspAppointmentType };
       }
 
-      const updatedRadiologyDataWithFavourites = await AppointmentHelper.getFavoriteInDetails(userTypeData, radiology_type_data, FAVOURITE_TYPE.RADIOLOGY);
+      const updatedRadiologyDataWithFavourites = await AppointmentHelper.getFavoriteInDetails(
+        userTypeData,
+        radiology_type_data,
+        FAVOURITE_TYPE.RADIOLOGY
+      );
 
-      featureDetails = {...featureDetails, ...{radiology_type_data: updatedRadiologyDataWithFavourites}}
-
+      featureDetails = {
+        ...featureDetails,
+        ...{ radiology_type_data: updatedRadiologyDataWithFavourites }
+      };
 
       return raiseSuccess(
         res,
@@ -783,7 +812,7 @@ class AppointmentController extends Controller {
       const { body, userDetails } = req;
 
       const {
-        userRoleId=null,
+        userRoleId = null,
         userId,
         userData: { category } = {},
         userCategoryData: { basic_info: { id: doctorId } = {} } = {}
@@ -797,7 +826,7 @@ class AppointmentController extends Controller {
       const scheduleEventService = new ScheduleEventService();
 
       docAllCareplanData = await carePlanService.getCarePlanByData({
-        user_role_id:userRoleId
+        user_role_id: userRoleId
       });
 
       // Logger.debug("786756465789",docAllCareplanData);

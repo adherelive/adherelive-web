@@ -88,74 +88,65 @@ class MobileAccountsController extends Controller {
     const { raiseSuccess, raiseClientError, raiseServerError } = this;
     try {
       const { userDetails: { userId } = {} } = req;
-      Logger.debug("6564546787654678787678965678",req.query);
+      Logger.debug("6564546787654678787678965678", req.query);
 
-      const { query: { all_accounts = 0 ,  provider_id = null } = {} } = req;
+      const { query: { all_accounts = 0, provider_id = null } = {} } = req;
       const get_all_accounts = all_accounts == 0 ? false : true;
 
       let accountDetails = {};
       let accountWrapperDetails = {};
       let accountWrapper = null;
 
-      if(provider_id){
-        
-    
-          let providerApiData = {} , allUsers = {} ;
+      if (provider_id) {
+        let providerApiData = {},
+          allUsers = {};
 
-          const providerWrapper = await ProviderWrapper(null,provider_id);
-          providerApiData[providerWrapper.getProviderId()] = providerWrapper.getBasicInfo();
-          const providerUserId = await providerWrapper.getUserId();
-          const accountDetails = await accountDetailsService.getAllAccountsForUser(
-            providerUserId
-          ) || [];
+        const providerWrapper = await ProviderWrapper(null, provider_id);
+        providerApiData[
+          providerWrapper.getProviderId()
+        ] = providerWrapper.getBasicInfo();
+        const providerUserId = await providerWrapper.getUserId();
+        const accountDetails =
+          (await accountDetailsService.getAllAccountsForUser(providerUserId)) ||
+          [];
 
-          const providerUserWrapper = await UserWrapper(null,providerUserId);
-          allUsers[providerUserWrapper.getId()] = providerUserWrapper.getBasicInfo();
+        const providerUserWrapper = await UserWrapper(null, providerUserId);
+        allUsers[
+          providerUserWrapper.getId()
+        ] = providerUserWrapper.getBasicInfo();
 
-          if (accountDetails && accountDetails.length) {
-            for (const account of accountDetails) {
-              accountWrapper = await AccountsWrapper(account);
-              accountWrapperDetails[
-                accountWrapper.getId()
-              ] = accountWrapper.getBasicInfo();
-            }
-          }else{
-            return raiseClientError(
-              res,
-              422,
-              {},
-              "No account Details Found"
-            );
+        if (accountDetails && accountDetails.length) {
+          for (const account of accountDetails) {
+            accountWrapper = await AccountsWrapper(account);
+            accountWrapperDetails[
+              accountWrapper.getId()
+            ] = accountWrapper.getBasicInfo();
           }
+        } else {
+          return raiseClientError(res, 422, {}, "No account Details Found");
+        }
 
-          
+        const userWrapper = await UserWrapper(null, userId);
 
-          const userWrapper = await UserWrapper(null, userId);
-
-          allUsers[userWrapper.getId()] = userWrapper.getBasicInfo();
-          return raiseSuccess(
-            res,
-            200,
-            {
-              users: {
-                ...allUsers
-              },
-              account_details: {
-                ...accountWrapperDetails
-              },
-              providers:{
-                ...providerApiData
-              }
+        allUsers[userWrapper.getId()] = userWrapper.getBasicInfo();
+        return raiseSuccess(
+          res,
+          200,
+          {
+            users: {
+              ...allUsers
             },
-            "Account details fetched successfully."
-          );
-
-      
-         
-        
+            account_details: {
+              ...accountWrapperDetails
+            },
+            providers: {
+              ...providerApiData
+            }
+          },
+          "Account details fetched successfully."
+        );
       }
 
-      
       if (get_all_accounts) {
         accountDetails = await accountDetailsService.getAllAccountsForUser(
           userId
@@ -285,7 +276,7 @@ class MobileAccountsController extends Controller {
       );
 
       if (accountDetails) {
-        Logger.debug("234543453245",accountDetails);
+        Logger.debug("234543453245", accountDetails);
         for (const account of accountDetails) {
           accountWrapper = await AccountsWrapper(account);
           accountWrapperDetails[
@@ -293,7 +284,6 @@ class MobileAccountsController extends Controller {
           ] = accountWrapper.getBasicInfo();
         }
       }
-
 
       return raiseSuccess(
         res,

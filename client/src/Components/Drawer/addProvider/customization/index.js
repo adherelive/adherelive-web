@@ -11,7 +11,7 @@ class Customization extends Component {
     super(props);
   }
 
-  formatMessage = (message) => this.props.intl.formatMessage(message);
+  formatMessage = message => this.props.intl.formatMessage(message);
 
   render() {
     const { formatMessage } = this;

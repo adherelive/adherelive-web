@@ -65,7 +65,6 @@ export const formatPatientTableData = data => {
   Object.keys(doctors).forEach(id => {
     const { basic_info: { user_id } = {} } = doctors[id] || {};
 
-
     if (user_id === authenticated_user) {
       doctor_id = id;
     }
@@ -79,9 +78,13 @@ export const formatPatientTableData = data => {
   let carePlanData = {};
   for (let carePlan of Object.values(care_plans)) {
     let { basic_info = {} } = carePlan || {};
-    let { doctor_id: doctorId = 1, patient_id, id: carePlanId = 1 } = basic_info;
+    let {
+      doctor_id: doctorId = 1,
+      patient_id,
+      id: carePlanId = 1
+    } = basic_info;
     if (`${doctorId}` === doctor_id) {
-      if(`${patient_id}` === id) {
+      if (`${patient_id}` === id) {
         let {
           details: {
             treatment_id: cTreatment = "",
@@ -90,11 +93,11 @@ export const formatPatientTableData = data => {
           } = {}
         } = carePlan || {};
         let { basic_info: { name: treatmentName = "" } = {} } =
-        treatments[cTreatment] || {};
+          treatments[cTreatment] || {};
         let { basic_info: { name: severityName = "" } = {} } =
-        severities[cSeverity] || {};
+          severities[cSeverity] || {};
         let { basic_info: { name: conditionName = "" } = {} } =
-        conditions[cCondition] || {};
+          conditions[cCondition] || {};
 
         treatment = treatmentName;
         condition = conditionName;
@@ -109,9 +112,14 @@ export const formatPatientTableData = data => {
       }
     }
   }
-  
-  
-  patientData = { ...patients[id], treatment, condition, severity ,carePlanData  };
+
+  patientData = {
+    ...patients[id],
+    treatment,
+    condition,
+    severity,
+    carePlanData
+  };
 
   const { basic_info: { name: carePlanName } = {}, activated_on } =
     care_plans["1"] || {}; // todo: constant for now as careplan runs from seeder as design is not finalized
@@ -122,8 +130,6 @@ export const formatPatientTableData = data => {
     provider_id,
     chats: patientChatIds = []
   } = patientData || {};
-
- 
 
   const {} = users[user_id] || {};
   let chatData = {};
@@ -138,7 +144,6 @@ export const formatPatientTableData = data => {
   const treatmentData = treatments[treatment_id] || {};
   const doctorData = doctors[doctor_id] || {};
   const providerData = providers[provider_id] || {};
-
 
   return {
     patientData,

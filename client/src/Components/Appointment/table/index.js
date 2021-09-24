@@ -5,6 +5,7 @@ import generateRow from "./dataRow";
 import getColumn from "./header";
 // import { getAppointmentsForPatientUrl } from "../../../Helper/url/appointments";
 import messages from "./messages";
+
 class PatientTable extends Component {
   constructor(props) {
     super(props);
@@ -53,15 +54,11 @@ class PatientTable extends Component {
     //   onChange: onSelectChange
     // };
 
-    const {
-      loading,
-      intl: { formatMessage } = {}
-    } = this.props;
+    const { loading, intl: { formatMessage } = {} } = this.props;
 
     const locale = {
       emptyText: this.formatMessage(messages.emptyAppointmentTable)
     };
-
 
     return (
       <Table

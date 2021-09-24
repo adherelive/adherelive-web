@@ -16,6 +16,7 @@ class RepeatInterval extends Component {
     } = this.props;
     validateFields();
   }
+
   componentWillUnmount() {
     const {
       form: { validateFields }
@@ -53,9 +54,9 @@ class RepeatInterval extends Component {
 
   getInitialValue = () => {
     let initialValue;
-    const { purpose, event,medicationData = {} } = this.props;
-    let { schedule_data: { repeat_interval = '' } = {} } = medicationData;
-    initialValue=repeat_interval;
+    const { purpose, event, medicationData = {} } = this.props;
+    let { schedule_data: { repeat_interval = "" } = {} } = medicationData;
+    initialValue = repeat_interval;
     if (purpose) {
       const { data: { repeatInterval } = {} } = event;
       initialValue = repeatInterval;

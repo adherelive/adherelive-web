@@ -13,5 +13,5 @@ export default class Exercise {
 
   getExerciseDetails = () => {
     return this._data.exercise_details ? this._data.exercise_details : [];
-  };  
+  };
 }

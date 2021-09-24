@@ -34,19 +34,18 @@ class addNewConsultationDrawer extends Component {
       newConsultationFee: "",
       fetchingAdminPayments: false,
       consultationFeeId: null,
-      consultation:"",
+      consultation: "",
       payload: null,
-      submitting:false,
-      razorpay_link:''
+      submitting: false,
+      razorpay_link: ""
     };
   }
 
   componentDidMount() {
-    const {payload ={}} = this.props;
+    const { payload = {} } = this.props;
   }
 
   componentDidUpdate(prevProps, prevState) {
-
     // const { consultation } = this.state;
     // const { consultation: prev_consultation } = prevState;
     // if (consultation !== prev_consultation) {
@@ -54,19 +53,33 @@ class addNewConsultationDrawer extends Component {
     // }
     // this.updateConsultationFeeData();
 
-    const {visible : prev_visible = false} = prevProps || {}; 
-    const {visible = false} = this.props || {};
+    const { visible: prev_visible = false } = prevProps || {};
+    const { visible = false } = this.props || {};
 
-    if(visible && visible !== prev_visible){
-      const {payload :{basic_info = {} } } = this.props;
-      const {payload : updatedPayload ={}} = this.props;
-      if(basic_info){
-        let {payload :{razorpay_link : provider_doc_razorpay_link = '',basic_info : {razorpay_link = '' , name = "", amount = "", type = "", id = null} = {}} = {} } = 
-        this.props;       
-        
-        razorpay_link = razorpay_link ? razorpay_link :  provider_doc_razorpay_link;
+    if (visible && visible !== prev_visible) {
+      const {
+        payload: { basic_info = {} }
+      } = this.props;
+      const { payload: updatedPayload = {} } = this.props;
+      if (basic_info) {
+        let {
+          payload: {
+            razorpay_link: provider_doc_razorpay_link = "",
+            basic_info: {
+              razorpay_link = "",
+              name = "",
+              amount = "",
+              type = "",
+              id = null
+            } = {}
+          } = {}
+        } = this.props;
 
-        if(id){
+        razorpay_link = razorpay_link
+          ? razorpay_link
+          : provider_doc_razorpay_link;
+
+        if (id) {
           this.setState({
             newConsultationName: name,
             newConsultationFee: amount,
@@ -74,24 +87,22 @@ class addNewConsultationDrawer extends Component {
             payload: updatedPayload,
             consultationFeeId: id,
             razorpay_link
-          })
+          });
 
-          if(type){
-            const newConsultationTypeText =  CONSULTATION_FEE_TYPE_TEXT[type];
+          if (type) {
+            const newConsultationTypeText = CONSULTATION_FEE_TYPE_TEXT[type];
             this.setState({
-              consultation:parseInt(type),
+              consultation: parseInt(type),
               newConsultationTypeText
-             });
+            });
           }
-          
         }
-      }else{
+      } else {
         this.setFieldValues();
       }
     }
-
   }
-  
+
   setFee = e => {
     const { value } = e.target;
     const reg = /^-?\d*(\.\d*)?$/;
@@ -102,11 +113,8 @@ class addNewConsultationDrawer extends Component {
 
   setRazorpayLink = e => {
     const { value } = e.target;
-      this.setState({ razorpay_link: e.target.value });
-    
-  }
-
- 
+    this.setState({ razorpay_link: e.target.value });
+  };
 
   setFieldValues = () => {
     const { consultation } = this.state;
@@ -134,8 +142,6 @@ class addNewConsultationDrawer extends Component {
     }
   };
 
-  
-
   setConsultationName = e => {
     e.preventDefault();
     const { value } = e.target;
@@ -152,22 +158,17 @@ class addNewConsultationDrawer extends Component {
     for (let each in defaultPaymentsProducts) {
       const { basic_info: { id = null, name = "", type = "" } = {} } =
         defaultPaymentsProducts[each] || {};
-          options.push(<Option 
-            key={id}
-            value={id}>
-            {name}
-        </Option>)
-    
+      options.push(
+        <Option key={id} value={id}>
+          {name}
+        </Option>
+      );
     }
 
     return options;
-
-    
-}
-
+  };
 
   setConsultation = value => {
-
     this.setState({ consultation: value });
 
     if (value === 1) {
@@ -195,14 +196,15 @@ class addNewConsultationDrawer extends Component {
   };
 
   isDoctorRoleAssociatedWithProvider = () => {
-    const {auth_role, user_roles} = this.props;
-    const {basic_info: {linked_with, linked_id} = {}} = user_roles[auth_role] || {};
+    const { auth_role, user_roles } = this.props;
+    const { basic_info: { linked_with, linked_id } = {} } =
+      user_roles[auth_role] || {};
 
-    if(linked_id) {
+    if (linked_id) {
       return linked_id;
     }
     return false;
-  }
+  };
 
   renderAddNewConsultationFee = () => {
     const provider_id = this.isDoctorRoleAssociatedWithProvider();
@@ -212,8 +214,8 @@ class addNewConsultationDrawer extends Component {
       newConsultationTypeText = "",
       newConsultationFee = "",
       consultationFeeId = null,
-      consultation="",
-      razorpay_link = ''
+      consultation = "",
+      razorpay_link = ""
     } = this.state;
 
     return (
@@ -228,25 +230,23 @@ class addNewConsultationDrawer extends Component {
           </span>
         </div>
 
-                <Select
-                    className="form-inputs-ap drawer-select"
-                    placeholder="Select Consultation Type"
-                    value={consultation}
-                    onChange={this.setConsultation}
-                    autoComplete="off"
-                    optionFilterProp="children"
-                    filterOption={(input, option) =>
-                        option.props.children
-                            .toLowerCase()
-                            .indexOf(input.toLowerCase()) >= 0
-                    }
-                >
-                    {this.getConsultationOption()}
-                </Select>
-
+        <Select
+          className="form-inputs-ap drawer-select"
+          placeholder="Select Consultation Type"
+          value={consultation}
+          onChange={this.setConsultation}
+          autoComplete="off"
+          optionFilterProp="children"
+          filterOption={(input, option) =>
+            option.props.children.toLowerCase().indexOf(input.toLowerCase()) >=
+            0
+          }
+        >
+          {this.getConsultationOption()}
+        </Select>
 
         <div>
-          { consultation !== ""  ? (
+          {consultation !== "" ? (
             <div>
               <div className="form-headings flex align-center justify-start">
                 {this.formatMessage(messages.consultationFeeName)}
@@ -293,7 +293,6 @@ class addNewConsultationDrawer extends Component {
                 disabled={provider_id}
                 type="string"
               />
-
             </div>
           ) : null}
         </div>
@@ -328,7 +327,7 @@ class addNewConsultationDrawer extends Component {
       newConsultationType = "",
       newConsultationFee = "",
       consultationFeeId = null,
-      razorpay_link=''
+      razorpay_link = ""
     } = this.state;
     const validate = this.validateData();
     const { submit } = this.props;
@@ -355,14 +354,21 @@ class addNewConsultationDrawer extends Component {
 
   async handleSubmit(data) {
     try {
-      const { addDoctorPaymentProduct, setIsUpdated ,doctors = {}, users = {} , user_roles = {} , auth_role = null } = this.props;
+      const {
+        addDoctorPaymentProduct,
+        setIsUpdated,
+        doctors = {},
+        users = {},
+        user_roles = {},
+        auth_role = null
+      } = this.props;
       const { close } = this.props;
 
-      this.setState({submitting:true});
-      const {doctor_id = null}=data;
-      const {basic_info:{user_id}={}}=doctors[doctor_id] || {};
+      this.setState({ submitting: true });
+      const { doctor_id = null } = data;
+      const { basic_info: { user_id } = {} } = doctors[doctor_id] || {};
       const { category = null } = users[user_id] || {};
-      data["for_user_type"]=category;
+      data["for_user_type"] = category;
       const response = await addDoctorPaymentProduct(data);
       const { consultationFeeId = null } = this.state;
       const {
@@ -381,10 +387,10 @@ class addNewConsultationDrawer extends Component {
       } else {
         message.warn(payload_message);
       }
-      this.setState({submitting:false});
+      this.setState({ submitting: false });
     } catch (err) {
       console.log("err ", err);
-      this.setState({submitting:false});
+      this.setState({ submitting: false });
       message.warn(this.formatMessage(messages.somethingWentWrong));
     }
   }
@@ -399,9 +405,9 @@ class addNewConsultationDrawer extends Component {
       newConsultationTypeText: "",
       newConsultationFee: "",
       fetchingAdminPayments: false,
-      consultation : "",
+      consultation: "",
       consultationFeeId: null,
-      razorpay_link:''
+      razorpay_link: ""
     });
     close();
   };
@@ -409,7 +415,7 @@ class addNewConsultationDrawer extends Component {
   render() {
     const { visible } = this.props;
     const { onClose, renderAddNewConsultationFee } = this;
-    const { consultationFeeId ,consultation , submitting=false} = this.state;
+    const { consultationFeeId, consultation, submitting = false } = this.state;
     const title = consultationFeeId
       ? this.formatMessage(messages.editConsultationFee)
       : this.formatMessage(messages.addConsultationFee);
@@ -435,8 +441,8 @@ class addNewConsultationDrawer extends Component {
         >
           {renderAddNewConsultationFee()}
 
-          {consultation !== "" ? 
-             <Footer
+          {consultation !== "" ? (
+            <Footer
               onSubmit={this.onSubmit}
               onClose={this.onClose}
               submitText={this.formatMessage(messages.submit)}
@@ -444,16 +450,15 @@ class addNewConsultationDrawer extends Component {
               cancelComponent={null}
               submitting={submitting}
             />
-
-            // <div className="add-patient-footer">
-            //   <Button onClick={this.onClose} style={{ marginRight: 8 }}>
-            //     {this.formatMessage(messages.cancel)}
-            //   </Button>
-            //   <Button onClick={this.onSubmit} type="primary">
-            //     {this.formatMessage(messages.submit)}
-            //   </Button>
-            // </div>
-           : null}
+          ) : // <div className="add-patient-footer">
+          //   <Button onClick={this.onClose} style={{ marginRight: 8 }}>
+          //     {this.formatMessage(messages.cancel)}
+          //   </Button>
+          //   <Button onClick={this.onSubmit} type="primary">
+          //     {this.formatMessage(messages.submit)}
+          //   </Button>
+          // </div>
+          null}
         </Drawer>
       </Fragment>
     );

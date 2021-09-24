@@ -1,7 +1,7 @@
-'use strict';
+"use strict";
 
-import {TABLE_NAME, VIDEO_TYPES} from "../app/models/exerciseContents";
-import {TABLE_NAME as exerciseTableName} from "../app/models/exercise";
+import { TABLE_NAME, VIDEO_TYPES } from "../app/models/exerciseContents";
+import { TABLE_NAME as exerciseTableName } from "../app/models/exercise";
 
 import { USER_CATEGORY } from "../constant";
 
@@ -32,9 +32,9 @@ module.exports = {
         values: [
           USER_CATEGORY.DOCTOR,
           USER_CATEGORY.PROVIDER,
-          USER_CATEGORY.ADMIN,
+          USER_CATEGORY.ADMIN
         ],
-        defaultValue: USER_CATEGORY.ADMIN,
+        defaultValue: USER_CATEGORY.ADMIN
       },
       video_content_type: {
         type: DataTypes.ENUM,
@@ -42,10 +42,10 @@ module.exports = {
         defaultValue: VIDEO_TYPES.NONE
       },
       video_content: {
-        type: DataTypes.STRING,
+        type: DataTypes.STRING
       },
       details: {
-        type: DataTypes.JSON,
+        type: DataTypes.JSON
       },
       created_at: {
         allowNull: false,
@@ -62,7 +62,7 @@ module.exports = {
     });
   },
 
-  down: (queryInterface) => {
+  down: queryInterface => {
     return queryInterface.dropTable(TABLE_NAME);
   }
 };

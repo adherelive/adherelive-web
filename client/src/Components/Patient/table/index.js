@@ -9,19 +9,19 @@ import Input from "antd/es/input";
 import Button from "antd/es/button";
 import SearchOutlined from "@ant-design/icons/SearchOutlined";
 import Highlighter from "react-highlight-words";
-import { TABLE_COLUMN  } from "./helper";
-import {DIAGNOSIS_TYPE} from "../../../constant";
+import { TABLE_COLUMN } from "./helper";
+import { DIAGNOSIS_TYPE } from "../../../constant";
 
 class PatientTable extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      searchText: '',
-      searchedColumn: '',
+      searchText: "",
+      searchedColumn: ""
     };
   }
 
-  onRowClick = (key) => (event) => {
+  onRowClick = key => event => {
     event.preventDefault();
     const { openPatientDetailsDrawer } = this.props;
     openPatientDetailsDrawer({ patient_id: key });
@@ -31,20 +31,20 @@ class PatientTable extends Component {
     const { onRowClick } = this;
     const { key } = record;
     return {
-      onClick: onRowClick(key),
+      onClick: onRowClick(key)
     };
   };
 
   formatMessage = data => this.props.intl.formatMessage(data);
 
-  onSelectChange = (selectedRowKeys) => {
+  onSelectChange = selectedRowKeys => {
     this.setState({ selectedRows: selectedRowKeys });
   };
 
   getLoadingComponent = () => {
     const antIcon = <Icon type="loading" style={{ fontSize: 24 }} spin />;
     return {
-      indicator: antIcon,
+      indicator: antIcon
     };
   };
 
@@ -66,9 +66,9 @@ class PatientTable extends Component {
       openEditPatientDrawer
     } = this.props;
 
-    const {onRowClick} = this;
-  
-    return Object.keys(patients).map((id) => {
+    const { onRowClick } = this;
+
+    return Object.keys(patients).map(id => {
       return generateRow({
         id,
         patients,
@@ -94,17 +94,22 @@ class PatientTable extends Component {
     confirm();
     this.setState({
       searchText: selectedKeys[0],
-      searchedColumn: dataIndex,
+      searchedColumn: dataIndex
     });
   };
 
   handleReset = clearFilters => {
     clearFilters();
-    this.setState({ searchText: '' });
+    this.setState({ searchText: "" });
   };
 
   getColumnSearchProps = dataIndex => ({
-    filterDropdown: ({ setSelectedKeys, selectedKeys, confirm, clearFilters }) => (
+    filterDropdown: ({
+      setSelectedKeys,
+      selectedKeys,
+      confirm,
+      clearFilters
+    }) => (
       <div style={{ padding: 8 }}>
         <Input
           ref={node => {
@@ -112,90 +117,87 @@ class PatientTable extends Component {
           }}
           placeholder={`Search ${dataIndex}`}
           value={selectedKeys[0]}
-          onChange={e => setSelectedKeys(e.target.value ? [e.target.value] : [])}
-          onPressEnter={() => this.handleSearch(selectedKeys, confirm, dataIndex)}
-          style={{ width: "100%", marginBottom: 8, display: 'block' }}
+          onChange={e =>
+            setSelectedKeys(e.target.value ? [e.target.value] : [])
+          }
+          onPressEnter={() =>
+            this.handleSearch(selectedKeys, confirm, dataIndex)
+          }
+          style={{ width: "100%", marginBottom: 8, display: "block" }}
         />
-        
-          <Button
-            type="primary"
-            onClick={() => this.handleSearch(selectedKeys, confirm, dataIndex)}
-            icon={<SearchOutlined />}
-            size="small"
-            style={{ width: 90, marginRight: 8 }}
-          >
-            {this.formatMessage(messages.searchText)}
-          </Button>
-          <Button onClick={() => this.handleReset(clearFilters)} size="small" 
+
+        <Button
+          type="primary"
+          onClick={() => this.handleSearch(selectedKeys, confirm, dataIndex)}
+          icon={<SearchOutlined />}
+          size="small"
+          style={{ width: 90, marginRight: 8 }}
+        >
+          {this.formatMessage(messages.searchText)}
+        </Button>
+        <Button
+          onClick={() => this.handleReset(clearFilters)}
+          size="small"
           style={{ width: 90 }}
-          >
-            {this.formatMessage(messages.resetText)}
-          </Button>
-          
-        
+        >
+          {this.formatMessage(messages.resetText)}
+        </Button>
       </div>
     ),
-    filterIcon: filtered => <SearchOutlined style={{ color: filtered ? '#1890ff' : undefined }} />,
-    onFilter: (value, record) =>
-    
-      {
+    filterIcon: filtered => (
+      <SearchOutlined style={{ color: filtered ? "#1890ff" : undefined }} />
+    ),
+    onFilter: (value, record) => {
+      if (dataIndex === TABLE_COLUMN.TREATMENT.dataIndex) {
+        const { carePlanData = {} } = record[dataIndex] || {};
+        const { treatment = "" } = carePlanData;
 
-        if(dataIndex === TABLE_COLUMN.TREATMENT.dataIndex){
-          const {carePlanData = {}} = record[dataIndex] || {};
-          const { treatment = '' , } = carePlanData;
+        return treatment
+          ? treatment
+              .toString()
+              .toLowerCase()
+              .includes(value.toLowerCase())
+          : "";
+      } else if (dataIndex === TABLE_COLUMN.DIAGNOSIS.dataIndex) {
+        const { patientData = {} } = record[dataIndex] || {};
+        const { carePlanData = {} } = patientData;
+        const { details: { diagnosis = {} } = {} } = carePlanData;
+        const { type = "1", description = "" } = diagnosis || {};
 
-          return (treatment
-            ? treatment.toString().toLowerCase().includes(value.toLowerCase())
-            : ''
-          )
-        }else if(dataIndex === TABLE_COLUMN.DIAGNOSIS.dataIndex){
-          const {patientData = {}}=record[dataIndex] || {};
-          const {carePlanData = {}} = patientData;
-          const { details:{diagnosis={}}={} } = carePlanData;
-          const {type ='1',description=''} = diagnosis || {};
+        const diagnosisType = DIAGNOSIS_TYPE[type];
+        const diagnosisTypeValue = diagnosisType["value"] || "";
 
-          const diagnosisType = DIAGNOSIS_TYPE[type];
-          const diagnosisTypeValue = diagnosisType["value"] || '';
-
-          const recordText =`${diagnosisTypeValue} ${description}`;
-          return (recordText
-            ? recordText.toString().toLowerCase().includes(value.toLowerCase())
-            : ''
-          )
-
-        }
-
-        
-      },
+        const recordText = `${diagnosisTypeValue} ${description}`;
+        return recordText
+          ? recordText
+              .toString()
+              .toLowerCase()
+              .includes(value.toLowerCase())
+          : "";
+      }
+    },
     onFilterDropdownVisibleChange: visible => {
       if (visible) {
         setTimeout(() => this.searchInput.select(), 100);
       }
     }
-      
-      
   });
 
   render() {
     const { onRow, onSelectChange, getLoadingComponent, getDataSource } = this;
 
     const rowSelection = {
-      onChange: onSelectChange,
+      onChange: onSelectChange
     };
 
-
-    const {
-      loading,
-      intl: { formatMessage } = {},
-    } = this.props;
+    const { loading, intl: { formatMessage } = {} } = this.props;
 
     const patientLocale = {
-      emptyText:formatMessage(messages.emptyPatientTable)
-    }
+      emptyText: formatMessage(messages.emptyPatientTable)
+    };
 
     return (
       <Table
-        
         rowClassName={() => "pointer"}
         loading={loading === true ? getLoadingComponent() : false}
         columns={getColumn({
@@ -206,10 +208,9 @@ class PatientTable extends Component {
         dataSource={getDataSource()}
         scroll={{ x: 1600 }}
         pagination={{
-          position: "bottom",
+          position: "bottom"
         }}
         locale={patientLocale}
-        
       />
     );
   }

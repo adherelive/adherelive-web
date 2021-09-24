@@ -103,7 +103,11 @@ class VitalController extends Controller {
           start_date,
           end_date,
           details: vitals.getBasicInfo(),
-          participants: [userRoleId, patientUserRoleId],
+          participants: [
+            userRoleId,
+            patientUserRoleId,
+            ...carePlan.getCareplnSecondaryProfiles()
+          ],
           actor: {
             id: userId,
             user_role_id: userRoleId,
@@ -212,7 +216,11 @@ class VitalController extends Controller {
           start_date,
           end_date,
           details: vitals.getBasicInfo(),
-          participants: [userRoleId, patientUserRoleId],
+          participants: [
+            userRoleId,
+            patientUserRoleId,
+            ...carePlan.getCareplnSecondaryProfiles()
+          ],
           actor: {
             id: userId,
             user_role_id: userRoleId,
