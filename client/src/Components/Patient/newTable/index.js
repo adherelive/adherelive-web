@@ -433,7 +433,8 @@ class patientTable extends Component {
     if (
       (columnKey !== TABLE_COLUMN.CREATED_AT.key &&
         columnKey !== TABLE_COLUMN.PID.key) ||
-      searchTreatmentText.length > 0 || searchDiagnosisText.length > 0
+      searchTreatmentText.length > 0 ||
+      searchDiagnosisText.length > 0
     ) {
       return;
     }

@@ -663,6 +663,16 @@ class Dashboard extends Component {
       getProviderBanner
     } = this;
 
+    // console.log("198237837128 getCookie", this.getCookie("accessToken"));
+
+    const {
+      formatMessage,
+      renderChartTabs,
+      getVerifyModal,
+      changeTab,
+      getProviderBanner
+    } = this;
+
     let {
       basic_info: {
         user_id: patientUserId = "",
@@ -689,6 +699,11 @@ class Dashboard extends Component {
     // const roomId = getRoomId(doctorRoleId, patientRoleId);
 
     const { channel_id: roomId } = care_plans[care_plan_id] || {};
+
+    let bannerFlag = true;
+    const { providers = {}, doctor_provider_id = null } = this.props;
+    const { details: { banner = "" } = {} } =
+      providers[doctor_provider_id] || {};
 
     let bannerFlag = true;
     const { providers = {}, doctor_provider_id = null } = this.props;
@@ -754,6 +769,8 @@ class Dashboard extends Component {
               </div>
             )}
           </div>
+
+          {/* }   */}
 
           {/* }   */}
 
