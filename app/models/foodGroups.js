@@ -17,25 +17,25 @@ export const db = database => {
         primaryKey: true,
         type: DataTypes.INTEGER
       },
-      portion_id:{
-          type:DataTypes.INTEGER,
-          allowNull:false,
-      },
-      serving:{
-        type: DataTypes.FLOAT(11, 2),
-        allowNull: false,
-      },
-      food_item_detail_id:{
+      portion_id: {
         type: DataTypes.INTEGER,
-        allowNull: false,
+        allowNull: false
+      },
+      serving: {
+        type: DataTypes.FLOAT(11, 2),
+        allowNull: false
+      },
+      food_item_detail_id: {
+        type: DataTypes.INTEGER,
+        allowNull: false
       },
       details: {
-        type: DataTypes.JSON,
+        type: DataTypes.JSON
       }
     },
     {
       underscored: true,
-      paranoid: true,
+      paranoid: true
     }
   );
 };
@@ -44,14 +44,17 @@ export const associate = database => {
   // const {TABLE_NAME} = database.models || {};
   // associations here (if any) ...
 
-    // associations here (if any) ...
-    database.models[TABLE_NAME].hasOne(database.models[portionTableName], {
-        foreignKey: "id",
-        sourceKey: "portion_id"
-    });
+  // associations here (if any) ...
+  database.models[TABLE_NAME].hasOne(database.models[portionTableName], {
+    foreignKey: "id",
+    sourceKey: "portion_id"
+  });
 
-    database.models[TABLE_NAME].hasOne(database.models[foodItemDetailsTableName], {
-        foreignKey: "id",
-        sourceKey: "food_item_detail_id"
-    });
+  database.models[TABLE_NAME].hasOne(
+    database.models[foodItemDetailsTableName],
+    {
+      foreignKey: "id",
+      sourceKey: "food_item_detail_id"
+    }
+  );
 };

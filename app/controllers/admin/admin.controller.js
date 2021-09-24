@@ -24,7 +24,7 @@ import UserWrapper from "../../ApiWrapper/web/user";
 import ProviderWrapper from "../../ApiWrapper/web/provider";
 import TACWrapper from "../../ApiWrapper/web/termsAndConditions";
 
-import {USER_CATEGORY , TERMS_AND_CONDITIONS_TYPES} from "../../../constant"
+import { USER_CATEGORY, TERMS_AND_CONDITIONS_TYPES } from "../../../constant";
 
 const Log = new Logger("ADMIN > CONTROLLER");
 
@@ -110,15 +110,17 @@ class AdminController extends Controller {
           const doctorWrapper = await DoctorWrapper(doctor);
           const doctorId = doctorWrapper.getDoctorId();
           const userId = doctorWrapper.getUserId();
-          let userRoleId = null ;
-          const userRoleDataForUserId =await  userRoleService.getFirstUserRole(userId);
-          if(userRoleDataForUserId){
+          let userRoleId = null;
+          const userRoleDataForUserId = await userRoleService.getFirstUserRole(
+            userId
+          );
+          if (userRoleDataForUserId) {
             const userRoleWrapper = UserRoleWrapper(userRoleDataForUserId);
-            userRoleId =  (await userRoleWrapper).getId() || null;
+            userRoleId = (await userRoleWrapper).getId() || null;
           }
 
           const careplanData = await carePlanService.getCarePlanByData({
-            user_role_id:userRoleId
+            user_role_id: userRoleId
           });
 
           for (const carePlan of careplanData) {
@@ -152,62 +154,72 @@ class AdminController extends Controller {
     const { raiseSuccess, raiseServerError } = this;
     try {
       let mappingData = [];
-      const users = await userService.getUserByData({category: [USER_CATEGORY.PROVIDER]});
+      const users = await userService.getUserByData({
+        category: [USER_CATEGORY.PROVIDER]
+      });
 
       if (users && users.length) {
         for (const user of users) {
           const userWrapper = await UserWrapper(user);
-          const provider = await providerService.getProviderByData({user_id: userWrapper.getId()});
-          const providerWrapper = await ProviderWrapper(provider)
-          mappingData.push({provider_id: providerWrapper.getProviderId(), terms_and_conditions_id:  2})
+          const provider = await providerService.getProviderByData({
+            user_id: userWrapper.getId()
+          });
+          const providerWrapper = await ProviderWrapper(provider);
+          mappingData.push({
+            provider_id: providerWrapper.getProviderId(),
+            terms_and_conditions_id: 2
+          });
         }
       }
-      if(mappingData && mappingData.length) {
-        const response = await providerTermsMappingService.bulkCreate(mappingData)
+      if (mappingData && mappingData.length) {
+        const response = await providerTermsMappingService.bulkCreate(
+          mappingData
+        );
       }
-      
-      return raiseSuccess(res, 200, {}, "Updated terms and conditions for existing providers.");
+
+      return raiseSuccess(
+        res,
+        200,
+        {},
+        "Updated terms and conditions for existing providers."
+      );
     } catch (error) {
       Log.debug("updateProviderTermsMappingForExistingUsers 500 error", error);
       return raiseServerError(res);
     }
   };
 
-  getTermsAndConditions = async (req,res)=> {
-    const { raiseSuccess, raiseServerError ,raiseClientError} = this;
+  getTermsAndConditions = async (req, res) => {
+    const { raiseSuccess, raiseServerError, raiseClientError } = this;
     try {
       const { params: { id = null } = {} } = req;
-      let record = null ;
+      let record = null;
 
-      if(id.toString() === "0"){
-        record = await tacService.getByData({terms_type:TERMS_AND_CONDITIONS_TYPES.DEFAULT_TERMS_OF_PAYMENT});  
-      }else{
-        record = await tacService.getByData({id});
+      if (id.toString() === "0") {
+        record = await tacService.getByData({
+          terms_type: TERMS_AND_CONDITIONS_TYPES.DEFAULT_TERMS_OF_PAYMENT
+        });
+      } else {
+        record = await tacService.getByData({ id });
       }
 
-      if(!record){
-        return raiseClientError(
-          res,
-          422,
-          {},
-          "No Matching record Found"
-        )
+      if (!record) {
+        return raiseClientError(res, 422, {}, "No Matching record Found");
       }
 
-      const tacDetails = await TACWrapper(record); 
+      const tacDetails = await TACWrapper(record);
       let tacApidata = {};
-      if(id.toString() === "0" ){
-        tacApidata["0"]=tacDetails.getBasicInfo();
-      }else{
-        tacApidata[tacDetails.getId()]=tacDetails.getBasicInfo();
-
+      if (id.toString() === "0") {
+        tacApidata["0"] = tacDetails.getBasicInfo();
+      } else {
+        tacApidata[tacDetails.getId()] = tacDetails.getBasicInfo();
       }
 
       return raiseSuccess(
         res,
         200,
         {
-          terms_and_conditions:{
+          terms_and_conditions: {
             ...tacApidata
           }
         },
@@ -218,7 +230,6 @@ class AdminController extends Controller {
       return raiseServerError(res);
     }
   };
-
 }
 
 export default new AdminController();

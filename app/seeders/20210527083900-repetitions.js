@@ -1,9 +1,9 @@
-'use strict';
+"use strict";
 
-import {TABLE_NAME} from "../models/exerciseRepetition";
+import { TABLE_NAME } from "../models/exerciseRepetition";
 
 module.exports = {
-  up: (queryInterface) => {
+  up: queryInterface => {
     return queryInterface.bulkInsert(TABLE_NAME, [
       {
         type: "steps",
@@ -34,11 +34,11 @@ module.exports = {
         type: "repetitions",
         created_at: new Date(),
         updated_at: new Date()
-      },
+      }
     ]);
   },
 
-  down: (queryInterface) => {
+  down: queryInterface => {
     return queryInterface.bulkDelete(TABLE_NAME, null, {});
   }
 };

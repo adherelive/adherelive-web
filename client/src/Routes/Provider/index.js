@@ -73,22 +73,17 @@ const PrivacyPolicy = lazy(() =>
   )
 );
 
-
-const ProviderTransactionPage = lazy(() => 
-    import(
-      /* webpackChunkName: "ProviderTransactionPage" */ "../../Containers/Pages/providerTransactionPage"
-
-    )
+const ProviderTransactionPage = lazy(() =>
+  import(
+    /* webpackChunkName: "ProviderTransactionPage" */ "../../Containers/Pages/providerTransactionPage"
+  )
 );
 
-const PaymentDetailsPage = lazy(() => 
-    import(
-      /* webpackChunkName: "ProviderPaymentDetailsPage" */ "../../Containers/ProviderAccountDetails"
-
-    )
+const PaymentDetailsPage = lazy(() =>
+  import(
+    /* webpackChunkName: "ProviderPaymentDetailsPage" */ "../../Containers/ProviderAccountDetails"
+  )
 );
-
-
 
 const ProviderDoctorDetailsComp = props => {
   const { match: { params: { id } = {} } = {} } = props;
@@ -110,7 +105,7 @@ class ProviderDoctor extends Component {
     const showSidebar = !(
       pathname.includes("patient-consulting") ||
       pathname.includes("terms-of-service") ||
-      pathname.includes("privacy-policy") || 
+      pathname.includes("privacy-policy") ||
       pathname.includes("terms-of-payment")
     );
 
@@ -198,18 +193,21 @@ class ProviderDoctor extends Component {
                 />
 
                 <Route
-                 exact
-                 path={PATH.PROVIDER.TRANSACTION_DETAILS}
-                 component={ProviderTransactionPage}
+                  exact
+                  path={PATH.PROVIDER.TRANSACTION_DETAILS}
+                  component={ProviderTransactionPage}
                 />
 
                 <Route
-                exact
-                path={PATH.PROVIDER.PAYMENT_DETAILS}
-                component={PaymentDetailsPage}
+                  exact
+                  path={PATH.PROVIDER.PAYMENT_DETAILS}
+                  component={PaymentDetailsPage}
                 />
 
-                <Route path={PATH.LANDING_PAGE} component={ProviderDoctorPage} />
+                <Route
+                  path={PATH.LANDING_PAGE}
+                  component={ProviderDoctorPage}
+                />
                 {/* <Route path={""} component={BlankState} /> */}
               </Switch>
             </div>

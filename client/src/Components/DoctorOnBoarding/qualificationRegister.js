@@ -2046,4 +2046,5 @@ class QualificationRegister extends Component {
     );
   }
 }
+
 export default withRouter(injectIntl(QualificationRegister));

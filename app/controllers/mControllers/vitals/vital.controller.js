@@ -31,7 +31,7 @@ import {
   FEATURE_TYPE,
   NOTIFICATION_STAGES,
   USER_CATEGORY,
-  MESSAGE_TYPES,
+  MESSAGE_TYPES
 } from "../../../../constant";
 import SqsQueueService from "../../../services/awsQueue/queue.service";
 
@@ -54,21 +54,21 @@ class VitalController extends Controller {
           start_date,
           end_date,
           repeat_days,
-          description,
+          description
         } = {},
         userDetails: {
           userId,
           userRoleId,
           userData: { category } = {},
-          userCategoryData = {},
-        } = {},
+          userCategoryData = {}
+        } = {}
       } = req;
 
       const QueueService = new queueService();
 
       const doesVitalExists = await VitalService.getByData({
         care_plan_id,
-        vital_template_id,
+        vital_template_id
       });
 
       if (!doesVitalExists) {
@@ -79,9 +79,9 @@ class VitalController extends Controller {
           end_date,
           details: {
             repeat_interval_id,
-            repeat_days,
+            repeat_days
           },
-          description,
+          description
         });
 
         const vitals = await VitalWrapper({ id: vitalData.get("id") });
@@ -104,14 +104,18 @@ class VitalController extends Controller {
           start_date,
           end_date,
           details: vitals.getBasicInfo(),
-          participants: [userRoleId, patientUserRoleId, ...carePlan.getCareplnSecondaryProfiles()],
+          participants: [
+            userRoleId,
+            patientUserRoleId,
+            ...carePlan.getCareplnSecondaryProfiles()
+          ],
           actor: {
             id: userId,
             user_role_id: userRoleId,
             category,
-            userCategoryData,
+            userCategoryData
           },
-          vital_templates: vital_templates[vitals.getVitalTemplateId()],
+          vital_templates: vital_templates[vitals.getVitalTemplateId()]
         };
 
         // RRule
@@ -124,7 +128,7 @@ class VitalController extends Controller {
         const vitalJob = JobSdk.execute({
           eventType: EVENT_TYPE.VITALS,
           eventStage: NOTIFICATION_STAGES.CREATE,
-          event: eventScheduleData,
+          event: eventScheduleData
         });
 
         NotificationSdk.execute(vitalJob);
@@ -134,10 +138,10 @@ class VitalController extends Controller {
           200,
           {
             vitals: {
-              [vitals.getVitalId()]: vitals.getBasicInfo(),
+              [vitals.getVitalId()]: vitals.getBasicInfo()
             },
             ...rest,
-            vital_templates,
+            vital_templates
           },
           "Vital added successfully"
         );
@@ -165,11 +169,11 @@ class VitalController extends Controller {
           userId,
           userRoleId,
           userData: { category } = {},
-          userCategoryData = {},
+          userCategoryData = {}
         } = {},
         body,
         body: { start_date, end_date } = {},
-        params: { id } = {},
+        params: { id } = {}
       } = req;
       const EventService = new eventService();
 
@@ -181,7 +185,7 @@ class VitalController extends Controller {
         const previousVital = await VitalWrapper({ data: doesVitalExists });
         const dataToUpdate = vitalHelper.getVitalUpdateData({
           ...body,
-          previousVital,
+          previousVital
         });
         const vitalData = await VitalService.update(dataToUpdate, id);
 
@@ -189,7 +193,7 @@ class VitalController extends Controller {
 
         const vitals = await VitalWrapper({ id });
         const vitalTemplates = await VitalTemplateWrapper({
-          id: vitals.getVitalTemplateId(),
+          id: vitals.getVitalTemplateId()
         });
         const carePlan = await CarePlanWrapper(null, vitals.getCarePlanId());
 
@@ -208,21 +212,25 @@ class VitalController extends Controller {
           start_date,
           end_date,
           details: vitals.getBasicInfo(),
-          participants: [userRoleId, patientUserRoleId, ...carePlan.getCareplnSecondaryProfiles()],
+          participants: [
+            userRoleId,
+            patientUserRoleId,
+            ...carePlan.getCareplnSecondaryProfiles()
+          ],
           actor: {
             id: userId,
             user_role_id: userRoleId,
             category,
-            userCategoryData,
+            userCategoryData
           },
-          vital_templates: vitalTemplates.getBasicInfo(),
+          vital_templates: vitalTemplates.getBasicInfo()
         };
 
         Log.debug("eventScheduleData", eventScheduleData);
 
         const deletedEvents = await EventService.deleteBatch({
           event_id: vitals.getVitalId(),
-          event_type: EVENT_TYPE.VITALS,
+          event_type: EVENT_TYPE.VITALS
         });
 
         Log.debug("deletedEvents", deletedEvents);
@@ -233,7 +241,7 @@ class VitalController extends Controller {
         const vitalJob = JobSdk.execute({
           eventType: EVENT_TYPE.VITALS,
           eventStage: NOTIFICATION_STAGES.UPDATE,
-          event: eventScheduleData,
+          event: eventScheduleData
         });
         NotificationSdk.execute(vitalJob);
 
@@ -242,10 +250,10 @@ class VitalController extends Controller {
           200,
           {
             vitals: {
-              [vitals.getVitalId()]: vitals.getBasicInfo(),
+              [vitals.getVitalId()]: vitals.getBasicInfo()
             },
             ...(await vitals.getReferenceInfo()),
-            vital_id: vitals.getVitalId(),
+            vital_id: vitals.getVitalId()
           },
           "Vital updated successfully"
         );
@@ -260,7 +268,7 @@ class VitalController extends Controller {
     const { raiseSuccess, raiseServerError } = this;
     try {
       const vitalData = await FeatureDetailService.getDetailsByData({
-        feature_type: FEATURE_TYPE.VITAL,
+        feature_type: FEATURE_TYPE.VITAL
       });
 
       const vitalDetails = await FeatureDetailWrapper(vitalData);
@@ -270,7 +278,7 @@ class VitalController extends Controller {
         200,
         {
           ...vitalDetails.getFeatureDetails(),
-          days: DAYS,
+          days: DAYS
         },
         "Vital form details fetched successfully"
       );
@@ -305,9 +313,9 @@ class VitalController extends Controller {
           200,
           {
             vital_templates: {
-              ...templateDetails,
+              ...templateDetails
             },
-            vital_template_ids: templateIds,
+            vital_template_ids: templateIds
           },
           "Vitals fetched successfully"
         );
@@ -326,11 +334,8 @@ class VitalController extends Controller {
       Log.debug("req.params --->", req.params);
       const {
         params: { id } = {},
-        userDetails: {
-          userRoleId,
-          userData: { category } = {},
-        } = {},
-        body: { response } = {},
+        userDetails: { userRoleId, userData: { category } = {} } = {},
+        body: { response } = {}
       } = req;
       const EventService = new eventService();
 
@@ -352,7 +357,7 @@ class VitalController extends Controller {
 
       Log.info(`vital ${vital.getVitalId()} ${vital.getVitalTemplateId()}`);
       const vitalTemplate = await VitalTemplateWrapper({
-        id: vital.getVitalTemplateId(),
+        id: vital.getVitalTemplateId()
       });
 
       Log.info(`event.getStatus() ${event.getStatus()}`);
@@ -362,16 +367,16 @@ class VitalController extends Controller {
 
         prevResponse.unshift({
           value: rest,
-          createdTime,
+          createdTime
         });
 
         const updateEvent = await EventService.update(
           {
             details: {
               ...event.getDetails(),
-              response: prevResponse,
+              response: prevResponse
             },
-            status: EVENT_STATUS.COMPLETED,
+            status: EVENT_STATUS.COMPLETED
           },
           event_id
         );
@@ -392,14 +397,14 @@ class VitalController extends Controller {
 
       const chatJSON = JSON.stringify({
         vitals: {
-          [vital.getVitalId()]: vital.getBasicInfo(),
+          [vital.getVitalId()]: vital.getBasicInfo()
         },
         vital_templates: {
-          [vitalTemplate.getVitalTemplateId()]: vitalTemplate.getBasicInfo(),
+          [vitalTemplate.getVitalTemplateId()]: vitalTemplate.getBasicInfo()
         },
         vital_id: vital.getVitalId(),
         response,
-        type: EVENT_TYPE.VITALS,
+        type: EVENT_TYPE.VITALS
       });
 
       const twilioMsg = await twilioService.addSymptomMessage(
@@ -435,23 +440,27 @@ class VitalController extends Controller {
         event_id: vital.getVitalId(),
         event_type: EVENT_TYPE.VITALS,
         vital: vital.getBasicInfo(),
-        participants: [doctorRoleId, userRoleId, ...carePlan.getCareplnSecondaryProfiles()],
+        participants: [
+          doctorRoleId,
+          userRoleId,
+          ...carePlan.getCareplnSecondaryProfiles()
+        ],
         // participant_role_ids: [doctorRoleId, userRoleId, ...carePlan.getCareplnSecondaryProfiles()],
         actor: {
           id: patientData.getUserId(),
           user_role_id: userRoleId,
           details: {
             name: patientData.getFullName(),
-            category: USER_CATEGORY.PATIENT,
-          },
+            category: USER_CATEGORY.PATIENT
+          }
         },
-        vital_templates: vitalTemplate.getBasicInfo(),
+        vital_templates: vitalTemplate.getBasicInfo()
       };
 
       const vitalJob = JobSdk.execute({
         eventType: EVENT_TYPE.VITALS,
         eventStage: NOTIFICATION_STAGES.RESPONSE_ADDED,
-        event: eventScheduleData,
+        event: eventScheduleData
       });
 
       await NotificationSdk.execute(vitalJob);
@@ -460,7 +469,7 @@ class VitalController extends Controller {
         res,
         200,
         {
-          ...(await vital.getAllInfo()),
+          ...(await vital.getAllInfo())
         },
         `${vitalTemplate.getName().toUpperCase()} vital updated successfully`
       );
@@ -488,7 +497,7 @@ class VitalController extends Controller {
           event_id: id,
           event_type: EVENT_TYPE.VITALS,
           date: vital.getStartDate(),
-          sort: "DESC",
+          sort: "DESC"
         }
       );
 
@@ -513,9 +522,9 @@ class VitalController extends Controller {
           200,
           {
             vital_timeline: {
-              ...dateWiseVitalData,
+              ...dateWiseVitalData
             },
-            vital_date_ids: timelineDates,
+            vital_date_ids: timelineDates
           },
           "Vital responses fetched successfully"
         );

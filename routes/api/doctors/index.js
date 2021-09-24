@@ -182,5 +182,4 @@ router.post(
   DoctorController.activateDoctor
 );
 
-
 module.exports = router;

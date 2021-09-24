@@ -10,18 +10,18 @@ const Logger = new Log("WEB > USER_FAVOURITES > SERVICE");
 class UserFavouritesService {
   constructor() {}
 
-  markFavourite = async (data) => {
+  markFavourite = async data => {
     const transaction = await Database.initTransaction();
     try {
-        const markedRecord = await Database.getModel(TABLE_NAME).create(data, {
-            raw: true,
-            transaction
-        });
-        await transaction.commit();
-        return markedRecord;
-    } catch(error) {
-        await transaction.rollback();
-        throw error;
+      const markedRecord = await Database.getModel(TABLE_NAME).create(data, {
+        raw: true,
+        transaction
+      });
+      await transaction.commit();
+      return markedRecord;
+    } catch (error) {
+      await transaction.rollback();
+      throw error;
     }
   };
 
@@ -31,19 +31,19 @@ class UserFavouritesService {
         where: data,
         raw: true
       });
-      return favourite ;
+      return favourite;
     } catch (error) {
       throw error;
     }
   };
 
-  findExistingFavourite =  async data => {
+  findExistingFavourite = async data => {
     try {
       const existing = await Database.getModel(TABLE_NAME).findOne({
         where: data,
         raw: true
       });
-      return existing ;
+      return existing;
     } catch (error) {
       throw error;
     }
@@ -51,13 +51,13 @@ class UserFavouritesService {
 
   getByData = async data => {
     try {
-        const favourite = await Database.getModel(TABLE_NAME).findOne({
-            where: data,
-            raw: true
-        });
-        return favourite;
-    } catch(error) {
-        throw error;
+      const favourite = await Database.getModel(TABLE_NAME).findOne({
+        where: data,
+        raw: true
+      });
+      return favourite;
+    } catch (error) {
+      throw error;
     }
   };
 
@@ -65,19 +65,16 @@ class UserFavouritesService {
     try {
       const deleteFavourite = await Database.getModel(TABLE_NAME).destroy({
         where: {
-          id,
+          id
         },
         paranoid: false
       });
       return deleteFavourite;
     } catch (error) {
-      console.log("32784284576237463256948723 ERRRRO",error);
+      console.log("32784284576237463256948723 ERRRRO", error);
       throw error;
     }
   };
-  
-
 }
-
 
 export default new UserFavouritesService();

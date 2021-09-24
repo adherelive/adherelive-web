@@ -18,31 +18,31 @@ export const uploadDocument = async ({
   fileName,
   id,
   folder,
-  doHashing,
+  doHashing
 }) => {
   try {
-      Log.info(`fileName : ${fileName}`);
-      await minioService.createBucket();
+    Log.info(`fileName : ${fileName}`);
+    await minioService.createBucket();
 
-      let hash = md5.create();
-      hash.update(id);
-      hash.hex();
-      hash = String(hash);
+    let hash = md5.create();
+    hash.update(id);
+    hash.hex();
+    hash = String(hash);
 
-      const subfolder = doHashing? hash.substring(4): id;
+    const subfolder = doHashing ? hash.substring(4) : id;
 
-      const encodedFileName = subfolder + "/" + fileName;
+    const encodedFileName = subfolder + "/" + fileName;
 
-      Log.info(`encodedFileName :: ${encodedFileName}`);
+    Log.info(`encodedFileName :: ${encodedFileName}`);
 
-      const filePath = `${folder}/${encodedFileName}`;
-      Log.info(`filePath :: ${filePath}`);
+    const filePath = `${folder}/${encodedFileName}`;
+    Log.info(`filePath :: ${filePath}`);
 
-      await minioService.saveBufferObject(buffer, filePath, null);
-      return completePath(`/${filePath}`);
-  } catch(error) {
-      Log.debug("uploadDocument catch error", error);
-      throw error;
+    await minioService.saveBufferObject(buffer, filePath, null);
+    return completePath(`/${filePath}`);
+  } catch (error) {
+    Log.debug("uploadDocument catch error", error);
+    throw error;
   }
 };
 
@@ -69,11 +69,11 @@ export const getNotificationUsers = async (type, event_id) => {
   }
 };
 
-const appointmentUsers = async (appointment_id) => {
+const appointmentUsers = async appointment_id => {
   try {
     const careplanAppointment =
       (await carePlanAppointmentService.getCareplanByAppointment({
-        appointment_id,
+        appointment_id
       })) || {};
 
     const { care_plan_id } = await careplanAppointment;
@@ -86,28 +86,27 @@ const appointmentUsers = async (appointment_id) => {
     return [
       patientUserRoleId,
       carePlan.getUserRoleId(),
-      ...carePlan.getCareplnSecondaryProfiles(),
+      ...carePlan.getCareplnSecondaryProfiles()
     ];
   } catch (error) {
     throw error;
   }
 };
 
-const dietUsers = async (diet_id) => {
+const dietUsers = async diet_id => {
   try {
-
-  } catch(error) {
+  } catch (error) {
     throw error;
   }
 };
 
-const workoutUsers = async (workout_id) => {};
+const workoutUsers = async workout_id => {};
 
-const medicationUsers = async (medication_id) => {};
+const medicationUsers = async medication_id => {};
 
-const vitalUsers = async (vital_id) => {
+const vitalUsers = async vital_id => {
   try {
-    const vital = await VitalWrapper({id: vital_id});
+    const vital = await VitalWrapper({ id: vital_id });
     const carePlan = await CareplanWrapper(null, vital.getCarePlanId());
 
     const patient = await PatientWrapper(null, carePlan.getPatientId());
@@ -116,11 +115,11 @@ const vitalUsers = async (vital_id) => {
     return [
       patientUserRoleId,
       carePlan.getUserRoleId(),
-      ...carePlan.getCareplnSecondaryProfiles(),
+      ...carePlan.getCareplnSecondaryProfiles()
     ];
-  } catch(error) {
+  } catch (error) {
     throw error;
   }
 };
 
-const careplanActivationUsers = async (care_plan_id) => {};
+const careplanActivationUsers = async care_plan_id => {};

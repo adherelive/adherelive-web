@@ -5,14 +5,14 @@ class Logger {
   constructor(type, payload) {
     switch (type) {
       case "email":
-        console.log('TYPEEEEEE=============>          ',type, payload);
+        console.log("TYPEEEEEE=============>          ", type, payload);
         this._model = emailLoggerModel;
         break;
       case "sms":
         // this._model = smsLoggerModel;
         break;
       case "event_error":
-        // this._model = eventErrorLoggerModel;
+      // this._model = eventErrorLoggerModel;
       default:
         break;
     }

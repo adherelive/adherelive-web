@@ -54,7 +54,7 @@ export const db = database => {
 };
 
 export const associate = database => {
-  const { careplan_secondary_doctor_mappings,care_plans,user_roles } =
+  const { careplan_secondary_doctor_mappings, care_plans, user_roles } =
     database.models || {};
 
   // associations here (if any) ...
@@ -67,5 +67,4 @@ export const associate = database => {
     foreignKey: "secondary_doctor_role_id",
     targetKey: "id"
   });
-
 };

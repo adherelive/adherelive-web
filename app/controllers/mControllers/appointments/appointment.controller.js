@@ -114,8 +114,8 @@ class MobileAppointmentController extends Controller {
         participant_one_id: userCategoryId,
         participant_two_type,
         participant_two_id,
-        organizer_type:category,
-        organizer_id:userCategoryId,
+        organizer_type: category,
+        organizer_id: userCategoryId,
         description,
         start_date: moment(date),
         end_date: moment(date),
@@ -154,7 +154,7 @@ class MobileAppointmentController extends Controller {
             id: participant_two_id
           });
           const patientData = await PatientWrapper(patient);
-          const {user_role_id} = await patientData.getAllInfo();
+          const { user_role_id } = await patientData.getAllInfo();
           participantTwoId = user_role_id;
           break;
         default:
@@ -171,7 +171,11 @@ class MobileAppointmentController extends Controller {
         start_time,
         end_time,
         details: appointmentData.getBasicInfo(),
-        participants: [userRoleId, participantTwoId, ...carePlan.getCareplnSecondaryProfiles()],
+        participants: [
+          userRoleId,
+          participantTwoId,
+          ...carePlan.getCareplnSecondaryProfiles()
+        ],
         actor: {
           id: userId,
           user_role_id: userRoleId,
@@ -298,8 +302,11 @@ class MobileAppointmentController extends Controller {
       const { id: participant_two_id, category: participant_two_type } =
         participant_two || {};
 
-        // careplan id for appointment
-      const {care_plan_id = null} = await carePlanAppointmentService.getSingleCarePlanAppointmentByData({appointment_id: id}) || {};
+      // careplan id for appointment
+      const { care_plan_id = null } =
+        (await carePlanAppointmentService.getSingleCarePlanAppointmentByData({
+          appointment_id: id
+        })) || {};
 
       const oldAppointment = await appointmentService.getAppointmentById(id);
 
@@ -356,7 +363,7 @@ class MobileAppointmentController extends Controller {
         participant_one_id: userCategoryId,
         participant_two_type,
         participant_two_id,
-        organizer_type:category,
+        organizer_type: category,
         organizer_id: userCategoryId,
         description,
         start_date: moment(date),
@@ -404,7 +411,7 @@ class MobileAppointmentController extends Controller {
             id: participant_two_id
           });
           const patientData = await PatientWrapper(patient);
-          const {user_role_id} = await patientData.getAllInfo();
+          const { user_role_id } = await patientData.getAllInfo();
           participantTwoId = user_role_id;
           break;
         default:
@@ -429,7 +436,11 @@ class MobileAppointmentController extends Controller {
         start_time,
         end_time,
         details: appointmentApiData.getBasicInfo(),
-        participants: [userRoleId, participantTwoId, ...carePlan.getCareplnSecondaryProfiles()],
+        participants: [
+          userRoleId,
+          participantTwoId,
+          ...carePlan.getCareplnSecondaryProfiles()
+        ],
         actor: {
           id: userId,
           user_role_id: userRoleId,
@@ -497,52 +508,71 @@ class MobileAppointmentController extends Controller {
   getAppointmentDetails = async (req, res) => {
     const { raiseSuccess, raiseServerError } = this;
     try {
+      const {
+        userDetails: { userData: { category }, userCategoryId } = {},
+        headers: { version = null } = {},
+        headers = {}
+      } = req;
 
-      const {userDetails: {userData: {category}, userCategoryId} = {}, 
-             headers: {version = null} = {}, headers = {}} = req;
+      let featureDetails = {};
 
-      let featureDetails = {}
-
-      if(version) {
+      if (version) {
         const appointmentDetails = await featureDetailService.getDetailsByData({
           feature_type: FEATURE_TYPE.APPOINTMENT
         });
-  
+
         const appointmentData = await FeatureDetailsWrapper(appointmentDetails);
         featureDetails = appointmentData.getFeatureDetails();
-        const {type_description, radiology_type_data} =  featureDetails || {};
-  
+        const { type_description, radiology_type_data } = featureDetails || {};
+
         const userTypeData = {
           id: userCategoryId,
-          category,
+          category
         };
-  
-        const updatedTypeDescriptionWithFavourites = await AppointmentHelper.getFavoriteInDetails(userTypeData, type_description, FAVOURITE_TYPE.MEDICAL_TESTS);
-        featureDetails = {...featureDetails, ...{type_description: updatedTypeDescriptionWithFavourites}}
-        const updatedRadiologyDataWithFavourites = await AppointmentHelper.getFavoriteInDetails(userTypeData, radiology_type_data, FAVOURITE_TYPE.RADIOLOGY);
-        featureDetails = {...featureDetails, ...{radiology_type_data: updatedRadiologyDataWithFavourites}}
-   
+
+        const updatedTypeDescriptionWithFavourites = await AppointmentHelper.getFavoriteInDetails(
+          userTypeData,
+          type_description,
+          FAVOURITE_TYPE.MEDICAL_TESTS
+        );
+        featureDetails = {
+          ...featureDetails,
+          ...{ type_description: updatedTypeDescriptionWithFavourites }
+        };
+        const updatedRadiologyDataWithFavourites = await AppointmentHelper.getFavoriteInDetails(
+          userTypeData,
+          radiology_type_data,
+          FAVOURITE_TYPE.RADIOLOGY
+        );
+        featureDetails = {
+          ...featureDetails,
+          ...{ radiology_type_data: updatedRadiologyDataWithFavourites }
+        };
       } else {
-        const prevVersionsAppointmentDetails = await featureDetailService.getDetailsByData({
-          feature_type: FEATURE_TYPE.PREV_VERSION_APPOINTMENT
-        });
-  
-        const prevVersionsAppointmentData = await FeatureDetailsWrapper(prevVersionsAppointmentDetails);
+        const prevVersionsAppointmentDetails = await featureDetailService.getDetailsByData(
+          {
+            feature_type: FEATURE_TYPE.PREV_VERSION_APPOINTMENT
+          }
+        );
+
+        const prevVersionsAppointmentData = await FeatureDetailsWrapper(
+          prevVersionsAppointmentDetails
+        );
         featureDetails = prevVersionsAppointmentData.getFeatureDetails();
       }
 
-      const {appointment_type ={}} = featureDetails;
-      if(category === USER_CATEGORY.HSP){
+      const { appointment_type = {} } = featureDetails;
+      if (category === USER_CATEGORY.HSP) {
         let hspAppointmentType = {};
-        for(let each in appointment_type ){
-          const { title = '' } = appointment_type[each];
-          const { title : radiologyTitle } = APPOINTMENT_TYPE[RADIOLOGY];
-          if(title === radiologyTitle ){
+        for (let each in appointment_type) {
+          const { title = "" } = appointment_type[each];
+          const { title: radiologyTitle } = APPOINTMENT_TYPE[RADIOLOGY];
+          if (title === radiologyTitle) {
             continue;
           }
-          hspAppointmentType[each]=appointment_type[each];
+          hspAppointmentType[each] = appointment_type[each];
         }
-        featureDetails["appointment_type"]={...hspAppointmentType};
+        featureDetails["appointment_type"] = { ...hspAppointmentType };
       }
 
       return raiseSuccess(

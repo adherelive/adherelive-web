@@ -1,7 +1,7 @@
-'use strict';
+"use strict";
 
-import {TABLE_NAME} from "../app/models/eventHistory";
-import {DataTypes} from "sequelize";
+import { TABLE_NAME } from "../app/models/eventHistory";
+import { DataTypes } from "sequelize";
 
 module.exports = {
   up: (queryInterface, Sequelize) => {
@@ -14,7 +14,7 @@ module.exports = {
       },
       schedule_event_id: {
         type: DataTypes.INTEGER,
-        allowNull: false,
+        allowNull: false
       },
       data: {
         type: DataTypes.JSON

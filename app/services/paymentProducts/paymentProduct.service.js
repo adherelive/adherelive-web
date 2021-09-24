@@ -10,7 +10,7 @@ export default class PaymentProductService {
     try {
       const paymentProducts = await Database.getModel(TABLE_NAME).findOne({
         where: data,
-        raw: true,
+        raw: true
       });
       return paymentProducts;
     } catch (error) {
@@ -18,7 +18,7 @@ export default class PaymentProductService {
     }
   };
 
-  getAllCreatorTypeProducts = async (data) => {
+  getAllCreatorTypeProducts = async data => {
     try {
       const paymentProducts = await Database.getModel(TABLE_NAME).findAll({
         where: data,
@@ -58,9 +58,7 @@ export default class PaymentProductService {
     }
   };
 
-  deleteDoctorProduct = async ({
-    id = null
-  }) => {
+  deleteDoctorProduct = async ({ id = null }) => {
     try {
       const deletedDoctorProduct = await Database.getModel(TABLE_NAME).destroy({
         where: {
@@ -87,7 +85,6 @@ export default class PaymentProductService {
       throw error;
     }
   };
-
 
   getAll = async () => {
     try {

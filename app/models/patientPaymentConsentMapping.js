@@ -1,7 +1,7 @@
 "use strict";
 import { DataTypes } from "sequelize";
 import { TABLE_NAME as patientTableName } from "./patients";
-import { TABLE_NAME as providerTermsMapping} from "./providerTermsMappings";
+import { TABLE_NAME as providerTermsMapping } from "./providerTermsMappings";
 import { TABLE_NAME as doctorTableName } from "./doctors";
 
 export const TABLE_NAME = "patient_payment_consent_mappings";
@@ -48,7 +48,7 @@ export const db = database => {
       payment_terms_accepted: {
         type: DataTypes.BOOLEAN,
         defaultValue: false
-      },
+      }
     },
     {
       underscored: true,
@@ -56,10 +56,10 @@ export const db = database => {
       getterMethods: {
         getBasicInfo() {
           return {
-              id: this.id,
-              patient_id: this.patient_id,
-              provider_terms_mapping_id: this.provider_terms_mapping_id,
-              payment_terms_accepted: this.payment_terms_accepted
+            id: this.id,
+            patient_id: this.patient_id,
+            provider_terms_mapping_id: this.provider_terms_mapping_id,
+            payment_terms_accepted: this.payment_terms_accepted
           };
         }
       }
@@ -67,5 +67,4 @@ export const db = database => {
   );
 };
 
-export const associate = database => {
-};
+export const associate = database => {};

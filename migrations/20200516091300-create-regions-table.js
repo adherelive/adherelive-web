@@ -1,6 +1,6 @@
-'use strict';
+"use strict";
 
-import {DB_TABLES} from "../constant";
+import { DB_TABLES } from "../constant";
 
 module.exports = {
   up: (queryInterface, Sequelize) => {
@@ -13,10 +13,10 @@ module.exports = {
       },
       name: {
         type: Sequelize.STRING,
-        allowNull: false,
+        allowNull: false
       },
       activated_on: {
-        type: Sequelize.DATE,
+        type: Sequelize.DATE
       },
       created_at: {
         allowNull: false,

@@ -54,7 +54,7 @@ class AdhocController extends Controller {
             id: userId,
             user_identity: userId,
             linked_id,
-            linked_with,
+            linked_with
           });
         }
       }
@@ -94,25 +94,25 @@ class AdhocController extends Controller {
         const userRole =
           (await userRoleService.findOne({
             where: {
-              user_identity: userPreference.getUserId(),
+              user_identity: userPreference.getUserId()
             },
-            attributes: ["id"],
+            attributes: ["id"]
           })) || null;
         userPreferenceArr.push({
           id: userPreference.getUserPreferenceId(),
           user_id: userPreference.getUserId(),
-          user_role_id: userRole.id,
+          user_role_id: userRole.id
         });
       }
 
       const updateResponse = await userPreferenceService.bulkUpdate({
-        data: userPreferenceArr,
+        data: userPreferenceArr
       });
 
       //-- add test-provider record to user-pref table
 
       const user = await userService.getUserData({
-        email: "test-provider@mail.com",
+        email: "test-provider@mail.com"
       });
 
       if (user) {
@@ -120,7 +120,7 @@ class AdhocController extends Controller {
         const user_identity = await userWrapper.getId();
 
         const existing = await userPreferenceService.findOne({
-          where: { user_id: user_identity },
+          where: { user_id: user_identity }
         });
 
         if (!existing) {
@@ -135,9 +135,9 @@ class AdhocController extends Controller {
             const newRecord = await userPreferenceService.addUserPreference({
               user_id: "5",
               details: {
-                charts: ["1", "2", "3"],
+                charts: ["1", "2", "3"]
               },
-              user_role_id: userRoleId,
+              user_role_id: userRoleId
             });
           }
         }
@@ -160,17 +160,17 @@ class AdhocController extends Controller {
             paymentProduct.getForUserRoleId()
           )) || {};
 
-          let forUserRoleId = null;
+        let forUserRoleId = null;
 
-          if(forUserId) {
-            forUserRoleId =
+        if (forUserId) {
+          forUserRoleId =
             (await userRoleService.findOne({
               where: {
-                user_identity: forUserId,
+                user_identity: forUserId
               },
-              attributes: ["id"],
+              attributes: ["id"]
             })) || null;
-          }
+        }
 
         const { user_id: creatorUserId } =
           (await getUserDetails(
@@ -178,17 +178,17 @@ class AdhocController extends Controller {
             paymentProduct.getCreatorRoleId()
           )) || {};
 
-          let creatorRoleId = null;
+        let creatorRoleId = null;
 
-          if(creatorUserId) {
-            creatorRoleId =
-          (await userRoleService.findOne({
-            where: {
-              user_identity: creatorUserId,
-            },
-            attributes: ["id"],
-          })) || null;
-          }
+        if (creatorUserId) {
+          creatorRoleId =
+            (await userRoleService.findOne({
+              where: {
+                user_identity: creatorUserId
+              },
+              attributes: ["id"]
+            })) || null;
+        }
 
         if (forUserRoleId && creatorRoleId) {
           const { id: for_user_role_id = 0 } = forUserRoleId || {};
@@ -197,7 +197,7 @@ class AdhocController extends Controller {
           const paymentProductUpdateResponse = await paymentProductService.updateDoctorProduct(
             {
               for_user_role_id,
-              creator_role_id,
+              creator_role_id
             },
             paymentProduct.getId()
           );
@@ -257,8 +257,8 @@ class AdhocController extends Controller {
           userRoleId,
           userRoleData,
           userData = {},
-          userCategoryData = {},
-        } = {},
+          userCategoryData = {}
+        } = {}
       } = req;
 
       return this.raiseSuccess(
@@ -269,7 +269,7 @@ class AdhocController extends Controller {
           userRoleData,
           userId,
           userData,
-          userCategoryData,
+          userCategoryData
         },
         "Test api successfull."
       );
@@ -312,8 +312,8 @@ class AdhocController extends Controller {
 
           const patientPreference = await userPreferenceService.findOne({
             where: {
-              user_id,
-            },
+              user_id
+            }
           });
 
           const { id: preferenceId, details: { timings } = {} } =
@@ -325,7 +325,7 @@ class AdhocController extends Controller {
 
           await userPreferenceService.updateUserPreferenceData(
             {
-              details: { timings: newTimings },
+              details: { timings: newTimings }
             },
             preferenceId
           );
@@ -363,7 +363,7 @@ class AdhocController extends Controller {
 
         for (const permission of Object.keys(featurePermissions)) {
           permissionsData.push({
-            type: featurePermissions[permission],
+            type: featurePermissions[permission]
           });
         }
       }
@@ -387,7 +387,7 @@ class AdhocController extends Controller {
 
               Log.debug("102398123 updatePermissions", {
                 category,
-                categoryPermissions,
+                categoryPermissions
               });
 
               for (let createdPermission of createdPermissions) {
@@ -396,11 +396,11 @@ class AdhocController extends Controller {
                   console.log("1293023 createdPermission", {
                     category,
                     id,
-                    type,
+                    type
                   });
                   userPermissionsData.push({
                     category,
-                    permission_id: id,
+                    permission_id: id
                   });
                 }
               }
@@ -433,19 +433,25 @@ class AdhocController extends Controller {
     try {
       const channelSeparator = process.config.twilio.CHANNEL_SERVER;
 
-      const careplans = await carePlanService.getAll() || [];
+      const careplans = (await carePlanService.getAll()) || [];
 
-      if(careplans.length) {
-        for(let index = 0; index < careplans.length; index++) {
-          const {id, patient_id, user_role_id} = careplans[index] || {};
+      if (careplans.length) {
+        for (let index = 0; index < careplans.length; index++) {
+          const { id, patient_id, user_role_id } = careplans[index] || {};
 
-          Log.debug("1231023 ", `${user_role_id}-${channelSeparator}-${patient_id}`);
-          await carePlanService.updateCarePlan({channel_id: `${user_role_id}-${channelSeparator}-${patient_id}`}, id);
+          Log.debug(
+            "1231023 ",
+            `${user_role_id}-${channelSeparator}-${patient_id}`
+          );
+          await carePlanService.updateCarePlan(
+            { channel_id: `${user_role_id}-${channelSeparator}-${patient_id}` },
+            id
+          );
         }
 
         return raiseSuccess(res, 200, {}, "Channels updated successfully");
       }
-    } catch(error) {
+    } catch (error) {
       Log.debug("updateChannels 500", error);
       return raiseServerError(res);
     }

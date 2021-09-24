@@ -16,11 +16,11 @@ export const db = database => {
       name: {
         type: DataTypes.STRING,
         allowNull: false
-      },
+      }
     },
     {
       underscored: true,
-      paranoid: true,
+      paranoid: true
     }
   );
 };

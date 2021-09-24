@@ -39,6 +39,6 @@ export default props => {
       title: "",
       ...TABLE_COLUMN.DELETE,
       render: data => <Delete {...data} />
-    },
+    }
   ];
 };

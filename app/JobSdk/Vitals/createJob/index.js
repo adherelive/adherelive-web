@@ -42,21 +42,21 @@ class CreateJob extends VitalJob {
     //   }
     // });
 
-    const {rows: userRoles = []} = await UserRoleService.findAndCountAll({
-      where: {
-        id: participants
-      }
-    }) || {};
+    const { rows: userRoles = [] } =
+      (await UserRoleService.findAndCountAll({
+        where: {
+          id: participants
+        }
+      })) || {};
 
     let providerId = null;
 
-    for(const userRole of userRoles) {
-      const {id, user_identity, linked_id} = userRole || {};
-      if(id !== user_role_id) {
+    for (const userRole of userRoles) {
+      const { id, user_identity, linked_id } = userRole || {};
+      if (id !== user_role_id) {
         userIds.push(user_identity);
-      } 
-      else {
-        if(linked_id) {
+      } else {
+        if (linked_id) {
           providerId = linked_id;
         }
       }
@@ -64,12 +64,13 @@ class CreateJob extends VitalJob {
 
     // provider
     let providerName = DEFAULT_PROVIDER;
-    if(providerId) {
-      const provider = await ProviderService.getProviderByData({id: providerId});
-      const {name} = provider || {};
+    if (providerId) {
+      const provider = await ProviderService.getProviderByData({
+        id: providerId
+      });
+      const { name } = provider || {};
       providerName = name;
     }
-
 
     const userDevices = await UserDeviceService.getAllDeviceByData({
       user_id: userIds

@@ -37,17 +37,17 @@ class ResponseJob extends WorkoutJob {
       }
     });
 
-    const {rows: userRoles = []} = await UserRoleService.findAndCountAll({
-      where: {
-        id: userRoleIds
-      }
-    }) || {};
+    const { rows: userRoles = [] } =
+      (await UserRoleService.findAndCountAll({
+        where: {
+          id: userRoleIds
+        }
+      })) || {};
 
-    for(const userRole of userRoles) {
-      const {user_identity} = userRole || {};
+    for (const userRole of userRoles) {
+      const { user_identity } = userRole || {};
       userIds.push(user_identity);
     }
-
 
     const userDevices = await UserDeviceService.getAllDeviceByData({
       user_id: userIds
@@ -61,8 +61,8 @@ class ResponseJob extends WorkoutJob {
     }
 
     let workoutName = "";
-    if(workout_id) {
-      const {basic_info: {name} = {}} = workouts[workout_id] || {};
+    if (workout_id) {
+      const { basic_info: { name } = {} } = workouts[workout_id] || {};
       workoutName = name;
     }
 
@@ -78,7 +78,7 @@ class ResponseJob extends WorkoutJob {
       android_channel_id: process.config.one_signal.urgent_channel_id,
       data: {
         url: `/${NOTIFICATION_VERB.WORKOUT_RESPONSE}`,
-        params: {...this.getWorkoutData(), doctorRoleId}
+        params: { ...this.getWorkoutData(), doctorRoleId }
       }
     });
 
@@ -89,7 +89,8 @@ class ResponseJob extends WorkoutJob {
     const { getWorkoutData } = this;
     const data = getWorkoutData();
     const {
-      participants = [], actor: { id: actorId, user_role_id} = {},
+      participants = [],
+      actor: { id: actorId, user_role_id } = {},
       id = null
     } = data || {};
 

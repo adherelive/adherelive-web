@@ -8,6 +8,7 @@ import { withRouter } from "react-router-dom";
 
 const LOGO = "logo";
 const DASHBOARD = "dashboard";
+
 // const PROFILE = "profile";
 
 class SideMenu extends Component {
@@ -41,9 +42,7 @@ class SideMenu extends Component {
         className="side-bar-menu p0"
         onSelect={handleItemSelect}
         theme="dark"
-      >
-      
-      </Menu>
+      ></Menu>
     );
   }
 }

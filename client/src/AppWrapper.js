@@ -4,21 +4,20 @@ import { injectIntl } from "react-intl";
 import Routes from "./Containers/Routes";
 
 // timezone update
-import {setTimeZone} from "./Helper/moment";
+import { setTimeZone } from "./Helper/moment";
 
 class AppWrapper extends Component {
+  componentDidMount() {
+    setTimeZone();
+  }
 
-    componentDidMount() {
-        setTimeZone();
-    }
-
-    render() {
-        return (
-            <Router>
-                    <Routes/>
-            </Router>
-        );
-    }
+  render() {
+    return (
+      <Router>
+        <Routes />
+      </Router>
+    );
+  }
 }
 
 export default injectIntl(AppWrapper);

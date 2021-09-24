@@ -170,32 +170,32 @@ const messages = defineMessages({
     description: "",
     defaultMessage: "Enable Video"
   },
-  readyToCall:{
+  readyToCall: {
     id: "app.chatFullScreen.readyToCall",
     description: "",
     defaultMessage: "Ready to call"
   },
-  audioCheck:{
+  audioCheck: {
     id: "app.chatFullScreen.audioCheck",
     description: "",
     defaultMessage: "Audio Check"
   },
-  checkAudioVideo:{
+  checkAudioVideo: {
     id: "app.chatFullScreen.checkAudioVideo",
     description: "",
     defaultMessage: "Check your audio and video"
   },
-  audioOff:{
+  audioOff: {
     id: "app.chatFullScreen.audioOff",
     description: "",
     defaultMessage: "Audio is Off"
   },
-  videoOff:{
+  videoOff: {
     id: "app.chatFullScreen.videoOff",
     description: "",
     defaultMessage: "Video is Off"
   },
-  adhereLive:{
+  adhereLive: {
     id: "app.chatFullScreen.adhereLive",
     description: "",
     defaultMessage: "Adhere.Live"
@@ -203,12 +203,14 @@ const messages = defineMessages({
   LocalNetworkIssue: {
     id: "app.video.call.local.network.issue",
     description: "",
-    defaultMessage: "Slow internet connection. Please check your internet settings"
+    defaultMessage:
+      "Slow internet connection. Please check your internet settings"
   },
   RemoteNetworkIssue: {
     id: "app.video.call.remote.network.issue",
     description: "",
-    defaultMessage: "{name} has either disconnected or internet connection is down."
+    defaultMessage:
+      "{name} has either disconnected or internet connection is down."
   }
 });
 

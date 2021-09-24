@@ -1,6 +1,10 @@
 import VitalJob from "../";
 import moment from "moment";
-import { DEFAULT_PROVIDER, EVENT_TYPE, NOTIFICATION_VERB } from "../../../../constant";
+import {
+  DEFAULT_PROVIDER,
+  EVENT_TYPE,
+  NOTIFICATION_VERB
+} from "../../../../constant";
 
 import UserRoleService from "../../../services/userRoles/userRoles.service";
 import ProviderService from "../../../services/provider/provider.service";
@@ -40,20 +44,21 @@ class ResponseJob extends VitalJob {
     //   }
     // });
 
-    const {rows: userRoles = []} = await UserRoleService.findAndCountAll({
-      where: {
-        id: participants
-      }
-    }) || {};
+    const { rows: userRoles = [] } =
+      (await UserRoleService.findAndCountAll({
+        where: {
+          id: participants
+        }
+      })) || {};
 
     let doctorRoleId = null;
 
-    for(const userRole of userRoles) {
-      const {id, user_identity, linked_id} = userRole || {};
-      if(id !== user_role_id) {
+    for (const userRole of userRoles) {
+      const { id, user_identity, linked_id } = userRole || {};
+      if (id !== user_role_id) {
         userIds.push(user_identity);
         doctorRoleId = id;
-      } 
+      }
       // else {
       //   if(linked_id) {
       //     providerId = linked_id;
@@ -92,7 +97,14 @@ class ResponseJob extends VitalJob {
       android_channel_id: process.config.one_signal.urgent_channel_id,
       data: {
         url: "/vital_response",
-        params: {vital, vital_id: event_id, vital_templates, patient_id, actorId, doctorRoleId}
+        params: {
+          vital,
+          vital_id: event_id,
+          vital_templates,
+          patient_id,
+          actorId,
+          doctorRoleId
+        }
       }
     });
 
@@ -103,7 +115,8 @@ class ResponseJob extends VitalJob {
     const { getData } = this;
     const data = getData();
     const {
-      participants = [], actor: { id: actorId, user_role_id } = {},
+      participants = [],
+      actor: { id: actorId, user_role_id } = {},
       event_id = null,
       id = null
     } = data || {};

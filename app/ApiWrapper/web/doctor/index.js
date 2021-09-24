@@ -30,7 +30,9 @@ class DoctorWrapper extends BaseDoctor {
 
     if (speciality) {
       const specialityDetails = await SpecialityWrapper(speciality);
-      specialityData[specialityDetails.getSpecialityId()] = specialityDetails.getBasicInfo();
+      specialityData[
+        specialityDetails.getSpecialityId()
+      ] = specialityDetails.getBasicInfo();
     }
 
     if (user) {
@@ -43,10 +45,10 @@ class DoctorWrapper extends BaseDoctor {
         [getDoctorId()]: await getAllInfo()
       },
       specialities: {
-        ...specialityData,
+        ...specialityData
       },
       users: {
-        ...userData,
+        ...userData
       }
     };
   };
@@ -66,7 +68,7 @@ class DoctorWrapper extends BaseDoctor {
       activated_on,
       profile_pic,
       signature_pic,
-      full_name,
+      full_name
     } = _data || {};
     return {
       basic_info: {
@@ -83,7 +85,7 @@ class DoctorWrapper extends BaseDoctor {
         signature_pic: completePath(signature_pic)
       },
       qualifications,
-      activated_on,
+      activated_on
     };
   };
 
@@ -140,12 +142,13 @@ class DoctorWrapper extends BaseDoctor {
     }
 
     // get all user roles
-    const {rows: userRoles} = await userRoleService.findAndCountAll({
-      where: {
-        user_identity: this.getUserId()
-      },
-      attributes: ["id"]
-    }) || [];
+    const { rows: userRoles } =
+      (await userRoleService.findAndCountAll({
+        where: {
+          user_identity: this.getUserId()
+        },
+        attributes: ["id"]
+      })) || [];
 
     const userRoleIds = userRoles.map(userRole => userRole.id);
 
@@ -166,13 +169,16 @@ class DoctorWrapper extends BaseDoctor {
         }
       }
 
-      const watchlistRecords = await DoctorPatientWatchlistService.getAllByData({user_role_id:userRoleIds[index]});
+      const watchlistRecords = await DoctorPatientWatchlistService.getAllByData(
+        { user_role_id: userRoleIds[index] }
+      );
       const userRoleId = userRoleIds[index];
       let curreRoleIdPatientIds = [];
-      if(watchlistRecords && watchlistRecords.length){
-
-        for(let i = 0; i <watchlistRecords.length ; i++ ){
-          const watchlistWrapper = await DoctorPatientWatchlistWrapper(watchlistRecords[i]);
+      if (watchlistRecords && watchlistRecords.length) {
+        for (let i = 0; i < watchlistRecords.length; i++) {
+          const watchlistWrapper = await DoctorPatientWatchlistWrapper(
+            watchlistRecords[i]
+          );
           const patient_id = await watchlistWrapper.getPatientId();
           curreRoleIdPatientIds.push(patient_id);
         }
@@ -180,20 +186,22 @@ class DoctorWrapper extends BaseDoctor {
         watchlistPatientIds[userRoleId] = [...curreRoleIdPatientIds];
       }
 
+      const { rows: doctorCarePlans } =
+        (await carePlanService.findAndCountAll({
+          where: {
+            [Op.or]: [
+              { user_role_id: userRoleIds[index] },
+              { patient_id: patientIds }
+            ]
+          },
+          order: [["expired_on", "ASC"]],
+          attributes: ["id"],
+          userRoleId: userRoleIds[index]
+        })) || [];
 
-      const {rows: doctorCarePlans} = await carePlanService.findAndCountAll({
-        where: {
-          [Op.or]: [
-            {user_role_id: userRoleIds[index]},
-            {patient_id: patientIds}
-          ]
-        },
-        order: [["expired_on","ASC"]],
-        attributes: ["id"],
-        userRoleId:userRoleIds[index]
-      }) || [];
-
-      carePlanIds[userRoleIds[index]] = [...new Set(doctorCarePlans.map(carePlan => carePlan.id))];
+      carePlanIds[userRoleIds[index]] = [
+        ...new Set(doctorCarePlans.map(carePlan => carePlan.id))
+      ];
     }
 
     // const carePlansDoctor =
@@ -266,7 +274,7 @@ class DoctorWrapper extends BaseDoctor {
       care_plan_ids: carePlanIds,
       watchlist_patient_ids,
       razorpay_account_id,
-      watchlist_ids: watchlistPatientIds,
+      watchlist_ids: watchlistPatientIds
       // provider_id: providerId
     };
   };

@@ -44,7 +44,7 @@ class FeatureDetailsService {
     }
   };
 
-  add = async (data) => {
+  add = async data => {
     const transaction = await Database.initTransaction();
     try {
       const featureDetails = Database.getModel(TABLE_NAME).create(data);

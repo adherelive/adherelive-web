@@ -1,6 +1,7 @@
 const twilio = require("twilio");
 
 import Log from "../../../libs/log";
+
 const AccessToken = twilio.jwt.AccessToken;
 const VideoGrant = AccessToken.VideoGrant;
 const IpMessagingGrant = AccessToken.ChatGrant;
@@ -20,7 +21,7 @@ class TwilioService {
     let createdRoom;
     client.video.rooms
       .create({ uniqueName: name })
-      .then((room) => (createdRoom = room));
+      .then(room => (createdRoom = room));
     return createdRoom;
   }
 
@@ -36,7 +37,7 @@ class TwilioService {
     const endpointId = appName + ":" + identity + ":" + deviceId;
     const ipmGrant = new IpMessagingGrant({
       serviceSid: process.config.twilio.TWILIO_CHAT_SERVICE_SID,
-      endpointId: endpointId,
+      endpointId: endpointId
     });
     token.addGrant(ipmGrant);
 
@@ -94,12 +95,12 @@ class TwilioService {
       channel.messages
         .create({
           from: "adhere_bot",
-          body: message,
+          body: message
         })
-        .then((response) => {
+        .then(response => {
           console.log("Bot message sent!", response);
         })
-        .catch((err) => {
+        .catch(err => {
           console.error("Failed to send message");
           console.error(err);
         });
@@ -122,12 +123,12 @@ class TwilioService {
       channel.messages
         .create({
           from: `${doctor}`,
-          body: message,
+          body: message
         })
-        .then((response) => {
+        .then(response => {
           console.log("User message sent!", response);
         })
-        .catch((err) => {
+        .catch(err => {
           console.error("Failed to send message");
           console.error(err);
         });
@@ -145,11 +146,11 @@ class TwilioService {
       const channel = await client.chat
         .services(process.config.twilio.TWILIO_CHAT_SERVICE_SID)
         .channels.list()
-        .then((channels) => {
+        .then(channels => {
           console.log("channels ----> ", channels, channels.length);
           return channels;
         })
-        .then((channels) => {
+        .then(channels => {
           let channelsName = [];
           let friendlyNames = [];
           let channelData = {};
@@ -168,7 +169,7 @@ class TwilioService {
               channelsName,
               count: channelsName.length,
               friendlyNames: friendlyNames,
-              channelData,
+              channelData
             });
           }
         });
@@ -183,11 +184,11 @@ class TwilioService {
       const channel = await client.chat
         .services(process.config.twilio.TWILIO_CHAT_SERVICE_SID)
         .channels.list()
-        .then((channels) => {
+        .then(channels => {
           console.log("channels ----> ", channels, channels.length);
           return channels;
         })
-        .then((channels) => {
+        .then(channels => {
           let channelsName = [];
           for (let i = 0; i < channels.length; i++) {
             const { sid, uniqueName } = channels[i] || {};
@@ -200,17 +201,17 @@ class TwilioService {
                 .services(process.config.twilio.TWILIO_CHAT_SERVICE_SID)
                 .channels(sid)
                 .remove()
-                .then((response) => {
+                .then(response => {
                   console.log("delete success response", response);
                   channelsName.push(uniqueName);
                 })
-                .catch((err) => {
+                .catch(err => {
                   console.log("delete catch error", err);
                 });
             }
             console.log("DELETED CHANNEL NAMES AND COUNT", {
               channelsName,
-              count: channelsName.length,
+              count: channelsName.length
             });
           }
         });
@@ -237,12 +238,12 @@ class TwilioService {
     try {
       const client = require("twilio")(accountSid, authToken);
       const newMember = await client.chat
-      .services(process.config.twilio.TWILIO_CHAT_SERVICE_SID)
-      .channels(channelName)
-      .members.create({identity});
+        .services(process.config.twilio.TWILIO_CHAT_SERVICE_SID)
+        .channels(channelName)
+        .members.create({ identity });
 
       return newMember ? true : false;
-    } catch(error) {
+    } catch (error) {
       Logger.debug("addMember 500 error", error);
     }
   };

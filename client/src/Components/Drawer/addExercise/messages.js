@@ -26,27 +26,27 @@ const message = defineMessages({
     description: "",
     defaultMessage: "Calories Burnt"
   },
-  name_required_error:{
+  name_required_error: {
     id: "app.drawer.add.exercise.item.name.error",
     description: "",
     defaultMessage: "Exercise Name is a required field"
   },
-  repetition_id_required_error:{
+  repetition_id_required_error: {
     id: "app.drawer.add.exercise.item.portion.id.error",
     description: "",
     defaultMessage: "Repetition Type is a required field"
   },
-  repetition_value_required_error:{
+  repetition_value_required_error: {
     id: "app.drawer.add.exercise.item.repetition.value.error",
     description: "",
     defaultMessage: "Repetition value is a required field"
   },
-  submit_text:{
+  submit_text: {
     id: "app.drawer.add.exercise..submit.text",
     description: "",
     defaultMessage: "Submit"
   },
-  videoUrl:{
+  videoUrl: {
     id: "app.drawer.add.exercise.videoUrl",
     description: "",
     defaultMessage: "Video URL"

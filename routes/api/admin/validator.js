@@ -40,47 +40,61 @@ const addProviderSchema = Joi.object().keys({
     .required()
     .label("Please enter correct address"),
 
-    // custom ui
-    icon: Joi.string().optional().allow(null, ''),
-    banner: Joi.string().optional().allow(null, ''),
+  // custom ui
+  icon: Joi.string()
+    .optional()
+    .allow(null, ""),
+  banner: Joi.string()
+    .optional()
+    .allow(null, ""),
 
   // account details
-    razorpay_account_id: Joi.string().optional().allow("", null),
-    razorpay_account_name: Joi.string().optional().allow("", null),
+  razorpay_account_id: Joi.string()
+    .optional()
+    .allow("", null),
+  razorpay_account_name: Joi.string()
+    .optional()
+    .allow("", null),
   account_type: Joi.string()
     .optional()
     .allow("", null),
   customer_name: Joi.when("account_type", {
     is: Joi.string().disallow("", null),
-    then: Joi.string().required().label("Please enter customer name as registered with the bank"),
+    then: Joi.string()
+      .required()
+      .label("Please enter customer name as registered with the bank"),
     otherwise: Joi.string()
       .optional()
       .allow("", null)
   }),
   account_number: Joi.when("account_type", {
-      is: Joi.string().disallow("", null),
-      then: Joi.string().required().label("Please enter account number"),
-      otherwise: Joi.string()
-          .optional()
-          .allow("", null)
+    is: Joi.string().disallow("", null),
+    then: Joi.string()
+      .required()
+      .label("Please enter account number"),
+    otherwise: Joi.string()
+      .optional()
+      .allow("", null)
   }),
   ifsc_code: Joi.when("account_type", {
-      is: Joi.string().disallow("", null),
-      then: Joi.string().required().label("Please enter IFSC Code"),
-      otherwise: Joi.string()
-          .optional()
-          .allow("", null)
+    is: Joi.string().disallow("", null),
+    then: Joi.string()
+      .required()
+      .label("Please enter IFSC Code"),
+    otherwise: Joi.string()
+      .optional()
+      .allow("", null)
   }),
   use_as_main: Joi.boolean()
-      .optional()
-      .default(true),
+    .optional()
+    .default(true),
   upi_id: Joi.string()
     .optional()
     .allow("", null),
 
   prescription_details: Joi.string()
-  .optional()
-  .allow("", null),
+    .optional()
+    .allow("", null)
 });
 
 const updateProviderSchema = Joi.object().keys({
@@ -111,59 +125,72 @@ const updateProviderSchema = Joi.object().keys({
     .label("Please enter correct address"),
 
   // custom ui
-  icon: Joi.string().optional().allow(null, ''),
-  banner: Joi.string().optional().allow(null, ''),
+  icon: Joi.string()
+    .optional()
+    .allow(null, ""),
+  banner: Joi.string()
+    .optional()
+    .allow(null, ""),
 
   // account details
-  razorpay_account_id: Joi.string().optional().allow("", null),
-  razorpay_account_name: Joi.string().optional().allow("", null),
+  razorpay_account_id: Joi.string()
+    .optional()
+    .allow("", null),
+  razorpay_account_name: Joi.string()
+    .optional()
+    .allow("", null),
   account_type: Joi.string()
-      .optional()
-      .allow("", null),
+    .optional()
+    .allow("", null),
   customer_name: Joi.when("account_type", {
-      is: Joi.string().disallow("", null),
-      then: Joi.string().required().label("Please enter customer name as registered with the bank"),
-      otherwise: Joi.string()
-          .optional()
-          .allow("", null)
+    is: Joi.string().disallow("", null),
+    then: Joi.string()
+      .required()
+      .label("Please enter customer name as registered with the bank"),
+    otherwise: Joi.string()
+      .optional()
+      .allow("", null)
   }),
   account_number: Joi.when("account_type", {
-      is: Joi.string().disallow("", null),
-      then: Joi.string().required().label("Please enter account number"),
-      otherwise: Joi.string()
-          .optional()
-          .allow("", null)
+    is: Joi.string().disallow("", null),
+    then: Joi.string()
+      .required()
+      .label("Please enter account number"),
+    otherwise: Joi.string()
+      .optional()
+      .allow("", null)
   }),
   ifsc_code: Joi.when("account_type", {
-      is: Joi.string().disallow("", null),
-      then: Joi.string().required().label("Please enter IFSC Code"),
-      otherwise: Joi.string()
-          .optional()
-          .allow("", null)
+    is: Joi.string().disallow("", null),
+    then: Joi.string()
+      .required()
+      .label("Please enter IFSC Code"),
+    otherwise: Joi.string()
+      .optional()
+      .allow("", null)
   }),
   use_as_main: Joi.boolean()
-      .optional()
-      .default(true),
+    .optional()
+    .default(true),
   upi_id: Joi.string()
-      .optional()
-      .allow("", null),
+    .optional()
+    .allow("", null),
 
   prescription_details: Joi.string()
-  .optional()
-  .allow("", null),
-  
+    .optional()
+    .allow("", null)
 });
 
 const addMedicineSchema = Joi.object().keys({
-    name: Joi.string()
+  name: Joi.string()
     .required()
     .label("Please enter valid medicine name"),
-    type: Joi.string()
-      .required()
-      .label("Please select valid medicine type"),
-    generic_name: Joi.string()
-        .optional()
-        .allow("", null)
+  type: Joi.string()
+    .required()
+    .label("Please select valid medicine type"),
+  generic_name: Joi.string()
+    .optional()
+    .allow("", null)
 });
 
 export const validateAddProviderData = (req, res, next) => {
@@ -183,7 +210,6 @@ export const validateUpdateProviderData = (req, res, next) => {
   }
   next();
 };
-
 
 export const validateAddMedicineData = (req, res, next) => {
   const { body: data = {} } = req;

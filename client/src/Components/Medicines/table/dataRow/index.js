@@ -1,12 +1,20 @@
 import { TABLE_COLUMN } from "../helper";
 
 export default data => {
-  const { id = null ,medicineData = {} , doctors={} , makeMedicinePublic , currentPage = null,
-  getPrivateMedicines,changeLoading , searchText='' , mapMedicineToPublic  , deleteMedicine ,
-  getPublicMedicines,
-  currentTab
-} = data;
-
+  const {
+    id = null,
+    medicineData = {},
+    doctors = {},
+    makeMedicinePublic,
+    currentPage = null,
+    getPrivateMedicines,
+    changeLoading,
+    searchText = "",
+    mapMedicineToPublic,
+    deleteMedicine,
+    getPublicMedicines,
+    currentTab
+  } = data;
 
   return {
     key: id,

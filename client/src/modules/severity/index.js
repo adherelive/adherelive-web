@@ -13,7 +13,7 @@ export const searchSeverity = value => {
     try {
       response = await doRequest({
         method: REQUEST_TYPE.GET,
-        url: searchSeverities(value),
+        url: searchSeverities(value)
       });
 
       const { status, payload: { data, message = "" } = {} } = response || {};
@@ -32,7 +32,7 @@ export const searchSeverity = value => {
       console.log("SEARCH SEVERITY MODULE catch error -> ", error);
     }
     return response;
-  }
+  };
 };
 
 function severityReducer(state, data) {
@@ -40,7 +40,7 @@ function severityReducer(state, data) {
   if (severity) {
     return {
       ...state,
-      ...severity,
+      ...severity
     };
   } else {
     return state;

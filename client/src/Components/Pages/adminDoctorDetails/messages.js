@@ -304,7 +304,8 @@ const messages = defineMessages({
   warnNote: {
     id: "app.admin.doctors.warnNote",
     description: "",
-    defaultMessage: "The doctor will not be able to login after being deactivated."
+    defaultMessage:
+      "The doctor will not be able to login after being deactivated."
   },
   confirmMessage: {
     id: "app.admin.doctors.confirmMessage",

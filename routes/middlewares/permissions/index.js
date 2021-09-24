@@ -1,7 +1,7 @@
 const errMessage = require("../../../config/messages.json").errMessages;
 const Response = require("../../../app/controllers/helper/responseFormat");
 
-export default (permission) => (req, res, next) => {
+export default permission => (req, res, next) => {
   try {
     const { permissions = [] } = req;
     if (!permissions.includes(permission)) {

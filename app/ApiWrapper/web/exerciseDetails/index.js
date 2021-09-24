@@ -17,8 +17,8 @@ class ExerciseDetailWrapper extends BaseExerciseDetail {
         exercise_id,
         repetition_id,
         repetition_value,
-        calorific_value,
-      } = {},
+        calorific_value
+      } = {}
     } = this;
 
     return {
@@ -26,11 +26,11 @@ class ExerciseDetailWrapper extends BaseExerciseDetail {
         id,
         exercise_id,
         repetition_id,
-        repetition_value,
+        repetition_value
       },
       creator_id,
       creator_type,
-      calorific_value,
+      calorific_value
     };
   };
 
@@ -38,7 +38,7 @@ class ExerciseDetailWrapper extends BaseExerciseDetail {
     const { getBasicInfo } = this;
 
     return {
-      ...getBasicInfo(),
+      ...getBasicInfo()
     };
   };
 
@@ -57,22 +57,22 @@ class ExerciseDetailWrapper extends BaseExerciseDetail {
     if (repetitions) {
       const { id, type } = repetitions || {};
       allRepetitions[id] = {
-        type,
+        type
       };
     }
 
     return {
       exercise_details: {
         [getId()]: {
-          ...(await getAllInfo()),
-        },
+          ...(await getAllInfo())
+        }
       },
       repetitions: {
-        ...allRepetitions,
+        ...allRepetitions
       },
       exercises: {
-        ...allExercises,
-      },
+        ...allExercises
+      }
     };
   };
 }

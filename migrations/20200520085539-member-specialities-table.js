@@ -1,16 +1,16 @@
-'use strict';
+"use strict";
 
-import {DB_TABLES, USER_CATEGORY} from "../constant";
+import { DB_TABLES, USER_CATEGORY } from "../constant";
 
 module.exports = {
   up: (queryInterface, Sequelize) => {
     /*
-      Add altering commands here.
-      Return a promise to correctly handle asynchronicity.
+          Add altering commands here.
+          Return a promise to correctly handle asynchronicity.
 
-      Example:
-      return queryInterface.createTable('users', { id: Sequelize.INTEGER });
-    */
+          Example:
+          return queryInterface.createTable('users', { id: Sequelize.INTEGER });
+        */
     return queryInterface.createTable(DB_TABLES.MEMBER_SPECIALITIES, {
       id: {
         allowNull: false,
@@ -23,9 +23,9 @@ module.exports = {
         allowNull: false,
         references: {
           model: {
-            tableName: DB_TABLES.SPECIALITIES,
+            tableName: DB_TABLES.SPECIALITIES
           },
-          key: 'id'
+          key: "id"
         }
       },
       member_type: {
@@ -53,12 +53,12 @@ module.exports = {
 
   down: (queryInterface, Sequelize) => {
     /*
-      Add reverting commands here.
-      Return a promise to correctly handle asynchronicity.
+          Add reverting commands here.
+          Return a promise to correctly handle asynchronicity.
 
-      Example:
-      return queryInterface.dropTable('users');
-    */
+          Example:
+          return queryInterface.dropTable('users');
+        */
     return queryInterface.dropTable(DB_TABLES.MEMBER_SPECIALITIES);
   }
 };

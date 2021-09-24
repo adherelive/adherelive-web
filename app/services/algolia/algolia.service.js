@@ -2,7 +2,7 @@ import algoliasearch from "algoliasearch";
 import Logger from "../../../libs/log";
 import medicineService from "../medicine/medicine.service";
 
-import MedicineWrapper from "../../ApiWrapper/mobile/medicine"
+import MedicineWrapper from "../../ApiWrapper/mobile/medicine";
 
 const Log = new Logger("ALGOLIA > SERVICE");
 export default class AlgoliaService {
@@ -30,7 +30,13 @@ export default class AlgoliaService {
       let updatedMedicine = [];
 
       for (const medicine of allMedicines) {
-        const { details, id, name, creator_id, public_medicine = true } = medicine;
+        const {
+          details,
+          id,
+          name,
+          creator_id,
+          public_medicine = true
+        } = medicine;
         const { classification = "", icd_code = "", generic_name = "" } =
           details || {};
 
@@ -58,12 +64,9 @@ export default class AlgoliaService {
 
       const searchAttributes = await index.setSettings({
         searchableAttributes: ["name", "generic_name", "classification"],
-        attributesForFaceting: [
-          "creator_id",
-          "public_medicine"
-        ],
+        attributesForFaceting: ["creator_id", "public_medicine"],
         highlightPreTag: '<em class="search-highlight">',
-        highlightPostTag: '</em>'
+        highlightPostTag: "</em>"
       });
 
       console.log("searchAttributes ----. ", searchAttributes);
@@ -74,7 +77,7 @@ export default class AlgoliaService {
     }
   };
 
-  addNewMedicineData =  async(medicineId) => {
+  addNewMedicineData = async medicineId => {
     try {
       const index = this.client.initIndex(
         process.config.algolia.medicine_index
@@ -84,12 +87,14 @@ export default class AlgoliaService {
       const medicineData = await medicineService.getMedicineById(medicineId);
       const objectIdPrefix = process.config.algolia.object_id_prefix;
 
-
-      if(medicineData) {
+      if (medicineData) {
         const medicineWrapper = await MedicineWrapper(medicineData);
 
         let updatedMedicine = [];
-        const { details, basic_info: { id, name, creator_id, public_medicine} = {} } = medicineWrapper.getAllInfo();
+        const {
+          details,
+          basic_info: { id, name, creator_id, public_medicine } = {}
+        } = medicineWrapper.getAllInfo();
         const { classification = "", icd_code = "", generic_name = "" } =
           details || {};
 
@@ -105,12 +110,13 @@ export default class AlgoliaService {
           public_medicine,
           objectID
         });
-  
-       
-        const result = await index.saveObjects(updatedMedicine, {
-          autoGenerateObjectIDIfNotExist: true
-        }).wait();
-  
+
+        const result = await index
+          .saveObjects(updatedMedicine, {
+            autoGenerateObjectIDIfNotExist: true
+          })
+          .wait();
+
         console.log("result ----. ", result);
 
         return result;
@@ -119,10 +125,9 @@ export default class AlgoliaService {
       Log.debug("500 addNewMedicineData error: ", error);
       throw error;
     }
-  }
+  };
 
-
-  updateMedicineData =  async(medicineId) => {
+  updateMedicineData = async medicineId => {
     try {
       const index = this.client.initIndex(
         process.config.algolia.medicine_index
@@ -132,12 +137,14 @@ export default class AlgoliaService {
       const medicineData = await medicineService.getMedicineById(medicineId);
       const objectIdPrefix = process.config.algolia.object_id_prefix;
 
-
-      if(medicineData) {
+      if (medicineData) {
         const medicineWrapper = await MedicineWrapper(medicineData);
 
         let updatedMedicine = [];
-        const { details, basic_info: { id, name, creator_id, public_medicine} = {} } = medicineWrapper.getAllInfo();
+        const {
+          details,
+          basic_info: { id, name, creator_id, public_medicine } = {}
+        } = medicineWrapper.getAllInfo();
         const { classification = "", icd_code = "", generic_name = "" } =
           details || {};
 
@@ -155,7 +162,7 @@ export default class AlgoliaService {
         });
 
         const result = await index.partialUpdateObjects(updatedMedicine).wait();
-  
+
         console.log("result ----. ", result);
 
         return result;
@@ -164,9 +171,9 @@ export default class AlgoliaService {
       Log.debug("500 updateMedicineData error: ", error);
       throw error;
     }
-  }
+  };
 
-  deleteMedicineData =  async(medicineId) => {
+  deleteMedicineData = async medicineId => {
     try {
       const index = this.client.initIndex(
         process.config.algolia.medicine_index
@@ -180,5 +187,5 @@ export default class AlgoliaService {
       Log.debug("500 deleteMedicineData error: ", error);
       throw error;
     }
-  }
+  };
 }

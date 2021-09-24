@@ -75,10 +75,20 @@ class EndDate extends Component {
   };
 
   getInitialValue = () => {
-    const { purpose, event = {}, events = {}, medications, medicationData = {}, payload: { id: medication_id } = {} } = this.props;
+    const {
+      purpose,
+      event = {},
+      events = {},
+      medications,
+      medicationData = {},
+      payload: { id: medication_id } = {}
+    } = this.props;
 
     const { basic_info: { end_date } = {} } = medications[medication_id] || {};
-    const { schedule_data: { end_date:endDate = '', duration } = {} , templatePage=false } = medicationData || {} ;
+    const {
+      schedule_data: { end_date: endDate = "", duration } = {},
+      templatePage = false
+    } = medicationData || {};
 
     let initialValue = this.getNewEndDate();
     if (purpose) {
@@ -90,12 +100,11 @@ class EndDate extends Component {
 
     let finalEndDate = moment(end_date).clone();
 
-    
     if (Object.keys(medicationData).length) {
-      finalEndDate = endDate ? endDate : moment().add(7, 'days');
+      finalEndDate = endDate ? endDate : moment().add(7, "days");
 
-      if(duration) {
-        finalEndDate = moment().add((parseInt(duration)),'days');
+      if (duration) {
+        finalEndDate = moment().add(parseInt(duration), "days");
       }
     }
 
@@ -117,7 +126,7 @@ class EndDate extends Component {
       // medications,
       // medicationData = {},
       // payload: { id: medication_id } = {}
-      payload:{canViewDetails=false}={}
+      payload: { canViewDetails = false } = {}
     } = this.props;
     const { formatMessage, openCalendar, getInitialValue, calendarComp } = this;
 
@@ -126,7 +135,6 @@ class EndDate extends Component {
 
     // let finalEndDate = moment(end_date).clone();
 
-    
     // if (Object.keys(medicationData).length) {
     //   finalEndDate = endDate ? endDate : moment().add(7, 'days');
 
@@ -141,18 +149,20 @@ class EndDate extends Component {
     //   }else if(duration === null){
     //     finalEndDate = null;
     //   }
-     
+
     // }
 
-    console.log("918371723 getFieldValue", {value: getFieldValue(FIELD_NAME)});
+    console.log("918371723 getFieldValue", {
+      value: getFieldValue(FIELD_NAME)
+    });
 
     return (
       <div className="flex flex-grow-1 row align-items-center">
         <div className="pl8 wp100">
-          <div className='flex  row mb-4' >
+          <div className="flex  row mb-4">
             <span className="form-label">To</span>
           </div>
-          
+
           <FormItem className="wp100">
             {getFieldDecorator(FIELD_NAME, {
               initialValue: getInitialValue()
@@ -163,7 +173,8 @@ class EndDate extends Component {
                 showToday={false}
                 // suffixIcon={calendarComp()}
                 disabled={
-                  getFieldError(repeatIntervalField.field_name) !== undefined || canViewDetails
+                  getFieldError(repeatIntervalField.field_name) !== undefined ||
+                  canViewDetails
                 }
                 // allowClear={false}
                 disabledDate={disabledEndDate}

@@ -615,7 +615,7 @@ class DietController extends Controller {
 
       const allCareplansForDoctor =
         (await carePlanService.getCarePlanByData({
-          doctor_id: userCategoryId,
+          doctor_id: userCategoryId
           // user_role_id: userRoleId,
         })) || [];
       const dietService = new DietService();

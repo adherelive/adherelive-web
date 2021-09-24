@@ -20,8 +20,7 @@ const messages = defineMessages({
     id: "app.doctor.table.providers.title",
     description: "",
     defaultMessage: "Providers"
-  },
-
+  }
 });
 
 export default messages;

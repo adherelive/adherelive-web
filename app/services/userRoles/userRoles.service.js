@@ -7,7 +7,7 @@ import { TABLE_NAME as doctorTableName } from "../../models/doctors";
 import { TABLE_NAME as patientTableName } from "../../models/patients";
 import { TABLE_NAME as providerTableName } from "../../models/providers";
 
-const DEFAULT_ORDER = [["created_at","DESC"]];
+const DEFAULT_ORDER = [["created_at", "DESC"]];
 
 class UserRolesService {
   constructor() {}
@@ -36,10 +36,10 @@ class UserRolesService {
             include: [
               Database.getModel(doctorTableName),
               Database.getModel(patientTableName),
-              Database.getModel(providerTableName),
-            ],
+              Database.getModel(providerTableName)
+            ]
           }
-        ],
+        ]
       });
       return userRoles;
     } catch (error) {
@@ -47,12 +47,11 @@ class UserRolesService {
     }
   };
 
-
-  getFirstUserRole = async (userIdentity) => {
+  getFirstUserRole = async userIdentity => {
     try {
       const userRole = await Database.getModel(TABLE_NAME).findOne({
         where: {
-          user_identity: userIdentity,
+          user_identity: userIdentity
         },
         order: [["created_at", "ASC"]]
       });
@@ -72,10 +71,10 @@ class UserRolesService {
             include: [
               Database.getModel(doctorTableName),
               Database.getModel(patientTableName),
-              Database.getModel(providerTableName),
-            ],
+              Database.getModel(providerTableName)
+            ]
           }
-        ],
+        ]
         // raw: true,
         // nest: true,
       });
@@ -85,7 +84,7 @@ class UserRolesService {
     }
   };
 
-  findAndCountAll = async ({where, order = DEFAULT_ORDER, attributes}) => {
+  findAndCountAll = async ({ where, order = DEFAULT_ORDER, attributes }) => {
     try {
       return await Database.getModel(TABLE_NAME).findAndCountAll({
         where,
@@ -98,7 +97,7 @@ class UserRolesService {
     }
   };
 
-  findOne = async ({where, order = DEFAULT_ORDER, attributes}) => {
+  findOne = async ({ where, order = DEFAULT_ORDER, attributes }) => {
     try {
       return await Database.getModel(TABLE_NAME).findOne({
         where,
@@ -115,14 +114,13 @@ class UserRolesService {
     try {
       const userRoles = await Database.getModel(TABLE_NAME).findAll({
         where: data,
-        raw: true,
+        raw: true
       });
       return userRoles;
     } catch (error) {
       throw error;
     }
   };
-
 }
 
 export default new UserRolesService();

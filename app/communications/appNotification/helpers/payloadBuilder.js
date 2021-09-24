@@ -140,6 +140,7 @@ class PayloadBuilder {
         return null;
     }
   }
+
   getArticlePayload() {
     let payload = !isEmpty(arguments)
       ? { ...{}, ...arguments[0] }
@@ -290,4 +291,5 @@ class PayloadBuilder {
     }
   }
 }
+
 module.exports = data => new PayloadBuilder(data);

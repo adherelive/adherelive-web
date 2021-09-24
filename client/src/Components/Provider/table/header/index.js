@@ -27,16 +27,17 @@ export default props => {
       render: userData => <ContactDetails {...userData} />
     },
     {
-      title:'',
+      title: "",
       ...TABLE_COLUMN.EDIT,
-      render : data => {
-        const {  providerData,
-          openEditProviderDrawer,
-        } = data;
-          return (
-            <Edit  {...providerData} openEditProviderDrawer={openEditProviderDrawer} />
-          )
-        }
-    },
+      render: data => {
+        const { providerData, openEditProviderDrawer } = data;
+        return (
+          <Edit
+            {...providerData}
+            openEditProviderDrawer={openEditProviderDrawer}
+          />
+        );
+      }
+    }
   ];
 };

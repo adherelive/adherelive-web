@@ -9,14 +9,13 @@ import CreatedAt from "../dataColumn/created";
 export default props => {
   const { formatMessage } = props || {};
 
-
   return [
     {
-      title:formatMessage(messages.templateName),
+      title: formatMessage(messages.templateName),
       ...TABLE_COLUMN.NAME,
       render: data => {
         const { templateData } = data || {};
-        return <Name templateData={templateData}  />;
+        return <Name templateData={templateData} />;
       }
     },
     {
@@ -24,21 +23,29 @@ export default props => {
       ...TABLE_COLUMN.CREATED_AT,
       render: data => {
         const { templateData } = data || {};
-        return <CreatedAt templateData={templateData}  />;
+        return <CreatedAt templateData={templateData} />;
       }
     },
     {
       title: "",
       ...TABLE_COLUMN.EDIT,
       render: data => {
-        const {  id , duplicateCareplanTemplate, handleOpenEditDrawer , templateData } = data;
+        const {
+          id,
+          duplicateCareplanTemplate,
+          handleOpenEditDrawer,
+          templateData
+        } = data;
 
         return (
-          <Edit id={id} duplicateCareplanTemplate={duplicateCareplanTemplate} 
-          handleOpenEditDrawer={handleOpenEditDrawer} 
-          templateData={templateData}/>
+          <Edit
+            id={id}
+            duplicateCareplanTemplate={duplicateCareplanTemplate}
+            handleOpenEditDrawer={handleOpenEditDrawer}
+            templateData={templateData}
+          />
         );
       }
-    },
+    }
   ];
 };
