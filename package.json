@@ -64,7 +64,7 @@
     "agora-access-token": "^2.0.4",
     "algoliasearch": "^4.8.3",
     "atob": "^2.1.2",
-    "aws-sdk": "^2.683.0",
+    "aws-sdk": "^2.983.0",
     "axios": "^0.19.2",
     "base64-img": "^1.0.4",
     "bcrypt": "^4.0.1",
