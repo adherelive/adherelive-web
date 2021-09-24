@@ -178,37 +178,6 @@ export const searchDoctorName = name => {
   };
 };
 
-export const searchDoctorName = name => {
-  let response = {};
-  return async dispatch => {
-    try {
-      dispatch({ type: SEARCH_DOCTOR_NAME_START });
-      response = await doRequest({
-        method: REQUEST_TYPE.GET,
-        url: searchDoctorNameUrl(name)
-      });
-
-      const { status, payload: { data, error } = {} } = response || {};
-
-      if (status === true) {
-        dispatch({
-          type: SEARCH_DOCTOR_NAME_COMPLETE,
-          data: data,
-          payload: data
-        });
-      } else {
-        dispatch({
-          type: SEARCH_DOCTOR_NAME_FAILED,
-          error
-        });
-      }
-    } catch (error) {
-      console.log("SEARCH_DOCTOR_NAME ERROR --> ", error);
-    }
-    return response;
-  };
-};
-
 export const updateDoctor = (user_id, updateData) => {
   let response = {};
   return async dispatch => {

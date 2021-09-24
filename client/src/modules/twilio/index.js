@@ -20,8 +20,6 @@ const SET_PATIENT_FOR_CHAT_COMPLETED = "SET_PATIENT_FOR_CHAT_COMPLETED";
 
 const SET_CARE_PLAN_FOR_CHAT_COMPLETED = "SET_CARE_PLAN_FOR_CHAT_COMPLETED";
 
-const SET_CARE_PLAN_FOR_CHAT_COMPLETED = "SET_CARE_PLAN_FOR_CHAT_COMPLETED";
-
 const setTwilioAccessToken = (state, data) => {
   const { identity = {}, token = {} } = data;
   return { ...state, identity: identity, videoToken: token };
