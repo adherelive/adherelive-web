@@ -19,10 +19,10 @@ import VitalWrapper from "../ApiWrapper/mobile/vitals";
 const Log = new Logger("LONG_TERM > CRONS");
 
 class LongTerm {
-  getuserFromRole = async roleId => {
+  getuserFromRole = async (roleId) => {
     try {
       const userRoles = await userRoleService.findOne({
-        where: { id: roleId }
+        where: { id: roleId },
       });
 
       const { user_identity } = userRoles || {};
@@ -119,18 +119,18 @@ class LongTerm {
     }
   };
 
-  createMedicationEvents = async medicationId => {
+  createMedicationEvents = async (medicationId) => {
     try {
       const eventService = new EventService();
 
       const medication = await medicationService.getMedication({
-        id: medicationId
+        id: medicationId,
       });
 
       const scheduleEvent =
         (await eventService.getEventByData({
           event_id: medicationId,
-          event_type: EVENT_TYPE.MEDICATION_REMINDER
+          event_type: EVENT_TYPE.MEDICATION_REMINDER,
         })) || null;
 
       const { details: { actor, participants = [] } = {} } =
@@ -138,7 +138,9 @@ class LongTerm {
 
       const { details, details: { when_to_take } = {} } = medication || {};
 
-      const { id: actorId } = actor || {};
+      // const { id: actorId } = actor || {};
+
+      const { id: actorId, user_role_id } = actor || {};
 
       let patientUserRoleId = null;
       for (const participant of participants) {
@@ -168,7 +170,7 @@ class LongTerm {
         participants,
         actor,
         participant_one: patientUserId,
-        participant_two: actorId
+        participant_two: actorId,
       };
 
       const queueService = new QueueService();
@@ -179,18 +181,18 @@ class LongTerm {
     }
   };
 
-  createVitalEvents = async vitalId => {
+  createVitalEvents = async (vitalId) => {
     try {
       const eventService = new EventService();
 
       const vital = await vitalService.getByData({
-        id: vitalId
+        id: vitalId,
       });
 
       const scheduleEvent =
         (await eventService.getEventByData({
           event_id: vitalId,
-          event_type: EVENT_TYPE.VITALS
+          event_type: EVENT_TYPE.VITALS,
         })) || null;
 
       const { details: { actor, participants = [] } = {} } =
@@ -234,7 +236,7 @@ class LongTerm {
         details: vitals.getBasicInfo(),
         participants,
         actor,
-        vital_templates: vital_templates[vitals.getVitalTemplateId()]
+        vital_templates: vital_templates[vitals.getVitalTemplateId()],
       };
 
       // Log.debug("eventScheduleData", eventScheduleData);
@@ -247,14 +249,14 @@ class LongTerm {
     }
   };
 
-  createDietEvents = async dietId => {
+  createDietEvents = async (dietId) => {
     try {
       const eventService = new EventService();
 
       const scheduleEvent =
         (await eventService.getEventByData({
           event_id: dietId,
-          event_type: EVENT_TYPE.DIET
+          event_type: EVENT_TYPE.DIET,
         })) || null;
 
       Log.debug("2139280382 dietId", dietId, scheduleEvent);
@@ -283,7 +285,7 @@ class LongTerm {
           .toISOString(),
         end_date: null,
         participants,
-        actor
+        actor,
       };
 
       // Log.debug("eventScheduleData", eventScheduleData);
@@ -296,14 +298,14 @@ class LongTerm {
     }
   };
 
-  createWorkoutEvents = async workoutId => {
+  createWorkoutEvents = async (workoutId) => {
     try {
       const eventService = new EventService();
 
       const scheduleEvent =
         (await eventService.getEventByData({
           event_id: workoutId,
-          event_type: EVENT_TYPE.WORKOUT
+          event_type: EVENT_TYPE.WORKOUT,
         })) || null;
 
       const { details: { actor, participants = [] } = {} } =
@@ -330,7 +332,7 @@ class LongTerm {
           .toISOString(),
         end_date: null,
         participants,
-        actor
+        actor,
       };
 
       // Log.debug("eventScheduleData", eventScheduleData);
@@ -357,7 +359,7 @@ class LongTerm {
           const scheduleEvent =
             (await eventService.getEventByData({
               event_id: medicationId,
-              event_type: EVENT_TYPE.MEDICATION_REMINDER
+              event_type: EVENT_TYPE.MEDICATION_REMINDER,
             })) || null;
 
           if (scheduleEvent) {
@@ -365,7 +367,7 @@ class LongTerm {
               (await eventService.getAllEventByData({
                 event_id: medicationId,
                 event_type: EVENT_TYPE.MEDICATION_REMINDER,
-                status: EVENT_STATUS.PENDING
+                status: EVENT_STATUS.PENDING,
               })) || [];
 
             if (scheduleEvents.length === 0) {
@@ -385,7 +387,7 @@ class LongTerm {
           const scheduleEvent =
             (await eventService.getEventByData({
               event_id: vitalId,
-              event_type: EVENT_TYPE.VITALS
+              event_type: EVENT_TYPE.VITALS,
             })) || null;
 
           if (scheduleEvent) {
@@ -393,7 +395,7 @@ class LongTerm {
               (await eventService.getAllEventByData({
                 event_id: vitalId,
                 event_type: EVENT_TYPE.VITALS,
-                status: EVENT_STATUS.PENDING
+                status: EVENT_STATUS.PENDING,
               })) || [];
 
             if (scheduleEvents.length === 0) {
@@ -413,7 +415,7 @@ class LongTerm {
           const scheduleEvent =
             (await eventService.getEventByData({
               event_id: dietId,
-              event_type: EVENT_TYPE.DIET
+              event_type: EVENT_TYPE.DIET,
             })) || null;
 
           if (scheduleEvent) {
@@ -421,7 +423,7 @@ class LongTerm {
               (await eventService.getEventByData({
                 event_id: dietId,
                 event_type: EVENT_TYPE.DIET,
-                status: EVENT_STATUS.PENDING
+                status: EVENT_STATUS.PENDING,
               })) || [];
 
             Log.debug("dietIds scheduleEvents", scheduleEvents.length);
@@ -442,7 +444,7 @@ class LongTerm {
           const scheduleEvent =
             (await eventService.getEventByData({
               event_id: workoutId,
-              event_type: EVENT_TYPE.WORKOUT
+              event_type: EVENT_TYPE.WORKOUT,
             })) || null;
 
           if (scheduleEvent) {
@@ -450,7 +452,7 @@ class LongTerm {
               (await eventService.getAllEventByData({
                 event_id: workoutId,
                 event_type: EVENT_TYPE.WORKOUT,
-                status: EVENT_STATUS.PENDING
+                status: EVENT_STATUS.PENDING,
               })) || [];
 
             if (scheduleEvents.length === 0) {
