@@ -1,6 +1,6 @@
-"use strict";
+'use strict';
 
-import { TABLE_NAME } from "../app/models/college";
+import {TABLE_NAME} from "../app/models/college";
 
 module.exports = {
   up: (queryInterface, Sequelize) => {
@@ -12,12 +12,12 @@ module.exports = {
         type: Sequelize.INTEGER
       },
       name: {
-        type: Sequelize.STRING(100)
+        type: Sequelize.STRING(100),
       },
       user_created: {
-        allowNull: false,
+        allowNull:false,
         type: Sequelize.BOOLEAN,
-        defaultValue: false
+        defaultValue:false
       },
       created_at: {
         allowNull: false,

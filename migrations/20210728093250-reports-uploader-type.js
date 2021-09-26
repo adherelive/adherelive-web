@@ -8,18 +8,19 @@ module.exports = {
       queryInterface.changeColumn(TABLE_NAME, "uploader_type", {
         type: Sequelize.ENUM,
         values: [
-          USER_CATEGORY.DOCTOR,
+          USER_CATEGORY.DOCTOR, 
           USER_CATEGORY.PATIENT,
-          USER_CATEGORY.HSP
-        ],
-        allowNull: false
+          USER_CATEGORY.HSP],
+        allowNull: false,
+          
       })
     ]);
   },
 
   down: (queryInterface, Sequelize) => {
     return Promise.all([
-      queryInterface.changeColumn(TABLE_NAME, "uploader_type")
+      queryInterface.changeColumn(TABLE_NAME, "uploader_type"),
+
     ]);
   }
 };

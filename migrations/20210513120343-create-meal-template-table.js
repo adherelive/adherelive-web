@@ -1,8 +1,9 @@
-"use strict";
+'use strict';
 
-import { TABLE_NAME } from "../app/models/mealTemplates";
+import {TABLE_NAME} from "../app/models/mealTemplates";
 
-import { USER_CATEGORY_ARRAY } from "../app/models/users";
+import {USER_CATEGORY_ARRAY} from "../app/models/users";
+
 
 module.exports = {
   up: (queryInterface, Sequelize) => {
@@ -13,20 +14,20 @@ module.exports = {
         primaryKey: true,
         type: Sequelize.INTEGER
       },
-      creator_id: {
+      creator_id:{
         type: Sequelize.INTEGER,
-        allowNull: false
+        allowNull: false,
       },
-      creator_type: {
+      creator_type:{
         type: Sequelize.ENUM,
         values: USER_CATEGORY_ARRAY,
         allowNull: false
       },
-      name: {
+      name : {
         type: Sequelize.STRING,
-        allowNull: false
+        allowNull: false,
       },
-      details: {
+      details:{
         type: Sequelize.JSON
       },
       created_at: {

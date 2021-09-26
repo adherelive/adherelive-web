@@ -1,9 +1,9 @@
-"use strict";
+'use strict';
 
-import { DataTypes } from "sequelize";
-import { TABLE_NAME } from "../app/models/consents";
-import { TABLE_NAME as doctorTableName } from "../app/models/doctors";
-import { TABLE_NAME as patientTableName } from "../app/models/patients";
+import {DataTypes} from "sequelize";
+import {TABLE_NAME} from "../app/models/consents";
+import {TABLE_NAME as doctorTableName} from "../app/models/doctors";
+import {TABLE_NAME as patientTableName} from "../app/models/patients";
 
 module.exports = {
   up: (queryInterface, Sequelize) => {
@@ -16,16 +16,16 @@ module.exports = {
       },
       type: {
         type: Sequelize.STRING,
-        allowNull: false
+        allowNull: false,
       },
       doctor_id: {
         type: DataTypes.INTEGER,
         allowNull: false,
         references: {
           model: {
-            tableName: doctorTableName
+            tableName: doctorTableName,
           },
-          key: "id"
+          key: 'id'
         }
       },
       patient_id: {
@@ -33,19 +33,19 @@ module.exports = {
         allowNull: false,
         references: {
           model: {
-            tableName: patientTableName
+            tableName: patientTableName,
           },
-          key: "id"
+          key: 'id'
         }
       },
       details: {
-        type: Sequelize.JSON
+        type: Sequelize.JSON,
       },
       activated_on: {
-        type: Sequelize.DATE
+        type: Sequelize.DATE,
       },
       expired_on: {
-        type: Sequelize.DATE
+        type: Sequelize.DATE,
       },
       created_at: {
         allowNull: false,

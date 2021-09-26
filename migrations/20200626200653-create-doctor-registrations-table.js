@@ -1,8 +1,8 @@
-"use strict";
+'use strict';
 
-import { TABLE_NAME } from "../app/models/doctorRegistrations";
-import { TABLE_NAME as doctorTableName } from "../app/models/doctors";
-import { TABLE_NAME as registrationCouncilTableName } from "../app/models/registrationCouncil";
+import {TABLE_NAME} from "../app/models/doctorRegistrations";
+import {TABLE_NAME as doctorTableName} from "../app/models/doctors";
+import {TABLE_NAME as registrationCouncilTableName} from "../app/models/registrationCouncil";
 
 module.exports = {
   up: (queryInterface, Sequelize) => {
@@ -18,28 +18,28 @@ module.exports = {
         allowNull: false,
         references: {
           model: {
-            tableName: doctorTableName
+            tableName: doctorTableName,
           },
-          key: "id"
+          key: 'id'
         }
       },
       number: {
         type: Sequelize.STRING(100),
-        allowNull: false
+        allowNull: false,
       },
       registration_council_id: {
         type: Sequelize.INTEGER,
         allowNull: false,
         references: {
           model: {
-            tableName: registrationCouncilTableName
+            tableName: registrationCouncilTableName,
           },
-          key: "id"
+          key: 'id'
         }
       },
       year: {
         type: Sequelize.INTEGER,
-        allowNull: false
+        allowNull: false,
       },
       expiry_date: {
         type: Sequelize.DATE,

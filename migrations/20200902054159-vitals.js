@@ -1,8 +1,8 @@
-"use strict";
+'use strict';
 
-import { TABLE_NAME } from "../app/models/vitals";
-import { TABLE_NAME as vitalTemplateTableName } from "../app/models/vitalTemplates";
-import { TABLE_NAME as carePlanTableName } from "../app/models/carePlan";
+import {TABLE_NAME} from "../app/models/vitals";
+import {TABLE_NAME as vitalTemplateTableName} from "../app/models/vitalTemplates";
+import {TABLE_NAME as carePlanTableName} from "../app/models/carePlan";
 
 module.exports = {
   up: (queryInterface, Sequelize) => {
@@ -18,9 +18,9 @@ module.exports = {
         allowNull: false,
         references: {
           model: {
-            tableName: vitalTemplateTableName
+            tableName: vitalTemplateTableName,
           },
-          key: "id"
+          key: 'id'
         }
       },
       care_plan_id: {
@@ -28,16 +28,16 @@ module.exports = {
         allowNull: false,
         references: {
           model: {
-            tableName: carePlanTableName
+            tableName: carePlanTableName,
           },
-          key: "id"
+          key: 'id'
         }
       },
       details: {
         type: Sequelize.JSON
       },
       description: {
-        type: Sequelize.STRING(1000)
+        type: Sequelize.STRING(1000),
       },
       start_date: {
         type: Sequelize.DATE

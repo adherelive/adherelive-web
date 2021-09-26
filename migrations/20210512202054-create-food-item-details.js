@@ -3,7 +3,7 @@
 import { TABLE_NAME } from "../app/models/foodItemDetails";
 import { TABLE_NAME as portionTableName } from "../app/models/portions";
 import { TABLE_NAME as foodItemTableName } from "../app/models/foodItemDetails";
-import { USER_CATEGORY_ARRAY } from "../app/models/users";
+import {USER_CATEGORY_ARRAY} from "../app/models/users";
 
 module.exports = {
   up: (queryInterface, Sequelize) => {
@@ -12,73 +12,73 @@ module.exports = {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
-        type: Sequelize.INTEGER
+        type: Sequelize.INTEGER,
       },
       food_item_id: {
         type: Sequelize.INTEGER,
         allowNull: false,
         references: {
           model: {
-            tableName: foodItemTableName
+            tableName: foodItemTableName,
           },
-          key: "id"
-        }
+          key: "id",
+        },
       },
       portion_id: {
         type: Sequelize.INTEGER,
         allowNull: false,
         references: {
           model: {
-            tableName: portionTableName
+            tableName: portionTableName,
           },
-          key: "id"
-        }
+          key: "id",
+        },
       },
       portion_size: {
-        type: Sequelize.FLOAT(11, 2),
+        type: Sequelize.FLOAT(11,2),
         allowNull: false
       },
       calorific_value: {
-        type: Sequelize.FLOAT(11, 2)
+        type: Sequelize.FLOAT(11,2),
       },
       carbs: {
-        type: Sequelize.FLOAT(11, 2)
+        type: Sequelize.FLOAT(11,2),
       },
       proteins: {
-        type: Sequelize.FLOAT(11, 2)
+        type: Sequelize.FLOAT(11,2),
       },
       fats: {
-        type: Sequelize.FLOAT(11, 2)
+        type: Sequelize.FLOAT(11,2),
       },
       fibers: {
-        type: Sequelize.FLOAT(11, 2)
+        type: Sequelize.FLOAT(11,2),
       },
       details: {
-        type: Sequelize.JSON
+        type: Sequelize.JSON,
       },
-      creator_id: {
+      creator_id:{
         type: Sequelize.INTEGER
       },
-      creator_type: {
+      creator_type:{
         type: Sequelize.ENUM,
         values: USER_CATEGORY_ARRAY
       },
       created_at: {
         allowNull: false,
-        type: Sequelize.DATE
+        type: Sequelize.DATE,
       },
       updated_at: {
         allowNull: false,
-        type: Sequelize.DATE
+        type: Sequelize.DATE,
       },
       deleted_at: {
         allowNull: true,
-        type: Sequelize.DATE
-      }
+        type: Sequelize.DATE,
+      },
     });
   },
 
   down: (queryInterface, Sequelize) => {
     return queryInterface.dropTable(TABLE_NAME);
-  }
+  },
 };

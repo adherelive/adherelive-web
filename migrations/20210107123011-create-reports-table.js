@@ -1,8 +1,8 @@
-"use strict";
-import { DataTypes } from "sequelize";
-import { TABLE_NAME } from "../app/models/reports";
-import { TABLE_NAME as patientTableName } from "../app/models/patients";
-import { USER_CATEGORY } from "../constant";
+'use strict';
+import {DataTypes} from "sequelize";
+import {TABLE_NAME} from "../app/models/reports";
+import {TABLE_NAME as patientTableName} from "../app/models/patients";
+import {USER_CATEGORY} from "../constant";
 
 module.exports = {
   up: (queryInterface, Sequelize) => {
@@ -24,20 +24,20 @@ module.exports = {
         }
       },
       name: {
-        type: DataTypes.STRING
+        type: DataTypes.STRING,
       },
       test_date: {
         type: DataTypes.DATEONLY,
-        allowNull: false
+        allowNull: false,
       },
       uploader_id: {
         type: DataTypes.INTEGER,
-        allowNull: false
+        allowNull: false,
       },
       uploader_type: {
         type: DataTypes.ENUM,
         values: [USER_CATEGORY.DOCTOR, USER_CATEGORY.PATIENT],
-        allowNull: false
+        allowNull: false,
       },
       created_at: {
         allowNull: false,

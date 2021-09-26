@@ -1,7 +1,7 @@
-"use strict";
+'use strict';
 
-import { USER_FAV_USER_CATEGORY, USER_FAV_ALL_TYPES } from "../constant";
-import { TABLE_NAME } from "../app/models/userFavourites";
+import {USER_FAV_USER_CATEGORY , USER_FAV_ALL_TYPES} from "../constant";
+import {TABLE_NAME} from "../app/models/userFavourites";
 
 module.exports = {
   up: (queryInterface, Sequelize) => {
@@ -17,18 +17,18 @@ module.exports = {
         type: Sequelize.INTEGER
       },
       user_category_type: {
-        allowNull: false,
+        allowNull: false,  
         type: Sequelize.ENUM,
-        values: USER_FAV_USER_CATEGORY
+        values: USER_FAV_USER_CATEGORY,
       },
       marked_favourite_id: {
         allowNull: false,
         type: Sequelize.INTEGER
       },
       marked_favourite_type: {
-        allowNull: false,
+        allowNull: false,  
         type: Sequelize.ENUM,
-        values: USER_FAV_ALL_TYPES
+        values: USER_FAV_ALL_TYPES,
       },
       created_at: {
         allowNull: false,
