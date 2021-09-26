@@ -12,8 +12,8 @@ class CollegeWrapper extends BaseCollege {
     return {
       basic_info: {
         id,
-        name
-      }
+        name,
+      },
     };
   };
 }

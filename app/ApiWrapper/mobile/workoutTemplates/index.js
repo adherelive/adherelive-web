@@ -51,13 +51,8 @@ class WorkoutTemplateWrapper extends BaseWorkoutTemplate {
 
     if (exerciseDetails) {
       for (let index = 0; index < exerciseDetails.length; index++) {
-        const exerciseDetail = await ExerciseDetailWrapper({
-          data: exerciseDetails[index]
-        });
-        const {
-          exercise_details,
-          repetitions
-        } = await exerciseDetail.getReferenceInfo();
+        const exerciseDetail = (await ExerciseDetailWrapper({data: exerciseDetails[index]}));
+        const {exercise_details, repetitions} = await exerciseDetail.getReferenceInfo();
         allExerciseDetails = { ...allExerciseDetails, ...exercise_details };
         allRepetitions = { ...allRepetitions, ...repetitions };
       }
@@ -70,7 +65,7 @@ class WorkoutTemplateWrapper extends BaseWorkoutTemplate {
         }
       },
       exercise_details: allExerciseDetails,
-      repetitions: allRepetitions
+      repetitions: allRepetitions,
     };
   };
 }

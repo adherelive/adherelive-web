@@ -1,6 +1,6 @@
-"use strict";
+'use strict';
 
-import { DB_TABLES } from "../constant";
+import {DB_TABLES} from "../constant";
 
 module.exports = {
   up: (queryInterface, Sequelize) => {
@@ -16,9 +16,9 @@ module.exports = {
         allowNull: false,
         references: {
           model: {
-            tableName: DB_TABLES.ACTION_DETAILS
+            tableName: DB_TABLES.ACTION_DETAILS,
           },
-          key: "id"
+          key: 'id'
         }
       },
       adherence: {

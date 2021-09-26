@@ -1,10 +1,10 @@
-"use strict";
+'use strict';
 
-import { TABLE_NAME, PAYMENT_TYPE } from "../models/paymentProducts";
-import { USER_CATEGORY } from "../../constant";
+import {TABLE_NAME, PAYMENT_TYPE} from "../models/paymentProducts";
+import {USER_CATEGORY} from "../../constant";
 
 module.exports = {
-  up: queryInterface => {
+  up: (queryInterface) => {
     return queryInterface.bulkInsert(TABLE_NAME, [
       {
         name: "Tele-Medicine",
@@ -36,7 +36,7 @@ module.exports = {
     ]);
   },
 
-  down: queryInterface => {
+  down: (queryInterface) => {
     return queryInterface.bulkDelete(TABLE_NAME, null, {});
   }
 };

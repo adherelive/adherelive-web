@@ -1,6 +1,6 @@
-"use strict";
+'use strict';
 
-import { TABLE_NAME } from "../app/models/uploadDocuments";
+import {TABLE_NAME} from "../app/models/uploadDocuments";
 
 module.exports = {
   up: (queryInterface, Sequelize) => {
@@ -13,15 +13,15 @@ module.exports = {
       },
       parent_type: {
         type: Sequelize.STRING(200),
-        allowNull: false
+        allowNull: false,
       },
-      parent_id: {
+      parent_id:{
         allowNull: false,
         type: Sequelize.INTEGER
       },
       document: {
         type: Sequelize.STRING(1000),
-        allowNull: false
+        allowNull: false,
       },
       name: {
         type: Sequelize.STRING(1000)
@@ -39,7 +39,7 @@ module.exports = {
         type: Sequelize.DATE
       }
     });
-  },
+    },
 
   down: (queryInterface, Sequelize) => {
     return queryInterface.dropTable(TABLE_NAME);

@@ -1,5 +1,5 @@
-"use strict";
-import { TABLE_NAME } from "../app/models/consents";
+'use strict';
+import {TABLE_NAME} from "../app/models/consents";
 
 module.exports = {
   up: (queryInterface, Sequelize) => {
@@ -11,6 +11,6 @@ module.exports = {
   },
 
   down: (queryInterface, Sequelize) => {
-    return queryInterface.removeColumn(TABLE_NAME, "user_role_id");
+    return queryInterface.removeColumn(TABLE_NAME, "user_role_id")
   }
 };

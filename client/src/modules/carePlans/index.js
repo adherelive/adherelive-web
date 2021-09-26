@@ -3,31 +3,26 @@ import {
   REQUEST_TYPE,
   USER_CATEGORY,
   PATH,
-  ONBOARDING_STATUS
+  ONBOARDING_STATUS,
 } from "../../constant";
 import { doRequest } from "../../Helper/network";
 import { Auth } from "../../Helper/urls";
 
 export const GET_PATIENT_CARE_PLAN_DETAILS = "GET_PATIENT_CARE_PLAN_DETAILS";
-export const GET_PATIENT_CARE_PLAN_DETAILS_COMPLETED =
-  "GET_PATIENT_CARE_PLAN_DETAILS_COMPLETED";
-export const GET_PATIENT_CARE_PLAN_DETAILS_COMPLETED_WITH_ERROR =
-  "GET_PATIENT_CARE_PLAN_DETAILS_COMPLETED_WITH_ERROR";
+export const GET_PATIENT_CARE_PLAN_DETAILS_COMPLETED = "GET_PATIENT_CARE_PLAN_DETAILS_COMPLETED";
+export const GET_PATIENT_CARE_PLAN_DETAILS_COMPLETED_WITH_ERROR = "GET_PATIENT_CARE_PLAN_DETAILS_COMPLETED_WITH_ERROR";
 
 export const ADD_CARE_PLAN_DATA = "ADD_CARE_PLAN_DATA";
 export const ADD_CARE_PLAN_DATA_COMPLETED = "ADD_CARE_PLAN_DATA_COMPLETED";
-export const ADD_CARE_PLAN_DATA_COMPLETED_WITH_ERROR =
-  "ADD_CARE_PLAN_DATA_COMPLETED_WITH_ERROR";
+export const ADD_CARE_PLAN_DATA_COMPLETED_WITH_ERROR = "ADD_CARE_PLAN_DATA_COMPLETED_WITH_ERROR";
 
-export const ADD_SECONDARY_DOCTOR_TO_CARE_PLAN =
-  "ADD_SECONDARY_DOCTOR_TO_CARE_PLAN";
-export const ADD_SECONDARY_DOCTOR_TO_CARE_PLAN_COMPLETED =
-  "ADD_SECONDARY_DOCTOR_TO_CARE_PLAN_COMPLETED";
-export const ADD_SECONDARY_DOCTOR_TO_CARE_PLAN_FAILED =
-  "ADD_SECONDARY_DOCTOR_TO_CARE_PLAN_FAILED";
+export const ADD_SECONDARY_DOCTOR_TO_CARE_PLAN = "ADD_SECONDARY_DOCTOR_TO_CARE_PLAN";
+export const ADD_SECONDARY_DOCTOR_TO_CARE_PLAN_COMPLETED = "ADD_SECONDARY_DOCTOR_TO_CARE_PLAN_COMPLETED";
+export const ADD_SECONDARY_DOCTOR_TO_CARE_PLAN_FAILED = "ADD_SECONDARY_DOCTOR_TO_CARE_PLAN_FAILED";
 
 function carePlanReducer(state, data) {
   const { care_plans } = data || {};
+  
   if (care_plans) {
     return {
       ...state,
@@ -36,11 +31,11 @@ function carePlanReducer(state, data) {
   } else {
     return state;
   }
-}
+};
 
 export const addCarePlanMedicationsAndAppointments = (payload, carePlanId) => {
   let response = {};
-  return async dispatch => {
+  return async (dispatch) => {
     try {
       dispatch({ type: ADD_CARE_PLAN_DATA });
 
@@ -56,14 +51,14 @@ export const addCarePlanMedicationsAndAppointments = (payload, carePlanId) => {
       if (status === false) {
         dispatch({
           type: ADD_CARE_PLAN_DATA_COMPLETED_WITH_ERROR,
-          payload: { error }
+          payload: { error },
         });
       } else if (status === true) {
         const { users = {} } = data;
 
         dispatch({
           type: ADD_CARE_PLAN_DATA_COMPLETED,
-          data
+          data,
         });
       }
     } catch (err) {
@@ -75,9 +70,9 @@ export const addCarePlanMedicationsAndAppointments = (payload, carePlanId) => {
   };
 };
 
-export const getPatientCarePlanDetails = patientId => {
+export const getPatientCarePlanDetails = (patientId) => {
   let response = {};
-  return async dispatch => {
+  return async (dispatch) => {
     try {
       dispatch({ type: GET_PATIENT_CARE_PLAN_DETAILS });
 
@@ -92,7 +87,7 @@ export const getPatientCarePlanDetails = patientId => {
       if (status === false) {
         dispatch({
           type: GET_PATIENT_CARE_PLAN_DETAILS_COMPLETED_WITH_ERROR,
-          payload: { error }
+          payload: { error },
         });
       } else if (status === true) {
         dispatch({
@@ -109,9 +104,10 @@ export const getPatientCarePlanDetails = patientId => {
     return response;
   };
 };
-export const addSecondaryDoctorToCareplan = payload => {
+
+export const addSecondaryDoctorToCareplan = (payload) => {
   let response = {};
-  return async dispatch => {
+  return async (dispatch) => {
     try {
       dispatch({ type: ADD_SECONDARY_DOCTOR_TO_CARE_PLAN });
 
@@ -127,14 +123,14 @@ export const addSecondaryDoctorToCareplan = payload => {
       if (status === false) {
         dispatch({
           type: ADD_SECONDARY_DOCTOR_TO_CARE_PLAN_FAILED,
-          payload: { error }
+          payload: { error },
         });
       } else if (status === true) {
         const { users = {} } = data;
 
         dispatch({
           type: ADD_SECONDARY_DOCTOR_TO_CARE_PLAN_COMPLETED,
-          data
+          data,
         });
       }
     } catch (err) {

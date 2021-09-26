@@ -12,8 +12,8 @@ class ConditionWrapper extends BaseCondition {
     return {
       basic_info: {
         id,
-        name
-      }
+        name,
+      },
     };
   };
 }

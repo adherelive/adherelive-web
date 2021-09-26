@@ -10,43 +10,43 @@ module.exports = {
       id: {
         type: DataTypes.INTEGER,
         primaryKey: true,
-        autoIncrement: true
+        autoIncrement: true,
       },
       workout_template_id: {
         type: DataTypes.INTEGER,
         allowNull: false,
         references: {
           model: {
-            tableName: workoutTemplateTableName
+            tableName: workoutTemplateTableName,
           },
-          key: "id"
-        }
+          key: "id",
+        },
       },
       exercise_detail_id: {
         type: DataTypes.INTEGER,
         allowNull: false,
         references: {
           model: {
-            tableName: exerciseDetailTableName
+            tableName: exerciseDetailTableName,
           },
-          key: "id"
-        }
+          key: "id",
+        },
       },
       created_at: {
         allowNull: false,
-        type: DataTypes.DATE
+        type: DataTypes.DATE,
       },
       updated_at: {
         allowNull: false,
-        type: DataTypes.DATE
+        type: DataTypes.DATE,
       },
       deleted_at: {
-        type: DataTypes.DATE
-      }
+        type: DataTypes.DATE,
+      },
     });
   },
 
   down: (queryInterface, DataTypes) => {
     return queryInterface.dropTable(TABLE_NAME);
-  }
+  },
 };
