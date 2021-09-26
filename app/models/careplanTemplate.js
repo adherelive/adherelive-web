@@ -68,7 +68,7 @@ export const db = database => {
       },
       details: {
         type: DataTypes.JSON
-      },
+      }
       // created_at: {
       //   allowNull: true,
       //   type: DataTypes.DATE
@@ -109,14 +109,20 @@ export const associate = database => {
     sourceKey: "condition_id"
   });
 
-  database.models[TABLE_NAME].hasMany(database.models[appointmentTemplateTableName], {
-    foreignKey: "care_plan_template_id",
-    sourceKey: "id"
-  });
-  database.models[TABLE_NAME].hasMany(database.models[medicationTemplateTableName], {
-    foreignKey: "care_plan_template_id",
-    sourceKey: "id"
-  });
+  database.models[TABLE_NAME].hasMany(
+    database.models[appointmentTemplateTableName],
+    {
+      foreignKey: "care_plan_template_id",
+      sourceKey: "id"
+    }
+  );
+  database.models[TABLE_NAME].hasMany(
+    database.models[medicationTemplateTableName],
+    {
+      foreignKey: "care_plan_template_id",
+      sourceKey: "id"
+    }
+  );
 
   database.models[TABLE_NAME].hasMany(database.models[vitalTemplateTableName], {
     foreignKey: "care_plan_template_id",
@@ -128,8 +134,11 @@ export const associate = database => {
     sourceKey: "id"
   });
 
-  database.models[TABLE_NAME].hasMany(database.models[workoutTemplateTableName], {
-    foreignKey: "care_plan_template_id",
-    sourceKey: "id"
-  });
+  database.models[TABLE_NAME].hasMany(
+    database.models[workoutTemplateTableName],
+    {
+      foreignKey: "care_plan_template_id",
+      sourceKey: "id"
+    }
+  );
 };
