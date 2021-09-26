@@ -7,7 +7,7 @@ import {
   handleCarePlans,
   handleAppointmentsTimeAssignment,
   handleDiet,
-  handleWorkout
+  handleWorkout,
 } from "./helper";
 
 const Log = new Logger("EVENTS > SQS_OBSERVER");

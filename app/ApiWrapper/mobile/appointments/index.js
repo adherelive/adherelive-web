@@ -74,11 +74,8 @@ class MAppointmentWrapper extends BaseAppointment {
     const { id } = _data;
 
     // get careplan attached to appointment
-    const appointmentCareplan =
-      (await carePlanAppointmentService.getCareplanByAppointment({
-        appointment_id: id
-      })) || null;
-    const { care_plan_id = null } = appointmentCareplan || {};
+    const appointmentCareplan = await carePlanAppointmentService.getCareplanByAppointment({appointment_id: id}) || null;
+    const {care_plan_id = null} = appointmentCareplan || {};
 
     const scheduleEventService = new ScheduleEventService();
     const scheduleEventData = await scheduleEventService.getAllEventByData({

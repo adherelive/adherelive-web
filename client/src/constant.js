@@ -83,7 +83,7 @@ export const USER_ADHERE_BOT = "adhere_bot";
 export const CHAT_MESSAGE_TYPE = {
   SYMPTOM: "symptoms",
   VITAL: "vitals",
-  CONSULTATION: "consultation_fees"
+  CONSULTATION: "consultation_fees",
 };
 
 export const TEXT_KEY = "text";
@@ -286,7 +286,7 @@ export const DRAWER = {
   WORKOUT_RESPONSE_DETALS: "WORKOUT_RESPONSE_DETALS",
   MISSED_DIET: "MISSED_DIET",
   MISSED_WORKOUT: "MISSED_WORKOUT",
-  ADD_SECONDARY_DOCTOR: "ADD_SECONDARY_DOCTOR"
+  ADD_SECONDARY_DOCTOR: "ADD_SECONDARY_DOCTOR",
 };
 
 export const USER_CATEGORY = {
@@ -319,7 +319,7 @@ export const PERMISSIONS = {
   EDIT_GRAPH: "EDIT_GRAPH",
   ADD_ACTION: "ADD_ACTION",
   ADD_CARE_PLAN_TEMPLATE: "ADD_CARE_PLAN_TEMPLATE",
-  ADD_CAREPLAN: "ADD_CAREPLAN"
+  ADD_CAREPLAN: "ADD_CAREPLAN",
 };
 
 export const USER_PERMISSIONS = {
@@ -334,7 +334,7 @@ export const USER_PERMISSIONS = {
   },
 
   ACCOUNT: {
-    VERIFIED: "VERIFIED_ACCOUNT"
+    VERIFIED: "VERIFIED_ACCOUNT",
   },
 
   /* [C] */
@@ -354,7 +354,7 @@ export const USER_PERMISSIONS = {
   },
 
   CALENDER: {
-    VIEW: "VIEW_CALENDER"
+    VIEW: "VIEW_CALENDER",
   },
 
   /* [D] */
@@ -370,14 +370,14 @@ export const USER_PERMISSIONS = {
   DOCTORS: {
     ADD: "ADD_DOCTOR",
     UPDATE: "UPDATE_DOCTOR",
-    VIEW: "VIEW_DOCTOR"
+    VIEW: "VIEW_DOCTOR",
   },
 
   /* [G] */
 
   GRAPHS: {
     ADD: "ADD_GRAPH",
-    UPDATE: "UPDATE_GRAPH"
+    UPDATE: "UPDATE_GRAPH",
   },
 
   /* [M] */
@@ -396,12 +396,12 @@ export const USER_PERMISSIONS = {
   PATIENTS: {
     ADD: "ADD_PATIENT",
     UPDATE: "UPDATE_PATIENT",
-    VIEW: "VIEW_PATIENT"
+    VIEW: "VIEW_PATIENT",
   },
 
   PAYMENT_PRODUCT: {
     ADD: "ADD_PAYMENT_PRODUCT",
-    VIEW: "VIEW_PAYMENT_PRODUCT"
+    VIEW: "VIEW_PAYMENT_PRODUCT",
   },
 
   /* [R] */
@@ -431,7 +431,7 @@ export const USER_PERMISSIONS = {
     VIEW: "VIEW_WORKOUT",
     DELETE: "DELETE_WORKOUT",
     TEMPLATE: "TEMPLATE_WORKOUT"
-  }
+  },
 };
 
 const DAY = "1";
@@ -2024,5 +2024,5 @@ export const PATIENT_MEAL_TIMINGS = {
   [MID_MORNING]: {
     time: "2020-09-24T11:00:00+05:30",
     text: "Mid Morning"
-  }
+  },
 };
