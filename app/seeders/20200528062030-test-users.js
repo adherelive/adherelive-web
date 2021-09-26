@@ -135,7 +135,7 @@ module.exports = {
         activated_on: new Date(),
         created_at: new Date(),
         updated_at: new Date()
-      }
+      },
     ]);
   },
 

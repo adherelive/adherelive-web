@@ -2,17 +2,17 @@ version: "3.0"
 
 services:
   #nginx:
-  #build: ./nginx
-  #restart: unless-stopped
-  #ports:
-  #- "80:80"
-  #- "443:443"
-  #volumes:
-  #- ./nginx/ssl.conf:/etc/nginx/nginx.conf
-  #- ./nginx/certbot/conf:/etc/letsencrypt
-  #- ./nginx/certbot/www:/var/www/certbot
-  #links:
-  #- node
+    #build: ./nginx
+    #restart: unless-stopped
+    #ports:
+      #- "80:80"
+      #- "443:443"
+    #volumes:
+      #- ./nginx/ssl.conf:/etc/nginx/nginx.conf
+      #- ./nginx/certbot/conf:/etc/letsencrypt
+      #- ./nginx/certbot/www:/var/www/certbot
+    #links:
+      #- node
 
   certbot:
     image: certbot/certbot:v0.36.0
@@ -36,15 +36,15 @@ services:
       - minio3
       - minio4
 
-      #mysql:
-      #image: mysql:latest
-      #ports:
+  #mysql:
+    #image: mysql:latest
+    #ports:
       #- 3306:3306
-      #expose:
+    #expose:
       #- 3306
-      #volumes:
+    #volumes:
       #- mysql:/var/lib/mysql
-      #environment:
+    #environment:
       #- MYSQL_ROOT_PASSWORD=pass
       #- MYSQL_DATABASE=adhere
       #- MYSQL_USER=user
