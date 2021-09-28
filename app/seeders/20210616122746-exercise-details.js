@@ -4,7 +4,7 @@ import { USER_CATEGORY } from "../../constant";
 import { TABLE_NAME } from "../models/exerciseDetails";
 
 module.exports = {
-  up: (queryInterface) => {
+  up: queryInterface => {
     return queryInterface.bulkInsert(TABLE_NAME, [
       {
         exercise_id: 1,
@@ -13,7 +13,7 @@ module.exports = {
         calorific_value: 100,
         creator_type: USER_CATEGORY.ADMIN,
         created_at: new Date(),
-        updated_at: new Date(),
+        updated_at: new Date()
       },
       {
         exercise_id: 2,
@@ -22,7 +22,7 @@ module.exports = {
         calorific_value: 100,
         creator_type: USER_CATEGORY.ADMIN,
         created_at: new Date(),
-        updated_at: new Date(),
+        updated_at: new Date()
       },
       {
         exercise_id: 3,
@@ -31,7 +31,7 @@ module.exports = {
         calorific_value: 100,
         creator_type: USER_CATEGORY.ADMIN,
         created_at: new Date(),
-        updated_at: new Date(),
+        updated_at: new Date()
       },
       {
         exercise_id: 4,
@@ -40,7 +40,7 @@ module.exports = {
         calorific_value: 100,
         creator_type: USER_CATEGORY.ADMIN,
         created_at: new Date(),
-        updated_at: new Date(),
+        updated_at: new Date()
       },
       {
         exercise_id: 5,
@@ -49,12 +49,12 @@ module.exports = {
         calorific_value: 100,
         creator_type: USER_CATEGORY.ADMIN,
         created_at: new Date(),
-        updated_at: new Date(),
-      },
+        updated_at: new Date()
+      }
     ]);
   },
 
-  down: (queryInterface) => {
+  down: queryInterface => {
     return queryInterface.bulkDelete(TABLE_NAME, null, {});
-  },
+  }
 };

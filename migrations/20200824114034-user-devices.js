@@ -1,7 +1,7 @@
-'use strict';
+"use strict";
 
-import {TABLE_NAME} from "../app/models/userDevices";
-import {TABLE_NAME as userTableName} from "../app/models/users";
+import { TABLE_NAME } from "../app/models/userDevices";
+import { TABLE_NAME as userTableName } from "../app/models/users";
 
 module.exports = {
   up: (queryInterface, Sequelize) => {
@@ -17,22 +17,22 @@ module.exports = {
         allowNull: false,
         references: {
           model: {
-            tableName: userTableName,
+            tableName: userTableName
           },
-          key: 'id'
+          key: "id"
         }
       },
       platform: {
         type: Sequelize.STRING,
-        allowNull: false,
+        allowNull: false
       },
       one_signal_user_id: {
         type: Sequelize.STRING,
-        allowNull: false,
+        allowNull: false
       },
       push_token: {
         type: Sequelize.STRING,
-        allowNull: false,
+        allowNull: false
       },
       created_at: {
         allowNull: false,

@@ -25,7 +25,7 @@ const mapStateToProps = state => {
     vital_templates = {},
     medicines = {},
     repeat_intervals = {},
-    pages: { care_plan_template_ids = [] } = {},
+    pages: { care_plan_template_ids = [] } = {}
   } = state;
 
   return {

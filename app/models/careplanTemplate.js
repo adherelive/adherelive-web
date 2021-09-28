@@ -1,14 +1,14 @@
 "use strict";
-import {DataTypes} from "sequelize";
-import {TABLE_NAME as treatmentTableName} from "./treatments";
-import {TABLE_NAME as severityTableName} from "./severity";
-import {TABLE_NAME as conditionTableName} from "./conditions";
-import {TABLE_NAME as userTableName} from "./users";
-import {TABLE_NAME as appointmentTemplateTableName} from "./templateAppointments";
-import {TABLE_NAME as medicationTemplateTableName} from "./templateMedications";
-import {TABLE_NAME as vitalTemplateTableName} from "./templateVitals";
-import {TABLE_NAME as dietTemplateTableName} from "./templateDiets";
-import {TABLE_NAME as workoutTemplateTableName} from "./templateWorkouts";
+import { DataTypes } from "sequelize";
+import { TABLE_NAME as treatmentTableName } from "./treatments";
+import { TABLE_NAME as severityTableName } from "./severity";
+import { TABLE_NAME as conditionTableName } from "./conditions";
+import { TABLE_NAME as userTableName } from "./users";
+import { TABLE_NAME as appointmentTemplateTableName } from "./templateAppointments";
+import { TABLE_NAME as medicationTemplateTableName } from "./templateMedications";
+import { TABLE_NAME as vitalTemplateTableName } from "./templateVitals";
+import { TABLE_NAME as dietTemplateTableName } from "./templateDiets";
+import { TABLE_NAME as workoutTemplateTableName } from "./templateWorkouts";
 
 export const TABLE_NAME = "care_plan_templates";
 
@@ -68,11 +68,11 @@ export const db = database => {
       },
       details: {
         type: DataTypes.JSON
-      },
-        // created_at: {
-        //   allowNull: true,
-        //   type: DataTypes.DATE
-        // },
+      }
+      // created_at: {
+      //   allowNull: true,
+      //   type: DataTypes.DATE
+      // },
     },
     {
       underscored: true,
@@ -93,7 +93,6 @@ export const db = database => {
 };
 
 export const associate = database => {
-
   // associations here (if any) ...
   database.models[TABLE_NAME].hasOne(database.models[treatmentTableName], {
     foreignKey: "id",
@@ -110,14 +109,20 @@ export const associate = database => {
     sourceKey: "condition_id"
   });
 
-  database.models[TABLE_NAME].hasMany(database.models[appointmentTemplateTableName], {
-    foreignKey: "care_plan_template_id",
-    sourceKey: "id"
-  });
-  database.models[TABLE_NAME].hasMany(database.models[medicationTemplateTableName], {
-    foreignKey: "care_plan_template_id",
-    sourceKey: "id"
-  });
+  database.models[TABLE_NAME].hasMany(
+    database.models[appointmentTemplateTableName],
+    {
+      foreignKey: "care_plan_template_id",
+      sourceKey: "id"
+    }
+  );
+  database.models[TABLE_NAME].hasMany(
+    database.models[medicationTemplateTableName],
+    {
+      foreignKey: "care_plan_template_id",
+      sourceKey: "id"
+    }
+  );
 
   database.models[TABLE_NAME].hasMany(database.models[vitalTemplateTableName], {
     foreignKey: "care_plan_template_id",
@@ -129,8 +134,11 @@ export const associate = database => {
     sourceKey: "id"
   });
 
-  database.models[TABLE_NAME].hasMany(database.models[workoutTemplateTableName], {
-    foreignKey: "care_plan_template_id",
-    sourceKey: "id"
-  });
+  database.models[TABLE_NAME].hasMany(
+    database.models[workoutTemplateTableName],
+    {
+      foreignKey: "care_plan_template_id",
+      sourceKey: "id"
+    }
+  );
 };

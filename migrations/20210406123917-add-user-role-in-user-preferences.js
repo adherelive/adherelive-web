@@ -1,6 +1,6 @@
-'use strict';
+"use strict";
 
-import {TABLE_NAME} from "../app/models/userPreferences";
+import { TABLE_NAME } from "../app/models/userPreferences";
 
 module.exports = {
   up: (queryInterface, Sequelize) => {

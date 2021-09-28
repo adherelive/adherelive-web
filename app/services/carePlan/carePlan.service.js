@@ -15,6 +15,7 @@ import { TABLE_NAME as medicineTableName } from "../../models/medicines";
 import { TABLE_NAME as userRolesTableName } from "../../models/userRoles";
 import { TABLE_NAME as careplanSecondaryDoctorMappingsTableName } from "../../models/careplanSecondaryDoctorMappings";
 import { USER_CATEGORY } from "../../../constant";
+
 const DEFAULT_ORDER = [["created_at", "DESC"]];
 
 class CarePlanService {

@@ -26,9 +26,9 @@ export default class Patients extends Component {
         <Router>
           <Switch>
             <Route
-                exact
-                path={PATH.PATIENT.DETAILS}
-                component={PatientDetailsComp}
+              exact
+              path={PATH.PATIENT.DETAILS}
+              component={PatientDetailsComp}
             />
             {/*<Route exact path={PATH.PATIENT.PA} component={Patient} />*/}
           </Switch>

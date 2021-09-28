@@ -3,7 +3,7 @@ import Form from "antd/es/form";
 import Upload from "antd/es/upload";
 import Icon from "antd/es/icon";
 
-import { DeleteTwoTone , EyeTwoTone } from "@ant-design/icons";
+import { DeleteTwoTone, EyeTwoTone } from "@ant-design/icons";
 import LoadingStatus from "../../../Common/Loading";
 import messages from "../message";
 import Modal from "antd/es/modal";
@@ -19,7 +19,7 @@ class Field extends Component {
     this.state = {
       imageUrl: null,
       viewModalVisible: false,
-      viewModalSrc: "",
+      viewModalSrc: ""
     };
   }
 
@@ -35,32 +35,31 @@ class Field extends Component {
   };
 
   handleDocumentViewOpen = src => () => {
-  
     this.setState({
       viewModalVisible: true,
       viewModalSrc: src
     });
-
-  
-  
-};
+  };
 
   getInitial = () => {
-    const {provider_id, providers = {}, form: {setFieldsValue} = {}} = this.props;
+    const {
+      provider_id,
+      providers = {},
+      form: { setFieldsValue } = {}
+    } = this.props;
 
-    const {details: {banner = null} = {}} = providers[provider_id] || {};
+    const { details: { banner = null } = {} } = providers[provider_id] || {};
 
-    if(provider_id) {
-      this.setState({imageUrl: banner});
-      setFieldsValue({[FIELD_NAME]: banner});
+    if (provider_id) {
+      this.setState({ imageUrl: banner });
+      setFieldsValue({ [FIELD_NAME]: banner });
     }
-    
   };
 
   formatMessage = (message, data = {}) =>
     this.props.intl.formatMessage(message, data);
 
-  fieldsError = (FIELD_NAME) => {
+  fieldsError = FIELD_NAME => {
     const { form: { isFieldTouched, getFieldError } = {} } = this.props;
     const error = isFieldTouched(FIELD_NAME) && getFieldError(FIELD_NAME);
     return error;
@@ -91,7 +90,7 @@ class Field extends Component {
     this.setState({ imageUrl: fileUrl });
   };
 
-  handleIconRemove = (file) => {
+  handleIconRemove = file => {
     const { form: { setFieldsValue } = {} } = this.props;
     this.setState({ imageUrl: null });
     setFieldsValue({ [FIELD_NAME]: null });
@@ -121,11 +120,15 @@ class Field extends Component {
   };
 
   getLogo = () => {
-    const {imageUrl} = this.state;
-    const {handleIconRemove} = this;
+    const { imageUrl } = this.state;
+    const { handleIconRemove } = this;
     return (
       <div className={"qualification-avatar-uploader "}>
-        <img src={imageUrl} alt={"provider-banner"} className="wp100 hp100 br4"  />
+        <img
+          src={imageUrl}
+          alt={"provider-banner"}
+          className="wp100 hp100 br4"
+        />
         <div className="overlay"></div>
         <div className="button absolute tp45 l0 wp100 flex justify-center align-space-evenly doc-container">
           {" "}
@@ -147,30 +150,30 @@ class Field extends Component {
 
   render() {
     const { form } = this.props;
-    const { imageUrl ,viewModalVisible= false, viewModalSrc =''} = this.state;
     const {
-      formatMessage,
-      fieldsError,
-      getLogo,
-      getFormContent
-    } = this;
+      imageUrl,
+      viewModalVisible = false,
+      viewModalSrc = ""
+    } = this.state;
+    const { formatMessage, fieldsError, getLogo, getFormContent } = this;
 
     const { getFieldDecorator, getFieldValue } = form || {};
 
     console.log("03712839217 getFieldValue", getFieldValue(FIELD_NAME));
     return (
       <Fragment>
-          <FormItem
-            validateStatus={fieldsError[FIELD_NAME] ? "error" : ""}
-            help={fieldsError[FIELD_NAME] || ""}
-            label={formatMessage(messages.bannerUploadText)}
-            className="mb0I"
-          >
-            {getFieldDecorator(FIELD_NAME, {})(
-              imageUrl ? getLogo() : getFormContent()
-            )}
-          </FormItem>
-          <Modal
+        <FormItem
+          validateStatus={fieldsError[FIELD_NAME] ? "error" : ""}
+          help={fieldsError[FIELD_NAME] || ""}
+          label={formatMessage(messages.bannerUploadText)}
+          className="mb0I"
+        >
+          {getFieldDecorator(
+            FIELD_NAME,
+            {}
+          )(imageUrl ? getLogo() : getFormContent())}
+        </FormItem>
+        <Modal
           visible={viewModalVisible}
           closable
           mask
@@ -196,5 +199,5 @@ class Field extends Component {
 
 export default {
   field_name: FIELD_NAME,
-  render: (props) => <Field {...props} />,
+  render: props => <Field {...props} />
 };

@@ -8,6 +8,7 @@ import CompanyIcon from "../../../Assets/images/logo3x.png";
 import messages from "./message";
 import ReactMarkdown from "react-markdown";
 import { PATH } from "../../../constant";
+
 const TERMS_OF_SERVICE = "terms_of_service";
 
 class UserConsent extends Component {

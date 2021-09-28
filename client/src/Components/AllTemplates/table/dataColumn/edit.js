@@ -64,28 +64,30 @@ class editTemplateColumn extends Component {
     const { handleOpenEditDrawer, id, templateData } = this.props;
     const { basic_info: { user_id } = {} } = templateData || {};
     return (
-        <div className="flex justify-end align-center">
-          <div className={`fs18 fw600 flex direction-column align-center justify-center ${user_id ? "mr50" : ""}`}>
-            <Tooltip
-              title={this.formatMessage(messages.duplicate_text)}
-              onClick={handleDuplicateConfirm}
-            >
-              <CopyOutlined type="default" className="tab-color" />
-            </Tooltip>
-          </div>
+      <div className="flex justify-end align-center">
+        <div
+          className={`fs18 fw600 flex direction-column align-center justify-center ${
+            user_id ? "mr50" : ""
+          }`}
+        >
+          <Tooltip
+            title={this.formatMessage(messages.duplicate_text)}
+            onClick={handleDuplicateConfirm}
+          >
+            <CopyOutlined type="default" className="tab-color" />
+          </Tooltip>
+        </div>
 
-          {user_id ? (
-              <Tooltip
-                  title={this.formatMessage(messages.edit_text)}
-              >
+        {user_id ? (
+          <Tooltip title={this.formatMessage(messages.edit_text)}>
             <img
               src={edit_image}
               className="edit-patient-icon flex direction-column align-center justify-center"
               onClick={handleOpenEditDrawer({ id })}
             />
-              </Tooltip>
-          ) : null}
-        </div>
+          </Tooltip>
+        ) : null}
+      </div>
     );
   }
 }

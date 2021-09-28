@@ -93,17 +93,16 @@ class WhenToTakeMedication extends Component {
   }
 
   formatWhenToTakeButtons = () => {
-    const {form: {getFieldDecorator} = {}} = this.props;
+    const { form: { getFieldDecorator } = {} } = this.props;
     const {
       formatMessage,
       onClickOd,
       onClickBd,
       onClickTds,
       onCLickSos,
-        getKeys,
+      getKeys
     } = this;
     this.WHEN_TO_TAKE_BUTTONS = { ...WHEN_TO_TAKE_BUTTONS };
-
 
     const keys = getKeys();
     Object.keys(WHEN_TO_TAKE_BUTTONS).forEach(index => {
@@ -112,7 +111,7 @@ class WhenToTakeMedication extends Component {
       let additionalData = {};
 
       // set initial value for button
-      if(keys.length === whenToTakeCount) {
+      if (keys.length === whenToTakeCount) {
         getFieldDecorator(FIELD_NAME_ABBR, {
           initialValue: id
         });
@@ -568,7 +567,7 @@ class WhenToTakeMedication extends Component {
     const { setFieldsValue } = form;
 
     // const { selected_timing } = this.state;
-    const {WHEN_TO_TAKE_BUTTONS, getKeys} = this;
+    const { WHEN_TO_TAKE_BUTTONS, getKeys } = this;
     const keys = getKeys();
     if (keys.length === 2) {
       this.add();
@@ -587,9 +586,8 @@ class WhenToTakeMedication extends Component {
   };
 
   onCLickSos = () => {
-    const { form: { setFieldsValue } = {}
-    } = this.props;
-    const {WHEN_TO_TAKE_BUTTONS} = this;
+    const { form: { setFieldsValue } = {} } = this.props;
+    const { WHEN_TO_TAKE_BUTTONS } = this;
     // const {getKeys} = this;
 
     // const keys = getKeys();
@@ -684,10 +682,11 @@ class WhenToTakeMedication extends Component {
     const { WHEN_TO_TAKE_BUTTONS = {}, getKeys } = this;
     const keys = getKeys();
 
-    console.log("0281329312 WHEN_TO_TAKE_BUTTONS", {WHEN_TO_TAKE_BUTTONS});
+    console.log("0281329312 WHEN_TO_TAKE_BUTTONS", { WHEN_TO_TAKE_BUTTONS });
 
     return Object.keys(WHEN_TO_TAKE_BUTTONS).map(index => {
-      const { id, setter, text, whenToTakeCount } = WHEN_TO_TAKE_BUTTONS[index] || {};
+      const { id, setter, text, whenToTakeCount } =
+        WHEN_TO_TAKE_BUTTONS[index] || {};
 
       return (
         <RadioButton
@@ -710,7 +709,10 @@ class WhenToTakeMedication extends Component {
     if (Object.keys(WHEN_TO_TAKE_BUTTONS).length > 0) {
       return (
         <Fragment>
-          {getFieldDecorator(FIELD_NAME_ABBR, {})(
+          {getFieldDecorator(
+            FIELD_NAME_ABBR,
+            {}
+          )(
             <RadioGroup
               className="flex justify-content-end radio-formulation flex-wrap"
               buttonStyle="solid"

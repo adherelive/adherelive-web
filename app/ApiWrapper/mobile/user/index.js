@@ -27,7 +27,7 @@ class MUserWrapper extends BaseUser {
       verified,
       onboarded,
       onboarding_status,
-      has_consent,
+      has_consent
       // system_generated_password
     } = _data || {};
     return {
@@ -36,7 +36,7 @@ class MUserWrapper extends BaseUser {
         user_name,
         email,
         mobile_number,
-        prefix,
+        prefix
       },
       verified,
       onboarded,
@@ -45,7 +45,7 @@ class MUserWrapper extends BaseUser {
       sign_in_type,
       category,
       activated_on,
-      has_consent,
+      has_consent
     };
   };
 
@@ -86,13 +86,13 @@ class MUserWrapper extends BaseUser {
       const doctorData = await DoctorWrapper(doctor);
       return {
         userCategoryData: doctorData.getBasicInfo(),
-        userCategoryId: doctorData.getDoctorId(),
+        userCategoryId: doctorData.getDoctorId()
       };
     } else if (patient) {
       const patientData = await PatientWrapper(patient);
       return {
         userCategoryData: patientData.getBasicInfo(),
-        userCategoryId: patientData.getPatientId(),
+        userCategoryId: patientData.getPatientId()
       };
     }
   };
@@ -125,12 +125,12 @@ class MUserWrapper extends BaseUser {
 
       return {
         users: {
-          [getId()]: getBasicInfo(),
+          [getId()]: getBasicInfo()
         },
         doctors,
         patients,
         patient_id,
-        doctor_id,
+        doctor_id
       };
     } catch (error) {
       throw error;

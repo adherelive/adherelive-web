@@ -32,21 +32,21 @@ export const GRAPH_INITIAL_STATE = {
       data: {
         total: "119",
         critical: "90"
-      },
+      }
     },
     {
       id: "active_patient",
       data: {
         total: "119",
         critical: "90"
-      },
+      }
     },
     {
       id: "critical_patient",
       data: {
         total: "119",
         critical: "90"
-      },
+      }
     }
   ]
 };
@@ -230,7 +230,6 @@ export const PAGE_INITIAL = {
 };
 
 export const USER_INITIAL_STATE = {};
-
 
 export const medication = {
   basic_info: {

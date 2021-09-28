@@ -30,7 +30,7 @@ class DietWrapper extends BaseDiet {
         total_calories,
         start_date,
         end_date,
-        care_plan_id,
+        care_plan_id
       },
       details,
       expired_on
@@ -51,7 +51,7 @@ class DietWrapper extends BaseDiet {
       for (let index = 0; index < dietFoodGroupMappings.length; index++) {
         const { id } = dietFoodGroupMappings[index] || {};
         const dietFoodGroupMappingWrapper = await DietFoodGroupMappingWrapper({
-          id,
+          id
         });
 
         const {
@@ -59,19 +59,19 @@ class DietWrapper extends BaseDiet {
           food_groups = {},
           portions = {},
           food_items = {},
-          food_item_details = {},
+          food_item_details = {}
         } = await dietFoodGroupMappingWrapper.getReferenceInfo();
 
         dietFoodGroupMappingData = {
           ...dietFoodGroupMappingData,
-          ...diet_food_grouping_mappings,
+          ...diet_food_grouping_mappings
         };
         foodGroupsApiData = { ...foodGroupsApiData, ...food_groups };
         portionsApiData = { ...portionsApiData, ...portions };
         foodItemsApiData = { ...foodItemsApiData, ...food_items };
         foodItemDetailsApiData = {
           ...foodItemDetailsApiData,
-          ...food_item_details,
+          ...food_item_details
         };
       }
     }
@@ -79,14 +79,14 @@ class DietWrapper extends BaseDiet {
     return {
       diets: {
         [getId()]: {
-          ...(getAllInfo()),
-        },
+          ...getAllInfo()
+        }
       },
       diet_food_group_mappings: dietFoodGroupMappingData,
       food_groups: foodGroupsApiData,
       portions: portionsApiData,
       food_items: foodItemsApiData,
-      food_item_details: foodItemDetailsApiData,
+      food_item_details: foodItemDetailsApiData
     };
   };
 
@@ -104,7 +104,7 @@ class DietWrapper extends BaseDiet {
     }
     return {
       ...getBasicInfo(),
-      diet_food_group_mapping_ids,
+      diet_food_group_mapping_ids
     };
   };
 }

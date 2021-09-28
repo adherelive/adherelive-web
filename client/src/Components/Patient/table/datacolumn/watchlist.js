@@ -29,7 +29,7 @@ class Watchlist extends Component {
       patientData: { basic_info: { id: prev_id } = {} } = {},
       doctorData: {
         watchlist_patient_ids: prev_watchlist_patient_ids = []
-      } = {},
+      } = {}
     } = prevProps || {};
 
     const {
@@ -48,7 +48,7 @@ class Watchlist extends Component {
   }
 
   formatMessage = data => this.props.intl.formatMessage(data);
-  
+
   addThisToWatchlist = e => {
     e.preventDefault();
     const {

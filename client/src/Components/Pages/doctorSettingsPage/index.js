@@ -11,7 +11,12 @@ import confirm from "antd/es/modal/confirm";
 // todo: import any component from antd using this format
 import Tooltip from "antd/es/tooltip";
 
-import {CONSULTATION_FEE, BILLING, PAYMENT_DETAILS, TABLE_DEFAULT_BLANK_FIELD} from "../../../constant";
+import {
+  CONSULTATION_FEE,
+  BILLING,
+  PAYMENT_DETAILS,
+  TABLE_DEFAULT_BLANK_FIELD
+} from "../../../constant";
 
 import AddConsultationFeeDrawer from "../../../Containers/Drawer/addConsultationFee";
 import AddAccountDetailsDrawer from "../../../Containers/Drawer/addAccountDetailsDrawer";
@@ -90,7 +95,7 @@ class DoctorSettingsPage extends Component {
         statusCode
       } = response || {};
 
-      console.log("RESPONSEEEEEEEEEEEEEEEE ====>",response);
+      console.log("RESPONSEEEEEEEEEEEEEEEE ====>", response);
       if (status && statusCode === 200) {
         this.setState({
           fetchingDoctorPayments: false,
@@ -144,7 +149,7 @@ class DoctorSettingsPage extends Component {
     const { openConsultationFeeDrawer } = this.props;
     const { doctorPaymentProducts } = this.state;
     const { [id]: paymentData } = doctorPaymentProducts;
-    console.log("8723562837462375468327453287",{id,paymentData});
+    console.log("8723562837462375468327453287", { id, paymentData });
     openConsultationFeeDrawer(paymentData);
   };
 
@@ -153,7 +158,7 @@ class DoctorSettingsPage extends Component {
     openRazorpayAccountDetailsDrawer();
   };
 
-  displayEditRazorpayAccountDetails = fetchedAccountDetails_id => (e) => {
+  displayEditRazorpayAccountDetails = fetchedAccountDetails_id => e => {
     e.preventDefault();
     const { openEditRazorpayAccountDetailsDrawer } = this.props;
     this.setState({ editDetailsSelectedID: fetchedAccountDetails_id });
@@ -199,7 +204,6 @@ class DoctorSettingsPage extends Component {
   noConsultationFeeDisplay = () => {
     const provider_id = this.isDoctorRoleAssociatedWithProvider() || null;
 
-    
     return (
       <div className="w700 mb20 flex direction-column align-center justify-center">
         <div className="br-lightgrey h200 w200 br4"></div>
@@ -210,21 +214,19 @@ class DoctorSettingsPage extends Component {
           {this.formatMessage(messages.notAddedFeesYet)}
         </div>
 
-      {
-        provider_id === null
-        ?
-        <div className=" mt20">
-          <Button type="primary" onClick={this.displayAddDoctorPaymentProduct}>
-            <span className="w200 fs20">
-              {this.formatMessage(messages.addFee)}
-            </span>
-            {/* Add */}
-          </Button>
-        </div>
-        :
-        null
-      }
-        
+        {provider_id === null ? (
+          <div className=" mt20">
+            <Button
+              type="primary"
+              onClick={this.displayAddDoctorPaymentProduct}
+            >
+              <span className="w200 fs20">
+                {this.formatMessage(messages.addFee)}
+              </span>
+              {/* Add */}
+            </Button>
+          </div>
+        ) : null}
       </div>
     );
   };
@@ -258,9 +260,8 @@ class DoctorSettingsPage extends Component {
   }
 
   getAddAccountDetailsDisplay = () => {
-
     const providerid = this.isDoctorRoleAssociatedWithProvider();
-    if(providerid){
+    if (providerid) {
       return null;
     }
 
@@ -290,14 +291,11 @@ class DoctorSettingsPage extends Component {
       const provider_id = this.isDoctorRoleAssociatedWithProvider() || null;
       let response = {};
 
-      console.log("83827163871873671638712",{provider_id});
+      console.log("83827163871873671638712", { provider_id });
 
-
-      if(provider_id){
+      if (provider_id) {
         response = await getAccountDetails(provider_id);
-
-      }else{
-        
+      } else {
         response = await getAccountDetails();
       }
 
@@ -421,22 +419,20 @@ class DoctorSettingsPage extends Component {
       doctorPaymentProducts
     } = this.state;
 
-    const {displayEditDoctorPaymentProduct} = this;
+    const { displayEditDoctorPaymentProduct } = this;
 
     return (
       <div className="wp100 flex direction-column justify-space-between">
         <div>
           {noDoctorPaymentProducts ? (
-            
-            <div className="flex align-center justify-center " >{this.noConsultationFeeDisplay()}</div>
-
-          
+            <div className="flex align-center justify-center ">
+              {this.noConsultationFeeDisplay()}
+            </div>
           ) : (
             <div className="flex direction-column align-center justify-center">
               {/* {this.displayDoctorPaymentProducts()} */}
-              
-              <DoctorConsultationFeeTable/>
-              
+
+              <DoctorConsultationFeeTable />
             </div>
           )}
         </div>
@@ -444,59 +440,48 @@ class DoctorSettingsPage extends Component {
     );
   };
 
-
-  deleteAccountDetails = (id) => () => {
-
+  deleteAccountDetails = id => () => {
     this.handleDelete(id);
-
-}
-
-
+  };
 
   handleDelete = id => {
     // e.preventDefault();
     const { warnNote } = this;
 
-
     confirm({
       title: `${this.formatMessage(messages.warnNote)}`,
-      content: (
-        <div>
-          {warnNote()}
-        </div>
-      ),
+      content: <div>{warnNote()}</div>,
       onOk: async () => {
         try {
-                  const { deleteAccountDetails } = this.props;
-                  const response = await deleteAccountDetails(id);
-            
-                  const {
-                    status,
-                    payload: { data: { users = {}, account_details = {} } = {} } = {},
-                    statusCode
-                  } = response || {};
-            
-                  if (status && Object.keys(account_details).length === 0) {
-                    this.setState({
-                      noAccountDetails: true
-                    });
-                  }
-            
-                  if (status) {
-                    this.setState({ account_details });
-                    message.success(
-                      this.formatMessage(messages.accountDetailsDeleteSuccess)
-                    );
-                  }
-                } catch (err) {
-                  console.log("err ", err);
-                  message.warn(this.formatMessage(messages.somethingWentWrong));
-                }
+          const { deleteAccountDetails } = this.props;
+          const response = await deleteAccountDetails(id);
+
+          const {
+            status,
+            payload: { data: { users = {}, account_details = {} } = {} } = {},
+            statusCode
+          } = response || {};
+
+          if (status && Object.keys(account_details).length === 0) {
+            this.setState({
+              noAccountDetails: true
+            });
+          }
+
+          if (status) {
+            this.setState({ account_details });
+            message.success(
+              this.formatMessage(messages.accountDetailsDeleteSuccess)
+            );
+          }
+        } catch (err) {
+          console.log("err ", err);
+          message.warn(this.formatMessage(messages.somethingWentWrong));
+        }
       },
-      onCancel() { }
+      onCancel() {}
     });
   };
-
 
   warnNote = () => {
     return (
@@ -509,9 +494,6 @@ class DoctorSettingsPage extends Component {
     );
   };
 
-
-
-
   getAddedAccountDetails = () => {
     const { account_details } = this.state;
     let details = [];
@@ -519,137 +501,144 @@ class DoctorSettingsPage extends Component {
     const providerid = this.isDoctorRoleAssociatedWithProvider() || null;
 
     const accountDetails = Object.keys(account_details).map(account_id => {
-        const {
-            basic_info: {
-                id,
-                customer_name,
-                account_number,
-                ifsc_code,
-                account_type,
-                account_mobile_number,
-                prefix,
-                upi_id,
-                in_use = false,
-            } = {}
-        } = account_details[account_id] || {};
+      const {
+        basic_info: {
+          id,
+          customer_name,
+          account_number,
+          ifsc_code,
+          account_type,
+          account_mobile_number,
+          prefix,
+          upi_id,
+          in_use = false
+        } = {}
+      } = account_details[account_id] || {};
 
-        return (
-          <div
-            className={`relative br5 wp30 ml20 mt20 flex direction-column justify-center ${
-              in_use ? "bg-lighter-blue" : "bg-lighter-grey"
-            } account-details `}
-            key={`account-detail-${id}`}
-          >
-            {/* customer_name */}
-            <div className="mt10 ml10 flex direction-column align-start wp90">
-              <span className="fs14">
-                {this.formatMessage(messages.linkedAccountName)}
+      return (
+        <div
+          className={`relative br5 wp30 ml20 mt20 flex direction-column justify-center ${
+            in_use ? "bg-lighter-blue" : "bg-lighter-grey"
+          } account-details `}
+          key={`account-detail-${id}`}
+        >
+          {/* customer_name */}
+          <div className="mt10 ml10 flex direction-column align-start wp90">
+            <span className="fs14">
+              {this.formatMessage(messages.linkedAccountName)}
+            </span>
+
+            <span className="fs18 fw700">
+              <span>
+                {customer_name ? customer_name : TABLE_DEFAULT_BLANK_FIELD}
               </span>
+            </span>
+          </div>
 
-              <span className="fs18 fw700">
-                <span>
-                  {customer_name ? customer_name : TABLE_DEFAULT_BLANK_FIELD}
-                </span>
+          {/* mobile_number */}
+          <div className="mt10 mb10 ml10 flex direction-column align-start wp90">
+            <span className="fs14">
+              {this.formatMessage(messages.contactNumber)}
+            </span>
+
+            <span className="fs18 fw700">
+              <span>
+                {`+${prefix ? prefix : TABLE_DEFAULT_BLANK_FIELD}-${
+                  account_mobile_number
+                    ? account_mobile_number
+                    : TABLE_DEFAULT_BLANK_FIELD
+                }`}
               </span>
-            </div>
+            </span>
+          </div>
 
-            {/* mobile_number */}
-            <div className="mt10 mb10 ml10 flex direction-column align-start wp90">
-              <span className="fs14">
-                {this.formatMessage(messages.contactNumber)}
+          {/* account_number */}
+          <div className="mt10 mb10 ml10 flex direction-column align-start wp90">
+            <span className="fs14">
+              {this.formatMessage(messages.accountNumber)}
+            </span>
+
+            <span className="fs18 fw700">
+              <span>
+                {account_number ? account_number : TABLE_DEFAULT_BLANK_FIELD}
               </span>
+            </span>
+          </div>
 
-              <span className="fs18 fw700">
-                <span>
-                  {`+${prefix ? prefix : TABLE_DEFAULT_BLANK_FIELD}-${
-                    account_mobile_number
-                      ? account_mobile_number
-                      : TABLE_DEFAULT_BLANK_FIELD
-                  }`}
-                </span>
+          {/* ifsc_code */}
+          <div className="mt10 mb10 ml10 flex direction-column align-start wp90">
+            <span className="fs14">{this.formatMessage(messages.ifsc)}</span>
+
+            <span className="fs18 fw700">
+              <span>{ifsc_code ? ifsc_code : TABLE_DEFAULT_BLANK_FIELD}</span>
+            </span>
+          </div>
+
+          {/* account_type */}
+          <div className="mt10 mb10 ml10 flex direction-column align-start wp90">
+            <span className="fs14">
+              {this.formatMessage(messages.accountType)}
+            </span>
+
+            <span className="fs18 fw700">
+              <span>
+                {account_type ? account_type : TABLE_DEFAULT_BLANK_FIELD}
               </span>
-            </div>
+            </span>
+          </div>
 
-            {/* account_number */}
-            <div className="mt10 mb10 ml10 flex direction-column align-start wp90">
-              <span className="fs14">
-                {this.formatMessage(messages.accountNumber)}
-              </span>
+          {/* upi_id */}
+          <div className="mt10 mb10 ml10 flex direction-column align-start wp90">
+            <span className="fs14">{this.formatMessage(messages.upiId)}</span>
 
-              <span className="fs18 fw700">
-                <span>
-                  {account_number ? account_number : TABLE_DEFAULT_BLANK_FIELD}
-                </span>
-              </span>
-            </div>
+            <span className="fs18 fw700">
+              <span>{upi_id ? upi_id : TABLE_DEFAULT_BLANK_FIELD}</span>
+            </span>
+          </div>
 
-            {/* ifsc_code */}
-            <div className="mt10 mb10 ml10 flex direction-column align-start wp90">
-              <span className="fs14">{this.formatMessage(messages.ifsc)}</span>
-
-              <span className="fs18 fw700">
-                <span>{ifsc_code ? ifsc_code : TABLE_DEFAULT_BLANK_FIELD}</span>
-              </span>
-            </div>
-
-            {/* account_type */}
-            <div className="mt10 mb10 ml10 flex direction-column align-start wp90">
-              <span className="fs14">{this.formatMessage(messages.accountType)}</span>
-
-              <span className="fs18 fw700">
-                <span>
-                  {account_type ? account_type : TABLE_DEFAULT_BLANK_FIELD}
-                </span>
-              </span>
-            </div>
-
-            {/* upi_id */}
-            <div className="mt10 mb10 ml10 flex direction-column align-start wp90">
-              <span className="fs14">{this.formatMessage(messages.upiId)}</span>
-
-              <span className="fs18 fw700">
-                <span>{upi_id ? upi_id : TABLE_DEFAULT_BLANK_FIELD}</span>
-              </span>
-            </div>
-              
-          {
-            !providerid
-            &&
-              
+          {!providerid && (
             <div className="flex  align-center justify-space-evenly wp100 mb10">
-           
-              <Tooltip placement={"bottom"} title={this.formatMessage(messages.editAccount)}
-              className="account-details-edit">
-                 <div className="flex align-center justify-space-between w60 pointer" onClick={this.displayEditRazorpayAccountDetails(id)} >
-                   
-                    <div className="flex direction-column  align-center justify-center" >
-                    <img src={edit_image} className="pointer edit-patient-icon" />
-                    </div>
-                    <div className="flex direction-column  align-center justify-center dark-sky-blue" >
-                    <span className="fs18 " >{this.formatMessage(messages.editAccount)}</span>
-                    </div>
-                 </div>
+              <Tooltip
+                placement={"bottom"}
+                title={this.formatMessage(messages.editAccount)}
+                className="account-details-edit"
+              >
+                <div
+                  className="flex align-center justify-space-between w60 pointer"
+                  onClick={this.displayEditRazorpayAccountDetails(id)}
+                >
+                  <div className="flex direction-column  align-center justify-center">
+                    <img
+                      src={edit_image}
+                      className="pointer edit-patient-icon"
+                    />
+                  </div>
+                  <div className="flex direction-column  align-center justify-center dark-sky-blue">
+                    <span className="fs18 ">
+                      {this.formatMessage(messages.editAccount)}
+                    </span>
+                  </div>
+                </div>
               </Tooltip>
               {/* </div> */}
-              <Tooltip className="absolute t10 r10 account-details-delete"  title={this.formatMessage(messages.deleteAccount)}>
-              <DeleteTwoTone
-                className={"pointer align-self-start "}
-                onClick={this.deleteAccountDetails(id)}
-                twoToneColor="#707070"
-                style={{ fontSize: "18px" }}
-              />
+              <Tooltip
+                className="absolute t10 r10 account-details-delete"
+                title={this.formatMessage(messages.deleteAccount)}
+              >
+                <DeleteTwoTone
+                  className={"pointer align-self-start "}
+                  onClick={this.deleteAccountDetails(id)}
+                  twoToneColor="#707070"
+                  style={{ fontSize: "18px" }}
+                />
               </Tooltip>
             </div>
-            }
-          </div>
-        );
+          )}
+        </div>
+      );
     });
 
     return accountDetails;
-
-   
-   
-
   };
 
   getPaymentDetails = () => {
@@ -657,9 +646,11 @@ class DoctorSettingsPage extends Component {
 
     if (noAccountDetails) {
       // add custom message here centered
-      return (<div className="flex align-center justify-center mt40">
-      {this.getAddAccountDetailsDisplay()}
-    </div>);
+      return (
+        <div className="flex align-center justify-center mt40">
+          {this.getAddAccountDetailsDisplay()}
+        </div>
+      );
     }
 
     return (
@@ -669,85 +660,76 @@ class DoctorSettingsPage extends Component {
         </div>
         <div className="wp100 flex flex-wrap">
           {/* {this.getAddedAccountDetails()} */}
-          <DoctorAccountDetails/>
+          <DoctorAccountDetails />
         </div>
       </Fragment>
     );
   };
 
-
   sidebar = () => {
     return (
       <div className="br5 bg-grey h250 p20 wp100 flex direction-column mw270 ">
-            <div
-              className="fs20 fw700 mb14 h-cursor-p"
-              onClick={this.handleItemSelect(CONSULTATION_FEE)}
-            >
-              {this.getConsultationFeesHeader()}
-            </div>
-            <div
-              className="fs20 fw700 mb14 h-cursor-p"
-              onClick={this.handleItemSelect(BILLING)}
-            >
-              {this.getBillingHeader()}
-            </div>
-            <div
-              className="fs20 fw700 mb14 h-cursor-p"
-              onClick={this.handleItemSelect(PAYMENT_DETAILS)}
-            >
-              {this.getPaymentDetailsHeader()}
-            </div>
-          </div>
-    )
-  }
+        <div
+          className="fs20 fw700 mb14 h-cursor-p"
+          onClick={this.handleItemSelect(CONSULTATION_FEE)}
+        >
+          {this.getConsultationFeesHeader()}
+        </div>
+        <div
+          className="fs20 fw700 mb14 h-cursor-p"
+          onClick={this.handleItemSelect(BILLING)}
+        >
+          {this.getBillingHeader()}
+        </div>
+        <div
+          className="fs20 fw700 mb14 h-cursor-p"
+          onClick={this.handleItemSelect(PAYMENT_DETAILS)}
+        >
+          {this.getPaymentDetailsHeader()}
+        </div>
+      </div>
+    );
+  };
 
   sidebarRelatedContent = () => {
-    const {
-      selectedKey,
-    } = this.state;
+    const { selectedKey } = this.state;
     return (
-
-    <div className="wp100" >
+      <div className="wp100">
         {selectedKey === CONSULTATION_FEE && this.consultationFeeDisplay()}
-
 
         {selectedKey === BILLING && (
           <div className="wp100 flex direction-column justify-space-between">
             <div className="flex direction-column align-center justify-center fs20 fw600">
-            {this.formatMessage(messages.billingDisplay)}
+              {this.formatMessage(messages.billingDisplay)}
             </div>
           </div>
         )}
 
         {selectedKey === PAYMENT_DETAILS && (
           <div className="wp100 ml10 mr10 flex direction-column justify-space-between mw635">
-            <DoctorAccountDetails/>
+            <DoctorAccountDetails />
           </div>
         )}
-    </div>
-    )
-    
-  }
+      </div>
+    );
+  };
 
   isDoctorRoleAssociatedWithProvider = () => {
-    const {auth: {auth_role} = {}, user_roles = {}} = this.props;
-    const {basic_info: {linked_with, linked_id} = {}} = user_roles[auth_role] || {};
+    const { auth: { auth_role } = {}, user_roles = {} } = this.props;
+    const { basic_info: { linked_with, linked_id } = {} } =
+      user_roles[auth_role] || {};
 
-    if(linked_id) {
+    if (linked_id) {
       return linked_id;
     }
     return false;
-  }
+  };
 
   render() {
-    const {
-      selectedKey,
-    } = this.state;
-    const { sidebar} = this;
+    const { selectedKey } = this.state;
+    const { sidebar } = this;
     const { noDoctorPaymentProducts } = this.state;
     const provider_id = this.isDoctorRoleAssociatedWithProvider();
-
-    
 
     return (
       <Fragment>
@@ -755,38 +737,37 @@ class DoctorSettingsPage extends Component {
         {/* <div className="wp100 ml20 mt20 fs28 fw700 flex justify-start align-center">
           {this.formatMessage(messages.doctor_settings_header_text)}
         </div> */}
-      
-      
-        <div className="wp100 pt20  mb20 fs28 fw700 flex justify-space-between align-center">
-          
-        <div className="ml20 flex flex-start align-center">
-        {this.formatMessage(messages.doctor_settings_header_text)}
-        </div>
 
-        {!noDoctorPaymentProducts && selectedKey === CONSULTATION_FEE &&  !provider_id  &&(
-          <div className="flex flex-end align-center">
-            <Button
-              type="primary"
-              className="ml10 mr20 add-button "
-              icon={"plus"}
-              onClick={this.displayAddDoctorPaymentProduct}
-            >
-              <span className="fs16">
-                {this.formatMessage(messages.addMore)}
-              </span>
-            </Button>
+        <div className="wp100 pt20  mb20 fs28 fw700 flex justify-space-between align-center">
+          <div className="ml20 flex flex-start align-center">
+            {this.formatMessage(messages.doctor_settings_header_text)}
           </div>
-        )}
-      </div>
+
+          {!noDoctorPaymentProducts &&
+            selectedKey === CONSULTATION_FEE &&
+            !provider_id && (
+              <div className="flex flex-end align-center">
+                <Button
+                  type="primary"
+                  className="ml10 mr20 add-button "
+                  icon={"plus"}
+                  onClick={this.displayAddDoctorPaymentProduct}
+                >
+                  <span className="fs16">
+                    {this.formatMessage(messages.addMore)}
+                  </span>
+                </Button>
+              </div>
+            )}
+        </div>
 
         <div className="wp100 p20 flex flex-wrap">
           {/************************* SIDEBAR *************************/}
 
-          <div className="wp30" >{sidebar()}</div>
+          <div className="wp30">{sidebar()}</div>
 
           {/************************* SIDEBAR RELATED CONTENTS *************************/}
-          <div className="wp70" >{this.sidebarRelatedContent()}</div>
-        
+          <div className="wp70">{this.sidebarRelatedContent()}</div>
         </div>
 
         <AddConsultationFeeDrawer

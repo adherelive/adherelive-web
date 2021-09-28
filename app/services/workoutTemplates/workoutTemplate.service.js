@@ -9,7 +9,7 @@ export default class WorkoutTemplateService {
   create = async ({
     workoutTemplate = {},
     exerciseDetails = [],
-    transaction: continuedTransaction = null,
+    transaction: continuedTransaction = null
   }) => {
     const transaction = continuedTransaction
       ? continuedTransaction
@@ -18,13 +18,13 @@ export default class WorkoutTemplateService {
       const workoutTemplateCreated =
         (await Database.getModel(TABLE_NAME).create(workoutTemplate, {
           raw: true,
-          transaction,
+          transaction
         })) || null;
 
       const { id: workout_template_id } = workoutTemplateCreated || {};
 
       // create exercise detail mappings
-      const exerciseDetailMapping = exerciseDetails.map((id) => {
+      const exerciseDetailMapping = exerciseDetails.map(id => {
         return { workout_template_id, exercise_detail_id: id };
       });
 
@@ -32,7 +32,7 @@ export default class WorkoutTemplateService {
         workoutTemplateExerciseMappingTableName
       ).bulkCreate(exerciseDetailMapping, {
         raw: true,
-        transaction,
+        transaction
       });
       await transaction.commit();
       return workout_template_id;
@@ -46,7 +46,7 @@ export default class WorkoutTemplateService {
     workoutTemplate = {},
     exerciseDetails = [],
     id: workout_template_id,
-    transaction: continuedTransaction = null,
+    transaction: continuedTransaction = null
   }) => {
     const transaction = continuedTransaction
       ? continuedTransaction
@@ -54,19 +54,19 @@ export default class WorkoutTemplateService {
     try {
       (await Database.getModel(TABLE_NAME).update(workoutTemplate, {
         where: { id: workout_template_id },
-        transaction,
+        transaction
       })) || null;
 
       // delete existing exercise details mappings
       await Database.getModel(workoutTemplateExerciseMappingTableName).destroy({
         where: {
-          workout_template_id,
+          workout_template_id
         },
-        transaction,
+        transaction
       });
 
       // create exercise detail mappings
-      const exerciseDetailMapping = exerciseDetails.map((id) => {
+      const exerciseDetailMapping = exerciseDetails.map(id => {
         return { workout_template_id, exercise_detail_id: id };
       });
 
@@ -74,7 +74,7 @@ export default class WorkoutTemplateService {
         workoutTemplateExerciseMappingTableName
       ).bulkCreate(exerciseDetailMapping, {
         raw: true,
-        transaction,
+        transaction
       });
       await transaction.commit();
       return true;
@@ -91,16 +91,16 @@ export default class WorkoutTemplateService {
     try {
       await Database.getModel(TABLE_NAME).destroy({
         where: {
-          id,
+          id
         },
-        transaction,
+        transaction
       });
 
       await Database.getModel(workoutTemplateExerciseMappingTableName).destroy({
         where: {
-          workout_template_id: id,
+          workout_template_id: id
         },
-        transaction,
+        transaction
       });
 
       await transaction.commit();
@@ -111,7 +111,7 @@ export default class WorkoutTemplateService {
     }
   };
 
-  findOne = async (data) => {
+  findOne = async data => {
     try {
       return (
         (await Database.getModel(TABLE_NAME).findOne({
@@ -119,9 +119,9 @@ export default class WorkoutTemplateService {
           include: [
             {
               model: Database.getModel(exerciseDetailTableName),
-              include: [Database.getModel(repetitionTableName)],
-            },
-          ],
+              include: [Database.getModel(repetitionTableName)]
+            }
+          ]
         })) || null
       );
     } catch (error) {
@@ -129,7 +129,7 @@ export default class WorkoutTemplateService {
     }
   };
 
-  findAndCountAll = async (data) => {
+  findAndCountAll = async data => {
     try {
       return (
         (await Database.getModel(TABLE_NAME).findAndCountAll({
@@ -137,9 +137,9 @@ export default class WorkoutTemplateService {
           include: [
             {
               model: Database.getModel(exerciseDetailTableName),
-              include: [Database.getModel(repetitionTableName)],
-            },
-          ],
+              include: [Database.getModel(repetitionTableName)]
+            }
+          ]
         })) || []
       );
     } catch (error) {

@@ -5,6 +5,7 @@ import { TABLE_NAME as specialityTableName } from "../../models/specialities";
 import { TABLE_NAME as userTableName } from "../../models/users";
 import { Op } from "sequelize";
 import { separateNameForSearch } from "../../helper/common/index";
+
 const DEFAULT_ORDER = [["created_at", "DESC"]];
 
 class DoctorService {

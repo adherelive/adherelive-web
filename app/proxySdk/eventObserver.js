@@ -1,4 +1,5 @@
 import { Proxy_Sdk, EVENTS } from ".";
+
 const eventExecutor = require("./eventExecutor");
 const Logger = require("./libs/logger");
 const Log = require("../../libs/log")("proxySdk:EventObserver");

@@ -2,7 +2,6 @@ const AWS = require("aws-sdk");
 const log = require("../../../libs/log")("communications ---> smsManger");
 const axios = require("axios");
 
-
 class SmsManager {
   constructor() {
     AWS.config.update({
@@ -17,8 +16,8 @@ class SmsManager {
 
     this.sns.setSMSAttributes({
       attributes: {
-        'DefaultSenderID':'ADHERE-LIVE',
-        'DefaultSMSType': 'Transactional',
+        DefaultSenderID: "ADHERE-LIVE",
+        DefaultSMSType: "Transactional"
       }
     });
   }
@@ -78,15 +77,17 @@ class SmsManager {
 
       let smsSent = false;
 
-      await this.sns.publish(smsData).promise().then(
-          (data) => {
-            log.info("sms sent...........!!", data);
-            smsSent = true;
-          }
-      ).catch(error => {
-        log.info("sending sms error ------->>>>", error);
-        smsSent = false;
-      });
+      await this.sns
+        .publish(smsData)
+        .promise()
+        .then(data => {
+          log.info("sms sent...........!!", data);
+          smsSent = true;
+        })
+        .catch(error => {
+          log.info("sending sms error ------->>>>", error);
+          smsSent = false;
+        });
 
       return smsSent;
 

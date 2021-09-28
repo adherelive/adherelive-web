@@ -14,14 +14,14 @@ import { connect } from "react-redux";
 import { searchCollege } from "../../modules/colleges";
 import { searchCouncil } from "../../modules/councils";
 import { searchDegree } from "../../modules/degrees";
-import {searchSpecialties} from "../../modules/specialities";
+import { searchSpecialties } from "../../modules/specialities";
 import {
   getDoctorDetails,
-  getDoctorProfileDetails,
+  getDoctorProfileDetails
 } from "../../modules/doctors";
 
 const mapStateToProps = state => {
-  console.log("STATEEEEEEEEEEEEEEEEEEEEE =====>",state);
+  console.log("STATEEEEEEEEEEEEEEEEEEEEE =====>", state);
   const {
     auth,
     users,
@@ -60,7 +60,7 @@ const mapDispatchToProps = dispatch => {
     searchDegree: data => dispatch(searchDegree(data)),
     doctorQualificationRegister: data =>
       dispatch(doctorQualificationRegister(data)),
-    getDoctorQualificationRegisterData: (data) =>
+    getDoctorQualificationRegisterData: data =>
       dispatch(getDoctorQualificationRegisterData(data)),
     registerQualification: data => dispatch(registerQualification(data)),
     registerRegistration: data => dispatch(registerRegistration(data)),
@@ -68,11 +68,9 @@ const mapDispatchToProps = dispatch => {
       dispatch(deleteDoctorQualificationImage(qualificationId, document)),
     deleteDoctorRegistrationImage: (registrationId, document) =>
       dispatch(deleteDoctorRegistrationImage(registrationId, document)),
-      searchSpecialities: (data) => dispatch(searchSpecialties(data)),
-    callNewDoctorAction : (doctor_id) => dispatch(callNewDoctorAction(doctor_id)),
-    getDoctorProfileDetails : id => dispatch(getDoctorProfileDetails(id))
-
-  
+    searchSpecialities: data => dispatch(searchSpecialties(data)),
+    callNewDoctorAction: doctor_id => dispatch(callNewDoctorAction(doctor_id)),
+    getDoctorProfileDetails: id => dispatch(getDoctorProfileDetails(id))
   };
 };
 export default withRouter(

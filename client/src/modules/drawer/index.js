@@ -2,13 +2,13 @@ import {
   ADD_APPOINTMENT_COMPLETE,
   ADD_CARE_PLAN_APPOINTMENT_COMPLETE,
   UPDATE_APPOINTMENT_COMPLETE,
-  DELETE_APPOINTMENTS_COMPLETE,
+  DELETE_APPOINTMENTS_COMPLETE
 } from "../appointments";
 import {
   ADD_MEDICATION_REMINDER_COMPLETE,
   ADD_CARE_PLAN_MEDICATION_REMINDER_COMPLETE,
   UPDATE_MEDICATION_COMPLETE,
-  DELETE_MEDICATION_COMPLETE,
+  DELETE_MEDICATION_COMPLETE
 } from "../medications";
 
 const OPEN_DRAWER = "OPEN_DRAWER";
@@ -16,13 +16,13 @@ const CLOSE_DRAWER = "CLOSE_DRAWER";
 
 const intial_state = {
   visible: false,
-  loading: false,
+  loading: false
 };
 
-export const open = (data) => {
+export const open = data => {
   return {
     type: OPEN_DRAWER,
-    data,
+    data
   };
 };
 
@@ -40,14 +40,14 @@ export const close = () => {
     }
     if (drawer_stack.length === 0) {
       return dispatch({
-        type: CLOSE_DRAWER,
+        type: CLOSE_DRAWER
       });
     } else {
       const remainingData = drawer_stack[drawer_stack.length - 1];
       const type = Object.keys(remainingData)[0];
       return dispatch({
         type: OPEN_DRAWER,
-        data: { type, drawer_stack },
+        data: { type, drawer_stack }
       });
     }
   };
@@ -59,7 +59,7 @@ export default (state = intial_state, action) => {
     case OPEN_DRAWER:
       return {
         visible: true,
-        data,
+        data
       };
     case ADD_APPOINTMENT_COMPLETE:
     case ADD_MEDICATION_REMINDER_COMPLETE:
@@ -71,7 +71,7 @@ export default (state = intial_state, action) => {
     case ADD_CARE_PLAN_MEDICATION_REMINDER_COMPLETE:
     case CLOSE_DRAWER:
       return {
-        visible: false,
+        visible: false
       };
     default:
       return state;

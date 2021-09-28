@@ -8,10 +8,10 @@ import { USER_CATEGORY } from "../../../constant";
 const router = express.Router();
 
 router.get(
-    "/",
-    Authenticate,
-    Authorize(USER_CATEGORY.DOCTOR,USER_CATEGORY.HSP),
-    WorkoutResponse.get
+  "/",
+  Authenticate,
+  Authorize(USER_CATEGORY.DOCTOR, USER_CATEGORY.HSP),
+  WorkoutResponse.get
 );
 
 export default router;

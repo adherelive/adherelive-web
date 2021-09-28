@@ -16,7 +16,6 @@ import chartRouter from "./graphs";
 import userService from "../../app/services/user/user.service";
 import userRolesService from "../../app/services/userRoles/userRoles.service";
 
-
 import jwt from "jsonwebtoken";
 
 import collegeRouter from "./college";
@@ -49,7 +48,10 @@ import workoutRouter from "./workouts";
 
 router.use(async (req, res, next) => {
   try {
-    let accessToken, userId = null, userRoleId, userRoleData;
+    let accessToken,
+      userId = null,
+      userRoleId,
+      userRoleData;
     const { authorization = "" } = req.headers || {};
     const bearer = authorization.split(" ");
     if (bearer.length === 2) {
@@ -61,11 +63,13 @@ router.use(async (req, res, next) => {
     if (accessToken) {
       const decodedAccessToken = await jwt.verify(accessToken, secret);
       const { userRoleId: decodedUserRoleId = null } = decodedAccessToken || {};
-      const userRoleDetails = await userRolesService.getSingleUserRoleByData({id: decodedUserRoleId});
-      if(userRoleDetails) {
+      const userRoleDetails = await userRolesService.getSingleUserRoleByData({
+        id: decodedUserRoleId
+      });
+      if (userRoleDetails) {
         const userRole = await UserRoleWrapper(userRoleDetails);
         userId = userRole.getUserId();
-        userRoleId = parseInt(decodedUserRoleId);;
+        userRoleId = parseInt(decodedUserRoleId);
         userRoleData = userRole.getBasicInfo();
       } else {
         req.userDetails = {
@@ -143,13 +147,13 @@ router.use("/transactions", transactionRouter);
 router.use("/accounts", accountsRouter);
 router.use("/features", featuresRouter);
 router.use("/reports", reportRouter);
-router.use("/favourites",userFavourites);
+router.use("/favourites", userFavourites);
 router.use("/adhoc", adhocRouter);
 router.use("/user-roles", userRoles);
-router.use("/food-items",foodItemsRouter);
-router.use("/meal/templates",mealTemplateRouter);
-router.use("/diet",dietRouter);
-router.use("/portions",portionRouter);
+router.use("/food-items", foodItemsRouter);
+router.use("/meal/templates", mealTemplateRouter);
+router.use("/diet", dietRouter);
+router.use("/portions", portionRouter);
 router.use("/exercises", exerciseRouter);
 router.use("/workout", workoutRouter);
 

@@ -11,6 +11,7 @@
   max-width: 800px;
   border-right: 1px solid #e5ddd5;
 }
+
 .chat-patient-card {
   width: 100%;
   height: 50px;
@@ -24,6 +25,7 @@
   margin-left: 10px;
   cursor: pointer;
 }
+
 .chat-patient-card-parent {
   display: flex;
   // justify-content: center;
@@ -31,6 +33,7 @@
   width: 100%;
   height: 70px;
   border-bottom: 1px solid #e5ddd5;
+
   &:hover {
     background-color: #f7f7f7;
   }
@@ -89,10 +92,12 @@
   background-color: @lighter-sky-blue;
   justify-content: start;
   align-items: center;
+
   .patientSearch {
     flex-grow: 1;
     height: 40px;
     border-radius: 20px;
+
     .ant-input {
       flex-grow: 1;
       height: 40px;
@@ -153,6 +158,7 @@
   overflow-y: scroll;
   display: flex;
   flex-direction: column;
+
   .element::-webkit-scrollbar {
     width: 0 !important;
   }
@@ -178,12 +184,14 @@
     overflow-y: scroll;
     height: 100%;
     overflow-x: hidden;
+
     .chat-messages {
       display: flex;
       height: auto;
       padding: 10px 24px;
       width: 100%;
       flex-direction: column;
+
       &.end {
         justify-content: flex-end;
       }
@@ -192,9 +200,11 @@
     .chat-avatar {
       display: flex;
       height: auto;
+
       &.left {
         margin-left: 8px;
       }
+
       &.right {
         margin-right: 8px;
       }
@@ -209,14 +219,17 @@
       border-radius: 6px;
       background-color: rgba(78, 216, 218, 0.2);
       align-self: flex-start;
+
       &.end {
         align-self: flex-end;
         text-align: end;
       }
+
       .chat-media-message-text {
         .chat-media-message-image {
           height: 160px;
         }
+
         &:hover {
           color: @primary-color;
         }
@@ -232,6 +245,7 @@
       font-size: 12px;
       color: #aab0b3;
       padding: 2px;
+
       &.start {
         align-self: flex-start;
         margin-left: 32px;
@@ -258,16 +272,19 @@
   height: 60px;
   width: 75%;
   align-items: center;
+
   .footer-left {
     display: flex;
     height: 100%;
     width: 20%;
     justify-content: center;
     align-items: center;
+
     .back-image {
       cursor: pointer;
     }
   }
+
   .footer-right {
     display: flex;
     height: 100%;
@@ -276,7 +293,7 @@
     padding-left: 10px;
     padding-right: 10px;
     background-color: @dark-brown-grey;
-  
+
     .chat-form {
       display: flex;
       width: 100%;
@@ -292,9 +309,11 @@
           height: 40px;
           border-radius: 20px;
         }
+
         .form-button {
           display: flex;
         }
+
         .ant-btn {
           border: 1px solid #fff;
           height: 100%;
@@ -312,6 +331,7 @@
   flex-direction: column;
   height: 500px;
 }
+
 .twilioVideoBodyContainer {
   display: flex;
   flex-direction: column;
@@ -319,6 +339,7 @@
   width: 100%;
   align-items: center;
 }
+
 .twilioVideoCardHolder1 {
   height: 400px;
   width: 80%;
@@ -326,6 +347,7 @@
   flex-direction: column;
   align-items: center;
 }
+
 .twilioVideoCard {
   height: 100%;
   width: 100%;
@@ -342,6 +364,7 @@
   justify-content: flex-end;
   align-items: center;
 }
+
 .twilioVideoCard2 {
   height: 100%;
   width: 50%;
@@ -358,6 +381,7 @@
   align-items: center;
   padding: 0 0 0 0;
 }
+
 .twilioVideoCard2 .ant-card-body {
   height: 100%;
   width: 100%;
@@ -366,14 +390,17 @@
   justify-content: flex-end;
   padding: 0 0 0 0;
 }
+
 .twilioVideoCard video {
   width: 100%;
   height: 100%;
 }
+
 .twilioVideoCard2 video {
   width: 100%;
   height: 100%;
 }
+
 .videoButtonContainer {
   height: 100%;
   width: 50%;
@@ -442,6 +469,7 @@
 #remote-media video {
   width: 100%;
 }
+
 .downloadable-file {
   display: flex;
   justify-content: space-between;
@@ -460,6 +488,7 @@
         padding: 0px;
         height: 48px;
       }
+
       .ant-modal-close {
         height: 48px;
         line-height: 48px;
@@ -470,7 +499,7 @@
 
 // agora video css
 
-.containerDiv{
+.containerDiv {
   display: flex;
   flex-direction: row;
   height: 90vh;
@@ -478,20 +507,21 @@
   // background-color: chartreuse;
 }
 
-.childContainer1 , .childContainer2{
+.childContainer1,
+.childContainer2 {
   height: 100%;
   width: 50%;
   // border: 1px solid black;
 }
 
-.videoPlayer{
+.videoPlayer {
   height: 100%;
   width: 100%;
 
-  .videoCallStopBtn{
+  .videoCallStopBtn {
     position: absolute !important;
     top: 90% !important;
-    left: 46% ;
+    left: 46%;
     z-index: 9999;
     background: #252525;
     color: #e5ddd5;
@@ -507,15 +537,14 @@
     overflow: hidden;
     position: relative;
     cursor: pointer;
-    transition: .3s linear;
-    &:focus{
+    transition: 0.3s linear;
+
+    &:focus {
       outline: none;
     }
   }
-
 }
 
-
-.class-test-container &>*{
+.class-test-container & > * {
   border-radius: 10px;
 }

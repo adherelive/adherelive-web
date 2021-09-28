@@ -8,27 +8,27 @@ module.exports = {
       id: {
         type: DataTypes.INTEGER,
         primaryKey: true,
-        autoIncrement: true,
+        autoIncrement: true
       },
       type: {
         type: DataTypes.STRING(1000),
-        allowNull: false,
+        allowNull: false
       },
       created_at: {
         allowNull: false,
-        type: DataTypes.DATE,
+        type: DataTypes.DATE
       },
       updated_at: {
         allowNull: false,
-        type: DataTypes.DATE,
+        type: DataTypes.DATE
       },
       deleted_at: {
-        type: DataTypes.DATE,
-      },
+        type: DataTypes.DATE
+      }
     });
   },
 
   down: (queryInterface, Sequelize) => {
     return queryInterface.dropTable(TABLE_NAME);
-  },
+  }
 };

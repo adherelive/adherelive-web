@@ -5,6 +5,7 @@ import specialityService from "../../../services/speciality/speciality.service";
 import SpecialityWrapper from "../../../ApiWrapper/mobile/speciality";
 
 const Log = new Logger("SPECIALITY MOBILE CONTROLLER");
+
 class SpecialityController extends Controller {
   constructor() {
     super();

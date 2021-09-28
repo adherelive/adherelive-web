@@ -17,8 +17,14 @@ export default props => {
       title: formatMessage(messages.name),
       ...TABLE_COLUMN.NAME,
       render: data => {
-        const {doctorData,userData , formatMessage} = data || {};
-        return <Name doctorData={doctorData}  userData={userData}  formatMessage={formatMessage}/>;
+        const { doctorData, userData, formatMessage } = data || {};
+        return (
+          <Name
+            doctorData={doctorData}
+            userData={userData}
+            formatMessage={formatMessage}
+          />
+        );
       }
     },
     {
@@ -40,6 +46,6 @@ export default props => {
       title: formatMessage(messages.contact_details),
       ...TABLE_COLUMN.CONTACT_DETAILS,
       render: userData => <ContactDetails {...userData} />
-    },
+    }
   ];
 };

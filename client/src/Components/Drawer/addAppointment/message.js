@@ -17,11 +17,10 @@ const message = defineMessages({
     description: "",
     defaultMessage: "Type"
   },
-  appointmentTypeDescription:{
+  appointmentTypeDescription: {
     id: "app.drawer.add.appointment.appointmentTypeDescription",
     description: "",
     defaultMessage: "Description"
-
   },
   select_patient: {
     id: "app.drawer.add.appointment.select.patient",
@@ -444,7 +443,7 @@ const message = defineMessages({
     description: "",
     defaultMessage: "Choose Appointment Type"
   },
-  placeholderTypeDesc : {
+  placeholderTypeDesc: {
     id: "app.drawer.add.appointment.placeholderTypeDesc",
     description: "",
     defaultMessage: "Choose Type Description"
@@ -458,7 +457,7 @@ const message = defineMessages({
     id: "app.drawer.add.appointment.placeholderProvider",
     description: "",
     defaultMessage: "Choose Provider"
-  },
+  }
 });
 
 export default message;

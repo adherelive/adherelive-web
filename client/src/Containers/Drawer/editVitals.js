@@ -6,15 +6,14 @@ import { searchVital } from "../../modules/vital_templates";
 import { getVitalOccurence } from "../../modules/vital_occurence";
 import { updateVital, getVitals } from "../../modules/vitals";
 
-
-
 // import { createReminder, updateReminder } from "../../modules/reminder"; // write to add to database
 const mapStateToProps = state => {
   const {
-    drawer: { visible, loading, data: { type, payload = {} } = {} }, vital_templates, repeat_intervals, vitals
+    drawer: { visible, loading, data: { type, payload = {} } = {} },
+    vital_templates,
+    repeat_intervals,
+    vitals
   } = state;
-
-  
 
   return {
     visible: visible && type === DRAWER.EDIT_VITALS,
@@ -36,7 +35,4 @@ const mapDispatchToProps = dispatch => {
   };
 };
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(EditVitals);
+export default connect(mapStateToProps, mapDispatchToProps)(EditVitals);

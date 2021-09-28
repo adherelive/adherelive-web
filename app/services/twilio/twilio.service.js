@@ -1,6 +1,7 @@
 const twilio = require("twilio");
 
 import Log from "../../../libs/log";
+
 const AccessToken = twilio.jwt.AccessToken;
 const VideoGrant = AccessToken.VideoGrant;
 const IpMessagingGrant = AccessToken.ChatGrant;

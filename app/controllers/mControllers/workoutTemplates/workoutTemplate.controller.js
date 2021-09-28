@@ -29,7 +29,7 @@ class WorkoutTemplateController extends Controller {
       // check if name already exists
       const workoutTemplateExistsForName =
         (await workoutTemplateService.findOne({
-          name,
+          name
         })) || null;
 
       if (workoutTemplateExistsForName) {
@@ -46,21 +46,21 @@ class WorkoutTemplateController extends Controller {
           workoutTemplate: {
             name,
             creator_id: userCategoryId,
-            creator_type: category,
+            creator_type: category
           },
-          exerciseDetails,
+          exerciseDetails
         })) || null;
 
       if (workoutTemplateId !== null) {
         const workoutTemplates = await WorkoutTemplateWrapper({
-          id: workoutTemplateId,
+          id: workoutTemplateId
         });
 
         return raiseSuccess(
           res,
           200,
           {
-            ...(await workoutTemplates.getReferenceInfo()),
+            ...(await workoutTemplates.getReferenceInfo())
           },
           "Workout Template created successfully"
         );
@@ -96,7 +96,7 @@ class WorkoutTemplateController extends Controller {
         (await workoutTemplateService.findOne({
           name,
           creator_id: userCategoryId,
-          creator_type: category,
+          creator_type: category
         })) || null;
 
       if (workoutTemplateExists) {
@@ -115,10 +115,10 @@ class WorkoutTemplateController extends Controller {
       const isWorkoutTemplateUpdated =
         (await workoutTemplateService.update({
           workoutTemplate: {
-            name,
+            name
           },
           exerciseDetails,
-          id,
+          id
         })) || false;
 
       if (isWorkoutTemplateUpdated) {
@@ -128,7 +128,7 @@ class WorkoutTemplateController extends Controller {
           res,
           200,
           {
-            ...(await updatedWorkoutTemplate.getReferenceInfo()),
+            ...(await updatedWorkoutTemplate.getReferenceInfo())
           },
           "Workout template updated successfully"
         );
@@ -159,7 +159,7 @@ class WorkoutTemplateController extends Controller {
       // check if name already exists
       const workoutTemplateExists =
         (await workoutTemplateService.findOne({
-          id,
+          id
         })) || null;
 
       if (!workoutTemplateExists) {
