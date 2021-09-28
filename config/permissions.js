@@ -6,11 +6,11 @@ export default {
     UPDATE: "UPDATE_APPOINTMENT",
     VIEW: "VIEW_APPOINTMENT",
     DELETE: "DELETE_APPOINTMENT",
-    TEMPLATE:"TEMPLATE_APPOINTMENT"
+    TEMPLATE: "TEMPLATE_APPOINTMENT"
   },
 
   ACCOUNT: {
-    VERIFIED: "VERIFIED_ACCOUNT",
+    VERIFIED: "VERIFIED_ACCOUNT"
   },
 
   /* [C] */
@@ -18,7 +18,8 @@ export default {
   CARE_PLAN: {
     ADD: "ADD_CARE_PLAN",
     UPDATE: "UPDATE_CARE_PLAN",
-    VIEW: "VIEW_CARE_PLAN"
+    VIEW: "VIEW_CARE_PLAN",
+    ADD_PROFILE: "ADD_PROFILE"
   },
 
   CARE_PLAN_TEMPLATE: {
@@ -30,7 +31,7 @@ export default {
   },
 
   CALENDER: {
-    VIEW: "VIEW_CALENDER",
+    VIEW: "VIEW_CALENDER"
   },
 
   /* [D] */
@@ -40,20 +41,20 @@ export default {
     UPDATE: "UPDATE_DIET",
     VIEW: "VIEW_DIET",
     DELETE: "DELETE_DIET",
-    TEMPLATE:"TEMPLATE_DIET"
+    TEMPLATE: "TEMPLATE_DIET"
   },
 
   DOCTORS: {
     ADD: "ADD_DOCTOR",
     UPDATE: "UPDATE_DOCTOR",
-    VIEW: "VIEW_DOCTOR",
+    VIEW: "VIEW_DOCTOR"
   },
 
   /* [G] */
 
   GRAPHS: {
     ADD: "ADD_GRAPH",
-    UPDATE: "UPDATE_GRAPH",
+    UPDATE: "UPDATE_GRAPH"
   },
 
   /* [M] */
@@ -64,7 +65,7 @@ export default {
     VIEW: "VIEW_MEDICATION",
     VIEW_TIMELINE: "VIEW_TIMELINE_MEDICATION",
     DELETE: "DELETE_MEDICATION",
-    TEMPLATE:"TEMPLATE_MEDICATION"
+    TEMPLATE: "TEMPLATE_MEDICATION"
   },
 
   /* [P] */
@@ -72,17 +73,17 @@ export default {
   PATIENTS: {
     ADD: "ADD_PATIENT",
     UPDATE: "UPDATE_PATIENT",
-    VIEW: "VIEW_PATIENT",
+    VIEW: "VIEW_PATIENT"
   },
 
   PAYMENT_PRODUCT: {
     ADD: "ADD_PAYMENT_PRODUCT",
-    VIEW: "VIEW_PAYMENT_PRODUCT",
+    VIEW: "VIEW_PAYMENT_PRODUCT"
   },
 
-   /* [R] */
+  /* [R] */
 
-   REPORTS: {
+  REPORTS: {
     ADD: "ADD_REPORT",
     UPDATE: "UPDATE_REPORT",
     VIEW: "VIEW_REPORT",
@@ -96,7 +97,7 @@ export default {
     UPDATE: "UPDATE_VITAL",
     VIEW: "VIEW_VITAL",
     DELETE: "DELETE_VITAL",
-    TEMPLATE:"TEMPLATE_VITAL"
+    TEMPLATE: "TEMPLATE_VITAL"
   },
 
   /* [W] */
@@ -106,9 +107,8 @@ export default {
     UPDATE: "UPDATE_WORKOUT",
     VIEW: "VIEW_WORKOUT",
     DELETE: "DELETE_WORKOUT",
-    TEMPLATE:"TEMPLATE_WORKOUT"
-  },
-
+    TEMPLATE: "TEMPLATE_WORKOUT"
+  }
 };
 
 // export const USER_PERMISSIONS = {
@@ -119,7 +119,6 @@ export default {
 //     PERMISSIONS.MEDICATIONS.VIEW_TIMELINE,
 //     PERMISSIONS.MEDICATIONS.DELETE,
 
-    
 //   ],
 
 //   [USER_CATEGORY.HSP]: [
