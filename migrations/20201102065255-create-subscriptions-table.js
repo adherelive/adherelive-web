@@ -1,9 +1,9 @@
-'use strict';
+"use strict";
 
-import {DataTypes} from "sequelize";
-import {TABLE_NAME} from "../app/models/subscriptions";
-import {TABLE_NAME as paymentProductPlansTableName} from "../app/models/paymentProducts";
-import {USER_CATEGORY_ARRAY} from "../app/models/users";
+import { DataTypes } from "sequelize";
+import { TABLE_NAME } from "../app/models/subscriptions";
+import { TABLE_NAME as paymentProductPlansTableName } from "../app/models/paymentProducts";
+import { USER_CATEGORY_ARRAY } from "../app/models/users";
 
 module.exports = {
   up: (queryInterface, Sequelize) => {
@@ -19,9 +19,9 @@ module.exports = {
         allowNull: false,
         references: {
           model: {
-            tableName: paymentProductPlansTableName,
+            tableName: paymentProductPlansTableName
           },
-          key: 'id'
+          key: "id"
         }
       },
       subscriber_type: {

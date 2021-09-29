@@ -1,6 +1,6 @@
-'use strict';
+"use strict";
 
-import {ACTION_TYPE, DB_TABLES} from "../constant";
+import { ACTION_TYPE, DB_TABLES } from "../constant";
 
 module.exports = {
   up: (queryInterface, Sequelize) => {
@@ -16,9 +16,9 @@ module.exports = {
         allowNull: false,
         references: {
           model: {
-            tableName: DB_TABLES.CARE_PLANS,
+            tableName: DB_TABLES.CARE_PLANS
           },
-          key: 'id'
+          key: "id"
         }
       },
       type: {
@@ -31,13 +31,13 @@ module.exports = {
         allowNull: false
       },
       reference_link: {
-        type: Sequelize.STRING(1000),
+        type: Sequelize.STRING(1000)
       },
       start_date: {
-        type: Sequelize.DATE,
+        type: Sequelize.DATE
       },
       end_date: {
-        type: Sequelize.DATE,
+        type: Sequelize.DATE
       },
       created_at: {
         allowNull: false,

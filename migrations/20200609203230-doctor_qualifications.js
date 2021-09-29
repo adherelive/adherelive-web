@@ -1,9 +1,9 @@
-'use strict';
+"use strict";
 
-import {TABLE_NAME} from "../app/models/doctorQualifications";
-import {TABLE_NAME as collegeTableName} from "../app/models/college";
-import {TABLE_NAME as doctorTableName} from "../app/models/doctors";
-import {TABLE_NAME as degreeTableName} from "../app/models/degree";
+import { TABLE_NAME } from "../app/models/doctorQualifications";
+import { TABLE_NAME as collegeTableName } from "../app/models/college";
+import { TABLE_NAME as doctorTableName } from "../app/models/doctors";
+import { TABLE_NAME as degreeTableName } from "../app/models/degree";
 
 module.exports = {
   up: (queryInterface, Sequelize) => {
@@ -19,9 +19,9 @@ module.exports = {
         allowNull: false,
         references: {
           model: {
-            tableName: doctorTableName,
+            tableName: doctorTableName
           },
-          key: 'id'
+          key: "id"
         }
       },
       degree_id: {
@@ -61,7 +61,7 @@ module.exports = {
         type: Sequelize.DATE
       }
     });
-    },
+  },
 
   down: (queryInterface, Sequelize) => {
     return queryInterface.dropTable(TABLE_NAME);

@@ -47,7 +47,7 @@ class ScheduleEventWrapper extends BaseScheduleEvent {
       medications,
       vitals,
       diets,
-      workouts,
+      workouts
     };
   };
 
@@ -104,9 +104,9 @@ class ScheduleEventWrapper extends BaseScheduleEvent {
 
     return {
       schedule_events: {
-        [getScheduleEventId()]: getAllInfo(),
+        [getScheduleEventId()]: getAllInfo()
       },
-      ...eventTypeData,
+      ...eventTypeData
     };
   };
 }

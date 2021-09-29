@@ -461,17 +461,11 @@ class TemplatePageCreateDrawer extends Component {
   };
 
   showAddDiet = () => {
-    this.setState({
-      showAddDietInner: true,
-      isDietVisible: true
-    });
+    this.setState({ showAddDietInner: true, isDietVisible: true });
   };
 
   closeAddDiet = () => {
-    this.setState({
-      showAddDietInner: false,
-      isDietVisible: false
-    });
+    this.setState({ showAddDietInner: false, isDietVisible: false });
   };
 
   showAddWorkout = () => {

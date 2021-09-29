@@ -93,9 +93,9 @@ class StartJob extends AppointmentJob {
     templateData.push({
       small_icon: process.config.app.icon_android,
       app_id: process.config.one_signal.app_id, // TODO: add the same in pushNotification handler in notificationSdk
-      headings: { en: `Appointment started (${providerName})` },
+      headings: { en: `Appointment Started (${providerName})` },
       contents: {
-        en: `Appointment with ${actorCategory} ${name} has started! Tap here to join`
+        en: `Appointment with ${name}(${actorCategory}) is started! Tap here to join`
       },
       // buttons: [{ id: "yes", text: "Yes" }, { id: "no", text: "No" }],
       include_player_ids: [...playerIds],

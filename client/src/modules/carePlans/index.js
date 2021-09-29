@@ -28,7 +28,6 @@ export const ADD_SECONDARY_DOCTOR_TO_CARE_PLAN_FAILED =
 
 function carePlanReducer(state, data) {
   const { care_plans } = data || {};
-
   if (care_plans) {
     return {
       ...state,
@@ -110,7 +109,6 @@ export const getPatientCarePlanDetails = patientId => {
     return response;
   };
 };
-
 export const addSecondaryDoctorToCareplan = payload => {
   let response = {};
   return async dispatch => {

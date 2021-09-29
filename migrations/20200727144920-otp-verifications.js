@@ -1,7 +1,7 @@
-'use strict';
+"use strict";
 
-import {TABLE_NAME} from "../app/models/otpVerifications";
-import {TABLE_NAME as userTableName} from "../app/models/users";
+import { TABLE_NAME } from "../app/models/otpVerifications";
+import { TABLE_NAME as userTableName } from "../app/models/users";
 
 module.exports = {
   up: (queryInterface, Sequelize) => {
@@ -17,14 +17,14 @@ module.exports = {
         allowNull: false,
         references: {
           model: {
-            tableName: userTableName,
+            tableName: userTableName
           },
-          key: 'id'
+          key: "id"
         }
       },
       otp: {
         type: Sequelize.STRING(4),
-        allowNull: false,
+        allowNull: false
       },
       created_at: {
         allowNull: false,

@@ -1,8 +1,8 @@
 "use strict";
 
 import { USER_CATEGORY } from "../constant";
-import {TABLE_NAME} from "../app/models/medicationReminders";
-import {TABLE_NAME as medicineTableName} from "../app/models/medicines";
+import { TABLE_NAME } from "../app/models/medicationReminders";
+import { TABLE_NAME as medicineTableName } from "../app/models/medicines";
 
 module.exports = {
   up: (queryInterface, Sequelize) => {
@@ -19,7 +19,11 @@ module.exports = {
       },
       organizer_type: {
         type: Sequelize.ENUM,
-        values: [USER_CATEGORY.DOCTOR, USER_CATEGORY.PATIENT, USER_CATEGORY.CARE_TAKER]
+        values: [
+          USER_CATEGORY.DOCTOR,
+          USER_CATEGORY.PATIENT,
+          USER_CATEGORY.CARE_TAKER
+        ]
       },
       organizer_id: {
         type: Sequelize.INTEGER,
@@ -30,10 +34,10 @@ module.exports = {
         allowNull: false,
         references: {
           model: {
-            tableName: medicineTableName,
+            tableName: medicineTableName
           },
-          key: "id",
-        },
+          key: "id"
+        }
       },
       description: {
         type: Sequelize.STRING(1000)

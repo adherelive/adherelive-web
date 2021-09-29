@@ -1,128 +1,128 @@
-'use strict';
+"use strict";
 
-import {TABLE_NAME} from "../models/specialities";
+import { TABLE_NAME } from "../models/specialities";
 
 module.exports = {
   up: (queryInterface, Sequelize) => {
     return queryInterface.bulkInsert(TABLE_NAME, [
       {
-        name: 'Anaesthesia',
+        name: "Anaesthesia",
         created_at: new Date(),
         updated_at: new Date()
       },
       {
-        name: 'Anatomy:',
+        name: "Anatomy:",
         created_at: new Date(),
         updated_at: new Date()
       },
       {
-        name: 'Biochemistry',
+        name: "Biochemistry",
         created_at: new Date(),
         updated_at: new Date()
       },
       {
-        name: 'Community Medicine/PSM',
+        name: "Community Medicine/PSM",
         created_at: new Date(),
         updated_at: new Date()
       },
       {
-        name: 'Dermatology',
+        name: "Dermatology",
         created_at: new Date(),
         updated_at: new Date()
       },
-      { name: 'ENT', created_at: new Date(), updated_at: new Date() },
+      { name: "ENT", created_at: new Date(), updated_at: new Date() },
       {
-        name: 'Family Medicine',
-        created_at: new Date(),
-        updated_at: new Date()
-      },
-      {
-        name: 'Forensic Medicine',
+        name: "Family Medicine",
         created_at: new Date(),
         updated_at: new Date()
       },
       {
-        name: 'General Medicine',
+        name: "Forensic Medicine",
         created_at: new Date(),
         updated_at: new Date()
       },
       {
-        name: 'General Surgery',
+        name: "General Medicine",
         created_at: new Date(),
         updated_at: new Date()
       },
       {
-        name: 'Microbiology',
+        name: "General Surgery",
         created_at: new Date(),
         updated_at: new Date()
       },
       {
-        name: 'Nuclear Medicine',
+        name: "Microbiology",
         created_at: new Date(),
         updated_at: new Date()
       },
       {
-        name: 'Orthopaedics',
+        name: "Nuclear Medicine",
         created_at: new Date(),
         updated_at: new Date()
       },
       {
-        name: 'Ophthalmology',
+        name: "Orthopaedics",
         created_at: new Date(),
         updated_at: new Date()
       },
       {
-        name: 'Obs & Gynaecology',
+        name: "Ophthalmology",
         created_at: new Date(),
         updated_at: new Date()
       },
       {
-        name: 'Palliative Medicine',
+        name: "Obs & Gynaecology",
         created_at: new Date(),
         updated_at: new Date()
       },
       {
-        name: 'Pathology',
+        name: "Palliative Medicine",
         created_at: new Date(),
         updated_at: new Date()
       },
       {
-        name: 'Pharmacology',
+        name: "Pathology",
         created_at: new Date(),
         updated_at: new Date()
       },
       {
-        name: 'Physiology',
+        name: "Pharmacology",
         created_at: new Date(),
         updated_at: new Date()
       },
       {
-        name: 'Paediatrics',
+        name: "Physiology",
         created_at: new Date(),
         updated_at: new Date()
       },
       {
-        name: 'Psychiatry',
+        name: "Paediatrics",
         created_at: new Date(),
         updated_at: new Date()
       },
       {
-        name: 'Pulmonology',
+        name: "Psychiatry",
         created_at: new Date(),
         updated_at: new Date()
       },
       {
-        name: 'Radiodiagnosis',
+        name: "Pulmonology",
         created_at: new Date(),
         updated_at: new Date()
       },
       {
-        name: 'Radiotherapy',
+        name: "Radiodiagnosis",
         created_at: new Date(),
         updated_at: new Date()
       },
       {
-        name: 'Tropical',
+        name: "Radiotherapy",
+        created_at: new Date(),
+        updated_at: new Date()
+      },
+      {
+        name: "Tropical",
         created_at: new Date(),
         updated_at: new Date()
       }

@@ -83,12 +83,12 @@ class UpdateJob extends AppointmentJob {
     templateData.push({
       small_icon: process.config.app.icon_android,
       app_id: process.config.one_signal.app_id, // TODO: add the same in pushNotification handler in notificationSdk
-      headings: { en: `Appointment update (${providerName})` },
+      headings: { en: `Appointment Update (${providerName})` },
       contents: {
         en: `${
           actorCategory === USER_CATEGORY.DOCTOR ||
           actorCategory === USER_CATEGORY.HSP
-            ? "Dr. "
+            ? "Dr."
             : ""
         }${name} updated an appointment with you. Tap here to know more!`
       },

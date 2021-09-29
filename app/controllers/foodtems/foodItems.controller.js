@@ -96,10 +96,7 @@ class FoodItemController extends Controller {
       const {
         food_item_id = null,
         food_item_detail_id = null
-      } = await foodItemService.create({
-        foodItemData,
-        userData
-      });
+      } = await foodItemService.create({ foodItemData, userData });
 
       let foodItemsApiData = {},
         foodItemDetailsApiData = {},

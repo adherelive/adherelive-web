@@ -98,8 +98,8 @@ export default class ExerciseService {
     try {
       if (exercise) {
         /*
-                        to prevent the admin and user created exercise update, following check was added
-                        */
+          to prevent the admin and user created exercise update, following check was added
+        */
         const exerciseExists =
           (await Database.getModel(TABLE_NAME).findOne({
             where: { id }
@@ -135,8 +135,8 @@ export default class ExerciseService {
         // update
         const { creator_type } = exerciseDetailExists || {};
         /*
-                        to prevent the admin and user created exercise update, following check was added
-                        */
+          to prevent the admin and user created exercise update, following check was added
+        */
         if (creator_type !== USER_CATEGORY.ADMIN) {
           await Database.getModel(exerciseDetailsTableName).update(data, {
             where: {
@@ -308,9 +308,9 @@ export default class ExerciseService {
 /*
 
 Executing (default): SELECT `exercises`.`id`, `exercises`.`name`, `exercises`.`created_at` AS `createdAt`, `exercises`.`updated_at` AS `updatedAt`, `exercises`.`deleted_at` AS `deletedAt`, `exercise_details`.`id` AS `exercise_details.id`, `exercise_details`.`exercise_id` AS `exercise_details.exercise_id`, `exercise_details`.`repetition_id` AS `exercise_details.repetition_id`, `exercise_details`.`calorific_value` AS `exercise_details.calorific_value`, `exercise_details`.`created_at` AS `exercise_details.createdAt`, `exercise_details`.`updated_at` AS `exercise_details.updatedAt`, `exercise_details`.`deleted_at` AS `exercise_details.deletedAt` 
-FROM `exercises` AS `exercises` LEFT OUTER JOIN `exercise_details` AS `exercise_details` ON `exercises`.`id` = `exercise_details`.`exercise_id` AND (`exercise_details`.`deleted_at` IS NULL) LEFT OUTER JOIN `exercise_user_created_mappings` AS `exercise_user_created_mapping` ON `exercises`.`id` = `exercise_user_created_mapping`.`exercise_id` AND (`exercise_user_created_mapping`.`deleted_at` IS NULL) WHERE (`exercises`.`deleted_at` IS NULL AND (`exercises`.`name` = 'exercise 1' AND `exercise_user_created_mapping`.`exercise_id` IS NULL)) LIMIT 1;
+  FROM `exercises` AS `exercises` LEFT OUTER JOIN `exercise_details` AS `exercise_details` ON `exercises`.`id` = `exercise_details`.`exercise_id` AND (`exercise_details`.`deleted_at` IS NULL) LEFT OUTER JOIN `exercise_user_created_mappings` AS `exercise_user_created_mapping` ON `exercises`.`id` = `exercise_user_created_mapping`.`exercise_id` AND (`exercise_user_created_mapping`.`deleted_at` IS NULL) WHERE (`exercises`.`deleted_at` IS NULL AND (`exercises`.`name` = 'exercise 1' AND `exercise_user_created_mapping`.`exercise_id` IS NULL)) LIMIT 1;
 
 Executing (default): SELECT `exercises`.*, `exercise_details`.`id` AS `exercise_details.id`, `exercise_details`.`exercise_id` AS `exercise_details.exercise_id`, `exercise_details`.`repetition_id` AS `exercise_details.repetition_id`, `exercise_details`.`calorific_value` AS `exercise_details.calorific_value`, `exercise_details`.`created_at` AS `exercise_details.createdAt`, `exercise_details`.`updated_at` AS `exercise_details.updatedAt`, `exercise_details`.`deleted_at` AS `exercise_details.deletedAt`
- FROM (SELECT `exercises`.`id`, `exercises`.`name`, `exercises`.`created_at` AS `createdAt`, `exercises`.`updated_at` AS `updatedAt`, `exercises`.`deleted_at` AS `deletedAt` FROM `exercises` AS `exercises` WHERE (`exercises`.`deleted_at` IS NULL AND (`exercises`.`name` = 'exercise 1' AND `exercise_user_created_mapping`.`exercise_id` IS NULL)) LIMIT 1) AS `exercises` LEFT OUTER JOIN `exercise_details` AS `exercise_details` ON `exercises`.`id` = `exercise_details`.`exercise_id` AND (`exercise_details`.`deleted_at` IS NULL) LEFT OUTER JOIN `exercise_user_created_mappings` AS `exercise_user_created_mapping` ON `exercises`.`id` = `exercise_user_created_mapping`.`exercise_id` AND (`exercise_user_created_mapping`.`deleted_at` IS NULL);
+  FROM (SELECT `exercises`.`id`, `exercises`.`name`, `exercises`.`created_at` AS `createdAt`, `exercises`.`updated_at` AS `updatedAt`, `exercises`.`deleted_at` AS `deletedAt` FROM `exercises` AS `exercises` WHERE (`exercises`.`deleted_at` IS NULL AND (`exercises`.`name` = 'exercise 1' AND `exercise_user_created_mapping`.`exercise_id` IS NULL)) LIMIT 1) AS `exercises` LEFT OUTER JOIN `exercise_details` AS `exercise_details` ON `exercises`.`id` = `exercise_details`.`exercise_id` AND (`exercise_details`.`deleted_at` IS NULL) LEFT OUTER JOIN `exercise_user_created_mappings` AS `exercise_user_created_mapping` ON `exercises`.`id` = `exercise_user_created_mapping`.`exercise_id` AND (`exercise_user_created_mapping`.`deleted_at` IS NULL);
 
 */

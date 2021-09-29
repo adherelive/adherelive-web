@@ -9,6 +9,7 @@ export const validationError = (res, isValid) => {
     response.setMessage(label ? label : message);
     return res.status(response.getStatusCode()).json(response.getResponse());
   } else {
+    return;
   }
 };
 

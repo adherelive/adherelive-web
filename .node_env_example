@@ -40,10 +40,10 @@ INVITE_EXPIRE_TIME=30
 DB_CONNECTION=mysql
 DB_DATABASE=adhere
 DB_DATABASE_NAME=adhere
-DB_HOST=mysql
+DB_HOST=adherelive-prod-db.mysql.database.azure.com
 DB_PORT=3306
-DB_USER=user
-DB_PASSWORD=password
+DB_USER=adherelive@adherelive-prod-db
+DB_PASSWORD=eK7tz4s3CBkYPjUaSBAl
 DB_DIALECT=mysql
 
 SALT_ROUNDS=5
@@ -96,8 +96,7 @@ MINIO_SECRET_KEY=Gc_Gj4sNAeo5zlSM56xPWa0dLpGaOUD_FtLiUydhKmOTDK15VbZeWb1wl9NwiD1
 MINIO_VOLUME_NAME=adhere_storage_stack
 MINIO_REGION=us-east-1
 MINIO_ENDPOINT=minio1
-MINIO_BUCKET_NAME=adhere-subharti
-#MINIO_BUCKET_NAME=bucket
+MINIO_BUCKET_NAME=adherelive-production
 
 ###### S3 #######
 EXPIRY_TIME=30
@@ -107,10 +106,10 @@ GETSTREAM_API_SECRET=mqdvv7jv26sfxmt8wahqv7p9vx77p7r3u9au5qzv6v9f9utk67v4vzf4tbv
 GETSTREAM_REGION=us-east
 GETSTREAM_APP_ID=95904
 
-ONE_SIGNAL_APP_ID=78b416ba-40f8-41a7-904a-baf7c708573c
-ONE_SIGNAL_KEY=MTBmODJhOWEtMTM5MC00MWJiLWJmMDUtYjg1YmZlOGQ4NzY0
+ONE_SIGNAL_APP_ID=a9a030ff-9d46-4cd0-b367-a91154fdde24
+ONE_SIGNAL_KEY=YjI3ZTY4YmMtY2NiNy00NjE3LTg1OWMtZTZkOTUwMzA1NDM0
 # urgent notification channel id
-URGENT_CHANNEL_ID=105aaf07-aa23-47d3-8792-e737aaf34b3c
+URGENT_CHANNEL_ID=801c9f8b-4327-480b-a0ea-9f990c4aa3df
 
 GOOGLE_CLIENT_ID=398277517704-eqh1lvm3872s2a5t916kua18gp60steu.apps.googleusercontent.com
 GOOGLE_CLIENT_SECRET=KszeHfBloxPaTayEXB_y6WQg
@@ -127,8 +126,6 @@ BRANCH_IO_KEY=key_live_hbL5zlRfxNiPzCmRlQcXVihbywdivtNo
 BRANCH_IO_BASE_URL=https://api2.branch.io/v1/url
 
 DEVELOPER_EMAIL=sagar.agrawal@adhere.live,vivek.asthana@adhere.live,gagneet.singh@adhere.live,vasu@adhere.live,sparsh.jaiswal@adhere.live
-
-
 SUPPORT_EMAIL=customersupport@adhere.live
 
 EVENT_FETCH_COUNT=7
@@ -194,4 +191,3 @@ SMS_HASH=E0/sT0hP9oL
 INACTIVITY_DAYS_NO=5
 
 DOCTOR_NAME_SEARCH_LIST_SIZE_LIMIT=10
-

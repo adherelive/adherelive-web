@@ -1,6 +1,6 @@
 "use strict";
 
-import {TABLE_NAME} from "../models/conditions";
+import { TABLE_NAME } from "../models/conditions";
 
 module.exports = {
   up: (queryInterface, Sequelize) => {
