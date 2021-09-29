@@ -1,4 +1,5 @@
 import Log from "../../../libs/log";
+
 const { RtcTokenBuilder, RtcRole } = require("agora-access-token");
 
 const appID = process.config.agora.app_id;

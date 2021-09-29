@@ -419,7 +419,8 @@ class VideoComponent extends Component {
     if (hasJoinedRoom) {
       if (
         (status === "waiting" || !video2connected) &&
-        status !== "loading" && status !== "started"
+        status !== "loading" &&
+        status !== "started"
       ) {
         showWaitngMsg = true;
       }

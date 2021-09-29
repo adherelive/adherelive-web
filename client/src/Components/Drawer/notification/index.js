@@ -763,7 +763,7 @@ class NotificationDrawer extends Component {
           <div className="flex align-center justify-space-between">
             <div className="wp20 flex align-center justify-center">
               <ClockCircleOutlined className="dark-sky-blue fs28" />
-              {/* <img src={vital_icon} 
+              {/* <img src={vital_icon}
               className="pointer h45 w45 " /> */}
             </div>
             <div className="wp75">

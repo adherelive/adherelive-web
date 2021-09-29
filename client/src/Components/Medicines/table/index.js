@@ -33,6 +33,7 @@ class MedicineTable extends Component {
   }
 
   componentDidMount() {}
+
   componentDidUpdate(prevProps, prevState) {
     console.log(
       "782657387923785623789233 CD UPDATEEEEEEEEEEEEEEEEEeeeeeeeeeeeeeee"

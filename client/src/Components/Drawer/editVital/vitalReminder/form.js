@@ -22,6 +22,7 @@ import {
   DAYS,
   ALTERNATE_DAYS
 } from "../../../../constant";
+
 const { Item: FormItem } = Form;
 
 const UNIT_FIELD = "unit";
@@ -78,6 +79,7 @@ class EditVitalForm extends Component {
       });
     }
   }
+
   scrollToTop = () => {
     let antForm = document.getElementsByClassName("Form")[0];
     let antDrawerBody = antForm.parentNode;

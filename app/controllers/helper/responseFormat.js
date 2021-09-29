@@ -4,6 +4,7 @@ class Response {
     this.statusCode = statusCode;
     this.data = {};
   }
+
   /**
    * @api {OPTIONS} /response Response format
    * @apiName responseFormat
@@ -94,18 +95,23 @@ class Response {
   getData() {
     return this.data;
   }
+
   setMessage(message) {
     this.message = message;
   }
+
   getMessage() {
     return this.message;
   }
+
   setError(error) {
     this.error = Object.assign({}, error);
   }
+
   getError() {
     return this.error;
   }
+
   /**
    * @api {OPTIONS} /getResponse Generates response
    * @apiName getResponse

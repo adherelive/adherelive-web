@@ -224,4 +224,5 @@ class ClinicRegister extends Component {
     );
   }
 }
+
 export default injectIntl(ClinicRegister);

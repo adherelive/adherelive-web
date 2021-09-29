@@ -1,5 +1,6 @@
 import * as constants from "../../../../config/constants";
 import Controller from "../../";
+
 const moment = require("moment");
 const jwt = require("jsonwebtoken");
 const request = require("request");
@@ -43,6 +44,7 @@ import {
   VERIFICATION_TYPE
 } from "../../../../constant";
 import { Proxy_Sdk, EVENTS } from "../../../proxySdk";
+
 const errMessage = require("../../../../config/messages.json").errMessages;
 import treatmentService from "../../../services/treatment/treatment.service";
 import MTreatmentWrapper from "../../../ApiWrapper/mobile/treatments";

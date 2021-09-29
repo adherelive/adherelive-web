@@ -58,6 +58,7 @@ import { downloadFileFromS3 } from "../mControllers/user/userHelper";
 
 // HELPERS...
 import * as AppointmentHelper from "./helper";
+
 const FILE_NAME = "WEB APPOINTMENT CONTROLLER";
 
 const Logger = new Log(FILE_NAME);

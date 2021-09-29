@@ -8,6 +8,7 @@ import ClockCircleOutlined from "@ant-design/icons/es/icons/ClockCircleOutlined"
 import CheckCircleOutlined from "@ant-design/icons/es/icons/CheckCircleOutlined";
 import StopOutlined from "@ant-design/icons/es/icons/StopOutlined";
 import Modal from "antd/es/modal";
+
 const { Item: TimelineItem } = Timeline;
 
 const COMPLETED = "completed";

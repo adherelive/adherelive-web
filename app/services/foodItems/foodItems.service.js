@@ -3,6 +3,7 @@ import Database from "../../../libs/mysql";
 import { TABLE_NAME } from "../../models/foodItems";
 import { TABLE_NAME as foodItemDetailTableName } from "../../models/foodItemDetails";
 import { USER_CATEGORY } from "../../../constant";
+
 const DEFAULT_ORDER = [["created_at", "DESC"]];
 
 class FoodItemsService {
@@ -279,10 +280,10 @@ class FoodItemsService {
       });
 
       /* nested raw true is not allowed by sequelize
-      Links:
-      https://github.com/sequelize/sequelize/issues/3897 (closed)
-      https://github.com/sequelize/sequelize/issues/5193 (open)
-      */
+            Links:
+            https://github.com/sequelize/sequelize/issues/3897 (closed)
+            https://github.com/sequelize/sequelize/issues/5193 (open)
+            */
       return JSON.parse(JSON.stringify(records));
     } catch (error) {
       throw error;

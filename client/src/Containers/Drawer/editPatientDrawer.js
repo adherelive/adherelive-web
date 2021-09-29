@@ -7,6 +7,7 @@ import { searchCondition } from "../../modules/conditions";
 import { searchSeverity } from "../../modules/severity";
 import { searchMedicine } from "../../modules/medicines";
 import { updatePatientAndCareplan } from "../../modules/doctors";
+
 const mapStateToProps = state => {
   const { auth } = state;
   const { authenticated_user, authenticated_category } = auth;

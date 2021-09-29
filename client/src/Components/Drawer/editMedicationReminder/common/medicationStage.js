@@ -25,6 +25,7 @@ const { Item: FormItem } = Form;
 const { Option } = Select;
 
 const FIELD_NAME = "medicine_id";
+
 class MedicationStage extends Component {
   constructor(props) {
     super(props);

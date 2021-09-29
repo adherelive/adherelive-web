@@ -8,6 +8,7 @@ import {
   onPassed
 } from "../helper";
 import { ACTIVITIES } from "../activityType";
+
 const { ActivitySdk } = require("../");
 const { REMINDER } = ACTIVITIES;
 

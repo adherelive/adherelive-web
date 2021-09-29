@@ -613,6 +613,7 @@ class DoctorProfilePage extends Component {
     newQualificationDegree[qualification_id] = false;
     this.setState({ edit_qualification_degree: newQualificationDegree });
   };
+
   async handleDegreeSearch(data) {
     try {
       if (data) {
@@ -634,6 +635,7 @@ class DoctorProfilePage extends Component {
       this.setState({ fetchingDegrees: false });
     }
   }
+
   getDegreesOption = () => {
     const { degrees = {} } = this.props;
 
@@ -673,6 +675,7 @@ class DoctorProfilePage extends Component {
     newQualificationCollege[qualification_id] = false;
     this.setState({ edit_qualification_college: newQualificationCollege });
   };
+
   async handleCollegeSearch(data) {
     try {
       if (data) {
@@ -694,6 +697,7 @@ class DoctorProfilePage extends Component {
       this.setState({ fetchingColleges: false });
     }
   }
+
   getCollegesOption = () => {
     const { colleges = {} } = this.props;
 

@@ -6,6 +6,7 @@ import {
 } from "../../../../constant";
 import TableStatus from "../../../../Helper/TableStatus";
 import messages from "../messages";
+
 export default props => {
   const { doctorData, userData, formatMessage } = props || {};
   const { basic_info: { full_name, gender, profile_pic } = {} } =

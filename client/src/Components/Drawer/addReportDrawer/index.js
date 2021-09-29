@@ -400,6 +400,7 @@ class addReportDrawer extends Component {
       close();
     }
   };
+
   render() {
     const { visible } = this.props;
     const { name, documents, test_date, submitting = false } = this.state;

@@ -11,6 +11,7 @@ import {
   getDoctorDetails,
   getDoctorProfileDetails
 } from "../../modules/doctors";
+
 const mapStateToProps = state => {
   const { auth, users, doctors, onBoarding, doctor_clinics } = state;
   const { authenticated_user, authenticated_category } = auth;

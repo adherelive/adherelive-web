@@ -76,4 +76,5 @@ class Steps extends Component {
     );
   }
 }
+
 export default withRouter(injectIntl(Steps));

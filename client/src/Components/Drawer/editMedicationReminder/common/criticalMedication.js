@@ -5,6 +5,7 @@ import { Checkbox, Form } from "antd";
 const { Item: FormItem } = Form;
 
 const FIELD_NAME = "critical";
+
 class CriticalMedication extends Component {
   componentDidMount() {
     const {
@@ -12,6 +13,7 @@ class CriticalMedication extends Component {
     } = this.props;
     validateFields();
   }
+
   componentWillUnmount() {
     const {
       form: { validateFields }

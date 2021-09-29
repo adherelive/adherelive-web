@@ -3,6 +3,7 @@ import BaseFoodItem from "../../../services/foodItems/index";
 import FoodItemService from "../../../services/foodItems/foodItems.service";
 
 import FoodItemDetailsWrapper from "../foodItemDetails";
+
 class FoodItemWrapper extends BaseFoodItem {
   constructor(data) {
     super(data);

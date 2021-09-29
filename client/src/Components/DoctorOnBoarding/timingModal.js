@@ -575,4 +575,5 @@ class TimingModal extends Component {
     );
   }
 }
+
 export default injectIntl(TimingModal);

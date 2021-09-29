@@ -139,6 +139,8 @@ class MedicationStage extends Component {
     );
   };
 
+  CustomSearchBox = connectSearchBox(this.SearchBox);
+
   getStagesOption = () => {
     const { medicines = {} } = this.props;
     // let medicationStagesOption = [];
@@ -266,8 +268,6 @@ class MedicationStage extends Component {
     console.log("7865467890765467890");
     this.setState({ searching_medicine: true });
   };
-
-  CustomSearchBox = connectSearchBox(this.SearchBox);
 
   render() {
     const {

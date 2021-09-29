@@ -24,6 +24,7 @@ class AdminMedicine extends Component {
       currentTab: ALL_TABS.PUBLIC
     };
   }
+
   componentDidMount() {
     this.handleGetAllPublicMedicines();
     this.handleGetAllPrivateMedicines();

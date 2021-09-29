@@ -8,6 +8,7 @@ import { withRouter } from "react-router-dom";
 
 const LOGO = "logo";
 const DASHBOARD = "dashboard";
+
 // const PROFILE = "profile";
 
 class SideMenu extends Component {

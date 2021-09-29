@@ -7,6 +7,7 @@ import {
   onStart
 } from "../helper";
 import { ACTIVITIES } from "../activityType";
+
 const { ActivitySdk } = require("../");
 const { ADVERSE_EVENT } = ACTIVITIES;
 

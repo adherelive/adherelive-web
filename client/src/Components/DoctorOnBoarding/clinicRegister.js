@@ -678,4 +678,5 @@ class ClinicRegister extends Component {
     );
   }
 }
+
 export default withRouter(injectIntl(ClinicRegister));

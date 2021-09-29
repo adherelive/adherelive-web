@@ -1,5 +1,6 @@
 import { Sequelize } from "sequelize";
 import Logger from "./log";
+
 const Log = new Logger("SEQUELIZE QUERY");
 // const Config = require("../config/config");
 // Config();

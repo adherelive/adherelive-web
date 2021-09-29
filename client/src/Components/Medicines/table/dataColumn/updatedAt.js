@@ -1,5 +1,6 @@
 import React from "react";
 import moment from "moment";
+
 export default props => {
   const { medicineData = {} } = props || {};
   const { updated_at = "" } = medicineData || {};

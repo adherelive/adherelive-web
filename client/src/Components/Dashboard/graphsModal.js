@@ -105,4 +105,5 @@ class GraphsModal extends Component {
     );
   }
 }
+
 export default injectIntl(GraphsModal);
