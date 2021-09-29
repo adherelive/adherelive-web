@@ -7,7 +7,6 @@ import CarePlanController from "../../../app/controllers/carePlans/carePlan.cont
 import * as validator from "./validator";
 import isAllowed from "../../middlewares/permissions";
 import PERMISSIONS from "../../../config/permissions";
-
 const router = express.Router();
 
 // router.post('/create-medications-and-appointments/:carePlanId',

@@ -55,12 +55,7 @@ const mapDispatchToProps = dispatch => {
     getPatientPreferenceDietDetails: patient_id =>
       dispatch(getPatientPreferenceDietDetails(patient_id)),
     updateDietTotalCalories: ({ total_calories, diet_id }) =>
-      dispatch(
-        updateDietTotalCalories({
-          total_calories,
-          diet_id
-        })
-      )
+      dispatch(updateDietTotalCalories({ total_calories, diet_id }))
   };
 };
 

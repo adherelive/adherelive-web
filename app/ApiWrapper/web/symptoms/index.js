@@ -13,7 +13,6 @@ import Logger from "../../../../libs/log";
 import DocumentService from "../../../services/uploadDocuments/uploadDocuments.service";
 import { ACTIVITY_TYPE, DOCUMENT_PARENT_TYPE } from "../../../../constant";
 import DocumentWrapper from "../uploadDocument";
-
 const Log = new Logger("API_WRAPPER > WEB > SYMPTOMS");
 
 class SymptomWrapper extends BaseSymptom {

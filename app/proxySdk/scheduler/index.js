@@ -71,7 +71,6 @@ class Scheduler {
       throw error;
     }
   }
-
   async addScheduledJob(data) {
     try {
     } catch (error) {

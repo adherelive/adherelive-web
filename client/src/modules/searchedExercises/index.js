@@ -2,7 +2,6 @@ import { doRequest } from "../../Helper/network";
 import { REQUEST_TYPE } from "../../constant";
 import { searchExerciseUrl } from "../../Helper/urls/exercises";
 import { ADD_EXERCISE_COMPLETED, EDIT_EXERCISE_COMPLETED } from "../exercises";
-
 export const SEARCH_EXERCISE_START = "SEARCH_EXERCISE_START";
 export const SEARCH_EXERCISE_COMPLETED = "SEARCH_EXERCISE_COMPLETED";
 export const SEARCH_EXERCISE_FAILED = "SEARCH_EXERCISE_FAILED";

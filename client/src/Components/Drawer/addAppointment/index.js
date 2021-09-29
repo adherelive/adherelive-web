@@ -265,7 +265,7 @@ class AddAppointment extends Component {
         >
           {/* <div className="flex direction-row justify-space-between"> */}
           <FormWrapper wrappedComponentRef={setFormRef} {...this.props} />
-          {/* <CalendarTimeSelecton
+          {/* <CalendarTimeSelecton 
                 className="calendar-section wp60"
             /> */}
           {/* </div> */}

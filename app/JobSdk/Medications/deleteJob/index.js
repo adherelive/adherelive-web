@@ -72,7 +72,7 @@ class DeleteJob extends MedicationJob {
       app_id: process.config.one_signal.app_id, // TODO: add the same in pushNotification handler in notificationSdk
       headings: { en: `Medication Delete (${providerName})` },
       contents: {
-        en: `Your ${actorCategory} ${name} has deleted a medication. Tap here to know more!`
+        en: `${name}(${actorCategory}) has deleted a medication. Tap here to know more!`
       },
       include_player_ids: [...playerIds],
       priority: 10,

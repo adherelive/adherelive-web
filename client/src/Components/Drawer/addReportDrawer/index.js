@@ -271,10 +271,7 @@ class addReportDrawer extends Component {
         const { originFileObj = {} } = file;
         data.set("files", originFileObj);
 
-        this.setState({
-          uploading: true,
-          submitting: true
-        });
+        this.setState({ uploading: true, submitting: true });
         const response = await uploadReport(patient_id, data);
         const {
           status = false,
@@ -403,7 +400,6 @@ class addReportDrawer extends Component {
       close();
     }
   };
-
   render() {
     const { visible } = this.props;
     const { name, documents, test_date, submitting = false } = this.state;

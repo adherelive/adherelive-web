@@ -10,7 +10,6 @@ import {
 } from "../../modules/exercises";
 import { searchExercise } from "../../modules/searchedExercises";
 import { clearLatestCreatedExercise } from "../../modules/latestCreatedExercise";
-
 const mapStateToProps = state => {
   const { auth } = state;
   const { authenticated_user, authenticated_category } = auth;

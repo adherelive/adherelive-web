@@ -367,7 +367,7 @@ class EditAppointment extends Component {
             enableSubmit={this.enableSubmit}
             {...this.props}
           />
-          {/* <CalendarTimeSelecton
+          {/* <CalendarTimeSelecton 
                 className="calendar-section wp60"
             /> */}
           {/* </div> */}

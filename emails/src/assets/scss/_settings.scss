@@ -94,16 +94,16 @@ $stat-font-size: 40px;
 // ---------
 
 $button-padding: (
-        tiny: 4px 8px 4px 8px,
-        small: 5px 10px 5px 10px,
-        default: 8px 16px 8px 16px,
-        large: 10px 20px 10px 20px
+  tiny: 4px 8px 4px 8px,
+  small: 5px 10px 5px 10px,
+  default: 8px 16px 8px 16px,
+  large: 10px 20px 10px 20px
 );
 $button-font-size: (
-        tiny: 10px,
-        small: 12px,
-        default: 14px,
-        large: 20px
+  tiny: 10px,
+  small: 12px,
+  default: 14px,
+  large: 20px
 );
 $button-color: $white;
 $button-color-alt: $medium-gray;
@@ -121,7 +121,7 @@ $callout-background: $white;
 $callout-background-fade: 85%;
 $callout-padding: 3px;
 $callout-margin-bottom: 0;
-$callout-border: none; //0px solid darken($callout-background, 20%);
+$callout-border: none ;//0px solid darken($callout-background, 20%);
 $callout-border-secondary: 1px solid darken($secondary-color, 20%);
 $callout-border-success: 1px solid darken($success-color, 20%);
 $callout-border-warning: 1px solid darken($warning-color, 20%);

@@ -579,15 +579,13 @@ class EditPatientDrawer extends Component {
         {/* us */}
         <Option value="1">
           <div className="flex align-center">
-            <img src={us} className="w16 h16" />
-            <div className="ml4">+1</div>
+            <img src={us} className="w16 h16" /> <div className="ml4">+1</div>
           </div>
         </Option>
         {/* uk */}
         <Option value="44">
           <div className="flex align-center">
-            <img src={uk} className="w16 h16" />
-            <div className="ml4">+44</div>
+            <img src={uk} className="w16 h16" /> <div className="ml4">+44</div>
           </div>
         </Option>
         {/* china */}
@@ -1197,6 +1195,9 @@ class EditPatientDrawer extends Component {
     if (visible !== true) {
       return null;
     }
+
+    console.log("821387612873618276387126387", { state: this.state });
+
     return (
       <Fragment>
         <Drawer

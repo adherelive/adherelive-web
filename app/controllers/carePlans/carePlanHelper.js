@@ -129,8 +129,6 @@ export const getCareplanData = async ({
       }
     }
 
-    Log.info(`8912731893 currentCareplanId ${currentCareplanId}`);
-
     // appointments
     const allAppointments =
       (await appointmentService.getAppointmentByData({

@@ -34,7 +34,6 @@ import {
 } from "../../../constant";
 
 import WorkoutResponsesService from "../../services/workoutResponses/workoutResponses.service";
-
 const Log = new Logger("WEB > WORKOUT > CONTROLLER");
 
 class WorkoutController extends Controller {

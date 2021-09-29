@@ -180,7 +180,8 @@ class MDoctorWrapper extends BaseDoctor {
             ]
           },
           order: [["expired_on", "ASC"]],
-          attributes: ["id"]
+          attributes: ["id"],
+          userRoleId: userRoleIds[index]
         })) || [];
 
       carePlanIds[userRoleIds[index]] = [

@@ -58,14 +58,7 @@ class MedicineService {
 
       console.log(
         "329847562389462364872384122 ************************************8******8888",
-        {
-          data,
-          offset,
-          limit,
-          public_medicine,
-          doctorIds,
-          medicine
-        }
+        { data, offset, limit, public_medicine, doctorIds, medicine }
       );
       return medicine;
     } catch (error) {

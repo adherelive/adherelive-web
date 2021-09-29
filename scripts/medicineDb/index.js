@@ -1,7 +1,6 @@
 import Papa from "papaparse";
 import fs from "fs";
 import path from "path";
-
 const Config = require("../../config/config");
 
 Config();

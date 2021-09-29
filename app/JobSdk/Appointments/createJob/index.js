@@ -99,9 +99,9 @@ class CreateJob extends AppointmentJob {
         en: `${
           actorCategory === USER_CATEGORY.DOCTOR ||
           actorCategory === USER_CATEGORY.HSP
-            ? "Dr. "
+            ? "Dr."
             : ""
-        }${name} created an appointment for you. Tap here to know more!`
+        }${name} created an appointment with you. Tap here to know more!`
       },
       include_player_ids: [...playerIds],
       priority: 10,

@@ -2386,18 +2386,18 @@ class PatientController extends Controller {
 
       let allPatientIds = [];
       /*
-            userId (auth) [DOCTOR]
+      userId (auth) [DOCTOR]
 
-            SORT
-            created_at [asc, desc]
-            name [asc, desc]
+      SORT
+      created_at [asc, desc]
+      name [asc, desc]
 
-            FILTER
-            diagnosis [description, type]
-            treatment
+      FILTER
+      diagnosis [description, type]
+      treatment
 
-            doctors -> careplans -> patients
-            */
+      doctors -> careplans -> patients
+      */
 
       const {
         offset = 0,
@@ -2457,6 +2457,9 @@ class PatientController extends Controller {
           const watchlistRecords = await doctorPatientWatchlistService.getAllByData(
             { user_role_id: userRoleId }
           );
+
+          // watchlisted patient ids
+
           if (watchlistRecords && watchlistRecords.length) {
             for (let i = 0; i < watchlistRecords.length; i++) {
               const watchlistWrapper = await DoctorPatientWatchlistWrapper(
@@ -2477,6 +2480,7 @@ class PatientController extends Controller {
           // watchlistQuery = `AND carePlan.doctor_id = ${userCategoryId} AND carePlan.patient_id IN (${watchlist_patient_ids})`;
         }
 
+        // filter to get name sorted paginated data
         if (sort_name) {
           const order = sort_name === "0" ? "ASC" : "DESC";
           [count, patientsForDoctor] =
@@ -2535,6 +2539,8 @@ class PatientController extends Controller {
               })) || [];
           }
         } else if (filter_diagnosis) {
+          // diagnosis filter
+
           let diagnosis_type = null;
 
           if (DIAGNOSIS_TYPE.FINAL.text.includes(filter_diagnosis)) {

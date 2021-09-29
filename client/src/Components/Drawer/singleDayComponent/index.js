@@ -367,6 +367,7 @@ class DayDiet extends Component {
       // else no food group id key
       editData["food_group_id"] = food_group_id;
     }
+
     this.setState({
       selectedTime: time,
       editFoodGroupDrawerVisible: true,

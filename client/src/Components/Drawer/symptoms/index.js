@@ -37,7 +37,6 @@ class SymptomsDrawer extends Component {
   }
 
   componentDidMount() {}
-
   formatMessage = data => this.props.intl.formatMessage(data);
 
   getBodyPartName = selected_part => {

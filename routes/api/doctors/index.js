@@ -125,6 +125,13 @@ router.delete(
   PaymentController.removeDoctorPaymentProduct
 );
 
+// router.post(
+//   "/profile",
+//   Authenticate,
+//   isAllowed(PERMISSIONS.DOCTORS.ADD_PROFILE),
+//   DoctorController.addProfile
+// );
+
 router.post(
   "/:id",
   Authenticate,

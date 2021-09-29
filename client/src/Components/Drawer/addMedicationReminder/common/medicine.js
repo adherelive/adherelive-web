@@ -74,7 +74,6 @@ class Medicine extends Component {
     this.setState({ inputText: input });
     this.setState({ hits });
   };
-
   getHighlightedText(text, highlight) {
     const parts = text.split(new RegExp(`(${highlight})`, "gi"));
     return (

@@ -3,7 +3,6 @@ import {
   GET_PUBLIC_MEDICINES_COMPLETED,
   DELETE_MEDICINE_COMPLETED
 } from "../../medicines";
-
 const PUBLIC = "public";
 
 function getPublicAdminMedicinesReducer(state, data) {

@@ -3,7 +3,6 @@ import twilioService from "../../services/twilio/twilio.service";
 import Controller from "../";
 
 import Log from "../../../libs/log_new";
-
 Log.fileName("WEB > TWILIO > CONTROLLER");
 
 class TwilioController extends Controller {

@@ -1,5 +1,4 @@
 import { REPEAT_TYPE } from "../../../constant";
-
 const moment = require("moment");
 
 const isBeforeOffset = date => {

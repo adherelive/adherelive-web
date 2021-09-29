@@ -9,7 +9,6 @@ import {
 } from "../../modules/foodItems";
 import { searchFood } from "../../modules/searchedFoodItems";
 import { clearLatestCreatedFoodItem } from "../../modules/latestCreatedFood";
-
 const mapStateToProps = state => {
   const { auth } = state;
   const { authenticated_user, authenticated_category } = auth;

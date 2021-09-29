@@ -9,7 +9,6 @@ const { Item: FormItem } = Form;
 
 const FIELD_NAME = "strength";
 const MAXIMUM_LENGTH = 10000;
-
 class MedicationStrength extends Component {
   componentDidMount() {
     const {
@@ -17,7 +16,6 @@ class MedicationStrength extends Component {
     } = this.props;
     validateFields();
   }
-
   componentWillUnmount() {
     const {
       form: { validateFields }

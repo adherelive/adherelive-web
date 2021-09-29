@@ -3819,9 +3819,10 @@ class DoctorController extends Controller {
           crIdsForMatchingTreatmentType.push(careplan_id);
         }
 
-        const allPatients = await carePlanService.getPaginatedDataOfPatients(
-          data
-        );
+        const allPatients = await carePlanService.getPaginatedDataOfPatients({
+          ...data,
+          secondary_careplan_ids
+        });
 
         console.log("35732432542730078783246722223 ======>>>>> ", {
           allPatients,

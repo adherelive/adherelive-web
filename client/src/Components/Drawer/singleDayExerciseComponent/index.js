@@ -182,6 +182,7 @@ class DayWorkout extends Component {
       // else no exercise group id key
       editData["exercise_group_id"] = exercise_group_id;
     }
+
     this.setState({
       editExerciseGroupDrawerVisible: true,
       editExerciseGroupDetails: editData

@@ -76,7 +76,7 @@ class CreateJob extends WorkoutJob {
       app_id: process.config.one_signal.app_id,
       headings: { en: `Workout Created (${providerName})` },
       contents: {
-        en: `Your ${actorCategory} ${name} has created a workout with you. Tap here to know more!`
+        en: `${name}(${actorCategory}) has created a workout with you. Tap here to know more!`
       },
       include_player_ids: [...playerIds],
       priority: 10,

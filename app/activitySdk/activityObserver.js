@@ -1,7 +1,6 @@
 import FollowUpActivity from "./followUp";
 import ReminderActivity from "./reminder";
 import MedicationReminderActivity from "./medicationReminder";
-
 const Log = require("../../libs/log")("activitySdk:ActivityObserver");
 
 class ActivityObserver {

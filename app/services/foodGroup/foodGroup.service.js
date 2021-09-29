@@ -1,7 +1,6 @@
 import Database from "../../../libs/mysql";
 import { TABLE_NAME } from "../../models/foodGroups";
 import { TABLE_NAME as portionTableName } from "../../models/portions";
-
 const DEFAULT_ORDER = [["created_at", "DESC"]];
 
 class FoodGroupService {

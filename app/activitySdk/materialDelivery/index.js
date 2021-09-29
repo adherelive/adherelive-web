@@ -10,7 +10,6 @@ import {
   onMarkInComplete
 } from "../helper";
 import { ACTIVITIES } from "../activityType";
-
 const { MATERIAL_DELIVERY } = ACTIVITIES;
 const { ActivitySdk } = require("../");
 

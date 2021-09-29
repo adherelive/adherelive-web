@@ -327,7 +327,6 @@ class ChatPopUp extends Component {
       this.scrollToBottom();
     }
   }
-
   tick = async () => {
     const { authenticated_user } = this.props;
     const members = this.channel ? await this.channel.getMembers() : [];

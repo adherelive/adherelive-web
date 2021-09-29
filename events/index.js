@@ -1,6 +1,5 @@
 import Log from "../libs/log";
 import schedule from "node-schedule";
-
 const Logger = new Log("EVENT SCHEDULE CREATOR");
 
 // FOR TEST...

@@ -1,6 +1,6 @@
 {
   "name": "adherelive",
-  "version": "2.1.0",
+  "version": "2.0.7",
   "description": "all packages for the adherelive web package",
   "main": "constant.js",
   "author": "",

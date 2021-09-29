@@ -17,7 +17,6 @@ class Formulation extends Component {
     } = this.props;
     validateFields();
   }
-
   componentWillUnmount() {
     const {
       form: { validateFields }

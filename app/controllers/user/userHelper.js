@@ -12,7 +12,6 @@ import UserRolesWrapper from "../../ApiWrapper/web/userRoles";
 // import  EVENTS from "../../proxySdk/proxyEvents";
 import minioService from "../../../app/services/minio/minio.service";
 import md5 from "js-md5";
-
 const chalk = require("chalk");
 import base64 from "js-base64";
 import bcrypt from "bcrypt";
@@ -272,14 +271,14 @@ export const createNewUser = async (
     let uId = userInfo.get("id");
 
     const emailPayload = {
-      title: "AdhereLive: Verification Mail",
+      title: "Verification mail",
       toAddress: email,
       templateName: EMAIL_TEMPLATE_NAME.WELCOME,
       templateData: {
         title: "Doctor",
         link: process.config.WEB_URL + process.config.app.invite_link + link,
         inviteCard: "",
-        mainBodyText: "We are happy that you chose the AdhereLive platform.",
+        mainBodyText: "We are really happy that you chose us.",
         subBodyText: "Please verify your account",
         buttonText: "Verify",
         host: process.config.WEB_URL,

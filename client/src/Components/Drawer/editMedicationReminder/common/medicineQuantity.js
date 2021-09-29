@@ -22,7 +22,6 @@ class MedicineQuantity extends Component {
     } = this.props;
     validateFields();
   }
-
   componentWillUnmount() {
     const {
       form: { validateFields }

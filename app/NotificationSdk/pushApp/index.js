@@ -3,7 +3,6 @@ import Logger from "../../../libs/log";
 import fetch from "node-fetch";
 
 const Log = new Logger("NOTIFICATION_SDK > PUSH_APP");
-
 // Log.filename("NOTIFICATION_SDK > PUSH_APP");
 
 class PushNotification {

@@ -1,5 +1,4 @@
 let stream = require("getstream");
-
 class Notifier {
   constructor(payload) {
     this.key = process.config.getstream.API_KEY;

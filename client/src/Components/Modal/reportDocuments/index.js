@@ -16,7 +16,6 @@ class ReportDocuments extends Component {
       viewModalSrc: ""
     };
   }
-
   componentDidMount() {}
 
   getImageView = ({ src = "", id, name }) => {

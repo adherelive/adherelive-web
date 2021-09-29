@@ -99,7 +99,7 @@ class PriorJob extends AppointmentJob {
     templateData.push({
       small_icon: process.config.app.icon_android,
       app_id: process.config.one_signal.app_id,
-      headings: { en: `Upcoming appointment reminder (${providerName})` },
+      headings: { en: `Upcoming Appointment Reminder (${providerName})` },
       contents: {
         en: `An appointment ${appointmentType}-${type_description}${
           radiology_type ? `-${radiology_type}` : ""

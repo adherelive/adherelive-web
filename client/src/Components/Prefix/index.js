@@ -17,7 +17,6 @@ import japan from "../../Assets/images/japan.png";
 import china from "../../Assets/images/china.png";
 import switzerland from "../../Assets/images/switzerland.png";
 import france from "../../Assets/images/france.png";
-
 const { Item: FormItem } = Form;
 const { Option } = Select;
 const FIELD_NAME = "prefix";
@@ -74,14 +73,14 @@ class Prefix extends Component {
             {/* us */}
             <Option value="1">
               <div className="flex align-center">
-                <img src={us} className="w16 h16" />
+                <img src={us} className="w16 h16" />{" "}
                 <div className="ml4">+1</div>
               </div>
             </Option>
             {/* uk */}
             <Option value="44">
               <div className="flex align-center">
-                <img src={uk} className="w16 h16" />
+                <img src={uk} className="w16 h16" />{" "}
                 <div className="ml4">+44</div>
               </div>
             </Option>

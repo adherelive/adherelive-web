@@ -418,7 +418,6 @@ class editReportDrawer extends Component {
       close();
     }
   };
-
   render() {
     const { visible } = this.props;
     const { name, new_documents } = this.state;

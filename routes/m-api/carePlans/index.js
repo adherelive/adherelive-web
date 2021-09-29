@@ -13,6 +13,7 @@ import PERMISSIONS from "../../../config/permissions";
 const router = express.Router();
 
 // router.post('/create-medications-and-appointments/:carePlanId',
+
 router.post(
   "/profile",
   Authenticated,

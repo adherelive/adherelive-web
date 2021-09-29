@@ -55,12 +55,7 @@ const mapDispatchToProps = dispatch => {
     getPatientCarePlanDetails: patientId =>
       dispatch(getPatientCarePlanDetails(patientId)),
     updateWorkoutTotalCalories: ({ workout_id, total_calories }) =>
-      dispatch(
-        updateWorkoutTotalCalories({
-          workout_id,
-          total_calories
-        })
-      )
+      dispatch(updateWorkoutTotalCalories({ workout_id, total_calories }))
   };
 };
 

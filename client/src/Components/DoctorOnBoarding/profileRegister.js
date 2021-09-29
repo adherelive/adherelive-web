@@ -685,63 +685,61 @@ class Profileregister extends Component {
         {/* india */}
         <Option value="91">
           <div className="flex align-center">
-            <img src={india} className="w16 h16" />
+            <img src={india} className="w16 h16" />{" "}
             <div className="ml4">+91</div>
           </div>
         </Option>
         {/* australia */}
         <Option value="61">
           <div className="flex align-center">
-            <img src={australia} className="w16 h16" />
+            <img src={australia} className="w16 h16" />{" "}
             <div className="ml4">+61</div>
           </div>
         </Option>
         {/* us */}
         <Option value="1">
           <div className="flex align-center">
-            <img src={us} className="w16 h16" />
-            <div className="ml4">+1</div>
+            <img src={us} className="w16 h16" /> <div className="ml4">+1</div>
           </div>
         </Option>
         {/* uk */}
         <Option value="44">
           <div className="flex align-center">
-            <img src={uk} className="w16 h16" />
-            <div className="ml4">+44</div>
+            <img src={uk} className="w16 h16" /> <div className="ml4">+44</div>
           </div>
         </Option>
         {/* china */}
         <Option value="86">
           <div className="flex align-center">
-            <img src={china} className="w16 h16" />
+            <img src={china} className="w16 h16" />{" "}
             <div className="ml4">+86</div>
           </div>
         </Option>
         {/* japan */}
         <Option value="81">
           <div className="flex align-center">
-            <img src={japan} className="w16 h16" />
+            <img src={japan} className="w16 h16" />{" "}
             <div className="ml4">+81</div>
           </div>
         </Option>
         {/* germany */}
         <Option value="49">
           <div className="flex align-center">
-            <img src={germany} className="w16 h16" />
+            <img src={germany} className="w16 h16" />{" "}
             <div className="ml4">+49</div>
           </div>
         </Option>
         {/* france */}
         <Option value="33">
           <div className="flex align-center">
-            <img src={france} className="w16 h16" />
+            <img src={france} className="w16 h16" />{" "}
             <div className="ml4">+33</div>
           </div>
         </Option>
         {/* switzerland */}
         <Option value="41">
           <div className="flex align-center">
-            <img src={switzerland} className="w16 h16" />
+            <img src={switzerland} className="w16 h16" />{" "}
             <div className="ml4">+41</div>
           </div>
         </Option>
@@ -749,28 +747,28 @@ class Profileregister extends Component {
         {/* russia */}
         <Option value="7">
           <div className="flex align-center">
-            <img src={russia} className="w16 h16" />
+            <img src={russia} className="w16 h16" />{" "}
             <div className="ml4">+7</div>
           </div>
         </Option>
         {/* south africa */}
         <Option value="27">
           <div className="flex align-center">
-            <img src={southAfrica} className="w16 h16" />
+            <img src={southAfrica} className="w16 h16" />{" "}
             <div className="ml4">+27</div>
           </div>
         </Option>
         {/* pakistan */}
         <Option value="92">
           <div className="flex align-center">
-            <img src={pakistan} className="w16 h16" />
+            <img src={pakistan} className="w16 h16" />{" "}
             <div className="ml4">+92</div>
           </div>
         </Option>
         {/* bangladesh */}
         <Option value="880">
           <div className="flex align-center">
-            <img src={bangladesh} className="w16 h16" />
+            <img src={bangladesh} className="w16 h16" />{" "}
             <div className="ml4">+880</div>
           </div>
         </Option>
@@ -989,5 +987,4 @@ class Profileregister extends Component {
     );
   }
 }
-
 export default withRouter(injectIntl(Profileregister));

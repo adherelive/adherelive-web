@@ -4,7 +4,6 @@ import {
   MAKE_MEDICINE_PUBLIC_COMPLETED,
   DELETE_MEDICINE_COMPLETED
 } from "../../medicines";
-
 const PRIVATE = "private";
 
 function getPrivateSearchMedicinesReducer(state, data) {

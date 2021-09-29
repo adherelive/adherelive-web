@@ -21,11 +21,9 @@ class VitalOccurence extends Component {
       fetchingVitals: false
     };
   }
-
   componentDidMount() {
     this.getStagesOption();
   }
-
   getStagesOption = () => {
     if (!this.state.fetchingVitals) {
       const { getVitalOccurence } = this.props;

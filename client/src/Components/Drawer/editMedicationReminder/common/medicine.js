@@ -155,10 +155,7 @@ class Medicine extends Component {
             key={i}
             style={
               part.toLowerCase() === highlight.toLowerCase()
-                ? {
-                    fontWeight: "bold",
-                    backgroundColor: "orange"
-                  }
+                ? { fontWeight: "bold", backgroundColor: "orange" }
                 : {}
             }
           >

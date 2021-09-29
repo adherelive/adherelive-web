@@ -12,7 +12,6 @@ import { connect } from "react-redux";
 import { searchDoctorEmail } from "../../modules/doctors";
 
 import { getDoctorDetails } from "../../modules/doctors";
-
 const mapStateToProps = state => {
   const { auth, users, onBoarding, doctors, emails = {} } = state;
 

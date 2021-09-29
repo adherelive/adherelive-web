@@ -191,16 +191,10 @@ class SearchPatient extends Component {
             });
           }
         } else {
-          this.setState({
-            patient_ids: [],
-            fetchingPatients: false
-          });
+          this.setState({ patient_ids: [], fetchingPatients: false });
         }
       } else {
-        this.setState({
-          patient_ids: [],
-          fetchingPatients: false
-        });
+        this.setState({ patient_ids: [], fetchingPatients: false });
       }
     } catch (err) {
       console.log("err23423423423423432432432", err);

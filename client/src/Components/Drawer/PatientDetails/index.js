@@ -226,12 +226,6 @@ class PatientDetailsDrawer extends Component {
 
       let docName = "";
 
-      console.log("324242347298472983748274923748237489", {
-        organizer,
-        organizer_id,
-        doctors
-      }); // TODO: check this
-
       // for(const doctorId in doctors) {
       //   const {basic_info: {full_name, user_id} = {}} = doctors[doctorId] || {};
       //   if(user_id === organizer_id) {

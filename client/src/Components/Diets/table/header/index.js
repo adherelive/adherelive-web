@@ -8,7 +8,6 @@ import RepeatDays from "../dataColumn/repeatDays";
 import Calories from "../dataColumn/calories";
 import Edit from "../dataColumn/edit";
 import TimelineButton from "../dataColumn/timelineButton";
-
 export default props => {
   const { formatMessage } = props || {};
 

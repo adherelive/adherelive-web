@@ -44,10 +44,10 @@ class MealTemplatesService {
       });
 
       /* nested raw true is not allowed by sequelize
-            Links:
-            https://github.com/sequelize/sequelize/issues/3897 (closed)
-            https://github.com/sequelize/sequelize/issues/5193 (open)
-            */
+      Links:
+      https://github.com/sequelize/sequelize/issues/3897 (closed)
+      https://github.com/sequelize/sequelize/issues/5193 (open)
+      */
       return JSON.parse(JSON.stringify(mealTemplate));
     } catch (error) {
       throw error;
