@@ -14,11 +14,7 @@ import calendar from "../../../Assets/images/calendar1.svg";
 import { ClockCircleOutlined } from "@ant-design/icons";
 import Dropdown from "antd/es/dropdown";
 import TimeKeeper from "react-timekeeper";
-import {
-  FAVOURITE_TYPE,
-  MEDICAL_TEST,
-  RADIOLOGY
-} from "../../../constant";
+import { FAVOURITE_TYPE, MEDICAL_TEST, RADIOLOGY } from "../../../constant";
 import StarOutlined from "@ant-design/icons/StarOutlined";
 import StarFilled from "@ant-design/icons/StarFilled";
 import Tooltip from "antd/es/tooltip";
@@ -64,7 +60,7 @@ class AddAppointmentForm extends Component {
       descDropDownOpen: false,
       radiologyDropDownVisible: false,
       radiologyTypeSelected: null,
-      typeDescValue:''
+      typeDescValue: ""
     };
   }
 
@@ -345,21 +341,21 @@ class AddAppointmentForm extends Component {
               //   placement="topLeft"
               //   // title={favorite_id ? this.formatMessage(messages.unMarkFav) : this.formatMessage(messages.markFav)}
               // >
-                <Fragment>
-                  {favorite_id ? (
-                      <StarFilled
-                          style={{ fontSize: "20px", color: "#f9c216" }}
-                          onClick={this.handleremoveMedicalTestFavourites(index)}
-                      />
-                  ) : (
-                      <StarOutlined
-                          style={{ fontSize: "20px", color: "#f9c216" }}
-                          onClick={this.handleAddMedicalTestFavourites(index)}
-                      />
-                  )}
-                </Fragment>
-              // </Tooltip>
-            ) : null}
+              <Fragment>
+                {favorite_id ? (
+                  <StarFilled
+                    style={{ fontSize: "20px", color: "#f9c216" }}
+                    onClick={this.handleremoveMedicalTestFavourites(index)}
+                  />
+                ) : (
+                  <StarOutlined
+                    style={{ fontSize: "20px", color: "#f9c216" }}
+                    onClick={this.handleAddMedicalTestFavourites(index)}
+                  />
+                )}
+              </Fragment>
+            ) : // </Tooltip>
+            null}
           </div>
         </Option>
       );
@@ -679,10 +675,7 @@ class AddAppointmentForm extends Component {
       };
 
       const response = await markFavourite(data);
-      const {
-        status,
-        payload: { message: resp_msg = "" } = {}
-      } = response;
+      const { status, payload: { message: resp_msg = "" } = {} } = response;
       if (status) {
         message.success(resp_msg);
         // this.getRadiologyFavourites();
@@ -703,10 +696,7 @@ class AddAppointmentForm extends Component {
       const { handleTypeDescriptionUpdate } = this;
 
       const response = await removeFavouriteRecord(recordID);
-      const {
-        status,
-        payload: {message: resp_msg = "" } = {}
-      } = response;
+      const { status, payload: { message: resp_msg = "" } = {} } = response;
       if (status) {
         message.success(resp_msg);
         await handleTypeDescriptionUpdate();
@@ -722,26 +712,21 @@ class AddAppointmentForm extends Component {
     this.setState({ radiologyDropDownVisible: open });
   };
 
+  handleTypeDescriptionSelect = value => {
+    const { form: { setFieldsValue } = {} } = this.props;
 
-  handleTypeDescriptionSelect = (value) => {
-    
-    const {
-      form: { setFieldsValue } = {},
-    } = this.props;
+    const { typeDescValue = "" } = this.state;
 
-
-    const {typeDescValue=''} = this.state;
-    
-    if(value != typeDescValue){
-      setFieldsValue({[RADIOLOGY_TYPE]:null})
+    if (value != typeDescValue) {
+      setFieldsValue({ [RADIOLOGY_TYPE]: null });
     }
 
-    this.setState({typeDescValue:value});
-  }
+    this.setState({ typeDescValue: value });
+  };
 
   render() {
     const {
-      form: { getFieldDecorator, isFieldTouched, getFieldError, getFieldValue },
+      form: { getFieldDecorator, isFieldTouched, getFieldError, getFieldValue }
     } = this.props;
     const { radiologyTypeSelected = null } = this.state;
     const {
@@ -911,7 +896,9 @@ class AddAppointmentForm extends Component {
                   disabled={radiologyTypeSelected === null}
                   notFoundContent={"No match found"}
                   className="drawer-select"
-                  placeholder={formatMessage(messages.placeholderRadiologyTypeDesc)}
+                  placeholder={formatMessage(
+                    messages.placeholderRadiologyTypeDesc
+                  )}
                   showSearch
                   defaultActiveFirstOption={true}
                   autoComplete="off"

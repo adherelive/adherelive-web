@@ -50,7 +50,7 @@ const messages = defineMessages({
     id: "app.diets.table.diets.deactivated",
     description: "",
     defaultMessage: "Deactivated"
-  },
+  }
 });
 
 export default messages;

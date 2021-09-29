@@ -56,52 +56,52 @@ const messages = defineMessages({
     description: "",
     defaultMessage: "Provider details Added successfully"
   },
-  accountDetails : {
+  accountDetails: {
     id: "app.addProvider.accountDetails",
     description: "",
     defaultMessage: "Account Details"
   },
-  accountType : {
+  accountType: {
     id: "app.addProvider.accountType",
     description: "",
     defaultMessage: "Account Type"
   },
-  beneficiaryName : {
+  beneficiaryName: {
     id: "app.addProvider.beneficiaryName",
     description: "",
     defaultMessage: "Beneficiary Name"
   },
-  accountNumber : {
+  accountNumber: {
     id: "app.addProvider.accountNumber",
     description: "",
     defaultMessage: "Account Number"
   },
-  ifscCode : {
+  ifscCode: {
     id: "app.addProvider.ifscCode",
     description: "",
     defaultMessage: "IFSC Code"
   },
-  upiId : {
+  upiId: {
     id: "app.addProvider.upiId",
     description: "",
     defaultMessage: "UPI Id"
   },
-  razorpayAccId : {
+  razorpayAccId: {
     id: "app.addProvider.razorpayAccId",
     description: "",
     defaultMessage: "Razorpay account Id"
   },
-  razorpayAccName : {
+  razorpayAccName: {
     id: "app.addProvider.razorpayAccName",
     description: "",
     defaultMessage: "Razorpay account name"
   },
-  reset : {
+  reset: {
     id: "app.addProvider.reset",
     description: "",
     defaultMessage: "Reset"
   },
-  resetAccountFields : {
+  resetAccountFields: {
     id: "app.addProvider.resetAccountFields",
     description: "",
     defaultMessage: "Reset all account details"
@@ -153,41 +153,41 @@ const messages = defineMessages({
     description: "",
     defaultMessage: "Password is required"
   },
-  confirm_password_required_text : {
+  confirm_password_required_text: {
     id: "app.addProvider.error.confirm.password.required.text",
     description: "",
     defaultMessage: "Confirm password is required"
   },
-  name_error : {
+  name_error: {
     id: "app.addProvider.error.name.error",
     description: "",
     defaultMessage: "Name is required"
   },
-  beneficiary_name_error:{
+  beneficiary_name_error: {
     id: "app.addProvider.error.beneficiary.name.error",
     description: "",
     defaultMessage: "Beneficiary name is required"
   },
-  account_num_error:{
+  account_num_error: {
     id: "app.addProvider.error.account.num.error",
     description: "",
     defaultMessage: "Account number is required"
   },
-  ifsc_error:{
+  ifsc_error: {
     id: "app.addProvider.error.ifsc.error",
     description: "",
     defaultMessage: "IFSC Code is required"
   },
-  address_required_text:{
+  address_required_text: {
     id: "app.addProvider.error.address.required",
     description: "",
     defaultMessage: "Address is required"
   },
-  prescriptionDetails:{
+  prescriptionDetails: {
     id: "app.addProvider.prescriptionDetails",
     description: "",
     defaultMessage: "Prescription Details"
-  },
+  }
 });
 
 export default messages;

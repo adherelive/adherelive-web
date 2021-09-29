@@ -179,12 +179,16 @@ class AppointmentService {
     try {
       const month = moment(value).month();
       const year = moment(value).year();
-      const startOfMonth = moment().month(month).year(year)
-          .startOf("month")
-          .toISOString();
-      const endOfMonth = moment().month(month).year(year)
-          .endOf("month")
-          .toISOString();
+      const startOfMonth = moment()
+        .month(month)
+        .year(year)
+        .startOf("month")
+        .toISOString();
+      const endOfMonth = moment()
+        .month(month)
+        .year(year)
+        .endOf("month")
+        .toISOString();
 
       const appointments = await Database.getModel(TABLE_NAME).findAll({
         where: {

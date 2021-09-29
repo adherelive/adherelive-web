@@ -35,14 +35,15 @@ class ResponseJob extends DietJob {
       }
     });
 
-    const {rows: userRoles = []} = await UserRoleService.findAndCountAll({
-      where: {
-        id: userRoleIds
-      }
-    }) || {};
+    const { rows: userRoles = [] } =
+      (await UserRoleService.findAndCountAll({
+        where: {
+          id: userRoleIds
+        }
+      })) || {};
 
-    for(const userRole of userRoles) {
-      const {user_identity} = userRole || {};
+    for (const userRole of userRoles) {
+      const { user_identity } = userRole || {};
       userIds.push(user_identity);
     }
 
@@ -69,7 +70,7 @@ class ResponseJob extends DietJob {
       android_channel_id: process.config.one_signal.urgent_channel_id,
       data: {
         url: `/${NOTIFICATION_VERB.DIET_RESPONSE}`,
-        params: {...this.getDietData(), doctorRoleId}
+        params: { ...this.getDietData(), doctorRoleId }
       }
     });
 
@@ -80,7 +81,8 @@ class ResponseJob extends DietJob {
     const { getDietData } = this;
     const data = getDietData();
     const {
-      participants = [], actor: { id: actorId, user_role_id } = {},
+      participants = [],
+      actor: { id: actorId, user_role_id } = {},
       id = null
     } = data || {};
 

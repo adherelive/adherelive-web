@@ -4,10 +4,9 @@ import { TABLE_NAME as portionTableName } from "./portions";
 
 import { USER_CATEGORY_ARRAY } from "./users";
 
-
 export const TABLE_NAME = "food_items";
 
-export const db = (database) => {
+export const db = database => {
   database.define(
     TABLE_NAME,
     {
@@ -15,28 +14,28 @@ export const db = (database) => {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
-        type: DataTypes.INTEGER,
+        type: DataTypes.INTEGER
       },
       name: {
         type: DataTypes.STRING,
-        allowNull: false,
+        allowNull: false
       },
       creator_id: {
-        type: DataTypes.INTEGER,
+        type: DataTypes.INTEGER
       },
       creator_type: {
-          type: DataTypes.ENUM,
-          values: USER_CATEGORY_ARRAY
-      },
+        type: DataTypes.ENUM,
+        values: USER_CATEGORY_ARRAY
+      }
     },
     {
       underscored: true,
-      paranoid: true,
+      paranoid: true
     }
   );
 };
 
-export const associate = (database) => {
+export const associate = database => {
   // const {upload_documents} = database.models || {};
 
   // associations here (if any) ...
@@ -45,9 +44,7 @@ export const associate = (database) => {
     database.models[foodItemDetailsTableName],
     {
       foreignKey: "food_item_id",
-      sourceKey: "id",
+      sourceKey: "id"
     }
   );
-
-  
 };

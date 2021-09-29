@@ -32,18 +32,19 @@ class CreateJob extends CarePlanJob {
     const playerIds = [];
     const userIds = [];
 
-    const {rows: userRoles = []} = await UserRoleService.findAndCountAll({
-      where: {
-        id: participants
-      }
-    }) || {};
+    const { rows: userRoles = [] } =
+      (await UserRoleService.findAndCountAll({
+        where: {
+          id: participants
+        }
+      })) || {};
 
     let providerId = null;
-    for(const userRole of userRoles) {
-      const {id, user_identity, linked_id} = userRole || {};
+    for (const userRole of userRoles) {
+      const { id, user_identity, linked_id } = userRole || {};
 
-      if(id === user_role_id) {
-        if(linked_id) {
+      if (id === user_role_id) {
+        if (linked_id) {
           providerId = linked_id;
         }
       } else {
@@ -52,9 +53,11 @@ class CreateJob extends CarePlanJob {
     }
 
     let providerName = DEFAULT_PROVIDER;
-    if(providerId) {
-      const provider = await ProviderService.getProviderByData({id: providerId});
-      const {name} = provider || {};
+    if (providerId) {
+      const provider = await ProviderService.getProviderByData({
+        id: providerId
+      });
+      const { name } = provider || {};
       providerName = name;
     }
 
@@ -72,9 +75,9 @@ class CreateJob extends CarePlanJob {
     templateData.push({
       small_icon: process.config.app.icon_android,
       app_id: process.config.one_signal.app_id, // TODO: add the same in pushNotification handler in notificationSdk
-      headings: { en: `New careplan created! (${providerName})` },
+      headings: { en: `New CarePlan created! (${providerName})` },
       contents: {
-        en: `Did you buy the required medicines for the new careplan?`
+        en: `Did you buy the required medicines for the new CarePlan?`
       },
       buttons: [
         { id: "yes", text: "Yes" },

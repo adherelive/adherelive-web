@@ -3,8 +3,14 @@ import { TABLE_COLUMN, formatAppointmentTableData } from "../helper";
 export default data => {
   const { id } = data;
   const formattedData = formatAppointmentTableData(data);
-  const { appointmentData, userData, treatmentData, doctorData, providerData, chatData } =
-    formattedData || {};
+  const {
+    appointmentData,
+    userData,
+    treatmentData,
+    doctorData,
+    providerData,
+    chatData
+  } = formattedData || {};
   return {
     key: id,
     [TABLE_COLUMN.ORGANIZER.dataIndex]: {
@@ -19,6 +25,6 @@ export default data => {
     },
     [TABLE_COLUMN.DESCRIPTION.dataIndex]: {
       appointmentData
-    },
+    }
   };
 };

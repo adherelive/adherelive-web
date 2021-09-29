@@ -6,7 +6,11 @@ import { resetNotificationRedirect } from "../../modules/notificationRedirect";
 
 const mapStateToProps = state => {
   const {
-    auth: { authPermissions = [], authenticated_user = 1 , auth_role = null } = {},
+    auth: {
+      authPermissions = [],
+      authenticated_user = 1,
+      auth_role = null
+    } = {},
     users = {},
     patients = {},
     doctors = {},
@@ -30,8 +34,7 @@ const mapStateToProps = state => {
 const mapDispatchToProps = dispatch => {
   return {
     getAllFeatures: () => dispatch(getAllFeatures()),
-    resetNotificationRedirect:() => dispatch(resetNotificationRedirect())
-
+    resetNotificationRedirect: () => dispatch(resetNotificationRedirect())
   };
 };
 

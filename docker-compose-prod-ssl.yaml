@@ -25,7 +25,7 @@ services:
   node:
     #image: irikeish/adhere:portal
     image: gagneet/adherelive:portal
-    command: ["npm", "run", "start"]
+    command: [ "npm", "run", "start" ]
     ports:
       - "5000:5000"
     volumes:

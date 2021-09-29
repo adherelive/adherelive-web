@@ -334,87 +334,87 @@ export default defineMessages({
   select_timing: {
     id: "app.vital.edit.drawer.select.timing",
     description: "",
-    defaultMessage: "Select Timing",
+    defaultMessage: "Select Timing"
   },
   delete_text: {
     id: "app.vital.edit.drawer.delete.text",
     description: "",
-    defaultMessage: "Delete",
+    defaultMessage: "Delete"
   },
   dose: {
     id: "app.vital.edit.drawer.Dose",
     description: "",
-    defaultMessage: "Dose",
+    defaultMessage: "Dose"
   },
   tablet: {
     id: "app.vital.edit.drawer.tablet",
     description: "",
-    defaultMessage: "Tablet",
+    defaultMessage: "Tablet"
   },
   syringe: {
     id: "app.vital.edit.drawer.syringe",
     description: "",
-    defaultMessage: "Syringe",
+    defaultMessage: "Syringe"
   },
   syrup: {
     id: "app.vital.edit.drawer.syrup",
     description: "",
-    defaultMessage: "Syrup",
+    defaultMessage: "Syrup"
   },
   formulation: {
     id: "app.vital.edit.drawer.formulation",
     description: "",
-    defaultMessage: "Formulation",
+    defaultMessage: "Formulation"
   },
   od: {
     id: "app.vital.edit.drawer.od",
     description: "",
-    defaultMessage: "OD",
+    defaultMessage: "OD"
   },
   bd: {
     id: "app.vital.edit.drawer.bd",
     description: "",
-    defaultMessage: "BD",
+    defaultMessage: "BD"
   },
   tds: {
     id: "app.vital.edit.drawer.tds",
     description: "",
-    defaultMessage: "TDS",
+    defaultMessage: "TDS"
   },
   everyday: {
     id: "app.vital.edit.drawer.everyday",
     description: "",
-    defaultMessage: "Everyday",
+    defaultMessage: "Everyday"
   },
   alternate: {
     id: "app.vital.edit.drawer.alternate",
     description: "",
-    defaultMessage: "Alternate",
+    defaultMessage: "Alternate"
   },
   oneWeek: {
     id: "app.vital.edit.drawer.oneWeek",
     description: "",
-    defaultMessage: "1 week",
+    defaultMessage: "1 week"
   },
   twoWeeks: {
     id: "app.vital.edit.drawer.twoWeeks",
     description: "",
-    defaultMessage: "2 weeks",
+    defaultMessage: "2 weeks"
   },
   longterm: {
     id: "app.vital.edit.drawer.longterm",
     description: "",
-    defaultMessage: "Longterm",
+    defaultMessage: "Longterm"
   },
   specialInstruction: {
     id: "app.vital.edit.drawer.specialInstruction",
     description: "",
-    defaultMessage: "Special Instruction",
+    defaultMessage: "Special Instruction"
   },
   enterInstruction: {
     id: "app.vital.edit.drawer.enterInstruction",
     description: "",
-    defaultMessage: "Enter instructions",
+    defaultMessage: "Enter instructions"
   },
   vital: {
     id: "app.vital.edit.drawer.vital",
@@ -435,6 +435,5 @@ export default defineMessages({
     id: "app.vital.edit.viewDetails",
     description: "",
     defaultMessage: "Vital Details"
-},
-
+  }
 });

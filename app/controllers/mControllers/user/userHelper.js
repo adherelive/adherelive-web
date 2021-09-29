@@ -12,7 +12,7 @@ import {
   DOCUMENT_PARENT_TYPE,
   ONBOARDING_STATUS
 } from "../../../../constant";
-import {completePath} from "../../../helper/filePath";
+import { completePath } from "../../../helper/filePath";
 
 export const doctorQualificationData = async userId => {
   try {
@@ -156,8 +156,7 @@ export const downloadFileFromS3 = async (objectName, filePath) => {
   }
 };
 
-
-export const getServerSpecificConstants  = () => {
+export const getServerSpecificConstants = () => {
   const server_constants = {
     GETSTREAM_API_KEY: process.config.getstream.key,
     GETSTREAM_APP_ID: process.config.getstream.appId,
@@ -166,14 +165,13 @@ export const getServerSpecificConstants  = () => {
 
     AGORA_APP_ID: process.config.agora.app_id,
 
-    RAZORPAY_KEY :process.config.razorpay.key,
+    RAZORPAY_KEY: process.config.razorpay.key,
 
     ALGOLIA_APP_ID: process.config.algolia.app_id,
     ALGOLIA_APP_KEY: process.config.algolia.app_key,
     ALGOLIA_MEDICINE_INDEX: process.config.algolia.medicine_index,
     ONE_SIGNAL_APP_ID: process.config.one_signal.app_id
-  } 
-
+  };
 
   return server_constants;
-}
+};

@@ -27,14 +27,7 @@ import GraphsModal from "./graphsModal";
 import { getPatientConsultingVideoUrl } from "../../Helper/url/patients";
 import { getPatientConsultingUrl } from "../../Helper/url/patients";
 import config from "../../config";
-import {
-  message,
-  Button,
-  Spin,
-  Menu,
-  Dropdown,
-  Modal
-} from "antd";
+import { message, Button, Spin, Menu, Dropdown, Modal } from "antd";
 import SearchPatient from "../../Containers/SearchPatient";
 import MissedAppointmentsDrawer from "../../Containers/Drawer/missedAppointment";
 import MissedVitalsDrawer from "../../Containers/Drawer/missedVital";
@@ -46,7 +39,6 @@ import MissedWorkoutsDrawer from "../../Containers/Drawer/missedWorkout";
 import { getRoomId } from "../../Helper/twilio";
 
 const { GETSTREAM_API_KEY, GETSTREAM_APP_ID } = config;
-
 const { TabPane } = Tabs;
 
 const CHART_MISSED_MEDICATION = "Missed Medication";
@@ -56,22 +48,20 @@ const CHART_MISSED_DIET = "Missed Diet";
 const CHART_MISSED_WORKOUT = "Missed Workout";
 
 export const CURRENT_TAB = {
-  ALL_PATIENTS:"1",
-  WATCHLIST:"2"
+  ALL_PATIENTS: "1",
+  WATCHLIST: "2"
 };
 
-export const SORTING_TYPE={
-  SORT_BY_DATE:"0",
-  SORT_BY_NAME:"1"   
-}
+export const SORTING_TYPE = {
+  SORT_BY_DATE: "0",
+  SORT_BY_NAME: "1"
+};
 
-export const SORT_CREATEDAT="sort_createdAt";
-export const SORT_NAME="sort_name";
-export const FILTER_DIAGNOSIS="filter_diagnosis";
-export const FILTER_TREATMENT="filter_treatment";
-export const OFFSET="offset";
-
-
+export const SORT_CREATEDAT = "sort_createdAt";
+export const SORT_NAME = "sort_name";
+export const FILTER_DIAGNOSIS = "filter_diagnosis";
+export const FILTER_TREATMENT = "filter_treatment";
+export const OFFSET = "offset";
 
 class Dashboard extends Component {
   constructor(props) {
@@ -83,28 +73,28 @@ class Dashboard extends Component {
       doctorUserId: 1,
       patient_ids: [],
       showModal: false,
-      loading:false,
-      submitting:false,
-      currentTab:CURRENT_TAB.ALL_PATIENTS,
-      allPatientsTab:{
-        sort_createdAt:1,
-        sort_name:null,
-        filter_diagnosis:'',
-        filter_treatment:'',
-        offset:0
+      loading: false,
+      submitting: false,
+      currentTab: CURRENT_TAB.ALL_PATIENTS,
+      allPatientsTab: {
+        sort_createdAt: 1,
+        sort_name: null,
+        filter_diagnosis: "",
+        filter_treatment: "",
+        offset: 0
       },
-      watchlistTab:{
-        sort_createdAt:1,
-        sort_name:null,
-        filter_diagnosis:'',
-        filter_treatment:'',
-        offset:0
+      watchlistTab: {
+        sort_createdAt: 1,
+        sort_name: null,
+        filter_diagnosis: "",
+        filter_treatment: "",
+        offset: 0
       }
     };
   }
 
   async componentDidMount() {
-    const {  authPermissions = [] } = this.props;
+    const { authPermissions = [] } = this.props;
     const {
       searchMedicine,
       getGraphs,
@@ -116,7 +106,7 @@ class Dashboard extends Component {
       getAllMissedScheduleEvents
     } = this.props;
 
-    this.setState({loading:true});
+    this.setState({ loading: true });
 
     closePopUp();
     let doctorUserId = ""; //user_id of doctor
@@ -133,9 +123,13 @@ class Dashboard extends Component {
         payload: { data: { user_preferences: { charts = [] } = {} } = {} } = {}
       } = response;
       if (status) {
-        this.setState({ graphsToShow: [...charts], graphLoading: false ,loading:false });
-      }else{
-        this.setState({loading:false});
+        this.setState({
+          graphsToShow: [...charts],
+          graphLoading: false,
+          loading: false
+        });
+      } else {
+        this.setState({ loading: false });
       }
     });
 
@@ -147,7 +141,6 @@ class Dashboard extends Component {
     getAllFeatures();
     getAllMissedScheduleEvents();
     this.initiateInAppNotificationObj();
-    
   }
 
   // handleGetAllDietsForDoctor = async() => {
@@ -176,9 +169,9 @@ class Dashboard extends Component {
   //       );
 
   //       this.client = clientFeed;
-    
+
   //   }
-    
+
   //   this.updateUnseenNotificationData();
   // };
 
@@ -188,121 +181,106 @@ class Dashboard extends Component {
   //   return data;
   // }
 
-
   // updateUnseenNotificationData = async () => {
   //   const data = await this.getFeedData();
   //   const { unseen = 0 } = data || {};
   //   this.props.updateUnseenInAppNotificationCount(unseen);
-  // };  
+  // };
 
   initiateInAppNotificationObj = () => {
     const { notificationToken, feedId } = this.props;
-    const {updateUnseenNotificationData} = this;
+    const { updateUnseenNotificationData } = this;
 
     if (notificationToken || feedId) {
-        let clientFeed = connect(
-            GETSTREAM_API_KEY,
-            notificationToken,
-            GETSTREAM_APP_ID
-        );
+      let clientFeed = connect(
+        config.GETSTREAM_API_KEY,
+        notificationToken,
+        config.GETSTREAM_APP_ID
+      );
 
-        this.client = clientFeed;
+      this.client = clientFeed;
     }
-    
+
     updateUnseenNotificationData();
   };
 
-
-
-  getFeedData = async() => {
-    const {feedId}=this.props;
+  getFeedData = async () => {
+    const { feedId } = this.props;
     const limit = config.REACT_APP_NOTIFICATION_ONE_TIME_LIMIT;
     let clientFeed = this.client.feed("notification", feedId);
 
     const data = await clientFeed.get({ limit });
     return data;
-  }
-
+  };
 
   updateUnseenNotificationData = async () => {
     const data = await this.getFeedData();
     const { unseen = 0 } = data || {};
-    const {setUnseenNotificationCount} = this.props;
+    const { setUnseenNotificationCount } = this.props;
     setUnseenNotificationCount(unseen);
   };
 
-
-
-  changeTabState = ({currentTab,type,value}) => {
-
-    let prevState = '';
-    if(currentTab === CURRENT_TAB.ALL_PATIENTS){
-      const { allPatientsTab= {}}=this.state;
+  changeTabState = ({ currentTab, type, value }) => {
+    let prevState = "";
+    if (currentTab === CURRENT_TAB.ALL_PATIENTS) {
+      const { allPatientsTab = {} } = this.state;
       prevState = allPatientsTab;
-    }else{
-      const { watchlistTab= {}}=this.state;
+    } else {
+      const { watchlistTab = {} } = this.state;
       prevState = watchlistTab;
     }
 
     let newState = prevState;
-    newState[type]=value;
+    newState[type] = value;
 
-    if(currentTab === CURRENT_TAB.ALL_PATIENTS){
-      this.setState({allPatientsTab:newState});
-    }else{
-      this.setState({watchwatchlistTab:newState});
+    if (currentTab === CURRENT_TAB.ALL_PATIENTS) {
+      this.setState({ allPatientsTab: newState });
+    } else {
+      this.setState({ watchwatchlistTab: newState });
     }
+  };
 
-  }
-
-  sortByName = ({currentTab}) => {
-
-    let prevState = '';
-    if(currentTab === CURRENT_TAB.ALL_PATIENTS){
-      const { allPatientsTab= {}}=this.state;
+  sortByName = ({ currentTab }) => {
+    let prevState = "";
+    if (currentTab === CURRENT_TAB.ALL_PATIENTS) {
+      const { allPatientsTab = {} } = this.state;
       prevState = allPatientsTab;
-    }else{
-      const { watchlistTab= {}}=this.state;
+    } else {
+      const { watchlistTab = {} } = this.state;
       prevState = watchlistTab;
     }
 
     let newState = prevState;
-    newState["sort_createdAt"]=null;
-    newState["sort_name"]=1;
+    newState["sort_createdAt"] = null;
+    newState["sort_name"] = 1;
 
-
-    if(currentTab === CURRENT_TAB.ALL_PATIENTS){
-      this.setState({allPatientsTab:newState});
-    }else{
-      this.setState({watchwatchlistTab:newState});
+    if (currentTab === CURRENT_TAB.ALL_PATIENTS) {
+      this.setState({ allPatientsTab: newState });
+    } else {
+      this.setState({ watchwatchlistTab: newState });
     }
+  };
 
-  }
-
-  sortByCreatedAt = ({currentTab}) => {
-    let prevState = '';
-    if(currentTab === CURRENT_TAB.ALL_PATIENTS){
-      const { allPatientsTab= {}}=this.state;
+  sortByCreatedAt = ({ currentTab }) => {
+    let prevState = "";
+    if (currentTab === CURRENT_TAB.ALL_PATIENTS) {
+      const { allPatientsTab = {} } = this.state;
       prevState = allPatientsTab;
-    }else{
-      const { watchlistTab= {}}=this.state;
+    } else {
+      const { watchlistTab = {} } = this.state;
       prevState = watchlistTab;
     }
 
     let newState = prevState;
-    newState["sort_createdAt"]=1;
-    newState["sort_name"]=null;
+    newState["sort_createdAt"] = 1;
+    newState["sort_name"] = null;
 
-
-    if(currentTab === CURRENT_TAB.ALL_PATIENTS){
-      this.setState({allPatientsTab:newState});
-    }else{
-      this.setState({watchwatchlistTab:newState});
+    if (currentTab === CURRENT_TAB.ALL_PATIENTS) {
+      this.setState({ allPatientsTab: newState });
+    } else {
+      this.setState({ watchwatchlistTab: newState });
     }
-  }
-  
-
-  
+  };
 
   getMenu = () => {
     const { authPermissions = [] } = this.props;
@@ -326,46 +304,60 @@ class Dashboard extends Component {
 
   chartClicked = name => {
     if (name === CHART_MISSED_APPOINTMENT) {
-      const {openMissedAppointmentDrawer} = this.props;
+      const { openMissedAppointmentDrawer } = this.props;
       openMissedAppointmentDrawer();
     } else if (name === CHART_MISSED_ACTION) {
-      const {openMissedVitalDrawer} = this.props;
+      const { openMissedVitalDrawer } = this.props;
       openMissedVitalDrawer();
     } else if (name === CHART_MISSED_MEDICATION) {
-      const {openMissedMedicationDrawer} = this.props;
+      const { openMissedMedicationDrawer } = this.props;
       openMissedMedicationDrawer();
     } else if (name === CHART_MISSED_DIET) {
-      const {openMissedDietDrawer} = this.props;
-        openMissedDietDrawer();
-    }
-    else if (name === CHART_MISSED_WORKOUT ) {
-      const {openMissedWorkoutDrawer} = this.props;
+      const { openMissedDietDrawer } = this.props;
+      openMissedDietDrawer();
+    } else if (name === CHART_MISSED_WORKOUT) {
+      const { openMissedWorkoutDrawer } = this.props;
       openMissedWorkoutDrawer();
     }
   };
 
-
   renderChartTabs = () => {
-    const { graphs,dashboard={} } = this.props;
+    const { graphs, dashboard = {} } = this.props;
     const {
-      medication_ids={},
-      appointment_ids={},
-      vital_ids={},
-      diet_ids={},
-      workout_ids={}
-    }=dashboard;
-    const {critical:medication_critical=[],non_critical:medication_non_critical=[]}=medication_ids;
-    const {critical:vital_critical=[],non_critical:vital_non_critical=[]}=vital_ids;
-    const {critical:appointment_critical=[],non_critical:appointment_non_critical=[]}=appointment_ids;
-    const {critical:diet_critical=[],non_critical:diet_non_critical=[]}=diet_ids;
-    const {critical:workout_critical=[],non_critical:workout_non_critical=[]}=workout_ids;
+      medication_ids = {},
+      appointment_ids = {},
+      vital_ids = {},
+      diet_ids = {},
+      workout_ids = {}
+    } = dashboard;
+    const {
+      critical: medication_critical = [],
+      non_critical: medication_non_critical = []
+    } = medication_ids;
+    const {
+      critical: vital_critical = [],
+      non_critical: vital_non_critical = []
+    } = vital_ids;
+    const {
+      critical: appointment_critical = [],
+      non_critical: appointment_non_critical = []
+    } = appointment_ids;
+    const {
+      critical: diet_critical = [],
+      non_critical: diet_non_critical = []
+    } = diet_ids;
+    const {
+      critical: workout_critical = [],
+      non_critical: workout_non_critical = []
+    } = workout_ids;
 
-    const medication_total = medication_critical.length+medication_non_critical.length;
-    const vital_total = vital_critical.length+vital_non_critical.length;
-    const appointment_total = appointment_critical.length+appointment_non_critical.length;
+    const medication_total =
+      medication_critical.length + medication_non_critical.length;
+    const vital_total = vital_critical.length + vital_non_critical.length;
+    const appointment_total =
+      appointment_critical.length + appointment_non_critical.length;
     const diet_total = diet_critical.length + diet_non_critical.length;
     const workout_total = workout_critical.length + workout_non_critical.length;
-
 
     const { graphsToShow, graphLoading } = this.state;
 
@@ -379,33 +371,26 @@ class Dashboard extends Component {
     }
 
     const chartBlocks = graphsToShow.map(id => {
-      const { 
-         name ,type=''} = graphs[id] || {};
-      let total=0;
+      const { name, type = "" } = graphs[id] || {};
+      let total = 0;
       let critical = 0;
 
-
-    
-
-      if(type === MISSED_MEDICATION){
+      if (type === MISSED_MEDICATION) {
         total = medication_total;
         critical = medication_critical.length;
-     } else if(type === MISSED_APPOINTMENTS){
+      } else if (type === MISSED_APPOINTMENTS) {
         total = appointment_total;
         critical = appointment_critical.length;
-
-     } else if(type === MISSED_ACTIONS){
+      } else if (type === MISSED_ACTIONS) {
         total = vital_total;
         critical = vital_critical.length;
-     } else if(type === MISSED_DIET){
-      total = diet_total;
-      critical = diet_critical.length;
-     } else if(type === MISSED_WORKOUT ){
+      } else if (type === MISSED_DIET) {
+        total = diet_total;
+        critical = diet_critical.length;
+      } else if (type === MISSED_WORKOUT) {
         total = workout_total;
         critical = workout_critical.length;
-     }
-
-   
+      }
 
       return (
         <div key={`donut-div-${id}`} onClick={() => this.chartClicked(name)}>
@@ -443,7 +428,7 @@ class Dashboard extends Component {
     const { addPatient, authenticated_user } = this.props;
 
     const { basic_info: { id = 1 } = {} } = authenticated_user || {};
-    this.setState({submitting:true});
+    this.setState({ submitting: true });
     addPatient(data).then(response => {
       let {
         status = false,
@@ -461,14 +446,13 @@ class Dashboard extends Component {
       let currentCarePlanId = care_plan_ids[0];
       let patient_id = patient_ids ? patient_ids[0] : 0;
       if (status) {
-
         this.props.history.push({
           pathname: `/patients/${patient_id}`,
           state: { showTemplateDrawer, currentCarePlanId }
         });
 
         // })
-        this.setState({submitting:false});
+        this.setState({ submitting: false });
       } else {
         if (statusCode === 422) {
           message.error(this.formatMessage(messages.patientExistError));
@@ -476,7 +460,7 @@ class Dashboard extends Component {
           message.error(this.formatMessage(messages.somethingWentWrongError));
         }
 
-        this.setState({submitting:false});
+        this.setState({ submitting: false });
       }
     });
   };
@@ -514,15 +498,19 @@ class Dashboard extends Component {
     }
     const {
       patients,
-      twilio: { patientId: chatPatientId = 1 } = {},
-      auth_role : doctorRoleId = null 
+      twilio: { care_plan_id: currentCareplanId = 1 } = {},
+      auth_role: doctorRoleId = null,
+      care_plans
     } = this.props;
     const { doctorUserId } = this.state;
-    let { basic_info: { user_id: patientUserId = "" } = {} , user_role_id : patientRoleId = null  } = patients[
-      chatPatientId
-    ];
+    // let { basic_info: { user_id: patientUserId = "" } = {} , user_role_id : patientRoleId = null  } = patients[
+    //   chatPatientId
+    // ];
 
-    const roomId = getRoomId(doctorRoleId, patientRoleId);
+    // const roomId = getRoomId(doctorRoleId, patientRoleId);
+    const { channel_id: roomId } = care_plans[currentCareplanId] || {};
+
+    console.log("123921083 roomId", roomId);
 
     window.open(
       `${config.WEB_URL}/test${getPatientConsultingVideoUrl(roomId)}`,
@@ -585,7 +573,7 @@ class Dashboard extends Component {
       <div className="wp100 flex justify-center align-center">
         <Modal
           className="mt62"
-          visible={showVerifyModal} 
+          visible={showVerifyModal}
           closable
           mask
           maskClosable
@@ -610,50 +598,34 @@ class Dashboard extends Component {
     showVerifyModal(false);
   };
 
-  changeTab = (tab) => {
-    this.setState({currentTab: tab});
+  changeTab = tab => {
+    this.setState({ currentTab: tab });
   };
 
   getProviderBanner = () => {
-    const {providers ={} , doctor_provider_id = null } = this.props;
-    const { details : { banner = '' } = {} } = providers[doctor_provider_id] || {};
+    const { providers = {}, doctor_provider_id = null } = this.props;
+    const { details: { banner = "" } = {} } =
+      providers[doctor_provider_id] || {};
 
-    if(!doctor_provider_id || !banner){
+    if (!doctor_provider_id || !banner) {
       return null;
     }
-    
+
     return (
       <div>
-        <img src={banner} alt="provider-banner" style={{height:"80px",width:"auto"}} />
+        <img
+          src={banner}
+          alt="provider-banner"
+          style={{ height: "80px", width: "auto" }}
+        />
       </div>
-    )
-  }
-
+    );
+  };
 
   render() {
-    const { doctors = {}, authenticated_user } = this.props;
-    let doctorID = null;
-    let docName = "";
-    Object.keys(doctors).forEach(id => {
-      const { basic_info: { user_id } = {} } = doctors[id] || {};
-
-      if (user_id === authenticated_user) {
-        doctorID = id;
-      }
-    });
     const {
-      basic_info: {
-          full_name
-      } = {}
-    } = doctors[doctorID] || {};
-    docName = full_name
-      ? `Dr. ${full_name}`
-      : TABLE_DEFAULT_BLANK_FIELD;
-
-    // console.log("198237837128 getCookie", this.getCookie("accessToken"));
-
-
-    const {
+      doctors = {},
+      authenticated_user,
       graphs,
       treatments,
       conditions,
@@ -663,12 +635,33 @@ class Dashboard extends Component {
       chats: { minimized = false, visible: popUpVisible = false },
       drawer: { visible: drawerVisible = false } = {},
       ui_features: { showVerifyModal = false } = {},
-      twilio: { patientId: chatPatientId = 1 },
-      auth_role : doctorRoleId = null,
-      authenticated_category
+      twilio: { patientId: chatPatientId = 1, care_plan_id },
+      auth_role: doctorRoleId = null,
+      authenticated_category,
+      care_plans
     } = this.props;
 
-    const { formatMessage, renderChartTabs, getVerifyModal , changeTab , getProviderBanner } = this;
+    let doctorID = null;
+    let docName = "";
+    Object.keys(doctors).forEach(id => {
+      const { basic_info: { user_id } = {} } = doctors[id] || {};
+
+      if (user_id === authenticated_user) {
+        doctorID = id;
+      }
+    });
+    const { basic_info: { full_name } = {} } = doctors[doctorID] || {};
+    docName = full_name ? `Dr. ${full_name}` : TABLE_DEFAULT_BLANK_FIELD;
+
+    // console.log("198237837128 getCookie", this.getCookie("accessToken"));
+
+    const {
+      formatMessage,
+      renderChartTabs,
+      getVerifyModal,
+      changeTab,
+      getProviderBanner
+    } = this;
 
     let {
       basic_info: {
@@ -677,7 +670,7 @@ class Dashboard extends Component {
         middle_name = "",
         last_name = ""
       } = {},
-      user_role_id :  patientRoleId = null,
+      user_role_id: patientRoleId = null,
       details: { profile_pic: patientDp = "" } = {}
     } = patients[chatPatientId] || {};
 
@@ -686,55 +679,61 @@ class Dashboard extends Component {
       graphsToShow,
       visibleModal,
       doctorUserId,
-      loading=false,
-      submitting=false,
-      currentTab=CURRENT_TAB.ALL_PATIENTS,
+      loading = false,
+      submitting = false,
+      currentTab = CURRENT_TAB.ALL_PATIENTS,
       allPatientsTab,
       watchlistTab
     } = this.state;
 
-const roomId = getRoomId(doctorRoleId, patientRoleId);
+    // const roomId = getRoomId(doctorRoleId, patientRoleId);
 
-    let bannerFlag=true;
-    const {providers ={} , doctor_provider_id = null } = this.props;
-    const { details : { banner = '' } = {} } = providers[doctor_provider_id] || {};
+    const { channel_id: roomId } = care_plans[care_plan_id] || {};
 
-    if(!doctor_provider_id || !banner){
-     bannerFlag=false;
+    let bannerFlag = true;
+
+    const { providers = {}, doctor_provider_id = null } = this.props;
+
+    const { details: { banner = "" } = {} } =
+      providers[doctor_provider_id] || {};
+
+    if (!doctor_provider_id || !banner) {
+      bannerFlag = false;
     }
-    
-    if (Object.keys(graphs).length === 0 || loading || docName === TABLE_DEFAULT_BLANK_FIELD) {
+
+    if (
+      Object.keys(graphs).length === 0 ||
+      loading ||
+      docName === TABLE_DEFAULT_BLANK_FIELD
+    ) {
       return (
-      <div className="hvh100 flex direction-column align-center justify-center" >
-        <Loading className={"wp100"} />
-      </div>);
+        <div className="hvh100 flex direction-column align-center justify-center">
+          <Loading className={"wp100"} />
+        </div>
+      );
     }
 
     return (
       <Fragment>
         <div className=" dashboard p20">
-          
           <div
             className={`flex direction-row justify-space-between align-center`}
           >
-            
-            {bannerFlag 
-            ?
-             getProviderBanner() 
-            :
-            (
-              <div className={bannerFlag ? "mt14" : ""}> 
-            {docName !== "" ? (
-                <div className="fs28 fw700">
-                  {formatMessage(messages.welcome)}, {docName}
-                </div>
-              ) : (
-                <div className="fs28 fw700">
-                  {formatMessage(messages.dashboard)}
-                </div>
-              )}
-          </div> 
-            ) }
+            {bannerFlag ? (
+              getProviderBanner()
+            ) : (
+              <div className={bannerFlag ? "mt14" : ""}>
+                {docName !== "" ? (
+                  <div className="fs28 fw700">
+                    {formatMessage(messages.welcome)}, {docName}
+                  </div>
+                ) : (
+                  <div className="fs28 fw700">
+                    {formatMessage(messages.dashboard)}
+                  </div>
+                )}
+              </div>
+            )}
             {(authPermissions.includes(USER_PERMISSIONS.PATIENTS.ADD) ||
               authPermissions.includes(USER_PERMISSIONS.GRAPHS.UPDATE)) && (
               <div className="flex direction-row justify-space-between align-center w500">
@@ -756,17 +755,15 @@ const roomId = getRoomId(doctorRoleId, patientRoleId);
                 </Dropdown>
               </div>
             )}
-            
           </div>
 
           {/* }   */}
 
-          {
-            bannerFlag 
-            &&
-            (
-              <div className="mt14" > 
-            {docName !== "" ? (
+          {/* }   */}
+
+          {bannerFlag && (
+            <div className="mt14">
+              {docName !== "" ? (
                 <div className="fs28 fw700">
                   {formatMessage(messages.welcome)}, {docName}
                 </div>
@@ -775,9 +772,8 @@ const roomId = getRoomId(doctorRoleId, patientRoleId);
                   {formatMessage(messages.dashboard)}
                 </div>
               )}
-          </div>
-            )
-          }  
+            </div>
+          )}
 
           <section className="horizontal-scroll-wrapper pr10 mt10">
             {renderChartTabs()}
@@ -787,8 +783,11 @@ const roomId = getRoomId(doctorRoleId, patientRoleId);
             {formatMessage(messages.patients)}
           </div>
 
-          <Tabs tabPosition="top"
-          defaultActiveKey={CURRENT_TAB.ALL_PATIENTS} activeKey={currentTab} onTabClick={changeTab}
+          <Tabs
+            tabPosition="top"
+            defaultActiveKey={CURRENT_TAB.ALL_PATIENTS}
+            activeKey={currentTab}
+            onTabClick={changeTab}
           >
             <TabPane
               tab={
@@ -797,23 +796,16 @@ const roomId = getRoomId(doctorRoleId, patientRoleId);
                 </span>
               }
               key={CURRENT_TAB.ALL_PATIENTS}
-              
             >
-              {
-                currentTab === CURRENT_TAB.ALL_PATIENTS
-                &&
-                (
-                  <Patients
-                currentTab={currentTab} 
-                tabState={allPatientsTab}
-                changeTabState={this.changeTabState}
-                sortByName={this.sortByName}
-                sortByCreatedAt={this.sortByCreatedAt}
-
-              />
-
-                )
-              }
+              {currentTab === CURRENT_TAB.ALL_PATIENTS && (
+                <Patients
+                  currentTab={currentTab}
+                  tabState={allPatientsTab}
+                  changeTabState={this.changeTabState}
+                  sortByName={this.sortByName}
+                  sortByCreatedAt={this.sortByCreatedAt}
+                />
+              )}
             </TabPane>
 
             <TabPane
@@ -824,19 +816,15 @@ const roomId = getRoomId(doctorRoleId, patientRoleId);
               }
               key={CURRENT_TAB.WATCHLIST}
             >
-
-              {
-                currentTab === CURRENT_TAB.WATCHLIST
-                &&
-                <Watchlist 
-                currentTab={currentTab} 
-                tabState={watchlistTab}
-                changeTabState={this.changeTabState}
-                sortByName={this.sortByName}
-                sortByCreatedAt={this.sortByCreatedAt}
-              
-              />
-              }
+              {currentTab === CURRENT_TAB.WATCHLIST && (
+                <Watchlist
+                  currentTab={currentTab}
+                  tabState={watchlistTab}
+                  changeTabState={this.changeTabState}
+                  sortByName={this.sortByName}
+                  sortByCreatedAt={this.sortByCreatedAt}
+                />
+              )}
             </TabPane>
           </Tabs>
         </div>
@@ -895,16 +883,15 @@ const roomId = getRoomId(doctorRoleId, patientRoleId);
           />
         )}
 
-        <MissedAppointmentsDrawer/>
+        <MissedAppointmentsDrawer />
 
-        <MissedVitalsDrawer/>
+        <MissedVitalsDrawer />
 
         <MissedMedicationsDrawer />
-        
+
         <MissedDietsDrawer />
 
-        <MissedWorkoutsDrawer/>
-
+        <MissedWorkoutsDrawer />
 
         {authPermissions.length === 0 ? (
           <div className="fixed b0 p20 bg-light-grey wp100">

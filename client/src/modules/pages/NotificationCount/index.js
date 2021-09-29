@@ -1,12 +1,12 @@
 const SET_UNSEEN_NOTIFICATION_COUNT = "SET_UNSEEN_NOTIFICATION_COUNT";
 
-export const setUnseenNotificationCount = (unseen_notification_count) => {
+export const setUnseenNotificationCount = unseen_notification_count => {
   let response = {};
-  return async (dispatch) => {
+  return async dispatch => {
     try {
       dispatch({
         type: SET_UNSEEN_NOTIFICATION_COUNT,
-        payload: { unseen_notification_count },
+        payload: { unseen_notification_count }
       });
     } catch (error) {
       console.log("SET_UNSEEN_NOTIFICATION_COUNT error ---> ", error);
@@ -25,7 +25,7 @@ function setUnseenNotiCountReducer(state, data) {
     const countData = { unseen_notification_count: unseen_notification_count };
     return {
       ...state,
-      ...countData,
+      ...countData
     };
   } else {
     return state;
@@ -38,7 +38,7 @@ export default (state = {}, data) => {
     case SET_UNSEEN_NOTIFICATION_COUNT:
       return {
         ...state,
-        ...payload,
+        ...payload
       };
     default:
       return state;

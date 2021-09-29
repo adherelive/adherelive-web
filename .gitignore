@@ -1,14 +1,17 @@
+# npm related
 node_modules
 .DS_store
 .env
-.kunal.env
-/public
 .node_env
+/public
 .idea
 dump
-#not ignore settings file
+
+# not ignore settings file
 !/public/.gitkeep
 .c9
+/s3Downloads
+
 # self
 notes.txt
 

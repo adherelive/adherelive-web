@@ -1,47 +1,47 @@
-
 export default class ScheduleEvent {
-    constructor(data) {
-        this._data = data;
-    }
+  constructor(data) {
+    this._data = data;
+  }
 
-    getEventType = () => {
-        return this._data.get("event_type");
-    };
+  getData = () => this._data.get();
 
-    getEventId = () => {
-        return this._data.get("event_id");
-    };
+  getEventType = () => {
+    return this._data.get("event_type");
+  };
 
-    getScheduleEventId = () => {
-        return this._data.get("id");
-    };
+  getEventId = () => {
+    return this._data.get("event_id");
+  };
 
-    getStatus = () => {
-        return this._data.get("status");
-    };
+  getScheduleEventId = () => {
+    return this._data.get("id");
+  };
 
-    getDetails = () => {
-        return this._data.get("details");
-    };
+  getStatus = () => {
+    return this._data.get("status");
+  };
 
-    getDate = () => {
-      return this._data.get("date");
-    };
+  getDetails = () => {
+    return this._data.get("details");
+  };
 
-    getStartTime = () => {
-        return this._data.get("start_time");
-    };
+  getDate = () => {
+    return this._data.get("date");
+  };
 
-    getEndTime = () => {
-        return this._data.get("end_time");
-    };
+  getStartTime = () => {
+    return this._data.get("start_time");
+  };
 
+  getEndTime = () => {
+    return this._data.get("end_time");
+  };
 
-    getCriticalValue = () => {
-        return this._data.get("critical");
-    }
+  getCriticalValue = () => {
+    return this._data.get("critical");
+  };
 
-    updatedAt = () => {
-        return this._data.get("updated_at");
-    };
+  updatedAt = () => {
+    return this._data.get("updated_at");
+  };
 }

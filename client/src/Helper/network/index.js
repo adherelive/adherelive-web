@@ -34,7 +34,7 @@ export const doRequest = async requestdata => {
     data,
     xsrfCookieName,
     xsrfHeaderName,
-    onUploadProgress,
+    onUploadProgress
   };
   try {
     const response = await axios(requestConfig);

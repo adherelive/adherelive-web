@@ -1,7 +1,7 @@
 "use strict";
 import { DataTypes } from "sequelize";
 import { TABLE_NAME as userTableName } from "./users";
-import { USER_CATEGORY} from "../../constant";
+import { USER_CATEGORY } from "../../constant";
 
 export const TABLE_NAME = "user_roles";
 
@@ -27,11 +27,11 @@ export const db = database => {
       linked_with: {
         type: DataTypes.ENUM,
         values: [USER_CATEGORY.PROVIDER, USER_CATEGORY.ADMIN],
-        allowNull: true,
+        allowNull: true
       },
       linked_id: {
         type: DataTypes.INTEGER,
-        allowNull: true,
+        allowNull: true
       }
     },
     {

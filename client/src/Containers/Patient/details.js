@@ -1,7 +1,7 @@
 import PatientDetails from "../../Components/Patient/details";
 import { connect } from "react-redux";
 import { withRouter } from "react-router-dom";
-import { open,close } from "../../modules/drawer";
+import { open, close } from "../../modules/drawer";
 import { getMedications } from "../../modules/medications";
 import {
   getAppointments,
@@ -21,13 +21,12 @@ import {
 import { addCareplanForPatient } from "../../modules/patients";
 import { storeAppointmentDocuments } from "../../modules/uploadDocuments";
 import { getSymptomTimeLine } from "../../modules/symptoms";
-import {fetchReports} from "../../modules/reports";
+import { fetchReports } from "../../modules/reports";
 import { getVitalOccurence } from "../../modules/vital_occurence";
 import { searchVital } from "../../modules/vital_templates";
-import { setUnseenNotificationCount }  from "../../modules/pages/NotificationCount";
+import { setUnseenNotificationCount } from "../../modules/pages/NotificationCount";
 import { resetNotificationRedirect } from "../../modules/notificationRedirect";
-import {getAllTemplatesForDoctor} from "../../modules/carePlanTemplates";
-
+import { getAllTemplatesForDoctor } from "../../modules/carePlanTemplates";
 
 const mapStateToProps = (state, ownProps) => {
   const {
@@ -48,7 +47,14 @@ const mapStateToProps = (state, ownProps) => {
     care_plan_templates = {},
     severity = {},
     show_template_drawer = {},
-    auth: { authPermissions = [], authenticated_user = 1,authenticated_category, auth_role, notificationToken = '' , feedId = '' } = {},
+    auth: {
+      authPermissions = [],
+      authenticated_user = 1,
+      authenticated_category,
+      auth_role,
+      notificationToken = "",
+      feedId = ""
+    } = {},
     chats,
     drawer,
     pages: { care_plan_template_ids = [] } = {},
@@ -57,14 +63,14 @@ const mapStateToProps = (state, ownProps) => {
     schedule_events = {},
     features = {},
     features_mappings = {},
-    reports={},
-    repeat_intervals={},
-    vital_templates={},
+    reports = {},
+    repeat_intervals = {},
+    vital_templates = {},
     user_roles = {},
     providers = {},
-    notification_redirect={},
+    notification_redirect = {},
     diets = {},
-    exercise_contents={}
+    exercise_contents = {}
   } = state;
 
   // const { id } = ownprops;
@@ -160,18 +166,24 @@ const mapDispatchToProps = dispatch => {
       dispatch(addCareplanForPatient(patient_id, data)),
     openEditPatientDrawer: payload =>
       dispatch(open({ type: DRAWER.EDIT_PATIENT, payload })),
-    storeAppointmentDocuments: data => dispatch(storeAppointmentDocuments(data)),
-    openAddReportsDrawer : (payload) =>  dispatch(open({ type: DRAWER.ADD_REPORT,payload })),
-    getSymptomTimeLine: (patientId) => dispatch(getSymptomTimeLine(patientId)),
-    fetchPatientReports: (id)  => dispatch(fetchReports(id)),
+    storeAppointmentDocuments: data =>
+      dispatch(storeAppointmentDocuments(data)),
+    openAddReportsDrawer: payload =>
+      dispatch(open({ type: DRAWER.ADD_REPORT, payload })),
+    getSymptomTimeLine: patientId => dispatch(getSymptomTimeLine(patientId)),
+    fetchPatientReports: id => dispatch(fetchReports(id)),
     getVitalOccurence: () => dispatch(getVitalOccurence()),
     searchVital: data => dispatch(searchVital(data)),
-    setUnseenNotificationCount : (count) => dispatch(setUnseenNotificationCount(count)),
-    openAddDietDrawer:(payload) => dispatch(open({ type: DRAWER.ADD_DIET,payload })),
-    openAddWorkoutDrawer:(payload) => dispatch(open({ type: DRAWER.ADD_WORKOUT,payload })),
-    resetNotificationRedirect:() => dispatch(resetNotificationRedirect()),
-    getAllTemplatesForDoctor:()=>dispatch(getAllTemplatesForDoctor())
-
+    setUnseenNotificationCount: count =>
+      dispatch(setUnseenNotificationCount(count)),
+    openAddDietDrawer: payload =>
+      dispatch(open({ type: DRAWER.ADD_DIET, payload })),
+    openAddWorkoutDrawer: payload =>
+      dispatch(open({ type: DRAWER.ADD_WORKOUT, payload })),
+    resetNotificationRedirect: () => dispatch(resetNotificationRedirect()),
+    getAllTemplatesForDoctor: () => dispatch(getAllTemplatesForDoctor()),
+    openAddSecondaryDoctorDrawer: payload =>
+      dispatch(open({ type: DRAWER.ADD_SECONDARY_DOCTOR, payload }))
   };
 };
 

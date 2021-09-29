@@ -23,7 +23,7 @@ class DietResponsesService {
           { ...dietResponseData, document_uploaded },
           {
             raw: true,
-            transaction,
+            transaction
           }
         )) || null;
 
@@ -38,10 +38,10 @@ class DietResponsesService {
               name,
               document: getFilePath(file),
               parent_type: DOCUMENT_PARENT_TYPE.DIET_RESPONSE,
-              parent_id: id,
+              parent_id: id
             },
             {
-              transaction,
+              transaction
             }
           );
         }
@@ -50,13 +50,13 @@ class DietResponsesService {
       // update schedule event status
       await Database.getModel(scheduleEventsTableName).update(
         {
-          status: EVENT_STATUS.COMPLETED,
+          status: EVENT_STATUS.COMPLETED
         },
         {
           where: {
-            id: schedule_event_id,
+            id: schedule_event_id
           },
-          transaction,
+          transaction
         }
       );
 
@@ -68,11 +68,11 @@ class DietResponsesService {
     }
   };
 
-  getByData = async (data) => {
+  getByData = async data => {
     try {
       return await Database.getModel(TABLE_NAME).findOne({
         where: data,
-        raw: true,
+        raw: true
       });
     } catch (error) {
       throw error;
@@ -84,10 +84,10 @@ class DietResponsesService {
     try {
       const record = await Database.getModel(TABLE_NAME).update(data, {
         where: {
-          id,
+          id
         },
         raw: true,
-        transaction,
+        transaction
       });
       await transaction.commit();
       return record;
@@ -103,18 +103,18 @@ class DietResponsesService {
         where,
         order,
         attributes,
-        raw: true,
+        raw: true
       });
     } catch (error) {
       throw error;
     }
   };
 
-  findOne = async (data) => {
+  findOne = async data => {
     try {
       const diet = await Database.getModel(TABLE_NAME).findOne({
         where: data,
-        raw: true,
+        raw: true
       });
       return diet;
     } catch (error) {
@@ -122,12 +122,12 @@ class DietResponsesService {
     }
   };
 
-  delete = async (id) => {
+  delete = async id => {
     try {
       const record = await Database.getModel(TABLE_NAME).destroy({
         where: {
-          id,
-        },
+          id
+        }
       });
       return record;
     } catch (err) {

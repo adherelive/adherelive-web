@@ -1,14 +1,9 @@
 import { TABLE_COLUMN, formatTemplateTableData } from "../helper";
 
 export default data => {
-  const { id , 
-     duplicateCareplanTemplate,
-     handleOpenEditDrawer} = data;
+  const { id, duplicateCareplanTemplate, handleOpenEditDrawer } = data;
   const formattedData = formatTemplateTableData(data);
-  const { 
-    templateData
-  } =
-    formattedData || {};
+  const { templateData } = formattedData || {};
 
   return {
     key: id,
@@ -23,6 +18,6 @@ export default data => {
       duplicateCareplanTemplate,
       handleOpenEditDrawer,
       templateData
-    },
+    }
   };
 };

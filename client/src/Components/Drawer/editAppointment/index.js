@@ -21,7 +21,7 @@ class EditAppointment extends Component {
     this.state = {
       visible: true,
       disabledSubmit: true,
-      submitting:false
+      submitting: false
     };
 
     this.FormWrapper = Form.create({ onFieldsChange: this.onFormFieldChanges })(
@@ -29,16 +29,15 @@ class EditAppointment extends Component {
     );
   }
 
-  componentDidMount = () => {
-  }
+  componentDidMount = () => {};
 
   enableSubmit = () => {
     this.setState({ disabledSubmit: false });
-  }
+  };
 
-  onFormFieldChanges = (props) => {
+  onFormFieldChanges = props => {
     const {
-      form: { getFieldsError, isFieldsTouched },
+      form: { getFieldsError, isFieldsTouched }
     } = props;
     const isError = hasErrors(getFieldsError());
     const { disabledSubmit } = this.state;
@@ -48,7 +47,7 @@ class EditAppointment extends Component {
     }
   };
 
-  handleSubmit = (e) => {
+  handleSubmit = e => {
     e.preventDefault();
     const {
       updateAppointment,
@@ -58,13 +57,13 @@ class EditAppointment extends Component {
       getAppointments,
       editAppointment,
       addAppointment,
-      payload: { patient_id } = {},
+      payload: { patient_id } = {}
     } = this.props;
     const { formRef = {}, formatMessage } = this;
     const {
       props: {
-        form: { validateFields },
-      },
+        form: { validateFields }
+      }
     } = formRef;
 
     let pId = patientId ? patientId : patient_id;
@@ -84,93 +83,105 @@ class EditAppointment extends Component {
           end_time,
           description = "",
           treatment = "",
-          radiology_type=""
+          radiology_type = ""
         } = values;
 
+        let provider_name = typeof provider_id === "string" ? provider_id : "";
 
-        let provider_name = typeof (provider_id) === 'string' ? provider_id : '';
-
-        let newProvider_id = typeof (provider_id) === 'string' ? null : provider_id;
-
+        let newProvider_id =
+          typeof provider_id === "string" ? null : provider_id;
 
         const startDate = date ? moment(date) : moment();
         const newMonth = date ? startDate.get("month") : moment().get("month");
         const newDate = date ? startDate.get("date") : moment().get("date");
         const newYear = date ? startDate.get("year") : moment().get("year");
-        let newEventStartTime = date ? moment(start_time)
-          .clone()
-          .set({ month: newMonth, year: newYear, date: newDate }) : start_time;
-        let newEventEndTime = date ? moment(end_time)
-          .clone()
-          .set({ month: newMonth, year: newYear, date: newDate }) : end_time;
-        const data = newProvider_id ? {
-          // todo: change participant one with patient from store
-          id,
-          participant_two: {
-            id: pId,
-            category: "patient",
-          },
-          date,
-          start_time: newEventStartTime,
-          end_time: newEventEndTime,
-          reason,
-          description,
-          type,
-          type_description,
-          provider_id: newProvider_id,
-          provider_name,
-          critical,
-          treatment_id: treatment,
-        } : {
-            // todo: change participant one with patient from store
-            id,
-            participant_two: {
-              id: pId,
-              category: "patient",
-            },
-            date,
-            start_time: newEventStartTime,
-            end_time: newEventEndTime,
-            reason,
-            description,
-            type,
-            type_description,
-            provider_name,
-            critical,
-            treatment_id: treatment,
-          };
+        let newEventStartTime = date
+          ? moment(start_time)
+              .clone()
+              .set({ month: newMonth, year: newYear, date: newDate })
+          : start_time;
+        let newEventEndTime = date
+          ? moment(end_time)
+              .clone()
+              .set({ month: newMonth, year: newYear, date: newDate })
+          : end_time;
+        const data = newProvider_id
+          ? {
+              // todo: change participant one with patient from store
+              id,
+              participant_two: {
+                id: pId,
+                category: "patient"
+              },
+              date,
+              start_time: newEventStartTime,
+              end_time: newEventEndTime,
+              reason,
+              description,
+              type,
+              type_description,
+              provider_id: newProvider_id,
+              provider_name,
+              critical,
+              treatment_id: treatment
+            }
+          : {
+              // todo: change participant one with patient from store
+              id,
+              participant_two: {
+                id: pId,
+                category: "patient"
+              },
+              date,
+              start_time: newEventStartTime,
+              end_time: newEventEndTime,
+              reason,
+              description,
+              type,
+              type_description,
+              provider_name,
+              critical,
+              treatment_id: treatment
+            };
 
-          if(type === RADIOLOGY){
-            data["radiology_type"] = radiology_type;
-          }
-
-        if (!date || !start_time || !end_time || !type || !type_description || !reason || (!provider_id && !provider_name)) {
-          message.error(formatMessage(messages.fillMandatory))
-        } else if (moment(date).isSame(moment(), 'day') && moment(start_time).isBefore(moment())) {
-          message.error(formatMessage(messages.pastTimeError))
+        if (type === RADIOLOGY) {
+          data["radiology_type"] = radiology_type;
         }
-        else if (moment(end_time).isBefore(moment(start_time))) {
-          message.error(formatMessage(messages.validTimingError))
-        } else if (editAppointment) {
 
+        if (
+          !date ||
+          !start_time ||
+          !end_time ||
+          !type ||
+          !type_description ||
+          !reason ||
+          (!provider_id && !provider_name)
+        ) {
+          message.error(formatMessage(messages.fillMandatory));
+        } else if (
+          moment(date).isSame(moment(), "day") &&
+          moment(start_time).isBefore(moment())
+        ) {
+          message.error(formatMessage(messages.pastTimeError));
+        } else if (moment(end_time).isBefore(moment(start_time))) {
+          message.error(formatMessage(messages.validTimingError));
+        } else if (editAppointment) {
           // this.setState({ disabledSubmit: true });
           editAppointment(data);
-
         } else if (addAppointment) {
-
           // this.setState({ disabledSubmit: true });
           addAppointment(data);
         } else {
           try {
-            this.setState({submitting:true});
+            this.setState({ submitting: true });
             const response = await updateAppointment(data);
             const {
               status,
               statusCode: code,
               payload: {
                 message: errorMessage = "",
-                error: { error_type = "" } = {},
-              },
+                error: { error_type = "" } = {}
+              }
             } = response || {};
 
             if (code === 422 && error_type === "slot_present") {
@@ -180,7 +191,6 @@ class EditAppointment extends Component {
                 )} - ${moment(end_time).format("LT")}`
               );
             } else if (status === true) {
-
               this.setState({ disabledSubmit: true });
               message.success(formatMessage(messages.edit_appointment_success));
               getAppointments(pId);
@@ -188,10 +198,9 @@ class EditAppointment extends Component {
               message.warn(formatMessage(messages.somethingWentWrong));
             }
 
-            this.setState({submitting:false});
-
+            this.setState({ submitting: false });
           } catch (error) {
-            this.setState({submitting:false});
+            this.setState({ submitting: false });
             console.log("ADD APPOINTMENT UI ERROR ---> ", error);
           }
         }
@@ -199,7 +208,7 @@ class EditAppointment extends Component {
     });
   };
 
-  formatMessage = (data) => this.props.intl.formatMessage(data);
+  formatMessage = data => this.props.intl.formatMessage(data);
 
   onClose = () => {
     const { close } = this.props;
@@ -207,7 +216,7 @@ class EditAppointment extends Component {
     close();
   };
 
-  setFormRef = (formRef) => {
+  setFormRef = formRef => {
     this.formRef = formRef;
     if (formRef) {
       this.setState({ formRef: true });
@@ -230,18 +239,21 @@ class EditAppointment extends Component {
     const { payload: { id, patient_id } = {}, patients } = this.props;
     const { warnNote } = this;
 
-    const { basic_info: { first_name, middle_name, last_name } = {} } = patients[patient_id] || {};
+    const { basic_info: { first_name, middle_name, last_name } = {} } =
+      patients[patient_id] || {};
 
     confirm({
-      title: `Are you sure you want to delete the appointment with ${first_name} ${middle_name ? `${middle_name} ` : ""}${last_name ? last_name : ""}?`,
-      content: (
-        <div>
-          {warnNote()}
-        </div>
-      ),
+      title: `Are you sure you want to delete the appointment with ${first_name} ${
+        middle_name ? `${middle_name} ` : ""
+      }${last_name ? last_name : ""}?`,
+      content: <div>{warnNote()}</div>,
       onOk: async () => {
         this.setState({ loading: true });
-        const { deleteAppointment, getAppointments, getPatientCarePlanDetails } = this.props;
+        const {
+          deleteAppointment,
+          getAppointments,
+          getPatientCarePlanDetails
+        } = this.props;
         const response = await deleteAppointment(id);
         const { status } = response || {};
         if (status === true) {
@@ -249,13 +261,18 @@ class EditAppointment extends Component {
           getAppointments(patient_id);
         }
       },
-      onCancel() { }
+      onCancel() {}
     });
   };
 
   getDeleteButton = () => {
     const { handleDelete } = this;
-    const { loading, deleteAppointmentOfTemplate, addAppointment, hideAppointment } = this.props;
+    const {
+      loading,
+      deleteAppointmentOfTemplate,
+      addAppointment,
+      hideAppointment
+    } = this.props;
     if (addAppointment) {
       return (
         <Button onClick={hideAppointment} style={{ marginRight: 8 }}>
@@ -268,7 +285,11 @@ class EditAppointment extends Component {
         type="danger"
         ghost
         className="fs14 no-border style-delete"
-        onClick={deleteAppointmentOfTemplate ? deleteAppointmentOfTemplate : handleDelete}
+        onClick={
+          deleteAppointmentOfTemplate
+            ? deleteAppointmentOfTemplate
+            : handleDelete
+        }
         loading={loading}
       >
         <div className="flex align-center delete-text">
@@ -279,25 +300,26 @@ class EditAppointment extends Component {
   };
 
   render() {
-    const { visible,
+    const {
+      visible,
       editAppointment,
       addAppointment,
       appointmentVisible = false,
-      hideAppointment ,
-      payload:{canViewDetails=false}={}
+      hideAppointment,
+      payload: { canViewDetails = false } = {}
     } = this.props;
-    const { disabledSubmit , submitting=false } = this.state;
+    const { disabledSubmit, submitting = false } = this.state;
     const {
       onClose,
       formatMessage,
       setFormRef,
       handleSubmit,
       FormWrapper,
-      getDeleteButton,
+      getDeleteButton
     } = this;
 
     const submitButtonProps = {
-      disabled: disabledSubmit,
+      disabled: disabledSubmit
       // loading: loading && !deleteLoading
     };
 
@@ -317,42 +339,52 @@ class EditAppointment extends Component {
             top: "0px"
           }}
           destroyOnClose={true}
-          onClose={editAppointment || addAppointment ? hideAppointment : onClose}
-          visible={editAppointment || addAppointment ? appointmentVisible : visible} // todo: change as per prop -> "visible", -- WIP --
-          width={'35%'}
+          onClose={
+            editAppointment || addAppointment ? hideAppointment : onClose
+          }
+          visible={
+            editAppointment || addAppointment ? appointmentVisible : visible
+          } // todo: change as per prop -> "visible", -- WIP --
+          width={"35%"}
           title={
             canViewDetails
-            ? formatMessage(messages.viewDetails)
-            : editAppointment ? formatMessage(messages.appointment) : addAppointment ? "Add Appointment" : formatMessage(messages.edit_appointment)}
-        // headerStyle={{
-        //     display:"flex",
-        //     justifyContent:"space-between",
-        //     alignItems:"center"
-        // }}
+              ? formatMessage(messages.viewDetails)
+              : editAppointment
+              ? formatMessage(messages.appointment)
+              : addAppointment
+              ? "Add Appointment"
+              : formatMessage(messages.edit_appointment)
+          }
+          // headerStyle={{
+          //     display:"flex",
+          //     justifyContent:"space-between",
+          //     alignItems:"center"
+          // }}
         >
           {/* <div className="flex direction-row justify-space-between"> */}
-          <FormWrapper wrappedComponentRef={setFormRef} enableSubmit={this.enableSubmit} {...this.props} />
-          {/* <CalendarTimeSelecton 
+          <FormWrapper
+            wrappedComponentRef={setFormRef}
+            enableSubmit={this.enableSubmit}
+            {...this.props}
+          />
+          {/* <CalendarTimeSelecton
                 className="calendar-section wp60"
             /> */}
           {/* </div> */}
 
-            {
-              !canViewDetails
-              &&
-              (
-                <Footer
-                  className="flex justify-space-between"
-                  onSubmit={handleSubmit}
-                  onClose={editAppointment || addAppointment ? hideAppointment : onClose}
-                  submitText={formatMessage(messages.submit_text)}
-                  submitButtonProps={submitButtonProps}
-                  cancelComponent={getDeleteButton()}
-                  submitting={submitting}
-                />
-              )
-            }
-          
+          {!canViewDetails && (
+            <Footer
+              className="flex justify-space-between"
+              onSubmit={handleSubmit}
+              onClose={
+                editAppointment || addAppointment ? hideAppointment : onClose
+              }
+              submitText={formatMessage(messages.submit_text)}
+              submitButtonProps={submitButtonProps}
+              cancelComponent={getDeleteButton()}
+              submitting={submitting}
+            />
+          )}
         </Drawer>
       </Fragment>
     );

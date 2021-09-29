@@ -41,10 +41,7 @@ class TransactionController extends Controller {
     try {
       const {
         body: { payment_product_id, currency, isUpi = false },
-        userDetails: {
-          userRoleId,
-          userData: { category } = {}
-        } = {}
+        userDetails: { userRoleId, userData: { category } = {} } = {}
       } = req;
 
       const paymentProduct = await PaymentProductWrapper({
@@ -76,12 +73,13 @@ class TransactionController extends Controller {
         });
 
         const requestor_id = transactions.getRequestorId();
-        const requestorRole = await userRolesService.findOne({
-          where: {id: requestor_id},
-          attributes: ["user_identity"]
-        }) || null;
+        const requestorRole =
+          (await userRolesService.findOne({
+            where: { id: requestor_id },
+            attributes: ["user_identity"]
+          })) || null;
 
-        const { user_identity = null} = requestorRole || {};
+        const { user_identity = null } = requestorRole || {};
         const accountDetails = await accountDetailService.getCurrentAccountByUserId(
           user_identity
         );
@@ -220,8 +218,8 @@ class TransactionController extends Controller {
       }
 
       const isVerified = TransactionHelper.verifyTransaction(
-          transaction_response,
-          oldTransaction
+        transaction_response,
+        oldTransaction
       );
 
       Log.info(`transaction verified : ${isVerified}`);
@@ -321,11 +319,12 @@ class TransactionController extends Controller {
           case USER_CATEGORY.HSP:
           case USER_CATEGORY.PROVIDER:
             const requestor_id = transaction.getRequestorId();
-            const requestorRole = await userRolesService.findOne({
-              where: {id: requestor_id},
-              attributes: ["user_identity"]
-            }) || null;
-            const { user_identity = null} = requestorRole || {};
+            const requestorRole =
+              (await userRolesService.findOne({
+                where: { id: requestor_id },
+                attributes: ["user_identity"]
+              })) || null;
+            const { user_identity = null } = requestorRole || {};
             accountUserId = user_identity;
             break;
           default:

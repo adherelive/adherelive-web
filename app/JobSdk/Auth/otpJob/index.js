@@ -1,46 +1,46 @@
 import AuthJob from "../";
-import {EMAIL_TEMPLATE_NAME} from "../../../../constant";
+import { EMAIL_TEMPLATE_NAME } from "../../../../constant";
 
 class PatientOtpJob extends AuthJob {
-    constructor(data) {
-        super(data);
-    }
+  constructor(data) {
+    super(data);
+  }
 
-    getEmailTemplate = () => {
-        const {getData} = this;
-        const {details: {otp} = {}} = getData() || {};
+  getEmailTemplate = () => {
+    const { getData } = this;
+    const { details: { otp } = {} } = getData() || {};
 
-        const templateData = [
-            {
-                title: "AdhereLive: OTP verification for Patient",
-                toAddress: process.config.app.developer_email,
-                templateName: EMAIL_TEMPLATE_NAME.OTP_VERIFICATION,
-                templateData: {
-                    title: "Patient",
-                    mainBodyText: "OTP for the patient login is",
-                    subBodyText: otp,
-                    host: process.config.WEB_URL,
-                    contactTo: process.config.app.support_email
-                }
-            }
-        ];
+    const templateData = [
+      {
+        title: "AdhereLive: OTP verification for Patient",
+        toAddress: process.config.app.developer_email,
+        templateName: EMAIL_TEMPLATE_NAME.OTP_VERIFICATION,
+        templateData: {
+          title: "Patient",
+          mainBodyText: "OTP for the AdhereLive patient login is",
+          subBodyText: otp,
+          host: process.config.WEB_URL,
+          contactTo: process.config.app.support_email
+        }
+      }
+    ];
 
-        return templateData;
-    };
+    return templateData;
+  };
 
-    getSmsTemplate = () => {
-        const {getData} = this;
-        const {details: {prefix, phoneNumber, otp} = {}} = getData() || {};
+  getSmsTemplate = () => {
+    const { getData } = this;
+    const { details: { prefix, phoneNumber, otp } = {} } = getData() || {};
 
-        const templateData = [
-            {
-                phoneNumber: `+${prefix}${phoneNumber}`,
-                message:`Hello from AdhereLive! Your One Time Password is ${otp}`
-            }
-        ];
+    const templateData = [
+      {
+        phoneNumber: `+${prefix}${phoneNumber}`,
+        message: `Hello from AdhereLive! Your One Time Password is ${otp}`
+      }
+    ];
 
-        return templateData;
-    };
+    return templateData;
+  };
 }
 
 export default PatientOtpJob;

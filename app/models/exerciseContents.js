@@ -11,7 +11,7 @@ export const VIDEO_TYPES = {
   NONE: "none"
 };
 
-export const db = (database) => {
+export const db = database => {
   database.define(
     TABLE_NAME,
     {
@@ -19,20 +19,20 @@ export const db = (database) => {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
-        type: DataTypes.INTEGER,
+        type: DataTypes.INTEGER
       },
       exercise_id: {
         type: DataTypes.INTEGER,
         allowNull: false,
         references: {
           model: {
-            tableName: exerciseTableName,
+            tableName: exerciseTableName
           },
-          key: "id",
-        },
+          key: "id"
+        }
       },
       creator_id: {
-        type: DataTypes.INTEGER,
+        type: DataTypes.INTEGER
       },
       creator_type: {
         type: DataTypes.ENUM,
@@ -42,7 +42,7 @@ export const db = (database) => {
           USER_CATEGORY.ADMIN,
           USER_CATEGORY.HSP
         ],
-        defaultValue: USER_CATEGORY.ADMIN,
+        defaultValue: USER_CATEGORY.ADMIN
       },
       video_content_type: {
         type: DataTypes.ENUM,
@@ -50,20 +50,20 @@ export const db = (database) => {
         defaultValue: VIDEO_TYPES.NONE
       },
       video_content: {
-        type: DataTypes.STRING,
+        type: DataTypes.STRING
       },
       details: {
-        type: DataTypes.JSON,
-      },
+        type: DataTypes.JSON
+      }
     },
     {
       underscored: true,
-      paranoid: true,
+      paranoid: true
     }
   );
 };
 
-export const associate = (database) => {
+export const associate = database => {
   // database.models[TABLE_NAME].hasOne(database.models[repetitionTableName], {
   //   foreignKey: "default_repetition_id",
   //   targetKey: "id",
@@ -74,11 +74,8 @@ export const associate = (database) => {
   //   targetKey: "id"
   // });
 
-  database.models[TABLE_NAME].belongsTo(
-    database.models[exerciseTableName],
-    {
-      foreignKey: "exercise_id",
-      targetKey: "id",
-    }
-  );
+  database.models[TABLE_NAME].belongsTo(database.models[exerciseTableName], {
+    foreignKey: "exercise_id",
+    targetKey: "id"
+  });
 };

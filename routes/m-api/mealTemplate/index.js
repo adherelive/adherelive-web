@@ -6,19 +6,11 @@ import * as Validator from "./validate";
 
 const router = express.Router();
 
-router.post("/",
-    Authenticate,
-    Validator.create,
-    MealTemplate.create);
+router.post("/", Authenticate, Validator.create, MealTemplate.create);
 
-router.post("/:id",
-    Authenticate,
-    Validator.update,
-    MealTemplate.update);
+router.post("/:id", Authenticate, Validator.update, MealTemplate.update);
 
-router.delete("/:id", 
-    Authenticate,
-    MealTemplate.delete);
+router.delete("/:id", Authenticate, MealTemplate.delete);
 
 export default router;
 // module.exports = router;

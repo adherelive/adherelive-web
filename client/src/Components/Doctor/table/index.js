@@ -36,14 +36,14 @@ class DoctorTable extends Component {
     }
   }
 
-  onSelectChange = (selectedRowKeys) => {
+  onSelectChange = selectedRowKeys => {
     this.setState({ selectedRows: selectedRowKeys });
   };
 
   getLoadingComponent = () => {
     const antIcon = <Icon type="loading" style={{ fontSize: 24 }} spin />;
     return {
-      indicator: antIcon,
+      indicator: antIcon
     };
   };
 
@@ -51,28 +51,28 @@ class DoctorTable extends Component {
     const { users, doctors, doctor_ids, specialities } = this.props;
     const { intl: { formatMessage } = {} } = this.props;
 
-    return doctor_ids.map((id) => {
+    return doctor_ids.map(id => {
       return generateRow({
         id,
         users,
         doctors,
         specialities,
-        formatMessage,
+        formatMessage
       });
     });
   };
 
-  onRowClick = (key) => (event) => {
+  onRowClick = key => event => {
     event.preventDefault();
     const { history } = this.props;
     history.push(`/doctors/${key}`);
   };
 
-  onRow = (record) => {
+  onRow = record => {
     const { onRowClick } = this;
     const { key } = record;
     return {
-      onClick: onRowClick(key),
+      onClick: onRowClick(key)
     };
   };
 
@@ -90,11 +90,11 @@ class DoctorTable extends Component {
     const {
       loading,
       //pagination_bottom,
-      intl: { formatMessage } = {},
+      intl: { formatMessage } = {}
     } = this.props;
 
     const doctorLocale = {
-      emptyText: formatMessage(messages.emptyDoctorTable),
+      emptyText: formatMessage(messages.emptyDoctorTable)
     };
 
     return (
@@ -105,13 +105,13 @@ class DoctorTable extends Component {
         loading={loading === true ? getLoadingComponent() : false}
         columns={getColumn({
           formatMessage,
-          className: "pointer",
+          className: "pointer"
         })}
         dataSource={getDataSource()}
         scroll={{ x: 1600 }}
         title={getTableTitle}
         pagination={{
-          position: "top",
+          position: "top"
         }}
         locale={doctorLocale}
       />

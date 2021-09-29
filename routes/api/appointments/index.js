@@ -22,10 +22,10 @@ router.post(
 );
 
 router.delete(
-  "/:document_id/delete-doc", 
+  "/:document_id/delete-doc",
   Authenticate,
-  Appointment.deleteAppointmentDoc);
-
+  Appointment.deleteAppointmentDoc
+);
 
 router.get(
   "/missed",

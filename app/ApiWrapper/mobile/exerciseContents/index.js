@@ -17,22 +17,25 @@ class ExerciseContentWrapper extends BaseExerciseContent {
       creator_id,
       creator_type,
       video_content_type,
-      video_content,
+      video_content
     } = _data || {};
 
-    const videoContent = video_content_type === VIDEO_TYPES.UPLOAD ? completePath(video_content) : video_content;
+    const videoContent =
+      video_content_type === VIDEO_TYPES.UPLOAD
+        ? completePath(video_content)
+        : video_content;
 
     return {
       basic_info: {
         id,
-        exercise_id,
+        exercise_id
       },
       creator_id,
       creator_type,
       video: {
         content_type: video_content_type,
-        content: videoContent,
-      },
+        content: videoContent
+      }
     };
   };
 }
@@ -41,7 +44,7 @@ export default async ({
   data = null,
   id = null,
   exercise_id = null,
-  auth = null,
+  auth = null
 }) => {
   if (data) {
     return new ExerciseContentWrapper(data);
@@ -53,7 +56,7 @@ export default async ({
   }
   const exerciseContent = await exerciseContentService.findOne({
     exercise_id,
-    ...auth,
+    ...auth
   });
   return new ExerciseContentWrapper(exerciseContent);
 };

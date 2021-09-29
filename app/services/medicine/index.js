@@ -18,14 +18,13 @@ export default class Medicine {
     return this._data.get();
   };
 
-    getMedicineId = () => {
-        return this._data.get("id");
-    }
+  getMedicineId = () => {
+    return this._data.get("id");
+  };
 
-
-    getStartDate = () => {
-        return this._data.get("start_date");
-    };
+  getStartDate = () => {
+    return this._data.get("start_date");
+  };
 
   getDetails = () => {
     return this._data.get("details");
