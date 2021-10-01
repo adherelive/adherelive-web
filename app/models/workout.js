@@ -6,61 +6,61 @@ import { TABLE_NAME as workoutExerciseGroupMappingTableName } from "./workoutExe
 
 export const TABLE_NAME = "workouts";
 
-export const db = database => {
+export const db = (database) => {
   database.define(
     TABLE_NAME,
     {
       id: {
         type: DataTypes.INTEGER,
         primaryKey: true,
-        autoIncrement: true
+        autoIncrement: true,
       },
       care_plan_id: {
         type: DataTypes.INTEGER,
-        allowNull: false
+        allowNull: false,
       },
       name: {
         type: DataTypes.STRING,
-        allowNull: false
+        allowNull: false,
       },
       total_calories: {
-        type: DataTypes.FLOAT(11, 2)
+        type: DataTypes.FLOAT(11, 2),
       },
       start_date: {
         type: DataTypes.DATE,
-        allowNull: false
+        allowNull: false,
       },
       end_date: {
-        type: DataTypes.DATE
+        type: DataTypes.DATE,
       },
       time: {
         type: DataTypes.DATE,
-        allowNull: false
+        allowNull: false,
       },
       details: {
-        type: DataTypes.JSON
+        type: DataTypes.JSON,
       },
       expired_on: {
-        type: DataTypes.DATE
-      }
+        type: DataTypes.DATE,
+      },
     },
     {
       underscored: true,
-      paranoid: true
+      paranoid: true,
     }
   );
 };
 
-export const associate = database => {
+export const associate = (database) => {
   database.models[TABLE_NAME].belongsTo(database.models[carePlanTableName], {
     foreignKey: "care_plan_id",
-    targetKey: "id"
+    targetKey: "id",
   });
 
   database.models[TABLE_NAME].belongsToMany(
     database.models[exerciseGroupTableName],
     {
-      through: workoutExerciseGroupMappingTableName
+      through: workoutExerciseGroupMappingTableName,
     }
   );
 };

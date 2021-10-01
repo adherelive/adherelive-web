@@ -1,7 +1,6 @@
 import { doRequest } from "../../Helper/network";
 import { Twilio } from "../../Helper/urls";
 import { REQUEST_TYPE } from "../../constant";
-
 const intialState = {};
 
 const FETCHING_TWILIO_VIDEO_ACCESS_TOKEN = "FETCHING_TWILIO_VIDEO_ACCESS_TOKEN";
@@ -16,7 +15,9 @@ const FETCHING_TWILIO_CHAT_ACCESS_TOKEN_COMPLETED =
 const FETCHING_TWILIO_CHAT_ACCESS_TOKEN_COMPLETED_WITH_ERROR =
   "FETCHING_TWILIO_CHAT_ACCESS_TOKEN_COMPLETED_WITH_ERROR";
 
-const SET_PATIENT_FOR_CHAT_COMPLETED = "SET_PATIENT_FOR_CHAT_COMPLETED";
+
+const SET_PATIENT_FOR_CHAT_COMPLETED =
+  "SET_PATIENT_FOR_CHAT_COMPLETED";
 
 const SET_CARE_PLAN_FOR_CHAT_COMPLETED = "SET_CARE_PLAN_FOR_CHAT_COMPLETED";
 
@@ -31,12 +32,12 @@ const setTwilioChatAccessToken = (state, data) => {
 };
 
 const setPatientIdForChat = (state, data) => {
-  const { patient_id = "" } = data;
+  const { patient_id = '' } = data;
   return { ...state, patientId: patient_id };
 };
 
 const setCareplanIdForChat = (state, data) => {
-  const { care_plan_id = null } = data;
+  const {care_plan_id = null} = data;
   return {
     ...state,
     care_plan_id
@@ -66,7 +67,7 @@ export const fetchVideoAccessToken = userId => {
           payload: payload.error
         });
       }
-    } catch (error) {}
+    } catch (error) { }
   };
 };
 
@@ -75,7 +76,7 @@ export const fetchChatAccessToken = userId => {
   return async dispatch => {
     try {
       dispatch({ type: FETCHING_TWILIO_CHAT_ACCESS_TOKEN });
-      response = await doRequest({
+       response = await doRequest({
         method: REQUEST_TYPE.GET,
         url: Twilio.getTwilioChatAccessToken(),
         params: { identity: userId, device: "browser" }
@@ -94,7 +95,7 @@ export const fetchChatAccessToken = userId => {
           payload: payload.error
         });
       }
-    } catch (error) {}
+    } catch (error) { }
     return response;
   };
 };
@@ -106,7 +107,7 @@ export const setPatientForChat = patient_id => {
         type: SET_PATIENT_FOR_CHAT_COMPLETED,
         payload: { patient_id }
       });
-    } catch (error) {}
+    } catch (error) { }
   };
 };
 
@@ -117,7 +118,7 @@ export const setCareplanForChat = care_plan_id => {
         type: SET_CARE_PLAN_FOR_CHAT_COMPLETED,
         payload: { care_plan_id }
       });
-    } catch (error) {}
+    } catch (error) { }
   };
 };
 

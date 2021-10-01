@@ -14,9 +14,9 @@ export const getAuthCategory = ({ doctors, authenticated_user }) => {
 };
 
 export const getFullName = ({ first_name, middle_name, last_name }) => {
-  return `${first_name ? ` ${first_name}` : ""}  ${
-    middle_name ? ` ${middle_name}` : ""
-  }${last_name ? ` ${last_name}` : ""}`;
+  return `${first_name ? ` ${first_name}` : ""}  ${middle_name ? ` ${middle_name}` : ""}${
+    last_name ? ` ${last_name}` : ""
+  }`;
 };
 
 export const isJSON = obj => {
@@ -32,8 +32,5 @@ export const isJSON = obj => {
 };
 
 export const getAbbreviation = (str = "") => {
-  return str
-    .split(" ")
-    .map(word => word.charAt(0))
-    .join(" ");
+  return str.split(" ").map(word => word.charAt(0)).join(" ");
 };

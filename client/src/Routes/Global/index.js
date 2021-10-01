@@ -1,4 +1,4 @@
-import React, { Component, lazy } from "react";
+import React, {Component, lazy} from "react";
 import { BrowserRouter, Route, Switch, Redirect } from "react-router-dom";
 // import landingPage from "../Components/landingPage";
 // import Signup from "../Containers/Invite";
@@ -14,9 +14,9 @@ import ResetPassword from "../../Containers/forgotPassword/resetPassword";
 import { PATH } from "../../constant";
 
 const TermsOfService = lazy(() =>
-  import(
-    /* webpackChunkName: "TermsOfServicePage" */ "../../Containers/Pages/TermsOfService"
-  )
+    import(
+        /* webpackChunkName: "TermsOfServicePage" */ "../../Containers/Pages/TermsOfService"
+        )
 );
 
 const TermsOfPayment = lazy(() =>
@@ -26,10 +26,12 @@ const TermsOfPayment = lazy(() =>
 );
 
 const PrivacyPolicy = lazy(() =>
-  import(
-    /* webpackChunkName: "PrivacyPolicyPage" */ "../../Containers/Pages/PrivacyPolicy"
-  )
+    import(
+        /* webpackChunkName: "PrivacyPolicyPage" */ "../../Containers/Pages/PrivacyPolicy"
+        )
 );
+
+
 
 export default class Global extends Component {
   constructor(props) {
@@ -78,11 +80,7 @@ export default class Global extends Component {
           {redirecting && <Redirect to={authRedirection} />}
           <Route exact path={PATH.SIGN_IN} component={SignIn} />
 
-          <Route
-            exact
-            path={PATH.TERMS_OF_SERVICE}
-            component={TermsOfService}
-          />
+          <Route exact path={PATH.TERMS_OF_SERVICE} component={TermsOfService} />
 
           <Route
             exact

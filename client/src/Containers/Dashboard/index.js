@@ -20,24 +20,16 @@ import { getAllFeatures } from "../../modules/featuresMappings";
 import { DRAWER } from "../../constant";
 import { open } from "../../modules/drawer";
 import { getAllMissedScheduleEvents } from "../../modules/scheduleEvents";
-import { setUnseenNotificationCount } from "../../modules/pages/NotificationCount";
+import { setUnseenNotificationCount }  from "../../modules/pages/NotificationCount";
 import { getAllDietsForDoctor } from "../../modules/diets";
 
 const mapStateToProps = state => {
   const {
     graphs,
-    auth: {
-      authenticated_category,
-      authPermissions = [],
-      authenticated_user = 1,
-      auth_role = null,
-      notificationToken = "",
-      feedId = "",
-      doctor_provider_id = ""
-    } = {},
+    auth: {authenticated_category, authPermissions = [], authenticated_user = 1  , auth_role = null, notificationToken = '' , feedId = '' , doctor_provider_id = ''  } = {},
     treatments = {},
     conditions = {},
-    pages: { ui_features = {}, dashboard = {} } = {},
+    pages: { ui_features = {} ,dashboard ={}} = {},
     severity = {},
     chats,
     drawer,
@@ -47,7 +39,7 @@ const mapStateToProps = state => {
     features = {},
     features_mappings = {},
     providers = {},
-    care_plans = {}
+    care_plans = {},
   } = state;
   return {
     notificationToken,
@@ -95,17 +87,18 @@ const mapDispatchToProps = dispatch => {
     showVerifyModal: data => dispatch(showVerifyModal(data)),
     getAllFeatures: () => dispatch(getAllFeatures()),
     openMissedMedicationDrawer: () =>
-      dispatch(open({ type: DRAWER.MISSED_MEDICATION })),
+    dispatch(open({ type: DRAWER.MISSED_MEDICATION})),
     openMissedAppointmentDrawer: () =>
-      dispatch(open({ type: DRAWER.MISSED_APPOINTMENT })),
-    openMissedVitalDrawer: () => dispatch(open({ type: DRAWER.MISSED_VITAL })),
+    dispatch(open({ type: DRAWER.MISSED_APPOINTMENT})),
+    openMissedVitalDrawer: () =>
+    dispatch(open({ type: DRAWER.MISSED_VITAL})),
     getAllMissedScheduleEvents: () => dispatch(getAllMissedScheduleEvents()),
-    setUnseenNotificationCount: count =>
-      dispatch(setUnseenNotificationCount(count)),
-    getAllDietsForDoctor: () => dispatch(getAllDietsForDoctor()),
-    openMissedDietDrawer: () => dispatch(open({ type: DRAWER.MISSED_DIET })),
+    setUnseenNotificationCount : (count) => dispatch(setUnseenNotificationCount(count)),
+    getAllDietsForDoctor:() => dispatch(getAllDietsForDoctor()),
+    openMissedDietDrawer: () =>
+    dispatch(open({ type: DRAWER.MISSED_DIET})),
     openMissedWorkoutDrawer: () =>
-      dispatch(open({ type: DRAWER.MISSED_WORKOUT }))
+    dispatch(open({ type: DRAWER.MISSED_WORKOUT})),
   };
 };
 

@@ -72,7 +72,7 @@ class UserWrapper extends BaseUser {
         userCategoryData: patientData.getBasicInfo(),
         userCategoryId: patientData.getPatientId()
       };
-    } else if (provider) {
+    } else if(provider) {
       const providerData = await ProviderWrapper(provider);
       return {
         userCategoryData: providerData.getBasicInfo(),
@@ -120,7 +120,7 @@ class UserWrapper extends BaseUser {
     let permissions = [];
 
     if (isActivated()) {
-      permissions = await getPermissions();
+     permissions = await getPermissions();
     }
 
     return {
@@ -135,6 +135,7 @@ class UserWrapper extends BaseUser {
     const { getId, getBasicInfo, _data } = this;
 
     const { doctor, patient } = _data;
+
 
     const doctors = {};
     const patients = {};

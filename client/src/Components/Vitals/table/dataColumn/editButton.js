@@ -5,28 +5,23 @@ import Tooltip from "antd/es/tooltip";
 import EyeFilled from "@ant-design/icons/EyeFilled";
 
 export default props => {
-  const { action, id, formatMessage, canViewDetails = false } = props || {};
+  const { action, id, formatMessage, canViewDetails=false } = props || {};
 
   return (
-    <Tooltip
-      placement="bottom"
-      title={
-        canViewDetails
-          ? formatMessage(messages.view)
-          : formatMessage(messages.edit)
-      }
-    >
+    <Tooltip placement="bottom" title={ canViewDetails ? formatMessage(messages.view) : formatMessage(messages.edit)}>
       <div className="p10" onClick={action(id)}>
         <div className="flex align-center justify-center">
-          {canViewDetails ? (
+        { 
+            canViewDetails
+            ?
             <EyeFilled
               className="w20"
               className={"del doc-opt"}
-              style={{ fontSize: "18px", color: "#1890ff" }}
+              style={{ fontSize: '18px', color:"#1890ff" }}
             />
-          ) : (
+            :
             <img src={edit_image} alt="edit button" />
-          )}
+          }
         </div>
       </div>
     </Tooltip>

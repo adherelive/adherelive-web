@@ -27,11 +27,11 @@ export const db = database => {
       linked_with: {
         type: DataTypes.ENUM,
         values: [USER_CATEGORY.PROVIDER, USER_CATEGORY.ADMIN],
-        allowNull: true
+        allowNull: true,
       },
       linked_id: {
         type: DataTypes.INTEGER,
-        allowNull: true
+        allowNull: true,
       }
     },
     {

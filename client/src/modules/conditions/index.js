@@ -14,7 +14,7 @@ export const searchCondition = value => {
     try {
       response = await doRequest({
         method: REQUEST_TYPE.GET,
-        url: searchConditions(value)
+        url: searchConditions(value),
       });
 
       const { status, payload: { data, message = "" } = {} } = response || {};
@@ -33,15 +33,16 @@ export const searchCondition = value => {
       console.log("SEARCH CONDITION MODULE catch error -> ", error);
     }
     return response;
-  };
+  }
 };
+
 
 function conditionReducer(state, data) {
   const { conditions } = data || {};
   if (conditions) {
     return {
       ...state,
-      ...conditions
+      ...conditions,
     };
   } else {
     return state;
@@ -54,6 +55,6 @@ export default (state = {}, action) => {
     case SEARCH_CONDITION_COMPLETED:
       return conditionReducer(state, data);
     default:
-      return conditionReducer(state, data);
+      return conditionReducer(state, data)
   }
 };

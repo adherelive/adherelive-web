@@ -37,23 +37,15 @@ class SymptomService {
     }
   };
 
-  getCount = async data => {
+  getCount = async (data) => {
     try {
       return await Database.getModel(TABLE_NAME).count({
         where: {
           ...data,
           created_at: {
-            [Op.between]: [
-              moment()
-                .utc()
-                .subtract(7, "days")
-                .toISOString(),
-              moment()
-                .utc()
-                .toISOString()
-            ]
+            [Op.between]: [moment().utc().subtract(7, "days").toISOString(), moment().utc().toISOString()]
           }
-        }
+        },
       });
     } catch (error) {
       throw error;

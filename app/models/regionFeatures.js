@@ -4,7 +4,7 @@ import { FEATURES } from "./features";
 
 export const REGION_FEATURES = "region_features";
 
-export const db = database => {
+export const db = (database) => {
   database.define(
     REGION_FEATURES,
     {
@@ -19,14 +19,14 @@ export const db = database => {
         allowNull: false,
         references: {
           model: {
-            tableName: FEATURES
+                        tableName: FEATURES,
           },
-          key: "id"
+                    key: 'id'
         }
       },
       activated_on: {
-        type: DataTypes.DATE
-      }
+                type: DataTypes.DATE,
+            },
     },
     {
       underscored: true,
@@ -35,7 +35,7 @@ export const db = database => {
         getBasicInfo() {
           return {
             id: this.id,
-            name: this.name
+                        name:this.name,
           };
         }
       }
@@ -43,7 +43,7 @@ export const db = database => {
   );
 };
 
-export const associate = database => {
+export const associate = (database) => {
   const { region_features, features } = database.models || {};
 
   // associations here (if any) ...

@@ -5,7 +5,7 @@ import { TABLE_NAME as treatmentTableName } from "./treatments";
 
 export const TABLE_NAME = "treatment_condition_mappings";
 
-export const db = database => {
+export const db = (database) => {
   database.define(
     TABLE_NAME,
     {
@@ -20,9 +20,9 @@ export const db = database => {
         allowNull: false,
         references: {
           model: {
-            tableName: conditionTableName
+                        tableName: conditionTableName,
           },
-          key: "id"
+                    key: 'id'
         }
       },
       treatment_id: {
@@ -30,11 +30,11 @@ export const db = database => {
         allowNull: false,
         references: {
           model: {
-            tableName: treatmentTableName
+                        tableName: treatmentTableName,
           },
-          key: "id"
+                    key: 'id'
         }
-      }
+            },
     },
     {
       underscored: true,
@@ -43,7 +43,7 @@ export const db = database => {
         getBasicInfo() {
           return {
             id: this.id,
-            name: this.name
+                        name:this.name,
           };
         }
       }
@@ -51,7 +51,7 @@ export const db = database => {
   );
 };
 
-export const associate = database => {
+export const associate = (database) => {
   // const {TABLE_NAME} = database.models || {};
   // associations here (if any) ...
 };

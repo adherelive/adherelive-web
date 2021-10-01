@@ -5,7 +5,8 @@ const messages = defineMessages({
     id: "app.provider.transaction.details.transactionsText",
     description: "",
     defaultMessage: "Transactions"
-  }
+  },
+  
 });
 
 export default messages;

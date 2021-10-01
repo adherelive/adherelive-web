@@ -52,7 +52,7 @@ class ResetPassword extends Component {
       history
     } = this.props;
     this.setState({ loading: true });
-    // todo: check how to use validateFields here as that is causing promise related error
+      // todo: check how to use validateFields here as that is causing promise related error
     const { new_password, confirm_password } = getFieldsValue();
     if (new_password && confirm_password) {
       try {

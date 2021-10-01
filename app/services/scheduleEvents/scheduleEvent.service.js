@@ -6,7 +6,7 @@ import Database from "../../../libs/mysql";
 import moment from "moment";
 
 class ScheduleEventService {
-  create = async data => {
+  create = async (data) => {
     try {
       const scheduleEvents = await Database.getModel(TABLE_NAME).create(data);
       return scheduleEvents;
@@ -15,7 +15,7 @@ class ScheduleEventService {
     }
   };
 
-  bulkCreate = async data => {
+  bulkCreate = async (data) => {
     try {
       const scheduleEvents = await Database.getModel(TABLE_NAME).bulkCreate(
         data
@@ -31,12 +31,12 @@ class ScheduleEventService {
     try {
       const scheduleEvents = await Database.getModel(TABLE_NAME).update(data, {
         where: {
-          id
+          id,
         },
         transaction,
         // returning: true,
         raw: true,
-        individualHooks: true
+        individualHooks: true,
       });
       await transaction.commit();
       return scheduleEvents;
@@ -58,10 +58,10 @@ class ScheduleEventService {
     }
   };
 
-  getAllEventByData = async data => {
+  getAllEventByData = async (data) => {
     try {
       const scheduleEvent = await Database.getModel(TABLE_NAME).findAll({
-        where: data
+        where: data,
       });
       return scheduleEvent;
     } catch (error) {
@@ -76,11 +76,11 @@ class ScheduleEventService {
         where: {
           event_id,
           date: {
-            [Op.lte]: date
+            [Op.lte]: date,
           },
-          event_type
+          event_type,
         },
-        order: [["date", "ASC"]]
+        order: [["date", "ASC"]],
       });
       return scheduleEvent;
     } catch (error) {
@@ -101,14 +101,14 @@ class ScheduleEventService {
               moment(date).startOf("day"),
               moment()
                 .utc()
-                .toISOString()
-            ]
+                .toISOString(),
+            ],
           },
           status: {
-            [Op.not]: [EVENT_STATUS.PENDING, EVENT_STATUS.SCHEDULED]
-          }
+            [Op.not]: [EVENT_STATUS.PENDING, EVENT_STATUS.SCHEDULED],
+          },
         },
-        order: [["start_time", sort]]
+        order: [["start_time", sort]],
       });
       return scheduleEvent;
     } catch (error) {
@@ -123,7 +123,7 @@ class ScheduleEventService {
         event_type = "",
         date,
         sort = "ASC",
-        paranoid = true
+        paranoid = true,
       } = data;
       const scheduleEvent = await Database.getModel(TABLE_NAME).findAll({
         where: {
@@ -134,19 +134,19 @@ class ScheduleEventService {
               moment(date).startOf("day"),
               moment()
                 .utc()
-                .toISOString()
-            ]
+                .toISOString(),
+            ],
           },
           status: {
             [Op.not]: [
               EVENT_STATUS.PENDING,
               EVENT_STATUS.PRIOR,
-              EVENT_STATUS.SCHEDULED
-            ]
-          }
+              EVENT_STATUS.SCHEDULED,
+            ],
+          },
         },
         paranoid,
-        order: [["start_time", sort]]
+        order: [["start_time", sort]],
       });
       return scheduleEvent;
     } catch (error) {
@@ -168,24 +168,24 @@ class ScheduleEventService {
                   moment(date).startOf("day"),
                   moment()
                     .utc()
-                    .toISOString()
-                ]
-              }
+                    .toISOString(),
+                ],
+              },
             },
             {
-              status: EVENT_STATUS.COMPLETED
-            }
+              status: EVENT_STATUS.COMPLETED,
+            },
           ],
           status: {
             [Op.or]: [
               EVENT_STATUS.COMPLETED,
               EVENT_STATUS.EXPIRED,
               EVENT_STATUS.CANCELLED,
-              EVENT_STATUS.STARTED
-            ]
-          }
+              EVENT_STATUS.STARTED,
+            ],
+          },
         },
-        order: [["start_time", sort]]
+        order: [["start_time", sort]],
       });
       return scheduleEvent;
     } catch (error) {
@@ -202,12 +202,12 @@ class ScheduleEventService {
               moment()
                 .utc()
                 .toDate(),
-              time
-            ]
+              time,
+            ],
           },
           event_type,
-          status: EVENT_STATUS.PENDING
-        }
+          status: EVENT_STATUS.PENDING,
+        },
       });
       return scheduleEvent;
     } catch (error) {
@@ -215,15 +215,15 @@ class ScheduleEventService {
     }
   };
 
-  getStartEventByData = async time => {
+  getStartEventByData = async (time) => {
     try {
       const scheduleEvent = await Database.getModel(TABLE_NAME).findAll({
         where: {
           start_time: {
-            [Op.between]: [moment(time).startOf("day"), time]
+            [Op.between]: [moment(time).startOf("day"), time],
           },
-          status: [EVENT_STATUS.PENDING, EVENT_STATUS.PRIOR]
-        }
+          status: [EVENT_STATUS.PENDING, EVENT_STATUS.PRIOR],
+        },
       });
       return scheduleEvent;
     } catch (error) {
@@ -231,19 +231,19 @@ class ScheduleEventService {
     }
   };
 
-  getPassedEventData = async time => {
+  getPassedEventData = async (time) => {
     try {
       const scheduleEvent = await Database.getModel(TABLE_NAME).findAll({
         where: {
           start_time: {
-            [Op.between]: [moment(time).subtract(1, "year"), time]
+            [Op.between]: [moment(time).subtract(1, "year"), time],
           },
           status: [
             EVENT_STATUS.SCHEDULED,
             EVENT_STATUS.PENDING,
-            EVENT_STATUS.PRIOR
-          ]
-        }
+            EVENT_STATUS.PRIOR,
+          ],
+        },
       });
       return scheduleEvent;
     } catch (error) {
@@ -251,10 +251,10 @@ class ScheduleEventService {
     }
   };
 
-  deleteBatch = async data => {
+  deleteBatch = async (data) => {
     try {
       const scheduleEvent = await Database.getModel(TABLE_NAME).destroy({
-        where: data
+        where: data,
       });
       return scheduleEvent;
     } catch (error) {
@@ -262,16 +262,16 @@ class ScheduleEventService {
     }
   };
 
-  getAllPastData = async data => {
+  getAllPastData = async (data) => {
     try {
       const { event_id, startDate, date } = data;
       const scheduleEvent = await Database.getModel(TABLE_NAME).findAll({
         where: {
           event_id,
           start_time: {
-            [Op.between]: [moment(startDate).startOf("day"), date]
-          }
-        }
+            [Op.between]: [moment(startDate).startOf("day"), date],
+          },
+        },
       });
       return scheduleEvent;
     } catch (error) {
@@ -279,7 +279,7 @@ class ScheduleEventService {
     }
   };
 
-  getUpcomingByData = async data => {
+  getUpcomingByData = async (data) => {
     try {
       const {
         vital_ids = [],
@@ -288,7 +288,7 @@ class ScheduleEventService {
         diet_ids = [],
         workout_ids = [],
         startLimit,
-        endLimit
+        endLimit,
       } = data;
       const scheduleEvent = await Database.getModel(TABLE_NAME).findAll({
         offset: startLimit,
@@ -297,32 +297,32 @@ class ScheduleEventService {
           start_time: {
             [Op.gt]: moment()
               .utc()
-              .toISOString()
+              .toISOString(),
           },
           [Op.or]: [
             {
               event_id: appointment_ids,
-              event_type: EVENT_TYPE.APPOINTMENT
+              event_type: EVENT_TYPE.APPOINTMENT,
             },
             {
               event_id: medication_ids,
-              event_type: EVENT_TYPE.MEDICATION_REMINDER
+              event_type: EVENT_TYPE.MEDICATION_REMINDER,
             },
             {
               event_id: vital_ids,
-              event_type: EVENT_TYPE.VITALS
+              event_type: EVENT_TYPE.VITALS,
             },
             {
               event_id: diet_ids,
-              event_type: EVENT_TYPE.DIET
+              event_type: EVENT_TYPE.DIET,
             },
             {
               event_id: workout_ids,
-              event_type: EVENT_TYPE.WORKOUT
-            }
-          ]
+              event_type: EVENT_TYPE.WORKOUT,
+            },
+          ],
         },
-        order: [["start_time", "ASC"]]
+        order: [["start_time", "ASC"]],
       });
       return scheduleEvent;
     } catch (error) {
@@ -330,15 +330,9 @@ class ScheduleEventService {
     }
   };
 
-  getMissedByData = async data => {
+  getMissedByData = async (data) => {
     try {
-      const {
-        vital_ids,
-        appointment_ids,
-        medication_ids,
-        diet_ids,
-        workout_ids
-      } = data;
+      const { vital_ids, appointment_ids, medication_ids , diet_ids , workout_ids } = data;
       return await Database.getModel(TABLE_NAME).findAll({
         where: {
           date: {
@@ -349,41 +343,41 @@ class ScheduleEventService {
                 .toDate(),
               moment()
                 .utc()
-                .toDate()
-            ]
+                .toDate(),
+            ],
           },
           [Op.or]: [
             {
               event_id: appointment_ids,
-              event_type: EVENT_TYPE.APPOINTMENT
+              event_type: EVENT_TYPE.APPOINTMENT,
             },
             {
               event_id: medication_ids,
-              event_type: EVENT_TYPE.MEDICATION_REMINDER
+              event_type: EVENT_TYPE.MEDICATION_REMINDER,
             },
             {
               event_id: vital_ids,
-              event_type: EVENT_TYPE.VITALS
+              event_type: EVENT_TYPE.VITALS,
             },
             {
               event_id: diet_ids,
-              event_type: EVENT_TYPE.DIET
+              event_type: EVENT_TYPE.DIET,
             },
             {
               event_id: workout_ids,
-              event_type: EVENT_TYPE.WORKOUT
-            }
+              event_type: EVENT_TYPE.WORKOUT,
+            },
           ],
-          status: EVENT_STATUS.EXPIRED
+          status: EVENT_STATUS.EXPIRED,
         },
-        order: [["start_time", "DESC"]]
+        order: [["start_time", "DESC"]],
       });
     } catch (error) {
       throw error;
     }
   };
 
-  getPageEventByData = async data => {
+  getPageEventByData = async (data) => {
     try {
       const { eventIds, startLimit, endLimit, event_type } = data;
       const scheduleEvent = await Database.getModel(TABLE_NAME).findAll({
@@ -391,9 +385,9 @@ class ScheduleEventService {
         limit: endLimit,
         where: {
           event_id: eventIds,
-          event_type
+          event_type,
         },
-        order: [["start_time", "ASC"]]
+        order: [["start_time", "ASC"]],
       });
       return scheduleEvent;
     } catch (error) {
@@ -406,7 +400,7 @@ class ScheduleEventService {
     medications,
     vitals,
     diets,
-    workouts
+    workouts,
   }) => {
     try {
       const scheduleEvent = await Database.getModel(TABLE_NAME).findAll({
@@ -415,31 +409,31 @@ class ScheduleEventService {
             [Op.gt]: [
               moment()
                 .utc()
-                .toISOString()
-            ]
+                .toISOString(),
+            ],
           },
           status: [
             EVENT_STATUS.PENDING,
             EVENT_STATUS.PRIOR,
-            EVENT_STATUS.SCHEDULED
+            EVENT_STATUS.SCHEDULED,
           ],
           [Op.or]: [
             {
-              ...appointments
+              ...appointments,
             },
             {
-              ...medications
+              ...medications,
             },
             {
-              ...vitals
+              ...vitals,
             },
             {
-              ...diets
+              ...diets,
             },
-            { ...workouts }
-          ]
+            { ...workouts },
+          ],
         },
-        order: [["start_time", "ASC"]]
+        order: [["start_time", "ASC"]],
       });
       return scheduleEvent;
     } catch (error) {
@@ -447,41 +441,34 @@ class ScheduleEventService {
     }
   };
 
-  getAllEventStatusByData = async ({
-    appointment,
-    medication,
-    vital,
-    diet,
-    workout
-  }) => {
+  getAllEventStatusByData = async ({ appointment, medication, vital, diet, workout }) => {
     try {
       return await Database.getModel(TABLE_NAME).findAll({
         where: {
           [Op.or]: [
             {
-              ...appointment
+              ...appointment,
             },
             {
-              ...medication
+              ...medication,
             },
             {
-              ...vital
+              ...vital,
             },
-            diet,
-            workout
-          ]
+            diet, workout
+          ],
         },
         attributes: ["status"],
-        raw: true
+        raw: true,
       });
     } catch (error) {
       throw error;
     }
   };
-  getCount = async data => {
+  getCount = async (data) => {
     try {
       return await Database.getModel(TABLE_NAME).count({
-        where: data
+        where: data,
       });
     } catch (error) {
       throw error;

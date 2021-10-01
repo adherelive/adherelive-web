@@ -18,7 +18,7 @@ class PermissionService {
     }
   };
 
-  bulkCreate = async permissions => {
+  bulkCreate = async (permissions) => {
     const transaction = await Database.initTransaction();
     try {
       const createdPermissions = await Database.getModel(
@@ -33,12 +33,12 @@ class PermissionService {
     }
   };
 
-  getPermissionsById = async data => {
+  getPermissionsById = async (data) => {
     try {
       const permissions = Database.getModel(TABLE_NAME).findAll({
         where: {
-          id: data
-        }
+          id: data,
+        },
       });
       return permissions;
     } catch (error) {

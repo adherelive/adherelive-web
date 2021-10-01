@@ -63,7 +63,7 @@ const SideMenuComp = props => {
     !(
       pathname.includes("patient-consulting") ||
       pathname.includes("terms-of-service") ||
-      pathname.includes("privacy-policy") ||
+      pathname.includes("privacy-policy") || 
       pathname.includes("terms-of-payment")
     )
   ) {
@@ -91,7 +91,7 @@ class AdminDoctor extends Component {
     const isSideMenuVisible = !(
       pathname.includes("patient-consulting") ||
       pathname.includes("terms-of-service") ||
-      pathname.includes("privacy-policy") ||
+      pathname.includes("privacy-policy") || 
       pathname.includes("terms-of-payment")
     );
     return (
@@ -148,7 +148,7 @@ class AdminDoctor extends Component {
                   path={PATH.ADMIN.ALL_MEDICINES}
                   component={AdminMedicines}
                 />
-                <Route path={PATH.LANDING_PAGE} component={AdminDoctorPage} />
+                <Route  path={PATH.LANDING_PAGE} component={AdminDoctorPage} />
                 {/* <Route path={""} component={BlankState} /> */}
               </Switch>
             </div>

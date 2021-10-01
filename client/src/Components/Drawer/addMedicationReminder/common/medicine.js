@@ -22,7 +22,7 @@ class Medicine extends Component {
       searching: false,
       defaultSet: false,
       medicine_id: null,
-      medicine_name: ""
+      medicine_name: "",
     };
   }
 
@@ -37,7 +37,7 @@ class Medicine extends Component {
     const { newMedicineId } = this.props;
     const {
       form: { setFieldsValue, getFieldValue },
-      setFormulation
+      setFormulation,
     } = this.props;
     if (prev_newMedicineId !== newMedicineId) {
       const { medicines = {} } = this.props;
@@ -47,14 +47,14 @@ class Medicine extends Component {
       setFieldsValue({ [FIELD_NAME]: medicineId });
       this.setState({
         medicine_name: name,
-        medicine_id: medicineId
+        medicine_id: medicineId,
       });
 
       setFieldsValue({ [FIELD_NAME]: medicineId });
     }
   }
 
-  formatMessage = data => this.props.intl.formatMessage(data);
+  formatMessage = (data) => this.props.intl.formatMessage(data);
 
   handleGetFavouritesMeds = async () => {
     try {
@@ -69,12 +69,11 @@ class Medicine extends Component {
     }
   };
 
-  handleSearch = async input => {
+  handleSearch = async (input) => {
     const hits = await algoliaSearchHelper(input);
     this.setState({ inputText: input });
     this.setState({ hits });
   };
-
   getHighlightedText(text, highlight) {
     const parts = text.split(new RegExp(`(${highlight})`, "gi"));
     return (
@@ -96,8 +95,8 @@ class Medicine extends Component {
     );
   }
 
-  isMedicineFavorite = id => {
-    const { favourite_medicine_ids = [] } = this.props;
+  isMedicineFavorite = (id) => {
+    const {favourite_medicine_ids = []} = this.props;
 
     // return favourite_medicine_ids.includes(parseInt(id));
     return favourite_medicine_ids.includes(id.toString());
@@ -110,7 +109,7 @@ class Medicine extends Component {
       inputText = "",
       searching = false,
       medicine_name: med_name = "",
-      medicine_id: selectedMedicineId = null
+      medicine_id: selectedMedicineId = null,
     } = this.state;
     const { getHighlightedText, isMedicineFavorite } = this;
 
@@ -118,7 +117,7 @@ class Medicine extends Component {
       const { name = "", medicine_id = null, generic_name = "" } =
         hits[each] || {};
 
-      // default without selected
+        // default without selected
 
       if (isDefault ? medicine_id !== selectedMedicineId : true) {
         // check for add last selected option only for default hits case and not searching --->
@@ -230,14 +229,14 @@ class Medicine extends Component {
     return options;
   };
 
-  handleAddMedicineOpen = e => {
+  handleAddMedicineOpen = (e) => {
     e.preventDefault();
     // e.stopPropagation();
     // console.log("472384623897482394890793284",{props:this.props});
     const {
       openAddMedicineDrawer,
       setMedicineVal,
-      form: { setFieldsValue } = {}
+      form: { setFieldsValue } = {},
     } = this.props;
     const { inputText = "" } = this.state;
     this.setState({ medicine_id: null, medicine: "" });
@@ -251,7 +250,7 @@ class Medicine extends Component {
       favourite_medicine_ids = [],
       favourites_data,
       setFavMedicineValue,
-      medicines = {}
+      medicines = {},
     } = this.props;
     const { searching = false } = this.state;
 
@@ -259,7 +258,7 @@ class Medicine extends Component {
 
     const {
       medicine_name: med_name = "",
-      medicine_id: med_id = null
+      medicine_id: med_id = null,
     } = this.state;
 
     for (let each in favourites_data) {
@@ -270,7 +269,7 @@ class Medicine extends Component {
         const key = Object.keys(marked_favourites_data)[0] || null;
 
         const {
-          basic_info: { name: medicine_name = "", id: medicine_id = null } = {}
+          basic_info: { name: medicine_name = "", id: medicine_id = null } = {},
         } = marked_favourites_data[key];
 
         if (medicine_id != med_id) {
@@ -361,10 +360,7 @@ class Medicine extends Component {
         return this.getFavouriteOptions();
       } else {
         // return this.getDefaultResultOptions(defaultHits);
-        return this.getSearchingResultOptions({
-          hits: defaultHits,
-          isDefault: true
-        });
+        return this.getSearchingResultOptions({hits: defaultHits, isDefault: true});
       }
     }
   };
@@ -377,34 +373,34 @@ class Medicine extends Component {
   //   }
   // };
 
-  getParentNode = t => t.parentNode;
+  getParentNode = (t) => t.parentNode;
 
-  onDropdownVisibleChange = isOpen => {
+  onDropdownVisibleChange = (isOpen) => {
     this.setState({ searching: isOpen });
   };
 
-  onOptionSelect = value => {
+  onOptionSelect = (value) => {
     const { medicines = {} } = this.props;
     const {
-      form: { setFieldsValue }
+      form: { setFieldsValue },
     } = this.props;
     const { basic_info: { name: med_name = "" } = {} } = medicines[value] || {};
     this.setState({
       medicine_id: value,
       inputText: "",
-      medicine_name: med_name
+      medicine_name: med_name,
     });
     setFieldsValue({ [FIELD_NAME]: value });
   };
 
-  handleAddFavourites = id => async e => {
+  handleAddFavourites = (id) => async (e) => {
     try {
       e.preventDefault();
       e.stopPropagation();
       const { markFavourite } = this.props;
       const data = {
         type: "medicine",
-        id
+        id,
       };
 
       const response = await markFavourite(data);
@@ -419,14 +415,14 @@ class Medicine extends Component {
     }
   };
 
-  handleremoveFavourites = id => async e => {
+  handleremoveFavourites = (id) => async (e) => {
     try {
       e.preventDefault();
       e.stopPropagation();
       const { removeFavourite } = this.props;
       const data = {
         type: "medicine",
-        typeId: id
+        typeId: id,
       };
 
       const response = await removeFavourite(data);
@@ -443,7 +439,7 @@ class Medicine extends Component {
 
   render() {
     const {
-      form: { getFieldDecorator }
+      form: { getFieldDecorator },
     } = this.props;
     const { medicine_id = null } = this.state;
     const {
@@ -452,7 +448,7 @@ class Medicine extends Component {
       handleSearch,
       getOptions,
       onOptionSelect,
-      onDropdownVisibleChange
+      onDropdownVisibleChange,
     } = this;
 
     return (
@@ -486,5 +482,5 @@ const Field = injectIntl(Medicine);
 
 export default {
   field_name: FIELD_NAME,
-  render: props => <Field {...props} />
+  render: (props) => <Field {...props} />,
 };

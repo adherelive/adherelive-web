@@ -1,3 +1,4 @@
+
 const MINIMIZED_POPUP = "MINIMIZED_POPUP";
 const OPEN_POPUP = "OPEN_POPUP";
 const MAXIMIZED_POPUP = "MAXIMIZED_POPUP";
@@ -5,7 +6,7 @@ const CLOSE_POPUP = "CLOSE_POPUP";
 
 const intial_state = {
   minimized: false,
-  visible: false
+  visible: false,
 };
 
 export const openPopUp = () => {

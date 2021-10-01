@@ -5,12 +5,12 @@ export default class MedicationReminder {
 
   getExistingData = () => {
     return this._data.get("");
-  };
+    }
 
   getParticipants = () => {
     const { participant_id, organizer_id } = this._data;
     return { participant_id, organizer_id };
-  };
+    }
 
   getParticipant = () => {
     return this._data.get("participant_id");
@@ -18,7 +18,7 @@ export default class MedicationReminder {
 
   getMReminderId = () => {
     return this._data.get("id");
-  };
+    }
 
   getDetails = () => {
     return this._data.get("details");

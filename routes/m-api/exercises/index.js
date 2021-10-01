@@ -21,13 +21,7 @@ router.get(
   Exercise.search
 );
 
-router.post(
-  "/",
-  Authenticate,
-  Authorize(USER_CATEGORY.DOCTOR, USER_CATEGORY.HSP),
-  validate.create,
-  Exercise.create
-);
+router.post("/", Authenticate, Authorize(USER_CATEGORY.DOCTOR,USER_CATEGORY.HSP),validate.create, Exercise.create);
 
 router.post(
   "/upload",

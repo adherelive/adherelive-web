@@ -25,7 +25,9 @@ const message = defineMessages({
     id: "app.drawer.add.doctor.name.field.name",
     description: "",
     defaultMessage: "Name"
-  }
+  },
+
+  
 });
 
 export default message;

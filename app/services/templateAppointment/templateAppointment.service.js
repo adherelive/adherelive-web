@@ -2,7 +2,7 @@ import Database from "../../../libs/mysql";
 import { TABLE_NAME } from "../../models/templateAppointments";
 
 class TemplateAppointmentService {
-  getTemplateAppointmentByData = async data => {
+    getTemplateAppointmentByData = async (data) => {
     try {
       const templateAppointments = await Database.getModel(TABLE_NAME).findAll({
         where: data
@@ -13,7 +13,7 @@ class TemplateAppointmentService {
     }
   };
 
-  getSingleTemplateAppointmentsByData = async data => {
+    getSingleTemplateAppointmentsByData = async (data) => {
     try {
       const templateAppointment = await Database.getModel(TABLE_NAME).findOne({
         where: data
@@ -24,7 +24,7 @@ class TemplateAppointmentService {
     }
   };
 
-  getAppointmentsByCarePlanTemplateId = async care_plan_template_id => {
+    getAppointmentsByCarePlanTemplateId = async (care_plan_template_id) => {
     try {
       const templateAppointments = await Database.getModel(TABLE_NAME).findAll({
         where: care_plan_template_id
@@ -37,16 +37,14 @@ class TemplateAppointmentService {
 
   addTemplateAppointment = async data => {
     try {
-      const templateAppointment = await Database.getModel(TABLE_NAME).create(
-        data
-      );
+            const templateAppointment = await Database.getModel(TABLE_NAME).create(data);
       return templateAppointment;
     } catch (error) {
       throw error;
     }
   };
 
-  deleteAppointment = async data => {
+    deleteAppointment = async (data) => {
     try {
       return await Database.getModel(TABLE_NAME).destroy({
         where: data
@@ -59,15 +57,12 @@ class TemplateAppointmentService {
   update = async (data, id) => {
     const transaction = await Database.initTransaction();
     try {
-      const templateAppointment = await Database.getModel(TABLE_NAME).update(
-        data,
-        {
+            const templateAppointment = await Database.getModel(TABLE_NAME).update(data, {
           where: {
             id
           },
           transaction
-        }
-      );
+            });
       await transaction.commit();
       return templateAppointment;
     } catch (error) {

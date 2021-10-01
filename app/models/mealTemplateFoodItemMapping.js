@@ -5,7 +5,7 @@ import { TABLE_NAME as foodItemDetailsTableName } from "./foodItemDetails";
 
 export const TABLE_NAME = "meal_template_food_item_mappings";
 
-export const db = database => {
+export const db = (database) => {
   database.define(
     TABLE_NAME,
     {
@@ -17,21 +17,21 @@ export const db = database => {
       },
       meal_template_id: {
         type: DataTypes.INTEGER,
-        allowNull: false
+                allowNull: false,
       },
       food_item_detail_id: {
         type: DataTypes.INTEGER,
-        allowNull: false
+                allowNull:false,
       }
     },
     {
       underscored: true,
-      paranoid: true
+            paranoid: true,
     }
   );
 };
 
-export const associate = database => {
+export const associate = (database) => {
   // const {upload_documents} = database.models || {};
   // database.models[TABLE_NAME].hasOne(database.models[mealTemplateTableName], {
   //     foreignKey: "id",

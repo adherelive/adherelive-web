@@ -5,7 +5,8 @@ const messages = defineMessages({
     id: "app.doctor.transaction.details.transactionsText",
     description: "",
     defaultMessage: "Transactions"
-  }
+  },
+  
 });
 
 export default messages;

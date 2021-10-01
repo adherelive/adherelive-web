@@ -9,49 +9,46 @@ export default props => {
     data: {
       basic_info: { id = null, name = "", type = "", amount = "" } = {},
       deleteDoctorProduct,
-      formatMessage
+        formatMessage
     } = {}
   } = props || {};
 
-  const handleDelete = id => async e => {
+  const handleDelete = (id) => async(e) =>{
     e.preventDefault();
-    try {
-      const { data = {} } = props;
-      const { deleteDoctorProduct } = data || {};
-      const response = await deleteDoctorProduct({ id });
-      const {
-        status,
-        statusCode,
-        payload: { data: resp_data = {}, message: resp_msg = "" } = {}
-      } = response || {};
+    try{
+      const {data={}}=props;
+      const {deleteDoctorProduct} = data || {};
+      const response = await deleteDoctorProduct({id});
+      const {status,statusCode,payload:{
+        data : resp_data={}, message:resp_msg=''
+      }={}} = response || {};
 
-      if (status) {
+      if(status){
         message.success(resp_msg);
-      } else {
+      }else{
         message.warn(resp_msg);
       }
-    } catch (error) {
-      console.log("error ==>", error);
-    }
-  };
 
-  const { data: { editable } = {} } = props;
+
+    }catch(error){
+      console.log("error ==>",error);
+    }
+  }
+
+  const {data: {editable} = {}} =props;
   // console.log("5464564564645654",provider_id);
 
-  if (!editable) {
+  if(!editable){
     return null;
   }
 
   return (
-    <Tooltip
-      placement={"bottom"}
-      title={formatMessage(messages.deleteConsultationFee)}
-    >
-      <DeleteOutlined
-        className={"pointer align-self-end"}
-        onClick={handleDelete(id)}
-        style={{ fontSize: "18px", color: "#6d7278" }}
-      />
-    </Tooltip>
+      <Tooltip placement={"bottom"} title={formatMessage(messages.deleteConsultationFee)}>
+          <DeleteOutlined
+            className={"pointer align-self-end"}
+            onClick={handleDelete(id)}
+            style={{ fontSize: "18px", color: "#6d7278" }}
+          />
+      </Tooltip>
   );
 };

@@ -33,8 +33,8 @@ class editReportDrawer extends Component {
       name: "",
       test_date: "",
       exisiting_documents: [],
-      enableModal: false,
-      submitting: false
+      enableModal:false,
+      submitting:false
     };
   }
 
@@ -81,10 +81,14 @@ class editReportDrawer extends Component {
   };
 
   handleDocumentViewOpen = src => () => {
-    this.setState({
-      viewModalVisible: true,
-      viewModalSrc: src
-    });
+  
+      this.setState({
+        viewModalVisible: true,
+        viewModalSrc: src
+      });
+
+    
+    
   };
 
   handleDocumentViewClose = () => {
@@ -97,8 +101,10 @@ class editReportDrawer extends Component {
   handleExistingDelete = delete_id => e => {
     e.preventDefault();
     this.confirmExisitngDelete(delete_id);
+    
   };
-
+  
+   
   exsitingDeleteWarnNote = () => {
     return (
       <div className="pt16">
@@ -110,7 +116,7 @@ class editReportDrawer extends Component {
     );
   };
 
-  confirmExisitngDelete = delete_id => {
+  confirmExisitngDelete = (delete_id) => {
     const { exsitingDeleteWarnNote } = this;
 
     confirm({
@@ -119,13 +125,13 @@ class editReportDrawer extends Component {
       onOk: async () => {
         const { deleteReport } = this.props;
         const { exisiting_documents } = this.state;
-
+    
         deleteReport(delete_id).then(response => {
           const {
             status,
             payload: { message: msg = "" }
           } = response;
-
+    
           if (status) {
             const { exisiting_documents } = this.state;
             let indexToDelete = -1;
@@ -138,7 +144,7 @@ class editReportDrawer extends Component {
                 break;
               }
             }
-
+    
             if (indexToDelete > -1) {
               exisiting_documents.splice(indexToDelete, 1);
               this.setState({ exisiting_documents });
@@ -154,6 +160,7 @@ class editReportDrawer extends Component {
   };
 
   handleDelete = delete_src => e => {
+    
     e.preventDefault();
     const { new_documents } = this.state;
     let indexToDelete = -1;
@@ -167,9 +174,8 @@ class editReportDrawer extends Component {
 
     if (indexToDelete > -1) {
       new_documents.splice(indexToDelete, 1);
-      this.setState({
-        new_documents
-      });
+      this.setState({ 
+        new_documents });
       message.success(this.formatMessage(messages.deleteSuccess));
     }
   };
@@ -224,31 +230,38 @@ class editReportDrawer extends Component {
         </div>
         <div className="overlay"></div>
         <div className="absolute tp45 l0 wp100 flex justify-center align-space-evenly doc-container ">
-          {id ? (
-            <DeleteTwoTone
-              className={"del doc-opt"}
-              // className="w20 "
-              onClick={this.handleExistingDelete(id)}
-              twoToneColor="#fff"
-            />
-          ) : (
-            <DeleteTwoTone
-              className={"del doc-opt"}
-              // className="w20 "
-              onClick={this.handleDelete(src)}
-              twoToneColor="#fff"
-            />
-          )}
+              {id
+                ?
+                <DeleteTwoTone
+                  className={"del doc-opt"}
+                  // className="w20 "
+                  onClick={this.handleExistingDelete(id)}
+                  twoToneColor="#fff"
+                />
+                :
+                <DeleteTwoTone
+                className={"del doc-opt"}
+                // className="w20 "
+                onClick={this.handleDelete( src)}
+                twoToneColor="#fff"
+                />
+                }
+              
+                <a
+                  download={name}
+                  href={src}
+                  target={"_self"}
+                  className={"del doc-opt ml4 mb4"}
+                  style={{color:"#fff"}}
 
-          <a
-            download={name}
-            href={src}
-            target={"_self"}
-            className={"del doc-opt ml4 mb4"}
-            style={{ color: "#fff" }}
-          >
-            <DownloadOutlined className="fs18 " twoToneColor="#fff" />
-          </a>
+                >
+                  <DownloadOutlined 
+                   className="fs18 "
+                   twoToneColor="#fff"
+                  />
+                </a>
+                
+
         </div>
       </div>
     );
@@ -314,6 +327,7 @@ class editReportDrawer extends Component {
   };
 
   handleUploadChange = ({ file }) => {
+    
     const { new_documents = [] } = this.state;
     console.log("287423 file ---> ", { file });
 
@@ -334,13 +348,14 @@ class editReportDrawer extends Component {
         file
       });
 
-      this.setState({ enableModal: true });
+      this.setState({ enableModal:true})
     }
 
     console.log("287423 new_documents", { newDocuments });
     this.setState({
-      new_documents: [...new_documents, ...newDocuments]
-    });
+       new_documents: [...new_documents, ...newDocuments],
+      
+     });
   };
 
   setTestDate = value => {
@@ -434,7 +449,7 @@ class editReportDrawer extends Component {
         const { originFileObj = {} } = file;
         data.set("files", originFileObj);
 
-        this.setState({ uploading: true, submitting: true });
+        this.setState({ uploading: true , submitting:true });
         const response = await uploadReport(patient_id, data);
         const {
           status = false,
@@ -459,7 +474,7 @@ class editReportDrawer extends Component {
     } catch (error) {
       console.log("error", error);
       message.warn(this.formatMessage(messages.somethingWentWrong));
-      this.setState({ uploading: false, submitting: false });
+      this.setState({ uploading: false,submitting:false });
     }
   }
 
@@ -513,11 +528,11 @@ class editReportDrawer extends Component {
         message.warn(respMessage);
       }
 
-      this.setState({ submitting: false });
+      this.setState({submitting:false});
     } catch (error) {
       console.log("error", error);
       message.warn(this.formatMessage(messages.somethingWentWrong));
-      this.setState({ uploading: false, submitting: false });
+      this.setState({ uploading: false , submitting:false });
     }
   }
 
@@ -564,8 +579,8 @@ class editReportDrawer extends Component {
     const { close } = this.props;
     const { handleCloseWarning } = this;
 
-    const { name, new_documents, enableModal } = this.state;
-    if ((name || Object.keys(new_documents).length > 0) && enableModal) {
+    const { name, new_documents,enableModal } = this.state;
+    if ( (name || Object.keys(new_documents).length > 0) && enableModal ) {
       handleCloseWarning();
     } else {
       this.setState({
@@ -581,7 +596,6 @@ class editReportDrawer extends Component {
       close();
     }
   };
-
   render() {
     const { visible } = this.props;
     const {
@@ -598,16 +612,9 @@ class editReportDrawer extends Component {
       handleSubmit
     } = this;
 
-    const {
-      viewModalVisible,
-      viewModalSrc,
-      enableModal,
-      submitting = false
-    } = this.state;
-    console.log(
-      "786578326427348234762427394823 enableModal  --->",
-      viewModalVisible && enableModal
-    );
+    const { viewModalVisible, viewModalSrc ,enableModal,submitting=false} = this.state;
+    console.log("786578326427348234762427394823 enableModal  --->",(viewModalVisible && enableModal));
+
 
     if (visible !== true) {
       return null;

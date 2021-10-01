@@ -4,7 +4,7 @@ import Database from "../../../libs/mysql";
 import { TABLE_NAME } from "../../models/otpVerifications";
 
 class OtpVerificationService {
-  create = async data => {
+    create = async (data) => {
     try {
       const otpDetails = await Database.getModel(TABLE_NAME).create(data);
       return otpDetails;
@@ -13,7 +13,7 @@ class OtpVerificationService {
     }
   };
 
-  getOtpByData = async data => {
+    getOtpByData = async (data) => {
     try {
       const { otp, user_id } = data; //otp,
       const otpDetails = await Database.getModel(TABLE_NAME).findAll({
@@ -22,11 +22,9 @@ class OtpVerificationService {
           // TODO: change on deployment
           ...data,
           updated_at: {
-            [Op.gte]: moment()
-              .subtract(process.config.app.otp_live_minutes, "minutes")
-              .toDate()
+                        [Op.gte]: moment().subtract(process.config.app.otp_live_minutes, 'minutes').toDate()
           }
-        }
+                },
       });
       return otpDetails;
     } catch (error) {
@@ -34,13 +32,13 @@ class OtpVerificationService {
     }
   };
 
-  delete = async data => {
+    delete = async (data) => {
     try {
       const { otp, user_id } = data;
       const otpDetails = await Database.getModel(TABLE_NAME).destroy({
         where: {
-          user_id
-        }
+                    user_id,
+                },
       });
       return otpDetails;
     } catch (error) {

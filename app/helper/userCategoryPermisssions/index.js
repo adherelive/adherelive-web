@@ -2,7 +2,7 @@ import { USER_CATEGORY } from "../../../constant";
 
 import PERMISSIONS from "../../../config/permissions";
 
-export const getPermissions = type => {
+export const getPermissions = (type) => {
   switch (type) {
     case USER_CATEGORY.ADMIN:
       return [
@@ -54,7 +54,7 @@ export const getPermissions = type => {
         PERMISSIONS.DIETS.UPDATE,
         PERMISSIONS.DIETS.DELETE,
         PERMISSIONS.DIETS.VIEW,
-        PERMISSIONS.DIETS.TEMPLATE
+        PERMISSIONS.DIETS.TEMPLATE,
       ];
     case USER_CATEGORY.DOCTOR:
       return [
@@ -110,7 +110,7 @@ export const getPermissions = type => {
         PERMISSIONS.DIETS.ADD,
         PERMISSIONS.DIETS.UPDATE,
         PERMISSIONS.DIETS.DELETE,
-        PERMISSIONS.DIETS.VIEW
+        PERMISSIONS.DIETS.VIEW,
       ];
 
     case USER_CATEGORY.HSP:
@@ -163,7 +163,7 @@ export const getPermissions = type => {
         PERMISSIONS.DIETS.ADD,
         PERMISSIONS.DIETS.UPDATE,
         PERMISSIONS.DIETS.DELETE,
-        PERMISSIONS.DIETS.VIEW
+        PERMISSIONS.DIETS.VIEW,
       ];
     case USER_CATEGORY.PROVIDER:
       return [
@@ -194,7 +194,7 @@ export const getPermissions = type => {
         PERMISSIONS.ACCOUNT.VERIFIED,
 
         PERMISSIONS.PAYMENT_PRODUCT.VIEW,
-        PERMISSIONS.PAYMENT_PRODUCT.ADD
+        PERMISSIONS.PAYMENT_PRODUCT.ADD,
       ];
     case USER_CATEGORY.PATIENT:
       return [
@@ -207,7 +207,7 @@ export const getPermissions = type => {
 
         PERMISSIONS.ACCOUNT.VERIFIED,
 
-        PERMISSIONS.PAYMENT_PRODUCT.VIEW
+          PERMISSIONS.PAYMENT_PRODUCT.VIEW,
       ];
   }
 };

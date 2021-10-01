@@ -7,7 +7,7 @@ import { USER_CATEGORY, SIGN_IN_CATEGORY } from "../../constant";
 
 export const TABLE_NAME = "doctor_patient_watchlists";
 
-export const db = database => {
+export const db = (database) => {
   database.define(
     TABLE_NAME,
     {
@@ -15,16 +15,16 @@ export const db = database => {
         type: DataTypes.INTEGER,
         primaryKey: true,
         autoIncrement: true,
-        allowNull: false
+                allowNull: false,
       },
       doctor_id: {
         type: DataTypes.INTEGER,
         allowNull: false,
         references: {
           model: {
-            tableName: doctorTableName
+                        tableName: doctorTableName,
           },
-          key: "id"
+                    key: 'id'
         }
       },
       patient_id: {
@@ -32,9 +32,9 @@ export const db = database => {
         allowNull: false,
         references: {
           model: {
-            tableName: patientTableName
+                        tableName: patientTableName,
           },
-          key: "id"
+                    key: 'id'
         }
       },
       user_role_id: {
@@ -42,9 +42,9 @@ export const db = database => {
         allowNull: false,
         references: {
           model: {
-            tableName: userRoleTableName
+                        tableName: userRoleTableName,
           },
-          key: "id"
+                    key: 'id'
         }
       }
     },
@@ -64,7 +64,7 @@ export const db = database => {
   );
 };
 
-export const associate = database => {
+export const associate = (database) => {
   // const {TABLE_NAME} = database.models || {};
 
   // associations here (if any) ...

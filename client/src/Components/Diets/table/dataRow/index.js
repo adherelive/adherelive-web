@@ -1,8 +1,7 @@
 import { TABLE_COLUMN } from "../helper";
 
 export default data => {
-  const {
-    id,
+  const { id,
     openResponseDrawer,
     openEditDrawer,
     dietData,
@@ -13,11 +12,11 @@ export default data => {
   return {
     key: id,
     [TABLE_COLUMN.NAME.dataIndex]: {
-      dietData,
-      formatMessage
+        dietData,
+        formatMessage
     },
     [TABLE_COLUMN.DURATION.dataIndex]: {
-      dietData
+        dietData
     },
     [TABLE_COLUMN.REPEAT_DAYS.dataIndex]: {
       dietData
@@ -36,6 +35,6 @@ export default data => {
       openEditDrawer,
       formatMessage,
       canViewDetails
-    }
+    },
   };
 };

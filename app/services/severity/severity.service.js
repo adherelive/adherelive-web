@@ -12,14 +12,14 @@ class SeverityService {
     }
   };
 
-  search = async data => {
+    search = async (data) => {
     try {
       const severity = await Database.getModel(TABLE_NAME).findAll({
         where: {
           name: {
-            [Op.like]: `%${data}%`
-          }
-        }
+                        [Op.like]: `%${data}%`,
+                    },
+                },
       });
       return severity;
     } catch (error) {

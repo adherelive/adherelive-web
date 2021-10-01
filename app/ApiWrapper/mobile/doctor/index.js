@@ -1,4 +1,4 @@
-import { Op } from "sequelize";
+import {Op} from "sequelize";
 
 import BaseDoctor from "../../../services/doctor";
 import doctorService from "../../../services/doctor/doctor.service";
@@ -7,6 +7,7 @@ import carePlanService from "../../../services/carePlan/carePlan.service";
 import doctorProviderMappingService from "../../../services/doctorProviderMapping/doctorProviderMapping.service";
 import userRoleService from "../../../services/userRoles/userRoles.service";
 import DoctorPatientWatchlistService from "../../../services/doctorPatientWatchlist/doctorPatientWatchlist.service";
+
 
 import SpecialityWrapper from "../speciality";
 import ConsentWrapper from "../../mobile/consent";
@@ -51,7 +52,7 @@ class MDoctorWrapper extends BaseDoctor {
       first_name,
       middle_name,
       last_name,
-      full_name,
+        full_name,
       qualifications,
       activated_on,
       profile_pic,
@@ -120,30 +121,28 @@ class MDoctorWrapper extends BaseDoctor {
 
     const doctorUserId = this.getUserId();
     const UserRole = await userRoleService.getFirstUserRole(doctorUserId);
-    let userRoleId = null;
-    if (UserRole) {
+    let userRoleId = null ;
+    if(UserRole){
       const userRoleWrapper = await UserRoleWrapper(UserRole);
       userRoleId = await userRoleWrapper.getId();
     }
 
     // get all user roles
-    const { rows: userRoles } =
-      (await userRoleService.findAndCountAll({
-        where: {
-          user_identity: this.getUserId()
-        },
-        attributes: ["id"]
-      })) || [];
+    const {rows: userRoles} = await userRoleService.findAndCountAll({
+      where: {
+        user_identity: this.getUserId()
+      },
+      attributes: ["id"]
+    }) || [];
 
     const userRoleIds = userRoles.map(userRole => userRole.id);
 
     let carePlanIds = {};
     let watchlistPatientIds = {};
 
-    for (let index = 0; index < userRoleIds.length; index++) {
-      const consents = await consentService.getAllByData({
-        user_role_id: userRoleIds[index]
-      });
+
+    for(let index = 0; index < userRoleIds.length; index++) {
+      const consents = await consentService.getAllByData({ user_role_id: userRoleIds[index] });
 
       let patientIds = [];
 
@@ -154,16 +153,13 @@ class MDoctorWrapper extends BaseDoctor {
         }
       }
 
-      const watchlistRecords = await DoctorPatientWatchlistService.getAllByData(
-        { user_role_id: userRoleIds[index] }
-      );
+      const watchlistRecords = await DoctorPatientWatchlistService.getAllByData({user_role_id:userRoleIds[index]});
       const userRoleId = userRoleIds[index];
       let curreRoleIdPatientIds = [];
-      if (watchlistRecords && watchlistRecords.length) {
-        for (let i = 0; i < watchlistRecords.length; i++) {
-          const watchlistWrapper = await DoctorPatientWatchlistWrapper(
-            watchlistRecords[i]
-          );
+      if(watchlistRecords && watchlistRecords.length){
+
+        for(let i = 0; i <watchlistRecords.length ; i++ ){
+          const watchlistWrapper = await DoctorPatientWatchlistWrapper(watchlistRecords[i]);
           const patient_id = await watchlistWrapper.getPatientId();
           curreRoleIdPatientIds.push(patient_id);
         }
@@ -171,22 +167,21 @@ class MDoctorWrapper extends BaseDoctor {
         watchlistPatientIds[userRoleId] = [...curreRoleIdPatientIds];
       }
 
-      const { rows: doctorCarePlans } =
-        (await carePlanService.findAndCountAll({
-          where: {
-            [Op.or]: [
-              { user_role_id: userRoleIds[index] },
-              { patient_id: patientIds }
-            ]
-          },
-          order: [["expired_on", "ASC"]],
-          attributes: ["id"],
-          userRoleId: userRoleIds[index]
-        })) || [];
 
-      carePlanIds[userRoleIds[index]] = [
-        ...new Set(doctorCarePlans.map(carePlan => carePlan.id))
-      ];
+
+      const {rows: doctorCarePlans} = await carePlanService.findAndCountAll({
+        where: {
+          [Op.or]: [
+            {user_role_id: userRoleIds[index]},
+            {patient_id: patientIds}
+          ]
+        },
+        order: [["expired_on","ASC"]],
+        attributes: ["id"],
+        userRoleId:userRoleIds[index]
+      }) || [];
+
+      carePlanIds[userRoleIds[index]] = [...new Set(doctorCarePlans.map(carePlan => carePlan.id))];
     }
     // const carePlansDoctor =
     //   (await carePlanService.getMultipleCarePlanByData({ user_role_id:userRoleId })) ||
@@ -248,7 +243,8 @@ class MDoctorWrapper extends BaseDoctor {
       care_plan_ids: carePlanIds,
       watchlist_patient_ids,
       // provider_id: providerId,
-      watchlist_ids: watchlistPatientIds
+      watchlist_ids:watchlistPatientIds
+
     };
   };
 }

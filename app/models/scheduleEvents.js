@@ -10,7 +10,7 @@ export const TABLE_NAME = "schedule_events";
 
 const Log = new Logger("SCHEDULE_EVENTS > MODEL");
 
-export const db = database => {
+export const db = (database) => {
   database.define(
     TABLE_NAME,
     {
@@ -18,10 +18,10 @@ export const db = database => {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
-        type: DataTypes.INTEGER
+        type: DataTypes.INTEGER,
       },
       critical: {
-        type: DataTypes.BOOLEAN
+        type: DataTypes.BOOLEAN,
       },
       event_type: {
         type: DataTypes.ENUM,
@@ -32,14 +32,14 @@ export const db = database => {
           EVENT_TYPE.VITALS,
           EVENT_TYPE.CARE_PLAN_ACTIVATION,
           EVENT_TYPE.DIET,
-          EVENT_TYPE.WORKOUT
-        ]
+          EVENT_TYPE.WORKOUT,
+        ],
       },
       event_id: {
-        type: DataTypes.INTEGER
+        type: DataTypes.INTEGER,
       },
       details: {
-        type: DataTypes.JSON
+        type: DataTypes.JSON,
       },
       status: {
         type: DataTypes.ENUM,
@@ -48,12 +48,12 @@ export const db = database => {
           EVENT_STATUS.PENDING,
           EVENT_STATUS.COMPLETED,
           EVENT_STATUS.EXPIRED,
-          EVENT_STATUS.CANCELLED
+          EVENT_STATUS.CANCELLED,
         ],
-        defaultValue: EVENT_STATUS.PENDING
+        defaultValue: EVENT_STATUS.PENDING,
       },
       date: {
-        type: DataTypes.DATEONLY
+        type: DataTypes.DATEONLY,
       },
       start_time: {
         type: DataTypes.DATE,
@@ -64,7 +64,7 @@ export const db = database => {
               .seconds(0)
               .toISOString()
           );
-        }
+        },
       },
       end_time: {
         type: DataTypes.DATE,
@@ -75,17 +75,17 @@ export const db = database => {
               .seconds(0)
               .toISOString()
           );
-        }
+        },
       },
       created_at: {
-        type: DataTypes.DATE
+        type: DataTypes.DATE,
       },
       updated_at: {
-        type: DataTypes.DATE
+        type: DataTypes.DATE,
       },
       deleted_at: {
-        type: DataTypes.DATE
-      }
+        type: DataTypes.DATE,
+      },
     },
     {
       underscored: true,
@@ -102,16 +102,16 @@ export const db = database => {
           // if(event_type === EVENT_TYPE.VITALS) {
           return database.models[eventHistoryTableName].create({
             schedule_event_id: id,
-            data: previousValues
+            data: previousValues,
           });
           // }
-        }
-      }
+        },
+      },
     }
   );
 };
 
-export const associate = database => {
+export const associate = (database) => {
   // const {<TABLE_NAME>} = database.models || {};
   // associations here (if any) ...
 };

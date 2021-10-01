@@ -3,7 +3,7 @@ import { DataTypes } from "sequelize";
 
 export const REGIONS = "regions";
 
-export const db = database => {
+export const db = (database) => {
   database.define(
     REGIONS,
     {
@@ -15,11 +15,11 @@ export const db = database => {
       },
       name: {
         type: DataTypes.STRING,
-        allowNull: false
+                allowNull: false,
       },
       activated_on: {
-        type: DataTypes.DATE
-      }
+                type: DataTypes.DATE,
+            },
     },
     {
       underscored: true,
@@ -37,7 +37,7 @@ export const db = database => {
   );
 };
 
-export const associate = database => {
+export const associate = (database) => {
   // const {TABLE_NAME} = database.models || {};
   // associations here (if any) ...
 };

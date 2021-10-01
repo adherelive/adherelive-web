@@ -2,7 +2,7 @@ import {
   REQUEST_TYPE,
   USER_CATEGORY,
   PATH,
-  ONBOARDING_STATUS
+  ONBOARDING_STATUS,
 } from "../../constant";
 import { doRequest } from "../../Helper/network";
 import { Auth } from "../../Helper/urls";
@@ -80,7 +80,7 @@ export const COMMON_UPLOAD_DOCUMENT_COMPLETED =
   "COMMON_UPLOAD_DOCUMENT_COMPLETED";
 
 export const AUTH_INITIAL_STATE = {
-  authenticated: false
+  authenticated: false,
 };
 
 function setAuthRedirect(user, isInitial = false) {
@@ -89,13 +89,10 @@ function setAuthRedirect(user, isInitial = false) {
   const {
     onboarded = true,
     onboarding_status = "",
-    category = USER_CATEGORY.DOCTOR
+    category = USER_CATEGORY.DOCTOR,
   } = user;
   let authRedirect = "";
-  if (
-    !onboarded &&
-    (category == USER_CATEGORY.DOCTOR || category == USER_CATEGORY.HSP)
-  ) {
+  if (!onboarded && (category == USER_CATEGORY.DOCTOR || category == USER_CATEGORY.HSP ) ) {
     if (onboarding_status == ONBOARDING_STATUS.PROFILE_REGISTERED) {
       authRedirect = PATH.REGISTER_QUALIFICATIONS;
     } else if (
@@ -126,14 +123,11 @@ function setAuthRedirectSignIn(user, isInitial = false) {
   const {
     onboarded = true,
     onboarding_status = "",
-    category = USER_CATEGORY.DOCTOR
+    category = USER_CATEGORY.DOCTOR,
   } = user;
 
   let authRedirect = "/";
-  if (
-    !onboarded &&
-    (category == USER_CATEGORY.DOCTOR || category == USER_CATEGORY.HSP)
-  ) {
+  if (!onboarded && (category == USER_CATEGORY.DOCTOR || category == USER_CATEGORY.HSP) ) {
     if (onboarding_status == ONBOARDING_STATUS.PROFILE_REGISTERED) {
       authRedirect = PATH.REGISTER_QUALIFICATIONS;
     } else if (
@@ -155,16 +149,16 @@ function setAuthRedirectSignIn(user, isInitial = false) {
   return authRedirect;
 }
 
-export const signIn = payload => {
+export const signIn = (payload) => {
   let response = {};
-  return async dispatch => {
+  return async (dispatch) => {
     try {
       dispatch({ type: SIGNING });
 
       response = await doRequest({
         method: REQUEST_TYPE.POST,
         url: Auth.signInUrl(),
-        data: payload
+        data: payload,
       });
 
       const { status, payload: { error = "", data = {} } = {} } =
@@ -173,7 +167,7 @@ export const signIn = payload => {
       if (status === false) {
         dispatch({
           type: SIGNING_COMPLETED_WITH_ERROR,
-          payload: { error }
+          payload: { error },
         });
       } else if (status === true) {
         const {
@@ -182,7 +176,7 @@ export const signIn = payload => {
           auth_category = "",
           permissions = [],
           notificationToken = "",
-          feedId = ""
+          feedId = "",
         } = data;
 
         const { has_consent = false } = users[auth_user] || {};
@@ -199,9 +193,9 @@ export const signIn = payload => {
             authPermissions: permissions,
             notificationToken,
             feedId,
-            hasConsent: has_consent
+            hasConsent: has_consent,
           },
-          data
+          data,
         });
       }
     } catch (err) {
@@ -213,16 +207,16 @@ export const signIn = payload => {
   };
 };
 
-export const uploadDocument = payload => {
+export const uploadDocument = (payload) => {
   let response = {};
-  return async dispatch => {
+  return async (dispatch) => {
     try {
       dispatch({ type: COMMON_UPLOAD_DOCUMENT });
 
       response = await doRequest({
         method: REQUEST_TYPE.POST,
         url: Auth.uploadDocument(),
-        data: payload
+        data: payload,
       });
 
       const { status, payload: { error = "" } = {} } = response || {};
@@ -230,12 +224,12 @@ export const uploadDocument = payload => {
       if (status === false) {
         dispatch({
           type: COMMON_UPLOAD_DOCUMENT_FAILED,
-          payload: { error }
+          payload: { error },
         });
       } else if (status === true) {
         dispatch({
           type: COMMON_UPLOAD_DOCUMENT_COMPLETED,
-          payload: {}
+          payload: {},
         });
       }
     } catch (error) {
@@ -245,16 +239,16 @@ export const uploadDocument = payload => {
   };
 };
 
-export const forgotPassword = payload => {
+export const forgotPassword = (payload) => {
   let response = {};
-  return async dispatch => {
+  return async (dispatch) => {
     try {
       dispatch({ type: FORGOT_PASSWORD });
 
       response = await doRequest({
         method: REQUEST_TYPE.POST,
         url: Auth.forgotPasswordUrl(),
-        data: payload
+        data: payload,
       });
 
       const { status, payload: { error = "", data = {} } = {} } =
@@ -263,19 +257,19 @@ export const forgotPassword = payload => {
       if (status === false) {
         dispatch({
           type: FORGOT_PASSWORD_COMPLETED_WITH_ERROR,
-          payload: { error }
+          payload: { error },
         });
       } else if (status === true) {
         const {
           users = {},
           auth_user = "",
           auth_category = "",
-          permissions = []
+          permissions = [],
         } = data;
 
         dispatch({
           type: FORGOT_PASSWORD_COMPLETED,
-          payload: {}
+          payload: {},
         });
       }
     } catch (err) {
@@ -287,15 +281,15 @@ export const forgotPassword = payload => {
   };
 };
 
-export const verifyForgotPasswordLink = link => {
+export const verifyForgotPasswordLink = (link) => {
   let response = {};
-  return async dispatch => {
+  return async (dispatch) => {
     try {
       dispatch({ type: VERIFY_FORGOT_PASSWORD_LINK });
 
       response = await doRequest({
         method: REQUEST_TYPE.POST,
-        url: Auth.verifyResetPasswordLinkUrl(link)
+        url: Auth.verifyResetPasswordLinkUrl(link),
       });
 
       const { status, payload: { error = "", data = {} } = {} } =
@@ -304,12 +298,12 @@ export const verifyForgotPasswordLink = link => {
       if (status === false) {
         dispatch({
           type: VERIFY_FORGOT_PASSWORD_LINK_COMPLETED_WITH_ERROR,
-          payload: { error }
+          payload: { error },
         });
       } else if (status === true) {
         dispatch({
           type: VERIFY_FORGOT_PASSWORD_LINK_COMPLETED,
-          payload: {}
+          payload: {},
         });
       }
     } catch (err) {
@@ -321,16 +315,16 @@ export const verifyForgotPasswordLink = link => {
   };
 };
 
-export const resetPassword = payload => {
+export const resetPassword = (payload) => {
   let response = {};
-  return async dispatch => {
+  return async (dispatch) => {
     try {
       dispatch({ type: RESET_PASSWORD });
 
       response = await doRequest({
         method: REQUEST_TYPE.POST,
         url: Auth.resetPasswordUrl(),
-        data: payload
+        data: payload,
       });
 
       const { status, payload: { error = "", data = {} } = {} } =
@@ -339,12 +333,12 @@ export const resetPassword = payload => {
       if (status === false) {
         dispatch({
           type: RESET_PASSWORD_COMPLETED_WITH_ERROR,
-          payload: { error }
+          payload: { error },
         });
       } else if (status === true) {
         dispatch({
           type: RESET_PASSWORD_COMPLETED,
-          payload: {}
+          payload: {},
         });
       }
     } catch (err) {
@@ -356,15 +350,15 @@ export const resetPassword = payload => {
   };
 };
 
-export const verifyUser = link => {
+export const verifyUser = (link) => {
   let response = {};
-  return async dispatch => {
+  return async (dispatch) => {
     try {
       dispatch({ type: VALIDATING_LINK });
 
       response = await doRequest({
         method: REQUEST_TYPE.GET,
-        url: Auth.getVerifyUserUrl(link)
+        url: Auth.getVerifyUserUrl(link),
       });
 
       const { status, payload: { error = "", data = {} } = {} } =
@@ -373,14 +367,14 @@ export const verifyUser = link => {
       if (status === false) {
         dispatch({
           type: VALIDATING_LINK_COMPLETED_WITH_ERROR,
-          payload: { error }
+          payload: { error },
         });
       } else if (status === true) {
         let {
           users = {},
           auth_user = "",
           auth_category = "",
-          permissions = []
+          permissions = [],
         } = data;
         // let authUser = Object.values(users).length ? Object.values(users)[0] : {};
 
@@ -394,9 +388,9 @@ export const verifyUser = link => {
             authRedirection,
             authCategory: auth_category,
             authPermissions: permissions,
-            hasConsent: has_consent
+            hasConsent: has_consent,
           },
-          data
+          data,
         });
       }
     } catch (err) {
@@ -408,16 +402,16 @@ export const verifyUser = link => {
   };
 };
 
-export const signUp = payload => {
+export const signUp = (payload) => {
   let response = {};
-  return async dispatch => {
+  return async (dispatch) => {
     try {
       dispatch({ type: SIGNING_UP });
 
       response = await doRequest({
         method: REQUEST_TYPE.POST,
         url: Auth.signUpUrl(),
-        data: payload
+        data: payload,
       });
 
       const { status, payload: { error = "", data = {} } = {} } =
@@ -426,13 +420,13 @@ export const signUp = payload => {
       if (status === false) {
         dispatch({
           type: SIGNING_UP_COMPLETED_WITH_ERROR,
-          payload: { error }
+          payload: { error },
         });
       } else if (status === true) {
         const { _id, users } = data;
         dispatch({
           type: SIGNING_UP_COMPLETED,
-          payload: {}
+          payload: {},
         });
       }
     } catch (err) {
@@ -446,38 +440,38 @@ export const signUp = payload => {
 
 export const signOut = () => {
   let response = {};
-  return async dispatch => {
+  return async (dispatch) => {
     try {
       dispatch({ type: SIGNING_OUT });
 
       response = await doRequest({
         method: REQUEST_TYPE.POST,
-        url: Auth.signOutUrl()
+        url: Auth.signOutUrl(),
       });
 
       const { status, payload: { error } = {} } = response || {};
       if (status === true) {
         dispatch({
-          type: SIGNING_OUT_COMPLETED
+          type: SIGNING_OUT_COMPLETED,
         });
       } else {
         dispatch({
           type: SIGNING_OUT_COMPLETED_WITH_ERROR,
-          message: error.message
+          message: error.message,
         });
       }
     } catch (err) {
       console.log("", err);
       dispatch({
         type: SIGNING_COMPLETED_WITH_ERROR,
-        message: err.message
+        message: err.message,
       });
     }
     return response;
   };
 };
 
-export const googleSignIn = data => {
+export const googleSignIn = (data) => {
   return async (dispatch, getState) => {
     try {
       const { auth = {} } = getState();
@@ -485,13 +479,13 @@ export const googleSignIn = data => {
       const response = await doRequest({
         method: REQUEST_TYPE.POST,
         data: data,
-        url: Auth.googleSignInUrl()
+        url: Auth.googleSignInUrl(),
       });
 
       if (response.status === false) {
         dispatch({
           type: GOOGLE_SIGNING_COMPLETED_WITH_ERROR,
-          payload: { error: response.payload.error }
+          payload: { error: response.payload.error },
         });
       } else if (response.status === true) {
         const { lastUrl = false } = data;
@@ -504,8 +498,8 @@ export const googleSignIn = data => {
             users: response.payload.data.users,
             authenticatedUser: _id,
             authRedirection,
-            hasConsent: has_consent
-          }
+            hasConsent: has_consent,
+          },
         });
       }
     } catch (err) {
@@ -515,21 +509,21 @@ export const googleSignIn = data => {
   };
 };
 
-export const facebookSignIn = data => {
-  return async dispatch => {
+export const facebookSignIn = (data) => {
+  return async (dispatch) => {
     try {
       dispatch({ type: FACEBOOK_SIGNING });
 
       const response = await doRequest({
         method: REQUEST_TYPE.POST,
         data: data,
-        url: Auth.facebookSignInUrl()
+        url: Auth.facebookSignInUrl(),
       });
 
       if (response.status === false) {
         dispatch({
           type: FACEBOOK_SIGNING_COMPLETED_WITH_ERROR,
-          payload: { error: response.payload.error }
+          payload: { error: response.payload.error },
         });
       } else if (response.status === true) {
         const { lastUrl = false } = data || {};
@@ -542,8 +536,8 @@ export const facebookSignIn = data => {
             users,
             authenticatedUser: _id,
             authRedirection,
-            hasConsent: has_consent
-          }
+            hasConsent: has_consent,
+          },
         });
       }
     } catch (err) {
@@ -555,13 +549,13 @@ export const facebookSignIn = data => {
 
 export const getInitialData = () => {
   let response = {};
-  return async dispatch => {
+  return async (dispatch) => {
     try {
       dispatch({ type: GETTING_INITIAL_DATA });
 
       response = await doRequest({
         method: REQUEST_TYPE.GET,
-        url: Auth.getInitialData()
+        url: Auth.getInitialData(),
       });
 
       const { status, payload: { error, data } = {} } = response || {};
@@ -569,7 +563,7 @@ export const getInitialData = () => {
       if (status === false) {
         dispatch({
           type: GETTING_INITIAL_DATA_COMPLETED_WITH_ERROR,
-          payload: { error }
+          payload: { error },
         });
       } else if (status === true) {
         let {
@@ -581,7 +575,7 @@ export const getInitialData = () => {
           feedId = "",
           doctor_provider_id,
           auth_role,
-          firebase_keys = {}
+          firebase_keys = {},
         } = data;
         // let authUser = Object.values(users).length ? Object.values(users)[0] : {};
 
@@ -603,9 +597,9 @@ export const getInitialData = () => {
             hasConsent: has_consent,
             [doctor_provider_id ? "doctor_provider_id" : ""]: doctor_provider_id
               ? doctor_provider_id
-              : null
+              : null,
           },
-          data
+          data,
         });
       }
     } catch (err) {
@@ -616,16 +610,16 @@ export const getInitialData = () => {
   };
 };
 
-export const giveUserConsent = payload => {
+export const giveUserConsent = (payload) => {
   let response = {};
-  return async dispatch => {
+  return async (dispatch) => {
     try {
       dispatch({ type: GIVE_USER_CONSENT_START });
 
       response = await doRequest({
         method: REQUEST_TYPE.POST,
         url: Auth.giveUserConsentUrl(),
-        data: payload
+        data: payload,
       });
 
       const { status, payload: { error = "", data = {} } = {} } =
@@ -634,7 +628,7 @@ export const giveUserConsent = payload => {
       if (status === false) {
         dispatch({
           type: GIVE_USER_CONSENT_COMPLETED_WITH_ERROR,
-          payload: { error }
+          payload: { error },
         });
       } else if (status === true) {
         const {
@@ -643,7 +637,7 @@ export const giveUserConsent = payload => {
           auth_category = "",
           permissions = [],
           notificationToken = "",
-          feedId = ""
+          feedId = "",
         } = data;
         // let authUser = Object.values(users).length ? Object.values(users)[0] : {};
         let authRedirection = setAuthRedirectSignIn(users[auth_user]);
@@ -659,9 +653,9 @@ export const giveUserConsent = payload => {
             authPermissions: permissions,
             notificationToken,
             feedId,
-            hasConsent: has_consent
+            hasConsent: has_consent,
           },
-          data
+          data,
         });
       }
     } catch (err) {
@@ -682,6 +676,7 @@ export default (state = AUTH_INITIAL_STATE, action = {}) => {
   const { type, payload } = action;
   switch (type) {
     case GETTING_INITIAL_DATA_COMPLETED:
+
       return {
         authenticated: true,
         authenticated_category: payload.authCategory,
@@ -695,7 +690,7 @@ export default (state = AUTH_INITIAL_STATE, action = {}) => {
         hasConsent: payload.hasConsent,
         doctor_provider_id: payload.doctor_provider_id
           ? payload.doctor_provider_id
-          : null
+          : null,
       };
 
     case VALIDATING_LINK_COMPLETED:
@@ -705,12 +700,12 @@ export default (state = AUTH_INITIAL_STATE, action = {}) => {
         authenticated_category: payload.authCategory,
         authRedirection: payload.authRedirection,
         authPermissions: payload.authPermissions,
-        hasConsent: payload.hasConsent
+        hasConsent: payload.hasConsent,
       };
 
     case GETTING_INITIAL_DATA_COMPLETED_WITH_ERROR:
       return {
-        authenticated: false
+        authenticated: false,
         // authRedirection: "",
       };
     case GOOGLE_SIGNING_COMPLETED:
@@ -718,30 +713,30 @@ export default (state = AUTH_INITIAL_STATE, action = {}) => {
         authenticated: true,
         authenticated_user: payload.authenticatedUser,
         authRedirection: payload.authRedirection,
-        hasConsent: payload.hasConsent
+        hasConsent: payload.hasConsent,
       };
     case GOOGLE_SIGNING_COMPLETED_WITH_ERROR:
       return {
         authenticated: false,
-        error: payload.error
+        error: payload.error,
       };
     case FACEBOOK_SIGNING_COMPLETED:
       return {
         authenticated: true,
         authenticated_user: payload.authenticatedUser,
         authRedirection: payload.authRedirection,
-        hasConsent: payload.hasConsent
+        hasConsent: payload.hasConsent,
       };
     case FACEBOOK_SIGNING_COMPLETED_WITH_ERROR:
       return {
         authenticated: false,
-        error: payload.error
+        error: payload.error,
       };
 
     case SIGNING_OUT_COMPLETED:
       return {
         authenticated: false,
-        authRedirection: "/sign-in"
+        authRedirection: "/sign-in",
       };
     case SIGNING_COMPLETED:
       return {
@@ -752,7 +747,7 @@ export default (state = AUTH_INITIAL_STATE, action = {}) => {
         authPermissions: payload.authPermissions,
         notificationToken: payload.notificationToken,
         feedId: payload.feedId,
-        hasConsent: payload.hasConsent
+        hasConsent: payload.hasConsent,
       };
     case GIVE_USER_CONSENT_COMPLETED:
       return {
@@ -763,7 +758,7 @@ export default (state = AUTH_INITIAL_STATE, action = {}) => {
         authPermissions: payload.authPermissions,
         notificationToken: payload.notificationToken,
         feedId: payload.feedId,
-        hasConsent: payload.hasConsent
+        hasConsent: payload.hasConsent,
       };
     default:
       return state;

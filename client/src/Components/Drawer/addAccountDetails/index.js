@@ -35,7 +35,7 @@ class addAccountDetailsDrawer extends Component {
       account_type: "",
       use_as_main: false,
       upi_id: "",
-      submitting: false
+      submitting:false
     };
   }
 
@@ -135,15 +135,13 @@ class addAccountDetailsDrawer extends Component {
         {/* us */}
         <Option value="1">
           <div className="flex align-center">
-            <img src={us} className="w16 h16" />
-            <div className="ml4">+1</div>
+            <img src={us} className="w16 h16" /> <div className="ml4">+1</div>
           </div>
         </Option>
         {/* uk */}
         <Option value="44">
           <div className="flex align-center">
-            <img src={uk} className="w16 h16" />
-            <div className="ml4">+44</div>
+            <img src={uk} className="w16 h16" /> <div className="ml4">+44</div>
           </div>
         </Option>
         {/* china */}
@@ -437,6 +435,7 @@ class addAccountDetailsDrawer extends Component {
     use_as_main = false,
     upi_id
   }) => {
+
     this.handleSubmit({
       customer_name,
       account_mobile_number,
@@ -460,7 +459,7 @@ class addAccountDetailsDrawer extends Component {
     upi_id
   }) {
     try {
-      this.setState({ submitting: true });
+      this.setState({submitting:true});
 
       const { addAccountDetails, updateAccountDetailsAdded } = this.props;
       const response = await addAccountDetails({
@@ -479,13 +478,14 @@ class addAccountDetailsDrawer extends Component {
         updateAccountDetailsAdded();
         this.onClose();
       } else {
-        message.warn(msg);
+          message.warn(msg);
       }
 
-      this.setState({ submitting: false });
+      this.setState({submitting:false});
+
     } catch (err) {
       console.log("err", err);
-      this.setState({ submitting: false });
+      this.setState({submitting:false});
       message.warn(this.formatMessage(messages.somethingWentWrong));
     }
   }
@@ -525,7 +525,7 @@ class addAccountDetailsDrawer extends Component {
       //  renderAddNewConsultationFee
     } = this;
 
-    const { submitting = false } = this.state;
+    const {submitting = false} = this.state;
 
     if (visible !== true) {
       return null;
@@ -549,19 +549,23 @@ class addAccountDetailsDrawer extends Component {
         >
           {renderAddAccountDetailsForm()}
 
-          <Footer
+         <Footer
             onSubmit={this.onSubmit}
             onClose={this.onClose}
             submitText={this.formatMessage(messages.submit)}
             submitButtonProps={{}}
+
             cancelComponent={
               <Button onClick={this.onClose} style={{ marginRight: 8 }}>
-                {this.formatMessage(messages.cancel)}
-              </Button>
+              {this.formatMessage(messages.cancel)}
+            </Button>
             }
-            submitting={submitting}
-          />
 
+            submitting={submitting}
+
+          /> 
+
+        
           {/* <div className="add-patient-footer">
             <Button onClick={this.onClose} style={{ marginRight: 8 }}>
               {this.formatMessage(messages.cancel)}
@@ -570,6 +574,8 @@ class addAccountDetailsDrawer extends Component {
               {this.formatMessage(messages.submit)}
             </Button>
           </div> */}
+
+          
         </Drawer>
       </Fragment>
     );

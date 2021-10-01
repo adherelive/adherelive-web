@@ -3,18 +3,16 @@ import { TABLE_NAME } from "../../models/transactions";
 import { TABLE_NAME as paymentProductTableName } from "../../models/paymentProducts";
 
 class TransactionService {
-  createTransaction = async data => {
+    createTransaction = async (data) => {
     try {
-      const transaction = await Database.getModel(TABLE_NAME).create(data, {
-        raw: true
-      });
+            const transaction = await Database.getModel(TABLE_NAME).create(data, {raw: true});
       return transaction;
     } catch (error) {
       throw error;
     }
   };
 
-  getByData = async data => {
+    getByData = async (data) => {
     try {
       const transaction = await Database.getModel(TABLE_NAME).findOne({
         where: data,
@@ -34,7 +32,7 @@ class TransactionService {
     }
   };
 
-  getAllByData = async data => {
+    getAllByData = async (data) => {
     try {
       const transaction = await Database.getModel(TABLE_NAME).findAll({
         where: data,

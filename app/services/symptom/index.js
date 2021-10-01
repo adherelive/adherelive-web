@@ -19,14 +19,12 @@ export default class Symptom {
 
   getSymptomId = () => {
     return this._data.get("id");
-  };
+    }
 
   getCreatedDate = () => {
     const createDate = this._data.get("created_at");
-    return moment(createDate)
-      .utc()
-      .format("YYYY-MM-DD");
-  };
+        return moment(createDate).utc().format("YYYY-MM-DD")
+    }
 
   getPart = () => {
     const { config: { parts } = {} } = this._data;
@@ -40,5 +38,5 @@ export default class Symptom {
 
   getUnformattedCreateDate = () => {
     return this._data.get("created_at");
-  };
+    }
 }

@@ -56,31 +56,31 @@ const messages = defineMessages({
     description: "",
     defaultMessage: "Profiles"
   },
-  active_header: {
+  active_header : {
     id: "app.doctor.tableactive.header",
     description: "",
     defaultMessage: "Active"
   },
-  active: {
+  active : {
     id: "app.doctor.active",
     description: "",
     defaultMessage: "Active"
   },
-  inactive: {
+  inactive : {
     id: "app.doctor.tableactive.inactive",
     description: "",
     defaultMessage: "Inactive"
   },
-  emptyDoctorTable: {
+  emptyDoctorTable:{
     id: "app.doctor.table.emptyDoctorTable",
     description: "",
     defaultMessage: "No Doctors added for the user yet"
   },
-  typeText: {
+  typeText:{
     id: "app.doctor.table.typeText",
     description: "",
     defaultMessage: "Type : {category}"
-  }
+  },
 });
 
 export default messages;

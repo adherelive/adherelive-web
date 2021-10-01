@@ -176,7 +176,7 @@ class CarePlanTemplateWrapper extends BaseCarePlanTemplate {
         allTemplateDiets = { ...allTemplateDiets, ...template_diets };
         allFoodItemDetails = { ...allFoodItemDetails, ...food_item_details };
         allFoodItems = { ...allFoodItems, ...food_items };
-        allPortions = { ...allPortions, ...portions };
+        allPortions = {...allPortions, ...portions};
         templateDietIds.push(templateDiet.getId());
       }
     }
@@ -203,7 +203,7 @@ class CarePlanTemplateWrapper extends BaseCarePlanTemplate {
         allTemplateWorkouts = { ...allTemplateWorkouts, ...template_workouts };
         allExerciseDetails = { ...allExerciseDetails, ...exercise_details };
         allExercises = { ...allExercises, ...exercises };
-        allRepetitions = { ...allRepetitions, ...repetitions };
+        allRepetitions = {...allRepetitions, ...repetitions};
         templateWorkoutIds.push(templateWorkout.getId());
       }
     }

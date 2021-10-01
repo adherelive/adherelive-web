@@ -9,86 +9,95 @@ import generateRow from "./dataRow";
 import getColumn from "./header";
 
 import messages from "./messages";
-import { USER_CATEGORY } from "../../../constant";
+import {USER_CATEGORY} from "../../../constant";
 
 class ProviderTable extends Component {
-  constructor(props) {
-    super(props);
-  }
+    constructor(props) {
+        super(props);
+    }
 
-  componentDidMount() {
-    const { getAllProviders } = this.props;
-    getAllProviders();
-  }
+    componentDidMount() {
+        const { getAllProviders } = this.props;
+        getAllProviders();
+    }
 
-  onSelectChange = selectedRowKeys => {
-    this.setState({ selectedRows: selectedRowKeys });
-  };
-
-  getLoadingComponent = () => {
-    const antIcon = <Icon type="loading" style={{ fontSize: 24 }} spin />;
-    return {
-      indicator: antIcon
+    onSelectChange = selectedRowKeys => {
+        this.setState({ selectedRows: selectedRowKeys });
     };
-  };
 
-  getDataSource = () => {
-    const {
-      users,
-      providers,
-      provider_ids,
-      openEditProviderDrawer
-    } = this.props;
+    getLoadingComponent = () => {
+        const antIcon = <Icon type="loading" style={{ fontSize: 24 }} spin />;
+        return {
+            indicator: antIcon
+        };
+    };
 
-    console.log("7865467890", { providers, provider_ids });
+    getDataSource = () => {
+        const { users,
+             providers,
+              provider_ids,
+              openEditProviderDrawer,
+              } = this.props;
 
-    return Object.keys(providers).map(id => {
-      return generateRow({
-        id,
-        users,
-        providers,
-        openEditProviderDrawer
-      });
-    });
-  };
+        console.log("7865467890",{providers,provider_ids});      
 
-  getTableTitle = () => {
-    const { intl: { formatMessage } = {} } = this.props;
-    const { auth: { authenticated_category = "" } = {} } = this.props;
-    return authenticated_category === USER_CATEGORY.ADMIN ? (
-      <div className="fs22 fw600 m0">{formatMessage(messages.providers)}</div>
-    ) : null;
-  };
+      
+        return Object.keys(providers).map(id => {
+            return generateRow({
+                id,
+                users,
+                providers,
+                openEditProviderDrawer,
+                
+            });
+        });
+    };
 
-  render() {
-    const { getLoadingComponent, getDataSource, getTableTitle } = this;
+   
 
-    const {
-      loading,
-      pagination_bottom,
-      intl: { formatMessage } = {}
-    } = this.props;
+    getTableTitle = () => {
+        const {intl: {formatMessage} = {}} = this.props;
+        const {auth : {authenticated_category = ''} = {}} = this.props;
+      return (
+        authenticated_category === USER_CATEGORY.ADMIN
+        ?
+        (<div className="fs22 fw600 m0">{formatMessage(messages.providers)}</div>)
+        :
+        null
+        
+      );
+    };
 
-    return (
-      <Table
-        // onRow={onRow}
-        className="wp100 mt40 mb40"
-        rowClassName={() => "pointer"}
-        loading={loading === true ? getLoadingComponent() : false}
-        columns={getColumn({
-          formatMessage,
-          className: "pointer"
-        })}
-        dataSource={getDataSource()}
-        scroll={{ x: "100%" }}
-        // title={getTableTitle}
-        pagination={{
-          position: "top",
-          pageSize: 10
-        }}
-      />
-    );
-  }
+    render() {
+        const { 
+             getLoadingComponent, getDataSource, getTableTitle } = this;
+
+        const {
+            loading,
+            pagination_bottom,
+            intl: { formatMessage } = {}
+        } = this.props;
+
+        return (
+            <Table
+                // onRow={onRow}
+                className="wp100 mt40 mb40"
+                rowClassName={() => "pointer"}
+                loading={loading === true ? getLoadingComponent() : false}
+                columns={getColumn({
+                    formatMessage,
+                    className: "pointer"
+                })}
+                dataSource={getDataSource()}
+                scroll={{ x: "100%" }}
+                // title={getTableTitle}
+                pagination={{
+                    position: "top",
+                    pageSize: 10
+                }}
+            />
+        );
+    }
 }
 
 export default withRouter(injectIntl(ProviderTable));

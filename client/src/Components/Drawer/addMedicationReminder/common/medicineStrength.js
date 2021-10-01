@@ -9,7 +9,6 @@ const { Item: FormItem } = Form;
 
 const FIELD_NAME = "strength";
 const MAXIMUM_LENGTH = 10000;
-
 class MedicationStrength extends Component {
   componentDidMount() {
     const {
@@ -17,7 +16,6 @@ class MedicationStrength extends Component {
     } = this.props;
     validateFields();
   }
-
   componentWillUnmount() {
     const {
       form: { validateFields }
@@ -45,7 +43,7 @@ class MedicationStrength extends Component {
       medication,
       getFieldValue
     } = form;
-
+    
     const error = isFieldTouched(FIELD_NAME) && getFieldError(FIELD_NAME);
 
     const { getInitialValue } = this;
@@ -70,7 +68,7 @@ class MedicationStrength extends Component {
               }
             ],
             initialValue: getInitialValue()
-          })(<InputNumber min={1} style={{ width: "100%" }} />)}
+          })(<InputNumber  min={1} style={{ width: "100%" }} />)}
         </FormItem>
       </Fragment>
     );

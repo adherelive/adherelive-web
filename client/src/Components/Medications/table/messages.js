@@ -31,7 +31,7 @@ const messages = defineMessages({
     description: "",
     defaultMessage: "Edit"
   },
-  emptyMedicationTable: {
+  emptyMedicationTable:{
     id: "app.medication.table.emptyMedicationTable",
     description: "",
     defaultMessage: "No Medication Data added yet"
@@ -40,7 +40,7 @@ const messages = defineMessages({
     id: "app.medication.table.workouts.view",
     description: "",
     defaultMessage: "View"
-  }
+  },
 });
 
 export default messages;

@@ -5,13 +5,8 @@ import { TABLE_DEFAULT_BLANK_FIELD } from "../../../../constant";
 export default props => {
   const { carePlanData: { activated_on } = {} } = props || {};
 
-  const { carePlanData } = props || {};
+  const {carePlanData} = props || {};
 
-  return (
-    <div>
-      {activated_on
-        ? moment(activated_on).format("Do MMM YYYY")
-        : TABLE_DEFAULT_BLANK_FIELD}
-    </div>
-  );
+
+  return <div>{activated_on ? moment(activated_on).format("Do MMM YYYY") : TABLE_DEFAULT_BLANK_FIELD}</div>;
 };

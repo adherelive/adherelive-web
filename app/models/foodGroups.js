@@ -19,23 +19,23 @@ export const db = database => {
       },
       portion_id: {
         type: DataTypes.INTEGER,
-        allowNull: false
+          allowNull:false,
       },
       serving: {
         type: DataTypes.FLOAT(11, 2),
-        allowNull: false
+        allowNull: false,
       },
       food_item_detail_id: {
         type: DataTypes.INTEGER,
-        allowNull: false
+        allowNull: false,
       },
       details: {
-        type: DataTypes.JSON
+        type: DataTypes.JSON,
       }
     },
     {
       underscored: true,
-      paranoid: true
+      paranoid: true,
     }
   );
 };
@@ -50,11 +50,8 @@ export const associate = database => {
     sourceKey: "portion_id"
   });
 
-  database.models[TABLE_NAME].hasOne(
-    database.models[foodItemDetailsTableName],
-    {
+    database.models[TABLE_NAME].hasOne(database.models[foodItemDetailsTableName], {
       foreignKey: "id",
       sourceKey: "food_item_detail_id"
-    }
-  );
+    });
 };

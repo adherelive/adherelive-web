@@ -67,10 +67,7 @@ export const db = database => {
           if (value) {
             this.setDataValue(
               "last_name",
-              value
-                .split(" ")
-                .map(text => text.charAt(0).toUpperCase() + text.slice(1))
-                .join(" ")
+              value.split(" ").map(text => text.charAt(0).toUpperCase() + text.slice(1)).join(" ")
             );
           } else {
             this.setDataValue("last_name", null);
@@ -112,9 +109,7 @@ export const db = database => {
       full_name: {
         type: DataTypes.VIRTUAL,
         get() {
-          return !this.first_name
-            ? null
-            : `${this.first_name}${
+          return !this.first_name? null: `${this.first_name}${
                 this.middle_name ? ` ${this.middle_name}` : ""
               }${this.last_name ? ` ${this.last_name}` : ""}`;
         }

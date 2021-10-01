@@ -5,7 +5,8 @@ const messages = defineMessages({
     id: "drawer.footer.submitting",
     description: "",
     defaultMessage: "Submitting"
-  }
+  },
+
 });
 
 export default messages;

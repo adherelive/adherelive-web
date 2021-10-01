@@ -20,26 +20,28 @@ class VitalOccurence extends Component {
       vitals: {},
       fetchingVitals: false
     };
-  }
 
-  componentDidMount() {
+  }
+  componentDidMount(){
     this.getStagesOption();
   }
-
   getStagesOption = () => {
-    if (!this.state.fetchingVitals) {
-      const { getVitalOccurence } = this.props;
-      getVitalOccurence().then(res => {
+    if(!this.state.fetchingVitals){
+      const {  getVitalOccurence } = this.props;
+      getVitalOccurence().then(res=>{
         const { status = false } = res;
-        if (status) {
-          this.setState({ fetchingVitals: true });
+        if(status){
+          this.setState({fetchingVitals:true})
         }
       });
-    } else {
-    }
-  };
+    }else{
 
+    }
+    
+  };
+    
   getParentNode = t => t.parentNode;
+
 
   render() {
     const {
@@ -52,7 +54,7 @@ class VitalOccurence extends Component {
     const { getStagesOption, getParentNode, handleVitalSearch } = this;
 
     const options = Object.keys(repeat_intervals).map(id => {
-      const { text = "" } = repeat_intervals[id] || {};
+      const { text = '' } = repeat_intervals[id] || {};
       return (
         <Option key={id} value={id}>
           {text}
@@ -63,6 +65,7 @@ class VitalOccurence extends Component {
     // if (!program_has_medication_stage || (!!purpose && !!!getInitialValue())) {
     //   return null;
     // }
+
 
     // const error = isFieldTouched(FIELD_NAME) && getFieldError(FIELD_NAME);
 
@@ -77,9 +80,7 @@ class VitalOccurence extends Component {
           // ]
         })(
           <Select
-            notFoundContent={
-              !fetchingVitals ? <Spin size="small" /> : "No match found"
-            }
+            notFoundContent={!fetchingVitals ? <Spin size="small" /> : 'No match found'}
             className="drawer-select"
             placeholder="Select Occurence"
             showSearch
@@ -92,6 +93,7 @@ class VitalOccurence extends Component {
                 .indexOf(input.toLowerCase()) >= 0
             }
             getPopupContainer={getParentNode}
+
           >
             {options}
           </Select>

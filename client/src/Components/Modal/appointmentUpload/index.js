@@ -3,7 +3,7 @@ import { injectIntl } from "react-intl";
 import Modal from "antd/es/modal";
 import message from "antd/es/message";
 import Upload from "antd/es/upload";
-import Button from "antd/es/button";
+import Button from "antd/es/button"
 import messages from "./messages";
 import {
   DeleteTwoTone,
@@ -18,11 +18,11 @@ import confirm from "antd/es/modal/confirm";
 class AppointmentUploadModal extends Component {
   constructor(props) {
     super(props);
-    this.state = {
-      viewModalVisible: false,
-      viewModalSrc: "",
+    this.state={
+      viewModalVisible:false,
+      viewModalSrc:'',
       uploading: false
-    };
+    }
   }
 
   formatMessage = message => this.props.intl.formatMessage(message);
@@ -39,7 +39,7 @@ class AppointmentUploadModal extends Component {
     let data = new FormData();
     data.append("files", file);
 
-    this.setState({ uploading: true });
+    this.setState({uploading: true});
 
     const response = await uploadAppointmentDocs(data);
 
@@ -49,41 +49,48 @@ class AppointmentUploadModal extends Component {
     } = response;
 
     if (status) {
-      this.setState({ uploading: false });
+      this.setState({uploading: false});
       message.success(respMessage);
     } else {
       message.warn(respMessage);
     }
   };
 
-  handleDelete = (id, src) => e => {
+  handleDelete = (id,src) => (e) => {
     e.preventDefault();
     const { warnNote } = this;
 
+
     confirm({
       title: `${this.formatMessage(messages.warnNote)}`,
-      content: <div>{warnNote()}</div>,
+      content: (
+        <div>
+          {warnNote()}
+        </div>
+      ),
       onOk: async () => {
         try {
-          const { deleteAppointmentDocs } = this.props;
-          const response = await deleteAppointmentDocs(id);
-          const {
-            status,
-            payload: { data, message: respMessage } = {}
-          } = response;
-          if (status) {
-            message.success(respMessage);
-          } else {
-            message.warn(respMessage);
-          }
+             
+                const {deleteAppointmentDocs} = this.props;
+                const response =await deleteAppointmentDocs(id);
+                const { status, payload: { data, message : respMessage} = {} } = response;
+                if (status) {
+                  message.success(respMessage);
+                } else {
+                  message.warn(respMessage);
+                }
+          
+             
+
         } catch (err) {
           console.log("err ", err);
           message.warn(this.formatMessage(messages.somethingWentWrong));
         }
       },
-      onCancel() {}
+      onCancel() { }
     });
   };
+
 
   warnNote = () => {
     return (
@@ -96,89 +103,110 @@ class AppointmentUploadModal extends Component {
     );
   };
 
+  
   getImageView = ({ src, id }) => {
     return (
-      <div className={"qualification-avatar-uploader "}>
-        <img src={src} className="wp100 hp100 br4" alt="appointment-report" />
-        <div className="overlay"></div>
-        <div className="absolute tp45 l0 wp100 flex justify-center align-space-evenly doc-container">
-          <DeleteTwoTone
-            className={"del doc-opt"}
-            // className="w20 "
-            onClick={this.handleDelete(id, src)}
-            twoToneColor="#fff"
-          />{" "}
-          <EyeTwoTone
-            className="w20"
-            className={"del doc-opt"}
-            onClick={this.handleDocumentViewOpen(id, src)}
-            twoToneColor="#fff"
-          />
-          <a
-            href={src}
-            target={"_self"}
-            className={"del doc-opt ml4"}
-            style={{ color: "#fff" }}
-          >
-            <DownloadOutlined className="fs18" twoToneColor="#fff" />
-          </a>
-        </div>
-      </div>
+              <div className={"qualification-avatar-uploader "}>
+              <img src={src} className="wp100 hp100 br4" alt="appointment-report" />
+              <div className="overlay"></div>
+              <div className="absolute tp45 l0 wp100 flex justify-center align-space-evenly doc-container">
+                <DeleteTwoTone
+                  className={"del doc-opt"}
+                  // className="w20 "
+                  onClick={this.handleDelete(id, src)}
+                  twoToneColor="#fff"
+                />{" "}
+                <EyeTwoTone
+                    className="w20"
+                    className={"del doc-opt"}
+                    onClick={this.handleDocumentViewOpen(id, src)}
+                    twoToneColor="#fff"
+                />
+                <a
+                  href={src}
+                  target={"_self"}
+                  className={"del doc-opt ml4"}
+                  style={{color:"#fff"}}
+
+                >
+                  <DownloadOutlined 
+                   className="fs18"
+                   twoToneColor="#fff"
+                  />
+                </a>
+                
+              </div>
+            </div>
+    
     );
   };
+
 
   getFileView = ({ src, extension, id }) => {
     return (
       <div className={"qualification-avatar-uploader "}>
+
         {/* <div className="wp100 mw100 flex direction-column align-center justify-center"> */}
         <div className="absolute tp45 l0 wp100 flex justify-center align-space-evenly doc-container ">
+
           {extension.toUpperCase()}
         </div>
         <div className="overlay"></div>
         <div className="absolute tp45 l0 wp100 flex justify-center align-space-evenly doc-container ">
-          <DeleteTwoTone
-            className={"del doc-opt"}
-            // className="w20 "
-            onClick={this.handleDelete(id, src)}
-            twoToneColor="#fff"
-          />{" "}
-          <EyeTwoTone
-            className="w20"
-            className={"del doc-opt"}
-            onClick={this.handleDocumentViewOpen(id, src)}
-            twoToneColor="#fff"
-          />
-          <a
-            href={src}
-            target={"_self"}
-            className={"del doc-opt ml4"}
-            style={{ color: "#fff" }}
-          >
-            <DownloadOutlined className="fs18 " twoToneColor="#fff" />
-          </a>
+        <DeleteTwoTone
+                  className={"del doc-opt"}
+                  // className="w20 "
+                  onClick={this.handleDelete(id, src)}
+                  twoToneColor="#fff"
+                />{" "}
+                <EyeTwoTone
+                    className="w20"
+                    className={"del doc-opt"}
+                    onClick={this.handleDocumentViewOpen(id, src)}
+                    twoToneColor="#fff"
+                />
+                <a
+                  href={src}
+                  target={"_self"}
+                  className={"del doc-opt ml4"}
+                  style={{color:"#fff"}}
+
+                >
+                  <DownloadOutlined 
+                   className="fs18 "
+                   twoToneColor="#fff"
+                  />
+                </a>
+                
+
         </div>
       </div>
     );
   };
 
-  handleDocumentViewOpen = (id, src) => () => {
+
+
+  handleDocumentViewOpen = (id,src) => () => {
     this.setState({
-      viewModalVisible: true,
-      viewModalSrc: src
+      viewModalVisible:true,
+      viewModalSrc:src
     });
-  };
+
+  }
 
   handleDocumentViewClose = () => {
     this.setState({
-      viewModalVisible: false,
-      viewModalSrc: ""
+      viewModalVisible:false,
+      viewModalSrc:''
     });
-  };
+
+  }
 
   getUploadedDocuments = () => {
     const { appointments, upload_documents } = this.props;
     const { getImageView, getFileView } = this;
     const { appointment_document_ids } = appointments || {};
+    
 
     return appointment_document_ids.map(id => {
       const { basic_info: { document } = {} } = upload_documents[id] || {};
@@ -188,22 +216,21 @@ class AppointmentUploadModal extends Component {
         document.length
       );
 
+
       return (
         <div key={`appointment-upload-${id}`}>
-          {documentExtension === "png" ||
-          documentExtension === "jpg" ||
-          documentExtension === "peg" ||
-          documentExtension === "jpeg"
+          {documentExtension === "png" || documentExtension === "jpg" || documentExtension === "peg" || documentExtension === "jpeg" 
             ? getImageView({ src: document, id })
             : getFileView({ src: document, extension: documentExtension, id })}
+
         </div>
       );
     });
   };
 
   getUploadButton = () => {
-    const { uploading } = this.state;
-    return uploading ? <LoadingOutlined /> : <PlusOutlined />;
+    const {uploading} = this.state;
+    return uploading ? (<LoadingOutlined />) : (<PlusOutlined />);
   };
 
   render() {
@@ -216,7 +243,7 @@ class AppointmentUploadModal extends Component {
       getUploadButton
     } = this;
 
-    const { viewModalVisible = false, viewModalSrc = "" } = this.state;
+    const {viewModalVisible=false,viewModalSrc=''}=this.state;
     return (
       <div>
         <Modal
@@ -252,24 +279,21 @@ class AppointmentUploadModal extends Component {
         </Modal>
 
         <Modal
-          visible={viewModalVisible}
-          // title={`${formatMessage(messages.profile_pic_text)}`}
-          closable
-          mask
-          maskClosable
-          onCancel={handleDocumentViewClose}
-          width={`50%`}
-          footer={[
-            <Button key="back" onClick={handleDocumentViewClose}>
+        visible={viewModalVisible}
+        // title={`${formatMessage(messages.profile_pic_text)}`}
+        closable
+        mask
+        maskClosable
+        onCancel={handleDocumentViewClose}
+        width={`50%`}
+        footer={[
+          <Button key="back" onClick={handleDocumentViewClose}>
               Close
-            </Button>
-          ]}
+          </Button>
+         
+      ]}
         >
-          <img
-            src={viewModalSrc}
-            alt="qualification document"
-            className="wp100"
-          />
+        <img src={viewModalSrc} alt="qualification document" className="wp100" />
         </Modal>
       </div>
     );

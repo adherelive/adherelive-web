@@ -261,7 +261,11 @@ class CalendarTimeSelecton extends Component {
                   getCalendarContainer={this.getParentNode}
                 />
               </div>
-              <div className={"flex-1 flex justify-end align-center mr8 ml8"}>
+              <div
+                className={
+                  "flex-1 flex justify-end align-center mr8 ml8"
+                }
+              >
                 {name && (
                   <div className="flex justify-start align-center bg-transparent">
                     <img alt={"u"} src={profilePicLink} />

@@ -14,10 +14,10 @@ class ExerciseGroupWrapper extends BaseExerciseGroup {
     return {
       basic_info: {
         id,
-        exercise_detail_id
+        exercise_detail_id,
       },
       sets,
-      details
+      details,
     };
   };
 
@@ -28,12 +28,7 @@ class ExerciseGroupWrapper extends BaseExerciseGroup {
   };
 
   getReferenceInfo = async () => {
-    const {
-      getId,
-      getExerciseDetails,
-      getWorkoutExerciseGroupMappings,
-      getAllInfo
-    } = this;
+    const { getId, getExerciseDetails, getWorkoutExerciseGroupMappings, getAllInfo } = this;
 
     // get exercise details
     // let allExerciseGroup = {};
@@ -43,12 +38,12 @@ class ExerciseGroupWrapper extends BaseExerciseGroup {
     const exerciseDetails = getExerciseDetails();
     if (exerciseDetails) {
       const exerciseDetail = await ExerciseDetailWrapper({
-        data: exerciseDetails
+        data: exerciseDetails,
       });
       const {
         exercise_details,
         repetitions,
-        exercises
+        exercises,
       } = await exerciseDetail.getReferenceInfo();
 
       // const {id, workout_id, exercise_group_id, time} = getWorkoutExerciseGroupMappings();
@@ -64,11 +59,11 @@ class ExerciseGroupWrapper extends BaseExerciseGroup {
 
     return {
       exercise_groups: {
-        [getId()]: getAllInfo()
+        [getId()]: getAllInfo(),
       },
       exercises: allExercises,
       exercise_details: allExerciseDetails,
-      repetitions: allRepetitions
+      repetitions: allRepetitions,
       // workout_exercise_group_mappings: allExerciseGroup
     };
   };

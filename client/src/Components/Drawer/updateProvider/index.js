@@ -6,14 +6,15 @@ import Footer from "../footer";
 import Form from "antd/es/form";
 import messages from "./message";
 
-import UpdateProviderForm from "./form";
+import UpdateProviderForm from  "./form";
 import { SAVINGS, CURRENT, ACCOUNT_TYPES } from "../../../constant";
+
 
 class updateProviderDrawer extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      submitting: false
+      submitting:false
     };
 
     this.FormWrapper = Form.create({ onFieldsChange: this.onFormFieldChanges })(
@@ -21,7 +22,7 @@ class updateProviderDrawer extends Component {
     );
   }
 
-  componentDidMount() {}
+  componentDidMount(){}
 
   formatMessage = data => this.props.intl.formatMessage(data);
 
@@ -30,47 +31,44 @@ class updateProviderDrawer extends Component {
     close();
   };
 
-  handleSubmit = e => {
+  handleSubmit = (e) =>{
     e.preventDefault();
     const { formRef = {}, formatMessage } = this;
 
     const {
       props: {
-        form: { validateFields, resetFields }
-      }
+        form: { validateFields, resetFields },
+      },
     } = formRef;
 
     validateFields(async (err, values) => {
       if (!err) {
-        const {
-          payload = {},
-          providers = {},
-          users = {},
-          visible
-        } = this.props;
-        const { provider_id = null } = payload;
+
+        const {payload = {},providers={},users={},visible} = this.props;
+        const {provider_id=null} = payload;
 
         let {
-          name = "",
-          prefix = "91",
-          mobile_number = "",
-          email = "",
-          address = "",
-          account_type = "",
-          customer_name = "",
-          account_number = "",
-          ifsc_code = "",
-          upi_id = "",
-          razorpay_account_id = "",
-          razorpay_account_name = "",
+          name='',
+          prefix='91',
+          mobile_number='',
+          email='',
+          address='',
+          account_type='',
+          customer_name='',
+          account_number='',
+          ifsc_code='',
+          upi_id='',
+          razorpay_account_id='',
+          razorpay_account_name='',
           icon = "",
-          banner = "",
-          prescription_details = ""
+          banner = '',
+          prescription_details=''
         } = values;
 
-        let data = {};
 
-        data = {
+        let data = {};
+        
+          data = {
           name,
           prefix,
           mobile_number,
@@ -82,47 +80,52 @@ class updateProviderDrawer extends Component {
           ifsc_code,
           upi_id,
           razorpay_account_id,
-          razorpay_account_name,
+          razorpay_account_name ,
           icon,
           banner,
           prescription_details
-        };
-
-        try {
-          const { updateProvider } = this.props;
-          this.setState({ submitting: true });
-          const response = await updateProvider(provider_id, data);
-
-          const { status, payload: { message: msg } = {} } = response;
-          if (status) {
-            message.success(this.formatMessage(messages.updateProviderSuccess));
-            this.onClose();
-          } else {
-            message.warn(msg);
           }
+       
+          try {
+            const {updateProvider}=this.props;
+            this.setState({submitting:true});
+            const response = await updateProvider(provider_id,data);
+        
+            const { status, payload: { message: msg } = {} } = response;
+            if (status) {
+              message.success(this.formatMessage(messages.updateProviderSuccess));
+              this.onClose();
+            } else {
+                message.warn(msg);
+            }
 
-          this.setState({ submitting: false });
-        } catch (err) {
-          console.log("err", err);
-          this.setState({ submitting: false });
-          message.warn(this.formatMessage(messages.somethingWentWrong));
-        }
-      } else {
+            this.setState({submitting:false});
+
+          } catch (err) {
+            console.log("err", err);
+            this.setState({submitting:false});
+            message.warn(this.formatMessage(messages.somethingWentWrong));
+          }
+        
+      }else{
         console.log("18731297 err --> ", err);
-        let allErrors = "";
-        for (let each in err) {
-          const { errors = [] } = err[each] || {};
-          for (let error of errors) {
-            const { message = "" } = error;
-            allErrors = allErrors + message + ".";
+        let allErrors = '';
+        for(let each in err){
+          const {errors = [] } = err[each] || {};
+          for(let error of errors ){
+            const {message = ''} = error;
+            allErrors = allErrors + message+".";
           }
         }
         message.warn(allErrors);
-      }
-    });
-  };
 
-  setFormRef = formRef => {
+        return;
+      }
+
+    });
+  }
+
+  setFormRef = (formRef) => {
     this.formRef = formRef;
     if (formRef) {
       this.setState({ formRef: true });
@@ -130,16 +133,16 @@ class updateProviderDrawer extends Component {
   };
 
   render() {
-    const { payload = {}, providers = {}, users = {}, visible } = this.props;
-    const { provider_id = null } = payload;
-    const { submitting = false } = this.state;
+    const {payload = {},providers={},users={},visible} = this.props;
+    const {provider_id=null} = payload;
+    const {submitting = false } =this.state;
 
     const {
       onClose,
       formatMessage,
       setFormRef,
       handleSubmit,
-      FormWrapper
+      FormWrapper,
     } = this;
 
     if (visible !== true) {
@@ -163,11 +166,7 @@ class updateProviderDrawer extends Component {
           width={`30%`}
         >
           {/* {this.renderUpdateProviderForm()} */}
-          <FormWrapper
-            wrappedComponentRef={setFormRef}
-            {...this.props}
-            provider_id={provider_id}
-          />
+          <FormWrapper wrappedComponentRef={setFormRef} {...this.props} provider_id={provider_id}/>
 
           <Footer
             onSubmit={this.handleSubmit}

@@ -16,7 +16,7 @@ const { Option, OptGroup } = Select;
 const NAME = "name";
 const REPETITION_VALUE = "repetition_value";
 const REPETITION_ID = "repetition_id";
-const CALORIFIC_VALUE = "calorific_value";
+const CALORIFIC_VALUE="calorific_value";
 const VIDEO_CONTENT = "video_content";
 
 const FIELDS = [
@@ -30,88 +30,96 @@ const FIELDS = [
 class AddExerciseForm extends Component {
   constructor(props) {
     super(props);
-    this.state = {
-      loading: false
-    };
+    this.state={
+      loading:false
+    }
   }
 
   componentDidMount() {
-    const { exercise_name = "" } = this.props;
-    if (exercise_name.length) {
-      const { form: { setFieldsValue } = {} } = this.props;
-
+    const { exercise_name = '' } = this.props;
+    if(exercise_name.length){
+      const {
+        form: { setFieldsValue } = {}
+      } = this.props;
+  
       setFieldsValue({ [NAME]: exercise_name });
     }
   }
 
   getRepetitionOptions = () => {
-    const { repetitions = {} } = this.props;
+    const {
+      repetitions = {} 
+    } = this.props;
+
 
     return Object.values(repetitions).map((each, index) => {
-      const { id = null, type = "" } = each || {};
-      return (
-        <Option key={`${index}-${type}`} value={id}>
-          {type}
-        </Option>
-      );
+        const { id = null , type = '' } = each || {};
+        return (
+          <Option key={`${index}-${type}`} value={id}>
+            {type}
+          </Option>
+        );
     });
+
   };
 
   handleRepetitionSelect = value => {
-    const { form: { setFieldsValue } = {} } = this.props;
-
-    setFieldsValue({ [REPETITION_ID]: value });
-  };
-
-  formatMessage = data => this.props.intl.formatMessage(data);
-
-  handleUpload = async ({ file }) => {
     const {
-      uploadExerciseContent,
-      form: { setFieldsValue } = {},
-      setUploadedVideoUrl,
-      setVideoContentType
-    } = this.props;
+        form: { setFieldsValue } = {}
+      } = this.props;
+  
+      setFieldsValue({ [REPETITION_ID]: value });
+     
+  };
+  
+
+  formatMessage = (data) => this.props.intl.formatMessage(data);
+
+  handleUpload = async ({file}) => {
+    const { uploadExerciseContent , form: { setFieldsValue } = {} , setUploadedVideoUrl, setVideoContentType  }=this.props;
     const data = new FormData();
     data.set("files", file);
     try {
       this.setState({ loading: true });
       const response = await uploadExerciseContent(data);
-      const { status, payload: { data: { documents = [] } = {} } = {} } =
-        response || {};
+      const { status, payload: { data: { documents = [] } = {} } = {} } = response || {};
 
       if (status === true) {
-        if (documents.length) {
-          const { name = "", file: resp_file = "" } = documents[0] || {};
+        if(documents.length){
+          const {name='',file : resp_file=''} = documents[0] || {};
           setVideoContentType(VIDEO_TYPES.UPLOAD);
           setFieldsValue({ [VIDEO_CONTENT]: name });
           setUploadedVideoUrl(resp_file);
+          
         }
         this.setState({ loading: false });
+      
+
       } else {
         this.setState({ loading: false });
       }
     } catch (error) {
       this.setState({ loading: false });
     }
-  };
+  }
 
-  onChange = e => {
-    const {
-      form: { setFieldsValue } = {},
-      setUploadedVideoUrl,
-      setVideoContentType
-    } = this.props;
+  onChange = (e) => {
+    const { form: { setFieldsValue } = {} , setUploadedVideoUrl ,setVideoContentType }=this.props;
     setVideoContentType(VIDEO_TYPES.URL);
-    setUploadedVideoUrl("");
-  };
+    setUploadedVideoUrl('');
+  }
 
+  
   render() {
     const {
-      form: { getFieldDecorator, isFieldTouched, getFieldError }
+      form: { getFieldDecorator, isFieldTouched, getFieldError}
     } = this.props;
 
-    const { formatMessage, handleUpload } = this;
+    const {
+      formatMessage,
+      handleUpload
+    } = this;
+
 
     let fieldsError = {};
     FIELDS.forEach(value => {
@@ -119,110 +127,127 @@ class AddExerciseForm extends Component {
       fieldsError = { ...fieldsError, [value]: error };
     });
 
+
     return (
       <Form className="fw700 wp100 pb30 Form">
+
         {/* food item name */}
         <FormItem
           label={formatMessage(messages.exercise_name)}
           className="flex-grow-1 mt-4"
         >
           {getFieldDecorator(NAME, {
-            rules: [
-              {
-                required: true,
-                message: formatMessage(messages.name_required_error)
-              }
-            ]
-          })(<Input type="string" max="500" />)}
+              rules: [
+                {
+                  required: true,
+                  message: formatMessage(messages.name_required_error)
+                }
+              ]
+          })
+          (
+              <Input
+              type="string"
+              max="500"
+              />
+          )
+       
+          }
         </FormItem>
 
-        <div className="flex align-center justify-space-between wp100">
-          <div className="flex  wp40 ">
-            {/* portion size */}
-            <FormItem
-              label={formatMessage(messages.repetition_value)}
-              className="mt-4 flex-grow-1"
-            >
-              {getFieldDecorator(REPETITION_VALUE, {
-                rules: [
-                  {
-                    required: true,
-                    message: formatMessage(
-                      messages.repetition_value_required_error
-                    )
-                  }
-                ]
-              })(<Input type="number" min="1" />)}
-            </FormItem>
-          </div>
-          <div className="flex  wp40 ">
-            {/* portion type */}
-            <FormItem
-              label={formatMessage(messages.repetition_type)}
-              className="mt-4 flex-grow-1"
-            >
-              {getFieldDecorator(REPETITION_ID, {
-                rules: [
-                  {
-                    required: true,
-                    message: formatMessage(
-                      messages.repetition_id_required_error
-                    )
-                  }
-                ]
-              })(
-                <Select
-                  className="drawer-select"
-                  onSelect={this.handleRepetitionSelect}
-                >
-                  {this.getRepetitionOptions()}
-                </Select>
-              )}
-            </FormItem>
-          </div>
+
+        <div className="flex align-center justify-space-between wp100" >
+              <div className="flex  wp40 " >
+              {/* portion size */}
+              <FormItem
+                        label={formatMessage(messages.repetition_value)}
+                        className="mt-4 flex-grow-1"
+                      >
+                        {getFieldDecorator(REPETITION_VALUE, {
+                            rules: [
+                              {
+                                required: true,
+                                message: formatMessage(messages.repetition_value_required_error)
+                              }
+                            ]
+                        })(
+                            <Input
+                            type="number"
+                            min="1"
+                            />
+                        )}
+              </FormItem>
+              </div>
+              <div className="flex  wp40 " >
+              {/* portion type */}
+              <FormItem
+                        label={formatMessage(messages.repetition_type)}
+                        className="mt-4 flex-grow-1"
+                      >
+                        {getFieldDecorator(REPETITION_ID, {
+                            rules: [
+                              {
+                                required: true,
+                                message: formatMessage(messages.repetition_id_required_error)
+                              }
+                            ]
+                        })(
+                              <Select
+                              className="drawer-select"
+                              onSelect={ this.handleRepetitionSelect }
+                          >
+                              {this.getRepetitionOptions()}
+                          </Select>
+                        )}
+              </FormItem>
+              </div>
+            
+
         </div>
 
-        {/* calories */}
+            {/* calories */}
         <FormItem
           label={formatMessage(messages.calories)}
           className="flex-grow-1 mt-4 "
         >
-          {getFieldDecorator(
-            CALORIFIC_VALUE,
-            {}
-          )(<Input type="number" className="mb20" />)}
+          {getFieldDecorator(CALORIFIC_VALUE, {})(
+              <Input
+              type="number"
+              className="mb20"
+              />
+          )}
         </FormItem>
 
         <FormItem
           label={formatMessage(messages.videoUrl)}
           className="flex-grow-1 mt-4 "
         >
-          {getFieldDecorator(
-            VIDEO_CONTENT,
-            {}
-          )(
-            <Input
+          {getFieldDecorator(VIDEO_CONTENT, {})(
+              <Input
               type="string"
               className="mb20 "
               onChange={this.onChange}
               suffix={
-                <div className="form-button tab-color pointer">
-                  <Upload
-                    showUploadList={false}
-                    multiple={false}
-                    accept=".mp4"
-                    className="flex align-center chat-upload-component"
-                    customRequest={handleUpload}
-                  >
-                    <div className="chat-upload-btn">
-                      <CameraOutlined />
-                    </div>
-                  </Upload>
-                </div>
+              <div className="form-button tab-color pointer">
+                <Upload
+                  showUploadList={false}
+                  multiple={false}
+                  accept=".mp4"
+                  className="flex align-center chat-upload-component"
+                  customRequest={handleUpload}
+                >
+                  <div
+                  className="chat-upload-btn"
+                >
+                    <CameraOutlined/>
+                  </div>
+                </Upload>
+              </div>
               }
-            />
+              />
           )}
         </FormItem>
+
+        
       </Form>
     );
   }

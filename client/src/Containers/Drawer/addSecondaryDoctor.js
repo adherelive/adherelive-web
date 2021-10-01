@@ -2,18 +2,18 @@ import { connect } from "react-redux";
 import AddSecondaryDoctorDrawer from "../../Components/Drawer/addSecondaryDoctor";
 import { DRAWER } from "../../constant";
 import { close } from "../../modules/drawer";
-import { searchDoctorName } from "../../modules/doctors";
-import { addSecondaryDoctorToCareplan } from "../../modules/carePlans";
+import {searchDoctorName } from "../../modules/doctors";
+import {addSecondaryDoctorToCareplan} from "../../modules/carePlans";
 
 const mapStateToProps = state => {
-  const { auth } = state;
-  const { authenticated_user, authenticated_category, auth_role = null } = auth;
+  const { auth} = state;
+  const { authenticated_user, authenticated_category,auth_role = null, } = auth;
   const {
     drawer: { visible, loading, data: { type, payload = {} } = {} },
-    users = {},
+    users={},
     user_roles = {},
-    providers = {},
-    doctors = {}
+    providers ={},
+    doctors={}
   } = state;
 
   return {
@@ -32,9 +32,8 @@ const mapStateToProps = state => {
 const mapDispatchToProps = dispatch => {
   return {
     close: () => dispatch(close()),
-    searchDoctorName: name => dispatch(searchDoctorName(name)),
-    addSecondaryDoctorToCareplan: payload =>
-      dispatch(addSecondaryDoctorToCareplan(payload))
+    searchDoctorName : name => dispatch(searchDoctorName(name)),
+    addSecondaryDoctorToCareplan : payload => dispatch(addSecondaryDoctorToCareplan(payload))
   };
 };
 

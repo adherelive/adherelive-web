@@ -10,10 +10,14 @@
 //   }
 // };
 
+
+
 function allProvidersPageReducer(state, data) {
   const { provider_ids } = data || {};
   if (provider_ids) {
-    return [...provider_ids];
+    return [
+      ...provider_ids
+    ];
   } else {
     return state;
   }

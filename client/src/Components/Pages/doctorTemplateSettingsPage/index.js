@@ -12,7 +12,7 @@ class TemplatePage extends Component {
     super(props);
     this.state = {
       loading: false
-    };
+    }
   }
 
   componentDidMount() {
@@ -30,15 +30,15 @@ class TemplatePage extends Component {
   async handleGetAllTemplates() {
     const { getAllTemplatesForDoctor } = this.props;
     try {
-      this.setState({ loading: true });
+      this.setState({loading: true});
       const response = await getAllTemplatesForDoctor();
       const { status, payload: { data = {}, message: msg = "" } = {} } =
         response || {};
       if (!status) {
         message.warn(msg);
-        this.setState({ loading: false });
+        this.setState({loading: false});
       } else {
-        this.setState({ loading: false });
+        this.setState({loading: false});
       }
     } catch (error) {
       console.log("error ===>", error);
@@ -123,7 +123,7 @@ class TemplatePage extends Component {
   };
 
   render() {
-    const { loading } = this.state;
+    const {loading} = this.state;
     return (
       <div>
         <div>

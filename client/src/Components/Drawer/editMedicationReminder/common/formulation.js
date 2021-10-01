@@ -18,7 +18,6 @@ class Formulation extends Component {
     } = this.props;
     validateFields();
   }
-
   componentWillUnmount() {
     const {
       form: { validateFields }
@@ -59,11 +58,7 @@ class Formulation extends Component {
 
       const strId = id.toString();
       return (
-        <Option
-          key={`${category}:${defaultUnit}:${name}`}
-          value={strId}
-          title={name}
-        >
+        <Option key={`${category}:${defaultUnit}:${name}`} value={strId} title={name}>
           {getStringFormat(name)}
         </Option>
       );
@@ -106,7 +101,7 @@ class Formulation extends Component {
   render() {
     const {
       form,
-      payload: { id: medication_id, canViewDetails = false } = {},
+      payload: { id: medication_id,canViewDetails=false } = {},
       medications,
       medicationData = {}
     } = this.props;

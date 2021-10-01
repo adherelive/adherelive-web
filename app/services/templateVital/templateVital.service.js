@@ -2,7 +2,7 @@ import Database from "../../../libs/mysql";
 import { TABLE_NAME } from "../../models/templateVitals";
 
 export default class TemplateVitalService {
-  getByData = async data => {
+    getByData = async (data) => {
     try {
       return await Database.getModel(TABLE_NAME).findOne({
         where: data,
@@ -11,9 +11,9 @@ export default class TemplateVitalService {
     } catch (error) {
       throw error;
     }
-  };
+    }
 
-  deleteVital = async data => {
+    deleteVital = async (data) => {
     try {
       return await Database.getModel(TABLE_NAME).destroy({
         where: data,
@@ -24,7 +24,7 @@ export default class TemplateVitalService {
     }
   };
 
-  create = async data => {
+    create = async (data) => {
     try {
       const templateVital = await Database.getModel(TABLE_NAME).create(data);
       return templateVital;

@@ -3,7 +3,8 @@ import { Op } from "sequelize";
 import { TABLE_NAME } from "../../models/portions";
 
 class PortionServiceService {
-  constructor() {}
+    constructor() {
+    }
 
   getByData = async data => {
     try {
@@ -25,14 +26,14 @@ class PortionServiceService {
     }
   };
 
-  search = async data => {
+    search = async (data) => {
     try {
       const portions = await Database.getModel(TABLE_NAME).findAll({
         where: {
           name: {
-            [Op.like]: `%${data}%`
-          }
-        }
+                        [Op.like]: `%${data}%`,
+                    },
+                },
       });
       return portions;
     } catch (error) {

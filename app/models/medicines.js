@@ -36,7 +36,7 @@ export const db = database => {
       public_medicine: {
         type: DataTypes.BOOLEAN,
         defaultValue: true
-      }
+      },
     },
     {
       underscored: true,

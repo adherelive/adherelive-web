@@ -96,7 +96,7 @@ export const db = database => {
       },
       deleted_at: {
         type: DataTypes.DATE
-      }
+    },
     },
     {
       underscored: true,

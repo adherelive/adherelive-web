@@ -29,13 +29,7 @@ class MedicineService {
     }
   };
 
-  searchMedicineForAdmin = async (
-    data,
-    offset,
-    limit,
-    public_medicine,
-    doctorIds
-  ) => {
+  searchMedicineForAdmin = async (data, offset, limit, public_medicine, doctorIds) => {
     try {
       let medicine = null;
       medicine = await Database.getModel(TABLE_NAME).findAll({
@@ -56,17 +50,7 @@ class MedicineService {
         order: [["updated_at", "DESC"]]
       });
 
-      console.log(
-        "329847562389462364872384122 ************************************8******8888",
-        {
-          data,
-          offset,
-          limit,
-          public_medicine,
-          doctorIds,
-          medicine
-        }
-      );
+      console.log("329847562389462364872384122 ************************************8******8888",{data, offset, limit, public_medicine, doctorIds,medicine});
       return medicine;
     } catch (error) {
       throw error;
@@ -150,8 +134,8 @@ class MedicineService {
     try {
       const medicine = await Database.getModel(TABLE_NAME).update(data, {
         where: {
-          id
-        }
+          id,
+        },
       });
       return medicine;
     } catch (err) {
@@ -159,12 +143,12 @@ class MedicineService {
     }
   };
 
-  deleteMedicine = async id => {
+  deleteMedicine = async (id) => {
     try {
       const medicine = await Database.getModel(TABLE_NAME).destroy({
         where: {
-          id
-        }
+          id,
+        },
       });
       return medicine;
     } catch (err) {

@@ -4,7 +4,7 @@ import { CURRENCY, REPEAT_TYPE, USER_CATEGORY } from "../../constant";
 
 export const PRODUCT_PLANS = "product_plans";
 
-export const db = database => {
+export const db = (database) => {
   database.define(
     PRODUCT_PLANS,
     {
@@ -37,14 +37,9 @@ export const db = database => {
       },
       billing_cycle: {
         type: DataTypes.ENUM,
-        values: [
-          REPEAT_TYPE.YEARLY,
-          REPEAT_TYPE.MONTHLY,
-          REPEAT_TYPE.WEEKLY,
-          REPEAT_TYPE.DAILY
-        ],
+                values: [REPEAT_TYPE.YEARLY, REPEAT_TYPE.MONTHLY, REPEAT_TYPE.WEEKLY, REPEAT_TYPE.DAILY],
         allowNull: false
-      }
+            },
     },
     {
       underscored: true,
@@ -58,7 +53,7 @@ export const db = database => {
             provider_type: this.provider_type,
             subscription_charge: this.subscription_charge,
             currency: this.currency,
-            billing_cycle: this.billing_cycle
+                        billing_cycle:this.billing_cycle,
           };
         }
       }
@@ -66,7 +61,7 @@ export const db = database => {
   );
 };
 
-export const associate = database => {
+export const associate = (database) => {
   // const {TABLE_NAME} = database.models || {};
   // associations here (if any) ...
 };

@@ -1,10 +1,7 @@
 import { SIGNING_COMPLETED } from "./modules/auth";
 import { SIGNING_COMPLETED_WITH_ERROR } from "./modules/auth";
 
-import {
-  GOOGLE_SIGNING_COMPLETED,
-  GOOGLE_SIGNING_COMPLETED_WITH_ERROR
-} from "./modules/auth";
+import { GOOGLE_SIGNING_COMPLETED, GOOGLE_SIGNING_COMPLETED_WITH_ERROR } from "./modules/auth";
 
 import { SIGNING, SIGNING_UP } from "./modules/auth";
 import { SIGNING_UP_COMPLETED } from "./modules/auth";

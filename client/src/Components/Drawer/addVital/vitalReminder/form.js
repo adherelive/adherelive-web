@@ -13,13 +13,9 @@ import RepeatFields from "../common/repeatFields";
 import startDateField from "../common/startDate";
 import endDateField from "../common/endDate";
 import startTimeField from "../common/startTime";
-import {
-  REPEAT_TYPE,
-  USER_CATEGORY,
-  DAYS_NUMBER,
-  DAYS,
-  ALTERNATE_DAYS
-} from "../../../../constant";
+import { REPEAT_TYPE, USER_CATEGORY, DAYS_NUMBER, DAYS, ALTERNATE_DAYS } from "../../../../constant";
+
+
 
 const { Item: FormItem } = Form;
 
@@ -68,14 +64,14 @@ class AddvitalsForm extends Component {
       });
     }
   }
-
-  scrollToTop = () => {
-    let antForm = document.getElementsByClassName("Form")[0];
+  
+   scrollToTop = () => {
+    let antForm= document.getElementsByClassName('Form')[0];
     let antDrawerBody = antForm.parentNode;
-    let antDrawerWrapperBody = antDrawerBody.parentNode;
+    let antDrawerWrapperBody=antDrawerBody.parentNode;
     antDrawerBody.scrollIntoView(true);
     antDrawerWrapperBody.scrollTop -= 200;
-  };
+  }
   formatMessage = data => this.props.intl.formatMessage(data);
 
   handleCancel = e => {
@@ -119,6 +115,7 @@ class AddvitalsForm extends Component {
 
     let repeat = getFieldValue(repeatField.field_name);
 
+
     let selectedDays = getFieldValue(repeatDaysField.field_name);
     let repeatInterval = getFieldValue(repeatIntervalField.field_name);
 
@@ -131,9 +128,7 @@ class AddvitalsForm extends Component {
     // }
 
     const startDate = getFieldValue(startDateField.field_name);
-    let startDateDay = startDate
-      ? moment(startDate).format("ddd")
-      : moment().format("ddd");
+    let startDateDay = startDate ? moment(startDate).format('ddd') : moment().format('ddd');
     let startDayNumber = DAYS_NUMBER[startDateDay];
     let dayDiffPos = 0;
     let dayDiffNeg = 0;
@@ -147,22 +142,14 @@ class AddvitalsForm extends Component {
         let dayNo = DAYS_NUMBER[day];
         let dayDiff = dayNo - startDayNumber;
 
-        dayDiffPos =
-          dayDiffPos === 0 && dayDiff > 0
-            ? dayDiff
-            : dayDiff > 0 && dayDiff < dayDiffPos
-            ? dayDiff
-            : dayDiffPos;
-        dayDiffNeg =
-          dayDiffNeg === 0 && dayDiff < 0
-            ? dayDiff
-            : dayDiff < 0 && Math.abs(dayDiff) > Math.abs(dayDiffNeg)
-            ? dayDiff
-            : dayDiffNeg;
+        dayDiffPos = dayDiffPos === 0 && dayDiff > 0 ? dayDiff : dayDiff > 0 && dayDiff < dayDiffPos ? dayDiff : dayDiffPos;
+        dayDiffNeg = dayDiffNeg === 0 && dayDiff < 0 ? dayDiff : dayDiff < 0 && Math.abs(dayDiff) > Math.abs(dayDiffNeg) ? dayDiff : dayDiffNeg;
       }
 
       daysToAdd = dayDiffPos ? dayDiffPos : 7 + dayDiffNeg;
+
     }
+
 
     let newEndDate;
 
@@ -193,10 +180,11 @@ class AddvitalsForm extends Component {
     }
 
     if (!newEndDate) {
+
       newEndDate = startDateCopy;
     }
 
-    return moment(newEndDate).add(daysToAdd, "days");
+    return moment(newEndDate).add(daysToAdd, 'days');
   };
 
   adjustEndDate = repeatValue => {
@@ -260,7 +248,7 @@ class AddvitalsForm extends Component {
     } = this.props;
 
     const startDate = getFieldValue(startDateField.field_name);
-    let newEndDate = moment(startDate).add(1, "week");
+    let newEndDate = moment(startDate).add(1, 'week');
     setFieldsValue({
       [endDateField.field_name]: newEndDate
     });
@@ -293,7 +281,7 @@ class AddvitalsForm extends Component {
     } = this.props;
 
     const startDate = getFieldValue(startDateField.field_name);
-    let newEndDate = moment(startDate).add(2, "week");
+    let newEndDate = moment(startDate).add(2, 'week');
     setFieldsValue({
       [endDateField.field_name]: newEndDate
     });
@@ -309,6 +297,7 @@ class AddvitalsForm extends Component {
       [endDateField.field_name]: null
     });
   };
+
 
   render() {
     const {
@@ -332,7 +321,7 @@ class AddvitalsForm extends Component {
     return (
       <Fragment>
         <Form className="event-form pb80 wp100 Form">
-          <div className="flex direction-row flex-grow-1">
+          <div className='flex direction-row flex-grow-1'>
             <label
               htmlFor="vital_template"
               className="form-label"
@@ -344,7 +333,7 @@ class AddvitalsForm extends Component {
             <div className="star-red">*</div>
           </div>
           {vitalNameField.render({ ...this.props })}
-          <div className="flex direction-row flex-grow-1">
+          <div className='flex direction-row flex-grow-1'>
             <label
               htmlFor="vital_template"
               className="form-label"

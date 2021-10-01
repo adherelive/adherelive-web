@@ -4,12 +4,12 @@ import { TABLE_NAME } from "../../models/mealTemplateFoodItemMapping";
 const DEFAULT_ORDER = [["created_at", "DESC"]];
 
 class MealTemplateFoodItemMappingService {
-  create = async data => {
+  create = async (data) => {
     const transaction = await Database.initTransaction();
     try {
       const record = await Database.getModel(TABLE_NAME).create(data, {
         raw: true,
-        transaction
+            transaction,
         // include: [
         // Database.getModel(mealTemplateTableName),
         // Database.getModel(foodItemTableName),
@@ -28,7 +28,7 @@ class MealTemplateFoodItemMappingService {
     try {
       const record = await Database.getModel(TABLE_NAME).update(data, {
         where: {
-          id
+          id,
         },
         // include: [
         // Database.getModel(mealTemplateTableName),
@@ -73,12 +73,12 @@ class MealTemplateFoodItemMappingService {
     }
   };
 
-  delete = async id => {
+  delete = async (id) => {
     try {
       const record = await Database.getModel(TABLE_NAME).destroy({
         where: {
           id
-        }
+        },
       });
       return record;
     } catch (err) {

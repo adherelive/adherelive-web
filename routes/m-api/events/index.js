@@ -29,7 +29,11 @@ router.get(
 //   MobileMedicationReminder.createCarePlanMedication
 // );
 
-router.get("/missed", Authenticate, EventController.getAllMissedEvents);
+router.get(
+  "/missed",
+  Authenticate,
+    EventController.getAllMissedEvents
+);
 
 router.get(
   "/missed/:patient_id",
@@ -57,11 +61,23 @@ router.post(
   EventController.updateMedicationStatus
 );
 
-router.post("/:id/complete", Authenticate, EventController.markEventComplete);
+router.post(
+    "/:id/complete",
+    Authenticate,
+    EventController.markEventComplete
+);
 
-router.post("/:id/cancel", Authenticate, EventController.markEventCancelled);
+router.post(
+    "/:id/cancel",
+    Authenticate,
+    EventController.markEventCancelled
+);
 
-router.post("/:id/reschedule", Authenticate, EventController.reschedule);
+router.post(
+  "/:id/reschedule",
+  Authenticate,
+  EventController.reschedule
+)
 
 router.delete(
   "/:id/vitals/response",

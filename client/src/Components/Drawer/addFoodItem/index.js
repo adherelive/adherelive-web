@@ -16,17 +16,18 @@ class AddFoodItem extends Component {
     this.state = {
       visible: true,
       disabledSubmit: true,
-      submitting: false
+      submitting:false
     };
 
     this.FormWrapper = Form.create({ onFieldsChange: this.onFormFieldChanges })(
-      AddFoodItemForm
+        AddFoodItemForm
     );
   }
-
-  onFormFieldChanges = props => {
+ 
+ 
+  onFormFieldChanges = (props) => {
     const {
-      form: { getFieldsError, isFieldsTouched }
+      form: { getFieldsError, isFieldsTouched },
     } = props;
     const isError = hasErrors(getFieldsError());
     const { disabledSubmit } = this.state;
@@ -35,73 +36,75 @@ class AddFoodItem extends Component {
     }
   };
 
-  handleSubmit = e => {
+  handleSubmit = (e) => {
     e.preventDefault();
     const { addFoodItem } = this.props;
     const { formRef = {}, formatMessage } = this;
 
     const {
       props: {
-        form: { validateFields, resetFields }
-      }
+        form: { validateFields, resetFields },
+      },
     } = formRef;
 
     validateFields(async (err, values) => {
       if (!err) {
         let {
-          name: initail_name,
-          portion_id = null,
-          portion_size = 1,
-          proteins = null,
+          name:initail_name,
+          portion_id=null,
+          portion_size=1,
+          proteins=null,
           fats = null,
-          carbs = null,
-          fibers = null,
-          calorific_value = null
+          carbs = null ,
+          fibers = null ,
+          calorific_value = null 
         } = values;
 
         const name = initail_name.trim();
 
         const data = {
-          name,
-          portion_id: portion_id ? parseInt(portion_id) : null,
-          portion_size: portion_size ? parseFloat(portion_size) : null,
-          proteins: proteins ? parseFloat(proteins) : null,
-          fats: fats ? parseFloat(fats) : null,
-          carbs: carbs ? parseFloat(carbs) : null,
-          fibers: fibers ? parseFloat(fibers) : null,
-          calorific_value: calorific_value ? parseFloat(calorific_value) : null
+            name,
+            portion_id:  portion_id ? parseInt(portion_id) : null ,
+            portion_size:  portion_size ? parseFloat(portion_size) : null,
+            proteins:  proteins ? parseFloat(proteins) : null,
+            fats:  fats ? parseFloat(fats) : null,
+            carbs:  carbs ? parseFloat(carbs) : null,
+            fibers:  fibers ? parseFloat(fibers) : null,
+            calorific_value:  calorific_value ? parseFloat(calorific_value) : null 
         };
 
-        try {
-          this.setState({ submitting: true });
-          const response = await addFoodItem(data);
-          const {
-            status,
-            statusCode: code,
-            payload: {
-              message: errorMessage = "",
-              error: { error_type = "" } = {}
+      
+          try {
+            this.setState({submitting:true});
+            const response = await addFoodItem(data);
+            const {
+              status,
+              statusCode: code,
+              payload: { message: errorMessage = "", error: { error_type = "" } = {} },
+            } = response || {};
+
+           
+            if(!status){
+                message.error(errorMessage);
+            }else{
+                message.success(errorMessage);
             }
-          } = response || {};
+            this.setState({submitting:false});
 
-          if (!status) {
-            message.error(errorMessage);
-          } else {
-            message.success(errorMessage);
-          }
-          this.setState({ submitting: false });
+            if(status){
+              this.onClose();
+            }
+            
 
-          if (status) {
-            this.onClose();
+          } catch (error) {
+            this.setState({submitting:false});
           }
-        } catch (error) {
-          this.setState({ submitting: false });
+  
         }
-      }
     });
   };
 
-  formatMessage = data => this.props.intl.formatMessage(data);
+  formatMessage = (data) => this.props.intl.formatMessage(data);
 
   onClose = () => {
     const { closeAddFoodItemDrawer } = this.props;
@@ -109,19 +112,19 @@ class AddFoodItem extends Component {
     const { formRef } = this;
     const {
       props: {
-        form: { resetFields }
-      }
+        form: { resetFields },
+      },
     } = formRef;
     this.setState({
       visible: true,
       disabledSubmit: true,
-      submitting: false
+      submitting:false
     });
     resetFields();
     closeAddFoodItemDrawer();
   };
 
-  setFormRef = formRef => {
+  setFormRef = (formRef) => {
     this.formRef = formRef;
     if (formRef) {
       this.setState({ formRef: true });
@@ -130,19 +133,21 @@ class AddFoodItem extends Component {
 
   render() {
     const { visible } = this.props;
-    const { disabledSubmit, submitting = false } = this.state;
+    const { disabledSubmit , submitting=false } = this.state;
+
 
     const {
       onClose,
       formatMessage,
       setFormRef,
       handleSubmit,
-      FormWrapper
+      FormWrapper,
     } = this;
 
     const submitButtonProps = {
-      disabled: disabledSubmit
+      disabled: disabledSubmit,
     };
+
 
     return (
       <Fragment>
@@ -155,10 +160,12 @@ class AddFoodItem extends Component {
             top: "0px"
           }}
           destroyOnClose={true}
-          onClose={onClose}
+
+          onClose={ onClose}
           visible={visible}
-          width={"35%"}
+          width={'35%'}
           title={formatMessage(messages.add_food_item)}
+      
         >
           <FormWrapper wrappedComponentRef={setFormRef} {...this.props} />
 

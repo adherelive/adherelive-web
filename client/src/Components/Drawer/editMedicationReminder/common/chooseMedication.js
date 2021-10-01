@@ -18,7 +18,6 @@ class ChooseMedication extends Component {
     } = this.props;
     validateFields();
   }
-
   componentWillUnmount() {
     const {
       form: { validateFields }
@@ -78,7 +77,9 @@ class ChooseMedication extends Component {
   };
 
   render() {
-    const { form, purpose, medicationData } = this.props;
+
+
+    const { form, purpose,medicationData } = this.props;
     const {
       getFieldDecorator,
       getFieldError,
@@ -87,7 +88,7 @@ class ChooseMedication extends Component {
     } = form;
     const error = isFieldTouched(FIELD_NAME) && getFieldError(FIELD_NAME);
 
-    const { medicine_id = "" } = medicationData || {};
+    const{medicine_id=''}=medicationData||{};
     const { getMedicationOption, getInitialValue } = this;
 
     return (
@@ -105,7 +106,7 @@ class ChooseMedication extends Component {
                 message: "Select a Medicine"
               }
             ],
-            initialValue: medicine_id ? medicine_id : getInitialValue()
+            initialValue:medicine_id?medicine_id: getInitialValue()
           })(
             <Select
               className="full-width"

@@ -197,10 +197,11 @@ class CarePlanTemplateWrapper extends BaseCarePlanTemplate {
         allTemplateWorkouts = { ...allTemplateWorkouts, ...template_workouts };
         allExerciseDetails = { ...allExerciseDetails, ...exercise_details };
         allExercises = { ...allExercises, ...exercises };
-        allRepetitions = { ...allRepetitions, ...repetitions };
+        allRepetitions = {...allRepetitions, ...repetitions};
         templateWorkoutIds.push(templateWorkout.getId());
       }
     }
+
 
     const medicineData = await medicineService.getMedicineByData({
       id: medicineIds,

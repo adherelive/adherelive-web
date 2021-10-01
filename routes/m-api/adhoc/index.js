@@ -10,6 +10,10 @@ router.post(
   adhocController.migrateAllUsersToUserRoles
 );
 
-router.post("/test-api", Authenticated, adhocController.testApi);
+router.post(
+    "/test-api",
+    Authenticated,
+    adhocController.testApi
+);
 
 module.exports = router;

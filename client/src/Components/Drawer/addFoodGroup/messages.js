@@ -51,32 +51,32 @@ const message = defineMessages({
     description: "",
     defaultMessage: "Calories"
   },
-  food_required_error: {
+  food_required_error:{
     id: "app.drawer.add.food.group.food.error",
     description: "",
     defaultMessage: "Food is a required field"
   },
-  portion_id_required_error: {
+  portion_id_required_error:{
     id: "app.drawer.add.food.group.portion.id.error",
     description: "",
     defaultMessage: "Portion Type is a required field"
   },
-  portion_size_required_error: {
+  portion_size_required_error:{
     id: "app.drawer.add.food.group.portion.size.error",
     description: "",
     defaultMessage: "Portion Size is a required field"
   },
-  note: {
+  note:{
     id: "app.drawer.add.food.group.portion.submit.note",
     description: "",
     defaultMessage: "Note"
   },
-  submit_text: {
+  submit_text:{
     id: "app.drawer.add.food.group.portion.submit.text",
     description: "",
     defaultMessage: "Submit"
   },
-  add_new_food_details: {
+  add_new_food_details:{
     id: "app.drawer.add.food.group.add.new.details",
     description: "",
     defaultMessage: "Add New Food "
@@ -90,7 +90,7 @@ const message = defineMessages({
     id: "app.drawer.add.food.group.something.went.wrong",
     description: "",
     defaultMessage: "Something went wrong"
-  }
+  },
 });
 
 export default message;

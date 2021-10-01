@@ -3,7 +3,7 @@ import Database from "../../../libs/mysql";
 import { TABLE_NAME } from "../../models/treatments";
 
 class TreatmentService {
-  getAll = async data => {
+    getAll = async (data) => {
     try {
       const treatment = await Database.getModel(TABLE_NAME).findAll();
       return treatment;
@@ -12,14 +12,14 @@ class TreatmentService {
     }
   };
 
-  search = async data => {
+    search = async (data) => {
     try {
       const treatment = await Database.getModel(TABLE_NAME).findAll({
         where: {
           name: {
-            [Op.like]: `${data}%`
-          }
-        }
+                        [Op.like]: `${data}%`,
+                    },
+                },
       });
       return treatment;
     } catch (error) {
@@ -27,14 +27,14 @@ class TreatmentService {
     }
   };
 
-  searchByName = async data => {
+    searchByName = async (data) => {
     try {
       const treatment = await Database.getModel(TABLE_NAME).findAll({
         where: {
           name: {
-            [Op.like]: `%${data}%`
-          }
-        }
+                        [Op.like]: `%${data}%`,
+                    },
+                },
       });
       return treatment;
     } catch (error) {

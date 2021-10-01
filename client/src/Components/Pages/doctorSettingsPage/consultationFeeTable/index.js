@@ -4,7 +4,7 @@ import { Table, Icon, Empty } from "antd";
 import generateRow from "./datarow";
 // import { USER_PERMISSIONS } from '../../../constant'
 import getColumn from "./header";
-import messages from "./messages";
+import messages from "./messages"; 
 
 class ConsultationFeeTable extends Component {
   constructor(props) {
@@ -12,7 +12,7 @@ class ConsultationFeeTable extends Component {
     this.state = {};
   }
 
-  componentDidUpdate(prevProps, prevState) {}
+  componentDidUpdate(prevProps,prevState){}
 
   // onRowClick = (key) => (event) => {
   //   event.preventDefault();
@@ -39,11 +39,11 @@ class ConsultationFeeTable extends Component {
     };
   };
 
-  formatMessage = data => this.props.intl.formatMessage(data);
+  formatMessage = data =>  this.props.intl.formatMessage(data);
 
   getDataSource = () => {
     const {
-      doctors = {},
+      doctors ={},
       doctorPaymentProducts,
       deleteDoctorProduct,
       editDoctorProduct = null,
@@ -90,7 +90,7 @@ class ConsultationFeeTable extends Component {
     const locale = {
       emptyText: this.formatMessage(messages.emptyConsultationTable)
     };
-
+    
     return (
       <Table
         // onRow={authPermissions.includes(USER_PERMISSIONS.PATIENTS.VIEW) ? onRow : null}
@@ -103,7 +103,7 @@ class ConsultationFeeTable extends Component {
         dataSource={getDataSource()}
         scroll={{ x: "100%" }}
         pagination={{
-          position: "top"
+          position: "top",
           // pageSize: 6
         }}
         locale={locale}

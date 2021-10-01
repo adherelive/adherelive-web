@@ -2,11 +2,11 @@ import Database from "../../../libs/mysql";
 import { TABLE_NAME } from "../../models/templateWorkouts";
 
 export default class TemplateWorkoutService {
-  create = async data => {
+  create = async (data) => {
     const transaction = await Database.initTransaction();
     try {
       const templateWorkout = await Database.getModel(TABLE_NAME).create(data, {
-        transaction
+        transaction,
       });
 
       await transaction.commit();
@@ -31,14 +31,14 @@ export default class TemplateWorkoutService {
     }
   };
 
-  delete = async data => {
+  delete = async (data) => {
     const transaction = await Database.initTransaction();
     try {
       const deletedTemplateWorkout = await Database.getModel(
         TABLE_NAME
       ).destroy({
         where: data,
-        transaction
+        transaction,
       });
       await transaction.commit();
       return deletedTemplateWorkout;
@@ -52,7 +52,7 @@ export default class TemplateWorkoutService {
     try {
       return (
         (await Database.getModel(TABLE_NAME).findOne({
-          where: data
+          where: data,
         })) || null
       );
     } catch (error) {

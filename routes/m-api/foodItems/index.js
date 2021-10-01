@@ -23,6 +23,11 @@ router.post(
   FoodItemController.update
 );
 
-router.get("/", Authenticate, isDoctor, FoodItemController.search);
+  router.get(
+    "/",
+    Authenticate,
+    isDoctor,
+    FoodItemController.search
+  );
 
 module.exports = router;

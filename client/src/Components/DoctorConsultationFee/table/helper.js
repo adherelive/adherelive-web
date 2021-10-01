@@ -22,5 +22,5 @@ export const TABLE_COLUMN = {
     key: "DELETE",
     width: 100,
     dataIndex: "DELETE"
-  }
+  },
 };

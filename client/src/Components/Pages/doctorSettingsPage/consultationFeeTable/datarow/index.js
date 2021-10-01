@@ -22,6 +22,6 @@ export default data => {
     [TABLE_COLUMN.DELETE.dataIndex]: {
       data,
       formatMessage
-    }
+    },
   };
 };

@@ -33,11 +33,11 @@ export default class FoodItem {
 
   getCreatorId = () => {
     return this._data.creator_id;
-  };
+    }
 
   getCreatorType = () => {
     return this._data.creator_type;
-  };
+    }
 
   // getPortionDetails = () => {
   //     console.log("868768687687 ===>>>>>> > > > > >",{data:this._data});

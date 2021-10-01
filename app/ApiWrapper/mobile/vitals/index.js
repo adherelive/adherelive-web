@@ -71,11 +71,10 @@ class VitalWrapper extends BaseVital {
       const scheduleEvent = await EventWrapper(events);
       scheduleEventIds.push(scheduleEvent.getScheduleEventId());
 
-      if (scheduleEvent.getStatus() !== EVENT_STATUS.COMPLETED) {
-        if (
-          !latestPendingEventId &&
-          scheduleEvent.getStatus() !== EVENT_STATUS.EXPIRED
-        ) {
+      if (
+        scheduleEvent.getStatus() !== EVENT_STATUS.COMPLETED
+      ) {
+        if (!latestPendingEventId && scheduleEvent.getStatus() !== EVENT_STATUS.EXPIRED) {
           latestPendingEventId = scheduleEvent.getScheduleEventId();
         }
         remaining++;
@@ -113,10 +112,11 @@ class VitalWrapper extends BaseVital {
     const carePlanData = {};
 
     let wrapperQuery = {};
-    if (vital_template) {
+    if(vital_template) {
       wrapperQuery = {
         data: vital_template
       };
+
     } else {
       wrapperQuery = {
         id: getVitalTemplateId()
@@ -125,16 +125,16 @@ class VitalWrapper extends BaseVital {
 
     const vitalTemplates = await VitalTemplateWrapper(wrapperQuery);
     vitalTemplateData[
-      vitalTemplates.getVitalTemplateId()
-    ] = vitalTemplates.getBasicInfo();
+        vitalTemplates.getVitalTemplateId()
+        ] = vitalTemplates.getBasicInfo();
 
-    if (care_plan) {
+    if(care_plan) {
       const carePlans = await CarePlanWrapper(care_plan);
       carePlanData[carePlans.getCarePlanId()] = await carePlans.getAllInfo();
     }
 
     return {
-      ...(await getAllInfo()),
+      ...await getAllInfo(),
       vital_templates: {
         ...vitalTemplateData
       },

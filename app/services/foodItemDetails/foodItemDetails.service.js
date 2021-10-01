@@ -10,7 +10,7 @@ import { USER_CATEGORY } from "../../../constant";
 const DEFAULT_ORDER = [["created_at", "DESC"]];
 
 class FoodItemsService {
-  create = async data => {
+  create = async (data) => {
     const transaction = await Database.initTransaction();
     try {
       const record = await Database.getModel(TABLE_NAME).create(data, {
@@ -34,11 +34,9 @@ class FoodItemsService {
               food_item_id,
               creator_type: USER_CATEGORY.ADMIN
             },
-            {
-              food_item_id,
+            { food_item_id,
               creator_id,
-              creator_type
-            }
+              creator_type }
           ]
         },
         raw: true
@@ -60,14 +58,11 @@ class FoodItemsService {
     }
   };
 
-  findOne = async data => {
+  findOne = async (data) => {
     try {
       const records = await Database.getModel(TABLE_NAME).findOne({
         where: data,
-        include: [
-          Database.getModel(foodItemTableName),
-          Database.getModel(portionTableName)
-        ]
+        include:[Database.getModel(foodItemTableName), Database.getModel(portionTableName)],
       });
 
       /* nested raw true is not allowed by sequelize
@@ -86,7 +81,7 @@ class FoodItemsService {
     try {
       const record = await Database.getModel(TABLE_NAME).update(data, {
         where: {
-          id
+          id,
         },
         raw: true,
         transaction
@@ -104,10 +99,7 @@ class FoodItemsService {
       return await Database.getModel(TABLE_NAME).findAndCountAll({
         where,
         order,
-        include: [
-          Database.getModel(foodItemTableName),
-          Database.getModel(portionTableName)
-        ],
+        include:[Database.getModel(foodItemTableName), Database.getModel(portionTableName)],
         attributes,
         raw: true
       });

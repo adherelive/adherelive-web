@@ -31,37 +31,37 @@ const message = defineMessages({
     description: "",
     defaultMessage: "Calories"
   },
-  exercise_required_error: {
+  exercise_required_error:{
     id: "app.drawer.edit.exercise.group.exercise.error",
     description: "",
     defaultMessage: "Exercise is a required field"
   },
-  repetition_id_required_error: {
+  repetition_id_required_error:{
     id: "app.drawer.edit.exercise.group.repetition.id.error",
     description: "",
     defaultMessage: "Repetition Type is a required field"
   },
-  repetition_value_required_error: {
+  repetition_value_required_error:{
     id: "app.drawer.edit.exercise.group.repeition.value.error",
     description: "",
     defaultMessage: "Repetition value is a required field"
   },
-  sets_required_error: {
+  sets_required_error:{
     id: "app.drawer.edit.food.group.sets.error",
     description: "",
     defaultMessage: "Sets is a required field"
   },
-  note: {
+  note:{
     id: "app.drawer.edit.exercise.group.portion.submit.note",
     description: "",
     defaultMessage: "Note"
   },
-  submit_text: {
+  submit_text:{
     id: "app.drawer.edit.exercise.group.portion.submit.text",
     description: "",
     defaultMessage: "Submit"
   },
-  add_new_exercise_details: {
+  add_new_exercise_details:{
     id: "app.drawer.edit.exercise.group.edit.new.details",
     description: "",
     defaultMessage: "Add New Exercise "
@@ -76,7 +76,7 @@ const message = defineMessages({
     description: "",
     defaultMessage: "Something went wrong"
   },
-  videoUrl: {
+  videoUrl:{
     id: "app.drawer.edit.exercise.group.videoUrl",
     description: "",
     defaultMessage: "Video URL"

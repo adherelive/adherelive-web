@@ -24,7 +24,9 @@ class ProviderTermsMappingService {
 
   bulkCreate = async data => {
     try {
-      const response = await Database.getModel(TABLE_NAME).bulkCreate(data);
+      const response = await Database.getModel(TABLE_NAME).bulkCreate(
+        data
+      );
       return response;
     } catch (error) {
       throw error;

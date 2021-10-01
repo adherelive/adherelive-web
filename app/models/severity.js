@@ -3,7 +3,7 @@ import { DataTypes } from "sequelize";
 
 export const TABLE_NAME = "severity";
 
-export const db = database => {
+export const db = (database) => {
   database.define(
     TABLE_NAME,
     {
@@ -15,8 +15,8 @@ export const db = database => {
       },
       name: {
         type: DataTypes.STRING,
-        allowNull: false
-      }
+                allowNull: false,
+            },
     },
     {
       underscored: true,
@@ -26,7 +26,7 @@ export const db = database => {
         getBasicInfo() {
           return {
             id: this.id,
-            name: this.name
+                        name:this.name,
           };
         }
       }
@@ -34,7 +34,7 @@ export const db = database => {
   );
 };
 
-export const associate = database => {
+export const associate = (database) => {
   // const {<TABLE_NAME>} = database.models || {};
   // associations here (if any) ...
 };

@@ -5,5 +5,5 @@ export default class ProviderTermsMapping {
 
   getId = () => {
     return this._data.id;
-  };
+    }   
 }

@@ -20,7 +20,7 @@ export default class Medicine {
 
   getMedicineId = () => {
     return this._data.get("id");
-  };
+    }
 
   getStartDate = () => {
     return this._data.get("start_date");

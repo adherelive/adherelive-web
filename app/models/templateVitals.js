@@ -30,19 +30,19 @@ export const db = database => {
         allowNull: false,
         references: {
           model: {
-            tableName: vitalTemplatesTableName
+                        tableName: vitalTemplatesTableName,
           },
-          key: "id"
+                    key: 'id'
         }
       },
       details: {
         type: DataTypes.JSON,
         allowNull: true
-      }
+            },
     },
     {
       underscored: true,
-      paranoid: true
+            paranoid: true,
     }
   );
 };

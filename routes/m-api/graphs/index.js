@@ -6,7 +6,11 @@ import { param } from "express-validator";
 
 const router = express.Router();
 
-router.get("/", Authenticated, GraphController.getAllGraphs);
+router.get(
+    "/",
+    Authenticated,
+    GraphController.getAllGraphs
+);
 
 router.post(
   "/:id",

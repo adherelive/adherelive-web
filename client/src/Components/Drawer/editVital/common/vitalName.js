@@ -24,14 +24,15 @@ class VitalName extends Component {
     this.handleVitalSearch = throttle(this.handleVitalSearch.bind(this), 2000);
   }
 
-  componentDidMount() {
-    this.handleVitalSearch("");
+  componentDidMount(){
+    this.handleVitalSearch('');
   }
 
   getVitalsOption = () => {
     const { vital_templates = {} } = this.props;
     // let medicationStagesOption = [];
     return Object.keys(vital_templates).map(id => {
+
       const { basic_info: { name } = {} } = vital_templates[id] || {};
       return (
         <Option key={id} value={id}>
@@ -49,10 +50,7 @@ class VitalName extends Component {
         const { searchVital } = this.props;
         this.setState({ fetchingVitals: true });
         const response = await searchVital(data);
-        const {
-          status,
-          payload: { data: responseData, message } = {}
-        } = response;
+        const { status, payload: { data: responseData, message } = {} } = response;
         if (status) {
           this.setState({ fetchingVitals: false });
         } else {
@@ -66,23 +64,20 @@ class VitalName extends Component {
       message.warn("Something wen't wrong. Please try again later");
       this.setState({ fetchingVitals: false });
     }
-  }
+  };
 
   async handleVitalSearch(data) {
     try {
       // if (data) {
-      const { searchVital } = this.props;
-      this.setState({ fetchingVitals: true });
-      const response = await searchVital(data);
-      const {
-        status,
-        payload: { data: responseData, message } = {}
-      } = response;
-      if (status) {
-        this.setState({ fetchingVitals: false });
-      } else {
-        this.setState({ fetchingVitals: false });
-      }
+        const { searchVital } = this.props;
+        this.setState({ fetchingVitals: true });
+        const response = await searchVital(data);
+        const { status, payload: { data: responseData, message } = {} } = response;
+        if (status) {
+          this.setState({ fetchingVitals: false });
+        } else {
+          this.setState({ fetchingVitals: false });
+        }
       // } else {
       //   this.setState({ fetchingVitals: false });
       // }
@@ -91,72 +86,53 @@ class VitalName extends Component {
       message.warn("Something wen't wrong. Please try again later");
       this.setState({ fetchingVitals: false });
     }
-  }
+  };
 
   handleVitals = () => {
-    const { searchVital } = this.props;
+    const {searchVital} = this.props;
     searchVital("");
   };
 
-  handleVitalChange = id => {
-    const {
-      form: { setFieldsValue, getFieldValue } = {},
-      enableSubmit
-    } = this.props;
+
+  handleVitalChange = (id) => {
+    const { form: { setFieldsValue ,getFieldValue} = {},enableSubmit } = this.props;
 
     const temp_id = parseInt(id);
-    setFieldsValue({ [FIELD_NAME]: temp_id });
+    setFieldsValue({[FIELD_NAME]:temp_id})
     enableSubmit();
-  };
+  }
 
   render() {
     const {
-      form: {
-        getFieldDecorator,
-        setFieldsValue,
-        getFieldError,
-        isFieldTouched
-      },
+      form: { getFieldDecorator,setFieldsValue, getFieldError, isFieldTouched },
       setFormulation,
-      payload: { id: vital_id, canViewDetails = false } = {},
+      payload: { id:vital_id , canViewDetails = false }={},
       vitals,
       vital_templates
     } = this.props;
-    const { basic_info: { vital_template_id } = {} } = vitals[vital_id] || {};
+    const { basic_info : { vital_template_id } = {} } = vitals[vital_id] || {};
 
     const { fetchingVitals } = this.state;
 
-    const {
-      getVitalsOption,
-      handleVitalChange,
-      getParentNode,
-      handleVitalSearch,
-      handleVitals
-    } = this;
+    const { getVitalsOption,handleVitalChange, getParentNode, handleVitalSearch,handleVitals } = this;
 
     // if (!program_has_medication_stage || (!!purpose && !!!getInitialValue())) {
     //   return null;
     // }
 
-    const { basic_info: { name = "" } = {} } =
-      vital_templates[vital_template_id] || {};
-    const { vitalData = {} } = this.props;
-    const { vital_template_id: existing_vital_template_id = "" } =
-      vitalData || {};
+    const { basic_info:{name = ''}={} } = vital_templates[vital_template_id] || {};
+    const {vitalData = {}} = this.props;
+    const{vital_template_id : existing_vital_template_id=''}=vitalData||{};
 
     return (
       <FormItem>
         {getFieldDecorator(FIELD_NAME, {
-          initialValue: existing_vital_template_id
-            ? existing_vital_template_id.toString()
-            : name
+          initialValue:existing_vital_template_id ?  existing_vital_template_id.toString() :  name
         })(
           <Select
             onFocus={vitalData ? handleVitals : null}
             onSearch={handleVitalSearch}
-            notFoundContent={
-              fetchingVitals ? <Spin size="small" /> : "No match found"
-            }
+            notFoundContent={fetchingVitals ? <Spin size="small" /> : 'No match found'}
             className="drawer-select"
             placeholder="Select Vital"
             showSearch
@@ -170,9 +146,7 @@ class VitalName extends Component {
             }
             onChange={vitalData ? handleVitalChange : null}
             getPopupContainer={getParentNode}
-            disabled={
-              canViewDetails || (!canViewDetails && vitalData ? false : true)
-            }
+            disabled={canViewDetails ||  (!canViewDetails && vitalData ? false : true)}
           >
             {vitalData ? getVitalsOption() : null}
           </Select>

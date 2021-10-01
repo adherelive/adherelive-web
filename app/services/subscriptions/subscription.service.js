@@ -6,7 +6,7 @@ import Op from "sequelize/lib/operators";
 import moment from "moment";
 
 export default class SubscriptionService {
-  getByData = async data => {
+    getByData = async (data) => {
     try {
       const subscriptions = Database.getModel(TABLE_NAME).findOne({
         where: data,
@@ -23,14 +23,7 @@ export default class SubscriptionService {
       const subscriptions = Database.getModel(TABLE_NAME).findAll({
         where: {
           renew_on: {
-            [Op.between]: [
-              moment()
-                .startOf("day")
-                .toISOString(),
-              moment()
-                .endOf("day")
-                .toISOString()
-            ]
+                        [Op.between]: [moment().startOf("day").toISOString(), moment().endOf("day").toISOString()],
           }
         },
         raw: true,
@@ -47,11 +40,9 @@ export default class SubscriptionService {
     }
   };
 
-  createSubscription = async data => {
+    createSubscription = async (data) => {
     try {
-      const subscriptions = Database.getModel(TABLE_NAME).create(data, {
-        raw: true
-      });
+            const subscriptions = Database.getModel(TABLE_NAME).create(data, {raw: true});
       return subscriptions;
     } catch (error) {
       throw error;

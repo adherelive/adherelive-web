@@ -35,7 +35,7 @@ import {
 // import Button from "antd/es/button";
 import Menu from "antd/es/menu";
 import Dropdown from "antd/es/dropdown";
-import { CHAT_MESSAGE_TYPE } from "../../constant";
+import {CHAT_MESSAGE_TYPE} from "../../constant";
 // import { USER_ADHERE_BOT, CHAT_MESSAGE_TYPE, PARTS, PART_LIST_BACK, PART_LIST_CODES, PART_LIST_FRONT, BODY,PARTS_GRAPH,BODY_VIEW,BODY_SIDE } from "../../constant";
 
 export const MENU_ITEMS = {
@@ -128,27 +128,27 @@ class ChatForm extends Component {
     this.setState({ newMessage: event.target.value });
   };
 
-  sendMessage = async event => {
+  sendMessage = async(event) => {
     if (event) {
       event.preventDefault();
     }
 
-    const { raiseChatNotificationFunc, authenticated_user } = this.props;
+    const {raiseChatNotificationFunc, authenticated_user}=this.props;
     let trimmedMessage = this.state.newMessage.trim();
     if (this.state.newMessage.length > 0 && trimmedMessage.length > 0) {
       const message = this.state.newMessage;
       this.setState({ newMessage: "" });
+      
+      const {channel = null } = this.props;
 
-      const { channel = null } = this.props;
-
-      if (channel) {
+      if(channel){
         const resp = await channel.sendMessage(message, {
           sender_id: authenticated_user
         });
       }
 
-      if (message) {
-        raiseChatNotificationFunc(message);
+      if(message){
+        raiseChatNotificationFunc(message)
       }
     }
     if (this.state.fileList.length > 0) {
@@ -156,9 +156,7 @@ class ChatForm extends Component {
         const formData = new FormData();
         formData.append("file", this.state.fileList[i]);
         const respo = await this.props.channel.sendMessage(formData);
-        raiseChatNotificationFunc(
-          this.props.formatMessage(messages.newDocumentUploadedNotify)
-        );
+        raiseChatNotificationFunc(this.props.formatMessage(messages.newDocumentUploadedNotify))
       }
       this.setState({ fileList: [] });
     }
@@ -185,12 +183,8 @@ class ChatForm extends Component {
     this.setState({ viewConsultationModal: false });
   };
 
-  sendPaymentMessage = data => async e => {
-    const {
-      authenticated_user,
-      authenticated_category,
-      raiseChatNotificationFunc
-    } = this.props;
+  sendPaymentMessage = (data) => async(e) => {
+    const {authenticated_user, authenticated_category , raiseChatNotificationFunc} = this.props;
     e.preventDefault();
     const { name, type, amount, productId } = data || {};
     const response = await this.props.channel.sendMessage(
@@ -209,11 +203,8 @@ class ChatForm extends Component {
       })
     );
 
-    const notificationMessage = this.props.formatMessage(
-      messages.newPaymentAddedNotify,
-      { name }
-    );
-    raiseChatNotificationFunc(notificationMessage);
+    const notificationMessage = this.props.formatMessage(messages.newPaymentAddedNotify, {name})
+    raiseChatNotificationFunc(notificationMessage)
 
     this.setState({ viewConsultationModal: false });
   };
@@ -234,7 +225,7 @@ class ChatForm extends Component {
             name,
             type,
             amount,
-            productId: id
+            productId: id,
           })}
         >
           <div className="flex justify-space-between align-center bw1 br5 p10">
@@ -296,11 +287,10 @@ class ChatForm extends Component {
             accept=".jpg,.jpeg,.png,.pdf,.mp4"
             className="flex align-center chat-upload-component"
           >
-            <div className="chat-upload-btn">
-              <Icon
-                type="paper-clip"
-                className="text-white fs20 pointer br50 h36 w36 p8 bg-lighter-sky-blue"
-              />
+            <div
+            className="chat-upload-btn"
+           >
+               <Icon type="paper-clip" className="text-white fs20 pointer br50 h36 w36 p8 bg-lighter-sky-blue" />
             </div>
           </Upload>
         </Form>
@@ -431,8 +421,7 @@ class TwilioChat extends Component {
     this.initChat();
   };
 
-  formatMessage = (data, ...rest) =>
-    this.props.intl.formatMessage(data, ...rest);
+  formatMessage = (data, ...rest) => this.props.intl.formatMessage(data, ...rest);
 
   initChat = () => {
     this.chatClient = new Chat(this.state.token);
@@ -532,7 +521,7 @@ class TwilioChat extends Component {
       const {
         index,
         attributes: { sender_id } = {},
-        author
+        author,
       } = messageData.state;
       if (
         index <= otherUserLastConsumedMessageIndex &&
@@ -747,10 +736,7 @@ class TwilioChat extends Component {
 
   toggleChatPermission = async () => {
     const { authenticated_category, patientId } = this.props;
-    if (
-      authenticated_category !== USER_CATEGORY.DOCTOR &&
-      authenticated_category !== USER_CATEGORY.HSP
-    ) {
+    if (authenticated_category !== USER_CATEGORY.DOCTOR && authenticated_category !== USER_CATEGORY.HSP) {
       return;
     }
 
@@ -779,10 +765,7 @@ class TwilioChat extends Component {
 
   toggleVideoCallPermission = async () => {
     const { authenticated_category, patientId } = this.props;
-    if (
-      authenticated_category !== USER_CATEGORY.DOCTOR &&
-      authenticated_category !== USER_CATEGORY.HSP
-    ) {
+    if (authenticated_category !== USER_CATEGORY.DOCTOR && authenticated_category !== USER_CATEGORY.HSP) {
       return;
     }
 
@@ -812,7 +795,8 @@ class TwilioChat extends Component {
     }
   };
 
-  raiseChatNotificationFunc = message => {
+  raiseChatNotificationFunc = (message) => {
+
     const {
       patientId = null,
       patients = {},
@@ -820,20 +804,15 @@ class TwilioChat extends Component {
     } = this.props;
 
     const {
-      [patientId]: {
-        basic_info: { user_id: patientUserId = null } = {},
-        user_role_id: patientRoleId = null
-      } = {}
+      [patientId]: { basic_info: { user_id: patientUserId = null } = {} , user_role_id : patientRoleId = null  } = {}
     } = patients;
 
-    const data = {
-      message,
-      receiver_id: patientUserId,
-      receiver_role_id: patientRoleId
-    };
+    
+    const data = { message, receiver_id: patientUserId , receiver_role_id : patientRoleId }
 
-    const resp = raiseChatNotification(data);
-  };
+
+    const resp = raiseChatNotification(data)
+  }
 
   render() {
     const { getDoctorConsultations } = this.props;

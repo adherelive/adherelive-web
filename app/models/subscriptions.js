@@ -5,7 +5,7 @@ import { USER_CATEGORY_ARRAY } from "./users";
 
 export const TABLE_NAME = "subscriptions";
 
-export const db = database => {
+export const db = (database) => {
   database.define(
     TABLE_NAME,
     {
@@ -20,9 +20,9 @@ export const db = database => {
         allowNull: false,
         references: {
           model: {
-            tableName: paymentProductPlansTableName
+                        tableName: paymentProductPlansTableName,
           },
-          key: "id"
+                    key: 'id'
         }
       },
       subscriber_type: {
@@ -47,17 +47,14 @@ export const db = database => {
     },
     {
       underscored: true,
-      paranoid: true
+            paranoid: true,
     }
   );
 };
 
-export const associate = database => {
-  database.models[TABLE_NAME].hasOne(
-    database.models[paymentProductPlansTableName],
-    {
+export const associate = (database) => {
+    database.models[TABLE_NAME].hasOne(database.models[paymentProductPlansTableName], {
       foreignKey: "id",
       sourceKey: "payment_product_id"
-    }
-  );
+    });
 };

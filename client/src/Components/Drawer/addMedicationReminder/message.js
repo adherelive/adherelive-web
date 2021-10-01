@@ -319,143 +319,143 @@ export default defineMessages({
   select_timing: {
     id: "medication_reminder.drawer.select.timing",
     description: "",
-    defaultMessage: "Select Timing"
+    defaultMessage: "Select Timing",
   },
   delete_text: {
     id: "medication_reminder.drawer.delete.text",
     description: "",
-    defaultMessage: "Delete"
+    defaultMessage: "Delete",
   },
   dose: {
     id: "medication_reminder.drawer.Dose",
     description: "",
-    defaultMessage: "Dose"
+    defaultMessage: "Dose",
   },
   tablet: {
     id: "medication_reminder.drawer.tablet",
     description: "",
-    defaultMessage: "Tablet"
+    defaultMessage: "Tablet",
   },
   syringe: {
     id: "medication_reminder.drawer.syringe",
     description: "",
-    defaultMessage: "Syringe"
+    defaultMessage: "Syringe",
   },
   syrup: {
     id: "medication_reminder.drawer.syrup",
     description: "",
-    defaultMessage: "Syrup"
+    defaultMessage: "Syrup",
   },
   formulation: {
     id: "medication_reminder.drawer.formulation",
     description: "",
-    defaultMessage: "Formulation"
+    defaultMessage: "Formulation",
   },
   od: {
     id: "medication_reminder.drawer.od",
     description: "",
-    defaultMessage: "OD"
+    defaultMessage: "OD",
   },
   bd: {
     id: "medication_reminder.drawer.bd",
     description: "",
-    defaultMessage: "BD"
+    defaultMessage: "BD",
   },
   tds: {
     id: "medication_reminder.drawer.tds",
     description: "",
-    defaultMessage: "TDS"
+    defaultMessage: "TDS",
   },
   sos: {
     id: "medication_reminder.drawer.sos",
     description: "",
-    defaultMessage: "SOS"
+    defaultMessage: "SOS",
   },
   oneWeek: {
     id: "medication_reminder.drawer.oneWeek",
     description: "",
-    defaultMessage: "1 week"
+    defaultMessage: "1 week",
   },
   twoWeeks: {
     id: "medication_reminder.drawer.twoWeeks",
     description: "",
-    defaultMessage: "2 weeks"
+    defaultMessage: "2 weeks",
   },
   longterm: {
     id: "medication_reminder.drawer.longterm",
     description: "",
-    defaultMessage: "Longterm"
+    defaultMessage: "Longterm",
   },
   specialInstruction: {
     id: "medication_reminder.drawer.specialInstruction",
     description: "",
-    defaultMessage: "Special Instruction"
+    defaultMessage: "Special Instruction",
   },
   enterInstruction: {
     id: "medication_reminder.drawer.enterInstruction",
     description: "",
-    defaultMessage: "Enter instructions"
+    defaultMessage: "Enter instructions",
   },
   everyday: {
     id: "medication_reminder.drawer.everyday",
     description: "",
-    defaultMessage: "Everyday"
+    defaultMessage: "Everyday",
   },
   alternate: {
     id: "medication_reminder.drawer.alternate",
     description: "",
-    defaultMessage: "Alternate"
+    defaultMessage: "Alternate",
   },
   medicineText: {
     id: "medication_reminder.drawer.medicine.text",
     description: "",
-    defaultMessage: "Medicine"
+    defaultMessage: "Medicine",
   },
-  addMedicine: {
+  addMedicine:{
     id: "medication_reminder.drawer.add.med",
     description: "",
-    defaultMessage: "Add Medicine"
+    defaultMessage: "Add Medicine",
   },
-  name: {
+  name:{
     id: "medication_reminder.drawer.name",
     description: "",
-    defaultMessage: "Name"
+    defaultMessage: "Name",
   },
   unMark: {
     id: "medication_reminder.add.drawer.unMark",
     description: "",
-    defaultMessage: "Un-check"
+    defaultMessage: "Un-check",
   },
   mark: {
     id: "medication_reminder.add.drawer.mark",
     description: "",
-    defaultMessage: "Mark favourite"
+    defaultMessage: "Mark favourite",
   },
   beforeMeals: {
     id: "medication_reminder.add.drawer.before.meals",
     description: "",
-    defaultMessage: "Before Meals"
+    defaultMessage: "Before Meals",
   },
   afterMeals: {
     id: "medication_reminder.add.drawer.after.meals",
     description: "",
-    defaultMessage: "After Meals"
+    defaultMessage: "After Meals",
   },
   sosMessage: {
     id: "medication_reminder.add.drawer.sos.message",
     description: "",
-    defaultMessage: "Take Whenever Required"
+    defaultMessage: "Take Whenever Required",
   },
   medicineLabel: {
     id: "medication_reminder.add.drawer.medicine.label",
     description: "",
-    defaultMessage: "Medicine"
+    defaultMessage: "Medicine",
   },
 
   // error
   whenToTakeError: {
     id: "medication_reminder.add.drawer.when.to.take.error",
     description: "",
-    defaultMessage: "Please select correct time"
+    defaultMessage: "Please select correct time",
   }
 });

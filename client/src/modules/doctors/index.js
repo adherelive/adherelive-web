@@ -20,6 +20,7 @@ import {
   searchDoctorNameUrl
 } from "../../Helper/urls/doctor";
 
+
 import { getAllDoctorsForProviderUrl } from "../../Helper/urls/provider";
 
 import { accountDetailsUrl } from "../../Helper/urls/accounts";
@@ -116,7 +117,7 @@ export const ACTIVATE_DOCTOR_START = "ACTIVATE_DOCTOR_START";
 export const ACTIVATE_DOCTOR_COMPLETE = "ACTIVATE_DOCTOR_COMPLETE";
 export const ACTIVATE_DOCTOR_FAILED = "ACTIVATE_DOCTOR_FAILED";
 
-export const searchDoctorEmail = email => {
+export const searchDoctorEmail = (email) => {
   let response = {};
   return async dispatch => {
     try {
@@ -145,9 +146,10 @@ export const searchDoctorEmail = email => {
     }
     return response;
   };
-};
+}
 
-export const searchDoctorName = name => {
+
+export const searchDoctorName = (name) => {
   let response = {};
   return async dispatch => {
     try {
@@ -167,7 +169,7 @@ export const searchDoctorName = name => {
         });
       } else {
         dispatch({
-          type: SEARCH_DOCTOR_NAME_FAILED,
+          type: SEARCH_DOCTOR_NAME_FAILED ,
           error
         });
       }
@@ -176,7 +178,7 @@ export const searchDoctorName = name => {
     }
     return response;
   };
-};
+}
 
 export const updateDoctor = (user_id, updateData) => {
   let response = {};
@@ -381,9 +383,9 @@ export const deleteDoctorPaymentProduct = payload => {
       });
 
       const { status, payload: { data, error } = {} } = response || {};
-      const { id = null } = payload;
+      const {id = null} = payload;
       if (status === true) {
-        if (id) {
+        if(id){
           data["id"] = id;
         }
         dispatch({
@@ -561,7 +563,7 @@ export const getDoctorDetails = id => {
   };
 };
 
-export const getDoctorProfileDetails = (id = null) => {
+export const getDoctorProfileDetails = (id=null) => {
   let response = {};
   return async dispatch => {
     try {
@@ -652,7 +654,7 @@ export const addRazorpayId = (id, payload) => {
   };
 };
 
-export const deactivateDoctor = doctor_id => {
+export const deactivateDoctor = (doctor_id) => {
   let response = {};
   return async dispatch => {
     try {
@@ -681,7 +683,8 @@ export const deactivateDoctor = doctor_id => {
   };
 };
 
-export const activateDoctor = user_id => {
+
+export const activateDoctor = (user_id) => {
   let response = {};
   return async dispatch => {
     try {
@@ -709,6 +712,8 @@ export const activateDoctor = user_id => {
     return response;
   };
 };
+
+
 
 // export const getAccountDetails = () => {
 //   let response = {};

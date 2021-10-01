@@ -55,7 +55,7 @@ export const db = database => {
       },
       amount: {
         type: DataTypes.INTEGER,
-        allowNull: false
+            allowNull: false,
       },
       requestor_id: {
         type: DataTypes.INTEGER
@@ -82,7 +82,7 @@ export const db = database => {
       },
       updated_at: {
         allowNull: false,
-        type: DataTypes.DATE
+            type: DataTypes.DATE,
       }
     },
     {

@@ -12,6 +12,7 @@ import UserRoleWrapper from "../userRoles";
 import ProviderWrapper from "../provider";
 import { USER_CATEGORY } from "../../../../constant";
 
+
 class CarePlanWrapper extends BaseCarePlan {
   constructor(data) {
     super(data);
@@ -140,14 +141,14 @@ class CarePlanWrapper extends BaseCarePlan {
 
     const secondary_doctor_user_role_ids = this.getCareplnSecondaryProfiles() || [] ;
 
-    if (secondary_doctor_user_role_ids.length) {
-      for (let each in secondary_doctor_user_role_ids) {
+    if(secondary_doctor_user_role_ids.length){
+      for(let each in secondary_doctor_user_role_ids){
         const secondary_doctor_role_id = secondary_doctor_user_role_ids[each];
         const userRoleWrapper = await UserRoleWrapper(null,secondary_doctor_role_id);
         const userId = await userRoleWrapper.getUserId();
         const doctor = await DoctorService.getDoctorByUserId(userId) || {};
         let doctorWrapper = {};
-        if (doctor) {
+        if(doctor){
           doctorWrapper = await DoctorWrapper(doctor);
           doctorData[doctorWrapper.getDoctorId()] = await doctorWrapper.getAllInfo();
 
@@ -157,6 +158,7 @@ class CarePlanWrapper extends BaseCarePlan {
             userRolesApiData = { ...userRolesApiData, [userRoleWrapper.getId()]: { ...userRoleWrapper.getBasicInfo() } };
           }
         }
+
       }
     }
 
@@ -170,8 +172,8 @@ class CarePlanWrapper extends BaseCarePlan {
       patients: {
         ...patientData,
       },
-      providers: { ...providersApiData },
-      user_roles: { ...userRolesApiData },
+      providers:{ ...providersApiData},
+      user_roles:{ ...userRolesApiData},
       doctor_id,
       patient_id,
       care_plan_id: getCarePlanId(),

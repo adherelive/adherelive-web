@@ -6,7 +6,7 @@ import { TABLE_NAME as collegeTableName } from "./college";
 
 export const TABLE_NAME = "doctor_qualifications";
 
-export const db = database => {
+export const db = (database) => {
   database.define(
     TABLE_NAME,
     {
@@ -21,9 +21,9 @@ export const db = database => {
         allowNull: false,
         references: {
           model: {
-            tableName: doctorTableName
+                        tableName: doctorTableName,
           },
-          key: "id"
+                    key: 'id'
         }
       },
       degree_id: {
@@ -31,9 +31,9 @@ export const db = database => {
         allowNull: false,
         references: {
           model: {
-            tableName: degreeTableName
+                        tableName: degreeTableName,
           },
-          key: "id"
+                    key: 'id'
         }
       },
       college_id: {
@@ -41,15 +41,15 @@ export const db = database => {
         allowNull: false,
         references: {
           model: {
-            tableName: collegeTableName
+                        tableName: collegeTableName,
           },
-          key: "id"
+                    key: 'id'
         }
       },
       year: {
         type: DataTypes.INTEGER,
-        allowNull: false
-      }
+                allowNull: false,
+            },
     },
     {
       underscored: true,
@@ -61,14 +61,13 @@ export const db = database => {
             doctor_id: this.doctor_id,
             degree: this.degree,
             year: this.year,
-            college: this.college
+                        college: this.college,
             // photos: this.photos
           };
         }
       }
     }
-  );
-};
+    )};
 
 export const associate = database => {
   // associations here (if any) ...

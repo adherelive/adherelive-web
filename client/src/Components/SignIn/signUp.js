@@ -122,13 +122,10 @@ class SignUp extends Component {
     }
   };
 
-  modalAcceptTOS = e => {
-    const { readTermsOfService, openTOSModal } = this.state;
+  modalAcceptTOS = (e) => {
+      const { readTermsOfService, openTOSModal } = this.state;
 
-    this.setState({
-      readTermsOfService: !readTermsOfService,
-      openTOSModal: false
-    });
+      this.setState({readTermsOfService: !readTermsOfService, openTOSModal: false});
   };
 
   render() {
@@ -144,7 +141,7 @@ class SignUp extends Component {
     const {
       handleSignUp,
       openTOSModalComp,
-      modalAcceptTOS,
+        modalAcceptTOS,
       closeTOSModal,
       tosComponent
     } = this;

@@ -13,18 +13,10 @@ class ProviderWrapper extends BaseProvider {
 
   getBasicInfo = () => {
     const { _data } = this;
-    const {
-      id,
-      name,
-      address,
-      city,
-      state,
-      user_id,
-      activated_on,
-      details = {}
-    } = _data || {};
+    const { id, name, address, city, state, user_id, activated_on, details = {} } =
+      _data || {};
 
-    const { icon, banner } = details || {};
+      const {icon , banner } = details || {};
 
     return {
       basic_info: {
@@ -38,7 +30,7 @@ class ProviderWrapper extends BaseProvider {
       details: {
         ...details,
         icon: completePath(icon),
-        banner: completePath(banner)
+        banner: completePath(banner),
       },
       activated_on
     };
@@ -46,18 +38,10 @@ class ProviderWrapper extends BaseProvider {
 
   getAllInfo = async () => {
     const { _data } = this;
-    const {
-      id,
-      name,
-      address,
-      city,
-      state,
-      user_id,
-      activated_on,
-      details = {}
-    } = _data || {};
+    const { id, name, address, city, state, user_id, activated_on, details = {} } =
+      _data || {};
 
-    const { icon, banner } = details || {};
+      const {icon , banner} = details || {};
 
     const providerDoctors = await doctorProviderMappingService.getDoctorProviderMappingByData(
       { provider_id: id }
@@ -84,14 +68,14 @@ class ProviderWrapper extends BaseProvider {
         banner: completePath(banner)
       },
       activated_on,
-      doctor_ids
+      doctor_ids,
     };
   };
 
   getReferenceInfo = async () => {
     try {
-      const { _data, getBasicInfo, getProviderId } = this;
-      const { user } = _data;
+      const {_data, getBasicInfo, getProviderId} = this;
+      const {user} = _data;
 
       const userData = await UserWrapper(user.get());
 
@@ -100,12 +84,12 @@ class ProviderWrapper extends BaseProvider {
           [getProviderId()]: getBasicInfo()
         },
         users: {
-          [userData.getId()]: userData.getBasicInfo()
+          [userData.getId()] : userData.getBasicInfo()
         },
         user_id: userData.getId(),
         provider_id: getProviderId()
       };
-    } catch (error) {
+    } catch(error) {
       throw error;
     }
   };

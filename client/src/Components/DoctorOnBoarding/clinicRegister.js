@@ -58,7 +58,7 @@ class ClinicRegister extends Component {
       name: "",
       location: "",
       timings: {},
-      daySelected: { ...DAY_SELECTED_DEFAULT },
+      daySelected: {...DAY_SELECTED_DEFAULT},
       clinic_id: ""
     };
     let clinicsKeys = [key1];
@@ -71,7 +71,10 @@ class ClinicRegister extends Component {
     this.setState({});
   }
 
+
+
   fetchData = async () => {
+   
     const url = window.location.href.split("/");
     const { authenticated_category } = this.props;
     const { getDoctorProfileDetails } = this.props;
@@ -93,20 +96,14 @@ class ClinicRegister extends Component {
       }
 
       const url = window.location.href.split("/");
-      const current_doc_id = url.length > 4 ? url[url.length - 1] : 0;
+      const current_doc_id=url.length > 4 ? url[url.length - 1] : 0;
 
-      if (
-        authenticated_category === USER_CATEGORY.PROVIDER &&
-        parseInt(id) === parseInt(current_doc_id)
-      ) {
+      if(authenticated_category === USER_CATEGORY.PROVIDER && parseInt(id) === parseInt(current_doc_id) ){
         docClinicIds = doctor_clinic_ids;
         await getDoctorProfileDetails(id);
       }
 
-      if (
-        authenticated_category === USER_CATEGORY.DOCTOR ||
-        authenticated_category === USER_CATEGORY.HSP
-      ) {
+      if (authenticated_category === USER_CATEGORY.DOCTOR || authenticated_category === USER_CATEGORY.HSP) {
         await getDoctorProfileDetails(id);
       }
     }
@@ -117,6 +114,7 @@ class ClinicRegister extends Component {
     let existingClinincsKeys = [];
 
     if (docClinicIds.length > 0) {
+
       for (let eachClinic of docClinicIds) {
         let key = uuid();
 
@@ -175,7 +173,7 @@ class ClinicRegister extends Component {
         name: "",
         location: "",
         timings: {},
-        daySelected: { ...DAY_SELECTED_DEFAULT },
+        daySelected: {...DAY_SELECTED_DEFAULT},
         clinic_id: ""
       };
       clinicsKeys = [key];
@@ -198,6 +196,7 @@ class ClinicRegister extends Component {
         await callNewDoctorAction(doctor_id);
         this.setState({ doctor_id });
       } else {
+        return;
       }
     } catch (error) {
       console.log("443534543535 -->", error);
@@ -430,7 +429,7 @@ class ClinicRegister extends Component {
   };
 
   validateClinics = newClinics => {
-    console.log("11983721 newClinics --> ", { newClinics });
+    console.log("11983721 newClinics --> ", {newClinics});
     for (let edu of newClinics) {
       let { name = "", location = "", timings = [] } = edu;
 
@@ -484,7 +483,7 @@ class ClinicRegister extends Component {
     const { doctor_id, clinics = {} } = this.state;
 
     if (validate) {
-      let newClinics = Object.values(clinics);
+        let newClinics = Object.values(clinics);
       for (let clinic of newClinics) {
         let { timings = {} } = clinic;
         let time_slots = {
@@ -518,11 +517,11 @@ class ClinicRegister extends Component {
               history.replace(PATH.LANDING_PAGE);
             }
           } else if (
-            (authenticated_category === USER_CATEGORY.DOCTOR ||
-              authenticated_category === USER_CATEGORY.HSP) &&
+            ( authenticated_category === USER_CATEGORY.DOCTOR || authenticated_category === USER_CATEGORY.HSP ) &&
             window.location.href.includes(PATH.REGISTER_FROM_MY_PROFILE)
           ) {
             history.replace(PATH.PROFILE);
+            return;
           } else {
             history.replace(PATH.LANDING_PAGE);
           }
@@ -559,11 +558,11 @@ class ClinicRegister extends Component {
         history.replace(`${PATH.REGISTER_QUALIFICATIONS}/${doctor_id}`);
       }
     } else if (
-      (authenticated_category === USER_CATEGORY.DOCTOR ||
-        authenticated_category === USER_CATEGORY.HSP) &&
+      (authenticated_category === USER_CATEGORY.DOCTOR || authenticated_category === USER_CATEGORY.HSP) &&
       window.location.href.includes(PATH.REGISTER_FROM_MY_PROFILE)
     ) {
       history.replace(PATH.PROFILE);
+      return;
     } else {
       history.replace(PATH.REGISTER_QUALIFICATIONS);
     }
@@ -621,7 +620,7 @@ class ClinicRegister extends Component {
     let daySelectForModal =
       clinicKeyOfModalTiming && Object.keys(currClinicDaySelect).length
         ? currClinicDaySelect
-        : { ...DAY_SELECTED_DEFAULT };
+        : {...DAY_SELECTED_DEFAULT};
 
     return (
       <Fragment>
@@ -675,5 +674,4 @@ class ClinicRegister extends Component {
     );
   }
 }
-
 export default withRouter(injectIntl(ClinicRegister));

@@ -13,21 +13,21 @@ export default class FoodItem {
 
   getfoodItemDetails = () => {
     return this._data.food_item_details || [];
-  };
+    }
 
   getCreatorId = () => {
     return this._data.creator_id;
-  };
+    }
 
   getCreatorType = () => {
     return this._data.creator_type;
-  };
+    }
 
   getCreatorId = () => {
     return this._data.creator_id;
-  };
+    }
 
   getCreatorType = () => {
     return this._data.creator_type;
-  };
+    }
 }

@@ -18,7 +18,8 @@ class Watchlist extends Component {
   componentDidMount() {
     const {
       patientData: { basic_info: { id } = {} } = {},
-      doctorData: { watchlist_patient_ids = [] } = {}
+      doctorData: { watchlist_patient_ids = [] } = {},
+      
     } = this.props || {};
 
     if (watchlist_patient_ids.includes(id)) {
@@ -36,7 +37,8 @@ class Watchlist extends Component {
 
     const {
       patientData: { basic_info: { id } = {} } = {},
-      doctorData: { watchlist_patient_ids = [] } = {}
+      doctorData: { watchlist_patient_ids = [] } = {},
+      
     } = this.props || {};
 
     if (
@@ -48,8 +50,9 @@ class Watchlist extends Component {
       });
     }
   }
-
+  
   formatMessage = data => this.props.intl.formatMessage(data);
+
 
   addThisToWatchlist = e => {
     e.preventDefault();
@@ -79,6 +82,8 @@ class Watchlist extends Component {
       isAdded: true
     });
   };
+
+
 
   removeFromWatchlist = e => {
     e.preventDefault();
@@ -116,7 +121,7 @@ class Watchlist extends Component {
   render() {
     const { isAdded } = this.state;
 
-    const { formatMessage } = this;
+    const {formatMessage}=this;
 
     const {
       patientData: {
@@ -136,9 +141,7 @@ class Watchlist extends Component {
       >
         <div className="wp100 p10 flex direction-column align-left ">
           <div className="fw600 tab-color ">
-            {`${getName(first_name)}  ${getName(middle_name)} ${getName(
-              last_name
-            )}`}
+            {`${getName(first_name)}  ${getName(middle_name)} ${getName(last_name)}`}
           </div>
           <div className="flex direction-row  align-left">
             <div>{age ? `${age}` : "--"}</div>
@@ -159,7 +162,7 @@ class Watchlist extends Component {
           onClick={this.stopEventBubbling}
         >
           {isAdded ? (
-            <Tooltip title={formatMessage(messages.removeFromWatchlist)}>
+            <Tooltip title={formatMessage(messages.removeFromWatchlist)} >
               <Icon
                 type="eye"
                 className="fs20"
@@ -168,15 +171,16 @@ class Watchlist extends Component {
               />
             </Tooltip>
           ) : (
-            <Tooltip title={formatMessage(messages.addToWatchlist)}>
+            <Tooltip title={formatMessage(messages.addToWatchlist)} >
               <Icon
-                type="eye-invisible"
-                theme="filled"
-                className="fs20"
-                value={isAdded}
-                onClick={this.addThisToWatchlist}
-              />
+              type="eye-invisible"
+              theme="filled"
+              className="fs20"
+              value={isAdded}
+              onClick={this.addThisToWatchlist}
+            />
             </Tooltip>
+            
           )}
         </div>
       </div>
@@ -185,3 +189,4 @@ class Watchlist extends Component {
 }
 
 export default injectIntl(Watchlist);
+

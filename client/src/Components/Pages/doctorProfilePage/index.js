@@ -209,7 +209,7 @@ class DoctorProfilePage extends Component {
       user_id: null,
       viewModalVisible: false,
       viewModalSrc: "",
-      searchSpecialityText: ""
+      searchSpecialityText:''
     };
 
     // this.handleSpecialitySearch = throttle(
@@ -355,7 +355,7 @@ class DoctorProfilePage extends Component {
       this.setState({
         loading: false
       });
-      console.log("72833257423646238748236482634823", { error });
+      console.log("72833257423646238748236482634823",{error});
       message.warn("Something went wrong, please try again later");
     }
   };
@@ -613,7 +613,6 @@ class DoctorProfilePage extends Component {
     newQualificationDegree[qualification_id] = false;
     this.setState({ edit_qualification_degree: newQualificationDegree });
   };
-
   async handleDegreeSearch(data) {
     try {
       if (data) {
@@ -635,7 +634,6 @@ class DoctorProfilePage extends Component {
       this.setState({ fetchingDegrees: false });
     }
   }
-
   getDegreesOption = () => {
     const { degrees = {} } = this.props;
 
@@ -675,7 +673,6 @@ class DoctorProfilePage extends Component {
     newQualificationCollege[qualification_id] = false;
     this.setState({ edit_qualification_college: newQualificationCollege });
   };
-
   async handleCollegeSearch(data) {
     try {
       if (data) {
@@ -697,7 +694,6 @@ class DoctorProfilePage extends Component {
       this.setState({ fetchingColleges: false });
     }
   }
-
   getCollegesOption = () => {
     const { colleges = {} } = this.props;
 
@@ -1803,15 +1799,15 @@ class DoctorProfilePage extends Component {
       //   this.setState({ fetchingSpeciality: false });
       // }
 
-      this.setState({ searchSpecialityText: data });
+      this.setState({searchSpecialityText:data});
     } catch (err) {
       console.log("err", err);
       message.warn("Something went wrong, please try again later");
       this.setState({ fetchingSpeciality: false });
     }
-  };
+  }
 
-  handleCouncilSearch = async data => {
+   handleCouncilSearch=async(data) => {
     try {
       if (data) {
         const { searchCouncil } = this.props;
@@ -1838,33 +1834,35 @@ class DoctorProfilePage extends Component {
       message.error(this.formatMessage(messages.somethingWentWrong));
       this.setState({ fetchingCouncils: false });
     }
-  };
+  }
   getSpecialityOption = () => {
     const { specialities = {} } = this.props;
-    const { searchSpecialityText = "" } = this.state;
+    const {searchSpecialityText = ''} = this.state;
 
     let options = [];
 
-    options.push(
-      Object.keys(specialities).map(id => {
-        const { basic_info: { name } = {} } = specialities[id] || {};
-        return (
-          <Option key={id} value={id}>
-            {name}
-          </Option>
-        );
-      })
+   
+
+    options.push( Object.keys(specialities).map(id => {
+      const { basic_info: { name } = {} } = specialities[id] || {};
+      return (
+        <Option key={id} value={id}>
+          {name}
+        </Option>
+      );
+    })
     );
 
     options.push(
       <Option key={searchSpecialityText} value={searchSpecialityText}>
-        {`${this.formatMessage(
-          messages.addSpeciality
-        )}${" "}"${searchSpecialityText}"`}
+      {`${this.formatMessage(messages.addSpeciality)}${" "}"${searchSpecialityText}"`}
       </Option>
-    );
+    )
+   
 
     return options;
+
+
   };
 
   renderSpecialities = () => {
@@ -1973,13 +1971,13 @@ class DoctorProfilePage extends Component {
     const {
       auth: { authenticated_category = "", authenticated_user = null },
       doctors,
-      users,
-      id
+        users,
+        id
     } = this.props;
 
-    const { basic_info: { user_id } = {} } = doctors[id] || {};
-    const { activated_on = null } = users[user_id] || {};
-    console.log("1819238 ", { activated_on });
+    const {basic_info: {user_id} = {}} = doctors[id] || {};
+    const {activated_on = null} = users[user_id] || {};
+    console.log("1819238 ", {activated_on});
 
     return (
       <div>
@@ -1990,28 +1988,26 @@ class DoctorProfilePage extends Component {
           </div>
 
           {/*<div>*/}
-          {authenticated_category === USER_CATEGORY.PROVIDER ? (
-            <div className="flex flex-end align-center">
-              {getFooter()}
-              {activated_on !== null && (
-                <Dropdown
-                  overlay={this.getMenu()}
-                  trigger={["click"]}
-                  placement="bottomRight"
+            {authenticated_category === USER_CATEGORY.PROVIDER ? (
+              <div className="flex flex-end align-center">
+                {getFooter()}
+                {activated_on !== null && <Dropdown
+                    overlay={this.getMenu()}
+                    trigger={["click"]}
+                    placement="bottomRight"
                 >
                   <Button
-                    type="primary"
-                    className="mr10 mb10 add-button "
-                    icon={"plus"}
+                      type="primary"
+                      className="mr10 mb10 add-button "
+                      icon={"plus"}
                   >
                     <span className="fs16">
                       {this.formatMessage(messages.add)}
                     </span>
                   </Button>
-                </Dropdown>
-              )}
-            </div>
-          ) : null}
+                </Dropdown>}
+              </div>
+            ) : null}
           {/*</div>*/}
         </div>
       </div>
@@ -2088,7 +2084,7 @@ class DoctorProfilePage extends Component {
         this.setState({ profile_pic: p_pic });
       }
 
-      if (p_pic && profile_pic_url === "" && p_pic.length) {
+      if (p_pic && profile_pic_url === "" && p_pic.length ) {
         this.setState({ profile_pic_url: p_pic });
       }
 
@@ -2263,10 +2259,14 @@ class DoctorProfilePage extends Component {
   };
 
   handleDocumentViewOpen = src => () => {
+  
     this.setState({
       viewModalVisible: true,
       viewModalSrc: src
     });
+
+    
+    
   };
 
   handleDocumentViewClose = () => {
@@ -2362,62 +2362,63 @@ class DoctorProfilePage extends Component {
                   const { basic_info: { document, parent_id } = {} } =
                     upload_documents[id] || {};
                   // if (verified_doctor) {
-                  // const documentType =
-                  //   document.substring(document.length - 3) || null;
-
-                  const arr = document.split("?")[0];
-                  let documentType;
-                  if (arr.length) {
-                    documentType = arr.substr(arr.length - 3);
-                  }
-                  if (documentType) {
-                    if (documentType !== "jpg" && documentType !== "png") {
-                      return (
-                        <a
-                          key={`q-${id}`}
-                          className="w100 h100 mr6 mt6 mb6 pointer"
-                          href={document}
-                          target="_blank"
-                          // onClick={handleDocumentDownload(id)}
-                        >
-                          <div className="w100 h100 br5 flex align-center justify-center">
-                            {documentType.toUpperCase()}
-                          </div>
-                        </a>
-                      );
-                    } else {
-                      return (
-                        <div
-                          key={document}
-                          className={"qualification-avatar-uploader"}
-                        >
-                          <img src={document} className="wp100 hp100 br4" />
-                          <div className="overlay"></div>
-                          <div className="absolute tp45 l0 wp100 flex justify-center align-space-evenly doc-container ">
-                            {" "}
-                            <DeleteTwoTone
-                              className={"del doc-opt"}
-                              onClick={this.handleRemoveListRegistration(
-                                parent_id,
-                                document
-                              )}
-                              twoToneColor="#fff"
-                            />{" "}
-                            <EyeTwoTone
-                              className="w20"
-                              className={"del doc-opt pointer"}
-                              onClick={this.handleDocumentViewOpen(document)}
-                              twoToneColor="#fff"
-                            />
-                          </div>
-                        </div>
-                      );
+                    // const documentType =
+                    //   document.substring(document.length - 3) || null;
+                    
+                    const arr = document.split("?")[0];
+                    let documentType;
+                    if(arr.length){
+                      documentType = arr.substr(arr.length - 3);
                     }
-                  }
+                    if (documentType) {
+                     
+                      if (documentType !== "jpg" && documentType !== "png") {
+                        return (
+                          <a
+                            key={`q-${id}`}
+                            className="w100 h100 mr6 mt6 mb6 pointer"
+                            href={document}
+                            target="_blank"
+                            // onClick={handleDocumentDownload(id)}
+                          >
+                            <div className="w100 h100 br5 flex align-center justify-center">
+                              {documentType.toUpperCase()}
+                            </div>
+                          </a>
+                        );
+                      } else {
+                        return (
+                          <div
+                        key={document}
+                        className={"qualification-avatar-uploader"}
+                      >
+                        <img src={document} className="wp100 hp100 br4" />
+                        <div className="overlay"></div>
+                        <div className="absolute tp45 l0 wp100 flex justify-center align-space-evenly doc-container ">
+                          {" "}
+                          <DeleteTwoTone
+                            className={"del doc-opt"}
+                            onClick={this.handleRemoveListRegistration(
+                              parent_id,
+                              document
+                            )}
+                            twoToneColor="#fff"
+                          />{" "}
+                           <EyeTwoTone
+                            className="w20"
+                            className={"del doc-opt pointer"}
+                            onClick={this.handleDocumentViewOpen(document)}
+                            twoToneColor="#fff"
+                          />
+                        </div>
+                      </div>
+                        );
+                      }
+                    }
                   // } else {
-                  // return (
-
-                  // );
+                    // return (
+                      
+                    // );
                   // }
                 })}
                 {verified_doctor && upload_document_ids.length < 3 && (
@@ -2646,73 +2647,70 @@ class DoctorProfilePage extends Component {
                   const { basic_info: { document, parent_id } = {} } =
                     upload_documents[id] || {};
                   // if (!verified_doctor) {
-                  // return (
-
-                  // );
+                    // return (
+                      
+                    // );
                   // } else {
-                  // const documentType =
-                  //   document.substring(document.length - 3) || null;
-                  const arr = document.split("?")[0];
-                  let documentType;
-                  if (arr.length) {
-                    documentType = arr.substr(arr.length - 3);
-                  }
-                  if (documentType) {
-                    if (documentType !== "jpg" && documentType !== "png") {
-                      return (
-                        <a
-                          key={`q-${id}`}
-                          className="w100 h100 mr6 mt6 mb6 pointer"
-                          href={document}
-                          target="_blank"
-                          // onClick={handleDocumentDownload(id)}
-                        >
-                          <div className="w100 h100 br5 flex align-center justify-center">
-                            {documentType.toUpperCase()}
-                          </div>
-                        </a>
-                      );
-                    } else {
-                      return (
-                        // <div
-                        //   key={`q-${id}`}
-                        //   className="w100 h100 mr6 mt6 mb6 pointer"
-                        //   onClick={handlePictureModal(id)}
-                        // >
-                        //   <img
-                        //     src={document}
-                        //     className="w100 h100 br5"
-                        //     alt={`qualification document ${id}`}
-                        //   />
-                        // </div>
-
-                        <div
-                          key={document}
-                          className={"qualification-avatar-uploader"}
-                        >
-                          <img src={document} className="wp100 hp100 br4" />
-                          <div className="overlay"></div>
-                          <div className="absolute tp45 l0 wp100 flex justify-center align-space-evenly doc-container ">
-                            {" "}
-                            <DeleteTwoTone
-                              className={"del doc-opt"}
-                              onClick={this.handleRemoveList(
-                                parent_id,
-                                document
-                              )}
-                              twoToneColor="#fff"
-                            />{" "}
-                            <EyeTwoTone
-                              className="w20"
-                              className={"del doc-opt pointer"}
-                              onClick={this.handleDocumentViewOpen(document)}
-                              twoToneColor="#fff"
-                            />
-                          </div>
-                        </div>
-                      );
+                    // const documentType =
+                    //   document.substring(document.length - 3) || null;
+                    const arr = document.split("?")[0];
+                    let documentType;
+                    if(arr.length){
+                      documentType = arr.substr(arr.length - 3);
                     }
-                  }
+                    if (documentType) {
+                      if (documentType !== "jpg" && documentType !== "png") {
+                        return (
+                          <a
+                            key={`q-${id}`}
+                            className="w100 h100 mr6 mt6 mb6 pointer"
+                            href={document}
+                            target="_blank"
+                            // onClick={handleDocumentDownload(id)}
+                          >
+                            <div className="w100 h100 br5 flex align-center justify-center">
+                              {documentType.toUpperCase()}
+                            </div>
+                          </a>
+                        );
+                      } else {
+                        return (
+                          // <div
+                          //   key={`q-${id}`}
+                          //   className="w100 h100 mr6 mt6 mb6 pointer"
+                          //   onClick={handlePictureModal(id)}
+                          // >
+                          //   <img
+                          //     src={document}
+                          //     className="w100 h100 br5"
+                          //     alt={`qualification document ${id}`}
+                          //   />
+                          // </div>
+                          
+                          <div
+                        key={document}
+                        className={"qualification-avatar-uploader"}
+                      >
+                        <img src={document} className="wp100 hp100 br4" />
+                        <div className="overlay"></div>
+                        <div className="absolute tp45 l0 wp100 flex justify-center align-space-evenly doc-container ">
+                          {" "}
+                          <DeleteTwoTone
+                            className={"del doc-opt"}
+                            onClick={this.handleRemoveList(parent_id, document)}
+                            twoToneColor="#fff"
+                          />{" "}
+                          <EyeTwoTone
+                            className="w20"
+                            className={"del doc-opt pointer"}
+                            onClick={this.handleDocumentViewOpen(document)}
+                            twoToneColor="#fff"
+                          />
+                        </div>
+                      </div>
+                        );
+                      }
+                    }
                   // }
                 })}
                 {verified_doctor && upload_document_ids.length < 3 && (
@@ -2911,18 +2909,16 @@ class DoctorProfilePage extends Component {
 
     return (
       <div className="flex justify-end align-center">
-        {!isVerifyVisible && (
-          <div className="flex align-center justify=space-between">
-            <Button
+        {!isVerifyVisible && <div className="flex align-center justify=space-between">
+          <Button
               // disabled={disabled}
               type="primary"
               className="mb10 mr10"
               onClick={handleVerify}
-            >
-              {formatMessage(messages.submit_button_text)}
-            </Button>
-          </div>
-        )}
+          >
+            {formatMessage(messages.submit_button_text)}
+          </Button>
+        </div>}
 
         <div className="flex column align-center justify-center">
           {active ? (
@@ -3039,10 +3035,7 @@ class DoctorProfilePage extends Component {
       doctors
     } = this.props;
 
-    if (
-      authenticated_category === USER_CATEGORY.DOCTOR ||
-      authenticated_category === USER_CATEGORY.HSP
-    ) {
+    if (authenticated_category === USER_CATEGORY.DOCTOR || authenticated_category === USER_CATEGORY.HSP) {
       history.replace(
         `${PATH.REGISTER_FROM_MY_PROFILE}${PATH.REGISTER_QUALIFICATIONS}`
       );
@@ -3063,10 +3056,7 @@ class DoctorProfilePage extends Component {
       doctors
     } = this.props;
 
-    if (
-      authenticated_category === USER_CATEGORY.DOCTOR ||
-      authenticated_category === USER_CATEGORY.HSP
-    ) {
+    if (authenticated_category === USER_CATEGORY.DOCTOR || authenticated_category === USER_CATEGORY.HSP) {
       history.replace(
         `${PATH.REGISTER_FROM_MY_PROFILE}${PATH.REGISTER_CLINICS}`
       );
@@ -3127,7 +3117,7 @@ class DoctorProfilePage extends Component {
 
     const { viewModalVisible, viewModalSrc } = this.state;
 
-    const { handleDocumentViewClose } = this;
+    const {handleDocumentViewClose } = this;
     if (loading) {
       return <PageLoading />;
     }
@@ -3266,6 +3256,7 @@ class DoctorProfilePage extends Component {
             className="wp100"
           />
         </Modal>
+
       </Fragment>
     );
   }

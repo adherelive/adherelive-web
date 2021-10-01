@@ -16,17 +16,18 @@ class AddSecondaryDoc extends Component {
     this.state = {
       visible: true,
       disabledSubmit: true,
-      submitting: false
+      submitting:false
     };
 
     this.FormWrapper = Form.create({ onFieldsChange: this.onFormFieldChanges })(
-      AddFoodItemForm
+        AddFoodItemForm
     );
   }
-
-  onFormFieldChanges = props => {
+ 
+ 
+  onFormFieldChanges = (props) => {
     const {
-      form: { getFieldsError, isFieldsTouched }
+      form: { getFieldsError, isFieldsTouched },
     } = props;
     const isError = hasErrors(getFieldsError());
     const { disabledSubmit } = this.state;
@@ -35,56 +36,62 @@ class AddSecondaryDoc extends Component {
     }
   };
 
-  handleSubmit = e => {
+  handleSubmit = (e) => {
     e.preventDefault();
-    const { addSecondaryDoctorToCareplan, carePlanId = null } = this.props;
+    const { addSecondaryDoctorToCareplan , carePlanId = null } = this.props;
     const { formRef = {}, formatMessage } = this;
 
     const {
       props: {
-        form: { validateFields, resetFields }
-      }
+        form: { validateFields, resetFields },
+      },
     } = formRef;
 
     validateFields(async (err, values) => {
       if (!err) {
-        let { doctor_role_id } = values;
+        let {
+          doctor_role_id
+        } = values;
 
+     
         const data = {
-          user_role_id: doctor_role_id,
-          care_plan_id: carePlanId
+          user_role_id:doctor_role_id,
+          care_plan_id:carePlanId
         };
 
-        try {
-          this.setState({ submitting: true });
-          const response = await addSecondaryDoctorToCareplan(data);
-          const {
-            status,
-            statusCode: code,
-            payload: {
-              message: errorMessage = "",
-              error: { error_type = "" } = {}
+      
+          try {
+            this.setState({submitting:true});
+            const response = await addSecondaryDoctorToCareplan(data);
+            const {
+              status,
+              statusCode: code,
+              payload: { message: errorMessage = "", error: { error_type = "" } = {} },
+            } = response || {};
+
+
+           
+            if(!status){
+                message.error(errorMessage);
+            }else{
+                message.success(errorMessage);
             }
-          } = response || {};
+            this.setState({submitting:false});
 
-          if (!status) {
-            message.error(errorMessage);
-          } else {
-            message.success(errorMessage);
-          }
-          this.setState({ submitting: false });
+            if(status){
+              this.onClose();
+            }
+            
 
-          if (status) {
-            this.onClose();
+          } catch (error) {
+            this.setState({submitting:false});
           }
-        } catch (error) {
-          this.setState({ submitting: false });
+  
         }
-      }
     });
   };
 
-  formatMessage = data => this.props.intl.formatMessage(data);
+  formatMessage = (data) => this.props.intl.formatMessage(data);
 
   onClose = () => {
     const { close } = this.props;
@@ -92,19 +99,19 @@ class AddSecondaryDoc extends Component {
     const { formRef } = this;
     const {
       props: {
-        form: { resetFields }
-      }
+        form: { resetFields },
+      },
     } = formRef;
     this.setState({
       visible: true,
       disabledSubmit: true,
-      submitting: false
+      submitting:false
     });
     resetFields();
     close();
   };
 
-  setFormRef = formRef => {
+  setFormRef = (formRef) => {
     this.formRef = formRef;
     if (formRef) {
       this.setState({ formRef: true });
@@ -113,21 +120,23 @@ class AddSecondaryDoc extends Component {
 
   render() {
     const { visible } = this.props;
-    const { disabledSubmit, submitting = false } = this.state;
+    const { disabledSubmit , submitting=false } = this.state;
+
 
     const {
       onClose,
       formatMessage,
       setFormRef,
       handleSubmit,
-      FormWrapper
+      FormWrapper,
     } = this;
 
     const submitButtonProps = {
-      disabled: disabledSubmit
+      disabled: disabledSubmit,
     };
 
-    console.log("82376482364826348723", { props: this.props });
+    console.log("82376482364826348723",{props:this.props});
+
 
     return (
       <Fragment>
@@ -140,10 +149,12 @@ class AddSecondaryDoc extends Component {
             top: "0px"
           }}
           destroyOnClose={true}
-          onClose={onClose}
+
+          onClose={ onClose}
           visible={visible}
-          width={"35%"}
+          width={'35%'}
           title={formatMessage(messages.add_doctor)}
+      
         >
           <FormWrapper wrappedComponentRef={setFormRef} {...this.props} />
 

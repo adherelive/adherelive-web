@@ -5,6 +5,7 @@ import MealTemplateService from "../../../services/mealTemplate/mealTemplate.ser
 //Wrapper
 import FoodItemDetailsWrapper from "../foodItemDetails";
 
+
 class MealTemplateWrapper extends BaseMealTemplate {
   constructor(data) {
     super(data);
@@ -18,9 +19,9 @@ class MealTemplateWrapper extends BaseMealTemplate {
         id,
         name,
         creator_id,
-        creator_type
+        creator_type,
       },
-      details
+      details,
     };
   };
 
@@ -32,13 +33,13 @@ class MealTemplateWrapper extends BaseMealTemplate {
 
     if (allFoodItemDetails.length > 0) {
       for (let index = 0; index < allFoodItemDetails.length; index++) {
-        const { id } = allFoodItemDetails[index];
+        const {id} = allFoodItemDetails[index];
         food_item_detail_ids.push(id);
       }
     }
     return {
       ...getBasicInfo(),
-      food_item_detail_ids
+      food_item_detail_ids,
     };
   };
 
@@ -51,12 +52,8 @@ class MealTemplateWrapper extends BaseMealTemplate {
     let food_item_detail_ids = [];
     if (allFoodItemDetails.length > 0) {
       for (let index = 0; index < allFoodItemDetails.length; index++) {
-        const FoodItemDetails = await FoodItemDetailsWrapper({
-          data: allFoodItemDetails[index]
-        });
-        foodItemsDetailsData[
-          FoodItemDetails.getId()
-        ] = FoodItemDetails.getBasicInfo();
+        const FoodItemDetails = await FoodItemDetailsWrapper({ data: allFoodItemDetails[index] });
+        foodItemsDetailsData[FoodItemDetails.getId()] = FoodItemDetails.getBasicInfo();
         food_item_detail_ids.push(FoodItemDetails.getId());
       }
     }
@@ -64,13 +61,13 @@ class MealTemplateWrapper extends BaseMealTemplate {
     return {
       meal_templates: {
         [getId()]: {
-          ...(await getAllInfo())
-        }
+          ...(await getAllInfo()),
+        },
       },
       food_item_details: {
-        ...foodItemsDetailsData
+        ...foodItemsDetailsData,
       },
-      food_item_detail_ids
+      food_item_detail_ids,
     };
   };
 }

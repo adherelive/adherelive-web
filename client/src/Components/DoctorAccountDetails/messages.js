@@ -110,7 +110,7 @@ const messages = defineMessages({
     id: "app.account.details.edit.account.text",
     description: "",
     defaultMessage: "Edit"
-  },
+  }, 
   deleteAccount: {
     id: "app.account.details.delete.account.text",
     description: "",
@@ -120,14 +120,12 @@ const messages = defineMessages({
     id: "app.account.details.delete.billingDisplay",
     description: "",
     defaultMessage: "No billing details yet"
-  },
-  warnNote: {
+  },  warnNote :{
     id: "app.account.details.delete.warnNote",
     description: "",
-    defaultMessage:
-      "There might be payment settlements attached to this account. Please be sure before removing these Account Details."
+    defaultMessage: "There might be payment settlements attached to this account. Please be sure before removing these Account Details."
   },
-  irreversibleWarn: {
+  irreversibleWarn :{
     id: "app.account.details.delete.irreversibleWarn",
     description: "",
     defaultMessage: "This delete is irreversible"

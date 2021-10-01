@@ -9,12 +9,12 @@ class TemplateTable extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      loading: false
+        loading: false
     };
   }
 
   componentDidMount() {
-    const {} = this.props;
+      const {} = this.props;
   }
 
   onRowClick = key => event => {
@@ -94,8 +94,8 @@ class TemplateTable extends Component {
     console.log("12837919827 loading", { loading });
 
     const templateLocale = {
-      emptyText: formatMessage(messages.emptyTemplateTable)
-    };
+      emptyText:formatMessage(messages.emptyTemplateTable)
+    }
 
     return (
       <Fragment>

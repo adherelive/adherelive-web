@@ -6,123 +6,136 @@ import {
   TABLET,
   SYRUP,
   PARTS,
-  PART_LIST_CODES
+  PART_LIST_CODES,
 } from "../../../../constant";
 
-import { getName } from "../../../../Helper/validation";
+import {getName} from "../../../../Helper/validation";
 
 import { Tabs, Table, Menu, Dropdown, Spin, message, Button } from "antd";
 
-class patientCarePlans extends Component {
-  constructor(props) {
-    super(props);
 
-    this.state = {
-      care_plans: {},
-      current_careplan_id: null
-    };
-  }
+class patientCarePlans extends Component{
 
-  componentDidMount() {
-    let { getPatientCarePlanDetails, patient_id } = this.props;
+    constructor(props){
+        super(props)
 
-    getPatientCarePlanDetails(patient_id).then(response => {
-      let { status = false, payload = {} } = response;
-      console.log(
-        "respOnseeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee -->",
-        response
-      );
-      if (status) {
+        this.state ={
+            care_plans:{},
+            current_careplan_id:null
+        }
+    }
+
+    componentDidMount(){
+        
         let {
-          data: { show = false, care_plans = {}, current_careplan_id } = {}
-        } = payload;
+            getPatientCarePlanDetails,
+            patient_id,
+          } = this.props;
 
-        console.log("Cureent careplan ====>", care_plans, current_careplan_id);
+          getPatientCarePlanDetails(patient_id).then(response => {
+            let { status = false, payload = {} } = response;
+            console.log("respOnseeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee -->",response);
+            if (status) {
+              let {
+                data: {
+                  show = false,
+                  care_plans = {},
+                  current_careplan_id
+                } = {}
+              } = payload;
 
-        this.setState({
-          care_plans,
-          current_careplan_id
-        });
-      }
-    });
-  }
 
-  getActiveInactiveOptions = (isActive = false) => {
-    if (isActive) {
-      return (
-        <div className="active-inactive-careplan">
-          <div className="active-careplan">
-            {this.formatMessage(messages.activeCareplan)}
-          </div>
-        </div>
-      );
-    } else {
-      return null;
+              console.log("Cureent careplan ====>",care_plans,current_careplan_id);
+
+              this.setState({
+                  care_plans,
+                  current_careplan_id
+              })
+
+            }
+          });
+
     }
-  };
 
-  getAllCarePlans = (care_plans, current_careplan_id) => {
-    let allCarePlans = [];
-    let currentCarePlan = this.getCurrentCarePlan(
-      care_plans,
-      current_careplan_id
-    );
-    allCarePlans.push(currentCarePlan);
+    getActiveInactiveOptions = (isActive = false ) => {
+        if(isActive){
+            return (<div className="active-inactive-careplan" >
+                <div className="active-careplan" >
+                    {this.formatMessage(messages.activeCareplan)}
+                </div>
+            </div>)
+        }else{
+            return null
+        }
+    }
 
-    let allOtherCarePlans = this.getCarePlans(care_plans, current_careplan_id);
-    allCarePlans.push(allOtherCarePlans);
-    return allCarePlans;
-  };
+    getAllCarePlans = (care_plans,current_careplan_id) => {
+        let allCarePlans = [];
+        let currentCarePlan = this.getCurrentCarePlan(care_plans,current_careplan_id);
+        allCarePlans.push(currentCarePlan);
 
-  formatMessage = data => this.props.intl.formatMessage(data);
+        let allOtherCarePlans = this.getCarePlans(care_plans,current_careplan_id);
+        allCarePlans.push(allOtherCarePlans);
+        return allCarePlans;
+    }
 
-  getCurrentCarePlan = (care_plans, current_careplan_id) => {
-    const { treatments, doctors } = this.props;
-    const { basic_info: { first_name = "", last_name = "" } = {} } =
-      Object.values(doctors)[0] || {};
+    formatMessage = data => this.props.intl.formatMessage(data);
 
-    const { details: { treatment_id } = {} } =
-      care_plans[current_careplan_id] || {};
-    const { basic_info: { name = "" } = {} } = treatments[treatment_id] || {};
-    return (
-      <div className="careplanListOption">
-        <div>
-          <h3>{name}</h3>
-          <h5>{`${first_name} ${getName(last_name)}`} </h5>
-        </div>
-        {this.getActiveInactiveOptions(true)}
-      </div>
-    );
-  };
+    getCurrentCarePlan = (care_plans,current_careplan_id) => {
+        const {treatments,doctors} = this.props;
+        const {basic_info:{first_name="",last_name=""} = {} } = Object.values(doctors)[0] || {};
+        
+        const {details:{treatment_id} = {}} = care_plans[current_careplan_id] || {};
+        const {basic_info:{ name='' } ={}} = treatments[treatment_id] || {};
+        return (
+        <div className="careplanListOption">
 
-  getCarePlans = (care_plans, current_careplan_id) => {
-    const { treatments } = this.props;
-
-    const nonCurrentCareplans = [];
-    for (let eachId in care_plans) {
-      const { details: { treatment_id } = {} } = care_plans[eachId] || {};
-      const { basic_info: { name = "" } = {} } = treatments[treatment_id] || {};
-      if (eachId !== JSON.stringify(current_careplan_id)) {
-        nonCurrentCareplans.push(
-          <div className="careplanListOption">
             <div>
-              <h3>{this.formatMessage(messages.careplanHeading)}</h3>
+                <h3>{name}</h3>
+                <h5>{`${first_name} ${getName(last_name)}`} </h5>
             </div>
-            {this.getActiveInactiveOptions()}
-          </div>
-        );
-      }
+            {this.getActiveInactiveOptions(true)}
+
+      </div>)
     }
 
-    return nonCurrentCareplans;
-  };
+    getCarePlans = (care_plans,current_careplan_id) => {
+        const {treatments} = this.props;
+       
+        const nonCurrentCareplans = [];
+        for(let eachId in care_plans){
+            const { details:{treatment_id} = {}} = care_plans[eachId] || {};
+            const {basic_info:{ name='' } ={}} = treatments[treatment_id] || {};
+            if(eachId !== JSON.stringify(current_careplan_id)){
+                nonCurrentCareplans.push(
+                    <div className="careplanListOption">
 
-  render() {
-    const { care_plans, current_careplan_id } = this.state;
-    const allCarePlans = this.getAllCarePlans(care_plans, current_careplan_id);
+                        <div>
+                            <h3>{this.formatMessage(messages.careplanHeading)}</h3>
+                            
+                        </div>
+                        {this.getActiveInactiveOptions()}
 
-    return <div className="careplanList">{allCarePlans}</div>;
-  }
+                    </div>
+                    )
+            }
+        }
+
+        return nonCurrentCareplans;
+
+    }
+
+    render(){
+       const {care_plans,current_careplan_id} = this.state;
+       const allCarePlans = this.getAllCarePlans(care_plans,current_careplan_id);
+
+        return (
+            <div className="careplanList" >
+                {allCarePlans}
+            </div>
+        )
+    }
 }
+
 
 export default injectIntl(patientCarePlans);

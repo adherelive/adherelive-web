@@ -2,7 +2,7 @@ import Database from "../../../libs/mysql";
 import { TABLE_NAME } from "../../models/templateMedications";
 
 class TemplateMedicationService {
-  getTemplateMedicationByData = async data => {
+    getTemplateMedicationByData = async (data) => {
     try {
       const templateMedications = await Database.getModel(TABLE_NAME).findAll({
         where: data
@@ -13,7 +13,7 @@ class TemplateMedicationService {
     }
   };
 
-  getSingleTemplateMedicationByData = async data => {
+    getSingleTemplateMedicationByData = async (data) => {
     try {
       const templateMedication = await Database.getModel(TABLE_NAME).findOne({
         where: data
@@ -24,7 +24,7 @@ class TemplateMedicationService {
     }
   };
 
-  getMedicationsByCarePlanTemplateId = async care_plan_template_id => {
+    getMedicationsByCarePlanTemplateId = async (care_plan_template_id) => {
     try {
       const templateMedications = await Database.getModel(TABLE_NAME).findAll({
         where: care_plan_template_id
@@ -37,16 +37,14 @@ class TemplateMedicationService {
 
   addTemplateMedication = async data => {
     try {
-      const templateMedication = await Database.getModel(TABLE_NAME).create(
-        data
-      );
+            const templateMedication = await Database.getModel(TABLE_NAME).create(data);
       return templateMedication;
     } catch (error) {
       throw error;
     }
   };
 
-  deleteMedication = async data => {
+    deleteMedication = async (data) => {
     try {
       return await Database.getModel(TABLE_NAME).destroy({
         where: data
@@ -59,15 +57,12 @@ class TemplateMedicationService {
   update = async (data, id) => {
     const transaction = await Database.initTransaction();
     try {
-      const templateMedication = await Database.getModel(TABLE_NAME).update(
-        data,
-        {
+            const templateMedication = await Database.getModel(TABLE_NAME).update(data, {
           where: {
             id
           },
           transaction
-        }
-      );
+            });
       await transaction.commit();
       return templateMedication;
     } catch (error) {

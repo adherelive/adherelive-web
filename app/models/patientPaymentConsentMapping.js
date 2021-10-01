@@ -48,7 +48,7 @@ export const db = database => {
       payment_terms_accepted: {
         type: DataTypes.BOOLEAN,
         defaultValue: false
-      }
+      },
     },
     {
       underscored: true,
@@ -67,4 +67,5 @@ export const db = database => {
   );
 };
 
-export const associate = database => {};
+export const associate = database => {
+};

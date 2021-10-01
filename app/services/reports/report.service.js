@@ -4,7 +4,7 @@ import { TABLE_NAME } from "../../models/reports";
 export default class ReportService {
   constructor() {}
 
-  addReport = async data => {
+    addReport = async (data) => {
     const transaction = await Database.initTransaction();
     try {
       const report = await Database.getModel(TABLE_NAME).create(data, {
@@ -38,7 +38,7 @@ export default class ReportService {
     }
   };
 
-  getReportByData = async data => {
+    getReportByData = async (data) => {
     try {
       return await Database.getModel(TABLE_NAME).findOne({
         where: data,
@@ -49,7 +49,7 @@ export default class ReportService {
     }
   };
 
-  getAllReportByData = async data => {
+    getAllReportByData = async (data) => {
     try {
       return await Database.getModel(TABLE_NAME).findAll({
         where: data,
@@ -61,7 +61,7 @@ export default class ReportService {
     }
   };
 
-  latestReportAndCount = async data => {
+    latestReportAndCount = async (data) => {
     try {
       return await Database.getModel(TABLE_NAME).findAndCountAll({
         where: data,

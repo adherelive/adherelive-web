@@ -34,10 +34,8 @@ class SelectedDays extends Component {
   formatMessage = data => this.props.intl.formatMessage(data);
 
   handleCheckDays = (tag, checked) => {
-    const {
-      form: { getFieldValue }
-    } = this.props;
-    const selectedDays = getFieldValue(FIELD_NAME) || [];
+    const {form : { getFieldValue }} = this.props;
+    const selectedDays  = getFieldValue(FIELD_NAME) || [];
     const nextSelectedTags = checked
       ? [...selectedDays, tag]
       : selectedDays.filter(t => t !== tag);
@@ -51,9 +49,9 @@ class SelectedDays extends Component {
 
   render() {
     const {
-      form: { getFieldDecorator, getFieldValue }
+      form: { getFieldDecorator,getFieldValue }
     } = this.props;
-    let selectedDays = getFieldValue(FIELD_NAME) || [];
+    let selectedDays  = getFieldValue(FIELD_NAME) || [];
     const { handleCheckDays, formatMessage } = this;
     return (
       <div className="select-days-form-content">
@@ -66,7 +64,7 @@ class SelectedDays extends Component {
             rules: [
               {
                 required: true,
-                message: "Please select days for vitals!"
+                message:'Please select days for vitals!'
               }
             ],
             initialValue: selectedDays

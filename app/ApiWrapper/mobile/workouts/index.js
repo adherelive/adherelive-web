@@ -26,7 +26,7 @@ class WorkoutWrapper extends BaseWorkout {
       basic_info: {
         id,
         care_plan_id,
-        name
+        name,
       },
       time,
       start_date,
@@ -41,13 +41,13 @@ class WorkoutWrapper extends BaseWorkout {
     const { getBasicInfo, getExerciseGroups } = this;
 
     let exercise_group_ids = [];
-    // workout_exercise_group_mapping_ids = [];
+      // workout_exercise_group_mapping_ids = [];
     const exerciseMappings = getExerciseGroups() || [];
     if (exerciseMappings.length > 0) {
       // add exercise mapping ids | exercise group ids here
       for (let index = 0; index < exerciseMappings.length; index++) {
         const {
-          id
+          id,
           // workout_exercise_group_mappings: {
           //   id: workout_exercise_group_mapping_id,
           // } = {},
@@ -60,7 +60,7 @@ class WorkoutWrapper extends BaseWorkout {
     }
     return {
       ...getBasicInfo(),
-      exercise_group_ids
+      exercise_group_ids,
       // workout_exercise_group_mapping_ids,
     };
   };
@@ -69,7 +69,7 @@ class WorkoutWrapper extends BaseWorkout {
     const { getId, getAllInfo, getExerciseGroups } = this;
 
     // let allWorkoutExerciseGroupMappings = {},
-    let allExerciseGroups = {},
+      let allExerciseGroups = {},
       allExerciseDetails = {},
       allExercises = {},
       allRepetitions = {};
@@ -79,14 +79,14 @@ class WorkoutWrapper extends BaseWorkout {
       // add exercise mapping ids | exercise group ids here
       for (let index = 0; index < exerciseMappings.length; index++) {
         const exerciseGroup = await ExerciseGroupWrapper({
-          data: exerciseMappings[index]
+          data: exerciseMappings[index],
         });
         const {
           // workout_exercise_group_mappings,
           exercise_groups,
           exercise_details,
           exercises,
-          repetitions
+          repetitions,
         } = await exerciseGroup.getReferenceInfo();
 
         allExerciseGroups = { ...allExerciseGroups, ...exercise_groups };
@@ -100,15 +100,16 @@ class WorkoutWrapper extends BaseWorkout {
       }
     }
 
+
     return {
       workouts: {
-        [getId()]: getAllInfo()
+        [getId()]: getAllInfo(),
       },
       // workout_exercise_group_mappings: allWorkoutExerciseGroupMappings,
       exercise_groups: allExerciseGroups,
       exercise_details: allExerciseDetails,
       exercises: allExercises,
-      repetitions: allRepetitions
+      repetitions: allRepetitions,
     };
   };
 }

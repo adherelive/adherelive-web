@@ -8,7 +8,7 @@ import { USER_CATEGORY_ARRAY } from "./users";
 
 export const TABLE_NAME = "meal_templates";
 
-export const db = database => {
+export const db = (database) => {
   database.define(
     TABLE_NAME,
     {
@@ -20,11 +20,11 @@ export const db = database => {
       },
       name: {
         type: DataTypes.STRING,
-        allowNull: false
+                allowNull: false,
       },
       creator_id: {
         type: DataTypes.INTEGER,
-        allowNull: false
+                allowNull:false,
       },
       creator_type: {
         type: DataTypes.ENUM,
@@ -37,20 +37,18 @@ export const db = database => {
     },
     {
       underscored: true,
-      paranoid: true
+            paranoid: true,
     }
   );
 };
 
-export const associate = database => {
+export const associate = (database) => {
   // const {upload_documents} = database.models || {};
 
   // associations here (if any) ...
 
-  database.models[TABLE_NAME].belongsToMany(
-    database.models[foodItemDetailsTableName],
-    {
+
+    database.models[TABLE_NAME].belongsToMany(database.models[foodItemDetailsTableName], {
       through: mealTemplateMappingTableName
-    }
-  );
+    });
 };

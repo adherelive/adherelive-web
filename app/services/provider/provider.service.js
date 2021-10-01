@@ -12,7 +12,7 @@ class ProviderService {
     }
   };
 
-  getProviderByData = async data => {
+    getProviderByData = async (data) => {
     try {
       const provider = await Database.getModel(TABLE_NAME).findOne({
         where: data,
@@ -34,7 +34,7 @@ class ProviderService {
     }
   };
 
-  addProvider = async data => {
+    addProvider = async (data) => {
     const transaction = await Database.initTransaction();
     try {
       const provider = await Database.getModel(TABLE_NAME).create(data, {

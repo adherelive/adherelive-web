@@ -103,10 +103,11 @@ class EndDate extends Component {
     } = this.props;
     const { formatMessage, openCalendar, getInitialValue, calendarComp } = this;
 
-    return (
+
+   return (
       <div className="wp100 flex align-center">
         <div className="pr8 wp100">
-          <div className="flex row">
+          <div className='flex row'>
             <span className="form-label">To</span>
           </div>
           <FormItem className="wp100">

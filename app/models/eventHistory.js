@@ -5,7 +5,7 @@ import { TABLE_NAME as scheduleEventTableName } from "./scheduleEvents";
 
 export const TABLE_NAME = "event_history";
 
-export const db = database => {
+export const db = (database) => {
   database.define(
     TABLE_NAME,
     {
@@ -17,11 +17,11 @@ export const db = database => {
       },
       schedule_event_id: {
         type: DataTypes.INTEGER,
-        allowNull: false
+                allowNull: false,
       },
       data: {
         type: DataTypes.JSON
-      }
+            },
     },
     {
       underscored: true,
@@ -31,12 +31,9 @@ export const db = database => {
   );
 };
 
-export const associate = database => {
-  database.models[TABLE_NAME].belongsTo(
-    database.models[scheduleEventTableName],
-    {
+export const associate = (database) => {
+    database.models[TABLE_NAME].belongsTo(database.models[scheduleEventTableName], {
       foreignKey: "schedule_event_id",
       targetKey: "id"
-    }
-  );
+    });
 };

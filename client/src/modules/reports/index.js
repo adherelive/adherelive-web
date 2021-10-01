@@ -2,12 +2,12 @@ import { doRequest } from "../../Helper/network";
 import { REQUEST_TYPE } from "../../constant";
 
 import {
-  uploadReportUrl,
-  fetchReportsUrl,
-  addReportUrl,
-  getAllReportsUrl,
-  deleteUploadUrl,
-  updateReportUrl
+    uploadReportUrl,
+    fetchReportsUrl,
+    addReportUrl,
+    getAllReportsUrl,
+    deleteUploadUrl,
+    updateReportUrl
 } from "../../Helper/urls/report";
 
 export const ADD_REPORT_START = "ADD_REPORT_START";
@@ -34,65 +34,67 @@ export const FETCH_REPORT_START = "FETCH_REPORT_START";
 export const FETCH_REPORT_COMPLETE = "FETCH_REPORT_COMPLETE";
 export const FETCH_REPORT_FAILED = "FETCH_REPORT_FAILED";
 
-export const fetchReports = patientId => {
-  let response = {};
-  return async dispatch => {
-    try {
-      dispatch({ type: FETCH_REPORT_START });
-      response = await doRequest({
-        method: REQUEST_TYPE.GET,
-        url: fetchReportsUrl(patientId)
-      });
-      const { status, payload: { data, error } = {} } = response || {};
+export const fetchReports = (patientId) => {
+    let response = {};
+    return async dispatch => {
+      try {
+          dispatch({type: FETCH_REPORT_START});
+          response = await doRequest({
+              method: REQUEST_TYPE.GET,
+              url: fetchReportsUrl(patientId),
+          });
+          const { status, payload: { data, error } = {} } = response || {};
 
-      if (status === true) {
-        dispatch({ type: FETCH_REPORT_COMPLETE, data });
-      } else {
-        dispatch({
-          type: FETCH_REPORT_FAILED,
-          error
-        });
+          if (status === true) {
+              dispatch({type: FETCH_REPORT_COMPLETE, data});
+          } else {
+              dispatch({
+                  type: FETCH_REPORT_FAILED,
+                  error
+              });
+          }
+      } catch(error) {
+            console.log("fetchReports module catch error", error);
       }
-    } catch (error) {
-      console.log("fetchReports module catch error", error);
-    }
-    return response;
-  };
+      return response;
+    };
 };
 
-export const uploadReport = (patient_id, payload) => {
-  let response = {};
-  return async dispatch => {
-    try {
-      dispatch({ type: UPLOAD_REPORT_START });
-      response = await doRequest({
-        method: REQUEST_TYPE.POST,
-        url: uploadReportUrl(patient_id),
-        data: payload
-      });
 
-      const { status, payload: { data, error } = {} } = response || {};
-
-      if (status == true) {
-        dispatch({ type: UPLOAD_REPORT_COMPLETE, data });
-      } else {
-        dispatch({
-          type: UPLOAD_REPORT_FAILED,
-          error
+export const uploadReport = (patient_id,payload) => {
+    let response = {};
+    return async dispatch => {
+      try {
+        dispatch({ type:UPLOAD_REPORT_START});
+        response = await doRequest({
+          method: REQUEST_TYPE.POST,
+          url: uploadReportUrl(patient_id),
+          data: payload
         });
-      }
-    } catch (error) {
-      console.log("UPLOAD_REPORT ERROR --> ", error);
-    }
-    return response;
-  };
-};
+  
+        const { status, payload: { data, error } = {} } = response || {};
 
-export const addReport = payload => {
+        if (status == true) {
+            dispatch({type: UPLOAD_REPORT_COMPLETE, data});
+        } else {
+          dispatch({
+            type: UPLOAD_REPORT_FAILED,
+            error
+          });
+        }
+      } catch (error) {
+        console.log("UPLOAD_REPORT ERROR --> ", error);
+      }
+      return response;
+    };
+  
+}
+
+export const addReport = (payload) => {
   let response = {};
   return async dispatch => {
     try {
-      dispatch({ type: ADD_REPORT_START });
+      dispatch({ type:ADD_REPORT_START});
       response = await doRequest({
         method: REQUEST_TYPE.POST,
         url: addReportUrl(),
@@ -102,7 +104,9 @@ export const addReport = payload => {
       const { status, payload: { data, error } = {} } = response || {};
 
       if (status == true) {
-        dispatch({ type: ADD_REPORT_COMPLETE, data });
+
+          dispatch({type: ADD_REPORT_COMPLETE, data});
+
       } else {
         dispatch({
           type: ADD_REPORT_FAILED,
@@ -114,13 +118,15 @@ export const addReport = payload => {
     }
     return response;
   };
-};
 
-export const getAllReports = patient_id => {
+}
+
+
+export const getAllReports = (patient_id) => {
   let response = {};
   return async dispatch => {
     try {
-      dispatch({ type: GET_ALL_REPORTS_START });
+      dispatch({ type:GET_ALL_REPORTS_START});
       response = await doRequest({
         method: REQUEST_TYPE.GET,
         url: getAllReportsUrl(patient_id)
@@ -129,7 +135,9 @@ export const getAllReports = patient_id => {
       const { status, payload: { data, error } = {} } = response || {};
 
       if (status == true) {
-        dispatch({ type: GET_ALL_REPORTS_COMPLETE, data });
+
+          dispatch({type: GET_ALL_REPORTS_COMPLETE, data});
+
       } else {
         dispatch({
           type: GET_ALL_REPORTS_FAILED,
@@ -141,13 +149,14 @@ export const getAllReports = patient_id => {
     }
     return response;
   };
-};
 
-export const deleteReport = doc_id => {
+}
+
+export const deleteReport = (doc_id) => {
   let response = {};
   return async dispatch => {
     try {
-      dispatch({ type: DELETE_REPORT_START });
+      dispatch({ type:DELETE_REPORT_START});
       response = await doRequest({
         method: REQUEST_TYPE.DELETE,
         url: deleteUploadUrl(doc_id)
@@ -156,7 +165,9 @@ export const deleteReport = doc_id => {
       const { status, payload: { data, error } = {} } = response || {};
 
       if (status == true) {
-        dispatch({ type: DELETE_REPORT_COMPLETE, data });
+
+          dispatch({type: DELETE_REPORT_COMPLETE, data});
+
       } else {
         dispatch({
           type: DELETE_REPORT_FAILED,
@@ -168,13 +179,14 @@ export const deleteReport = doc_id => {
     }
     return response;
   };
-};
 
-export const updateReport = (report_id, payload) => {
+}
+
+export const updateReport = (report_id,payload) => {
   let response = {};
   return async dispatch => {
     try {
-      dispatch({ type: UPDATE_REPORT_START });
+      dispatch({ type:UPDATE_REPORT_START});
       response = await doRequest({
         method: REQUEST_TYPE.POST,
         url: updateReportUrl(report_id),
@@ -184,7 +196,9 @@ export const updateReport = (report_id, payload) => {
       const { status, payload: { data, error } = {} } = response || {};
 
       if (status == true) {
-        dispatch({ type: UPDATE_REPORT_COMPLETE, data });
+
+          dispatch({type: UPDATE_REPORT_COMPLETE, data});
+
       } else {
         dispatch({
           type: UPDATE_REPORT_FAILED,
@@ -196,25 +210,29 @@ export const updateReport = (report_id, payload) => {
     }
     return response;
   };
-};
 
-function reportsReducer(state, data) {
-  const { reports } = data || {};
-  if (reports) {
-    return {
-      ...state,
-      ...reports
-    };
-  } else {
-    return state;
-  }
 }
 
-export default (state = {}, action) => {
-  const { type, data } = action;
 
-  switch (type) {
-    default:
-      return reportsReducer(state, data);
-  }
+
+function reportsReducer(state, data) {
+    const { reports } = data || {};
+    if (reports) {
+        return {
+            ...state,
+            ...reports,
+        };
+    } else {
+        return state;
+    }
+}
+  
+export default (state = {}, action) => {
+const { type, data } = action;
+
+    switch (type) {
+       
+        default:
+            return reportsReducer(state, data)
+    }
 };

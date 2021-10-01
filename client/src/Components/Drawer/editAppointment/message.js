@@ -387,6 +387,7 @@ const message = defineMessages({
     id: "app.drawer.add.appointment.appointmentTypeDescription",
     description: "",
     defaultMessage: "Description"
+
   },
   econsulting: {
     id: "add.event.econsulting",
@@ -468,7 +469,7 @@ const message = defineMessages({
     description: "",
     defaultMessage: "Choose Appointment Type"
   },
-  placeholderTypeDesc: {
+  placeholderTypeDesc : {
     id: "app.drawer.edit.appointment.placeholderTypeDesc",
     description: "",
     defaultMessage: "Choose Type Description"
@@ -487,7 +488,7 @@ const message = defineMessages({
     id: "app.drawer.edit.appointment.viewDetails",
     description: "",
     defaultMessage: "Appointment Details"
-  }
+  },
 });
 
 export default message;

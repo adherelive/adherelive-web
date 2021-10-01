@@ -31,35 +31,31 @@ export const db = database => {
       },
       test_date: {
         type: DataTypes.DATEONLY,
-        allowNull: false
+                allowNull: false,
       },
       uploader_id: {
         type: DataTypes.INTEGER,
-        allowNull: false
+                allowNull: false,
       },
       uploader_type: {
         type: DataTypes.ENUM,
-        values: [
-          USER_CATEGORY.DOCTOR,
-          USER_CATEGORY.PATIENT,
-          USER_CATEGORY.HSP
-        ],
-        allowNull: false
+                values: [USER_CATEGORY.DOCTOR, USER_CATEGORY.PATIENT, USER_CATEGORY.HSP],
+                allowNull: false,
       },
       created_at: {
         allowNull: false,
         type: DataTypes.DATE,
-        defaultValue: new Date()
+                defaultValue: new Date(),
       },
       updated_at: {
         allowNull: false,
         type: DataTypes.DATE,
-        defaultValue: new Date()
-      }
+                defaultValue: new Date(),
+            },
     },
     {
       underscored: true,
-      paranoid: true
+            paranoid: true,
     }
   );
 };

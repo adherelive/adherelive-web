@@ -13,6 +13,7 @@ import UserRoleWrapper from "../userRoles";
 import ProviderWrapper from "../provider";
 import { USER_CATEGORY } from "../../../../constant";
 
+
 class CarePlanWrapper extends BaseCarePlan {
   constructor(data) {
     super(data);
@@ -104,6 +105,7 @@ class CarePlanWrapper extends BaseCarePlan {
       });
     }
 
+
     const secondary_doctor_user_role_ids = this.getCareplnSecondaryProfiles() || [] ;
 
     return {
@@ -131,6 +133,7 @@ class CarePlanWrapper extends BaseCarePlan {
     let doctorData = {}, providersApiData = {} ,userRolesApiData = {};;
     let doctor_id = null;
 
+
     if (doctor) {
       const doctors = await DoctorWrapper(doctor);
       doctorData[doctors.getDoctorId()] = await doctors.getAllInfo();
@@ -139,14 +142,14 @@ class CarePlanWrapper extends BaseCarePlan {
 
     const secondary_doctor_user_role_ids = this.getCareplnSecondaryProfiles() || [] ;
 
-    if (secondary_doctor_user_role_ids.length) {
-      for (let each in secondary_doctor_user_role_ids) {
+    if(secondary_doctor_user_role_ids.length){
+      for(let each in secondary_doctor_user_role_ids){
         const secondary_doctor_role_id = secondary_doctor_user_role_ids[each];
         const userRoleWrapper = await UserRoleWrapper(null,secondary_doctor_role_id);
         const userId = await userRoleWrapper.getUserId();
         const doctor = await DoctorService.getDoctorByUserId(userId) || {};
         let doctorWrapper = {};
-        if (doctor) {
+        if(doctor){
           doctorWrapper = await DoctorWrapper(doctor);
           doctorData[doctorWrapper.getDoctorId()] = await doctorWrapper.getAllInfo();
 
@@ -156,8 +159,10 @@ class CarePlanWrapper extends BaseCarePlan {
             userRolesApiData = { ...userRolesApiData, [userRoleWrapper.getId()]: { ...userRoleWrapper.getBasicInfo() } };
           }
         }
+
       }
     }
+
 
     return {
       care_plans: {
@@ -166,8 +171,8 @@ class CarePlanWrapper extends BaseCarePlan {
       doctors: {
         ...doctorData,
       },
-      providers: { ...providersApiData },
-      user_roles: { ...userRolesApiData },
+      providers:{ ...providersApiData},
+      user_roles:{ ...userRolesApiData},
       doctor_id
     };
   };

@@ -6,21 +6,21 @@ class WhenToTakeForm extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      count: []
+      count: [],
     };
   }
 
   componentDidMount() {
     const { medication_details: { timings = {} } = {} } = this.props;
     this.setState({
-      count: [timings]
+      count: [timings],
     });
   }
 
-  getUnitOption = index => {
+  getUnitOption = (index) => {
     const { count } = this.state;
     const timings = count[index] || {};
-    return Object.keys(timings).map(id => {
+    return Object.keys(timings).map((id) => {
       const { text, time } = timings[id] || {};
       return (
         <Option key={`${index}.${id}.${time}`} value={id}>
@@ -34,7 +34,7 @@ class WhenToTakeForm extends Component {
     const { form } = this.props;
     const { count } = this.state;
     const {
-      getFieldDecorator
+      getFieldDecorator,
       //getFieldValue
     } = form;
     return count.map((details, index) => {
@@ -47,10 +47,10 @@ class WhenToTakeForm extends Component {
             rules: [
               {
                 required: true,
-                message: "Select The Time"
-              }
+                message: "Select The Time",
+              },
             ],
-            initialValue: getInitialValue()
+            initialValue: getInitialValue(),
           })(
             <Select
               className="full-width"

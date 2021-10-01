@@ -41,11 +41,11 @@ const messages = defineMessages({
     description: "",
     defaultMessage: "Transaction ID"
   },
-  emptyTransactionTable: {
+  emptyTransactionTable:{
     id: "app.medication.table.emptyTransactionTable",
     description: "",
     defaultMessage: "No Transaction Data added yet"
-  }
+  },
 });
 
 export default messages;

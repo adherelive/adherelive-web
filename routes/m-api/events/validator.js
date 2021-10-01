@@ -37,7 +37,7 @@ const medicationReminderFormSchema = Joi.object().keys({
     .optional()
     .allow(null),
   when_to_take_abbr: Joi.number().optional(),
-  when_to_take: Joi.array().when("when_to_take_abbr", {
+  when_to_take: Joi.array().when('when_to_take_abbr', {
     is: Joi.exist(),
     then: Joi.when("when_to_take_abbr", {
       is: WHEN_TO_TAKE_ABBREVATIONS.SOS,
@@ -47,7 +47,7 @@ const medicationReminderFormSchema = Joi.object().keys({
     otherwise: Joi.required()
   }),
   repeat: Joi.string().required(),
-  repeat_days: Joi.array().when("when_to_take_abbr", {
+  repeat_days: Joi.array().when('when_to_take_abbr', {
     is: Joi.exist(),
     then: Joi.when("when_to_take_abbr", {
       is: WHEN_TO_TAKE_ABBREVATIONS.SOS,

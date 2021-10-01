@@ -5,7 +5,7 @@ import { VERIFICATION_TYPE } from "../../constant";
 
 export const TABLE_NAME = "user_verifications";
 
-export const db = database => {
+export const db = (database) => {
   database.define(
     TABLE_NAME,
     {
@@ -20,26 +20,22 @@ export const db = database => {
         allowNull: false,
         references: {
           model: {
-            tableName: userTableName
+                        tableName: userTableName,
           },
-          key: "id"
+                    key: 'id'
         }
       },
       request_id: {
         type: DataTypes.STRING,
-        allowNull: false
+                allowNull: false,
       },
       status: {
         type: DataTypes.STRING(20)
       },
       type: {
         type: DataTypes.ENUM,
-        values: [
-          VERIFICATION_TYPE.FORGOT_PASSWORD,
-          VERIFICATION_TYPE.SIGN_UP,
-          VERIFICATION_TYPE.PATIENT_SIGN_UP
-        ]
-      }
+                values: [VERIFICATION_TYPE.FORGOT_PASSWORD, VERIFICATION_TYPE.SIGN_UP, VERIFICATION_TYPE.PATIENT_SIGN_UP]
+            },
     },
     {
       underscored: true,
@@ -58,7 +54,7 @@ export const db = database => {
   );
 };
 
-export const associate = database => {
+export const associate = (database) => {
   const { user_verifications, users } = database.models || {};
 
   // associations here (if any) ...

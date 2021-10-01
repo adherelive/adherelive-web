@@ -51,8 +51,9 @@ const mapDispatchToProps = dispatch => {
     getDoctorDetails: id => () => dispatch(getDoctorDetails(id)),
     addRazorpayId: (id, payload) => dispatch(addRazorpayId(id, payload)),
     getDoctorAccountDetails: id => () => dispatch(getDoctorAccountDetails(id)),
-    deactivateDoctor: doctor_id => dispatch(deactivateDoctor(doctor_id)),
-    activateDoctor: user_id => dispatch(activateDoctor(user_id))
+    deactivateDoctor : (doctor_id) => dispatch(deactivateDoctor(doctor_id)) ,
+    activateDoctor : (user_id) => dispatch(activateDoctor(user_id)) 
+
   };
 };
 const mergePropsToState = (stateProps, dispatchProps, ownProps) => {

@@ -9,9 +9,7 @@ export const getSeparateName = name => {
   let last_name = rest.length > 1 ? rest.join(" ") : null;
 
   return {
-    first_name,
-    middle_name,
-    last_name
+        first_name, middle_name, last_name
   };
   // console.log("first middle last ---------------->>>> ", first, middle, rest);
   // switch (nameArr.length) {
@@ -58,10 +56,9 @@ export const getRoomId = (doctor, patient) => {
   return `careplan-${doctor}-${patient}-${process.config.twilio.CHANNEL_SERVER}`;
 };
 
-export const getRoomUsers = (room = "") =>
-  room.split(`-${process.config.twilio.CHANNEL_SERVER}-`);
+export const getRoomUsers = (room = "") => room.split(`-${process.config.twilio.CHANNEL_SERVER}-`);
 
-export const separateNameForSearch = value => {
+export const separateNameForSearch = (value) => {
   let firstName = value;
   let middleName = value;
   let lastName = value;
@@ -81,4 +78,4 @@ export const separateNameForSearch = value => {
   }
 
   return { firstName, middleName, lastName };
-};
+}

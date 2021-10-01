@@ -13,7 +13,7 @@ export const searchTreatment = value => {
     try {
       response = await doRequest({
         method: REQUEST_TYPE.GET,
-        url: searchTreatments(value)
+        url: searchTreatments(value),
       });
 
       const { status, payload: { data, message = "" } = {} } = response || {};
@@ -32,7 +32,7 @@ export const searchTreatment = value => {
       console.log("SEARCH TREATMENTS MODULE catch error -> ", error);
     }
     return response;
-  };
+  }
 };
 
 function treatmentReducer(state, data) {
@@ -40,7 +40,7 @@ function treatmentReducer(state, data) {
   if (treatments) {
     return {
       ...state,
-      ...treatments
+      ...treatments,
     };
   } else {
     return state;

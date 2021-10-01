@@ -2,12 +2,10 @@ import Database from "../../../libs/mysql";
 import { TABLE_NAME } from "../../models/templateDiets";
 
 export default class TemplateDietService {
-  create = async data => {
+  create = async (data) => {
     const transaction = await Database.initTransaction();
     try {
-      const templateDiet = await Database.getModel(TABLE_NAME).create(data, {
-        transaction
-      });
+      const templateDiet = await Database.getModel(TABLE_NAME).create(data, {transaction});
 
       await transaction.commit();
       return templateDiet;
@@ -20,9 +18,7 @@ export default class TemplateDietService {
   update = async (data, id) => {
     const transaction = await Database.initTransaction();
     try {
-      const updateTemplateDiet = await Database.getModel(
-        TABLE_NAME
-      ).update(data, { where: { id }, transaction });
+      const updateTemplateDiet = await Database.getModel(TABLE_NAME).update(data, {where:{id}, transaction});
       await transaction.commit();
       return updateTemplateDiet;
     } catch (error) {
@@ -31,7 +27,7 @@ export default class TemplateDietService {
     }
   };
 
-  delete = async data => {
+  delete = async (data) => {
     const transaction = await Database.initTransaction();
     try {
       const deletedTemplateDiet = await Database.getModel(TABLE_NAME).destroy({
@@ -50,7 +46,7 @@ export default class TemplateDietService {
     try {
       return await Database.getModel(TABLE_NAME).findOne({
         where: data,
-        raw: true
+        raw: true,
       });
     } catch (error) {
       throw error;
