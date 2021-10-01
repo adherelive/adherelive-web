@@ -13,14 +13,8 @@ const credentialsFormSchema = Joi.object().keys({
     .regex(/^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%^&*])(?=.{8,})/)
     .min(PASSWORD_LENGTH)
     .required()
-    .label(
-      "Password must contain atleast 1 uppercase, lowercase, number & special character"
-    ),
-  readTermsOfService: Joi.boolean()
-    .required()
-    .label(
-      "Please acknowledge if you have read the terms of service and privacy policy"
-    )
+      .label("Password must contain atleast 1 uppercase, lowercase, number & special character"),
+  readTermsOfService: Joi.boolean().required().label("Please acknowledge if you have read the terms of service and privacy policy")
 });
 
 const signInSchema = Joi.object().keys({
@@ -30,23 +24,18 @@ const signInSchema = Joi.object().keys({
     .label("Please enter valid email"),
   password: Joi.string()
     .required()
-    .label(
-      "Password must contain atleast 1 uppercase, lowercase, number & special character"
-    )
+      .label("Password must contain atleast 1 uppercase, lowercase, number & special character")
 });
 
 const forgotPasswordSchema = Joi.object().keys({
   email: Joi.string()
     .email()
     .required()
-    .label("Please enter valid email")
+      .label("Please enter valid email"),
 });
 
 const verifyLinkSchema = Joi.object().keys({
-  link: Joi.string()
-    .guid({ version: "uuidv4" })
-    .required()
-    .label("Verification link is not correct")
+  link: Joi.string().guid({version: 'uuidv4'}).required().label("Verification link is not correct")
 });
 
 const matchPassword = (value, helpers) => {
@@ -55,7 +44,7 @@ const matchPassword = (value, helpers) => {
   if (new_password === value) {
     return value;
   } else {
-    return helpers.error("any.invalid");
+    return helpers.error('any.invalid');
   }
 };
 
@@ -63,12 +52,8 @@ const updatePasswordSchema = Joi.object().keys({
   new_password: Joi.string()
     .regex(/^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%^&*])(?=.{8,})/)
     .required()
-    .label(
-      "Password must contain atleast 1 uppercase, lowercase, number & special character"
-    ),
-  confirm_password: Joi.string()
-    .custom(matchPassword)
-    .label("Password does not match. Please try again")
+      .label("Password must contain atleast 1 uppercase, lowercase, number & special character"),
+  confirm_password: Joi.string().custom(matchPassword).label("Password does not match. Please try again")
 });
 
 const validateStartTime = startTime => {

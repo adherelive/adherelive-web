@@ -117,10 +117,7 @@ class ReportController extends Controller {
   latestReport = async (req, res) => {
     const { raiseSuccess, raiseClientError, raiseServerError } = this;
     try {
-      const {
-        query: { patient_id } = {},
-        userDetails: { userData: { category } = {}, userCategoryId } = {}
-      } = req;
+      const {query: {patient_id} = {}, userDetails: {userData: {category} = {}, userCategoryId} = {}} = req;
       Log.info(`query: patient_id : ${patient_id}`);
 
       if (!patient_id) {
@@ -128,20 +125,15 @@ class ReportController extends Controller {
       }
 
       const reportService = new ReportService();
-      const { count, rows: allReports = [] } =
-        (await reportService.latestReportAndCount({
+      const {count, rows: allReports = []} = await reportService.latestReportAndCount({
           patient_id
-        })) || {};
+      }) || {};
 
       if (allReports.length > 0) {
         const report = await ReportWrapper({ data: allReports[0] });
         let doctors = {};
 
-        if (
-          (category === USER_CATEGORY.DOCTOR ||
-            category === USER_CATEGORY.HSP) &&
-          userCategoryId === report.getUploaderId()
-        ) {
+        if((category === USER_CATEGORY.DOCTOR || category === USER_CATEGORY.HSP) && userCategoryId === report.getUploaderId()) {
           const doctor = await DoctorWrapper(null, report.getUploaderId());
           doctors[doctor.getDoctorId()] = await doctor.getAllInfo();
         }
@@ -151,7 +143,7 @@ class ReportController extends Controller {
           200,
           {
             report_count: count,
-            ...(await report.getReferenceInfo()),
+              ...await report.getReferenceInfo(),
             doctors: {
               ...doctors
             }
@@ -174,20 +166,17 @@ class ReportController extends Controller {
       Log.info(`params: document_id = ${document_id}`);
 
       if (!document_id) {
-        return raiseClientError(
-          res,
-          422,
-          {},
-          "Please select correct document to delete"
-        );
+        return raiseClientError(res, 422, {}, "Please select correct document to delete");
       }
-
-      const response = await uploadDocumentService.deleteDocumentByData({
-        id: document_id
-      });
+      const response = await uploadDocumentService.deleteDocumentByData({id: document_id});
       Log.debug("response", response);
+      return raiseSuccess(
+          res,
+          200,
+          {},
+          "Document deleted successfully"
+        );
 
-      return raiseSuccess(res, 200, {}, "Document deleted successfully");
     } catch (error) {
       Log.debug("deleteReportDocument 500 error", error);
       return raiseServerError(res);

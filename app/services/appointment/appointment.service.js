@@ -179,14 +179,10 @@ class AppointmentService {
     try {
       const month = moment(value).month();
       const year = moment(value).year();
-      const startOfMonth = moment()
-        .month(month)
-        .year(year)
+      const startOfMonth = moment().month(month).year(year)
         .startOf("month")
         .toISOString();
-      const endOfMonth = moment()
-        .month(month)
-        .year(year)
+      const endOfMonth = moment().month(month).year(year)
         .endOf("month")
         .toISOString();
 

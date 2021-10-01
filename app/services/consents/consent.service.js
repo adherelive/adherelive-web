@@ -2,18 +2,16 @@ import Database from "../../../libs/mysql";
 import { TABLE_NAME } from "../../models/consents";
 
 class ConsentService {
-  create = async data => {
+    create = async (data) => {
     try {
-      const consent = await Database.getModel(TABLE_NAME).create(data, {
-        raw: true
-      });
+          const consent = await Database.getModel(TABLE_NAME).create(data, {raw: true});
       return consent;
     } catch (error) {
       throw error;
     }
   };
 
-  getByData = async data => {
+    getByData = async (data) => {
     try {
       const consent = await Database.getModel(TABLE_NAME).findOne({
         where: data,
@@ -25,7 +23,7 @@ class ConsentService {
     }
   };
 
-  getAllByData = async data => {
+    getAllByData = async (data) => {
     try {
       const consent = await Database.getModel(TABLE_NAME).findAll({
         where: data,

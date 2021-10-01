@@ -98,19 +98,15 @@ class ProvidersController extends Controller {
       //   { provider_id: providerId }
       // );
 
-      const UserRoles = await UserRoleService.getAllByData({
-        linked_id: providerId,
-        linked_with: USER_CATEGORY.PROVIDER
-      });
+      const UserRoles =
+       await UserRoleService.getAllByData({linked_id:providerId , linked_with:USER_CATEGORY.PROVIDER});
 
       if (UserRoles && UserRoles.length) {
         for (let i = 0; i < UserRoles.length; i++) {
           const UserRole = UserRoles[i];
           const userRoleWrapper = await UserRoleWrapper(UserRole);
           const DoctorUserId = await userRoleWrapper.getUserId();
-          const doctor = await DoctorService.getDoctorByData({
-            user_id: DoctorUserId
-          });
+          const doctor = await DoctorService.getDoctorByData({user_id:DoctorUserId});
           if (doctor) {
             const doctorWrapper = await DoctorWrapper(doctor);
             const doctorId = await doctorWrapper.getDoctorId();
@@ -443,19 +439,15 @@ class ProvidersController extends Controller {
       let patientIds = [];
       let doctorIds = [];
 
-      const UserRoles = await UserRoleService.getAllByData({
-        linked_id: providerId,
-        linked_with: USER_CATEGORY.PROVIDER
-      });
+      const UserRoles =
+      await UserRoleService.getAllByData({linked_id:providerId , linked_with:USER_CATEGORY.PROVIDER});
 
       if (UserRoles && UserRoles.length) {
         for (let i = 0; i < UserRoles.length; i++) {
           const UserRole = UserRoles[i];
           const userRoleWrapper = await UserRoleWrapper(UserRole);
           const DoctorUserId = await userRoleWrapper.getUserId();
-          const doctor = await DoctorService.getDoctorByData({
-            user_id: DoctorUserId
-          });
+         const doctor = await DoctorService.getDoctorByData({user_id:DoctorUserId});
           if (doctor) {
             const doctorWrapper = await DoctorWrapper(doctor);
             const doctorId = await doctorWrapper.getDoctorId();
@@ -575,19 +567,15 @@ class ProvidersController extends Controller {
 
       let doctorIds = [];
 
-      const UserRoles = await UserRoleService.getAllByData({
-        linked_id: providerId,
-        linked_with: USER_CATEGORY.PROVIDER
-      });
+      const UserRoles =
+      await UserRoleService.getAllByData({linked_id:providerId , linked_with:USER_CATEGORY.PROVIDER});
 
       if (UserRoles && UserRoles.length) {
         for (let i = 0; i < UserRoles.length; i++) {
           const UserRole = UserRoles[i];
           const userRoleWrapper = await UserRoleWrapper(UserRole);
           const DoctorUserId = await userRoleWrapper.getUserId();
-          const doctor = await DoctorService.getDoctorByData({
-            user_id: DoctorUserId
-          });
+         const doctor = await DoctorService.getDoctorByData({user_id:DoctorUserId});
           if (doctor) {
             const doctorWrapper = await DoctorWrapper(doctor);
             const doctorId = await doctorWrapper.getDoctorId();
@@ -726,12 +714,7 @@ class ProvidersController extends Controller {
       let userIds = [];
       for (let index = 0; index < allProviders.length; index++) {
         const provider = await ProviderWrapper(allProviders[index]);
-        const {
-          providers,
-          users,
-          user_id,
-          provider_id
-        } = await provider.getReferenceInfo();
+        const { providers, users, user_id, provider_id } = await provider.getReferenceInfo();
         providerData = { ...providerData, ...providers };
         userData = { ...userData, ...users };
         userIds.push(user_id);
@@ -740,8 +723,7 @@ class ProvidersController extends Controller {
 
       // provider accounts
       let providerAccountsData = {};
-      const allAccounts =
-        (await accountDetailsService.getAllAccountsForUser(userIds)) || [];
+      const allAccounts = await accountDetailsService.getAllAccountsForUser(userIds) || [];
 
       if (allAccounts.length > 0) {
         for (let index = 0; index < allAccounts.length; index++) {
@@ -761,7 +743,7 @@ class ProvidersController extends Controller {
             ...userData
           },
           account_details: {
-            ...providerAccountsData
+            ...providerAccountsData,
           },
           provider_ids: providerIds
         },
@@ -823,9 +805,7 @@ class ProvidersController extends Controller {
         );
       }
 
-      const activated_on = moment()
-        .utc()
-        .toISOString();
+      const activated_on = moment().utc().toISOString();
 
       // create user
       const salt = await bcrypt.genSalt(Number(process.config.saltRounds));
@@ -840,15 +820,13 @@ class ProvidersController extends Controller {
         category: USER_CATEGORY.PROVIDER,
         sign_in_type: SIGN_IN_CATEGORY.BASIC,
         onboarded: true,
-        verified: true
+        verified: true,
       });
 
       const userData = await UserWrapper(user.get());
 
       const providerUserId = await userData.getId();
-      const userRole = await UserRoleService.create({
-        user_identity: providerUserId
-      });
+      const userRole = await UserRoleService.create({user_identity:providerUserId});
       const userRoleWrapper = await UserRoleWrapper(userRole);
       const newUserRoleId = await userRoleWrapper.getId();
 
@@ -875,7 +853,7 @@ class ProvidersController extends Controller {
           icon: getFilePath(icon),
           banner: getFilePath(banner),
           prescription_details
-        }
+        },
       });
       const providerData = await ProviderWrapper(provider);
 
@@ -907,19 +885,19 @@ class ProvidersController extends Controller {
           razorpay_account_id,
           razorpay_account_name,
           prefix,
-          account_mobile_number: mobile_number
+          account_mobile_number:mobile_number,
         });
 
         if (Object.keys(accountData).length > 0) {
-          const accountDetails = await accountDetailsService.addAccountDetails({
+          const accountDetails = await accountDetailsService.addAccountDetails(
+              {
             ...accountData,
             user_id: userData.getId()
-          });
+              }
+          );
 
           const providerAccount = await AccountsWrapper(accountDetails);
-          providerAccountData[
-            providerAccount.getId()
-          ] = providerAccount.getBasicInfo();
+          providerAccountData[providerAccount.getId()] = providerAccount.getBasicInfo();
         }
       }
 
@@ -934,7 +912,7 @@ class ProvidersController extends Controller {
             [userData.getId()]: userData.getBasicInfo()
           },
           account_details: {
-            ...providerAccountData
+            ...providerAccountData,
           }
         },
         "Provider added successfully"
@@ -977,10 +955,9 @@ class ProvidersController extends Controller {
         prescription_details
       } = body || {};
 
-      const existingProvider =
-        (await providerService.getProviderByData({
+      const existingProvider = await providerService.getProviderByData({
           id
-        })) || null;
+      }) || null;
 
       if (!existingProvider) {
         return raiseClientError(res, 422, {}, "Provider does not exists");
@@ -991,18 +968,14 @@ class ProvidersController extends Controller {
       // update user
       const salt = await bcrypt.genSalt(Number(process.config.saltRounds));
 
-      await userService.updateUser(
-        {
+      await userService.updateUser({
           email,
           prefix,
-          mobile_number
-        },
-        previousProvider.getUserId()
-      );
+        mobile_number,
+      }, previousProvider.getUserId());
 
       // update provider
-      await providerService.updateProvider(
-        {
+      await providerService.updateProvider({
           name,
           address,
           details: {
@@ -1011,17 +984,14 @@ class ProvidersController extends Controller {
             banner: getFilePath(banner),
             prescription_details
           }
-        },
-        id
-      );
+      }, id);
 
       const updatedProvider = await ProviderWrapper(null, id);
 
       // update account
-      const previousAccount =
-        (await accountDetailsService.getByData({
+      const previousAccount = await accountDetailsService.getByData({
           user_id: previousProvider.getUserId()
-        })) || null;
+      }) || null;
 
       let updatedAccountData = {};
 
@@ -1037,22 +1007,18 @@ class ProvidersController extends Controller {
           razorpay_account_id,
           razorpay_account_name,
           prefix,
-          account_mobile_number: mobile_number
+          account_mobile_number:mobile_number,
         });
 
         await accountDetailsService.update(accountData, account.getId());
 
         const updatedAccount = await AccountsWrapper(null, account.getId());
-        updatedAccountData[
-          updatedAccount.getId()
-        ] = updatedAccount.getBasicInfo();
+        updatedAccountData[updatedAccount.getId()] = updatedAccount.getBasicInfo();
 
-        Logger.debug("783453267478657894235236476289347523846923", {
-          account_details: {
+        Logger.debug("783453267478657894235236476289347523846923",{account_details: {
             ...updatedAccountData
           },
-          updatedAccount
-        });
+        updatedAccount});
       } else {
         // check for valid account details to be added
         if (account_type) {
@@ -1066,7 +1032,7 @@ class ProvidersController extends Controller {
             razorpay_account_id,
             razorpay_account_name,
             prefix,
-            account_mobile_number: mobile_number
+            account_mobile_number:mobile_number,
           });
 
           if (Object.keys(accountData).length > 0) {
@@ -1078,9 +1044,7 @@ class ProvidersController extends Controller {
             );
 
             const providerAccount = await AccountsWrapper(accountDetails);
-            updatedAccountData[
-              providerAccount.getId()
-            ] = providerAccount.getBasicInfo();
+            updatedAccountData[providerAccount.getId()] = providerAccount.getBasicInfo();
           }
         }
       }
@@ -1089,10 +1053,10 @@ class ProvidersController extends Controller {
         res,
         200,
         {
-          ...(await updatedProvider.getReferenceInfo()),
+            ...await updatedProvider.getReferenceInfo(),
           account_details: {
             ...updatedAccountData
-          }
+            },
         },
         "Provider updated successfully"
       );

@@ -33,27 +33,14 @@ const medicationReminderFormSchema = Joi.object().keys({
   when_to_take: Joi.array().required(),
   repeat: Joi.string().required(),
   repeat_days: Joi.array(),
-  repeat_interval: Joi.number()
-    .optional()
-    .allow(""),
+  repeat_interval: Joi.number().optional().allow(""),
   start_date: Joi.date().required(),
-  end_date: Joi.date()
-    .optional()
-    .allow("", null),
-  medicine_id: Joi.number()
-    .optional()
-    .allow(""),
+  end_date: Joi.date().optional().allow("", null),
+  medicine_id: Joi.number().optional().allow(""),
   medicine_type: Joi.string().required(),
-  participant_id: Joi.number()
-    .optional()
-    .allow(""),
-  critical: Joi.boolean()
-    .optional()
-    .allow(""),
-  description: Joi.string()
-    .max(500, "utf-8")
-    .optional()
-    .allow("")
+  participant_id: Joi.number().optional().allow(""),
+  critical: Joi.boolean().optional().allow(""),
+  description: Joi.string().max(500, 'utf-8').optional().allow("")
 });
 
 const validateStartTime = startTime => {
@@ -81,12 +68,7 @@ export const validateMedicationReminderData = (req, res, next) => {
   //     // return res.status(422).json(response.getResponse());
   // }
   if (end_date && !validateTimeInterval(start_date, end_date)) {
-    return raiseClientError(
-      res,
-      422,
-      {},
-      "start date should be less than end date"
-    );
+    return raiseClientError(res, 422, {}, "start date should be less than end date");
     // const response = new Response(false, 422);
     // response.setError({ error: "start time should be less than end time" });
     // return res.status(422).json(response.getResponse());

@@ -6,9 +6,7 @@ class DoctorRegistrationService {
 
   addRegistration = async data => {
     try {
-      const doctorRegistration = await Database.getModel(TABLE_NAME).create(
-        data
-      );
+            const doctorRegistration = await Database.getModel(TABLE_NAME).create(data);
       return doctorRegistration;
     } catch (error) {
       throw error;
@@ -45,15 +43,12 @@ class DoctorRegistrationService {
 
   updateRegistration = async (data, id) => {
     try {
-      const doctorRegistration = await Database.getModel(TABLE_NAME).update(
-        data,
-        {
+            const doctorRegistration = await Database.getModel(TABLE_NAME).update(data,{
           where: {
             id,
             deleted_at: null
           }
-        }
-      );
+            });
       return doctorRegistration;
     } catch (error) {
       throw error;

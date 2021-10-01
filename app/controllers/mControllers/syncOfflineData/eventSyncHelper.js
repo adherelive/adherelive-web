@@ -46,12 +46,7 @@ export const syncMedicationReminderStatus = async (
   }
 };
 
-export const syncVitalsResponseData = async (
-  event_data,
-  createdTime,
-  res,
-  userRoleId
-) => {
+export const syncVitalsResponseData = async (event_data, createdTime, res, userRoleId) => {
   try {
     const eventService = new EventService();
     const { vital_id = null, data = {} } = event_data;

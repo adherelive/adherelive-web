@@ -4,11 +4,7 @@ import UserRoleService from "../../../services/userRoles/userRoles.service";
 import ProviderService from "../../../services/provider/provider.service";
 import UserDeviceService from "../../../services/userDevices/userDevice.service";
 import UserDeviceWrapper from "../../../ApiWrapper/mobile/userDevice";
-import {
-  AGORA_CALL_NOTIFICATION_TYPES,
-  USER_CATEGORY,
-  DEFAULT_PROVIDER
-} from "../../../../constant";
+import {AGORA_CALL_NOTIFICATION_TYPES, USER_CATEGORY, DEFAULT_PROVIDER} from "../../../../constant";
 
 import moment from "moment";
 
@@ -29,20 +25,17 @@ class StartJob extends AgoraJob {
       }
     } = getAgoraData() || {};
 
-    const participants = roomId.split(
-      `-${process.config.twilio.CHANNEL_SERVER}-`
-    );
+        const participants = roomId.split(`-${process.config.twilio.CHANNEL_SERVER}-`);
 
     const templateData = [];
     const playerIds = [];
     const userIds = [];
 
-    const { rows: userRoles = [] } =
-      (await UserRoleService.findAndCountAll({
+        const {rows: userRoles = []} = await UserRoleService.findAndCountAll({
         where: {
           id: participants
         }
-      })) || {};
+        }) || {};
 
     let providerId = null;
     for (const userRole of userRoles) {
@@ -59,17 +52,14 @@ class StartJob extends AgoraJob {
 
     let providerName = DEFAULT_PROVIDER;
     if (providerId) {
-      const provider = await ProviderService.getProviderByData({
-        id: providerId
-      });
+            const provider = await ProviderService.getProviderByData({id: providerId});
       const { name } = provider || {};
       providerName = name;
     }
 
-    const userDevices =
-      (await UserDeviceService.getAllDeviceByData({
-        user_id: userIds
-      })) || [];
+        const userDevices = await UserDeviceService.getAllDeviceByData({
+            user_id: userIds
+        }) || [];
 
     if (userDevices.length > 0) {
       for (const device of userDevices) {
@@ -78,7 +68,7 @@ class StartJob extends AgoraJob {
       }
     }
 
-    const url = getNotificationUrl(AGORA_CALL_NOTIFICATION_TYPES.START_CALL);
+        const url = getNotificationUrl(AGORA_CALL_NOTIFICATION_TYPES.START_CALL)
 
     templateData.push({
       small_icon: process.config.app.icon_android,
@@ -87,11 +77,7 @@ class StartJob extends AgoraJob {
       include_player_ids: [...playerIds],
       headings: { en: `Call on AdhereLive: (${providerName})` },
       contents: {
-        en: `${
-          category === USER_CATEGORY.DOCTOR || category === USER_CATEGORY.HSP
-            ? "Dr. "
-            : ""
-        }${full_name} is calling you!`
+                en: `${category === USER_CATEGORY.DOCTOR || category === USER_CATEGORY.HSP ? "Dr. " : ""}${full_name} is calling you!`
       },
       priority: 10,
       android_channel_id: process.config.one_signal.urgent_channel_id,
@@ -114,9 +100,8 @@ class StartJob extends AgoraJob {
       roomId
     } = getAgoraData() || {};
 
-    const participants = roomId.split(
-      `-${process.config.twilio.CHANNEL_SERVER}-`
-    );
+
+        const participants = roomId.split(`-${process.config.twilio.CHANNEL_SERVER}-`);
 
     const templateData = [];
 

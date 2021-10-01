@@ -52,7 +52,7 @@ class UserRoleController extends Controller {
           providers: userRoleProviders = {},
           admins: userRoleAdmins = {},
           patients: userRolePatients = {},
-          user_roles: userRoleData = {}
+          user_roles: userRoleData = {},
         } = userRoleAllInfo || {};
 
         if (userRoleDoctors && Object.keys(userRoleDoctors).length) {
@@ -83,7 +83,7 @@ class UserRoleController extends Controller {
           doctors,
           providers,
           patients,
-          admins
+          admins,
         },
         "User role data fetched successfully"
       );
@@ -98,18 +98,18 @@ class UserRoleController extends Controller {
     try {
       const {
         userDetails: { userId } = {},
-        body: { userRoleId = null } = {}
+        body: { userRoleId = null } = {},
       } = req;
 
       const { count, rows } =
         (await userRoleService.findAndCountAll({
           where: {
-            user_identity: userId
+            user_identity: userId,
           },
-          attributes: ["id"]
+          attributes: ["id"],
         })) || [];
 
-      const allRoleIds = rows.map(row => row.id);
+      const allRoleIds = rows.map((row) => row.id);
 
       if (allRoleIds.indexOf(parseInt(userRoleId)) === -1) {
         return raiseClientError(res, 422, {}, "UNAUTHORIZED");
@@ -126,11 +126,11 @@ class UserRoleController extends Controller {
       const secret = process.config.TOKEN_SECRET_KEY;
       const accessToken = await jwt.sign(
         {
-          userRoleId
+          userRoleId,
         },
         secret,
         {
-          expiresIn
+          expiresIn,
         }
       );
 
@@ -158,7 +158,7 @@ class UserRoleController extends Controller {
         notificationToken: notificationToken,
         feedId,
         auth_category: apiUserDetails.getCategory(),
-        hasConsent: apiUserDetails.getConsent()
+        hasConsent: apiUserDetails.getConsent(),
       };
 
       res.clearCookie("accessToken");
@@ -167,7 +167,7 @@ class UserRoleController extends Controller {
         expires: new Date(
           Date.now() + process.config.INVITE_EXPIRE_TIME * 86400000
         ),
-        httpOnly: true
+        httpOnly: true,
       });
 
       return raiseSuccess(

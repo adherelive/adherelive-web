@@ -20,35 +20,22 @@ class TransactionController extends Controller {
 
       switch (category) {
         case USER_CATEGORY.PROVIDER:
-          responseData =
-            (await TransactionHelper.getProviderTransactions(req)) || {};
+                    responseData = await TransactionHelper.getProviderTransactions(req) || {};
           break;
         case USER_CATEGORY.DOCTOR:
-          responseData =
-            (await TransactionHelper.getDoctorTransactions(req)) || {};
+                    responseData = await TransactionHelper.getDoctorTransactions(req) || {};
           break;
         case USER_CATEGORY.HSP:
-          responseData =
-            (await TransactionHelper.getDoctorTransactions(req)) || {};
+                    responseData = await TransactionHelper.getDoctorTransactions(req) || {};
           break;
         default:
           break;
       }
 
       if (Object.keys(responseData).length > 0) {
-        return raiseSuccess(
-          res,
-          200,
-          { ...responseData },
-          "Transaction details fetched successfully"
-        );
+                return raiseSuccess(res, 200, {...responseData}, "Transaction details fetched successfully");
       } else {
-        return raiseSuccess(
-          res,
-          200,
-          {},
-          "No transactions available at the moment"
-        );
+                return raiseSuccess(res, 200, {}, "No transactions available at the moment");
       }
 
       // const transactionService = new TransactionService();

@@ -43,7 +43,9 @@ class SyncController extends Controller {
     const { raiseSuccess, raiseClientError, raiseServerError } = this;
     try {
       const { body: { event_sync_data = {} } = {} } = req;
-      const { userDetails: { userRoleId } = {} } = req;
+      const {
+        userDetails: { userRoleId } = {},
+      } = req;
       const {
         event_type = null,
         event_data = {},
@@ -75,12 +77,7 @@ class SyncController extends Controller {
           syncEventApiDetails,
           vitalApiDetails,
           vitalTemplate
-        } = await syncVitalsResponseData(
-          event_data,
-          update_time,
-          res,
-          userRoleId
-        );
+        } = await syncVitalsResponseData(event_data, update_time, res, userRoleId);
         console.log("Got data in the sync controller: ");
         return raiseSuccess(
           res,

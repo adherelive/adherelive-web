@@ -8,7 +8,7 @@ const Log = new Logger("SYMPTOM > CONTROLLER > HELPER");
 
 export const uploadImage = async ({ userId, file }) => {
   try {
-    const fileExt = file.originalname.replace(/\s+/g, "");
+        const fileExt= file.originalname.replace(/\s+/g, '');
     await minioService.createBucket();
 
     const imageName = md5(`${userId}-symptom-photo`);
@@ -31,11 +31,11 @@ export const uploadImage = async ({ userId, file }) => {
     Log.debug("uploadImage 500 error", error);
     return {};
   }
-};
+}
 
 export const uploadAudio = async ({ userId, file }) => {
   try {
-    const fileExt = file.originalname.replace(/\s+/g, "");
+        const fileExt= file.originalname.replace(/\s+/g, '');
     await minioService.createBucket();
 
     const imageName = md5(`${userId}-symptom-audio`);
@@ -58,11 +58,11 @@ export const uploadAudio = async ({ userId, file }) => {
     Log.debug("uploadAudio 500 error", error);
     return {};
   }
-};
+}
 
 export const uploadVideo = async ({ userId, file }) => {
   try {
-    const fileExt = file.originalname.replace(/\s+/g, "");
+        const fileExt= file.originalname.replace(/\s+/g, '');
     await minioService.createBucket();
 
     const videoName = md5(`${userId}-symptom-video`);
@@ -85,4 +85,4 @@ export const uploadVideo = async ({ userId, file }) => {
     Log.debug("uploadVideo 500 error", error);
     return {};
   }
-};
+}

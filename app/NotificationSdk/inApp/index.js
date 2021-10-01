@@ -10,11 +10,7 @@ class AppNotification {
     Log.info(`secretKey : ${process.config.getstream.secretKey}`);
     Log.info(`appId : ${process.config.getstream.appId}`);
 
-    this.client = stream.connect(
-      process.config.getstream.key,
-      process.config.getstream.secretKey,
-      process.config.getstream.appId
-    );
+        this.client = stream.connect(process.config.getstream.key, process.config.getstream.secretKey, process.config.getstream.appId);
   }
 
   notify = (templates = []) => {
@@ -24,23 +20,23 @@ class AppNotification {
         Log.debug("AppNotification notify response", res);
       });
     }
-  };
+    }
 
-  getUserToken = id => {
-    const userToken = this.client.createUserToken(`${id}`);
+    getUserToken = (id) => {
+        const userToken = this.client.createUserToken(
+            `${id}`
+        );
     return userToken;
   };
 
-  sendAppNotification = async template => {
+    sendAppNotification = async (template) => {
     try {
       // TODO: add get stream rest api call code here
       Log.debug("sendAppNotification --> ", template.actor.toString());
-      const client = stream.connect(
-        process.config.getstream.key,
-        process.config.getstream.secretKey,
-        process.config.getstream.appId
-      );
-      const userToken = client.createUserToken(template.actor.toString());
+            const client = stream.connect(process.config.getstream.key, process.config.getstream.secretKey, process.config.getstream.appId);
+            const userToken = client.createUserToken(
+                template.actor.toString()
+            );
 
       // Log.debug("client --> ", client);
 

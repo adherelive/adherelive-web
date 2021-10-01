@@ -32,12 +32,11 @@ class CreateJob extends CarePlanJob {
     const playerIds = [];
     const userIds = [];
 
-    const { rows: userRoles = [] } =
-      (await UserRoleService.findAndCountAll({
-        where: {
-          id: participants
-        }
-      })) || {};
+    const {rows: userRoles = []} = await UserRoleService.findAndCountAll({
+      where: {
+        id: participants
+      }
+    }) || {};
 
     let providerId = null;
     for (const userRole of userRoles) {
@@ -54,9 +53,7 @@ class CreateJob extends CarePlanJob {
 
     let providerName = DEFAULT_PROVIDER;
     if (providerId) {
-      const provider = await ProviderService.getProviderByData({
-        id: providerId
-      });
+      const provider = await ProviderService.getProviderByData({id: providerId});
       const { name } = provider || {};
       providerName = name;
     }

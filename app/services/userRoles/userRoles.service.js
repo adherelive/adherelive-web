@@ -36,10 +36,10 @@ class UserRolesService {
             include: [
               Database.getModel(doctorTableName),
               Database.getModel(patientTableName),
-              Database.getModel(providerTableName)
-            ]
+              Database.getModel(providerTableName),
+            ],
           }
-        ]
+        ],
       });
       return userRoles;
     } catch (error) {
@@ -47,11 +47,11 @@ class UserRolesService {
     }
   };
 
-  getFirstUserRole = async userIdentity => {
+  getFirstUserRole = async (userIdentity) => {
     try {
       const userRole = await Database.getModel(TABLE_NAME).findOne({
         where: {
-          user_identity: userIdentity
+          user_identity: userIdentity,
         },
         order: [["created_at", "ASC"]]
       });
@@ -71,10 +71,10 @@ class UserRolesService {
             include: [
               Database.getModel(doctorTableName),
               Database.getModel(patientTableName),
-              Database.getModel(providerTableName)
-            ]
+              Database.getModel(providerTableName),
+            ],
           }
-        ]
+        ],
         // raw: true,
         // nest: true,
       });
@@ -114,7 +114,7 @@ class UserRolesService {
     try {
       const userRoles = await Database.getModel(TABLE_NAME).findAll({
         where: data,
-        raw: true
+        raw: true,
       });
       return userRoles;
     } catch (error) {

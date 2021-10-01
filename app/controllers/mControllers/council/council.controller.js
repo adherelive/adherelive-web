@@ -25,9 +25,7 @@ class CouncilController extends Controller {
         let councilApiData = {};
         for (const council of councilDetails) {
           const councilWrapper = await new CouncilWrapper(council);
-          councilApiData[
-            councilWrapper.getCouncilId()
-          ] = councilWrapper.getBasicInfo();
+                    councilApiData[councilWrapper.getCouncilId()] = councilWrapper.getBasicInfo();
         }
 
         return raiseSuccess(
@@ -41,12 +39,7 @@ class CouncilController extends Controller {
           "Councils fetched successfully"
         );
       } else {
-        return raiseClientError(
-          res,
-          422,
-          {},
-          `No council found with name including ${value}`
-        );
+                return raiseClientError(res, 422, {}, `No council found with name including ${value}`)
       }
     } catch (error) {
       Logger.debug("council search 500 error", error);

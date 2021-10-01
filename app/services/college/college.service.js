@@ -12,14 +12,14 @@ class CollegeService {
     }
   };
 
-  search = async data => {
+    search = async (data) => {
     try {
       const college = await Database.getModel(TABLE_NAME).findAll({
         where: {
           name: {
-            [Op.like]: `%${data}%`
-          }
-        }
+                        [Op.like]: `%${data}%`,
+                    },
+                },
       });
       return college;
     } catch (error) {
@@ -51,7 +51,9 @@ class CollegeService {
 
   create = async data => {
     try {
-      const college = await Database.getModel(TABLE_NAME).create(data);
+            const college = await Database.getModel(TABLE_NAME).create(
+                data
+              );
       return college;
     } catch (error) {
       throw error;

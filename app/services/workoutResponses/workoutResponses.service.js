@@ -4,7 +4,7 @@ import { TABLE_NAME } from "../../models/workoutResponses";
 const DEFAULT_ORDER = [["created_at", "DESC"]];
 
 class WorkoutResponsesService {
-  create = async data => {
+  create = async (data) => {
     const transaction = await Database.initTransaction();
     try {
       const record = await Database.getModel(TABLE_NAME).create(data, {
@@ -19,7 +19,7 @@ class WorkoutResponsesService {
     }
   };
 
-  bulkCreate = async data => {
+  bulkCreate = async (data) => {
     const transaction = await Database.initTransaction();
     try {
       const record = await Database.getModel(TABLE_NAME).bulkCreate(data, {
@@ -49,7 +49,7 @@ class WorkoutResponsesService {
     try {
       await Database.getModel(TABLE_NAME).update(data, {
         where: {
-          id
+          id,
         },
         transaction
       });
@@ -66,14 +66,14 @@ class WorkoutResponsesService {
       return await Database.getModel(TABLE_NAME).findAndCountAll({
         where,
         order,
-        attributes
+        attributes,
       });
     } catch (error) {
       throw error;
     }
   };
 
-  findOne = async data => {
+   findOne = async (data) => {
     try {
       const diet = await Database.getModel(TABLE_NAME).findOne({
         where: data,
@@ -85,12 +85,12 @@ class WorkoutResponsesService {
     }
   };
 
-  delete = async id => {
+  delete = async (id) => {
     try {
       const record = await Database.getModel(TABLE_NAME).destroy({
         where: {
           id
-        }
+        },
       });
       return record;
     } catch (err) {

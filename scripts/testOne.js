@@ -40,41 +40,29 @@ database
     console.log("Db connect error is: ", err);
   });
 
-const addMedicine = async data => {
+const addMedicine = async (data) => {
   try {
     const { name, pillbox_id } = data || {};
-    const medicine = await database.query(
-      "INSERT INTO `medicines` (`name`, `pillbox_id`, `type`, `created_at`, `updated_at`) VALUES (?, ?, ?, ?, ?);",
-      {
-        replacements: [
-          `${name}`,
-          `${pillbox_id}`,
-          "tablet",
-          moment().format(),
-          moment().format()
-        ],
+        const medicine = await database.query("INSERT INTO `medicines` (`name`, `pillbox_id`, `type`, `created_at`, `updated_at`) VALUES (?, ?, ?, ?, ?);", {
+            replacements: [`${name}`, `${pillbox_id}`, "tablet", moment().format(), moment().format()],
         type: QueryTypes.INSERT
-      }
-    );
+        });
 
     Logger.debug("addMedicine ---> ", medicine);
   } catch (error) {
     throw error;
   }
-};
+}
 
 // UNCOMMENT BELOW FOR MEDICINE DB READ
 
 let dataToWrite = [];
 
-fs.readFile(
-  path.join(__dirname, "Pillbox.csv"),
-  { encoding: "utf-8" },
-  (err, file) => {
+fs.readFile(path.join(__dirname, 'Pillbox.csv'), {encoding: 'utf-8'},  (err, file) => {
     if (!err) {
       Papa.parse(file, {
         header: true,
-        step: async row => {
+            step: async (row) => {
           /*
            * Keys from csv file:
            * ID        :   Pillbox ID for medicine (pillbox_id)
@@ -109,10 +97,7 @@ fs.readFile(
             database
               .authenticate()
               .then(async () => {
-                await addMedicine({
-                  pillbox_id: ID ? ID : null,
-                  name: rxstring ? rxstring : medicine_name
-                });
+                            await addMedicine({pillbox_id: ID ? ID : null, name: rxstring ? rxstring : medicine_name});
                 console.log("Db and tables have been created...");
               })
               .catch(err => {
@@ -134,5 +119,4 @@ fs.readFile(
         }
       });
     }
-  }
-);
+});

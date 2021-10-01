@@ -34,7 +34,7 @@ class CarePlanTemplateService {
           },
           Database.getModel(vitalTemplateTableName),
           Database.getModel(dietTemplateTableName),
-          Database.getModel(workoutTemplateTableName)
+          Database.getModel(workoutTemplateTableName),
         ]
       });
       return carePlanTemplate;
@@ -45,18 +45,15 @@ class CarePlanTemplateService {
 
   create = async data => {
     try {
-      const carePlanTemplate = await Database.getModel(TABLE_NAME).create(
-        data,
-        {
+      const carePlanTemplate = await Database.getModel(TABLE_NAME).create(data, {
           include: [
             Database.getModel(appointmentTemplateTableName),
             Database.getModel(medicationTemplateTableName),
             Database.getModel(vitalTemplateTableName),
             Database.getModel(dietTemplateTableName),
-            Database.getModel(workoutTemplateTableName)
+          Database.getModel(workoutTemplateTableName),
           ]
-        }
-      );
+      });
       return carePlanTemplate;
     } catch (error) {
       throw error;
@@ -66,9 +63,7 @@ class CarePlanTemplateService {
   update = async (data, id) => {
     const transaction = await Database.initTransaction();
     try {
-      const carePlanTemplate = await Database.getModel(TABLE_NAME).update(
-        data,
-        {
+      const carePlanTemplate = await Database.getModel(TABLE_NAME).update(data, {
           where: {
             id
           },
@@ -77,10 +72,9 @@ class CarePlanTemplateService {
             Database.getModel(medicationTemplateTableName),
             Database.getModel(vitalTemplateTableName),
             Database.getModel(dietTemplateTableName),
-            Database.getModel(workoutTemplateTableName)
-          ]
-        }
-      );
+          Database.getModel(workoutTemplateTableName),
+        ],
+      });
       await transaction.commit();
       return carePlanTemplate;
     } catch (error) {
@@ -115,7 +109,7 @@ class CarePlanTemplateService {
           },
           Database.getModel(vitalTemplateTableName),
           Database.getModel(dietTemplateTableName),
-          Database.getModel(workoutTemplateTableName)
+          Database.getModel(workoutTemplateTableName),
         ]
       });
       return carePlanTemplate;
@@ -154,7 +148,7 @@ class CarePlanTemplateService {
           },
           Database.getModel(vitalTemplateTableName),
           Database.getModel(dietTemplateTableName),
-          Database.getModel(workoutTemplateTableName)
+            Database.getModel(workoutTemplateTableName),
         ],
         order: [["updated_at", "DESC"]]
       });
@@ -184,7 +178,7 @@ class CarePlanTemplateService {
     }
   };
 
-  deleteTemplate = async data => {
+  deleteTemplate = async (data) => {
     try {
       return await Database.getModel(TABLE_NAME).destroy({
         where: data
@@ -194,7 +188,7 @@ class CarePlanTemplateService {
     }
   };
 
-  getAllTemplatesForDoctor = async data => {
+  getAllTemplatesForDoctor = async (data) => {
     try {
       const { user_id, ...rest } = data;
       const carePlanTemplate = await Database.getModel(TABLE_NAME).findAll({
@@ -223,7 +217,7 @@ class CarePlanTemplateService {
           },
           Database.getModel(vitalTemplateTableName),
           Database.getModel(dietTemplateTableName),
-          Database.getModel(workoutTemplateTableName)
+          Database.getModel(workoutTemplateTableName),
         ],
         order: [["updated_at", "DESC"]]
       });

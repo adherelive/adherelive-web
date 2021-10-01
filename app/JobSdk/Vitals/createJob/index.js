@@ -42,12 +42,11 @@ class CreateJob extends VitalJob {
     //   }
     // });
 
-    const { rows: userRoles = [] } =
-      (await UserRoleService.findAndCountAll({
-        where: {
-          id: participants
-        }
-      })) || {};
+    const {rows: userRoles = []} = await UserRoleService.findAndCountAll({
+      where: {
+        id: participants
+      }
+    }) || {};
 
     let providerId = null;
 
@@ -55,7 +54,8 @@ class CreateJob extends VitalJob {
       const { id, user_identity, linked_id } = userRole || {};
       if (id !== user_role_id) {
         userIds.push(user_identity);
-      } else {
+      } 
+      else {
         if (linked_id) {
           providerId = linked_id;
         }
@@ -65,9 +65,7 @@ class CreateJob extends VitalJob {
     // provider
     let providerName = DEFAULT_PROVIDER;
     if (providerId) {
-      const provider = await ProviderService.getProviderByData({
-        id: providerId
-      });
+      const provider = await ProviderService.getProviderByData({id: providerId});
       const { name } = provider || {};
       providerName = name;
     }

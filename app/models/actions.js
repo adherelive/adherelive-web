@@ -5,7 +5,7 @@ import { ACTION_TYPE } from "../../constant";
 
 export const ACTIONS = "actions";
 
-export const db = database => {
+export const db = (database) => {
   database.define(
     ACTIONS,
     {
@@ -20,9 +20,9 @@ export const db = database => {
         allowNull: false,
         references: {
           model: {
-            tableName: CARE_PLANS
+                        tableName: CARE_PLANS,
           },
-          key: "id"
+                    key: 'id'
         }
       },
       type: {
@@ -35,14 +35,14 @@ export const db = database => {
         allowNull: false
       },
       reference_link: {
-        type: DataTypes.STRING(1000)
+                type: DataTypes.STRING(1000),
       },
       start_date: {
-        type: DataTypes.DATE
+                type: DataTypes.DATE,
       },
       end_date: {
-        type: DataTypes.DATE
-      }
+                type: DataTypes.DATE,
+            },
     },
     {
       underscored: true,
@@ -64,7 +64,7 @@ export const db = database => {
   );
 };
 
-export const associate = database => {
+export const associate = (database) => {
   const { actions, care_plans } = database.models || {};
 
   // associations here (if any) ...

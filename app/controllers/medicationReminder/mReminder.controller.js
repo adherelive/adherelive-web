@@ -40,8 +40,7 @@ import {
   LUNCH,
   EVENING,
   DINNER,
-  NOTIFICATION_STAGES,
-  MEDICINE_FORMULATION,
+  NOTIFICATION_STAGES, MEDICINE_FORMULATION,
   WHEN_TO_TAKE_ABBREVATIONS
 } from "../../../constant";
 import Log from "../../../libs/log";
@@ -161,14 +160,16 @@ class MReminderController extends Controller {
           id: userId,
           user_role_id: userRoleId,
           details: { name: full_name, category }
-        }
+        },
         // participant_one: patient.getUserId(),
         // participant_two: userId
       };
 
       const QueueService = new queueService();
 
-      const sqsResponse = await QueueService.sendMessage(eventScheduleData);
+      const sqsResponse = await QueueService.sendMessage(
+        eventScheduleData
+      );
 
       Logger.debug("sqsResponse ---> ", sqsResponse);
 
@@ -329,9 +330,7 @@ class MReminderController extends Controller {
       const patient = await PatientWrapper(null, patient_id);
       const { user_role_id: patientRoleId } = await patient.getAllInfo();
 
-      const when_to_take_abbr_int = when_to_take_abbr
-        ? parseInt(when_to_take_abbr, 10)
-        : when_to_take_abbr;
+      const when_to_take_abbr_int = when_to_take_abbr? parseInt(when_to_take_abbr, 10): when_to_take_abbr;
 
       const eventScheduleData = {
         patient_id: patient.getUserId(),
@@ -347,7 +346,7 @@ class MReminderController extends Controller {
           id: userId,
           user_role_id: userRoleId,
           details: { name: full_name, category }
-        }
+        },
         // participant_one: patient.getUserId(),
         // participant_two: userId
       };
@@ -483,14 +482,12 @@ class MReminderController extends Controller {
           id: userId,
           user_role_id: userRoleId,
           details: { name: full_name, category }
-        }
+        },
         // participant_one: patient.getUserId(),
         // participant_two: userId
       };
 
-      const when_to_take_abbr_int = when_to_take_abbr
-        ? parseInt(when_to_take_abbr, 10)
-        : when_to_take_abbr;
+      const when_to_take_abbr_int = when_to_take_abbr? parseInt(when_to_take_abbr, 10): when_to_take_abbr;
       if (when_to_take_abbr_int !== WHEN_TO_TAKE_ABBREVATIONS.SOS) {
         const QueueService = new queueService();
         await QueueService.sendMessage(eventScheduleData);
@@ -547,11 +544,9 @@ class MReminderController extends Controller {
 
       if (parseInt(patient_id)) {
         const patient = await PatientWrapper(null, patient_id);
-        const timingPreference = await userPreferenceService.getPreferenceByData(
-          {
+        const timingPreference = await userPreferenceService.getPreferenceByData({
             user_id: patient.getUserId()
-          }
-        );
+        });
         const options = await UserPreferenceWrapper(timingPreference);
         const { timings: userTimings = {} } = options.getAllDetails();
 
@@ -636,15 +631,7 @@ class MReminderController extends Controller {
   delete = async (req, res) => {
     const { raiseSuccess, raiseServerError } = this;
     try {
-      const {
-        params: { id } = {},
-        userDetails: {
-          userId,
-          userRoleId,
-          userData: { category } = {},
-          userCategoryData: { basic_info: { full_name } = {} } = {}
-        } = {}
-      } = req;
+      const { params: { id } = {}, userDetails: {userId, userRoleId, userData: {category} = {}, userCategoryData: {basic_info: {full_name} = {}} = {}} = {}} = req;
 
       const medication = await MedicationWrapper(null, id);
       const carePlanMedicationDetails = await carePlanMedicationService.deleteCarePlanMedicationByMedicationId(
@@ -675,7 +662,7 @@ class MReminderController extends Controller {
           id: userId,
           user_role_id: userRoleId,
           details: { name: full_name, category }
-        }
+        },
       };
 
       const medicationJob = MedicationJob.execute(

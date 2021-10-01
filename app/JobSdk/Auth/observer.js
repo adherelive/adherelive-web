@@ -5,7 +5,8 @@ import DeactivateDoctorJob from "./deactivateDoctorJob";
 import ActivateDoctorJob from "./activateDoctorJob";
 
 class AuthObserver {
-  constructor() {}
+    constructor() {
+    }
 
   execute = (typeStatus, eventDetails) => {
     switch (typeStatus) {

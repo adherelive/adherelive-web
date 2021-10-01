@@ -25,5 +25,5 @@ export default class DoctorPatientWatchlist {
 
   getDeletedAt = () => {
     return this._data.get("deleted_at");
-  };
+    }
 }

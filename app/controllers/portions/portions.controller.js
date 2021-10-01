@@ -22,9 +22,7 @@ class PortionController extends Controller {
         let portionApiData = {};
         for (const portion of portionDetails) {
           const portionWrapper = await PortionWrapper({ data: portion });
-          portionApiData[
-            portionWrapper.getId()
-          ] = portionWrapper.getBasicInfo();
+                    portionApiData[portionWrapper.getId()] = portionWrapper.getBasicInfo();
         }
 
         return raiseSuccess(
@@ -38,12 +36,7 @@ class PortionController extends Controller {
           "Portions fetched successfully"
         );
       } else {
-        return raiseClientError(
-          res,
-          422,
-          {},
-          `No portion found with name including ${value}`
-        );
+                return raiseClientError(res, 422, {}, `No portion found with name including ${value}`)
       }
     } catch (error) {
       Logger.debug("portion search 500 error", error);

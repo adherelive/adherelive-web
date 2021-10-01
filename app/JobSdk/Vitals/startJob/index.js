@@ -22,11 +22,11 @@ class StartJob extends VitalJob {
         actor: {
           id: actorId,
           user_role_id,
-          details: { name, category: actorCategory } = {}
+          details: { name, category: actorCategory } = {},
         } = {},
 
         vital_templates,
-        vital_templates: { basic_info: { name: vitalName = "" } = {} } = {}
+        vital_templates: { basic_info: { name: vitalName = "" } = {} } = {},
       } = {},
       event_id
       // eventId = null,
@@ -45,12 +45,11 @@ class StartJob extends VitalJob {
     //   }
     // });
 
-    const { rows: userRoles = [] } =
-      (await UserRoleService.findAndCountAll({
-        where: {
-          id: participants
-        }
-      })) || {};
+    const {rows: userRoles = []} = await UserRoleService.findAndCountAll({
+      where: {
+        id: participants
+      }
+    }) || {};
 
     let providerId = null;
 
@@ -58,7 +57,8 @@ class StartJob extends VitalJob {
       const { id, user_identity, linked_id } = userRole || {};
       if (id !== user_role_id) {
         userIds.push(user_identity);
-      } else {
+      } 
+      else {
         if (linked_id) {
           providerId = linked_id;
         }
@@ -68,15 +68,13 @@ class StartJob extends VitalJob {
     // provider
     let providerName = DEFAULT_PROVIDER;
     if (providerId) {
-      const provider = await ProviderService.getProviderByData({
-        id: providerId
-      });
+      const provider = await ProviderService.getProviderByData({id: providerId});
       const { name } = provider || {};
       providerName = name;
     }
 
     const userDevices = await UserDeviceService.getAllDeviceByData({
-      user_id: userIds
+      user_id: userIds,
     });
 
     if (userDevices.length > 0) {
@@ -91,7 +89,7 @@ class StartJob extends VitalJob {
       app_id: process.config.one_signal.app_id, // TODO: add the same in pushNotification handler in notificationSdk
       headings: { en: `${vitalName} Reminder` },
       contents: {
-        en: `Tap here to update your ${vitalName}`
+        en: `Tap here to update your ${vitalName}`,
       },
       // buttons: [{ id: "yes", text: "Yes" }, { id: "no", text: "No" }],
       include_player_ids: [...playerIds],
@@ -101,8 +99,8 @@ class StartJob extends VitalJob {
         url: "/vitals",
         vital: latestVital[event_id],
         vital_template: vital_templates,
-        type: "modal"
-      }
+        type: "modal",
+      },
     });
 
     return templateData;
@@ -115,7 +113,7 @@ class StartJob extends VitalJob {
       details: { participants = [], actor: { id: actorId, user_role_id } = {} },
       id = null,
       start_time = null,
-      event_id = null
+      event_id = null,
     } = data || {};
 
     const templateData = [];
@@ -131,7 +129,7 @@ class StartJob extends VitalJob {
           verb: `vital_start:${currentTimeStamp}`,
           event: EVENT_TYPE.VITALS,
           time: start_time,
-          start_time: start_time
+          start_time: start_time,
         });
       }
     }

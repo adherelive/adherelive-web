@@ -49,12 +49,11 @@ class StartJob extends AppointmentJob {
     //   }
     // });
 
-    const { rows: userRoles = [] } =
-      (await UserRoleService.findAndCountAll({
-        where: {
-          id: participants
-        }
-      })) || {};
+    const {rows: userRoles = []} = await UserRoleService.findAndCountAll({
+      where: {
+        id: participants
+      }
+    }) || {};
 
     let providerId = null;
 
@@ -69,9 +68,7 @@ class StartJob extends AppointmentJob {
     // provider
     let providerName = DEFAULT_PROVIDER;
     if (providerId) {
-      const provider = await ProviderService.getProviderByData({
-        id: providerId
-      });
+      const provider = await ProviderService.getProviderByData({id: providerId});
       const { name } = provider || {};
       providerName = name;
     }

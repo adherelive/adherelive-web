@@ -22,7 +22,7 @@ class UserDeviceController extends Controller {
 
       if (userExists) {
         const deviceExists = await UserDeviceService.getDeviceByData({
-          one_signal_user_id
+                  one_signal_user_id,
         });
         if (!deviceExists) {
           const userDeviceData = await UserDeviceService.addDevice({
@@ -34,14 +34,11 @@ class UserDeviceController extends Controller {
 
           return raiseSuccess(res, 200, {}, "Device added successfully");
         } else {
-          const userDeviceData = await UserDeviceService.updateDevice(
-            {
+                  const userDeviceData = await UserDeviceService.updateDevice({
               user_id: userId,
               platform: platform,
               push_token: push_token
-            },
-            deviceExists.get("id")
-          );
+                  }, deviceExists.get("id"));
 
           Log.debug("userDeviceData", userDeviceData);
 

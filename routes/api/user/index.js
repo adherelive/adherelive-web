@@ -8,19 +8,34 @@ const multer = require("multer");
 const storage = multer.memoryStorage();
 const upload = multer({ dest: "../../../app/public/", storage: storage });
 
-router.get("/register/:link", userController.verifyUser);
+router.get(
+    "/register/:link",
+    userController.verifyUser,
+);
 
-router.post("/sign-in", validator.validateSignInData, userController.signIn);
+router.post(
+    "/sign-in",
+    validator.validateSignInData,
+    userController.signIn,
+);
 
-router.post("/consent", Authenticate, userController.giveConsent);
+router.post(
+    "/consent",
+    Authenticate,
+    userController.giveConsent
+);
 
 router.post(
   "/sign-up",
   validator.validateCredentialsData,
-  userController.signUp
+    userController.signUp,
 );
 
-router.get("/get-basic-info", Authenticate, userController.onAppStart);
+router.get(
+    "/get-basic-info",
+    Authenticate,
+    userController.onAppStart,
+);
 
 // future requirement -------------------------
 
@@ -34,9 +49,17 @@ router.get("/get-basic-info", Authenticate, userController.onAppStart);
 //     userController.signInFacebook
 // );
 
-router.post("/upload", upload.single("files"), userController.uploadImage);
+router.post(
+    "/upload",
+    upload.single("files"),
+    userController.uploadImage
+);
 
-router.post("/sign-out", Authenticate, userController.signOut);
+router.post(
+    "/sign-out",
+    Authenticate,
+    userController.signOut
+);
 
 router.post(
   "/forgot-password",

@@ -116,10 +116,11 @@ class ReportController extends Controller {
   updateReports = async (req, res) => {
     const { raiseSuccess, raiseClientError, raiseServerError } = this;
     try {
-      const {
-        params: { id } = {},
-        body: { name, test_date, documents = [] } = {}
-      } = req;
+      const { params: { id } = {}, body: {
+        name,
+          test_date,
+          documents = [],
+      } = {} } = req;
       Log.info(`Report : id = ${id}`);
 
       if (!id) {
@@ -155,13 +156,12 @@ class ReportController extends Controller {
         const { name, file } = documents[index] || {};
 
         // check for exists
-        const documentExists =
-          (await uploadDocumentService.getDocumentByName({
+        const documentExists = await uploadDocumentService.getDocumentByName({
             name,
             document: getFilePath(file),
             parent_id: existingReport.getId(),
             parent_type: DOCUMENT_PARENT_TYPE.REPORT
-          })) || null;
+        }) || null;
 
         if (!documentExists) {
           await uploadDocumentService.addDocument({
@@ -179,7 +179,7 @@ class ReportController extends Controller {
         res,
         200,
         {
-          ...(await updatedReport.getReferenceInfo())
+            ...await updatedReport.getReferenceInfo()
         },
         "Report updated successfully"
       );
@@ -196,20 +196,17 @@ class ReportController extends Controller {
       Log.info(`params: document_id = ${document_id}`);
 
       if (!document_id) {
-        return raiseClientError(
-          res,
-          422,
-          {},
-          "Please select correct document to delete"
-        );
+        return raiseClientError(res, 422, {}, "Please select correct document to delete");
       }
-
-      const response = await uploadDocumentService.deleteDocumentByData({
-        id: document_id
-      });
+      const response = await uploadDocumentService.deleteDocumentByData({id: document_id});
       Log.debug("response", response);
+      return raiseSuccess(
+          res,
+          200,
+          {},
+          "Document deleted successfully"
+        );
 
-      return raiseSuccess(res, 200, {}, "Document deleted successfully");
     } catch (error) {
       Log.debug("deleteReportDocument 500 error", error);
       return raiseServerError(res);

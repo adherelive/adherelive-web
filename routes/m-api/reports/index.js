@@ -10,7 +10,12 @@ const upload = multer({ dest: "../../../app/public/", storage: storage });
 
 const router = express.Router();
 
-router.get("/latest", Authenticated, isDoctor, Report.latestReport);
+router.get(
+    "/latest",
+    Authenticated,
+    isDoctor,
+    Report.latestReport
+)
 
 router.post(
   "/",
@@ -26,7 +31,11 @@ router.post(
   Report.uploadReportDocuments
 );
 
-router.delete("/:document_id", Authenticated, Report.deleteReportDocument);
+router.delete(
+    "/:document_id",
+    Authenticated,
+    Report.deleteReportDocument
+);
 
 // router.post(
 //     "/:id",

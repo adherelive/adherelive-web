@@ -7,7 +7,7 @@ import { TABLE_NAME as similarFoodMappingTableName } from "../../models/similarF
 const DEFAULT_ORDER = [["created_at", "DESC"]];
 
 class DietFoodGroupMappingService {
-  create = async data => {
+  create = async (data) => {
     const transaction = await Database.initTransaction();
     try {
       const record = await Database.getModel(TABLE_NAME).create(data, {
@@ -64,7 +64,7 @@ class DietFoodGroupMappingService {
     try {
       const record = await Database.getModel(TABLE_NAME).update(data, {
         where: {
-          id
+          id,
         },
         include: [
           Database.getModel(foodGroupTableName),
@@ -95,12 +95,12 @@ class DietFoodGroupMappingService {
     }
   };
 
-  delete = async id => {
+  delete = async (id) => {
     try {
       const record = await Database.getModel(TABLE_NAME).destroy({
         where: {
           id
-        }
+        },
       });
       return record;
     } catch (err) {

@@ -9,13 +9,13 @@ class Controller {
     response.setMessage(message);
     response.setData(data);
     return res.status(code).json(response.getResponse());
-  };
+  }
 
   raiseServerError = (res, code = 500, error = {}, message = "") => {
     const response = new Response(false, code);
     response.setMessage(errMessage.INTERNAL_SERVER_ERROR.message);
     return res.status(code).json(response.getResponse());
-  };
+  }
 
   raiseClientError = (res, code = 422, error, message) => {
     const payload = {
@@ -27,7 +27,7 @@ class Controller {
     response.setError(payload.error);
     response.setMessage(message);
     return res.status(payload.code).json(response.getResponse());
-  };
+  }
 }
 
 module.exports = Controller;

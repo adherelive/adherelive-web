@@ -48,12 +48,9 @@ router.post(
   Workout.updateTotalCalories
 );
 
-router.post(
-  "/",
-  Authenticate,
-  Authorize(USER_CATEGORY.DOCTOR, USER_CATEGORY.HSP),
-  Workout.create
-);
+router.post("/", Authenticate, 
+Authorize(USER_CATEGORY.DOCTOR,USER_CATEGORY.HSP),
+ Workout.create);
 
 router.post(
   "/:id",

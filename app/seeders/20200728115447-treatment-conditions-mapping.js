@@ -1,6 +1,6 @@
-"use strict";
+'use strict';
 
-import { TABLE_NAME } from "../models/treatmentConditionMapping";
+import {TABLE_NAME} from "../models/treatmentConditionMapping";
 
 module.exports = {
   up: (queryInterface, Sequelize) => {
@@ -100,7 +100,7 @@ module.exports = {
         treatment_id: "6",
         created_at: new Date(),
         updated_at: new Date()
-      }
+      },
     ]);
   },
 

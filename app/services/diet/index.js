@@ -1,41 +1,44 @@
 export default class Diet {
-  constructor(data) {
-    this._data = data;
-  }
 
-  getId = () => {
-    return this._data.id;
-  };
+    constructor(data){
+        this._data=data;
+    }
 
-  getName = () => {
-    return this._data.name;
-  };
+    getId = () => {
+        return this._data.id;
+    }
 
-  getTotalCalories = () => {
-    return this._data.total_calories;
-  };
+    getName = () => {
+        return this._data.name;
+    }
 
-  getStartDate = () => {
-    return this._data.start_date;
-  };
+    getTotalCalories = () => {
+        return this._data.total_calories;
+    }
+    
+    getStartDate = () => {
+        return this._data.start_date;
+    }
 
-  getEndDate = () => {
-    return this._data.end_date;
-  };
+    getEndDate = () => {
+        return this._data.end_date;
+    }
 
-  getCareplanId = () => {
-    return this._data.care_plan_id;
-  };
+    getCareplanId = () => {
+        return this._data.care_plan_id;
+    }
 
-  getDetails = () => {
-    return this._data.details;
-  };
+    getDetails = () => {
+        return this._data.details;
+    }
 
-  getDietFoodGroupMappings = () => {
-    return this._data.diet_food_group_mappings;
-  };
+    getDietFoodGroupMappings = () => {
+        return this._data.diet_food_group_mappings;
+    } 
 
-  getExpiredOn = () => {
-    return this._data.expired_on;
-  };
+    getExpiredOn = () => {
+        return this._data.expired_on;
+    };
+
+
 }

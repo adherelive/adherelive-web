@@ -5,7 +5,8 @@ import UpdateJob from "./updateJob";
 import ResponseJob from "./responseJob";
 
 class VitalObserver {
-  constructor() {}
+    constructor() {
+    }
 
   execute = (typeStatus, eventDetails) => {
     switch (typeStatus) {

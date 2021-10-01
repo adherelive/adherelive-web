@@ -1,14 +1,7 @@
-import {
-  BREAKFAST,
-  DINNER,
-  EVENING,
-  LUNCH,
-  SLEEP,
-  WAKE_UP
-} from "../../../constant";
+import {BREAKFAST, DINNER, EVENING, LUNCH, SLEEP, WAKE_UP} from "../../../constant";
 import moment from "moment";
 
-export const getTimings = timings => {
+export const getTimings = (timings) => {
   let formattedTimings = [];
 
   Object.keys(timings).forEach(id => {

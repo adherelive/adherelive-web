@@ -7,9 +7,7 @@ class DoctorQualificationService {
   addQualification = async data => {
     const transaction = await Database.initTransaction();
     try {
-      const doctorQualification = await Database.getModel(
-        TABLE_NAME
-      ).create(data, { transaction });
+          const doctorQualification = await Database.getModel(TABLE_NAME).create(data, {transaction});
       await transaction.commit();
       return doctorQualification;
     } catch (error) {
@@ -49,16 +47,13 @@ class DoctorQualificationService {
   updateQualification = async (data, id) => {
     const transaction = await Database.initTransaction();
     try {
-      const doctorQualification = await Database.getModel(TABLE_NAME).update(
-        data,
-        {
+            const doctorQualification = await Database.getModel(TABLE_NAME).update(data,{
           where: {
             id,
             deleted_at: null
           },
           transaction
-        }
-      );
+            });
       await transaction.commit();
       return doctorQualification;
     } catch (error) {

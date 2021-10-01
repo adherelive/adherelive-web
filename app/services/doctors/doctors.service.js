@@ -10,9 +10,7 @@ class DoctorsService {
   addDoctor = async data => {
     const transaction = await Database.initTransaction();
     try {
-      const doctor = await Database.getModel(TABLE_NAME).create(data, {
-        transaction
-      });
+      const doctor = await Database.getModel(TABLE_NAME).create(data, { transaction });
 
       await transaction.commit();
       return doctor;
@@ -26,7 +24,7 @@ class DoctorsService {
     try {
       const doctor = await Database.getModel(TABLE_NAME).findOne({
         where: {
-          user_id
+          user_id,
         },
         include: Database.getModel(specialityTableName)
       });

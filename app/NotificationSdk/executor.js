@@ -47,7 +47,7 @@ class EventExecutor {
     }
   }
 
-  sendPushNotification = async template => {
+    sendPushNotification = async (template) => {
     try {
       // TODO: add one-signal rest api call code here
       const response = await fetch(
@@ -68,15 +68,14 @@ class EventExecutor {
     }
   };
 
-  sendAppNotification = async template => {
+    sendAppNotification = async (template) => {
     try {
       // TODO: add get stream rest api call code here
       Log.debug("sendAppNotification --> ", template.actor.toString());
-      const client = stream.connect(
-        process.config.getstream.key,
-        process.config.getstream.secretKey
-      );
-      const userToken = client.createUserToken(template.actor.toString());
+            const client = stream.connect(process.config.getstream.key, process.config.getstream.secretKey);
+            const userToken = client.createUserToken(
+                template.actor.toString()
+            );
 
       Log.debug("userToken --> ", userToken);
       Log.debug("client --> ", client);

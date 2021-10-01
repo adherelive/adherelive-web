@@ -51,7 +51,7 @@ class UserRoleController extends Controller {
           providers: userRoleProviders = {},
           admins: userRoleAdmins = {},
           patients: userRolePatients = {},
-          user_roles: userRoleData = {}
+            user_roles: userRoleData = {},
         } = userRoleAllInfo || {};
 
         doctors = { ...doctors, ...userRoleDoctors };
@@ -75,7 +75,7 @@ class UserRoleController extends Controller {
           doctors,
           providers,
           patients,
-          admins
+            admins,
         },
         "User role data fetched successfully"
       );
@@ -96,12 +96,12 @@ class UserRoleController extends Controller {
       const { count, rows } =
         (await userRoleService.findAndCountAll({
           where: {
-            user_identity: userId
+            user_identity: userId,
           },
-          attributes: ["id"]
+          attributes: ["id"],
         })) || [];
 
-      const allRoleIds = rows.map(row => row.id);
+      const allRoleIds = rows.map((row) => row.id);
 
       if (allRoleIds.indexOf(parseInt(userRoleId)) === -1) {
         return raiseClientError(res, 422, {}, "UNAUTHORIZED");
@@ -128,7 +128,9 @@ class UserRoleController extends Controller {
 
       const appNotification = new AppNotification();
 
-      const notificationToken = appNotification.getUserToken(`${userRoleId}`);
+        const notificationToken = appNotification.getUserToken(
+          `${userRoleId}`
+        );
       const feedId = base64.encode(`${userRoleId}`);
 
       const userRef = await userService.getUserData({ id: user.get("id") });

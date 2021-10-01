@@ -19,21 +19,20 @@ class CreateJob extends MedicationJob {
       actor: {
         id: actorId,
         user_role_id,
-        details: { name, category: actorCategory } = {}
+        details: { name, category: actorCategory } = {},
       } = {},
-      event_id = null
+      event_id = null,
     } = getMedicationData() || {};
 
     const templateData = [];
     const playerIds = [];
     const userIds = [];
 
-    const { rows: userRoles = [] } =
-      (await UserRoleService.findAndCountAll({
-        where: {
-          id: participants
-        }
-      })) || {};
+    const {rows: userRoles = []} = await UserRoleService.findAndCountAll({
+      where: {
+        id: participants
+      }
+    }) || {};
 
     let providerId = null;
     for (const userRole of userRoles) {
@@ -50,15 +49,13 @@ class CreateJob extends MedicationJob {
 
     let providerName = DEFAULT_PROVIDER;
     if (providerId) {
-      const provider = await ProviderService.getProviderByData({
-        id: providerId
-      });
+      const provider = await ProviderService.getProviderByData({id: providerId});
       const { name } = provider || {};
       providerName = name;
     }
 
     const userDevices = await UserDeviceService.getAllDeviceByData({
-      user_id: userIds
+      user_id: userIds,
     });
 
     if (userDevices.length > 0) {
@@ -73,13 +70,13 @@ class CreateJob extends MedicationJob {
       app_id: process.config.one_signal.app_id, // TODO: add the same in pushNotification handler in notificationSdk
       headings: { en: `Medication Created (${providerName})` },
       contents: {
-        en: `Your ${actorCategory} ${name} has created a medication reminder. Tap here to know more!`
+        en: `Your ${actorCategory} ${name} has created a medication reminder. Tap here to know more!`,
       },
       // buttons: [{ id: "yes", text: "Yes" }, { id: "no", text: "No" }],
       include_player_ids: [...playerIds],
       priority: 10,
       android_channel_id: process.config.one_signal.urgent_channel_id,
-      data: { url: "/medications", params: getMedicationData() }
+      data: { url: "/medications", params: getMedicationData() },
     });
 
     return templateData;
@@ -92,9 +89,9 @@ class CreateJob extends MedicationJob {
       actor: {
         id: actorId,
         user_role_id,
-        details: { name, category: actorCategory } = {}
+        details: { name, category: actorCategory } = {},
       } = {},
-      event_id
+      event_id,
     } = getMedicationData() || {};
 
     const templateData = [];
@@ -112,7 +109,7 @@ class CreateJob extends MedicationJob {
           event: EVENT_TYPE.MEDICATION_REMINDER,
           // message: `${name}(${actorCategory}) has created a medication reminder`,
           time: currentTime,
-          create_time: `${currentTime}`
+          create_time: `${currentTime}`,
         });
       }
     }

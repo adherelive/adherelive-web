@@ -7,7 +7,7 @@ import {
   NO_DIET,
   NO_WORKOUT,
   USER_CATEGORY,
-  CHART_DETAILS
+    CHART_DETAILS,
 } from "../../../constant";
 
 import userPreferenceService from "../../services/userPreferences/userPreference.service";
@@ -30,29 +30,23 @@ class GraphController extends Controller {
       // const {userDetails: {userId} = {}} = req;
       const { userDetails: { userRoleId } = {} } = req;
 
-      const userPreference =
-        (await userPreferenceService.findOne({
+            const userPreference = await userPreferenceService.findOne({
           where: {
             user_role_id: userRoleId
           }
-        })) || null;
+            }) || null;
 
       let chartData = {};
 
       if (userPreference) {
-        const userPreferenceWrapper = await UserPreferenceWrapper(
-          userPreference
-        );
+                const userPreferenceWrapper = await UserPreferenceWrapper(userPreference);
         const charts = userPreferenceWrapper.getChartDetails() || [];
 
         charts.forEach(chart => {
           chartData[chart] = { ...CHART_DETAILS[chart] };
         });
 
-        return raiseSuccess(
-          res,
-          200,
-          {
+                return raiseSuccess(res, 200, {
             user_preferences: {
               ...userPreferenceWrapper.getChartInfo()
             },
@@ -63,12 +57,7 @@ class GraphController extends Controller {
           "Charts fetched successfully"
         );
       } else {
-        return raiseClientError(
-          res,
-          422,
-          {},
-          "Incorrect user for preference request"
-        );
+                return raiseClientError(res, 422, {}, "Incorrect user for preference request");
       }
 
       // const userPreferenceData = await userPreferenceService.getPreferenceByData({user_id: userId});
@@ -110,15 +99,8 @@ class GraphController extends Controller {
       // const {params: {id} = {}, userDetails: {userId} = {}} = req;
       const { body: { chart_ids = [] } = {} } = req;
       const { userDetails } = req;
-      const {
-        userId,
-        userRoleId,
-        userData: { category } = {},
-        userCategoryData: { basic_info: { id: doctorId } = {} } = {}
-      } = userDetails || {};
-      const userPreferenceData = await userPreferenceService.getPreferenceByData(
-        { user_role_id: userRoleId }
-      );
+            const { userId,userRoleId, userData: { category  } = {} ,userCategoryData : { basic_info: { id :doctorId } ={} } = {} } = userDetails || {};
+            const userPreferenceData = await userPreferenceService.getPreferenceByData({user_role_id:userRoleId});
       const userPreference = await UserPreferenceWrapper(userPreferenceData);
 
       let chartData = {};
@@ -126,23 +108,23 @@ class GraphController extends Controller {
       let CHART_DETAILS = {
         [NO_MEDICATION]: {
           type: "no_medication",
-          name: "Missed Medication"
+                  name: "Missed Medication",
         },
         [NO_APPOINTMENT]: {
           type: "no_appointment",
-          name: "Missed Appointment"
+                  name: "Missed Appointment",
         },
         [NO_ACTION]: {
           type: "no_action",
-          name: "Missed Action"
+                  name: "Missed Action",
         },
         [NO_DIET]: {
           type: "no_diet",
-          name: "Missed Diet"
+                    name: "Missed Diet",
         },
         [NO_WORKOUT]: {
           type: "no_workout",
-          name: "Missed Workout"
+                    name: "Missed Workout",
         }
       };
 
@@ -164,29 +146,19 @@ class GraphController extends Controller {
         charts: updatedChart
       };
 
-      const updateUserPreference = await userPreferenceService.updateUserPreferenceData(
-        {
+            const updateUserPreference = await userPreferenceService.updateUserPreferenceData({
           details: updatedDetails
-        },
-        userPreference.getUserPreferenceId()
-      );
+            }, userPreference.getUserPreferenceId());
 
-      const updatedUserPreferenceData = await userPreferenceService.getPreferenceByData(
-        { user_role_id: userRoleId }
-      );
+            const updatedUserPreferenceData = await userPreferenceService.getPreferenceByData({user_role_id:userRoleId});
 
-      const updatedUserPreference = await UserPreferenceWrapper(
-        updatedUserPreferenceData
-      );
+            const updatedUserPreference = await UserPreferenceWrapper(updatedUserPreferenceData);
 
       updatedChart.forEach(chart => {
         chartData[chart] = CHART_DETAILS[chart];
       });
 
-      return raiseSuccess(
-        res,
-        200,
-        {
+            return raiseSuccess(res, 200, {
           user_preferences: {
             ...updatedUserPreference.getChartInfo()
           },
@@ -194,8 +166,7 @@ class GraphController extends Controller {
             ...chartData
           }
         },
-        "Charts added successfully"
-      );
+                "Charts added successfully");
     } catch (error) {
       Logger.debug("Add Graphs 500 error ---> ", error);
       return raiseServerError(res);
@@ -209,11 +180,11 @@ class GraphController extends Controller {
 
       // only admin api
       if (category !== USER_CATEGORY.ADMIN) {
-        return raiseClientError(res, 401, {}, "UNAUTHORIZED");
+              return raiseClientError(res, 401, {},"UNAUTHORIZED")
       }
 
       // get all providers in platform
-      const allProviders = (await ProviderService.getAllProviders()) || [];
+          const allProviders = await ProviderService.getAllProviders() || [];
 
       if (allProviders.length > 0) {
         for (let index = 0; index < allProviders.length; index++) {
@@ -225,10 +196,9 @@ class GraphController extends Controller {
 
           const { id: user_role_id = null } = userRole || {};
 
-          const userPreferenceExists =
-            (await userPreferenceService.getPreferenceByData({
+                  const userPreferenceExists = await userPreferenceService.getPreferenceByData({
               user_role_id
-            })) || null;
+                  }) || null;
 
           if (!userPreferenceExists) {
             await userPreferenceService.addUserPreference({

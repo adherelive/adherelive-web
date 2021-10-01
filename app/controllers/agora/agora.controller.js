@@ -20,17 +20,16 @@ class AgoraController extends Controller {
 
   generateVideoAccessToken = async (req, res) => {
     try {
-      const {
-        params: { id = null } = {},
-        userDetails: { userRoleId, userData: { category } = {} } = {}
-      } = req;
+            const {params: {id = null} = {}, userDetails: {
+               userRoleId,
+               userData: { category } = {}} = {}} = req;
 
-      let doctorRoleId = null,
-        patientRoleId = null;
+            let doctorRoleId = null, patientRoleId = null;
       if (category === USER_CATEGORY.DOCTOR) {
         doctorRoleId = userRoleId;
         patientRoleId = id;
-      } else if (category === USER_CATEGORY.HSP) {
+            }
+            else if(category === USER_CATEGORY.HSP) {
         doctorRoleId = userRoleId;
         patientRoleId = id;
       } else if (category === USER_CATEGORY.PATIENT) {
@@ -39,34 +38,21 @@ class AgoraController extends Controller {
       }
       const channelName = agoraService.getRoomId(doctorRoleId, patientRoleId);
 
-      const token = await agoraService.videoTokenGenerator(
-        userRoleId,
-        channelName
-      );
+            const token = await agoraService.videoTokenGenerator(userRoleId, channelName);
 
-      return this.raiseSuccess(
-        res,
-        200,
-        { token: token },
-        "Created new video token with userId"
-      );
+            return this.raiseSuccess(res, 200, { token: token}, "Created new video token with userId");
     } catch (error) {
       Log.debug("generateVideoAccessToken 50 error", error);
       return this.raiseServerError(res, 500, {}, "Error in video calling.");
     }
-  };
+    }
 
   missedCall = async (req, res) => {
     try {
-      const {
-        body: { roomId } = {},
-        userDetails: {
-          userId,
+            const {body: { roomId } = {}, userDetails: {userId,
           userRoleId,
           userData: { category } = {},
-          userCategoryData: { basic_info: { full_name } = {} } = {}
-        } = {}
-      } = req;
+                 userCategoryData: { basic_info: { full_name } = {} } = {}} = {}} = req;
 
       // let doctorUserId = null, patientUserId = null;
       // if(category === USER_CATEGORY.DOCTOR) {
@@ -98,22 +84,12 @@ class AgoraController extends Controller {
       );
       await NotificationSdk.execute(agoraJob);
 
-      return this.raiseSuccess(
-        res,
-        200,
-        {},
-        "Notification raised successfully for missed call."
-      );
+            return this.raiseSuccess(res, 200, {}, "Notification raised successfully for missed call.");
     } catch (error) {
       Log.debug("missedCall 500 error", error);
-      return this.raiseServerError(
-        res,
-        500,
-        {},
-        "Error in sending missed call notification."
-      );
+            return this.raiseServerError(res, 500, {}, "Error in sending missed call notification.");
     }
-  };
+    }
 
   startCall = async (req, res) => {
     try {

@@ -171,7 +171,7 @@ export const getServerSpecificConstants = () => {
     ALGOLIA_APP_KEY: process.config.algolia.app_key,
     ALGOLIA_MEDICINE_INDEX: process.config.algolia.medicine_index,
     ONE_SIGNAL_APP_ID: process.config.one_signal.app_id
-  };
+  } 
 
   return server_constants;
-};
+}

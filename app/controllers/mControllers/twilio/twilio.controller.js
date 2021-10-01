@@ -14,21 +14,12 @@ class TwilioController extends Controller {
   generateTwilioChatAccessToken = async (req, res) => {
     try {
       const deviceId = req.query.device ? req.query.device : "application";
-      const {
-        userDetails: { userId, userRoleId }
-      } = req;
-      const identity = req.query.identity
-        ? req.query.identity
-        : `${userRoleId}`;
+            const {userDetails: {userId, userRoleId}} = req;
+            const identity = req.query.identity ? req.query.identity : `${userRoleId}`;
 
       const token = await twilioService.chatTokenGenerator(identity, deviceId);
 
-      return this.raiseSuccess(
-        res,
-        200,
-        { identity: identity, token: token },
-        "Created new chat token."
-      );
+            return this.raiseSuccess(res, 200, {identity: identity, token: token}, "Created new chat token.");
 
       // const response = new Response(true, 200);
       // response.setData({ identity: identity, token: token });
@@ -41,24 +32,17 @@ class TwilioController extends Controller {
       // response.setError({ error: err });
       // res.status(500).json(response.getResponse());
     }
-  };
+    }
 
   generateTwilioVideoAccessToken = async (req, res) => {
     try {
       // const userId = req.query.userId ? req.query.userId : null;
-      const {
-        userDetails: { userId, userRoleId }
-      } = req;
+            const {userDetails: {userId, userRoleId}} = req;
       const identity = userRoleId ? `${userRoleId}` : faker.name.findName();
 
       const token = await twilioService.videoTokenGenerator(identity);
 
-      return this.raiseSuccess(
-        res,
-        200,
-        { identity: identity, token: token },
-        "Created new video token."
-      );
+            return this.raiseSuccess(res, 200, {identity: identity, token: token}, "Created new video token.");
 
       // const response = new Response(true, 200);
       // response.setData({ identity: identity, token: token });
@@ -72,7 +56,7 @@ class TwilioController extends Controller {
       // response.setError({ error: err });
       // res.status(500).json(response.getResponse());
     }
-  };
+    }
 
   getConnectedParticipants = async (req, res) => {
     try {
@@ -87,19 +71,14 @@ class TwilioController extends Controller {
         connectedParticipants[identity] = status;
       });
 
-      return this.raiseSuccess(
-        res,
-        200,
-        {
+            return this.raiseSuccess(res, 200, {
           connectedParticipants
-        },
-        "Fetched Connected Participants"
-      );
+            }, "Fetched Connected Participants");
     } catch (err) {
       Log.debug("getConnectedParticipants 50 error", error);
       return this.raiseServerError(res);
     }
-  };
+    }
 }
 
 export default new TwilioController();

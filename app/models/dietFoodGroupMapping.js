@@ -6,7 +6,7 @@ import { TABLE_NAME as similarFoodMappingTableName } from "./similarFoodMapping"
 
 export const TABLE_NAME = "diet_food_group_mappings";
 
-export const db = database => {
+export const db = (database) => {
   database.define(
     TABLE_NAME,
     {
@@ -14,29 +14,29 @@ export const db = database => {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
-        type: DataTypes.INTEGER
+                type: DataTypes.INTEGER,
       },
       time: {
         type: DataTypes.INTEGER,
-        allowNull: false
+                allowNull: false,
       },
       food_group_id: {
         type: DataTypes.INTEGER,
-        allowNull: false
+                allowNull: false,
       },
       diet_id: {
         type: DataTypes.INTEGER,
-        allowNull: false
+                allowNull: false,
       }
     },
     {
       underscored: true,
-      paranoid: true
+            paranoid: true,
     }
   );
 };
 
-export const associate = database => {
+export const associate = (database) => {
   // const {TABLE_NAME} = database.models || {};
 
   // associations here (if any) ...
@@ -51,19 +51,13 @@ export const associate = database => {
     sourceKey: "diet_id"
   });
 
-  database.models[TABLE_NAME].hasMany(
-    database.models[similarFoodMappingTableName],
-    {
-      foreignKey: "related_to_id",
-      sourceKey: "id"
-    }
-  );
+    database.models[TABLE_NAME].hasMany(database.models[similarFoodMappingTableName],{
+        foreignKey:"related_to_id",
+        sourceKey:"id",
+    });
 
-  database.models[TABLE_NAME].hasMany(
-    database.models[similarFoodMappingTableName],
-    {
-      foreignKey: "secondary_id",
-      sourceKey: "id"
-    }
-  );
+    database.models[TABLE_NAME].hasMany(database.models[similarFoodMappingTableName],{
+        foreignKey:"secondary_id",
+        sourceKey:"id",
+    });
 };

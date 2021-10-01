@@ -7,16 +7,17 @@ const Log = new Logger("NOTIFICATION_SDK > PUSH_APP");
 // Log.filename("NOTIFICATION_SDK > PUSH_APP");
 
 class PushNotification {
-  constructor() {}
+    constructor() {
+    }
 
   notify = (templates = []) => {
     for (const template of templates) {
       Log.debug("templates push app--> ", template);
       this.sendPushNotification(template);
     }
-  };
+    }
 
-  sendPushNotification = template => {
+    sendPushNotification = (template) => {
     try {
       const headers = {
         "Content-Type": "application/json; charset=utf-8",

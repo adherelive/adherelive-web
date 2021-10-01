@@ -74,7 +74,7 @@ class PassedCron {
     }
   };
 
-  handleDietPassed = async event => {
+  handleDietPassed = async (event) => {
     try {
       const scheduleEventService = new ScheduleEventService();
       const currentTime = moment()
@@ -87,7 +87,7 @@ class PassedCron {
       ) {
         await scheduleEventService.update(
           {
-            status: EVENT_STATUS.EXPIRED
+            status: EVENT_STATUS.EXPIRED,
           },
           event.getScheduleEventId()
         );
@@ -97,7 +97,7 @@ class PassedCron {
     }
   };
 
-  handleWorkoutPassed = async event => {
+  handleWorkoutPassed = async (event) => {
     try {
       const scheduleEventService = new ScheduleEventService();
       const currentTime = moment()
@@ -110,7 +110,7 @@ class PassedCron {
       ) {
         await scheduleEventService.update(
           {
-            status: EVENT_STATUS.EXPIRED
+            status: EVENT_STATUS.EXPIRED,
           },
           event.getScheduleEventId()
         );
@@ -120,7 +120,7 @@ class PassedCron {
     }
   };
 
-  handleVitalPassed = async event => {
+  handleVitalPassed = async (event) => {
     try {
       const scheduleEventService = new ScheduleEventService();
       const currentTime = moment()
@@ -128,11 +128,11 @@ class PassedCron {
         .toDate();
       const eventId = event.getEventId();
       const {
-        details: { repeat_interval_id: repeatIntervalId = "" } = {}
+        details: { repeat_interval_id: repeatIntervalId = "" } = {},
       } = event.getDetails();
 
       const vitalData = await FeatureDetailService.getDetailsByData({
-        feature_type: FEATURE_TYPE.VITAL
+        feature_type: FEATURE_TYPE.VITAL,
       });
 
       const vital = await FeatureDetailWrapper(vitalData);
@@ -150,7 +150,7 @@ class PassedCron {
       if (moment(currentTime).diff(event.getStartTime(), "hours") >= value) {
         const updateEventStatus = await scheduleEventService.update(
           {
-            status: EVENT_STATUS.EXPIRED
+            status: EVENT_STATUS.EXPIRED,
           },
           event.getScheduleEventId()
         );
@@ -160,7 +160,7 @@ class PassedCron {
     }
   };
 
-  handleMedicationPassed = async event => {
+  handleMedicationPassed = async (event) => {
     try {
       const scheduleEventService = new ScheduleEventService();
       const currentTime = moment()
@@ -178,7 +178,7 @@ class PassedCron {
           event.updatedAt(),
           "minutes"
         ),
-        type_INTERVAL: typeof this.RESCHEDULE_INTERVAL
+        type_INTERVAL: typeof this.RESCHEDULE_INTERVAL,
       });
 
       const diff = moment(currentTime).diff(event.updatedAt(), "minutes");
@@ -186,7 +186,7 @@ class PassedCron {
       if (diff === this.RESCHEDULE_INTERVAL) {
         const updateEventStatus = await scheduleEventService.update(
           {
-            status: EVENT_STATUS.PENDING
+            status: EVENT_STATUS.PENDING,
           },
           event.getScheduleEventId()
         );
@@ -196,7 +196,7 @@ class PassedCron {
         count: moment(currentTime).diff(event.getStartTime(), "minutes"),
         condition:
           moment(currentTime).diff(event.getStartTime(), "minutes") >
-          this.RESCHEDULE_DURATION
+          this.RESCHEDULE_DURATION,
       });
 
       if (
@@ -205,7 +205,7 @@ class PassedCron {
       ) {
         const updateEventStatus = await scheduleEventService.update(
           {
-            status: EVENT_STATUS.EXPIRED
+            status: EVENT_STATUS.EXPIRED,
           },
           event.getScheduleEventId()
         );
@@ -215,7 +215,7 @@ class PassedCron {
     }
   };
 
-  handleAppointmentPassed = async event => {
+  handleAppointmentPassed = async (event) => {
     try {
       const scheduleEventService = new ScheduleEventService();
       const currentTime = moment()
@@ -228,7 +228,7 @@ class PassedCron {
       ) {
         const updateEventStatus = await scheduleEventService.update(
           {
-            status: EVENT_STATUS.EXPIRED
+            status: EVENT_STATUS.EXPIRED,
           },
           event.getScheduleEventId()
         );
@@ -238,7 +238,7 @@ class PassedCron {
     }
   };
 
-  handleCarePlanPassed = async event => {
+  handleCarePlanPassed = async (event) => {
     try {
       const scheduleEventService = new ScheduleEventService();
       const currentTime = moment()
@@ -257,7 +257,7 @@ class PassedCron {
           {
             status: EVENT_STATUS.PENDING,
             start_time: carePlanStartTime,
-            end_time: carePlanEndTime
+            end_time: carePlanEndTime,
           },
           event.getScheduleEventId()
         );

@@ -1,10 +1,6 @@
 import WorkoutJob from "../";
 import moment from "moment";
-import {
-  EVENT_TYPE,
-  NOTIFICATION_VERB,
-  DEFAULT_PROVIDER
-} from "../../../../constant";
+import { EVENT_TYPE, NOTIFICATION_VERB, DEFAULT_PROVIDER } from "../../../../constant";
 
 import UserRoleService from "../../../services/userRoles/userRoles.service";
 import ProviderService from "../../../services/provider/provider.service";
@@ -36,12 +32,11 @@ class StartJob extends WorkoutJob {
     const playerIds = [];
     const userIds = [];
 
-    const { rows: userRoles = [] } =
-      (await UserRoleService.findAndCountAll({
-        where: {
-          id: participants
-        }
-      })) || {};
+    const {rows: userRoles = []} = await UserRoleService.findAndCountAll({
+      where: {
+        id: participants
+      }
+    }) || {};
 
     let providerId = null;
     for (const userRole of userRoles) {
@@ -58,9 +53,7 @@ class StartJob extends WorkoutJob {
 
     let providerName = DEFAULT_PROVIDER;
     if (providerId) {
-      const provider = await ProviderService.getProviderByData({
-        id: providerId
-      });
+      const provider = await ProviderService.getProviderByData({id: providerId});
       const { name } = provider || {};
       providerName = name;
     }
@@ -92,10 +85,7 @@ class StartJob extends WorkoutJob {
       include_player_ids: [...playerIds],
       priority: 10,
       android_channel_id: process.config.one_signal.urgent_channel_id,
-      data: {
-        url: `/${NOTIFICATION_VERB.WORKOUT_START}`,
-        params: getWorkoutData()
-      }
+      data: { url: `/${NOTIFICATION_VERB.WORKOUT_START}`, params: getWorkoutData() }
     });
 
     return templateData;

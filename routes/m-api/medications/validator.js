@@ -10,7 +10,7 @@ const medicationReminderFormSchema = Joi.object().keys({
   unit: Joi.string().required(),
   quantity: Joi.number().required(),
   when_to_take_abbr: Joi.number().optional(),
-  when_to_take: Joi.array().when("when_to_take_abbr", {
+    when_to_take: Joi.array().when('when_to_take_abbr', {
     is: Joi.exist(),
     then: Joi.when("when_to_take_abbr", {
       is: WHEN_TO_TAKE_ABBREVATIONS.SOS,
@@ -20,7 +20,7 @@ const medicationReminderFormSchema = Joi.object().keys({
     otherwise: Joi.required()
   }),
   repeat: Joi.string().required(),
-  repeat_days: Joi.array().when("when_to_take_abbr", {
+    repeat_days: Joi.array().when('when_to_take_abbr', {
     is: Joi.exist(),
     then: Joi.when("when_to_take_abbr", {
       is: WHEN_TO_TAKE_ABBREVATIONS.SOS,
@@ -31,28 +31,19 @@ const medicationReminderFormSchema = Joi.object().keys({
   }),
   repeat_interval: Joi.number().optional(),
   start_date: Joi.date().required(),
-  end_date: Joi.date()
-    .optional()
-    .allow(null),
+    end_date: Joi.date().optional().allow(null),
   medication_stage: Joi.string().optional(),
   medicine_id: Joi.number().required(),
   medicine_type: Joi.number().required(),
-  participant_id: Joi.string()
-    .optional()
-    .allow(""),
-  critical: Joi.boolean()
-    .optional()
-    .allow(""),
-  description: Joi.string()
-    .max(500, "utf-8")
-    .optional()
-    .allow(""),
+    participant_id: Joi.string().optional().allow(""),
+    critical: Joi.boolean().optional().allow(""),
+    description: Joi.string().max(500, 'utf-8').optional().allow(""),
   care_plan_id: Joi.number()
     .optional()
     .allow("", null),
   patient_id: Joi.number()
     .optional()
-    .allow("", null)
+    .allow("", null),
 });
 
 // const validateStartTime = startTime => {

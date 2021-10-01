@@ -33,7 +33,7 @@ class EventController extends Controller {
       const eventService = new EventService();
 
       const events = await eventService.getEventByData({
-        id
+        id,
       });
 
       if (events) {
@@ -47,9 +47,9 @@ class EventController extends Controller {
             200,
             {
               vital_templates: {
-                ...vital_templates
+                ...vital_templates,
               },
-              vital_template_id: vitals.getVitalTemplateId()
+              vital_template_id: vitals.getVitalTemplateId(),
             },
             "Vital template fetched successfully"
           );
@@ -75,11 +75,7 @@ class EventController extends Controller {
     try {
       const {
         query: { type = EVENT_TYPE.ALL, key = null } = {},
-        userDetails: {
-          userRoleId = null,
-          userData: { category },
-          userCategoryId
-        } = {}
+        userDetails: { userRoleId = null , userData: { category }, userCategoryId } = {}
       } = req;
       Log.info(`query : key = ${key} | type = ${type}`);
 
@@ -96,7 +92,7 @@ class EventController extends Controller {
 
       const allCarePlanData =
         (await CarePlanService.getMultipleCarePlanByData({
-          patient_id: userCategoryId
+          patient_id: userCategoryId,
         })) || [];
 
       let scheduleEvents = [];
@@ -116,7 +112,7 @@ class EventController extends Controller {
           medication_ids = [],
           vital_ids = [],
           diet_ids = [],
-          workout_ids = []
+          workout_ids = [],
         } = await carePlanWrapper.getAllInfo();
 
         vitalIds = [...vitalIds, ...vital_ids];
@@ -141,7 +137,7 @@ class EventController extends Controller {
                 diet_ids: dietIds,
                 workout_ids: workoutIds,
                 appointment_ids: appointmentIds,
-                medication_ids: medicationIds
+                medication_ids: medicationIds,
               })) || [];
             break;
           case EVENT_TYPE.APPOINTMENT:
@@ -149,7 +145,7 @@ class EventController extends Controller {
               (await eventService.getUpcomingByData({
                 startLimit,
                 endLimit,
-                appointment_ids: appointmentIds
+                appointment_ids: appointmentIds,
               })) || [];
             break;
           case EVENT_TYPE.MEDICATION_REMINDER:
@@ -157,7 +153,7 @@ class EventController extends Controller {
               (await eventService.getUpcomingByData({
                 startLimit,
                 endLimit,
-                medication_ids: medicationIds
+                medication_ids: medicationIds,
               })) || [];
             break;
           case EVENT_TYPE.VITALS:
@@ -165,7 +161,7 @@ class EventController extends Controller {
               (await eventService.getUpcomingByData({
                 startLimit,
                 endLimit,
-                vital_ids: vitalIds
+                vital_ids: vitalIds,
               })) || [];
             break;
           case EVENT_TYPE.DIET:
@@ -173,7 +169,7 @@ class EventController extends Controller {
               (await eventService.getUpcomingByData({
                 startLimit,
                 endLimit,
-                diet_ids: dietIds
+                diet_ids: dietIds,
               })) || [];
             break;
           case EVENT_TYPE.WORKOUT:
@@ -181,7 +177,7 @@ class EventController extends Controller {
               (await eventService.getUpcomingByData({
                 startLimit,
                 endLimit,
-                workout_ids: workoutIds
+                workout_ids: workoutIds,
               })) || [];
             break;
         }
@@ -221,24 +217,24 @@ class EventController extends Controller {
         scheduleEvents = await eventService.getPendingEventsData({
           appointments: {
             event_id: appointmentIds,
-            event_type: EVENT_TYPE.APPOINTMENT
+            event_type: EVENT_TYPE.APPOINTMENT,
           },
           medications: {
             event_id: medicationIds,
-            event_type: EVENT_TYPE.MEDICATION_REMINDER
+            event_type: EVENT_TYPE.MEDICATION_REMINDER,
           },
           vitals: {
             event_id: vitalIds,
-            event_type: EVENT_TYPE.VITALS
+            event_type: EVENT_TYPE.VITALS,
           },
           diets: {
             event_id: dietIds,
-            event_type: EVENT_TYPE.DIET
+            event_type: EVENT_TYPE.DIET,
           },
           workouts: {
             event_id: workoutIds,
-            event_type: EVENT_TYPE.WORKOUT
-          }
+            event_type: EVENT_TYPE.WORKOUT,
+          },
         });
       }
       // else {
@@ -261,7 +257,7 @@ class EventController extends Controller {
               vitals: prevVitals,
               medications: prevMedications,
               diets: prevDiets,
-              workouts: prevWorkouts
+              workouts: prevWorkouts,
             } = dateWiseEventData[event.getDate()] || {};
             const {
               all,
@@ -269,7 +265,7 @@ class EventController extends Controller {
               vitals,
               medications,
               diets,
-              workouts
+              workouts,
             } = event.getDateWiseInfo();
             dateWiseEventData[event.getDate()] = {
               all: [...prevAll, ...all],
@@ -277,7 +273,7 @@ class EventController extends Controller {
               medications: [...prevMedications, ...medications],
               vitals: [...prevVitals, ...vitals],
               diets: [...prevDiets, ...diets],
-              workouts: [...prevWorkouts, ...workouts]
+              workouts: [...prevWorkouts, ...workouts],
             };
           } else {
             const {
@@ -286,7 +282,7 @@ class EventController extends Controller {
               vitals,
               medications,
               diets,
-              workouts
+              workouts,
             } = event.getDateWiseInfo();
             dateWiseEventData[event.getDate()] = {
               all,
@@ -294,7 +290,7 @@ class EventController extends Controller {
               medications,
               vitals,
               diets,
-              workouts
+              workouts,
             };
             dates.push(event.getDate());
           }
@@ -305,12 +301,12 @@ class EventController extends Controller {
           200,
           {
             schedule_events: {
-              ...scheduleEventData
+              ...scheduleEventData,
             },
             date_wise_events: {
-              ...dateWiseEventData
+              ...dateWiseEventData,
             },
-            date_ids: dates
+            date_ids: dates,
           },
           "Events fetched successfully"
         );
@@ -353,7 +349,7 @@ class EventController extends Controller {
       const mEventDetails = await eventService.update(eventDetails, event_id);
 
       const updatedEventDetails = await eventService.getEventByData({
-        id: event_id
+        id: event_id,
       });
 
       const eventApiDetails = await EventWrapper(updatedEventDetails);
@@ -364,9 +360,9 @@ class EventController extends Controller {
         {
           schedule_events: {
             [eventApiDetails.getEventId()]: {
-              ...eventApiDetails.getAllInfo()
-            }
-          }
+              ...eventApiDetails.getAllInfo(),
+            },
+          },
         },
         "Medication reminder event status updated successfully"
       );
@@ -398,7 +394,7 @@ class EventController extends Controller {
         medications = {},
         appointments = {},
         medicines = {},
-        schedule_events = {}
+        schedule_events = {},
       } = await event.getReferenceInfo();
 
       return raiseSuccess(
@@ -408,7 +404,7 @@ class EventController extends Controller {
           appointments,
           medications,
           medicines,
-          schedule_events
+          schedule_events,
         },
         "Event completed successfully"
       );
@@ -440,7 +436,7 @@ class EventController extends Controller {
         medications = {},
         appointments = {},
         medicines = {},
-        schedule_events = {}
+        schedule_events = {},
       } = await event.getReferenceInfo();
 
       return raiseSuccess(
@@ -450,7 +446,7 @@ class EventController extends Controller {
           appointments,
           medications,
           medicines,
-          schedule_events
+          schedule_events,
         },
         "Event completed successfully"
       );
@@ -504,10 +500,7 @@ class EventController extends Controller {
         (await CarePlanService.getMultipleCarePlanByData({
           patient_id,
           // doctor_id: category === USER_CATEGORY.DOCTOR ? userCategoryId : "",
-          user_role_id:
-            category === USER_CATEGORY.DOCTOR || category === USER_CATEGORY.HSP
-              ? userRoleId
-              : null
+          user_role_id: (category === USER_CATEGORY.DOCTOR || category === USER_CATEGORY.HSP ) ? userRoleId : null,
           // doctor_id: category === USER_CATEGORY.DOCTOR ? userCategoryId : "", (revious before conflict resolve)
         })) || [];
 
@@ -545,7 +538,7 @@ class EventController extends Controller {
               event_type: EVENT_TYPE.APPOINTMENT,
               event_id: id,
               status: EVENT_STATUS.EXPIRED,
-              critical: true
+              critical: true,
             })) || 0;
 
           const nonCriticalAppointment =
@@ -553,7 +546,7 @@ class EventController extends Controller {
               event_type: EVENT_TYPE.APPOINTMENT,
               event_id: id,
               status: EVENT_STATUS.EXPIRED,
-              critical: false
+              critical: false,
             })) || 0;
 
           if (criticalAppointment > 0) {
@@ -571,7 +564,7 @@ class EventController extends Controller {
               event_type: EVENT_TYPE.MEDICATION_REMINDER,
               event_id: id,
               status: EVENT_STATUS.EXPIRED,
-              critical: true
+              critical: true,
             })) || 0;
 
           const nonCriticalMedication =
@@ -579,7 +572,7 @@ class EventController extends Controller {
               event_type: EVENT_TYPE.MEDICATION_REMINDER,
               event_id: id,
               status: EVENT_STATUS.EXPIRED,
-              critical: false
+              critical: false,
             })) || 0;
 
           if (criticalMedication > 0) {
@@ -597,7 +590,7 @@ class EventController extends Controller {
               event_type: EVENT_TYPE.VITALS,
               event_id: id,
               status: EVENT_STATUS.EXPIRED,
-              critical: true
+              critical: true,
             })) || 0;
 
           const nonCriticalVital =
@@ -605,7 +598,7 @@ class EventController extends Controller {
               event_type: EVENT_TYPE.VITALS,
               event_id: id,
               status: EVENT_STATUS.EXPIRED,
-              critical: false
+              critical: false,
             })) || 0;
 
           if (criticalVital > 0) {
@@ -671,7 +664,7 @@ class EventController extends Controller {
 
       // symptoms
       const symptomsCount = await SymptomService.getCount({
-        patient_id
+        patient_id,
       });
 
       return raiseSuccess(
@@ -680,15 +673,15 @@ class EventController extends Controller {
         {
           missed_appointment: {
             critical: appointmentCritical.length,
-            non_critical: appointmentNonCritical.length
+            non_critical: appointmentNonCritical.length,
           },
           missed_medications: {
             critical: medicationCritical.length,
-            non_critical: medicationNonCritical.length
+            non_critical: medicationNonCritical.length,
           },
           missed_vitals: {
             critical: vitalCritical.length,
-            non_critical: vitalNonCritical.length
+            non_critical: vitalNonCritical.length,
           },
           missed_diets: {
             critical: dietCritical.length,
@@ -700,8 +693,8 @@ class EventController extends Controller {
           },
           missed_symptoms: {
             critical: 0,
-            non_critical: symptomsCount
-          }
+            non_critical: symptomsCount,
+          },
         },
         "Patient missed events fetched successfully"
       );
@@ -715,33 +708,19 @@ class EventController extends Controller {
     const { raiseSuccess, raiseServerError } = this;
     try {
       Log.debug("req.params", req.params);
-      const {
-        params: { patient_id } = {},
-        userDetails: { userData: { category } = {}, userRoleId = null } = {}
-      } = req;
+      const { params: { patient_id } = {} ,userDetails : { userData: { category } = {}, userRoleId = null } = {} } = req;
       const EventService = new eventService();
-      let carePlan = null,
-        vital_ids = [],
-        appointment_ids = [],
-        medication_ids = [],
-        diet_ids = [],
-        workout_ids = [];
+      let carePlan = null , vital_ids = [],appointment_ids =[], medication_ids = [] , diet_ids = [] , workout_ids = []  ;
 
       const carePlanData = await CarePlanService.getSingleCarePlanByData({
         patient_id,
-        ...((category === USER_CATEGORY.DOCTOR ||
-          category === USER_CATEGORY.HSP) && { user_role_id: userRoleId })
+        ...(category === USER_CATEGORY.DOCTOR || category === USER_CATEGORY.HSP) && { 'user_role_id': userRoleId }
       });
 
       if (carePlanData) {
         carePlan = await CarePlanWrapper(carePlanData);
-        const {
-          vital_ids: cPvital_ids = [],
-          appointment_ids: cPappointment_ids = [],
-          medication_ids: cPmedication_ids = [],
-          diet_ids: cPdiet_ids = [],
-          workout_ids: cPworkout_ids = []
-        } = (await carePlan.getAllInfo()) || {};
+        const { vital_ids:cPvital_ids = [], appointment_ids:cPappointment_ids = [], medication_ids :cPmedication_ids= [] , diet_ids : cPdiet_ids= [], workout_ids :cPworkout_ids= []  } =
+          (await carePlan.getAllInfo()) || {};
 
         vital_ids = cPvital_ids;
         appointment_ids = cPappointment_ids;
@@ -755,7 +734,7 @@ class EventController extends Controller {
       const lastVisitData = [];
 
       const latestSymptom = await SymptomService.getLastUpdatedData({
-        patient_id
+        patient_id,
       });
       if (latestSymptom.length > 0) {
         for (const symptoms of latestSymptom) {
@@ -776,7 +755,7 @@ class EventController extends Controller {
           .subtract(7, "days")
           .utc()
           .toISOString(),
-        sort: "DESC"
+        sort: "DESC",
       });
 
       const appointmentEvents = await EventService.getLastVisitData({
@@ -786,7 +765,7 @@ class EventController extends Controller {
           .subtract(7, "days")
           .utc()
           .toISOString(),
-        sort: "DESC"
+        sort: "DESC",
       });
 
       const medicationEvents = await EventService.getLastVisitData({
@@ -796,7 +775,7 @@ class EventController extends Controller {
           .subtract(7, "days")
           .utc()
           .toISOString(),
-        sort: "DESC"
+        sort: "DESC",
       });
 
       const dietEvents = await EventService.getLastVisitData({
@@ -806,7 +785,7 @@ class EventController extends Controller {
           .subtract(7, "days")
           .utc()
           .toISOString(),
-        sort: "DESC"
+        sort: "DESC",
       });
 
       const workoutEvents = await EventService.getLastVisitData({
@@ -816,7 +795,7 @@ class EventController extends Controller {
           .subtract(7, "days")
           .utc()
           .toISOString(),
-        sort: "DESC"
+        sort: "DESC",
       });
 
       let scheduleEvents = [
@@ -847,7 +826,7 @@ class EventController extends Controller {
 
         for (const [key, event] of [
           ...latestSymptom,
-          ...scheduleEvents
+          ...scheduleEvents,
         ].entries()) {
           lastVisitData.push({
             event_type: event.get("event_type")
@@ -856,13 +835,11 @@ class EventController extends Controller {
             id: event.get("id"),
             updatedAt: event.get("event_type")
               ? event.get("start_time")
-              : event.get("created_at")
+              : event.get("created_at"),
           });
 
           const eventWrapper = await EventWrapper(event);
-          scheduleEventData[
-            eventWrapper.getScheduleEventId()
-          ] = eventWrapper.getAllInfo();
+          scheduleEventData[eventWrapper.getScheduleEventId()] = eventWrapper.getAllInfo();
 
           if (key === 3) {
             break;
@@ -882,15 +859,15 @@ class EventController extends Controller {
           200,
           {
             schedule_events: {
-              ...scheduleEventData
+              ...scheduleEventData,
             },
             symptoms: {
-              ...symptomData
+              ...symptomData,
             },
             upload_documents: {
-              ...documentData
+              ...documentData,
             },
-            last_visit: lastVisitData
+            last_visit: lastVisitData,
           },
           "Events fetched successfully"
         );
@@ -908,7 +885,7 @@ class EventController extends Controller {
     try {
       const {
         params: { id },
-        query: { index } = {}
+        query: { index } = {},
       } = req;
       Log.info(`params: event_id: ${id} | query : index : ${index}`);
 
@@ -924,7 +901,7 @@ class EventController extends Controller {
       const EventService = new eventService();
 
       const eventData = await EventService.getEventByData({
-        id
+        id,
       });
 
       let eventId = null;
@@ -939,8 +916,8 @@ class EventController extends Controller {
           {
             details: {
               ...event.getDetails(),
-              response: prevResponse
-            }
+              response: prevResponse,
+            },
           },
           id
         );
@@ -951,7 +928,7 @@ class EventController extends Controller {
             event_id: vital.getVitalId(),
             event_type: EVENT_TYPE.VITALS,
             date: vital.getStartDate(),
-            sort: "DESC"
+            sort: "DESC",
           });
 
           let dateWiseVitalData = {};
@@ -975,9 +952,9 @@ class EventController extends Controller {
               200,
               {
                 vital_timeline: {
-                  ...dateWiseVitalData
+                  ...dateWiseVitalData,
                 },
-                vital_date_ids: timelineDates
+                vital_date_ids: timelineDates,
               },
               "Vital responses deleted and updated successfully"
             );
@@ -1010,7 +987,7 @@ class EventController extends Controller {
       const {
         params: { id },
         query: { index } = {},
-        body: { value = {} } = {}
+        body: { value = {} } = {},
       } = req;
       Log.info(`params: event_id: ${id} | query : index : ${index}`);
       Log.debug("body : value ", value);
@@ -1027,7 +1004,7 @@ class EventController extends Controller {
       const EventService = new eventService();
 
       const eventData = await EventService.getEventByData({
-        id
+        id,
       });
 
       let eventId = null;
@@ -1041,15 +1018,15 @@ class EventController extends Controller {
 
         prevResponse.splice(index, 1, {
           value,
-          createdTime: response.createdTime
+          createdTime: response.createdTime,
         });
 
         await EventService.update(
           {
             details: {
               ...event.getDetails(),
-              response: prevResponse
-            }
+              response: prevResponse,
+            },
           },
           id
         );
@@ -1060,7 +1037,7 @@ class EventController extends Controller {
               event_id: vital.getVitalId(),
               event_type: EVENT_TYPE.VITALS,
               date: vital.getStartDate(),
-              sort: "DESC"
+              sort: "DESC",
             })) || [];
 
           let dateWiseVitalData = {};
@@ -1084,9 +1061,9 @@ class EventController extends Controller {
               200,
               {
                 vital_timeline: {
-                  ...dateWiseVitalData
+                  ...dateWiseVitalData,
                 },
-                vital_date_ids: timelineDates
+                vital_date_ids: timelineDates,
               },
               "Vital responses deleted and updated successfully"
             );
@@ -1132,7 +1109,7 @@ class EventController extends Controller {
 
       const existingEvent =
         (await EventService.getEventByData({
-          id
+          id,
         })) || null;
 
       if (!existingEvent) {
@@ -1189,7 +1166,7 @@ class EventController extends Controller {
             ...allEventInfo,
             status: EVENT_STATUS.PENDING,
             start_time: newStartTime,
-            end_time: newStartTime
+            end_time: newStartTime,
           })) || null;
 
         if (newScheduledEvent) {

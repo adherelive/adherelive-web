@@ -75,7 +75,11 @@ router.get(
   PatientController.getPatientReports
 );
 
-router.get("/diet", Authenticated, DietController.getPatientDiets);
+router.get(
+  "/diet",
+  Authenticated,
+  DietController.getPatientDiets
+);
 
 router.get(
   "/searchpatient",

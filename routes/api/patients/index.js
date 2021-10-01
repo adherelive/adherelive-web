@@ -8,8 +8,7 @@ var upload = multer({ dest: "../app/public/", storage: storage });
 
 const router = express.Router();
 
-router.post(
-  "/patients",
+router.post('/patients',
   Authenticated,
   upload.single("files"),
   PatientController.updatePatient
@@ -33,7 +32,11 @@ router.post(
   PatientController.patientConsentVerification
 );
 
-router.get("/", Authenticated, PatientController.searchPatient);
+router.get(
+    "/",
+    Authenticated,
+    PatientController.searchPatient
+);
 
 router.get(
   "/:id/appointments",

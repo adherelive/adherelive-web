@@ -23,7 +23,7 @@ class EmailManger {
       smtpTransport({
         auth: {
           // api_user:process.config.email.USER,
-          api_key: process.config.email.KEY
+          api_key:process.config.email.KEY,
           // api_user: 'adhere-tripock',
           // api_key: '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'
         }
@@ -34,20 +34,22 @@ class EmailManger {
   genrateEmailTemplateString(name, data, options) {
     let filepath = path.join(__dirname, "/../../views/emailTemplates/");
     return new Promise((resolve, reject) => {
-      ejs.renderFile(filepath + name + ".ejs", data, options, (err, str) => {
-        if (err) {
-          return reject(err);
+      ejs.renderFile(
+        filepath + name + ".ejs",
+        data,
+        options,
+        (err, str) => {
+          if (err) {
+            return reject(err);
+          }
+          return resolve(str);
         }
-        return resolve(str);
-      });
+      );
     });
   }
 
   emailPayloadValidator(emailPayload) {
-    console.log(
-      "Email Payloader Validator -------------------->   ",
-      emailPayload
-    );
+    console.log("Email Payloader Validator -------------------->   ", emailPayload);
     if (!emailPayload.toAddress)
       return {
         error: 1,
@@ -80,10 +82,7 @@ class EmailManger {
 
   async emailPayloadTransformer(payload) {
     try {
-      console.log(
-        "Email Payloader Transformet =================>    ",
-        payload
-      );
+      console.log("Email Payloader Transformet =================>    ", payload);
       let payloadBuilder = new emailPayloadBuilder(payload);
       let templateString = "";
       switch (payload.templateName) {
@@ -291,11 +290,8 @@ class EmailManger {
   async sendEmail(emailPayload) {
     try {
       let payload = await this.emailPayloadTransformer(emailPayload);
-      Log.info(
-        "validting email payload!! ========>     ",
-        process.config.SMTP_USER,
-        process.config.SMTP_KEY
-      );
+      Log.info("validting email payload!! ========>     ",process.config.SMTP_USER,
+  process.config.SMTP_KEY);
       let isValid = this.emailPayloadValidator(emailPayload);
       if (isValid && isValid.error == 1) return isValid;
       Log.success("email payload is valid!!");

@@ -36,7 +36,7 @@ export const validateCreateFavourite = (req, res, next) => {
 };
 
 export const validateGetFavourites = (req, res, next) => {
-  const { query: { type = "" } = {} } = req;
+    const { query: { type = '' } = {} } = req;
   const data = { type };
   const isValid = getFavourites.validate(data);
   if (isValid && isValid.error != null) {
@@ -47,7 +47,7 @@ export const validateGetFavourites = (req, res, next) => {
 
 export const validateRemoveFavourites = (req, res, next) => {
   const { params: { id = null } = {} } = req;
-  const data = { id };
+    const data={id}
   const isValid = removeFavourites.validate(data);
   if (isValid && isValid.error != null) {
     return validationError(res, isValid);

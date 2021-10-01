@@ -12,10 +12,10 @@ export default class AgoraJob {
 
   getAgoraData = () => {
     return this._data;
-  };
+    }
 
-  getNotificationUrl = type => {
+    getNotificationUrl = (type) => {
     const { [type]: url } = NOTIFICATION_URLS;
     return url;
-  };
+    }
 }

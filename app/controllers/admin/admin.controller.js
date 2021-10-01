@@ -111,9 +111,7 @@ class AdminController extends Controller {
           const doctorId = doctorWrapper.getDoctorId();
           const userId = doctorWrapper.getUserId();
           let userRoleId = null;
-          const userRoleDataForUserId = await userRoleService.getFirstUserRole(
-            userId
-          );
+          const userRoleDataForUserId =await  userRoleService.getFirstUserRole(userId);
           if (userRoleDataForUserId) {
             const userRoleWrapper = UserRoleWrapper(userRoleDataForUserId);
             userRoleId = (await userRoleWrapper).getId() || null;
@@ -154,35 +152,21 @@ class AdminController extends Controller {
     const { raiseSuccess, raiseServerError } = this;
     try {
       let mappingData = [];
-      const users = await userService.getUserByData({
-        category: [USER_CATEGORY.PROVIDER]
-      });
+      const users = await userService.getUserByData({category: [USER_CATEGORY.PROVIDER]});
 
       if (users && users.length) {
         for (const user of users) {
           const userWrapper = await UserWrapper(user);
-          const provider = await providerService.getProviderByData({
-            user_id: userWrapper.getId()
-          });
-          const providerWrapper = await ProviderWrapper(provider);
-          mappingData.push({
-            provider_id: providerWrapper.getProviderId(),
-            terms_and_conditions_id: 2
-          });
+          const provider = await providerService.getProviderByData({user_id: userWrapper.getId()});
+          const providerWrapper = await ProviderWrapper(provider)
+          mappingData.push({provider_id: providerWrapper.getProviderId(), terms_and_conditions_id:  2})
         }
       }
       if (mappingData && mappingData.length) {
-        const response = await providerTermsMappingService.bulkCreate(
-          mappingData
-        );
+        const response = await providerTermsMappingService.bulkCreate(mappingData)
       }
 
-      return raiseSuccess(
-        res,
-        200,
-        {},
-        "Updated terms and conditions for existing providers."
-      );
+      return raiseSuccess(res, 200, {}, "Updated terms and conditions for existing providers.");
     } catch (error) {
       Log.debug("updateProviderTermsMappingForExistingUsers 500 error", error);
       return raiseServerError(res);
@@ -196,9 +180,7 @@ class AdminController extends Controller {
       let record = null;
 
       if (id.toString() === "0") {
-        record = await tacService.getByData({
-          terms_type: TERMS_AND_CONDITIONS_TYPES.DEFAULT_TERMS_OF_PAYMENT
-        });
+        record = await tacService.getByData({terms_type:TERMS_AND_CONDITIONS_TYPES.DEFAULT_TERMS_OF_PAYMENT});  
       } else {
         record = await tacService.getByData({ id });
       }

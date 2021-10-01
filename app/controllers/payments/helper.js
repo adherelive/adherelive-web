@@ -1,7 +1,7 @@
 import isEmpty from "lodash/isEmpty";
 
 export const getFormattedData = (data = {}) => {
-  const { name, type, amount, id, razorpay_link = "" } = data;
+  const { name, type, amount, id , razorpay_link='' } = data;
 
   let details = {};
 

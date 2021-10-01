@@ -24,7 +24,9 @@ const notificationMessages = {
         case "C2D":
           return `It's time to Call ${data.name} ${data.category}`;
         case "C2C":
-          return `${data.name} (${data.category}) is having ${data.reminderName} for ${data.time}`;
+          return `${data.name} (${data.category}) is having ${
+            data.reminderName
+          } for ${data.time}`;
       }
     }
   },
@@ -78,12 +80,16 @@ const notificationMessages = {
   },
   patient: {
     Discharge: data => {
-      return `Patient ${data.name} has been discharged from program ${data.title}`;
+      return `Patient ${data.name} has been discharged from program ${
+        data.title
+      }`;
     }
   },
   adverseEvent: {
     Add: data => {
-      return `${data.name} seems to have a ${data.concern} like for ${data.duration} after the medication`;
+      return `${data.name} seems to have a ${data.concern} like for ${
+        data.duration
+      } after the medication`;
     }
   },
   vitals: {

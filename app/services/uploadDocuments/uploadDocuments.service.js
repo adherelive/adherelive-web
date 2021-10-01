@@ -7,9 +7,7 @@ class UploadDocumentService {
   addDocument = async data => {
     const transaction = await Database.initTransaction();
     try {
-      const document = await Database.getModel(TABLE_NAME).create(data, {
-        transaction
-      });
+          const document = await Database.getModel(TABLE_NAME).create(data, {transaction});
       await transaction.commit();
       return document;
     } catch (error) {
@@ -36,7 +34,7 @@ class UploadDocumentService {
       const documents = await Database.getModel(TABLE_NAME).findAll({
         where: {
           parent_type,
-          parent_id
+                    parent_id,
           // deleted_at:null
         }
       });
@@ -77,7 +75,7 @@ class UploadDocumentService {
     }
   };
 
-  getDocumentByName = async data => {
+    getDocumentByName = async (data) => {
     try {
       const document = await Database.getModel(TABLE_NAME).findOne({
         where: data
@@ -88,7 +86,7 @@ class UploadDocumentService {
     }
   };
 
-  getAllByData = async data => {
+    getAllByData = async (data) => {
     try {
       const documents = await Database.getModel(TABLE_NAME).findAll({
         where: data
@@ -99,7 +97,7 @@ class UploadDocumentService {
     }
   };
 
-  deleteDocumentsOfAppointment = async id => {
+    deleteDocumentsOfAppointment = async (id) => {
     try {
       const documents = await Database.getModel(TABLE_NAME).destroy({
         where: {
@@ -112,7 +110,7 @@ class UploadDocumentService {
     }
   };
 
-  deleteDocumentByData = async data => {
+    deleteDocumentByData = async (data) => {
     try {
       return await Database.getModel(TABLE_NAME).destroy({
         where: data

@@ -4,11 +4,9 @@ import UserRoleService from "../../../services/userRoles/userRoles.service";
 import ProviderService from "../../../services/provider/provider.service";
 import UserDeviceService from "../../../services/userDevices/userDevice.service";
 import UserDeviceWrapper from "../../../ApiWrapper/mobile/userDevice";
-import {
-  AGORA_CALL_NOTIFICATION_TYPES,
-  USER_CATEGORY,
-  DEFAULT_PROVIDER
-} from "../../../../constant";
+import {AGORA_CALL_NOTIFICATION_TYPES, USER_CATEGORY, DEFAULT_PROVIDER} from "../../../../constant";
+
+
 
 import moment from "moment";
 
@@ -29,20 +27,17 @@ class MissedJob extends AgoraJob {
       }
     } = getAgoraData() || {};
 
-    const participants = roomId.split(
-      `-${process.config.twilio.CHANNEL_SERVER}-`
-    );
+        const participants = roomId.split(`-${process.config.twilio.CHANNEL_SERVER}-`);
 
     const templateData = [];
     const playerIds = [];
     const userIds = [];
 
-    const { rows: userRoles = [] } =
-      (await UserRoleService.findAndCountAll({
+        const {rows: userRoles = []} = await UserRoleService.findAndCountAll({
         where: {
           id: participants
         }
-      })) || {};
+        }) || {};
 
     let providerId = null;
     for (const userRole of userRoles) {
@@ -58,17 +53,14 @@ class MissedJob extends AgoraJob {
 
     let providerName = DEFAULT_PROVIDER;
     if (providerId) {
-      const provider = await ProviderService.getProviderByData({
-        id: providerId
-      });
+            const provider = await ProviderService.getProviderByData({id: providerId});
       const { name } = provider || {};
       providerName = name;
     }
 
-    const userDevices =
-      (await UserDeviceService.getAllDeviceByData({
-        user_id: userIds
-      })) || [];
+        const userDevices = await UserDeviceService.getAllDeviceByData({
+            user_id: userIds
+        }) || [];
 
     if (userDevices.length > 0) {
       for (const device of userDevices) {
@@ -77,18 +69,14 @@ class MissedJob extends AgoraJob {
       }
     }
 
-    const url = getNotificationUrl(AGORA_CALL_NOTIFICATION_TYPES.MISSED_CALL);
+        const url = getNotificationUrl(AGORA_CALL_NOTIFICATION_TYPES.MISSED_CALL)
 
     templateData.push({
       small_icon: process.config.app.icon_android,
       app_id: process.config.one_signal.app_id,
       headings: { en: `Missed call (${providerName})` },
       contents: {
-        en: `You missed a call from ${
-          category === USER_CATEGORY.DOCTOR || category === USER_CATEGORY.HSP
-            ? "Dr. "
-            : ""
-        }${full_name}.`
+              en: `You missed a call from ${category === USER_CATEGORY.DOCTOR || category === USER_CATEGORY.HSP ? "Dr. " : ""}${full_name}.`
       },
       include_player_ids: [...playerIds],
       priority: 10,
@@ -112,9 +100,7 @@ class MissedJob extends AgoraJob {
       roomId
     } = getAgoraData() || {};
 
-    const participants = roomId.split(
-      `-${process.config.twilio.CHANNEL_SERVER}-`
-    );
+        const participants = roomId.split(`-${process.config.twilio.CHANNEL_SERVER}-`);
 
     const templateData = [];
 

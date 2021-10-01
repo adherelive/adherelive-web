@@ -1,8 +1,8 @@
-"use strict";
+'use strict';
 
-import { TABLE_NAME } from "../app/models/careplanSecondaryDoctorMappings";
-import { TABLE_NAME as careplanTableName } from "../app/models/carePlan";
-import { TABLE_NAME as userRoleTableName } from "../app/models/userRoles";
+import {TABLE_NAME } from "../app/models/careplanSecondaryDoctorMappings";
+import {TABLE_NAME as careplanTableName} from "../app/models/carePlan";
+import {TABLE_NAME as userRoleTableName} from "../app/models/userRoles";
 
 module.exports = {
   up: (queryInterface, DataTypes) => {
@@ -48,7 +48,7 @@ module.exports = {
     });
   },
 
-  down: queryInterface => {
+  down: (queryInterface) => {
     return queryInterface.dropTable(TABLE_NAME);
   }
 };

@@ -8,37 +8,37 @@ module.exports = {
     return queryInterface.bulkInsert(TABLE_NAME, [
       {
         name: "Apple",
-        creator_type: USER_CATEGORY.ADMIN,
+        creator_type:USER_CATEGORY.ADMIN,
         created_at: new Date(),
         updated_at: new Date()
       },
       {
         name: "Banana",
-        creator_type: USER_CATEGORY.ADMIN,
+        creator_type:USER_CATEGORY.ADMIN,
         created_at: new Date(),
         updated_at: new Date()
       },
       {
         name: "Mango",
-        creator_type: USER_CATEGORY.ADMIN,
+        creator_type:USER_CATEGORY.ADMIN,
         created_at: new Date(),
         updated_at: new Date()
       },
       {
         name: "Watermelon",
-        creator_type: USER_CATEGORY.ADMIN,
+        creator_type:USER_CATEGORY.ADMIN,
         created_at: new Date(),
         updated_at: new Date()
       },
       {
         name: "Papaya",
-        creator_type: USER_CATEGORY.ADMIN,
+        creator_type:USER_CATEGORY.ADMIN,
         created_at: new Date(),
         updated_at: new Date()
       },
       {
         name: "Guava",
-        creator_type: USER_CATEGORY.ADMIN,
+        creator_type:USER_CATEGORY.ADMIN,
         created_at: new Date(),
         updated_at: new Date()
       }

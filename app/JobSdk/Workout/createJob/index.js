@@ -5,11 +5,7 @@ import UserRoleService from "../../../services/userRoles/userRoles.service";
 import ProviderService from "../../../services/provider/provider.service";
 import UserDeviceService from "../../../services/userDevices/userDevice.service";
 import UserDeviceWrapper from "../../../ApiWrapper/mobile/userDevice";
-import {
-  EVENT_TYPE,
-  NOTIFICATION_VERB,
-  DEFAULT_PROVIDER
-} from "../../../../constant";
+import { EVENT_TYPE, NOTIFICATION_VERB, DEFAULT_PROVIDER } from "../../../../constant";
 
 class CreateJob extends WorkoutJob {
   constructor(data) {
@@ -31,12 +27,11 @@ class CreateJob extends WorkoutJob {
     const playerIds = [];
     const userIds = [];
 
-    const { rows: userRoles = [] } =
-      (await UserRoleService.findAndCountAll({
-        where: {
-          id: participants
-        }
-      })) || {};
+    const {rows: userRoles = []} = await UserRoleService.findAndCountAll({
+      where: {
+        id: participants
+      }
+    }) || {};
 
     let providerId = null;
     for (const userRole of userRoles) {
@@ -53,9 +48,7 @@ class CreateJob extends WorkoutJob {
 
     let providerName = DEFAULT_PROVIDER;
     if (providerId) {
-      const provider = await ProviderService.getProviderByData({
-        id: providerId
-      });
+      const provider = await ProviderService.getProviderByData({id: providerId});
       const { name } = provider || {};
       providerName = name;
     }
@@ -81,10 +74,7 @@ class CreateJob extends WorkoutJob {
       include_player_ids: [...playerIds],
       priority: 10,
       android_channel_id: process.config.one_signal.urgent_channel_id,
-      data: {
-        url: `/${NOTIFICATION_VERB.WORKOUT_CREATION}`,
-        params: getWorkoutData()
-      }
+      data: { url: `/${NOTIFICATION_VERB.WORKOUT_CREATION}`, params: getWorkoutData() }
     });
 
     return templateData;
@@ -94,7 +84,10 @@ class CreateJob extends WorkoutJob {
     const { getWorkoutData } = this;
     const {
       participants = [],
-      actor: { id: actorId, user_role_id } = {},
+      actor: {
+        id: actorId,
+        user_role_id,
+      } = {},
       event_id
     } = getWorkoutData() || {};
 

@@ -11,7 +11,7 @@ export default class ExerciseDetailService {
   create = async ({
     exerciseDetails,
     auth,
-    transaction: continuedTransaction = null
+    transaction: continuedTransaction = null,
   }) => {
     const transaction = continuedTransaction
       ? continuedTransaction
@@ -21,7 +21,7 @@ export default class ExerciseDetailService {
         (await Database.getModel(TABLE_NAME).create(
           { ...exerciseDetails, ...auth },
           {
-            transaction
+            transaction,
           }
         )) || null;
 
@@ -40,7 +40,7 @@ export default class ExerciseDetailService {
       let whereQuery = {};
       if (id) {
         whereQuery = {
-          id
+          id,
         };
       } else {
         whereQuery = {
@@ -48,16 +48,16 @@ export default class ExerciseDetailService {
           [Op.or]: [
             auth,
             {
-              creator_type: USER_CATEGORY.ADMIN
-            }
-          ]
+              creator_type: USER_CATEGORY.ADMIN,
+            },
+          ],
         };
       }
 
       return (
         (await Database.getModel(TABLE_NAME).findOne({
           where: whereQuery,
-          include: [Database.getModel(repetitionTableName)]
+          include: [Database.getModel(repetitionTableName)],
         })) || null
       );
     } catch (error) {
@@ -70,10 +70,7 @@ export default class ExerciseDetailService {
       return (
         (await Database.getModel(TABLE_NAME).findAndCountAll({
           where: query,
-          include: [
-            Database.getModel(repetitionTableName),
-            Database.getModel(exerciseTableName)
-          ]
+          include: [Database.getModel(repetitionTableName), Database.getModel(exerciseTableName)],
           // limit,
           // offset
         })) || {}
@@ -89,10 +86,10 @@ export default class ExerciseDetailService {
         exercise_id,
         [Op.or]: [
           {
-            creator_type: USER_CATEGORY.ADMIN
+            creator_type: USER_CATEGORY.ADMIN,
           },
-          auth
-        ]
+          auth,
+        ],
       };
     }
     return {};

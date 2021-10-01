@@ -4,7 +4,7 @@ import { Op } from "sequelize";
 import moment from "moment";
 
 class UserDeviceService {
-  addDevice = async data => {
+    addDevice = async (data) => {
     try {
       const userDevice = await Database.getModel(TABLE_NAME).create(data);
       return userDevice;
@@ -13,7 +13,7 @@ class UserDeviceService {
     }
   };
 
-  getDeviceByData = async data => {
+    getDeviceByData = async (data) => {
     try {
       const userDevice = await Database.getModel(TABLE_NAME).findOne({
         where: data
@@ -24,9 +24,9 @@ class UserDeviceService {
     }
   };
 
-  getAllDeviceByData = async data => {
+    getAllDeviceByData = async (data) => {
     const inactivityDaysLimit = process.config.app.inactivity_days_no;
-    const dateFrom = moment().subtract(parseInt(inactivityDaysLimit, 10), "d");
+        const dateFrom = moment().subtract(parseInt(inactivityDaysLimit, 10),'d');
     try {
       const userDevice = await Database.getModel(TABLE_NAME).findAll({
         where: {
@@ -42,7 +42,7 @@ class UserDeviceService {
     }
   };
 
-  deleteDevice = async data => {
+    deleteDevice = async (data) => {
     try {
       const userDevice = await Database.getModel(TABLE_NAME).destroy({
         where: data,

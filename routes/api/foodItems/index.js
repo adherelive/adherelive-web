@@ -23,7 +23,12 @@ router.post(
   FoodItemController.update
 );
 
-router.get("/", Authenticate, isDoctor, FoodItemController.search);
+router.get(
+  "/",
+  Authenticate,
+  isDoctor,
+  FoodItemController.search
+);
 
 // get all & on permission basis
 

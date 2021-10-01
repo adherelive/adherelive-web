@@ -138,8 +138,12 @@ export const addProviderDoctor = async (
     if (doctorExist) {
       let doctor_data = {
         city,
-        profile_pic: profile_pic ? getFilePath(profile_pic) : null,
-        signature_pic: signature_pic ? getFilePath(signature_pic) : null,
+        profile_pic: profile_pic
+          ? getFilePath(profile_pic)
+          : null,
+        signature_pic: signature_pic
+          ? getFilePath(signature_pic)
+          : null,
         first_name,
         middle_name,
         last_name

@@ -2,7 +2,8 @@ import Database from "../../../libs/mysql";
 import { TABLE_NAME } from "../../models/userCategoryPermissions";
 
 class UserPermissionService {
-  constructor() {}
+    constructor() {
+    }
 
   deleteAll = async () => {
     try {
@@ -18,7 +19,7 @@ class UserPermissionService {
     }
   };
 
-  bulkCreate = async userPermissions => {
+    bulkCreate = async (userPermissions) => {
     const transaction = await Database.initTransaction();
     try {
       const createdUserPermissions = await Database.getModel(

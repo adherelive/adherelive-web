@@ -185,14 +185,16 @@ class MobileMReminderController extends Controller {
         status: EVENT_STATUS.SCHEDULED,
         start_date,
         end_date,
-        when_to_take
+        when_to_take,
         // participant_one: patient.getUserId(),
         // participant_two: userId
       };
 
       const QueueService = new queueService();
 
-      const sqsResponse = await QueueService.sendMessage(eventScheduleData);
+      const sqsResponse = await QueueService.sendMessage(
+        eventScheduleData
+      );
 
       Logger.debug("sqsResponse ---> ", sqsResponse);
 
@@ -347,15 +349,13 @@ class MobileMReminderController extends Controller {
           }
         },
         medicationId: mReminderDetails.get("id"),
-        event_id: mReminderDetails.get("id")
+        event_id: mReminderDetails.get("id"),
       };
 
       let details = mReminderDetails.getBasicInfo.details;
       details = { ...details, ...eventData };
 
-      const when_to_take_abbr_int = when_to_take_abbr
-        ? parseInt(when_to_take_abbr, 10)
-        : when_to_take_abbr;
+      const when_to_take_abbr_int = when_to_take_abbr? parseInt(when_to_take_abbr, 10): when_to_take_abbr;
       if (when_to_take_abbr_int !== WHEN_TO_TAKE_ABBREVATIONS.SOS) {
         const eventScheduleData = {
           patient_id: patient.getUserId(),
@@ -371,7 +371,7 @@ class MobileMReminderController extends Controller {
             id: userId,
             user_role_id: userRoleId,
             details: { name: full_name, category }
-          }
+          },
           // participant_one: patient.getUserId(),
           // participant_two: userId
         };
@@ -410,7 +410,9 @@ class MobileMReminderController extends Controller {
       // await Proxy_Sdk.scheduleEvent({data: eventScheduleData});
     } catch (error) {
       Logger.debug("Add medication error", error);
-      return this.raiseServerError(res);
+      return this.raiseServerError(
+        res,
+      );
     }
   };
 
@@ -432,11 +434,9 @@ class MobileMReminderController extends Controller {
 
       if (parseInt(patient_id) !== 0) {
         const patient = await PatientWrapper(null, patient_id);
-        const timingPreference = await userPreferenceService.getPreferenceByData(
-          {
+        const timingPreference = await userPreferenceService.getPreferenceByData({
             user_id: patient.getUserId()
-          }
-        );
+        });
         const options = await UserPreferenceWrapper(timingPreference);
         const { timings: userTimings = {} } = options.getAllDetails();
 
@@ -640,14 +640,12 @@ class MobileMReminderController extends Controller {
           id: userId,
           user_role_id: userRoleId,
           details: { name: full_name, category }
-        }
+        },
         // participant_one: patient.getUserId(),
         // participant_two: userId
       };
 
-      const when_to_take_abbr_int = when_to_take_abbr
-        ? parseInt(when_to_take_abbr, 10)
-        : when_to_take_abbr;
+      const when_to_take_abbr_int = when_to_take_abbr? parseInt(when_to_take_abbr, 10): when_to_take_abbr;
       if (when_to_take_abbr_int !== WHEN_TO_TAKE_ABBREVATIONS.SOS) {
         const QueueService = new queueService();
         await QueueService.sendMessage(eventScheduleData);
@@ -712,7 +710,7 @@ class MobileMReminderController extends Controller {
           id: userId,
           user_role_id: userRoleId,
           details: { name: full_name, category }
-        }
+        },
       };
 
       const medicationJob = MedicationJob.execute(

@@ -23,11 +23,7 @@ class FeatureController extends Controller {
     const { raiseServerError, raiseSuccess } = this;
     try {
       const {
-        userDetails: {
-          userRoleId = null,
-          userData: { category } = {},
-          userCategoryId
-        } = {}
+        userDetails: { userRoleId=null, userData: { category } = {}, userCategoryId } = {}
       } = req;
 
       let featureMappings = {};
@@ -83,7 +79,7 @@ class FeatureController extends Controller {
             ? userCategoryId
             : otherUserCategoryId;
         const doctorId =
-          category === USER_CATEGORY.DOCTOR || category === USER_CATEGORY.HSP
+          (category === USER_CATEGORY.DOCTOR || category === USER_CATEGORY.HSP )
             ? userCategoryId
             : otherUserCategoryId;
         const patientFeatures = await doctorPatientFeatureMappingService.getByData(

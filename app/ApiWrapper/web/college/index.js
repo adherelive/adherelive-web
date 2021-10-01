@@ -8,12 +8,15 @@ class CollegeWrapper extends BaseCollege {
 
   getBasicInfo = () => {
     const { _data } = this;
-    const { id, name } = _data || {};
+        const {
+            id,
+            name
+        } = _data || {};
     return {
       basic_info: {
         id,
-        name
-      }
+                name,
+            },
     };
   };
 }

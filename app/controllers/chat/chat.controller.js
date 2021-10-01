@@ -12,8 +12,7 @@ class ChatController extends Controller {
   notify = async (req, res) => {
     const { raiseSuccess, raiseClientError, raiseServerError } = this;
     try {
-      const {
-        body,
+            const {body,
         userDetails: {
           userId,
           userData: { category } = {},
@@ -21,13 +20,17 @@ class ChatController extends Controller {
         } = {}
       } = req;
 
-      const { doctor_id, patient_id, message } = body || {};
+            const {
+                doctor_id,
+                patient_id,
+                message
+            } = body || {};
 
       const actor = {
         id: userId,
         details: {
           category,
-          name: full_name
+                    name: full_name,
         }
       };
 
@@ -39,7 +42,7 @@ class ChatController extends Controller {
         }
       };
 
-      const UserMessageJob = ChatJob.execute();
+            const UserMessageJob = ChatJob.execute()
     } catch (error) {
       Log.debug("notify 500 error", error);
       return raiseServerError(res);

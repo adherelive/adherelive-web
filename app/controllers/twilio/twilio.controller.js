@@ -34,9 +34,7 @@ class TwilioController extends Controller {
   generateTwilioVideoAccessToken = async (req, res) => {
     const { raiseSuccess, raiseServerError } = this;
     try {
-      const {
-        userDetails: { userRoleId }
-      } = req;
+      const {userDetails: {userRoleId}} = req;
       const userId = userRoleId ? userRoleId : null;
       const identity = userId ? userId : faker.name.findName();
 

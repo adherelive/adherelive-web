@@ -1,7 +1,7 @@
 import ChatJob from "../";
 import moment from "moment";
 
-import { MESSAGE_TYPES } from "../../../../constant";
+import {MESSAGE_TYPES} from "../../../../constant"
 
 import UserRoleService from "../../../services/userRoles/userRoles.service";
 import ProviderService from "../../../services/provider/provider.service";
@@ -28,16 +28,13 @@ class BotMessageJob extends ChatJob {
         details: { name, category: actorCategory } = {}
       } = {},
       participants = [],
-      details: { message = "" }
+            details: {
+                message = ""
+            }
     } = getData() || {};
 
-    let doctorRoleId =
-      actorCategory === USER_CATEGORY.DOCTOR ||
-      actorCategory === USER_CATEGORY.HSP
-        ? actorRoleId
-        : null;
-    let patientRoleId =
-      actorCategory === USER_CATEGORY.PATIENT ? actorRoleId : null;
+        let doctorRoleId = (actorCategory === USER_CATEGORY.DOCTOR || actorCategory === USER_CATEGORY.HSP)? actorRoleId: null;
+        let patientRoleId = actorCategory === USER_CATEGORY.PATIENT? actorRoleId: null;
 
     const templateData = [];
     const playerIds = [];
@@ -49,19 +46,18 @@ class BotMessageJob extends ChatJob {
       userRoleIds.push(participant);
       if (participant !== actorRoleId) {
         if (!doctorRoleId) {
-          doctorRoleId = participant;
+                doctorRoleId = participant
         } else if (!patientRoleId) {
-          patientRoleId = participant;
+                patientRoleId = participant
         }
       }
     });
 
-    const { rows: userRoles = [] } =
-      (await UserRoleService.findAndCountAll({
+        const {rows: userRoles = []} = await UserRoleService.findAndCountAll({
         where: {
           id: userRoleIds
         }
-      })) || {};
+        }) || {};
 
     let providerId = null;
     for (const userRole of userRoles) {
@@ -77,17 +73,15 @@ class BotMessageJob extends ChatJob {
 
     let providerName = DEFAULT_PROVIDER;
     if (providerId) {
-      const provider = await ProviderService.getProviderByData({
-        id: providerId
-      });
+            const provider = await ProviderService.getProviderByData({id: providerId});
       const { name } = provider || {};
       providerName = name;
     }
 
-    const userDevices =
-      (await UserDeviceService.getAllDeviceByData({
-        user_id: userIds
-      })) || [];
+
+        const userDevices = await UserDeviceService.getAllDeviceByData({
+            user_id: userIds
+        }) || [];
 
     if (userDevices.length > 0) {
       for (const device of userDevices) {
@@ -96,7 +90,7 @@ class BotMessageJob extends ChatJob {
       }
     }
 
-    const roomId = getRoomId(doctorRoleId, patientRoleId);
+        const roomId = getRoomId(doctorRoleId, patientRoleId)
 
     templateData.push({
       small_icon: process.config.app.icon_android,
@@ -109,16 +103,8 @@ class BotMessageJob extends ChatJob {
       priority: 10,
       android_group: "adhere.live",
       android_channel_id: process.config.one_signal.urgent_channel_id,
-      data: {
-        url: `/chat-message`,
-        params: {
-          ...getData(),
-          doctorUserId: doctorRoleId,
-          patientUserId: patientRoleId,
-          roomId,
-          actorId
-        }
-      }
+            data: { url: `/chat-message`, params: {...getData(), doctorUserId: doctorRoleId,
+                 patientUserId: patientRoleId, roomId, actorId }}
     });
     // }
 

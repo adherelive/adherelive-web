@@ -29,7 +29,7 @@ class CarePlanService {
     }
   }
 
-  getCarePlanByData = async data => {
+  getCarePlanByData = async (data) => {
     try {
       const { user_role_id = null, ...rest } = data || {};
 
@@ -37,7 +37,7 @@ class CarePlanService {
       if (user_role_id) {
         secondaryDoctorQuery.push(
           {
-            "$careplan_secondary_doctor_mappings.secondary_doctor_role_id$": user_role_id
+            '$careplan_secondary_doctor_mappings.secondary_doctor_role_id$': user_role_id
           },
           {
             user_role_id
@@ -66,7 +66,7 @@ class CarePlanService {
               include: {
                 model: Database.getModel(medicineTableName),
                 required: true
-              }
+              },
               // required: true
             }
           },
@@ -98,7 +98,7 @@ class CarePlanService {
               include: {
                 model: Database.getModel(medicineTableName),
                 required: true
-              }
+             },
               // required: true
             }
           },
@@ -130,7 +130,7 @@ class CarePlanService {
               include: {
                 model: Database.getModel(medicineTableName),
                 required: true
-              }
+              },
               // required: true
             }
           },
@@ -155,7 +155,7 @@ class CarePlanService {
       if (user_role_id) {
         secondaryDoctorQuery.push(
           {
-            "$careplan_secondary_doctor_mappings.secondary_doctor_role_id$": user_role_id
+            '$careplan_secondary_doctor_mappings.secondary_doctor_role_id$': user_role_id
           },
           {
             user_role_id
@@ -184,7 +184,7 @@ class CarePlanService {
               include: {
                 model: Database.getModel(medicineTableName),
                 required: true
-              }
+              },
               // required: true
             }
           },
@@ -232,7 +232,7 @@ class CarePlanService {
     }
   };
 
-  getAllPatients = async data => {
+  getAllPatients = async (data) => {
     try {
       const carePlan = await Database.getModel(TABLE_NAME).findAll({
         where: data,
@@ -242,9 +242,9 @@ class CarePlanService {
     } catch (error) {
       throw error;
     }
-  };
+  }
 
-  getAllDoctors = async data => {
+  getAllDoctors = async (data) => {
     try {
       const carePlan = await Database.getModel(TABLE_NAME).findAll({
         where: data,
@@ -254,12 +254,9 @@ class CarePlanService {
     } catch (error) {
       throw error;
     }
-  };
+  }
 
-  getDistinctPatientCounts = async (
-    userRoleId,
-    careplanIdsAsSecondaryDoctor = []
-  ) => {
+  getDistinctPatientCounts = async(userRoleId,careplanIdsAsSecondaryDoctor=[]) => {
     try {
       const carePlan = await Database.getModel(TABLE_NAME).count({
         where: {
@@ -275,19 +272,15 @@ class CarePlanService {
           ]
         },
         distinct: true,
-        col: "patient_id"
+        col: 'patient_id'
       });
       return carePlan;
     } catch (error) {
       throw error;
     }
-  };
+  }
 
-  getWatchlistedDistinctPatientCounts = async (
-    watchlistPatientIds,
-    userRoleId,
-    careplanIdsAsSecondaryDoctor = []
-  ) => {
+  getWatchlistedDistinctPatientCounts = async( watchlistPatientIds,userRoleId,careplanIdsAsSecondaryDoctor=[]) => {
     try {
       const carePlan = await Database.getModel(TABLE_NAME).count({
         where: {
@@ -304,30 +297,17 @@ class CarePlanService {
           ]
         },
         distinct: true,
-        col: "patient_id"
+        col: 'patient_id'
       });
       return carePlan;
     } catch (error) {
       throw error;
     }
-  };
+  }
 
-  getPaginatedDataOfPatients = async data => {
-    const {
-      offset,
-      limit,
-      doctorId,
-      watchlistPatientIds,
-      watchlist,
-      sortByName,
-      createdAtOrder,
-      nameOrder,
-      userRoleId,
-      secondary_careplan_ids = null
-    } = data;
-    const sortBy = sortByName
-      ? `t3.first_name ${nameOrder ? "desc" : "asc"}`
-      : `t3.created_at ${createdAtOrder ? "desc" : "asc"}`;
+  getPaginatedDataOfPatients = async(data) => {
+    const {offset, limit, doctorId, watchlistPatientIds, watchlist, sortByName,createdAtOrder,nameOrder , userRoleId,secondary_careplan_ids=null } = data;
+    const sortBy = sortByName? `t3.first_name ${nameOrder ? "desc" : "asc" }`: `t3.created_at ${createdAtOrder ? "desc" : "asc" }`;
     // sortByName = 1 --> a-z , created_at = 1 --> latest top
     try {
       let query = "";
@@ -336,37 +316,29 @@ class CarePlanService {
         t1.created_at as care_plan_created_at, t1.expired_on as care_plan_expired_on, 
         t3.* from ${TABLE_NAME} as t1 join 
         (select MAX(created_at) as created_at,patient_id from ${TABLE_NAME}
-        where patient_id in (${watchlistPatientIds}) and ( user_role_id=${userRoleId} OR id in ( ${
-          secondary_careplan_ids ? secondary_careplan_ids : null
-        } ) ) 
+        where patient_id in (${watchlistPatientIds}) and ( user_role_id=${userRoleId} OR id in ( ${secondary_careplan_ids ? secondary_careplan_ids : null} ) ) 
          group by patient_id) as t2
          on t1.patient_id = t2.patient_id and t1.created_at = t2.created_at
          join ${patientTableName} as t3
          on t1.patient_id = t3.id
          where 
          t1.patient_id in (${watchlistPatientIds}) and
-         (t1.user_role_id = ${userRoleId} OR t1.id in (${
-          secondary_careplan_ids ? secondary_careplan_ids : null
-        }) )
+         (t1.user_role_id = ${userRoleId} OR t1.id in (${secondary_careplan_ids ? secondary_careplan_ids : null}) )
          order by ${sortBy}
          limit ${limit}
-         offset ${offset};`;
+         offset ${offset};`
       } else {
         query = `select t1.id as care_plan_id, t1.details as care_plan_details, 
         t1.created_at as care_plan_created_at, t1.expired_on as care_plan_expired_on, 
         t3.* from ${TABLE_NAME} as t1 join 
-        (select MAX(created_at) as created_at,patient_id from ${TABLE_NAME} where ( user_role_id=${userRoleId} OR id in ( ${
-          secondary_careplan_ids ? secondary_careplan_ids : null
-        } ) ) group by patient_id) as t2
+        (select MAX(created_at) as created_at,patient_id from ${TABLE_NAME} where ( user_role_id=${userRoleId} OR id in ( ${secondary_careplan_ids ? secondary_careplan_ids : null} ) ) group by patient_id) as t2
          on t1.patient_id = t2.patient_id and t1.created_at = t2.created_at
          join ${patientTableName} as t3
          on t1.patient_id = t3.id
-         where (t1.doctor_id = ${doctorId} and  t1.user_role_id = ${userRoleId}) OR t1.id in ( ${
-          secondary_careplan_ids ? secondary_careplan_ids : null
-        } )
+         where (t1.doctor_id = ${doctorId} and  t1.user_role_id = ${userRoleId}) OR t1.id in ( ${secondary_careplan_ids ? secondary_careplan_ids : null} )
          order by ${sortBy}
          limit ${limit}
-         offset ${offset};`;
+         offset ${offset};`
       }
 
       const [patients, metaData] = await Database.performRawQuery(query);
@@ -377,14 +349,15 @@ class CarePlanService {
     } catch (err) {
       throw err;
     }
-  };
+  }
 
-  searchDiagnosisType = async searchDisagnosisType => {
+  searchDiagnosisType = async(searchDisagnosisType) => {
     try {
       const intType = parseInt(searchDisagnosisType);
       const query = `SELECT id AS careplan_id , JSON_UNQUOTE(JSON_EXTRACT(details,'$.diagnosis.type')) AS  diagnosis 
         FROM adhere.care_plans
-        WHERE JSON_EXTRACT(details, "$.diagnosis.type") = "${intType}";`;
+        WHERE JSON_EXTRACT(details, "$.diagnosis.type") = "${intType}";`
+ 
 
       const [careplans, metaData] = await Database.performRawQuery(query);
 
@@ -392,13 +365,13 @@ class CarePlanService {
     } catch (err) {
       throw err;
     }
-  };
+  }
 
-  searchDiagnosisDescription = async seachDiagnosisText => {
+  searchDiagnosisDescription = async(seachDiagnosisText) => {
     try {
       const query = `SELECT id AS careplan_id , JSON_UNQUOTE(JSON_EXTRACT(details,'$.diagnosis.description')) AS  diagnosis 
         FROM adhere.care_plans
-        WHERE JSON_EXTRACT(details, "$.diagnosis.description") like "%${seachDiagnosisText}%" ;`;
+        WHERE JSON_EXTRACT(details, "$.diagnosis.description") like "%${seachDiagnosisText}%" ;`
 
       const [careplans, metaData] = await Database.performRawQuery(query);
 
@@ -406,60 +379,48 @@ class CarePlanService {
     } catch (err) {
       throw err;
     }
-  };
+  }
 
-  searchtreatmentIds = async treatmentIds => {
+  searchtreatmentIds = async(treatmentIds) => {
     try {
       const query = `SELECT id AS careplan_id , JSON_UNQUOTE(JSON_EXTRACT(details,'$.treatment_id')) AS  diagnosis 
         FROM adhere.care_plans
-        WHERE JSON_EXTRACT(details, "$.treatment_id") in (${treatmentIds});`;
+        WHERE JSON_EXTRACT(details, "$.treatment_id") in (${treatmentIds});`
 
       const [careplans, metaData] = await Database.performRawQuery(query);
 
-      console.log("35732432542730078783246722 === = ==========>>>", {
-        careplans
-      });
+      console.log("35732432542730078783246722 === = ==========>>>",{careplans});
 
       return careplans;
     } catch (err) {
       throw err;
     }
-  };
+  }
 
-  getPaginatedPatients = async ({
-    doctor_id,
-    order,
-    filter,
-    offset,
-    limit,
-    watchlist,
-    user_role_id,
-    secondary_careplan_ids = null
-  }) => {
+  getPaginatedPatients = async ({doctor_id, order, filter,offset,limit,watchlist,user_role_id,secondary_careplan_ids=null}) => {
+
     // const patientWatchlistedIds = watchlistPatientIds.length ? watchlistPatientIds.toString() : null ;
 
     // console.log("7456278467234627429384221",{offset,limit,watchlistPatientIds,patientWatchlistedIds});
 
-    let finalFilter = filter
-      ? `${filter} AND carePlan.user_role_id = ${user_role_id}`
-      : `carePlan.user_role_id = ${user_role_id}`;
-
-    if (secondary_careplan_ids && secondary_careplan_ids.length) {
-      finalFilter = filter
-        ? `${filter} AND (carePlan.user_role_id = ${user_role_id} OR carePlan.id in (${secondary_careplan_ids}) )`
-        : `carePlan.user_role_id = ${user_role_id} OR carePlan.id in (${secondary_careplan_ids})  `;
+    let  finalFilter = filter ? `${filter} AND carePlan.user_role_id = ${user_role_id}` :  `carePlan.user_role_id = ${user_role_id}`;
+   
+    if(secondary_careplan_ids && secondary_careplan_ids.length){
+      finalFilter = filter 
+      ? 
+      `${filter} AND (carePlan.user_role_id = ${user_role_id} OR carePlan.id in (${secondary_careplan_ids}) )` 
+      : 
+       `carePlan.user_role_id = ${user_role_id} OR carePlan.id in (${secondary_careplan_ids})  `;
     }
 
     const finalOrder = order ? order : `patient.created_at DESC`;
-    let query = "";
+    let query ='';
 
     query = `
     SELECT  carePlan.id AS care_plan_id, carePlan.details AS care_plan_details, carePlan.created_at AS care_plan_created_at,
       carePlan.expired_on AS care_plan_expired_on, carePlan.activated_on AS care_plan_activated_on, carePlan.user_role_id AS care_plan_user_role_id ,   patient.* FROM ${TABLE_NAME} AS carePlan
       JOIN 
-        (SELECT MAX(created_at) AS created_at, patient_id from ${TABLE_NAME} WHERE ( user_role_id=${user_role_id} OR id in (${
-      secondary_careplan_ids ? secondary_careplan_ids : null
-    }) ) GROUP BY patient_id)
+        (SELECT MAX(created_at) AS created_at, patient_id from ${TABLE_NAME} WHERE ( user_role_id=${user_role_id} OR id in (${secondary_careplan_ids ? secondary_careplan_ids : null}) ) GROUP BY patient_id)
       AS carePlan2 ON carePlan.patient_id = carePlan2.patient_id AND carePlan.created_at = carePlan2.created_at
       JOIN ${patientTableName} as patient ON carePlan.patient_id = patient.id
         WHERE ${finalFilter} ${watchlist}
@@ -471,9 +432,7 @@ class CarePlanService {
     SELECT carePlan.id AS care_plan_id, carePlan.details AS care_plan_details, carePlan.created_at AS care_plan_created_at,
       carePlan.expired_on AS care_plan_expired_on, carePlan.activated_on AS care_plan_activated_on, patient.* FROM ${TABLE_NAME} AS carePlan
       JOIN 
-        (SELECT MAX(created_at) AS created_at, patient_id from ${TABLE_NAME} WHERE ( user_role_id=${user_role_id} OR id in (${
-      secondary_careplan_ids ? secondary_careplan_ids : null
-    }) ) GROUP BY patient_id)
+        (SELECT MAX(created_at) AS created_at, patient_id from ${TABLE_NAME} WHERE ( user_role_id=${user_role_id} OR id in (${secondary_careplan_ids ? secondary_careplan_ids : null }) ) GROUP BY patient_id)
       AS carePlan2 ON carePlan.patient_id = carePlan2.patient_id AND carePlan.created_at = carePlan2.created_at
       JOIN ${patientTableName} as patient ON carePlan.patient_id = patient.id
         WHERE ${finalFilter} ${watchlist}
@@ -482,16 +441,9 @@ class CarePlanService {
     // }
 
     try {
-      const carePlans = await Database.performRawQuery(query, {
-        raw: true,
-        type: QueryTypes.SELECT
-      });
+      const carePlans = await Database.performRawQuery(query, {raw: true, type: QueryTypes.SELECT});
 
-      const carePlanCount =
-        (await Database.performRawQuery(countQuery, {
-          raw: true,
-          type: QueryTypes.SELECT
-        })) || [];
+      const carePlanCount = await Database.performRawQuery(countQuery, {raw: true, type: QueryTypes.SELECT}) || [];
 
       // console.log("910238102 carePlanCount", carePlanCount);
       return [carePlanCount.length, carePlans];
@@ -515,12 +467,7 @@ class CarePlanService {
     }
   };
 
-  findAndCountAll = async ({
-    where,
-    order = DEFAULT_ORDER,
-    attributes,
-    userRoleId
-  }) => {
+  findAndCountAll = async ({where, order = DEFAULT_ORDER, attributes,userRoleId}) => {
     try {
       return await Database.getModel(TABLE_NAME).findAndCountAll({
         where: {
@@ -529,7 +476,7 @@ class CarePlanService {
               ...where
             },
             {
-              "$careplan_secondary_doctor_mappings.secondary_doctor_role_id$": userRoleId
+              '$careplan_secondary_doctor_mappings.secondary_doctor_role_id$': userRoleId
             }
           ]
         },
@@ -545,7 +492,7 @@ class CarePlanService {
               include: {
                 model: Database.getModel(medicineTableName),
                 required: true
-              }
+              },
               // required: true
             }
           },

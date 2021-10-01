@@ -12,14 +12,14 @@ class CouncilService {
     }
   };
 
-  search = async data => {
+    search = async (data) => {
     try {
       const council = await Database.getModel(TABLE_NAME).findAll({
         where: {
           name: {
-            [Op.like]: `%${data}%`
-          }
-        }
+                        [Op.like]: `%${data}%`,
+                    },
+                },
       });
       return council;
     } catch (error) {
@@ -47,11 +47,13 @@ class CouncilService {
     } catch (error) {
       throw error;
     }
-  };
+    }
 
   create = async data => {
     try {
-      const council = await Database.getModel(TABLE_NAME).create(data);
+            const council = await Database.getModel(TABLE_NAME).create(
+                data
+              );
       return council;
     } catch (error) {
       throw error;

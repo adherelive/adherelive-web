@@ -27,12 +27,12 @@ class FoodItemController extends Controller {
         body,
         userDetails: {
           userCategoryId = null,
-          userData: { category = null } = {}
+                    userData: { category = null } = {},
         } = {}
       } = req;
 
       const {
-        name = "",
+                name = '' ,
         calorific_value = null,
         carbs = null,
         proteins = null,
@@ -93,22 +93,13 @@ class FoodItemController extends Controller {
 
       // create
 
-      const {
-        food_item_id = null,
-        food_item_detail_id = null
-      } = await foodItemService.create({ foodItemData, userData });
+            const {food_item_id =null ,food_item_detail_id =null } = await foodItemService.create( {foodItemData,userData} );
 
-      let foodItemsApiData = {},
-        foodItemDetailsApiData = {},
-        portionsApiData = {};
+            let foodItemsApiData = {} , foodItemDetailsApiData = {} , portionsApiData = {};
 
       if (food_item_id) {
-        const createdFoodItemWrapper = await FoodItemWrapper({
-          id: food_item_id
-        });
-        foodItemsApiData[
-          createdFoodItemWrapper.getId()
-        ] = await createdFoodItemWrapper.getBasicInfo();
+                const createdFoodItemWrapper = await FoodItemWrapper({id:food_item_id});
+                foodItemsApiData[createdFoodItemWrapper.getId()]= await createdFoodItemWrapper.getBasicInfo();
         // const creatorType = await createdFoodItemWrapper.getCreatorType();
         // const creatorId = await createdFoodItemWrapper.getCreatorId();
         // if(creatorType === USER_CATEGORY.DOCTOR){
@@ -118,18 +109,12 @@ class FoodItemController extends Controller {
       }
 
       if (food_item_detail_id) {
-        const createdFoodItemDetailWrapper = await FoodItemDetailsWrapper({
-          id: food_item_detail_id
-        });
-        foodItemDetailsApiData[
-          createdFoodItemDetailWrapper.getId()
-        ] = await createdFoodItemDetailWrapper.getBasicInfo();
+                const createdFoodItemDetailWrapper = await FoodItemDetailsWrapper({id:food_item_detail_id});
+                foodItemDetailsApiData[createdFoodItemDetailWrapper.getId()] = await createdFoodItemDetailWrapper.getBasicInfo();   
         // const creatorType = await createdFoodItemDetailWrapper.getCreatorType();
         // const creatorId = await createdFoodItemDetailWrapper.getCreatorId();
         const portionId = await createdFoodItemDetailWrapper.getPortionId();
-        portionsApiData[
-          portionId
-        ] = await createdFoodItemDetailWrapper.getPortionDetails();
+                portionsApiData[portionId] = await createdFoodItemDetailWrapper.getPortionDetails();
         // if(creatorType === USER_CATEGORY.DOCTOR){
         //     const doctorData = await DoctorWrapper(null,creatorId);
         //     doctorApiData[creatorId] = await doctorData.getBasicInfo();
@@ -166,7 +151,7 @@ class FoodItemController extends Controller {
         body,
         userDetails: {
           userCategoryId = null,
-          userData: { category = null } = {}
+                    userData: { category = null } = {},
         } = {}
       } = req;
 
@@ -179,14 +164,12 @@ class FoodItemController extends Controller {
         details = {},
         portion_id = null,
         portion_size = 1,
-        fibers = null
+                fibers= null,
       } = body || {};
 
       const foodItemService = new FoodItemService();
 
-      const FoodItemRecordExists = await foodItemService.getByData({
-        id: foodItemId
-      });
+            const FoodItemRecordExists = await foodItemService.getByData({id:foodItemId})
 
       // no matching food item
 
@@ -206,11 +189,9 @@ class FoodItemController extends Controller {
       const creator_type = await foodItemWrapper.getCreatorType();
 
       const hasPermission =
-        (creator_id &&
-          userCategoryId &&
-          creator_id.toString() === userCategoryId.toString() &&
-          creator_type === category) ||
-        creator_type === USER_CATEGORY.ADMIN;
+                ( creator_id && userCategoryId && creator_id.toString() === userCategoryId.toString() && creator_type === category ) 
+                ||
+                (  creator_type === USER_CATEGORY.ADMIN );
 
       // different dietician's food item
 
@@ -225,42 +206,42 @@ class FoodItemController extends Controller {
 
       // ---- has permission
 
-      const matchingDetailsForPortionAndUser = await foodItemService.getItemDetailData(
-        {
+            const matchingDetailsForPortionAndUser = await foodItemService.getItemDetailData({
           portion_id,
           food_item_id: foodItemId,
           creator_id: userCategoryId,
-          creator_type: category
-        }
-      );
+                creator_type:category,
+            });
 
-      let foodItemDetailsId = null,
-        canUpdateFoodItem = false,
-        canUpdateFoodItemDetails = false;
+
+            let foodItemDetailsId = null , canUpdateFoodItem = false , canUpdateFoodItemDetails = false ;
 
       // if its doctor' item, only then editable by doc
-      canUpdateFoodItem =
-        foodItemWrapper.getCreatorType() === USER_CATEGORY.ADMIN ? false : true;
+            canUpdateFoodItem = foodItemWrapper.getCreatorType() === USER_CATEGORY.ADMIN ? false : true;
 
-      //if its doctor' item Detail , only then editable
+            //if its doctor' item Detail , only then editable 
       if (matchingDetailsForPortionAndUser) {
-        const DetailsWrapper = await FoodItemDetailsWrapper({
-          data: matchingDetailsForPortionAndUser
-        });
-        foodItemDetailsId = (await DetailsWrapper.getId()) || null;
-        const ItemDetailsWrapper = await FoodItemDetailsWrapper({
-          data: matchingDetailsForPortionAndUser
-        });
+                const DetailsWrapper = await FoodItemDetailsWrapper({data:matchingDetailsForPortionAndUser});
+                foodItemDetailsId = await DetailsWrapper.getId() || null; 
+                const ItemDetailsWrapper = await FoodItemDetailsWrapper({data:matchingDetailsForPortionAndUser});
         if (
-          (ItemDetailsWrapper.getCreatorType() === USER_CATEGORY.DOCTOR &&
-            category == USER_CATEGORY.DOCTOR &&
-            ItemDetailsWrapper.getCreatorId() === userCategoryId) ||
-          (ItemDetailsWrapper.getCreatorType() === USER_CATEGORY.HSP &&
-            category == USER_CATEGORY.HSP &&
-            ItemDetailsWrapper.getCreatorId() === userCategoryId)
+                    (ItemDetailsWrapper.getCreatorType() === USER_CATEGORY.DOCTOR 
+                        &&
+                    category == USER_CATEGORY.DOCTOR 
+                        &&
+                    ItemDetailsWrapper.getCreatorId() === userCategoryId
+                    )
+                    ||
+                    (ItemDetailsWrapper.getCreatorType() === USER_CATEGORY.HSP 
+                        &&
+                    category == USER_CATEGORY.HSP
+                        &&
+                    ItemDetailsWrapper.getCreatorId() === userCategoryId
+                    )
         ) {
           canUpdateFoodItemDetails = true;
-        } else {
+                }
+                else{
           canUpdateFoodItemDetails = false;
         }
         // canUpdateFoodItemDetails = ItemDetailsWrapper.getCreatorType() === USER_CATEGORY.ADMIN ? false : true;
@@ -304,30 +285,21 @@ class FoodItemController extends Controller {
         fibers
       };
 
-      const {
-        food_item_id,
-        food_item_detail_id
-      } = await foodItemService.update({
+            const { food_item_id , food_item_detail_id } = await foodItemService.update({
         food_item_id: foodItemId,
         item_detail_id: foodItemDetailsId,
         foodItemData,
         foodItemDetailData,
         toUpdate,
         canUpdateFoodItem,
-        canUpdateFoodItemDetails
-      });
+                canUpdateFoodItemDetails});
 
-      let foodItemsApiData = {},
-        foodItemDetailsApiData = {},
-        portionsApiData = {};
+
+                let foodItemsApiData = {} , foodItemDetailsApiData = {} , portionsApiData = {};
 
       if (food_item_id) {
-        const createdFoodItemWrapper = await FoodItemWrapper({
-          id: food_item_id
-        });
-        foodItemsApiData[
-          createdFoodItemWrapper.getId()
-        ] = await createdFoodItemWrapper.getBasicInfo();
+                const createdFoodItemWrapper = await FoodItemWrapper({id:food_item_id});
+                foodItemsApiData[createdFoodItemWrapper.getId()]= await createdFoodItemWrapper.getBasicInfo();
         // const creatorType = await createdFoodItemWrapper.getCreatorType();
         // const creatorId = await createdFoodItemWrapper.getCreatorId();
         // if(creatorType === USER_CATEGORY.DOCTOR){
@@ -337,18 +309,12 @@ class FoodItemController extends Controller {
       }
 
       if (food_item_detail_id) {
-        const createdFoodItemDetailWrapper = await FoodItemDetailsWrapper({
-          id: food_item_detail_id
-        });
-        foodItemDetailsApiData[
-          createdFoodItemDetailWrapper.getId()
-        ] = await createdFoodItemDetailWrapper.getBasicInfo();
+                const createdFoodItemDetailWrapper = await FoodItemDetailsWrapper({id:food_item_detail_id});
+                foodItemDetailsApiData[createdFoodItemDetailWrapper.getId()] = await createdFoodItemDetailWrapper.getBasicInfo();   
         // const creatorType = await createdFoodItemDetailWrapper.getCreatorType();
         // const creatorId = await createdFoodItemDetailWrapper.getCreatorId();
         const portionId = await createdFoodItemDetailWrapper.getPortionId();
-        portionsApiData[
-          portionId
-        ] = await createdFoodItemDetailWrapper.getPortionDetails();
+                portionsApiData[portionId] = await createdFoodItemDetailWrapper.getPortionDetails();
         // if(creatorType === USER_CATEGORY.DOCTOR){
         //     const doctorData = await DoctorWrapper(null,creatorId);
         //     doctorApiData[creatorId] = await doctorData.getBasicInfo();
@@ -384,26 +350,23 @@ class FoodItemController extends Controller {
     const { raiseSuccess, raiseServerError } = this;
     try {
       const {
-        query: { value = "" } = {},
+                query : { value = '' } = {},
         userDetails: {
           userCategoryId = null,
-          userData: { category = null } = {}
+                    userData: { category = null } = {},
         } = {}
       } = req;
 
       const foodItemService = new FoodItemService();
       // const foodItemDetailService = new FoodItemDetailService();
 
-      let foodItemsApiData = {},
-        foodItemDetailsApiData = {},
-        portionsApiData = {};
+            let foodItemsApiData = {} , foodItemDetailsApiData = {} , portionsApiData = {};
 
-      const foodItems =
-        (await foodItemService.search({
+            const foodItems = await foodItemService.search({
           name: value,
           creator_id: userCategoryId,
           creator_type: category
-        })) || {};
+            }) || {} ;
 
       if (Object.keys(foodItems).length) {
         for (let each in foodItems) {
@@ -414,16 +377,10 @@ class FoodItemController extends Controller {
 
           for (let eachDetail in foodItemDetails) {
             const record = foodItemDetails[eachDetail] || {};
-            const foodItemDetailWrapper = await FoodItemDetailsWrapper({
-              data: record
-            });
-            foodItemDetailsApiData[
-              foodItemDetailWrapper.getId()
-            ] = await foodItemDetailWrapper.getBasicInfo();
+                        const foodItemDetailWrapper = await FoodItemDetailsWrapper({data:record});
+                        foodItemDetailsApiData[foodItemDetailWrapper.getId()] = await foodItemDetailWrapper.getBasicInfo();
             const portionId = await foodItemDetailWrapper.getPortionId();
-            portionsApiData[
-              portionId
-            ] = await foodItemDetailWrapper.getPortionDetails();
+                        portionsApiData[portionId] = await foodItemDetailWrapper.getPortionDetails();
             // const detailCreatorType = await foodItemDetailWrapper.getCreatorType();
             // const detailCreatorId = await foodItemDetailWrapper.getCreatorId();
             // if(detailCreatorType === USER_CATEGORY.DOCTOR){
@@ -432,9 +389,7 @@ class FoodItemController extends Controller {
             // }
           }
 
-          foodItemsApiData[
-            foodItemWrapper.getId()
-          ] = await foodItemWrapper.getBasicInfo();
+                    foodItemsApiData[foodItemWrapper.getId()] = await foodItemWrapper.getBasicInfo();
           // const creatorType = await foodItemWrapper.getCreatorType();
           // const creatorId = await foodItemWrapper.getCreatorId();
           // if(creatorType === USER_CATEGORY.DOCTOR){
@@ -456,7 +411,7 @@ class FoodItemController extends Controller {
           },
           portions: {
             ...portionsApiData
-          }
+                    },
           // doctors:{
           //     ...doctorApiData
           // }

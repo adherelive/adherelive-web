@@ -53,10 +53,7 @@ import workoutRouter from "./workouts";
 
 router.use(async function(req, res, next) {
   try {
-    let accessToken,
-      userId = null,
-      userRoleId,
-      userRoleData;
+    let accessToken, userId = null, userRoleId, userRoleData;
     const { cookies = {} } = req;
     if (cookies.accessToken) {
       accessToken = cookies.accessToken;
@@ -74,13 +71,8 @@ router.use(async function(req, res, next) {
 
     if (accessToken) {
       const decodedAccessToken = await jwt.verify(accessToken, secret);
-      const {
-        userRoleId: decodedUserRoleId = null,
-        userId: decodedUserTokenUserId = null
-      } = decodedAccessToken || {};
-      const userRoleDetails = await userRolesService.getSingleUserRoleByData({
-        id: decodedUserRoleId
-      });
+      const { userRoleId: decodedUserRoleId = null, userId: decodedUserTokenUserId = null } = decodedAccessToken || {};
+      const userRoleDetails = await userRolesService.getSingleUserRoleByData({id: decodedUserRoleId});
       if (userRoleDetails) {
         const userRole = await UserRoleWrapper(userRoleDetails);
         userId = userRole.getUserId();
@@ -123,12 +115,14 @@ router.use(async function(req, res, next) {
       };
     }
     next();
+    return;
   } catch (err) {
     Log.debug("API INDEX CATCH ERROR ", err);
     req.userDetails = {
       exists: false
     };
     next();
+    return;
   }
 });
 

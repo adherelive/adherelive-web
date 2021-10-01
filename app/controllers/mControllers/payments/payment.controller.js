@@ -31,10 +31,7 @@ class PaymentController extends Controller {
        *
        *
        * */
-      const {
-        body,
-        userDetails: { userData: { category }, userRoleId } = {}
-      } = req;
+      const { body, userDetails: { userData: {category}, userRoleId } = {} } = req;
       const { for_user_type = USER_CATEGORY.DOCTOR } = body;
       const dataToAdd = PaymentHelper.getFormattedData(body);
       const paymentProductService = new PaymentProductService();
@@ -199,7 +196,9 @@ class PaymentController extends Controller {
   deleteDoctorPaymentProduct = async (req, res) => {
     const { raiseSuccess, raiseClientError, raiseServerError } = this;
     try {
-      const { params: { id = 0 } = {} } = req;
+      const {
+        params: { id = 0 } = {}
+      } = req;
 
       const paymentProductService = new PaymentProductService();
       const paymentProductData = await paymentProductService.deleteDoctorProductById(

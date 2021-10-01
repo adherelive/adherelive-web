@@ -12,14 +12,14 @@ class ConditionService {
     }
   };
 
-  search = async data => {
+    search = async (data) => {
     try {
       const condition = await Database.getModel(TABLE_NAME).findAll({
         where: {
           name: {
-            [Op.like]: `${data}%`
-          }
-        }
+                        [Op.like]: `${data}%`,
+                    },
+                },
       });
       return condition;
     } catch (error) {

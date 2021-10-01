@@ -4,7 +4,8 @@ import { TABLE_NAME } from "../../models/userPreferences";
 const DEFAULT_ORDER = [["created_at", "DESC"]];
 
 class UserPreferenceService {
-  constructor() {}
+    constructor() {
+    }
 
   addUserPreference = async data => {
     try {
@@ -64,13 +65,10 @@ class UserPreferenceService {
   bulkUpdate = async ({ data }) => {
     const transaction = await Database.initTransaction();
     try {
-      const userPreferences = await Database.getModel(TABLE_NAME).bulkCreate(
-        data,
-        {
+            const userPreferences = await Database.getModel(TABLE_NAME).bulkCreate(data, {
           updateOnDuplicate: ["user_role_id"],
           transaction
-        }
-      );
+            });
       transaction.commit();
       return userPreferences;
     } catch (error) {

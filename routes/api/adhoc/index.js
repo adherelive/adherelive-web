@@ -4,7 +4,11 @@ const router = express.Router();
 import adhocController from "../../../app/controllers/adhoc/adhoc.controller";
 import Authenticated from "../middleware/auth";
 
-router.post("/purge/sqs", Authenticated, adhocController.purgeSqsQueue);
+router.post(
+    "/purge/sqs",
+    Authenticated,
+    adhocController.purgeSqsQueue
+);
 
 router.post(
   "/populate-user-roles",
@@ -12,7 +16,11 @@ router.post(
   adhocController.migrateAllUsersToUserRoles
 );
 
-router.post("/test-api", Authenticated, adhocController.testApi);
+router.post(
+    "/test-api",
+    Authenticated,
+    adhocController.testApi
+);
 
 router.post(
   "/patient/update-timings",
@@ -20,7 +28,11 @@ router.post(
   adhocController.updatePatientTimings
 );
 
-router.post("/permissions", Authenticated, adhocController.updatePermissions);
+router.post(
+    "/permissions",
+    Authenticated,
+    adhocController.updatePermissions
+);
 
 router.post(
   "/careplan/channels",

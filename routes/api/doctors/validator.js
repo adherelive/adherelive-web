@@ -47,7 +47,7 @@ const addDoctorForm = Joi.object().keys({
     .allow("", null),
   existingDoctorId: Joi.string()
     .optional()
-    .allow("", null)
+    .allow("", null),  
 });
 
 const addPatientForm = Joi.object().keys({
@@ -113,7 +113,7 @@ const addPatientForm = Joi.object().keys({
     .allow("", null),
   address: Joi.string()
     .optional()
-    .allow("", null)
+    .allow("", null),
 });
 
 const addQualificationRegistrationForm = Joi.object().keys({
@@ -136,7 +136,7 @@ const addQualificationRegistrationForm = Joi.object().keys({
         then: Joi.string().required(),
         otherwise: Joi.string()
           .optional()
-          .allow("", null)
+          .allow("", null),
       }),
       degree_id: Joi.string()
         // .regex(/^\d+$/)
@@ -154,7 +154,7 @@ const addQualificationRegistrationForm = Joi.object().keys({
         .allow(0, null),
       photo: Joi.array()
         .optional()
-        .allow("")
+        .allow(""),
     })
   ),
   registration_details: Joi.array().items(
@@ -183,9 +183,9 @@ const addQualificationRegistrationForm = Joi.object().keys({
         .allow(0, null),
       photo: Joi.array()
         .optional()
-        .allow("")
+        .allow(""),
     })
-  )
+  ),
 });
 
 const addQualificationStepForm = Joi.object().keys({
@@ -207,7 +207,7 @@ const addQualificationStepForm = Joi.object().keys({
       then: Joi.string().required(),
       otherwise: Joi.string()
         .optional()
-        .allow("", null)
+        .allow("", null),
     }),
     degree_id: Joi.string()
       // .regex(/^\d+$/)
@@ -222,8 +222,8 @@ const addQualificationStepForm = Joi.object().keys({
     ),
     id: Joi.number()
       .optional()
-      .allow(0, null)
-  })
+      .allow(0, null),
+  }),
 });
 
 const addRegistrationStepForm = Joi.object().keys({
@@ -249,7 +249,7 @@ const addRegistrationStepForm = Joi.object().keys({
         then: Joi.string().required(),
         otherwise: Joi.string()
           .optional()
-          .allow("", null)
+          .allow("", null),
       }),
       degree_id: Joi.string()
         // .regex(/^\d+$/)
@@ -264,7 +264,7 @@ const addRegistrationStepForm = Joi.object().keys({
       ),
       id: Joi.number()
         .optional()
-        .allow(0, null)
+        .allow(0, null),
     })
   ),
   registration: Joi.object().keys({
@@ -292,11 +292,11 @@ const addRegistrationStepForm = Joi.object().keys({
       .allow(0, null),
     photo: Joi.array()
       .optional()
-      .allow("")
+      .allow(""),
   }),
   id: Joi.number()
     .optional()
-    .allow(0, null)
+    .allow(0, null),
 });
 
 const addClinicsForm = Joi.object().keys({
@@ -315,9 +315,9 @@ const addClinicsForm = Joi.object().keys({
       time_slots: Joi.object(),
       clinic_id: Joi.number()
         .optional()
-        .allow("", null)
+        .allow("", null),
     })
-  )
+  ),
 });
 
 export const validateAddDoctorData = (req, res, next) => {
@@ -329,7 +329,7 @@ export const validateAddDoctorData = (req, res, next) => {
   next();
 };
 
-const validDOB = date => {
+const validDOB = (date) => {
   return moment().diff(date, "d") <= 0;
 };
 

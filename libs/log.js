@@ -8,7 +8,7 @@ class Log {
       "------------------------------------------------------------------------------------------------------";
   }
 
-  fileName = filename => {
+  fileName = (filename) => {
     this.source = filename;
     return this;
   };
@@ -32,9 +32,7 @@ class Log {
       data += `${prop} : ${obj[prop]}\n`;
     });
 
-    console.log(
-      `${this.source} ${this.getLogDate()} \n\n${msg} -> \n\n ${data} \n`
-    );
+    console.log(`${this.source} ${this.getLogDate()} \n\n${msg} -> \n\n ${data} \n`);
   };
 
   request(data) {

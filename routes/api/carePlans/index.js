@@ -19,8 +19,7 @@ router.post(
   CarePlanController.addProfile
 );
 
-router.post(
-  "/:carePlanId",
+router.post('/:carePlanId',
   Authenticated,
   // Authorize(USER_CATEGORY.DOCTOR),
   isAllowed(PERMISSIONS.CARE_PLAN_TEMPLATE.ADD),

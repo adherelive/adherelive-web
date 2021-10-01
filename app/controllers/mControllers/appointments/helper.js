@@ -6,35 +6,22 @@ import FavoriteService from "../../../services/userFavourites/userFavourites.ser
 
 const Log = new Logger("MOBILE > APPOINTMENT > HELPER");
 
-export const getFavoriteInDetails = async (
-  userTypeData,
-  typeDescription,
-  type
-) => {
+export const getFavoriteInDetails = async (userTypeData, typeDescription, type) => {
   try {
     let response = {};
 
     switch (type) {
       case FAVOURITE_TYPE.MEDICAL_TESTS:
-        const medicalTestTypes = await medicalTestFavorites(
-          userTypeData,
-          typeDescription[MEDICAL_TEST]
-        );
-        response = {
-          ...typeDescription,
-          ...{ [MEDICAL_TEST]: medicalTestTypes }
-        };
+                const medicalTestTypes = await medicalTestFavorites(userTypeData, typeDescription[MEDICAL_TEST]);
+                response = { ...typeDescription, ...{[MEDICAL_TEST]: medicalTestTypes}}
         return response;
       case FAVOURITE_TYPE.RADIOLOGY:
-        const radiologyTypes = await radiologyTypeFavorites(
-          userTypeData,
-          typeDescription
-        );
+                const radiologyTypes = await radiologyTypeFavorites(userTypeData, typeDescription)
         response = radiologyTypes;
         return response;
     }
 
-    return response;
+        return response
   } catch (error) {
     Log.debug("mgetFavouriteInDetails error", error);
     return null;
@@ -43,14 +30,12 @@ export const getFavoriteInDetails = async (
 
 const medicalTestFavorites = async (userTypeData, types) => {
   try {
-    const { id: user_category_id, category: user_category_type } =
-      userTypeData || {};
-    const allMedicalTestFavorites =
-      (await FavoriteService.getAllFavourites({
+        const {id: user_category_id, category: user_category_type} = userTypeData || {};
+        const allMedicalTestFavorites = await FavoriteService.getAllFavourites({
         user_category_id,
         user_category_type,
         marked_favourite_type: FAVOURITE_TYPE.MEDICAL_TESTS
-      })) || [];
+        }) || [];
 
     let favoriteIndices = {};
 
@@ -60,24 +45,18 @@ const medicalTestFavorites = async (userTypeData, types) => {
     }
 
     const favIndicesList = Object.keys(favoriteIndices);
-    let updatedTypes = [],
-      favTypesList = [],
-      notFavTypesList = [];
+        let updatedTypes = [], favTypesList = [], notFavTypesList = [];
     for (const [idx, type] of types.entries()) {
       let favoriteId = null;
       if (favIndicesList.indexOf(`${idx}`) > -1) {
-        favoriteId = favoriteIndices[idx];
-        favTypesList.push({ name: type, favorite_id: favoriteId, index: idx });
+                favoriteId = favoriteIndices[idx]
+                favTypesList.push({name: type, favorite_id: favoriteId, index: idx})
       } else {
-        notFavTypesList.push({
-          name: type,
-          favorite_id: favoriteId,
-          index: idx
-        });
+                notFavTypesList.push({name: type, favorite_id: favoriteId, index: idx})
       }
     }
 
-    updatedTypes = [...favTypesList, ...notFavTypesList];
+        updatedTypes = [...favTypesList, ...notFavTypesList]
     return updatedTypes;
   } catch (error) {
     Log.debug("m-medicalTestFavorites error", error);
@@ -86,35 +65,21 @@ const medicalTestFavorites = async (userTypeData, types) => {
 
 const radiologyTypeFavorites = async (userTypeData, types) => {
   try {
-    const { id: user_category_id, category: user_category_type } =
-      userTypeData || {};
-    const allRadiologyFavorites =
-      (await FavoriteService.getAllFavourites({
+        const {id: user_category_id, category: user_category_type} = userTypeData || {};
+        const allRadiologyFavorites = await FavoriteService.getAllFavourites({
         user_category_id,
         user_category_type,
         marked_favourite_type: FAVOURITE_TYPE.RADIOLOGY
-      })) || [];
+        }) || [];
 
     let favoriteIndices = {};
 
     for (const radiologyFavorite of allRadiologyFavorites) {
-      const {
-        marked_favourite_id = null,
-        id = null,
-        details: {
-          sub_category_id = null,
-          selected_radiology_index = null
-        } = {}
-      } = radiologyFavorite;
+            const {marked_favourite_id =  null, id = null, 
+                details: {sub_category_id = null, selected_radiology_index = null} = {}} = radiologyFavorite;
 
-      if (
-        marked_favourite_id !== null &&
-        sub_category_id !== null &&
-        selected_radiology_index !== null
-      ) {
-        favoriteIndices[
-          `${marked_favourite_id}-${sub_category_id}-${selected_radiology_index}`
-        ] = id;
+            if(marked_favourite_id !== null && sub_category_id !== null && selected_radiology_index !== null) {
+                favoriteIndices[`${marked_favourite_id}-${sub_category_id}-${selected_radiology_index}`] = id;
       }
     }
 
@@ -126,30 +91,26 @@ const radiologyTypeFavorites = async (userTypeData, types) => {
       const subTypesIds = Object.keys(data);
 
       for (const subTypeId of subTypesIds) {
-        const {
-          [subTypeId]: { index = null, items = [], name: subTypeName = "" } = {}
-        } = data;
+                const {[subTypeId]: { index = null, items = [], name: subTypeName = ""} = {}} = data;
         let updatedItems = [];
         let favoriteItems = [];
         let nonFavoriteItems = [];
         for (const [idx, type] of items.entries()) {
           let favoriteId = null;
           if (favIndicesList.indexOf(`${id}-${index}-${idx}`) > -1) {
-            favoriteId = favoriteIndices[`${id}-${index}-${idx}`];
-            favoriteItems.push({ name: type, favorite_id: favoriteId });
+                        favoriteId = favoriteIndices[`${id}-${index}-${idx}`]
+                        favoriteItems.push({name: type, favorite_id: favoriteId})
           } else {
-            nonFavoriteItems.push({ name: type, favorite_id: null });
+                        nonFavoriteItems.push({name: type, favorite_id: null})
           }
           // updatedItems.push({name: type, favorite_id: favoriteId})
         }
-        updatedItems = [...favoriteItems, ...nonFavoriteItems];
-        data = {
-          ...data,
-          [subTypeId]: { name: subTypeName, index, items: updatedItems }
-        };
+                updatedItems = [...favoriteItems, ...nonFavoriteItems]
+                data = {...data, [subTypeId]: {name: subTypeName, index, items: updatedItems}}
+
       }
 
-      types = { ...types, [typeId]: { id, data, name: typeName } };
+            types = {...types, [typeId]: {id, data, name: typeName} }
     }
     return types;
   } catch (error) {

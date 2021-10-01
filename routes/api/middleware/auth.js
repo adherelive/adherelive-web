@@ -1,5 +1,5 @@
 const jwt = require("jsonwebtoken");
-const { OAuth2Client } = require("google-auth-library");
+const {OAuth2Client} = require('google-auth-library');
 const userService = require("../../../app/services/user/user.service");
 const errMessage = require("../../../config/messages.json").errMessages;
 const Response = require("../../../app/controllers/helper/responseFormat");
@@ -32,8 +32,7 @@ export default async (req, res, next) => {
       const decodedAccessToken = await jwt.verify(accessToken, secret);
       // const access_token = decodedAccessToken.accessToken;
 
-      const { userId = "", accessToken: access_token = "" } =
-        decodedAccessToken || {};
+            const {userId = "", accessToken : access_token = ""} = decodedAccessToken || {};
 
       // // const CLIENT_ID = process.config.GOOGLE_KEYS.CLIENT_ID;
       // // const CLIENT_SECRET = process.config.GOOGLE_KEYS.CLIENT_SECRET;
@@ -58,7 +57,8 @@ export default async (req, res, next) => {
       return res.status(400).json(response.getResponse());
     }
     next();
-  } catch (err) {
+    }
+    catch(err){
     console.log("errr ===== ", err.name);
     let payload = {};
     if (err.name === "TokenExpiredError") {

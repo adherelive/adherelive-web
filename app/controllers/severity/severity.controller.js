@@ -25,9 +25,7 @@ class SeverityController extends Controller {
         let severityApiData = {};
         for (const severity of severityDetails) {
           const severityWrapper = await new SeverityWrapper(severity);
-          severityApiData[
-            severityWrapper.getSeverityId()
-          ] = severityWrapper.getBasicInfo();
+                    severityApiData[severityWrapper.getSeverityId()] = severityWrapper.getBasicInfo();
         }
 
         return raiseSuccess(
@@ -41,12 +39,7 @@ class SeverityController extends Controller {
           "Severities fetched successfully"
         );
       } else {
-        return raiseClientError(
-          res,
-          422,
-          {},
-          `No severity found with name including ${value}`
-        );
+                return raiseClientError(res, 422, {}, `No severity found with name including ${value}`)
       }
     } catch (error) {
       Logger.debug("severity search 500 error", error);

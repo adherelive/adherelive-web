@@ -34,13 +34,11 @@ module.exports = {
         name: "Scoop",
         created_at: new Date(),
         updated_at: new Date()
-      },
-      {
+      },{
         name: "g",
         created_at: new Date(),
         updated_at: new Date()
-      },
-      {
+      },{
         name: "l",
         created_at: new Date(),
         updated_at: new Date()

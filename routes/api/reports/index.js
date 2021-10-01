@@ -30,6 +30,10 @@ router.post(
   Report.updateReports
 );
 
-router.delete("/:document_id", Authenticated, Report.deleteReportDocument);
+router.delete(
+    "/:document_id",
+    Authenticated,
+    Report.deleteReportDocument
+);
 
 module.exports = router;

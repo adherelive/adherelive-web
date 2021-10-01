@@ -9,39 +9,39 @@ module.exports = {
       id: {
         type: DataTypes.INTEGER,
         primaryKey: true,
-        autoIncrement: true
+        autoIncrement: true,
       },
       name: {
         type: DataTypes.STRING(1000),
-        allowNull: false
+        allowNull: false,
       },
       creator_id: {
-        type: DataTypes.INTEGER
+        type: DataTypes.INTEGER,
       },
       creator_type: {
         type: DataTypes.ENUM,
         values: [
           USER_CATEGORY.DOCTOR,
           USER_CATEGORY.PROVIDER,
-          USER_CATEGORY.ADMIN
+          USER_CATEGORY.ADMIN,
         ],
         defaultValue: USER_CATEGORY.ADMIN
       },
       created_at: {
         allowNull: false,
-        type: DataTypes.DATE
+        type: DataTypes.DATE,
       },
       updated_at: {
         allowNull: false,
-        type: DataTypes.DATE
+        type: DataTypes.DATE,
       },
       deleted_at: {
-        type: DataTypes.DATE
-      }
+        type: DataTypes.DATE,
+      },
     });
   },
 
   down: (queryInterface, Sequelize) => {
     return queryInterface.dropTable(TABLE_NAME);
-  }
+  },
 };

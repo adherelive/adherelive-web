@@ -6,9 +6,7 @@ Config();
 export const getMedicineData = async () => {
   return new Promise((res, rej) => {
     if (process.config.app.medicine_data === "SUBHARTI") {
-      fs.readFile(
-        __dirname + "/data/subharti_medicine.json",
-        async (error, data) => {
+      fs.readFile(__dirname + "/data/subharti_medicine.json", async (error, data) => {
           if (error) {
             console.error("error in reading medicine data", error);
             rej(error);
@@ -18,8 +16,10 @@ export const getMedicineData = async () => {
           const medicine = JSON.parse(data.toString());
 
           for (let i = 0; i < medicine.length; i++) {
-            const { medicine_short_name = "", category = "" } =
-              medicine[i] || {};
+          const {
+            medicine_short_name = "",
+              category = "",
+          } = medicine[i] || {};
 
             // for (const indiaName of updatedIndiaName) {
             const details = { ...medicine[i] };
@@ -47,8 +47,7 @@ export const getMedicineData = async () => {
           }
 
           res(updatedMedicine);
-        }
-      );
+      });
     } else {
       fs.readFile(__dirname + "/data/medicine.json", async (error, data) => {
         if (error) {
@@ -102,10 +101,7 @@ export const getMedicineData = async () => {
           }
 
           if (!updatedIndiaName.length && !internationalNameList.length) {
-            const details = {
-              ...medicine[i],
-              india_name: [...updatedIndiaName]
-            };
+            const details = { ...medicine[i], india_name: [...updatedIndiaName] };
             updatedMedicine.push({
               name: generic_name,
               type: "tablet",

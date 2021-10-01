@@ -2,7 +2,7 @@ import Database from "../../../libs/mysql";
 import { TABLE_NAME } from "../../models/carePlanMedications";
 
 class CarePlanMedicationService {
-  getAllByData = async data => {
+    getAllByData = async (data) => {
     try {
       const carePlanMedications = await Database.getModel(TABLE_NAME).findAll({
         where: data
@@ -13,7 +13,7 @@ class CarePlanMedicationService {
     }
   };
 
-  getCarePlanMedicationByData = async data => {
+    getCarePlanMedicationByData = async (data) => {
     try {
       const carePlanMedications = await Database.getModel(TABLE_NAME).findAll({
         where: data
@@ -37,7 +37,7 @@ class CarePlanMedicationService {
     }
   };
 
-  getCareplanByMedication = async data => {
+    getCareplanByMedication = async (data) => {
     try {
       return await Database.getModel(TABLE_NAME).findOne({
         where: data,
@@ -48,7 +48,7 @@ class CarePlanMedicationService {
     }
   };
 
-  getMedicationsByCarePlanId = async care_plan_id => {
+    getMedicationsByCarePlanId = async (care_plan_id) => {
     try {
       const carePlanMedications = await Database.getModel(TABLE_NAME).findAll({
         where: { care_plan_id }
@@ -61,9 +61,7 @@ class CarePlanMedicationService {
 
   addCarePlanMedication = async data => {
     try {
-      const carePlanMedication = await Database.getModel(TABLE_NAME).create(
-        data
-      );
+            const carePlanMedication = await Database.getModel(TABLE_NAME).create(data);
       return carePlanMedication;
     } catch (error) {
       throw error;

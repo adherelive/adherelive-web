@@ -25,9 +25,7 @@ class ConditionController extends Controller {
         let conditionApiData = {};
         for (const condition of conditionDetails) {
           const conditionWrapper = await new ConditionWrapper(condition);
-          conditionApiData[
-            conditionWrapper.getConditionId()
-          ] = conditionWrapper.getBasicInfo();
+                    conditionApiData[conditionWrapper.getConditionId()] = conditionWrapper.getBasicInfo();
         }
 
         return raiseSuccess(
@@ -41,12 +39,7 @@ class ConditionController extends Controller {
           "Conditions fetched successfully"
         );
       } else {
-        return raiseClientError(
-          res,
-          422,
-          {},
-          `No condition found with name including ${value}`
-        );
+                return raiseClientError(res, 422, {}, `No condition found with name including ${value}`)
       }
     } catch (error) {
       Logger.debug("condition search 500 error", error);

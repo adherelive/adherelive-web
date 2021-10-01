@@ -225,18 +225,21 @@ class PatientsService {
     `;
     try {
       return await Database.getModel(TABLE_NAME).findAll({
-        attributes: ["each", []],
+        attributes: [
+          "each",
+          []
+        ],
         include: [
           {
             model: Database.getModel(careplanTableName),
             where: {
-              "$care_plan.doctor_id$": doctor_id
-            }
-          }
+              '$care_plan.doctor_id$': doctor_id,
+            },
+          },
         ],
         having: Sequelize.literal(``),
         order: [["first_name", "ASC"]],
-        raw: true
+        raw: true,
       });
     } catch (error) {
       throw error;

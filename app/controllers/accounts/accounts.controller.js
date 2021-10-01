@@ -98,22 +98,17 @@ class MobileAccountsController extends Controller {
       let accountWrapper = null;
 
       if (provider_id) {
-        let providerApiData = {},
-          allUsers = {};
+          let providerApiData = {} , allUsers = {} ;
 
         const providerWrapper = await ProviderWrapper(null, provider_id);
-        providerApiData[
-          providerWrapper.getProviderId()
-        ] = providerWrapper.getBasicInfo();
+          providerApiData[providerWrapper.getProviderId()] = providerWrapper.getBasicInfo();
         const providerUserId = await providerWrapper.getUserId();
-        const accountDetails =
-          (await accountDetailsService.getAllAccountsForUser(providerUserId)) ||
-          [];
+          const accountDetails = await accountDetailsService.getAllAccountsForUser(
+            providerUserId
+          ) || [];
 
         const providerUserWrapper = await UserWrapper(null, providerUserId);
-        allUsers[
-          providerUserWrapper.getId()
-        ] = providerUserWrapper.getBasicInfo();
+          allUsers[providerUserWrapper.getId()] = providerUserWrapper.getBasicInfo();
 
         if (accountDetails && accountDetails.length) {
           for (const account of accountDetails) {

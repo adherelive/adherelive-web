@@ -25,9 +25,7 @@ class DegreeController extends Controller {
         let degreeApiData = {};
         for (const degree of degreeDetails) {
           const degreeWrapper = await new DegreeWrapper(degree);
-          degreeApiData[
-            degreeWrapper.getDegreeId()
-          ] = degreeWrapper.getBasicInfo();
+                    degreeApiData[degreeWrapper.getDegreeId()] = degreeWrapper.getBasicInfo();
         }
 
         return raiseSuccess(
@@ -41,12 +39,7 @@ class DegreeController extends Controller {
           "Degrees fetched successfully"
         );
       } else {
-        return raiseClientError(
-          res,
-          422,
-          {},
-          `No degree found with name including ${value}`
-        );
+                return raiseClientError(res, 422, {}, `No degree found with name including ${value}`)
       }
     } catch (error) {
       Logger.debug("degree search 500 error", error);

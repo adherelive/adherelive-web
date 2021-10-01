@@ -5,7 +5,7 @@ import { TABLE_NAME as dietFoodGroupMappingTableName } from "./dietFoodGroupMapp
 
 export const TABLE_NAME = "diet";
 
-export const db = database => {
+export const db = (database) => {
   database.define(
     TABLE_NAME,
     {
@@ -17,7 +17,7 @@ export const db = database => {
       },
       name: {
         type: DataTypes.STRING(1000),
-        allowNull: false
+                allowNull: false,
       },
       total_calories: {
         type: DataTypes.FLOAT
@@ -30,35 +30,32 @@ export const db = database => {
       },
       care_plan_id: {
         type: DataTypes.INTEGER,
-        allowNull: false
+                allowNull: false,
       },
       details: {
         type: DataTypes.JSON
       },
       expired_on: {
-        type: DataTypes.DATE
-      }
+                type: DataTypes.DATE,
+            },
     },
     {
       underscored: true,
       paranoid: true,
-      freezeTableName: true
+            freezeTableName: true,
     }
   );
 };
 
-export const associate = database => {
+export const associate = (database) => {
   // associations here (if any) ...
   database.models[TABLE_NAME].hasOne(database.models[carePlanTableName], {
     foreignKey: "id",
     sourceKey: "care_plan_id"
   });
 
-  database.models[TABLE_NAME].hasMany(
-    database.models[dietFoodGroupMappingTableName],
-    {
-      foreignKey: "diet_id",
-      sourceKey: "id"
-    }
-  );
+    database.models[TABLE_NAME].hasMany(database.models[dietFoodGroupMappingTableName], {
+        foreignKey:"diet_id",
+        sourceKey:"id"
+    });
 };

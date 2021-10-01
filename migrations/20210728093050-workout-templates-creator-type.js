@@ -8,20 +8,22 @@ module.exports = {
       queryInterface.changeColumn(TABLE_NAME, "creator_type", {
         type: Sequelize.ENUM,
         values: [
-          USER_CATEGORY.DOCTOR,
-          USER_CATEGORY.PROVIDER,
-          USER_CATEGORY.ADMIN,
-          USER_CATEGORY.HSP
-        ],
+            USER_CATEGORY.DOCTOR,
+            USER_CATEGORY.PROVIDER,
+            USER_CATEGORY.ADMIN,
+            USER_CATEGORY.HSP
+          ],
         defaultValue: USER_CATEGORY.DOCTOR,
-        allowNull: false
+        allowNull: false,
+          
       })
     ]);
   },
 
   down: (queryInterface, Sequelize) => {
     return Promise.all([
-      queryInterface.changeColumn(TABLE_NAME, "creator_type")
+      queryInterface.changeColumn(TABLE_NAME, "creator_type"),
+
     ]);
   }
 };

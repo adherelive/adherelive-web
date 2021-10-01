@@ -5,11 +5,11 @@ export default class Patient {
 
   getUserId = () => {
     return this._data.get("user_id");
-  };
+    }
 
   getPatientId = () => {
     return this._data.get("id");
-  };
+    }
 
   getDetails = () => {
     return this._data.get("details");
@@ -17,11 +17,11 @@ export default class Patient {
 
   getName = () => {
     return this._data.get("first_name");
-  };
+    }
 
   getFullName = () => {
     return this._data.get("full_name");
-  };
+    }
 
   getPaymentsTermsAccepted = () => this._data.payment_terms_accepted;
 }

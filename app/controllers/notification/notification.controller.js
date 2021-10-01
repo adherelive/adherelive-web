@@ -5,13 +5,7 @@ import { getDataForNotification } from "./notification.controller.helper";
 import ChatJob from "../../JobSdk/Chat/observer";
 import NotificationSdk from "../../NotificationSdk";
 
-import {
-  MESSAGE_TYPES,
-  NOTIFICATION_STAGES,
-  NOTIFICATION_VERB,
-  EVENT_TYPE,
-  AGORA_CALL_NOTIFICATION_TYPES
-} from "../../../constant";
+import { MESSAGE_TYPES, NOTIFICATION_STAGES, NOTIFICATION_VERB , EVENT_TYPE , AGORA_CALL_NOTIFICATION_TYPES} from "../../../constant"
 // import ScheduleEventService from "../../services/scheduleEvents/scheduleEvent.service";
 import ScheduleEventService from "../../services/scheduleEvents/scheduleEvent.service";
 import userService from "../../services/user/user.service";
@@ -31,10 +25,7 @@ class NotificationController extends Controller {
   getNotifications = async (req, res) => {
     const { raiseSuccess, raiseServerError } = this;
     try {
-      const {
-        body: { activities } = {},
-        userDetails: { userId, userRoleId, userData: { category } = {} } = {}
-      } = req;
+      const { body: { activities } = {}, userDetails: { userId, userRoleId, userData: { category } = {} } = {} } = req;
 
       const notificationIds = [];
 
@@ -117,7 +108,7 @@ class NotificationController extends Controller {
           exercise_details = null,
           exercises = null,
           repetitions = null,
-          workout_responses = null
+          workout_responses = null,
         } = details || {};
 
         // for (let each in appointments){
@@ -177,7 +168,7 @@ class NotificationController extends Controller {
 
         notificationData = { ...notificationData, ...notifications };
         userData = { ...userData, ...users };
-        userRoleData = { ...userRoleData, ...user_roles };
+        userRoleData = {...userRoleData, ...user_roles}
         doctorData = { ...doctorData, ...doctors };
         patientData = { ...patientData, ...patients };
         appointmentData = { ...appointmentData, ...appointments };
@@ -194,10 +185,7 @@ class NotificationController extends Controller {
         }
 
         if (diet_food_group_mappings) {
-          dietFoodGroupMappingData = {
-            ...dietFoodGroupMappingData,
-            ...diet_food_group_mappings
-          };
+          dietFoodGroupMappingData = {...dietFoodGroupMappingData, ...diet_food_group_mappings};
         }
 
         if (food_groups) {
@@ -245,10 +233,7 @@ class NotificationController extends Controller {
         }
 
         if (workout_responses) {
-          workoutResponseData = {
-            ...workoutResponseData,
-            ...workout_responses
-          };
+          workoutResponseData = {...workoutResponseData, ...workout_responses};
         }
       }
 
@@ -302,7 +287,7 @@ class NotificationController extends Controller {
           symptom_ids: Object.keys(symptomsData),
           diet_response_ids: Object.keys(dietResponseData),
           workout_response_ids: Object.keys(workoutResponseData),
-          upload_document_ids: Object.keys(uploadDocumentsData)
+          upload_document_ids: Object.keys(uploadDocumentsData),
         },
         "Notification data fetched successfully"
       );
@@ -315,10 +300,7 @@ class NotificationController extends Controller {
   raiseChatNotification = async (req, res) => {
     const { raiseSuccess, raiseServerError } = this;
     try {
-      const {
-        body: { message = "", receiver_id = "", receiver_role_id = "" } = {},
-        userDetails = {}
-      } = req || {};
+      const { body: { message = "", receiver_id = "", receiver_role_id = "" } = {}, userDetails  = {} } = req || {};
 
       const {
         userId,
@@ -342,7 +324,10 @@ class NotificationController extends Controller {
         }
       };
 
-      const chatJob = ChatJob.execute(MESSAGE_TYPES.USER_MESSAGE, eventData);
+      const chatJob = ChatJob.execute(
+        MESSAGE_TYPES.USER_MESSAGE,
+        eventData
+      );
       await NotificationSdk.execute(chatJob);
 
       return raiseSuccess(res, 200, {}, "Notification sent successfully.");
@@ -350,7 +335,7 @@ class NotificationController extends Controller {
       Log.debug("raiseChatNotification 500 error", error);
       return raiseServerError(res);
     }
-  };
+  }
 }
 
 export default new NotificationController();

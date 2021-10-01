@@ -24,11 +24,11 @@ class ConsentWrapper extends BaseConsent {
         type,
         doctor_id,
         patient_id,
-        user_role_id
+              user_role_id,
       },
       activated_on,
       expire_on
-    };
+      }
   };
 }
 

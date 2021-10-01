@@ -8,14 +8,15 @@ module.exports = {
       queryInterface.changeColumn(TABLE_NAME, "creator_type", {
         type: Sequelize.ENUM,
         values: USER_CATEGORY_ARRAY,
-        allowNull: false
+        allowNull: false,
       })
     ]);
   },
 
   down: (queryInterface, Sequelize) => {
     return Promise.all([
-      queryInterface.changeColumn(TABLE_NAME, "creator_type")
+      queryInterface.changeColumn(TABLE_NAME, "creator_type"),
+
     ]);
   }
 };

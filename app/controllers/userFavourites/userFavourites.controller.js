@@ -23,14 +23,13 @@ class UserFavouritesController extends Controller {
     try {
       const {
         body,
-        userDetails: {
-          userId,
-          userCategoryId,
-          userData: { category = "" } = {}
-        } = {}
+          userDetails: {userId, userCategoryId ,  userData: { category = "" } = {} } = {}
       } = req;
 
-      const { type = "", id = "", details = {} } = body;
+        const
+         {
+          type='',id='', details = {}
+         } = body;
 
       let data = {
         user_category_id: userCategoryId,
@@ -38,7 +37,7 @@ class UserFavouritesController extends Controller {
         marked_favourite_id: id,
         marked_favourite_type: type,
         details
-      };
+         }
 
       // const existing = await UserFavouritesService.findExistingFavourite(data);
 
@@ -51,7 +50,7 @@ class UserFavouritesController extends Controller {
       //   );
       // }
 
-      data = { ...data, details };
+        data = {...data, details}
       const record = await UserFavouritesService.markFavourite(data);
       Log.debug("23874237904127868452176379012", { record });
 
@@ -85,20 +84,16 @@ class UserFavouritesController extends Controller {
     const { raiseSuccess, raiseClientError, raiseServerError } = this;
     try {
       const {
-        userDetails: {
-          userId,
-          userCategoryId,
-          userData: { category = "" } = {}
-        } = {}
+          userDetails: {userId, userCategoryId ,  userData: { category = "" } = {} } = {}
       } = req;
 
-      const { query: { type = "" } = {} } = req;
+        const { query: { type = '' } = {} } = req;
 
       const data = {
         user_category_id: userCategoryId,
         user_category_type: category,
         marked_favourite_type: type
-      };
+         }
 
       const favourites = await UserFavouritesService.getAllFavourites(data);
 
@@ -134,12 +129,8 @@ class UserFavouritesController extends Controller {
         {
           favourites_data,
           user_data: userData,
-          ...(type === FAVOURITE_TYPE.MEDICINE && {
-            favourite_medicine_ids: favourite_medicine_ids
-          }),
-          ...(type === FAVOURITE_TYPE.MEDICAL_TESTS && {
-            favourite_medical_test_ids: favourite_medical_test_ids
-          })
+          ...type===FAVOURITE_TYPE.MEDICINE && { 'favourite_medicine_ids': favourite_medicine_ids },
+          ...type === FAVOURITE_TYPE.MEDICAL_TESTS && { 'favourite_medical_test_ids': favourite_medical_test_ids }
         },
         "Get User Favourites successful"
       );
@@ -154,11 +145,7 @@ class UserFavouritesController extends Controller {
     try {
       const {
         body,
-        userDetails: {
-          userId,
-          userCategoryId,
-          userData: { category = "" } = {}
-        } = {}
+          userDetails: {userId, userCategoryId ,  userData: { category = "" } = {} } = {}
       } = req;
 
       const { params: { id = null } = {} } = req;
@@ -166,9 +153,7 @@ class UserFavouritesController extends Controller {
       const favourite = await UserFavouritesWrapper(null, id);
       const type = await favourite.getMarkedFavouriteType();
 
-      const existing = await UserFavouritesService.findExistingFavourite({
-        id
-      });
+        const existing = await UserFavouritesService.findExistingFavourite({id});
 
       if (existing) {
         const deleted = await UserFavouritesService.delete(id);
@@ -198,11 +183,7 @@ class UserFavouritesController extends Controller {
     try {
       const {
         body,
-        userDetails: {
-          userId,
-          userCategoryId,
-          userData: { category = "" } = {}
-        } = {}
+          userDetails: {userId, userCategoryId ,  userData: { category = "" } = {} } = {}
       } = req;
 
       const { query: { typeId = null, type = "" } = {} } = req;

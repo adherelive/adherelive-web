@@ -216,7 +216,7 @@ class UserService {
   getUserData = async data => {
     try {
       const user = await Database.getModel(TABLE_NAME).findOne({
-        where: data
+        where: data,
       });
       return user;
     } catch (error) {
@@ -279,21 +279,23 @@ class UserService {
     }
   };
 
-  searchMail = async value => {
+  searchMail = async (value) => {
     try {
-      const matchingUsers = await Database.getModel(TABLE_NAME).findAll({
+      const matchingUsers = await Database.getModel(TABLE_NAME).findAll(
+        {
         where: {
           email: {
             [Op.like]: `${value}%`
           }
         },
         paranoid: false
-      });
+        }
+      );
       return matchingUsers;
     } catch (err) {
       throw err;
     }
-  };
+  }
 }
 
 export default new UserService();

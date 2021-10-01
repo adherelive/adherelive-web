@@ -37,12 +37,11 @@ class ResponseJob extends WorkoutJob {
       }
     });
 
-    const { rows: userRoles = [] } =
-      (await UserRoleService.findAndCountAll({
-        where: {
-          id: userRoleIds
-        }
-      })) || {};
+    const {rows: userRoles = []} = await UserRoleService.findAndCountAll({
+      where: {
+        id: userRoleIds
+      }
+    }) || {};
 
     for (const userRole of userRoles) {
       const { user_identity } = userRole || {};
@@ -89,8 +88,7 @@ class ResponseJob extends WorkoutJob {
     const { getWorkoutData } = this;
     const data = getWorkoutData();
     const {
-      participants = [],
-      actor: { id: actorId, user_role_id } = {},
+      participants = [], actor: { id: actorId, user_role_id} = {},
       id = null
     } = data || {};
 

@@ -1,5 +1,5 @@
 const jwt = require("jsonwebtoken");
-const { OAuth2Client } = require("google-auth-library");
+const {OAuth2Client} = require('google-auth-library');
 const userService = require("../../../app/services/user/user.service");
 const errMessage = require("../../../config/messages.json").errMessages;
 const Response = require("../../../app/controllers/helper/responseFormat");
@@ -33,7 +33,8 @@ export default async (req, res, next) => {
       return res.status(400).json(response.getResponse());
     }
     next();
-  } catch (err) {
+    }
+    catch(err){
     console.log("errr ===== ", err);
     let payload = {};
     if (err.name === "TokenExpiredError") {

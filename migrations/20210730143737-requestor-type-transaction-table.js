@@ -14,7 +14,8 @@ module.exports = {
 
   down: (queryInterface, Sequelize) => {
     return Promise.all([
-      queryInterface.changeColumn(TABLE_NAME, "requestor_type")
+      queryInterface.changeColumn(TABLE_NAME, "requestor_type"),
+
     ]);
   }
 };

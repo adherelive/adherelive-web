@@ -30,14 +30,14 @@ export default class RepetitionService {
     }
   };
 
-  search = async data => {
+    search = async (data) => {
     try {
       const repetitions = await Database.getModel(TABLE_NAME).findAll({
         where: {
           type: {
-            [Op.like]: `%${data}%`
-          }
-        }
+                        [Op.like]: `%${data}%`,
+                    },
+                },
       });
       return repetitions;
     } catch (error) {

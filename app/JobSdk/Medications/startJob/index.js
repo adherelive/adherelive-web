@@ -1,10 +1,6 @@
 import MedicationJob from "../";
 import moment from "moment";
-import {
-  EVENT_TYPE,
-  NOTIFICATION_VERB,
-  DEFAULT_PROVIDER
-} from "../../../../constant";
+import { EVENT_TYPE, NOTIFICATION_VERB, DEFAULT_PROVIDER } from "../../../../constant";
 
 import ProviderService from "../../../services/provider/provider.service";
 import UserRoleService from "../../../services/userRoles/userRoles.service";
@@ -40,12 +36,11 @@ class StartJob extends MedicationJob {
     const playerIds = [];
     const userIds = [];
 
-    const { rows: userRoles = [] } =
-      (await UserRoleService.findAndCountAll({
-        where: {
-          id: participants
-        }
-      })) || {};
+    const {rows: userRoles = []} = await UserRoleService.findAndCountAll({
+      where: {
+        id: participants
+      }
+    }) || {};
 
     let providerId = null;
     for (const userRole of userRoles) {
@@ -62,9 +57,7 @@ class StartJob extends MedicationJob {
 
     let providerName = DEFAULT_PROVIDER;
     if (providerId) {
-      const provider = await ProviderService.getProviderByData({
-        id: providerId
-      });
+      const provider = await ProviderService.getProviderByData({id: providerId});
       const { name } = provider || {};
       providerName = name;
     }

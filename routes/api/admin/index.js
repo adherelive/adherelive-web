@@ -60,22 +60,12 @@ router.get("/chats", Authenticate, twilioController.getAllChats);
 
 // ---------------------------- POST ----------------------------
 
-router.post(
-  "/providers",
-  Authenticate,
-  validator.validateAddProviderData,
-  Provider.addProvider
-);
+router.post("/providers", Authenticate, validator.validateAddProviderData, Provider.addProvider);
 
 // to add previous providers default graph user preference
 router.post("/providers/graphs", Authenticate, Graphs.updateProviderGraph);
 
-router.post(
-  "/providers/:id",
-  Authenticate,
-  validator.validateUpdateProviderData,
-  Provider.updateProvider
-);
+router.post("/providers/:id", Authenticate, validator.validateUpdateProviderData, Provider.updateProvider);
 
 router.post("/doctors/:id", Authenticate, Doctor.verifyDoctors);
 
@@ -84,12 +74,7 @@ router.post("/doctors/:id/account", Authenticate, Doctor.updateRazorpayAccount);
 router.post("/details", Authenticate, Admin.updateTermsAndPolicy);
 router.post("/algolia/medicine", Authenticate, Algolia.updateMedicine);
 
-router.post(
-  "/medicines",
-  Authenticate,
-  validator.validateAddMedicineData,
-  Medicine.addMedicineByAdmin
-);
+router.post("/medicines", Authenticate, validator.validateAddMedicineData, Medicine.addMedicineByAdmin);
 
 router.post("/medicines/:id/public", Authenticate, Medicine.makeMedicinePublic);
 
@@ -98,14 +83,10 @@ router.post("/enable-all-features", Authenticate, Admin.enableAllFeatures);
 
 // ---------------------------- DELETE ----------------------------
 
-router.delete("/medicines/:id", Authenticate, Medicine.deleteMedicine);
+router.delete("/medicines/:id", Authenticate, Medicine.deleteMedicine)
 
 router.delete("/chats/delete", Authenticate, twilioController.deleteChat);
 
-router.post(
-  "/update/provider-terms",
-  Authenticate,
-  adminController.updateProviderTermsMappingForExistingUsers
-);
+router.post("/update/provider-terms", Authenticate, adminController.updateProviderTermsMappingForExistingUsers);
 
 module.exports = router;

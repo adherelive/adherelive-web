@@ -48,10 +48,7 @@ import workoutRouter from "./workouts";
 
 router.use(async (req, res, next) => {
   try {
-    let accessToken,
-      userId = null,
-      userRoleId,
-      userRoleData;
+    let accessToken, userId = null, userRoleId, userRoleData;
     const { authorization = "" } = req.headers || {};
     const bearer = authorization.split(" ");
     if (bearer.length === 2) {
@@ -63,9 +60,7 @@ router.use(async (req, res, next) => {
     if (accessToken) {
       const decodedAccessToken = await jwt.verify(accessToken, secret);
       const { userRoleId: decodedUserRoleId = null } = decodedAccessToken || {};
-      const userRoleDetails = await userRolesService.getSingleUserRoleByData({
-        id: decodedUserRoleId
-      });
+      const userRoleDetails = await userRolesService.getSingleUserRoleByData({id: decodedUserRoleId});
       if (userRoleDetails) {
         const userRole = await UserRoleWrapper(userRoleDetails);
         userId = userRole.getUserId();
@@ -108,12 +103,14 @@ router.use(async (req, res, next) => {
       };
     }
     next();
+    return;
   } catch (err) {
     console.log("89127381723 err -->", err);
     req.userDetails = {
       exists: false
     };
     next();
+    return;
   }
 });
 

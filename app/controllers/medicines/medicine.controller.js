@@ -36,9 +36,7 @@ class MedicineController extends Controller {
         let medicineApiData = {};
         await medicineDetails.forEach(async medicine => {
           const medicineWrapper = await new MedicineWrapper(medicine);
-          medicineApiData[
-            medicineWrapper.getMedicineId()
-          ] = medicineWrapper.getBasicInfo();
+                    medicineApiData[medicineWrapper.getMedicineId()] = medicineWrapper.getBasicInfo();
         });
 
         return raiseSuccess(
@@ -52,12 +50,7 @@ class MedicineController extends Controller {
           "medicine data fetched successfully"
         );
       } else {
-        return raiseClientError(
-          res,
-          422,
-          {},
-          `no medicine found with name including ${value}`
-        );
+                return raiseClientError(res, 422, {}, `no medicine found with name including ${value}`)
       }
     } catch (error) {
       // Logger.debug("500 error", error);
@@ -70,7 +63,7 @@ class MedicineController extends Controller {
     try {
       const { body = {}, userDetails = {} } = req;
 
-      const algoliaService = new AlgoliaService();
+            const algoliaService = new AlgoliaService()
 
       const {
         userCategoryData: { basic_info: { id: categoryId = null } = {} } = {}
@@ -84,39 +77,33 @@ class MedicineController extends Controller {
         created_at: new Date(),
         type,
         public_medicine: false
-      };
+            }
 
-      const medicineDetails = await medicineService.add(new_medicine_data);
+            const medicineDetails = await medicineService.add(new_medicine_data)
       let medicineApiDetails = {};
 
       if (medicineDetails) {
         const medicine_id = medicineDetails.get("id");
         const response = await algoliaService.addNewMedicineData(medicine_id);
-        medicineApiDetails = await MedicineWrapper(null, medicine_id);
+                medicineApiDetails =  await MedicineWrapper(null, medicine_id)
       }
 
-      return raiseSuccess(
-        res,
-        200,
-        {
-          medicines: {
-            [medicineApiDetails.getMedicineId()]: medicineApiDetails.getBasicInfo()
-          }
-        },
-        "New medicine added successfully."
-      );
+            return raiseSuccess(res, 200, 
+                {medicines: {[medicineApiDetails.getMedicineId()]: medicineApiDetails.getBasicInfo()}}, 
+                "New medicine added successfully.");
+            
     } catch (error) {
       Logger.debug("500 addMedicine error", error);
       return raiseServerError(res);
     }
-  };
+    }
 
   addMedicineByAdmin = async (req, res) => {
     const { raiseServerError, raiseSuccess } = this;
     try {
       const { body } = req;
 
-      const algoliaService = new AlgoliaService();
+            const algoliaService = new AlgoliaService()
       const { name = "", type = "", generic_name = "" } = body || {};
 
       const new_medicine_data = {
@@ -125,33 +112,27 @@ class MedicineController extends Controller {
         created_at: new Date(),
         public_medicine: true,
         type,
-        details: { generic_name }
-      };
+                details: { generic_name },
+            }
 
-      const medicineDetails = await medicineService.add(new_medicine_data);
+            const medicineDetails = await medicineService.add(new_medicine_data)
       let medicineApiDetails = {};
 
       if (medicineDetails) {
         const medicine_id = medicineDetails.get("id");
         const response = await algoliaService.addNewMedicineData(medicine_id);
-        medicineApiDetails = await MedicineWrapper(null, medicine_id);
+                medicineApiDetails =  await MedicineWrapper(null, medicine_id)
       }
 
-      return raiseSuccess(
-        res,
-        200,
-        {
-          medicines: {
-            [medicineApiDetails.getMedicineId()]: medicineApiDetails.getBasicInfo()
-          }
-        },
-        "New medicine added successfully."
-      );
+            return raiseSuccess(res, 200, 
+                {medicines: {[medicineApiDetails.getMedicineId()]: medicineApiDetails.getBasicInfo()}}, 
+                "New medicine added successfully.");
+            
     } catch (error) {
       Logger.debug("500 addMedicine error", error);
       return raiseServerError(res);
     }
-  };
+    }
 
   makeMedicinePublic = async (req, res) => {
     const { raiseServerError, raiseSuccess, raiseClientError } = this;
@@ -159,41 +140,30 @@ class MedicineController extends Controller {
       const { params: { id: medicine_id = null } = {} } = req;
 
       if (!medicine_id) {
-        return raiseClientError(res, 422, {}, "Invalid medicine selected.");
+               return raiseClientError(res, 422, {}, "Invalid medicine selected.")
       }
 
-      const algoliaService = new AlgoliaService();
+            const algoliaService = new AlgoliaService()
 
-      const medicineDetails = await medicineService.updateMedicine(
-        { public_medicine: true },
-        medicine_id
-      );
+            const medicineDetails = await medicineService.updateMedicine({public_medicine: true}, medicine_id);
       let medicineApiDetails = {};
 
-      const updatedMedicineDetails = await medicineService.getMedicineById(
-        medicine_id
-      );
+            const updatedMedicineDetails = await medicineService.getMedicineById(medicine_id)
       if (updatedMedicineDetails) {
-        medicineApiDetails = await MedicineWrapper(updatedMedicineDetails);
+                medicineApiDetails =  await MedicineWrapper(updatedMedicineDetails)
         const medicineId = medicineApiDetails.getMedicineId();
         const response = await algoliaService.updateMedicineData(medicineId);
       }
 
-      return raiseSuccess(
-        res,
-        200,
-        {
-          medicines: {
-            [medicineApiDetails.getMedicineId()]: medicineApiDetails.getBasicInfo()
-          }
-        },
-        "Medicine is made public to all doctors successfully."
-      );
+            return raiseSuccess(res, 200, 
+                {medicines: {[medicineApiDetails.getMedicineId()]: medicineApiDetails.getBasicInfo()}}, 
+                "Medicine is made public to all doctors successfully.");
+            
     } catch (error) {
       Logger.debug("500 makeMedicinePublic error", error);
       return raiseServerError(res);
     }
-  };
+    }
 
   getMedicinesForAdmin = async (req, res) => {
     const { raiseSuccess, raiseClientError, raiseServerError } = this;
@@ -208,8 +178,8 @@ class MedicineController extends Controller {
       if (doctorDetails && doctorDetails.length > 0) {
         await doctorDetails.forEach(async doctor => {
           const doctorWrapper = await DoctorWrapper(doctor);
-          doctorIds.push(doctorWrapper.getDoctorId());
-        });
+                    doctorIds.push(doctorWrapper.getDoctorId())
+                })
       }
 
       console.log("81731289213 doctorIds", doctorIds);
@@ -222,50 +192,27 @@ class MedicineController extends Controller {
 
       const publicMedicine = parseInt(public_medicine, 10) === 0 ? 0 : 1;
 
-      const total_count = await medicineService.getMedicineCountForAdmin(
-        value,
-        publicMedicine,
-        doctorIds
-      );
-      const medicineDetails = await medicineService.searchMedicineForAdmin(
-        value,
-        offsetLimit,
-        endLimit,
-        publicMedicine,
-        doctorIds
-      );
-      Logger.debug("329847562389462364872384122", {
-        total_count,
-        l: medicineDetails.length,
-        medicineDetails,
-        doctorIds,
-        doctorDetails,
-        value,
-        offset,
-        public_medicine
-      });
+            const total_count = await medicineService.getMedicineCountForAdmin(value, publicMedicine, doctorIds);
+            const medicineDetails = await medicineService.searchMedicineForAdmin(value, offsetLimit, endLimit, publicMedicine, doctorIds);
+            Logger.debug("329847562389462364872384122",{total_count,l:medicineDetails.length,medicineDetails,doctorIds,doctorDetails,value,offset,public_medicine});
 
-      const creatorIds = [];
+            const creatorIds = []
       if (medicineDetails.length > 0) {
         let medicineApiData = {};
         await medicineDetails.forEach(async medicine => {
           const medicineWrapper = await new MedicineWrapper(medicine);
-          medicineApiData[
-            medicineWrapper.getMedicineId()
-          ] = medicineWrapper.getAllInfo();
+                    medicineApiData[medicineWrapper.getMedicineId()] = medicineWrapper.getAllInfo();
 
           const creator_id = medicineWrapper.getCreatorId();
 
           if (creator_id) {
-            creatorIds.push(creator_id);
+                        creatorIds.push(creator_id)
           }
         });
 
         for (const id of creatorIds) {
           const doctorApiWrapper = await DoctorWrapper(null, id);
-          doctors[
-            doctorApiWrapper.getDoctorId()
-          ] = doctorApiWrapper.getBasicInfo();
+                    doctors[doctorApiWrapper.getDoctorId()]=doctorApiWrapper.getBasicInfo()
         }
 
         return raiseSuccess(
@@ -282,12 +229,7 @@ class MedicineController extends Controller {
           "Medicine data fetched successfully"
         );
       } else {
-        return raiseClientError(
-          res,
-          422,
-          {},
-          `No medicine found with name including ${value}`
-        );
+                return raiseClientError(res, 422, {}, `No medicine found with name including ${value}`)
       }
     } catch (error) {
       Logger.debug("500 getMedicinesForAdmin error", error);
@@ -301,23 +243,20 @@ class MedicineController extends Controller {
       const { params: { id: medicine_id = null } = {} } = req;
 
       if (!medicine_id) {
-        return raiseClientError(res, 422, {}, "Invalid medicine selected.");
+               return raiseClientError(res, 422, {}, "Invalid medicine selected.")
       }
 
-      const algoliaService = new AlgoliaService();
+            const algoliaService = new AlgoliaService()
 
       // delete template medication wrt medicine_id
-      const templateMedication = await TemplateMedicationService.deleteMedication(
-        {
+            const templateMedication = await TemplateMedicationService.deleteMedication({
           medicine_id
-        }
-      );
+            });
 
       // delete medications wrt medicine_id
-      const medicationData =
-        (await MedicationService.getAllMedicationByData({
+            const medicationData = await MedicationService.getAllMedicationByData({
           medicine_id
-        })) || [];
+            }) || [];
 
       let medicationIds = [];
 
@@ -337,12 +276,8 @@ class MedicineController extends Controller {
         event_id: medicationIds
       });
 
-      const deleteCareplanMedications = await CareplanMedicationService.deleteCarePlanMedicationByMedicationId(
-        medicationIds
-      );
-      const deleteMedications = await MedicationService.deleteMedication(
-        medicationIds
-      );
+            const deleteCareplanMedications = await CareplanMedicationService.deleteCarePlanMedicationByMedicationId(medicationIds);
+            const deleteMedications = await MedicationService.deleteMedication(medicationIds);
 
       // delete medicine
       const medicineDetails = await medicineService.deleteMedicine(medicine_id);
@@ -352,12 +287,14 @@ class MedicineController extends Controller {
         Logger.debug("algolia delete response", response);
       }
 
-      return raiseSuccess(res, 200, {}, "Medicine deleted successfully.");
+            return raiseSuccess(res, 200, 
+                {}, 
+                "Medicine deleted successfully.");
     } catch (error) {
       Logger.debug("500 deleteMedicine error", error);
       return raiseServerError(res);
     }
-  };
+    }
 }
 
 export default new MedicineController();

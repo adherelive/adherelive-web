@@ -1,10 +1,6 @@
 import SymptomsJob from "../";
 import moment from "moment";
-import {
-  DEFAULT_PROVIDER,
-  EVENT_TYPE,
-  USER_CATEGORY
-} from "../../../../constant";
+import {DEFAULT_PROVIDER, EVENT_TYPE, USER_CATEGORY} from "../../../../constant";
 
 import UserRoleService from "../../../services/userRoles/userRoles.service";
 import UserDeviceService from "../../../services/userDevices/userDevice.service";
@@ -35,12 +31,11 @@ class CreateJob extends SymptomsJob {
     const playerIds = [];
     const userIds = [];
 
-    const { rows: userRoles = [] } =
-      (await UserRoleService.findAndCountAll({
-        where: {
-          id: participants
-        }
-      })) || {};
+    const {rows: userRoles = []} = await UserRoleService.findAndCountAll({
+      where: {
+        id: participants
+      }
+    }) || {};
 
     // let providerId = null;
     let doctorRoleId = null;
@@ -87,16 +82,8 @@ class CreateJob extends SymptomsJob {
       include_player_ids: [...playerIds],
       priority: 10,
       android_channel_id: process.config.one_signal.urgent_channel_id,
-      data: {
-        url: "/symptoms-add",
-        params: {
-          actorId,
-          symptom_id: event_id,
-          care_plan_id_data,
-          patient_id,
-          doctorRoleId
-        }
-      }
+      data: { url: "/symptoms-add", params: { actorId, symptom_id: event_id,
+         care_plan_id_data, patient_id, doctorRoleId } }
     });
 
     return templateData;

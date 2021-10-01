@@ -5,14 +5,14 @@ import {
   EVENING,
   DINNER,
   SLEEP,
-  MID_MORNING
+  MID_MORNING,
 } from "../../../constant";
 import Logger from "../../../libs/log";
 
 const Log = new Logger("DIET > HELPER");
 
 export const getTimeWiseDietFoodGroupMappings = async ({
-  diet_food_group_mappings
+  diet_food_group_mappings,
 }) => {
   try {
     let timeWiseData = {};
@@ -21,7 +21,7 @@ export const getTimeWiseDietFoodGroupMappings = async ({
     for (let each in diet_food_group_mappings) {
       const {
         basic_info: { day = null, time = null } = {},
-        related_diet_food_group_mapping_ids = []
+        related_diet_food_group_mapping_ids = [],
       } = diet_food_group_mappings[each] || {};
 
       const forTime = timeWiseData[time] || {};
@@ -47,7 +47,7 @@ export const getTimeWiseDietFoodGroupMappings = async ({
         tempArr.push(related_diet_food_group_mapping_ids);
         mappingIds = tempArr;
         allIds.push(eachInt);
-        related_diet_food_group_mapping_ids.forEach(element => {
+        related_diet_food_group_mapping_ids.forEach((element) => {
           allIds.push(element);
         });
       } else if (!allIds.includes(eachInt)) {
@@ -59,8 +59,8 @@ export const getTimeWiseDietFoodGroupMappings = async ({
         ...timeWiseData,
         [`${time}`]: {
           ...forTime,
-          ["mappingIds"]: mappingIds
-        }
+          ["mappingIds"]: mappingIds,
+        },
       };
     }
 
@@ -78,54 +78,54 @@ export const daysDietPlan = async () => {
   }
 };
 
-export const getTimings = userTimings => {
+export const getTimings = (userTimings) => {
   try {
     const allDietTimings = {};
-    Object.keys(userTimings).forEach(userTimingId => {
+    Object.keys(userTimings).forEach((userTimingId) => {
       const { value } = userTimings[userTimingId] || {};
 
       switch (userTimingId) {
         case WAKE_UP:
           allDietTimings[WAKE_UP] = {
             text: "Immediately After Wakeup",
-            time: value
+            time: value,
           };
           break;
         case BREAKFAST:
           allDietTimings[BREAKFAST] = {
             text: "Breakfast",
-            time: value
+            time: value,
           };
           break;
         case MID_MORNING:
           allDietTimings[MID_MORNING] = {
             text: "Mid Morning",
-            time: value
+              time: value,
           };
           break;
         case LUNCH:
           allDietTimings[LUNCH] = {
             text: "Lunch",
-            time: value
+            time: value,
           };
           break;
         case EVENING:
           allDietTimings[EVENING] = {
             text: "Evening",
-            time: value
+            time: value,
           };
           break;
 
         case DINNER:
           allDietTimings[DINNER] = {
             text: "Dinner",
-            time: value
+            time: value,
           };
           break;
         case SLEEP:
           allDietTimings[SLEEP] = {
             text: "Before Sleep",
-            time: value
+            time: value,
           };
           break;
       }

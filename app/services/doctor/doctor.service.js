@@ -30,10 +30,7 @@ class DoctorService {
     try {
       const doctor = await Database.getModel(TABLE_NAME).findAll({
         where: data,
-        include: [
-          Database.getModel(userTableName),
-          Database.getModel(specialityTableName)
-        ]
+        include: [Database.getModel(userTableName), Database.getModel(specialityTableName)]
       });
       return doctor;
     } catch (error) {
@@ -229,10 +226,7 @@ class DoctorService {
           ]
         }
       });
-      console.log("329847562389462364872384122 ===============>", {
-        doctor,
-        value
-      });
+      console.log("329847562389462364872384122 ===============>",{doctor,value});
 
       return doctor;
     } catch (error) {
@@ -255,7 +249,9 @@ class DoctorService {
 
   searchByName = async ({ value, limit }) => {
     try {
-      const { firstName, middleName, lastName } = separateNameForSearch(value);
+      const {
+         firstName,  middleName, lastName
+      } = separateNameForSearch(value);
 
       const doctor = await Database.getModel(TABLE_NAME).findAll({
         where: {

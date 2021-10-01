@@ -10,7 +10,9 @@ class VitalService {
   addVital = async data => {
     try {
       const vitals = await Database.getModel(TABLE_NAME).create(data, {
-        include: [Database.getModel(vitalTemplatesTableName)]
+        include: [
+            Database.getModel(vitalTemplatesTableName)
+        ]
       });
       return vitals;
     } catch (error) {
@@ -44,10 +46,7 @@ class VitalService {
           },
           {
             model: Database.getModel(carePlanTableName),
-            include: [
-              Database.getModel(carePlanAppointmentTableName),
-              Database.getModel(carePlanMedicationTableName)
-            ]
+            include: [Database.getModel(carePlanAppointmentTableName), Database.getModel(carePlanMedicationTableName)]
           }
         ]
       });

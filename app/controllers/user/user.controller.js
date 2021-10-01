@@ -17,7 +17,7 @@ import severityService from "../../services/severity/severity.service";
 import conditionService from "../../services/condition/condition.service";
 import providerService from "../../services/provider/provider.service";
 import doctorProviderMappingService from "../../services/doctorProviderMapping/doctorProviderMapping.service";
-import userRolesService from "../../services/userRoles/userRoles.service";
+import userRolesService from '../../services/userRoles/userRoles.service';
 import doctorPatientWatchlistService from "../../services/doctorPatientWatchlist/doctorPatientWatchlist.service";
 
 import UserWrapper from "../../ApiWrapper/web/user";
@@ -35,7 +35,10 @@ import DoctorPatientWatchlistWrapper from "../../ApiWrapper/web/doctorPatientWat
 import doctorService from "../../services/doctors/doctors.service";
 import UserVerificationServices from "../../services/userVerifications/userVerifications.services";
 import Controller from "../index";
-import { uploadImageS3, createNewUser } from "./userHelper";
+import {
+  uploadImageS3,
+  createNewUser
+} from "./userHelper";
 import { v4 as uuidv4 } from "uuid";
 import constants from "../../../config/constants";
 import {
@@ -63,17 +66,10 @@ class UserController extends Controller {
   signUp = async (req, res) => {
     const { raiseClientError, raiseServerError, raiseSuccess } = this;
     try {
-      const {
-        body: { password, email, readTermsOfService = false } = {}
-      } = req;
+        const {body: {password, email, readTermsOfService = false} = {}} = req;
 
       if (!readTermsOfService) {
-        return this.raiseClientError(
-          res,
-          422,
-          {},
-          "Please read our Terms of Service before signing up"
-        );
+        return this.raiseClientError(res, 422, {}, "Please read our Terms of Service before signing up");
       }
 
       const newUser = await createNewUser(email, password, null);
@@ -100,16 +96,14 @@ class UserController extends Controller {
         // return res.status(500).json(response.getResponse());
       }
     }
-  };
+  }
 
   verifyUser = async (req, res) => {
     const { raiseSuccess, raiseClientError, raiseServerError } = this;
     try {
       const { params: { link } = {} } = req;
       Logger.info(`(request)(param) LINK :: ${link}`);
-      const verifications = await UserVerificationServices.getRequestByLink(
-        link
-      );
+      const verifications = await UserVerificationServices.getRequestByLink(link);
 
       const { user_id: userId } = verifications.get("") || {};
 
@@ -141,7 +135,9 @@ class UserController extends Controller {
 
         const appNotification = new AppNotification();
 
-        const notificationToken = appNotification.getUserToken(`${userId}`);
+        const notificationToken = appNotification.getUserToken(
+          `${userId}`
+        );
         // const feedId = base64.encode(`${userId}`);
 
         const apiUserDetails = await UserWrapper(null, userId);
@@ -266,7 +262,9 @@ class UserController extends Controller {
 
         const appNotification = new AppNotification();
 
-        const notificationToken = appNotification.getUserToken(`${userRoleId}`);
+        const notificationToken = appNotification.getUserToken(
+          `${userRoleId}`
+        );
         const feedId = base64.encode(`${userRoleId}`);
 
         // Logger.debug("notificationToken --> ", notificationToken);
@@ -284,7 +282,7 @@ class UserController extends Controller {
 
         const dataToSend = {
           users: {
-            [apiUserDetails.getId()]: apiUserDetails.getBasicInfo()
+            [apiUserDetails.getId()]: apiUserDetails.getBasicInfo(),
           },
           permissions,
           auth_user: apiUserDetails.getId(),
@@ -292,7 +290,7 @@ class UserController extends Controller {
           notificationToken: notificationToken,
           feedId,
           auth_category: apiUserDetails.getCategory(),
-          hasConsent: apiUserDetails.getConsent()
+          hasConsent: apiUserDetails.getConsent(),
         };
 
         res.cookie("accessToken", accessToken, {
@@ -339,22 +337,12 @@ class UserController extends Controller {
   giveConsent = async (req, res) => {
     const { raiseClientError } = this;
     try {
-      const {
-        userDetails: { userId, userRoleId } = {},
-        body: { agreeConsent } = {}
-      } = req;
+      const {userDetails: {userId, userRoleId} = {}, body: {agreeConsent} = {}} = req;
 
-      Logger.info(
-        `1897389172 agreeConsent :: ${agreeConsent} | userId : ${userId}`
-      );
+      Logger.info(`1897389172 agreeConsent :: ${agreeConsent} | userId : ${userId}`);
 
       if (!agreeConsent) {
-        return raiseClientError(
-          res,
-          422,
-          {},
-          "Cannot proceed without accepting Terms of Service"
-        );
+        return raiseClientError(res, 422, {}, "Cannot proceed without accepting Terms of Service");
       }
 
       //update
@@ -380,7 +368,9 @@ class UserController extends Controller {
 
       const appNotification = new AppNotification();
 
-      const notificationToken = appNotification.getUserToken(`${userRoleId}`);
+      const notificationToken = appNotification.getUserToken(
+          `${userRoleId}`
+      );
       const feedId = base64.encode(`${userRoleId}`);
 
       const userRef = await userService.getUserData({ id: userId });
@@ -422,7 +412,7 @@ class UserController extends Controller {
       Logger.debug("giveConsent 500 error ----> ", error);
       return this.raiseServerError(res);
     }
-  };
+  }
 
   async signInGoogle(req, res) {
     const authCode = req.body.tokenId;
@@ -586,14 +576,10 @@ class UserController extends Controller {
               userCategoryApiWrapper = await DoctorWrapper(userCategoryData);
 
               let watchlist_patient_ids = [];
-              const watchlistRecords = await doctorPatientWatchlistService.getAllByData(
-                { user_role_id: userRoleId }
-              );
+              const watchlistRecords = await doctorPatientWatchlistService.getAllByData({user_role_id:userRoleId});
               if (watchlistRecords && watchlistRecords.length) {
                 for (let i = 0; i < watchlistRecords.length; i++) {
-                  const watchlistWrapper = await DoctorPatientWatchlistWrapper(
-                    watchlistRecords[i]
-                  );
+                  const watchlistWrapper = await DoctorPatientWatchlistWrapper(watchlistRecords[i]);
                   const patientId = await watchlistWrapper.getPatientId();
                   watchlist_patient_ids.push(patientId);
                 }
@@ -602,17 +588,15 @@ class UserController extends Controller {
               let allInfo = {};
               allInfo = await userCategoryApiWrapper.getAllInfo();
               delete allInfo.watchlist_patient_ids;
-              allInfo["watchlist_patient_ids"] = watchlist_patient_ids;
+              allInfo['watchlist_patient_ids']=watchlist_patient_ids;
 
               userCategoryId = userCategoryApiWrapper.getDoctorId();
               userCaregoryApiData[
                 userCategoryApiWrapper.getDoctorId()
               ] = allInfo;
 
-              const record = await userRolesService.getSingleUserRoleByData({
-                id: userRoleId
-              });
-              const { linked_with = "", linked_id = null } = record || {};
+              const record = await userRolesService.getSingleUserRoleByData({id:userRoleId});
+              const {linked_with = '',linked_id = null } = record || {};
               if (linked_with === USER_CATEGORY.PROVIDER) {
                 const providerId = linked_id;
                 doctorProviderId = providerId;
@@ -671,14 +655,10 @@ class UserController extends Controller {
               userCategoryApiWrapper = await DoctorWrapper(userCategoryData);
 
               let watchlist_patient_ids = [];
-              const watchlistRecords = await doctorPatientWatchlistService.getAllByData(
-                { user_role_id: userRoleId }
-              );
+              const watchlistRecords = await doctorPatientWatchlistService.getAllByData({user_role_id:userRoleId});
               if (watchlistRecords && watchlistRecords.length) {
                 for (let i = 0; i < watchlistRecords.length; i++) {
-                  const watchlistWrapper = await DoctorPatientWatchlistWrapper(
-                    watchlistRecords[i]
-                  );
+                  const watchlistWrapper = await DoctorPatientWatchlistWrapper(watchlistRecords[i]);
                   const patientId = await watchlistWrapper.getPatientId();
                   watchlist_patient_ids.push(patientId);
                 }
@@ -687,17 +667,15 @@ class UserController extends Controller {
               let allInfo = {};
               allInfo = await userCategoryApiWrapper.getAllInfo();
               delete allInfo.watchlist_patient_ids;
-              allInfo["watchlist_patient_ids"] = watchlist_patient_ids;
+              allInfo['watchlist_patient_ids']=watchlist_patient_ids;
 
               userCategoryId = userCategoryApiWrapper.getDoctorId();
               userCaregoryApiData[
                 userCategoryApiWrapper.getDoctorId()
               ] = allInfo;
 
-              const record = await userRolesService.getSingleUserRoleByData({
-                id: userRoleId
-              });
-              const { linked_with = "", linked_id = null } = record || {};
+              const record = await userRolesService.getSingleUserRoleByData({id:userRoleId});
+              const {linked_with = '',linked_id = null } = record || {};
               if (linked_with === USER_CATEGORY.PROVIDER) {
                 const providerId = linked_id;
                 doctorProviderId = providerId;
@@ -851,11 +829,7 @@ class UserController extends Controller {
 
         // speciality temp todo
         let referenceData = {};
-        if (
-          (category === USER_CATEGORY.DOCTOR ||
-            category === USER_CATEGORY.HSP) &&
-          userCategoryApiWrapper
-        ) {
+        if ( (category === USER_CATEGORY.DOCTOR || category === USER_CATEGORY.HSP ) && userCategoryApiWrapper) {
           referenceData = await userCategoryApiWrapper.getReferenceInfo();
         }
 
@@ -904,12 +878,10 @@ class UserController extends Controller {
           auth_user: userId,
           auth_category: category,
           auth_role: userRoleId,
-          [category === USER_CATEGORY.DOCTOR || category === USER_CATEGORY.HSP
-            ? "doctor_provider_id"
-            : ""]:
+          [category === USER_CATEGORY.DOCTOR || category === USER_CATEGORY.HSP  ? "doctor_provider_id" : ""]:
             category === USER_CATEGORY.DOCTOR || category === USER_CATEGORY.HSP
               ? doctorProviderId
-              : ""
+            : "",  
         };
 
         if (category !== USER_CATEGORY.PROVIDER) {
@@ -1007,7 +979,9 @@ class UserController extends Controller {
       if (doctorExist) {
         let doctor_data = {
           city,
-          profile_pic: profile_pic ? getFilePath(profile_pic) : null,
+          profile_pic: profile_pic
+            ? getFilePath(profile_pic)
+            : null,
           first_name,
           middle_name,
           last_name,
@@ -1020,7 +994,9 @@ class UserController extends Controller {
         let doctor_data = {
           user_id,
           city,
-          profile_pic: profile_pic ? getFilePath(profile_pic) : null,
+          profile_pic: profile_pic
+            ? getFilePath(profile_pic)
+            : null,
           first_name,
           middle_name,
           last_name,
@@ -1102,7 +1078,9 @@ class UserController extends Controller {
         }`;
 
         city = docCity;
-        profile_pic = docPic ? completePath(docPic) : null;
+        profile_pic = docPic
+          ? completePath(docPic)
+          : null;
       }
 
       const profileData = {
@@ -1190,6 +1168,7 @@ class UserController extends Controller {
         let qId = qualification.get("id");
         if (newQualifications.includes(qId)) {
           console.log("QUALIFICATIONS IFFFF", newQualifications);
+          continue;
         } else {
           console.log("QUALIFICATIONS ELSEEEE", newQualifications);
           let deleteDocs = await documentService.deleteDocumentsOfQualification(
@@ -1232,6 +1211,7 @@ class UserController extends Controller {
         let rId = registration.get("id");
         if (newRegistrations.includes(rId)) {
           console.log("REGISTRATION IFFFF", newRegistrations);
+          continue;
         } else {
           console.log("REGISTRATION ELSEEEE", newRegistrations);
           let deleteDocs = await documentService.deleteDocumentsOfQualification(
@@ -1602,6 +1582,7 @@ class UserController extends Controller {
         let qId = qualification.get("id");
         if (newQualifications.includes(qId)) {
           console.log("QUALIFICATIONS IFFFF", newQualifications);
+          continue;
         } else {
           console.log("QUALIFICATIONS ELSEEEE", newQualifications);
           let deleteDocs = await documentService.deleteDocumentsOfQualification(
@@ -2156,9 +2137,7 @@ class UserController extends Controller {
 
         const secret = process.config.TOKEN_SECRET_KEY;
 
-        const userRole = await userRolesService.getFirstUserRole(
-          linkVerificationData.getUserId()
-        );
+        const userRole = await userRolesService.getFirstUserRole(linkVerificationData.getUserId());
 
         const { id: userRoleId } = userRole || {};
         const accessToken = await jwt.sign(

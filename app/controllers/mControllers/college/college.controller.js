@@ -25,9 +25,7 @@ class CollegeController extends Controller {
         let collegeApiData = {};
         for (const college of collegeDetails) {
           const collegeWrapper = await new CollegeWrapper(college);
-          collegeApiData[
-            collegeWrapper.getCollegeId()
-          ] = collegeWrapper.getBasicInfo();
+                    collegeApiData[collegeWrapper.getCollegeId()] = collegeWrapper.getBasicInfo();
         }
 
         return raiseSuccess(
@@ -41,12 +39,7 @@ class CollegeController extends Controller {
           "Colleges fetched successfully"
         );
       } else {
-        return raiseClientError(
-          res,
-          422,
-          {},
-          `No college found with name including ${value}`
-        );
+                return raiseClientError(res, 422, {}, `No college found with name including ${value}`)
       }
     } catch (error) {
       Logger.debug("college search 500 error", error);

@@ -91,8 +91,7 @@ class AppointmentController extends Controller {
         // participant_one_type = "",
         // participant_one_id = "",
       } = body;
-      const { userId, userRoleId, userData: { category } = {} } =
-        userDetails || {};
+      const { userId, userRoleId, userData: { category } = {} } = userDetails || {};
       const { id: participant_two_id, category: participant_two_type } =
         participant_two || {};
 
@@ -266,7 +265,7 @@ class AppointmentController extends Controller {
         provider_id = null,
         provider_name = null,
         critical = false,
-        radiology_type = ""
+        radiology_type="",
         // participant_one_type = "",
         // participant_one_id = "",
       } = body;
@@ -348,7 +347,7 @@ class AppointmentController extends Controller {
           type,
           type_description,
           critical,
-          ...(type === RADIOLOGY && { radiology_type: radiology_type })
+          ...type === RADIOLOGY && { 'radiology_type': radiology_type }
         }
       };
 
@@ -394,11 +393,7 @@ class AppointmentController extends Controller {
         start_time,
         end_time,
         details: appointmentApiData.getBasicInfo(),
-        participants: [
-          userRoleId,
-          participantTwoId,
-          ...carePlanApiWrapper.getCareplnSecondaryProfiles()
-        ],
+        participants: [userRoleId, participantTwoId, ...carePlanApiWrapper.getCareplnSecondaryProfiles()],
         actor: {
           id: userId,
           user_role_id: userRoleId,
@@ -466,7 +461,7 @@ class AppointmentController extends Controller {
         critical = false,
         // participant_one_type = "",
         // participant_one_id = "",
-        radiology_type = ""
+        radiology_type="",
       } = body;
 
       const {
@@ -484,10 +479,7 @@ class AppointmentController extends Controller {
       );
 
       // careplan id for appointment
-      const { care_plan_id = null } =
-        (await carePlanAppointmentService.getSingleCarePlanAppointmentByData({
-          appointment_id
-        })) || {};
+      const {care_plan_id = null} = await carePlanAppointmentService.getSingleCarePlanAppointmentByData({appointment_id}) || {};
 
       const oldAppointmentData = await AppointmentWrapper(oldAppointment);
 
@@ -613,11 +605,7 @@ class AppointmentController extends Controller {
         start_time,
         end_time,
         details: appointmentApiData.getBasicInfo(),
-        participants: [
-          userRoleId,
-          participantTwoId,
-          ...carePlan.getCareplnSecondaryProfiles()
-        ],
+        participants: [userRoleId, participantTwoId, ...carePlan.getCareplnSecondaryProfiles()],
         actor: {
           id: userId,
           user_role_id: userRoleId,
@@ -738,9 +726,7 @@ class AppointmentController extends Controller {
   getAppointmentDetails = async (req, res) => {
     const { raiseSuccess, raiseServerError } = this;
     try {
-      const {
-        userDetails: { userData: { category }, userCategoryId } = {}
-      } = req;
+      const {userDetails: {userData: {category}, userCategoryId} = {}} = req;
       const appointmentDetails = await featureDetailService.getDetailsByData({
         feature_type: FEATURE_TYPE.APPOINTMENT
       });
@@ -752,24 +738,17 @@ class AppointmentController extends Controller {
 
       const userTypeData = {
         id: userCategoryId,
-        category
+        category,
       };
 
-      const updatedTypeDescriptionWithFavourites = await AppointmentHelper.getFavoriteInDetails(
-        userTypeData,
-        type_description,
-        FAVOURITE_TYPE.MEDICAL_TESTS
-      );
+      const updatedTypeDescriptionWithFavourites = await AppointmentHelper.getFavoriteInDetails(userTypeData, type_description, FAVOURITE_TYPE.MEDICAL_TESTS);
 
-      featureDetails = {
-        ...featureDetails,
-        ...{ type_description: updatedTypeDescriptionWithFavourites }
-      };
+      featureDetails = {...featureDetails, ...{type_description: updatedTypeDescriptionWithFavourites}}
       const { appointment_type = {} } = featureDetails;
       if (category === USER_CATEGORY.HSP) {
         let hspAppointmentType = {};
         for (let each in appointment_type) {
-          const { title = "" } = appointment_type[each];
+          const { title = '' } = appointment_type[each];
           const { title: radiologyTitle } = APPOINTMENT_TYPE[RADIOLOGY];
           if (title === radiologyTitle) {
             continue;
@@ -779,16 +758,9 @@ class AppointmentController extends Controller {
         featureDetails["appointment_type"] = { ...hspAppointmentType };
       }
 
-      const updatedRadiologyDataWithFavourites = await AppointmentHelper.getFavoriteInDetails(
-        userTypeData,
-        radiology_type_data,
-        FAVOURITE_TYPE.RADIOLOGY
-      );
+      const updatedRadiologyDataWithFavourites = await AppointmentHelper.getFavoriteInDetails(userTypeData, radiology_type_data, FAVOURITE_TYPE.RADIOLOGY);
 
-      featureDetails = {
-        ...featureDetails,
-        ...{ radiology_type_data: updatedRadiologyDataWithFavourites }
-      };
+      featureDetails = {...featureDetails, ...{radiology_type_data: updatedRadiologyDataWithFavourites}}
 
       return raiseSuccess(
         res,

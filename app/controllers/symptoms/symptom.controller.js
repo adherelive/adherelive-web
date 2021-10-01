@@ -36,12 +36,7 @@ class SymptomController extends Controller {
         if (symptomExists) {
           const symptom = await SymptomWrapper({ data: symptomExists });
           const { symptoms } = await symptom.getAllInfo();
-          const {
-            users,
-            upload_documents,
-            patients,
-            doctors
-          } = await symptom.getReferenceInfo();
+                    const { users, upload_documents, patients, doctors } = await symptom.getReferenceInfo();
           symptomData = { ...symptomData, ...symptoms };
           userData = { ...userData, ...users };
           documentData = { ...documentData, ...upload_documents };

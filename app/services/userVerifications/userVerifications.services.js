@@ -16,7 +16,7 @@ class UserVerificationsService {
       const verification = await Database.getModel(TABLE_NAME).findOne({
         where: {
           request_id: link
-        }
+                },
       });
       return verification;
     } catch (err) {
@@ -37,7 +37,7 @@ class UserVerificationsService {
     }
   };
 
-  getRequestByData = async data => {
+    getRequestByData = async (data) => {
     try {
       const verification = await Database.getModel(TABLE_NAME).findOne({
         where: data
@@ -46,7 +46,7 @@ class UserVerificationsService {
     } catch (err) {
       throw err;
     }
-  };
+    }
 }
 
 export default new UserVerificationsService();

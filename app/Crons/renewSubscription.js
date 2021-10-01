@@ -20,29 +20,19 @@ class RenewSubscription {
       Log.info(`TOTAL SUBSCRIPTIONS DUE : ${subscriptions.length}`);
       if (subscriptions.length > 0) {
         for (let i = 0; i < subscriptions.length; i++) {
-          const subscription = await SubscriptionWrapper({
-            data: subscriptions[i]
-          });
+                    const subscription = await SubscriptionWrapper({data: subscriptions[i]});
 
           let patientUserRoleId = null;
           if (subscription.getSubscriberType() === USER_CATEGORY.PATIENT) {
             patientUserRoleId = subscription.getSubscriberId();
           }
 
-          const {
-            payment_products,
-            payment_product_id
-          } = await subscription.getReferenceInfo();
+                    const {payment_products, payment_product_id} = await subscription.getReferenceInfo();
 
-          const {
-            basic_info: { amount, name, type, creator_id, creator_type } = {}
-          } = payment_products[payment_product_id] || {};
+                    const {basic_info: {amount, name, type, creator_id, creator_type} = {}} = payment_products[payment_product_id] || {};
 
           let doctorUserRoleId = null;
-          if (
-            creator_type === USER_CATEGORY.DOCTOR ||
-            creator_type === USER_CATEGORY.HSP
-          ) {
+                    if(creator_type === USER_CATEGORY.DOCTOR || creator_type === USER_CATEGORY.HSP ) {
             doctorUserRoleId = creator_id;
           }
 
@@ -56,15 +46,9 @@ class RenewSubscription {
           });
 
           if (patientUserRoleId && doctorUserRoleId) {
-            const twilioMessage = await TwilioService.addUserMessage(
-              doctorUserRoleId,
-              patientUserRoleId,
-              message
-            );
+                        const twilioMessage = await TwilioService.addUserMessage(doctorUserRoleId, patientUserRoleId, message);
           } else {
-            Log.info(
-              `patientUserId : ${patientUserRoleId} | doctorUserId : ${doctorUserRoleId}`
-            );
+                        Log.info(`patientUserId : ${patientUserRoleId} | doctorUserId : ${doctorUserRoleId}`);
           }
         }
       } else {

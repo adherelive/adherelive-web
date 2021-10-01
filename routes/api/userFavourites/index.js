@@ -26,6 +26,10 @@ router.delete(
   UserFavourites.removeFavourite
 );
 
-router.delete("/", Authenticated, UserFavourites.removeFavouriteMedicine);
+router.delete(
+    "/",
+    Authenticated,
+    UserFavourites.removeFavouriteMedicine
+);
 
 module.exports = router;

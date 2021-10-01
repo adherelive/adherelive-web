@@ -12,14 +12,14 @@ class DegreeService {
     }
   };
 
-  search = async data => {
+    search = async (data) => {
     try {
       const degree = await Database.getModel(TABLE_NAME).findAll({
         where: {
           name: {
-            [Op.like]: `%${data}%`
-          }
-        }
+                        [Op.like]: `%${data}%`,
+                    },
+                },
       });
       return degree;
     } catch (error) {
@@ -51,7 +51,9 @@ class DegreeService {
 
   create = async data => {
     try {
-      const degree = await Database.getModel(TABLE_NAME).create(data);
+            const degree = await Database.getModel(TABLE_NAME).create(
+                data
+              );
       return degree;
     } catch (error) {
       throw error;

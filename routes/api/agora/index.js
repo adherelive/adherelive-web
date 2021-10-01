@@ -10,8 +10,17 @@ router.get(
   agoraController.generateVideoAccessToken
 );
 
-router.post("/missed", Authenticated, agoraController.missedCall);
 
-router.post("/start", Authenticated, agoraController.startCall);
+router.post(
+  "/missed",
+  Authenticated,
+  agoraController.missedCall
+)
+
+router.post(
+  "/start",
+  Authenticated,
+  agoraController.startCall
+);
 
 module.exports = router;

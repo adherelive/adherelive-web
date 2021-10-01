@@ -20,7 +20,7 @@ import CareplanWrapper from "../../ApiWrapper/web/carePlan";
 import PatientWrapper from "../../ApiWrapper/web/patient";
 import ExerciseContentWrapper from "../../ApiWrapper/web/exerciseContents";
 import WorkoutResponseWrapper from "../../ApiWrapper/web/workoutResponse";
-import EventWrapper from "../../ApiWrapper/common/scheduleEvents";
+import EventWrapper from "../../ApiWrapper/common/scheduleEvents"
 // import WorkoutTemplateWrapper from "../../../ApiWrapper/mobile/workoutTemplates";
 
 import WorkoutJob from "../../JobSdk/Workout/observer";
@@ -30,7 +30,7 @@ import {
   DAYS,
   EVENT_STATUS,
   EVENT_TYPE,
-  USER_CATEGORY
+  USER_CATEGORY,
 } from "../../../constant";
 
 import WorkoutResponsesService from "../../services/workoutResponses/workoutResponses.service";
@@ -52,7 +52,7 @@ class WorkoutController extends Controller {
         userId,
         userRoleId,
         userData: { category } = {},
-        userCategoryData: { basic_info: { full_name = "" } = {} } = {}
+        userCategoryData: { basic_info: { full_name = "" } = {} } = {},
       } = userDetails || {};
 
       const {
@@ -64,7 +64,7 @@ class WorkoutController extends Controller {
         total_calories = null,
         not_to_do = "",
         repeat_days = [],
-        workout_exercise_groups = []
+        workout_exercise_groups = [],
       } = body;
 
       const careplanWrapper = await CareplanWrapper(null, care_plan_id);
@@ -77,9 +77,8 @@ class WorkoutController extends Controller {
         where: {
           doctor_id: current_careplan_doctor_id,
           patient_id: patientId,
-          user_role_id: userRoleId
-        },
-        attributes: ["id"]
+          user_role_id:userRoleId},
+        attributes:['id']
       });
 
       if (count > 0) {
@@ -129,7 +128,7 @@ class WorkoutController extends Controller {
         total_calories,
         workout_exercise_groups,
         time,
-        details: { not_to_do, repeat_days }
+        details: { not_to_do, repeat_days },
       });
 
       const workout = await WorkoutWrapper({ id: workout_id });
@@ -147,8 +146,8 @@ class WorkoutController extends Controller {
         actor: {
           id: userId,
           user_role_id: userRoleId,
-          details: { name: full_name, category }
-        }
+          details: { name: full_name, category },
+        },
       };
 
       const queueService = new QueueService();
@@ -169,8 +168,8 @@ class WorkoutController extends Controller {
         {
           ...(await workout.getReferenceInfo()),
           care_plans: {
-            [careplanWrapper.getCarePlanId()]: await careplanWrapper.getAllInfo()
-          }
+            [careplanWrapper.getCarePlanId()]: await careplanWrapper.getAllInfo(),
+          },
         },
         "Workout created successfully."
       );
@@ -190,7 +189,7 @@ class WorkoutController extends Controller {
         userId,
         userRoleId,
         userData: { category } = {},
-        userCategoryData: { basic_info: { full_name = "" } = {} } = {}
+        userCategoryData: { basic_info: { full_name = "" } = {} } = {},
       } = userDetails || {};
 
       const { id: workout_id } = params || {};
@@ -205,7 +204,7 @@ class WorkoutController extends Controller {
         repeat_days = [],
         time = null,
         workout_exercise_groups = [],
-        delete_exercise_group_ids = []
+        delete_exercise_group_ids = [],
       } = body;
 
       const careplanWrapper = await CareplanWrapper(null, care_plan_id);
@@ -218,7 +217,7 @@ class WorkoutController extends Controller {
           patient_id: patientId,
           user_role_id: userRoleId
         },
-        attributes: ["id"]
+        attributes:['id']
       });
 
       if (count > 0) {
@@ -233,10 +232,7 @@ class WorkoutController extends Controller {
               const workoutTime = await workoutWrapper.getTime();
               const fomattedTime = moment(time).toISOString();
               const formattedWorkoutTime = moment(workoutTime).toISOString();
-              if (
-                id.toString() !== workout_id.toString() &&
-                fomattedTime === formattedWorkoutTime
-              ) {
+              if(id.toString() !== workout_id.toString() && fomattedTime === formattedWorkoutTime){
                 return raiseClientError(
                   res,
                   422,
@@ -287,7 +283,7 @@ class WorkoutController extends Controller {
         details: { not_to_do, repeat_days },
         time,
         workout_exercise_groups,
-        delete_exercise_group_ids
+        delete_exercise_group_ids,
       });
 
       if (isUpdated) {
@@ -297,7 +293,7 @@ class WorkoutController extends Controller {
         const eventService = new EventService();
         await eventService.deleteBatch({
           event_id: workout_id,
-          event_type: EVENT_TYPE.WORKOUT
+          event_type: EVENT_TYPE.WORKOUT,
         });
 
         // create new schedule events
@@ -316,8 +312,8 @@ class WorkoutController extends Controller {
           actor: {
             id: userId,
             user_role_id: userRoleId,
-            details: { name: full_name, category }
-          }
+            details: { name: full_name, category },
+          },
         };
 
         const queueService = new QueueService();
@@ -365,16 +361,11 @@ class WorkoutController extends Controller {
       if (isDeleted) {
         const workoutWrapper = await WorkoutWrapper({ id });
         workoutApiData[workoutWrapper.getId()] = workoutWrapper.getBasicInfo();
-        return raiseSuccess(
-          res,
-          200,
-          {
+        return raiseSuccess(res, 200, {
             workouts: {
               ...workoutApiData
             }
-          },
-          "Workout deleted successfully"
-        );
+        }, "Workout deleted successfully");
       } else {
         return raiseClientError(
           res,
@@ -411,10 +402,7 @@ class WorkoutController extends Controller {
         );
       }
 
-      const isUpdated = await workoutService.updateWorkotTotalCalories({
-        total_calories,
-        workout_id
-      });
+      const isUpdated = await workoutService.updateWorkotTotalCalories({total_calories,workout_id});
 
       const workout = await WorkoutWrapper({ id: workout_id });
       return raiseSuccess(
@@ -450,13 +438,13 @@ class WorkoutController extends Controller {
           200,
           {
             repetitions: {
-              ...allRepetitions
+              ...allRepetitions,
             },
             days: DAYS,
             start_time: {
               hours: process.config.app.workout_start_hours,
-              minutes: process.config.app.workout_start_minutes
-            }
+              minutes: process.config.app.workout_start_minutes,
+            },
           },
           "Workout details fetched successfully"
         );
@@ -483,10 +471,7 @@ class WorkoutController extends Controller {
       const { patient_id = null } = query || {};
       const { userData: { category } = {}, userCategoryId } = userDetails;
 
-      if (
-        (category === USER_CATEGORY.DOCTOR || category === USER_CATEGORY.HSP) &&
-        !patient_id
-      ) {
+      if ( ( category === USER_CATEGORY.DOCTOR || category === USER_CATEGORY.HSP ) && !patient_id) {
         return raiseClientError(
           res,
           422,
@@ -499,14 +484,11 @@ class WorkoutController extends Controller {
 
       if (category === USER_CATEGORY.PATIENT) {
         getAllCareplanQuery = {
-          patient_id: userCategoryId
+          patient_id: userCategoryId,
         };
-      } else if (
-        category === USER_CATEGORY.DOCTOR ||
-        category === USER_CATEGORY.HSP
-      ) {
+      } else if (category === USER_CATEGORY.DOCTOR || category === USER_CATEGORY.HSP ) {
         getAllCareplanQuery = {
-          patient_id
+          patient_id,
           // doctor_id: userCategoryId,
         };
       }
@@ -527,9 +509,9 @@ class WorkoutController extends Controller {
         const workoutService = new WorkoutService();
         const {
           count: totalWorkouts,
-          rows: allWorkouts = []
+          rows: allWorkouts = [],
         } = await workoutService.findAndCountAll({
-          where: { care_plan_id: carePlanIds }
+          where: { care_plan_id: carePlanIds },
         });
 
         if (totalWorkouts) {
@@ -548,7 +530,7 @@ class WorkoutController extends Controller {
               exercise_groups,
               exercise_details,
               exercises,
-              repetitions
+              repetitions,
             } = await workout.getReferenceInfo();
             allWorkoutData = { ...allWorkoutData, ...workouts };
             // allWorkoutExerciseGroupMappings = {
@@ -567,14 +549,14 @@ class WorkoutController extends Controller {
             (await exerciseContentService.findAndCountAll({
               exercise_id: Object.keys(allExercises),
               creator_id: userCategoryId,
-              creator_type: category
+              creator_type: category,
             })) || {};
 
           let allExerciseContents = {};
           if (totalExerciseContent) {
             for (let index = 0; index < exerciseContents.length; index++) {
               const exerciseContent = await ExerciseContentWrapper({
-                data: exerciseContents[index]
+                data: exerciseContents[index],
               });
               allExerciseContents[
                 exerciseContent.getId()
@@ -592,7 +574,7 @@ class WorkoutController extends Controller {
               exercise_details: allExerciseDetails,
               exercises: allExercises,
               repetitions: allRepetitions,
-              exercise_contents: allExerciseContents
+              exercise_contents: allExerciseContents,
             },
             "Workouts fetched successfully"
           );
@@ -629,20 +611,20 @@ class WorkoutController extends Controller {
 
       let auth = {
         creator_id: userCategoryId,
-        creator_type: category
+        creator_type: category,
       };
       if (category === USER_CATEGORY.PATIENT) {
         const patientCareplans = await carePlanService.getAllDoctors({
-          patient_id: userCategoryId
+          patient_id: userCategoryId,
         });
 
         const doctorIds = patientCareplans.map(
-          patientCareplan => patientCareplan.doctor_id
+          (patientCareplan) => patientCareplan.doctor_id
         );
 
         auth = {
           creator_id: doctorIds,
-          creator_type: [USER_CATEGORY.DOCTOR, USER_CATEGORY.HSP]
+          creator_type: [USER_CATEGORY.DOCTOR,USER_CATEGORY.HSP],
         };
       }
 
@@ -663,7 +645,7 @@ class WorkoutController extends Controller {
       const {
         exercises,
         exercise_groups,
-        exercise_details
+        exercise_details,
       } = await workout.getReferenceInfo();
 
       // exercise contents
@@ -671,7 +653,7 @@ class WorkoutController extends Controller {
       const { count: totalExerciseContent, rows: exerciseContents = [] } =
         (await exerciseContentService.findAndCountAll({
           exercise_id: Object.keys(exercises),
-          ...auth
+          ...auth,
         })) || {};
 
       let allExerciseContents = {};
@@ -681,7 +663,7 @@ class WorkoutController extends Controller {
       if (totalExerciseContent) {
         for (let index = 0; index < exerciseContents.length; index++) {
           const exerciseContent = await ExerciseContentWrapper({
-            data: exerciseContents[index]
+            data: exerciseContents[index],
           });
           allExerciseContents[
             exerciseContent.getId()
@@ -696,9 +678,9 @@ class WorkoutController extends Controller {
       const workoutResponsesService = new WorkoutResponsesService();
       const {
         count: totalWorkoutResponses,
-        rows: workoutResponses
+        rows: workoutResponses,
       } = await workoutResponsesService.findAndCountAll({
-        workout_id: id
+        workout_id: id,
       });
 
       let allWorkoutResponses = {};
@@ -708,12 +690,12 @@ class WorkoutController extends Controller {
       if (totalWorkoutResponses) {
         for (let index = 0; index < totalWorkoutResponses; index++) {
           const workoutResponse = await WorkoutResponseWrapper({
-            data: workoutResponses[index]
+            data: workoutResponses[index],
           });
 
           const {
             workout_responses,
-            schedule_events
+            schedule_events,
           } = await workoutResponse.getReferenceInfo();
           allWorkoutResponseExerciseGroups[
             workoutResponse.getExerciseGroupId()
@@ -721,7 +703,7 @@ class WorkoutController extends Controller {
 
           allWorkoutResponses = {
             ...allWorkoutResponses,
-            ...workout_responses
+            ...workout_responses,
           };
           allScheduleEvents = { ...allScheduleEvents, ...schedule_events };
         }
@@ -733,15 +715,14 @@ class WorkoutController extends Controller {
         const {
           basic_info: { id: exercise_group_id, exercise_detail_id } = {},
           sets = null,
-          details = {}
+          details = {},
         } = exercise_groups[exerciseGroupId] || {};
 
         const { basic_info: { exercise_id } = {}, calorific_value = 0 } =
           exercise_details[exercise_detail_id] || {};
 
         if (sets) {
-          workoutExerciseGroupsTotalCalories =
-            workoutExerciseGroupsTotalCalories + sets * calorific_value;
+          workoutExerciseGroupsTotalCalories = workoutExerciseGroupsTotalCalories+(sets*calorific_value);
         }
 
         const exerciseContentId =
@@ -756,7 +737,7 @@ class WorkoutController extends Controller {
           sets,
           exercise_content_id: exerciseContentId,
           workout_response_id: workoutResponseId,
-          ...details
+          ...details,
         });
       }
 
@@ -810,7 +791,7 @@ class WorkoutController extends Controller {
         event_type: EVENT_TYPE.WORKOUT,
         date: workout.getStartDate(),
         sort: "DESC",
-        paranoid: false
+        paranoid: false,
       });
 
       let dateWiseWorkoutData = {};
@@ -823,7 +804,7 @@ class WorkoutController extends Controller {
 
           const {
             count: totalWorkoutResponses,
-            rows: workoutResponses = []
+            rows: workoutResponses = [],
           } = await workoutResponseService.findAndCountAll({
             where: { schedule_event_id: event.getScheduleEventId() }
           });
@@ -838,7 +819,7 @@ class WorkoutController extends Controller {
               innerIndex++
             ) {
               const workoutResponse = await WorkoutResponseWrapper({
-                data: workoutResponses[innerIndex]
+                data: workoutResponses[innerIndex],
               });
 
               const { workout_responses, workout_response_id } =
@@ -846,7 +827,7 @@ class WorkoutController extends Controller {
 
               allWorkoutResponses = {
                 ...allWorkoutResponses,
-                ...workout_responses
+                ...workout_responses,
               };
               allWorkoutResponseIds.push(workout_response_id);
             }
@@ -874,9 +855,9 @@ class WorkoutController extends Controller {
           200,
           {
             workout_timeline: {
-              ...dateWiseWorkoutData
+              ...dateWiseWorkoutData,
             },
-            workout_date_ids: timelineDates
+            workout_date_ids: timelineDates,
           },
           "Exercises timeline fetched successfully"
         );

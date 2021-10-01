@@ -20,19 +20,18 @@ class DeleteJob extends MedicationJob {
         id: actorId,
         user_role_id,
         details: { name, category: actorCategory } = {}
-      } = {}
+            } = {},
     } = getMedicationData() || {};
 
     const templateData = [];
     const playerIds = [];
     const userIds = [];
 
-    const { rows: userRoles = [] } =
-      (await UserRoleService.findAndCountAll({
+        const {rows: userRoles = []} = await UserRoleService.findAndCountAll({
         where: {
           id: participants
         }
-      })) || {};
+        }) || {};
 
     let providerId = null;
     for (const userRole of userRoles) {
@@ -49,9 +48,7 @@ class DeleteJob extends MedicationJob {
 
     let providerName = DEFAULT_PROVIDER;
     if (providerId) {
-      const provider = await ProviderService.getProviderByData({
-        id: providerId
-      });
+            const provider = await ProviderService.getProviderByData({id: providerId});
       const { name } = provider || {};
       providerName = name;
     }
@@ -87,7 +84,10 @@ class DeleteJob extends MedicationJob {
     const { getMedicationData } = this;
     const {
       participants = [],
-      actor: { id: actorId, user_role_id } = {},
+            actor: {
+                id: actorId,
+                user_role_id,
+            } = {},
       event_id
     } = getMedicationData() || {};
 

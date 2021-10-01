@@ -20,11 +20,7 @@ import Activity from "../app/activitySdk/activityObserver";
 
 Database.init();
 
-const Events = import("../events")
-  .then(module => {})
-  .catch(err => {
-    console.log("event module error", err);
-  });
+const Events  = import("../events").then(module => {}).catch(err => {console.log("event module error", err)});
 
 const cookieSession = require("cookie-session");
 const cookieParser = require("cookie-parser");
@@ -43,14 +39,11 @@ const cron = schedule.scheduleJob("*/1 * * * *", async () => {
 
 const perDayUtcRule = new schedule.RecurrenceRule();
 perDayUtcRule.hour = 0;
-perDayUtcRule.tz = "Etc/UTC";
+perDayUtcRule.tz = 'Etc/UTC';
 
-const removeDocumentPerDayCron = schedule.scheduleJob(
-  perDayUtcRule,
-  async () => {
-    await RemoveDocuments.runObserver();
-  }
-);
+const removeDocumentPerDayCron = schedule.scheduleJob(perDayUtcRule, async() => {
+  await RemoveDocuments.runObserver();
+});
 
 // CRONS RUNNING EVERY 1 HOUR
 const perHourCron = schedule.scheduleJob("0 0 */1 * * *", async () => {

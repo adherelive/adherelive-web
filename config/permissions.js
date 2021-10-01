@@ -10,7 +10,7 @@ export default {
   },
 
   ACCOUNT: {
-    VERIFIED: "VERIFIED_ACCOUNT"
+    VERIFIED: "VERIFIED_ACCOUNT",
   },
 
   /* [C] */
@@ -31,7 +31,7 @@ export default {
   },
 
   CALENDER: {
-    VIEW: "VIEW_CALENDER"
+    VIEW: "VIEW_CALENDER",
   },
 
   /* [D] */
@@ -47,14 +47,14 @@ export default {
   DOCTORS: {
     ADD: "ADD_DOCTOR",
     UPDATE: "UPDATE_DOCTOR",
-    VIEW: "VIEW_DOCTOR"
+    VIEW: "VIEW_DOCTOR",
   },
 
   /* [G] */
 
   GRAPHS: {
     ADD: "ADD_GRAPH",
-    UPDATE: "UPDATE_GRAPH"
+    UPDATE: "UPDATE_GRAPH",
   },
 
   /* [M] */
@@ -73,12 +73,12 @@ export default {
   PATIENTS: {
     ADD: "ADD_PATIENT",
     UPDATE: "UPDATE_PATIENT",
-    VIEW: "VIEW_PATIENT"
+    VIEW: "VIEW_PATIENT",
   },
 
   PAYMENT_PRODUCT: {
     ADD: "ADD_PAYMENT_PRODUCT",
-    VIEW: "VIEW_PAYMENT_PRODUCT"
+    VIEW: "VIEW_PAYMENT_PRODUCT",
   },
 
   /* [R] */
@@ -108,7 +108,7 @@ export default {
     VIEW: "VIEW_WORKOUT",
     DELETE: "DELETE_WORKOUT",
     TEMPLATE: "TEMPLATE_WORKOUT"
-  }
+  },
 };
 
 // export const USER_PERMISSIONS = {

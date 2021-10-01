@@ -10,7 +10,7 @@ const Logger = new Log("WEB > USER_FAVOURITES > SERVICE");
 class UserFavouritesService {
   constructor() {}
 
-  markFavourite = async data => {
+  markFavourite = async (data) => {
     const transaction = await Database.initTransaction();
     try {
       const markedRecord = await Database.getModel(TABLE_NAME).create(data, {
@@ -65,7 +65,7 @@ class UserFavouritesService {
     try {
       const deleteFavourite = await Database.getModel(TABLE_NAME).destroy({
         where: {
-          id
+          id,
         },
         paranoid: false
       });

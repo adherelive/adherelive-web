@@ -1,7 +1,9 @@
 import { validationError } from "../../api/helper";
 import Joi from "@hapi/joi";
 
-const careplanTemplateForm = Joi.object().keys({});
+const careplanTemplateForm = Joi.object().keys({
+
+});
 
 export const validateCareplanTemplateData = (req, res, next) => {
   const { body: data = {} } = req;
@@ -10,4 +12,4 @@ export const validateCareplanTemplateData = (req, res, next) => {
     return validationError(res, isValid);
   }
   next();
-};
+}

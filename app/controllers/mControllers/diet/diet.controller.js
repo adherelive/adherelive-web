@@ -31,7 +31,7 @@ import {
   DAYS,
   USER_CATEGORY,
   MEDICATION_TIMING,
-  PATIENT_MEAL_TIMINGS
+  PATIENT_MEAL_TIMINGS,
 } from "../../../../constant";
 import carePlanService from "../../../services/carePlan/carePlan.service";
 
@@ -49,8 +49,8 @@ class DietController extends Controller {
         params: { id = null } = {},
         userDetails: {
           userCategoryId = null,
-          userData: { category = null } = {}
-        } = {}
+          userData: { category = null } = {},
+        } = {},
       } = req;
 
       const dietService = await new DietService();
@@ -83,7 +83,7 @@ class DietController extends Controller {
 
       let dietApidata = {},
         dietBasicInfo = {},
-        dietFoodGroupsTotalCalories = 0;
+        dietFoodGroupsTotalCalories = 0;;
 
       dietBasicInfo[dietWrapper.getId()] = await dietWrapper.getBasicInfo();
 
@@ -92,11 +92,11 @@ class DietController extends Controller {
         food_groups = {},
         food_items = {},
         food_item_details = {},
-        portions = {}
+        portions = {},
       } = referenceInfo || {};
 
       const timeWise = await getTimeWiseDietFoodGroupMappings({
-        diet_food_group_mappings
+        diet_food_group_mappings,
       });
 
       // for(let each in timeWise){
@@ -132,15 +132,14 @@ class DietController extends Controller {
 
           const current_mapping = diet_food_group_mappings[primary] || {};
           const {
-            basic_info: { time = "", food_group_id = null } = {}
+            basic_info: { time = "", food_group_id = null } = {},
           } = current_mapping;
           const {
             basic_info: { food_item_detail_id = null, serving = null } = {},
-            details = {}
+            details = {},
           } = food_groups[food_group_id] || {};
-          const {
-            basic_info: { portion_id = null, calorific_value = 0 } = {}
-          } = food_item_details[food_item_detail_id] || {};
+          const { basic_info: { portion_id = null ,calorific_value = 0} = {} } =
+            food_item_details[food_item_detail_id] || {};
 
           if (details) {
             const { notes: detail_notes = "" } = details;
@@ -148,8 +147,7 @@ class DietController extends Controller {
           }
 
           if (serving) {
-            dietFoodGroupsTotalCalories =
-              dietFoodGroupsTotalCalories + serving * calorific_value;
+            dietFoodGroupsTotalCalories=dietFoodGroupsTotalCalories+(serving*calorific_value);
           }
 
           if (related_diet_food_group_mapping_ids.length) {
@@ -161,21 +159,20 @@ class DietController extends Controller {
               const similarMappingId = related_diet_food_group_mapping_ids[i];
 
               const {
-                basic_info: { food_group_id: similar_food_group_id = null } = {}
+                basic_info: {
+                  food_group_id: similar_food_group_id = null,
+                } = {},
               } = diet_food_group_mappings[similarMappingId] || {};
               const {
                 basic_info: {
                   food_item_detail_id: similar_food_item_detail_id = null,
-                  serving: similar_serving = null
+                  serving: similar_serving = null,
                 } = {},
-                details: similar_details = {}
+                details: similar_details = {},
               } = food_groups[similar_food_group_id] || {};
 
               const {
-                basic_info: {
-                  portion_id: similar_portion_id = null,
-                  calorific_value: similar_calorific_value = 0
-                } = {}
+                basic_info: { portion_id: similar_portion_id = null ,  calorific_value  : similar_calorific_value = 0  } = {},
               } = food_item_details[similar_food_item_detail_id] || {};
 
               let similar_notes = "";
@@ -185,9 +182,7 @@ class DietController extends Controller {
               }
 
               if (similar_serving) {
-                dietFoodGroupsTotalCalories =
-                  dietFoodGroupsTotalCalories +
-                  similar_serving * similar_calorific_value;
+                dietFoodGroupsTotalCalories=dietFoodGroupsTotalCalories+(similar_serving*similar_calorific_value);
               }
 
               const similarData = {
@@ -195,7 +190,7 @@ class DietController extends Controller {
                 portion_id: similar_portion_id,
                 food_item_detail_id: similar_food_item_detail_id,
                 food_group_id: similar_food_group_id,
-                notes: similar_notes
+                notes: similar_notes,
               };
 
               similarFoodGroups.push(similarData);
@@ -209,7 +204,7 @@ class DietController extends Controller {
             food_group_id,
             notes,
             food_item_detail_id,
-            similar: [...similarFoodGroups]
+            similar: [...similarFoodGroups],
           };
 
           const currentDietDataForTime = dietApidata[time] || [];
@@ -224,10 +219,10 @@ class DietController extends Controller {
         200,
         {
           diets: {
-            ...dietBasicInfo
+            ...dietBasicInfo,
           },
           diet_food_groups: {
-            ...dietApidata
+            ...dietApidata,
           },
           food_items,
           food_item_details,
@@ -251,7 +246,7 @@ class DietController extends Controller {
         userId,
         userRoleId,
         userData: { category } = {},
-        userCategoryData: { basic_info: { full_name = "" } = {} } = {}
+        userCategoryData: { basic_info: { full_name = "" } = {} } = {},
       } = userDetails || {};
 
       const {
@@ -262,7 +257,7 @@ class DietController extends Controller {
         total_calories = null,
         repeat_days = [],
         not_to_do = "",
-        diet_food_groups = []
+        diet_food_groups = [],
       } = body;
 
       const dietService = new DietService();
@@ -285,7 +280,7 @@ class DietController extends Controller {
         end_date,
         total_calories,
         diet_food_groups,
-        details: { not_to_do, repeat_days }
+        details: { not_to_do, repeat_days },
       });
       const dietWrapper = await DietWrapper({ id: diet_id });
 
@@ -309,8 +304,8 @@ class DietController extends Controller {
         actor: {
           id: userId,
           user_role_id: userRoleId,
-          details: { name: full_name, category }
-        }
+          details: { name: full_name, category },
+        },
       };
 
       const QueueService = new queueService();
@@ -330,7 +325,7 @@ class DietController extends Controller {
         res,
         200,
         {
-          ...referenceInfo
+          ...referenceInfo,
         },
         "Diet created successfully."
       );
@@ -354,7 +349,7 @@ class DietController extends Controller {
         const patient = await PatientWrapper(null, patient_id);
         const timingPreference = await userPreferenceService.getPreferenceByData(
           {
-            user_id: patient.getUserId()
+            user_id: patient.getUserId(),
           }
         );
         const options = await UserPreferenceWrapper(timingPreference);
@@ -383,7 +378,7 @@ class DietController extends Controller {
         200,
         {
           timings,
-          days: DAYS
+          days: DAYS,
         },
         "Diet related patient details fetched successfully"
       );
@@ -401,9 +396,9 @@ class DietController extends Controller {
       const { count = null, rows = [] } =
         (await dietService.getAllForCareplanId({
           where: {
-            care_plan_id
+            care_plan_id,
           },
-          attributes: ["id"]
+          attributes: ["id"],
         })) || [];
 
       let dietsApiData = {},
@@ -425,9 +420,9 @@ class DietController extends Controller {
         200,
         {
           diets: {
-            ...dietsApiData
+            ...dietsApiData,
           },
-          diet_ids
+          diet_ids,
         },
         "Diets for careplan fetched successfully"
       );
@@ -447,8 +442,8 @@ class DietController extends Controller {
           userId,
           userRoleId,
           userData: { category } = {},
-          userCategoryData: { basic_info: { full_name = "" } = {} } = {}
-        } = {}
+          userCategoryData: { basic_info: { full_name = "" } = {} } = {},
+        } = {},
       } = req;
 
       const { id: diet_id = null } = params;
@@ -470,7 +465,7 @@ class DietController extends Controller {
         not_to_do = "",
         repeat_days = [],
         diet_food_groups = {},
-        delete_food_group_ids = []
+        delete_food_group_ids = [],
       } = body;
 
       const existingDiet =
@@ -497,7 +492,7 @@ class DietController extends Controller {
         not_to_do,
         repeat_days,
         diet_food_groups,
-        delete_food_group_ids
+        delete_food_group_ids,
       });
 
       let dietsApiData = {};
@@ -509,7 +504,7 @@ class DietController extends Controller {
       const eventService = new EventService();
       await eventService.deleteBatch({
         event_id: diet_id,
-        event_type: EVENT_TYPE.DIET
+        event_type: EVENT_TYPE.DIET,
       });
 
       // create new schedule events
@@ -529,8 +524,8 @@ class DietController extends Controller {
         actor: {
           id: userId,
           user_role_id: userRoleId,
-          details: { name: full_name, category }
-        }
+          details: { name: full_name, category },
+        },
       };
 
       const QueueService = new queueService();
@@ -544,8 +539,8 @@ class DietController extends Controller {
         200,
         {
           diets: {
-            ...dietsApiData
-          }
+            ...dietsApiData,
+          },
         },
         "Diet updated successfully"
       );
@@ -580,16 +575,11 @@ class DietController extends Controller {
       if (isDeleted) {
         const dietWrapper = await DietWrapper({ id });
         dietApiData[dietWrapper.getId()] = dietWrapper.getBasicInfo();
-        return raiseSuccess(
-          res,
-          200,
-          {
+        return raiseSuccess(res, 200, {
             diets: {
               ...dietApiData
             }
-          },
-          "Diet deleted successfully"
-        );
+        }, "Diet deleted successfully");
       } else {
         return raiseClientError(
           res,
@@ -615,7 +605,7 @@ class DietController extends Controller {
 
       const allCareplansForDoctor =
         (await carePlanService.getCarePlanByData({
-          doctor_id: userCategoryId
+          doctor_id: userCategoryId,
           // user_role_id: userRoleId,
         })) || [];
       const dietService = new DietService();
@@ -624,12 +614,12 @@ class DietController extends Controller {
           const { id: care_plan_id = null } = allCareplansForDoctor[i] || {};
           const {
             count = null,
-            rows = []
+            rows = [],
           } = await dietService.getAllForCareplanId({
             where: {
-              care_plan_id
+              care_plan_id,
             },
-            attributes: ["id"]
+            attributes: ["id"],
           });
           if (count > 0) {
             for (let row of rows) {
@@ -648,8 +638,8 @@ class DietController extends Controller {
         200,
         {
           diets: {
-            ...allDietsApiWrapper
-          }
+            ...allDietsApiWrapper,
+          },
         },
         "Diet Data fetched successfully"
       );
@@ -663,7 +653,7 @@ class DietController extends Controller {
     const { raiseSuccess, raiseClientError, raiseServerError } = this;
     try {
       const {
-        userDetails: { userData: { category } = {}, userCategoryId } = {}
+        userDetails: { userData: { category } = {}, userCategoryId } = {},
       } = req;
 
       if (category !== USER_CATEGORY.PATIENT) {
@@ -681,19 +671,19 @@ class DietController extends Controller {
 
       const allCareplansForPatient =
         (await carePlanService.getCarePlanByData({
-          patient_id: userCategoryId
+          patient_id: userCategoryId,
         })) || [];
       if (allCareplansForPatient.length) {
         for (let i = 0; i < allCareplansForPatient.length; i++) {
           const { id: care_plan_id = null } = allCareplansForPatient[i] || {};
           const {
             count = null,
-            rows = []
+            rows = [],
           } = await dietService.getAllForCareplanId({
             where: {
-              care_plan_id
+              care_plan_id,
             },
-            attributes: ["id"]
+            attributes: ["id"],
           });
           if (count > 0) {
             for (let row of rows) {
@@ -709,19 +699,19 @@ class DietController extends Controller {
                 food_groups,
                 portions,
                 food_items,
-                food_item_details
+                food_item_details,
               } = await dietWrapper.getReferenceInfo();
 
               allDiets = { ...allDiets, ...diets };
               allDietFoodMappings = {
                 ...allDietFoodMappings,
-                ...diet_food_group_mappings
+                ...diet_food_group_mappings,
               };
               allFoodGroups = { ...allFoodGroups, ...food_groups };
               allFoodItems = { ...allFoodItems, ...food_items };
               allFoodItemDetails = {
                 ...allFoodItemDetails,
-                ...food_item_details
+                ...food_item_details,
               };
               allPortions = { ...allPortions, ...portions };
             }
@@ -738,7 +728,7 @@ class DietController extends Controller {
           food_groups: allFoodGroups,
           food_items: allFoodItems,
           food_item_details: allFoodItemDetails,
-          portions: allPortions
+          portions: allPortions,
         },
         "Diet Data fetched successfully"
       );
@@ -780,7 +770,7 @@ class DietController extends Controller {
         event_type: EVENT_TYPE.DIET,
         date: diet.getStartDate(),
         sort: "DESC",
-        paranoid: false
+        paranoid: false,
       });
 
       let dateWiseDietData = {};
@@ -793,14 +783,14 @@ class DietController extends Controller {
 
           const dietResponseData = await dietResponsesService.getByData({
             diet_id: id,
-            schedule_event_id: event.getScheduleEventId()
+            schedule_event_id: event.getScheduleEventId(),
           });
 
           let allDietResponseData = {};
 
           if (dietResponseData) {
             const dietResponse = await DietResponseWrapper({
-              data: dietResponseData
+              data: dietResponseData,
             });
 
             const { diet_responses, upload_documents, diet_response_id } =
@@ -809,13 +799,13 @@ class DietController extends Controller {
             allDietResponseData = {
               diet_responses,
               upload_documents,
-              diet_response_id
+              diet_response_id,
             };
           }
 
           let eventData = {
             ...(await event.getAllInfo()),
-            ...allDietResponseData
+            ...allDietResponseData,
           };
 
           if (dateWiseDietData.hasOwnProperty(event.getDate())) {
@@ -832,9 +822,9 @@ class DietController extends Controller {
           200,
           {
             diet_timeline: {
-              ...dateWiseDietData
+              ...dateWiseDietData,
             },
-            diet_date_ids: timelineDates
+            diet_date_ids: timelineDates,
           },
           "Diet responses fetched successfully"
         );
@@ -855,7 +845,9 @@ class DietController extends Controller {
   updateTotalCalories = async (req, res) => {
     const { raiseSuccess, raiseClientError, raiseServerError } = this;
     try {
-      const { query = {} } = req;
+      const {
+        query = {}
+      } = req;
 
       const { id: diet_id = null, total_calories = 0 } = query;
 
@@ -882,8 +874,8 @@ class DietController extends Controller {
         200,
         {
           diets: {
-            ...dietsApiData
-          }
+            ...dietsApiData,
+          },
         },
         "Diet total calories updated successfully"
       );

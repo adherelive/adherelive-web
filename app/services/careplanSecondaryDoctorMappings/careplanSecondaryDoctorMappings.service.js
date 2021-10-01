@@ -13,10 +13,10 @@ class CareplanSecondaryDoctorMappingsService {
         where,
         include: [
           Database.getModel(careplanTableName),
-          Database.getModel(userRolesTableName)
+              Database.getModel(userRolesTableName),
         ],
         order,
-        attributes
+            attributes,
         // raw: true
       });
     } catch (error) {
@@ -46,12 +46,10 @@ class CareplanSecondaryDoctorMappingsService {
     }
   };
 
-  create = async data => {
+    create = async (data) => {
     const transaction = await Database.initTransaction();
     try {
-      const createMapping = await Database.getModel(TABLE_NAME).create(data, {
-        transaction
-      });
+        const createMapping = await Database.getModel(TABLE_NAME).create(data, {transaction});
 
       await transaction.commit();
       return createMapping;
@@ -61,15 +59,12 @@ class CareplanSecondaryDoctorMappingsService {
     }
   };
 
-  delete = async data => {
+    delete = async (data) => {
     const transaction = await Database.initTransaction();
     try {
-      await Database.getModel(TABLE_NAME).destroy(
-        {
+        await Database.getModel(TABLE_NAME).destroy({
           where: data
-        },
-        { transaction }
-      );
+        }, {transaction});
 
       await transaction.commit();
       return true;

@@ -10,7 +10,7 @@ import { TABLE_NAME as careplanSecondaryDoctorMappingsTableName } from "./carepl
 
 export const TABLE_NAME = "care_plans";
 
-export const db = database => {
+export const db = (database) => {
   database.define(
     TABLE_NAME,
     {
@@ -25,9 +25,9 @@ export const db = database => {
         allowNull: false,
         references: {
           model: {
-            tableName: doctorTableName
+                        tableName: doctorTableName,
           },
-          key: "id"
+                    key: 'id'
         }
       },
       patient_id: {
@@ -35,9 +35,9 @@ export const db = database => {
         allowNull: false,
         references: {
           model: {
-            tableName: patientTableName
+                        tableName: patientTableName,
           },
-          key: "id"
+                    key: 'id'
         }
       },
       care_plan_template_id: {
@@ -45,79 +45,79 @@ export const db = database => {
         allowNull: true,
         references: {
           model: {
-            tableName: carePlanTemplateTableName
+                        tableName: carePlanTemplateTableName,
           },
-          key: "id"
-        }
-      },
-      details: {
-        type: DataTypes.JSON
-      },
-      activated_on: {
-        type: DataTypes.DATE
-      },
-      renew_on: {
-        type: DataTypes.DATE
-      },
-      user_role_id: {
-        type: DataTypes.INTEGER,
-        allowNull: true,
-        references: {
-          model: {
-            tableName: userRolesTableName
-          },
-          key: "id"
-        }
-      },
-      channel_id: {
-        type: DataTypes.STRING
-      },
-      expired_on: {
-        type: DataTypes.DATE
-      },
-      created_at: {
-        type: DataTypes.DATE,
-        allowNull: false
-      }
-    },
-    {
-      underscored: true,
-      paranoid: true,
-      getterMethods: {
-        getBasicInfo() {
-          return {
-            id: this.id,
-            // name: this.name,
-            // condition_id: this.condition_id,
-            // consent_id: this.consent_id,
-            doctor_id: this.doctor_id,
-            patient_id: this.patient_id,
-            details: this.details,
-            activated_on: this.activated_on,
-            renew_on: this.renew_on,
-            expired_on: this.expired_on
-          };
+                    key: 'id'
+                }
+            },
+            details: {
+                type: DataTypes.JSON,
+            },
+            activated_on: {
+                type: DataTypes.DATE,
+            },
+            renew_on: {
+                type: DataTypes.DATE,
+            },
+            user_role_id:{
+                type: DataTypes.INTEGER,
+                allowNull: true,
+                references: {
+                    model: {
+                        tableName: userRolesTableName ,
+                    },
+                    key: 'id'
+                }
+            },
+            channel_id: {
+                type: DataTypes.STRING,
+            },
+            expired_on: {
+                type: DataTypes.DATE,
+            },
+            created_at: {
+                type: DataTypes.DATE,
+                allowNull: false
+            }
         },
-        getId() {
-          return this.id;
+        {
+            underscored: true,
+            paranoid: true,
+            getterMethods: {
+                getBasicInfo() {
+                    return {
+                        id: this.id,
+                        // name: this.name,
+                        // condition_id: this.condition_id,
+                        // consent_id: this.consent_id,
+                        doctor_id: this.doctor_id,
+                        patient_id: this.patient_id,
+                        details: this.details,
+                        activated_on: this.activated_on,
+                        renew_on: this.renew_on,
+                        expired_on: this.expired_on
+                    };
+                },
+                getId() {
+                    return this.id;
+                }
+            }
         }
-      }
-    }
-  );
+    );
 };
 
-export const associate = database => {
+export const associate = (database) => {
   // associations here (if any) ...
   database.models[TABLE_NAME].belongsTo(database.models[patientTableName], {
     foreignKey: "patient_id",
-    targetKey: "id"
+        targetKey: "id",
     // foreignKey: "user_id",
     // targetKey: "id"
   });
 
   database.models[TABLE_NAME].belongsTo(database.models[userRolesTableName], {
     foreignKey: "user_role_id",
-    targetKey: "id"
+        targetKey: "id",
   });
 
   database.models[TABLE_NAME].hasOne(database.models[doctorTableName], {
@@ -125,27 +125,18 @@ export const associate = database => {
     sourceKey: "doctor_id"
   });
 
-  database.models[TABLE_NAME].hasMany(
-    database.models[carePlanAppointmentTableName],
-    {
-      foreignKey: "care_plan_id",
-      sourceKey: "id"
-    }
-  );
+    database.models[TABLE_NAME].hasMany(database.models[carePlanAppointmentTableName], {
+        foreignKey:"care_plan_id",
+        sourceKey:"id"
+    });
 
-  database.models[TABLE_NAME].hasMany(
-    database.models[carePlanMedicationTableName],
-    {
-      foreignKey: "care_plan_id",
-      sourceKey: "id"
-    }
-  );
+    database.models[TABLE_NAME].hasMany(database.models[carePlanMedicationTableName], {
+        foreignKey:"care_plan_id",
+        sourceKey:"id"
+    });
 
-  database.models[TABLE_NAME].hasMany(
-    database.models[careplanSecondaryDoctorMappingsTableName],
-    {
-      foreignKey: "care_plan_id",
-      sourceKey: "id"
-    }
-  );
+    database.models[TABLE_NAME].hasMany(database.models[careplanSecondaryDoctorMappingsTableName], {
+        foreignKey:"care_plan_id",
+        sourceKey:"id"
+    });
 };

@@ -20,7 +20,7 @@ export default class CarePlan {
   };
 
   getCarePlanDetails = () => {
-    return this._data.get("details");
+        return this._data.get('details');
   };
 
   getCreatedAt = () => {
@@ -41,11 +41,8 @@ export default class CarePlan {
 
   getCareplnSecondaryProfiles = () => {
     const { careplan_secondary_doctor_mappings = [] } = this._data || {};
-
-    return careplan_secondary_doctor_mappings.map(
-      data => data.secondary_doctor_role_id
-    );
-  };
+        return careplan_secondary_doctor_mappings.map(data => data.secondary_doctor_role_id);
+    };
 
   getChannelId = () => {
     return this._data.get("channel_id");

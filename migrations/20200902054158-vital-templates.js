@@ -1,6 +1,6 @@
-"use strict";
+'use strict';
 
-import { TABLE_NAME } from "../app/models/vitalTemplates";
+import {TABLE_NAME} from "../app/models/vitalTemplates";
 
 module.exports = {
   up: (queryInterface, Sequelize) => {
@@ -13,10 +13,10 @@ module.exports = {
       },
       name: {
         type: Sequelize.STRING,
-        allowNull: false
+        allowNull: false,
       },
       unit: {
-        type: Sequelize.STRING
+        type: Sequelize.STRING,
       },
       details: {
         type: Sequelize.JSON

@@ -17,7 +17,7 @@ import NotificationSdk from "../../../NotificationSdk";
 import Logger from "../../../../libs/log";
 import {
   DOCUMENT_PARENT_TYPE,
-  NOTIFICATION_STAGES
+  NOTIFICATION_STAGES,
 } from "../../../../constant";
 import { USER_CATEGORY } from "../../../../constant";
 
@@ -43,18 +43,18 @@ class DietResponseController extends Controller {
       const fileUrl = await UploadHelper.upload({
         file,
         id: userId,
-        folder: DOCUMENT_PARENT_TYPE.DIET_RESPONSE
+        folder: DOCUMENT_PARENT_TYPE.DIET_RESPONSE,
       });
       documents.push({
         name: originalname,
-        file: fileUrl
+        file: fileUrl,
       });
 
       return raiseSuccess(
         res,
         200,
         {
-          documents
+          documents,
         },
         "Image uploaded successfully"
       );
@@ -74,15 +74,15 @@ class DietResponseController extends Controller {
           userId,
           userRoleId,
           userData: { category } = {},
-          userCategoryData: { basic_info: { full_name } = {} } = {}
-        } = {}
+          userCategoryData: { basic_info: { full_name } = {} } = {},
+        } = {},
       } = req;
       const {
         schedule_event_id,
         diet_id,
         diet_response_status,
         response_text,
-        documents = []
+        documents = [],
       } = body || {};
 
       const dietResponseService = new DietResponseService();
@@ -97,12 +97,8 @@ class DietResponseController extends Controller {
       }
 
       if (responseExists) {
-        return raiseClientError(
-          res,
-          422,
-          {},
-          "Diet already captured for this time."
-        );
+        return raiseClientError(res, 422, {}, "Diet already captured for this time.");
+
       }
 
       const dietResponseId =
@@ -111,7 +107,7 @@ class DietResponseController extends Controller {
           diet_id,
           response_text,
           status: diet_response_status,
-          documents
+          documents,
         })) || null;
 
       if (dietResponseId) {
@@ -123,7 +119,7 @@ class DietResponseController extends Controller {
         const doctor = await DoctorWrapper(null, carePlan.getDoctorId());
 
         const dietResponse = await DietResponseWrapper({
-          id: dietResponseId
+          id: dietResponseId,
         });
 
         const dietJob = DietJob.execute(NOTIFICATION_STAGES.RESPONSE_ADDED, {
@@ -131,10 +127,10 @@ class DietResponseController extends Controller {
           actor: {
             id: userId,
             user_role_id: userRoleId,
-            details: { name: full_name, category }
+            details: {name: full_name, category},
           },
           id: dietResponseId,
-          ...(await dietResponse.getReferenceInfo())
+          ...(await dietResponse.getReferenceInfo()),
         });
 
         await NotificationSdk.execute(dietJob);

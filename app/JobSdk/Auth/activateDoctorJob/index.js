@@ -17,8 +17,11 @@ export default class DeactivateDoctorJob extends AuthJob {
   getPushAppTemplate = async () => {
     const { getData } = this;
     const {
-      actor: { id: actorId, details: { name } = {} } = {},
-      participants = []
+            actor: {
+                id: actorId,
+                details: { name } = {}
+            } = {},
+            participants = [],
     } = getData() || {};
 
     const templateData = [];
@@ -32,10 +35,9 @@ export default class DeactivateDoctorJob extends AuthJob {
       }
     });
 
-    const userDevices =
-      (await UserDeviceService.getAllDeviceByData({
-        user_id: userIds
-      })) || [];
+        const userDevices = await UserDeviceService.getAllDeviceByData({
+            user_id: userIds
+        }) || [];
 
     if (userDevices.length > 0) {
       for (const device of userDevices) {
@@ -64,8 +66,11 @@ export default class DeactivateDoctorJob extends AuthJob {
   getInAppTemplate = () => {
     const { getData } = this;
     const {
-      actor: { id: actorId, details: { name } = {} } = {},
-      participants = []
+            actor: {
+                id: actorId,
+                details: { name } = {}
+            } = {},
+            participants = [],
       // doctor_id,
       // patient_id,
     } = getData() || {};

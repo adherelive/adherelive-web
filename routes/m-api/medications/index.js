@@ -42,11 +42,6 @@ router.post(
   MobileMedication.update
 );
 
-router.delete(
-  "/:id",
-  Authenticate,
-  isAllowed(PERMISSIONS.MEDICATIONS.DELETE),
-  MobileMedication.delete
-);
+router.delete("/:id", Authenticate, isAllowed(PERMISSIONS.MEDICATIONS.DELETE), MobileMedication.delete);
 
 module.exports = router;

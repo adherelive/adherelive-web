@@ -4,12 +4,10 @@ import { TABLE_NAME } from "../../models/doctorClinics";
 class DoctorClinicService {
   constructor() {}
 
-  addClinic = async data => {
+  addClinic = async (data) => {
     const transaction = await Database.initTransaction();
     try {
-      const doctorClinic = await Database.getModel(TABLE_NAME).create(data, {
-        transaction
-      });
+      const doctorClinic = await Database.getModel(TABLE_NAME).create(data, {transaction});
       await transaction.commit();
       return doctorClinic;
     } catch (error) {
@@ -51,12 +49,12 @@ class DoctorClinicService {
     }
   };
 
-  getClinicById = async id => {
+  getClinicById = async (id) => {
     try {
       const doctorClinic = await Database.getModel(TABLE_NAME).findOne({
         where: {
-          id
-        }
+          id,
+        },
       });
       return doctorClinic;
     } catch (error) {

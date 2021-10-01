@@ -6,7 +6,7 @@ import { TABLE_NAME as userRoleTableName } from "./userRoles";
 
 export const TABLE_NAME = "consents";
 
-export const db = database => {
+export const db = (database) => {
   database.define(
     TABLE_NAME,
     {
@@ -17,16 +17,16 @@ export const db = database => {
       },
       type: {
         type: DataTypes.STRING,
-        allowNull: false
+                allowNull: false,
       },
       doctor_id: {
         type: DataTypes.INTEGER,
         allowNull: false,
         references: {
           model: {
-            tableName: doctorTableName
+                        tableName: doctorTableName,
           },
-          key: "id"
+                    key: 'id'
         }
       },
       patient_id: {
@@ -34,9 +34,9 @@ export const db = database => {
         allowNull: false,
         references: {
           model: {
-            tableName: patientTableName
+                        tableName: patientTableName,
           },
-          key: "id"
+                    key: 'id'
         }
       },
       user_role_id: {
@@ -44,20 +44,20 @@ export const db = database => {
         allowNull: false,
         references: {
           model: {
-            tableName: userRoleTableName
+                        tableName: userRoleTableName,
           },
-          key: "id"
+                    key: 'id'
         }
       },
       details: {
-        type: DataTypes.JSON
+                type: DataTypes.JSON,
       },
       activated_on: {
-        type: DataTypes.DATE
+                type: DataTypes.DATE,
       },
       expired_on: {
-        type: DataTypes.DATE
-      }
+                type: DataTypes.DATE,
+            },
     },
     {
       underscored: true,
@@ -77,7 +77,7 @@ export const db = database => {
   );
 };
 
-export const associate = database => {
+export const associate = (database) => {
   database.models[TABLE_NAME].hasOne(database.models[patientTableName], {
     foreignKey: "id",
     sourceKey: "patient_id"

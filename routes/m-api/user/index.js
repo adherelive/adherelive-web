@@ -14,9 +14,17 @@ import userDeviceRouter from "../userDevice";
 
 const PASSWORD_LENGTH = 8;
 
-router.post("/sign-in", validator.validateSignInData, mUserController.signIn);
+router.post(
+    "/sign-in",
+    validator.validateSignInData,
+    mUserController.signIn,
+);
 
-router.post("/consent", Authenticate, mUserController.giveConsent);
+router.post(
+    "/consent",
+    Authenticate,
+    mUserController.giveConsent
+);
 
 router.post(
   "/verify-otp",
@@ -33,10 +41,14 @@ router.post(
 router.post(
   "/sign-up",
   validator.validateCredentialsData,
-  mUserController.signUp
+    mUserController.signUp,
 );
 
-router.get("/get-basic-info", Authenticate, mUserController.onAppStart);
+router.get(
+    "/get-basic-info",
+    Authenticate,
+    mUserController.onAppStart,
+);
 
 // router.post(
 //     "/googleSignIn",

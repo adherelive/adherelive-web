@@ -6,6 +6,10 @@ import Transactions from "../../../app/controllers/transactions/transaction.cont
 
 const router = express.Router();
 
-router.get("/", Authenticate, Transactions.getAllTransactions);
+router.get(
+    "/",
+    Authenticate,
+    Transactions.getAllTransactions
+)
 
 export default router;
