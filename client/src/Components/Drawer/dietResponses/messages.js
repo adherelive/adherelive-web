@@ -1,11 +1,11 @@
-import { defineMessages } from "react-intl";
+import {defineMessages} from "react-intl";
 
 const messages = defineMessages({
-  title: {
-    id: "app.drawer.diet.response.title",
-    description: "",
-    defaultMessage: "{diet_name} Adherence"
-  }
+    title: {
+        id: "app.drawer.diet.response.title",
+        description: "",
+        defaultMessage: "{diet_name} Adherence"
+    }
 });
 
 export default messages;

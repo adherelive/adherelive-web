@@ -1,61 +1,51 @@
-import { USER_CATEGORY } from "../../../constant";
+import {USER_CATEGORY} from "../../../constant";
 
 export const TABLE_COLUMN = {
-  NAME: {
-    key: "NAME",
-    dataIndex: "NAME"
-  },
-  TIME: {
-    key: "TIME",
-    dataIndex: "TIME"
-  },
-  REPORT_DOCUMENTS: {
-    key: "REPORT_DOCUMENTS",
-    dataIndex: "REPORT_DOCUMENTS"
-    // ellipsis: true
-  },
-  EDIT: {
-    key: "EDIT",
-    dataIndex: "EDIT",
-    width: 100
-  }
+    NAME: {
+        key: "NAME",
+        dataIndex: "NAME",
+    },
+    TIME: {
+        key: "TIME",
+        dataIndex: "TIME",
+    },
+    REPORT_DOCUMENTS: {
+        key: "REPORT_DOCUMENTS",
+        dataIndex: "REPORT_DOCUMENTS",
+        // ellipsis: true
+    },
+    EDIT: {
+        key: "EDIT",
+        dataIndex: "EDIT",
+        width: 100
+    }
 };
 
-export const formatReportData = ({
-  id,
-  reports,
-  patients,
-  doctors,
-  upload_documents
-}) => {
-  const reportData = reports[id] || {};
+export const formatReportData = ({id, reports, patients, doctors, upload_documents}) => {
+    const reportData = reports[id] || {};
 
-  const {
-    basic_info: { patient_id } = {},
-    uploader: { id: uploaderId, category: uploaderCategory } = {},
-    report_document_ids = []
-  } = reportData || {};
+    const {
+        basic_info: {patient_id} = {},
+        uploader: {id: uploaderId, category: uploaderCategory} = {},
+        report_document_ids = []
+    } = reportData || {};
 
-  const patientData = patients[patient_id] || {};
+    const patientData = patients[patient_id] || {};
 
-  const uploaderData =
-    uploaderCategory === USER_CATEGORY.DOCTOR ||
-    uploaderCategory === USER_CATEGORY.HSP
-      ? doctors[uploaderId]
-      : patients[uploaderId];
+    const uploaderData = (uploaderCategory === USER_CATEGORY.DOCTOR || uploaderCategory === USER_CATEGORY.HSP) ? doctors[uploaderId] : patients[uploaderId];
 
-  // documents
-  let documentData = {};
-  report_document_ids.forEach(documentId => {
-    documentData[documentId] = upload_documents[documentId] || {};
-  });
+    // documents
+    let documentData = {};
+    report_document_ids.forEach(documentId => {
+        documentData[documentId] = upload_documents[documentId] || {};
+    });
 
-  return {
-    reportData,
-    patientData,
-    uploaderData,
-    documentData
-  };
+    return {
+        reportData,
+        patientData,
+        uploaderData,
+        documentData,
+    };
 };
 
 //   export const formatAppointmentTableData = data => {
@@ -70,3 +60,4 @@ export const formatReportData = ({
 //       vitalData: vitals[id],
 //     };
 //   };
+  

@@ -1,7 +1,7 @@
 export const getGraphsUrl = () => {
-  return `/charts/`;
+    return `/charts/`;
 };
 
 export const addGraphsUrl = () => {
-  return `/charts/`;
+    return `/charts/`;
 };

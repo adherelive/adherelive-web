@@ -1,114 +1,114 @@
 export default {
-  /* [A] */
+    /* [A] */
 
-  APPOINTMENTS: {
-    ADD: "ADD_APPOINTMENT",
-    UPDATE: "UPDATE_APPOINTMENT",
-    VIEW: "VIEW_APPOINTMENT",
-    DELETE: "DELETE_APPOINTMENT",
-    TEMPLATE: "TEMPLATE_APPOINTMENT"
-  },
+    APPOINTMENTS: {
+        ADD: "ADD_APPOINTMENT",
+        UPDATE: "UPDATE_APPOINTMENT",
+        VIEW: "VIEW_APPOINTMENT",
+        DELETE: "DELETE_APPOINTMENT",
+        TEMPLATE: "TEMPLATE_APPOINTMENT"
+    },
 
-  ACCOUNT: {
-    VERIFIED: "VERIFIED_ACCOUNT"
-  },
+    ACCOUNT: {
+        VERIFIED: "VERIFIED_ACCOUNT",
+    },
 
-  /* [C] */
+    /* [C] */
 
-  CARE_PLAN: {
-    ADD: "ADD_CARE_PLAN",
-    UPDATE: "UPDATE_CARE_PLAN",
-    VIEW: "VIEW_CARE_PLAN",
-    ADD_PROFILE: "ADD_PROFILE"
-  },
+    CARE_PLAN: {
+        ADD: "ADD_CARE_PLAN",
+        UPDATE: "UPDATE_CARE_PLAN",
+        VIEW: "VIEW_CARE_PLAN",
+        ADD_PROFILE: "ADD_PROFILE"
+    },
 
-  CARE_PLAN_TEMPLATE: {
-    ADD: "ADD_CARE_PLAN_TEMPLATE",
-    UPDATE: "UPDATE_CARE_PLAN_TEMPLATE",
-    VIEW: "VIEW_CARE_PLAN_TEMPLATE",
-    DUPLICATE: "DUPLICATE_CARE_PLAN_TEMPLATE",
-    DELETE: "DELETE_CARE_PLAN_TEMPLATE"
-  },
+    CARE_PLAN_TEMPLATE: {
+        ADD: "ADD_CARE_PLAN_TEMPLATE",
+        UPDATE: "UPDATE_CARE_PLAN_TEMPLATE",
+        VIEW: "VIEW_CARE_PLAN_TEMPLATE",
+        DUPLICATE: "DUPLICATE_CARE_PLAN_TEMPLATE",
+        DELETE: "DELETE_CARE_PLAN_TEMPLATE"
+    },
 
-  CALENDER: {
-    VIEW: "VIEW_CALENDER"
-  },
+    CALENDER: {
+        VIEW: "VIEW_CALENDER",
+    },
 
-  /* [D] */
+    /* [D] */
 
-  DIETS: {
-    ADD: "ADD_DIET",
-    UPDATE: "UPDATE_DIET",
-    VIEW: "VIEW_DIET",
-    DELETE: "DELETE_DIET",
-    TEMPLATE: "TEMPLATE_DIET"
-  },
+    DIETS: {
+        ADD: "ADD_DIET",
+        UPDATE: "UPDATE_DIET",
+        VIEW: "VIEW_DIET",
+        DELETE: "DELETE_DIET",
+        TEMPLATE: "TEMPLATE_DIET"
+    },
 
-  DOCTORS: {
-    ADD: "ADD_DOCTOR",
-    UPDATE: "UPDATE_DOCTOR",
-    VIEW: "VIEW_DOCTOR"
-  },
+    DOCTORS: {
+        ADD: "ADD_DOCTOR",
+        UPDATE: "UPDATE_DOCTOR",
+        VIEW: "VIEW_DOCTOR",
+    },
 
-  /* [G] */
+    /* [G] */
 
-  GRAPHS: {
-    ADD: "ADD_GRAPH",
-    UPDATE: "UPDATE_GRAPH"
-  },
+    GRAPHS: {
+        ADD: "ADD_GRAPH",
+        UPDATE: "UPDATE_GRAPH",
+    },
 
-  /* [M] */
+    /* [M] */
 
-  MEDICATIONS: {
-    ADD: "ADD_MEDICATION",
-    UPDATE: "UPDATE_MEDICATION",
-    VIEW: "VIEW_MEDICATION",
-    VIEW_TIMELINE: "VIEW_TIMELINE_MEDICATION",
-    DELETE: "DELETE_MEDICATION",
-    TEMPLATE: "TEMPLATE_MEDICATION"
-  },
+    MEDICATIONS: {
+        ADD: "ADD_MEDICATION",
+        UPDATE: "UPDATE_MEDICATION",
+        VIEW: "VIEW_MEDICATION",
+        VIEW_TIMELINE: "VIEW_TIMELINE_MEDICATION",
+        DELETE: "DELETE_MEDICATION",
+        TEMPLATE: "TEMPLATE_MEDICATION"
+    },
 
-  /* [P] */
+    /* [P] */
 
-  PATIENTS: {
-    ADD: "ADD_PATIENT",
-    UPDATE: "UPDATE_PATIENT",
-    VIEW: "VIEW_PATIENT"
-  },
+    PATIENTS: {
+        ADD: "ADD_PATIENT",
+        UPDATE: "UPDATE_PATIENT",
+        VIEW: "VIEW_PATIENT",
+    },
 
-  PAYMENT_PRODUCT: {
-    ADD: "ADD_PAYMENT_PRODUCT",
-    VIEW: "VIEW_PAYMENT_PRODUCT"
-  },
+    PAYMENT_PRODUCT: {
+        ADD: "ADD_PAYMENT_PRODUCT",
+        VIEW: "VIEW_PAYMENT_PRODUCT",
+    },
 
-  /* [R] */
+    /* [R] */
 
-  REPORTS: {
-    ADD: "ADD_REPORT",
-    UPDATE: "UPDATE_REPORT",
-    VIEW: "VIEW_REPORT",
-    DELETE: "DELETE_REPORT"
-  },
+    REPORTS: {
+        ADD: "ADD_REPORT",
+        UPDATE: "UPDATE_REPORT",
+        VIEW: "VIEW_REPORT",
+        DELETE: "DELETE_REPORT"
+    },
 
-  /* [V] */
+    /* [V] */
 
-  VITALS: {
-    ADD: "ADD_VITAL",
-    UPDATE: "UPDATE_VITAL",
-    VIEW: "VIEW_VITAL",
-    DELETE: "DELETE_VITAL",
-    TEMPLATE: "TEMPLATE_VITAL"
-  },
+    VITALS: {
+        ADD: "ADD_VITAL",
+        UPDATE: "UPDATE_VITAL",
+        VIEW: "VIEW_VITAL",
+        DELETE: "DELETE_VITAL",
+        TEMPLATE: "TEMPLATE_VITAL"
+    },
 
-  /* [W] */
+    /* [W] */
 
-  WORKOUTS: {
-    ADD: "ADD_WORKOUT",
-    UPDATE: "UPDATE_WORKOUT",
-    VIEW: "VIEW_WORKOUT",
-    DELETE: "DELETE_WORKOUT",
-    TEMPLATE: "TEMPLATE_WORKOUT"
-  }
+    WORKOUTS: {
+        ADD: "ADD_WORKOUT",
+        UPDATE: "UPDATE_WORKOUT",
+        VIEW: "VIEW_WORKOUT",
+        DELETE: "DELETE_WORKOUT",
+        TEMPLATE: "TEMPLATE_WORKOUT"
+    },
 };
 
 // export const USER_PERMISSIONS = {

@@ -24,7 +24,7 @@ import qualificationService from "../../services/doctorQualifications/doctorQual
 import doctorRegistrationService from "../../services/doctorRegistration/doctorRegistration.service";
 import treatmentService from "../../services/treatment/treatment.service";
 import doctorPatientWatchlistService from "../../services/doctorPatientWatchlist/doctorPatientWatchlist.service";
-import userRolesService from "../../services/userRoles/userRoles.service";
+import userRolesService from '../../services/userRoles/userRoles.service';
 import DietService from "../../services/diet/diet.service";
 import PortionServiceService from "../../services/portions/portions.service";
 import RepetitionService from "../../services/exerciseRepetitions/repetition.service";
@@ -32,7 +32,8 @@ import providerService from "../../services/provider/provider.service";
 import ExerciseContentService from "../../services/exerciseContents/exerciseContent.service";
 import WorkoutService from "../../services/workouts/workout.service";
 import userPreferenceService from "../../services/userPreferences/userPreference.service";
-import careplanSecondaryDoctorMappingService from "../../services/careplanSecondaryDoctorMappings/careplanSecondaryDoctorMappings.service";
+import careplanSecondaryDoctorMappingService
+    from "../../services/careplanSecondaryDoctorMappings/careplanSecondaryDoctorMappings.service";
 
 // WRAPPERS --------------------------------
 import ExerciseContentWrapper from "../../ApiWrapper/web/exerciseContents";
@@ -69,2600 +70,2536 @@ import * as DietHelper from "../diet/dietHelper";
 import Log from "../../../libs/log";
 import moment from "moment";
 import {
-  BODY_VIEW,
-  CONSENT_TYPE,
-  EMAIL_TEMPLATE_NAME,
-  USER_CATEGORY,
-  S3_DOWNLOAD_FOLDER,
-  PRESCRIPTION_PDF_FOLDER,
-  DIAGNOSIS_TYPE,
-  S3_DOWNLOAD_FOLDER_PROVIDER,
-  CONSULTATION
+    BODY_VIEW,
+    CONSENT_TYPE,
+    EMAIL_TEMPLATE_NAME,
+    USER_CATEGORY,
+    S3_DOWNLOAD_FOLDER,
+    PRESCRIPTION_PDF_FOLDER,
+    DIAGNOSIS_TYPE,
+    S3_DOWNLOAD_FOLDER_PROVIDER,
+    CONSULTATION,
 } from "../../../constant";
 import generateOTP from "../../helper/generateOtp";
-import { EVENTS, Proxy_Sdk } from "../../proxySdk";
+import {EVENTS, Proxy_Sdk} from "../../proxySdk";
 // import carePlan from "../../ApiWrapper/web/carePlan";
 import generatePDF from "../../helper/generateCarePlanPdf";
-import { downloadFileFromS3 } from "../user/userHelper";
-import { getFilePath } from "../../helper/filePath";
-import { checkAndCreateDirectory, getSeparateName } from "../../helper/common";
+import {downloadFileFromS3} from "../user/userHelper";
+import {getFilePath} from "../../helper/filePath";
+import {checkAndCreateDirectory, getSeparateName} from "../../helper/common";
 import PERMISSIONS from "../../../config/permissions";
 // helpers
 import * as carePlanHelper from "../carePlans/carePlanHelper";
-import { getDoctorCurrentTime } from "../../helper/getUserTime";
+import {getDoctorCurrentTime} from "../../helper/getUserTime";
 
 const path = require("path");
 
 const Logger = new Log("WEB > PATIENTS > CONTROLLER");
 
 class PatientController extends Controller {
-  constructor() {
-    super();
-  }
+    constructor() {
+        super();
+    }
 
-  updatePatient = async (req, res) => {
-    try {
-      const { userDetails, body, file } = req;
-      const { pid, profile_pic, name, email = "" } = body || {};
-      const { userId = "3" } = userDetails || {};
+    updatePatient = async (req, res) => {
+        try {
+            const {userDetails, body, file} = req;
+            const {pid, profile_pic, name, email = ""} = body || {};
+            const {userId = "3"} = userDetails || {};
 
-      console.log("\n\n PROFILE PIC FILE \n", req);
+            console.log("\n\n PROFILE PIC FILE \n", req);
 
-      if (email) {
-        const updateUserDetails = await userService.updateEmail(
-          { email },
-          userId
-        );
-      }
-
-      const splitName = name.split(" ");
-
-      // todo minio configure here
-      if (profile_pic) {
-        await minioService.createBucket();
-        // var file = path.join(__dirname, "../../../report.xlsx");
-        const fileStream = fs.createReadStream(profile_pic);
-        // console.log("FIleStreammmmmmmmmmmmmHHH",fileStream);
-        let hash = md5.create();
-        hash.update(userId);
-        hash.hex();
-        hash = String(hash);
-        const folder = "patients";
-        // const fileExt = "";
-        const file_name = hash.substring(4) + "-Report." + fileExt;
-        const metaData = {
-          "Content-Type":
-            "application/	application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
-        };
-        const fileUrl = folder + "/" + file_name;
-        await minioService.saveBufferObject(fileStream, fileUrl, metaData);
-
-        console.log("file urlll: ", process.config.minio.MINI);
-      }
-
-      const { first_name, middle_name, last_name } = getSeparateName(name);
-
-      const patientData = {
-        user_id: userId,
-        first_name,
-        middle_name,
-        last_name,
-        details: {
-          // todo: profile_pic
-        },
-        uid: pid
-      };
-      // add patient for userId
-      const patientDetails = await patientService.update(patientData);
-
-      return this.raiseSuccess(
-        res,
-        200,
-        {
-          patients: {
-            [patientDetails.getId]: {
-              ...patientDetails.getBasicInfo
+            if (email) {
+                const updateUserDetails = await userService.updateEmail(
+                    {email},
+                    userId
+                );
             }
-          }
-        },
-        "patient details updated successfully"
-      );
-    } catch (error) {
-      console.log("UPDATE PATIENT ERROR --> ", error);
-      return this.raiseServerError(res, 500, error, error.getMessage());
-    }
-  };
 
-  getPatientAppointments = async (req, res) => {
-    const { raiseServerError, raiseSuccess } = this;
-    try {
-      const { params: { id } = {}, userDetails: { userId } = {} } = req;
-
-      const appointmentList = await appointmentService.getAppointmentForPatient(
-        id
-      );
-      // Logger.debug("appointmentList", appointmentList);
-
-      // if (appointmentList.length > 0) {
-      let appointmentApiData = {};
-      let appointmentDocuments = {};
-      let appointment_ids = [];
-
-      for (const appointment of appointmentList) {
-        const appointmentWrapper = await AppointmentWrapper(appointment);
-        appointmentApiData[
-          appointmentWrapper.getAppointmentId()
-        ] = appointmentWrapper.getBasicInfo();
-
-        const {
-          appointment_docs
-        } = await appointmentWrapper.getReferenceInfo();
-
-        appointmentDocuments = { ...appointmentDocuments, ...appointment_docs };
-        appointment_ids.push(appointmentWrapper.getAppointmentId());
-      }
-
-      return raiseSuccess(
-        res,
-        200,
-        {
-          appointments: {
-            ...appointmentApiData
-          },
-          appointment_docs: {
-            ...appointmentDocuments
-          },
-          appointment_ids
-        },
-        `appointment data for patient: ${id} fetched successfully`
-      );
-    } catch (error) {
-      Logger.debug("getPatientAppointments 500 error", error);
-      raiseServerError(res);
-    }
-  };
-
-  getPatientMedications = async (req, res) => {
-    const { raiseSuccess, raiseServerError } = this;
-    try {
-      const { params: { id } = {} } = req;
-
-      const medicationDetails = await medicationReminderService.getMedicationsForParticipant(
-        { participant_id: id }
-      );
-
-      // console.log("712367132 medicationDetails --> ", medicationDetails);
-      // Logger.debug("medication details", medicationDetails);
-
-      let medicationApiData = {};
-      let medicineId = [];
-
-      for (const medication of medicationDetails) {
-        const medicationWrapper = await MReminderWrapper(medication);
-        const { medications } = await medicationWrapper.getAllInfo();
-        medicationApiData = { ...medicationApiData, ...medications };
-        // medicationApiData[
-        //   medicationWrapper.getMReminderId()
-        // ] = medicationWrapper.getBasicInfo();
-        medicineId.push(medicationWrapper.getMedicineId());
-      }
-
-      Logger.debug("medicineId", medicationDetails);
-
-      const medicineData = await medicineService.getMedicineByData({
-        id: medicineId
-      });
-
-      let medicineApiData = {};
-
-      for (const medicine of medicineData) {
-        const medicineWrapper = await MedicineApiWrapper(medicine);
-        medicineApiData[
-          medicineWrapper.getMedicineId()
-        ] = medicineWrapper.getBasicInfo();
-      }
-
-      Logger.debug("medicineData", medicineData);
-
-      return raiseSuccess(
-        res,
-        200,
-        {
-          medications: {
-            ...medicationApiData
-          },
-          medicines: {
-            ...medicineApiData
-          }
-        },
-        "Medications fetched successfully"
-      );
-    } catch (error) {
-      Logger.debug("500 error ", error);
-      return raiseServerError(res);
-    }
-  };
-
-  getPatientCarePlanDetails = async (req, res) => {
-    const { raiseSuccess, raiseClientError, raiseServerError } = this;
-    try {
-      const { id: patient_id = 1 } = req.params;
-      Logger.info(`params: patient_id = ${patient_id}`);
-      const {
-        userDetails: {
-          userRoleId = null,
-          userId,
-          userCategoryId,
-          userData: { category } = {}
-        } = {}
-      } = req;
-
-      if (!patient_id) {
-        return raiseClientError(
-          res,
-          422,
-          {},
-          "Please select correct patient to continue"
-        );
-      }
-
-      // get all careplans attached to patient
-      const carePlans =
-        (await carePlanService.getMultipleCarePlanByData({
-          patient_id,
-          user_role_id: userRoleId
-        })) || [];
-
-      let treatmentIds = [];
-
-      let carePlanApiDetails = {};
-      let carePlanIds = [];
-      let latestCarePlanId = null;
-
-      let doctorData = {};
-
-      let allProvidersData = {};
-      let allUserRoleData = {};
-
-      let appointmentApiDetails = {};
-      let medicationApiDetails = {};
-      let scheduleEventData = {};
-
-      let templateMedicationData = {};
-
-      let templateAppointmentData = {};
-
-      let otherCarePlanTemplates = {};
-      let medicineApiData = {};
-      let carePlanTemplateIds = [];
-
-      // for care plan templates
-      let templateVitalData = {};
-      let templateDietData = {},
-        foodItemDetailsApiData = {},
-        foodItemsApiData = {},
-        portionsApiData = {};
-
-      let templateWorkoutData = {},
-        exerciseDetailData = {},
-        exerciseData = {},
-        repetitionData = {};
-
-      // for vitals
-      let vitalTemplateData = {};
-
-      if (carePlans.length > 0) {
-        const {
-          care_plans,
-          medicines,
-          medications,
-          appointments,
-          doctors,
-          providers = {},
-          user_roles = {},
-          schedule_events,
-          care_plan_ids,
-          current_careplan_id
-        } = await carePlanHelper.getCareplanData({
-          carePlans,
-          userCategory: category,
-          doctorId: userCategoryId,
-          userRoleId
-        });
-
-        // care plans
-        carePlanApiDetails = { ...carePlanApiDetails, ...care_plans };
-
-        // care plan ids
-        carePlanIds = [...care_plan_ids];
-
-        // latest care plan id
-        latestCarePlanId = current_careplan_id;
-
-        // doctors
-        doctorData = { ...doctorData, ...doctors };
-
-        // appointments
-        appointmentApiDetails = { ...appointmentApiDetails, ...appointments };
-
-        // medications
-        medicationApiDetails = { ...medicationApiDetails, ...medications };
-
-        // schedule events
-        scheduleEventData = { ...scheduleEventData, ...schedule_events };
-
-        // medicines
-        medicineApiData = { ...medicineApiData, ...medicines };
-
-        allProvidersData = { ...allProvidersData, ...providers };
-
-        allUserRoleData = { ...allUserRoleData, ...user_roles };
-
-        // get all treatment ids from careplan for templates
-        Object.keys(care_plans).forEach(id => {
-          const { details: { treatment_id } = {} } = care_plans[id] || {};
-          treatmentIds.push(treatment_id);
-        });
-      }
-
-      // get all careplan templates for user(doctor)
-      const carePlanTemplates =
-        (await carePlanTemplateService.getCarePlanTemplateData({
-          user_id: userId,
-          treatment_id: treatmentIds
-        })) || [];
-
-      if (carePlanTemplates.length > 0) {
-        for (let index = 0; index < carePlanTemplates.length; index++) {
-          const carePlanTemplate = await CarePlanTemplateWrapper(
-            carePlanTemplates[index]
-          );
-
-          const {
-            care_plan_templates,
-            template_appointments,
-            template_medications,
-            template_vitals,
-            template_diets,
-            template_workouts,
-            exercise_details,
-            exercises,
-            repetitions,
-            vital_templates,
-            food_items,
-            food_item_details,
-            portions,
-            medicines
-          } = await carePlanTemplate.getReferenceInfo();
-
-          carePlanTemplateIds = [
-            ...new Set([
-              ...carePlanTemplateIds,
-              ...Object.keys(care_plan_templates)
-            ])
-          ];
-
-          // carePlanTemplateIds.push(...Object.keys(care_plan_templates));
-          otherCarePlanTemplates = {
-            ...otherCarePlanTemplates,
-            ...care_plan_templates
-          };
-          templateAppointmentData = {
-            ...templateAppointmentData,
-            ...template_appointments
-          };
-          templateMedicationData = {
-            ...templateMedicationData,
-            ...template_medications
-          };
-
-          templateVitalData = {
-            ...templateVitalData,
-            ...template_vitals
-          };
-
-          templateDietData = {
-            ...templateDietData,
-            ...template_diets
-          };
-
-          foodItemDetailsApiData = {
-            ...foodItemDetailsApiData,
-            ...food_item_details
-          };
-
-          foodItemsApiData = {
-            ...foodItemsApiData,
-            ...food_items
-          };
-
-          portionsApiData = {
-            ...portionsApiData,
-            ...portions
-          };
-
-          templateWorkoutData = {
-            ...templateWorkoutData,
-            ...template_workouts
-          };
-
-          exerciseDetailData = {
-            ...exerciseDetailData,
-            ...exercise_details
-          };
-
-          exerciseData = {
-            ...exerciseData,
-            ...exercises
-          };
-
-          repetitionData = {
-            ...repetitionData,
-            ...repetitions
-          };
-
-          vitalTemplateData = {
-            ...vitalTemplateData,
-            ...vital_templates
-          };
-          medicineApiData = { ...medicineApiData, ...medicines };
-        }
-      } else {
-        carePlanTemplateIds.push("1");
-        otherCarePlanTemplates["1"] = {
-          basic_info: {
-            id: "1",
-            name: "Blank Template"
-          }
-        };
-      }
-
-      // for (const carePlan of carePlans) {
-      //   const carePlanData = await CarePlanWrapper(carePlan);
-      //   const { doctors, doctor_id } = await carePlanData.getReferenceInfo();
-      //   doctorData = { ...doctorData, ...doctors };
-      //   if (category === USER_CATEGORY.DOCTOR && doctor_id === userCategoryId) {
-      //     if (
-      //       moment(carePlanData.getCreatedAt()).diff(
-      //         moment(latestCarePlan),
-      //         "minutes"
-      //       ) > 0
-      //     ) {
-      //       latestCarePlan = carePlanData.getCreatedAt();
-      //       latestCarePlanId = carePlanData.getCarePlanId();
-      //     }
-      //
-      //     if (latestCarePlan === null) {
-      //       latestCarePlan = carePlanData.getCreatedAt();
-      //       latestCarePlanId = carePlanData.getCarePlanId();
-      //     }
-      //   }
-      //
-      //   const {
-      //     treatment_id,
-      //   } = carePlanData.getCarePlanDetails();
-      //
-      //   treatmentIds.push(treatment_id);
-      //
-      //   // const carePlanTemplates = await carePlanTemplateService.getCarePlanTemplateData(
-      //   //     {
-      //   //       treatment_id,
-      //   //       severity_id,
-      //   //       condition_id,
-      //   //       user_id: userId
-      //   //     }
-      //   // );
-      //
-      //   let carePlanTemplateData = null;
-      //
-      //   Logger.info(`care plan template ---> ${carePlanData.getCarePlanTemplateId()}`);
-      //   if (carePlanData.getCarePlanTemplateId()) {
-      //     const carePlanTemplate = await carePlanTemplateService.getCarePlanTemplateById(
-      //       carePlanData.getCarePlanTemplateId()
-      //     );
-      //     carePlanTemplateData = await CarePlanTemplateWrapper(
-      //       carePlanTemplate
-      //     );
-      //
-      //     // get template attached to careplan
-      //     const {
-      //       care_plan_templates,
-      //       template_appointments,
-      //       template_medications,
-      //       medicines
-      //     } = await carePlanTemplateData.getReferenceInfo();
-      //
-      //
-      //     carePlanTemplateIds = [...new Set([...carePlanTemplateIds, ...Object.keys(care_plan_templates)])];
-      //
-      //     // carePlanTemplateIds.push(...Object.keys(care_plan_templates));
-      //     otherCarePlanTemplates = {
-      //       ...otherCarePlanTemplates,
-      //       ...care_plan_templates
-      //     };
-      //     templateAppointmentData = {
-      //       ...templateAppointmentData,
-      //       ...template_appointments
-      //     };
-      //     templateMedicationData = {
-      //       ...templateMedicationData,
-      //       ...template_medications
-      //     };
-      //     medicineApiData = { ...medicineApiData, ...medicines };
-      //
-      //     // const medications = await templateMedicationService.getMedicationsByCarePlanTemplateId(
-      //     //   carePlanData.getCarePlanTemplateId()
-      //     // );
-      //     //
-      //     // for (const medication of medications) {
-      //     //   const medicationData = await TemplateMedicationWrapper(medication);
-      //     //   templateMedicationData[
-      //     //     medicationData.getTemplateMedicationId()
-      //     //   ] = medicationData.getBasicInfo();
-      //     //   template_medication_ids.push(
-      //     //     medicationData.getTemplateMedicationId()
-      //     //   );
-      //     //   medicine_ids.push(medicationData.getTemplateMedicineId());
-      //     // }
-      //     //
-      //     // const appointments = await templateAppointmentService.getAppointmentsByCarePlanTemplateId(
-      //     //   carePlanData.getCarePlanTemplateId()
-      //     // );
-      //     //
-      //     // for (const appointment of appointments) {
-      //     //   const appointmentData = await TemplateAppointmentWrapper(
-      //     //     appointment
-      //     //   );
-      //     //   templateAppointmentData[
-      //     //     appointmentData.getTemplateAppointmentId()
-      //     //   ] = appointmentData.getBasicInfo();
-      //     //   template_appointment_ids.push(
-      //     //     appointmentData.getTemplateAppointmentId()
-      //     //   );
-      //     // }
-      //   }
-      //
-      //   const carePlanAppointments = await carePlanAppointmentService.getAppointmentsByCarePlanId(
-      //     carePlanData.getCarePlanId()
-      //   );
-      //
-      //   for (const carePlanAppointment of carePlanAppointments) {
-      //     appointment_ids.push(carePlanAppointment.get("appointment_id"));
-      //   }
-      //
-      //   const appointments = await appointmentService.getAppointmentByData({
-      //     id: appointment_ids
-      //   });
-      //   if (appointments.length > 0) {
-      //     for (const appointment of appointments) {
-      //       const appointmentData = await AppointmentWrapper(appointment);
-      //
-      //       const {
-      //         appointments,
-      //         schedule_events
-      //       } = await appointmentData.getReferenceInfo();
-      //       appointmentApiDetails = {
-      //         ...appointmentApiDetails,
-      //         ...appointments
-      //       };
-      //       scheduleEventData = { ...scheduleEventData, ...schedule_events };
-      //       // appointmentApiDetails[appointmentData.getAppointmentId()] = appointmentData.getBasicInfo();
-      //     }
-      //   }
-      //   const carePlanMedications = await carePlanMedicationService.getMedicationsByCarePlanId(
-      //     carePlanData.getCarePlanId()
-      //   );
-      //
-      //   for (const carePlanMedication of carePlanMedications) {
-      //     medication_ids.push(carePlanMedication.get("medication_id"));
-      //   }
-      //
-      //   const medications = await medicationReminderService.getMedicationsForParticipant(
-      //     { id: medication_ids }
-      //   );
-      //   if (medications.length > 0) {
-      //     for (const medication of medications) {
-      //       const medicationWrapper = await MReminderWrapper(medication);
-      //       const {medications: medicationData} = await medicationWrapper.getAllInfo();
-      //       medicationApiDetails = {...medicationApiDetails, ...medicationData};
-      //       medicine_ids.push(medicationWrapper.getMedicineId());
-      //     }
-      //   }
-      //
-      //   const medicineData = await medicineService.getMedicineByData({
-      //     id: medicine_ids
-      //   });
-      //
-      //   for (const medicine of medicineData) {
-      //     const medicineWrapper = await MedicineApiWrapper(medicine);
-      //     medicineApiData[
-      //       medicineWrapper.getMedicineId()
-      //     ] = medicineWrapper.getBasicInfo();
-      //   }
-      //
-      //   if (carePlanTemplateData || carePlanTemplates.length > 0) {
-      //     // Logger.debug(`786534546789098765234569090114 ---> ${patient_id} All Careplan Templates`,carePlanTemplates);
-      //     //
-      //     // for (const carePlanTemplate of carePlanTemplates) {
-      //     //   carePlanTemplateData = await CarePlanTemplateWrapper(
-      //     //     carePlanTemplate
-      //     //   );
-      //     //   Logger.debug(`786534546789098765234569090114 ---> ${patient_id} CARE PLAN TEMP Data`,carePlanTemplate);
-      //     //
-      //     //   const {
-      //     //     care_plan_templates,
-      //     //     template_appointments,
-      //     //     template_medications,
-      //     //     medicines
-      //     //   } = await carePlanTemplateData.getReferenceInfo();
-      //     //
-      //     //
-      //     //   carePlanTemplateIds = [...new Set([...carePlanTemplateIds, ...Object.keys(care_plan_templates)])];
-      //     //
-      //     //   // carePlanTemplateIds.push(...Object.keys(care_plan_templates));
-      //     //   otherCarePlanTemplates = {
-      //     //     ...otherCarePlanTemplates,
-      //     //     ...care_plan_templates
-      //     //   };
-      //     //   templateAppointmentData = {
-      //     //     ...templateAppointmentData,
-      //     //     ...template_appointments
-      //     //   };
-      //     //   templateMedicationData = {
-      //     //     ...templateMedicationData,
-      //     //     ...template_medications
-      //     //   };
-      //     //   medicineApiData = { ...medicineApiData, ...medicines };
-      //     // }
-      //   } else {
-      //     carePlanTemplateIds.push("1");
-      //     otherCarePlanTemplates["1"] = {
-      //       basic_info: {
-      //         id: "1",
-      //         name: "Blank Template"
-      //       }
-      //     };
-      //   }
-      //
-      //   Logger.debug(`786534546789098765234569090114 ---> ${patient_id}`,carePlanTemplateIds);
-      //
-      //   carePlanApiDetails[
-      //     carePlanData.getCarePlanId()
-      //   ] = await carePlanData.getAllInfo();
-      //   carePlanIds.push(carePlanData.getCarePlanId());
-      // }
-
-      let exerciseContentData = {};
-      const exerciseContentService = new ExerciseContentService();
-
-      for (let each in exerciseData) {
-        const exercise = exerciseData[each] || {};
-        const { basic_info: { id = null } = {} } = exercise || {};
-        const exerciseContentExists =
-          (await exerciseContentService.findOne({
-            exercise_id: id,
-            creator_id: userCategoryId,
-            creator_type: category
-          })) || null;
-
-        if (exerciseContentExists) {
-          const exerciseContentWrapper = await ExerciseContentWrapper({
-            exercise_id: id,
-            auth: { creator_id: userCategoryId, creator_type: category }
-          });
-          exerciseContentData[
-            exerciseContentWrapper.getId()
-          ] = exerciseContentWrapper.getBasicInfo();
-        }
-      }
-
-      const symptomData = await SymptomService.getAllByData({ patient_id });
-
-      let symptomDetails = {};
-      let uploadDocumentData = {};
-
-      if (symptomData.length > 0) {
-        for (const data of symptomData) {
-          const symptom = await SymptomWrapper({ data });
-          const { symptoms } = await symptom.getAllInfo();
-          const { upload_documents } = await symptom.getReferenceInfo();
-          symptomDetails = { ...symptomDetails, ...symptoms };
-          uploadDocumentData = { ...uploadDocumentData, ...upload_documents };
-        }
-      }
-
-      return raiseSuccess(
-        res,
-        200,
-        {
-          current_careplan_id: latestCarePlanId,
-          care_plan_ids: carePlanIds,
-          doctors: {
-            ...doctorData
-          },
-          care_plans: {
-            ...carePlanApiDetails
-          },
-          care_plan_template_ids: [...carePlanTemplateIds],
-          care_plan_templates: {
-            ...otherCarePlanTemplates
-          },
-          appointments: {
-            ...appointmentApiDetails
-          },
-          medications: {
-            ...medicationApiDetails
-          },
-          symptoms: {
-            ...symptomDetails
-          },
-          upload_documents: {
-            ...uploadDocumentData
-          },
-          template_appointments: {
-            ...templateAppointmentData
-          },
-          template_medications: {
-            ...templateMedicationData
-          },
-          template_vitals: {
-            ...templateVitalData
-          },
-          template_diets: {
-            ...templateDietData
-          },
-          food_items: {
-            ...foodItemsApiData
-          },
-          food_item_details: {
-            ...foodItemDetailsApiData
-          },
-          portions: {
-            ...portionsApiData
-          },
-          providers: {
-            ...allProvidersData
-          },
-          user_roles: {
-            ...allUserRoleData
-          },
-
-          template_workouts: templateWorkoutData,
-          exercise_details: exerciseDetailData,
-          exercises: exerciseData,
-          exercise_contents: exerciseContentData,
-          repetitions: repetitionData,
-
-          vital_templates: {
-            ...vitalTemplateData
-          },
-          medicines: {
-            ...medicineApiData
-          },
-          schedule_events: {
-            ...scheduleEventData
-          }
-        },
-        "Patient care plan details fetched successfully"
-      );
-    } catch (error) {
-      // Logger.debug("get careplan 500 error ---> ", error);
-      console.log("GET PATIENT DETAILS ERROR careplan --> ", error);
-      return raiseServerError(res);
-    }
-  };
-
-  getPatientSymptoms = async (req, res) => {
-    const { raiseSuccess, raiseServerError, raiseClientError } = this;
-    try {
-      Logger.debug("req.params ----->", req.params);
-      const {
-        params: { patient_id } = {},
-        userDetails: {
-          userId,
-          userRoleId = null,
-          userData: { category } = {}
-        } = {}
-      } = req;
-
-      const carePlanData = await carePlanService.getSingleCarePlanByData({
-        patient_id,
-        ...((category === USER_CATEGORY.DOCTOR ||
-          category === USER_CATEGORY.HSP) && { user_role_id: userRoleId })
-      });
-      const carePlan = await CarePlanWrapper(carePlanData);
-
-      const symptomData = await SymptomService.getAllByData({
-        patient_id
-        // care_plan_id: carePlan.getCarePlanId()
-      });
-
-      let uploadDocumentData = {};
-      const dateWiseSymptoms = {};
-      let symptomDates = [];
-
-      if (symptomData.length > 0) {
-        for (const data of symptomData) {
-          const symptom = await SymptomWrapper({ data });
-
-          Logger.debug("symptom created date ---> ", symptom.getCreatedDate());
-          const symptomDetails = await symptom.getDateWiseInfo();
-          if (dateWiseSymptoms.hasOwnProperty(symptom.getCreatedDate())) {
-            dateWiseSymptoms[symptom.getCreatedDate()].push(symptomDetails);
-          } else {
-            dateWiseSymptoms[symptom.getCreatedDate()] = [];
-            dateWiseSymptoms[symptom.getCreatedDate()].push(symptomDetails);
-          }
-          const { upload_documents } = await symptom.getReferenceInfo();
-          uploadDocumentData = { ...uploadDocumentData, ...upload_documents };
-          if (symptomDates.indexOf(symptom.getCreatedDate()) === -1) {
-            symptomDates.push(symptom.getCreatedDate());
-          }
-        }
-
-        symptomDates.sort((a, b) => {
-          if (moment(a).isBefore(moment(b))) return 1;
-
-          if (moment(a).isAfter(moment(b))) return -1;
-
-          return 0;
-        });
-        // console.log("incident=============>", incidentLogs);
-        // console.log("medicationLogs=============>", medicationLogs);
-        symptomDates.forEach(date => {
-          const data = dateWiseSymptoms[date] || [];
-          data.sort((activityA, activityB) => {
-            const { createdAt: a } = activityA;
-            const { createdAt: b } = activityB;
-            if (moment(a).isBefore(moment(b))) return 1;
-
-            if (moment(a).isAfter(moment(b))) return -1;
-
-            return 0;
-          });
-        });
-
-        return raiseSuccess(
-          res,
-          200,
-          {
-            timeline_symptoms: {
-              ...dateWiseSymptoms
-            },
-            upload_documents: {
-              ...uploadDocumentData
-            },
-            symptom_dates: symptomDates
-          },
-          "Symptoms data fetched successfully"
-        );
-      } else {
-        return raiseClientError(
-          res,
-          422,
-          {},
-          "Patient has not updated any symptoms yet for the treatment"
-        );
-      }
-    } catch (error) {
-      Logger.debug(
-        "76235274523754328648273947293 getPatientSymptoms 500 error",
-        error
-      );
-      return raiseServerError(res);
-    }
-  };
-
-  // getPatientVitals = async (req, res) => {
-  //   const { raiseSuccess, raiseServerError, raiseClientError } = this;
-  //   try {
-  //     Logger.debug("3455432134532476567897", req.params);
-  //     const {userDetails = {}} = req;
-  //     const { params: { careplan_id } = {} ,userDetails : { userData: { category } = {}  } } = req;
-  //     const {userRoleId = null } = userDetails  ;
-
-  //     let carePlan =null;
-  //     let allVitals = [];
-  //     carePlan = await carePlanService.getSingleCarePlanByData({
-  //       id: careplan_id,
-  //       [category === USER_CATEGORY.DOCTOR && 'user_role_id' ] : category === USER_CATEGORY.DOCTOR && userRoleId
-  //     });
-
-  //     if(carePlan){
-
-  //       allVitals = await VitalService.getAllByData({
-  //         care_plan_id: carePlan.get("id")
-  //       });
-
-  //     }
-
-  //     let vitalDetails = {};
-  //     let vitalTemplateDetails = {};
-  //     let carePlanTemplateDetails = {};
-
-  //     if (allVitals.length > 0) {
-  //       for (const vitalData of allVitals) {
-  //         const vital = await VitalWrapper(vitalData);
-  //         const { vitals } = await vital.getAllInfo();
-  //         const {
-  //           vital_templates,
-  //           care_plans
-  //         } = await vital.getReferenceInfo();
-
-  //         vitalDetails = { ...vitalDetails, ...vitals };
-
-  //         vitalTemplateDetails = {
-  //           ...vitalTemplateDetails,
-  //           ...vital_templates
-  //         };
-  //         carePlanTemplateDetails = {
-  //           ...carePlanTemplateDetails,
-  //           ...care_plans
-  //         };
-  //       }
-
-  //       return raiseSuccess(
-  //         res,
-  //         200,
-  //         {
-  //           vitals: {
-  //             ...vitalDetails
-  //           },
-  //           vital_templates: {
-  //             ...vitalTemplateDetails
-  //           },
-  //           care_plans: {
-  //             ...carePlanTemplateDetails
-  //           },
-  //           vital_ids: Object.keys(vitalDetails)
-  //         },
-  //         "Vitals fetched successfully for the patient"
-  //       );
-  //     } else {
-  //       return raiseSuccess(
-  //         res,
-  //         200,
-  //         {},
-  //         "There are no added vitals for the patient"
-  //       );
-  //     }
-  //   } catch (error) {
-  //     Logger.debug("getPatientVitals 500 error", error);
-  //     return raiseServerError(res);
-  //   }
-  // };
-
-  getPatientVitals = async (req, res) => {
-    const { raiseSuccess, raiseServerError, raiseClientError } = this;
-    try {
-      Logger.debug("34554321345324", req.params);
-      const { params: { careplan_id } = {} } = req;
-      let patient_id = null;
-
-      const careplanWrapper = await CarePlanWrapper(null, careplan_id);
-      if (careplanWrapper) {
-        patient_id = await careplanWrapper.getPatientId();
-      }
-
-      const carePlans = await carePlanService.getMultipleCarePlanByData({
-        patient_id
-      });
-
-      /* incoming change from release/adhere branch */
-      // const carePlan = await carePlanService.getSingleCarePlanByData({
-      //   id: careplan_id,
-      // });
-      // const allVitals = await VitalService.getAllByData({
-      //   care_plan_id: carePlan.get("id"),
-      // });
-
-      let allVitals = [];
-
-      for (const carePlan of carePlans) {
-        const vitals = await VitalService.getAllByData({
-          care_plan_id: carePlan.get("id")
-        });
-
-        allVitals = [...allVitals, ...vitals];
-      }
-
-      let vitalDetails = {};
-      let vitalTemplateDetails = {};
-      let carePlanTemplateDetails = {};
-
-      if (allVitals.length > 0) {
-        for (const vitalData of allVitals) {
-          const vital = await VitalWrapper(vitalData);
-          const { vitals } = await vital.getAllInfo();
-          const {
-            vital_templates,
-            care_plans
-          } = await vital.getReferenceInfo();
-
-          vitalDetails = { ...vitalDetails, ...vitals };
-
-          vitalTemplateDetails = {
-            ...vitalTemplateDetails,
-            ...vital_templates
-          };
-          carePlanTemplateDetails = {
-            ...carePlanTemplateDetails,
-            ...care_plans
-          };
-        }
-
-        return raiseSuccess(
-          res,
-          200,
-          {
-            vitals: {
-              ...vitalDetails
-            },
-            vital_templates: {
-              ...vitalTemplateDetails
-            },
-            care_plans: {
-              ...carePlanTemplateDetails
-            },
-            vital_ids: Object.keys(vitalDetails)
-          },
-          "Vitals fetched successfully for the patient"
-        );
-      } else {
-        return raiseSuccess(
-          res,
-          200,
-          {},
-          "There are no added vitals for the patient"
-        );
-      }
-    } catch (error) {
-      Logger.debug("getPatientVitals 500 error", error);
-      return raiseServerError(res);
-    }
-  };
-
-  getPatientPartSymptoms = async (req, res) => {
-    const { raiseSuccess, raiseServerError, raiseClientError } = this;
-    try {
-      Logger.debug("req.params ----->", req.params);
-      const {
-        query: { duration = "5" } = {},
-        params: { patient_id } = {},
-        userDetails: { userId } = {}
-      } = req;
-
-      const currentTime = moment()
-        .utc()
-        .toISOString();
-      const historyTime = moment()
-        .subtract(duration, "days")
-        .utc()
-        .toISOString();
-
-      const symptomData = await SymptomService.getFilteredData({
-        patient_id,
-        start_time: historyTime,
-        end_time: currentTime
-      });
-
-      let uploadDocumentData = {};
-
-      const sideWiseParts = {};
-
-      const frontPart = {};
-      const backPart = {};
-
-      if (symptomData.length > 0) {
-        for (const data of symptomData) {
-          const symptom = await SymptomWrapper({ data });
-          const symptomDetails = await symptom.getDateWiseInfo();
-
-          // DATA FORMATTED FOR SIDE AND PART WISE ORDER
-
-          if (symptom.getSide() === BODY_VIEW.FRONT) {
-            if (frontPart.hasOwnProperty(symptom.getPart())) {
-              frontPart[symptom.getPart()].push(symptomDetails);
-            } else {
-              frontPart[symptom.getPart()] = [];
-              frontPart[symptom.getPart()].push(symptomDetails);
+            const splitName = name.split(" ");
+
+            // todo minio configure here
+            if (profile_pic) {
+                await minioService.createBucket();
+                // var file = path.join(__dirname, "../../../report.xlsx");
+                const fileStream = fs.createReadStream(profile_pic);
+                // console.log("FIleStreammmmmmmmmmmmmHHH",fileStream);
+                let hash = md5.create();
+                hash.update(userId);
+                hash.hex();
+                hash = String(hash);
+                const folder = "patients";
+                // const fileExt = "";
+                const file_name = hash.substring(4) + "-Report." + fileExt;
+                const metaData = {
+                    "Content-Type":
+                        "application/	application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+                };
+                const fileUrl = folder + "/" + file_name;
+                await minioService.saveBufferObject(fileStream, fileUrl, metaData);
+
+                console.log("file urlll: ", process.config.minio.MINI);
             }
-          } else {
-            if (backPart.hasOwnProperty(symptom.getPart())) {
-              backPart[symptom.getPart()].push(symptomDetails);
-            } else {
-              backPart[symptom.getPart()] = [];
-              backPart[symptom.getPart()].push(symptomDetails);
+
+            const {first_name, middle_name, last_name} = getSeparateName(name);
+
+            const patientData = {
+                user_id: userId,
+                first_name,
+                middle_name,
+                last_name,
+                details: {
+                    // todo: profile_pic
+                },
+                uid: pid,
+            };
+            // add patient for userId
+            const patientDetails = await patientService.update(patientData);
+
+            return this.raiseSuccess(
+                res,
+                200,
+                {
+                    patients: {
+                        [patientDetails.getId]: {
+                            ...patientDetails.getBasicInfo,
+                        },
+                    },
+                },
+                "patient details updated successfully"
+            );
+        } catch (error) {
+            console.log("UPDATE PATIENT ERROR --> ", error);
+            return this.raiseServerError(res, 500, error, error.getMessage());
+        }
+    };
+
+    getPatientAppointments = async (req, res) => {
+        const {raiseServerError, raiseSuccess} = this;
+        try {
+            const {params: {id} = {}, userDetails: {userId} = {}} = req;
+
+            const appointmentList = await appointmentService.getAppointmentForPatient(
+                id
+            );
+            // Logger.debug("appointmentList", appointmentList);
+
+            // if (appointmentList.length > 0) {
+            let appointmentApiData = {};
+            let appointmentDocuments = {};
+            let appointment_ids = [];
+
+            for (const appointment of appointmentList) {
+                const appointmentWrapper = await AppointmentWrapper(appointment);
+                appointmentApiData[
+                    appointmentWrapper.getAppointmentId()
+                    ] = appointmentWrapper.getBasicInfo();
+
+                const {
+                    appointment_docs,
+                } = await appointmentWrapper.getReferenceInfo();
+
+                appointmentDocuments = {...appointmentDocuments, ...appointment_docs};
+                appointment_ids.push(appointmentWrapper.getAppointmentId());
             }
-          }
 
-          const { upload_documents } = await symptom.getReferenceInfo();
-          uploadDocumentData = { ...uploadDocumentData, ...upload_documents };
+            return raiseSuccess(
+                res,
+                200,
+                {
+                    appointments: {
+                        ...appointmentApiData,
+                    },
+                    appointment_docs: {
+                        ...appointmentDocuments,
+                    },
+                    appointment_ids,
+                },
+                `appointment data for patient: ${id} fetched successfully`
+            );
+        } catch (error) {
+            Logger.debug("getPatientAppointments 500 error", error);
+            raiseServerError(res);
         }
+    };
 
-        for (const side of Object.values(BODY_VIEW)) {
-          if (side === BODY_VIEW.FRONT) {
-            sideWiseParts[side] = { ...frontPart };
-          } else {
-            sideWiseParts[side] = { ...backPart };
-          }
-        }
+    getPatientMedications = async (req, res) => {
+        const {raiseSuccess, raiseServerError} = this;
+        try {
+            const {params: {id} = {}} = req;
 
-        Object.values(BODY_VIEW).forEach(side => {
-          const sideData = sideWiseParts[side] || {};
-          if (sideData) {
-            Object.keys(sideData).forEach(part => {
-              const data = sideData[part] || [];
-              data.sort((activityA, activityB) => {
-                const { createdAt: a } = activityA;
-                const { createdAt: b } = activityB;
-                if (moment(a).isBefore(moment(b))) return 1;
+            const medicationDetails = await medicationReminderService.getMedicationsForParticipant(
+                {participant_id: id}
+            );
 
-                if (moment(a).isAfter(moment(b))) return -1;
+            // console.log("712367132 medicationDetails --> ", medicationDetails);
+            // Logger.debug("medication details", medicationDetails);
 
-                return 0;
-              });
-            });
-          } else {
-            sideWiseParts[side] = [];
-          }
-        });
+            let medicationApiData = {};
+            let medicineId = [];
 
-        return raiseSuccess(
-          res,
-          200,
-          {
-            symptom_parts: {
-              ...sideWiseParts
-            },
-            upload_documents: {
-              ...uploadDocumentData
+            for (const medication of medicationDetails) {
+                const medicationWrapper = await MReminderWrapper(medication);
+                const {medications} = await medicationWrapper.getAllInfo();
+                medicationApiData = {...medicationApiData, ...medications};
+                // medicationApiData[
+                //   medicationWrapper.getMReminderId()
+                // ] = medicationWrapper.getBasicInfo();
+                medicineId.push(medicationWrapper.getMedicineId());
             }
-          },
-          "Symptoms data fetched successfully"
-        );
-      } else {
-        Object.values(BODY_VIEW).forEach(side => {
-          sideWiseParts[side] = [];
-        });
-        return raiseSuccess(
-          res,
-          200,
-          {
-            symptom_parts: {
-              ...sideWiseParts
-            },
-            upload_documents: {
-              ...uploadDocumentData
-            }
-          },
-          "Patient has not updated any symptoms yet for the treatment"
-        );
-      }
-    } catch (error) {
-      Logger.debug("getPatientPartSymptoms 500 error", error);
-      return raiseServerError(res);
-    }
-  };
 
-  searchPatient = async (req, res) => {
-    const { raiseSuccess, raiseServerError } = this;
-    try {
-      Logger.info(`searchPatient request query : ${req.query.value}`);
-      const { query: { value = "" } = {} } = req;
+            Logger.debug("medicineId", medicationDetails);
 
-      const users = await userService.getPatientByMobile(value);
-
-      if (users.length > 0) {
-        let userDetails = {};
-        let patientDetails = {};
-        const patientIds = [];
-        for (const userData of users) {
-          const user = await UserWrapper(userData.get());
-
-          const { users, patients, patient_id } = await user.getReferenceInfo();
-          Logger.debug("232323num", users);
-          Logger.debug("232323num", patients);
-          patientIds.push(patient_id);
-          userDetails = { ...userDetails, ...users };
-          patientDetails = { ...patientDetails, ...patients };
-        }
-
-        return raiseSuccess(
-          res,
-          200,
-          {
-            users: {
-              ...userDetails
-            },
-            patients: {
-              ...patientDetails
-            },
-            patient_ids: patientIds
-          },
-          "Patients fetched successfully"
-        );
-      } else {
-        return raiseSuccess(
-          res,
-          201,
-          {},
-          "No patient linked with the given phone number"
-        );
-      }
-    } catch (error) {
-      Logger.debug("searchPatient 500 error", error);
-      return raiseServerError(res);
-    }
-  };
-
-  searchPatientForDoctor = async (req, res) => {
-    const { raiseSuccess, raiseServerError } = this;
-    try {
-      const { userDetails: { userRoleId = null, userId } = {} } = req;
-      const { query: { value = "" } = {} } = req;
-
-      const isNumber = !isNaN(value);
-      let doctorData = {};
-      const patientIdsForThisDoc = [];
-      const userIdsForForPatientForDoc = [];
-      const doctor = await doctorService.getDoctorByUserId(parseInt(userId));
-      const doctorDetails = await DoctorWrapper(doctor);
-      doctorData[
-        doctorDetails.getDoctorId()
-      ] = await doctorDetails.getAllInfo();
-      const { care_plan_ids: all_care_plan_ids = [] } = doctorData[
-        doctorDetails.getDoctorId()
-      ];
-      const care_plan_ids = all_care_plan_ids[userRoleId.toString()] || [];
-
-      // console.log("32894723648723648726348762387462837462873462783",{care_plan_ids});
-
-      for (const each_id of care_plan_ids) {
-        let thisCarePlanData = await userService.getCarePlanData(each_id);
-        const { dataValues: { patient_id = null } = {} } = thisCarePlanData;
-        patientIdsForThisDoc.push(patient_id);
-        const {
-          dataValues: { user_id = null } = {}
-        } = await patientService.getPatientByIdForPatientSearch(patient_id);
-        userIdsForForPatientForDoc.push(user_id);
-      }
-
-      if (!isNumber) {
-        const allPatients = await patientService.getPatientForDoctor(
-          value,
-          patientIdsForThisDoc
-        );
-        if (allPatients.length > 0) {
-          let userDetails = {};
-          let patientDetails = {};
-          const patientIds = [];
-
-          for (const patientData of allPatients) {
-            const patient = await PatientWrapper(patientData, null);
-            const { patients, users } = await patient.getReferenceInfo();
-            const {
-              basic_info: { id: current_patient_id = null } = {}
-            } = Object.values(patients)[0];
-            patientIds.push(current_patient_id);
-            userDetails = { ...userDetails, ...users };
-            patientDetails = { ...patientDetails, ...patients };
-          }
-
-          return raiseSuccess(
-            res,
-            200,
-            {
-              users: {
-                ...userDetails
-              },
-              patients: {
-                ...patientDetails
-              },
-              patient_ids: patientIds
-            },
-            "Patients fetched successfully"
-          );
-        } else {
-          return raiseSuccess(
-            res,
-            201,
-            {},
-            "No patient linked with the input "
-          );
-        }
-      } else {
-        const users = await patientService.getPatientByMobileForDoctor(
-          value,
-          userIdsForForPatientForDoc
-        );
-
-        if (users.length > 0) {
-          let userDetails = {};
-          let patientDetails = {};
-          const patientIds = [];
-          for (const userData of users) {
-            const user = await UserWrapper(userData.get());
-
-            const {
-              users,
-              patients,
-              patient_id
-            } = await user.getReferenceInfo();
-            patientIds.push(patient_id);
-            userDetails = { ...userDetails, ...users };
-            patientDetails = { ...patientDetails, ...patients };
-          }
-
-          return raiseSuccess(
-            res,
-            200,
-            {
-              users: {
-                ...userDetails
-              },
-              patients: {
-                ...patientDetails
-              },
-              patient_ids: patientIds
-            },
-            "Patients fetched successfully"
-          );
-        } else {
-          return raiseSuccess(
-            res,
-            201,
-            {},
-            "No patient linked with the given phone number"
-          );
-        }
-      }
-    } catch (error) {
-      Logger.debug("searchPatientForDoctor 500 error", error);
-      return raiseServerError(res);
-    }
-  };
-
-  patientConsentRequest = async (req, res) => {
-    const { raiseSuccess, raiseServerError } = this;
-    try {
-      const {
-        params: { id: patient_id } = {},
-        userDetails: { userId, userRoleId } = {}
-      } = req;
-
-      const patient = await PatientWrapper(null, patient_id);
-
-      const { users } = await patient.getReferenceInfo();
-      const { basic_info: { prefix, mobile_number, email } = {} } = users[
-        patient.getUserId()
-      ];
-
-      Logger.debug("patient_id ---> ", mobile_number);
-
-      const otp = generateOTP();
-
-      await otpVerificationService.delete({
-        user_id: patient.getUserId()
-      });
-
-      await otpVerificationService.create({
-        user_id: patient.getUserId(),
-        otp
-      });
-
-      if (process.config.app.env === "development") {
-        const emailPayload = {
-          title: "OTP Consent verification for patient",
-          toAddress: process.config.app.developer_email,
-          templateName: EMAIL_TEMPLATE_NAME.OTP_VERIFICATION,
-          templateData: {
-            title: "Patient",
-            mainBodyText: "OTP for the AdhereLive patient consent is",
-            subBodyText: otp,
-            host: process.config.WEB_URL,
-            contactTo: process.config.app.support_email
-          }
-        };
-        Proxy_Sdk.execute(EVENTS.SEND_EMAIL, emailPayload);
-      } else {
-        if (email) {
-          const emailPayload = {
-            title: "OTP Consent verification for patient",
-            toAddress: email,
-            templateName: EMAIL_TEMPLATE_NAME.OTP_VERIFICATION,
-            templateData: {
-              title: "Patient",
-              mainBodyText: "OTP for the AdhereLive patient consent is",
-              subBodyText: otp,
-              host: process.config.WEB_URL,
-              contactTo: process.config.app.support_email
-            }
-          };
-          Proxy_Sdk.execute(EVENTS.SEND_EMAIL, emailPayload);
-        }
-
-        const smsPayload = {
-          // countryCode: prefix,
-          phoneNumber: `+${prefix}${mobile_number}`, // mobile_number
-          message: `Hello from AdhereLive! Your OTP for consent request is ${otp}`
-        };
-
-        Proxy_Sdk.execute(EVENTS.SEND_SMS, smsPayload);
-      }
-
-      return raiseSuccess(
-        res,
-        200,
-        {
-          user_id: patient.getUserId()
-        },
-        "OTP sent successfully"
-      );
-    } catch (error) {
-      Logger.debug("patientConsentRequest 500 error", error);
-      return raiseServerError(res);
-    }
-  };
-
-  patientConsentVerification = async (req, res) => {
-    const { raiseSuccess, raiseClientError, raiseServerError } = this;
-    try {
-      const {
-        body: { otp, user_id } = {},
-        userDetails: {
-          userRoleId = null,
-          userId,
-          userData: { category } = {}
-        } = {}
-      } = req;
-
-      // service instance
-      const consentService = new ConsentService();
-
-      const otpVerification = await otpVerificationService.getOtpByData({
-        otp,
-        user_id
-      });
-
-      if (otpVerification.length > 0) {
-        // helper variables
-        let doctorData = {};
-        const doctorIds = [];
-        let consentDoctorId = null;
-
-        const destroyOtp = await otpVerificationService.delete({ user_id });
-
-        const user = await UserWrapper(null, user_id);
-        const { patient_id } = await user.getReferenceInfo();
-
-        const patient = await PatientWrapper(null, patient_id);
-
-        let authDoctor = null;
-
-        if (
-          category === USER_CATEGORY.DOCTOR ||
-          category === USER_CATEGORY.HSP
-        ) {
-          authDoctor = await doctorService.getDoctorByData({ user_id: userId });
-        }
-
-        const consentData = await consentService.create({
-          type: CONSENT_TYPE.CARE_PLAN,
-          doctor_id: authDoctor.get("id"),
-          patient_id,
-          user_role_id: userRoleId
-        });
-        const consents = await ConsentWrapper({ data: consentData });
-
-        const carePlans = await carePlanService.getCarePlanByData({
-          patient_id
-        });
-
-        if (carePlans.length > 0) {
-          for (let i = 0; i < carePlans.length; i++) {
-            const carePlan = await CarePlanWrapper(carePlans[i]);
-            doctorIds.push(carePlan.getDoctorId());
-          }
-        }
-
-        if (doctorIds.length > 0) {
-          const doctors = await doctorService.getAllDoctorByData({
-            id: doctorIds
-          });
-
-          if (doctors.length > 0) {
-            for (let i = 0; i < doctors.length; i++) {
-              const doctor = await DoctorWrapper(doctors[i]);
-              doctorData[doctor.getDoctorId()] = await doctor.getAllInfo();
-
-              if (doctor.getUserId() === userId) {
-                consentDoctorId = doctor.getDoctorId();
-              }
-            }
-          }
-        }
-
-        return raiseSuccess(
-          res,
-          200,
-          {
-            doctors: {
-              ...doctorData
-            },
-            patients: {
-              [patient.getPatientId()]: {
-                ...patient.getBasicInfo(),
-                consent_ids: [consents.getConsentId()]
-              }
-            },
-            consents: {
-              [consents.getConsentId()]: consents.getBasicInfo()
-            }
-          },
-          "Consent approved"
-        );
-      } else {
-        return raiseClientError(
-          res,
-          400,
-          {},
-          "Otp not correct. Please try again."
-        );
-      }
-    } catch (error) {
-      Logger.debug("patientConsentVerification 500 error", error);
-      return raiseServerError(res);
-    }
-  };
-
-  createNewCareplanforPatient = async (req, res) => {
-    const { raiseSuccess, raiseClientError, raiseServerError } = this;
-    try {
-      const {
-        clinical_notes = "",
-        diagnosis_type = "1",
-        diagnosis_description = "",
-        treatment_id,
-        severity_id,
-        condition_id,
-        symptoms = ""
-      } = req.body;
-
-      const {
-        params: { patient_id } = {},
-        userDetails: { userRoleId = null, userId } = {}
-      } = req;
-
-      let userData = null;
-      let patientData = null;
-      let patientOtherDetails = {};
-      let carePlanOtherDetails = {};
-
-      if (clinical_notes) {
-        carePlanOtherDetails["clinical_notes"] = clinical_notes;
-      }
-      if (symptoms) {
-        carePlanOtherDetails["symptoms"] = symptoms;
-      }
-
-      if (clinical_notes) {
-        carePlanOtherDetails["clinical_notes"] = clinical_notes;
-      }
-      if (symptoms) {
-        carePlanOtherDetails["symptoms"] = symptoms;
-      }
-
-      patientData = await PatientWrapper(null, patient_id);
-
-      const doctor = await doctorService.getDoctorByData({ user_id: userId });
-      const carePlanTemplate = await carePlanTemplateService.getCarePlanTemplateData(
-        {
-          treatment_id,
-          severity_id,
-          condition_id,
-          user_id: userId
-        }
-      );
-      const care_plan_template_id = null;
-
-      const details = {
-        treatment_id,
-        severity_id,
-        condition_id,
-        diagnosis: {
-          type: diagnosis_type,
-          description: diagnosis_description
-        },
-        ...carePlanOtherDetails
-      };
-
-      const carePlan = await carePlanService.addCarePlan({
-        patient_id,
-        user_role_id: userRoleId,
-        doctor_id: doctor.get("id"),
-        care_plan_template_id,
-        details,
-        created_at: moment()
-      });
-
-      const carePlanData = await CarePlanWrapper(carePlan);
-      const care_plan_id = await carePlanData.getCarePlanId();
-      let doctorData = {};
-      const doctorIds = [];
-
-      const carePlans = await carePlanService.getCarePlanByData({
-        patient_id,
-        user_role_id: userRoleId
-      });
-
-      if (carePlans.length > 0) {
-        for (let i = 0; i < carePlans.length; i++) {
-          const carePlan = await CarePlanWrapper(carePlans[i]);
-          doctorIds.push(carePlan.getDoctorId());
-        }
-      }
-
-      if (doctorIds.length > 0) {
-        const doctors = await doctorService.getAllDoctorByData({
-          id: doctorIds
-        });
-
-        if (doctors.length > 0) {
-          for (let i = 0; i < doctors.length; i++) {
-            const doctor = await DoctorWrapper(doctors[i]);
-            doctorData[doctor.getDoctorId()] = await doctor.getAllInfo();
-          }
-        }
-      }
-
-      return this.raiseSuccess(
-        res,
-        200,
-        {
-          care_plan_ids: [carePlanData.getCarePlanId()],
-          care_plans: {
-            [carePlanData.getCarePlanId()]: carePlanData.getBasicInfo()
-          },
-          doctors: {
-            ...doctorData
-          }
-        },
-        "Careplan added successfully"
-      );
-    } catch (error) {
-      Logger.debug("ADD CAREPLAN PATIENT 500 ERROR", error);
-      return raiseServerError(res);
-    }
-  };
-
-  getPatientReports = async (req, res) => {
-    const { raiseSuccess, raiseClientError, raiseServerError } = this;
-    try {
-      const {
-        params: { patient_id } = {},
-        userDetails: { userCategoryId } = {}
-      } = req;
-      Logger.info(`params: patient_id = ${patient_id}`);
-
-      if (!patient_id) {
-        return raiseClientError(res, 422, {}, "Please select correct patient");
-      }
-
-      const reportService = new ReportService();
-      const allReports =
-        (await reportService.getAllReportByData({
-          patient_id
-        })) || [];
-
-      let reportData = {};
-      let documentData = {};
-
-      let doctorIds = [];
-      let reportIds = [];
-
-      for (let index = 0; index < allReports.length; index++) {
-        const report = await ReportWrapper({ data: allReports[index] });
-        const { reports, upload_documents } = await report.getReferenceInfo();
-        reportIds.push(report.getId());
-        reportData = { ...reportData, ...reports };
-        documentData = { ...documentData, ...upload_documents };
-
-        // collect other doctor ids
-        if (
-          (report.getUploaderType() === USER_CATEGORY.DOCTOR ||
-            report.getUploaderType() === USER_CATEGORY.HSP) &&
-          report.getUploaderId() !== userCategoryId
-        ) {
-          doctorIds.push(report.getUploaderId());
-        }
-      }
-
-      // get other doctor basic details
-      // todo: check with others if this data is already present for multi careplan
-      let doctorData = {};
-      if (doctorIds.length > 0) {
-        const allDoctors =
-          (await doctorService.getAllDoctorByData({
-            id: doctorIds
-          })) || [];
-
-        for (let index = 0; index < allDoctors.length; index++) {
-          const doctor = await DoctorWrapper(allDoctors[index]);
-          doctorData[doctor.getDoctorId()] = await doctor.getAllInfo();
-        }
-      }
-
-      return raiseSuccess(
-        res,
-        200,
-        {
-          reports: {
-            ...reportData
-          },
-          doctors: {
-            ...doctorData
-          },
-          upload_documents: {
-            ...documentData
-          },
-          report_ids: reportIds
-        },
-        "Reports for patient fetched successfully"
-      );
-    } catch (error) {
-      Logger.debug("getPatientReports 500 error", error);
-      return raiseServerError(res);
-    }
-  };
-
-  generatePrescription = async (req, res) => {
-    const { raiseSuccess, raiseClientError, raiseServerError } = this;
-    try {
-      const { care_plan_id = null } = req.params;
-      const {
-        userDetails: {
-          userId,
-          userRoleId = null,
-          userData: { category } = {}
-        } = {},
-        permissions = []
-      } = req;
-      const dietService = new DietService();
-      const workoutService = new WorkoutService();
-      // const carePlanId = parseInt(care_plan_id);
-
-      let dataForPdf = {};
-
-      let usersData = {};
-      let userRolesData = {};
-      let qualifications = {};
-      let degrees = {};
-      let registrationsData = {};
-      let conditions = {};
-      let medications = {};
-      let medicines = {};
-      let nextAppointmentDuration = null;
-
-      if (!care_plan_id) {
-        return raiseClientError(res, 422, {}, "Invalid Care Plan.");
-      }
-
-      const carePlan = await carePlanService.getCarePlanById(care_plan_id);
-      const carePlanData = await CarePlanWrapper(carePlan);
-      const curr_patient_id = carePlanData.getPatientId();
-
-      const doctorUserRoleId = carePlanData.getUserRoleId();
-
-      if (
-        `${doctorUserRoleId}` !== `${userRoleId}` &&
-        category !== USER_CATEGORY.PATIENT
-      ) {
-        return raiseClientError(
-          res,
-          422,
-          {},
-          "You don't have the rights to access this prescription."
-        );
-      }
-      const userRoles = await userRolesService.getSingleUserRoleByData({
-        id: doctorUserRoleId
-      });
-      if (userRoles) {
-        const userRolesWrapper = await UserRolesWrapper(userRoles);
-        userRolesData = {
-          ...userRolesData,
-          [doctorUserRoleId]: userRolesWrapper.getBasicInfo()
-        };
-      }
-
-      const carePlanCreatedDate = carePlanData.getCreatedAt();
-
-      const {
-        details: { condition_id = null } = {},
-        medication_ids = [],
-        appointment_ids = [],
-        diet_ids = [],
-        workout_ids = []
-      } = await carePlanData.getAllInfo();
-
-      const conditionData = await conditionService.getByData({
-        id: condition_id
-      });
-      if (conditionData) {
-        const condition = await ConditionWrapper(conditionData);
-        conditions[condition_id] = condition.getBasicInfo();
-      }
-
-      if (permissions.includes(PERMISSIONS.MEDICATIONS.ADD)) {
-        for (const medicationId of medication_ids) {
-          const medication = await medicationReminderService.getMedication({
-            id: medicationId
-          });
-
-          if (medication) {
-            const medicationWrapper = await MReminderWrapper(medication);
-            const medicineId = medicationWrapper.getMedicineId();
             const medicineData = await medicineService.getMedicineByData({
-              id: medicineId
+                id: medicineId,
             });
+
+            let medicineApiData = {};
 
             for (const medicine of medicineData) {
-              const medicineWrapper = await MedicineApiWrapper(medicine);
-              medicines = {
-                ...medicines,
-                ...{
-                  [medicineWrapper.getMedicineId()]: medicineWrapper.getAllInfo()
-                }
-              };
+                const medicineWrapper = await MedicineApiWrapper(medicine);
+                medicineApiData[
+                    medicineWrapper.getMedicineId()
+                    ] = medicineWrapper.getBasicInfo();
             }
-            medications = {
-              ...medications,
-              ...{ [medicationId]: medicationWrapper.getBasicInfo() }
-            };
-          }
+
+            Logger.debug("medicineData", medicineData);
+
+            return raiseSuccess(
+                res,
+                200,
+                {
+                    medications: {
+                        ...medicationApiData,
+                    },
+                    medicines: {
+                        ...medicineApiData,
+                    },
+                },
+                "Medications fetched successfully"
+            );
+        } catch (error) {
+            Logger.debug("500 error ", error);
+            return raiseServerError(res);
         }
-      }
+    };
 
-      const now = moment();
-      let nextAppointment = null;
+    getPatientCarePlanDetails = async (req, res) => {
+        const {raiseSuccess, raiseClientError, raiseServerError} = this;
+        try {
+            const {id: patient_id = 1} = req.params;
+            Logger.info(`params: patient_id = ${patient_id}`);
+            const {
+                userDetails: {
+                    userRoleId = null,
+                    userId,
+                    userCategoryId,
+                    userData: {category} = {},
+                } = {},
+            } = req;
 
-      let suggestedInvestigations = [];
-      for (const appointmentId of appointment_ids) {
-        const appointment = await appointmentService.getAppointmentById(
-          appointmentId
-        );
-
-        if (appointment) {
-          const appointmentWrapper = await AppointmentWrapper(appointment);
-
-          const startDate = appointmentWrapper.getStartTime();
-          const startDateObj = moment(startDate);
-
-          const diff = startDateObj.diff(now);
-
-          if (diff > 0) {
-            if (!nextAppointment || nextAppointment.diff(startDateObj) > 0) {
-              nextAppointment = startDateObj;
+            if (!patient_id) {
+                return raiseClientError(
+                    res,
+                    422,
+                    {},
+                    "Please select correct patient to continue"
+                );
             }
-          }
 
-          const { type } = appointmentWrapper.getDetails() || {};
+            // get all careplans attached to patient
+            const carePlans =
+                (await carePlanService.getMultipleCarePlanByData({
+                    patient_id,
+                    user_role_id: userRoleId
+                })) || [];
 
-          if (type !== CONSULTATION) {
-            const { type_description = "", radiology_type = "" } =
-              appointmentWrapper.getDetails() || {};
-            suggestedInvestigations.push({
-              type,
-              type_description,
-              radiology_type,
-              start_date: startDate
-            });
-          }
-        }
-      }
+            let treatmentIds = [];
 
-      let dietApiData = {},
-        dietIds = [],
-        workoutApiData = {},
-        workoutIds = [];
+            let carePlanApiDetails = {};
+            let carePlanIds = [];
+            let latestCarePlanId = null;
 
-      // diet
-      for (const id of diet_ids) {
-        const diet = await dietService.getByData({ id });
+            let doctorData = {};
 
-        if (diet) {
-          const dietData = await dietService.findOne({ id });
-          const dietWrapper = await DietWrapper({ data: dietData });
-          const expired_on = await dietWrapper.getExpiredOn();
+            let allProvidersData = {};
+            let allUserRoleData = {};
 
-          if (expired_on) {
-            continue;
-          }
+            let appointmentApiDetails = {};
+            let medicationApiDetails = {};
+            let scheduleEventData = {};
 
-          const referenceInfo = await dietWrapper.getReferenceInfo();
+            let templateMedicationData = {};
 
-          let dietFoodGroupsApidata = {},
-            dietBasicInfo = {};
+            let templateAppointmentData = {};
 
-          dietBasicInfo[dietWrapper.getId()] = await dietWrapper.getBasicInfo();
+            let otherCarePlanTemplates = {};
+            let medicineApiData = {};
+            let carePlanTemplateIds = [];
 
-          const {
-            diet_food_group_mappings = {},
-            food_groups = {},
-            food_items = {},
-            food_item_details = {}
-          } = referenceInfo || {};
+            // for care plan templates
+            let templateVitalData = {};
+            let templateDietData = {}, foodItemDetailsApiData = {}, foodItemsApiData = {}, portionsApiData = {};
 
-          const timeWise = await DietHelper.getTimeWiseDietFoodGroupMappings({
-            diet_food_group_mappings
-          });
+            let templateWorkoutData = {},
+                exerciseDetailData = {},
+                exerciseData = {},
+                repetitionData = {};
 
-          for (let eachTime in timeWise) {
-            const { mappingIds = [] } = timeWise[eachTime] || {};
+            // for vitals
+            let vitalTemplateData = {};
 
-            for (let ele of mappingIds) {
-              let primary = null,
-                related_diet_food_group_mapping_ids = [];
-
-              if (Array.isArray(ele)) {
-                ele.sort(function(a, b) {
-                  return a - b;
+            if (carePlans.length > 0) {
+                const {
+                    care_plans,
+                    medicines,
+                    medications,
+                    appointments,
+                    doctors,
+                    providers = {},
+                    user_roles = {},
+                    schedule_events,
+                    care_plan_ids,
+                    current_careplan_id,
+                } = await carePlanHelper.getCareplanData({
+                    carePlans,
+                    userCategory: category,
+                    doctorId: userCategoryId,
+                    userRoleId
                 });
 
-                primary = ele[0] || null;
-                related_diet_food_group_mapping_ids = ele.slice(1);
-              } else {
-                primary = ele;
-              }
+                // care plans
+                carePlanApiDetails = {...carePlanApiDetails, ...care_plans};
 
-              let currentfodmattedData = {};
+                // care plan ids
+                carePlanIds = [...care_plan_ids];
 
-              // const related_diet_food_group_mapping_ids = mappingIds.slice(1);
-              let similarFoodGroups = [],
-                notes = "";
+                // latest care plan id
+                latestCarePlanId = current_careplan_id;
 
-              const current_mapping = diet_food_group_mappings[primary] || {};
-              const {
-                basic_info: { time = "", food_group_id = null } = {}
-              } = current_mapping;
-              const {
-                basic_info: { food_item_detail_id = null, serving = null } = {},
-                details = {}
-              } = food_groups[food_group_id] || {};
-              const { basic_info: { portion_id = null } = {} } =
-                food_item_details[food_item_detail_id] || {};
+                // doctors
+                doctorData = {...doctorData, ...doctors};
 
-              if (details) {
-                const { notes: detail_notes = "" } = details;
-                notes = detail_notes;
-              }
-              if (related_diet_food_group_mapping_ids.length) {
-                for (
-                  let i = 0;
-                  i < related_diet_food_group_mapping_ids.length;
-                  i++
-                ) {
-                  const similarMappingId =
-                    related_diet_food_group_mapping_ids[i];
+                // appointments
+                appointmentApiDetails = {...appointmentApiDetails, ...appointments};
 
-                  const {
-                    basic_info: {
-                      food_group_id: similar_food_group_id = null
-                    } = {}
-                  } = diet_food_group_mappings[similarMappingId] || {};
-                  const {
-                    basic_info: {
-                      food_item_detail_id: similar_food_item_detail_id = null,
-                      serving: similar_serving = null
-                    } = {},
-                    details: similar_details = {}
-                  } = food_groups[similar_food_group_id] || {};
+                // medications
+                medicationApiDetails = {...medicationApiDetails, ...medications};
 
-                  const {
-                    basic_info: { portion_id: similar_portion_id = null } = {}
-                  } = food_item_details[similar_food_item_detail_id] || {};
+                // schedule events
+                scheduleEventData = {...scheduleEventData, ...schedule_events};
 
-                  let similar_notes = "";
-                  if (similar_details) {
-                    const { notes = "" } = similar_details || {};
-                    similar_notes = notes;
-                  }
+                // medicines
+                medicineApiData = {...medicineApiData, ...medicines};
 
-                  const similarData = {
-                    serving: similar_serving,
-                    portion_id: similar_portion_id,
-                    food_item_detail_id: similar_food_item_detail_id,
-                    food_group_id: similar_food_group_id,
-                    notes: similar_notes
-                  };
+                allProvidersData = {...allProvidersData, ...providers};
 
-                  similarFoodGroups.push(similarData);
-                  // delete diet_food_group_mappings[similarMappingId];
+                allUserRoleData = {...allUserRoleData, ...user_roles};
+
+                // get all treatment ids from careplan for templates
+                Object.keys(care_plans).forEach((id) => {
+                    const {details: {treatment_id} = {}} = care_plans[id] || {};
+                    treatmentIds.push(treatment_id);
+                });
+            }
+
+            // get all careplan templates for user(doctor)
+            const carePlanTemplates =
+                (await carePlanTemplateService.getCarePlanTemplateData({
+                    user_id: userId,
+                    treatment_id: treatmentIds,
+                })) || [];
+
+            if (carePlanTemplates.length > 0) {
+                for (let index = 0; index < carePlanTemplates.length; index++) {
+                    const carePlanTemplate = await CarePlanTemplateWrapper(
+                        carePlanTemplates[index]
+                    );
+
+                    const {
+                        care_plan_templates,
+                        template_appointments,
+                        template_medications,
+                        template_vitals,
+                        template_diets,
+                        template_workouts,
+                        exercise_details,
+                        exercises,
+                        repetitions,
+                        vital_templates,
+                        food_items,
+                        food_item_details,
+                        portions,
+                        medicines,
+                    } = await carePlanTemplate.getReferenceInfo();
+
+                    carePlanTemplateIds = [
+                        ...new Set([
+                            ...carePlanTemplateIds,
+                            ...Object.keys(care_plan_templates),
+                        ]),
+                    ];
+
+                    // carePlanTemplateIds.push(...Object.keys(care_plan_templates));
+                    otherCarePlanTemplates = {
+                        ...otherCarePlanTemplates,
+                        ...care_plan_templates,
+                    };
+                    templateAppointmentData = {
+                        ...templateAppointmentData,
+                        ...template_appointments,
+                    };
+                    templateMedicationData = {
+                        ...templateMedicationData,
+                        ...template_medications,
+                    };
+
+                    templateVitalData = {
+                        ...templateVitalData,
+                        ...template_vitals,
+                    };
+
+                    templateDietData = {
+                        ...templateDietData,
+                        ...template_diets
+                    };
+
+                    foodItemDetailsApiData = {
+                        ...foodItemDetailsApiData,
+                        ...food_item_details
+                    };
+
+                    foodItemsApiData = {
+                        ...foodItemsApiData,
+                        ...food_items
+                    };
+
+                    portionsApiData = {
+                        ...portionsApiData,
+                        ...portions
+                    };
+
+                    templateWorkoutData = {
+                        ...templateWorkoutData,
+                        ...template_workouts,
+                    };
+
+                    exerciseDetailData = {
+                        ...exerciseDetailData,
+                        ...exercise_details
+                    };
+
+                    exerciseData = {
+                        ...exerciseData,
+                        ...exercises
+                    };
+
+                    repetitionData = {
+                        ...repetitionData,
+                        ...repetitions
+                    };
+
+                    vitalTemplateData = {
+                        ...vitalTemplateData,
+                        ...vital_templates,
+                    };
+                    medicineApiData = {...medicineApiData, ...medicines};
                 }
-              }
-
-              currentfodmattedData = {
-                serving,
-                portion_id,
-                food_group_id,
-                notes,
-                food_item_detail_id,
-                similar: [...similarFoodGroups]
-              };
-
-              const currentDietDataForTime = dietFoodGroupsApidata[time] || [];
-              currentDietDataForTime.push(currentfodmattedData);
-
-              dietFoodGroupsApidata[`${time}`] = [...currentDietDataForTime];
+            } else {
+                carePlanTemplateIds.push("1");
+                otherCarePlanTemplates["1"] = {
+                    basic_info: {
+                        id: "1",
+                        name: "Blank Template",
+                    },
+                };
             }
-          }
 
-          dietApiData[id] = {
-            diets: {
-              ...dietBasicInfo
-            },
-            diet_food_groups: {
-              ...dietFoodGroupsApidata
-            },
-            food_items,
-            food_item_details
-          };
+            // for (const carePlan of carePlans) {
+            //   const carePlanData = await CarePlanWrapper(carePlan);
+            //   const { doctors, doctor_id } = await carePlanData.getReferenceInfo();
+            //   doctorData = { ...doctorData, ...doctors };
+            //   if (category === USER_CATEGORY.DOCTOR && doctor_id === userCategoryId) {
+            //     if (
+            //       moment(carePlanData.getCreatedAt()).diff(
+            //         moment(latestCarePlan),
+            //         "minutes"
+            //       ) > 0
+            //     ) {
+            //       latestCarePlan = carePlanData.getCreatedAt();
+            //       latestCarePlanId = carePlanData.getCarePlanId();
+            //     }
+            //
+            //     if (latestCarePlan === null) {
+            //       latestCarePlan = carePlanData.getCreatedAt();
+            //       latestCarePlanId = carePlanData.getCarePlanId();
+            //     }
+            //   }
+            //
+            //   const {
+            //     treatment_id,
+            //   } = carePlanData.getCarePlanDetails();
+            //
+            //   treatmentIds.push(treatment_id);
+            //
+            //   // const carePlanTemplates = await carePlanTemplateService.getCarePlanTemplateData(
+            //   //     {
+            //   //       treatment_id,
+            //   //       severity_id,
+            //   //       condition_id,
+            //   //       user_id: userId
+            //   //     }
+            //   // );
+            //
+            //   let carePlanTemplateData = null;
+            //
+            //   Logger.info(`care plan template ---> ${carePlanData.getCarePlanTemplateId()}`);
+            //   if (carePlanData.getCarePlanTemplateId()) {
+            //     const carePlanTemplate = await carePlanTemplateService.getCarePlanTemplateById(
+            //       carePlanData.getCarePlanTemplateId()
+            //     );
+            //     carePlanTemplateData = await CarePlanTemplateWrapper(
+            //       carePlanTemplate
+            //     );
+            //
+            //     // get template attached to careplan
+            //     const {
+            //       care_plan_templates,
+            //       template_appointments,
+            //       template_medications,
+            //       medicines
+            //     } = await carePlanTemplateData.getReferenceInfo();
+            //
+            //
+            //     carePlanTemplateIds = [...new Set([...carePlanTemplateIds, ...Object.keys(care_plan_templates)])];
+            //
+            //     // carePlanTemplateIds.push(...Object.keys(care_plan_templates));
+            //     otherCarePlanTemplates = {
+            //       ...otherCarePlanTemplates,
+            //       ...care_plan_templates
+            //     };
+            //     templateAppointmentData = {
+            //       ...templateAppointmentData,
+            //       ...template_appointments
+            //     };
+            //     templateMedicationData = {
+            //       ...templateMedicationData,
+            //       ...template_medications
+            //     };
+            //     medicineApiData = { ...medicineApiData, ...medicines };
+            //
+            //     // const medications = await templateMedicationService.getMedicationsByCarePlanTemplateId(
+            //     //   carePlanData.getCarePlanTemplateId()
+            //     // );
+            //     //
+            //     // for (const medication of medications) {
+            //     //   const medicationData = await TemplateMedicationWrapper(medication);
+            //     //   templateMedicationData[
+            //     //     medicationData.getTemplateMedicationId()
+            //     //   ] = medicationData.getBasicInfo();
+            //     //   template_medication_ids.push(
+            //     //     medicationData.getTemplateMedicationId()
+            //     //   );
+            //     //   medicine_ids.push(medicationData.getTemplateMedicineId());
+            //     // }
+            //     //
+            //     // const appointments = await templateAppointmentService.getAppointmentsByCarePlanTemplateId(
+            //     //   carePlanData.getCarePlanTemplateId()
+            //     // );
+            //     //
+            //     // for (const appointment of appointments) {
+            //     //   const appointmentData = await TemplateAppointmentWrapper(
+            //     //     appointment
+            //     //   );
+            //     //   templateAppointmentData[
+            //     //     appointmentData.getTemplateAppointmentId()
+            //     //   ] = appointmentData.getBasicInfo();
+            //     //   template_appointment_ids.push(
+            //     //     appointmentData.getTemplateAppointmentId()
+            //     //   );
+            //     // }
+            //   }
+            //
+            //   const carePlanAppointments = await carePlanAppointmentService.getAppointmentsByCarePlanId(
+            //     carePlanData.getCarePlanId()
+            //   );
+            //
+            //   for (const carePlanAppointment of carePlanAppointments) {
+            //     appointment_ids.push(carePlanAppointment.get("appointment_id"));
+            //   }
+            //
+            //   const appointments = await appointmentService.getAppointmentByData({
+            //     id: appointment_ids
+            //   });
+            //   if (appointments.length > 0) {
+            //     for (const appointment of appointments) {
+            //       const appointmentData = await AppointmentWrapper(appointment);
+            //
+            //       const {
+            //         appointments,
+            //         schedule_events
+            //       } = await appointmentData.getReferenceInfo();
+            //       appointmentApiDetails = {
+            //         ...appointmentApiDetails,
+            //         ...appointments
+            //       };
+            //       scheduleEventData = { ...scheduleEventData, ...schedule_events };
+            //       // appointmentApiDetails[appointmentData.getAppointmentId()] = appointmentData.getBasicInfo();
+            //     }
+            //   }
+            //   const carePlanMedications = await carePlanMedicationService.getMedicationsByCarePlanId(
+            //     carePlanData.getCarePlanId()
+            //   );
+            //
+            //   for (const carePlanMedication of carePlanMedications) {
+            //     medication_ids.push(carePlanMedication.get("medication_id"));
+            //   }
+            //
+            //   const medications = await medicationReminderService.getMedicationsForParticipant(
+            //     { id: medication_ids }
+            //   );
+            //   if (medications.length > 0) {
+            //     for (const medication of medications) {
+            //       const medicationWrapper = await MReminderWrapper(medication);
+            //       const {medications: medicationData} = await medicationWrapper.getAllInfo();
+            //       medicationApiDetails = {...medicationApiDetails, ...medicationData};
+            //       medicine_ids.push(medicationWrapper.getMedicineId());
+            //     }
+            //   }
+            //
+            //   const medicineData = await medicineService.getMedicineByData({
+            //     id: medicine_ids
+            //   });
+            //
+            //   for (const medicine of medicineData) {
+            //     const medicineWrapper = await MedicineApiWrapper(medicine);
+            //     medicineApiData[
+            //       medicineWrapper.getMedicineId()
+            //     ] = medicineWrapper.getBasicInfo();
+            //   }
+            //
+            //   if (carePlanTemplateData || carePlanTemplates.length > 0) {
+            //     // Logger.debug(`786534546789098765234569090114 ---> ${patient_id} All Careplan Templates`,carePlanTemplates);
+            //     //
+            //     // for (const carePlanTemplate of carePlanTemplates) {
+            //     //   carePlanTemplateData = await CarePlanTemplateWrapper(
+            //     //     carePlanTemplate
+            //     //   );
+            //     //   Logger.debug(`786534546789098765234569090114 ---> ${patient_id} CARE PLAN TEMP Data`,carePlanTemplate);
+            //     //
+            //     //   const {
+            //     //     care_plan_templates,
+            //     //     template_appointments,
+            //     //     template_medications,
+            //     //     medicines
+            //     //   } = await carePlanTemplateData.getReferenceInfo();
+            //     //
+            //     //
+            //     //   carePlanTemplateIds = [...new Set([...carePlanTemplateIds, ...Object.keys(care_plan_templates)])];
+            //     //
+            //     //   // carePlanTemplateIds.push(...Object.keys(care_plan_templates));
+            //     //   otherCarePlanTemplates = {
+            //     //     ...otherCarePlanTemplates,
+            //     //     ...care_plan_templates
+            //     //   };
+            //     //   templateAppointmentData = {
+            //     //     ...templateAppointmentData,
+            //     //     ...template_appointments
+            //     //   };
+            //     //   templateMedicationData = {
+            //     //     ...templateMedicationData,
+            //     //     ...template_medications
+            //     //   };
+            //     //   medicineApiData = { ...medicineApiData, ...medicines };
+            //     // }
+            //   } else {
+            //     carePlanTemplateIds.push("1");
+            //     otherCarePlanTemplates["1"] = {
+            //       basic_info: {
+            //         id: "1",
+            //         name: "Blank Template"
+            //       }
+            //     };
+            //   }
+            //
+            //   Logger.debug(`786534546789098765234569090114 ---> ${patient_id}`,carePlanTemplateIds);
+            //
+            //   carePlanApiDetails[
+            //     carePlanData.getCarePlanId()
+            //   ] = await carePlanData.getAllInfo();
+            //   carePlanIds.push(carePlanData.getCarePlanId());
+            // }
 
-          dietIds.push(id);
+            let exerciseContentData = {};
+            const exerciseContentService = new ExerciseContentService();
+
+            for (let each in exerciseData) {
+                const exercise = exerciseData[each] || {};
+                const {basic_info: {id = null} = {}} = exercise || {};
+                const exerciseContentExists =
+                    (await exerciseContentService.findOne({
+                        exercise_id: id,
+                        creator_id: userCategoryId,
+                        creator_type: category,
+                    })) || null;
+
+                if (exerciseContentExists) {
+                    const exerciseContentWrapper = await ExerciseContentWrapper({
+                        exercise_id: id,
+                        auth: {creator_id: userCategoryId, creator_type: category},
+                    });
+                    exerciseContentData[
+                        exerciseContentWrapper.getId()
+                        ] = exerciseContentWrapper.getBasicInfo();
+                }
+            }
+
+            const symptomData = await SymptomService.getAllByData({patient_id});
+
+            let symptomDetails = {};
+            let uploadDocumentData = {};
+
+            if (symptomData.length > 0) {
+                for (const data of symptomData) {
+                    const symptom = await SymptomWrapper({data});
+                    const {symptoms} = await symptom.getAllInfo();
+                    const {upload_documents} = await symptom.getReferenceInfo();
+                    symptomDetails = {...symptomDetails, ...symptoms};
+                    uploadDocumentData = {...uploadDocumentData, ...upload_documents};
+                }
+            }
+
+            return raiseSuccess(
+                res,
+                200,
+                {
+                    current_careplan_id: latestCarePlanId,
+                    care_plan_ids: carePlanIds,
+                    doctors: {
+                        ...doctorData,
+                    },
+                    care_plans: {
+                        ...carePlanApiDetails,
+                    },
+                    care_plan_template_ids: [...carePlanTemplateIds],
+                    care_plan_templates: {
+                        ...otherCarePlanTemplates,
+                    },
+                    appointments: {
+                        ...appointmentApiDetails,
+                    },
+                    medications: {
+                        ...medicationApiDetails,
+                    },
+                    symptoms: {
+                        ...symptomDetails,
+                    },
+                    upload_documents: {
+                        ...uploadDocumentData,
+                    },
+                    template_appointments: {
+                        ...templateAppointmentData,
+                    },
+                    template_medications: {
+                        ...templateMedicationData,
+                    },
+                    template_vitals: {
+                        ...templateVitalData,
+                    },
+                    template_diets: {
+                        ...templateDietData
+                    },
+                    food_items: {
+                        ...foodItemsApiData
+                    },
+                    food_item_details: {
+                        ...foodItemDetailsApiData
+                    },
+                    portions: {
+                        ...portionsApiData,
+                    },
+                    providers: {
+                        ...allProvidersData,
+                    },
+                    user_roles: {
+                        ...allUserRoleData,
+                    },
+
+                    template_workouts: templateWorkoutData,
+                    exercise_details: exerciseDetailData,
+                    exercises: exerciseData,
+                    exercise_contents: exerciseContentData,
+                    repetitions: repetitionData,
+
+                    vital_templates: {
+                        ...vitalTemplateData,
+                    },
+                    medicines: {
+                        ...medicineApiData,
+                    },
+                    schedule_events: {
+                        ...scheduleEventData,
+                    },
+                },
+                "Patient care plan details fetched successfully"
+            );
+        } catch (error) {
+            // Logger.debug("get careplan 500 error ---> ", error);
+            console.log("GET PATIENT DETAILS ERROR careplan --> ", error);
+            return raiseServerError(res);
         }
-      }
+    };
 
-      for (const id of workout_ids) {
-        const workout = await workoutService.findOne({ id });
-
-        if (workout) {
-          const workoutWrapper = await WorkoutWrapper({ data: workout });
-          const expired_on = await workoutWrapper.getExpiredOn();
-          if (expired_on) {
-            continue;
-          }
-
-          let workout_exercise_groups = [];
-          const {
-            exercises,
-            exercise_groups,
-            exercise_details
-          } = await workoutWrapper.getReferenceInfo();
-
-          for (const exerciseGroupId of Object.keys(exercise_groups)) {
+    getPatientSymptoms = async (req, res) => {
+        const {raiseSuccess, raiseServerError, raiseClientError} = this;
+        try {
+            Logger.debug("req.params ----->", req.params);
             const {
-              basic_info: { id: exercise_group_id, exercise_detail_id } = {},
-              sets,
-              details = {}
-            } = exercise_groups[exerciseGroupId] || {};
+                params: {patient_id} = {},
+                userDetails: {userId, userRoleId = null, userData: {category} = {}} = {}
+            } = req;
 
-            const { basic_info: { exercise_id } = {} } =
-              exercise_details[exercise_detail_id] || {};
-
-            workout_exercise_groups.push({
-              exercise_group_id,
-              exercise_detail_id,
-              sets,
-              ...details
+            const carePlanData = await carePlanService.getSingleCarePlanByData({
+                patient_id,
+                ...(category === USER_CATEGORY.DOCTOR || category === USER_CATEGORY.HSP) && {'user_role_id': userRoleId}
             });
-          }
+            const carePlan = await CarePlanWrapper(carePlanData);
 
-          workoutApiData[workoutWrapper.getId()] = {
-            ...(await workoutWrapper.getReferenceInfo()),
-            workout_exercise_groups
-          };
+            const symptomData = await SymptomService.getAllByData({
+                patient_id,
+                // care_plan_id: carePlan.getCarePlanId()
+            });
 
-          workoutIds.push(workoutWrapper.getId());
-        }
-      }
+            let uploadDocumentData = {};
+            const dateWiseSymptoms = {};
+            let symptomDates = [];
 
-      // sort suggested investigations
-      const sortedInvestigations = suggestedInvestigations.sort((a, b) => {
-        const { start_date: aStartDate } = a || {};
-        const { start_date: bStartDate } = b || {};
+            if (symptomData.length > 0) {
+                for (const data of symptomData) {
+                    const symptom = await SymptomWrapper({data});
 
-        if (moment(bStartDate).diff(moment(aStartDate), "minutes") > 0) {
-          return 1;
-        } else {
-          return -1;
-        }
-      });
+                    Logger.debug("symptom created date ---> ", symptom.getCreatedDate());
+                    const symptomDetails = await symptom.getDateWiseInfo();
+                    if (dateWiseSymptoms.hasOwnProperty(symptom.getCreatedDate())) {
+                        dateWiseSymptoms[symptom.getCreatedDate()].push(symptomDetails);
+                    } else {
+                        dateWiseSymptoms[symptom.getCreatedDate()] = [];
+                        dateWiseSymptoms[symptom.getCreatedDate()].push(symptomDetails);
+                    }
+                    const {upload_documents} = await symptom.getReferenceInfo();
+                    uploadDocumentData = {...uploadDocumentData, ...upload_documents};
+                    if (symptomDates.indexOf(symptom.getCreatedDate()) === -1) {
+                        symptomDates.push(symptom.getCreatedDate());
+                    }
+                }
 
-      // Logger.debug(
-      //   "98273917312 sortedInvestigations ",
-      //   sortedInvestigations
-      // );
+                symptomDates.sort((a, b) => {
+                    if (moment(a).isBefore(moment(b))) return 1;
 
-      if (nextAppointment) {
-        nextAppointmentDuration =
-          nextAppointment.diff(now, "days") !== 0
-            ? `${nextAppointment.diff(now, "days")} days`
-            : `${nextAppointment.diff(now, "hours")} hours`;
-      }
+                    if (moment(a).isAfter(moment(b))) return -1;
 
-      let patient = null;
+                    return 0;
+                });
+                // console.log("incident=============>", incidentLogs);
+                // console.log("medicationLogs=============>", medicationLogs);
+                symptomDates.forEach((date) => {
+                    const data = dateWiseSymptoms[date] || [];
+                    data.sort((activityA, activityB) => {
+                        const {createdAt: a} = activityA;
+                        const {createdAt: b} = activityB;
+                        if (moment(a).isBefore(moment(b))) return 1;
 
-      if (category === USER_CATEGORY.DOCTOR || category === USER_CATEGORY.HSP) {
-        patient = await patientService.getPatientById({ id: curr_patient_id });
-      } else {
-        patient = await patientService.getPatientByUserId(userId);
-      }
+                        if (moment(a).isAfter(moment(b))) return -1;
 
-      const patientData = await PatientWrapper(patient);
+                        return 0;
+                    });
+                });
 
-      const timingPreference = await userPreferenceService.getPreferenceByData({
-        user_id: patientData.getUserId()
-      });
-      const userPrefOptions = await UserPreferenceWrapper(timingPreference);
-      const { timings: userTimings = {} } = userPrefOptions.getAllDetails();
-      const timings = DietHelper.getTimings(userTimings);
-
-      const { doctors, doctor_id } = await carePlanData.getReferenceInfo();
-
-      const {
-        [doctor_id]: {
-          basic_info: { signature_pic = "", full_name = "", profile_pic } = {}
-        } = {}
-      } = doctors;
-
-      checkAndCreateDirectory(S3_DOWNLOAD_FOLDER);
-
-      const doctorSignImage = `${S3_DOWNLOAD_FOLDER}/${full_name}.jpeg`;
-
-      const downloadImage = await downloadFileFromS3(
-        getFilePath(signature_pic),
-        doctorSignImage
-      );
-
-      const doctorQualifications = await qualificationService.getQualificationsByDoctorId(
-        doctor_id
-      );
-
-      await doctorQualifications.forEach(async doctorQualification => {
-        const doctorQualificationWrapper = await QualificationWrapper(
-          doctorQualification
-        );
-        const degreeId = doctorQualificationWrapper.getDegreeId();
-        const degreeWrapper = await DegreeWrapper(null, degreeId);
-        degrees[degreeId] = degreeWrapper.getBasicInfo();
-      });
-
-      const doctorRegistrations = await doctorRegistrationService.getRegistrationByDoctorId(
-        doctor_id
-      );
-
-      for (const doctorRegistration of doctorRegistrations) {
-        const registrationData = await RegistrationWrapper(doctorRegistration);
-        const council_id = registrationData.getCouncilId();
-        const councilWrapper = await CouncilWrapper(null, council_id);
-
-        const regData = registrationData.getBasicInfo();
-        const { basic_info: { number = "" } = {} } = regData;
-        registrationsData[registrationData.getDoctorRegistrationId()] = {
-          number,
-          council: councilWrapper.getBasicInfo()
-        };
-      }
-
-      const {
-        [`${doctor_id}`]: { basic_info: { user_id: doctorUserId = null } = {} }
-      } = doctors;
-
-      let user_ids = [doctorUserId, userId];
-      if (category === USER_CATEGORY.DOCTOR || category === USER_CATEGORY.HSP) {
-        const curr_data = await patientData.getAllInfo();
-        const { basic_info: { user_id: curr_p_user_id = "" } = {} } =
-          curr_data || {};
-        user_ids = [doctorUserId, curr_p_user_id];
-      }
-
-      for (const id of user_ids) {
-        const intId = parseInt(id);
-        const user = await userService.getUserById(intId);
-
-        if (user) {
-          const userWrapper = await UserWrapper(user.get());
-          usersData = { ...usersData, ...{ [id]: userWrapper.getBasicInfo() } };
-        }
-      }
-
-      // provider data
-      const {
-        [doctorUserRoleId]: {
-          basic_info: { linked_id: provider_id = null } = {}
-        } = {}
-      } = userRolesData || {};
-
-      let providerData = {};
-
-      let providerIcon = "";
-      let providerPrescriptionDetails = "";
-      if (provider_id) {
-        const providerWrapper = await ProviderWrapper(null, provider_id);
-        const { providers, users } = await providerWrapper.getReferenceInfo();
-
-        const { details: { icon = null, prescription_details = "" } = {} } =
-          providers[provider_id] || {};
-        checkAndCreateDirectory(S3_DOWNLOAD_FOLDER_PROVIDER);
-        providerPrescriptionDetails = prescription_details;
-        if (icon) {
-          providerIcon = `${S3_DOWNLOAD_FOLDER_PROVIDER}/provider-${provider_id}-icon.jpeg`;
-
-          const downloadProviderImage = await downloadFileFromS3(
-            getFilePath(icon),
-            providerIcon
-          );
-        }
-
-        providerData = { ...providers[provider_id] };
-        usersData = { ...usersData, ...users };
-      }
-
-      const portionServiceService = new PortionServiceService();
-      const allPortions = await portionServiceService.getAll();
-      let portionApiData = {};
-
-      for (let each in allPortions) {
-        const portion = allPortions[each] || {};
-        const portionWrapper = await PortionWrapper({ data: portion });
-        portionApiData[portionWrapper.getId()] = portionWrapper.getBasicInfo();
-      }
-
-      const repetitionService = new RepetitionService();
-      let repetitionApiData = {};
-
-      const { count, rows: repetitions = [] } =
-        (await repetitionService.findAndCountAll()) || {};
-      if (count) {
-        for (let index = 0; index < repetitions.length; index++) {
-          const { id, type } = repetitions[index] || {};
-          repetitionApiData[id] = { id, type };
-        }
-      }
-
-      dataForPdf = {
-        users: { ...usersData },
-        ...(permissions.includes(PERMISSIONS.MEDICATIONS.ADD) && {
-          medications
-        }),
-        ...(permissions.includes(PERMISSIONS.MEDICATIONS.ADD) && { medicines }),
-        care_plans: {
-          [carePlanData.getCarePlanId()]: {
-            ...carePlanData.getBasicInfo()
-          }
-        },
-        doctors,
-        degrees,
-        portions: { ...portionApiData },
-        repetitions: { ...repetitionApiData },
-        conditions,
-        providers: providerData,
-        providerIcon,
-        providerPrescriptionDetails,
-        doctor_id,
-        registrations: registrationsData,
-        creationDate: carePlanCreatedDate,
-        nextAppointmentDuration,
-        suggestedInvestigations: sortedInvestigations,
-        patients: {
-          ...{ [patientData.getPatientId()]: patientData.getBasicInfo() }
-        },
-        diets_formatted_data: { ...dietApiData },
-        workouts_formatted_data: { ...workoutApiData },
-        workout_ids: workoutIds,
-        diet_ids: dietIds,
-        timings,
-        currentTime: getDoctorCurrentTime(doctorUserId).format(
-          "Do MMMM YYYY, hh:mm a"
-        )
-      };
-
-      checkAndCreateDirectory(PRESCRIPTION_PDF_FOLDER);
-      const pdfFileName = await generatePDF(dataForPdf, doctorSignImage);
-      const pdfFile = `${pdfFileName}.pdf`;
-
-      const options = {
-        root: path.join(__dirname, `../../../${PRESCRIPTION_PDF_FOLDER}/`)
-      };
-      return res.sendFile(pdfFile, options);
-    } catch (err) {
-      Logger.debug("Error while generating the prescription: ", err);
-      return raiseServerError(res);
-    }
-  };
-
-  getAllPatientsPagination = async (req, res) => {
-    const { raiseSuccess, raiseClientError, raiseServerError } = this;
-    try {
-      const { query, userDetails } = req;
-
-      const {
-        userId,
-        userRoleId,
-        userData: { category } = {},
-        userCategoryId
-      } = userDetails || {};
-
-      let allPatientIds = [];
-      /*
-      userId (auth) [DOCTOR]
-
-      SORT
-      created_at [asc, desc]
-      name [asc, desc]
-
-      FILTER
-      diagnosis [description, type]
-      treatment
-
-      doctors -> careplans -> patients
-      */
-
-      const {
-        offset = 0,
-        sort_name = null,
-        sort_createdAt = null,
-        filter_treatment = null,
-        filter_diagnosis = null,
-        watchlist = 0
-      } = query || {};
-
-      const limit = process.config.PATIENT_LIST_SIZE_LIMIT;
-      const offsetLimit = parseInt(limit, 10) * parseInt(offset, 10);
-      const endLimit = parseInt(limit, 10);
-      const getWatchListPatients = parseInt(watchlist, 10) === 0 ? 0 : 1;
-
-      let patientsForDoctor = [];
-
-      let rowData = [];
-
-      let count = null;
-      let treatments = {};
-
-      // careplan ids as secondary doctor
-      const {
-        count: careplansCount = 0,
-        rows: careplanAsSecondaryDoctor = []
-      } = await careplanSecondaryDoctorMappingService.findAndCountAll({
-        where: {
-          secondary_doctor_role_id: userRoleId
-        }
-      });
-
-      let careplanIdsAsSecondaryDoctor = [];
-
-      if (careplansCount) {
-        for (let each of careplanAsSecondaryDoctor) {
-          const { care_plan: { id = null, patient_id = null } = {} } =
-            each || {};
-          careplanIdsAsSecondaryDoctor.push(id);
-        }
-      }
-
-      const secondary_careplan_ids = careplanIdsAsSecondaryDoctor.toString();
-
-      if (category === USER_CATEGORY.DOCTOR || category === USER_CATEGORY.HSP) {
-        let watchlistQuery = "";
-        const doctor = await doctorService.getDoctorByData({
-          user_id: userId
-        });
-
-        if (doctor && getWatchListPatients) {
-          const doctorData = await DoctorWrapper(doctor);
-
-          const doctorAllInfo = await doctorData.getAllInfo();
-          // let { watchlist_patient_ids = []} = doctorAllInfo || {};
-          let watchlist_patient_ids = [];
-          const watchlistRecords = await doctorPatientWatchlistService.getAllByData(
-            { user_role_id: userRoleId }
-          );
-
-          // watchlisted patient ids
-
-          if (watchlistRecords && watchlistRecords.length) {
-            for (let i = 0; i < watchlistRecords.length; i++) {
-              const watchlistWrapper = await DoctorPatientWatchlistWrapper(
-                watchlistRecords[i]
-              );
-              const patientId = await watchlistWrapper.getPatientId();
-              watchlist_patient_ids.push(patientId);
+                return raiseSuccess(
+                    res,
+                    200,
+                    {
+                        timeline_symptoms: {
+                            ...dateWiseSymptoms,
+                        },
+                        upload_documents: {
+                            ...uploadDocumentData,
+                        },
+                        symptom_dates: symptomDates,
+                    },
+                    "Symptoms data fetched successfully"
+                );
+            } else {
+                return raiseClientError(
+                    res,
+                    422,
+                    {},
+                    "Patient has not updated any symptoms yet for the treatment"
+                );
             }
-          }
-          watchlist_patient_ids = watchlist_patient_ids.length
-            ? watchlist_patient_ids
-            : null; // if no patient id watchlisted , check patinetIds for (null) as watchlist_patient_ids=[]
-          watchlistQuery = `AND (carePlan.user_role_id = ${userRoleId} OR carePlan.id in ( ${secondary_careplan_ids} ) ) AND carePlan.patient_id IN (${watchlist_patient_ids})`;
-          // let { watchlist_patient_ids = [] } = doctorAllInfo || {};
-          // watchlist_patient_ids = watchlist_patient_ids.length
-          //   ? watchlist_patient_ids
-          //   : null; // if no patient id watchlisted , check patinetIds for (null) as watchlist_patient_ids=[]
-          // watchlistQuery = `AND carePlan.doctor_id = ${userCategoryId} AND carePlan.patient_id IN (${watchlist_patient_ids})`;
+        } catch (error) {
+            Logger.debug("76235274523754328648273947293 getPatientSymptoms 500 error", error);
+            return raiseServerError(res);
         }
+    };
 
-        // filter to get name sorted paginated data
-        if (sort_name) {
-          const order = sort_name === "0" ? "ASC" : "DESC";
-          [count, patientsForDoctor] =
-            (await carePlanService.getPaginatedPatients({
-              doctor_id: userCategoryId,
-              user_role_id: userRoleId,
-              order: `patient.first_name ${order}`,
-              offset: offsetLimit,
-              limit: endLimit,
-              watchlist: watchlistQuery,
-              // watchlistPatientIds,
-              // watchlist: getWatchListPatients,
-              secondary_careplan_ids
-            })) || [];
-        } else if (sort_createdAt) {
-          // filter to get date sorted paginated data
+    // getPatientVitals = async (req, res) => {
+    //   const { raiseSuccess, raiseServerError, raiseClientError } = this;
+    //   try {
+    //     Logger.debug("3455432134532476567897", req.params);
+    //     const {userDetails = {}} = req;
+    //     const { params: { careplan_id } = {} ,userDetails : { userData: { category } = {}  } } = req;
+    //     const {userRoleId = null } = userDetails  ;
 
-          const order = sort_createdAt === "0" ? "ASC" : "DESC";
-          [count, patientsForDoctor] =
-            (await carePlanService.getPaginatedPatients({
-              doctor_id: userCategoryId,
-              user_role_id: userRoleId,
-              order: `patient.created_at ${order}`,
-              offset: offsetLimit,
-              limit: endLimit,
-              watchlist: watchlistQuery,
-              secondary_careplan_ids
-            })) || [];
-        } else if (filter_treatment) {
-          const allTreatments =
-            (await treatmentService.searchByName(filter_treatment)) || [];
+    //     let carePlan =null;
+    //     let allVitals = [];
+    //     carePlan = await carePlanService.getSingleCarePlanByData({
+    //       id: careplan_id,
+    //       [category === USER_CATEGORY.DOCTOR && 'user_role_id' ] : category === USER_CATEGORY.DOCTOR && userRoleId
+    //     });
 
-          // get all treatment
-          if (allTreatments.length > 0) {
-            for (let index = 0; index < allTreatments.length; index++) {
-              const treatment = await TreatmentWrapper(allTreatments[index]);
-              treatments = {
-                ...treatments,
-                [treatment.getTreatmentId()]: treatment.getBasicInfo()
-              };
+    //     if(carePlan){
+
+    //       allVitals = await VitalService.getAllByData({
+    //         care_plan_id: carePlan.get("id")
+    //       });
+
+    //     }
+
+    //     let vitalDetails = {};
+    //     let vitalTemplateDetails = {};
+    //     let carePlanTemplateDetails = {};
+
+    //     if (allVitals.length > 0) {
+    //       for (const vitalData of allVitals) {
+    //         const vital = await VitalWrapper(vitalData);
+    //         const { vitals } = await vital.getAllInfo();
+    //         const {
+    //           vital_templates,
+    //           care_plans
+    //         } = await vital.getReferenceInfo();
+
+    //         vitalDetails = { ...vitalDetails, ...vitals };
+
+    //         vitalTemplateDetails = {
+    //           ...vitalTemplateDetails,
+    //           ...vital_templates
+    //         };
+    //         carePlanTemplateDetails = {
+    //           ...carePlanTemplateDetails,
+    //           ...care_plans
+    //         };
+    //       }
+
+    //       return raiseSuccess(
+    //         res,
+    //         200,
+    //         {
+    //           vitals: {
+    //             ...vitalDetails
+    //           },
+    //           vital_templates: {
+    //             ...vitalTemplateDetails
+    //           },
+    //           care_plans: {
+    //             ...carePlanTemplateDetails
+    //           },
+    //           vital_ids: Object.keys(vitalDetails)
+    //         },
+    //         "Vitals fetched successfully for the patient"
+    //       );
+    //     } else {
+    //       return raiseSuccess(
+    //         res,
+    //         200,
+    //         {},
+    //         "There are no added vitals for the patient"
+    //       );
+    //     }
+    //   } catch (error) {
+    //     Logger.debug("getPatientVitals 500 error", error);
+    //     return raiseServerError(res);
+    //   }
+    // };
+
+    getPatientVitals = async (req, res) => {
+        const {raiseSuccess, raiseServerError, raiseClientError} = this;
+        try {
+            Logger.debug("34554321345324", req.params);
+            const {params: {careplan_id} = {}} = req;
+            let patient_id = null;
+
+            const careplanWrapper = await CarePlanWrapper(null, careplan_id);
+            if (careplanWrapper) {
+                patient_id = await careplanWrapper.getPatientId();
             }
 
-            const treatmentIds =
-              allTreatments.map(treatment => treatment.id) || [];
-            [count, patientsForDoctor] =
-              (await carePlanService.getPaginatedPatients({
-                doctor_id: userCategoryId,
-                filter: `JSON_VALUE(carePlan.details, '$.treatment_id') IN (${treatmentIds}) 
+            const carePlans = await carePlanService.getMultipleCarePlanByData({
+                patient_id,
+            });
+
+            /* incoming change from release/adhere branch */
+            // const carePlan = await carePlanService.getSingleCarePlanByData({
+            //   id: careplan_id,
+            // });
+            // const allVitals = await VitalService.getAllByData({
+            //   care_plan_id: carePlan.get("id"),
+            // });
+
+            let allVitals = [];
+
+            for (const carePlan of carePlans) {
+                const vitals = await VitalService.getAllByData({
+                    care_plan_id: carePlan.get("id")
+                });
+
+                allVitals = [...allVitals, ...vitals];
+            }
+
+            let vitalDetails = {};
+            let vitalTemplateDetails = {};
+            let carePlanTemplateDetails = {};
+
+            if (allVitals.length > 0) {
+                for (const vitalData of allVitals) {
+                    const vital = await VitalWrapper(vitalData);
+                    const {vitals} = await vital.getAllInfo();
+                    const {
+                        vital_templates,
+                        care_plans,
+                    } = await vital.getReferenceInfo();
+
+                    vitalDetails = {...vitalDetails, ...vitals};
+
+                    vitalTemplateDetails = {
+                        ...vitalTemplateDetails,
+                        ...vital_templates,
+                    };
+                    carePlanTemplateDetails = {
+                        ...carePlanTemplateDetails,
+                        ...care_plans,
+                    };
+                }
+
+                return raiseSuccess(
+                    res,
+                    200,
+                    {
+                        vitals: {
+                            ...vitalDetails,
+                        },
+                        vital_templates: {
+                            ...vitalTemplateDetails,
+                        },
+                        care_plans: {
+                            ...carePlanTemplateDetails,
+                        },
+                        vital_ids: Object.keys(vitalDetails),
+                    },
+                    "Vitals fetched successfully for the patient"
+                );
+            } else {
+                return raiseSuccess(
+                    res,
+                    200,
+                    {},
+                    "There are no added vitals for the patient"
+                );
+            }
+        } catch (error) {
+            Logger.debug("getPatientVitals 500 error", error);
+            return raiseServerError(res);
+        }
+    };
+
+    getPatientPartSymptoms = async (req, res) => {
+        const {raiseSuccess, raiseServerError, raiseClientError} = this;
+        try {
+            Logger.debug("req.params ----->", req.params);
+            const {
+                query: {duration = "5"} = {},
+                params: {patient_id} = {},
+                userDetails: {userId} = {},
+            } = req;
+
+            const currentTime = moment()
+                .utc()
+                .toISOString();
+            const historyTime = moment()
+                .subtract(duration, "days")
+                .utc()
+                .toISOString();
+
+            const symptomData = await SymptomService.getFilteredData({
+                patient_id,
+                start_time: historyTime,
+                end_time: currentTime,
+            });
+
+            let uploadDocumentData = {};
+
+            const sideWiseParts = {};
+
+            const frontPart = {};
+            const backPart = {};
+
+            if (symptomData.length > 0) {
+                for (const data of symptomData) {
+                    const symptom = await SymptomWrapper({data});
+                    const symptomDetails = await symptom.getDateWiseInfo();
+
+                    // DATA FORMATTED FOR SIDE AND PART WISE ORDER
+
+                    if (symptom.getSide() === BODY_VIEW.FRONT) {
+                        if (frontPart.hasOwnProperty(symptom.getPart())) {
+                            frontPart[symptom.getPart()].push(symptomDetails);
+                        } else {
+                            frontPart[symptom.getPart()] = [];
+                            frontPart[symptom.getPart()].push(symptomDetails);
+                        }
+                    } else {
+                        if (backPart.hasOwnProperty(symptom.getPart())) {
+                            backPart[symptom.getPart()].push(symptomDetails);
+                        } else {
+                            backPart[symptom.getPart()] = [];
+                            backPart[symptom.getPart()].push(symptomDetails);
+                        }
+                    }
+
+                    const {upload_documents} = await symptom.getReferenceInfo();
+                    uploadDocumentData = {...uploadDocumentData, ...upload_documents};
+                }
+
+                for (const side of Object.values(BODY_VIEW)) {
+                    if (side === BODY_VIEW.FRONT) {
+                        sideWiseParts[side] = {...frontPart};
+                    } else {
+                        sideWiseParts[side] = {...backPart};
+                    }
+                }
+
+                Object.values(BODY_VIEW).forEach((side) => {
+                    const sideData = sideWiseParts[side] || {};
+                    if (sideData) {
+                        Object.keys(sideData).forEach((part) => {
+                            const data = sideData[part] || [];
+                            data.sort((activityA, activityB) => {
+                                const {createdAt: a} = activityA;
+                                const {createdAt: b} = activityB;
+                                if (moment(a).isBefore(moment(b))) return 1;
+
+                                if (moment(a).isAfter(moment(b))) return -1;
+
+                                return 0;
+                            });
+                        });
+                    } else {
+                        sideWiseParts[side] = [];
+                    }
+                });
+
+                return raiseSuccess(
+                    res,
+                    200,
+                    {
+                        symptom_parts: {
+                            ...sideWiseParts,
+                        },
+                        upload_documents: {
+                            ...uploadDocumentData,
+                        },
+                    },
+                    "Symptoms data fetched successfully"
+                );
+            } else {
+                Object.values(BODY_VIEW).forEach((side) => {
+                    sideWiseParts[side] = [];
+                });
+                return raiseSuccess(
+                    res,
+                    200,
+                    {
+                        symptom_parts: {
+                            ...sideWiseParts,
+                        },
+                        upload_documents: {
+                            ...uploadDocumentData,
+                        },
+                    },
+                    "Patient has not updated any symptoms yet for the treatment"
+                );
+            }
+        } catch (error) {
+            Logger.debug("getPatientPartSymptoms 500 error", error);
+            return raiseServerError(res);
+        }
+    };
+
+    searchPatient = async (req, res) => {
+        const {raiseSuccess, raiseServerError} = this;
+        try {
+            Logger.info(`searchPatient request query : ${req.query.value}`);
+            const {query: {value = ""} = {}} = req;
+
+            const users = await userService.getPatientByMobile(value);
+
+            if (users.length > 0) {
+                let userDetails = {};
+                let patientDetails = {};
+                const patientIds = [];
+                for (const userData of users) {
+                    const user = await UserWrapper(userData.get());
+
+                    const {users, patients, patient_id} = await user.getReferenceInfo();
+                    Logger.debug("232323num", users);
+                    Logger.debug("232323num", patients);
+                    patientIds.push(patient_id);
+                    userDetails = {...userDetails, ...users};
+                    patientDetails = {...patientDetails, ...patients};
+                }
+
+                return raiseSuccess(
+                    res,
+                    200,
+                    {
+                        users: {
+                            ...userDetails,
+                        },
+                        patients: {
+                            ...patientDetails,
+                        },
+                        patient_ids: patientIds,
+                    },
+                    "Patients fetched successfully"
+                );
+            } else {
+                return raiseSuccess(
+                    res,
+                    201,
+                    {},
+                    "No patient linked with the given phone number"
+                );
+            }
+        } catch (error) {
+            Logger.debug("searchPatient 500 error", error);
+            return raiseServerError(res);
+        }
+    };
+
+    searchPatientForDoctor = async (req, res) => {
+        const {raiseSuccess, raiseServerError} = this;
+        try {
+            const {userDetails: {userRoleId = null, userId} = {}} = req;
+            const {query: {value = ""} = {}} = req;
+
+            const isNumber = !isNaN(value);
+            let doctorData = {};
+            const patientIdsForThisDoc = [];
+            const userIdsForForPatientForDoc = [];
+            const doctor = await doctorService.getDoctorByUserId(parseInt(userId));
+            const doctorDetails = await DoctorWrapper(doctor);
+            doctorData[
+                doctorDetails.getDoctorId()
+                ] = await doctorDetails.getAllInfo();
+            const {care_plan_ids: all_care_plan_ids = []} = doctorData[doctorDetails.getDoctorId()];
+            const care_plan_ids = all_care_plan_ids[userRoleId.toString()] || [];
+
+            // console.log("32894723648723648726348762387462837462873462783",{care_plan_ids});
+
+            for (const each_id of care_plan_ids) {
+                let thisCarePlanData = await userService.getCarePlanData(each_id);
+                const {dataValues: {patient_id = null} = {}} = thisCarePlanData;
+                patientIdsForThisDoc.push(patient_id);
+                const {
+                    dataValues: {user_id = null} = {},
+                } = await patientService.getPatientByIdForPatientSearch(patient_id);
+                userIdsForForPatientForDoc.push(user_id);
+            }
+
+            if (!isNumber) {
+                const allPatients = await patientService.getPatientForDoctor(
+                    value,
+                    patientIdsForThisDoc
+                );
+                if (allPatients.length > 0) {
+                    let userDetails = {};
+                    let patientDetails = {};
+                    const patientIds = [];
+
+                    for (const patientData of allPatients) {
+                        const patient = await PatientWrapper(patientData, null);
+                        const {patients, users} = await patient.getReferenceInfo();
+                        const {
+                            basic_info: {id: current_patient_id = null} = {},
+                        } = Object.values(patients)[0];
+                        patientIds.push(current_patient_id);
+                        userDetails = {...userDetails, ...users};
+                        patientDetails = {...patientDetails, ...patients};
+                    }
+
+                    return raiseSuccess(
+                        res,
+                        200,
+                        {
+                            users: {
+                                ...userDetails,
+                            },
+                            patients: {
+                                ...patientDetails,
+                            },
+                            patient_ids: patientIds,
+                        },
+                        "Patients fetched successfully"
+                    );
+                } else {
+                    return raiseSuccess(
+                        res,
+                        201,
+                        {},
+                        "No patient linked with the input "
+                    );
+                }
+            } else {
+                const users = await patientService.getPatientByMobileForDoctor(
+                    value,
+                    userIdsForForPatientForDoc
+                );
+
+                if (users.length > 0) {
+                    let userDetails = {};
+                    let patientDetails = {};
+                    const patientIds = [];
+                    for (const userData of users) {
+                        const user = await UserWrapper(userData.get());
+
+                        const {
+                            users,
+                            patients,
+                            patient_id,
+                        } = await user.getReferenceInfo();
+                        patientIds.push(patient_id);
+                        userDetails = {...userDetails, ...users};
+                        patientDetails = {...patientDetails, ...patients};
+                    }
+
+                    return raiseSuccess(
+                        res,
+                        200,
+                        {
+                            users: {
+                                ...userDetails,
+                            },
+                            patients: {
+                                ...patientDetails,
+                            },
+                            patient_ids: patientIds,
+                        },
+                        "Patients fetched successfully"
+                    );
+                } else {
+                    return raiseSuccess(
+                        res,
+                        201,
+                        {},
+                        "No patient linked with the given phone number"
+                    );
+                }
+            }
+        } catch (error) {
+            Logger.debug("searchPatientForDoctor 500 error", error);
+            return raiseServerError(res);
+        }
+    };
+
+    patientConsentRequest = async (req, res) => {
+        const {raiseSuccess, raiseServerError} = this;
+        try {
+            const {
+                params: {id: patient_id} = {},
+                userDetails: {userId, userRoleId} = {}
+            } = req;
+
+            const patient = await PatientWrapper(null, patient_id);
+
+            const {users} = await patient.getReferenceInfo();
+            const {basic_info: {prefix, mobile_number, email} = {}} = users[
+                patient.getUserId()
+                ];
+
+            Logger.debug("patient_id ---> ", mobile_number);
+
+            const otp = generateOTP();
+
+            await otpVerificationService.delete({
+                user_id: patient.getUserId(),
+            });
+
+            await otpVerificationService.create({
+                user_id: patient.getUserId(),
+                otp,
+            });
+
+            if (process.config.app.env === "development") {
+                const emailPayload = {
+                    title: "OTP Consent verification for patient",
+                    toAddress: process.config.app.developer_email,
+                    templateName: EMAIL_TEMPLATE_NAME.OTP_VERIFICATION,
+                    templateData: {
+                        title: "Patient",
+                        mainBodyText: "OTP for the AdhereLive patient consent is",
+                        subBodyText: otp,
+                        host: process.config.WEB_URL,
+                        contactTo: process.config.app.support_email,
+                    },
+                };
+                Proxy_Sdk.execute(EVENTS.SEND_EMAIL, emailPayload);
+            } else {
+                if (email) {
+                    const emailPayload = {
+                        title: "OTP Consent verification for patient",
+                        toAddress: email,
+                        templateName: EMAIL_TEMPLATE_NAME.OTP_VERIFICATION,
+                        templateData: {
+                            title: "Patient",
+                            mainBodyText: "OTP for the AdhereLive patient consent is",
+                            subBodyText: otp,
+                            host: process.config.WEB_URL,
+                            contactTo: process.config.app.support_email,
+                        },
+                    };
+                    Proxy_Sdk.execute(EVENTS.SEND_EMAIL, emailPayload);
+                }
+
+                const smsPayload = {
+                    // countryCode: prefix,
+                    phoneNumber: `+${prefix}${mobile_number}`, // mobile_number
+                    message: `Hello from AdhereLive! Your OTP for consent request is ${otp}`,
+                };
+
+                Proxy_Sdk.execute(EVENTS.SEND_SMS, smsPayload);
+            }
+
+            return raiseSuccess(
+                res,
+                200,
+                {
+                    user_id: patient.getUserId(),
+                },
+                "OTP sent successfully"
+            );
+        } catch (error) {
+            Logger.debug("patientConsentRequest 500 error", error);
+            return raiseServerError(res);
+        }
+    };
+
+    patientConsentVerification = async (req, res) => {
+        const {raiseSuccess, raiseClientError, raiseServerError} = this;
+        try {
+            const {
+                body: {otp, user_id} = {},
+                userDetails: {userRoleId = null, userId, userData: {category} = {}} = {}
+            } = req;
+
+            // service instance
+            const consentService = new ConsentService();
+
+            const otpVerification = await otpVerificationService.getOtpByData({
+                otp,
+                user_id,
+            });
+
+            if (otpVerification.length > 0) {
+                // helper variables
+                let doctorData = {};
+                const doctorIds = [];
+                let consentDoctorId = null;
+
+                const destroyOtp = await otpVerificationService.delete({user_id});
+
+                const user = await UserWrapper(null, user_id);
+                const {patient_id} = await user.getReferenceInfo();
+
+                const patient = await PatientWrapper(null, patient_id);
+
+                let authDoctor = null;
+
+                if (category === USER_CATEGORY.DOCTOR || category === USER_CATEGORY.HSP) {
+                    authDoctor = await doctorService.getDoctorByData({user_id: userId});
+                }
+
+                const consentData = await consentService.create({
+                    type: CONSENT_TYPE.CARE_PLAN,
+                    doctor_id: authDoctor.get("id"),
+                    patient_id,
+                    user_role_id: userRoleId
+                });
+                const consents = await ConsentWrapper({data: consentData});
+
+                const carePlans = await carePlanService.getCarePlanByData({
+                    patient_id,
+                });
+
+                if (carePlans.length > 0) {
+                    for (let i = 0; i < carePlans.length; i++) {
+                        const carePlan = await CarePlanWrapper(carePlans[i]);
+                        doctorIds.push(carePlan.getDoctorId());
+                    }
+                }
+
+                if (doctorIds.length > 0) {
+                    const doctors = await doctorService.getAllDoctorByData({
+                        id: doctorIds,
+                    });
+
+                    if (doctors.length > 0) {
+                        for (let i = 0; i < doctors.length; i++) {
+                            const doctor = await DoctorWrapper(doctors[i]);
+                            doctorData[doctor.getDoctorId()] = await doctor.getAllInfo();
+
+                            if (doctor.getUserId() === userId) {
+                                consentDoctorId = doctor.getDoctorId();
+                            }
+                        }
+                    }
+                }
+
+                return raiseSuccess(
+                    res,
+                    200,
+                    {
+                        doctors: {
+                            ...doctorData,
+                        },
+                        patients: {
+                            [patient.getPatientId()]: {
+                                ...patient.getBasicInfo(),
+                                consent_ids: [consents.getConsentId()],
+                            },
+                        },
+                        consents: {
+                            [consents.getConsentId()]: consents.getBasicInfo(),
+                        },
+                    },
+                    "Consent approved"
+                );
+            } else {
+                return raiseClientError(
+                    res,
+                    400,
+                    {},
+                    "Otp not correct. Please try again."
+                );
+            }
+        } catch (error) {
+            Logger.debug("patientConsentVerification 500 error", error);
+            return raiseServerError(res);
+        }
+    };
+
+    createNewCareplanforPatient = async (req, res) => {
+        const {raiseSuccess, raiseClientError, raiseServerError} = this;
+        try {
+            const {
+                clinical_notes = "",
+                diagnosis_type = "1",
+                diagnosis_description = "",
+                treatment_id,
+                severity_id,
+                condition_id,
+                symptoms = "",
+            } = req.body;
+
+            const {params: {patient_id} = {}, userDetails: {userRoleId = null, userId} = {}} = req;
+
+            let userData = null;
+            let patientData = null;
+            let patientOtherDetails = {};
+            let carePlanOtherDetails = {};
+
+            if (clinical_notes) {
+                carePlanOtherDetails["clinical_notes"] = clinical_notes;
+            }
+            if (symptoms) {
+                carePlanOtherDetails["symptoms"] = symptoms;
+            }
+
+            if (clinical_notes) {
+                carePlanOtherDetails["clinical_notes"] = clinical_notes;
+            }
+            if (symptoms) {
+                carePlanOtherDetails["symptoms"] = symptoms;
+            }
+
+            patientData = await PatientWrapper(null, patient_id);
+
+            const doctor = await doctorService.getDoctorByData({user_id: userId});
+            const carePlanTemplate = await carePlanTemplateService.getCarePlanTemplateData(
+                {
+                    treatment_id,
+                    severity_id,
+                    condition_id,
+                    user_id: userId,
+                }
+            );
+            const care_plan_template_id = null;
+
+            const details = {
+                treatment_id,
+                severity_id,
+                condition_id,
+                diagnosis: {
+                    type: diagnosis_type,
+                    description: diagnosis_description,
+                },
+                ...carePlanOtherDetails,
+            };
+
+            const carePlan = await carePlanService.addCarePlan({
+                patient_id,
+                user_role_id: userRoleId,
+                doctor_id: doctor.get("id"),
+                care_plan_template_id,
+                details,
+                created_at: moment(),
+            });
+
+            const carePlanData = await CarePlanWrapper(carePlan);
+            const care_plan_id = await carePlanData.getCarePlanId();
+            let doctorData = {};
+            const doctorIds = [];
+
+            const carePlans = await carePlanService.getCarePlanByData({
+                patient_id,
+                user_role_id: userRoleId
+            });
+
+            if (carePlans.length > 0) {
+                for (let i = 0; i < carePlans.length; i++) {
+                    const carePlan = await CarePlanWrapper(carePlans[i]);
+                    doctorIds.push(carePlan.getDoctorId());
+                }
+            }
+
+            if (doctorIds.length > 0) {
+                const doctors = await doctorService.getAllDoctorByData({
+                    id: doctorIds,
+                });
+
+                if (doctors.length > 0) {
+                    for (let i = 0; i < doctors.length; i++) {
+                        const doctor = await DoctorWrapper(doctors[i]);
+                        doctorData[doctor.getDoctorId()] = await doctor.getAllInfo();
+                    }
+                }
+            }
+
+            return this.raiseSuccess(
+                res,
+                200,
+                {
+                    care_plan_ids: [carePlanData.getCarePlanId()],
+                    care_plans: {
+                        [carePlanData.getCarePlanId()]: carePlanData.getBasicInfo(),
+                    },
+                    doctors: {
+                        ...doctorData,
+                    },
+                },
+                "Careplan added successfully"
+            );
+        } catch (error) {
+            Logger.debug("ADD CAREPLAN PATIENT 500 ERROR", error);
+            return raiseServerError(res);
+        }
+    };
+
+    getPatientReports = async (req, res) => {
+        const {raiseSuccess, raiseClientError, raiseServerError} = this;
+        try {
+            const {
+                params: {patient_id} = {},
+                userDetails: {userCategoryId} = {},
+            } = req;
+            Logger.info(`params: patient_id = ${patient_id}`);
+
+            if (!patient_id) {
+                return raiseClientError(res, 422, {}, "Please select correct patient");
+            }
+
+            const reportService = new ReportService();
+            const allReports =
+                (await reportService.getAllReportByData({
+                    patient_id,
+                })) || [];
+
+            let reportData = {};
+            let documentData = {};
+
+            let doctorIds = [];
+            let reportIds = [];
+
+            for (let index = 0; index < allReports.length; index++) {
+                const report = await ReportWrapper({data: allReports[index]});
+                const {reports, upload_documents} = await report.getReferenceInfo();
+                reportIds.push(report.getId());
+                reportData = {...reportData, ...reports};
+                documentData = {...documentData, ...upload_documents};
+
+                // collect other doctor ids
+                if (
+                    (report.getUploaderType() === USER_CATEGORY.DOCTOR || report.getUploaderType() === USER_CATEGORY.HSP) &&
+                    report.getUploaderId() !== userCategoryId
+                ) {
+                    doctorIds.push(report.getUploaderId());
+                }
+            }
+
+            // get other doctor basic details
+            // todo: check with others if this data is already present for multi careplan
+            let doctorData = {};
+            if (doctorIds.length > 0) {
+                const allDoctors =
+                    (await doctorService.getAllDoctorByData({
+                        id: doctorIds,
+                    })) || [];
+
+                for (let index = 0; index < allDoctors.length; index++) {
+                    const doctor = await DoctorWrapper(allDoctors[index]);
+                    doctorData[doctor.getDoctorId()] = await doctor.getAllInfo();
+                }
+            }
+
+            return raiseSuccess(
+                res,
+                200,
+                {
+                    reports: {
+                        ...reportData,
+                    },
+                    doctors: {
+                        ...doctorData,
+                    },
+                    upload_documents: {
+                        ...documentData,
+                    },
+                    report_ids: reportIds,
+                },
+                "Reports for patient fetched successfully"
+            );
+        } catch (error) {
+            Logger.debug("getPatientReports 500 error", error);
+            return raiseServerError(res);
+        }
+    };
+
+    generatePrescription = async (req, res) => {
+        const {raiseSuccess, raiseClientError, raiseServerError} = this;
+        try {
+            const {care_plan_id = null} = req.params;
+            const {userDetails: {userId, userRoleId = null, userData: {category} = {}} = {}, permissions = []} = req;
+            const dietService = new DietService();
+            const workoutService = new WorkoutService();
+            // const carePlanId = parseInt(care_plan_id);
+
+            let dataForPdf = {};
+
+            let usersData = {};
+            let userRolesData = {};
+            let qualifications = {};
+            let degrees = {};
+            let registrationsData = {};
+            let conditions = {};
+            let medications = {};
+            let medicines = {};
+            let nextAppointmentDuration = null;
+
+            if (!care_plan_id) {
+                return raiseClientError(res, 422, {}, "Invalid Care Plan.");
+            }
+
+            const carePlan = await carePlanService.getCarePlanById(care_plan_id);
+            const carePlanData = await CarePlanWrapper(carePlan);
+            const curr_patient_id = carePlanData.getPatientId();
+
+            const doctorUserRoleId = carePlanData.getUserRoleId();
+
+            if (`${doctorUserRoleId}` !== `${userRoleId}` && category !== USER_CATEGORY.PATIENT) {
+                return raiseClientError(res, 422, {}, "You don't have the rights to access this prescription.");
+            }
+            const userRoles = await userRolesService.getSingleUserRoleByData({id: doctorUserRoleId});
+            if (userRoles) {
+                const userRolesWrapper = await UserRolesWrapper(userRoles);
+                userRolesData = {...userRolesData, [doctorUserRoleId]: userRolesWrapper.getBasicInfo()}
+            }
+
+            const carePlanCreatedDate = carePlanData.getCreatedAt();
+
+            const {
+                details: {condition_id = null} = {},
+                medication_ids = [],
+                appointment_ids = [],
+                diet_ids = [],
+                workout_ids = []
+            } = await carePlanData.getAllInfo();
+
+            const conditionData = await conditionService.getByData({
+                id: condition_id,
+            });
+            if (conditionData) {
+                const condition = await ConditionWrapper(conditionData);
+                conditions[condition_id] = condition.getBasicInfo();
+            }
+
+            if (permissions.includes(PERMISSIONS.MEDICATIONS.ADD)) {
+                for (const medicationId of medication_ids) {
+                    const medication = await medicationReminderService.getMedication({
+                        id: medicationId,
+                    });
+
+                    if (medication) {
+                        const medicationWrapper = await MReminderWrapper(medication);
+                        const medicineId = medicationWrapper.getMedicineId();
+                        const medicineData = await medicineService.getMedicineByData({
+                            id: medicineId,
+                        });
+
+                        for (const medicine of medicineData) {
+                            const medicineWrapper = await MedicineApiWrapper(medicine);
+                            medicines = {
+                                ...medicines,
+                                ...{
+                                    [medicineWrapper.getMedicineId()]: medicineWrapper.getAllInfo(),
+                                },
+                            };
+                        }
+                        medications = {
+                            ...medications,
+                            ...{[medicationId]: medicationWrapper.getBasicInfo()},
+                        };
+                    }
+                }
+            }
+
+            const now = moment();
+            let nextAppointment = null;
+
+            let suggestedInvestigations = [];
+            for (const appointmentId of appointment_ids) {
+                const appointment = await appointmentService.getAppointmentById(
+                    appointmentId
+                );
+
+                if (appointment) {
+                    const appointmentWrapper = await AppointmentWrapper(appointment);
+
+                    const startDate = appointmentWrapper.getStartTime();
+                    const startDateObj = moment(startDate);
+
+                    const diff = startDateObj.diff(now);
+
+                    if (diff > 0) {
+                        if (!nextAppointment || nextAppointment.diff(startDateObj) > 0) {
+                            nextAppointment = startDateObj;
+                        }
+                    }
+
+                    const {type} = appointmentWrapper.getDetails() || {};
+
+                    if (type !== CONSULTATION) {
+                        const {type_description = "", radiology_type = ""} = appointmentWrapper.getDetails() || {};
+                        suggestedInvestigations.push({
+                            type,
+                            type_description,
+                            radiology_type,
+                            start_date: startDate
+                        });
+                    }
+                }
+            }
+
+            let dietApiData = {}, dietIds = [], workoutApiData = {}, workoutIds = [];
+
+            // diet
+            for (const id of diet_ids) {
+                const diet = await dietService.getByData({id})
+
+                if (diet) {
+                    const dietData = await dietService.findOne({id});
+                    const dietWrapper = await DietWrapper({data: dietData});
+                    const expired_on = await dietWrapper.getExpiredOn();
+
+                    if (expired_on) {
+                        continue;
+                    }
+
+                    const referenceInfo = await dietWrapper.getReferenceInfo();
+
+                    let dietFoodGroupsApidata = {},
+                        dietBasicInfo = {};
+
+                    dietBasicInfo[dietWrapper.getId()] = await dietWrapper.getBasicInfo();
+
+                    const {
+                        diet_food_group_mappings = {},
+                        food_groups = {},
+                        food_items = {},
+                        food_item_details = {},
+                    } = referenceInfo || {};
+
+                    const timeWise = await DietHelper.getTimeWiseDietFoodGroupMappings({
+                        diet_food_group_mappings,
+                    });
+
+                    for (let eachTime in timeWise) {
+                        const {mappingIds = []} = timeWise[eachTime] || {};
+
+                        for (let ele of mappingIds) {
+                            let primary = null,
+                                related_diet_food_group_mapping_ids = [];
+
+                            if (Array.isArray(ele)) {
+                                ele.sort(function (a, b) {
+                                    return a - b;
+                                });
+
+                                primary = ele[0] || null;
+                                related_diet_food_group_mapping_ids = ele.slice(1);
+                            } else {
+                                primary = ele;
+                            }
+
+                            let currentfodmattedData = {};
+
+                            // const related_diet_food_group_mapping_ids = mappingIds.slice(1);
+                            let similarFoodGroups = [],
+                                notes = "";
+
+                            const current_mapping = diet_food_group_mappings[primary] || {};
+                            const {
+                                basic_info: {time = "", food_group_id = null} = {},
+                            } = current_mapping;
+                            const {
+                                basic_info: {food_item_detail_id = null, serving = null} = {},
+                                details = {},
+                            } = food_groups[food_group_id] || {};
+                            const {basic_info: {portion_id = null} = {}} =
+                            food_item_details[food_item_detail_id] || {};
+
+                            if (details) {
+                                const {notes: detail_notes = ""} = details;
+                                notes = detail_notes;
+                            }
+                            if (related_diet_food_group_mapping_ids.length) {
+                                for (
+                                    let i = 0;
+                                    i < related_diet_food_group_mapping_ids.length;
+                                    i++
+                                ) {
+                                    const similarMappingId = related_diet_food_group_mapping_ids[i];
+
+                                    const {
+                                        basic_info: {
+                                            food_group_id: similar_food_group_id = null,
+                                        } = {},
+                                    } = diet_food_group_mappings[similarMappingId] || {};
+                                    const {
+                                        basic_info: {
+                                            food_item_detail_id: similar_food_item_detail_id = null,
+                                            serving: similar_serving = null,
+                                        } = {},
+                                        details: similar_details = {},
+                                    } = food_groups[similar_food_group_id] || {};
+
+                                    const {
+                                        basic_info: {portion_id: similar_portion_id = null} = {},
+                                    } = food_item_details[similar_food_item_detail_id] || {};
+
+                                    let similar_notes = "";
+                                    if (similar_details) {
+                                        const {notes = ""} = similar_details || {};
+                                        similar_notes = notes;
+                                    }
+
+                                    const similarData = {
+                                        serving: similar_serving,
+                                        portion_id: similar_portion_id,
+                                        food_item_detail_id: similar_food_item_detail_id,
+                                        food_group_id: similar_food_group_id,
+                                        notes: similar_notes,
+                                    };
+
+                                    similarFoodGroups.push(similarData);
+                                    // delete diet_food_group_mappings[similarMappingId];
+                                }
+                            }
+
+                            currentfodmattedData = {
+                                serving,
+                                portion_id,
+                                food_group_id,
+                                notes,
+                                food_item_detail_id,
+                                similar: [...similarFoodGroups],
+                            };
+
+                            const currentDietDataForTime = dietFoodGroupsApidata[time] || [];
+                            currentDietDataForTime.push(currentfodmattedData);
+
+                            dietFoodGroupsApidata[`${time}`] = [...currentDietDataForTime];
+                        }
+                    }
+
+                    dietApiData[id] = {
+                        diets: {
+                            ...dietBasicInfo,
+                        },
+                        diet_food_groups: {
+                            ...dietFoodGroupsApidata,
+                        },
+                        food_items,
+                        food_item_details
+                    }
+
+                    dietIds.push(id);
+                }
+            }
+
+            for (const id of workout_ids) {
+                const workout = await workoutService.findOne({id});
+
+                if (workout) {
+                    const workoutWrapper = await WorkoutWrapper({data: workout});
+                    const expired_on = await workoutWrapper.getExpiredOn();
+                    if (expired_on) {
+                        continue;
+                    }
+
+                    let workout_exercise_groups = [];
+                    const {
+                        exercises,
+                        exercise_groups,
+                        exercise_details,
+                    } = await workoutWrapper.getReferenceInfo();
+
+                    for (const exerciseGroupId of Object.keys(exercise_groups)) {
+                        const {
+                            basic_info: {id: exercise_group_id, exercise_detail_id} = {},
+                            sets,
+                            details = {},
+                        } = exercise_groups[exerciseGroupId] || {};
+
+                        const {basic_info: {exercise_id} = {}} =
+                        exercise_details[exercise_detail_id] || {};
+
+                        workout_exercise_groups.push({
+                            exercise_group_id,
+                            exercise_detail_id,
+                            sets,
+                            ...details,
+                        });
+                    }
+
+                    workoutApiData[workoutWrapper.getId()] =
+                        {
+                            ...(await workoutWrapper.getReferenceInfo()),
+                            workout_exercise_groups
+                        };
+
+                    workoutIds.push(workoutWrapper.getId());
+                }
+            }
+
+            // sort suggested investigations
+            const sortedInvestigations = suggestedInvestigations.sort((a, b) => {
+                const {start_date: aStartDate} = a || {};
+                const {start_date: bStartDate} = b || {};
+
+                if (moment(bStartDate).diff(moment(aStartDate), "minutes") > 0) {
+                    return 1;
+                } else {
+                    return -1;
+                }
+            });
+
+            // Logger.debug(
+            //   "98273917312 sortedInvestigations ",
+            //   sortedInvestigations
+            // );
+
+            if (nextAppointment) {
+                nextAppointmentDuration =
+                    nextAppointment.diff(now, "days") !== 0
+                        ? `${nextAppointment.diff(now, "days")} days`
+                        : `${nextAppointment.diff(now, "hours")} hours`;
+            }
+
+            let patient = null;
+
+            if (category === USER_CATEGORY.DOCTOR || category === USER_CATEGORY.HSP) {
+                patient = await patientService.getPatientById({id: curr_patient_id});
+            } else {
+                patient = await patientService.getPatientByUserId(userId);
+            }
+
+            const patientData = await PatientWrapper(patient);
+
+            const timingPreference = await userPreferenceService.getPreferenceByData(
+                {
+                    user_id: patientData.getUserId(),
+                }
+            );
+            const userPrefOptions = await UserPreferenceWrapper(timingPreference);
+            const {timings: userTimings = {}} = userPrefOptions.getAllDetails();
+            const timings = DietHelper.getTimings(userTimings);
+
+            const {doctors, doctor_id} = await carePlanData.getReferenceInfo();
+
+            const {
+                [doctor_id]: {
+                    basic_info: {signature_pic = "", full_name = "", profile_pic} = {},
+                } = {},
+            } = doctors;
+
+            checkAndCreateDirectory(S3_DOWNLOAD_FOLDER);
+
+            const doctorSignImage = `${S3_DOWNLOAD_FOLDER}/${full_name}.jpeg`;
+
+            const downloadImage = await downloadFileFromS3(
+                getFilePath(signature_pic),
+                doctorSignImage
+            );
+
+            const doctorQualifications = await qualificationService.getQualificationsByDoctorId(
+                doctor_id
+            );
+
+            await doctorQualifications.forEach(async (doctorQualification) => {
+                const doctorQualificationWrapper = await QualificationWrapper(
+                    doctorQualification
+                );
+                const degreeId = doctorQualificationWrapper.getDegreeId();
+                const degreeWrapper = await DegreeWrapper(null, degreeId);
+                degrees[degreeId] = degreeWrapper.getBasicInfo();
+            });
+
+            const doctorRegistrations = await doctorRegistrationService.getRegistrationByDoctorId(
+                doctor_id
+            );
+
+            for (const doctorRegistration of doctorRegistrations) {
+                const registrationData = await RegistrationWrapper(doctorRegistration);
+                const council_id = registrationData.getCouncilId();
+                const councilWrapper = await CouncilWrapper(null, council_id);
+
+                const regData = registrationData.getBasicInfo();
+                const {basic_info: {number = ""} = {}} = regData;
+                registrationsData[registrationData.getDoctorRegistrationId()] = {
+                    number,
+                    council: councilWrapper.getBasicInfo(),
+                };
+            }
+
+            const {
+                [`${doctor_id}`]: {basic_info: {user_id: doctorUserId = null} = {}},
+            } = doctors;
+
+            let user_ids = [doctorUserId, userId];
+            if (category === USER_CATEGORY.DOCTOR || category === USER_CATEGORY.HSP) {
+                const curr_data = await patientData.getAllInfo();
+                const {basic_info: {user_id: curr_p_user_id = ""} = {}} =
+                curr_data || {};
+                user_ids = [doctorUserId, curr_p_user_id];
+            }
+
+            for (const id of user_ids) {
+                const intId = parseInt(id);
+                const user = await userService.getUserById(intId);
+
+                if (user) {
+                    const userWrapper = await UserWrapper(user.get());
+                    usersData = {...usersData, ...{[id]: userWrapper.getBasicInfo()}};
+                }
+            }
+
+            // provider data
+            const {[doctorUserRoleId]: {basic_info: {linked_id: provider_id = null} = {}} = {}} = userRolesData || {};
+
+            let providerData = {};
+
+            let providerIcon = "";
+            let providerPrescriptionDetails = "";
+            if (provider_id) {
+                const providerWrapper = await ProviderWrapper(null, provider_id);
+                const {providers, users} = await providerWrapper.getReferenceInfo();
+
+                const {details: {icon = null, prescription_details = ''} = {}} = providers[provider_id] || {};
+                checkAndCreateDirectory(S3_DOWNLOAD_FOLDER_PROVIDER);
+                providerPrescriptionDetails = prescription_details;
+                if (icon) {
+                    providerIcon = `${S3_DOWNLOAD_FOLDER_PROVIDER}/provider-${provider_id}-icon.jpeg`;
+
+                    const downloadProviderImage = await downloadFileFromS3(
+                        getFilePath(icon),
+                        providerIcon
+                    );
+                }
+
+                providerData = {...providers[provider_id]};
+                usersData = {...usersData, ...users};
+            }
+
+            const portionServiceService = new PortionServiceService();
+            const allPortions = await portionServiceService.getAll();
+            let portionApiData = {};
+
+            for (let each in allPortions) {
+                const portion = allPortions[each] || {};
+                const portionWrapper = await PortionWrapper({data: portion});
+                portionApiData[portionWrapper.getId()] = portionWrapper.getBasicInfo();
+            }
+
+            const repetitionService = new RepetitionService();
+            let repetitionApiData = {};
+
+            const {count, rows: repetitions = []} =
+            (await repetitionService.findAndCountAll()) || {};
+            if (count) {
+                for (let index = 0; index < repetitions.length; index++) {
+                    const {id, type} = repetitions[index] || {};
+                    repetitionApiData[id] = {id, type};
+                }
+            }
+
+            dataForPdf = {
+                users: {...usersData},
+                ...(permissions.includes(PERMISSIONS.MEDICATIONS.ADD)) && {medications},
+                ...(permissions.includes(PERMISSIONS.MEDICATIONS.ADD)) && {medicines},
+                care_plans: {
+                    [carePlanData.getCarePlanId()]: {
+                        ...carePlanData.getBasicInfo(),
+                    },
+                },
+                doctors,
+                degrees,
+                portions: {...portionApiData},
+                repetitions: {...repetitionApiData},
+                conditions,
+                providers: providerData,
+                providerIcon,
+                providerPrescriptionDetails,
+                doctor_id,
+                registrations: registrationsData,
+                creationDate: carePlanCreatedDate,
+                nextAppointmentDuration,
+                suggestedInvestigations: sortedInvestigations,
+                patients: {
+                    ...{[patientData.getPatientId()]: patientData.getBasicInfo()},
+                },
+                diets_formatted_data: {...dietApiData},
+                workouts_formatted_data: {...workoutApiData},
+                workout_ids: workoutIds,
+                diet_ids: dietIds,
+                timings,
+                currentTime: getDoctorCurrentTime(doctorUserId).format(
+                    "Do MMMM YYYY, hh:mm a"
+                ),
+            };
+
+            checkAndCreateDirectory(PRESCRIPTION_PDF_FOLDER);
+            const pdfFileName = await generatePDF(dataForPdf, doctorSignImage);
+            const pdfFile = `${pdfFileName}.pdf`;
+
+            const options = {
+                root: path.join(__dirname, `../../../${PRESCRIPTION_PDF_FOLDER}/`),
+            };
+            return res.sendFile(pdfFile, options);
+        } catch (err) {
+            Logger.debug(
+                "Error while generating the prescription: ",
+                err
+            );
+            return raiseServerError(res);
+        }
+    };
+
+    getAllPatientsPagination = async (req, res) => {
+        const {raiseSuccess, raiseClientError, raiseServerError} = this;
+        try {
+            const {query, userDetails} = req;
+
+            const {userId, userRoleId, userData: {category} = {}, userCategoryId} = userDetails || {};
+
+            let allPatientIds = [];
+            /*
+                  userId (auth) [DOCTOR]
+
+                  SORT
+                  created_at [asc, desc]
+                  name [asc, desc]
+
+                  FILTER
+                  diagnosis [description, type]
+                  treatment
+
+                  doctors -> careplans -> patients
+                  */
+
+            const {
+                offset = 0,
+                sort_name = null,
+                sort_createdAt = null,
+                filter_treatment = null,
+                filter_diagnosis = null,
+                watchlist = 0,
+            } = query || {};
+
+            const limit = process.config.PATIENT_LIST_SIZE_LIMIT;
+            const offsetLimit = parseInt(limit, 10) * parseInt(offset, 10);
+            const endLimit = parseInt(limit, 10);
+            const getWatchListPatients = parseInt(watchlist, 10) === 0 ? 0 : 1;
+
+            let patientsForDoctor = [];
+
+            let rowData = [];
+
+            let count = null;
+            let treatments = {};
+
+            // careplan ids as secondary doctor
+            const {
+                count: careplansCount = 0,
+                rows: careplanAsSecondaryDoctor = []
+            } = await careplanSecondaryDoctorMappingService.findAndCountAll({
+                where: {
+                    secondary_doctor_role_id: userRoleId
+                }
+            });
+
+            let careplanIdsAsSecondaryDoctor = [];
+
+            if (careplansCount) {
+                for (let each of careplanAsSecondaryDoctor) {
+                    const {care_plan: {id = null, patient_id = null} = {}} = each || {};
+                    careplanIdsAsSecondaryDoctor.push(id);
+                }
+            }
+
+            const secondary_careplan_ids = careplanIdsAsSecondaryDoctor.toString();
+
+            if (category === USER_CATEGORY.DOCTOR || category === USER_CATEGORY.HSP) {
+                let watchlistQuery = "";
+                const doctor = await doctorService.getDoctorByData({
+                    user_id: userId,
+                });
+
+                if (doctor && getWatchListPatients) {
+                    const doctorData = await DoctorWrapper(doctor);
+
+                    const doctorAllInfo = await doctorData.getAllInfo();
+                    // let { watchlist_patient_ids = []} = doctorAllInfo || {};
+                    let watchlist_patient_ids = [];
+                    const watchlistRecords =
+                        await doctorPatientWatchlistService.getAllByData(
+                            {user_role_id: userRoleId}
+                        );
+
+                    // watchlisted patient ids
+
+                    if (watchlistRecords && watchlistRecords.length) {
+                        for (let i = 0; i < watchlistRecords.length; i++) {
+                            const watchlistWrapper = await DoctorPatientWatchlistWrapper(watchlistRecords[i]);
+                            const patientId = await watchlistWrapper.getPatientId();
+                            watchlist_patient_ids.push(patientId);
+                        }
+                    }
+                    watchlist_patient_ids = watchlist_patient_ids.length ? watchlist_patient_ids : null; // if no patient id watchlisted , check patinetIds for (null) as watchlist_patient_ids=[]
+                    watchlistQuery = `AND (carePlan.user_role_id = ${userRoleId} OR carePlan.id in ( ${secondary_careplan_ids} ) ) AND carePlan.patient_id IN (${watchlist_patient_ids})`;
+                    // let { watchlist_patient_ids = [] } = doctorAllInfo || {};
+                    // watchlist_patient_ids = watchlist_patient_ids.length
+                    //   ? watchlist_patient_ids
+                    //   : null; // if no patient id watchlisted , check patinetIds for (null) as watchlist_patient_ids=[]
+                    // watchlistQuery = `AND carePlan.doctor_id = ${userCategoryId} AND carePlan.patient_id IN (${watchlist_patient_ids})`;
+                }
+
+                // filter to get name sorted paginated data
+                if (sort_name) {
+                    const order = sort_name === "0" ? "ASC" : "DESC";
+                    [count, patientsForDoctor] = await carePlanService.getPaginatedPatients({
+                        doctor_id: userCategoryId,
+                        user_role_id: userRoleId,
+                        order: `patient.first_name ${order}`,
+                        offset: offsetLimit,
+                        limit: endLimit,
+                        watchlist: watchlistQuery,
+                        // watchlistPatientIds,
+                        // watchlist: getWatchListPatients,
+                        secondary_careplan_ids
+                    }) || [];
+                } else if (sort_createdAt) {
+                    // filter to get date sorted paginated data
+
+                    const order = sort_createdAt === "0" ? "ASC" : "DESC";
+                    [count, patientsForDoctor] = await carePlanService.getPaginatedPatients({
+                        doctor_id: userCategoryId,
+                        user_role_id: userRoleId,
+                        order: `patient.created_at ${order}`,
+                        offset: offsetLimit,
+                        limit: endLimit,
+                        watchlist: watchlistQuery,
+                        secondary_careplan_ids
+                    }) || [];
+                } else if (filter_treatment) {
+                    const allTreatments = await treatmentService.searchByName(filter_treatment) || [];
+
+                    // get all treatment
+                    if (allTreatments.length > 0) {
+                        for (let index = 0; index < allTreatments.length; index++) {
+                            const treatment = await TreatmentWrapper(allTreatments[index]);
+                            treatments = {
+                                ...treatments,
+                                [treatment.getTreatmentId()]: treatment.getBasicInfo(),
+                            };
+                        }
+
+                        const treatmentIds = allTreatments.map(treatment => treatment.id) || [];
+                        [count, patientsForDoctor] = await carePlanService.getPaginatedPatients({
+                            doctor_id: userCategoryId,
+                            filter: `JSON_VALUE(carePlan.details, '$.treatment_id') IN (${treatmentIds}) 
              
               `,
-                offset: offsetLimit,
-                limit: endLimit,
-                watchlist: watchlistQuery,
-                user_role_id: userRoleId,
-                secondary_careplan_ids
-              })) || [];
-          }
-        } else if (filter_diagnosis) {
-          // diagnosis filter
+                            offset: offsetLimit,
+                            limit: endLimit,
+                            watchlist: watchlistQuery,
+                            user_role_id: userRoleId,
+                            secondary_careplan_ids
+                        }) || [];
+                    }
+                } else if (filter_diagnosis) {
+                    // diagnosis filter
 
-          let diagnosis_type = null;
+                    let diagnosis_type = null;
 
-          if (DIAGNOSIS_TYPE.FINAL.text.includes(filter_diagnosis)) {
-            diagnosis_type = DIAGNOSIS_TYPE.FINAL.id;
-          } else if (DIAGNOSIS_TYPE.PROBABLE.text.includes(filter_diagnosis)) {
-            diagnosis_type = DIAGNOSIS_TYPE.PROBABLE.id;
-          } else {
-            diagnosis_type = null;
-          }
-          [count, patientsForDoctor] =
-            (await carePlanService.getPaginatedPatients({
-              doctor_id: userCategoryId,
-              user_role_id: userRoleId,
-              filter: `(JSON_VALUE(carePlan.details, '$.diagnosis.description') LIKE '${filter_diagnosis}%' OR
+                    if (DIAGNOSIS_TYPE.FINAL.text.includes(filter_diagnosis)) {
+                        diagnosis_type = DIAGNOSIS_TYPE.FINAL.id;
+                    } else if (DIAGNOSIS_TYPE.PROBABLE.text.includes(filter_diagnosis)) {
+                        diagnosis_type = DIAGNOSIS_TYPE.PROBABLE.id;
+                    } else {
+                        diagnosis_type = null;
+                    }
+                    [count, patientsForDoctor] = await carePlanService.getPaginatedPatients({
+                        doctor_id: userCategoryId,
+                        user_role_id: userRoleId,
+                        filter:
+                            `(JSON_VALUE(carePlan.details, '$.diagnosis.description') LIKE '${filter_diagnosis}%' OR
                 JSON_VALUE(carePlan.details, '$.diagnosis.type') = ${diagnosis_type}) 
                 
                  `,
-              user_role_id: userRoleId,
-              offset: offsetLimit,
-              limit: endLimit,
-              watchlist: watchlistQuery,
-              secondary_careplan_ids
-            })) || [];
-        }
+                        user_role_id: userRoleId,
+                        offset: offsetLimit,
+                        limit: endLimit,
+                        watchlist: watchlistQuery,
+                        secondary_careplan_ids
+                    }) || [];
+                }
 
-        if (patientsForDoctor.length > 0) {
-          for (let index = 0; index < patientsForDoctor.length; index++) {
-            const {
-              care_plan_id,
-              care_plan_details,
-              care_plan_created_at,
-              care_plan_expired_on,
-              care_plan_activated_on,
-              ...patient
-            } = patientsForDoctor[index] || {};
-            patient["care_plan_id"] = care_plan_id;
-            const { id = null } = { ...patient };
+                if (patientsForDoctor.length > 0) {
+                    for (let index = 0; index < patientsForDoctor.length; index++) {
+                        const {
+                            care_plan_id,
+                            care_plan_details,
+                            care_plan_created_at,
+                            care_plan_expired_on,
+                            care_plan_activated_on,
+                            ...patient
+                        } = patientsForDoctor[index] || {};
+                        patient["care_plan_id"] = care_plan_id;
+                        const {id = null} = {...patient};
 
-            if (allPatientIds.includes(id)) {
-              continue;
+                        if (allPatientIds.includes(id)) {
+                            continue;
+                        }
+
+                        allPatientIds.push(id);
+                        const patientData = await PatientWrapper(null, id);
+                        const {user_role_id = null} = await patientData.getAllInfo();
+                        patient["user_role_id"] = user_role_id;
+
+                        rowData.push({
+                            care_plans: {
+                                id: care_plan_id,
+                                details: care_plan_details,
+                                created_at: care_plan_created_at,
+                                expired_on: care_plan_expired_on,
+                                activated_on: care_plan_activated_on,
+                            },
+                            patients: {
+                                ...patient,
+                            },
+                        });
+                    }
+                }
             }
 
-            allPatientIds.push(id);
-            const patientData = await PatientWrapper(null, id);
-            const { user_role_id = null } = await patientData.getAllInfo();
-            patient["user_role_id"] = user_role_id;
-
-            rowData.push({
-              care_plans: {
-                id: care_plan_id,
-                details: care_plan_details,
-                created_at: care_plan_created_at,
-                expired_on: care_plan_expired_on,
-                activated_on: care_plan_activated_on
-              },
-              patients: {
-                ...patient
-              }
-            });
-          }
+            return raiseSuccess(
+                res,
+                200,
+                {
+                    rowData,
+                    treatments,
+                    total: allPatientIds.length,
+                },
+                "success"
+            );
+        } catch (error) {
+            Logger.debug("getAllPatientsPagination 500", error);
+            return raiseServerError(res);
         }
-      }
+    };
 
-      return raiseSuccess(
-        res,
-        200,
-        {
-          rowData,
-          treatments,
-          total: allPatientIds.length
-        },
-        "success"
-      );
-    } catch (error) {
-      Logger.debug("getAllPatientsPagination 500", error);
-      return raiseServerError(res);
-    }
-  };
+    acceptPaymentsTerms = async (req, res) => {
+        const {raiseClientError} = this;
+        try {
+            const {userDetails: {userId} = {}, body: {acceptTerms} = {}} = req;
 
-  acceptPaymentsTerms = async (req, res) => {
-    const { raiseClientError } = this;
-    try {
-      const { userDetails: { userId } = {}, body: { acceptTerms } = {} } = req;
+            if (!acceptTerms) {
+                return raiseClientError(
+                    res,
+                    422,
+                    {},
+                    "Cannot proceed further without accepting Terms of Payments"
+                );
+            }
 
-      if (!acceptTerms) {
-        return raiseClientError(
-          res,
-          422,
-          {},
-          "Cannot proceed further without accepting Terms of Payments"
-        );
-      }
+            const patient = await patientService.getPatientByUserId(userId);
+            const patientApiWrapper = await PatientWrapper(patient);
+            const updatePatient = await patientService.update(
+                {
+                    payment_terms_accepted: acceptTerms,
+                },
+                patientApiWrapper.getPatientId()
+            );
 
-      const patient = await patientService.getPatientByUserId(userId);
-      const patientApiWrapper = await PatientWrapper(patient);
-      const updatePatient = await patientService.update(
-        {
-          payment_terms_accepted: acceptTerms
-        },
-        patientApiWrapper.getPatientId()
-      );
+            const updatePatientApiWrapper = await PatientWrapper(
+                null,
+                patientApiWrapper.getPatientId()
+            );
 
-      const updatePatientApiWrapper = await PatientWrapper(
-        null,
-        patientApiWrapper.getPatientId()
-      );
+            const dataToSend = {
+                [updatePatientApiWrapper.getPatientId()]: updatePatientApiWrapper.getBasicInfo(),
+            };
 
-      const dataToSend = {
-        [updatePatientApiWrapper.getPatientId()]: updatePatientApiWrapper.getBasicInfo()
-      };
-
-      return this.raiseSuccess(
-        res,
-        200,
-        { patients: dataToSend },
-        "Payment terms changed successfully."
-      );
-    } catch (error) {
-      Logger.debug("acceptPaymentsTerms 500 error ----> ", error);
-      return this.raiseServerError(res);
-    }
-  };
+            return this.raiseSuccess(
+                res,
+                200,
+                {patients: dataToSend},
+                "Payment terms changed successfully."
+            );
+        } catch (error) {
+            Logger.debug("acceptPaymentsTerms 500 error ----> ", error);
+            return this.raiseServerError(res);
+        }
+    };
 }
 
 export default new PatientController();

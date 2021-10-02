@@ -2,15 +2,15 @@
 import {TABLE_NAME} from "../app/models/consents";
 
 module.exports = {
-  up: (queryInterface, Sequelize) => {
-    return Promise.all([
-      queryInterface.addColumn(TABLE_NAME, "user_role_id", {
-        type: Sequelize.INTEGER
-      })
-    ]);
-  },
+    up: (queryInterface, Sequelize) => {
+        return Promise.all([
+            queryInterface.addColumn(TABLE_NAME, "user_role_id", {
+                type: Sequelize.INTEGER
+            })
+        ]);
+    },
 
-  down: (queryInterface, Sequelize) => {
-    return queryInterface.removeColumn(TABLE_NAME, "user_role_id")
-  }
+    down: (queryInterface, Sequelize) => {
+        return queryInterface.removeColumn(TABLE_NAME, "user_role_id")
+    }
 };

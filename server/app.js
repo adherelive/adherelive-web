@@ -20,11 +20,10 @@ import Activity from "../app/activitySdk/activityObserver";
 
 Database.init();
 
-const Events = import("../events")
-  .then(module => {})
-  .catch(err => {
-    console.log("event module error", err);
-  });
+const Events = import("../events").then(module => {
+}).catch(err => {
+    console.log("event module error", err)
+});
 
 const cookieSession = require("cookie-session");
 const cookieParser = require("cookie-parser");
@@ -36,26 +35,23 @@ const app = express();
 
 // CRONS RUNNING EVERY 1 MINUTE
 const cron = schedule.scheduleJob("*/1 * * * *", async () => {
-  await Prior.runObserver();
-  await Passed.runObserver();
-  await Start.runObserver();
+    await Prior.runObserver();
+    await Passed.runObserver();
+    await Start.runObserver();
 });
 
 const perDayUtcRule = new schedule.RecurrenceRule();
 perDayUtcRule.hour = 0;
-perDayUtcRule.tz = "Etc/UTC";
+perDayUtcRule.tz = 'Etc/UTC';
 
-const removeDocumentPerDayCron = schedule.scheduleJob(
-  perDayUtcRule,
-  async () => {
+const removeDocumentPerDayCron = schedule.scheduleJob(perDayUtcRule, async () => {
     await RemoveDocuments.runObserver();
-  }
-);
+});
 
 // CRONS RUNNING EVERY 1 HOUR
 const perHourCron = schedule.scheduleJob("0 0 */1 * * *", async () => {
-  await LongTerm.observer();
-  await activePatient.runObserver();
+    await LongTerm.observer();
+    await activePatient.runObserver();
 });
 
 // CRONS RUNNING AT START OF EVERY MONTH
@@ -65,26 +61,26 @@ rule.hour = 0;
 rule.minute = 0;
 
 const perDayCron = schedule.scheduleJob(rule, async () => {
-  await RenewSubscription.runObserver();
+    await RenewSubscription.runObserver();
 });
 
 EventObserver.runObservers();
 Activity.runObservers();
 
-app.use(express.json({ limit: "50mb" }));
+app.use(express.json({limit: "50mb"}));
 app.use(
-  express.urlencoded({
-    extended: true,
-    limit: "50mb"
-  })
+    express.urlencoded({
+        extended: true,
+        limit: "50mb"
+    })
 );
 app.use(cookieParser());
 app.use(cors());
 app.use(
-  cookieSession({
-    maxAge: 30 * 24 * 60 * 60 * 1000,
-    keys: JSON.parse(process.config.cookieKey)
-  })
+    cookieSession({
+        maxAge: 30 * 24 * 60 * 60 * 1000,
+        keys: JSON.parse(process.config.cookieKey)
+    })
 );
 
 app.use(express.static(path.join(__dirname, "../public")));
@@ -95,7 +91,7 @@ app.use("/api", ApiRouter);
 app.use("/m-api", mApiRouter);
 
 app.get("/*", (req, res) => {
-  res.sendFile(path.resolve("public/index.html"));
+    res.sendFile(path.resolve("public/index.html"));
 });
 
 module.exports = app;

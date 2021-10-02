@@ -20,7 +20,7 @@ class AddPatientJob extends AuthJob {
                     link: universalLink,
                     inviteCard: "",
                     mainBodyText: "We are happy to welcome you onboard the AdhereLive platform",
-                    subBodyText: "Please verify your account",
+                    subBodyText: "Please verify your account by clicking on the 'Verify' button below",
                     buttonText: "Verify",
                     host: process.config.WEB_URL,
                     contactTo: process.config.app.support_email
