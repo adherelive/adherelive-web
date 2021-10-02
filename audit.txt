@@ -1,0 +1,92 @@
+
+up to date, audited 1506 packages in 3s
+
+149 packages are looking for funding
+  run `npm fund` for details
+
+# npm audit report
+
+glob-parent  <5.1.2
+Severity: moderate
+Regular expression denial of service - https://npmjs.com/advisories/1751
+fix available via `npm audit fix`
+node_modules/watchpack-chokidar2/node_modules/glob-parent
+  chokidar  1.0.0-rc1 - 2.1.8
+  Depends on vulnerable versions of glob-parent
+  node_modules/watchpack-chokidar2/node_modules/chokidar
+    watchpack-chokidar2  *
+    Depends on vulnerable versions of chokidar
+    node_modules/watchpack-chokidar2
+      watchpack  1.7.2 - 1.7.5
+      Depends on vulnerable versions of watchpack-chokidar2
+      node_modules/watchpack
+        webpack  4.44.0 - 4.46.0
+        Depends on vulnerable versions of watchpack
+        node_modules/webpack
+
+lodash  <=4.17.20
+Severity: high
+Prototype Pollution - https://npmjs.com/advisories/1065
+Prototype Pollution - https://npmjs.com/advisories/1523
+Command Injection - https://npmjs.com/advisories/1673
+Prototype Pollution - https://npmjs.com/advisories/577
+Prototype Pollution - https://npmjs.com/advisories/782
+No fix available
+node_modules/sendgrid/node_modules/lodash
+  sendgrid  0.3.2 - 2.0.0
+  Depends on vulnerable versions of lodash
+  node_modules/sendgrid
+    nodemailer-sendgrid-transport  *
+    Depends on vulnerable versions of sendgrid
+    node_modules/nodemailer-sendgrid-transport
+
+marked  0.3.14 - 0.6.1
+Severity: moderate
+Regular Expression Denial of Service - https://npmjs.com/advisories/812
+fix available via `npm audit fix`
+node_modules/marked
+  esdoc  >=0.1.0
+  Depends on vulnerable versions of marked
+  Depends on vulnerable versions of minimist
+  node_modules/esdoc
+
+minimist  <0.2.1 || >=1.0.0 <1.2.3
+Prototype Pollution - https://npmjs.com/advisories/1179
+fix available via `npm audit fix`
+node_modules/esdoc/node_modules/minimist
+  esdoc  >=0.1.0
+  Depends on vulnerable versions of marked
+  Depends on vulnerable versions of minimist
+  node_modules/esdoc
+
+utils-extend  *
+Severity: high
+Prototype Pollution - https://npmjs.com/advisories/1502
+fix available via `npm audit fix --force`
+Will install base64-img@1.0.1, which is a breaking change
+node_modules/utils-extend
+  ajax-request  >=1.0.1
+  Depends on vulnerable versions of utils-extend
+  node_modules/ajax-request
+    base64-img  *
+    Depends on vulnerable versions of ajax-request
+    Depends on vulnerable versions of file-system
+    node_modules/base64-img
+  file-match  *
+  Depends on vulnerable versions of utils-extend
+  node_modules/file-match
+    file-system  >=1.2.3
+    Depends on vulnerable versions of file-match
+    Depends on vulnerable versions of utils-extend
+    node_modules/file-system
+
+16 vulnerabilities (3 low, 7 moderate, 6 high)
+
+To address issues that do not require attention, run:
+  npm audit fix
+
+To address all issues possible (including breaking changes), run:
+  npm audit fix --force
+
+Some issues need review, and may require choosing
+a different dependency.

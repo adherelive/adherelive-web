@@ -1,11 +1,12 @@
-export const getcreateCarePlanMedicationAndAppointmentUrl = carePlanId => {
-  return `/carePlans/${carePlanId}`;
+export const getcreateCarePlanMedicationAndAppointmentUrl = (carePlanId) => {
+    return `/carePlans/${carePlanId}`;
 };
 
-export const getPatientCarePlanDetailsUrl = patientId => {
-  return `/patients/${patientId}/careplan-details`;
+export const getPatientCarePlanDetailsUrl = (patientId) => {
+    return `/patients/${patientId}/careplan-details`;
 };
+
 
 export const addDoctroRoleIdToCareplanUrl = () => {
-  return `/carePlans/profile`;
+    return `/carePlans/profile`;
 };

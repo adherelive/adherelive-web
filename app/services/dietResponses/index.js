@@ -1,25 +1,27 @@
 export default class DietResponses {
-  constructor(data) {
-    this._data = data;
-  }
 
-  getId = () => {
-    return this._data.id;
-  };
+    constructor(data) {
+        this._data = data;
+    }
 
-  getDietId = () => {
-    return this._data.diet_id;
-  };
+    getId = () => {
+        return this._data.id;
+    }
 
-  getScheduleEventId = () => {
-    return this._data.schedule_event_id;
-  };
+    getDietId = () => {
+        return this._data.diet_id;
+    }
 
-  getStatus = () => {
-    return this._data.status;
-  };
+    getScheduleEventId = () => {
+        return this._data.schedule_event_id;
+    }
 
-  isDocumentUploaded = () => {
-    return this._data.document_uploaded;
-  };
+    getStatus = () => {
+        return this._data.status;
+    }
+
+    isDocumentUploaded = () => {
+        return this._data.document_uploaded;
+    };
+
 }

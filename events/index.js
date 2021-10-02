@@ -17,16 +17,16 @@ import queueService from "../app/services/awsQueue/queue.service";
 // });
 
 const SqsObserver = import("./sqsObserver")
-  .then(module => {
-    const sqs = new module.default();
-    const QueueService = new queueService();
-    const cron = schedule.scheduleJob("*/30 * * * * *", async () => {
-      await sqs.observe(QueueService);
+    .then(module => {
+        const sqs = new module.default();
+        const QueueService = new queueService();
+        const cron = schedule.scheduleJob("*/30 * * * * *", async () => {
+            await sqs.observe(QueueService);
+        });
+    })
+    .catch(err => {
+        console.log("dynamic import err", err);
     });
-  })
-  .catch(err => {
-    console.log("dynamic import err", err);
-  });
 
 // while(true) {
 //     (async () => {

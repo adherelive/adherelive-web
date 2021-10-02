@@ -35,7 +35,9 @@
             ],
             "url": {
               "raw": "{{baseUrl}}/dashboards/graphs/:number/:ClinicianID/:ProviderID",
-              "host": ["{{baseUrl}}"],
+              "host": [
+                "{{baseUrl}}"
+              ],
               "path": [
                 "dashboards",
                 "graphs",
@@ -86,7 +88,9 @@
                 "header": [],
                 "url": {
                   "raw": "{{baseUrl}}/dashboards/graphs/:number/:ClinicianID/:ProviderID",
-                  "host": ["{{baseUrl}}"],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
                   "path": [
                     "dashboards",
                     "graphs",
@@ -126,7 +130,9 @@
                 "header": [],
                 "url": {
                   "raw": "{{baseUrl}}/dashboards/graphs/:number/:ClinicianID/:ProviderID",
-                  "host": ["{{baseUrl}}"],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
                   "path": [
                     "dashboards",
                     "graphs",
@@ -166,7 +172,9 @@
                 "header": [],
                 "url": {
                   "raw": "{{baseUrl}}/dashboards/graphs/:number/:ClinicianID/:ProviderID",
-                  "host": ["{{baseUrl}}"],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
                   "path": [
                     "dashboards",
                     "graphs",
@@ -282,7 +290,9 @@
                 ],
                 "url": {
                   "raw": "{{baseUrl}}/dashboards/graphs/:number/:ClinicianID/:ProviderID",
-                  "host": ["{{baseUrl}}"],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
                   "path": [
                     "dashboards",
                     "graphs",
@@ -343,7 +353,9 @@
             ],
             "url": {
               "raw": "{{baseUrl}}/dashboards/patients/:number/:ClinicianID/:ProviderID",
-              "host": ["{{baseUrl}}"],
+              "host": [
+                "{{baseUrl}}"
+              ],
               "path": [
                 "dashboards",
                 "patients",
@@ -394,7 +406,9 @@
                 "header": [],
                 "url": {
                   "raw": "{{baseUrl}}/dashboards/patients/:number/:ClinicianID/:ProviderID",
-                  "host": ["{{baseUrl}}"],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
                   "path": [
                     "dashboards",
                     "patients",
@@ -495,7 +509,9 @@
                 ],
                 "url": {
                   "raw": "{{baseUrl}}/dashboards/patients/:number/:ClinicianID/:ProviderID",
-                  "host": ["{{baseUrl}}"],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
                   "path": [
                     "dashboards",
                     "patients",
@@ -535,7 +551,9 @@
                 "header": [],
                 "url": {
                   "raw": "{{baseUrl}}/dashboards/patients/:number/:ClinicianID/:ProviderID",
-                  "host": ["{{baseUrl}}"],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
                   "path": [
                     "dashboards",
                     "patients",
@@ -575,7 +593,9 @@
                 "header": [],
                 "url": {
                   "raw": "{{baseUrl}}/dashboards/patients/:number/:ClinicianID/:ProviderID",
-                  "host": ["{{baseUrl}}"],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
                   "path": [
                     "dashboards",
                     "patients",
@@ -665,8 +685,12 @@
             },
             "url": {
               "raw": "{{baseUrl}}/patient",
-              "host": ["{{baseUrl}}"],
-              "path": ["patient"]
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "patient"
+              ]
             },
             "description": "Create a New Patient in the Database"
           },
@@ -713,8 +737,12 @@
                 },
                 "url": {
                   "raw": "{{baseUrl}}/patient",
-                  "host": ["{{baseUrl}}"],
-                  "path": ["patient"]
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "patient"
+                  ]
                 }
               },
               "status": "Method Not Allowed",
@@ -740,8 +768,12 @@
                 },
                 "url": {
                   "raw": "{{baseUrl}}/patient",
-                  "host": ["{{baseUrl}}"],
-                  "path": ["patient"]
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "patient"
+                  ]
                 }
               },
               "status": "Created",
@@ -792,8 +824,12 @@
             },
             "url": {
               "raw": "{{baseUrl}}/patient",
-              "host": ["{{baseUrl}}"],
-              "path": ["patient"]
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "patient"
+              ]
             },
             "description": "Update the existing Patient record in Database for a Clinician"
           },
@@ -870,8 +906,12 @@
                 },
                 "url": {
                   "raw": "{{baseUrl}}/patient",
-                  "host": ["{{baseUrl}}"],
-                  "path": ["patient"]
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "patient"
+                  ]
                 }
               },
               "status": "Method Not Allowed",
@@ -897,8 +937,12 @@
                 },
                 "url": {
                   "raw": "{{baseUrl}}/patient",
-                  "host": ["{{baseUrl}}"],
-                  "path": ["patient"]
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "patient"
+                  ]
                 }
               },
               "status": "Not Found",
@@ -924,8 +968,12 @@
                 },
                 "url": {
                   "raw": "{{baseUrl}}/patient",
-                  "host": ["{{baseUrl}}"],
-                  "path": ["patient"]
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "patient"
+                  ]
                 }
               },
               "status": "Bad Request",
@@ -951,8 +999,12 @@
                 },
                 "url": {
                   "raw": "{{baseUrl}}/patient",
-                  "host": ["{{baseUrl}}"],
-                  "path": ["patient"]
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "patient"
+                  ]
                 }
               },
               "status": "OK",
@@ -995,8 +1047,13 @@
             ],
             "url": {
               "raw": "{{baseUrl}}/patient/:patientId",
-              "host": ["{{baseUrl}}"],
-              "path": ["patient", ":patientId"],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "patient",
+                ":patientId"
+              ],
               "variable": [
                 {
                   "id": "278b5339-68ed-4acf-8ed8-6a2e42c91484",
@@ -1020,8 +1077,13 @@
                 "header": [],
                 "url": {
                   "raw": "{{baseUrl}}/patient/:patientId",
-                  "host": ["{{baseUrl}}"],
-                  "path": ["patient", ":patientId"],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "patient",
+                    ":patientId"
+                  ],
                   "variable": [
                     {
                       "key": "patientId"
@@ -1048,8 +1110,13 @@
                 "header": [],
                 "url": {
                   "raw": "{{baseUrl}}/patient/:patientId",
-                  "host": ["{{baseUrl}}"],
-                  "path": ["patient", ":patientId"],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "patient",
+                    ":patientId"
+                  ],
                   "variable": [
                     {
                       "key": "patientId"
@@ -1152,8 +1219,13 @@
                 ],
                 "url": {
                   "raw": "{{baseUrl}}/patient/:patientId",
-                  "host": ["{{baseUrl}}"],
-                  "path": ["patient", ":patientId"],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "patient",
+                    ":patientId"
+                  ],
                   "variable": [
                     {
                       "key": "patientId"
@@ -1180,8 +1252,13 @@
                 "header": [],
                 "url": {
                   "raw": "{{baseUrl}}/patient/:patientId",
-                  "host": ["{{baseUrl}}"],
-                  "path": ["patient", ":patientId"],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "patient",
+                    ":patientId"
+                  ],
                   "variable": [
                     {
                       "key": "patientId"
