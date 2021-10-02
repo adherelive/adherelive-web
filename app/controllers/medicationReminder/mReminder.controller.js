@@ -631,7 +631,8 @@ class MReminderController extends Controller {
     delete = async (req, res) => {
         const {raiseSuccess, raiseServerError} = this;
         try {
-            const {params: {id} = {},
+            const {
+                params: {id} = {},
                 userDetails: {
                     userId,
                     userRoleId,
