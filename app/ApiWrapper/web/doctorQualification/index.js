@@ -28,7 +28,7 @@ class DoctorQualificationWrapper extends BaseDoctorQualification {
 }
 
 export default async (data = null, id = null) => {
-    if(data) {
+    if (data) {
         return new DoctorQualificationWrapper(data);
     }
     const doctorQualification = await doctorQualificationService.getQualificationById(id);

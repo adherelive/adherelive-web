@@ -1,7 +1,5 @@
-
-
 function templateWorkoutsReducer(state, data) {
-    const { template_workouts } = data || {};
+    const {template_workouts} = data || {};
     if (template_workouts) {
         return {
             ...state,
@@ -13,7 +11,7 @@ function templateWorkoutsReducer(state, data) {
 }
 
 export default (state = {}, action) => {
-    const { type, data } = action;
+    const {type, data} = action;
     switch (type) {
         default:
             return templateWorkoutsReducer(state, data)

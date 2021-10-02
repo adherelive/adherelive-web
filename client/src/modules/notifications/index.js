@@ -1,6 +1,6 @@
-import { doRequest } from "../../Helper/network";
-import { REQUEST_TYPE } from "../../constant";
-import { getNotifications } from "../../Helper/urls/notifications";
+import {doRequest} from "../../Helper/network";
+import {REQUEST_TYPE} from "../../constant";
+import {getNotifications} from "../../Helper/urls/notifications";
 
 export const GET_NOTIFICATION_START = "GET_NOTIFICATION_START";
 export const GET_NOTIFICATION_COMPLETED = "GET_NOTIFICATION_COMPLETED";
@@ -16,7 +16,7 @@ export const getNotification = value => {
                 data: value
             });
 
-            const { status, payload: { data, message = "" } = {} } = response || {};
+            const {status, payload: {data, message = ""} = {}} = response || {};
             if (status === true) {
                 dispatch({
                     type: GET_NOTIFICATION_COMPLETED,
@@ -36,7 +36,7 @@ export const getNotification = value => {
 };
 
 function notificationReducer(state, data) {
-    const { notifications = {} } = data || {};
+    const {notifications = {}} = data || {};
     if (notifications) {
         return {
             ...state,
@@ -48,7 +48,7 @@ function notificationReducer(state, data) {
 }
 
 export default (state = {}, payload) => {
-    const { type, data } = payload || {};
+    const {type, data} = payload || {};
     switch (type) {
         case GET_NOTIFICATION_COMPLETED:
             return notificationReducer(state, data);

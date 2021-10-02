@@ -1,5 +1,5 @@
-import { doRequest } from "../../Helper/network";
-import { REQUEST_TYPE } from "../../constant";
+import {doRequest} from "../../Helper/network";
+import {REQUEST_TYPE} from "../../constant";
 import {Agora} from "../../Helper/urls";
 
 export const AGORA_VIDEO_TOKEN_START = "AGORA_VIDEO_TOKEN_START";
@@ -17,30 +17,30 @@ export const VOIP_CALL_MISSED_NOTIFY_FAILED = "VOIP_CALL_MISSED_NOTIFY_FAILED";
 export const fetchVideoAccessToken = userId => {
     console.log("198731237 userId", userId);
     return async dispatch => {
-      try {
-          dispatch({type: AGORA_VIDEO_TOKEN_START});
+        try {
+            dispatch({type: AGORA_VIDEO_TOKEN_START});
 
-          const response = await doRequest({
-              method: REQUEST_TYPE.GET,
-              url: Agora.getVideoAccessToken(userId),
-              // params: { userId: userId }
-          });
+            const response = await doRequest({
+                method: REQUEST_TYPE.GET,
+                url: Agora.getVideoAccessToken(userId),
+                // params: { userId: userId }
+            });
 
-          const { status, payload: {data} = {} } = response;
+            const {status, payload: {data} = {}} = response;
 
-          if(status === true) {
-              dispatch({
-                  type: AGORA_VIDEO_TOKEN_COMPLETE,
-                  payload: data
-              });
-          } else {
-              dispatch({
-                  type: AGORA_VIDEO_TOKEN_FAILED,
-              });
-          }
-      } catch(error) {
-          console.log("fetchVideoAccessToken failed", error);
-      }
+            if (status === true) {
+                dispatch({
+                    type: AGORA_VIDEO_TOKEN_COMPLETE,
+                    payload: data
+                });
+            } else {
+                dispatch({
+                    type: AGORA_VIDEO_TOKEN_FAILED,
+                });
+            }
+        } catch (error) {
+            console.log("fetchVideoAccessToken failed", error);
+        }
     };
 };
 
@@ -48,7 +48,7 @@ export const startCall = (roomId) => {
     let response = {};
     return async (dispatch) => {
         try {
-            dispatch({ type: VOIP_CALL_NOTIFY_START });
+            dispatch({type: VOIP_CALL_NOTIFY_START});
 
             response = await doRequest({
                 method: REQUEST_TYPE.POST,
@@ -58,7 +58,7 @@ export const startCall = (roomId) => {
                 }
             });
 
-            const { status, payload: { data = {}, error = {} } = {} } =
+            const {status, payload: {data = {}, error = {}} = {}} =
             response || {};
             if (status === true) {
                 dispatch({
@@ -82,7 +82,7 @@ export const missedCall = (roomId) => {
     let response = {};
     return async (dispatch) => {
         try {
-            dispatch({ type: VOIP_CALL_MISSED_NOTIFY_START });
+            dispatch({type: VOIP_CALL_MISSED_NOTIFY_START});
 
             response = await doRequest({
                 method: REQUEST_TYPE.POST,
@@ -92,7 +92,7 @@ export const missedCall = (roomId) => {
                 }
             });
 
-            const { status, payload: { data = {}, error = {} } = {} } =
+            const {status, payload: {data = {}, error = {}} = {}} =
             response || {};
             if (status === true) {
                 dispatch({
@@ -115,10 +115,10 @@ export const missedCall = (roomId) => {
 
 function videoTokenReducer(state, data) {
     const {token} = data || {};
-    if(token) {
+    if (token) {
         return {
             ...state,
-            video_token:  token
+            video_token: token
         };
     } else {
         return state;
@@ -126,11 +126,11 @@ function videoTokenReducer(state, data) {
 }
 
 export default (state = {}, action) => {
-  const {type, payload} = action || {};
-  switch(type) {
-      case AGORA_VIDEO_TOKEN_COMPLETE:
-          return videoTokenReducer(state, payload);
-      default:
-          return state;
-  }
+    const {type, payload} = action || {};
+    switch (type) {
+        case AGORA_VIDEO_TOKEN_COMPLETE:
+            return videoTokenReducer(state, payload);
+        default:
+            return state;
+    }
 };

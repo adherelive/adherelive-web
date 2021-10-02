@@ -13,7 +13,7 @@ import DoctorProviderMappingWrapper from "../../web/doctorProviderMapping";
 import PatientWrapper from "../../mobile/patient";
 
 
-import { USER_CATEGORY} from "../../../../constant";
+import {USER_CATEGORY} from "../../../../constant";
 
 class MUserRoleWrapper extends BaseUserRole {
     constructor(data) {
@@ -46,36 +46,36 @@ class MUserRoleWrapper extends BaseUserRole {
     };
 
     getAllInfo = async () => {
-        const { _data: {id, linked_id, linked_with} = {}, getBasicInfo, getUser } = this;
-    
-        const { doctor } = getUser() || {};
+        const {_data: {id, linked_id, linked_with} = {}, getBasicInfo, getUser} = this;
+
+        const {doctor} = getUser() || {};
 
         let doctors = {};
         let admins = {};
         let providers = {};
         let patients = {};
-    
+
         if (doctor && doctor.id) {
-          const doctorWrapper = await DoctorWrapper(doctor);
-          doctors = { ...doctors, [doctor.id]: await doctorWrapper.getAllInfo() };
-    
-          if (linked_with === USER_CATEGORY.PROVIDER && linked_id) {
-    
-            const providerData = await ProviderWrapper(null, linked_id);
-    
-            // user_category_data = {
-            //     ...user_category_data ,
-            //     linked_provider_id:provider_id,
-            //     provider : { [provider_id] : { ...providerAllInfo} }
-            //  };
-            providers = { [linked_id]: await providerData.getAllInfo() };
-          }
+            const doctorWrapper = await DoctorWrapper(doctor);
+            doctors = {...doctors, [doctor.id]: await doctorWrapper.getAllInfo()};
+
+            if (linked_with === USER_CATEGORY.PROVIDER && linked_id) {
+
+                const providerData = await ProviderWrapper(null, linked_id);
+
+                // user_category_data = {
+                //     ...user_category_data ,
+                //     linked_provider_id:provider_id,
+                //     provider : { [provider_id] : { ...providerAllInfo} }
+                //  };
+                providers = {[linked_id]: await providerData.getAllInfo()};
+            }
         }
 
         // if (linked_with === USER_CATEGORY.PROVIDER && linked_id) {
-    
+
         //   const providerData = await ProviderWrapper(null, linked_id);
-  
+
         //   // user_category_data = {
         //   //     ...user_category_data ,
         //   //     linked_provider_id:provider_id,
@@ -83,18 +83,18 @@ class MUserRoleWrapper extends BaseUserRole {
         //   //  };
         //   providers = { [linked_id]: providerData.getBasicInfo() };
         // }
-    
+
         // switch (getUserRoleUserCategoryType) {
         //     case USER_CATEGORY.PROVIDER:
         //         const providerData = await providerService.getProviderByData({id:getUserRoleUserCategoryId});
         //         const providerDataWrapper = await  ProviderWrapper(providerData);
         //         const providerAllInfo = await providerDataWrapper.getAllInfo();
         //         const providerId = await providerDataWrapper.getProviderId();
-    
+
         //         providers = {
         //             [providerId]:{...providerAllInfo}
         //         }
-    
+
         //         break;
         //     case USER_CATEGORY.DOCTOR:
         //         const doctorData = await doctorService.getDoctorByData({id:getUserRoleUserCategoryId});
@@ -108,18 +108,18 @@ class MUserRoleWrapper extends BaseUserRole {
         //         const doctorProvider = await doctorProviderMappingService.getProviderForDoctor(
         //             doctor_id
         //           );
-    
+
         //           let provider_id = null ;
         //           if (doctorProvider) {
-    
+
         //             const doctorProviderWrapper = await DoctorProviderMappingWrapper(
         //               doctorProvider
         //             );
         //             provider_id = await doctorProviderWrapper.getProviderId();
-    
+
         //             const providerData = await ProviderWrapper(null, provider_id);
         //             const providerAllInfo =await  providerData.getAllInfo();
-    
+
         //             // user_category_data = {
         //             //     ...user_category_data ,
         //             //     linked_provider_id:provider_id,
@@ -127,7 +127,7 @@ class MUserRoleWrapper extends BaseUserRole {
         //             //  };
         //             providers =  { [provider_id] : { ...providerAllInfo} };
         //           }
-    
+
         //         break;
         //     case USER_CATEGORY.PATIENT:
         //         const patientData = await patientService.getPatientByData({id:getUserRoleUserCategoryId});
@@ -137,7 +137,7 @@ class MUserRoleWrapper extends BaseUserRole {
         //         patients = {
         //             [patientId]:{...patietAllInfo}
         //         }
-    
+
         //         break;
         //     case USER_CATEGORY.ADMIN:
         //         user_category_data = {};
@@ -145,21 +145,21 @@ class MUserRoleWrapper extends BaseUserRole {
         //     default:
         //         break;
         // }
-    
+
         return {
-          user_roles: {
-            [id]: getBasicInfo()
-          },
-          doctors,
-          patients,
-          providers,
-          admins,
+            user_roles: {
+                [id]: getBasicInfo()
+            },
+            doctors,
+            patients,
+            providers,
+            admins,
         };
-      };
+    };
 }
 
 export default async (data = null, id = null) => {
-    if(data) {
+    if (data) {
         return new MUserRoleWrapper(data);
     }
     const profile = await userRolesService.getSingleUserRoleByData({id});

@@ -1,4 +1,4 @@
-import { defineMessages } from "react-intl";
+import {defineMessages} from "react-intl";
 
 const messages = defineMessages({
     addReport: {
@@ -6,52 +6,52 @@ const messages = defineMessages({
         description: "",
         defaultMessage: "Add Report"
     },
-    upload_text:{
+    upload_text: {
         id: "app.addReport.upload_text",
         description: "",
         defaultMessage: "Upload"
     },
-    name:{
+    name: {
         id: "app.addReport.name",
         description: "",
         defaultMessage: "Name"
     },
-    files:{
+    files: {
         id: "app.addReport.files",
         description: "",
         defaultMessage: "Files"
     },
-    add_report_name:{
+    add_report_name: {
         id: "app.addReport.addReportName",
         description: "",
         defaultMessage: "Add Report Name"
     },
-    submit:{
+    submit: {
         id: "app.addReport.submit",
         description: "",
         defaultMessage: "Submit"
     },
-    somethingWentWrong: { 
+    somethingWentWrong: {
         id: "app.addReport.somethingWentWrong",
         description: "",
         defaultMessage: "Something went wrong."
     },
-    testDate:{ 
+    testDate: {
         id: "app.addReport.testDate",
         description: "",
         defaultMessage: "Test Date"
     },
-    deleteSuccess:{ 
+    deleteSuccess: {
         id: "app.addReport.reportDelete",
         description: "",
         defaultMessage: "Report deleted"
     },
-    exitWarn:{ 
+    exitWarn: {
         id: "app.addReport.exitWarn",
         description: "",
         defaultMessage: "This will remove all the data to be uploaded"
     },
-    exitMessage:{ 
+    exitMessage: {
         id: "app.addReport.exitMessage",
         description: "",
         defaultMessage: "Are you sure you want to cancel ?"

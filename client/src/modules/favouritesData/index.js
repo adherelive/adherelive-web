@@ -1,9 +1,11 @@
-import { doRequest } from "../../Helper/network";
-import { FAVOURITE_TYPE, REQUEST_TYPE } from "../../constant";
-import { markFavouriteUrl , 
-    getFavouritesUrl , 
-    removeFavouritesUrl , 
-    removeFavouriteRecordUrl } from "../../Helper/urls/markFavourite";
+import {doRequest} from "../../Helper/network";
+import {FAVOURITE_TYPE, REQUEST_TYPE} from "../../constant";
+import {
+    markFavouriteUrl,
+    getFavouritesUrl,
+    removeFavouritesUrl,
+    removeFavouriteRecordUrl
+} from "../../Helper/urls/markFavourite";
 
 export const MARK_FAVOURITE = "MARK_FAVOURITE";
 export const MARK_FAVOURITE_COMPLETED = "MARK_FAVOURITE_COMPLETED";
@@ -32,13 +34,13 @@ export const markFavourite = (payload) => {
                 data: payload
             });
 
-            const { status, payload: { data : respData, message = "" } = {} } = response || {};
+            const {status, payload: {data: respData, message = ""} = {}} = response || {};
             let data = respData;
 
-            
+
             if (status === true) {
                 const {id} = payload;
-                data["id"]=id.toString();
+                data["id"] = id.toString();
                 dispatch({
                     type: MARK_FAVOURITE_COMPLETED,
                     data
@@ -65,7 +67,7 @@ export const getFavourites = ({type}) => {
                 url: getFavouritesUrl({type})
             });
 
-            const { status, payload: { data, message = "" } = {} } = response || {};
+            const {status, payload: {data, message = ""} = {}} = response || {};
             if (status === true) {
                 dispatch({
                     type: GET_FAVOURITES_COMPLETED,
@@ -84,26 +86,26 @@ export const getFavourites = ({type}) => {
     }
 };
 
-export const removeFavourite = ({typeId,type}) => {
+export const removeFavourite = ({typeId, type}) => {
     let response = {};
     return async dispatch => {
         try {
             response = await doRequest({
                 method: REQUEST_TYPE.DELETE,
-                url: removeFavouritesUrl({typeId,type}),
+                url: removeFavouritesUrl({typeId, type}),
             });
 
-            const { status, payload: { data : resp_data, message = "" } = {} } = response || {};
-            let data=resp_data;
+            const {status, payload: {data: resp_data, message = ""} = {}} = response || {};
+            let data = resp_data;
             if (status === true) {
                 const {removed_favourites_data = {}} = data;
                 const key = Object.keys(removed_favourites_data)[0];
 
                 data["removed_record_key"] = key;
 
-                if(type === "medicine"){
+                if (type === "medicine") {
                     data["removed_medicine_id"] = typeId.toString();
-                }else if (type === "medical_tests"){
+                } else if (type === "medical_tests") {
                     data["removed_medical_test_id"] = typeId.toString();
                 }
                 dispatch({
@@ -132,13 +134,13 @@ export const removeFavouriteByRecordId = (id) => {
                 url: removeFavouriteRecordUrl(id),
             });
 
-            const { status, payload: { data : resp_data, message = "" } = {} } = response || {};
-            let data=resp_data;
+            const {status, payload: {data: resp_data, message = ""} = {}} = response || {};
+            let data = resp_data;
             if (status === true) {
-                
 
-                data["removed_record_id"]=id;
-                
+
+                data["removed_record_id"] = id;
+
                 dispatch({
                     type: REMOVE_FAVOURITE_RECORD_COMPLETED,
                     data
@@ -157,12 +159,11 @@ export const removeFavouriteByRecordId = (id) => {
 }
 
 
-
 function removeFavouriteReducer(state, data) {
 
-    const { removed_record_key   } = data || {};
+    const {removed_record_key} = data || {};
     if (removed_record_key) {
-        const { [removed_record_key.toString()]:record , ...rest} = state || {};
+        const {[removed_record_key.toString()]: record, ...rest} = state || {};
 
         return {
             ...rest
@@ -172,11 +173,11 @@ function removeFavouriteReducer(state, data) {
     }
 }
 
-function removeFavouriteRecord(state,data) {
+function removeFavouriteRecord(state, data) {
 
-    const { removed_record_id   } = data || {};
+    const {removed_record_id} = data || {};
     if (removed_record_id) {
-        const { [removed_record_id.toString()]:record , ...rest} = state || {};
+        const {[removed_record_id.toString()]: record, ...rest} = state || {};
 
         return {
             ...rest
@@ -189,7 +190,7 @@ function removeFavouriteRecord(state,data) {
 
 function getFavouriteReducer(state, data) {
 
-    const { favourites_data = {} } = data || {};
+    const {favourites_data = {}} = data || {};
     if (favourites_data) {
         return {
             ...state,
@@ -201,15 +202,15 @@ function getFavouriteReducer(state, data) {
 }
 
 export default (state = {}, payload) => {
-    const { type, data } = payload || {};
+    const {type, data} = payload || {};
 
     switch (type) {
         case GET_FAVOURITES_COMPLETED:
             return getFavouriteReducer(state, data);
         case REMOVE_FAVOURITE_COMPLETED:
-            return removeFavouriteReducer(state,data); 
+            return removeFavouriteReducer(state, data);
         case REMOVE_FAVOURITE_RECORD_COMPLETED:
-            return removeFavouriteRecord(state,data);        
+            return removeFavouriteRecord(state, data);
         default:
             return getFavouriteReducer(state, data);
     }

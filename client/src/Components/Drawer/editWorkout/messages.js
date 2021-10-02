@@ -1,4 +1,4 @@
-import { defineMessages } from "react-intl";
+import {defineMessages} from "react-intl";
 
 const messages = defineMessages({
     editWorkout: {
@@ -26,72 +26,72 @@ const messages = defineMessages({
         description: "",
         defaultMessage: "Add Food Item"
     },
-    somethingWentWrong:{
+    somethingWentWrong: {
         id: "app.edit.workout.add.something.went.wrong",
         description: "",
         defaultMessage: "Something went wrong"
     },
-    dayOftheWeek:{
+    dayOftheWeek: {
         id: "app.edit.workout.add.day.of.the.week",
         description: "",
         defaultMessage: "Day Of the Week"
     },
-    workout_text:{
+    workout_text: {
         id: "app.edit.workout.add.workout.text",
         description: "",
         defaultMessage: "Workout"
     },
-    start_date:{
+    start_date: {
         id: "app.edit.workout.add.start.date",
         description: "",
         defaultMessage: "Start Date"
     },
-    end_date:{
+    end_date: {
         id: "app.edit.workout.add.end.date",
         description: "",
         defaultMessage: "End Date"
     },
-    what_not_to_do:{
+    what_not_to_do: {
         id: "app.edit.workout.add.what.not.to.do",
         description: "",
         defaultMessage: "What not to do"
     },
-    requiredStartDate:{
+    requiredStartDate: {
         id: "app.edit.workout.add.start.date.required",
         description: "",
         defaultMessage: "Please add start date"
     },
-    submit_text:{
+    submit_text: {
         id: "app.edit.workout.add.submit",
         description: "",
         defaultMessage: "Submit"
     },
-    requiredName:{
+    requiredName: {
         id: "app.edit.workout.add.required.name",
         description: "",
         defaultMessage: "Please add name"
     },
-    name:{
+    name: {
         id: "app.edit.workout.add.name",
         description: "",
         defaultMessage: "Name"
     },
-    addWorkoutName:{
+    addWorkoutName: {
         id: "app.edit.workout.add.workout.name",
         description: "",
         defaultMessage: "Add Workout Name"
     },
-    requiredRepeatDays:{
+    requiredRepeatDays: {
         id: "app.edit.workout.required.repeat.days",
         description: "",
         defaultMessage: "Please select workout repeat days"
     },
-    fillAlldetails:{
+    fillAlldetails: {
         id: "app.edit.workout.fill.all.details",
         description: "",
         defaultMessage: "Please fill all required details"
     },
-    addWorkoutDetails:{
+    addWorkoutDetails: {
         id: "app.edit.workout.add.workout.add.details",
         description: "",
         defaultMessage: "Please add workout details"
@@ -101,17 +101,17 @@ const messages = defineMessages({
         description: "",
         defaultMessage: "This will delete workout and all its related data"
     },
-    irreversibleWarn :{
+    irreversibleWarn: {
         id: "app.edit.workout.details.delete.irreversibleWarn",
         description: "",
         defaultMessage: "This delete is irreversible"
     },
-    workoutTime:{
+    workoutTime: {
         id: "app.edit.workout.add.workout.workoutTime",
         description: "",
         defaultMessage: "Workout Time"
     },
-    timeError:{
+    timeError: {
         id: "app.edit.workout.add.workout.timeError",
         description: "",
         defaultMessage: "Workout for this patient of time added already exists"

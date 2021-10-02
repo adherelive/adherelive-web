@@ -17,7 +17,7 @@ class PatientAlerts extends Component {
 
     componentDidMount() {
         const {last_visit} = this.state;
-        if(last_visit.length === 0) {
+        if (last_visit.length === 0) {
             this.getAlertData();
         }
     }
@@ -28,15 +28,15 @@ class PatientAlerts extends Component {
             const {getLastVisitAlerts} = this.props;
             const response = await getLastVisitAlerts();
             const {status, payload: {data: {last_visit = []} = {}} = {}} = response || {};
-            if(status === true) {
+            if (status === true) {
                 this.setState({last_visit, loading: false});
             }
-            if(last_visit.length === 0) {
+            if (last_visit.length === 0) {
                 this.setState({areEvents: false, loading: false})
             } else {
                 this.setState({loading: false})
             }
-        } catch(error) {
+        } catch (error) {
             this.setState({loading: false})
         }
     };
@@ -74,7 +74,8 @@ class PatientAlerts extends Component {
                 ) : (
                     <div className="wp30 pl16 fw600 bl-green ">{formatMessage(messages.taken_medication)}</div>
                 )}
-                <div className="wp70 fw600 ">{`${moment(time).format("DD MMM, YYYY")} (${moment(time).format("LT")})`}</div>
+                <div
+                    className="wp70 fw600 ">{`${moment(time).format("DD MMM, YYYY")} (${moment(time).format("LT")})`}</div>
             </div>
         );
     };
@@ -90,7 +91,8 @@ class PatientAlerts extends Component {
                 ) : (
                     <div className="wp30 pl16 fw600 bl-green">{formatMessage(messages.completed_appointment)}</div>
                 )}
-                <div className="wp70 fw600">{`${moment(time).format("DD MMM, YYYY")} (${moment(time).format("LT")})`}</div>
+                <div
+                    className="wp70 fw600">{`${moment(time).format("DD MMM, YYYY")} (${moment(time).format("LT")})`}</div>
             </div>
         );
     };
@@ -106,7 +108,8 @@ class PatientAlerts extends Component {
                 ) : (
                     <div className="wp30 pl16 fw600 bl-green">{formatMessage(messages.completed_vital)}</div>
                 )}
-                <div className="wp50 fw600">{`${moment(time).format("DD MMM, YYYY")} (${moment(time).format("LT")})`}</div>
+                <div
+                    className="wp50 fw600">{`${moment(time).format("DD MMM, YYYY")} (${moment(time).format("LT")})`}</div>
                 <div className="wp20 fw500 word-wrap">{`(${name})`}</div>
             </div>
         );
@@ -116,8 +119,8 @@ class PatientAlerts extends Component {
     getDiets = ({data, time}) => {
         const {intl: {formatMessage} = {}} = this.props;
         const {status} = data || {};
-        const {details:{diets = {} , diet_id = null } = {}} = data || {};
-        const { basic_info:{name=''}={} }=diets[diet_id] || {}
+        const {details: {diets = {}, diet_id = null} = {}} = data || {};
+        const {basic_info: {name = ''} = {}} = diets[diet_id] || {}
         return (
             <div key={`diet-${time}`} className="wp100 flex align-center pt10 pb10 pl6 pr6 tal">
                 {status === EVENT_STATUS.EXPIRED ? (
@@ -125,39 +128,40 @@ class PatientAlerts extends Component {
                 ) : (
                     <div className="wp30 pl16 fw600 bl-green">{formatMessage(messages.completed_diet)}</div>
                 )}
-                <div className="wp50 fw600">{`${moment(time).format("DD MMM, YYYY")} (${moment(time).format("LT")})`}</div>
+                <div
+                    className="wp50 fw600">{`${moment(time).format("DD MMM, YYYY")} (${moment(time).format("LT")})`}</div>
                 <div className="wp20 fw500 word-wrap">{`(${name})`}</div>
             </div>
 
-           
+
         );
     };
-
 
 
     getWorkouts = ({data, time}) => {
         const {intl: {formatMessage} = {}} = this.props;
         const {status} = data || {};
-        const {details:{workouts = {} , workout_id = null } = {}} = data || {};
-        const { basic_info:{name=''}={} }=workouts[workout_id] || {}
+        const {details: {workouts = {}, workout_id = null} = {}} = data || {};
+        const {basic_info: {name = ''} = {}} = workouts[workout_id] || {}
         return (
             <div key={`workout-${time}`} className="wp100 flex align-center pt10 pb10 pl6 pr6 tal">
-            {status === EVENT_STATUS.EXPIRED ? (
-                <div className="wp30 pl16 fw600 bl-warning-red">{formatMessage(messages.missed_workout)}</div>
-            ) : (
-                <div className="wp30 pl16 fw600 bl-green">{formatMessage(messages.completed_workout)}</div>
-            )}
-            <div className="wp50 fw600">{`${moment(time).format("DD MMM, YYYY")} (${moment(time).format("LT")})`}</div>
-            <div className="wp20 fw500 word-wrap">{`(${name})`}</div>
-        </div>
+                {status === EVENT_STATUS.EXPIRED ? (
+                    <div className="wp30 pl16 fw600 bl-warning-red">{formatMessage(messages.missed_workout)}</div>
+                ) : (
+                    <div className="wp30 pl16 fw600 bl-green">{formatMessage(messages.completed_workout)}</div>
+                )}
+                <div
+                    className="wp50 fw600">{`${moment(time).format("DD MMM, YYYY")} (${moment(time).format("LT")})`}</div>
+                <div className="wp20 fw500 word-wrap">{`(${name})`}</div>
+            </div>
         );
     };
 
     getScheduleEvent = ({data, time}) => {
-        const {getMedication, getVitals, getAppointment , getDiets , getWorkouts} = this;
+        const {getMedication, getVitals, getAppointment, getDiets, getWorkouts} = this;
         const {event_type} = data || {};
 
-        switch(event_type) {
+        switch (event_type) {
             case EVENT_TYPE.MEDICATION_REMINDER:
                 return getMedication({data, time});
             case EVENT_TYPE.APPOINTMENT:
@@ -165,7 +169,7 @@ class PatientAlerts extends Component {
             case EVENT_TYPE.VITALS:
                 return getVitals({data, time});
             case EVENT_TYPE.DIET:
-                return getDiets ({data, time});
+                return getDiets({data, time});
             case EVENT_TYPE.WORKOUT:
                 return getWorkouts({data, time});
 
@@ -175,13 +179,13 @@ class PatientAlerts extends Component {
     getEvents = () => {
         const {schedule_events} = this.props;
         const {last_visit} = this.state;
-        console.log("7263423847628346872347238",{last_visit});
+        console.log("7263423847628346872347238", {last_visit});
 
         const events = last_visit.map(details => {
-           const {event_type, id, updatedAt} = details || {};
+            const {event_type, id, updatedAt} = details || {};
 
-           
-            switch(event_type) {
+
+            switch (event_type) {
                 case EVENT_TYPE.SYMPTOMS:
                     return this.getSymptom({time: updatedAt, id});
                 default:
@@ -197,7 +201,7 @@ class PatientAlerts extends Component {
         const {loading, areEvents, last_visit = []} = this.state;
         const {getBlankState, getEvents} = this;
 
-        if(loading) {
+        if (loading) {
             return null;
         }
 

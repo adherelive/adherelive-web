@@ -1,5 +1,5 @@
-import { connect } from "react-redux";
-import { withRouter } from "react-router-dom";
+import {connect} from "react-redux";
+import {withRouter} from "react-router-dom";
 import TosPPEditorPage from "../../../Components/Pages/tosPPEditorPage";
 import {getTermsAndPolicy, updateTermsAndPolicy} from "../../../modules/otherDetails";
 

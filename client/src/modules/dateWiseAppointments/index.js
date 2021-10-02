@@ -1,21 +1,21 @@
 function dateWiseAppointmentsReducer(state, data) {
     const {date_wise_appointments} = data || {};
 
-    if(date_wise_appointments) {
+    if (date_wise_appointments) {
 
-      return {
-        ...date_wise_appointments
-      }
+        return {
+            ...date_wise_appointments
+        }
     } else {
-      return state;
+        return state;
     }
-  }
-  
-  export default (state = [], action) => {
-    const { type, data } = action;
+}
+
+export default (state = [], action) => {
+    const {type, data} = action;
     switch (type) {
-      default:
-        return dateWiseAppointmentsReducer(state,data);
+        default:
+            return dateWiseAppointmentsReducer(state, data);
     }
-  };
+};
   

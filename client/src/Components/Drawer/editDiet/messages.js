@@ -1,4 +1,4 @@
-import { defineMessages } from "react-intl";
+import {defineMessages} from "react-intl";
 
 const messages = defineMessages({
     editDiet: {
@@ -26,72 +26,72 @@ const messages = defineMessages({
         description: "",
         defaultMessage: "Add Food Item"
     },
-    somethingWentWrong:{
+    somethingWentWrong: {
         id: "app.edit.diet.add.something.went.wrong",
         description: "",
         defaultMessage: "Something went wrong"
     },
-    dayOftheWeek:{
+    dayOftheWeek: {
         id: "app.edit.diet.add.day.of.the.week",
         description: "",
         defaultMessage: "Day Of the Week"
     },
-    diet_text:{
+    diet_text: {
         id: "app.edit.diet.add.diet.text",
         description: "",
         defaultMessage: "Diet"
     },
-    start_date:{
+    start_date: {
         id: "app.edit.diet.add.start.date",
         description: "",
         defaultMessage: "Start Date"
     },
-    end_date:{
+    end_date: {
         id: "app.edit.diet.add.end.date",
         description: "",
         defaultMessage: "End Date"
     },
-    what_not_to_do:{
+    what_not_to_do: {
         id: "app.edit.diet.add.what.not.to.do",
         description: "",
         defaultMessage: "What not to do"
     },
-    requiredStartDate:{
+    requiredStartDate: {
         id: "app.edit.diet.add.start.date.required",
         description: "",
         defaultMessage: "Please add start date"
     },
-    submit_text:{
+    submit_text: {
         id: "app.edit.diet.add.submit",
         description: "",
         defaultMessage: "Submit"
     },
-    requiredName:{
+    requiredName: {
         id: "app.edit.diet.add.required.name",
         description: "",
         defaultMessage: "Please add name"
     },
-    name:{
+    name: {
         id: "app.edit.diet.add.name",
         description: "",
         defaultMessage: "Name"
     },
-    addDietName:{
+    addDietName: {
         id: "app.edit.diet.add.diet.name",
         description: "",
         defaultMessage: "Add Diet Name"
     },
-    requiredRepeatDays:{
+    requiredRepeatDays: {
         id: "app.edit.diet.required.repeat.days",
         description: "",
         defaultMessage: "Please select diet repeat days"
     },
-    fillAlldetails:{
+    fillAlldetails: {
         id: "app.edit.diet.fill.all.details",
         description: "",
         defaultMessage: "Please fill all required details"
     },
-    addDietDetails:{
+    addDietDetails: {
         id: "app.edit.diet.add.diet.add.details",
         description: "",
         defaultMessage: "Please add diet details"
@@ -101,11 +101,11 @@ const messages = defineMessages({
         description: "",
         defaultMessage: "This will delete diet and all its related data"
     },
-    irreversibleWarn :{
+    irreversibleWarn: {
         id: "app.edit.diet.details.delete.irreversibleWarn",
         description: "",
         defaultMessage: "This delete is irreversible"
-      }
+    }
 });
 
 export default messages;

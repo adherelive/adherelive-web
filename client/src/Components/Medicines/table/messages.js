@@ -1,4 +1,4 @@
-import { defineMessages } from "react-intl";
+import {defineMessages} from "react-intl";
 
 export default defineMessages({
     medicineNameSearchText: {
@@ -41,52 +41,52 @@ export default defineMessages({
         description: "",
         defaultMessage: "Creator"
     },
-    publicMessage:{
+    publicMessage: {
         id: "app.medicines.table.publicMessage",
         description: "",
         defaultMessage: "Are you sure you want to make"
     },
-    tablet:{
+    tablet: {
         id: "app.medicines.table.tablet",
         description: "",
         defaultMessage: "Tablet"
     },
-    syrup:{
+    syrup: {
         id: "app.medicines.table.syrup",
         description: "",
         defaultMessage: "Syrup"
     },
-    syringe:{
+    syringe: {
         id: "app.medicines.table.syringe",
         description: "",
         defaultMessage: "Syringe"
     },
-    public:{
+    public: {
         id: "app.medicines.table.public",
         description: "",
         defaultMessage: "Pubic"
     },
-    makePublic:{
+    makePublic: {
         id: "app.medicines.table.makePublic",
         description: "",
         defaultMessage: "Make Public"
     },
-    delete:{
+    delete: {
         id: "app.medicines.table.delete",
         description: "",
         defaultMessage: "Delete Medicine"
     },
-    sureMessage:{
+    sureMessage: {
         id: "app.medicines.table.sureMessage",
         description: "",
         defaultMessage: "Are you sure you want to delete Medicine"
     },
-    irreversibleMessage:{
+    irreversibleMessage: {
         id: "app.medicines.table.irreversibleMessage",
         description: "",
         defaultMessage: "This action is irreversible and will delete all the medications, reminders and templates attached to this medicine. "
     },
-    availableWarn:{
+    availableWarn: {
         id: "app.medicines.table.availableWarn",
         description: "",
         defaultMessage: "After being public,this Medicine will be visible to all the doctors"

@@ -1,7 +1,7 @@
-import { defineMessages } from "react-intl";
+import {defineMessages} from "react-intl";
 
 export default defineMessages({
-    message404:{
+    message404: {
         id: "app.blankState.404.message",
         description: "",
         defaultMessage: "The link you clicked may be broken or the page may have been removed or renamed"

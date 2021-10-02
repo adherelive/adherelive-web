@@ -1,18 +1,18 @@
-import { connect } from "react-redux";
-import { withRouter } from "react-router-dom";
+import {connect} from "react-redux";
+import {withRouter} from "react-router-dom";
 import EditFoodGroupDrawer from "../../Components/Drawer/editFoodGroup";
-import { close  } from "../../modules/drawer";
-import { addFoodItem ,storeFoodItemAndDetails , updateFoodItem } from "../../modules/foodItems";
-import { searchFood  } from "../../modules/searchedFoodItems";
-import { clearLatestCreatedFoodItem } from "../../modules/latestCreatedFood";
+import {close} from "../../modules/drawer";
+import {addFoodItem, storeFoodItemAndDetails, updateFoodItem} from "../../modules/foodItems";
+import {searchFood} from "../../modules/searchedFoodItems";
+import {clearLatestCreatedFoodItem} from "../../modules/latestCreatedFood";
 
 
 const mapStateToProps = state => {
-    const { auth} = state;
-    const { authenticated_user, authenticated_category } = auth;
+    const {auth} = state;
+    const {authenticated_user, authenticated_category} = auth;
     const {
-        drawer: {  loading, data: {  payload = {} } = {} },
-        portions, 
+        drawer: {loading, data: {payload = {}} = {}},
+        portions,
         care_plans,
         food_items,
         food_item_details,
@@ -41,11 +41,11 @@ const mapStateToProps = state => {
 const mapDispatchToProps = dispatch => {
     return {
         close: () => dispatch(close()),
-        addFoodItem : (data) => dispatch(addFoodItem(data)),
-        updateFoodItem : ({food_item_id,data}) => dispatch(updateFoodItem({food_item_id,data})),
-        searchFood : (value) => dispatch(searchFood(value)),
-        storeFoodItemAndDetails : (data) => dispatch(storeFoodItemAndDetails(data)),
-        clearLatestCreatedFoodItem : () => dispatch(clearLatestCreatedFoodItem())
+        addFoodItem: (data) => dispatch(addFoodItem(data)),
+        updateFoodItem: ({food_item_id, data}) => dispatch(updateFoodItem({food_item_id, data})),
+        searchFood: (value) => dispatch(searchFood(value)),
+        storeFoodItemAndDetails: (data) => dispatch(storeFoodItemAndDetails(data)),
+        clearLatestCreatedFoodItem: () => dispatch(clearLatestCreatedFoodItem())
 
     };
 };

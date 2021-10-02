@@ -5,7 +5,7 @@ import {getVitalTimeline, editVitalResponse, deleteVitalResponse} from "../../mo
 
 const mapStateToProps = state => {
     const {
-        drawer: { visible, data: { type, payload : {id, loading,canViewDetails=false} = {} } = {} },
+        drawer: {visible, data: {type, payload: {id, loading, canViewDetails = false} = {}} = {}},
         vitals = {},
         vital_templates = {},
         schedule_events = {}

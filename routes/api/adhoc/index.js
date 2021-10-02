@@ -11,9 +11,9 @@ router.post(
 );
 
 router.post(
-  "/populate-user-roles",
-  Authenticated,
-  adhocController.migrateAllUsersToUserRoles
+    "/populate-user-roles",
+    Authenticated,
+    adhocController.migrateAllUsersToUserRoles
 );
 
 router.post(
@@ -23,9 +23,9 @@ router.post(
 );
 
 router.post(
-  "/patient/update-timings",
-  Authenticated,
-  adhocController.updatePatientTimings
+    "/patient/update-timings",
+    Authenticated,
+    adhocController.updatePatientTimings
 );
 
 router.post(
@@ -35,9 +35,9 @@ router.post(
 );
 
 router.post(
-  "/careplan/channels",
-  Authenticated,
-  adhocController.updateChannels
+    "/careplan/channels",
+    Authenticated,
+    adhocController.updateChannels
 );
 
 module.exports = router;

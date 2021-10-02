@@ -1,16 +1,12 @@
-import { connect } from "react-redux";
-import { withRouter } from "react-router-dom";
+import {connect} from "react-redux";
+import {withRouter} from "react-router-dom";
 import PPConfirm from "../../../Components/Modal/PPConfirm";
 import {getTermsAndPolicy} from "../../../modules/otherDetails";
 
 const mapStateToProps = state => {
-    const {
+    const {} = state;
 
-    } = state;
-
-    return {
-
-    };
+    return {};
 };
 
 const mapDispatchToProps = dispatch => {

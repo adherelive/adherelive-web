@@ -11,7 +11,7 @@ class VitalTimelineDrawer extends Component {
     }
 
     onClose = () => {
-        const { close } = this.props;
+        const {close} = this.props;
         close();
     };
 

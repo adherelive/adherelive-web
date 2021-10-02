@@ -54,11 +54,11 @@ class SubscriptionWrapper extends BaseSubscription {
             return {
                 ...await getAllInfo(),
                 payment_products: {
-                    [paymentProduct.getId()] : paymentProduct.getBasicInfo()
+                    [paymentProduct.getId()]: paymentProduct.getBasicInfo()
                 },
                 payment_product_id: paymentProduct.getId()
             }
-        } catch(error) {
+        } catch (error) {
             throw error;
         }
     };
@@ -66,7 +66,7 @@ class SubscriptionWrapper extends BaseSubscription {
 
 export default async ({data = null, id = null}) => {
     try {
-        if(data) {
+        if (data) {
             return new SubscriptionWrapper(data);
         }
         const subscriptionService = new SubscriptionService();

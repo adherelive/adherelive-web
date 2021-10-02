@@ -7,23 +7,22 @@ export default props => {
     const {openEditProviderDrawer} = props;
     const {
         basic_info: {
-          id:provider_id
+            id: provider_id
         } = {}
-      } = props || {};
+    } = props || {};
 
 
-
-  return (
-      <Tooltip placement={"bottom"} 
-      className={"pointer"}
-      style={{ fontSize: "18px",color: "#6d7278" }}
-      >
-        <div className="wp100 flex justify-center"
-            onClick={openEditProviderDrawer({provider_id})}
+    return (
+        <Tooltip placement={"bottom"}
+                 className={"pointer"}
+                 style={{fontSize: "18px", color: "#6d7278"}}
         >
-         <img src={edit_image} className="edit-patient-icon" />
-        </div>
+            <div className="wp100 flex justify-center"
+                 onClick={openEditProviderDrawer({provider_id})}
+            >
+                <img src={edit_image} className="edit-patient-icon"/>
+            </div>
 
-      </Tooltip>
-  );
+        </Tooltip>
+    );
 };

@@ -6,7 +6,7 @@ import * as validator from "./validator";
 
 const multer = require("multer");
 const storage = multer.memoryStorage();
-const upload = multer({ dest: "../../../app/public/", storage: storage });
+const upload = multer({dest: "../../../app/public/", storage: storage});
 
 router.get(
     "/register/:link",
@@ -26,8 +26,8 @@ router.post(
 );
 
 router.post(
-  "/sign-up",
-  validator.validateCredentialsData,
+    "/sign-up",
+    validator.validateCredentialsData,
     userController.signUp,
 );
 
@@ -62,22 +62,22 @@ router.post(
 );
 
 router.post(
-  "/forgot-password",
-  validator.forgotPasswordForm,
-  userController.forgotPassword
+    "/forgot-password",
+    validator.forgotPasswordForm,
+    userController.forgotPassword
 );
 
 router.post(
-  "/verify/:link",
-  validator.verifyLinkValidation,
-  userController.verifyPasswordResetLink
+    "/verify/:link",
+    validator.verifyLinkValidation,
+    userController.verifyPasswordResetLink
 );
 
 router.post(
-  "/password-reset",
-  Authenticate,
-  validator.validateUpdatePasswordData,
-  userController.updateUserPassword
+    "/password-reset",
+    Authenticate,
+    validator.validateUpdatePasswordData,
+    userController.updateUserPassword
 );
 
 module.exports = router;

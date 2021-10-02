@@ -2,7 +2,7 @@ import express from "express";
 import Authenticated from "../middlewares/auth";
 import GraphController from "../../../app/controllers/mControllers/graphs/graph.controller";
 
-import { param } from "express-validator";
+import {param} from "express-validator";
 
 const router = express.Router();
 
@@ -13,15 +13,15 @@ router.get(
 );
 
 router.post(
-  "/:id",
-  Authenticated,
-  [
-    param("id")
-      .isNumeric()
-      .withMessage("Invalid chart type")
-  ],
-  //validator
-  GraphController.addGraphType
+    "/:id",
+    Authenticated,
+    [
+        param("id")
+            .isNumeric()
+            .withMessage("Invalid chart type")
+    ],
+    //validator
+    GraphController.addGraphType
 );
 
 module.exports = router;

@@ -16,7 +16,7 @@ router.post("/:id",
     Validator.update,
     MealTemplate.update);
 
-router.delete("/:id", 
+router.delete("/:id",
     Authenticate,
     MealTemplate.delete);
 

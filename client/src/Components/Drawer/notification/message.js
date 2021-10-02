@@ -1,4 +1,4 @@
-import { defineMessages } from "react-intl";
+import {defineMessages} from "react-intl";
 
 const messages = defineMessages({
     notifications: {
@@ -146,12 +146,12 @@ const messages = defineMessages({
         description: "",
         defaultMessage: "{full_name} captured diet for {diet_name} - {time_text} "
     },
-    dietHeading:{
+    dietHeading: {
         id: "app.notifications.dietHeading",
         description: "",
         defaultMessage: "Diet Captured"
     },
-    workoutHeading:{
+    workoutHeading: {
         id: "app.notifications.workoutHeadingetHeading",
         description: "",
         defaultMessage: "Workout Captured"

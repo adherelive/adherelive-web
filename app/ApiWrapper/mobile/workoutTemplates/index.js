@@ -10,12 +10,14 @@ class WorkoutTemplateWrapper extends BaseWorkoutTemplate {
     }
 
     getBasicInfo = () => {
-        const {_data: {
-            id,
-            name,
-            creator_id,
-            creator_type,
-        } = {}} = this;
+        const {
+            _data: {
+                id,
+                name,
+                creator_id,
+                creator_type,
+            } = {}
+        } = this;
 
         return {
             basic_info: {
@@ -28,13 +30,13 @@ class WorkoutTemplateWrapper extends BaseWorkoutTemplate {
     };
 
     getAllInfo = async () => {
-        const {getBasicInfo, getExerciseDetails}  = this;
+        const {getBasicInfo, getExerciseDetails} = this;
 
         const exerciseDetails = getExerciseDetails() || null;
-        
+
         let exercise_detail_ids = [];
-        if(exerciseDetails) {
-            for(let index = 0; index < exerciseDetails.length; index++) {
+        if (exerciseDetails) {
+            for (let index = 0; index < exerciseDetails.length; index++) {
                 const {id} = exerciseDetails[index] || {};
                 exercise_detail_ids.push(id);
             }
@@ -53,9 +55,9 @@ class WorkoutTemplateWrapper extends BaseWorkoutTemplate {
         let allRepetitions = {};
 
         const exerciseDetails = getExerciseDetails() || null;
-        
-        if(exerciseDetails) {
-            for(let index = 0; index < exerciseDetails.length; index++) {
+
+        if (exerciseDetails) {
+            for (let index = 0; index < exerciseDetails.length; index++) {
                 const exerciseDetail = await ExerciseDetailWrapper({data: exerciseDetails[index]});
                 const {exercise_details, repetitions} = await exerciseDetail.getReferenceInfo();
                 allExerciseDetails = {...allExerciseDetails, ...exercise_details};
@@ -76,7 +78,7 @@ class WorkoutTemplateWrapper extends BaseWorkoutTemplate {
 }
 
 export default async ({data = null, id = null}) => {
-    if(data) {
+    if (data) {
         return new WorkoutTemplateWrapper(data);
     }
     const workoutTemplateService = new WorkoutTemplateService();

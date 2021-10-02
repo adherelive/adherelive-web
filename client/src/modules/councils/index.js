@@ -1,6 +1,6 @@
-import { doRequest } from "../../Helper/network";
-import { REQUEST_TYPE } from "../../constant";
-import { searchCouncils } from "../../Helper/urls/councils";
+import {doRequest} from "../../Helper/network";
+import {REQUEST_TYPE} from "../../constant";
+import {searchCouncils} from "../../Helper/urls/councils";
 
 export const SEARCH_COUNCIL_START = "SEARCH_COUNCIL_START";
 export const SEARCH_COUNCIL_COMPLETED = "SEARCH_COUNCIL_COMPLETED";
@@ -15,7 +15,7 @@ export const searchCouncil = value => {
                 url: searchCouncils(value),
             });
 
-            const { status, payload: { data, message = "" } = {} } = response || {};
+            const {status, payload: {data, message = ""} = {}} = response || {};
             if (status === true) {
                 dispatch({
                     type: SEARCH_COUNCIL_COMPLETED,
@@ -35,7 +35,7 @@ export const searchCouncil = value => {
 };
 
 function councilReducer(state, data) {
-    const { registration_councils = {} } = data || {};
+    const {registration_councils = {}} = data || {};
     if (registration_councils) {
         return {
             ...state,
@@ -47,7 +47,7 @@ function councilReducer(state, data) {
 }
 
 export default (state = {}, payload) => {
-    const { type, data } = payload || {};
+    const {type, data} = payload || {};
     switch (type) {
         case SEARCH_COUNCIL_COMPLETED:
             return councilReducer(state, data);

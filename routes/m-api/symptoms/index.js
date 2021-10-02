@@ -5,7 +5,7 @@ import Authenticate from "../middlewares/auth";
 import * as validator from "./validator";
 
 const storage = multer.memoryStorage();
-const upload = multer({ dest: "../../../app/public/", storage: storage });
+const upload = multer({dest: "../../../app/public/", storage: storage});
 const router = express.Router();
 
 router.post(
@@ -15,31 +15,31 @@ router.post(
 );
 
 router.post(
-  "/audio",
-  Authenticate,
-  upload.single("files"),
-  SymptomController.uploadAudio
+    "/audio",
+    Authenticate,
+    upload.single("files"),
+    SymptomController.uploadAudio
 );
 
 router.post(
-  "/videos",
-  Authenticate,
-  upload.single("files"),
-  SymptomController.uploadVideo
+    "/videos",
+    Authenticate,
+    upload.single("files"),
+    SymptomController.uploadVideo
 );
 
 router.post(
-  "/photo",
-  Authenticate,
-  upload.single("files"),
-  SymptomController.uploadPhotos
+    "/photo",
+    Authenticate,
+    upload.single("files"),
+    SymptomController.uploadPhotos
 );
 
 router.post(
-  "/:patient_id",
-  Authenticate,
-  // validator.ValidateSymptomData,
-  SymptomController.create
+    "/:patient_id",
+    Authenticate,
+    // validator.ValidateSymptomData,
+    SymptomController.create
 );
 
 export default router;

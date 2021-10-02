@@ -22,7 +22,7 @@ class SpecialityWrapper extends BaseSpeciality {
 }
 
 export default async (data = null, id = null) => {
-    if(data) {
+    if (data) {
         return new SpecialityWrapper(data);
     }
     const doctor = await specialityService.getSpecialityByData({id});

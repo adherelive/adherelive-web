@@ -5,9 +5,9 @@ import adhocController from "../../../app/controllers/adhoc/adhoc.controller";
 import Authenticated from "../middlewares/auth";
 
 router.post(
-  "/populate-user-roles",
-  Authenticated,
-  adhocController.migrateAllUsersToUserRoles
+    "/populate-user-roles",
+    Authenticated,
+    adhocController.migrateAllUsersToUserRoles
 );
 
 router.post(

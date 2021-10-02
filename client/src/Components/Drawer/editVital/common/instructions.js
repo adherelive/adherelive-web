@@ -1,24 +1,25 @@
-import React, { Component, } from "react";
-import { Form } from "antd";
-import { injectIntl } from "react-intl";
+import React, {Component,} from "react";
+import {Form} from "antd";
+import {injectIntl} from "react-intl";
 import TextArea from "antd/es/input/TextArea";
 import messages from "../message";
 
 const FIELD_NAME = "special_instruction";
 
-const { Item: FormItem } = Form;
+const {Item: FormItem} = Form;
 
 class Formulation extends Component {
     componentDidMount() {
         const {
-            form: { validateFields }
+            form: {validateFields}
         } = this.props;
         validateFields();
 
     }
+
     componentWillUnmount() {
         const {
-            form: { validateFields }
+            form: {validateFields}
         } = this.props;
         validateFields();
     }
@@ -29,10 +30,11 @@ class Formulation extends Component {
 
 
     render() {
-        const { form,
+        const {
+            form,
             vitals = {},
-            payload: { id:vital_id , canViewDetails = false } = {},
-            } = this.props;
+            payload: {id: vital_id, canViewDetails = false} = {},
+        } = this.props;
         const {
             getFieldDecorator,
             getFieldError,
@@ -41,9 +43,9 @@ class Formulation extends Component {
         const error = isFieldTouched(FIELD_NAME) && getFieldError(FIELD_NAME);
 
 
-        let { description = null } = vitals[vital_id] || {};
+        let {description = null} = vitals[vital_id] || {};
         const {vitalData = {}} = this.props;
-        const{description : existing_description=''}=vitalData||{};
+        const {description: existing_description = ''} = vitalData || {};
 
         return (
             <div className="mb20 select-days-form-content">
@@ -54,7 +56,7 @@ class Formulation extends Component {
                     help={error || ""}
                 >
                     {getFieldDecorator(FIELD_NAME, {
-                        initialValue: existing_description? existing_description : description
+                        initialValue: existing_description ? existing_description : description
                     })(
                         <TextArea
                             autoFocus

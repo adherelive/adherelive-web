@@ -33,7 +33,7 @@ class ConsentWrapper extends BaseConsent {
 }
 
 export default async ({data = null, id = null}) => {
-    if(data) {
+    if (data) {
         return new ConsentWrapper(data);
     }
     const consentService = new ConsentService();

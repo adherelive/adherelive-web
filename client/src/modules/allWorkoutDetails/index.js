@@ -1,7 +1,7 @@
-import { GET_WORKOUT_DETAILS_COMPLETED } from "../workouts";
+import {GET_WORKOUT_DETAILS_COMPLETED} from "../workouts";
 
 function getAllWorkoutDetailsReducer(state, data) {
-    const { days  , repetitions , start_time = {} } = data || {};
+    const {days, repetitions, start_time = {}} = data || {};
     if (days && days.length) {
         return {
             ...state,
@@ -14,8 +14,8 @@ function getAllWorkoutDetailsReducer(state, data) {
     }
 }
 
-export default(state = {}, action) => {
-    const { type, data } = action;
+export default (state = {}, action) => {
+    const {type, data} = action;
     switch (type) {
         case GET_WORKOUT_DETAILS_COMPLETED:
             return getAllWorkoutDetailsReducer(state, data);

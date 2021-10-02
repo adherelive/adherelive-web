@@ -1,7 +1,7 @@
 export default class DietFoodGroupMapping {
 
-    constructor(data){
-        this._data = data ;
+    constructor(data) {
+        this._data = data;
     }
 
     getId = () => {
@@ -11,7 +11,7 @@ export default class DietFoodGroupMapping {
     getTime = () => {
         return this._data.time;
     }
-    
+
     getFoodGroupId = () => {
         return this._data.food_group_id;
     }

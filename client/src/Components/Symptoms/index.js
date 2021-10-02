@@ -1,11 +1,10 @@
-import React, { Component } from "react";
-import { injectIntl } from "react-intl";
-import { Tabs, message } from "antd";
+import React, {Component} from "react";
+import {injectIntl} from "react-intl";
+import {Tabs, message} from "antd";
 
 import Timeline from './timeline';
 import Summary from './summary';
 import messages from "./message";
-
 
 
 const TABS = {
@@ -13,7 +12,7 @@ const TABS = {
     SUMMARY: "2"
 };
 
-const { TabPane } = Tabs;
+const {TabPane} = Tabs;
 
 
 class SymptomsTab extends Component {
@@ -25,14 +24,14 @@ class SymptomsTab extends Component {
     }
 
     componentDidMount() {
-        const { getSymptomTimeLine, patientId } = this.props;
+        const {getSymptomTimeLine, patientId} = this.props;
         getSymptomTimeLine(patientId);
     }
 
 
     onRowSymptoms = (record, rowIndex) => {
         console.log('utsdiyqwtdyyqwfduyqwfudydqwd=======>', record)
-        const { onRowClickSymptoms } = this;
+        const {onRowClickSymptoms} = this;
         // const { key } = record;
         return {
             onClick: onRowClickSymptoms(record)
@@ -40,17 +39,28 @@ class SymptomsTab extends Component {
     };
 
     handleSubmitTemplate = (data) => {
-        const { addCarePlanMedicationsAndAppointments, getMedications, getAppointments, care_plans, patient_id, getPatientCarePlanDetails } = this.props;
+        const {
+            addCarePlanMedicationsAndAppointments,
+            getMedications,
+            getAppointments,
+            care_plans,
+            patient_id,
+            getPatientCarePlanDetails
+        } = this.props;
         let carePlanId = 1;
         for (let carePlan of Object.values(care_plans)) {
-            let { basic_info: { id = 1, patient_id: patientId = 1 } } = carePlan;
+            let {basic_info: {id = 1, patient_id: patientId = 1}} = carePlan;
             if (patient_id == patientId) {
                 carePlanId = id;
             }
 
         }
         addCarePlanMedicationsAndAppointments(data, carePlanId).then(response => {
-            const { status = false, statusCode, payload: { error: { error_type = '' } = {}, message: errorMessage = '' } = {} } = response;
+            const {
+                status = false,
+                statusCode,
+                payload: {error: {error_type = ''} = {}, message: errorMessage = ''} = {}
+            } = response;
             if (status) {
                 this.onCloseTemplate();
 
@@ -83,7 +93,7 @@ class SymptomsTab extends Component {
     formatMessage = (data) => this.props.intl.formatMessage(data);
 
     renderTabBar = () => {
-        const { currentTab = TABS.TIMELINE } = this.state;
+        const {currentTab = TABS.TIMELINE} = this.state;
         return (
             <div class="flex justify-content-space-around">
                 <div
@@ -111,7 +121,7 @@ class SymptomsTab extends Component {
     };
 
     render() {
-        const { currentTab = TABS.TIMELINE } = this.state;
+        const {currentTab = TABS.TIMELINE} = this.state;
         return (
             <div className="pt10 pr10 pb10 pl10 wp100 hp100">
                 <Tabs activeKey={currentTab} renderTabBar={this.renderTabBar}>

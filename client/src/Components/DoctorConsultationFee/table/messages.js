@@ -1,4 +1,4 @@
-import { defineMessages } from "react-intl";
+import {defineMessages} from "react-intl";
 
 const messages = defineMessages({
     name: {
@@ -21,12 +21,12 @@ const messages = defineMessages({
         description: "",
         defaultMessage: "Add More"
     },
-    deleteDoctorProductSuccess : {
+    deleteDoctorProductSuccess: {
         id: "app.doctors.settings.consultationFee.table.delete.doctor.productsuccess",
         description: "",
         defaultMessage: "Consultation Fee deleted successfully"
     },
-    somethingWentWrong : {
+    somethingWentWrong: {
         id: "app.doctors.settings.consultationFee.table.somethingWentWrong",
         description: "",
         defaultMessage: "Something went wrong."
@@ -41,12 +41,12 @@ const messages = defineMessages({
         description: "",
         defaultMessage: "Delete"
     },
-    emptyConsultationTable:{
+    emptyConsultationTable: {
         id: "app.doctors.settings.consultationFee.table.emptyConsultationTable",
         description: "",
         defaultMessage: "No consultation fee to display yet"
     },
-   
+
 });
 
 export default messages;

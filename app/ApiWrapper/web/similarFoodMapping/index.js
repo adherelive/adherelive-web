@@ -7,7 +7,7 @@ class SimilarFoodMappingWrapper extends BaseSimilarFoodMapping {
     }
 
     getBasicInfo = () => {
-        const { _data } = this;
+        const {_data} = this;
         const {
             id,
             related_to_id,
@@ -29,6 +29,6 @@ export default async ({data = null, id = null}) => {
     }
 
     const similarFoodMappingService = new SimilarFoodMappingService();
-    const mapping = await similarFoodMappingService.getByData({ id });
+    const mapping = await similarFoodMappingService.getByData({id});
     return new SimilarFoodMappingWrapper(mapping);
 };

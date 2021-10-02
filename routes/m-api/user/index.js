@@ -8,7 +8,7 @@ import Authenticate from "../middlewares/auth";
 
 const multer = require("multer");
 const storage = multer.memoryStorage();
-const upload = multer({ dest: "../../../app/public/", storage: storage });
+const upload = multer({dest: "../../../app/public/", storage: storage});
 
 import userDeviceRouter from "../userDevice";
 
@@ -27,20 +27,20 @@ router.post(
 );
 
 router.post(
-  "/verify-otp",
-  validator.validateOtpData,
-  mUserController.verifyOtp
+    "/verify-otp",
+    validator.validateOtpData,
+    mUserController.verifyOtp
 );
 
 router.post(
-  "/doctors/sign-in",
-  validator.validateDoctorSignInData,
-  mUserController.doctorSignIn
+    "/doctors/sign-in",
+    validator.validateDoctorSignInData,
+    mUserController.doctorSignIn
 );
 
 router.post(
-  "/sign-up",
-  validator.validateCredentialsData,
+    "/sign-up",
+    validator.validateCredentialsData,
     mUserController.signUp,
 );
 
@@ -63,28 +63,28 @@ router.get(
 router.post("/sign-out", Authenticate, mUserController.signOut);
 
 router.post(
-  "/forgot-password",
-  validator.forgotPassword,
-  mUserController.forgotPassword
+    "/forgot-password",
+    validator.forgotPassword,
+    mUserController.forgotPassword
 );
 
 router.post(
-  "/verify-password/:link",
-  validator.verifyLink,
-  mUserController.verifyPasswordResetLink
+    "/verify-password/:link",
+    validator.verifyLink,
+    mUserController.verifyPasswordResetLink
 );
 
 router.post(
-  "/verify/:link",
-  validator.verifyLink,
-  mUserController.verifyPatientLink
+    "/verify/:link",
+    validator.verifyLink,
+    mUserController.verifyPatientLink
 );
 
 router.post(
-  "/password-reset",
-  Authenticate,
-  validator.updatePasswordForm,
-  mUserController.updateUserPassword
+    "/password-reset",
+    Authenticate,
+    validator.updatePasswordForm,
+    mUserController.updateUserPassword
 );
 
 router.use("/devices", userDeviceRouter);

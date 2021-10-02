@@ -9,10 +9,10 @@ export const authDoctorSelector = createSelector(
     (doctors, auth) => {
         let authDoctorId = null;
         Object.keys(doctors).forEach(index => {
-           const {basic_info: {id, user_id} = {} } = doctors[index] || {};
-           if(user_id === auth.authenticated_user) {
-               authDoctorId = id;
-           }
+            const {basic_info: {id, user_id} = {}} = doctors[index] || {};
+            if (user_id === auth.authenticated_user) {
+                authDoctorId = id;
+            }
         });
 
         return authDoctorId;
@@ -33,10 +33,10 @@ export const authCategorySelector = createSelector(
         //     }
         // });
         Object.keys(doctors).forEach(index => {
-           const {basic_info: {id, user_id} = {} } = doctors[index] || {};
-           if(user_id === auth.authenticated_user) {
-               authDoctorId = id;
-           }
+            const {basic_info: {id, user_id} = {}} = doctors[index] || {};
+            if (user_id === auth.authenticated_user) {
+                authDoctorId = id;
+            }
         });
 
         return doctors[authDoctorId];

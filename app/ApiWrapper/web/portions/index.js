@@ -7,7 +7,7 @@ class PortionWrapper extends BasePortion {
     }
 
     getBasicInfo = () => {
-        const { _data } = this;
+        const {_data} = this;
         const {
             id,
             name
@@ -21,11 +21,11 @@ class PortionWrapper extends BasePortion {
     };
 }
 
-export default async ( {data = null, id = null} ) => {
+export default async ({data = null, id = null}) => {
     if (data !== null) {
         return new PortionWrapper(data);
     }
     const portionService = new PortionService();
-    const portion = await portionService.getByData({ id });
+    const portion = await portionService.getByData({id});
     return new PortionWrapper(portion.get());
 };

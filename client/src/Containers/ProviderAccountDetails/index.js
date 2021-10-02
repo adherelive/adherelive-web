@@ -1,16 +1,16 @@
-import { connect } from "react-redux";
+import {connect} from "react-redux";
 import ProviderAccountDetails from "../../Components/ProviderAccountDetails";
-import { withRouter } from "react-router-dom";
+import {withRouter} from "react-router-dom";
 import {getAccountDetails} from "../../modules/accountDetails";
 
 const mapStateToProps = state => {
     const {
-        auth={},
-        users={},
-        payment_products={},
-        auth: { authPermissions = [], authenticated_user = 1 ,authenticated_category} = {},
-        account_details={},
-        user_roles={},
+        auth = {},
+        users = {},
+        payment_products = {},
+        auth: {authPermissions = [], authenticated_user = 1, authenticated_category} = {},
+        account_details = {},
+        user_roles = {},
         providers = {}
     } = state;
 
@@ -24,19 +24,17 @@ const mapStateToProps = state => {
         authenticated_category,
         account_details,
         user_roles,
-        providers 
+        providers
     };
 };
 
 const mapDispatchToProps = dispatch => {
     return {
-      getAccountDetails: (provider_id=null) => dispatch(getAccountDetails(provider_id)),
-    } 
-  };
-
-
+        getAccountDetails: (provider_id = null) => dispatch(getAccountDetails(provider_id)),
+    }
+};
 
 
 export default withRouter(
-  connect(mapStateToProps, mapDispatchToProps)(ProviderAccountDetails)
+    connect(mapStateToProps, mapDispatchToProps)(ProviderAccountDetails)
 );

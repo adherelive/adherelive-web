@@ -1,5 +1,5 @@
 import Joi from "joi";
-import { validationError } from "../../helper";
+import {validationError} from "../../helper";
 
 // schema
 const createExerciseSchema = Joi.object({
@@ -22,21 +22,21 @@ const createExerciseSchema = Joi.object({
         'number.base': `Calorific Value must be of type number`,
         'any.optional': `Calorific Value must be of type number`
     }),
-  video: Joi.object({
+    video: Joi.object({
         content_type: Joi.string().optional().allow("", null),
         content: Joi.string().optional().allow("", null)
     }).optional().allow("", null),
 });
 
 export const create = (req, res, next) => {
-  const { body: data = {} } = req;
-  const isValid = createExerciseSchema.validate(data, { convert: false });
+    const {body: data = {}} = req;
+    const isValid = createExerciseSchema.validate(data, {convert: false});
 
-  const { error: { details = [] } = {} } = isValid || {};
+    const {error: {details = []} = {}} = isValid || {};
 
-  if (details.length > 0) {
-    return validationError(res, details[0].message);
-  } else {
-    next();
-  }
+    if (details.length > 0) {
+        return validationError(res, details[0].message);
+    } else {
+        next();
+    }
 };

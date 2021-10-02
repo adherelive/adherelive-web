@@ -7,7 +7,7 @@ class ConditionWrapper extends BaseCondition {
     }
 
     getBasicInfo = () => {
-        const { _data } = this;
+        const {_data} = this;
         const {
             id,
             name
@@ -25,6 +25,6 @@ export default async (data = null, id = null) => {
     if (data !== null) {
         return new ConditionWrapper(data);
     }
-    const condition = await conditionService.getByData({ id });
+    const condition = await conditionService.getByData({id});
     return new ConditionWrapper(condition.get());
 };

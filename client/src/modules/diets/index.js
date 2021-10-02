@@ -1,14 +1,15 @@
-import { doRequest } from "../../Helper/network";
-import { REQUEST_TYPE } from "../../constant";
-import { addDietUrl , 
-    getDietsForCareplanUrl , 
-    getDietDetailsByIdUrl , 
-    updateDietUrl ,
+import {doRequest} from "../../Helper/network";
+import {REQUEST_TYPE} from "../../constant";
+import {
+    addDietUrl,
+    getDietsForCareplanUrl,
+    getDietDetailsByIdUrl,
+    updateDietUrl,
     getAllDietsForDoctorUrl,
     getDietTimelineUrl,
     getPatientPreferenceDietDetailsUrl,
     updateDietTotalCaloriesUrl
- } from "../../Helper/urls/diet";
+} from "../../Helper/urls/diet";
 
 export const ADD_DIET_START = "ADD_DIET_START";
 export const ADD_DIET_COMPLETED = "ADD_DIET_COMPLETED";
@@ -53,10 +54,10 @@ export const addDiet = (payload) => {
             response = await doRequest({
                 method: REQUEST_TYPE.POST,
                 url: addDietUrl(),
-                data:payload
+                data: payload
             });
 
-            const { status, payload: { data, message = "" } = {} } = response || {};
+            const {status, payload: {data, message = ""} = {}} = response || {};
             if (status === true) {
                 dispatch({
                     type: ADD_DIET_COMPLETED,
@@ -84,7 +85,7 @@ export const getPatientPreferenceDietDetails = (patient_id) => {
                 url: getPatientPreferenceDietDetailsUrl(patient_id)
             });
 
-            const { status, payload: { data, message = "" } = {} } = response || {};
+            const {status, payload: {data, message = ""} = {}} = response || {};
             if (status === true) {
                 dispatch({
                     type: GET_PATEINT_PREFERENCE_DIET_DETAILS_COMPLETED,
@@ -103,17 +104,17 @@ export const getPatientPreferenceDietDetails = (patient_id) => {
     }
 }
 
-export const updateDiet = (payload,diet_id) => {
+export const updateDiet = (payload, diet_id) => {
     let response = {};
     return async dispatch => {
         try {
             response = await doRequest({
                 method: REQUEST_TYPE.POST,
                 url: updateDietUrl(diet_id),
-                data:payload
+                data: payload
             });
 
-            const { status, payload: { data, message = "" } = {} } = response || {};
+            const {status, payload: {data, message = ""} = {}} = response || {};
             if (status === true) {
                 dispatch({
                     type: UPDATE_DIET_COMPLETED,
@@ -132,24 +133,24 @@ export const updateDiet = (payload,diet_id) => {
     }
 };
 
-export const updateDietTotalCalories = ({total_calories,diet_id}) => {
+export const updateDietTotalCalories = ({total_calories, diet_id}) => {
     let response = {};
     return async dispatch => {
         try {
             response = await doRequest({
                 method: REQUEST_TYPE.POST,
-                url: updateDietTotalCaloriesUrl(diet_id,total_calories)
+                url: updateDietTotalCaloriesUrl(diet_id, total_calories)
             });
 
-            const { status, payload: { data, message = "" } = {} } = response || {};
+            const {status, payload: {data, message = ""} = {}} = response || {};
             if (status === true) {
                 dispatch({
-                    type:UPDATE_DIET_TOTAL_CALORIES_COMPLETED ,
+                    type: UPDATE_DIET_TOTAL_CALORIES_COMPLETED,
                     data
                 });
             } else {
                 dispatch({
-                    type: UPDATE_DIET_TOTAL_CALORIES_FAILED ,
+                    type: UPDATE_DIET_TOTAL_CALORIES_FAILED,
                     message
                 });
             }
@@ -169,7 +170,7 @@ export const getDietsForCareplan = (care_plan_id) => {
                 url: getDietsForCareplanUrl(care_plan_id)
             });
 
-            const { status, payload: { data, message = "" } = {} } = response || {};
+            const {status, payload: {data, message = ""} = {}} = response || {};
             if (status === true) {
                 dispatch({
                     type: GET_CAREPLAN_DIETS_COMPLETED,
@@ -188,7 +189,7 @@ export const getDietsForCareplan = (care_plan_id) => {
     }
 };
 
-export const getSingleDietData = (id)  => {
+export const getSingleDietData = (id) => {
     let response = {};
     return async dispatch => {
         try {
@@ -197,7 +198,7 @@ export const getSingleDietData = (id)  => {
                 url: getDietDetailsByIdUrl(id)
             });
 
-            const { status, payload: { data, message = "" } = {} } = response || {};
+            const {status, payload: {data, message = ""} = {}} = response || {};
             if (status === true) {
                 dispatch({
                     type: GET_SINGLE_DIET_DETAILS_COMPLETED,
@@ -217,8 +218,7 @@ export const getSingleDietData = (id)  => {
 };
 
 
-
-export const deleteDiet = (id)  => {
+export const deleteDiet = (id) => {
     let response = {};
     return async dispatch => {
         try {
@@ -227,10 +227,10 @@ export const deleteDiet = (id)  => {
                 url: getDietDetailsByIdUrl(id)
             });
 
-            const { status, payload: { data : resp_data = {} , message = "" } = {} } = response || {};
+            const {status, payload: {data: resp_data = {}, message = ""} = {}} = response || {};
 
             const data = {
-                deleted_diet_id:id,
+                deleted_diet_id: id,
                 ...resp_data
             };
 
@@ -261,7 +261,7 @@ export const getAllDietsForDoctor = () => {
                 url: getAllDietsForDoctorUrl()
             });
 
-            const { status, payload: { data, message = "" } = {} } = response || {};
+            const {status, payload: {data, message = ""} = {}} = response || {};
             if (status === true) {
                 dispatch({
                     type: GET_ALL_DIETS_FOR_DOCTOR_COMPLETED,
@@ -284,42 +284,42 @@ export const getAllDietsForDoctor = () => {
 export const getDietTimeline = (dietId) => {
     let response = {};
     return async (dispatch) => {
-      try {
-        dispatch({ type: GET_DIET_TIMELINE_START });
-  
-        response = await doRequest({
-          method: REQUEST_TYPE.GET,
-          url: getDietTimelineUrl(dietId),
-        });
-  
-        const { status, payload: { data, message = "" } = {} } = response || {};
+        try {
+            dispatch({type: GET_DIET_TIMELINE_START});
 
-        if (status === true) {
-          dispatch({ type: GET_DIET_TIMELINE_COMPLETED, data });
-        } else {
-          dispatch({ type: GET_DIET_TIMELINE_FAILED, message });
+            response = await doRequest({
+                method: REQUEST_TYPE.GET,
+                url: getDietTimelineUrl(dietId),
+            });
+
+            const {status, payload: {data, message = ""} = {}} = response || {};
+
+            if (status === true) {
+                dispatch({type: GET_DIET_TIMELINE_COMPLETED, data});
+            } else {
+                dispatch({type: GET_DIET_TIMELINE_FAILED, message});
+            }
+        } catch (error) {
+            console.log("UPDATE DIET MODULE catch error -> ", error);
+
         }
-      } catch (error) {
-        console.log("UPDATE DIET MODULE catch error -> ", error);
-
-      }
-      return response;
+        return response;
     };
-  };
-  
+};
+
 
 function deleteDietReducer(state, data) {
-    const {deleted_diet_id } = data || {};
+    const {deleted_diet_id} = data || {};
 
-    if(deleted_diet_id){
-        const {[deleted_diet_id.toString()]:diet , ...rest} =  state || {};
-        
-        if(diet){
+    if (deleted_diet_id) {
+        const {[deleted_diet_id.toString()]: diet, ...rest} = state || {};
+
+        if (diet) {
             let updatedDiet = {...rest};
             return {
                 ...updatedDiet
             }
-        }else{
+        } else {
             return state;
         }
     } else {
@@ -328,9 +328,8 @@ function deleteDietReducer(state, data) {
 }
 
 
-
 function dietReducer(state, data) {
-    const { diets = {} } = data || {};
+    const {diets = {}} = data || {};
     if (diets) {
         return {
             ...state,
@@ -342,17 +341,17 @@ function dietReducer(state, data) {
 }
 
 export default (state = {}, action) => {
-    const { type, data } = action || {};
+    const {type, data} = action || {};
     switch (type) {
         case ADD_DIET_COMPLETED:
             return dietReducer(state, data);
         case UPDATE_DIET_COMPLETED:
             return dietReducer(state, data);
         case GET_CAREPLAN_DIETS_COMPLETED:
-            return dietReducer(state,data);
+            return dietReducer(state, data);
         case DELETE_DIET_COMPLETED:
             // return deleteDietReducer(state,data); // delete diet reducer
-            return dietReducer(state,data);
+            return dietReducer(state, data);
         default:
             return dietReducer(state, data);
     }

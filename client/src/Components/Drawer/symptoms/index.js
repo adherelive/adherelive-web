@@ -1,6 +1,6 @@
-import React, { Component, Fragment } from "react";
-import { injectIntl } from "react-intl";
-import { Drawer, Icon, Select, Input, message, Button, Spin, Radio, DatePicker, Modal } from "antd";
+import React, {Component, Fragment} from "react";
+import {injectIntl} from "react-intl";
+import {Drawer, Icon, Select, Input, message, Button, Spin, Radio, DatePicker, Modal} from "antd";
 import config from "../../../config";
 import messages from './message';
 import File from "../../../Assets/images/file.png";
@@ -9,7 +9,7 @@ import humanBody from '../../../Assets/images/humanBodyFront.jpeg';
 import ImagePlaceHolder from "../../../Assets/images/image_placeholder.png";
 import humanBodyBack from '../../../Assets/images/humanBodyBack.jpeg';
 import Download from "../../../Assets/images/down-arrow.png";
-import { PARTS, PART_LIST_BACK, PART_LIST_CODES, PART_LIST_FRONT, BODY } from '../../../constant';
+import {PARTS, PART_LIST_BACK, PART_LIST_CODES, PART_LIST_FRONT, BODY} from '../../../constant';
 
 
 class SymptomsDrawer extends Component {
@@ -22,10 +22,11 @@ class SymptomsDrawer extends Component {
 
     componentDidMount() {
     }
+
     formatMessage = data => this.props.intl.formatMessage(data);
 
     getBodyPartName = (selected_part) => {
-        const { formatMessage } = this;
+        const {formatMessage} = this;
         if (selected_part === PART_LIST_CODES.HEAD) {
             return formatMessage(messages.head);
         } else if (selected_part === PART_LIST_CODES.LEFT_EYE) {
@@ -136,16 +137,17 @@ class SymptomsDrawer extends Component {
             return formatMessage(messages.leftCalf);
         } else if (selected_part === PART_LIST_CODES.RIGHT_CALF) {
             return formatMessage(messages.rightCalf);
-        };
+        }
+        ;
     };
 
     closeModal = () => {
-        this.setState({ imageModalVisible: false });
+        this.setState({imageModalVisible: false});
     }
 
     openModal = () => {
 
-        this.setState({ imageModalVisible: true });
+        this.setState({imageModalVisible: true});
     }
 
     imageModal = (url) => {
@@ -163,7 +165,7 @@ class SymptomsDrawer extends Component {
                 width={`50%`}
                 footer={null}
             >
-                <img src={url} alt="qualification document" className="wp100" />
+                <img src={url} alt="qualification document" className="wp100"/>
             </Modal>
         );
     };
@@ -190,18 +192,29 @@ class SymptomsDrawer extends Component {
     };
 
     renderBody = () => {
-        const { payload: { data: { body_part = '', body_part_key = '', description = '', side = '1', image_document_ids = [], audio_document_ids = [] } }, upload_documents = {} } = this.props;
+        const {
+            payload: {
+                data: {
+                    body_part = '',
+                    body_part_key = '',
+                    description = '',
+                    side = '1',
+                    image_document_ids = [],
+                    audio_document_ids = []
+                }
+            }, upload_documents = {}
+        } = this.props;
         let imageUrl = '';
         let audioUrl = '';
         let audioName = '';
 
         if (image_document_ids.length) {
-            const { basic_info: { document = '' } = {} } = upload_documents[image_document_ids[0]] || {};
+            const {basic_info: {document = ''} = {}} = upload_documents[image_document_ids[0]] || {};
             imageUrl = document
         }
 
         if (audio_document_ids.length) {
-            const { basic_info: { document = '', name = '' } = {} } = upload_documents[audio_document_ids[0]] || {};
+            const {basic_info: {document = '', name = ''} = {}} = upload_documents[audio_document_ids[0]] || {};
             audioUrl = document;
             audioName = name;
         }
@@ -210,56 +223,73 @@ class SymptomsDrawer extends Component {
             <div className='humanbody-container hp100'>
                 <div className='fs20 medium tac'>{this.getBodyPartName(body_part_key)}</div>
                 <div className={'flex direction-row flex-1 align-center'}>
-                    <div className='fs14 medium'>{side === '1' ? this.formatMessage(messages.right) : this.formatMessage(messages.left)}</div>
-                    <div className='humanBodyWrapper' >
+                    <div
+                        className='fs14 medium'>{side === '1' ? this.formatMessage(messages.right) : this.formatMessage(messages.left)}</div>
+                    <div className='humanBodyWrapper'>
                         <img
                             src={side === '1' ? humanBody : humanBodyBack}
                             className={'wp100 hp100'}
                         />
                         {side === '1' ? (PART_LIST_FRONT.map(part => {
-                            const { key, areaStyle = {}, dotStyle = {} } = BODY[part];
-                            const { top: bpTop = 0,
-                                left: bpLeft = 0,
-                                height: bpHeight = 0,
-                                width: bpWidth = 0 } = areaStyle || {};
-                            const { top: dotTop = 0, left: dotLeft = 0 } = dotStyle || {};
-                            console.log('isSAMEEEEEEEE============>', body_part, key, body_part === key);
-                            return (
-                                <div
-                                    key={key}
-                                    style={{ position: 'absolute', top: `${bpTop}px`, left: `${bpLeft}px`, height: `${bpHeight}px`, width: `${bpWidth}px` }}
-                                >
-                                    <div
-                                        style={{
-                                            top: `${dotTop}px`,
-                                            left: `${dotLeft}px`,
-                                            position: "absolute",
-                                            height: body_part_key === key ? 12 : 0,
-                                            width: body_part_key === key ? 12 : 0,
-                                            backgroundColor: body_part_key === key ? "rgba(0, 129, 138, 0.41)" : 'rgba(0,0,0,0)',
-                                            borderRadius: '50%',
-
-                                            // height:  12,
-                                            // width:  12 ,
-                                            // backgroundColor: "red",
-                                            // borderRadius: '50%'
-                                        }
-                                        }
-                                    />
-                                </div>
-                            );
-                        })) :
-                            (PART_LIST_BACK.map(part => {
-                                const { key, areaStyle = {}, dotStyle = {} } = BODY[part];
-                                const { top: bpTop = 0,
+                                const {key, areaStyle = {}, dotStyle = {}} = BODY[part];
+                                const {
+                                    top: bpTop = 0,
                                     left: bpLeft = 0,
                                     height: bpHeight = 0,
-                                    width: bpWidth = 0 } = areaStyle || {};
-                                const { top: dotTop = 0, left: dotLeft = 0 } = dotStyle || {};
+                                    width: bpWidth = 0
+                                } = areaStyle || {};
+                                const {top: dotTop = 0, left: dotLeft = 0} = dotStyle || {};
+                                console.log('isSAMEEEEEEEE============>', body_part, key, body_part === key);
                                 return (
                                     <div
                                         key={key}
-                                        style={{ position: 'absolute', top: `${bpTop}px`, left: `${bpLeft}px`, height: `${bpHeight}px`, width: `${bpWidth}px` }}
+                                        style={{
+                                            position: 'absolute',
+                                            top: `${bpTop}px`,
+                                            left: `${bpLeft}px`,
+                                            height: `${bpHeight}px`,
+                                            width: `${bpWidth}px`
+                                        }}
+                                    >
+                                        <div
+                                            style={{
+                                                top: `${dotTop}px`,
+                                                left: `${dotLeft}px`,
+                                                position: "absolute",
+                                                height: body_part_key === key ? 12 : 0,
+                                                width: body_part_key === key ? 12 : 0,
+                                                backgroundColor: body_part_key === key ? "rgba(0, 129, 138, 0.41)" : 'rgba(0,0,0,0)',
+                                                borderRadius: '50%',
+
+                                                // height:  12,
+                                                // width:  12 ,
+                                                // backgroundColor: "red",
+                                                // borderRadius: '50%'
+                                            }
+                                            }
+                                        />
+                                    </div>
+                                );
+                            })) :
+                            (PART_LIST_BACK.map(part => {
+                                const {key, areaStyle = {}, dotStyle = {}} = BODY[part];
+                                const {
+                                    top: bpTop = 0,
+                                    left: bpLeft = 0,
+                                    height: bpHeight = 0,
+                                    width: bpWidth = 0
+                                } = areaStyle || {};
+                                const {top: dotTop = 0, left: dotLeft = 0} = dotStyle || {};
+                                return (
+                                    <div
+                                        key={key}
+                                        style={{
+                                            position: 'absolute',
+                                            top: `${bpTop}px`,
+                                            left: `${bpLeft}px`,
+                                            height: `${bpHeight}px`,
+                                            width: `${bpWidth}px`
+                                        }}
                                     >
                                         <div
                                             style={{
@@ -283,7 +313,8 @@ class SymptomsDrawer extends Component {
                             }))}
                     </div>
 
-                    <div className='fs14 medium'>{side === '1' ? this.formatMessage(messages.left) : this.formatMessage(messages.right)}</div>
+                    <div
+                        className='fs14 medium'>{side === '1' ? this.formatMessage(messages.left) : this.formatMessage(messages.right)}</div>
                 </div>
 
                 <div className={'fs18 medium'}>{this.formatMessage(messages.description)}</div>
@@ -300,23 +331,24 @@ class SymptomsDrawer extends Component {
                             />
                         </div>
                     ) : (
-                            <img
-                                className="symptom-image mt10"
-                                src={ImagePlaceHolder}
-                                alt="Uploaded Image"
-                            />
-                        )}
+                        <img
+                            className="symptom-image mt10"
+                            src={ImagePlaceHolder}
+                            alt="Uploaded Image"
+                        />
+                    )}
                     {this.imageModal(imageUrl)}
                 </Fragment>) : null}
                 {audioUrl && audioUrl.length ? (
                     <div className='downloadable-file mt10'>
-                        <img src={File} className='w20 mr10' />
+                        <img src={File} className='w20 mr10'/>
                         <div className='fs14 mr10'>
                             {audioName.length <= 12
                                 ? audioName
                                 : `${audioName.substring(0, 13)}...`}
                         </div>
-                        <img src={Download} className='w20 mr10 pointer' onClick={this.onClickDownloader(audioUrl, audioName)} />
+                        <img src={Download} className='w20 mr10 pointer'
+                             onClick={this.onClickDownloader(audioUrl, audioName)}/>
                     </div>) : null}
             </div>
         );
@@ -324,7 +356,7 @@ class SymptomsDrawer extends Component {
 
 
     render() {
-        const { visible, close } = this.props;
+        const {visible, close} = this.props;
         if (visible !== true) {
             return null;
         }

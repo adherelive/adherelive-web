@@ -7,7 +7,7 @@ class TACWrapper extends BaseTermsandConditions {
     }
 
     getBasicInfo = () => {
-        const { _data } = this;
+        const {_data} = this;
         const {
             id,
             terms_type,
@@ -27,6 +27,6 @@ export default async ({data = null, id = null}) => {
     if (data !== null) {
         return new TACWrapper(data);
     }
-    const tacRecord = await termsAndConditionsService.getByData({ id });
+    const tacRecord = await termsAndConditionsService.getByData({id});
     return new TACWrapper(tacRecord);
 };

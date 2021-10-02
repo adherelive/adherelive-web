@@ -1,4 +1,4 @@
-import { defineMessages } from "react-intl";
+import {defineMessages} from "react-intl";
 
 const messages = defineMessages({
     completed: {
@@ -16,12 +16,12 @@ const messages = defineMessages({
         description: "",
         defaultMessage: "Not Recorded"
     },
-    taken : {
+    taken: {
         id: "app.diet.timeline.taken",
         description: "",
         defaultMessage: "Taken"
     },
-    cancelled_reschedule:{
+    cancelled_reschedule: {
         id: "app.diet.timeline.cancelled.reschedule",
         description: "",
         defaultMessage: "(Cancelled) Reschedule in 10 minutes"

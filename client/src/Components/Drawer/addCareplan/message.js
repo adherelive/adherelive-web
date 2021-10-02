@@ -1,4 +1,4 @@
-import { defineMessages } from "react-intl";
+import {defineMessages} from "react-intl";
 
 const messages = defineMessages({
     addCareplan: {
@@ -36,7 +36,7 @@ const messages = defineMessages({
         description: "",
         defaultMessage: "Submit"
     },
-    somethingWentWrong: { 
+    somethingWentWrong: {
         id: "app.addCareplan.somethingWentWrong",
         description: "",
         defaultMessage: "Something wen't wrong."
@@ -61,26 +61,26 @@ const messages = defineMessages({
         description: "",
         defaultMessage: 'Please enter a condition.'
     },
-    writeHere:{    
+    writeHere: {
         id: "app.addCareplan.writeHere",
         description: "",
         defaultMessage: "Write here"
     },
-    clinicalNotes:{  
+    clinicalNotes: {
         id: "app.addCareplan.clinicalNotes",
         description: "",
         defaultMessage: "Clinical Notes"
     },
-    diagnosis:{ 
-        id: "app.addCareplan.diagnosis", 
+    diagnosis: {
+        id: "app.addCareplan.diagnosis",
         description: "",
         defaultMessage: "Diagnosis"
     },
-    diagnosisError:{ 
+    diagnosisError: {
         id: "app.addCareplan.diagnosisError",
         description: "",
         defaultMessage: "Please enter Diagnosis"
-    },diagnosisTypeError:{ 
+    }, diagnosisTypeError: {
         id: "app.addCareplan.diagnosisTypeError",
         description: "",
         defaultMessage: "Please enter Diagnosis Type"
@@ -90,10 +90,10 @@ const messages = defineMessages({
         description: "",
         defaultMessage: "Symptoms"
     },
-    add_careplan_success:{
+    add_careplan_success: {
         id: "app.addCareplan.success.message",
-    description: "",
-    defaultMessage: "Careplan created successfully"
+        description: "",
+        defaultMessage: "Careplan created successfully"
     }
 
 });

@@ -1,20 +1,22 @@
-import React, { Component, Fragment } from "react";
-import { injectIntl } from "react-intl";
-import { Checkbox, Form } from "antd";
+import React, {Component, Fragment} from "react";
+import {injectIntl} from "react-intl";
+import {Checkbox, Form} from "antd";
 
-const { Item: FormItem } = Form;
+const {Item: FormItem} = Form;
 
 const FIELD_NAME = "critical";
+
 class CriticalMedication extends Component {
     componentDidMount() {
         const {
-            form: { validateFields }
+            form: {validateFields}
         } = this.props;
         validateFields();
     }
+
     componentWillUnmount() {
         const {
-            form: { validateFields }
+            form: {validateFields}
         } = this.props;
         validateFields();
     }
@@ -22,7 +24,7 @@ class CriticalMedication extends Component {
     getParentNode = t => t.parentNode;
 
     getInitialValue = () => {
-        const { purpose, event: { data = {} } = {} } = this.props;
+        const {purpose, event: {data = {}} = {}} = this.props;
         let initialValue;
         if (purpose) {
             initialValue = data[FIELD_NAME];
@@ -31,7 +33,12 @@ class CriticalMedication extends Component {
     };
 
     render() {
-        const { form, medications, payload: { id: medication_id , canViewDetails = false } = {}, medicationData = {} } = this.props;
+        const {
+            form,
+            medications,
+            payload: {id: medication_id, canViewDetails = false} = {},
+            medicationData = {}
+        } = this.props;
         const {
             getFieldDecorator,
             getFieldError,
@@ -40,15 +47,15 @@ class CriticalMedication extends Component {
             //getFieldValue
         } = form;
 
-        let { basic_info: { details: { critical = false } = {} } = {} } = medications[medication_id] || {};
-        let { schedule_data: { critical: Critical = false } = {} } = medicationData;
+        let {basic_info: {details: {critical = false} = {}} = {}} = medications[medication_id] || {};
+        let {schedule_data: {critical: Critical = false} = {}} = medicationData;
 
         if (Critical) {
             critical = Critical;
         }
         const error = isFieldTouched(FIELD_NAME) && getFieldError(FIELD_NAME);
 
-        const { getInitialValue } = this;
+        const {getInitialValue} = this;
 
         return (
             <Fragment>
@@ -63,8 +70,8 @@ class CriticalMedication extends Component {
                         initialValue: critical ? critical : false
                     })(
                         <Checkbox
-                        disabled={canViewDetails}
-                         >Critical Medication</Checkbox>)}
+                            disabled={canViewDetails}
+                        >Critical Medication</Checkbox>)}
                 </FormItem>
             </Fragment>
         );

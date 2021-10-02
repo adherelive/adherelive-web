@@ -7,7 +7,7 @@ class TemplateVitalWrapper extends BaseTemplateVital {
     }
 
     getBasicInfo = () => {
-        const { _data } = this;
+        const {_data} = this;
         const {
             id,
             care_plan_template_id,
@@ -30,6 +30,6 @@ export default async ({data = null, id = null}) => {
         return new TemplateVitalWrapper(data);
     }
     const templateVitalService = new TemplateVitalService();
-    const templateVital = await templateVitalService.getByData({ id });
+    const templateVital = await templateVitalService.getByData({id});
     return new TemplateVitalWrapper(templateVital);
 };

@@ -14,7 +14,7 @@ class ReportTable extends Component {
         this.state = {
             loading: true,
             report_ids: [],
-            documentData : {},
+            documentData: {},
         };
     }
 
@@ -26,7 +26,7 @@ class ReportTable extends Component {
         const {report_ids} = this.props;
         const {report_ids: prev_report_ids} = prevProps;
 
-        if(report_ids !== prev_report_ids) {
+        if (report_ids !== prev_report_ids) {
             this.setState({report_ids});
         }
     }
@@ -39,10 +39,10 @@ class ReportTable extends Component {
             const {loading} = this.state;
             const response = await fetchPatientReports();
             const {status, payload: {data: {report_ids = []} = {}} = {}} = response || {};
-            if(status === true) {
+            if (status === true) {
                 this.setState({report_ids, loading: false});
             }
-        } catch(error) {
+        } catch (error) {
             this.setState({loading: false});
         }
     };
@@ -53,11 +53,11 @@ class ReportTable extends Component {
     };
 
     openModal = (documentData) => () => {
-      this.setState({documentData, modalVisible: true});
+        this.setState({documentData, modalVisible: true});
     };
 
     closeModal = () => {
-      this.setState({modalVisible: false});
+        this.setState({modalVisible: false});
     };
 
     getDataSource = () => {
@@ -106,13 +106,13 @@ class ReportTable extends Component {
 
     render() {
         const {
-            intl: { formatMessage } = {},
+            intl: {formatMessage} = {},
         } = this.props;
         const {modalVisible, documentData} = this.state;
-        const { getDataSource, closeModal } = this;
+        const {getDataSource, closeModal} = this;
 
         const reportLocale = {
-            emptyText:this.formatMessage(messages.emptyReports)
+            emptyText: this.formatMessage(messages.emptyReports)
         }
 
         return (
@@ -125,13 +125,14 @@ class ReportTable extends Component {
                         className: "pointer",
                     })}
                     dataSource={getDataSource()}
-                    scroll={{ x: '100%' }}
+                    scroll={{x: '100%'}}
                     pagination={{
                         position: "bottom",
                     }}
                     locale={reportLocale}
                 />
-                <ReportDocumentModal visible={modalVisible} documentData={documentData} onClose={closeModal} formatMessage={formatMessage}/>
+                <ReportDocumentModal visible={modalVisible} documentData={documentData} onClose={closeModal}
+                                     formatMessage={formatMessage}/>
             </Fragment>
         );
     }

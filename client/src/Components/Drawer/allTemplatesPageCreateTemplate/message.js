@@ -1,4 +1,4 @@
-import { defineMessages } from "react-intl";
+import {defineMessages} from "react-intl";
 
 const messages = defineMessages({
     medicine: {
@@ -157,32 +157,32 @@ const messages = defineMessages({
         description: "",
         defaultMessage: "An action for this vital already exist in this template."
     },
-    templateTitle:{
+    templateTitle: {
         id: "app.allTemplatesAddDrawer.templateTitle",
         description: "",
         defaultMessage: "Add Template"
     },
-    add:{
+    add: {
         id: "app.allTemplatesAddDrawer.add",
         description: "",
         defaultMessage: "Add"
     },
-    name_text:{
+    name_text: {
         id: "app.allTemplatesAddDrawer.nameText",
         description: "",
         defaultMessage: "Name"
     },
-    namePlaceholder:{
+    namePlaceholder: {
         id: "app.allTemplatesAddDrawer.namePlaceholder",
         description: "",
         defaultMessage: "Template name"
     },
-    warnMessage:{
+    warnMessage: {
         id: "app.allTemplatesAddDrawer.warnMessage",
         description: "",
         defaultMessage: "This will delete all unsaved template data"
     },
-    closeMessage:{
+    closeMessage: {
         id: "app.allTemplatesAddDrawer.closeMessage",
         description: "",
         defaultMessage: "Are you sure you want to cancel ?"
@@ -197,7 +197,7 @@ const messages = defineMessages({
         description: "",
         defaultMessage: "Diets"
     },
-    workouts:{
+    workouts: {
         id: "app.allTemplatesAddDrawer.workouts",
         description: "",
         defaultMessage: "Workouts"

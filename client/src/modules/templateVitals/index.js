@@ -1,7 +1,5 @@
-
-
 function templateVitalsReducer(state, data) {
-    const { template_vitals } = data || {};
+    const {template_vitals} = data || {};
     if (template_vitals) {
         return {
             ...state,
@@ -13,7 +11,7 @@ function templateVitalsReducer(state, data) {
 }
 
 export default (state = {}, action) => {
-    const { type, data } = action;
+    const {type, data} = action;
     switch (type) {
         default:
             return templateVitalsReducer(state, data)

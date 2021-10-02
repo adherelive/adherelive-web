@@ -7,14 +7,20 @@ import {open} from "../../modules/drawer";
 import {DRAWER} from "../../constant";
 
 const mapStateToProps = state => {
-    const {reports = {}, doctors = {}, patients = {}, upload_documents = {}, pages: {report_ids = []} = {}} = state || {};
-  return {
-      reports,
-      doctors,
-      patients,
-      upload_documents,
-      report_ids,
-  };
+    const {
+        reports = {},
+        doctors = {},
+        patients = {},
+        upload_documents = {},
+        pages: {report_ids = []} = {}
+    } = state || {};
+    return {
+        reports,
+        doctors,
+        patients,
+        upload_documents,
+        report_ids,
+    };
 };
 
 const mapDispatchToProps = dispatch => {
@@ -49,7 +55,6 @@ const mergeProps = (stateProps, dispatchProps, ownProps) => {
         fetchPatientReports: fetchPatientReports(patientId)
     };
 };
-
 
 
 export default withRouter(connect(

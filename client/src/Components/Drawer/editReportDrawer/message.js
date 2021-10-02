@@ -1,4 +1,4 @@
-import { defineMessages } from "react-intl";
+import {defineMessages} from "react-intl";
 
 const messages = defineMessages({
     editReport: {
@@ -6,66 +6,66 @@ const messages = defineMessages({
         description: "",
         defaultMessage: "Edit Report"
     },
-    upload_text:{
+    upload_text: {
         id: "app.editReport.upload_text",
         description: "",
         defaultMessage: "Upload"
     },
-    name:{
+    name: {
         id: "app.editReport.name",
         description: "",
         defaultMessage: "Name"
     },
-    files:{
+    files: {
         id: "app.editReport.files",
         description: "",
         defaultMessage: "Files"
     },
-    add_report_name:{
+    add_report_name: {
         id: "app.editReport.editReportName",
         description: "",
         defaultMessage: "Add Report Name"
     },
-    submit:{
+    submit: {
         id: "app.editReport.submit",
         description: "",
         defaultMessage: "Submit"
     },
-    somethingWentWrong: { 
+    somethingWentWrong: {
         id: "app.editReport.somethingWentWrong",
         description: "",
         defaultMessage: "Something went wrong."
     },
-    testDate: { 
+    testDate: {
         id: "app.editReport.testDate",
         description: "",
         defaultMessage: "Test Date"
     },
-    deleteSuccess:{ 
+    deleteSuccess: {
         id: "app.editReport.reportDelete",
         description: "",
         defaultMessage: "Report deleted"
     },
-    exitWarn:{ 
+    exitWarn: {
         id: "app.editReport.exitWarn",
         description: "",
         defaultMessage: "This will remove all the data to be uploaded"
     },
-    exitMessage:{ 
+    exitMessage: {
         id: "app.editReport.exitMessage",
         description: "",
         defaultMessage: "Are you sure you want to cancel ?"
     },
-    deleteWarn:{ 
+    deleteWarn: {
         id: "app.editReport.deleteWarn",
         description: "",
         defaultMessage: "This will delete is irreversible"
     },
-    deleteMessage:{
+    deleteMessage: {
         id: "app.editReport.deleteMessage",
         description: "",
         defaultMessage: "Are you sure you want to delete the document ?"
-        
+
     }
 });
 

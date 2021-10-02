@@ -11,7 +11,7 @@ class FoodGroupWrapper extends BaseFoodGroup {
     }
 
     getBasicInfo = () => {
-        const { _data } = this;
+        const {_data} = this;
         const {
             id,
             portion_id,
@@ -32,33 +32,32 @@ class FoodGroupWrapper extends BaseFoodGroup {
     };
 
 
-   
     getAllInfo = async () => {
-        const { getBasicInfo } = this;
+        const {getBasicInfo} = this;
 
         return {
-        ...getBasicInfo(),
+            ...getBasicInfo(),
         };
     };
 
-    getReferenceInfo = async() => {
-         
-        const { getBasicInfo , getId }=this;
+    getReferenceInfo = async () => {
+
+        const {getBasicInfo, getId} = this;
         let portionData = {};
 
         const foodItemDetailsId = await this.getFoodItemDetailsId();
-        const foodItemDetailsData = await FoodItemDetailsWrapper({id:foodItemDetailsId});
+        const foodItemDetailsData = await FoodItemDetailsWrapper({id: foodItemDetailsId});
 
         const portion_id = this.getPortionId();
-        const portionWrapper = await PortionWrapper({id:portion_id});
-    
-        portionData[`${portion_id}`] =  await portionWrapper.getBasicInfo();
-      
+        const portionWrapper = await PortionWrapper({id: portion_id});
+
+        portionData[`${portion_id}`] = await portionWrapper.getBasicInfo();
+
         return {
-            food_groups:{
-                [`${getId()}`]:{...(await getBasicInfo())}
+            food_groups: {
+                [`${getId()}`]: {...(await getBasicInfo())}
             },
-            portions:{
+            portions: {
                 ...portionData
             },
             ...(await foodItemDetailsData.getReferenceInfo())
@@ -68,12 +67,11 @@ class FoodGroupWrapper extends BaseFoodGroup {
 }
 
 
-
 export default async ({data = null, id = null}) => {
     if (data !== null) {
         return new FoodGroupWrapper(data);
     }
-    const foodGroupService =new FoodGroupService();
-    const foodGroup = await foodGroupService.getByData({ id });
+    const foodGroupService = new FoodGroupService();
+    const foodGroup = await foodGroupService.getByData({id});
     return new FoodGroupWrapper(foodGroup);
 };

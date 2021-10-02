@@ -1,5 +1,6 @@
 import BasePatientConsentMapping from "../../../services/patientPaymentConsentMapping";
-import patientPaymentConsentMappingService from "../../../services/patientPaymentConsentMapping/patientPaymentConsentMapping.service";
+import patientPaymentConsentMappingService
+    from "../../../services/patientPaymentConsentMapping/patientPaymentConsentMapping.service";
 
 
 class PatientPaymentConsentMappingWrapper extends BasePatientConsentMapping {
@@ -31,7 +32,7 @@ class PatientPaymentConsentMappingWrapper extends BasePatientConsentMapping {
 }
 
 export default async (data = null, id = null) => {
-    if(data) {
+    if (data) {
         return new PatientPaymentConsentMappingWrapper(data);
     }
     const response = await patientPaymentConsentMappingService.getSingleEntityByData({id})

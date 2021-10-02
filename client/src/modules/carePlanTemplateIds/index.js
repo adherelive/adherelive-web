@@ -1,8 +1,7 @@
-
 export const GET_ALL_TEMPLATES_FOR_DOC_COMPLETE = "GET_ALL_TEMPLATES_FOR_DOC_COMPLETE";
 
 function carePlanTemplateIds(state, data) {
-    const { care_plan_template_ids } = data || {};
+    const {care_plan_template_ids} = data || {};
     if (care_plan_template_ids) {
         return {
             ...care_plan_template_ids,
@@ -13,7 +12,7 @@ function carePlanTemplateIds(state, data) {
 }
 
 export default (state = {}, action) => {
-    const { type, data } = action;
+    const {type, data} = action;
     switch (type) {
         // case GET_ALL_TEMPLATES_FOR_DOC_COMPLETE:
         //     const {care_plan_template_ids =[]} = data;

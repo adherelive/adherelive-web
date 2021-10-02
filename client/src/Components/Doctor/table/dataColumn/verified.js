@@ -3,8 +3,8 @@ import moment from "moment";
 import {CheckCircleTwoTone, ExclamationCircleTwoTone} from "@ant-design/icons";
 
 export default props => {
-    const { userData } = props || {};
-    const { activated_on } = userData || {};
+    const {userData} = props || {};
+    const {activated_on} = userData || {};
 
 
     return (

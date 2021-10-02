@@ -1,4 +1,4 @@
-import { defineMessages } from "react-intl";
+import {defineMessages} from "react-intl";
 
 const messages = defineMessages({
     editPatient: {
@@ -6,7 +6,7 @@ const messages = defineMessages({
         description: "",
         defaultMessage: "Edit Patient"
     },
-    searchPatient:{
+    searchPatient: {
         id: "app.editPatient.searchPatient",
         description: "",
         defaultMessage: "Search"
@@ -116,26 +116,26 @@ const messages = defineMessages({
         description: "",
         defaultMessage: "Allergies"
     },
-    writeHere:{
+    writeHere: {
         id: "app.editPatient.writeHere",
         description: "",
         defaultMessage: "Write here"
     },
-    clinicalNotes:{
+    clinicalNotes: {
         id: "app.editPatient.clinicalNotes",
         description: "",
         defaultMessage: "Clinical Notes"
     },
-    diagnosis:{
+    diagnosis: {
         id: "app.editPatient.diagnosis",
         description: "",
         defaultMessage: "Diagnosis"
     },
-    diagnosisError:{
+    diagnosisError: {
         id: "app.editPatient.diagnosisError",
         description: "",
         defaultMessage: "Please enter Diagnosis"
-    },diagnosisTypeError:{
+    }, diagnosisTypeError: {
         id: "app.editPatient.diagnosisTypeError",
         description: "",
         defaultMessage: "Please enter Diagnosis Type"
@@ -155,22 +155,22 @@ const messages = defineMessages({
         description: "",
         defaultMessage: "Symptoms"
     },
-    height_placeholder:{
+    height_placeholder: {
         id: "app.editPatient.height.placeholder",
         description: "",
         defaultMessage: "Add Height in Centimeters"
     },
-    weight_placeholder:{
+    weight_placeholder: {
         id: "app.editPatient.weight.placeholder",
         description: "",
         defaultMessage: "Add Weight in Kgs"
     },
-    editSuccess:{
+    editSuccess: {
         id: "app.editPatient.editSuccess",
         description: "",
         defaultMessage: "Patient Edited successfully"
     },
-    address:{
+    address: {
         id: "app.editPatient.address",
         description: "",
         defaultMessage: "Address"
@@ -185,13 +185,13 @@ const messages = defineMessages({
         description: "",
         defaultMessage: "Please enter correct weight value"
     },
-    none:{
+    none: {
         id: "app.addPatient.none",
         description: "",
         defaultMessage: "None"
     },
-      
-    
+
+
 });
 
 export default messages;

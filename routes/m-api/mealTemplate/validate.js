@@ -1,5 +1,5 @@
 import Joi from "joi";
-import { validationError } from "../../helper";
+import {validationError} from "../../helper";
 
 // schema
 const createMealTemplateSchema = Joi.object({
@@ -21,7 +21,7 @@ const createMealTemplateSchema = Joi.object({
     })
 });
 
-const updateMealTemplateSchema= Joi.object({
+const updateMealTemplateSchema = Joi.object({
 
     name: Joi.string().max(50).required().messages({
         'string.base': `Template name should be a type of text`,
@@ -42,27 +42,27 @@ const updateMealTemplateSchema= Joi.object({
 });
 
 export const create = (req, res, next) => {
-  const { body: data = {} } = req;
-  const isValid = createMealTemplateSchema.validate(data, { convert: false });
+    const {body: data = {}} = req;
+    const isValid = createMealTemplateSchema.validate(data, {convert: false});
 
-  const { error: { details = [] } = {} } = isValid || {};
+    const {error: {details = []} = {}} = isValid || {};
 
-  if (details.length > 0) {
-    return validationError(res, details[0].message);
-  } else {
-    next();
-  }
+    if (details.length > 0) {
+        return validationError(res, details[0].message);
+    } else {
+        next();
+    }
 };
 
 export const update = (req, res, next) => {
-  const { body: data = {} } = req;
-  const isValid = updateMealTemplateSchema.validate(data, { convert: false });
+    const {body: data = {}} = req;
+    const isValid = updateMealTemplateSchema.validate(data, {convert: false});
 
-  const { error: { details = [] } = {} } = isValid || {};
+    const {error: {details = []} = {}} = isValid || {};
 
-  if (details.length > 0) {
-    return validationError(res, details[0].message);
-  } else {
-    next();
-  }
+    if (details.length > 0) {
+        return validationError(res, details[0].message);
+    } else {
+        next();
+    }
 };

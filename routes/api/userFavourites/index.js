@@ -6,24 +6,24 @@ import * as validate from "./validator";
 const router = express.Router();
 
 router.post(
-  "/",
-  Authenticated,
-  // validate.validateCreateFavourite,
-  UserFavourites.create
+    "/",
+    Authenticated,
+    // validate.validateCreateFavourite,
+    UserFavourites.create
 );
 
 router.get(
-  "/",
-  Authenticated,
-  validate.validateGetFavourites,
-  UserFavourites.getUserTypeFavourites
+    "/",
+    Authenticated,
+    validate.validateGetFavourites,
+    UserFavourites.getUserTypeFavourites
 );
 
 router.delete(
-  "/:id",
-  Authenticated,
-  // validate.validateRemoveFavourites,
-  UserFavourites.removeFavourite
+    "/:id",
+    Authenticated,
+    // validate.validateRemoveFavourites,
+    UserFavourites.removeFavourite
 );
 
 router.delete(

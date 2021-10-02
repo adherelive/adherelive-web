@@ -30,7 +30,7 @@ class DoctorRegistrationWrapper extends BaseDoctorRegistration {
 }
 
 export default async (data = null, id = null) => {
-    if(data) {
+    if (data) {
         return new DoctorRegistrationWrapper(data);
     }
     const doctorRegistration = await doctorRegistrationService.getRegistrationById(id);

@@ -4,7 +4,7 @@ const express = require("express");
 const router = express.Router();
 import Authenticate from "../middleware/auth";
 import Response from "../../../app/helper/responseFormat";
-import { USER_CATEGORY } from "../../../constant";
+import {USER_CATEGORY} from "../../../constant";
 
 import Doctor from "../../../app/controllers/doctors/doctor.controller";
 import Admin from "../../../app/controllers/admin/admin.controller";
@@ -20,24 +20,24 @@ router.get("/details/:type", Admin.getTermsAndPolicy);
 router.get("/terms_and_conditions/:id", Admin.getTermsAndConditions);
 
 router.use(async (req, res, next) => {
-  try {
-    const { userDetails } = req;
-    const { userData: { category } = {} } = userDetails || {};
+    try {
+        const {userDetails} = req;
+        const {userData: {category} = {}} = userDetails || {};
 
-    if (
-      category !== USER_CATEGORY.ADMIN &&
-      category !== USER_CATEGORY.PROVIDER
-    ) {
-      const response = new Response(false, 401);
-      response.setMessage("only admin user can have access to this api");
-      return res.status(response.getStatusCode()).json(response.getResponse());
+        if (
+            category !== USER_CATEGORY.ADMIN &&
+            category !== USER_CATEGORY.PROVIDER
+        ) {
+            const response = new Response(false, 401);
+            response.setMessage("only admin user can have access to this api");
+            return res.status(response.getStatusCode()).json(response.getResponse());
+        }
+    } catch (error) {
+        const response = new Response(false, 500);
+        response.setMessage("something went wrong. Please try again later");
+        return res.status(response.getStatusCode()).json(response.getResponse());
     }
-  } catch (error) {
-    const response = new Response(false, 500);
-    response.setMessage("something went wrong. Please try again later");
-    return res.status(response.getStatusCode()).json(response.getResponse());
-  }
-  next();
+    next();
 });
 
 // ---------------------------- GET ----------------------------
@@ -49,9 +49,9 @@ router.get("/doctors/:id", Authenticate, Doctor.getAllAdminDoctorDetails);
 router.get("/providers", Authenticate, Provider.getAllProviders);
 
 router.get(
-  "/doctors/:id/account",
-  Authenticate,
-  AccountsController.getDoctorAccountDetails
+    "/doctors/:id/account",
+    Authenticate,
+    AccountsController.getDoctorAccountDetails
 );
 
 router.get("/medicines", Authenticate, Medicine.getMedicinesForAdmin);

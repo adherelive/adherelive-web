@@ -11,22 +11,21 @@
 // };
 
 
-
 function allProvidersPageReducer(state, data) {
-  const { provider_ids } = data || {};
-  if (provider_ids) {
-    return [
-      ...provider_ids
-    ];
-  } else {
-    return state;
-  }
+    const {provider_ids} = data || {};
+    if (provider_ids) {
+        return [
+            ...provider_ids
+        ];
+    } else {
+        return state;
+    }
 }
 
 export default (state = [], action) => {
-  const { type, data } = action;
-  switch (type) {
-    default:
-      return allProvidersPageReducer(state, data);
-  }
+    const {type, data} = action;
+    switch (type) {
+        default:
+            return allProvidersPageReducer(state, data);
+    }
 };

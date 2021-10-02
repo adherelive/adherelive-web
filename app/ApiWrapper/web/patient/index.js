@@ -18,7 +18,7 @@ class PatientWrapper extends BasePatient {
 
     getBasicInfo = () => {
 
-        const { _data } = this;
+        const {_data} = this;
         const {
             id,
             user_id,
@@ -36,12 +36,12 @@ class PatientWrapper extends BasePatient {
             dob,
             uid,
             payment_terms_accepted,
-            createdAt:created_at
+            createdAt: created_at
         } = _data || {};
         // console.log("346236542783642534623548723648",{created_at,_data});
         const {profile_pic = ""} = details || {};
 
-        const updatedDetails =  {
+        const updatedDetails = {
             ...details,
             profile_pic: profile_pic ? completePath(profile_pic) : null,
         };
@@ -72,20 +72,20 @@ class PatientWrapper extends BasePatient {
         const {_data, getBasicInfo, getPatientId} = this;
 
         // const carePlans = await carePlanService.getMultipleCarePlanByData({patient_id: getPatientId()});
-        const order = [["created_at","DESC"]];
-        const data={patient_id: getPatientId()};
-        let carePlan = await carePlanService.getSingleCarePlanByData(data,order);
+        const order = [["created_at", "DESC"]];
+        const data = {patient_id: getPatientId()};
+        let carePlan = await carePlanService.getSingleCarePlanByData(data, order);
 
         const carePlanId = carePlan.get("id") || null;
-    
-        const { user_id =null } = _data || {};
-        let user_role_id = null ;
+
+        const {user_id = null} = _data || {};
+        let user_role_id = null;
         const userRole = await userRolesService.getFirstUserRole(user_id);
-        if(userRole){
+        if (userRole) {
             const userRoleData = await userRoleWrapper(userRole);
             user_role_id = userRoleData.getId();
         }
-        
+
         return {
             ...getBasicInfo(),
             care_plan_id: carePlanId,
@@ -113,6 +113,6 @@ export default async (data = null, id = null) => {
     if (data) {
         return new PatientWrapper(data);
     }
-    const patient = await patientService.getPatientById({ id });
+    const patient = await patientService.getPatientById({id});
     return new PatientWrapper(patient);
 }

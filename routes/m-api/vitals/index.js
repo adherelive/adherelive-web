@@ -17,23 +17,23 @@ router.get(
 );
 
 router.get(
-  "/:id",
-  Authenticate,
-  VitalController.getVitalResponseTimeline
+    "/:id",
+    Authenticate,
+    VitalController.getVitalResponseTimeline
 );
 
 router.post(
-  "/",
-  Authenticate,
-  // validator.validateVitalsForm,
-  VitalController.addVital
+    "/",
+    Authenticate,
+    // validator.validateVitalsForm,
+    VitalController.addVital
 );
 
 router.post(
-  "/:id",
-  Authenticate,
-  // validator.validateVitalsForm,
-  VitalController.updateVital
+    "/:id",
+    Authenticate,
+    // validator.validateVitalsForm,
+    VitalController.updateVital
 );
 
 router.post(

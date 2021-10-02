@@ -7,7 +7,7 @@ class UserPreferenceWrapper extends BaseUserPreference {
     }
 
     getBasicInfo = () => {
-        const { _data } = this;
+        const {_data} = this;
         const {
             id,
             user_id,
@@ -23,11 +23,11 @@ class UserPreferenceWrapper extends BaseUserPreference {
     };
 
     getChartInfo = () => {
-      const {_data: {details: {charts = []}} = {}} = this;
+        const {_data: {details: {charts = []}} = {}} = this;
 
-      return {
-          charts
-      };
+        return {
+            charts
+        };
     };
 }
 

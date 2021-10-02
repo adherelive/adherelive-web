@@ -54,7 +54,7 @@ class CarePlanAppointmentWrapper extends BaseCarePlanAppointment {
 }
 
 export default async (data = null, id = null) => {
-    if(data) {
+    if (data) {
         return new CarePlanAppointmentWrapper(data);
     }
     const carePlan = await carePlanAppointmentService.getSingleCarePlanAppointmentByData({id});

@@ -8,18 +8,18 @@ import MobileMedicationReminder from "../../../app/controllers/mControllers/medi
 import * as validator from "./validator";
 
 router.post(
-  "/appointments",
-  Authenticate,
-  validator.validateAppointmentFormData,
-  MobileAppointment.create
+    "/appointments",
+    Authenticate,
+    validator.validateAppointmentFormData,
+    MobileAppointment.create
 );
 
 // ----------- MEDICATION -----------
 
 router.get(
-  "/medication-details",
-  Authenticate,
-  MobileMedicationReminder.getMedicationDetails
+    "/medication-details",
+    Authenticate,
+    MobileMedicationReminder.getMedicationDetails
 );
 
 // router.post(
@@ -30,15 +30,15 @@ router.get(
 // );
 
 router.get(
-  "/missed",
-  Authenticate,
+    "/missed",
+    Authenticate,
     EventController.getAllMissedEvents
 );
 
 router.get(
-  "/missed/:patient_id",
-  Authenticate,
-  EventController.getPatientMissedEvents
+    "/missed/:patient_id",
+    Authenticate,
+    EventController.getPatientMissedEvents
 );
 
 // VITALS
@@ -50,15 +50,15 @@ router.get("/", Authenticate, EventController.getAllEvents);
 
 // for alerts from last visit
 router.get(
-  "/:patient_id/last-visit",
-  Authenticate,
-  EventController.getLastVisitEvents
+    "/:patient_id/last-visit",
+    Authenticate,
+    EventController.getLastVisitEvents
 );
 
 router.post(
-  "/medication-status/:eventId",
-  Authenticate,
-  EventController.updateMedicationStatus
+    "/medication-status/:eventId",
+    Authenticate,
+    EventController.updateMedicationStatus
 );
 
 router.post(
@@ -74,21 +74,21 @@ router.post(
 );
 
 router.post(
-  "/:id/reschedule",
-  Authenticate,
-  EventController.reschedule
+    "/:id/reschedule",
+    Authenticate,
+    EventController.reschedule
 )
 
 router.delete(
-  "/:id/vitals/response",
-  Authenticate,
-  EventController.deleteVitalResponse
+    "/:id/vitals/response",
+    Authenticate,
+    EventController.deleteVitalResponse
 );
 
 router.post(
-  "/:id/vitals/response",
-  Authenticate,
-  EventController.updateVitalResponse
+    "/:id/vitals/response",
+    Authenticate,
+    EventController.updateVitalResponse
 );
 
 module.exports = router;

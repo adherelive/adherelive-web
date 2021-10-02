@@ -1,5 +1,5 @@
 import Joi from "joi";
-import { validationErrorMessage } from "../helper";
+import {validationErrorMessage} from "../helper";
 
 // schema
 const createFoodItemSchema = Joi.object({
@@ -13,7 +13,7 @@ const createFoodItemSchema = Joi.object({
         'number.empty': `Portion Id cannot be empty`,
         'any.required': `Portion Id is required`
     }),
-    portion_size:Joi.number().strict().required().messages({
+    portion_size: Joi.number().strict().required().messages({
         'number.base': `Portion Size must be of type number`,
         'number.empty': `Portion Size cannot be empty`,
         'any.required': `Portion Size is required`
@@ -38,7 +38,7 @@ const createFoodItemSchema = Joi.object({
         'number.base': `Fibers must be of type number`,
         'any.optional': `Fibers must be of type number`
     }),
-  details: Joi.object().optional()
+    details: Joi.object().optional()
 });
 
 const updateFoodItemSchema = Joi.object({
@@ -77,31 +77,31 @@ const updateFoodItemSchema = Joi.object({
         'number.base': `Fibers must be of type number`,
         'any.optional': `Fibers must be of type number`
     }),
-  details: Joi.object().optional()
+    details: Joi.object().optional()
 });
 
 export const create = (req, res, next) => {
-  const { body: data = {} } = req;
-  const isValid = createFoodItemSchema.validate(data, { convert: false });
+    const {body: data = {}} = req;
+    const isValid = createFoodItemSchema.validate(data, {convert: false});
 
-  const { error: { details = [] } = {} } = isValid || {};
+    const {error: {details = []} = {}} = isValid || {};
 
-  if (details.length > 0) {
-    return validationErrorMessage(res, details[0].message);
-  } else {
-    next();
-  }
+    if (details.length > 0) {
+        return validationErrorMessage(res, details[0].message);
+    } else {
+        next();
+    }
 };
 
 export const update = (req, res, next) => {
-  const { body: data = {} } = req;
-  const isValid = updateFoodItemSchema.validate(data, { convert: false });
+    const {body: data = {}} = req;
+    const isValid = updateFoodItemSchema.validate(data, {convert: false});
 
-  const { error: { details = [] } = {} } = isValid || {};
+    const {error: {details = []} = {}} = isValid || {};
 
-  if (details.length > 0) {
-    return validationErrorMessage(res, details[0].message);
-  } else {
-    next();
-  }
+    if (details.length > 0) {
+        return validationErrorMessage(res, details[0].message);
+    } else {
+        next();
+    }
 };

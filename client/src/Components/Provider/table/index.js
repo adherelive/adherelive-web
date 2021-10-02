@@ -1,6 +1,6 @@
-import React, { Component } from "react";
-import { injectIntl } from "react-intl";
-import { withRouter } from "react-router-dom";
+import React, {Component} from "react";
+import {injectIntl} from "react-intl";
+import {withRouter} from "react-router-dom";
 
 import Table from "antd/es/table";
 import Icon from "antd/es/icon";
@@ -17,65 +17,66 @@ class ProviderTable extends Component {
     }
 
     componentDidMount() {
-        const { getAllProviders } = this.props;
+        const {getAllProviders} = this.props;
         getAllProviders();
     }
 
     onSelectChange = selectedRowKeys => {
-        this.setState({ selectedRows: selectedRowKeys });
+        this.setState({selectedRows: selectedRowKeys});
     };
 
     getLoadingComponent = () => {
-        const antIcon = <Icon type="loading" style={{ fontSize: 24 }} spin />;
+        const antIcon = <Icon type="loading" style={{fontSize: 24}} spin/>;
         return {
             indicator: antIcon
         };
     };
 
     getDataSource = () => {
-        const { users,
-             providers,
-              provider_ids,
-              openEditProviderDrawer,
-              } = this.props;
+        const {
+            users,
+            providers,
+            provider_ids,
+            openEditProviderDrawer,
+        } = this.props;
 
-        console.log("7865467890",{providers,provider_ids});      
+        console.log("7865467890", {providers, provider_ids});
 
-      
+
         return Object.keys(providers).map(id => {
             return generateRow({
                 id,
                 users,
                 providers,
                 openEditProviderDrawer,
-                
+
             });
         });
     };
 
-   
 
     getTableTitle = () => {
         const {intl: {formatMessage} = {}} = this.props;
-        const {auth : {authenticated_category = ''} = {}} = this.props;
-      return (
-        authenticated_category === USER_CATEGORY.ADMIN
-        ?
-        (<div className="fs22 fw600 m0">{formatMessage(messages.providers)}</div>)
-        :
-        null
-        
-      );
+        const {auth: {authenticated_category = ''} = {}} = this.props;
+        return (
+            authenticated_category === USER_CATEGORY.ADMIN
+                ?
+                (<div className="fs22 fw600 m0">{formatMessage(messages.providers)}</div>)
+                :
+                null
+
+        );
     };
 
     render() {
-        const { 
-             getLoadingComponent, getDataSource, getTableTitle } = this;
+        const {
+            getLoadingComponent, getDataSource, getTableTitle
+        } = this;
 
         const {
             loading,
             pagination_bottom,
-            intl: { formatMessage } = {}
+            intl: {formatMessage} = {}
         } = this.props;
 
         return (
@@ -89,7 +90,7 @@ class ProviderTable extends Component {
                     className: "pointer"
                 })}
                 dataSource={getDataSource()}
-                scroll={{ x: "100%" }}
+                scroll={{x: "100%"}}
                 // title={getTableTitle}
                 pagination={{
                     position: "top",

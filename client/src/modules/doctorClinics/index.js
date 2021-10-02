@@ -1,5 +1,5 @@
 function doctorClinicReducer(state, data) {
-    const { doctor_clinics } = data || {};
+    const {doctor_clinics} = data || {};
     if (doctor_clinics) {
         return {
             ...state,
@@ -11,7 +11,7 @@ function doctorClinicReducer(state, data) {
 }
 
 export default (state = {}, action) => {
-    const { type, data } = action;
+    const {type, data} = action;
     switch (type) {
         default:
             return doctorClinicReducer(state, data);

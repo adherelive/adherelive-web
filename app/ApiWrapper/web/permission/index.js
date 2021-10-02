@@ -6,18 +6,18 @@ class PermissionWrapper extends BasePermission {
     }
 
     getBasicInfo = () => {
-      const {_data} = this;
-      const {
-          id,
-          type
-      } = _data || {};
+        const {_data} = this;
+        const {
+            id,
+            type
+        } = _data || {};
 
-      return {
-          basic_info: {
-              id,
-              type
-          }
-      };
+        return {
+            basic_info: {
+                id,
+                type
+            }
+        };
     };
 }
 

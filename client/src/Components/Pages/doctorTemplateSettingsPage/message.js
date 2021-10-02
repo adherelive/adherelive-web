@@ -1,4 +1,4 @@
-import { defineMessages } from "react-intl";
+import {defineMessages} from "react-intl";
 
 export default defineMessages({
     createText: {
@@ -6,15 +6,15 @@ export default defineMessages({
         description: "",
         defaultMessage: "Create Template"
     },
-    noExistingText:{
+    noExistingText: {
         id: "app.templateTable.noExistingText",
         description: "",
         defaultMessage: "No Existing Templates"
     },
-    templates:{
+    templates: {
         id: "app.templateTable.templates",
         description: "",
         defaultMessage: "Templates"
     },
-    
+
 });

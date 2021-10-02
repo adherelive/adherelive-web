@@ -7,36 +7,36 @@ class ConsentWrapper extends BaseConsent {
     }
 
     getBasicInfo = () => {
-      const {_data} = this;
-      const {
-          id,
-          type,
-          doctor_id,
-          patient_id,
-          user_role_id,
-          activated_on,
-          expire_on
-      } = _data || {};
+        const {_data} = this;
+        const {
+            id,
+            type,
+            doctor_id,
+            patient_id,
+            user_role_id,
+            activated_on,
+            expire_on
+        } = _data || {};
 
-      return {
-          basic_info: {
-              id,
-              type,
-              doctor_id,
-              patient_id,
-              user_role_id,
-          },
-          activated_on,
-          expire_on
-      }
+        return {
+            basic_info: {
+                id,
+                type,
+                doctor_id,
+                patient_id,
+                user_role_id,
+            },
+            activated_on,
+            expire_on
+        }
     };
 }
 
 export default async ({data = null, id = null}) => {
-  if(data) {
-      return new ConsentWrapper(data);
-  }
-  const consentService = new ConsentService();
-  const consent = await consentService.getByData({id});
-  return new ConsentWrapper(consent);
+    if (data) {
+        return new ConsentWrapper(data);
+    }
+    const consentService = new ConsentService();
+    const consent = await consentService.getByData({id});
+    return new ConsentWrapper(consent);
 };
