@@ -123,7 +123,7 @@ class PatientController extends Controller {
                 await minioService.createBucket();
                 // var file = path.join(__dirname, "../../../report.xlsx");
                 const fileStream = fs.createReadStream(profile_pic);
-                // console.log("FIleStreammmmmmmmmmmmmHHH",fileStream);
+                console.log("File Stream: ", fileStream);
                 let hash = md5.create();
                 hash.update(userId);
                 hash.hex();
@@ -132,8 +132,7 @@ class PatientController extends Controller {
                 // const fileExt = "";
                 const file_name = hash.substring(4) + "-Report." + fileExt;
                 const metaData = {
-                    "Content-Type":
-                        "application/	application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+                    "Content-Type": "application/	application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
                 };
                 const fileUrl = folder + "/" + file_name;
                 await minioService.saveBufferObject(fileStream, fileUrl, metaData);
@@ -149,7 +148,7 @@ class PatientController extends Controller {
                 middle_name,
                 last_name,
                 details: {
-                    // todo: profile_pic
+                    // TODO: profile_pic
                 },
                 uid: pid,
             };
@@ -340,11 +339,7 @@ class PatientController extends Controller {
             // for care plan templates
             let templateVitalData = {};
             let templateDietData = {}, foodItemDetailsApiData = {}, foodItemsApiData = {}, portionsApiData = {};
-
-            let templateWorkoutData = {},
-                exerciseDetailData = {},
-                exerciseData = {},
-                repetitionData = {};
+            let templateWorkoutData = {}, exerciseDetailData = {}, exerciseData = {}, repetitionData = {};
 
             // for vitals
             let vitalTemplateData = {};
@@ -361,12 +356,12 @@ class PatientController extends Controller {
                     schedule_events,
                     care_plan_ids,
                     current_careplan_id,
-                } = await carePlanHelper.getCareplanData({
+                } = (await carePlanHelper.getCareplanData({
                     carePlans,
                     userCategory: category,
                     doctorId: userCategoryId,
                     userRoleId
-                });
+                }));
 
                 // care plans
                 carePlanApiDetails = {...carePlanApiDetails, ...care_plans};
@@ -2492,10 +2487,7 @@ class PatientController extends Controller {
                         user_role_id: userRoleId,
                         filter:
                             `(JSON_VALUE(carePlan.details, '$.diagnosis.description') LIKE '${filter_diagnosis}%' OR
-                JSON_VALUE(carePlan.details, '$.diagnosis.type') = ${diagnosis_type}) 
-                
-                 `,
-                        user_role_id: userRoleId,
+                JSON_VALUE(carePlan.details, '$.diagnosis.type') = ${diagnosis_type})`,
                         offset: offsetLimit,
                         limit: endLimit,
                         watchlist: watchlistQuery,

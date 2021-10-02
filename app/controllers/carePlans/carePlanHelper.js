@@ -35,11 +35,11 @@ import moment from "moment";
 const Log = new Logger("CARE_PLAN > HELPER");
 
 export const getCareplanData = async ({
-                                          carePlans = [],
-                                          userCategory,
-                                          doctorId,
-                                          userRoleId,
-                                      }) => {
+      carePlans = [],
+      userCategory,
+      doctorId,
+      userRoleId,
+  }) => {
     try {
         let carePlanData = {};
         let carePlanIds = [];
@@ -63,12 +63,13 @@ export const getCareplanData = async ({
         let currentCareplanId = null;
 
         for (let index = 0; index < carePlans.length; index++) {
-            const careplan = await CarePlanWrapper(carePlans[index]);
+            const careplan = (await CarePlanWrapper(carePlans[index]));
             const {
                 care_plans,
                 doctors,
                 doctor_id,
-            } = await careplan.getReferenceInfo();
+            } = (await careplan.getReferenceInfo());
+
             carePlanData = {...carePlanData, ...care_plans};
             carePlanIds.push(careplan.getCarePlanId());
 
@@ -79,35 +80,32 @@ export const getCareplanData = async ({
                 appointment_ids,
                 basic_info: {user_role_id = null} = {},
             } = care_plans[careplan.getCarePlanId()] || {};
+
             appointmentIds = [...appointmentIds, ...appointment_ids];
+            
             medicationIds = [...medicationIds, ...medication_ids];
 
-            const secondaryDoctorUserRoleIds =
-                careplan.getCareplnSecondaryProfiles() || [];
+            const secondaryDoctorUserRoleIds = careplan.getCareplnSecondaryProfiles() || [];
 
             const isUserRoleAllowed = [user_role_id, ...secondaryDoctorUserRoleIds]
                 .map((id) => parseInt(id))
                 .includes(userRoleId);
-            // get latest careplan id
-            if (
-                (userCategory === USER_CATEGORY.DOCTOR ||
-                    userCategory === USER_CATEGORY.HSP) &&
-                isUserRoleAllowed
-            ) {
-                // if(userCategory === USER_CATEGORY.DOCTOR && doctorId === doctor_id) {
-                if (
-                    moment(careplan.getCreatedAt()).diff(
-                        moment(currentCareplanTime),
-                        "minutes"
-                    ) > 0
-                ) {
-                    currentCareplanTime = careplan.getCreatedAt();
-                    currentCareplanId = careplan.getCarePlanId();
-                }
 
-                if (currentCareplanTime === null) {
-                    currentCareplanTime = careplan.getCreatedAt();
-                    currentCareplanId = careplan.getCarePlanId();
+            // get latest careplan id
+            if ((userCategory === USER_CATEGORY.DOCTOR || userCategory === USER_CATEGORY.HSP) && isUserRoleAllowed ) {
+
+                //if ( userCategory === USER_CATEGORY.DOCTOR && doctorId === doctor_id ) {
+                if ( doctorId === doctor_id ) {
+
+                    if ( moment(careplan.getCreatedAt()).diff( moment(currentCareplanTime), "minutes" ) > 0 ) {
+                        currentCareplanTime = careplan.getCreatedAt();
+                        currentCareplanId = careplan.getCarePlanId();
+                    }
+
+                    if (currentCareplanTime === null) {
+                        currentCareplanTime = careplan.getCreatedAt();
+                        currentCareplanId = careplan.getCarePlanId();
+                    }
                 }
             }
 

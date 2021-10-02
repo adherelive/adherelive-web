@@ -13,7 +13,7 @@
     "chart.js": "^2.9.3",
     "classnames": "^2.3.1",
     "date-fns": "^2.24.0",
-    "firebase": "^9.1.1",
+    "firebase": "^8.5.0",
     "fullcalendar-reactwrapper": "^1.0.7",
     "getstream": "^7.2.11",
     "install": "^0.13.0",
