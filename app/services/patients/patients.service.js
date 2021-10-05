@@ -1,11 +1,9 @@
-import Sequelize from "sequelize";
+import Sequelize, {Op} from "sequelize";
 import Database from "../../../libs/mysql";
-import {Op} from "sequelize";
 import {TABLE_NAME} from "../../models/patients";
 import {TABLE_NAME as userTableName} from "../../models/users";
 import {TABLE_NAME as careplanTableName} from "../../models/carePlan";
 import Log from "../../../libs/log";
-import {TABLE_NAME as doctorTableName} from "../../models/doctors";
 
 const Logger = new Log("WEB > PATIENTS > CONTROLLER");
 

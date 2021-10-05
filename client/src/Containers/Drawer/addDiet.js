@@ -2,7 +2,6 @@ import {connect} from "react-redux";
 import {withRouter} from "react-router-dom";
 import AddDietDrawer from "../../Components/Drawer/addDiet";
 import {close} from "../../modules/drawer";
-import {open} from "../../modules/drawer";
 import {DRAWER} from "../../constant";
 import {getPortions} from "../../modules/portions";
 import {addFoodItem} from "../../modules/foodItems";

@@ -8,7 +8,6 @@ import DocumentService from "../../../services/uploadDocuments/uploadDocuments.s
 import UserWrapper from "../user";
 import DoctorWrapper from "../doctor";
 import PatientWrapper from "../patient";
-import CarePlanWrapper from "../carePlan";
 import DocumentWrapper from "../uploadDocument";
 
 import {ACTIVITY_TYPE, DOCUMENT_PARENT_TYPE} from "../../../../constant";

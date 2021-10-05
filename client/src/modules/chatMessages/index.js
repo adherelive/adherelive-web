@@ -1,6 +1,4 @@
-import {
-    REQUEST_TYPE
-} from "../../constant";
+import {REQUEST_TYPE} from "../../constant";
 import {doRequest} from "../../Helper/network";
 import {fetchRaiseChatNotificationUrl} from "../../Helper/urls/notifications";
 

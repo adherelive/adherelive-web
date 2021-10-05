@@ -1,12 +1,11 @@
 import React, {Component} from "react";
 import {injectIntl} from "react-intl";
-import {Form, Input, Tag} from "antd";
+import {Form, Input, Radio, Tag} from "antd";
 import messages from "../message";
-import {DAYS, ALTERNATE_DAYS} from "../../../../constant";
+import {ALTERNATE_DAYS, DAYS} from "../../../../constant";
 import startDate from "./startDate";
 import endDate from "./endDate";
 import moment from "moment";
-import {Radio} from "antd";
 import whenToTake, {WHEN_TO_TAKE_BUTTONS} from "../../addMedicationReminder/common/whenTotakeMedicaine";
 
 const {Item: FormItem} = Form;

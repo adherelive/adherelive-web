@@ -2,15 +2,11 @@ import {connect} from "react-redux";
 import AddMedicationReminder from "../../Components/Drawer/addMedicationReminder/medicationsReminder";
 import {DRAWER} from "../../constant";
 import {close} from "../../modules/drawer";
-import {getMedications, addMedicationReminder, addCarePlanMedicationReminder} from "../../modules/medications";
+import {addCarePlanMedicationReminder, addMedicationReminder, getMedications} from "../../modules/medications";
 import {getMedicationDetails} from "../../modules/otherDetails";
 import {getAppointments} from "../../modules/appointments";
-import {searchMedicine, addMedicine} from "../../modules/medicines";
-import {
-    markFavourite,
-    getFavourites,
-    removeFavourite
-} from "../../modules/favouritesData/index";
+import {addMedicine, searchMedicine} from "../../modules/medicines";
+import {getFavourites, markFavourite, removeFavourite} from "../../modules/favouritesData/index";
 
 const mapStateToProps = state => {
     const {auth} = state;

@@ -1,8 +1,4 @@
-import {
-    ADD_EXERCISE_COMPLETED
-    , STORE_EXERCISE_AND_DETAILS
-    , EDIT_EXERCISE_COMPLETED
-} from "../exercises";
+import {ADD_EXERCISE_COMPLETED, EDIT_EXERCISE_COMPLETED, STORE_EXERCISE_AND_DETAILS} from "../exercises";
 import {GET_SINGLE_DIET_DETAILS_COMPLETED} from "../../modules/diets";
 
 function exerciseDetaisReducer(state, data) {

@@ -4,7 +4,7 @@ import UserRoleService from "../../../services/userRoles/userRoles.service";
 import ProviderService from "../../../services/provider/provider.service";
 import UserDeviceService from "../../../services/userDevices/userDevice.service";
 import UserDeviceWrapper from "../../../ApiWrapper/mobile/userDevice";
-import {AGORA_CALL_NOTIFICATION_TYPES, USER_CATEGORY, DEFAULT_PROVIDER} from "../../../../constant";
+import {AGORA_CALL_NOTIFICATION_TYPES, DEFAULT_PROVIDER, USER_CATEGORY} from "../../../../constant";
 
 
 import moment from "moment";

@@ -1,7 +1,6 @@
 import {connect} from "react-redux";
 import {withRouter} from "react-router-dom";
 import WorkoutResponseDrawer from "../../Components/Drawer/workoutResponses";
-import {getWorkoutScheduleEventDetails} from "../../modules/workouts";
 
 import {close} from "../../modules/drawer";
 import {DRAWER} from "../../constant";

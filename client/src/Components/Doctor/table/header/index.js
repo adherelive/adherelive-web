@@ -7,7 +7,6 @@ import Verified from "../dataColumn/verified";
 import Speciality from "../dataColumn/speciality";
 import Address from "../dataColumn/address";
 import ContactDetails from "../dataColumn/contactDetails";
-import Active from "../dataColumn/active";
 
 export default props => {
     const {formatMessage} = props || {};

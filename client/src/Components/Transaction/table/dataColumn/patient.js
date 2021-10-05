@@ -1,5 +1,4 @@
 import React from "react";
-import {getFullName} from "../../../../Helper/common";
 import Tooltip from "antd/es/tooltip";
 import Avatar from "antd/es/avatar";
 

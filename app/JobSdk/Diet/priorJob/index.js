@@ -1,6 +1,6 @@
 import DietJob from "../";
 import moment from "moment";
-import {EVENT_TYPE, NOTIFICATION_VERB, DEFAULT_PROVIDER} from "../../../../constant";
+import {DEFAULT_PROVIDER, EVENT_TYPE, NOTIFICATION_VERB} from "../../../../constant";
 
 import UserRoleService from "../../../services/userRoles/userRoles.service";
 import ProviderService from "../../../services/provider/provider.service";

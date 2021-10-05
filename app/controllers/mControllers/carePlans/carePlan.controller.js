@@ -1,5 +1,4 @@
 import Controller from "../../index";
-import patientService from "../../../../app/services/patients/patients.service";
 import carePlanService from "../../../services/carePlan/carePlan.service";
 import carePlanTemplateService from "../../../services/carePlanTemplate/carePlanTemplate.service";
 import CarePlanWrapper from "../../../ApiWrapper/mobile/carePlan";
@@ -13,13 +12,9 @@ import medicineService from "../../../services/medicine/medicine.service";
 import careplanSecondaryDoctorMappingService
     from "../../../services/careplanSecondaryDoctorMappings/careplanSecondaryDoctorMappings.service";
 import twilioService from "../../../services/twilio/twilio.service";
-import UserRoleWrapper from "../../../ApiWrapper/mobile/userRoles";
 
-import {
-    getCarePlanAppointmentIds,
-    getCarePlanMedicationIds,
-    getCarePlanSeverityDetails,
-} from "./carePlanHelper";
+import * as carePlanHelper from "./carePlanHelper";
+import {getCarePlanAppointmentIds, getCarePlanMedicationIds, getCarePlanSeverityDetails} from "./carePlanHelper";
 import {
     EVENT_LONG_TERM_VALUE,
     EVENT_STATUS,
@@ -27,8 +22,6 @@ import {
     USER_CATEGORY,
     WHEN_TO_TAKE_ABBREVATIONS,
 } from "../../../../constant";
-import doctorService from "../../../services/doctor/doctor.service";
-import DoctorWrapper from "../../../ApiWrapper/mobile/doctor";
 import PatientWrapper from "../../../ApiWrapper/mobile/patient";
 import AppointmentWrapper from "../../../ApiWrapper/mobile/appointments";
 import MedicationWrapper from "../../../ApiWrapper/mobile/medicationReminder";
@@ -38,7 +31,6 @@ import queueService from "../../../services/awsQueue/queue.service";
 // import SqsQueueService from "../../../services/awsQueue/queue.service";
 import ScheduleEventService from "../../../services/scheduleEvents/scheduleEvent.service";
 import moment from "moment";
-import * as carePlanHelper from "./carePlanHelper";
 import PERMISSIONS from "../../../../config/permissions";
 
 import Logger from "../../../../libs/log";

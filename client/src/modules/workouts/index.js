@@ -1,14 +1,14 @@
 import {doRequest} from "../../Helper/network";
 import {REQUEST_TYPE} from "../../constant";
 import {
-    getWorkoutDetailsUrl,
     addWorkoutUrl,
     getSingleWorkoutDetailsUrl,
-    updateWorkoutUrl,
+    getWorkoutDetailsUrl,
+    getWorkoutScheduleEventDetailsUrl,
     getWorkoutsForPatientDetailsUrl,
     getWorkoutTimelineUrl,
-    getWorkoutScheduleEventDetailsUrl,
-    updateWorkoutTotalCaloriesUrl
+    updateWorkoutTotalCaloriesUrl,
+    updateWorkoutUrl
 } from "../../Helper/urls/workout";
 
 export const GET_WORKOUT_DETAILS_START = "GET_WORKOUT_DETAILS_START";

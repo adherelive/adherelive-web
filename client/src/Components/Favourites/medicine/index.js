@@ -1,12 +1,10 @@
-import React, {Component, Fragment} from "react";
+import React, {Component} from "react";
 import {injectIntl} from "react-intl";
 import {withRouter} from "react-router-dom";
-import Input from "antd/es/input";
-import Button from "antd/es/button";
 import message from "antd/es/message";
 import Select from "antd/es/select";
 import Tooltip from "antd/es/tooltip";
-import {TagFilled, TagOutlined} from "@ant-design/icons";
+import {TagFilled} from "@ant-design/icons";
 
 const {Option} = Select;
 

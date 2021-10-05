@@ -1,7 +1,7 @@
 import React, {Fragment} from "react";
 
 import {Doughnut} from "react-chartjs-2";
-import {GRAPH_COLORS, CHART_TITLE} from "../../../constant";
+import {GRAPH_COLORS} from "../../../constant";
 import messages from "./message";
 
 export default function donutGraph(props) {

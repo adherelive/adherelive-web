@@ -1,10 +1,6 @@
 import React, {Component, Fragment} from "react";
 import {injectIntl} from "react-intl";
-import {
-    WAKE_UP,
-    MEAL_TIMINGS,
-    PATIENT_MEAL_TIMINGS
-} from "../../../constant";
+import {MEAL_TIMINGS, PATIENT_MEAL_TIMINGS, WAKE_UP} from "../../../constant";
 
 import AddFoodGroupDrawer from "../../../Containers/Drawer/addFoodGroup";
 import EditFoodGroupDrawer from "../../../Containers/Drawer/editFoodGroup";

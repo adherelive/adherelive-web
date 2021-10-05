@@ -1,6 +1,6 @@
 import React, {Component, Fragment} from "react";
 import {injectIntl} from "react-intl";
-import {Select, Form} from "antd";
+import {Form, Select} from "antd";
 import dropDownIcon from "../../../../Assets/images/material-icons-black-arrow-drop-down.svg";
 
 import {USER_CATEGORY} from "../../../../constant";

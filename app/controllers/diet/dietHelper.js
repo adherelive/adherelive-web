@@ -1,12 +1,4 @@
-import {
-    BREAKFAST,
-    LUNCH,
-    WAKE_UP,
-    EVENING,
-    DINNER,
-    SLEEP,
-    MID_MORNING,
-} from "../../../constant";
+import {BREAKFAST, DINNER, EVENING, LUNCH, MID_MORNING, SLEEP, WAKE_UP,} from "../../../constant";
 import Logger from "../../../libs/log";
 
 const Log = new Logger("DIET > HELPER");

@@ -1,6 +1,6 @@
 import Joi from "@hapi/joi";
 import moment from "moment";
-import {PASSWORD_LENGTH, USER_CATEGORY} from "../../../constant";
+import {PASSWORD_LENGTH} from "../../../constant";
 import Response from "../../../app/helper/responseFormat";
 import {validationError} from "../../api/helper";
 

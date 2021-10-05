@@ -10,8 +10,6 @@ import userService from "../../services/user/user.service";
 //WRAPPERS
 import UserRoleWrapper from "../../ApiWrapper/web/userRoles";
 import UserWrapper from "../../ApiWrapper/web/user";
-
-import {USER_CATEGORY} from "../../../constant";
 import AppNotification from "../../NotificationSdk/inApp";
 
 const Log = new Logger("WEB > CONTROLLER > PAYMENTS");

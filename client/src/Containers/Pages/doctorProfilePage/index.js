@@ -2,15 +2,15 @@ import {connect} from "react-redux";
 import DoctorProfilePage from "../../../Components/Pages/doctorProfilePage";
 import {withRouter} from "react-router-dom";
 import {
-    updateDoctor, getDoctorProfileDetails, verifyDoctor,
-    deactivateDoctor, activateDoctor
+    activateDoctor,
+    deactivateDoctor,
+    getDoctorProfileDetails,
+    updateDoctor,
+    verifyDoctor
 } from "../../../modules/doctors";
 import {searchSpecialties} from "../../../modules/specialities";
 import {searchCouncil} from "../../../modules/councils";
-import {
-    deleteDoctorQualificationImage,
-    deleteDoctorRegistrationImage,
-} from "../../../modules/onBoarding";
+import {deleteDoctorQualificationImage, deleteDoctorRegistrationImage,} from "../../../modules/onBoarding";
 import {searchDegree} from "../../../modules/degrees";
 import {searchCollege} from "../../../modules/colleges";
 

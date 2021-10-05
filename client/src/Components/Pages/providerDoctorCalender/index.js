@@ -1,12 +1,9 @@
 import React, {Component, Fragment} from "react";
 import {injectIntl} from "react-intl";
 
-import {Calendar, message, Drawer, Icon} from "antd";
+import {Calendar, Drawer, message} from "antd";
 import moment from "moment";
-import {
-    APPOINTMENT_TYPE_TITLE,
-    TABLE_DEFAULT_BLANK_FIELD
-} from "../../../constant";
+import {APPOINTMENT_TYPE_TITLE, TABLE_DEFAULT_BLANK_FIELD} from "../../../constant";
 import messages from "./messages";
 import {InfoCircleOutlined} from "@ant-design/icons";
 import Tooltip from "antd/es/tooltip";

@@ -12,13 +12,7 @@ import Icon from "antd/es/icon";
 import moment from "moment";
 import DatePicker from "antd/es/date-picker";
 
-import {
-    DeleteTwoTone,
-    PlusOutlined,
-    EyeTwoTone,
-    DownloadOutlined,
-    LoadingOutlined
-} from "@ant-design/icons";
+import {DeleteTwoTone, DownloadOutlined, EyeTwoTone, LoadingOutlined, PlusOutlined} from "@ant-design/icons";
 
 import messages from "./message";
 

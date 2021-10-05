@@ -2,11 +2,11 @@ import {connect} from "react-redux";
 import AdminDoctorDetails from "../../../Components/Pages/adminDoctorDetails";
 import {withRouter} from "react-router-dom";
 import {
-    getDoctorDetails,
-    verifyDoctor,
+    activateDoctor,
     addRazorpayId,
     deactivateDoctor,
-    activateDoctor
+    getDoctorDetails,
+    verifyDoctor
 } from "../../../modules/doctors";
 import {getDoctorAccountDetails} from "../../../modules/accountDetails";
 // import {verifyDoctor} from "../../../modules/doctors";

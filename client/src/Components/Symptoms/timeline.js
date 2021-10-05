@@ -1,7 +1,7 @@
 import React, {Component} from "react";
 import {injectIntl} from "react-intl";
 import {PART_LIST_CODES} from "../../constant";
-import {Timeline, message, Spin, Modal} from "antd";
+import {message, Modal, Spin, Timeline} from "antd";
 
 import moment from "moment";
 import audio from "../../Assets/images/music.png";

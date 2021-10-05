@@ -1,6 +1,6 @@
 "use strict";
 
-import {FEATURE_TYPE, REPEAT_INTERVAL, RADIOLOGY_SUB_CATEGORY_DATA, RADIOLOGY_DATA} from "../../constant";
+import {FEATURE_TYPE, RADIOLOGY_DATA, RADIOLOGY_SUB_CATEGORY_DATA, REPEAT_INTERVAL} from "../../constant";
 import {TABLE_NAME} from "../models/featureDetails";
 
 module.exports = {

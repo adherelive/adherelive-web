@@ -1,5 +1,5 @@
 import React from "react";
-import {TABLE_DEFAULT_BLANK_FIELD, DIAGNOSIS_TYPE} from "../../../../constant";
+import {DIAGNOSIS_TYPE} from "../../../../constant";
 
 export default props => {
     const {

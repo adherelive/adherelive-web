@@ -2,7 +2,7 @@
 
 import {TABLE_NAME} from "../app/models/patients";
 import {TABLE_NAME as userTableName} from "../app/models/users";
-import {GENDER, BLANK_STATE} from "../constant";
+import {BLANK_STATE, GENDER} from "../constant";
 
 module.exports = {
     up: (queryInterface, Sequelize) => {

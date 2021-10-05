@@ -5,7 +5,7 @@ import ProviderService from "../../../services/provider/provider.service";
 import UserRoleService from "../../../services/userRoles/userRoles.service";
 import UserDeviceService from "../../../services/userDevices/userDevice.service";
 import UserDeviceWrapper from "../../../ApiWrapper/mobile/userDevice";
-import {EVENT_TYPE, DEFAULT_PROVIDER} from "../../../../constant";
+import {DEFAULT_PROVIDER, EVENT_TYPE} from "../../../../constant";
 
 class UpdateJob extends MedicationJob {
     constructor(data) {

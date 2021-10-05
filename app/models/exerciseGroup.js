@@ -1,7 +1,6 @@
 "use strict";
 import {DataTypes} from "sequelize";
 import {TABLE_NAME as exerciseDetailTableName} from "./exerciseDetails";
-import {TABLE_NAME as repetitionTableName} from "./exerciseRepetition";
 
 export const TABLE_NAME = "exercise_groups";
 

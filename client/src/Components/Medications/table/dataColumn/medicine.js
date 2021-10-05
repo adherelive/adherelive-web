@@ -2,11 +2,7 @@ import React from "react";
 import TabletIcon from "../../../../Assets/images/tabletIcon3x.png";
 import InjectionIcon from "../../../../Assets/images/injectionIcon3x.png";
 import SyrupIcon from "../../../../Assets/images/pharmacy.png";
-import {
-    TABLET,
-    SYRUP,
-    MEDICINE_FORM_TYPE
-} from "../../../../constant";
+import {SYRUP, TABLET} from "../../../../constant";
 
 
 export default props => {

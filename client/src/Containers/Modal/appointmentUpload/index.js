@@ -1,6 +1,6 @@
 import {connect} from "react-redux";
 import {withRouter} from "react-router-dom";
-import {uploadAppointmentDocs, deleteAppointmentDocs} from "../../../modules/uploadDocuments";
+import {deleteAppointmentDocs, uploadAppointmentDocs} from "../../../modules/uploadDocuments";
 import AppointmentUpload from "../../../Components/Modal/appointmentUpload";
 
 const mapStateToProps = state => {

@@ -1,11 +1,7 @@
 import agoraService from "../../../services/agora/agora.service";
 
 import Controller from "../../";
-import {
-    USER_CATEGORY,
-    EVENT_STATUS,
-    AGORA_CALL_NOTIFICATION_TYPES
-} from "../../../../constant";
+import {AGORA_CALL_NOTIFICATION_TYPES, EVENT_STATUS, USER_CATEGORY} from "../../../../constant";
 
 import Log from "../../../../libs/log_new";
 

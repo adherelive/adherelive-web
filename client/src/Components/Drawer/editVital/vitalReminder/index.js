@@ -8,11 +8,8 @@ import confirm from "antd/es/modal/confirm";
 import Button from "antd/es/button";
 
 import EditVitalForm from "./form";
-
-import {MEDICINE_UNITS} from '../../../../constant'
 import messages from "../message";
 import Footer from "../../footer";
-import startTimeField from "../common/startTime";
 import startDateField from "../common/startDate";
 import endDateField from "../common/endDate";
 import repeatDaysField from "../common/selectedDays";

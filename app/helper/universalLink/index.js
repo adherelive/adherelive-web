@@ -1,6 +1,5 @@
 import createLink from "../../../app/branch-io";
 import {EVENT_TYPE} from "../../../constant";
-import {VERIFICATION_TYPE} from "../../../constant";
 
 //const temp_app_link = "http://localhost:3000";
 const temp_app_link = process.config.APP_URL;

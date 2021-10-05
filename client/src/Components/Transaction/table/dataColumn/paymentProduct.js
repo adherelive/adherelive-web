@@ -1,5 +1,5 @@
 import React from "react";
-import {TABLE_DEFAULT_BLANK_FIELD, CONSULTATION_FEE_TYPE_TEXT} from "../../../../constant";
+import {CONSULTATION_FEE_TYPE_TEXT, TABLE_DEFAULT_BLANK_FIELD} from "../../../../constant";
 
 export default props => {
     const {paymentProductData} = props || {};

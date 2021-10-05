@@ -6,8 +6,6 @@ import DoctorWrapper from "../../mobile/doctor";
 import PatientWrapper from "../../mobile/patient";
 import isEmpty from "lodash/isEmpty";
 
-import * as PermissionHelper from "../../../helper/userCategoryPermisssions";
-
 class MUserWrapper extends BaseUser {
     constructor(data) {
         super(data);

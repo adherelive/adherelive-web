@@ -3,11 +3,11 @@ import Tag from "antd/es/tag";
 import {TABLE_STATUS, TRANSACTION_STATUS} from "../../constant";
 import {
     CheckCircleOutlined,
-    SyncOutlined,
+    ClockCircleOutlined,
     CloseCircleOutlined,
     ExclamationCircleOutlined,
-    ClockCircleOutlined,
     MinusCircleOutlined,
+    SyncOutlined,
 } from "@ant-design/icons";
 
 export default props => {

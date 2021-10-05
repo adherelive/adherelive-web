@@ -1,14 +1,9 @@
 import React, {Component} from "react";
 import {injectIntl} from "react-intl";
-import Button from "antd/es/button";
 
 import {getAuthCategory, getFullName} from "../../../../Helper/common";
 import careplanBg from "../../../../Assets/images/careplan-access-bg.png";
-import {
-    DIAGNOSIS_TYPE,
-    FINAL,
-    PROBABLE, TABLE_DEFAULT_BLANK_FIELD,
-} from "../../../../constant";
+import {TABLE_DEFAULT_BLANK_FIELD,} from "../../../../constant";
 import messages from "./messages";
 
 class PatientCarePlans extends Component {

@@ -1,6 +1,6 @@
 import React, {Component, Fragment} from "react";
 import {injectIntl} from "react-intl";
-import {Button, Drawer} from "antd";
+import {Drawer} from "antd";
 import messages from "./messages";
 import SingleDayExerciseComponent from "../singleDayExerciseComponent/index";
 import message from "antd/es/message";

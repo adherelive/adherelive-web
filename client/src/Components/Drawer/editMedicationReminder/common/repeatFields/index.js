@@ -1,5 +1,4 @@
 import React, {Fragment} from "react";
-import repeatType from "../repeatType";
 // import repeatInterval from "../repeatInterval";
 import startDate from "../startDate";
 import endDate from "../endDate";

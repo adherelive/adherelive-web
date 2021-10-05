@@ -1,21 +1,8 @@
 import React, {Component, Fragment} from "react";
-import {
-    USER_ADHERE_BOT,
-    CHAT_MESSAGE_TYPE,
-    PARTS,
-    PART_LIST_BACK,
-    PART_LIST_CODES,
-    PART_LIST_FRONT,
-    BODY,
-    PARTS_GRAPH,
-    BODY_VIEW,
-    BODY_SIDE
-} from "../../constant";
-import messages from "./messages";
+import {CHAT_MESSAGE_TYPE} from "../../constant";
 import {injectIntl} from "react-intl";
 import SymptomBotMessage from "./symptomBotMessage";
 import VitalBotMessage from "./vitalBotMessages";
-import {Form, Input, Button, Spin, Avatar, Upload, Modal} from "antd";
 import moment from "moment";
 import {isJSON} from "../../Helper/common";
 

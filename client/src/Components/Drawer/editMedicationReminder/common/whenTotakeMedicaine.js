@@ -1,5 +1,5 @@
 import React, {Component, Fragment} from "react";
-import {Select, Form, Radio, Icon} from "antd";
+import {Form, Radio, Select} from "antd";
 import {injectIntl} from "react-intl";
 import messages from "../message";
 import moment from "moment";

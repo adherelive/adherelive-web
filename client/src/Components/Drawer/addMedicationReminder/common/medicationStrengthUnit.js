@@ -1,7 +1,7 @@
 import React, {Component, Fragment} from "react";
-import {Select, Form} from "antd";
+import {Form, Select} from "antd";
 import {injectIntl} from "react-intl";
-import {MEDICINE_UNITS, MEDICINE_TYPE} from '../../../../constant';
+import {MEDICINE_TYPE, MEDICINE_UNITS} from '../../../../constant';
 // import chooseMedicationField from "./medicationStage";
 import chooseMedicationField from "./medicine";
 

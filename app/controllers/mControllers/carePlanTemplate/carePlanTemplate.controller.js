@@ -14,11 +14,7 @@ import ExerciseContentService from "../../../services/exerciseContents/exerciseC
 import ExerciseContentWrapper from "../../../ApiWrapper/mobile/exerciseContents";
 import CarePlanTemplateWrapper from "../../../ApiWrapper/mobile/carePlanTemplate";
 
-import {
-    TEMPLATE_DUPLICATE_TEXT,
-    USER_CATEGORY,
-    EVENT_LONG_TERM_VALUE,
-} from "../../../../constant";
+import {TEMPLATE_DUPLICATE_TEXT,} from "../../../../constant";
 
 import PERMISSIONS from "../../../../config/permissions";
 

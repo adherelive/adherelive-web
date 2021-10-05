@@ -1,6 +1,6 @@
 import React, {Component} from "react";
 import {injectIntl} from "react-intl";
-import {Menu, Tooltip} from "antd";
+import {Menu} from "antd";
 import {PATH} from "../../constant";
 import {withRouter} from "react-router-dom";
 

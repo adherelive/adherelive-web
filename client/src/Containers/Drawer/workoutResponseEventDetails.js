@@ -4,7 +4,6 @@ import WorkoutResponseEventDetails from "../../Components/Drawer/workoutResponse
 import {getWorkoutScheduleEventDetails} from "../../modules/workouts";
 
 import {close} from "../../modules/drawer";
-import {DRAWER} from "../../constant";
 
 const mapStateToProps = state => {
     const {

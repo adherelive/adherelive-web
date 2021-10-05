@@ -1,6 +1,5 @@
-import React, {Component, Fragment} from "react";
-import {injectIntl, FormattedMessage} from "react-intl";
-import {Button, Input, Form, Row, Col, message} from "antd";
+import React, {Component} from "react";
+import {Button, Form, Input, message} from "antd";
 import {Spring} from 'react-spring/renderprops'
 import LoginByGoogle from "./googleLogin";
 import LoginByFacebook from "./facebookLogin";

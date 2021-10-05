@@ -12,7 +12,7 @@ import AudioDisabledIcon from "../../Assets/images/ico-vc-audio-off.png";
 import VideoIcon from "../../Assets/images/ico-vc-video.png";
 import VideoDisabledIcon from "../../Assets/images/ico-vc-video-off.png";
 import UserDpPlaceholder from "../../Assets/images/ico-placeholder-userdp.svg";
-import {USER_CATEGORY, LOCAL_STORAGE} from "../../constant";
+import {LOCAL_STORAGE, USER_CATEGORY} from "../../constant";
 import messages from "./messages";
 import Loading from "../Common/Loading";
 import Tooltip from "antd/es/tooltip";

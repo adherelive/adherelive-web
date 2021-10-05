@@ -1,7 +1,6 @@
 'use strict';
 
-import {TABLE_NAME} from "../app/models/workoutExerciseGroupMapping";
-import {TABLE_NAME as workoutTableName} from "../app/models/workoutExerciseGroupMapping";
+import {TABLE_NAME, TABLE_NAME as workoutTableName} from "../app/models/workoutExerciseGroupMapping";
 import {TABLE_NAME as exerciseGroupTableName} from "../app/models/exerciseGroup";
 
 module.exports = {

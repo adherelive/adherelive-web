@@ -1,8 +1,6 @@
 import Database from "../../../libs/mysql";
-import {QueryTypes} from "sequelize";
 
 import {TABLE_NAME} from "../../models/doctor_patient_watchlist";
-import {TABLE_NAME as userRolesTableName} from "../../models/userRoles";
 
 class DoctorPatientWatchlistService {
     async getAll() {

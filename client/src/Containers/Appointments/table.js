@@ -1,8 +1,6 @@
 import {connect} from "react-redux";
 import AppointmentTable from "../../Components/Appointment/table";
 import {withRouter} from "react-router-dom";
-import {open} from "../../modules/drawer";
-import {DRAWER} from "../../constant";
 
 const mapStateToProps = state => {
     const {

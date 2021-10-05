@@ -28,7 +28,6 @@ import userRolesService from '../../services/userRoles/userRoles.service';
 import DietService from "../../services/diet/diet.service";
 import PortionServiceService from "../../services/portions/portions.service";
 import RepetitionService from "../../services/exerciseRepetitions/repetition.service";
-import providerService from "../../services/provider/provider.service";
 import ExerciseContentService from "../../services/exerciseContents/exerciseContent.service";
 import WorkoutService from "../../services/workouts/workout.service";
 import userPreferenceService from "../../services/userPreferences/userPreference.service";
@@ -72,13 +71,13 @@ import moment from "moment";
 import {
     BODY_VIEW,
     CONSENT_TYPE,
-    EMAIL_TEMPLATE_NAME,
-    USER_CATEGORY,
-    S3_DOWNLOAD_FOLDER,
-    PRESCRIPTION_PDF_FOLDER,
-    DIAGNOSIS_TYPE,
-    S3_DOWNLOAD_FOLDER_PROVIDER,
     CONSULTATION,
+    DIAGNOSIS_TYPE,
+    EMAIL_TEMPLATE_NAME,
+    PRESCRIPTION_PDF_FOLDER,
+    S3_DOWNLOAD_FOLDER,
+    S3_DOWNLOAD_FOLDER_PROVIDER,
+    USER_CATEGORY,
 } from "../../../constant";
 import generateOTP from "../../helper/generateOtp";
 import {EVENTS, Proxy_Sdk} from "../../proxySdk";

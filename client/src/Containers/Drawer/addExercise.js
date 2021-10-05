@@ -2,7 +2,6 @@ import {connect} from "react-redux";
 import {withRouter} from "react-router-dom";
 import AddExerciseDrawer from "../../Components/Drawer/addExercise";
 import {close} from "../../modules/drawer";
-import {DRAWER} from "../../constant";
 import {addExercise, uploadExerciseContent} from "../../modules/exercises";
 
 const mapStateToProps = state => {

@@ -3,10 +3,10 @@ import {REQUEST_TYPE} from "../../constant";
 import {
     addAppointmentUrl,
     addCarePlanAppointmentUrl,
-    getAppointmentForParticipantUrl,
-    updateAppointmentUrl,
     deleteAppointmentUrl,
+    getAppointmentForParticipantUrl,
     getAppointmentsDetailsUrl,
+    updateAppointmentUrl,
 } from "../../Helper/urls/appointments";
 
 

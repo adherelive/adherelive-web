@@ -1,4 +1,4 @@
-import {TABLE_COLUMN, formatAppointmentTableData} from "../helper";
+import {formatAppointmentTableData, TABLE_COLUMN} from "../helper";
 
 export default data => {
     const {id, openResponseDrawer, openEditDrawer, formatMessage, canViewDetails = false} = data;

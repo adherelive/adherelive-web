@@ -7,12 +7,8 @@ import {getSymptomDetails} from "../../modules/symptoms";
 import {getVitalOccurence} from "../../modules/vital_occurence";
 
 import {addMessageOfChat, raiseChatNotification} from "../../modules/chatMessages";
-import {closePopUp, minimizePopUp, maximizePopUp} from "../../modules/chat";
-import {
-    getAllFeatures,
-    toggleChatPermission,
-    toggleVideoPermission
-} from "../../modules/featuresMappings";
+import {closePopUp, maximizePopUp, minimizePopUp} from "../../modules/chat";
+import {getAllFeatures, toggleChatPermission, toggleVideoPermission} from "../../modules/featuresMappings";
 
 const mapStateToProps = state => {
     const {

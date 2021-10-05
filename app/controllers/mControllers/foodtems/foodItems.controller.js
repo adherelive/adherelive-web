@@ -3,13 +3,11 @@ import Controller from "../../";
 //services
 import FoodItemService from "../../../services/foodItems/foodItems.service";
 // import FoodItemDetailService from "../../../services/foodItemDetails/foodItemDetails.service";
-
 //wrappers
 import FoodItemWrapper from "../../../ApiWrapper/mobile/foodItem";
 import FoodItemDetailsWrapper from "../../../ApiWrapper/mobile/foodItemDetails";
 // import PortionWrapper from "../../../ApiWrapper/mobile/portions";
 // import DoctorWrapper from "../../../ApiWrapper/mobile/doctor";
-
 import Log from "../../../../libs/log";
 import {USER_CATEGORY} from "../../../../constant";
 

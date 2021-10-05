@@ -2,8 +2,6 @@ import React, {Component} from "react";
 import {injectIntl} from "react-intl";
 import {DatePicker, Form} from "antd";
 import moment from "moment";
-
-import messages from "../message";
 import calendar from "../../../../Assets/images/calendar1.svg";
 import repeatIntervalField from "./repeatInterval";
 import repeatField from "./repeatType";

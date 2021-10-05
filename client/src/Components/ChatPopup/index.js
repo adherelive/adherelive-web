@@ -1,14 +1,5 @@
 import React, {Component, Fragment} from "react";
-import {
-    Form,
-    Input,
-    Button,
-    Spin,
-    // Avatar,
-    Upload,
-    // Modal,
-    message,
-} from "antd";
+import {Button, Form, Input, message, Spin, Upload,} from "antd";
 // import moment from "moment";
 import Chat from "twilio-chat";
 // import DoubleTick from "../../Assets/images/double-tick-indicator.png";
@@ -27,12 +18,7 @@ import {injectIntl} from "react-intl";
 import CallIcon from "../../Assets/images/telephone.png";
 import CallDisabledIcon from "../../Assets/images/call-disabled.png";
 
-import {
-    // USER_ADHERE_BOT,
-    // CHAT_MESSAGE_TYPE,
-    FEATURES,
-    USER_CATEGORY,
-} from "../../constant";
+import {FEATURES, USER_CATEGORY,} from "../../constant";
 import ChatMessageDetails from "./chatMessageDetails";
 
 import Menu from "antd/es/menu";

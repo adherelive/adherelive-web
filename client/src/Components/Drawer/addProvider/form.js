@@ -11,9 +11,9 @@ import confirm from "antd/es/modal/confirm";
 import Customization from "./customization";
 import messages from "./message";
 
-import {EyeTwoTone, EyeInvisibleOutlined} from "@ant-design/icons";
+import {EyeInvisibleOutlined, EyeTwoTone} from "@ant-design/icons";
 import prefixField from "../../Prefix";
-import {SAVINGS, CURRENT, ACCOUNT_TYPES} from "../../../constant";
+import {ACCOUNT_TYPES, CURRENT, SAVINGS} from "../../../constant";
 
 const {Item: FormItem} = Form;
 const {Password, TextArea} = Input;

@@ -1,6 +1,6 @@
 import React from "react";
 
-import {TABLE_COLUMN, getTransactionFilters} from "../helper";
+import {getTransactionFilters, TABLE_COLUMN} from "../helper";
 import messages from "../messages";
 import TransactionId from "../dataColumn/id";
 import Doctor from "../dataColumn/doctor";

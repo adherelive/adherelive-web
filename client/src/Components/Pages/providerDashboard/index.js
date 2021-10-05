@@ -1,12 +1,12 @@
 import React, {Component, Fragment} from "react";
 import {injectIntl} from "react-intl";
 import {
-    USER_PERMISSIONS,
-    MISSED_MEDICATION,
-    MISSED_APPOINTMENTS,
     MISSED_ACTIONS,
+    MISSED_APPOINTMENTS,
     MISSED_DIET,
-    MISSED_WORKOUT
+    MISSED_MEDICATION,
+    MISSED_WORKOUT,
+    USER_PERMISSIONS
 } from "../../../constant";
 
 

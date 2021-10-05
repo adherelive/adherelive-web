@@ -1,7 +1,7 @@
 import {connect} from "react-redux";
 import {withRouter} from "react-router-dom";
 import VitalTimeline from "../../Components/Vitals/timeline";
-import {getVitalTimeline, editVitalResponse, deleteVitalResponse} from "../../modules/vitals";
+import {deleteVitalResponse, editVitalResponse, getVitalTimeline} from "../../modules/vitals";
 
 const mapStateToProps = state => {
     const {

@@ -1,7 +1,6 @@
 "use strict";
 
 import {TABLE_NAME} from "../app/models/foodItems";
-import {TABLE_NAME as portionTableName} from "../app/models/portions";
 import {USER_CATEGORY_ARRAY} from "../app/models/users";
 
 module.exports = {

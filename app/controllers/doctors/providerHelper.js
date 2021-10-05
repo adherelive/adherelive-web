@@ -9,9 +9,8 @@ import DoctorWrapper from "../../ApiWrapper/web/doctor";
 import ProviderWrapper from "../../ApiWrapper/web/provider";
 
 import {createNewUser} from "../user/userHelper";
-import {generatePassword} from "../helper/passwordGenerator";
 
-import {ONBOARDING_STATUS, USER_CATEGORY} from "../../../constant";
+import {USER_CATEGORY} from "../../../constant";
 import {getFilePath} from "../../helper/filePath";
 
 export const addProviderDoctor = async (

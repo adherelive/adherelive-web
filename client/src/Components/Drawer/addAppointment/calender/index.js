@@ -4,7 +4,6 @@ import {DatePicker} from "antd";
 import FullCalendar from "fullcalendar-reactwrapper";
 import "fullcalendar-reactwrapper/dist/css/fullcalendar.min.css";
 // // import isEqual from "lodash-es/isEqual";
-
 import next from "../../../../Assets/images/ico-calendar-nav-next.svg";
 import prev from "../../../../Assets/images/ico-calendar-nav-prev.svg";
 import dropDownIcon from "../../../../Assets/images/ico-dropdown.svg";

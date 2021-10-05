@@ -1,4 +1,4 @@
-import {TABLE_COLUMN, formatTemplateTableData} from "../helper";
+import {formatTemplateTableData, TABLE_COLUMN} from "../helper";
 
 export default data => {
     const {

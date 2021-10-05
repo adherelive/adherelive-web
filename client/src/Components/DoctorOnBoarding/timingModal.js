@@ -4,7 +4,7 @@ import {injectIntl} from "react-intl";
 // import {formatMessage} from "react-intl/src/format";
 import moment from "moment";
 import uuid from "react-uuid";
-import {Button, Modal, TimePicker, Icon, message, Checkbox} from "antd";
+import {Button, Checkbox, Icon, message, Modal} from "antd";
 import {FULL_DAYS} from "../../constant";
 import messages from "./messages";
 import {ClockCircleOutlined} from "@ant-design/icons";

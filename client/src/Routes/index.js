@@ -1,4 +1,4 @@
-import React, {Component, lazy, Fragment} from "react";
+import React, {Component, Fragment, lazy} from "react";
 // import Footer from "../Containers/Footer";
 import {BrowserRouter as Router} from "react-router-dom";
 import Loading from "../Components/Common/Loading";

@@ -1,28 +1,24 @@
 import Controller from "../../index";
 import {
+    APPOINTMENT_TYPE,
+    DOCUMENT_PARENT_TYPE,
     EVENT_STATUS,
     EVENT_TYPE,
+    FAVOURITE_TYPE,
     FEATURE_TYPE,
-    USER_CATEGORY,
-    DOCUMENT_PARENT_TYPE,
-    S3_DOWNLOAD_FOLDER,
     NOTIFICATION_STAGES,
     RADIOLOGY,
-    FAVOURITE_TYPE,
-    APPOINTMENT_TYPE
+    S3_DOWNLOAD_FOLDER,
+    USER_CATEGORY
 } from "../../../../constant";
 import moment from "moment";
 
 import Log from "../../../../libs/log";
 import AppointmentJob from "../../../JobSdk/Appointments/observer";
 import NotificationSdk from "../../../NotificationSdk";
-import {uploadImageS3} from "../user/userHelper";
+import {downloadFileFromS3, uploadImageS3} from "../user/userHelper";
 import {getFilePath} from "../../../helper/filePath";
-import {downloadFileFromS3} from "../user/userHelper";
 import {checkAndCreateDirectory} from "../../../helper/common";
-
-const path = require("path");
-
 // SERVICES...
 import appointmentService from "../../../services/appointment/appointment.service";
 import queueService from "../../../services/awsQueue/queue.service";
@@ -45,6 +41,8 @@ import CarePlanWrapper from "../../../ApiWrapper/mobile/carePlan";
 import FeatureDetailsWrapper from "../../../ApiWrapper/mobile/featureDetails";
 
 import * as AppointmentHelper from "./helper";
+
+const path = require("path");
 
 const Logger = new Log("MOBILE APPOINTMENT CONTROLLER");
 

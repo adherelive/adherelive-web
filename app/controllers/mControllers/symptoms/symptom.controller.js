@@ -12,24 +12,17 @@ import CarePlanWrapper from "../../../ApiWrapper/mobile/carePlan";
 // import DoctorWrapper from "../../../ApiWrapper/mobile/doctor";
 import PatientWrapper from "../../../ApiWrapper/mobile/patient";
 
-import {
-    uploadAudio,
-    uploadImage,
-    uploadVideo,
-} from "./symptom.controller.helper";
+import {uploadAudio, uploadImage, uploadVideo,} from "./symptom.controller.helper";
 import Logger from "../../../../libs/log";
 import {
-    DOCUMENT_PARENT_TYPE,
-    USER_CATEGORY,
     ALLOWED_VIDEO_EXTENSIONS,
-    EVENT_TYPE,
+    DOCUMENT_PARENT_TYPE,
     EVENT_STATUS,
-    // MESSAGE_TYPES,
+    EVENT_TYPE,
+    USER_CATEGORY,
 } from "../../../../constant";
 import {getFilePath} from "../../../helper/filePath";
 import carePlanService from "../../../services/carePlan/carePlan.service";
-
-import ChatJob from "../../../JobSdk/Chat/observer";
 import SymptomsJob from "../../../JobSdk/Symptoms/observer";
 import NotificationSdk from "../../../NotificationSdk";
 

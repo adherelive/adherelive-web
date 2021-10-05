@@ -1,7 +1,7 @@
 import {connect} from "react-redux";
 import {withRouter} from "react-router-dom";
 import AddMedicineDrawer from "../../Components/Drawer/addNewMedicine";
-import {addMedicine, addAdminMedicine} from "../../modules/medicines";
+import {addAdminMedicine, addMedicine} from "../../modules/medicines";
 import {DRAWER} from "../../constant";
 import {close} from "../../modules/drawer";
 

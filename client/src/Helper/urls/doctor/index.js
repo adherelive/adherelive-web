@@ -1,5 +1,3 @@
-import doctors from "../../../modules/doctors";
-
 export const getdoctorProfileRegisterUrl = () => {
     return `/doctors/`;
 };

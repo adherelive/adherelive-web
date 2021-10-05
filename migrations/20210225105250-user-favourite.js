@@ -1,6 +1,6 @@
 'use strict';
 
-import {USER_FAV_USER_CATEGORY, USER_FAV_ALL_TYPES} from "../constant";
+import {USER_FAV_ALL_TYPES, USER_FAV_USER_CATEGORY} from "../constant";
 import {TABLE_NAME} from "../app/models/userFavourites";
 
 module.exports = {

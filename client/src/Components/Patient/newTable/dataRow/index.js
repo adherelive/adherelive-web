@@ -1,4 +1,4 @@
-import {TABLE_COLUMN, formatPatientTableData} from "../helper";
+import {formatPatientTableData, TABLE_COLUMN} from "../helper";
 
 export default data => {
     const {

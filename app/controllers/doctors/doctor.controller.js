@@ -16,7 +16,6 @@ import documentService from "../../services/uploadDocuments/uploadDocuments.serv
 import registrationService from "../../services/doctorRegistration/doctorRegistration.service";
 import carePlanTemplateService from "../../services/carePlanTemplate/carePlanTemplate.service";
 import carePlanService from "../../services/carePlan/carePlan.service";
-import SymptomService from "../../services/symptom/symptom.service";
 // import medicineService from "../../services/medicine/medicine.service";
 // import templateMedicationService from "../../services/templateMedication/templateMedication.service";
 // import templateAppointmentService from "../../services/templateAppointment/templateAppointment.service";
@@ -66,19 +65,18 @@ import {
     ALLOWED_DOC_TYPE_DOCTORS,
     DOCUMENT_PARENT_TYPE,
     EMAIL_TEMPLATE_NAME,
-    EVENT_TYPE,
+    FEATURES,
+    NO_ACTION,
+    NO_APPOINTMENT,
+    NO_MEDICATION,
+    NOTIFICATION_VERB,
     ONBOARDING_STATUS,
+    PATIENT_MEAL_TIMINGS,
     SIGN_IN_CATEGORY,
     USER_CATEGORY,
-    VERIFICATION_TYPE,
-    PATIENT_MEAL_TIMINGS,
-    FEATURES,
-    NOTIFICATION_VERB,
-    NO_MEDICATION,
-    NO_APPOINTMENT,
-    NO_ACTION
+    VERIFICATION_TYPE
 } from "../../../constant";
-import {getFilePath, completePath} from "../../helper/filePath";
+import {completePath, getFilePath} from "../../helper/filePath";
 import getReferenceId from "../../helper/referenceIdGenerator";
 import getUniversalLink from "../../helper/universalLink";
 import getAge from "../../helper/getAge";
@@ -88,10 +86,10 @@ import {uploadImageS3} from "../user/userHelper";
 import {EVENTS, Proxy_Sdk} from "../../proxySdk";
 import UserVerificationServices from "../../services/userVerifications/userVerifications.services";
 import UserPreferenceService from "../../services/userPreferences/userPreference.service";
+import userPreferenceService from "../../services/userPreferences/userPreference.service";
 import userRolesService from "../../services/userRoles/userRoles.service";
 import doctorPatientWatchlistService from "../../services/doctorPatientWatchlist/doctorPatientWatchlist.service";
 import {getRoomId, getSeparateName} from "../../helper/common";
-import userPreferenceService from "../../services/userPreferences/userPreference.service";
 // import doctor from "../../ApiWrapper/web/doctor";
 // import college from "../../ApiWrapper/web/college";
 

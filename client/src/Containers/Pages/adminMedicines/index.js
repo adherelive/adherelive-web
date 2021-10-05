@@ -1,7 +1,7 @@
 import {connect} from "react-redux";
 import {withRouter} from "react-router-dom";
 import AdminMedicines from "../../../Components/Pages/adminMedicine";
-import {searchMedicine, getPublicMedicines, getPrivateMedicines} from "../../../modules/medicines";
+import {getPrivateMedicines, getPublicMedicines, searchMedicine} from "../../../modules/medicines";
 import {open} from "../../../modules/drawer";
 import {DRAWER} from "../../../constant";
 

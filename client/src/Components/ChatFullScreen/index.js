@@ -8,7 +8,6 @@ import {getRoomId} from "../../Helper/twilio";
 import {FEATURES} from "../../constant";
 import {message} from "antd";
 import messages from "./messages";
-import NotificationDrawer from "../../Containers/Drawer/notificationDrawer";
 
 
 class ChatFullScreen extends Component {

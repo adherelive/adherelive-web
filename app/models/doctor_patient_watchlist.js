@@ -3,7 +3,6 @@ import {DataTypes} from "sequelize";
 import {TABLE_NAME as doctorTableName} from "./doctors";
 import {TABLE_NAME as patientTableName} from "./patients";
 import {TABLE_NAME as userRoleTableName} from "./userRoles";
-import {USER_CATEGORY, SIGN_IN_CATEGORY} from "../../constant";
 
 export const TABLE_NAME = "doctor_patient_watchlists";
 

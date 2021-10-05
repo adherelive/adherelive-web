@@ -1,5 +1,5 @@
 import React, {Component, lazy} from "react";
-import {BrowserRouter, Route, Switch, Redirect} from "react-router-dom";
+import {BrowserRouter, Redirect, Route, Switch} from "react-router-dom";
 // import landingPage from "../Components/landingPage";
 // import Signup from "../Containers/Invite";
 // import Identify from "../Components/forgotPassword/Identify";

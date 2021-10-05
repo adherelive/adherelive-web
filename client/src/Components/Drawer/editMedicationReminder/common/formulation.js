@@ -1,5 +1,5 @@
 import React, {Component} from "react";
-import {Select, Form} from "antd";
+import {Form, Select} from "antd";
 import {injectIntl} from "react-intl";
 import {MEDICINE_UNITS} from "../../../../constant";
 import messages from "../message";

@@ -1,8 +1,8 @@
 import React, {Component, Fragment} from "react";
 import {injectIntl} from "react-intl";
-import {Drawer, Select, Input, Button, Radio, Checkbox} from "antd";
+import {Button, Checkbox, Drawer, Input, Radio, Select} from "antd";
 import message from "antd/es/message";
-import {SAVINGS, CURRENT, ACCOUNT_TYPES} from "../../../constant";
+import {ACCOUNT_TYPES, CURRENT, SAVINGS} from "../../../constant";
 
 import india from "../../../Assets/images/india.png";
 import australia from "../../../Assets/images/australia.png";

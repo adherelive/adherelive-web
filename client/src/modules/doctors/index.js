@@ -1,29 +1,25 @@
 import {doRequest} from "../../Helper/network";
 import {REQUEST_TYPE} from "../../constant";
 import {
-    getDoctorDetailsUrl,
-    getAllDoctorsUrl,
-    getVerifyDoctorUrl,
-    updateDoctorURL,
-    getDoctorProfileDetailsUrl,
-    addPatientToWatchlistUrl,
-    removePatientFromWatchlistUrl,
-    getAdminPaymentProductUrl,
-    getDoctorPaymentProductUrl,
+    activateDoctorURL,
     addDoctorPaymentPoductUrl,
     addRazorpayIdUrl,
-    patientWatchlistUrl,
-    updatePatientAndCareplanUrl,
     deactivateDoctorURL,
-    activateDoctorURL,
+    getAdminPaymentProductUrl,
+    getAllDoctorsUrl,
+    getDoctorDetailsUrl,
+    getDoctorPaymentProductUrl,
+    getDoctorProfileDetailsUrl,
+    getVerifyDoctorUrl,
+    patientWatchlistUrl,
     searchDoctorEmailUrl,
-    searchDoctorNameUrl
+    searchDoctorNameUrl,
+    updateDoctorURL,
+    updatePatientAndCareplanUrl
 } from "../../Helper/urls/doctor";
 
 
 import {getAllDoctorsForProviderUrl} from "../../Helper/urls/provider";
-
-import {accountDetailsUrl} from "../../Helper/urls/accounts";
 
 export const SEARCH_DOCTOR_START = "SEARCH_DOCTOR_START";
 export const SEARCH_DOCTOR_COMPLETE = "SEARCH_DOCTOR_COMPLETE";

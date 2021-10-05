@@ -3,7 +3,6 @@ import Controller from "../../index";
 // services
 import WorkoutResponseService from "../../../services/workoutResponses/workoutResponses.service";
 import EventService from "../../../services/scheduleEvents/scheduleEvent.service";
-import WorkoutService from "../../../services/workouts/workout.service";
 import ExerciseContentService from "../../../services/exerciseContents/exerciseContent.service";
 import carePlanService from "../../../services/carePlan/carePlan.service";
 
@@ -19,12 +18,7 @@ import WorkoutJob from "../../../JobSdk/Workout/observer";
 import NotificationSdk from "../../../NotificationSdk";
 
 import Logger from "../../../../libs/log";
-import {
-    EVENT_STATUS,
-    NOTIFICATION_STAGES,
-    USER_CATEGORY,
-    WORKOUT_RESPONSE_STATUS,
-} from "../../../../constant";
+import {EVENT_STATUS, NOTIFICATION_STAGES, USER_CATEGORY, WORKOUT_RESPONSE_STATUS,} from "../../../../constant";
 
 const Log = new Logger("MOBILE > WORKOUT_RESPONSE > CONTROLLER");
 

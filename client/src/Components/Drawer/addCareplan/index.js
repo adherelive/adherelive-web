@@ -1,15 +1,13 @@
 import React, {Component, Fragment} from "react";
 import {injectIntl} from "react-intl";
-import {Drawer, Icon, Select, Input, message, Button, Spin, Radio, DatePicker} from "antd";
-import moment from "moment";
+import {Button, Drawer, message, Select, Spin} from "antd";
 import throttle from "lodash-es/throttle";
-import {getName} from "../../../Helper/validation";
 
 
 import messages from './message';
 import "react-datepicker/dist/react-datepicker.css";
 import TextArea from "antd/lib/input/TextArea";
-import {FINAL, PROBABLE, DIAGNOSIS_TYPE} from "../../../constant";
+import {DIAGNOSIS_TYPE, FINAL, PROBABLE} from "../../../constant";
 import Footer from "../footer";
 
 

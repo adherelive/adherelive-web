@@ -1,4 +1,4 @@
-import {USER_CATEGORY, TRANSACTION_STATUS} from "../../../constant";
+import {TRANSACTION_STATUS, USER_CATEGORY} from "../../../constant";
 
 export const getTransactionFilters = () => {
     return Object.keys(TRANSACTION_STATUS).map(key => {

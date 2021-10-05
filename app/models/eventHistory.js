@@ -1,5 +1,4 @@
 import {DataTypes} from "sequelize";
-import Database from "../../libs/mysql";
 
 import {TABLE_NAME as scheduleEventTableName} from "./scheduleEvents";
 

@@ -1,9 +1,8 @@
 import React, {Component, Fragment} from "react";
 import {injectIntl} from "react-intl";
-import {Drawer, Select, Input, message, Button, Spin, Radio} from "antd";
+import {Drawer, Input, message, Radio, Select, Spin} from "antd";
 import moment from "moment";
 import throttle from "lodash-es/throttle";
-import {getName} from "../../../Helper/validation";
 
 
 import india from '../../../Assets/images/india.png';
@@ -22,7 +21,7 @@ import france from '../../../Assets/images/france.png';
 import messages from './message';
 import "react-datepicker/dist/react-datepicker.css";
 import TextArea from "antd/lib/input/TextArea";
-import {FINAL, PROBABLE, DIAGNOSIS_TYPE, PATIENT_CONSTANTS} from "../../../constant";
+import {DIAGNOSIS_TYPE, FINAL, PATIENT_CONSTANTS, PROBABLE} from "../../../constant";
 import Footer from "../footer";
 
 const {Option} = Select;

@@ -7,8 +7,6 @@ import base64 from "js-base64";
 import bcrypt from "bcrypt";
 
 import Log from "../../../libs/log";
-// import fs from "fs";
-const Response = require("../helper/responseFormat");
 import userService from "../../services/user/user.service";
 import patientService from "../../services/patients/patients.service";
 import carePlanService from "../../services/carePlan/carePlan.service";
@@ -16,7 +14,6 @@ import treatmentService from "../../services/treatment/treatment.service";
 import severityService from "../../services/severity/severity.service";
 import conditionService from "../../services/condition/condition.service";
 import providerService from "../../services/provider/provider.service";
-import doctorProviderMappingService from "../../services/doctorProviderMapping/doctorProviderMapping.service";
 import userRolesService from '../../services/userRoles/userRoles.service';
 import doctorPatientWatchlistService from "../../services/doctorPatientWatchlist/doctorPatientWatchlist.service";
 
@@ -28,33 +25,27 @@ import TreatmentWrapper from "../../ApiWrapper/web/treatments";
 import SeverityWrapper from "../../ApiWrapper/web/severity";
 import ConditionWrapper from "../../ApiWrapper/web/conditions";
 import ProvidersWrapper from "../../ApiWrapper/web/provider";
-import DoctorProviderMappingWrapper from "../../ApiWrapper/web/doctorProviderMapping";
 import UserRolesWrapper from "../../ApiWrapper/web/userRoles";
 import DoctorPatientWatchlistWrapper from "../../ApiWrapper/web/doctorPatientWatchlist";
 
 import doctorService from "../../services/doctors/doctors.service";
 import UserVerificationServices from "../../services/userVerifications/userVerifications.services";
 import Controller from "../index";
-import {
-    uploadImageS3,
-    createNewUser
-} from "./userHelper";
+import {createNewUser, uploadImageS3} from "./userHelper";
 import {v4 as uuidv4} from "uuid";
 import constants from "../../../config/constants";
-import {
-    EMAIL_TEMPLATE_NAME,
-    USER_CATEGORY,
-    VERIFICATION_TYPE
-} from "../../../constant";
-import {Proxy_Sdk, EVENTS} from "../../proxySdk";
-// import  EVENTS from "../../proxySdk/proxyEvents";
-const errMessage = require("../../../config/messages.json").errMessages;
+import {EMAIL_TEMPLATE_NAME, USER_CATEGORY, VERIFICATION_TYPE} from "../../../constant";
+import {EVENTS, Proxy_Sdk} from "../../proxySdk";
 import {getCarePlanSeverityDetails} from "../carePlans/carePlanHelper";
 import LinkVerificationWrapper from "../../ApiWrapper/mobile/userVerification";
 
 import AppNotification from "../../NotificationSdk/inApp";
 import AdhocJob from "../../JobSdk/Adhoc/observer";
 import {getSeparateName} from "../../helper/common";
+// import fs from "fs";
+const Response = require("../helper/responseFormat");
+// import  EVENTS from "../../proxySdk/proxyEvents";
+const errMessage = require("../../../config/messages.json").errMessages;
 
 const Logger = new Log("WEB USER CONTROLLER");
 

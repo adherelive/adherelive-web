@@ -1,37 +1,15 @@
 import React, {Component, Fragment} from "react";
-import {Form, Input, Button, Spin, Avatar, Upload, Modal} from "antd";
+import {Modal} from "antd";
 import moment from "moment";
-import Chat from "twilio-chat";
 import DoubleTick from "../../Assets/images/double-tick-indicator.png";
-import Send from "../../Assets/images/send.png";
 import SingleTick from "../../Assets/images/check-symbol.png";
-import PaperClip from "../../Assets/images/attachPop.png";
 import ImagePlaceHolder from "../../Assets/images/image_placeholder.png";
-import Close from "../../Assets/images/close.png";
-import Maximize from "../../Assets/images/maximize.png";
 import Download from "../../Assets/images/down-arrow.png";
 import File from "../../Assets/images/file.png";
 import messages from "./messages";
 import {injectIntl} from "react-intl";
-import humanBody from "../../Assets/images/humanBodyFront.jpeg";
-import humanBodyBack from "../../Assets/images/humanBodyBack.jpeg";
-import bodyImage from "../../../src/Assets/images/body.jpg";
 // import CloseChatIcon from "../../Assets/images/ico-vc-message-close.png";
-import CallIcon from "../../Assets/images/telephone.png";
-import {
-    USER_ADHERE_BOT,
-    CHAT_MESSAGE_TYPE,
-    PARTS,
-    PART_LIST_BACK,
-    PART_LIST_CODES,
-    PART_LIST_FRONT,
-    BODY,
-    PARTS_GRAPH,
-    BODY_VIEW,
-    BODY_SIDE,
-    USER_CATEGORY,
-    EVENT_TYPE
-} from "../../constant";
+import {BODY_SIDE, CHAT_MESSAGE_TYPE, EVENT_TYPE, PARTS_GRAPH, USER_ADHERE_BOT, USER_CATEGORY} from "../../constant";
 import BotMessage from "./botMessage";
 import {getFullName, isJSON} from "../../Helper/common";
 import ReactAudioPlayer from "react-audio-player";

@@ -1,24 +1,16 @@
 import PatientDetails from "../../Components/Patient/details";
 import {connect} from "react-redux";
 import {withRouter} from "react-router-dom";
-import {open, close} from "../../modules/drawer";
+import {close, open} from "../../modules/drawer";
 import {getMedications} from "../../modules/medications";
-import {
-    getAppointments,
-    getAppointmentsDetails
-} from "../../modules/appointments";
-import {requestConsent, consentVerify} from "../../modules/patients";
+import {getAppointments, getAppointmentsDetails} from "../../modules/appointments";
+import {addCareplanForPatient, consentVerify, requestConsent} from "../../modules/patients";
 import {searchMedicine} from "../../modules/medicines";
-import {getPatientCarePlanDetails} from "../../modules/carePlans";
-import {addCarePlanMedicationsAndAppointments} from "../../modules/carePlans";
+import {addCarePlanMedicationsAndAppointments, getPatientCarePlanDetails} from "../../modules/carePlans";
 import {DRAWER} from "../../constant";
-import {openPopUp, closePopUp} from "../../modules/chat";
+import {closePopUp, openPopUp} from "../../modules/chat";
 import {fetchChatAccessToken} from "../../modules/twilio";
-import {
-    getLastVisitAlerts,
-    markAppointmentComplete
-} from "../../modules/scheduleEvents/index";
-import {addCareplanForPatient} from "../../modules/patients";
+import {getLastVisitAlerts, markAppointmentComplete} from "../../modules/scheduleEvents/index";
 import {storeAppointmentDocuments} from "../../modules/uploadDocuments";
 import {getSymptomTimeLine} from "../../modules/symptoms";
 import {fetchReports} from "../../modules/reports";

@@ -1,10 +1,10 @@
 import React, {Component} from "react";
 import {injectIntl} from "react-intl";
-import {TimePicker, Form} from "antd";
+import {Form, TimePicker} from "antd";
 import messages from "../message";
 import moment from "moment";
 
-import {EVENT_TYPE, EVENT_ACTION} from "../../../../constant";
+import {EVENT_ACTION, EVENT_TYPE} from "../../../../constant";
 
 const {Item: FormItem} = Form;
 

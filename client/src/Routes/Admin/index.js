@@ -1,8 +1,5 @@
-import React, {lazy, Component} from "react";
-import {
-
-    withRouter
-} from "react-router-dom";
+import React, {Component, lazy} from "react";
+import {withRouter} from "react-router-dom";
 
 const AdminDoctors = lazy(() =>
     import(/* webpackChunkName: "AdminDoctorRouter" */ "./doctor")

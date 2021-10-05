@@ -1,4 +1,4 @@
-import {TABLE_COLUMN, formatTransactionTableData} from "../helper";
+import {formatTransactionTableData, TABLE_COLUMN} from "../helper";
 import {USER_CATEGORY} from "../../../../constant";
 
 export default data => {

@@ -5,7 +5,6 @@ import {DOCUMENT_PARENT_TYPE, PRESCRIPTION_PDF_FOLDER, S3_DOWNLOAD_FOLDER} from 
 import * as UploadHelper from "./helper";
 
 // SERVICES ---------------
-
 import documentService from "../services/uploadDocuments/uploadDocuments.service";
 
 const AWS_FOLDER_NAME = {

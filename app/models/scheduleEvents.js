@@ -1,7 +1,7 @@
 "use strict";
 import moment from "moment";
 import {DataTypes} from "sequelize";
-import {EVENT_TYPE, EVENT_STATUS} from "../../constant";
+import {EVENT_STATUS, EVENT_TYPE} from "../../constant";
 import Logger from "../../libs/log";
 
 import {TABLE_NAME as eventHistoryTableName} from "./eventHistory";

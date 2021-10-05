@@ -1,4 +1,4 @@
-import {Op, fn, literal, col} from "sequelize";
+import {literal, Op} from "sequelize";
 import Database from "../../../libs/mysql";
 import moment from "moment";
 import {USER_CATEGORY} from "../../../constant";

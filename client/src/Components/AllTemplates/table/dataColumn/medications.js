@@ -1,15 +1,13 @@
 import React from "react";
-import {Icon} from "antd";
 
 import {
-    MEDICATION_TIMING,
     DAYS_TEXT_NUM_SHORT,
-    EVENT_TYPE,
+    MEDICATION_TIMING,
     MEDICATION_TIMING_HOURS,
     MEDICATION_TIMING_MINUTES,
-    TABLET,
+    MEDICINE_FORM_TYPE,
     SYRUP,
-    MEDICINE_FORM_TYPE
+    TABLET
 } from "../../../../constant";
 import moment from "moment";
 import TabletIcon from "../../../../Assets/images/tabletIcon3x.png";

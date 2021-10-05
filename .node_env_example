@@ -78,8 +78,7 @@ AWS_PRESCRIPTION_BUCKET=
 #TWILIO_AUTH_TOKEN=1cf5b1a6801c773fe8bd138bb0bb50d4
 #TWILIO_CHANNEL_SERVER=adhere-demo
 
-
-# Twilio Account details for teh Production Server
+# Twilio Account details for the Production Server
 TWILIO_ACCOUNT_SID=AC4a0dbe84bfd89f481278897339959d4a
 TWILIO_API_KEY=SK7b5afcfee1c29a88ba946e34fdb64144
 TWILIO_API_SECRET=TlE7g9LLe2ejSMyazEQC2eI20Ez6AmS5

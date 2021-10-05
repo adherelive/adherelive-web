@@ -1,6 +1,6 @@
 import React, {Component} from "react";
 import {injectIntl} from "react-intl";
-import {Radio, Form} from "antd";
+import {Form, Radio} from "antd";
 
 import messages from "../message";
 import {getActivityBetween} from "../constant";

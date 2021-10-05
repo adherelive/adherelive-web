@@ -5,14 +5,7 @@ import message from "antd/es/message";
 import Upload from "antd/es/upload";
 import Button from "antd/es/button"
 import messages from "./messages";
-import {
-    DeleteTwoTone,
-    PlusOutlined,
-    EyeTwoTone,
-    DownloadOutlined,
-    // CloudDownloadOutlined,
-    LoadingOutlined
-} from "@ant-design/icons";
+import {DeleteTwoTone, DownloadOutlined, EyeTwoTone, LoadingOutlined, PlusOutlined} from "@ant-design/icons";
 import confirm from "antd/es/modal/confirm";
 
 class AppointmentUploadModal extends Component {

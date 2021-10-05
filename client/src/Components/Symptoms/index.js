@@ -1,6 +1,6 @@
 import React, {Component} from "react";
 import {injectIntl} from "react-intl";
-import {Tabs, message} from "antd";
+import {message, Tabs} from "antd";
 
 import Timeline from './timeline';
 import Summary from './summary';

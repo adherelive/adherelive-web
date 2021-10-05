@@ -2,7 +2,7 @@ import React, {Component} from "react";
 import {injectIntl} from "react-intl";
 import Modal from "antd/es/modal";
 import messages from "./messages";
-import {Button, Checkbox} from "antd";
+import {Checkbox} from "antd";
 import message from "antd/es/message";
 import ReactMarkdown from "react-markdown";
 

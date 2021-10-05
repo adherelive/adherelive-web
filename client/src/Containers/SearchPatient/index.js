@@ -1,6 +1,5 @@
 import {withRouter} from "react-router-dom";
 import SearchPatient from "../../Components/SearchPatient/index";
-import {getInitialData} from "../../modules/auth";
 import {connect} from "react-redux";
 import {searchPatientForDoctor} from "../../modules/patients"
 

@@ -4,15 +4,12 @@ import BaseDoctor from "../../../services/doctor";
 import doctorService from "../../../services/doctor/doctor.service";
 import ConsentService from "../../../services/consents/consent.service";
 import carePlanService from "../../../services/carePlan/carePlan.service";
-import doctorProviderMappingService from "../../../services/doctorProviderMapping/doctorProviderMapping.service";
 import userRoleService from "../../../services/userRoles/userRoles.service";
 import DoctorPatientWatchlistService from "../../../services/doctorPatientWatchlist/doctorPatientWatchlist.service";
 
 
 import SpecialityWrapper from "../speciality";
 import ConsentWrapper from "../../mobile/consent";
-import CarePlanWrapper from "../../mobile/carePlan";
-import DoctorProviderMappingWrapper from "../../web/doctorProviderMapping";
 import UserRoleWrapper from "../../mobile/userRoles";
 import DoctorPatientWatchlistWrapper from "../../mobile/doctorPatientWatchlist";
 

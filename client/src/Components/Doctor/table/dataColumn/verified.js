@@ -1,5 +1,4 @@
 import React from "react";
-import moment from "moment";
 import {CheckCircleTwoTone, ExclamationCircleTwoTone} from "@ant-design/icons";
 
 export default props => {

@@ -1,6 +1,6 @@
 import {withRouter} from "react-router-dom";
 import SignIn from "../../Components/SignIn";
-import {signOut, signIn, signUp, verifyUser, getInitialData} from "../../modules/auth";
+import {getInitialData, signIn, signOut, signUp, verifyUser} from "../../modules/auth";
 import {connect} from "react-redux";
 import {getUserRoles} from "../../modules/userRoles";
 

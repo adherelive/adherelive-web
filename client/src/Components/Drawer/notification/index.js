@@ -1,24 +1,21 @@
 import React, {Component, Fragment} from "react";
 import {injectIntl} from "react-intl";
-import {Drawer, Select, Form, message} from "antd";
+import {Drawer, Form, message, Select} from "antd";
 import config from "../../../config";
 import moment from "moment";
 import {connect} from "getstream";
 import messages from "./message";
 import {
-    NOTIFICATION_STAGES,
-    EVENT_TYPE,
     AGORA_CALL_NOTIFICATION_TYPES,
-    TYPE_SYMPTOMS,
-    TYPE_APPOINTMENTS,
-    TYPE_VITALS,
-    TYPE_DIETS,
-    TYPE_USER_MESSAGE,
     APPOINTMENT_TYPE_TITLE,
-    MEDICATION_TIMING,
-    TYPE_WORKOUTS,
-    PATIENT_MEAL_TIMINGS
-    // WHEN_TO_TAKE_ABBR_TYPES,
+    EVENT_TYPE,
+    NOTIFICATION_STAGES,
+    TYPE_APPOINTMENTS,
+    TYPE_DIETS,
+    TYPE_SYMPTOMS,
+    TYPE_USER_MESSAGE,
+    TYPE_VITALS,
+    TYPE_WORKOUTS
 } from "../../../constant";
 import VideoCameraFilled from "@ant-design/icons/VideoCameraFilled";
 import MessageFilled from "@ant-design/icons/MessageFilled";
@@ -31,7 +28,6 @@ import Loading from "../../Common/Loading";
 import {throttle} from "lodash";
 import {getPatientConsultingVideoUrl} from "../../../Helper/url/patients";
 import workout_icon from "../../../Assets/images/workout_icon.png";
-import vital_icon from "../../../Assets/images/vital.png";
 
 // import { getNotifications } from "../../../Helper/urls/notifications";
 const {Option} = Select;

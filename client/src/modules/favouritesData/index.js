@@ -1,10 +1,10 @@
 import {doRequest} from "../../Helper/network";
-import {FAVOURITE_TYPE, REQUEST_TYPE} from "../../constant";
+import {REQUEST_TYPE} from "../../constant";
 import {
-    markFavouriteUrl,
     getFavouritesUrl,
-    removeFavouritesUrl,
-    removeFavouriteRecordUrl
+    markFavouriteUrl,
+    removeFavouriteRecordUrl,
+    removeFavouritesUrl
 } from "../../Helper/urls/markFavourite";
 
 export const MARK_FAVOURITE = "MARK_FAVOURITE";

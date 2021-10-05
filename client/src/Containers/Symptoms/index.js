@@ -1,7 +1,7 @@
 import {connect} from "react-redux";
 import Symptoms from "../../Components/Symptoms";
 import {DRAWER} from "../../constant";
-import {getSymptomTimeLine, getHistorySymptom} from "../../modules/symptoms";
+import {getHistorySymptom, getSymptomTimeLine} from "../../modules/symptoms";
 
 const mapStateToProps = state => {
     const {
