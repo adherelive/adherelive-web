@@ -13,6 +13,8 @@ import AppointmentJob from "../JobSdk/Appointments/observer";
 import DietJob from "../JobSdk/Diet/observer";
 import WorkoutJob from "../JobSdk/Workout/observer";
 
+import * as CronHelper from "./helper";
+
 import NotificationSdk from "../NotificationSdk";
 
 const Log = new Logger("CRON > PRIOR");
@@ -36,7 +38,8 @@ class PriorCron {
         .toDate()
     );
     const scheduleEvents =
-      (await this.scheduleEventService.getPriorEventByData(priorTime, type)) || [];
+      (await this.scheduleEventService.getPriorEventByData(priorTime, type)) ||
+      [];
     Log.debug("scheduleEvents ---> ", scheduleEvents);
     return scheduleEvents || [];
   };
@@ -51,7 +54,7 @@ class PriorCron {
 
       for (const scheduleEvent of allPriorAppointmentEvents) {
         const event = await ScheduleEventWrapper(scheduleEvent);
-        return this.handleAppointmentPrior(event.getAllInfo());
+        await this.handleAppointmentPrior(event);
       }
 
       // for event type : diet
@@ -60,7 +63,7 @@ class PriorCron {
         EVENT_TYPE.DIET
       );
 
-      if(allPriorDietEvents.length > 0) {
+      if (allPriorDietEvents.length > 0) {
         for (const scheduleEvent of allPriorDietEvents) {
           const event = await ScheduleEventWrapper(scheduleEvent);
           return this.handleDietPrior(event.getAllInfo());
@@ -73,13 +76,12 @@ class PriorCron {
         EVENT_TYPE.WORKOUT
       );
 
-      if(allPriorWorkoutEvents.length > 0) {
+      if (allPriorWorkoutEvents.length > 0) {
         for (const scheduleEvent of allPriorWorkoutEvents) {
           const event = await ScheduleEventWrapper(scheduleEvent);
           return this.handleWorkoutPrior(event.getAllInfo());
         }
       }
-      
     } catch (error) {
       Log.debug("prior runObserver catch error", error);
     }
@@ -87,7 +89,7 @@ class PriorCron {
 
   handleAppointmentPrior = async (event) => {
     try {
-      const { id } = event || {};
+      const { id, event_id, details } = event.getData() || {};
       // const data = {
       //     participants: event.getParticipants(),
       //     // actor: {
@@ -98,7 +100,15 @@ class PriorCron {
       //     // },
       //     id: event.getEventId()
       // }
-      const appointmentJob = AppointmentJob.execute(EVENT_STATUS.PRIOR, event);
+
+      const participants = await CronHelper.getNotificationUsers(
+        EVENT_TYPE.APPOINTMENT,
+        event_id
+      );
+      const appointmentJob = AppointmentJob.execute(EVENT_STATUS.PRIOR, {
+        ...event.getData(),
+        details: { ...details, participants },
+      });
 
       await NotificationSdk.execute(appointmentJob);
 

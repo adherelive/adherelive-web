@@ -16,6 +16,7 @@ import * as CarePlans from "../app/models/carePlan";
 import * as CarePlanAppointments from "../app/models/carePlanAppointments";
 import * as CarePlanMedications from "../app/models/carePlanMedications";
 import * as CarePlanTemplates from "../app/models/careplanTemplate";
+import * as CareplanSecondaryDoctorMappings from "../app/models/careplanSecondaryDoctorMappings";
 import * as Clinics from "../app/models/clinics";
 import * as Colleges from "../app/models/college";
 import * as Conditions from "../app/models/conditions";
@@ -125,6 +126,7 @@ const models = [
   CarePlanAppointments,
   CarePlanMedications,
   CarePlanTemplates,
+  CareplanSecondaryDoctorMappings,
   Clinics,
   Colleges,
   Conditions,

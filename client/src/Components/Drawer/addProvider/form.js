@@ -268,23 +268,29 @@ class AddProviderForm extends Component {
             rules: [
               {
                 required: true,
-                message: formatMessage(messages.address_required_text),
-              },
-            ],
-          })(<Input type="string" />)}
-        </FormItem>
+                message: formatMessage(messages.address_required_text)
+            }
+        ]
+      })
+      (
+          <Input
+          type="string"
+          />
+      )}
+      </FormItem>
 
-        <Customization {...this.props} />
-        {/* <-------------------------- ACCOUNT DETAILS --------------------------------------->*/}
+      <Customization {...this.props}/>
+      {/* <-------------------------- ACCOUNT DETAILS --------------------------------------->*/}
 
-        <div className="fwbolder fs18 mb20 mt20 flex align-center justify-space-between">
-          <span>{formatMessage(messages.accountDetails)}</span>
-          <Tooltip title={formatMessage(messages.resetAccountFields)}>
-            <Button type="ghost" onClick={this.handleCloseWarning}>
-              {formatMessage(messages.reset)}
-            </Button>
-          </Tooltip>
-        </div>
+      <div className="fwbolder fs18 mb20 mt20 flex align-center justify-space-between">
+        <span>{formatMessage(messages.accountDetails)}</span>
+        <Tooltip title={formatMessage(messages.resetAccountFields)} >
+          <Button
+           type="ghost"
+           onClick={this.handleCloseWarning}
+           >{formatMessage(messages.reset)}</Button>
+        </Tooltip>
+      </div>
 
         {/* account type */}
         <FormItem

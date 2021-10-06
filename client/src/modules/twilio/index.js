@@ -19,6 +19,8 @@ const FETCHING_TWILIO_CHAT_ACCESS_TOKEN_COMPLETED_WITH_ERROR =
 const SET_PATIENT_FOR_CHAT_COMPLETED =
   "SET_PATIENT_FOR_CHAT_COMPLETED";
 
+const SET_CARE_PLAN_FOR_CHAT_COMPLETED = "SET_CARE_PLAN_FOR_CHAT_COMPLETED";
+
 const setTwilioAccessToken = (state, data) => {
   const { identity = {}, token = {} } = data;
   return { ...state, identity: identity, videoToken: token };
@@ -32,6 +34,14 @@ const setTwilioChatAccessToken = (state, data) => {
 const setPatientIdForChat = (state, data) => {
   const { patient_id = '' } = data;
   return { ...state, patientId: patient_id };
+};
+
+const setCareplanIdForChat = (state, data) => {
+  const {care_plan_id = null} = data;
+  return {
+    ...state,
+    care_plan_id
+  };
 };
 
 export const fetchVideoAccessToken = userId => {
@@ -101,6 +111,17 @@ export const setPatientForChat = patient_id => {
   };
 };
 
+export const setCareplanForChat = care_plan_id => {
+  return async dispatch => {
+    try {
+      dispatch({
+        type: SET_CARE_PLAN_FOR_CHAT_COMPLETED,
+        payload: { care_plan_id }
+      });
+    } catch (error) { }
+  };
+};
+
 export default (state = intialState, action) => {
   const { type, payload = {} } = action;
   switch (type) {
@@ -113,6 +134,8 @@ export default (state = intialState, action) => {
     case SET_PATIENT_FOR_CHAT_COMPLETED: {
       return setPatientIdForChat(state, payload);
     }
+    case SET_CARE_PLAN_FOR_CHAT_COMPLETED:
+      return setCareplanIdForChat(state, payload);
     default: {
       return state;
     }

@@ -8,6 +8,7 @@ import { doRequest } from "../../../Helper/network";
 import { generatePrescriptionUrl } from "../../../Helper/urls/patients";
 import ShareIcon from "../../../Assets/images/redirect3x.png";
 import EyeFilled from "@ant-design/icons/EyeFilled";
+import {getName} from "../../../Helper/validation";
 
 import config from "../../../config";
 
@@ -54,6 +55,7 @@ import DietResponseDrawer from "../../../Containers/Drawer/dietResponseDrawer";
 import WorkoutResponseDrawer from "../../../Containers/Drawer/workoutResponseDrawer";
 import AddWorkoutDrawer from "../../../Containers/Drawer/addWorkout"
 import EditWorkoutDrawer from "../../../Containers/Drawer/editWorkout";
+import AddSecondaryDoctorDrawer from "../../../Containers/Drawer/addSecondaryDoctor";
 // TABLES
 import VitalTable from "../../../Containers/Vitals/table";
 import MedicationTable from "../../../Containers/Medications/table";
@@ -398,11 +400,13 @@ const PatientCard = ({
   patient_id,
   editPatient,
   // editPatientOption,
-  openVideoScreen
+  openVideoScreen,
+  
 }) => {
   const { details: { comorbidities, allergies } = {} } =
     patients[patient_id] || {};
 
+   
   const menu = (
     <Menu>
       <Menu.Item onClick={editPatient}>
@@ -573,13 +577,43 @@ const PatientTreatmentCard = ({
   treatment_symptoms,
   selectedCarePlanId,
   auth_role,
-  user_role_id
+  user_role_id,
+  secondary_doctor_user_role_ids,
+  doctors,
+  user_roles,
+  providers
 }) => {
   const time = moment().format("Do MMMM YYYY, hh:mm a");
 
 
   const isPrescriptionOfCurrentDoc = !isOtherCarePlan && user_role_id.toString() === auth_role.toString();
     
+  let all_providers = '',count=1;
+  for(let each in secondary_doctor_user_role_ids){
+    const role_id = secondary_doctor_user_role_ids[each] || {} ;
+
+    const { basic_info:{user_identity = null , linked_id = null}={} }  = user_roles[role_id] || {};
+
+    let doctor_id=null;
+    for(let doctorId in doctors ){
+      const {basic_info:{user_id} ={} } = doctors[doctorId] || {};
+      if(user_identity == user_id ){
+        doctor_id=doctorId;
+        break;
+      }
+
+    }
+
+    const {basic_info:{name : provider_name = ''} = {}} = providers[linked_id] || {};
+
+    const { basic_info:{first_name='',middle_name='',last_name=''} = {} } = doctors[doctor_id] || {};
+
+    let doctor_name = `${getName(first_name)}  ${getName(middle_name)} ${getName(last_name)}`;
+
+    all_providers=`${all_providers}${count > 1 ? "," : ""}${" "}${doctor_name}${provider_name.length > 0 ? `${" "}(${provider_name})` : '' }`;
+    count++;
+  }
+
 
   return (
     <div className="treatment mt20 tal bg-faint-grey">
@@ -664,10 +698,18 @@ const PatientTreatmentCard = ({
 
         <div className="flex direction-column mb14">
           <div className="fs14">
-            {formatMessage(messages.treatment_provider)}
+            {formatMessage(messages.hospital)}
           </div>
           <div className="fs16 fw700">{treatment_provider}</div>
         </div>
+
+        <div className="flex direction-column mb14">
+          <div className="fs14">
+          {formatMessage(messages.providers)}
+          </div>
+          <div className="fs16 fw700">{all_providers}</div>
+        </div>
+
       </div>
     </div>
   );
@@ -811,9 +853,6 @@ class PatientDetails extends Component {
           selectedCarePlanId: current_careplan_id
         });
       }
-
-      
-
 
       
 
@@ -1245,6 +1284,14 @@ class PatientDetails extends Component {
               <div>{this.formatMessage(messages.workout)}</div>
             </Menu.Item>
         )}
+
+        {( authPermissions.includes(USER_PERMISSIONS.CARE_PLAN.ADD ) ) && (
+            <Menu.Item 
+            onClick={this.handleAddDoctorToCareplan}
+             >
+              <div>{this.formatMessage(messages.secondary_doctor)}</div>
+            </Menu.Item>
+        )}
        
       </Menu>
     );
@@ -1282,6 +1329,17 @@ class PatientDetails extends Component {
 
     openAddWorkoutDrawer({
       patient_id
+    });
+
+  }
+
+  handleAddDoctorToCareplan= e => {
+
+    const { openAddSecondaryDoctorDrawer } = this.props;
+    const { selectedCarePlanId = null } = this.state;
+
+    openAddSecondaryDoctorDrawer({
+      selectedCarePlanId
     });
 
   }
@@ -2235,7 +2293,9 @@ class PatientDetails extends Component {
       authenticated_user = null,
       reports = {},
       auth_role = null,
-      authenticated_category
+      authenticated_category,
+      providers={},
+      user_roles={}
     } = this.props;
 
 
@@ -2478,7 +2538,7 @@ class PatientDetails extends Component {
     } = this.state;
 
 
-    const {basic_info : {user_role_id = null } = {} } = care_plans[selectedCarePlanId];
+    const {basic_info : {user_role_id = null } = {} ,secondary_doctor_user_role_ids = []} = care_plans[selectedCarePlanId];
 
     // let defaultActiveKeyValue = "1";
     const  {activeKey = "1"}=this.state;
@@ -2517,6 +2577,7 @@ class PatientDetails extends Component {
                 editPatient={this.handleEditPatientDrawer}
                 editPatientOption={this.editPatientOption}
                 openVideoScreen={openVideoScreen}
+               
               />
 
               {/* {this.editPatientOption()} */}
@@ -2572,6 +2633,10 @@ class PatientDetails extends Component {
                 }
                 auth_role={auth_role}
                 user_role_id = {user_role_id}
+                secondary_doctor_user_role_ids={secondary_doctor_user_role_ids}
+                user_roles={user_roles}
+                doctors={doctors}
+                providers={providers}
               />
             </div>
 
@@ -2847,6 +2912,10 @@ class PatientDetails extends Component {
           <EditAppointmentDrawer
                 carePlan={carePlan}
                 carePlanId={carePlanId}
+          />
+          <AddSecondaryDoctorDrawer
+            carePlan={carePlan}
+            carePlanId={carePlanId}
           />
           
         </div>

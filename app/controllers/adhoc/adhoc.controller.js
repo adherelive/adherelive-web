@@ -56,7 +56,6 @@ class AdhocController extends Controller {
             linked_id,
             linked_with,
           });
-
         }
       }
 
@@ -425,6 +424,29 @@ class AdhocController extends Controller {
       }
     } catch (error) {
       Log.debug("updatePermissions 500", error);
+      return raiseServerError(res);
+    }
+  };
+
+  updateChannels = async (req, res) => {
+    const { raiseSuccess, raiseServerError } = this;
+    try {
+      const channelSeparator = process.config.twilio.CHANNEL_SERVER;
+
+      const careplans = await carePlanService.getAll() || [];
+
+      if(careplans.length) {
+        for(let index = 0; index < careplans.length; index++) {
+          const {id, patient_id, user_role_id} = careplans[index] || {};
+
+          Log.debug("1231023 ", `${user_role_id}-${channelSeparator}-${patient_id}`);
+          await carePlanService.updateCarePlan({channel_id: `${user_role_id}-${channelSeparator}-${patient_id}`}, id);
+        }
+
+        return raiseSuccess(res, 200, {}, "Channels updated successfully");
+      }
+    } catch(error) {
+      Log.debug("updateChannels 500", error);
       return raiseServerError(res);
     }
   };

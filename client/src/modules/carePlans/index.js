@@ -23,6 +23,12 @@ export const ADD_CARE_PLAN_DATA_COMPLETED = "ADD_CARE_PLAN_DATA_COMPLETED";
 export const ADD_CARE_PLAN_DATA_COMPLETED_WITH_ERROR =
   "ADD_CARE_PLAN_DATA_COMPLETED_WITH_ERROR";
 
+
+export const ADD_SECONDARY_DOCTOR_TO_CARE_PLAN = "ADD_SECONDARY_DOCTOR_TO_CARE_PLAN";
+export const ADD_SECONDARY_DOCTOR_TO_CARE_PLAN_COMPLETED = "ADD_SECONDARY_DOCTOR_TO_CARE_PLAN_COMPLETED";
+export const ADD_SECONDARY_DOCTOR_TO_CARE_PLAN_FAILED =
+  "ADD_SECONDARY_DOCTOR_TO_CARE_PLAN_FAILED";
+
 function carePlanReducer(state, data) {
     const {care_plans} = data || {};
     if(care_plans) {
@@ -96,6 +102,7 @@ export const addCarePlanMedicationsAndAppointments =(payload,carePlanId)=>{
           dispatch({
             type:GET_PATIENT_CARE_PLAN_DETAILS_COMPLETED,
             data: data,
+            payload:data
           });
         }
       } catch (err) {
@@ -106,6 +113,43 @@ export const addCarePlanMedicationsAndAppointments =(payload,carePlanId)=>{
       return response;
     };
   }
+  export const addSecondaryDoctorToCareplan =(payload)=>{
+    let response = {};
+    return async (dispatch) => {
+      try {
+        dispatch({ type: ADD_SECONDARY_DOCTOR_TO_CARE_PLAN });
+  
+        response = await doRequest({
+          method: REQUEST_TYPE.POST,
+          url: CarePlan.addDoctroRoleIdToCareplanUrl(),
+          data:payload
+        });
+  
+        const { status, payload: { error = "", data = {} } = {} } =
+          response || {};
+  
+        if (status === false) {
+          dispatch({
+            type:ADD_SECONDARY_DOCTOR_TO_CARE_PLAN_FAILED ,
+            payload: { error },
+          });
+        } else if (status === true) {
+          const { users = {} } = data;
+       
+          dispatch({
+            type:ADD_SECONDARY_DOCTOR_TO_CARE_PLAN_COMPLETED ,
+            data,
+          });
+        }
+      } catch (err) {
+        console.log("err ADD_SECONDARY_DOCTOR_TO_CARE_PLAN ", err);
+        throw err;
+      }
+  
+      return response;
+    };
+  }
+
 
 export default (state = {}, action) => {
     const {type, data} = action || {};

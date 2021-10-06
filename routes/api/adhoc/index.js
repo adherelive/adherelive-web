@@ -34,5 +34,11 @@ router.post(
     adhocController.updatePermissions
 );
 
+router.post(
+    "/careplan/channels",
+    Authenticated,
+    adhocController.updateChannels
+);
+
   
 module.exports = router;

@@ -9,6 +9,7 @@ dump
 #not ignore settings file
 !/public/.gitkeep
 .c9
+/s3Downloads
 # self
 notes.txt
 

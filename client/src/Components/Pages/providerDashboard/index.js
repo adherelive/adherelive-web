@@ -94,7 +94,7 @@ class ProviderDoctorPage extends Component {
           <Menu>
             {authPermissions.includes(USER_PERMISSIONS.DOCTORS.ADD) && (
               <Menu.Item onClick={this.addDoctor}>
-                <div className="tac" >{this.formatMessage(messages.addDoctorOrHSP)}</div>
+                <div className="tac" >{this.formatMessage(messages.addProviderOrHSP)}</div>
               </Menu.Item>
             )}
             {authPermissions.includes(USER_PERMISSIONS.GRAPHS.UPDATE) && (

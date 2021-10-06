@@ -9,7 +9,7 @@ import twilioService from "../../../services/twilio/twilio.service";
 import SymptomWrapper from "../../../ApiWrapper/mobile/symptoms";
 import DocumentWrapper from "../../../ApiWrapper/mobile/uploadDocument";
 import CarePlanWrapper from "../../../ApiWrapper/mobile/carePlan";
-import DoctorWrapper from "../../../ApiWrapper/mobile/doctor";
+// import DoctorWrapper from "../../../ApiWrapper/mobile/doctor";
 import PatientWrapper from "../../../ApiWrapper/mobile/patient";
 
 import {
@@ -24,7 +24,7 @@ import {
   ALLOWED_VIDEO_EXTENSIONS,
   EVENT_TYPE,
   EVENT_STATUS,
-  MESSAGE_TYPES,
+  // MESSAGE_TYPES,
 } from "../../../../constant";
 import { getFilePath } from "../../../helper/filePath";
 import carePlanService from "../../../services/carePlan/carePlan.service";
@@ -151,13 +151,16 @@ class SymptomController extends Controller {
       });
 
       let allUniqueDoctorsToNotifyData = {};
+
+      let alluniqueChatChannelData = {};
       let doctorLatestCareplanData = {};
 
       for (const carePlanData of carePlans) {
         const carePlan = await CarePlanWrapper(carePlanData);
-        const doctorId = carePlan.getDoctorId();
+        // const doctorId = carePlan.getDoctorId();
         const doctorRoleId = carePlan.getUserRoleId();
-        const doctorData = await DoctorWrapper(null, doctorId);
+        const secondaryDoctorRoleIds = carePlan.getCareplnSecondaryProfiles();
+        // const doctorData = await DoctorWrapper(null, doctorId);
         
 
         const chatJSON = JSON.stringify({
@@ -189,14 +192,17 @@ class SymptomController extends Controller {
         //   }
         // };
 
+        // for notifications
+        for(let roleId of [doctorRoleId, ...secondaryDoctorRoleIds]) {
+
         if (
           Object.keys(allUniqueDoctorsToNotifyData).indexOf(
-            doctorRoleId
+            roleId
           ) === -1
         ) {
-          allUniqueDoctorsToNotifyData[doctorRoleId] = {
+          allUniqueDoctorsToNotifyData[roleId] = {
             eventData: {
-              participants: [doctorRoleId, userRoleId],
+              participants: [roleId, userRoleId],
               actor: {
                 id: patientData.getUserId(),
                 user_role_id: userRoleId,
@@ -209,15 +215,28 @@ class SymptomController extends Controller {
                 message: `A new symptom is added.`,
               },
             },
+            // todo: chat
             twilio: {
-              doctor: doctorRoleId,
-              patient: userRoleId,
+              channel_id: carePlan.getChannelId(),
               content: chatJSON,
             },
           };
 
           doctorLatestCareplanData[doctorRoleId] = carePlan.getCarePlanId();
         }
+      }
+
+      // for chat message
+      if (
+        Object.keys(alluniqueChatChannelData).indexOf(
+          carePlan.getChannelId()
+        ) === -1
+      ) {
+        alluniqueChatChannelData[carePlan.getChannelId()] = {
+          // todo: chat
+            content: chatJSON,
+        };
+      }
 
         // const chatJob = ChatJob.execute(
         //   MESSAGE_TYPES.USER_MESSAGE,
@@ -250,7 +269,7 @@ class SymptomController extends Controller {
         );
         await NotificationSdk.execute(symptomJob);
 
-        for (const doctorId in allUniqueDoctorsToNotifyData) {
+        for (const chatChannel in alluniqueChatChannelData) {
           // const chatJob = ChatJob.execute(
           //   MESSAGE_TYPES.USER_MESSAGE,
           //   allUniqueDoctorsToNotifyData[doctorId].eventData
@@ -258,10 +277,10 @@ class SymptomController extends Controller {
           // await NotificationSdk.execute(chatJob);
 
           // twilio
-          const { doctor, patient, content } =
-            allUniqueDoctorsToNotifyData[doctorId].twilio || {};
+          const { content } =
+              alluniqueChatChannelData[chatChannel] || {};
 
-          await twilioService.addSymptomMessage(doctor, patient, content);
+          await twilioService.addSymptomMessage(chatChannel, content);
         }
       }
 

@@ -21,6 +21,7 @@ import VitalWrapper from "../../../ApiWrapper/mobile/vitals";
 import PatientWrapper from "../../../ApiWrapper/mobile/patient";
 import DietWrapper from "../../../ApiWrapper/mobile/diet";
 import WorkoutWrapper from "../../../ApiWrapper/mobile/workouts";
+import UserRoleWrapper from "../../../ApiWrapper/mobile/userRoles";
 
 import Logger from "../../../../libs/log";
 import {
@@ -55,6 +56,9 @@ export const getCareplanData = async ({
 
     let doctorData = {};
 
+    let providerData = {};
+    let userRoleData = {};
+
     let currentCareplanTime = null;
     let currentCareplanId = null;
 
@@ -75,15 +79,20 @@ export const getCareplanData = async ({
         appointment_ids,
         basic_info: { user_role_id = null } = {},
       } = care_plans[careplan.getCarePlanId()] || {};
+
+      const secondaryDoctorUserRoleIds = careplan.getCareplnSecondaryProfiles() || [];
       appointmentIds = [...appointmentIds, ...appointment_ids];
       medicationIds = [...medicationIds, ...medication_ids];
 
       // get latest careplan id
       // Log.debug("7123731 careplan --> ", careplan.getCreatedAt());
       // Log.debug("71237312 careplan --> ", moment(currentCareplanTime));
+
+      const isUserRoleAllowed = [user_role_id, ...secondaryDoctorUserRoleIds].map(id => parseInt(id)).includes(userRoleId);
+
       if (
         (userCategory === USER_CATEGORY.DOCTOR || userCategory === USER_CATEGORY.HSP) &&
-        user_role_id.toString() === userRoleId.toString()
+        isUserRoleAllowed
       ) {
         // if(userCategory === USER_CATEGORY.DOCTOR && doctorId === doctor_id) {
         if (
@@ -100,6 +109,16 @@ export const getCareplanData = async ({
           currentCareplanTime = careplan.getCreatedAt();
           currentCareplanId = careplan.getCarePlanId();
         }
+      }
+
+      for(let index = 0; index < secondaryDoctorUserRoleIds.length; index++) {
+        const userRole = await UserRoleWrapper(null, secondaryDoctorUserRoleIds[index]);
+  
+        const {user_roles: secondaryUserRoles, doctors: secondaryDoctors, providers: secondaryProviders} = await userRole.getAllInfo();
+        
+        doctorData = {...doctorData, ...secondaryDoctors};
+        providerData = {...providerData, ...secondaryProviders};
+        userRoleData = {...userRoleData, ...secondaryUserRoles};
       }
     }
 
@@ -161,6 +180,12 @@ export const getCareplanData = async ({
       },
       doctors: {
         ...doctorData,
+      },
+      providers: {
+        ...providerData,
+      },
+      user_roles: {
+        ...userRoleData,
       },
       care_plan_ids: carePlanIds,
       current_careplan_id: currentCareplanId,

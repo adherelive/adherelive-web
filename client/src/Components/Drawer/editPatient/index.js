@@ -58,7 +58,7 @@ class EditPatientDrawer extends Component {
             treatment:null ,
             severity:null,
             careplan_id : null,
-            submitting:false
+            submitting:false,
         };
         this.handleConditionSearch = throttle(this.handleConditionSearch.bind(this), 2000);
         this.handleTreatmentSearch = throttle(this.handleTreatmentSearch.bind(this), 2000);
@@ -460,6 +460,8 @@ class EditPatientDrawer extends Component {
         this.setState({ date_of_birth: moment(e.target.value) });
     };
 
+
+    
     setHeight = (e) => {
         const { value } = e.target;
         const reg = /^-?\d*(\.\d*)?$/;
@@ -843,6 +845,7 @@ class EditPatientDrawer extends Component {
                 >
                     {this.getTreatmentOption()}
                 </Select>
+
             </div>
         );
 
@@ -961,6 +964,9 @@ class EditPatientDrawer extends Component {
         if (visible !== true) {
             return null;
         }
+
+        console.log("821387612873618276387126387",{state:this.state});
+
         return (
             <Fragment>
                 <Drawer

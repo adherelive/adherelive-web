@@ -117,11 +117,13 @@ class PriorJob extends AppointmentJob {
   getInAppTemplate = () => {
     const { getAppointmentData } = this;
     const {
-      participants = [],
-      actor: {
-        id: actorId,
-        user_role_id,
-        details: { name, category: actorCategory } = {},
+      details: {
+        participants = [],
+        actor: {
+          id: actorId,
+          user_role_id,
+          details: { name, category: actorCategory } = {},
+        } = {},
       } = {},
       id,
     } = getAppointmentData() || {};

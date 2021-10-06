@@ -17,6 +17,7 @@ import uploadDocumentService from "../../../services/uploadDocuments/uploadDocum
 import featuresService from "../../../services/features/features.service";
 import doctorPatientFeatureMappingService from "../../../services/doctorPatientFeatureMapping/doctorPatientFeatureMapping.service";
 import userRolesService from "../../../services/userRoles/userRoles.service";
+import careplanSecondaryDoctorMappingService from "../../../services/careplanSecondaryDoctorMappings/careplanSecondaryDoctorMappings.service";
 
 // m-api wrappers
 import PatientWrapper from "../../../ApiWrapper/mobile/patient";
@@ -31,6 +32,7 @@ import UploadDocumentWrapper from "../../../ApiWrapper/mobile/uploadDocument";
 import FeatureMappingWrapper from "../../../ApiWrapper/mobile/doctorPatientFeatureMapping";
 import UserRoleWrapper from "../../../ApiWrapper/mobile/userRoles";
 import UserPreferenceWrapper from "../../../ApiWrapper/mobile/userPreference";
+import ProviderWrapper from "../../../ApiWrapper/mobile/provider";
 
 import Log from "../../../../libs/log";
 import {
@@ -78,7 +80,7 @@ import MedicineApiWrapper from "../../../ApiWrapper/mobile/medicine";
 import UserVerificationServices from "../../../services/userVerifications/userVerifications.services";
 import getUniversalLink from "../../../helper/universalLink";
 import getAge from "../../../helper/getAge";
-import { getSeparateName } from "../../../helper/common";
+import { getRoomId, getSeparateName } from "../../../helper/common";
 import { EVENTS, Proxy_Sdk } from "../../../proxySdk";
 import UserPreferenceService from "../../../services/userPreferences/userPreference.service";
 import doctorsService from "../../../services/doctors/doctors.service";
@@ -355,14 +357,14 @@ class MobileDoctorController extends Controller {
           weight,
           address,
         });
+        const userRoleWrapper = await UserRoleWrapper(userRole);
+        const newUserRoleId = await userRoleWrapper.getId();
 
         const patientWrapper = await PatientWrapper(patient);
         const patientUserId = await patientWrapper.getUserId();
         const userRole = await userRolesService.create({
           user_identity: patientUserId,
         });
-        const userRoleWrapper = await UserRoleWrapper(userRole);
-        const newUserRoleId = await userRoleWrapper.getId();
 
         await UserPreferenceService.addUserPreference({
           user_id: newUserId,
@@ -423,8 +425,16 @@ class MobileDoctorController extends Controller {
         care_plan_template_id,
         details,
         user_role_id: userRoleId,
+        // channel_id: getRoomId(userRoleId, patient_id),
         created_at: moment(),
       });
+
+      const {id: carePlanId} = carePlan || {};
+      const {user_role_id: patientRoleId} = await patientData.getAllInfo();
+
+      await carePlanService.updateCarePlan({
+        channel_id: getRoomId(userRoleId, patientRoleId)
+      }, carePlanId);
 
       const carePlanData = await CarePlanWrapper(carePlan);
 
@@ -2401,6 +2411,8 @@ class MobileDoctorController extends Controller {
       });
 
       const getWatchListPatients = parseInt(watchlist, 10) === 0 ? 0 : 1;
+
+         // sort type
       const sortByName = parseInt(sort_by_name, 10) === 0 ? 0 : 1;
 
       let doctorId = null,
@@ -2428,13 +2440,33 @@ class MobileDoctorController extends Controller {
         }
       }
 
+      // careplan ids as secondary doctor
+      const { count : careplansCount = 0 , rows : careplanAsSecondaryDoctor = [] } = await careplanSecondaryDoctorMappingService.findAndCountAll({
+        where:{
+          secondary_doctor_role_id:userRoleId
+        }
+      });
+
+      let careplanIdsAsSecondaryDoctor = [];
+
+      if(careplansCount){
+        for(let each of careplanAsSecondaryDoctor){
+          const { care_plan : {id = null } = {} } = each || {};
+          careplanIdsAsSecondaryDoctor.push(id);
+        }
+      }
+
+      const secondary_careplan_ids = careplanIdsAsSecondaryDoctor.toString(); // string
+
+      // watchlisted patient ids
       if (getWatchListPatients) {
         count = await carePlanService.getWatchlistedDistinctPatientCounts(
           watchlistPatientIds,
-          userRoleId
+          userRoleId,
+          careplanIdsAsSecondaryDoctor
         );
       } else {
-        count = await carePlanService.getDistinctPatientCounts(userRoleId);
+        count = await carePlanService.getDistinctPatientCounts(userRoleId,careplanIdsAsSecondaryDoctor);
       }
 
       if (count > 0) {
@@ -2449,14 +2481,16 @@ class MobileDoctorController extends Controller {
           nameOrder: sortByName ? true : false,
           createdAtOrder: sortByName ? false : true,
         };
-        const allPatients = await carePlanService.getPaginatedDataOfPatients(
-          data
-        );
+        const allPatients = await carePlanService.getPaginatedDataOfPatients({ ...data, secondary_careplan_ids });
 
         for (const patient of allPatients) {
           const formattedPatientData = patient;
 
           const { id, details = {} } = formattedPatientData;
+          if(patientIds.includes(id)){
+            continue;
+          }
+
           patientIds.push(id);
           let watchlist = false;
 
@@ -2482,7 +2516,7 @@ class MobileDoctorController extends Controller {
         res,
         200,
         {
-          total: count,
+          total: patientIds.length,
           page_size: limit,
           patient_ids: patientIds,
           patients,
@@ -2494,6 +2528,149 @@ class MobileDoctorController extends Controller {
       return raiseServerError(res);
     }
   };
+
+
+
+  searchDoctorName = async(req,res) => {
+    const { raiseSuccess, raiseClientError, raiseServerError } = this;
+    try {
+      const {
+        query: { name : value = null } = {},
+        userDetails: {userRoleId} = {}
+      } = req;
+
+      const limit = process.config.DOCTOR_NAME_SEARCH_LIST_SIZE_LIMIT;
+      const endLimit = parseInt(limit, 10);
+      const matchingDoctors = await doctorService.searchByName({value,limit: endLimit}) || [];
+      let userRoles = {},providers={}, doctors = {}, users = {};
+      let rowData = [];
+      if(matchingDoctors && matchingDoctors.length){
+        for(let each in matchingDoctors){
+          
+          const eachDoctor = matchingDoctors[each] || {};
+          const doctorWrapper = await DoctorWrapper(eachDoctor) ;
+          const userId = await doctorWrapper.getUserId() || null;
+          const userWrapper = await UserWrapper(null,userId);
+          const allUserRolesForDoctor = await userRolesService.getAllByData({user_identity:userId});
+          for(let eachRole in allUserRolesForDoctor){
+            const userRole = allUserRolesForDoctor[eachRole] || {};
+            const userRoleWrapper = await UserRoleWrapper(userRole);
+            const linked_id =  userRoleWrapper.getLinkedId();
+            const linked_with =  userRoleWrapper.getLinkedWith();
+
+            // providers = {};
+            if(userRoleWrapper.getId() === userRoleId) continue;
+            
+            if(linked_id && linked_with === USER_CATEGORY.PROVIDER ){
+              const providerWrapper = await ProviderWrapper(null , linked_id);
+              providers = {  [providerWrapper.getProviderId()]: {...providerWrapper.getBasicInfo()} };
+            }
+            // userRoles={ ...userRoles, [userRoleWrapper.getId()]:{...userRoleWrapper.getBasicInfo()} };
+
+            // rowData.push({
+            //   doctors:{
+            //     [doctorWrapper.getDoctorId()]:{...doctorWrapper.getBasicInfo()}
+            //   },
+            //   users:{
+            //     [userWrapper.getId()]:{...userWrapper.getBasicInfo()}
+            //   },
+            //   user_roles:{
+            //     [userRoleWrapper.getId()]:{...userRoleWrapper.getBasicInfo()}
+            //   },
+            //   providers:{
+            //     ...providers
+            //   },
+            //   doctor_id:doctorWrapper.getDoctorId(),
+            //   user_role_id:userRoleWrapper.getId()
+            //  });
+
+             rowData.push({
+              doctor_id: doctorWrapper.getDoctorId(),
+              user_id: userWrapper.getId(),
+              user_role_id: userRoleWrapper.getId(),
+              provider_id: linked_id,
+            });
+
+            doctors = {...doctors, [doctorWrapper.getDoctorId()]:{...(await doctorWrapper.getAllInfo())}};
+            
+            users = {...users, [userWrapper.getId()]:{...userWrapper.getBasicInfo()}};
+              
+            userRoles = {...userRoles, [userRoleWrapper.getId()]:{...userRoleWrapper.getBasicInfo()}};
+
+          }
+
+
+          // rowData.push({
+          //   doctors:{
+          //     ...doctorWrapper.getBasicInfo()
+          //   },
+          //   users:{
+          //     ...userWrapper.getBasicInfo()
+          //   },
+          //   user_roles:{
+          //     ...userRoles
+          //   },
+          //   providers:{
+          //     ...providers
+          //   }
+          //  });
+        }
+
+
+        return raiseSuccess(
+              res,
+              200,
+              {
+                rowData,
+                doctors,
+                users,
+                user_roles: userRoles,
+                providers
+              },
+              "Matching Doctors found  successfully."
+            );
+
+      }else{
+            return raiseClientError(
+              res,
+              422,
+              {},
+              "No Matching Doctors with name found."
+            );
+        }
+
+    } catch (error) {
+      Logger.debug("searchDoctorName 500 ERROR", error);
+      return raiseServerError(res);
+    }
+  }
+
+  // addProfile = async (req, res) => {
+  //   const { raiseSuccess, raiseClientError, raiseServerError } = this;
+  //   try {
+  //       const {body: {user_role_id, care_plan_id} = {}} = req;
+
+  //       const dataToAdd = {
+  //         care_plan_id, 
+  //         secondary_doctor_role_id: user_role_id
+  //       };
+  //       const existingMapping = await careplanSecondaryDoctorMappingService.getByData(dataToAdd) || null;
+
+  //       if(!existingMapping) {
+  //         const createdMapping = await careplanSecondaryDoctorMappingService.create(dataToAdd) || null;
+
+  //         if(createdMapping) {
+  //           return raiseSuccess(res, 200, {}, "Profile added successfully");
+  //         }
+  //       } else {
+  //         return raiseClientError(res, 422, {}, "Profile already added in the treatment");
+  //       }
+  //   } catch(error) {
+  //     Logger.debug("addProfile 500 ERROR", error);
+  //     return raiseServerError(res);
+  //   }
+  // };
+
 }
 
 export default new MobileDoctorController();

@@ -28,7 +28,7 @@ import providerService from "../../services/provider/provider.service";
 import doctorProviderMappingService from "../../services/doctorProviderMapping/doctorProviderMapping.service";
 import featuresService from "../../services/features/features.service";
 import doctorPatientFeatureMappingService from "../../services/doctorPatientFeatureMapping/doctorPatientFeatureMapping.service";
-
+import careplanSecondaryDoctorMappingService from "../../services/careplanSecondaryDoctorMappings/careplanSecondaryDoctorMappings.service";
 // import TemplateMedicationWrapper from "../../ApiWrapper/web/templateMedication";
 // import TemplateAppointmentWrapper from "../../ApiWrapper/web/templateAppointment";
 import DegreeWrapper from "../../ApiWrapper/mobile/degree";
@@ -87,7 +87,7 @@ import UserVerificationServices from "../../services/userVerifications/userVerif
 import UserPreferenceService from "../../services/userPreferences/userPreference.service";
 import userRolesService from "../../services/userRoles/userRoles.service";
 import doctorPatientWatchlistService from "../../services/doctorPatientWatchlist/doctorPatientWatchlist.service";
-import { getSeparateName } from "../../helper/common";
+import { getRoomId, getSeparateName } from "../../helper/common";
 import userPreferenceService from "../../services/userPreferences/userPreference.service";
 // import doctor from "../../ApiWrapper/web/doctor";
 // import college from "../../ApiWrapper/web/college";
@@ -1282,6 +1282,7 @@ class DoctorController extends Controller {
         );
 
         patientData = await PatientWrapper(null, patient_id);
+
       } else {
         const password = process.config.DEFAULT_PASSWORD;
         const salt = await bcrypt.genSalt(Number(process.config.saltRounds));
@@ -1393,10 +1394,19 @@ class DoctorController extends Controller {
         care_plan_template_id,
         details,
         user_role_id:userRoleId,
+        // channel_id: getRoomId(userRoleId, patient_id),
         created_at: moment()
       });
 
-      const carePlanData = await CarePlanWrapper(carePlan);
+      const {id: carePlanId} = carePlan || {};
+
+      const {user_role_id: patientRoleId} = await patientData.getAllInfo();
+
+      await carePlanService.updateCarePlan({
+        channel_id: getRoomId(userRoleId, patientRoleId)
+      }, carePlanId);
+
+      const carePlanData = await CarePlanWrapper(null, carePlanId);
       // const care_plan_id = await carePlanData.getCarePlanId();
 
       let templateMedicationData = {};
@@ -3637,10 +3647,28 @@ class DoctorController extends Controller {
     
       }
 
+      const { count : careplansCount = 0 , rows : careplanAsSecondaryDoctor = [] } = await careplanSecondaryDoctorMappingService.findAndCountAll({
+        where:{
+          secondary_doctor_role_id:userRoleId
+        }
+      });
+
+      let careplanIdsAsSecondaryDoctor = [];
+
+      if(careplansCount){
+        for(let each of careplanAsSecondaryDoctor){
+          const { care_plan : {id = null } = {} } = each || {};
+          careplanIdsAsSecondaryDoctor.push(id);
+        }
+      }
+
+      const secondary_careplan_ids = careplanIdsAsSecondaryDoctor.toString();
+
+
       if(getWatchListPatients) {
-        count = await carePlanService.getWatchlistedDistinctPatientCounts(doctorId, watchlistPatientIds);
+        count = await carePlanService.getWatchlistedDistinctPatientCounts( watchlistPatientIds,userRoleId,careplanIdsAsSecondaryDoctor);
       } else {
-        count = await carePlanService.getDistinctPatientCounts(doctorId);
+        count = await carePlanService.getDistinctPatientCounts(userRoleId,careplanIdsAsSecondaryDoctor);
       }
 
       if(count > 0) {
@@ -3712,7 +3740,7 @@ class DoctorController extends Controller {
 
         }
 
-        const allPatients = await carePlanService.getPaginatedDataOfPatients(data);
+        const allPatients = await carePlanService.getPaginatedDataOfPatients({ ...data, secondary_careplan_ids });
 
         console.log("35732432542730078783246722223 ======>>>>> ",{allPatients,crIdsForMatchingTreatmentType})
 
@@ -3743,6 +3771,11 @@ class DoctorController extends Controller {
                 }
               }
           }
+
+          if(patientIds.includes(id)){
+            continue;
+          }
+
           patientIds.push(id);
           let watchlist = false;
   
@@ -3768,7 +3801,7 @@ class DoctorController extends Controller {
         res,
         200,
         {
-          total: count,
+          total: patientIds.length,
           page_size: limit,
           patient_ids: patientIds,
           paginated_patients_data: paginatedPatientData,
@@ -3844,6 +3877,129 @@ class DoctorController extends Controller {
       return raiseServerError(res);
     }
   }
+
+  searchDoctorName = async(req,res) => {
+    const { raiseSuccess, raiseClientError, raiseServerError } = this;
+    try {
+      const {
+        query: { name : value = null } = {},
+        userDetails: {userRoleId} = {}
+      } = req;
+
+      const limit = process.config.DOCTOR_NAME_SEARCH_LIST_SIZE_LIMIT;
+      const endLimit = parseInt(limit, 10);
+      const matchingDoctors = await doctorService.searchByName({value,limit: endLimit}) || [];
+      let userRoles = {},providers={}, doctors = {}, users = {};
+      let rowData = [];
+      if(matchingDoctors && matchingDoctors.length){
+        for(let each in matchingDoctors){
+          
+          const eachDoctor = matchingDoctors[each] || {};
+          const doctorWrapper = await DoctorWrapper(eachDoctor) ;
+          const userId = await doctorWrapper.getUserId() || null;
+          const userWrapper = await UserWrapper(null,userId);
+          const allUserRolesForDoctor = await userRolesService.getAllByData({user_identity:userId});
+          for(let eachRole in allUserRolesForDoctor){
+
+            const userRole = allUserRolesForDoctor[eachRole] || {};
+            const userRoleWrapper = await UserRoleWrapper(userRole);
+            const linked_id =  userRoleWrapper.getLinkedId();
+            const linked_with =  userRoleWrapper.getLinkedWith();
+
+            if(userRoleWrapper.getId() === userRoleId) continue;
+            
+            if(linked_id && linked_with === USER_CATEGORY.PROVIDER ){
+              const providerWrapper = await ProviderWrapper(null , linked_id);
+              providers = {  [providerWrapper.getProviderId()]: {...providerWrapper.getBasicInfo()} };
+            }
+            // userRoles={ ...userRoles, [userRoleWrapper.getId()]:{...userRoleWrapper.getBasicInfo()} };
+
+            rowData.push({
+              doctor_id: doctorWrapper.getDoctorId(),
+              user_id: userWrapper.getId(),
+              user_role_id: userRoleWrapper.getId(),
+              provider_id: linked_id,
+            });
+
+            doctors = {...doctors, [doctorWrapper.getDoctorId()]:{...(await doctorWrapper.getAllInfo())}};
+            
+            users = {...users, [userWrapper.getId()]:{...userWrapper.getBasicInfo()}};
+              
+            userRoles = {...userRoles, [userRoleWrapper.getId()]:{...userRoleWrapper.getBasicInfo()}};
+            
+          }
+
+
+          // rowData.push({
+          //   doctors:{
+          //     ...doctorWrapper.getBasicInfo()
+          //   },
+          //   users:{
+          //     ...userWrapper.getBasicInfo()
+          //   },
+          //   user_roles:{
+          //     ...userRoles
+          //   },
+          //   providers:{
+          //     ...providers
+          //   }
+          //  });
+        }
+
+
+        return raiseSuccess(
+              res,
+              200,
+              {
+                rowData,
+                doctors,
+                users,
+                user_roles: userRoles,
+                providers
+              },
+              "Matching Doctors found  successfully."
+            );
+
+      }else{
+            return raiseClientError(
+              res,
+              422,
+              {},
+              "No Matching Doctors with name found."
+            );
+        }
+
+    } catch (error) {
+      Logger.debug("searchDoctorName 500 ERROR", error);
+      return raiseServerError(res);
+    }
+  }
+
+  // addProfile = async (req, res) => {
+  //   const { raiseSuccess, raiseClientError, raiseServerError } = this;
+  //   try {
+  //       const {body: {user_role_id, care_plan_id} = {}} = req;
+
+  //       const dataToAdd = {
+  //         care_plan_id, 
+  //         secondary_doctor_role_id: user_role_id
+  //       };
+  //       const existingMapping = await careplanSecondaryDoctorMappingService.getByData(dataToAdd) || null;
+
+  //       if(!existingMapping) {
+  //         const createdMapping = await careplanSecondaryDoctorMappingService.create(dataToAdd) || null;
+
+  //         if(createdMapping) {
+  //           return raiseSuccess(res, 200, {}, "Profile added successfully");
+  //         }
+  //       } else {
+  //         return raiseClientError(res, 422, {}, "Profile already added in the treatment");
+  //       }
+  //   } catch(error) {
+  //     Logger.debug("addProfile 500 ERROR", error);
+  //     return raiseServerError(res);
+  //   }
+  // };
 
 }
 

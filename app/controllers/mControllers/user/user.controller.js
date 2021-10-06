@@ -578,7 +578,7 @@ class MobileUserController extends Controller {
     }
   }
 
-  onAppStart = async (req, res, next) => {
+  onAppStart = async (req, res) => {
     let response;
     try {
       if (req.userDetails.exists) {
@@ -628,7 +628,7 @@ class MobileUserController extends Controller {
                 doctorIds.push(carePlanApiWrapper.getDoctorId());
                 carePlanApiData[
                   carePlanApiWrapper.getCarePlanId()
-                ] = carePlanApiWrapper.getBasicInfo();
+                ] = await carePlanApiWrapper.getAllInfo();
 
                 const {
                   severity_id,
@@ -681,7 +681,7 @@ class MobileUserController extends Controller {
                 patientIds.push(carePlanApiWrapper.getPatientId());
                 carePlanApiData[
                   carePlanApiWrapper.getCarePlanId()
-                ] = carePlanApiWrapper.getBasicInfo();
+                ] = await carePlanApiWrapper.getAllInfo();
 
                 const {
                   severity_id,

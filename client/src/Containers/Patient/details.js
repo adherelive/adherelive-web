@@ -170,7 +170,9 @@ const mapDispatchToProps = dispatch => {
     openAddDietDrawer:(payload) => dispatch(open({ type: DRAWER.ADD_DIET,payload })),
     openAddWorkoutDrawer:(payload) => dispatch(open({ type: DRAWER.ADD_WORKOUT,payload })),
     resetNotificationRedirect:() => dispatch(resetNotificationRedirect()),
-    getAllTemplatesForDoctor:()=>dispatch(getAllTemplatesForDoctor())
+    getAllTemplatesForDoctor:()=>dispatch(getAllTemplatesForDoctor()),
+    openAddSecondaryDoctorDrawer:(payload) => dispatch(open({ type: DRAWER.ADD_SECONDARY_DOCTOR,payload })),
+
 
   };
 };

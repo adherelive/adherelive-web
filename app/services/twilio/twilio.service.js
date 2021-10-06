@@ -71,23 +71,23 @@ class TwilioService {
     });
   }
 
-  addSymptomMessage = async (doctor, patient, message) => {
+  addSymptomMessage = async (channel_id, message) => {
     try {
       const client = require("twilio")(accountSid, authToken);
 
       const channelExists = await client.chat
         .services(process.config.twilio.TWILIO_CHAT_SERVICE_SID)
-        .channels(this.getRoomId(doctor, patient));
+        .channels(channel_id);
 
       if (!channelExists) {
         const newChannel = await client.chat
           .services(process.config.twilio.TWILIO_CHAT_SERVICE_SID)
-          .channel.create(this.getRoomId(doctor, patient));
+          .channel.create(channel_id);
       }
 
       const channel = await client.chat
         .services(process.config.twilio.TWILIO_CHAT_SERVICE_SID)
-        .channels(this.getRoomId(doctor, patient));
+        .channels(channel_id);
 
       // issue: http for development
       // link: https://support.twilio.com/hc/en-us/articles/360007130274-Requirements-for-Connecting-to-the-Twilio-REST-API-and-Troubleshooting-Common-Issues
@@ -230,6 +230,20 @@ class TwilioService {
       // Logger.debug("channel -> ", channel);
     } catch (error) {
       Logger.debug("addSymptom message 500 error", error);
+    }
+  };
+
+  addMember = async (channelName, identity) => {
+    try {
+      const client = require("twilio")(accountSid, authToken);
+      const newMember = await client.chat
+      .services(process.config.twilio.TWILIO_CHAT_SERVICE_SID)
+      .channels(channelName)
+      .members.create({identity});
+
+      return newMember ? true : false;
+    } catch(error) {
+      Logger.debug("addMember 500 error", error);
     }
   };
 }

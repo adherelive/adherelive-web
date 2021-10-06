@@ -196,8 +196,6 @@ class PatientDetailsDrawer extends Component {
 
       let docName = "";
 
-      console.log("324242347298472983748274923748237489",{organizer,organizer_id,doctors});
-
       // for(const doctorId in doctors) {
       //   const {basic_info: {full_name, user_id} = {}} = doctors[doctorId] || {};
       //   if(user_id === organizer_id) {
@@ -230,9 +228,14 @@ class PatientDetailsDrawer extends Component {
 
   openChatTab = () => {
 
-    const { payload: { patient_id } = {}, setPatientForChat, openPopUp , patients } = this.props;
+    const { 
+      // payload: { patient_id } = {}, 
+      setCareplanForChat, 
+      openPopUp
+     } = this.props;
+    const {carePlanId} = this.state;
 
-    setPatientForChat(patient_id).then(() => {
+    setCareplanForChat(carePlanId).then(() => {
       openPopUp()
     }
     );
@@ -280,7 +283,7 @@ class PatientDetailsDrawer extends Component {
 
     if (id) {
 
-      let carePlanId = 1;
+      let carePlanId = null;
 
       for (let carePlan of Object.values(care_plans)) {
 
@@ -444,7 +447,7 @@ class PatientDetailsDrawer extends Component {
                 <div className="flex-2">{condition}</div>
               </div>
               <div className="flex justify-space-between align-center">
-                <div className="flex-1">{formatMessage(messages.doctor)}</div>
+                <div className="flex-1">{formatMessage(messages.provider)}</div>
                 <div className="flex-2">{doctor_first_name ? `${doctor_first_name} ${doctor_middle_name ? `${doctor_middle_name} ` : ""}${doctor_last_name ? `${doctor_last_name} ` : ""}` : "--"}</div>
               </div>
               <div className="flex justify-space-between align-center">
