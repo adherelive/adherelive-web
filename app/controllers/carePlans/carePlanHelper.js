@@ -197,6 +197,87 @@ export const getCareplanData = async ({
   }
 };
 
+export const getCareplanDataWithImp = async ({
+  carePlans = [],
+  userCategory,
+  doctorId,
+  userRoleId,
+}) => {
+  try {
+    let carePlanData = {};
+    let carePlanIds = [];
+
+    let medicationIds = [];
+
+
+    let currentCareplanTime = null;
+    let currentCareplanId = null;
+
+    for (let index = 0; index < carePlans.length; index++) {
+      const careplan = await CarePlanWrapper(carePlans[index]);
+      const {
+        care_plans,
+        doctors,
+        doctor_id,
+      } = await careplan.getReferenceInfo();
+      carePlanData = { ...carePlanData, ...care_plans };
+      carePlanIds.push(careplan.getCarePlanId());
+
+      const {
+        medication_ids,
+        appointment_ids,
+        basic_info: { user_role_id = null } = {},
+      } = care_plans[careplan.getCarePlanId()] || {};
+      
+      medicationIds = [...medicationIds, ...medication_ids];
+
+      const secondaryDoctorUserRoleIds =
+        careplan.getCareplnSecondaryProfiles() || [];
+
+      const isUserRoleAllowed = [user_role_id, ...secondaryDoctorUserRoleIds]
+        .map((id) => parseInt(id))
+        .includes(userRoleId);
+      // get latest careplan id
+      if (
+        (userCategory === USER_CATEGORY.DOCTOR ||
+          userCategory === USER_CATEGORY.HSP) &&
+        isUserRoleAllowed
+      ) {
+        // if(userCategory === USER_CATEGORY.DOCTOR && doctorId === doctor_id) {
+        if (
+          moment(careplan.getCreatedAt()).diff(
+            moment(currentCareplanTime),
+            "minutes"
+          ) > 0
+        ) {
+          currentCareplanTime = careplan.getCreatedAt();
+          currentCareplanId = careplan.getCarePlanId();
+        }
+
+        if (currentCareplanTime === null) {
+          currentCareplanTime = careplan.getCreatedAt();
+          currentCareplanId = careplan.getCarePlanId();
+        }
+      }
+
+      
+    }
+
+
+    return {
+      care_plans: {
+        ...carePlanData,
+      },
+      care_plan_ids: carePlanIds,
+      current_careplan_id: currentCareplanId,
+    };
+  } catch (error) {
+    Log.debug("getCareplanData catch error", error);
+    return {};
+  }
+};
+
+
 export const createVitals = async ({
   data = [],
   carePlanId,
