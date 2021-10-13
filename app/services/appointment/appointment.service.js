@@ -82,6 +82,10 @@ class AppointmentService {
   };
 
   getAppointmentByData = async data => {
+    console.log("get appointment by data in service - Start")
+    console.log(data)
+    console.log("get appointment by data in service - End")
+    
     try {
       const appointment = await Database.getModel(TABLE_NAME).findAll({
         where: data
