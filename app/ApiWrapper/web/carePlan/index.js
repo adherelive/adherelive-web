@@ -117,11 +117,23 @@ class CarePlanWrapper extends BaseCarePlan {
     };
   };
 
+  getReferenceInfoWithImp = async () => {
+    const {  getCarePlanId, getAllInfo } = this;
+
+    return {
+      care_plans: {
+        [getCarePlanId()]: await getAllInfo(),
+      }
+    };
+  };
+
+
+
   getReferenceInfo = async () => {
     const { _data, getCarePlanId, getAllInfo } = this;
     const { doctor, patient } = _data || {};
 
-    let doctorData = {}, providersApiData = {} ,userRolesApiData = {};;
+    let doctorData = {}, providersApiData = {}, userRolesApiData = {};;
     let doctor_id = null;
 
     if (doctor) {
@@ -139,22 +151,22 @@ class CarePlanWrapper extends BaseCarePlan {
       patient_id = patients.getPatientId();
     }
 
-    const secondary_doctor_user_role_ids = this.getCareplnSecondaryProfiles() || [] ;
+    const secondary_doctor_user_role_ids = this.getCareplnSecondaryProfiles() || [];
 
-    if(secondary_doctor_user_role_ids.length){
-      for(let each in secondary_doctor_user_role_ids){
+    if (secondary_doctor_user_role_ids.length) {
+      for (let each in secondary_doctor_user_role_ids) {
         const secondary_doctor_role_id = secondary_doctor_user_role_ids[each];
-        const userRoleWrapper = await UserRoleWrapper(null,secondary_doctor_role_id);
+        const userRoleWrapper = await UserRoleWrapper(null, secondary_doctor_role_id);
         const userId = await userRoleWrapper.getUserId();
         const doctor = await DoctorService.getDoctorByUserId(userId) || {};
         let doctorWrapper = {};
-        if(doctor){
+        if (doctor) {
           doctorWrapper = await DoctorWrapper(doctor);
           doctorData[doctorWrapper.getDoctorId()] = await doctorWrapper.getAllInfo();
 
-          if(userRoleWrapper.getLinkedId() !== null && userRoleWrapper.getLinkedWith() === USER_CATEGORY.PROVIDER ){
-            const providerWrapper = await ProviderWrapper(null,userRoleWrapper.getLinkedId())
-            providersApiData = { ...providersApiData , [providerWrapper.getProviderId()]:{...providerWrapper.getBasicInfo()} };
+          if (userRoleWrapper.getLinkedId() !== null && userRoleWrapper.getLinkedWith() === USER_CATEGORY.PROVIDER) {
+            const providerWrapper = await ProviderWrapper(null, userRoleWrapper.getLinkedId())
+            providersApiData = { ...providersApiData, [providerWrapper.getProviderId()]: { ...providerWrapper.getBasicInfo() } };
             userRolesApiData = { ...userRolesApiData, [userRoleWrapper.getId()]: { ...userRoleWrapper.getBasicInfo() } };
           }
         }
@@ -172,14 +184,18 @@ class CarePlanWrapper extends BaseCarePlan {
       patients: {
         ...patientData,
       },
-      providers:{ ...providersApiData},
-      user_roles:{ ...userRolesApiData},
+      providers: { ...providersApiData },
+      user_roles: { ...userRolesApiData },
       doctor_id,
       patient_id,
       care_plan_id: getCarePlanId(),
     };
-  };
+  }
 }
+
+
+
+
 
 export default async (data = null, id = null) => {
   if (data) {
