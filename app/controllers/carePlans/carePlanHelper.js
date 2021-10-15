@@ -34,78 +34,6 @@ import moment from "moment";
 
 const Log = new Logger("CARE_PLAN > HELPER");
 
-
-/**
- * Not Imp
- *  medicines,
-    medications,
-    appointments,
-    doctors,
-    providers = {},
-    user_roles = {},
-    schedule_events,
- * 
-    Imp -> care_plans,care_plan_ids,current_careplan_id
- */
-export const getCareplanDataWithImp = async ({
-  carePlans = [],
-  userCategory,
-  doctorId,
-  userRoleId,
-}) => {
-  try {
-    let carePlanData = {};
-    let carePlanIds = [];
-    let currentCareplanTime = null;
-    let currentCareplanId = null;
-    for (let index = 0; index < carePlans.length; index++) {
-      const careplan = await CarePlanWrapper(carePlans[index]);
-      const {
-        care_plans,
-        doctors,
-        doctor_id,
-      } = await careplan.getReferenceInfo();
-      carePlanData = { ...carePlanData, ...care_plans };
-      carePlanIds.push(careplan.getCarePlanId());
-      if (
-        (userCategory === USER_CATEGORY.DOCTOR ||
-          userCategory === USER_CATEGORY.HSP) &&
-        isUserRoleAllowed
-      ) {
-        // if(userCategory === USER_CATEGORY.DOCTOR && doctorId === doctor_id) {
-        if (
-          moment(careplan.getCreatedAt()).diff(
-            moment(currentCareplanTime),
-            "minutes"
-          ) > 0
-        ) {
-          currentCareplanTime = careplan.getCreatedAt();
-          currentCareplanId = careplan.getCarePlanId();
-        }
-        if (currentCareplanTime === null) {
-          currentCareplanTime = careplan.getCreatedAt();
-          currentCareplanId = careplan.getCarePlanId();
-        }
-      }
-    }
-
-    return {
-      care_plans: {
-        ...carePlanData,
-      },
-      care_plan_ids: carePlanIds,
-      current_careplan_id: currentCareplanId,
-    };
-  } catch (error) {
-    console.log('error in care planHelper - start')
-    console.log(error)
-    console.log('error in care planHelper - start')
-    Log.debug("getCareplanData catch error", error);
-    return {};
-  }
-};
-
-
 export const getCareplanData = async ({
   carePlans = [],
   userCategory,
@@ -202,11 +130,10 @@ export const getCareplanData = async ({
     }
 
     // appointments
-    const allAppointments = []
-    // (await appointmentService.getAppointmentByData({
-    //   id: appointmentIds,
-    // })) || [];
-
+    const allAppointments =
+      (await appointmentService.getAppointmentByData({
+        id: appointmentIds,
+      })) || [];
 
     if (allAppointments.length > 0) {
       for (let index = 0; index < allAppointments.length; index++) {
@@ -260,6 +187,82 @@ export const getCareplanData = async ({
       },
       user_roles: {
         ...userRoleData,
+      },
+      care_plan_ids: carePlanIds,
+      current_careplan_id: currentCareplanId,
+    };
+  } catch (error) {
+    Log.debug("getCareplanData catch error", error);
+    return {};
+  }
+};
+
+export const getCareplanDataWithImp = async ({
+  carePlans = [],
+  userCategory,
+  doctorId,
+  userRoleId,
+}) => {
+  try {
+    let carePlanData = {};
+    let carePlanIds = [];
+
+    let medicationIds = [];
+
+    let currentCareplanTime = null;
+    let currentCareplanId = null;
+
+    for (let index = 0; index < carePlans.length; index++) {
+      const careplan = await CarePlanWrapper(carePlans[index]);
+      const {
+        care_plans,
+        doctors,
+        doctor_id,
+      } = await careplan.getReferenceInfo();
+      carePlanData = { ...carePlanData, ...care_plans };
+      carePlanIds.push(careplan.getCarePlanId());
+
+      const {
+        medication_ids,
+        appointment_ids,
+        basic_info: { user_role_id = null } = {},
+      } = care_plans[careplan.getCarePlanId()] || {};
+
+      medicationIds = [...medicationIds, ...medication_ids];
+
+      const secondaryDoctorUserRoleIds =
+        careplan.getCareplnSecondaryProfiles() || [];
+
+      const isUserRoleAllowed = [user_role_id, ...secondaryDoctorUserRoleIds]
+        .map((id) => parseInt(id))
+        .includes(userRoleId);
+      // get latest careplan id
+      if (
+        (userCategory === USER_CATEGORY.DOCTOR ||
+          userCategory === USER_CATEGORY.HSP) &&
+        isUserRoleAllowed
+      ) {
+        // if(userCategory === USER_CATEGORY.DOCTOR && doctorId === doctor_id) {
+        if (
+          moment(careplan.getCreatedAt()).diff(
+            moment(currentCareplanTime),
+            "minutes"
+          ) > 0
+        ) {
+          currentCareplanTime = careplan.getCreatedAt();
+          currentCareplanId = careplan.getCarePlanId();
+        }
+
+        if (currentCareplanTime === null) {
+          currentCareplanTime = careplan.getCreatedAt();
+          currentCareplanId = careplan.getCarePlanId();
+        }
+      }
+    }
+
+    return {
+      care_plans: {
+        ...carePlanData,
       },
       care_plan_ids: carePlanIds,
       current_careplan_id: currentCareplanId,

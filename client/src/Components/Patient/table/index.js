@@ -9,15 +9,15 @@ import Input from "antd/es/input";
 import Button from "antd/es/button";
 import SearchOutlined from "@ant-design/icons/SearchOutlined";
 import Highlighter from "react-highlight-words";
-import { TABLE_COLUMN  } from "./helper";
-import {DIAGNOSIS_TYPE} from "../../../constant";
+import { TABLE_COLUMN } from "./helper";
+import { DIAGNOSIS_TYPE } from "../../../constant";
 
 class PatientTable extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      searchText: '',
-      searchedColumn: '',
+      searchText: "",
+      searchedColumn: "",
     };
   }
 
@@ -35,7 +35,7 @@ class PatientTable extends Component {
     };
   };
 
-  formatMessage = data => this.props.intl.formatMessage(data);
+  formatMessage = (data) => this.props.intl.formatMessage(data);
 
   onSelectChange = (selectedRowKeys) => {
     this.setState({ selectedRows: selectedRowKeys });
@@ -63,11 +63,11 @@ class PatientTable extends Component {
       authenticated_user,
       addToWatchlist,
       removePatientFromWatchlist,
-      openEditPatientDrawer
+      openEditPatientDrawer,
     } = this.props;
 
-    const {onRowClick} = this;
-  
+    const { onRowClick } = this;
+
     return Object.keys(patients).map((id) => {
       return generateRow({
         id,
@@ -85,7 +85,7 @@ class PatientTable extends Component {
         addToWatchlist,
         onRowClick,
         removePatientFromWatchlist,
-        openEditPatientDrawer
+        openEditPatientDrawer,
       });
     });
   };
@@ -98,82 +98,89 @@ class PatientTable extends Component {
     });
   };
 
-  handleReset = clearFilters => {
+  handleReset = (clearFilters) => {
     clearFilters();
-    this.setState({ searchText: '' });
+    this.setState({ searchText: "" });
   };
 
-  getColumnSearchProps = dataIndex => ({
-    filterDropdown: ({ setSelectedKeys, selectedKeys, confirm, clearFilters }) => (
+  getColumnSearchProps = (dataIndex) => ({
+    filterDropdown: ({
+      setSelectedKeys,
+      selectedKeys,
+      confirm,
+      clearFilters,
+    }) => (
       <div style={{ padding: 8 }}>
         <Input
-          ref={node => {
+          ref={(node) => {
             this.searchInput = node;
           }}
           placeholder={`Search ${dataIndex}`}
           value={selectedKeys[0]}
-          onChange={e => setSelectedKeys(e.target.value ? [e.target.value] : [])}
-          onPressEnter={() => this.handleSearch(selectedKeys, confirm, dataIndex)}
-          style={{ width: "100%", marginBottom: 8, display: 'block' }}
+          onChange={(e) =>
+            setSelectedKeys(e.target.value ? [e.target.value] : [])
+          }
+          onPressEnter={() =>
+            this.handleSearch(selectedKeys, confirm, dataIndex)
+          }
+          style={{ width: "100%", marginBottom: 8, display: "block" }}
         />
-        
-          <Button
-            type="primary"
-            onClick={() => this.handleSearch(selectedKeys, confirm, dataIndex)}
-            icon={<SearchOutlined />}
-            size="small"
-            style={{ width: 90, marginRight: 8 }}
-          >
-            {this.formatMessage(messages.searchText)}
-          </Button>
-          <Button onClick={() => this.handleReset(clearFilters)} size="small" 
+
+        <Button
+          type="primary"
+          onClick={() => this.handleSearch(selectedKeys, confirm, dataIndex)}
+          icon={<SearchOutlined />}
+          size="small"
+          style={{ width: 90, marginRight: 8 }}
+        >
+          {this.formatMessage(messages.searchText)}
+        </Button>
+        <Button
+          onClick={() => this.handleReset(clearFilters)}
+          size="small"
           style={{ width: 90 }}
-          >
-            {this.formatMessage(messages.resetText)}
-          </Button>
-          
-        
+        >
+          {this.formatMessage(messages.resetText)}
+        </Button>
       </div>
     ),
-    filterIcon: filtered => <SearchOutlined style={{ color: filtered ? '#1890ff' : undefined }} />,
-    onFilter: (value, record) =>
-    
-      {
+    filterIcon: (filtered) => (
+      <SearchOutlined style={{ color: filtered ? "#1890ff" : undefined }} />
+    ),
+    onFilter: (value, record) => {
+      if (dataIndex === TABLE_COLUMN.TREATMENT.dataIndex) {
+        const { carePlanData = {} } = record[dataIndex] || {};
+        const { treatment = "" } = carePlanData;
 
-        if(dataIndex === TABLE_COLUMN.TREATMENT.dataIndex){
-          const {carePlanData = {}} = record[dataIndex] || {};
-          const { treatment = '' , } = carePlanData;
+        return treatment
+          ? treatment
+              .toString()
+              .toLowerCase()
+              .includes(value.toLowerCase())
+          : "";
+      } else if (dataIndex === TABLE_COLUMN.DIAGNOSIS.dataIndex) {
+        const { patientData = {} } = record[dataIndex] || {};
+        const { carePlanData = {} } = patientData;
+        const { details: { diagnosis = {} } = {} } = carePlanData;
+        const { type = "1", description = "" } = diagnosis || {};
 
-          return (treatment
-            ? treatment.toString().toLowerCase().includes(value.toLowerCase())
-            : ''
-          )
-        }else if(dataIndex === TABLE_COLUMN.DIAGNOSIS.dataIndex){
-          const {patientData = {}}=record[dataIndex] || {};
-          const {carePlanData = {}} = patientData;
-          const { details:{diagnosis={}}={} } = carePlanData;
-          const {type ='1',description=''} = diagnosis || {};
+        const diagnosisType = DIAGNOSIS_TYPE[type];
+        const diagnosisTypeValue = diagnosisType["value"] || "";
 
-          const diagnosisType = DIAGNOSIS_TYPE[type];
-          const diagnosisTypeValue = diagnosisType["value"] || '';
-
-          const recordText =`${diagnosisTypeValue} ${description}`;
-          return (recordText
-            ? recordText.toString().toLowerCase().includes(value.toLowerCase())
-            : ''
-          )
-
-        }
-
-        
-      },
-    onFilterDropdownVisibleChange: visible => {
+        const recordText = `${diagnosisTypeValue} ${description}`;
+        return recordText
+          ? recordText
+              .toString()
+              .toLowerCase()
+              .includes(value.toLowerCase())
+          : "";
+      }
+    },
+    onFilterDropdownVisibleChange: (visible) => {
       if (visible) {
         setTimeout(() => this.searchInput.select(), 100);
       }
-    }
-      
-      
+    },
   });
 
   render() {
@@ -183,25 +190,20 @@ class PatientTable extends Component {
       onChange: onSelectChange,
     };
 
-
-    const {
-      loading,
-      intl: { formatMessage } = {},
-    } = this.props;
+    const { loading, intl: { formatMessage } = {} } = this.props;
 
     const patientLocale = {
-      emptyText:formatMessage(messages.emptyPatientTable)
-    }
+      emptyText: formatMessage(messages.emptyPatientTable),
+    };
 
     return (
       <Table
-        
         rowClassName={() => "pointer"}
         loading={loading === true ? getLoadingComponent() : false}
         columns={getColumn({
           formatMessage,
           className: "pointer",
-          getColumnSearchProps: this.getColumnSearchProps
+          getColumnSearchProps: this.getColumnSearchProps,
         })}
         dataSource={getDataSource()}
         scroll={{ x: 1600 }}
@@ -209,7 +211,6 @@ class PatientTable extends Component {
           position: "bottom",
         }}
         locale={patientLocale}
-        
       />
     );
   }
