@@ -190,7 +190,7 @@ class CarePlanWrapper extends BaseCarePlan {
       patient_id,
       care_plan_id: getCarePlanId(),
     };
-  }
+  };
 }
 
 
