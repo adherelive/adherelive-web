@@ -5,7 +5,7 @@ import UserRoleService from "../../../services/userRoles/userRoles.service";
 import ProviderService from "../../../services/provider/provider.service";
 import UserDeviceService from "../../../services/userDevices/userDevice.service";
 import UserDeviceWrapper from "../../../ApiWrapper/mobile/userDevice";
-import {DEFAULT_PROVIDER, EVENT_TYPE, NOTIFICATION_VERB} from "../../../../constant";
+import {EVENT_TYPE, NOTIFICATION_VERB, DEFAULT_PROVIDER} from "../../../../constant";
 
 class CreateJob extends WorkoutJob {
     constructor(data) {

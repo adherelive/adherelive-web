@@ -1,16 +1,20 @@
 import React, {Component, Fragment} from "react";
 import {injectIntl} from "react-intl";
-import {DeleteTwoTone, EyeTwoTone, LoadingOutlined} from "@ant-design/icons";
+import {DeleteTwoTone, LoadingOutlined, EyeTwoTone} from "@ant-design/icons";
 import uuid from "react-uuid";
-import {Button, DatePicker, Input, message, Spin, Upload} from "antd";
+import {Input, DatePicker, Upload, message, Spin, Button} from "antd";
 
 import Select from "antd/es/select";
-import {PATH, REQUEST_TYPE, USER_CATEGORY} from "../../constant";
-import {getUploadQualificationDocumentUrl, getUploadRegistrationDocumentUrl} from "../../Helper/urls/doctor";
+import {REQUEST_TYPE, PATH, USER_CATEGORY} from "../../constant";
+import {
+    getUploadQualificationDocumentUrl,
+    getUploadRegistrationDocumentUrl
+} from "../../Helper/urls/doctor";
 import {doRequest} from "../../Helper/network";
 import UploadSteps from "./steps";
 import plus from "../../Assets/images/plus.png";
 // import YearPicker from "react-year-picker";
+import throttle from "lodash-es/throttle";
 import moment from "moment";
 import {withRouter} from "react-router-dom";
 import messages from "./messages";

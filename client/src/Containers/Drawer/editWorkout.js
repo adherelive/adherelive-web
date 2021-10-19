@@ -5,10 +5,10 @@ import {close} from "../../modules/drawer";
 import {DRAWER} from "../../constant";
 import {addExercise} from "../../modules/exercises";
 import {
-    deleteWorkout,
-    getSingleWorkoutDetails,
-    getWorkoutDetails,
     updateWorkout,
+    getSingleWorkoutDetails
+    , deleteWorkout
+    , getWorkoutDetails,
     updateWorkoutTotalCalories
 } from "../../modules/workouts";
 import {getPatientCarePlanDetails} from "../../modules/carePlans";

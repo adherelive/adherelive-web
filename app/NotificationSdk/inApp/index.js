@@ -1,3 +1,4 @@
+import EventExecutor from "../executor";
 import Logger from "../../../libs/log";
 import stream from "getstream";
 

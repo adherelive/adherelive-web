@@ -1,4 +1,12 @@
-import {onCancel, onComplete, onCreate, onPassed, onRescheduled, onStart, onUpdate} from "../helper";
+import {
+    onCreate,
+    onComplete,
+    onCancel,
+    onRescheduled,
+    onStart,
+    onUpdate,
+    onPassed
+} from "../helper";
 import {ACTIVITIES} from "../activityType";
 
 const {ActivitySdk} = require("../");

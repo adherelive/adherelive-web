@@ -2,9 +2,9 @@ import {doRequest} from "../../Helper/network";
 import {REQUEST_TYPE} from "../../constant";
 import {getDoctorAccountDetailsUrl} from "../../Helper/urls/doctor";
 import {
-    accountDetailsForCreatedByProviderUrl,
     accountDetailsUrl,
-    updateAccountDetailsUrl
+    updateAccountDetailsUrl,
+    accountDetailsForCreatedByProviderUrl
 } from "../../Helper/urls/accounts";
 
 export const GET_DOCTOR_ACCOUNT_DETAILS_START =

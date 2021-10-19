@@ -8,7 +8,9 @@ import DoctorWrapper from "../../ApiWrapper/web/doctor";
 import PatientWrapper from "../../ApiWrapper/web/patient";
 import ProviderWrapper from "../../ApiWrapper/web/provider"
 
-import {USER_CATEGORY} from "../../../constant";
+import {
+    USER_CATEGORY
+} from "../../../constant";
 
 const Log = new Logger("ADHOC > HELPER");
 

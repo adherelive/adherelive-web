@@ -2,8 +2,9 @@ import {connect} from "react-redux";
 import {withRouter} from "react-router-dom";
 import AddWorkoutDrawer from "../../Components/Drawer/addWorkout";
 import {close} from "../../modules/drawer";
+import {open} from "../../modules/drawer";
 import {DRAWER} from "../../constant";
-import {addWorkout, getWorkoutDetails} from "../../modules/workouts";
+import {getWorkoutDetails, addWorkout} from "../../modules/workouts";
 import {addExercise} from "../../modules/exercises";
 
 // import { addDiet } from "../../modules/diets";

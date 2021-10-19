@@ -13,24 +13,22 @@ import {getName} from "../../../Helper/validation";
 import config from "../../../config";
 
 import {
-    DIAGNOSIS_TYPE,
-    FEATURES,
-    GENDER,
-    PART_LIST_CODES,
-    PARTS,
     REQUEST_TYPE,
-    SYRUP,
-    TABLE_DEFAULT_BLANK_FIELD,
+    GENDER,
+    USER_PERMISSIONS,
     TABLET,
-    TYPE_APPOINTMENTS,
-    TYPE_DIETS,
-    TYPE_SYMPTOMS,
-    TYPE_VITALS,
-    TYPE_WORKOUTS,
+    SYRUP,
+    PARTS,
+    PART_LIST_CODES,
+    DIAGNOSIS_TYPE,
+    TABLE_DEFAULT_BLANK_FIELD,
+    FEATURES,
     USER_CATEGORY,
-    USER_PERMISSIONS
+    HOST,
+    PATH,
+    TYPE_APPOINTMENTS, TYPE_SYMPTOMS, TYPE_VITALS, TYPE_DIETS, TYPE_WORKOUTS
 } from "../../../constant";
-import {Button, Dropdown, message, Spin, Table, Tabs} from "antd";
+import {Tabs, Table, Dropdown, Spin, message, Button} from "antd";
 import Modal from "antd/es/modal";
 import Menu from "antd/es/menu";
 
@@ -68,7 +66,12 @@ import PatientAlerts from "../../../Containers/Patient/common/patientAlerts";
 
 import PatientCarePlans from "./common/patientProfileCarePlans";
 
-import {CaretDownOutlined, MessageOutlined, PhoneOutlined, VideoCameraOutlined} from "@ant-design/icons";
+import {
+    PhoneOutlined,
+    MessageOutlined,
+    VideoCameraOutlined,
+    CaretDownOutlined
+} from "@ant-design/icons";
 import moment from "moment";
 
 // appointment upload modal
@@ -81,6 +84,7 @@ import TabletIcon from "../../../Assets/images/tabletIcon3x.png";
 import InjectionIcon from "../../../Assets/images/injectionIcon3x.png";
 import SyrupIcon from "../../../Assets/images/pharmacy.png";
 import {getPatientConsultingVideoUrl} from "../../../Helper/url/patients";
+import {getPatientConsultingUrl} from "../../../Helper/url/patients";
 import SymptomTabs from "../../../Containers/Symptoms";
 import {getRoomId} from "../../../Helper/twilio";
 import {getFullName} from "../../../Helper/common";

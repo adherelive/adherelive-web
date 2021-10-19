@@ -1,4 +1,5 @@
 import Controller from "../";
+import patientService from "../../../app/services/patients/patients.service";
 import carePlanService from "../../services/carePlan/carePlan.service";
 import CarePlanWrapper from "../../ApiWrapper/web/carePlan";
 import appointmentService from "../../services/appointment/appointment.service";
@@ -12,9 +13,18 @@ import careplanSecondaryDoctorMappingService
     from "../../services/careplanSecondaryDoctorMappings/careplanSecondaryDoctorMappings.service";
 import twilioService from "../../services/twilio/twilio.service";
 
-import * as carePlanHelper from "./carePlanHelper";
-import {getCarePlanAppointmentIds, getCarePlanMedicationIds, getCarePlanSeverityDetails} from "./carePlanHelper";
-import {EVENT_LONG_TERM_VALUE, EVENT_TYPE, USER_CATEGORY,} from "../../../constant";
+import {
+    getCarePlanAppointmentIds,
+    getCarePlanMedicationIds,
+    getCarePlanSeverityDetails,
+} from "./carePlanHelper";
+import {
+    EVENT_LONG_TERM_VALUE,
+    EVENT_STATUS,
+    EVENT_TYPE,
+    USER_CATEGORY,
+} from "../../../constant";
+import UserRoleWrapper from "../../ApiWrapper/web/userRoles";
 import doctorService from "../../services/doctor/doctor.service";
 import DoctorWrapper from "../../ApiWrapper/web/doctor";
 import PatientWrapper from "../../ApiWrapper/web/patient";
@@ -25,6 +35,8 @@ import CarePlanTemplateWrapper from "../../ApiWrapper/web/carePlanTemplate";
 import Logger from "../../../libs/log";
 import moment from "moment";
 import queueService from "../../services/awsQueue/queue.service";
+
+import * as carePlanHelper from "./carePlanHelper";
 import MedicationWrapper from "../../ApiWrapper/web/medicationReminder";
 
 import PERMISSIONS from "../../../config/permissions";

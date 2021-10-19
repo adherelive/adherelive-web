@@ -1,6 +1,7 @@
 import Controller from "../index";
 
 import accountDetailsService from "../../services/accountDetails/accountDetails.service";
+import userService from "../../services/user/user.service";
 
 import AccountsWrapper from "../../ApiWrapper/web/accountsDetails";
 import UserWrapper from "../../ApiWrapper/web/user";

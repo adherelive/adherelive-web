@@ -5,6 +5,8 @@ import Button from "antd/es/button";
 import Tabs from "antd/es/tabs";
 import AddMedicineDrawer from "../../../Containers/Drawer/addMedicine";
 import MedicineTable from "../../../Containers/Medicines/table";
+import config from "../../../config";
+import message from "antd/es/message";
 
 const {TabPane} = Tabs;
 

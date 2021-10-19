@@ -1,11 +1,11 @@
 import {connect} from "react-redux";
 import {withRouter} from "react-router-dom";
 import AllTemplates from "../../Components/AllTemplates/table";
+import {getAllTemplatesForDoctor} from "../../modules/carePlanTemplates";
 import {
     createCareplanTemplate,
-    duplicateCareplanTemplate,
-    getAllTemplatesForDoctor,
-    updateCareplanTemplate
+    updateCareplanTemplate,
+    duplicateCareplanTemplate
 } from "../../modules/carePlanTemplates";
 
 const mapStateToProps = state => {

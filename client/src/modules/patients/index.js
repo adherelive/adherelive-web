@@ -1,12 +1,9 @@
 import {doRequest} from "../../Helper/network";
 import {REQUEST_TYPE} from "../../constant";
 import {
-    addCareplanForPatientUrl,
-    getAddPatientUrl,
-    getConsentVerifyUrl,
-    getRequestConsentUrl,
-    searchPatientForDoctorUrl,
-    searchPatientFromNumUrl
+    getAddPatientUrl, searchPatientFromNumUrl,
+    getRequestConsentUrl, getConsentVerifyUrl,
+    searchPatientForDoctorUrl, addCareplanForPatientUrl
 } from '../../Helper/urls/patients'
 
 import {getPatientMissedEventsUrl} from "../../Helper/urls/event";

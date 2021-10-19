@@ -1,6 +1,10 @@
 import AppointmentJob from "../";
 import moment from "moment";
-import {APPOINTMENT_TYPE, DEFAULT_PROVIDER, EVENT_TYPE,} from "../../../../constant";
+import {
+    DEFAULT_PROVIDER,
+    APPOINTMENT_TYPE,
+    EVENT_TYPE,
+} from "../../../../constant";
 
 import UserRoleService from "../../../services/userRoles/userRoles.service";
 import ProviderService from "../../../services/provider/provider.service";

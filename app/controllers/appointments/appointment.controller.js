@@ -6,18 +6,22 @@ import {
 } from "../carePlans/carePlanHelper";
 import {Proxy_Sdk} from "../../proxySdk";
 import {
-    APPOINTMENT_TYPE,
-    DOCUMENT_PARENT_TYPE,
     EVENT_STATUS,
     EVENT_TYPE,
-    FAVOURITE_TYPE,
     FEATURE_TYPE,
+    USER_CATEGORY,
+    DOCUMENT_PARENT_TYPE,
+    S3_DOWNLOAD_FOLDER,
     NOTIFICATION_STAGES,
     RADIOLOGY,
-    S3_DOWNLOAD_FOLDER,
-    USER_CATEGORY
+    FAVOURITE_TYPE,
+    // MEDICAL_TEST,
+    APPOINTMENT_TYPE
 } from "../../../constant";
 import moment from "moment";
+
+const path = require("path");
+
 import Log from "../../../libs/log";
 import {raiseClientError} from "../../../routes/helper";
 
@@ -45,6 +49,7 @@ import UploadDocumentWrapper from "../../ApiWrapper/web/uploadDocument";
 import EventWrapper from "../../ApiWrapper/common/scheduleEvents";
 
 // import eventService from "../../services/scheduleEvents/scheduleEvent.service";
+
 import {uploadImageS3} from "../user/userHelper";
 import {getFilePath} from "../../helper/filePath";
 import {checkAndCreateDirectory} from "../../helper/common";
@@ -53,8 +58,6 @@ import {downloadFileFromS3} from "../mControllers/user/userHelper";
 
 // HELPERS...
 import * as AppointmentHelper from "./helper";
-
-const path = require("path");
 
 const FILE_NAME = "WEB APPOINTMENT CONTROLLER";
 

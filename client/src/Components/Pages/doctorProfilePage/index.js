@@ -4,7 +4,7 @@ import message from "antd/es/message";
 import Button from "antd/es/button";
 import Modal from "antd/es/modal";
 // import uuid from 'react-uuid';
-import {Avatar, DatePicker, Input, Select, Spin, Upload} from "antd";
+import {Avatar, Upload, Input, Select, Spin, DatePicker} from "antd";
 import throttle from "lodash-es/throttle";
 import {doRequest} from "../../../Helper/network";
 // import LocationModal from '../../../Components/DoctorOnBoarding/locationmodal';
@@ -16,35 +16,38 @@ import Menu from "antd/es/menu";
 import Dropdown from "antd/es/dropdown";
 
 import {
-    ArrowLeftOutlined,
-    CameraFilled,
     CheckCircleTwoTone,
+    ExclamationCircleTwoTone,
+    ArrowLeftOutlined,
+    UserOutlined,
+    EditOutlined,
+    CameraFilled,
+    DeleteTwoTone,
     CheckOutlined,
     CloseOutlined,
-    DeleteTwoTone,
-    EditOutlined,
-    ExclamationCircleTwoTone,
-    EyeTwoTone,
     PlusCircleOutlined,
-    UserOutlined
+    EyeTwoTone
 } from "@ant-design/icons";
 import moment from "moment";
 import messages from "./messages";
-import {getUploadQualificationDocumentUrl, getUploadURL} from "../../../Helper/urls/doctor";
 import {
-    ACCOUNT_STATUS,
+    getUploadURL,
+    getUploadQualificationDocumentUrl
+} from "../../../Helper/urls/doctor";
+import {
+    PATH,
+    USER_CATEGORY,
+    TABLE_DEFAULT_BLANK_FIELD,
     DAYS_TEXT_NUM,
+    REQUEST_TYPE,
+    MALE,
+    GENDER,
     FEMALE,
+    OTHER,
     FULL_DAYS,
     FULL_DAYS_NUMBER,
-    GENDER,
     HTTP_CODE_SERVER_ERROR,
-    MALE,
-    OTHER,
-    PATH,
-    REQUEST_TYPE,
-    TABLE_DEFAULT_BLANK_FIELD,
-    USER_CATEGORY
+    ACCOUNT_STATUS
 } from "../../../constant";
 import {PageLoading} from "../../../Helper/loading/pageLoading";
 import {withRouter} from "react-router-dom";

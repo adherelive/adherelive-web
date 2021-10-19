@@ -1,4 +1,5 @@
 import React, {Fragment} from "react";
+import repeatType from "../repeatType";
 // import repeatInterval from "../repeatInterval";
 import startDate from "../startDate";
 import endDate from "../endDate";
@@ -7,7 +8,7 @@ import selectedDays from "../selectedDays";
 import {Radio} from "antd";
 import moment from "moment";
 import messages from '../../message';
-import {ALTERNATE_DAYS} from "../../../../../constant"
+import {ALTERNATE_DAYS, DAYS} from "../../../../../constant"
 
 const RadioButton = Radio.Button;
 const RadioGroup = Radio.Group;

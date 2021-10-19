@@ -4,6 +4,7 @@ import MedicationTimeline from "../../Components/Medications/timeline";
 import {getMedicationTimeline} from "../../modules/medications";
 
 import {open} from "../../modules/drawer";
+import {getMedications} from "../../modules/medications";
 import {DRAWER} from "../../constant";
 
 const mapStateToProps = state => {

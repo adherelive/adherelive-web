@@ -16,7 +16,7 @@ import {Twilio} from "../../Helper/urls";
 import {REQUEST_TYPE, USER_CATEGORY} from "../../constant";
 
 
-import {Button, Icon} from "antd";
+import {Button, message, Icon, Spin} from "antd";
 
 
 class VideoComponent extends Component {

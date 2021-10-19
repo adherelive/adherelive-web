@@ -1,6 +1,8 @@
 import {doRequest} from "../../Helper/network";
 import {REQUEST_TYPE} from "../../constant";
-import {getTACUrl} from "../../Helper/urls/otherDetails";
+import {
+    getTACUrl
+} from "../../Helper/urls/otherDetails";
 
 export const GET_TAC_START = "GET_TAC_START";
 export const GET_TAC_COMPLETE = "GET_TAC_COMPLETE";

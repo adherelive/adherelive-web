@@ -1,6 +1,6 @@
 import Joi from "@hapi/joi";
 import moment from "moment";
-import {WHEN_TO_TAKE_ABBREVATIONS} from "../../../constant";
+import {USER_CATEGORY, WHEN_TO_TAKE_ABBREVATIONS} from "../../../constant";
 import {raiseClientError} from "../../helper";
 
 const appointmentFormSchema = Joi.object().keys({

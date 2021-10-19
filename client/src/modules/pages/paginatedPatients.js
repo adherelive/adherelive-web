@@ -3,8 +3,8 @@ import {REQUEST_TYPE} from "../../constant";
 
 import {
     getPatientsPaginatedUrl,
-    getSearchDiagnosisPaginatedPatientsUrl,
-    getSearchTreatmentPaginatedPatientsUrl
+    getSearchTreatmentPaginatedPatientsUrl,
+    getSearchDiagnosisPaginatedPatientsUrl
 } from "../../Helper/urls/patients";
 
 export const GET_PATIENT_PAGINATED = "GET_PATIENT_PAGINATED";

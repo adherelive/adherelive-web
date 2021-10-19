@@ -1,19 +1,23 @@
 import Logger from "../../../libs/log";
+
+const Log = new Logger("EVENT HELPER");
 import {EVENT_TYPE, USER_CATEGORY} from "../../../constant";
 
 // services
 import CarePlanService from "../../services/carePlan/carePlan.service";
 import EventService from "../../services/scheduleEvents/scheduleEvent.service";
+import doctorProviderMappingService from "../../services/doctorProviderMapping/doctorProviderMapping.service";
 import patientService from "../../services/patients/patients.service";
 import userRoleService from "../../services/userRoles/userRoles.service";
+import doctorService from "../../services/doctor/doctor.service";
 // wrappers
 import CarePlanWrapper from "../../ApiWrapper/web/carePlan";
 import EventWrapper from "../../ApiWrapper/common/scheduleEvents";
 import PatientWrapper from "../../ApiWrapper/web/patient";
+import DoctorWrapper from "../../ApiWrapper/web/doctor";
+import UserRoleWrapper from "../../ApiWrapper/web/userRoles";
 import DietWrapper from "../../ApiWrapper/web/diet";
 import WorkoutWrppaer from "../../ApiWrapper/web/workouts";
-
-const Log = new Logger("EVENT HELPER");
 
 export const doctorChart = async req => {
     try {

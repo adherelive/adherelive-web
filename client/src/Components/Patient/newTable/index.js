@@ -1,6 +1,6 @@
 import React, {Component} from "react";
 import {injectIntl} from "react-intl";
-import {Icon, Table} from "antd";
+import {Table, Icon} from "antd";
 import generateRow from "./dataRow";
 import getColumn from "./header";
 import messages from "./messages";
@@ -12,9 +12,15 @@ import config from "../../../config";
 import Input from "antd/es/input";
 import Button from "antd/es/button";
 import SearchOutlined from "@ant-design/icons/SearchOutlined";
-import {ASCEND, DESCEND, DIAGNOSIS_TYPE} from "../../../constant";
+import {DIAGNOSIS_TYPE, ASCEND, DESCEND} from "../../../constant";
 
-import {FILTER_DIAGNOSIS, FILTER_TREATMENT, OFFSET, SORT_CREATEDAT, SORT_NAME} from "../../Dashboard/index";
+import {
+    SORT_CREATEDAT,
+    SORT_NAME,
+    FILTER_DIAGNOSIS,
+    FILTER_TREATMENT,
+    OFFSET
+} from "../../Dashboard/index";
 
 export const SORTING_TYPE = {
     SORT_BY_DATE: "0",

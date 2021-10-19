@@ -1,12 +1,12 @@
 import {doRequest} from "../../Helper/network";
 import {REQUEST_TYPE} from "../../constant";
 import {
-    deleteMedicationUrl,
-    getAddCarePlanMedicationReminderURL,
     getAddMedicationReminderURL,
+    getAddCarePlanMedicationReminderURL,
     getMedicationForParticipantUrl,
-    getMedicationTimelineURL,
     updateMedicationUrl,
+    deleteMedicationUrl,
+    getMedicationTimelineURL,
 } from "../../Helper/urls/mReminders";
 
 // const INITIAL_STATE = {

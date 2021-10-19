@@ -1,5 +1,9 @@
 import BaseAppointment from "../../../services/appointment";
-import {DOCUMENT_PARENT_TYPE, EVENT_STATUS, EVENT_TYPE} from "../../../../constant";
+import {
+    EVENT_STATUS,
+    EVENT_TYPE,
+    DOCUMENT_PARENT_TYPE
+} from "../../../../constant";
 
 import appointmentService from "../../../services/appointment/appointment.service";
 import carePlanAppointmentService from "../../../services/carePlanAppointment/carePlanAppointment.service";

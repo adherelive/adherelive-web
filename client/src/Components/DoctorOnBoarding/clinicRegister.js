@@ -2,8 +2,14 @@ import React, {Component, Fragment} from "react";
 import {injectIntl} from "react-intl";
 import {DeleteTwoTone} from "@ant-design/icons";
 import uuid from "react-uuid";
-import {Icon, Input, message} from "antd";
-import {DAYS_TEXT_NUM_SHORT, FULL_DAYS, FULL_DAYS_NUMBER, PATH, USER_CATEGORY} from "../../constant";
+import {Input, Icon, message} from "antd";
+import {
+    PATH,
+    FULL_DAYS,
+    FULL_DAYS_NUMBER,
+    USER_CATEGORY,
+    DAYS_TEXT_NUM_SHORT
+} from "../../constant";
 import UploadSteps from "./steps";
 import LocationModal from "./locationmodal";
 import TimingModal from "./timingModal";

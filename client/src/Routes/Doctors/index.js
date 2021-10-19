@@ -1,5 +1,11 @@
-import React, {Component, Fragment, lazy} from "react";
-import {BrowserRouter as Router, Redirect, Route, Switch, withRouter} from "react-router-dom";
+import React, {lazy, Component, Fragment} from "react";
+import {
+    BrowserRouter as Router,
+    Route,
+    Switch,
+    Redirect,
+    withRouter
+} from "react-router-dom";
 import SideMenu from "../../Containers/Sidebar";
 import BlankState from "../../Components/Common/BlankState";
 import {PATH} from "../../constant";

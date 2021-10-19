@@ -4,23 +4,27 @@ import message from "antd/es/message";
 import Button from "antd/es/button";
 import Modal from "antd/es/modal";
 import confirm from "antd/es/modal/confirm";
+import Switch from "antd/es/switch";
 
 import {
-    ArrowLeftOutlined,
     CheckCircleTwoTone,
-    EditOutlined,
     ExclamationCircleTwoTone,
-    FileTextOutlined
+    ArrowLeftOutlined,
+    FileTextOutlined,
+    EditOutlined
 } from "@ant-design/icons";
 
 import {Input} from "antd";
 
 import moment from "moment";
 import messages from "./messages";
-import {ACCOUNT_STATUS, DAYS_TEXT_NUM, TABLE_DEFAULT_BLANK_FIELD} from "../../../constant";
+import {TABLE_DEFAULT_BLANK_FIELD, DAYS_TEXT_NUM, ACCOUNT_STATUS} from "../../../constant";
 import {PageLoading} from "../../../Helper/loading/pageLoading";
 import {withRouter} from "react-router-dom";
 import Tooltip from "antd/es/tooltip";
+
+import Menu from "antd/es/menu";
+import Dropdown from "antd/es/dropdown";
 import Tag from "antd/es/tag";
 
 class AdminDoctorDetails extends Component {

@@ -1,5 +1,7 @@
 import React from "react";
-import {TABLE_DEFAULT_BLANK_FIELD} from "../../../../constant";
+import {
+    TABLE_DEFAULT_BLANK_FIELD
+} from "../../../../constant";
 
 export default props => {
     const {carePlanData: {severity = ""} = {}} = props || {};

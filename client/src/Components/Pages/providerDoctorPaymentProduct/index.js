@@ -7,6 +7,7 @@ import AddConsultationFeeDrawer from "../../../Containers/Drawer/addConsultation
 import ConsultationFeeTable from "../../../Containers/ConsultationFees";
 
 // import DoctorConsultationFeeTable from "../../../Containers/DoctorConsultationFee";
+
 import messages from "./messages";
 import {ArrowLeftOutlined} from "@ant-design/icons";
 import Loading from "../../Common/Loading";

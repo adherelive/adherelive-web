@@ -7,9 +7,11 @@ import * as PaymentHelper from "./helper";
 
 // SERVICES...
 import PaymentProductService from "../../../services/paymentProducts/paymentProduct.service";
+import doctorProviderMappingService from "../../../services/doctorProviderMapping/doctorProviderMapping.service";
 
 // WRAPPERS...
 import PaymentProductWrapper from "../../../ApiWrapper/mobile/paymentProducts";
+import DoctorProviderMappingWrapper from "../../../ApiWrapper/web/doctorProviderMapping";
 
 const Log = new Logger("MOBILE > CONTROLLER > PAYMENTS");
 

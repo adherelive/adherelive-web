@@ -1,3 +1,6 @@
+import {doRequest} from "../../Helper/network";
+import {REQUEST_TYPE} from "../../constant";
+
 export const DELETE_DOCTOR_PAYMENT_PRODUCT_COMPLETE =
     "DELETE_DOCTOR_PAYMENT_PRODUCT_COMPLETE";
 

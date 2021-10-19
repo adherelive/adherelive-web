@@ -6,6 +6,7 @@ import Select from "antd/es/select";
 import Input from "antd/es/input";
 import messages from "./messages";
 import {VIDEO_TYPES} from "../../../constant";
+import message from "antd/es/message";
 import CameraOutlined from "@ant-design/icons/CameraOutlined";
 import Upload from "antd/es/upload";
 

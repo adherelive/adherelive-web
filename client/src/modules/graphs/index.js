@@ -1,6 +1,11 @@
 import {GRAPH_INITIAL_STATE} from "../../data";
 import * as Graphs from "../../Helper/urls/graphs";
-import {REQUEST_TYPE,} from "../../constant";
+import {
+    REQUEST_TYPE,
+    USER_CATEGORY,
+    PATH,
+    ONBOARDING_STATUS,
+} from "../../constant";
 import {doRequest} from "../../Helper/network";
 
 

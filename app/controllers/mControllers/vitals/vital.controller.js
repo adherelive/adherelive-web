@@ -22,7 +22,18 @@ import PatientWrapper from "../../../ApiWrapper/mobile/patient";
 
 import JobSdk from "../../../JobSdk";
 import NotificationSdk from "../../../NotificationSdk";
-import {DAYS, EVENT_STATUS, EVENT_TYPE, FEATURE_TYPE, NOTIFICATION_STAGES, USER_CATEGORY,} from "../../../../constant";
+
+import ChatJob from "../../../JobSdk/Chat/observer";
+import {
+    DAYS,
+    EVENT_STATUS,
+    EVENT_TYPE,
+    FEATURE_TYPE,
+    NOTIFICATION_STAGES,
+    USER_CATEGORY,
+    MESSAGE_TYPES,
+} from "../../../../constant";
+import SqsQueueService from "../../../services/awsQueue/queue.service";
 
 const Log = new Logger("MOBILE > VITALS > CONTROLLER");
 

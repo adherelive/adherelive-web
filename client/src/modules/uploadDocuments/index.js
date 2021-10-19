@@ -1,6 +1,6 @@
 import {doRequest} from "../../Helper/network";
 import {REQUEST_TYPE} from "../../constant";
-import {getDeleteAppointmentDocumentUrl, getUploadAppointmentDocumentUrl} from "../../Helper/urls/appointments";
+import {getUploadAppointmentDocumentUrl, getDeleteAppointmentDocumentUrl} from "../../Helper/urls/appointments";
 
 export const STORE_APPOINTMENT_DOCS = "STORE_APPOINTMENT_DOCS";
 export const STORE_APPOINTMENT_DOCS_COMPLETE = "STORE_APPOINTMENT_DOCS_COMPLETE";

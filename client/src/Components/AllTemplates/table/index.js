@@ -1,6 +1,6 @@
 import React, {Component, Fragment} from "react";
 import {injectIntl} from "react-intl";
-import {Icon, Table} from "antd";
+import {Table, Icon} from "antd";
 import generateRow from "./dataRow";
 import getColumn from "./header";
 import messages from "./messages";

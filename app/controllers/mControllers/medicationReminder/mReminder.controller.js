@@ -2,17 +2,19 @@ import Controller from "../../index";
 import moment from "moment";
 
 import {
-    CUSTOM_REPEAT_OPTIONS,
-    DAYS,
-    DOSE_AMOUNT,
-    DOSE_UNIT,
     EVENT_STATUS,
     EVENT_TYPE,
-    MEDICATION_TIMING,
-    MEDICINE_FORMULATION,
-    NOTIFICATION_STAGES,
     REPEAT_TYPE,
+    // DAYS_MOBILE,
+    MEDICATION_TIMING,
+    DOSE_AMOUNT,
+    DOSE_UNIT,
+    CUSTOM_REPEAT_OPTIONS,
+    // MEDICINE_FORM_TYPE,
     USER_CATEGORY,
+    NOTIFICATION_STAGES,
+    DAYS,
+    MEDICINE_FORMULATION,
     WHEN_TO_TAKE_ABBREVATIONS
 } from "../../../../constant";
 import Log from "../../../../libs/log";
@@ -39,9 +41,9 @@ import userPreferenceService from "../../../services/userPreferences/userPrefere
 import DoctorWrapper from "../../../ApiWrapper/mobile/doctor";
 import PatientWrapper from "../../../ApiWrapper/mobile/patient";
 import MobileMReminderWrapper from "../../../ApiWrapper/mobile/medicationReminder";
-import MedicationWrapper from "../../../ApiWrapper/mobile/medicationReminder";
 import MedicineApiWrapper from "../../../ApiWrapper/mobile/medicine";
 import CarePlanWrapper from "../../../ApiWrapper/mobile/carePlan";
+import MedicationWrapper from "../../../ApiWrapper/mobile/medicationReminder";
 import UserPreferenceWrapper from "../../../ApiWrapper/mobile/userPreference";
 
 import * as medicationHelper from "../../medicationReminder/medicationHelper";

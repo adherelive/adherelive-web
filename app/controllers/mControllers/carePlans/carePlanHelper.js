@@ -12,6 +12,7 @@ import DietService from "../../../services/diet/diet.service";
 import WorkoutService from "../../../services/workouts/workout.service";
 
 // services
+
 // wrappers
 import CarePlanWrapper from "../../../ApiWrapper/mobile/carePlan";
 import AppointmentWrapper from "../../../ApiWrapper/mobile/appointments";
@@ -23,7 +24,12 @@ import WorkoutWrapper from "../../../ApiWrapper/mobile/workouts";
 import UserRoleWrapper from "../../../ApiWrapper/mobile/userRoles";
 
 import Logger from "../../../../libs/log";
-import {EVENT_LONG_TERM_VALUE, EVENT_STATUS, EVENT_TYPE, USER_CATEGORY,} from "../../../../constant";
+import {
+    EVENT_LONG_TERM_VALUE,
+    EVENT_STATUS,
+    EVENT_TYPE,
+    USER_CATEGORY,
+} from "../../../../constant";
 import moment from "moment";
 
 const Log = new Logger("CARE_PLAN > HELPER");

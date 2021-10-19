@@ -1,5 +1,8 @@
 import {SEARCH_EXERCISE_COMPLETED} from "../searchedExercises";
-import {ADD_EXERCISE_COMPLETED, EDIT_EXERCISE_COMPLETED} from "../exercises";
+import {
+    ADD_EXERCISE_COMPLETED
+    , EDIT_EXERCISE_COMPLETED
+} from "../exercises";
 
 function searchExerciseDetaisReducer(state, data) {
     let {exercises = {}, exercise_details = {}} = data || {};

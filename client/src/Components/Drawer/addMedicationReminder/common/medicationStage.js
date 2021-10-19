@@ -4,15 +4,23 @@ import {injectIntl} from "react-intl";
 import throttle from "lodash-es/throttle";
 
 import Form from "antd/es/form";
+import Input from "antd/es/input";
 import Select from "antd/es/select";
 import message from "antd/es/message";
 import config from "../../../../config";
 import Tooltip from "antd/es/tooltip";
 
-import {EditOutlined} from "@ant-design/icons";
+import {EditOutlined, CloseCircleOutlined} from "@ant-design/icons";
 
-import {connectHits, connectSearchBox, Highlight, InstantSearch} from "react-instantsearch-dom";
+import {
+    InstantSearch,
+    Hits,
+    SearchBox,
+    Highlight,
+    connectSearchBox
+} from "react-instantsearch-dom";
 import algoliasearch from "algoliasearch/lite";
+import {connectHits} from "react-instantsearch-dom";
 
 const {Item: FormItem} = Form;
 const {Option} = Select;

@@ -2,7 +2,7 @@ import {connect} from "react-redux";
 import ProviderTable from "../../Components/Provider/table";
 import {withRouter} from "react-router-dom";
 import {getAllProviders} from "../../modules/providers";
-import {DRAWER} from "../../constant";
+import {USER_CATEGORY, DRAWER} from "../../constant";
 import {open} from "../../modules/drawer";
 
 

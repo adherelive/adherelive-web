@@ -1,18 +1,19 @@
 import React, {Component, Fragment} from "react";
 import {injectIntl} from "react-intl";
-import {Button, Drawer, Icon, Input, message, Modal, Select, TimePicker} from "antd";
+import {Drawer, Icon, Select, Input, message, Button, TimePicker, Modal} from "antd";
 
 import {
+    WHEN_TO_TAKE_ABBR_TYPES,
+    MEDICATION_TIMING,
+    DAYS,
     DAYS_TEXT_NUM_SHORT,
     EVENT_TYPE,
-    MEDICATION_TIMING,
     MEDICATION_TIMING_HOURS,
     MEDICATION_TIMING_MINUTES,
-    RADIOLOGY,
-    SYRUP,
     TABLET,
-    USER_CATEGORY,
-    WHEN_TO_TAKE_ABBR_TYPES
+    SYRUP,
+    RADIOLOGY,
+    USER_CATEGORY
 } from "../../../constant";
 import moment from "moment";
 import EditMedicationReminder from "../../../Containers/Drawer/editMedicationReminder";

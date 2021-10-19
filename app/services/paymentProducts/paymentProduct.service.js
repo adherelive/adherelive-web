@@ -1,5 +1,6 @@
 import Database from "../../../libs/mysql";
 import {TABLE_NAME} from "../../models/paymentProducts";
+import {USER_CATEGORY} from "../../../constant";
 import Log from "../../../libs/log";
 
 const Logger = new Log("WEB > PAYMENT_PRODUCTS > SERVICES");

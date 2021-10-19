@@ -1,4 +1,11 @@
-import {onAdverseEventCreate} from "../helper";
+import {
+    onCreate,
+    onAdverseEventCreate,
+    onComplete,
+    onCancel,
+    onReschedule,
+    onStart
+} from "../helper";
 import {ACTIVITIES} from "../activityType";
 
 const {ActivitySdk} = require("../");

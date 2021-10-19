@@ -2,15 +2,15 @@ import {Drawer} from "antd";
 import React, {Component, Fragment} from "react";
 import {injectIntl} from "react-intl";
 import {
-    DAYS_TEXT_NUM_SHORT,
     DELETE_TEMPLATE_RELATED_TYPE,
-    EVENT_TYPE,
     MEDICATION_TIMING,
+    DAYS_TEXT_NUM_SHORT,
+    EVENT_TYPE,
     MEDICATION_TIMING_HOURS,
     MEDICATION_TIMING_MINUTES,
-    MEDICINE_UNITS,
-    SYRUP,
     TABLET,
+    SYRUP,
+    MEDICINE_UNITS,
     USER_CATEGORY
 } from "../../../constant";
 import moment from "moment";

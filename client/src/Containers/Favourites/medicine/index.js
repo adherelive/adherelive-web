@@ -1,7 +1,11 @@
 import {connect} from "react-redux";
 import {withRouter} from "react-router-dom";
 import FavouriteMedicines from "../../../Components/Favourites/medicine";
-import {getFavourites, markFavourite, removeFavourite} from "../../../modules/favouritesData/index";
+import {
+    markFavourite,
+    getFavourites,
+    removeFavourite
+} from "../../../modules/favouritesData/index";
 
 const mapStateToProps = state => {
     const {

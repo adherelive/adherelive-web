@@ -1,4 +1,5 @@
 import express from "express";
+import multer from "multer";
 import SymptomController from "../../../app/controllers/symptoms/symptom.controller";
 import Authenticate from "../middleware/auth";
 // import * as validator from "./validator";

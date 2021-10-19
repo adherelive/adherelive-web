@@ -1,6 +1,6 @@
 import React, {Component} from "react";
 import {injectIntl} from "react-intl";
-import {Button, Form, Input, message} from "antd";
+import {Button, Input, Form, message} from "antd";
 import messages from "./message";
 import {withRouter} from "react-router-dom";
 import {PATH} from "../../constant";

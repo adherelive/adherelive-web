@@ -7,8 +7,8 @@ import {DRAWER} from "../../constant";
 import {addToWatchlist, removePatientFromWatchlist} from "../../modules/doctors";
 import {
     getPatientsPaginated,
-    searchDiagnosisPaginatedPatients,
-    searchTreatmentPaginatedPatients
+    searchTreatmentPaginatedPatients,
+    searchDiagnosisPaginatedPatients
 } from "../../modules/pages/paginatedPatients";
 
 const mapStateToProps = state => {

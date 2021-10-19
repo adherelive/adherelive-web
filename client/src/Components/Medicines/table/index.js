@@ -1,6 +1,6 @@
 import React, {Component} from "react";
 import {injectIntl} from "react-intl";
-import {Icon, Table} from "antd";
+import {Table, Icon} from "antd";
 import Input from "antd/es/input";
 import Button from "antd/es/button";
 import moment from "moment";
@@ -8,6 +8,8 @@ import moment from "moment";
 import generateRow from "./dataRow";
 import getColumn from "./header";
 import config from "../../../config";
+
+import message from "antd/es/message";
 import {TABLE_COLUMN} from "./helper";
 
 import messages from "./messages";

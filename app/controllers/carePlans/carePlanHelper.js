@@ -7,6 +7,7 @@ import carePlanAppointmentService from "../../services/carePlanAppointment/careP
 // import templateMedicationService from "../../services/templateMedication/templateMedication.service";
 // import templateAppointmentService from "../../services/templateAppointment/templateAppointment.service";
 // import medicineService from "../../services/medicine/medicine.service";
+
 // services
 import vitalService from "../../services/vitals/vital.service";
 import DietService from "../../services/diet/diet.service";
@@ -23,7 +24,12 @@ import WorkoutWrapper from "../../ApiWrapper/web/workouts";
 import UserRoleWrapper from "../../ApiWrapper/web/userRoles";
 
 import Logger from "../../../libs/log";
-import {EVENT_LONG_TERM_VALUE, EVENT_STATUS, EVENT_TYPE, USER_CATEGORY,} from "../../../constant";
+import {
+    EVENT_TYPE,
+    USER_CATEGORY,
+    EVENT_LONG_TERM_VALUE,
+    EVENT_STATUS,
+} from "../../../constant";
 import moment from "moment";
 
 const Log = new Logger("CARE_PLAN > HELPER");
@@ -57,13 +63,12 @@ export const getCareplanData = async ({
         let currentCareplanId = null;
 
         for (let index = 0; index < carePlans.length; index++) {
-            const careplan = (await CarePlanWrapper(carePlans[index]));
+            const careplan = await CarePlanWrapper(carePlans[index]);
             const {
                 care_plans,
                 doctors,
                 doctor_id,
-            } = (await careplan.getReferenceInfo());
-
+            } = await careplan.getReferenceInfo();
             carePlanData = {...carePlanData, ...care_plans};
             carePlanIds.push(careplan.getCarePlanId());
 
@@ -74,32 +79,35 @@ export const getCareplanData = async ({
                 appointment_ids,
                 basic_info: {user_role_id = null} = {},
             } = care_plans[careplan.getCarePlanId()] || {};
-
             appointmentIds = [...appointmentIds, ...appointment_ids];
-
             medicationIds = [...medicationIds, ...medication_ids];
 
-            const secondaryDoctorUserRoleIds = careplan.getCareplnSecondaryProfiles() || [];
+            const secondaryDoctorUserRoleIds =
+                careplan.getCareplnSecondaryProfiles() || [];
 
             const isUserRoleAllowed = [user_role_id, ...secondaryDoctorUserRoleIds]
                 .map((id) => parseInt(id))
                 .includes(userRoleId);
-
             // get latest careplan id
-            if ((userCategory === USER_CATEGORY.DOCTOR || userCategory === USER_CATEGORY.HSP) && isUserRoleAllowed) {
+            if (
+                (userCategory === USER_CATEGORY.DOCTOR ||
+                    userCategory === USER_CATEGORY.HSP) &&
+                isUserRoleAllowed
+            ) {
+                // if(userCategory === USER_CATEGORY.DOCTOR && doctorId === doctor_id) {
+                if (
+                    moment(careplan.getCreatedAt()).diff(
+                        moment(currentCareplanTime),
+                        "minutes"
+                    ) > 0
+                ) {
+                    currentCareplanTime = careplan.getCreatedAt();
+                    currentCareplanId = careplan.getCarePlanId();
+                }
 
-                //if ( userCategory === USER_CATEGORY.DOCTOR && doctorId === doctor_id ) {
-                if (doctorId === doctor_id) {
-
-                    if (moment(careplan.getCreatedAt()).diff(moment(currentCareplanTime), "minutes") > 0) {
-                        currentCareplanTime = careplan.getCreatedAt();
-                        currentCareplanId = careplan.getCarePlanId();
-                    }
-
-                    if (currentCareplanTime === null) {
-                        currentCareplanTime = careplan.getCreatedAt();
-                        currentCareplanId = careplan.getCarePlanId();
-                    }
+                if (currentCareplanTime === null) {
+                    currentCareplanTime = careplan.getCreatedAt();
+                    currentCareplanId = careplan.getCarePlanId();
                 }
             }
 

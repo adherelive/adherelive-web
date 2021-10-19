@@ -1,5 +1,10 @@
 import React, {Component, Fragment} from "react";
-import {BrowserRouter as Router, Route, Switch} from "react-router-dom";
+import {
+    BrowserRouter as Router,
+    Route,
+    Switch,
+    Redirect
+} from "react-router-dom";
 import PatientDetails from "../../Containers/Patient/details";
 import {PATH} from "../../constant";
 

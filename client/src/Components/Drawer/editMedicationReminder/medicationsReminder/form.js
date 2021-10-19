@@ -1,5 +1,5 @@
 import React, {Component, Fragment} from "react";
-import {Button, Form, Input, message, Radio} from "antd";
+import {Form, Button, Input, message, Radio} from "antd";
 import moment from "moment";
 import participantsField from "../common/participants";
 import startTimeField from "../common/startTime";
@@ -23,7 +23,7 @@ import formulation from "../common/formulation";
 
 import messages from "../message";
 import {hasErrors, isNumber} from "../../../../Helper/validation";
-import {DAYS_NUMBER, MEDICINE_UNITS, REPEAT_TYPE, USER_CATEGORY} from "../../../../constant";
+import {REPEAT_TYPE, USER_CATEGORY, DAYS_NUMBER, MEDICINE_UNITS} from "../../../../constant";
 
 const InputGroup = Input.Group;
 const {Item: FormItem} = Form;

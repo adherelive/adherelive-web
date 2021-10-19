@@ -1,6 +1,10 @@
 import {doRequest} from "../../Helper/network";
 import {REQUEST_TYPE} from "../../constant";
-import {getHistorySymptomUrl, getSymptomsDetailsUrl, getSymptomTimeLineUrl} from "../../Helper/urls/symptoms";
+import {
+    getSymptomsDetailsUrl,
+    getSymptomTimeLineUrl,
+    getHistorySymptomUrl
+} from "../../Helper/urls/symptoms";
 
 
 export const GET_SYMPTOM = "GET_SYMPTOM";

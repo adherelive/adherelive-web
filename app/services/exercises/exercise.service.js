@@ -6,7 +6,10 @@ import {USER_CATEGORY} from "../../../constant";
 import {TABLE_NAME} from "../../models/exercise";
 // import { TABLE_NAME as exerciseUserCreatedMappingTableName } from "../../models/exerciseUserCreatedMapping";
 import {TABLE_NAME as exerciseDetailsTableName} from "../../models/exerciseDetails";
-import {TABLE_NAME as exerciseContentTableName, VIDEO_TYPES,} from "../../models/exerciseContents";
+import {
+    TABLE_NAME as exerciseContentTableName,
+    VIDEO_TYPES,
+} from "../../models/exerciseContents";
 import {TABLE_NAME as repetitionTableName} from "../../models/exerciseRepetition";
 import {getFilePath} from "../../helper/filePath";
 
