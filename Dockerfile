@@ -1,10 +1,12 @@
 FROM node:carbon-jessie
 RUN mkdir -p /usr/src/app/client && mkdir -p /usr/src/app/public
 WORKDIR /usr/src/app
+COPY .env_example /usr/src/app/.env
 COPY package.json /usr/src/app
 COPY package-lock.json /usr/src/app
 COPY client/package.json /usr/src/app/client
 COPY client/package-lock.json /usr/src/app/client
+COPY client/.env_example /usr/src/app/client/.env
 # COPY .node_env /usr/src/app/.env
 RUN npm run postinstall && npm cache clean --force --loglevel=error
 COPY ./client/. /usr/src/app/client/
