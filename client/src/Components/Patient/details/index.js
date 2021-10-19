@@ -854,6 +854,11 @@ class PatientDetails extends Component {
 
       // AKSHAY NEW CODE IMPLEMENTATION END
 
+      console.log(
+        "AKSHAY NEW CODE CHNAGES ====================>",
+        patientCarePlans
+      );
+
       const {
         notification_redirect: { care_plan_id = null } = {},
       } = this.props;
