@@ -1,7 +1,7 @@
 import axios from "axios";
 import { HOST } from "../../constant";
 
-export const doRequest = async requestdata => {
+export const doRequest = async (requestdata) => {
   const defaultHeader = {};
 
   // timeout specifies the number of milliseconds before the request times out.
@@ -21,7 +21,7 @@ export const doRequest = async requestdata => {
     baseURL = HOST,
     params = {},
     data = {},
-    onUploadProgress
+    onUploadProgress,
   } = requestdata;
 
   //create request config according to data

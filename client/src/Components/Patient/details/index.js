@@ -9,6 +9,7 @@ import { generatePrescriptionUrl } from "../../../Helper/urls/patients";
 import ShareIcon from "../../../Assets/images/redirect3x.png";
 import EyeFilled from "@ant-design/icons/EyeFilled";
 import { getName } from "../../../Helper/validation";
+import isEmpty from "../../../Helper/is-empty";
 
 import config from "../../../config";
 
@@ -838,6 +839,21 @@ class PatientDetails extends Component {
         } = {},
       } = payload;
 
+      // AKSHAY NEW CODE IMPLEMENTATION START
+
+      const patientCarePlans =
+        !isEmpty(care_plan_ids) &&
+        care_plan_ids.filter((id) => {
+          const { basic_info: { patient_id: carePlanPatientId = "0" } = {} } =
+            care_plans[id] || {};
+
+          if (carePlanPatientId.toString() === patient_id) {
+            return id;
+          }
+        });
+
+      // AKSHAY NEW CODE IMPLEMENTATION END
+
       const {
         notification_redirect: { care_plan_id = null } = {},
       } = this.props;
@@ -864,7 +880,11 @@ class PatientDetails extends Component {
         patientCarePlanIds: care_plan_ids,
         current_careplan_id,
         isOtherCarePlan: false,
-        selectedCarePlanId: current_careplan_id,
+        // selectedCarePlanId: current_careplan_id,
+        // AKSHAY NEW CODE IMPLEMENTATION END
+        selectedCarePlanId: !isEmpty(patientCarePlans)
+          ? patientCarePlans[0]
+          : "",
       });
     }
 
