@@ -1,36 +1,36 @@
 import {
-    EVENT_TYPE,
-    FEATURE_TYPE,
-    REPEAT_INTERVAL,
-    WAKE_UP,
-    SLEEP,
-    BREAKFAST,
-    LUNCH,
-    EVENING,
-    DINNER,
+    AFTER_BREAKFAST,
+    AFTER_DINNER,
+    AFTER_EVENING_SNACK,
+    AFTER_LUNCH,
     AFTER_WAKEUP,
     BEFORE_BREAKFAST,
-    AFTER_BREAKFAST,
-    BEFORE_LUNCH,
-    AFTER_LUNCH,
-    BEFORE_EVENING_SNACK,
-    AFTER_EVENING_SNACK,
     BEFORE_DINNER,
-    AFTER_DINNER,
+    BEFORE_EVENING_SNACK,
+    BEFORE_LUNCH,
     BEFORE_SLEEP,
-    MONDAY,
-    TUESDAY,
-    WEDNESDAY,
-    THURSDAY,
+    BREAKFAST,
+    DINNER,
+    EVENING,
+    EVENT_TYPE,
+    FEATURE_TYPE,
     FRIDAY,
-    SATURDAY,
-    SUNDAY,
+    LUNCH,
     MEDICATION_TIMING,
-    WITH_LUNCH,
-    WITH_DINNER,
-    WITH_BREAKFAST,
-    PATIENT_MEAL_TIMINGS,
     MID_MORNING,
+    MONDAY,
+    PATIENT_MEAL_TIMINGS,
+    REPEAT_INTERVAL,
+    SATURDAY,
+    SLEEP,
+    SUNDAY,
+    THURSDAY,
+    TUESDAY,
+    WAKE_UP,
+    WEDNESDAY,
+    WITH_BREAKFAST,
+    WITH_DINNER,
+    WITH_LUNCH,
 } from "../constant";
 
 import FeatureDetailWrapper from "../app/ApiWrapper/web/featureDetails";
@@ -63,9 +63,9 @@ const scheduleService = new ScheduleService();
 const getUserPreferences = async (user_id) => {
     try {
         Log.info(`user_id : ${user_id}`);
-        const userPreference = await UserPreferenceService.getPreferenceByData({
+        const userPreference = (await UserPreferenceService.getPreferenceByData({
             user_id,
-        });
+        }));
         const {timings = {}} = userPreference.get("details") || {};
         return timings;
     } catch (error) {
@@ -910,6 +910,11 @@ const getDietTimings = (date, timing, patientPreference) => {
 const updateMedicationTiming = (date, timing, patientPreference) => {
     console.log("139812832739871 date, timing, patientPreference", {date, timing, patientPreference}); // TODO: Added
     switch (timing) {
+        case WITH_BREAKFAST:
+            const {hours: wbh, minutes: wbm} = getLunch(patientPreference) || {};
+            return moment(date)
+                .set("hours", wbh)
+                .set("minutes", wbm);
         case AFTER_WAKEUP:
             const {hours: awh, minutes: awm} = getWakeUp(patientPreference) || {};
             return moment(date)

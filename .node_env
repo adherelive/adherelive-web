@@ -60,8 +60,8 @@ AWS_TOPIC_ARN=
 AWS_PRESCRIPTION_BUCKET=
 
 # Twilio Account details for the Demo Server
-TWILIO_ACCOUNT_SID=ACeea90f2fe2b66e50da207e946954c52d
 TWILIO_API_KEY=SKa7af6661cd0eba6f72d98fb95f2f4647
+TWILIO_ACCOUNT_SID=ACeea90f2fe2b66e50da207e946954c52d
 TWILIO_API_SECRET=K22GweB91vDuHppwD79cVmA7nMZMLWT6
 TWILIO_CHAT_SERVICE_SID=IS86f1dcb573a74909a8248b944aa90d9c
 TWILIO_AUTH_TOKEN=1cf5b1a6801c773fe8bd138bb0bb50d4
@@ -109,6 +109,7 @@ FORCE_COLOR=1
 
 BRANCH_IO_KEY=key_live_hbL5zlRfxNiPzCmRlQcXVihbywdivtNo
 BRANCH_IO_BASE_URL=https://api2.branch.io/v1/url
+
 # TODO: Add your Email ID here
 DEVELOPER_EMAIL=vivek.asthana@adhere.live,gagneet.singh@adhere.live,gaurav@myrl.tech
 SUPPORT_EMAIL=customersupport@adhere.live
