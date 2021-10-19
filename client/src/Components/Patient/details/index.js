@@ -371,6 +371,7 @@ const PatientProfileHeader = ({
   user_role_id,
 }) => {
   console.log("3287642547652342", { selectedCarePlanId });
+  console.log("AKSHAY NEW CHANGES");
   return (
     <div className="flex pt20 pr24 pb10 pl24">
       <div className="patient-profile-header flex-grow-0">
