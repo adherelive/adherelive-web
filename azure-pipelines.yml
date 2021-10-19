@@ -28,6 +28,6 @@ stages:
         dockerRegistryEndpoint: portal_demo
         action: Run a Docker Compose command
         dockerComposefile: '$(Build.SourcesDirectory)/docker-compose.yml'
-        dockerComposeCommand: build node --no-cache
+        dockerComposeCommand: build node
         additionalImagetags: |
           $(tag)
