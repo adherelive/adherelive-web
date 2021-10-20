@@ -5,7 +5,7 @@ import Vital from "./Vitals/observer";
 
 class JobSdk {
     execute = ({eventType, eventStage, event}) => {
-        switch (eventType) {
+        switch(eventType) {
             case EVENT_TYPE.APPOINTMENT:
                 return this.handleAppointmentPayload({eventStage, event});
             case EVENT_TYPE.MEDICATION_REMINDER:
@@ -24,7 +24,7 @@ class JobSdk {
             case NOTIFICATION_STAGES.CREATE:
                 return Appointment.execute(NOTIFICATION_STAGES.CREATE, event);
             default:
-                return {default: "0", type: "appointment"};
+                return {default:"0", type: "appointment"};
         }
     };
 
@@ -35,7 +35,7 @@ class JobSdk {
             case NOTIFICATION_STAGES.CREATE:
                 return Medication.execute(NOTIFICATION_STAGES.CREATE, event);
             default:
-                return {default: "0", type: "medication"};
+                return {default:"0", type: "medication"};
         }
     };
 }

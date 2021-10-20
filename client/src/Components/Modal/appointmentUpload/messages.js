@@ -1,4 +1,4 @@
-import {defineMessages} from "react-intl";
+import { defineMessages } from "react-intl";
 
 export default defineMessages({
     upload_appointment_document_title: {
@@ -10,19 +10,19 @@ export default defineMessages({
         id: "app.modal.appointment.upload.text",
         description: "",
         defaultMessage: "Upload"
-    }, warnNote: {
+    }, warnNote :{
         id: "app.modal.appointment.upload.delete.warnNote",
         description: "",
         defaultMessage: "This document will be deleted permanently from uploaded documents."
     },
-    irreversibleWarn: {
+    irreversibleWarn :{
         id: "app.modal.appointment.upload.delete.irreversibleWarn",
         description: "",
         defaultMessage: "This delete is irreversible"
     },
     somethingWentWrong: {
-        id: "app.modal.appointment.upload.somethingWentWrong",
-        description: "",
-        defaultMessage: "Something went wrong."
-    },
+    id: "app.modal.appointment.upload.somethingWentWrong",
+    description: "",
+    defaultMessage: "Something went wrong."
+}, 
 });

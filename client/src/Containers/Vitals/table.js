@@ -7,18 +7,17 @@ import {getVitals} from "../../modules/vitals";
 import {DRAWER} from "../../constant";
 
 const mapStateToProps = state => {
-    const {
-        vitals = {}, vital_templates = {}, pages: {vital_ids = []} = {}, care_plans = {},
-        auth: {auth_role = null} = {},
-    } = state;
+  const {vitals = {}, vital_templates = {}, pages: {vital_ids = []} = {}, care_plans = {},     
+   auth : { auth_role = null } = {},
+} = state;
 
-    return {
-        vitals,
-        vital_templates,
-        vital_ids,
-        care_plans,
-        auth_role
-    };
+  return {
+      vitals,
+      vital_templates,
+      vital_ids,
+      care_plans,
+      auth_role
+  };
 };
 
 const mapDispatchToProps = dispatch => {

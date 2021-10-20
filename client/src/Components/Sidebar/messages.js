@@ -1,4 +1,4 @@
-import {defineMessages} from "react-intl";
+import { defineMessages } from "react-intl";
 
 export default defineMessages({
     tos_pp_editor: {
@@ -36,59 +36,59 @@ export default defineMessages({
         description: "",
         defaultMessage: "Providers"
     },
-    calender: {
+    calender : {
         id: "app.dashboard.sidebar.menu.calender",
         description: "",
         defaultMessage: "Calender"
     },
-    transactionDetails: {
+    transactionDetails : {
         id: "app.dashboard.sidebar.menu.transactionDetails",
         description: "",
         defaultMessage: "Transaction Details"
     },
-    notifications: {
-        id: "app.dashboard.sidebar.menu.notifications",
-        description: "",
-        defaultMessage: "Notifications"
+    notifications:{
+        id:"app.dashboard.sidebar.menu.notifications",
+        description:"",
+        defaultMessage:"Notifications"
     },
-    logOut: {
-        id: "app.dashboard.sidebar.menu.logOut",
-        description: "",
-        defaultMessage: "Log Out"
+    logOut:{
+        id:"app.dashboard.sidebar.menu.logOut",
+        description:"",
+        defaultMessage:"Log Out"
     },
-    dashboard: {
-        id: "app.dashboard.sidebar.menu.dashboardText",
-        description: "",
-        defaultMessage: "Dashboard"
+    dashboard:{
+        id:"app.dashboard.sidebar.menu.dashboardText",
+        description:"",
+        defaultMessage:"Dashboard"
     },
-    templates: {
-        id: "app.dashboard.sidebar.menu.templatesText",
-        description: "",
-        defaultMessage: "Treatment plan Templates"
+    templates:{
+        id:"app.dashboard.sidebar.menu.templatesText",
+        description:"",
+        defaultMessage:"Treatment plan Templates"
     },
     medicineText: {
-        id: "app.dashboard.sidebar.menu.medicine.text",
-        description: "",
-        defaultMessage: "All Medicines"
+        id:"app.dashboard.sidebar.menu.medicine.text",
+        description:"",
+        defaultMessage:"All Medicines"
     },
     selfAccount: {
-        id: "app.dashboard.sidebar.menu.self.account.text",
-        description: "",
-        defaultMessage: "self"
+        id:"app.dashboard.sidebar.menu.self.account.text",
+        description:"",
+        defaultMessage:"self"
     },
     manageAccount: {
-        id: "app.dashboard.sidebar.menu.manage.account.text",
-        description: "",
-        defaultMessage: "Manage Account"
+        id:"app.dashboard.sidebar.menu.manage.account.text",
+        description:"",
+        defaultMessage:"Manage Account"
     },
     providerIcon: {
-        id: "app.dashboard.sidebar.menu.provider.icon",
-        description: "",
-        defaultMessage: "Linked Provider Icon"
+        id:"app.dashboard.sidebar.menu.provider.icon",
+        description:"",
+        defaultMessage:"Linked Provider Icon"
     },
     paymentDetailsHeader: {
         id: "app.dashboard.sidebar.menu.payment.details",
         description: "",
         defaultMessage: "Payment Details"
-    },
+      },
 });

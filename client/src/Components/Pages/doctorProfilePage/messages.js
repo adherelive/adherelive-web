@@ -1,4 +1,4 @@
-import {defineMessages} from "react-intl";
+import { defineMessages } from "react-intl";
 
 const messages = defineMessages({
     doctor_details_header_text: {
@@ -270,7 +270,7 @@ const messages = defineMessages({
         id: "app.profile.doctors.activateText",
         description: "",
         defaultMessage: "Activate"
-    },
+      },
     deactivateText: {
         id: "app.profile.doctors.deactivateText",
         description: "",

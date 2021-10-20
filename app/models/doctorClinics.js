@@ -62,7 +62,7 @@ export const associate = (database) => {
 
     // associations here (if any) ...
     doctor_clinics.belongsTo(doctors, {
-        foreignKey: "doctor_id",
-        targetKey: "id"
+        foreignKey:"doctor_id",
+        targetKey:"id"
     });
 };

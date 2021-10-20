@@ -18,4 +18,5 @@ export default class Workout {
     getExpiredOn = () => {
         return this._data.expired_on;
     };
+    
 }

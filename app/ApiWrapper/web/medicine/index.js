@@ -49,30 +49,28 @@ class MedicineWrapper extends BaseMedicine {
     };
 
     getAllInfo = () => {
-        const {_data} = this;
-        const {
-            id, name, type, description, creator_id,
-            details, public_medicine, updatedAt, createdAt
-        } = _data || {};
+        const { _data } = this;
+        const { id, name, type, description, creator_id, 
+          details, public_medicine, updatedAt, createdAt } = _data || {};
 
         return {
-            basic_info: {
-                id,
-                name,
-                type,
-                description,
-                creator_id,
-                public_medicine
-            },
-            details,
-            updated_at: updatedAt,
-            created_at: createdAt
+          basic_info: {
+            id,
+            name,
+            type,
+            description,
+            creator_id,
+            public_medicine
+          },
+          details,
+          updated_at: updatedAt,
+          created_at: createdAt
         };
-    };
+      };
 }
 
 export default async (data = null, id = null) => {
-    if (data) {
+    if(data) {
         return new MedicineWrapper(data);
     }
     const medicine = await medicineService.getMedicineById(id);

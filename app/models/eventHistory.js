@@ -33,7 +33,7 @@ export const db = (database) => {
 
 export const associate = (database) => {
     database.models[TABLE_NAME].belongsTo(database.models[scheduleEventTableName], {
-        foreignKey: "schedule_event_id",
-        targetKey: "id"
+        foreignKey:"schedule_event_id",
+        targetKey:"id"
     });
 };

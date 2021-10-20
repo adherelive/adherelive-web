@@ -5,39 +5,40 @@ import moment from "moment";
 import Sequelize, {QueryTypes} from "sequelize";
 // const Config = require("../config/config");
 // Config();
+
 import Log from "../libs/log";
 
 const Logger = new Log("MEDICINE SEQUELIZE QUERY");
 console.log("process.config.db.name --> ", process.config.db.name);
 
 const database = new Sequelize(
-    process.config.db.name,
-    process.config.db.username,
-    process.config.db.password,
-    {
-        host: process.config.db.host,
-        port: process.config.db.port,
-        dialect: process.config.db.dialect,
-        pool: {
-            max: 10,
-            min: 0,
-            acquire: 30000,
-            idle: 10000
-        },
-        logging: function (str) {
-            Logger.debug("query", str);
-        }
+  process.config.db.name,
+  process.config.db.username,
+  process.config.db.password,
+  {
+    host: process.config.db.host,
+    port: process.config.db.port,
+    dialect: process.config.db.dialect,
+    pool: {
+      max: 10,
+      min: 0,
+      acquire: 30000,
+      idle: 10000
+    },
+    logging: function(str) {
+      Logger.debug("query", str);
     }
+  }
 );
 
 database
-    .authenticate()
-    .then(() => {
-        console.log("Db and tables have been created...");
-    })
-    .catch(err => {
-        console.log("Db connect error is: ", err);
-    });
+  .authenticate()
+  .then(() => {
+    console.log("Db and tables have been created...");
+  })
+  .catch(err => {
+    console.log("Db connect error is: ", err);
+  });
 
 const addMedicine = async (data) => {
     try {
@@ -48,7 +49,7 @@ const addMedicine = async (data) => {
         });
 
         Logger.debug("addMedicine ---> ", medicine);
-    } catch (error) {
+    } catch(error) {
         throw error;
     }
 }
@@ -57,16 +58,16 @@ const addMedicine = async (data) => {
 
 let dataToWrite = [];
 
-fs.readFile(path.join(__dirname, 'Pillbox.csv'), {encoding: 'utf-8'}, (err, file) => {
-    if (!err) {
+fs.readFile(path.join(__dirname, 'Pillbox.csv'), {encoding: 'utf-8'},  (err, file) => {
+    if(!err) {
         Papa.parse(file, {
             header: true,
             step: async (row) => {
                 /*
-                 * Keys from csv file:
-                 * ID        :   Pillbox ID for medicine (pillbox_id)
-                 * rxstring  :   Full name of medicine (name)
-                 * */
+                * Keys from csv file:
+                * ID        :   Pillbox ID for medicine (pillbox_id)
+                * rxstring  :   Full name of medicine (name)
+                * */
                 try {
                     const {data} = row || {};
                     const {ID, rxstring, medicine_name} = data || {};
@@ -104,11 +105,11 @@ fs.readFile(path.join(__dirname, 'Pillbox.csv'), {encoding: 'utf-8'}, (err, file
                         });
 
                     // await addMedicine({pillbox_id: ID, name: rxstring});
-                } catch (error) {
+                } catch(error) {
                     console.log("Row add error --> ", error);
                 }
             },
-            complete: function (results) {
+            complete: function(results) {
                 console.log("Finished:");
                 // fs.writeFile('medicineDb.txt', JSON.stringify({dataToWrite}), "utf8", (err) => {
                 //     if(err) {
@@ -119,3 +120,5 @@ fs.readFile(path.join(__dirname, 'Pillbox.csv'), {encoding: 'utf-8'}, (err, file
         });
     }
 });
+
+

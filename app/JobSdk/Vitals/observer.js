@@ -9,7 +9,7 @@ class VitalObserver {
     }
 
     execute = (typeStatus, eventDetails) => {
-        switch (typeStatus) {
+        switch(typeStatus) {
             case NOTIFICATION_STAGES.CREATE:
                 return new CreateJob(eventDetails);
             case NOTIFICATION_STAGES.START:

@@ -2,8 +2,7 @@ import Database from "../../../libs/mysql";
 import {TABLE_NAME} from "../../models/reports";
 
 export default class ReportService {
-    constructor() {
-    }
+    constructor() {}
 
     addReport = async (data) => {
         const transaction = await Database.initTransaction();
@@ -14,7 +13,7 @@ export default class ReportService {
             });
             await transaction.commit();
             return report;
-        } catch (error) {
+        } catch(error) {
             await transaction.rollback();
             throw error;
         }
@@ -25,7 +24,7 @@ export default class ReportService {
         try {
             const report = await Database.getModel(TABLE_NAME).update(data, {
                 where: {
-                    id
+                  id
                 },
                 raw: true,
                 returning: true,
@@ -33,7 +32,7 @@ export default class ReportService {
             });
             await transaction.commit();
             return report;
-        } catch (error) {
+        } catch(error) {
             await transaction.rollback();
             throw error;
         }
@@ -45,7 +44,7 @@ export default class ReportService {
                 where: data,
                 raw: true
             });
-        } catch (error) {
+        } catch(error) {
             throw error;
         }
     };
@@ -57,7 +56,7 @@ export default class ReportService {
                 raw: true,
                 order: [["test_date", "DESC"]]
             });
-        } catch (error) {
+        } catch(error) {
             throw error;
         }
     };
@@ -66,10 +65,10 @@ export default class ReportService {
         try {
             return await Database.getModel(TABLE_NAME).findAndCountAll({
                 where: data,
-                order: [["updated_at", "DESC"]],
+                order: [["updated_at","DESC"]],
                 raw: true
             });
-        } catch (error) {
+        } catch(error) {
             throw error;
         }
     };

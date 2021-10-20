@@ -1,4 +1,4 @@
-import {defineMessages} from "react-intl";
+import { defineMessages } from "react-intl";
 
 const messages = defineMessages({
     loginSuccessfull: {
@@ -181,32 +181,32 @@ const messages = defineMessages({
         description: "Association",
         defaultMessage: 'AdhereLive in association with'
     },
-    agreeSignupPPText: {
+    agreeSignupPPText:{
         id: "app.signIn.agree.signup.PPText",
         description: "Signup Privacy Policy Text",
         defaultMessage: "By signing up you agree to our"
     },
-    agreeSigninPPText: {
+    agreeSigninPPText:{
         id: "app.signIn.agree.signin.PPText",
         description: "Signin Privacy Policy Text",
         defaultMessage: "By signing in you agree to our"
     },
-    signup: {
+    signup:{
         id: "app.signIn.agree.signup",
         description: "Signup Agree",
         defaultMessage: "Signup"
     },
-    login: {
+    login:{
         id: "app.signIn.agree.login",
         description: "Login Agree",
         defaultMessage: "Login"
     },
-    newToAdhere: {
+    newToAdhere:{
         id: "app.signIn.agree.newToAdhere",
         description: "New to AdhereLive",
         defaultMessage: "New to AdhereLive?"
     },
-    alreadyAUser: {
+    alreadyAUser:{
         id: "app.signIn.agree.alreadyAUser",
         description: "Already a User",
         defaultMessage: "Already a user?"

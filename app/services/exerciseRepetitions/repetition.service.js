@@ -1,11 +1,11 @@
 import Database from "../../../libs/mysql";
-import {TABLE_NAME} from "../../models/exerciseRepetition";
+import { TABLE_NAME } from "../../models/exerciseRepetition";
 
 export default class RepetitionService {
     findAndCountAll = async () => {
         try {
             return await Database.getModel(TABLE_NAME).findAndCountAll();
-        } catch (error) {
+        } catch(error) {
             throw error;
         }
     };
@@ -16,7 +16,7 @@ export default class RepetitionService {
                 where: data
             });
             return repetition;
-        } catch (error) {
+        } catch(error) {
             throw error;
         }
     };
@@ -25,7 +25,7 @@ export default class RepetitionService {
         try {
             const repetitions = await Database.getModel(TABLE_NAME).findAll();
             return repetitions;
-        } catch (error) {
+        } catch(error) {
             throw error;
         }
     };
@@ -44,4 +44,6 @@ export default class RepetitionService {
             throw error;
         }
     };
+
 }
+

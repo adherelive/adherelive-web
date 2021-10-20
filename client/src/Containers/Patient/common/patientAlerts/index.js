@@ -10,26 +10,26 @@ const mapStateToProps = (state) => {
 };
 
 const mapDispatchToProps = (dispatch) => {
-    return {
-        getLastVisitAlerts: (id) => () => dispatch(getLastVisitAlerts(id))
-    };
+  return {
+      getLastVisitAlerts: (id) => () => dispatch(getLastVisitAlerts(id))
+  };
 };
 
 const mergeProps = (stateProps, dispatchProps, ownProps) => {
-    const {
-        schedule_events,
-        symptoms
-    } = stateProps;
+  const {
+      schedule_events,
+      symptoms
+  } = stateProps;
 
-    const {getLastVisitAlerts} = dispatchProps;
+  const {getLastVisitAlerts} = dispatchProps;
 
-    const {patientId} = ownProps;
+  const {patientId} = ownProps;
 
-    return {
-        schedule_events,
-        symptoms,
-        getLastVisitAlerts: getLastVisitAlerts(patientId)
-    };
+  return {
+    schedule_events,
+    symptoms,
+    getLastVisitAlerts: getLastVisitAlerts(patientId)
+  };
 };
 
 export default withRouter(connect(

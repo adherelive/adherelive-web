@@ -14,7 +14,7 @@ class DietTable extends Component {
 
         this.state = {
             loading: false,
-            diet_ids: []
+            diet_ids:[]
         };
     }
 
@@ -22,12 +22,12 @@ class DietTable extends Component {
         await this.getAllDiets();
     }
 
-    async componentDidUpdate(prevProps, prevState) {
-        const {care_plans = {}, carePlanId = null} = this.props;
-        const {carePlanId: prev_carePlanId = null, care_plans: prev_care_plans = {}} = prevProps || {};
-        const {diet_ids = []} = care_plans[carePlanId] || {};
-        const {diet_ids: prev_diet_ids = []} = prev_care_plans[prev_carePlanId] || {};
-        if (prev_diet_ids.length !== diet_ids.length || carePlanId != prev_carePlanId) {
+    async componentDidUpdate(prevProps,prevState){
+        const { care_plans = {},carePlanId =null}= this.props;
+        const {carePlanId : prev_carePlanId = null , care_plans : prev_care_plans = {} } = prevProps || {};
+        const { diet_ids =[] } = care_plans[carePlanId] || {};
+        const { diet_ids : prev_diet_ids =[] } = prev_care_plans[prev_carePlanId] || {};
+        if(prev_diet_ids.length !== diet_ids.length || carePlanId != prev_carePlanId){
             await this.getAllDiets();
         }
     }
@@ -35,11 +35,11 @@ class DietTable extends Component {
 
     getAllDiets = async () => {
         try {
-            const {getDietsForCareplan, carePlanId = null, care_plans} = this.props;
-            this.setState({loading: true});
+            const {getDietsForCareplan , carePlanId = null , care_plans } = this.props;
+            this.setState({loading:true});
             const response = await getDietsForCareplan(carePlanId);
-            const {status, statusCode, payload: {data = {}, message: resp_msg = ''} = {}} = response || {};
-            if (!status && statusCode !== 422) {
+            const {status,statusCode, payload: {data = {} , message : resp_msg = '' } = {} } = response || {};
+            if(!status && statusCode !== 422){
                 message.warn(resp_msg);
             }
             const {diet_ids = []} = care_plans[carePlanId] || {};
@@ -48,7 +48,7 @@ class DietTable extends Component {
                 loading: false,
                 diet_ids
             });
-        } catch (error) {
+        } catch(error) {
             this.setState({loading: false});
         }
     };
@@ -57,24 +57,23 @@ class DietTable extends Component {
         const {
             isOtherCarePlan,
             intl: {formatMessage} = {},
-            diets = {},
-            auth_role = null,
+            diets={},
+            auth_role =null ,
             care_plans = {},
             carePlanId = null
         } = this.props;
 
         const {diet_ids = []} = this.state;
 
-        const {basic_info: {user_role_id = null} = {}} = care_plans[carePlanId] || {};
-        let canViewDetails = true;
-        if (!isOtherCarePlan && user_role_id.toString() === auth_role.toString()) {
-            canViewDetails = false;
+        const {basic_info : { user_role_id = null } = {} } = care_plans[carePlanId] || {};
+        let canViewDetails=true;
+        if(!isOtherCarePlan && user_role_id.toString() === auth_role.toString()) {
+            canViewDetails=false;
         }
 
         const {
-            openResponseDrawer,
-            openEditDrawer
-        } = this;
+            openResponseDrawer, 
+            openEditDrawer} = this;
 
 
         return diet_ids.map((id) => {
@@ -93,65 +92,50 @@ class DietTable extends Component {
 
     openResponseDrawer = (diet_id) => (e) => {
         e.preventDefault();
-        const {
-            openDietResponseDrawer,
-            isOtherCarePlan,
-            auth_role = null,
-            care_plans = {},
-            carePlanId,
-            diets = {}
-        } = this.props;
-        const {basic_info: {name = ''} = {}} = diets[diet_id] || {};
-        const {basic_info: {user_role_id = null} = {}} = care_plans[carePlanId] || {};
-        let canViewDetails = true;
-        if (!isOtherCarePlan && user_role_id.toString() === auth_role.toString()) {
-            canViewDetails = false;
+        const {openDietResponseDrawer, isOtherCarePlan, auth_role =null ,care_plans = {},carePlanId , diets = {} } = this.props;
+        const { basic_info : {name = ''} = {} } = diets[diet_id] || {};
+        const {basic_info : { user_role_id = null } = {} } = care_plans[carePlanId] || {};
+        let canViewDetails=true;
+        if(!isOtherCarePlan && user_role_id.toString() === auth_role.toString()) {
+            canViewDetails=false;
         }
-        openDietResponseDrawer({diet_id, diet_name: name, loading: true});
-
+        openDietResponseDrawer({diet_id, diet_name:name, loading: true});
+        
     };
 
     openEditDrawer = (diet_id) => (e) => {
         e.preventDefault();
-        const {
-            openEditDietDrawer,
-            isOtherCarePlan,
-            patientId,
-            auth_role = null,
-            care_plans = {},
-            carePlanId,
-            diets = {}
-        } = this.props;
-        const {details: {repeat_days = []} = {}} = diets[diet_id];
-        const {basic_info: {user_role_id = null} = {}} = care_plans[carePlanId] || {};
-        let canViewDetails = true;
-        if (!isOtherCarePlan && user_role_id.toString() === auth_role.toString()) {
-            canViewDetails = false;
+        const {openEditDietDrawer, isOtherCarePlan, patientId ,auth_role =null ,care_plans = {},carePlanId , diets = {} } = this.props;
+        const { details : { repeat_days = [] } = {} } = diets[diet_id];
+        const {basic_info : { user_role_id = null } = {} } = care_plans[carePlanId] || {};
+        let canViewDetails=true;
+        if(!isOtherCarePlan && user_role_id.toString() === auth_role.toString()) {
+            canViewDetails=false;
         }
-        openEditDietDrawer({diet_id, patient_id: patientId, careplan_id: carePlanId, repeat_days, canViewDetails});
-
+        openEditDietDrawer({diet_id, patient_id: patientId,careplan_id:carePlanId,repeat_days,canViewDetails});
+           
     };
 
     formatMessage = data => this.props.intl.formatMessage(data);
 
     getLoadingComponent = () => {
-        const antIcon = <Icon type="loading" style={{fontSize: 24}} spin/>;
+        const antIcon = <Icon type="loading" style={{ fontSize: 24 }} spin />;
         return {
-            indicator: antIcon
+          indicator: antIcon
         };
-    };
+      };
 
     render() {
         const locale = {
             emptyText: this.formatMessage(messages.no_diets)
-        };
+          };
 
         const {
-            intl: {formatMessage} = {},
+            intl: { formatMessage } = {},
         } = this.props;
-        const {getLoadingComponent, getDataSource} = this;
+        const { getLoadingComponent, getDataSource } = this;
 
-        const {loading = false} = this.state;
+        const {loading=false}=this.state;
 
         return (
             <Table
@@ -164,7 +148,7 @@ class DietTable extends Component {
                 dataSource={
                     getDataSource()
                 }
-                scroll={{x: '100%'}}
+                scroll={{ x: '100%' }}
                 pagination={{
                     position: "bottom",
                 }}

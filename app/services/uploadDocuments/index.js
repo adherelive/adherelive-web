@@ -1,3 +1,4 @@
+
 export default class UploadDocument {
     constructor(data) {
         this._data = data;

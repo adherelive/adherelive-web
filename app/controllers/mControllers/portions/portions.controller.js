@@ -4,7 +4,7 @@ import PortionWrapper from "../../../ApiWrapper/mobile/portions";
 
 import Log from "../../../../libs/log";
 
-const Logger = new Log("MOBILE PORTIONS CONTROLLER");
+const Logger  = new Log("MOBILE PORTIONS CONTROLLER");
 
 class PortionController extends Controller {
     constructor() {
@@ -14,14 +14,15 @@ class PortionController extends Controller {
     getAll = async (req, res) => {
         const {raiseSuccess, raiseClientError, raiseServerError} = this;
         try {
+
             const portionService = new PortionService();
 
             const portionDetails = await portionService.getAll();
 
-            if (portionDetails.length > 0) {
+            if(portionDetails.length > 0) {
                 let portionApiData = {};
-                for (const portion of portionDetails) {
-                    const portionWrapper = await PortionWrapper({data: portion});
+                for(const portion of portionDetails) {
+                    const portionWrapper = await PortionWrapper({data:portion});
                     portionApiData[portionWrapper.getId()] = portionWrapper.getBasicInfo();
                 }
 
@@ -38,7 +39,7 @@ class PortionController extends Controller {
             } else {
                 return raiseClientError(res, 422, {}, `No portion found with name including ${value}`)
             }
-        } catch (error) {
+        } catch(error) {
             Logger.debug("portion search 500 error", error);
             return raiseServerError(res);
         }

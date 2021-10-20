@@ -54,12 +54,13 @@ export const db = (database) => {
     );
 };
 
+
 export const associate = (database) => {
     const {user_verifications, users} = database.models || {};
 
     // associations here (if any) ...
     user_verifications.belongsTo(users, {
-        foreignKey: "user_id",
-        targetKey: "id"
+        foreignKey:"user_id",
+        targetKey:"id"
     });
 };

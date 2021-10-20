@@ -2,19 +2,18 @@ import Database from "../../../libs/mysql";
 import {TABLE_NAME} from "../../models/uploadDocuments";
 
 class UploadDocumentService {
-    constructor() {
-    }
+    constructor() {}
 
     addDocument = async data => {
         const transaction = await Database.initTransaction();
-        try {
-            const document = await Database.getModel(TABLE_NAME).create(data, {transaction});
-            await transaction.commit();
-            return document;
-        } catch (error) {
-            await transaction.rollback();
-            throw error;
-        }
+      try {
+          const document = await Database.getModel(TABLE_NAME).create(data, {transaction});
+          await transaction.commit();
+          return document;
+      } catch(error) {
+          await transaction.rollback();
+          throw error;
+      }
     };
 
     getDocumentById = async id => {
@@ -25,12 +24,12 @@ class UploadDocumentService {
                 }
             });
             return documents;
-        } catch (error) {
+        } catch(error) {
             throw error;
         }
     };
 
-    getDoctorQualificationDocuments = async (parent_type, parent_id) => {
+    getDoctorQualificationDocuments = async (parent_type,parent_id) => {
         try {
             const documents = await Database.getModel(TABLE_NAME).findAll({
                 where: {
@@ -40,38 +39,38 @@ class UploadDocumentService {
                 }
             });
             return documents;
-        } catch (error) {
+        } catch(error) {
             throw error;
         }
     };
 
-    getDocumentByData = async (parent_type, parent_id, document) => {
+    getDocumentByData = async (parent_type,parent_id,document) => {
         try {
             const documents = await Database.getModel(TABLE_NAME).findOne({
                 where: {
                     parent_type,
                     parent_id,
                     document,
-                    deleted_at: null
+                    deleted_at:null
                 }
             });
             return documents;
-        } catch (error) {
+        } catch(error) {
             throw error;
         }
     };
 
-    deleteDocumentsOfQualification = async (parent_type, parent_id) => {
+    deleteDocumentsOfQualification = async (parent_type,parent_id) => {
         try {
             const documents = await Database.getModel(TABLE_NAME).destroy({
                 where: {
                     parent_type,
                     parent_id,
-                    deleted_at: null
+                    deleted_at:null
                 }
             });
             return documents;
-        } catch (error) {
+        } catch(error) {
             throw error;
         }
     };
@@ -82,7 +81,7 @@ class UploadDocumentService {
                 where: data
             });
             return document;
-        } catch (error) {
+        } catch(error) {
             throw error;
         }
     };
@@ -93,7 +92,7 @@ class UploadDocumentService {
                 where: data
             });
             return documents;
-        } catch (error) {
+        } catch(error) {
             throw error;
         }
     };
@@ -106,7 +105,7 @@ class UploadDocumentService {
                 }
             });
             return documents;
-        } catch (error) {
+        } catch(error) {
             throw error;
         }
     };
@@ -116,18 +115,19 @@ class UploadDocumentService {
             return await Database.getModel(TABLE_NAME).destroy({
                 where: data
             });
-        } catch (error) {
+        } catch(error) {
             throw error;
         }
     };
 
     getAll = async () => {
-        try {
-            return await Database.getModel(TABLE_NAME).findAll();
-        } catch (error) {
-            throw error;
-        }
+      try {
+          return await Database.getModel(TABLE_NAME).findAll();
+      } catch(error) {
+          throw error;
+      }
     };
+   
 }
 
 export default new UploadDocumentService();

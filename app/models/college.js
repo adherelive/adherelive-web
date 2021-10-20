@@ -20,7 +20,7 @@ export const db = (database) => {
             user_created: {
                 type: DataTypes.BOOLEAN,
                 allowNull: false,
-                defaultValue: false
+                defaultValue:false
             }
         },
         {
@@ -30,7 +30,9 @@ export const db = (database) => {
     );
 };
 
+
 export const associate = (database) => {
     // const {TABLE_NAME} = database.models || {};
+
     // associations here (if any) ...
 };

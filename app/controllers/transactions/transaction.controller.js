@@ -18,7 +18,7 @@ class TransactionController extends Controller {
             const {userDetails: {userData: {category} = {}} = {}} = req;
             let responseData = {};
 
-            switch (category) {
+            switch(category) {
                 case USER_CATEGORY.PROVIDER:
                     responseData = await TransactionHelper.getProviderTransactions(req) || {};
                     break;
@@ -32,7 +32,7 @@ class TransactionController extends Controller {
                     break;
             }
 
-            if (Object.keys(responseData).length > 0) {
+            if(Object.keys(responseData).length > 0) {
                 return raiseSuccess(res, 200, {...responseData}, "Transaction details fetched successfully");
             } else {
                 return raiseSuccess(res, 200, {}, "No transactions available at the moment");
@@ -56,7 +56,8 @@ class TransactionController extends Controller {
             //         paymentProductData = {...paymentProductData, ...payment_products};
             //     }
             // }
-        } catch (error) {
+
+        } catch(error) {
             Log.debug("getAllTransactions 500 error", error);
             return raiseServerError(res);
         }

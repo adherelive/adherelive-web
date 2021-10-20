@@ -7,7 +7,7 @@ class CouncilWrapper extends BaseCouncil {
     }
 
     getBasicInfo = () => {
-        const {_data} = this;
+        const { _data } = this;
         const {
             id,
             name
@@ -25,6 +25,6 @@ export default async (data = null, id = null) => {
     if (data !== null) {
         return new CouncilWrapper(data);
     }
-    const council = await councilService.getByData({id});
+    const council = await councilService.getByData({ id });
     return new CouncilWrapper(council);
 };

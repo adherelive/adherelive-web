@@ -7,7 +7,7 @@ class ProviderService {
         try {
             const provider = await Database.getModel(TABLE_NAME).findAll();
             return provider;
-        } catch (err) {
+        } catch(err) {
             throw err;
         }
     };
@@ -19,19 +19,19 @@ class ProviderService {
                 include: [Database.getModel(userTableName)]
             });
             return provider;
-        } catch (err) {
+        } catch(err) {
             throw err;
         }
     };
 
     getAllProviders = async () => {
-        try {
-            return await Database.getModel(TABLE_NAME).findAll({
-                include: [Database.getModel(userTableName)]
-            });
-        } catch (err) {
-            throw err;
-        }
+      try {
+          return await Database.getModel(TABLE_NAME).findAll({
+              include: [Database.getModel(userTableName)]
+          });
+      } catch(err) {
+          throw err;
+      }
     };
 
     addProvider = async (data) => {
@@ -42,7 +42,7 @@ class ProviderService {
             });
             await transaction.commit();
             return provider;
-        } catch (err) {
+        } catch(err) {
             await transaction.rollback();
             throw err;
         }
@@ -59,7 +59,7 @@ class ProviderService {
             });
             await transaction.commit();
             return provider;
-        } catch (err) {
+        } catch(err) {
             await transaction.rollback();
             throw err;
         }

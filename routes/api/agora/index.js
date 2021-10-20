@@ -12,15 +12,16 @@ router.get(
 
 
 router.post(
-    "/missed",
-    Authenticated,
-    agoraController.missedCall
+  "/missed",
+  Authenticated,
+  agoraController.missedCall
 )
 
 router.post(
-    "/start",
-    Authenticated,
-    agoraController.startCall
+  "/start",
+  Authenticated,
+  agoraController.startCall
 );
 
+  
 module.exports = router;

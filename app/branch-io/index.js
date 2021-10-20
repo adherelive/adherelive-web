@@ -12,9 +12,9 @@ export default async function createLink(data = {}) {
 
         console.log("dara====", res);
 
-        const {status} = res;
+        const { status } = res;
         if (status === 200) {
-            const {data: {url} = {}} = res;
+            const { data: { url } = {} } = res;
             return url;
         }
     } catch (err) {

@@ -6,17 +6,17 @@ const Response = require("../../../app/controllers/helper/responseFormat");
 import doRequest from "../../../app/controllers/helper/doRequest";
 
 export default async (req, res, next) => {
-    try {
+    try{
         let accessToken;
-        const {authorization = ""} = req.headers || {};
+        const { authorization = "" } = req.headers || {};
         if (authorization) {
             const bearer = authorization.split(" ");
             if (bearer.length === 2) {
                 accessToken = bearer[1];
             }
         } else {
-            const {accessToken: receivedAccessToken = {}} = req.body;
-            if (receivedAccessToken) {
+            const { accessToken: receivedAccessToken = {} } = req.body;
+            if(receivedAccessToken) {
                 accessToken = receivedAccessToken;
             }
         }
@@ -29,11 +29,12 @@ export default async (req, res, next) => {
             const access_token = decodedAccessToken.accessToken;
         } else {
             const response = new Response(false, 401);
-            response.setError({message: errMessage.COOKIES_NOT_SET});
+            response.setError({ message: errMessage.COOKIES_NOT_SET });
             return res.status(400).json(response.getResponse());
         }
         next();
-    } catch (err) {
+    }
+    catch(err){
         console.log("errr ===== ", err);
         let payload = {};
         if (err.name === "TokenExpiredError") {
@@ -52,4 +53,5 @@ export default async (req, res, next) => {
         response.setError(payload);
         return res.status(payload.code).json(response.getResponse());
     }
+
 };

@@ -1,3 +1,4 @@
+
 export default class CarePlan {
     constructor(data) {
         this._data = data;
@@ -28,7 +29,7 @@ export default class CarePlan {
     };
 
     getActivatedOn = () => {
-        return this._data.get("activated_on");
+      return this._data.get("activated_on");
     };
 
     getExpiredOn = () => {
@@ -41,6 +42,7 @@ export default class CarePlan {
 
     getCareplnSecondaryProfiles = () => {
         const {careplan_secondary_doctor_mappings = []} = this._data || {};
+
         return careplan_secondary_doctor_mappings.map(data => data.secondary_doctor_role_id);
     };
 

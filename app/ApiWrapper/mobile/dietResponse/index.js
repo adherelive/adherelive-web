@@ -1,4 +1,4 @@
-import {DOCUMENT_PARENT_TYPE} from "../../../../constant";
+import { DOCUMENT_PARENT_TYPE } from "../../../../constant";
 import BaseDietResponse from "../../../services/dietResponses";
 import DietResponsesService from "../../../services/dietResponses/dietResponses.service";
 import uploadDocumentsService from "../../../services/uploadDocuments/uploadDocuments.service";
@@ -15,13 +15,13 @@ class DietResponseWrapper extends BaseDietResponse {
     getBasicInfo = () => {
         const {_data} = this;
         const {
-            id, diet_id, schedule_event_id, status, document_uploaded, response_text, other_details, updatedAt
+            id, diet_id, schedule_event_id, status, document_uploaded, response_text, other_details,updatedAt
         } = _data;
         return {
             basic_info: {
                 id, diet_id, schedule_event_id
             },
-            status, document_uploaded, response_text, other_details, updated_at: updatedAt
+            status, document_uploaded, response_text, other_details,updated_at: updatedAt
         }
     };
 
@@ -29,13 +29,13 @@ class DietResponseWrapper extends BaseDietResponse {
         const {getId, getBasicInfo, isDocumentUploaded} = this;
 
         let allDocumentIds = [];
-        if (isDocumentUploaded()) {
+        if(isDocumentUploaded()) {
             const allDocuments = await uploadDocumentsService.getAllByData({
                 parent_id: getId(),
                 parent_type: DOCUMENT_PARENT_TYPE.DIET_RESPONSE
             }) || [];
 
-            for (let index = 0; index < allDocuments.length; index++) {
+            for(let index = 0; index < allDocuments.length; index++) {
                 const document = await DocumentWrapper(allDocuments[index]);
                 allDocumentIds.push(document.getUploadDocumentId());
             }
@@ -51,25 +51,22 @@ class DietResponseWrapper extends BaseDietResponse {
         const {getId, isDocumentUploaded, getScheduleEventId, getAllInfo} = this;
         const scheduleEventService = new ScheduleEventService();
         let scheduleEventData = {};
-        if (getScheduleEventId()) {
-            const schduleEventRecord = await scheduleEventService.getEventByData({
-                paranoid: false,
-                id: getScheduleEventId()
-            });
-            if (schduleEventRecord) {
+        if(getScheduleEventId()) {
+            const schduleEventRecord = await scheduleEventService.getEventByData({paranoid:false,id:getScheduleEventId()});
+            if(schduleEventRecord){
                 const scheduleEvent = await EventWrapper(schduleEventRecord);
                 scheduleEventData[getScheduleEventId()] = scheduleEvent.getAllInfo();
             }
         }
 
         let allUploadDocuments = {};
-        if (isDocumentUploaded()) {
+        if(isDocumentUploaded()) {
             const allDocuments = await uploadDocumentsService.getAllByData({
                 parent_id: getId(),
                 parent_type: DOCUMENT_PARENT_TYPE.DIET_RESPONSE
             }) || [];
 
-            for (let index = 0; index < allDocuments.length; index++) {
+            for(let index = 0; index < allDocuments.length; index++) {
                 const document = await DocumentWrapper(allDocuments[index]);
                 allUploadDocuments[document.getUploadDocumentId()] = document.getBasicInfo();
             }
@@ -87,7 +84,7 @@ class DietResponseWrapper extends BaseDietResponse {
 }
 
 export default async ({data = null, id = null}) => {
-    if (data) {
+    if(data) {
         return new DietResponseWrapper(data);
     }
     const dietResponseService = new DietResponsesService();

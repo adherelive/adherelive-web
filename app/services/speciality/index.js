@@ -4,6 +4,6 @@ export default class Speciality {
     }
 
     getSpecialityId = () => {
-        return this._data.get("id");
+      return this._data.get("id");
     };
 }

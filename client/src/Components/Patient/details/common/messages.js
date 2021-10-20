@@ -1,4 +1,4 @@
-import {defineMessages} from "react-intl";
+import { defineMessages } from "react-intl";
 
 const messages = defineMessages({
     alert_header: {
@@ -96,7 +96,7 @@ const messages = defineMessages({
         description: "",
         defaultMessage: "Treatment Plans"
     },
-    patientOtherTreatmentPlans: {
+    patientOtherTreatmentPlans : {
         id: "app.patients.common.treatment.plans.otherTreatmentPlans",
         description: "",
         defaultMessage: "Patient has other treatment plans"

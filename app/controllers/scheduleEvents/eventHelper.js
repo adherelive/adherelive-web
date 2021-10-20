@@ -24,12 +24,15 @@ export const doctorChart = async req => {
         const {userDetails: {userRoleId, userCategoryId: doctor_id} = {}} = req;
         Log.info(`DOCTOR ID (doctor_id) : ${doctor_id}`);
 
+
         return await getAllDataForDoctors({doctor_id, user_role_id: userRoleId});
+
     } catch (error) {
         Log.debug("doctorChart catch error", error);
         throw error;
     }
 };
+
 
 export const hspChart = async req => {
     try {
@@ -37,7 +40,7 @@ export const hspChart = async req => {
         Log.info(`DOCTOR ID (doctor_id) : ${doctor_id}`);
 
 
-        return await getAllDataForDoctors({doctor_id, user_role_id: userRoleId, category: USER_CATEGORY.HSP});
+        return await getAllDataForDoctors({doctor_id, user_role_id: userRoleId,category:USER_CATEGORY.HSP});
 
     } catch (error) {
         Log.debug("doctorChart catch error", error);
@@ -56,119 +59,118 @@ export const providerChart = async (req) => {
         // const doctorIds = doctorData.map(data => data.doctor_id);
 
         // Log.debug("doctorIds", doctorData);
-        let allDoctorsData = {};
+        let  allDoctorsData = {} ;
 
-        const {count = 0, rows = []} = await userRoleService.findAndCountAll({
-            where: {
-                linked_id: provider_id
+        const {count = 0 ,rows = []} = await userRoleService.findAndCountAll({
+            where:{
+                linked_id:provider_id
             },
-            attributes: ['id']
+            attributes:['id']
         });
 
-        if (count) {
-            for (let each in rows) {
-                const {id: user_role_id} = rows[each] || {};
-                const [response, responseMessage] = await getAllDataForDoctors({
-                    doctor_id: null,
-                    doctorIds: [],
-                    user_role_id,
-                    category: USER_CATEGORY.PROVIDER
-                });
+
+        if(count){
+            for(let each in rows){
+                const { id : user_role_id } = rows[each] || {};
+                const [response, responseMessage] = await getAllDataForDoctors({doctor_id:null, doctorIds:[], user_role_id, category: USER_CATEGORY.PROVIDER});
                 const {
-                    missed_medications: p_missed_medications = {},
+                    missed_medications: p_missed_medications={},
                     medication_ids: {
-                        critical: p_medication_ids_critical = [],
-                        non_critical: p_medication_ids_non_critical = []
-                    } = {},
-                    missed_appointments: p_missed_appointments = {},
-                    appointment_ids: {
-                        critical: p_appointment_ids_critical = [],
-                        non_critical: p_appointment_ids_non_critical = []
-                    } = {},
-                    missed_vitals: p_missed_vitals = {},
-                    vital_ids: {
-                        critical: p_vital_ids_critical = [],
-                        non_critical: p_vital_ids_non_critical = []
-                    } = {},
-                    missed_diets: p_missed_diets = {},
-                    diet_ids: {
-                        critical: p_diet_ids_critical = [],
-                        non_critical: p_diet_ids_non_critical = []
-                    } = {},
-                    missed_workouts: p_missed_workouts = {},
+                        critical:p_medication_ids_critical=[],
+                        non_critical:p_medication_ids_non_critical=[]
+                    }={},
+                    missed_appointments: p_missed_appointments={},
+                    appointment_ids:{
+                        critical:p_appointment_ids_critical=[],
+                        non_critical:p_appointment_ids_non_critical=[]
+                    }={},
+                    missed_vitals: p_missed_vitals={},
+                    vital_ids:{
+                        critical:p_vital_ids_critical=[],
+                        non_critical:p_vital_ids_non_critical=[]
+                    }={},
+                    missed_diets: p_missed_diets={},
+                    diet_ids:{
+                        critical:p_diet_ids_critical=[],
+                        non_critical:p_diet_ids_non_critical=[]
+                    }={},
+                    missed_workouts: p_missed_workouts={},
                     workout_ids: {
-                        critical: p_workout_ids_critical = [],
-                        non_critical: p_workout_ids_non_critical = []
-                    } = {},
-                    patients: p_patients = {}
-                } = response || {};
+                        critical:p_workout_ids_critical=[],
+                        non_critical:p_workout_ids_non_critical=[]
+                    }={},
+                    patients: p_patients={}
+                }=response || {};
 
                 const {
-                    missed_medications = {},
+                    missed_medications={},
                     medication_ids: {
-                        critical: medication_ids_critical = [],
-                        non_critical: medication_ids_non_critical = []
+                        critical:medication_ids_critical=[],
+                        non_critical:medication_ids_non_critical=[]
+                    }={},
+                    missed_appointments={},
+                    appointment_ids:{
+                        critical:appointment_ids_critical=[],
+                        non_critical:appointment_ids_non_critical=[]
                     } = {},
-                    missed_appointments = {},
-                    appointment_ids: {
-                        critical: appointment_ids_critical = [],
-                        non_critical: appointment_ids_non_critical = []
-                    } = {},
-                    missed_vitals = {},
-                    vital_ids: {
-                        critical: vital_ids_critical = [],
-                        non_critical: vital_ids_non_critical = []
-                    } = {},
-                    missed_diets = {},
-                    diet_ids: {
-                        critical: diet_ids_critical = [],
-                        non_critical: diet_ids_non_critical = []
-                    } = {},
-                    missed_workouts = {},
+                    missed_vitals={},
+                    vital_ids:{
+                        critical:vital_ids_critical=[],
+                        non_critical:vital_ids_non_critical=[]
+                    }={},
+                    missed_diets={},
+                    diet_ids:{
+                        critical:diet_ids_critical=[],
+                        non_critical:diet_ids_non_critical=[]
+                    }={},
+                    missed_workouts={},
                     workout_ids: {
-                        critical: workout_ids_critical = [],
-                        non_critical: workout_ids_non_critical = []
-                    } = {},
-                    patients = {}
-                } = allDoctorsData || {};
+                        critical:workout_ids_critical=[],
+                        non_critical:workout_ids_non_critical=[]
+                    }={},
+                    patients={}
+                }=allDoctorsData || {};
+
 
                 allDoctorsData = {
-                    missed_medications: {...missed_medications, ...p_missed_medications},
-                    missed_appointments: {...missed_appointments, ...p_missed_appointments},
-                    missed_vitals: {...missed_vitals, ...p_missed_vitals},
-                    missed_diets: {...missed_diets, ...p_missed_diets},
-                    missed_workouts: {...missed_workouts, ...p_missed_workouts},
+                    missed_medications:{...missed_medications, ...p_missed_medications},
+                    missed_appointments:{...missed_appointments,...p_missed_appointments},
+                    missed_vitals:{...missed_vitals,...p_missed_vitals},
+                    missed_diets:{...missed_diets,...p_missed_diets},
+                    missed_workouts:{...missed_workouts,...p_missed_workouts},
 
-                    medication_ids: {
-                        'critical': [...medication_ids_critical, ...p_medication_ids_critical],
-                        'non_critical': [...medication_ids_non_critical, ...p_medication_ids_non_critical]
-                    },
-                    appointment_ids: {
-                        'critical': [...appointment_ids_critical, ...p_appointment_ids_critical],
-                        'non_critical': [...appointment_ids_non_critical, ...p_appointment_ids_non_critical]
-                    },
-                    vital_ids: {
-                        'critical': [...vital_ids_critical, ...p_vital_ids_critical],
-                        'non_critical': [...vital_ids_non_critical, ...p_vital_ids_non_critical]
-                    },
-                    diet_ids: {
-                        'critical': [...diet_ids_critical, ...p_diet_ids_critical],
-                        'non_critical': [...diet_ids_non_critical, ...p_diet_ids_non_critical]
-                    },
-                    workout_ids: {
-                        'critical': [...workout_ids_critical, ...p_workout_ids_critical],
-                        'non_critical': [...workout_ids_non_critical, ...p_workout_ids_non_critical]
-                    },
-                    patients: {...patients, ...p_patients}
+                    medication_ids:{
+                        'critical':[...medication_ids_critical,...p_medication_ids_critical],
+                        'non_critical':[...medication_ids_non_critical,...p_medication_ids_non_critical]
+                    } ,
+                    appointment_ids:{
+                        'critical':[...appointment_ids_critical,...p_appointment_ids_critical],
+                        'non_critical':[...appointment_ids_non_critical,...p_appointment_ids_non_critical]
+                    } ,
+                    vital_ids:{
+                        'critical':[...vital_ids_critical,...p_vital_ids_critical],
+                        'non_critical':[...vital_ids_non_critical,...p_vital_ids_non_critical]
+                    } ,
+                    diet_ids:{
+                        'critical':[...diet_ids_critical,...p_diet_ids_critical],
+                        'non_critical':[...diet_ids_non_critical,...p_diet_ids_non_critical]
+                    } ,
+                    workout_ids:{
+                        'critical':[...workout_ids_critical,...p_workout_ids_critical],
+                        'non_critical':[...workout_ids_non_critical,...p_workout_ids_non_critical]
+                    } ,
+                    patients:{...patients,...p_patients}
                 }
+              
 
-                console.log("32462374627427423", {user_role_id, allDoctorsData, response});
+                console.log("32462374627427423",{user_role_id,allDoctorsData,response});
 
             }
         }
 
+
         return [
-            {...allDoctorsData},
+            { ...allDoctorsData },
             "Missed events fetched successfully"
         ];
     } catch (error) {
@@ -219,8 +221,8 @@ const getAllDataForDoctors = async ({doctor_id, category = USER_CATEGORY.PROVIDE
             appointmentIds = [...appointmentIds, ...appointment_ids];
             medicationIds = [...medicationIds, ...medication_ids];
             vitalIds = [...vitalIds, ...vital_ids];
-            dietIds = [...dietIds, ...diet_ids];
-            workoutIds = [...workoutIds, ...workout_ids];
+            dietIds = [ ...dietIds, ...diet_ids];
+            workoutIds = [ ...workoutIds, ...workout_ids ];
         }
 
         // fetch all schedule events in latest -> last order for each event_ids collected
@@ -305,17 +307,20 @@ const getFormattedData = async (events = [], category = USER_CATEGORY.DOCTOR) =>
                 vital_templates: {basic_info: {name: vital_name} = {}} = {},
                 participant_one = {},
                 participant_two = {},
-                diets: event_diets = {},
-                workouts: event_workouts = {},
-                workout_id = null,
+                diets : event_diets = {},
+                workouts : event_workouts = {},
+                workout_id = null, 
                 diet_id = null,
             } = {},
             critical
         } = event.getAllInfo();
 
+
+
         switch (event.getEventType()) {
             case EVENT_TYPE.MEDICATION_REMINDER:
-                if (category === USER_CATEGORY.HSP) {
+
+                if(category === USER_CATEGORY.HSP){
                     continue;
                 }
 
@@ -357,7 +362,7 @@ const getFormattedData = async (events = [], category = USER_CATEGORY.DOCTOR) =>
 
             case EVENT_TYPE.APPOINTMENT:
                 if (category === USER_CATEGORY.PROVIDER) {
-                    if (participant_one.category === USER_CATEGORY.PATIENT) {
+                    if(participant_one.category === USER_CATEGORY.PATIENT) {
                         patientIds.push(participant_one.id);
                     } else {
                         patientIds.push(participant_two.id);
@@ -382,8 +387,9 @@ const getFormattedData = async (events = [], category = USER_CATEGORY.DOCTOR) =>
                 }
                 break;
             case EVENT_TYPE.VITALS:
+
                 if (category === USER_CATEGORY.PROVIDER) {
-                    patientIds.push(patient_id);
+                        patientIds.push(patient_id);
                 }
 
                 if (!(event.getEventId() in vitals)) {
@@ -419,13 +425,15 @@ const getFormattedData = async (events = [], category = USER_CATEGORY.DOCTOR) =>
                 }
                 break;
 
+
             case EVENT_TYPE.DIET:
-                const dietWrapper = await DietWrapper({id: diet_id});
+
+                const dietWrapper = await DietWrapper({id:diet_id});
                 const careplan_id = await dietWrapper.getCareplanId();
-                const careplanWrapper = await CarePlanWrapper(null, careplan_id);
+                const careplanWrapper = await CarePlanWrapper(null,careplan_id);
                 const patientId = await careplanWrapper.getPatientId();
 
-                const {basic_info: {name: diet_name = ''} = {}} = event_diets[diet_id] || {};
+                const { basic_info:{name :diet_name =''}={} } = event_diets[diet_id] || {};
                 if (!(event.getEventId() in diets)) {
                     if (category === USER_CATEGORY.PROVIDER) {
                         patientIds.push(patientId);
@@ -433,7 +441,7 @@ const getFormattedData = async (events = [], category = USER_CATEGORY.DOCTOR) =>
                     const timings = {};
                     timings[event.getDate()] = [];
                     timings[event.getDate()].push({start_time, end_time});
-                    diets[event.getEventId()] = {diet_name, participant_id: patientId, timings, critical};
+                    diets[event.getEventId()] = {  diet_name, participant_id:patientId , timings, critical};
                 } else {
                     const {timings} = diets[event.getEventId()] || {};
                     if (!Object.keys(timings).includes(event.getDate())) {
@@ -455,13 +463,16 @@ const getFormattedData = async (events = [], category = USER_CATEGORY.DOCTOR) =>
                 }
                 break;
 
+
             case EVENT_TYPE.WORKOUT:
-                const workoutWrapper = await WorkoutWrppaer({id: workout_id});
+        
+                const workoutWrapper = await WorkoutWrppaer({id:workout_id});
                 const workout_careplan_id = await workoutWrapper.getCareplanId();
-                const workoutCareplanWrapper = await CarePlanWrapper(null, workout_careplan_id);
+                const workoutCareplanWrapper = await CarePlanWrapper(null,workout_careplan_id);
                 const workoutPatientId = await workoutCareplanWrapper.getPatientId();
 
-                const {basic_info: {name: workout_name = ''} = {}} = event_workouts[workout_id] || {};
+
+                const { basic_info : { name : workout_name = '' } = {} } = event_workouts[workout_id] || {};
                 if (!(event.getEventId() in workouts)) {
                     if (category === USER_CATEGORY.PROVIDER) {
                         patientIds.push(workoutPatientId);
@@ -469,7 +480,7 @@ const getFormattedData = async (events = [], category = USER_CATEGORY.DOCTOR) =>
                     const timings = {};
                     timings[event.getDate()] = [];
                     timings[event.getDate()].push({start_time, end_time});
-                    workouts[event.getEventId()] = {workout_name, participant_id: workoutPatientId, timings, critical};
+                    workouts[event.getEventId()] = { workout_name, participant_id:workoutPatientId , timings, critical};
                 } else {
                     const {timings} = workouts[event.getEventId()] || {};
                     if (!Object.keys(timings).includes(event.getDate())) {
@@ -490,21 +501,23 @@ const getFormattedData = async (events = [], category = USER_CATEGORY.DOCTOR) =>
                         : null;
                 }
                 break;
+    
+
         }
     }
 
     let patientData = {};
 
-    if (patientIds.length > 0) {
+    if(patientIds.length > 0) {
         const allPatients = await patientService.getPatientByData({
             id: patientIds
         }) || [];
 
-        for (let index = 0; index < allPatients.length; index++) {
+        for(let index = 0; index < allPatients.length; index++) {
             const patient = await PatientWrapper(allPatients[index]);
-            const {user_role_id = null, care_plan_id = null} = await patient.getAllInfo();
-            patientData[patient.getPatientId()] = {...patient.getBasicInfo(), user_role_id, care_plan_id}
-
+            const {user_role_id = null,care_plan_id = null } = await  patient.getAllInfo();
+            patientData[patient.getPatientId()] = {...patient.getBasicInfo() ,user_role_id ,care_plan_id }
+            
         }
     }
 
@@ -530,14 +543,15 @@ const getFormattedData = async (events = [], category = USER_CATEGORY.DOCTOR) =>
             non_critical: vital_non_critical_ids,
         },
 
-        // diets
-        missed_diets: diets,
-        diet_ids: {
-            critical: diet_critical_ids,
-            non_critical: diet_non_critical_ids,
-        },
+         // diets
+         missed_diets: diets,
+         diet_ids: {
+             critical: diet_critical_ids,
+             non_critical: diet_non_critical_ids,
+         },
 
-        // actions (vitals)
+
+          // actions (vitals)
         missed_workouts: workouts,
         workout_ids: {
             critical: workout_critical_ids,

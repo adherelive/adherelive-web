@@ -7,7 +7,7 @@ class TreatmentWrapper extends BaseTreatment {
     }
 
     getBasicInfo = () => {
-        const {_data} = this;
+        const { _data } = this;
         const {
             id,
             name
@@ -25,6 +25,6 @@ export default async (data = null, id = null) => {
     if (data !== null) {
         return new TreatmentWrapper(data);
     }
-    const treatment = await treatmentService.getByData({id});
+    const treatment = await treatmentService.getByData({ id });
     return new TreatmentWrapper(treatment.get());
 };

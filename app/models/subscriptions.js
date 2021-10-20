@@ -52,9 +52,10 @@ export const db = (database) => {
     );
 };
 
+
 export const associate = (database) => {
     database.models[TABLE_NAME].hasOne(database.models[paymentProductPlansTableName], {
-        foreignKey: "id",
-        sourceKey: "payment_product_id"
+        foreignKey:"id",
+        sourceKey:"payment_product_id"
     });
 };

@@ -1,7 +1,7 @@
 import Joi from "@hapi/joi";
 import moment from "moment";
-import {USER_CATEGORY, WHEN_TO_TAKE_ABBREVATIONS} from "../../../constant";
-import {raiseClientError} from "../../helper";
+import { USER_CATEGORY, WHEN_TO_TAKE_ABBREVATIONS } from "../../../constant";
+import { raiseClientError } from "../../helper";
 import Response from "../../../app/helper/responseFormat";
 
 const medicationReminderFormSchema = Joi.object().keys({
@@ -11,23 +11,23 @@ const medicationReminderFormSchema = Joi.object().keys({
     quantity: Joi.number().required(),
     when_to_take_abbr: Joi.number().optional(),
     when_to_take: Joi.array().when('when_to_take_abbr', {
-        is: Joi.exist(),
-        then: Joi.when("when_to_take_abbr", {
-            is: WHEN_TO_TAKE_ABBREVATIONS.SOS,
-            then: Joi.optional(),
-            otherwise: Joi.required()
-        }),
+      is: Joi.exist(),
+      then: Joi.when("when_to_take_abbr", {
+        is: WHEN_TO_TAKE_ABBREVATIONS.SOS,
+        then: Joi.optional(),
         otherwise: Joi.required()
+      }),
+      otherwise: Joi.required()
     }),
     repeat: Joi.string().required(),
     repeat_days: Joi.array().when('when_to_take_abbr', {
-        is: Joi.exist(),
-        then: Joi.when("when_to_take_abbr", {
-            is: WHEN_TO_TAKE_ABBREVATIONS.SOS,
-            then: Joi.optional(),
-            otherwise: Joi.required()
-        }),
+      is: Joi.exist(),
+      then: Joi.when("when_to_take_abbr", {
+        is: WHEN_TO_TAKE_ABBREVATIONS.SOS,
+        then: Joi.optional(),
         otherwise: Joi.required()
+      }),
+      otherwise: Joi.required()
     }),
     repeat_interval: Joi.number().optional(),
     start_date: Joi.date().required(),
@@ -39,11 +39,11 @@ const medicationReminderFormSchema = Joi.object().keys({
     critical: Joi.boolean().optional().allow(""),
     description: Joi.string().max(500, 'utf-8').optional().allow(""),
     care_plan_id: Joi.number()
-        .optional()
-        .allow("", null),
+    .optional()
+    .allow("", null),
     patient_id: Joi.number()
-        .optional()
-        .allow("", null),
+    .optional()
+    .allow("", null),
 });
 
 // const validateStartTime = startTime => {
@@ -56,15 +56,15 @@ const medicationReminderFormSchema = Joi.object().keys({
 // };
 
 export const validateMedicationReminderData = (req, res, next) => {
-    const {body: data = {}} = req;
-    const {start_date, end_date} = data;
-    const isValid = medicationReminderFormSchema.validate(data);
-    if (isValid && isValid.error != null) {
-        // return raiseClientError(res, 422, isValid.error, "please check filled details");
-        const response = new Response(false, 422);
-        response.setError(isValid.error);
-        response.setMessage("please check filled details");
-        return res.status(422).json(response.getResponse());
-    }
-    next();
+  const { body: data = {} } = req;
+  const { start_date, end_date } = data;
+  const isValid = medicationReminderFormSchema.validate(data);
+  if (isValid && isValid.error != null) {
+    // return raiseClientError(res, 422, isValid.error, "please check filled details");
+    const response = new Response(false, 422);
+    response.setError(isValid.error);
+    response.setMessage("please check filled details");
+    return res.status(422).json(response.getResponse());
+  }
+  next();
 };

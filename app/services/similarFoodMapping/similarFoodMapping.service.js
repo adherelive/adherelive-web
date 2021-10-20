@@ -2,7 +2,8 @@ import Database from "../../../libs/mysql";
 import {Op} from "sequelize";
 import {TABLE_NAME} from "../../models/similarFoodMapping";
 
-const DEFAULT_ORDER = [["created_at", "DESC"]];
+const DEFAULT_ORDER = [["created_at","DESC"]];
+
 
 class SimilarFoodMappingService {
     constructor() {
@@ -13,9 +14,9 @@ class SimilarFoodMappingService {
             const record = await Database.getModel(TABLE_NAME).findOne({
                 where: data,
                 raw: true
-            });
+              });
             return record;
-        } catch (error) {
+        } catch(error) {
             throw error;
         }
     };
@@ -23,28 +24,34 @@ class SimilarFoodMappingService {
     getAll = async () => {
         try {
             const records = await Database.getModel(TABLE_NAME).findAll(
-                {
-                    raw: true
-                }
+            {
+            raw: true
+            }
             );
             return records;
-        } catch (error) {
+        } catch(error) {
             throw error;
         }
     };
 
-    findAndCountAll = async ({where, order = DEFAULT_ORDER, attributes}) => {
-        try {
-            return await Database.getModel(TABLE_NAME).findAndCountAll({
-                where,
-                order,
-                attributes,
-                raw: true,
-            });
-        } catch (error) {
-            throw error;
-        }
-    };
+
+
+  
+  findAndCountAll = async ({ where, order = DEFAULT_ORDER, attributes }) => {
+    try {
+      return await Database.getModel(TABLE_NAME).findAndCountAll({
+        where,
+        order,
+        attributes,
+        raw: true,
+      });
+    } catch (error) {
+      throw error;
+    }
+  };
+
+
+
 }
 
-export default SimilarFoodMappingService;
+export default  SimilarFoodMappingService;

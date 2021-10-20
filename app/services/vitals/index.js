@@ -4,7 +4,7 @@ export default class Vitals {
     }
 
     getVitalId = () => {
-        return this._data.get("id");
+      return this._data.get("id");
     };
 
     getVitalTemplateId = () => {
@@ -22,4 +22,5 @@ export default class Vitals {
     getStartDate = () => {
         return this._data.get("start_date");
     };
+
 }

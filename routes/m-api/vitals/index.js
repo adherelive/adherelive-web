@@ -2,7 +2,7 @@ import express from "express";
 import VitalController from "../../../app/controllers/mControllers/vitals/vital.controller";
 import Authenticate from "../middlewares/auth";
 // import * as validator from "./validator";
-const router = express.Router();
+const router  = express.Router();
 
 router.get(
     "/",
@@ -17,9 +17,9 @@ router.get(
 );
 
 router.get(
-    "/:id",
-    Authenticate,
-    VitalController.getVitalResponseTimeline
+  "/:id",
+  Authenticate,
+  VitalController.getVitalResponseTimeline
 );
 
 router.post(

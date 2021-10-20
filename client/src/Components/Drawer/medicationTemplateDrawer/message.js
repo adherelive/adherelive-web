@@ -1,4 +1,4 @@
-import {defineMessages} from "react-intl";
+import { defineMessages } from "react-intl";
 
 const messages = defineMessages({
     medicine: {
@@ -167,7 +167,7 @@ const messages = defineMessages({
         description: "",
         defaultMessage: "A workout with this name already exist in this template."
     },
-    sosMessage: {
+    sosMessage:{
         id: "app.medicationTemplate.sosMessage",
         description: "",
         defaultMessage: "Take Whenever Required"

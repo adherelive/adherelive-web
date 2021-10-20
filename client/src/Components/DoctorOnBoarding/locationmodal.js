@@ -1,8 +1,9 @@
-import React, {Component} from "react";
-import {injectIntl} from "react-intl";
-import {Button, Input, Modal} from "antd";
+import React, { Component } from "react";
+import { injectIntl } from "react-intl";
+import { Button, Input, Modal } from "antd";
 import PlacesAutocomplete from "react-places-autocomplete";
 import messages from './messages';
+
 
 
 class ClinicRegister extends Component {
@@ -18,11 +19,11 @@ class ClinicRegister extends Component {
     }
 
     componentDidMount() {
-        this.setState({address: '', pincode: '', addressManual: '', landmark: ''})
+        this.setState({ address: '', pincode: '', addressManual: '', landmark: '' })
     }
 
     setManualAddress = e => {
-        this.setState({addressManual: e.target.value});
+        this.setState({ addressManual: e.target.value });
     };
 
 
@@ -30,21 +31,21 @@ class ClinicRegister extends Component {
 
     setManualPincode = e => {
 
-        const {value} = e.target;
+        const { value } = e.target;
         const reg = /^-?\d*(\.\d*)?$/;
         if ((!isNaN(value) && reg.test(value)) || value === '' || value === '-') {
-            this.setState({pincode: e.target.value});
+            this.setState({ pincode: e.target.value });
         }
     };
 
     setManualLandMark = e => {
-        this.setState({landmark: e.target.value});
+        this.setState({ landmark: e.target.value });
     };
 
 
     handleSave = () => {
-        let {address = '', pincode = '', addressManual = '', landmark = ''} = this.state;
-        let {handleOk} = this.props;
+        let { address = '', pincode = '', addressManual = '', landmark = '' } = this.state;
+        let { handleOk } = this.props;
         let manual = addressManual + (landmark ? `,${landmark}` : '') + (pincode ? `,Pincode:${pincode}` : '');
 
         let locationToSave = address ? address : manual;
@@ -60,12 +61,12 @@ class ClinicRegister extends Component {
     }
 
     handleChange = address => {
-        this.setState({address});
+        this.setState({ address });
     };
 
     handleClose = () => {
 
-        const {handleCancel} = this.props;
+        const { handleCancel } = this.props;
 
         handleCancel();
         this.setState({
@@ -82,19 +83,19 @@ class ClinicRegister extends Component {
     }
 
     handleChangeAddress = address => {
-        this.setState({address});
+        this.setState({ address });
     };
 
     handleSelect = address => {
 
-        this.setState({address});
+        this.setState({ address });
     };
 
 
     render() {
-        const {address = '', addressManual = '', pincode = '', landmark = ''} = this.state;
+        const { address = '', addressManual = '', pincode = '', landmark = '' } = this.state;
 
-        const {visible, location} = this.props;
+        const { visible, location } = this.props;
         return (
             <Modal
                 visible={visible}
@@ -118,7 +119,7 @@ class ClinicRegister extends Component {
                         onChange={this.handleChangeAddress}
                         onSelect={this.handleSelect}
                     >
-                        {({getInputProps, suggestions, getSuggestionItemProps, loading}) => (
+                        {({ getInputProps, suggestions, getSuggestionItemProps, loading }) => (
                             <div>
                                 <Input
 
@@ -148,6 +149,8 @@ class ClinicRegister extends Component {
                             </div>
                         )}
                     </PlacesAutocomplete>
+
+
 
 
                     <div className='form-category-headings'>{this.formatMessage(messages.addManually)}</div>
@@ -181,5 +184,4 @@ class ClinicRegister extends Component {
         );
     }
 }
-
 export default injectIntl(ClinicRegister);

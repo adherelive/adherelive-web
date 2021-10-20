@@ -1,3 +1,4 @@
+
 export default class ScheduleEvent {
     constructor(data) {
         this._data = data;
@@ -26,7 +27,7 @@ export default class ScheduleEvent {
     };
 
     getDate = () => {
-        return this._data.get("date");
+      return this._data.get("date");
     };
 
     getStartTime = () => {
@@ -36,6 +37,7 @@ export default class ScheduleEvent {
     getEndTime = () => {
         return this._data.get("end_time");
     };
+
 
     getCriticalValue = () => {
         return this._data.get("critical");

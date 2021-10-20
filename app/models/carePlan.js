@@ -5,8 +5,8 @@ import {TABLE_NAME as patientTableName} from "./patients";
 import {TABLE_NAME as carePlanTemplateTableName} from "./careplanTemplate";
 import {TABLE_NAME as carePlanAppointmentTableName} from "./carePlanAppointments";
 import {TABLE_NAME as carePlanMedicationTableName} from "./carePlanMedications";
-import {TABLE_NAME as userRolesTableName} from "./userRoles";
-import {TABLE_NAME as careplanSecondaryDoctorMappingsTableName} from "./careplanSecondaryDoctorMappings";
+import {TABLE_NAME as userRolesTableName } from "./userRoles";
+import { TABLE_NAME as careplanSecondaryDoctorMappingsTableName } from "./careplanSecondaryDoctorMappings";
 
 export const TABLE_NAME = "care_plans";
 
@@ -59,12 +59,12 @@ export const db = (database) => {
             renew_on: {
                 type: DataTypes.DATE,
             },
-            user_role_id: {
+            user_role_id:{
                 type: DataTypes.INTEGER,
                 allowNull: true,
                 references: {
                     model: {
-                        tableName: userRolesTableName,
+                        tableName: userRolesTableName ,
                     },
                     key: 'id'
                 }
@@ -126,17 +126,19 @@ export const associate = (database) => {
     });
 
     database.models[TABLE_NAME].hasMany(database.models[carePlanAppointmentTableName], {
-        foreignKey: "care_plan_id",
-        sourceKey: "id"
+        foreignKey:"care_plan_id",
+        sourceKey:"id"
     });
 
     database.models[TABLE_NAME].hasMany(database.models[carePlanMedicationTableName], {
-        foreignKey: "care_plan_id",
-        sourceKey: "id"
+        foreignKey:"care_plan_id",
+        sourceKey:"id"
     });
 
     database.models[TABLE_NAME].hasMany(database.models[careplanSecondaryDoctorMappingsTableName], {
-        foreignKey: "care_plan_id",
-        sourceKey: "id"
+        foreignKey:"care_plan_id",
+        sourceKey:"id"
     });
+
+
 };

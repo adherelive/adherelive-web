@@ -1,5 +1,8 @@
 import UserWrapper from "../../app/ApiWrapper/mobile/user";
 import UserRoleWrapper from "../../app/ApiWrapper/mobile/userRoles";
+
+const express = require("express");
+const router = express.Router();
 import mUserRouter from "./user";
 import mAppointmentRouter from "./appointments";
 import mEventRouter from "./events";
@@ -12,6 +15,7 @@ import chartRouter from "./graphs";
 
 import userService from "../../app/services/user/user.service";
 import userRolesService from "../../app/services/userRoles/userRoles.service";
+
 
 import jwt from "jsonwebtoken";
 
@@ -43,75 +47,72 @@ import portionRouter from "./portion";
 import exerciseRouter from "./exercises";
 import workoutRouter from "./workouts";
 
-const express = require("express");
-const router = express.Router();
-
 router.use(async (req, res, next) => {
-    try {
-        let accessToken, userId = null, userRoleId, userRoleData;
-        const {authorization = ""} = req.headers || {};
-        const bearer = authorization.split(" ");
-        if (bearer.length === 2) {
-            accessToken = bearer[1];
-        }
+  try {
+    let accessToken, userId = null, userRoleId, userRoleData;
+    const { authorization = "" } = req.headers || {};
+    const bearer = authorization.split(" ");
+    if (bearer.length === 2) {
+      accessToken = bearer[1];
+    }
 
-        const secret = process.config.TOKEN_SECRET_KEY;
+    const secret = process.config.TOKEN_SECRET_KEY;
 
-        if (accessToken) {
-            const decodedAccessToken = await jwt.verify(accessToken, secret);
-            const {userRoleId: decodedUserRoleId = null} = decodedAccessToken || {};
-            const userRoleDetails = await userRolesService.getSingleUserRoleByData({id: decodedUserRoleId});
-            if (userRoleDetails) {
-                const userRole = await UserRoleWrapper(userRoleDetails);
-                userId = userRole.getUserId();
-                userRoleId = parseInt(decodedUserRoleId);
-                userRoleData = userRole.getBasicInfo();
-            } else {
-                req.userDetails = {
-                    exists: false
-                };
-                next();
-                return;
-            }
-        } else {
-            req.userDetails = {
-                exists: false
-            };
-            next();
-            return;
-        }
-
-        const userData = await userService.getUser(userId);
-        if (userData) {
-            const user = await UserWrapper(userData);
-            const {userCategoryData, userCategoryId} =
-            (await user.getCategoryInfo()) || {};
-            req.userDetails = {
-                exists: true,
-                userRoleId,
-                userRoleData,
-                userId,
-                userData: userData.getBasicInfo,
-                userCategoryData,
-                userCategoryId
-            };
-
-            req.permissions = await user.getPermissions();
-        } else {
-            req.userDetails = {
-                exists: false
-            };
-        }
-        next();
-        return;
-    } catch (err) {
-        console.log("89127381723 err -->", err);
+    if (accessToken) {
+      const decodedAccessToken = await jwt.verify(accessToken, secret);
+      const { userRoleId: decodedUserRoleId = null } = decodedAccessToken || {};
+      const userRoleDetails = await userRolesService.getSingleUserRoleByData({id: decodedUserRoleId});
+      if(userRoleDetails) {
+        const userRole = await UserRoleWrapper(userRoleDetails);
+        userId = userRole.getUserId();
+        userRoleId = parseInt(decodedUserRoleId);;
+        userRoleData = userRole.getBasicInfo();
+      } else {
         req.userDetails = {
-            exists: false
+          exists: false
         };
         next();
         return;
+      }
+    } else {
+      req.userDetails = {
+        exists: false
+      };
+      next();
+      return;
     }
+
+    const userData = await userService.getUser(userId);
+    if (userData) {
+      const user = await UserWrapper(userData);
+      const { userCategoryData, userCategoryId } =
+        (await user.getCategoryInfo()) || {};
+      req.userDetails = {
+        exists: true,
+        userRoleId,
+        userRoleData,
+        userId,
+        userData: userData.getBasicInfo,
+        userCategoryData,
+        userCategoryId
+      };
+
+      req.permissions = await user.getPermissions();
+    } else {
+      req.userDetails = {
+        exists: false
+      };
+    }
+    next();
+    return;
+  } catch (err) {
+    console.log("89127381723 err -->", err);
+    req.userDetails = {
+      exists: false
+    };
+    next();
+    return;
+  }
 });
 
 router.use("/auth", mUserRouter);
@@ -142,13 +143,13 @@ router.use("/transactions", transactionRouter);
 router.use("/accounts", accountsRouter);
 router.use("/features", featuresRouter);
 router.use("/reports", reportRouter);
-router.use("/favourites", userFavourites);
+router.use("/favourites",userFavourites);
 router.use("/adhoc", adhocRouter);
 router.use("/user-roles", userRoles);
-router.use("/food-items", foodItemsRouter);
-router.use("/meal/templates", mealTemplateRouter);
-router.use("/diet", dietRouter);
-router.use("/portions", portionRouter);
+router.use("/food-items",foodItemsRouter);
+router.use("/meal/templates",mealTemplateRouter);
+router.use("/diet",dietRouter);
+router.use("/portions",portionRouter);
 router.use("/exercises", exerciseRouter);
 router.use("/workout", workoutRouter);
 

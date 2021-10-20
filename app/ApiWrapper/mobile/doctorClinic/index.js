@@ -28,7 +28,7 @@ class DoctorClinicWrapper extends BaseDoctorClinic {
 }
 
 export default async (data = null, id = null) => {
-    if (data) {
+    if(data) {
         return new DoctorClinicWrapper(data);
     }
     const doctorClinic = await doctorClinicsService.getClinicById(id);

@@ -4,7 +4,7 @@ import DegreeWrapper from "../../../ApiWrapper/mobile/degree";
 
 import Log from "../../../../libs/log";
 
-const Logger = new Log("MOBILE DEGREE CONTROLLER");
+const Logger  = new Log("MOBILE DEGREE CONTROLLER");
 
 class DegreeController extends Controller {
     constructor() {
@@ -21,9 +21,9 @@ class DegreeController extends Controller {
 
             const degreeDetails = await degreeService.search(value);
 
-            if (degreeDetails.length > 0) {
+            if(degreeDetails.length > 0) {
                 let degreeApiData = {};
-                for (const degree of degreeDetails) {
+                for(const degree of degreeDetails) {
                     const degreeWrapper = await new DegreeWrapper(degree);
                     degreeApiData[degreeWrapper.getDegreeId()] = degreeWrapper.getBasicInfo();
                 }
@@ -41,7 +41,7 @@ class DegreeController extends Controller {
             } else {
                 return raiseClientError(res, 422, {}, `No degree found with name including ${value}`)
             }
-        } catch (error) {
+        } catch(error) {
             Logger.debug("degree search 500 error", error);
             return raiseServerError(res);
         }

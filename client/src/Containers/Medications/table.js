@@ -7,19 +7,17 @@ import {getMedications} from "../../modules/medications";
 import {DRAWER} from "../../constant";
 
 const mapStateToProps = state => {
-    const {
-        medications = {},
-        auth: {auth_role = null} = {},
-        pages: {medication_ids = []} = {}, care_plans = {}, medicines = {}
-    } = state;
+  const {medications = {},
+  auth : { auth_role = null } = {},
+   pages: {medication_ids = []} = {}, care_plans = {},medicines={}} = state;
 
-    return {
-        medications,
-        medication_ids,
-        care_plans,
-        medicines,
-        auth_role
-    };
+  return {
+      medications,
+      medication_ids,
+      care_plans,
+      medicines,
+      auth_role
+  };
 };
 
 const mapDispatchToProps = dispatch => {
@@ -27,7 +25,7 @@ const mapDispatchToProps = dispatch => {
         getPatientMedications: (id) => () => dispatch(getMedications(id)),
         editMedicationDrawer: (payload) => dispatch(open({type: DRAWER.EDIT_MEDICATION, payload})),
         medicationResponseDrawer: (payload) => dispatch(open({type: DRAWER.MEDICATION_RESPONSE_TIMELINE, payload})),
-        getMedications: (id) => dispatch(getMedications(id))
+        getMedications : (id) => dispatch(getMedications(id)) 
 
     };
 };
@@ -48,7 +46,7 @@ const mergeProps = (stateProps, dispatchProps, ownProps) => {
     } = dispatchProps;
 
     const {patientId, carePlanId} = ownProps;
-    const {medication_ids = []} = care_plans[carePlanId];
+    const {medication_ids =[]} = care_plans[carePlanId];
 
     return {
         patientId,

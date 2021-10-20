@@ -49,7 +49,7 @@ class ReportWrapper extends BaseReport {
 
             let uploadDocumentIds = [];
 
-            for (let index = 0; index < documents.length; index++) {
+            for(let index = 0; index < documents.length; index++) {
                 const document = await DocumentWrapper(documents[index]);
                 uploadDocumentIds.push(document.getUploadDocumentId());
             }
@@ -58,7 +58,7 @@ class ReportWrapper extends BaseReport {
                 ...getBasicInfo(),
                 report_document_ids: uploadDocumentIds
             };
-        } catch (error) {
+        } catch(error) {
             Log.debug("getAllInfo error", error);
             throw error;
         }
@@ -74,7 +74,7 @@ class ReportWrapper extends BaseReport {
 
             let uploadDocuments = {};
 
-            for (let index = 0; index < documents.length; index++) {
+            for(let index = 0; index < documents.length; index++) {
                 const document = await DocumentWrapper(documents[index]);
                 uploadDocuments[document.getUploadDocumentId()] = document.getBasicInfo();
             }
@@ -88,7 +88,7 @@ class ReportWrapper extends BaseReport {
                 },
                 report_ids: [getId()]
             };
-        } catch (error) {
+        } catch(error) {
             Log.debug("getReferenceInfo error", error);
             throw error;
         }
@@ -97,13 +97,13 @@ class ReportWrapper extends BaseReport {
 
 export default async ({data = null, id = null}) => {
     try {
-        if (data) {
+        if(data) {
             return new ReportWrapper(data)
         }
         const reportService = new ReportService();
         const reports = await reportService.getReportByData({id});
         return new ReportWrapper(reports);
-    } catch (error) {
+    } catch(error) {
         Log.debug("ReportWrapper catch error", error);
         throw error;
     }

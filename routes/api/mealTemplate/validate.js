@@ -21,7 +21,8 @@ const createMealTemplateSchema = Joi.object({
     })
 });
 
-const updateMealTemplateSchema = Joi.object({
+const updateMealTemplateSchema= Joi.object({
+
     name: Joi.string().max(50).required().messages({
         'string.base': `Template name should be a type of text`,
         'string.empty': `Template name cannot be empty`,
@@ -41,25 +42,26 @@ const updateMealTemplateSchema = Joi.object({
 });
 
 export const create = (req, res, next) => {
-    const {body: data = {}} = req;
+    const { body: data = {} } = req;
     const isValid = createMealTemplateSchema.validate(data, {convert: false});
 
     const {error: {details = []} = {}} = isValid || {};
 
-    if (details.length > 0) {
+    if(details.length > 0) {
         return validationErrorMessage(res, details[0].message);
     } else {
         next();
     }
 };
 
+
 export const update = (req, res, next) => {
-    const {body: data = {}} = req;
+    const { body: data = {} } = req;
     const isValid = updateMealTemplateSchema.validate(data, {convert: false});
 
     const {error: {details = []} = {}} = isValid || {};
 
-    if (details.length > 0) {
+    if(details.length > 0) {
         return validationErrorMessage(res, details[0].message);
     } else {
         next();

@@ -4,7 +4,7 @@ import CollegeWrapper from "../../ApiWrapper/web/college";
 
 import Log from "../../../libs/log";
 
-const Logger = new Log("WEB COLLEGE CONTROLLER");
+const Logger  = new Log("WEB COLLEGE CONTROLLER");
 
 class CollegeController extends Controller {
     constructor() {
@@ -21,9 +21,9 @@ class CollegeController extends Controller {
 
             const collegeDetails = await collegeService.search(value);
 
-            if (collegeDetails.length > 0) {
+            if(collegeDetails.length > 0) {
                 let collegeApiData = {};
-                for (const college of collegeDetails) {
+                for(const college of collegeDetails) {
                     const collegeWrapper = await new CollegeWrapper(college);
                     collegeApiData[collegeWrapper.getCollegeId()] = collegeWrapper.getBasicInfo();
                 }
@@ -41,7 +41,7 @@ class CollegeController extends Controller {
             } else {
                 return raiseClientError(res, 201, {}, `No college found with name including ${value}`)
             }
-        } catch (error) {
+        } catch(error) {
             Logger.debug("college search 500 error", error);
             return raiseServerError(res);
         }

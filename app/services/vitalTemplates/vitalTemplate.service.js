@@ -3,6 +3,7 @@ import Database from "../../../libs/mysql";
 import {TABLE_NAME} from "../../models/vitalTemplates";
 
 class VitalTemplateService {
+
     searchByData = async (data) => {
         try {
             const vitalTemplates = await Database.getModel(TABLE_NAME).findAll({
@@ -13,7 +14,7 @@ class VitalTemplateService {
                 }
             });
             return vitalTemplates;
-        } catch (error) {
+        } catch(error) {
             throw error;
         }
     };
@@ -24,7 +25,7 @@ class VitalTemplateService {
                 where: data
             });
             return vitalTemplates;
-        } catch (error) {
+        } catch(error) {
             throw error;
         }
     };
@@ -34,7 +35,7 @@ class VitalTemplateService {
             return await Database.getModel(TABLE_NAME).findAll({
                 where: data
             });
-        } catch (error) {
+        } catch(error) {
             throw error;
         }
     };

@@ -66,7 +66,7 @@ export const db = (database) => {
                 getBasicInfo() {
                     return {
                         id: this.id,
-                        type: this.type,
+                        type:this.type,
                         details: this.details,
                         activated_on: this.activated_on,
                         expired_on: this.expired_on

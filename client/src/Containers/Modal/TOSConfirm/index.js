@@ -1,12 +1,16 @@
-import {connect} from "react-redux";
-import {withRouter} from "react-router-dom";
+import { connect } from "react-redux";
+import { withRouter } from "react-router-dom";
 import TOSConfirm from "../../../Components/Modal/TOSConfirm";
 import {getTermsAndPolicy} from "../../../modules/otherDetails";
 
 const mapStateToProps = state => {
-    const {} = state;
+    const {
 
-    return {};
+    } = state;
+
+    return {
+
+    };
 };
 
 const mapDispatchToProps = dispatch => {

@@ -1,8 +1,8 @@
 import {
     REQUEST_TYPE
-} from "../../constant";
-import {doRequest} from "../../Helper/network";
-import {fetchRaiseChatNotificationUrl} from "../../Helper/urls/notifications";
+  } from "../../constant";
+  import { doRequest } from "../../Helper/network";
+  import { fetchRaiseChatNotificationUrl } from "../../Helper/urls/notifications";
 
 const ADD_MESSAGE_FOR_CHAT_COMPLETED =
     "ADD_MESSAGE_FOR_CHAT_COMPLETED";
@@ -11,8 +11,8 @@ const CHANNEL = 'channel';
 const intialState = {};
 
 const addMessagesForChat = (state, data) => {
-    const {room_id = '', messages} = data;
-    let {messages: messagesOfRoom = [], messageIds = []} = state[room_id] || {};
+    const { room_id = '', messages } = data;
+    let { messages: messagesOfRoom = [], messageIds = [] } = state[room_id] || {};
     // console.log('3628947832974892348932', room_id, typeof (messages), Object.keys(messages), Object.keys(messages).includes(CHANNEL), messagesOfRoom, messageIds, state);
     if (Object.keys(messages).includes(CHANNEL)) {
         // console.log('3628947832974892348932', room_id, typeof (messages), Object.keys(messages), messagesOfRoom, messageIds, state);
@@ -37,30 +37,30 @@ const addMessagesForChat = (state, data) => {
 
         }
     }
-    state[room_id] = {messages: messagesOfRoom, messageIds};
+    state[room_id] = { messages: messagesOfRoom, messageIds };
     // console.log('3628947832974892348932  last', messagesOfRoom, messageIds, state);
-    return {...state};
+    return { ...state };
 };
 
 export const raiseChatNotification = (payload) => {
     let response = {};
     return async (dispatch) => {
-        try {
-            response = await doRequest({
-                method: REQUEST_TYPE.POST,
-                url: fetchRaiseChatNotificationUrl(),
-                data: payload,
-            });
-
-            const {status, payload: {error = "", data = {}} = {}} =
-            response || {};
-
-        } catch (err) {
-            return {status: false};
-        }
-        return response;
+      try {
+        response = await doRequest({
+          method: REQUEST_TYPE.POST,
+          url: fetchRaiseChatNotificationUrl(),
+          data: payload,
+        });
+  
+        const { status, payload: { error = "", data = {} } = {} } =
+          response || {};
+          
+      } catch (err) {
+        return {status: false};
+      }
+      return response;
     };
-};
+  };
 
 
 export const addMessageOfChat = (room_id, messages) => {
@@ -68,16 +68,15 @@ export const addMessageOfChat = (room_id, messages) => {
         try {
             dispatch({
                 type: ADD_MESSAGE_FOR_CHAT_COMPLETED,
-                payload: {room_id, messages}
+                payload: { room_id, messages }
             });
-        } catch (error) {
-        }
+        } catch (error) { }
     };
 };
 
 
 export default (state = intialState, action) => {
-    const {type, payload = {}} = action;
+    const { type, payload = {} } = action;
     switch (type) {
 
         case ADD_MESSAGE_FOR_CHAT_COMPLETED: {

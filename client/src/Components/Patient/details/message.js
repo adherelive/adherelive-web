@@ -1,4 +1,4 @@
-import {defineMessages} from "react-intl";
+import { defineMessages } from "react-intl";
 
 const messages = defineMessages({
     profile_edit: {
@@ -511,57 +511,57 @@ const messages = defineMessages({
         description: "",
         defaultMessage: "Clinical Notes"
     },
-    diagnosis_type: {
+    diagnosis_type:{
         id: "app.patient_profile.diagnosis.type",
         description: "",
         defaultMessage: "Diagnosis Type"
     },
-    diagnosis_text: {
+    diagnosis_text:{
         id: "app.patient_profile.diagnosis.text",
         description: "",
         defaultMessage: "Diagnosis"
     },
-    symptoms_text: {
+    symptoms_text:{
         id: "app.patient_profile.symptom.text",
         description: "",
         defaultMessage: "Symptoms"
     },
-    edit_patient: {
+    edit_patient:{
         id: "app.patient_profile.edit.patient",
         description: "",
         defaultMessage: "Edit"
     },
-    upload_reports: {
+    upload_reports:{
         id: "app.patient_profile.upload.reports",
         description: "",
         defaultMessage: "Upload Reports"
     },
-    reports: {
+    reports:{
         id: "app.patient_profile.reports",
         description: "",
         defaultMessage: "Reports"
     },
-    food_items: {
+    food_items:{
         id: "app.patient_profile.food.items",
         description: "",
         defaultMessage: "Food Items"
     },
-    diet: {
+    diet:{
         id: "app.patient_profile.diet",
         description: "",
         defaultMessage: "Diet"
     },
-    workout: {
+    workout:{
         id: "app.patient_profile.workout",
         description: "",
         defaultMessage: "Workout"
     },
-    secondary_doctor: {
+    secondary_doctor:{
         id: "app.patient_profile.secondary_doctor",
         description: "",
         defaultMessage: "Doctor"
     },
-    prescription: {
+    prescription:{
         id: "app.patient_profile.prescription",
         description: "",
         defaultMessage: "Prescription"
@@ -570,13 +570,13 @@ const messages = defineMessages({
         id: "app.appointment.table.emptyAppointmentTable",
         description: "",
         defaultMessage: "No Appointment Data added yet"
-    },
+      },
     videoCallBlocked: {
         id: "app.appointment.table.videoCallBlocked",
         description: "",
         defaultMessage:
             "You can not call this user as call feature is blocked for this user."
-    },
+    },  
     edit: {
         id: "app.appointment.table.edit",
         description: "",

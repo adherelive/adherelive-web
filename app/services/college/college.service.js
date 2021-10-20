@@ -3,11 +3,12 @@ import Database from "../../../libs/mysql";
 import {TABLE_NAME} from "../../models/college";
 
 class CollegeService {
+
     getAll = async () => {
         try {
             const college = await Database.getModel(TABLE_NAME).findAll();
             return college;
-        } catch (error) {
+        } catch(error) {
             throw error;
         }
     };
@@ -33,7 +34,7 @@ class CollegeService {
                 where: data
             });
             return college;
-        } catch (error) {
+        } catch(error) {
             throw error;
         }
     };
@@ -44,18 +45,20 @@ class CollegeService {
                 where: data
             });
             return college;
-        } catch (error) {
+        } catch(error) {
             throw error;
         }
     };
 
     create = async data => {
         try {
+
             const college = await Database.getModel(TABLE_NAME).create(
                 data
-            );
-            return college;
-        } catch (error) {
+              );
+              return college;
+
+        } catch(error) {
             throw error;
         }
     };

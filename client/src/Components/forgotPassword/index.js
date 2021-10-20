@@ -1,8 +1,8 @@
-import React, {Component} from "react";
-import {Button, Input, Form, message} from "antd";
+import React, { Component } from "react";
+import { Button, Input, Form, message } from "antd";
 import CompanyIcon from '../../Assets/images/logo3x.png'
 
-const {Item: FormItem} = Form;
+const { Item: FormItem } = Form;
 
 const EMAIL = "email";
 
@@ -11,7 +11,8 @@ const FIELDS = [EMAIL];
 class ForgotPassword extends Component {
     constructor(props) {
         super(props);
-        this.state = {};
+        this.state = {
+        };
     }
 
     async componentDidMount() {
@@ -21,18 +22,18 @@ class ForgotPassword extends Component {
     handleForgotPassword = async e => {
         e.preventDefault();
         const {
-            form: {validateFields},
+            form: { validateFields },
             forgotPassword,
             // match: { path } = {},
             // history
         } = this.props;
-        this.setState({loading: true});
-        validateFields(async (err, {email}) => {
+        this.setState({ loading: true });
+        validateFields(async (err, { email }) => {
             if (!err) {
                 try {
 
-                    const response = await forgotPassword({email});
-                    const {status = false, statusCode, payload: {message: resMessage} = {}} = response;
+                    const response = await forgotPassword({ email });
+                    const { status = false, statusCode, payload: { message: resMessage } = {} } = response;
                     if (status) {
                         message.success(resMessage, 4);
 
@@ -40,13 +41,13 @@ class ForgotPassword extends Component {
                         if (statusCode === 422) {
                             message.error(resMessage, 4);
                         } else {
-                            this.setState({loading: false});
+                            this.setState({ loading: false });
                             message.error(resMessage, 4);
                         }
                     }
                 } catch (err) {
                     console.log("298293 err ----> ", err);
-                    this.setState({loading: false});
+                    this.setState({ loading: false });
                     message.error("Something went wrong, Please try again", 4);
                 }
             } else {
@@ -57,19 +58,16 @@ class ForgotPassword extends Component {
     };
 
     render() {
-        const {
-            form: {
-                getFieldDecorator, isFieldTouched,
-                getFieldError
-            }
-        } = this.props;
+        const { form: { getFieldDecorator, isFieldTouched,
+            getFieldError
+             } } = this.props;
         let fieldsError = {};
         FIELDS.forEach(value => {
             const error = isFieldTouched(value) && getFieldError(value);
-            fieldsError = {...fieldsError, [value]: error};
+            fieldsError = { ...fieldsError, [value]: error };
         });
-        const {handleForgotPassword} = this;
-
+        const { handleForgotPassword } = this;
+       
         return (
             <div className="wp100 landing-background flex direction-column justify-center align-center">
 
@@ -77,7 +75,7 @@ class ForgotPassword extends Component {
                     <div className="mt40 wp100 mt24 flex justify-space-between align-center direction-row ">
 
                         <div className="flex direction-row align-center">
-                            <img alt="" src={CompanyIcon} className='company-logo'/>
+                            <img alt="" src={CompanyIcon} className='company-logo' />
                             <div className='text-white fs28 medium italic'>Adhere.Live</div>
                         </div>
 
@@ -89,7 +87,7 @@ class ForgotPassword extends Component {
                         <div className="form-container-forgot">
                             <div className="mb8 fs24 fw600 pt20 flex direction-column tal">
                                 Forgot Password
-                            </div>
+                    </div>
 
                             <Form onSubmit={handleForgotPassword} className="login-form">
                                 <FormItem
@@ -120,16 +118,16 @@ class ForgotPassword extends Component {
 
 
                                 {/* <div classname='fs12 medium dark-sky-blue mt4 tar'>Forgot Password?</div> */}
-                                <FormItem>
+                                <FormItem >
                                     <Button
                                         type="primary"
                                         className="wp100 h40 mt28"
                                         htmlType="submit"
                                         size={"large"}
-                                        // loading={loading}
+                                    // loading={loading}
                                     >
                                         Submit
-                                    </Button>
+                            </Button>
                                     <div className="flex justify-space-between direction-column mt10 align-end">
 
                                     </div>

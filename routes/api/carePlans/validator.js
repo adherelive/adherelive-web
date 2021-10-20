@@ -14,14 +14,14 @@ const templateCreateCarePlanForm = Joi.object().keys({
     name: Joi.string().when('createTemplate', {
         is: Joi.boolean().valid(true),
         then: Joi.string().trim().required().messages({
-            'string.empty': "Template name cannot be empty"
+            'string.empty' : "Template name cannot be empty"
         }),
         otherwise: Joi.string().optional().allow("")
     }),
 });
 
 export const validateCreateCarePlanFromTemplate = (req, res, next) => {
-    const {body: data = {}} = req;
+    const { body: data = {} } = req;
     const isValid = templateCreateCarePlanForm.validate(data);
     if (isValid && isValid.error != null) {
         return validationError(res, isValid);

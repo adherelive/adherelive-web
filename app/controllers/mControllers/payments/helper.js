@@ -5,27 +5,27 @@ export const getFormattedData = (data = {}) => {
 
     let updatedPaymentProducts = [];
     payment_products.forEach(product => {
-        const {name, type, amount, id, razorpay_link = ''} = product || {};
+        const {name, type, amount, id , razorpay_link='' } = product || {};
 
         let details = {};
 
-        if (!isEmpty(id)) {
+        if(!isEmpty(id)) {
             details.id = id;
         }
 
-        if (!isEmpty(name)) {
+        if(!isEmpty(name)) {
             details.name = name;
         }
 
-        if (!isEmpty(type)) {
+        if(!isEmpty(type)) {
             details.type = type;
         }
 
-        if (!isEmpty(amount)) {
+        if(!isEmpty(amount)) {
             details.amount = amount;
         }
 
-        details.razorpay_link = razorpay_link;
+        details.razorpay_link=razorpay_link;
 
         updatedPaymentProducts.push(details);
     });

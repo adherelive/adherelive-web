@@ -7,7 +7,7 @@ class ChatObserver {
     }
 
     execute = (typeStatus, details) => {
-        switch (typeStatus) {
+        switch(typeStatus) {
             case MESSAGE_TYPES.USER_MESSAGE:
                 return new UserMessageJob(details);
             case MESSAGE_TYPES.BOT_MESSAGE:

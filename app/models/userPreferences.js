@@ -52,5 +52,5 @@ export const associate = (database) => {
     database.models[TABLE_NAME].belongsTo(database.models[userRoleTableName], {
         foreignKey: "user_role_id",
         targetKey: "id"
-    });
+     });
 };

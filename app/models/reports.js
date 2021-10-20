@@ -1,5 +1,5 @@
 "use strict";
-import {DataTypes} from "sequelize";
+import { DataTypes } from "sequelize";
 import {TABLE_NAME as patientTableName} from "./patients";
 import {USER_CATEGORY} from "../../constant";
 

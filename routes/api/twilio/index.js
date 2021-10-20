@@ -4,19 +4,19 @@ import Authenticate from "../middleware/auth";
 import twilioController from "../../../app/controllers/twilio/twilio.controller";
 
 router.get(
-    "/getTwilioVideoAccessToken",
-    twilioController.generateTwilioVideoAccessToken
+  "/getTwilioVideoAccessToken",
+  twilioController.generateTwilioVideoAccessToken
 );
 
 router.get(
-    "/getTwilioChatAccessToken",
-    Authenticate,
-    twilioController.generateTwilioChatAccessToken
+  "/getTwilioChatAccessToken",
+  Authenticate,
+  twilioController.generateTwilioChatAccessToken
 );
 
 router.get(
-    "/getConnectedParticipants/:roomId",
-    twilioController.getConnectedParticipants
+  "/getConnectedParticipants/:roomId",
+  twilioController.getConnectedParticipants
 );
 
 // router.delete(

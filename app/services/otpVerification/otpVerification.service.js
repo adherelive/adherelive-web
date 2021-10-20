@@ -4,18 +4,19 @@ import Database from "../../../libs/mysql";
 import {TABLE_NAME} from "../../models/otpVerifications";
 
 class OtpVerificationService {
+
     create = async (data) => {
         try {
             const otpDetails = await Database.getModel(TABLE_NAME).create(data);
             return otpDetails;
-        } catch (error) {
+        } catch(error) {
             throw error;
         }
     };
 
     getOtpByData = async (data) => {
         try {
-            const {otp, user_id} = data; //otp,
+            const { otp, user_id} = data; //otp,
             const otpDetails = await Database.getModel(TABLE_NAME).findAll({
                 limit: 1,
                 where: {
@@ -27,7 +28,7 @@ class OtpVerificationService {
                 },
             });
             return otpDetails;
-        } catch (error) {
+        } catch(error) {
             throw error;
         }
     };
@@ -41,7 +42,7 @@ class OtpVerificationService {
                 },
             });
             return otpDetails;
-        } catch (error) {
+        } catch(error) {
             throw error;
         }
     };

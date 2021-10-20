@@ -1,3 +1,4 @@
+
 export default class DoctorPatientWatchlist {
     constructor(data) {
         this._data = data;
@@ -26,4 +27,5 @@ export default class DoctorPatientWatchlist {
     getDeletedAt = () => {
         return this._data.get("deleted_at");
     }
+
 }

@@ -1,7 +1,7 @@
 export default class DietResponses {
 
-    constructor(data) {
-        this._data = data;
+    constructor(data){
+        this._data=data;
     }
 
     getId = () => {

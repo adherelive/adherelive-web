@@ -3,7 +3,6 @@ import Logger from "../../../libs/log";
 import fetch from "node-fetch";
 
 const Log = new Logger("NOTIFICATION_SDK > PUSH_APP");
-
 // Log.filename("NOTIFICATION_SDK > PUSH_APP");
 
 class PushNotification {
@@ -11,7 +10,7 @@ class PushNotification {
     }
 
     notify = (templates = []) => {
-        for (const template of templates) {
+        for(const template of templates) {
             Log.debug("templates push app--> ", template);
             this.sendPushNotification(template);
         }
@@ -35,19 +34,19 @@ class PushNotification {
             };
 
             const https = require("https");
-            const req = https.request(options, function (res) {
-                res.on("data", function (data) {
+            const req = https.request(options, function(res) {
+                res.on("data", function(data) {
                     console.log("Response:", template);
-                    console.log("Data:", data);
+                    console.log("Data:",data);
                 });
 
-                res.on("error", function (err) {
+                res.on("error", function(err) {
                     console.log("ERROR: in listening in push notification");
-                    console.log("err:", err);
+                    console.log("err:",err);
                 });
             });
 
-            req.on("error", function (e) {
+            req.on("error", function(e) {
                 console.log("ERROR in sending push notification:");
                 console.log(e);
             });

@@ -1,13 +1,13 @@
 import {connect} from "react-redux";
 import {withRouter} from "react-router-dom";
 import WorkoutTimeline from "../../Components/Workouts/timeline";
-import {getWorkoutTimeline} from "../../modules/workouts";
+import { getWorkoutTimeline } from "../../modules/workouts";
 
 const mapStateToProps = state => {
     const {
         workouts = {},
         schedule_events = {},
-        pages: {workout_response_ids = []} = {},
+        pages : { workout_response_ids = [] } = {},
         workout_responses = {}
     } = state;
 
@@ -21,7 +21,7 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => {
     return {
-        getWorkoutTimeline: (id) => dispatch(getWorkoutTimeline(id)),
+        getWorkoutTimeline: (id)  => dispatch(getWorkoutTimeline(id)),
     };
 };
 

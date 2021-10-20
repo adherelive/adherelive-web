@@ -11,7 +11,7 @@ const Logger = new Log(FILE_NAME);
 
 class MobileMedicineController extends Controller {
     constructor() {
-        super();
+      super();
     }
 
     searchMedicine = async (req, res) => {
@@ -25,33 +25,35 @@ class MobileMedicineController extends Controller {
 
             let medicineApiDetails = {};
 
-            if (allMedicine.length > 0) {
-                for (const medicine of allMedicine) {
+            if(allMedicine.length > 0) {
+                for(const medicine of allMedicine) {
                     const medicineApiWrapper = await MedicineApiWrapper(medicine);
                     medicineApiDetails[medicineApiWrapper.getMedicineId()] = medicineApiWrapper.getBasicInfo();
                 }
             } else {
+                
             }
 
             return raiseSuccess(res, 200, {...medicineApiDetails}, "medicine data fetched successfully");
-        } catch (error) {
+        } catch(error) {
             // Logger.debug("500 error", error);
             return raiseServerError(res, 500, {}, error.message);
         }
     };
 
-    addMedicine = async (req, res) => {
+
+    addMedicine = async(req, res) => {
         const {raiseServerError, raiseSuccess} = this;
-        try {
-            const {body = {}, userDetails = {}} = req;
+        try{
+            const { body = {}, userDetails = {}} = req;
 
             const algoliaService = new AlgoliaService()
 
             const {
-                userCategoryData: {basic_info: {id: categoryId = null} = {}} = {}
-            } = userDetails || {};
+                userCategoryData: { basic_info: { id: categoryId = null } = {} } = {}
+              } = userDetails || {};
 
-            const {name = "", type = ""} = body;
+            const { name = "", type = "" } = body;
 
             const new_medicine_data = {
                 name,
@@ -60,24 +62,22 @@ class MobileMedicineController extends Controller {
                 type,
                 public_medicine: false
             }
-
+ 
             const medicineDetails = await medicineService.add(new_medicine_data)
-            let medicineApiDetails = {};
+            let medicineApiDetails= {};
 
-            if (medicineDetails) {
+            if(medicineDetails) {
                 const medicine_id = medicineDetails.get("id");
                 const response = algoliaService.addNewMedicineData(medicine_id);
-                medicineApiDetails = await MedicineApiWrapper(null, medicine_id)
+                medicineApiDetails =  await MedicineApiWrapper(null, medicine_id)
             }
 
-            return raiseSuccess(res, 200,
-                {
-                    medicines: {[medicineApiDetails.getMedicineId()]: medicineApiDetails.getBasicInfo()},
-                    medicine_ids: [medicineApiDetails.getMedicineId()]
-                },
+            return raiseSuccess(res, 200, 
+                {medicines: {[medicineApiDetails.getMedicineId()]: medicineApiDetails.getBasicInfo()},
+                 medicine_ids: [medicineApiDetails.getMedicineId()]}, 
                 "New medicine added successfully.");
-
-        } catch (error) {
+            
+        } catch(error) {
             Logger.debug("500 addMedicine error", error);
             return raiseServerError(res, 500, {}, error.message);
         }

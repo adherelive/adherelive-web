@@ -16,11 +16,13 @@ router.get(
     Diet.getAllDietsForDoctor
 );
 
+
 router.get(
     "/:id/timeline",
     Authenticate,
     Diet.getDietResponseTimeline
 );
+
 
 router.get(
     "/details/patients/:patient_id",
@@ -69,5 +71,7 @@ router.delete(
 //     Authenticate,
 //     Diet.update
 // );
+
+
 
 module.exports = router;

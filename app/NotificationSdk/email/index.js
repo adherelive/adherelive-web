@@ -5,7 +5,7 @@ class EmailNotification {
     }
 
     notify = (templates = []) => {
-        for (const template of templates) {
+        for(const template of templates) {
             EventExecutor.sendEmail(template);
         }
     }

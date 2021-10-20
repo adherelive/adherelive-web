@@ -11,14 +11,14 @@ class MedicationTimelineDrawer extends Component {
     }
 
     onClose = () => {
-        const {close} = this.props;
+        const { close } = this.props;
         close();
     };
 
     drawerTitle = () => {
-        const {medications, id, medicines} = this.props;
-        const {basic_info: {details: {medicine_id = ""} = {}} = {}} = medications[id] || {};
-        const {basic_info: {name = ''} = {}} = medicines[medicine_id] || {};
+        const {medications, id,medicines} = this.props;
+        const {basic_info: {details:{medicine_id = "" } = {} } = {}} = medications[id] || {};   
+        const {basic_info : {name = '' } = {}} = medicines[medicine_id] || {};
         return name;
     }
 
@@ -43,10 +43,10 @@ class MedicationTimelineDrawer extends Component {
                     position: "sticky",
                     zIndex: "9999",
                     top: "0px",
-                    display: "flex",
-                    justifyContent: "flex-start",
-                    alignItems: "flex-start",
-                    width: "100%",
+                    display:"flex",
+                    justifyContent:"flex-start",
+                    alignItems:"flex-start",
+                    width:"100%",
                 }}
             >
                 <MedicationTimeline {...this.props}/>

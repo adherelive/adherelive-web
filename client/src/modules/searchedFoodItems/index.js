@@ -1,11 +1,11 @@
-import {doRequest} from "../../Helper/network";
+import { doRequest } from "../../Helper/network";
 import {REQUEST_TYPE} from "../../constant";
-import {searchFoodUrl} from "../../Helper/urls/foodItems";
-import {ADD_FOOD_ITEM_COMPLETED, EDIT_FOOD_ITEM_COMPLETED} from "../foodItems";
-
+import { searchFoodUrl } from "../../Helper/urls/foodItems";
+import { ADD_FOOD_ITEM_COMPLETED , EDIT_FOOD_ITEM_COMPLETED} from "../foodItems";
 export const SEARCH_FOOD_START = "SEARCH_FOOD_START";
 export const SEARCH_FOOD_COMPLETED = "SEARCH_FOOD_COMPLETED";
 export const SEARCH_FOOD_FAILED = "SEARCH_FOOD_FAILED";
+
 
 
 export const searchFood = value => {
@@ -18,7 +18,7 @@ export const searchFood = value => {
             });
 
             const {status, payload: {data, message = ""} = {}} = response || {};
-            if (status === true) {
+            if(status === true) {
                 dispatch({
                     type: SEARCH_FOOD_COMPLETED,
                     data,
@@ -29,7 +29,7 @@ export const searchFood = value => {
                     message
                 });
             }
-        } catch (error) {
+        } catch(error) {
             console.log("SEARCH FOOD MODULE catch error -> ", error);
         }
         return response;
@@ -38,40 +38,40 @@ export const searchFood = value => {
 
 
 function searchFoodItemReducer(state, data) {
-    let {food_items = {}} = data || {};
-    if (food_items) {
+    let { food_items = {} } = data || {};
+    if(food_items ) {
         return {
             ...food_items
         };
-
+    
     } else {
         return state;
     }
 }
 
 function addedNewItemDetailReducer(state, data) {
-    let {food_items = {}} = data || {};
-    if (food_items) {
+    let { food_items = {} } = data || {};
+    if(food_items ) {
         return {
             ...state,
             ...food_items
         };
-
+    
     } else {
         return state;
     }
 }
 
 export default (state = {}, action) => {
-    const {type, data} = action || {};
-    switch (type) {
-        case SEARCH_FOOD_COMPLETED:
-            return searchFoodItemReducer(state, data);
-        case ADD_FOOD_ITEM_COMPLETED:
-            return addedNewItemDetailReducer(state, data);
-        case EDIT_FOOD_ITEM_COMPLETED:
-            return addedNewItemDetailReducer(state, data);
-        default:
-            return state;
-    }
+  const { type, data } = action || {};
+  switch (type) {
+    case SEARCH_FOOD_COMPLETED:
+        return searchFoodItemReducer(state, data);
+    case ADD_FOOD_ITEM_COMPLETED:
+        return addedNewItemDetailReducer(state, data);     
+    case EDIT_FOOD_ITEM_COMPLETED:
+        return addedNewItemDetailReducer(state, data);     
+    default:
+        return state;
+  }
 };

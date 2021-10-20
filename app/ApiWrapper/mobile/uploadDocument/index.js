@@ -30,7 +30,7 @@ class MobileUploadDocumentWrapper extends BaseUploadDocument {
 }
 
 export default async (data = null, id = null) => {
-    if (data) {
+    if(data) {
         return new MobileUploadDocumentWrapper(data);
     }
     const doctor = await uploadDocumentService.getDocumentById({id});

@@ -2,6 +2,7 @@
 import {DataTypes} from "sequelize";
 import {CURRENCY, REPEAT_TYPE, USER_CATEGORY} from "../../constant";
 
+
 export const PRODUCT_PLANS = "product_plans";
 
 export const db = (database) => {
@@ -48,12 +49,12 @@ export const db = (database) => {
                 getBasicInfo() {
                     return {
                         id: this.id,
-                        provider_id: this.provider_id,
-                        description: this.description,
-                        provider_type: this.provider_type,
-                        subscription_charge: this.subscription_charge,
-                        currency: this.currency,
-                        billing_cycle: this.billing_cycle,
+                        provider_id:this.provider_id,
+                        description:this.description,
+                        provider_type:this.provider_type,
+                        subscription_charge:this.subscription_charge,
+                        currency:this.currency,
+                        billing_cycle:this.billing_cycle,
                     };
                 }
             }
@@ -63,5 +64,6 @@ export const db = (database) => {
 
 export const associate = (database) => {
     // const {TABLE_NAME} = database.models || {};
+
     // associations here (if any) ...
 };

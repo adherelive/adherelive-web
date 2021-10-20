@@ -8,7 +8,7 @@ import {DRAWER} from "../../constant";
 
 const mapStateToProps = state => {
     const {
-        drawer: {visible, data: {type, payload: {id, loading} = {}} = {}},
+        drawer: { visible, data: { type, payload : {id, loading} = {} } = {} },
         vitals = {},
         vital_templates = {},
         schedule_events = {}

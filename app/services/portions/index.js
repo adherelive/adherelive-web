@@ -1,4 +1,4 @@
-export default class Portion {
+export default class Portion{
     constructor(data) {
         this._data = data;
     }
@@ -10,4 +10,5 @@ export default class Portion {
     getName = () => {
         return this._data.name;
     };
+    
 }

@@ -6,7 +6,7 @@ export const algoliaSearchHelper = async (input = ' ') => {
     const index = algoliaClient.initIndex(config.algolia.medicine_index);
     const response = await index.search(input);
     // console.log("38926745237469732084",{input,response});
-    const {hits = {}} = response;
-    return hits;
+    const {hits={}}=response;
+    return  hits;
 
 }

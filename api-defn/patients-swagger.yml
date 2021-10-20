@@ -19,7 +19,7 @@ info:
      |**429 Too Many Requests**      | The user has sent too many requests beyond the throttling limit. | 
      |**500 Internal Server Error**  | An unexpected internal error occurred.                           | 
      |**503 Service Unavailable**    | The service is temporarily unavailable.                          | 
-
+     
   termsOfService: 'http://adhere.live/terms/'
   contact:
     email: info@adhere.live
@@ -293,7 +293,7 @@ paths:
               format: date-time
               description: The UTC date/time at which the current rate limit window resets.
           schema:
-            $ref: '#/definitions/Patient'
+            $ref: '#/definitions/Patient'          
         '400':
           description: Invalid ID supplied
         '404':

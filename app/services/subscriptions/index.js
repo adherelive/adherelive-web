@@ -8,7 +8,7 @@ export default class Subscriptions {
     };
 
     getSubscriberType = () => {
-        return this._data.subscriber_type;
+      return this._data.subscriber_type;
     };
 
     getSubscriberId = () => {

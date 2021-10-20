@@ -12,7 +12,7 @@ class PortionServiceService {
                 where: data
             });
             return portion;
-        } catch (error) {
+        } catch(error) {
             throw error;
         }
     };
@@ -21,7 +21,7 @@ class PortionServiceService {
         try {
             const portions = await Database.getModel(TABLE_NAME).findAll();
             return portions;
-        } catch (error) {
+        } catch(error) {
             throw error;
         }
     };
@@ -42,4 +42,4 @@ class PortionServiceService {
     };
 }
 
-export default PortionServiceService;
+export default  PortionServiceService;

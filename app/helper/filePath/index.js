@@ -9,32 +9,32 @@
 import minioService from "../../services/minio/minio.service";
 
 export const completePath = (path) => {
-    // return path
-    //   ? `${process.config.minio.MINIO_S3_HOST}/${process.config.minio.MINIO_BUCKET_NAME}${path}`
-    //   : null;
+  // return path
+  //   ? `${process.config.minio.MINIO_S3_HOST}/${process.config.minio.MINIO_BUCKET_NAME}${path}`
+  //   : null;
 
-    if (path) {
-        return minioService.getSignedUrl(path);
-    }
-    return null;
+  if (path) {
+    return minioService.getSignedUrl(path);
+  }
+  return null;
 };
 
 export const getFilePath = (url) => {
-    // return url && url.split(process.config.minio.MINIO_BUCKET_NAME).length > 1
-    //   ? url.split(process.config.minio.MINIO_BUCKET_NAME)[1]
-    //   : null;
+  // return url && url.split(process.config.minio.MINIO_BUCKET_NAME).length > 1
+  //   ? url.split(process.config.minio.MINIO_BUCKET_NAME)[1]
+  //   : null;
 
-    if (url) {
-        // for S3
-        const decodedUrl = decodeURI(url);
-        const s3Url = decodedUrl.split("?")[0] || null;
+  if (url) {
+    // for S3
+    const decodedUrl = decodeURI(url);
+    const s3Url = decodedUrl.split("?")[0] || null;
 
-        if (s3Url) {
-            return s3Url && s3Url.split(process.config.minio.MINIO_S3_HOST).length > 1
-                ? s3Url.split(process.config.minio.MINIO_S3_HOST)[1]
-                : null;
-        }
+    if (s3Url) {
+      return s3Url && s3Url.split(process.config.minio.MINIO_S3_HOST).length > 1
+        ? s3Url.split(process.config.minio.MINIO_S3_HOST)[1]
+        : null;
     }
+  }
 
-    return null;
+  return null;
 };

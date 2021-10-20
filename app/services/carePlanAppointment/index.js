@@ -1,3 +1,4 @@
+
 export default class CarePlanAppointment {
     constructor(data) {
         this._data = data;

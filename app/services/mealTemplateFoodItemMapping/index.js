@@ -1,6 +1,7 @@
 export default class MealTemplateFoodItemMapping {
-    constructor(data) {
-        this._data = data;
+
+    constructor(data){
+        this._data=data;
     }
 
     getId = () => {
@@ -18,4 +19,5 @@ export default class MealTemplateFoodItemMapping {
     getFoodItemDetailId = () => {
         return this._data.food_item_detail_id;
     }
+    
 }

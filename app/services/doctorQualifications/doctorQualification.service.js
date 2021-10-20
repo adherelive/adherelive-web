@@ -2,19 +2,18 @@ import Database from "../../../libs/mysql";
 import {TABLE_NAME} from "../../models/doctorQualifications";
 
 class DoctorQualificationService {
-    constructor() {
-    }
+    constructor() {}
 
     addQualification = async data => {
         const transaction = await Database.initTransaction();
-        try {
-            const doctorQualification = await Database.getModel(TABLE_NAME).create(data, {transaction});
-            await transaction.commit();
-            return doctorQualification;
-        } catch (error) {
-            await transaction.rollback();
-            throw error;
-        }
+      try {
+          const doctorQualification = await Database.getModel(TABLE_NAME).create(data, {transaction});
+          await transaction.commit();
+          return doctorQualification;
+      } catch(error) {
+          await transaction.rollback();
+          throw error;
+      }
     };
 
     getQualificationsByDoctorId = async doctor_id => {
@@ -22,42 +21,43 @@ class DoctorQualificationService {
             const doctorQualification = await Database.getModel(TABLE_NAME).findAll({
                 where: {
                     doctor_id,
-                    deleted_at: null
+                    deleted_at:null
                 }
             });
             return doctorQualification;
-        } catch (error) {
+        } catch(error) {
             throw error;
         }
     };
+
 
     getQualificationById = async id => {
         try {
             const doctorQualification = await Database.getModel(TABLE_NAME).findOne({
                 where: {
                     id,
-                    deleted_at: null
+                    deleted_at:null
                 }
             });
             return doctorQualification;
-        } catch (error) {
+        } catch(error) {
             throw error;
         }
     };
 
-    updateQualification = async (data, id) => {
+    updateQualification = async (data,id) => {
         const transaction = await Database.initTransaction();
         try {
-            const doctorQualification = await Database.getModel(TABLE_NAME).update(data, {
+            const doctorQualification = await Database.getModel(TABLE_NAME).update(data,{
                 where: {
                     id,
-                    deleted_at: null
+                    deleted_at:null
                 },
                 transaction
             });
             await transaction.commit();
             return doctorQualification;
-        } catch (error) {
+        } catch(error) {
             await transaction.rollback();
             throw error;
         }
@@ -68,16 +68,16 @@ class DoctorQualificationService {
             const doctorQualification = await Database.getModel(TABLE_NAME).findAll({
                 where: {
                     doctor_id,
-                    deleted_at: null
+                    deleted_at:null
                 }
             });
             return doctorQualification;
-        } catch (error) {
+        } catch(error) {
             throw error;
         }
     };
 
-    getQualificationByData = async (doctor_id, degree, college, year) => {
+    getQualificationByData = async (doctor_id,degree,college,year)=> {
         try {
             const doctorQualification = await Database.getModel(TABLE_NAME).findOne({
                 where: {
@@ -85,14 +85,16 @@ class DoctorQualificationService {
                     degree,
                     college,
                     year,
-                    deleted_at: null
+                    deleted_at:null
                 }
             });
             return doctorQualification;
-        } catch (error) {
+        } catch(error) {
             throw error;
         }
     };
+
+   
 }
 
 export default new DoctorQualificationService();

@@ -40,71 +40,71 @@ class ReportWrapper extends BaseReport {
     };
 
     getAllInfo = async () => {
-        const {getBasicInfo, getId} = this;
-        try {
-            const documents = await uploadDocumentService.getAllByData({
-                parent_id: getId(),
-                parent_type: DOCUMENT_PARENT_TYPE.REPORT
-            }) || [];
+      const {getBasicInfo, getId} = this;
+      try {
+          const documents = await uploadDocumentService.getAllByData({
+              parent_id: getId(),
+              parent_type: DOCUMENT_PARENT_TYPE.REPORT
+          }) || [];
 
-            let uploadDocumentIds = [];
+          let uploadDocumentIds = [];
 
-            for (let index = 0; index < documents.length; index++) {
-                const document = await DocumentWrapper(documents[index]);
-                uploadDocumentIds.push(document.getUploadDocumentId());
-            }
+          for(let index = 0; index < documents.length; index++) {
+              const document = await DocumentWrapper(documents[index]);
+              uploadDocumentIds.push(document.getUploadDocumentId());
+          }
 
-            return {
-                ...getBasicInfo(),
-                report_document_ids: uploadDocumentIds
-            };
-        } catch (error) {
-            Log.debug("getAllInfo error", error);
-            throw error;
-        }
+          return {
+              ...getBasicInfo(),
+              report_document_ids: uploadDocumentIds
+          };
+      } catch(error) {
+          Log.debug("getAllInfo error", error);
+          throw error;
+      }
     };
 
     getReferenceInfo = async () => {
-        const {getAllInfo, getId} = this;
-        try {
-            const documents = await uploadDocumentService.getAllByData({
-                parent_id: getId(),
-                parent_type: DOCUMENT_PARENT_TYPE.REPORT
-            }) || [];
+      const {getAllInfo, getId} = this;
+      try {
+          const documents = await uploadDocumentService.getAllByData({
+              parent_id: getId(),
+              parent_type: DOCUMENT_PARENT_TYPE.REPORT
+          }) || [];
 
-            let uploadDocuments = {};
+          let uploadDocuments = {};
 
-            for (let index = 0; index < documents.length; index++) {
-                const document = await DocumentWrapper(documents[index]);
-                uploadDocuments[document.getUploadDocumentId()] = document.getBasicInfo();
-            }
+          for(let index = 0; index < documents.length; index++) {
+              const document = await DocumentWrapper(documents[index]);
+              uploadDocuments[document.getUploadDocumentId()] = document.getBasicInfo();
+          }
 
-            return {
-                reports: {
-                    [getId()]: await getAllInfo(),
-                },
-                upload_documents: {
-                    ...uploadDocuments
-                },
-                report_id: getId()
-            };
-        } catch (error) {
-            Log.debug("getReferenceInfo error", error);
-            throw error;
-        }
+          return {
+              reports: {
+                  [getId()]: await getAllInfo(),
+              },
+              upload_documents: {
+                  ...uploadDocuments
+              },
+              report_id: getId()
+          };
+      } catch(error) {
+          Log.debug("getReferenceInfo error", error);
+          throw error;
+      }
     };
 }
 
 export default async ({data = null, id = null}) => {
-    try {
-        if (data) {
-            return new ReportWrapper(data)
-        }
-        const reportService = new ReportService();
-        const reports = await reportService.getReportByData({id});
-        return new ReportWrapper(reports);
-    } catch (error) {
-        Log.debug("ReportWrapper catch error", error);
-        throw error;
-    }
+  try {
+      if(data) {
+          return new ReportWrapper(data)
+      }
+      const reportService = new ReportService();
+      const reports = await reportService.getReportByData({id});
+      return new ReportWrapper(reports);
+  } catch(error) {
+    Log.debug("ReportWrapper catch error", error);
+    throw error;
+  }
 };

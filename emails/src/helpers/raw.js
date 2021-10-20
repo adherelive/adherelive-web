@@ -5,6 +5,6 @@
  * {{ this }} code won't be parsed.
  * {{{{/raw}}}}
  */
-module.exports = function (content) {
-    return content.fn();
+module.exports = function(content) {
+  return content.fn();
 };

@@ -4,20 +4,20 @@ import Authenticate from "../middlewares/auth";
 
 import mDoctorController from "../../../app/controllers/mControllers/doctors/doctor.controller";
 import mFeatureController from "../../../app/controllers/mControllers/features/features.controller";
-import {isDoctor} from "../middlewares/doctor";
+import { isDoctor } from "../middlewares/doctor";
 
 router.post(
-    "/toggleChatMessagePermission/:patient_id",
-    Authenticate,
-    isDoctor,
-    mDoctorController.toggleChatMessagePermission
+  "/toggleChatMessagePermission/:patient_id",
+  Authenticate,
+  isDoctor,
+  mDoctorController.toggleChatMessagePermission
 );
 
 router.post(
-    "/toggleVideoCallPermission/:patient_id",
-    Authenticate,
-    isDoctor,
-    mDoctorController.toggleVideoCallPermission
+  "/toggleVideoCallPermission/:patient_id",
+  Authenticate,
+  isDoctor,
+  mDoctorController.toggleVideoCallPermission
 );
 
 router.get("/", Authenticate, mFeatureController.getAllFeaturesMappingForUser);

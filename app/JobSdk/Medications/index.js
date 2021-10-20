@@ -8,12 +8,12 @@ export default class MedicationJob {
     };
 
     getUsers = () => {
-        const {participants = []} = this._data || {};
+        const { participants = [] } = this._data || {};
         return participants;
     };
 
     isCritical = () => {
-        const {critical = false} = this._data || {};
+        const { critical = false } = this._data || {};
         return critical;
     };
 }
