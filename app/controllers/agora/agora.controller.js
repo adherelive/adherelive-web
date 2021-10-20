@@ -8,7 +8,6 @@ import {
 
 import Logger from "../../../libs/log";
 
-
 import AgoraJob from "../../JobSdk/Agora/observer";
 import NotificationSdk from "../../NotificationSdk";
 

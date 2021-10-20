@@ -191,7 +191,6 @@ class CarePlanWrapper extends BaseCarePlan {
   };
 }
 
-
 export default async (data = null, id = null) => {
   if (data) {
     return new CarePlanWrapper(data);

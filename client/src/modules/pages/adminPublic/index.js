@@ -1,9 +1,8 @@
-import {MAP_MEDICINE_TO_PUBLIC, GET_PUBLIC_MEDICINES_COMPLETED, DELETE_MEDICINE_COMPLETED} from "../../medicines";
+import { MAP_MEDICINE_TO_PUBLIC, GET_PUBLIC_MEDICINES_COMPLETED, DELETE_MEDICINE_COMPLETED } from "../../medicines";
 
 const PUBLIC = "public";
 
-
- function getPublicAdminMedicinesReducer(state, data) {
+function getPublicAdminMedicinesReducer(state, data) {
      const {offset=0,medicines,type=''} = data || {};
      const public_medicines =  {...state,[offset]: medicines};
 
@@ -14,10 +13,9 @@ const PUBLIC = "public";
      }else{
          return state;
      }
- } 
+} 
 
-
- function mapMedicineToPublicReducer(state, data) {
+function mapMedicineToPublicReducer(state, data) {
      const {medicine} = data || {};
      if(medicine){
          const {["0"]:existing , ...rest} = state;
@@ -28,10 +26,9 @@ const PUBLIC = "public";
      }else{
          return state;
      }   
- }
+}
 
-
- function deleteMedicineReducer(state,data){
+function deleteMedicineReducer(state,data){
     const {medicine_id , offset = null} = data || {};
     if(medicine_id){
         const {[medicine_id.toString()]:medicine , ...rest} =  state[offset] || {};
@@ -47,12 +44,10 @@ const PUBLIC = "public";
         }
     } else {
         return state;
-    }
-  
+    }  
 }
- 
-  
-  export default (state = [], action) => {
+
+export default (state = [], action) => {
     const { type, data } = action;
 
 
@@ -66,5 +61,5 @@ const PUBLIC = "public";
       default:
         return getPublicAdminMedicinesReducer(state,data);
     }
-  };
+};
   

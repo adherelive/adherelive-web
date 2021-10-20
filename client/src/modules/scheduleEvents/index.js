@@ -4,7 +4,6 @@ import {getScheduleEventsUrl, getAppointmentCompleteUrl,getAllMissedScheduleEven
 import {getCalenderDataCountForDayUrl,getCalenderDataForDayUrl} from "../../Helper/urls/provider";
 import {getPatientLastVisitAlertUrl} from '../../Helper/url/patients'
 
-
 export const GET_SCHEDULE_EVENTS_START = "GET_SCHEDULE_EVENTS_START";
 export const GET_SCHEDULE_EVENTS_COMPLETED = "GET_SCHEDULE_EVENTS_COMPLETED";
 export const GET_SCHEDULE_EVENTS_FAILED = "GET_SCHEDULE_EVENTS_FAILED";

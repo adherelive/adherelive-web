@@ -3,8 +3,6 @@ import { TABLE_NAME as dietFoodGroupMappingTableName } from "./dietFoodGroupMapp
 
 import { USER_CATEGORY_ARRAY } from "./users";
 
-import {USER_CATEGORY_ARRAY} from "./users";
-
 export const TABLE_NAME = "similar_food_mappings";
 
 export const db = (database) => {

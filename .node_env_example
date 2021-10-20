@@ -124,7 +124,7 @@ BRANCH_IO_KEY=key_live_hbL5zlRfxNiPzCmRlQcXVihbywdivtNo
 BRANCH_IO_BASE_URL=https://api2.branch.io/v1/url
 
 # TODO: Add the developer email for getting OTP
-DEVELOPER_EMAIL=gagneet.singh@adhere.live,vivek.asthana@adhere.live,vasu@adhere.live,sagar.agrawal@adhere.live,sparsh.jaiswal@adhere.live,ankur.agrawal@adhere.live
+DEVELOPER_EMAIL=gagneet.singh@adhere.live,vivek.asthana@adhere.live,vasu@adhere.live,sagar.agrawal@adhere.live,sparsh.jaiswal@adhere.live,ankur.agrawal@adhere.live,gaurav@mryl.tech
 SUPPORT_EMAIL=customersupport@adhere.live
 
 EVENT_FETCH_COUNT=7

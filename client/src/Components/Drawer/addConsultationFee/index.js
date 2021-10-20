@@ -16,9 +16,6 @@ import { CONSULTATION_FEE_TYPE_TEXT } from "../../../constant";
 import moment from "moment";
 import throttle from "lodash-es/throttle";
 
-import moment from "moment";
-import throttle from "lodash-es/throttle";
-
 import messages from "./message";
 import Footer from "../footer";
 
