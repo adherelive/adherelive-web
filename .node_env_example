@@ -6,10 +6,7 @@ APP_NAME="adherelive"
 API_URL=https://portal.adhere.live
 WEB_URL=https://portal.adhere.live
 APP_URL=https://portal.adhere.live
-#S3_HOST=https://portal.adhere.live
-S3_HOST=amazonaws.com
-S3_ACCESS_KEY=lwzlJgSubYjdbGhYL87jgbwxhXSEAxdA
-S3_SECRET_KEY=Gc_Gj4sNAeo5zlSM56xPWa0dLpGaOUD_FtLiUydhKmOTDK15VbZeWb1wl9NwiD1t_phXodwCPDZ1_C4DC_mcAw
+
 INVITE_LINK=/validation/
 
 RESET_PASSWORD_LINK=https://portal.adhere.live/reset-password/
@@ -62,7 +59,14 @@ AWS_PLATFORM_ARN=
 AWS_TOPIC_ARN=
 AWS_PRESCRIPTION_BUCKET=
 
-# for data cleaning
+# Test Credentials for Twilio : (Adhere on Twilio)
+#TWILIO_ACCOUNT_SID=ACbd29da5182433fbe60c2bc90d3629322
+#TWILIO_API_KEY=SK6b9e2841ac7603d5505f8aca7d361c68
+#TWILIO_API_SECRET=49SPoYcKkUJcvEhmF5EDSzwQ0JhpmE69
+#TWILIO_CHAT_SERVICE_SID=ISa404254ed9994458869292808719dbac
+#TWILIO_AUTH_TOKEN=24c24e05a8ddb89b04c1be6ed2e13fa4
+
+#for data cleaning
 #TWILIO_API_KEY=SKbf0539629250027b51858bb74ba8f3b7
 #TWILIO_ACCOUNT_SID=ACbd29da5182433fbe60c2bc90d3629322
 #TWILIO_API_SECRET=W6NtW38fopX4g45XgeNNJgE1bNLlWk4d
@@ -95,7 +99,11 @@ MINIO_REGION=us-east-1
 MINIO_ENDPOINT=minio1
 MINIO_BUCKET_NAME=adherelive-production
 
-###### S3 #######
+# S3
+#S3_HOST=https://portal.adhere.live
+S3_HOST=amazonaws.com
+S3_ACCESS_KEY=lwzlJgSubYjdbGhYL87jgbwxhXSEAxdA
+S3_SECRET_KEY=Gc_Gj4sNAeo5zlSM56xPWa0dLpGaOUD_FtLiUydhKmOTDK15VbZeWb1wl9NwiD1t_phXodwCPDZ1_C4DC_mcAw
 EXPIRY_TIME=30
 
 # GetStream Demo
@@ -111,13 +119,13 @@ GETSTREAM_APP_ID=1143860
 
 ONE_SIGNAL_APP_ID=78b416ba-40f8-41a7-904a-baf7c708573c
 ONE_SIGNAL_KEY=MTBmODJhOWEtMTM5MC00MWJiLWJmMDUtYjg1YmZlOGQ4NzY0
-# Urgent notification channel id
+# Urgent notification channel ID
 URGENT_CHANNEL_ID=105aaf07-aa23-47d3-8792-e737aaf34b3c
 
 # One Signal Demo
 #ONE_SIGNAL_APP_ID=a9a030ff-9d46-4cd0-b367-a91154fdde24
 #ONE_SIGNAL_KEY=YjI3ZTY4YmMtY2NiNy00NjE3LTg1OWMtZTZkOTUwMzA1NDM0
-# Urgent notification channel id
+# Urgent notification channel ID
 #URGENT_CHANNEL_ID=801c9f8b-4327-480b-a0ea-9f990c4aa3df
 
 GOOGLE_CLIENT_ID=398277517704-eqh1lvm3872s2a5t916kua18gp60steu.apps.googleusercontent.com
@@ -134,7 +142,8 @@ FORCE_COLOR=1
 BRANCH_IO_KEY=key_live_hbL5zlRfxNiPzCmRlQcXVihbywdivtNo
 BRANCH_IO_BASE_URL=https://api2.branch.io/v1/url
 
-DEVELOPER_EMAIL=sagar.agrawal@adhere.live,vivek.asthana@adhere.live,gagneet.singh@adhere.live,vasu@adhere.live,sparsh.jaiswal@adhere.live
+# TODO: Add the developer email for getting OTP
+DEVELOPER_EMAIL=gagneet.singh@adhere.live,vivek.asthana@adhere.live,vasu@adhere.live,sagar.agrawal@adhere.live,sparsh.jaiswal@adhere.live,ankur.agrawal@adhere.live
 SUPPORT_EMAIL=customersupport@adhere.live
 
 EVENT_FETCH_COUNT=7
@@ -146,6 +155,7 @@ SENDGRID_FROM_NAME="Adhere.Live Support"
 SENDGRID_API_KEY=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
 #SENDGRID_API_KEY=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
 
+# SQS AWS Credentials
 AWS_ACCCOUNT_ID=832280438605
 SQS_DOMAIN_URL=https://sqs.ap-south-1.amazonaws.com
 SQS_QUEUE_NAME=adherelive-production
@@ -153,13 +163,13 @@ SQS_QUEUE_NAME=adherelive-production
 APPOINTMENT_WAIT_TIME_HOURS=2
 CAREPLAN_ACTIVATION_RESCHEDULE_HOURS=6
 
-# RAZORPAY_TOKENS
+# RazorPay Tokens
 RAZORPAY_KEY=rzp_live_OwALSRKZ5HVNeM
 RAZORPAY_SECRET=B2IO0FS4RU1oKqzc63byy9Vr
 
 DEFAULT_CURRENCY=INR
 
-# ALGOLIA CREDENTIALS
+# Algolia Credentials
 # for account vineet.sharma@tripock.com (Password@123)
 # ! DO NOT UPDATE ANYTHING ON THE ACCOUNT !
 ALGOLIA_APP_ID=WCKMPH5GKD
@@ -172,7 +182,7 @@ ADMIN_MEDICINE_ONE_PAGE_LIMIT=10
 
 ANDROID_ICON_NAME=ic_stat_onesignal_default
 
-# AGORA CREDENTIALS
+# Agora Credentials
 # for account shivang.upadhyay@tripock.com (Password@123)
 AGORA_APP_ID=92e6bf32127d465699951a92ba40cc6d
 AGORA_APP_CERTIFICATE=d24d921ebf4041a7a4aef2dec0634ef9
