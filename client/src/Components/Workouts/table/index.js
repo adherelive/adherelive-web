@@ -14,7 +14,7 @@ class WorkoutTable extends Component {
 
         this.state = {
             loading: false,
-            workout_ids: []
+            workout_ids:[]
         };
     }
 
@@ -22,12 +22,12 @@ class WorkoutTable extends Component {
         await this.getAllWorkouts();
     }
 
-    async componentDidUpdate(prevProps, prevState) {
-        const {care_plans = {}, carePlanId = null} = this.props;
-        const {carePlanId: prev_carePlanId = null, care_plans: prev_care_plans = {}} = prevProps || {};
-        const {workout_ids = []} = care_plans[carePlanId] || {};
-        const {workout_ids: prev_workout_ids = []} = prev_care_plans[prev_carePlanId] || {};
-        if (prev_workout_ids.length !== workout_ids.length || carePlanId != prev_carePlanId) {
+    async componentDidUpdate(prevProps,prevState){
+        const { care_plans = {},carePlanId =null}= this.props;
+        const {carePlanId : prev_carePlanId = null , care_plans : prev_care_plans = {} } = prevProps || {};
+        const { workout_ids =[] } = care_plans[carePlanId] || {};
+        const { workout_ids : prev_workout_ids =[] } = prev_care_plans[prev_carePlanId] || {};
+        if(prev_workout_ids.length !== workout_ids.length || carePlanId != prev_carePlanId){
             await this.getAllWorkouts();
         }
     }
@@ -35,22 +35,22 @@ class WorkoutTable extends Component {
 
     getAllWorkouts = async () => {
         try {
-            const {getWorkoutsForPatient, carePlanId = null, care_plans, patientId, workouts = {}} = this.props;
-            this.setState({loading: true});
+            const {getWorkoutsForPatient , carePlanId = null , care_plans ,patientId , workouts = {}} = this.props;
+            this.setState({loading:true});
             const response = await getWorkoutsForPatient(patientId);
-            const {status, statusCode, payload: {data = {}, message: resp_msg = ''} = {}} = response || {};
-            if (!status && statusCode !== 422) {
+            const {status,statusCode, payload: {data = {} , message : resp_msg = '' } = {} } = response || {};
+            if(!status && statusCode !== 422){
                 message.warn(resp_msg);
             }
 
             const {workout_ids = []} = care_plans[carePlanId] || {};
-            console.log("234623426384762742342", {workout_ids, workouts});
+            console.log("234623426384762742342",{workout_ids,workouts});
 
             this.setState({
                 loading: false,
                 workout_ids
             });
-        } catch (error) {
+        } catch(error) {
             this.setState({loading: false});
         }
     };
@@ -59,24 +59,23 @@ class WorkoutTable extends Component {
         const {
             isOtherCarePlan,
             intl: {formatMessage} = {},
-            workouts = {},
-            auth_role = null,
-            care_plans = {},
-            carePlanId = null
+            workouts={},
+            auth_role =null ,
+            care_plans = {}, 
+            carePlanId=null
         } = this.props;
 
         const {workout_ids = []} = this.state;
 
-        const {basic_info: {user_role_id = null} = {}} = care_plans[carePlanId] || {};
-        let canViewDetails = true;
-        if (!isOtherCarePlan && user_role_id.toString() === auth_role.toString()) {
-            canViewDetails = false;
-        }
+        const {basic_info : { user_role_id = null } = {} } = care_plans[carePlanId] || {};
+        let canViewDetails=true;
+        if(!isOtherCarePlan && user_role_id.toString() === auth_role.toString()) {
+            canViewDetails=false;
+        }  
 
         const {
-            openResponseDrawer,
-            openEditDrawer
-        } = this;
+            openResponseDrawer, 
+            openEditDrawer} = this;
 
 
         return workout_ids.map((id) => {
@@ -96,71 +95,50 @@ class WorkoutTable extends Component {
     openResponseDrawer = (workout_id) => (e) => {
 
         e.preventDefault();
-        const {
-            openWorkoutResponseDrawer,
-            isOtherCarePlan,
-            auth_role = null,
-            care_plans = {},
-            carePlanId,
-            workouts = {}
-        } = this.props;
-        const {basic_info: {name = ''} = {}} = workouts[workout_id] || {};
-        const {basic_info: {user_role_id = null} = {}} = care_plans[carePlanId] || {};
-        let canViewDetails = true;
-        if (!isOtherCarePlan && user_role_id.toString() === auth_role.toString()) {
-            canViewDetails = false;
-        }
-        openWorkoutResponseDrawer({workout_id, workout_name: name, loading: true});
-
+        const {openWorkoutResponseDrawer, isOtherCarePlan, auth_role =null ,care_plans = {}, carePlanId , workouts = {} } = this.props;
+        const { basic_info : {name = ''} = {} } = workouts[workout_id] || {};
+        const {basic_info : { user_role_id = null } = {} } = care_plans[carePlanId] || {};
+        let canViewDetails=true;
+        if(!isOtherCarePlan && user_role_id.toString() === auth_role.toString()) {
+            canViewDetails=false;
+        }            
+        openWorkoutResponseDrawer({workout_id, workout_name:name, loading: true});
+      
     };
 
     openEditDrawer = (workout_id) => (e) => {
         e.preventDefault();
-        const {
-            openEditWorkoutDrawer,
-            isOtherCarePlan,
-            patientId,
-            auth_role = null,
-            care_plans = {},
-            carePlanId,
-            workouts = {}
-        } = this.props;
-        const {details: {repeat_days = []} = {}} = workouts[workout_id];
-        const {basic_info: {user_role_id = null} = {}} = care_plans[carePlanId] || {};
-        let canViewDetails = true;
-        if (!isOtherCarePlan && user_role_id.toString() === auth_role.toString()) {
-            canViewDetails = false;
-        }
-        openEditWorkoutDrawer({
-            workout_id,
-            patient_id: patientId,
-            careplan_id: carePlanId,
-            repeat_days,
-            canViewDetails
-        });
-
+        const {openEditWorkoutDrawer, isOtherCarePlan, patientId , auth_role =null ,care_plans = {}, carePlanId , workouts = {} } = this.props;
+        const { details : { repeat_days = [] } = {} } = workouts[workout_id];
+        const {basic_info : { user_role_id = null } = {} } = care_plans[carePlanId] || {};
+        let canViewDetails=true;
+        if(!isOtherCarePlan && user_role_id.toString() === auth_role.toString()) {
+            canViewDetails=false;
+        }            
+        openEditWorkoutDrawer({workout_id, patient_id: patientId,careplan_id:carePlanId,repeat_days,canViewDetails});
+        
     };
 
     formatMessage = data => this.props.intl.formatMessage(data);
 
     getLoadingComponent = () => {
-        const antIcon = <Icon type="loading" style={{fontSize: 24}} spin/>;
+        const antIcon = <Icon type="loading" style={{ fontSize: 24 }} spin />;
         return {
-            indicator: antIcon
+          indicator: antIcon
         };
-    };
+      };
 
     render() {
         const locale = {
             emptyText: this.formatMessage(messages.no_workouts)
-        };
+          };
 
         const {
-            intl: {formatMessage} = {},
+            intl: { formatMessage } = {},
         } = this.props;
-        const {getLoadingComponent, getDataSource} = this;
+        const { getLoadingComponent, getDataSource } = this;
 
-        const {loading = false} = this.state;
+        const {loading=false}=this.state;
 
         return (
             <Table
@@ -173,7 +151,7 @@ class WorkoutTable extends Component {
                 dataSource={
                     getDataSource()
                 }
-                scroll={{x: '100%'}}
+                scroll={{ x: '100%' }}
                 pagination={{
                     position: "bottom",
                 }}

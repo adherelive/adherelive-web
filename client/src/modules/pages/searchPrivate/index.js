@@ -9,52 +9,52 @@ const PRIVATE = "private";
 
 
 function getPrivateSearchMedicinesReducer(state, data) {
-    const {offset = 0, medicines, type = '', searchText = ''} = data || {};
-    const search_private_medicines = {...state, [offset]: medicines};
+    const {offset=0,medicines,type='' , searchText = ''} = data || {};
+    const search_private_medicines =  {...state,[offset]: medicines};
 
-
-    if (medicines && type === PRIVATE && searchText !== '') {
+    
+    if(medicines && type===PRIVATE && searchText !== '') {
 
         return {
-            ...search_private_medicines
+           ...search_private_medicines
         }
-    } else {
+    }else{
         return state;
     }
-}
+} 
 
 function resetPrivateReducer(state, data) {
-    return [];
-
+    return [] ;
+    
 }
 
-function getRemaingSearchedAfterMakingPublic(state, data) {
+function getRemaingSearchedAfterMakingPublic (state,data) { 
     const {offset = 0} = data || {};
-    const {medicines = {}} = data;
-    if (medicines) {
+    const {medicines ={}} = data;
+    if(medicines){
         const id = Object.keys(medicines)[0] || null;
-        const {[id.toString()]: medicine, ...rest} = state[offset] || {};
+        const {[id.toString()]:medicine,...rest} = state[offset] || {};
         const remainingKeyMedicinesLength = Object.keys(rest).length;
         return {...rest};
-    } else {
+    }else {
         return state;
     }
-
+ 
 }
 
-function getRemainingPrivateSearchedAfterDelete(state, data) {
-    const {medicine_id, offset = null} = data || {};
+function getRemainingPrivateSearchedAfterDelete(state,data) {
+    const {medicine_id , offset = null} = data || {};
 
-    if (medicine_id) {
-        const {[medicine_id.toString()]: medicine, ...rest} = state[offset] || {};
-
-        if (medicine) {
+    if(medicine_id){
+        const {[medicine_id.toString()]:medicine , ...rest} =  state[offset] || {};
+        
+        if(medicine){
             let updatedMed = {...state};
             updatedMed[offset] = {...rest};
             return {
                 ...updatedMed
             }
-        } else {
+        }else{
             return state;
         }
     } else {
@@ -63,20 +63,20 @@ function getRemainingPrivateSearchedAfterDelete(state, data) {
 
 }
 
-
-export default (state = [], action) => {
-    const {type, data} = action;
-    switch (type) {
-        case DELETE_MEDICINE_COMPLETED:
-            return getRemainingPrivateSearchedAfterDelete(state, data);
-        case GET_PRIVATE_MEDICINES_COMPLETED:
-            return getPrivateSearchMedicinesReducer(state, data);
-        case RESET_SEARCH_PRIVATE :
-            return resetPrivateReducer(state, data);
-        case MAKE_MEDICINE_PUBLIC_COMPLETED:
-            return getRemaingSearchedAfterMakingPublic(state, data);
-        default:
-            return getPrivateSearchMedicinesReducer(state, data);
-    }
-};
+ 
+ export default (state = [], action) => {
+   const { type, data } = action;
+   switch (type) {
+     case DELETE_MEDICINE_COMPLETED:
+        return getRemainingPrivateSearchedAfterDelete(state,data);   
+     case GET_PRIVATE_MEDICINES_COMPLETED:
+         return getPrivateSearchMedicinesReducer(state,data);   
+     case RESET_SEARCH_PRIVATE : 
+         return resetPrivateReducer(state,data);
+     case MAKE_MEDICINE_PUBLIC_COMPLETED:
+            return getRemaingSearchedAfterMakingPublic(state,data);             
+     default:
+       return getPrivateSearchMedicinesReducer(state,data);
+   }
+ };
  

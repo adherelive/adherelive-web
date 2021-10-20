@@ -1,4 +1,4 @@
-import {defineMessages} from "react-intl";
+import { defineMessages } from "react-intl";
 
 const messages = defineMessages({
     somethingWentWrong: {
@@ -30,29 +30,29 @@ const messages = defineMessages({
         id: "app.missedMedications.patient.name",
         description: "",
         defaultMessage: "Patient"
-    },
+    }, 
     critical: {
         id: "app.missedMedications.critical",
         description: "",
         defaultMessage: "Critical"
-    },
-
+    }, 
+    
     non_critical: {
         id: "app.missedMedications.not.critical",
         description: "",
         defaultMessage: "Non critical"
-    },
-    no_critical_missed: {
+    }, 
+    no_critical_missed:{
         id: "app.missedMedications.no.critical.missed",
         description: "",
         defaultMessage: "No missed critical medication"
-    },
-    no_non_critical_missed: {
+    }, 
+    no_non_critical_missed:{
         id: "app.missedMedications.no.non.critical.missed",
         description: "",
         defaultMessage: "No missed non critical medication"
-    },
-
+    }, 
+    
 });
 
 export default messages;

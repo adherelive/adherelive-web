@@ -1,5 +1,7 @@
+
+
 function appointmentsTypeReducer(state, data) {
-    const {appointment_type} = data || {};
+    const { appointment_type } = data || {};
     if (appointment_type) {
         return {
             ...state,
@@ -11,7 +13,7 @@ function appointmentsTypeReducer(state, data) {
 }
 
 export default (state = {}, action) => {
-    const {type, data} = action;
+    const { type, data } = action;
     switch (type) {
         default:
             return appointmentsTypeReducer(state, data)

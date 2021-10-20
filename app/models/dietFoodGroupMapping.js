@@ -1,8 +1,8 @@
 "use strict";
 import {DataTypes} from "sequelize";
-import {TABLE_NAME as foodGroupTableName} from "./foodGroups";
-import {TABLE_NAME as dietTableName} from "./diet";
-import {TABLE_NAME as similarFoodMappingTableName} from "./similarFoodMapping";
+import { TABLE_NAME as foodGroupTableName } from "./foodGroups";
+import { TABLE_NAME as dietTableName } from "./diet";
+import { TABLE_NAME as similarFoodMappingTableName } from "./similarFoodMapping";
 
 export const TABLE_NAME = "diet_food_group_mappings";
 
@@ -20,11 +20,11 @@ export const db = (database) => {
                 type: DataTypes.INTEGER,
                 allowNull: false,
             },
-            food_group_id: {
+            food_group_id : {
                 type: DataTypes.INTEGER,
                 allowNull: false,
             },
-            diet_id: {
+            diet_id : {
                 type: DataTypes.INTEGER,
                 allowNull: false,
             }
@@ -51,13 +51,14 @@ export const associate = (database) => {
         sourceKey: "diet_id"
     });
 
-    database.models[TABLE_NAME].hasMany(database.models[similarFoodMappingTableName], {
-        foreignKey: "related_to_id",
-        sourceKey: "id",
+    database.models[TABLE_NAME].hasMany(database.models[similarFoodMappingTableName],{
+        foreignKey:"related_to_id",
+        sourceKey:"id",
     });
 
-    database.models[TABLE_NAME].hasMany(database.models[similarFoodMappingTableName], {
-        foreignKey: "secondary_id",
-        sourceKey: "id",
+    database.models[TABLE_NAME].hasMany(database.models[similarFoodMappingTableName],{
+        foreignKey:"secondary_id",
+        sourceKey:"id",
     });
+
 };

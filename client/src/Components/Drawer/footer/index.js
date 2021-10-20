@@ -1,7 +1,7 @@
 import React from "react";
-import {Button} from "antd";
+import { Button } from "antd";
 import {PoweroffOutlined} from "@ant-design/icons";
-import {injectIntl} from "react-intl";
+import { injectIntl } from "react-intl";
 import messages from "./message";
 
 export default injectIntl(props => {
@@ -15,7 +15,7 @@ export default injectIntl(props => {
         submitText,
         cancelButtonProps = {},
         submitButtonProps = {},
-        submitting = false
+        submitting=false
     } = props;
 
 
@@ -33,11 +33,11 @@ export default injectIntl(props => {
             className="mr10"
             type="primary"
             {...submitButtonProps}
-            icon={submitting ? <PoweroffOutlined/> : null}
+            icon={submitting ? <PoweroffOutlined /> : null }
             loading={submitting}
         >
             {
-                submitText
+              submitText
             }
         </Button>
     );

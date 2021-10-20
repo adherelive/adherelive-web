@@ -30,6 +30,6 @@ export const associate = (database) => {
     // associations here (if any) ...
     database.models[TABLE_NAME].belongsToMany(database.models[userTableName], {
         through: userCategoryPermissionTableName,
-        foreignKey: "category"
+        foreignKey:"category"
     });
 };

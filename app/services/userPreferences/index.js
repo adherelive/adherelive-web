@@ -14,19 +14,19 @@ export default class UserPreference {
     };
 
     getChartDetails = () => {
-        const details = this._data.get("details");
-        const {charts} = details || {};
-        return charts;
+      const details =  this._data.get("details");
+      const {charts} = details || {};
+      return charts;
     };
 
     allowEmail = () => {
-        const details = this._data.get("details");
-        const {emailNotification} = details || {};
-        return emailNotification;
+        const details =  this._data.get("details");
+      const {emailNotification} = details || {};
+      return emailNotification;
     };
 
     allowSms = () => {
-        const details = this._data.get("details");
+        const details =  this._data.get("details");
         const {smsNotification} = details || {};
         return smsNotification;
     };

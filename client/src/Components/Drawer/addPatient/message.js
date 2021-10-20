@@ -1,4 +1,4 @@
-import {defineMessages} from "react-intl";
+import { defineMessages } from "react-intl";
 
 const messages = defineMessages({
     addPatient: {
@@ -11,7 +11,7 @@ const messages = defineMessages({
         description: "",
         defaultMessage: "Add New Patient"
     },
-    searchPatient: {
+    searchPatient:{
         id: "app.addPatient.searchPatient",
         description: "",
         defaultMessage: "Search"
@@ -126,26 +126,26 @@ const messages = defineMessages({
         description: "",
         defaultMessage: "Allergies"
     },
-    writeHere: {
+    writeHere:{
         id: "app.addPatient.writeHere",
         description: "",
         defaultMessage: "Write here"
     },
-    clinicalNotes: {
+    clinicalNotes:{
         id: "app.addPatient.clinicalNotes",
         description: "",
         defaultMessage: "Clinical Notes"
     },
-    diagnosis: {
+    diagnosis:{
         id: "app.addPatient.diagnosis",
         description: "",
         defaultMessage: "Diagnosis"
     },
-    diagnosisError: {
+    diagnosisError:{
         id: "app.addPatient.diagnosisError",
         description: "",
         defaultMessage: "Please enter Diagnosis"
-    }, diagnosisTypeError: {
+    },diagnosisTypeError:{
         id: "app.addPatient.diagnosisTypeError",
         description: "",
         defaultMessage: "Please enter Diagnosis Type"
@@ -165,17 +165,17 @@ const messages = defineMessages({
         description: "",
         defaultMessage: "Symptoms"
     },
-    height_placeholder: {
+    height_placeholder:{
         id: "app.addPatient.height.placeholder",
         description: "",
         defaultMessage: "Add Height in Centimeters"
     },
-    weight_placeholder: {
+    weight_placeholder:{
         id: "app.addPatient.weight.placeholder",
         description: "",
         defaultMessage: "Add Weight in Kgs"
     },
-    address: {
+    address:{
         id: "app.addPatient.address",
         description: "",
         defaultMessage: "Address"
@@ -195,7 +195,7 @@ const messages = defineMessages({
         description: "",
         defaultMessage: "None"
     },
-
+    
 });
 
 export default messages;

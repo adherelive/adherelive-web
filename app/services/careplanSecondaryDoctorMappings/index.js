@@ -10,4 +10,5 @@ export default class CareplanSecondaryDoctorMappings {
     secondaryDoctorRoleId() {
         return this._data.get("secondary_doctor_role_id");
     }
+
 }

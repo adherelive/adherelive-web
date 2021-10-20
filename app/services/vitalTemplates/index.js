@@ -8,7 +8,7 @@ export default class VitalTemplates {
     };
 
     getName = () => {
-        return this._data.get("name");
+      return this._data.get("name");
     };
 
     getUnit = () => {

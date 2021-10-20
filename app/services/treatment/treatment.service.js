@@ -3,11 +3,12 @@ import Database from "../../../libs/mysql";
 import {TABLE_NAME} from "../../models/treatments";
 
 class TreatmentService {
+
     getAll = async (data) => {
         try {
             const treatment = await Database.getModel(TABLE_NAME).findAll();
             return treatment;
-        } catch (error) {
+        } catch(error) {
             throw error;
         }
     };
@@ -48,7 +49,7 @@ class TreatmentService {
                 where: data
             });
             return treatment;
-        } catch (error) {
+        } catch(error) {
             throw error;
         }
     };

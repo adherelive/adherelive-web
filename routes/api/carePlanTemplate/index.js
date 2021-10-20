@@ -1,9 +1,11 @@
 import express from "express";
 import Authenticate from "../middleware/auth";
 // import * as validator from "./validator";
+
 import CarePlanTemplate from "../../../app/controllers/carePlanTemplate/carePlanTemplate.controller";
 import isAllowed from "../../middlewares/permissions";
 import PERMISSIONS from "../../../config/permissions";
+
 
 const router = express.Router();
 
@@ -25,14 +27,14 @@ router.post(
 router.post(
     "/duplicate/:id",
     Authenticate,
-    isAllowed(PERMISSIONS.CARE_PLAN_TEMPLATE.DUPLICATE),
+    isAllowed(PERMISSIONS.CARE_PLAN_TEMPLATE.DUPLICATE ),
     CarePlanTemplate.duplicate
 );
 
 router.post(
     "/:id",
     Authenticate,
-    isAllowed(PERMISSIONS.CARE_PLAN_TEMPLATE.UPDATE),
+    isAllowed(PERMISSIONS.CARE_PLAN_TEMPLATE.UPDATE ),
     CarePlanTemplate.update
 );
 
@@ -40,7 +42,7 @@ router.delete(
     "/:id",
     Authenticate,
     // todo-v: add validator IMP
-    isAllowed(PERMISSIONS.CARE_PLAN_TEMPLATE.DELETE),
+    isAllowed(PERMISSIONS.CARE_PLAN_TEMPLATE.DELETE ),
     CarePlanTemplate.delete
 );
 

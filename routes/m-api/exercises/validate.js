@@ -29,12 +29,12 @@ const createExerciseSchema = Joi.object({
 });
 
 export const create = (req, res, next) => {
-    const {body: data = {}} = req;
+    const { body: data = {} } = req;
     const isValid = createExerciseSchema.validate(data, {convert: false});
 
     const {error: {details = []} = {}} = isValid || {};
 
-    if (details.length > 0) {
+    if(details.length > 0) {
         return validationError(res, details[0].message);
     } else {
         next();

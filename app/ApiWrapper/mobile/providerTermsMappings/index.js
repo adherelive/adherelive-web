@@ -25,7 +25,7 @@ class ProviderTermsMappingsWrapper extends BaseProviderTermsMapping {
 }
 
 export default async (data = null, id = null) => {
-    if (data) {
+    if(data) {
         return new ProviderTermsMappingsWrapper(data);
     }
     const response = await providerTermsMappingsService.getSingleEntityByData({id})

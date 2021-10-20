@@ -9,30 +9,30 @@ import ResponseDetailsDrawer from "../../../Containers/Drawer/workoutResponseEve
 class WorkoutResponseDrawer extends Component {
     constructor(props) {
         super(props);
-        this.state = {
-            detailsDrawerVisible: false,
-            schedule_event_id: null,
-            date: null
+        this.state={
+            detailsDrawerVisible:false,
+            schedule_event_id:null,
+            date:null
         }
     }
 
     onClose = () => {
-        const {close} = this.props;
+        const { close } = this.props;
         close();
     };
 
-    openWorkoutResponseDetails = ({schedule_event_id, date}) => {
+    openWorkoutResponseDetails = ({schedule_event_id,date}) => {
         this.setState({
-            detailsDrawerVisible: true,
+            detailsDrawerVisible:true,
             schedule_event_id,
             date
         });
-    }
+    }   
 
     closeWorkoutResponseDetails = () => {
         this.setState({
-            detailsDrawerVisible: false,
-            schedule_event_id: null
+            detailsDrawerVisible:false,
+            schedule_event_id:null
         });
     }
 
@@ -40,10 +40,10 @@ class WorkoutResponseDrawer extends Component {
         const {
             visible,
             intl: {formatMessage} = {},
-            workout_name = ''
+            workout_name=''
         } = this.props;
         const {onClose} = this;
-        const {schedule_event_id = null, detailsDrawerVisible = false, date = null} = this.state;
+        const {schedule_event_id=null,detailsDrawerVisible=false , date = null }=this.state;
 
         return (
             <Drawer
@@ -55,28 +55,28 @@ class WorkoutResponseDrawer extends Component {
                 title={formatMessage(
                     {...messages.title},
                     {workout_name}
-                )}
+                    )}
                 headerStyle={{
                     position: "sticky",
                     zIndex: "9999",
                     top: "0px",
-                    display: "flex",
-                    justifyContent: "flex-start",
-                    alignItems: "flex-start",
-                    width: "100%",
+                    display:"flex",
+                    justifyContent:"flex-start",
+                    alignItems:"flex-start",
+                    width:"100%",
                 }}
             >
-                <WorkoutTimeline
-                    {...this.props}
+                <WorkoutTimeline 
+                    {...this.props} 
                     workout_name={workout_name}
                     openWorkoutResponseDetails={this.openWorkoutResponseDetails}
                 />
-                <ResponseDetailsDrawer
-                    workout_name={workout_name}
-                    date={date}
-                    schedule_event_id={schedule_event_id}
-                    visible={detailsDrawerVisible}
-                    closeWorkoutResponseDetails={this.closeWorkoutResponseDetails}
+                <ResponseDetailsDrawer 
+                workout_name={workout_name}
+                date={date}
+                schedule_event_id={schedule_event_id} 
+                visible={detailsDrawerVisible}
+                closeWorkoutResponseDetails={this.closeWorkoutResponseDetails}
                 />
             </Drawer>
         );

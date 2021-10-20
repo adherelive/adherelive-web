@@ -1,5 +1,7 @@
+
+
 function typeDescriptionReducer(state, data) {
-    const {type_description} = data || {};
+    const { type_description } = data || {};
     if (type_description) {
         return {
             ...state,
@@ -11,7 +13,7 @@ function typeDescriptionReducer(state, data) {
 }
 
 export default (state = {}, action) => {
-    const {type, data} = action;
+    const { type, data } = action;
     switch (type) {
         default:
             return typeDescriptionReducer(state, data)

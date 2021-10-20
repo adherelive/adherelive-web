@@ -1,4 +1,4 @@
-import {defineMessages} from "react-intl";
+import { defineMessages } from "react-intl";
 
 const messages = defineMessages({
     completed: {
@@ -16,22 +16,22 @@ const messages = defineMessages({
         description: "",
         defaultMessage: "Not Recorded"
     },
-    taken: {
+    taken : {
         id: "app.workout.timeline.taken",
         description: "",
         defaultMessage: "Taken"
     },
-    cancelled_reschedule: {
+    cancelled_reschedule:{
         id: "app.workout.timeline.cancelled.reschedule",
         description: "",
         defaultMessage: "(Cancelled) Reschedule in 10 minutes"
     },
-    exercisesDone: {
+    exercisesDone:{
         id: "app.workout.timeline.exercisesDone",
         description: "",
         defaultMessage: " {complete}/{total} exercises done"
     },
-    timeText: {
+    timeText:{
         id: "app.workout.timeline.timeText",
         description: "",
         defaultMessage: "Time :  {time}"

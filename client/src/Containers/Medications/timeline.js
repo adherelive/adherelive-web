@@ -9,10 +9,10 @@ import {DRAWER} from "../../constant";
 
 const mapStateToProps = state => {
     const {
-        drawer: {visible, data: {type, payload: {id, loading} = {}} = {}},
+        drawer: { visible, data: { type, payload : {id, loading} = {} } = {} },
         medications = {},
         schedule_events = {}
-
+    
     } = state;
 
     return {

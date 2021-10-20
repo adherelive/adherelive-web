@@ -5,7 +5,7 @@ export default class PatientConsentMapping {
 
     getId = () => {
         return this._data.id;
-    }
+    }   
 
     getProviderTermsMappingId = () => {
         return this._data.provider_terms_mapping_id;
@@ -22,4 +22,5 @@ export default class PatientConsentMapping {
     getPaymentTermsAccepted = () => {
         return this._data.payment_terms_accepted;
     }
+
 }

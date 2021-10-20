@@ -1,3 +1,4 @@
+
 import {AGORA_CALL_NOTIFICATION_TYPES} from "../../../constant";
 
 export const NOTIFICATION_URLS = {
@@ -15,7 +16,7 @@ export default class AgoraJob {
     }
 
     getNotificationUrl = (type) => {
-        const {[type]: url} = NOTIFICATION_URLS;
+        const {[type]:  url} = NOTIFICATION_URLS;
         return url;
     }
 }

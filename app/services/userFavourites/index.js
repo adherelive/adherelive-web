@@ -1,3 +1,4 @@
+
 export default class UserFavourites {
     constructor(data) {
         this._data = data;
@@ -9,7 +10,7 @@ export default class UserFavourites {
 
     getUserCategoryType = () => this._data.user_category_type;
 
-    getUserCategoryId = () => {
+    getUserCategoryId = () =>  {
         return this._data.user_category_id;
     }
 
@@ -20,4 +21,7 @@ export default class UserFavourites {
     getMarkedFavouriteId = () => {
         return this._data.marked_favourite_id;
     }
+
+   
+
 }

@@ -1,7 +1,7 @@
-import {defineMessages} from "react-intl";
+import { defineMessages } from "react-intl";
 
 const messages = defineMessages({
-    orText: {
+    orText:{
         id: "app.single.day.comp.ot.text",
         description: "",
         defaultMessage: "or"

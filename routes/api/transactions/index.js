@@ -4,7 +4,7 @@ import {isProvider} from "../middleware/provider";
 
 import Transactions from "../../../app/controllers/transactions/transaction.controller";
 
-const router = express.Router();
+const router  = express.Router();
 
 router.get(
     "/",

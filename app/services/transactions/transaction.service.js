@@ -1,13 +1,14 @@
 import Database from "../../../libs/mysql";
-import {TABLE_NAME} from "../../models/transactions";
-import {TABLE_NAME as paymentProductTableName} from "../../models/paymentProducts";
+import { TABLE_NAME } from "../../models/transactions";
+import { TABLE_NAME as paymentProductTableName } from "../../models/paymentProducts";
 
 class TransactionService {
+
     createTransaction = async (data) => {
         try {
             const transaction = await Database.getModel(TABLE_NAME).create(data, {raw: true});
             return transaction;
-        } catch (error) {
+        } catch(error) {
             throw error;
         }
     };
@@ -22,12 +23,12 @@ class TransactionService {
                     {
                         model: Database.getModel(paymentProductTableName),
                         // as: paymentProductTableName,
-                        exclude: ["created_at", "updated_at"]
+                        exclude: ["created_at","updated_at"]
                     }
                 ]
             });
             return transaction;
-        } catch (error) {
+        } catch(error) {
             throw error;
         }
     };
@@ -42,33 +43,33 @@ class TransactionService {
                     {
                         model: Database.getModel(paymentProductTableName),
                         // as: paymentProductTableName,
-                        exclude: ["created_at", "updated_at"]
+                        exclude: ["created_at","updated_at"]
                     }
                 ],
-                order: [["updated_at", "DESC"]]
+                order: [["updated_at","DESC"]]
             });
             return transaction;
-        } catch (error) {
+        } catch(error) {
             throw error;
         }
     };
 
-    updateTransaction = async (data, id) => {
-        const transaction = await Database.initTransaction();
-        try {
-            const transactions = await Database.getModel(TABLE_NAME).update(data, {
-                where: {
-                    id
-                },
-                transaction
-            });
-            transaction.commit();
-            return transactions;
-        } catch (error) {
-            transaction.rollback();
-            throw error;
-        }
-    };
+  updateTransaction = async (data, id) => {
+    const transaction = await Database.initTransaction();
+    try {
+      const transactions = await Database.getModel(TABLE_NAME).update(data, {
+        where: {
+          id
+        },
+        transaction
+      });
+      transaction.commit();
+      return transactions;
+    } catch (error) {
+      transaction.rollback();
+      throw error;
+    }
+  };
 }
 
 export default TransactionService;

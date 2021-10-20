@@ -9,7 +9,7 @@ class AuthObserver {
     }
 
     execute = (typeStatus, eventDetails) => {
-        switch (typeStatus) {
+        switch(typeStatus) {
             case EVENT_TYPE.OTP:
                 return new OtpJob(eventDetails);
             case EVENT_TYPE.ADD_PATIENT:

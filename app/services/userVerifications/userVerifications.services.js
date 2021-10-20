@@ -15,7 +15,7 @@ class UserVerificationsService {
         try {
             const verification = await Database.getModel(TABLE_NAME).findOne({
                 where: {
-                    request_id: link
+                    request_id:link
                 },
             });
             return verification;
@@ -28,7 +28,7 @@ class UserVerificationsService {
         try {
             const verification = await Database.getModel(TABLE_NAME).update(data, {
                 where: {
-                    request_id: link
+                    request_id:link
                 }
             });
             return verification;

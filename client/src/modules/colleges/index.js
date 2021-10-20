@@ -1,6 +1,6 @@
-import {doRequest} from "../../Helper/network";
-import {REQUEST_TYPE} from "../../constant";
-import {searchColleges} from "../../Helper/urls/colleges";
+import { doRequest } from "../../Helper/network";
+import { REQUEST_TYPE } from "../../constant";
+import { searchColleges } from "../../Helper/urls/colleges";
 
 export const SEARCH_COLLEGE_START = "SEARCH_COLLEGE_START";
 export const SEARCH_COLLEGE_COMPLETED = "SEARCH_COLLEGE_COMPLETED";
@@ -15,7 +15,7 @@ export const searchCollege = value => {
                 url: searchColleges(value),
             });
 
-            const {status, payload: {data, message = ""} = {}} = response || {};
+            const { status, payload: { data, message = "" } = {} } = response || {};
             if (status === true) {
                 dispatch({
                     type: SEARCH_COLLEGE_COMPLETED,
@@ -35,7 +35,7 @@ export const searchCollege = value => {
 };
 
 function collegeReducer(state, data) {
-    const {colleges = {}} = data || {};
+    const { colleges = {} } = data || {};
     if (colleges) {
         return {
             ...state,
@@ -47,7 +47,7 @@ function collegeReducer(state, data) {
 }
 
 export default (state = {}, payload) => {
-    const {type, data} = payload || {};
+    const { type, data } = payload || {};
     switch (type) {
         case SEARCH_COLLEGE_COMPLETED:
             return collegeReducer(state, data);

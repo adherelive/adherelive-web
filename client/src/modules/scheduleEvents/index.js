@@ -1,23 +1,20 @@
 import {doRequest} from "../../Helper/network";
 import {REQUEST_TYPE} from "../../constant";
-import {getScheduleEventsUrl, getAppointmentCompleteUrl, getAllMissedScheduleEventsUrl} from "../../Helper/urls/event";
-import {getCalenderDataCountForDayUrl, getCalenderDataForDayUrl} from "../../Helper/urls/provider";
-
-
+import {getScheduleEventsUrl, getAppointmentCompleteUrl,getAllMissedScheduleEventsUrl} from "../../Helper/urls/event";
+import {getCalenderDataCountForDayUrl,getCalenderDataForDayUrl} from "../../Helper/urls/provider";
 import {getPatientLastVisitAlertUrl} from '../../Helper/url/patients'
+
 
 export const GET_SCHEDULE_EVENTS_START = "GET_SCHEDULE_EVENTS_START";
 export const GET_SCHEDULE_EVENTS_COMPLETED = "GET_SCHEDULE_EVENTS_COMPLETED";
 export const GET_SCHEDULE_EVENTS_FAILED = "GET_SCHEDULE_EVENTS_FAILED";
 
-
-export const GET_LAST_VISIT_ALERTS = 'GET_LAST_VISIT_ALERTS';
-export const GET_LAST_VISIT_ALERTS_COMPLETE = 'GET_LAST_VISIT_ALERTS_COMPLETE';
-export const GET_LAST_VISIT_ALERTS_FAILED = 'GET_LAST_VISIT_ALERTS_FAILED';
+export const GET_LAST_VISIT_ALERTS='GET_LAST_VISIT_ALERTS';
+export const GET_LAST_VISIT_ALERTS_COMPLETE='GET_LAST_VISIT_ALERTS_COMPLETE';
+export const GET_LAST_VISIT_ALERTS_FAILED='GET_LAST_VISIT_ALERTS_FAILED';
 
 export const APPOINTMENT_STATUS_UPDATE_COMPLETED = "APPOINTMENT_STATUS_UPDATE_COMPLETED";
 export const APPOINTMENT_STATUS_UPDATE_FAILED = "APPOINTMENT_STATUS_UPDATE_FAILED";
-
 
 export const GET_CALENDER_DATA_COUNT_START = "GET_CALENDER_DATA_COUNT_START";
 export const GET_CALENDER_DATA_COUNT_COMPLETED = "GET_CALENDER_DATA_COUNT_COMPLETED";
@@ -94,7 +91,7 @@ export const getCalenderDataCountForDay = (date) => {
 };
 
 
-export const getCalenderDataForDay = (date, type) => {
+export const getCalenderDataForDay = (date,type) => {
     let response = {};
     return async dispatch => {
         try {
@@ -102,7 +99,7 @@ export const getCalenderDataForDay = (date, type) => {
 
             response = await doRequest({
                 method: REQUEST_TYPE.GET,
-                url: getCalenderDataForDayUrl(date, type),
+                url: getCalenderDataForDayUrl(date,type),
             });
 
             const {status, payload: {data = {}, error = {}} = {}} = response || {};
@@ -126,36 +123,37 @@ export const getCalenderDataForDay = (date, type) => {
 };
 
 
+
 export const getLastVisitAlerts = (id) => {
-    let response = {};
-    return async (dispatch) => {
-        try {
-            dispatch({
-                type: GET_LAST_VISIT_ALERTS
-            });
-            response = await doRequest({
-                method: REQUEST_TYPE.GET,
-                url: getPatientLastVisitAlertUrl(id),
-            });
-
-            const {status, payload: {data, error} = {}} = response || {};
-            if (status === true) {
-                dispatch({
-                    type: GET_LAST_VISIT_ALERTS_COMPLETE,
-                    data: data,
-                });
-            } else {
-                dispatch({
-                    type: GET_LAST_VISIT_ALERTS_FAILED,
-                    error,
-                });
-            }
-
-        } catch (error) {
-            console.log("GET LAST VISIT ALERTS ERROR", error);
-        }
-        return response;
+  let response={};
+  return async (dispatch) => {
+    try{
+      dispatch({
+        type:GET_LAST_VISIT_ALERTS
+      });
+      response = await doRequest({
+        method: REQUEST_TYPE.GET,
+        url:getPatientLastVisitAlertUrl(id),
+      });
+      
+    const { status, payload: { data, error } = {} } = response || {};
+      if (status === true) {
+        dispatch({
+          type: GET_LAST_VISIT_ALERTS_COMPLETE,
+          data: data,
+        });
+      } else {
+        dispatch({
+          type:GET_LAST_VISIT_ALERTS_FAILED,
+          error,
+        });
+      }
+      
+    } catch(error) {
+       console.log("GET LAST VISIT ALERTS ERROR", error);
     }
+    return response;
+  }
 };
 
 export const markAppointmentComplete = (id) => {
@@ -164,10 +162,10 @@ export const markAppointmentComplete = (id) => {
         try {
             response = await doRequest({
                 method: REQUEST_TYPE.POST,
-                url: getAppointmentCompleteUrl(id),
+                url:getAppointmentCompleteUrl(id),
             });
 
-            const {status, payload: {data, error} = {}} = response || {};
+            const { status, payload: { data, error } = {} } = response || {};
             if (status === true) {
                 dispatch({
                     type: APPOINTMENT_STATUS_UPDATE_COMPLETED,
@@ -179,7 +177,7 @@ export const markAppointmentComplete = (id) => {
                     error,
                 });
             }
-        } catch (error) {
+        } catch(error) {
             console.log("markAppointmentComplete 500 error", error);
         }
         return response;
@@ -189,29 +187,29 @@ export const markAppointmentComplete = (id) => {
 export const getAllMissedScheduleEvents = () => {
     let response = {};
     return async (dispatch) => {
-        try {
+        try{
             dispatch({type: GET_ALL_MISSED_SCHEDULE_EVENTS_START});
 
             response = await doRequest({
-                method: REQUEST_TYPE.GET,
-                url: getAllMissedScheduleEventsUrl()
+                method:REQUEST_TYPE.GET,
+                url:getAllMissedScheduleEventsUrl()
             });
 
-            const {status, payload: {data, error} = {}} = response || {};
-            if (status === true) {
+            const {status,payload: {data,error} = {} } = response || {};
+            if(status === true){
                 dispatch({
-                    type: GET_ALL_MISSED_SCHEDULE_EVENTS_COMPLETED,
-                    data: data
+                    type:GET_ALL_MISSED_SCHEDULE_EVENTS_COMPLETED,
+                    data:data
                 });
-            } else {
+            }else{
                 dispatch({
-                    type: GET_ALL_MISSED_SCHEDULE_EVENTS_FAILED,
+                    type:GET_ALL_MISSED_SCHEDULE_EVENTS_FAILED,
                     error
                 })
             }
 
-        } catch (error) {
-            console.log("GetAllMissedScheduleEvents Error --->", error);
+        }catch(error){
+            console.log("GetAllMissedScheduleEvents Error --->",error);
         }
         return response;
     }

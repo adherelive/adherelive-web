@@ -13,7 +13,7 @@ export default class MedicationReminder {
     }
 
     getParticipant = () => {
-        return this._data.get("participant_id");
+      return this._data.get("participant_id");
     };
 
     getMReminderId = () => {
@@ -21,13 +21,13 @@ export default class MedicationReminder {
     }
 
     getDetails = () => {
-        return this._data.get("details");
+      return this._data.get("details");
     };
 
     getMedicineId = () => {
         const details = this._data.get("details");
         const {medicine_id} = details || {};
-        if (medicine_id) {
+        if(medicine_id) {
             return medicine_id;
         }
     };

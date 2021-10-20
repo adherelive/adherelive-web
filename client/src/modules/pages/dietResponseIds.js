@@ -1,6 +1,8 @@
+
+
 function dietResponseIdsReducer(state, data) {
     const {diet_response_ids = []} = data || {};
-    if (diet_response_ids.length > 0) {
+    if(diet_response_ids.length > 0) {
         return [
             ...state,
             ...diet_response_ids
@@ -11,9 +13,9 @@ function dietResponseIdsReducer(state, data) {
 }
 
 export default (state = [], action = {}) => {
-    const {type, data} = action;
+    const { type, data } = action;
     switch (type) {
-        default:
-            return dietResponseIdsReducer(state, data);
+      default:
+        return dietResponseIdsReducer(state, data);
     }
 }

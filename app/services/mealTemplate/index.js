@@ -1,6 +1,7 @@
-export default class MealTemplate {
-    constructor(data) {
-        this._data = data;
+export default class  MealTemplate {
+
+    constructor(data){
+        this._data = data;   
     }
 
     getId = () => {
@@ -23,4 +24,5 @@ export default class MealTemplate {
         console.log("1230998213 this._data.food_items", this._data);
         return this._data.food_item_details || [];
     }
+    
 }

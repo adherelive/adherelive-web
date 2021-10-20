@@ -1,4 +1,4 @@
-export default class Repetition {
+export default class Repetition{
     constructor(data) {
         this._data = data;
     }
@@ -10,4 +10,5 @@ export default class Repetition {
     getType = () => {
         return this._data.type;
     };
+    
 }

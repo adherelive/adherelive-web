@@ -40,4 +40,5 @@ router.post(
     adhocController.updateChannels
 );
 
+  
 module.exports = router;

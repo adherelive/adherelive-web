@@ -1,4 +1,4 @@
-import {combineReducers} from "redux";
+import { combineReducers } from "redux";
 import search_public_medicines from "./searchPublic";
 import search_private_medicines from "./searchPrivate";
 

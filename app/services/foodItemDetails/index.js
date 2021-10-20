@@ -15,6 +15,7 @@ export default class FoodItem {
         return this._data.carbs;
     }
 
+
     getFoodItemProteins() {
         return this._data.proteins;
     }
@@ -27,14 +28,14 @@ export default class FoodItem {
         return this._data.details;
     }
 
-    getPortionId() {
+    getPortionId () {
         return this._data.portion_id;
     }
 
     getCreatorId = () => {
         return this._data.creator_id;
     }
-
+    
     getCreatorType = () => {
         return this._data.creator_type;
     }
@@ -44,4 +45,7 @@ export default class FoodItem {
     //     const portion = this._data.portion ? this._data.portion : {};
     //     return { ...portion };
     // }
+
+    
 }
+

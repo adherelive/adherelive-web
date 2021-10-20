@@ -1,5 +1,7 @@
+
+
 function staticTemplatesReducer(state, data) {
-    const {static_templates} = data || {};
+    const { static_templates } = data || {};
     if (static_templates) {
         return {
             ...state,
@@ -11,7 +13,7 @@ function staticTemplatesReducer(state, data) {
 }
 
 export default (state = {}, action) => {
-    const {type, data} = action;
+    const { type, data } = action;
     switch (type) {
         default:
             return staticTemplatesReducer(state, data)

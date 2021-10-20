@@ -7,23 +7,23 @@ import doRequest from "../../../app/controllers/helper/doRequest";
 
 export default async (req, res, next) => {
     try {
-        const {query: {m} = {}} = req;
+        const { query: { m } = {} } = req;
         let accessToken;
         if (m) {
-            const {authorization = ""} = req.headers || {};
+            const { authorization = "" } = req.headers || {};
             const bearer = authorization.split(" ");
             if (bearer.length === 2) {
                 accessToken = bearer[1];
             }
         } else {
-            const {cookies = {}} = req;
+            const { cookies = {} } = req;
             if (cookies.accessToken) {
                 accessToken = cookies.accessToken;
             }
         }
 
-        const {accesstoken: aT = ""} = req.headers || {};
-        if (aT) {
+        const {accesstoken : aT = ""} = req.headers || {};
+        if(aT) {
             accessToken = aT;
         }
 
@@ -32,7 +32,7 @@ export default async (req, res, next) => {
             const decodedAccessToken = await jwt.verify(accessToken, secret);
             // const access_token = decodedAccessToken.accessToken;
 
-            const {userId = "", accessToken: access_token = ""} = decodedAccessToken || {};
+            const {userId = "", accessToken : access_token = ""} = decodedAccessToken || {};
 
             // // const CLIENT_ID = process.config.GOOGLE_KEYS.CLIENT_ID;
             // // const CLIENT_SECRET = process.config.GOOGLE_KEYS.CLIENT_SECRET;
@@ -40,6 +40,7 @@ export default async (req, res, next) => {
             // // const client = new OAuth2Client(CLIENT_ID, CLIENT_SECRET, REDIRECT_URI);
             // // const userInfo =  await client.getTokenInfo(access_token);
             // // console.log(userInfo);
+
 
             // // now check the accessToken for facebook login
             // const appToken = process.config.FACEBOOK_KEYS.APP_TOKEN;
@@ -53,11 +54,12 @@ export default async (req, res, next) => {
             // console.log("test --->>> ", res);
         } else {
             const response = new Response(false, 401);
-            response.setError({message: errMessage.COOKIES_NOT_SET});
+            response.setError({ message: errMessage.COOKIES_NOT_SET });
             return res.status(400).json(response.getResponse());
         }
         next();
-    } catch (err) {
+    }
+    catch(err){
         console.log("errr ===== ", err.name);
         let payload = {};
         if (err.name === "TokenExpiredError") {
@@ -76,4 +78,5 @@ export default async (req, res, next) => {
         response.setError(payload);
         return res.status(payload.code).json(response.getResponse());
     }
+
 };

@@ -35,7 +35,7 @@ export const db = (database) => {
                 getBasicInfo() {
                     return {
                         id: this.id,
-                        name: this.name,
+                        name:this.name,
                     };
                 }
             }
@@ -48,7 +48,8 @@ export const associate = (database) => {
 
     // associations here (if any) ...
     region_features.belongsTo(features, {
-        foreignKey: "feature_id",
-        targetKey: "id"
+        foreignKey:"feature_id",
+        targetKey:"id"
     });
+
 };

@@ -6,6 +6,7 @@ import Op from "sequelize/lib/operators";
 import moment from "moment";
 
 export default class SubscriptionService {
+
     getByData = async (data) => {
         try {
             const subscriptions = Database.getModel(TABLE_NAME).findOne({
@@ -30,7 +31,7 @@ export default class SubscriptionService {
                 include: [
                     {
                         model: Database.getModel(paymentProductTableName),
-                        exclude: ["created_at", "updated_at"]
+                        exclude: ["created_at","updated_at"]
                     }
                 ]
             });

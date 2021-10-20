@@ -6,47 +6,47 @@ import * as validator from "./validator";
 
 const multer = require("multer");
 const storage = multer.memoryStorage();
-const upload = multer({dest: "../../../app/public/", storage: storage});
+const upload = multer({ dest: "../../../app/public/", storage: storage });
 
 router.get("/details", Authenticate, MobileAppointment.getAppointmentDetails);
 
 router.get(
-    "/:document_id/download-doc",
-    Authenticate,
-    MobileAppointment.downloadAppointmentDoc
+  "/:document_id/download-doc",
+  Authenticate,
+  MobileAppointment.downloadAppointmentDoc
 );
 
 router.delete(
-    "/:document_id/delete-doc",
-    Authenticate,
-    MobileAppointment.deleteAppointmentDoc
+  "/:document_id/delete-doc",
+  Authenticate,
+  MobileAppointment.deleteAppointmentDoc
 );
 
 router.post(
-    "/:appointment_id/upload-doc",
-    Authenticate,
-    upload.single("files"),
-    MobileAppointment.uploadAppointmentDoc
+  "/:appointment_id/upload-doc",
+  Authenticate,
+  upload.single("files"),
+  MobileAppointment.uploadAppointmentDoc
 );
 
 router.get(
-    "/:patient_id",
-    Authenticate,
-    MobileAppointment.getAppointmentForPatient
+  "/:patient_id",
+  Authenticate,
+  MobileAppointment.getAppointmentForPatient
 );
 
 router.post(
-    "/",
-    Authenticate,
-    validator.validateAppointmentFormData,
-    MobileAppointment.create
+  "/",
+  Authenticate,
+  validator.validateAppointmentFormData,
+  MobileAppointment.create
 );
 
 router.post(
-    "/:id",
-    Authenticate,
-    validator.validateAppointmentFormData,
-    MobileAppointment.update
+  "/:id",
+  Authenticate,
+  validator.validateAppointmentFormData,
+  MobileAppointment.update
 );
 
 router.delete("/:id", Authenticate, MobileAppointment.delete);

@@ -26,15 +26,17 @@ export const db = (database) => {
                 getBasicInfo() {
                     return {
                         id: this.id,
-                        name: this.name,
+                        name:this.name,
                     };
                 }
             }
         }
     );
+
 };
 
 export const associate = (database) => {
     // const {<TABLE_NAME>} = database.models || {};
+
     // associations here (if any) ...
 };

@@ -1,5 +1,7 @@
+
+
 function exerciseContentsReducer(state, data) {
-    const {exercise_contents} = data || {};
+    const { exercise_contents } = data || {};
     if (exercise_contents) {
         return {
             ...state,
@@ -11,7 +13,7 @@ function exerciseContentsReducer(state, data) {
 }
 
 export default (state = {}, action) => {
-    const {type, data} = action;
+    const { type, data } = action;
     switch (type) {
         default:
             return exerciseContentsReducer(state, data)

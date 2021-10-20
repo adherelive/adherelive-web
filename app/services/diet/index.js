@@ -1,7 +1,7 @@
 export default class Diet {
 
-    constructor(data) {
-        this._data = data;
+    constructor(data){
+        this._data=data;
     }
 
     getId = () => {
@@ -15,7 +15,7 @@ export default class Diet {
     getTotalCalories = () => {
         return this._data.total_calories;
     }
-
+    
     getStartDate = () => {
         return this._data.start_date;
     }
@@ -34,7 +34,7 @@ export default class Diet {
 
     getDietFoodGroupMappings = () => {
         return this._data.diet_food_group_mappings;
-    }
+    } 
 
     getExpiredOn = () => {
         return this._data.expired_on;

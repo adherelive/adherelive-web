@@ -1,23 +1,22 @@
-import {connect} from "react-redux";
-import {withRouter} from "react-router-dom";
+import { connect } from "react-redux";
+import { withRouter } from "react-router-dom";
 import EditExerciseGroupDrawer from "../../Components/Drawer/editExerciseGroup";
-import {close} from "../../modules/drawer";
-import {
-    addExercise,
-    storeExerciseAndDetails,
-    updateExercise,
+import { close  } from "../../modules/drawer";
+import { addExercise ,
+    storeExerciseAndDetails , 
+    updateExercise , 
     uploadExerciseContent
-} from "../../modules/exercises";
-import {searchExercise} from "../../modules/searchedExercises";
-import {clearLatestCreatedExercise} from "../../modules/latestCreatedExercise";
+    } from "../../modules/exercises";
+import { searchExercise  } from "../../modules/searchedExercises";
+import { clearLatestCreatedExercise } from "../../modules/latestCreatedExercise";
 
 
 const mapStateToProps = state => {
-    const {auth} = state;
-    const {authenticated_user, authenticated_category} = auth;
+    const { auth} = state;
+    const { authenticated_user, authenticated_category } = auth;
     const {
-        drawer: {loading, data: {payload = {}} = {}},
-        repetitions,
+        drawer: {  loading, data: {  payload = {} } = {} },
+        repetitions, 
         care_plans,
         exercises,
         exercise_details,
@@ -48,12 +47,12 @@ const mapStateToProps = state => {
 const mapDispatchToProps = dispatch => {
     return {
         close: () => dispatch(close()),
-        addExercise: (data) => dispatch(addExercise(data)),
-        updateExercise: ({exercise_id, data}) => dispatch(updateExercise({exercise_id, data})),
-        searchExercise: (value) => dispatch(searchExercise(value)),
-        storeExerciseAndDetails: (data) => dispatch(storeExerciseAndDetails(data)),
-        clearLatestCreatedExercise: () => dispatch(clearLatestCreatedExercise()),
-        uploadExerciseContent: (data) => dispatch(uploadExerciseContent(data))
+        addExercise : (data) => dispatch(addExercise(data)),
+        updateExercise : ({exercise_id,data}) => dispatch(updateExercise({exercise_id,data})),
+        searchExercise : (value) => dispatch(searchExercise(value)),
+        storeExerciseAndDetails : (data) => dispatch(storeExerciseAndDetails(data)),
+        clearLatestCreatedExercise : () => dispatch(clearLatestCreatedExercise()),
+        uploadExerciseContent : (data) => dispatch(uploadExerciseContent(data))
 
     };
 };

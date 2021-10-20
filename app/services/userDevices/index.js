@@ -4,6 +4,6 @@ export default class UserDevice {
     }
 
     getOneSignalDeviceId = () => {
-        return this._data.get("one_signal_user_id");
+      return this._data.get("one_signal_user_id");
     };
 }

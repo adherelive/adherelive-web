@@ -18,17 +18,17 @@ export const getLinkDetails = async (category, userId) => {
     try {
         let response = {};
 
-        switch (category) {
+        switch(category) {
             case USER_CATEGORY.DOCTOR:
                 const doctor = await doctorService.getDoctorByUserId(userId);
-                if (doctor) {
+                if(doctor) {
                     const doctorWrapper = await DoctorWrapper(doctor);
                     const {provider_id} = await doctorWrapper.getAllInfo();
-                    if (provider_id) {
+                    if(provider_id) {
                         response = {linked_id: provider_id, linked_with: USER_CATEGORY.PROVIDER}
                     } else {
                         response = {linked_id: null, linked_with: null}
-                    }
+                    } 
                 }
                 break;
             default:
@@ -36,38 +36,37 @@ export const getLinkDetails = async (category, userId) => {
         }
 
         return response;
-    } catch (error) {
+    } catch(error) {
         Log.debug("getLinkDetails error", error);
         return null;
     }
 };
 
+
 export const getUserDetails = async (category, categoryId) => {
     try {
         let response = {};
 
-        switch (category) {
+        switch(category) {
             case USER_CATEGORY.DOCTOR:
-                const doctor = await doctorService.findOne({
-                    where: {id: categoryId},
-                    attributes: ["user_id"]
-                }) || null;
-
-                const {user_id: doctorUserId} = doctor || {};
-                response = {user_id: doctorUserId};
+                const doctor = await doctorService.findOne({where: {id: categoryId}, 
+                    attributes: ["user_id"]}) || null;
+                
+                const { user_id: doctorUserId } = doctor || {};
+                response =  { user_id: doctorUserId };
                 break;
             case USER_CATEGORY.PATIENT:
                 const patient = await patientService.getPatientById(categoryId);
                 const patientWrapper = await PatientWrapper(patient);
                 const patientUserId = patientWrapper.getUserId();
-                response = {user_id: patientUserId};
+                response =  { user_id: patientUserId };
                 break;
             case USER_CATEGORY.PROVIDER:
                 const providers = await providerService.getProviderByData({id: categoryId});
-                if (providers && providers.length) {
+                if(providers && providers.length) {
                     const providerWrapper = await ProviderWrapper(providers[0]);
                     const providerUserId = providerWrapper.getUserId();
-                    response = {user_id: providerUserId};
+                    response =  { user_id: providerUserId };
                 }
                 break;
             default:
@@ -75,7 +74,7 @@ export const getUserDetails = async (category, categoryId) => {
         }
 
         return response;
-    } catch (error) {
+    } catch(error) {
         Log.debug("getLinkDetails error", error);
         return null;
     }

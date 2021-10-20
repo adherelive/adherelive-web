@@ -1,3 +1,4 @@
+
 export default class Patient {
     constructor(data) {
         this._data = data;
@@ -24,4 +25,5 @@ export default class Patient {
     }
 
     getPaymentsTermsAccepted = () => this._data.payment_terms_accepted;
+
 }

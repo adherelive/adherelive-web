@@ -3,7 +3,6 @@ import twilioService from "../../../services/twilio/twilio.service";
 import Controller from "../../";
 
 import Log from "../../../../libs/log_new";
-
 Log.fileName("MOBILE > TWILIO > CONTROLLER");
 
 class TwilioController extends Controller {
@@ -60,14 +59,14 @@ class TwilioController extends Controller {
 
     getConnectedParticipants = async (req, res) => {
         try {
-            const {roomId} = req.params;
+            const { roomId } = req.params;
 
             const connectedParticipantsList = await twilioService.getRoomConnectedParticipants(
                 roomId
             );
             let connectedParticipants = {};
             connectedParticipantsList.forEach(participant => {
-                const {status, identity} = participant;
+                const { status, identity } = participant;
                 connectedParticipants[identity] = status;
             });
 

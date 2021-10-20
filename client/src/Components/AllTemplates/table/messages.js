@@ -1,17 +1,17 @@
-import {defineMessages} from "react-intl";
+import { defineMessages } from "react-intl";
 
 const messages = defineMessages({
-    templateName: {
+    templateName:{
         id: "app.allTemplatesTable.templateName",
         description: "",
         defaultMessage: "Name"
     },
-    createdAt: {
+    createdAt:{
         id: "app.allTemplatesTable.createdAt",
         description: "",
         defaultMessage: "Created At"
     },
-    createDuplicateMessage: {
+    createDuplicateMessage:{
         id: "app.allTemplatesTable.createDuplicateMessage",
         description: "",
         defaultMessage: "Are you sure you want to create a duplicate template ?"
@@ -30,7 +30,7 @@ const messages = defineMessages({
         id: "app.patient.table.emptyTemplateTable",
         description: "",
         defaultMessage: "No Template added yet"
-    }
+      }
 });
 
 export default messages;

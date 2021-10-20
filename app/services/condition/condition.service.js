@@ -3,13 +3,14 @@ import Database from "../../../libs/mysql";
 import {TABLE_NAME} from "../../models/conditions";
 
 class ConditionService {
+
     getAll = async () => {
-        try {
-            const condition = await Database.getModel(TABLE_NAME).findAll();
-            return condition;
-        } catch (error) {
-            throw error;
-        }
+      try {
+          const condition = await Database.getModel(TABLE_NAME).findAll();
+          return condition;
+      } catch(error) {
+          throw error;
+      }
     };
 
     search = async (data) => {
@@ -33,7 +34,7 @@ class ConditionService {
                 where: data
             });
             return condition;
-        } catch (error) {
+        } catch(error) {
             throw error;
         }
     };
@@ -44,7 +45,7 @@ class ConditionService {
                 where: data
             });
             return condition;
-        } catch (error) {
+        } catch(error) {
             throw error;
         }
     };

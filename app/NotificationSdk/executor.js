@@ -14,7 +14,7 @@ class EventExecutor {
             let response = await EmailManager.sendEmail(mailData);
             Object.assign(
                 mailData,
-                response ? {status: "SENT"} : {status: "FAILED"}
+                response ? { status: "SENT" } : { status: "FAILED" }
             );
             let logger = new Logger("email", mailData);
             logger.log();
@@ -33,7 +33,7 @@ class EventExecutor {
             let response = SmsManager.sendSms(smsData);
             Object.assign(
                 smsData,
-                response ? {status: "SENT"} : {status: "FAILED"}
+                response ? { status: "SENT" } : { status: "FAILED" }
             );
             let logger = new Logger("sms", smsData);
             logger.log();
@@ -53,7 +53,7 @@ class EventExecutor {
             const response = await fetch(
                 "https://onesignal.com/api/v1/notifications",
                 {
-                    method: "POST",
+                    method:"POST",
                     port: 443,
                     headers: {
                         "Content-Type": "application/json; charset=utf-8",

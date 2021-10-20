@@ -4,7 +4,7 @@ import SeverityWrapper from "../../ApiWrapper/web/severity";
 
 import Log from "../../../libs/log";
 
-const Logger = new Log("WEB DEGREE CONTROLLER");
+const Logger  = new Log("WEB DEGREE CONTROLLER");
 
 class SeverityController extends Controller {
     constructor() {
@@ -21,9 +21,9 @@ class SeverityController extends Controller {
 
             const severityDetails = await severityService.search(value);
 
-            if (severityDetails.length > 0) {
+            if(severityDetails.length > 0) {
                 let severityApiData = {};
-                for (const severity of severityDetails) {
+                for(const severity of severityDetails) {
                     const severityWrapper = await new SeverityWrapper(severity);
                     severityApiData[severityWrapper.getSeverityId()] = severityWrapper.getBasicInfo();
                 }
@@ -41,7 +41,7 @@ class SeverityController extends Controller {
             } else {
                 return raiseClientError(res, 422, {}, `No severity found with name including ${value}`)
             }
-        } catch (error) {
+        } catch(error) {
             Logger.debug("severity search 500 error", error);
             return raiseServerError(res);
         }

@@ -4,9 +4,11 @@ import Authenticate from "../middleware/auth";
 import userController from "../../../app/controllers/user/user.controller";
 import * as validator from "./validator";
 
+
 const multer = require("multer");
 const storage = multer.memoryStorage();
-const upload = multer({dest: "../../../app/public/", storage: storage});
+const upload = multer({ dest: "../../../app/public/", storage: storage });
+
 
 router.get(
     "/register/:link",
@@ -24,6 +26,7 @@ router.post(
     Authenticate,
     userController.giveConsent
 );
+
 
 router.post(
     "/sign-up",

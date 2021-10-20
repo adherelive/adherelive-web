@@ -24,7 +24,7 @@ export default class Transaction {
     getPayeeType = () => this._data.payee_type;
 
     getPaymentProduct = () => {
-        return this._data.payment_products;
+      return this._data.payment_products;
     };
 
     getMode = () => {

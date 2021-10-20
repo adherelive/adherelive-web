@@ -14,7 +14,7 @@ class AppNotification {
     }
 
     notify = (templates = []) => {
-        for (const template of templates) {
+        for(const template of templates) {
             Log.debug("template data -->", template);
             this.sendAppNotification(template).then(res => {
                 Log.debug("AppNotification notify response", res);

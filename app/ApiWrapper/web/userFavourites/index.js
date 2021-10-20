@@ -38,9 +38,9 @@ class UserFavouritesWrapper extends BaseUserFavourites {
     };
 
     getReferenceInfo = async () => {
-        const {
-            getMarkedFavouriteType, getMarkedFavouriteId,
-            getBasicInfo
+      const {
+          getMarkedFavouriteType , getMarkedFavouriteId,
+          getBasicInfo
         } = this;
 
         let marked_favourites_data = {};
@@ -48,9 +48,9 @@ class UserFavouritesWrapper extends BaseUserFavourites {
 
         switch (getMarkedFavouriteType()) {
             case FAVOURITE_TYPE.MEDICINE:
-                const id = getMarkedFavouriteId();
-                const medicine = await MedicineWrapper(null, id);
-                const ref_info = await medicine.getAllInfo();
+                const id =  getMarkedFavouriteId();
+                const medicine = await MedicineWrapper(null, id );
+                const ref_info = await  medicine.getAllInfo();
                 const medicineId = await medicine.getMedicineId();
                 marked_favourites_data[medicineId] = {...ref_info};
                 break;
@@ -58,17 +58,17 @@ class UserFavouritesWrapper extends BaseUserFavourites {
                 break;
         }
 
-        return {
-            ...basic_info,
-            marked_favourites_data
-        };
+      return {
+        ...basic_info,  
+        marked_favourites_data
+      };
     };
 }
 
 export default async (data = null, id = null) => {
-    if (data) {
+    if(data) {
         return new UserFavouritesWrapper(data);
     }
-    const favourite = await userFavouritesService.getByData({id});
+    const favourite = await userFavouritesService.getByData({ id });
     return new UserFavouritesWrapper(favourite);
 };

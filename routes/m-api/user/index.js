@@ -6,10 +6,14 @@ import userDeviceRouter from "../userDevice";
 
 const express = require("express");
 const router = express.Router();
-
+import mUserController from "../../../app/controllers/mControllers/user/user.controller";
+import * as validator from "./validator";
+import Authenticate from "../middlewares/auth";
 const multer = require("multer");
 const storage = multer.memoryStorage();
-const upload = multer({dest: "../../../app/public/", storage: storage});
+const upload = multer({ dest: "../../../app/public/", storage: storage });
+
+import userDeviceRouter from "../userDevice";
 
 const PASSWORD_LENGTH = 8;
 
@@ -42,6 +46,7 @@ router.post(
     validator.validateCredentialsData,
     mUserController.signUp,
 );
+
 
 router.get(
     "/get-basic-info",
@@ -80,10 +85,10 @@ router.post(
 );
 
 router.post(
-    "/password-reset",
-    Authenticate,
+  "/password-reset",
+  Authenticate,
     validator.updatePasswordForm,
-    mUserController.updateUserPassword
+  mUserController.updateUserPassword
 );
 
 router.use("/devices", userDeviceRouter);

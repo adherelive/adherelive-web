@@ -4,7 +4,7 @@ import {ACTIONS} from "./actions";
 
 export const ACTION_DETAILS = "action_details";
 
-export const db = (database) => {
+export const db =  (database) => {
     database.define(
         ACTION_DETAILS,
         {

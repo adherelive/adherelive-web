@@ -14,7 +14,7 @@ export default class Symptom {
     };
 
     getText = () => {
-        return this, _data.get("text");
+        return this,_data.get("text");
     };
 
     getSymptomId = () => {
@@ -27,13 +27,13 @@ export default class Symptom {
     }
 
     getPart = () => {
-        const {config: {parts} = {}} = this._data;
-        return parts;
+      const {config : {parts} = {}} = this._data;
+      return parts;
     };
 
     getSide = () => {
-        const {config: {side} = {}} = this._data;
-        return side;
+      const {config: {side} = {}} = this._data;
+      return side;
     };
 
     getUnformattedCreateDate = () => {

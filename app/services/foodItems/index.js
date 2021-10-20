@@ -15,10 +15,11 @@ export default class FoodItem {
         return this._data.food_item_details || [];
     }
 
+
     getCreatorId = () => {
         return this._data.creator_id;
     }
-
+    
     getCreatorType = () => {
         return this._data.creator_type;
     }
@@ -26,8 +27,10 @@ export default class FoodItem {
     getCreatorId = () => {
         return this._data.creator_id;
     }
-
+    
     getCreatorType = () => {
         return this._data.creator_type;
     }
+
 }
+

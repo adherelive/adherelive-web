@@ -1,6 +1,7 @@
 export default class WorkoutResponses {
-    constructor(data) {
-        this._data = data;
+
+    constructor(data){
+        this._data=data;
     }
 
     getId = () => {
@@ -16,4 +17,5 @@ export default class WorkoutResponses {
     getStatus = () => {
         return this._data.status;
     }
+
 }

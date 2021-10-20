@@ -4,19 +4,19 @@ function workoutResponseReducer(state, data) {
     if (workout_responses) {
 
         return {
-            ...state,
-            ...workout_responses
+        ...state,
+        ...workout_responses
         };
     } else {
-        return state;
+      return state;
     }
-}
-
-export default (state = {}, action) => {
-    const {type, data} = action;
+  }
+  
+  export default (state = {}, action) => {
+    const { type, data } = action;
     switch (type) {
-        default:
-            return workoutResponseReducer(state, data);
+      default:
+        return workoutResponseReducer(state,data);
     }
-};
+  };
   

@@ -10,7 +10,7 @@ export const updateWorkoutUrl = (id) => {
     return `/workout/${id}`;
 }
 
-export const updateWorkoutTotalCaloriesUrl = (workout_id, total_calories) => {
+export const updateWorkoutTotalCaloriesUrl = (workout_id,total_calories) => {
     return `/workout/update-calories?id=${workout_id}&total_calories=${total_calories}`;
 }
 

@@ -2,13 +2,14 @@ import Database from "../../../libs/mysql";
 import {TABLE_NAME} from "../../models/carePlanAppointments";
 
 class CarePlanAppointmentService {
+
     getAllByData = async (data) => {
         try {
             const carePlanAppointments = await Database.getModel(TABLE_NAME).findAll({
                 where: data
             });
             return carePlanAppointments;
-        } catch (error) {
+        } catch(error) {
             throw error;
         }
     };
@@ -19,7 +20,7 @@ class CarePlanAppointmentService {
                 where: data
             });
             return carePlanAppointments;
-        } catch (error) {
+        } catch(error) {
             throw error;
         }
     };
@@ -30,7 +31,7 @@ class CarePlanAppointmentService {
                 where: data
             });
             return carePlanAppointment;
-        } catch (error) {
+        } catch(error) {
             throw error;
         }
     };
@@ -41,10 +42,11 @@ class CarePlanAppointmentService {
                 where: data,
                 attributes: ["care_plan_id"]
             });
-        } catch (error) {
+        } catch(error) {
             throw error;
         }
     };
+
 
     getAppointmentsByCarePlanId = async (care_plan_id) => {
         try {
@@ -52,32 +54,32 @@ class CarePlanAppointmentService {
                 where: {care_plan_id}
             });
             return carePlanAppointments;
-        } catch (error) {
+        } catch(error) {
             throw error;
         }
     };
 
     deleteCarePlanAppointmentByAppointmentId = async appointment_id => {
         try {
-            const carePlanAppointments = await Database.getModel(TABLE_NAME).destroy({
-                where: {
-                    appointment_id
-                }
-            });
-            return carePlanAppointments;
-        } catch (err) {
-            throw err;
+          const carePlanAppointments = await Database.getModel(TABLE_NAME).destroy({
+            where: {
+                appointment_id
+            }
+          });
+          return carePlanAppointments;
+        } catch(err) {
+          throw err;
         }
-    };
+      };
 
     addCarePlanAppointment = async data => {
         try {
             const carePlanAppointment = await Database.getModel(TABLE_NAME).create(data);
             return carePlanAppointment;
-        } catch (error) {
+        } catch(error) {
             throw error;
         }
-    };
+      };
 }
 
 export default new CarePlanAppointmentService();

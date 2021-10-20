@@ -4,7 +4,7 @@ import CouncilWrapper from "../../ApiWrapper/web/council";
 
 import Log from "../../../libs/log";
 
-const Logger = new Log("WEB DEGREE CONTROLLER");
+const Logger  = new Log("WEB DEGREE CONTROLLER");
 
 class CouncilController extends Controller {
     constructor() {
@@ -21,9 +21,9 @@ class CouncilController extends Controller {
 
             const councilDetails = await councilService.search(value);
 
-            if (councilDetails.length > 0) {
+            if(councilDetails.length > 0) {
                 let councilApiData = {};
-                for (const council of councilDetails) {
+                for(const council of councilDetails) {
                     const councilWrapper = await new CouncilWrapper(council);
                     councilApiData[councilWrapper.getCouncilId()] = councilWrapper.getBasicInfo();
                 }
@@ -41,7 +41,7 @@ class CouncilController extends Controller {
             } else {
                 return raiseClientError(res, 422, {}, `No council found with name including ${value}`)
             }
-        } catch (error) {
+        } catch(error) {
             Logger.debug("council search 500 error", error);
             return raiseServerError(res);
         }

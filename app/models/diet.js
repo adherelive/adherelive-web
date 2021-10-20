@@ -1,7 +1,8 @@
 "use strict";
 import {DataTypes} from "sequelize";
-import {TABLE_NAME as carePlanTableName} from "./carePlan";
-import {TABLE_NAME as dietFoodGroupMappingTableName} from "./dietFoodGroupMapping";
+import { TABLE_NAME as carePlanTableName } from "./carePlan";
+import { TABLE_NAME as dietFoodGroupMappingTableName } from "./dietFoodGroupMapping";
+
 
 export const TABLE_NAME = "diet";
 
@@ -19,21 +20,21 @@ export const db = (database) => {
                 type: DataTypes.STRING(1000),
                 allowNull: false,
             },
-            total_calories: {
-                type: DataTypes.FLOAT
+            total_calories : {
+                type : DataTypes.FLOAT
             },
             start_date: {
                 type: DataTypes.DATE
             },
             end_date: {
-                type: DataTypes.DATE
+                type: DataTypes.DATE 
             },
             care_plan_id: {
                 type: DataTypes.INTEGER,
                 allowNull: false,
             },
             details: {
-                type: DataTypes.JSON
+                type: DataTypes.JSON 
             },
             expired_on: {
                 type: DataTypes.DATE,
@@ -48,6 +49,7 @@ export const db = (database) => {
 };
 
 export const associate = (database) => {
+
     // associations here (if any) ...
     database.models[TABLE_NAME].hasOne(database.models[carePlanTableName], {
         foreignKey: "id",
@@ -55,7 +57,8 @@ export const associate = (database) => {
     });
 
     database.models[TABLE_NAME].hasMany(database.models[dietFoodGroupMappingTableName], {
-        foreignKey: "diet_id",
-        sourceKey: "id"
+        foreignKey:"diet_id",
+        sourceKey:"id"
     });
+    
 };

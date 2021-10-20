@@ -1,9 +1,9 @@
 import express from "express";
 import VitalController from "../../../app/controllers/vitals/vital.controller";
 import Authenticate from "../middleware/auth";
-import {isDoctor} from "../middleware/doctor";
+import { isDoctor } from "../middleware/doctor";
 // import * as validator from "./validator";
-const router = express.Router();
+const router  = express.Router();
 
 router.get(
     "/",
@@ -31,9 +31,9 @@ router.get(
 );
 
 router.post(
-    "/",
-    Authenticate,
-    // validator.validateVitalsForm,
+  "/",
+  Authenticate,
+  // validator.validateVitalsForm,
     VitalController.create
 );
 

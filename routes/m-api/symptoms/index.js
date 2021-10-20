@@ -5,8 +5,8 @@ import Authenticate from "../middlewares/auth";
 import * as validator from "./validator";
 
 const storage = multer.memoryStorage();
-const upload = multer({dest: "../../../app/public/", storage: storage});
-const router = express.Router();
+const upload = multer({ dest: "../../../app/public/", storage: storage });
+const router  = express.Router();
 
 router.post(
     "/",
@@ -15,10 +15,10 @@ router.post(
 );
 
 router.post(
-    "/audio",
-    Authenticate,
+  "/audio",
+  Authenticate,
     upload.single("files"),
-    SymptomController.uploadAudio
+  SymptomController.uploadAudio
 );
 
 router.post(

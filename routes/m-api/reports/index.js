@@ -6,7 +6,7 @@ import {isDoctor} from "../middlewares/doctor";
 
 const multer = require("multer");
 const storage = multer.memoryStorage();
-const upload = multer({dest: "../../../app/public/", storage: storage});
+const upload = multer({ dest: "../../../app/public/", storage: storage });
 
 const router = express.Router();
 

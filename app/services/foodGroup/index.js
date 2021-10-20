@@ -1,6 +1,7 @@
 export default class FoodGroup {
-    constructor(data) {
-        this._data = data;
+
+    constructor(data){
+        this._data=data;
     }
 
     getId = () => {
@@ -14,7 +15,7 @@ export default class FoodGroup {
     getPortionId = () => {
         return this._data.portion_id;
     }
-
+    
     getServing = () => {
         return this._data.serving;
     }
@@ -22,4 +23,6 @@ export default class FoodGroup {
     getFoodItemDetailsId = () => {
         return this._data.food_item_detail_id;
     }
+
+   
 }

@@ -2,9 +2,8 @@ import express from "express";
 import Authenticated from "../middleware/auth";
 import PatientController from "../../../app/controllers/patients/patients.controller";
 import multer from "multer";
-
 var storage = multer.memoryStorage();
-var upload = multer({dest: "../app/public/", storage: storage});
+var upload = multer({ dest: "../app/public/", storage: storage });
 
 const router = express.Router();
 
@@ -90,7 +89,7 @@ router.post(
     "/add-careplan-for-patient/:patient_id",
     Authenticated,
     PatientController.createNewCareplanforPatient
-);
+)
 
 router.get(
     "/generate_prescription/:care_plan_id",
@@ -103,5 +102,6 @@ router.get(
     Authenticated,
     PatientController.getAllPatientsPagination
 );
+  
 
 module.exports = router;

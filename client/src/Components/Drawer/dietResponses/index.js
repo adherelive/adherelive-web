@@ -11,7 +11,7 @@ class dietResponseDrawer extends Component {
     }
 
     onClose = () => {
-        const {close} = this.props;
+        const { close } = this.props;
         close();
     };
 
@@ -19,7 +19,7 @@ class dietResponseDrawer extends Component {
         const {
             visible,
             intl: {formatMessage} = {},
-            diet_name = ''
+            diet_name=''
         } = this.props;
         const {onClose} = this;
 
@@ -33,15 +33,15 @@ class dietResponseDrawer extends Component {
                 title={formatMessage(
                     {...messages.title},
                     {diet_name}
-                )}
+                    )}
                 headerStyle={{
                     position: "sticky",
                     zIndex: "9999",
                     top: "0px",
-                    display: "flex",
-                    justifyContent: "flex-start",
-                    alignItems: "flex-start",
-                    width: "100%",
+                    display:"flex",
+                    justifyContent:"flex-start",
+                    alignItems:"flex-start",
+                    width:"100%",
                 }}
             >
                 <DietTimeline {...this.props}/>

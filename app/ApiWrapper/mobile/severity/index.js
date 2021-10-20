@@ -7,7 +7,7 @@ class SeverityWrapper extends BaseSeverity {
     }
 
     getBasicInfo = () => {
-        const {_data} = this;
+        const { _data } = this;
         const {
             id,
             name
@@ -25,6 +25,6 @@ export default async (data = null, id = null) => {
     if (data) {
         return new SeverityWrapper(data);
     }
-    const severity = await severityService.getByData({id});
+    const severity = await severityService.getByData({ id });
     return new SeverityWrapper(severity.get());
 };

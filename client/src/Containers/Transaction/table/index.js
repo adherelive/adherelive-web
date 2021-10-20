@@ -1,27 +1,27 @@
-import {connect} from "react-redux";
+import { connect } from "react-redux";
 import TransactionTable from "../../../Components/Transaction/table/index";
-import {withRouter} from "react-router-dom";
+import { withRouter } from "react-router-dom";
 import {getAllTransactions} from "../../../modules/providers";
 
 const mapStateToProps = state => {
     const {
         transactions = {},
-        doctors = {},
+        doctors={},
         patients = {},
-        payment_products = {},
-        pages: {transaction_ids = []} = {},
-        users = {},
-        auth = {},
+        payment_products={},
+        pages: { transaction_ids = []} = {},
+        users={},
+        auth={},
         user_roles = {}
     } = state;
 
-    const {authenticated_user, authenticated_category} = auth;
+    const { authenticated_user, authenticated_category } = auth;
 
     return {
-        transactions,
-        transaction_ids,
+        transactions ,
+        transaction_ids ,
         doctors,
-        patients,
+        patients ,
         payment_products,
         authenticated_user,
         authenticated_category,

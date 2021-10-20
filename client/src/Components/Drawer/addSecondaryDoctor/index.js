@@ -1,6 +1,6 @@
-import React, {Component, Fragment} from "react";
-import {injectIntl} from "react-intl";
-import {hasErrors} from "../../../Helper/validation";
+import React, { Component, Fragment } from "react";
+import { injectIntl } from "react-intl";
+import { hasErrors } from "../../../Helper/validation";
 
 import Drawer from "antd/es/drawer";
 import Form from "antd/es/form";
@@ -11,164 +11,165 @@ import AddFoodItemForm from "./form";
 import Footer from "../footer";
 
 class AddSecondaryDoc extends Component {
-    constructor(props) {
-        super(props);
-        this.state = {
-            visible: true,
-            disabledSubmit: true,
-            submitting: false
-        };
-
-        this.FormWrapper = Form.create({onFieldsChange: this.onFormFieldChanges})(
-            AddFoodItemForm
-        );
-    }
-
-
-    onFormFieldChanges = (props) => {
-        const {
-            form: {getFieldsError, isFieldsTouched},
-        } = props;
-        const isError = hasErrors(getFieldsError());
-        const {disabledSubmit} = this.state;
-        if (disabledSubmit !== isError && isFieldsTouched()) {
-            this.setState({disabledSubmit: isError});
-        }
+  constructor(props) {
+    super(props);
+    this.state = {
+      visible: true,
+      disabledSubmit: true,
+      submitting:false
     };
 
-    handleSubmit = (e) => {
-        e.preventDefault();
-        const {addSecondaryDoctorToCareplan, carePlanId = null} = this.props;
-        const {formRef = {}, formatMessage} = this;
+    this.FormWrapper = Form.create({ onFieldsChange: this.onFormFieldChanges })(
+        AddFoodItemForm
+    );
+  }
+ 
+ 
+  onFormFieldChanges = (props) => {
+    const {
+      form: { getFieldsError, isFieldsTouched },
+    } = props;
+    const isError = hasErrors(getFieldsError());
+    const { disabledSubmit } = this.state;
+    if (disabledSubmit !== isError && isFieldsTouched()) {
+      this.setState({ disabledSubmit: isError });
+    }
+  };
 
-        const {
-            props: {
-                form: {validateFields, resetFields},
-            },
-        } = formRef;
+  handleSubmit = (e) => {
+    e.preventDefault();
+    const { addSecondaryDoctorToCareplan , carePlanId = null } = this.props;
+    const { formRef = {}, formatMessage } = this;
 
-        validateFields(async (err, values) => {
-            if (!err) {
-                let {
-                    doctor_role_id
-                } = values;
+    const {
+      props: {
+        form: { validateFields, resetFields },
+      },
+    } = formRef;
 
+    validateFields(async (err, values) => {
+      if (!err) {
+        let {
+          doctor_role_id
+        } = values;
 
-                const data = {
-                    user_role_id: doctor_role_id,
-                    care_plan_id: carePlanId
-                };
+     
+        const data = {
+          user_role_id:doctor_role_id,
+          care_plan_id:carePlanId
+        };
 
-
-                try {
-                    this.setState({submitting: true});
-                    const response = await addSecondaryDoctorToCareplan(data);
-                    const {
-                        status,
-                        statusCode: code,
-                        payload: {message: errorMessage = "", error: {error_type = ""} = {}},
-                    } = response || {};
-
-
-                    if (!status) {
-                        message.error(errorMessage);
-                    } else {
-                        message.success(errorMessage);
-                    }
-                    this.setState({submitting: false});
-
-                    if (status) {
-                        this.onClose();
-                    }
+      
+          try {
+            this.setState({submitting:true});
+            const response = await addSecondaryDoctorToCareplan(data);
+            const {
+              status,
+              statusCode: code,
+              payload: { message: errorMessage = "", error: { error_type = "" } = {} },
+            } = response || {};
 
 
-                } catch (error) {
-                    this.setState({submitting: false});
-                }
-
+           
+            if(!status){
+                message.error(errorMessage);
+            }else{
+                message.success(errorMessage);
             }
-        });
-    };
+            this.setState({submitting:false});
 
-    formatMessage = (data) => this.props.intl.formatMessage(data);
+            if(status){
+              this.onClose();
+            }
+            
 
-    onClose = () => {
-        const {close} = this.props;
-
-        const {formRef} = this;
-        const {
-            props: {
-                form: {resetFields},
-            },
-        } = formRef;
-        this.setState({
-            visible: true,
-            disabledSubmit: true,
-            submitting: false
-        });
-        resetFields();
-        close();
-    };
-
-    setFormRef = (formRef) => {
-        this.formRef = formRef;
-        if (formRef) {
-            this.setState({formRef: true});
+          } catch (error) {
+            this.setState({submitting:false});
+          }
+  
         }
+    });
+  };
+
+  formatMessage = (data) => this.props.intl.formatMessage(data);
+
+  onClose = () => {
+    const { close } = this.props;
+
+    const { formRef } = this;
+    const {
+      props: {
+        form: { resetFields },
+      },
+    } = formRef;
+    this.setState({
+      visible: true,
+      disabledSubmit: true,
+      submitting:false
+    });
+    resetFields();
+    close();
+  };
+
+  setFormRef = (formRef) => {
+    this.formRef = formRef;
+    if (formRef) {
+      this.setState({ formRef: true });
+    }
+  };
+
+  render() {
+    const { visible } = this.props;
+    const { disabledSubmit , submitting=false } = this.state;
+
+
+    const {
+      onClose,
+      formatMessage,
+      setFormRef,
+      handleSubmit,
+      FormWrapper,
+    } = this;
+
+    const submitButtonProps = {
+      disabled: disabledSubmit,
     };
 
-    render() {
-        const {visible} = this.props;
-        const {disabledSubmit, submitting = false} = this.state;
+    console.log("82376482364826348723",{props:this.props});
 
 
-        const {
-            onClose,
-            formatMessage,
-            setFormRef,
-            handleSubmit,
-            FormWrapper,
-        } = this;
+    return (
+      <Fragment>
+        <Drawer
+          placement="right"
+          maskClosable={false}
+          headerStyle={{
+            position: "sticky",
+            zIndex: "9999",
+            top: "0px"
+          }}
+          destroyOnClose={true}
 
-        const submitButtonProps = {
-            disabled: disabledSubmit,
-        };
+          onClose={ onClose}
+          visible={visible}
+          width={'35%'}
+          title={formatMessage(messages.add_doctor)}
+      
+        >
+          <FormWrapper wrappedComponentRef={setFormRef} {...this.props} />
 
-        console.log("82376482364826348723", {props: this.props});
-
-
-        return (
-            <Fragment>
-                <Drawer
-                    placement="right"
-                    maskClosable={false}
-                    headerStyle={{
-                        position: "sticky",
-                        zIndex: "9999",
-                        top: "0px"
-                    }}
-                    destroyOnClose={true}
-
-                    onClose={onClose}
-                    visible={visible}
-                    width={'35%'}
-                    title={formatMessage(messages.add_doctor)}
-
-                >
-                    <FormWrapper wrappedComponentRef={setFormRef} {...this.props} />
-
-                    <Footer
-                        onSubmit={handleSubmit}
-                        onClose={onClose}
-                        submitText={formatMessage(messages.submit_text)}
-                        submitButtonProps={submitButtonProps}
-                        cancelComponent={null}
-                        submitting={submitting}
-                    />
-                </Drawer>
-            </Fragment>
-        );
-    }
+          <Footer
+            onSubmit={handleSubmit}
+            onClose={onClose}
+            submitText={formatMessage(messages.submit_text)}
+            submitButtonProps={submitButtonProps}
+            cancelComponent={null}
+            submitting={submitting}
+          />
+        </Drawer>
+      </Fragment>
+    );
+  }
 }
 
 export default injectIntl(AddSecondaryDoc);

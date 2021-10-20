@@ -7,18 +7,18 @@ const getDocumentComp = (documents, total) => {
     let comps = [];
 
     Object.keys(documents).forEach((id, index) => {
-        if (index < REPORT_DOCUMENTS_TO_SHOW) {
+        if(index < REPORT_DOCUMENTS_TO_SHOW) {
             const {basic_info: {name, document: src} = {}} = documents[id] || {};
 
-            const extension = name.substring(name.length - 5, name.length).split(".")[1];
+            const extension = name.substring(name.length-5, name.length).split(".")[1];
 
             const isImage = extension === "png" || extension === "jpeg" || extension === "jpg" || extension === "svg" || false;
             comps.push(
                 <Fragment key={`small-report-document-${id}`}>
                     {isImage ? (
-                        <div className="ml6">
-                            <img src={src} alt={name} className="w30 h30 br5"/>
-                        </div>) : (
+                    <div className="ml6">
+                        <img src={src} alt={name} className="w30 h30 br5"/>
+                    </div>) : (
                         <div className="ml6 w30 h30 br5 bg-light-grey flex align-center justify-center">
                             <PaperClipOutlined className="black-85 fs16"/>
                         </div>
@@ -42,9 +42,9 @@ const getDocumentComp = (documents, total) => {
 export default ({documentData, openModal}) => {
     const totalDocuments = Object.keys(documentData).length;
 
-    return (
-        <div className="flex align-center" onClick={openModal(documentData)}>
-            {getDocumentComp(documentData, totalDocuments)}
-        </div>
-    );
+  return (
+    <div className="flex align-center" onClick={openModal(documentData)}>
+        {getDocumentComp(documentData, totalDocuments)}
+    </div>
+  );
 };

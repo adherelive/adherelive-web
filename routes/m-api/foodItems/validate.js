@@ -13,7 +13,7 @@ const createFoodItemSchema = Joi.object({
         'number.empty': `Portion Id cannot be empty`,
         'any.required': `Portion Id is required`
     }),
-    portion_size: Joi.number().strict().required().messages({
+    portion_size:Joi.number().strict().required().messages({
         'number.base': `Portion Size must be of type number`,
         'number.empty': `Portion Size cannot be empty`,
         'any.required': `Portion Size is required`
@@ -40,6 +40,8 @@ const createFoodItemSchema = Joi.object({
     }),
     details: Joi.object().optional()
 });
+
+
 
 const updateFoodItemSchema = Joi.object({
     name: Joi.string().max(50).required().messages({
@@ -81,12 +83,12 @@ const updateFoodItemSchema = Joi.object({
 });
 
 export const create = (req, res, next) => {
-    const {body: data = {}} = req;
+    const { body: data = {} } = req;
     const isValid = createFoodItemSchema.validate(data, {convert: false});
 
     const {error: {details = []} = {}} = isValid || {};
 
-    if (details.length > 0) {
+    if(details.length > 0) {
         return validationError(res, details[0].message);
     } else {
         next();
@@ -94,12 +96,12 @@ export const create = (req, res, next) => {
 };
 
 export const update = (req, res, next) => {
-    const {body: data = {}} = req;
+    const { body: data = {} } = req;
     const isValid = updateFoodItemSchema.validate(data, {convert: false});
 
     const {error: {details = []} = {}} = isValid || {};
 
-    if (details.length > 0) {
+    if(details.length > 0) {
         return validationError(res, details[0].message);
     } else {
         next();

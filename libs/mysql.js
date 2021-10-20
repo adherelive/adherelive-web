@@ -1,5 +1,9 @@
-import {Sequelize} from "sequelize";
+import { Sequelize } from "sequelize";
 import Logger from "./log";
+const Log = new Logger("SEQUELIZE QUERY");
+// const Config = require("../config/config");
+// Config();
+
 // MODELS
 import * as ActionDetails from "../app/models/actionDetails";
 import * as Actions from "../app/models/actions";
@@ -108,177 +112,175 @@ import * as WorkoutExerciseGroupMapping from "../app/models/workoutExerciseGroup
 import * as WorkoutTemplates from "../app/models/workoutTemplate";
 import * as WorkoutTemplateExerciseMapping from "../app/models/workoutTemplateExerciseMapping";
 
-const Log = new Logger("SEQUELIZE QUERY");
-// const Config = require("../config/config");
-// Config();
 
 // Models List...
 const models = [
-    AccountDetails,
-    ActionDetails,
-    Actions,
-    Adherence,
-    Appointments,
-    Articles,
+  AccountDetails,
+  ActionDetails,
+  Actions,
+  Adherence,
+  Appointments,
+  Articles,
 
-    CarePlans,
-    CarePlanAppointments,
-    CarePlanMedications,
-    CarePlanTemplates,
-    CareplanSecondaryDoctorMappings,
-    Clinics,
-    Colleges,
-    Conditions,
-    Consents,
-    Course,
+  CarePlans,
+  CarePlanAppointments,
+  CarePlanMedications,
+  CarePlanTemplates,
+  CareplanSecondaryDoctorMappings,
+  Clinics,
+  Colleges,
+  Conditions,
+  Consents,
+  Course,
 
-    Degree,
-    Diet,
-    DietResponse,
-    DietFoodGroupMapping,
-    Disease,
-    DoctorClinics,
-    DoctorQualifications,
-    DoctorRegistrations,
-    Doctors,
-    DoctorProviderMapping,
-    DoctorPatientFeaturesMapping,
+  Degree,
+  Diet,
+  DietResponse,
+  DietFoodGroupMapping,
+  Disease,
+  DoctorClinics,
+  DoctorQualifications,
+  DoctorRegistrations,
+  Doctors,
+  DoctorProviderMapping,
+  DoctorPatientFeaturesMapping,
 
-    EmailLogger,
-    EventHistory,
-    Exercise,
-    ExerciseDetails,
-    ExerciseRepetitions,
-    ExerciseGroup,
-    ExerciseContent,
+  EmailLogger,
+  EventHistory,
+  Exercise,
+  ExerciseDetails,
+  ExerciseRepetitions,
+  ExerciseGroup,
+  ExerciseContent,
 
-    FeatureDetails,
-    Features,
-    FoodItems,
-    FoodGroups,
-    FoodItemDetails,
+  FeatureDetails,
+  Features,
+  FoodItems,
+  FoodGroups,
+  FoodItemDetails,
 
-    Medications,
-    Medicines,
-    MemberSpecialities,
-    MealTemplates,
-    MealTemplateFoodItemMapping,
+  Medications,
+  Medicines,
+  MemberSpecialities,
+  MealTemplates,
+  MealTemplateFoodItemMapping,
 
-    ScheduleEvents,
+  ScheduleEvents,
+  
+  OtpVerifications,
 
-    OtpVerifications,
+  PatientCareTakers,
+  Patients,
+  Permissions,
+  PlatformEvents,
+  ProductPlans,
+  Providers,
+  ProviderMembers,
+  PaymentProducts,
+  PatientPaymentConsentMapping,
+  ProviderTermsMapping,
+  Portions,
 
-    PatientCareTakers,
-    Patients,
-    Permissions,
-    PlatformEvents,
-    ProductPlans,
-    Providers,
-    ProviderMembers,
-    PaymentProducts,
-    PatientPaymentConsentMapping,
-    ProviderTermsMapping,
-    Portions,
+  RegionFeatures,
+  RegionProviders,
+  Regions,
+  RegistrationCouncils,
+  Reminders,
+  Reports,
 
-    RegionFeatures,
-    RegionProviders,
-    Regions,
-    RegistrationCouncils,
-    Reminders,
-    Reports,
+  Severity,
+  Speciality,
+  Subscriptions,
+  Symptoms,
+  SimilarFoodMapping,
 
-    Severity,
-    Speciality,
-    Subscriptions,
-    Symptoms,
-    SimilarFoodMapping,
+  TemplateAppointments,
+  TemplateMedications,
+  TemplateVitals,
+  TemplateDiets,
+  TemplateWorkouts,
+  TreatmentConditionMapping,
+  Treatments,
+  Transactions,
+  TermsAndConditions,
 
-    TemplateAppointments,
-    TemplateMedications,
-    TemplateVitals,
-    TemplateDiets,
-    TemplateWorkouts,
-    TreatmentConditionMapping,
-    Treatments,
-    Transactions,
-    TermsAndConditions,
+  UploadDocuments,
+  UserCategoryPermissions,
+  UserDevices,
+  UserPreferences,
+  Users,
+  UserFavourites,
+  UserVerifications,
+  UserRoles,
 
-    UploadDocuments,
-    UserCategoryPermissions,
-    UserDevices,
-    UserPreferences,
-    Users,
-    UserFavourites,
-    UserVerifications,
-    UserRoles,
+  Vitals,
+  VitalTemplates,
 
-    Vitals,
-    VitalTemplates,
-
-    Watchlist,
-    Workouts,
-    WorkoutResponses,
-    WorkoutExerciseGroupMapping,
-    WorkoutTemplates,
-    WorkoutTemplateExerciseMapping
+  Watchlist,
+  Workouts,
+  WorkoutResponses,
+  WorkoutExerciseGroupMapping,
+  WorkoutTemplates,
+  WorkoutTemplateExerciseMapping
 ];
 
 class Database {
-    static connection = null;
+  static connection = null;
 
-    static getDatabase = async () => {
-        // console.log("=====", Database.connection);
-        if (Database.connection === null) {
-            Database.connection = await new Sequelize(
-                process.config.db.name,
-                process.config.db.username,
-                process.config.db.password,
-                {
-                    host: process.config.db.host,
-                    port: process.config.db.port,
-                    dialect: process.config.db.dialect,
-                    pool: {
-                        max: 10,
-                        min: 0,
-                        acquire: 30000,
-                        idle: 10000
-                    },
-                    logging: function (str) {
-                        Log.debug("query", str);
-                    }
-                }
-            );
+  static getDatabase = async () => {
+    // console.log("=====", Database.connection);
+    if (Database.connection === null) {
+      Database.connection = await new Sequelize(
+        process.config.db.name,
+        process.config.db.username,
+        process.config.db.password,
+        {
+          host: process.config.db.host,
+          port: process.config.db.port,
+          dialect: process.config.db.dialect,
+          pool: {
+            max: 10,
+            min: 0,
+            acquire: 30000,
+            idle: 10000
+          },
+          logging: function(str) {
+            Log.debug("query", str);
+          }
         }
+      );
+    }
 
-        return Database.connection;
-    };
+    return Database.connection;
+  };
 
-    static getModel = dbName => Database.connection.models[dbName];
+  static getModel = dbName => Database.connection.models[dbName];
 
-    static initTransaction = () => Database.connection.transaction();
+  static initTransaction = () => Database.connection.transaction();
 
-    static performRawQuery = async (query, options = {}) => {
-        const database = await Database.getDatabase();
-        return await database.queryInterface.sequelize.query(query, options);
-    };
 
-    static init = async () => {
-        try {
-            const database = await Database.getDatabase();
-            await database.authenticate();
+  static performRawQuery = async(query, options = {}) => {
+    const database = await Database.getDatabase();
+    return await database.queryInterface.sequelize.query(query, options);
+  };
 
-            for (const model of models) {
-                model.db(database);
-            }
+  static init = async () => {
+    try {
+      const database = await Database.getDatabase();
+      await database.authenticate();
 
-            for (const model of models) {
-                model.associate(database);
-            }
-            Log.info("Db and tables have been created...");
-        } catch (err) {
-            Log.err(1000, "Db connect error is: ", err);
-        }
-    };
+      for (const model of models) {
+        model.db(database);
+      }
+
+      for (const model of models) {
+        model.associate(database);
+      }
+      Log.info("Db and tables have been created...");
+    } catch (err) {
+      Log.err(1000, "Db connect error is: ", err);
+    }
+  };
 }
 
 export default Database;

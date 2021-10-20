@@ -8,7 +8,7 @@ const antIcon = <LoadingOutlined spin style={{fontSize: 24}}/>;
 export const PageLoading = (props) => {
     return (
         <div className="wp100 hp100 flex justify-center align-center">
-            <Spin indicator={antIcon}/>
+            <Spin indicator={antIcon} />
         </div>
     );
 };

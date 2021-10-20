@@ -2,13 +2,14 @@ import Database from "../../../libs/mysql";
 import {TABLE_NAME} from "../../models/templateAppointments";
 
 class TemplateAppointmentService {
+
     getTemplateAppointmentByData = async (data) => {
         try {
             const templateAppointments = await Database.getModel(TABLE_NAME).findAll({
                 where: data
             });
             return templateAppointments;
-        } catch (error) {
+        } catch(error) {
             throw error;
         }
     };
@@ -19,7 +20,7 @@ class TemplateAppointmentService {
                 where: data
             });
             return templateAppointment;
-        } catch (error) {
+        } catch(error) {
             throw error;
         }
     };
@@ -30,7 +31,7 @@ class TemplateAppointmentService {
                 where: care_plan_template_id
             });
             return templateAppointments;
-        } catch (error) {
+        } catch(error) {
             throw error;
         }
     };
@@ -39,17 +40,17 @@ class TemplateAppointmentService {
         try {
             const templateAppointment = await Database.getModel(TABLE_NAME).create(data);
             return templateAppointment;
-        } catch (error) {
+        } catch(error) {
             throw error;
         }
-    };
+      };
 
     deleteAppointment = async (data) => {
         try {
             return await Database.getModel(TABLE_NAME).destroy({
-                where: data
+               where: data
             });
-        } catch (error) {
+        } catch(error) {
             throw error;
         }
     };
@@ -65,7 +66,7 @@ class TemplateAppointmentService {
             });
             await transaction.commit();
             return templateAppointment;
-        } catch (error) {
+        } catch(error) {
             await transaction.rollback();
             throw error;
         }

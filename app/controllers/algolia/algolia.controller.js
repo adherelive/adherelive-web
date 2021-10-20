@@ -16,12 +16,13 @@ class AlgoliaController extends Controller {
             Log.debug("client", await algoliaService.getClient());
             const result = await algoliaService.medicineData();
             Log.debug("result", result);
-            if (result) {
+            if(result) {
                 return this.raiseSuccess(res, 200, {}, "medicine data added");
             } else {
                 return this.raiseClientError(res, 422, {}, "something wrong in data");
             }
-        } catch (error) {
+
+        } catch(error) {
             Log.debug("updateMedicine catch error", error);
             return this.raiseServerError(res);
         }

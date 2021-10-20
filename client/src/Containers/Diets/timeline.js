@@ -8,7 +8,7 @@ const mapStateToProps = state => {
         diets = {},
         schedule_events = {},
         upload_documents = {},
-        pages: {diet_response_ids = []} = {},
+        pages : { diet_response_ids = [] } = {},
         diet_responses = {}
     } = state;
 
@@ -23,7 +23,7 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => {
     return {
-        getDietTimeline: (id) => dispatch(getDietTimeline(id)),
+        getDietTimeline: (id)  => dispatch(getDietTimeline(id)),
     };
 };
 

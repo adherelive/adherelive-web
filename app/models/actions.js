@@ -51,12 +51,12 @@ export const db = (database) => {
                 getBasicInfo() {
                     return {
                         id: this.id,
-                        care_plan_id: this.care_plan_id,
-                        type: this.type,
-                        frequency_per_day: this.frequency_per_day,
-                        reference_link: this.reference_link,
-                        start_date: this.start_date,
-                        end_date: this.end_date
+                        care_plan_id:this.care_plan_id,
+                        type:this.type,
+                        frequency_per_day:this.frequency_per_day,
+                        reference_link:this.reference_link,
+                        start_date:this.start_date,
+                        end_date:this.end_date
                     };
                 }
             }
@@ -69,7 +69,7 @@ export const associate = (database) => {
 
     // associations here (if any) ...
     actions.belongsTo(care_plans, {
-        foreignKey: "care_plan_id",
-        targetKey: "id"
+        foreignKey:"care_plan_id",
+        targetKey:"id"
     });
 };

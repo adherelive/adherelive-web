@@ -15,6 +15,7 @@ router.get(
     Diet.getDietsByCareplan
 );
 
+
 router.get(
     "/all-diets",
     Authenticate,
@@ -50,16 +51,19 @@ router.post(
     Authenticate,
     Diet.update
 );
+
 router.post(
     "/",
     Authenticate,
     Diet.create
 );
+
 router.delete(
     "/:id",
     Authenticate,
     Diet.delete
 );
+
 // router.post(
 //     "/",
 //     Authenticate,
@@ -71,5 +75,7 @@ router.delete(
 //     Authenticate,
 //     Diet.update
 // );
+
+
 
 module.exports = router;

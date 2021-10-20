@@ -23,7 +23,7 @@ export const db = (database) => {
             user_created: {
                 type: DataTypes.INTEGER,
                 allowNull: true,
-                defaultValue: null
+                defaultValue:null
             }
         },
         {
@@ -33,8 +33,10 @@ export const db = (database) => {
     );
 };
 
+
 export const associate = (database) => {
     // const {TABLE_NAME} = database.models || {};
+
     // associations here (if any) ...
     // Specialities.belongsTo(Doctors, {
     //     foreignKey: "speciality_id",

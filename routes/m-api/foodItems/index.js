@@ -2,17 +2,17 @@
 import express from "express";
 import Authenticate from "../middlewares/auth";
 import FoodItemController from "../../../app/controllers/mControllers/foodtems/foodItems.controller";
-import {isDoctor} from "../middlewares/doctor";
+import { isDoctor } from "../middlewares/doctor";
 import * as Validator from "./validate";
 
 const router = express.Router();
 
 router.post(
-    "/",
-    Authenticate,
-    isDoctor,
-    Validator.create,
-    FoodItemController.create
+  "/",
+  Authenticate,
+  isDoctor,
+  Validator.create,
+  FoodItemController.create
 );
 
 router.post(
@@ -21,13 +21,14 @@ router.post(
     isDoctor,
     Validator.update,
     FoodItemController.update
-);
+  );
 
-router.get(
+
+  router.get(
     "/",
     Authenticate,
     isDoctor,
     FoodItemController.search
-);
+  );
 
 module.exports = router;

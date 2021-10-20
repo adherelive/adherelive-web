@@ -10,18 +10,16 @@ export default class DeactivateDoctorJob extends AuthJob {
         super(data);
     }
 
-    getEmailTemplate = () => {
-    };
+    getEmailTemplate = () => {};
 
-    getSmsTemplate = () => {
-    };
+    getSmsTemplate = () => {};
 
     getPushAppTemplate = async () => {
-        const {getData} = this;
+        const { getData } = this;
         const {
             actor: {
                 id: actorId,
-                details: {name} = {}
+                details: { name } = {}
             } = {},
             participants = [],
         } = getData() || {};
@@ -43,7 +41,7 @@ export default class DeactivateDoctorJob extends AuthJob {
 
         if (userDevices.length > 0) {
             for (const device of userDevices) {
-                const userDevice = await UserDeviceWrapper({data: device});
+                const userDevice = await UserDeviceWrapper({ data: device });
                 playerIds.push(userDevice.getOneSignalDeviceId());
             }
         }
@@ -51,14 +49,14 @@ export default class DeactivateDoctorJob extends AuthJob {
         templateData.push({
             small_icon: process.config.app.icon_android,
             app_id: process.config.one_signal.app_id,
-            headings: {en: "Doctor Association"},
+            headings: { en: "Doctor Association" },
             contents: {
                 en: `Dr. ${name} is not associated with the platform anymore. Platform owns no obligation if you continue the medication prescribed by this doctor.`
             },
             include_player_ids: [...playerIds],
             priority: 10,
             android_channel_id: process.config.one_signal.urgent_channel_id,
-            data: {url: `/`, params: {...getData()}}
+            data: { url: `/`, params: {...getData() }}
         });
         // }
 
@@ -66,11 +64,11 @@ export default class DeactivateDoctorJob extends AuthJob {
     };
 
     getInAppTemplate = () => {
-        const {getData} = this;
+        const { getData } = this;
         const {
             actor: {
                 id: actorId,
-                details: {name} = {}
+                details: { name } = {}
             } = {},
             participants = [],
             // doctor_id,

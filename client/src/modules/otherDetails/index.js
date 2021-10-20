@@ -1,4 +1,4 @@
-import {doRequest} from "../../Helper/network";
+import { doRequest } from "../../Helper/network";
 import {getMedicationDetailsUrl, getTermsAndPolicyUrl, updateTermsAndPolicyUrl} from "../../Helper/urls/otherDetails";
 import {REQUEST_TYPE} from "../../constant";
 
@@ -19,12 +19,12 @@ export const getMedicationDetails = (patientId) => {
     return async dispatch => {
         try {
             dispatch({type: GET_MEDICATION_DETAILS_START});
-            response = await doRequest({
+             response = await doRequest({
                 method: REQUEST_TYPE.GET,
                 url: getMedicationDetailsUrl(patientId),
             });
             const {status, payload: {data} = {}} = response || {};
-            if (status === true) {
+            if(status === true) {
                 dispatch({
                     type: GET_MEDICATION_DETAILS_COMPLETE,
                     payload: data,
@@ -35,7 +35,7 @@ export const getMedicationDetails = (patientId) => {
                     type: GET_MEDICATION_DETAILS_FAILED,
                 });
             }
-        } catch (error) {
+        } catch(error) {
             console.log("GET MEDICATION DETAILS error ---> ", error);
         }
         return response;
@@ -52,7 +52,7 @@ export const getTermsAndPolicy = (type) => {
                 url: getTermsAndPolicyUrl(type),
             });
             const {status, payload: {data} = {}} = response || {};
-            if (status === true) {
+            if(status === true) {
                 dispatch({
                     type: GET_TERMS_AND_POLICY_COMPLETED,
                     payload: data
@@ -62,7 +62,7 @@ export const getTermsAndPolicy = (type) => {
                     type: GET_TERMS_AND_POLICY_FAILED,
                 });
             }
-        } catch (error) {
+        } catch(error) {
             console.log("GET MEDICATION DETAILS error ---> ", error);
         }
         return response;
@@ -82,7 +82,7 @@ export const updateTermsAndPolicy = (payload) => {
             });
             console.log("09183013 response ---> ", response);
             const {status, payload: {data} = {}} = response || {};
-            if (status === true) {
+            if(status === true) {
                 dispatch({
                     type: UPDATE_TERMS_AND_POLICY_COMPLETED,
                     payload: data
@@ -92,7 +92,7 @@ export const updateTermsAndPolicy = (payload) => {
                     type: UPDATE_TERMS_AND_POLICY_FAILED,
                 });
             }
-        } catch (error) {
+        } catch(error) {
             console.log("GET MEDICATION DETAILS error ---> ", error);
         }
 
@@ -111,7 +111,7 @@ function medicationDetailsReducer(state, data) {
 
 function otherDetailsReducer(state, data) {
     const {medication_details = {}} = data || {};
-    if (Object.keys(medication_details).length > 0) {
+    if(Object.keys(medication_details).length > 0) {
         return {
             ...state,
             medication_details
@@ -123,7 +123,7 @@ function otherDetailsReducer(state, data) {
 
 export default (state = {}, data) => {
     const {type, payload} = data || {};
-    switch (type) {
+    switch(type) {
         case GET_MEDICATION_DETAILS_COMPLETE:
             return medicationDetailsReducer(state, payload);
         default:

@@ -1,7 +1,7 @@
 import {DataTypes} from "sequelize";
-import {TABLE_NAME as mealTemplateTableName} from "./mealTemplates";
-import {TABLE_NAME as foodItemTableName} from "./foodItems";
-import {TABLE_NAME as foodItemDetailsTableName} from "./foodItemDetails";
+import {TABLE_NAME as mealTemplateTableName } from "./mealTemplates";
+import {TABLE_NAME as foodItemTableName } from "./foodItems";
+import {TABLE_NAME as foodItemDetailsTableName } from "./foodItemDetails";
 
 export const TABLE_NAME = "meal_template_food_item_mappings";
 
@@ -21,7 +21,7 @@ export const db = (database) => {
             },
             food_item_detail_id: {
                 type: DataTypes.INTEGER,
-                allowNull: false,
+                allowNull:false,
             }
         },
         {
@@ -33,12 +33,15 @@ export const db = (database) => {
 
 export const associate = (database) => {
     // const {upload_documents} = database.models || {};
+
     // database.models[TABLE_NAME].hasOne(database.models[mealTemplateTableName], {
     //     foreignKey: "id",
     //     sourceKey: "meal_template_id"
     // });
+
     // database.models[TABLE_NAME].hasOne(database.models[foodItemDetailsTableName], {
     //     foreignKey: "id",
     //     sourceKey: "food_item_detail_id"
     // });
+
 };

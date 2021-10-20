@@ -5,9 +5,12 @@ import {isDoctor} from "../middleware/doctor";
 import isAllowed from "../../middlewares/permissions";
 import PERMISSIONS from "../../../config/permissions";
 
+
 import Authenticate from "../middleware/auth";
 import Medication from "../../../app/controllers/medicationReminder/mReminder.controller";
 import * as validator from "./validator";
+
+
 
 // router.get(
 //     "/missed",
@@ -16,12 +19,14 @@ import * as validator from "./validator";
 //     Medication.getAllMissedMedications
 // );
 
+
 router.get(
     "/:id",
     Authenticate,
     isAllowed(PERMISSIONS.MEDICATIONS.VIEW),
     Medication.getMedicationForId
 );
+
 
 router.get(
     "/:patient_id/details",
@@ -58,5 +63,6 @@ router.get(
     isAllowed(PERMISSIONS.MEDICATIONS.VIEW_TIMELINE),
     Medication.getMedicationResponseTimeline
 );
+
 
 module.exports = router;

@@ -8,19 +8,19 @@ class FeatureDetailsWrapper extends BaseFeatureDetails {
     }
 
     getAppointmentType = () => {
-        const {getFeatureType, getFeatureDetails} = this;
-        if (getFeatureType() === FEATURE_TYPE.APPOINTMENT) {
-            const {appointment_type} = getFeatureDetails();
+      const {getFeatureType, getFeatureDetails} = this;
+      if(getFeatureType() === FEATURE_TYPE.APPOINTMENT) {
+          const {appointment_type} = getFeatureDetails();
 
-            return {
-                ...appointment_type
-            };
-        }
+          return {
+              ...appointment_type
+          };
+      }
     };
 
     getAppointmentTypeDescription = (id) => {
         const {getFeatureType, getFeatureDetails} = this;
-        if (getFeatureType() === FEATURE_TYPE.APPOINTMENT) {
+        if(getFeatureType() === FEATURE_TYPE.APPOINTMENT) {
             const {type_description = []} = getFeatureDetails();
 
             return {
@@ -31,9 +31,9 @@ class FeatureDetailsWrapper extends BaseFeatureDetails {
 }
 
 export default async (data = null, id = null) => {
-    if (data) {
-        return new FeatureDetailsWrapper(data);
-    }
-    const featureDetails = await featureDetailsService.getDetailsByData({id});
-    return new FeatureDetailsWrapper(featureDetails);
+  if(data) {
+      return new FeatureDetailsWrapper(data);
+  }
+  const featureDetails = await featureDetailsService.getDetailsByData({id});
+  return new FeatureDetailsWrapper(featureDetails);
 };

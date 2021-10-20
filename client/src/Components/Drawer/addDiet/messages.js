@@ -1,4 +1,4 @@
-import {defineMessages} from "react-intl";
+import { defineMessages } from "react-intl";
 
 const messages = defineMessages({
     addDiet: {
@@ -6,77 +6,77 @@ const messages = defineMessages({
         description: "",
         defaultMessage: "Add Diet"
     },
-    somethingWentWrong: {
+    somethingWentWrong:{
         id: "app.add.diet.add.something.went.wrong",
         description: "",
         defaultMessage: "Something went wrong"
     },
-    dayOftheWeek: {
+    dayOftheWeek:{
         id: "app.add.diet.add.day.of.the.week",
         description: "",
         defaultMessage: "Day Of the Week"
     },
-    diet_text: {
+    diet_text:{
         id: "app.add.diet.add.diet.text",
         description: "",
         defaultMessage: "Diet"
     },
-    start_date: {
+    start_date:{
         id: "app.add.diet.add.start.date",
         description: "",
         defaultMessage: "Start Date"
     },
-    end_date: {
+    end_date:{
         id: "app.add.diet.add.end.date",
         description: "",
         defaultMessage: "End Date"
     },
-    what_not_to_do: {
+    what_not_to_do:{
         id: "app.add.diet.add.what.not.to.do",
         description: "",
         defaultMessage: "What not to do"
     },
-    requiredStartDate: {
+    requiredStartDate:{
         id: "app.add.diet.add.start.date.required",
         description: "",
         defaultMessage: "Please add start date"
     },
-    submit_text: {
+    submit_text:{
         id: "app.add.diet.add.submit",
         description: "",
         defaultMessage: "Submit"
     },
-    requiredName: {
+    requiredName:{
         id: "app.add.diet.add.required.name",
         description: "",
         defaultMessage: "Please add name"
     },
-    name: {
+    name:{
         id: "app.add.diet.add.name",
         description: "",
         defaultMessage: "Name"
     },
-    addDietName: {
+    addDietName:{
         id: "app.add.diet.add.diet.name",
         description: "",
         defaultMessage: "Add Diet Name"
     },
-    requiredRepeatDays: {
+    requiredRepeatDays:{
         id: "app.add.diet.add.diet.required.repeat.days",
         description: "",
         defaultMessage: "Please select diet repeat days"
     },
-    fillAlldetails: {
+    fillAlldetails:{
         id: "app.add.diet.add.diet.fill.all.details",
         description: "",
         defaultMessage: "Please fill all required details"
     },
-    addDietDetails: {
+    addDietDetails:{
         id: "app.add.diet.add.diet.add.details",
         description: "",
         defaultMessage: "Please add diet details"
     },
-    orText: {
+    orText:{
         id: "app.add.diet.add.diet.or.text",
         description: "",
         defaultMessage: "or"

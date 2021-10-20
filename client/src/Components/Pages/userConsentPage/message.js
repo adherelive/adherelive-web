@@ -1,4 +1,4 @@
-import {defineMessages} from "react-intl";
+import { defineMessages } from "react-intl";
 
 const messages = defineMessages({
     appName: {
@@ -21,7 +21,7 @@ const messages = defineMessages({
         description: "",
         defaultMessage: 'Submit'
     },
-
+   
 });
 
 export default messages;

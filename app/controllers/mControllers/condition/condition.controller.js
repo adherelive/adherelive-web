@@ -4,7 +4,7 @@ import ConditionWrapper from "../../../ApiWrapper/mobile/conditions";
 
 import Log from "../../../../libs/log";
 
-const Logger = new Log("MOBILE CONDITION CONTROLLER");
+const Logger  = new Log("MOBILE CONDITION CONTROLLER");
 
 class ConditionController extends Controller {
     constructor() {
@@ -21,9 +21,9 @@ class ConditionController extends Controller {
 
             const conditionDetails = await conditionService.search(value);
 
-            if (conditionDetails.length > 0) {
+            if(conditionDetails.length > 0) {
                 let conditionApiData = {};
-                for (const condition of conditionDetails) {
+                for(const condition of conditionDetails) {
                     const conditionWrapper = await new ConditionWrapper(condition);
                     conditionApiData[conditionWrapper.getConditionId()] = conditionWrapper.getBasicInfo();
                 }
@@ -41,7 +41,7 @@ class ConditionController extends Controller {
             } else {
                 return raiseClientError(res, 422, {}, `No condition found with name including ${value}`)
             }
-        } catch (error) {
+        } catch(error) {
             Logger.debug("condition search 500 error", error);
             return raiseServerError(res);
         }

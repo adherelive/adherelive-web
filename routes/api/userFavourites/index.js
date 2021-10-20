@@ -12,6 +12,7 @@ router.post(
     UserFavourites.create
 );
 
+
 router.get(
     "/",
     Authenticated,
@@ -31,5 +32,10 @@ router.delete(
     Authenticated,
     UserFavourites.removeFavouriteMedicine
 );
+
+
+
+
+
 
 module.exports = router;

@@ -1,4 +1,4 @@
-import {defineMessages} from "react-intl";
+import { defineMessages } from "react-intl";
 
 const messages = defineMessages({
     medicine: {
@@ -147,52 +147,52 @@ const messages = defineMessages({
         description: "",
         defaultMessage: "An action for this vital already exist in this template."
     },
-    templateTitle: {
+    templateTitle:{
         id: "app.allTemplatesEditDrawer.templateTitle",
         description: "",
         defaultMessage: "Edit Template"
     },
-    add: {
+    add:{
         id: "app.allTemplatesEditDrawer.add",
         description: "",
         defaultMessage: "Add"
     },
-    name_text: {
+    name_text:{
         id: "app.allTemplatesEditDrawer.nameText",
         description: "",
         defaultMessage: "Name"
     },
-    namePlaceholder: {
+    namePlaceholder:{
         id: "app.allTemplatesEditDrawer.namePlaceholder",
         description: "",
         defaultMessage: "Template name"
     },
-    warnMessage: {
+    warnMessage:{
         id: "app.allTemplatesEditDrawer.warnMessage",
         description: "",
         defaultMessage: "This will delete all unsaved template data"
     },
-    closeMessage: {
+    closeMessage:{
         id: "app.allTemplatesEditDrawer.closeMessage",
         description: "",
         defaultMessage: "Are you sure you want to cancel ?"
     },
-    delete: {
+    delete:{
         id: "app.allTemplatesEditDrawer.delete",
         description: "",
         defaultMessage: "Delete"
     },
-    deleteTemplateWarn: {
+    deleteTemplateWarn:{
         id: "app.allTemplatesEditDrawer.deleteTemplateWarn",
         description: "",
         defaultMessage: "This action is irreversible and will delete all data related to this template."
     },
-    deleteTemplateNote: {
+    deleteTemplateNote:{
         id: "app.allTemplatesEditDrawer.deleteTemplateNote",
         description: "",
         defaultMessage: "Are you sure you want to delete this template ?"
     },
-    submitting: {
+    submitting:{
         id: "app.allTemplatesEditDrawer.submitting",
         description: "",
         defaultMessage: "Submitting"

@@ -5,151 +5,151 @@ import Logger from "../../../libs/log";
 const Log = new Logger("QUEUE > SERVICE");
 
 export default class QueueService {
-    constructor() {
-        AWS.config.update({
-            accessKeyId: process.config.aws.access_key_id,
-            secretAccessKey: process.config.aws.access_key,
-            region: process.config.aws.region,
-        });
-        this.sqs = new AWS.SQS();
+  constructor() {
+    AWS.config.update({
+      accessKeyId: process.config.aws.access_key_id,
+      secretAccessKey: process.config.aws.access_key,
+      region: process.config.aws.region,
+    });
+    this.sqs = new AWS.SQS();
+  }
+
+  createQueue = (name = "test_queue") => {
+    const params = {
+      QueueName: name,
+      Attributes: {
+        DelaySeconds: "60",
+        MessageRetentionPeriod: "86400",
+      },
+    };
+
+    this.sqs.createQueue(params, (err, data) => {
+      if (err) {
+        Log.debug("createQueue err", err);
+      } else {
+        Log.debug("Success", data.QueueUrl);
+      }
+    });
+  };
+
+  getQueueUrl = () => {
+    return `${process.config.sqs.domain_url}/${process.config.sqs.account_id}/${process.config.sqs.queue_name}`;
+  };
+
+  sendMessage = async (data) => {
+    try {
+      const stringData = JSON.stringify(data);
+
+      const params = {
+        DelaySeconds: 30,
+        MessageAttributes: {
+          //     Title: {
+          //         DataType: "String",
+          //         StringValue: "The Whistler"
+          //     },
+          //     Author: {
+          //         DataType: "String",
+          //         StringValue: "John Grisham"
+          //     },
+          //     WeeksOn: {
+          //         DataType: "Number",
+          //         StringValue: "6"
+          //     }
+        },
+        MessageBody: stringData,
+        // MessageDeduplicationId: "TheWhistler",  // Required for FIFO queues
+        // MessageGroupId: "Group1",  // Required for FIFO queues
+        QueueUrl: this.getQueueUrl(),
+      };
+
+      const response = await this.sqs.sendMessage(params).promise();
+      Log.debug("sendMessage response", response);
+      return response;
+    } catch (error) {
+      Log.debug("sendMessage catch error", error);
     }
+  };
 
-    createQueue = (name = "test_queue") => {
+  sendBatchMessage = async (dataArr) => {
+    try {
+      const formattedData = [];
+
+      console.log("18231873 data --> ", dataArr);
+      dataArr.forEach((data, index) => {
+        const stringData = JSON.stringify(data);
         const params = {
-            QueueName: name,
-            Attributes: {
-                DelaySeconds: "60",
-                MessageRetentionPeriod: "86400",
-            },
+          Id: `${moment().format("x")}-${index}`,
+          DelaySeconds: 5,
+          MessageAttributes: {},
+          MessageBody: stringData,
+          // QueueUrl: this.getQueueUrl(queueName)
         };
+        formattedData.push(params);
+      });
 
-        this.sqs.createQueue(params, (err, data) => {
-            if (err) {
-                Log.debug("createQueue err", err);
-            } else {
-                Log.debug("Success", data.QueueUrl);
-            }
-        });
-    };
+      const params = {
+        Entries: formattedData,
+        QueueUrl: this.getQueueUrl(),
+      };
 
-    getQueueUrl = () => {
-        return `${process.config.sqs.domain_url}/${process.config.sqs.account_id}/${process.config.sqs.queue_name}`;
-    };
+      const response = await this.sqs.sendMessageBatch(params).promise();
+      Log.debug("sendMessage batch response", response);
+      return response;
+    } catch (error) {
+      Log.debug("sendMessage batch catch error", error);
+    }
+  };
 
-    sendMessage = async (data) => {
-        try {
-            const stringData = JSON.stringify(data);
+  receiveMessage = async () => {
+    try {
+      Log.info(`queue url : ${this.getQueueUrl()}`);
 
-            const params = {
-                DelaySeconds: 30,
-                MessageAttributes: {
-                    //     Title: {
-                    //         DataType: "String",
-                    //         StringValue: "The Whistler"
-                    //     },
-                    //     Author: {
-                    //         DataType: "String",
-                    //         StringValue: "John Grisham"
-                    //     },
-                    //     WeeksOn: {
-                    //         DataType: "Number",
-                    //         StringValue: "6"
-                    //     }
-                },
-                MessageBody: stringData,
-                // MessageDeduplicationId: "TheWhistler",  // Required for FIFO queues
-                // MessageGroupId: "Group1",  // Required for FIFO queues
-                QueueUrl: this.getQueueUrl(),
-            };
+      const params = {
+        AttributeNames: ["SentTimestamp"],
+        MaxNumberOfMessages: 10,
+        WaitTimeSeconds: 10,
+        MessageAttributeNames: ["All"],
+        QueueUrl: this.getQueueUrl(),
+      };
 
-            const response = await this.sqs.sendMessage(params).promise();
-            Log.debug("sendMessage response", response);
-            return response;
-        } catch (error) {
-            Log.debug("sendMessage catch error", error);
-        }
-    };
+      const response = await this.sqs.receiveMessage(params).promise();
+      // Log.debug("receiveMessage response", response.Messages.length);
 
-    sendBatchMessage = async (dataArr) => {
-        try {
-            const formattedData = [];
+      return response.Messages || [];
+    } catch (error) {
+      console.log("receiveMessage 500 error", error);
+    }
+  };
 
-            console.log("18231873 data --> ", dataArr);
-            dataArr.forEach((data, index) => {
-                const stringData = JSON.stringify(data);
-                const params = {
-                    Id: `${moment().format("x")}-${index}`,
-                    DelaySeconds: 5,
-                    MessageAttributes: {},
-                    MessageBody: stringData,
-                    // QueueUrl: this.getQueueUrl(queueName)
-                };
-                formattedData.push(params);
-            });
+  deleteMessage = async (ReceiptHandle) => {
+    try {
+      const params = {
+        QueueUrl: await this.getQueueUrl(),
+        ReceiptHandle,
+      };
 
-            const params = {
-                Entries: formattedData,
-                QueueUrl: this.getQueueUrl(),
-            };
+      const response = await this.sqs.deleteMessage(params).promise();
 
-            const response = await this.sqs.sendMessageBatch(params).promise();
-            Log.debug("sendMessage batch response", response);
-            return response;
-        } catch (error) {
-            Log.debug("sendMessage batch catch error", error);
-        }
-    };
+      return response;
+    } catch (error) {
+      console.log("receiveMessage 500 error", error);
+    }
+  };
 
-    receiveMessage = async () => {
-        try {
-            Log.info(`queue url : ${this.getQueueUrl()}`);
+  purgeQueue = async (queueName) => {
+    try {
+      const params = {
+        QueueUrl: await this.getQueueUrl(),
+      };
 
-            const params = {
-                AttributeNames: ["SentTimestamp"],
-                MaxNumberOfMessages: 10,
-                WaitTimeSeconds: 10,
-                MessageAttributeNames: ["All"],
-                QueueUrl: this.getQueueUrl(),
-            };
-
-            const response = await this.sqs.receiveMessage(params).promise();
-            // Log.debug("receiveMessage response", response.Messages.length);
-
-            return response.Messages || [];
-        } catch (error) {
-            console.log("receiveMessage 500 error", error);
-        }
-    };
-
-    deleteMessage = async (ReceiptHandle) => {
-        try {
-            const params = {
-                QueueUrl: await this.getQueueUrl(),
-                ReceiptHandle,
-            };
-
-            const response = await this.sqs.deleteMessage(params).promise();
-
-            return response;
-        } catch (error) {
-            console.log("receiveMessage 500 error", error);
-        }
-    };
-
-    purgeQueue = async (queueName) => {
-        try {
-            const params = {
-                QueueUrl: await this.getQueueUrl(),
-            };
-
-            if (process.config.sqs.queue_name === queueName) {
-                const response = await this.sqs.purgeQueue(params).promise();
-                return response;
-            } else {
-                return null;
-            }
-        } catch (error) {
-            console.log("purgeQueue 500 error", error);
-        }
-    };
+      if (process.config.sqs.queue_name === queueName) {
+        const response = await this.sqs.purgeQueue(params).promise();
+        return response;
+      } else {
+        return null;
+      }
+    } catch (error) {
+      console.log("purgeQueue 500 error", error);
+    }
+  };
 }

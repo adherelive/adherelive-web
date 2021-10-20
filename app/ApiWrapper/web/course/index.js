@@ -7,7 +7,7 @@ class CourseWrapper extends BaseCourse {
     }
 
     getBasicInfo = () => {
-        const {_data} = this;
+        const { _data } = this;
         const {
             id,
             name
@@ -25,6 +25,6 @@ export default async (data = null, id = null) => {
     if (data !== null) {
         return new CourseWrapper(data);
     }
-    const course = await courseService.getByData({id});
+    const course = await courseService.getByData({ id });
     return new CourseWrapper(course);
 };

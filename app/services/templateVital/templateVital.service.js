@@ -8,27 +8,27 @@ export default class TemplateVitalService {
                 where: data,
                 raw: true
             });
-        } catch (error) {
+        } catch(error) {
             throw error;
         }
     }
 
     deleteVital = async (data) => {
-        try {
+      try {
             return await Database.getModel(TABLE_NAME).destroy({
                 where: data,
                 include: []
             });
-        } catch (error) {
-            throw error;
-        }
+      } catch(error) {
+          throw error;
+      }
     };
 
     create = async (data) => {
         try {
             const templateVital = await Database.getModel(TABLE_NAME).create(data);
             return templateVital;
-        } catch (error) {
+        } catch(error) {
             throw error;
         }
     };
@@ -44,7 +44,7 @@ export default class TemplateVitalService {
             });
             await transaction.commit();
             return templateVital;
-        } catch (error) {
+        } catch(error) {
             await transaction.rollback();
             throw error;
         }

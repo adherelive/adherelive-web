@@ -12,8 +12,7 @@ class ChatController extends Controller {
     notify = async (req, res) => {
         const {raiseSuccess, raiseClientError, raiseServerError} = this;
         try {
-            const {
-                body,
+            const {body,
                 userDetails: {
                     userId,
                     userData: {category} = {},
