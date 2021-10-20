@@ -67,7 +67,6 @@ TWILIO_CHAT_SERVICE_SID=IS86f1dcb573a74909a8248b944aa90d9c
 TWILIO_AUTH_TOKEN=1cf5b1a6801c773fe8bd138bb0bb50d4
 TWILIO_CHANNEL_SERVER=adhere-demo
 
-
 device_token=
 
 MINIO_ACCESS_KEY=lwzlJgSubYjdbGhYL87jgbwxhXSEAxdA
@@ -75,14 +74,14 @@ MINIO_SECRET_KEY=Gc_Gj4sNAeo5zlSM56xPWa0dLpGaOUD_FtLiUydhKmOTDK15VbZeWb1wl9NwiD1
 MINIO_VOLUME_NAME=adhere_storage_stack
 MINIO_REGION=us-east-1
 MINIO_ENDPOINT=minio1
-MINIO_BUCKET_NAME=adhere-subharti
+MINIO_BUCKET_NAME=adherelive-production
 
 # S3 Details
 #S3_HOST=https://demo.adhere.live
 S3_HOST=amazonaws.com
 S3_ACCESS_KEY=lwzlJgSubYjdbGhYL87jgbwxhXSEAxdA
 S3_SECRET_KEY=Gc_Gj4sNAeo5zlSM56xPWa0dLpGaOUD_FtLiUydhKmOTDK15VbZeWb1wl9NwiD1t_phXodwCPDZ1_C4DC_mcAw
-EXPIRY_TIME=30
+S3_EXPIRY_TIME=30
 
 # Demo 
 GETSTREAM_API_KEY=kmvug7bs2v52
@@ -111,7 +110,7 @@ BRANCH_IO_KEY=key_live_hbL5zlRfxNiPzCmRlQcXVihbywdivtNo
 BRANCH_IO_BASE_URL=https://api2.branch.io/v1/url
 
 # TODO: Add your Email ID here
-DEVELOPER_EMAIL=vivek.asthana@adhere.live,gagneet.singh@adhere.live,gaurav@myrl.tech
+DEVELOPER_EMAIL=gagneet.singh@adhere.live,vivek.asthana@adhere.live,sagar.agrawal@adhere.live,drsparsh@adhere.live,ankur.agrawal@adhere.live,gaurav@myrl.tech
 SUPPORT_EMAIL=customersupport@adhere.live
 
 EVENT_FETCH_COUNT=7
@@ -131,9 +130,9 @@ SQS_QUEUE_NAME=adhere_demo
 APPOINTMENT_WAIT_TIME_HOURS=2
 CAREPLAN_ACTIVATION_RESCHEDULE_HOURS=6
 
-# RazorPay Tokens
-RAZORPAY_KEY=rzp_live_OwALSRKZ5HVNeM
-RAZORPAY_SECRET=B2IO0FS4RU1oKqzc63byy9Vr
+# RAZORPAY_TOKENS
+RAZORPAY_KEY=rzp_test_Gh3UkoLeMJkEN1
+RAZORPAY_SECRET=wDuxUaX3u7elvqAhoII84ebg
 
 DEFAULT_CURRENCY=INR
 
