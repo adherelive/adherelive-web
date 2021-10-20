@@ -1,4 +1,3 @@
-
 import { doRequest } from "../../Helper/network";
 import { REQUEST_TYPE } from "../../constant";
 import {
@@ -15,7 +14,6 @@ export const GET_HISTORY_SYMPTOM = "GET_HISTORY_SYMPTOM";
 export const GET_SYMPTOM_DETAILS_START = "GET_SYMPTOM_DETAILS_START";
 export const GET_SYMPTOM_DETAILS_COMPLETE = "GET_SYMPTOM_DETAILS_COMPLETE";
 export const GET_SYMPTOM_DETAILS_FAILED = "GET_SYMPTOM_DETAILS_FAILED";
-
 
 export const getSymptomDetails = (ids = []) => {
   let response = {};
@@ -49,7 +47,6 @@ export const getSymptomDetails = (ids = []) => {
   }
 };
 
-
 export const getSymptomTimeLine = patientId => {
   return async dispatch => {
     let response = {};
@@ -73,7 +70,6 @@ export const getSymptomTimeLine = patientId => {
     return response;
   };
 };
-
 
 export const getHistorySymptom = (patientId, days) => {
   return async dispatch => {

@@ -10,10 +10,9 @@ import {
     deleteCareplanTemplateDiet,
     updateCareplanTemplateUrl,
     deleteCareplanTemplateWorkout
-     } from "../../Helper/urls/carePlanTemplates";
+} from "../../Helper/urls/carePlanTemplates";
 
 import {getAllTemplatesUrl} from "../../Helper/urls/carePlanTemplates";
-
 
 export const CREATE_CAREPLAN_TEMPLATE_START = "CREATE_CAREPLAN_TEMPLATE_START";
 export const CREATE_CAREPLAN_TEMPLATE_COMPLETED = "CREATE_CAREPLAN_TEMPLATE_COMPLETED";

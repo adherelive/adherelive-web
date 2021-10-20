@@ -1,0 +1,254 @@
+\adherelive-web> npm install
+npm WARN deprecated @hapi/pinpoint@2.0.0: Moved to 'npm install @sideway/pinpoint'
+npm WARN deprecated request-promise@4.2.6: request-promise has been deprecated because it extends the now deprecated request package, see https://github.com/request/request/issues/3142
+npm WARN deprecated urix@0.1.0: Please see https://github.com/lydell/urix#deprecated
+npm WARN deprecated har-validator@5.1.5: this library is no longer supported
+npm WARN deprecated @hapi/formula@2.0.0: Moved to 'npm install @sideway/formula'
+npm WARN deprecated chokidar@2.1.8: Chokidar 2 will break on node v14+. Upgrade to chokidar 3 with 15x less dependencies.
+npm WARN deprecated resolve-url@0.2.1: https://github.com/lydell/resolve-url#deprecated
+npm WARN deprecated @hapi/address@4.1.0: Moved to 'npm install @sideway/address'
+npm WARN deprecated querystring@0.2.0: The querystring API is considered Legacy. new code should use the URLSearchParams API instead.
+npm WARN deprecated uuid@3.4.0: Please upgrade  to version 7 or higher.  Older versions may use Math.random() in certain circumstances, which is known to be problematic.  See https://v8.dev/blog/math-random for details.
+npm WARN deprecated uuid@3.4.0: Please upgrade  to version 7 or higher.  Older versions may use Math.random() in certain circumstances, which is known to be problematic.  See https://v8.dev/blog/math-random for details.
+npm WARN deprecated request@2.88.2: request has been deprecated, see https://github.com/request/request/issues/3142
+npm WARN deprecated uuid@3.3.2: Please upgrade  to version 7 or higher.  Older versions may use Math.random() in certain circumstances, which is known to be problematic.  See https://v8.dev/blog/math-random for details.
+npm WARN deprecated sendgrid@1.9.2: Please see v6.X+ at https://www.npmjs.com/org/sendgrid
+npm WARN deprecated @hapi/joi@17.1.1: Switch to 'npm install joi'
+npm WARN deprecated core-js@2.6.12: core-js@<3.3 is no longer maintained and not recommended for usage due to the number of issues. Because of the V8 engine whims, feature detection in old core-js versions could cause a slowdown up to 100x even if nothing is polyfilled. Please, upgrade your dependencies to the actual version of core-js.
+
+> adherelive@2.1.0 postinstall
+> cd client && npm install
+
+npm WARN deprecated topo@2.0.2: This version has been deprecated in accordance with the hapi support policy (hapi.im/support). Please upgrade to the latest version to get the best features, bug fixes, and security patches. If you are unable to upgrade at this time, paid support is available for older versions (hapi.im/commercial).
+npm WARN deprecated kleur@2.0.2: Please upgrade to kleur@3 or migrate to 'ansi-colors' if you prefer the old syntax. Visit <https://github.com/lukeed/kleur/releases/tag/v3.0.0\> for migration path(s).
+npm WARN deprecated flatten@1.0.3: flatten is deprecated in favor of utility frameworks such as lodash.
+npm WARN deprecated request-promise-native@1.0.9: request-promise-native has been deprecated because it extends the now deprecated request package, see https://github.com/request/request/issues/3142
+npm WARN deprecated eslint-loader@2.1.1: This loader has been deprecated. Please use eslint-webpack-plugin
+npm WARN deprecated urix@0.1.0: Please see https://github.com/lydell/urix#deprecated
+npm WARN deprecated har-validator@5.1.5: this library is no longer supported
+npm WARN deprecated hoek@4.2.1: This version has been deprecated in accordance with the hapi support policy (hapi.im/support). Please upgrade to the latest version to get the best features, bug fixes, and security patches. If you are unable to upgrade at this time, paid support is available for older versions (hapi.im/commercial).
+npm WARN deprecated chokidar@2.1.8: Chokidar 2 will break on node v14+. Upgrade to chokidar 3 with 15x less dependencies.
+npm WARN deprecated resolve-url@0.2.1: https://github.com/lydell/resolve-url#deprecated
+npm WARN deprecated babel-plugin-react-intl@3.0.1: this package has been renamed to babel-plugin-formatjs
+npm WARN deprecated circular-json@0.3.3: CircularJSON is in maintenance only, flatted is its successor.
+npm WARN deprecated left-pad@1.3.0: use String.prototype.padStart()
+npm WARN deprecated sane@2.5.2: some dependency vulnerabilities fixed, support for node < 10 dropped, and newer ECMAScript syntax/features added
+npm WARN deprecated html-webpack-plugin@4.0.0-alpha.2: please switch to a stable version
+npm WARN deprecated querystring@0.2.0: The querystring API is considered Legacy. new code should use the URLSearchParams API instead.
+npm WARN deprecated babel-eslint@9.0.0: babel-eslint is now @babel/eslint-parser. This package will no longer receive updates.
+npm WARN deprecated intl-messageformat-parser@1.4.0: We've written a new parser that's 6x faster and is backwards compatible. Please use @formatjs/icu-messageformat-parser
+npm WARN deprecated uuid@3.4.0: Please upgrade  to version 7 or higher.  Older versions may use Math.random() in certain circumstances, which is known to be problematic.  See https://v8.dev/blog/math-random for details.
+npm WARN deprecated request@2.88.2: request has been deprecated, see https://github.com/request/request/issues/3142
+npm WARN deprecated sendgrid@1.9.2: Please see v6.X+ at https://www.npmjs.com/org/sendgrid
+npm WARN deprecated uglify-es@3.3.9: support for ECMAScript is superseded by `uglify-js` as of v3.13.0
+npm WARN deprecated joi@11.4.0: This version has been deprecated in accordance with the hapi support policy (hapi.im/support). Please upgrade to the latest version to get the best features, bug fixes, and security patches. If you are unable to upgrade at this time, paid support is available for older versions (hapi.im/commercial).
+npm WARN deprecated popper.js@1.16.1: You can find the new Popper v2 at @popperjs/core, this package is dedicated to the legacy v1
+npm WARN deprecated intl-relativeformat@2.2.0: This package has been deprecated, please see migration guide at 'https://github.com/formatjs/formatjs/tree/master/packages/intl-relativeformat#migration-guide'
+npm WARN deprecated core-js@1.2.7: core-js@<3.3 is no longer maintained and not recommended for usage due to the number of issues. Because of the V8 engine whims, feature detection in old core-js versions could cause a slowdown up to 100x even if nothing is polyfilled. Please, upgrade your dependencies to the actual version of core-js.
+npm WARN deprecated core-js@2.5.7: core-js@<3.3 is no longer maintained and not recommended for usage due to the number of issues. Because of the V8 engine whims, feature detection in old core-js versions could cause a slowdown up to 100x even if nothing is polyfilled. Please, upgrade your dependencies to the actual version of core-js.
+npm WARN deprecated core-js@2.6.12: core-js@<3.3 is no longer maintained and not recommended for usage due to the number of issues. Because of the V8 engine whims, feature detection in old core-js versions could cause a slowdown up to 100x even if nothing is polyfilled. Please, upgrade your dependencies to the actual version of core-js.
+
+added 3769 packages, and audited 4462 packages in 1m
+
+
+> npm audit fix
+
+added 1 package, removed 2 packages, changed 2 packages, and audited 1475 packages in 6s
+
+122 packages are looking for funding
+  run `npm fund` for details
+
+# npm audit report
+
+ansi-regex  >2.1.1 <5.0.1
+Severity: moderate
+ Inefficient Regular Expression Complexity in chalk/ansi-regex - https://github.com/advisories/GHSA-93q8-gq69-wqmw
+fix available via `npm audit fix --force`
+Will install sequelize-cli@5.0.0, which is a breaking change
+node_modules/sequelize-cli/node_modules/ansi-regex
+node_modules/wide-align/node_modules/ansi-regex
+  strip-ansi  4.0.0 - 5.2.0
+  Depends on vulnerable versions of ansi-regex
+  node_modules/sequelize-cli/node_modules/strip-ansi
+  node_modules/wide-align/node_modules/strip-ansi
+    cliui  4.0.0 - 5.0.0
+    Depends on vulnerable versions of strip-ansi
+    Depends on vulnerable versions of wrap-ansi
+    node_modules/sequelize-cli/node_modules/cliui
+      yargs  10.1.0 - 15.0.0
+      Depends on vulnerable versions of cliui
+      Depends on vulnerable versions of string-width
+      node_modules/sequelize-cli/node_modules/yargs
+        sequelize-cli  >=5.0.1
+        Depends on vulnerable versions of yargs
+        node_modules/sequelize-cli
+    string-width  2.1.0 - 4.1.0
+    Depends on vulnerable versions of strip-ansi
+    node_modules/sequelize-cli/node_modules/string-width
+    node_modules/wide-align/node_modules/string-width
+      wrap-ansi  3.0.0 - 6.1.0
+      Depends on vulnerable versions of string-width
+      Depends on vulnerable versions of strip-ansi
+      node_modules/sequelize-cli/node_modules/wrap-ansi
+
+glob-parent  <5.1.2
+Severity: high
+Regular expression denial of service - https://github.com/advisories/GHSA-ww39-953v-wcq6
+fix available via `npm audit fix`
+node_modules/watchpack-chokidar2/node_modules/glob-parent
+  chokidar  1.0.0-rc1 - 2.1.8
+  Depends on vulnerable versions of braces
+  Depends on vulnerable versions of glob-parent
+  Depends on vulnerable versions of readdirp
+  node_modules/watchpack-chokidar2/node_modules/chokidar
+    watchpack-chokidar2  *
+    Depends on vulnerable versions of chokidar
+    node_modules/watchpack-chokidar2
+      watchpack  1.7.2 - 1.7.5
+      Depends on vulnerable versions of watchpack-chokidar2
+      node_modules/watchpack
+        webpack  4.0.0-alpha.0 - 5.0.0-rc.6
+        Depends on vulnerable versions of micromatch
+        Depends on vulnerable versions of watchpack
+        node_modules/webpack
+
+lodash  <=4.17.20
+Severity: critical
+Command Injection in lodash - https://github.com/advisories/GHSA-35jh-r3h4-6jhm
+Prototype Pollution in lodash - https://github.com/advisories/GHSA-p6mc-m468-83gw
+Prototype Pollution in lodash - https://github.com/advisories/GHSA-jf85-cpcp-j695
+Prototype Pollution in lodash - https://github.com/advisories/GHSA-4xc9-xhrj-v574
+Prototype Pollution in lodash - https://github.com/advisories/GHSA-fvqr-27wr-82fm
+No fix available
+node_modules/sendgrid/node_modules/lodash
+  sendgrid  0.3.2 - 2.0.0
+  Depends on vulnerable versions of lodash
+  node_modules/sendgrid
+    nodemailer-sendgrid-transport  *
+    Depends on vulnerable versions of sendgrid
+    node_modules/nodemailer-sendgrid-transport
+
+minimist  1.0.0 - 1.2.2
+Severity: moderate
+Prototype Pollution in minimist - https://github.com/advisories/GHSA-vh95-rmgr-6w4m
+fix available via `npm audit fix`
+node_modules/esdoc/node_modules/minimist
+  esdoc  >=0.1.0
+  Depends on vulnerable versions of ice-cap
+  Depends on vulnerable versions of minimist
+  node_modules/esdoc
+    smtpapi  >=1.4.0
+    Depends on vulnerable versions of esdoc
+    node_modules/smtpapi
+
+nth-check  <2.0.1
+Severity: moderate
+Inefficient Regular Expression Complexity in nth-check - https://github.com/advisories/GHSA-rp65-9cf3-cjxr
+fix available via `npm audit fix`
+node_modules/nth-check
+  css-select  <=3.1.0
+  Depends on vulnerable versions of nth-check
+  node_modules/css-select
+    cheerio  0.19.0 - 1.0.0-rc.3
+    Depends on vulnerable versions of css-select
+    node_modules/cheerio
+    node_modules/ice-cap/node_modules/cheerio
+      ice-cap  >=0.0.4
+      Depends on vulnerable versions of cheerio
+      node_modules/ice-cap
+        esdoc  >=0.1.0
+        Depends on vulnerable versions of ice-cap
+        Depends on vulnerable versions of minimist
+        node_modules/esdoc
+          smtpapi  >=1.4.0
+          Depends on vulnerable versions of esdoc
+          node_modules/smtpapi
+
+set-value  <4.0.1
+Severity: high
+Prototype Pollution in set-value - https://github.com/advisories/GHSA-4jqc-8m5r-9rpr
+fix available via `npm audit fix`
+node_modules/set-value
+  cache-base  >=0.7.0
+  Depends on vulnerable versions of set-value
+  Depends on vulnerable versions of union-value
+  node_modules/cache-base
+    base  >=0.7.0
+    Depends on vulnerable versions of cache-base
+    node_modules/base
+      snapdragon  0.6.0 - 0.10.1
+      Depends on vulnerable versions of base
+      node_modules/snapdragon
+        braces  2.0.0 - 2.3.2
+        Depends on vulnerable versions of snapdragon
+        node_modules/watchpack-chokidar2/node_modules/braces
+        node_modules/webpack/node_modules/braces
+          chokidar  1.0.0-rc1 - 2.1.8
+          Depends on vulnerable versions of braces
+          Depends on vulnerable versions of glob-parent
+          Depends on vulnerable versions of readdirp
+          node_modules/watchpack-chokidar2/node_modules/chokidar
+            watchpack-chokidar2  *
+            Depends on vulnerable versions of chokidar
+            node_modules/watchpack-chokidar2
+              watchpack  1.7.2 - 1.7.5
+              Depends on vulnerable versions of watchpack-chokidar2
+              node_modules/watchpack
+                webpack  4.0.0-alpha.0 - 5.0.0-rc.6
+                Depends on vulnerable versions of micromatch
+                Depends on vulnerable versions of watchpack
+                node_modules/webpack
+        expand-brackets  1.0.0 - 2.1.4
+        Depends on vulnerable versions of snapdragon
+        node_modules/expand-brackets
+        extglob  1.0.0 - 2.0.4
+        Depends on vulnerable versions of snapdragon
+        node_modules/extglob
+        micromatch  3.0.0 - 3.1.10
+        Depends on vulnerable versions of snapdragon
+        node_modules/watchpack-chokidar2/node_modules/micromatch
+        node_modules/webpack/node_modules/micromatch
+          anymatch  2.0.0
+          Depends on vulnerable versions of micromatch
+          node_modules/watchpack-chokidar2/node_modules/anymatch
+          readdirp  2.2.0 - 2.2.1
+          Depends on vulnerable versions of micromatch
+          node_modules/watchpack-chokidar2/node_modules/readdirp
+        nanomatch  >=0.1.1
+        Depends on vulnerable versions of snapdragon
+        node_modules/nanomatch
+  union-value  *
+  Depends on vulnerable versions of set-value
+  node_modules/union-value
+
+utils-extend  *
+Severity: high
+Prototype Pollution - https://github.com/advisories/GHSA-6pq3-928q-x6w6
+fix available via `npm audit fix --force`
+Will install base64-img@1.0.1, which is a breaking change
+node_modules/utils-extend
+  ajax-request  >=1.0.1
+  Depends on vulnerable versions of utils-extend
+  node_modules/ajax-request
+    base64-img  *
+    Depends on vulnerable versions of ajax-request
+    Depends on vulnerable versions of file-system
+    node_modules/base64-img
+  file-match  *
+  Depends on vulnerable versions of utils-extend
+  node_modules/file-match
+    file-system  >=1.2.3
+    Depends on vulnerable versions of file-match
+    Depends on vulnerable versions of utils-extend
+    node_modules/file-system
+
+39 vulnerabilities (2 low, 14 moderate, 22 high, 1 critical)
+
+To address issues that do not require attention, run:
+  npm audit fix
+
+To address all issues possible (including breaking changes), run:
+  npm audit fix --force
+
+Some issues need review, and may require choosing
+a different dependency.

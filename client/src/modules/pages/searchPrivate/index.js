@@ -1,5 +1,11 @@
-import {GET_PRIVATE_MEDICINES_COMPLETED,RESET_SEARCH_PRIVATE,MAKE_MEDICINE_PUBLIC_COMPLETED,DELETE_MEDICINE_COMPLETED} from "../../medicines";
-const PRIVATE="private";
+import {
+    GET_PRIVATE_MEDICINES_COMPLETED,
+    RESET_SEARCH_PRIVATE,
+    MAKE_MEDICINE_PUBLIC_COMPLETED,
+    DELETE_MEDICINE_COMPLETED
+} from "../../medicines";
+
+const PRIVATE = "private";
 
 
 function getPrivateSearchMedicinesReducer(state, data) {

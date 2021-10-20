@@ -1,8 +1,8 @@
-import {DataTypes} from "sequelize";
-import {TABLE_NAME as userTableName } from "./users";
-import {TABLE_NAME as foodItemDetailsTableName} from "./foodItemDetails";
+import { DataTypes } from "sequelize";
+import { TABLE_NAME as userTableName } from "./users";
+import { TABLE_NAME as foodItemDetailsTableName } from "./foodItemDetails";
 import { TABLE as foodItemTableName } from "./foodItems";
-import {TABLE_NAME as mealTemplateMappingTableName } from "./mealTemplateFoodItemMapping";
+import { TABLE_NAME as mealTemplateMappingTableName } from "./mealTemplateFoodItemMapping";
 
 import { USER_CATEGORY_ARRAY } from "./users";
 

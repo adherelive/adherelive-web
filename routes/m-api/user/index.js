@@ -1,10 +1,11 @@
 import userController from "../../../app/controllers/user/user.controller";
-
-const express = require("express");
-const router = express.Router();
 import mUserController from "../../../app/controllers/mControllers/user/user.controller";
 import * as validator from "./validator";
 import Authenticate from "../middlewares/auth";
+import userDeviceRouter from "../userDevice";
+
+const express = require("express");
+const router = express.Router();
 const multer = require("multer");
 const storage = multer.memoryStorage();
 const upload = multer({ dest: "../../../app/public/", storage: storage });

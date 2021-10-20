@@ -9,7 +9,6 @@ import messages from '../message';
 import moment from "moment";
 import { Radio } from "antd";
 
-
 const { Item: FormItem } = Form;
 const { CheckableTag } = Tag;
 const RadioButton = Radio.Button;

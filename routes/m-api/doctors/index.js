@@ -1,12 +1,6 @@
 // import userController from "../../../app/controllers/user/user.controller";
-
-const express = require("express");
-const router = express.Router();
 import Authenticate from "../middlewares/auth";
 import * as validator from "./validator";
-const multer = require("multer");
-const storage = multer.memoryStorage();
-const upload = multer({ dest: "../../../app/public/", storage: storage });
 
 import isAllowed from "../../middlewares/permissions";
 import PERMISSIONS from "../../../config/permissions";
@@ -15,6 +9,13 @@ import mDoctorController from "../../../app/controllers/mControllers/doctors/doc
 import { isDoctor } from "../middlewares/doctor";
 import PaymentController from "../../../app/controllers/mControllers/payments/payment.controller";
 import CarePlanTemplate from "../../../app/controllers/carePlanTemplate/carePlanTemplate.controller";
+
+const multer = require("multer");
+const storage = multer.memoryStorage();
+const upload = multer({ dest: "../../../app/public/", storage: storage });
+
+const express = require("express");
+const router = express.Router();
 
 router.post(
   "/",

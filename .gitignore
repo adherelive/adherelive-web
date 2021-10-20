@@ -1,10 +1,7 @@
 # npm related
 node_modules
 .DS_store
-.env
-.kunal.env
 /public
-.node_env
 .idea
 dump
 
@@ -91,7 +88,6 @@ typings/
 .yarn-integrity
 
 # dotenv environment variables file
-.env
 .env.test
 
 # parcel-bundler cache (https://parceljs.org/)

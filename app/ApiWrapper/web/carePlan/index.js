@@ -127,8 +127,6 @@ class CarePlanWrapper extends BaseCarePlan {
     };
   };
 
-
-
   getReferenceInfo = async () => {
     const { _data, getCarePlanId, getAllInfo } = this;
     const { doctor, patient } = _data || {};
@@ -192,10 +190,6 @@ class CarePlanWrapper extends BaseCarePlan {
     };
   };
 }
-
-
-
-
 
 export default async (data = null, id = null) => {
   if (data) {

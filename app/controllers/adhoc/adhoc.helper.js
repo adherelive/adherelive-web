@@ -10,7 +10,7 @@ import ProviderWrapper from "../../ApiWrapper/web/provider"
 
 import {
     USER_CATEGORY
-  } from "../../../constant";
+} from "../../../constant";
 
 const Log = new Logger("ADHOC > HELPER");
 

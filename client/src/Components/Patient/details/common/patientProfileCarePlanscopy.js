@@ -13,7 +13,6 @@ import {getName} from "../../../../Helper/validation";
 
 import { Tabs, Table, Menu, Dropdown, Spin, message, Button } from "antd";
 
-
 class patientCarePlans extends Component{
 
     constructor(props){

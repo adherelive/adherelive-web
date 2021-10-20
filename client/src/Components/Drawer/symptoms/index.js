@@ -11,7 +11,6 @@ import humanBodyBack from '../../../Assets/images/humanBodyBack.jpeg';
 import Download from "../../../Assets/images/down-arrow.png";
 import { PARTS, PART_LIST_BACK, PART_LIST_CODES, PART_LIST_FRONT, BODY } from '../../../constant';
 
-
 class SymptomsDrawer extends Component {
     constructor(props) {
         super(props);

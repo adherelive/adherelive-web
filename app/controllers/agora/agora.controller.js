@@ -4,10 +4,9 @@ import {
     USER_CATEGORY,
     AGORA_CALL_NOTIFICATION_TYPES,
     EVENT_STATUS
-  } from "../../../constant";
+} from "../../../constant";
 
 import Logger from "../../../libs/log";
-
 
 import AgoraJob from "../../JobSdk/Agora/observer";
 import NotificationSdk from "../../NotificationSdk";

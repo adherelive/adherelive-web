@@ -8,7 +8,7 @@ import { addDietUrl ,
     getDietTimelineUrl,
     getPatientPreferenceDietDetailsUrl,
     updateDietTotalCaloriesUrl
- } from "../../Helper/urls/diet";
+} from "../../Helper/urls/diet";
 
 export const ADD_DIET_START = "ADD_DIET_START";
 export const ADD_DIET_COMPLETED = "ADD_DIET_COMPLETED";

@@ -9,7 +9,6 @@ import messages from "./message";
 import UpdateProviderForm from  "./form";
 import { SAVINGS, CURRENT, ACCOUNT_TYPES } from "../../../constant";
 
-
 class updateProviderDrawer extends Component {
   constructor(props) {
     super(props);

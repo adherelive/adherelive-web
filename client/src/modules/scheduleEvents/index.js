@@ -2,14 +2,11 @@ import {doRequest} from "../../Helper/network";
 import {REQUEST_TYPE} from "../../constant";
 import {getScheduleEventsUrl, getAppointmentCompleteUrl,getAllMissedScheduleEventsUrl} from "../../Helper/urls/event";
 import {getCalenderDataCountForDayUrl,getCalenderDataForDayUrl} from "../../Helper/urls/provider";
-
-
 import {getPatientLastVisitAlertUrl} from '../../Helper/url/patients'
 
 export const GET_SCHEDULE_EVENTS_START = "GET_SCHEDULE_EVENTS_START";
 export const GET_SCHEDULE_EVENTS_COMPLETED = "GET_SCHEDULE_EVENTS_COMPLETED";
 export const GET_SCHEDULE_EVENTS_FAILED = "GET_SCHEDULE_EVENTS_FAILED";
-
 
 export const GET_LAST_VISIT_ALERTS='GET_LAST_VISIT_ALERTS';
 export const GET_LAST_VISIT_ALERTS_COMPLETE='GET_LAST_VISIT_ALERTS_COMPLETE';
@@ -17,7 +14,6 @@ export const GET_LAST_VISIT_ALERTS_FAILED='GET_LAST_VISIT_ALERTS_FAILED';
 
 export const APPOINTMENT_STATUS_UPDATE_COMPLETED = "APPOINTMENT_STATUS_UPDATE_COMPLETED";
 export const APPOINTMENT_STATUS_UPDATE_FAILED = "APPOINTMENT_STATUS_UPDATE_FAILED";
-
 
 export const GET_CALENDER_DATA_COUNT_START = "GET_CALENDER_DATA_COUNT_START";
 export const GET_CALENDER_DATA_COUNT_COMPLETED = "GET_CALENDER_DATA_COUNT_COMPLETED";

@@ -4,8 +4,6 @@ import {QueryTypes} from "sequelize";
 import {TABLE_NAME} from "../../models/doctor_patient_watchlist";
 import { TABLE_NAME as userRolesTableName } from "../../models/userRoles";
 
-
-
 class DoctorPatientWatchlistService {
 
   async getAll() {
@@ -18,7 +16,6 @@ class DoctorPatientWatchlistService {
     }
   }
 
-
   getByData = async data => {
         try {
             const record = await Database.getModel(TABLE_NAME).findOne({
@@ -28,9 +25,9 @@ class DoctorPatientWatchlistService {
         } catch(error) {
             throw error;
         }
-    };
+  };
 
-    getAllByData = async data => {
+  getAllByData = async data => {
       try {
           const record = await Database.getModel(TABLE_NAME).findAll({
               where: data
@@ -41,23 +38,22 @@ class DoctorPatientWatchlistService {
       }
   };
 
-    updateRecord = async (data, id) => {
-      const transaction = await Database.initTransaction();
-      try {
-        const record = await Database.getModel(TABLE_NAME).update(data, {
-          where: {
-            id
-          },
-          transaction
-        });
-        await transaction.commit();
-        return record;
-      } catch (error) {
-        await transaction.rollback();
-        throw error;
-      }
-    };
-
+  updateRecord = async (data, id) => {
+    const transaction = await Database.initTransaction();
+    try {
+      const record = await Database.getModel(TABLE_NAME).update(data, {
+        where: {
+          id
+        },
+        transaction
+      });
+      await transaction.commit();
+      return record;
+    } catch (error) {
+      await transaction.rollback();
+      throw error;
+    }
+  };
 
 }
 

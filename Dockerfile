@@ -1,4 +1,4 @@
-FROM node:carbon-jessie
+FROM node:lts-buster
 RUN mkdir -p /usr/src/app/client && mkdir -p /usr/src/app/public
 WORKDIR /usr/src/app
 COPY package.json /usr/src/app

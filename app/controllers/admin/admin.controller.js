@@ -24,7 +24,10 @@ import UserWrapper from "../../ApiWrapper/web/user";
 import ProviderWrapper from "../../ApiWrapper/web/provider";
 import TACWrapper from "../../ApiWrapper/web/termsAndConditions";
 
-import {USER_CATEGORY , TERMS_AND_CONDITIONS_TYPES} from "../../../constant"
+import {
+  USER_CATEGORY, 
+  TERMS_AND_CONDITIONS_TYPES
+} from "../../../constant";
 
 const Log = new Logger("ADMIN > CONTROLLER");
 

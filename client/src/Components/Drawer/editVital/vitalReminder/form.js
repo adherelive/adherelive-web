@@ -13,22 +13,14 @@ import instructions from "../common/instructions";
 import vitalNameField from "../common/vitalName";
 import vitalOccurenceField from "../common/vitalOccurence";
 
-
 import messages from "../message";
 import { hasErrors, isNumber } from "../../../../Helper/validation";
 import { REPEAT_TYPE, USER_CATEGORY, DAYS_NUMBER, DAYS, ALTERNATE_DAYS } from "../../../../constant";
+
 const { Item: FormItem } = Form;
-
-
-
 const UNIT_FIELD = 'unit';
-
-
 const UNIT_ML = 'ml';
-
 const UNIT_MG = 'mg';
-
-
 const RadioButton = Radio.Button;
 const RadioGroup = Radio.Group;
 

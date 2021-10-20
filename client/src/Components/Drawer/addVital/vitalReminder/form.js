@@ -15,8 +15,6 @@ import endDateField from "../common/endDate";
 import startTimeField from "../common/startTime";
 import { REPEAT_TYPE, USER_CATEGORY, DAYS_NUMBER, DAYS, ALTERNATE_DAYS } from "../../../../constant";
 
-
-
 const { Item: FormItem } = Form;
 
 class AddvitalsForm extends Component {
