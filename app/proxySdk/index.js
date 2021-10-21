@@ -12,7 +12,7 @@ const { ActivitySdk, STAGES } = require("../activitySdk");
 const schedule = require("node-schedule");
 
 function checkEventHaveToStart(startTime) {
-  console.log("AAAAAAAAAAAAAAAAAAAAA");
+  console.log("START TIME: Check Event Has Started");
   const at00 = moment()
     .minutes(0)
     .seconds(0)
@@ -52,7 +52,7 @@ function checkEventHaveToStart(startTime) {
   if (startTime < listOfScheduler[x]) {
     status = true;
   }
-  console.log("BBBBBBBBBBBBBBBBBBBBB", status);
+  console.log("Start Time List of Schedulers: ", status);
   return status;
 }
 
@@ -72,7 +72,12 @@ class ProxySdk extends EventEmitter {
   }
   scheduledJobIscheduledJobIdd;
   execute(eventName, ...args) {
-    console.log('INSIDEEEE EXECUTEEEEEEEEEEEEEE=>>>>>>>>>>>>>>',eventName,'   7896976858674654786877e65587 ', args);
+    console.log(
+      "INSIDE EXECUTE EVENT EMITTER: ",
+      eventName,
+      " SENT ARGS ",
+      args
+    );
     this.emit(eventName, ...args);
   }
 
