@@ -3,7 +3,7 @@ import { injectIntl } from "react-intl";
 import { Button, Input, Form, message } from "antd";
 import messages from "./message";
 import { withRouter } from "react-router-dom";
-import {PATH} from "../../constant";
+import { PATH } from "../../constant";
 import config from "../../config";
 
 const { Item: FormItem } = Form;
@@ -33,25 +33,28 @@ class SignIn extends Component {
       getUserRoles,
       history
     } = this.props;
-    
+
     this.setState({ loading: true });
     validateFields(async (err, { email, password }) => {
       if (!err) {
         try {
           const response = await signIn({ email, password });
-          const { status = false, statusCode , payload :{ data={} ,message:resp_msg}={}} = response;
-          const {users={},auth_user='', hasConsent} = data || {};
+          const {
+            status = false,
+            statusCode,
+            payload: { data = {}, message: resp_msg } = {}
+          } = response;
+          const { users = {}, auth_user = "", hasConsent } = data || {};
 
           if (status) {
             message.success(this.formatMessage(messages.loginSuccessfull), 4);
-            if(hasConsent){
+            if (hasConsent) {
               getInitialData();
               getUserRoles();
-            }else{
+            } else {
               history.push(PATH.CONSENT);
             }
-          }
-          else{
+          } else {
             if (statusCode === 422) {
               message.error(this.formatMessage(messages.emailDoesNotxist), 4);
             } else {
@@ -76,7 +79,6 @@ class SignIn extends Component {
   tosComponent = () => {
     return (
       <div className="flex mb20">
-
         <div className="slate-grey mt-10 fs12 p10 medium">
           <span>{this.formatMessage(messages.agreeSigninPPText)}</span>{" "}
           <a href={PRIVACY_PAGE_URL} target={"_blank"}>
@@ -97,10 +99,9 @@ class SignIn extends Component {
       const error = isFieldTouched(value) && getFieldError(value);
       fieldsError = { ...fieldsError, [value]: error };
     });
-    const { handleSignIn ,tosComponent } = this;
+    const { handleSignIn, tosComponent } = this;
     return (
-
-                <Form onSubmit={handleSignIn} className="login-form">
+      <Form onSubmit={handleSignIn} className="login-form">
         <FormItem
           validateStatus={fieldsError[EMAIL] ? "error" : ""}
           help={fieldsError[EMAIL] || ""}
@@ -171,10 +172,14 @@ class SignIn extends Component {
           </div>
         </FormItem>
       </Form>
-  
-
     );
   }
 }
 
-export default withRouter(Form.create({ name: "signin_form" })(injectIntl(SignIn)));
+// TODO: antd v4x has deprecated Form.create. Need to change to not use the Form.create
+//const NormalLoginForm = ({ name: "signin_form" })(injectIntl(SignIn));
+
+export default withRouter(
+  Form.create({ name: "signin_form" })(injectIntl(SignIn))
+);
+//export default withRouter(mapStateToProps, mapDispatchToProps)(NormalLoginForm);
