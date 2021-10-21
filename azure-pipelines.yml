@@ -31,3 +31,14 @@ stages:
         dockerComposeCommand: build node
         additionalImagetags: |
           $(tag)
+    - task: DockerCompose@0
+      displayName: Push services
+      inputs:
+        action: Push services
+        projectName: $(Build.Repository.Name)
+        containerregistrytype: Container Registry
+        dockerRegistryEndpoint: portal_demo
+        dockerComposeFile: docker-compose.yml
+        qualifyImageNames: true
+        additionalImageTags: |
+          $(Build.BuildId)
