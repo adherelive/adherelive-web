@@ -35,7 +35,7 @@ stages:
       displayName: Push services
       inputs:
         action: Push services
-        projectName: $(Build.Repository.Name)
+        projectName: gagneet/adherelive:portal_demo
         containerregistrytype: Container Registry
         dockerRegistryEndpoint: portal_demo
         dockerComposeFile: docker-compose.yml
