@@ -10,6 +10,7 @@ resources:
 
 variables:
   tag: '$(Build.BuildId)'
+  ImageNames: 'gagneet/adherelive:portal_demo'
 
 stages:
 - stage: Build
@@ -31,14 +32,13 @@ stages:
         dockerComposeCommand: build node
         additionalImagetags: |
           $(tag)
-    - task: DockerCompose@0
-      displayName: Push services
+    - task: Docker@1
+      displayName: Push image to DockerHub
       inputs:
-        action: Push services
-        projectName: gagneet/adherelive:portal_demo
         containerregistrytype: Container Registry
         dockerRegistryEndpoint: portal_demo
-        dockerComposeFile: docker-compose.yml
-        qualifyImageNames: true
-        additionalImageTags: |
-          $(Build.BuildId)
+        command: Push an image
+        imageName: $(ImageNames)
+        useDefaultContext: true
+      condition: and(succeeded(), ne(variables['Build.Reason'], 'PullRequest'))
+    - script: docker pull $(ImageNames)
