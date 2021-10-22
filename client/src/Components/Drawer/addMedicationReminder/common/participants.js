@@ -255,7 +255,7 @@ class Participants extends Component {
         <div>
           {(USER_CATEGORY.CARE_COACH === "PATIENT" ||
             category === USER_CATEGORY.DOCTOR ||
-              category === USER_CATEGORY.HSP) && (
+            category === USER_CATEGORY.HSP) && (
             <FormItem
               label={`${
                 eventMode === EVENT_TYPE.APPOINTMENT
