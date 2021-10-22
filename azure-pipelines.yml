@@ -40,5 +40,3 @@ stages:
         command: Push an image
         imageName: $(ImageNames)
         useDefaultContext: true
-      condition: and(succeeded(), ne(variables['Build.Reason'], 'PullRequest'))
-    - script: docker pull $(ImageNames)
