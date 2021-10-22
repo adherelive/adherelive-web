@@ -87,7 +87,7 @@ class PriorCron {
     }
   };
 
-  handleAppointmentPrior = async (event) => {
+  handleAppointmentPrior = async event => {
     try {
       const { id, event_id, details } = event.getData() || {};
       // const data = {
@@ -107,14 +107,14 @@ class PriorCron {
       );
       const appointmentJob = AppointmentJob.execute(EVENT_STATUS.PRIOR, {
         ...event.getData(),
-        details: { ...details, participants },
+        details: { ...details, participants }
       });
 
       await NotificationSdk.execute(appointmentJob);
 
       const updateEventStatus = await this.scheduleEventService.update(
         {
-          status: EVENT_STATUS.PRIOR,
+          status: EVENT_STATUS.PRIOR
         },
         id
       );
@@ -123,7 +123,7 @@ class PriorCron {
     }
   };
 
-  handleDietPrior = async (event) => {
+  handleDietPrior = async event => {
     try {
       const { id } = event || {};
       const dietJob = DietJob.execute(EVENT_STATUS.PRIOR, event);
@@ -132,7 +132,7 @@ class PriorCron {
 
       await this.scheduleEventService.update(
         {
-          status: EVENT_STATUS.PRIOR,
+          status: EVENT_STATUS.PRIOR
         },
         id
       );
@@ -141,7 +141,7 @@ class PriorCron {
     }
   };
 
-  handleWorkoutPrior = async (event) => {
+  handleWorkoutPrior = async event => {
     try {
       const { id } = event || {};
       const workoutJob = WorkoutJob.execute(EVENT_STATUS.PRIOR, event);
@@ -150,7 +150,7 @@ class PriorCron {
 
       await this.scheduleEventService.update(
         {
-          status: EVENT_STATUS.PRIOR,
+          status: EVENT_STATUS.PRIOR
         },
         id
       );

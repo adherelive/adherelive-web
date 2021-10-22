@@ -46,22 +46,22 @@ const message = defineMessages({
     description: "",
     defaultMessage: "Calories"
   },
-  name_required_error:{
+  name_required_error: {
     id: "app.drawer.add.food.item.name.error",
     description: "",
     defaultMessage: "Name is a required field"
   },
-  portion_id_required_error:{
+  portion_id_required_error: {
     id: "app.drawer.add.food.item.portion.id.error",
     description: "",
     defaultMessage: "Portion Type is a required field"
   },
-  portion_size_required_error:{
+  portion_size_required_error: {
     id: "app.drawer.add.food.item.portion.size.error",
     description: "",
     defaultMessage: "Portion Size is a required field"
   },
-  submit_text:{
+  submit_text: {
     id: "app.drawer.add.food.item.portion.submit.text",
     description: "",
     defaultMessage: "Submit"
@@ -70,7 +70,7 @@ const message = defineMessages({
     id: "app.drawer.add.food.item.search.food",
     description: "",
     defaultMessage: "Search Food"
-  },
+  }
 });
 
 export default message;

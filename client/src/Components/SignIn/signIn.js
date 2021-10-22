@@ -16,6 +16,7 @@ const FIELDS = [EMAIL, PASSWORD];
 
 const TOS_PAGE_URL = `${config.WEB_URL}${PATH.TERMS_OF_SERVICE}`;
 const PRIVACY_PAGE_URL = `${config.WEB_URL}${PATH.PRIVACY_POLICY}`;
+
 class SignIn extends Component {
   constructor(props) {
     super(props);

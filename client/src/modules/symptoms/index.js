@@ -6,7 +6,6 @@ import {
   getHistorySymptomUrl
 } from "../../Helper/urls/symptoms";
 
-
 export const GET_SYMPTOM = "GET_SYMPTOM";
 
 export const GET_HISTORY_SYMPTOM = "GET_HISTORY_SYMPTOM";
@@ -37,14 +36,14 @@ export const getSymptomDetails = (ids = []) => {
       } else {
         dispatch({
           type: GET_SYMPTOM_DETAILS_FAILED,
-          error,
+          error
         });
       }
     } catch (error) {
       console.log("GET SYMPTOM DETAILS ERROR --> ", error);
     }
     return response;
-  }
+  };
 };
 
 export const getSymptomTimeLine = patientId => {

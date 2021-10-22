@@ -1,6 +1,6 @@
 # adherelive-web
-Web Portal for AdhereLive. Currently the Doctor's and Admin's login portal on the web application 
 
+Web Portal for AdhereLive. Currently the Doctor's and Admin's login portal on the web application
 
 # For Production Build
 
@@ -35,7 +35,8 @@ This will start the project along with Mysql and Minio stacks.
 
 ## 3. Make sure .node_env is complete
 
-Compare .node_env with .node_env.example and .env with .env.example. If any key-value pair is missing in .node_env, copy it in from the .node_env.example.
+Compare .node_env with .node_env.example and .env with .env.example. If any key-value pair is missing in .node_env, copy
+it in from the .node_env.example.
 
 ## 4. Run seeders
 
@@ -82,7 +83,8 @@ This will start the project along with Mysql and Minio stacks.
 
 ## 3. Make sure .node_env is complete
 
-Compare .node_env with .node_env.example and .env with .env.example. If any key-value pair is missing in .node_env, copy it in from the .node_env.example.
+Compare .node_env with .node_env.example and .env with .env.example. If any key-value pair is missing in .node_env, copy
+it in from the .node_env.example.
 
 ## 4. Running migrations
 

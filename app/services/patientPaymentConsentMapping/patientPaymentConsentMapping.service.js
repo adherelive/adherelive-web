@@ -3,7 +3,7 @@ import Database from "../../../libs/mysql";
 // TABLES
 import { TABLE_NAME } from "../../models/patientPaymentConsentMapping";
 
-const DEFAULT_ORDER = [["created_at","DESC"]];
+const DEFAULT_ORDER = [["created_at", "DESC"]];
 
 class PatientPaymentConsentMappingService {
   constructor() {}
@@ -46,7 +46,7 @@ class PatientPaymentConsentMappingService {
     }
   };
 
-  findAndCountAll = async ({where, order = DEFAULT_ORDER, attributes}) => {
+  findAndCountAll = async ({ where, order = DEFAULT_ORDER, attributes }) => {
     try {
       return await Database.getModel(TABLE_NAME).findAndCountAll({
         where,
@@ -59,7 +59,7 @@ class PatientPaymentConsentMappingService {
     }
   };
 
-  findOne = async ({where, order = DEFAULT_ORDER, attributes}) => {
+  findOne = async ({ where, order = DEFAULT_ORDER, attributes }) => {
     try {
       return await Database.getModel(TABLE_NAME).findOne({
         where,
@@ -88,7 +88,6 @@ class PatientPaymentConsentMappingService {
       throw error;
     }
   };
-
 }
 
 export default new PatientPaymentConsentMappingService();

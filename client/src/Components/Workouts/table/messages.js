@@ -50,7 +50,7 @@ const messages = defineMessages({
     id: "app.workouts.table.workouts.responseTimeline",
     description: "",
     defaultMessage: "Response Timeline"
-  },
+  }
 });
 
 export default messages;

@@ -5,30 +5,32 @@ import { close } from "../../modules/drawer";
 import {
   createCareplanTemplate,
   deleteCareplanTemplateRelated,
-  updateCareplanTemplate } from "../../modules/carePlanTemplates";
-  import {getAllTemplatesForDoctor} from "../../modules/carePlanTemplates";
-
+  updateCareplanTemplate
+} from "../../modules/carePlanTemplates";
+import { getAllTemplatesForDoctor } from "../../modules/carePlanTemplates";
 
 // import { createReminder, updateReminder } from "../../modules/reminder"; // write to add to database
 const mapStateToProps = state => {
   const {
-    auth:{authPermissions = [], authenticated_user = 1,authenticated_category } = {},
-    drawer: { visible, loading, data: { type, payload = {} } = {} }, 
+    auth: {
+      authPermissions = [],
+      authenticated_user = 1,
+      authenticated_category
+    } = {},
+    drawer: { visible, loading, data: { type, payload = {} } = {} },
     doctors = {},
-    care_plan_templates={},
-    template_appointments={},
-    template_medications={},
+    care_plan_templates = {},
+    template_appointments = {},
+    template_medications = {},
     template_diets = {},
-    template_workouts={},
-    template_vitals={},
-    vital_templates={},
-    medicines={},
+    template_workouts = {},
+    template_vitals = {},
+    vital_templates = {},
+    medicines = {},
     pages: { care_plan_template_ids = [] } = {},
-    repeat_intervals={},
-    exercise_contents={}
+    repeat_intervals = {},
+    exercise_contents = {}
   } = state;
-
-  
 
   return {
     authPermissions,
@@ -41,7 +43,7 @@ const mapStateToProps = state => {
     care_plan_templates,
     template_appointments,
     template_medications,
-    template_diets ,
+    template_diets,
     template_workouts,
     template_vitals,
     vital_templates,
@@ -55,11 +57,23 @@ const mapStateToProps = state => {
 const mapDispatchToProps = dispatch => {
   return {
     close: () => dispatch(close()),
-    createCareplanTemplate : (payload) => dispatch(createCareplanTemplate(payload)),
-    deleteCareplanTemplateRelated : ({careplan_template_id,other_id,other_type}) =>
-    dispatch(deleteCareplanTemplateRelated({careplan_template_id,other_id,other_type})),
-    updateCareplanTemplate : (id,payload) => dispatch(updateCareplanTemplate(id,payload)),
-    getAllTemplatesForDoctor:()=>dispatch(getAllTemplatesForDoctor())
+    createCareplanTemplate: payload =>
+      dispatch(createCareplanTemplate(payload)),
+    deleteCareplanTemplateRelated: ({
+      careplan_template_id,
+      other_id,
+      other_type
+    }) =>
+      dispatch(
+        deleteCareplanTemplateRelated({
+          careplan_template_id,
+          other_id,
+          other_type
+        })
+      ),
+    updateCareplanTemplate: (id, payload) =>
+      dispatch(updateCareplanTemplate(id, payload)),
+    getAllTemplatesForDoctor: () => dispatch(getAllTemplatesForDoctor())
   };
 };
 

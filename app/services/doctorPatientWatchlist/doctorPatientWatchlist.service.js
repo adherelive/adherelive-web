@@ -1,11 +1,10 @@
 import Database from "../../../libs/mysql";
-import {QueryTypes} from "sequelize";
+import { QueryTypes } from "sequelize";
 
-import {TABLE_NAME} from "../../models/doctor_patient_watchlist";
+import { TABLE_NAME } from "../../models/doctor_patient_watchlist";
 import { TABLE_NAME as userRolesTableName } from "../../models/userRoles";
 
 class DoctorPatientWatchlistService {
-
   async getAll() {
     try {
       const watchlistRecords = await Database.getModel(TABLE_NAME).findAll();
@@ -17,25 +16,25 @@ class DoctorPatientWatchlistService {
   }
 
   getByData = async data => {
-        try {
-            const record = await Database.getModel(TABLE_NAME).findOne({
-                where: data
-            });
-            return record;
-        } catch(error) {
-            throw error;
-        }
+    try {
+      const record = await Database.getModel(TABLE_NAME).findOne({
+        where: data
+      });
+      return record;
+    } catch (error) {
+      throw error;
+    }
   };
 
   getAllByData = async data => {
-      try {
-          const record = await Database.getModel(TABLE_NAME).findAll({
-              where: data
-          });
-          return record;
-      } catch(error) {
-          throw error;
-      }
+    try {
+      const record = await Database.getModel(TABLE_NAME).findAll({
+        where: data
+      });
+      return record;
+    } catch (error) {
+      throw error;
+    }
   };
 
   updateRecord = async (data, id) => {
@@ -54,7 +53,6 @@ class DoctorPatientWatchlistService {
       throw error;
     }
   };
-
 }
 
 export default new DoctorPatientWatchlistService();

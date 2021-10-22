@@ -25,7 +25,7 @@ class TransactionWrapper extends BaseTransaction {
       payee_type,
       status,
       transaction_response,
-        updated_at
+      updated_at
     } = _data;
 
     return {
@@ -51,7 +51,7 @@ class TransactionWrapper extends BaseTransaction {
   };
 
   getAllInfo = async () => {
-    const {getBasicInfo, getId} = this;
+    const { getBasicInfo, getId } = this;
     return {
       transactions: {
         [getId()]: getBasicInfo()
@@ -62,19 +62,21 @@ class TransactionWrapper extends BaseTransaction {
 
   getReferenceInfo = async () => {
     try {
-      const {getAllInfo, _data} = this;
-      const {payment_product} = _data || {};
+      const { getAllInfo, _data } = this;
+      const { payment_product } = _data || {};
 
-      const paymentProducts = await PaymentProductWrapper({data: payment_product});
+      const paymentProducts = await PaymentProductWrapper({
+        data: payment_product
+      });
 
       return {
-        ...await getAllInfo(),
+        ...(await getAllInfo()),
         payment_products: {
           [paymentProducts.getId()]: paymentProducts.getBasicInfo()
         },
-        payment_product_id: paymentProducts.getId(),
+        payment_product_id: paymentProducts.getId()
       };
-    } catch(error) {
+    } catch (error) {
       throw error;
     }
   };
@@ -88,7 +90,7 @@ export default async ({ data = null, id = null }) => {
     const transactionService = new TransactionService();
     const transaction = await transactionService.getByData({ id });
     return new TransactionWrapper(transaction);
-  } catch(error) {
+  } catch (error) {
     throw error;
   }
 };

@@ -1,7 +1,7 @@
-'use strict';
+"use strict";
 
-import {TABLE_NAME} from "../app/models/exerciseUserCreatedMapping";
-import {TABLE_NAME as exerciseTableName} from "../app/models/exercise";
+import { TABLE_NAME } from "../app/models/exerciseUserCreatedMapping";
+import { TABLE_NAME as exerciseTableName } from "../app/models/exercise";
 import { USER_CATEGORY } from "../constant";
 
 module.exports = {
@@ -10,16 +10,16 @@ module.exports = {
       id: {
         type: DataTypes.INTEGER,
         primaryKey: true,
-        autoIncrement: true,
+        autoIncrement: true
       },
       exercise_id: {
         type: DataTypes.INTEGER,
         allowNull: false,
         references: {
           model: {
-            tableName: exerciseTableName,
+            tableName: exerciseTableName
           },
-          key: "id", 
+          key: "id"
         }
       },
       creator_id: {
@@ -31,21 +31,21 @@ module.exports = {
         values: [
           USER_CATEGORY.DOCTOR,
           USER_CATEGORY.PROVIDER,
-          USER_CATEGORY.ADMIN,
+          USER_CATEGORY.ADMIN
         ],
         defaultValue: USER_CATEGORY.DOCTOR
       },
       created_at: {
         type: DataTypes.DATE,
-        allowNull: false,
+        allowNull: false
       },
       updated_at: {
         type: DataTypes.DATE,
-        allowNull: false,
+        allowNull: false
       },
       deleted_at: {
-        type: DataTypes.DATE,
-      },
+        type: DataTypes.DATE
+      }
     });
   },
 

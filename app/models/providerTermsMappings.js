@@ -41,9 +41,9 @@ export const db = database => {
       getterMethods: {
         getBasicInfo() {
           return {
-              id: this.id,
-              provider_id: this.provider_id,
-              terms_and_conditions_id: this.terms_and_conditions_id
+            id: this.id,
+            provider_id: this.provider_id,
+            terms_and_conditions_id: this.terms_and_conditions_id
           };
         }
       }
@@ -52,8 +52,8 @@ export const db = database => {
 };
 
 export const associate = database => {
-    database.models[TABLE_NAME].belongsTo(database.models[providerTableName], {
-        foreignKey: "provider_id",
-        targetKey: "id"
-    });
+  database.models[TABLE_NAME].belongsTo(database.models[providerTableName], {
+    foreignKey: "provider_id",
+    targetKey: "id"
+  });
 };

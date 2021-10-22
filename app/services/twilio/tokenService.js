@@ -6,7 +6,6 @@ const IpMessagingGrant = AccessToken.ChatGrant;
 let VideoGrant = AccessToken.VideoGrant;
 
 function TokenGenerator(identity, deviceId) {
-
   const appName = "TwilioChat";
 
   // Create a unique ID for the client on their current device

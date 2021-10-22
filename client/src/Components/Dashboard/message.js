@@ -117,15 +117,13 @@ const messages = defineMessages({
   return: {
     id: "app.dashboard.return",
     description: "",
-    defaultMessage:
-      "Return"
+    defaultMessage: "Return"
   },
   submit: {
     id: "app.dashboard.submit",
     description: "",
-    defaultMessage:
-      "Submit"
-  },
+    defaultMessage: "Submit"
+  }
 });
 
 export default messages;

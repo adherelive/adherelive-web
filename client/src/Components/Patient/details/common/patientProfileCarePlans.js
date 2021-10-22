@@ -8,7 +8,7 @@ import {
   DIAGNOSIS_TYPE,
   FINAL,
   PROBABLE,
-  TABLE_DEFAULT_BLANK_FIELD,
+  TABLE_DEFAULT_BLANK_FIELD
 } from "../../../../constant";
 import messages from "./messages";
 
@@ -17,7 +17,7 @@ class PatientCarePlans extends Component {
     super(props);
   }
 
-  getCarePlanStatus = (expired_on) => {
+  getCarePlanStatus = expired_on => {
     const { intl: { formatMessage } = {} } = this.props;
     return expired_on
       ? formatMessage(messages.inactive_careplan)
@@ -34,7 +34,7 @@ class PatientCarePlans extends Component {
       selectedCarePlanId,
       patient_id,
       intl: { formatMessage } = {},
-      auth_role,
+      auth_role
     } = this.props;
     const { getCarePlanStatus } = this;
     const authDoctor = getAuthCategory({ doctors, authenticated_user });
@@ -42,7 +42,7 @@ class PatientCarePlans extends Component {
     const { care_plan_ids = {}, basic_info: { id: doctorId } = {} } =
       authDoctor || {};
 
-    const patientCarePlans = care_plan_ids[auth_role].filter((id) => {
+    const patientCarePlans = care_plan_ids[auth_role].filter(id => {
       const { basic_info: { patient_id: carePlanPatientId = "0" } = {} } =
         care_plans[id] || {};
 
@@ -67,13 +67,13 @@ class PatientCarePlans extends Component {
         basic_info: {
           doctor_id,
           patient_id: carePlanPatientId,
-          user_role_id = null,
+          user_role_id = null
         } = {},
         details: {
           treatment_id,
-          diagnosis: { type = "1", description = "" } = {},
+          diagnosis: { type = "1", description = "" } = {}
         } = {},
-        expired_on,
+        expired_on
       } = care_plans[id] || {};
       const { basic_info: { name } = {} } = treatments[treatment_id] || {};
       const { basic_info: { first_name, middle_name, last_name } = {} } =
@@ -114,7 +114,7 @@ class PatientCarePlans extends Component {
                 : `Dr. ${getFullName({
                     first_name,
                     middle_name,
-                    last_name,
+                    last_name
                   })}`}
             </div>
           </div>
@@ -211,14 +211,14 @@ class PatientCarePlans extends Component {
       doctors,
       authenticated_user,
       patientCarePlanIds,
-      auth_role,
+      auth_role
     } = this.props;
 
     const authDoctor = getAuthCategory({ doctors, authenticated_user });
 
     const { care_plan_ids = [] } = authDoctor || {};
 
-    const hiddenCarePlanIds = patientCarePlanIds.filter((id) => {
+    const hiddenCarePlanIds = patientCarePlanIds.filter(id => {
       return !care_plan_ids[auth_role].includes(id);
     });
 
@@ -231,7 +231,7 @@ class PatientCarePlans extends Component {
       getVisibleCarePlans,
       getHiddenCarePlans,
       renderFooter,
-      hideFooter,
+      hideFooter
     } = this;
 
     return (

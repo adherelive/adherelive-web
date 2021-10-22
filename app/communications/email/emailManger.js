@@ -6,6 +6,7 @@ const emailPayloadBuilder = require("./emailPayloadBuilder");
 const Log = require("../../../libs/log")("communications --> emailManger");
 const nodemailer = require("nodemailer");
 const smtpTransport = require("nodemailer-sendgrid-transport");
+
 class EmailManger {
   constructor() {
     // AWS.config.update({
@@ -22,10 +23,9 @@ class EmailManger {
       smtpTransport({
         auth: {
           // api_user:process.config.email.USER,
-          api_key:process.config.email.KEY,
+          api_key: process.config.email.KEY
           // api_user: 'adhere-tripock',
           // api_key: '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'
-
         }
       })
     );
@@ -34,22 +34,20 @@ class EmailManger {
   genrateEmailTemplateString(name, data, options) {
     let filepath = path.join(__dirname, "/../../views/emailTemplates/");
     return new Promise((resolve, reject) => {
-      ejs.renderFile(
-        filepath + name + ".ejs",
-        data,
-        options,
-        (err, str) => {
-          if (err) {
-            return reject(err);
-          }
-          return resolve(str);
+      ejs.renderFile(filepath + name + ".ejs", data, options, (err, str) => {
+        if (err) {
+          return reject(err);
         }
-      );
+        return resolve(str);
+      });
     });
   }
 
   emailPayloadValidator(emailPayload) {
-    console.log("Email Payloader Validator -------------------->   ", emailPayload);
+    console.log(
+      "Email Payloader Validator -------------------->   ",
+      emailPayload
+    );
     if (!emailPayload.toAddress)
       return {
         error: 1,
@@ -82,7 +80,10 @@ class EmailManger {
 
   async emailPayloadTransformer(payload) {
     try {
-      console.log("Email Payloader Transformet =================>    ", payload);
+      console.log(
+        "Email Payloader Transformet =================>    ",
+        payload
+      );
       let payloadBuilder = new emailPayloadBuilder(payload);
       let templateString = "";
       switch (payload.templateName) {
@@ -93,39 +94,39 @@ class EmailManger {
             {}
           );
           break;
-          case "welcome":
-            templateString = await this.genrateEmailTemplateString(
-              "welcome",
-              payload.templateData,
-              {}
-            );
-            break;
+        case "welcome":
+          templateString = await this.genrateEmailTemplateString(
+            "welcome",
+            payload.templateData,
+            {}
+          );
+          break;
         case "invitation":
           templateString = await this.genrateEmailTemplateString(
-              "invitation",
-              payload.templateData,
-              {}
+            "invitation",
+            payload.templateData,
+            {}
           );
           break;
         case "verifiedDoctor":
           templateString = await this.genrateEmailTemplateString(
-              "verifiedDoctor",
-              payload.templateData,
-              {}
+            "verifiedDoctor",
+            payload.templateData,
+            {}
           );
           break;
         case "otpVerification":
           templateString = await this.genrateEmailTemplateString(
-              "otpVerification",
-              payload.templateData,
-              {}
+            "otpVerification",
+            payload.templateData,
+            {}
           );
           break;
-          case "serverCrash":
+        case "serverCrash":
           templateString = await this.genrateEmailTemplateString(
-              "serverCrash",
-              payload.templateData,
-              {}
+            "serverCrash",
+            payload.templateData,
+            {}
           );
           break;
         case "BookingStatusSubmittedUser":
@@ -277,7 +278,7 @@ class EmailManger {
         .createEmailTitle()
         .createEmailBodyTemplate(templateString)
         .createSourceAddress(process.config.email.FROM)
-          .createSourceName(process.config.email.FROM_NAME)
+        .createSourceName(process.config.email.FROM_NAME)
         .createReplyToAddress(process.config.email.FROM)
         .build();
       console.log("Transformer Returning ====================>    ", content);
@@ -290,8 +291,11 @@ class EmailManger {
   async sendEmail(emailPayload) {
     try {
       let payload = await this.emailPayloadTransformer(emailPayload);
-      Log.info("validting email payload!! ========>     ",process.config.SMTP_USER,
-  process.config.SMTP_KEY);
+      Log.info(
+        "validting email payload!! ========>     ",
+        process.config.SMTP_USER,
+        process.config.SMTP_KEY
+      );
       let isValid = this.emailPayloadValidator(emailPayload);
       if (isValid && isValid.error == 1) return isValid;
       Log.success("email payload is valid!!");

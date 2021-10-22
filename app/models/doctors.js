@@ -71,9 +71,11 @@ export const db = database => {
       full_name: {
         type: DataTypes.VIRTUAL,
         get() {
-          return !this.first_name? null:`${this.first_name}${
-            this.middle_name ? ` ${this.middle_name}` : ""
-          }${this.last_name ? ` ${this.last_name}` : ""}`;
+          return !this.first_name
+            ? null
+            : `${this.first_name}${
+                this.middle_name ? ` ${this.middle_name}` : ""
+              }${this.last_name ? ` ${this.last_name}` : ""}`;
         }
       }
     },
@@ -108,13 +110,13 @@ export const db = database => {
 export const associate = database => {
   // associations here (if any) ...
 
-    database.models[TABLE_NAME].belongsTo(database.models[userTableName], {
-        foreignKey: "user_id",
-        targetKey: "id"
-    });
+  database.models[TABLE_NAME].belongsTo(database.models[userTableName], {
+    foreignKey: "user_id",
+    targetKey: "id"
+  });
 
-    database.models[TABLE_NAME].hasOne(database.models[specialityTableName], {
-        foreignKey: "id",
-        sourceKey: "speciality_id"
-    });
+  database.models[TABLE_NAME].hasOne(database.models[specialityTableName], {
+    foreignKey: "id",
+    sourceKey: "speciality_id"
+  });
 };

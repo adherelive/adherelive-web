@@ -23,7 +23,7 @@ export const PATH = {
   RESET_PASSWORD: "/reset-password/:link",
   REGISTER_FROM_PROFILE: "/register-from-profile",
   REGISTER_FROM_MY_PROFILE: "/register-from-my-profile",
-  TERMS_OF_PAYMENT:"/terms-of-payment/:id",
+  TERMS_OF_PAYMENT: "/terms-of-payment/:id",
   PATIENT: {
     PA: "/patients",
     DETAILS: "/patients/:patient_id"
@@ -34,7 +34,7 @@ export const PATH = {
       DETAILS: "/doctors/:id"
     },
     TOS_PP_EDITOR: "/details",
-    ALL_PROVIDERS : "/providers",
+    ALL_PROVIDERS: "/providers",
     ALL_MEDICINES: "/medicines"
   },
   PROVIDER: {
@@ -44,22 +44,22 @@ export const PATH = {
       PAYMENT_PRODUCTS: "/doctors/:id/payment-products"
     },
     CALENDER: "/calender",
-    TRANSACTION_DETAILS:"/transaction-details",
-    PAYMENT_DETAILS:"/payment-details"
+    TRANSACTION_DETAILS: "/transaction-details",
+    PAYMENT_DETAILS: "/payment-details"
   },
-  DOCTOR:{
-    TRANSACTION_DETAILS:"/transaction-details"
+  DOCTOR: {
+    TRANSACTION_DETAILS: "/transaction-details"
   },
   TERMS_OF_SERVICE: "/terms-of-service",
   PRIVACY_POLICY: "/privacy-policy",
-  TEMPLATES:"/templates",
-  CONSENT:"/consent"
+  TEMPLATES: "/templates",
+  CONSENT: "/consent"
 };
 
 export const AGORA_CALL_NOTIFICATION_TYPES = {
   START_CALL: "START_CALL",
   MISSED_CALL: "MISSED_CALL"
-}
+};
 
 export const NOTIFICATION_STAGES = {
   CREATE: "Create",
@@ -71,7 +71,7 @@ export const NOTIFICATION_STAGES = {
   SHARE: "Share",
   EDIT_NOTES: "Edit_Notes",
   APPROVED: "Approve",
-  RESPONSE_ADDED:"Response_added"
+  RESPONSE_ADDED: "Response_added"
 };
 
 export const HTTP_CODE_SERVER_ERROR = 500;
@@ -83,13 +83,11 @@ export const USER_ADHERE_BOT = "adhere_bot";
 export const CHAT_MESSAGE_TYPE = {
   SYMPTOM: "symptoms",
   VITAL: "vitals",
-  CONSULTATION:"consultation_fees",
+  CONSULTATION: "consultation_fees"
 };
 
 export const TEXT_KEY = "text";
 export const TIME_KEY = "time";
-
-
 
 export const AFTER_WAKEUP = "1";
 export const BEFORE_BREAKFAST = "2";
@@ -104,9 +102,7 @@ export const WITH_DINNER = "10";
 export const AFTER_DINNER = "11";
 export const BEFORE_SLEEP = "12";
 
-
 export const NOON = "13";
-
 
 export const MEDICATION_TIMING = {
   [AFTER_WAKEUP]: {
@@ -115,7 +111,7 @@ export const MEDICATION_TIMING = {
   },
   [BEFORE_BREAKFAST]: {
     [TEXT_KEY]: "Before Breakfast",
-    [TIME_KEY]:"8:30am"
+    [TIME_KEY]: "8:30am"
   },
   [AFTER_BREAKFAST]: {
     [TEXT_KEY]: "After Breakfast",
@@ -158,7 +154,6 @@ export const MEDICATION_TIMING = {
     [TIME_KEY]: "11:00pm"
   }
 };
-
 
 export const MEDICATION_TIMING_HOURS = {
   [BEFORE_BREAKFAST]: 8,
@@ -271,27 +266,27 @@ export const DRAWER = {
   ADD_RAZORPAY_ACCOUNT_DETAILS: "ADD_RAZORPAY_ACCOUNT_DETAILS",
   EDIT_RAZORPAY_ACCOUNT_DETAILS: "EDIT_RAZORPAY_ACCOUNT_DETAILS",
   EDIT_PATIENT: "EDIT_PATIENT",
-  ADD_PROVIDER:"ADD_PROVIDER",
-  EDIT_PROVIDER:"EDIT_PROVIDER",
-  ADD_REPORT:"ADD_REPORT",
+  ADD_PROVIDER: "ADD_PROVIDER",
+  EDIT_PROVIDER: "EDIT_PROVIDER",
+  ADD_REPORT: "ADD_REPORT",
   EDIT_REPORT: "EDIT_REPORT",
-  MISSED_MEDICATION:"MISSED_MEDICATION",
-  MISSED_APPOINTMENT:"MISSED_APPOINTMENT",
-  MISSED_VITAL:"MISSED_VITAL",
-  CREATE_CAREPLAN_TEMPLATE:"CREATE_CAREPLAN_TEMPLATE",
-  EDIT_CAREPLAN_TEMPLATE:"EDIT_CAREPLAN_TEMPLATE",
-  ADD_MEDICINES:"ADD_MEDICINES",
-  ADD_FOOD_ITEM:"ADD_FOOD_ITEM",
-  ADD_DIET:"ADD_DIET",
-  EDIT_DIET:"EDIT_DIET",
-  DIET_RESPONSE:"DIET_RESPONSE",
-  ADD_WORKOUT:"ADD_WORKOUT",
-  EDIT_WORKOUT:"EDIT_WORKOUT",
-  WORKOUT_RESPONSE:"WORKOUT_RESPONSE",
-  WORKOUT_RESPONSE_DETALS:"WORKOUT_RESPONSE_DETALS",
-  MISSED_DIET:"MISSED_DIET",
-  MISSED_WORKOUT:"MISSED_WORKOUT",
-  ADD_SECONDARY_DOCTOR:"ADD_SECONDARY_DOCTOR",
+  MISSED_MEDICATION: "MISSED_MEDICATION",
+  MISSED_APPOINTMENT: "MISSED_APPOINTMENT",
+  MISSED_VITAL: "MISSED_VITAL",
+  CREATE_CAREPLAN_TEMPLATE: "CREATE_CAREPLAN_TEMPLATE",
+  EDIT_CAREPLAN_TEMPLATE: "EDIT_CAREPLAN_TEMPLATE",
+  ADD_MEDICINES: "ADD_MEDICINES",
+  ADD_FOOD_ITEM: "ADD_FOOD_ITEM",
+  ADD_DIET: "ADD_DIET",
+  EDIT_DIET: "EDIT_DIET",
+  DIET_RESPONSE: "DIET_RESPONSE",
+  ADD_WORKOUT: "ADD_WORKOUT",
+  EDIT_WORKOUT: "EDIT_WORKOUT",
+  WORKOUT_RESPONSE: "WORKOUT_RESPONSE",
+  WORKOUT_RESPONSE_DETALS: "WORKOUT_RESPONSE_DETALS",
+  MISSED_DIET: "MISSED_DIET",
+  MISSED_WORKOUT: "MISSED_WORKOUT",
+  ADD_SECONDARY_DOCTOR: "ADD_SECONDARY_DOCTOR"
 };
 
 export const USER_CATEGORY = {
@@ -303,7 +298,7 @@ export const USER_CATEGORY = {
   PHARMACY_ADMIN: "pharmacyAdmin",
   ADMIN: "admin",
   PROVIDER: "provider",
-  HSP:"hsp"
+  HSP: "hsp"
 };
 
 export const ACTIVITY_TYPE = {
@@ -324,10 +319,10 @@ export const PERMISSIONS = {
   EDIT_GRAPH: "EDIT_GRAPH",
   ADD_ACTION: "ADD_ACTION",
   ADD_CARE_PLAN_TEMPLATE: "ADD_CARE_PLAN_TEMPLATE",
-  ADD_CAREPLAN: "ADD_CAREPLAN",
+  ADD_CAREPLAN: "ADD_CAREPLAN"
 };
 
-export const USER_PERMISSIONS =  {
+export const USER_PERMISSIONS = {
   /* [A] */
 
   APPOINTMENTS: {
@@ -335,11 +330,11 @@ export const USER_PERMISSIONS =  {
     UPDATE: "UPDATE_APPOINTMENT",
     VIEW: "VIEW_APPOINTMENT",
     DELETE: "DELETE_APPOINTMENT",
-    TEMPLATE:"TEMPLATE_APPOINTMENT"
+    TEMPLATE: "TEMPLATE_APPOINTMENT"
   },
 
   ACCOUNT: {
-    VERIFIED: "VERIFIED_ACCOUNT",
+    VERIFIED: "VERIFIED_ACCOUNT"
   },
 
   /* [C] */
@@ -359,7 +354,7 @@ export const USER_PERMISSIONS =  {
   },
 
   CALENDER: {
-    VIEW: "VIEW_CALENDER",
+    VIEW: "VIEW_CALENDER"
   },
 
   /* [D] */
@@ -369,20 +364,20 @@ export const USER_PERMISSIONS =  {
     UPDATE: "UPDATE_DIET",
     VIEW: "VIEW_DIET",
     DELETE: "DELETE_DIET",
-    TEMPLATE:"TEMPLATE_DIET"
+    TEMPLATE: "TEMPLATE_DIET"
   },
 
   DOCTORS: {
     ADD: "ADD_DOCTOR",
     UPDATE: "UPDATE_DOCTOR",
-    VIEW: "VIEW_DOCTOR",
+    VIEW: "VIEW_DOCTOR"
   },
 
   /* [G] */
 
   GRAPHS: {
     ADD: "ADD_GRAPH",
-    UPDATE: "UPDATE_GRAPH",
+    UPDATE: "UPDATE_GRAPH"
   },
 
   /* [M] */
@@ -393,7 +388,7 @@ export const USER_PERMISSIONS =  {
     VIEW: "VIEW_MEDICATION",
     VIEW_TIMELINE: "VIEW_TIMELINE_MEDICATION",
     DELETE: "DELETE_MEDICATION",
-    TEMPLATE:"TEMPLATE_MEDICATION"
+    TEMPLATE: "TEMPLATE_MEDICATION"
   },
 
   /* [P] */
@@ -401,17 +396,17 @@ export const USER_PERMISSIONS =  {
   PATIENTS: {
     ADD: "ADD_PATIENT",
     UPDATE: "UPDATE_PATIENT",
-    VIEW: "VIEW_PATIENT",
+    VIEW: "VIEW_PATIENT"
   },
 
   PAYMENT_PRODUCT: {
     ADD: "ADD_PAYMENT_PRODUCT",
-    VIEW: "VIEW_PAYMENT_PRODUCT",
+    VIEW: "VIEW_PAYMENT_PRODUCT"
   },
 
-   /* [R] */
+  /* [R] */
 
-   REPORTS: {
+  REPORTS: {
     ADD: "ADD_REPORT",
     UPDATE: "UPDATE_REPORT",
     VIEW: "VIEW_REPORT",
@@ -425,7 +420,7 @@ export const USER_PERMISSIONS =  {
     UPDATE: "UPDATE_VITAL",
     VIEW: "VIEW_VITAL",
     DELETE: "DELETE_VITAL",
-    TEMPLATE:"TEMPLATE_VITAL"
+    TEMPLATE: "TEMPLATE_VITAL"
   },
 
   /* [W] */
@@ -435,11 +430,9 @@ export const USER_PERMISSIONS =  {
     UPDATE: "UPDATE_WORKOUT",
     VIEW: "VIEW_WORKOUT",
     DELETE: "DELETE_WORKOUT",
-    TEMPLATE:"TEMPLATE_WORKOUT"
-  },
-
+    TEMPLATE: "TEMPLATE_WORKOUT"
+  }
 };
-
 
 const DAY = "1";
 const MONTH = "2";
@@ -547,8 +540,8 @@ export const EVENT_TYPE = {
   MEDICATION_REMINDER: "medication-reminder",
   SYMPTOMS: "symptoms",
   VITALS: "vitals",
-  DIET:"diet",
-  WORKOUT:"workout"
+  DIET: "diet",
+  WORKOUT: "workout"
 };
 
 export const EVENT_STATUS = {
@@ -558,7 +551,6 @@ export const EVENT_STATUS = {
   EXPIRED: "expired",
   CANCELLED: "cancelled"
 };
-
 
 //request type
 export const REQUEST_TYPE = {
@@ -643,7 +635,6 @@ export const GRAPH_COLORS = {
       dark: "bg-dark-brown",
       light: "bg-light-brown"
     }
-
   },
   [NO_WORKOUT]: {
     dark: "#00FF7F",
@@ -856,10 +847,10 @@ export const BODY_SIDE = {
   2: "BACK"
 };
 
-export const BODY_SIDE_TEXT  ={
+export const BODY_SIDE_TEXT = {
   1: "Front",
   2: "Back"
-}
+};
 export const PARTS = {
   HEAD: "HEAD",
   RIGHT_EYE: "RIGHT_EYE",
@@ -1921,13 +1912,10 @@ export const FEATURES = {
   AUDIO_CALL: "Audio Call"
 };
 
-
 export const TABLE_STATUS = {
-  TRANSACTION_TABLE:"transaction_table",
-  ADMIN_DOCTOR_TABLE:"admin_doctor_table"
+  TRANSACTION_TABLE: "transaction_table",
+  ADMIN_DOCTOR_TABLE: "admin_doctor_table"
 };
-
-
 
 export const TRANSACTION_STATUS = {
   PENDING: "pending",
@@ -1939,18 +1927,17 @@ export const TRANSACTION_STATUS = {
 };
 
 export const ACCOUNT_STATUS = {
-  INACTIVE:"INACTIVE",
-  ACTIVE:"ACTIVE"
+  INACTIVE: "INACTIVE",
+  ACTIVE: "ACTIVE"
 };
 
-export const DELETE_TEMPLATE_RELATED_TYPE={
-  MEDICATION:"medication",
-  APPOINTMENT:"appointment",
-  VITAL:"vital",
-  DIET:"diet",
-  WORKOUT:"workout"
-}
-
+export const DELETE_TEMPLATE_RELATED_TYPE = {
+  MEDICATION: "medication",
+  APPOINTMENT: "appointment",
+  VITAL: "vital",
+  DIET: "diet",
+  WORKOUT: "workout"
+};
 
 export const FAVOURITE_TYPE = {
   MEDICINE: "medicine",
@@ -1958,41 +1945,39 @@ export const FAVOURITE_TYPE = {
   RADIOLOGY: "radiology"
 };
 
-export const USER_FAV_ALL_TYPES=[
+export const USER_FAV_ALL_TYPES = [
   FAVOURITE_TYPE.MEDICINE,
   FAVOURITE_TYPE.MEDICAL_TESTS,
   FAVOURITE_TYPE.RADIOLOGY
-]
+];
 
-export const WHEN_TO_TAKE_ABBR_TYPES={
-  OD:"1",
-  BD:"2",
-  TD:"3",
-  SOS:"4"
-}
-
+export const WHEN_TO_TAKE_ABBR_TYPES = {
+  OD: "1",
+  BD: "2",
+  TD: "3",
+  SOS: "4"
+};
 
 export const LOCAL_STORAGE = {
-  LOCAL_IS_AUDIO_ON:"localIsAudioOn",
-  LOCAL_IS_VIDEO_ON:"localIsVideoOn"
-}
+  LOCAL_IS_AUDIO_ON: "localIsAudioOn",
+  LOCAL_IS_VIDEO_ON: "localIsVideoOn"
+};
 
 export const ASCEND = "ascend";
 export const DESCEND = "descend";
 
-export const TYPE_SYMPTOMS="Symptoms";
-export const TYPE_APPOINTMENTS="Appointments";
+export const TYPE_SYMPTOMS = "Symptoms";
+export const TYPE_APPOINTMENTS = "Appointments";
 export const TYPE_VITALS = "vitals";
 export const TYPE_USER_MESSAGE = "UserMessage";
-export const TYPE_DIETS="diets";
-export const TYPE_WORKOUTS="workouts";
+export const TYPE_DIETS = "diets";
+export const TYPE_WORKOUTS = "workouts";
 
 export const VIDEO_TYPES = {
   URL: "url",
   UPLOAD: "upload",
   NONE: "none"
 };
-
 
 export const WAKE_UP = "1";
 export const BREAKFAST = "2";
@@ -2039,5 +2024,5 @@ export const PATIENT_MEAL_TIMINGS = {
   [MID_MORNING]: {
     time: "2020-09-24T11:00:00+05:30",
     text: "Mid Morning"
-  },
+  }
 };

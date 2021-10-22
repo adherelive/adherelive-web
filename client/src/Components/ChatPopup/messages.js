@@ -147,7 +147,7 @@ const messages = defineMessages({
     id: "app.chatFullScreen.chatPopUp.defaultNewMessage",
     description: "",
     defaultMessage: "---"
-  },
+  }
 });
 
 export default messages;

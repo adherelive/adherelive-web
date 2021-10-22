@@ -1,7 +1,7 @@
 import { defineMessages } from "react-intl";
 
 const messages = defineMessages({
-    addDoctor: {
+  addDoctor: {
     id: "app.provider.dashboard.addDoctor",
     description: "",
     defaultMessage: "Doctor"
@@ -21,17 +21,17 @@ const messages = defineMessages({
     description: "",
     defaultMessage: "Welcome"
   },
-  add:{
+  add: {
     id: "app.provider.dashboard.add",
     description: "",
     defaultMessage: "Add"
   },
-  doctors:{
+  doctors: {
     id: "app.provider.dashboard.doctors",
     description: "",
     defaultMessage: "Doctors"
   },
-  profiles:{
+  profiles: {
     id: "app.provider.dashboard.profiles",
     description: "",
     defaultMessage: "Profiles"
@@ -50,8 +50,7 @@ const messages = defineMessages({
     id: "app.provider.dashboard.no.graph.text",
     description: "",
     defaultMessage: "Please add graphs from the menu above to display here"
-  },
-  
+  }
 });
 
 export default messages;

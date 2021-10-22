@@ -9,7 +9,7 @@ import { WORKOUT_RESPONSE_STATUS } from "../../constant";
 
 export const TABLE_NAME = "workout_responses";
 
-export const db = (database) => {
+export const db = database => {
   database.define(
     TABLE_NAME,
     {
@@ -17,55 +17,55 @@ export const db = (database) => {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
-        type: DataTypes.INTEGER,
+        type: DataTypes.INTEGER
       },
       workout_id: {
         type: DataTypes.INTEGER,
         allowNull: false,
         references: {
           model: {
-            tableName: workoutTableName,
+            tableName: workoutTableName
           },
-          key: "id",
-        },
+          key: "id"
+        }
       },
       exercise_group_id: {
         type: DataTypes.INTEGER,
         allowNull: false,
         references: {
           model: {
-            tableName: exerciseGroupTableName,
+            tableName: exerciseGroupTableName
           },
-          key: "id",
-        },
+          key: "id"
+        }
       },
       schedule_event_id: {
         type: DataTypes.INTEGER,
         allowNull: false,
         references: {
           model: {
-            tableName: scheduleEventsTable,
+            tableName: scheduleEventsTable
           },
-          key: "id",
-        },
+          key: "id"
+        }
       },
       repetition_id: {
         type: DataTypes.INTEGER,
         allowNull: false,
         references: {
           model: {
-            tableName: repetitionTableName,
+            tableName: repetitionTableName
           },
-          key: "id",
-        },
+          key: "id"
+        }
       },
       repetition_value: {
         type: DataTypes.INTEGER,
-        allowNull: false,
+        allowNull: false
       },
       sets: {
         type: DataTypes.INTEGER,
-        allowNull: false,
+        allowNull: false
       },
       status: {
         type: DataTypes.ENUM,
@@ -74,18 +74,18 @@ export const db = (database) => {
           WORKOUT_RESPONSE_STATUS.DONE,
           WORKOUT_RESPONSE_STATUS.EXPIRED,
           WORKOUT_RESPONSE_STATUS.PARTIALLY_DONE,
-          WORKOUT_RESPONSE_STATUS.SKIPPED,
-        ],
+          WORKOUT_RESPONSE_STATUS.SKIPPED
+        ]
       },
       other_details: {
-        type: DataTypes.JSON,
-      },
+        type: DataTypes.JSON
+      }
     },
     {
       underscored: true,
-      paranoid: true,
+      paranoid: true
     }
   );
 };
 
-export const associate = (database) => {};
+export const associate = database => {};

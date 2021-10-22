@@ -531,7 +531,7 @@ export const handleVitals = async vital => {
       }
     } else {
       for (let i = 0; i < allDays.length; i++) {
-        console.log("Wake Up Time Value: ", WAKE_UP, timings[WAKE_UP]);
+        console.log("Wake Up Time Value: ", WAKE_UP, timings[this.WAKE_UP]);
         const { value: wakeUpTime } = timings[WAKE_UP];
         const { value: sleepTime } = timings[SLEEP];
 

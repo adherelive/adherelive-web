@@ -30,13 +30,17 @@ class UserRoleWrapper extends BaseUserRole {
         id,
         user_identity,
         linked_id,
-        linked_with,
-      },
+        linked_with
+      }
     };
   };
 
   getAllInfo = async () => {
-    const { _data: {id, linked_id, linked_with} = {}, getBasicInfo, getUser } = this;
+    const {
+      _data: { id, linked_id, linked_with } = {},
+      getBasicInfo,
+      getUser
+    } = this;
 
     const { doctor, provider } = getUser() || {};
 
@@ -51,12 +55,10 @@ class UserRoleWrapper extends BaseUserRole {
 
       let provider_id = null;
       if (linked_with === USER_CATEGORY.PROVIDER && linked_id) {
-
         const providerData = await ProviderWrapper(null, linked_id);
         providers = { [linked_id]: await providerData.getAllInfo() };
       }
-    } else if(provider && provider.id) {
-
+    } else if (provider && provider.id) {
     }
 
     // switch (getUserRoleUserCategoryType) {
@@ -128,7 +130,7 @@ class UserRoleWrapper extends BaseUserRole {
       doctors,
       patients,
       providers,
-      admins,
+      admins
     };
   };
 }

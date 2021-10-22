@@ -1,5 +1,6 @@
 import { Sequelize } from "sequelize";
 import Logger from "./log";
+
 const Log = new Logger("SEQUELIZE QUERY");
 // const Config = require("../config/config");
 // Config();
@@ -112,7 +113,6 @@ import * as WorkoutExerciseGroupMapping from "../app/models/workoutExerciseGroup
 import * as WorkoutTemplates from "../app/models/workoutTemplate";
 import * as WorkoutTemplateExerciseMapping from "../app/models/workoutTemplateExerciseMapping";
 
-
 // Models List...
 const models = [
   AccountDetails,
@@ -166,7 +166,7 @@ const models = [
   MealTemplateFoodItemMapping,
 
   ScheduleEvents,
-  
+
   OtpVerifications,
 
   PatientCareTakers,
@@ -258,8 +258,7 @@ class Database {
 
   static initTransaction = () => Database.connection.transaction();
 
-
-  static performRawQuery = async(query, options = {}) => {
+  static performRawQuery = async (query, options = {}) => {
     const database = await Database.getDatabase();
     return await database.queryInterface.sequelize.query(query, options);
   };

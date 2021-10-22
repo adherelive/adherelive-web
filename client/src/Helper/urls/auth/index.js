@@ -18,7 +18,7 @@ export const forgotPasswordUrl = () => {
   return `/auth/forgot-password`;
 };
 
-export const verifyResetPasswordLinkUrl = (link) => {
+export const verifyResetPasswordLinkUrl = link => {
   return `/auth/verify/${link}`;
 };
 
@@ -34,10 +34,9 @@ export const signOutUrl = () => {
   return `/auth/sign-out`;
 };
 
-export const getVerifyUserUrl = (link) => {
+export const getVerifyUserUrl = link => {
   return `/auth/register/${link}`;
 };
-
 
 export const giveUserConsentUrl = () => {
   return `/auth/consent`;

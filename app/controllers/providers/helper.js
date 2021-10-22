@@ -47,13 +47,12 @@ export const validateAccountData = ({
     data["razorpay_account_name"] = razorpay_account_name;
   }
 
-  if(prefix){
+  if (prefix) {
     data["prefix"] = prefix;
   }
 
-  if(account_mobile_number){
+  if (account_mobile_number) {
     data["account_mobile_number"] = account_mobile_number;
-
   }
 
   return data;

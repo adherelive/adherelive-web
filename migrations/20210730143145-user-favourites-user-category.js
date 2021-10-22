@@ -9,15 +9,14 @@ module.exports = {
         type: Sequelize.ENUM,
         values: USER_FAV_USER_CATEGORY,
         required: true,
-        allowNull:false
+        allowNull: false
       })
     ]);
   },
 
   down: (queryInterface, Sequelize) => {
     return Promise.all([
-      queryInterface.changeColumn(TABLE_NAME, "user_category_type"),
-
+      queryInterface.changeColumn(TABLE_NAME, "user_category_type")
     ]);
   }
 };

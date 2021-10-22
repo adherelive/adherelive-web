@@ -42,14 +42,14 @@ const FIELDS = [
   UPI_ID,
   RAZORPAY_ACCOUNT_ID,
   RAZORPAY_ACCOUNT_NAME,
-  PRESCRIPTION_DETAILS,
+  PRESCRIPTION_DETAILS
 ];
 
 class UpdateProviderForm extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      account_type_exists: false,
+      account_type_exists: false
     };
   }
 
@@ -66,14 +66,14 @@ class UpdateProviderForm extends Component {
     }
   }
 
-  getParentNode = (t) => t.parentNode;
+  getParentNode = t => t.parentNode;
 
-  formatMessage = (data) => this.props.intl.formatMessage(data);
+  formatMessage = data => this.props.intl.formatMessage(data);
 
-  setAccountType = (type) => (e) => {
+  setAccountType = type => e => {
     e.preventDefault();
     const {
-      form: { setFieldsValue },
+      form: { setFieldsValue }
     } = this.props;
 
     setFieldsValue({ [ACCOUNT_TYPE]: type });
@@ -115,7 +115,7 @@ class UpdateProviderForm extends Component {
     );
   };
 
-  handleCloseWarning = (e) => {
+  handleCloseWarning = e => {
     e.preventDefault();
     const { warnNote } = this;
 
@@ -131,18 +131,18 @@ class UpdateProviderForm extends Component {
       onOk: async () => {
         this.resetAllAccount();
       },
-      onCancel() {},
+      onCancel() {}
     });
   };
 
   render() {
     const {
-      form: { getFieldDecorator, isFieldTouched, getFieldError, getFieldValue },
+      form: { getFieldDecorator, isFieldTouched, getFieldError, getFieldValue }
     } = this.props;
     const { formatMessage } = this;
 
     let fieldsError = {};
-    FIELDS.forEach((value) => {
+    FIELDS.forEach(value => {
       const error = isFieldTouched(value) && getFieldError(value);
       fieldsError = { ...fieldsError, [value]: error };
     });
@@ -151,7 +151,7 @@ class UpdateProviderForm extends Component {
       providers = {},
       users = {},
       provider_id = null,
-      account_details = {},
+      account_details = {}
     } = this.props;
 
     const {
@@ -160,9 +160,9 @@ class UpdateProviderForm extends Component {
         city = "",
         name = "",
         state = "",
-        user_id = null,
+        user_id = null
       } = {},
-      details: { prescription_details: initial_prescription_details = "" } = {},
+      details: { prescription_details: initial_prescription_details = "" } = {}
     } = providers[provider_id] || {};
 
     let accountData = {};
@@ -185,7 +185,7 @@ class UpdateProviderForm extends Component {
       ifsc_code = "",
       razorpay_account_id = null,
       razorpay_account_name = "",
-      upi_id = null,
+      upi_id = null
     } = account_basic_info || {};
 
     const {
@@ -193,8 +193,8 @@ class UpdateProviderForm extends Component {
         email = "",
         mobile_number = "",
         prefix = "",
-        user_name = "",
-      } = {},
+        user_name = ""
+      } = {}
     } = users[user_id] || {};
 
     const { account_type_exists = false } = this.state;
@@ -221,14 +221,14 @@ class UpdateProviderForm extends Component {
             rules: [
               {
                 type: "email",
-                message: formatMessage(messages.valid_email_text),
+                message: formatMessage(messages.valid_email_text)
               },
               {
                 required: true,
-                message: formatMessage(messages.email_required_text),
-              },
+                message: formatMessage(messages.email_required_text)
+              }
             ],
-            initialValue: email,
+            initialValue: email
           })(<Input type="string" />)}
         </FormItem>
 
@@ -242,10 +242,10 @@ class UpdateProviderForm extends Component {
             rules: [
               {
                 required: true,
-                message: formatMessage(messages.name_error),
-              },
+                message: formatMessage(messages.name_error)
+              }
             ],
-            initialValue: name,
+            initialValue: name
           })(<Input type="string" />)}
         </FormItem>
 
@@ -257,57 +257,41 @@ class UpdateProviderForm extends Component {
           className="mb0I"
         >
           {getFieldDecorator(MOBILE_NUMBER, {
-            initialValue: mobile_number,
+            initialValue: mobile_number
           })(
             <Input
-            addonBefore={prefixSelector}
-            minLength={6}
-            maxLength={20}
-            type="number"
-            style={{borderColor:"red"}}
+              addonBefore={prefixSelector}
+              minLength={6}
+              maxLength={20}
+              type="number"
+              style={{ borderColor: "red" }}
+            />
+          )}
+        </FormItem>
 
-          />
-        )}
-      </FormItem>
+        <FormItem
+          validateStatus={fieldsError[ADDRESS] ? "error" : ""}
+          help={fieldsError[ADDRESS] || ""}
+          label={formatMessage(messages.address)}
+          className="mb0I"
+        >
+          {getFieldDecorator(ADDRESS, {
+            initialValue: address
+          })(<Input type="string" />)}
+        </FormItem>
 
+        <Customization {...this.props} />
 
-      
+        {/* <---------------------------------- ACCOUNT DETAILS ------------------------------------> */}
 
-    
-      <FormItem
-        validateStatus={fieldsError[ADDRESS] ? "error" : ""}
-        help={fieldsError[ADDRESS] || ""}
-        label={formatMessage(messages.address)}
-        className="mb0I"
-      >
-      {getFieldDecorator(ADDRESS, {
-        initialValue:address
-      })
-      (
-          <Input
-          type="string"
-          />
-      )}
-      </FormItem>
-
-      <Customization {...this.props} />
-
-
-      {/* <---------------------------------- ACCOUNT DETAILS ------------------------------------> */}
-
-
-      <div className="fwbolder fs18 mb20 mt20 flex align-center justify-space-between">
-        <span>{formatMessage(messages.accountDetails)}</span>
-        <Tooltip 
-        title={formatMessage(messages.resetAccountFields)}
-         >
-          <Button
-           type="ghost"
-           onClick={this.handleCloseWarning}
-           >{formatMessage(messages.reset)}</Button>
-        </Tooltip>
- 
-      </div>
+        <div className="fwbolder fs18 mb20 mt20 flex align-center justify-space-between">
+          <span>{formatMessage(messages.accountDetails)}</span>
+          <Tooltip title={formatMessage(messages.resetAccountFields)}>
+            <Button type="ghost" onClick={this.handleCloseWarning}>
+              {formatMessage(messages.reset)}
+            </Button>
+          </Tooltip>
+        </div>
 
         {/* account type */}
         <FormItem
@@ -317,7 +301,7 @@ class UpdateProviderForm extends Component {
           className="mb0I"
         >
           {getFieldDecorator(ACCOUNT_TYPE, {
-            initialValue: account_type,
+            initialValue: account_type
           })(
             <div className="add-patient-radio wp100 flex">
               <Radio.Group
@@ -326,13 +310,13 @@ class UpdateProviderForm extends Component {
                   display: "flex",
                   flexDirection: "row",
                   alignItems: "center",
-                  justifyContent: "space-between",
+                  justifyContent: "space-between"
                 }}
                 value={account_type_val}
               >
                 <Radio.Button
                   style={{
-                    width: "50%",
+                    width: "50%"
                   }}
                   value={SAVINGS}
                   onClick={this.setAccountType(SAVINGS)}
@@ -342,7 +326,7 @@ class UpdateProviderForm extends Component {
 
                 <Radio.Button
                   style={{
-                    width: "50%",
+                    width: "50%"
                   }}
                   value={CURRENT}
                   onClick={this.setAccountType(CURRENT)}
@@ -365,10 +349,10 @@ class UpdateProviderForm extends Component {
             rules: [
               {
                 required: account_type_exists,
-                message: formatMessage(messages.beneficiary_name_error),
-              },
+                message: formatMessage(messages.beneficiary_name_error)
+              }
             ],
-            initialValue: customer_name,
+            initialValue: customer_name
           })(<Input type="string" disabled={!account_type_exists} />)}
         </FormItem>
 
@@ -383,10 +367,10 @@ class UpdateProviderForm extends Component {
             rules: [
               {
                 required: account_type_exists,
-                message: formatMessage(messages.account_num_error),
-              },
+                message: formatMessage(messages.account_num_error)
+              }
             ],
-            initialValue: account_number,
+            initialValue: account_number
           })(<Input type="number" disabled={!account_type_exists} />)}
         </FormItem>
 
@@ -401,10 +385,10 @@ class UpdateProviderForm extends Component {
             rules: [
               {
                 required: account_type_exists,
-                message: formatMessage(messages.ifsc_error),
-              },
+                message: formatMessage(messages.ifsc_error)
+              }
             ],
-            initialValue: ifsc_code,
+            initialValue: ifsc_code
           })(<Input type="string" disabled={!account_type_exists} />)}
         </FormItem>
 
@@ -416,7 +400,7 @@ class UpdateProviderForm extends Component {
           className="mb0I"
         >
           {getFieldDecorator(UPI_ID, {
-            initialValue: upi_id,
+            initialValue: upi_id
           })(<Input type="string" disabled={!account_type_exists} />)}
         </FormItem>
 
@@ -428,7 +412,7 @@ class UpdateProviderForm extends Component {
           className="mb0I"
         >
           {getFieldDecorator(RAZORPAY_ACCOUNT_ID, {
-            initialValue: razorpay_account_id,
+            initialValue: razorpay_account_id
           })(<Input type="string" disabled={!account_type_exists} />)}
         </FormItem>
 
@@ -440,7 +424,7 @@ class UpdateProviderForm extends Component {
           className="mb0I"
         >
           {getFieldDecorator(RAZORPAY_ACCOUNT_NAME, {
-            initialValue: razorpay_account_name,
+            initialValue: razorpay_account_name
           })(<Input type="string" disabled={!account_type_exists} />)}
         </FormItem>
 
@@ -451,11 +435,8 @@ class UpdateProviderForm extends Component {
           label={formatMessage(messages.prescriptionDetails)}
         >
           {getFieldDecorator(PRESCRIPTION_DETAILS, {
-            initialValue: initial_prescription_details,
-          })(<
-            TextArea rows={3} className="mb40" 
-            maxLength={300}
-            />)}
+            initialValue: initial_prescription_details
+          })(<TextArea rows={3} className="mb40" maxLength={300} />)}
         </FormItem>
       </Form>
     );

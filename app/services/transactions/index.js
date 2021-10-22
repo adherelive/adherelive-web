@@ -1,33 +1,33 @@
 export default class Transaction {
-    constructor(data) {
-        this._data = data;
-    }
+  constructor(data) {
+    this._data = data;
+  }
 
-    getId = () => {
-        return this._data.id;
-    };
+  getId = () => {
+    return this._data.id;
+  };
 
-    getTransactionResponse = () => {
-        return this._data.transaction_response;
-    };
+  getTransactionResponse = () => {
+    return this._data.transaction_response;
+  };
 
-    getRequestorType = () => {
-        return this._data.requestor_type;
-    };
+  getRequestorType = () => {
+    return this._data.requestor_type;
+  };
 
-    getRequestorId = () => {
-        return this._data.requestor_id;
-    };
+  getRequestorId = () => {
+    return this._data.requestor_id;
+  };
 
-    getPayeeId = () => this._data.payee_id;
+  getPayeeId = () => this._data.payee_id;
 
-    getPayeeType = () => this._data.payee_type;
+  getPayeeType = () => this._data.payee_type;
 
-    getPaymentProduct = () => {
-      return this._data.payment_products;
-    };
+  getPaymentProduct = () => {
+    return this._data.payment_products;
+  };
 
-    getMode = () => {
-        return this._data.mode;
-    };
+  getMode = () => {
+    return this._data.mode;
+  };
 }

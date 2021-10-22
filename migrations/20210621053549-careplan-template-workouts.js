@@ -1,7 +1,7 @@
-'use strict';
+"use strict";
 
-import {TABLE_NAME} from "../app/models/templateWorkouts";
-import {TABLE_NAME as carePlanTemplateTableName} from "../app/models/careplanTemplate";
+import { TABLE_NAME } from "../app/models/templateWorkouts";
+import { TABLE_NAME as carePlanTemplateTableName } from "../app/models/careplanTemplate";
 
 module.exports = {
   up: (queryInterface, DataTypes) => {
@@ -24,19 +24,19 @@ module.exports = {
       },
       name: {
         type: DataTypes.STRING,
-        allowNull: false,
+        allowNull: false
       },
       total_calories: {
-        type: DataTypes.FLOAT(11, 2),
+        type: DataTypes.FLOAT(11, 2)
       },
       duration: {
         type: DataTypes.INTEGER
       },
       time: {
-        type: DataTypes.DATE,
+        type: DataTypes.DATE
       },
       details: {
-        type: DataTypes.JSON,
+        type: DataTypes.JSON
       },
       created_at: {
         allowNull: false,
@@ -53,7 +53,7 @@ module.exports = {
     });
   },
 
-  down: (queryInterface) => {
+  down: queryInterface => {
     return queryInterface.dropTable(TABLE_NAME);
   }
 };

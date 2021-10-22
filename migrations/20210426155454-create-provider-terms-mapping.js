@@ -1,4 +1,4 @@
-'use strict';
+"use strict";
 
 import { TABLE_NAME } from "../app/models/providerTermsMappings";
 import { TABLE_NAME as providerTableName } from "../app/models/providers";
@@ -7,31 +7,31 @@ import { TABLE_NAME as termsAndConditions } from "../app/models/termsAndConditio
 module.exports = {
   up: (queryInterface, Sequelize) => {
     return queryInterface.createTable(TABLE_NAME, {
-        id: {
-            type: Sequelize.INTEGER,
-            primaryKey: true,
-            autoIncrement: true
+      id: {
+        type: Sequelize.INTEGER,
+        primaryKey: true,
+        autoIncrement: true
+      },
+      provider_id: {
+        type: Sequelize.INTEGER,
+        allowNull: false,
+        references: {
+          model: {
+            tableName: providerTableName
           },
-          provider_id: {
-            type: Sequelize.INTEGER,
-            allowNull: false,
-            references: {
-              model: {
-                tableName: providerTableName
-              },
-              key: "id"
-            }
+          key: "id"
+        }
+      },
+      terms_and_conditions_id: {
+        type: Sequelize.INTEGER,
+        allowNull: true,
+        references: {
+          model: {
+            tableName: termsAndConditions
           },
-          terms_and_conditions_id: {
-            type: Sequelize.INTEGER,
-            allowNull: true,
-            references: {
-              model: {
-                tableName: termsAndConditions
-              },
-              key: "id"
-            }
-          },
+          key: "id"
+        }
+      },
       created_at: {
         allowNull: false,
         type: Sequelize.DATE

@@ -11,56 +11,56 @@ export const SWITCH_USER_ROLE_COMPLETED = "SWITCH_USER_ROLE_COMPLETED";
 export const SWITCH_USER_ROLE_FAILED = "SWITCH_USER_ROLE_FAILED";
 
 export const getUserRoles = () => {
-    return async (dispatch) => {
-        try {
-            dispatch({type: GET_USER_ROLES_START});
-            const response = await doRequest({
-                method: REQUEST_TYPE.GET,
-                url: UserRoleUrls.getUserRoles(),
-              });
-        
-              const { status, payload: { data = {}, error = {} } = {} } =
-                response || {};
-              if (status === true) {
-                dispatch({ type: GET_USER_ROLES_COMPLETED, payload: data, data });
-              } else {
-                dispatch({ type: GET_USER_ROLES_FAILED, payload: error });
-              }
-        } catch(error) {
-            console.log("userRoles module error", error);
-        }
-    };
+  return async dispatch => {
+    try {
+      dispatch({ type: GET_USER_ROLES_START });
+      const response = await doRequest({
+        method: REQUEST_TYPE.GET,
+        url: UserRoleUrls.getUserRoles()
+      });
+
+      const { status, payload: { data = {}, error = {} } = {} } =
+        response || {};
+      if (status === true) {
+        dispatch({ type: GET_USER_ROLES_COMPLETED, payload: data, data });
+      } else {
+        dispatch({ type: GET_USER_ROLES_FAILED, payload: error });
+      }
+    } catch (error) {
+      console.log("userRoles module error", error);
+    }
+  };
 };
 
-export const switchUserRole = (payload) => {
-  return async (dispatch) => {
+export const switchUserRole = payload => {
+  return async dispatch => {
     try {
-      dispatch({type: SWITCH_USER_ROLE_START});
+      dispatch({ type: SWITCH_USER_ROLE_START });
       const response = await doRequest({
-          method: REQUEST_TYPE.POST,
-          url: UserRoleUrls.switchUserRoles(),
-          data: payload
-        });
-  
-        const { status, payload: { data = {}, error = {} } = {} } =
-          response || {};
-        if (status === true) {
-          dispatch({ type: SWITCH_USER_ROLE_COMPLETED, payload: data, data });
-        } else {
-          dispatch({ type: SWITCH_USER_ROLE_FAILED, payload: error });
-        }
-    } catch(error) {
+        method: REQUEST_TYPE.POST,
+        url: UserRoleUrls.switchUserRoles(),
+        data: payload
+      });
+
+      const { status, payload: { data = {}, error = {} } = {} } =
+        response || {};
+      if (status === true) {
+        dispatch({ type: SWITCH_USER_ROLE_COMPLETED, payload: data, data });
+      } else {
+        dispatch({ type: SWITCH_USER_ROLE_FAILED, payload: error });
+      }
+    } catch (error) {
       console.log("switchUserRole module error", error);
     }
   };
 };
 
 function userRoleReducer(state, data) {
-  const {user_roles} = data || {};
-  if(user_roles) {
+  const { user_roles } = data || {};
+  if (user_roles) {
     return {
       ...state,
-      ...user_roles,
+      ...user_roles
     };
   } else {
     return state;
@@ -68,9 +68,9 @@ function userRoleReducer(state, data) {
 }
 
 export default (state = {}, actions) => {
-    const {type, payload} = actions || {};
-    switch(type) {
-        default:
-            return userRoleReducer(state, payload);
-    }
+  const { type, payload } = actions || {};
+  switch (type) {
+    default:
+      return userRoleReducer(state, payload);
+  }
 };

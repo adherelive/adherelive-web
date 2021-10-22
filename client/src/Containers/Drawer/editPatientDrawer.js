@@ -5,21 +5,21 @@ import { close } from "../../modules/drawer";
 import { searchTreatment } from "../../modules/treatments";
 import { searchCondition } from "../../modules/conditions";
 import { searchSeverity } from "../../modules/severity";
-import {searchMedicine} from "../../modules/medicines";
-import {updatePatientAndCareplan } from "../../modules/doctors";
+import { searchMedicine } from "../../modules/medicines";
+import { updatePatientAndCareplan } from "../../modules/doctors";
+
 const mapStateToProps = state => {
-  const { auth} = state;
+  const { auth } = state;
   const { authenticated_user, authenticated_category } = auth;
   const {
     drawer: { visible, loading, data: { type, payload = {} } = {} },
-    users={},
+    users = {},
     treatments = {},
     conditions = {},
     severity = {},
-    patients ={},
-    doctors={}
+    patients = {},
+    doctors = {}
   } = state;
-
 
   return {
     visible: visible && type === DRAWER.EDIT_PATIENT,
@@ -42,12 +42,9 @@ const mapDispatchToProps = dispatch => {
     searchCondition: value => dispatch(searchCondition(value)),
     searchTreatment: value => dispatch(searchTreatment(value)),
     searchSeverity: value => dispatch(searchSeverity(value)),
-    updatePatientAndCareplan : (careplan_id,payload) => dispatch(updatePatientAndCareplan(careplan_id,payload))
-    
+    updatePatientAndCareplan: (careplan_id, payload) =>
+      dispatch(updatePatientAndCareplan(careplan_id, payload))
   };
 };
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(EditPatientDrawer);
+export default connect(mapStateToProps, mapDispatchToProps)(EditPatientDrawer);

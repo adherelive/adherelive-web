@@ -15,12 +15,18 @@ import vitalOccurenceField from "../common/vitalOccurence";
 
 import messages from "../message";
 import { hasErrors, isNumber } from "../../../../Helper/validation";
-import { REPEAT_TYPE, USER_CATEGORY, DAYS_NUMBER, DAYS, ALTERNATE_DAYS } from "../../../../constant";
+import {
+  REPEAT_TYPE,
+  USER_CATEGORY,
+  DAYS_NUMBER,
+  DAYS,
+  ALTERNATE_DAYS
+} from "../../../../constant";
 
 const { Item: FormItem } = Form;
-const UNIT_FIELD = 'unit';
-const UNIT_ML = 'ml';
-const UNIT_MG = 'mg';
+const UNIT_FIELD = "unit";
+const UNIT_ML = "ml";
+const UNIT_MG = "mg";
 const RadioButton = Radio.Button;
 const RadioGroup = Radio.Group;
 
@@ -69,17 +75,16 @@ class EditVitalForm extends Component {
       });
     }
   }
+
   scrollToTop = () => {
-    let antForm= document.getElementsByClassName('Form')[0];
+    let antForm = document.getElementsByClassName("Form")[0];
     let antDrawerBody = antForm.parentNode;
-    let antDrawerWrapperBody=antDrawerBody.parentNode;
+    let antDrawerWrapperBody = antDrawerBody.parentNode;
     antDrawerBody.scrollIntoView(true);
     antDrawerWrapperBody.scrollTop -= 200;
-  }
-
+  };
 
   formatMessage = data => this.props.intl.formatMessage(data);
-
 
   setUnit = e => {
     e.preventDefault();
@@ -104,7 +109,6 @@ class EditVitalForm extends Component {
 
     let repeat = getFieldValue(repeatField.field_name);
 
-
     let selectedDays = getFieldValue(repeatDaysField.field_name);
     let repeatInterval = getFieldValue(repeatIntervalField.field_name);
 
@@ -117,7 +121,9 @@ class EditVitalForm extends Component {
     // }
 
     const startDate = getFieldValue(startDateField.field_name);
-    let startDateDay = startDate ? moment(startDate).format('ddd') : moment().format('ddd');
+    let startDateDay = startDate
+      ? moment(startDate).format("ddd")
+      : moment().format("ddd");
     let startDayNumber = DAYS_NUMBER[startDateDay];
     let dayDiffPos = 0;
     let dayDiffNeg = 0;
@@ -130,14 +136,22 @@ class EditVitalForm extends Component {
         let dayNo = DAYS_NUMBER[day];
         let dayDiff = dayNo - startDayNumber;
 
-        dayDiffPos = dayDiffPos === 0 && dayDiff > 0 ? dayDiff : dayDiff > 0 && dayDiff < dayDiffPos ? dayDiff : dayDiffPos;
-        dayDiffNeg = dayDiffNeg === 0 && dayDiff < 0 ? dayDiff : dayDiff < 0 && Math.abs(dayDiff) > Math.abs(dayDiffNeg) ? dayDiff : dayDiffNeg;
+        dayDiffPos =
+          dayDiffPos === 0 && dayDiff > 0
+            ? dayDiff
+            : dayDiff > 0 && dayDiff < dayDiffPos
+            ? dayDiff
+            : dayDiffPos;
+        dayDiffNeg =
+          dayDiffNeg === 0 && dayDiff < 0
+            ? dayDiff
+            : dayDiff < 0 && Math.abs(dayDiff) > Math.abs(dayDiffNeg)
+            ? dayDiff
+            : dayDiffNeg;
       }
 
       daysToAdd = dayDiffPos ? dayDiffPos : 7 + dayDiffNeg;
-
     }
-
 
     let newEndDate;
 
@@ -168,11 +182,10 @@ class EditVitalForm extends Component {
     }
 
     if (!newEndDate) {
-
       newEndDate = startDateCopy;
     }
 
-    return moment(newEndDate).add(daysToAdd, 'days');
+    return moment(newEndDate).add(daysToAdd, "days");
   };
 
   adjustEndDate = repeatValue => {
@@ -217,7 +230,7 @@ class EditVitalForm extends Component {
     validateFields([startTimeField.field_name]);
   };
 
-  onChangeEventStartTime = startTime => { };
+  onChangeEventStartTime = startTime => {};
 
   onStartDateChange = currentDate => {
     const {
@@ -242,11 +255,11 @@ class EditVitalForm extends Component {
     }
   };
 
-  onEndDateChange = () => { };
+  onEndDateChange = () => {};
 
-  onStartTimeChange = () => { };
+  onStartTimeChange = () => {};
 
-  onEndTimeChange = () => { };
+  onEndTimeChange = () => {};
 
   onEventDurationChange = (start, end) => {
     const {
@@ -282,7 +295,6 @@ class EditVitalForm extends Component {
     }
   };
 
-
   addMedicationReminder = e => {
     e.preventDefault();
     const {
@@ -310,16 +322,16 @@ class EditVitalForm extends Component {
           [startDateField.field_name]:
             startDate && startDate !== null
               ? startDate
-                .clone()
-                .startOf("day")
-                .toISOString()
+                  .clone()
+                  .startOf("day")
+                  .toISOString()
               : startDate,
           [endDateField.field_name]:
             endDate && endDate !== null
               ? endDate
-                .clone()
-                .endOf("day")
-                .toISOString()
+                  .clone()
+                  .endOf("day")
+                  .toISOString()
               : endDate
         };
 
@@ -328,7 +340,6 @@ class EditVitalForm extends Component {
             ...data_to_submit,
             [repeatDaysField.field_name]: repeatDays.split(",")
           };
-
         }
         try {
           const response = await addMedicationReminder(data_to_submit);
@@ -345,7 +356,6 @@ class EditVitalForm extends Component {
     });
   };
 
-
   setEndDateOneWeek = e => {
     e.preventDefault();
     const {
@@ -354,7 +364,7 @@ class EditVitalForm extends Component {
     } = this.props;
 
     const startDate = getFieldValue(startDateField.field_name);
-    let newEndDate = moment(startDate).add(1, 'week');
+    let newEndDate = moment(startDate).add(1, "week");
     setFieldsValue({
       [endDateField.field_name]: newEndDate
     });
@@ -369,7 +379,7 @@ class EditVitalForm extends Component {
     } = this.props;
 
     const startDate = getFieldValue(startDateField.field_name);
-    let newEndDate = moment(startDate).add(2, 'week');
+    let newEndDate = moment(startDate).add(2, "week");
     setFieldsValue({
       [endDateField.field_name]: newEndDate
     });
@@ -457,7 +467,6 @@ class EditVitalForm extends Component {
       form: { getFieldValue }
     } = this.props;
 
-
     const startTime = getFieldValue(startTimeField.field_name);
     let endTime;
 
@@ -472,7 +481,7 @@ class EditVitalForm extends Component {
     return (
       <Fragment>
         <Form className="event-form pb80 wp100 Form">
-          <div className='flex direction-row flex-grow-1'>
+          <div className="flex direction-row flex-grow-1">
             <label
               htmlFor="vital_template"
               className="form-label"
@@ -484,7 +493,7 @@ class EditVitalForm extends Component {
             <div className="star-red">*</div>
           </div>
           {vitalNameField.render({ ...this.props })}
-          <div className='flex direction-row flex-grow-1'>
+          <div className="flex direction-row flex-grow-1">
             <label
               htmlFor="vital_template"
               className="form-label"

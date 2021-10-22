@@ -18,9 +18,9 @@ class SignIn extends Component {
   }
 
   async componentDidMount() {
-    const { match : { params = {} } = {} , history } = this.props;
-    const { link = "" } = params ;   
-    const {formatMessage} = this;
+    const { match: { params = {} } = {}, history } = this.props;
+    const { link = "" } = params;
+    const { formatMessage } = this;
     if (link) {
       const { verifyUser } = this.props;
       let response = await verifyUser(link);
@@ -48,11 +48,16 @@ class SignIn extends Component {
   };
 
   render() {
-    const { auth: {authenticated_user} = {} } = this.props;
+    const { auth: { authenticated_user } = {} } = this.props;
     const { login } = this.state;
-    const { formatMessage , toggleLogin } = this;
+    const { formatMessage, toggleLogin } = this;
     return (
-      <div className={`wp100 landing-background flex direction-column justify-center align-center ${authenticated_user ? "hp100" : ""}`} style={{overflowY: "hidden"}}>
+      <div
+        className={`wp100 landing-background flex direction-column justify-center align-center ${
+          authenticated_user ? "hp100" : ""
+        }`}
+        style={{ overflowY: "hidden" }}
+      >
         <div className="hp100 wp75">
           <div className="mt40 wp100 mt24 flex justify-space-between align-center direction-row ">
             <div className="flex direction-row align-center">
@@ -68,27 +73,26 @@ class SignIn extends Component {
 
             <div className="flex direction-row align-center">
               <div className="text-white fs16 mr16 ">
-                {login ? this.formatMessage(messages.newToAdhere) : this.formatMessage(messages.alreadyAUser) }
+                {login
+                  ? this.formatMessage(messages.newToAdhere)
+                  : this.formatMessage(messages.alreadyAUser)}
               </div>
               <div
                 className="signup-button medium pointer"
                 onClick={toggleLogin}
               >
-                {login ? formatMessage(messages.signup) : formatMessage(messages.login) }
+                {login
+                  ? formatMessage(messages.signup)
+                  : formatMessage(messages.login)}
               </div>
             </div>
           </div>
-                {
-                }
-          {
-            login
-            ?
-            <LoginComponent { ...this.props} />
-            :
-            <SignUpComponent { ...this.props} />
-          }
-
-         
+          {}
+          {login ? (
+            <LoginComponent {...this.props} />
+          ) : (
+            <SignUpComponent {...this.props} />
+          )}
         </div>
       </div>
     );
@@ -96,4 +100,3 @@ class SignIn extends Component {
 }
 
 export default injectIntl(SignIn);
-

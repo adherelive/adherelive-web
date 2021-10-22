@@ -1,10 +1,16 @@
 import { TABLE_COLUMN, formatPatientTableData } from "../helper";
 
 export default data => {
-  const { id,addToWatchlist, onRowClick,removePatientFromWatchlist} = data;
+  const { id, addToWatchlist, onRowClick, removePatientFromWatchlist } = data;
   const formattedData = formatPatientTableData(data);
-  const { patientData, treatmentData, doctorData, providerData, chatData, carePlanData} =
-    formattedData || {};
+  const {
+    patientData,
+    treatmentData,
+    doctorData,
+    providerData,
+    chatData,
+    carePlanData
+  } = formattedData || {};
 
   return {
     key: id,
@@ -37,6 +43,6 @@ export default data => {
     },
     [TABLE_COLUMN.CREATED_AT.dataIndex]: {
       patientData
-    },
+    }
   };
 };

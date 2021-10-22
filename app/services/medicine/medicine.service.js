@@ -29,31 +29,44 @@ class MedicineService {
     }
   };
 
-  searchMedicineForAdmin = async (data, offset, limit, public_medicine, doctorIds) => {
+  searchMedicineForAdmin = async (
+    data,
+    offset,
+    limit,
+    public_medicine,
+    doctorIds
+  ) => {
     try {
       let medicine = null;
-        medicine = await Database.getModel(TABLE_NAME).findAll({
+      medicine = await Database.getModel(TABLE_NAME).findAll({
+        offset,
+        limit,
+        where: {
+          public_medicine,
+
+          [Op.or]: {
+            name: {
+              [Op.like]: `%${data}%`
+            },
+            creator_id: {
+              [Op.in]: doctorIds
+            }
+          }
+        },
+        order: [["updated_at", "DESC"]]
+      });
+
+      console.log(
+        "329847562389462364872384122 ************************************8******8888",
+        {
+          data,
           offset,
           limit,
-          where: {
-            
-              public_medicine,
-              
-                [Op.or]: {
-                  name: {
-                    [Op.like]: `%${data}%`
-                  },
-                  creator_id: {
-                    [Op.in]: doctorIds
-                  }
-                }
-              
-            
-          },
-          order: [["updated_at","DESC"]]
-        });
-    
-      console.log("329847562389462364872384122 ************************************8******8888",{data, offset, limit, public_medicine, doctorIds,medicine});
+          public_medicine,
+          doctorIds,
+          medicine
+        }
+      );
       return medicine;
     } catch (error) {
       throw error;
@@ -63,11 +76,11 @@ class MedicineService {
   getMedicineCountForAdmin = async (data, public_medicine, doctorIds) => {
     try {
       let count = 0;
-      if(!public_medicine && doctorIds && doctorIds.length) {
+      if (!public_medicine && doctorIds && doctorIds.length) {
         count = await Database.getModel(TABLE_NAME).count({
           where: {
             [Op.and]: [
-              {public_medicine},
+              { public_medicine },
               {
                 [Op.or]: {
                   name: {
@@ -97,7 +110,6 @@ class MedicineService {
       throw error;
     }
   };
-
 
   getMedicineById = async id => {
     try {
@@ -138,8 +150,8 @@ class MedicineService {
     try {
       const medicine = await Database.getModel(TABLE_NAME).update(data, {
         where: {
-          id,
-        },
+          id
+        }
       });
       return medicine;
     } catch (err) {
@@ -147,12 +159,12 @@ class MedicineService {
     }
   };
 
-  deleteMedicine = async (id) => {
+  deleteMedicine = async id => {
     try {
       const medicine = await Database.getModel(TABLE_NAME).destroy({
         where: {
-          id,
-        },
+          id
+        }
       });
       return medicine;
     } catch (err) {

@@ -16,9 +16,9 @@ router.get(
 );
 
 router.get(
-    "/:patient_id/details",
-    Authenticate,
-    MobileMedication.getMedicationDetails
+  "/:patient_id/details",
+  Authenticate,
+  MobileMedication.getMedicationDetails
 );
 
 // router.get(
@@ -42,6 +42,11 @@ router.post(
   MobileMedication.update
 );
 
-router.delete("/:id", Authenticate, isAllowed(PERMISSIONS.MEDICATIONS.DELETE), MobileMedication.delete);
+router.delete(
+  "/:id",
+  Authenticate,
+  isAllowed(PERMISSIONS.MEDICATIONS.DELETE),
+  MobileMedication.delete
+);
 
 module.exports = router;

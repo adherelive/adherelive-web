@@ -3,7 +3,6 @@ import Controller from "../../";
 // Services
 import MealTemplateService from "../../../services/mealTemplate/mealTemplate.service";
 
-
 //Wrappers
 import MealTemplateWrapper from "../../../ApiWrapper/mobile/mealTemplate";
 
@@ -15,6 +14,7 @@ class MealTemplateController extends Controller {
   constructor() {
     super();
   }
+
   create = async (req, res) => {
     const { raiseSuccess, raiseClientError, raiseServerError } = this;
     try {
@@ -23,17 +23,18 @@ class MealTemplateController extends Controller {
         body,
         userDetails: {
           userCategoryId = null,
-          userData: { category = null } = {},
-        } = {},
+          userData: { category = null } = {}
+        } = {}
       } = req;
-      const { food_item_detail_ids: foodItemDetails = [], name = "" } = body || {};
+      const { food_item_detail_ids: foodItemDetails = [], name = "" } =
+        body || {};
 
       const mealTemplateService = new MealTemplateService();
 
       const mealTemplateExistsForName =
-        await mealTemplateService.findOne({
-          name,
-        }) || null;
+        (await mealTemplateService.findOne({
+          name
+        })) || null;
 
       if (mealTemplateExistsForName) {
         return raiseClientError(
@@ -49,9 +50,9 @@ class MealTemplateController extends Controller {
           meal: {
             name,
             creator_id: userCategoryId,
-            creator_type: category,
+            creator_type: category
           },
-          foodItemDetails,
+          foodItemDetails
         })) || null;
 
       if (mealTemplateId !== null) {
@@ -61,7 +62,7 @@ class MealTemplateController extends Controller {
           res,
           200,
           {
-            ...(await mealTemplates.getReferenceInfo()),
+            ...(await mealTemplates.getReferenceInfo())
           },
           "Meal Template created successfully"
         );
@@ -85,34 +86,44 @@ class MealTemplateController extends Controller {
       Log.debug("update meal template request", req.body);
       const {
         params: { id } = {},
-        body: { name, food_item_detail_ids: foodItemDetails = [] } = {},
+        body: { name, food_item_detail_ids: foodItemDetails = [] } = {}
       } = req;
 
       const mealTemplateService = new MealTemplateService();
 
-      const mealTemplateExists = await mealTemplateService.findOne({id}) || null;
+      const mealTemplateExists =
+        (await mealTemplateService.findOne({ id })) || null;
 
-      if(!mealTemplateExists) {
-        return raiseClientError(res, 422, {}, "Meal Template to be updated does not exists");
+      if (!mealTemplateExists) {
+        return raiseClientError(
+          res,
+          422,
+          {},
+          "Meal Template to be updated does not exists"
+        );
       }
 
-      const mealTemplate = await mealTemplateService.findOne({name});
-      if(mealTemplate){
-        const { id :existingId= null } = mealTemplate || {};
-        if(id.toString() !== existingId.toString()){
-          return raiseClientError(res, 422, {}, "Meal Template with same name exists");
+      const mealTemplate = await mealTemplateService.findOne({ name });
+      if (mealTemplate) {
+        const { id: existingId = null } = mealTemplate || {};
+        if (id.toString() !== existingId.toString()) {
+          return raiseClientError(
+            res,
+            422,
+            {},
+            "Meal Template with same name exists"
+          );
         }
       }
-      
 
       const isMealTemplateUpdate = await mealTemplateService.update({
         meal: {
-          name,
+          name
         },
         foodItemDetails,
-        id,
+        id
       });
-    
+
       if (!isMealTemplateUpdate) {
         return raiseClientError(
           res,
@@ -130,7 +141,7 @@ class MealTemplateController extends Controller {
         res,
         200,
         {
-          ...(await updatedMealTemplate.getReferenceInfo()),
+          ...(await updatedMealTemplate.getReferenceInfo())
         },
         "Meal Template updated successfully"
       );
@@ -143,25 +154,27 @@ class MealTemplateController extends Controller {
   delete = async (req, res) => {
     const { raiseSuccess, raiseClientError, raiseServerError } = this;
     try {
-      const {
-        params: { id: template_id } = {}
-      } = req;
-
+      const { params: { id: template_id } = {} } = req;
 
       const mealTemplateService = new MealTemplateService();
 
-
-      const templateFound = await mealTemplateService.findOne({id:template_id});
+      const templateFound = await mealTemplateService.findOne({
+        id: template_id
+      });
 
       if (templateFound) {
-
         const deleted = await mealTemplateService.delete({
           template_id
         });
 
         return raiseSuccess(res, 200, {}, "Meal Template deleted");
       } else {
-        return raiseSuccess(res, 422, {}, "Meal Template to be deleted does not exists");
+        return raiseSuccess(
+          res,
+          422,
+          {},
+          "Meal Template to be deleted does not exists"
+        );
       }
     } catch (error) {
       Log.debug("delete Meal Template  500 error", error);

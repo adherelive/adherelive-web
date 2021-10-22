@@ -5,13 +5,14 @@ export const getSeparateName = name => {
   const [first = null, middle = null, ...rest] = nameArr || [];
 
   let first_name = first || null;
-      let middle_name = middle || null;
-      let last_name = rest.length > 1 ? rest.join(" ") : null;
+  let middle_name = middle || null;
+  let last_name = rest.length > 1 ? rest.join(" ") : null;
 
-
-      return {
-        first_name, middle_name, last_name
-      };
+  return {
+    first_name,
+    middle_name,
+    last_name
+  };
   // console.log("first middle last ---------------->>>> ", first, middle, rest);
   // switch (nameArr.length) {
   //   case 1:
@@ -57,9 +58,10 @@ export const getRoomId = (doctor, patient) => {
   return `careplan-${doctor}-${patient}-${process.config.twilio.CHANNEL_SERVER}`;
 };
 
-export const getRoomUsers = (room = "") => room.split(`-${process.config.twilio.CHANNEL_SERVER}-`);
+export const getRoomUsers = (room = "") =>
+  room.split(`-${process.config.twilio.CHANNEL_SERVER}-`);
 
-export const separateNameForSearch = (value) => {
+export const separateNameForSearch = value => {
   let firstName = value;
   let middleName = value;
   let lastName = value;
@@ -75,9 +77,8 @@ export const separateNameForSearch = (value) => {
       middleName = name[1];
       // lastName = name[2];
       lastName = rest.length > 1 ? rest.join(" ") : null;
-
     }
   }
 
-  return { firstName,middleName,lastName };
-}
+  return { firstName, middleName, lastName };
+};

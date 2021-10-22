@@ -17,9 +17,12 @@ export default props => {
       title: formatMessage(messages.medicine_name),
       ...TABLE_COLUMN.MEDICINE,
       render: data => {
-        const { medicationData,medicationTemplateData } = data || {};
+        const { medicationData, medicationTemplateData } = data || {};
         return (
-          <Medicine medicationTemplateData={medicationTemplateData}  medicationData={medicationData} />
+          <Medicine
+            medicationTemplateData={medicationTemplateData}
+            medicationData={medicationData}
+          />
         );
       }
     },
@@ -27,40 +30,45 @@ export default props => {
       title: formatMessage(messages.taken_vs_total),
       ...TABLE_COLUMN.TAKEN,
 
-      render: ({medicationData}) => <Taken medicationData={medicationData} />
+      render: ({ medicationData }) => <Taken medicationData={medicationData} />
     },
     {
       title: formatMessage(messages.intake),
       ...TABLE_COLUMN.INTAKE,
 
-      render: ({medicationData}) => <Intake medicationData={medicationData} />
+      render: ({ medicationData }) => <Intake medicationData={medicationData} />
     },
     {
       title: formatMessage(messages.duration),
       ...TABLE_COLUMN.DURATION,
-      render: ({medicationData}) => <Duration medicationData={medicationData} />
+      render: ({ medicationData }) => (
+        <Duration medicationData={medicationData} />
+      )
     },
     {
       title: "Adherence",
       ...TABLE_COLUMN.TIMELINE,
 
-      render: ({openResponseDrawer, formatMessage, id}) => <TimelineButton formatMessage={formatMessage} openResponseDrawer={openResponseDrawer} id={id}/>
+      render: ({ openResponseDrawer, formatMessage, id }) => (
+        <TimelineButton
+          formatMessage={formatMessage}
+          openResponseDrawer={openResponseDrawer}
+          id={id}
+        />
+      )
     },
     {
       title: "",
       ...TABLE_COLUMN.EDIT,
 
-      render: ({
-        openEditDrawer, 
-        formatMessage, 
-        id, 
-        canViewDetails})  =>  <EditButton 
-                                formatMessage={formatMessage} 
-                                id={id} action={openEditDrawer} 
-                                canViewDetails={canViewDetails}
-                              />
-       
-       
+      render: ({ openEditDrawer, formatMessage, id, canViewDetails }) => (
+        <EditButton
+          formatMessage={formatMessage}
+          id={id}
+          action={openEditDrawer}
+          canViewDetails={canViewDetails}
+        />
+      )
     }
   ];
 };
