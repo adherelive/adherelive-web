@@ -30,7 +30,7 @@ class ExerciseController extends Controller {
         repetition_value,
         name,
         calorific_value,
-        video = {},
+        video = {}
       } = body || {};
 
       const { userData: { category } = {}, userCategoryId } = userDetails || {};
@@ -45,8 +45,8 @@ class ExerciseController extends Controller {
           name,
           auth: {
             creator_id: userCategoryId,
-            creator_type: category,
-          },
+            creator_type: category
+          }
         })) || null;
 
       let exerciseId = null,
@@ -64,8 +64,8 @@ class ExerciseController extends Controller {
             // repetition_value,
             auth: {
               creator_id: userCategoryId,
-              creator_type: category,
-            },
+              creator_type: category
+            }
           })) || null;
 
         // check if exercise detail already exists
@@ -83,12 +83,12 @@ class ExerciseController extends Controller {
                 exercise_id: id,
                 repetition_id,
                 repetition_value,
-                calorific_value,
+                calorific_value
               },
               auth: {
                 creator_id: userCategoryId,
-                creator_type: category,
-              },
+                creator_type: category
+              }
             })) || null;
           if (exerciseDetailId) {
             exerciseId = id;
@@ -99,20 +99,20 @@ class ExerciseController extends Controller {
         const { id = null, detail_id = null } =
           (await exerciseService.create({
             exercise: {
-              name,
+              name
             },
             exercise_content: {
-              video,
+              video
             },
             auth: {
               creator_id: userCategoryId,
-              creator_type: category,
+              creator_type: category
             },
             exercise_details: {
               repetition_id,
               repetition_value,
-              calorific_value,
-            },
+              calorific_value
+            }
           })) || null;
 
         if (id) {
@@ -133,13 +133,13 @@ class ExerciseController extends Controller {
           (await exerciseContentService.findOne({
             exercise_id: exerciseId,
             creator_id: userCategoryId,
-            creator_type: category,
+            creator_type: category
           })) || null;
 
         if (exerciseContentExists) {
           const exerciseContentWrapper = await ExerciseContentWrapper({
             exercise_id: exerciseId,
-            auth: { creator_id: userCategoryId, creator_type: category },
+            auth: { creator_id: userCategoryId, creator_type: category }
           });
           exerciseContentData[
             exerciseContentWrapper.getId()
@@ -153,7 +153,7 @@ class ExerciseController extends Controller {
             ...(await exercise.getReferenceInfo()),
             exercise_contents: exerciseContentData,
             exercise_id: exerciseId,
-            exercise_detail_id: detailId,
+            exercise_detail_id: detailId
           },
           "Exercise created successfully"
         );
@@ -161,7 +161,7 @@ class ExerciseController extends Controller {
         return raiseClientError(res, 422, {}, "Please check details entered");
       }
     } catch (error) {
-      Log.debug("create 500", error);
+      Log.debug("create 500 error - exercise created successfully", error);
       return raiseServerError(res);
     }
   };
@@ -182,7 +182,7 @@ class ExerciseController extends Controller {
         repetition_id,
         repetition_value,
         calorific_value,
-        video = {},
+        video = {}
       } = body || {};
 
       const { userData: { category } = {}, userCategoryId } = userDetails || {};
@@ -196,8 +196,8 @@ class ExerciseController extends Controller {
           name,
           auth: {
             creator_id: userCategoryId,
-            creator_type: category,
-          },
+            creator_type: category
+          }
         })) || null;
 
       if (exerciseExists) {
@@ -219,20 +219,19 @@ class ExerciseController extends Controller {
           id,
           exerciseDetails: {
             exercise_detail_id,
-            data: { repetition_id, repetition_value, calorific_value },
+            data: { repetition_id, repetition_value, calorific_value }
           },
           exercise_content: {
-            video,
+            video
           },
           auth: {
             creator_id: userCategoryId,
-            creator_type: category,
-          },
+            creator_type: category
+          }
         })) || false;
 
       exerciseId = exercise_id;
       detailId = detail_id;
-
 
       if (isExerciseUpdated) {
         const updatedExercise = await ExerciseWrapper({ id });
@@ -242,13 +241,13 @@ class ExerciseController extends Controller {
           (await exerciseContentService.findOne({
             exercise_id: id,
             creator_id: userCategoryId,
-            creator_type: category,
+            creator_type: category
           })) || null;
 
         if (exerciseContentExists) {
           const exerciseContentWrapper = await ExerciseContentWrapper({
             exercise_id: id,
-            auth: { creator_id: userCategoryId, creator_type: category },
+            auth: { creator_id: userCategoryId, creator_type: category }
           });
           exerciseContentData[
             exerciseContentWrapper.getId()
@@ -262,7 +261,7 @@ class ExerciseController extends Controller {
             ...(await updatedExercise.getReferenceInfo()),
             exercise_contents: exerciseContentData,
             exercise_id: exerciseId,
-            exercise_detail_id: detailId,
+            exercise_detail_id: detailId
           },
           "Exercise updated successfully"
         );
@@ -292,8 +291,8 @@ class ExerciseController extends Controller {
           query: exerciseService.queryBuilder({ search: name }),
           auth: {
             creator_id: userCategoryId,
-            creator_type: category,
-          },
+            creator_type: category
+          }
         })) || null;
 
       let allExercises = {};
@@ -304,12 +303,12 @@ class ExerciseController extends Controller {
         let exerciseIds = [];
         for (let index = 0; index < searchedExercises.length; index++) {
           const exercise = await ExerciseWrapper({
-            data: searchedExercises[index],
+            data: searchedExercises[index]
           });
           const {
             exercises,
             exercise_details,
-            repetitions,
+            repetitions
           } = await exercise.getReferenceInfo();
           allExercises = { ...allExercises, ...exercises };
           allExerciseDetails = { ...allExerciseDetails, ...exercise_details };
@@ -324,14 +323,14 @@ class ExerciseController extends Controller {
           (await exerciseContentService.findAndCountAll({
             exercise_id: exerciseIds,
             creator_id: userCategoryId,
-            creator_type: category,
+            creator_type: category
           })) || {};
 
         let allExerciseContents = {};
         if (totalExerciseContent) {
           for (let index = 0; index < exerciseContents.length; index++) {
             const exerciseContent = await ExerciseContentWrapper({
-              data: exerciseContents[index],
+              data: exerciseContents[index]
             });
             allExerciseContents[
               exerciseContent.getId()
@@ -346,7 +345,7 @@ class ExerciseController extends Controller {
             exercises: allExercises,
             exercise_details: allExerciseDetails,
             repetitions: allRepetitions,
-            exercise_contents: allExerciseContents,
+            exercise_contents: allExerciseContents
           },
           "Searched exercise fetched successfully"
         );
@@ -365,7 +364,7 @@ class ExerciseController extends Controller {
   };
 
   uploadContent = async (req, res) => {
-    const { raiseSuccess, raiseServerError,raiseClientError } = this;
+    const { raiseSuccess, raiseServerError, raiseClientError } = this;
     try {
       const { file, userDetails: { userId } = {} } = req;
 
@@ -379,18 +378,18 @@ class ExerciseController extends Controller {
       const fileUrl = await UploadHelper.upload({
         file,
         id: userId,
-        folder: DOCUMENT_PARENT_TYPE.EXERCISE_CONTENT,
+        folder: DOCUMENT_PARENT_TYPE.EXERCISE_CONTENT
       });
       documents.push({
         name: originalname,
-        file: fileUrl,
+        file: fileUrl
       });
 
       return raiseSuccess(
         res,
         200,
         {
-          documents,
+          documents
         },
         "Content uploaded successfully"
       );
