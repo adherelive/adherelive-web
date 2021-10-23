@@ -430,7 +430,7 @@ class DoctorController extends Controller {
             "To enable Add Patient option on your Dashboard, please click on verify and login via the Email and password for the account",
           buttonText: "Welcome",
           host: process.config.WEB_URL,
-          contactTo: "info@adhere.live"
+          contactTo: "customersupport@adhere.live"
         }
       };
       Proxy_Sdk.execute(EVENTS.SEND_EMAIL, emailPayload);

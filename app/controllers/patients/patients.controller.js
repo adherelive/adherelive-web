@@ -2088,7 +2088,9 @@ class PatientController extends Controller {
         }
       }
 
-      const secondary_careplan_ids = careplanIdsAsSecondaryDoctor.toString();
+      const secondary_careplan_ids = careplanIdsAsSecondaryDoctor.toString()
+        ? careplanIdsAsSecondaryDoctor.toString()
+        : null;
 
       if (category === USER_CATEGORY.DOCTOR || category === USER_CATEGORY.HSP) {
         let watchlistQuery = "";
