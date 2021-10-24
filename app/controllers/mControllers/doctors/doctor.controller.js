@@ -722,7 +722,6 @@ class MobileDoctorController extends Controller {
       for (let qualification of qualificationsOfDoctor) {
         let qId = qualification.get("id");
         if (newQualifications.includes(qId)) {
-          continue;
         } else {
           let deleteDocs = await documentService.deleteDocumentsOfQualification(
             DOCUMENT_PARENT_TYPE.DOCTOR_QUALIFICATION,
@@ -807,7 +806,6 @@ class MobileDoctorController extends Controller {
       for (const registration of registrationsOfDoctor) {
         const rId = registration.get("id");
         if (newRegistrations.includes(rId)) {
-          continue;
         } else {
           const deleteDocs = await documentService.deleteDocumentsOfQualification(
             DOCUMENT_PARENT_TYPE.DOCTOR_REGISTRATION,
@@ -2682,10 +2680,10 @@ class MobileDoctorController extends Controller {
   //         care_plan_id,
   //         secondary_doctor_role_id: user_role_id
   //       };
-  //       const existingMapping = await careplanSecondaryDoctorMappingService.getByData(dataToAdd) || null;
+  //       const existingMapping = await carePlanSecondaryDoctorMappingService.getByData(dataToAdd) || null;
 
   //       if(!existingMapping) {
-  //         const createdMapping = await careplanSecondaryDoctorMappingService.create(dataToAdd) || null;
+  //         const createdMapping = await carePlanSecondaryDoctorMappingService.create(dataToAdd) || null;
 
   //         if(createdMapping) {
   //           return raiseSuccess(res, 200, {}, "Profile added successfully");

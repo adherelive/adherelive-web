@@ -712,7 +712,6 @@ class ChatMessageDetails extends Component {
               </div>
             </div>
           );
-          return;
         } else {
           messageToRender.push(
             <div className="wp100 flex justify-start">

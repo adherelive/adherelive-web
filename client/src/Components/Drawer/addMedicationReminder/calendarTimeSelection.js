@@ -96,7 +96,7 @@ class CalendarComponent extends Component {
   }
 }
 
-class CalendarTimeSelecton extends Component {
+class CalendarTimeSelection extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -288,4 +288,4 @@ class CalendarTimeSelecton extends Component {
   }
 }
 
-export default injectIntl(CalendarTimeSelecton);
+export default injectIntl(CalendarTimeSelection);

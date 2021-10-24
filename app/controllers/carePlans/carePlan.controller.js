@@ -9,7 +9,7 @@ import carePlanAppointmentService from "../../services/carePlanAppointment/careP
 import templateMedicationService from "../../services/templateMedication/templateMedication.service";
 import templateAppointmentService from "../../services/templateAppointment/templateAppointment.service";
 import medicineService from "../../services/medicine/medicine.service";
-import careplanSecondaryDoctorMappingService from "../../services/careplanSecondaryDoctorMappings/careplanSecondaryDoctorMappings.service";
+import carePlanSecondaryDoctorMappingService from "../../services/careplanSecondaryDoctorMappings/careplanSecondaryDoctorMappings.service";
 import twilioService from "../../services/twilio/twilio.service";
 
 import {
@@ -32,6 +32,7 @@ import AppointmentWrapper from "../../ApiWrapper/web/appointments";
 import carePlanTemplateService from "../../services/carePlanTemplate/carePlanTemplate.service";
 import CarePlanTemplateWrapper from "../../ApiWrapper/web/carePlanTemplate";
 import Logger from "../../../libs/log";
+import ScheduleEventService from "../../services/scheduleEvents/scheduleEvent.service";
 import moment from "moment";
 import queueService from "../../services/awsQueue/queue.service";
 
@@ -72,7 +73,7 @@ class CarePlanController extends Controller {
       } = userDetails || {};
 
       if (!care_plan_id) {
-        return raiseClientError(
+        return this.raiseClientError(
           res,
           422,
           {},
@@ -231,6 +232,7 @@ class CarePlanController extends Controller {
       const carePlanStartTime = new moment.utc();
       const carePlanEndTime = new moment.utc(carePlanStartTime).add(2, "hours");
       const patient = await PatientWrapper(null, patient_id);
+      const { user_role_id: patientRoleId } = await patient.getAllInfo();
 
       let carePlanScheduleData = {};
       if (permissions.includes(PERMISSIONS.MEDICATIONS.ADD)) {
@@ -250,11 +252,11 @@ class CarePlanController extends Controller {
         };
       }
 
-      // const sqsResponseforCareplan = await QueueService.sendMessage(
+      // const sqsResponseForCarePlan = await QueueService.sendMessage(
       //   carePlanScheduleData
       // );
       //
-      // Log.debug("sqsResponse for care plan---> ", sqsResponseforCareplan);
+      // Log.debug("sqsResponse for care plan---> ", sqsResponseForCarePlan);
 
       let medicationApiDetails = {};
       let medicineApiDetails = {};
@@ -682,12 +684,12 @@ class CarePlanController extends Controller {
         secondary_doctor_role_id: user_role_id
       };
       const existingMapping =
-        (await careplanSecondaryDoctorMappingService.getByData(dataToAdd)) ||
+        (await carePlanSecondaryDoctorMappingService.getByData(dataToAdd)) ||
         null;
 
       if (!existingMapping) {
         const createdMapping =
-          (await careplanSecondaryDoctorMappingService.create(dataToAdd)) ||
+          (await carePlanSecondaryDoctorMappingService.create(dataToAdd)) ||
           null;
 
         if (createdMapping) {
@@ -730,7 +732,7 @@ class CarePlanController extends Controller {
           // if(addUserToChat) {
           //   return raiseSuccess(res, 200, {}, "Profile added successfully");
           // } else {
-          //   await careplanSecondaryDoctorMappingService.delete(dataToAdd) || null;
+          //   await carePlanSecondaryDoctorMappingService.delete(dataToAdd) || null;
           // }
           return raiseSuccess(
             res,

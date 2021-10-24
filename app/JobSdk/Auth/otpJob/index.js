@@ -12,12 +12,12 @@ class PatientOtpJob extends AuthJob {
 
     const templateData = [
       {
-        title: "OTP Verification for patient",
+        title: "OTP Verification for AdhereLive",
         toAddress: process.config.app.developer_email,
         templateName: EMAIL_TEMPLATE_NAME.OTP_VERIFICATION,
         templateData: {
-          title: "Patient",
-          mainBodyText: "OTP for the AdhereLive patient login is",
+          title: "Patient Login OTP",
+          mainBodyText: "OTP for the patient login on AdhereLive is",
           subBodyText: otp,
           host: process.config.WEB_URL,
           contactTo: process.config.app.support_email

@@ -98,8 +98,8 @@ export default class ExerciseService {
     try {
       if (exercise) {
         /*
-                        to prevent the admin and user created exercise update, following check was added
-                        */
+                                to prevent the admin and user created exercise update, following check was added
+                                */
         const exerciseExists =
           (await Database.getModel(TABLE_NAME).findOne({
             where: { id }
@@ -135,8 +135,8 @@ export default class ExerciseService {
         // update
         const { creator_type } = exerciseDetailExists || {};
         /*
-                        to prevent the admin and user created exercise update, following check was added
-                        */
+                                to prevent the admin and user created exercise update, following check was added
+                                */
         if (creator_type !== USER_CATEGORY.ADMIN) {
           await Database.getModel(exerciseDetailsTableName).update(data, {
             where: {

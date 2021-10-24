@@ -37,8 +37,6 @@ class TestAgoraVideo extends Component {
       isAudioOn: true,
       testing: false,
       audioLevel: 0,
-      isVideoOn: false,
-      isAudioOn: true,
       roomId: null
     };
 
