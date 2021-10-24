@@ -1,7 +1,6 @@
 import Controller from "../";
 import patientService from "../../../app/services/patients/patients.service";
 import carePlanService from "../../services/carePlan/carePlan.service";
-import carePlanTemplateService from "../../services/carePlanTemplate/carePlanTemplate.service";
 import CarePlanWrapper from "../../ApiWrapper/web/carePlan";
 import appointmentService from "../../services/appointment/appointment.service";
 import medicationReminderService from "../../services/medicationReminder/mReminder.service";
@@ -33,7 +32,6 @@ import AppointmentWrapper from "../../ApiWrapper/web/appointments";
 import carePlanTemplateService from "../../services/carePlanTemplate/carePlanTemplate.service";
 import CarePlanTemplateWrapper from "../../ApiWrapper/web/carePlanTemplate";
 import Logger from "../../../libs/log";
-import queueService from "../../services/awsQueue/queue.service";
 import ScheduleEventService from "../../services/scheduleEvents/scheduleEvent.service";
 import moment from "moment";
 import queueService from "../../services/awsQueue/queue.service";
@@ -254,11 +252,11 @@ class CarePlanController extends Controller {
         };
       }
 
-      // const sqsResponseforCareplan = await QueueService.sendMessage(
+      // const sqsResponseForCarePlan = await QueueService.sendMessage(
       //   carePlanScheduleData
       // );
       //
-      // Log.debug("sqsResponse for care plan---> ", sqsResponseforCareplan);
+      // Log.debug("sqsResponse for care plan---> ", sqsResponseForCarePlan);
 
       let medicationApiDetails = {};
       let medicineApiDetails = {};

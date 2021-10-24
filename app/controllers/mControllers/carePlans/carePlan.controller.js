@@ -288,11 +288,11 @@ class CarePlanController extends Controller {
         };
       }
 
-      // const sqsResponseforCareplan = await QueueService.sendMessage(
+      // const sqsResponseForCarePlan = await QueueService.sendMessage(
       //   carePlanScheduleData
       // );
       //
-      // Log.debug("sqsResponse for care plan---> ", sqsResponseforCareplan);
+      // Log.debug("sqsResponse for care plan---> ", sqsResponseForCarePlan);
 
       let medicationApiDetails = {};
       let medication_ids = [];
