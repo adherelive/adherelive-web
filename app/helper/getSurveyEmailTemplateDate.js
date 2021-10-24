@@ -1,4 +1,4 @@
-// const { SURVEY_TEMPLATE } = require("../surveySdk");
+const { SURVEY_TEMPLATE } = require("../surveySdk");
 
 export const preparePatientSurveyMailData = async data => {
   const { careCoachName, templateId, surveyId, userName } = data;

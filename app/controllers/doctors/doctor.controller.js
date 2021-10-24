@@ -90,6 +90,8 @@ import userRolesService from "../../services/userRoles/userRoles.service";
 import doctorPatientWatchlistService from "../../services/doctorPatientWatchlist/doctorPatientWatchlist.service";
 import { getRoomId, getSeparateName } from "../../helper/common";
 import userPreferenceService from "../../services/userPreferences/userPreference.service";
+import { raiseClientError } from "../../../routes/api/helper";
+import { raiseClientError } from "../../../routes/helper";
 // import doctor from "../../ApiWrapper/web/doctor";
 // import college from "../../ApiWrapper/web/college";
 
@@ -4092,10 +4094,10 @@ class DoctorController extends Controller {
   //         care_plan_id,
   //         secondary_doctor_role_id: user_role_id
   //       };
-  //       const existingMapping = await careplanSecondaryDoctorMappingService.getByData(dataToAdd) || null;
+  //       const existingMapping = await carePlanSecondaryDoctorMappingService.getByData(dataToAdd) || null;
 
   //       if(!existingMapping) {
-  //         const createdMapping = await careplanSecondaryDoctorMappingService.create(dataToAdd) || null;
+  //         const createdMapping = await carePlanSecondaryDoctorMappingService.create(dataToAdd) || null;
 
   //         if(createdMapping) {
   //           return raiseSuccess(res, 200, {}, "Profile added successfully");

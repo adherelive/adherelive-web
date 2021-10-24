@@ -1061,7 +1061,7 @@ class CarePlanController extends Controller {
           // if(addUserToChat) {
           //   return raiseSuccess(res, 200, {}, "Profile added successfully");
           // } else {
-          //   await careplanSecondaryDoctorMappingService.delete(dataToAdd) || null;
+          //   await carePlanSecondaryDoctorMappingService.delete(dataToAdd) || null;
           // }
           return raiseSuccess(
             res,

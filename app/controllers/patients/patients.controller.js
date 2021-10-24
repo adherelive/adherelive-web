@@ -594,7 +594,7 @@ class PatientController extends Controller {
       }
     } catch (error) {
       Logger.debug(
-        "76235274523754328648273947293 getPatientSymptoms 500 error",
+        "getPatientSymptoms 500 error - patient not updated any symptoms",
         error
       );
       return raiseServerError(res);
@@ -2034,18 +2034,18 @@ class PatientController extends Controller {
 
       let allPatientIds = [];
       /*
-                  userId (auth) [DOCTOR]
+                        userId (auth) [DOCTOR]
 
-                  SORT
-                  created_at [asc, desc]
-                  name [asc, desc]
+                        SORT
+                        created_at [asc, desc]
+                        name [asc, desc]
 
-                  FILTER
-                  diagnosis [description, type]
-                  treatment
+                        FILTER
+                        diagnosis [description, type]
+                        treatment
 
-                  doctors -> careplans -> patients
-                  */
+                        doctors -> careplans -> patients
+                        */
 
       const {
         offset = 0,
@@ -2088,9 +2088,7 @@ class PatientController extends Controller {
         }
       }
 
-      const secondary_careplan_ids = careplanIdsAsSecondaryDoctor.toString()
-        ? careplanIdsAsSecondaryDoctor.toString()
-        : null;
+      const secondary_careplan_ids = careplanIdsAsSecondaryDoctor.toString();
 
       if (category === USER_CATEGORY.DOCTOR || category === USER_CATEGORY.HSP) {
         let watchlistQuery = "";
