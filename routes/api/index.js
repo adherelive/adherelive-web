@@ -123,14 +123,12 @@ router.use(async function(req, res, next) {
       };
     }
     next();
-    return;
   } catch (err) {
     Log.debug("API INDEX CATCH ERROR ", err);
     req.userDetails = {
       exists: false
     };
     next();
-    return;
   }
 });
 

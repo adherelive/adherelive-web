@@ -1286,7 +1286,6 @@ class MobileUserController extends Controller {
         let qId = qualification.get("id");
         if (newQualifications.includes(qId)) {
           console.log("QUALIFICATIONS IFFFF", newQualifications);
-          continue;
         } else {
           console.log("QUALIFICATIONS ELSEEEE", newQualifications);
           let deleteDocs = await documentService.deleteDocumentsOfQualification(
@@ -1329,7 +1328,6 @@ class MobileUserController extends Controller {
         let rId = registration.get("id");
         if (newRegistrations.includes(rId)) {
           console.log("REGISTRATION IFFFF", newRegistrations);
-          continue;
         } else {
           console.log("REGISTRATION ELSEEEE", newRegistrations);
           let deleteDocs = await documentService.deleteDocumentsOfQualification(

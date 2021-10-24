@@ -83,7 +83,6 @@ class MealTemplatesService {
             food_item_detail_id: currentFoodItemDetailsId
           });
         } else {
-          continue;
         }
       }
 

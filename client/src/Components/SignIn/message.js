@@ -197,7 +197,7 @@ const messages = defineMessages({
     description: "Signup Agree",
     defaultMessage: "Signup"
   },
-  login: {
+  loginAgree: {
     id: "app.signIn.agree.login",
     description: "Login Agree",
     defaultMessage: "Login"

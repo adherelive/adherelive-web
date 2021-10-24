@@ -21,7 +21,7 @@ services:
   mysql:
     image: mysql:latest
     ports:
-      - 3306:3306
+      - "3306:3306"
     expose:
       - 3306
     volumes:

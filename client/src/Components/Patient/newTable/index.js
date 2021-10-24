@@ -34,7 +34,7 @@ class patientTable extends Component {
       offset: 0,
       pageSize: 0,
       loading: false,
-      total: null,
+      //total: null,
       tabChanged: false,
       created_at_order: 1,
       name_order: 1,

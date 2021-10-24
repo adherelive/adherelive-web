@@ -33,7 +33,8 @@ const mapStateToProps = state => {
     payment_products,
     auth,
     users,
-    doctors,
+    // TODO: 'doctors' used again without parameters?
+    // doctors,
     authPermissions,
     authenticated_user,
     authenticated_category,

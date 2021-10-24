@@ -722,7 +722,6 @@ class MobileDoctorController extends Controller {
       for (let qualification of qualificationsOfDoctor) {
         let qId = qualification.get("id");
         if (newQualifications.includes(qId)) {
-          continue;
         } else {
           let deleteDocs = await documentService.deleteDocumentsOfQualification(
             DOCUMENT_PARENT_TYPE.DOCTOR_QUALIFICATION,
@@ -807,7 +806,6 @@ class MobileDoctorController extends Controller {
       for (const registration of registrationsOfDoctor) {
         const rId = registration.get("id");
         if (newRegistrations.includes(rId)) {
-          continue;
         } else {
           const deleteDocs = await documentService.deleteDocumentsOfQualification(
             DOCUMENT_PARENT_TYPE.DOCTOR_REGISTRATION,

@@ -59,14 +59,6 @@ module.exports = {
         type: Sequelize.STRING,
         allowNull: true
       },
-      height: {
-        type: Sequelize.STRING,
-        allowNull: true
-      },
-      weight: {
-        type: Sequelize.STRING,
-        allowNull: true
-      },
       activated_on: {
         type: Sequelize.DATE
       },

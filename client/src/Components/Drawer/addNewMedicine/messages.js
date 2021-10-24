@@ -50,11 +50,6 @@ const messages = defineMessages({
     id: "app.addMedicine.drawer.submit",
     description: "",
     defaultMessage: "Submit"
-  },
-  formulation: {
-    id: "app.addMedicine.drawer.formulation",
-    description: "",
-    defaultMessage: "Formulation"
   }
 });
 

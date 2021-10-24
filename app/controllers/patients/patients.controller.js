@@ -2203,10 +2203,7 @@ class PatientController extends Controller {
               doctor_id: userCategoryId,
               user_role_id: userRoleId,
               filter: `(JSON_VALUE(carePlan.details, '$.diagnosis.description') LIKE '${filter_diagnosis}%' OR
-                JSON_VALUE(carePlan.details, '$.diagnosis.type') = ${diagnosis_type}) 
-                
-                 `,
-              user_role_id: userRoleId,
+                JSON_VALUE(carePlan.details, '$.diagnosis.type') = ${diagnosis_type})`,
               offset: offsetLimit,
               limit: endLimit,
               watchlist: watchlistQuery,
