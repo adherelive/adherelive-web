@@ -90,9 +90,6 @@ import userRolesService from "../../services/userRoles/userRoles.service";
 import doctorPatientWatchlistService from "../../services/doctorPatientWatchlist/doctorPatientWatchlist.service";
 import { getRoomId, getSeparateName } from "../../helper/common";
 import userPreferenceService from "../../services/userPreferences/userPreference.service";
-import { raiseClientError } from "../../../routes/api/helper";
-// TODO: Duplicate entry for this? Which one is being used?
-// import { raiseClientError } from "../../../routes/helper";
 // import doctor from "../../ApiWrapper/web/doctor";
 // import college from "../../ApiWrapper/web/college";
 
@@ -433,7 +430,7 @@ class DoctorController extends Controller {
             "To enable Add Patient option on your Dashboard, please click on verify and login via the Email and password for the account",
           buttonText: "Welcome",
           host: process.config.WEB_URL,
-          contactTo: "customersupport@adhere.live"
+          contactTo: "info@adhere.live"
         }
       };
       Proxy_Sdk.execute(EVENTS.SEND_EMAIL, emailPayload);
@@ -1767,6 +1764,7 @@ class DoctorController extends Controller {
       for (let qualification of qualificationsOfDoctor) {
         let qId = qualification.get("id");
         if (newQualifications.includes(qId)) {
+          continue;
         } else {
           let deleteDocs = await documentService.deleteDocumentsOfQualification(
             DOCUMENT_PARENT_TYPE.DOCTOR_QUALIFICATION,
@@ -1851,6 +1849,7 @@ class DoctorController extends Controller {
       for (const registration of registrationsOfDoctor) {
         const rId = registration.get("id");
         if (newRegistrations.includes(rId)) {
+          continue;
         } else {
           const deleteDocs = await documentService.deleteDocumentsOfQualification(
             DOCUMENT_PARENT_TYPE.DOCTOR_REGISTRATION,
@@ -4093,10 +4092,10 @@ class DoctorController extends Controller {
   //         care_plan_id,
   //         secondary_doctor_role_id: user_role_id
   //       };
-  //       const existingMapping = await carePlanSecondaryDoctorMappingService.getByData(dataToAdd) || null;
+  //       const existingMapping = await careplanSecondaryDoctorMappingService.getByData(dataToAdd) || null;
 
   //       if(!existingMapping) {
-  //         const createdMapping = await carePlanSecondaryDoctorMappingService.create(dataToAdd) || null;
+  //         const createdMapping = await careplanSecondaryDoctorMappingService.create(dataToAdd) || null;
 
   //         if(createdMapping) {
   //           return raiseSuccess(res, 200, {}, "Profile added successfully");

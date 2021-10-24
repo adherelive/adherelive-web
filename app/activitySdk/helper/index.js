@@ -16,7 +16,7 @@ const log = require("../../../libs/log")("ACTIVITY_SDK");
 
 const notify = (participants, payload) => {
   console.log("participants---------------------->", participants);
-  // prepare notification data according to event category
+  //preapare notification data according to eventcategory
   const { participantOne, participantTwo } = participants;
   if (participantOne) {
     log.info(`going to notify: ${payload} to ${participantOne}`);
@@ -26,6 +26,7 @@ const notify = (participants, payload) => {
     log.info(`going to notify: ${payload} to ${participantTwo}`);
     NotificationSdk.execute(participantTwo, payload);
   }
+  return;
 };
 
 const logActivity = async ({

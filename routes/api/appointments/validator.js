@@ -31,7 +31,6 @@ const appointmentFormSchema = Joi.object().keys({
     .optional()
     .allow(""),
   type_description: Joi.string().required(),
-  // TODO: rr_rule here?
   radiology_type: Joi.string()
     .optional()
     .allow(""),
@@ -46,6 +45,10 @@ const appointmentFormSchema = Joi.object().keys({
     .optional(),
   // description: Joi.string().optional(),
   treatment_id: Joi.number()
+    .optional()
+    .allow(""),
+  // TODO: rr_rule here?
+  radiology_type: Joi.string()
     .optional()
     .allow("")
 });

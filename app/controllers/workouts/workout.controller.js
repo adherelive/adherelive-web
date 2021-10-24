@@ -79,8 +79,7 @@ class WorkoutController extends Controller {
           patient_id: patientId,
           user_role_id: userRoleId
         },
-        attributes: ["id"],
-        userRoleId: current_careplan_doctor_id
+        attributes: ["id"]
       });
 
       if (count > 0) {
@@ -436,8 +435,6 @@ class WorkoutController extends Controller {
       // get repetition ids
       const repetitionService = new RepetitionService();
 
-      // get exercise group ids
-      console.log("What is repetion Service? --->", repetitionService);
       const { count, rows: repetitions = [] } =
         (await repetitionService.findAndCountAll()) || {};
       if (count) {
@@ -509,9 +506,8 @@ class WorkoutController extends Controller {
         category === USER_CATEGORY.HSP
       ) {
         getAllCareplanQuery = {
-          patient_id,
-          // TODO: Check if the below line is correct, else remove it
-          doctor_id: userCategoryId
+          patient_id
+          // doctor_id: userCategoryId,
         };
       }
 

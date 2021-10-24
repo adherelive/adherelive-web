@@ -346,6 +346,7 @@ class editReportDrawer extends Component {
           uploading: false,
           viewModalVisible: false,
           viewModalSrc: "",
+          uploading: false,
           new_documents: [],
           name: ""
         });

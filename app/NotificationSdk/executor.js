@@ -4,7 +4,6 @@ import SmsManager from "../communications/sms/smsManger";
 import Logger from "../../libs/log";
 import fetch from "node-fetch";
 import stream from "getstream";
-import { validateMailData } from "../proxySdk/libs/validator";
 
 const Log = new Logger("NOTIFICATION_SDK > EXECUTOR");
 

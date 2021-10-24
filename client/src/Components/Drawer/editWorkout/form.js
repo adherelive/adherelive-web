@@ -312,16 +312,14 @@ class WorkoutFieldsFrom extends Component {
               className="flex-grow-1 full-width mt10 ant-date-custom-ap-date "
             >
               {getFieldDecorator(START_DATE, {
-                // TODO: Check why moment() was used here
-                // initialValue: moment(),
+                initialValue: moment(),
                 rules: [
                   {
                     required: true,
                     message: formatMessage(messages.requiredStartDate)
                   }
                 ],
-                // TODO: Added moment() for all dates
-                initialValue: moment(start_date) ? moment(start_date) : null
+                initialValue: start_date ? start_date : null
               })(
                 <DatePicker
                   className="wp100 h53"

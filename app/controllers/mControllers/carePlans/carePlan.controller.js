@@ -288,11 +288,11 @@ class CarePlanController extends Controller {
         };
       }
 
-      // const sqsResponseForCarePlan = await QueueService.sendMessage(
+      // const sqsResponseforCareplan = await QueueService.sendMessage(
       //   carePlanScheduleData
       // );
       //
-      // Log.debug("sqsResponse for care plan---> ", sqsResponseForCarePlan);
+      // Log.debug("sqsResponse for care plan---> ", sqsResponseforCareplan);
 
       let medicationApiDetails = {};
       let medication_ids = [];
@@ -1061,7 +1061,7 @@ class CarePlanController extends Controller {
           // if(addUserToChat) {
           //   return raiseSuccess(res, 200, {}, "Profile added successfully");
           // } else {
-          //   await carePlanSecondaryDoctorMappingService.delete(dataToAdd) || null;
+          //   await careplanSecondaryDoctorMappingService.delete(dataToAdd) || null;
           // }
           return raiseSuccess(
             res,

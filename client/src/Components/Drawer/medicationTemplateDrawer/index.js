@@ -234,7 +234,7 @@ class TemplateDrawer extends Component {
         } = template_vitals[vId];
 
         const s_date = moment().toISOString();
-        let e_date = moment()
+        const e_date = moment()
           .add(parseInt(duration), "days")
           .toISOString();
 
@@ -266,7 +266,7 @@ class TemplateDrawer extends Component {
         } = template_diets[dId] || {};
 
         const s_date = moment().toISOString();
-        let e_date = moment()
+        const e_date = moment()
           .add(parseInt(duration), "days")
           .toISOString();
 
@@ -303,7 +303,7 @@ class TemplateDrawer extends Component {
         } = template_workouts[wId] || {};
 
         const s_date = moment().toISOString();
-        let e_date = moment()
+        const e_date = moment()
           .add(parseInt(duration), "days")
           .toISOString();
 
@@ -526,7 +526,7 @@ class TemplateDrawer extends Component {
         } = template_diets[dId] || {};
 
         const s_date = moment().toISOString();
-        let e_date = moment()
+        const e_date = moment()
           .add(parseInt(duration), "days")
           .toISOString();
 
@@ -563,7 +563,7 @@ class TemplateDrawer extends Component {
         } = template_workouts[wId] || {};
 
         const s_date = moment().toISOString();
-        let e_date = moment()
+        const e_date = moment()
           .add(parseInt(duration), "days")
           .toISOString();
 

@@ -1,5 +1,4 @@
 import Response from "../../../app/helper/responseFormat";
-import errMessage from "../../../config/messages.json";
 
 export const raiseSuccess = (res, code = 200, data = {}, message) => {
   const response = new Response(true, code);
@@ -41,6 +40,7 @@ export const validationError = (res, isValid) => {
     response.setMessage(label ? label : message);
     return res.status(response.getStatusCode()).json(response.getResponse());
   } else {
+    return;
   }
 };
 

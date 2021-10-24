@@ -46,6 +46,11 @@ const messages = defineMessages({
     description: "",
     defaultMessage: "Start Date"
   },
+  provider: {
+    id: "app.drawer.patient.details.provider",
+    description: "",
+    defaultMessage: "Provider"
+  },
   medications: {
     id: "app.drawer.patient.details.medications",
     description: "",

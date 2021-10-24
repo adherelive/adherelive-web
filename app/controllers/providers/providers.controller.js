@@ -866,6 +866,10 @@ class ProvidersController extends Controller {
         name,
         address,
         activated_on,
+        details: {
+          icon: getFilePath(icon),
+          banner: getFilePath(banner)
+        },
         user_id: userData.getId(),
         details: {
           icon: getFilePath(icon),

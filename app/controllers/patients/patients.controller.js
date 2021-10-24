@@ -594,7 +594,7 @@ class PatientController extends Controller {
       }
     } catch (error) {
       Logger.debug(
-        "getPatientSymptoms 500 error - patient not updated any symptoms",
+        "76235274523754328648273947293 getPatientSymptoms 500 error",
         error
       );
       return raiseServerError(res);
@@ -2034,18 +2034,18 @@ class PatientController extends Controller {
 
       let allPatientIds = [];
       /*
-                        userId (auth) [DOCTOR]
+                  userId (auth) [DOCTOR]
 
-                        SORT
-                        created_at [asc, desc]
-                        name [asc, desc]
+                  SORT
+                  created_at [asc, desc]
+                  name [asc, desc]
 
-                        FILTER
-                        diagnosis [description, type]
-                        treatment
+                  FILTER
+                  diagnosis [description, type]
+                  treatment
 
-                        doctors -> careplans -> patients
-                        */
+                  doctors -> careplans -> patients
+                  */
 
       const {
         offset = 0,
@@ -2203,7 +2203,10 @@ class PatientController extends Controller {
               doctor_id: userCategoryId,
               user_role_id: userRoleId,
               filter: `(JSON_VALUE(carePlan.details, '$.diagnosis.description') LIKE '${filter_diagnosis}%' OR
-                JSON_VALUE(carePlan.details, '$.diagnosis.type') = ${diagnosis_type})`,
+                JSON_VALUE(carePlan.details, '$.diagnosis.type') = ${diagnosis_type}) 
+                
+                 `,
+              user_role_id: userRoleId,
               offset: offsetLimit,
               limit: endLimit,
               watchlist: watchlistQuery,

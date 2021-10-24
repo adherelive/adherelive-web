@@ -486,7 +486,6 @@ export const DOSE_UNIT = {
 export const TEXT_KEY = "text";
 export const TIME_KEY = "time";
 
-export const WITH_BREAKFAST = "0";
 export const AFTER_WAKEUP = "1";
 export const BEFORE_BREAKFAST = "2";
 export const AFTER_BREAKFAST = "3";
@@ -503,10 +502,6 @@ export const BEFORE_SLEEP = "12";
 export const DIET_TIMINGS = {};
 
 export const MEDICATION_TIMING = {
-  [WITH_BREAKFAST]: {
-    [TEXT_KEY]: "With Breakfast",
-    [TIME_KEY]: "2020-09-24T03:30:00.000Z"
-  },
   [AFTER_WAKEUP]: {
     [TEXT_KEY]: "After Wake Up",
     [TIME_KEY]: "2020-09-24T02:30:00.000Z"

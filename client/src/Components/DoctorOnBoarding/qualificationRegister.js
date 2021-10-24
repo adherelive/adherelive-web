@@ -705,6 +705,7 @@ class QualificationRegister extends Component {
     for (let each in obj) {
       const { status = "" } = obj[each] || {};
       if (status === "uploading") {
+        continue;
       } else {
         newUnuploadedArr.push(obj[each]);
       }
@@ -776,6 +777,7 @@ class QualificationRegister extends Component {
     for (let each in obj) {
       const { status = "" } = obj[each] || {};
       if (status === "uploading") {
+        continue;
       } else {
         newUnuploadedArr.push(obj[each]);
       }
@@ -1848,6 +1850,7 @@ class QualificationRegister extends Component {
             window.location.href.includes(PATH.REGISTER_FROM_MY_PROFILE)
           ) {
             history.replace(PATH.PROFILE);
+            return;
           } else {
             history.replace(PATH.REGISTER_CLINICS);
           }
@@ -1875,6 +1878,7 @@ class QualificationRegister extends Component {
       window.location.href.includes(PATH.REGISTER_FROM_MY_PROFILE)
     ) {
       history.replace(PATH.PROFILE);
+      return;
     } else {
       history.replace(PATH.REGISTER_PROFILE);
     }

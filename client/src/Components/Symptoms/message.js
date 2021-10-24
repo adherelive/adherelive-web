@@ -281,6 +281,16 @@ const messages = defineMessages({
     description: "Bleed Area Screen",
     defaultMessage: "Right Calf"
   },
+  left: {
+    id: "app.bleedArea.left",
+    description: "Bleed Area Screen",
+    defaultMessage: "Left"
+  },
+  right: {
+    id: "app.bleedArea.right",
+    description: "Bleed Area Screen",
+    defaultMessage: "Right"
+  },
   timeline: {
     id: "app.bleedArea.timeline",
     description: "Bleed Area Screen",
