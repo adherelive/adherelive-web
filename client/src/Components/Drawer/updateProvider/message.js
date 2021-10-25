@@ -161,51 +161,6 @@ const messages = defineMessages({
     description: "",
     defaultMessage: "This will reset all the account details to initial"
   },
-  accountDetails: {
-    id: "app.updateProvider.accountDetails",
-    description: "",
-    defaultMessage: "Account Details"
-  },
-  accountType: {
-    id: "app.updateProvider.accountType",
-    description: "",
-    defaultMessage: "Account Type"
-  },
-  beneficiaryName: {
-    id: "app.updateProvider.beneficiaryName",
-    description: "",
-    defaultMessage: "Beneficiary Name"
-  },
-  accountNumber: {
-    id: "app.updateProvider.accountNumber",
-    description: "",
-    defaultMessage: "Account Number"
-  },
-  ifscCode: {
-    id: "app.updateProvider.ifscCode",
-    description: "",
-    defaultMessage: "IFSC Code"
-  },
-  upiId: {
-    id: "app.updateProvider.upiId",
-    description: "",
-    defaultMessage: "UPI Id"
-  },
-  razorpayAccId: {
-    id: "app.updateProvider.razorpayAccId",
-    description: "",
-    defaultMessage: "Razorpay account Id"
-  },
-  razorpayAccName: {
-    id: "app.updateProvider.razorpayAccName",
-    description: "",
-    defaultMessage: "Razorpay account name"
-  },
-  reset: {
-    id: "app.updateProvider.reset",
-    description: "",
-    defaultMessage: "Reset"
-  },
   bannerUploadText: {
     id: "app.updateProvider.banner.text",
     description: "",

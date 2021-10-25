@@ -93,7 +93,7 @@ class SmsManager {
   }
 
   smsDataTransformer(smsData) {
-    let smsTransformedData = new Object();
+    let smsTransformedData = {}; // new Object();
     smsTransformedData.PhoneNumber = smsData.phoneNumber;
     smsTransformedData.countryCode = smsData.countryCode;
     smsTransformedData.Message = smsData.message;

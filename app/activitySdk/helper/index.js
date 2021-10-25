@@ -16,7 +16,7 @@ const log = require("../../../libs/log")("ACTIVITY_SDK");
 
 const notify = (participants, payload) => {
   console.log("participants---------------------->", participants);
-  //preapare notification data according to eventcategory
+  // prepare notification data according to event category
   const { participantOne, participantTwo } = participants;
   if (participantOne) {
     log.info(`going to notify: ${payload} to ${participantOne}`);
