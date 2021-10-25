@@ -1,7 +1,48 @@
 {
   "name": "adherelive-client",
   "version": "2.2.0",
+  "description": "All packages for the adherelive-client web application",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/adherelive/adherelive-web.git"
+  },
+  "keywords": [
+    "adherelive",
+    "client",
+    "web",
+    "react",
+    "mobile",
+    "android",
+    "ios"
+  ],
+  "author": "gagneet.singh@adhere.live",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/adherelive/adherelive-web/issues"
+  },
+  "homepage": "https://github.com/adherelive/adherelive-web#readme",
+  "scripts": {
+    "start": "react-app-rewired start",
+    "build": "react-app-rewired build && cp -R build/* ../public/",
+    "test": "react-app-rewired test",
+    "eject": "react-app-rewired eject",
+    "extract": "NODE_ENV=development babel src",
+    "manage:translations": "node translationManager.js"
+  },
   "private": true,
+  "proxy": "http://localhost:5000",
+  "eslintConfig": {
+    "extends": "react-app"
+  },
+  "devDependencies": {
+    "@babel/cli": "^7.15.7",
+    "@babel/core": "^7.15.5",
+    "@babel/plugin-transform-arrow-functions": "^7.14.5",
+    "@babel/preset-env": "^7.15.6",
+    "babel-plugin-react-intl": "3.0.1",
+    "babel-preset-react-app": "^10.0.0",
+    "prettier": "^2.4.1"
+  },
   "dependencies": {
     "@ant-design/icons": "^4.7.0",
     "agora-rtc-sdk": "^3.6.5",
@@ -66,31 +107,10 @@
     "twilio-chat": "^5.0.2",
     "twilio-video": "2.17.1"
   },
-  "scripts": {
-    "start": "react-app-rewired start",
-    "build": "react-app-rewired build && cp -R build/* ../public/",
-    "test": "react-app-rewired test",
-    "eject": "react-app-rewired eject",
-    "extract": "NODE_ENV=development babel src",
-    "manage:translations": "node translationManager.js"
-  },
-  "eslintConfig": {
-    "extends": "react-app"
-  },
   "browserslist": [
     ">0.2%",
     "not dead",
     "not ie <= 11",
     "not op_mini all"
-  ],
-  "proxy": "http://localhost:5000",
-  "devDependencies": {
-    "@babel/cli": "^7.15.7",
-    "@babel/core": "^7.15.5",
-    "@babel/plugin-transform-arrow-functions": "^7.14.5",
-    "@babel/preset-env": "^7.15.6",
-    "babel-plugin-react-intl": "3.0.1",
-    "babel-preset-react-app": "^10.0.0",
-    "prettier": "^2.4.1"
-  }
+  ]
 }
