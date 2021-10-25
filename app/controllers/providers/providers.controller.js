@@ -866,10 +866,11 @@ class ProvidersController extends Controller {
         name,
         address,
         activated_on,
-        details: {
-          icon: getFilePath(icon),
-          banner: getFilePath(banner)
-        },
+        // TODO: These are duplicate and not required anymore?
+        //details: {
+        //icon: getFilePath(icon),
+        //banner: getFilePath(banner)
+        //},
         user_id: userData.getId(),
         details: {
           icon: getFilePath(icon),

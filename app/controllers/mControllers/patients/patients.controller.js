@@ -1954,10 +1954,7 @@ class MPatientController extends Controller {
         }
       });
 
-      // Logger.debug(
-      //   "98273917312 sortedInvestigations ",
-      //   sortedInvestigations
-      // );
+      Logger.debug("Sorted investigations ", sortedInvestigations);
 
       if (nextAppointment) {
         nextAppointmentDuration =

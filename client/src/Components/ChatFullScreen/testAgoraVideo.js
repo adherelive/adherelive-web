@@ -37,8 +37,9 @@ class TestAgoraVideo extends Component {
       isAudioOn: true,
       testing: false,
       audioLevel: 0,
-      isVideoOn: false,
-      isAudioOn: true,
+      // TODO: Values repeated, but with different boolean. Commenting
+      //isVideoOn: false,
+      //isAudioOn: true,
       roomId: null
     };
 

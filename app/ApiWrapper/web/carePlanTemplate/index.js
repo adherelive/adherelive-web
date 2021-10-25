@@ -194,15 +194,17 @@ class CarePlanTemplateWrapper extends BaseCarePlanTemplate {
         templateWorkoutIds.push(templateWorkout.getId());
       }
     }
-    /*
+
+    /** TODO: Check if the following are required, else remove them 
         exercise_details,
-                    exercises,
-                    repetitions,
-                    food_items,
-                    food_item_details,
-                    portions,
-                    medicines,
-        */
+        exercises,
+        repetitions,
+        food_items,
+        food_item_details,
+        portions,
+        medicines,
+    */
+
     return {
       care_plan_templates: {
         [this.getCarePlanTemplateId()]: {

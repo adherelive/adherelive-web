@@ -594,7 +594,7 @@ class PatientController extends Controller {
       }
     } catch (error) {
       Logger.debug(
-        "76235274523754328648273947293 getPatientSymptoms 500 error",
+        "getPatientSymptoms 500 error - patient not updated any symptoms",
         error
       );
       return raiseServerError(res);
@@ -2033,19 +2033,20 @@ class PatientController extends Controller {
       } = userDetails || {};
 
       let allPatientIds = [];
-      /*
-                  userId (auth) [DOCTOR]
 
-                  SORT
-                  created_at [asc, desc]
-                  name [asc, desc]
+      /** TODO: Check if these are required now or not.
+        userId (auth) [DOCTOR]
 
-                  FILTER
-                  diagnosis [description, type]
-                  treatment
+        SORT
+        created_at [asc, desc]
+        name [asc, desc]
 
-                  doctors -> careplans -> patients
-                  */
+        FILTER
+        diagnosis [description, type]
+        treatment
+
+        doctors -> careplans -> patients
+      */
 
       const {
         offset = 0,
@@ -2203,10 +2204,9 @@ class PatientController extends Controller {
               doctor_id: userCategoryId,
               user_role_id: userRoleId,
               filter: `(JSON_VALUE(carePlan.details, '$.diagnosis.description') LIKE '${filter_diagnosis}%' OR
-                JSON_VALUE(carePlan.details, '$.diagnosis.type') = ${diagnosis_type}) 
-                
-                 `,
-              user_role_id: userRoleId,
+                JSON_VALUE(carePlan.details, '$.diagnosis.type') = ${diagnosis_type})`,
+              // TODO: Duplicate user_role_id, commenting it
+              //user_role_id: userRoleId,
               offset: offsetLimit,
               limit: endLimit,
               watchlist: watchlistQuery,

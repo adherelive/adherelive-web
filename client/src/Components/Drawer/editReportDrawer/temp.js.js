@@ -346,7 +346,8 @@ class editReportDrawer extends Component {
           uploading: false,
           viewModalVisible: false,
           viewModalSrc: "",
-          uploading: false,
+          // TODO: Duplicate entry, commenting
+          //uploading: false,
           new_documents: [],
           name: ""
         });

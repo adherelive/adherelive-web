@@ -71,7 +71,7 @@ class MobileUserController extends Controller {
   signIn = async (req, res) => {
     try {
       const { prefix, mobile_number, hash = "" } = req.body;
-      Logger.info(`3198237912 hash :: ${hash}`);
+      Logger.info(`Password hash :: ${hash}`);
       const user = await userService.getUserByNumber({ mobile_number, prefix });
 
       // const userDetails = user[0];
@@ -81,7 +81,7 @@ class MobileUserController extends Controller {
           res,
           422,
           user,
-          "Mobile Number doesn't exists"
+          "Mobile Number does not exist"
         );
       }
 
@@ -118,12 +118,12 @@ class MobileUserController extends Controller {
 
       if (process.config.app.env === "development") {
         const emailPayload = {
-          title: "OTP Verification for patient",
+          title: "OTP verification for demo",
           toAddress: process.config.app.developer_email,
           templateName: EMAIL_TEMPLATE_NAME.OTP_VERIFICATION,
           templateData: {
-            title: "Patient",
-            mainBodyText: "OTP for the AdhereLive patient login is",
+            title: "Demo Patient",
+            mainBodyText: "OTP for the Demo AdhereLive patient login is",
             subBodyText: otp,
             host: process.config.WEB_URL,
             contactTo: process.config.app.support_email
@@ -134,12 +134,12 @@ class MobileUserController extends Controller {
       } else {
         // if(apiUserDetails.getEmail()) {
         const emailPayload = {
-          title: "OTP Verification for patient",
+          title: "OTP verification for AdhereLive",
           toAddress: process.config.app.developer_email,
           templateName: EMAIL_TEMPLATE_NAME.OTP_VERIFICATION,
           templateData: {
-            title: "Patient",
-            mainBodyText: "OTP for the AdhereLive patient login is",
+            title: "Patient Login",
+            mainBodyText: "OTP for patient login on AdhereLive is",
             subBodyText: otp,
             host: process.config.WEB_URL,
             contactTo: process.config.app.support_email
@@ -193,7 +193,7 @@ class MobileUserController extends Controller {
       //   return this.raiseClientError(res, 422, {}, "Invalid Credentials");
       // }
     } catch (error) {
-      console.log("error sign in  --> ", error);
+      console.log("error sign in with OTP  --> ", error);
 
       // notification
       const crashJob = await AdhocJob.execute("crash", {
@@ -2124,7 +2124,7 @@ class MobileUserController extends Controller {
           templateName: EMAIL_TEMPLATE_NAME.FORGOT_PASSWORD
         };
 
-        console.log("91397138923 emailPayload -------------->", emailPayload);
+        console.log("emailPayload for reset password--->", emailPayload);
         const emailResponse = await Proxy_Sdk.execute(
           EVENTS.SEND_EMAIL,
           emailPayload

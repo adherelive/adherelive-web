@@ -1,3 +1,4 @@
+// TODO: Check why this is included, as the "surveySDK" does not exist
 // const { SURVEY_TEMPLATE } = require("../surveySdk");
 
 export const preparePatientSurveyMailData = async data => {

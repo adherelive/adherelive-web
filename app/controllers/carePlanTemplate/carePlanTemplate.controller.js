@@ -298,7 +298,8 @@ class CarePlanTemplateController extends Controller {
             template_workouts: allTemplateWorkouts,
             exercise_details: allExerciseDetails,
             exercises: allExercises,
-            exercise_contents: exerciseContentData,
+            // TODO: Need to check which declaration is correct
+            // exercise_contents: exerciseContentData,
             repetitions: allRepetitions,
             exercise_contents: allExerciseContents,
 

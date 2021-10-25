@@ -23,7 +23,7 @@ import moment from "moment";
 const path = require("path");
 
 import Log from "../../../libs/log";
-import { raiseClientError } from "../../../routes/helper";
+import { raiseClientError } from "../../../routes/api/helper";
 
 import AppointmentJob from "../../JobSdk/Appointments/observer";
 import NotificationSdk from "../../NotificationSdk";
