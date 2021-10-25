@@ -52,7 +52,7 @@
     "react-popper": "^2.2.3",
     "react-redux": "^7.2.0",
     "react-router-dom": "^4.3.1",
-    "react-scripts": "2.1.1",
+    "react-scripts": "4.0.0",
     "react-slider": "^1.0.8",
     "react-spring": "^8.0.27",
     "react-timekeeper": "^1.1.0",
@@ -64,7 +64,8 @@
     "reselect": "^4.0.0",
     "showdown": "^1.9.1",
     "twilio-chat": "^5.0.2",
-    "twilio-video": "2.17.1"
+    "twilio-video": "2.17.1",
+    "@snyk/protect": "latest"
   },
   "scripts": {
     "start": "react-app-rewired start",
@@ -72,7 +73,9 @@
     "test": "react-app-rewired test",
     "eject": "react-app-rewired eject",
     "extract": "NODE_ENV=development babel src",
-    "manage:translations": "node translationManager.js"
+    "manage:translations": "node translationManager.js",
+    "prepare": "npm run snyk-protect",
+    "snyk-protect": "snyk-protect"
   },
   "eslintConfig": {
     "extends": "react-app"
@@ -92,5 +95,6 @@
     "babel-plugin-react-intl": "3.0.1",
     "babel-preset-react-app": "^10.0.0",
     "prettier": "^2.4.1"
-  }
+  },
+  "snyk": true
 }
