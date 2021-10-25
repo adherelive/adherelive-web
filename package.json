@@ -80,7 +80,7 @@
     "agora-access-token": "^2.0.4",
     "algoliasearch": "^4.10.5",
     "atob": "^2.1.2",
-    "aws-sdk": "^2.999.0",
+    "aws-sdk": "^2.1000.0",
     "axios": "^0.22.0",
     "base64-img": "^1.0.4",
     "bcrypt": "^5.0.1",
