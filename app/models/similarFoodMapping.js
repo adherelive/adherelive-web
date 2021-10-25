@@ -5,7 +5,7 @@ import { USER_CATEGORY_ARRAY } from "./users";
 
 export const TABLE_NAME = "similar_food_mappings";
 
-export const db = database => {
+export const db = (database) => {
   database.define(
     TABLE_NAME,
     {
@@ -13,37 +13,37 @@ export const db = database => {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
-        type: DataTypes.INTEGER
+        type: DataTypes.INTEGER,
       },
       related_to_id: {
         type: DataTypes.INTEGER,
         allowNull: false,
         references: {
           model: {
-            tableName: dietFoodGroupMappingTableName
+            tableName: dietFoodGroupMappingTableName,
           },
-          key: "id"
-        }
+          key: "id",
+        },
       },
       secondary_id: {
         type: DataTypes.INTEGER,
         allowNull: false,
         references: {
           model: {
-            tableName: dietFoodGroupMappingTableName
+            tableName: dietFoodGroupMappingTableName,
           },
-          key: "id"
-        }
-      }
+          key: "id",
+        },
+      },
     },
     {
       underscored: true,
-      paranoid: true
+      paranoid: true,
     }
   );
 };
 
-export const associate = database => {
+export const associate = (database) => {
   // const {upload_documents} = database.models || {};
   // associations here (if any) ...
 };

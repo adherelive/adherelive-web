@@ -1,11 +1,11 @@
 import React from "react";
 import { CONSULTATION_FEE_TYPE_TEXT } from "../../../../../constant";
 
-export default props => {
+export default (props) => {
   const {
     data: {
-      basic_info: { id = null, name = "", type = "", amount = "" } = {}
-    } = {}
+      basic_info: { id = null, name = "", type = "", amount = "" } = {},
+    } = {},
   } = props || {};
 
   return (

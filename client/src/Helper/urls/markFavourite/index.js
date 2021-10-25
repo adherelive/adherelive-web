@@ -10,6 +10,6 @@ export const removeFavouritesUrl = ({ typeId, type }) => {
   return `/favourites?typeId=${typeId}&type=${type}`;
 };
 
-export const removeFavouriteRecordUrl = id => {
+export const removeFavouriteRecordUrl = (id) => {
   return `/favourites/${id}`;
 };

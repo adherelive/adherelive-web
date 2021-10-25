@@ -7,19 +7,19 @@ import { fetchVideoAccessToken } from "../../modules/twilio";
 //     addVideoRoomParticipantsInEvent
 // } from "../../modules/events";
 
-const mapStateToProps = state => {
+const mapStateToProps = (state) => {
   const {
     twilio,
     users,
     auth: { authenticated_user = 1 } = {},
-    patients = {}
+    patients = {},
   } = state;
   return { twilio, users, authenticated_user, patients };
 };
 
-const mapDispatchToProps = dispatch => {
+const mapDispatchToProps = (dispatch) => {
   return {
-    fetchVideoAccessToken: userId => dispatch(fetchVideoAccessToken(userId))
+    fetchVideoAccessToken: (userId) => dispatch(fetchVideoAccessToken(userId)),
     // fetchEventUsers: eventId => dispatch(fetchEventUsers(eventId)),
     // addVideoRoomParticipantsInEvent: (eventId, userOne, userTwo) =>
     //     dispatch(addVideoRoomParticipantsInEvent(eventId, userOne, userTwo))

@@ -64,12 +64,12 @@ export const REGISTER_REGISTRATION_COMPLETED_WITH_ERROR =
 
 export const NEW_DOCTOR = "NEW_DOCTOR";
 
-export const callNewDoctorAction = doctor_id => {
-  return async dispatch => {
+export const callNewDoctorAction = (doctor_id) => {
+  return async (dispatch) => {
     try {
       dispatch({
         type: NEW_DOCTOR,
-        data: { doctor_id }
+        data: { doctor_id },
       });
     } catch (err) {
       console.log("New Doctor Error", err);
@@ -78,16 +78,16 @@ export const callNewDoctorAction = doctor_id => {
   };
 };
 
-export const doctorProfileRegister = payload => {
+export const doctorProfileRegister = (payload) => {
   let response = {};
-  return async dispatch => {
+  return async (dispatch) => {
     try {
       dispatch({ type: DOCTOR_PROFILE_UPDATE });
       console.log(payload);
       response = await doRequest({
         method: REQUEST_TYPE.POST,
         url: Doctor.getdoctorProfileRegisterUrl(),
-        data: payload
+        data: payload,
       });
 
       const { status, payload: { error = "", data = {} } = {} } =
@@ -98,14 +98,14 @@ export const doctorProfileRegister = payload => {
       if (status === false) {
         dispatch({
           type: DOCTOR_PROFILE_UPDATE_COMPLETED_WITH_ERROR,
-          payload: { error }
+          payload: { error },
         });
       } else if (status === true) {
         const { doctors = {} } = data || {};
 
         dispatch({
           type: DOCTOR_PROFILE_UPDATE_COMPLETED,
-          data: data
+          data: data,
         });
 
         if (Object.keys(doctors).length > 0) {
@@ -122,16 +122,16 @@ export const doctorProfileRegister = payload => {
   };
 };
 
-export const sendPasswordMail = payload => {
+export const sendPasswordMail = (payload) => {
   let response = {};
-  return async dispatch => {
+  return async (dispatch) => {
     try {
       dispatch({ type: SEND_PASSWORD_MAIL });
 
       response = await doRequest({
         method: REQUEST_TYPE.POST,
         url: sendPasswordMailUrl(),
-        data: payload
+        data: payload,
       });
 
       const { status, payload: { error = "", data = {} } = {} } =
@@ -141,12 +141,12 @@ export const sendPasswordMail = payload => {
         dispatch({
           type: SEND_PASSWORD_MAIL_COMPLETED,
           payload: data,
-          data
+          data,
         });
       } else {
         dispatch({
           type: SEND_PASSWORD_MAIL_COMPLETED_WITH_ERROR,
-          payload: error
+          payload: error,
         });
       }
     } catch (err) {
@@ -158,16 +158,16 @@ export const sendPasswordMail = payload => {
   };
 };
 
-export const doctorQualificationRegister = payload => {
+export const doctorQualificationRegister = (payload) => {
   let response = {};
-  return async dispatch => {
+  return async (dispatch) => {
     try {
       dispatch({ type: DOCTOR_QUALIFICATION_UPDATE });
 
       response = await doRequest({
         method: REQUEST_TYPE.POST,
         url: Doctor.getdoctorQualificationRegisterUrl(),
-        data: payload
+        data: payload,
       });
 
       const { status, payload: { error = "", data = {} } = {} } =
@@ -176,12 +176,12 @@ export const doctorQualificationRegister = payload => {
       if (status === false) {
         dispatch({
           type: DOCTOR_QUALIFICATION_UPDATE_COMPLETED_WITH_ERROR,
-          payload: { error }
+          payload: { error },
         });
       } else if (status === true) {
         dispatch({
           type: DOCTOR_QUALIFICATION_UPDATE_COMPLETED,
-          data: data
+          data: data,
         });
       }
     } catch (err) {
@@ -193,16 +193,16 @@ export const doctorQualificationRegister = payload => {
   };
 };
 
-export const doctorClinicRegister = payload => {
+export const doctorClinicRegister = (payload) => {
   let response = {};
-  return async dispatch => {
+  return async (dispatch) => {
     try {
       dispatch({ type: DOCTOR_CLINIC_UPDATE });
 
       response = await doRequest({
         method: REQUEST_TYPE.POST,
         url: Doctor.getdoctorClinicRegisterUrl(),
-        data: payload
+        data: payload,
       });
 
       const { status, payload: { error = "", data = {} } = {} } =
@@ -211,7 +211,7 @@ export const doctorClinicRegister = payload => {
       if (status === false) {
         dispatch({
           type: DOCTOR_CLINIC_UPDATE_COMPLETED_WITH_ERROR,
-          payload: { error }
+          payload: { error },
         });
       } else if (status === true) {
         dispatch({
@@ -219,7 +219,7 @@ export const doctorClinicRegister = payload => {
           // payload: {
 
           // },
-          data: data
+          data: data,
         });
       }
     } catch (err) {
@@ -231,15 +231,15 @@ export const doctorClinicRegister = payload => {
   };
 };
 
-export const getDoctorProfileRegisterData = userId => {
+export const getDoctorProfileRegisterData = (userId) => {
   let response = {};
-  return async dispatch => {
+  return async (dispatch) => {
     try {
       dispatch({ type: GET_DOCTOR_PROFILE_DATA });
 
       response = await doRequest({
         method: REQUEST_TYPE.GET,
-        url: Doctor.getdoctorProfileRegisterDataUrl(userId)
+        url: Doctor.getdoctorProfileRegisterDataUrl(userId),
       });
 
       const { status, payload: { error = "", data = {} } = {} } =
@@ -248,15 +248,15 @@ export const getDoctorProfileRegisterData = userId => {
       if (status === false) {
         dispatch({
           type: GET_DOCTOR_PROFILE_DATA_COMPLETED_WITH_ERROR,
-          payload: { error }
+          payload: { error },
         });
       } else if (status === true) {
         const { profileData } = data;
         dispatch({
           type: GET_DOCTOR_PROFILE_DATA_COMPLETED,
           payload: {
-            profileData
-          }
+            profileData,
+          },
         });
       }
     } catch (err) {
@@ -268,16 +268,16 @@ export const getDoctorProfileRegisterData = userId => {
   };
 };
 
-export const getDoctorQualificationRegisterData = payload => {
+export const getDoctorQualificationRegisterData = (payload) => {
   let response = {};
   const { doctor_id = "" } = payload || {};
-  return async dispatch => {
+  return async (dispatch) => {
     try {
       dispatch({ type: GET_DOCTOR_QUALIFICATION_DATA });
 
       response = await doRequest({
         method: REQUEST_TYPE.GET,
-        url: Doctor.getdoctorQualificationRegisterDataUrl(doctor_id)
+        url: Doctor.getdoctorQualificationRegisterDataUrl(doctor_id),
         // data: payload
       });
 
@@ -289,13 +289,13 @@ export const getDoctorQualificationRegisterData = payload => {
       if (status === false) {
         dispatch({
           type: GET_DOCTOR_QUALIFICATION_DATA_COMPLETED_WITH_ERROR,
-          payload: { error }
+          payload: { error },
         });
       } else if (status === true) {
         // const { qualificationData, registration_details, upload_documents } = data;
         dispatch({
           type: GET_DOCTOR_QUALIFICATION_DATA_COMPLETED,
-          data: data
+          data: data,
         });
       }
     } catch (err) {
@@ -307,15 +307,15 @@ export const getDoctorQualificationRegisterData = payload => {
   };
 };
 
-export const registerQualification = payload => {
+export const registerQualification = (payload) => {
   let response = {};
-  return async dispatch => {
+  return async (dispatch) => {
     try {
       dispatch({ type: REGISTER_QUALIFICATION });
       response = await doRequest({
         method: REQUEST_TYPE.POST,
         url: Doctor.getRegisterQualificationUrl(),
-        data: payload
+        data: payload,
       });
 
       const { status, payload: { error = "", data = {} } = {} } =
@@ -324,13 +324,13 @@ export const registerQualification = payload => {
       if (status === false) {
         dispatch({
           type: REGISTER_QUALIFICATION_COMPLETED_WITH_ERROR,
-          payload: { error }
+          payload: { error },
         });
       } else if (status === true) {
         // const { qualification_id } = data;
         dispatch({
           type: REGISTER_QUALIFICATION_COMPLETED,
-          data: data
+          data: data,
         });
       }
     } catch (err) {
@@ -342,15 +342,15 @@ export const registerQualification = payload => {
   };
 };
 
-export const registerRegistration = payload => {
+export const registerRegistration = (payload) => {
   let response = {};
-  return async dispatch => {
+  return async (dispatch) => {
     try {
       dispatch({ type: REGISTER_REGISTRATION });
       response = await doRequest({
         method: REQUEST_TYPE.POST,
         url: Doctor.getRegisterRegistrationUrl(),
-        data: payload
+        data: payload,
       });
 
       const { status, payload: { error = "", data = {} } = {} } =
@@ -359,13 +359,13 @@ export const registerRegistration = payload => {
       if (status === false) {
         dispatch({
           type: REGISTER_REGISTRATION_COMPLETED_WITH_ERROR,
-          payload: { error }
+          payload: { error },
         });
       } else if (status === true) {
         // const { qualification_id } = data;
         dispatch({
           type: REGISTER_REGISTRATION_COMPLETED,
-          data: data
+          data: data,
         });
       }
     } catch (err) {
@@ -379,14 +379,14 @@ export const registerRegistration = payload => {
 
 export const deleteDoctorQualificationImage = (qualificationId, document) => {
   let response = {};
-  return async dispatch => {
+  return async (dispatch) => {
     try {
       dispatch({ type: DELETE_QUALIFICATION_IMAGE });
 
       response = await doRequest({
         method: REQUEST_TYPE.DELETE,
         url: Doctor.getDeleteQualificationDocumentUrl(qualificationId),
-        data: { document }
+        data: { document },
       });
 
       const { status, payload: { error = "", data = {} } = {} } =
@@ -395,12 +395,12 @@ export const deleteDoctorQualificationImage = (qualificationId, document) => {
       if (status === false) {
         dispatch({
           type: DELETE_QUALIFICATION_IMAGE_COMPLETED_WITH_ERROR,
-          payload: { error }
+          payload: { error },
         });
       } else if (status === true) {
         dispatch({
           type: DELETE_QUALIFICATION_IMAGE_COMPLETED,
-          data: {}
+          data: {},
         });
       }
     } catch (err) {
@@ -414,14 +414,14 @@ export const deleteDoctorQualificationImage = (qualificationId, document) => {
 
 export const deleteDoctorRegistrationImage = (registrationId, document) => {
   let response = {};
-  return async dispatch => {
+  return async (dispatch) => {
     try {
       dispatch({ type: DELETE_REGISTRATION_IMAGE });
 
       response = await doRequest({
         method: REQUEST_TYPE.DELETE,
         url: Doctor.getDeleteRegistrationDocumentUrl(registrationId),
-        data: { document }
+        data: { document },
       });
 
       const { status, payload: { error = "" } = {} } = response || {};
@@ -429,12 +429,12 @@ export const deleteDoctorRegistrationImage = (registrationId, document) => {
       if (status === false) {
         dispatch({
           type: DELETE_REGISTRATION_IMAGE_COMPLETED_WITH_ERROR,
-          payload: { error }
+          payload: { error },
         });
       } else if (status === true) {
         dispatch({
           type: DELETE_REGISTRATION_IMAGE_COMPLETED,
-          data: {}
+          data: {},
         });
       }
     } catch (err) {
@@ -454,7 +454,7 @@ export default (state = {}, action) => {
       if (doctor_id) {
         return {
           ...state,
-          new_doctor_created_id: doctor_id
+          new_doctor_created_id: doctor_id,
         };
       } else {
         return { ...state };
@@ -462,14 +462,14 @@ export default (state = {}, action) => {
 
     case GET_DOCTOR_PROFILE_DATA_COMPLETED:
       return {
-        profileData: data.profileData
+        profileData: data.profileData,
       };
 
     case GET_DOCTOR_QUALIFICATION_DATA_COMPLETED:
       return {
         qualificationData: data.qualificationData,
         registration_details: data.registration_details,
-        upload_documents: data.upload_documents
+        upload_documents: data.upload_documents,
       };
     default:
       return state;

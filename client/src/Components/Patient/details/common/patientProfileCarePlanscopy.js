@@ -6,7 +6,7 @@ import {
   TABLET,
   SYRUP,
   PARTS,
-  PART_LIST_CODES
+  PART_LIST_CODES,
 } from "../../../../constant";
 
 import { getName } from "../../../../Helper/validation";
@@ -19,14 +19,14 @@ class patientCarePlans extends Component {
 
     this.state = {
       care_plans: {},
-      current_careplan_id: null
+      current_careplan_id: null,
     };
   }
 
   componentDidMount() {
     let { getPatientCarePlanDetails, patient_id } = this.props;
 
-    getPatientCarePlanDetails(patient_id).then(response => {
+    getPatientCarePlanDetails(patient_id).then((response) => {
       let { status = false, payload = {} } = response;
       console.log(
         "respOnseeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee -->",
@@ -34,14 +34,14 @@ class patientCarePlans extends Component {
       );
       if (status) {
         let {
-          data: { show = false, care_plans = {}, current_careplan_id } = {}
+          data: { show = false, care_plans = {}, current_careplan_id } = {},
         } = payload;
 
         console.log("Cureent careplan ====>", care_plans, current_careplan_id);
 
         this.setState({
           care_plans,
-          current_careplan_id
+          current_careplan_id,
         });
       }
     });
@@ -74,7 +74,7 @@ class patientCarePlans extends Component {
     return allCarePlans;
   };
 
-  formatMessage = data => this.props.intl.formatMessage(data);
+  formatMessage = (data) => this.props.intl.formatMessage(data);
 
   getCurrentCarePlan = (care_plans, current_careplan_id) => {
     const { treatments, doctors } = this.props;

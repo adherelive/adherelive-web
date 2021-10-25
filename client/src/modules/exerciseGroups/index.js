@@ -3,7 +3,7 @@ function exerciseGroupsReducer(state, data) {
   if (exercise_groups) {
     return {
       ...state,
-      ...exercise_groups
+      ...exercise_groups,
     };
   } else {
     return state;

@@ -6,7 +6,7 @@ function missedEventReducer(state, data) {
     missed_appointments = {},
     missed_vitals = {},
     missed_diets = {},
-    missed_workouts = {}
+    missed_workouts = {},
   } = data || {};
   if (
     Object.keys(missed_medications).length > 0 ||
@@ -17,7 +17,7 @@ function missedEventReducer(state, data) {
   ) {
     return {
       ...state,
-      ...data
+      ...data,
     };
   } else {
     return state;

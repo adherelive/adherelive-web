@@ -3,7 +3,7 @@ function templateAppointmentsReducer(state, data) {
   if (template_appointments) {
     return {
       ...state,
-      ...template_appointments
+      ...template_appointments,
     };
   } else {
     return state;

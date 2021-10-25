@@ -3,27 +3,27 @@ import { getUserDetails } from "../../../Helper/userDetails";
 export const TABLE_COLUMN = {
   ORGANIZER: {
     key: "ORGANIZER",
-    dataIndex: "ORGANIZER"
+    dataIndex: "ORGANIZER",
     // width: 100
   },
   DATE: {
     key: "DATE",
-    dataIndex: "DATE"
+    dataIndex: "DATE",
     // width: 100
   },
   TIMING: {
     key: "TIMING",
-    dataIndex: "TIMING"
+    dataIndex: "TIMING",
     // width: 150
   },
   DESCRIPTION: {
     key: "DESCRIPTION",
-    dataIndex: "DESCRIPTION"
+    dataIndex: "DESCRIPTION",
     // width: 100
-  }
+  },
 };
 
-export const formatAppointmentTableData = data => {
+export const formatAppointmentTableData = (data) => {
   const { appointments, id, doctors, patients, care_takers } = data || {};
 
   const { organizer: { id: organizer_id, category } = {} } =
@@ -34,11 +34,11 @@ export const formatAppointmentTableData = data => {
     id: organizer_id,
     doctors,
     patients,
-    care_takers
+    care_takers,
   });
 
   return {
     appointmentData: appointments[id],
-    userData
+    userData,
   };
 };

@@ -34,7 +34,7 @@ const FIELDS = [
   FIBERS,
   CALORIFIC_VALUE,
   SERVING,
-  NOTES
+  NOTES,
 ];
 
 class AddFoodGroupForm extends Component {
@@ -43,7 +43,7 @@ class AddFoodGroupForm extends Component {
     this.state = {
       food_item_id: null,
       searchingFood: "",
-      doctor_id: null
+      doctor_id: null,
     };
 
     this.handleFoodSearch = debounce(this.handleFoodSearch.bind(this), 200);
@@ -70,13 +70,12 @@ class AddFoodGroupForm extends Component {
       visibleAddFoodDrawer,
       searched_food_item_details = {},
       searched_food_items = {},
-      setFoodItemName
+      setFoodItemName,
     } = this.props;
 
     const { food_item_detail_id: prev_food_item_detail_id = null } = prevProps;
-    const {
-      visibleAddFoodDrawer: prev_visibleAddFoodDrawer = false
-    } = prevProps;
+    const { visibleAddFoodDrawer: prev_visibleAddFoodDrawer = false } =
+      prevProps;
 
     const { basic_info: { food_item_id: previous_item_id = null } = {} } =
       searched_food_item_details[food_item_detail_id] || {};
@@ -105,7 +104,7 @@ class AddFoodGroupForm extends Component {
 
   fillAllNewCreatedFoodDetails = () => {
     const {
-      latest_created_food: { food_items = {}, food_item_details = {} } = {}
+      latest_created_food: { food_items = {}, food_item_details = {} } = {},
     } = this.props;
     const { setFoodItemName, setEditable, setFoodItemDetailId } = this.props;
     let food_item_id = null,
@@ -131,8 +130,8 @@ class AddFoodGroupForm extends Component {
         fats = null,
         fibers = null,
         portion_size = 1,
-        portion_id = null
-      } = {}
+        portion_id = null,
+      } = {},
     } = food_item_details[detail_id] || {};
 
     const { basic_info: { name = "" } = {} } = food_items[food_item_id] || {};
@@ -156,14 +155,12 @@ class AddFoodGroupForm extends Component {
   };
 
   getPortionOptions = () => {
-    const {
-      food_item_id: state_food_item_id = null,
-      doctor_id = null
-    } = this.state;
+    const { food_item_id: state_food_item_id = null, doctor_id = null } =
+      this.state;
     const {
       searched_food_item_details,
       portions = {},
-      authenticated_category
+      authenticated_category,
     } = this.props;
     let options = [],
       portion_ids = [],
@@ -177,8 +174,8 @@ class AddFoodGroupForm extends Component {
           food_item_id,
           portion_id,
           creator_id = null,
-          creator_type = null
-        } = {}
+          creator_type = null,
+        } = {},
       } = detail;
 
       if (
@@ -204,7 +201,7 @@ class AddFoodGroupForm extends Component {
             value={portion_id}
             onClick={this.handleExistingPortionSelect({
               detail_id,
-              editable: canEdit
+              editable: canEdit,
             })}
           >
             {name}
@@ -234,62 +231,66 @@ class AddFoodGroupForm extends Component {
     return options;
   };
 
-  handleExistingPortionSelect = ({ detail_id: value, editable }) => () => {
-    const {
-      form: { setFieldsValue } = {},
-      searched_food_item_details,
-      setFoodItemDetailId,
-      setEditable
-    } = this.props;
+  handleExistingPortionSelect =
+    ({ detail_id: value, editable }) =>
+    () => {
+      const {
+        form: { setFieldsValue } = {},
+        searched_food_item_details,
+        setFoodItemDetailId,
+        setEditable,
+      } = this.props;
 
-    const {
-      basic_info: {
-        id: detail_id,
-        calorific_value,
-        carbs,
-        proteins,
-        fats,
-        fibers,
-        portion_id,
-        portion_size = 1
-      } = {}
-    } = searched_food_item_details[value] || {};
+      const {
+        basic_info: {
+          id: detail_id,
+          calorific_value,
+          carbs,
+          proteins,
+          fats,
+          fibers,
+          portion_id,
+          portion_size = 1,
+        } = {},
+      } = searched_food_item_details[value] || {};
 
-    setFieldsValue({ [PORTION_ID]: portion_id });
-    setFieldsValue({ [CALORIFIC_VALUE]: calorific_value });
-    setFieldsValue({ [CARBS]: carbs });
-    setFieldsValue({ [PROTEINS]: proteins });
-    setFieldsValue({ [FATS]: fats });
-    setFieldsValue({ [FIBERS]: fibers });
-    setFieldsValue({ [PORTION_SIZE]: portion_size });
-    setFoodItemDetailId(detail_id);
-    setEditable(editable);
-  };
+      setFieldsValue({ [PORTION_ID]: portion_id });
+      setFieldsValue({ [CALORIFIC_VALUE]: calorific_value });
+      setFieldsValue({ [CARBS]: carbs });
+      setFieldsValue({ [PROTEINS]: proteins });
+      setFieldsValue({ [FATS]: fats });
+      setFieldsValue({ [FIBERS]: fibers });
+      setFieldsValue({ [PORTION_SIZE]: portion_size });
+      setFoodItemDetailId(detail_id);
+      setEditable(editable);
+    };
 
-  handleDifferentPortionSelect = ({ editable }) => () => {
-    // non existing details for item
+  handleDifferentPortionSelect =
+    ({ editable }) =>
+    () => {
+      // non existing details for item
 
-    const {
-      form: { setFieldsValue } = {},
-      setFoodItemDetailId,
-      setEditable
-    } = this.props;
+      const {
+        form: { setFieldsValue } = {},
+        setFoodItemDetailId,
+        setEditable,
+      } = this.props;
 
-    setFieldsValue({ [PORTION_ID]: null });
-    setFieldsValue({ [PORTION_SIZE]: 1 });
-    setFieldsValue({ [CALORIFIC_VALUE]: null });
-    setFieldsValue({ [CARBS]: null });
-    setFieldsValue({ [PROTEINS]: null });
-    setFieldsValue({ [FATS]: null });
-    setFieldsValue({ [FIBERS]: null });
+      setFieldsValue({ [PORTION_ID]: null });
+      setFieldsValue({ [PORTION_SIZE]: 1 });
+      setFieldsValue({ [CALORIFIC_VALUE]: null });
+      setFieldsValue({ [CARBS]: null });
+      setFieldsValue({ [PROTEINS]: null });
+      setFieldsValue({ [FATS]: null });
+      setFieldsValue({ [FIBERS]: null });
 
-    setFoodItemDetailId(null);
-    setEditable(editable);
-  };
+      setFoodItemDetailId(null);
+      setEditable(editable);
+    };
 
-  formatMessage = data => this.props.intl.formatMessage(data);
+  formatMessage = (data) => this.props.intl.formatMessage(data);
 
-  handleOpenAddDrawer = async e => {
+  handleOpenAddDrawer = async (e) => {
     const { openAddFoodItemDrawer } = this.props;
     const { form: { setFieldsValue } = {} } = this.props;
     e.preventDefault();
@@ -342,7 +343,7 @@ class AddFoodGroupForm extends Component {
     return options;
   };
 
-  handleFoodSearch = async value => {
+  handleFoodSearch = async (value) => {
     try {
       const { searchFood, setFoodItemName } = this.props;
       const response = await searchFood(value);
@@ -363,7 +364,7 @@ class AddFoodGroupForm extends Component {
     }
   };
 
-  setFoodItemId = value => {
+  setFoodItemId = (value) => {
     const {
       searched_food_items = {},
       setFoodItemName,
@@ -371,13 +372,11 @@ class AddFoodGroupForm extends Component {
       setFoodItemDetailId,
       setEditable,
       form: { setFieldsValue } = {},
-      authenticated_category
+      authenticated_category,
     } = this.props;
 
-    const {
-      doctor_id = null,
-      food_item_id: prev_food_item_id = null
-    } = this.state;
+    const { doctor_id = null, food_item_id: prev_food_item_id = null } =
+      this.state;
 
     let first = null;
     const { basic_info: { name = "" } = {} } = searched_food_items[value] || {};
@@ -397,8 +396,8 @@ class AddFoodGroupForm extends Component {
           basic_info: {
             food_item_id,
             creator_id = null,
-            creator_type = null
-          } = {}
+            creator_type = null,
+          } = {},
         } = searched_food_item_details[each] || {};
         if (value.toString() === food_item_id.toString()) {
           if (
@@ -424,8 +423,8 @@ class AddFoodGroupForm extends Component {
           fats,
           fibers,
           portion_id,
-          portion_size = 1
-        } = {}
+          portion_size = 1,
+        } = {},
       } = searched_food_item_details[first] || {};
 
       setFieldsValue({ [PORTION_ID]: portion_id });
@@ -454,7 +453,7 @@ class AddFoodGroupForm extends Component {
     return options;
   };
 
-  onBlur = props => {
+  onBlur = (props) => {
     const value = parseInt(props);
     const isNotANumber = isNaN(value);
 
@@ -467,20 +466,20 @@ class AddFoodGroupForm extends Component {
   render() {
     const {
       form: { getFieldDecorator, isFieldTouched, getFieldError },
-      editable = false
+      editable = false,
     } = this.props;
     const {
       formatMessage,
       setFoodItemId,
       handleFoodSearch,
       getFoodOptions,
-      onBlur
+      onBlur,
     } = this;
 
     const { food_item_id = null } = this.state;
 
     let fieldsError = {};
-    FIELDS.forEach(value => {
+    FIELDS.forEach((value) => {
       const error = isFieldTouched(value) && getFieldError(value);
       fieldsError = { ...fieldsError, [value]: error };
     });
@@ -496,9 +495,9 @@ class AddFoodGroupForm extends Component {
             rules: [
               {
                 required: true,
-                message: formatMessage(messages.food_required_error)
-              }
-            ]
+                message: formatMessage(messages.food_required_error),
+              },
+            ],
           })(
             <Select
               placeholder={this.formatMessage(messages.search_food)}
@@ -540,9 +539,9 @@ class AddFoodGroupForm extends Component {
                 rules: [
                   {
                     required: true,
-                    message: formatMessage(messages.food_required_error)
-                  }
-                ]
+                    message: formatMessage(messages.food_required_error),
+                  },
+                ],
               })(<Input type="number" min="1" />)}
             </FormItem>
           </div>
@@ -561,9 +560,9 @@ class AddFoodGroupForm extends Component {
                       required: true,
                       message: formatMessage(
                         messages.portion_size_required_error
-                      )
-                    }
-                  ]
+                      ),
+                    },
+                  ],
                 })(<Input type="number" min="1" disabled={!editable} />)}
               </FormItem>
             </div>
@@ -579,9 +578,11 @@ class AddFoodGroupForm extends Component {
                   rules: [
                     {
                       required: true,
-                      message: formatMessage(messages.portion_id_required_error)
-                    }
-                  ]
+                      message: formatMessage(
+                        messages.portion_id_required_error
+                      ),
+                    },
+                  ],
                 })(
                   <Select
                     className="drawer-select"

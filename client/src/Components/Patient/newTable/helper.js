@@ -3,47 +3,47 @@ export const TABLE_COLUMN = {
     key: "PID",
     dataIndex: "PID",
     width: 200,
-    fixed: "left"
+    fixed: "left",
   },
   WATCHLIST: {
     key: "WATCHLIST",
-    dataIndex: "WATCHLIST"
+    dataIndex: "WATCHLIST",
   },
   CONDITION: {
     key: "CONDITION",
-    dataIndex: "CONDITION"
+    dataIndex: "CONDITION",
   },
   TREATMENT: {
     key: "TREATMENT",
-    dataIndex: "TREATMENT"
+    dataIndex: "TREATMENT",
   },
   SEVERITY: {
     key: "SEVERITY",
-    dataIndex: "SEVERITY"
+    dataIndex: "SEVERITY",
   },
   AGE: {
     key: "AGE",
-    dataIndex: "AGE"
+    dataIndex: "AGE",
   },
   START_DATE: {
     key: "START_DATE",
-    dataIndex: "START_DATE"
+    dataIndex: "START_DATE",
   },
   DOCTOR: {
     key: "DOCTOR",
-    dataIndex: "DOCTOR"
+    dataIndex: "DOCTOR",
   },
   DIAGNOSIS: {
     key: "DIAGNOSIS",
-    dataIndex: "DIAGNOSIS"
+    dataIndex: "DIAGNOSIS",
   },
   CREATED_AT: {
     key: "CREATED_AT",
-    dataIndex: "CREATED_AT"
-  }
+    dataIndex: "CREATED_AT",
+  },
 };
 
-export const formatPatientTableData = data => {
+export const formatPatientTableData = (data) => {
   let {
     id,
     doctors,
@@ -54,14 +54,14 @@ export const formatPatientTableData = data => {
     care_plans,
     authenticated_user,
     openEditPatientDrawer,
-    paginatedPatientData
+    paginatedPatientData,
   } = data || {};
 
   const { care_plans: data_care_plans = {}, patients = {} } =
     paginatedPatientData || {};
 
   let doctor_id = null;
-  Object.keys(doctors).forEach(id => {
+  Object.keys(doctors).forEach((id) => {
     const { basic_info: { user_id = null } = {} } = doctors[id] || {};
 
     if (user_id === authenticated_user) {
@@ -79,9 +79,9 @@ export const formatPatientTableData = data => {
     details: {
       treatment_id: cTreatment = "",
       condition_id: cCondition = "",
-      severity_id: cSeverity = ""
+      severity_id: cSeverity = "",
     } = {},
-    id: carePlanId = ""
+    id: carePlanId = "",
   } = data_care_plans || {};
 
   let { basic_info: { name: treatmentName = "" } = {} } =
@@ -101,7 +101,7 @@ export const formatPatientTableData = data => {
     ...data_care_plans,
     treatment,
     condition,
-    severity
+    severity,
   };
 
   const patientData = { ...patients };
@@ -117,6 +117,6 @@ export const formatPatientTableData = data => {
     doctorData,
     treatmentData,
     carePlanData,
-    openEditPatientDrawer
+    openEditPatientDrawer,
   };
 };

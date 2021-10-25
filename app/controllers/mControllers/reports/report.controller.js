@@ -25,7 +25,7 @@ class ReportController extends Controller {
     try {
       const {
         body: { name, test_date, patient_id, documents = [] },
-        userDetails: { userData: { category }, userCategoryId } = {}
+        userDetails: { userData: { category }, userCategoryId } = {},
       } = req;
 
       // create reports
@@ -35,7 +35,7 @@ class ReportController extends Controller {
         patient_id,
         test_date,
         uploader_id: userCategoryId,
-        uploader_type: category
+        uploader_type: category,
       });
 
       const report = await ReportWrapper({ data: addReport });
@@ -47,7 +47,7 @@ class ReportController extends Controller {
           name,
           document: getFilePath(file),
           parent_type: DOCUMENT_PARENT_TYPE.REPORT,
-          parent_id: report.getId()
+          parent_id: report.getId(),
         });
         // const documentExists =
         //   (await uploadDocumentService.getDocumentByName({
@@ -65,7 +65,7 @@ class ReportController extends Controller {
         res,
         200,
         {
-          ...(await report.getReferenceInfo())
+          ...(await report.getReferenceInfo()),
         },
         "Report added successfully"
       );
@@ -92,11 +92,11 @@ class ReportController extends Controller {
       const { originalname } = file || {};
       const fileUrl = await ReportHelper.uploadReport({
         file,
-        id: patient_id
+        id: patient_id,
       });
       documents.push({
         name: originalname,
-        file: fileUrl
+        file: fileUrl,
       });
       // }
 
@@ -104,7 +104,7 @@ class ReportController extends Controller {
         res,
         200,
         {
-          documents
+          documents,
         },
         "Files uploaded successfully"
       );
@@ -119,7 +119,7 @@ class ReportController extends Controller {
     try {
       const {
         query: { patient_id } = {},
-        userDetails: { userData: { category } = {}, userCategoryId } = {}
+        userDetails: { userData: { category } = {}, userCategoryId } = {},
       } = req;
       Log.info(`query: patient_id : ${patient_id}`);
 
@@ -130,7 +130,7 @@ class ReportController extends Controller {
       const reportService = new ReportService();
       const { count, rows: allReports = [] } =
         (await reportService.latestReportAndCount({
-          patient_id
+          patient_id,
         })) || {};
 
       if (allReports.length > 0) {
@@ -153,8 +153,8 @@ class ReportController extends Controller {
             report_count: count,
             ...(await report.getReferenceInfo()),
             doctors: {
-              ...doctors
-            }
+              ...doctors,
+            },
           },
           "Latest report fetched successfully"
         );
@@ -183,7 +183,7 @@ class ReportController extends Controller {
       }
 
       const response = await uploadDocumentService.deleteDocumentByData({
-        id: document_id
+        id: document_id,
       });
       Log.debug("response", response);
 

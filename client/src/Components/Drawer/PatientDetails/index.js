@@ -12,7 +12,7 @@ import {
   MISSED_APPOINTMENT_TEXT,
   MISSED_SYMPTOM_TEXT,
   USER_PERMISSIONS,
-  MISSED_APPOINTMENTS
+  MISSED_APPOINTMENTS,
 } from "../../../constant";
 import messages from "./message";
 import moment from "moment";
@@ -34,7 +34,7 @@ class PatientDetailsDrawer extends Component {
       missed_appointment: {},
       missed_vitals: {},
       missed_medications: {},
-      missed_symptoms: {}
+      missed_symptoms: {},
     };
   }
 
@@ -45,7 +45,7 @@ class PatientDetailsDrawer extends Component {
       care_plans = {},
       getAppointments,
       appointments = {},
-      patients = {}
+      patients = {},
     } = this.props;
     let carePlanId = 1;
     let carePlanMedicationIds = [];
@@ -65,7 +65,7 @@ class PatientDetailsDrawer extends Component {
       let {
         basic_info: { id = 1, patient_id: patientId = 1 },
         medication_ids = [],
-        appointment_ids = []
+        appointment_ids = [],
       } = carePlan;
       if (parseInt(patient_id) === parseInt(patientId)) {
         carePlanId = id;
@@ -90,7 +90,7 @@ class PatientDetailsDrawer extends Component {
       appointments = {},
       getPatientMissedEvents,
       auth: { authenticated_user = null } = {},
-      doctors = {}
+      doctors = {},
     } = this.props;
     // console.log("67182736812368761283761287",{props:this.props});
     const { payload: { patient_id: prev_patient_id } = {} } = prevProps;
@@ -112,7 +112,7 @@ class PatientDetailsDrawer extends Component {
       let {
         basic_info: { id = 1, patient_id: patientId = 1, doctor_id = null },
         medication_ids = [],
-        appointment_ids = []
+        appointment_ids = [],
       } = carePlan;
       if (
         parseInt(patient_id) === parseInt(patientId) &&
@@ -142,7 +142,7 @@ class PatientDetailsDrawer extends Component {
         missed_appointment = {},
         missed_vitals = {},
         missed_medications = {},
-        missed_symptoms = {}
+        missed_symptoms = {},
       } = data || {};
 
       if (status) {
@@ -150,7 +150,7 @@ class PatientDetailsDrawer extends Component {
           missed_appointment,
           missed_vitals,
           missed_medications,
-          missed_symptoms
+          missed_symptoms,
         });
       }
     } catch (error) {
@@ -159,9 +159,9 @@ class PatientDetailsDrawer extends Component {
     }
   }
 
-  getFormattedDays = dates => {
+  getFormattedDays = (dates) => {
     let dayString = [];
-    dates.forEach(date => {
+    dates.forEach((date) => {
       const { day, time } = date || {};
       dayString.push(`${day} at ${time}`);
     });
@@ -174,13 +174,13 @@ class PatientDetailsDrawer extends Component {
     const { medications = {}, medicines = {} } = this.props;
 
     // const { medications: medication_ids = [] } = patients[id] || {};
-    const medicationList = carePlanMedicationIds.map(id => {
+    const medicationList = carePlanMedicationIds.map((id) => {
       const {
         basic_info: {
           start_date,
           end_date,
-          details: { medicine_id, repeat_days } = {}
-        } = {}
+          details: { medicine_id, repeat_days } = {},
+        } = {},
       } = medications[id] || {};
 
       const { basic_info: { type, name = "" } = {} } =
@@ -212,16 +212,16 @@ class PatientDetailsDrawer extends Component {
 
     const { appointments = {}, doctors = {} } = this.props;
     const { formatMessage } = this;
-    const appointmentList = appointmentsListIds.map(id => {
+    const appointmentList = appointmentsListIds.map((id) => {
       const {
         basic_info: {
           start_date,
           start_time,
           end_time,
-          details: { type_description = "" } = {}
+          details: { type_description = "" } = {},
         } = {},
         organizer,
-        organizer: { id: organizer_id } = {}
+        organizer: { id: organizer_id } = {},
       } = appointments[id] || {};
 
       let docName = "";
@@ -270,7 +270,7 @@ class PatientDetailsDrawer extends Component {
     const {
       // payload: { patient_id } = {},
       setCareplanForChat,
-      openPopUp
+      openPopUp,
     } = this.props;
     const { carePlanId } = this.state;
 
@@ -280,7 +280,7 @@ class PatientDetailsDrawer extends Component {
     // window.open(`http://localhost:3000${getPatientConsultingUrl(patient_id)}`, '_blank');
   };
 
-  handlePatientDetailsRedirect = e => {
+  handlePatientDetailsRedirect = (e) => {
     e.preventDefault();
     const { history, payload: { patient_id } = {} } = this.props;
     this.onClose();
@@ -298,7 +298,7 @@ class PatientDetailsDrawer extends Component {
       patients,
       payload,
       care_plans,
-      users = {}
+      users = {},
     } = this.props;
 
     const {
@@ -306,14 +306,14 @@ class PatientDetailsDrawer extends Component {
       getMedicationList,
       handlePatientDetailsRedirect,
       openChatTab,
-      getAppointmentList
+      getAppointmentList,
     } = this;
 
     const { authenticated_user, authPermissions = [] } = auth || {};
 
     let doctorId = null;
 
-    Object.keys(doctors).forEach(id => {
+    Object.keys(doctors).forEach((id) => {
       const { basic_info: { user_id } = {} } = doctors[id] || {};
 
       if (user_id === authenticated_user) {
@@ -330,7 +330,7 @@ class PatientDetailsDrawer extends Component {
         let {
           basic_info: { id: cpId = 1, doctor_id = null, patient_id = null },
           carePlanAppointmentIds = [],
-          carePlanMedicationIds = []
+          carePlanMedicationIds = [],
         } = carePlan;
 
         if (`${doctorId}` === `${doctor_id}`) {
@@ -348,9 +348,9 @@ class PatientDetailsDrawer extends Component {
           condition_id = "",
           clinical_notes = "",
           diagnosis: { type = "1", description = "" } = {},
-          symptoms = ""
+          symptoms = "",
         } = {},
-        activated_on: start_date
+        activated_on: start_date,
       } = care_plans[carePlanId] || {};
       const { basic_info: { name: treatment = "" } = {} } =
         treatments[treatment_id] || {};
@@ -366,10 +366,10 @@ class PatientDetailsDrawer extends Component {
           last_name,
           age = "--",
           gender,
-          uid = "123456"
+          uid = "123456",
         } = {},
         reports = [],
-        provider_id
+        provider_id,
       } = patients[id] || {};
       const { basic_info: { prefix = "91", mobile_number = "" } = {} } =
         users[user_id] || {};
@@ -378,8 +378,8 @@ class PatientDetailsDrawer extends Component {
         basic_info: {
           first_name: doctor_first_name,
           middle_name: doctor_middle_name,
-          last_name: doctor_last_name
-        } = {}
+          last_name: doctor_last_name,
+        } = {},
       } = doctors[doctor_id] || {};
       const { basic_info: { name: providerName = "--" } = {} } =
         providers[provider_id] || {};
@@ -389,7 +389,7 @@ class PatientDetailsDrawer extends Component {
         missed_appointment = {},
         missed_vitals = {},
         missed_medications = {},
-        missed_symptoms = {}
+        missed_symptoms = {},
       } = this.state;
 
       return (
@@ -430,14 +430,14 @@ class PatientDetailsDrawer extends Component {
           {/*boxes*/}
 
           <div className=" mt20 flex flex-wrap wp100">
-            {Object.keys(PATIENT_BOX_CONTENT).map(id => {
+            {Object.keys(PATIENT_BOX_CONTENT).map((id) => {
               let critical = 0;
               let non_critical = 0;
               let total = 0;
               if (PATIENT_BOX_CONTENT[id]["text"] === MISSED_SYMPTOM_TEXT) {
                 const {
                   critical: symptom_critical = 0,
-                  non_critical: symptom_non_critical = 0
+                  non_critical: symptom_non_critical = 0,
                 } = missed_symptoms;
                 critical = symptom_critical;
                 non_critical = symptom_non_critical;
@@ -447,7 +447,7 @@ class PatientDetailsDrawer extends Component {
               ) {
                 const {
                   critical: appointment_critical = 0,
-                  non_critical: appointment_non_critical = 0
+                  non_critical: appointment_non_critical = 0,
                 } = missed_appointment;
                 critical = appointment_critical;
                 non_critical = appointment_non_critical;
@@ -457,7 +457,7 @@ class PatientDetailsDrawer extends Component {
               ) {
                 const {
                   critical: vital_critical = 0,
-                  non_critical: vital_non_critical = 0
+                  non_critical: vital_non_critical = 0,
                 } = missed_vitals;
                 critical = vital_critical;
                 non_critical = vital_non_critical;
@@ -467,7 +467,7 @@ class PatientDetailsDrawer extends Component {
               ) {
                 const {
                   critical: medication_critical = 0,
-                  non_critical: medication_non_critical = 0
+                  non_critical: medication_non_critical = 0,
                 } = missed_medications;
                 critical = medication_critical;
                 non_critical = medication_non_critical;
@@ -639,7 +639,7 @@ class PatientDetailsDrawer extends Component {
           headerStyle={{
             position: "sticky",
             zIndex: "9999",
-            top: "0px"
+            top: "0px",
           }}
           onClose={onClose}
           visible={visible} // todo: change as per state, -- WIP --

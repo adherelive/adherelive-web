@@ -9,7 +9,7 @@ class UserPermissionService {
       await Database.getModel(TABLE_NAME).destroy({
         // truncate: true,
         where: {},
-        force: true
+        force: true,
       });
 
       return true;
@@ -18,7 +18,7 @@ class UserPermissionService {
     }
   };
 
-  bulkCreate = async userPermissions => {
+  bulkCreate = async (userPermissions) => {
     const transaction = await Database.initTransaction();
     try {
       const createdUserPermissions = await Database.getModel(
@@ -33,10 +33,10 @@ class UserPermissionService {
     }
   };
 
-  getPermissionsByData = async data => {
+  getPermissionsByData = async (data) => {
     try {
       const userPermission = Database.getModel(TABLE_NAME).findAll({
-        where: data
+        where: data,
       });
       return userPermission;
     } catch (error) {

@@ -12,14 +12,14 @@ const FIELD_NAME = "repeatInterval";
 class RepeatInterval extends Component {
   componentDidMount() {
     const {
-      form: { validateFields }
+      form: { validateFields },
     } = this.props;
     validateFields();
   }
 
   componentWillUnmount() {
     const {
-      form: { validateFields }
+      form: { validateFields },
     } = this.props;
     validateFields();
   }
@@ -37,7 +37,7 @@ class RepeatInterval extends Component {
 
   getRepeatTypeStr = () => {
     const {
-      form: { getFieldValue }
+      form: { getFieldValue },
     } = this.props;
     const repeatType = getFieldValue(repeatTypeField.field_name);
     switch (repeatType) {
@@ -64,7 +64,7 @@ class RepeatInterval extends Component {
     return initialValue;
   };
 
-  onChangeRepeatInterval = e => {
+  onChangeRepeatInterval = (e) => {
     const { adjustEndDate } = this.props;
     const val = e.target.value;
     const res = isNumber(val);
@@ -77,13 +77,13 @@ class RepeatInterval extends Component {
     const {
       form: { getFieldDecorator, getFieldError, isFieldTouched },
       adjustEndDate,
-      intl: { formatMessage }
+      intl: { formatMessage },
     } = this.props;
     const {
       validateRepeatInterval,
       getRepeatTypeStr,
       getInitialValue,
-      onChangeRepeatInterval
+      onChangeRepeatInterval,
     } = this;
 
     const repeatIntervalError =
@@ -101,14 +101,14 @@ class RepeatInterval extends Component {
             rules: [
               {
                 required: true,
-                message: formatMessage(messages.repeatIntervalError)
+                message: formatMessage(messages.repeatIntervalError),
               },
 
               {
-                validator: validateRepeatInterval
-              }
+                validator: validateRepeatInterval,
+              },
             ],
-            initialValue: getInitialValue()
+            initialValue: getInitialValue(),
           })(
             <Input
               onChange={onChangeRepeatInterval}
@@ -128,5 +128,5 @@ const Field = injectIntl(RepeatInterval);
 
 export default {
   field_name: FIELD_NAME,
-  render: props => <Field {...props} />
+  render: (props) => <Field {...props} />,
 };

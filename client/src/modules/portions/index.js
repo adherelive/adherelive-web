@@ -8,12 +8,12 @@ export const GET_PORTIONS_FAILED = "GET_PORTIONS_FAILED";
 
 export const getPortions = () => {
   let response = {};
-  return async dispatch => {
+  return async (dispatch) => {
     try {
       dispatch({ type: GET_PORTIONS_START });
       response = await doRequest({
         method: REQUEST_TYPE.GET,
-        url: getPortionsUrl()
+        url: getPortionsUrl(),
       });
 
       const { status, payload: { data, message = "" } = {} } = response || {};
@@ -21,12 +21,12 @@ export const getPortions = () => {
       if (status === true) {
         dispatch({
           type: GET_PORTIONS_COMPLETED,
-          data
+          data,
         });
       } else {
         dispatch({
           type: GET_PORTIONS_FAILED,
-          message
+          message,
         });
       }
     } catch (error) {
@@ -41,7 +41,7 @@ function portionsReducer(state, data) {
   if (portions) {
     return {
       ...state,
-      ...portions
+      ...portions,
     };
   } else {
     return state;

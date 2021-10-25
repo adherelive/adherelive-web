@@ -7,10 +7,10 @@ import {
   CloseCircleOutlined,
   ExclamationCircleOutlined,
   ClockCircleOutlined,
-  MinusCircleOutlined
+  MinusCircleOutlined,
 } from "@ant-design/icons";
 
-export default props => {
+export default (props) => {
   const { displayProps: { type, status } = {} } = props;
 
   // TODO-V: need to update based on each status | make it more reusable

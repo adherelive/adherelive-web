@@ -13,11 +13,11 @@ class PPConfirm extends Component {
     super(props);
 
     this.state = {
-      value: ""
+      value: "",
     };
   }
 
-  formatMessage = message => this.props.intl.formatMessage(message);
+  formatMessage = (message) => this.props.intl.formatMessage(message);
 
   async componentDidMount() {
     const { getTermsAndPolicy } = this.props;

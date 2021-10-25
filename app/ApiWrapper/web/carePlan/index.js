@@ -29,7 +29,7 @@ class CarePlanWrapper extends BaseCarePlan {
       renew_on,
       expired_on,
       user_role_id,
-      channel_id
+      channel_id,
     } = _data || {};
 
     return {
@@ -38,13 +38,13 @@ class CarePlanWrapper extends BaseCarePlan {
         doctor_id,
         patient_id,
         care_plan_template_id,
-        user_role_id
+        user_role_id,
       },
       details,
       activated_on,
       renew_on,
       expired_on,
-      channel_id
+      channel_id,
     };
   };
 
@@ -62,7 +62,7 @@ class CarePlanWrapper extends BaseCarePlan {
 
     const vitalIds = [];
     if (vitals.length > 0) {
-      vitals.forEach(vital => {
+      vitals.forEach((vital) => {
         vitalIds.push(vital.get("id"));
       });
     }
@@ -71,13 +71,13 @@ class CarePlanWrapper extends BaseCarePlan {
     const { rows: diets = [] } =
       (await dietService.findAndCountAll({
         where: { care_plan_id: getCarePlanId() },
-        attributes: ["id"]
+        attributes: ["id"],
       })) || {};
 
     const dietIds = [];
 
     if (diets.length > 0) {
-      diets.forEach(diet => {
+      diets.forEach((diet) => {
         if (dietIds.indexOf(diet.id) === -1) {
           dietIds.push(diet.id);
         }
@@ -88,13 +88,13 @@ class CarePlanWrapper extends BaseCarePlan {
     const { rows: workouts = [] } =
       (await workoutService.findAndCountAll({
         where: { care_plan_id: getCarePlanId() },
-        attributes: ["id"]
+        attributes: ["id"],
       })) || {};
 
     const workoutIds = [];
 
     if (workouts.length > 0) {
-      workouts.forEach(workout => {
+      workouts.forEach((workout) => {
         if (workoutIds.indexOf(workout.id) === -1) {
           workoutIds.push(workout.id);
         }
@@ -106,16 +106,16 @@ class CarePlanWrapper extends BaseCarePlan {
 
     return {
       ...getBasicInfo(),
-      appointment_ids: care_plan_appointments.map(appointment =>
+      appointment_ids: care_plan_appointments.map((appointment) =>
         appointment.get("appointment_id")
       ),
-      medication_ids: care_plan_medications.map(medication =>
+      medication_ids: care_plan_medications.map((medication) =>
         medication.get("medication_id")
       ),
       vital_ids: vitalIds,
       diet_ids: dietIds,
       workout_ids: workoutIds,
-      secondary_doctor_user_role_ids
+      secondary_doctor_user_role_ids,
     };
   };
 
@@ -124,8 +124,8 @@ class CarePlanWrapper extends BaseCarePlan {
 
     return {
       care_plans: {
-        [getCarePlanId()]: await getAllInfo()
-      }
+        [getCarePlanId()]: await getAllInfo(),
+      },
     };
   };
 
@@ -168,9 +168,8 @@ class CarePlanWrapper extends BaseCarePlan {
         let doctorWrapper = {};
         if (doctor) {
           doctorWrapper = await DoctorWrapper(doctor);
-          doctorData[
-            doctorWrapper.getDoctorId()
-          ] = await doctorWrapper.getAllInfo();
+          doctorData[doctorWrapper.getDoctorId()] =
+            await doctorWrapper.getAllInfo();
 
           if (
             userRoleWrapper.getLinkedId() !== null &&
@@ -183,12 +182,12 @@ class CarePlanWrapper extends BaseCarePlan {
             providersApiData = {
               ...providersApiData,
               [providerWrapper.getProviderId()]: {
-                ...providerWrapper.getBasicInfo()
-              }
+                ...providerWrapper.getBasicInfo(),
+              },
             };
             userRolesApiData = {
               ...userRolesApiData,
-              [userRoleWrapper.getId()]: { ...userRoleWrapper.getBasicInfo() }
+              [userRoleWrapper.getId()]: { ...userRoleWrapper.getBasicInfo() },
             };
           }
         }
@@ -197,19 +196,19 @@ class CarePlanWrapper extends BaseCarePlan {
 
     return {
       care_plans: {
-        [getCarePlanId()]: await getAllInfo()
+        [getCarePlanId()]: await getAllInfo(),
       },
       doctors: {
-        ...doctorData
+        ...doctorData,
       },
       patients: {
-        ...patientData
+        ...patientData,
       },
       providers: { ...providersApiData },
       user_roles: { ...userRolesApiData },
       doctor_id,
       patient_id,
-      care_plan_id: getCarePlanId()
+      care_plan_id: getCarePlanId(),
     };
   };
 }

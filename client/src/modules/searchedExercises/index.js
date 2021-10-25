@@ -7,25 +7,25 @@ export const SEARCH_EXERCISE_START = "SEARCH_EXERCISE_START";
 export const SEARCH_EXERCISE_COMPLETED = "SEARCH_EXERCISE_COMPLETED";
 export const SEARCH_EXERCISE_FAILED = "SEARCH_EXERCISE_FAILED";
 
-export const searchExercise = value => {
+export const searchExercise = (value) => {
   let response = {};
-  return async dispatch => {
+  return async (dispatch) => {
     try {
       response = await doRequest({
         method: REQUEST_TYPE.GET,
-        url: searchExerciseUrl(value)
+        url: searchExerciseUrl(value),
       });
 
       const { status, payload: { data, message = "" } = {} } = response || {};
       if (status === true) {
         dispatch({
           type: SEARCH_EXERCISE_COMPLETED,
-          data
+          data,
         });
       } else {
         dispatch({
           type: SEARCH_EXERCISE_FAILED,
-          message
+          message,
         });
       }
     } catch (error) {
@@ -39,7 +39,7 @@ function searchExerciseReducer(state, data) {
   let { exercises = {} } = data || {};
   if (exercises) {
     return {
-      ...exercises
+      ...exercises,
     };
   } else {
     return state;
@@ -51,7 +51,7 @@ function addedNewItemDetailReducer(state, data) {
   if (exercises) {
     return {
       ...state,
-      ...exercises
+      ...exercises,
     };
   } else {
     return state;

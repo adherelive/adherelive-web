@@ -1,7 +1,7 @@
 import React from "react";
 import moment from "moment";
 
-export default props => {
+export default (props) => {
   const { patientData: { created_at = "" } = {} } = props || {};
 
   return (

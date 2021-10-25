@@ -29,10 +29,10 @@ class SymptomWrapper extends BaseSymptom {
       basic_info: {
         id,
         patient_id,
-        care_plan_id
+        care_plan_id,
       },
       config,
-      text
+      text,
     };
   };
 
@@ -51,17 +51,17 @@ class SymptomWrapper extends BaseSymptom {
         getSymptomId()
       )) || [];
 
-    const audioDocumentIds = audios.map(audio => audio.get("id"));
-    const imageDocumentIds = photos.map(photo => photo.get("id"));
+    const audioDocumentIds = audios.map((audio) => audio.get("id"));
+    const imageDocumentIds = photos.map((photo) => photo.get("id"));
 
     return {
       data: {
         ...(await this.getBasicInfo()),
         image_document_ids: imageDocumentIds,
-        audio_document_ids: audioDocumentIds
+        audio_document_ids: audioDocumentIds,
       },
       type: ACTIVITY_TYPE.SYMPTOM,
-      createdAt: getUnformattedCreateDate()
+      createdAt: getUnformattedCreateDate(),
     };
   };
 
@@ -86,9 +86,9 @@ class SymptomWrapper extends BaseSymptom {
         getSymptomId()
       )) || [];
 
-    const audioDocumentIds = audios.map(audio => audio.get("id"));
-    const imageDocumentIds = photos.map(photo => photo.get("id"));
-    const videoDocumentIds = videos.map(video => video.get("id"));
+    const audioDocumentIds = audios.map((audio) => audio.get("id"));
+    const imageDocumentIds = photos.map((photo) => photo.get("id"));
+    const videoDocumentIds = videos.map((video) => video.get("id"));
 
     return {
       symptoms: {
@@ -97,9 +97,9 @@ class SymptomWrapper extends BaseSymptom {
           image_document_ids: imageDocumentIds,
           audio_document_ids: audioDocumentIds,
           video_document_ids: videoDocumentIds,
-          snapshot: ""
-        }
-      }
+          snapshot: "",
+        },
+      },
     };
   };
 
@@ -147,17 +147,17 @@ class SymptomWrapper extends BaseSymptom {
 
     return {
       users: {
-        ...userData
+        ...userData,
       },
       upload_documents: {
-        ...documentData
+        ...documentData,
       },
       patients: {
-        [patients.getPatientId()]: patients.getBasicInfo()
+        [patients.getPatientId()]: patients.getBasicInfo(),
       },
       doctors: {
-        [doctors.getDoctorId()]: await doctors.getAllInfo()
-      }
+        [doctors.getDoctorId()]: await doctors.getAllInfo(),
+      },
       // care_plans: {
       //   [carePlans.getCarePlanId()]: carePlans.getBasicInfo()
       // }

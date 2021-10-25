@@ -9,7 +9,7 @@ import {
   NOTIFICATION_STAGES,
   RADIOLOGY,
   FAVOURITE_TYPE,
-  APPOINTMENT_TYPE
+  APPOINTMENT_TYPE,
 } from "../../../../constant";
 import moment from "moment";
 
@@ -73,14 +73,14 @@ class MobileAppointmentController extends Controller {
         provider_id = null,
         provider_name = null,
         critical = false,
-        radiology_type = ""
+        radiology_type = "",
       } = body;
       const {
         userId,
         userRoleId,
         userData: { category } = {},
         userCategoryId,
-        userCategoryData: { basic_info: { full_name } = {} } = {}
+        userCategoryData: { basic_info: { full_name } = {} } = {},
       } = userDetails || {};
       const { id: participant_two_id, category: participant_two_type } =
         participant_two || {};
@@ -90,11 +90,11 @@ class MobileAppointmentController extends Controller {
         end_time,
         {
           participant_one_id: userCategoryId,
-          participant_one_type: category
+          participant_one_type: category,
         },
         {
           participant_two_id,
-          participant_two_type
+          participant_two_type,
         }
       );
 
@@ -103,7 +103,7 @@ class MobileAppointmentController extends Controller {
           res,
           422,
           {
-            error_type: "slot_present"
+            error_type: "slot_present",
           },
           `Appointment Slot already present between`
         );
@@ -130,8 +130,8 @@ class MobileAppointmentController extends Controller {
           type,
           type_description,
           critical,
-          radiology_type
-        }
+          radiology_type,
+        },
       };
 
       const appointment = await appointmentService.addAppointment(
@@ -151,7 +151,7 @@ class MobileAppointmentController extends Controller {
         //   break;
         case USER_CATEGORY.PATIENT:
           const patient = await patientService.getPatientById({
-            id: participant_two_id
+            id: participant_two_id,
           });
           const patientData = await PatientWrapper(patient);
           const { user_role_id } = await patientData.getAllInfo();
@@ -174,13 +174,13 @@ class MobileAppointmentController extends Controller {
         participants: [
           userRoleId,
           participantTwoId,
-          ...carePlan.getCareplnSecondaryProfiles()
+          ...carePlan.getCareplnSecondaryProfiles(),
         ],
         actor: {
           id: userId,
           user_role_id: userRoleId,
-          details: { name: full_name, category }
-        }
+          details: { name: full_name, category },
+        },
       };
 
       const QueueService = new queueService();
@@ -195,12 +195,11 @@ class MobileAppointmentController extends Controller {
 
       // ADD CARE_PLAN APPOINTMENT
       if (care_plan_id) {
-        const carePlanAppointment = await carePlanAppointmentService.addCarePlanAppointment(
-          {
+        const carePlanAppointment =
+          await carePlanAppointmentService.addCarePlanAppointment({
             care_plan_id,
-            appointment_id: appointmentData.getAppointmentId()
-          }
-        );
+            appointment_id: appointmentData.getAppointmentId(),
+          });
 
         const careplanAppointmentData = await CarePlanAppointmentWrapper(
           carePlanAppointment
@@ -210,7 +209,7 @@ class MobileAppointmentController extends Controller {
           res,
           200,
           {
-            ...(await careplanAppointmentData.getReferenceInfo())
+            ...(await careplanAppointmentData.getReferenceInfo()),
           },
           `appointment created for careplan id : ${care_plan_id}`
         );
@@ -221,8 +220,9 @@ class MobileAppointmentController extends Controller {
         200,
         {
           appointments: {
-            [appointmentData.getAppointmentId()]: appointmentData.getBasicInfo()
-          }
+            [appointmentData.getAppointmentId()]:
+              appointmentData.getBasicInfo(),
+          },
         },
         "appointment created successfully"
       );
@@ -247,9 +247,8 @@ class MobileAppointmentController extends Controller {
 
       for (const appointment of appointmentList) {
         const appointmentWrapper = await MAppointmentWrapper(appointment);
-        appointmentApiData[
-          appointmentWrapper.getAppointmentId()
-        ] = appointmentWrapper.getBasicInfo();
+        appointmentApiData[appointmentWrapper.getAppointmentId()] =
+          appointmentWrapper.getBasicInfo();
       }
 
       return raiseSuccess(
@@ -257,8 +256,8 @@ class MobileAppointmentController extends Controller {
         200,
         {
           appointments: {
-            ...appointmentApiData
-          }
+            ...appointmentApiData,
+          },
         },
         `Appointment data for patient: ${id} fetched successfully`
       );
@@ -290,14 +289,14 @@ class MobileAppointmentController extends Controller {
         provider_id = null,
         provider_name = null,
         critical = false,
-        radiology_type = ""
+        radiology_type = "",
       } = body;
       const {
         userId,
         userRoleId,
         userData: { category } = {},
         userCategoryId,
-        userCategoryData: { basic_info: { full_name } = {} } = {}
+        userCategoryData: { basic_info: { full_name } = {} } = {},
       } = userDetails || {};
       const { id: participant_two_id, category: participant_two_type } =
         participant_two || {};
@@ -305,7 +304,7 @@ class MobileAppointmentController extends Controller {
       // careplan id for appointment
       const { care_plan_id = null } =
         (await carePlanAppointmentService.getSingleCarePlanAppointmentByData({
-          appointment_id: id
+          appointment_id: id,
         })) || {};
 
       const oldAppointment = await appointmentService.getAppointmentById(id);
@@ -327,16 +326,16 @@ class MobileAppointmentController extends Controller {
           end_time,
           {
             participant_one_id: userCategoryId,
-            participant_one_type: category
+            participant_one_type: category,
           },
           {
             participant_two_id,
-            participant_two_type
+            participant_two_type,
           }
         );
 
         const filteredAppointments = previousAppointments.filter(
-          appointment => {
+          (appointment) => {
             console.log(
               "appointment id",
               typeof id,
@@ -351,7 +350,7 @@ class MobileAppointmentController extends Controller {
             res,
             422,
             {
-              error_type: "slot_present"
+              error_type: "slot_present",
             },
             `Appointment Slot already present between`
           );
@@ -379,8 +378,8 @@ class MobileAppointmentController extends Controller {
           type,
           type_description,
           critical,
-          radiology_type
-        }
+          radiology_type,
+        },
       };
 
       const appointment = await appointmentService.updateAppointment(
@@ -388,9 +387,8 @@ class MobileAppointmentController extends Controller {
         appointment_data
       );
 
-      const updatedAppointmentDetails = await appointmentService.getAppointmentById(
-        id
-      );
+      const updatedAppointmentDetails =
+        await appointmentService.getAppointmentById(id);
 
       const appointmentApiData = await MAppointmentWrapper(
         updatedAppointmentDetails
@@ -408,7 +406,7 @@ class MobileAppointmentController extends Controller {
         //   break;
         case USER_CATEGORY.PATIENT:
           const patient = await patientService.getPatientById({
-            id: participant_two_id
+            id: participant_two_id,
           });
           const patientData = await PatientWrapper(patient);
           const { user_role_id } = await patientData.getAllInfo();
@@ -422,7 +420,7 @@ class MobileAppointmentController extends Controller {
       const scheduleEventService = new ScheduleEventService();
       await scheduleEventService.deleteBatch({
         event_id: id,
-        event_type: EVENT_TYPE.APPOINTMENT
+        event_type: EVENT_TYPE.APPOINTMENT,
       });
 
       const carePlan = await CarePlanWrapper(null, care_plan_id);
@@ -439,13 +437,13 @@ class MobileAppointmentController extends Controller {
         participants: [
           userRoleId,
           participantTwoId,
-          ...carePlan.getCareplnSecondaryProfiles()
+          ...carePlan.getCareplnSecondaryProfiles(),
         ],
         actor: {
           id: userId,
           user_role_id: userRoleId,
-          details: { name: full_name, category }
-        }
+          details: { name: full_name, category },
+        },
       };
 
       const QueueService = new queueService();
@@ -463,9 +461,9 @@ class MobileAppointmentController extends Controller {
         {
           appointments: {
             [appointmentApiData.getAppointmentId()]: {
-              ...appointmentApiData.getBasicInfo()
-            }
-          }
+              ...appointmentApiData.getBasicInfo(),
+            },
+          },
         },
         "appointment updated successfully"
       );
@@ -481,12 +479,13 @@ class MobileAppointmentController extends Controller {
       Logger.debug("REQUEST DATA ----> ", req.params);
       const {
         params: { id: appointment_id } = {},
-        userDetails: { userId } = {}
+        userDetails: { userId } = {},
       } = req;
 
-      const carePlanAppointmentDetails = await carePlanAppointmentService.deleteCarePlanAppointmentByAppointmentId(
-        appointment_id
-      );
+      const carePlanAppointmentDetails =
+        await carePlanAppointmentService.deleteCarePlanAppointmentByAppointmentId(
+          appointment_id
+        );
       const appointmentDetails = await appointmentService.deleteAppointment(
         appointment_id
       );
@@ -495,7 +494,7 @@ class MobileAppointmentController extends Controller {
       const scheduleEventService = new ScheduleEventService();
       await scheduleEventService.deleteBatch({
         event_id: appointment_id,
-        event_type: EVENT_TYPE.APPOINTMENT
+        event_type: EVENT_TYPE.APPOINTMENT,
       });
 
       return raiseSuccess(res, 200, {}, `Appointment deleted successfully`);
@@ -511,14 +510,14 @@ class MobileAppointmentController extends Controller {
       const {
         userDetails: { userData: { category }, userCategoryId } = {},
         headers: { version = null } = {},
-        headers = {}
+        headers = {},
       } = req;
 
       let featureDetails = {};
 
       if (version) {
         const appointmentDetails = await featureDetailService.getDetailsByData({
-          feature_type: FEATURE_TYPE.APPOINTMENT
+          feature_type: FEATURE_TYPE.APPOINTMENT,
         });
 
         const appointmentData = await FeatureDetailsWrapper(appointmentDetails);
@@ -527,33 +526,34 @@ class MobileAppointmentController extends Controller {
 
         const userTypeData = {
           id: userCategoryId,
-          category
+          category,
         };
 
-        const updatedTypeDescriptionWithFavourites = await AppointmentHelper.getFavoriteInDetails(
-          userTypeData,
-          type_description,
-          FAVOURITE_TYPE.MEDICAL_TESTS
-        );
+        const updatedTypeDescriptionWithFavourites =
+          await AppointmentHelper.getFavoriteInDetails(
+            userTypeData,
+            type_description,
+            FAVOURITE_TYPE.MEDICAL_TESTS
+          );
         featureDetails = {
           ...featureDetails,
-          ...{ type_description: updatedTypeDescriptionWithFavourites }
+          ...{ type_description: updatedTypeDescriptionWithFavourites },
         };
-        const updatedRadiologyDataWithFavourites = await AppointmentHelper.getFavoriteInDetails(
-          userTypeData,
-          radiology_type_data,
-          FAVOURITE_TYPE.RADIOLOGY
-        );
+        const updatedRadiologyDataWithFavourites =
+          await AppointmentHelper.getFavoriteInDetails(
+            userTypeData,
+            radiology_type_data,
+            FAVOURITE_TYPE.RADIOLOGY
+          );
         featureDetails = {
           ...featureDetails,
-          ...{ radiology_type_data: updatedRadiologyDataWithFavourites }
+          ...{ radiology_type_data: updatedRadiologyDataWithFavourites },
         };
       } else {
-        const prevVersionsAppointmentDetails = await featureDetailService.getDetailsByData(
-          {
-            feature_type: FEATURE_TYPE.PREV_VERSION_APPOINTMENT
-          }
-        );
+        const prevVersionsAppointmentDetails =
+          await featureDetailService.getDetailsByData({
+            feature_type: FEATURE_TYPE.PREV_VERSION_APPOINTMENT,
+          });
 
         const prevVersionsAppointmentData = await FeatureDetailsWrapper(
           prevVersionsAppointmentDetails
@@ -580,8 +580,8 @@ class MobileAppointmentController extends Controller {
         200,
         {
           static_templates: {
-            appointments: { ...featureDetails }
-          }
+            appointments: { ...featureDetails },
+          },
         },
         "Appointment details fetched successfully"
       );
@@ -613,7 +613,7 @@ class MobileAppointmentController extends Controller {
   uploadAppointmentDoc = async (req, res) => {
     try {
       const {
-        userDetails: { userId = null, userData: { category } = {} } = {}
+        userDetails: { userId = null, userData: { category } = {} } = {},
       } = req || {};
       const file = req.file;
       const { params: { appointment_id = null } = {} } = req || {};
@@ -648,10 +648,8 @@ class MobileAppointmentController extends Controller {
       if (appointmentDetails) {
         appointmentApiData = await MAppointmentWrapper(appointmentDetails);
 
-        const {
-          participant_one_id,
-          participant_two_id
-        } = appointmentApiData.getParticipants();
+        const { participant_one_id, participant_two_id } =
+          appointmentApiData.getParticipants();
 
         let userCategoryId = null;
         let userCategoryData = null;
@@ -659,14 +657,14 @@ class MobileAppointmentController extends Controller {
         switch (category) {
           case USER_CATEGORY.DOCTOR:
             const doctor = await doctorService.getDoctorByData({
-              user_id: userId
+              user_id: userId,
             });
             userCategoryData = await DoctorWrapper(doctor);
             userCategoryId = userCategoryData.getDoctorId();
             break;
           case USER_CATEGORY.HSP:
             const hspDoctor = await doctorService.getDoctorByData({
-              user_id: userId
+              user_id: userId,
             });
             userCategoryData = await DoctorWrapper(hspDoctor);
             userCategoryId = userCategoryData.getDoctorId();
@@ -712,30 +710,30 @@ class MobileAppointmentController extends Controller {
             parent_type: DOCUMENT_PARENT_TYPE.APPOINTMENT_DOC,
             parent_id: appointment_id,
             document: fileUrl,
-            name: file_name
+            name: file_name,
           });
         }
 
         let uploadDocumentsData = {};
-        const uploadDocuments = await documentService.getDoctorQualificationDocuments(
-          DOCUMENT_PARENT_TYPE.APPOINTMENT_DOC,
-          appointment_id
-        );
+        const uploadDocuments =
+          await documentService.getDoctorQualificationDocuments(
+            DOCUMENT_PARENT_TYPE.APPOINTMENT_DOC,
+            appointment_id
+          );
 
         for (const uploadDocument of uploadDocuments) {
           const uploadDocumentData = await UploadDocumentWrapper(
             uploadDocument
           );
-          uploadDocumentsData[
-            uploadDocumentData.getUploadDocumentId()
-          ] = uploadDocumentData.getBasicInfo();
+          uploadDocumentsData[uploadDocumentData.getUploadDocumentId()] =
+            uploadDocumentData.getBasicInfo();
         }
 
         return this.raiseSuccess(
           res,
           200,
           {
-            ...(await appointmentApiData.getAllInfo())
+            ...(await appointmentApiData.getAllInfo()),
           },
           "Appointment documents uploaded successfully."
         );
@@ -753,7 +751,7 @@ class MobileAppointmentController extends Controller {
     try {
       const {
         userDetails: { userId = null, userData: { category } = {} } = {},
-        params: { document_id = null } = {}
+        params: { document_id = null } = {},
       } = req || {};
 
       const uploadDocuments = await documentService.getDocumentById(
@@ -770,9 +768,8 @@ class MobileAppointmentController extends Controller {
       }
 
       const uploadDocumentData = await UploadDocumentWrapper(uploadDocuments);
-      const {
-        basic_info: { name, document, parent_id, parent_type } = {}
-      } = uploadDocumentData.getBasicInfo();
+      const { basic_info: { name, document, parent_id, parent_type } = {} } =
+        uploadDocumentData.getBasicInfo();
 
       const appointmentDetails = await appointmentService.getAppointmentById(
         parent_id
@@ -784,10 +781,8 @@ class MobileAppointmentController extends Controller {
           appointmentDetails
         );
 
-        const {
-          participant_one_id,
-          participant_two_id
-        } = appointmentApiData.getParticipants();
+        const { participant_one_id, participant_two_id } =
+          appointmentApiData.getParticipants();
 
         let userCategoryId = null;
         let userCategoryData = null;
@@ -795,14 +790,14 @@ class MobileAppointmentController extends Controller {
         switch (category) {
           case USER_CATEGORY.DOCTOR:
             const doctor = await doctorService.getDoctorByData({
-              user_id: userId
+              user_id: userId,
             });
             userCategoryData = await DoctorWrapper(doctor);
             userCategoryId = userCategoryData.getDoctorId();
             break;
           case USER_CATEGORY.HSP:
             const hspDoctor = await doctorService.getDoctorByData({
-              user_id: userId
+              user_id: userId,
             });
             userCategoryData = await DoctorWrapper(hspDoctor);
             userCategoryId = userCategoryData.getDoctorId();
@@ -844,7 +839,7 @@ class MobileAppointmentController extends Controller {
       );
 
       const options = {
-        root: path.join(__dirname, `../../../../${S3_DOWNLOAD_FOLDER}/`)
+        root: path.join(__dirname, `../../../../${S3_DOWNLOAD_FOLDER}/`),
       };
       return res.sendFile(name, options);
     } catch (error) {
@@ -856,7 +851,7 @@ class MobileAppointmentController extends Controller {
   deleteAppointmentDoc = async (req, res) => {
     try {
       const {
-        userDetails: { userId = null, userData: { category } = {} } = {}
+        userDetails: { userId = null, userData: { category } = {} } = {},
       } = req || {};
       const { params: { document_id = null } = {} } = req || {};
 
@@ -873,9 +868,8 @@ class MobileAppointmentController extends Controller {
 
       const uploadDocumentData = await UploadDocumentWrapper(documentData);
 
-      const {
-        basic_info: { parent_id } = {}
-      } = uploadDocumentData.getBasicInfo();
+      const { basic_info: { parent_id } = {} } =
+        uploadDocumentData.getBasicInfo();
 
       const appointmentDetails = await appointmentService.getAppointmentById(
         parent_id
@@ -886,10 +880,8 @@ class MobileAppointmentController extends Controller {
         const appointmentApiData = await MAppointmentWrapper(
           appointmentDetails
         );
-        const {
-          participant_one_id,
-          participant_two_id
-        } = appointmentApiData.getParticipants();
+        const { participant_one_id, participant_two_id } =
+          appointmentApiData.getParticipants();
 
         let userCategoryId = null;
         let userCategoryData = null;
@@ -897,14 +889,14 @@ class MobileAppointmentController extends Controller {
         switch (category) {
           case USER_CATEGORY.DOCTOR:
             const doctor = await doctorService.getDoctorByData({
-              user_id: userId
+              user_id: userId,
             });
             userCategoryData = await DoctorWrapper(doctor);
             userCategoryId = userCategoryData.getDoctorId();
             break;
           case USER_CATEGORY.HSP:
             const hspDoctor = await doctorService.getDoctorByData({
-              user_id: userId
+              user_id: userId,
             });
             userCategoryData = await DoctorWrapper(hspDoctor);
             userCategoryId = userCategoryData.getDoctorId();
@@ -944,7 +936,7 @@ class MobileAppointmentController extends Controller {
         res,
         200,
         {
-          ...(await appointment.getAllInfo())
+          ...(await appointment.getAllInfo()),
         },
         "Appointment documents deleted successfully."
       );

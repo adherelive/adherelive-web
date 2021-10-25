@@ -4,7 +4,7 @@ import { ACTIONS } from "./actions";
 
 export const ACTION_DETAILS = "action_details";
 
-export const db = database => {
+export const db = (database) => {
   database.define(
     ACTION_DETAILS,
     {
@@ -12,39 +12,39 @@ export const db = database => {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
-        type: DataTypes.INTEGER
+        type: DataTypes.INTEGER,
       },
       action_id: {
         type: DataTypes.INTEGER,
         allowNull: false,
         references: {
           model: {
-            tableName: ACTIONS
+            tableName: ACTIONS,
           },
-          key: "id"
-        }
+          key: "id",
+        },
       },
       type: {
         type: DataTypes.STRING,
-        allowNull: false
+        allowNull: false,
       },
       dosage: {
         type: DataTypes.STRING,
-        allowNull: true
+        allowNull: true,
       },
       time: {
         type: DataTypes.DATE,
-        allowNull: false
-      }
+        allowNull: false,
+      },
     },
     {
       underscored: true,
-      paranoid: true
+      paranoid: true,
     }
   );
 };
 
-export const associate = database => {
+export const associate = (database) => {
   const { action_details, actions } = database.models || {};
 
   // action_details.belongsTo(actions, {

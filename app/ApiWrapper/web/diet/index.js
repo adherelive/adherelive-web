@@ -21,7 +21,7 @@ class DietWrapper extends BaseDiet {
       end_date,
       care_plan_id,
       details,
-      expired_on
+      expired_on,
     } = _data || {};
 
     return {
@@ -31,10 +31,10 @@ class DietWrapper extends BaseDiet {
         total_calories,
         start_date,
         end_date,
-        care_plan_id
+        care_plan_id,
       },
       details,
-      expired_on
+      expired_on,
     };
   };
 
@@ -59,7 +59,7 @@ class DietWrapper extends BaseDiet {
         const mapping = dietFoodGroupMappings[i];
         const { id = null } = mapping || {};
         const dietFoodGroupMappingWrapper = await DietFoodGroupMappingWrapper({
-          id
+          id,
         });
 
         const {
@@ -69,12 +69,12 @@ class DietWrapper extends BaseDiet {
           portions = {},
           food_items = {},
           food_item_details = {},
-          similar_food_mappings = {}
+          similar_food_mappings = {},
         } = await dietFoodGroupMappingWrapper.getReferenceInfo();
 
         dietFoodGroupMappingData = {
           ...dietFoodGroupMappingData,
-          ...diet_food_grouping_mappings
+          ...diet_food_grouping_mappings,
         };
         foodGroupsApiData = { ...foodGroupsApiData, ...food_groups };
         dietsApiData = { ...dietsApiData, ...diets };
@@ -82,42 +82,41 @@ class DietWrapper extends BaseDiet {
         foodItemsApiData = { ...foodItemsApiData, ...food_items };
         foodItemDetailsApiData = {
           ...foodItemDetailsApiData,
-          ...food_item_details
+          ...food_item_details,
         };
         similiarFoodMappingApiData = {
           ...similiarFoodMappingApiData,
-          ...similar_food_mappings
+          ...similar_food_mappings,
         };
       }
     }
 
-    careplanApiData[
-      careplanData.getCarePlanId()
-    ] = await careplanData.getAllInfo();
+    careplanApiData[careplanData.getCarePlanId()] =
+      await careplanData.getAllInfo();
 
     return {
       diets: {
-        ...dietsApiData
+        ...dietsApiData,
       },
       care_plans: { ...careplanApiData },
       diet_food_group_mappings: {
-        ...dietFoodGroupMappingData
+        ...dietFoodGroupMappingData,
       },
       food_groups: {
-        ...foodGroupsApiData
+        ...foodGroupsApiData,
       },
       portions: {
-        ...portionsApiData
+        ...portionsApiData,
       },
       food_items: {
-        ...foodItemsApiData
+        ...foodItemsApiData,
       },
       food_item_details: {
-        ...foodItemDetailsApiData
+        ...foodItemDetailsApiData,
       },
       similar_food_mappings: {
-        ...similiarFoodMappingApiData
-      }
+        ...similiarFoodMappingApiData,
+      },
     };
   };
 
@@ -135,7 +134,7 @@ class DietWrapper extends BaseDiet {
     }
     return {
       ...getBasicInfo(),
-      diet_food_group_mapping_ids
+      diet_food_group_mapping_ids,
     };
   };
 }

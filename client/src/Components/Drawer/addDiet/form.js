@@ -25,15 +25,15 @@ class DietFieldsFrom extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      selectedDays: []
+      selectedDays: [],
     };
   }
 
-  getParentNode = t => t.parentNode;
+  getParentNode = (t) => t.parentNode;
 
-  formatMessage = data => this.props.intl.formatMessage(data);
+  formatMessage = (data) => this.props.intl.formatMessage(data);
 
-  disabledStartDate = current => {
+  disabledStartDate = (current) => {
     return current && current <= moment().subtract({ day: 1 });
   };
 
@@ -41,15 +41,15 @@ class DietFieldsFrom extends Component {
     const { selectedDays } = this.state;
     const nextSelectedTags = checked
       ? [...selectedDays, tag]
-      : selectedDays.filter(t => t !== tag);
+      : selectedDays.filter((t) => t !== tag);
 
     const newSelectedTags = checked
       ? [...selectedDays, tag]
-      : selectedDays.filter(t => t !== tag);
+      : selectedDays.filter((t) => t !== tag);
 
     this.setState({ selectedDays: newSelectedTags });
     const {
-      form: { setFieldsValue, validateFields }
+      form: { setFieldsValue, validateFields },
     } = this.props;
     setFieldsValue({ [REPEAT_DAYS]: newSelectedTags });
     validateFields();
@@ -57,7 +57,7 @@ class DietFieldsFrom extends Component {
 
   setSameForAllDays = () => {
     const {
-      form: { setFieldsValue, validateFields }
+      form: { setFieldsValue, validateFields },
     } = this.props;
     this.setState({ selectedDays: DAYS });
     setFieldsValue({ [REPEAT_DAYS]: DAYS });
@@ -66,7 +66,7 @@ class DietFieldsFrom extends Component {
 
   unSetSameForAllDays = () => {
     const {
-      form: { setFieldsValue, validateFields }
+      form: { setFieldsValue, validateFields },
     } = this.props;
     this.setState({ selectedDays: [] });
     setFieldsValue({ [REPEAT_DAYS]: [] });
@@ -76,7 +76,7 @@ class DietFieldsFrom extends Component {
   render() {
     const {
       form: { getFieldDecorator, isFieldTouched, getFieldError, getFieldValue },
-      getDietComponent
+      getDietComponent,
     } = this.props;
 
     const { selectedDays } = this.state;
@@ -84,7 +84,7 @@ class DietFieldsFrom extends Component {
     const { formatMessage, handleCheckDays } = this;
 
     let fieldsError = {};
-    FIELDS.forEach(value => {
+    FIELDS.forEach((value) => {
       const error = isFieldTouched(value) && getFieldError(value);
       fieldsError = { ...fieldsError, [value]: error };
     });
@@ -99,9 +99,9 @@ class DietFieldsFrom extends Component {
             rules: [
               {
                 required: true,
-                message: formatMessage(messages.requiredName)
-              }
-            ]
+                message: formatMessage(messages.requiredName),
+              },
+            ],
           })(
             <Input
               placeholder={this.formatMessage(messages.addDietName)}
@@ -138,17 +138,17 @@ class DietFieldsFrom extends Component {
                   rules: [
                     {
                       required: true,
-                      message: this.formatMessage(messages.requiredRepeatDays)
-                    }
-                  ]
+                      message: this.formatMessage(messages.requiredRepeatDays),
+                    },
+                  ],
                 })(<Input />)}
               </FormItem>
               <div className="flex-shrink-1 flex justify-space-evenly select-days mt10">
-                {DAYS.map(tag => (
+                {DAYS.map((tag) => (
                   <CheckableTag
                     key={tag}
                     checked={selectedDays.indexOf(tag) > -1}
-                    onChange={checked => handleCheckDays(tag, checked)}
+                    onChange={(checked) => handleCheckDays(tag, checked)}
                   >
                     {tag}
                   </CheckableTag>
@@ -171,9 +171,9 @@ class DietFieldsFrom extends Component {
                 rules: [
                   {
                     required: true,
-                    message: formatMessage(messages.requiredStartDate)
-                  }
-                ]
+                    message: formatMessage(messages.requiredStartDate),
+                  },
+                ],
               })(
                 <DatePicker
                   className="wp100 h53"

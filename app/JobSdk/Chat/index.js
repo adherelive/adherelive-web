@@ -10,5 +10,5 @@ export default class ChatJob {
 
 export const MESSAGE_TYPE = {
   USER_MESSAGE: "USER_MESSAGE",
-  BOT_MESSAGE: "BOT_MESSAGE"
+  BOT_MESSAGE: "BOT_MESSAGE",
 };

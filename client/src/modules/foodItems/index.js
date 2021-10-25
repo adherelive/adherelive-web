@@ -14,26 +14,26 @@ export const EDIT_FOOD_ITEM_FAILED = "EDIT_FOOD_ITEM_FAILED";
 
 export const STORE_FOOD_ITEM_AND_DETAILS = "STORE_FOOD_ITEM_AND_DETAILS";
 
-export const addFoodItem = payload => {
+export const addFoodItem = (payload) => {
   let response = {};
-  return async dispatch => {
+  return async (dispatch) => {
     try {
       response = await doRequest({
         method: REQUEST_TYPE.POST,
         url: addFoodItemUrl(),
-        data: payload
+        data: payload,
       });
 
       const { status, payload: { data, message = "" } = {} } = response || {};
       if (status === true) {
         dispatch({
           type: ADD_FOOD_ITEM_COMPLETED,
-          data
+          data,
         });
       } else {
         dispatch({
           type: ADD_FOOD_ITEM_FAILED,
-          message
+          message,
         });
       }
     } catch (error) {
@@ -45,24 +45,24 @@ export const addFoodItem = payload => {
 
 export const updateFoodItem = ({ food_item_id, data: payload }) => {
   let response = {};
-  return async dispatch => {
+  return async (dispatch) => {
     try {
       response = await doRequest({
         method: REQUEST_TYPE.POST,
         url: updateFoodItemUrl(food_item_id),
-        data: payload
+        data: payload,
       });
 
       const { status, payload: { data, message = "" } = {} } = response || {};
       if (status === true) {
         dispatch({
           type: EDIT_FOOD_ITEM_COMPLETED,
-          data
+          data,
         });
       } else {
         dispatch({
           type: EDIT_FOOD_ITEM_FAILED,
-          message
+          message,
         });
       }
     } catch (error) {
@@ -72,14 +72,14 @@ export const updateFoodItem = ({ food_item_id, data: payload }) => {
   };
 };
 
-export const storeFoodItemAndDetails = data => {
-  return async dispatch => {
+export const storeFoodItemAndDetails = (data) => {
+  return async (dispatch) => {
     try {
       const { food_items, food_item_details } = data;
       if (food_items && food_item_details) {
         dispatch({
           type: STORE_FOOD_ITEM_AND_DETAILS,
-          data
+          data,
         });
       }
     } catch (error) {
@@ -93,7 +93,7 @@ function foodItemReducer(state, data) {
   if (food_items) {
     return {
       ...state,
-      ...food_items
+      ...food_items,
     };
   } else {
     return state;

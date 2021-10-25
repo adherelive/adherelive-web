@@ -4,7 +4,7 @@ import { CURRENCY, REPEAT_TYPE, USER_CATEGORY } from "../../constant";
 
 export const PRODUCT_PLANS = "product_plans";
 
-export const db = database => {
+export const db = (database) => {
   database.define(
     PRODUCT_PLANS,
     {
@@ -12,28 +12,28 @@ export const db = database => {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
-        type: DataTypes.INTEGER
+        type: DataTypes.INTEGER,
       },
       provider_type: {
         type: DataTypes.ENUM,
-        values: [USER_CATEGORY.DOCTOR, USER_CATEGORY.PROVIDER]
+        values: [USER_CATEGORY.DOCTOR, USER_CATEGORY.PROVIDER],
       },
       provider_id: {
         type: DataTypes.INTEGER,
-        allowNull: false
+        allowNull: false,
       },
       description: {
         type: DataTypes.STRING(1000),
-        allowNull: false
+        allowNull: false,
       },
       subscription_charge: {
         type: DataTypes.STRING,
-        allowNull: false
+        allowNull: false,
       },
       currency: {
         type: DataTypes.ENUM,
         values: [CURRENCY.INR, CURRENCY.AUD, CURRENCY.USD],
-        allowNull: false
+        allowNull: false,
       },
       billing_cycle: {
         type: DataTypes.ENUM,
@@ -41,10 +41,10 @@ export const db = database => {
           REPEAT_TYPE.YEARLY,
           REPEAT_TYPE.MONTHLY,
           REPEAT_TYPE.WEEKLY,
-          REPEAT_TYPE.DAILY
+          REPEAT_TYPE.DAILY,
         ],
-        allowNull: false
-      }
+        allowNull: false,
+      },
     },
     {
       underscored: true,
@@ -58,15 +58,15 @@ export const db = database => {
             provider_type: this.provider_type,
             subscription_charge: this.subscription_charge,
             currency: this.currency,
-            billing_cycle: this.billing_cycle
+            billing_cycle: this.billing_cycle,
           };
-        }
-      }
+        },
+      },
     }
   );
 };
 
-export const associate = database => {
+export const associate = (database) => {
   // const {TABLE_NAME} = database.models || {};
   // associations here (if any) ...
 };

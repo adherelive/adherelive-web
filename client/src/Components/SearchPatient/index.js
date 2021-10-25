@@ -20,7 +20,7 @@ import {
   Menu,
   Dropdown,
   Tooltip,
-  Avatar
+  Avatar,
 } from "antd";
 
 const { Option } = Select;
@@ -32,7 +32,7 @@ class SearchPatient extends Component {
       searchInput: "",
       fetchingPatients: false,
       patient_ids: [],
-      users: {}
+      users: {},
     };
 
     this.handlePatientSearch = debounce(
@@ -43,15 +43,15 @@ class SearchPatient extends Component {
 
   componentDidMount() {}
 
-  formatMessage = data => this.props.intl.formatMessage(data);
+  formatMessage = (data) => this.props.intl.formatMessage(data);
 
-  handlePatientDetailsRedirect = patient_id => {
+  handlePatientDetailsRedirect = (patient_id) => {
     // e.preventDefault();
     const { history } = this.props;
     history.push(`/patients/${patient_id}`);
   };
 
-  setInput = value => {
+  setInput = (value) => {
     const { searchPatientForDoctor } = this.props;
 
     this.setState({ searchInput: value });
@@ -114,14 +114,14 @@ class SearchPatient extends Component {
     for (let id of patient_ids) {
       const {
         basic_info: { first_name, middle_name, last_name, user_id = null } = {},
-        details: { profile_pic = null } = {}
+        details: { profile_pic = null } = {},
       } = patients[id] || {};
       const {
         basic_info: {
           email = "",
           mobile_number: user_mobile_numer = "",
-          prefix: user_prefix = ""
-        } = {}
+          prefix: user_prefix = "",
+        } = {},
       } = users[user_id] || {};
       options.push(
         <Option
@@ -172,9 +172,9 @@ class SearchPatient extends Component {
             data: {
               patient_ids: response_patient_ids = [],
               users = {},
-              patients: response_patients = {}
-            }
-          } = {}
+              patients: response_patients = {},
+            },
+          } = {},
         } = response || {};
 
         if (status) {
@@ -182,24 +182,24 @@ class SearchPatient extends Component {
             this.setState({
               patient_ids: response_patient_ids,
               users,
-              fetchingPatients: false
+              fetchingPatients: false,
             });
           } else {
             this.setState({
               patient_ids: [],
-              fetchingPatients: false
+              fetchingPatients: false,
             });
           }
         } else {
           this.setState({
             patient_ids: [],
-            fetchingPatients: false
+            fetchingPatients: false,
           });
         }
       } else {
         this.setState({
           patient_ids: [],
-          fetchingPatients: false
+          fetchingPatients: false,
         });
       }
     } catch (err) {
@@ -209,7 +209,7 @@ class SearchPatient extends Component {
     }
   }
 
-  patientChanged = patient_id => {
+  patientChanged = (patient_id) => {
     this.handlePatientDetailsRedirect(patient_id);
   };
 

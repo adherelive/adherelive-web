@@ -9,7 +9,7 @@ import {
   deleteCareplanTemplateVital,
   deleteCareplanTemplateDiet,
   updateCareplanTemplateUrl,
-  deleteCareplanTemplateWorkout
+  deleteCareplanTemplateWorkout,
 } from "../../Helper/urls/carePlanTemplates";
 
 import { getAllTemplatesUrl } from "../../Helper/urls/carePlanTemplates";
@@ -46,16 +46,16 @@ export const GET_ALL_TEMPLATES_FOR_DOC_COMPLETE =
 export const GET_ALL_TEMPLATES_FOR_DOC_FAILED =
   "GET_ALL_TEMPLATES_FOR_DOC_FAILED";
 
-export const createCareplanTemplate = payload => {
+export const createCareplanTemplate = (payload) => {
   let response = {};
-  return async dispatch => {
+  return async (dispatch) => {
     try {
       dispatch({ type: CREATE_CAREPLAN_TEMPLATE_START });
 
       response = await doRequest({
         method: REQUEST_TYPE.POST,
         url: createCareplanTemplateUrl(),
-        data: payload
+        data: payload,
       });
 
       const { status, payload: { data, message = "" } = {} } = response || {};
@@ -63,12 +63,12 @@ export const createCareplanTemplate = payload => {
         dispatch({
           type: CREATE_CAREPLAN_TEMPLATE_COMPLETED,
           data,
-          payload: data
+          payload: data,
         });
       } else {
         dispatch({
           type: CREATE_CAREPLAN_TEMPLATE_FAILED,
-          message
+          message,
         });
       }
     } catch (error) {
@@ -80,12 +80,12 @@ export const createCareplanTemplate = payload => {
 
 export const getAllTemplatesForDoctor = () => {
   let response;
-  return async dispatch => {
+  return async (dispatch) => {
     try {
       dispatch({ type: GET_ALL_TEMPLATES_FOR_DOC });
       response = await doRequest({
         method: REQUEST_TYPE.GET,
-        url: getAllTemplatesUrl()
+        url: getAllTemplatesUrl(),
       });
 
       const { status, payload: { data, error } = {} } = response || {};
@@ -93,12 +93,12 @@ export const getAllTemplatesForDoctor = () => {
         dispatch({
           type: GET_ALL_TEMPLATES_FOR_DOC_COMPLETE,
           data: data,
-          payload: data
+          payload: data,
         });
       } else {
         dispatch({
           type: GET_ALL_TEMPLATES_FOR_DOC_FAILED,
-          error
+          error,
         });
       }
     } catch (error) {
@@ -110,14 +110,14 @@ export const getAllTemplatesForDoctor = () => {
 
 export const updateCareplanTemplate = (id, payload) => {
   let response = {};
-  return async dispatch => {
+  return async (dispatch) => {
     try {
       dispatch({ type: UPDATE_CAREPLAN_TEMPLATE_START });
 
       response = await doRequest({
         method: REQUEST_TYPE.POST,
         url: updateCareplanTemplateUrl(id),
-        data: payload
+        data: payload,
       });
 
       const { status, payload: { data, message = "" } = {} } = response || {};
@@ -125,12 +125,12 @@ export const updateCareplanTemplate = (id, payload) => {
         dispatch({
           type: UPDATE_CAREPLAN_TEMPLATE_COMPLETED,
           data,
-          payload: data
+          payload: data,
         });
       } else {
         dispatch({
           type: UPDATE_CAREPLAN_TEMPLATE_FAILED,
-          message
+          message,
         });
       }
     } catch (error) {
@@ -140,14 +140,14 @@ export const updateCareplanTemplate = (id, payload) => {
   };
 };
 
-export const duplicateCareplanTemplate = careplan_template_id => {
+export const duplicateCareplanTemplate = (careplan_template_id) => {
   let response = {};
-  return async dispatch => {
+  return async (dispatch) => {
     try {
       dispatch({ type: DUPLICATE_CAREPLAN_TEMPLATE_START });
       response = await doRequest({
         method: REQUEST_TYPE.POST,
-        url: duplicateCareplanTemplateUrl(careplan_template_id)
+        url: duplicateCareplanTemplateUrl(careplan_template_id),
       });
 
       const { status, payload: { data, message = "" } = {} } = response || {};
@@ -155,12 +155,12 @@ export const duplicateCareplanTemplate = careplan_template_id => {
         dispatch({
           type: DUPLICATE_CAREPLAN_TEMPLATE_COMPLETED,
           data,
-          payload: data
+          payload: data,
         });
       } else {
         dispatch({
           type: DUPLICATE_CAREPLAN_TEMPLATE_FAILED,
-          message
+          message,
         });
       }
     } catch (error) {
@@ -173,10 +173,10 @@ export const duplicateCareplanTemplate = careplan_template_id => {
 export const deleteCareplanTemplateRelated = ({
   careplan_template_id,
   other_id,
-  other_type
+  other_type,
 }) => {
   let response = {};
-  return async dispatch => {
+  return async (dispatch) => {
     try {
       let url = "/";
 
@@ -197,7 +197,7 @@ export const deleteCareplanTemplateRelated = ({
       dispatch({ type: DELETE_CAREPLAN_TEMPLATE_RELATED_START });
       response = await doRequest({
         method: REQUEST_TYPE.DELETE,
-        url: url
+        url: url,
       });
 
       let { status, payload: { data, message = "" } = {} } = response || {};
@@ -205,12 +205,12 @@ export const deleteCareplanTemplateRelated = ({
         dispatch({
           type: DELETE_CAREPLAN_TEMPLATE_RELATED_COMPLETED,
           data,
-          payload: data
+          payload: data,
         });
       } else {
         dispatch({
           type: DELETE_CAREPLAN_TEMPLATE_RELATED_FAILED,
-          message
+          message,
         });
       }
     } catch (error) {
@@ -225,7 +225,7 @@ function carePlanTemplatesReducer(state, data) {
   if (care_plan_templates) {
     return {
       ...state,
-      ...care_plan_templates
+      ...care_plan_templates,
     };
   } else {
     return state;

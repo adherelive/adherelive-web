@@ -8,7 +8,7 @@ import { searchSeverity } from "../../modules/severity";
 import { searchMedicine } from "../../modules/medicines";
 import { updatePatientAndCareplan } from "../../modules/doctors";
 
-const mapStateToProps = state => {
+const mapStateToProps = (state) => {
   const { auth } = state;
   const { authenticated_user, authenticated_category } = auth;
   const {
@@ -18,7 +18,7 @@ const mapStateToProps = state => {
     conditions = {},
     severity = {},
     patients = {},
-    doctors = {}
+    doctors = {},
   } = state;
 
   return {
@@ -31,19 +31,19 @@ const mapStateToProps = state => {
     patients,
     users,
     doctors,
-    authenticated_user
+    authenticated_user,
   };
 };
 
-const mapDispatchToProps = dispatch => {
+const mapDispatchToProps = (dispatch) => {
   return {
     close: () => dispatch(close()),
-    searchMedicine: value => dispatch(searchMedicine(value)),
-    searchCondition: value => dispatch(searchCondition(value)),
-    searchTreatment: value => dispatch(searchTreatment(value)),
-    searchSeverity: value => dispatch(searchSeverity(value)),
+    searchMedicine: (value) => dispatch(searchMedicine(value)),
+    searchCondition: (value) => dispatch(searchCondition(value)),
+    searchTreatment: (value) => dispatch(searchTreatment(value)),
+    searchSeverity: (value) => dispatch(searchSeverity(value)),
     updatePatientAndCareplan: (careplan_id, payload) =>
-      dispatch(updatePatientAndCareplan(careplan_id, payload))
+      dispatch(updatePatientAndCareplan(careplan_id, payload)),
   };
 };
 

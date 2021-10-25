@@ -13,7 +13,7 @@ module.exports = {
         city: "delhi",
         speciality_id: "1",
         created_at: new Date(),
-        updated_at: new Date()
+        updated_at: new Date(),
       },
       {
         user_id: "3",
@@ -23,12 +23,12 @@ module.exports = {
         city: "delhi",
         speciality_id: "2",
         created_at: new Date(),
-        updated_at: new Date()
-      }
+        updated_at: new Date(),
+      },
     ]);
   },
 
   down: (queryInterface, Sequelize) => {
     return queryInterface.bulkDelete(TABLE_NAME, null, {});
-  }
+  },
 };

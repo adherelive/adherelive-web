@@ -18,8 +18,8 @@ class ResponseJob extends DietJob {
       actor: {
         id: actorId,
         user_role_id,
-        details: { name, category: actorCategory } = {}
-      } = {}
+        details: { name, category: actorCategory } = {},
+      } = {},
     } = _data || {};
 
     const templateData = [];
@@ -28,7 +28,7 @@ class ResponseJob extends DietJob {
     const userRoleIds = [];
     let doctorRoleId = null;
 
-    participants.forEach(participant => {
+    participants.forEach((participant) => {
       if (participant !== user_role_id) {
         doctorRoleId = participant;
         userRoleIds.push(participant);
@@ -38,8 +38,8 @@ class ResponseJob extends DietJob {
     const { rows: userRoles = [] } =
       (await UserRoleService.findAndCountAll({
         where: {
-          id: userRoleIds
-        }
+          id: userRoleIds,
+        },
       })) || {};
 
     for (const userRole of userRoles) {
@@ -48,7 +48,7 @@ class ResponseJob extends DietJob {
     }
 
     const userDevices = await UserDeviceService.getAllDeviceByData({
-      user_id: userIds
+      user_id: userIds,
     });
 
     if (userDevices.length > 0) {
@@ -63,15 +63,15 @@ class ResponseJob extends DietJob {
       app_id: process.config.one_signal.app_id,
       headings: { en: `Diet Response from ${name}` },
       contents: {
-        en: `Diet Response has been added by ${name}. Tap here to know more!`
+        en: `Diet Response has been added by ${name}. Tap here to know more!`,
       },
       include_player_ids: [...playerIds],
       priority: 10,
       android_channel_id: process.config.one_signal.urgent_channel_id,
       data: {
         url: `/${NOTIFICATION_VERB.DIET_RESPONSE}`,
-        params: { ...this.getDietData(), doctorRoleId }
-      }
+        params: { ...this.getDietData(), doctorRoleId },
+      },
     });
 
     return templateData;
@@ -83,7 +83,7 @@ class ResponseJob extends DietJob {
     const {
       participants = [],
       actor: { id: actorId, user_role_id } = {},
-      id = null
+      id = null,
     } = data || {};
 
     const templateData = [];
@@ -101,7 +101,7 @@ class ResponseJob extends DietJob {
           verb: `${NOTIFICATION_VERB.DIET_RESPONSE}:${currentTimeStamp}`,
           event: EVENT_TYPE.DIET,
           time: currentTime,
-          create_time: currentTime
+          create_time: currentTime,
         });
       }
     }

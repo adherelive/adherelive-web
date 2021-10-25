@@ -7,7 +7,7 @@ import UserDeviceWrapper from "../../../ApiWrapper/mobile/userDevice";
 import {
   AGORA_CALL_NOTIFICATION_TYPES,
   USER_CATEGORY,
-  DEFAULT_PROVIDER
+  DEFAULT_PROVIDER,
 } from "../../../../constant";
 
 import moment from "moment";
@@ -25,8 +25,8 @@ class StartJob extends AgoraJob {
       actor: {
         id: actorId,
         user_role_id,
-        details: { name: full_name, category }
-      }
+        details: { name: full_name, category },
+      },
     } = getAgoraData() || {};
 
     const participants = roomId.split(
@@ -40,8 +40,8 @@ class StartJob extends AgoraJob {
     const { rows: userRoles = [] } =
       (await UserRoleService.findAndCountAll({
         where: {
-          id: participants
-        }
+          id: participants,
+        },
       })) || {};
 
     let providerId = null;
@@ -60,7 +60,7 @@ class StartJob extends AgoraJob {
     let providerName = DEFAULT_PROVIDER;
     if (providerId) {
       const provider = await ProviderService.getProviderByData({
-        id: providerId
+        id: providerId,
       });
       const { name } = provider || {};
       providerName = name;
@@ -68,7 +68,7 @@ class StartJob extends AgoraJob {
 
     const userDevices =
       (await UserDeviceService.getAllDeviceByData({
-        user_id: userIds
+        user_id: userIds,
       })) || [];
 
     if (userDevices.length > 0) {
@@ -91,11 +91,11 @@ class StartJob extends AgoraJob {
           category === USER_CATEGORY.DOCTOR || category === USER_CATEGORY.HSP
             ? "Dr. "
             : ""
-        }${full_name} is calling you!`
+        }${full_name} is calling you!`,
       },
       priority: 10,
       android_channel_id: process.config.one_signal.urgent_channel_id,
-      data: { url, params: getAgoraData() }
+      data: { url, params: getAgoraData() },
     });
 
     return templateData;
@@ -107,11 +107,11 @@ class StartJob extends AgoraJob {
       actor: {
         id: actorId,
         user_role_id,
-        details: { name, category: actorCategory } = {}
+        details: { name, category: actorCategory } = {},
       } = {},
       event_id,
       event_type,
-      roomId
+      roomId,
     } = getAgoraData() || {};
 
     const participants = roomId.split(
@@ -134,7 +134,7 @@ class StartJob extends AgoraJob {
           verb: `start_call:${currentTimeStamp}`,
           event: event_type,
           time: `${currentTime}`,
-          create_time: `${currentTime}`
+          create_time: `${currentTime}`,
         });
       }
     }

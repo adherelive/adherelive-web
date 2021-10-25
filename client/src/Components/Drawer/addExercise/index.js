@@ -17,7 +17,7 @@ class AddExercise extends Component {
       disabledSubmit: true,
       submitting: false,
       uploadedVideoUrl: "",
-      videoContentType: null
+      videoContentType: null,
     };
 
     this.FormWrapper = Form.create({ onFieldsChange: this.onFormFieldChanges })(
@@ -25,17 +25,17 @@ class AddExercise extends Component {
     );
   }
 
-  setUploadedVideoUrl = url => {
+  setUploadedVideoUrl = (url) => {
     this.setState({ uploadedVideoUrl: url });
   };
 
-  setVideoContentType = type => {
+  setVideoContentType = (type) => {
     this.setState({ videoContentType: type });
   };
 
-  onFormFieldChanges = props => {
+  onFormFieldChanges = (props) => {
     const {
-      form: { getFieldsError, isFieldsTouched }
+      form: { getFieldsError, isFieldsTouched },
     } = props;
     const isError = hasErrors(getFieldsError());
     const { disabledSubmit } = this.state;
@@ -44,19 +44,19 @@ class AddExercise extends Component {
     }
   };
 
-  handleSubmit = e => {
+  handleSubmit = (e) => {
     e.preventDefault();
     const { addExercise } = this.props;
     const { formRef = {}, formatMessage } = this;
     const {
       uploadedVideoUrl = "",
-      videoContentType: video_content_type = null
+      videoContentType: video_content_type = null,
     } = this.state;
 
     const {
       props: {
-        form: { validateFields, resetFields }
-      }
+        form: { validateFields, resetFields },
+      },
     } = formRef;
 
     validateFields(async (err, values) => {
@@ -66,7 +66,7 @@ class AddExercise extends Component {
           repetition_id = null,
           repetition_value = 1,
           calorific_value = null,
-          video_content = ""
+          video_content = "",
         } = values;
 
         const name = initail_name.trim();
@@ -78,7 +78,7 @@ class AddExercise extends Component {
           }
           video = {
             content_type: video_content_type,
-            content: video_content
+            content: video_content,
           };
         }
 
@@ -89,7 +89,7 @@ class AddExercise extends Component {
             ? parseInt(repetition_value)
             : null,
           calorific_value: calorific_value ? parseFloat(calorific_value) : null,
-          video
+          video,
         };
 
         try {
@@ -100,8 +100,8 @@ class AddExercise extends Component {
             statusCode: code,
             payload: {
               message: errorMessage = "",
-              error: { error_type = "" } = {}
-            }
+              error: { error_type = "" } = {},
+            },
           } = response || {};
 
           if (!status) {
@@ -121,7 +121,7 @@ class AddExercise extends Component {
     });
   };
 
-  formatMessage = data => this.props.intl.formatMessage(data);
+  formatMessage = (data) => this.props.intl.formatMessage(data);
 
   onClose = () => {
     const { closeAddExerciseDrawer } = this.props;
@@ -129,19 +129,19 @@ class AddExercise extends Component {
     const { formRef } = this;
     const {
       props: {
-        form: { resetFields }
-      }
+        form: { resetFields },
+      },
     } = formRef;
     this.setState({
       visible: true,
       disabledSubmit: true,
-      submitting: false
+      submitting: false,
     });
     resetFields();
     closeAddExerciseDrawer();
   };
 
-  setFormRef = formRef => {
+  setFormRef = (formRef) => {
     this.formRef = formRef;
     if (formRef) {
       this.setState({ formRef: true });
@@ -152,16 +152,11 @@ class AddExercise extends Component {
     const { visible } = this.props;
     const { disabledSubmit, submitting = false } = this.state;
 
-    const {
-      onClose,
-      formatMessage,
-      setFormRef,
-      handleSubmit,
-      FormWrapper
-    } = this;
+    const { onClose, formatMessage, setFormRef, handleSubmit, FormWrapper } =
+      this;
 
     const submitButtonProps = {
-      disabled: disabledSubmit
+      disabled: disabledSubmit,
     };
 
     return (
@@ -172,7 +167,7 @@ class AddExercise extends Component {
           headerStyle={{
             position: "sticky",
             zIndex: "9999",
-            top: "0px"
+            top: "0px",
           }}
           destroyOnClose={true}
           onClose={onClose}

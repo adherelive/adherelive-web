@@ -21,7 +21,7 @@ class AddSecondaryDoctor extends Component {
     this.state = {
       searchingName: false,
       rowData: [],
-      dropDownVisible: false
+      dropDownVisible: false,
     };
 
     this.FormWrapper = Form.create({ onFieldsChange: this.onFormFieldChanges })(
@@ -33,9 +33,9 @@ class AddSecondaryDoctor extends Component {
 
   async componentDidMount() {}
 
-  formatMessage = data => this.props.intl.formatMessage(data);
+  formatMessage = (data) => this.props.intl.formatMessage(data);
 
-  searchName = async name => {
+  searchName = async (name) => {
     try {
       const { searchDoctorName } = this.props;
       this.setState({ searchingName: true });
@@ -43,7 +43,7 @@ class AddSecondaryDoctor extends Component {
       const {
         status,
         statusCode,
-        payload: { data = {}, message: res_message = "" } = {}
+        payload: { data = {}, message: res_message = "" } = {},
       } = response || {};
       if (!status && statusCode !== 422) {
         this.setState({ rowData: [] });
@@ -52,7 +52,7 @@ class AddSecondaryDoctor extends Component {
       const { rowData = [] } = data || {};
       this.setState({
         rowData,
-        searchingName: false
+        searchingName: false,
       });
     } catch (error) {
       this.setState({ searchingName: false });
@@ -65,7 +65,7 @@ class AddSecondaryDoctor extends Component {
     const { doctors = {}, providers = {}, auth_role = null } = this.props;
     // console.log("467236472647264782",{rowData});
 
-    return Object.keys(rowData).map(id => {
+    return Object.keys(rowData).map((id) => {
       const rowDataObj = rowData[id] || {};
       const { doctor_id, provider_id, user_id, user_role_id } =
         rowDataObj || {};
@@ -74,7 +74,7 @@ class AddSecondaryDoctor extends Component {
         return null;
       }
       const {
-        basic_info: { first_name = "", middle_name = "", last_name = "" } = {}
+        basic_info: { first_name = "", middle_name = "", last_name = "" } = {},
       } = doctors[doctor_id] || {};
 
       let provider_name = "";
@@ -103,20 +103,20 @@ class AddSecondaryDoctor extends Component {
     });
   };
 
-  setDoctor = value => {
+  setDoctor = (value) => {
     const { form: { setFieldsValue } = {} } = this.props;
 
     setFieldsValue({ [DOCTOR_ROLE_ID]: value });
   };
 
-  onDropdownVisibleChange = visible => {
+  onDropdownVisibleChange = (visible) => {
     this.setState({ dropDownVisible: visible });
   };
 
   render() {
     const { formatMessage } = this;
     const {
-      form: { getFieldDecorator }
+      form: { getFieldDecorator },
     } = this.props;
 
     const { searchingName = false } = this.state;
@@ -130,9 +130,9 @@ class AddSecondaryDoctor extends Component {
             rules: [
               {
                 required: true,
-                message: formatMessage(messages.doctor_name_required_error)
-              }
-            ]
+                message: formatMessage(messages.doctor_name_required_error),
+              },
+            ],
           })(
             <Select
               className="form-inputs-ap drawer-select"

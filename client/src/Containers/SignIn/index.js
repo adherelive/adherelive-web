@@ -5,24 +5,24 @@ import {
   signIn,
   signUp,
   verifyUser,
-  getInitialData
+  getInitialData,
 } from "../../modules/auth";
 import { connect } from "react-redux";
 import { getUserRoles } from "../../modules/userRoles";
 
-const mapStateToProps = state => {
+const mapStateToProps = (state) => {
   const { graphs, auth } = state;
   return { graphs, auth };
 };
 
-const mapDispatchToProps = dispatch => {
+const mapDispatchToProps = (dispatch) => {
   return {
-    signIn: data => dispatch(signIn(data)),
-    signUp: data => dispatch(signUp(data)),
-    verifyUser: link => dispatch(verifyUser(link)),
+    signIn: (data) => dispatch(signIn(data)),
+    signUp: (data) => dispatch(signUp(data)),
+    verifyUser: (link) => dispatch(verifyUser(link)),
     signOut: () => dispatch(signOut()),
     getInitialData: () => dispatch(getInitialData()),
-    getUserRoles: () => dispatch(getUserRoles)
+    getUserRoles: () => dispatch(getUserRoles),
   };
 };
 

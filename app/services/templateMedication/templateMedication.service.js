@@ -2,10 +2,10 @@ import Database from "../../../libs/mysql";
 import { TABLE_NAME } from "../../models/templateMedications";
 
 class TemplateMedicationService {
-  getTemplateMedicationByData = async data => {
+  getTemplateMedicationByData = async (data) => {
     try {
       const templateMedications = await Database.getModel(TABLE_NAME).findAll({
-        where: data
+        where: data,
       });
       return templateMedications;
     } catch (error) {
@@ -13,10 +13,10 @@ class TemplateMedicationService {
     }
   };
 
-  getSingleTemplateMedicationByData = async data => {
+  getSingleTemplateMedicationByData = async (data) => {
     try {
       const templateMedication = await Database.getModel(TABLE_NAME).findOne({
-        where: data
+        where: data,
       });
       return templateMedication;
     } catch (error) {
@@ -24,10 +24,10 @@ class TemplateMedicationService {
     }
   };
 
-  getMedicationsByCarePlanTemplateId = async care_plan_template_id => {
+  getMedicationsByCarePlanTemplateId = async (care_plan_template_id) => {
     try {
       const templateMedications = await Database.getModel(TABLE_NAME).findAll({
-        where: care_plan_template_id
+        where: care_plan_template_id,
       });
       return templateMedications;
     } catch (error) {
@@ -35,7 +35,7 @@ class TemplateMedicationService {
     }
   };
 
-  addTemplateMedication = async data => {
+  addTemplateMedication = async (data) => {
     try {
       const templateMedication = await Database.getModel(TABLE_NAME).create(
         data
@@ -46,10 +46,10 @@ class TemplateMedicationService {
     }
   };
 
-  deleteMedication = async data => {
+  deleteMedication = async (data) => {
     try {
       return await Database.getModel(TABLE_NAME).destroy({
-        where: data
+        where: data,
       });
     } catch (error) {
       throw error;
@@ -63,9 +63,9 @@ class TemplateMedicationService {
         data,
         {
           where: {
-            id
+            id,
           },
-          transaction
+          transaction,
         }
       );
       await transaction.commit();

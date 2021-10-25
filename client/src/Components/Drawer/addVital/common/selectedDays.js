@@ -13,37 +13,37 @@ class SelectedDays extends Component {
     super(props);
     const { event: { data: { repeatDays = [] } = {} } = {} } = props;
     this.state = {
-      selectedDays: repeatDays
+      selectedDays: repeatDays,
     };
   }
 
   componentDidMount() {
     const {
-      form: { validateFields }
+      form: { validateFields },
     } = this.props;
     validateFields();
   }
 
   componentWillUnmount() {
     const {
-      form: { validateFields }
+      form: { validateFields },
     } = this.props;
     validateFields();
   }
 
-  formatMessage = data => this.props.intl.formatMessage(data);
+  formatMessage = (data) => this.props.intl.formatMessage(data);
 
   handleCheckDays = (tag, checked) => {
     const {
-      form: { getFieldValue }
+      form: { getFieldValue },
     } = this.props;
     const selectedDays = getFieldValue(FIELD_NAME) || [];
     const nextSelectedTags = checked
       ? [...selectedDays, tag]
-      : selectedDays.filter(t => t !== tag);
+      : selectedDays.filter((t) => t !== tag);
     this.setState({ selectedDays: nextSelectedTags });
     const {
-      form: { setFieldsValue, validateFields }
+      form: { setFieldsValue, validateFields },
     } = this.props;
     setFieldsValue({ [FIELD_NAME]: nextSelectedTags });
     validateFields();
@@ -51,7 +51,7 @@ class SelectedDays extends Component {
 
   render() {
     const {
-      form: { getFieldDecorator, getFieldValue }
+      form: { getFieldDecorator, getFieldValue },
     } = this.props;
     let selectedDays = getFieldValue(FIELD_NAME) || [];
     const { handleCheckDays, formatMessage } = this;
@@ -66,18 +66,18 @@ class SelectedDays extends Component {
             rules: [
               {
                 required: true,
-                message: "Please select days for vitals!"
-              }
+                message: "Please select days for vitals!",
+              },
             ],
-            initialValue: selectedDays
+            initialValue: selectedDays,
           })(<Input />)}
         </FormItem>
         <div className="flex-shrink-1 flex justify-space-evenly select-days">
-          {DAYS.map(tag => (
+          {DAYS.map((tag) => (
             <CheckableTag
               key={tag}
               checked={selectedDays.indexOf(tag) > -1}
-              onChange={checked => handleCheckDays(tag, checked)}
+              onChange={(checked) => handleCheckDays(tag, checked)}
             >
               {tag}
             </CheckableTag>
@@ -92,5 +92,5 @@ const Field = injectIntl(SelectedDays);
 
 export default {
   field_name: FIELD_NAME,
-  render: props => <Field {...props} />
+  render: (props) => <Field {...props} />,
 };

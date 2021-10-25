@@ -1,6 +1,6 @@
 import React from "react";
 
-export default props => {
+export default (props) => {
   const { workoutData: { details: { repeat_days = [] } = {} } = {} } =
     props || {};
   let str = repeat_days.toString() || "";

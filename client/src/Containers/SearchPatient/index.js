@@ -4,25 +4,25 @@ import { getInitialData } from "../../modules/auth";
 import { connect } from "react-redux";
 import { searchPatientForDoctor } from "../../modules/patients";
 
-const mapStateToProps = state => {
+const mapStateToProps = (state) => {
   const {
     auth: { authPermissions = [], authenticated_user = 1 } = {},
     drawer,
     patients,
-    doctors
+    doctors,
   } = state;
   return {
     authPermissions,
     drawer,
     patients,
     doctors,
-    authenticated_user
+    authenticated_user,
   };
 };
 
-const mapDispatchToProps = dispatch => {
+const mapDispatchToProps = (dispatch) => {
   return {
-    searchPatientForDoctor: value => dispatch(searchPatientForDoctor(value))
+    searchPatientForDoctor: (value) => dispatch(searchPatientForDoctor(value)),
   };
 };
 

@@ -18,7 +18,7 @@ class VitalOccurence extends Component {
     super(props);
     this.state = {
       vitals: {},
-      fetchingVitals: false
+      fetchingVitals: false,
     };
   }
 
@@ -29,7 +29,7 @@ class VitalOccurence extends Component {
   getStagesOption = () => {
     if (!this.state.fetchingVitals) {
       const { getVitalOccurence } = this.props;
-      getVitalOccurence().then(res => {
+      getVitalOccurence().then((res) => {
         const { status = false } = res;
         if (status) {
           this.setState({ fetchingVitals: true });
@@ -39,12 +39,12 @@ class VitalOccurence extends Component {
     }
   };
 
-  getParentNode = t => t.parentNode;
+  getParentNode = (t) => t.parentNode;
 
-  occurenceEdited = e => {
+  occurenceEdited = (e) => {
     const {
       form: { setFieldsValue, validateFields },
-      enableSubmit
+      enableSubmit,
     } = this.props;
 
     enableSubmit();
@@ -55,7 +55,7 @@ class VitalOccurence extends Component {
       form: { getFieldDecorator, getFieldError, isFieldTouched },
       repeat_intervals,
       payload: { id: vital_id, canViewDetails = false } = {},
-      vitals
+      vitals,
     } = this.props;
     const { details: { repeat_interval_id } = {} } = vitals[vital_id] || {};
     const { fetchingVitals } = this.state;
@@ -72,7 +72,7 @@ class VitalOccurence extends Component {
       existing_repeat_interval_id = vital_repeat_int_id;
     }
 
-    const options = Object.keys(repeat_intervals).map(id => {
+    const options = Object.keys(repeat_intervals).map((id) => {
       const { text = "" } = repeat_intervals[id] || {};
       return (
         <Option key={id} value={id} onClick={this.occurenceEdited}>
@@ -92,7 +92,7 @@ class VitalOccurence extends Component {
         {getFieldDecorator(FIELD_NAME, {
           initialValue: existing_repeat_interval_id
             ? existing_repeat_interval_id
-            : repeat_interval_id
+            : repeat_interval_id,
         })(
           <Select
             notFoundContent={
@@ -124,5 +124,5 @@ const Field = injectIntl(VitalOccurence);
 
 export default {
   field_name: FIELD_NAME,
-  render: props => <Field {...props} />
+  render: (props) => <Field {...props} />,
 };

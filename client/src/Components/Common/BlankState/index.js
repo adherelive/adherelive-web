@@ -28,12 +28,12 @@ const getHeader = ({ intl: { formatMessage } = {} }) => (
   </div>
 );
 
-const handleRedirect = props => e => {
+const handleRedirect = (props) => (e) => {
   e.preventDefault();
   props.history.push(PATH.LANDING_PAGE);
 };
 
-const BlankState = props => {
+const BlankState = (props) => {
   const { intl: { formatMessage } = {} } = props;
   return (
     <Fragment>

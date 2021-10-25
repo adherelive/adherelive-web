@@ -4,12 +4,12 @@ import { TABLE_NAME } from "../../models/mealTemplateFoodItemMapping";
 const DEFAULT_ORDER = [["created_at", "DESC"]];
 
 class MealTemplateFoodItemMappingService {
-  create = async data => {
+  create = async (data) => {
     const transaction = await Database.initTransaction();
     try {
       const record = await Database.getModel(TABLE_NAME).create(data, {
         raw: true,
-        transaction
+        transaction,
         // include: [
         // Database.getModel(mealTemplateTableName),
         // Database.getModel(foodItemTableName),
@@ -28,14 +28,14 @@ class MealTemplateFoodItemMappingService {
     try {
       const record = await Database.getModel(TABLE_NAME).update(data, {
         where: {
-          id
+          id,
         },
         // include: [
         // Database.getModel(mealTemplateTableName),
         // Database.getModel(foodItemTableName),
         // ],
         raw: true,
-        transaction
+        transaction,
       });
       await transaction.commit();
       return record;
@@ -45,7 +45,7 @@ class MealTemplateFoodItemMappingService {
     }
   };
 
-  getByData = async data => {
+  getByData = async (data) => {
     try {
       return await Database.getModel(TABLE_NAME).findOne({
         where: data,
@@ -53,7 +53,7 @@ class MealTemplateFoodItemMappingService {
         // Database.getModel(mealTemplateTableName),
         // Database.getModel(foodItemTableName),
         // ],
-        raw: true
+        raw: true,
       });
     } catch (error) {
       throw error;
@@ -66,19 +66,19 @@ class MealTemplateFoodItemMappingService {
         where,
         order,
         attributes,
-        raw: true
+        raw: true,
       });
     } catch (error) {
       throw error;
     }
   };
 
-  delete = async id => {
+  delete = async (id) => {
     try {
       const record = await Database.getModel(TABLE_NAME).destroy({
         where: {
-          id
-        }
+          id,
+        },
       });
       return record;
     } catch (err) {

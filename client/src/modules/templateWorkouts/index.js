@@ -3,7 +3,7 @@ function templateWorkoutsReducer(state, data) {
   if (template_workouts) {
     return {
       ...state,
-      ...template_workouts
+      ...template_workouts,
     };
   } else {
     return state;

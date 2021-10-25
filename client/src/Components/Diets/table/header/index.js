@@ -9,34 +9,34 @@ import Calories from "../dataColumn/calories";
 import Edit from "../dataColumn/edit";
 import TimelineButton from "../dataColumn/timelineButton";
 
-export default props => {
+export default (props) => {
   const { formatMessage } = props || {};
 
   return [
     {
       title: formatMessage(messages.name),
       ...TABLE_COLUMN.NAME,
-      render: data => {
+      render: (data) => {
         const { dietData, formatMessage } = data || {};
         return <Name dietData={dietData} formatMessage={formatMessage} />;
-      }
+      },
     },
     {
       title: formatMessage(messages.duration),
       ...TABLE_COLUMN.DURATION,
 
-      render: ({ dietData }) => <Duration dietData={dietData} />
+      render: ({ dietData }) => <Duration dietData={dietData} />,
     },
     {
       title: formatMessage(messages.repeat_days),
       ...TABLE_COLUMN.REPEAT_DAYS,
 
-      render: ({ dietData }) => <RepeatDays dietData={dietData} />
+      render: ({ dietData }) => <RepeatDays dietData={dietData} />,
     },
     {
       title: formatMessage(messages.calories),
       ...TABLE_COLUMN.CALORIES,
-      render: ({ dietData }) => <Calories dietData={dietData} />
+      render: ({ dietData }) => <Calories dietData={dietData} />,
     },
     {
       title: "Adherence",
@@ -48,7 +48,7 @@ export default props => {
           openResponseDrawer={openResponseDrawer}
           id={id}
         />
-      )
+      ),
     },
     {
       title: "",
@@ -59,7 +59,7 @@ export default props => {
         formatMessage,
         id,
         dietData,
-        canViewDetails
+        canViewDetails,
       }) => (
         <Edit
           formatMessage={formatMessage}
@@ -68,7 +68,7 @@ export default props => {
           dietData={dietData}
           canViewDetails={canViewDetails}
         />
-      )
-    }
+      ),
+    },
   ];
 };

@@ -12,11 +12,11 @@ class ProviderService {
     }
   };
 
-  getProviderByData = async data => {
+  getProviderByData = async (data) => {
     try {
       const provider = await Database.getModel(TABLE_NAME).findOne({
         where: data,
-        include: [Database.getModel(userTableName)]
+        include: [Database.getModel(userTableName)],
       });
       return provider;
     } catch (err) {
@@ -27,18 +27,18 @@ class ProviderService {
   getAllProviders = async () => {
     try {
       return await Database.getModel(TABLE_NAME).findAll({
-        include: [Database.getModel(userTableName)]
+        include: [Database.getModel(userTableName)],
       });
     } catch (err) {
       throw err;
     }
   };
 
-  addProvider = async data => {
+  addProvider = async (data) => {
     const transaction = await Database.initTransaction();
     try {
       const provider = await Database.getModel(TABLE_NAME).create(data, {
-        transaction
+        transaction,
       });
       await transaction.commit();
       return provider;
@@ -53,9 +53,9 @@ class ProviderService {
     try {
       const provider = await Database.getModel(TABLE_NAME).update(data, {
         where: {
-          id
+          id,
         },
-        transaction
+        transaction,
       });
       await transaction.commit();
       return provider;

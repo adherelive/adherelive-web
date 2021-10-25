@@ -4,68 +4,68 @@ const messages = defineMessages({
   editReport: {
     id: "app.editReport.editReport",
     description: "",
-    defaultMessage: "Edit Report"
+    defaultMessage: "Edit Report",
   },
   upload_text: {
     id: "app.editReport.upload_text",
     description: "",
-    defaultMessage: "Upload"
+    defaultMessage: "Upload",
   },
   name: {
     id: "app.editReport.name",
     description: "",
-    defaultMessage: "Name"
+    defaultMessage: "Name",
   },
   files: {
     id: "app.editReport.files",
     description: "",
-    defaultMessage: "Files"
+    defaultMessage: "Files",
   },
   add_report_name: {
     id: "app.editReport.editReportName",
     description: "",
-    defaultMessage: "Add Report Name"
+    defaultMessage: "Add Report Name",
   },
   submit: {
     id: "app.editReport.submit",
     description: "",
-    defaultMessage: "Submit"
+    defaultMessage: "Submit",
   },
   somethingWentWrong: {
     id: "app.editReport.somethingWentWrong",
     description: "",
-    defaultMessage: "Something went wrong."
+    defaultMessage: "Something went wrong.",
   },
   testDate: {
     id: "app.editReport.testDate",
     description: "",
-    defaultMessage: "Test Date"
+    defaultMessage: "Test Date",
   },
   deleteSuccess: {
     id: "app.editReport.reportDelete",
     description: "",
-    defaultMessage: "Report deleted"
+    defaultMessage: "Report deleted",
   },
   exitWarn: {
     id: "app.editReport.exitWarn",
     description: "",
-    defaultMessage: "This will remove all the data to be uploaded"
+    defaultMessage: "This will remove all the data to be uploaded",
   },
   exitMessage: {
     id: "app.editReport.exitMessage",
     description: "",
-    defaultMessage: "Are you sure you want to cancel ?"
+    defaultMessage: "Are you sure you want to cancel ?",
   },
   deleteWarn: {
     id: "app.editReport.deleteWarn",
     description: "",
-    defaultMessage: "This will delete is irreversible"
+    defaultMessage: "This will delete is irreversible",
   },
   deleteMessage: {
     id: "app.editReport.deleteMessage",
     description: "",
-    defaultMessage: "Are you sure you want to delete the document ?"
-  }
+    defaultMessage: "Are you sure you want to delete the document ?",
+  },
 });
 
 export default messages;

@@ -25,9 +25,8 @@ class SeverityController extends Controller {
         let severityApiData = {};
         for (const severity of severityDetails) {
           const severityWrapper = await new SeverityWrapper(severity);
-          severityApiData[
-            severityWrapper.getSeverityId()
-          ] = severityWrapper.getBasicInfo();
+          severityApiData[severityWrapper.getSeverityId()] =
+            severityWrapper.getBasicInfo();
         }
 
         return raiseSuccess(
@@ -35,8 +34,8 @@ class SeverityController extends Controller {
           200,
           {
             severity: {
-              ...severityApiData
-            }
+              ...severityApiData,
+            },
           },
           "Severities fetched successfully"
         );

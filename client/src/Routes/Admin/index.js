@@ -9,14 +9,14 @@ class Admin extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      redirecting: this.props.authRedirection
+      redirecting: this.props.authRedirection,
     };
   }
 
   componentDidMount() {
     this.setState(() => {
       return {
-        redirecting: false
+        redirecting: false,
       };
     });
   }

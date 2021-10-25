@@ -16,11 +16,11 @@ class PushNotification {
     }
   };
 
-  sendPushNotification = template => {
+  sendPushNotification = (template) => {
     try {
       const headers = {
         "Content-Type": "application/json; charset=utf-8",
-        Authorization: "Basic " + process.config.one_signal.key
+        Authorization: "Basic " + process.config.one_signal.key,
         // host: "onesignal.com"
       };
 
@@ -30,23 +30,23 @@ class PushNotification {
         port: 443,
         path: "/api/v1/notifications",
         method: "POST",
-        headers: headers
+        headers: headers,
       };
 
       const https = require("https");
-      const req = https.request(options, function(res) {
-        res.on("data", function(data) {
+      const req = https.request(options, function (res) {
+        res.on("data", function (data) {
           console.log("Response:", template);
           console.log("Data:", data);
         });
 
-        res.on("error", function(err) {
+        res.on("error", function (err) {
           console.log("ERROR: in listening in push notification");
           console.log("err:", err);
         });
       });
 
-      req.on("error", function(e) {
+      req.on("error", function (e) {
         console.log("ERROR in sending push notification:");
         console.log(e);
       });

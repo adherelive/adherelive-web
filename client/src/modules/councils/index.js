@@ -6,25 +6,25 @@ export const SEARCH_COUNCIL_START = "SEARCH_COUNCIL_START";
 export const SEARCH_COUNCIL_COMPLETED = "SEARCH_COUNCIL_COMPLETED";
 export const SEARCH_COUNCIL_FAILED = "SEARCH_COUNCIL_FAILED";
 
-export const searchCouncil = value => {
+export const searchCouncil = (value) => {
   let response = {};
-  return async dispatch => {
+  return async (dispatch) => {
     try {
       response = await doRequest({
         method: REQUEST_TYPE.GET,
-        url: searchCouncils(value)
+        url: searchCouncils(value),
       });
 
       const { status, payload: { data, message = "" } = {} } = response || {};
       if (status === true) {
         dispatch({
           type: SEARCH_COUNCIL_COMPLETED,
-          data
+          data,
         });
       } else {
         dispatch({
           type: SEARCH_COUNCIL_FAILED,
-          message
+          message,
         });
       }
     } catch (error) {
@@ -39,7 +39,7 @@ function councilReducer(state, data) {
   if (registration_councils) {
     return {
       ...state,
-      ...registration_councils
+      ...registration_councils,
     };
   } else {
     return state;

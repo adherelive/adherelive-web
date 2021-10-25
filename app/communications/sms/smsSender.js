@@ -8,7 +8,7 @@ class SmsManager {
     AWS.config.update({
       accessKeyId: process.config.aws.access_key_id,
       secretAccessKey: process.config.aws.access_key,
-      region: process.config.aws.region
+      region: process.config.aws.region,
     });
 
     this.TopicArn = process.config.aws.topic_arn;
@@ -40,7 +40,7 @@ class SmsManager {
         url: process.config.MSG91_SMS_URL,
         headers: {
           authkey: process.config.MSG91_AUTH_KEY,
-          "content-type": "application/json"
+          "content-type": "application/json",
         },
         data: {
           sender: process.config.MSG91_SENDER,
@@ -49,10 +49,10 @@ class SmsManager {
           sms: [
             {
               message: smsData.Message,
-              to: [smsData.PhoneNumber]
-            }
-          ]
-        }
+              to: [smsData.PhoneNumber],
+            },
+          ],
+        },
       };
 
       let response = await axios(options);
@@ -107,27 +107,27 @@ class SmsManager {
     if (!smsData.countryCode)
       return {
         error: 1,
-        message: "invalid or empty country code!!"
+        message: "invalid or empty country code!!",
       };
 
     if (!smsData.phoneNumber)
       return {
         error: 1,
-        message: "invalid or empty phone number!!"
+        message: "invalid or empty phone number!!",
       };
 
     if (!smsData.message)
       return {
         error: 1,
-        message: "message can't be empty"
+        message: "message can't be empty",
       };
     return {
       error: 0,
-      message: "valid"
+      message: "valid",
     };
   }
 }
 
-module.exports = payload => {
+module.exports = (payload) => {
   return new SmsManager(payload);
 };

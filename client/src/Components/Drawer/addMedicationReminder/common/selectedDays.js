@@ -21,53 +21,53 @@ class SelectedDays extends Component {
     super(props);
     const { event: { data: { repeatDays = [] } = {} } = {} } = this.props;
     this.state = {
-      selectedDays: repeatDays
+      selectedDays: repeatDays,
     };
   }
 
   componentDidMount() {
     const {
-      form: { validateFields }
+      form: { validateFields },
     } = this.props;
     validateFields();
   }
 
   componentWillUnmount() {
     const {
-      form: { validateFields }
+      form: { validateFields },
     } = this.props;
     validateFields();
   }
 
-  formatMessage = data => this.props.intl.formatMessage(data);
+  formatMessage = (data) => this.props.intl.formatMessage(data);
 
   handleCheckDays = (tag, checked) => {
     const { selectedDays } = this.state;
     const nextSelectedTags = checked
       ? [...selectedDays, tag]
-      : selectedDays.filter(t => t !== tag);
+      : selectedDays.filter((t) => t !== tag);
     this.setState({ selectedDays: nextSelectedTags });
     const {
-      form: { setFieldsValue, validateFields }
+      form: { setFieldsValue, validateFields },
     } = this.props;
     setFieldsValue({ [FIELD_NAME]: nextSelectedTags.join(",") });
     validateFields();
   };
 
-  setRepeatEveryDay = e => {
+  setRepeatEveryDay = (e) => {
     e.preventDefault();
     const {
-      form: { setFieldsValue, validateFields }
+      form: { setFieldsValue, validateFields },
     } = this.props;
     this.setState({ selectedDays: DAYS });
     setFieldsValue({ [FIELD_NAME]: DAYS.join(",") });
     validateFields();
   };
 
-  setRepeatAlternateDay = e => {
+  setRepeatAlternateDay = (e) => {
     e.preventDefault();
     const {
-      form: { setFieldsValue, validateFields }
+      form: { setFieldsValue, validateFields },
     } = this.props;
     this.setState({ selectedDays: ALTERNATE_DAYS });
     setFieldsValue({ [FIELD_NAME]: ALTERNATE_DAYS.join(",") });
@@ -76,7 +76,7 @@ class SelectedDays extends Component {
 
   render() {
     const {
-      form: { getFieldDecorator, getFieldValue, setFieldValue }
+      form: { getFieldDecorator, getFieldValue, setFieldValue },
     } = this.props;
 
     const { selectedDays } = this.state;
@@ -97,7 +97,7 @@ class SelectedDays extends Component {
       if (selectedDaysArray.length == 7) {
         selectedDaysRadio = 1;
       } else if (selectedDaysArray.length == 4) {
-        ALTERNATE_DAYS.map(value => {
+        ALTERNATE_DAYS.map((value) => {
           if (!selectedDaysArray.includes(value)) {
             selectedDaysRadio = null;
           }
@@ -134,18 +134,18 @@ class SelectedDays extends Component {
             rules: [
               {
                 required: true,
-                message: "Please select days for medication!"
-              }
+                message: "Please select days for medication!",
+              },
             ],
-            initialValue: selectedDays.join(",")
+            initialValue: selectedDays.join(","),
           })(<Input />)}
         </FormItem>
         <div className="flex-shrink-1 flex justify-space-evenly select-days">
-          {DAYS.map(tag => (
+          {DAYS.map((tag) => (
             <CheckableTag
               key={tag}
               checked={selectedDays.indexOf(tag) > -1}
-              onChange={checked => handleCheckDays(tag, checked)}
+              onChange={(checked) => handleCheckDays(tag, checked)}
             >
               {tag}
             </CheckableTag>
@@ -173,5 +173,5 @@ const Field = injectIntl(SelectedDays);
 
 export default {
   field_name: FIELD_NAME,
-  render: props => <Field {...props} />
+  render: (props) => <Field {...props} />,
 };

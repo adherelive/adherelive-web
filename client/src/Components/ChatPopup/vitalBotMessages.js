@@ -9,7 +9,7 @@ import {
   BODY,
   PARTS_GRAPH,
   BODY_VIEW,
-  BODY_SIDE
+  BODY_SIDE,
 } from "../../constant";
 import messages from "./messages";
 import { injectIntl } from "react-intl";
@@ -24,7 +24,7 @@ class vitalBotMessage extends Component {
 
   componentDidMount() {}
 
-  getEllipsis = message => {
+  getEllipsis = (message) => {
     return (
       <div className="wp100 tar fs20 pr20">
         <span
@@ -39,7 +39,7 @@ class vitalBotMessage extends Component {
     );
   };
 
-  replyToMessage = e => {
+  replyToMessage = (e) => {
     e.preventDefault();
     const { updateReplyMessageId } = this.props;
     if (typeof updateReplyMessageId === "function") {
@@ -55,7 +55,7 @@ class vitalBotMessage extends Component {
       body: this_body,
       message,
       patientDp,
-      vital_repeat_intervals = {}
+      vital_repeat_intervals = {},
     } = this.props;
     const body = JSON.parse(this_body);
     const { vitals, vital_id, vital_templates, response } = body;
@@ -63,7 +63,7 @@ class vitalBotMessage extends Component {
     const vitalsMessageArray = [];
     const {
       basic_info: { vital_template_id } = {},
-      details: { repeat_days = [], repeat_interval_id = "" } = {}
+      details: { repeat_days = [], repeat_interval_id = "" } = {},
     } = vitals[vital_id] || {};
     const { basic_info: { name } = {}, details: { template = [] } = {} } =
       vital_templates[vital_template_id] || {};
@@ -71,7 +71,7 @@ class vitalBotMessage extends Component {
     // console.log("template",template);
     //while rendering bottom message for vitals
 
-    template.map(eachTemplate => {
+    template.map((eachTemplate) => {
       let vitalMessage = "";
       const { id, label, placeholder } = eachTemplate || {};
 

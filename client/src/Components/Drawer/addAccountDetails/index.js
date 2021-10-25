@@ -35,7 +35,7 @@ class addAccountDetailsDrawer extends Component {
       account_type: "",
       use_as_main: false,
       upi_id: "",
-      submitting: false
+      submitting: false,
     };
   }
 
@@ -49,7 +49,7 @@ class addAccountDetailsDrawer extends Component {
   //
   // }
 
-  setLinkedAccountName = e => {
+  setLinkedAccountName = (e) => {
     e.preventDefault();
     const { value } = e.target;
     const reg = /^[a-zA-Z][a-zA-Z\s]*$/;
@@ -58,33 +58,33 @@ class addAccountDetailsDrawer extends Component {
     }
   };
 
-  setPhoneNumber = e => {
+  setPhoneNumber = (e) => {
     e.preventDefault();
     const { value } = e.target;
 
     this.setState({ account_mobile_number: e.target.value });
   };
 
-  setAccountNumber = e => {
+  setAccountNumber = (e) => {
     e.preventDefault();
     const { value } = e.target;
     this.setState({ account_number: value });
   };
 
-  setAccountType = value => {
+  setAccountType = (value) => {
     this.setState({ account_type: value });
   };
 
-  setPrefix = value => {
+  setPrefix = (value) => {
     this.setState({ prefix: value });
   };
 
-  set_ifsc_code = e => {
+  set_ifsc_code = (e) => {
     e.preventDefault();
     const { value } = e.target;
     this.setState({ ifsc_code: value });
   };
-  setMain = e => {
+  setMain = (e) => {
     e.preventDefault();
     const { use_as_main } = this.state;
     if (use_as_main) {
@@ -94,7 +94,7 @@ class addAccountDetailsDrawer extends Component {
     }
   };
 
-  setUPIidValue = e => {
+  setUPIidValue = (e) => {
     e.preventDefault();
     const { value } = e.target;
     this.setState({ upi_id: value });
@@ -109,7 +109,7 @@ class addAccountDetailsDrawer extends Component {
       ifsc_code = "",
       account_number = "",
       use_as_main = false,
-      upi_id = ""
+      upi_id = "",
     } = this.state;
 
     const prefixSelector = (
@@ -289,14 +289,14 @@ class addAccountDetailsDrawer extends Component {
                 display: "flex",
                 flexDirection: "row",
                 alignItems: "center",
-                justifyContent: "space-between"
+                justifyContent: "space-between",
               }}
             >
               <Radio.Button
                 style={{
                   width: "40%",
                   marginBottom: "10px",
-                  marginTop: "10px"
+                  marginTop: "10px",
                 }}
                 value={SAVINGS}
                 onClick={() => {
@@ -310,7 +310,7 @@ class addAccountDetailsDrawer extends Component {
                 style={{
                   width: "40%",
                   marginBottom: "10px",
-                  marginTop: "10px"
+                  marginTop: "10px",
                 }}
                 value={CURRENT}
                 onClick={() => {
@@ -373,7 +373,7 @@ class addAccountDetailsDrawer extends Component {
     );
   };
 
-  formatMessage = data => this.props.intl.formatMessage(data);
+  formatMessage = (data) => this.props.intl.formatMessage(data);
 
   onClose = () => {
     const { close } = this.props;
@@ -385,7 +385,7 @@ class addAccountDetailsDrawer extends Component {
       ifsc_code: "",
       account_type: "",
       use_as_main: false,
-      upi_id: ""
+      upi_id: "",
     });
     close();
   };
@@ -397,7 +397,7 @@ class addAccountDetailsDrawer extends Component {
       prefix = "",
       account_number = "",
       ifsc_code = "",
-      account_type = ""
+      account_type = "",
     } = this.state;
 
     if (!prefix) {
@@ -435,7 +435,7 @@ class addAccountDetailsDrawer extends Component {
     ifsc_code,
     account_type,
     use_as_main = false,
-    upi_id
+    upi_id,
   }) => {
     this.handleSubmit({
       customer_name,
@@ -445,7 +445,7 @@ class addAccountDetailsDrawer extends Component {
       ifsc_code,
       account_type,
       use_as_main,
-      upi_id
+      upi_id,
     });
   };
 
@@ -457,7 +457,7 @@ class addAccountDetailsDrawer extends Component {
     ifsc_code,
     account_type,
     use_as_main,
-    upi_id
+    upi_id,
   }) {
     try {
       this.setState({ submitting: true });
@@ -471,7 +471,7 @@ class addAccountDetailsDrawer extends Component {
         ifsc_code,
         account_type,
         use_as_main,
-        upi_id
+        upi_id,
       });
       const { status, payload: { message: msg } = {} } = response;
       if (status) {
@@ -499,7 +499,7 @@ class addAccountDetailsDrawer extends Component {
       ifsc_code = "",
       account_type = "",
       use_as_main = false,
-      upi_id = ""
+      upi_id = "",
     } = this.state;
     const validate = this.validateData();
     const { submit } = this;
@@ -512,7 +512,7 @@ class addAccountDetailsDrawer extends Component {
         ifsc_code,
         account_type,
         use_as_main,
-        upi_id
+        upi_id,
       });
     }
   };
@@ -521,7 +521,7 @@ class addAccountDetailsDrawer extends Component {
     const { renderAddAccountDetailsForm } = this;
     const { visible } = this.props;
     const {
-      onClose
+      onClose,
       //  renderAddNewConsultationFee
     } = this;
 
@@ -540,7 +540,7 @@ class addAccountDetailsDrawer extends Component {
           headerStyle={{
             position: "sticky",
             zIndex: "9999",
-            top: "0px"
+            top: "0px",
           }}
           destroyOnClose={true}
           onClose={onClose}

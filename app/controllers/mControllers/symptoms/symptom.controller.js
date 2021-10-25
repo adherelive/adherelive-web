@@ -15,7 +15,7 @@ import PatientWrapper from "../../../ApiWrapper/mobile/patient";
 import {
   uploadAudio,
   uploadImage,
-  uploadVideo
+  uploadVideo,
 } from "./symptom.controller.helper";
 import Logger from "../../../../libs/log";
 import {
@@ -23,7 +23,7 @@ import {
   USER_CATEGORY,
   ALLOWED_VIDEO_EXTENSIONS,
   EVENT_TYPE,
-  EVENT_STATUS
+  EVENT_STATUS,
   // MESSAGE_TYPES,
 } from "../../../../constant";
 import { getFilePath } from "../../../helper/filePath";
@@ -50,7 +50,7 @@ class SymptomController extends Controller {
         body,
         params: { patient_id } = {},
         // userDetails: { userId, userRoleId } = {}
-        userDetails: { userId, userRoleId, userData: { category } = {} } = {}
+        userDetails: { userId, userRoleId, userData: { category } = {} } = {},
       } = req;
       const {
         care_plan_id,
@@ -60,7 +60,7 @@ class SymptomController extends Controller {
         text = "",
         audios = [],
         photos = [],
-        videos = []
+        videos = [],
       } = body || {};
 
       const patientData = await PatientWrapper(null, patient_id);
@@ -71,9 +71,9 @@ class SymptomController extends Controller {
         config: {
           duration,
           parts,
-          side
+          side,
         },
-        text
+        text,
       });
 
       const symptom = await SymptomWrapper(symptomData);
@@ -86,19 +86,18 @@ class SymptomController extends Controller {
         const { name, file } = audio || {};
         const audioExists = await UploadDocumentService.getDocumentByName({
           name,
-          parent_id: symptom.getSymptomId()
+          parent_id: symptom.getSymptomId(),
         });
         if (!audioExists) {
           const addDocument = await UploadDocumentService.addDocument({
             parent_type: DOCUMENT_PARENT_TYPE.SYMPTOM_AUDIO,
             parent_id: symptom.getSymptomId(),
             document: getFilePath(file),
-            name
+            name,
           });
           const document = await DocumentWrapper(addDocument);
-          uploadDocumentData[
-            document.getUploadDocumentId()
-          ] = document.getBasicInfo();
+          uploadDocumentData[document.getUploadDocumentId()] =
+            document.getBasicInfo();
           audioDocumentIds.push(addDocument.get("id"));
         }
       }
@@ -107,19 +106,18 @@ class SymptomController extends Controller {
         const { name, file } = photo || {};
         const audioExists = await UploadDocumentService.getDocumentByName({
           name,
-          parent_id: symptom.getSymptomId()
+          parent_id: symptom.getSymptomId(),
         });
         if (!audioExists) {
           const addDocument = await UploadDocumentService.addDocument({
             parent_type: DOCUMENT_PARENT_TYPE.SYMPTOM_PHOTO,
             parent_id: symptom.getSymptomId(),
             document: getFilePath(file),
-            name
+            name,
           });
           const document = await DocumentWrapper(addDocument);
-          uploadDocumentData[
-            document.getUploadDocumentId()
-          ] = document.getBasicInfo();
+          uploadDocumentData[document.getUploadDocumentId()] =
+            document.getBasicInfo();
           imageDocumentIds.push(addDocument.get("id"));
         }
       }
@@ -128,25 +126,24 @@ class SymptomController extends Controller {
         const { name, file } = video || {};
         const videoExists = await UploadDocumentService.getDocumentByName({
           name,
-          parent_id: symptom.getSymptomId()
+          parent_id: symptom.getSymptomId(),
         });
         if (!videoExists) {
           const addDocument = await UploadDocumentService.addDocument({
             parent_type: DOCUMENT_PARENT_TYPE.SYMPTOM_VIDEO,
             parent_id: symptom.getSymptomId(),
             document: getFilePath(file),
-            name
+            name,
           });
           const document = await DocumentWrapper(addDocument);
-          uploadDocumentData[
-            document.getUploadDocumentId()
-          ] = document.getBasicInfo();
+          uploadDocumentData[document.getUploadDocumentId()] =
+            document.getBasicInfo();
         }
       }
 
       const carePlans = await carePlanService.getMultipleCarePlanByData({
         expired_on: null,
-        patient_id
+        patient_id,
       });
 
       let allUniqueDoctorsToNotifyData = {};
@@ -164,10 +161,10 @@ class SymptomController extends Controller {
         const chatJSON = JSON.stringify({
           ...(await symptom.getAllInfo()),
           upload_documents: {
-            ...uploadDocumentData
+            ...uploadDocumentData,
           },
           symptom_id: symptom.getSymptomId(),
-          type: EVENT_TYPE.SYMPTOMS
+          type: EVENT_TYPE.SYMPTOMS,
         });
 
         // const twilioMsg = await twilioService.addSymptomMessage(
@@ -203,18 +200,18 @@ class SymptomController extends Controller {
                   user_role_id: userRoleId,
                   details: {
                     name: patientData.getFullName(),
-                    category: USER_CATEGORY.PATIENT
-                  }
+                    category: USER_CATEGORY.PATIENT,
+                  },
                 },
                 details: {
-                  message: `A new symptom is added.`
-                }
+                  message: `A new symptom is added.`,
+                },
               },
               // todo: chat
               twilio: {
                 channel_id: carePlan.getChannelId(),
-                content: chatJSON
-              }
+                content: chatJSON,
+              },
             };
 
             doctorLatestCareplanData[doctorRoleId] = carePlan.getCarePlanId();
@@ -229,7 +226,7 @@ class SymptomController extends Controller {
         ) {
           alluniqueChatChannelData[carePlan.getChannelId()] = {
             // todo: chat
-            content: chatJSON
+            content: chatJSON,
           };
         }
 
@@ -242,7 +239,7 @@ class SymptomController extends Controller {
 
       if (Object.keys(allUniqueDoctorsToNotifyData).length > 0) {
         const allDoctorIds = Object.keys(allUniqueDoctorsToNotifyData).map(
-          id => {
+          (id) => {
             return parseInt(id, 10);
           }
         );
@@ -252,11 +249,11 @@ class SymptomController extends Controller {
           actor: {
             id: userId,
             user_role_id: userRoleId,
-            details: { name: patientData.getFullName(), category }
+            details: { name: patientData.getFullName(), category },
           },
           patient_id,
           care_plan_id_data: doctorLatestCareplanData,
-          event_id: symptom.getSymptomId()
+          event_id: symptom.getSymptomId(),
         };
 
         const symptomJob = SymptomsJob.execute(
@@ -285,7 +282,7 @@ class SymptomController extends Controller {
         {
           ...(await symptom.getAllInfo()),
           ...(await symptom.getReferenceInfo()),
-          symptom_ids: [symptom.getSymptomId()]
+          symptom_ids: [symptom.getSymptomId()],
         },
         "Symptom added successfully"
       );
@@ -309,7 +306,7 @@ class SymptomController extends Controller {
         200,
         {
           file,
-          name
+          name,
         },
         "Symptom audio added successfully"
       );
@@ -326,7 +323,7 @@ class SymptomController extends Controller {
 
       const {
         file: videoFile,
-        userDetails: { userId, userData: { category } = {} } = {}
+        userDetails: { userId, userData: { category } = {} } = {},
       } = req;
 
       if (category === USER_CATEGORY.PATIENT) {
@@ -344,7 +341,7 @@ class SymptomController extends Controller {
             200,
             {
               file,
-              name
+              name,
             },
             "Symptom video added successfully"
           );
@@ -386,7 +383,7 @@ class SymptomController extends Controller {
         200,
         {
           file,
-          name
+          name,
         },
         "Symptom photo added successfully"
       );
@@ -414,12 +411,8 @@ class SymptomController extends Controller {
         if (symptomExists) {
           const symptom = await SymptomWrapper({ data: symptomExists });
           const { symptoms } = await symptom.getAllInfo();
-          const {
-            users,
-            upload_documents,
-            patients,
-            doctors
-          } = await symptom.getReferenceInfo();
+          const { users, upload_documents, patients, doctors } =
+            await symptom.getReferenceInfo();
           symptomData = { ...symptomData, ...symptoms };
           userData = { ...userData, ...users };
           documentData = { ...documentData, ...upload_documents };
@@ -433,20 +426,20 @@ class SymptomController extends Controller {
         200,
         {
           symptoms: {
-            ...symptomData
+            ...symptomData,
           },
           upload_documents: {
-            ...documentData
+            ...documentData,
           },
           users: {
-            ...userData
+            ...userData,
           },
           doctors: {
-            ...doctorData
+            ...doctorData,
           },
           patients: {
-            ...patientData
-          }
+            ...patientData,
+          },
         },
         "Symptom details fetched successfully"
       );

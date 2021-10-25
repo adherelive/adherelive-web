@@ -1,7 +1,7 @@
 import React from "react";
 import moment from "moment";
 
-export default props => {
+export default (props) => {
   const { appointmentData } = props || {};
   const { basic_info: { start_time, end_time } = {} } = appointmentData || {};
 

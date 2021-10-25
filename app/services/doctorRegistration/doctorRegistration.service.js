@@ -4,7 +4,7 @@ import { TABLE_NAME } from "../../models/doctorRegistrations";
 class DoctorRegistrationService {
   constructor() {}
 
-  addRegistration = async data => {
+  addRegistration = async (data) => {
     try {
       const doctorRegistration = await Database.getModel(TABLE_NAME).create(
         data
@@ -15,13 +15,13 @@ class DoctorRegistrationService {
     }
   };
 
-  getRegistrationByDoctorId = async doctor_id => {
+  getRegistrationByDoctorId = async (doctor_id) => {
     try {
       const doctorRegistration = await Database.getModel(TABLE_NAME).findAll({
         where: {
           doctor_id,
-          deleted_at: null
-        }
+          deleted_at: null,
+        },
       });
       return doctorRegistration;
     } catch (error) {
@@ -29,13 +29,13 @@ class DoctorRegistrationService {
     }
   };
 
-  getRegistrationById = async id => {
+  getRegistrationById = async (id) => {
     try {
       const doctorRegistration = await Database.getModel(TABLE_NAME).findOne({
         where: {
           id,
-          deleted_at: null
-        }
+          deleted_at: null,
+        },
       });
       return doctorRegistration;
     } catch (error) {
@@ -50,8 +50,8 @@ class DoctorRegistrationService {
         {
           where: {
             id,
-            deleted_at: null
-          }
+            deleted_at: null,
+          },
         }
       );
       return doctorRegistration;
@@ -68,8 +68,8 @@ class DoctorRegistrationService {
           council,
           expiry_date,
           year,
-          deleted_at: null
-        }
+          deleted_at: null,
+        },
       });
       return doctorRegistration;
     } catch (error) {

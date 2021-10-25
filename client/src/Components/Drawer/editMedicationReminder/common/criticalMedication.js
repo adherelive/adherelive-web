@@ -9,19 +9,19 @@ const FIELD_NAME = "critical";
 class CriticalMedication extends Component {
   componentDidMount() {
     const {
-      form: { validateFields }
+      form: { validateFields },
     } = this.props;
     validateFields();
   }
 
   componentWillUnmount() {
     const {
-      form: { validateFields }
+      form: { validateFields },
     } = this.props;
     validateFields();
   }
 
-  getParentNode = t => t.parentNode;
+  getParentNode = (t) => t.parentNode;
 
   getInitialValue = () => {
     const { purpose, event: { data = {} } = {} } = this.props;
@@ -37,13 +37,13 @@ class CriticalMedication extends Component {
       form,
       medications,
       payload: { id: medication_id, canViewDetails = false } = {},
-      medicationData = {}
+      medicationData = {},
     } = this.props;
     const {
       getFieldDecorator,
       getFieldError,
       isFieldTouched,
-      medication
+      medication,
       //getFieldValue
     } = form;
 
@@ -67,7 +67,7 @@ class CriticalMedication extends Component {
         >
           {getFieldDecorator(FIELD_NAME, {
             valuePropName: "checked",
-            initialValue: critical ? critical : false
+            initialValue: critical ? critical : false,
           })(
             <Checkbox disabled={canViewDetails}>Critical Medication</Checkbox>
           )}
@@ -82,5 +82,5 @@ const Field = injectIntl(CriticalMedication);
 
 export default {
   field_name: FIELD_NAME,
-  render: props => <Field {...props} />
+  render: (props) => <Field {...props} />,
 };

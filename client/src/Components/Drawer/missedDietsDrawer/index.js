@@ -13,7 +13,7 @@ class MissedDietsDrawer extends Component {
       missed_diets: {},
       criticalDietIds: [],
       nonCriticalDietIds: [],
-      fetching: false
+      fetching: false,
     };
   }
 
@@ -21,14 +21,14 @@ class MissedDietsDrawer extends Component {
     // this.getMissedDiet();
   }
 
-  formatMessage = data => this.props.intl.formatMessage(data);
+  formatMessage = (data) => this.props.intl.formatMessage(data);
 
   onClose = () => {
     const { close } = this.props;
     close();
   };
 
-  handlePatientDetailsRedirect = patient_id => e => {
+  handlePatientDetailsRedirect = (patient_id) => (e) => {
     const { authenticated_category } = this.props;
 
     if (authenticated_category === USER_CATEGORY.PROVIDER) {
@@ -48,9 +48,13 @@ class MissedDietsDrawer extends Component {
     const criticalList = [];
     const nonCriticalList = [];
 
-    Object.keys(missed_diets).forEach(id => {
-      const { critical, participant_id, diet_name = "", timings } =
-        missed_diets[id] || {};
+    Object.keys(missed_diets).forEach((id) => {
+      const {
+        critical,
+        participant_id,
+        diet_name = "",
+        timings,
+      } = missed_diets[id] || {};
 
       const { basic_info: { id: patientId, full_name } = {} } =
         patients[participant_id] || {};

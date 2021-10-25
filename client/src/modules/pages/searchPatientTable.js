@@ -4,7 +4,7 @@ import patient_table_search_watchlist_patients from "./searchPatientTableWatchli
 
 const searchPatientTableReducer = combineReducers({
   patient_table_search_all_patients,
-  patient_table_search_watchlist_patients
+  patient_table_search_watchlist_patients,
 });
 
 export default (state, action) => {

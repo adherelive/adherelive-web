@@ -18,7 +18,7 @@ import {
   USER_CATEGORY,
   DAYS_NUMBER,
   DAYS,
-  ALTERNATE_DAYS
+  ALTERNATE_DAYS,
 } from "../../../../constant";
 
 const { Item: FormItem } = Form;
@@ -38,7 +38,7 @@ class AddvitalsForm extends Component {
       //   programId = []
       // },
       fetchMedicationStages,
-      fetchProgramProducts
+      fetchProgramProducts,
     } = this.props;
     const { programId } = [];
     const { _id } = "23";
@@ -47,21 +47,21 @@ class AddvitalsForm extends Component {
 
     if (category === USER_CATEGORY.PATIENT) {
       fetchProgramProducts(programId[0]);
-      fetchMedicationStages(_id).then(response => {
+      fetchMedicationStages(_id).then((response) => {
         const { status, payload } = response;
         if (status) {
           const {
-            data: { medicationStages = [], program_has_medication_stage } = {}
+            data: { medicationStages = [], program_has_medication_stage } = {},
           } = payload;
           if (medicationStages.length > 0) {
             this.setState({
               medicationStages: medicationStages,
-              program_has_medication_stage
+              program_has_medication_stage,
             });
           } else {
             this.setState({
               medicationStages: [],
-              program_has_medication_stage
+              program_has_medication_stage,
             });
           }
         }
@@ -76,9 +76,9 @@ class AddvitalsForm extends Component {
     antDrawerBody.scrollIntoView(true);
     antDrawerWrapperBody.scrollTop -= 200;
   };
-  formatMessage = data => this.props.intl.formatMessage(data);
+  formatMessage = (data) => this.props.intl.formatMessage(data);
 
-  handleCancel = e => {
+  handleCancel = (e) => {
     if (e) {
       e.preventDefault();
     }
@@ -89,7 +89,7 @@ class AddvitalsForm extends Component {
   getFooter = () => {
     const {
       form: { getFieldsError },
-      requesting
+      requesting,
     } = this.props;
     const { formatMessage } = this;
 
@@ -112,9 +112,9 @@ class AddvitalsForm extends Component {
     );
   };
 
-  getNewEndDate = repeatValue => {
+  getNewEndDate = (repeatValue) => {
     const {
-      form: { getFieldValue }
+      form: { getFieldValue },
     } = this.props;
 
     let repeat = getFieldValue(repeatField.field_name);
@@ -199,9 +199,9 @@ class AddvitalsForm extends Component {
     return moment(newEndDate).add(daysToAdd, "days");
   };
 
-  adjustEndDate = repeatValue => {
+  adjustEndDate = (repeatValue) => {
     const {
-      form: { setFieldsValue }
+      form: { setFieldsValue },
     } = this.props;
     const endDate = this.getNewEndDate(repeatValue);
     if (endDate) {
@@ -209,9 +209,9 @@ class AddvitalsForm extends Component {
     }
   };
 
-  adjustEventOnStartDateChange = prevDate => {
+  adjustEventOnStartDateChange = (prevDate) => {
     const {
-      form: { getFieldValue, setFieldsValue, validateFields }
+      form: { getFieldValue, setFieldsValue, validateFields },
     } = this.props;
 
     const eventStartTime = getFieldValue(startTimeField.field_name);
@@ -235,78 +235,78 @@ class AddvitalsForm extends Component {
     }
 
     setFieldsValue({
-      [startTimeField.field_name]: newEventStartTime
+      [startTimeField.field_name]: newEventStartTime,
     });
     // this.adjustEndDate();
     validateFields([startTimeField.field_name]);
   };
 
-  disabledStartDate = current => {
+  disabledStartDate = (current) => {
     // Can not select days before today
     return current && current <= moment().subtract({ day: 1 });
   };
 
-  disabledEndDate = current => {
+  disabledEndDate = (current) => {
     const endDate = this.getNewEndDate();
     if (endDate) {
       return current && current < endDate;
     }
   };
 
-  setEndDateOneWeek = e => {
+  setEndDateOneWeek = (e) => {
     e.preventDefault();
     const {
-      form: { setFieldsValue, getFieldValue }
+      form: { setFieldsValue, getFieldValue },
     } = this.props;
 
     const startDate = getFieldValue(startDateField.field_name);
     let newEndDate = moment(startDate).add(1, "week");
     setFieldsValue({
-      [endDateField.field_name]: newEndDate
+      [endDateField.field_name]: newEndDate,
     });
   };
 
-  setRepeatEveryDay = e => {
+  setRepeatEveryDay = (e) => {
     e.preventDefault();
     const {
-      form: { setFieldsValue }
+      form: { setFieldsValue },
     } = this.props;
     setFieldsValue({
-      [repeatDaysField.field_name]: DAYS
+      [repeatDaysField.field_name]: DAYS,
     });
   };
 
-  setRepeatAlternateDay = e => {
+  setRepeatAlternateDay = (e) => {
     e.preventDefault();
     const {
-      form: { setFieldsValue }
+      form: { setFieldsValue },
     } = this.props;
     setFieldsValue({
-      [repeatDaysField.field_name]: ALTERNATE_DAYS
+      [repeatDaysField.field_name]: ALTERNATE_DAYS,
     });
   };
 
-  setEndDateTwoWeek = e => {
+  setEndDateTwoWeek = (e) => {
     e.preventDefault();
     const {
-      form: { setFieldsValue, getFieldValue }
+      form: { setFieldsValue, getFieldValue },
     } = this.props;
 
     const startDate = getFieldValue(startDateField.field_name);
     let newEndDate = moment(startDate).add(2, "week");
     setFieldsValue({
-      [endDateField.field_name]: newEndDate
+      [endDateField.field_name]: newEndDate,
     });
   };
 
-  setEndDateLongTime = e => {
+  setEndDateLongTime = (e) => {
     e.preventDefault();
     const {
-      form: { setFieldsValue }
+      form: { setFieldsValue },
     } = this.props;
 
     setFieldsValue({
-      [endDateField.field_name]: null
+      [endDateField.field_name]: null,
     });
   };
 
@@ -321,12 +321,12 @@ class AddvitalsForm extends Component {
       setEndDateLongTime,
       setRepeatEveryDay,
       setRepeatAlternateDay,
-      formatMessage
+      formatMessage,
     } = this;
 
     const {
       form: { getFieldValue },
-      medicines
+      medicines,
     } = this.props;
 
     return (

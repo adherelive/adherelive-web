@@ -3,13 +3,13 @@ import { DeleteOutlined } from "@ant-design/icons";
 import messages from "../messages";
 import Tooltip from "antd/es/tooltip";
 
-export default props => {
+export default (props) => {
   const {
     data: {
       basic_info: { id = null, name = "", type = "", amount = "" } = {},
       deleteDoctorProduct,
-      formatMessage
-    } = {}
+      formatMessage,
+    } = {},
   } = props || {};
 
   const { data: { doctors: { provider_id } = {} } = {} } = props;

@@ -1,7 +1,7 @@
 import React from "react";
 import { TABLE_DEFAULT_BLANK_FIELD } from "../../../../constant";
 
-export default props => {
+export default (props) => {
   const { transactionData } = props || {};
   const { basic_info: { amount } = {} } = transactionData || {};
 

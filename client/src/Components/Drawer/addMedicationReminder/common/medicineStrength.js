@@ -13,19 +13,19 @@ const MAXIMUM_LENGTH = 10000;
 class MedicationStrength extends Component {
   componentDidMount() {
     const {
-      form: { validateFields }
+      form: { validateFields },
     } = this.props;
     validateFields();
   }
 
   componentWillUnmount() {
     const {
-      form: { validateFields }
+      form: { validateFields },
     } = this.props;
     validateFields();
   }
 
-  getParentNode = t => t.parentNode;
+  getParentNode = (t) => t.parentNode;
 
   getInitialValue = () => {
     const { purpose, event: { data = {} } = {} } = this.props;
@@ -43,7 +43,7 @@ class MedicationStrength extends Component {
       getFieldError,
       isFieldTouched,
       medication,
-      getFieldValue
+      getFieldValue,
     } = form;
 
     const error = isFieldTouched(FIELD_NAME) && getFieldError(FIELD_NAME);
@@ -61,15 +61,15 @@ class MedicationStrength extends Component {
             rules: [
               {
                 required: true,
-                message: "Enter Medicine Strength."
+                message: "Enter Medicine Strength.",
               },
               {
                 type: "number",
                 max: MAXIMUM_LENGTH,
-                message: "Please enter valid strength"
-              }
+                message: "Please enter valid strength",
+              },
             ],
-            initialValue: getInitialValue()
+            initialValue: getInitialValue(),
           })(<InputNumber min={1} style={{ width: "100%" }} />)}
         </FormItem>
       </Fragment>
@@ -83,5 +83,5 @@ const Field = injectIntl(MedicationStrength);
 export default {
   field_name: FIELD_NAME,
   maximum_length: MAXIMUM_LENGTH,
-  render: props => <Field {...props} />
+  render: (props) => <Field {...props} />,
 };

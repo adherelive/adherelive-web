@@ -22,9 +22,8 @@ class PortionController extends Controller {
         let portionApiData = {};
         for (const portion of portionDetails) {
           const portionWrapper = await PortionWrapper({ data: portion });
-          portionApiData[
-            portionWrapper.getId()
-          ] = portionWrapper.getBasicInfo();
+          portionApiData[portionWrapper.getId()] =
+            portionWrapper.getBasicInfo();
         }
 
         return raiseSuccess(
@@ -32,8 +31,8 @@ class PortionController extends Controller {
           200,
           {
             portions: {
-              ...portionApiData
-            }
+              ...portionApiData,
+            },
           },
           "Portions fetched successfully"
         );

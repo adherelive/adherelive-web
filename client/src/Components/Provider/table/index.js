@@ -21,33 +21,29 @@ class ProviderTable extends Component {
     getAllProviders();
   }
 
-  onSelectChange = selectedRowKeys => {
+  onSelectChange = (selectedRowKeys) => {
     this.setState({ selectedRows: selectedRowKeys });
   };
 
   getLoadingComponent = () => {
     const antIcon = <Icon type="loading" style={{ fontSize: 24 }} spin />;
     return {
-      indicator: antIcon
+      indicator: antIcon,
     };
   };
 
   getDataSource = () => {
-    const {
-      users,
-      providers,
-      provider_ids,
-      openEditProviderDrawer
-    } = this.props;
+    const { users, providers, provider_ids, openEditProviderDrawer } =
+      this.props;
 
     console.log("7865467890", { providers, provider_ids });
 
-    return Object.keys(providers).map(id => {
+    return Object.keys(providers).map((id) => {
       return generateRow({
         id,
         users,
         providers,
-        openEditProviderDrawer
+        openEditProviderDrawer,
       });
     });
   };
@@ -66,7 +62,7 @@ class ProviderTable extends Component {
     const {
       loading,
       pagination_bottom,
-      intl: { formatMessage } = {}
+      intl: { formatMessage } = {},
     } = this.props;
 
     return (
@@ -77,14 +73,14 @@ class ProviderTable extends Component {
         loading={loading === true ? getLoadingComponent() : false}
         columns={getColumn({
           formatMessage,
-          className: "pointer"
+          className: "pointer",
         })}
         dataSource={getDataSource()}
         scroll={{ x: "100%" }}
         // title={getTableTitle}
         pagination={{
           position: "top",
-          pageSize: 10
+          pageSize: 10,
         }}
       />
     );

@@ -14,7 +14,7 @@ class DietTable extends Component {
 
     this.state = {
       loading: false,
-      diet_ids: []
+      diet_ids: [],
     };
   }
 
@@ -26,7 +26,7 @@ class DietTable extends Component {
     const { care_plans = {}, carePlanId = null } = this.props;
     const {
       carePlanId: prev_carePlanId = null,
-      care_plans: prev_care_plans = {}
+      care_plans: prev_care_plans = {},
     } = prevProps || {};
     const { diet_ids = [] } = care_plans[carePlanId] || {};
     const { diet_ids: prev_diet_ids = [] } =
@@ -47,7 +47,7 @@ class DietTable extends Component {
       const {
         status,
         statusCode,
-        payload: { data = {}, message: resp_msg = "" } = {}
+        payload: { data = {}, message: resp_msg = "" } = {},
       } = response || {};
       if (!status && statusCode !== 422) {
         message.warn(resp_msg);
@@ -56,7 +56,7 @@ class DietTable extends Component {
 
       this.setState({
         loading: false,
-        diet_ids
+        diet_ids,
       });
     } catch (error) {
       this.setState({ loading: false });
@@ -70,7 +70,7 @@ class DietTable extends Component {
       diets = {},
       auth_role = null,
       care_plans = {},
-      carePlanId = null
+      carePlanId = null,
     } = this.props;
 
     const { diet_ids = [] } = this.state;
@@ -84,7 +84,7 @@ class DietTable extends Component {
 
     const { openResponseDrawer, openEditDrawer } = this;
 
-    return diet_ids.map(id => {
+    return diet_ids.map((id) => {
       const dietData = diets[id] || {};
       return generateRow({
         id,
@@ -93,12 +93,12 @@ class DietTable extends Component {
         openEditDrawer,
         formatMessage,
         isOtherCarePlan,
-        canViewDetails
+        canViewDetails,
       });
     });
   };
 
-  openResponseDrawer = diet_id => e => {
+  openResponseDrawer = (diet_id) => (e) => {
     e.preventDefault();
     const {
       openDietResponseDrawer,
@@ -106,7 +106,7 @@ class DietTable extends Component {
       auth_role = null,
       care_plans = {},
       carePlanId,
-      diets = {}
+      diets = {},
     } = this.props;
     const { basic_info: { name = "" } = {} } = diets[diet_id] || {};
     const { basic_info: { user_role_id = null } = {} } =
@@ -118,7 +118,7 @@ class DietTable extends Component {
     openDietResponseDrawer({ diet_id, diet_name: name, loading: true });
   };
 
-  openEditDrawer = diet_id => e => {
+  openEditDrawer = (diet_id) => (e) => {
     e.preventDefault();
     const {
       openEditDietDrawer,
@@ -127,7 +127,7 @@ class DietTable extends Component {
       auth_role = null,
       care_plans = {},
       carePlanId,
-      diets = {}
+      diets = {},
     } = this.props;
     const { details: { repeat_days = [] } = {} } = diets[diet_id];
     const { basic_info: { user_role_id = null } = {} } =
@@ -141,22 +141,22 @@ class DietTable extends Component {
       patient_id: patientId,
       careplan_id: carePlanId,
       repeat_days,
-      canViewDetails
+      canViewDetails,
     });
   };
 
-  formatMessage = data => this.props.intl.formatMessage(data);
+  formatMessage = (data) => this.props.intl.formatMessage(data);
 
   getLoadingComponent = () => {
     const antIcon = <Icon type="loading" style={{ fontSize: 24 }} spin />;
     return {
-      indicator: antIcon
+      indicator: antIcon,
     };
   };
 
   render() {
     const locale = {
-      emptyText: this.formatMessage(messages.no_diets)
+      emptyText: this.formatMessage(messages.no_diets),
     };
 
     const { intl: { formatMessage } = {} } = this.props;
@@ -170,12 +170,12 @@ class DietTable extends Component {
         loading={loading === true ? getLoadingComponent() : false}
         columns={getColumn({
           formatMessage,
-          className: "pointer"
+          className: "pointer",
         })}
         dataSource={getDataSource()}
         scroll={{ x: "100%" }}
         pagination={{
-          position: "bottom"
+          position: "bottom",
         }}
         locale={locale}
       />

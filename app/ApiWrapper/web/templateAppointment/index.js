@@ -15,18 +15,18 @@ class TemplateAppointmentWrapper extends BaseTemplateAppointment {
       time_gap,
       details,
       provider_id,
-      provider_name
+      provider_name,
     } = _data || {};
     return {
       basic_info: {
         id,
-        care_plan_template_id
+        care_plan_template_id,
       },
       reason,
       time_gap,
       details,
       provider_id,
-      provider_name
+      provider_name,
     };
   };
 }
@@ -35,8 +35,9 @@ export default async (data = null, id = null) => {
   if (data !== null) {
     return new TemplateAppointmentWrapper(data);
   }
-  const templateAppointment = await templateAppointmentService.getSingleTemplateAppointmentsByData(
-    { id }
-  );
+  const templateAppointment =
+    await templateAppointmentService.getSingleTemplateAppointmentsByData({
+      id,
+    });
   return new TemplateAppointmentWrapper(templateAppointment.get());
 };

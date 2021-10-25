@@ -9,14 +9,14 @@ import Address from "../dataColumn/address";
 import ContactDetails from "../dataColumn/contactDetails";
 import Active from "../dataColumn/active";
 
-export default props => {
+export default (props) => {
   const { formatMessage } = props || {};
 
   return [
     {
       title: formatMessage(messages.name),
       ...TABLE_COLUMN.NAME,
-      render: data => {
+      render: (data) => {
         const { doctorData, userData, formatMessage } = data || {};
         return (
           <Name
@@ -25,27 +25,27 @@ export default props => {
             formatMessage={formatMessage}
           />
         );
-      }
+      },
     },
     {
       title: formatMessage(messages.verified),
       ...TABLE_COLUMN.VERIFIED,
-      render: doctorData => <Verified {...doctorData} />
+      render: (doctorData) => <Verified {...doctorData} />,
     },
     {
       title: formatMessage(messages.speciality),
       ...TABLE_COLUMN.SPECIALITY,
-      render: doctorData => <Speciality {...doctorData} />
+      render: (doctorData) => <Speciality {...doctorData} />,
     },
     {
       title: formatMessage(messages.address),
       ...TABLE_COLUMN.ADDRESS,
-      render: doctorData => <Address {...doctorData} />
+      render: (doctorData) => <Address {...doctorData} />,
     },
     {
       title: formatMessage(messages.contact_details),
       ...TABLE_COLUMN.CONTACT_DETAILS,
-      render: userData => <ContactDetails {...userData} />
-    }
+      render: (userData) => <ContactDetails {...userData} />,
+    },
   ];
 };

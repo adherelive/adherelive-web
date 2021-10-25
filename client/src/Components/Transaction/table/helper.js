@@ -1,10 +1,10 @@
 import { USER_CATEGORY, TRANSACTION_STATUS } from "../../../constant";
 
 export const getTransactionFilters = () => {
-  return Object.keys(TRANSACTION_STATUS).map(key => {
+  return Object.keys(TRANSACTION_STATUS).map((key) => {
     return {
       text: TRANSACTION_STATUS[key],
-      value: TRANSACTION_STATUS[key]
+      value: TRANSACTION_STATUS[key],
     };
   });
 };
@@ -13,28 +13,28 @@ export const TABLE_COLUMN = {
   ID: {
     key: "ID",
     dataIndex: "ID",
-    fixed: "left"
+    fixed: "left",
   },
   DOCTOR: {
     key: "DOCTOR",
-    dataIndex: "DOCTOR"
+    dataIndex: "DOCTOR",
     //   width: 200
   },
   PATIENT: {
     key: "PATIENT",
-    dataIndex: "PATIENT"
+    dataIndex: "PATIENT",
   },
   PAYMENT_PRODUCT: {
     key: "PAYMENT_PRODUCT",
-    dataIndex: "PAYMENT_PRODUCT"
+    dataIndex: "PAYMENT_PRODUCT",
   },
   AMOUNT: {
     key: "AMOUNT",
-    dataIndex: "AMOUNT"
+    dataIndex: "AMOUNT",
   },
   STATUS: {
     key: "STATUS",
-    dataIndex: "STATUS"
+    dataIndex: "STATUS",
     // onFilter: (value, record ) => {
     //   // console.log("874657483294723463792",{record,value,recordStatus:record.STATUS});
     //   const {transactionData : {status=''} = {} }  = record.STATUS || {};
@@ -43,11 +43,11 @@ export const TABLE_COLUMN = {
   },
   DATE: {
     key: "DATE",
-    dataIndex: "DATE"
-  }
+    dataIndex: "DATE",
+  },
 };
 
-export const formatTransactionTableData = data => {
+export const formatTransactionTableData = (data) => {
   let {
     id,
     transactions,
@@ -55,14 +55,14 @@ export const formatTransactionTableData = data => {
     doctors,
     payment_products,
     transaction_ids,
-    users
+    users,
   } = data || {};
 
   const transactionData = transactions[id] || {};
   const {
     requestor = {},
     payee = {},
-    basic_info: { payment_product_id = null } = {}
+    basic_info: { payment_product_id = null } = {},
   } = transactions[id] || {};
   let doctorId = null;
 
@@ -84,12 +84,10 @@ export const formatTransactionTableData = data => {
   }
 
   const { user_roles = {} } = data;
-  const {
-    basic_info: { user_identity: request_user_id = null } = {}
-  } = user_roles[requestor_id];
-  const {
-    basic_info: { user_identity: payee_user_id = null } = {}
-  } = user_roles[payee_id];
+  const { basic_info: { user_identity: request_user_id = null } = {} } =
+    user_roles[requestor_id];
+  const { basic_info: { user_identity: payee_user_id = null } = {} } =
+    user_roles[payee_id];
 
   for (let each in doctors) {
     const { basic_info: { user_id } = {} } = doctors[each];
@@ -115,6 +113,6 @@ export const formatTransactionTableData = data => {
     paymentProductData,
     doctorData,
     transaction_ids,
-    users
+    users,
   };
 };

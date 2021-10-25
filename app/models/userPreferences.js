@@ -5,52 +5,52 @@ import { TABLE_NAME as userRoleTableName } from "./userRoles";
 
 export const TABLE_NAME = "user_preferences";
 
-export const db = database => {
+export const db = (database) => {
   database.define(
     TABLE_NAME,
     {
       id: {
         type: DataTypes.INTEGER,
         primaryKey: true,
-        autoIncrement: true
+        autoIncrement: true,
       },
       user_id: {
         type: DataTypes.INTEGER,
         allowNull: false,
         references: {
           model: {
-            tableName: userTableName
+            tableName: userTableName,
           },
-          key: "id"
-        }
+          key: "id",
+        },
       },
       details: {
-        type: DataTypes.JSON
+        type: DataTypes.JSON,
       },
       user_role_id: {
         type: DataTypes.INTEGER,
         allowNull: false,
         references: {
           model: {
-            tableName: userRoleTableName
+            tableName: userRoleTableName,
           },
-          key: "id"
-        }
-      }
+          key: "id",
+        },
+      },
     },
     {
       underscored: true,
-      paranoid: true
+      paranoid: true,
     }
   );
 };
 
-export const associate = database => {
+export const associate = (database) => {
   // const {upload_documents} = database.models || {};
 
   // associations here (if any) ...
   database.models[TABLE_NAME].belongsTo(database.models[userRoleTableName], {
     foreignKey: "user_role_id",
-    targetKey: "id"
+    targetKey: "id",
   });
 };

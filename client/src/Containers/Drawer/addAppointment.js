@@ -8,16 +8,16 @@ import {
   getAppointments,
   addAppointment,
   addCarePlanAppointment,
-  getAppointmentsDetails
+  getAppointmentsDetails,
 } from "../../modules/appointments";
 import {
   markFavourite,
   getFavourites,
   removeFavourite,
-  removeFavouriteByRecordId
+  removeFavouriteByRecordId,
 } from "../../modules/favouritesData/index";
 
-const mapStateToProps = state => {
+const mapStateToProps = (state) => {
   const {
     drawer: { visible, loading, data: { type, payload = {} } = {} },
     patients,
@@ -26,7 +26,7 @@ const mapStateToProps = state => {
     static_templates,
     providers,
     favourites_data = {},
-    pages: { favourite_medical_test_ids = [] } = {}
+    pages: { favourite_medical_test_ids = [] } = {},
   } = state;
   return {
     visible: visible && type === DRAWER.ADD_APPOINTMENT,
@@ -38,24 +38,24 @@ const mapStateToProps = state => {
     static_templates,
     providers,
     favourites_data,
-    favourite_medical_test_ids
+    favourite_medical_test_ids,
   };
 };
 
-const mapDispatchToProps = dispatch => {
+const mapDispatchToProps = (dispatch) => {
   return {
     close: () => dispatch(close()),
-    addAppointment: data => dispatch(addAppointment(data)),
+    addAppointment: (data) => dispatch(addAppointment(data)),
     addCarePlanAppointment: (data, carePlanId) =>
       dispatch(addCarePlanAppointment(data, carePlanId)),
-    getMedications: id => dispatch(getMedications(id)),
+    getMedications: (id) => dispatch(getMedications(id)),
     getAppointmentsDetails: () => dispatch(getAppointmentsDetails()),
-    getAppointments: id => dispatch(getAppointments(id)),
-    markFavourite: payload => dispatch(markFavourite(payload)),
+    getAppointments: (id) => dispatch(getAppointments(id)),
+    markFavourite: (payload) => dispatch(markFavourite(payload)),
     getFavourites: ({ type }) => dispatch(getFavourites({ type })),
     removeFavourite: ({ typeId, type }) =>
       dispatch(removeFavourite({ typeId, type })),
-    removeFavouriteRecord: id => dispatch(removeFavouriteByRecordId(id))
+    removeFavouriteRecord: (id) => dispatch(removeFavouriteByRecordId(id)),
   };
 };
 

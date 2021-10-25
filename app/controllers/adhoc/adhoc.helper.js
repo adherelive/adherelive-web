@@ -25,7 +25,7 @@ export const getLinkDetails = async (category, userId) => {
           if (provider_id) {
             response = {
               linked_id: provider_id,
-              linked_with: USER_CATEGORY.PROVIDER
+              linked_with: USER_CATEGORY.PROVIDER,
             };
           } else {
             response = { linked_id: null, linked_with: null };
@@ -52,7 +52,7 @@ export const getUserDetails = async (category, categoryId) => {
         const doctor =
           (await doctorService.findOne({
             where: { id: categoryId },
-            attributes: ["user_id"]
+            attributes: ["user_id"],
           })) || null;
 
         const { user_id: doctorUserId } = doctor || {};
@@ -66,7 +66,7 @@ export const getUserDetails = async (category, categoryId) => {
         break;
       case USER_CATEGORY.PROVIDER:
         const providers = await providerService.getProviderByData({
-          id: categoryId
+          id: categoryId,
         });
         if (providers && providers.length) {
           const providerWrapper = await ProviderWrapper(providers[0]);

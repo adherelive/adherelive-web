@@ -13,7 +13,7 @@ import {
   TimePicker,
   Icon,
   message,
-  Spin
+  Spin,
 } from "antd";
 import SideMenu from "./sidebar";
 import { REQUEST_TYPE, PATH, USER_CATEGORY } from "../../constant";
@@ -25,7 +25,7 @@ import { withRouter } from "react-router-dom";
 // import GooglePlacesAutocomplete from 'react-google-places-autocomplete';
 import PlacesAutocomplete, {
   geocodeByAddress,
-  getLatLng
+  getLatLng,
 } from "react-places-autocomplete";
 import india from "../../Assets/images/india.png";
 import australia from "../../Assets/images/australia.png";
@@ -62,7 +62,7 @@ class Profileregister extends Component {
       loading: "",
       searchingMail: false,
       existingDoctor: false,
-      existingDoctorId: null
+      existingDoctorId: null,
     };
   }
 
@@ -75,7 +75,7 @@ class Profileregister extends Component {
       authenticated_user = "",
       authenticated_category = "",
       users,
-      getDoctorQualificationRegisterData
+      getDoctorQualificationRegisterData,
     } = this.props;
 
     const { basic_info: { id = 1 } = {} } = authenticated_user;
@@ -90,9 +90,9 @@ class Profileregister extends Component {
       basic_info: {
         email = "",
         mobile_number = "",
-        prefix: newPrefix = ""
+        prefix: newPrefix = "",
       } = {},
-      category = ""
+      category = "",
     } = users[authenticated_user] || {};
     await getDoctorQualificationRegisterData();
 
@@ -104,7 +104,7 @@ class Profileregister extends Component {
         email,
         mobile_number,
         category,
-        prefix: newPrefix ? newPrefix : "91"
+        prefix: newPrefix ? newPrefix : "91",
       });
       for (let doctor of Object.values(doctors)) {
         const {
@@ -116,9 +116,9 @@ class Profileregister extends Component {
             profile_pic = "",
             signature_pic = "",
             address = "",
-            city = ""
+            city = "",
           },
-          city: city_temp = ""
+          city: city_temp = "",
         } = doctor || {};
         if (parseInt(user_id) === parseInt(authenticated_user)) {
           let final_city = "";
@@ -140,7 +140,7 @@ class Profileregister extends Component {
             profile_pic_url_saved: profile_pic,
             profile_pic,
             signature_pic_url_saved: signature_pic,
-            signature_pic
+            signature_pic,
           });
         }
       }
@@ -168,17 +168,17 @@ class Profileregister extends Component {
             last_name = "",
             profile_pic = "",
             signature_pic = "",
-            city = ""
+            city = "",
           } = {},
-          city: city_temp = ""
+          city: city_temp = "",
         } = doctors[doctor_id] || {};
         const {
           basic_info: {
             email = "",
             mobile_number = "",
-            prefix: newPrefix = ""
+            prefix: newPrefix = "",
           } = {},
-          category = ""
+          category = "",
         } = users[user_id] || {};
         let final_city = "";
 
@@ -193,7 +193,7 @@ class Profileregister extends Component {
           mobile_number,
           category,
           prefix: newPrefix ? newPrefix : "91",
-          doctor_id
+          doctor_id,
         });
 
         let name = first_name
@@ -207,7 +207,7 @@ class Profileregister extends Component {
           profile_pic_url_saved: profile_pic,
           profile_pic,
           signature_pic_url_saved: signature_pic,
-          signature_pic
+          signature_pic,
         });
       } else {
         const { doctors = {}, users = {} } = this.props;
@@ -219,18 +219,18 @@ class Profileregister extends Component {
             last_name = "",
             profile_pic = "",
             signature_pic = "",
-            city = ""
+            city = "",
           } = {},
-          city: city_temp = ""
+          city: city_temp = "",
         } = doctors[doctor_id] || {};
 
         const {
           basic_info: {
             email = "",
             mobile_number = "",
-            prefix: newPrefix = ""
+            prefix: newPrefix = "",
           } = {},
-          category = ""
+          category = "",
         } = users[user_id] || {};
         let final_city = "";
 
@@ -244,7 +244,7 @@ class Profileregister extends Component {
           email,
           mobile_number,
           category,
-          prefix: newPrefix ? newPrefix : "91"
+          prefix: newPrefix ? newPrefix : "91",
         });
 
         let name = first_name
@@ -258,7 +258,7 @@ class Profileregister extends Component {
           profile_pic_url_saved: profile_pic,
           profile_pic,
           signature_pic_url_saved: signature_pic,
-          signature_pic
+          signature_pic,
         });
       }
     } catch (error) {
@@ -267,7 +267,7 @@ class Profileregister extends Component {
     }
   }
 
-  setName = e => {
+  setName = (e) => {
     // this.setState({ name: e.target.value });
     const { value } = e.target;
     const reg = /^[a-zA-Z][a-zA-Z\s]*$/;
@@ -276,29 +276,29 @@ class Profileregister extends Component {
     }
   };
 
-  setCategory = value => {
+  setCategory = (value) => {
     this.setState({ category: value });
   };
 
-  setPrefix = value => {
+  setPrefix = (value) => {
     this.setState({ prefix: value });
   };
 
-  setEmail = value => {
+  setEmail = (value) => {
     this.setState({ email: value, existingDoctor: true });
     message.info(this.formatMessage(messages.mailInUse));
   };
 
-  formatMessage = data => this.props.intl.formatMessage(data);
+  formatMessage = (data) => this.props.intl.formatMessage(data);
 
-  setCity = e => {
+  setCity = (e) => {
     this.setState({ city: e.target.value });
   };
 
   getCategoryOptions = () => {
     const genderes = [
       { name: "Doctor", value: USER_CATEGORY.DOCTOR },
-      { name: "HSP", value: USER_CATEGORY.HSP }
+      { name: "HSP", value: USER_CATEGORY.HSP },
     ];
     let options = [];
 
@@ -312,14 +312,14 @@ class Profileregister extends Component {
     }
     return options;
   };
-  uploadDp = file => {
+  uploadDp = (file) => {
     let data = new FormData();
     data.append("files", file, file.name);
     doRequest({
       method: REQUEST_TYPE.POST,
       data: data,
-      url: getUploadURL()
-    }).then(response => {
+      url: getUploadURL(),
+    }).then((response) => {
       if (response.status) {
         let { files = [] } = response.payload.data;
         this.setState({ profile_pic_url: files[0] });
@@ -337,18 +337,18 @@ class Profileregister extends Component {
     // },100);
 
     return {
-      abort() {}
+      abort() {},
     };
   };
 
-  uploadSignature = file => {
+  uploadSignature = (file) => {
     let data = new FormData();
     data.append("files", file, file.name);
     doRequest({
       method: REQUEST_TYPE.POST,
       data: data,
-      url: getUploadURL()
-    }).then(response => {
+      url: getUploadURL(),
+    }).then((response) => {
       if (response.status) {
         let { files = [] } = response.payload.data;
         this.setState({ signature_pic_url: files[0] });
@@ -358,11 +358,11 @@ class Profileregister extends Component {
     });
 
     return {
-      abort() {}
+      abort() {},
     };
   };
 
-  beforeUpload = file => {
+  beforeUpload = (file) => {
     const isJpgOrPng = file.type === "image/jpeg" || file.type === "image/png";
     if (!isJpgOrPng) {
       message.error(this.formatMessage(messages.imageTypeError));
@@ -370,7 +370,7 @@ class Profileregister extends Component {
     return isJpgOrPng;
   };
 
-  handleChange = info => {
+  handleChange = (info) => {
     // if (info.file.status === 'uploading') {
     //   this.setState({ loading: true });
     //   return;
@@ -379,26 +379,27 @@ class Profileregister extends Component {
     // Get this url from response in real world.
     //   let {file={}}=info;
 
-    this.getBase64(info.file.originFileObj, profile_pic => {
+    this.getBase64(info.file.originFileObj, (profile_pic) => {
       // console.log("5645452413256547345224121",profile_pic)
       this.setState({
         profile_pic,
-        loading: false
+        loading: false,
       });
     });
   };
 
-  handleSignatureUploadChange = info => {
-    this.getBase64(info.file.originFileObj, signature_pic =>
+  handleSignatureUploadChange = (info) => {
+    this.getBase64(info.file.originFileObj, (signature_pic) =>
       this.setState({
         signature_pic,
-        loading: false
+        loading: false,
       })
     );
   };
 
-  validateEmail = email => {
-    const re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+  validateEmail = (email) => {
+    const re =
+      /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
     return re.test(String(email).toLowerCase());
   };
 
@@ -413,7 +414,7 @@ class Profileregister extends Component {
       profile_pic_url = "",
       profile_pic_url_saved = "",
       signature_pic_url = "",
-      signature_pic_url_saved = ""
+      signature_pic_url_saved = "",
     } = this.state;
 
     if (!category) {
@@ -463,7 +464,7 @@ class Profileregister extends Component {
         profile_pic_url_saved = "",
         signature_pic_url = "",
         signature_pic_url_saved = "",
-        doctor_id = null
+        doctor_id = null,
       } = this.state;
       const data = {
         name,
@@ -475,7 +476,7 @@ class Profileregister extends Component {
         profile_pic: profile_pic_url ? profile_pic_url : profile_pic_url_saved,
         signature_pic: signature_pic_url
           ? signature_pic_url
-          : signature_pic_url_saved
+          : signature_pic_url_saved,
       };
       if (authenticated_category === USER_CATEGORY.PROVIDER) {
         // if(existingDoctor){
@@ -488,7 +489,7 @@ class Profileregister extends Component {
         data["existing"] = existingDoctor;
         data["existingDoctorId"] = existingDoctorId;
       }
-      doctorProfileRegister(data).then(response => {
+      doctorProfileRegister(data).then((response) => {
         console.log(
           " 32453454RESPONSE FOR DOC PROFILE REGISTER ===>",
           response
@@ -498,8 +499,8 @@ class Profileregister extends Component {
           statusCode,
           payload: {
             message: res_message = "",
-            data: { doctors: response_doctors = {} } = {}
-          } = {}
+            data: { doctors: response_doctors = {} } = {},
+          } = {},
         } = response;
 
         // console.log("98326472647623742634732",{response});
@@ -549,14 +550,14 @@ class Profileregister extends Component {
     }
   };
 
-  handleChangeCity = address => {
+  handleChangeCity = (address) => {
     this.setState({ city: address });
   };
 
-  handleSelect = address => {
+  handleSelect = (address) => {
     this.setState({ city: address });
   };
-  setNumber = e => {
+  setNumber = (e) => {
     const { value } = e.target;
     const reg = /^-?\d*(\.\d*)?$/;
     if ((!isNaN(value) && reg.test(value)) || value === "" || value === "-") {
@@ -577,7 +578,7 @@ class Profileregister extends Component {
     }
   };
 
-  searchEmail = async email => {
+  searchEmail = async (email) => {
     try {
       const { searchDoctorEmail } = this.props;
       this.setState({ searchingMail: true });
@@ -585,7 +586,7 @@ class Profileregister extends Component {
       const {
         status,
         statusCode,
-        payload: { message: res_message = "" } = {}
+        payload: { message: res_message = "" } = {},
       } = response || {};
 
       if (!status && statusCode !== 422) {
@@ -602,14 +603,14 @@ class Profileregister extends Component {
     }
   };
 
-  setEmailMatchingDoctor = id => () => {
+  setEmailMatchingDoctor = (id) => () => {
     this.setState({ existingDoctorId: id });
   };
 
   getEmailOptions = () => {
     const { emails = {} } = this.props;
 
-    return Object.keys(emails).map(id => {
+    return Object.keys(emails).map((id) => {
       const email = emails[id];
       return (
         <Option
@@ -623,7 +624,7 @@ class Profileregister extends Component {
     });
   };
 
-  onEmailBlur = async value => {
+  onEmailBlur = async (value) => {
     try {
       const { searchDoctorEmail } = this.props;
       const { email: mailId = "" } = this.state;
@@ -667,13 +668,13 @@ class Profileregister extends Component {
       prefix = "",
       profile_pic_url_saved = "",
       signature_pic_url_saved = "",
-      city = ""
+      city = "",
     } = this.state;
     const {
       authenticated_user = "",
       authenticated_category = "",
       users,
-      getDoctorQualificationRegisterData
+      getDoctorQualificationRegisterData,
     } = this.props;
 
     const prefixSelector = (
@@ -915,24 +916,24 @@ class Profileregister extends Component {
             getInputProps,
             suggestions,
             getSuggestionItemProps,
-            loading
+            loading,
           }) => (
             <div>
               <Input
                 {...getInputProps({
                   placeholder: this.formatMessage(messages.searchCity),
-                  className: "form-inputs-google"
+                  className: "form-inputs-google",
                 })}
               />
               <div className="google-places-autocomplete__suggestions-container">
                 {loading && <div>Loading...</div>}
-                {suggestions.map(suggestion => {
+                {suggestions.map((suggestion) => {
                   const className = "google-places-autocomplete__suggestion";
                   // inline style for demonstration purpose
                   return (
                     <div
                       {...getSuggestionItemProps(suggestion, {
-                        className
+                        className,
                       })}
                     >
                       <span>{suggestion.description}</span>
@@ -952,7 +953,7 @@ class Profileregister extends Component {
       authenticated_user = "",
       authenticated_category = "",
       users,
-      getDoctorQualificationRegisterData
+      getDoctorQualificationRegisterData,
     } = this.props;
     const { existingDoctor = false, existingDoctorId = null } = this.state;
 

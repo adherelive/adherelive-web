@@ -14,10 +14,10 @@ module.exports = {
           description: "Please fast before 12 hours",
           appointment_type: "1",
           type_description: "Blood Test",
-          critical: false
+          critical: false,
         }),
         created_at: new Date(),
-        updated_at: new Date()
+        updated_at: new Date(),
       },
       {
         care_plan_template_id: 1,
@@ -28,15 +28,15 @@ module.exports = {
           description: "We will do a checkup in the morning too.",
           appointment_type: "1",
           type_description: "Blood Test",
-          critical: true
+          critical: true,
         }),
         created_at: new Date(),
-        updated_at: new Date()
-      }
+        updated_at: new Date(),
+      },
     ]);
   },
 
   down: (queryInterface, Sequelize) => {
     return queryInterface.bulkDelete(TABLE_NAME, null, {});
-  }
+  },
 };

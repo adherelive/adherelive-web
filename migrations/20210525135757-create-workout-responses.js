@@ -15,55 +15,55 @@ module.exports = {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
-        type: DataTypes.INTEGER
+        type: DataTypes.INTEGER,
       },
       workout_id: {
         type: DataTypes.INTEGER,
         allowNull: false,
         references: {
           model: {
-            tableName: workoutTableName
+            tableName: workoutTableName,
           },
-          key: "id"
-        }
+          key: "id",
+        },
       },
       exercise_group_id: {
         type: DataTypes.INTEGER,
         allowNull: false,
         references: {
           model: {
-            tableName: exerciseGroupTableName
+            tableName: exerciseGroupTableName,
           },
-          key: "id"
-        }
+          key: "id",
+        },
       },
       schedule_event_id: {
         type: DataTypes.INTEGER,
         allowNull: false,
         references: {
           model: {
-            tableName: scheduleEventsTable
+            tableName: scheduleEventsTable,
           },
-          key: "id"
-        }
+          key: "id",
+        },
       },
       repetition_id: {
         type: DataTypes.INTEGER,
         allowNull: false,
         references: {
           model: {
-            tableName: repetitionTableName
+            tableName: repetitionTableName,
           },
-          key: "id"
-        }
+          key: "id",
+        },
       },
       repetition_value: {
         type: DataTypes.INTEGER,
-        allowNull: false
+        allowNull: false,
       },
       sets: {
         type: DataTypes.INTEGER,
-        allowNull: false
+        allowNull: false,
       },
       status: {
         type: DataTypes.ENUM,
@@ -72,27 +72,27 @@ module.exports = {
           WORKOUT_RESPONSE_STATUS.DONE,
           WORKOUT_RESPONSE_STATUS.EXPIRED,
           WORKOUT_RESPONSE_STATUS.PARTIALLY_DONE,
-          WORKOUT_RESPONSE_STATUS.SKIPPED
-        ]
+          WORKOUT_RESPONSE_STATUS.SKIPPED,
+        ],
       },
       other_details: {
-        type: DataTypes.JSON
+        type: DataTypes.JSON,
       },
       created_at: {
         allowNull: false,
-        type: DataTypes.DATE
+        type: DataTypes.DATE,
       },
       updated_at: {
         allowNull: false,
-        type: DataTypes.DATE
+        type: DataTypes.DATE,
       },
       deleted_at: {
-        type: DataTypes.DATE
-      }
+        type: DataTypes.DATE,
+      },
     });
   },
 
-  down: queryInterface => {
+  down: (queryInterface) => {
     return queryInterface.dropTable(TABLE_NAME);
-  }
+  },
 };

@@ -11,12 +11,12 @@ export const SWITCH_USER_ROLE_COMPLETED = "SWITCH_USER_ROLE_COMPLETED";
 export const SWITCH_USER_ROLE_FAILED = "SWITCH_USER_ROLE_FAILED";
 
 export const getUserRoles = () => {
-  return async dispatch => {
+  return async (dispatch) => {
     try {
       dispatch({ type: GET_USER_ROLES_START });
       const response = await doRequest({
         method: REQUEST_TYPE.GET,
-        url: UserRoleUrls.getUserRoles()
+        url: UserRoleUrls.getUserRoles(),
       });
 
       const { status, payload: { data = {}, error = {} } = {} } =
@@ -32,14 +32,14 @@ export const getUserRoles = () => {
   };
 };
 
-export const switchUserRole = payload => {
-  return async dispatch => {
+export const switchUserRole = (payload) => {
+  return async (dispatch) => {
     try {
       dispatch({ type: SWITCH_USER_ROLE_START });
       const response = await doRequest({
         method: REQUEST_TYPE.POST,
         url: UserRoleUrls.switchUserRoles(),
-        data: payload
+        data: payload,
       });
 
       const { status, payload: { data = {}, error = {} } = {} } =
@@ -60,7 +60,7 @@ function userRoleReducer(state, data) {
   if (user_roles) {
     return {
       ...state,
-      ...user_roles
+      ...user_roles,
     };
   } else {
     return state;

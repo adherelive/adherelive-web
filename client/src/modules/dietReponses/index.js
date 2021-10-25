@@ -3,7 +3,7 @@ function dietResponseReducer(state, data) {
   if (diet_responses) {
     return {
       ...state,
-      ...diet_responses
+      ...diet_responses,
     };
   } else {
     return state;

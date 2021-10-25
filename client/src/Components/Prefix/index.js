@@ -41,7 +41,7 @@ class Prefix extends Component {
 
   render() {
     const {
-      form: { getFieldDecorator, getFieldError, isFieldTouched }
+      form: { getFieldDecorator, getFieldError, isFieldTouched },
     } = this.props;
 
     const error = isFieldTouched(FIELD_NAME) && getFieldError(FIELD_NAME);
@@ -54,7 +54,7 @@ class Prefix extends Component {
         help={error || ""}
       >
         {getFieldDecorator(FIELD_NAME, {
-          initialValue: getInitialValue()
+          initialValue: getInitialValue(),
         })(
           <Select className="flex align-center h50 w80">
             {/* india */}
@@ -160,5 +160,5 @@ const Field = injectIntl(Prefix);
 
 export default {
   field_name: FIELD_NAME,
-  render: props => <Field {...props} />
+  render: (props) => <Field {...props} />,
 };

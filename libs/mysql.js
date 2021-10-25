@@ -221,7 +221,7 @@ const models = [
   WorkoutResponses,
   WorkoutExerciseGroupMapping,
   WorkoutTemplates,
-  WorkoutTemplateExerciseMapping
+  WorkoutTemplateExerciseMapping,
 ];
 
 class Database {
@@ -242,11 +242,11 @@ class Database {
             max: 10,
             min: 0,
             acquire: 30000,
-            idle: 10000
+            idle: 10000,
           },
-          logging: function(str) {
+          logging: function (str) {
             Log.debug("query", str);
-          }
+          },
         }
       );
     }
@@ -254,7 +254,7 @@ class Database {
     return Database.connection;
   };
 
-  static getModel = dbName => Database.connection.models[dbName];
+  static getModel = (dbName) => Database.connection.models[dbName];
 
   static initTransaction = () => Database.connection.transaction();
 

@@ -4,7 +4,7 @@ import { Op } from "sequelize";
 import moment from "moment";
 
 class UserDeviceService {
-  addDevice = async data => {
+  addDevice = async (data) => {
     try {
       const userDevice = await Database.getModel(TABLE_NAME).create(data);
       return userDevice;
@@ -13,10 +13,10 @@ class UserDeviceService {
     }
   };
 
-  getDeviceByData = async data => {
+  getDeviceByData = async (data) => {
     try {
       const userDevice = await Database.getModel(TABLE_NAME).findOne({
-        where: data
+        where: data,
       });
       return userDevice;
     } catch (error) {
@@ -24,7 +24,7 @@ class UserDeviceService {
     }
   };
 
-  getAllDeviceByData = async data => {
+  getAllDeviceByData = async (data) => {
     const inactivityDaysLimit = process.config.app.inactivity_days_no;
     const dateFrom = moment().subtract(parseInt(inactivityDaysLimit, 10), "d");
     try {
@@ -32,9 +32,9 @@ class UserDeviceService {
         where: {
           ...data,
           updated_at: {
-            [Op.gte]: dateFrom
-          }
-        }
+            [Op.gte]: dateFrom,
+          },
+        },
       });
       return userDevice;
     } catch (error) {
@@ -42,11 +42,11 @@ class UserDeviceService {
     }
   };
 
-  deleteDevice = async data => {
+  deleteDevice = async (data) => {
     try {
       const userDevice = await Database.getModel(TABLE_NAME).destroy({
         where: data,
-        force: true
+        force: true,
       });
       return userDevice;
     } catch (error) {
@@ -59,9 +59,9 @@ class UserDeviceService {
     try {
       const userDevice = await Database.getModel(TABLE_NAME).update(data, {
         where: {
-          id
+          id,
         },
-        transaction
+        transaction,
       });
       await transaction.commit();
       return userDevice;

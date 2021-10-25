@@ -3,14 +3,14 @@ import ForgotPassword from "../../Components/forgotPassword";
 import { forgotPassword } from "../../modules/auth";
 import { connect } from "react-redux";
 
-const mapStateToProps = state => {
+const mapStateToProps = (state) => {
   const {} = state;
   return {};
 };
 
-const mapDispatchToProps = dispatch => {
+const mapDispatchToProps = (dispatch) => {
   return {
-    forgotPassword: payload => dispatch(forgotPassword(payload))
+    forgotPassword: (payload) => dispatch(forgotPassword(payload)),
   };
 };
 

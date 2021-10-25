@@ -7,14 +7,14 @@ module.exports = {
     return Promise.all([
       queryInterface.changeColumn(TABLE_NAME, "treatment_id", {
         type: DataTypes.INTEGER,
-        allowNull: true
-      })
+        allowNull: true,
+      }),
     ]);
   },
 
   down: (queryInterface, Sequelize) => {
     return Promise.all([
-      queryInterface.changeColumn(TABLE_NAME, "treatment_id")
+      queryInterface.changeColumn(TABLE_NAME, "treatment_id"),
     ]);
-  }
+  },
 };

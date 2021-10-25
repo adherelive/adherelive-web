@@ -21,7 +21,7 @@ class EditWorkout extends Component {
       days: [],
       time: "",
       deletedExerciseGroupIds: [],
-      canOnlyView: false
+      canOnlyView: false,
     };
 
     this.FormWrapper = Form.create({ onFieldsChange: this.onFormFieldChanges })(
@@ -38,14 +38,14 @@ class EditWorkout extends Component {
       const {
         time: data_time = null,
         total_calories,
-        details: { workout_exercise_groups = {} } = {}
+        details: { workout_exercise_groups = {} } = {},
       } = workoutData || {};
 
       const {
         all_workout_details: {
           days = [],
-          start_time: { hours = "", minutes = "" } = {}
-        } = {}
+          start_time: { hours = "", minutes = "" } = {},
+        } = {},
       } = this.props;
       const time = data_time
         ? data_time
@@ -55,7 +55,7 @@ class EditWorkout extends Component {
         completeData: [...workout_exercise_groups],
         initialFormData: {},
         total_calories,
-        time
+        time,
       });
     }
   }
@@ -64,11 +64,11 @@ class EditWorkout extends Component {
     const {
       isWorkoutVisible = false,
       visible = false,
-      workoutData = {}
+      workoutData = {},
     } = this.props;
     const {
       isWorkoutVisible: prev_isWorkoutVisible = false,
-      visible: prev_visible = false
+      visible: prev_visible = false,
     } = prevProps;
 
     if (visible && visible !== prev_visible) {
@@ -79,14 +79,14 @@ class EditWorkout extends Component {
       const {
         time: data_time = null,
         total_calories,
-        details: { workout_exercise_groups = {} } = {}
+        details: { workout_exercise_groups = {} } = {},
       } = workoutData || {};
 
       const {
         all_workout_details: {
           days = [],
-          start_time: { hours = "", minutes = "" } = {}
-        } = {}
+          start_time: { hours = "", minutes = "" } = {},
+        } = {},
       } = this.props;
       const time = data_time
         ? data_time
@@ -96,12 +96,12 @@ class EditWorkout extends Component {
         completeData: [...workout_exercise_groups],
         initialFormData: {},
         total_calories,
-        time
+        time,
       });
     }
   }
 
-  setDeletedExerciseGroupId = id => {
+  setDeletedExerciseGroupId = (id) => {
     const { deletedExerciseGroupIds = [] } = this.state;
     deletedExerciseGroupIds.push(id);
     this.setState({ deletedExerciseGroupIds });
@@ -112,10 +112,13 @@ class EditWorkout extends Component {
       const {
         getSingleWorkoutDetails,
         payload = {},
-        updateWorkoutTotalCalories
+        updateWorkoutTotalCalories,
       } = this.props;
-      const { care_plan_id, workout_id = null, canViewDetails = false } =
-        payload || {};
+      const {
+        care_plan_id,
+        workout_id = null,
+        canViewDetails = false,
+      } = payload || {};
 
       this.setState({ loading: true });
 
@@ -129,7 +132,7 @@ class EditWorkout extends Component {
         const {
           workouts = {},
           workout_exercise_groups = {},
-          exercise_groups_total_calories = 0
+          exercise_groups_total_calories = 0,
         } = data || {};
 
         const {
@@ -139,17 +142,17 @@ class EditWorkout extends Component {
           total_calories = "",
           start_date = "",
           end_date = "",
-          expired_on = null
+          expired_on = null,
         } = workouts[workout_id] || {};
 
         if (total_calories !== exercise_groups_total_calories) {
           const updateCaloriesResponse = await updateWorkoutTotalCalories({
             workout_id,
-            total_calories: exercise_groups_total_calories
+            total_calories: exercise_groups_total_calories,
           });
           const {
             status: updateCalories_status,
-            payload: { message: updateCalories_resp_msg = "" } = {}
+            payload: { message: updateCalories_resp_msg = "" } = {},
           } = updateCaloriesResponse || {};
 
           if (!updateCalories_status) {
@@ -161,7 +164,7 @@ class EditWorkout extends Component {
           name,
           start_date,
           end_date,
-          not_to_do
+          not_to_do,
         };
 
         this.setState({
@@ -169,7 +172,7 @@ class EditWorkout extends Component {
           initialFormData,
           care_plan_id,
           total_calories: exercise_groups_total_calories,
-          time
+          time,
         });
 
         if (expired_on || canViewDetails) {
@@ -198,8 +201,8 @@ class EditWorkout extends Component {
           all_workout_details = {},
           all_workout_details: {
             days = [],
-            start_time: { hours = "", minutes = "" } = {}
-          } = {}
+            start_time: { hours = "", minutes = "" } = {},
+          } = {},
         } = this.props;
         const time = moment(`${hours}:${minutes}`, "HH:mm A").toISOString();
 
@@ -210,9 +213,9 @@ class EditWorkout extends Component {
     }
   };
 
-  formatMessage = data => this.props.intl.formatMessage(data);
+  formatMessage = (data) => this.props.intl.formatMessage(data);
 
-  setFinalDayData = data => {
+  setFinalDayData = (data) => {
     this.setState({ completeData: data });
   };
 
@@ -220,8 +223,8 @@ class EditWorkout extends Component {
     const { close } = this.props;
     const {
       props: {
-        form: { resetFields }
-      }
+        form: { resetFields },
+      },
     } = this.formRef;
 
     this.setState({
@@ -230,18 +233,18 @@ class EditWorkout extends Component {
       submitting: false,
       time: "",
       deletedExerciseGroupIds: [],
-      canOnlyView: false
+      canOnlyView: false,
     });
 
     resetFields();
     close();
   };
 
-  setNewTotalCal = newTotalCal => {
+  setNewTotalCal = (newTotalCal) => {
     this.setState({ total_calories: newTotalCal });
   };
 
-  setFormRef = formRef => {
+  setFormRef = (formRef) => {
     this.formRef = formRef;
     if (formRef) {
       this.setState({ formRef: true });
@@ -262,8 +265,8 @@ class EditWorkout extends Component {
   handleSubmit = async () => {
     const {
       props: {
-        form: { validateFields }
-      }
+        form: { validateFields },
+      },
     } = this.formRef;
 
     const {
@@ -271,13 +274,13 @@ class EditWorkout extends Component {
       carePlanId: care_plan_id = null,
       payload,
       addTemplateWorkout = null,
-      editTemplateWorkout = null
+      editTemplateWorkout = null,
     } = this.props;
     const {
       time = "",
       completeData: workout_exercise_groups = {},
       total_calories = 0,
-      deletedExerciseGroupIds = []
+      deletedExerciseGroupIds = [],
     } = this.state;
     const { workout_id = null } = payload || {};
     const validated = this.validateWorkoutData();
@@ -295,7 +298,7 @@ class EditWorkout extends Component {
           start_date: moment_start_date,
           end_date: moment_end_date,
           what_not_to_do,
-          repeat_days
+          repeat_days,
         } = values;
 
         if (
@@ -322,7 +325,7 @@ class EditWorkout extends Component {
           end_date,
           not_to_do: what_not_to_do,
           delete_exercise_group_ids: deletedExerciseGroupIds,
-          time: fomattedTime
+          time: fomattedTime,
         };
 
         this.setState({ submitting: true });
@@ -333,7 +336,7 @@ class EditWorkout extends Component {
           const {
             status,
             statusCode,
-            payload: { data: resp_data = {}, message: resp_msg = "" } = {}
+            payload: { data: resp_data = {}, message: resp_msg = "" } = {},
           } = response || {};
           if (status) {
             message.success(resp_msg);
@@ -370,7 +373,7 @@ class EditWorkout extends Component {
     });
   };
 
-  setTime = time => {
+  setTime = (time) => {
     this.setState({ time });
   };
 
@@ -379,7 +382,7 @@ class EditWorkout extends Component {
     const {
       completeData = {},
       total_calories = 0,
-      canOnlyView = false
+      canOnlyView = false,
     } = this.state;
 
     return (
@@ -408,7 +411,7 @@ class EditWorkout extends Component {
     const { warnNote } = this;
     const {
       payload: { workout_id = null, patient_id } = {},
-      getPatientCarePlanDetails
+      getPatientCarePlanDetails,
     } = this.props || {};
 
     confirm({
@@ -421,7 +424,7 @@ class EditWorkout extends Component {
           const {
             status,
             statusCode,
-            payload: { data: resp_data = {}, message: resp_msg = "" } = {}
+            payload: { data: resp_data = {}, message: resp_msg = "" } = {},
           } = response || {};
           if (status) {
             message.success(resp_msg);
@@ -435,7 +438,7 @@ class EditWorkout extends Component {
           message.warn(this.formatMessage(messages.somethingWentWrong));
         }
       },
-      onCancel() {}
+      onCancel() {},
     });
   };
 
@@ -456,7 +459,7 @@ class EditWorkout extends Component {
       loading,
       deleteWorkoutOfTemplate,
       hideWorkout,
-      addTemplateWorkout
+      addTemplateWorkout,
     } = this.props;
 
     if (addTemplateWorkout) {
@@ -492,14 +495,14 @@ class EditWorkout extends Component {
       getWorkoutComponent,
       getDeleteButton,
       setTime,
-      FormWrapper
+      FormWrapper,
     } = this;
     const { visible = false } = this.props;
     const {
       workoutVisible = false,
       hideWorkout = null,
       addTemplateWorkout = null,
-      editTemplateWorkout = null
+      editTemplateWorkout = null,
     } = this.props;
     const {
       submitting = false,
@@ -507,7 +510,7 @@ class EditWorkout extends Component {
       loading = false,
       days = [],
       time = "",
-      canOnlyView = false
+      canOnlyView = false,
     } = this.state;
 
     return (
@@ -527,7 +530,7 @@ class EditWorkout extends Component {
           headerStyle={{
             position: "sticky",
             zIndex: "9999",
-            top: "0px"
+            top: "0px",
           }}
           destroyOnClose={true}
           onClose={

@@ -1,7 +1,7 @@
 import {
   DELETE_MEDICINE_COMPLETED,
   GET_PUBLIC_MEDICINES_COMPLETED,
-  RESET_SEARCH_PUBLIC
+  RESET_SEARCH_PUBLIC,
 } from "../../medicines";
 
 const PUBLIC = "public";
@@ -12,7 +12,7 @@ function getPublicSearchMedicinesReducer(state, data) {
 
   if (medicines && type === PUBLIC && searchText !== "") {
     return {
-      ...search_public_medicines
+      ...search_public_medicines,
     };
   } else {
     return state;
@@ -33,7 +33,7 @@ function getRemainingPublicSearchedAfterDelete(state, data) {
       let updatedMed = { ...state };
       updatedMed[offset] = { ...rest };
       return {
-        ...updatedMed
+        ...updatedMed,
       };
     } else {
       return state;

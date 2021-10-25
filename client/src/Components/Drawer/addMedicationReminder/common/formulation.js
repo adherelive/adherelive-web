@@ -13,37 +13,37 @@ const { Item: FormItem } = Form;
 class Formulation extends Component {
   componentDidMount() {
     const {
-      form: { validateFields }
+      form: { validateFields },
     } = this.props;
     validateFields();
   }
 
   componentWillUnmount() {
     const {
-      form: { validateFields }
+      form: { validateFields },
     } = this.props;
     validateFields();
   }
 
-  getParentNode = t => t.parentNode;
+  getParentNode = (t) => t.parentNode;
 
-  formatMessage = data => this.props.intl.formatMessage(data);
+  formatMessage = (data) => this.props.intl.formatMessage(data);
 
   setUnitMg = () => {
     const {
-      form: { setFieldsValue }
+      form: { setFieldsValue },
     } = this.props;
     setFieldsValue({ [unitField.field_name]: MEDICINE_UNITS.MG });
   };
 
   setUnitMl = () => {
     const {
-      form: { setFieldsValue }
+      form: { setFieldsValue },
     } = this.props;
     setFieldsValue({ [unitField.field_name]: MEDICINE_UNITS.ML });
   };
 
-  getStringFormat = str => {
+  getStringFormat = (str) => {
     return str
       ? `${str.charAt(0).toUpperCase()}${str.substring(1, str.length)}`
       : "";
@@ -52,7 +52,7 @@ class Formulation extends Component {
   getOptions = (items, category) => {
     const { getStringFormat } = this;
 
-    return items.map(item => {
+    return items.map((item) => {
       const { name, defaultUnit, id } = item || {};
 
       const strId = id.toString();
@@ -72,7 +72,7 @@ class Formulation extends Component {
     const { medication_details: { medicine_type } = {} } = this.props;
     const { getOptions, getStringFormat } = this;
 
-    return Object.keys(medicine_type).map(id => {
+    return Object.keys(medicine_type).map((id) => {
       const { items, name } = medicine_type[id] || {};
 
       return (
@@ -148,5 +148,5 @@ const Field = injectIntl(Formulation);
 
 export default {
   field_name: FIELD_NAME,
-  render: props => <Field {...props} />
+  render: (props) => <Field {...props} />,
 };

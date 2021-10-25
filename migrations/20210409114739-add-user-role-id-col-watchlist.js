@@ -10,14 +10,14 @@ module.exports = {
       allowNull: true,
       references: {
         model: {
-          tableName: userRoleTableName
+          tableName: userRoleTableName,
         },
-        key: "id"
-      }
+        key: "id",
+      },
     });
   },
 
   down: (queryInterface, Sequelize) => {
     return queryInterface.removeColumn(TABLE_NAME, "user_role_id");
-  }
+  },
 };

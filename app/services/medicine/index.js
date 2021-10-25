@@ -6,7 +6,7 @@ export default class Medicine {
     this._data = data;
   }
 
-  setCurrentData = data => {
+  setCurrentData = (data) => {
     this._data = data;
   };
 

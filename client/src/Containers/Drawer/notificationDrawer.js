@@ -7,7 +7,7 @@ import { getNotification } from "../../modules/notifications";
 import { doNotificationRedirect } from "../../modules/notificationRedirect";
 import { setUnseenNotificationCount } from "../../modules/pages/NotificationCount";
 
-const mapStateToProps = state => {
+const mapStateToProps = (state) => {
   const {
     drawer: { visible, loading, data: { type, payload = {} } = {} },
     patients,
@@ -27,7 +27,7 @@ const mapStateToProps = state => {
     diets = {},
     diet_food_group_mappings = {},
     workouts = {},
-    diet_responses = {}
+    diet_responses = {},
   } = state;
   return {
     visible: visible && type === DRAWER.NOTIFICATIONS,
@@ -50,18 +50,18 @@ const mapStateToProps = state => {
     diets,
     diet_food_group_mappings,
     workouts,
-    diet_responses
+    diet_responses,
   };
 };
 
-const mapDispatchToProps = dispatch => {
+const mapDispatchToProps = (dispatch) => {
   return {
     close: () => dispatch(close()),
-    getNotification: activities => dispatch(getNotification(activities)),
-    doNotificationRedirect: payload =>
+    getNotification: (activities) => dispatch(getNotification(activities)),
+    doNotificationRedirect: (payload) =>
       dispatch(doNotificationRedirect(payload)),
-    setUnseenNotificationCount: count =>
-      dispatch(setUnseenNotificationCount(count))
+    setUnseenNotificationCount: (count) =>
+      dispatch(setUnseenNotificationCount(count)),
   };
 };
 

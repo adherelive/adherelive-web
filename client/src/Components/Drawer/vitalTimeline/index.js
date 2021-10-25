@@ -37,7 +37,7 @@ class VitalTimelineDrawer extends Component {
         width={"35%"}
         title={formatMessage(
           {
-            ...messages.vital_timeline
+            ...messages.vital_timeline,
           },
           { name: drawerTitle() }
         )}

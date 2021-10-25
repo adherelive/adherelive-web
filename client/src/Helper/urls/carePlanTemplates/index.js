@@ -2,11 +2,11 @@ export const createCareplanTemplateUrl = () => {
   return `/care-plan-templates/`;
 };
 
-export const updateCareplanTemplateUrl = id => {
+export const updateCareplanTemplateUrl = (id) => {
   return `/care-plan-templates/${id}`;
 };
 
-export const duplicateCareplanTemplateUrl = careplan_template_id => {
+export const duplicateCareplanTemplateUrl = (careplan_template_id) => {
   return `/care-plan-templates/duplicate/${careplan_template_id}`;
 };
 
@@ -14,7 +14,7 @@ export const getAllTemplatesUrl = () => {
   return `/care-plan-templates/`;
 };
 
-export const deleteCareplanTemplate = careplan_template_id => {
+export const deleteCareplanTemplate = (careplan_template_id) => {
   return `/care-plan-templates/${careplan_template_id}`;
 };
 

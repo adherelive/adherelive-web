@@ -1,14 +1,14 @@
 import { SEARCH_FOOD_COMPLETED } from "../searchedFoodItems";
 import {
   ADD_FOOD_ITEM_COMPLETED,
-  EDIT_FOOD_ITEM_COMPLETED
+  EDIT_FOOD_ITEM_COMPLETED,
 } from "../foodItems";
 
 function searchFoodItemDetaisReducer(state, data) {
   let { food_items = {}, food_item_details = {} } = data || {};
   if (food_items && food_item_details) {
     return {
-      ...food_item_details
+      ...food_item_details,
     };
   } else {
     return state;
@@ -20,7 +20,7 @@ function addedNewItemReducer(state, data) {
   if (food_items && food_item_details) {
     return {
       ...state,
-      ...food_item_details
+      ...food_item_details,
     };
   } else {
     return state;

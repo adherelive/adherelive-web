@@ -14,7 +14,7 @@ class MissedMedicationsDrawer extends Component {
       missed_vitals: {},
       criticalVitalIds: [],
       nonCriticalVitalIds: [],
-      fetching: false
+      fetching: false,
     };
   }
 
@@ -22,7 +22,7 @@ class MissedMedicationsDrawer extends Component {
     // this.handleGetMissedVitals();
   }
 
-  formatMessage = data => this.props.intl.formatMessage(data);
+  formatMessage = (data) => this.props.intl.formatMessage(data);
 
   onClose = () => {
     const { close } = this.props;
@@ -58,7 +58,7 @@ class MissedMedicationsDrawer extends Component {
   //     }
   // }
 
-  handlePatientDetailsRedirect = patient_id => e => {
+  handlePatientDetailsRedirect = (patient_id) => (e) => {
     const { authenticated_category } = this.props;
 
     if (authenticated_category === USER_CATEGORY.PROVIDER) {
@@ -78,7 +78,7 @@ class MissedMedicationsDrawer extends Component {
 
     const { handlePatientDetailsRedirect, formatMessage } = this;
 
-    Object.keys(missed_vitals).forEach(id => {
+    Object.keys(missed_vitals).forEach((id) => {
       console.log("182371923 vitals", { vitals: missed_vitals[id] });
       const { critical, patient_id, vital_name, timings } =
         missed_vitals[id] || {};

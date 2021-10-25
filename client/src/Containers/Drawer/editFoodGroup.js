@@ -5,12 +5,12 @@ import { close } from "../../modules/drawer";
 import {
   addFoodItem,
   storeFoodItemAndDetails,
-  updateFoodItem
+  updateFoodItem,
 } from "../../modules/foodItems";
 import { searchFood } from "../../modules/searchedFoodItems";
 import { clearLatestCreatedFoodItem } from "../../modules/latestCreatedFood";
 
-const mapStateToProps = state => {
+const mapStateToProps = (state) => {
   const { auth } = state;
   const { authenticated_user, authenticated_category } = auth;
   const {
@@ -22,7 +22,7 @@ const mapStateToProps = state => {
     searched_food_items,
     searched_food_item_details,
     doctors,
-    latest_created_food
+    latest_created_food,
   } = state;
 
   return {
@@ -37,19 +37,19 @@ const mapStateToProps = state => {
     searched_food_items,
     searched_food_item_details,
     doctors,
-    latest_created_food
+    latest_created_food,
   };
 };
 
-const mapDispatchToProps = dispatch => {
+const mapDispatchToProps = (dispatch) => {
   return {
     close: () => dispatch(close()),
-    addFoodItem: data => dispatch(addFoodItem(data)),
+    addFoodItem: (data) => dispatch(addFoodItem(data)),
     updateFoodItem: ({ food_item_id, data }) =>
       dispatch(updateFoodItem({ food_item_id, data })),
-    searchFood: value => dispatch(searchFood(value)),
-    storeFoodItemAndDetails: data => dispatch(storeFoodItemAndDetails(data)),
-    clearLatestCreatedFoodItem: () => dispatch(clearLatestCreatedFoodItem())
+    searchFood: (value) => dispatch(searchFood(value)),
+    storeFoodItemAndDetails: (data) => dispatch(storeFoodItemAndDetails(data)),
+    clearLatestCreatedFoodItem: () => dispatch(clearLatestCreatedFoodItem()),
   };
 };
 

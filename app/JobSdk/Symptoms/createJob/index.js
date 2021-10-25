@@ -3,7 +3,7 @@ import moment from "moment";
 import {
   DEFAULT_PROVIDER,
   EVENT_TYPE,
-  USER_CATEGORY
+  USER_CATEGORY,
 } from "../../../../constant";
 
 import UserRoleService from "../../../services/userRoles/userRoles.service";
@@ -24,11 +24,11 @@ class CreateJob extends SymptomsJob {
       actor: {
         id: actorId,
         user_role_id,
-        details: { name, category: actorCategory } = {}
+        details: { name, category: actorCategory } = {},
       } = {},
       event_id = null,
       patient_id = null,
-      care_plan_id_data = null
+      care_plan_id_data = null,
     } = getSymptomsData() || {};
 
     const templateData = [];
@@ -38,8 +38,8 @@ class CreateJob extends SymptomsJob {
     const { rows: userRoles = [] } =
       (await UserRoleService.findAndCountAll({
         where: {
-          id: participants
-        }
+          id: participants,
+        },
       })) || {};
 
     // let providerId = null;
@@ -67,7 +67,7 @@ class CreateJob extends SymptomsJob {
     // }
 
     const userDevices = await UserDeviceService.getAllDeviceByData({
-      user_id: userIds
+      user_id: userIds,
     });
 
     if (userDevices.length > 0) {
@@ -82,7 +82,7 @@ class CreateJob extends SymptomsJob {
       app_id: process.config.one_signal.app_id,
       headings: { en: `Symptom Added` },
       contents: {
-        en: `${name} added a new symptom.`
+        en: `${name} added a new symptom.`,
       },
       include_player_ids: [...playerIds],
       priority: 10,
@@ -94,9 +94,9 @@ class CreateJob extends SymptomsJob {
           symptom_id: event_id,
           care_plan_id_data,
           patient_id,
-          doctorRoleId
-        }
-      }
+          doctorRoleId,
+        },
+      },
     });
 
     return templateData;
@@ -109,9 +109,9 @@ class CreateJob extends SymptomsJob {
       actor: {
         id: actorId,
         user_role_id,
-        details: { name, category: actorCategory } = {}
+        details: { name, category: actorCategory } = {},
       } = {},
-      event_id
+      event_id,
     } = getSymptomsData() || {};
 
     const templateData = [];
@@ -128,7 +128,7 @@ class CreateJob extends SymptomsJob {
           verb: `symptoms_create:${currentTimeStamp}`,
           event: EVENT_TYPE.SYMPTOMS,
           time: `${currentTime}`,
-          create_time: `${currentTime}`
+          create_time: `${currentTime}`,
         });
       }
     }

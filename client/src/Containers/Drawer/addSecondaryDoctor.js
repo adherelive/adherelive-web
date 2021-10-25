@@ -5,7 +5,7 @@ import { close } from "../../modules/drawer";
 import { searchDoctorName } from "../../modules/doctors";
 import { addSecondaryDoctorToCareplan } from "../../modules/carePlans";
 
-const mapStateToProps = state => {
+const mapStateToProps = (state) => {
   const { auth } = state;
   const { authenticated_user, authenticated_category, auth_role = null } = auth;
   const {
@@ -13,7 +13,7 @@ const mapStateToProps = state => {
     users = {},
     user_roles = {},
     providers = {},
-    doctors = {}
+    doctors = {},
   } = state;
 
   return {
@@ -25,16 +25,16 @@ const mapStateToProps = state => {
     users,
     doctors,
     authenticated_user,
-    auth_role
+    auth_role,
   };
 };
 
-const mapDispatchToProps = dispatch => {
+const mapDispatchToProps = (dispatch) => {
   return {
     close: () => dispatch(close()),
-    searchDoctorName: name => dispatch(searchDoctorName(name)),
-    addSecondaryDoctorToCareplan: payload =>
-      dispatch(addSecondaryDoctorToCareplan(payload))
+    searchDoctorName: (name) => dispatch(searchDoctorName(name)),
+    addSecondaryDoctorToCareplan: (payload) =>
+      dispatch(addSecondaryDoctorToCareplan(payload)),
   };
 };
 

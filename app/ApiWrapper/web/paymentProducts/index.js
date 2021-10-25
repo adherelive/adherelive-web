@@ -18,7 +18,7 @@ class PaymentProductWrapper extends BasePaymentProduct {
       product_user_type,
       for_user_role_id,
       for_user_type,
-      razorpay_link
+      razorpay_link,
     } = this._data;
     // const {id, creator_id, creator_type, name,
     //      type, details, amount,
@@ -30,7 +30,7 @@ class PaymentProductWrapper extends BasePaymentProduct {
         id,
         name,
         type,
-        amount
+        amount,
       },
       creator_role_id,
       creator_type,
@@ -38,7 +38,7 @@ class PaymentProductWrapper extends BasePaymentProduct {
       for_user_type,
       product_user_type,
       details,
-      razorpay_link
+      razorpay_link,
     };
   };
 

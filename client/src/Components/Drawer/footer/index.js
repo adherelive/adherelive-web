@@ -4,7 +4,7 @@ import { PoweroffOutlined } from "@ant-design/icons";
 import { injectIntl } from "react-intl";
 import messages from "./message";
 
-export default injectIntl(props => {
+export default injectIntl((props) => {
   const {
     onSubmit,
     onClose,
@@ -15,7 +15,7 @@ export default injectIntl(props => {
     submitText,
     cancelButtonProps = {},
     submitButtonProps = {},
-    submitting = false
+    submitting = false,
   } = props;
 
   const CancelButton = (
@@ -24,7 +24,7 @@ export default injectIntl(props => {
     </Button>
   );
 
-  const formatMessage = data => props.intl.formatMessage(data);
+  const formatMessage = (data) => props.intl.formatMessage(data);
 
   const SubmitButton = (
     <Button

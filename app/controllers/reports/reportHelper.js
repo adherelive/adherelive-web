@@ -27,7 +27,7 @@ export const uploadReport = async ({ file, id }) => {
     const isImage = mimetype.split("/")[0] === "image";
     if (isImage) {
       metaData = {
-        "Content-Type": `${mimetype}`
+        "Content-Type": `${mimetype}`,
       };
     }
 

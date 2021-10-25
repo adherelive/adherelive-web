@@ -4,7 +4,7 @@ import {
   DOSE_UNIT,
   WHEN_TO_TAKE_ABBREVATIONS,
   APPOINTMENT_TYPE,
-  PATIENT_MEAL_TIMINGS
+  PATIENT_MEAL_TIMINGS,
 } from "../../../constant";
 import moment from "moment";
 import PDFDocument from "pdfkit";
@@ -66,12 +66,12 @@ export default async (pdfData, signatureImage) => {
         workouts_formatted_data = {},
         workout_ids = [],
         timings = {},
-        providerPrescriptionDetails: pdfproviderPrescriptionDetails = ""
+        providerPrescriptionDetails: pdfproviderPrescriptionDetails = "",
       } = pdfData;
       const doc = new PDFDocument({
         size: "A4",
         margin: DOC_MARGIN,
-        bufferPages: true
+        bufferPages: true,
       });
 
       let providerPrescriptionDetails = pdfproviderPrescriptionDetails.length
@@ -134,7 +134,7 @@ export default async (pdfData, signatureImage) => {
         allergies,
         comorbidities,
         suggestedInvestigations,
-        providerPrescriptionDetails
+        providerPrescriptionDetails,
       });
 
       // generateHr(doc, doc.y + 17);
@@ -254,7 +254,7 @@ function getPdfName(pdfData) {
     degrees = {},
     registrations = {},
     care_plans = {},
-    conditions = {}
+    conditions = {},
   } = pdfData;
 
   const { name: doctorName = "" } = formatDoctorsData(
@@ -325,7 +325,7 @@ function printDiet(
       diets = {},
       diet_food_groups = {},
       food_items = {},
-      food_item_details = {}
+      food_item_details = {},
     } = diets_formatted_data[each];
 
     const {
@@ -333,9 +333,9 @@ function printDiet(
         name: diet_name,
         start_date = null,
         end_date = null,
-        total_calories = 0
+        total_calories = 0,
       } = {},
-      details: { not_to_do = "", repeat_days = [] } = {}
+      details: { not_to_do = "", repeat_days = [] } = {},
     } = diets[Object.keys(diets)[0]] || {};
 
     let basicDetailsYLevel = singleDietDetailYLevel + 20,
@@ -369,14 +369,14 @@ function printDiet(
       .font(MEDIUM_FONT)
       .text(`${dietCount}.`, serialNoXStart, basicDetailsYLevel)
       .text(`${diet_name}`, dietNameXStart, basicDetailsYLevel, {
-        width: dietDetailsTimeXStart - dietNameXStart
+        width: dietDetailsTimeXStart - dietNameXStart,
       })
       .text(
         `${!end_date ? "Long Term" : durationText}`,
         startDateXStart,
         basicDetailsYLevel,
         {
-          width: endDateXStart - startDateXStart
+          width: endDateXStart - startDateXStart,
         }
       );
     // .text(`${formattedEndDate}`, endDateXStart, basicDetailsYLevel)
@@ -397,7 +397,7 @@ function printDiet(
           dietDetailsTimeXStart,
           singleDietDetailYLevel + 20,
           {
-            width: dietDetailsDataXStart - dietDetailsTimeXStart
+            width: dietDetailsDataXStart - dietDetailsTimeXStart,
             // continued:true
           }
         );
@@ -409,11 +409,11 @@ function printDiet(
           notes = "",
           portion_id = null,
           serving = null,
-          similar = []
+          similar = [],
         } = foodGroup || {};
 
         const {
-          basic_info: { food_item_id = null, portion_size = null } = {}
+          basic_info: { food_item_id = null, portion_size = null } = {},
         } = food_item_details[food_item_detail_id] || {};
         const { basic_info: { name: food_name = "" } = {} } =
           food_items[food_item_id] || {};
@@ -432,11 +432,11 @@ function printDiet(
             food_item_detail_id = null,
             notes = "",
             portion_id = null,
-            serving = null
+            serving = null,
           } = eachSimilar || {};
 
           const {
-            basic_info: { food_item_id = null, portion_size = null } = {}
+            basic_info: { food_item_id = null, portion_size = null } = {},
           } = food_item_details[food_item_detail_id] || {};
           const { basic_info: { name: food_name = "" } = {} } =
             food_items[food_item_id] || {};
@@ -463,7 +463,7 @@ function printDiet(
             dietDetailsDataXStart,
             singleDietDetailYLevel + 20,
             {
-              width: startDateXStart - dietDetailsDataXStart
+              width: startDateXStart - dietDetailsDataXStart,
             }
           );
 
@@ -479,7 +479,7 @@ function printDiet(
                 singleDietDetailYLevel + 5,
                 {
                   width: startDateXStart - dietDetailsDataXStart,
-                  continued: true
+                  continued: true,
                 }
               )
               .font(MEDIUM_FONT)
@@ -488,7 +488,7 @@ function printDiet(
                 dietDetailsDataXStart,
                 singleDietDetailYLevel + 5,
                 {
-                  width: startDateXStart - dietDetailsDataXStart
+                  width: startDateXStart - dietDetailsDataXStart,
                 }
               )
           : null;
@@ -515,7 +515,7 @@ function printDiet(
         singleDietDetailYLevel + 20,
         {
           width: startDateXStart - dietDetailsTimeXStart,
-          continued: true
+          continued: true,
         }
       )
       .font(MEDIUM_FONT)
@@ -524,7 +524,7 @@ function printDiet(
         dietDetailsTimeXStart + 10,
         singleDietDetailYLevel + 20,
         {
-          width: startDateXStart - dietDetailsTimeXStart
+          width: startDateXStart - dietDetailsTimeXStart,
         }
       );
 
@@ -538,7 +538,7 @@ function printDiet(
         singleDietDetailYLevel + 10,
         {
           width: startDateXStart - dietDetailsTimeXStart,
-          continued: true
+          continued: true,
         }
       )
       .font(MEDIUM_FONT)
@@ -547,7 +547,7 @@ function printDiet(
         dietDetailsTimeXStart + 10,
         singleDietDetailYLevel + 10,
         {
-          width: startDateXStart - dietDetailsTimeXStart
+          width: startDateXStart - dietDetailsTimeXStart,
         }
       );
 
@@ -561,7 +561,7 @@ function printDiet(
         singleDietDetailYLevel + 10,
         {
           width: startDateXStart - dietDetailsTimeXStart,
-          continued: true
+          continued: true,
         }
       )
       .font(MEDIUM_FONT)
@@ -570,7 +570,7 @@ function printDiet(
         dietDetailsTimeXStart + 10,
         singleDietDetailYLevel + 10,
         {
-          width: startDateXStart - dietDetailsTimeXStart
+          width: startDateXStart - dietDetailsTimeXStart,
         }
       );
 
@@ -641,7 +641,7 @@ function printWorkout(
       workouts = {},
       exercises = {},
       exercise_details = {},
-      workout_exercise_groups = {}
+      workout_exercise_groups = {},
     } = workouts_formatted_data[each];
 
     const {
@@ -650,7 +650,7 @@ function printWorkout(
       time: workoutTime = "",
       start_date = null,
       end_date = null,
-      total_calories = 0
+      total_calories = 0,
     } = workouts[Object.keys(workouts)[0]] || {};
 
     let basicDetailsYLevel = singleWorkoutDetailYLevel + 20,
@@ -687,17 +687,17 @@ function printWorkout(
       .font(MEDIUM_FONT)
       .text(`${workoutCount}.`, serialNoXStart, basicDetailsYLevel)
       .text(`${workout_name}`, workoutNameXStart, basicDetailsYLevel, {
-        width: workoutTimeXStart - workoutNameXStart
+        width: workoutTimeXStart - workoutNameXStart,
       })
       .text(`${formattedTime}`, workoutTimeXStart, basicDetailsYLevel, {
-        width: workoutDetailsDataXStart - workoutTimeXStart
+        width: workoutDetailsDataXStart - workoutTimeXStart,
       })
       .text(
         `${!end_date ? "Long Term" : durationText}`,
         startDateXStart,
         basicDetailsYLevel,
         {
-          width: endDateXStart - startDateXStart
+          width: endDateXStart - startDateXStart,
         }
       );
     // .text(`${formattedEndDate}`, endDateXStart, basicDetailsYLevel)
@@ -705,15 +705,18 @@ function printWorkout(
     for (let each in workout_exercise_groups) {
       const exerciseGroupArrayForEach = workout_exercise_groups[each] || [];
 
-      const { exercise_detail_id = null, notes = "", sets = null } =
-        exerciseGroupArrayForEach || {};
+      const {
+        exercise_detail_id = null,
+        notes = "",
+        sets = null,
+      } = exerciseGroupArrayForEach || {};
 
       const {
         basic_info: {
           exercise_id = null,
           repetition_value = null,
-          repetition_id = null
-        } = {}
+          repetition_id = null,
+        } = {},
       } = exercise_details[exercise_detail_id] || {};
       const { basic_info: { name: exercise_name = "" } = {} } =
         exercises[exercise_id] || {};
@@ -734,7 +737,7 @@ function printWorkout(
           workoutDetailsDataXStart,
           singleWorkoutDetailYLevel + 20,
           {
-            width: startDateXStart - workoutDetailsDataXStart
+            width: startDateXStart - workoutDetailsDataXStart,
           }
         );
 
@@ -750,7 +753,7 @@ function printWorkout(
               singleWorkoutDetailYLevel + 5,
               {
                 width: startDateXStart - workoutDetailsDataXStart,
-                continued: true
+                continued: true,
               }
             )
             .font(MEDIUM_FONT)
@@ -759,7 +762,7 @@ function printWorkout(
               workoutDetailsDataXStart,
               singleWorkoutDetailYLevel + 5,
               {
-                width: startDateXStart - workoutDetailsDataXStart
+                width: startDateXStart - workoutDetailsDataXStart,
               }
             )
         : null;
@@ -783,7 +786,7 @@ function printWorkout(
         singleWorkoutDetailYLevel + 20,
         {
           width: startDateXStart - workoutDetailsDataXStart,
-          continued: true
+          continued: true,
         }
       )
       .font(MEDIUM_FONT)
@@ -792,7 +795,7 @@ function printWorkout(
         workoutDetailsDataXStart + 10,
         singleWorkoutDetailYLevel + 20,
         {
-          width: startDateXStart - workoutDetailsDataXStart
+          width: startDateXStart - workoutDetailsDataXStart,
         }
       );
 
@@ -806,7 +809,7 @@ function printWorkout(
         singleWorkoutDetailYLevel + 10,
         {
           width: startDateXStart - workoutDetailsDataXStart,
-          continued: true
+          continued: true,
         }
       )
       .font(MEDIUM_FONT)
@@ -815,7 +818,7 @@ function printWorkout(
         workoutDetailsDataXStart + 10,
         singleWorkoutDetailYLevel + 10,
         {
-          width: startDateXStart - workoutDetailsDataXStart
+          width: startDateXStart - workoutDetailsDataXStart,
         }
       );
 
@@ -829,7 +832,7 @@ function printWorkout(
         singleWorkoutDetailYLevel + 10,
         {
           width: startDateXStart - workoutDetailsDataXStart,
-          continued: true
+          continued: true,
         }
       )
       .font(MEDIUM_FONT)
@@ -838,7 +841,7 @@ function printWorkout(
         workoutDetailsDataXStart + 10,
         singleWorkoutDetailYLevel + 10,
         {
-          width: startDateXStart - workoutDetailsDataXStart
+          width: startDateXStart - workoutDetailsDataXStart,
         }
       );
 
@@ -880,7 +883,7 @@ function printDoctorBlockData(
     prefix = "",
     providerLogo = "",
     providerName = "",
-    providerAddress = ""
+    providerAddress = "",
   } = formatDoctorsData(
     doctors,
     users,
@@ -897,7 +900,7 @@ function printDoctorBlockData(
   if (providerIcon) {
     doc.image(`${providerIcon}`, DOC_MARGIN, doctorBlockStartY, {
       width: 80,
-      height: 80
+      height: 80,
     });
 
     doctorBlockStartX = doc.x + 100;
@@ -962,7 +965,7 @@ function printDoctorBlockData(
       .fontSize(fontSize)
       .text(`${providerPrescriptionDetails}`, DOC_MARGIN + 30, doc.y + 5, {
         width: 500 - 30,
-        height: 30
+        height: 30,
       });
 
     doctorDetailsEnd = doc.y;
@@ -995,7 +998,7 @@ function printDoctorBlockData(
   // if (providerIcon) {
   doc.image(`${__dirname}/qr-code.png`, 480, doctorBlockStartY, {
     width: 80,
-    height: 80
+    height: 80,
   });
   // }
 
@@ -1023,26 +1026,26 @@ function printPatientBlockData(
     weight = null,
     mobile_number = "",
     prefix = "",
-    uid = ""
+    uid = "",
   } = formatPatientData(patients, users);
 
   doc
     .fontSize(NORMAL_FONT_SIZE)
     .font(BOLD_FONT)
     .text("Name: ", DOC_MARGIN, doctorBlockEndRowLevel + 20, {
-      continued: true
+      continued: true,
     })
     .font(REGULAR_FONT)
     .text(`${patientName}`, DOC_MARGIN + 10, doctorBlockEndRowLevel + 20),
     {
-      continued: true
+      continued: true,
     };
 
   doc
     .fontSize(NORMAL_FONT_SIZE)
     .font(BOLD_FONT)
     .text("Date: ", DOC_MARGIN + 400, doctorBlockEndRowLevel + 20, {
-      continued: true
+      continued: true,
     })
     .font(REGULAR_FONT)
     .text(
@@ -1073,7 +1076,7 @@ function printPatientBlockData(
     .fontSize(NORMAL_FONT_SIZE)
     .font(BOLD_FONT)
     .text("Mobile Number :", DOC_MARGIN, patientNameEnds + 10, {
-      continued: true
+      continued: true,
     })
     .font(REGULAR_FONT)
     .text(`+${prefix}-${mobile_number}`, DOC_MARGIN + 10, patientNameEnds + 10);
@@ -1084,7 +1087,7 @@ function printPatientBlockData(
     .fontSize(NORMAL_FONT_SIZE)
     .font(BOLD_FONT)
     .text("Patient ID: ", DOC_MARGIN, mobileNumberEnds + 10, {
-      continued: true
+      continued: true,
     })
     .font(REGULAR_FONT)
     .text(uid, DOC_MARGIN + 10, mobileNumberEnds + 10);
@@ -1126,19 +1129,19 @@ function printPatientBlockData(
     .text("Age: ", DOC_MARGIN, addressEndRowLevel + 10, { continued: true })
     .font(REGULAR_FONT)
     .text(`${age}`, DOC_MARGIN + 10, addressEndRowLevel + 10, {
-      continued: true
+      continued: true,
     })
     .font(BOLD_FONT)
     .text("Gender: ", DOC_MARGIN + 40, addressEndRowLevel + 10, {
-      continued: true
+      continued: true,
     })
     .font(REGULAR_FONT)
     .text(`${gender ? gender : ""}`, DOC_MARGIN + 50, addressEndRowLevel + 10, {
-      continued: true
+      continued: true,
     })
     .font(BOLD_FONT)
     .text("Height: ", DOC_MARGIN + 70, addressEndRowLevel + 10, {
-      continued: true
+      continued: true,
     })
     .font(REGULAR_FONT)
     .text(
@@ -1149,7 +1152,7 @@ function printPatientBlockData(
     )
     .font(BOLD_FONT)
     .text("Weight: ", DOC_MARGIN + 100, addressEndRowLevel + 10, {
-      continued: true
+      continued: true,
     })
     .font(REGULAR_FONT)
     .text(
@@ -1171,7 +1174,7 @@ function printCarePlanData({
   allergies,
   comorbidities,
   suggestedInvestigations,
-  providerPrescriptionDetails
+  providerPrescriptionDetails,
 }) {
   const { diagnosis, condition, symptoms, clinicalNotes } = formatCarePlanData(
     care_plans,
@@ -1204,7 +1207,7 @@ function printCarePlanData({
     .fillColor("#212b36")
     .font(BOLD_FONT)
     .text("Chief Complaints: ", DOC_MARGIN, relevantHistoryEndLevel + 10, {
-      continued: true
+      continued: true,
     })
 
     .font(REGULAR_FONT)
@@ -1216,7 +1219,7 @@ function printCarePlanData({
     .font(BOLD_FONT)
     .fontSize(NORMAL_FONT_SIZE)
     .text("General Examination: ", DOC_MARGIN, chiefComplaintsEndLevel, {
-      continued: true
+      continued: true,
     })
     .font(REGULAR_FONT)
     .text(`${clinicalNotes}`, doc.x + 10, chiefComplaintsEndLevel);
@@ -1227,7 +1230,7 @@ function printCarePlanData({
     .font(BOLD_FONT)
     .fontSize(NORMAL_FONT_SIZE)
     .text("Diagnosis :", DOC_MARGIN, generalExaminationEndLevel, {
-      continued: true
+      continued: true,
     })
     .font(REGULAR_FONT)
     .text(`${diagnosis}`, doc.x + 10, generalExaminationEndLevel);
@@ -1295,7 +1298,7 @@ function printCarePlanData({
         // endDate,
         duration,
         dosage,
-        timings
+        timings,
       } = medicationData;
 
       const medicineData = `(${medicineType}) ${medicineName} `;
@@ -1319,17 +1322,17 @@ function printCarePlanData({
         .font(MEDIUM_FONT)
         .text(`${index + 1}.`, serialNoXStart, medicationYLevel)
         .text(`${medicineData}`, medicineXStart, medicationYLevel, {
-          width: dosageXStart - medicineXStart
+          width: dosageXStart - medicineXStart,
         })
         .text(`${genericName}`, medicineXStart, doc.y, {
-          width: dosageXStart - medicineXStart
+          width: dosageXStart - medicineXStart,
         })
         .text(
           `Note: ${description ? description : "-"}`,
           medicineXStart,
           doc.y,
           {
-            width: dosageXStart - medicineXStart
+            width: dosageXStart - medicineXStart,
           }
         );
 
@@ -1353,7 +1356,7 @@ function printCarePlanData({
         .text(`${strength}`, dosageXStart, medicationYLevel)
         .text(`${quantity ? quantity : "-"}`, quantityXStart, medicationYLevel)
         .text(`${dosage}`, frequencyXStart, medicationYLevel, {
-          width: timingFrequencyXStart - frequencyXStart
+          width: timingFrequencyXStart - frequencyXStart,
         });
 
       doc
@@ -1499,7 +1502,7 @@ function printProviderPrescriptionDetails(doc, providerPrescriptionDetails) {
     .fontSize(fontSize)
     .text(`${providerPrescriptionDetails}`, DOC_MARGIN, PAGE_END_LIMIT + 35, {
       width: 500 - DOC_MARGIN,
-      height: 30
+      height: 30,
     });
 
   //   let strHeight=doc.heightOfString(providerPrescriptionDetails, {lineGap: 0, width: providerDetailsEnd-providerDetailsStart});
@@ -1567,7 +1570,7 @@ function printFooter(
   try {
     doc.image(`${imageUrl}`, 400, doc.y + 10, {
       width: 120,
-      height: signaturePictureHeight
+      height: signaturePictureHeight,
     });
   } catch (err) {
     console.log("ERROR in signature pic", err);
@@ -1600,9 +1603,8 @@ function formatCarePlanData(carePlans, conditions) {
   const conditionIds = Object.keys(conditions);
   if (conditionIds && conditionIds.length) {
     const conditionId = conditionIds[0];
-    const {
-      [conditionId]: { basic_info: { name = "" } = {} } = {}
-    } = conditions;
+    const { [conditionId]: { basic_info: { name = "" } = {} } = {} } =
+      conditions;
     condition = name;
   }
 
@@ -1614,9 +1616,9 @@ function formatCarePlanData(carePlans, conditions) {
         details: {
           symptoms: symptom = "",
           diagnosis: { description = "" } = {},
-          clinical_notes = ""
-        } = {}
-      }
+          clinical_notes = "",
+        } = {},
+      },
     } = carePlans;
 
     diagnosis = description;
@@ -1649,17 +1651,17 @@ function formatDoctorsData(
         middle_name = "",
         last_name = "",
         signature_image = "",
-        profile_pic
+        profile_pic,
       } = {},
       city = "",
-      provider_id
-    } = {}
+      provider_id,
+    } = {},
   } = doctors;
 
   const {
     [user_id]: {
-      basic_info: { mobile_number = "", email = "", prefix = "" } = {}
-    } = {}
+      basic_info: { mobile_number = "", email = "", prefix = "" } = {},
+    } = {},
   } = users;
 
   let providerLogo = "";
@@ -1674,7 +1676,7 @@ function formatDoctorsData(
   if (Object.keys(providers).length > 0) {
     const {
       basic_info: { user_id: providerUserId, name, address } = {},
-      details: { icon: providerIcon } = {}
+      details: { icon: providerIcon } = {},
     } = providers || {};
     providerName = name;
     providerAddress = address;
@@ -1692,9 +1694,8 @@ function formatDoctorsData(
 
   const degreeIds = Object.keys(degrees);
   for (const id of degreeIds) {
-    const {
-      [id]: { basic_info: { name: degreeName = "" } = {} } = {}
-    } = degrees;
+    const { [id]: { basic_info: { name: degreeName = "" } = {} } = {} } =
+      degrees;
     degree = degreeName ? degree + `${degreeName}, ` : degree;
   }
 
@@ -1703,8 +1704,8 @@ function formatDoctorsData(
     const {
       [regId]: {
         number = "",
-        council: { basic_info: { name: council_name = "" } = {} } = {}
-      } = {}
+        council: { basic_info: { name: council_name = "" } = {} } = {},
+      } = {},
     } = registrations;
     registrationNumber = registrationNumber + `${number}, `;
   }
@@ -1731,7 +1732,7 @@ function formatDoctorsData(
     prefix: prefixToShow,
     providerLogo,
     providerName,
-    providerAddress
+    providerAddress,
   };
 }
 
@@ -1753,10 +1754,10 @@ function formatPatientData(patients, users) {
         weight = "",
         user_id = null,
         full_name = "",
-        uid = ""
+        uid = "",
       } = {},
-      details: { allergies = "", comorbidities = "" } = {}
-    } = {}
+      details: { allergies = "", comorbidities = "" } = {},
+    } = {},
   } = patients;
 
   let name = first_name;
@@ -1764,7 +1765,7 @@ function formatPatientData(patients, users) {
   name = last_name ? `${name} ${last_name}` : name;
 
   const {
-    [user_id]: { basic_info: { mobile_number = "", prefix = "" } = {} } = {}
+    [user_id]: { basic_info: { mobile_number = "", prefix = "" } = {} } = {},
   } = users;
 
   return {
@@ -1778,7 +1779,7 @@ function formatPatientData(patients, users) {
     comorbidities,
     mobile_number,
     prefix,
-    uid
+    uid,
   };
 }
 
@@ -1795,10 +1796,10 @@ function formatMedicationsData(medications, medicines) {
           start_date = "",
           end_date = "",
           description = "",
-          details = null
+          details = null,
         } = {},
-        details: mobileDetails = null
-      }
+        details: mobileDetails = null,
+      },
     } = medications;
 
     let mainDetails = {};
@@ -1815,14 +1816,14 @@ function formatMedicationsData(medications, medicines) {
       medicine_type = "",
       strength = "",
       unit = "",
-      quantity = null
+      quantity = null,
     } = mainDetails || {};
 
     const {
       [medicine_id]: {
         basic_info: { name = "", type = "" } = {},
-        details: medicineExtraDetails = {}
-      } = {}
+        details: medicineExtraDetails = {},
+      } = {},
     } = medicines || {};
     const { generic_name = "" } = medicineExtraDetails || {};
 
@@ -1858,7 +1859,7 @@ function formatMedicationsData(medications, medicines) {
       dosage: getWhenToTakeDosage(when_to_take),
       duration: end_date
         ? moment(end_date).diff(moment(start_date), "days")
-        : "Long term" // todo: change text here after discussion
+        : "Long term", // todo: change text here after discussion
     };
 
     medicationsList.push(medicationDataObj);
@@ -1867,7 +1868,7 @@ function formatMedicationsData(medications, medicines) {
   return medicationsList;
 }
 
-const getWhenToTakeDosage = when_to_take => {
+const getWhenToTakeDosage = (when_to_take) => {
   switch (when_to_take.length) {
     case WHEN_TO_TAKE_ABBREVATIONS.OD:
       return "Once a day";
@@ -1883,10 +1884,10 @@ const getWhenToTakeDosage = when_to_take => {
 };
 
 const getWhenToTakeTimings = (when_to_take = []) => {
-  return when_to_take.map(id => MEDICATION_TIMING[id].text).join(", ");
+  return when_to_take.map((id) => MEDICATION_TIMING[id].text).join(", ");
 };
 
-const getWhenToTakeText = number => {
+const getWhenToTakeText = (number) => {
   switch (number) {
     case 1:
       return `Once a day`;
@@ -1940,13 +1941,13 @@ function getPageDetails(doc) {
   return { onePageHeight, totalPagesToDrawLine };
 }
 
-const reStyleText = text => {
+const reStyleText = (text) => {
   return `${text.charAt(0).toUpperCase()}${text
     .substring(1, text.length)
     .toLowerCase()}`;
 };
 
-const checkAndAddNewPage = doc => {
+const checkAndAddNewPage = (doc) => {
   if (doc.y > PAGE_END_LIMIT) {
     addPageAndNumber(doc);
   }

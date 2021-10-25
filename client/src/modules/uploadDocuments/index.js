@@ -2,7 +2,7 @@ import { doRequest } from "../../Helper/network";
 import { REQUEST_TYPE } from "../../constant";
 import {
   getUploadAppointmentDocumentUrl,
-  getDeleteAppointmentDocumentUrl
+  getDeleteAppointmentDocumentUrl,
 } from "../../Helper/urls/appointments";
 
 export const STORE_APPOINTMENT_DOCS = "STORE_APPOINTMENT_DOCS";
@@ -24,12 +24,12 @@ export const DELETE_APPOINTMENT_DOCUMENT_COMPLETE =
 export const DELETE_APPOINTMENT_DOCUMENT_FAILED =
   "DELETE_APPOINTMENT_DOCUMENT_FAILED";
 
-export const storeAppointmentDocuments = data => {
-  return async dispatch => {
+export const storeAppointmentDocuments = (data) => {
+  return async (dispatch) => {
     try {
       dispatch({
         type: STORE_APPOINTMENT_DOCS,
-        data: data
+        data: data,
       });
 
       console.log("STORE_APPOINTMENT_DOCS");
@@ -43,13 +43,13 @@ export const storeAppointmentDocuments = data => {
 export const uploadAppointmentDocs = (payload, id) => {
   let response = {};
   console.log("123098138239 data --> ", payload);
-  return async dispatch => {
+  return async (dispatch) => {
     try {
       dispatch({ type: UPLOAD_APPOINTMENT_DOCUMENT_START });
       response = await doRequest({
         method: REQUEST_TYPE.POST,
         data: payload,
-        url: getUploadAppointmentDocumentUrl(id)
+        url: getUploadAppointmentDocumentUrl(id),
       });
 
       const { status, payload: { data } = {} } = response || {};
@@ -57,7 +57,7 @@ export const uploadAppointmentDocs = (payload, id) => {
         dispatch({ type: UPLOAD_APPOINTMENT_DOCUMENT_COMPLETE, data });
       } else {
         dispatch({
-          type: UPLOAD_APPOINTMENT_DOCUMENT_FAILED
+          type: UPLOAD_APPOINTMENT_DOCUMENT_FAILED,
         });
       }
     } catch (error) {
@@ -67,14 +67,14 @@ export const uploadAppointmentDocs = (payload, id) => {
   };
 };
 
-export const deleteAppointmentDocs = doc_id => {
+export const deleteAppointmentDocs = (doc_id) => {
   let response = {};
-  return async dispatch => {
+  return async (dispatch) => {
     try {
       dispatch({ type: DELETE_APPOINTMENT_DOCUMENT_START });
       response = await doRequest({
         method: REQUEST_TYPE.DELETE,
-        url: getDeleteAppointmentDocumentUrl(doc_id)
+        url: getDeleteAppointmentDocumentUrl(doc_id),
       });
 
       const { status, payload: { data } = {} } = response || {};
@@ -82,7 +82,7 @@ export const deleteAppointmentDocs = doc_id => {
         dispatch({ type: DELETE_APPOINTMENT_DOCUMENT_COMPLETE, data });
       } else {
         dispatch({
-          type: DELETE_APPOINTMENT_DOCUMENT_FAILED
+          type: DELETE_APPOINTMENT_DOCUMENT_FAILED,
         });
       }
     } catch (error) {
@@ -97,7 +97,7 @@ function uploadDocumentReducer(state, data) {
   if (upload_documents) {
     return {
       ...state,
-      ...upload_documents
+      ...upload_documents,
     };
   } else {
     return state;

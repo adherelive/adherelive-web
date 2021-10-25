@@ -8,7 +8,7 @@ import { getMedications } from "../../modules/medications";
 import {
   getAppointments,
   addAppointment,
-  addCarePlanAppointment
+  addCarePlanAppointment,
 } from "../../modules/appointments";
 import { searchMedicine } from "../../modules/medicines";
 import { searchTreatment } from "../../modules/treatments";
@@ -16,7 +16,7 @@ import { searchCondition } from "../../modules/conditions";
 import { searchSeverity } from "../../modules/severity";
 import { addCareplanForPatient } from "../../modules/patients";
 
-const mapStateToProps = state => {
+const mapStateToProps = (state) => {
   const {
     drawer: { visible, loading, data: { type, payload = {} } = {} },
     treatments = {},
@@ -24,7 +24,7 @@ const mapStateToProps = state => {
     severity = {},
     patients,
     doctors,
-    care_plans
+    care_plans,
   } = state;
   return {
     visible: visible && type === DRAWER.ADD_CAREPLAN,
@@ -37,21 +37,21 @@ const mapStateToProps = state => {
     conditions,
     severity,
     patients,
-    doctors
+    doctors,
   };
 };
 
-const mapDispatchToProps = dispatch => {
+const mapDispatchToProps = (dispatch) => {
   return {
     close: () => dispatch(close()),
-    getMedications: id => dispatch(getMedications(id)),
+    getMedications: (id) => dispatch(getMedications(id)),
     getInitialData: () => dispatch(getInitialData()),
-    searchMedicine: value => dispatch(searchMedicine(value)),
-    searchCondition: value => dispatch(searchCondition(value)),
-    searchTreatment: value => dispatch(searchTreatment(value)),
-    searchSeverity: value => dispatch(searchSeverity(value)),
+    searchMedicine: (value) => dispatch(searchMedicine(value)),
+    searchCondition: (value) => dispatch(searchCondition(value)),
+    searchTreatment: (value) => dispatch(searchTreatment(value)),
+    searchSeverity: (value) => dispatch(searchSeverity(value)),
     addCareplanForPatient: (patient_id, data) =>
-      dispatch(addCareplanForPatient(patient_id, data))
+      dispatch(addCareplanForPatient(patient_id, data)),
   };
 };
 

@@ -18,29 +18,29 @@ const MAXIMUM_LENGTH = 10000;
 class MedicineQuantity extends Component {
   componentDidMount() {
     const {
-      form: { validateFields }
+      form: { validateFields },
     } = this.props;
     validateFields();
   }
 
   componentWillUnmount() {
     const {
-      form: { validateFields }
+      form: { validateFields },
     } = this.props;
     validateFields();
   }
 
-  formatMessage = data => this.props.intl.formatMessage(data);
+  formatMessage = (data) => this.props.intl.formatMessage(data);
 
-  onRadioChange = e => {
+  onRadioChange = (e) => {
     e.preventDefault();
     const {
       form: { setFieldsValue, getFieldValue },
-      enableSubmit
+      enableSubmit,
     } = this.props;
     const currentValue = getFieldValue(FIELD_NAME) || 0.0;
     setFieldsValue({
-      [FIELD_NAME]: parseFloat(currentValue) + parseFloat(e.target.value)
+      [FIELD_NAME]: parseFloat(currentValue) + parseFloat(e.target.value),
     });
     enableSubmit();
   };
@@ -59,14 +59,10 @@ class MedicineQuantity extends Component {
       form,
       medications,
       payload: { id: medication_id, canViewDetails = false } = {},
-      medicationData = {}
+      medicationData = {},
     } = this.props;
-    const {
-      getFieldDecorator,
-      getFieldError,
-      isFieldTouched,
-      getFieldValue
-    } = form;
+    const { getFieldDecorator, getFieldError, isFieldTouched, getFieldValue } =
+      form;
 
     const { onRadioChange, formatMessage, getInitialValue } = this;
 
@@ -120,10 +116,10 @@ class MedicineQuantity extends Component {
               {
                 type: "number",
                 max: MAXIMUM_LENGTH,
-                message: "Please enter valid quantity"
-              }
+                message: "Please enter valid quantity",
+              },
             ],
-            initialValue: quantity ? quantity : 1
+            initialValue: quantity ? quantity : 1,
           })(
             <InputNumber
               min={0.01}
@@ -143,5 +139,5 @@ const Field = injectIntl(MedicineQuantity);
 export default {
   field_name: FIELD_NAME,
   maximum_length: MAXIMUM_LENGTH,
-  render: props => <Field {...props} />
+  render: (props) => <Field {...props} />,
 };

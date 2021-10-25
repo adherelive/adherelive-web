@@ -22,12 +22,12 @@ class CreateJob extends VitalJob {
         id: actorId,
         user_role_id,
         userCategoryData: {
-          basic_info: { first_name, middle_name, last_name } = {}
+          basic_info: { first_name, middle_name, last_name } = {},
         } = {},
-        category
+        category,
       } = {},
       vital_templates: { basic_info: { name: vitalName = "" } = {} } = {},
-      eventId = null
+      eventId = null,
     } = getData() || {};
 
     const templateData = [];
@@ -45,8 +45,8 @@ class CreateJob extends VitalJob {
     const { rows: userRoles = [] } =
       (await UserRoleService.findAndCountAll({
         where: {
-          id: participants
-        }
+          id: participants,
+        },
       })) || {};
 
     let providerId = null;
@@ -66,14 +66,14 @@ class CreateJob extends VitalJob {
     let providerName = DEFAULT_PROVIDER;
     if (providerId) {
       const provider = await ProviderService.getProviderByData({
-        id: providerId
+        id: providerId,
       });
       const { name } = provider || {};
       providerName = name;
     }
 
     const userDevices = await UserDeviceService.getAllDeviceByData({
-      user_id: userIds
+      user_id: userIds,
     });
 
     if (userDevices.length > 0) {
@@ -91,14 +91,14 @@ class CreateJob extends VitalJob {
         en: `${getFullName({
           first_name,
           middle_name,
-          last_name
-        })}(${category}) has added ${vitalName} vital for you`
+          last_name,
+        })}(${category}) has added ${vitalName} vital for you`,
       },
       // buttons: [{ id: "yes", text: "Yes" }, { id: "no", text: "No" }],
       include_player_ids: [...playerIds],
       priority: 10,
       android_channel_id: process.config.one_signal.urgent_channel_id,
-      data: { url: "/vitals", params: getData() }
+      data: { url: "/vitals", params: getData() },
     });
 
     return templateData;
@@ -109,7 +109,7 @@ class CreateJob extends VitalJob {
     const {
       participants = [],
       actor: { id: actorId, user_role_id } = {},
-      event_id: eventId = null
+      event_id: eventId = null,
     } = getData() || {};
 
     const templateData = [];
@@ -127,7 +127,7 @@ class CreateJob extends VitalJob {
           verb: `vital_create:${currentTimeStamp}`,
           event: EVENT_TYPE.VITALS,
           time: currentTime,
-          create_time: `${currentTime}`
+          create_time: `${currentTime}`,
         });
       }
     }

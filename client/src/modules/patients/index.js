@@ -6,7 +6,7 @@ import {
   getRequestConsentUrl,
   getConsentVerifyUrl,
   searchPatientForDoctorUrl,
-  addCareplanForPatientUrl
+  addCareplanForPatientUrl,
 } from "../../Helper/urls/patients";
 import { getInitialData } from "./../auth/index";
 
@@ -51,26 +51,26 @@ export const GENERATE_PRESCRIPTION_COMPLETED =
   "GENERATE_PRESCRIPTION_COMPLETED";
 export const GENERATE_PRESCRIPTION_FAILED = "GENERATE_PRESCRIPTION_FAILED";
 
-export const requestConsent = id => {
+export const requestConsent = (id) => {
   let response = {};
-  return async dispatch => {
+  return async (dispatch) => {
     try {
       dispatch({ type: REQUEST_CONSENT_OTP_START });
 
       response = await doRequest({
         method: REQUEST_TYPE.POST,
-        url: getRequestConsentUrl(id)
+        url: getRequestConsentUrl(id),
       });
 
       const { status } = response || {};
 
       if (status === true) {
         dispatch({
-          type: REQUEST_CONSENT_OTP_COMPLETED
+          type: REQUEST_CONSENT_OTP_COMPLETED,
         });
       } else {
         dispatch({
-          type: REQUEST_CONSENT_OTP_FAILED
+          type: REQUEST_CONSENT_OTP_FAILED,
         });
       }
     } catch (err) {
@@ -82,16 +82,16 @@ export const requestConsent = id => {
   };
 };
 
-export const consentVerify = payload => {
+export const consentVerify = (payload) => {
   let response = {};
-  return async dispatch => {
+  return async (dispatch) => {
     try {
       dispatch({ type: CONSENT_VERIFY_START });
 
       response = await doRequest({
         method: REQUEST_TYPE.POST,
         url: getConsentVerifyUrl(),
-        data: payload
+        data: payload,
       });
 
       const { status, payload: { data } = {} } = response || {};
@@ -99,11 +99,11 @@ export const consentVerify = payload => {
       if (status === true) {
         dispatch({
           type: CONSENT_VERIFY_COMPLETED,
-          data
+          data,
         });
       } else {
         dispatch({
-          type: CONSENT_VERIFY_FAILED
+          type: CONSENT_VERIFY_FAILED,
         });
       }
     } catch (err) {
@@ -115,16 +115,16 @@ export const consentVerify = payload => {
   };
 };
 
-export const addPatient = payload => {
+export const addPatient = (payload) => {
   let response = {};
-  return async dispatch => {
+  return async (dispatch) => {
     try {
       dispatch({ type: ADD_PATIENT });
 
       response = await doRequest({
         method: REQUEST_TYPE.POST,
         url: getAddPatientUrl(),
-        data: payload
+        data: payload,
       });
 
       const { status, payload: { error = "", data = {} } = {} } =
@@ -133,13 +133,13 @@ export const addPatient = payload => {
       if (status === false) {
         dispatch({
           type: ADD_PATIENT_COMPLETED_WITH_ERROR,
-          payload: { error }
+          payload: { error },
         });
       } else if (status === true) {
         // const { patients = {} } = data;
         dispatch({
           type: ADD_PATIENT_COMPLETED,
-          data: data
+          data: data,
         });
         dispatch(getInitialData());
       }
@@ -152,15 +152,15 @@ export const addPatient = payload => {
   };
 };
 
-export const searchPatientFromNum = value => {
+export const searchPatientFromNum = (value) => {
   let response = {};
-  return async dispatch => {
+  return async (dispatch) => {
     try {
       dispatch({ type: SEARCH_PATIENT });
 
       response = await doRequest({
         method: REQUEST_TYPE.GET,
-        url: searchPatientFromNumUrl(value)
+        url: searchPatientFromNumUrl(value),
       });
 
       const { status, payload: { error = "", data = {} } = {} } =
@@ -169,7 +169,7 @@ export const searchPatientFromNum = value => {
       if (status === false) {
         dispatch({
           type: SEARCH_PATIENT_FAILED,
-          payload: { error }
+          payload: { error },
         });
       } else if (status === true) {
         // dispatch({
@@ -186,15 +186,15 @@ export const searchPatientFromNum = value => {
   };
 };
 
-export const searchPatientForDoctor = value => {
+export const searchPatientForDoctor = (value) => {
   let response = {};
-  return async dispatch => {
+  return async (dispatch) => {
     try {
       dispatch({ type: SEARCH_PATIENT_FOR_DOCTOR });
 
       response = await doRequest({
         method: REQUEST_TYPE.GET,
-        url: searchPatientForDoctorUrl(value)
+        url: searchPatientForDoctorUrl(value),
       });
 
       const { status, payload: { error = "", data = {} } = {} } =
@@ -203,12 +203,12 @@ export const searchPatientForDoctor = value => {
       if (status === false) {
         dispatch({
           type: SEARCH_PATIENT_FOR_DOCTOR_FAILED,
-          payload: { error }
+          payload: { error },
         });
       } else if (status === true) {
         dispatch({
           type: SEARCH_PATIENT_FOR_DOCTOR_COMPLETE,
-          data: data
+          data: data,
         });
       }
     } catch (error) {
@@ -222,14 +222,14 @@ export const searchPatientForDoctor = value => {
 
 export const addCareplanForPatient = (id, payload) => {
   let response = {};
-  return async dispatch => {
+  return async (dispatch) => {
     try {
       dispatch({ type: ADD_NEW_CAREPLAN });
 
       response = await doRequest({
         method: REQUEST_TYPE.POST,
         url: addCareplanForPatientUrl(id),
-        data: payload
+        data: payload,
       });
 
       const { status, payload: { error = "", data = {} } = {} } =
@@ -238,13 +238,13 @@ export const addCareplanForPatient = (id, payload) => {
       if (status === false) {
         dispatch({
           type: ADD_NEW_CAREPLAN_FAILED,
-          payload: { error }
+          payload: { error },
         });
       } else if (status === true) {
         // const { patients = {} } = data;
         dispatch({
           type: ADD_NEW_CAREPLAN_COMPLETE,
-          data: data
+          data: data,
         });
       }
     } catch (err) {
@@ -256,15 +256,15 @@ export const addCareplanForPatient = (id, payload) => {
   };
 };
 
-export const getPatientMissedEvents = patient_id => {
+export const getPatientMissedEvents = (patient_id) => {
   let response = {};
-  return async dispatch => {
+  return async (dispatch) => {
     try {
       dispatch({ type: GET_PATIENT_MISSED_EVENTS_START });
 
       response = await doRequest({
         method: REQUEST_TYPE.GET,
-        url: getPatientMissedEventsUrl(patient_id)
+        url: getPatientMissedEventsUrl(patient_id),
       });
 
       const { status, payload: { data } = {} } = response || {};
@@ -272,11 +272,11 @@ export const getPatientMissedEvents = patient_id => {
       if (status === true) {
         dispatch({
           type: GET_PATIENT_MISSED_EVENTS_COMPLETED,
-          data
+          data,
         });
       } else {
         dispatch({
-          type: GET_PATIENT_MISSED_EVENTS_FAILED
+          type: GET_PATIENT_MISSED_EVENTS_FAILED,
         });
       }
     } catch (err) {
@@ -294,7 +294,7 @@ function patientReducer(state, data) {
     return {
       // ...PATIENT_INITIAL_STATE,
       ...state,
-      ...patients
+      ...patients,
     };
   } else {
     return state;

@@ -13,18 +13,18 @@ class FeatureDetailsWrapper extends BaseFeatureDetails {
       const { appointment_type } = getFeatureDetails();
 
       return {
-        ...appointment_type
+        ...appointment_type,
       };
     }
   };
 
-  getAppointmentTypeDescription = id => {
+  getAppointmentTypeDescription = (id) => {
     const { getFeatureType, getFeatureDetails } = this;
     if (getFeatureType() === FEATURE_TYPE.APPOINTMENT) {
       const { type_description = [] } = getFeatureDetails();
 
       return {
-        appointment_type_descriptions: type_description[id]
+        appointment_type_descriptions: type_description[id],
       };
     }
   };

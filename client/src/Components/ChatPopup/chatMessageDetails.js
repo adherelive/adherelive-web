@@ -30,7 +30,7 @@ import {
   BODY_VIEW,
   BODY_SIDE,
   USER_CATEGORY,
-  EVENT_TYPE
+  EVENT_TYPE,
 } from "../../constant";
 import BotMessage from "./botMessage";
 import { getFullName, isJSON } from "../../Helper/common";
@@ -44,7 +44,7 @@ class MediaComponent extends Component {
       url: "",
       blobUrl: "",
       message: "",
-      imageModalVisible: false
+      imageModalVisible: false,
     };
   }
 
@@ -85,15 +85,15 @@ class MediaComponent extends Component {
   openModal = () => {
     this.setState({ imageModalVisible: true });
   };
-  onClickDownloader = e => {
+  onClickDownloader = (e) => {
     e.preventDefault();
     const { url, message } = this.state;
     if (url && url.length > 0) {
       fetch(url, {
-        method: "GET"
+        method: "GET",
       })
-        .then(response => response.blob())
-        .then(blob => {
+        .then((response) => response.blob())
+        .then((blob) => {
           const blobUrl = window.URL.createObjectURL(new Blob([blob]));
           const downloader = document.createElement("a");
           downloader.href = blobUrl;
@@ -117,7 +117,7 @@ class MediaComponent extends Component {
     }
   };
 
-  onDownloadClick = e => {
+  onDownloadClick = (e) => {
     e.stopPropagation();
   };
 
@@ -212,7 +212,7 @@ class ChatMessageDetails extends Component {
       loadingMessageDetails: false,
       message_numbers: 0,
       vital_repeat_intervals: {},
-      message_ids_length: 0
+      message_ids_length: 0,
     };
   }
 
@@ -269,7 +269,7 @@ class ChatMessageDetails extends Component {
     const {
       message_numbers,
       loadSymptoms,
-      message_ids_length = 0
+      message_ids_length = 0,
     } = this.state;
     const { messageIds = [] } = chatMessages[roomId] || {};
 
@@ -290,13 +290,13 @@ class ChatMessageDetails extends Component {
     }
   }
 
-  formatMessage = data => this.props.intl.formatMessage(data);
+  formatMessage = (data) => this.props.intl.formatMessage(data);
 
-  fetchMessageDetails = data => {
+  fetchMessageDetails = (data) => {
     const { messages: messagesArray = [] } = data || {};
     const { getSymptomDetails } = this.props;
     let adhere_bot_messages = {
-      symptom_ids: []
+      symptom_ids: [],
     };
     for (let i in messagesArray) {
       let message = messagesArray[i];
@@ -310,7 +310,7 @@ class ChatMessageDetails extends Component {
       }
     }
     this.setState({ loadSymptoms: false, loadingMessageDetails: true });
-    getSymptomDetails(adhere_bot_messages["symptom_ids"]).then(res => {
+    getSymptomDetails(adhere_bot_messages["symptom_ids"]).then((res) => {
       if (res) {
         this.setState({ loadingMessageDetails: false });
         this.scrollToBottom();
@@ -320,13 +320,13 @@ class ChatMessageDetails extends Component {
 
   fetchVitalDetails = () => {
     const { getVitalOccurence } = this.props;
-    getVitalOccurence().then(res => {
+    getVitalOccurence().then((res) => {
       const { status = false } = res;
       if (status) {
         const { payload: { data } = {} } = res;
         const { repeat_intervals = {} } = data;
         this.setState({
-          vital_repeat_intervals: repeat_intervals
+          vital_repeat_intervals: repeat_intervals,
         });
       }
     });
@@ -356,13 +356,13 @@ class ChatMessageDetails extends Component {
           basic_info: {
             first_name: hsp_first_name,
             middle_name: hsp_middle_name,
-            last_name: hsp_last_name
-          } = {}
+            last_name: hsp_last_name,
+          } = {},
         } = doctors[id] || {};
         authorName = getFullName({
           first_name: hsp_first_name,
           middle_name: hsp_middle_name,
-          last_name: hsp_last_name
+          last_name: hsp_last_name,
         });
         break;
       case USER_CATEGORY.PATIENT:
@@ -370,13 +370,13 @@ class ChatMessageDetails extends Component {
           basic_info: {
             first_name: p_first_name,
             middle_name: p_middle_name,
-            last_name: p_last_name
-          } = {}
+            last_name: p_last_name,
+          } = {},
         } = patients[id] || {};
         authorName = getFullName({
           first_name: p_first_name,
           middle_name: p_middle_name,
-          last_name: p_last_name
+          last_name: p_last_name,
         });
         break;
       default:
@@ -434,7 +434,7 @@ class ChatMessageDetails extends Component {
           vitals[vital_id] || {};
         const {
           basic_info: { name: vitalName } = {},
-          details: { template } = {}
+          details: { template } = {},
         } = vital_templates[vital_template_id] || {};
 
         return (
@@ -470,11 +470,11 @@ class ChatMessageDetails extends Component {
     }
   };
 
-  getMessageComp = messageArr => {
+  getMessageComp = (messageArr) => {
     const {
       authenticated_user,
       otherUserLastConsumedMessageIndex,
-      handleReply
+      handleReply,
     } = this.props;
     const { getMetaBlock } = this;
 
@@ -561,8 +561,11 @@ class ChatMessageDetails extends Component {
         if (isJSON(body)) {
           const parsedMessage = JSON.parse(body);
           console.log("128781732 parsedMessage ---> ", parsedMessage);
-          const { text, meta: { productId = null } = {}, meta } =
-            parsedMessage || {};
+          const {
+            text,
+            meta: { productId = null } = {},
+            meta,
+          } = parsedMessage || {};
 
           if (productId) {
             const { amount, type, name } = meta || {};
@@ -750,7 +753,7 @@ class ChatMessageDetails extends Component {
       // authenticated_user,
       // users,
       roomId,
-      chatMessages
+      chatMessages,
       // patientDp,
       // symptoms,
       // upload_documents,

@@ -30,8 +30,8 @@ class UserRoleWrapper extends BaseUserRole {
         id,
         user_identity,
         linked_id,
-        linked_with
-      }
+        linked_with,
+      },
     };
   };
 
@@ -39,7 +39,7 @@ class UserRoleWrapper extends BaseUserRole {
     const {
       _data: { id, linked_id, linked_with } = {},
       getBasicInfo,
-      getUser
+      getUser,
     } = this;
 
     const { doctor, provider } = getUser() || {};
@@ -125,12 +125,12 @@ class UserRoleWrapper extends BaseUserRole {
 
     return {
       user_roles: {
-        [id]: getBasicInfo()
+        [id]: getBasicInfo(),
       },
       doctors,
       patients,
       providers,
-      admins
+      admins,
     };
   };
 }

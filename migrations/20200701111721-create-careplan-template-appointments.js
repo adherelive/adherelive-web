@@ -11,54 +11,54 @@ module.exports = {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
-        type: Sequelize.INTEGER
+        type: Sequelize.INTEGER,
       },
       care_plan_template_id: {
         type: Sequelize.INTEGER,
         allowNull: false,
         references: {
           model: {
-            tableName: carePlanTemplateTableName
+            tableName: carePlanTemplateTableName,
           },
-          key: "id"
-        }
+          key: "id",
+        },
       },
       reason: {
         type: Sequelize.STRING,
-        allowNull: false
+        allowNull: false,
       },
       time_gap: {
         type: Sequelize.STRING,
-        allowNull: false
+        allowNull: false,
       },
       details: {
         type: Sequelize.JSON,
-        allowNull: true
+        allowNull: true,
       },
       provider_id: {
         type: Sequelize.INTEGER,
-        allowNull: true
+        allowNull: true,
       },
       provider_name: {
         type: Sequelize.STRING(100),
-        allowNull: true
+        allowNull: true,
       },
       created_at: {
         allowNull: false,
-        type: Sequelize.DATE
+        type: Sequelize.DATE,
       },
       updated_at: {
         allowNull: false,
-        type: Sequelize.DATE
+        type: Sequelize.DATE,
       },
       deleted_at: {
         allowNull: true,
-        type: Sequelize.DATE
-      }
+        type: Sequelize.DATE,
+      },
     });
   },
 
   down: (queryInterface, Sequelize) => {
     return queryInterface.dropTable(TABLE_NAME);
-  }
+  },
 };

@@ -7,23 +7,19 @@ const createFavourite = Joi.object().keys({
     .valid(...USER_FAV_ALL_TYPES)
     .required()
     .label("Please enter valid favourite type"),
-  id: Joi.number()
-    .required()
-    .label("Please enter valid favourite Id"),
-  details: Joi.object().optional()
+  id: Joi.number().required().label("Please enter valid favourite Id"),
+  details: Joi.object().optional(),
 });
 
 const getFavourites = Joi.object().keys({
   type: Joi.string()
     .valid(...USER_FAV_ALL_TYPES)
     .required()
-    .label("Please enter valid favourite type")
+    .label("Please enter valid favourite type"),
 });
 
 const removeFavourites = Joi.object().keys({
-  id: Joi.number()
-    .required()
-    .label("Please enter valid favourite Id")
+  id: Joi.number().required().label("Please enter valid favourite Id"),
 });
 
 export const validateCreateFavourite = (req, res, next) => {

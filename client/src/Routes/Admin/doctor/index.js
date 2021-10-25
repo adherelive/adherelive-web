@@ -3,7 +3,7 @@ import {
   BrowserRouter as Router,
   Route,
   Switch,
-  withRouter
+  withRouter,
 } from "react-router-dom";
 import { PATH } from "../../../constant";
 import SideMenu from "../../../Containers/Sidebar";
@@ -57,7 +57,7 @@ const AdminMedicines = lazy(() =>
   )
 );
 
-const SideMenuComp = props => {
+const SideMenuComp = (props) => {
   const { location: { pathname = "" } = {} } = props;
   if (
     !(
@@ -73,7 +73,7 @@ const SideMenuComp = props => {
   }
 };
 
-const AdminDoctorDetailsPageComp = props => {
+const AdminDoctorDetailsPageComp = (props) => {
   const { match: { params: { id } = {} } = {} } = props;
   return <AdminDoctorDetailsPage id={id} />;
 };
@@ -82,7 +82,7 @@ class AdminDoctor extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      redirecting: this.props.authRedirection
+      redirecting: this.props.authRedirection,
     };
   }
 

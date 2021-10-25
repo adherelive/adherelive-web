@@ -5,7 +5,7 @@ import { TABLE_NAME as userTableName } from "./users";
 
 export const TABLE_NAME = "permissions";
 
-export const db = database => {
+export const db = (database) => {
   database.define(
     TABLE_NAME,
     {
@@ -13,23 +13,23 @@ export const db = database => {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
-        type: DataTypes.INTEGER
+        type: DataTypes.INTEGER,
       },
       type: {
-        type: DataTypes.STRING(100)
-      }
+        type: DataTypes.STRING(100),
+      },
     },
     {
       underscored: true,
-      paranoid: true
+      paranoid: true,
     }
   );
 };
 
-export const associate = database => {
+export const associate = (database) => {
   // associations here (if any) ...
   database.models[TABLE_NAME].belongsToMany(database.models[userTableName], {
     through: userCategoryPermissionTableName,
-    foreignKey: "category"
+    foreignKey: "category",
   });
 };

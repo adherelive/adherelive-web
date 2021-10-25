@@ -13,10 +13,10 @@ class DoctorClinicWrapper extends BaseDoctorClinic {
       basic_info: {
         id,
         doctor_id,
-        name
+        name,
       },
       location,
-      details
+      details,
     };
   };
 }

@@ -29,7 +29,7 @@ class AppointmentType extends Component {
   //   }
   // }
 
-  onChangeActivityType = e => {
+  onChangeActivityType = (e) => {
     e.preventDefault();
     const activityType = e.target.value;
 
@@ -38,14 +38,14 @@ class AppointmentType extends Component {
       data,
       form: { getFieldValue, setFieldsValue },
       otherUser,
-      purpose
+      purpose,
     } = this.props;
 
     const config = getActivityBetween({
       viewer: currentUser,
       other: otherUser,
       event: data,
-      edit: !!purpose
+      edit: !!purpose,
     });
 
     const { mode = {} } = config;
@@ -71,7 +71,7 @@ class AppointmentType extends Component {
     }
   };
 
-  formatMessage = data => this.props.intl.formatMessage(data);
+  formatMessage = (data) => this.props.intl.formatMessage(data);
 
   getInitialValue = () => {
     let initialValue;
@@ -87,7 +87,7 @@ class AppointmentType extends Component {
       viewer: currentUser,
       other: otherUser,
       event: data,
-      edit: !!purpose
+      edit: !!purpose,
     });
     const { activity = [] } = config;
 
@@ -106,11 +106,11 @@ class AppointmentType extends Component {
       viewer: currentUser,
       other: otherUser,
       event: data,
-      edit: !!purpose
+      edit: !!purpose,
     });
     const { activity = [] } = config;
 
-    return activity.map(option => {
+    return activity.map((option) => {
       return (
         <RadioButton
           key={option.value}
@@ -127,13 +127,13 @@ class AppointmentType extends Component {
   render() {
     const {
       form: { getFieldDecorator },
-      purpose
+      purpose,
     } = this.props;
     const {
       formatMessage,
       onChangeActivityType,
       getAppointmentTypeRadioOption,
-      getInitialValue
+      getInitialValue,
     } = this;
 
     // if (activity.length === 1) {
@@ -149,7 +149,7 @@ class AppointmentType extends Component {
     return (
       <FormItem label={formatMessage(messages.appointmentType)}>
         {getFieldDecorator(FIELD_NAME, {
-          initialValue: getInitialValue()
+          initialValue: getInitialValue(),
         })(
           <RadioGroup
             className="radio-group-tab"
@@ -172,5 +172,5 @@ const Field = injectIntl(AppointmentType);
 
 export default {
   field_name: FIELD_NAME,
-  render: props => <Field {...props} />
+  render: (props) => <Field {...props} />,
 };

@@ -4,7 +4,7 @@ let payloadValidator = require("../libs/validator");
 function validate() {
   try {
     console.log("stream validation started");
-    return through2.obj(function(chunk, enc, callback) {
+    return through2.obj(function (chunk, enc, callback) {
       // console.log("chunk at validate stream", chunk.toString());
       let data = JSON.parse(chunk.toString());
       let isValid = payloadValidator(data).isValid();

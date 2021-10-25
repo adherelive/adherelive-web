@@ -3,15 +3,15 @@ import { withRouter } from "react-router-dom";
 import { getLastVisitAlerts } from "../../../../modules/scheduleEvents";
 import PatientAlerts from "../../../../Components/Patient/details/common/patientAlerts";
 
-const mapStateToProps = state => {
+const mapStateToProps = (state) => {
   const { schedule_events, symptoms } = state || {};
 
   return { schedule_events, symptoms };
 };
 
-const mapDispatchToProps = dispatch => {
+const mapDispatchToProps = (dispatch) => {
   return {
-    getLastVisitAlerts: id => () => dispatch(getLastVisitAlerts(id))
+    getLastVisitAlerts: (id) => () => dispatch(getLastVisitAlerts(id)),
   };
 };
 
@@ -25,7 +25,7 @@ const mergeProps = (stateProps, dispatchProps, ownProps) => {
   return {
     schedule_events,
     symptoms,
-    getLastVisitAlerts: getLastVisitAlerts(patientId)
+    getLastVisitAlerts: getLastVisitAlerts(patientId),
   };
 };
 

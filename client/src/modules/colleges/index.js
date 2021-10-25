@@ -6,25 +6,25 @@ export const SEARCH_COLLEGE_START = "SEARCH_COLLEGE_START";
 export const SEARCH_COLLEGE_COMPLETED = "SEARCH_COLLEGE_COMPLETED";
 export const SEARCH_COLLEGE_FAILED = "SEARCH_COLLEGE_FAILED";
 
-export const searchCollege = value => {
+export const searchCollege = (value) => {
   let response = {};
-  return async dispatch => {
+  return async (dispatch) => {
     try {
       response = await doRequest({
         method: REQUEST_TYPE.GET,
-        url: searchColleges(value)
+        url: searchColleges(value),
       });
 
       const { status, payload: { data, message = "" } = {} } = response || {};
       if (status === true) {
         dispatch({
           type: SEARCH_COLLEGE_COMPLETED,
-          data
+          data,
         });
       } else {
         dispatch({
           type: SEARCH_COLLEGE_FAILED,
-          message
+          message,
         });
       }
     } catch (error) {
@@ -39,7 +39,7 @@ function collegeReducer(state, data) {
   if (colleges) {
     return {
       ...state,
-      ...colleges
+      ...colleges,
     };
   } else {
     return state;

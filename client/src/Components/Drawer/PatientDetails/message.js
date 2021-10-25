@@ -4,98 +4,98 @@ const messages = defineMessages({
   critical: {
     id: "app.drawer.patient.details.critical",
     description: "",
-    defaultMessage: "Critical"
+    defaultMessage: "Critical",
   },
   no_critical: {
     id: "app.drawer.patient.details.no.critical",
     description: "",
-    defaultMessage: "Non-Critical"
+    defaultMessage: "Non-Critical",
   },
   patient_details: {
     id: "app.drawer.patient.details.title",
     description: "",
-    defaultMessage: "Details"
+    defaultMessage: "Details",
   },
   treatment: {
     id: "app.drawer.patient.details.treatment",
     description: "",
-    defaultMessage: "Treatment"
+    defaultMessage: "Treatment",
   },
   severity: {
     id: "app.drawer.patient.details.severity",
     description: "",
-    defaultMessage: "Severity"
+    defaultMessage: "Severity",
   },
   condition: {
     id: "app.drawer.patient.details.condition",
     description: "",
-    defaultMessage: "Condition"
+    defaultMessage: "Condition",
   },
   doctor: {
     id: "app.drawer.patient.details.doctor",
     description: "",
-    defaultMessage: "Doctor"
+    defaultMessage: "Doctor",
   },
   provider: {
     id: "app.drawer.patient.details.provider",
     description: "",
-    defaultMessage: "Provider"
+    defaultMessage: "Provider",
   },
   start_date: {
     id: "app.drawer.patient.details.start.date",
     description: "",
-    defaultMessage: "Start Date"
+    defaultMessage: "Start Date",
   },
   medications: {
     id: "app.drawer.patient.details.medications",
     description: "",
-    defaultMessage: "Medications"
+    defaultMessage: "Medications",
   },
   appointments: {
     id: "app.drawer.patient.details.appointments",
     description: "",
-    defaultMessage: "Appointments"
+    defaultMessage: "Appointments",
   },
   gotoprofile: {
     id: "app.drawer.patient.details.gotoprofile",
     description: "",
-    defaultMessage: "Go to Profile"
+    defaultMessage: "Go to Profile",
   },
   mobile: {
     id: "app.drawer.patient.details.mobile",
     description: "",
-    defaultMessage: "Mobile"
+    defaultMessage: "Mobile",
   },
   clinicalNotes: {
     id: "app.drawer.patient.details.clinicalNotes",
     description: "",
-    defaultMessage: "Clinical Notes"
+    defaultMessage: "Clinical Notes",
   },
   diagnosisType: {
     id: "app.drawer.patient.details.diagnosisType",
     description: "",
-    defaultMessage: "Diagnosis Type"
+    defaultMessage: "Diagnosis Type",
   },
   diagnosisDesc: {
     id: "app.drawer.patient.details.diagnosisDesc",
     description: "",
-    defaultMessage: "Diagnosis Description"
+    defaultMessage: "Diagnosis Description",
   },
   symptoms: {
     id: "app.drawer.patient.details.symptoms",
     description: "",
-    defaultMessage: "Symptoms"
+    defaultMessage: "Symptoms",
   },
   somethingWentWrong: {
     id: "app.drawer.patient.details.somethingWentWrong",
     description: "",
-    defaultMessage: "Something went wrong"
+    defaultMessage: "Something went wrong",
   },
   appointmentDocName: {
     id: "app.drawer.patient.details.appointmentDocName",
     description: "",
-    defaultMessage: "By Dr.{name}"
-  }
+    defaultMessage: "By Dr.{name}",
+  },
 });
 
 export default messages;

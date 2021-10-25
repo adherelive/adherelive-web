@@ -29,7 +29,7 @@ export const getMedicineData = async () => {
               description: "",
               details: JSON.stringify(details),
               created_at: new Date(),
-              updated_at: new Date()
+              updated_at: new Date(),
             });
             // }
 
@@ -65,7 +65,7 @@ export const getMedicineData = async () => {
             icd_code,
             classification,
             india_name,
-            international_name
+            international_name,
           } = medicine[i] || {};
           let updatedIndiaName = [...india_name];
           const internationalNameList =
@@ -85,7 +85,7 @@ export const getMedicineData = async () => {
               description: "",
               details: JSON.stringify(details),
               created_at: new Date(),
-              updated_at: new Date()
+              updated_at: new Date(),
             });
           }
 
@@ -97,14 +97,14 @@ export const getMedicineData = async () => {
               description: "",
               details: JSON.stringify(details),
               created_at: new Date(),
-              updated_at: new Date()
+              updated_at: new Date(),
             });
           }
 
           if (!updatedIndiaName.length && !internationalNameList.length) {
             const details = {
               ...medicine[i],
-              india_name: [...updatedIndiaName]
+              india_name: [...updatedIndiaName],
             };
             updatedMedicine.push({
               name: generic_name,
@@ -112,7 +112,7 @@ export const getMedicineData = async () => {
               description: "",
               details: JSON.stringify(details),
               created_at: new Date(),
-              updated_at: new Date()
+              updated_at: new Date(),
             });
           }
         }

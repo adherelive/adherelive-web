@@ -53,7 +53,7 @@ function pages() {
         root: "src/pages",
         layouts: "src/layouts",
         partials: "src/partials",
-        helpers: "src/helpers"
+        helpers: "src/helpers",
       })
     )
     .pipe(inky())
@@ -73,14 +73,14 @@ function sass() {
     .pipe($.if(!PRODUCTION, $.sourcemaps.init()))
     .pipe(
       $.sass({
-        includePaths: ["node_modules/foundation-emails/scss"]
+        includePaths: ["node_modules/foundation-emails/scss"],
       }).on("error", $.sass.logError)
     )
     .pipe(
       $.if(
         PRODUCTION,
         $.uncss({
-          html: ["dist/**/*.html"]
+          html: ["dist/**/*.html"],
         })
       )
     )
@@ -107,7 +107,7 @@ function inline() {
 // Start a server with LiveReload to preview the site in
 function server(done) {
   browser.init({
-    server: "dist"
+    server: "dist",
   });
   done();
 }
@@ -138,7 +138,7 @@ function inliner(css) {
       applyStyleTags: false,
       removeStyleTags: true,
       preserveMediaQueries: true,
-      removeLinkTags: false
+      removeLinkTags: false,
     })
     .pipe($.replace, "<!-- <style> -->", `<style>${mqCss}</style>`)
     .pipe(
@@ -150,7 +150,7 @@ function inliner(css) {
     .pipe($.replace, "%&gt;", "%>")
     .pipe($.htmlmin, {
       collapseWhitespace: true,
-      minifyCSS: true
+      minifyCSS: true,
     });
 
   return pipe();
@@ -178,7 +178,7 @@ function aws() {
     ? $.awspublish.create(CONFIG.aws)
     : $.awspublish.create();
   var headers = {
-    "Cache-Control": "max-age=315360000, no-transform, public"
+    "Cache-Control": "max-age=315360000, no-transform, public",
   };
 
   return (
@@ -230,7 +230,7 @@ function zip() {
   var ext = ".html";
 
   function getHtmlFiles(dir) {
-    return fs.readdirSync(dir).filter(function(file) {
+    return fs.readdirSync(dir).filter(function (file) {
       var fileExt = path.join(dir, file);
       var isHtml = path.extname(fileExt) == ext;
       return fs.statSync(fileExt).isFile() && isHtml;
@@ -239,12 +239,12 @@ function zip() {
 
   var htmlFiles = getHtmlFiles(dist);
 
-  var moveTasks = htmlFiles.map(function(file) {
+  var moveTasks = htmlFiles.map(function (file) {
     var sourcePath = path.join(dist, file);
     var fileName = path.basename(sourcePath, ext);
 
     var moveHTML = gulp.src(sourcePath).pipe(
-      $.rename(function(path) {
+      $.rename(function (path) {
         path.dirname = fileName;
         return path;
       })
@@ -254,7 +254,7 @@ function zip() {
       .src(sourcePath)
       .pipe($.htmlSrc({ selector: "img" }))
       .pipe(
-        $.rename(function(path) {
+        $.rename(function (path) {
           path.dirname = fileName + path.dirname.replace("dist", "");
           return path;
         })

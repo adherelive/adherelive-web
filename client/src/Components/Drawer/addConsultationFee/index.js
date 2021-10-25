@@ -9,7 +9,7 @@ import {
   Button,
   Spin,
   Radio,
-  DatePicker
+  DatePicker,
 } from "antd";
 import { CONSULTATION_FEE_TYPE_TEXT } from "../../../constant";
 
@@ -37,7 +37,7 @@ class addNewConsultationDrawer extends Component {
       consultation: "",
       payload: null,
       submitting: false,
-      razorpay_link: ""
+      razorpay_link: "",
     };
   }
 
@@ -58,7 +58,7 @@ class addNewConsultationDrawer extends Component {
 
     if (visible && visible !== prev_visible) {
       const {
-        payload: { basic_info = {} }
+        payload: { basic_info = {} },
       } = this.props;
       const { payload: updatedPayload = {} } = this.props;
       if (basic_info) {
@@ -70,9 +70,9 @@ class addNewConsultationDrawer extends Component {
               name = "",
               amount = "",
               type = "",
-              id = null
-            } = {}
-          } = {}
+              id = null,
+            } = {},
+          } = {},
         } = this.props;
 
         razorpay_link = razorpay_link
@@ -86,14 +86,14 @@ class addNewConsultationDrawer extends Component {
             newConsultationType: type,
             payload: updatedPayload,
             consultationFeeId: id,
-            razorpay_link
+            razorpay_link,
           });
 
           if (type) {
             const newConsultationTypeText = CONSULTATION_FEE_TYPE_TEXT[type];
             this.setState({
               consultation: parseInt(type),
-              newConsultationTypeText
+              newConsultationTypeText,
             });
           }
         }
@@ -103,7 +103,7 @@ class addNewConsultationDrawer extends Component {
     }
   }
 
-  setFee = e => {
+  setFee = (e) => {
     const { value } = e.target;
     const reg = /^-?\d*(\.\d*)?$/;
     if ((!isNaN(value) && reg.test(value)) || value === "") {
@@ -111,7 +111,7 @@ class addNewConsultationDrawer extends Component {
     }
   };
 
-  setRazorpayLink = e => {
+  setRazorpayLink = (e) => {
     const { value } = e.target;
     this.setState({ razorpay_link: e.target.value });
   };
@@ -122,27 +122,27 @@ class addNewConsultationDrawer extends Component {
       this.setState({
         newConsultationName: "Tele-Medicine",
         newConsultationType: "1",
-        newConsultationTypeText: CONSULTATION_FEE_TYPE_TEXT["1"]
+        newConsultationTypeText: CONSULTATION_FEE_TYPE_TEXT["1"],
         // newConsultationFee: ""
       });
     } else if (consultation === 2) {
       this.setState({
         newConsultationName: "Offline Consultation",
         newConsultationType: "1",
-        newConsultationTypeText: CONSULTATION_FEE_TYPE_TEXT["1"]
+        newConsultationTypeText: CONSULTATION_FEE_TYPE_TEXT["1"],
         // newConsultationFee: ""
       });
     } else if (consultation === 3) {
       this.setState({
         newConsultationName: "Adherence Monitoring",
         newConsultationType: "2",
-        newConsultationTypeText: CONSULTATION_FEE_TYPE_TEXT["2"]
+        newConsultationTypeText: CONSULTATION_FEE_TYPE_TEXT["2"],
         // newConsultationFee: ""
       });
     }
   };
 
-  setConsultationName = e => {
+  setConsultationName = (e) => {
     e.preventDefault();
     const { value } = e.target;
     const reg = /^[a-zA-Z][a-zA-Z\s-]*$/;
@@ -168,28 +168,28 @@ class addNewConsultationDrawer extends Component {
     return options;
   };
 
-  setConsultation = value => {
+  setConsultation = (value) => {
     this.setState({ consultation: value });
 
     if (value === 1) {
       this.setState({
         newConsultationName: "Tele-Medicine",
         newConsultationType: "1",
-        newConsultationTypeText: CONSULTATION_FEE_TYPE_TEXT["1"]
+        newConsultationTypeText: CONSULTATION_FEE_TYPE_TEXT["1"],
         // newConsultationFee: ""
       });
     } else if (value === 2) {
       this.setState({
         newConsultationName: "Offline Consultation",
         newConsultationType: "1",
-        newConsultationTypeText: CONSULTATION_FEE_TYPE_TEXT["1"]
+        newConsultationTypeText: CONSULTATION_FEE_TYPE_TEXT["1"],
         // newConsultationFee: ""
       });
     } else if (value === 3) {
       this.setState({
         newConsultationName: "Adherence Monitoring",
         newConsultationType: "2",
-        newConsultationTypeText: CONSULTATION_FEE_TYPE_TEXT["2"]
+        newConsultationTypeText: CONSULTATION_FEE_TYPE_TEXT["2"],
         // newConsultationFee: ""
       });
     }
@@ -215,7 +215,7 @@ class addNewConsultationDrawer extends Component {
       newConsultationFee = "",
       consultationFeeId = null,
       consultation = "",
-      razorpay_link = ""
+      razorpay_link = "",
     } = this.state;
 
     return (
@@ -304,7 +304,7 @@ class addNewConsultationDrawer extends Component {
     const {
       newConsultationName = "",
       newConsultationType = "",
-      newConsultationFee = ""
+      newConsultationFee = "",
     } = this.state;
 
     if (!newConsultationName) {
@@ -327,7 +327,7 @@ class addNewConsultationDrawer extends Component {
       newConsultationType = "",
       newConsultationFee = "",
       consultationFeeId = null,
-      razorpay_link = ""
+      razorpay_link = "",
     } = this.state;
     const validate = this.validateData();
     const { submit } = this.props;
@@ -338,7 +338,7 @@ class addNewConsultationDrawer extends Component {
         name: newConsultationName,
         type: newConsultationType,
         amount: newConsultationFee,
-        razorpay_link
+        razorpay_link,
       };
 
       if (doctor_id) {
@@ -360,7 +360,7 @@ class addNewConsultationDrawer extends Component {
         doctors = {},
         users = {},
         user_roles = {},
-        auth_role = null
+        auth_role = null,
       } = this.props;
       const { close } = this.props;
 
@@ -374,8 +374,8 @@ class addNewConsultationDrawer extends Component {
       const {
         status,
         payload: {
-          data: { payment_products = {}, message: payload_message = "" } = {}
-        } = {}
+          data: { payment_products = {}, message: payload_message = "" } = {},
+        } = {},
       } = response || {};
       if (status) {
         const successMessage = consultationFeeId
@@ -395,7 +395,7 @@ class addNewConsultationDrawer extends Component {
     }
   }
 
-  formatMessage = data => this.props.intl.formatMessage(data);
+  formatMessage = (data) => this.props.intl.formatMessage(data);
 
   onClose = () => {
     const { close } = this.props;
@@ -407,7 +407,7 @@ class addNewConsultationDrawer extends Component {
       fetchingAdminPayments: false,
       consultation: "",
       consultationFeeId: null,
-      razorpay_link: ""
+      razorpay_link: "",
     });
     close();
   };
@@ -432,7 +432,7 @@ class addNewConsultationDrawer extends Component {
           headerStyle={{
             position: "sticky",
             zIndex: "9999",
-            top: "0px"
+            top: "0px",
           }}
           destroyOnClose={true}
           onClose={onClose}

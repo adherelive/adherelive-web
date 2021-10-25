@@ -12,8 +12,8 @@ class CourseWrapper extends BaseCourse {
     return {
       basic_info: {
         id,
-        name
-      }
+        name,
+      },
     };
   };
 }

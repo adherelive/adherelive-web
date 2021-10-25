@@ -16,8 +16,8 @@ class UserVerificationWrapper extends BaseUserVerification {
         user_id,
         request_id,
         status,
-        type
-      }
+        type,
+      },
     };
   };
 }
@@ -27,7 +27,7 @@ export default async (data = null, id = null) => {
     return new UserVerificationWrapper(data);
   }
   const userVerification = await userVerifcationService.getRequestByData({
-    id
+    id,
   });
   return new UserVerificationWrapper(userVerification);
 };

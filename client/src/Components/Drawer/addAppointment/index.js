@@ -18,7 +18,7 @@ class AddAppointment extends Component {
     this.state = {
       visible: true,
       disabledSubmit: true,
-      submitting: false
+      submitting: false,
     };
 
     this.FormWrapper = Form.create({ onFieldsChange: this.onFormFieldChanges })(
@@ -26,9 +26,9 @@ class AddAppointment extends Component {
     );
   }
 
-  onFormFieldChanges = props => {
+  onFormFieldChanges = (props) => {
     const {
-      form: { getFieldsError, isFieldsTouched }
+      form: { getFieldsError, isFieldsTouched },
     } = props;
     const isError = hasErrors(getFieldsError());
     const { disabledSubmit } = this.state;
@@ -37,20 +37,20 @@ class AddAppointment extends Component {
     }
   };
 
-  handleSubmit = e => {
+  handleSubmit = (e) => {
     e.preventDefault();
     const {
       addCarePlanAppointment,
       payload: { patient_id },
-      carePlanId
+      carePlanId,
     } = this.props;
     const { formRef = {}, formatMessage } = this;
 
     // const { basic_info: { user_id } = {} } = patients[patient_id] || {};
     const {
       props: {
-        form: { validateFields, resetFields }
-      }
+        form: { validateFields, resetFields },
+      },
     } = formRef;
 
     validateFields(async (err, values) => {
@@ -66,7 +66,7 @@ class AddAppointment extends Component {
           end_time,
           description = "",
           treatment = "",
-          radiology_type = ""
+          radiology_type = "",
         } = values;
 
         // if(type === RADIOLOGY){
@@ -98,7 +98,7 @@ class AddAppointment extends Component {
               // todo: change participant one with patient from store
               participant_two: {
                 id: patient_id,
-                category: "patient"
+                category: "patient",
               },
               date,
               start_time: newEventStartTime,
@@ -110,13 +110,13 @@ class AddAppointment extends Component {
               provider_id: newProvider_id,
               provider_name,
               critical,
-              treatment_id: treatment
+              treatment_id: treatment,
             }
           : {
               // todo: change participant one with patient from store
               participant_two: {
                 id: patient_id,
-                category: "patient"
+                category: "patient",
               },
               date,
               start_time: newEventStartTime,
@@ -127,7 +127,7 @@ class AddAppointment extends Component {
               type_description,
               provider_name,
               critical,
-              treatment_id: treatment
+              treatment_id: treatment,
             };
 
         if (type === RADIOLOGY) {
@@ -160,8 +160,8 @@ class AddAppointment extends Component {
               statusCode: code,
               payload: {
                 message: errorMessage = "",
-                error: { error_type = "" } = {}
-              }
+                error: { error_type = "" } = {},
+              },
             } = response || {};
 
             if (code === 422 && error_type === "slot_present") {
@@ -190,21 +190,21 @@ class AddAppointment extends Component {
     });
   };
 
-  formatMessage = data => this.props.intl.formatMessage(data);
+  formatMessage = (data) => this.props.intl.formatMessage(data);
 
   onClose = () => {
     const { close } = this.props;
     const { formRef } = this;
     const {
       props: {
-        form: { resetFields }
-      }
+        form: { resetFields },
+      },
     } = formRef;
     resetFields();
     close();
   };
 
-  setFormRef = formRef => {
+  setFormRef = (formRef) => {
     this.formRef = formRef;
     if (formRef) {
       this.setState({ formRef: true });
@@ -212,24 +212,15 @@ class AddAppointment extends Component {
   };
 
   render() {
-    const {
-      visible,
-      hideAppointment,
-      appointmentVisible,
-      editAppointment
-    } = this.props;
+    const { visible, hideAppointment, appointmentVisible, editAppointment } =
+      this.props;
     const { disabledSubmit, submitting = false } = this.state;
 
-    const {
-      onClose,
-      formatMessage,
-      setFormRef,
-      handleSubmit,
-      FormWrapper
-    } = this;
+    const { onClose, formatMessage, setFormRef, handleSubmit, FormWrapper } =
+      this;
 
     const submitButtonProps = {
-      disabled: disabledSubmit
+      disabled: disabledSubmit,
       // loading: loading && !deleteLoading
     };
 
@@ -246,7 +237,7 @@ class AddAppointment extends Component {
           headerStyle={{
             position: "sticky",
             zIndex: "9999",
-            top: "0px"
+            top: "0px",
           }}
           destroyOnClose={true}
           onClose={editAppointment ? hideAppointment : onClose}

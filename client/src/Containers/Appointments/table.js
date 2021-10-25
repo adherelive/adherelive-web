@@ -4,14 +4,14 @@ import { withRouter } from "react-router-dom";
 import { open } from "../../modules/drawer";
 import { DRAWER } from "../../constant";
 
-const mapStateToProps = state => {
+const mapStateToProps = (state) => {
   const {
     patients = {},
     doctors = {},
     users,
     care_plans,
     appointments,
-    auth: { authPermissions = [] } = {}
+    auth: { authPermissions = [] } = {},
   } = state;
 
   return {
@@ -20,11 +20,11 @@ const mapStateToProps = state => {
     users,
     care_plans,
     appointments,
-    authPermissions
+    authPermissions,
   };
 };
 
-const mapDispatchToProps = dispatch => {
+const mapDispatchToProps = (dispatch) => {
   return {
     // openPatientDetailsDrawer: (payload) => dispatch(open({type: DRAWER.PATIENT_DETAILS, payload}))
   };

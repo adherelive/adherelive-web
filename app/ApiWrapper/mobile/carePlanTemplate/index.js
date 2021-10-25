@@ -28,7 +28,7 @@ class CarePlanTemplateWrapper extends BaseCarePlanTemplate {
       condition_id,
       user_id,
       details = {},
-      createdAt = null
+      createdAt = null,
     } = _data || {};
 
     return {
@@ -38,10 +38,10 @@ class CarePlanTemplateWrapper extends BaseCarePlanTemplate {
         treatment_id,
         severity_id,
         condition_id,
-        user_id
+        user_id,
       },
       details,
-      created_at: createdAt
+      created_at: createdAt,
     };
   };
 
@@ -54,7 +54,7 @@ class CarePlanTemplateWrapper extends BaseCarePlanTemplate {
       severity_id,
       condition_id,
       user_id,
-      details = {}
+      details = {},
     } = _data || {};
 
     return {
@@ -66,11 +66,11 @@ class CarePlanTemplateWrapper extends BaseCarePlanTemplate {
             treatment_id,
             severity_id,
             condition_id,
-            user_id
+            user_id,
           },
-          details
-        }
-      }
+          details,
+        },
+      },
     };
   };
 
@@ -82,7 +82,7 @@ class CarePlanTemplateWrapper extends BaseCarePlanTemplate {
       getTemplateMedications,
       getTemplateVitals,
       getTemplateDiets,
-      getTemplateWorkouts
+      getTemplateWorkouts,
     } = this;
 
     let templateAppointments = [];
@@ -95,9 +95,8 @@ class CarePlanTemplateWrapper extends BaseCarePlanTemplate {
 
     for (const templateAppointment of getTemplateAppointments()) {
       const data = await TemplateAppointmentWrapper(templateAppointment);
-      templateAppointments[
-        data.getTemplateAppointmentId()
-      ] = data.getBasicInfo();
+      templateAppointments[data.getTemplateAppointmentId()] =
+        data.getBasicInfo();
       appointmentIds.push(data.getTemplateAppointmentId());
     }
 
@@ -121,7 +120,7 @@ class CarePlanTemplateWrapper extends BaseCarePlanTemplate {
     if (allVitals.length > 0) {
       for (let index = 0; index < allVitals.length; index++) {
         const templateVital = await TemplateVitalWrapper({
-          data: allVitals[index]
+          data: allVitals[index],
         });
         templateVitals[templateVital.getId()] = templateVital.getBasicInfo();
         templateVitalIds.push(templateVital.getId());
@@ -134,17 +133,16 @@ class CarePlanTemplateWrapper extends BaseCarePlanTemplate {
 
     const allVitalTemplates =
       (await vitalTemplateService.getAllByData({
-        id: vitalTemplateIds
+        id: vitalTemplateIds,
       })) || [];
 
     if (allVitalTemplates.length > 0) {
       for (let index = 0; index < allVitalTemplates.length; index++) {
         const vitalTemplate = await VitalTemplateWrapper({
-          data: allVitalTemplates[index]
+          data: allVitalTemplates[index],
         });
-        vitalTemplates[
-          vitalTemplate.getVitalTemplateId()
-        ] = vitalTemplate.getBasicInfo();
+        vitalTemplates[vitalTemplate.getVitalTemplateId()] =
+          vitalTemplate.getBasicInfo();
       }
     }
 
@@ -159,14 +157,10 @@ class CarePlanTemplateWrapper extends BaseCarePlanTemplate {
     if (allDiets.length > 0) {
       for (let index = 0; index < allDiets.length; index++) {
         const templateDiet = await TemplateDietWrapper({
-          data: allDiets[index]
+          data: allDiets[index],
         });
-        const {
-          template_diets,
-          portions,
-          food_item_details,
-          food_items
-        } = await templateDiet.getReferenceInfo();
+        const { template_diets, portions, food_item_details, food_items } =
+          await templateDiet.getReferenceInfo();
         allTemplateDiets = { ...allTemplateDiets, ...template_diets };
         allFoodItemDetails = { ...allFoodItemDetails, ...food_item_details };
         allFoodItems = { ...allFoodItems, ...food_items };
@@ -186,14 +180,10 @@ class CarePlanTemplateWrapper extends BaseCarePlanTemplate {
     if (allWorkouts.length > 0) {
       for (let index = 0; index < allWorkouts.length; index++) {
         const templateWorkout = await TemplateWorkoutWrapper({
-          data: allWorkouts[index]
+          data: allWorkouts[index],
         });
-        const {
-          template_workouts,
-          repetitions,
-          exercise_details,
-          exercises
-        } = await templateWorkout.getReferenceInfo();
+        const { template_workouts, repetitions, exercise_details, exercises } =
+          await templateWorkout.getReferenceInfo();
         allTemplateWorkouts = { ...allTemplateWorkouts, ...template_workouts };
         allExerciseDetails = { ...allExerciseDetails, ...exercise_details };
         allExercises = { ...allExercises, ...exercises };
@@ -203,7 +193,7 @@ class CarePlanTemplateWrapper extends BaseCarePlanTemplate {
     }
 
     const medicineData = await medicineService.getMedicineByData({
-      id: medicineIds
+      id: medicineIds,
     });
 
     for (const medicine of medicineData) {
@@ -219,17 +209,17 @@ class CarePlanTemplateWrapper extends BaseCarePlanTemplate {
           template_medication_ids: medicationIds,
           template_vital_ids: templateVitalIds,
           template_diet_ids: templateDietIds,
-          template_workout_ids: templateWorkoutIds
-        }
+          template_workout_ids: templateWorkoutIds,
+        },
       },
       template_appointments: {
-        ...templateAppointments
+        ...templateAppointments,
       },
       template_medications: {
-        ...templateMedications
+        ...templateMedications,
       },
       template_vitals: {
-        ...templateVitals
+        ...templateVitals,
       },
       template_diets: allTemplateDiets,
       food_items: allFoodItems,
@@ -242,12 +232,12 @@ class CarePlanTemplateWrapper extends BaseCarePlanTemplate {
       repetitions: allRepetitions,
 
       medicines: {
-        ...medicines
+        ...medicines,
       },
       vital_templates: {
-        ...vitalTemplates
+        ...vitalTemplates,
       },
-      care_plan_template_id: this.getCarePlanTemplateId()
+      care_plan_template_id: this.getCarePlanTemplateId(),
     };
   };
 }
@@ -256,8 +246,7 @@ export default async (data = null, id = null) => {
   if (data) {
     return new CarePlanTemplateWrapper(data);
   }
-  const carePlanTemplate = await carePlanTemplateService.getCarePlanTemplateById(
-    id
-  );
+  const carePlanTemplate =
+    await carePlanTemplateService.getCarePlanTemplateById(id);
   return new CarePlanTemplateWrapper(carePlanTemplate);
 };

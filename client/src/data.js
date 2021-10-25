@@ -1,6 +1,6 @@
 export const AUTH_INITIAL_STATE = {
   authenticated: true,
-  authenticated_user: "1"
+  authenticated_user: "1",
   // authRedirection:
 };
 
@@ -10,54 +10,54 @@ export const GRAPH_INITIAL_STATE = {
       id: "1",
       data: {
         total: "119",
-        critical: "90"
-      }
+        critical: "90",
+      },
     },
     {
       id: "2",
       data: {
         total: "119",
-        critical: "90"
-      }
+        critical: "90",
+      },
     },
     {
       id: "3",
       data: {
         total: "119",
-        critical: "90"
-      }
+        critical: "90",
+      },
     },
     {
       id: "4",
       data: {
         total: "119",
-        critical: "90"
-      }
+        critical: "90",
+      },
     },
     {
       id: "active_patient",
       data: {
         total: "119",
-        critical: "90"
-      }
+        critical: "90",
+      },
     },
     {
       id: "critical_patient",
       data: {
         total: "119",
-        critical: "90"
-      }
-    }
-  ]
+        critical: "90",
+      },
+    },
+  ],
 };
 
 export const PATIENT_INITIAL_STATE = {
-  "100": {
+  100: {
     basic_info: {
       first_name: "test",
       last_name: "1",
       age: "25",
-      gender: "m"
+      gender: "m",
     },
     chats: ["1"],
     condition: "1",
@@ -69,28 +69,28 @@ export const PATIENT_INITIAL_STATE = {
     reports: {
       symptoms: {
         total: 2,
-        critical: 1
+        critical: 1,
       },
       no_medication: {
         total: 3,
-        critical: 1
+        critical: 1,
       },
       no_appointment: {
         total: 2,
-        critical: 0
+        critical: 0,
       },
       no_action: {
         total: 2,
-        critical: 2
-      }
-    }
+        critical: 2,
+      },
+    },
   },
-  "101": {
+  101: {
     basic_info: {
       first_name: "test",
       last_name: "3",
       age: "35",
-      gender: "f"
+      gender: "f",
     },
     chats: ["2"],
     condition: "1",
@@ -102,105 +102,105 @@ export const PATIENT_INITIAL_STATE = {
     reports: {
       symptoms: {
         total: 2,
-        critical: 1
+        critical: 1,
       },
       no_medication: {
         total: 3,
-        critical: 1
+        critical: 1,
       },
       no_appointment: {
         total: 2,
-        critical: 0
+        critical: 0,
       },
       no_action: {
         total: 2,
-        critical: 2
-      }
-    }
-  }
+        critical: 2,
+      },
+    },
+  },
 };
 
 export const TREATMENT_INITIAL_STATE = {
-  "1": {
+  1: {
     basic_info: {
       id: "1",
-      treatment_type: "Hip Replacement"
+      treatment_type: "Hip Replacement",
     },
     patient_id: "1",
     severity_level: "2",
-    start_date: "24 March, 2020"
+    start_date: "24 March, 2020",
   },
-  "2": {
+  2: {
     basic_info: {
       id: "2",
-      treatment_type: "Hip Replacement"
+      treatment_type: "Hip Replacement",
     },
     patient_id: "23",
     severity_level: "4",
-    start_date: "20 March, 2020"
-  }
+    start_date: "20 March, 2020",
+  },
 };
 
 export const DOCTOR_INITIAL_STATE = {
-  "1": {
+  1: {
     basic_info: {
-      name: "doctor 1"
-    }
+      name: "doctor 1",
+    },
   },
-  "2": {
+  2: {
     basic_info: {
-      name: "doctor 2"
-    }
-  }
+      name: "doctor 2",
+    },
+  },
 };
 
 export const PROVIDER_INITIAL_STATE = {
-  "1": {
+  1: {
     basic_info: {
-      name: "provider 1"
-    }
+      name: "provider 1",
+    },
   },
-  "2": {
+  2: {
     basic_info: {
-      name: "provider 2"
-    }
-  }
+      name: "provider 2",
+    },
+  },
 };
 
 export const CHAT_INITIAL_STATE = {
-  "1": {
+  1: {
     doctor_id: "1",
     patient_id: "1",
     messages: {
       unread: "3",
-      content: ["a", "b", "c"]
-    }
+      content: ["a", "b", "c"],
+    },
   },
-  "2": {
+  2: {
     doctor_id: "2",
     patient_id: "23",
     messages: {
       unread: "0",
-      content: []
-    }
-  }
+      content: [],
+    },
+  },
 };
 
 export const MEDICATION_INITIAL_STATE = {
-  "1": {
+  1: {
     basic_info: {
-      medicine_name: "Amoxill 2mg"
+      medicine_name: "Amoxill 2mg",
     },
     schedule: {
       repeat_type: "DAILY",
-      doses: "ONCE"
+      doses: "ONCE",
     },
     start_date: "3rd February, 2020",
-    end_date: "3rd March, 2020"
+    end_date: "3rd March, 2020",
   },
-  "2": {
+  2: {
     basic_info: {
-      medicine_name: "Crocin 4mg"
+      medicine_name: "Crocin 4mg",
     },
     schedule: {
       repeat_type: "CERTAIN_DAYS",
@@ -208,17 +208,17 @@ export const MEDICATION_INITIAL_STATE = {
       date: [
         {
           day: "Mon",
-          time: "10:00 AM" // moment object here
+          time: "10:00 AM", // moment object here
         },
         {
           day: "Wed",
-          time: "02:00 PM" // moment object here
-        }
-      ]
+          time: "02:00 PM", // moment object here
+        },
+      ],
     },
     start_date: "3rd February, 2020", // moment object here
-    end_date: "3rd March, 2020" // moment object here
-  }
+    end_date: "3rd March, 2020", // moment object here
+  },
 };
 
 export const PAGE_INITIAL = {
@@ -226,18 +226,18 @@ export const PAGE_INITIAL = {
   TREATMENT_IDS: ["1", "2"],
   DOCTOR_IDS: ["1", "2"],
   PROVIDER_IDS: ["1", "2"],
-  CHAT_IDS: ["1", "2"]
+  CHAT_IDS: ["1", "2"],
 };
 
 export const USER_INITIAL_STATE = {};
 
 export const medication = {
   basic_info: {
-    medicine_name: "Amoxill 2mg"
+    medicine_name: "Amoxill 2mg",
     // other data
   },
   repeat_type: "", //twice, weekly, once, monthly, certain days
   repeat_time: [{}, {}], // only for certain days, moment object for specific days
   start_date: "",
-  end_date: ""
+  end_date: "",
 };

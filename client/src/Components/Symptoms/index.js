@@ -8,7 +8,7 @@ import messages from "./message";
 
 const TABS = {
   TIMELINE: "1",
-  SUMMARY: "2"
+  SUMMARY: "2",
 };
 
 const { TabPane } = Tabs;
@@ -17,7 +17,7 @@ class SymptomsTab extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      currentTab: TABS.TIMELINE
+      currentTab: TABS.TIMELINE,
     };
   }
 
@@ -31,36 +31,36 @@ class SymptomsTab extends Component {
     const { onRowClickSymptoms } = this;
     // const { key } = record;
     return {
-      onClick: onRowClickSymptoms(record)
+      onClick: onRowClickSymptoms(record),
     };
   };
 
-  handleSubmitTemplate = data => {
+  handleSubmitTemplate = (data) => {
     const {
       addCarePlanMedicationsAndAppointments,
       getMedications,
       getAppointments,
       care_plans,
       patient_id,
-      getPatientCarePlanDetails
+      getPatientCarePlanDetails,
     } = this.props;
     let carePlanId = 1;
     for (let carePlan of Object.values(care_plans)) {
       let {
-        basic_info: { id = 1, patient_id: patientId = 1 }
+        basic_info: { id = 1, patient_id: patientId = 1 },
       } = carePlan;
       if (patient_id == patientId) {
         carePlanId = id;
       }
     }
-    addCarePlanMedicationsAndAppointments(data, carePlanId).then(response => {
+    addCarePlanMedicationsAndAppointments(data, carePlanId).then((response) => {
       const {
         status = false,
         statusCode,
         payload: {
           error: { error_type = "" } = {},
-          message: errorMessage = ""
-        } = {}
+          message: errorMessage = "",
+        } = {},
       } = response;
       if (status) {
         this.onCloseTemplate();
@@ -83,13 +83,13 @@ class SymptomsTab extends Component {
     });
   };
 
-  onChangeTab = key => () => {
+  onChangeTab = (key) => () => {
     this.setState({
-      currentTab: key
+      currentTab: key,
     });
   };
 
-  formatMessage = data => this.props.intl.formatMessage(data);
+  formatMessage = (data) => this.props.intl.formatMessage(data);
 
   renderTabBar = () => {
     const { currentTab = TABS.TIMELINE } = this.state;

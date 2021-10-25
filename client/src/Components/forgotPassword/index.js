@@ -16,11 +16,11 @@ class ForgotPassword extends Component {
 
   async componentDidMount() {}
 
-  handleForgotPassword = async e => {
+  handleForgotPassword = async (e) => {
     e.preventDefault();
     const {
       form: { validateFields },
-      forgotPassword
+      forgotPassword,
       // match: { path } = {},
       // history
     } = this.props;
@@ -32,7 +32,7 @@ class ForgotPassword extends Component {
           const {
             status = false,
             statusCode,
-            payload: { message: resMessage } = {}
+            payload: { message: resMessage } = {},
           } = response;
           if (status) {
             message.success(resMessage, 4);
@@ -58,10 +58,10 @@ class ForgotPassword extends Component {
 
   render() {
     const {
-      form: { getFieldDecorator, isFieldTouched, getFieldError }
+      form: { getFieldDecorator, isFieldTouched, getFieldError },
     } = this.props;
     let fieldsError = {};
-    FIELDS.forEach(value => {
+    FIELDS.forEach((value) => {
       const error = isFieldTouched(value) && getFieldError(value);
       fieldsError = { ...fieldsError, [value]: error };
     });
@@ -95,13 +95,13 @@ class ForgotPassword extends Component {
                     rules: [
                       {
                         required: true,
-                        message: "Please enter email"
+                        message: "Please enter email",
                       },
                       {
                         type: "email",
-                        message: "Please enter a valid email!"
-                      }
-                    ]
+                        message: "Please enter a valid email!",
+                      },
+                    ],
                   })(<Input type="text" placeholder="Email" className="h40" />)}
                 </FormItem>
 

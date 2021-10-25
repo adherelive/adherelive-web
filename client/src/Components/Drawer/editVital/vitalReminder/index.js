@@ -29,7 +29,7 @@ class EditVital extends Component {
       disabledOk: true,
       fieldChanged: false,
       members: [],
-      submitting: false
+      submitting: false,
     };
     this.FormWrapper = Form.create({ onFieldsChange: this.onFormFieldChanges })(
       EditVitalForm
@@ -46,7 +46,7 @@ class EditVital extends Component {
     this.setState({ disabledOk: false });
   };
 
-  handleCancel = e => {
+  handleCancel = (e) => {
     if (e) {
       e.preventDefault();
     }
@@ -54,9 +54,9 @@ class EditVital extends Component {
     close();
   };
 
-  formatMessage = data => this.props.intl.formatMessage(data);
+  formatMessage = (data) => this.props.intl.formatMessage(data);
 
-  setFormRef = formRef => {
+  setFormRef = (formRef) => {
     this.formRef = formRef;
     if (formRef) {
       this.setState({ formRef: true });
@@ -67,7 +67,7 @@ class EditVital extends Component {
     const { close } = this.props;
     this.setState(
       {
-        disabledOk: true
+        disabledOk: true,
       },
       () => {
         close();
@@ -83,14 +83,14 @@ class EditVital extends Component {
       editVital,
       addVital,
       close,
-      payload: { id: vital_id } = {}
+      payload: { id: vital_id } = {},
     } = this.props;
 
     const { formRef = {}, formatMessage } = this;
     const {
       props: {
-        form: { validateFields }
-      }
+        form: { validateFields },
+      },
     } = formRef;
 
     const { vitalData = {} } = this.props;
@@ -120,13 +120,13 @@ class EditVital extends Component {
           [endDateField.field_name]:
             endDate && endDate !== null
               ? endDate.clone().toISOString()
-              : endDate
+              : endDate,
         };
 
         if (repeatDays) {
           data_to_submit = {
             ...data_to_submit,
-            [repeatDaysField.field_name]: repeatDays
+            [repeatDaysField.field_name]: repeatDays,
           };
         }
         if (!startDate || !repeat_interval_id || !repeatDays) {
@@ -173,13 +173,13 @@ class EditVital extends Component {
     );
   };
 
-  handleDelete = e => {
+  handleDelete = (e) => {
     e.preventDefault();
     const {
       payload: { id, patient_id } = {},
       patients,
       medicines,
-      medications
+      medications,
     } = this.props;
     const { warnNote } = this;
 
@@ -196,11 +196,8 @@ class EditVital extends Component {
       content: <div>{warnNote()}</div>,
       onOk: async () => {
         this.setState({ loading: true });
-        const {
-          deleteMedication,
-          getMedications,
-          getPatientCarePlanDetails
-        } = this.props;
+        const { deleteMedication, getMedications, getPatientCarePlanDetails } =
+          this.props;
         const response = await deleteMedication(id);
         const { status } = response || {};
         if (status === true) {
@@ -208,7 +205,7 @@ class EditVital extends Component {
           getMedications(patient_id);
         }
       },
-      onCancel() {}
+      onCancel() {},
     });
   };
 
@@ -250,16 +247,11 @@ class EditVital extends Component {
       hideVital,
       vitalVisible = false,
       vitalData = {},
-      payload: { canViewDetails = false } = {}
+      payload: { canViewDetails = false } = {},
     } = this.props;
 
-    const {
-      onClose,
-      setFormRef,
-      FormWrapper,
-      handleSubmit,
-      getDeleteButton
-    } = this;
+    const { onClose, setFormRef, FormWrapper, handleSubmit, getDeleteButton } =
+      this;
     const { disabledOk, submitting = false } = this.state;
 
     const enableSubmit = () => {
@@ -268,7 +260,7 @@ class EditVital extends Component {
 
     const submitButtonProps = {
       disabled: disabledOk,
-      loading: loading
+      loading: loading,
     };
 
     return (
@@ -281,7 +273,7 @@ class EditVital extends Component {
         headerStyle={{
           position: "sticky",
           zIndex: "9999",
-          top: "0px"
+          top: "0px",
         }}
         className="ant-drawer"
         // title={formatMessage(messages.title)}

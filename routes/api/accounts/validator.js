@@ -6,9 +6,7 @@ const accountFormSchema = Joi.object().keys({
   customer_name: Joi.string().required(),
   account_number: Joi.string().required(),
   ifsc_code: Joi.string().required(),
-  prefix: Joi.string()
-    .regex(/^\d+$/)
-    .required(),
+  prefix: Joi.string().regex(/^\d+$/).required(),
   account_mobile_number: Joi.string()
     .min(10)
     .max(10)
@@ -16,9 +14,7 @@ const accountFormSchema = Joi.object().keys({
     .required()
     .label("Please enter correct mobile number"),
   use_as_main: Joi.boolean().required(),
-  upi_id: Joi.string()
-    .optional()
-    .allow("", null)
+  upi_id: Joi.string().optional().allow("", null),
 });
 
 export const validateAccountFormData = (req, res, next) => {

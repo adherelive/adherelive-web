@@ -56,7 +56,7 @@ class EmailPayloadBuilder {
     if (text == "") return this;
     this.payload.Message.Body.Text = {
       Charset: "UTF-8",
-      Data: text
+      Data: text,
     };
 
     return this;

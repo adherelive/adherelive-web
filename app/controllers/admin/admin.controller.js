@@ -39,7 +39,7 @@ class AdminController extends Controller {
       const { body: { type: feature_type, content } = {} } = req;
       const previousTermsOrPolicy = await FeatureDetailService.getDetailsByData(
         {
-          feature_type
+          feature_type,
         }
       );
 
@@ -50,7 +50,7 @@ class AdminController extends Controller {
 
         const updatedDetails = {
           ...previousDetails.getFeatureDetails(),
-          content
+          content,
         };
         const updateFeatureDetails = await FeatureDetailService.update(
           { details: updatedDetails },
@@ -61,7 +61,7 @@ class AdminController extends Controller {
       } else {
         const addFeatureDetails = await FeatureDetailService.add({
           feature_type,
-          details: { content }
+          details: { content },
         });
 
         Log.debug("updateFeatureDetails --> ", addFeatureDetails);
@@ -79,7 +79,7 @@ class AdminController extends Controller {
     try {
       const { params: { type: feature_type } = {} } = req;
       const termsOrPolicy = await FeatureDetailService.getDetailsByData({
-        feature_type
+        feature_type,
       });
 
       const featureDetails = await FeatureDetailsWrapper(termsOrPolicy);
@@ -90,7 +90,7 @@ class AdminController extends Controller {
         res,
         200,
         {
-          ...featureDetails.getBasicInfo()
+          ...featureDetails.getBasicInfo(),
         },
         "Details fetched successfully"
       );
@@ -120,7 +120,7 @@ class AdminController extends Controller {
           }
 
           const careplanData = await carePlanService.getCarePlanByData({
-            user_role_id: userRoleId
+            user_role_id: userRoleId,
           });
 
           for (const carePlan of careplanData) {
@@ -136,7 +136,7 @@ class AdminController extends Controller {
                 patient_id: patientId,
                 feature_id: featureId,
                 created_at: new Date(),
-                updated_at: new Date()
+                updated_at: new Date(),
               });
             }
           }
@@ -155,19 +155,19 @@ class AdminController extends Controller {
     try {
       let mappingData = [];
       const users = await userService.getUserByData({
-        category: [USER_CATEGORY.PROVIDER]
+        category: [USER_CATEGORY.PROVIDER],
       });
 
       if (users && users.length) {
         for (const user of users) {
           const userWrapper = await UserWrapper(user);
           const provider = await providerService.getProviderByData({
-            user_id: userWrapper.getId()
+            user_id: userWrapper.getId(),
           });
           const providerWrapper = await ProviderWrapper(provider);
           mappingData.push({
             provider_id: providerWrapper.getProviderId(),
-            terms_and_conditions_id: 2
+            terms_and_conditions_id: 2,
           });
         }
       }
@@ -197,7 +197,7 @@ class AdminController extends Controller {
 
       if (id.toString() === "0") {
         record = await tacService.getByData({
-          terms_type: TERMS_AND_CONDITIONS_TYPES.DEFAULT_TERMS_OF_PAYMENT
+          terms_type: TERMS_AND_CONDITIONS_TYPES.DEFAULT_TERMS_OF_PAYMENT,
         });
       } else {
         record = await tacService.getByData({ id });
@@ -220,8 +220,8 @@ class AdminController extends Controller {
         200,
         {
           terms_and_conditions: {
-            ...tacApidata
-          }
+            ...tacApidata,
+          },
         },
         "Details fetched successfully"
       );

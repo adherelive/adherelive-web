@@ -6,13 +6,13 @@ import {
   getDoctorProfileDetails,
   verifyDoctor,
   deactivateDoctor,
-  activateDoctor
+  activateDoctor,
 } from "../../../modules/doctors";
 import { searchSpecialties } from "../../../modules/specialities";
 import { searchCouncil } from "../../../modules/councils";
 import {
   deleteDoctorQualificationImage,
-  deleteDoctorRegistrationImage
+  deleteDoctorRegistrationImage,
 } from "../../../modules/onBoarding";
 import { searchDegree } from "../../../modules/degrees";
 import { searchCollege } from "../../../modules/colleges";
@@ -20,7 +20,7 @@ import { searchCollege } from "../../../modules/colleges";
 // import {open} from "../../../modules/drawer";
 // import {DRAWER} from "../../../constant";
 
-const mapStateToProps = state => {
+const mapStateToProps = (state) => {
   const {
     auth,
     users,
@@ -35,7 +35,7 @@ const mapStateToProps = state => {
     degrees,
     colleges,
     councils,
-    specialities
+    specialities,
   } = state;
 
   return {
@@ -52,26 +52,26 @@ const mapStateToProps = state => {
     degrees,
     colleges,
     councils,
-    specialities
+    specialities,
   };
 };
 
-const mapDispatchToProps = dispatch => {
+const mapDispatchToProps = (dispatch) => {
   return {
-    getDoctorDetails: id => () => dispatch(getDoctorProfileDetails(id)),
-    verifyDoctor: id => dispatch(verifyDoctor(id)),
-    searchSpecialities: data => dispatch(searchSpecialties(data)),
+    getDoctorDetails: (id) => () => dispatch(getDoctorProfileDetails(id)),
+    verifyDoctor: (id) => dispatch(verifyDoctor(id)),
+    searchSpecialities: (data) => dispatch(searchSpecialties(data)),
     updateDoctorBasicInfo: (user_id, data) =>
       dispatch(updateDoctor(user_id, data)),
-    searchDegree: data => dispatch(searchDegree(data)),
-    searchCollege: data => dispatch(searchCollege(data)),
-    searchCouncil: data => dispatch(searchCouncil(data)),
+    searchDegree: (data) => dispatch(searchDegree(data)),
+    searchCollege: (data) => dispatch(searchCollege(data)),
+    searchCouncil: (data) => dispatch(searchCouncil(data)),
     deleteDoctorQualificationImage: (qualificationId, document) =>
       dispatch(deleteDoctorQualificationImage(qualificationId, document)),
     deleteDoctorRegistrationImage: (registrationId, document) =>
       dispatch(deleteDoctorRegistrationImage(registrationId, document)),
-    deactivateDoctor: doctor_id => dispatch(deactivateDoctor(doctor_id)),
-    activateDoctor: user_id => dispatch(activateDoctor(user_id))
+    deactivateDoctor: (doctor_id) => dispatch(deactivateDoctor(doctor_id)),
+    activateDoctor: (user_id) => dispatch(activateDoctor(user_id)),
   };
 };
 
@@ -87,7 +87,7 @@ const mergePropsToState = (stateProps, dispatchProps, ownProps) => {
     searchCouncil,
     verifyDoctor,
     deactivateDoctor,
-    activateDoctor
+    activateDoctor,
   } = dispatchProps;
 
   const {
@@ -104,7 +104,7 @@ const mergePropsToState = (stateProps, dispatchProps, ownProps) => {
     degrees,
     colleges,
     councils,
-    specialities
+    specialities,
   } = stateProps;
 
   const { id } = ownProps;
@@ -137,7 +137,7 @@ const mergePropsToState = (stateProps, dispatchProps, ownProps) => {
     deleteDoctorRegistrationImage: deleteDoctorRegistrationImage,
     searchCouncil: searchCouncil,
     deactivateDoctor,
-    activateDoctor
+    activateDoctor,
   };
 };
 

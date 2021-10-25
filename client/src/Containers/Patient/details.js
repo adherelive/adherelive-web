@@ -5,7 +5,7 @@ import { open, close } from "../../modules/drawer";
 import { getMedications } from "../../modules/medications";
 import {
   getAppointments,
-  getAppointmentsDetails
+  getAppointmentsDetails,
 } from "../../modules/appointments";
 import { requestConsent, consentVerify } from "../../modules/patients";
 import { searchMedicine } from "../../modules/medicines";
@@ -16,7 +16,7 @@ import { openPopUp, closePopUp } from "../../modules/chat";
 import { fetchChatAccessToken } from "../../modules/twilio";
 import {
   getLastVisitAlerts,
-  markAppointmentComplete
+  markAppointmentComplete,
 } from "../../modules/scheduleEvents/index";
 import { addCareplanForPatient } from "../../modules/patients";
 import { storeAppointmentDocuments } from "../../modules/uploadDocuments";
@@ -53,7 +53,7 @@ const mapStateToProps = (state, ownProps) => {
       authenticated_category,
       auth_role,
       notificationToken = "",
-      feedId = ""
+      feedId = "",
     } = {},
     chats,
     drawer,
@@ -70,7 +70,7 @@ const mapStateToProps = (state, ownProps) => {
     providers = {},
     notification_redirect = {},
     diets = {},
-    exercise_contents = {}
+    exercise_contents = {},
   } = state;
 
   // const { id } = ownprops;
@@ -79,9 +79,9 @@ const mapStateToProps = (state, ownProps) => {
     location: {
       state: {
         // showTemplateDrawer = false,
-        currentCarePlanId = 0
-      } = {}
-    } = {}
+        currentCarePlanId = 0,
+      } = {},
+    } = {},
   } = ownProps;
   return {
     auth_role,
@@ -124,66 +124,66 @@ const mapStateToProps = (state, ownProps) => {
     notificationToken,
     feedId,
     diets,
-    exercise_contents
+    exercise_contents,
   };
 };
 
-const mapDispatchToProps = dispatch => {
+const mapDispatchToProps = (dispatch) => {
   return {
-    openAppointmentDrawer: payload =>
+    openAppointmentDrawer: (payload) =>
       dispatch(open({ type: DRAWER.ADD_APPOINTMENT, payload })),
-    openMReminderDrawer: payload =>
+    openMReminderDrawer: (payload) =>
       dispatch(open({ type: DRAWER.ADD_MEDICATION_REMINDER, payload })),
-    openVitalsDrawer: payload =>
+    openVitalsDrawer: (payload) =>
       dispatch(open({ type: DRAWER.ADD_VITALS, payload })),
-    openEditVitalsDrawer: payload =>
+    openEditVitalsDrawer: (payload) =>
       dispatch(open({ type: DRAWER.EDIT_VITALS, payload })),
-    openSymptomsDrawer: payload =>
+    openSymptomsDrawer: (payload) =>
       dispatch(open({ type: DRAWER.SYMPTOMS, payload })),
-    getMedications: id => dispatch(getMedications(id)),
+    getMedications: (id) => dispatch(getMedications(id)),
     close: () => dispatch(close()),
-    getAppointments: id => dispatch(getAppointments(id)),
+    getAppointments: (id) => dispatch(getAppointments(id)),
     getAppointmentsDetails: () => dispatch(getAppointmentsDetails()),
-    getPatientCarePlanDetails: patientId =>
+    getPatientCarePlanDetails: (patientId) =>
       dispatch(getPatientCarePlanDetails(patientId)),
-    getLastVisitAlerts: patientId => dispatch(getLastVisitAlerts(patientId)),
-    searchMedicine: value => dispatch(searchMedicine(value)),
+    getLastVisitAlerts: (patientId) => dispatch(getLastVisitAlerts(patientId)),
+    searchMedicine: (value) => dispatch(searchMedicine(value)),
     addCarePlanMedicationsAndAppointments: (payload, carePlanId) =>
       dispatch(addCarePlanMedicationsAndAppointments(payload, carePlanId)),
-    openEditAppointmentDrawer: payload =>
+    openEditAppointmentDrawer: (payload) =>
       dispatch(open({ type: DRAWER.EDIT_APPOINTMENT, payload })),
-    openEditMedicationDrawer: payload =>
+    openEditMedicationDrawer: (payload) =>
       dispatch(open({ type: DRAWER.EDIT_MEDICATION, payload })),
     openPopUp: () => dispatch(openPopUp()),
     closePopUp: () => dispatch(closePopUp()),
-    fetchChatAccessToken: userId => dispatch(fetchChatAccessToken(userId)),
-    requestConsent: patientId => dispatch(requestConsent(patientId)),
-    consentVerify: data => dispatch(consentVerify(data)),
-    markAppointmentComplete: id => dispatch(markAppointmentComplete(id)),
-    openAddCareplanDrawer: payload =>
+    fetchChatAccessToken: (userId) => dispatch(fetchChatAccessToken(userId)),
+    requestConsent: (patientId) => dispatch(requestConsent(patientId)),
+    consentVerify: (data) => dispatch(consentVerify(data)),
+    markAppointmentComplete: (id) => dispatch(markAppointmentComplete(id)),
+    openAddCareplanDrawer: (payload) =>
       dispatch(open({ type: DRAWER.ADD_CAREPLAN, payload })),
     addCareplanForPatient: (patient_id, data) =>
       dispatch(addCareplanForPatient(patient_id, data)),
-    openEditPatientDrawer: payload =>
+    openEditPatientDrawer: (payload) =>
       dispatch(open({ type: DRAWER.EDIT_PATIENT, payload })),
-    storeAppointmentDocuments: data =>
+    storeAppointmentDocuments: (data) =>
       dispatch(storeAppointmentDocuments(data)),
-    openAddReportsDrawer: payload =>
+    openAddReportsDrawer: (payload) =>
       dispatch(open({ type: DRAWER.ADD_REPORT, payload })),
-    getSymptomTimeLine: patientId => dispatch(getSymptomTimeLine(patientId)),
-    fetchPatientReports: id => dispatch(fetchReports(id)),
+    getSymptomTimeLine: (patientId) => dispatch(getSymptomTimeLine(patientId)),
+    fetchPatientReports: (id) => dispatch(fetchReports(id)),
     getVitalOccurence: () => dispatch(getVitalOccurence()),
-    searchVital: data => dispatch(searchVital(data)),
-    setUnseenNotificationCount: count =>
+    searchVital: (data) => dispatch(searchVital(data)),
+    setUnseenNotificationCount: (count) =>
       dispatch(setUnseenNotificationCount(count)),
-    openAddDietDrawer: payload =>
+    openAddDietDrawer: (payload) =>
       dispatch(open({ type: DRAWER.ADD_DIET, payload })),
-    openAddWorkoutDrawer: payload =>
+    openAddWorkoutDrawer: (payload) =>
       dispatch(open({ type: DRAWER.ADD_WORKOUT, payload })),
     resetNotificationRedirect: () => dispatch(resetNotificationRedirect()),
     getAllTemplatesForDoctor: () => dispatch(getAllTemplatesForDoctor()),
-    openAddSecondaryDoctorDrawer: payload =>
-      dispatch(open({ type: DRAWER.ADD_SECONDARY_DOCTOR, payload }))
+    openAddSecondaryDoctorDrawer: (payload) =>
+      dispatch(open({ type: DRAWER.ADD_SECONDARY_DOCTOR, payload })),
   };
 };
 

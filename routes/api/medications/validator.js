@@ -7,21 +7,19 @@ const appointmentFormSchema = Joi.object().keys({
   participant_two: Joi.object()
     .keys({
       id: Joi.number().required(),
-      category: Joi.string().required()
+      category: Joi.string().required(),
     })
     .required(),
   date: Joi.date().required(),
   start_time: Joi.date().required(),
   end_time: Joi.date().required(),
-  description: Joi.string()
-    .optional()
-    .allow(""),
+  description: Joi.string().optional().allow(""),
   organizer: Joi.object()
     .keys({
       id: Joi.number().required(),
-      category: Joi.string().required()
+      category: Joi.string().required(),
     })
-    .optional()
+    .optional(),
   // TODO: rr_rule here?
 });
 
@@ -36,9 +34,9 @@ const medicationReminderFormSchema = Joi.object().keys({
     then: Joi.when("when_to_take_abbr", {
       is: WHEN_TO_TAKE_ABBREVATIONS.SOS,
       then: Joi.optional(),
-      otherwise: Joi.required()
+      otherwise: Joi.required(),
     }),
-    otherwise: Joi.required()
+    otherwise: Joi.required(),
   }),
   repeat: Joi.string().required(),
   repeat_days: Joi.array().when("when_to_take_abbr", {
@@ -46,34 +44,21 @@ const medicationReminderFormSchema = Joi.object().keys({
     then: Joi.when("when_to_take_abbr", {
       is: WHEN_TO_TAKE_ABBREVATIONS.SOS,
       then: Joi.optional(),
-      otherwise: Joi.required()
+      otherwise: Joi.required(),
     }),
-    otherwise: Joi.required()
+    otherwise: Joi.required(),
   }),
-  repeat_interval: Joi.number()
-    .optional()
-    .allow(""),
+  repeat_interval: Joi.number().optional().allow(""),
   start_date: Joi.date().required(),
-  end_date: Joi.date()
-    .optional()
-    .allow("", null),
-  medicine_id: Joi.number()
-    .optional()
-    .allow(""),
+  end_date: Joi.date().optional().allow("", null),
+  medicine_id: Joi.number().optional().allow(""),
   medicine_type: Joi.number().required(),
-  participant_id: Joi.number()
-    .optional()
-    .allow(""),
-  critical: Joi.boolean()
-    .optional()
-    .allow(""),
-  description: Joi.string()
-    .max(500, "utf-8")
-    .optional()
-    .allow("", null)
+  participant_id: Joi.number().optional().allow(""),
+  critical: Joi.boolean().optional().allow(""),
+  description: Joi.string().max(500, "utf-8").optional().allow("", null),
 });
 
-const validateStartTime = startTime => {
+const validateStartTime = (startTime) => {
   const now = moment().subtract(3, "minutes");
   return moment(startTime).isAfter(now);
 };

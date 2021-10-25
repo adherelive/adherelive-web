@@ -8,7 +8,7 @@ import {
   message,
   Button,
   TimePicker,
-  Modal
+  Modal,
 } from "antd";
 
 import {
@@ -22,7 +22,7 @@ import {
   TABLET,
   SYRUP,
   RADIOLOGY,
-  USER_CATEGORY
+  USER_CATEGORY,
 } from "../../../constant";
 import moment from "moment";
 import EditMedicationReminder from "../../../Containers/Drawer/editMedicationReminder";
@@ -51,7 +51,7 @@ const TemplateNameModal = ({
   changeTemplateName,
   saveTemplate,
   skip,
-  formatMessage
+  formatMessage,
 }) => {
   return (
     <Modal
@@ -116,7 +116,7 @@ class TemplateDrawer extends Component {
       showAreYouSureModal: false,
       templateEdited: false,
       isDietVisible: false,
-      isWorkoutVisible: false
+      isWorkoutVisible: false,
     };
   }
 
@@ -129,7 +129,7 @@ class TemplateDrawer extends Component {
       medicines,
       template_vitals = {},
       template_diets = {},
-      template_workouts = {}
+      template_workouts = {},
     } = this.props;
     let newMedicsKeys = [];
     let newAppointsKeys = [];
@@ -167,7 +167,7 @@ class TemplateDrawer extends Component {
         template_medication_ids = [],
         template_vital_ids = [],
         template_diet_ids = [],
-        template_workout_ids = []
+        template_workout_ids = [],
       } = care_plan_templates[carePlanTemplateId] || {};
       templateAppointmentIDs = template_appointment_ids;
       templateMedicationIDs = template_medication_ids;
@@ -183,7 +183,7 @@ class TemplateDrawer extends Component {
           time_gap = 0,
           details = {},
           provider_id,
-          provider_name = ""
+          provider_name = "",
         } = template_appointments[aId];
         newAppointment.id = id;
         newAppointment.schedule_data = details;
@@ -201,9 +201,9 @@ class TemplateDrawer extends Component {
           basic_info: {
             id = 0,
             care_plan_template_id = 0,
-            medicine_id = 0
+            medicine_id = 0,
           } = {},
-          schedule_data = {}
+          schedule_data = {},
         } = template_medications[mId] || {};
         newMedication.id = id;
         newMedication.schedule_data = schedule_data;
@@ -223,20 +223,18 @@ class TemplateDrawer extends Component {
           basic_info: {
             care_plan_template_id = 0,
             id = 0,
-            vital_template_id = 0
+            vital_template_id = 0,
           } = {},
           details: {
             description = "",
             duration = 0,
             repeat_days = [],
-            repeat_interval_id = ""
-          } = {}
+            repeat_interval_id = "",
+          } = {},
         } = template_vitals[vId];
 
         const s_date = moment().toISOString();
-        let e_date = moment()
-          .add(parseInt(duration), "days")
-          .toISOString();
+        let e_date = moment().add(parseInt(duration), "days").toISOString();
 
         if (duration === null) {
           e_date = null;
@@ -249,7 +247,7 @@ class TemplateDrawer extends Component {
           repeat_interval_id,
           description,
           start_date: s_date,
-          end_date: e_date
+          end_date: e_date,
         };
       }
 
@@ -261,14 +259,12 @@ class TemplateDrawer extends Component {
           details: {
             repeat_days = [],
             not_to_do = "",
-            diet_food_groups = {}
-          } = {}
+            diet_food_groups = {},
+          } = {},
         } = template_diets[dId] || {};
 
         const s_date = moment().toISOString();
-        let e_date = moment()
-          .add(parseInt(duration), "days")
-          .toISOString();
+        let e_date = moment().add(parseInt(duration), "days").toISOString();
 
         if (duration === null) {
           e_date = null;
@@ -284,8 +280,8 @@ class TemplateDrawer extends Component {
           details: {
             repeat_days,
             not_to_do,
-            diet_food_groups
-          }
+            diet_food_groups,
+          },
         };
       }
 
@@ -298,14 +294,12 @@ class TemplateDrawer extends Component {
           details: {
             repeat_days = [],
             not_to_do = "",
-            workout_exercise_groups = {}
-          } = {}
+            workout_exercise_groups = {},
+          } = {},
         } = template_workouts[wId] || {};
 
         const s_date = moment().toISOString();
-        let e_date = moment()
-          .add(parseInt(duration), "days")
-          .toISOString();
+        let e_date = moment().add(parseInt(duration), "days").toISOString();
 
         if (duration === null) {
           e_date = null;
@@ -322,8 +316,8 @@ class TemplateDrawer extends Component {
           details: {
             repeat_days,
             not_to_do,
-            workout_exercise_groups
-          }
+            workout_exercise_groups,
+          },
         };
       }
 
@@ -383,7 +377,7 @@ class TemplateDrawer extends Component {
       templateMedicationIDs,
       templateVitalIDs,
       templateDietIDs,
-      templateWorkoutIDs
+      templateWorkoutIDs,
     });
   }
 
@@ -399,7 +393,7 @@ class TemplateDrawer extends Component {
         template_vitals = {},
         template_diets = {},
         template_workouts = {},
-        medicines
+        medicines,
       } = this.props;
 
       let templateAppointments = {};
@@ -428,7 +422,7 @@ class TemplateDrawer extends Component {
         template_medication_ids = [],
         template_vital_ids = [],
         template_diet_ids = [],
-        template_workout_ids = []
+        template_workout_ids = [],
       } = care_plan_templates[carePlanTemplateId] || {};
       templateAppointmentIDs = template_appointment_ids;
       templateMedicationIDs = template_medication_ids;
@@ -443,7 +437,7 @@ class TemplateDrawer extends Component {
           time_gap = 0,
           details = {},
           provider_id,
-          provider_name = ""
+          provider_name = "",
         } = template_appointments[aId];
         newAppointment.id = id;
         newAppointment.schedule_data = details;
@@ -461,9 +455,9 @@ class TemplateDrawer extends Component {
           basic_info: {
             id = 0,
             care_plan_template_id = 0,
-            medicine_id = 0
+            medicine_id = 0,
           } = {},
-          schedule_data = {}
+          schedule_data = {},
         } = template_medications[mId] || {};
         newMedication.id = id;
         newMedication.schedule_data = schedule_data;
@@ -483,20 +477,18 @@ class TemplateDrawer extends Component {
           basic_info: {
             care_plan_template_id = 0,
             id = 0,
-            vital_template_id = 0
+            vital_template_id = 0,
           } = {},
           details: {
             description = "",
             duration = "",
             repeat_days = [],
-            repeat_interval_id = ""
-          } = {}
+            repeat_interval_id = "",
+          } = {},
         } = template_vitals[vId];
 
         const s_date = moment().toISOString();
-        let e_date = moment()
-          .add(parseInt(duration), "days")
-          .toISOString();
+        let e_date = moment().add(parseInt(duration), "days").toISOString();
 
         if (duration === null) {
           e_date = null;
@@ -509,7 +501,7 @@ class TemplateDrawer extends Component {
           repeat_interval_id,
           description,
           start_date: s_date,
-          end_date: e_date
+          end_date: e_date,
         };
       }
 
@@ -521,14 +513,12 @@ class TemplateDrawer extends Component {
           details: {
             repeat_days = [],
             not_to_do = "",
-            diet_food_groups = {}
-          } = {}
+            diet_food_groups = {},
+          } = {},
         } = template_diets[dId] || {};
 
         const s_date = moment().toISOString();
-        let e_date = moment()
-          .add(parseInt(duration), "days")
-          .toISOString();
+        let e_date = moment().add(parseInt(duration), "days").toISOString();
 
         if (duration === null) {
           e_date = null;
@@ -544,8 +534,8 @@ class TemplateDrawer extends Component {
           details: {
             repeat_days,
             not_to_do,
-            diet_food_groups
-          }
+            diet_food_groups,
+          },
         };
       }
 
@@ -558,14 +548,12 @@ class TemplateDrawer extends Component {
           details: {
             repeat_days = [],
             not_to_do = "",
-            workout_exercise_groups = {}
-          } = {}
+            workout_exercise_groups = {},
+          } = {},
         } = template_workouts[wId] || {};
 
         const s_date = moment().toISOString();
-        let e_date = moment()
-          .add(parseInt(duration), "days")
-          .toISOString();
+        let e_date = moment().add(parseInt(duration), "days").toISOString();
 
         if (duration === null) {
           e_date = null;
@@ -582,8 +570,8 @@ class TemplateDrawer extends Component {
           details: {
             repeat_days,
             not_to_do,
-            workout_exercise_groups
-          }
+            workout_exercise_groups,
+          },
         };
       }
 
@@ -642,7 +630,7 @@ class TemplateDrawer extends Component {
         templateVitalIDs,
         templateDietIDs,
         templateWorkoutIDs,
-        templateEdited: false
+        templateEdited: false,
       });
     }
   }
@@ -650,10 +638,9 @@ class TemplateDrawer extends Component {
   getCarePlanTemplateOptions = () => {
     const { carePlanTemplateIds = [] } = this.state;
     const { care_plan_templates = {} } = this.props;
-    const templates = Object.values(carePlanTemplateIds).map(templateId => {
-      const { basic_info: { name = "" } = {} } = care_plan_templates[
-        templateId
-      ];
+    const templates = Object.values(carePlanTemplateIds).map((templateId) => {
+      const { basic_info: { name = "" } = {} } =
+        care_plan_templates[templateId];
       return (
         <Option id={templateId} value={parseInt(templateId)}>
           {name}
@@ -672,7 +659,7 @@ class TemplateDrawer extends Component {
       </div>
     );
   };
-  setTemplateId = value => {
+  setTemplateId = (value) => {
     const { templateEdited = false } = this.state;
     if (templateEdited) {
       confirm({
@@ -681,7 +668,7 @@ class TemplateDrawer extends Component {
         onOk: async () => {
           this.setState({ carePlanTemplateId: parseInt(value) });
         },
-        onCancel() {}
+        onCancel() {},
       });
     } else {
       this.setState({ carePlanTemplateId: parseInt(value) });
@@ -800,57 +787,57 @@ class TemplateDrawer extends Component {
   showAddDiet = () => {
     this.setState({
       showAddDietInner: true,
-      isDietVisible: true
+      isDietVisible: true,
     });
   };
   closeAddDiet = () => {
     this.setState({
       showAddDietInner: false,
-      isDietVisible: false
+      isDietVisible: false,
     });
   };
   showAddWorkout = () => {
     this.setState({
       showAddWorkoutInner: true,
-      isWorkoutVisible: true
+      isWorkoutVisible: true,
     });
   };
   closeAddWorkout = () => {
     this.setState({
       showAddWorkoutInner: false,
-      isWorkoutVisible: false
+      isWorkoutVisible: false,
     });
   };
 
-  deleteMedication = key => () => {
+  deleteMedication = (key) => () => {
     let { medications = {}, medicationKeys = [] } = this.state;
     delete medications[key];
     medicationKeys.splice(medicationKeys.indexOf(key), 1);
     this.setState({ medications, medicationKeys });
   };
 
-  deleteVital = key => {
+  deleteVital = (key) => {
     let { vitals = {}, vitalKeys = [] } = this.state;
     delete vitals[key];
     vitalKeys.splice(vitalKeys.indexOf(key), 1);
     this.setState({ vitals, vitalKeys });
   };
 
-  deleteAppointment = key => () => {
+  deleteAppointment = (key) => () => {
     let { appointments = {}, appointmentKeys = [] } = this.state;
     delete appointments[key];
     appointmentKeys.splice(appointmentKeys.indexOf(key), 1);
     this.setState({ appointments, appointmentKeys });
   };
 
-  deleteDiet = key => () => {
+  deleteDiet = (key) => () => {
     let { diets = {}, dietKeys = [] } = this.state;
     delete diets[key];
     dietKeys.splice(dietKeys.indexOf(key), 1);
     this.setState({ diets, dietKeys });
   };
 
-  deleteWorkout = key => () => {
+  deleteWorkout = (key) => () => {
     let { workouts = {}, workoutKeys = [] } = this.state;
     delete workouts[key];
     workoutKeys.splice(workoutKeys.indexOf(key), 1);
@@ -870,7 +857,7 @@ class TemplateDrawer extends Component {
       workouts = {},
       workoutKeys = [],
       innerFormType = "",
-      innerFormKey = ""
+      innerFormKey = "",
     } = this.state;
 
     if (innerFormType == EVENT_TYPE.MEDICATION_REMINDER) {
@@ -901,7 +888,7 @@ class TemplateDrawer extends Component {
       dietKeys,
       workouts,
       workoutKeys,
-      templateEdited: true
+      templateEdited: true,
     });
     this.onCloseInner();
   };
@@ -919,13 +906,13 @@ class TemplateDrawer extends Component {
       dietKeys = [],
       workoutKeys = [],
       carePlanTemplateIds = [],
-      carePlanTemplateId
+      carePlanTemplateId,
     } = this.state;
 
     const {
       care_plan_templates = {},
       repeat_intervals = {},
-      vital_templates = {}
+      vital_templates = {},
     } = this.props;
 
     let firstTemplateId = carePlanTemplateIds[0];
@@ -952,7 +939,7 @@ class TemplateDrawer extends Component {
             {this.formatMessage(messages.addMore)}
           </div>
         </div>
-        {medicationKeys.map(key => {
+        {medicationKeys.map((key) => {
           let {
             medicine,
             medicineType,
@@ -960,8 +947,8 @@ class TemplateDrawer extends Component {
               when_to_take = "",
               start_date = moment(),
               medicine_type = "1",
-              repeat_days = []
-            } = {}
+              repeat_days = [],
+            } = {},
           } = medications[key];
           when_to_take.sort();
           let nextDueTime = moment().format("HH:MM A");
@@ -997,7 +984,7 @@ class TemplateDrawer extends Component {
               let newMinDiff = moment()
                 .set({
                   hour: MEDICATION_TIMING_HOURS[wtt],
-                  minute: MEDICATION_TIMING_MINUTES[wtt]
+                  minute: MEDICATION_TIMING_MINUTES[wtt],
                 })
                 .diff(moment());
               minDiff =
@@ -1093,15 +1080,15 @@ class TemplateDrawer extends Component {
             {this.formatMessage(messages.addMore)}
           </div>
         </div>
-        {appointmentKeys.map(key => {
+        {appointmentKeys.map((key) => {
           const {
             reason = "",
             schedule_data: {
               description = "",
               date = "",
-              start_time = ""
+              start_time = "",
             } = {},
-            time_gap = ""
+            time_gap = "",
           } = appointments[key];
           // let timeToShow = date && start_time ? `${moment(date).format('ll')} ${moment(date).format('hh:mm')}` : date ? moment(date).format('ll') : '';
           return (
@@ -1138,7 +1125,7 @@ class TemplateDrawer extends Component {
             {this.formatMessage(messages.addMore)}
           </div>
         </div>
-        {vitalKeys.map(key => {
+        {vitalKeys.map((key) => {
           const {
             description = "",
             end_date = "",
@@ -1147,12 +1134,11 @@ class TemplateDrawer extends Component {
             repeat_interval_id = "",
             start_date = "",
             vital_template_id = "",
-            vital = ""
+            vital = "",
           } = vitals[key];
 
-          const {
-            basic_info: { name: vital_name = "" } = {}
-          } = vital_templates[vital_template_id];
+          const { basic_info: { name: vital_name = "" } = {} } =
+            vital_templates[vital_template_id];
           const repeatObj = repeat_intervals[repeat_interval_id];
           const vital_repeat = repeatObj["text"];
 
@@ -1184,7 +1170,7 @@ class TemplateDrawer extends Component {
             {this.formatMessage(messages.addMore)}
           </div>
         </div>
-        {dietKeys.map(key => {
+        {dietKeys.map((key) => {
           const {
             id = null,
             care_plan_template_id = null,
@@ -1195,8 +1181,8 @@ class TemplateDrawer extends Component {
             details: {
               repeat_days = [],
               not_to_do = "",
-              diet_food_groups = {}
-            } = {}
+              diet_food_groups = {},
+            } = {},
           } = diets[key] || {};
 
           const repeat = repeat_days.length ? repeat_days.toString() : "";
@@ -1231,15 +1217,15 @@ class TemplateDrawer extends Component {
             {this.formatMessage(messages.addMore)}
           </div>
         </div>
-        {workoutKeys.map(key => {
+        {workoutKeys.map((key) => {
           const {
             name = "",
             total_calories = 0,
             details: {
               repeat_days = [],
               not_to_do = "",
-              workout_exercise_groups = {}
-            } = {}
+              workout_exercise_groups = {},
+            } = {},
           } = workouts[key] || {};
 
           const repeat = repeat_days.length ? repeat_days.toString() : "";
@@ -1290,8 +1276,8 @@ class TemplateDrawer extends Component {
           strength = 0,
           unit = "",
           when_to_take = [],
-          when_to_take_abbr = ""
-        } = {}
+          when_to_take_abbr = "",
+        } = {},
       } = medication;
 
       if (when_to_take.length === 0) {
@@ -1326,8 +1312,8 @@ class TemplateDrawer extends Component {
           date = "",
           end_time = "",
           start_time = "",
-          treatment_id = ""
-        } = {}
+          treatment_id = "",
+        } = {},
       } = appointment;
 
       if (!reason || !date || !end_time || !start_time || !treatment_id) {
@@ -1344,7 +1330,7 @@ class TemplateDrawer extends Component {
         end_date = "",
         start_date = "",
         repeat_interval_id = "",
-        repeat_days = []
+        repeat_days = [],
       } = vital;
 
       if (
@@ -1365,7 +1351,7 @@ class TemplateDrawer extends Component {
         id = null,
         name = "",
         start_date = "",
-        details: { repeat_days = [], diet_food_groups = {} } = {}
+        details: { repeat_days = [], diet_food_groups = {} } = {},
       } = diet;
 
       if (
@@ -1386,7 +1372,7 @@ class TemplateDrawer extends Component {
         name = "",
         start_date = "",
         time = "",
-        details: { repeat_days = [], workout_exercise_groups = {} } = {}
+        details: { repeat_days = [], workout_exercise_groups = {} } = {},
       } = workout;
 
       if (
@@ -1424,7 +1410,7 @@ class TemplateDrawer extends Component {
       templateVitalIDs,
       templateDietIDs,
       templateWorkoutIDs,
-      templateEdited
+      templateEdited,
     } = this.state;
     let templateDataExists =
       Object.values(medications).length ||
@@ -1460,7 +1446,7 @@ class TemplateDrawer extends Component {
     this.setState({ showTemplateNameModal: false });
   };
 
-  setTemplateName = event => {
+  setTemplateName = (event) => {
     this.setState({ name: event.target.value });
   };
 
@@ -1489,9 +1475,9 @@ class TemplateDrawer extends Component {
         basic_info: { id: carePlanId } = {},
         treatment_id = 1,
         severity_id = 1,
-        condition_id = 1
+        condition_id = 1,
       } = {},
-      authenticated_category
+      authenticated_category,
     } = this.props;
     let {
       medications = {},
@@ -1500,7 +1486,7 @@ class TemplateDrawer extends Component {
       diets = {},
       workouts = {},
       name = "",
-      createTemplate = false
+      createTemplate = false,
     } = this.state;
     let medicationsData = Object.values(medications);
     let appointmentsData = Object.values(appointments);
@@ -1515,8 +1501,8 @@ class TemplateDrawer extends Component {
           end_date = "",
           start_date = "",
           start_time = "",
-          duration
-        } = {}
+          duration,
+        } = {},
       } = newMed;
       if (!start_time && !start_date && !end_date) {
         medicationsData[medication].schedule_data.start_time = moment();
@@ -1549,16 +1535,16 @@ class TemplateDrawer extends Component {
           start_time = "",
           treatment_id = "",
           type = "",
-          appointment_type = ""
+          appointment_type = "",
         } = {},
-        time_gap = ""
+        time_gap = "",
       } = newAppointment;
       appointmentsData[appointment].schedule_data.type = appointment_type
         ? appointment_type
         : type;
       appointmentsData[appointment].schedule_data.participant_two = {
         id: patientId,
-        category: "patient"
+        category: "patient",
       };
 
       let updatedDate = null;
@@ -1628,12 +1614,12 @@ class TemplateDrawer extends Component {
         createTemplate,
         treatment_id,
         severity_id,
-        condition_id
+        condition_id,
       });
     }
   };
 
-  editMedication = data => {
+  editMedication = (data) => {
     let { medications = {}, innerFormKey = "" } = this.state;
     let { medicines } = this.props;
     let newMedication = medications[innerFormKey];
@@ -1650,12 +1636,11 @@ class TemplateDrawer extends Component {
       description = "",
       medicine_type = "",
       when_to_take = ["3"],
-      when_to_take_abbr = ""
+      when_to_take_abbr = "",
     } = data;
 
-    const { basic_info: { name = "", type = "" } = {} } = medicines[
-      medicine_id
-    ];
+    const { basic_info: { name = "", type = "" } = {} } =
+      medicines[medicine_id];
 
     newMedication.medicine_id = medicine_id;
     newMedication.medicine = name;
@@ -1672,7 +1657,7 @@ class TemplateDrawer extends Component {
       strength,
       start_time: moment(start_time),
       medicine_type,
-      description
+      description,
     };
     medications[innerFormKey] = newMedication;
     this.setState({ medications, templateEdited: true }, () => {
@@ -1681,7 +1666,7 @@ class TemplateDrawer extends Component {
     });
   };
 
-  editVital = data => {
+  editVital = (data) => {
     let { vitals = {}, innerFormKey = "" } = this.state;
     let { vital_templates = {} } = this.props;
     let newVital = vitals[innerFormKey] || {};
@@ -1691,12 +1676,11 @@ class TemplateDrawer extends Component {
       repeat_days = [],
       start_date = "",
       repeat_interval_id = "",
-      description = ""
+      description = "",
     } = data;
 
-    const { basic_info: { name = "" } = {} } = vital_templates[
-      vital_template_id
-    ];
+    const { basic_info: { name = "" } = {} } =
+      vital_templates[vital_template_id];
     let vitalExist = false;
 
     for (let key of Object.keys(vitals)) {
@@ -1727,7 +1711,7 @@ class TemplateDrawer extends Component {
         repeat_interval_id,
         description,
         start_date: s_date,
-        end_date: e_date
+        end_date: e_date,
       };
 
       this.setState({ vitals, templateEdited: true }, () => {
@@ -1737,7 +1721,7 @@ class TemplateDrawer extends Component {
     }
   };
 
-  addMedication = data => {
+  addMedication = (data) => {
     const {
       end_date = "",
       medicine_id = "",
@@ -1751,15 +1735,14 @@ class TemplateDrawer extends Component {
       unit = "",
       description = "",
       when_to_take = ["3"],
-      when_to_take_abbr = ""
+      when_to_take_abbr = "",
     } = data;
     console.log("327546235423786479812742376 =====> addMedication", { data });
     let { medications = {}, medicationKeys = [] } = this.state;
     let { medicines } = this.props;
     let newMedication = {};
-    const { basic_info: { name = "", type = "" } = {} } = medicines[
-      medicine_id
-    ];
+    const { basic_info: { name = "", type = "" } = {} } =
+      medicines[medicine_id];
     newMedication.medicine_id = medicine_id;
     newMedication.medicine = name;
     newMedication.medicineType = type;
@@ -1775,7 +1758,7 @@ class TemplateDrawer extends Component {
       strength,
       start_time: moment(start_time),
       medicine_type,
-      description
+      description,
     };
     let key = uuid();
     let medicineExist = false;
@@ -1800,7 +1783,7 @@ class TemplateDrawer extends Component {
     }
   };
 
-  addVital = data => {
+  addVital = (data) => {
     const { vital_templates = {} } = this.props;
     let newVital = {};
     let { vitals = {}, vitalKeys = [] } = this.state;
@@ -1811,12 +1794,11 @@ class TemplateDrawer extends Component {
       repeat_days = [],
       start_date = "",
       repeat_interval_id = "",
-      description = ""
+      description = "",
     } = data;
 
-    const { basic_info: { name = "" } = {} } = vital_templates[
-      vital_template_id
-    ];
+    const { basic_info: { name = "" } = {} } =
+      vital_templates[vital_template_id];
 
     let key = uuid();
     let vitalExist = false;
@@ -1838,7 +1820,7 @@ class TemplateDrawer extends Component {
         repeat_interval_id,
         description,
         start_date: moment(start_date),
-        end_date: moment(end_date)
+        end_date: moment(end_date),
       };
       this.setState({ vitals, vitalKeys, templateEdited: true }, () => {
         this.closeAddVital();
@@ -1846,7 +1828,7 @@ class TemplateDrawer extends Component {
     }
   };
 
-  editAppointment = data => {
+  editAppointment = (data) => {
     const { appointments = {}, innerFormKey = "" } = this.state;
 
     let {
@@ -1863,7 +1845,7 @@ class TemplateDrawer extends Component {
       participant_two = {},
       start_time = {},
       treatment_id = "",
-      reason = ""
+      reason = "",
     } = data;
 
     let newAppointment = appointments[innerFormKey];
@@ -1882,7 +1864,7 @@ class TemplateDrawer extends Component {
       critical,
       appointment_type: type,
       type_description,
-      radiology_type
+      radiology_type,
     };
     appointments[innerFormKey] = newAppointment;
     this.setState({ appointments, templateEdited: true }, () => {
@@ -1891,7 +1873,7 @@ class TemplateDrawer extends Component {
     });
   };
 
-  addAppointment = data => {
+  addAppointment = (data) => {
     let { appointments = {}, appointmentKeys = [] } = this.state;
     let key = uuid();
     let {
@@ -1907,7 +1889,7 @@ class TemplateDrawer extends Component {
       participant_two = {},
       start_time = {},
       treatment_id = "",
-      reason = ""
+      reason = "",
     } = data;
     let newAppointment = {};
 
@@ -1937,7 +1919,7 @@ class TemplateDrawer extends Component {
       critical,
       type,
       type_description,
-      radiology_type
+      radiology_type,
     };
     appointments[key] = newAppointment;
     appointmentKeys.push(key);
@@ -1949,7 +1931,7 @@ class TemplateDrawer extends Component {
     );
   };
 
-  addDiet = data => {
+  addDiet = (data) => {
     let { diets = {}, dietKeys = [] } = this.state;
 
     const {
@@ -1959,7 +1941,7 @@ class TemplateDrawer extends Component {
       diet_food_groups = {},
       start_date = "",
       end_date = "",
-      not_to_do = ""
+      not_to_do = "",
     } = data;
 
     let key = uuid();
@@ -1991,8 +1973,8 @@ class TemplateDrawer extends Component {
         details: {
           repeat_days,
           not_to_do,
-          diet_food_groups
-        }
+          diet_food_groups,
+        },
       };
       this.setState({ diets, dietKeys, templateEdited: true }, () => {
         this.closeAddDiet();
@@ -2000,7 +1982,7 @@ class TemplateDrawer extends Component {
     }
   };
 
-  editDiet = data => {
+  editDiet = (data) => {
     let { diets = {}, innerFormKey = "" } = this.state;
 
     const {
@@ -2010,7 +1992,7 @@ class TemplateDrawer extends Component {
       diet_food_groups = {},
       start_date = "",
       end_date = "",
-      not_to_do = ""
+      not_to_do = "",
     } = data;
 
     let dietNameExists = false;
@@ -2039,8 +2021,8 @@ class TemplateDrawer extends Component {
         details: {
           repeat_days,
           not_to_do,
-          diet_food_groups
-        }
+          diet_food_groups,
+        },
       };
 
       this.setState({ diets, templateEdited: true }, () => {
@@ -2050,7 +2032,7 @@ class TemplateDrawer extends Component {
     }
   };
 
-  addWorkout = data => {
+  addWorkout = (data) => {
     let { workouts = {}, workoutKeys = [] } = this.state;
 
     const {
@@ -2061,7 +2043,7 @@ class TemplateDrawer extends Component {
       start_date = "",
       end_date = "",
       not_to_do = "",
-      time = ""
+      time = "",
     } = data;
 
     let key = uuid();
@@ -2082,7 +2064,7 @@ class TemplateDrawer extends Component {
     }
     console.log("21381237123127318371283712  ===>>>>> ", {
       e_date,
-      start_date
+      start_date,
     });
 
     if (workoutNameExists) {
@@ -2098,8 +2080,8 @@ class TemplateDrawer extends Component {
         details: {
           repeat_days,
           not_to_do,
-          workout_exercise_groups
-        }
+          workout_exercise_groups,
+        },
       };
       this.setState({ workouts, workoutKeys, templateEdited: true }, () => {
         this.closeAddWorkout();
@@ -2107,7 +2089,7 @@ class TemplateDrawer extends Component {
     }
   };
 
-  editWorkout = data => {
+  editWorkout = (data) => {
     let { workouts = {}, innerFormKey = "" } = this.state;
 
     const {
@@ -2118,7 +2100,7 @@ class TemplateDrawer extends Component {
       start_date = "",
       end_date = "",
       not_to_do = "",
-      time = ""
+      time = "",
     } = data;
 
     let workoutNameExists = false;
@@ -2138,7 +2120,7 @@ class TemplateDrawer extends Component {
     }
     console.log("21381237123127318371283712  ===>>>>> ", {
       e_date,
-      start_date
+      start_date,
     });
 
     if (workoutNameExists) {
@@ -2153,8 +2135,8 @@ class TemplateDrawer extends Component {
         details: {
           repeat_days,
           not_to_do,
-          workout_exercise_groups
-        }
+          workout_exercise_groups,
+        },
       };
 
       this.setState({ workouts, templateEdited: true }, () => {
@@ -2164,7 +2146,7 @@ class TemplateDrawer extends Component {
     }
   };
 
-  formatMessage = data => this.props.intl.formatMessage(data);
+  formatMessage = (data) => this.props.intl.formatMessage(data);
 
   onClose = () => {
     const { closeTemplateDrawer } = this.props;
@@ -2175,7 +2157,7 @@ class TemplateDrawer extends Component {
     this.setState({
       showInner: false,
       isDietVisible: false,
-      isWorkoutVisible: false
+      isWorkoutVisible: false,
     });
   };
 
@@ -2186,7 +2168,7 @@ class TemplateDrawer extends Component {
       patients,
       carePlan,
       submit,
-      care_plan_templates
+      care_plan_templates,
     } = this.props;
     let {
       showInner,
@@ -2204,7 +2186,7 @@ class TemplateDrawer extends Component {
       showAddWorkoutInner,
       carePlanTemplateId,
       isDietVisible = false,
-      isWorkoutVisible = false
+      isWorkoutVisible = false,
     } = this.state;
     let { basic_info: { name: carePlanName = "" } = {} } =
       care_plan_templates[carePlanTemplateId] || {};
@@ -2240,7 +2222,7 @@ class TemplateDrawer extends Component {
     console.log("21381237123127318371283712 RENDDDDER==========>>", {
       workoutData,
       state: this.state,
-      props: this.props
+      props: this.props,
     });
     return (
       <Fragment>
@@ -2252,7 +2234,7 @@ class TemplateDrawer extends Component {
           headerStyle={{
             position: "sticky",
             zIndex: "9999",
-            top: "0px"
+            top: "0px",
           }}
           onClose={onClose}
           width={"35%"}

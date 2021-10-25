@@ -16,7 +16,7 @@ const FIELD_NAME = "end_date";
 const { Item: FormItem } = Form;
 
 class EndDate extends Component {
-  openCalendar = e => {
+  openCalendar = (e) => {
     e.preventDefault();
     const datePicker = window.document.getElementsByClassName(FIELD_NAME)[0];
 
@@ -31,13 +31,13 @@ class EndDate extends Component {
     }
   };
 
-  getParentNode = t => t.parentNode;
+  getParentNode = (t) => t.parentNode;
 
-  formatMessage = data => this.props.intl.formatMessage(data);
+  formatMessage = (data) => this.props.intl.formatMessage(data);
 
   getNewEndDate = () => {
     const {
-      form: { getFieldValue }
+      form: { getFieldValue },
     } = this.props;
 
     const repeat = getFieldValue(repeatField.field_name);
@@ -109,7 +109,7 @@ class EndDate extends Component {
       disabledEndDate,
       purpose,
       vitals,
-      payload: { id: vital_id, canViewDetails = false } = {}
+      payload: { id: vital_id, canViewDetails = false } = {},
     } = this.props;
     const { formatMessage, openCalendar, getInitialValue, calendarComp } = this;
     let { end_date = "" } = vitals[vital_id] || {};
@@ -129,7 +129,7 @@ class EndDate extends Component {
           </div>
           <FormItem className="wp100">
             {getFieldDecorator(FIELD_NAME, {
-              initialValue: end_date ? moment(end_date) : getInitialValue()
+              initialValue: end_date ? moment(end_date) : getInitialValue(),
             })(
               <DatePicker
                 className={`full-width ${FIELD_NAME} ant-date-custom-med wp100`}
@@ -163,5 +163,5 @@ const Field = injectIntl(EndDate);
 
 export default {
   field_name: FIELD_NAME,
-  render: props => <Field {...props} />
+  render: (props) => <Field {...props} />,
 };

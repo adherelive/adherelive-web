@@ -11,9 +11,9 @@ const { Item: FormItem } = Form;
 const FIELD_NAME = "start_time";
 
 class StartTime extends Component {
-  getParentNode = t => t.parentNode;
+  getParentNode = (t) => t.parentNode;
 
-  formatMessage = data => this.props.intl.formatMessage(data);
+  formatMessage = (data) => this.props.intl.formatMessage(data);
 
   getInitialValue = () => {
     const { purpose, event = {} } = this.props;
@@ -41,7 +41,7 @@ class StartTime extends Component {
       form: { getFieldDecorator, getFieldError },
       onChangeEventStartTime,
       eventMode,
-      purpose
+      purpose,
     } = this.props;
     const { formatMessage, getInitialValue, isValidStartTime } = this;
 
@@ -67,9 +67,9 @@ class StartTime extends Component {
           initialValue: getInitialValue(),
           rules: [
             {
-              validator: isValidStartTime
-            }
-          ]
+              validator: isValidStartTime,
+            },
+          ],
         })(
           <TimePicker
             allowClear={false}
@@ -94,5 +94,5 @@ const Field = injectIntl(StartTime);
 
 export default {
   field_name: FIELD_NAME,
-  render: props => <Field {...props} />
+  render: (props) => <Field {...props} />,
 };

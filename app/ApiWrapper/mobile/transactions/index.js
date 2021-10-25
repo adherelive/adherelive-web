@@ -24,7 +24,7 @@ class TransactionWrapper extends BaseTransaction {
       payee_id,
       payee_type,
       status,
-      transaction_response
+      transaction_response,
     } = _data;
 
     return {
@@ -33,18 +33,18 @@ class TransactionWrapper extends BaseTransaction {
         transaction_id,
         payment_product_id,
         mode,
-        amount
+        amount,
       },
       status,
       requestor: {
         id: requestor_id,
-        category: requestor_type
+        category: requestor_type,
       },
       payee: {
         id: payee_id,
-        category: payee_type
+        category: payee_type,
       },
-      transaction_response
+      transaction_response,
     };
   };
 
@@ -52,9 +52,9 @@ class TransactionWrapper extends BaseTransaction {
     const { getBasicInfo, getId } = this;
     return {
       transactions: {
-        [getId()]: getBasicInfo()
+        [getId()]: getBasicInfo(),
       },
-      transaction_id: getId()
+      transaction_id: getId(),
     };
   };
 
@@ -64,15 +64,15 @@ class TransactionWrapper extends BaseTransaction {
       const { payment_product } = _data || {};
 
       const paymentProducts = await PaymentProductWrapper({
-        data: payment_product
+        data: payment_product,
       });
 
       return {
         ...(await getAllInfo()),
         payment_products: {
-          [paymentProducts.getId()]: paymentProducts.getBasicInfo()
+          [paymentProducts.getId()]: paymentProducts.getBasicInfo(),
         },
-        payment_product_id: paymentProducts.getId()
+        payment_product_id: paymentProducts.getId(),
       };
     } catch (error) {
       throw error;

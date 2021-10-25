@@ -11,42 +11,42 @@ module.exports = {
       id: {
         type: Sequelize.INTEGER,
         primaryKey: true,
-        autoIncrement: true
+        autoIncrement: true,
       },
       user_identity: {
         type: Sequelize.INTEGER,
         allowNull: false,
         references: {
           model: {
-            tableName: userTableName
+            tableName: userTableName,
           },
-          key: "id"
-        }
+          key: "id",
+        },
       },
       linked_with: {
         type: Sequelize.ENUM,
         values: [USER_CATEGORY.PROVIDER, USER_CATEGORY.ADMIN],
-        allowNull: true
+        allowNull: true,
       },
       linked_id: {
         type: Sequelize.INTEGER,
-        allowNull: true
+        allowNull: true,
       },
       created_at: {
         allowNull: false,
-        type: Sequelize.DATE
+        type: Sequelize.DATE,
       },
       updated_at: {
         allowNull: false,
-        type: Sequelize.DATE
+        type: Sequelize.DATE,
       },
       deleted_at: {
         allowNull: true,
-        type: Sequelize.DATE
-      }
+        type: Sequelize.DATE,
+      },
     });
   },
   down: (queryInterface, Sequelize) => {
     return queryInterface.dropTable(TABLE_NAME);
-  }
+  },
 };

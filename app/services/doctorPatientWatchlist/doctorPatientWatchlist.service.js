@@ -15,10 +15,10 @@ class DoctorPatientWatchlistService {
     }
   }
 
-  getByData = async data => {
+  getByData = async (data) => {
     try {
       const record = await Database.getModel(TABLE_NAME).findOne({
-        where: data
+        where: data,
       });
       return record;
     } catch (error) {
@@ -26,10 +26,10 @@ class DoctorPatientWatchlistService {
     }
   };
 
-  getAllByData = async data => {
+  getAllByData = async (data) => {
     try {
       const record = await Database.getModel(TABLE_NAME).findAll({
-        where: data
+        where: data,
       });
       return record;
     } catch (error) {
@@ -42,9 +42,9 @@ class DoctorPatientWatchlistService {
     try {
       const record = await Database.getModel(TABLE_NAME).update(data, {
         where: {
-          id
+          id,
         },
-        transaction
+        transaction,
       });
       await transaction.commit();
       return record;

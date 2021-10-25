@@ -10,7 +10,7 @@ import {
   MISSED_ACTIONS,
   MISSED_DIET,
   MISSED_WORKOUT,
-  USER_PERMISSIONS
+  USER_PERMISSIONS,
 } from "../../constant";
 import Tabs from "antd/es/tabs";
 // import Patients from "../../Containers/Patient/paginatedTable";
@@ -49,12 +49,12 @@ const CHART_MISSED_WORKOUT = "Missed Workout";
 
 export const CURRENT_TAB = {
   ALL_PATIENTS: "1",
-  WATCHLIST: "2"
+  WATCHLIST: "2",
 };
 
 export const SORTING_TYPE = {
   SORT_BY_DATE: "0",
-  SORT_BY_NAME: "1"
+  SORT_BY_NAME: "1",
 };
 
 export const SORT_CREATEDAT = "sort_createdAt";
@@ -81,15 +81,15 @@ class Dashboard extends Component {
         sort_name: null,
         filter_diagnosis: "",
         filter_treatment: "",
-        offset: 0
+        offset: 0,
       },
       watchlistTab: {
         sort_createdAt: 1,
         sort_name: null,
         filter_diagnosis: "",
         filter_treatment: "",
-        offset: 0
-      }
+        offset: 0,
+      },
     };
   }
 
@@ -103,7 +103,7 @@ class Dashboard extends Component {
       closePopUp,
       fetchChatAccessToken,
       getAllFeatures,
-      getAllMissedScheduleEvents
+      getAllMissedScheduleEvents,
     } = this.props;
 
     this.setState({ loading: true });
@@ -117,16 +117,16 @@ class Dashboard extends Component {
       }
     }
     this.setState({ graphLoading: true, doctorUserId });
-    getGraphs().then(response => {
+    getGraphs().then((response) => {
       const {
         status,
-        payload: { data: { user_preferences: { charts = [] } = {} } = {} } = {}
+        payload: { data: { user_preferences: { charts = [] } = {} } = {} } = {},
       } = response;
       if (status) {
         this.setState({
           graphsToShow: [...charts],
           graphLoading: false,
-          loading: false
+          loading: false,
         });
       } else {
         this.setState({ loading: false });
@@ -300,9 +300,9 @@ class Dashboard extends Component {
     );
   };
 
-  formatMessage = data => this.props.intl.formatMessage(data);
+  formatMessage = (data) => this.props.intl.formatMessage(data);
 
-  chartClicked = name => {
+  chartClicked = (name) => {
     if (name === CHART_MISSED_APPOINTMENT) {
       const { openMissedAppointmentDrawer } = this.props;
       openMissedAppointmentDrawer();
@@ -328,27 +328,27 @@ class Dashboard extends Component {
       appointment_ids = {},
       vital_ids = {},
       diet_ids = {},
-      workout_ids = {}
+      workout_ids = {},
     } = dashboard;
     const {
       critical: medication_critical = [],
-      non_critical: medication_non_critical = []
+      non_critical: medication_non_critical = [],
     } = medication_ids;
     const {
       critical: vital_critical = [],
-      non_critical: vital_non_critical = []
+      non_critical: vital_non_critical = [],
     } = vital_ids;
     const {
       critical: appointment_critical = [],
-      non_critical: appointment_non_critical = []
+      non_critical: appointment_non_critical = [],
     } = appointment_ids;
     const {
       critical: diet_critical = [],
-      non_critical: diet_non_critical = []
+      non_critical: diet_non_critical = [],
     } = diet_ids;
     const {
       critical: workout_critical = [],
-      non_critical: workout_non_critical = []
+      non_critical: workout_non_critical = [],
     } = workout_ids;
 
     const medication_total =
@@ -370,7 +370,7 @@ class Dashboard extends Component {
       );
     }
 
-    const chartBlocks = graphsToShow.map(id => {
+    const chartBlocks = graphsToShow.map((id) => {
       const { name, type = "" } = graphs[id] || {};
       let total = 0;
       let critical = 0;
@@ -424,12 +424,12 @@ class Dashboard extends Component {
     this.setState({ visibleModal: true });
   };
 
-  addPatient = data => {
+  addPatient = (data) => {
     const { addPatient, authenticated_user } = this.props;
 
     const { basic_info: { id = 1 } = {} } = authenticated_user || {};
     this.setState({ submitting: true });
-    addPatient(data).then(response => {
+    addPatient(data).then((response) => {
       let {
         status = false,
         statusCode = 0,
@@ -437,10 +437,10 @@ class Dashboard extends Component {
           data: {
             patient_ids = [],
             care_plan_ids = [],
-            carePlanTemplateId = 0
+            carePlanTemplateId = 0,
           } = {},
-          message: responseMessage = ""
-        } = {}
+          message: responseMessage = "",
+        } = {},
       } = response;
       let showTemplateDrawer = carePlanTemplateId ? true : false;
       let currentCarePlanId = care_plan_ids[0];
@@ -448,7 +448,7 @@ class Dashboard extends Component {
       if (status) {
         this.props.history.push({
           pathname: `/patients/${patient_id}`,
-          state: { showTemplateDrawer, currentCarePlanId }
+          state: { showTemplateDrawer, currentCarePlanId },
         });
 
         // })
@@ -465,11 +465,11 @@ class Dashboard extends Component {
     });
   };
 
-  editDisplayGraphs = data => {
+  editDisplayGraphs = (data) => {
     let dataToUpdate = {};
     dataToUpdate.chart_ids = data;
     let { updateGraphs } = this.props;
-    updateGraphs(dataToUpdate).then(response => {
+    updateGraphs(dataToUpdate).then((response) => {
       const { status } = response;
       if (status) {
         this.setState({ graphsToShow: data, visibleModal: false });
@@ -500,7 +500,7 @@ class Dashboard extends Component {
       patients,
       twilio: { care_plan_id: currentCareplanId = 1 } = {},
       auth_role: doctorRoleId = null,
-      care_plans
+      care_plans,
     } = this.props;
     const { doctorUserId } = this.state;
     // let { basic_info: { user_id: patientUserId = "" } = {} , user_role_id : patientRoleId = null  } = patients[
@@ -534,7 +534,7 @@ class Dashboard extends Component {
     return videoCallBlocked;
   };
 
-  getFeatureId = featureName => {
+  getFeatureId = (featureName) => {
     const { features = {} } = this.props;
     const featuresIds = Object.keys(features);
 
@@ -551,7 +551,7 @@ class Dashboard extends Component {
 
   getOtherUserCategoryId = () => {
     const {
-      twilio: { patientId = 1 }
+      twilio: { patientId = 1 },
     } = this.props;
     return patientId;
   };
@@ -559,7 +559,7 @@ class Dashboard extends Component {
   maximizeChat = () => {
     const {
       patients,
-      twilio: { patientId: chatPatientId = 1 }
+      twilio: { patientId: chatPatientId = 1 },
     } = this.props;
     window.open(
       `${config.WEB_URL}${getPatientConsultingUrl(chatPatientId)}`,
@@ -598,7 +598,7 @@ class Dashboard extends Component {
     showVerifyModal(false);
   };
 
-  changeTab = tab => {
+  changeTab = (tab) => {
     this.setState({ currentTab: tab });
   };
 
@@ -638,12 +638,12 @@ class Dashboard extends Component {
       twilio: { patientId: chatPatientId = 1, care_plan_id },
       auth_role: doctorRoleId = null,
       authenticated_category,
-      care_plans
+      care_plans,
     } = this.props;
 
     let doctorID = null;
     let docName = "";
-    Object.keys(doctors).forEach(id => {
+    Object.keys(doctors).forEach((id) => {
       const { basic_info: { user_id } = {} } = doctors[id] || {};
 
       if (user_id === authenticated_user) {
@@ -660,7 +660,7 @@ class Dashboard extends Component {
       renderChartTabs,
       getVerifyModal,
       changeTab,
-      getProviderBanner
+      getProviderBanner,
     } = this;
 
     let {
@@ -668,10 +668,10 @@ class Dashboard extends Component {
         user_id: patientUserId = "",
         first_name = "",
         middle_name = "",
-        last_name = ""
+        last_name = "",
       } = {},
       user_role_id: patientRoleId = null,
-      details: { profile_pic: patientDp = "" } = {}
+      details: { profile_pic: patientDp = "" } = {},
     } = patients[chatPatientId] || {};
 
     const {
@@ -683,7 +683,7 @@ class Dashboard extends Component {
       submitting = false,
       currentTab = CURRENT_TAB.ALL_PATIENTS,
       allPatientsTab,
-      watchlistTab
+      watchlistTab,
     } = this.state;
 
     // const roomId = getRoomId(doctorRoleId, patientRoleId);

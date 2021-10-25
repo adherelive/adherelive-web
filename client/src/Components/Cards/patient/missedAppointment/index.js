@@ -2,15 +2,15 @@ import React from "react";
 import moment from "moment";
 import messages from "../messages";
 
-const getTimings = timings => {
+const getTimings = (timings) => {
   // console.log("876324237483294",timings);
 
-  return timings.map(time => {
+  return timings.map((time) => {
     return <div>{moment(time).format("Do MMM  (hh:mm A)")}</div>;
   });
 };
 
-export default props => {
+export default (props) => {
   const { formatMessage, onClick, name, time, treatment_type } = props;
   return (
     <div className="bw-cool-grey br5 mb10 p10">

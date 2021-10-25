@@ -14,7 +14,7 @@ class ReportTable extends Component {
     this.state = {
       loading: true,
       report_ids: [],
-      documentData: {}
+      documentData: {},
     };
   }
 
@@ -31,7 +31,7 @@ class ReportTable extends Component {
     }
   }
 
-  formatMessage = message => this.props.intl.formatMessage(message);
+  formatMessage = (message) => this.props.intl.formatMessage(message);
 
   getReports = async () => {
     try {
@@ -48,12 +48,12 @@ class ReportTable extends Component {
     }
   };
 
-  openEditDrawer = payload => () => {
+  openEditDrawer = (payload) => () => {
     const { openEditReport } = this.props;
     openEditReport(payload);
   };
 
-  openModal = documentData => () => {
+  openModal = (documentData) => () => {
     this.setState({ documentData, modalVisible: true });
   };
 
@@ -66,7 +66,7 @@ class ReportTable extends Component {
     const { report_ids } = this.state;
     const { formatMessage, openModal, openEditDrawer } = this;
 
-    return report_ids.map(id => {
+    return report_ids.map((id) => {
       return generateRow({
         formatMessage,
         id,
@@ -75,7 +75,7 @@ class ReportTable extends Component {
         doctors,
         upload_documents,
         openEditDrawer,
-        openModal
+        openModal,
       });
     });
   };
@@ -94,7 +94,7 @@ class ReportTable extends Component {
   //     }
   // };
 
-  formatMessage = data => this.props.intl.formatMessage(data);
+  formatMessage = (data) => this.props.intl.formatMessage(data);
 
   render() {
     const { intl: { formatMessage } = {} } = this.props;
@@ -102,7 +102,7 @@ class ReportTable extends Component {
     const { getDataSource, closeModal } = this;
 
     const reportLocale = {
-      emptyText: this.formatMessage(messages.emptyReports)
+      emptyText: this.formatMessage(messages.emptyReports),
     };
 
     return (
@@ -112,12 +112,12 @@ class ReportTable extends Component {
           // loading={loading === true ? getLoadingComponent() : false}
           columns={getColumn({
             formatMessage,
-            className: "pointer"
+            className: "pointer",
           })}
           dataSource={getDataSource()}
           scroll={{ x: "100%" }}
           pagination={{
-            position: "bottom"
+            position: "bottom",
           }}
           locale={reportLocale}
         />

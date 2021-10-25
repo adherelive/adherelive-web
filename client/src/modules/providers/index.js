@@ -3,7 +3,7 @@ import { REQUEST_TYPE } from "../../constant";
 
 import {
   getAllProvidersUrl,
-  updateProviderUrl
+  updateProviderUrl,
 } from "../../Helper/urls/provider";
 
 import { getAllTransactionsUrl } from "../../Helper/urls/transactions";
@@ -26,12 +26,12 @@ export const UPDATE_PROVIDER_FAILED = "UPDATE_PROVIDER_FAILED";
 
 export const getAllProviders = () => {
   let response = {};
-  return async dispatch => {
+  return async (dispatch) => {
     try {
       dispatch({ type: GET_ALL_PROVIDERS_START });
       response = await doRequest({
         method: REQUEST_TYPE.GET,
-        url: getAllProvidersUrl()
+        url: getAllProvidersUrl(),
       });
 
       // console.log("78654546576877653546576654565768 --------->",response);
@@ -41,12 +41,12 @@ export const getAllProviders = () => {
         dispatch({
           type: GET_ALL_PROVIDERS_COMPLETE,
           data: data,
-          payload: data
+          payload: data,
         });
       } else {
         dispatch({
           type: GET_ALL_PROVIDERS_FAILED,
-          error
+          error,
         });
       }
     } catch (error) {
@@ -58,12 +58,12 @@ export const getAllProviders = () => {
 
 export const getAllTransactions = () => {
   let response = {};
-  return async dispatch => {
+  return async (dispatch) => {
     try {
       dispatch({ type: GET_ALL_TRANSACTIONS_START });
       response = await doRequest({
         method: REQUEST_TYPE.GET,
-        url: getAllTransactionsUrl()
+        url: getAllTransactionsUrl(),
       });
 
       // console.log("78654546576877653546576654565768 --------->",response);
@@ -73,12 +73,12 @@ export const getAllTransactions = () => {
         dispatch({
           type: GET_ALL_TRANSACTIONS_COMPLETE,
           data: data,
-          payload: data
+          payload: data,
         });
       } else {
         dispatch({
           type: GET_ALL_TRANSACTIONS_FAILED,
-          error
+          error,
         });
       }
     } catch (error) {
@@ -88,15 +88,15 @@ export const getAllTransactions = () => {
   };
 };
 
-export const addProvider = payload => {
+export const addProvider = (payload) => {
   let response = {};
-  return async dispatch => {
+  return async (dispatch) => {
     try {
       dispatch({ type: ADD_PROVIDER_START });
       response = await doRequest({
         method: REQUEST_TYPE.POST,
         url: getAllProvidersUrl(),
-        data: payload
+        data: payload,
       });
 
       const { status, payload: { data, error } = {} } = response || {};
@@ -104,12 +104,12 @@ export const addProvider = payload => {
         dispatch({
           type: ADD_PROVIDER_COMPLETE,
           data: data,
-          payload: data
+          payload: data,
         });
       } else {
         dispatch({
           type: ADD_PROVIDER_FAILED,
-          error
+          error,
         });
       }
     } catch (error) {
@@ -121,13 +121,13 @@ export const addProvider = payload => {
 
 export const updateProvider = (id, payload) => {
   let response = {};
-  return async dispatch => {
+  return async (dispatch) => {
     try {
       dispatch({ type: UPDATE_PROVIDER_START });
       response = await doRequest({
         method: REQUEST_TYPE.POST,
         url: updateProviderUrl(id),
-        data: payload
+        data: payload,
       });
 
       const { status, payload: { data, error } = {} } = response || {};
@@ -135,12 +135,12 @@ export const updateProvider = (id, payload) => {
         dispatch({
           type: UPDATE_PROVIDER_COMPLETE,
           data: data,
-          payload: data
+          payload: data,
         });
       } else {
         dispatch({
           type: UPDATE_PROVIDER_FAILED,
-          error
+          error,
         });
       }
     } catch (error) {
@@ -155,7 +155,7 @@ function providersReducer(state, data) {
   if (providers) {
     return {
       ...state,
-      ...providers
+      ...providers,
     };
   } else {
     return state;

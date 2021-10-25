@@ -33,14 +33,14 @@ class PatientWrapper extends BasePatient {
       dob,
       uid,
       payment_terms_accepted,
-      createdAt: created_at
+      createdAt: created_at,
     } = _data || {};
     // console.log("346236542783642534623548723648",{created_at,_data});
     const { profile_pic = "" } = details || {};
 
     const updatedDetails = {
       ...details,
-      profile_pic: profile_pic ? completePath(profile_pic) : null
+      profile_pic: profile_pic ? completePath(profile_pic) : null,
     };
     return {
       basic_info: {
@@ -55,13 +55,13 @@ class PatientWrapper extends BasePatient {
         last_name,
         full_name,
         address,
-        uid
+        uid,
       },
       payment_terms_accepted,
       activated_on,
       details: updatedDetails,
       dob,
-      created_at
+      created_at,
     };
   };
 
@@ -86,7 +86,7 @@ class PatientWrapper extends BasePatient {
     return {
       ...getBasicInfo(),
       care_plan_id: carePlanId,
-      user_role_id
+      user_role_id,
     };
   };
 
@@ -97,11 +97,11 @@ class PatientWrapper extends BasePatient {
 
     return {
       patients: {
-        [getPatientId()]: await getAllInfo()
+        [getPatientId()]: await getAllInfo(),
       },
       users: {
-        [users.getId()]: users.getBasicInfo()
-      }
+        [users.getId()]: users.getBasicInfo(),
+      },
     };
   };
 }

@@ -5,5 +5,5 @@ import hi from "./hi.json";
 export default {
   en,
   ar,
-  hi
+  hi,
 };

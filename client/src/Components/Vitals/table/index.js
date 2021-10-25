@@ -11,7 +11,7 @@ class VitalTable extends Component {
 
     this.state = {
       loading: true,
-      vital_ids: []
+      vital_ids: [],
     };
   }
 
@@ -59,7 +59,7 @@ class VitalTable extends Component {
       vital_templates,
       intl: { formatMessage } = {},
       isOtherCarePlan,
-      auth_role = null
+      auth_role = null,
     } = this.props;
     // const {vital_ids} = this.state;
 
@@ -73,7 +73,7 @@ class VitalTable extends Component {
       canViewDetails = false;
     }
 
-    return vital_ids.map(id => {
+    return vital_ids.map((id) => {
       return generateRow({
         id,
         vitals,
@@ -82,18 +82,18 @@ class VitalTable extends Component {
         openEditDrawer,
         formatMessage,
         isOtherCarePlan,
-        canViewDetails
+        canViewDetails,
       });
     });
   };
 
-  openResponseDrawer = id => e => {
+  openResponseDrawer = (id) => (e) => {
     e.preventDefault();
     const {
       vitalResponseDrawer,
       isOtherCarePlan,
       auth_role = null,
-      care_plans = {}
+      care_plans = {},
     } = this.props;
     const { basic_info: { user_role_id = null } = {} } = care_plans || {};
     let canViewDetails = true;
@@ -103,13 +103,13 @@ class VitalTable extends Component {
     vitalResponseDrawer({ id, loading: true, canViewDetails });
   };
 
-  openEditDrawer = id => e => {
+  openEditDrawer = (id) => (e) => {
     e.preventDefault();
     const {
       editVitalDrawer,
       isOtherCarePlan,
       auth_role = null,
-      care_plans = {}
+      care_plans = {},
     } = this.props;
     const { basic_info: { user_role_id = null } = {} } = care_plans || {};
     let canViewDetails = true;
@@ -119,14 +119,14 @@ class VitalTable extends Component {
     editVitalDrawer({ id, loading: true, canViewDetails });
   };
 
-  formatMessage = data => this.props.intl.formatMessage(data);
+  formatMessage = (data) => this.props.intl.formatMessage(data);
 
   render() {
     const { intl: { formatMessage } = {} } = this.props;
     const { getLoadingComponent, getDataSource } = this;
 
     const vitalLocale = {
-      emptyText: this.formatMessage(messages.emptyVitalTable)
+      emptyText: this.formatMessage(messages.emptyVitalTable),
     };
 
     return (
@@ -135,12 +135,12 @@ class VitalTable extends Component {
         // loading={loading === true ? getLoadingComponent() : false}
         columns={getColumn({
           formatMessage,
-          className: "pointer"
+          className: "pointer",
         })}
         dataSource={getDataSource()}
         scroll={{ x: "100%" }}
         pagination={{
-          position: "bottom"
+          position: "bottom",
         }}
         locale={vitalLocale}
       />

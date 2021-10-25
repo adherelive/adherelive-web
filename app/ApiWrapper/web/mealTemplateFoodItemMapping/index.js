@@ -19,8 +19,8 @@ class MealTemplateFoodItemMappingWrapper extends BaseMealTemplateFoodItemMapping
       basic_info: {
         id,
         meal_template_id,
-        food_item_detail_id
-      }
+        food_item_detail_id,
+      },
     };
   };
 
@@ -28,7 +28,7 @@ class MealTemplateFoodItemMappingWrapper extends BaseMealTemplateFoodItemMapping
     const { getBasicInfo } = this;
 
     return {
-      ...getBasicInfo()
+      ...getBasicInfo(),
     };
   };
 
@@ -42,25 +42,23 @@ class MealTemplateFoodItemMappingWrapper extends BaseMealTemplateFoodItemMapping
       foodItemDetailApiData = {};
 
     const mealTemplateData = await MealTemplateWrapper({
-      id: meal_template_id
+      id: meal_template_id,
     });
-    mealTemplateApiData[
-      mealTemplateData.getId()
-    ] = mealTemplateData.getBasicInfo();
+    mealTemplateApiData[mealTemplateData.getId()] =
+      mealTemplateData.getBasicInfo();
 
     const foodItemDetails = await foodItemDetailsWrapper({
-      id: food_detail_item_id
+      id: food_detail_item_id,
     });
-    foodItemDetailApiData[
-      foodItemDetails.getId()
-    ] = foodItemDetails.getBasicInfo();
+    foodItemDetailApiData[foodItemDetails.getId()] =
+      foodItemDetails.getBasicInfo();
 
     return {
       meal_template_food_item_mapping: {
-        [`${this.getId()}`]: { ...getBasicInfo() }
+        [`${this.getId()}`]: { ...getBasicInfo() },
       },
       meal_templates: { ...mealTemplateApiData },
-      food_item_details: { ...foodItemDetailApiData }
+      food_item_details: { ...foodItemDetailApiData },
     };
   };
 }
@@ -69,7 +67,8 @@ export default async ({ data = null, id = null }) => {
   if (data !== null) {
     return new MealTemplateFoodItemMappingWrapper(data);
   }
-  const mealTemplateFoodItemMappingService = new MealTemplateFoodItemMappingService();
+  const mealTemplateFoodItemMappingService =
+    new MealTemplateFoodItemMappingService();
   const mapping = await mealTemplateFoodItemMappingService.getByData({ id });
   return new MealTemplateFoodItemMappingWrapper(mapping);
 };

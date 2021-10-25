@@ -20,32 +20,32 @@ class PatientTable extends Component {
   //   };
   // };
 
-  onSelectChange = selectedRowKeys => {
+  onSelectChange = (selectedRowKeys) => {
     this.setState({ selectedRows: selectedRowKeys });
   };
 
   getLoadingComponent = () => {
     const antIcon = <Icon type="loading" style={{ fontSize: 24 }} spin />;
     return {
-      indicator: antIcon
+      indicator: antIcon,
     };
   };
 
   getDataSource = () => {
     const { appointments, users, doctors, patients } = this.props;
 
-    return Object.keys(appointments).map(id => {
+    return Object.keys(appointments).map((id) => {
       return generateRow({
         id,
         appointments,
         users,
         doctors,
-        patients
+        patients,
       });
     });
   };
 
-  formatMessage = data => this.intl.formatMessage(data);
+  formatMessage = (data) => this.intl.formatMessage(data);
 
   render() {
     const { onRow, onSelectChange, getLoadingComponent, getDataSource } = this;
@@ -57,7 +57,7 @@ class PatientTable extends Component {
     const { loading, intl: { formatMessage } = {} } = this.props;
 
     const locale = {
-      emptyText: this.formatMessage(messages.emptyAppointmentTable)
+      emptyText: this.formatMessage(messages.emptyAppointmentTable),
     };
 
     return (
@@ -69,7 +69,7 @@ class PatientTable extends Component {
         locale={locale}
         columns={getColumn({
           formatMessage,
-          className: "pointer"
+          className: "pointer",
         })}
         dataSource={getDataSource()}
         scroll={{ x: 1600 }}

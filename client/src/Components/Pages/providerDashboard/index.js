@@ -6,7 +6,7 @@ import {
   MISSED_APPOINTMENTS,
   MISSED_ACTIONS,
   MISSED_DIET,
-  MISSED_WORKOUT
+  MISSED_WORKOUT,
 } from "../../../constant";
 
 import MissedAppointmentsDrawer from "../../../Containers/Drawer/missedAppointment";
@@ -39,17 +39,17 @@ class ProviderDoctorPage extends Component {
     this.state = {
       visibleModal: false,
       graphsToShow: [],
-      graphLoading: false
+      graphLoading: false,
     };
   }
 
   componentDidMount() {
     const { getGraphs, getAllMissedScheduleEvents } = this.props;
     getAllMissedScheduleEvents();
-    getGraphs().then(response => {
+    getGraphs().then((response) => {
       const {
         status,
-        payload: { data: { user_preferences: { charts = [] } = {} } = {} } = {}
+        payload: { data: { user_preferences: { charts = [] } = {} } = {} } = {},
       } = response;
       if (status) {
         this.setState({ graphsToShow: [...charts], graphLoading: false });
@@ -60,7 +60,7 @@ class ProviderDoctorPage extends Component {
   addDoctor = () => {
     this.props.history.push("/register-profile");
   };
-  formatMessage = data => this.props.intl.formatMessage(data);
+  formatMessage = (data) => this.props.intl.formatMessage(data);
 
   showEditGraphModal = () => {
     this.setState({ visibleModal: true });
@@ -70,11 +70,11 @@ class ProviderDoctorPage extends Component {
     this.setState({ visibleModal: false });
   };
 
-  editDisplayGraphs = data => {
+  editDisplayGraphs = (data) => {
     let dataToUpdate = {};
     dataToUpdate.chart_ids = data;
     let { updateGraphs } = this.props;
-    updateGraphs(dataToUpdate).then(response => {
+    updateGraphs(dataToUpdate).then((response) => {
       const { status } = response;
       if (status) {
         this.setState({ graphsToShow: data, visibleModal: false });
@@ -104,7 +104,7 @@ class ProviderDoctorPage extends Component {
     );
   };
 
-  chartClicked = name => {
+  chartClicked = (name) => {
     if (name === CHART_MISSED_APPOINTMENT) {
       const { openMissedAppointmentDrawer } = this.props;
       openMissedAppointmentDrawer();
@@ -131,28 +131,28 @@ class ProviderDoctorPage extends Component {
       appointment_ids = {},
       vital_ids = {},
       diet_ids = {},
-      workout_ids = {}
+      workout_ids = {},
     } = dashboard;
 
     const {
       critical: medication_critical = [],
-      non_critical: medication_non_critical = []
+      non_critical: medication_non_critical = [],
     } = medication_ids;
     const {
       critical: vital_critical = [],
-      non_critical: vital_non_critical = []
+      non_critical: vital_non_critical = [],
     } = vital_ids;
     const {
       critical: appointment_critical = [],
-      non_critical: appointment_non_critical = []
+      non_critical: appointment_non_critical = [],
     } = appointment_ids;
     const {
       critical: diet_critical = [],
-      non_critical: diet_non_critical = []
+      non_critical: diet_non_critical = [],
     } = diet_ids;
     const {
       critical: workout_critical = [],
-      non_critical: workout_non_critical = []
+      non_critical: workout_non_critical = [],
     } = workout_ids;
 
     const medication_total =
@@ -174,7 +174,7 @@ class ProviderDoctorPage extends Component {
       );
     }
 
-    const chartBlocks = graphsToShow.map(id => {
+    const chartBlocks = graphsToShow.map((id) => {
       const { name, type = "" } = graphs[id] || {};
       let total = 0;
       let critical = 0;
@@ -226,7 +226,7 @@ class ProviderDoctorPage extends Component {
       authenticated_user = "",
       users = {},
       providers = {},
-      authPermissions = []
+      authPermissions = [],
     } = this.props;
     const { visibleModal = false, graphsToShow = [] } = this.state;
     const { basic_info: { user_name = "" } = {} } =
@@ -234,7 +234,7 @@ class ProviderDoctorPage extends Component {
     let providerID = null;
     let providerName = "";
     const { renderChartTabs } = this;
-    Object.keys(providers).forEach(id => {
+    Object.keys(providers).forEach((id) => {
       const { basic_info: { user_id } = {} } = providers[id] || {};
 
       if (user_id === authenticated_user) {

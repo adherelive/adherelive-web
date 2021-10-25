@@ -14,7 +14,7 @@ const converter = new Showdown.Converter({
   tables: true,
   simplifiedAutoLink: true,
   strikethrough: true,
-  tasklists: true
+  tasklists: true,
 });
 
 const { Group: RadioGroup, Button: RadioButton } = Radio;
@@ -29,7 +29,7 @@ class TosPPEditorPage extends Component {
     this.state = {
       value: "",
       selectedTab: "write",
-      feature_type: TERMS_OF_SERVICE
+      feature_type: TERMS_OF_SERVICE,
     };
   }
 
@@ -45,7 +45,7 @@ class TosPPEditorPage extends Component {
     }
   }
 
-  formatMessage = message => this.props.intl.formatMessage(message);
+  formatMessage = (message) => this.props.intl.formatMessage(message);
 
   getData = async () => {
     const { getTermsAndPolicy } = this.props;
@@ -69,22 +69,22 @@ class TosPPEditorPage extends Component {
     }
   };
 
-  setValue = value => {
+  setValue = (value) => {
     this.setState({ value });
   };
 
-  setSelectedTab = selectedTab => {
+  setSelectedTab = (selectedTab) => {
     this.setState({ selectedTab });
   };
 
-  handleSubmit = async e => {
+  handleSubmit = async (e) => {
     e.preventDefault();
     const { updateTermsAndPolicy } = this.props;
     const { value, feature_type } = this.state;
     try {
       const response = await updateTermsAndPolicy({
         type: feature_type,
-        content: value
+        content: value,
       });
       const { status, payload: { message: respMessage = "" } = {} } =
         response || {};
@@ -99,24 +99,20 @@ class TosPPEditorPage extends Component {
     }
   };
 
-  handleOptionChange = e => {
+  handleOptionChange = (e) => {
     e.preventDefault();
     this.setState({ feature_type: e.target.value });
   };
 
-  handleBack = e => {
+  handleBack = (e) => {
     e.preventDefault();
     const { history } = this.props;
     history.goBack();
   };
 
   getHeader = () => {
-    const {
-      handleSubmit,
-      formatMessage,
-      handleOptionChange,
-      handleBack
-    } = this;
+    const { handleSubmit, formatMessage, handleOptionChange, handleBack } =
+      this;
     return (
       <Fragment>
         <div className="wp100 mb20 fs28 fw700 flex align-start justify-space-between">
@@ -162,7 +158,7 @@ class TosPPEditorPage extends Component {
           onChange={setValue}
           selectedTab={selectedTab}
           onTabChange={setSelectedTab}
-          generateMarkdownPreview={markdown =>
+          generateMarkdownPreview={(markdown) =>
             Promise.resolve(converter.makeHtml(markdown))
           }
         />

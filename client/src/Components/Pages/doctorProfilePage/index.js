@@ -26,13 +26,13 @@ import {
   CheckOutlined,
   CloseOutlined,
   PlusCircleOutlined,
-  EyeTwoTone
+  EyeTwoTone,
 } from "@ant-design/icons";
 import moment from "moment";
 import messages from "./messages";
 import {
   getUploadURL,
-  getUploadQualificationDocumentUrl
+  getUploadQualificationDocumentUrl,
 } from "../../../Helper/urls/doctor";
 import {
   PATH,
@@ -47,7 +47,7 @@ import {
   FULL_DAYS,
   FULL_DAYS_NUMBER,
   HTTP_CODE_SERVER_ERROR,
-  ACCOUNT_STATUS
+  ACCOUNT_STATUS,
 } from "../../../constant";
 import { PageLoading } from "../../../Helper/loading/pageLoading";
 import { withRouter } from "react-router-dom";
@@ -63,7 +63,7 @@ class DoctorProfilePage extends Component {
       auth: {
         authenticated_user = null,
         authPermissions = [],
-        authenticated_category = ""
+        authenticated_category = "",
       },
       users,
       doctors,
@@ -78,7 +78,7 @@ class DoctorProfilePage extends Component {
       colleges,
       councils,
       specialities,
-      id: doctorId
+      id: doctorId,
     } = props;
     let doctor_user_id = doctorId;
     for (let doctor of Object.values(doctors)) {
@@ -96,17 +96,17 @@ class DoctorProfilePage extends Component {
         profile_pic = "",
         gender = "",
         city = "",
-        speciality_id = ""
+        speciality_id = "",
       } = {},
       doctor_qualification_ids = [],
       doctor_registration_ids = [],
       doctor_clinic_ids = [],
-      city: city_temp = ""
+      city: city_temp = "",
     } = doctors[doctor_user_id] || {};
 
     const {
       basic_info: { email = "", mobile_number = "", prefix = "" } = {},
-      category = ""
+      category = "",
     } = users[authenticated_user] || {};
 
     let final_city = "";
@@ -120,7 +120,7 @@ class DoctorProfilePage extends Component {
     let edit_qualification_college = {};
     let edit_qualification_degree = {};
 
-    doctor_qualification_ids.forEach(element => {
+    doctor_qualification_ids.forEach((element) => {
       edit_qualification_year[element] = false;
       edit_qualification_college[element] = false;
       edit_qualification_degree[element] = false;
@@ -131,7 +131,7 @@ class DoctorProfilePage extends Component {
     let edit_registration_year = {};
     let edit_registration_expiry = {};
 
-    doctor_registration_ids.forEach(element => {
+    doctor_registration_ids.forEach((element) => {
       edit_registration_council[element] = false;
       edit_registration_number[element] = false;
       edit_registration_year[element] = false;
@@ -143,7 +143,7 @@ class DoctorProfilePage extends Component {
     let edit_clinic_timings = {};
     let modal_timing_visible = {};
     let doctor_clinic_location = {};
-    doctor_clinic_ids.forEach(element => {
+    doctor_clinic_ids.forEach((element) => {
       edit_clinic_name[element] = false;
       edit_clinic_location[element] = false;
       edit_clinic_timings[element] = false;
@@ -209,7 +209,7 @@ class DoctorProfilePage extends Component {
       user_id: null,
       viewModalVisible: false,
       viewModalSrc: "",
-      searchSpecialityText: ""
+      searchSpecialityText: "",
     };
 
     // this.handleSpecialitySearch = throttle(
@@ -231,7 +231,7 @@ class DoctorProfilePage extends Component {
     const {
       doctor_qualification_ids,
       doctor_registration_ids,
-      doctor_clinic_ids
+      doctor_clinic_ids,
     } = doctors[doctor_user_id] || {};
     getInitialData();
 
@@ -245,14 +245,14 @@ class DoctorProfilePage extends Component {
       this.setState({ loading: true });
       const { getDoctorDetails } = this.props;
       const {
-        auth: { authenticated_category = "" }
+        auth: { authenticated_category = "" },
       } = this.props;
 
       const response = await getDoctorDetails();
 
       const {
         status,
-        payload: { data = {}, message: { message: responseMessage } = {} } = {}
+        payload: { data = {}, message: { message: responseMessage } = {} } = {},
       } = response || {};
 
       if (status === true) {
@@ -272,7 +272,7 @@ class DoctorProfilePage extends Component {
             registration_councils = {},
             specialities = {},
             upload_documents = {},
-            users = {}
+            users = {},
           } = data || {};
 
           if (authenticated_category === USER_CATEGORY.PROVIDER) {
@@ -285,7 +285,7 @@ class DoctorProfilePage extends Component {
                 const { deleted_at = "" } = users[user_id] || {};
                 if (deleted_at) {
                   this.setState({
-                    active: false
+                    active: false,
                   });
                 }
               }
@@ -301,12 +301,12 @@ class DoctorProfilePage extends Component {
               gender = "",
               city = "",
               speciality_id = "",
-              user_id = ""
+              user_id = "",
             } = {},
             doctor_qualification_ids = [],
             doctor_registration_ids = [],
             doctor_clinic_ids = [],
-            city: city_temp = ""
+            city: city_temp = "",
           } = doctors[doctor_user_id] || {};
 
           let final_city = "";
@@ -338,29 +338,29 @@ class DoctorProfilePage extends Component {
             doctor_qualification_ids,
             doctor_registration_ids,
             doctor_clinic_ids,
-            user_id
+            user_id,
           });
         } else {
           this.setState({
-            loading: false
+            loading: false,
           });
         }
       } else {
         this.setState({
-          loading: false
+          loading: false,
         });
         message.warn(responseMessage);
       }
     } catch (error) {
       this.setState({
-        loading: false
+        loading: false,
       });
       console.log("72833257423646238748236482634823", { error });
       message.warn("Something went wrong, please try again later");
     }
   };
 
-  formatMessage = data => this.props.intl.formatMessage(data);
+  formatMessage = (data) => this.props.intl.formatMessage(data);
 
   warnNote = () => {
     return (
@@ -395,11 +395,11 @@ class DoctorProfilePage extends Component {
           console.log("doctorDeactivate UI error --> ", error);
         }
       },
-      onCancel() {}
+      onCancel() {},
     });
   };
 
-  handleActivate = async e => {
+  handleActivate = async (e) => {
     e.preventDefault();
     const { activateDoctor, id } = this.props;
     const { user_id = null } = this.state;
@@ -419,14 +419,14 @@ class DoctorProfilePage extends Component {
     }
   };
 
-  updateProfileData = async updateData => {
+  updateProfileData = async (updateData) => {
     try {
       this.setState({ updateLoading: true });
       const {
         auth: { authenticated_category = "", authenticated_user = null },
         doctors,
         users,
-        updateDoctorBasicInfo
+        updateDoctorBasicInfo,
       } = this.props;
       const { id } = authenticated_user;
       let response = {};
@@ -445,24 +445,24 @@ class DoctorProfilePage extends Component {
       const {
         status,
         payload: { message: respMessage },
-        statusCode
+        statusCode,
       } = response;
       if (status) {
         this.setState({
-          updateLoading: false
+          updateLoading: false,
         });
         message.success(respMessage);
         this.getInitialData();
         return true;
       } else {
         this.setState({
-          updateLoading: false
+          updateLoading: false,
         });
         if (statusCode == HTTP_CODE_SERVER_ERROR) {
           const {
             payload: {
-              message: { message: serverMessage }
-            }
+              message: { message: serverMessage },
+            },
           } = response;
           message.error(serverMessage);
         } else {
@@ -471,7 +471,7 @@ class DoctorProfilePage extends Component {
       }
     } catch (error) {
       this.setState({
-        updateLoading: false
+        updateLoading: false,
       });
       console.log(error);
       message.warn("Something went wrong, please try again later");
@@ -482,14 +482,14 @@ class DoctorProfilePage extends Component {
   editName = () => {
     this.setState({ edit_name: true });
   };
-  onChangeName = e => {
+  onChangeName = (e) => {
     this.setState({ name: e.target.value });
   };
   updateName = () => {
     const { name, doctor_user_id } = this.state;
     const { doctors } = this.props;
     const {
-      basic_info: { first_name = "", middle_name = "", last_name = "" }
+      basic_info: { first_name = "", middle_name = "", last_name = "" },
     } = doctors[doctor_user_id];
     const oldName = `${first_name} ${middle_name ? `${middle_name} ` : ""}${
       last_name ? last_name : ""
@@ -504,7 +504,7 @@ class DoctorProfilePage extends Component {
       message.warn(this.formatMessage(messages.nameError));
       return;
     }
-    this.updateProfileData({ name: name }).then(res => {
+    this.updateProfileData({ name: name }).then((res) => {
       if (res) {
         this.setState({ edit_name: false });
       } else {
@@ -516,7 +516,7 @@ class DoctorProfilePage extends Component {
     const { doctor_user_id = "" } = this.state;
     const { doctors } = this.props;
     const {
-      basic_info: { first_name = "", middle_name = "", last_name = "" }
+      basic_info: { first_name = "", middle_name = "", last_name = "" },
     } = doctors[doctor_user_id];
     const oldName = `${first_name} ${middle_name ? `${middle_name} ` : ""}${
       last_name ? last_name : ""
@@ -528,14 +528,14 @@ class DoctorProfilePage extends Component {
   editCity = () => {
     this.setState({ edit_city: true });
   };
-  onChangeCity = city => {
+  onChangeCity = (city) => {
     this.setState({ city: city });
   };
   updateCity = () => {
     const { city = "", doctor_user_id = "" } = this.state;
     const { doctors } = this.props;
     const {
-      basic_info: { city: oldCity }
+      basic_info: { city: oldCity },
     } = doctors[doctor_user_id];
     if (city == oldCity) {
       this.setState({ edit_city: false });
@@ -547,7 +547,7 @@ class DoctorProfilePage extends Component {
       message.warn(this.formatMessage(messages.cityError));
       return;
     }
-    this.updateProfileData({ city: city }).then(res => {
+    this.updateProfileData({ city: city }).then((res) => {
       if (res) {
         this.setState({ edit_city: false });
       } else {
@@ -559,7 +559,7 @@ class DoctorProfilePage extends Component {
     const { doctor_user_id = "" } = this.state;
     const { doctors } = this.props;
     const {
-      basic_info: { city: oldCity }
+      basic_info: { city: oldCity },
     } = doctors[doctor_user_id];
     this.setState({ city: oldCity });
     this.setState({ edit_city: false });
@@ -568,7 +568,7 @@ class DoctorProfilePage extends Component {
   editGender = () => {
     this.setState({ edit_gender: true });
   };
-  updateGender = value => {
+  updateGender = (value) => {
     this.setState({ gender: value, edit_gender: false });
     this.updateProfileData({ gender: value });
   };
@@ -582,22 +582,22 @@ class DoctorProfilePage extends Component {
   specialityBlur = () => {
     this.setState({ edit_specialities: false });
   };
-  updateSpeciality = value => {
+  updateSpeciality = (value) => {
     this.setState({ speciality_id: value, edit_specialities: false });
     this.updateProfileData({ speciality_id: value });
   };
 
-  editQualificationDegree = qualification_id => {
+  editQualificationDegree = (qualification_id) => {
     let newQualificationDegree = this.state.edit_qualification_degree;
     newQualificationDegree[qualification_id] = true;
     this.setState({ edit_qualification_degree: newQualificationDegree });
   };
-  onBlurQualificationDegree = qualification_id => {
+  onBlurQualificationDegree = (qualification_id) => {
     let newQualificationDegree = this.state.edit_qualification_degree;
     newQualificationDegree[qualification_id] = false;
     this.setState({ edit_qualification_degree: newQualificationDegree });
   };
-  updateDegree = qualification_id => value => {
+  updateDegree = (qualification_id) => (value) => {
     const { doctor_user_id, edit_qualification_degree } = this.state;
     let newQualificationDegree = edit_qualification_degree;
     let updateData = {
@@ -605,9 +605,9 @@ class DoctorProfilePage extends Component {
         {
           degree_id: value,
           doctor_id: doctor_user_id,
-          id: qualification_id
-        }
-      ]
+          id: qualification_id,
+        },
+      ],
     };
     this.updateProfileData(updateData);
     newQualificationDegree[qualification_id] = false;
@@ -639,7 +639,7 @@ class DoctorProfilePage extends Component {
   getDegreesOption = () => {
     const { degrees = {} } = this.props;
 
-    return Object.keys(degrees).map(id => {
+    return Object.keys(degrees).map((id) => {
       const { basic_info: { name, type } = {} } = degrees[id] || {};
       return (
         <Option key={id} value={id}>
@@ -649,17 +649,17 @@ class DoctorProfilePage extends Component {
     });
   };
 
-  editQualificationCollege = qualification_id => {
+  editQualificationCollege = (qualification_id) => {
     let newQualificationCollege = this.state.edit_qualification_college;
     newQualificationCollege[qualification_id] = true;
     this.setState({ edit_qualification_college: newQualificationCollege });
   };
-  onBlurQualificationCollege = qualification_id => {
+  onBlurQualificationCollege = (qualification_id) => {
     let newQualificationCollege = this.state.edit_qualification_college;
     newQualificationCollege[qualification_id] = false;
     this.setState({ edit_qualification_college: newQualificationCollege });
   };
-  updateCollege = qualification_id => value => {
+  updateCollege = (qualification_id) => (value) => {
     const { doctor_user_id = "", edit_qualification_college = "" } = this.state;
     let newQualificationCollege = edit_qualification_college;
     let updateData = {
@@ -667,9 +667,9 @@ class DoctorProfilePage extends Component {
         {
           college_id: value,
           doctor_id: doctor_user_id,
-          id: qualification_id
-        }
-      ]
+          id: qualification_id,
+        },
+      ],
     };
     this.updateProfileData(updateData);
     newQualificationCollege[qualification_id] = false;
@@ -701,7 +701,7 @@ class DoctorProfilePage extends Component {
   getCollegesOption = () => {
     const { colleges = {} } = this.props;
 
-    return Object.keys(colleges).map(id => {
+    return Object.keys(colleges).map((id) => {
       const { basic_info: { name } = {} } = colleges[id] || {};
       return (
         <Option key={id} value={id}>
@@ -711,12 +711,12 @@ class DoctorProfilePage extends Component {
     });
   };
 
-  editQualificationYear = qualification_id => {
+  editQualificationYear = (qualification_id) => {
     let newQualificationYear = this.state.edit_qualification_year;
     newQualificationYear[qualification_id] = true;
     this.setState({ edit_qualification_year: newQualificationYear });
   };
-  onBlurQualificationYear = qualification_id => {
+  onBlurQualificationYear = (qualification_id) => {
     let newQualificationYear = this.state.edit_qualification_year;
     newQualificationYear[qualification_id] = false;
     this.setState({ edit_qualification_year: newQualificationYear });
@@ -734,7 +734,7 @@ class DoctorProfilePage extends Component {
     }
     return years;
   };
-  updateQualificationYear = qualification_id => value => {
+  updateQualificationYear = (qualification_id) => (value) => {
     const { doctor_user_id = "", edit_qualification_year = "" } = this.state;
     const { doctor_qualifications } = this.props;
     let newQualificationYear = edit_qualification_year;
@@ -743,9 +743,9 @@ class DoctorProfilePage extends Component {
         {
           year: value,
           doctor_id: doctor_user_id,
-          id: qualification_id
-        }
-      ]
+          id: qualification_id,
+        },
+      ],
     };
     const res = this.updateProfileData(updateData);
     if (res) {
@@ -754,37 +754,37 @@ class DoctorProfilePage extends Component {
     }
   };
 
-  editRegistrationNumber = registration_id => {
+  editRegistrationNumber = (registration_id) => {
     const { edit_registration_number = "" } = this.state;
     let newRegistrationNumber = edit_registration_number;
     newRegistrationNumber[registration_id] = true;
     this.setState({ edit_registration_number: newRegistrationNumber });
   };
-  onBlurRegistrationNumber = registration_id => {
+  onBlurRegistrationNumber = (registration_id) => {
     const { edit_registration_number = "" } = this.state;
     let newRegistrationNumber = edit_registration_number;
     newRegistrationNumber[registration_id] = false;
     this.setState({ edit_registration_number: newRegistrationNumber });
   };
-  changeRegistrationNumber = event => {
+  changeRegistrationNumber = (event) => {
     let registration_id = event.target.dataset.id;
     const { registration_numbers = "" } = this.state;
     let newRegistrationNumber = registration_numbers;
     newRegistrationNumber[registration_id] = event.target.value;
     this.setState({ registration_numbers: newRegistrationNumber });
   };
-  updateRegistrationNumber = e => {
+  updateRegistrationNumber = (e) => {
     const {
       doctor_user_id = "",
       edit_registration_number = "",
-      registration_numbers = ""
+      registration_numbers = "",
     } = this.state;
     const { doctor_registrations } = this.props;
     let newEditRegistrationNumber = edit_registration_number;
     let newRegistrationNumber = registration_numbers;
     let registration_id = e.target.dataset.id;
     const {
-      basic_info: { number = "" }
+      basic_info: { number = "" },
     } = doctor_registrations[registration_id];
     if (e.target.value == number) {
       newEditRegistrationNumber[registration_id] = false;
@@ -796,7 +796,7 @@ class DoctorProfilePage extends Component {
       newRegistrationNumber[registration_id] = number;
       this.setState({
         edit_registration_number: newEditRegistrationNumber,
-        registration_numbers: newRegistrationNumber
+        registration_numbers: newRegistrationNumber,
       });
       message.warn(this.formatMessage(messages.registrationNumberError));
       return;
@@ -806,26 +806,26 @@ class DoctorProfilePage extends Component {
         {
           number: e.target.value,
           doctor_id: doctor_user_id,
-          id: registration_id
-        }
-      ]
+          id: registration_id,
+        },
+      ],
     };
-    this.updateProfileData(updateData).then(res => {
+    this.updateProfileData(updateData).then((res) => {
       if (res) {
         newEditRegistrationNumber[registration_id] = false;
         this.setState({ edit_registration_number: newEditRegistrationNumber });
       }
     });
   };
-  undoRegistrationNumberChanges = registration_id => {
+  undoRegistrationNumberChanges = (registration_id) => {
     const {
       doctor_user_id = "",
       registration_numbers = "",
-      edit_registration_number = ""
+      edit_registration_number = "",
     } = this.state;
     const { doctor_registrations } = this.props;
     const {
-      basic_info: { number }
+      basic_info: { number },
     } = doctor_registrations[registration_id];
     let newRegistrationNumber = registration_numbers;
     newRegistrationNumber[registration_id] = number;
@@ -833,21 +833,21 @@ class DoctorProfilePage extends Component {
     newEditRegistrationNumber[registration_id] = false;
     this.setState({
       edit_registration_number: newEditRegistrationNumber,
-      registration_numbers: newRegistrationNumber
+      registration_numbers: newRegistrationNumber,
     });
   };
 
-  editRegistrationCouncil = registration_id => {
+  editRegistrationCouncil = (registration_id) => {
     let newRegistrationCouncil = this.state.edit_registration_council;
     newRegistrationCouncil[registration_id] = true;
     this.setState({ edit_registration_council: newRegistrationCouncil });
   };
-  onBlurRegistrationCouncil = registration_id => {
+  onBlurRegistrationCouncil = (registration_id) => {
     let newRegistrationCouncil = this.state.edit_registration_council;
     newRegistrationCouncil[registration_id] = false;
     this.setState({ edit_registration_council: newRegistrationCouncil });
   };
-  updateRegistrationCouncil = registration_id => value => {
+  updateRegistrationCouncil = (registration_id) => (value) => {
     const { doctor_user_id = "", edit_registration_council = "" } = this.state;
     let newRegistrationCouncil = edit_registration_council;
     let updateData = {
@@ -855,9 +855,9 @@ class DoctorProfilePage extends Component {
         {
           registration_council_id: value,
           doctor_id: doctor_user_id,
-          id: registration_id
-        }
-      ]
+          id: registration_id,
+        },
+      ],
     };
     this.updateProfileData(updateData);
     newRegistrationCouncil[registration_id] = false;
@@ -866,7 +866,7 @@ class DoctorProfilePage extends Component {
   getCouncilOption = () => {
     const { councils = {} } = this.props;
 
-    return Object.keys(councils).map(id => {
+    return Object.keys(councils).map((id) => {
       const { basic_info: { name } = {} } = councils[id] || {};
       return (
         <Option key={id} value={id}>
@@ -876,12 +876,12 @@ class DoctorProfilePage extends Component {
     });
   };
 
-  editRegistrationYear = registration_id => {
+  editRegistrationYear = (registration_id) => {
     let newRegistrationYear = this.state.edit_registration_year;
     newRegistrationYear[registration_id] = true;
     this.setState({ edit_registration_year: newRegistrationYear });
   };
-  updateRegistrationYear = registration_id => value => {
+  updateRegistrationYear = (registration_id) => (value) => {
     const { doctor_user_id = "", edit_registration_year = "" } = this.state;
     let newRegistrationYear = edit_registration_year;
     let updateData = {
@@ -889,31 +889,31 @@ class DoctorProfilePage extends Component {
         {
           year: value,
           doctor_id: doctor_user_id,
-          id: registration_id
-        }
-      ]
+          id: registration_id,
+        },
+      ],
     };
     this.updateProfileData(updateData);
     newRegistrationYear[registration_id] = false;
     this.setState({ edit_registration_year: newRegistrationYear });
   };
-  onBlurRegistrationYear = registration_id => {
+  onBlurRegistrationYear = (registration_id) => {
     let newRegistrationYear = this.state.edit_registration_year;
     newRegistrationYear[registration_id] = false;
     this.setState({ edit_registration_year: newRegistrationYear });
   };
 
-  editRegistrationExpiryDate = registration_id => {
+  editRegistrationExpiryDate = (registration_id) => {
     let newRegistrationExpiryDate = this.state.edit_registration_expiry;
     newRegistrationExpiryDate[registration_id] = true;
     this.setState({ edit_registration_expiry: newRegistrationExpiryDate });
   };
-  onBlurRegistrationExpiryDate = registration_id => {
+  onBlurRegistrationExpiryDate = (registration_id) => {
     let newRegistrationExpiryDate = this.state.edit_registration_expiry;
     newRegistrationExpiryDate[registration_id] = false;
     this.setState({ edit_registration_expiry: newRegistrationExpiryDate });
   };
-  updateRegistrationExpiryDate = registration_id => (date, dateString) => {
+  updateRegistrationExpiryDate = (registration_id) => (date, dateString) => {
     if (date) {
       const { doctor_user_id = "", edit_registration_expiry = "" } = this.state;
       let newRegistrationExpiryDate = edit_registration_expiry;
@@ -922,9 +922,9 @@ class DoctorProfilePage extends Component {
           {
             expiryDate: date,
             doctor_id: doctor_user_id,
-            id: registration_id
-          }
-        ]
+            id: registration_id,
+          },
+        ],
       };
       this.updateProfileData(updateData);
       newRegistrationExpiryDate[registration_id] = false;
@@ -932,33 +932,33 @@ class DoctorProfilePage extends Component {
     }
   };
 
-  editClinicName = clinic_id => {
+  editClinicName = (clinic_id) => {
     const { edit_clinic_name = "" } = this.state;
     let newClinicName = edit_clinic_name;
     newClinicName[clinic_id] = true;
     this.setState({ edit_clinic_name: newClinicName });
   };
-  updateClinicName = e => {
+  updateClinicName = (e) => {
     const {
       doctor_user_id = "",
       edit_clinic_name = "",
-      clinic_names = ""
+      clinic_names = "",
     } = this.state;
     const { doctor_clinics = [] } = this.props;
     let newClinicName = clinic_names;
     let newEditClinic = edit_clinic_name;
     let clinic_id = e.target.dataset.id;
     const {
-      basic_info: { name: oldName }
+      basic_info: { name: oldName },
     } = doctor_clinics[clinic_id];
     let updateData = {
       clinic_details: [
         {
           name: e.target.value,
           doctor_id: doctor_user_id,
-          id: clinic_id
-        }
-      ]
+          id: clinic_id,
+        },
+      ],
     };
     if (e.target.value == oldName) {
       newEditClinic[clinic_id] = false;
@@ -970,38 +970,38 @@ class DoctorProfilePage extends Component {
       newClinicName[clinic_id] = oldName;
       this.setState({
         edit_clinic_name: newEditClinic,
-        clinic_names: newClinicName
+        clinic_names: newClinicName,
       });
       message.warn(this.formatMessage(messages.clincNameError));
       return;
     }
-    this.updateProfileData(updateData).then(res => {
+    this.updateProfileData(updateData).then((res) => {
       if (res) {
         newEditClinic[clinic_id] = false;
         this.setState({ edit_clinic_name: newEditClinic });
       }
     });
   };
-  undoClinicNameChanges = clinic_id => {
+  undoClinicNameChanges = (clinic_id) => {
     const {
       doctor_user_id = "",
       edit_clinic_name = "",
-      clinic_names = ""
+      clinic_names = "",
     } = this.state;
     const { doctor_clinics } = this.props;
     let newClinicName = clinic_names;
     let newEditClinic = edit_clinic_name;
     const {
-      basic_info: { name: oldName }
+      basic_info: { name: oldName },
     } = doctor_clinics[clinic_id];
     newEditClinic[clinic_id] = false;
     newClinicName[clinic_id] = oldName;
     this.setState({
       edit_clinic_name: newEditClinic,
-      clinic_names: newClinicName
+      clinic_names: newClinicName,
     });
   };
-  onChangeClinicName = event => {
+  onChangeClinicName = (event) => {
     let clinic_id = event.target.dataset.id;
     const { clinic_names } = this.state;
     let newClinicName = clinic_names;
@@ -1009,18 +1009,15 @@ class DoctorProfilePage extends Component {
     this.setState({ clinic_names: newClinicName });
   };
 
-  editClinicLocation = clinic_id => {
+  editClinicLocation = (clinic_id) => {
     const { edit_clinic_location } = this.state;
     let newClinicLocation = edit_clinic_location;
     newClinicLocation[clinic_id] = true;
     this.setState({ edit_clinic_location: newClinicLocation });
   };
-  updateClinicLocation = e => {
-    const {
-      doctor_user_id,
-      edit_clinic_location,
-      doctor_clinic_location
-    } = this.state;
+  updateClinicLocation = (e) => {
+    const { doctor_user_id, edit_clinic_location, doctor_clinic_location } =
+      this.state;
     const { doctor_clinics } = this.props;
     let newEditClinicLocation = edit_clinic_location;
     let newClinicLocation = doctor_clinic_location;
@@ -1030,9 +1027,9 @@ class DoctorProfilePage extends Component {
         {
           location: e.target.value,
           doctor_id: doctor_user_id,
-          id: clinic_id
-        }
-      ]
+          id: clinic_id,
+        },
+      ],
     };
     const { location: oldLocation } = doctor_clinics[clinic_id];
     if (e.target.value == oldLocation) {
@@ -1045,12 +1042,12 @@ class DoctorProfilePage extends Component {
       newClinicLocation[clinic_id] = oldLocation;
       this.setState({
         edit_clinic_location: newEditClinicLocation,
-        doctor_clinic_location: newClinicLocation
+        doctor_clinic_location: newClinicLocation,
       });
       message.warn(this.formatMessage(messages.clincLocationError));
       return;
     }
-    this.updateProfileData(updateData).then(res => {
+    this.updateProfileData(updateData).then((res) => {
       if (res) {
         newEditClinicLocation[clinic_id] = false;
         this.setState({ edit_clinic_location: newEditClinicLocation });
@@ -1058,12 +1055,9 @@ class DoctorProfilePage extends Component {
       }
     });
   };
-  undoLocationChanges = clinic_id => {
-    const {
-      doctor_user_id,
-      edit_clinic_location,
-      doctor_clinic_location
-    } = this.state;
+  undoLocationChanges = (clinic_id) => {
+    const { doctor_user_id, edit_clinic_location, doctor_clinic_location } =
+      this.state;
     const { doctor_clinics } = this.props;
     let newEditClinicLocation = edit_clinic_location;
     let newClinicLocation = doctor_clinic_location;
@@ -1072,11 +1066,11 @@ class DoctorProfilePage extends Component {
     newClinicLocation[clinic_id] = oldLocation;
     this.setState({
       edit_clinic_location: newEditClinicLocation,
-      doctor_clinic_location: newClinicLocation
+      doctor_clinic_location: newClinicLocation,
     });
   };
 
-  handleBack = e => {
+  handleBack = (e) => {
     e.preventDefault();
     const { history } = this.props;
     history.goBack();
@@ -1122,17 +1116,17 @@ class DoctorProfilePage extends Component {
       );
     }
   };
-  renderRegistrationNumber = registration_id => {
+  renderRegistrationNumber = (registration_id) => {
     const {
       edit_registration_number,
       verified_doctor,
       doctor_user_id,
-      registration_numbers
+      registration_numbers,
     } = this.state;
     const { doctor_registrations, doctors } = this.props;
     let regNumber = registration_numbers[registration_id];
     const {
-      basic_info: { number }
+      basic_info: { number },
     } = doctor_registrations[registration_id];
     if (regNumber == undefined) {
       regNumber = number;
@@ -1178,12 +1172,12 @@ class DoctorProfilePage extends Component {
     }
   };
 
-  renderClinicName = clinic_id => {
+  renderClinicName = (clinic_id) => {
     const { edit_clinic_name, verified_doctor, clinic_names } = this.state;
     const { doctor_clinics, doctors } = this.props;
     let clinicName = clinic_names[clinic_id];
     const {
-      basic_info: { name }
+      basic_info: { name },
     } = doctor_clinics[clinic_id];
     if (clinicName == undefined) {
       clinicName = name;
@@ -1224,18 +1218,15 @@ class DoctorProfilePage extends Component {
       );
     }
   };
-  handleCancelTiming = clinic_id => {
+  handleCancelTiming = (clinic_id) => {
     const { edit_clinic_timings } = this.state;
     let newModalVisibleTimings = edit_clinic_timings;
     newModalVisibleTimings[clinic_id] = false;
     this.setState({ edit_clinic_timings: newModalVisibleTimings });
   };
-  handleOkTiming = clinic_id => (timing, selectedDays) => {
-    const {
-      edit_clinic_timings,
-      modal_timing_visible,
-      doctor_user_id
-    } = this.state;
+  handleOkTiming = (clinic_id) => (timing, selectedDays) => {
+    const { edit_clinic_timings, modal_timing_visible, doctor_user_id } =
+      this.state;
     let time_slots = {
       [FULL_DAYS_NUMBER.MON]: timing[FULL_DAYS.MON],
       [FULL_DAYS_NUMBER.TUE]: timing[FULL_DAYS.TUE],
@@ -1243,16 +1234,16 @@ class DoctorProfilePage extends Component {
       [FULL_DAYS_NUMBER.THU]: timing[FULL_DAYS.THU],
       [FULL_DAYS_NUMBER.FRI]: timing[FULL_DAYS.FRI],
       [FULL_DAYS_NUMBER.SAT]: timing[FULL_DAYS.SAT],
-      [FULL_DAYS_NUMBER.SUN]: timing[FULL_DAYS.SUN]
+      [FULL_DAYS_NUMBER.SUN]: timing[FULL_DAYS.SUN],
     };
     const updateData = {
       clinic_details: [
         {
           time_slots: time_slots,
           doctor_id: doctor_user_id,
-          id: clinic_id
-        }
-      ]
+          id: clinic_id,
+        },
+      ],
     };
     this.updateProfileData(updateData);
     let editClinicTimings = edit_clinic_timings;
@@ -1261,10 +1252,10 @@ class DoctorProfilePage extends Component {
     editClinicTimings[clinic_id] = false;
     this.setState({
       modal_timing_visible: newModalTimings,
-      edit_clinic_timings: editClinicTimings
+      edit_clinic_timings: editClinicTimings,
     });
   };
-  setModalTimingVisible = clinic_id => () => {
+  setModalTimingVisible = (clinic_id) => () => {
     const { modal_timing_visible } = this.state;
     let newModalVisibleTimings = modal_timing_visible;
     newModalVisibleTimings[clinic_id] = true;
@@ -1274,7 +1265,7 @@ class DoctorProfilePage extends Component {
     const { edit_clinic_timings, verified_doctor } = this.state;
     const { doctor_clinics, doctors } = this.props;
     const {
-      basic_info: { name }
+      basic_info: { name },
     } = doctor_clinics[clinic_id];
 
     return Object.keys(time_slots).map((day, index) => {
@@ -1314,8 +1305,8 @@ class DoctorProfilePage extends Component {
     });
   };
 
-  renderTimings = timings => {
-    return Object.keys(timings).map(day => {
+  renderTimings = (timings) => {
+    return Object.keys(timings).map((day) => {
       return (
         <div className="wp100 flex flex-start">
           <div className="fs14 medium wp30">{`${this.getFullDayText(
@@ -1350,12 +1341,9 @@ class DoctorProfilePage extends Component {
     });
   };
 
-  renderClinicLocation = clinic_id => {
-    const {
-      edit_clinic_location,
-      verified_doctor,
-      doctor_clinic_location
-    } = this.state;
+  renderClinicLocation = (clinic_id) => {
+    const { edit_clinic_location, verified_doctor, doctor_clinic_location } =
+      this.state;
     const { doctor_clinics } = this.props;
     const { location } = doctor_clinics[clinic_id];
     let render_location = doctor_clinic_location[clinic_id];
@@ -1373,13 +1361,13 @@ class DoctorProfilePage extends Component {
               getInputProps,
               suggestions,
               getSuggestionItemProps,
-              loading
+              loading,
             }) => (
               <div>
                 <Input
                   {...getInputProps({
                     // placeholder: this.formatMessage(messages.searchCity),
-                    className: "form-inputs-google"
+                    className: "form-inputs-google",
                   })}
                   onPressEnter={this.updateClinicLocation}
                   data-id={clinic_id}
@@ -1392,16 +1380,16 @@ class DoctorProfilePage extends Component {
                   style={{
                     position: "absolute",
                     backgroundColor: "white",
-                    marginTop: "4px"
+                    marginTop: "4px",
                   }}
                 >
                   {loading && <div>Loading...</div>}
-                  {suggestions.map(suggestion => {
+                  {suggestions.map((suggestion) => {
                     const className = "google-places-autocomplete__suggestion";
                     return (
                       <div
                         {...getSuggestionItemProps(suggestion, {
-                          className
+                          className,
                         })}
                       >
                         <span>{suggestion.description}</span>
@@ -1440,7 +1428,7 @@ class DoctorProfilePage extends Component {
     }
   };
 
-  renderQualificationYear = qualification_id => {
+  renderQualificationYear = (qualification_id) => {
     const { edit_qualification_year, verified_doctor } = this.state;
     const { doctor_qualifications = {} } = this.props;
 
@@ -1480,7 +1468,7 @@ class DoctorProfilePage extends Component {
     }
   };
 
-  renderRegistrationYear = registration_id => {
+  renderRegistrationYear = (registration_id) => {
     const { edit_registration_year, verified_doctor } = this.state;
     const { doctor_registrations = {} } = this.props;
 
@@ -1520,7 +1508,7 @@ class DoctorProfilePage extends Component {
     }
   };
 
-  renderRegistrationExpiryDate = registration_id => {
+  renderRegistrationExpiryDate = (registration_id) => {
     const { edit_registration_expiry, verified_doctor } = this.state;
     const { doctor_registrations = {} } = this.props;
     const expiryDate = moment(
@@ -1557,11 +1545,11 @@ class DoctorProfilePage extends Component {
     }
   };
 
-  renderQualificationCollege = qualification_id => {
+  renderQualificationCollege = (qualification_id) => {
     const { edit_qualification_college, verified_doctor } = this.state;
     const { doctor_qualifications = {}, colleges = {} } = this.props;
     const {
-      basic_info: { college_id }
+      basic_info: { college_id },
     } = doctor_qualifications[qualification_id];
     const { basic_info: { name: collegeName } = {} } =
       colleges[college_id] || {};
@@ -1604,11 +1592,11 @@ class DoctorProfilePage extends Component {
       );
     }
   };
-  renderQualificationDegree = qualification_id => {
+  renderQualificationDegree = (qualification_id) => {
     const { edit_qualification_degree, verified_doctor } = this.state;
     const { doctor_qualifications = {}, degrees = {} } = this.props;
     const {
-      basic_info: { degree_id }
+      basic_info: { degree_id },
     } = doctor_qualifications[qualification_id];
     if (edit_qualification_degree[qualification_id]) {
       return (
@@ -1653,11 +1641,11 @@ class DoctorProfilePage extends Component {
       );
     }
   };
-  renderRegistrationCouncil = registration_id => {
+  renderRegistrationCouncil = (registration_id) => {
     const { edit_registration_council, verified_doctor } = this.state;
     const { doctor_registrations = {}, councils = {} } = this.props;
     const {
-      basic_info: { registration_council_id }
+      basic_info: { registration_council_id },
     } = doctor_registrations[registration_id];
     if (edit_registration_council[registration_id]) {
       return (
@@ -1709,7 +1697,7 @@ class DoctorProfilePage extends Component {
       );
     }
   };
-  onChangeClinicLocation = clinic_id => value => {
+  onChangeClinicLocation = (clinic_id) => (value) => {
     const { doctor_clinic_location } = this.state;
     let newClinicLocation = doctor_clinic_location;
     delete newClinicLocation[clinic_id];
@@ -1726,12 +1714,12 @@ class DoctorProfilePage extends Component {
               getInputProps,
               suggestions,
               getSuggestionItemProps,
-              loading
+              loading,
             }) => (
               <div>
                 <Input
                   {...getInputProps({
-                    className: "form-inputs-google"
+                    className: "form-inputs-google",
                   })}
                   onPressEnter={this.updateCity}
                   style={{ width: "390px", height: "auto", margin: "0" }}
@@ -1743,17 +1731,17 @@ class DoctorProfilePage extends Component {
                   style={{
                     position: "absolute",
                     backgroundColor: "white",
-                    marginTop: "4px"
+                    marginTop: "4px",
                   }}
                 >
                   {loading && <div>Loading...</div>}
-                  {suggestions.map(suggestion => {
+                  {suggestions.map((suggestion) => {
                     const className = "google-places-autocomplete__suggestion";
                     // inline style for demonstration purpose
                     return (
                       <div
                         {...getSuggestionItemProps(suggestion, {
-                          className
+                          className,
                         })}
                       >
                         <span>{suggestion.description}</span>
@@ -1811,7 +1799,7 @@ class DoctorProfilePage extends Component {
     }
   };
 
-  handleCouncilSearch = async data => {
+  handleCouncilSearch = async (data) => {
     try {
       if (data) {
         const { searchCouncil } = this.props;
@@ -1846,7 +1834,7 @@ class DoctorProfilePage extends Component {
     let options = [];
 
     options.push(
-      Object.keys(specialities).map(id => {
+      Object.keys(specialities).map((id) => {
         const { basic_info: { name } = {} } = specialities[id] || {};
         return (
           <Option key={id} value={id}>
@@ -1962,7 +1950,7 @@ class DoctorProfilePage extends Component {
     }
   };
 
-  editClinicTimings = clinic_id => {
+  editClinicTimings = (clinic_id) => {
     const { edit_clinic_timings = "" } = this.state;
     let newClinicTimings = edit_clinic_timings;
     newClinicTimings[clinic_id] = true;
@@ -1974,7 +1962,7 @@ class DoctorProfilePage extends Component {
       auth: { authenticated_category = "", authenticated_user = null },
       doctors,
       users,
-      id
+      id,
     } = this.props;
 
     const { basic_info: { user_id } = {} } = doctors[id] || {};
@@ -2029,8 +2017,8 @@ class DoctorProfilePage extends Component {
     doRequest({
       method: REQUEST_TYPE.POST,
       data: data,
-      url: getUploadURL()
-    }).then(response => {
+      url: getUploadURL(),
+    }).then((response) => {
       const { payload: { message: resp_message = "" } = {} } = response;
 
       if (response.status) {
@@ -2042,23 +2030,23 @@ class DoctorProfilePage extends Component {
       }
     });
   };
-  beforeUpload = file => {
+  beforeUpload = (file) => {
     const isJpgOrPng = file.type === "image/jpeg" || file.type === "image/png";
     if (!isJpgOrPng) {
       message.error("You can only upload JPG/PNG file!");
     }
     return isJpgOrPng;
   };
-  handleChange = info => {
+  handleChange = (info) => {
     const { file } = info;
     const isJpgOrPng = file.type === "image/jpeg" || file.type === "image/png";
     if (!isJpgOrPng) {
       return;
     }
-    this.getBase64(info.file.originFileObj, profile_pic =>
+    this.getBase64(info.file.originFileObj, (profile_pic) =>
       this.setState({
         profile_pic,
-        loading: false
+        loading: false,
       })
     );
   };
@@ -2068,13 +2056,13 @@ class DoctorProfilePage extends Component {
       auth: { authenticated_category = "", authenticated_user = null },
       doctors,
       users,
-      specialities
+      specialities,
     } = this.props;
     const current_doctor = doctors[authenticated_user];
     let {
       profile_pic_url = "",
       edit_name = "",
-      doctor_user_id = ""
+      doctor_user_id = "",
     } = this.state;
     const { formatMessage, handleProfilePicModalOpen } = this;
     const { basic_info: { user_id, gender, city, speciality_id } = {} } =
@@ -2100,7 +2088,7 @@ class DoctorProfilePage extends Component {
       onboarded,
       onboarding_status,
       activated_on,
-      deleted_at = null
+      deleted_at = null,
     } = users[user_id] || {};
     const { basic_info: { name: specialityName } = {} } =
       specialities[speciality_id] || {};
@@ -2257,22 +2245,22 @@ class DoctorProfilePage extends Component {
     );
   };
 
-  handlePictureModal = id => e => {
+  handlePictureModal = (id) => (e) => {
     e.preventDefault();
     this.setState({ modalVisible: true, selectedDocumentId: id });
   };
 
-  handleDocumentViewOpen = src => () => {
+  handleDocumentViewOpen = (src) => () => {
     this.setState({
       viewModalVisible: true,
-      viewModalSrc: src
+      viewModalSrc: src,
     });
   };
 
   handleDocumentViewClose = () => {
     this.setState({
       viewModalVisible: false,
-      viewModalSrc: ""
+      viewModalSrc: "",
     });
   };
 
@@ -2286,7 +2274,7 @@ class DoctorProfilePage extends Component {
       doctors,
       doctor_registrations,
       upload_documents,
-      councils = {}
+      councils = {},
     } = this.props;
     const { doctor_user_id = "", verified_doctor = "" } = this.state;
     const { formatMessage, handlePictureModal } = this;
@@ -2297,7 +2285,7 @@ class DoctorProfilePage extends Component {
       const {
         basic_info: { number, registration_council_id, year } = {},
         expiry_date,
-        upload_document_ids
+        upload_document_ids,
       } = doctor_registrations[registration_id] || {};
 
       const { basic_info: { name: registrationCouncilName } = {} } =
@@ -2358,7 +2346,7 @@ class DoctorProfilePage extends Component {
               </div>
 
               <div className="flex align-center flex-wrap">
-                {upload_document_ids.map(id => {
+                {upload_document_ids.map((id) => {
                   const { basic_info: { document, parent_id } = {} } =
                     upload_documents[id] || {};
                   // if (verified_doctor) {
@@ -2435,7 +2423,7 @@ class DoctorProfilePage extends Component {
                       width: 128,
                       height: 128,
                       margin: 6,
-                      display: "contents"
+                      display: "contents",
                     }}
                   >
                     {uploadButton}
@@ -2449,17 +2437,17 @@ class DoctorProfilePage extends Component {
     });
   };
 
-  handleDocumentDownload = id => e => {
+  handleDocumentDownload = (id) => (e) => {
     e.preventDefault();
   };
 
   handleRemoveList = (qualificationId, pic) => () => {
     let { deleteDoctorQualificationImage } = this.props;
-    deleteDoctorQualificationImage(qualificationId, pic).then(response => {
+    deleteDoctorQualificationImage(qualificationId, pic).then((response) => {
       let { status = false } = response;
       if (status) {
         const {
-          payload: { message: successMessage }
+          payload: { message: successMessage },
         } = response;
         message.success(successMessage);
         this.getInitialData();
@@ -2471,11 +2459,11 @@ class DoctorProfilePage extends Component {
   handleRemoveListRegistration = (registrationId, pic) => () => {
     let { deleteDoctorRegistrationImage } = this.props;
 
-    deleteDoctorRegistrationImage(registrationId, pic).then(response => {
+    deleteDoctorRegistrationImage(registrationId, pic).then((response) => {
       let { status = false } = response;
       if (status) {
         const {
-          payload: { message: successMessage }
+          payload: { message: successMessage },
         } = response;
         message.success(successMessage);
         this.getInitialData();
@@ -2484,86 +2472,78 @@ class DoctorProfilePage extends Component {
       }
     });
   };
-  customRequest = qualification_id => async ({
-    file,
-    filename,
-    onError,
-    onProgress,
-    onSuccess
-  }) => {
-    let data = new FormData();
-    data.append("files", file, file.name);
-    // data.append("qualification", JSON.stringify(qualificationData));
+  customRequest =
+    (qualification_id) =>
+    async ({ file, filename, onError, onProgress, onSuccess }) => {
+      let data = new FormData();
+      data.append("files", file, file.name);
+      // data.append("qualification", JSON.stringify(qualificationData));
 
-    let uploadResponse = await doRequest({
-      method: REQUEST_TYPE.POST,
-      data: data,
-      url: getUploadQualificationDocumentUrl()
-    });
+      let uploadResponse = await doRequest({
+        method: REQUEST_TYPE.POST,
+        data: data,
+        url: getUploadQualificationDocumentUrl(),
+      });
 
-    let { status = false } = uploadResponse;
-    const { payload: { message: resp_message = "" } = {} } = uploadResponse;
+      let { status = false } = uploadResponse;
+      const { payload: { message: resp_message = "" } = {} } = uploadResponse;
 
-    if (status) {
-      const { doctor_user_id = "" } = this.state;
-      let updateData = {
-        qualification_details: [
-          {
-            photos: uploadResponse.payload.data.files,
-            doctor_id: doctor_user_id,
-            id: qualification_id
-          }
-        ]
+      if (status) {
+        const { doctor_user_id = "" } = this.state;
+        let updateData = {
+          qualification_details: [
+            {
+              photos: uploadResponse.payload.data.files,
+              doctor_id: doctor_user_id,
+              id: qualification_id,
+            },
+          ],
+        };
+        this.updateProfileData(updateData);
+      } else {
+        message.error(resp_message);
+      }
+
+      return {
+        abort() {},
       };
-      this.updateProfileData(updateData);
-    } else {
-      message.error(resp_message);
-    }
-
-    return {
-      abort() {}
     };
-  };
-  customRequestRegistration = registration_id => async ({
-    file,
-    filename,
-    onError,
-    onProgress,
-    onSuccess
-  }) => {
-    let data = new FormData();
-    data.append("files", file, file.name);
-    // data.append("qualification", JSON.stringify(qualificationData));
+  customRequestRegistration =
+    (registration_id) =>
+    async ({ file, filename, onError, onProgress, onSuccess }) => {
+      let data = new FormData();
+      data.append("files", file, file.name);
+      // data.append("qualification", JSON.stringify(qualificationData));
 
-    let uploadResponse = await doRequest({
-      method: REQUEST_TYPE.POST,
-      data: data,
-      url: getUploadQualificationDocumentUrl()
-    });
+      let uploadResponse = await doRequest({
+        method: REQUEST_TYPE.POST,
+        data: data,
+        url: getUploadQualificationDocumentUrl(),
+      });
 
-    let { status = false } = uploadResponse;
-    const { payload: { message: resp_message = "" } = {} } = uploadResponse;
+      let { status = false } = uploadResponse;
+      const { payload: { message: resp_message = "" } = {} } = uploadResponse;
 
-    if (status) {
-      const { doctor_user_id = "" } = this.state;
-      let updateData = {
-        registration_details: [
-          {
-            photos: uploadResponse.payload.data.files,
-            doctor_id: doctor_user_id,
-            id: registration_id
-          }
-        ]
+      if (status) {
+        const { doctor_user_id = "" } = this.state;
+        let updateData = {
+          registration_details: [
+            {
+              photos: uploadResponse.payload.data.files,
+              doctor_id: doctor_user_id,
+              id: registration_id,
+            },
+          ],
+        };
+        this.updateProfileData(updateData);
+      } else {
+        message.error(resp_message);
+      }
+
+      return {
+        abort() {},
       };
-      this.updateProfileData(updateData);
-    } else {
-      message.error(resp_message);
-    }
-
-    return {
-      abort() {}
     };
-  };
   getDoctorQualificationDetails = () => {
     const uploadButton = (
       <div>
@@ -2575,7 +2555,7 @@ class DoctorProfilePage extends Component {
       doctor_qualifications,
       upload_documents,
       degrees = {},
-      colleges = {}
+      colleges = {},
     } = this.props;
     const { doctor_user_id = "", verified_doctor = "" } = this.state;
     const { formatMessage, handlePictureModal } = this;
@@ -2585,7 +2565,7 @@ class DoctorProfilePage extends Component {
     return doctor_qualification_ids.map((qualification_id, index) => {
       const {
         basic_info: { degree_id, college_id, year } = {},
-        upload_document_ids = []
+        upload_document_ids = [],
       } = doctor_qualifications[qualification_id] || {};
 
       const { basic_info: { name: collegeName } = {} } =
@@ -2642,7 +2622,7 @@ class DoctorProfilePage extends Component {
 
               {/*qualification_documents*/}
               <div className="flex align-center flex-wrap">
-                {upload_document_ids.map(id => {
+                {upload_document_ids.map((id) => {
                   const { basic_info: { document, parent_id } = {} } =
                     upload_documents[id] || {};
                   // if (!verified_doctor) {
@@ -2728,7 +2708,7 @@ class DoctorProfilePage extends Component {
                       width: 128,
                       height: 128,
                       margin: 6,
-                      display: "contents"
+                      display: "contents",
                     }}
                   >
                     {uploadButton}
@@ -2742,7 +2722,7 @@ class DoctorProfilePage extends Component {
     });
   };
 
-  getFullDayText = day => {
+  getFullDayText = (day) => {
     if (day.length === 1) {
       return DAYS_TEXT_NUM[day].toLocaleUpperCase();
     }
@@ -2751,20 +2731,20 @@ class DoctorProfilePage extends Component {
 
   getDoctorClinicDetails = () => {
     const numberToDay = {
-      "1": FULL_DAYS.SUN,
-      "2": FULL_DAYS.MON,
-      "3": FULL_DAYS.TUE,
-      "4": FULL_DAYS.WED,
-      "5": FULL_DAYS.THU,
-      "6": FULL_DAYS.FRI,
-      "7": FULL_DAYS.SAT
+      1: FULL_DAYS.SUN,
+      2: FULL_DAYS.MON,
+      3: FULL_DAYS.TUE,
+      4: FULL_DAYS.WED,
+      5: FULL_DAYS.THU,
+      6: FULL_DAYS.FRI,
+      7: FULL_DAYS.SAT,
     };
     const { id, doctors, doctor_clinics } = this.props;
     const { formatMessage, getFullDayText } = this;
     const {
       doctor_user_id = "",
       verified_doctor = "",
-      edit_clinic_timings = ""
+      edit_clinic_timings = "",
     } = this.state;
     const { doctor_clinic_ids = [] } = doctors[doctor_user_id] || {};
 
@@ -2772,7 +2752,7 @@ class DoctorProfilePage extends Component {
       const {
         basic_info: { name } = {},
         location,
-        details: { time_slots = [] } = {}
+        details: { time_slots = [] } = {},
       } = doctor_clinics[clinic_id] || {};
 
       let timeForModal = {};
@@ -2783,7 +2763,7 @@ class DoctorProfilePage extends Component {
         [FULL_DAYS.THU]: false,
         [FULL_DAYS.FRI]: false,
         [FULL_DAYS.SAT]: false,
-        [FULL_DAYS.SUN]: false
+        [FULL_DAYS.SUN]: false,
       };
       if (edit_clinic_timings[clinic_id]) {
         for (const time in time_slots) {
@@ -2812,7 +2792,7 @@ class DoctorProfilePage extends Component {
           if (!timeForModal[time].length) {
             timeForModal[time].push({
               startTime: "",
-              endTime: ""
+              endTime: "",
             });
           }
         }
@@ -2882,17 +2862,13 @@ class DoctorProfilePage extends Component {
   getFooter = () => {
     const { id, doctors, users } = this.props;
 
-    const {
-      formatMessage,
-      handleVerify,
-      handleCloseWarning,
-      handleActivate
-    } = this;
+    const { formatMessage, handleVerify, handleCloseWarning, handleActivate } =
+      this;
 
     const {
       doctor_qualification_ids = [],
       doctor_registration_ids = [],
-      basic_info: { user_id } = {}
+      basic_info: { user_id } = {},
     } = doctors[id] || {};
 
     let { activated_on } = users[user_id] || {};
@@ -2947,7 +2923,7 @@ class DoctorProfilePage extends Component {
     );
   };
 
-  handleVerify = async e => {
+  handleVerify = async (e) => {
     e.preventDefault();
     const { verifyDoctor, id } = this.props;
     try {
@@ -2965,7 +2941,7 @@ class DoctorProfilePage extends Component {
     }
   };
 
-  handlePictureModalClose = e => {
+  handlePictureModalClose = (e) => {
     e.preventDefault();
     this.setState({ modalVisible: false });
   };
@@ -2996,12 +2972,12 @@ class DoctorProfilePage extends Component {
     );
   };
 
-  handleProfilePicModalOpen = e => {
+  handleProfilePicModalOpen = (e) => {
     e.preventDefault();
     this.setState({ profilePicModalVisible: true });
   };
 
-  handleProfilePicModalClose = e => {
+  handleProfilePicModalClose = (e) => {
     e.preventDefault();
     this.setState({ profilePicModalVisible: false });
   };
@@ -3029,14 +3005,14 @@ class DoctorProfilePage extends Component {
       </Modal>
     );
   };
-  addQualificationDetails = e => {
+  addQualificationDetails = (e) => {
     e.preventDefault();
     const { history } = this.props;
     const { doctor_user_id: doctor_id = "" } = this.state;
 
     const {
       auth: { authenticated_category = "", authenticated_user = null },
-      doctors
+      doctors,
     } = this.props;
 
     if (
@@ -3054,13 +3030,13 @@ class DoctorProfilePage extends Component {
     );
   };
 
-  addClinicDetails = e => {
+  addClinicDetails = (e) => {
     e.preventDefault();
     const { history } = this.props;
     const { doctor_user_id: doctor_id = "" } = this.state;
     const {
       auth: { authenticated_category = "", authenticated_user = null },
-      doctors
+      doctors,
     } = this.props;
 
     if (
@@ -3098,12 +3074,12 @@ class DoctorProfilePage extends Component {
 
   render() {
     const {
-      doctor_user_id = ""
+      doctor_user_id = "",
       // verified_doctor = false
     } = this.state;
     const {
       auth: { authenticated_category = "", authenticated_user = null },
-      doctors
+      doctors,
     } = this.props;
     const current_doctor = doctors[authenticated_user];
     const { loading = "", updateLoading = "" } = this.state;
@@ -3116,13 +3092,13 @@ class DoctorProfilePage extends Component {
       getDoctorClinicDetails,
       getFooter,
       getModalDetails,
-      getProfilePicModal
+      getProfilePicModal,
     } = this;
 
     const {
       doctor_clinic_ids = [],
       doctor_qualification_ids = [],
-      doctor_registration_ids = []
+      doctor_registration_ids = [],
     } = doctors[doctor_user_id] || {};
 
     const { viewModalVisible, viewModalSrc } = this.state;
@@ -3257,7 +3233,7 @@ class DoctorProfilePage extends Component {
           footer={[
             <Button key="back" onClick={handleDocumentViewClose}>
               Close
-            </Button>
+            </Button>,
           ]}
         >
           <img

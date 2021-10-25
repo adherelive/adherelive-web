@@ -15,13 +15,13 @@ class WorkoutReponseEventDetailsDrawer extends Component {
       videoModalVisible: false,
       videoToShow: "",
       content_type: VIDEO_TYPES.NONE,
-      workout_responses: {}
+      workout_responses: {},
     };
   }
 
   componentDidMount() {}
 
-  formatMessage = data => this.props.intl.formatMessage(data);
+  formatMessage = (data) => this.props.intl.formatMessage(data);
 
   componentDidUpdate(prevProps, prevState) {
     const { visible: prev_visible = false } = prevProps;
@@ -33,16 +33,14 @@ class WorkoutReponseEventDetailsDrawer extends Component {
 
   getScheduleEventData = async () => {
     try {
-      const {
-        schedule_event_id = null,
-        getWorkoutScheduleEventDetails
-      } = this.props;
+      const { schedule_event_id = null, getWorkoutScheduleEventDetails } =
+        this.props;
       const response = await getWorkoutScheduleEventDetails(schedule_event_id);
 
       const {
         status,
         statusCode,
-        payload: { data: resp_data = {}, message: resp_msg = "" } = {}
+        payload: { data: resp_data = {}, message: resp_msg = "" } = {},
       } = response;
 
       if (!status) {
@@ -61,9 +59,13 @@ class WorkoutReponseEventDetailsDrawer extends Component {
     closeWorkoutResponseDetails();
   };
 
-  getDetailsComponent = data => {
-    const { name = "", response = {}, notes = "", content_id = null } =
-      data || {};
+  getDetailsComponent = (data) => {
+    const {
+      name = "",
+      response = {},
+      notes = "",
+      content_id = null,
+    } = data || {};
     const { exercise_contents = {}, repetitions = {} } = this.props;
     let src = "",
       content_type = "none";
@@ -71,8 +73,8 @@ class WorkoutReponseEventDetailsDrawer extends Component {
       const {
         video: {
           content = "",
-          content_type: video_content_type = VIDEO_TYPES.NONE
-        } = {}
+          content_type: video_content_type = VIDEO_TYPES.NONE,
+        } = {},
       } = exercise_contents[content_id] || {};
       src = content;
       content_type = video_content_type;
@@ -82,7 +84,7 @@ class WorkoutReponseEventDetailsDrawer extends Component {
       repetition_id = null,
       repetition_value = 0,
       sets = 0,
-      other_details: { calorific_value = 0 } = {}
+      other_details: { calorific_value = 0 } = {},
     } = response || {};
 
     const { type = "" } = repetitions[repetition_id] || {};
@@ -122,12 +124,12 @@ class WorkoutReponseEventDetailsDrawer extends Component {
       exercise_groups = {},
       workout_exercise_groups = [],
       exercise_details = {},
-      exercises = {}
+      exercises = {},
     } = this.props;
     const { workout_responses = {} } = this.state;
     console.log("8732648264826846238742", {
       workout_responses,
-      workout_exercise_groups
+      workout_exercise_groups,
     });
     for (let each in workout_responses) {
       let content_id = null;
@@ -135,7 +137,7 @@ class WorkoutReponseEventDetailsDrawer extends Component {
       const { basic_info: { exercise_group_id = null } = {} } = response || {};
       const {
         basic_info: { exercise_detail_id = null } = {},
-        details: { notes = "" } = {}
+        details: { notes = "" } = {},
       } = exercise_groups[exercise_group_id] || {};
       const { basic_info: { exercise_id = null } = {} } =
         exercise_details[exercise_detail_id] || {};
@@ -205,11 +207,13 @@ class WorkoutReponseEventDetailsDrawer extends Component {
     );
   };
 
-  openModal = ({ src, content_type }) => () => {
-    this.setState({ videoToShow: src, content_type }, () =>
-      this.setState({ videoModalVisible: true })
-    );
-  };
+  openModal =
+    ({ src, content_type }) =>
+    () => {
+      this.setState({ videoToShow: src, content_type }, () =>
+        this.setState({ videoModalVisible: true })
+      );
+    };
 
   closeModal = () => {
     this.setState({ videoModalVisible: false, content_type: VIDEO_TYPES.NONE });
@@ -220,7 +224,7 @@ class WorkoutReponseEventDetailsDrawer extends Component {
       visible,
       intl: { formatMessage } = {},
       workout_name = "",
-      date: props_date = null
+      date: props_date = null,
     } = this.props;
     const { onClose } = this;
     const date = moment(props_date).format("DD MMMM YYYY");
@@ -240,7 +244,7 @@ class WorkoutReponseEventDetailsDrawer extends Component {
           display: "flex",
           justifyContent: "flex-start",
           alignItems: "flex-start",
-          width: "100%"
+          width: "100%",
         }}
       >
         {this.getWorkoutData()}

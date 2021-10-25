@@ -9,15 +9,15 @@ import { getMedicationDetails } from "../../../modules/otherDetails";
 import { searchMedicine } from "../../../modules/medicines";
 import { getAllTemplatesForDoctor } from "../../../modules/carePlanTemplates";
 
-const mapStateToProps = state => {
+const mapStateToProps = (state) => {
   // console.log("3289467832482354723874792384 STATE",state);
   const {
     auth: {
       authPermissions = [],
       authenticated_user = 1,
-      authenticated_category
+      authenticated_category,
     } = {},
-    medicines = {}
+    medicines = {},
   } = state;
 
   console.log("8467528394723989 main page ====>", { state });
@@ -25,21 +25,21 @@ const mapStateToProps = state => {
   return {
     authenticated_user,
     authenticated_category,
-    medicines
+    medicines,
   };
 };
 
-const mapDispatchToProps = dispatch => {
+const mapDispatchToProps = (dispatch) => {
   return {
     getAllTemplatesForDoctor: () => dispatch(getAllTemplatesForDoctor()),
-    openCreateCareplanTemplateDrawer: payload =>
+    openCreateCareplanTemplateDrawer: (payload) =>
       dispatch(open({ type: DRAWER.CREATE_CAREPLAN_TEMPLATE, payload })),
     getVitalOccurence: () => dispatch(getVitalOccurence()),
     getAppointmentsDetails: () => dispatch(getAppointmentsDetails()),
-    getMedicationDetails: id => dispatch(getMedicationDetails(id)),
-    searchMedicine: value => dispatch(searchMedicine(value)),
-    openEditCareplanTemplateDrawer: payload =>
-      dispatch(open({ type: DRAWER.EDIT_CAREPLAN_TEMPLATE, payload }))
+    getMedicationDetails: (id) => dispatch(getMedicationDetails(id)),
+    searchMedicine: (value) => dispatch(searchMedicine(value)),
+    openEditCareplanTemplateDrawer: (payload) =>
+      dispatch(open({ type: DRAWER.EDIT_CAREPLAN_TEMPLATE, payload })),
   };
 };
 

@@ -22,7 +22,7 @@ export const getFavoriteInDetails = async (
         );
         response = {
           ...typeDescription,
-          ...{ [MEDICAL_TEST]: medicalTestTypes }
+          ...{ [MEDICAL_TEST]: medicalTestTypes },
         };
         return response;
       case FAVOURITE_TYPE.RADIOLOGY:
@@ -49,7 +49,7 @@ const medicalTestFavorites = async (userTypeData, types) => {
       (await FavoriteService.getAllFavourites({
         user_category_id,
         user_category_type,
-        marked_favourite_type: FAVOURITE_TYPE.MEDICAL_TESTS
+        marked_favourite_type: FAVOURITE_TYPE.MEDICAL_TESTS,
       })) || [];
 
     let favoriteIndices = {};
@@ -72,7 +72,7 @@ const medicalTestFavorites = async (userTypeData, types) => {
         notFavTypesList.push({
           name: type,
           favorite_id: favoriteId,
-          index: idx
+          index: idx,
         });
       }
     }
@@ -92,7 +92,7 @@ const radiologyTypeFavorites = async (userTypeData, types) => {
       (await FavoriteService.getAllFavourites({
         user_category_id,
         user_category_type,
-        marked_favourite_type: FAVOURITE_TYPE.RADIOLOGY
+        marked_favourite_type: FAVOURITE_TYPE.RADIOLOGY,
       })) || [];
 
     let favoriteIndices = {};
@@ -103,8 +103,8 @@ const radiologyTypeFavorites = async (userTypeData, types) => {
         id = null,
         details: {
           sub_category_id = null,
-          selected_radiology_index = null
-        } = {}
+          selected_radiology_index = null,
+        } = {},
       } = radiologyFavorite;
 
       if (
@@ -127,7 +127,11 @@ const radiologyTypeFavorites = async (userTypeData, types) => {
 
       for (const subTypeId of subTypesIds) {
         const {
-          [subTypeId]: { index = null, items = [], name: subTypeName = "" } = {}
+          [subTypeId]: {
+            index = null,
+            items = [],
+            name: subTypeName = "",
+          } = {},
         } = data;
         let updatedItems = [];
         let favoriteItems = [];
@@ -145,7 +149,7 @@ const radiologyTypeFavorites = async (userTypeData, types) => {
         updatedItems = [...favoriteItems, ...nonFavoriteItems];
         data = {
           ...data,
-          [subTypeId]: { name: subTypeName, index, items: updatedItems }
+          [subTypeId]: { name: subTypeName, index, items: updatedItems },
         };
       }
 

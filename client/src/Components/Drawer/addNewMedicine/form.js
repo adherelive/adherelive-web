@@ -33,11 +33,11 @@ class AddMedicineForm extends Component {
     antDrawerWrapperBody.scrollTop -= 200;
   };
 
-  getParentNode = t => t.parentNode;
+  getParentNode = (t) => t.parentNode;
 
-  formatMessage = data => this.props.intl.formatMessage(data);
+  formatMessage = (data) => this.props.intl.formatMessage(data);
 
-  getStringFormat = str => {
+  getStringFormat = (str) => {
     return str
       ? `${str.charAt(0).toUpperCase()}${str.substring(1, str.length)}`
       : "";
@@ -46,7 +46,7 @@ class AddMedicineForm extends Component {
   getOptions = (items, category) => {
     const { getStringFormat } = this;
 
-    return items.map(item => {
+    return items.map((item) => {
       const { name, defaultUnit, id } = item || {};
 
       return (
@@ -65,7 +65,7 @@ class AddMedicineForm extends Component {
     const { medication_details: { medicine_type = {} } = {} } = this.props;
     const { getOptions, getStringFormat } = this;
 
-    return Object.keys(medicine_type).map(id => {
+    return Object.keys(medicine_type).map((id) => {
       const { items, name } = medicine_type[id] || {};
 
       return (
@@ -76,16 +76,16 @@ class AddMedicineForm extends Component {
     });
   };
 
-  handleSelect = value => {
+  handleSelect = (value) => {
     const {
-      form: { setFieldsValue }
+      form: { setFieldsValue },
     } = this.props;
     setFieldsValue({ [TYPE]: value });
   };
 
   render() {
     const {
-      form: { getFieldDecorator, isFieldTouched, getFieldError, getFieldValue }
+      form: { getFieldDecorator, isFieldTouched, getFieldError, getFieldValue },
     } = this.props;
     // const disabledSubmit = (!name || !type);
 
@@ -94,7 +94,7 @@ class AddMedicineForm extends Component {
     const { formatMessage } = this;
 
     let fieldsError = {};
-    FIELDS.forEach(value => {
+    FIELDS.forEach((value) => {
       const error = isFieldTouched(value) && getFieldError(value);
       fieldsError = { ...fieldsError, [value]: error };
     });
@@ -109,10 +109,10 @@ class AddMedicineForm extends Component {
             rules: [
               {
                 required: true,
-                message: formatMessage(messages.fillFieldsError)
-              }
+                message: formatMessage(messages.fillFieldsError),
+              },
             ],
-            initialValue: input ? input : ""
+            initialValue: input ? input : "",
           })(
             <Input
               autoFocus
@@ -127,9 +127,9 @@ class AddMedicineForm extends Component {
             rules: [
               {
                 required: true,
-                message: formatMessage(messages.fillFieldsError)
-              }
-            ]
+                message: formatMessage(messages.fillFieldsError),
+              },
+            ],
           })(
             <Select
               className="full-width"

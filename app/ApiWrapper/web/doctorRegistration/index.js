@@ -14,7 +14,7 @@ class DoctorRegistrationWrapper extends BaseDoctorRegistration {
       number,
       registration_council_id,
       year,
-      expiry_date
+      expiry_date,
     } = _data || {};
     return {
       basic_info: {
@@ -22,9 +22,9 @@ class DoctorRegistrationWrapper extends BaseDoctorRegistration {
         doctor_id,
         number,
         registration_council_id,
-        year
+        year,
       },
-      expiry_date
+      expiry_date,
     };
   };
 }
@@ -33,8 +33,7 @@ export default async (data = null, id = null) => {
   if (data) {
     return new DoctorRegistrationWrapper(data);
   }
-  const doctorRegistration = await doctorRegistrationService.getRegistrationById(
-    id
-  );
+  const doctorRegistration =
+    await doctorRegistrationService.getRegistrationById(id);
   return new DoctorRegistrationWrapper(doctorRegistration);
 };

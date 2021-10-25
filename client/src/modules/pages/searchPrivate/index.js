@@ -2,7 +2,7 @@ import {
   GET_PRIVATE_MEDICINES_COMPLETED,
   RESET_SEARCH_PRIVATE,
   MAKE_MEDICINE_PUBLIC_COMPLETED,
-  DELETE_MEDICINE_COMPLETED
+  DELETE_MEDICINE_COMPLETED,
 } from "../../medicines";
 
 const PRIVATE = "private";
@@ -13,7 +13,7 @@ function getPrivateSearchMedicinesReducer(state, data) {
 
   if (medicines && type === PRIVATE && searchText !== "") {
     return {
-      ...search_private_medicines
+      ...search_private_medicines,
     };
   } else {
     return state;
@@ -47,7 +47,7 @@ function getRemainingPrivateSearchedAfterDelete(state, data) {
       let updatedMed = { ...state };
       updatedMed[offset] = { ...rest };
       return {
-        ...updatedMed
+        ...updatedMed,
       };
     } else {
       return state;

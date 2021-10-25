@@ -12,7 +12,7 @@ class WorkoutResponseDrawer extends Component {
     this.state = {
       detailsDrawerVisible: false,
       schedule_event_id: null,
-      date: null
+      date: null,
     };
   }
 
@@ -25,14 +25,14 @@ class WorkoutResponseDrawer extends Component {
     this.setState({
       detailsDrawerVisible: true,
       schedule_event_id,
-      date
+      date,
     });
   };
 
   closeWorkoutResponseDetails = () => {
     this.setState({
       detailsDrawerVisible: false,
-      schedule_event_id: null
+      schedule_event_id: null,
     });
   };
 
@@ -40,13 +40,13 @@ class WorkoutResponseDrawer extends Component {
     const {
       visible,
       intl: { formatMessage } = {},
-      workout_name = ""
+      workout_name = "",
     } = this.props;
     const { onClose } = this;
     const {
       schedule_event_id = null,
       detailsDrawerVisible = false,
-      date = null
+      date = null,
     } = this.state;
 
     return (
@@ -64,7 +64,7 @@ class WorkoutResponseDrawer extends Component {
           display: "flex",
           justifyContent: "flex-start",
           alignItems: "flex-start",
-          width: "100%"
+          width: "100%",
         }}
       >
         <WorkoutTimeline

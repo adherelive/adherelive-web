@@ -10,58 +10,58 @@ module.exports = {
       id: {
         type: Sequelize.INTEGER,
         primaryKey: true,
-        autoIncrement: true
+        autoIncrement: true,
       },
       doctor_id: {
         type: Sequelize.INTEGER,
         allowNull: false,
         references: {
           model: {
-            tableName: doctorTableName
+            tableName: doctorTableName,
           },
-          key: "id"
-        }
+          key: "id",
+        },
       },
       provider_terms_mapping_id: {
         type: Sequelize.INTEGER,
         allowNull: true,
         references: {
           model: {
-            tableName: providerTermsMapping
+            tableName: providerTermsMapping,
           },
-          key: "id"
-        }
+          key: "id",
+        },
       },
       patient_id: {
         type: Sequelize.INTEGER,
         allowNull: false,
         references: {
           model: {
-            tableName: patientTableName
+            tableName: patientTableName,
           },
-          key: "id"
-        }
+          key: "id",
+        },
       },
       payment_terms_accepted: {
         type: Sequelize.BOOLEAN,
-        defaultValue: false
+        defaultValue: false,
       },
       created_at: {
         allowNull: false,
-        type: Sequelize.DATE
+        type: Sequelize.DATE,
       },
       updated_at: {
         allowNull: false,
-        type: Sequelize.DATE
+        type: Sequelize.DATE,
       },
       deleted_at: {
         allowNull: true,
-        type: Sequelize.DATE
-      }
+        type: Sequelize.DATE,
+      },
     });
   },
 
   down: (queryInterface, Sequelize) => {
     return queryInterface.dropTable(TABLE_NAME);
-  }
+  },
 };

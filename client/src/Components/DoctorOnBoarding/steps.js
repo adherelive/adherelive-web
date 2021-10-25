@@ -10,7 +10,7 @@ class Steps extends Component {
     this.state = {};
   }
 
-  formatMessage = data => this.props.intl.formatMessage(data);
+  formatMessage = (data) => this.props.intl.formatMessage(data);
 
   render() {
     const { current = 0 } = this.props;

@@ -31,7 +31,7 @@ class ToggleLogin extends Component {
     }
   }
 
-  formatMessage = data => this.props.intl.formatMessage(data);
+  formatMessage = (data) => this.props.intl.formatMessage(data);
 
   redirectToForgotPassword = () => {
     const { history } = this.props;
@@ -49,7 +49,7 @@ class ToggleLogin extends Component {
             to={{ opacity: 1 }}
             config={{ delay: 200, duration: 500 }}
           >
-            {props => (
+            {(props) => (
               <div
                 className=" flex direction-column flex-1 wp100 hp100"
                 style={props}
@@ -111,7 +111,7 @@ class ToggleLogin extends Component {
           from={{ right: "60%", opacity: 0 }}
           to={{ right: "15%", opacity: 1 }}
         >
-          {props => (
+          {(props) => (
             <div className="form-container" style={props}>
               <div className="mb8 fs24 fw600 pt20 flex direction-column tal">
                 {formatMessage(messages.loginToDashboard)}

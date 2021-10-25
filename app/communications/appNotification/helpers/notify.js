@@ -84,4 +84,4 @@ class Notifier {
   }
 }
 
-module.exports = data => new Notifier(data);
+module.exports = (data) => new Notifier(data);

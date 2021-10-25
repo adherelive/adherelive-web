@@ -11,7 +11,7 @@ module.exports = () => {
       port: process.env.DB_PORT,
       username: process.env.DB_USER,
       password: process.env.DB_PASSWORD,
-      dialect: process.env.DB_DIALECT
+      dialect: process.env.DB_DIALECT,
     },
     saltRounds: process.env.SALT_ROUNDS,
     minio: {
@@ -20,7 +20,7 @@ module.exports = () => {
       MINIO_VOLUME_NAME: process.env.MINIO_VOLUME_NAME,
       MINIO_REGION: process.env.MINIO_REGION,
       MINIO_ENDPOINT: process.env.MINIO_ENDPOINT,
-      MINIO_BUCKET_NAME: process.env.MINIO_BUCKET_NAME
+      MINIO_BUCKET_NAME: process.env.MINIO_BUCKET_NAME,
     },
     APP_URL: process.env.APP_URL,
     WEB_URL: process.env.WEB_URL,
@@ -30,6 +30,6 @@ module.exports = () => {
     DEFAULT_PASSWORD: process.env.DEFAULT_PASSWORD,
     S3_BUCKET_URL: process.env.S3_BUCKET_URL,
     UTC_OFFSET_STR: process.env.UTC_OFFSET_STR,
-    DB_ENCRYPTION_KEY: process.env.DB_ENCRYPTION_KEY
+    DB_ENCRYPTION_KEY: process.env.DB_ENCRYPTION_KEY,
   };
 };

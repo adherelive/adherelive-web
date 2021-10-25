@@ -7,7 +7,7 @@ import {
   addReportUrl,
   getAllReportsUrl,
   deleteUploadUrl,
-  updateReportUrl
+  updateReportUrl,
 } from "../../Helper/urls/report";
 
 export const ADD_REPORT_START = "ADD_REPORT_START";
@@ -34,14 +34,14 @@ export const FETCH_REPORT_START = "FETCH_REPORT_START";
 export const FETCH_REPORT_COMPLETE = "FETCH_REPORT_COMPLETE";
 export const FETCH_REPORT_FAILED = "FETCH_REPORT_FAILED";
 
-export const fetchReports = patientId => {
+export const fetchReports = (patientId) => {
   let response = {};
-  return async dispatch => {
+  return async (dispatch) => {
     try {
       dispatch({ type: FETCH_REPORT_START });
       response = await doRequest({
         method: REQUEST_TYPE.GET,
-        url: fetchReportsUrl(patientId)
+        url: fetchReportsUrl(patientId),
       });
       const { status, payload: { data, error } = {} } = response || {};
 
@@ -50,7 +50,7 @@ export const fetchReports = patientId => {
       } else {
         dispatch({
           type: FETCH_REPORT_FAILED,
-          error
+          error,
         });
       }
     } catch (error) {
@@ -62,13 +62,13 @@ export const fetchReports = patientId => {
 
 export const uploadReport = (patient_id, payload) => {
   let response = {};
-  return async dispatch => {
+  return async (dispatch) => {
     try {
       dispatch({ type: UPLOAD_REPORT_START });
       response = await doRequest({
         method: REQUEST_TYPE.POST,
         url: uploadReportUrl(patient_id),
-        data: payload
+        data: payload,
       });
 
       const { status, payload: { data, error } = {} } = response || {};
@@ -78,7 +78,7 @@ export const uploadReport = (patient_id, payload) => {
       } else {
         dispatch({
           type: UPLOAD_REPORT_FAILED,
-          error
+          error,
         });
       }
     } catch (error) {
@@ -88,15 +88,15 @@ export const uploadReport = (patient_id, payload) => {
   };
 };
 
-export const addReport = payload => {
+export const addReport = (payload) => {
   let response = {};
-  return async dispatch => {
+  return async (dispatch) => {
     try {
       dispatch({ type: ADD_REPORT_START });
       response = await doRequest({
         method: REQUEST_TYPE.POST,
         url: addReportUrl(),
-        data: payload
+        data: payload,
       });
 
       const { status, payload: { data, error } = {} } = response || {};
@@ -106,7 +106,7 @@ export const addReport = payload => {
       } else {
         dispatch({
           type: ADD_REPORT_FAILED,
-          error
+          error,
         });
       }
     } catch (error) {
@@ -116,14 +116,14 @@ export const addReport = payload => {
   };
 };
 
-export const getAllReports = patient_id => {
+export const getAllReports = (patient_id) => {
   let response = {};
-  return async dispatch => {
+  return async (dispatch) => {
     try {
       dispatch({ type: GET_ALL_REPORTS_START });
       response = await doRequest({
         method: REQUEST_TYPE.GET,
-        url: getAllReportsUrl(patient_id)
+        url: getAllReportsUrl(patient_id),
       });
 
       const { status, payload: { data, error } = {} } = response || {};
@@ -133,7 +133,7 @@ export const getAllReports = patient_id => {
       } else {
         dispatch({
           type: GET_ALL_REPORTS_FAILED,
-          error
+          error,
         });
       }
     } catch (error) {
@@ -143,14 +143,14 @@ export const getAllReports = patient_id => {
   };
 };
 
-export const deleteReport = doc_id => {
+export const deleteReport = (doc_id) => {
   let response = {};
-  return async dispatch => {
+  return async (dispatch) => {
     try {
       dispatch({ type: DELETE_REPORT_START });
       response = await doRequest({
         method: REQUEST_TYPE.DELETE,
-        url: deleteUploadUrl(doc_id)
+        url: deleteUploadUrl(doc_id),
       });
 
       const { status, payload: { data, error } = {} } = response || {};
@@ -160,7 +160,7 @@ export const deleteReport = doc_id => {
       } else {
         dispatch({
           type: DELETE_REPORT_FAILED,
-          error
+          error,
         });
       }
     } catch (error) {
@@ -172,13 +172,13 @@ export const deleteReport = doc_id => {
 
 export const updateReport = (report_id, payload) => {
   let response = {};
-  return async dispatch => {
+  return async (dispatch) => {
     try {
       dispatch({ type: UPDATE_REPORT_START });
       response = await doRequest({
         method: REQUEST_TYPE.POST,
         url: updateReportUrl(report_id),
-        data: payload
+        data: payload,
       });
 
       const { status, payload: { data, error } = {} } = response || {};
@@ -188,7 +188,7 @@ export const updateReport = (report_id, payload) => {
       } else {
         dispatch({
           type: UPDATE_REPORT_FAILED,
-          error
+          error,
         });
       }
     } catch (error) {
@@ -203,7 +203,7 @@ function reportsReducer(state, data) {
   if (reports) {
     return {
       ...state,
-      ...reports
+      ...reports,
     };
   } else {
     return state;

@@ -7,7 +7,7 @@ import { DIET_RESPONSE_STATUS } from "../../constant";
 
 export const TABLE_NAME = "diet_responses";
 
-export const db = database => {
+export const db = (database) => {
   database.define(
     TABLE_NAME,
     {
@@ -15,27 +15,27 @@ export const db = database => {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
-        type: DataTypes.INTEGER
+        type: DataTypes.INTEGER,
       },
       diet_id: {
         type: DataTypes.INTEGER,
         allowNull: false,
         references: {
           model: {
-            tableName: dietTableName
+            tableName: dietTableName,
           },
-          key: "id"
-        }
+          key: "id",
+        },
       },
       schedule_event_id: {
         type: DataTypes.INTEGER,
         allowNull: false,
         references: {
           model: {
-            tableName: scheduleEventsTable
+            tableName: scheduleEventsTable,
           },
-          key: "id"
-        }
+          key: "id",
+        },
       },
       status: {
         type: DataTypes.ENUM,
@@ -44,25 +44,25 @@ export const db = database => {
           DIET_RESPONSE_STATUS.DONE,
           DIET_RESPONSE_STATUS.EXPIRED,
           DIET_RESPONSE_STATUS.PARTIALLY_DONE,
-          DIET_RESPONSE_STATUS.SKIPPED
-        ]
+          DIET_RESPONSE_STATUS.SKIPPED,
+        ],
       },
       document_uploaded: {
         type: DataTypes.BOOLEAN,
-        defaultValue: false
+        defaultValue: false,
       },
       response_text: {
-        type: DataTypes.STRING(2000)
+        type: DataTypes.STRING(2000),
       },
       other_details: {
-        type: DataTypes.JSON
-      }
+        type: DataTypes.JSON,
+      },
     },
     {
       underscored: true,
-      paranoid: true
+      paranoid: true,
     }
   );
 };
 
-export const associate = database => {};
+export const associate = (database) => {};

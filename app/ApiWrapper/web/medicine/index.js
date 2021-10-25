@@ -17,8 +17,8 @@ class MedicineWrapper extends BaseMedicine {
         type,
         description,
         creator_id,
-        public_medicine
-      }
+        public_medicine,
+      },
     };
   };
 
@@ -26,7 +26,7 @@ class MedicineWrapper extends BaseMedicine {
     const { _arrData, getExistingData, setCurrentData, _objectName } = this;
 
     let cumulativeData = {};
-    _arrData.forEach(data => {
+    _arrData.forEach((data) => {
       setCurrentData(data);
       const medicineData = getExistingData();
       const { id, name, type, description, creator_id, public_medicine } =
@@ -38,15 +38,15 @@ class MedicineWrapper extends BaseMedicine {
           type,
           description,
           creator_id,
-          public_medicine
-        }
+          public_medicine,
+        },
       };
     });
 
     return {
       [_objectName]: {
-        ...cumulativeData
-      }
+        ...cumulativeData,
+      },
     };
   };
 
@@ -61,7 +61,7 @@ class MedicineWrapper extends BaseMedicine {
       details,
       public_medicine,
       updatedAt,
-      createdAt
+      createdAt,
     } = _data || {};
 
     return {
@@ -71,11 +71,11 @@ class MedicineWrapper extends BaseMedicine {
         type,
         description,
         creator_id,
-        public_medicine
+        public_medicine,
       },
       details,
       updated_at: updatedAt,
-      created_at: createdAt
+      created_at: createdAt,
     };
   };
 }

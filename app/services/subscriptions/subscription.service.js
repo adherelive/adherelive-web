@@ -6,11 +6,11 @@ import Op from "sequelize/lib/operators";
 import moment from "moment";
 
 export default class SubscriptionService {
-  getByData = async data => {
+  getByData = async (data) => {
     try {
       const subscriptions = Database.getModel(TABLE_NAME).findOne({
         where: data,
-        raw: true
+        raw: true,
       });
       return subscriptions;
     } catch (error) {
@@ -24,22 +24,18 @@ export default class SubscriptionService {
         where: {
           renew_on: {
             [Op.between]: [
-              moment()
-                .startOf("day")
-                .toISOString(),
-              moment()
-                .endOf("day")
-                .toISOString()
-            ]
-          }
+              moment().startOf("day").toISOString(),
+              moment().endOf("day").toISOString(),
+            ],
+          },
         },
         raw: true,
         include: [
           {
             model: Database.getModel(paymentProductTableName),
-            exclude: ["created_at", "updated_at"]
-          }
-        ]
+            exclude: ["created_at", "updated_at"],
+          },
+        ],
       });
       return subscriptions;
     } catch (error) {
@@ -47,10 +43,10 @@ export default class SubscriptionService {
     }
   };
 
-  createSubscription = async data => {
+  createSubscription = async (data) => {
     try {
       const subscriptions = Database.getModel(TABLE_NAME).create(data, {
-        raw: true
+        raw: true,
       });
       return subscriptions;
     } catch (error) {
@@ -63,10 +59,10 @@ export default class SubscriptionService {
     try {
       const subscriptions = Database.getModel(TABLE_NAME).update(data, {
         where: {
-          id
+          id,
         },
         raw: true,
-        transaction
+        transaction,
       });
       transaction.commit();
       return subscriptions;

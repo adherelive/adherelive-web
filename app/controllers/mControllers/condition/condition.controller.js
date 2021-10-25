@@ -25,9 +25,8 @@ class ConditionController extends Controller {
         let conditionApiData = {};
         for (const condition of conditionDetails) {
           const conditionWrapper = await new ConditionWrapper(condition);
-          conditionApiData[
-            conditionWrapper.getConditionId()
-          ] = conditionWrapper.getBasicInfo();
+          conditionApiData[conditionWrapper.getConditionId()] =
+            conditionWrapper.getBasicInfo();
         }
 
         return raiseSuccess(
@@ -35,8 +34,8 @@ class ConditionController extends Controller {
           200,
           {
             conditions: {
-              ...conditionApiData
-            }
+              ...conditionApiData,
+            },
           },
           "Conditions fetched successfully"
         );

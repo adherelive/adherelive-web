@@ -12,8 +12,8 @@ class PortionWrapper extends BasePortion {
     return {
       basic_info: {
         id,
-        name
-      }
+        name,
+      },
     };
   };
 }

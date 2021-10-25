@@ -4,16 +4,16 @@ import messages from "../messages";
 import Tooltip from "antd/es/tooltip";
 import message from "antd/es/message";
 
-export default props => {
+export default (props) => {
   const {
     data: {
       basic_info: { id = null, name = "", type = "", amount = "" } = {},
       deleteDoctorProduct,
-      formatMessage
-    } = {}
+      formatMessage,
+    } = {},
   } = props || {};
 
-  const handleDelete = id => async e => {
+  const handleDelete = (id) => async (e) => {
     e.preventDefault();
     try {
       const { data = {} } = props;
@@ -22,7 +22,7 @@ export default props => {
       const {
         status,
         statusCode,
-        payload: { data: resp_data = {}, message: resp_msg = "" } = {}
+        payload: { data: resp_data = {}, message: resp_msg = "" } = {},
       } = response || {};
 
       if (status) {

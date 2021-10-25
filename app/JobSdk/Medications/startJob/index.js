@@ -3,7 +3,7 @@ import moment from "moment";
 import {
   EVENT_TYPE,
   NOTIFICATION_VERB,
-  DEFAULT_PROVIDER
+  DEFAULT_PROVIDER,
 } from "../../../../constant";
 
 import ProviderService from "../../../services/provider/provider.service";
@@ -26,14 +26,14 @@ class StartJob extends MedicationJob {
         actor: {
           id: actorId,
           user_role_id,
-          details: { name, category: actorCategory } = {}
+          details: { name, category: actorCategory } = {},
         } = {},
         medicines: { basic_info: { name: medicineName } = {} } = {},
         medications: {
-          details: { unit, critical, quantity, strength } = {}
-        } = {}
+          details: { unit, critical, quantity, strength } = {},
+        } = {},
       },
-      id
+      id,
     } = getMedicationData() || {};
 
     const templateData = [];
@@ -43,8 +43,8 @@ class StartJob extends MedicationJob {
     const { rows: userRoles = [] } =
       (await UserRoleService.findAndCountAll({
         where: {
-          id: participants
-        }
+          id: participants,
+        },
       })) || {};
 
     let providerId = null;
@@ -63,13 +63,13 @@ class StartJob extends MedicationJob {
     let providerName = DEFAULT_PROVIDER;
     if (providerId) {
       const provider = await ProviderService.getProviderByData({
-        id: providerId
+        id: providerId,
       });
       const { name } = provider || {};
       providerName = name;
     }
     const userDevices = await UserDeviceService.getAllDeviceByData({
-      user_id: userIds
+      user_id: userIds,
     });
 
     if (userDevices.length > 0) {
@@ -91,16 +91,16 @@ class StartJob extends MedicationJob {
           medicineName.length > 10
             ? medicineName.substring(0, 11)
             : medicineName
-        }(${strength}${unit}${quantity ? `x${quantity}` : ""})`
+        }(${strength}${unit}${quantity ? `x${quantity}` : ""})`,
       },
       buttons: [
         { id: "yes", text: "YES" },
-        { id: "no", text: "NO" }
+        { id: "no", text: "NO" },
       ],
       include_player_ids: [...playerIds],
       priority: 10,
       android_channel_id: process.config.one_signal.urgent_channel_id,
-      data: { url: "/medication-reminder", params: getMedicationData() }
+      data: { url: "/medication-reminder", params: getMedicationData() },
     });
 
     return templateData;
@@ -114,11 +114,11 @@ class StartJob extends MedicationJob {
         actor: {
           id: actorId,
           user_role_id,
-          details: { name, category: actorCategory } = {}
-        } = {}
+          details: { name, category: actorCategory } = {},
+        } = {},
       },
       id,
-      start_time
+      start_time,
     } = getMedicationData() || {};
 
     const templateData = [];
@@ -134,7 +134,7 @@ class StartJob extends MedicationJob {
           verb: `${MEDICATION_REMINDER_START}:${currentTimeStamp}`,
           event: EVENT_TYPE.MEDICATION_REMINDER,
           time: start_time,
-          start_time: start_time
+          start_time: start_time,
         });
       }
     }

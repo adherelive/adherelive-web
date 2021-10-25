@@ -3,19 +3,19 @@ import { withRouter } from "react-router-dom";
 import TosPPEditorPage from "../../../Components/Pages/tosPPEditorPage";
 import {
   getTermsAndPolicy,
-  updateTermsAndPolicy
+  updateTermsAndPolicy,
 } from "../../../modules/otherDetails";
 
-const mapStateToProps = state => {
+const mapStateToProps = (state) => {
   const {} = state;
 
   return {};
 };
 
-const mapDispatchToProps = dispatch => {
+const mapDispatchToProps = (dispatch) => {
   return {
-    getTermsAndPolicy: type => dispatch(getTermsAndPolicy(type)),
-    updateTermsAndPolicy: payload => dispatch(updateTermsAndPolicy(payload))
+    getTermsAndPolicy: (type) => dispatch(getTermsAndPolicy(type)),
+    updateTermsAndPolicy: (payload) => dispatch(updateTermsAndPolicy(payload)),
   };
 };
 

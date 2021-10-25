@@ -4,7 +4,7 @@ let eventList = {
   SEND_NOTIFICATION: "sendNotification",
   EMAIL_ERROR: "emailError",
   SMS_ERROR: "smsError",
-  NOTIFICATION_ERROR: "notificationError"
+  NOTIFICATION_ERROR: "notificationError",
 };
 
 module.exports = eventList;

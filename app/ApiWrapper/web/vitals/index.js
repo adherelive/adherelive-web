@@ -31,19 +31,19 @@ class VitalWrapper extends BaseVital {
       start_date,
       end_date,
       details,
-      description
+      description,
     } = _data || {};
 
     return {
       basic_info: {
         id,
         vital_template_id,
-        care_plan_id
+        care_plan_id,
       },
       details,
       start_date,
       end_date,
-      description
+      description,
     };
   };
 
@@ -52,15 +52,12 @@ class VitalWrapper extends BaseVital {
 
     const EventService = new eventService();
 
-    const currentDate = moment()
-      .endOf("day")
-      .utc()
-      .toDate();
+    const currentDate = moment().endOf("day").utc().toDate();
 
     const scheduleEvents = await EventService.getAllPastData({
       startDate: getStartDate(),
       event_id: getVitalId(),
-      date: currentDate
+      date: currentDate,
     });
 
     let vitalEvents = {};
@@ -68,7 +65,7 @@ class VitalWrapper extends BaseVital {
     let latestPendingEventId;
 
     const vitalData = await FeatureDetailService.getDetailsByData({
-      feature_type: FEATURE_TYPE.VITAL
+      feature_type: FEATURE_TYPE.VITAL,
     });
 
     const vitalDetails = await FeatureDetailWrapper(vitalData);
@@ -96,9 +93,9 @@ class VitalWrapper extends BaseVital {
         [getVitalId()]: {
           ...getBasicInfo(),
           remaining,
-          total: scheduleEventIds.length
-        }
-      }
+          total: scheduleEventIds.length,
+        },
+      },
     };
   };
 
@@ -112,18 +109,17 @@ class VitalWrapper extends BaseVital {
     let wrapperQuery = {};
     if (vital_template) {
       wrapperQuery = {
-        data: vital_template
+        data: vital_template,
       };
     } else {
       wrapperQuery = {
-        id: getVitalTemplateId()
+        id: getVitalTemplateId(),
       };
     }
 
     const vitalTemplates = await VitalTemplateWrapper(wrapperQuery);
-    vitalTemplateData[
-      vitalTemplates.getVitalTemplateId()
-    ] = vitalTemplates.getBasicInfo();
+    vitalTemplateData[vitalTemplates.getVitalTemplateId()] =
+      vitalTemplates.getBasicInfo();
 
     if (care_plan) {
       const carePlans = await CarePlanWrapper(care_plan);
@@ -133,11 +129,11 @@ class VitalWrapper extends BaseVital {
     return {
       ...(await getAllInfo()),
       vital_templates: {
-        ...vitalTemplateData
+        ...vitalTemplateData,
       },
       care_plans: {
-        ...carePlanData
-      }
+        ...carePlanData,
+      },
     };
   };
 }

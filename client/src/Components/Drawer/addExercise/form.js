@@ -24,14 +24,14 @@ const FIELDS = [
   REPETITION_VALUE,
   REPETITION_ID,
   CALORIFIC_VALUE,
-  VIDEO_CONTENT
+  VIDEO_CONTENT,
 ];
 
 class AddExerciseForm extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      loading: false
+      loading: false,
     };
   }
 
@@ -57,20 +57,20 @@ class AddExerciseForm extends Component {
     });
   };
 
-  handleRepetitionSelect = value => {
+  handleRepetitionSelect = (value) => {
     const { form: { setFieldsValue } = {} } = this.props;
 
     setFieldsValue({ [REPETITION_ID]: value });
   };
 
-  formatMessage = data => this.props.intl.formatMessage(data);
+  formatMessage = (data) => this.props.intl.formatMessage(data);
 
   handleUpload = async ({ file }) => {
     const {
       uploadExerciseContent,
       form: { setFieldsValue } = {},
       setUploadedVideoUrl,
-      setVideoContentType
+      setVideoContentType,
     } = this.props;
     const data = new FormData();
     data.set("files", file);
@@ -96,11 +96,11 @@ class AddExerciseForm extends Component {
     }
   };
 
-  onChange = e => {
+  onChange = (e) => {
     const {
       form: { setFieldsValue } = {},
       setUploadedVideoUrl,
-      setVideoContentType
+      setVideoContentType,
     } = this.props;
     setVideoContentType(VIDEO_TYPES.URL);
     setUploadedVideoUrl("");
@@ -108,13 +108,13 @@ class AddExerciseForm extends Component {
 
   render() {
     const {
-      form: { getFieldDecorator, isFieldTouched, getFieldError }
+      form: { getFieldDecorator, isFieldTouched, getFieldError },
     } = this.props;
 
     const { formatMessage, handleUpload } = this;
 
     let fieldsError = {};
-    FIELDS.forEach(value => {
+    FIELDS.forEach((value) => {
       const error = isFieldTouched(value) && getFieldError(value);
       fieldsError = { ...fieldsError, [value]: error };
     });
@@ -130,9 +130,9 @@ class AddExerciseForm extends Component {
             rules: [
               {
                 required: true,
-                message: formatMessage(messages.name_required_error)
-              }
-            ]
+                message: formatMessage(messages.name_required_error),
+              },
+            ],
           })(<Input type="string" max="500" />)}
         </FormItem>
 
@@ -149,9 +149,9 @@ class AddExerciseForm extends Component {
                     required: true,
                     message: formatMessage(
                       messages.repetition_value_required_error
-                    )
-                  }
-                ]
+                    ),
+                  },
+                ],
               })(<Input type="number" min="1" />)}
             </FormItem>
           </div>
@@ -167,9 +167,9 @@ class AddExerciseForm extends Component {
                     required: true,
                     message: formatMessage(
                       messages.repetition_id_required_error
-                    )
-                  }
-                ]
+                    ),
+                  },
+                ],
               })(
                 <Select
                   className="drawer-select"

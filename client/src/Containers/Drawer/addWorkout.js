@@ -9,7 +9,7 @@ import { addExercise } from "../../modules/exercises";
 
 // import { addDiet } from "../../modules/diets";
 
-const mapStateToProps = state => {
+const mapStateToProps = (state) => {
   const { auth } = state;
   const { authenticated_user, authenticated_category, auth_role } = auth;
   const {
@@ -20,7 +20,7 @@ const mapStateToProps = state => {
     exercise_details,
     searched_exercises,
     searched_exercise_details,
-    all_workout_details = {}
+    all_workout_details = {},
   } = state;
 
   return {
@@ -36,16 +36,16 @@ const mapStateToProps = state => {
     exercise_details,
     searched_exercises,
     searched_exercise_details,
-    all_workout_details
+    all_workout_details,
   };
 };
 
-const mapDispatchToProps = dispatch => {
+const mapDispatchToProps = (dispatch) => {
   return {
     close: () => dispatch(close()),
     getWorkoutDetails: () => dispatch(getWorkoutDetails()),
-    addExercise: data => dispatch(addExercise(data)),
-    addWorkout: data => dispatch(addWorkout(data))
+    addExercise: (data) => dispatch(addExercise(data)),
+    addWorkout: (data) => dispatch(addWorkout(data)),
   };
 };
 

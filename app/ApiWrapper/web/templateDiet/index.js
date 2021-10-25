@@ -18,17 +18,17 @@ class TemplateDietWrapper extends BaseTemplateDiet {
       care_plan_template_id,
       total_calories,
       duration,
-      details
+      details,
     } = _data || {};
     return {
       basic_info: {
         id,
         name,
-        care_plan_template_id
+        care_plan_template_id,
       },
       total_calories,
       duration,
-      details
+      details,
     };
   };
 
@@ -36,7 +36,7 @@ class TemplateDietWrapper extends BaseTemplateDiet {
     const { getBasicInfo } = this;
 
     return {
-      ...getBasicInfo()
+      ...getBasicInfo(),
     };
   };
 
@@ -61,7 +61,7 @@ class TemplateDietWrapper extends BaseTemplateDiet {
             for (let s in similar) {
               const eachSimilar = similar[s] || {};
               const {
-                food_item_detail_id: similar_food_item_detail_id = null
+                food_item_detail_id: similar_food_item_detail_id = null,
               } = similar[s] || {};
               if (similar_food_item_detail_id) {
                 food_item_detail_ids.push(similar_food_item_detail_id);
@@ -80,8 +80,8 @@ class TemplateDietWrapper extends BaseTemplateDiet {
       const { rows = [] } =
         (await foodItemDetailService.findAndCountAll({
           where: {
-            id: food_item_detail_ids
-          }
+            id: food_item_detail_ids,
+          },
         })) || {};
 
       foodItemDetails = rows;
@@ -93,13 +93,10 @@ class TemplateDietWrapper extends BaseTemplateDiet {
     if (foodItemDetails.length > 0) {
       for (let index = 0; index < foodItemDetails.length; index++) {
         const foodItemDetail = await FoodItemDetailWrapper({
-          data: foodItemDetails[index]
+          data: foodItemDetails[index],
         });
-        const {
-          food_item_details,
-          food_items,
-          portions
-        } = await foodItemDetail.getReferenceInfo();
+        const { food_item_details, food_items, portions } =
+          await foodItemDetail.getReferenceInfo();
         allFoodItemDetails = { ...allFoodItemDetails, ...food_item_details };
         allFoodItems = { ...allFoodItems, ...food_items };
         allPortions = { ...allPortions, ...portions };
@@ -109,12 +106,12 @@ class TemplateDietWrapper extends BaseTemplateDiet {
     return {
       template_diets: {
         [getId()]: {
-          ...getAllInfo()
-        }
+          ...getAllInfo(),
+        },
       },
       food_item_details: allFoodItemDetails,
       food_items: allFoodItems,
-      portions: allPortions
+      portions: allPortions,
     };
   };
 }

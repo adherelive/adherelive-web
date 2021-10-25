@@ -4,7 +4,7 @@ import {
   onComplete,
   onCancel,
   onReschedule,
-  onStart
+  onStart,
 } from "../helper";
 import { ACTIVITIES } from "../activityType";
 

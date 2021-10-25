@@ -9,7 +9,7 @@ import {
   BODY,
   PARTS_GRAPH,
   BODY_VIEW,
-  BODY_SIDE
+  BODY_SIDE,
 } from "../../constant";
 import messages from "./messages";
 import { injectIntl } from "react-intl";
@@ -29,7 +29,7 @@ class botMessage extends Component {
       body: this_body,
       message,
       patientDp,
-      vital_repeat_intervals
+      vital_repeat_intervals,
     } = this.props;
 
     if (!isJSON(this_body)) {

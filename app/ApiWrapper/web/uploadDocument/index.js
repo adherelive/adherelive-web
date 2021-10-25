@@ -16,8 +16,8 @@ class UploadDocumentWrapper extends BaseUploadDocument {
         parent_type,
         parent_id,
         name,
-        document: completePath(document)
-      }
+        document: completePath(document),
+      },
     };
   };
 }

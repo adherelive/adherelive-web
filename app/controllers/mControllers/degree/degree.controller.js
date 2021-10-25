@@ -25,9 +25,8 @@ class DegreeController extends Controller {
         let degreeApiData = {};
         for (const degree of degreeDetails) {
           const degreeWrapper = await new DegreeWrapper(degree);
-          degreeApiData[
-            degreeWrapper.getDegreeId()
-          ] = degreeWrapper.getBasicInfo();
+          degreeApiData[degreeWrapper.getDegreeId()] =
+            degreeWrapper.getBasicInfo();
         }
 
         return raiseSuccess(
@@ -35,8 +34,8 @@ class DegreeController extends Controller {
           200,
           {
             degrees: {
-              ...degreeApiData
-            }
+              ...degreeApiData,
+            },
           },
           "Degrees fetched successfully"
         );

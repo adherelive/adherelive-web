@@ -2,29 +2,29 @@ import Database from "../../../libs/mysql";
 import { TABLE_NAME } from "../../models/templateVitals";
 
 export default class TemplateVitalService {
-  getByData = async data => {
+  getByData = async (data) => {
     try {
       return await Database.getModel(TABLE_NAME).findOne({
         where: data,
-        raw: true
+        raw: true,
       });
     } catch (error) {
       throw error;
     }
   };
 
-  deleteVital = async data => {
+  deleteVital = async (data) => {
     try {
       return await Database.getModel(TABLE_NAME).destroy({
         where: data,
-        include: []
+        include: [],
       });
     } catch (error) {
       throw error;
     }
   };
 
-  create = async data => {
+  create = async (data) => {
     try {
       const templateVital = await Database.getModel(TABLE_NAME).create(data);
       return templateVital;
@@ -38,9 +38,9 @@ export default class TemplateVitalService {
     try {
       const templateVital = await Database.getModel(TABLE_NAME).update(data, {
         where: {
-          id
+          id,
         },
-        transaction
+        transaction,
       });
       await transaction.commit();
       return templateVital;

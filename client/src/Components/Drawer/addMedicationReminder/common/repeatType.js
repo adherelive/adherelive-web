@@ -12,9 +12,9 @@ const { Item: FormItem } = Form;
 const { Option } = Select;
 
 class RepeatType extends Component {
-  getParentNode = t => t.parentNode;
+  getParentNode = (t) => t.parentNode;
 
-  formatMessage = data => this.props.intl.formatMessage(data);
+  formatMessage = (data) => this.props.intl.formatMessage(data);
 
   getRepeatOption = () => {
     return REPEAT_OPTION.map((value, index) => {
@@ -40,7 +40,7 @@ class RepeatType extends Component {
       form: { getFieldDecorator },
       adjustEndDate,
       purpose,
-      series
+      series,
     } = this.props;
     const { getParentNode, getRepeatOption, getInitialValue } = this;
 
@@ -50,7 +50,7 @@ class RepeatType extends Component {
         style={{ display: series === false ? "none" : "" }}
       >
         {getFieldDecorator(FIELD_NAME, {
-          initialValue: getInitialValue()
+          initialValue: getInitialValue(),
         })(
           <Select
             className="full-width"
@@ -80,5 +80,5 @@ const Field = injectIntl(RepeatType);
 
 export default {
   field_name: FIELD_NAME,
-  render: props => <Field {...props} />
+  render: (props) => <Field {...props} />,
 };

@@ -6,15 +6,15 @@ import { open } from "../../modules/drawer";
 import { DRAWER } from "../../constant";
 import {
   addToWatchlist,
-  removePatientFromWatchlist
+  removePatientFromWatchlist,
 } from "../../modules/doctors";
 import {
   getPatientsPaginated,
   searchTreatmentPaginatedPatients,
-  searchDiagnosisPaginatedPatients
+  searchDiagnosisPaginatedPatients,
 } from "../../modules/pages/paginatedPatients";
 
-const mapStateToProps = state => {
+const mapStateToProps = (state) => {
   const {
     patients = {},
     doctors = {},
@@ -27,13 +27,13 @@ const mapStateToProps = state => {
       chat_ids = [],
       paginated_patient_data: { paginated_watchlist_patients = {} } = {},
       search_patient_table: {
-        patient_table_search_watchlist_patients = {}
-      } = {}
+        patient_table_search_watchlist_patients = {},
+      } = {},
     } = {},
     chats = {},
     users,
     auth: { authPermissions = [], authenticated_user, auth_role } = {},
-    care_plans
+    care_plans,
   } = state;
 
   return {
@@ -53,18 +53,18 @@ const mapStateToProps = state => {
     paginated_patients: paginated_watchlist_patients,
     search_treatments_patients: patient_table_search_watchlist_patients,
     search_diagnosis_patients: patient_table_search_watchlist_patients,
-    auth_role
+    auth_role,
   };
 };
 
-const mapDispatchToProps = dispatch => {
+const mapDispatchToProps = (dispatch) => {
   return {
-    openPatientDetailsDrawer: payload =>
+    openPatientDetailsDrawer: (payload) =>
       dispatch(open({ type: DRAWER.PATIENT_DETAILS, payload })),
-    addToWatchlist: patient_id => dispatch(addToWatchlist(patient_id)),
-    removePatientFromWatchlist: patient_id =>
+    addToWatchlist: (patient_id) => dispatch(addToWatchlist(patient_id)),
+    removePatientFromWatchlist: (patient_id) =>
       dispatch(removePatientFromWatchlist(patient_id)),
-    openEditPatientDrawer: payload =>
+    openEditPatientDrawer: (payload) =>
       dispatch(open({ type: DRAWER.EDIT_PATIENT, payload })),
     getPatientsPaginated: ({
       sort_createdAt,
@@ -72,7 +72,7 @@ const mapDispatchToProps = dispatch => {
       filter_diagnosis,
       filter_treatment,
       offset,
-      watchlist = 1
+      watchlist = 1,
     }) =>
       dispatch(
         getPatientsPaginated({
@@ -81,33 +81,33 @@ const mapDispatchToProps = dispatch => {
           filter_diagnosis,
           filter_treatment,
           offset,
-          watchlist
+          watchlist,
         })
       ),
     searchTreatmentPaginatedPatients: ({
       filter_treatment,
       offset,
-      watchlist = 1
+      watchlist = 1,
     }) =>
       dispatch(
         searchTreatmentPaginatedPatients({
           filter_treatment,
           offset,
-          watchlist
+          watchlist,
         })
       ),
     searchDiagnosisPaginatedPatients: ({
       filter_diagnosis,
       offset,
-      watchlist = 1
+      watchlist = 1,
     }) =>
       dispatch(
         searchDiagnosisPaginatedPatients({
           filter_diagnosis,
           offset,
-          watchlist
+          watchlist,
         })
-      )
+      ),
   };
 };
 

@@ -20,30 +20,30 @@ const TIMELINE_STATUS = {
   [DATE]: {
     key: DATE,
     dot: "",
-    color: "blue"
+    color: "blue",
   },
   [COMPLETED]: {
     key: COMPLETED,
     dot: <CheckCircleOutlined />,
-    color: "green"
+    color: "green",
   },
   [EXPIRED]: {
     key: EXPIRED,
     dot: <ClockCircleOutlined />,
-    color: "red"
+    color: "red",
   },
   [CANCELLED]: {
     key: CANCELLED,
     dot: <StopOutlined style={{ color: "#FFCC00" }} />,
-    color: "yellow"
-  }
+    color: "yellow",
+  },
 };
 
 class MedicationTimeline extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      loading: true
+      loading: true,
     };
   }
 
@@ -69,14 +69,14 @@ class MedicationTimeline extends Component {
         status,
         payload: {
           data: { medication_timeline = {}, medication_date_ids = [] } = {},
-          message: responseMessage
-        } = {}
+          message: responseMessage,
+        } = {},
       } = response || {};
       if (status === true) {
         this.setState({
           medication_timeline,
           medication_date_ids,
-          loading: false
+          loading: false,
         });
       } else {
         this.setState({ loading: false });
@@ -90,12 +90,12 @@ class MedicationTimeline extends Component {
     const { id, status, end_time, details = {} } = event || {};
     const {
       response: { values, currentTime } = {},
-      medication_templates: { details: { template } = {} } = {}
+      medication_templates: { details: { template } = {} } = {},
     } = details;
 
     let currentTemplate = {};
 
-    template.forEach(data => {
+    template.forEach((data) => {
       const { id } = data || {};
       if (id === responseId) {
         currentTemplate = data;
@@ -104,21 +104,20 @@ class MedicationTimeline extends Component {
     return currentTemplate;
   };
 
-  getEventsForDay = events => {
+  getEventsForDay = (events) => {
     const { intl: { formatMessage } = {} } = this.props;
     const { getMedicationTemplate } = this;
 
-    return events.map(event => {
+    return events.map((event) => {
       const { id, status, end_time, details = {} } = event || {};
       // console.log("76546789765435678",event);
       const { updated_at = "" } = event;
-      const {
-        details: { unit = "mg", strength = "", quantity = "" } = {}
-      } = event;
+      const { details: { unit = "mg", strength = "", quantity = "" } = {} } =
+        event;
 
       const {
         response: { value = {}, currentTime } = {},
-        medicines: { basic_info: { name: medicine_name = "" } = {} } = {}
+        medicines: { basic_info: { name: medicine_name = "" } = {} } = {},
       } = details;
 
       switch (status) {
@@ -190,7 +189,7 @@ class MedicationTimeline extends Component {
     const { medication_timeline, medication_date_ids } = this.state;
     const { getEventsForDay } = this;
 
-    return medication_date_ids.map(date => {
+    return medication_date_ids.map((date) => {
       const eventsForDay = medication_timeline[date] || {};
       return (
         <Fragment key={`${date}`}>

@@ -10,11 +10,11 @@ import {
   getSingleDietData,
   deleteDiet,
   getPatientPreferenceDietDetails,
-  updateDietTotalCalories
+  updateDietTotalCalories,
 } from "../../modules/diets";
 import { getPatientCarePlanDetails } from "../../modules/carePlans";
 
-const mapStateToProps = state => {
+const mapStateToProps = (state) => {
   const { auth } = state;
   const { authenticated_user, authenticated_category } = auth;
   const {
@@ -24,7 +24,7 @@ const mapStateToProps = state => {
     food_items,
     food_item_details,
     searched_food_items,
-    searched_food_item_details
+    searched_food_item_details,
   } = state;
 
   return {
@@ -38,29 +38,29 @@ const mapStateToProps = state => {
     food_items,
     food_item_details,
     searched_food_items,
-    searched_food_item_details
+    searched_food_item_details,
   };
 };
 
-const mapDispatchToProps = dispatch => {
+const mapDispatchToProps = (dispatch) => {
   return {
     close: () => dispatch(close()),
     getPortions: () => dispatch(getPortions()),
-    addFoodItem: data => dispatch(addFoodItem(data)),
+    addFoodItem: (data) => dispatch(addFoodItem(data)),
     updateDiet: (data, diet_id) => dispatch(updateDiet(data, diet_id)),
-    getSingleDietData: id => dispatch(getSingleDietData(id)),
-    deleteDiet: id => dispatch(deleteDiet(id)),
-    getPatientCarePlanDetails: patientId =>
+    getSingleDietData: (id) => dispatch(getSingleDietData(id)),
+    deleteDiet: (id) => dispatch(deleteDiet(id)),
+    getPatientCarePlanDetails: (patientId) =>
       dispatch(getPatientCarePlanDetails(patientId)),
-    getPatientPreferenceDietDetails: patient_id =>
+    getPatientPreferenceDietDetails: (patient_id) =>
       dispatch(getPatientPreferenceDietDetails(patient_id)),
     updateDietTotalCalories: ({ total_calories, diet_id }) =>
       dispatch(
         updateDietTotalCalories({
           total_calories,
-          diet_id
+          diet_id,
         })
-      )
+      ),
   };
 };
 

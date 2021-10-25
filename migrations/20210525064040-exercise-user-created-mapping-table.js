@@ -10,46 +10,46 @@ module.exports = {
       id: {
         type: DataTypes.INTEGER,
         primaryKey: true,
-        autoIncrement: true
+        autoIncrement: true,
       },
       exercise_id: {
         type: DataTypes.INTEGER,
         allowNull: false,
         references: {
           model: {
-            tableName: exerciseTableName
+            tableName: exerciseTableName,
           },
-          key: "id"
-        }
+          key: "id",
+        },
       },
       creator_id: {
         type: DataTypes.INTEGER,
-        allowNull: false
+        allowNull: false,
       },
       creator_type: {
         type: DataTypes.ENUM,
         values: [
           USER_CATEGORY.DOCTOR,
           USER_CATEGORY.PROVIDER,
-          USER_CATEGORY.ADMIN
+          USER_CATEGORY.ADMIN,
         ],
-        defaultValue: USER_CATEGORY.DOCTOR
+        defaultValue: USER_CATEGORY.DOCTOR,
       },
       created_at: {
         type: DataTypes.DATE,
-        allowNull: false
+        allowNull: false,
       },
       updated_at: {
         type: DataTypes.DATE,
-        allowNull: false
+        allowNull: false,
       },
       deleted_at: {
-        type: DataTypes.DATE
-      }
+        type: DataTypes.DATE,
+      },
     });
   },
 
   down: (queryInterface, Sequelize) => {
     return queryInterface.dropTable(TABLE_NAME);
-  }
+  },
 };

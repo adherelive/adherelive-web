@@ -10,44 +10,44 @@ module.exports = {
       id: {
         type: Sequelize.INTEGER,
         primaryKey: true,
-        autoIncrement: true
+        autoIncrement: true,
       },
       provider_id: {
         type: Sequelize.INTEGER,
         allowNull: false,
         references: {
           model: {
-            tableName: providerTableName
+            tableName: providerTableName,
           },
-          key: "id"
-        }
+          key: "id",
+        },
       },
       terms_and_conditions_id: {
         type: Sequelize.INTEGER,
         allowNull: true,
         references: {
           model: {
-            tableName: termsAndConditions
+            tableName: termsAndConditions,
           },
-          key: "id"
-        }
+          key: "id",
+        },
       },
       created_at: {
         allowNull: false,
-        type: Sequelize.DATE
+        type: Sequelize.DATE,
       },
       updated_at: {
         allowNull: false,
-        type: Sequelize.DATE
+        type: Sequelize.DATE,
       },
       deleted_at: {
         allowNull: true,
-        type: Sequelize.DATE
-      }
+        type: Sequelize.DATE,
+      },
     });
   },
 
   down: (queryInterface, Sequelize) => {
     return queryInterface.dropTable(TABLE_NAME);
-  }
+  },
 };

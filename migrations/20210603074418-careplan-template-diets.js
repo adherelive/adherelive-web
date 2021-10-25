@@ -10,48 +10,48 @@ module.exports = {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
-        type: DataTypes.INTEGER
+        type: DataTypes.INTEGER,
       },
       care_plan_template_id: {
         type: DataTypes.INTEGER,
         allowNull: false,
         references: {
           model: {
-            tableName: carePlanTemplateTableName
+            tableName: carePlanTemplateTableName,
           },
-          key: "id"
-        }
+          key: "id",
+        },
       },
       name: {
         type: DataTypes.STRING,
-        allowNull: false
+        allowNull: false,
       },
       total_calories: {
-        type: DataTypes.FLOAT(11, 2)
+        type: DataTypes.FLOAT(11, 2),
       },
       duration: {
-        type: DataTypes.INTEGER
+        type: DataTypes.INTEGER,
       },
       details: {
         type: DataTypes.JSON,
-        allowNull: true
+        allowNull: true,
       },
       created_at: {
         allowNull: false,
-        type: DataTypes.DATE
+        type: DataTypes.DATE,
       },
       updated_at: {
         allowNull: false,
-        type: DataTypes.DATE
+        type: DataTypes.DATE,
       },
       deleted_at: {
         allowNull: true,
-        type: DataTypes.DATE
-      }
+        type: DataTypes.DATE,
+      },
     });
   },
 
-  down: queryInterface => {
+  down: (queryInterface) => {
     return queryInterface.dropTable(TABLE_NAME);
-  }
+  },
 };

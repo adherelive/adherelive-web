@@ -7,25 +7,25 @@ export const SEARCH_TREATMENTS_START = "SEARCH_TREATMENTS_START";
 export const SEARCH_TREATMENTS_COMPLETED = "SEARCH_TREATMENTS_COMPLETED";
 export const SEARCH_TREATMENTS_FAILED = "SEARCH_TREATMENTS_FAILED";
 
-export const searchTreatment = value => {
+export const searchTreatment = (value) => {
   let response = {};
-  return async dispatch => {
+  return async (dispatch) => {
     try {
       response = await doRequest({
         method: REQUEST_TYPE.GET,
-        url: searchTreatments(value)
+        url: searchTreatments(value),
       });
 
       const { status, payload: { data, message = "" } = {} } = response || {};
       if (status === true) {
         dispatch({
           type: SEARCH_TREATMENTS_COMPLETED,
-          data
+          data,
         });
       } else {
         dispatch({
           type: SEARCH_TREATMENTS_FAILED,
-          message
+          message,
         });
       }
     } catch (error) {
@@ -40,7 +40,7 @@ function treatmentReducer(state, data) {
   if (treatments) {
     return {
       ...state,
-      ...treatments
+      ...treatments,
     };
   } else {
     return state;

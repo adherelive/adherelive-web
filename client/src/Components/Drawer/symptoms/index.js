@@ -10,7 +10,7 @@ import {
   Spin,
   Radio,
   DatePicker,
-  Modal
+  Modal,
 } from "antd";
 import config from "../../../config";
 import messages from "./message";
@@ -25,22 +25,22 @@ import {
   PART_LIST_BACK,
   PART_LIST_CODES,
   PART_LIST_FRONT,
-  BODY
+  BODY,
 } from "../../../constant";
 
 class SymptomsDrawer extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      imageModalVisible: false
+      imageModalVisible: false,
     };
   }
 
   componentDidMount() {}
 
-  formatMessage = data => this.props.intl.formatMessage(data);
+  formatMessage = (data) => this.props.intl.formatMessage(data);
 
-  getBodyPartName = selected_part => {
+  getBodyPartName = (selected_part) => {
     const { formatMessage } = this;
     if (selected_part === PART_LIST_CODES.HEAD) {
       return formatMessage(messages.head);
@@ -163,7 +163,7 @@ class SymptomsDrawer extends Component {
     this.setState({ imageModalVisible: true });
   };
 
-  imageModal = url => {
+  imageModal = (url) => {
     return (
       <Modal
         className={"chat-media-modal"}
@@ -187,10 +187,10 @@ class SymptomsDrawer extends Component {
     // const { url, message } = this.state;
     if (url && url.length > 0) {
       fetch(url, {
-        method: "GET"
+        method: "GET",
       })
-        .then(response => response.blob())
-        .then(blob => {
+        .then((response) => response.blob())
+        .then((blob) => {
           const blobUrl = window.URL.createObjectURL(new Blob([blob]));
           const downloader = document.createElement("a");
           downloader.href = blobUrl;
@@ -212,10 +212,10 @@ class SymptomsDrawer extends Component {
           description = "",
           side = "1",
           image_document_ids = [],
-          audio_document_ids = []
-        }
+          audio_document_ids = [],
+        },
       },
-      upload_documents = {}
+      upload_documents = {},
     } = this.props;
     let imageUrl = "";
     let audioUrl = "";
@@ -257,13 +257,13 @@ class SymptomsDrawer extends Component {
               className={"wp100 hp100"}
             />
             {side === "1"
-              ? PART_LIST_FRONT.map(part => {
+              ? PART_LIST_FRONT.map((part) => {
                   const { key, areaStyle = {}, dotStyle = {} } = BODY[part];
                   const {
                     top: bpTop = 0,
                     left: bpLeft = 0,
                     height: bpHeight = 0,
-                    width: bpWidth = 0
+                    width: bpWidth = 0,
                   } = areaStyle || {};
                   const { top: dotTop = 0, left: dotLeft = 0 } = dotStyle || {};
                   console.log(
@@ -280,7 +280,7 @@ class SymptomsDrawer extends Component {
                         top: `${bpTop}px`,
                         left: `${bpLeft}px`,
                         height: `${bpHeight}px`,
-                        width: `${bpWidth}px`
+                        width: `${bpWidth}px`,
                       }}
                     >
                       <div
@@ -294,7 +294,7 @@ class SymptomsDrawer extends Component {
                             body_part_key === key
                               ? "rgba(0, 129, 138, 0.41)"
                               : "rgba(0,0,0,0)",
-                          borderRadius: "50%"
+                          borderRadius: "50%",
 
                           // height:  12,
                           // width:  12 ,
@@ -305,13 +305,13 @@ class SymptomsDrawer extends Component {
                     </div>
                   );
                 })
-              : PART_LIST_BACK.map(part => {
+              : PART_LIST_BACK.map((part) => {
                   const { key, areaStyle = {}, dotStyle = {} } = BODY[part];
                   const {
                     top: bpTop = 0,
                     left: bpLeft = 0,
                     height: bpHeight = 0,
-                    width: bpWidth = 0
+                    width: bpWidth = 0,
                   } = areaStyle || {};
                   const { top: dotTop = 0, left: dotLeft = 0 } = dotStyle || {};
                   return (
@@ -322,7 +322,7 @@ class SymptomsDrawer extends Component {
                         top: `${bpTop}px`,
                         left: `${bpLeft}px`,
                         height: `${bpHeight}px`,
-                        width: `${bpWidth}px`
+                        width: `${bpWidth}px`,
                       }}
                     >
                       <div
@@ -336,7 +336,7 @@ class SymptomsDrawer extends Component {
                             body_part_key === key
                               ? "rgba(0, 129, 138, 0.41)"
                               : "rgba(0,0,0,0)",
-                          borderRadius: "50%"
+                          borderRadius: "50%",
 
                           // height:  12,
                           // width:  12 ,
@@ -419,7 +419,7 @@ class SymptomsDrawer extends Component {
           headerStyle={{
             position: "sticky",
             zIndex: "9999",
-            top: "0px"
+            top: "0px",
           }}
           onClose={close}
           visible={visible} // todo: change as per state, -- WIP --

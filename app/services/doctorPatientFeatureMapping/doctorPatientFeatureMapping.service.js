@@ -2,7 +2,7 @@ import Database from "../../../libs/mysql";
 import { TABLE_NAME } from "../../models/doctorPatientFeatureMapping";
 
 class DoctorPatientFeatureMappingService {
-  create = async data => {
+  create = async (data) => {
     try {
       const doctorPatientFeatureMapping = await Database.getModel(
         TABLE_NAME
@@ -13,12 +13,12 @@ class DoctorPatientFeatureMappingService {
     }
   };
 
-  getById = async id => {
+  getById = async (id) => {
     try {
       const doctorPatientFeatureMapping = await Database.getModel(
         TABLE_NAME
       ).findOne({
-        where: { id }
+        where: { id },
       });
       return doctorPatientFeatureMapping;
     } catch (error) {
@@ -26,12 +26,12 @@ class DoctorPatientFeatureMappingService {
     }
   };
 
-  getByData = async data => {
+  getByData = async (data) => {
     try {
       const doctorPatientFeatureMapping = await Database.getModel(
         TABLE_NAME
       ).findAll({
-        where: data
+        where: data,
       });
       return doctorPatientFeatureMapping;
     } catch (error) {
@@ -39,7 +39,7 @@ class DoctorPatientFeatureMappingService {
     }
   };
 
-  deleteMapping = async mapping_data => {
+  deleteMapping = async (mapping_data) => {
     const transaction = await Database.initTransaction();
     try {
       const { patient_id, doctor_id, feature_id } = mapping_data;
@@ -47,8 +47,8 @@ class DoctorPatientFeatureMappingService {
         where: {
           patient_id,
           doctor_id,
-          feature_id
-        }
+          feature_id,
+        },
       });
       await transaction.commit();
       return deletedDetails;

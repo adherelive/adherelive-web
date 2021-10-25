@@ -9,10 +9,10 @@ import { DeleteOutlined } from "@ant-design/icons";
 
 const ALL_TABS = {
   PUBLIC: "1",
-  CREATOR: "2"
+  CREATOR: "2",
 };
 
-export default props => {
+export default (props) => {
   const {
     medicineData = {},
     currentPage = 1,
@@ -20,13 +20,13 @@ export default props => {
     mapMedicineToPublic,
     getPublicMedicines,
     currentTab,
-    changeTab
+    changeTab,
   } = props || {};
   const {
-    basic_info: { name = "", id: medicine_id = null, public_medicine = false }
+    basic_info: { name = "", id: medicine_id = null, public_medicine = false },
   } = medicineData || {};
 
-  const handleMakeMedicinePublic = e => {
+  const handleMakeMedicinePublic = (e) => {
     e.preventDefault();
 
     confirm({
@@ -49,16 +49,16 @@ export default props => {
           const {
             makeMedicinePublic,
             getPrivateMedicines,
-            searchText = ""
+            searchText = "",
           } = props;
           changeLoading(true);
           const response = await makeMedicinePublic({ medicine_id, offset });
           const {
             payload: {
               data: { medicines = {} } = {},
-              message: resp_message
+              message: resp_message,
             } = {},
-            status
+            status,
           } = response;
           let medicine = {};
           const medicineKey = Object.keys(medicines)[0];
@@ -66,7 +66,7 @@ export default props => {
 
           const medicineValue = {
             basic_info,
-            ["updated_at"]: moment().toISOString()
+            ["updated_at"]: moment().toISOString(),
           };
 
           medicine[medicineKey] = medicineValue;
@@ -92,7 +92,7 @@ export default props => {
       },
       onCancel() {},
       maskClosable: false,
-      keyboard: false
+      keyboard: false,
     });
   };
 
@@ -107,7 +107,7 @@ export default props => {
     );
   };
 
-  const handleDelete = e => {
+  const handleDelete = (e) => {
     e.preventDefault();
 
     confirm({
@@ -137,7 +137,7 @@ export default props => {
       },
       onCancel() {},
       maskClosable: false,
-      keyboard: false
+      keyboard: false,
     });
   };
 

@@ -9,7 +9,7 @@ import {
   Button,
   Spin,
   Radio,
-  DatePicker
+  DatePicker,
 } from "antd";
 import moment from "moment";
 import throttle from "lodash-es/throttle";
@@ -37,7 +37,7 @@ class AddCareplanDrawer extends Component {
       diagnosis_description: "",
       diagnosis_type: "2",
       symptoms: "",
-      submitting: false
+      submitting: false,
     };
     this.handleConditionSearch = throttle(
       this.handleConditionSearch.bind(this),
@@ -61,9 +61,9 @@ class AddCareplanDrawer extends Component {
 
   componentDidUpdate(prevProps, prevState) {}
 
-  formatMessage = data => this.props.intl.formatMessage(data);
+  formatMessage = (data) => this.props.intl.formatMessage(data);
 
-  setClinicalNotes = e => {
+  setClinicalNotes = (e) => {
     const value = e.target.value.trim();
 
     if (value.length > 0 || value === "") {
@@ -71,7 +71,7 @@ class AddCareplanDrawer extends Component {
     }
   };
 
-  setSymptoms = e => {
+  setSymptoms = (e) => {
     const value = e.target.value.trim();
 
     if (value.length > 0 || value === "") {
@@ -79,7 +79,7 @@ class AddCareplanDrawer extends Component {
     }
   };
 
-  setPastedClinicalNotes = e => {
+  setPastedClinicalNotes = (e) => {
     e.preventDefault();
     let pastedValue = "";
     if (typeof e.clipboardData !== "undefined") {
@@ -90,7 +90,7 @@ class AddCareplanDrawer extends Component {
     }
   };
 
-  setPastedSymptoms = e => {
+  setPastedSymptoms = (e) => {
     e.preventDefault();
     let pastedValue = "";
     if (typeof e.clipboardData !== "undefined") {
@@ -101,7 +101,7 @@ class AddCareplanDrawer extends Component {
     }
   };
 
-  setDiagnosis = e => {
+  setDiagnosis = (e) => {
     const value = e.target.value.trim();
 
     if (value.length > 0 || value === "") {
@@ -109,7 +109,7 @@ class AddCareplanDrawer extends Component {
     }
   };
 
-  setPastedDiagnosis = e => {
+  setPastedDiagnosis = (e) => {
     e.preventDefault();
     let pastedValue = "";
     if (typeof e.clipboardData !== "undefined") {
@@ -120,19 +120,19 @@ class AddCareplanDrawer extends Component {
     }
   };
 
-  setDiagnosisType = value => {
+  setDiagnosisType = (value) => {
     this.setState({ diagnosis_type: value });
   };
 
-  setTreatment = value => {
+  setTreatment = (value) => {
     this.setState({ treatment: value });
   };
 
-  setSeverity = value => {
+  setSeverity = (value) => {
     this.setState({ severity: value });
   };
 
-  setCondition = async value => {
+  setCondition = async (value) => {
     const { searchTreatment } = this.props;
     this.setState({ condition: value });
 
@@ -140,7 +140,7 @@ class AddCareplanDrawer extends Component {
 
     const {
       status,
-      payload: { data: { treatments = {} } = {}, message } = {}
+      payload: { data: { treatments = {} } = {}, message } = {},
     } = response;
     if (status) {
       this.setState({ treatments, treatment: "" });
@@ -195,10 +195,8 @@ class AddCareplanDrawer extends Component {
         const { searchCondition } = this.props;
         this.setState({ fetchingCondition: true });
         const response = await searchCondition(data);
-        const {
-          status,
-          payload: { data: responseData, message } = {}
-        } = response;
+        const { status, payload: { data: responseData, message } = {} } =
+          response;
         if (status) {
           this.setState({ fetchingCondition: false });
         } else {
@@ -220,10 +218,8 @@ class AddCareplanDrawer extends Component {
         const { searchTreatment } = this.props;
         this.setState({ fetchingTreatment: true });
         const response = await searchTreatment(data);
-        const {
-          status,
-          payload: { data: treatments, message } = {}
-        } = response;
+        const { status, payload: { data: treatments, message } = {} } =
+          response;
         if (status) {
           this.setState({ fetchingTreatment: false });
         } else {
@@ -281,7 +277,7 @@ class AddCareplanDrawer extends Component {
       diagnosis_type = "2",
       severity = "",
       treatment = "",
-      symptoms = ""
+      symptoms = "",
     } = this.state;
 
     return (
@@ -440,7 +436,7 @@ class AddCareplanDrawer extends Component {
     const {
       treatment = "",
       diagnosis_description = "",
-      diagnosis_type = ""
+      diagnosis_type = "",
     } = this.state;
     if (!treatment) {
       message.error(this.formatMessage(messages.treatmentError));
@@ -464,7 +460,7 @@ class AddCareplanDrawer extends Component {
     const {
       status,
       statusCode: code,
-      payload: { message: errorMessage = "", error: { error_type = "" } = {} }
+      payload: { message: errorMessage = "", error: { error_type = "" } = {} },
     } = response || {};
 
     if (status === true) {
@@ -490,7 +486,7 @@ class AddCareplanDrawer extends Component {
       diagnosis_description = "",
       diagnosis_type = "",
       clinical_notes = "",
-      symptoms = ""
+      symptoms = "",
     } = this.state;
     const validate = this.validateData();
     // const { submit } = this.props;
@@ -504,7 +500,7 @@ class AddCareplanDrawer extends Component {
         diagnosis_description,
         diagnosis_type,
         clinical_notes,
-        symptoms
+        symptoms,
       };
 
       try {
@@ -530,7 +526,7 @@ class AddCareplanDrawer extends Component {
       clinical_notes: "",
       diagnosis_description: "",
       diagnosis_type: "2",
-      symptoms: ""
+      symptoms: "",
     });
     close();
   };
@@ -552,7 +548,7 @@ class AddCareplanDrawer extends Component {
           headerStyle={{
             position: "sticky",
             zIndex: "9999",
-            top: "0px"
+            top: "0px",
           }}
           onClose={onClose}
           visible={visible} // todo: change as per state, -- WIP --

@@ -5,7 +5,7 @@ function emailsReducer(state, data) {
   if (emails) {
     return {
       ...state,
-      ...emails
+      ...emails,
     };
   } else {
     return state;

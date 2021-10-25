@@ -7,7 +7,7 @@ import {
   onStart,
   onUpdate,
   onPassed,
-  onMarkInComplete
+  onMarkInComplete,
 } from "../helper";
 import { ACTIVITIES } from "../activityType";
 

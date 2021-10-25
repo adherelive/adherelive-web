@@ -13,76 +13,76 @@ module.exports = {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
-        type: Sequelize.INTEGER
+        type: Sequelize.INTEGER,
       },
       user_id: {
         type: Sequelize.INTEGER,
         allowNull: false,
         references: {
           model: {
-            tableName: userTableName
+            tableName: userTableName,
           },
-          key: "id"
-        }
+          key: "id",
+        },
       },
       city: {
         type: Sequelize.STRING(100),
-        allowNull: true
+        allowNull: true,
       },
       speciality_id: {
         type: Sequelize.INTEGER,
         allowNull: true,
         references: {
           model: {
-            tableName: specialityTableName
+            tableName: specialityTableName,
           },
-          key: "id"
-        }
+          key: "id",
+        },
       },
       gender: {
         type: Sequelize.ENUM,
         values: [GENDER.MALE, GENDER.FEMALE, GENDER.OTHER],
-        allowNull: true
+        allowNull: true,
       },
       profile_pic: {
         type: Sequelize.STRING,
-        allowNull: true
+        allowNull: true,
       },
       first_name: {
         type: Sequelize.STRING(100),
-        allowNull: true
+        allowNull: true,
       },
       middle_name: {
         type: Sequelize.STRING(100),
-        allowNull: true
+        allowNull: true,
       },
       last_name: {
         type: Sequelize.STRING(100),
-        allowNull: true
+        allowNull: true,
       },
       activated_on: {
-        type: Sequelize.DATE
+        type: Sequelize.DATE,
       },
       created_at: {
         allowNull: false,
-        type: Sequelize.DATE
+        type: Sequelize.DATE,
       },
       updated_at: {
         allowNull: false,
-        type: Sequelize.DATE
+        type: Sequelize.DATE,
       },
       deleted_at: {
         allowNull: true,
-        type: Sequelize.DATE
+        type: Sequelize.DATE,
       },
       signature_pic: {
         type: Sequelize.STRING,
-        allowNull: true
-      }
+        allowNull: true,
+      },
     });
   },
 
   down: (queryInterface, Sequelize) => {
     return queryInterface.dropTable(TABLE_NAME);
-  }
+  },
 };

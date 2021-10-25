@@ -8,23 +8,23 @@ export const GET_VITAL_OCCURENCE_FAILED = "GET_VITAL_OCCURENCE_FAILED";
 
 export const getVitalOccurence = () => {
   let response = {};
-  return async dispatch => {
+  return async (dispatch) => {
     try {
       response = await doRequest({
         method: REQUEST_TYPE.GET,
-        url: getVitalOccurenceUrl()
+        url: getVitalOccurenceUrl(),
       });
 
       const { status, payload: { data, message = "" } = {} } = response || {};
       if (status === true) {
         dispatch({
           type: GET_VITAL_OCCURENCE_COMPLETED,
-          data
+          data,
         });
       } else {
         dispatch({
           type: GET_VITAL_OCCURENCE_FAILED,
-          message
+          message,
         });
       }
     } catch (error) {
@@ -39,11 +39,11 @@ function vitalOccurenceReducer(state, data) {
   if (repeat_intervals) {
     return {
       ...state,
-      ...repeat_intervals
+      ...repeat_intervals,
     };
   } else {
     return {
-      ...state
+      ...state,
     };
   }
 }

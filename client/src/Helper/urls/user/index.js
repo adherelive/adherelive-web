@@ -2,7 +2,7 @@ export const getEditProfileURL = (userId = "") => {
   return "/edit-profile";
 };
 
-export const getUserByIdURL = userId => {
+export const getUserByIdURL = (userId) => {
   return `/user/${userId}`;
 };
 
@@ -38,26 +38,26 @@ export const getProgramsURL = () => {
   return "/programs";
 };
 
-export const getProgramDoctorsURL = programId => {
+export const getProgramDoctorsURL = (programId) => {
   return `/program/${programId}/doctors`;
 };
 
-export const getProgramPatientsURL = programId => {
+export const getProgramPatientsURL = (programId) => {
   return `/program/${programId}/patients`;
 };
 // export const getProgramPatientsUrl = programId => {
 //   return `/program/${programId}/patients`;
 // };
 
-export const getCurrentProgramUrl = programId => {
+export const getCurrentProgramUrl = (programId) => {
   return `/program/${programId}`;
 };
 
-export const getProductsURL = programId => {
+export const getProductsURL = (programId) => {
   return `/products/${programId}`;
 };
 
-export const getDoctorHospitalsURL = doctorId => {
+export const getDoctorHospitalsURL = (doctorId) => {
   return `/doctor/${doctorId}/hospitals`;
 };
 
@@ -72,43 +72,43 @@ export const getReactivatePatientURL = () => {
   return `/patients/reactivate`;
 };
 
-export const verifyDocumentURL = userId => {
+export const verifyDocumentURL = (userId) => {
   return `/users/${userId}/documents-verify`;
 };
 
-export const fetchCareCoachSurveyURL = userId => {
+export const fetchCareCoachSurveyURL = (userId) => {
   return `/users/surveys`;
 };
 
-export const reUploadIdProofsURL = userId => {
+export const reUploadIdProofsURL = (userId) => {
   return `/users/${userId}/reupload-idproofs`;
 };
 
-export const reUploadConsentDocsURL = userId => {
+export const reUploadConsentDocsURL = (userId) => {
   return `/users/${userId}/reupload-consentdocs`;
 };
 
-export const uploadDocsURL = userId => {
+export const uploadDocsURL = (userId) => {
   return `/users/${userId}/docs`;
 };
 
-export const verifyDocsURL = userId => {
+export const verifyDocsURL = (userId) => {
   return `/users/${userId}/docs/verify`;
 };
 
-export const getHistoricalClinicalReadingURL = userId => {
+export const getHistoricalClinicalReadingURL = (userId) => {
   return `/patients/${userId}/clinical-readings`;
 };
 
-export const getHistoricalBasicReadingURL = userId => {
+export const getHistoricalBasicReadingURL = (userId) => {
   return `/patients/${userId}/basic`;
 };
 
-export const getHistoricalVitalsReadingURL = userId => {
+export const getHistoricalVitalsReadingURL = (userId) => {
   return `/patients/${userId}/vitals`;
 };
 
-export const getHistoricalMedicationDataURL = userId => {
+export const getHistoricalMedicationDataURL = (userId) => {
   return `/patients/${userId}/medication`;
 };
 
@@ -120,11 +120,11 @@ export const addHospitalizationURL = () => {
   return `/hospitalization`;
 };
 
-export const getMedicationStagesURL = userId => {
+export const getMedicationStagesURL = (userId) => {
   return `/users/${userId}/medication-stage`;
 };
 
-export const updatePatHospital = userId => {
+export const updatePatHospital = (userId) => {
   return `/users/${userId}/hospital`;
 };
 export const addNewCareCoach = () => {

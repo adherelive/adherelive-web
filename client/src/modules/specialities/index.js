@@ -6,26 +6,26 @@ export const SEARCH_SPECIALITIES_START = "SEARCH_SPECIALITIES_START";
 export const SEARCH_SPECIALITIES_COMPLETED = "SEARCH_SPECIALITIES_COMPLETED";
 export const SEARCH_SPECIALITIES_FAILED = "SEARCH_SPECIALITIES_FAILED";
 
-export const searchSpecialties = value => {
+export const searchSpecialties = (value) => {
   let response = {};
-  return async dispatch => {
+  return async (dispatch) => {
     try {
       dispatch({ type: SEARCH_SPECIALITIES_START });
       response = await doRequest({
         method: REQUEST_TYPE.GET,
-        url: searchSpecialities(value)
+        url: searchSpecialities(value),
       });
 
       const { status, payload: { data, message = "" } = {} } = response || {};
       if (status === true) {
         dispatch({
           type: SEARCH_SPECIALITIES_COMPLETED,
-          data
+          data,
         });
       } else {
         dispatch({
           type: SEARCH_SPECIALITIES_FAILED,
-          message
+          message,
         });
       }
     } catch (error) {
@@ -40,7 +40,7 @@ function specialityReducer(state, data) {
   if (specialities) {
     return {
       ...state,
-      ...specialities
+      ...specialities,
     };
   } else {
     return state;

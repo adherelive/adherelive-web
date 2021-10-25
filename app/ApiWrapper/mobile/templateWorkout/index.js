@@ -19,18 +19,18 @@ class TemplateWorkoutWrapper extends BaseTemplateWorkout {
       total_calories,
       duration,
       time,
-      details
+      details,
     } = _data || {};
     return {
       basic_info: {
         id,
         name,
-        care_plan_template_id
+        care_plan_template_id,
       },
       time,
       total_calories,
       duration,
-      details
+      details,
     };
   };
 
@@ -38,7 +38,7 @@ class TemplateWorkoutWrapper extends BaseTemplateWorkout {
     const { getBasicInfo } = this;
 
     return {
-      ...getBasicInfo()
+      ...getBasicInfo(),
     };
   };
 
@@ -63,8 +63,8 @@ class TemplateWorkoutWrapper extends BaseTemplateWorkout {
       const { rows = [] } =
         (await exerciseDetailService.findAndCountAll({
           query: {
-            id: exercise_detail_ids
-          }
+            id: exercise_detail_ids,
+          },
         })) || {};
 
       exerciseDetails = rows;
@@ -76,13 +76,10 @@ class TemplateWorkoutWrapper extends BaseTemplateWorkout {
     if (exerciseDetails.length > 0) {
       for (let index = 0; index < exerciseDetails.length; index++) {
         const exerciseDetail = await ExerciseDetailWrapper({
-          data: exerciseDetails[index]
+          data: exerciseDetails[index],
         });
-        const {
-          exercise_details,
-          exercises,
-          repetitions
-        } = await exerciseDetail.getReferenceInfo();
+        const { exercise_details, exercises, repetitions } =
+          await exerciseDetail.getReferenceInfo();
         allExerciseDetails = { ...allExerciseDetails, ...exercise_details };
         allExercises = { ...allExercises, ...exercises };
         allRepetitions = { ...allRepetitions, ...repetitions };
@@ -92,12 +89,12 @@ class TemplateWorkoutWrapper extends BaseTemplateWorkout {
     return {
       template_workouts: {
         [getId()]: {
-          ...getAllInfo()
-        }
+          ...getAllInfo(),
+        },
       },
       exercise_details: allExerciseDetails,
       exercises: allExercises,
-      repetitions: allRepetitions
+      repetitions: allRepetitions,
     };
   };
 }

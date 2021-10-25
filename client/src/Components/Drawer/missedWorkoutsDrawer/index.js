@@ -13,7 +13,7 @@ class MissedWorkoutsDrawer extends Component {
       missed_workouts: {},
       criticalWorkoutIds: [],
       nonCriticalWorkoutIds: [],
-      fetching: false
+      fetching: false,
     };
   }
 
@@ -21,14 +21,14 @@ class MissedWorkoutsDrawer extends Component {
     // this.getMissedWorkout();
   }
 
-  formatMessage = data => this.props.intl.formatMessage(data);
+  formatMessage = (data) => this.props.intl.formatMessage(data);
 
   onClose = () => {
     const { close } = this.props;
     close();
   };
 
-  handlePatientDetailsRedirect = patient_id => e => {
+  handlePatientDetailsRedirect = (patient_id) => (e) => {
     const { authenticated_category } = this.props;
 
     if (authenticated_category === USER_CATEGORY.PROVIDER) {
@@ -48,9 +48,13 @@ class MissedWorkoutsDrawer extends Component {
     const criticalList = [];
     const nonCriticalList = [];
 
-    Object.keys(missed_workouts).forEach(id => {
-      const { critical, participant_id, workout_name = "", timings } =
-        missed_workouts[id] || {};
+    Object.keys(missed_workouts).forEach((id) => {
+      const {
+        critical,
+        participant_id,
+        workout_name = "",
+        timings,
+      } = missed_workouts[id] || {};
 
       const { basic_info: { id: patientId, full_name } = {} } =
         patients[participant_id] || {};

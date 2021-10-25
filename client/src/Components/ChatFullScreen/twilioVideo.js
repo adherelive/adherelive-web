@@ -32,7 +32,7 @@ class VideoComponent extends Component {
       participantConnected: false,
       videoEnabled: true,
       audioEnabled: true,
-      status: ""
+      status: "",
     };
     this.toggleLocalVideo = this.toggleLocalVideo.bind(this);
   }
@@ -41,17 +41,17 @@ class VideoComponent extends Component {
     console.log("65584464444444447648", this.props);
     const {
       match: {
-        params: { room_id }
+        params: { room_id },
       },
       authenticated_user,
-      fetchVideoAccessToken
+      fetchVideoAccessToken,
       // fetchEventUsers
     } = this.props;
-    fetchVideoAccessToken(authenticated_user).then(result => {
+    fetchVideoAccessToken(authenticated_user).then((result) => {
       this.setState((prevState, props) => {
         return {
           identity: props.twilio.identity,
-          token: props.twilio.videoToken
+          token: props.twilio.videoToken,
         };
       });
     });
@@ -77,14 +77,14 @@ class VideoComponent extends Component {
     //
     var localParticipant = this.state.activeRoom.localParticipant;
     if (flag === "disable") {
-      localParticipant.videoTracks.forEach(function(videoTrack) {
+      localParticipant.videoTracks.forEach(function (videoTrack) {
         videoTrack.disable();
       });
       //var remoteContainer = this.refs.remoteMedia;
       //
       //
     } else if (flag === "enable") {
-      localParticipant.videoTracks.forEach(function(videoTrack) {
+      localParticipant.videoTracks.forEach(function (videoTrack) {
         videoTrack.enable();
       });
       //
@@ -95,11 +95,11 @@ class VideoComponent extends Component {
     this.setState({ audioEnabled: !this.state.audioEnabled });
     var localParticipant = this.state.activeRoom.localParticipant;
     if (flag === "disable") {
-      localParticipant.audioTracks.forEach(function(audioTrack) {
+      localParticipant.audioTracks.forEach(function (audioTrack) {
         audioTrack.disable();
       });
     } else if (flag === "enable") {
-      localParticipant.audioTracks.forEach(function(audioTrack) {
+      localParticipant.audioTracks.forEach(function (audioTrack) {
         audioTrack.enable();
       });
     }
@@ -124,7 +124,7 @@ class VideoComponent extends Component {
       name: this.state.roomName,
       video: { width: 1440 },
       audio: true,
-      _useTwilioConnection: true
+      _useTwilioConnection: true,
     };
 
     if (this.state.previewTracks) {
@@ -141,7 +141,7 @@ class VideoComponent extends Component {
 
     Video.connect(this.state.token, connectOptions).then(
       this.roomJoined,
-      error => {
+      (error) => {
         alert("Could not connect to Twilio: " + error.message);
       }
     );
@@ -151,7 +151,7 @@ class VideoComponent extends Component {
   attachTracks = (tracks, container) => {
     console.log("73648723648723684723684==========>", tracks);
 
-    tracks.forEach(track => {
+    tracks.forEach((track) => {
       if (track.kind !== "data") {
         console.log("73648723648723684723684", track);
         container.appendChild(track.attach());
@@ -177,52 +177,51 @@ class VideoComponent extends Component {
   //     });
   // }
 
-  detachTracks = tracks => {
-    tracks.forEach(track => {
+  detachTracks = (tracks) => {
+    tracks.forEach((track) => {
       if (track.kind !== "data") {
-        track.detach().forEach(detachedElement => {
+        track.detach().forEach((detachedElement) => {
           detachedElement.remove();
         });
       }
     });
   };
 
-  detachParticipantTracks = participant => {
+  detachParticipantTracks = (participant) => {
     var tracks = Array.from(participant.tracks.values());
     this.detachTracks(tracks);
   };
 
-  roomJoined = async room => {
+  roomJoined = async (room) => {
     // Called when a participant joins a room
 
     this.setState({
       activeRoom: room,
       localMediaAvailable: true,
-      hasJoinedRoom: true
+      hasJoinedRoom: true,
     });
 
     const { sid } = room;
 
     const response = await doRequest({
       method: REQUEST_TYPE.GET,
-      url: Twilio.getConnectedParticipants(sid)
+      url: Twilio.getConnectedParticipants(sid),
     });
 
-    const {
-      payload: { data: { connectedParticipants = {} } = {} } = {}
-    } = response;
+    const { payload: { data: { connectedParticipants = {} } = {} } = {} } =
+      response;
     const { users, authenticated_user } = this.props;
 
     const userIds = Object.keys(users);
     const otherUserId = userIds.filter(
-      id => parseInt(id) !== parseInt(authenticated_user)
+      (id) => parseInt(id) !== parseInt(authenticated_user)
     )[0];
 
     if (connectedParticipants[otherUserId] === "connected") {
       this.setState({
         video2connected: true,
         participantConnected: otherUserId,
-        status: "connected"
+        status: "connected",
       });
     } else {
       this.setState({ status: "waiting" });
@@ -235,18 +234,18 @@ class VideoComponent extends Component {
     }
 
     // Attach the Tracks of the Room's Participants.
-    room.participants.forEach(participant => {
+    room.participants.forEach((participant) => {
       var previewContainer = this.refs.remoteMedia;
 
       this.attachParticipantTracks(participant, previewContainer);
     });
 
     // When a Participant joins the Room, log the event.
-    room.on("participantConnected", participant => {
+    room.on("participantConnected", (participant) => {
       this.setState({
         video2connected: true,
         participantConnected: participant.identity,
-        status: "Call Started"
+        status: "Call Started",
       });
     });
 
@@ -264,12 +263,12 @@ class VideoComponent extends Component {
     });
 
     // When a Participant leaves the Room, detach its Tracks.
-    room.on("participantDisconnected", participant => {
+    room.on("participantDisconnected", (participant) => {
       this.detachParticipantTracks(participant);
       this.setState({
         video2connected: false,
         participantConnected: false,
-        status: "partcipantDisconnected"
+        status: "partcipantDisconnected",
       });
     });
 
@@ -277,7 +276,7 @@ class VideoComponent extends Component {
     // of all Participants, including that of the LocalParticipant.
     room.on("disconnected", () => {
       if (this.state.previewTracks) {
-        this.state.previewTracks.forEach(track => {
+        this.state.previewTracks.forEach((track) => {
           track.stop();
         });
       }
@@ -289,7 +288,7 @@ class VideoComponent extends Component {
         localMediaAvailable: false,
         video2connected: false,
         participantConnected: false,
-        status: "Appointment done"
+        status: "Appointment done",
       });
     });
   };
@@ -330,15 +329,15 @@ class VideoComponent extends Component {
     const {
       users,
       match: {
-        params: { room_id = "" }
+        params: { room_id = "" },
       },
-      patients = {}
+      patients = {},
     } = this.props;
     let patientUserId = room_id.split("-")[room_id.split("-").length - 1];
     let patientId = "";
     for (let pat of Object.values(patients)) {
       let {
-        basic_info: { user_id, id = 1 }
+        basic_info: { user_id, id = 1 },
       } = pat;
       if (parseInt(user_id) === parseInt(patientUserId)) {
         patientId = id;
@@ -351,10 +350,10 @@ class VideoComponent extends Component {
       basic_info: {
         user_id: otherUserId = 1,
         first_name: name = "",
-        gender = ""
+        gender = "",
       } = {},
       dob = "",
-      details: { profile_pic: profilePic = UserDpPlaceholder }
+      details: { profile_pic: profilePic = UserDpPlaceholder },
     } = patients[patientId];
     if (otherUserId) {
       const { category } = users[otherUserId] || {};
@@ -399,12 +398,8 @@ class VideoComponent extends Component {
 
     const antIcon = <Icon type="loading" style={{ fontSize: 24 }} spin />;
 
-    const {
-      video2connected,
-      participantConnected,
-      hasJoinedRoom,
-      status
-    } = this.state;
+    const { video2connected, participantConnected, hasJoinedRoom, status } =
+      this.state;
     const { users, showChatBox } = this.props;
     const user =
       participantConnected && users[participantConnected]
@@ -412,7 +407,7 @@ class VideoComponent extends Component {
         : {};
 
     const {
-      basic_info: { profilePicLink: profilePic = UserDpPlaceholder, name } = {}
+      basic_info: { profilePicLink: profilePic = UserDpPlaceholder, name } = {},
     } = user;
 
     let showWaitngMsg = false;
@@ -434,17 +429,18 @@ class VideoComponent extends Component {
           backgroundColor: "black",
           position: "fixed",
           top: 0,
-          left: 0
+          left: 0,
         }}
       >
         <div ref="remoteMedia" id="remote-media" />
-        {status === "loading" || status === "started"
-        // && (
-        // <Spin
-        //     indicator={antIcon}
-        //     className="loadingForUser loadingForUserSub flex align-items-center justify-center mlp49"
-        // />
-        // )
+        {
+          status === "loading" || status === "started"
+          // && (
+          // <Spin
+          //     indicator={antIcon}
+          //     className="loadingForUser loadingForUserSub flex align-items-center justify-center mlp49"
+          // />
+          // )
         }
 
         <div
@@ -453,7 +449,7 @@ class VideoComponent extends Component {
             bottom: 32,
             right: 32,
             height: 180,
-            width: 250
+            width: 250,
           }}
         >
           {showLocalTrack}
@@ -478,7 +474,7 @@ class VideoComponent extends Component {
                       position: "absolute",
                       top: 32,
                       left: showChatBox ? 400 : 32,
-                      cursor: "pointer"
+                      cursor: "pointer",
                     }
                   : { display: "none" }
               }
@@ -503,7 +499,7 @@ class VideoComponent extends Component {
                       cursor: "pointer",
                       height: "94px",
                       width: "96px",
-                      borderRadius: "50%"
+                      borderRadius: "50%",
                     }}
                     alt="userDp"
                   />
@@ -576,7 +572,7 @@ class VideoComponent extends Component {
                   position: "absolute",
                   bottom: 32,
                   right: "46.5%",
-                  cursor: "pointer"
+                  cursor: "pointer",
                 }}
                 onClick={this.joinRoom}
                 alt="chatIcon"
@@ -594,7 +590,7 @@ class VideoComponent extends Component {
                   cursor: "pointer",
                   height: "94px",
                   width: "96px",
-                  borderRadius: "50%"
+                  borderRadius: "50%",
                 }}
                 alt="userDp"
               />

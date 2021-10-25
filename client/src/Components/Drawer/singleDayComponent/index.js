@@ -21,11 +21,11 @@ class DayDiet extends Component {
       addFoodGroupDrawerVisible: false,
       editFoodGroupDrawerVisible: false,
       editFoodGroupDetails: {},
-      selectedFoodGroupIndex: null
+      selectedFoodGroupIndex: null,
     };
   }
 
-  formatMessage = data => this.props.intl.formatMessage(data);
+  formatMessage = (data) => this.props.intl.formatMessage(data);
 
   getServingWiseCalorificValue = ({ food_item_detail_id, serving: serv }) => {
     let calVal = 0;
@@ -37,7 +37,7 @@ class DayDiet extends Component {
     return calVal;
   };
 
-  addFoodGroup = async data => {
+  addFoodGroup = async (data) => {
     // Add Food Group onSubmit
 
     // updates diet's completeData for new entry
@@ -47,7 +47,7 @@ class DayDiet extends Component {
       setFinalDayData,
       completeData,
       total_calories = 0,
-      setNewTotalCal
+      setNewTotalCal,
     } = this.props;
 
     const { food_item_detail_id = null, serving = 1 } = data;
@@ -58,13 +58,13 @@ class DayDiet extends Component {
     await setFinalDayData(newCompleteData);
     const calVal = this.getServingWiseCalorificValue({
       food_item_detail_id,
-      serving
+      serving,
     });
     const newTotalCalories = total_calories + calVal;
     setNewTotalCal(newTotalCalories);
   };
 
-  handleEditFoodGroupSubmit = async foodGroupDrawerData => {
+  handleEditFoodGroupSubmit = async (foodGroupDrawerData) => {
     // updates diet's completeData for updated entry
 
     const { similar_index = null } = foodGroupDrawerData;
@@ -76,7 +76,7 @@ class DayDiet extends Component {
     }
   };
 
-  editFoodGroup = async foodGroupDrawerData => {
+  editFoodGroup = async (foodGroupDrawerData) => {
     const { food_group_index, editedFoodGroupData } = foodGroupDrawerData;
 
     const { selectedTime } = this.state;
@@ -84,7 +84,7 @@ class DayDiet extends Component {
       setFinalDayData,
       completeData,
       total_calories = 0,
-      setNewTotalCal
+      setNewTotalCal,
     } = this.props;
     let newCompleteData = completeData;
 
@@ -96,13 +96,13 @@ class DayDiet extends Component {
       food_item_detail_id = null,
       serving = 1,
       prev_calorific_val = 0,
-      prev_serving = 1
+      prev_serving = 1,
     } = editedFoodGroupData || {};
 
     if (timeData.length && timeData[food_group_index]) {
       timeData[food_group_index] = {
         ...editedFoodGroupData,
-        ...(similar.length && { similar: similar })
+        ...(similar.length && { similar: similar }),
       };
     }
 
@@ -112,7 +112,7 @@ class DayDiet extends Component {
 
     const calVal = this.getServingWiseCalorificValue({
       food_item_detail_id,
-      serving
+      serving,
     });
 
     const totalPrevCalVal = prev_calorific_val * prev_serving || 0;
@@ -121,11 +121,11 @@ class DayDiet extends Component {
     setNewTotalCal(newTotalCal);
   };
 
-  editSimilarFoodGroup = async foodGroupDrawerData => {
+  editSimilarFoodGroup = async (foodGroupDrawerData) => {
     const {
       food_group_index,
       editedFoodGroupData,
-      similar_index = null
+      similar_index = null,
     } = foodGroupDrawerData;
 
     const { selectedTime } = this.state;
@@ -133,7 +133,7 @@ class DayDiet extends Component {
       setFinalDayData,
       completeData,
       total_calories = 0,
-      setNewTotalCal
+      setNewTotalCal,
     } = this.props;
     let newCompleteData = completeData;
 
@@ -148,7 +148,7 @@ class DayDiet extends Component {
       food_item_detail_id = null,
       serving = 1,
       prev_calorific_val = 0,
-      prev_serving = 1
+      prev_serving = 1,
     } = editedFoodGroupData || {};
 
     if (similarArr.length && similarArr[similar_index]) {
@@ -163,7 +163,7 @@ class DayDiet extends Component {
 
     const calVal = this.getServingWiseCalorificValue({
       food_item_detail_id,
-      serving
+      serving,
     });
 
     const totalPrevCalVal = prev_calorific_val * prev_serving || 0;
@@ -172,24 +172,26 @@ class DayDiet extends Component {
     setNewTotalCal(newTotalCal);
   };
 
-  addSimilarFoodGroup = ({ food_group_index, time }) => () => {
-    this.setState({ selectedFoodGroupIndex: food_group_index });
-    this.openAddFoodGroupDrawer(time);
-  };
+  addSimilarFoodGroup =
+    ({ food_group_index, time }) =>
+    () => {
+      this.setState({ selectedFoodGroupIndex: food_group_index });
+      this.openAddFoodGroupDrawer(time);
+    };
 
   closeAddSimilarFoodGroup = () => {
     this.setState({ selectedFoodGroupIndex: null });
     this.closeAddFoodGroupDrawer();
   };
 
-  submitAddSimilarFoodGroup = async data => {
+  submitAddSimilarFoodGroup = async (data) => {
     const { selectedTime, selectedFoodGroupIndex } = this.state;
 
     let {
       setFinalDayData,
       completeData,
       total_calories = 0,
-      setNewTotalCal
+      setNewTotalCal,
     } = this.props;
 
     const { food_item_detail_id = null, serving = 1 } = data;
@@ -204,7 +206,7 @@ class DayDiet extends Component {
     await setFinalDayData(newCompleteData);
     const calVal = this.getServingWiseCalorificValue({
       food_item_detail_id,
-      serving
+      serving,
     });
     const newTotalCalories = total_calories + calVal;
     setNewTotalCal(newTotalCalories);
@@ -215,7 +217,7 @@ class DayDiet extends Component {
     let {
       completeData: singleDayData,
       timings = {},
-      canOnlyView = false
+      canOnlyView = false,
     } = this.props;
 
     if (Object.keys(timings).length === 0) {
@@ -237,7 +239,7 @@ class DayDiet extends Component {
             food_item_detail_id = null,
             portion_id = null,
             serving = null,
-            similar = []
+            similar = [],
           } = singleTimeData[i] || {};
 
           const food_group_index = i;
@@ -250,7 +252,7 @@ class DayDiet extends Component {
             notes,
             time: each,
             similar_index: null,
-            food_group_id
+            food_group_id,
           });
 
           let allSimilarComponents = [];
@@ -262,7 +264,7 @@ class DayDiet extends Component {
                 food_item_detail_id: similar_food_item_detail_id = null,
                 portion_id: similar_portion_id = null,
                 serving: similar_serving = null,
-                food_group_id: similar_food_group_id
+                food_group_id: similar_food_group_id,
               } = similar[j] || {};
 
               const similarComponent = this.getFoodItemComponent({
@@ -273,7 +275,7 @@ class DayDiet extends Component {
                 notes: similar_notes,
                 time: each,
                 similar_index: j,
-                food_group_id: similar_food_group_id
+                food_group_id: similar_food_group_id,
               });
 
               allSimilarComponents.push(similarComponent);
@@ -291,7 +293,7 @@ class DayDiet extends Component {
                       className="or-button fs12 pointer flex drection-column align-center justify-center ml20"
                       onClick={this.addSimilarFoodGroup({
                         food_group_index,
-                        time: each
+                        time: each,
                       })}
                     >
                       {this.formatMessage(messages.orText).toUpperCase()}
@@ -314,7 +316,7 @@ class DayDiet extends Component {
               { ...messages.timeOptions },
               {
                 text,
-                formattedTime
+                formattedTime,
               }
             )}
           </div>
@@ -342,16 +344,16 @@ class DayDiet extends Component {
     return options;
   };
 
-  handleTimingSelect = value => e => {
+  handleTimingSelect = (value) => (e) => {
     e.preventDefault();
 
     this.openAddFoodGroupDrawer(value);
   };
 
-  openAddFoodGroupDrawer = selectedTime => {
+  openAddFoodGroupDrawer = (selectedTime) => {
     this.setState({
       selectedTime: selectedTime,
-      addFoodGroupDrawerVisible: true // open add food group drawer
+      addFoodGroupDrawerVisible: true, // open add food group drawer
     });
   };
 
@@ -359,7 +361,7 @@ class DayDiet extends Component {
     this.setState({ addFoodGroupDrawerVisible: false });
   };
 
-  handleOpenEditFoodGroupDrawer = data => () => {
+  handleOpenEditFoodGroupDrawer = (data) => () => {
     const { time, food_group_id = null, ...rest } = data || {};
     let editData = { ...rest };
 
@@ -370,111 +372,114 @@ class DayDiet extends Component {
     this.setState({
       selectedTime: time,
       editFoodGroupDrawerVisible: true,
-      editFoodGroupDetails: editData
+      editFoodGroupDetails: editData,
     });
   };
 
   closeEditFoodGroupDrawer = () => {
     this.setState({
       editFoodGroupDrawerVisible: false,
-      editFoodGroupDetails: {}
+      editFoodGroupDetails: {},
     });
   };
 
-  handleDeleteFoodGroup = ({ food_group_index, time }) => async () => {
-    const {
-      completeData,
-      setDeletedFoodGroupId,
-      food_item_details,
-      total_calories = 0,
-      setNewTotalCal,
-      setFinalDayData
-    } = this.props;
+  handleDeleteFoodGroup =
+    ({ food_group_index, time }) =>
+    async () => {
+      const {
+        completeData,
+        setDeletedFoodGroupId,
+        food_item_details,
+        total_calories = 0,
+        setNewTotalCal,
+        setFinalDayData,
+      } = this.props;
 
-    let timeData = completeData[time] || [];
-    const foodGroup = timeData[food_group_index] || {};
+      let timeData = completeData[time] || [];
+      const foodGroup = timeData[food_group_index] || {};
 
-    let newCompleteData = completeData;
+      let newCompleteData = completeData;
 
-    const { food_item_detail_id = null, serving = 1, similar = [] } =
-      foodGroup || {};
+      const {
+        food_item_detail_id = null,
+        serving = 1,
+        similar = [],
+      } = foodGroup || {};
 
-    const { basic_info: { calorific_value = 0 } = {} } =
-      food_item_details[food_item_detail_id] || {};
-    const newCalories = total_calories - calorific_value * serving;
+      const { basic_info: { calorific_value = 0 } = {} } =
+        food_item_details[food_item_detail_id] || {};
+      const newCalories = total_calories - calorific_value * serving;
 
-    const { food_group_id = null } = foodGroup;
+      const { food_group_id = null } = foodGroup;
 
-    if (food_group_id) {
-      setDeletedFoodGroupId(food_group_id);
-    }
-
-    if (similar.length === 0) {
-      if (Object.keys(foodGroup).length) {
-        timeData.splice(food_group_index, 1);
+      if (food_group_id) {
+        setDeletedFoodGroupId(food_group_id);
       }
 
+      if (similar.length === 0) {
+        if (Object.keys(foodGroup).length) {
+          timeData.splice(food_group_index, 1);
+        }
+
+        newCompleteData[time] = timeData;
+        await setFinalDayData(newCompleteData);
+        setNewTotalCal(newCalories);
+      } else {
+        const similarArr = foodGroup["similar"] || [];
+        const firstSimilar = similarArr[0] || {};
+        const restSimilar = similarArr.slice(1);
+        firstSimilar["similar"] = [...restSimilar];
+        timeData[food_group_index] = firstSimilar;
+        newCompleteData[time] = timeData;
+        await setFinalDayData(newCompleteData);
+        setNewTotalCal(newCalories);
+      }
+    };
+
+  handleDeleteSimilarFoodGroup =
+    ({ food_group_index, time, similar_index }) =>
+    async () => {
+      const {
+        completeData,
+        food_item_details,
+        total_calories = 0,
+        setNewTotalCal,
+        setFinalDayData,
+        setDeletedFoodGroupId,
+      } = this.props;
+
+      let timeData = completeData[time] || [];
+      let foodGroup = timeData[food_group_index] || {};
+
+      let newCompleteData = completeData;
+
+      const { similar: similarArr = [] } = foodGroup || {};
+      const similarFoodGroup = similarArr[similar_index] || {};
+
+      const {
+        food_item_detail_id = null,
+        serving = 1,
+        food_group_id = null,
+      } = similarFoodGroup;
+
+      if (food_group_id) {
+        setDeletedFoodGroupId(food_group_id);
+      }
+
+      const { basic_info: { calorific_value = 0 } = {} } =
+        food_item_details[food_item_detail_id] || {};
+      const newCalories = total_calories - calorific_value * serving;
+
+      if (Object.keys(similarFoodGroup).length) {
+        similarArr.splice(similar_index, 1);
+      }
+
+      foodGroup["similar"] = similarArr || [];
+      timeData[food_group_index] = foodGroup;
       newCompleteData[time] = timeData;
       await setFinalDayData(newCompleteData);
       setNewTotalCal(newCalories);
-    } else {
-      const similarArr = foodGroup["similar"] || [];
-      const firstSimilar = similarArr[0] || {};
-      const restSimilar = similarArr.slice(1);
-      firstSimilar["similar"] = [...restSimilar];
-      timeData[food_group_index] = firstSimilar;
-      newCompleteData[time] = timeData;
-      await setFinalDayData(newCompleteData);
-      setNewTotalCal(newCalories);
-    }
-  };
-
-  handleDeleteSimilarFoodGroup = ({
-    food_group_index,
-    time,
-    similar_index
-  }) => async () => {
-    const {
-      completeData,
-      food_item_details,
-      total_calories = 0,
-      setNewTotalCal,
-      setFinalDayData,
-      setDeletedFoodGroupId
-    } = this.props;
-
-    let timeData = completeData[time] || [];
-    let foodGroup = timeData[food_group_index] || {};
-
-    let newCompleteData = completeData;
-
-    const { similar: similarArr = [] } = foodGroup || {};
-    const similarFoodGroup = similarArr[similar_index] || {};
-
-    const {
-      food_item_detail_id = null,
-      serving = 1,
-      food_group_id = null
-    } = similarFoodGroup;
-
-    if (food_group_id) {
-      setDeletedFoodGroupId(food_group_id);
-    }
-
-    const { basic_info: { calorific_value = 0 } = {} } =
-      food_item_details[food_item_detail_id] || {};
-    const newCalories = total_calories - calorific_value * serving;
-
-    if (Object.keys(similarFoodGroup).length) {
-      similarArr.splice(similar_index, 1);
-    }
-
-    foodGroup["similar"] = similarArr || [];
-    timeData[food_group_index] = foodGroup;
-    newCompleteData[time] = timeData;
-    await setFinalDayData(newCompleteData);
-    setNewTotalCal(newCalories);
-  };
+    };
 
   getFoodItemComponent = ({
     food_group_index,
@@ -484,7 +489,7 @@ class DayDiet extends Component {
     notes,
     time,
     similar_index,
-    food_group_id
+    food_group_id,
   }) => {
     const { handleOpenEditFoodGroupDrawer } = this;
 
@@ -492,7 +497,7 @@ class DayDiet extends Component {
       food_items,
       food_item_details,
       portions,
-      canOnlyView = false
+      canOnlyView = false,
     } = this.props;
     const { basic_info: { food_item_id = null, portion_size = null } = {} } =
       food_item_details[food_item_detail_id] || {};
@@ -502,7 +507,7 @@ class DayDiet extends Component {
 
     const calVal = this.getServingWiseCalorificValue({
       food_item_detail_id,
-      serving
+      serving,
     });
     const { basic_info: { name: portion } = {} } = portions[portion_id] || {};
 
@@ -528,7 +533,7 @@ class DayDiet extends Component {
                     notes,
                     time,
                     similar_index,
-                    food_group_id
+                    food_group_id,
                   })}
                 />
               )}
@@ -543,7 +548,7 @@ class DayDiet extends Component {
                       : this.handleDeleteSimilarFoodGroup({
                           food_group_index,
                           time,
-                          similar_index
+                          similar_index,
                         })
                   }
                   style={{ fontSize: "18px", color: "#6d7278" }}
@@ -572,7 +577,7 @@ class DayDiet extends Component {
       addFoodGroupDrawerVisible = false,
       editFoodGroupDrawerVisible,
       editFoodGroupDetails,
-      selectedFoodGroupIndex = null
+      selectedFoodGroupIndex = null,
     } = this.state;
 
     const {
@@ -580,7 +585,7 @@ class DayDiet extends Component {
       closeEditFoodGroupDrawer,
       closeAddSimilarFoodGroup,
       addFoodGroup,
-      submitAddSimilarFoodGroup
+      submitAddSimilarFoodGroup,
     } = this;
 
     return (

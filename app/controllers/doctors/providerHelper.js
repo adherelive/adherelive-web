@@ -22,7 +22,7 @@ export const addProviderDoctor = async (
 ) => {
   try {
     const {
-      userDetails: { userId, userData: { category: userCategory } = {} } = {}
+      userDetails: { userId, userData: { category: userCategory } = {} } = {},
     } = req;
 
     const {
@@ -34,7 +34,7 @@ export const addProviderDoctor = async (
       profile_pic,
       signature_pic,
       email,
-      doctor_id = null
+      doctor_id = null,
     } = req.body;
 
     if (userCategory !== USER_CATEGORY.PROVIDER) {
@@ -42,7 +42,7 @@ export const addProviderDoctor = async (
     }
 
     const providerData = await providerService.getProviderByData({
-      user_id: userId
+      user_id: userId,
     });
 
     const provider = await ProviderWrapper(providerData);
@@ -53,7 +53,7 @@ export const addProviderDoctor = async (
 
     if (doctor_id) {
       prevDoctor = await doctorService.getDoctorByData({
-        id: doctor_id
+        id: doctor_id,
       });
 
       if (!prevDoctor) {
@@ -68,13 +68,13 @@ export const addProviderDoctor = async (
       category,
       mobile_number,
       prefix,
-      onboarding_status: null
+      onboarding_status: null,
     };
 
     // Mobile number validation
     const mobileNumberExist =
       (await userService.getUserByData({
-        mobile_number
+        mobile_number,
       })) || [];
 
     if (mobileNumberExist && mobileNumberExist.length) {
@@ -83,7 +83,7 @@ export const addProviderDoctor = async (
 
       let doctorUserIdTemp = null;
       const doctorUserDetailsTemp = await userService.getUserByEmail({
-        email
+        email,
       });
 
       if (doctorUserDetailsTemp) {
@@ -124,7 +124,7 @@ export const addProviderDoctor = async (
 
     let doctor = {};
     let doctorExist = await doctorService.getDoctorByData({
-      user_id: doctorUserId
+      user_id: doctorUserId,
     });
     let first_name = doctorName[0];
     let middle_name = doctorName.length === 3 ? doctorName[1] : "";
@@ -142,7 +142,7 @@ export const addProviderDoctor = async (
         signature_pic: signature_pic ? getFilePath(signature_pic) : null,
         first_name,
         middle_name,
-        last_name
+        last_name,
       };
       let doctor_id = doctorExist.get("id");
       doctor = await doctorService.updateDoctor(doctor_data, doctor_id);
@@ -154,7 +154,7 @@ export const addProviderDoctor = async (
         signature_pic: getFilePath(signature_pic),
         first_name,
         middle_name,
-        last_name
+        last_name,
       };
       doctor = await doctorService.addDoctor(doctor_data);
     }
@@ -168,7 +168,7 @@ export const addProviderDoctor = async (
     const userData = await UserWrapper(updatedUser.get());
 
     const updatedDoctor = await doctorService.getDoctorByData({
-      user_id: doctorUserId
+      user_id: doctorUserId,
     });
     const doctorData = await DoctorWrapper(updatedDoctor);
 
@@ -177,9 +177,10 @@ export const addProviderDoctor = async (
 
       if (providerId) {
         const mappingData = { doctor_id: doctorId, provider_id: providerId };
-        const response = await doctorProviderMappingService.createDoctorProviderMapping(
-          mappingData
-        );
+        const response =
+          await doctorProviderMappingService.createDoctorProviderMapping(
+            mappingData
+          );
       }
     }
 
@@ -188,11 +189,11 @@ export const addProviderDoctor = async (
       200,
       {
         users: {
-          [userData.getId()]: userData.getBasicInfo()
+          [userData.getId()]: userData.getBasicInfo(),
         },
         doctors: {
-          [doctorData.getDoctorId()]: doctorData.getBasicInfo()
-        }
+          [doctorData.getDoctorId()]: doctorData.getBasicInfo(),
+        },
       },
       "doctor profile updated successfully"
     );

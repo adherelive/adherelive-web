@@ -5,10 +5,10 @@ import { open } from "../../modules/drawer";
 import { DRAWER } from "../../constant";
 import {
   addToWatchlist,
-  removePatientFromWatchlist
+  removePatientFromWatchlist,
 } from "../../modules/doctors";
 
-const mapStateToProps = state => {
+const mapStateToProps = (state) => {
   const {
     patients: temp_patients = {},
     doctors = {},
@@ -20,17 +20,17 @@ const mapStateToProps = state => {
     chats = {},
     users,
     auth: { authPermissions = [], authenticated_user } = {},
-    care_plans
+    care_plans,
   } = state;
 
   const { watchlist_patient_ids = [] } = Object.values(doctors)[0] || {};
 
   const patients = Object.keys(temp_patients)
-    .filter(key => watchlist_patient_ids.includes(parseInt(key)))
+    .filter((key) => watchlist_patient_ids.includes(parseInt(key)))
     .reduce((obj, key) => {
       return {
         ...obj,
-        [key]: temp_patients[key]
+        [key]: temp_patients[key],
       };
     }, {});
 
@@ -47,17 +47,17 @@ const mapStateToProps = state => {
     users,
     care_plans,
     authPermissions,
-    authenticated_user
+    authenticated_user,
   };
 };
 
-const mapDispatchToProps = dispatch => {
+const mapDispatchToProps = (dispatch) => {
   return {
-    openPatientDetailsDrawer: payload =>
+    openPatientDetailsDrawer: (payload) =>
       dispatch(open({ type: DRAWER.PATIENT_DETAILS, payload })),
-    addToWatchlist: patient_id => dispatch(addToWatchlist(patient_id)),
-    removePatientFromWatchlist: patient_id =>
-      dispatch(removePatientFromWatchlist(patient_id))
+    addToWatchlist: (patient_id) => dispatch(addToWatchlist(patient_id)),
+    removePatientFromWatchlist: (patient_id) =>
+      dispatch(removePatientFromWatchlist(patient_id)),
   };
 };
 

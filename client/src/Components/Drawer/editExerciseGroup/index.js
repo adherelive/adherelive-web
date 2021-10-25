@@ -21,7 +21,7 @@ class EditExerciseGroup extends Component {
       editable: false,
       exercise_name: "",
       uploadedVideoUrl: "",
-      videoContentType: null
+      videoContentType: null,
     };
 
     this.FormWrapper = Form.create({ onFieldsChange: this.onFormFieldChanges })(
@@ -29,23 +29,23 @@ class EditExerciseGroup extends Component {
     );
   }
 
-  setUploadedVideoUrl = url => {
+  setUploadedVideoUrl = (url) => {
     this.setState({ uploadedVideoUrl: url });
   };
 
-  setVideoContentType = type => {
+  setVideoContentType = (type) => {
     this.setState({ videoContentType: type });
   };
 
-  setEditable = val => {
+  setEditable = (val) => {
     this.setState({ editable: val });
   };
 
-  setExerciseName = name => {
+  setExerciseName = (name) => {
     this.setState({ exercise_name: name });
   };
 
-  setExerciseDetailId = id => {
+  setExerciseDetailId = (id) => {
     this.setState({ exercise_detail_id: id });
   };
 
@@ -57,9 +57,9 @@ class EditExerciseGroup extends Component {
     this.setState({ visibleAddExerciseDrawer: false });
   };
 
-  onFormFieldChanges = props => {
+  onFormFieldChanges = (props) => {
     const {
-      form: { getFieldsError, isFieldsTouched }
+      form: { getFieldsError, isFieldsTouched },
     } = props;
     const isError = hasErrors(getFieldsError());
     const { disabledSubmit } = this.state;
@@ -68,7 +68,7 @@ class EditExerciseGroup extends Component {
     }
   };
 
-  handleSubmit = e => {
+  handleSubmit = (e) => {
     e.preventDefault();
     const {
       onSubmit,
@@ -77,18 +77,18 @@ class EditExerciseGroup extends Component {
       searched_exercise_details = {},
       editExerciseGroupDetails,
       updateExercise,
-      exercise_details = {}
+      exercise_details = {},
     } = this.props;
     const { formRef = {} } = this;
 
     const {
       exercise_detail_id = null,
       editable = false,
-      exercise_name = ""
+      exercise_name = "",
     } = this.state;
     const {
       uploadedVideoUrl = "",
-      videoContentType: video_content_type = null
+      videoContentType: video_content_type = null,
     } = this.state;
 
     const {
@@ -96,13 +96,13 @@ class EditExerciseGroup extends Component {
       exercise_group_index = null,
       similar_index = null,
       exercise_group_id = null,
-      sets: prev_sets = 1
+      sets: prev_sets = 1,
     } = editExerciseGroupDetails || {};
 
     const {
       props: {
-        form: { validateFields }
-      }
+        form: { validateFields },
+      },
     } = formRef;
 
     validateFields(async (err, values) => {
@@ -114,7 +114,7 @@ class EditExerciseGroup extends Component {
           calorific_value = null,
           sets = null,
           video_content = "",
-          notes = ""
+          notes = "",
         } = values;
 
         let video = {};
@@ -125,7 +125,7 @@ class EditExerciseGroup extends Component {
           }
           video = {
             content_type: video_content_type,
-            content: video_content
+            content: video_content,
           };
         }
 
@@ -147,7 +147,7 @@ class EditExerciseGroup extends Component {
           notes,
           prev_calorific_val,
           prev_sets,
-          ...(exercise_group_id && { exercise_group_id: exercise_group_id })
+          ...(exercise_group_id && { exercise_group_id: exercise_group_id }),
         };
 
         const updateData = {
@@ -158,7 +158,7 @@ class EditExerciseGroup extends Component {
             ? parseInt(repetition_value)
             : null,
           calorific_value: calorific_value ? parseInt(calorific_value) : null,
-          video
+          video,
         };
 
         try {
@@ -170,21 +170,20 @@ class EditExerciseGroup extends Component {
           // if(editable){
           const responseOnUpdate = await updateExercise({
             exercise_id,
-            data: updateData
+            data: updateData,
           });
           const {
             status,
             statusCode,
-            payload: { data: resp_data = {}, message: resp_msg = "" } = {}
+            payload: { data: resp_data = {}, message: resp_msg = "" } = {},
           } = responseOnUpdate;
           if (status) {
             const { exercise_details = {}, exercise_detail_id = null } =
               resp_data || {};
 
             if (exercise_detail_id) {
-              editedExerciseGroupData[`exercise_detail_id`] = parseInt(
-                exercise_detail_id
-              );
+              editedExerciseGroupData[`exercise_detail_id`] =
+                parseInt(exercise_detail_id);
               onSubmit({ editedExerciseGroupData, exercise_group_index });
               this.onClose();
             } else {
@@ -212,29 +211,29 @@ class EditExerciseGroup extends Component {
     });
   };
 
-  formatMessage = data => this.props.intl.formatMessage(data);
+  formatMessage = (data) => this.props.intl.formatMessage(data);
 
   onClose = () => {
     const { closeExerciseGroupDrawer } = this.props;
     const { formRef } = this;
     const {
       props: {
-        form: { resetFields }
-      }
+        form: { resetFields },
+      },
     } = formRef;
 
     this.setState({
       exercise_detail_id: null,
       visibleAddExerciseDrawer: false,
       editable: false,
-      exercise_name: ""
+      exercise_name: "",
     });
 
     resetFields();
     closeExerciseGroupDrawer();
   };
 
-  setFormRef = formRef => {
+  setFormRef = (formRef) => {
     this.formRef = formRef;
     if (formRef) {
       this.setState({ formRef: true });
@@ -249,7 +248,7 @@ class EditExerciseGroup extends Component {
       visibleAddExerciseDrawer = false,
       exercise_detail_id = null,
       editable = false,
-      exercise_name = ""
+      exercise_name = "",
     } = this.state;
 
     const {
@@ -260,11 +259,11 @@ class EditExerciseGroup extends Component {
       FormWrapper,
       setExerciseDetailId,
       openAddExerciseDrawer,
-      closeAddExerciseDrawer
+      closeAddExerciseDrawer,
     } = this;
 
     const submitButtonProps = {
-      disabled: disabledSubmit
+      disabled: disabledSubmit,
     };
 
     return (
@@ -275,7 +274,7 @@ class EditExerciseGroup extends Component {
           headerStyle={{
             position: "sticky",
             zIndex: "9999",
-            top: "0px"
+            top: "0px",
           }}
           destroyOnClose={true}
           onClose={onClose}

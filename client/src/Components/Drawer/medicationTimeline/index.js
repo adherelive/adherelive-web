@@ -36,7 +36,7 @@ class MedicationTimelineDrawer extends Component {
         width={"35%"}
         title={formatMessage(
           {
-            ...messages.medication_timeline
+            ...messages.medication_timeline,
           },
           { name: drawerTitle() }
         )}
@@ -47,7 +47,7 @@ class MedicationTimelineDrawer extends Component {
           display: "flex",
           justifyContent: "flex-start",
           alignItems: "flex-start",
-          width: "100%"
+          width: "100%",
         }}
       >
         <MedicationTimeline {...this.props} />

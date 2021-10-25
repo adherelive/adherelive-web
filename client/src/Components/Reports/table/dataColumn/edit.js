@@ -3,14 +3,14 @@ import edit_image from "../../../../Assets/images/edit.svg";
 import messages from "../message";
 import Tooltip from "antd/es/tooltip";
 
-export default props => {
+export default (props) => {
   const {
     openEditDrawer,
     id,
     formatMessage,
     reportData,
     uploaderData,
-    documentData
+    documentData,
   } = props || {};
 
   return (
@@ -22,7 +22,7 @@ export default props => {
           reportData,
           uploaderData,
           documentData,
-          report_id: id
+          report_id: id,
         })}
       >
         <div className="flex align-center justify-center">

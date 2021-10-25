@@ -3,12 +3,12 @@ import { connect } from "react-redux";
 // import { resetUnauthorizedError } from "../../modules/auth";
 import BlankState from "../../Components/BlankState";
 
-const mapStateToProps = state => {
+const mapStateToProps = (state) => {
   const {} = state;
   return {};
 };
 
-const mapDispatchToProps = dispatch => {
+const mapDispatchToProps = (dispatch) => {
   return {};
 };
 

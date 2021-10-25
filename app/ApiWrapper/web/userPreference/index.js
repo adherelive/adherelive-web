@@ -12,9 +12,9 @@ class UserPreferenceWrapper extends BaseUserPreference {
     return {
       basic_info: {
         id,
-        user_id
+        user_id,
       },
-      details
+      details,
     };
   };
 
@@ -22,7 +22,7 @@ class UserPreferenceWrapper extends BaseUserPreference {
     const { _data: { details: { charts = [] } } = {} } = this;
 
     return {
-      charts
+      charts,
     };
   };
 }
@@ -32,7 +32,7 @@ export default async (data = null, user_id = null) => {
     return new UserPreferenceWrapper(data);
   }
   const userPreference = await userPreferenceService.getPreferenceByData({
-    user_id
+    user_id,
   });
   return new UserPreferenceWrapper(userPreference);
 };

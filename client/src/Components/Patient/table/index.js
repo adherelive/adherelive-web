@@ -17,11 +17,11 @@ class PatientTable extends Component {
     super(props);
     this.state = {
       searchText: "",
-      searchedColumn: ""
+      searchedColumn: "",
     };
   }
 
-  onRowClick = key => event => {
+  onRowClick = (key) => (event) => {
     event.preventDefault();
     const { openPatientDetailsDrawer } = this.props;
     openPatientDetailsDrawer({ patient_id: key });
@@ -31,20 +31,20 @@ class PatientTable extends Component {
     const { onRowClick } = this;
     const { key } = record;
     return {
-      onClick: onRowClick(key)
+      onClick: onRowClick(key),
     };
   };
 
-  formatMessage = data => this.props.intl.formatMessage(data);
+  formatMessage = (data) => this.props.intl.formatMessage(data);
 
-  onSelectChange = selectedRowKeys => {
+  onSelectChange = (selectedRowKeys) => {
     this.setState({ selectedRows: selectedRowKeys });
   };
 
   getLoadingComponent = () => {
     const antIcon = <Icon type="loading" style={{ fontSize: 24 }} spin />;
     return {
-      indicator: antIcon
+      indicator: antIcon,
     };
   };
 
@@ -63,12 +63,12 @@ class PatientTable extends Component {
       authenticated_user,
       addToWatchlist,
       removePatientFromWatchlist,
-      openEditPatientDrawer
+      openEditPatientDrawer,
     } = this.props;
 
     const { onRowClick } = this;
 
-    return Object.keys(patients).map(id => {
+    return Object.keys(patients).map((id) => {
       return generateRow({
         id,
         patients,
@@ -85,7 +85,7 @@ class PatientTable extends Component {
         addToWatchlist,
         onRowClick,
         removePatientFromWatchlist,
-        openEditPatientDrawer
+        openEditPatientDrawer,
       });
     });
   };
@@ -94,30 +94,30 @@ class PatientTable extends Component {
     confirm();
     this.setState({
       searchText: selectedKeys[0],
-      searchedColumn: dataIndex
+      searchedColumn: dataIndex,
     });
   };
 
-  handleReset = clearFilters => {
+  handleReset = (clearFilters) => {
     clearFilters();
     this.setState({ searchText: "" });
   };
 
-  getColumnSearchProps = dataIndex => ({
+  getColumnSearchProps = (dataIndex) => ({
     filterDropdown: ({
       setSelectedKeys,
       selectedKeys,
       confirm,
-      clearFilters
+      clearFilters,
     }) => (
       <div style={{ padding: 8 }}>
         <Input
-          ref={node => {
+          ref={(node) => {
             this.searchInput = node;
           }}
           placeholder={`Search ${dataIndex}`}
           value={selectedKeys[0]}
-          onChange={e =>
+          onChange={(e) =>
             setSelectedKeys(e.target.value ? [e.target.value] : [])
           }
           onPressEnter={() =>
@@ -144,7 +144,7 @@ class PatientTable extends Component {
         </Button>
       </div>
     ),
-    filterIcon: filtered => (
+    filterIcon: (filtered) => (
       <SearchOutlined style={{ color: filtered ? "#1890ff" : undefined }} />
     ),
     onFilter: (value, record) => {
@@ -153,10 +153,7 @@ class PatientTable extends Component {
         const { treatment = "" } = carePlanData;
 
         return treatment
-          ? treatment
-              .toString()
-              .toLowerCase()
-              .includes(value.toLowerCase())
+          ? treatment.toString().toLowerCase().includes(value.toLowerCase())
           : "";
       } else if (dataIndex === TABLE_COLUMN.DIAGNOSIS.dataIndex) {
         const { patientData = {} } = record[dataIndex] || {};
@@ -169,31 +166,28 @@ class PatientTable extends Component {
 
         const recordText = `${diagnosisTypeValue} ${description}`;
         return recordText
-          ? recordText
-              .toString()
-              .toLowerCase()
-              .includes(value.toLowerCase())
+          ? recordText.toString().toLowerCase().includes(value.toLowerCase())
           : "";
       }
     },
-    onFilterDropdownVisibleChange: visible => {
+    onFilterDropdownVisibleChange: (visible) => {
       if (visible) {
         setTimeout(() => this.searchInput.select(), 100);
       }
-    }
+    },
   });
 
   render() {
     const { onRow, onSelectChange, getLoadingComponent, getDataSource } = this;
 
     const rowSelection = {
-      onChange: onSelectChange
+      onChange: onSelectChange,
     };
 
     const { loading, intl: { formatMessage } = {} } = this.props;
 
     const patientLocale = {
-      emptyText: formatMessage(messages.emptyPatientTable)
+      emptyText: formatMessage(messages.emptyPatientTable),
     };
 
     return (
@@ -203,12 +197,12 @@ class PatientTable extends Component {
         columns={getColumn({
           formatMessage,
           className: "pointer",
-          getColumnSearchProps: this.getColumnSearchProps
+          getColumnSearchProps: this.getColumnSearchProps,
         })}
         dataSource={getDataSource()}
         scroll={{ x: 1600 }}
         pagination={{
-          position: "bottom"
+          position: "bottom",
         }}
         locale={patientLocale}
       />

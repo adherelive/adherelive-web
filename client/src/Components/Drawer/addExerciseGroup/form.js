@@ -31,7 +31,7 @@ const FIELDS = [
   REPETITION_ID,
   CALORIFIC_VALUE,
   VIDEO_CONTENT,
-  NOTES
+  NOTES,
 ];
 
 class AddExerciseGroupForm extends Component {
@@ -40,7 +40,7 @@ class AddExerciseGroupForm extends Component {
     this.state = {
       exercise_id: null,
       searcingExercise: "",
-      doctor_id: null
+      doctor_id: null,
     };
 
     this.handleExerciseSearch = debounce(
@@ -70,12 +70,11 @@ class AddExerciseGroupForm extends Component {
       visibleAddExerciseDrawer,
       searched_exercise_details = {},
       searched_exercises = {},
-      setExerciseName
+      setExerciseName,
     } = this.props;
 
-    const {
-      visibleAddExerciseDrawer: prev_visibleAddExerciseDrawer = false
-    } = prevProps;
+    const { visibleAddExerciseDrawer: prev_visibleAddExerciseDrawer = false } =
+      prevProps;
 
     const { basic_info: { exercise_id: previous_exercise_id = null } = {} } =
       searched_exercise_details[exercise_detail_id] || {};
@@ -104,8 +103,8 @@ class AddExerciseGroupForm extends Component {
       latest_created_exercise: {
         exercises = {},
         exercise_details = {},
-        exercise_contents = {}
-      } = {}
+        exercise_contents = {},
+      } = {},
     } = this.props;
     const { setExerciseName, setEditable, setExerciseDetailId } = this.props;
     let exercise_id = null,
@@ -114,7 +113,7 @@ class AddExerciseGroupForm extends Component {
     const {
       form: { setFieldsValue } = {},
       setUploadedVideoUrl,
-      setVideoContentType
+      setVideoContentType,
     } = this.props;
 
     if (Object.keys(exercises).length) {
@@ -128,7 +127,7 @@ class AddExerciseGroupForm extends Component {
 
     const {
       basic_info: { repetition_id, repetition_value } = {},
-      calorific_value = 0
+      calorific_value = 0,
     } = exercise_details[detail_id] || {};
 
     const { basic_info: { name = "" } = {} } = exercises[exercise_id] || {};
@@ -156,15 +155,13 @@ class AddExerciseGroupForm extends Component {
   };
 
   getRepeatTypeOptions = () => {
-    const {
-      exercise_id: state_exercise_id = null,
-      doctor_id = null
-    } = this.state;
+    const { exercise_id: state_exercise_id = null, doctor_id = null } =
+      this.state;
     const {
       searched_exercise_details,
       repetitions = {},
       authenticated_category,
-      searched_exercises
+      searched_exercises,
     } = this.props;
     let options = [],
       repetition_ids = [],
@@ -178,7 +175,7 @@ class AddExerciseGroupForm extends Component {
       const {
         basic_info: { id: detail_id, exercise_id, repetition_id } = {},
         creator_id = null,
-        creator_type = null
+        creator_type = null,
       } = detail;
 
       if (
@@ -200,7 +197,7 @@ class AddExerciseGroupForm extends Component {
           value={repetition_id}
           onClick={this.handleExistingPortionSelect({
             detail_id,
-            editable: canEdit
+            editable: canEdit,
           })}
         >
           {type}
@@ -229,46 +226,50 @@ class AddExerciseGroupForm extends Component {
     return options;
   };
 
-  handleExistingPortionSelect = ({ detail_id: value, editable }) => () => {
-    const {
-      form: { setFieldsValue } = {},
-      searched_exercise_details,
-      setExerciseDetailId,
-      setEditable
-    } = this.props;
+  handleExistingPortionSelect =
+    ({ detail_id: value, editable }) =>
+    () => {
+      const {
+        form: { setFieldsValue } = {},
+        searched_exercise_details,
+        setExerciseDetailId,
+        setEditable,
+      } = this.props;
 
-    const {
-      basic_info: { id: detail_id, repetition_id, repetition_value } = {},
-      calorific_value = 0
-    } = searched_exercise_details[value] || {};
+      const {
+        basic_info: { id: detail_id, repetition_id, repetition_value } = {},
+        calorific_value = 0,
+      } = searched_exercise_details[value] || {};
 
-    setFieldsValue({ [REPETITION_ID]: repetition_id });
-    setFieldsValue({ [CALORIFIC_VALUE]: calorific_value });
-    setFieldsValue({ [REPETITION_VALUE]: repetition_value });
-    setExerciseDetailId(detail_id);
-    setEditable(editable);
-  };
+      setFieldsValue({ [REPETITION_ID]: repetition_id });
+      setFieldsValue({ [CALORIFIC_VALUE]: calorific_value });
+      setFieldsValue({ [REPETITION_VALUE]: repetition_value });
+      setExerciseDetailId(detail_id);
+      setEditable(editable);
+    };
 
-  handleDifferentPortionSelect = ({ editable }) => () => {
-    // non existing details for exercise
+  handleDifferentPortionSelect =
+    ({ editable }) =>
+    () => {
+      // non existing details for exercise
 
-    const {
-      form: { setFieldsValue } = {},
-      setExerciseDetailId,
-      setEditable
-    } = this.props;
+      const {
+        form: { setFieldsValue } = {},
+        setExerciseDetailId,
+        setEditable,
+      } = this.props;
 
-    setFieldsValue({ [REPETITION_ID]: null });
-    setFieldsValue({ [CALORIFIC_VALUE]: null });
-    setFieldsValue({ [REPETITION_VALUE]: 1 });
+      setFieldsValue({ [REPETITION_ID]: null });
+      setFieldsValue({ [CALORIFIC_VALUE]: null });
+      setFieldsValue({ [REPETITION_VALUE]: 1 });
 
-    setExerciseDetailId(null);
-    setEditable(editable);
-  };
+      setExerciseDetailId(null);
+      setEditable(editable);
+    };
 
-  formatMessage = data => this.props.intl.formatMessage(data);
+  formatMessage = (data) => this.props.intl.formatMessage(data);
 
-  handleOpenAddDrawer = async e => {
+  handleOpenAddDrawer = async (e) => {
     const { openAddExerciseDrawer } = this.props;
     const { form: { setFieldsValue } = {} } = this.props;
     e.preventDefault();
@@ -321,7 +322,7 @@ class AddExerciseGroupForm extends Component {
     return options;
   };
 
-  handleExerciseSearch = async value => {
+  handleExerciseSearch = async (value) => {
     try {
       console.log("86763286876832687", { value, props: this.props });
       const { searchExercise, setExerciseName } = this.props;
@@ -343,7 +344,7 @@ class AddExerciseGroupForm extends Component {
     }
   };
 
-  setExerciseId = value => {
+  setExerciseId = (value) => {
     const {
       searched_exercises = {},
       setExerciseName,
@@ -354,13 +355,11 @@ class AddExerciseGroupForm extends Component {
       authenticated_category,
       exercise_contents = {},
       setUploadedVideoUrl,
-      setVideoContentType
+      setVideoContentType,
     } = this.props;
 
-    const {
-      doctor_id = null,
-      exercise_id: prev_exercise_id = null
-    } = this.state;
+    const { doctor_id = null, exercise_id: prev_exercise_id = null } =
+      this.state;
 
     const { basic_info: { name = "" } = {}, exercise_detail_ids = [] } =
       searched_exercises[value] || {};
@@ -376,7 +375,7 @@ class AddExerciseGroupForm extends Component {
       const {
         basic_info: { exercise_id } = {},
         creator_id = null,
-        creator_type = null
+        creator_type = null,
       } = searched_exercise_details[first] || {};
       if (value && exercise_id && value.toString() === exercise_id.toString()) {
         if (
@@ -391,7 +390,7 @@ class AddExerciseGroupForm extends Component {
 
       const {
         basic_info: { id: detail_id, repetition_id, repetition_value = 1 } = {},
-        calorific_value = 0
+        calorific_value = 0,
       } = searched_exercise_details[first] || {};
 
       let flag = false;
@@ -399,7 +398,7 @@ class AddExerciseGroupForm extends Component {
       for (let each in exercise_contents) {
         const {
           basic_info: { exercise_id = null } = {},
-          video: { content_type = null, content = "" } = {}
+          video: { content_type = null, content = "" } = {},
         } = exercise_contents[each] || {};
         if (value.toString() === exercise_id.toString()) {
           setFieldsValue({ [VIDEO_CONTENT]: content });
@@ -425,7 +424,7 @@ class AddExerciseGroupForm extends Component {
     }
   };
 
-  onBlur = props => {
+  onBlur = (props) => {
     const value = parseInt(props);
     const isNotANumber = isNaN(value);
 
@@ -440,7 +439,7 @@ class AddExerciseGroupForm extends Component {
       uploadExerciseContent,
       form: { setFieldsValue } = {},
       setUploadedVideoUrl,
-      setVideoContentType
+      setVideoContentType,
     } = this.props;
     const data = new FormData();
     data.set("files", file);
@@ -467,11 +466,11 @@ class AddExerciseGroupForm extends Component {
     }
   };
 
-  onChange = e => {
+  onChange = (e) => {
     const {
       form: { setFieldsValue } = {},
       setUploadedVideoUrl,
-      setVideoContentType
+      setVideoContentType,
     } = this.props;
     setVideoContentType(VIDEO_TYPES.URL);
     setUploadedVideoUrl("");
@@ -480,7 +479,7 @@ class AddExerciseGroupForm extends Component {
   render() {
     const {
       form: { getFieldDecorator, isFieldTouched, getFieldError },
-      editable = false
+      editable = false,
     } = this.props;
     const {
       formatMessage,
@@ -489,13 +488,13 @@ class AddExerciseGroupForm extends Component {
       getExerciseOptions,
       onBlur,
       handleUpload,
-      onChange
+      onChange,
     } = this;
 
     const { exercise_id = null } = this.state;
 
     let fieldsError = {};
-    FIELDS.forEach(value => {
+    FIELDS.forEach((value) => {
       const error = isFieldTouched(value) && getFieldError(value);
       fieldsError = { ...fieldsError, [value]: error };
     });
@@ -511,9 +510,9 @@ class AddExerciseGroupForm extends Component {
             rules: [
               {
                 required: true,
-                message: formatMessage(messages.exercise_required_error)
-              }
-            ]
+                message: formatMessage(messages.exercise_required_error),
+              },
+            ],
           })(
             <Select
               placeholder={this.formatMessage(messages.search_exercise)}
@@ -555,9 +554,9 @@ class AddExerciseGroupForm extends Component {
                 rules: [
                   {
                     required: true,
-                    message: formatMessage(messages.sets_required_error)
-                  }
-                ]
+                    message: formatMessage(messages.sets_required_error),
+                  },
+                ],
               })(<Input type="number" min="1" />)}
             </FormItem>
           </div>
@@ -576,9 +575,9 @@ class AddExerciseGroupForm extends Component {
                       required: true,
                       message: formatMessage(
                         messages.repetition_value_required_error
-                      )
-                    }
-                  ]
+                      ),
+                    },
+                  ],
                 })(<Input type="number" min="1" disabled={!editable} />)}
               </FormItem>
             </div>
@@ -596,9 +595,9 @@ class AddExerciseGroupForm extends Component {
                       required: true,
                       message: formatMessage(
                         messages.repetition_id_required_error
-                      )
-                    }
-                  ]
+                      ),
+                    },
+                  ],
                 })(
                   <Select
                     className="drawer-select"

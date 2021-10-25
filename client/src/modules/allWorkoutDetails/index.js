@@ -7,7 +7,7 @@ function getAllWorkoutDetailsReducer(state, data) {
       ...state,
       days,
       repetitions,
-      start_time
+      start_time,
     };
   } else {
     return state;

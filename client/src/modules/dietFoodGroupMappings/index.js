@@ -3,7 +3,7 @@ function foodGroupMappingsReducer(state, data) {
   if (diet_food_group_mappings) {
     return {
       ...state,
-      ...diet_food_group_mappings
+      ...diet_food_group_mappings,
     };
   } else {
     return state;

@@ -1,6 +1,6 @@
 import { TABLE_COLUMN, formatReportData } from "../helper";
 
-export default data => {
+export default (data) => {
   const { formatMessage, openEditDrawer, id, openModal } = data;
   const formattedData = formatReportData(data);
   const { reportData, uploaderData, documentData } = formattedData || {};
@@ -9,14 +9,14 @@ export default data => {
     key: id,
     [TABLE_COLUMN.NAME.dataIndex]: {
       reportData,
-      uploaderData
+      uploaderData,
     },
     [TABLE_COLUMN.TIME.dataIndex]: {
-      reportData
+      reportData,
     },
     [TABLE_COLUMN.REPORT_DOCUMENTS.dataIndex]: {
       documentData,
-      openModal
+      openModal,
     },
     [TABLE_COLUMN.EDIT.dataIndex]: {
       openEditDrawer,
@@ -24,7 +24,7 @@ export default data => {
       id,
       reportData,
       uploaderData,
-      documentData
-    }
+      documentData,
+    },
   };
 };

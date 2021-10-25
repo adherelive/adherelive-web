@@ -18,7 +18,7 @@ export default class DeactivateDoctorJob extends AuthJob {
     const { getData } = this;
     const {
       actor: { id: actorId, details: { name } = {} } = {},
-      participants = []
+      participants = [],
     } = getData() || {};
 
     const templateData = [];
@@ -26,7 +26,7 @@ export default class DeactivateDoctorJob extends AuthJob {
     const userIds = [];
 
     // non actor participants are added for notification
-    participants.forEach(participant => {
+    participants.forEach((participant) => {
       if (participant !== actorId) {
         userIds.push(participant);
       }
@@ -34,7 +34,7 @@ export default class DeactivateDoctorJob extends AuthJob {
 
     const userDevices =
       (await UserDeviceService.getAllDeviceByData({
-        user_id: userIds
+        user_id: userIds,
       })) || [];
 
     if (userDevices.length > 0) {
@@ -49,12 +49,12 @@ export default class DeactivateDoctorJob extends AuthJob {
       app_id: process.config.one_signal.app_id,
       headings: { en: "Doctor Association" },
       contents: {
-        en: `Dr. ${name} is not associated with the platform anymore. Platform owns no obligation if you continue the medication prescribed by this doctor.`
+        en: `Dr. ${name} is not associated with the platform anymore. Platform owns no obligation if you continue the medication prescribed by this doctor.`,
       },
       include_player_ids: [...playerIds],
       priority: 10,
       android_channel_id: process.config.one_signal.urgent_channel_id,
-      data: { url: `/`, params: { ...getData() } }
+      data: { url: `/`, params: { ...getData() } },
     });
     // }
 
@@ -65,7 +65,7 @@ export default class DeactivateDoctorJob extends AuthJob {
     const { getData } = this;
     const {
       actor: { id: actorId, details: { name } = {} } = {},
-      participants = []
+      participants = [],
       // doctor_id,
       // patient_id,
     } = getData() || {};
@@ -83,7 +83,7 @@ export default class DeactivateDoctorJob extends AuthJob {
           verb: `${NOTIFICATION_VERB.DEACTIVATE_DOCTOR}:${currentTimeStamp}`,
           event: NOTIFICATION_VERB.DEACTIVATE_DOCTOR,
           time: `${currentTime}`,
-          create_time: `${currentTime}`
+          create_time: `${currentTime}`,
         });
       }
     }

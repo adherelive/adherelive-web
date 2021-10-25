@@ -28,17 +28,17 @@ class UserService {
     }
   }
 
-  getUser = async id => {
+  getUser = async (id) => {
     try {
       const user = await Database.getModel(TABLE_NAME).findOne({
         where: {
-          id
+          id,
         },
         include: [
           Database.getModel(doctorTableName),
           Database.getModel(patientTableName),
-          Database.getModel(providerTableName)
-        ]
+          Database.getModel(providerTableName),
+        ],
       });
       return user;
     } catch (err) {
@@ -55,19 +55,19 @@ class UserService {
           email,
           [Op.or]: [
             {
-              category: USER_CATEGORY.DOCTOR
+              category: USER_CATEGORY.DOCTOR,
             },
             {
-              category: USER_CATEGORY.ADMIN
+              category: USER_CATEGORY.ADMIN,
             },
             {
-              category: USER_CATEGORY.PROVIDER
+              category: USER_CATEGORY.PROVIDER,
             },
             {
-              category: USER_CATEGORY.HSP
-            }
-          ]
-        }
+              category: USER_CATEGORY.HSP,
+            },
+          ],
+        },
       });
       return user;
     } catch (error) {
@@ -75,13 +75,13 @@ class UserService {
     }
   }
 
-  getUserByNumber = async data => {
+  getUserByNumber = async (data) => {
     try {
       const user = await Database.getModel(TABLE_NAME).findOne({
         where: {
           ...data,
-          category: USER_CATEGORY.PATIENT
-        }
+          category: USER_CATEGORY.PATIENT,
+        },
       });
       return user;
     } catch (error) {
@@ -89,23 +89,23 @@ class UserService {
     }
   };
 
-  getUserById = async id => {
+  getUserById = async (id) => {
     try {
       const user = await Database.getModel(TABLE_NAME).findOne({
         where: {
-          id
+          id,
         },
         include: [
           {
             model: Database.getModel(doctorTableName),
-            paranoid: false
+            paranoid: false,
           },
           {
             model: Database.getModel(patientTableName),
-            paranoid: false
-          }
+            paranoid: false,
+          },
         ],
-        paranoid: false
+        paranoid: false,
       });
       return user;
     } catch (err) {
@@ -113,11 +113,11 @@ class UserService {
     }
   };
 
-  getUserByData = async data => {
+  getUserByData = async (data) => {
     try {
       const user = await Database.getModel(TABLE_NAME).findAll({
         where: data,
-        paranoid: false
+        paranoid: false,
       });
       return user;
     } catch (err) {
@@ -129,7 +129,7 @@ class UserService {
     const transaction = await Database.initTransaction();
     try {
       const response = await Database.getModel(TABLE_NAME).create(data, {
-        transaction
+        transaction,
       });
       await transaction.commit();
       return response;
@@ -144,9 +144,9 @@ class UserService {
     try {
       const user = await Database.getModel(TABLE_NAME).update(data, {
         where: {
-          id
+          id,
         },
-        transaction
+        transaction,
       });
       await transaction.commit();
       return user;
@@ -161,9 +161,9 @@ class UserService {
     try {
       const user = await Database.getModel(TABLE_NAME).update(data, {
         where: {
-          id
+          id,
         },
-        transaction
+        transaction,
       });
       await transaction.commit();
       return user;
@@ -173,18 +173,18 @@ class UserService {
     }
   };
 
-  getPatientByMobile = async mobile_number => {
+  getPatientByMobile = async (mobile_number) => {
     try {
       const user = await Database.getModel(TABLE_NAME).findAll({
         where: {
           category: USER_CATEGORY.PATIENT,
-          mobile_number
+          mobile_number,
         },
         include: [
           {
-            model: Database.getModel(patientTableName)
-          }
-        ]
+            model: Database.getModel(patientTableName),
+          },
+        ],
       });
       return user;
     } catch (err) {
@@ -213,22 +213,10 @@ class UserService {
   //   }
   // };
 
-  getUserData = async data => {
-    try {
-      const user = await Database.getModel(TABLE_NAME).findOne({
-        where: data
-      });
-      return user;
-    } catch (error) {
-      throw error;
-    }
-  };
-
-  getUserByDevices = async data => {
+  getUserData = async (data) => {
     try {
       const user = await Database.getModel(TABLE_NAME).findOne({
         where: data,
-        include: [Database.getModel(userDeviceTableName)]
       });
       return user;
     } catch (error) {
@@ -236,12 +224,24 @@ class UserService {
     }
   };
 
-  getCarePlanData = async id => {
+  getUserByDevices = async (data) => {
+    try {
+      const user = await Database.getModel(TABLE_NAME).findOne({
+        where: data,
+        include: [Database.getModel(userDeviceTableName)],
+      });
+      return user;
+    } catch (error) {
+      throw error;
+    }
+  };
+
+  getCarePlanData = async (id) => {
     try {
       const carePlan = await Database.getModel(carePlanTableName).findOne({
         where: {
-          id
-        }
+          id,
+        },
       });
       return carePlan;
     } catch (error) {
@@ -253,8 +253,8 @@ class UserService {
     try {
       const users = await Database.getModel(TABLE_NAME).destroy({
         where: {
-          id
-        }
+          id,
+        },
       });
       return users;
     } catch (err) {
@@ -268,9 +268,9 @@ class UserService {
         { deleted_at: null },
         {
           where: {
-            id
+            id,
           },
-          paranoid: false
+          paranoid: false,
         }
       );
       return users;
@@ -279,15 +279,15 @@ class UserService {
     }
   };
 
-  searchMail = async value => {
+  searchMail = async (value) => {
     try {
       const matchingUsers = await Database.getModel(TABLE_NAME).findAll({
         where: {
           email: {
-            [Op.like]: `${value}%`
-          }
+            [Op.like]: `${value}%`,
+          },
         },
-        paranoid: false
+        paranoid: false,
       });
       return matchingUsers;
     } catch (err) {

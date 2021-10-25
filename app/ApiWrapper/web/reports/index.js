@@ -23,13 +23,13 @@ class ReportWrapper extends BaseReport {
       basic_info: {
         id,
         patient_id,
-        name
+        name,
       },
       test_date,
       uploader: {
         id: uploader_id,
-        category: uploader_type
-      }
+        category: uploader_type,
+      },
     };
   };
 
@@ -39,7 +39,7 @@ class ReportWrapper extends BaseReport {
       const documents =
         (await uploadDocumentService.getAllByData({
           parent_id: getId(),
-          parent_type: DOCUMENT_PARENT_TYPE.REPORT
+          parent_type: DOCUMENT_PARENT_TYPE.REPORT,
         })) || [];
 
       let uploadDocumentIds = [];
@@ -51,7 +51,7 @@ class ReportWrapper extends BaseReport {
 
       return {
         ...getBasicInfo(),
-        report_document_ids: uploadDocumentIds
+        report_document_ids: uploadDocumentIds,
       };
     } catch (error) {
       Log.debug("getAllInfo error", error);
@@ -65,26 +65,25 @@ class ReportWrapper extends BaseReport {
       const documents =
         (await uploadDocumentService.getAllByData({
           parent_id: getId(),
-          parent_type: DOCUMENT_PARENT_TYPE.REPORT
+          parent_type: DOCUMENT_PARENT_TYPE.REPORT,
         })) || [];
 
       let uploadDocuments = {};
 
       for (let index = 0; index < documents.length; index++) {
         const document = await DocumentWrapper(documents[index]);
-        uploadDocuments[
-          document.getUploadDocumentId()
-        ] = document.getBasicInfo();
+        uploadDocuments[document.getUploadDocumentId()] =
+          document.getBasicInfo();
       }
 
       return {
         reports: {
-          [getId()]: await getAllInfo()
+          [getId()]: await getAllInfo(),
         },
         upload_documents: {
-          ...uploadDocuments
+          ...uploadDocuments,
         },
-        report_id: getId()
+        report_id: getId(),
       };
     } catch (error) {
       Log.debug("getReferenceInfo error", error);

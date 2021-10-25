@@ -8,10 +8,10 @@ class LoginByFacebook extends Component {
     this.state = {};
   }
 
-  responseFacebook = response => {
+  responseFacebook = (response) => {
     const accessToken = response.accessToken;
     const data = {
-      accessToken: accessToken
+      accessToken: accessToken,
     };
 
     this.props.facebookSignIn(data);
@@ -23,7 +23,7 @@ class LoginByFacebook extends Component {
         appId="279463729603660"
         fields="name,email,picture"
         callback={this.responseFacebook}
-        render={renderProps => (
+        render={(renderProps) => (
           <button onClick={renderProps.onClick} className="facebook-button">
             <img alt="fb-logo" src={fbLogo} className="fb-logo" />
             Login with Facebook

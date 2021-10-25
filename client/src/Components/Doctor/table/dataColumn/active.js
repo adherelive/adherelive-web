@@ -1,7 +1,7 @@
 import React from "react";
 import TableStatus from "../../../../Helper/TableStatus";
 
-export default props => {
+export default (props) => {
   const { userData } = props || {};
   const { deleted_at } = userData || {};
 

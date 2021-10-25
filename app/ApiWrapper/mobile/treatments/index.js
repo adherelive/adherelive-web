@@ -12,8 +12,8 @@ class TreatmentWrapper extends BaseTreatment {
     return {
       basic_info: {
         id,
-        name
-      }
+        name,
+      },
     };
   };
 }

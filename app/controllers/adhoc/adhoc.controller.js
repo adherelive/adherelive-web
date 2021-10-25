@@ -54,7 +54,7 @@ class AdhocController extends Controller {
             id: userId,
             user_identity: userId,
             linked_id,
-            linked_with
+            linked_with,
           });
         }
       }
@@ -94,25 +94,25 @@ class AdhocController extends Controller {
         const userRole =
           (await userRoleService.findOne({
             where: {
-              user_identity: userPreference.getUserId()
+              user_identity: userPreference.getUserId(),
             },
-            attributes: ["id"]
+            attributes: ["id"],
           })) || null;
         userPreferenceArr.push({
           id: userPreference.getUserPreferenceId(),
           user_id: userPreference.getUserId(),
-          user_role_id: userRole.id
+          user_role_id: userRole.id,
         });
       }
 
       const updateResponse = await userPreferenceService.bulkUpdate({
-        data: userPreferenceArr
+        data: userPreferenceArr,
       });
 
       //-- add test-provider record to user-pref table
 
       const user = await userService.getUserData({
-        email: "test-provider@mail.com"
+        email: "test-provider@mail.com",
       });
 
       if (user) {
@@ -120,7 +120,7 @@ class AdhocController extends Controller {
         const user_identity = await userWrapper.getId();
 
         const existing = await userPreferenceService.findOne({
-          where: { user_id: user_identity }
+          where: { user_id: user_identity },
         });
 
         if (!existing) {
@@ -135,9 +135,9 @@ class AdhocController extends Controller {
             const newRecord = await userPreferenceService.addUserPreference({
               user_id: "5",
               details: {
-                charts: ["1", "2", "3"]
+                charts: ["1", "2", "3"],
               },
-              user_role_id: userRoleId
+              user_role_id: userRoleId,
             });
           }
         }
@@ -166,9 +166,9 @@ class AdhocController extends Controller {
           forUserRoleId =
             (await userRoleService.findOne({
               where: {
-                user_identity: forUserId
+                user_identity: forUserId,
               },
-              attributes: ["id"]
+              attributes: ["id"],
             })) || null;
         }
 
@@ -184,9 +184,9 @@ class AdhocController extends Controller {
           creatorRoleId =
             (await userRoleService.findOne({
               where: {
-                user_identity: creatorUserId
+                user_identity: creatorUserId,
               },
-              attributes: ["id"]
+              attributes: ["id"],
             })) || null;
         }
 
@@ -194,13 +194,14 @@ class AdhocController extends Controller {
           const { id: for_user_role_id = 0 } = forUserRoleId || {};
           const { id: creator_role_id = null } = creatorRoleId || {};
 
-          const paymentProductUpdateResponse = await paymentProductService.updateDoctorProduct(
-            {
-              for_user_role_id,
-              creator_role_id
-            },
-            paymentProduct.getId()
-          );
+          const paymentProductUpdateResponse =
+            await paymentProductService.updateDoctorProduct(
+              {
+                for_user_role_id,
+                creator_role_id,
+              },
+              paymentProduct.getId()
+            );
         }
       }
 
@@ -221,10 +222,11 @@ class AdhocController extends Controller {
             const userRoleWrapper = await UserRoleWrapper(userRole);
             const userRoleId = userRoleWrapper.getId();
             let recordData = { ...watchlistWrapper, user_role_id: userRoleId };
-            const updatedRecord = await doctorPatientWatchlistService.updateRecord(
-              recordData,
-              recordId
-            );
+            const updatedRecord =
+              await doctorPatientWatchlistService.updateRecord(
+                recordData,
+                recordId
+              );
           }
         }
       }
@@ -257,8 +259,8 @@ class AdhocController extends Controller {
           userRoleId,
           userRoleData,
           userData = {},
-          userCategoryData = {}
-        } = {}
+          userCategoryData = {},
+        } = {},
       } = req;
 
       return this.raiseSuccess(
@@ -269,7 +271,7 @@ class AdhocController extends Controller {
           userRoleData,
           userId,
           userData,
-          userCategoryData
+          userCategoryData,
         },
         "Test api successfull."
       );
@@ -312,8 +314,8 @@ class AdhocController extends Controller {
 
           const patientPreference = await userPreferenceService.findOne({
             where: {
-              user_id
-            }
+              user_id,
+            },
           });
 
           const { id: preferenceId, details: { timings } = {} } =
@@ -325,7 +327,7 @@ class AdhocController extends Controller {
 
           await userPreferenceService.updateUserPreferenceData(
             {
-              details: { timings: newTimings }
+              details: { timings: newTimings },
             },
             preferenceId
           );
@@ -363,13 +365,14 @@ class AdhocController extends Controller {
 
         for (const permission of Object.keys(featurePermissions)) {
           permissionsData.push({
-            type: featurePermissions[permission]
+            type: featurePermissions[permission],
           });
         }
       }
 
       // delete previous user permissions
-      const isPreviousUserPermissionsDeleted = await userPermissionService.deleteAll();
+      const isPreviousUserPermissionsDeleted =
+        await userPermissionService.deleteAll();
 
       // delete previous permissions
       if (isPreviousUserPermissionsDeleted) {
@@ -387,7 +390,7 @@ class AdhocController extends Controller {
 
               Log.debug("102398123 updatePermissions", {
                 category,
-                categoryPermissions
+                categoryPermissions,
               });
 
               for (let createdPermission of createdPermissions) {
@@ -396,11 +399,11 @@ class AdhocController extends Controller {
                   console.log("1293023 createdPermission", {
                     category,
                     id,
-                    type
+                    type,
                   });
                   userPermissionsData.push({
                     category,
-                    permission_id: id
+                    permission_id: id,
                   });
                 }
               }

@@ -6,25 +6,25 @@ export const SEARCH_DEGREES_START = "SEARCH_DEGREES_START";
 export const SEARCH_DEGREES_COMPLETED = "SEARCH_DEGREES_COMPLETED";
 export const SEARCH_DEGREES_FAILED = "SEARCH_DEGREES_FAILED";
 
-export const searchDegree = value => {
+export const searchDegree = (value) => {
   let response = {};
-  return async dispatch => {
+  return async (dispatch) => {
     try {
       response = await doRequest({
         method: REQUEST_TYPE.GET,
-        url: searchDegrees(value)
+        url: searchDegrees(value),
       });
 
       const { status, payload: { data, message = "" } = {} } = response || {};
       if (status === true) {
         dispatch({
           type: SEARCH_DEGREES_COMPLETED,
-          data
+          data,
         });
       } else {
         dispatch({
           type: SEARCH_DEGREES_FAILED,
-          message
+          message,
         });
       }
     } catch (error) {
@@ -39,7 +39,7 @@ function degreeReducer(state, data) {
   if (degrees) {
     return {
       ...state,
-      ...degrees
+      ...degrees,
     };
   } else {
     return state;

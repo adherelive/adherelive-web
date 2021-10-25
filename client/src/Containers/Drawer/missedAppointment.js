@@ -5,16 +5,16 @@ import MissedAppointmentsDrawer from "../../Components/Drawer/missedAppointments
 import { close } from "../../modules/drawer";
 import { DRAWER } from "../../constant";
 
-const mapStateToProps = state => {
+const mapStateToProps = (state) => {
   const {
     auth: {
       authPermissions = [],
       authenticated_user = 1,
-      authenticated_category
+      authenticated_category,
     } = {},
     drawer: { visible, loading, data: { type, payload = {} } = {} },
     patients = {},
-    pages: { dashboard: { missed_appointments, appointment_ids } = {} }
+    pages: { dashboard: { missed_appointments, appointment_ids } = {} },
   } = state;
 
   return {
@@ -26,14 +26,14 @@ const mapStateToProps = state => {
     authenticated_user,
     patients,
     missed_appointments,
-    appointment_ids
+    appointment_ids,
   };
 };
 
-const mapDispatchToProps = dispatch => {
+const mapDispatchToProps = (dispatch) => {
   return {
     getAllMissedScheduleEvents: () => dispatch(getAllMissedScheduleEvents()),
-    close: () => dispatch(close())
+    close: () => dispatch(close()),
   };
 };
 

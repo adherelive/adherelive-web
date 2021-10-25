@@ -35,11 +35,11 @@ class ConsultationFeeTable extends Component {
   getLoadingComponent = () => {
     const antIcon = <Icon type="loading" style={{ fontSize: 24 }} spin />;
     return {
-      indicator: antIcon
+      indicator: antIcon,
     };
   };
 
-  formatMessage = data => this.props.intl.formatMessage(data);
+  formatMessage = (data) => this.props.intl.formatMessage(data);
 
   getDataSource = () => {
     const {
@@ -47,7 +47,7 @@ class ConsultationFeeTable extends Component {
       doctorPaymentProducts,
       deleteDoctorProduct,
       editDoctorProduct = null,
-      intl: { formatMessage } = {}
+      intl: { formatMessage } = {},
     } = this.props;
 
     // const {onRowClick} = this;
@@ -60,7 +60,7 @@ class ConsultationFeeTable extends Component {
           deleteDoctorProduct,
           editDoctorProduct,
           formatMessage,
-          doctors
+          doctors,
         })
       );
     }
@@ -73,22 +73,22 @@ class ConsultationFeeTable extends Component {
       // onRow,
       onSelectChange,
       // getLoadingComponent,
-      getDataSource
+      getDataSource,
     } = this;
 
     const rowSelection = {
-      onChange: onSelectChange
+      onChange: onSelectChange,
     };
 
     const {
       loading,
       pagination_bottom,
       authPermissions = [],
-      intl: { formatMessage } = {}
+      intl: { formatMessage } = {},
     } = this.props;
 
     const locale = {
-      emptyText: this.formatMessage(messages.emptyConsultationTable)
+      emptyText: this.formatMessage(messages.emptyConsultationTable),
     };
 
     return (
@@ -98,12 +98,12 @@ class ConsultationFeeTable extends Component {
         // loading={loading === true ? getLoadingComponent() : false}
         columns={getColumn({
           formatMessage,
-          className: "pointer"
+          className: "pointer",
         })}
         dataSource={getDataSource()}
         scroll={{ x: "100%" }}
         pagination={{
-          position: "top"
+          position: "top",
           // pageSize: 6
         }}
         locale={locale}

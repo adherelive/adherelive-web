@@ -3,7 +3,7 @@ import { SIGNING_COMPLETED_WITH_ERROR } from "./modules/auth";
 
 import {
   GOOGLE_SIGNING_COMPLETED,
-  GOOGLE_SIGNING_COMPLETED_WITH_ERROR
+  GOOGLE_SIGNING_COMPLETED_WITH_ERROR,
 } from "./modules/auth";
 
 import { SIGNING, SIGNING_UP } from "./modules/auth";
@@ -33,7 +33,7 @@ import { RESET_PASSWORD_LINK_COMPLETED } from "./modules/auth";
 //   FETCHING_ALL_PHARMA_CO_DATA_COMPLETED_WITH_ERROR
 // } from "./modules/pharmaCompanies";
 
-const retainState = store => next => action => {
+const retainState = (store) => (next) => (action) => {
   const storeInstance = store.getState();
   const { auth: { authenticated = false } = {} } = storeInstance;
   if (authenticated) {

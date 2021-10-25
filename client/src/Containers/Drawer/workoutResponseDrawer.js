@@ -6,16 +6,16 @@ import { getWorkoutScheduleEventDetails } from "../../modules/workouts";
 import { close } from "../../modules/drawer";
 import { DRAWER } from "../../constant";
 
-const mapStateToProps = state => {
+const mapStateToProps = (state) => {
   const {
     drawer: {
       visible,
-      data: { type, payload: { workout_id, workout_name, loading } = {} } = {}
+      data: { type, payload: { workout_id, workout_name, loading } = {} } = {},
     },
     workouts = {},
     schedule_events = {},
     pages: { workout_response_ids = [] } = {},
-    workout_responses = {}
+    workout_responses = {},
   } = state;
 
   return {
@@ -26,13 +26,13 @@ const mapStateToProps = state => {
     workouts,
     schedule_events,
     workout_response_ids,
-    workout_responses
+    workout_responses,
   };
 };
 
-const mapDispatchToProps = dispatch => {
+const mapDispatchToProps = (dispatch) => {
   return {
-    close: () => dispatch(close())
+    close: () => dispatch(close()),
   };
 };
 

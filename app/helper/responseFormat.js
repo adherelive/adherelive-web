@@ -128,18 +128,18 @@ class Response {
     if (this.getStatus()) {
       payload = {
         data: this.getData(),
-        message: this.getMessage()
+        message: this.getMessage(),
       };
     } else {
       payload = {
         error: this.getError(),
-        message: this.getMessage()
+        message: this.getMessage(),
       };
     }
     return {
       status: this.getStatus(),
       statusCode: this.getStatusCode(),
-      payload: payload
+      payload: payload,
     };
   }
 }

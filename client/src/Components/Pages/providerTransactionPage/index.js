@@ -8,7 +8,7 @@ class providerTransactionPage extends Component {
     super(props);
   }
 
-  formatMessage = data => this.props.intl.formatMessage(data);
+  formatMessage = (data) => this.props.intl.formatMessage(data);
 
   render() {
     return (

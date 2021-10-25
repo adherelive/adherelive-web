@@ -6,14 +6,14 @@ import {
   doctorProfileRegister,
   getDoctorProfileRegisterData,
   getDoctorQualificationRegisterData,
-  sendPasswordMail
+  sendPasswordMail,
 } from "../../modules/onBoarding";
 import { connect } from "react-redux";
 import { searchDoctorEmail } from "../../modules/doctors";
 
 import { getDoctorDetails } from "../../modules/doctors";
 
-const mapStateToProps = state => {
+const mapStateToProps = (state) => {
   const { auth, users, onBoarding, doctors, emails = {} } = state;
 
   const { authenticated_user, authenticated_category } = auth;
@@ -24,22 +24,23 @@ const mapStateToProps = state => {
     users,
     doctors,
     onBoarding,
-    emails
+    emails,
   };
 };
 
-const mapDispatchToProps = dispatch => {
+const mapDispatchToProps = (dispatch) => {
   return {
     signOut: () => dispatch(signOut()),
-    doctorProfileRegister: data => dispatch(doctorProfileRegister(data)),
-    getDoctorProfileRegisterData: userId =>
+    doctorProfileRegister: (data) => dispatch(doctorProfileRegister(data)),
+    getDoctorProfileRegisterData: (userId) =>
       dispatch(getDoctorProfileRegisterData(userId)),
     getDoctorQualificationRegisterData: () =>
       dispatch(getDoctorQualificationRegisterData()),
-    sendPasswordMail: data => dispatch(sendPasswordMail(data)),
-    callNewDoctorAction: doctor_id => dispatch(callNewDoctorAction(doctor_id)),
-    getDoctorDetails: id => dispatch(getDoctorDetails(id)),
-    searchDoctorEmail: email => dispatch(searchDoctorEmail(email))
+    sendPasswordMail: (data) => dispatch(sendPasswordMail(data)),
+    callNewDoctorAction: (doctor_id) =>
+      dispatch(callNewDoctorAction(doctor_id)),
+    getDoctorDetails: (id) => dispatch(getDoctorDetails(id)),
+    searchDoctorEmail: (email) => dispatch(searchDoctorEmail(email)),
   };
 };
 

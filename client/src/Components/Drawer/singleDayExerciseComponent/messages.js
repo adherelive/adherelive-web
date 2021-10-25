@@ -4,18 +4,18 @@ const messages = defineMessages({
   orText: {
     id: "app.single.exercise.comp.ot.text",
     description: "",
-    defaultMessage: "or"
+    defaultMessage: "or",
   },
   addExercise: {
     id: "app.single.exercise.comp.or.text.add.food",
     description: "",
-    defaultMessage: "Add Exercise"
+    defaultMessage: "Add Exercise",
   },
   note: {
     id: "app.single.exercise.comp.note",
     description: "",
-    defaultMessage: "Note"
-  }
+    defaultMessage: "Note",
+  },
 });
 
 export default messages;

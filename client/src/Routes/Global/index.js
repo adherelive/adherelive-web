@@ -35,14 +35,14 @@ export default class Global extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      redirecting: this.props.authRedirection
+      redirecting: this.props.authRedirection,
     };
   }
 
   componentDidMount() {
     this.setState((prevState, prevProps) => {
       return {
-        redirecting: false
+        redirecting: false,
       };
     });
   }
@@ -54,14 +54,14 @@ export default class Global extends Component {
     if (!(prevAuthRedirection === authRedirection)) {
       this.setState((prevState, prevProps) => {
         return {
-          redirecting: authRedirection
+          redirecting: authRedirection,
         };
       });
     } else {
       if (redirecting) {
         this.setState((prevState, prevProps) => {
           return {
-            redirecting: false
+            redirecting: false,
           };
         });
       }

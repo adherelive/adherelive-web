@@ -4,7 +4,7 @@ import InjectionIcon from "../../../../Assets/images/injectionIcon3x.png";
 import SyrupIcon from "../../../../Assets/images/pharmacy.png";
 import { TABLET, SYRUP, MEDICINE_FORM_TYPE } from "../../../../constant";
 
-export default props => {
+export default (props) => {
   const { medicationTemplateData, medicationData } = props || {};
 
   const { basic_info: { name } = {} } = medicationTemplateData || {};

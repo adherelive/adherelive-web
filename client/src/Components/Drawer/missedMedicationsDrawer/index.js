@@ -13,7 +13,7 @@ class MissedMedicationsDrawer extends Component {
       missed_medications: {},
       criticalMedicationIds: [],
       nonCriticalMedicationIds: [],
-      fetching: false
+      fetching: false,
     };
   }
 
@@ -21,7 +21,7 @@ class MissedMedicationsDrawer extends Component {
     // this.getMissedMedication();
   }
 
-  formatMessage = data => this.props.intl.formatMessage(data);
+  formatMessage = (data) => this.props.intl.formatMessage(data);
 
   onClose = () => {
     const { close } = this.props;
@@ -62,7 +62,7 @@ class MissedMedicationsDrawer extends Component {
   //   }
   // };
 
-  handlePatientDetailsRedirect = patient_id => e => {
+  handlePatientDetailsRedirect = (patient_id) => (e) => {
     const { authenticated_category } = this.props;
 
     if (authenticated_category === USER_CATEGORY.PROVIDER) {
@@ -82,12 +82,12 @@ class MissedMedicationsDrawer extends Component {
     const criticalList = [];
     const nonCriticalList = [];
 
-    Object.keys(missed_medications).forEach(id => {
+    Object.keys(missed_medications).forEach((id) => {
       const {
         critical,
         participant_id,
         medicines: { basic_info: { name: medicineName } = {} } = {},
-        timings
+        timings,
       } = missed_medications[id] || {};
 
       const { basic_info: { id: patientId, full_name } = {} } =

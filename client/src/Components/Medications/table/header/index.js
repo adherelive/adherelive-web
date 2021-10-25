@@ -9,14 +9,14 @@ import EditButton from "../dataColumn/editButton";
 import Duration from "../dataColumn/duration";
 import Taken from "../dataColumn/taken";
 
-export default props => {
+export default (props) => {
   const { formatMessage } = props || {};
 
   return [
     {
       title: formatMessage(messages.medicine_name),
       ...TABLE_COLUMN.MEDICINE,
-      render: data => {
+      render: (data) => {
         const { medicationData, medicationTemplateData } = data || {};
         return (
           <Medicine
@@ -24,26 +24,28 @@ export default props => {
             medicationData={medicationData}
           />
         );
-      }
+      },
     },
     {
       title: formatMessage(messages.taken_vs_total),
       ...TABLE_COLUMN.TAKEN,
 
-      render: ({ medicationData }) => <Taken medicationData={medicationData} />
+      render: ({ medicationData }) => <Taken medicationData={medicationData} />,
     },
     {
       title: formatMessage(messages.intake),
       ...TABLE_COLUMN.INTAKE,
 
-      render: ({ medicationData }) => <Intake medicationData={medicationData} />
+      render: ({ medicationData }) => (
+        <Intake medicationData={medicationData} />
+      ),
     },
     {
       title: formatMessage(messages.duration),
       ...TABLE_COLUMN.DURATION,
       render: ({ medicationData }) => (
         <Duration medicationData={medicationData} />
-      )
+      ),
     },
     {
       title: "Adherence",
@@ -55,7 +57,7 @@ export default props => {
           openResponseDrawer={openResponseDrawer}
           id={id}
         />
-      )
+      ),
     },
     {
       title: "",
@@ -68,7 +70,7 @@ export default props => {
           action={openEditDrawer}
           canViewDetails={canViewDetails}
         />
-      )
-    }
+      ),
+    },
   ];
 };

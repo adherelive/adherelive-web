@@ -21,8 +21,8 @@ import Activity from "../app/activitySdk/activityObserver";
 Database.init();
 
 const Events = import("../events")
-  .then(module => {})
-  .catch(err => {
+  .then((module) => {})
+  .catch((err) => {
     console.log("event module error", err);
   });
 
@@ -75,7 +75,7 @@ app.use(express.json({ limit: "50mb" }));
 app.use(
   express.urlencoded({
     extended: true,
-    limit: "50mb"
+    limit: "50mb",
   })
 );
 app.use(cookieParser());
@@ -83,7 +83,7 @@ app.use(cors());
 app.use(
   cookieSession({
     maxAge: 30 * 24 * 60 * 60 * 1000,
-    keys: JSON.parse(process.config.cookieKey)
+    keys: JSON.parse(process.config.cookieKey),
   })
 );
 

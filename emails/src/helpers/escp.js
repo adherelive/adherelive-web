@@ -5,6 +5,6 @@
  * @outputs
  * {{{firstName}}}
  */
-module.exports = function(content) {
+module.exports = function (content) {
   return "<%- " + content + " %>";
 };

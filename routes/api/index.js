@@ -51,7 +51,7 @@ import portionRouter from "./portion";
 import exerciseRouter from "./exercises";
 import workoutRouter from "./workouts";
 
-router.use(async function(req, res, next) {
+router.use(async function (req, res, next) {
   try {
     let accessToken,
       userId = null,
@@ -76,10 +76,10 @@ router.use(async function(req, res, next) {
       const decodedAccessToken = await jwt.verify(accessToken, secret);
       const {
         userRoleId: decodedUserRoleId = null,
-        userId: decodedUserTokenUserId = null
+        userId: decodedUserTokenUserId = null,
       } = decodedAccessToken || {};
       const userRoleDetails = await userRolesService.getSingleUserRoleByData({
-        id: decodedUserRoleId
+        id: decodedUserRoleId,
       });
       if (userRoleDetails) {
         const userRole = await UserRoleWrapper(userRoleDetails);
@@ -88,14 +88,14 @@ router.use(async function(req, res, next) {
         userRoleData = userRole.getBasicInfo();
       } else {
         req.userDetails = {
-          exists: false
+          exists: false,
         };
         next();
         return;
       }
     } else {
       req.userDetails = {
-        exists: false
+        exists: false,
       };
       next();
       return;
@@ -113,13 +113,13 @@ router.use(async function(req, res, next) {
         userId,
         userData: userData.getBasicInfo,
         userCategoryData,
-        userCategoryId
+        userCategoryId,
       };
 
       req.permissions = await user.getPermissions();
     } else {
       req.userDetails = {
-        exists: false
+        exists: false,
       };
     }
     next();
@@ -127,7 +127,7 @@ router.use(async function(req, res, next) {
   } catch (err) {
     Log.debug("API INDEX CATCH ERROR ", err);
     req.userDetails = {
-      exists: false
+      exists: false,
     };
     next();
     return;

@@ -15,7 +15,7 @@ class DoctorAccountDetails extends Component {
     super(props);
     this.state = {
       noAccountDetails: true,
-      loading: false
+      loading: false,
     };
   }
 
@@ -45,7 +45,7 @@ class DoctorAccountDetails extends Component {
     return false;
   };
 
-  formatMessage = data => this.props.intl.formatMessage(data);
+  formatMessage = (data) => this.props.intl.formatMessage(data);
 
   async handleGetAccountDetails() {
     try {
@@ -62,12 +62,12 @@ class DoctorAccountDetails extends Component {
       const {
         status,
         payload: { data: { users = {}, account_details = {} } = {} } = {},
-        statusCode
+        statusCode,
       } = response || {};
 
       if (status && Object.keys(account_details).length > 0) {
         this.setState({
-          noAccountDetails: false
+          noAccountDetails: false,
         });
       }
 
@@ -85,7 +85,7 @@ class DoctorAccountDetails extends Component {
 
     const providerid = this.isDoctorRoleAssociatedWithProvider() || null;
 
-    const accountDetails = Object.keys(account_details).map(account_id => {
+    const accountDetails = Object.keys(account_details).map((account_id) => {
       const {
         basic_info: {
           id,
@@ -96,8 +96,8 @@ class DoctorAccountDetails extends Component {
           account_mobile_number,
           prefix,
           upi_id,
-          in_use = false
-        } = {}
+          in_use = false,
+        } = {},
       } = account_details[account_id] || {};
 
       return (
@@ -226,14 +226,14 @@ class DoctorAccountDetails extends Component {
     return accountDetails;
   };
 
-  displayEditRazorpayAccountDetails = account_detail_id => e => {
+  displayEditRazorpayAccountDetails = (account_detail_id) => (e) => {
     e.preventDefault();
     console.log("328794682374672983042", { account_detail_id });
     const { openEditRazorpayAccountDetailsDrawer } = this.props;
     openEditRazorpayAccountDetailsDrawer({ account_detail_id });
   };
 
-  handleDelete = id => e => {
+  handleDelete = (id) => (e) => {
     e.preventDefault();
     const { warnNote } = this;
 
@@ -248,12 +248,12 @@ class DoctorAccountDetails extends Component {
           const {
             status,
             payload: { data: { users = {}, account_details = {} } = {} } = {},
-            statusCode
+            statusCode,
           } = response || {};
 
           if (status && Object.keys(account_details).length === 0) {
             this.setState({
-              noAccountDetails: true
+              noAccountDetails: true,
             });
           }
 
@@ -268,7 +268,7 @@ class DoctorAccountDetails extends Component {
           message.warn(this.formatMessage(messages.somethingWentWrong));
         }
       },
-      onCancel() {}
+      onCancel() {},
     });
   };
 

@@ -18,7 +18,7 @@ class VitalName extends Component {
     super(props);
     this.state = {
       vitals: {},
-      fetchingVitals: false
+      fetchingVitals: false,
     };
 
     this.handleVitalSearch = throttle(this.handleVitalSearch.bind(this), 2000);
@@ -31,7 +31,7 @@ class VitalName extends Component {
   getVitalsOption = () => {
     const { vital_templates = {} } = this.props;
     // let medicationStagesOption = [];
-    return Object.keys(vital_templates).map(id => {
+    return Object.keys(vital_templates).map((id) => {
       const { basic_info: { name } = {} } = vital_templates[id] || {};
       return (
         <Option key={id} value={id}>
@@ -41,7 +41,7 @@ class VitalName extends Component {
     });
   };
 
-  getParentNode = t => t.parentNode;
+  getParentNode = (t) => t.parentNode;
 
   async handleVitalSearch(data) {
     try {
@@ -49,10 +49,8 @@ class VitalName extends Component {
         const { searchVital } = this.props;
         this.setState({ fetchingVitals: true });
         const response = await searchVital(data);
-        const {
-          status,
-          payload: { data: responseData, message } = {}
-        } = response;
+        const { status, payload: { data: responseData, message } = {} } =
+          response;
         if (status) {
           this.setState({ fetchingVitals: false });
         } else {
@@ -74,10 +72,8 @@ class VitalName extends Component {
       const { searchVital } = this.props;
       this.setState({ fetchingVitals: true });
       const response = await searchVital(data);
-      const {
-        status,
-        payload: { data: responseData, message } = {}
-      } = response;
+      const { status, payload: { data: responseData, message } = {} } =
+        response;
       if (status) {
         this.setState({ fetchingVitals: false });
       } else {
@@ -98,11 +94,9 @@ class VitalName extends Component {
     searchVital("");
   };
 
-  handleVitalChange = id => {
-    const {
-      form: { setFieldsValue, getFieldValue } = {},
-      enableSubmit
-    } = this.props;
+  handleVitalChange = (id) => {
+    const { form: { setFieldsValue, getFieldValue } = {}, enableSubmit } =
+      this.props;
 
     const temp_id = parseInt(id);
     setFieldsValue({ [FIELD_NAME]: temp_id });
@@ -115,12 +109,12 @@ class VitalName extends Component {
         getFieldDecorator,
         setFieldsValue,
         getFieldError,
-        isFieldTouched
+        isFieldTouched,
       },
       setFormulation,
       payload: { id: vital_id, canViewDetails = false } = {},
       vitals,
-      vital_templates
+      vital_templates,
     } = this.props;
     const { basic_info: { vital_template_id } = {} } = vitals[vital_id] || {};
 
@@ -131,7 +125,7 @@ class VitalName extends Component {
       handleVitalChange,
       getParentNode,
       handleVitalSearch,
-      handleVitals
+      handleVitals,
     } = this;
 
     // if (!program_has_medication_stage || (!!purpose && !!!getInitialValue())) {
@@ -149,7 +143,7 @@ class VitalName extends Component {
         {getFieldDecorator(FIELD_NAME, {
           initialValue: existing_vital_template_id
             ? existing_vital_template_id.toString()
-            : name
+            : name,
         })(
           <Select
             onFocus={vitalData ? handleVitals : null}
@@ -186,5 +180,5 @@ const Field = injectIntl(VitalName);
 
 export default {
   field_name: FIELD_NAME,
-  render: props => <Field {...props} />
+  render: (props) => <Field {...props} />,
 };

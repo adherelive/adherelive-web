@@ -21,11 +21,11 @@ class CreateJob extends CarePlanJob {
         actor: {
           id: actorId,
           user_role_id,
-          details: { name, category: actorCategory } = {}
-        } = {}
+          details: { name, category: actorCategory } = {},
+        } = {},
       },
       event_id = null,
-      id = null
+      id = null,
     } = _data || {};
 
     const templateData = [];
@@ -35,8 +35,8 @@ class CreateJob extends CarePlanJob {
     const { rows: userRoles = [] } =
       (await UserRoleService.findAndCountAll({
         where: {
-          id: participants
-        }
+          id: participants,
+        },
       })) || {};
 
     let providerId = null;
@@ -55,14 +55,14 @@ class CreateJob extends CarePlanJob {
     let providerName = DEFAULT_PROVIDER;
     if (providerId) {
       const provider = await ProviderService.getProviderByData({
-        id: providerId
+        id: providerId,
       });
       const { name } = provider || {};
       providerName = name;
     }
 
     const userDevices = await UserDeviceService.getAllDeviceByData({
-      user_id: userIds
+      user_id: userIds,
     });
 
     if (userDevices.length > 0) {
@@ -77,19 +77,19 @@ class CreateJob extends CarePlanJob {
       app_id: process.config.one_signal.app_id, // TODO: add the same in pushNotification handler in notificationSdk
       headings: { en: `New careplan created! (${providerName})` },
       contents: {
-        en: `Did you buy the required medicines for the new careplan?`
+        en: `Did you buy the required medicines for the new careplan?`,
       },
       buttons: [
         { id: "yes", text: "Yes" },
-        { id: "no", text: "No" }
+        { id: "no", text: "No" },
       ],
       include_player_ids: [...playerIds],
       priority: 10,
       data: {
         url: "/careplan-activation",
         type: "normal",
-        params: { care_plan_id: event_id, schedule_event_id: id }
-      }
+        params: { care_plan_id: event_id, schedule_event_id: id },
+      },
     });
 
     return templateData;
@@ -103,10 +103,10 @@ class CreateJob extends CarePlanJob {
         actor: {
           id: actorId,
           user_role_id,
-          details: { name, category: actorCategory } = {}
-        } = {}
+          details: { name, category: actorCategory } = {},
+        } = {},
       },
-      id = null
+      id = null,
     } = _data || {};
 
     const templateData = [];
@@ -123,7 +123,7 @@ class CreateJob extends CarePlanJob {
           verb: `careplan_create:${currentTimeStamp}`,
           event: EVENT_TYPE.CARE_PLAN_ACTIVATION,
           time: currentTime,
-          create_time: `${currentTime}`
+          create_time: `${currentTime}`,
         });
       }
     }

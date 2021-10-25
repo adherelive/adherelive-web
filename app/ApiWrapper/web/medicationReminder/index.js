@@ -24,7 +24,7 @@ class MReminderWrapper extends BaseMedicationReminder {
       start_date,
       end_date,
       details,
-      rr_rule = ""
+      rr_rule = "",
     } = _data || {};
     return {
       basic_info: {
@@ -32,14 +32,14 @@ class MReminderWrapper extends BaseMedicationReminder {
         description,
         details,
         start_date,
-        end_date
+        end_date,
       },
       organizer: {
         id: organizer_id,
-        category: organizer_type
+        category: organizer_type,
       },
       participant_id,
-      rr_rule
+      rr_rule,
     };
   };
 
@@ -47,15 +47,12 @@ class MReminderWrapper extends BaseMedicationReminder {
     const { getBasicInfo, getMReminderId } = this;
     const eventService = new EventService();
 
-    const currentDate = moment()
-      .endOf("day")
-      .utc()
-      .toDate();
+    const currentDate = moment().endOf("day").utc().toDate();
 
     const scheduleEvents = await eventService.getAllPreviousByData({
       event_id: getMReminderId(),
       date: currentDate,
-      event_type: EVENT_TYPE.MEDICATION_REMINDER
+      event_type: EVENT_TYPE.MEDICATION_REMINDER,
     });
 
     let medicationEvents = {};
@@ -81,9 +78,9 @@ class MReminderWrapper extends BaseMedicationReminder {
           ...getBasicInfo(),
           remaining,
           total: scheduleEvents.length,
-          upcoming_event_id: latestPendingEventId
-        }
-      }
+          upcoming_event_id: latestPendingEventId,
+        },
+      },
     };
   };
   getReferenceInfo = async () => {
@@ -100,8 +97,8 @@ class MReminderWrapper extends BaseMedicationReminder {
     return {
       ...(await getAllInfo()),
       medicines: {
-        [medicineData.getMedicineId()]: medicineData.getBasicInfo()
-      }
+        [medicineData.getMedicineId()]: medicineData.getBasicInfo(),
+      },
     };
   };
 }

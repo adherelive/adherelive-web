@@ -7,7 +7,7 @@ const Logger = new Log("NOTIFICATION_SDK > INDEX");
 class NotificationSdk {
   constructor() {}
 
-  execute = async job => {
+  execute = async (job) => {
     const InApp = new inApp();
 
     // todo actor don't send notification : manage in job

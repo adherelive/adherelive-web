@@ -15,9 +15,9 @@ class DoctorPatientWatchlistWrapper extends BaseFeatureMapping {
         id,
         doctor_id,
         patient_id,
-        user_role_id
+        user_role_id,
       },
-      created_at
+      created_at,
     };
   };
 }

@@ -74,7 +74,7 @@ import {
   NOTIFICATION_VERB,
   NO_MEDICATION,
   NO_APPOINTMENT,
-  NO_ACTION
+  NO_ACTION,
 } from "../../../constant";
 import { getFilePath, completePath } from "../../helper/filePath";
 import getReferenceId from "../../helper/referenceIdGenerator";
@@ -117,9 +117,8 @@ class DoctorController extends Controller {
       for (const doctor of doctors) {
         const doctorWrapper = await DoctorWrapper(doctor);
 
-        doctorApiDetails[
-          doctorWrapper.getDoctorId()
-        ] = await doctorWrapper.getAllInfo();
+        doctorApiDetails[doctorWrapper.getDoctorId()] =
+          await doctorWrapper.getAllInfo();
         const { specialities } = await doctorWrapper.getReferenceInfo();
         specialityDetails = { ...specialityDetails, ...specialities };
         doctorIds.push(doctorWrapper.getDoctorId());
@@ -127,10 +126,10 @@ class DoctorController extends Controller {
       }
 
       const userDetails = await userService.getUserByData({
-        category: [USER_CATEGORY.DOCTOR, USER_CATEGORY.HSP]
+        category: [USER_CATEGORY.DOCTOR, USER_CATEGORY.HSP],
       });
 
-      await userDetails.forEach(async user => {
+      await userDetails.forEach(async (user) => {
         const userWrapper = await UserWrapper(user.get());
         userApiDetails[userWrapper.getId()] = userWrapper.getBasicInfo();
       });
@@ -140,16 +139,16 @@ class DoctorController extends Controller {
         200,
         {
           users: {
-            ...userApiDetails
+            ...userApiDetails,
           },
           doctors: {
-            ...doctorApiDetails
+            ...doctorApiDetails,
           },
           specialities: {
-            ...specialityDetails
+            ...specialityDetails,
           },
           user_ids: userIds,
-          doctor_ids: doctorIds
+          doctor_ids: doctorIds,
         },
         "doctor details fetched successfully"
       );
@@ -182,26 +181,28 @@ class DoctorController extends Controller {
 
       const doctorWrapper = await DoctorWrapper(doctors);
 
-      const doctorQualifications = await qualificationService.getQualificationsByDoctorId(
-        doctorWrapper.getDoctorId()
-      );
+      const doctorQualifications =
+        await qualificationService.getQualificationsByDoctorId(
+          doctorWrapper.getDoctorId()
+        );
 
       const userDetails = await userService.getUserById(
         doctorWrapper.getUserId()
       );
       const userWrapper = await UserWrapper(userDetails.get());
 
-      await doctorQualifications.forEach(async doctorQualification => {
+      await doctorQualifications.forEach(async (doctorQualification) => {
         const doctorQualificationWrapper = await QualificationWrapper(
           doctorQualification
         );
 
-        const qualificationDocuments = await documentService.getDoctorQualificationDocuments(
-          "doctor_qualification",
-          doctorQualificationWrapper.getDoctorQualificationId()
-        );
+        const qualificationDocuments =
+          await documentService.getDoctorQualificationDocuments(
+            "doctor_qualification",
+            doctorQualificationWrapper.getDoctorQualificationId()
+          );
 
-        await qualificationDocuments.forEach(async document => {
+        await qualificationDocuments.forEach(async (document) => {
           const uploadDocumentWrapper = await UploadDocumentWrapper(document);
           uploadDocumentApiDetails[
             uploadDocumentWrapper.getUploadDocumentId()
@@ -213,7 +214,7 @@ class DoctorController extends Controller {
           doctorQualificationWrapper.getDoctorQualificationId()
         ] = {
           ...doctorQualificationWrapper.getBasicInfo(),
-          upload_document_ids
+          upload_document_ids,
         };
 
         doctor_qualification_ids.push(
@@ -228,23 +229,25 @@ class DoctorController extends Controller {
       });
 
       // REGISTRATION DETAILS
-      const doctorRegistrations = await registrationService.getRegistrationByDoctorId(
-        doctorWrapper.getDoctorId()
-      );
+      const doctorRegistrations =
+        await registrationService.getRegistrationByDoctorId(
+          doctorWrapper.getDoctorId()
+        );
 
       Logger.debug("198361283 ---====> ", doctorRegistrations);
 
-      await doctorRegistrations.forEach(async doctorRegistration => {
+      await doctorRegistrations.forEach(async (doctorRegistration) => {
         const doctorRegistrationWrapper = await RegistrationWrapper(
           doctorRegistration
         );
 
-        const registrationDocuments = await documentService.getDoctorQualificationDocuments(
-          DOCUMENT_PARENT_TYPE.DOCTOR_REGISTRATION,
-          doctorRegistrationWrapper.getDoctorRegistrationId()
-        );
+        const registrationDocuments =
+          await documentService.getDoctorQualificationDocuments(
+            DOCUMENT_PARENT_TYPE.DOCTOR_REGISTRATION,
+            doctorRegistrationWrapper.getDoctorRegistrationId()
+          );
 
-        await registrationDocuments.forEach(async document => {
+        await registrationDocuments.forEach(async (document) => {
           const uploadDocumentWrapper = await UploadDocumentWrapper(document);
           uploadDocumentApiDetails[
             uploadDocumentWrapper.getUploadDocumentId()
@@ -256,7 +259,7 @@ class DoctorController extends Controller {
           doctorRegistrationWrapper.getDoctorRegistrationId()
         ] = {
           ...doctorRegistrationWrapper.getBasicInfo(),
-          upload_document_ids
+          upload_document_ids,
         };
 
         doctor_registration_ids.push(
@@ -272,16 +275,15 @@ class DoctorController extends Controller {
         doctorWrapper.getDoctorId()
       );
 
-      await doctorClinics.forEach(async doctorClinic => {
+      await doctorClinics.forEach(async (doctorClinic) => {
         const doctorClinicWrapper = await ClinicWrapper(doctorClinic);
-        doctorClinicApiDetails[
-          doctorClinicWrapper.getDoctorClinicId()
-        ] = doctorClinicWrapper.getBasicInfo();
+        doctorClinicApiDetails[doctorClinicWrapper.getDoctorClinicId()] =
+          doctorClinicWrapper.getBasicInfo();
         doctor_clinic_ids.push(doctorClinicWrapper.getDoctorClinicId());
       });
 
       const doctorCouncils = await councilService.getCouncilByData({
-        id: registration_council_ids
+        id: registration_council_ids,
       });
 
       let councilApiDetails = {};
@@ -291,7 +293,7 @@ class DoctorController extends Controller {
       }
 
       const doctorDegrees = await degreeService.getDegreeByData({
-        id: degree_ids
+        id: degree_ids,
       });
 
       let degreeApiDetails = {};
@@ -301,7 +303,7 @@ class DoctorController extends Controller {
       }
 
       const doctorColleges = await collegeService.getCollegeByData({
-        id: college_ids
+        id: college_ids,
       });
 
       let collegeApiDetails = {};
@@ -315,7 +317,7 @@ class DoctorController extends Controller {
         200,
         {
           users: {
-            [userWrapper.getId()]: userWrapper.getBasicInfo()
+            [userWrapper.getId()]: userWrapper.getBasicInfo(),
           },
           ...(await doctorWrapper.getReferenceInfo()),
           doctors: {
@@ -323,30 +325,30 @@ class DoctorController extends Controller {
               ...doctorWrapper.getBasicInfo(),
               doctor_qualification_ids,
               doctor_clinic_ids,
-              doctor_registration_ids
-            }
+              doctor_registration_ids,
+            },
           },
           doctor_qualifications: {
-            ...doctorQualificationApiDetails
+            ...doctorQualificationApiDetails,
           },
           doctor_clinics: {
-            ...doctorClinicApiDetails
+            ...doctorClinicApiDetails,
           },
           doctor_registrations: {
-            ...doctorRegistrationApiDetails
+            ...doctorRegistrationApiDetails,
           },
           upload_documents: {
-            ...uploadDocumentApiDetails
+            ...uploadDocumentApiDetails,
           },
           colleges: {
-            ...collegeApiDetails
+            ...collegeApiDetails,
           },
           degrees: {
-            ...degreeApiDetails
+            ...degreeApiDetails,
           },
           registration_councils: {
-            ...councilApiDetails
-          }
+            ...councilApiDetails,
+          },
         },
         "doctor details fetched successfully"
       );
@@ -364,12 +366,14 @@ class DoctorController extends Controller {
 
       const doctorWrapper = await DoctorWrapper(doctorDetails);
 
-      const doctorQualifications = await qualificationService.getQualificationsByDoctorId(
-        doctorWrapper.getDoctorId()
-      );
-      const doctorRegistrations = await registrationService.getRegistrationByDoctorId(
-        doctorWrapper.getDoctorId()
-      );
+      const doctorQualifications =
+        await qualificationService.getQualificationsByDoctorId(
+          doctorWrapper.getDoctorId()
+        );
+      const doctorRegistrations =
+        await registrationService.getRegistrationByDoctorId(
+          doctorWrapper.getDoctorId()
+        );
       // const doctorClinics = await clinicService.getClinicForDoctor(
       //   doctorWrapper.getDoctorId()
       // );
@@ -398,13 +402,12 @@ class DoctorController extends Controller {
       //   );
       // }
 
-      const {
-        basic_info: { first_name, middle_name, last_name } = {}
-      } = doctorWrapper.getBasicInfo();
+      const { basic_info: { first_name, middle_name, last_name } = {} } =
+        doctorWrapper.getBasicInfo();
 
       let verifyData = {
         activated_on: moment(),
-        verified: true
+        verified: true,
       };
 
       const userDetails = await userService.updateUser(
@@ -431,8 +434,8 @@ class DoctorController extends Controller {
             "To enable Add Patient option on your Dashboard, please click on verify and login via the Email and password for the account",
           buttonText: "Welcome",
           host: process.config.WEB_URL,
-          contactTo: "customersupport@adhere.live"
-        }
+          contactTo: "customersupport@adhere.live",
+        },
       };
       Proxy_Sdk.execute(EVENTS.SEND_EMAIL, emailPayload);
 
@@ -441,8 +444,8 @@ class DoctorController extends Controller {
         200,
         {
           users: {
-            [userWrapper.getId()]: userWrapper.getBasicInfo()
-          }
+            [userWrapper.getId()]: userWrapper.getBasicInfo(),
+          },
         },
         "Doctor verified successfully"
       );
@@ -457,7 +460,7 @@ class DoctorController extends Controller {
     try {
       const {
         userDetails: { userId = null, userData: { category } = {} } = {},
-        params: { doctor_id } = {}
+        params: { doctor_id } = {},
       } = req;
 
       if (
@@ -473,19 +476,19 @@ class DoctorController extends Controller {
       }
 
       const doctorDetails = await doctorService.getDoctorByData({
-        id: doctor_id
+        id: doctor_id,
       });
 
       const doctorWrapper = await DoctorWrapper(doctorDetails);
 
       const userDetails = await userService.deleteUser({
-        id: doctorWrapper.getUserId()
+        id: doctorWrapper.getUserId(),
       });
 
       // get all patients for the doctor to notify
       const allPatients =
         (await carePlanService.getAllPatients({
-          doctor_id: doctorWrapper.getDoctorId()
+          doctor_id: doctorWrapper.getDoctorId(),
         })) || [];
 
       Logger.debug("allPatients", allPatients);
@@ -507,10 +510,10 @@ class DoctorController extends Controller {
           actor: {
             id: doctorWrapper.getUserId(),
             details: {
-              name: doctorWrapper.getFullName()
-            }
+              name: doctorWrapper.getFullName(),
+            },
           },
-          participants: patientUserIds
+          participants: patientUserIds,
         }
       );
 
@@ -522,7 +525,7 @@ class DoctorController extends Controller {
         res,
         200,
         {
-          ...(await updatedUser.getReferenceInfo())
+          ...(await updatedUser.getReferenceInfo()),
         },
         "Doctor deactivated successfully"
       );
@@ -537,7 +540,7 @@ class DoctorController extends Controller {
     try {
       const {
         userDetails: { userId = null, userData: { category } = {} } = {},
-        params: { user_id } = {}
+        params: { user_id } = {},
       } = req;
 
       if (
@@ -559,7 +562,7 @@ class DoctorController extends Controller {
       const { doctor_id, ...rest } = await updatedUser.getReferenceInfo();
 
       const {
-        doctors: { [doctor_id]: { basic_info: { full_name } = {} } = {} } = {}
+        doctors: { [doctor_id]: { basic_info: { full_name } = {} } = {} } = {},
       } = rest || {};
 
       // get all patients for the doctor to notify
@@ -583,10 +586,10 @@ class DoctorController extends Controller {
         actor: {
           id: user_id,
           details: {
-            name: full_name
-          }
+            name: full_name,
+          },
         },
-        participants: patientUserIds
+        participants: patientUserIds,
       });
 
       await NotificationSdk.execute(deactivateJob);
@@ -596,7 +599,7 @@ class DoctorController extends Controller {
         200,
         {
           ...rest,
-          doctor_id
+          doctor_id,
         },
         "Doctor activated successfully"
       );
@@ -622,7 +625,7 @@ class DoctorController extends Controller {
         is_provider,
         email,
         existing = false,
-        existingDoctorId = null
+        existingDoctorId = null,
       } = req.body;
 
       if (is_provider && existing) {
@@ -633,7 +636,7 @@ class DoctorController extends Controller {
           const docUserId = await userData.getId();
 
           const provider = await providerService.getProviderByData({
-            user_id: userId
+            user_id: userId,
           });
 
           if (provider) {
@@ -642,7 +645,7 @@ class DoctorController extends Controller {
             const userRole = await userRolesService.getSingleUserRoleByData({
               user_identity: docUserId,
               linked_id: provider_id,
-              linked_with: USER_CATEGORY.PROVIDER
+              linked_with: USER_CATEGORY.PROVIDER,
             });
 
             if (userRole) {
@@ -657,7 +660,7 @@ class DoctorController extends Controller {
               const newUserRole = await userRolesService.create({
                 user_identity: docUserId,
                 linked_id: provider_id,
-                linked_with: USER_CATEGORY.PROVIDER
+                linked_with: USER_CATEGORY.PROVIDER,
               });
 
               const existingUserCategory = await userData.getCategory();
@@ -667,29 +670,29 @@ class DoctorController extends Controller {
               const doctor = await doctorService.getDoctorByUserId(docUserId);
               const doctorData = await DoctorWrapper(doctor);
               // -- create new user ref
-              const userPreference = await userPreferenceService.addUserPreference(
-                {
+              const userPreference =
+                await userPreferenceService.addUserPreference({
                   user_id: docUserId,
                   details: {
                     charts:
                       // existingUserCategory === USER_CATEGORY.DOCTOR
                       // ?
-                      [NO_MEDICATION, NO_APPOINTMENT, NO_ACTION]
+                      [NO_MEDICATION, NO_APPOINTMENT, NO_ACTION],
                     // :
                     // [NO_APPOINTMENT , NO_ACTION]
                   },
-                  user_role_id: roleData.getId()
-                }
-              );
+                  user_role_id: roleData.getId(),
+                });
 
               // -- create new doc provider mapping
               const mappingData = {
                 doctor_id: doctorData.getDoctorId(),
-                provider_id: provider_id
+                provider_id: provider_id,
               };
-              const response = await doctorProviderMappingService.createDoctorProviderMapping(
-                mappingData
-              );
+              const response =
+                await doctorProviderMappingService.createDoctorProviderMapping(
+                  mappingData
+                );
 
               return raiseSuccess(
                 res,
@@ -697,11 +700,11 @@ class DoctorController extends Controller {
                 {
                   user_roles,
                   users: {
-                    [userData.getId()]: userData.getBasicInfo()
+                    [userData.getId()]: userData.getBasicInfo(),
                   },
                   doctors: {
-                    [doctorData.getDoctorId()]: doctorData.getBasicInfo()
-                  }
+                    [doctorData.getDoctorId()]: doctorData.getBasicInfo(),
+                  },
                 },
                 "Doctor liked with provider successfully."
               );
@@ -726,12 +729,12 @@ class DoctorController extends Controller {
         category,
         mobile_number,
         prefix,
-        onboarding_status: ONBOARDING_STATUS.PROFILE_REGISTERED
+        onboarding_status: ONBOARDING_STATUS.PROFILE_REGISTERED,
       };
 
       const mobileNumberExist =
         (await userService.getUserByData({
-          mobile_number
+          mobile_number,
         })) || [];
       if (mobileNumberExist && mobileNumberExist.length) {
         const prevUser = await UserWrapper(mobileNumberExist[0].get());
@@ -750,7 +753,7 @@ class DoctorController extends Controller {
 
       let doctor = {};
       let doctorExist = await doctorService.getDoctorByData({
-        user_id: doctorUserId
+        user_id: doctorUserId,
       });
       // let first_name = doctorName[0];
       // let middle_name = doctorName.length === 3 ? doctorName[1] : "";
@@ -770,7 +773,7 @@ class DoctorController extends Controller {
           signature_pic: getFilePath(profile_pic),
           first_name,
           middle_name,
-          last_name
+          last_name,
         };
         let doctor_id = doctorExist.get("id");
         doctor = await doctorService.updateDoctor(doctor_data, doctor_id);
@@ -782,7 +785,7 @@ class DoctorController extends Controller {
           signature_pic: getFilePath(signature_pic),
           first_name,
           middle_name,
-          last_name
+          last_name,
         };
         doctor = await doctorService.addDoctor(doctor_data);
       }
@@ -795,7 +798,7 @@ class DoctorController extends Controller {
 
       const userData = await UserWrapper(updatedUser.get());
       const userPreference = await userPreferenceService.getPreferenceByData({
-        user_id: doctorUserId
+        user_id: doctorUserId,
       });
       if (userPreference) {
         const userPreferenceWrapper =
@@ -817,7 +820,7 @@ class DoctorController extends Controller {
       }
 
       const updatedDoctor = await doctorService.getDoctorByData({
-        user_id: doctorUserId
+        user_id: doctorUserId,
       });
       const doctorData = await DoctorWrapper(updatedDoctor);
 
@@ -826,11 +829,11 @@ class DoctorController extends Controller {
         200,
         {
           users: {
-            [userData.getId()]: userData.getBasicInfo()
+            [userData.getId()]: userData.getBasicInfo(),
           },
           doctors: {
-            [doctorData.getDoctorId()]: doctorData.getBasicInfo()
-          }
+            [doctorData.getDoctorId()]: doctorData.getBasicInfo(),
+          },
         },
         "doctor profile updated successfully"
       );
@@ -847,7 +850,7 @@ class DoctorController extends Controller {
     try {
       const { id = 0 } = req.params;
       const {
-        userDetails: { userId, userData: { category: userCategory } = {} } = {}
+        userDetails: { userId, userData: { category: userCategory } = {} } = {},
       } = req;
 
       let degreeData = {},
@@ -863,7 +866,7 @@ class DoctorController extends Controller {
         qualification_details = null,
         registration_details = null,
         clinic_details = null,
-        doctor_id = null
+        doctor_id = null,
       } = req.body;
 
       let speciality_id = null;
@@ -882,7 +885,7 @@ class DoctorController extends Controller {
       }
 
       let doctorExist = await doctorService.getDoctorByData({
-        user_id: doctorUserId
+        user_id: doctorUserId,
       });
       let doctor_data = {};
       if (name) {
@@ -906,7 +909,7 @@ class DoctorController extends Controller {
       const isNotANumber = isNaN(specialityId);
       if (isNotANumber) {
         const speciality = await specialityService.getSpecialityByData({
-          name: specialityId
+          name: specialityId,
         });
 
         if (speciality) {
@@ -915,7 +918,7 @@ class DoctorController extends Controller {
         } else {
           const newSpeciality = await specialityService.create({
             name: specialityId,
-            user_created: userId
+            user_created: userId,
           });
           const newSpecialityData = await SpecialityWrapper(newSpeciality);
           speciality_id = newSpecialityData.getSpecialityId();
@@ -925,13 +928,12 @@ class DoctorController extends Controller {
       }
 
       const speciality = await specialityService.getSpecialityByData({
-        id: speciality_id
+        id: speciality_id,
       });
       if (speciality) {
         const speWrapper = await SpecialityWrapper(speciality);
-        specialityData[
-          speWrapper.getSpecialityId()
-        ] = speWrapper.getBasicInfo();
+        specialityData[speWrapper.getSpecialityId()] =
+          speWrapper.getBasicInfo();
       }
 
       if (profile_pic) {
@@ -953,7 +955,7 @@ class DoctorController extends Controller {
         doctor = await doctorService.updateDoctor(doctor_data, doctor_id);
 
         const updatedDoctor = await doctorService.getDoctorByData({
-          user_id: doctorUserId
+          user_id: doctorUserId,
         });
 
         // basic information
@@ -962,9 +964,10 @@ class DoctorController extends Controller {
         // qualification
 
         if (qualification_details) {
-          const qualificationsOfDoctor = await qualificationService.getQualificationsByDoctorId(
-            doctorData.getDoctorId()
-          );
+          const qualificationsOfDoctor =
+            await qualificationService.getQualificationsByDoctorId(
+              doctorData.getDoctorId()
+            );
 
           let newQualifications = [];
           for (const item of qualification_details) {
@@ -976,7 +979,7 @@ class DoctorController extends Controller {
               college_id = "",
               photos = [],
               id = 0,
-              doctor_id = 0
+              doctor_id = 0,
             } = item;
 
             let degree_id = null;
@@ -993,7 +996,7 @@ class DoctorController extends Controller {
               } else {
                 const newDegree = await degreeService.create({
                   name: degreeId,
-                  user_created: userId
+                  user_created: userId,
                 });
                 const newDegreeData = await DegreeWrapper(newDegree);
                 degree_id = newDegreeData.getDegreeId();
@@ -1006,16 +1009,15 @@ class DoctorController extends Controller {
             if (degree_id) {
               degree = await degreeService.getByData({ id: degree_id });
               const degreeWrapper = await DegreeWrapper(degree);
-              degreeData[
-                degreeWrapper.getDegreeId()
-              ] = degreeWrapper.getBasicInfo();
+              degreeData[degreeWrapper.getDegreeId()] =
+                degreeWrapper.getBasicInfo();
             }
 
             let collegeId = college_id;
             if (college_name !== "") {
               const college = await collegeService.create({
                 name: college_name,
-                user_created: true
+                user_created: true,
               });
 
               const collegeWrapper = await CollegeWrapper(college);
@@ -1036,10 +1038,11 @@ class DoctorController extends Controller {
                 qualification_data["year"] = year;
               }
               qualification_data["doctor_id"] = doctor_id;
-              const qualification = await qualificationService.updateQualification(
-                qualification_data,
-                id
-              );
+              const qualification =
+                await qualificationService.updateQualification(
+                  qualification_data,
+                  id
+                );
               if (photos.length > 3) {
                 return this.raiseServerError(
                   res,
@@ -1060,7 +1063,7 @@ class DoctorController extends Controller {
                     doctor_id: doctorData.getDoctorId(),
                     parent_type: DOCUMENT_PARENT_TYPE.DOCTOR_QUALIFICATION,
                     parent_id: id,
-                    document: getFilePath(photo)
+                    document: getFilePath(photo),
                   });
                 }
               }
@@ -1071,9 +1074,10 @@ class DoctorController extends Controller {
         // registration information
 
         if (registration_details) {
-          const registrationsOfDoctor = await registrationService.getRegistrationByDoctorId(
-            doctorData.getDoctorId()
-          );
+          const registrationsOfDoctor =
+            await registrationService.getRegistrationByDoctorId(
+              doctorData.getDoctorId()
+            );
 
           for (const item of registration_details) {
             const {
@@ -1082,7 +1086,7 @@ class DoctorController extends Controller {
               year = null,
               expiryDate = null,
               id = 0,
-              photos: registration_photos = []
+              photos: registration_photos = [],
             } = item;
             let updateDataRegistration = {};
 
@@ -1093,7 +1097,7 @@ class DoctorController extends Controller {
             const isCouncilNotANumber = isNaN(regCouncilId);
             if (isCouncilNotANumber) {
               const council = await councilService.getByData({
-                name: regCouncilId
+                name: regCouncilId,
               });
 
               if (council) {
@@ -1102,7 +1106,7 @@ class DoctorController extends Controller {
               } else {
                 const newCouncil = await councilService.create({
                   name: regCouncilId,
-                  user_created: userId
+                  user_created: userId,
                 });
                 const newCouncilData = await CouncilWrapper(newCouncil);
                 registration_council_id = newCouncilData.getCouncilId();
@@ -1114,21 +1118,19 @@ class DoctorController extends Controller {
             let council = null;
             if (registration_council_id) {
               council = await councilService.getByData({
-                id: registration_council_id
+                id: registration_council_id,
               });
               const councilWrapper = await CouncilWrapper(council);
-              councilData[
-                councilWrapper.getCouncilId()
-              ] = councilWrapper.getBasicInfo();
+              councilData[councilWrapper.getCouncilId()] =
+                councilWrapper.getBasicInfo();
             }
 
             if (number) {
               updateDataRegistration["number"] = number;
             }
             if (registration_council_id) {
-              updateDataRegistration[
-                "registration_council_id"
-              ] = registration_council_id;
+              updateDataRegistration["registration_council_id"] =
+                registration_council_id;
             }
             if (year) {
               updateDataRegistration["year"] = year;
@@ -1155,7 +1157,7 @@ class DoctorController extends Controller {
                   doctor_id: doctorData.getDoctorId(),
                   parent_type: DOCUMENT_PARENT_TYPE.DOCTOR_REGISTRATION,
                   parent_id: id,
-                  document: getFilePath(registration_photo)
+                  document: getFilePath(registration_photo),
                 });
               }
             }
@@ -1170,7 +1172,7 @@ class DoctorController extends Controller {
               location = null,
               time_slots = null,
               id = 0,
-              doctor_id = null
+              doctor_id = null,
             } = clinic;
             if (name) {
               clinicDetails["name"] = name;
@@ -1199,17 +1201,17 @@ class DoctorController extends Controller {
           200,
           {
             doctors: {
-              [doctorData.getDoctorId()]: doctorData.getBasicInfo()
+              [doctorData.getDoctorId()]: doctorData.getBasicInfo(),
             },
             specialities: {
-              ...specialityData
+              ...specialityData,
             },
             degrees: {
-              ...degreeData
+              ...degreeData,
             },
             councils: {
-              ...councilData
-            }
+              ...councilData,
+            },
           },
           "Doctor profile updated successfully."
         );
@@ -1243,15 +1245,15 @@ class DoctorController extends Controller {
         height = "",
         weight = "",
         symptoms = "",
-        address = ""
+        address = "",
       } = req.body;
 
       const {
         userDetails: {
           userRoleId = null,
           userId,
-          userData: { category } = {}
-        } = {}
+          userData: { category } = {},
+        } = {},
       } = req;
 
       const userExists =
@@ -1311,7 +1313,7 @@ class DoctorController extends Controller {
             gender,
             dob: date_of_birth,
             age: getAge(moment(date_of_birth)),
-            details: { ...previousDetails, ...patientOtherDetails }
+            details: { ...previousDetails, ...patientOtherDetails },
           },
           patient_id
         );
@@ -1330,7 +1332,7 @@ class DoctorController extends Controller {
           onboarded: false,
           onboarding_status: ONBOARDING_STATUS.PATIENT.PROFILE_REGISTERED,
           verified: true,
-          activated_on: moment().format()
+          activated_on: moment().format(),
         });
         userData = await UserWrapper(user.get());
 
@@ -1356,17 +1358,17 @@ class DoctorController extends Controller {
           age,
           dob: date_of_birth,
           details: {
-            ...patientOtherDetails
+            ...patientOtherDetails,
           },
           height,
           weight,
-          address
+          address,
         });
 
         const patientWrapper = await PatientWrapper(patient);
         const patientUserId = await patientWrapper.getUserId();
         const userRole = await userRolesService.create({
-          user_identity: patientUserId
+          user_identity: patientUserId,
         });
         const userRoleWrapper = await UserRoleWrapper(userRole);
         const newUserRoleId = await userRoleWrapper.getId();
@@ -1374,9 +1376,9 @@ class DoctorController extends Controller {
         await UserPreferenceService.addUserPreference({
           user_id: newUserId,
           details: {
-            timings: PATIENT_MEAL_TIMINGS
+            timings: PATIENT_MEAL_TIMINGS,
           },
-          user_role_id: newUserRoleId
+          user_role_id: newUserRoleId,
         });
 
         const uid = patient_uid
@@ -1390,27 +1392,25 @@ class DoctorController extends Controller {
 
         for (const feature of features) {
           const { id: featureId } = feature;
-          const featureMappingData = await doctorPatientFeatureMappingService.create(
-            {
+          const featureMappingData =
+            await doctorPatientFeatureMappingService.create({
               feature_id: featureId,
               patient_id: patientData.getPatientId(),
-              doctor_id: doctor.get("id")
-            }
-          );
+              doctor_id: doctor.get("id"),
+            });
           if (featureMappingData) {
             patientFeatureIds.push(featureId);
           }
         }
       }
 
-      const carePlanTemplate = await carePlanTemplateService.getCarePlanTemplateData(
-        {
+      const carePlanTemplate =
+        await carePlanTemplateService.getCarePlanTemplateData({
           treatment_id,
           severity_id,
           condition_id,
-          user_id: userId
-        }
-      );
+          user_id: userId,
+        });
 
       const patient_id = patientData.getPatientId();
       const care_plan_template_id = null;
@@ -1421,9 +1421,9 @@ class DoctorController extends Controller {
         condition_id,
         diagnosis: {
           type: diagnosis_type,
-          description: diagnosis_description
+          description: diagnosis_description,
         },
-        ...carePlanOtherDetails
+        ...carePlanOtherDetails,
       };
 
       const carePlan = await carePlanService.addCarePlan({
@@ -1433,7 +1433,7 @@ class DoctorController extends Controller {
         details,
         user_role_id: userRoleId,
         // channel_id: getRoomId(userRoleId, patient_id),
-        created_at: moment()
+        created_at: moment(),
       });
 
       const { id: carePlanId } = carePlan || {};
@@ -1442,7 +1442,7 @@ class DoctorController extends Controller {
 
       await carePlanService.updateCarePlan(
         {
-          channel_id: getRoomId(userRoleId, patientRoleId)
+          channel_id: getRoomId(userRoleId, patientRoleId),
         },
         carePlanId
       );
@@ -1463,12 +1463,12 @@ class DoctorController extends Controller {
         user_id: patientData.getUserId(),
         request_id: link,
         status: "pending",
-        type: VERIFICATION_TYPE.PATIENT_SIGN_UP
+        type: VERIFICATION_TYPE.PATIENT_SIGN_UP,
       });
 
       const universalLink = await getUniversalLink({
         event_type: VERIFICATION_TYPE.PATIENT_SIGN_UP,
-        link
+        link,
       });
 
       const mobileUrl = `${process.config.WEB_URL}/${process.config.app.mobile_verify_link}/${link}`;
@@ -1478,7 +1478,7 @@ class DoctorController extends Controller {
       const smsPayload = {
         // countryCode: prefix,
         phoneNumber: `+${prefix}${mobile_number}`, // mobile_number
-        message: `Hello from AdhereLive! Please click the link to verify your number. ${universalLink}`
+        message: `Hello from AdhereLive! Please click the link to verify your number. ${universalLink}`,
       };
 
       // if(process.config.app.env === "development") {
@@ -1494,8 +1494,8 @@ class DoctorController extends Controller {
           subBodyText: "Please verify your account",
           buttonText: "Verify",
           host: process.config.WEB_URL,
-          contactTo: "customersupport@adhere.live"
-        }
+          contactTo: "customersupport@adhere.live",
+        },
       };
       Proxy_Sdk.execute(EVENTS.SEND_EMAIL, emailPayload);
       // } else {
@@ -1513,20 +1513,20 @@ class DoctorController extends Controller {
             care_plan_templates,
             template_appointments,
             template_medications,
-            medicines
+            medicines,
           } = await carePlanTemplateData.getReferenceInfo();
           carePlanTemplateIds.push(...Object.keys(care_plan_templates));
           otherCarePlanTemplates = {
             ...otherCarePlanTemplates,
-            ...care_plan_templates
+            ...care_plan_templates,
           };
           templateAppointmentData = {
             ...templateAppointmentData,
-            ...template_appointments
+            ...template_appointments,
           };
           templateMedicationData = {
             ...templateMedicationData,
-            ...template_medications
+            ...template_medications,
           };
           medicineApiData = { ...medicineApiData, ...medicines };
         }
@@ -1535,8 +1535,8 @@ class DoctorController extends Controller {
         otherCarePlanTemplates["1"] = {
           basic_info: {
             id: "1",
-            name: "Blank Template"
-          }
+            name: "Blank Template",
+          },
         };
       }
 
@@ -1549,31 +1549,31 @@ class DoctorController extends Controller {
           care_plan_ids: [carePlanData.getCarePlanId()],
           care_plan_template_ids: carePlanTemplateIds,
           users: {
-            [userData.getId()]: userData.getBasicInfo()
+            [userData.getId()]: userData.getBasicInfo(),
           },
           patients: {
             [patientData.getPatientId()]: {
-              ...(await patientData.getAllInfo())
-            }
+              ...(await patientData.getAllInfo()),
+            },
           },
           care_plans: {
-            [carePlanData.getCarePlanId()]: carePlanData.getBasicInfo()
+            [carePlanData.getCarePlanId()]: carePlanData.getBasicInfo(),
           },
           care_plan_templates: {
-            ...otherCarePlanTemplates
+            ...otherCarePlanTemplates,
           },
           template_appointments: {
-            ...templateAppointmentData
+            ...templateAppointmentData,
           },
           template_medications: {
-            ...templateMedicationData
+            ...templateMedicationData,
           },
           medicines: {
-            ...medicineApiData
+            ...medicineApiData,
           },
           features_mappings: {
-            [patientData.getPatientId()]: patientFeatureIds
-          }
+            [patientData.getPatientId()]: patientFeatureIds,
+          },
         },
         "Patient added successfully"
       );
@@ -1591,11 +1591,11 @@ class DoctorController extends Controller {
         gender = "",
         qualification_details = [],
         registration_details = [],
-        doctor_id = null
+        doctor_id = null,
       } = req.body;
 
       console.log("4867236812937127362187312 ======>>>>>>>>>", {
-        specialityId
+        specialityId,
       });
 
       let degreeData = {},
@@ -1607,8 +1607,8 @@ class DoctorController extends Controller {
       const {
         userDetails: {
           userId: user_id,
-          userData: { category = null } = {}
-        } = {}
+          userData: { category = null } = {},
+        } = {},
       } = req;
 
       let doctorUserId = user_id;
@@ -1623,7 +1623,7 @@ class DoctorController extends Controller {
         doctorUserId = doctorData.getUserId();
       } else {
         const doctor = await doctorService.getDoctorByData({
-          user_id: doctorUserId
+          user_id: doctorUserId,
         });
         doctorData = await DoctorWrapper(doctor);
       }
@@ -1634,7 +1634,7 @@ class DoctorController extends Controller {
       const isNotANumber = isNaN(specialityId);
       if (isNotANumber) {
         const speciality = await specialityService.getSpecialityByData({
-          name: specialityId
+          name: specialityId,
         });
 
         if (speciality) {
@@ -1643,7 +1643,7 @@ class DoctorController extends Controller {
         } else {
           const newSpeciality = await specialityService.create({
             name: specialityId,
-            user_created: user_id
+            user_created: user_id,
           });
           const newSpecialityData = await SpecialityWrapper(newSpeciality);
           speciality_id = newSpecialityData.getSpecialityId();
@@ -1653,7 +1653,7 @@ class DoctorController extends Controller {
       }
 
       const speciality = await specialityService.getSpecialityByData({
-        id: speciality_id
+        id: speciality_id,
       });
       const speWrapper = await SpecialityWrapper(speciality);
       specialityData[speWrapper.getSpecialityId()] = speWrapper.getBasicInfo();
@@ -1661,13 +1661,14 @@ class DoctorController extends Controller {
       const doctorUpdate = await doctorService.updateDoctor(
         {
           gender,
-          speciality_id
+          speciality_id,
         },
         doctorData.getDoctorId()
       );
-      const qualificationsOfDoctor = await qualificationService.getQualificationsByDoctorId(
-        doctorData.getDoctorId()
-      );
+      const qualificationsOfDoctor =
+        await qualificationService.getQualificationsByDoctorId(
+          doctorData.getDoctorId()
+        );
 
       let newQualifications = [];
       for (const item of qualification_details) {
@@ -1677,7 +1678,7 @@ class DoctorController extends Controller {
           college_name = "",
           college_id = "",
           photos = [],
-          id = 0
+          id = 0,
         } = item;
 
         // -- add degree
@@ -1693,7 +1694,7 @@ class DoctorController extends Controller {
           } else {
             const newDegree = await degreeService.create({
               name: degreeId,
-              user_created: user_id
+              user_created: user_id,
             });
             const newDegreeData = await DegreeWrapper(newDegree);
             degree_id = newDegreeData.getDegreeId();
@@ -1710,7 +1711,7 @@ class DoctorController extends Controller {
           let collegeId = college_id;
           if (college_name !== "") {
             const existingCollege = await collegeService.getByData({
-              name: college_name
+              name: college_name,
             });
 
             // Logger.debug("876546789653456789876789",existingCollege);
@@ -1718,7 +1719,7 @@ class DoctorController extends Controller {
             if (!existingCollege) {
               const college = await collegeService.create({
                 name: college_name,
-                user_created: true
+                user_created: true,
               });
 
               const collegeWrapper = await CollegeWrapper(college);
@@ -1736,7 +1737,7 @@ class DoctorController extends Controller {
               doctor_id: doctorData.getDoctorId(),
               degree_id,
               year,
-              college_id: collegeId
+              college_id: collegeId,
             },
             id
           );
@@ -1746,7 +1747,7 @@ class DoctorController extends Controller {
           if (college_name !== "") {
             const college = await collegeService.create({
               name: college_name,
-              user_created: true
+              user_created: true,
             });
 
             const collegeWrapper = await CollegeWrapper(college);
@@ -1757,7 +1758,7 @@ class DoctorController extends Controller {
             doctor_id: doctorData.getDoctorId(),
             degree_id,
             year,
-            college_id: collegeId
+            college_id: collegeId,
           });
         }
       }
@@ -1777,9 +1778,10 @@ class DoctorController extends Controller {
       }
 
       // REGISTRATION FOR DOCTOR
-      const registrationsOfDoctor = await registrationService.getRegistrationByDoctorId(
-        doctorData.getDoctorId()
-      );
+      const registrationsOfDoctor =
+        await registrationService.getRegistrationByDoctorId(
+          doctorData.getDoctorId()
+        );
 
       let newRegistrations = [];
       for (const item of registration_details) {
@@ -1788,7 +1790,7 @@ class DoctorController extends Controller {
           registration_council_id: regCouncilId,
           year,
           expiryDate: expiry_date,
-          id = 0
+          id = 0,
         } = item;
 
         // -- add council
@@ -1798,7 +1800,7 @@ class DoctorController extends Controller {
         const isCouncilNotANumber = isNaN(regCouncilId);
         if (isCouncilNotANumber) {
           const council = await councilService.getByData({
-            name: regCouncilId
+            name: regCouncilId,
           });
 
           if (council) {
@@ -1807,7 +1809,7 @@ class DoctorController extends Controller {
           } else {
             const newCouncil = await councilService.create({
               name: regCouncilId,
-              user_created: user_id
+              user_created: user_id,
             });
             const newCouncilData = await CouncilWrapper(newCouncil);
             registration_council_id = newCouncilData.getCouncilId();
@@ -1817,12 +1819,11 @@ class DoctorController extends Controller {
         }
 
         const council = await councilService.getByData({
-          id: registration_council_id
+          id: registration_council_id,
         });
         const councilWrapper = await CouncilWrapper(council);
-        councilData[
-          councilWrapper.getCouncilId()
-        ] = councilWrapper.getBasicInfo();
+        councilData[councilWrapper.getCouncilId()] =
+          councilWrapper.getBasicInfo();
 
         if (id && id !== "0") {
           const registration = await registrationService.updateRegistration(
@@ -1831,7 +1832,7 @@ class DoctorController extends Controller {
               number,
               year,
               registration_council_id,
-              expiry_date
+              expiry_date,
             },
             id
           );
@@ -1842,7 +1843,7 @@ class DoctorController extends Controller {
             number,
             year,
             registration_council_id,
-            expiry_date
+            expiry_date,
           });
         }
       }
@@ -1852,10 +1853,11 @@ class DoctorController extends Controller {
         if (newRegistrations.includes(rId)) {
           continue;
         } else {
-          const deleteDocs = await documentService.deleteDocumentsOfQualification(
-            DOCUMENT_PARENT_TYPE.DOCTOR_REGISTRATION,
-            rId
-          );
+          const deleteDocs =
+            await documentService.deleteDocumentsOfQualification(
+              DOCUMENT_PARENT_TYPE.DOCTOR_REGISTRATION,
+              rId
+            );
           const register = await registrationService.getRegistrationById(rId);
           register.destroy();
         }
@@ -1863,7 +1865,7 @@ class DoctorController extends Controller {
 
       const userUpdate = await userService.updateUser(
         {
-          onboarding_status: ONBOARDING_STATUS.QUALIFICATION_REGISTERED
+          onboarding_status: ONBOARDING_STATUS.QUALIFICATION_REGISTERED,
         },
         doctorUserId
       );
@@ -1872,7 +1874,7 @@ class DoctorController extends Controller {
       const updatedUserData = await UserWrapper(updatedUser.get());
 
       const updatedDoctor = await doctorService.getDoctorByData({
-        user_id: doctorUserId
+        user_id: doctorUserId,
       });
       const updatedDoctorData = await DoctorWrapper(updatedDoctor);
 
@@ -1880,9 +1882,10 @@ class DoctorController extends Controller {
 
       let qualificationsData = {};
       let doctor_qualification_ids = [];
-      const doctorQualifications = await qualificationService.getQualificationsByDoctorId(
-        updatedDoctorData.getDoctorId()
-      );
+      const doctorQualifications =
+        await qualificationService.getQualificationsByDoctorId(
+          updatedDoctorData.getDoctorId()
+        );
       for (const doctorQualification of doctorQualifications) {
         let upload_document_ids = [];
         const qualificationData = await QualificationWrapper(
@@ -1892,39 +1895,41 @@ class DoctorController extends Controller {
           qualificationData.getDoctorQualificationId()
         );
 
-        const uploadDocuments = await documentService.getDoctorQualificationDocuments(
-          DOCUMENT_PARENT_TYPE.DOCTOR_QUALIFICATION,
-          qualificationData.getDoctorQualificationId()
-        );
+        const uploadDocuments =
+          await documentService.getDoctorQualificationDocuments(
+            DOCUMENT_PARENT_TYPE.DOCTOR_QUALIFICATION,
+            qualificationData.getDoctorQualificationId()
+          );
 
         for (const uploadDocument of uploadDocuments) {
           const uploadDocumentData = await UploadDocumentWrapper(
             uploadDocument
           );
           upload_document_ids.push(uploadDocumentData.getUploadDocumentId());
-          uploadDocumentsData[
-            uploadDocumentData.getUploadDocumentId()
-          ] = uploadDocumentData.getBasicInfo();
+          uploadDocumentsData[uploadDocumentData.getUploadDocumentId()] =
+            uploadDocumentData.getBasicInfo();
         }
         qualificationsData[qualificationData.getDoctorQualificationId()] = {
           ...qualificationData.getBasicInfo(),
-          upload_document_ids
+          upload_document_ids,
         };
       }
 
       let registrationsData = {};
       let doctor_registration_ids = [];
-      const doctorRegistrations = await registrationService.getRegistrationByDoctorId(
-        updatedDoctorData.getDoctorId()
-      );
+      const doctorRegistrations =
+        await registrationService.getRegistrationByDoctorId(
+          updatedDoctorData.getDoctorId()
+        );
       for (const doctorRegistration of doctorRegistrations) {
         let upload_document_ids = [];
         const registrationData = await RegistrationWrapper(doctorRegistration);
 
-        const uploadDocuments = await documentService.getDoctorQualificationDocuments(
-          DOCUMENT_PARENT_TYPE.DOCTOR_REGISTRATION,
-          registrationData.getDoctorRegistrationId()
-        );
+        const uploadDocuments =
+          await documentService.getDoctorQualificationDocuments(
+            DOCUMENT_PARENT_TYPE.DOCTOR_REGISTRATION,
+            registrationData.getDoctorRegistrationId()
+          );
         doctor_registration_ids.push(
           registrationData.getDoctorRegistrationId()
         );
@@ -1934,13 +1939,12 @@ class DoctorController extends Controller {
             uploadDocument
           );
           upload_document_ids.push(uploadDocumentData.getUploadDocumentId());
-          uploadDocumentsData[
-            uploadDocumentData.getUploadDocumentId()
-          ] = uploadDocumentData.getBasicInfo();
+          uploadDocumentsData[uploadDocumentData.getUploadDocumentId()] =
+            uploadDocumentData.getBasicInfo();
         }
         registrationsData[registrationData.getDoctorRegistrationId()] = {
           ...registrationData.getBasicInfo(),
-          upload_document_ids
+          upload_document_ids,
         };
       }
 
@@ -1949,31 +1953,31 @@ class DoctorController extends Controller {
         200,
         {
           users: {
-            [updatedUserData.getId()]: updatedUserData.getBasicInfo()
+            [updatedUserData.getId()]: updatedUserData.getBasicInfo(),
           },
           doctors: {
-            [updatedDoctorData.getDoctorId()]: updatedDoctorData.getBasicInfo()
+            [updatedDoctorData.getDoctorId()]: updatedDoctorData.getBasicInfo(),
           },
           doctor_qualifications: {
-            ...qualificationsData
+            ...qualificationsData,
           },
           doctor_registrations: {
-            ...registrationsData
+            ...registrationsData,
           },
           upload_documents: {
-            ...uploadDocumentsData
+            ...uploadDocumentsData,
           },
           doctor_qualification_ids,
           doctor_registration_ids,
           degrees: {
-            ...degreeData
+            ...degreeData,
           },
           specialities: {
-            ...specialityData
+            ...specialityData,
           },
           councils: {
-            ...councilData
-          }
+            ...councilData,
+          },
         },
         "qualifications updated successfully"
       );
@@ -1988,7 +1992,7 @@ class DoctorController extends Controller {
     try {
       const {
         userDetails: { userId, userData: { category = null } = {} } = {},
-        body: { doctor_id = null } = {}
+        body: { doctor_id = null } = {},
       } = req;
       const file = req.file;
 
@@ -2022,7 +2026,7 @@ class DoctorController extends Controller {
         res,
         200,
         {
-          files: files
+          files: files,
           // qualification_id
         },
         "Doctor qualification document uploaded successfully"
@@ -2038,7 +2042,7 @@ class DoctorController extends Controller {
       const file = req.file;
       const {
         userDetails: { userId, userData: { category = null } = {} } = {},
-        body: { doctor_id = null } = {}
+        body: { doctor_id = null } = {},
       } = req;
 
       Logger.debug("updateRegistrationDocs file", file);
@@ -2073,7 +2077,7 @@ class DoctorController extends Controller {
         res,
         200,
         {
-          files: files
+          files: files,
         },
         "doctor registration document uploaded successfully"
       );
@@ -2089,13 +2093,13 @@ class DoctorController extends Controller {
         gender = "",
         speciality_id: specialityId = "",
         qualification = {},
-        doctor_id = null
+        doctor_id = null,
       } = req.body;
 
       let speciality_id = null;
 
       const {
-        userDetails: { userId, userData: { category = null } = {} } = {}
+        userDetails: { userId, userData: { category = null } = {} } = {},
       } = req;
 
       let degreeData = {},
@@ -2112,7 +2116,7 @@ class DoctorController extends Controller {
         doctorUserId = doctorData.getUserId();
       } else {
         let doctor = await doctorService.getDoctorByData({
-          user_id: doctorUserId
+          user_id: doctorUserId,
         });
         doctorData = await DoctorWrapper(doctor);
       }
@@ -2122,7 +2126,7 @@ class DoctorController extends Controller {
       if (isNotANumber) {
         console.log("72354671523786213162371283", { isNotANumber });
         const speciality = await specialityService.getSpecialityByData({
-          name: specialityId
+          name: specialityId,
         });
 
         if (speciality) {
@@ -2131,7 +2135,7 @@ class DoctorController extends Controller {
         } else {
           const newSpeciality = await specialityService.create({
             name: specialityId,
-            user_created: userId
+            user_created: userId,
           });
           const newSpecialityData = await SpecialityWrapper(newSpeciality);
           speciality_id = newSpecialityData.getSpecialityId();
@@ -2141,7 +2145,7 @@ class DoctorController extends Controller {
       }
 
       const speciality = await specialityService.getSpecialityByData({
-        id: speciality_id
+        id: speciality_id,
       });
       const speWrapper = await SpecialityWrapper(speciality);
       specialityData[speWrapper.getSpecialityId()] = speWrapper.getBasicInfo();
@@ -2150,7 +2154,7 @@ class DoctorController extends Controller {
         const updatedDoctor = await doctorService.updateDoctor(
           {
             gender,
-            speciality_id
+            speciality_id,
           },
           doctorData.getDoctorId()
         );
@@ -2161,7 +2165,7 @@ class DoctorController extends Controller {
         college_name = "",
         college_id = "",
         id,
-        photos = []
+        photos = [],
       } = qualification || {};
 
       let degree_id = null;
@@ -2178,7 +2182,7 @@ class DoctorController extends Controller {
         } else {
           const newDegree = await degreeService.create({
             name: degreeId,
-            user_created: userId
+            user_created: userId,
           });
           const newDegreeData = await DegreeWrapper(newDegree);
           degree_id = newDegreeData.getDegreeId();
@@ -2207,7 +2211,7 @@ class DoctorController extends Controller {
         if (college_name !== "") {
           const college = await collegeService.create({
             name: college_name,
-            user_created: true
+            user_created: true,
           });
 
           const collegeWrapper = await CollegeWrapper(college);
@@ -2218,7 +2222,7 @@ class DoctorController extends Controller {
           doctor_id: doctorData.getDoctorId(),
           degree_id,
           year,
-          college_id: collegeId
+          college_id: collegeId,
         });
 
         for (const photo of photos) {
@@ -2236,7 +2240,7 @@ class DoctorController extends Controller {
               doctor_id: doctorData.getDoctorId(),
               parent_type: DOCUMENT_PARENT_TYPE.DOCTOR_QUALIFICATION,
               parent_id: docQualification.get("id"),
-              document: getFilePath(photo)
+              document: getFilePath(photo),
             });
           }
         }
@@ -2245,22 +2249,23 @@ class DoctorController extends Controller {
         if (college_name !== "") {
           const college = await collegeService.create({
             name: college_name,
-            user_created: true
+            user_created: true,
           });
 
           const collegeWrapper = await CollegeWrapper(college);
           collegeId = collegeWrapper.getCollegeId();
         }
 
-        const docQualificationUpdate = await qualificationService.updateQualification(
-          {
-            doctor_id: doctorData.getDoctorId(),
-            degree_id,
-            year,
-            college_id: collegeId
-          },
-          id
-        );
+        const docQualificationUpdate =
+          await qualificationService.updateQualification(
+            {
+              doctor_id: doctorData.getDoctorId(),
+              degree_id,
+              year,
+              college_id: collegeId,
+            },
+            id
+          );
 
         docQualification = await qualificationService.getQualificationById(id);
         for (const photo of photos) {
@@ -2275,7 +2280,7 @@ class DoctorController extends Controller {
               doctor_id: doctorData.getDoctorId(),
               parent_type: DOCUMENT_PARENT_TYPE.DOCTOR_QUALIFICATION,
               parent_id: id,
-              document: getFilePath(photo)
+              document: getFilePath(photo),
             });
           }
         }
@@ -2286,7 +2291,7 @@ class DoctorController extends Controller {
       );
 
       const updatedDoctor = await doctorService.getDoctorByData({
-        user_id: doctorUserId
+        user_id: doctorUserId,
       });
       const updatedDoctorData = await DoctorWrapper(updatedDoctor);
 
@@ -2294,9 +2299,10 @@ class DoctorController extends Controller {
 
       let qualificationsData = {};
       let doctor_qualification_ids = [];
-      const doctorQualifications = await qualificationService.getQualificationsByDoctorId(
-        updatedDoctorData.getDoctorId()
-      );
+      const doctorQualifications =
+        await qualificationService.getQualificationsByDoctorId(
+          updatedDoctorData.getDoctorId()
+        );
 
       Logger.debug(
         "1893712983 doctorQualifications --> ",
@@ -2311,23 +2317,23 @@ class DoctorController extends Controller {
           qualificationData.getDoctorQualificationId()
         );
 
-        const uploadDocuments = await documentService.getDoctorQualificationDocuments(
-          DOCUMENT_PARENT_TYPE.DOCTOR_QUALIFICATION,
-          qualificationData.getDoctorQualificationId()
-        );
+        const uploadDocuments =
+          await documentService.getDoctorQualificationDocuments(
+            DOCUMENT_PARENT_TYPE.DOCTOR_QUALIFICATION,
+            qualificationData.getDoctorQualificationId()
+          );
 
         for (const uploadDocument of uploadDocuments) {
           const uploadDocumentData = await UploadDocumentWrapper(
             uploadDocument
           );
           upload_document_ids.push(uploadDocumentData.getUploadDocumentId());
-          uploadDocumentsData[
-            uploadDocumentData.getUploadDocumentId()
-          ] = uploadDocumentData.getBasicInfo();
+          uploadDocumentsData[uploadDocumentData.getUploadDocumentId()] =
+            uploadDocumentData.getBasicInfo();
         }
         qualificationsData[qualificationData.getDoctorQualificationId()] = {
           ...qualificationData.getBasicInfo(),
-          upload_document_ids
+          upload_document_ids,
         };
       }
 
@@ -2338,23 +2344,23 @@ class DoctorController extends Controller {
           doctors: {
             [updatedDoctorData.getDoctorId()]: {
               ...updatedDoctorData.getBasicInfo(),
-              doctor_qualification_ids
-            }
+              doctor_qualification_ids,
+            },
           },
           ...(await updatedDoctorData.getReferenceInfo()),
           doctor_qualifications: {
-            ...qualificationsData
+            ...qualificationsData,
           },
           upload_documents: {
-            ...uploadDocumentsData
+            ...uploadDocumentsData,
           },
           qualification_id: docQualificationDetails.getDoctorQualificationId(),
           degrees: {
-            ...degreeData
+            ...degreeData,
           },
           specialities: {
-            ...specialityData
-          }
+            ...specialityData,
+          },
         },
         "qualification details updated successfully"
       );
@@ -2369,7 +2375,7 @@ class DoctorController extends Controller {
     try {
       const {
         body,
-        userDetails: { userId, userData: { category = null } = {} } = {}
+        userDetails: { userId, userData: { category = null } = {} } = {},
       } = req;
 
       let doctorUserId = userId;
@@ -2379,7 +2385,7 @@ class DoctorController extends Controller {
         speciality_id: specialityId = "",
         qualification_details: qualifications = [],
         registration = {},
-        doctor_id = null
+        doctor_id = null,
       } = body || {};
 
       let specialityData = {},
@@ -2392,7 +2398,7 @@ class DoctorController extends Controller {
       const isNotANumber = isNaN(specialityId);
       if (isNotANumber) {
         const speciality = await specialityService.getSpecialityByData({
-          name: specialityId
+          name: specialityId,
         });
 
         if (speciality) {
@@ -2401,7 +2407,7 @@ class DoctorController extends Controller {
         } else {
           const newSpeciality = await specialityService.create({
             name: specialityId,
-            user_created: userId
+            user_created: userId,
           });
           const newSpecialityData = await SpecialityWrapper(newSpeciality);
           speciality_id = newSpecialityData.getSpecialityId();
@@ -2411,7 +2417,7 @@ class DoctorController extends Controller {
       }
 
       const speciality = await specialityService.getSpecialityByData({
-        id: speciality_id
+        id: speciality_id,
       });
       const speWrapper = await SpecialityWrapper(speciality);
       specialityData[speWrapper.getSpecialityId()] = speWrapper.getBasicInfo();
@@ -2429,7 +2435,7 @@ class DoctorController extends Controller {
         doctorUserId = doctorData.getUserId();
       } else {
         const doctor = await doctorService.getDoctorByData({
-          user_id: doctorUserId
+          user_id: doctorUserId,
         });
         doctorData = await DoctorWrapper(doctor);
       }
@@ -2449,7 +2455,7 @@ class DoctorController extends Controller {
             college_id = "",
             college_name = "",
             id,
-            photos = []
+            photos = [],
           } = qualification || {};
 
           if (photos.length > 3) {
@@ -2475,7 +2481,7 @@ class DoctorController extends Controller {
             } else {
               const newDegree = await degreeService.create({
                 name: degreeId,
-                user_created: userId
+                user_created: userId,
               });
               const newDegreeData = await DegreeWrapper(newDegree);
               degree_id = newDegreeData.getDegreeId();
@@ -2486,30 +2492,28 @@ class DoctorController extends Controller {
 
           let degree = await degreeService.getByData({ id: degree_id });
           const degreeWrapper = await DegreeWrapper(degree);
-          degreeData[
-            degreeWrapper.getDegreeId()
-          ] = degreeWrapper.getBasicInfo();
+          degreeData[degreeWrapper.getDegreeId()] =
+            degreeWrapper.getBasicInfo();
 
           if (id === "0") {
             let collegeId = college_id;
             if (college_name !== "") {
               const college = await collegeService.create({
                 name: college_name,
-                user_created: true
+                user_created: true,
               });
 
               const collegeWrapper = await CollegeWrapper(college);
               collegeId = collegeWrapper.getCollegeId();
             }
 
-            const docQualification = await qualificationService.addQualification(
-              {
+            const docQualification =
+              await qualificationService.addQualification({
                 doctor_id: doctorData.getDoctorId(),
                 degree_id,
                 year,
-                college_id: collegeId
-              }
-            );
+                college_id: collegeId,
+              });
 
             for (const photo of photos) {
               const docExist = await documentService.getDocumentByData(
@@ -2523,7 +2527,7 @@ class DoctorController extends Controller {
                   doctor_id: doctorData.getDoctorId(),
                   parent_type: DOCUMENT_PARENT_TYPE.DOCTOR_QUALIFICATION,
                   parent_id: docQualification.get("id"),
-                  document: getFilePath(photo)
+                  document: getFilePath(photo),
                 });
               }
             }
@@ -2537,7 +2541,7 @@ class DoctorController extends Controller {
               if (!college) {
                 college = await collegeService.create({
                   name: college_name,
-                  user_created: true
+                  user_created: true,
                 });
               }
 
@@ -2545,15 +2549,16 @@ class DoctorController extends Controller {
               collegeId = collegeWrapper.getCollegeId();
             }
 
-            const existingdocQualification = await qualificationService.updateQualification(
-              {
-                doctor_id: doctorData.getDoctorId(),
-                degree_id,
-                year,
-                college_id: collegeId
-              },
-              id
-            );
+            const existingdocQualification =
+              await qualificationService.updateQualification(
+                {
+                  doctor_id: doctorData.getDoctorId(),
+                  degree_id,
+                  year,
+                  college_id: collegeId,
+                },
+                id
+              );
             for (const photo of photos) {
               const docExist = await documentService.getDocumentByData(
                 DOCUMENT_PARENT_TYPE.DOCTOR_QUALIFICATION,
@@ -2566,7 +2571,7 @@ class DoctorController extends Controller {
                   doctor_id: doctorData.getDoctorId(),
                   parent_type: DOCUMENT_PARENT_TYPE.DOCTOR_QUALIFICATION,
                   parent_id: id,
-                  document: getFilePath(photo)
+                  document: getFilePath(photo),
                 });
               }
             }
@@ -2581,7 +2586,7 @@ class DoctorController extends Controller {
         year: registration_year = "",
         expiry_date = "",
         id,
-        photos: registration_photos = []
+        photos: registration_photos = [],
       } = registration || {};
 
       let docRegistrationDetails = null;
@@ -2608,7 +2613,7 @@ class DoctorController extends Controller {
         } else {
           const newCouncil = await councilService.create({
             name: regCouncilId,
-            user_created: userId
+            user_created: userId,
           });
           const newCouncilData = await CouncilWrapper(newCouncil);
           registration_council_id = newCouncilData.getCouncilId();
@@ -2618,12 +2623,11 @@ class DoctorController extends Controller {
       }
 
       const council = await councilService.getByData({
-        id: registration_council_id
+        id: registration_council_id,
       });
       const councilWrapper = await CouncilWrapper(council);
-      councilData[
-        councilWrapper.getCouncilId()
-      ] = councilWrapper.getBasicInfo();
+      councilData[councilWrapper.getCouncilId()] =
+        councilWrapper.getBasicInfo();
 
       if (id === "0") {
         const doctorRegistration = await registrationService.addRegistration({
@@ -2631,7 +2635,7 @@ class DoctorController extends Controller {
           number,
           registration_council_id,
           year: registration_year,
-          expiry_date: moment(expiry_date)
+          expiry_date: moment(expiry_date),
         });
 
         for (const photo of registration_photos) {
@@ -2646,7 +2650,7 @@ class DoctorController extends Controller {
               doctor_id: doctorData.getDoctorId(),
               parent_type: DOCUMENT_PARENT_TYPE.DOCTOR_REGISTRATION,
               parent_id: doctorRegistration.get("id"),
-              document: getFilePath(photo)
+              document: getFilePath(photo),
             });
           }
         }
@@ -2659,7 +2663,7 @@ class DoctorController extends Controller {
             number,
             registration_council_id,
             year: registration_year,
-            expiry_date: moment(expiry_date)
+            expiry_date: moment(expiry_date),
           },
           id
         );
@@ -2678,14 +2682,14 @@ class DoctorController extends Controller {
               doctor_id: doctorData.getDoctorId(),
               parent_type: DOCUMENT_PARENT_TYPE.DOCTOR_REGISTRATION,
               parent_id: id,
-              document: getFilePath(photo)
+              document: getFilePath(photo),
             });
           }
         }
       }
 
       const updatedDoctor = await doctorService.getDoctorByData({
-        user_id: doctorUserId
+        user_id: doctorUserId,
       });
       const updatedDoctorData = await DoctorWrapper(updatedDoctor);
 
@@ -2693,9 +2697,10 @@ class DoctorController extends Controller {
 
       let qualificationsData = {};
       let doctor_qualification_ids = [];
-      const doctorQualifications = await qualificationService.getQualificationsByDoctorId(
-        updatedDoctorData.getDoctorId()
-      );
+      const doctorQualifications =
+        await qualificationService.getQualificationsByDoctorId(
+          updatedDoctorData.getDoctorId()
+        );
       for (const doctorQualification of doctorQualifications) {
         let upload_document_ids = [];
         const qualificationData = await QualificationWrapper(
@@ -2705,39 +2710,41 @@ class DoctorController extends Controller {
           qualificationData.getDoctorQualificationId()
         );
 
-        const uploadDocuments = await documentService.getDoctorQualificationDocuments(
-          DOCUMENT_PARENT_TYPE.DOCTOR_QUALIFICATION,
-          qualificationData.getDoctorQualificationId()
-        );
+        const uploadDocuments =
+          await documentService.getDoctorQualificationDocuments(
+            DOCUMENT_PARENT_TYPE.DOCTOR_QUALIFICATION,
+            qualificationData.getDoctorQualificationId()
+          );
 
         for (const uploadDocument of uploadDocuments) {
           const uploadDocumentData = await UploadDocumentWrapper(
             uploadDocument
           );
           upload_document_ids.push(uploadDocumentData.getUploadDocumentId());
-          uploadDocumentsData[
-            uploadDocumentData.getUploadDocumentId()
-          ] = uploadDocumentData.getBasicInfo();
+          uploadDocumentsData[uploadDocumentData.getUploadDocumentId()] =
+            uploadDocumentData.getBasicInfo();
         }
         qualificationsData[qualificationData.getDoctorQualificationId()] = {
           ...qualificationData.getBasicInfo(),
-          upload_document_ids
+          upload_document_ids,
         };
       }
 
       let registrationsData = {};
       let doctor_registration_ids = [];
-      const doctorRegistrations = await registrationService.getRegistrationByDoctorId(
-        updatedDoctorData.getDoctorId()
-      );
+      const doctorRegistrations =
+        await registrationService.getRegistrationByDoctorId(
+          updatedDoctorData.getDoctorId()
+        );
       for (const doctorRegistration of doctorRegistrations) {
         let upload_document_ids = [];
         const registrationData = await RegistrationWrapper(doctorRegistration);
 
-        const uploadDocuments = await documentService.getDoctorQualificationDocuments(
-          DOCUMENT_PARENT_TYPE.DOCTOR_REGISTRATION,
-          registrationData.getDoctorRegistrationId()
-        );
+        const uploadDocuments =
+          await documentService.getDoctorQualificationDocuments(
+            DOCUMENT_PARENT_TYPE.DOCTOR_REGISTRATION,
+            registrationData.getDoctorRegistrationId()
+          );
         doctor_registration_ids.push(
           registrationData.getDoctorRegistrationId()
         );
@@ -2747,13 +2754,12 @@ class DoctorController extends Controller {
             uploadDocument
           );
           upload_document_ids.push(uploadDocumentData.getUploadDocumentId());
-          uploadDocumentsData[
-            uploadDocumentData.getUploadDocumentId()
-          ] = uploadDocumentData.getBasicInfo();
+          uploadDocumentsData[uploadDocumentData.getUploadDocumentId()] =
+            uploadDocumentData.getBasicInfo();
         }
         registrationsData[registrationData.getDoctorRegistrationId()] = {
           ...registrationData.getBasicInfo(),
-          upload_document_ids
+          upload_document_ids,
         };
       }
 
@@ -2765,27 +2771,27 @@ class DoctorController extends Controller {
           doctors: {
             [updatedDoctorData.getDoctorId()]: updatedDoctorData.getBasicInfo(),
             doctor_qualification_ids,
-            doctor_registration_ids
+            doctor_registration_ids,
           },
           ...(await updatedDoctorData.getReferenceInfo()),
           doctor_qualifications: {
-            ...qualificationsData
+            ...qualificationsData,
           },
           doctor_registrations: {
-            ...registrationsData
+            ...registrationsData,
           },
           upload_documents: {
-            ...uploadDocumentsData
+            ...uploadDocumentsData,
           },
           councils: {
-            ...councilData
+            ...councilData,
           },
           degrees: {
-            ...degreeData
+            ...degreeData,
           },
           specialities: {
-            ...specialityData
-          }
+            ...specialityData,
+          },
         },
         "registration details updated successfully"
       );
@@ -2800,7 +2806,7 @@ class DoctorController extends Controller {
     try {
       const {
         userDetails: { userId } = {},
-        params: { doctor_id = null } = {}
+        params: { doctor_id = null } = {},
       } = req;
 
       const doctors = await doctorService.getDoctorByData({ user_id: userId });
@@ -2830,9 +2836,10 @@ class DoctorController extends Controller {
         doctorWrapper = await DoctorWrapper(doctors);
       }
 
-      const doctorQualifications = await qualificationService.getQualificationsByDoctorId(
-        doctorWrapper.getDoctorId()
-      );
+      const doctorQualifications =
+        await qualificationService.getQualificationsByDoctorId(
+          doctorWrapper.getDoctorId()
+        );
 
       const userDetails = await userService.getUserById(
         doctorWrapper.getUserId()
@@ -2844,10 +2851,11 @@ class DoctorController extends Controller {
           doctorQualification
         );
 
-        const qualificationDocuments = await documentService.getDoctorQualificationDocuments(
-          DOCUMENT_PARENT_TYPE.DOCTOR_QUALIFICATION,
-          doctorQualificationWrapper.getDoctorQualificationId()
-        );
+        const qualificationDocuments =
+          await documentService.getDoctorQualificationDocuments(
+            DOCUMENT_PARENT_TYPE.DOCTOR_QUALIFICATION,
+            doctorQualificationWrapper.getDoctorQualificationId()
+          );
 
         for (const document of qualificationDocuments) {
           const uploadDocumentWrapper = await UploadDocumentWrapper(document);
@@ -2861,7 +2869,7 @@ class DoctorController extends Controller {
           doctorQualificationWrapper.getDoctorQualificationId()
         ] = {
           ...doctorQualificationWrapper.getBasicInfo(),
-          upload_document_ids
+          upload_document_ids,
         };
 
         doctor_qualification_ids.push(
@@ -2872,9 +2880,10 @@ class DoctorController extends Controller {
       }
 
       // REGISTRATION DETAILS
-      const doctorRegistrations = await registrationService.getRegistrationByDoctorId(
-        doctorWrapper.getDoctorId()
-      );
+      const doctorRegistrations =
+        await registrationService.getRegistrationByDoctorId(
+          doctorWrapper.getDoctorId()
+        );
 
       Logger.debug("198361283 ---====> ", doctorRegistrations);
 
@@ -2883,10 +2892,11 @@ class DoctorController extends Controller {
           doctorRegistration
         );
 
-        const registrationDocuments = await documentService.getDoctorQualificationDocuments(
-          DOCUMENT_PARENT_TYPE.DOCTOR_REGISTRATION,
-          doctorRegistrationWrapper.getDoctorRegistrationId()
-        );
+        const registrationDocuments =
+          await documentService.getDoctorQualificationDocuments(
+            DOCUMENT_PARENT_TYPE.DOCTOR_REGISTRATION,
+            doctorRegistrationWrapper.getDoctorRegistrationId()
+          );
 
         for (const document of registrationDocuments) {
           const uploadDocumentWrapper = await UploadDocumentWrapper(document);
@@ -2900,7 +2910,7 @@ class DoctorController extends Controller {
           doctorRegistrationWrapper.getDoctorRegistrationId()
         ] = {
           ...doctorRegistrationWrapper.getBasicInfo(),
-          upload_document_ids
+          upload_document_ids,
         };
 
         doctor_registration_ids.push(
@@ -2916,9 +2926,8 @@ class DoctorController extends Controller {
 
       for (const doctorClinic of doctorClinics) {
         const doctorClinicWrapper = await ClinicWrapper(doctorClinic);
-        doctorClinicApiDetails[
-          doctorClinicWrapper.getDoctorClinicId()
-        ] = doctorClinicWrapper.getBasicInfo();
+        doctorClinicApiDetails[doctorClinicWrapper.getDoctorClinicId()] =
+          doctorClinicWrapper.getBasicInfo();
         doctor_clinic_ids.push(doctorClinicWrapper.getDoctorClinicId());
       }
 
@@ -2940,18 +2949,16 @@ class DoctorController extends Controller {
       let collegeData = {};
       for (const college of colleges) {
         const collegeWrapper = await CollegeWrapper(college);
-        collegeData[
-          collegeWrapper.getCollegeId()
-        ] = collegeWrapper.getBasicInfo();
+        collegeData[collegeWrapper.getCollegeId()] =
+          collegeWrapper.getBasicInfo();
       }
 
       const councils = await councilService.getAll();
       let councilData = {};
       for (const council of councils) {
         const councilWrapper = await CouncilWrapper(council);
-        councilData[
-          councilWrapper.getCouncilId()
-        ] = councilWrapper.getBasicInfo();
+        councilData[councilWrapper.getCouncilId()] =
+          councilWrapper.getBasicInfo();
       }
 
       const refInfo = await doctorWrapper.getReferenceInfo();
@@ -2959,7 +2966,7 @@ class DoctorController extends Controller {
       Logger.debug("2864235427654723867432648327", {
         refInfo,
         doctors: docss,
-        users: userss
+        users: userss,
       });
 
       return raiseSuccess(
@@ -2972,33 +2979,33 @@ class DoctorController extends Controller {
               ...(await doctorWrapper.getAllInfo()),
               doctor_qualification_ids,
               doctor_clinic_ids,
-              doctor_registration_ids
-            }
+              doctor_registration_ids,
+            },
           },
           doctor_qualifications: {
-            ...doctorQualificationApiDetails
+            ...doctorQualificationApiDetails,
           },
           doctor_clinics: {
-            ...doctorClinicApiDetails
+            ...doctorClinicApiDetails,
           },
           doctor_registrations: {
-            ...doctorRegistrationApiDetails
+            ...doctorRegistrationApiDetails,
           },
           upload_documents: {
-            ...uploadDocumentApiDetails
+            ...uploadDocumentApiDetails,
           },
           colleges: {
-            ...collegeData
+            ...collegeData,
           },
           degrees: {
-            ...degreeData
+            ...degreeData,
           },
           registration_councils: {
-            ...councilData
+            ...councilData,
           },
           users: {
-            [userWrapper.getId()]: userWrapper.getBasicInfo()
-          }
+            [userWrapper.getId()]: userWrapper.getBasicInfo(),
+          },
         },
         "Doctor details fetched successfully"
       );
@@ -3013,7 +3020,7 @@ class DoctorController extends Controller {
     try {
       const { clinics = [], doctor_id = null } = req.body;
       const {
-        userDetails: { userId, userData: { category = null } = {} } = {}
+        userDetails: { userId, userData: { category = null } = {} } = {},
       } = req;
 
       let doctorUserId = userId;
@@ -3027,7 +3034,7 @@ class DoctorController extends Controller {
         doctorUserId = doctorData.getUserId();
       } else {
         const doctor = await doctorService.getDoctorByData({
-          user_id: doctorUserId
+          user_id: doctorUserId,
         });
         doctorData = await DoctorWrapper(doctor);
       }
@@ -3040,11 +3047,11 @@ class DoctorController extends Controller {
           name = "",
           location = "",
           time_slots = {},
-          clinic_id = ""
+          clinic_id = "",
         } = clinic;
 
         const details = {
-          time_slots
+          time_slots,
         };
 
         let newClinic = "";
@@ -3073,16 +3080,15 @@ class DoctorController extends Controller {
               doctor_id: doctorData.getDoctorId(),
               name,
               location,
-              details
+              details,
             });
           }
         }
 
         if (newClinic) {
           const clinicData = await ClinicWrapper(newClinic);
-          clinicDetails[
-            clinicData.getDoctorClinicId()
-          ] = clinicData.getBasicInfo();
+          clinicDetails[clinicData.getDoctorClinicId()] =
+            clinicData.getBasicInfo();
           doctor_clinic_ids.push(clinicData.getDoctorClinicId());
         }
       }
@@ -3090,7 +3096,7 @@ class DoctorController extends Controller {
       const userUpdate = await userService.updateUser(
         {
           onboarded: true,
-          onboarding_status: ONBOARDING_STATUS.CLINIC_REGISTERED
+          onboarding_status: ONBOARDING_STATUS.CLINIC_REGISTERED,
         },
         doctorUserId
       );
@@ -3103,12 +3109,12 @@ class DoctorController extends Controller {
         200,
         {
           users: {
-            [userData.getId()]: userData.getBasicInfo()
+            [userData.getId()]: userData.getBasicInfo(),
           },
           doctor_clinics: {
-            ...clinicDetails
+            ...clinicDetails,
           },
-          doctor_clinic_ids
+          doctor_clinic_ids,
         },
         "Doctor clinics added successfully"
       );
@@ -3228,7 +3234,7 @@ class DoctorController extends Controller {
         res,
         200,
         {
-          files
+          files,
         },
         "Profile pic uploaded successfully"
       );
@@ -3252,7 +3258,7 @@ class DoctorController extends Controller {
           {
             patient_id: parseInt(patient_id),
             doctor_id: doctor.get("id"),
-            user_role_id: userRoleId
+            user_role_id: userRoleId,
           }
         );
 
@@ -3260,9 +3266,8 @@ class DoctorController extends Controller {
 
         if (newWatchlistRecord) {
           const doctorDetails = await DoctorWrapper(doctor);
-          doctorData[
-            doctorDetails.getDoctorId()
-          ] = await doctorDetails.getAllInfo();
+          doctorData[doctorDetails.getDoctorId()] =
+            await doctorDetails.getAllInfo();
         }
 
         return raiseSuccess(
@@ -3270,8 +3275,8 @@ class DoctorController extends Controller {
           200,
           {
             doctors: {
-              ...doctorData
-            }
+              ...doctorData,
+            },
           },
           "watchlist record created"
         );
@@ -3293,21 +3298,19 @@ class DoctorController extends Controller {
       const patient = await PatientWrapper(null, patient_id);
       const doctor = await doctorsService.getDoctorByUserId(parseInt(userId));
       if (patient && doctor) {
-        const deletedWatchlistRecord = await doctorService.deleteWatchlistRecord(
-          {
+        const deletedWatchlistRecord =
+          await doctorService.deleteWatchlistRecord({
             patient_id: parseInt(patient_id),
             doctor_id: doctor.get("id"),
-            user_role_id: userRoleId
-          }
-        );
+            user_role_id: userRoleId,
+          });
 
         let doctorData = {};
 
         if (deletedWatchlistRecord) {
           const doctorDetails = await DoctorWrapper(doctor);
-          doctorData[
-            doctorDetails.getDoctorId()
-          ] = await doctorDetails.getAllInfo();
+          doctorData[doctorDetails.getDoctorId()] =
+            await doctorDetails.getAllInfo();
         }
 
         return raiseSuccess(
@@ -3315,8 +3318,8 @@ class DoctorController extends Controller {
           200,
           {
             doctors: {
-              ...doctorData
-            }
+              ...doctorData,
+            },
           },
           "watchlist record destroyed"
         );
@@ -3332,23 +3335,22 @@ class DoctorController extends Controller {
   updateRazorpayAccount = async (req, res) => {
     const { raiseSuccess, raiseClientError, raiseServerError } = this;
     try {
-      const {
-        params: { id } = {},
-        body: { account_id, account_name } = {}
-      } = req;
+      const { params: { id } = {}, body: { account_id, account_name } = {} } =
+        req;
 
       const doctor = await DoctorWrapper(null, id);
 
-      const accountDetails = await AccountDetailsService.getCurrentAccountByUserId(
-        doctor.getUserId()
-      );
+      const accountDetails =
+        await AccountDetailsService.getCurrentAccountByUserId(
+          doctor.getUserId()
+        );
 
       const account = await AccountDetailsWrapper(accountDetails);
 
       const updateAccount = await AccountDetailsService.update(
         {
           razorpay_account_id: account_id,
-          razorpay_account_name: account_name
+          razorpay_account_name: account_name,
         },
         account.getId()
       );
@@ -3360,8 +3362,8 @@ class DoctorController extends Controller {
         200,
         {
           account_details: {
-            [updatedAccount.getId()]: updatedAccount.getBasicInfo()
-          }
+            [updatedAccount.getId()]: updatedAccount.getBasicInfo(),
+          },
         },
         "Account updated successfully"
       );
@@ -3410,13 +3412,11 @@ class DoctorController extends Controller {
         height = "",
         weight = "",
         symptoms = "",
-        address = ""
+        address = "",
       } = req.body;
 
-      const {
-        params: { careplan_id } = {},
-        userDetails: { userId } = {}
-      } = req;
+      const { params: { careplan_id } = {}, userDetails: { userId } = {} } =
+        req;
       const carePlanData = await CarePlanWrapper(null, careplan_id);
       const patient_id = await carePlanData.getPatientId();
       const initialPatientData = await PatientWrapper(null, patient_id);
@@ -3446,7 +3446,7 @@ class DoctorController extends Controller {
         details: {
           ...previousDetails,
           allergies,
-          comorbidities
+          comorbidities,
         },
         uid: patient_uid,
         first_name,
@@ -3457,7 +3457,7 @@ class DoctorController extends Controller {
         weight,
         address,
         dob: date_of_birth,
-        age: getAge(moment(date_of_birth))
+        age: getAge(moment(date_of_birth)),
       };
 
       const updatedPatient = await patientService.update(
@@ -3484,9 +3484,9 @@ class DoctorController extends Controller {
           symptoms,
           diagnosis: {
             type: diagnosis_type,
-            description: diagnosis_description
-          }
-        }
+            description: diagnosis_description,
+          },
+        },
       };
 
       const updatedCareplanId = await carePlanService.updateCarePlan(
@@ -3502,11 +3502,13 @@ class DoctorController extends Controller {
         {
           care_plan_ids: [initialCarePlanData.getCarePlanId()],
           care_plans: {
-            [initialCarePlanData.getCarePlanId()]: await updatedCareplanDetails.getAllInfo()
+            [initialCarePlanData.getCarePlanId()]:
+              await updatedCareplanDetails.getAllInfo(),
           },
           patients: {
-            [initialPatientData.getPatientId()]: updatedpatientDetails.getBasicInfo()
-          }
+            [initialPatientData.getPatientId()]:
+              updatedpatientDetails.getBasicInfo(),
+          },
         },
         "Careplan added successfully"
       );
@@ -3522,7 +3524,7 @@ class DoctorController extends Controller {
       const {
         params: { patient_id = null } = {},
         userDetails: { userId } = {},
-        body = {}
+        body = {},
       } = req;
 
       const { mute = false } = body;
@@ -3536,30 +3538,27 @@ class DoctorController extends Controller {
         const feature_id = featureData.get("id");
 
         if (mute) {
-          const deleteFeatureMapping = await doctorPatientFeatureMappingService.deleteMapping(
-            {
+          const deleteFeatureMapping =
+            await doctorPatientFeatureMappingService.deleteMapping({
               doctor_id: doctor.get("id"),
               patient_id,
-              feature_id
-            }
-          );
+              feature_id,
+            });
         } else {
-          const patientFeature = await doctorPatientFeatureMappingService.create(
-            {
+          const patientFeature =
+            await doctorPatientFeatureMappingService.create({
               doctor_id: doctor.get("id"),
               patient_id: patient.getPatientId(),
-              feature_id
-            }
-          );
+              feature_id,
+            });
         }
       }
 
-      const patientFeatures = await doctorPatientFeatureMappingService.getByData(
-        {
+      const patientFeatures =
+        await doctorPatientFeatureMappingService.getByData({
           patient_id,
-          doctor_id: doctor.get("id")
-        }
-      );
+          doctor_id: doctor.get("id"),
+        });
 
       let patientFeatureIds = [];
 
@@ -3574,8 +3573,8 @@ class DoctorController extends Controller {
         200,
         {
           feature_mappings: {
-            [patient_id]: patientFeatureIds
-          }
+            [patient_id]: patientFeatureIds,
+          },
         },
         "Chat permission updated successfully."
       );
@@ -3591,7 +3590,7 @@ class DoctorController extends Controller {
       const {
         params: { patient_id = null } = {},
         userDetails: { userId } = {},
-        body = {}
+        body = {},
       } = req;
 
       const { block = false } = body;
@@ -3607,30 +3606,27 @@ class DoctorController extends Controller {
         const feature_id = featureData.get("id");
 
         if (block) {
-          const deleteFeatureMapping = await doctorPatientFeatureMappingService.deleteMapping(
-            {
+          const deleteFeatureMapping =
+            await doctorPatientFeatureMappingService.deleteMapping({
               doctor_id: doctor.get("id"),
               patient_id,
-              feature_id
-            }
-          );
+              feature_id,
+            });
         } else {
-          const patientFeature = await doctorPatientFeatureMappingService.create(
-            {
+          const patientFeature =
+            await doctorPatientFeatureMappingService.create({
               doctor_id: doctor.get("id"),
               patient_id: patient.getPatientId(),
-              feature_id
-            }
-          );
+              feature_id,
+            });
         }
       }
 
-      const patientFeatures = await doctorPatientFeatureMappingService.getByData(
-        {
+      const patientFeatures =
+        await doctorPatientFeatureMappingService.getByData({
           patient_id,
-          doctor_id: doctor.get("id")
-        }
-      );
+          doctor_id: doctor.get("id"),
+        });
 
       let patientFeatureIds = [];
 
@@ -3645,8 +3641,8 @@ class DoctorController extends Controller {
         200,
         {
           feature_mappings: {
-            [patient_id]: patientFeatureIds
-          }
+            [patient_id]: patientFeatureIds,
+          },
         },
         "Video call permission updated successfully."
       );
@@ -3659,10 +3655,8 @@ class DoctorController extends Controller {
   getPaginatedDataForPatients = async (req, res) => {
     const { raiseSuccess, raiseClientError, raiseServerError } = this;
     try {
-      const {
-        userDetails: { userId, userRoleId = null } = {},
-        query = {}
-      } = req;
+      const { userDetails: { userId, userRoleId = null } = {}, query = {} } =
+        req;
 
       const {
         offset = 0,
@@ -3672,7 +3666,7 @@ class DoctorController extends Controller {
         created_at_order = 1,
         searchTreatmentText = "",
         searchDisagnosisType = "",
-        seachDiagnosisText = ""
+        seachDiagnosisText = "",
       } = query || {};
 
       Logger.debug("783425462354725436211", { query });
@@ -3683,7 +3677,7 @@ class DoctorController extends Controller {
       const endLimit = parseInt(limit, 10);
 
       const doctor = await doctorService.getDoctorByData({
-        user_id: userId
+        user_id: userId,
       });
 
       const getWatchListPatients = parseInt(watchlist, 10) === 0 ? 0 : 1;
@@ -3703,9 +3697,10 @@ class DoctorController extends Controller {
         doctorId = doctorData.getDoctorId();
 
         const doctorAllInfo = await doctorData.getAllInfo();
-        const watchlistRecords = await doctorPatientWatchlistService.getAllByData(
-          { user_role_id: userRoleId }
-        );
+        const watchlistRecords =
+          await doctorPatientWatchlistService.getAllByData({
+            user_role_id: userRoleId,
+          });
         if (watchlistRecords && watchlistRecords.length) {
           for (let i = 0; i < watchlistRecords.length; i++) {
             const watchlistWrapper = await DoctorPatientWatchlistWrapper(
@@ -3719,11 +3714,11 @@ class DoctorController extends Controller {
 
       const {
         count: careplansCount = 0,
-        rows: careplanAsSecondaryDoctor = []
+        rows: careplanAsSecondaryDoctor = [],
       } = await careplanSecondaryDoctorMappingService.findAndCountAll({
         where: {
-          secondary_doctor_role_id: userRoleId
-        }
+          secondary_doctor_role_id: userRoleId,
+        },
       });
 
       let careplanIdsAsSecondaryDoctor = [];
@@ -3759,7 +3754,7 @@ class DoctorController extends Controller {
           watchlist: getWatchListPatients,
           sortByName,
           createdAtOrder,
-          nameOrder
+          nameOrder,
         };
 
         let matchingTreatmentIds = [];
@@ -3791,9 +3786,10 @@ class DoctorController extends Controller {
         }
 
         if (seachDiagnosisText) {
-          careplansForDiagnosisDesc = await carePlanService.searchDiagnosisDescription(
-            seachDiagnosisText
-          );
+          careplansForDiagnosisDesc =
+            await carePlanService.searchDiagnosisDescription(
+              seachDiagnosisText
+            );
         }
 
         if (treatmentIds.length > 0) {
@@ -3822,12 +3818,12 @@ class DoctorController extends Controller {
 
         const allPatients = await carePlanService.getPaginatedDataOfPatients({
           ...data,
-          secondary_careplan_ids
+          secondary_careplan_ids,
         });
 
         console.log("35732432542730078783246722223 ======>>>>> ", {
           allPatients,
-          crIdsForMatchingTreatmentType
+          crIdsForMatchingTreatmentType,
         });
 
         for (const patient of allPatients) {
@@ -3877,7 +3873,7 @@ class DoctorController extends Controller {
           const { profile_pic } = details;
           const updatedDetails = {
             ...details,
-            profile_pic: profile_pic ? completePath(profile_pic) : null
+            profile_pic: profile_pic ? completePath(profile_pic) : null,
           };
 
           if (watchlistPatientIds.indexOf(id) !== -1) {
@@ -3887,7 +3883,7 @@ class DoctorController extends Controller {
           paginatedPatientData[id] = {
             ...formattedPatientData,
             watchlist,
-            details: updatedDetails
+            details: updatedDetails,
           };
           const patientWrapper = await PatientWrapper(null, id);
           patients[id] = await patientWrapper.getAllInfo();
@@ -3902,7 +3898,7 @@ class DoctorController extends Controller {
           page_size: limit,
           patient_ids: patientIds,
           paginated_patients_data: paginatedPatientData,
-          patients
+          patients,
         },
         "Patients data fetched successfully."
       );
@@ -3918,7 +3914,7 @@ class DoctorController extends Controller {
       const {
         query: { email = null } = {},
         userDetails: { userId: user_id, userRoleId } = {},
-        body = {}
+        body = {},
       } = req;
 
       const matchingUsers = await userService.searchMail(email);
@@ -3935,7 +3931,7 @@ class DoctorController extends Controller {
           const matchingDoctor =
             (await doctorService.findOne({
               where: { user_id: userId },
-              attributes: ["id"]
+              attributes: ["id"],
             })) || null;
 
           if (matchingDoctor) {
@@ -3946,9 +3942,8 @@ class DoctorController extends Controller {
             doctors[doctorId] = await doctorData.getAllInfo();
             const userRole = await userRolesService.getFirstUserRole(userId);
             const userRoleData = await UserRoleWrapper(userRole);
-            user_roles[
-              userRoleData.getId()
-            ] = await userRoleData.getBasicInfo();
+            user_roles[userRoleData.getId()] =
+              await userRoleData.getBasicInfo();
             emails[doctorId] = await userData.getEmail();
           }
         }
@@ -3960,7 +3955,7 @@ class DoctorController extends Controller {
             users,
             doctors,
             user_roles,
-            emails
+            emails,
           },
           "Matching Users found  successfully."
         );
@@ -3978,7 +3973,7 @@ class DoctorController extends Controller {
     try {
       const {
         query: { name: value = null } = {},
-        userDetails: { userRoleId } = {}
+        userDetails: { userRoleId } = {},
       } = req;
 
       const limit = process.config.DOCTOR_NAME_SEARCH_LIST_SIZE_LIMIT;
@@ -3997,7 +3992,7 @@ class DoctorController extends Controller {
           const userId = (await doctorWrapper.getUserId()) || null;
           const userWrapper = await UserWrapper(null, userId);
           const allUserRolesForDoctor = await userRolesService.getAllByData({
-            user_identity: userId
+            user_identity: userId,
           });
           for (let eachRole in allUserRolesForDoctor) {
             const userRole = allUserRolesForDoctor[eachRole] || {};
@@ -4011,8 +4006,8 @@ class DoctorController extends Controller {
               const providerWrapper = await ProviderWrapper(null, linked_id);
               providers = {
                 [providerWrapper.getProviderId()]: {
-                  ...providerWrapper.getBasicInfo()
-                }
+                  ...providerWrapper.getBasicInfo(),
+                },
               };
             }
             // userRoles={ ...userRoles, [userRoleWrapper.getId()]:{...userRoleWrapper.getBasicInfo()} };
@@ -4021,24 +4016,24 @@ class DoctorController extends Controller {
               doctor_id: doctorWrapper.getDoctorId(),
               user_id: userWrapper.getId(),
               user_role_id: userRoleWrapper.getId(),
-              provider_id: linked_id
+              provider_id: linked_id,
             });
 
             doctors = {
               ...doctors,
               [doctorWrapper.getDoctorId()]: {
-                ...(await doctorWrapper.getAllInfo())
-              }
+                ...(await doctorWrapper.getAllInfo()),
+              },
             };
 
             users = {
               ...users,
-              [userWrapper.getId()]: { ...userWrapper.getBasicInfo() }
+              [userWrapper.getId()]: { ...userWrapper.getBasicInfo() },
             };
 
             userRoles = {
               ...userRoles,
-              [userRoleWrapper.getId()]: { ...userRoleWrapper.getBasicInfo() }
+              [userRoleWrapper.getId()]: { ...userRoleWrapper.getBasicInfo() },
             };
           }
 
@@ -4066,7 +4061,7 @@ class DoctorController extends Controller {
             doctors,
             users,
             user_roles: userRoles,
-            providers
+            providers,
           },
           "Matching Doctors found  successfully."
         );

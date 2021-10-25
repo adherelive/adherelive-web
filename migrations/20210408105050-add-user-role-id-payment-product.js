@@ -10,7 +10,7 @@ module.exports = {
         "for_user_id",
         "for_user_role_id"
       ),
-      queryInterface.renameColumn(TABLE_NAME, "creator_id", "creator_role_id")
+      queryInterface.renameColumn(TABLE_NAME, "creator_id", "creator_role_id"),
     ]);
   },
 
@@ -21,7 +21,7 @@ module.exports = {
         "for_user_role_id",
         "for_user_id"
       ),
-      queryInterface.renameColumn(TABLE_NAME, "creator_role_id", "creator_id")
+      queryInterface.renameColumn(TABLE_NAME, "creator_role_id", "creator_id"),
     ]);
-  }
+  },
 };

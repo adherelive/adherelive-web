@@ -22,7 +22,7 @@ class AddVitals extends Component {
       disabledOk: true,
       fieldChanged: false,
       members: [],
-      submitting: false
+      submitting: false,
     };
     this.FormWrapper = Form.create({ onFieldsChange: this.onFormFieldChanges })(
       AddVitalsForm
@@ -31,13 +31,13 @@ class AddVitals extends Component {
 
   componentDidMount() {}
 
-  hasErrors = fieldsError => {
-    return Object.keys(fieldsError).some(field => fieldsError[field]);
+  hasErrors = (fieldsError) => {
+    return Object.keys(fieldsError).some((field) => fieldsError[field]);
   };
 
   onFormFieldChanges = (props, allvalues) => {
     const {
-      form: { getFieldsError, isFieldsTouched }
+      form: { getFieldsError, isFieldsTouched },
     } = props;
     const isError = this.hasErrors(getFieldsError());
     const { disabledOk } = this.state;
@@ -46,7 +46,7 @@ class AddVitals extends Component {
     }
   };
 
-  handleCancel = e => {
+  handleCancel = (e) => {
     if (e) {
       e.preventDefault();
     }
@@ -54,9 +54,9 @@ class AddVitals extends Component {
     close();
   };
 
-  formatMessage = data => this.props.intl.formatMessage(data);
+  formatMessage = (data) => this.props.intl.formatMessage(data);
 
-  setFormRef = formRef => {
+  setFormRef = (formRef) => {
     this.formRef = formRef;
     if (formRef) {
       this.setState({ formRef: true });
@@ -74,8 +74,8 @@ class AddVitals extends Component {
     const { formRef = {}, formatMessage } = this;
     const {
       props: {
-        form: { validateFields }
-      }
+        form: { validateFields },
+      },
     } = formRef;
 
     validateFields(async (err, values) => {
@@ -98,19 +98,19 @@ class AddVitals extends Component {
               ? startDate.clone().format()
               : startDate,
           [endDateField.field_name]:
-            endDate && endDate !== null ? endDate.clone().format() : endDate
+            endDate && endDate !== null ? endDate.clone().format() : endDate,
         };
 
         if (repeatDays) {
           data_to_submit = {
             ...data_to_submit,
-            [repeatDaysField.field_name]: repeatDays
+            [repeatDaysField.field_name]: repeatDays,
           };
         }
         if (description) {
           data_to_submit = {
             ...data_to_submit,
-            description
+            description,
           };
         }
         if (
@@ -152,7 +152,7 @@ class AddVitals extends Component {
     const {
       visible,
       loading = false,
-      intl: { formatMessage }
+      intl: { formatMessage },
     } = this.props;
     const { onClose, setFormRef, FormWrapper, handleSubmit } = this;
     const { disabledSubmit, submitting = false } = this.state;
@@ -170,7 +170,7 @@ class AddVitals extends Component {
           headerStyle={{
             position: "sticky",
             zIndex: "9999",
-            top: "0px"
+            top: "0px",
           }}
           width={"35%"}
           onClose={onClose}

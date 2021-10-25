@@ -3,25 +3,25 @@ import AgoraVideo from "../../Components/ChatFullScreen/agoraVideo";
 import {
   fetchVideoAccessToken,
   startCall,
-  missedCall
+  missedCall,
 } from "../../modules/agora";
 
-const mapStateToProps = state => {
+const mapStateToProps = (state) => {
   const {
     agora = {},
     users = {},
     auth = {},
     patients = {},
-    doctors = {}
+    doctors = {},
   } = state;
   return { agora, users, auth, patients, doctors };
 };
 
-const mapDispatchToProps = dispatch => {
+const mapDispatchToProps = (dispatch) => {
   return {
-    fetchVideoAccessToken: userId => dispatch(fetchVideoAccessToken(userId)),
-    startCall: roomId => () => dispatch(startCall(roomId)),
-    missedCall: roomId => () => dispatch(missedCall(roomId))
+    fetchVideoAccessToken: (userId) => dispatch(fetchVideoAccessToken(userId)),
+    startCall: (roomId) => () => dispatch(startCall(roomId)),
+    missedCall: (roomId) => () => dispatch(missedCall(roomId)),
   };
 };
 
@@ -41,7 +41,7 @@ const mergeProps = (stateProps, dispatchProps, ownProps) => {
     fetchVideoAccessToken,
     room_id,
     startCall: startCall(room_id),
-    missedCall: missedCall(room_id)
+    missedCall: missedCall(room_id),
   };
 };
 

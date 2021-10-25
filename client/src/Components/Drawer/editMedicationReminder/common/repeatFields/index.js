@@ -12,10 +12,10 @@ import moment from "moment";
 const RadioButton = Radio.Button;
 const RadioGroup = Radio.Group;
 
-export default props => {
+export default (props) => {
   const {
     form: { getFieldValue },
-    payload: { canViewDetails = false } = {}
+    payload: { canViewDetails = false } = {},
   } = props;
   let start = getFieldValue(startDate.field_name);
   let end = getFieldValue(endDate.field_name);

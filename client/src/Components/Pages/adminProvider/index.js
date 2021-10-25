@@ -19,11 +19,11 @@ class AdminProviderViewPage extends Component {
     openAddProviderDrawer();
   };
 
-  formatMessage = data => this.props.intl.formatMessage(data);
+  formatMessage = (data) => this.props.intl.formatMessage(data);
 
   hideUpdateProviderVisible = () => {
     this.setState({
-      updateProviderVisible: false
+      updateProviderVisible: false,
     });
   };
 

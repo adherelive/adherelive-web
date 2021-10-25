@@ -16,7 +16,7 @@ export const validationError = (res, isValid) => {
 export const raiseClientError = (res, code = 422, error = {}, message) => {
   const payload = {
     code,
-    error
+    error,
   };
 
   const response = new Response(false, payload.code);

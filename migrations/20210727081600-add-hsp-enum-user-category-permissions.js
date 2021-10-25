@@ -13,8 +13,8 @@ module.exports = {
         USER_CATEGORY.PATIENT,
         USER_CATEGORY.PROVIDER,
         USER_CATEGORY.ADMIN,
-        USER_CATEGORY.CARE_TAKER
-      ]
+        USER_CATEGORY.CARE_TAKER,
+      ],
     });
   },
 
@@ -26,8 +26,8 @@ module.exports = {
         USER_CATEGORY.PATIENT,
         USER_CATEGORY.PROVIDER,
         USER_CATEGORY.ADMIN,
-        USER_CATEGORY.CARE_TAKER
-      ]
+        USER_CATEGORY.CARE_TAKER,
+      ],
     });
-  }
+  },
 };

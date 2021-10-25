@@ -5,7 +5,7 @@ function searchExerciseDetaisReducer(state, data) {
   let { exercises = {}, exercise_details = {} } = data || {};
   if (exercises && exercise_details) {
     return {
-      ...exercise_details
+      ...exercise_details,
     };
   } else {
     return state;
@@ -17,7 +17,7 @@ function addedNewExerciseReducer(state, data) {
   if (exercises && exercise_details) {
     return {
       ...state,
-      ...exercise_details
+      ...exercise_details,
     };
   } else {
     return state;

@@ -22,19 +22,19 @@ class DietResponseWrapper extends BaseDietResponse {
       document_uploaded,
       response_text,
       other_details,
-      updatedAt
+      updatedAt,
     } = _data;
     return {
       basic_info: {
         id,
         diet_id,
-        schedule_event_id
+        schedule_event_id,
       },
       status,
       document_uploaded,
       response_text,
       other_details,
-      updated_at: updatedAt
+      updated_at: updatedAt,
     };
   };
 
@@ -46,7 +46,7 @@ class DietResponseWrapper extends BaseDietResponse {
       const allDocuments =
         (await uploadDocumentsService.getAllByData({
           parent_id: getId(),
-          parent_type: DOCUMENT_PARENT_TYPE.DIET_RESPONSE
+          parent_type: DOCUMENT_PARENT_TYPE.DIET_RESPONSE,
         })) || [];
 
       for (let index = 0; index < allDocuments.length; index++) {
@@ -57,7 +57,7 @@ class DietResponseWrapper extends BaseDietResponse {
 
     return {
       ...getBasicInfo(),
-      upload_document_ids: allDocumentIds
+      upload_document_ids: allDocumentIds,
     };
   };
 
@@ -68,7 +68,7 @@ class DietResponseWrapper extends BaseDietResponse {
     if (getScheduleEventId()) {
       const schduleEventRecord = await scheduleEventService.getEventByData({
         paranoid: false,
-        id: getScheduleEventId()
+        id: getScheduleEventId(),
       });
       if (schduleEventRecord) {
         const scheduleEvent = await EventWrapper(schduleEventRecord);
@@ -81,24 +81,23 @@ class DietResponseWrapper extends BaseDietResponse {
       const allDocuments =
         (await uploadDocumentsService.getAllByData({
           parent_id: getId(),
-          parent_type: DOCUMENT_PARENT_TYPE.DIET_RESPONSE
+          parent_type: DOCUMENT_PARENT_TYPE.DIET_RESPONSE,
         })) || [];
 
       for (let index = 0; index < allDocuments.length; index++) {
         const document = await DocumentWrapper(allDocuments[index]);
-        allUploadDocuments[
-          document.getUploadDocumentId()
-        ] = document.getBasicInfo();
+        allUploadDocuments[document.getUploadDocumentId()] =
+          document.getBasicInfo();
       }
     }
 
     return {
       diet_responses: {
-        [getId()]: await getAllInfo()
+        [getId()]: await getAllInfo(),
       },
       upload_documents: allUploadDocuments,
       schedule_events: scheduleEventData,
-      diet_response_id: getId()
+      diet_response_id: getId(),
     };
   };
 }

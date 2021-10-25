@@ -17,7 +17,7 @@ import CarePlanTemplateWrapper from "../../../ApiWrapper/mobile/carePlanTemplate
 import {
   TEMPLATE_DUPLICATE_TEXT,
   USER_CATEGORY,
-  EVENT_LONG_TERM_VALUE
+  EVENT_LONG_TERM_VALUE,
 } from "../../../../constant";
 
 import PERMISSIONS from "../../../../config/permissions";
@@ -37,9 +37,9 @@ class CarePlanTemplateController extends Controller {
         userDetails: {
           userId,
           userData: { category } = {},
-          userCategoryId
+          userCategoryId,
         } = {},
-        permissions = []
+        permissions = [],
       } = req;
 
       const {
@@ -48,7 +48,7 @@ class CarePlanTemplateController extends Controller {
         vitalsData,
         dietData = [],
         workoutData = [],
-        name
+        name,
       } = body || {};
 
       Log.info(`name : ${name}`);
@@ -68,7 +68,7 @@ class CarePlanTemplateController extends Controller {
       const existingTemplate =
         (await carePlanTemplateService.getSingleTemplateByData({
           name,
-          user_id: userId
+          user_id: userId,
         })) || null;
 
       if (!existingTemplate) {
@@ -78,11 +78,11 @@ class CarePlanTemplateController extends Controller {
             user_id: userId,
             template_appointments: appointmentsData,
             ...(permissions.includes(PERMISSIONS.MEDICATIONS.TEMPLATE) && {
-              template_medications: medicationsData
+              template_medications: medicationsData,
             }),
             template_vitals: vitalsData,
             template_diets: dietData,
-            template_workouts: workoutData
+            template_workouts: workoutData,
           })) || null;
 
         Log.debug("createTemplate value", createTemplate);
@@ -92,7 +92,7 @@ class CarePlanTemplateController extends Controller {
 
           const allCareplanTemplates =
             (await carePlanTemplateService.getAllTemplatesForDoctor({
-              user_id: userId
+              user_id: userId,
             })) || [];
 
           let carePlanTemplateIds = [];
@@ -107,9 +107,8 @@ class CarePlanTemplateController extends Controller {
             }
           }
 
-          const {
-            exercises: allExercises = {}
-          } = await template.getReferenceInfo();
+          const { exercises: allExercises = {} } =
+            await template.getReferenceInfo();
           console.log("8163812638162837612873618273712381", { allExercises });
 
           let exerciseContentData = {};
@@ -122,17 +121,16 @@ class CarePlanTemplateController extends Controller {
               (await exerciseContentService.findOne({
                 exercise_id: id,
                 creator_id: userCategoryId,
-                creator_type: category
+                creator_type: category,
               })) || null;
 
             if (exerciseContentExists) {
               const exerciseContentWrapper = await ExerciseContentWrapper({
                 exercise_id: id,
-                auth: { creator_id: userCategoryId, creator_type: category }
+                auth: { creator_id: userCategoryId, creator_type: category },
               });
-              exerciseContentData[
-                exerciseContentWrapper.getId()
-              ] = exerciseContentWrapper.getBasicInfo();
+              exerciseContentData[exerciseContentWrapper.getId()] =
+                exerciseContentWrapper.getBasicInfo();
             }
           }
 
@@ -142,7 +140,7 @@ class CarePlanTemplateController extends Controller {
             {
               ...(await template.getReferenceInfo()),
               care_plan_template_ids: carePlanTemplateIds,
-              exercise_contents: exerciseContentData
+              exercise_contents: exerciseContentData,
             },
             "Template created successfully"
           );
@@ -170,14 +168,14 @@ class CarePlanTemplateController extends Controller {
         userDetails: {
           userId,
           userData: { category } = {},
-          userCategoryId
+          userCategoryId,
         } = {},
-        permissions = []
+        permissions = [],
       } = req;
 
       const allCareplanTemplates =
         (await carePlanTemplateService.getAllTemplatesForDoctor({
-          user_id: userId
+          user_id: userId,
         })) || [];
 
       let carePlanTemplate = {};
@@ -218,7 +216,7 @@ class CarePlanTemplateController extends Controller {
             template_workouts,
             exercise_details,
             exercises,
-            repetitions
+            repetitions,
           } = await template.getReferenceInfo();
 
           carePlanTemplate = { ...carePlanTemplate, ...care_plan_templates };
@@ -226,13 +224,13 @@ class CarePlanTemplateController extends Controller {
 
           templateAppointment = {
             ...templateAppointment,
-            ...template_appointments
+            ...template_appointments,
           };
 
           if (permissions.includes(PERMISSIONS.MEDICATIONS.TEMPLATE)) {
             templateMedication = {
               ...templateMedication,
-              ...template_medications
+              ...template_medications,
             };
           }
 
@@ -251,7 +249,7 @@ class CarePlanTemplateController extends Controller {
 
           allTemplateWorkouts = {
             ...allTemplateWorkouts,
-            ...template_workouts
+            ...template_workouts,
           };
           allExercises = { ...allExercises, ...exercises };
           allExerciseDetails = { ...allExerciseDetails, ...exercise_details };
@@ -268,17 +266,16 @@ class CarePlanTemplateController extends Controller {
             (await exerciseContentService.findOne({
               exercise_id: id,
               creator_id: userCategoryId,
-              creator_type: category
+              creator_type: category,
             })) || null;
 
           if (exerciseContentExists) {
             const exerciseContentWrapper = await ExerciseContentWrapper({
               exercise_id: id,
-              auth: { creator_id: userCategoryId, creator_type: category }
+              auth: { creator_id: userCategoryId, creator_type: category },
             });
-            exerciseContentData[
-              exerciseContentWrapper.getId()
-            ] = exerciseContentWrapper.getBasicInfo();
+            exerciseContentData[exerciseContentWrapper.getId()] =
+              exerciseContentWrapper.getBasicInfo();
           }
         }
 
@@ -287,18 +284,18 @@ class CarePlanTemplateController extends Controller {
           200,
           {
             care_plan_templates: {
-              ...carePlanTemplate
+              ...carePlanTemplate,
             },
             template_appointments: {
-              ...templateAppointment
+              ...templateAppointment,
             },
             ...(permissions.includes(PERMISSIONS.MEDICATIONS.TEMPLATE) && {
               template_medications: {
-                ...templateMedication
-              }
+                ...templateMedication,
+              },
             }),
             template_vitals: {
-              ...templateVital
+              ...templateVital,
             },
             template_diets: allTemplateDiets,
             food_items: allFoodItems,
@@ -312,14 +309,14 @@ class CarePlanTemplateController extends Controller {
             repetitions: allRepetitions,
 
             vital_templates: {
-              ...vitalTemplates
+              ...vitalTemplates,
             },
             ...(permissions.includes(PERMISSIONS.MEDICATIONS.TEMPLATE) && {
               medicines: {
-                ...medicineData
-              }
+                ...medicineData,
+              },
             }),
-            care_plan_template_ids: carePlanTemplateIds
+            care_plan_template_ids: carePlanTemplateIds,
           },
           "Templates fetched successfully"
         );
@@ -340,9 +337,9 @@ class CarePlanTemplateController extends Controller {
         userDetails: {
           userId,
           userData: { category } = {},
-          userCategoryId
+          userCategoryId,
         } = {},
-        permissions = []
+        permissions = [],
       } = req;
 
       Log.info(`careplan template id to duplicate : ${id}`);
@@ -367,7 +364,7 @@ class CarePlanTemplateController extends Controller {
           template_medications,
           template_appointments,
           template_diets,
-          template_workouts
+          template_workouts,
         } = await template.getReferenceInfo();
 
         const {
@@ -376,11 +373,11 @@ class CarePlanTemplateController extends Controller {
           template_medication_ids,
           template_vital_ids,
           template_diet_ids,
-          template_workout_ids
+          template_workout_ids,
         } = care_plan_templates[template.getCarePlanTemplateId()] || {};
 
         // appointments
-        const appointmentData = template_appointment_ids.map(id => {
+        const appointmentData = template_appointment_ids.map((id) => {
           const { reason, time_gap, details, provider_id, provider_name } =
             template_appointments[id] || {};
 
@@ -389,7 +386,7 @@ class CarePlanTemplateController extends Controller {
             time_gap,
             details,
             provider_id,
-            provider_name
+            provider_name,
           };
         });
 
@@ -397,57 +394,57 @@ class CarePlanTemplateController extends Controller {
         let medicationData = {};
 
         if (permissions.includes(PERMISSIONS.MEDICATIONS.TEMPLATE)) {
-          medicationData = template_medication_ids.map(id => {
+          medicationData = template_medication_ids.map((id) => {
             const {
               basic_info: { medicine_id },
-              schedule_data
+              schedule_data,
             } = template_medications[id] || {};
 
             return {
               medicine_id,
-              schedule_data
+              schedule_data,
             };
           });
         }
 
         // vitals (ACTIONS)
-        const vitalData = template_vital_ids.map(id => {
+        const vitalData = template_vital_ids.map((id) => {
           const {
             basic_info: { vital_template_id },
-            details
+            details,
           } = template_vitals[id] || {};
 
           return {
             vital_template_id,
-            details
+            details,
           };
         });
 
         // diets
-        const dietData = template_diet_ids.map(id => {
+        const dietData = template_diet_ids.map((id) => {
           const {
             basic_info: { name },
             total_calories,
             duration,
-            details
+            details,
           } = template_diets[id] || {};
 
           return {
             name: `${name} Copy`,
             total_calories,
             duration,
-            details
+            details,
           };
         });
 
         // workouts
-        const workoutData = template_workout_ids.map(id => {
+        const workoutData = template_workout_ids.map((id) => {
           const {
             basic_info: { name },
             total_calories,
             duration,
             time,
-            details
+            details,
           } = template_workouts[id] || {};
 
           return {
@@ -455,7 +452,7 @@ class CarePlanTemplateController extends Controller {
             total_calories,
             duration,
             time,
-            details
+            details,
           };
         });
 
@@ -469,18 +466,18 @@ class CarePlanTemplateController extends Controller {
           user_id: userId,
           template_appointments: appointmentData,
           ...(permissions.includes(PERMISSIONS.MEDICATIONS.TEMPLATE) && {
-            template_medications: medicationData
+            template_medications: medicationData,
           }),
           template_vitals: vitalData,
           template_diets: dietData,
-          template_workouts: workoutData
+          template_workouts: workoutData,
         };
 
         // check for existing template names
         const existingTemplate =
           (await carePlanTemplateService.getSingleTemplateByData({
             name: duplicateName,
-            user_id: userId
+            user_id: userId,
           })) || null;
 
         let isDuplicate = false;
@@ -504,7 +501,7 @@ class CarePlanTemplateController extends Controller {
 
           const allCareplanTemplates =
             (await carePlanTemplateService.getAllTemplatesForDoctor({
-              user_id: userId
+              user_id: userId,
             })) || [];
 
           let carePlanTemplateIds = [];
@@ -522,9 +519,8 @@ class CarePlanTemplateController extends Controller {
           //<<---------------------
 
           let exerciseContentData = {};
-          const {
-            exercises: allExercises = {}
-          } = await carePlanTemplate.getReferenceInfo();
+          const { exercises: allExercises = {} } =
+            await carePlanTemplate.getReferenceInfo();
 
           const exerciseContentService = new ExerciseContentService();
 
@@ -535,17 +531,16 @@ class CarePlanTemplateController extends Controller {
               (await exerciseContentService.findOne({
                 exercise_id: id,
                 creator_id: userCategoryId,
-                creator_type: category
+                creator_type: category,
               })) || null;
 
             if (exerciseContentExists) {
               const exerciseContentWrapper = await ExerciseContentWrapper({
                 exercise_id: id,
-                auth: { creator_id: userCategoryId, creator_type: category }
+                auth: { creator_id: userCategoryId, creator_type: category },
               });
-              exerciseContentData[
-                exerciseContentWrapper.getId()
-              ] = exerciseContentWrapper.getBasicInfo();
+              exerciseContentData[exerciseContentWrapper.getId()] =
+                exerciseContentWrapper.getBasicInfo();
             }
           }
 
@@ -555,7 +550,7 @@ class CarePlanTemplateController extends Controller {
             {
               ...(await carePlanTemplate.getReferenceInfo()),
               care_plan_template_ids: carePlanTemplateIds,
-              exercise_contents: exerciseContentData
+              exercise_contents: exerciseContentData,
             },
             "Template duplicate successfully"
           );
@@ -587,7 +582,7 @@ class CarePlanTemplateController extends Controller {
       const {
         params: { id: careplanTemplateId } = {},
         body = {},
-        permissions = []
+        permissions = [],
       } = req;
       Log.info(`careplan template id : ${careplanTemplateId}`);
       Log.debug("request body", body);
@@ -596,8 +591,8 @@ class CarePlanTemplateController extends Controller {
         userDetails: {
           userId,
           userData: { category } = {},
-          userCategoryId
-        } = {}
+          userCategoryId,
+        } = {},
       } = req;
 
       if (!careplanTemplateId) {
@@ -615,7 +610,7 @@ class CarePlanTemplateController extends Controller {
         vitalsData,
         dietData,
         workoutData,
-        name
+        name,
       } = body;
 
       if (
@@ -634,7 +629,7 @@ class CarePlanTemplateController extends Controller {
       const existingTemplate =
         (await carePlanTemplateService.getSingleTemplateByData({
           name,
-          user_id: userId
+          user_id: userId,
         })) || null;
 
       let isDuplicate = false;
@@ -650,7 +645,7 @@ class CarePlanTemplateController extends Controller {
         const updateTemplate =
           (await carePlanTemplateService.update(
             {
-              name
+              name,
             },
             careplanTemplateId
           )) || null;
@@ -666,7 +661,7 @@ class CarePlanTemplateController extends Controller {
               // create
               await templateAppointmentService.addTemplateAppointment({
                 ...rest,
-                care_plan_template_id: careplanTemplateId
+                care_plan_template_id: careplanTemplateId,
               });
             }
           }
@@ -686,7 +681,7 @@ class CarePlanTemplateController extends Controller {
               // create
               await templateMedicationService.addTemplateMedication({
                 ...rest,
-                care_plan_template_id: careplanTemplateId
+                care_plan_template_id: careplanTemplateId,
               });
             }
           }
@@ -704,7 +699,7 @@ class CarePlanTemplateController extends Controller {
               // create
               await templateVitalService.create({
                 ...rest,
-                care_plan_template_id: careplanTemplateId
+                care_plan_template_id: careplanTemplateId,
               });
             }
           }
@@ -714,8 +709,12 @@ class CarePlanTemplateController extends Controller {
         if (dietData.length > 0) {
           const templateDietService = new TemplateDietService();
           for (let index = 0; index < dietData.length; index++) {
-            const { id = null, start_date, end_date, ...rest } =
-              dietData[index] || {};
+            const {
+              id = null,
+              start_date,
+              end_date,
+              ...rest
+            } = dietData[index] || {};
 
             if (id) {
               // update
@@ -724,7 +723,7 @@ class CarePlanTemplateController extends Controller {
               // create
               await templateDietService.create({
                 ...rest,
-                care_plan_template_id: careplanTemplateId
+                care_plan_template_id: careplanTemplateId,
               });
             }
           }
@@ -734,8 +733,12 @@ class CarePlanTemplateController extends Controller {
         if (workoutData.length > 0) {
           const templateWorkoutService = new TemplateWorkoutService();
           for (let index = 0; index < workoutData.length; index++) {
-            const { id = null, start_date, end_date, ...rest } =
-              workoutData[index] || {};
+            const {
+              id = null,
+              start_date,
+              end_date,
+              ...rest
+            } = workoutData[index] || {};
 
             if (id) {
               // update
@@ -744,7 +747,7 @@ class CarePlanTemplateController extends Controller {
               // create
               await templateWorkoutService.create({
                 ...rest,
-                care_plan_template_id: careplanTemplateId
+                care_plan_template_id: careplanTemplateId,
               });
             }
           }
@@ -759,9 +762,8 @@ class CarePlanTemplateController extends Controller {
           );
 
           let exerciseContentData = {};
-          const {
-            exercises: allExercises = {}
-          } = await template.getReferenceInfo();
+          const { exercises: allExercises = {} } =
+            await template.getReferenceInfo();
 
           const exerciseContentService = new ExerciseContentService();
 
@@ -772,17 +774,16 @@ class CarePlanTemplateController extends Controller {
               (await exerciseContentService.findOne({
                 exercise_id: id,
                 creator_id: userCategoryId,
-                creator_type: category
+                creator_type: category,
               })) || null;
 
             if (exerciseContentExists) {
               const exerciseContentWrapper = await ExerciseContentWrapper({
                 exercise_id: id,
-                auth: { creator_id: userCategoryId, creator_type: category }
+                auth: { creator_id: userCategoryId, creator_type: category },
               });
-              exerciseContentData[
-                exerciseContentWrapper.getId()
-              ] = exerciseContentWrapper.getBasicInfo();
+              exerciseContentData[exerciseContentWrapper.getId()] =
+                exerciseContentWrapper.getBasicInfo();
             }
           }
 
@@ -791,7 +792,7 @@ class CarePlanTemplateController extends Controller {
             200,
             {
               ...(await template.getReferenceInfo()),
-              exercise_contents: exerciseContentData
+              exercise_contents: exerciseContentData,
             },
             "Template updated successfully"
           );
@@ -827,9 +828,9 @@ class CarePlanTemplateController extends Controller {
           medication = null,
           vital = null,
           diet = null,
-          workout = null
+          workout = null,
         } = {},
-        permissions = []
+        permissions = [],
       } = req;
 
       Log.info(
@@ -850,7 +851,7 @@ class CarePlanTemplateController extends Controller {
         // appointment
         if (appointment) {
           await templateAppointmentService.deleteAppointment({
-            id: appointment
+            id: appointment,
           });
         }
 
@@ -860,62 +861,62 @@ class CarePlanTemplateController extends Controller {
           medication
         ) {
           await templateMedicationService.deleteMedication({
-            id: medication
+            id: medication,
           });
         }
 
         // vital
         if (vital) {
           await templateVitalService.deleteVital({
-            id: vital
+            id: vital,
           });
         }
 
         // diet
         if (diet) {
           await templateDietService.delete({
-            id: diet
+            id: diet,
           });
         }
 
         // workout
         if (workout) {
           await templateWorkoutService.delete({
-            id: workout
+            id: workout,
           });
         }
 
         const updatedTemplate = await CarePlanTemplateWrapper(null, id);
         templateData = {
           ...templateData,
-          ...(await updatedTemplate.getReferenceInfo())
+          ...(await updatedTemplate.getReferenceInfo()),
         };
       } else {
         // delete template
 
         await carePlanTemplateService.deleteTemplate({
-          id
+          id,
         });
 
         // delete all other templates attached to template id
         await templateAppointmentService.deleteAppointment({
-          care_plan_template_id: id
+          care_plan_template_id: id,
         });
 
         await templateMedicationService.deleteMedication({
-          care_plan_template_id: id
+          care_plan_template_id: id,
         });
 
         await templateVitalService.deleteVital({
-          care_plan_template_id: id
+          care_plan_template_id: id,
         });
 
         await templateDietService.delete({
-          care_plan_template_id: id
+          care_plan_template_id: id,
         });
 
         await templateWorkoutService.delete({
-          care_plan_template_id: id
+          care_plan_template_id: id,
         });
       }
 
@@ -923,7 +924,7 @@ class CarePlanTemplateController extends Controller {
         res,
         200,
         {
-          ...templateData
+          ...templateData,
         },
         "Template related details deleted successfully"
       );

@@ -28,7 +28,7 @@ export default class WorkoutService {
         total_calories,
         details,
         time,
-        workout_exercise_groups = []
+        workout_exercise_groups = [],
       } = workoutData || {};
       // data for workout
       const workout = await Database.getModel(TABLE_NAME).create(
@@ -39,10 +39,10 @@ export default class WorkoutService {
           end_date,
           total_calories,
           details,
-          time
+          time,
         },
         {
-          transaction
+          transaction,
         }
       );
 
@@ -55,7 +55,7 @@ export default class WorkoutService {
         const {
           sets,
           exercise_detail_id,
-          notes
+          notes,
           // similar = [],
         } = currentExerciseCollection || {};
 
@@ -66,10 +66,10 @@ export default class WorkoutService {
           {
             sets,
             exercise_detail_id,
-            details: { notes }
+            details: { notes },
           },
           {
-            transaction
+            transaction,
           }
         );
 
@@ -78,10 +78,10 @@ export default class WorkoutService {
           {
             // time,
             workout_id,
-            exercise_group_id: exerciseGroup.id
+            exercise_group_id: exerciseGroup.id,
           },
           {
-            transaction
+            transaction,
           }
         )) || null;
       }
@@ -111,17 +111,17 @@ export default class WorkoutService {
       await Database.getModel(workoutExerciseGroupMappingTableName).destroy({
         where: {
           workout_id,
-          exercise_group_id: delete_exercise_group_ids
+          exercise_group_id: delete_exercise_group_ids,
         },
-        transaction
+        transaction,
       });
 
       // delete exercise groups
       await Database.getModel(exerciseGroupTableName).destroy({
         where: {
-          id: delete_exercise_group_ids
+          id: delete_exercise_group_ids,
         },
-        transaction
+        transaction,
       });
 
       for (let index = 0; index < workout_exercise_groups.length; index++) {
@@ -129,7 +129,7 @@ export default class WorkoutService {
           exercise_group_id = null,
           sets,
           exercise_detail_id,
-          notes
+          notes,
         } = workout_exercise_groups[index];
 
         if (exercise_group_id) {
@@ -138,11 +138,11 @@ export default class WorkoutService {
             {
               sets,
               exercise_detail_id,
-              details: { notes }
+              details: { notes },
             },
             {
               where: { id: exercise_group_id },
-              transaction
+              transaction,
             }
           );
 
@@ -165,10 +165,10 @@ export default class WorkoutService {
             {
               sets,
               exercise_detail_id,
-              details: { notes }
+              details: { notes },
             },
             {
-              transaction
+              transaction,
             }
           );
 
@@ -176,10 +176,10 @@ export default class WorkoutService {
             {
               // time,
               workout_id,
-              exercise_group_id: exerciseGroup.id
+              exercise_group_id: exerciseGroup.id,
             },
             {
-              transaction
+              transaction,
             }
           );
         }
@@ -188,7 +188,7 @@ export default class WorkoutService {
       // workout update
       await Database.getModel(TABLE_NAME).update(workoutData, {
         where: { id: workout_id },
-        transaction
+        transaction,
       });
       await transaction.commit();
       return true;
@@ -243,18 +243,18 @@ export default class WorkoutService {
       await Database.getModel(scheduleEventTableName).destroy({
         where: {
           event_id: id,
-          event_type: EVENT_TYPE.WORKOUT
+          event_type: EVENT_TYPE.WORKOUT,
         },
-        transaction
+        transaction,
       });
 
       await Database.getModel(TABLE_NAME).update(
         { expired_on: moment() },
         {
           where: {
-            id
+            id,
           },
-          transaction
+          transaction,
         }
       );
 
@@ -279,7 +279,7 @@ export default class WorkoutService {
         { workout_id, total_calories },
         {
           where: { id: workout_id },
-          transaction
+          transaction,
         }
       );
       await transaction.commit();
@@ -290,7 +290,7 @@ export default class WorkoutService {
     }
   };
 
-  findOne = async data => {
+  findOne = async (data) => {
     try {
       return await Database.getModel(TABLE_NAME).findOne({
         where: data,
@@ -302,12 +302,12 @@ export default class WorkoutService {
                 model: Database.getModel(exerciseDetailTableName),
                 include: [
                   Database.getModel(exerciseTableName),
-                  Database.getModel(repetitionTableName)
-                ]
-              }
-            ]
-          }
-        ]
+                  Database.getModel(repetitionTableName),
+                ],
+              },
+            ],
+          },
+        ],
       });
     } catch (error) {
       throw error;
@@ -328,12 +328,12 @@ export default class WorkoutService {
                 model: Database.getModel(exerciseDetailTableName),
                 include: [
                   Database.getModel(exerciseTableName),
-                  Database.getModel(repetitionTableName)
-                ]
-              }
-            ]
-          }
-        ]
+                  Database.getModel(repetitionTableName),
+                ],
+              },
+            ],
+          },
+        ],
       });
     } catch (error) {
       throw error;

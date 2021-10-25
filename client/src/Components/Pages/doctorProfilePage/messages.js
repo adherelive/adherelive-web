@@ -4,294 +4,294 @@ const messages = defineMessages({
   doctor_details_header_text: {
     id: "app.profile.doctors.details.header.text",
     description: "",
-    defaultMessage: "Doctor Details"
+    defaultMessage: "Doctor Details",
   },
   profile_details: {
     id: "app.profile.profile.details.header.text",
     description: "",
-    defaultMessage: "Profile Details"
+    defaultMessage: "Profile Details",
   },
   addSpeciality: {
     id: "app.profile.doctors.doctorProfileUpdate.addSpeciality",
     description: "",
-    defaultMessage: "Add Speciality"
+    defaultMessage: "Add Speciality",
   },
   cityError: {
     id: "app.profile.doctors.doctorProfileUpdate.cityError",
     description: "",
-    defaultMessage: "City cannot be empty."
+    defaultMessage: "City cannot be empty.",
   },
   clincLocationError: {
     id: "app.profile.doctors.doctorProfileUpdate.clincLocationError",
     description: "",
-    defaultMessage: "Clinic Location cannot be empty."
+    defaultMessage: "Clinic Location cannot be empty.",
   },
   nameError: {
     id: "app.profile.doctors.doctorProfileUpdate.nameError",
     description: "",
-    defaultMessage: "Name cannot be empty."
+    defaultMessage: "Name cannot be empty.",
   },
   clincNameError: {
     id: "app.profile.doctors.doctorProfileUpdate.clincNameError",
     description: "",
-    defaultMessage: "Clinic Name cannot be empty."
+    defaultMessage: "Clinic Name cannot be empty.",
   },
   registrationNumberError: {
     id: "app.profile.doctors.doctorProfileUpdate.registrationNumberError",
     description: "",
-    defaultMessage: "Registration Number cannot be empty."
+    defaultMessage: "Registration Number cannot be empty.",
   },
   somethingWentWrong: {
     id: "app.profile.doctors.doctorOnBoarding.somethingWentWrong",
     description: "",
-    defaultMessage: "Something went wrong."
+    defaultMessage: "Something went wrong.",
   },
   basic_details_text: {
     id: "app.profile.doctors.details.basic.details.text",
     description: "",
-    defaultMessage: "Basic Details"
+    defaultMessage: "Basic Details",
   },
   timings: {
     id: "app.profile.doctors.doctorOnBoarding.timings",
     description: "",
-    defaultMessage: "Timings"
+    defaultMessage: "Timings",
   },
   closed: {
     id: "app.profile.doctorsdoctorOnBoarding.closed",
     description: "",
-    defaultMessage: "Closed"
+    defaultMessage: "Closed",
   },
   profile_pic_text: {
     id: "app.profile.doctors.details.profile.pic.text",
     description: "",
-    defaultMessage: "Profile Picture"
+    defaultMessage: "Profile Picture",
   },
   name_text: {
     id: "app.profile.doctors.details.name.text",
     description: "",
-    defaultMessage: "Name"
+    defaultMessage: "Name",
   },
   gender_text: {
     id: "app.profile.doctors.details.gender.text",
     description: "",
-    defaultMessage: "Gender"
+    defaultMessage: "Gender",
   },
   age_text: {
     id: "app.profile.doctors.details.age.text",
     description: "",
-    defaultMessage: "Age"
+    defaultMessage: "Age",
   },
   email_text: {
     id: "app.profile.doctors.details.email.text",
     description: "",
-    defaultMessage: "Email"
+    defaultMessage: "Email",
   },
   mobile_number_text: {
     id: "app.profile.doctors.details.mobile.number.text",
     description: "",
-    defaultMessage: "Mobile Number"
+    defaultMessage: "Mobile Number",
   },
   sign_in_type_text: {
     id: "app.profile.doctors.details.sign.in.type.text",
     description: "",
-    defaultMessage: "Sign-in Type"
+    defaultMessage: "Sign-in Type",
   },
   onboarding_status_text: {
     id: "app.profile.doctors.details.onboarding.status.text",
     description: "",
-    defaultMessage: "Onboarding Status"
+    defaultMessage: "Onboarding Status",
   },
   no_photo_text: {
     id: "app.profile.doctors.details.no.photo.text",
     description: "",
-    defaultMessage: "No Photo"
+    defaultMessage: "No Photo",
   },
   address_text: {
     id: "app.profile.doctors.details.address.text",
     description: "",
-    defaultMessage: "City"
+    defaultMessage: "City",
   },
   verified_text: {
     id: "app.profile.doctors.details.verified.text",
     description: "",
-    defaultMessage: "Verified Status"
+    defaultMessage: "Verified Status",
   },
   qualification_details_text: {
     id: "app.profile.doctors.qualification.details.text",
     description: "",
-    defaultMessage: "Qualification Details"
+    defaultMessage: "Qualification Details",
   },
   clinic_details_text: {
     id: "app.profile.doctors.clinic.details.text",
     description: "",
-    defaultMessage: "Clinic Details"
+    defaultMessage: "Clinic Details",
   },
   submit_button_text: {
     id: "app.profile.doctors.submit.button.text",
     description: "",
-    defaultMessage: "Verify"
+    defaultMessage: "Verify",
   },
   degree_text: {
     id: "app.profile.doctors.degree.text",
     description: "",
-    defaultMessage: "Degree"
+    defaultMessage: "Degree",
   },
   college_text: {
     id: "app.profile.doctors.college.text",
     description: "",
-    defaultMessage: "College"
+    defaultMessage: "College",
   },
   year_text: {
     id: "app.profile.doctors.year.text",
     description: "",
-    defaultMessage: "Year"
+    defaultMessage: "Year",
   },
   location_text: {
     id: "app.profile.doctors.location.text",
     description: "",
-    defaultMessage: "Location"
+    defaultMessage: "Location",
   },
   open_between_text: {
     id: "app.profile.doctors.open.between.text",
     description: "",
-    defaultMessage: "Open Between"
+    defaultMessage: "Open Between",
   },
   upload_document_text: {
     id: "app.profile.doctors.upload.document.text",
     description: "",
-    defaultMessage: "Documents"
+    defaultMessage: "Documents",
   },
   upload_document_particular_text: {
     id: "app.profile.doctors.upload.document.particular.text",
     description: "",
-    defaultMessage: "Document"
+    defaultMessage: "Document",
   },
   qualification_text: {
     id: "app.profile.doctors.qualification.text",
     description: "",
-    defaultMessage: "Qualification"
+    defaultMessage: "Qualification",
   },
   clinic_text: {
     id: "app.profile.doctors.clinic.text",
     description: "",
-    defaultMessage: "Clinic"
+    defaultMessage: "Clinic",
   },
   registration_details_text: {
     id: "app.profile.doctors.registration.details.text",
     description: "",
-    defaultMessage: "Registration Details"
+    defaultMessage: "Registration Details",
   },
   registration_text: {
     id: "app.profile.doctors.registration.text",
     description: "",
-    defaultMessage: "Registration"
+    defaultMessage: "Registration",
   },
   registration_number_text: {
     id: "app.profile.doctors.registration.number.text",
     description: "",
-    defaultMessage: "Registration Number"
+    defaultMessage: "Registration Number",
   },
   registration_council_text: {
     id: "app.profile.doctors.registration.council.text",
     description: "",
-    defaultMessage: "Council"
+    defaultMessage: "Council",
   },
   registration_year_text: {
     id: "app.profile.doctors.registration.year.text",
     description: "",
-    defaultMessage: "Year"
+    defaultMessage: "Year",
   },
   registration_start_date_text: {
     id: "app.profile.doctors.registration.start.date.text",
     description: "",
-    defaultMessage: "Start Date"
+    defaultMessage: "Start Date",
   },
   registration_expiry_date_text: {
     id: "app.profile.doctors.registration.expiry.date.text",
     description: "",
-    defaultMessage: "Expiry Date"
+    defaultMessage: "Expiry Date",
   },
   no_registration_text: {
     id: "app.profile.doctors.no.registration.text",
     description: "",
-    defaultMessage: "Registration details yet to be updated"
+    defaultMessage: "Registration details yet to be updated",
   },
   no_qualification_text: {
     id: "app.profile.doctors.no.qualification.text",
     description: "",
-    defaultMessage: "Qualification details yet to be updated"
+    defaultMessage: "Qualification details yet to be updated",
   },
   no_clinic_text: {
     id: "app.profile.doctors.no.clinic.text",
     description: "",
-    defaultMessage: "Clinic details yet to be updated"
+    defaultMessage: "Clinic details yet to be updated",
   },
   timings_text: {
     id: "app.profile.doctors.timings.text",
     description: "",
-    defaultMessage: "Timings"
+    defaultMessage: "Timings",
   },
   speciality_text: {
     id: "app.profile.doctors.speciality.text",
     description: "",
-    defaultMessage: "Speciality"
+    defaultMessage: "Speciality",
   },
   addRegistrationDetails: {
     id: "app.profile.doctors.addRegistrationDetails",
     description: "",
-    defaultMessage: "Add Registration Details"
+    defaultMessage: "Add Registration Details",
   },
   addRegistrationQualificationDetails: {
     id: "app.profile.doctors.addRegistrationQualificationDetails",
     description: "",
-    defaultMessage: "Add Qualification/Registration Details"
+    defaultMessage: "Add Qualification/Registration Details",
   },
   addClinicalDetails: {
     id: "app.profile.doctors.addClinicalDetails",
     description: "",
-    defaultMessage: "Add Clinic Details"
+    defaultMessage: "Add Clinic Details",
   },
   qualification_update_first: {
     id: "app.profile.doctors.no.updateQualificationFirst.text",
     description: "",
-    defaultMessage: "Qualification details need to be updated first"
+    defaultMessage: "Qualification details need to be updated first",
   },
   add_payment_product: {
     id: "app.profile.doctors.add_payment_product",
     description: "",
-    defaultMessage: "Consultation Fee"
+    defaultMessage: "Consultation Fee",
   },
   add: {
     id: "app.profile.doctors.add",
     description: "",
-    defaultMessage: "Add"
+    defaultMessage: "Add",
   },
   activateText: {
     id: "app.profile.doctors.activateText",
     description: "",
-    defaultMessage: "Activate"
+    defaultMessage: "Activate",
   },
   deactivateText: {
     id: "app.profile.doctors.deactivateText",
     description: "",
-    defaultMessage: "Deactivate"
+    defaultMessage: "Deactivate",
   },
   warnNote: {
     id: "app.profile.doctors.warnNote",
     description: "",
     defaultMessage:
-      "The doctor will not be able to login after being deactivated."
+      "The doctor will not be able to login after being deactivated.",
   },
   confirmMessage: {
     id: "app.profile.doctors.confirmMessage",
     description: "",
-    defaultMessage: "Are you sure you want to deactivate this doctor ?"
+    defaultMessage: "Are you sure you want to deactivate this doctor ?",
   },
   account_status_text: {
     id: "app.profile.doctors.edit.account.status.text",
     description: "",
-    defaultMessage: "Account Status"
-  }
+    defaultMessage: "Account Status",
+  },
 });
 
 export default messages;

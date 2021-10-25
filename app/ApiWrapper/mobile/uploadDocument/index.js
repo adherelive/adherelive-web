@@ -16,8 +16,8 @@ class MobileUploadDocumentWrapper extends BaseUploadDocument {
         name,
         parent_type,
         parent_id,
-        document: completePath(document)
-      }
+        document: completePath(document),
+      },
     };
   };
 }

@@ -11,27 +11,27 @@ const { Item: FormItem } = Form;
 class Formulation extends Component {
   componentDidMount() {
     const {
-      form: { validateFields }
+      form: { validateFields },
     } = this.props;
     validateFields();
   }
 
   componentWillUnmount() {
     const {
-      form: { validateFields }
+      form: { validateFields },
     } = this.props;
     validateFields();
   }
 
-  getParentNode = t => t.parentNode;
+  getParentNode = (t) => t.parentNode;
 
-  formatMessage = data => this.props.intl.formatMessage(data);
+  formatMessage = (data) => this.props.intl.formatMessage(data);
 
   render() {
     const {
       form,
       vitals = {},
-      payload: { id: vital_id, canViewDetails = false } = {}
+      payload: { id: vital_id, canViewDetails = false } = {},
     } = this.props;
     const { getFieldDecorator, getFieldError, isFieldTouched } = form;
     const error = isFieldTouched(FIELD_NAME) && getFieldError(FIELD_NAME);
@@ -50,7 +50,7 @@ class Formulation extends Component {
           {getFieldDecorator(FIELD_NAME, {
             initialValue: existing_description
               ? existing_description
-              : description
+              : description,
           })(
             <TextArea
               autoFocus
@@ -71,5 +71,5 @@ const Field = injectIntl(Formulation);
 
 export default {
   field_name: FIELD_NAME,
-  render: props => <Field {...props} />
+  render: (props) => <Field {...props} />,
 };

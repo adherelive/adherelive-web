@@ -13,13 +13,13 @@ const { Group: RadioGroup, Button: RadioButton } = Radio;
 const FIELD_NAME = "activityMode";
 
 class ActivityMode extends Component {
-  onChangeActivityMode = e => {
+  onChangeActivityMode = (e) => {
     e.preventDefault();
     const { onChangeActivityMode } = this.props;
     onChangeActivityMode(e.target.value);
   };
 
-  formatMessage = data => this.props.intl.formatMessage(data);
+  formatMessage = (data) => this.props.intl.formatMessage(data);
 
   getInitialValue = () => {
     let initialValue;
@@ -30,7 +30,7 @@ class ActivityMode extends Component {
       form: { getFieldValue },
       otherUser,
       purpose,
-      event = {}
+      event = {},
     } = this.props;
 
     if (purpose) {
@@ -42,7 +42,7 @@ class ActivityMode extends Component {
       viewer: currentUser,
       other: otherUser,
       event: data,
-      edit: !!purpose
+      edit: !!purpose,
     });
 
     const activityType = getFieldValue(appointmentType.field_name);
@@ -69,7 +69,7 @@ class ActivityMode extends Component {
       data,
       form: { getFieldValue },
       otherUser,
-      purpose
+      purpose,
     } = this.props;
     const { formatMessage } = this;
 
@@ -77,7 +77,7 @@ class ActivityMode extends Component {
       viewer: currentUser,
       other: otherUser,
       event: data,
-      edit: !!purpose
+      edit: !!purpose,
     });
 
     const activityType = getFieldValue(appointmentType.field_name);
@@ -85,7 +85,7 @@ class ActivityMode extends Component {
 
     const activityModeOption = mode[activityType] || [];
 
-    return activityModeOption.map(option => {
+    return activityModeOption.map((option) => {
       return (
         <RadioButton
           key={option.value}
@@ -102,7 +102,7 @@ class ActivityMode extends Component {
   render() {
     const {
       form: { getFieldDecorator },
-      purpose
+      purpose,
     } = this.props;
 
     const { formatMessage, getActivityModeRadioButton, getInitialValue } = this;
@@ -110,7 +110,7 @@ class ActivityMode extends Component {
     return (
       <FormItem label={formatMessage(messages.activity)}>
         {getFieldDecorator(FIELD_NAME, {
-          initialValue: getInitialValue()
+          initialValue: getInitialValue(),
         })(
           <RadioGroup
             className="radio-group-tab"
@@ -131,5 +131,5 @@ const Field = injectIntl(ActivityMode);
 
 export default {
   field_name: FIELD_NAME,
-  render: props => <Field {...props} />
+  render: (props) => <Field {...props} />,
 };

@@ -3,7 +3,7 @@ import { getFullName } from "../../../../Helper/common";
 import Tooltip from "antd/es/tooltip";
 import Avatar from "antd/es/avatar";
 
-export default props => {
+export default (props) => {
   const { patientData } = props || {};
   const {
     basic_info: {
@@ -11,9 +11,9 @@ export default props => {
       middle_name,
       last_name,
       full_name = "",
-      uid = ""
+      uid = "",
     } = {},
-    details: { profile_pic = null } = {}
+    details: { profile_pic = null } = {},
   } = patientData || {};
 
   console.log("73542345237843246324", patientData);

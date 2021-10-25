@@ -16,7 +16,7 @@ class AddSecondaryDoc extends Component {
     this.state = {
       visible: true,
       disabledSubmit: true,
-      submitting: false
+      submitting: false,
     };
 
     this.FormWrapper = Form.create({ onFieldsChange: this.onFormFieldChanges })(
@@ -24,9 +24,9 @@ class AddSecondaryDoc extends Component {
     );
   }
 
-  onFormFieldChanges = props => {
+  onFormFieldChanges = (props) => {
     const {
-      form: { getFieldsError, isFieldsTouched }
+      form: { getFieldsError, isFieldsTouched },
     } = props;
     const isError = hasErrors(getFieldsError());
     const { disabledSubmit } = this.state;
@@ -35,15 +35,15 @@ class AddSecondaryDoc extends Component {
     }
   };
 
-  handleSubmit = e => {
+  handleSubmit = (e) => {
     e.preventDefault();
     const { addSecondaryDoctorToCareplan, carePlanId = null } = this.props;
     const { formRef = {}, formatMessage } = this;
 
     const {
       props: {
-        form: { validateFields, resetFields }
-      }
+        form: { validateFields, resetFields },
+      },
     } = formRef;
 
     validateFields(async (err, values) => {
@@ -52,7 +52,7 @@ class AddSecondaryDoc extends Component {
 
         const data = {
           user_role_id: doctor_role_id,
-          care_plan_id: carePlanId
+          care_plan_id: carePlanId,
         };
 
         try {
@@ -63,8 +63,8 @@ class AddSecondaryDoc extends Component {
             statusCode: code,
             payload: {
               message: errorMessage = "",
-              error: { error_type = "" } = {}
-            }
+              error: { error_type = "" } = {},
+            },
           } = response || {};
 
           if (!status) {
@@ -84,7 +84,7 @@ class AddSecondaryDoc extends Component {
     });
   };
 
-  formatMessage = data => this.props.intl.formatMessage(data);
+  formatMessage = (data) => this.props.intl.formatMessage(data);
 
   onClose = () => {
     const { close } = this.props;
@@ -92,19 +92,19 @@ class AddSecondaryDoc extends Component {
     const { formRef } = this;
     const {
       props: {
-        form: { resetFields }
-      }
+        form: { resetFields },
+      },
     } = formRef;
     this.setState({
       visible: true,
       disabledSubmit: true,
-      submitting: false
+      submitting: false,
     });
     resetFields();
     close();
   };
 
-  setFormRef = formRef => {
+  setFormRef = (formRef) => {
     this.formRef = formRef;
     if (formRef) {
       this.setState({ formRef: true });
@@ -115,16 +115,11 @@ class AddSecondaryDoc extends Component {
     const { visible } = this.props;
     const { disabledSubmit, submitting = false } = this.state;
 
-    const {
-      onClose,
-      formatMessage,
-      setFormRef,
-      handleSubmit,
-      FormWrapper
-    } = this;
+    const { onClose, formatMessage, setFormRef, handleSubmit, FormWrapper } =
+      this;
 
     const submitButtonProps = {
-      disabled: disabledSubmit
+      disabled: disabledSubmit,
     };
 
     console.log("82376482364826348723", { props: this.props });
@@ -137,7 +132,7 @@ class AddSecondaryDoc extends Component {
           headerStyle={{
             position: "sticky",
             zIndex: "9999",
-            top: "0px"
+            top: "0px",
           }}
           destroyOnClose={true}
           onClose={onClose}

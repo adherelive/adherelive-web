@@ -15,7 +15,7 @@ class SignIn extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      login: true
+      login: true,
     };
   }
 
@@ -27,13 +27,13 @@ class SignIn extends Component {
     this.setState({ login: newLogin });
   };
 
-  handleSignIn = async e => {
+  handleSignIn = async (e) => {
     e.preventDefault();
     const {
       form: { validateFields },
       signIn,
       match: { path } = {},
-      history
+      history,
     } = this.props;
     this.setState({ loading: true });
     validateFields(async (err, { email, password }) => {
@@ -64,7 +64,7 @@ class SignIn extends Component {
     const {
       googleSignIn,
       facebookSignIn,
-      form: { getFieldDecorator }
+      form: { getFieldDecorator },
     } = this.props;
     const { handleSignIn } = this;
     const { login } = this.state;
@@ -89,7 +89,7 @@ class SignIn extends Component {
             <div className="form-background-box"></div>
             {login ? (
               <Spring from={{ right: "55%" }} to={{ right: "15%" }}>
-                {props => (
+                {(props) => (
                   // <div style={props}>
                   <div className="form-container" style={props}>
                     <div className="mb8 fs24 fw600 pt30 flex direction-column tal">
@@ -106,9 +106,9 @@ class SignIn extends Component {
                           rules: [
                             {
                               required: true,
-                              message: "Please enter email or mobile number"
-                            }
-                          ]
+                              message: "Please enter email or mobile number",
+                            },
+                          ],
                         })(
                           <Input
                             type="text"
@@ -122,8 +122,8 @@ class SignIn extends Component {
                         <div className="fs16 medium tal mt4 mb8">Password</div>
                         {getFieldDecorator(PASSWORD, {
                           rules: [
-                            { required: true, message: "Enter your password" }
-                          ]
+                            { required: true, message: "Enter your password" },
+                          ],
                         })(<Password placeholder="Password" className="h40" />)}
                       </FormItem>
 
@@ -162,7 +162,7 @@ class SignIn extends Component {
               </Spring>
             ) : (
               <Spring from={{ right: "15%" }} to={{ right: "55%" }}>
-                {props => (
+                {(props) => (
                   // <div style={props}>
                   <div className="form-container" style={props}>
                     <div className="mb8 fs24 fw600 pt30 flex direction-column tal">
@@ -179,9 +179,9 @@ class SignIn extends Component {
                           rules: [
                             {
                               required: true,
-                              message: "Please enter email or mobile number"
-                            }
-                          ]
+                              message: "Please enter email or mobile number",
+                            },
+                          ],
                         })(
                           <Input
                             type="text"
@@ -195,8 +195,8 @@ class SignIn extends Component {
                         <div className="fs16 medium tal mt4 mb8">Password</div>
                         {getFieldDecorator(PASSWORD, {
                           rules: [
-                            { required: true, message: "Enter your password" }
-                          ]
+                            { required: true, message: "Enter your password" },
+                          ],
                         })(<Password placeholder="Password" className="h40" />)}
                       </FormItem>
 

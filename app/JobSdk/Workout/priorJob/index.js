@@ -3,7 +3,7 @@ import moment from "moment";
 import {
   EVENT_TYPE,
   NOTIFICATION_VERB,
-  DEFAULT_PROVIDER
+  DEFAULT_PROVIDER,
 } from "../../../../constant";
 
 import UserRoleService from "../../../services/userRoles/userRoles.service";
@@ -23,8 +23,8 @@ class PriorJob extends WorkoutJob {
         workouts = {},
         workout_id = null,
         participants = [],
-        actor: { id: actorId, user_role_id } = {}
-      } = {}
+        actor: { id: actorId, user_role_id } = {},
+      } = {},
     } = getWorkoutData() || {};
 
     const templateData = [];
@@ -34,8 +34,8 @@ class PriorJob extends WorkoutJob {
     const { rows: userRoles = [] } =
       (await UserRoleService.findAndCountAll({
         where: {
-          id: participants
-        }
+          id: participants,
+        },
       })) || {};
 
     let providerId = null;
@@ -54,14 +54,14 @@ class PriorJob extends WorkoutJob {
     let providerName = DEFAULT_PROVIDER;
     if (providerId) {
       const provider = await ProviderService.getProviderByData({
-        id: providerId
+        id: providerId,
       });
       const { name } = provider || {};
       providerName = name;
     }
 
     const userDevices = await UserDeviceService.getAllDeviceByData({
-      user_id: userIds
+      user_id: userIds,
     });
 
     if (userDevices.length > 0) {
@@ -82,15 +82,15 @@ class PriorJob extends WorkoutJob {
       app_id: process.config.one_signal.app_id,
       headings: { en: `Upcoming Workout Reminder (${providerName})` },
       contents: {
-        en: `${workoutName} is starting in ${process.config.app.workout_prior_time}. Tap here to know more!`
+        en: `${workoutName} is starting in ${process.config.app.workout_prior_time}. Tap here to know more!`,
       },
       include_player_ids: [...playerIds],
       priority: 10,
       android_channel_id: process.config.one_signal.urgent_channel_id,
       data: {
         url: `/${NOTIFICATION_VERB.WORKOUT_PRIOR}`,
-        params: getWorkoutData()
-      }
+        params: getWorkoutData(),
+      },
     });
 
     return templateData;
@@ -101,9 +101,9 @@ class PriorJob extends WorkoutJob {
     const {
       details: {
         participants = [],
-        actor: { id: actorId, user_role_id } = {}
+        actor: { id: actorId, user_role_id } = {},
       } = {},
-      id
+      id,
     } = getWorkoutData() || {};
 
     const templateData = [];
@@ -119,7 +119,7 @@ class PriorJob extends WorkoutJob {
           verb: `${NOTIFICATION_VERB.WORKOUT_PRIOR}:${currentTimeStamp}`,
           event: EVENT_TYPE.WORKOUT,
           time: currentTime,
-          create_time: `${currentTime}`
+          create_time: `${currentTime}`,
         });
       }
     }

@@ -25,10 +25,10 @@ class BotMessageJob extends ChatJob {
       actor: {
         id: actorId,
         user_role_id: actorRoleId,
-        details: { name, category: actorCategory } = {}
+        details: { name, category: actorCategory } = {},
       } = {},
       participants = [],
-      details: { message = "" }
+      details: { message = "" },
     } = getData() || {};
 
     let doctorRoleId =
@@ -45,7 +45,7 @@ class BotMessageJob extends ChatJob {
 
     const userRoleIds = [];
 
-    participants.forEach(participant => {
+    participants.forEach((participant) => {
       userRoleIds.push(participant);
       if (participant !== actorRoleId) {
         if (!doctorRoleId) {
@@ -59,8 +59,8 @@ class BotMessageJob extends ChatJob {
     const { rows: userRoles = [] } =
       (await UserRoleService.findAndCountAll({
         where: {
-          id: userRoleIds
-        }
+          id: userRoleIds,
+        },
       })) || {};
 
     let providerId = null;
@@ -78,7 +78,7 @@ class BotMessageJob extends ChatJob {
     let providerName = DEFAULT_PROVIDER;
     if (providerId) {
       const provider = await ProviderService.getProviderByData({
-        id: providerId
+        id: providerId,
       });
       const { name } = provider || {};
       providerName = name;
@@ -86,7 +86,7 @@ class BotMessageJob extends ChatJob {
 
     const userDevices =
       (await UserDeviceService.getAllDeviceByData({
-        user_id: userIds
+        user_id: userIds,
       })) || [];
 
     if (userDevices.length > 0) {
@@ -103,7 +103,7 @@ class BotMessageJob extends ChatJob {
       app_id: process.config.one_signal.app_id,
       headings: { en: `New Message (${providerName})` },
       contents: {
-        en: `${name}: ${message}`
+        en: `${name}: ${message}`,
       },
       include_player_ids: [...playerIds],
       priority: 10,
@@ -116,9 +116,9 @@ class BotMessageJob extends ChatJob {
           doctorUserId: doctorRoleId,
           patientUserId: patientRoleId,
           roomId,
-          actorId
-        }
-      }
+          actorId,
+        },
+      },
     });
     // }
 
@@ -131,9 +131,9 @@ class BotMessageJob extends ChatJob {
       actor: {
         id: actorId,
         user_role_id,
-        details: { name, category: actorCategory } = {}
+        details: { name, category: actorCategory } = {},
       } = {},
-      participants = []
+      participants = [],
     } = getData() || {};
 
     const templateData = [];
@@ -151,7 +151,7 @@ class BotMessageJob extends ChatJob {
           message: `by ${actorCategory} ${name}`,
           event: MESSAGE_TYPES.USER_MESSAGE,
           time: `${currentTime}`,
-          create_time: `${currentTime}`
+          create_time: `${currentTime}`,
         });
       }
     }

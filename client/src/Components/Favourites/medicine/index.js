@@ -15,7 +15,7 @@ class favouriteMedicine extends Component {
     super(props);
   }
 
-  setId = e => {
+  setId = (e) => {
     const { value } = e.target;
     this.setState({ id: value });
   };
@@ -59,13 +59,13 @@ class favouriteMedicine extends Component {
       favourites_data,
       favourite_medicine_ids,
       onFavOptionSelect,
-      getFavouriteSelectedMedicine
+      getFavouriteSelectedMedicine,
     } = this.props;
     const options = [];
 
     console.log("98346753264792834657234672930 ########################", {
       L: Object.keys(favourites_data).length,
-      favourites_data
+      favourites_data,
     });
     for (let each in favourites_data) {
       const { basic_info = {}, marked_favourites_data = {} } =
@@ -83,7 +83,7 @@ class favouriteMedicine extends Component {
         // })
 
         const {
-          basic_info: { name: medicine_name = "", id: medicine_id = null } = {}
+          basic_info: { name: medicine_name = "", id: medicine_id = null } = {},
         } = marked_favourites_data[key];
         options.push(
           <li
@@ -105,7 +105,7 @@ class favouriteMedicine extends Component {
     return options;
   };
 
-  handleGetFavouriteSelectedMedicine = (medicine_id, medicine_name) => e => {
+  handleGetFavouriteSelectedMedicine = (medicine_id, medicine_name) => (e) => {
     e.preventDefault();
     e.stopPropagation();
     const { getFavouriteSelectedMedicine, onFavOptionSelect } = this.props;
@@ -113,11 +113,11 @@ class favouriteMedicine extends Component {
     onFavOptionSelect(medicine_id);
   };
 
-  handleOnMouseDownPreventDef = e => {
+  handleOnMouseDownPreventDef = (e) => {
     e.preventDefault();
   };
 
-  handleremoveFavourites = id => async e => {
+  handleremoveFavourites = (id) => async (e) => {
     try {
       e.preventDefault();
       e.stopPropagation();
@@ -125,7 +125,7 @@ class favouriteMedicine extends Component {
       const { removeFavourite } = this.props;
       const data = {
         type: "medicine",
-        typeId: id
+        typeId: id,
       };
 
       const response = await removeFavourite(data);
@@ -133,7 +133,7 @@ class favouriteMedicine extends Component {
       const {
         status,
         statusCode,
-        payload: { data: resp_data = {}, message: resp_msg = "" } = {}
+        payload: { data: resp_data = {}, message: resp_msg = "" } = {},
       } = response;
       if (status) {
         message.success(resp_msg);
@@ -159,7 +159,7 @@ class favouriteMedicine extends Component {
   render() {
     const { medicineIdSelected = false, searching_medicine = "" } = this.props;
     console.log("9836462746239846239 searching_medicine", {
-      searching_medicine
+      searching_medicine,
     });
     return (
       <div

@@ -13,8 +13,8 @@ class TACWrapper extends BaseTermsandConditions {
       basic_info: {
         id,
         terms_type,
-        details
-      }
+        details,
+      },
     };
   };
 }

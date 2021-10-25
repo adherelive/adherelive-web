@@ -14,7 +14,7 @@ class TransactionTable extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      loading: true
+      loading: true,
     };
   }
 
@@ -22,7 +22,7 @@ class TransactionTable extends Component {
     this.handleGetAllTransactions();
   }
 
-  formatMessage = message => this.props.intl.formatMessage(message);
+  formatMessage = (message) => this.props.intl.formatMessage(message);
 
   async handleGetAllTransactions() {
     try {
@@ -40,7 +40,7 @@ class TransactionTable extends Component {
     }
   }
 
-  onSelectChange = selectedRowKeys => {
+  onSelectChange = (selectedRowKeys) => {
     this.setState({ selectedRows: selectedRowKeys });
   };
 
@@ -57,10 +57,10 @@ class TransactionTable extends Component {
       doctors,
       users,
       authenticated_category,
-      user_roles
+      user_roles,
     } = this.props;
 
-    return transaction_ids.map(id => {
+    return transaction_ids.map((id) => {
       return generateRow({
         id,
         transactions,
@@ -70,26 +70,22 @@ class TransactionTable extends Component {
         doctors,
         users,
         authenticated_category,
-        user_roles
+        user_roles,
       });
     });
   };
 
-  getParentNode = t => t.parentNode;
+  getParentNode = (t) => t.parentNode;
 
-  formatMessage = data => this.props.intl.formatMessage(data);
+  formatMessage = (data) => this.props.intl.formatMessage(data);
 
   render() {
     const { loading } = this.state;
-    const {
-      getLoadingComponent,
-      getDataSource,
-      formatMessage,
-      getParentNode
-    } = this;
+    const { getLoadingComponent, getDataSource, formatMessage, getParentNode } =
+      this;
 
     const transactionLocale = {
-      emptyText: this.formatMessage(messages.emptyTransactionTable)
+      emptyText: this.formatMessage(messages.emptyTransactionTable),
     };
     const { authenticated_category } = this.props;
 
@@ -102,14 +98,14 @@ class TransactionTable extends Component {
         columns={getColumn({
           formatMessage,
           className: "pointer",
-          authenticated_category
+          authenticated_category,
         })}
         getPopupContainer={getParentNode}
         dataSource={getDataSource()}
         scroll={{ x: 1600 }}
         pagination={{
           position: "top",
-          pageSize: 10
+          pageSize: 10,
         }}
         locale={transactionLocale}
       />

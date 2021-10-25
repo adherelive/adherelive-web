@@ -11,11 +11,7 @@ router.get("/", Authenticated, GraphController.getAllGraphs);
 router.post(
   "/:id",
   Authenticated,
-  [
-    param("id")
-      .isNumeric()
-      .withMessage("Invalid chart type")
-  ],
+  [param("id").isNumeric().withMessage("Invalid chart type")],
   //validator
   GraphController.addGraphType
 );

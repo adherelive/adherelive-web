@@ -22,13 +22,13 @@ class SelectedDays extends Component {
   constructor(props) {
     super(props);
     const {
-      form: { getFieldValue }
+      form: { getFieldValue },
     } = props;
 
     const { vitals, payload: { id: vital_id } = {} } = props;
     let { details: { repeat_days = [] } = {} } = vitals[vital_id] || {};
     this.state = {
-      selectedDays: repeat_days
+      selectedDays: repeat_days,
     };
   }
 
@@ -36,7 +36,7 @@ class SelectedDays extends Component {
     const {
       form: { validateFields },
       payload: { id = null } = {},
-      vitals = {}
+      vitals = {},
     } = this.props;
     validateFields();
 
@@ -59,18 +59,18 @@ class SelectedDays extends Component {
 
   componentWillUnmount() {
     const {
-      form: { validateFields }
+      form: { validateFields },
     } = this.props;
     validateFields();
   }
 
-  formatMessage = data => this.props.intl.formatMessage(data);
+  formatMessage = (data) => this.props.intl.formatMessage(data);
 
   getselectedDayRadio = () => {
     let { selectedDays } = this.state;
     const { vitalData = {} } = this.props;
     const {
-      form: { getFieldValue }
+      form: { getFieldValue },
     } = this.props;
     let start = getFieldValue(startDate.field_name);
     let end = getFieldValue(endDate.field_name);
@@ -87,7 +87,7 @@ class SelectedDays extends Component {
         selectedDaysRadio = 1;
         return selectedDaysRadio;
       } else if (selectedDaysArray.length == 4) {
-        ALTERNATE_DAYS.map(value => {
+        ALTERNATE_DAYS.map((value) => {
           if (!selectedDaysArray.includes(value)) {
             selectedDaysRadio = null;
           } else {
@@ -105,12 +105,12 @@ class SelectedDays extends Component {
     return selectedDaysRadio;
   };
 
-  setRepeatEveryDay = e => {
+  setRepeatEveryDay = (e) => {
     const { selectedDays } = this.state;
     e.preventDefault();
     const {
       form: { setFieldsValue, validateFields },
-      enableSubmit
+      enableSubmit,
     } = this.props;
     // setFieldsValue({
     //   [repeatDaysField.field_name]: DAYS
@@ -124,12 +124,12 @@ class SelectedDays extends Component {
     enableSubmit();
   };
 
-  setRepeatAlternateDay = e => {
+  setRepeatAlternateDay = (e) => {
     const { selectedDays } = this.state;
     e.preventDefault();
     const {
       form: { setFieldsValue, validateFields },
-      enableSubmit
+      enableSubmit,
     } = this.props;
     // setFieldsValue({
     //   [repeatDaysField.field_name]: ALTERNATE_DAYS
@@ -145,16 +145,16 @@ class SelectedDays extends Component {
 
   handleCheckDays = (tag, checked) => {
     const {
-      form: { getFieldValue }
+      form: { getFieldValue },
     } = this.props;
     const { selectedDays } = this.state;
     const nextSelectedTags = checked
       ? [...selectedDays, tag]
-      : selectedDays.filter(t => t !== tag);
+      : selectedDays.filter((t) => t !== tag);
     // console.log("nextSelectedTags",nextSelectedTags);
     this.setState({ selectedDays: nextSelectedTags });
     const {
-      form: { setFieldsValue, validateFields }
+      form: { setFieldsValue, validateFields },
     } = this.props;
     setFieldsValue({ [FIELD_NAME]: nextSelectedTags });
     validateFields();
@@ -162,14 +162,12 @@ class SelectedDays extends Component {
 
   render() {
     const {
-      form: { getFieldDecorator }
+      form: { getFieldDecorator },
     } = this.props;
 
     const { selectedDays } = this.state;
-    const {
-      vitalData = {},
-      payload: { canViewDetails = false } = {}
-    } = this.props;
+    const { vitalData = {}, payload: { canViewDetails = false } = {} } =
+      this.props;
     let { repeat_days: existing_repeat_days = "" } = vitalData || {};
     if (!existing_repeat_days) {
       const { details: { repeat_days: vital_repeat_days_new = [] } = {} } =
@@ -190,22 +188,22 @@ class SelectedDays extends Component {
             rules: [
               {
                 required: true,
-                message: "Please select days for vitals!"
-              }
+                message: "Please select days for vitals!",
+              },
             ],
             initialValue: existing_repeat_days
               ? existing_repeat_days
-              : selectedDays
+              : selectedDays,
           })(<Input disabled={canViewDetails} />)}
         </FormItem>
         <div className="flex-shrink-1 flex justify-space-evenly select-days">
-          {DAYS.map(tag => (
+          {DAYS.map((tag) => (
             <CheckableTag
               key={tag}
               checked={selectedDays.indexOf(tag) > -1}
               onChange={
                 !canViewDetails
-                  ? checked => handleCheckDays(tag, checked)
+                  ? (checked) => handleCheckDays(tag, checked)
                   : null
               }
             >
@@ -236,5 +234,5 @@ const Field = injectIntl(SelectedDays);
 
 export default {
   field_name: FIELD_NAME,
-  render: props => <Field {...props} />
+  render: (props) => <Field {...props} />,
 };

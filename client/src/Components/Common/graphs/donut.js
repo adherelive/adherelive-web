@@ -10,7 +10,7 @@ export default function donutGraph(props) {
   const { className } = GRAPH_COLORS[id] || {};
   const labels = [
     formatMessage(messages.compliant_text),
-    formatMessage(messages.critical_text)
+    formatMessage(messages.critical_text),
   ];
   // const labels = [CHART_TITLE[id] === "Adherence" ? formatMessage(messages.compliant_text) : formatMessage(messages.critical_text),
   // CHART_TITLE[id] === "Adherence" ? formatMessage(messages.non_compliant_text) : formatMessage(messages.non_critical_text)
@@ -23,16 +23,16 @@ export default function donutGraph(props) {
         // label: label,
         backgroundColor: [dark, light],
         // hoverBackgroundColor: ["#00CDCD", "#4B5000"],
-        data: graphContent
-      }
-    ]
+        data: graphContent,
+      },
+    ],
   };
   const options = {
     cutoutPercentage: 60,
     legend: {
-      display: false
+      display: false,
     },
-    responsive: true
+    responsive: true,
   };
   return (
     <Fragment>

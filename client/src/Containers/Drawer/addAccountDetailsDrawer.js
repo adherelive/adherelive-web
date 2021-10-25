@@ -6,26 +6,26 @@ import { close } from "../../modules/drawer";
 import {
   getAdminPaymentProduct,
   getDoctorPaymentProduct,
-  addDoctorPaymentProduct
+  addDoctorPaymentProduct,
 } from "../../modules/doctors";
 
 // import { createReminder, updateReminder } from "../../modules/reminder"; // write to add to database
-const mapStateToProps = state => {
+const mapStateToProps = (state) => {
   const {
-    drawer: { visible, loading, data: { type, payload = {} } = {} }
+    drawer: { visible, loading, data: { type, payload = {} } = {} },
   } = state;
 
   return {
     visible: visible && type === DRAWER.ADD_RAZORPAY_ACCOUNT_DETAILS,
     loading,
-    payload
+    payload,
   };
 };
 
-const mapDispatchToProps = dispatch => {
+const mapDispatchToProps = (dispatch) => {
   return {
     close: () => dispatch(close()),
-    addAccountDetails: data => dispatch(addAccountDetails(data))
+    addAccountDetails: (data) => dispatch(addAccountDetails(data)),
   };
 };
 

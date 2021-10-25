@@ -16,14 +16,14 @@ module.exports = {
           EVENT_STATUS.EXPIRED,
           EVENT_STATUS.CANCELLED,
           EVENT_STATUS.STARTED,
-          EVENT_STATUS.PRIOR
+          EVENT_STATUS.PRIOR,
         ],
-        defaultValue: EVENT_STATUS.PENDING
-      })
+        defaultValue: EVENT_STATUS.PENDING,
+      }),
     ]);
   },
 
   down: (queryInterface, Sequelize) => {
     return Promise.all([queryInterface.changeColumn(TABLE_NAME, "status")]);
-  }
+  },
 };

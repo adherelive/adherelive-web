@@ -5,13 +5,13 @@ import Tooltip from "antd/es/tooltip";
 import messages from "../messages";
 import { USER_CATEGORY } from "../../../../constant";
 
-export default props => {
+export default (props) => {
   const {
     data: {
       basic_info: { id = null, name = "", type = "", amount = "" } = {},
       openConsultationFeeDrawer,
-      formatMessage
-    } = {}
+      formatMessage,
+    } = {},
   } = props || {};
 
   const {
@@ -19,11 +19,11 @@ export default props => {
       razorpay_link = "",
       creator_type = "",
       basic_info = {},
-      doctors: { provider_id } = {}
-    } = {}
+      doctors: { provider_id } = {},
+    } = {},
   } = props;
 
-  const handleEdit = id => e => {
+  const handleEdit = (id) => (e) => {
     e.preventDefault();
     const { data = {} } = props;
     const { openConsultationFeeDrawer } = data || {};

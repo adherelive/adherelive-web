@@ -2,10 +2,10 @@ import Database from "../../../libs/mysql";
 import { TABLE_NAME } from "../../models/carePlanAppointments";
 
 class CarePlanAppointmentService {
-  getAllByData = async data => {
+  getAllByData = async (data) => {
     try {
       const carePlanAppointments = await Database.getModel(TABLE_NAME).findAll({
-        where: data
+        where: data,
       });
       return carePlanAppointments;
     } catch (error) {
@@ -13,10 +13,10 @@ class CarePlanAppointmentService {
     }
   };
 
-  getCarePlanAppointmentsByData = async data => {
+  getCarePlanAppointmentsByData = async (data) => {
     try {
       const carePlanAppointments = await Database.getModel(TABLE_NAME).findAll({
-        where: data
+        where: data,
       });
       return carePlanAppointments;
     } catch (error) {
@@ -24,10 +24,10 @@ class CarePlanAppointmentService {
     }
   };
 
-  getSingleCarePlanAppointmentByData = async data => {
+  getSingleCarePlanAppointmentByData = async (data) => {
     try {
       const carePlanAppointment = await Database.getModel(TABLE_NAME).findOne({
-        where: data
+        where: data,
       });
       return carePlanAppointment;
     } catch (error) {
@@ -35,21 +35,21 @@ class CarePlanAppointmentService {
     }
   };
 
-  getCareplanByAppointment = async data => {
+  getCareplanByAppointment = async (data) => {
     try {
       return await Database.getModel(TABLE_NAME).findOne({
         where: data,
-        attributes: ["care_plan_id"]
+        attributes: ["care_plan_id"],
       });
     } catch (error) {
       throw error;
     }
   };
 
-  getAppointmentsByCarePlanId = async care_plan_id => {
+  getAppointmentsByCarePlanId = async (care_plan_id) => {
     try {
       const carePlanAppointments = await Database.getModel(TABLE_NAME).findAll({
-        where: { care_plan_id }
+        where: { care_plan_id },
       });
       return carePlanAppointments;
     } catch (error) {
@@ -57,12 +57,12 @@ class CarePlanAppointmentService {
     }
   };
 
-  deleteCarePlanAppointmentByAppointmentId = async appointment_id => {
+  deleteCarePlanAppointmentByAppointmentId = async (appointment_id) => {
     try {
       const carePlanAppointments = await Database.getModel(TABLE_NAME).destroy({
         where: {
-          appointment_id
-        }
+          appointment_id,
+        },
       });
       return carePlanAppointments;
     } catch (err) {
@@ -70,7 +70,7 @@ class CarePlanAppointmentService {
     }
   };
 
-  addCarePlanAppointment = async data => {
+  addCarePlanAppointment = async (data) => {
     try {
       const carePlanAppointment = await Database.getModel(TABLE_NAME).create(
         data

@@ -6,7 +6,7 @@ import {
   NO_APPOINTMENT,
   NO_MEDICATION,
   NO_DIET,
-  NO_WORKOUT
+  NO_WORKOUT,
 } from "../../../constant";
 
 import { Button, Checkbox, Modal } from "antd";
@@ -34,7 +34,7 @@ class GraphsModal extends Component {
     // });
   };
 
-  toggleGraphSelected = graph => () => {
+  toggleGraphSelected = (graph) => () => {
     let { selectedGraphs = [] } = this.state;
     if (selectedGraphs.includes(graph)) {
       selectedGraphs.splice(selectedGraphs.indexOf(graph), 1);
@@ -65,11 +65,11 @@ class GraphsModal extends Component {
           </Button>,
           <Button key="submit" type="primary" onClick={this.handleSave}>
             Submit
-          </Button>
+          </Button>,
         ]}
       >
         <div className="location-container">
-          {graphs.map(graph => {
+          {graphs.map((graph) => {
             return (
               <div
                 key={graph}

@@ -21,18 +21,18 @@ class SignIn extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      login: true
+      login: true,
     };
   }
 
-  handleSignIn = async e => {
+  handleSignIn = async (e) => {
     e.preventDefault();
     const {
       form: { validateFields },
       signIn,
       getInitialData,
       getUserRoles,
-      history
+      history,
     } = this.props;
 
     this.setState({ loading: true });
@@ -43,7 +43,7 @@ class SignIn extends Component {
           const {
             status = false,
             statusCode,
-            payload: { data = {}, message: resp_msg } = {}
+            payload: { data = {}, message: resp_msg } = {},
           } = response;
           const { users = {}, auth_user = "", hasConsent } = data || {};
 
@@ -75,7 +75,7 @@ class SignIn extends Component {
     });
   };
 
-  formatMessage = data => this.props.intl.formatMessage(data);
+  formatMessage = (data) => this.props.intl.formatMessage(data);
 
   tosComponent = () => {
     return (
@@ -93,10 +93,10 @@ class SignIn extends Component {
   render() {
     const {
       form: { getFieldDecorator, isFieldTouched, getFieldError },
-      redirectToForgotPassword
+      redirectToForgotPassword,
     } = this.props;
     let fieldsError = {};
-    FIELDS.forEach(value => {
+    FIELDS.forEach((value) => {
       const error = isFieldTouched(value) && getFieldError(value);
       fieldsError = { ...fieldsError, [value]: error };
     });
@@ -114,13 +114,13 @@ class SignIn extends Component {
             rules: [
               {
                 required: true,
-                message: this.formatMessage(messages.enterEmail)
+                message: this.formatMessage(messages.enterEmail),
               },
               {
                 type: "email",
-                message: this.formatMessage(messages.enterValidEmail)
-              }
-            ]
+                message: this.formatMessage(messages.enterValidEmail),
+              },
+            ],
           })(<Input type="text" placeholder="Email" className="h40" />)}
         </FormItem>
 
@@ -135,9 +135,9 @@ class SignIn extends Component {
             rules: [
               {
                 required: true,
-                message: this.formatMessage(messages.enterPassword)
-              }
-            ]
+                message: this.formatMessage(messages.enterPassword),
+              },
+            ],
           })(<Password placeholder="Password" className="h40" />)}
         </FormItem>
         {tosComponent()}

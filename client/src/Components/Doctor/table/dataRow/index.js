@@ -1,6 +1,6 @@
 import { TABLE_COLUMN, formatDoctorTableData } from "../helper";
 
-export default data => {
+export default (data) => {
   const { id, formatMessage } = data;
   const formattedData = formatDoctorTableData(data);
   const { userData, doctorData, specialityData } = formattedData || {};
@@ -9,19 +9,19 @@ export default data => {
     [TABLE_COLUMN.NAME.dataIndex]: {
       doctorData,
       userData,
-      formatMessage
+      formatMessage,
     },
     [TABLE_COLUMN.VERIFIED.dataIndex]: {
-      userData
+      userData,
     },
     [TABLE_COLUMN.SPECIALITY.dataIndex]: {
-      specialityData
+      specialityData,
     },
     [TABLE_COLUMN.CONTACT_DETAILS.dataIndex]: {
-      userData
+      userData,
     },
     [TABLE_COLUMN.ADDRESS.dataIndex]: {
-      doctorData
-    }
+      doctorData,
+    },
   };
 };

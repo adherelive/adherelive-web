@@ -5,7 +5,7 @@ import { USER_CATEGORY_ARRAY } from "./users";
 
 export const TABLE_NAME = "subscriptions";
 
-export const db = database => {
+export const db = (database) => {
   database.define(
     TABLE_NAME,
     {
@@ -13,51 +13,51 @@ export const db = database => {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
-        type: DataTypes.INTEGER
+        type: DataTypes.INTEGER,
       },
       payment_product_id: {
         type: DataTypes.INTEGER,
         allowNull: false,
         references: {
           model: {
-            tableName: paymentProductPlansTableName
+            tableName: paymentProductPlansTableName,
           },
-          key: "id"
-        }
+          key: "id",
+        },
       },
       subscriber_type: {
         type: DataTypes.ENUM,
         values: USER_CATEGORY_ARRAY,
-        allowNull: false
+        allowNull: false,
       },
       subscriber_id: {
         type: DataTypes.INTEGER,
-        allowNull: false
+        allowNull: false,
       },
       activated_on: {
-        type: DataTypes.DATE
+        type: DataTypes.DATE,
       },
       renew_on: {
-        type: DataTypes.DATE
+        type: DataTypes.DATE,
       },
       expired_on: {
         type: DataTypes.DATE,
-        allowNull: false
-      }
+        allowNull: false,
+      },
     },
     {
       underscored: true,
-      paranoid: true
+      paranoid: true,
     }
   );
 };
 
-export const associate = database => {
+export const associate = (database) => {
   database.models[TABLE_NAME].hasOne(
     database.models[paymentProductPlansTableName],
     {
       foreignKey: "id",
-      sourceKey: "payment_product_id"
+      sourceKey: "payment_product_id",
     }
   );
 };

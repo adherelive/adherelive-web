@@ -26,8 +26,8 @@ class UserFavouritesController extends Controller {
         userDetails: {
           userId,
           userCategoryId,
-          userData: { category = "" } = {}
-        } = {}
+          userData: { category = "" } = {},
+        } = {},
       } = req;
 
       const { type = "", id = "", details = {} } = body;
@@ -37,7 +37,7 @@ class UserFavouritesController extends Controller {
         user_category_type: category,
         marked_favourite_id: id,
         marked_favourite_type: type,
-        details
+        details,
       };
 
       // const existing = await UserFavouritesService.findExistingFavourite(data);
@@ -71,7 +71,7 @@ class UserFavouritesController extends Controller {
         res,
         200,
         {
-          favourites_data
+          favourites_data,
         },
         "User Favourite marked successfully"
       );
@@ -88,8 +88,8 @@ class UserFavouritesController extends Controller {
         userDetails: {
           userId,
           userCategoryId,
-          userData: { category = "" } = {}
-        } = {}
+          userData: { category = "" } = {},
+        } = {},
       } = req;
 
       const { query: { type = "" } = {} } = req;
@@ -97,7 +97,7 @@ class UserFavouritesController extends Controller {
       const data = {
         user_category_id: userCategoryId,
         user_category_type: category,
-        marked_favourite_type: type
+        marked_favourite_type: type,
       };
 
       const favourites = await UserFavouritesService.getAllFavourites(data);
@@ -135,11 +135,11 @@ class UserFavouritesController extends Controller {
           favourites_data,
           user_data: userData,
           ...(type === FAVOURITE_TYPE.MEDICINE && {
-            favourite_medicine_ids: favourite_medicine_ids
+            favourite_medicine_ids: favourite_medicine_ids,
           }),
           ...(type === FAVOURITE_TYPE.MEDICAL_TESTS && {
-            favourite_medical_test_ids: favourite_medical_test_ids
-          })
+            favourite_medical_test_ids: favourite_medical_test_ids,
+          }),
         },
         "Get User Favourites successful"
       );
@@ -157,8 +157,8 @@ class UserFavouritesController extends Controller {
         userDetails: {
           userId,
           userCategoryId,
-          userData: { category = "" } = {}
-        } = {}
+          userData: { category = "" } = {},
+        } = {},
       } = req;
 
       const { params: { id = null } = {} } = req;
@@ -167,7 +167,7 @@ class UserFavouritesController extends Controller {
       const type = await favourite.getMarkedFavouriteType();
 
       const existing = await UserFavouritesService.findExistingFavourite({
-        id
+        id,
       });
 
       if (existing) {
@@ -201,15 +201,15 @@ class UserFavouritesController extends Controller {
         userDetails: {
           userId,
           userCategoryId,
-          userData: { category = "" } = {}
-        } = {}
+          userData: { category = "" } = {},
+        } = {},
       } = req;
 
       const { query: { typeId = null, type = "" } = {} } = req;
 
       const record = await UserFavouritesService.getByData({
         marked_favourite_id: typeId,
-        marked_favourite_type: type
+        marked_favourite_type: type,
       });
 
       let removed_favourites_data = {};
@@ -237,7 +237,7 @@ class UserFavouritesController extends Controller {
         res,
         200,
         {
-          removed_favourites_data
+          removed_favourites_data,
         },
         `Favourite ${type} unmarked successfully`
       );

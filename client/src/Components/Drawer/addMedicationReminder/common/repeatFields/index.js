@@ -12,9 +12,9 @@ import messages from "../../message";
 const RadioButton = Radio.Button;
 const RadioGroup = Radio.Group;
 
-export default props => {
+export default (props) => {
   const {
-    form: { getFieldValue }
+    form: { getFieldValue },
   } = props;
 
   let start = getFieldValue(startDate.field_name);

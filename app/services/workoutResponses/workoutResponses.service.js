@@ -4,12 +4,12 @@ import { TABLE_NAME } from "../../models/workoutResponses";
 const DEFAULT_ORDER = [["created_at", "DESC"]];
 
 class WorkoutResponsesService {
-  create = async data => {
+  create = async (data) => {
     const transaction = await Database.initTransaction();
     try {
       const record = await Database.getModel(TABLE_NAME).create(data, {
         raw: true,
-        transaction
+        transaction,
       });
       await transaction.commit();
       return record.id;
@@ -19,11 +19,11 @@ class WorkoutResponsesService {
     }
   };
 
-  bulkCreate = async data => {
+  bulkCreate = async (data) => {
     const transaction = await Database.initTransaction();
     try {
       const record = await Database.getModel(TABLE_NAME).bulkCreate(data, {
-        transaction
+        transaction,
       });
       await transaction.commit();
       return record;
@@ -33,11 +33,11 @@ class WorkoutResponsesService {
     }
   };
 
-  findOne = async data => {
+  findOne = async (data) => {
     try {
       return await Database.getModel(TABLE_NAME).findOne({
         where: data,
-        raw: true
+        raw: true,
       });
     } catch (error) {
       throw error;
@@ -49,9 +49,9 @@ class WorkoutResponsesService {
     try {
       await Database.getModel(TABLE_NAME).update(data, {
         where: {
-          id
+          id,
         },
-        transaction
+        transaction,
       });
       await transaction.commit();
       return true;
@@ -66,18 +66,18 @@ class WorkoutResponsesService {
       return await Database.getModel(TABLE_NAME).findAndCountAll({
         where,
         order,
-        attributes
+        attributes,
       });
     } catch (error) {
       throw error;
     }
   };
 
-  findOne = async data => {
+  findOne = async (data) => {
     try {
       const diet = await Database.getModel(TABLE_NAME).findOne({
         where: data,
-        raw: true
+        raw: true,
       });
       return diet;
     } catch (error) {
@@ -85,12 +85,12 @@ class WorkoutResponsesService {
     }
   };
 
-  delete = async id => {
+  delete = async (id) => {
     try {
       const record = await Database.getModel(TABLE_NAME).destroy({
         where: {
-          id
-        }
+          id,
+        },
       });
       return record;
     } catch (err) {

@@ -8,7 +8,7 @@ import UserDeviceWrapper from "../../../ApiWrapper/mobile/userDevice";
 import {
   EVENT_TYPE,
   NOTIFICATION_VERB,
-  DEFAULT_PROVIDER
+  DEFAULT_PROVIDER,
 } from "../../../../constant";
 
 class CreateJob extends DietJob {
@@ -23,8 +23,8 @@ class CreateJob extends DietJob {
       actor: {
         id: actorId,
         user_role_id,
-        details: { name, category: actorCategory } = {}
-      } = {}
+        details: { name, category: actorCategory } = {},
+      } = {},
     } = getDietData() || {};
 
     const templateData = [];
@@ -34,8 +34,8 @@ class CreateJob extends DietJob {
     const { rows: userRoles = [] } =
       (await UserRoleService.findAndCountAll({
         where: {
-          id: participants
-        }
+          id: participants,
+        },
       })) || {};
 
     let providerId = null;
@@ -53,14 +53,14 @@ class CreateJob extends DietJob {
     let providerName = DEFAULT_PROVIDER;
     if (providerId) {
       const provider = await ProviderService.getProviderByData({
-        id: providerId
+        id: providerId,
       });
       const { name } = provider || {};
       providerName = name;
     }
 
     const userDevices = await UserDeviceService.getAllDeviceByData({
-      user_id: userIds
+      user_id: userIds,
     });
 
     if (userDevices.length > 0) {
@@ -75,15 +75,15 @@ class CreateJob extends DietJob {
       app_id: process.config.one_signal.app_id,
       headings: { en: `Diet Created (${providerName})` },
       contents: {
-        en: `${name}(${actorCategory}) has created a diet with you. Tap here to know more!`
+        en: `${name}(${actorCategory}) has created a diet with you. Tap here to know more!`,
       },
       include_player_ids: [...playerIds],
       priority: 10,
       android_channel_id: process.config.one_signal.urgent_channel_id,
       data: {
         url: `/${NOTIFICATION_VERB.DIET_CREATION}`,
-        params: getDietData()
-      }
+        params: getDietData(),
+      },
     });
 
     return templateData;
@@ -94,7 +94,7 @@ class CreateJob extends DietJob {
     const {
       participants = [],
       actor: { id: actorId, user_role_id } = {},
-      event_id
+      event_id,
     } = getDietData() || {};
 
     const templateData = [];
@@ -111,7 +111,7 @@ class CreateJob extends DietJob {
           verb: `${NOTIFICATION_VERB.DIET_CREATION}:${currentTimeStamp}`,
           event: EVENT_TYPE.DIET,
           time: currentTime,
-          create_time: `${currentTime}`
+          create_time: `${currentTime}`,
         });
       }
     }

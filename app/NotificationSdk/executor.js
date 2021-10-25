@@ -48,7 +48,7 @@ class EventExecutor {
     }
   }
 
-  sendPushNotification = async template => {
+  sendPushNotification = async (template) => {
     try {
       // TODO: add one-signal rest api call code here
       const response = await fetch(
@@ -58,9 +58,9 @@ class EventExecutor {
           port: 443,
           headers: {
             "Content-Type": "application/json; charset=utf-8",
-            Authorization: "Basic " + process.config.ONE_SIGNAL_KEY
+            Authorization: "Basic " + process.config.ONE_SIGNAL_KEY,
           },
-          body: template
+          body: template,
         }
       );
       Log.debug("sendPushNotification Response", response);
@@ -69,7 +69,7 @@ class EventExecutor {
     }
   };
 
-  sendAppNotification = async template => {
+  sendAppNotification = async (template) => {
     try {
       // TODO: add get stream rest api call code here
       Log.debug("sendAppNotification --> ", template.actor.toString());
@@ -89,7 +89,7 @@ class EventExecutor {
       Log.debug("feed --> ", feed);
       // console.log("Data....OBBBjeeeect: ", data.object);
       // console.log("FFFFFEeeeeeedddddd: ", feed);
-      const response = await feed.addActivity(template).catch(err => {
+      const response = await feed.addActivity(template).catch((err) => {
         Log.debug("response err ------>", err);
       });
 

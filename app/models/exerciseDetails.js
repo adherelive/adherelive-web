@@ -6,29 +6,29 @@ import { TABLE_NAME as repetitionTableName } from "./exerciseRepetition";
 
 export const TABLE_NAME = "exercise_details";
 
-export const db = database => {
+export const db = (database) => {
   database.define(
     TABLE_NAME,
     {
       id: {
         type: DataTypes.INTEGER,
         primaryKey: true,
-        autoIncrement: true
+        autoIncrement: true,
       },
       exercise_id: {
         type: DataTypes.INTEGER,
-        allowNull: false
+        allowNull: false,
       },
       repetition_id: {
         type: DataTypes.INTEGER,
-        allowNull: false
+        allowNull: false,
       },
       repetition_value: {
         type: DataTypes.INTEGER,
-        allowNull: false
+        allowNull: false,
       },
       creator_id: {
-        type: DataTypes.INTEGER
+        type: DataTypes.INTEGER,
       },
       creator_type: {
         type: DataTypes.ENUM,
@@ -36,29 +36,29 @@ export const db = database => {
           USER_CATEGORY.DOCTOR,
           USER_CATEGORY.PROVIDER,
           USER_CATEGORY.ADMIN,
-          USER_CATEGORY.HSP
+          USER_CATEGORY.HSP,
         ],
-        defaultValue: USER_CATEGORY.ADMIN
+        defaultValue: USER_CATEGORY.ADMIN,
       },
       calorific_value: {
-        type: DataTypes.FLOAT(11, 2)
-      }
+        type: DataTypes.FLOAT(11, 2),
+      },
     },
     {
       underscored: true,
-      paranoid: true
+      paranoid: true,
     }
   );
 };
 
-export const associate = database => {
+export const associate = (database) => {
   database.models[TABLE_NAME].belongsTo(database.models[exerciseTableName], {
     foreignKey: "exercise_id",
-    targetKey: "id"
+    targetKey: "id",
   });
 
   database.models[TABLE_NAME].belongsTo(database.models[repetitionTableName], {
     foreignKey: "repetition_id",
-    targetKey: "id"
+    targetKey: "id",
   });
 };

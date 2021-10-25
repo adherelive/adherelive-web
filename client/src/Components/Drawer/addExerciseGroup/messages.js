@@ -4,83 +4,83 @@ const message = defineMessages({
   add_exercise_group: {
     id: "app.drawer.add.exercise.group.title",
     description: "",
-    defaultMessage: "Add Exercise"
+    defaultMessage: "Add Exercise",
   },
   exercise: {
     id: "app.drawer.add.exercise.group.exercise",
     description: "",
-    defaultMessage: "Exercise"
+    defaultMessage: "Exercise",
   },
   repetition_value: {
     id: "app.drawer.add.exercise.group.repetition.value",
     description: "",
-    defaultMessage: "Repeats"
+    defaultMessage: "Repeats",
   },
   repetition_type: {
     id: "app.drawer.add.exercise.group.repetition.type",
     description: "",
-    defaultMessage: "Repeat Type"
+    defaultMessage: "Repeat Type",
   },
   sets: {
     id: "app.drawer.add.exercise.group.sets",
     description: "",
-    defaultMessage: "Sets"
+    defaultMessage: "Sets",
   },
   calories: {
     id: "app.drawer.add.exercise.group.calories",
     description: "",
-    defaultMessage: "Calories Burnt"
+    defaultMessage: "Calories Burnt",
   },
   exercise_required_error: {
     id: "app.drawer.add.exercise.group.exercise.error",
     description: "",
-    defaultMessage: "Exercise is a required field"
+    defaultMessage: "Exercise is a required field",
   },
   sets_required_error: {
     id: "app.drawer.add.exercise.group.sets.error",
     description: "",
-    defaultMessage: "Sets is a required field"
+    defaultMessage: "Sets is a required field",
   },
   repetition_id_required_error: {
     id: "app.drawer.add.exercise.group.repetition.id.error",
     description: "",
-    defaultMessage: "Repetition Type is a required field"
+    defaultMessage: "Repetition Type is a required field",
   },
   repetition_value_required_error: {
     id: "app.drawer.add.exercise.group.repetition.value.error",
     description: "",
-    defaultMessage: "Repetition value is a required field"
+    defaultMessage: "Repetition value is a required field",
   },
   note: {
     id: "app.drawer.add.exercise.group.repetition.submit.note",
     description: "",
-    defaultMessage: "Note"
+    defaultMessage: "Note",
   },
   submit_text: {
     id: "app.drawer.add.exercise.group.repetition.submit.text",
     description: "",
-    defaultMessage: "Submit"
+    defaultMessage: "Submit",
   },
   add_new_exercise_details: {
     id: "app.drawer.add.exercise.group.add.new.details",
     description: "",
-    defaultMessage: "Add New exercise "
+    defaultMessage: "Add New exercise ",
   },
   search_exercise: {
     id: "app.drawer.add.exercise.group.search.exercise",
     description: "",
-    defaultMessage: "Search exercise"
+    defaultMessage: "Search exercise",
   },
   somethingWentWrong: {
     id: "app.drawer.add.exercise.group.something.went.wrong",
     description: "",
-    defaultMessage: "Something went wrong"
+    defaultMessage: "Something went wrong",
   },
   videoUrl: {
     id: "app.drawer.add.exercise.group.videoUrl",
     description: "",
-    defaultMessage: "Video URL"
-  }
+    defaultMessage: "Video URL",
+  },
 });
 
 export default message;

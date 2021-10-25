@@ -6,25 +6,25 @@ export const SEARCH_VITAL_START = "SEARCH_VITAL_START";
 export const SEARCH_VITAL_COMPLETED = "SEARCH_VITAL_COMPLETED";
 export const SEARCH_VITAL_FAILED = "SEARCH_VITAL_FAILED";
 
-export const searchVital = value => {
+export const searchVital = (value) => {
   let response = {};
-  return async dispatch => {
+  return async (dispatch) => {
     try {
       response = await doRequest({
         method: REQUEST_TYPE.GET,
-        url: searchVitals(value)
+        url: searchVitals(value),
       });
 
       const { status, payload: { data, message = "" } = {} } = response || {};
       if (status === true) {
         dispatch({
           type: SEARCH_VITAL_COMPLETED,
-          payload: data
+          payload: data,
         });
       } else {
         dispatch({
           type: SEARCH_VITAL_FAILED,
-          message
+          message,
         });
       }
     } catch (error) {
@@ -39,7 +39,7 @@ function vitalReducer(state, data) {
   if (vital_templates) {
     return {
       ...state,
-      ...vital_templates
+      ...vital_templates,
     };
   } else {
     return state;

@@ -4,134 +4,134 @@ const messages = defineMessages({
   doctor_settings_header_text: {
     id: "app.account.details.header.text",
     description: "",
-    defaultMessage: "Settings"
+    defaultMessage: "Settings",
   },
   doctorConsultationFeesHeader: {
     id: "app.account.details.consultation.fees.header",
     description: "",
-    defaultMessage: "Consultation Fees"
+    defaultMessage: "Consultation Fees",
   },
   noPaymentDetailsHeader: {
     id: "app.account.details.no.payment.details",
     description: "",
-    defaultMessage: "No Payment Details Added yet"
+    defaultMessage: "No Payment Details Added yet",
   },
   doctorBillingHeader: {
     id: "app.account.details.billig.header",
     description: "",
-    defaultMessage: "Billing"
+    defaultMessage: "Billing",
   },
   paymentDetailsHeader: {
     id: "app.account.details.payment.details",
     description: "",
-    defaultMessage: "Payment Details"
+    defaultMessage: "Payment Details",
   },
   noConsultationFeeAdded: {
     id: "app.account.details.no.consultation.fee.added",
     description: "",
-    defaultMessage: "No Consultation Fee Added"
+    defaultMessage: "No Consultation Fee Added",
   },
   notAddedFeesYet: {
     id: "app.account.details.no.fees.added",
     description: "",
-    defaultMessage: "Please add consultation fee in order to charge patients"
+    defaultMessage: "Please add consultation fee in order to charge patients",
   },
   addFee: {
     id: "app.account.details.add.fee",
     description: "",
-    defaultMessage: "Add Fee"
+    defaultMessage: "Add Fee",
   },
   addMore: {
     id: "app.account.details.add.more",
     description: "",
-    defaultMessage: "Add More"
+    defaultMessage: "Add More",
   },
   deleteDoctorProductSuccess: {
     id: "app.account.details.delete.doctor.productsuccess",
     description: "",
-    defaultMessage: "Consultation Fee deleted successfully"
+    defaultMessage: "Consultation Fee deleted successfully",
   },
   addAccountDetails: {
     id: "app.account.details.add.account.details",
     description: "",
-    defaultMessage: "Add account details"
+    defaultMessage: "Add account details",
   },
   addUPIDetails: {
     id: "app.account.details.add.upi.details",
     description: "",
-    defaultMessage: "Add UPI details"
+    defaultMessage: "Add UPI details",
   },
   somethingWentWrong: {
     id: "app.account.details.somethingWentWrong",
     description: "",
-    defaultMessage: "Something went wrong."
+    defaultMessage: "Something went wrong.",
   },
   existingAccountDetails: {
     id: "app.account.details.existingAccountDetails",
     description: "",
-    defaultMessage: "Existing Account Details"
+    defaultMessage: "Existing Account Details",
   },
   linkedAccountName: {
     id: "app.account.details.linked.account.name",
     description: "",
-    defaultMessage: "Linked Account Name"
+    defaultMessage: "Linked Account Name",
   },
   contactNumber: {
     id: "app.account.details.contact.number",
     description: "",
-    defaultMessage: "Contact Number"
+    defaultMessage: "Contact Number",
   },
   accountNumber: {
     id: "app.account.details.accountNumber",
     description: "",
-    defaultMessage: "Account Number"
+    defaultMessage: "Account Number",
   },
   accountType: {
     id: "app.account.details.accountType",
     description: "",
-    defaultMessage: "Account Type"
+    defaultMessage: "Account Type",
   },
   ifsc: {
     id: "app.account.details.ifsc",
     description: "",
-    defaultMessage: "IFSC Code"
+    defaultMessage: "IFSC Code",
   },
   accountDetailsDeleteSuccess: {
     id: "app.account.details.accountDetailsDeleteSuccess",
     description: "",
-    defaultMessage: "Account Details deleted succesfully"
+    defaultMessage: "Account Details deleted succesfully",
   },
   upiId: {
     id: "app.account.details.upiId",
     description: "",
-    defaultMessage: "UPI Id"
+    defaultMessage: "UPI Id",
   },
   editAccount: {
     id: "app.account.details.edit.account.text",
     description: "",
-    defaultMessage: "Edit"
+    defaultMessage: "Edit",
   },
   deleteAccount: {
     id: "app.account.details.delete.account.text",
     description: "",
-    defaultMessage: "Delete"
+    defaultMessage: "Delete",
   },
   billingDisplay: {
     id: "app.account.details.delete.billingDisplay",
     description: "",
-    defaultMessage: "No billing details yet"
+    defaultMessage: "No billing details yet",
   },
   warnNote: {
     id: "app.account.details.delete.warnNote",
     description: "",
     defaultMessage:
-      "There might be payment settlements attached to this account. Please be sure before removing these Account Details."
+      "There might be payment settlements attached to this account. Please be sure before removing these Account Details.",
   },
   irreversibleWarn: {
     id: "app.account.details.delete.irreversibleWarn",
     description: "",
-    defaultMessage: "This delete is irreversible"
-  }
+    defaultMessage: "This delete is irreversible",
+  },
 });
 
 export default messages;

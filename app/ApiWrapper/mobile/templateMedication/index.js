@@ -14,9 +14,9 @@ class TemplateMedicationWrapper extends BaseTemplateMedication {
       basic_info: {
         id,
         care_plan_template_id,
-        medicine_id
+        medicine_id,
       },
-      schedule_data
+      schedule_data,
     };
   };
 }
@@ -25,8 +25,7 @@ export default async (data = null, id = null) => {
   if (data !== null) {
     return new TemplateMedicationWrapper(data);
   }
-  const templateMedication = await templateMedicationService.getSingleTemplateMedicationByData(
-    { id }
-  );
+  const templateMedication =
+    await templateMedicationService.getSingleTemplateMedicationByData({ id });
   return new TemplateMedicationWrapper(templateMedication.get());
 };

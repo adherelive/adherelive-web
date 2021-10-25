@@ -9,7 +9,7 @@ const FIELD_NAME = "unit";
 
 const units = [
   { key: "mg", value: "mg" },
-  { key: "ml", value: "ml" }
+  { key: "ml", value: "ml" },
 ];
 const { Option } = Select;
 const { Item: FormItem } = Form;
@@ -17,19 +17,19 @@ const { Item: FormItem } = Form;
 class MedicationStrengthUnit extends Component {
   componentDidMount() {
     const {
-      form: { validateFields }
+      form: { validateFields },
     } = this.props;
     validateFields();
   }
 
   componentWillUnmount() {
     const {
-      form: { validateFields }
+      form: { validateFields },
     } = this.props;
     validateFields();
   }
 
-  getParentNode = t => t.parentNode;
+  getParentNode = (t) => t.parentNode;
 
   getUnitOption = () => {
     return units.map((unit, index) => {
@@ -46,7 +46,7 @@ class MedicationStrengthUnit extends Component {
       purpose,
       event: { data = {} } = {},
       form: { getFieldValue },
-      medicines
+      medicines,
     } = this.props;
     let medicine = getFieldValue(chooseMedicationField.field_name);
     let { basic_info: { type: medType = "" } = {} } = medicines[medicine] || {};
@@ -69,7 +69,7 @@ class MedicationStrengthUnit extends Component {
     const {
       getFieldDecorator,
       getFieldError,
-      isFieldTouched
+      isFieldTouched,
       //getFieldValue
     } = form;
     const error = isFieldTouched(FIELD_NAME) && getFieldError(FIELD_NAME);
@@ -83,10 +83,10 @@ class MedicationStrengthUnit extends Component {
             rules: [
               {
                 required: true,
-                message: "Select Strength Unit"
-              }
+                message: "Select Strength Unit",
+              },
             ],
-            initialValue: getInitialValue()
+            initialValue: getInitialValue(),
           })(
             <div></div>
             // <Select
@@ -117,5 +117,5 @@ const Field = injectIntl(MedicationStrengthUnit);
 
 export default {
   field_name: FIELD_NAME,
-  render: props => <Field {...props} />
+  render: (props) => <Field {...props} />,
 };

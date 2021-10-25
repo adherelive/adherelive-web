@@ -3,62 +3,62 @@ import { DataTypes } from "sequelize";
 import {
   TABLE_NAME,
   PAYMENT_PRODUCT_TYPES,
-  PRODUCT_USER_TYPES
+  PRODUCT_USER_TYPES,
 } from "../app/models/paymentProducts";
 import { USER_CATEGORY_ARRAY } from "../app/models/users";
 
 module.exports = {
-  up: queryInterface => {
+  up: (queryInterface) => {
     return queryInterface.createTable(TABLE_NAME, {
       id: {
         type: DataTypes.INTEGER,
         primaryKey: true,
         autoIncrement: true,
-        allowNull: false
+        allowNull: false,
       },
       name: {
         type: DataTypes.STRING,
-        allowNull: false
+        allowNull: false,
       },
       type: {
         type: DataTypes.ENUM,
         values: PAYMENT_PRODUCT_TYPES,
-        allowNull: false
+        allowNull: false,
       },
       amount: {
-        type: DataTypes.INTEGER
+        type: DataTypes.INTEGER,
       },
       creator_id: {
-        type: DataTypes.INTEGER
+        type: DataTypes.INTEGER,
         // allowNull: false
       },
       creator_type: {
         type: DataTypes.ENUM,
         values: USER_CATEGORY_ARRAY,
-        allowNull: false
+        allowNull: false,
       },
       product_user_type: {
         type: DataTypes.ENUM,
-        values: PRODUCT_USER_TYPES
+        values: PRODUCT_USER_TYPES,
       },
       details: {
-        type: DataTypes.JSON
+        type: DataTypes.JSON,
       },
       created_at: {
         allowNull: false,
-        type: DataTypes.DATE
+        type: DataTypes.DATE,
       },
       updated_at: {
         allowNull: false,
-        type: DataTypes.DATE
+        type: DataTypes.DATE,
       },
       deleted_at: {
-        type: DataTypes.DATE
-      }
+        type: DataTypes.DATE,
+      },
     });
   },
 
-  down: queryInterface => {
+  down: (queryInterface) => {
     return queryInterface.dropTable(TABLE_NAME);
-  }
+  },
 };

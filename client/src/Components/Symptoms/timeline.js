@@ -9,7 +9,7 @@ import messages from "./message";
 
 const TABS = {
   TIMELINE: "1",
-  SUMMARY: "2"
+  SUMMARY: "2",
 };
 
 class TimelineTab extends Component {
@@ -20,7 +20,7 @@ class TimelineTab extends Component {
       timelineSymptoms: {},
       symptom_dates: [],
       loading: false,
-      imageModalVisible: false
+      imageModalVisible: false,
     };
   }
 
@@ -28,7 +28,7 @@ class TimelineTab extends Component {
     const { getSymptomTimeLine, patientId } = this.props;
 
     this.setState({ loading: true });
-    getSymptomTimeLine(patientId).then(res => {
+    getSymptomTimeLine(patientId).then((res) => {
       const { status = false, payload: { data = {} } = {} } = res || {};
       if (status) {
         const { timeline_symptoms = {}, symptom_dates = [] } = data || {};
@@ -65,7 +65,7 @@ class TimelineTab extends Component {
     this.setState({ imageModalVisible: false });
   };
 
-  openModal = url => () => {
+  openModal = (url) => () => {
     this.setState({ imageToShow: url }, () =>
       this.setState({ imageModalVisible: true })
     );
@@ -75,36 +75,36 @@ class TimelineTab extends Component {
     const { onRowClickSymptoms } = this;
     // const { key } = record;
     return {
-      onClick: onRowClickSymptoms(record)
+      onClick: onRowClickSymptoms(record),
     };
   };
 
-  handleSubmitTemplate = data => {
+  handleSubmitTemplate = (data) => {
     const {
       addCarePlanMedicationsAndAppointments,
       getMedications,
       getAppointments,
       care_plans,
       patient_id,
-      getPatientCarePlanDetails
+      getPatientCarePlanDetails,
     } = this.props;
     let carePlanId = 1;
     for (let carePlan of Object.values(care_plans)) {
       let {
-        basic_info: { id = 1, patient_id: patientId = 1 }
+        basic_info: { id = 1, patient_id: patientId = 1 },
       } = carePlan;
       if (patient_id == patientId) {
         carePlanId = id;
       }
     }
-    addCarePlanMedicationsAndAppointments(data, carePlanId).then(response => {
+    addCarePlanMedicationsAndAppointments(data, carePlanId).then((response) => {
       const {
         status = false,
         statusCode,
         payload: {
           error: { error_type = "" } = {},
-          message: errorMessage = ""
-        } = {}
+          message: errorMessage = "",
+        } = {},
       } = response;
       if (status) {
         this.onCloseTemplate();
@@ -127,7 +127,7 @@ class TimelineTab extends Component {
     });
   };
 
-  getBodyPartName = selected_part => {
+  getBodyPartName = (selected_part) => {
     const { formatMessage } = this;
     if (selected_part === PART_LIST_CODES.HEAD) {
       return formatMessage(messages.head);
@@ -250,7 +250,7 @@ class TimelineTab extends Component {
     // createdAtDates.forEach(date => {
     for (let date of symptom_dates) {
       data.push({
-        date: `${date}`
+        date: `${date}`,
       });
       const activityData = timelineSymptoms[date] || [];
       activityData.forEach((activity, index) => {
@@ -260,16 +260,16 @@ class TimelineTab extends Component {
             text = "",
             image_document_ids = [],
             audio_document_ids = [],
-            config: { parts = [] } = {}
+            config: { parts = [] } = {},
           } = {},
-          createdAt = ""
+          createdAt = "",
         } = activity || {};
         const temp = {
           text,
           image_document_ids,
           audio_document_ids,
           createdAt,
-          parts
+          parts,
         };
         data.push(temp);
       });
@@ -280,10 +280,10 @@ class TimelineTab extends Component {
   onClickDownloader = (url, filename) => () => {
     if (url && url.length > 0) {
       fetch(url, {
-        method: "GET"
+        method: "GET",
       })
-        .then(response => response.blob())
-        .then(blob => {
+        .then((response) => response.blob())
+        .then((blob) => {
           const blobUrl = window.URL.createObjectURL(new Blob([blob]));
           const downloader = document.createElement("a");
           downloader.href = blobUrl;
@@ -295,7 +295,7 @@ class TimelineTab extends Component {
         });
     }
   };
-  renderTimelineBody = data => {
+  renderTimelineBody = (data) => {
     const { upload_documents = {} } = this.props;
     let dataTorender = [];
     console.log("1298317382 data --> ", data);
@@ -306,7 +306,7 @@ class TimelineTab extends Component {
         image_document_ids = [],
         audio_document_ids = [],
         createdAt = moment(),
-        parts = []
+        parts = [],
       } = rowData || {};
       let imageUrl = "";
       let audioUrl = "";
@@ -345,7 +345,7 @@ class TimelineTab extends Component {
                 paddingTop: imageUrl && imageUrl.length ? 0 : 5,
                 borderRadius: 2,
                 marginTop: -12,
-                width: 300
+                width: 300,
               }}
             >
               {text && text.length ? (
@@ -378,7 +378,7 @@ class TimelineTab extends Component {
                       height: 40,
                       marginRight: 10,
                       paddingLeft: 10,
-                      paddingRight: 10
+                      paddingRight: 10,
                     }}
                   >
                     <div className={"fs16"}>
@@ -396,7 +396,7 @@ class TimelineTab extends Component {
                   flexDirection: "row",
                   marginTop: text || imageUrl || audioUrl ? 10 : 0,
                   marginLeft: 10,
-                  alignItems: "center"
+                  alignItems: "center",
                 }}
               >
                 <div>{moment(createdAt).format("hh:mm a")}</div>
@@ -411,7 +411,7 @@ class TimelineTab extends Component {
     return dataTorender;
   };
 
-  formatMessage = data => this.props.intl.formatMessage(data);
+  formatMessage = (data) => this.props.intl.formatMessage(data);
 
   render() {
     const data = this.formatDataForTimeLine();

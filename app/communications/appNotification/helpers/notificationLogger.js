@@ -6,18 +6,18 @@ const moment = require("moment");
 let notificationSchema = new mongoose.Schema(
   {
     data: { type: mongoose.Schema.Types.Mixed },
-    status: { type: String, required: true }
+    status: { type: String, required: true },
   },
   {
     collation: collectionName,
-    timestamps: true
+    timestamps: true,
   }
 );
 
 let notificationModel = mongoose.model("NotificationLog", notificationSchema);
 
 const notificationLogger = {
-  success: function(message, data = null) {
+  success: function (message, data = null) {
     // console.log(
     //   chalk.blue(`Notifications [ ${moment().format("DD-MM-YY HH:MM:SS")}]:`),
     //   message,
@@ -25,7 +25,7 @@ const notificationLogger = {
     // );
     notificationModel
       .insertMany({ data, status: "success" })
-      .then(result => {
+      .then((result) => {
         // console.log(
         //   chalk.blue(
         //     `Notifications [ ${moment().format("DD-MM-YY HH:MM:SS")}]:`
@@ -34,7 +34,7 @@ const notificationLogger = {
         //   result
         // );
       })
-      .catch(err => {
+      .catch((err) => {
         console.log(
           chalk.red(
             `Notifications [ ${moment().format("DD-MM-YY HH:MM:SS")}]:`
@@ -44,7 +44,7 @@ const notificationLogger = {
         );
       });
   },
-  error: function(message, data = null, errObj = null) {
+  error: function (message, data = null, errObj = null) {
     console.log(
       chalk.red(`Notifications [ ${moment().format("DD-MM-YY HH:MM:SS")}]:`),
       message,
@@ -53,7 +53,7 @@ const notificationLogger = {
     );
     notificationModel
       .insertMany({ data, status: "failed" })
-      .then(result => {
+      .then((result) => {
         console.log(
           chalk.blue(
             `Notifications [ ${moment().format("DD-MM-YY HH:MM:SS")}]:`
@@ -62,7 +62,7 @@ const notificationLogger = {
           result
         );
       })
-      .catch(err => {
+      .catch((err) => {
         console.log(
           chalk.red(
             `Notifications [ ${moment().format("DD-MM-YY HH:MM:SS")}]:`
@@ -71,10 +71,10 @@ const notificationLogger = {
           err
         );
       });
-  }
+  },
 };
 
 module.exports = {
   notificationModel,
-  notificationLogger
+  notificationLogger,
 };

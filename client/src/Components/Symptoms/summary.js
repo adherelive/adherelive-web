@@ -4,7 +4,7 @@ import {
   PART_LIST_BACK,
   PART_LIST_CODES,
   PART_LIST_FRONT,
-  BODY
+  BODY,
 } from "../../constant";
 import { Timeline, message, Switch, Modal, Slider, Spin } from "antd";
 
@@ -17,7 +17,7 @@ import humanBodyBack from "../../Assets/images/humanBodyBack.jpeg";
 
 const TABS = {
   TIMELINE: "1",
-  SUMMARY: "2"
+  SUMMARY: "2",
 };
 
 class SummaryTab extends Component {
@@ -33,7 +33,7 @@ class SummaryTab extends Component {
       showFront: true,
       sliderDays: 10,
       imageModalVisible: false,
-      imageToShow: ""
+      imageToShow: "",
     };
   }
 
@@ -47,13 +47,13 @@ class SummaryTab extends Component {
     //         this.setState({ timelineSymptoms: timeline_symptoms });
     //     }
     // });
-    getHistorySymptom(patientId, 365).then(res => {
+    getHistorySymptom(patientId, 365).then((res) => {
       const { status, payload: { data: { symptom_parts = {} } = {} } = {} } =
         res || {};
       if (status) {
         let partsWithSymptoms = [
           ...Object.keys(symptom_parts[1]),
-          ...Object.keys(symptom_parts[2])
+          ...Object.keys(symptom_parts[2]),
         ];
         let symptomParts = { ...symptom_parts[1], ...symptom_parts[2] };
         this.setState({ partsWithSymptoms, symptomParts, loading: false });
@@ -74,36 +74,36 @@ class SummaryTab extends Component {
     const { onRowClickSymptoms } = this;
     // const { key } = record;
     return {
-      onClick: onRowClickSymptoms(record)
+      onClick: onRowClickSymptoms(record),
     };
   };
 
-  handleSubmitTemplate = data => {
+  handleSubmitTemplate = (data) => {
     const {
       addCarePlanMedicationsAndAppointments,
       getMedications,
       getAppointments,
       care_plans,
       patient_id,
-      getPatientCarePlanDetails
+      getPatientCarePlanDetails,
     } = this.props;
     let carePlanId = 1;
     for (let carePlan of Object.values(care_plans)) {
       let {
-        basic_info: { id = 1, patient_id: patientId = 1 }
+        basic_info: { id = 1, patient_id: patientId = 1 },
       } = carePlan;
       if (patient_id == patientId) {
         carePlanId = id;
       }
     }
-    addCarePlanMedicationsAndAppointments(data, carePlanId).then(response => {
+    addCarePlanMedicationsAndAppointments(data, carePlanId).then((response) => {
       const {
         status = false,
         statusCode,
         payload: {
           error: { error_type = "" } = {},
-          message: errorMessage = ""
-        } = {}
+          message: errorMessage = "",
+        } = {},
       } = response;
       if (status) {
         this.onCloseTemplate();
@@ -134,7 +134,7 @@ class SummaryTab extends Component {
     this.setState({ showModal: false });
   };
 
-  getBodyPartName = selected_part => {
+  getBodyPartName = (selected_part) => {
     const { formatMessage } = this;
     if (selected_part === PART_LIST_CODES.HEAD) {
       return formatMessage(messages.head);
@@ -257,7 +257,7 @@ class SummaryTab extends Component {
     // createdAtDates.forEach(date => {
     for (let date of Object.keys(timelineSymptoms)) {
       data.push({
-        date: `${date}`
+        date: `${date}`,
       });
       const activityData = timelineSymptoms[date] || [];
       activityData.forEach((activity, index) => {
@@ -267,16 +267,16 @@ class SummaryTab extends Component {
             text = "",
             image_document_ids = [],
             audio_document_ids = [],
-            config: { parts = [] } = {}
+            config: { parts = [] } = {},
           } = {},
-          createdAt = ""
+          createdAt = "",
         } = activity || {};
         const temp = {
           text,
           image_document_ids,
           audio_document_ids,
           createdAt,
-          parts
+          parts,
         };
         data.push(temp);
       });
@@ -285,7 +285,7 @@ class SummaryTab extends Component {
     return data;
   };
 
-  renderTimelineBody = data => {
+  renderTimelineBody = (data) => {
     const { upload_documents = {} } = this.props;
     let dataTorender = [];
     for (let rowData of data) {
@@ -295,7 +295,7 @@ class SummaryTab extends Component {
         image_document_ids = [],
         audio_document_ids = [],
         createdAt = moment(),
-        parts = []
+        parts = [],
       } = rowData || {};
       let imageUrl = "";
       let audioUrl = "";
@@ -335,7 +335,7 @@ class SummaryTab extends Component {
               paddingTop: imageUrl && imageUrl.length ? 0 : 5,
               borderRadius: 2,
               marginTop: -12,
-              width: 300
+              width: 300,
             }}
           >
             {text && text.length ? (
@@ -365,7 +365,7 @@ class SummaryTab extends Component {
                     height: 40,
                     marginRight: 10,
                     paddingLeft: 10,
-                    paddingRight: 10
+                    paddingRight: 10,
                   }}
                 >
                   <div className={"fs16"}>
@@ -384,7 +384,7 @@ class SummaryTab extends Component {
                 flexDirection: "row",
                 marginTop: text || imageUrl || audioUrl ? 10 : 0,
                 marginLeft: 10,
-                alignItems: "center"
+                alignItems: "center",
               }}
             >
               <div>{moment(createdAt).format("h a")}</div>
@@ -398,11 +398,11 @@ class SummaryTab extends Component {
     return dataTorender;
   };
 
-  showSymptomsOfPart = key => () => {
+  showSymptomsOfPart = (key) => () => {
     this.setState({ symptomsModalKey: key }, this.openModal);
   };
 
-  formatMessage = data => this.props.intl.formatMessage(data);
+  formatMessage = (data) => this.props.intl.formatMessage(data);
 
   toggleFront = () => {
     const { showFront: prevShowFront = false } = this.state;
@@ -414,10 +414,10 @@ class SummaryTab extends Component {
     // const { url, message } = this.state;
     if (url && url.length > 0) {
       fetch(url, {
-        method: "GET"
+        method: "GET",
       })
-        .then(response => response.blob())
-        .then(blob => {
+        .then((response) => response.blob())
+        .then((blob) => {
           const blobUrl = window.URL.createObjectURL(new Blob([blob]));
           const downloader = document.createElement("a");
           downloader.href = blobUrl;
@@ -449,9 +449,9 @@ class SummaryTab extends Component {
           data: {
             text = "",
             image_document_ids = [],
-            audio_document_ids = []
+            audio_document_ids = [],
           } = {},
-          createdAt = moment()
+          createdAt = moment(),
         } = rowData || {};
         let imageUrl = "";
         let audioUrl = "";
@@ -485,7 +485,7 @@ class SummaryTab extends Component {
               paddingBottom: 10,
               paddingTop: 10,
               borderRadius: 10,
-              width: "100%"
+              width: "100%",
             }}
           >
             <div className={"fs16 medium "}>
@@ -502,7 +502,7 @@ class SummaryTab extends Component {
                     width: 300,
                     height: 200,
                     borderRadius: 2,
-                    marginTop: 10
+                    marginTop: 10,
                   }}
                 />
               </div>
@@ -527,7 +527,7 @@ class SummaryTab extends Component {
                     height: 40,
                     marginRight: 10,
                     paddingLeft: 10,
-                    paddingRight: 10
+                    paddingRight: 10,
                   }}
                 >
                   <div className={"fs16"}>
@@ -582,23 +582,23 @@ class SummaryTab extends Component {
     this.setState({ imageModalVisible: false });
   };
 
-  openModalImage = url => () => {
+  openModalImage = (url) => () => {
     this.setState({ imageToShow: url }, () =>
       this.setState({ imageModalVisible: true })
     );
   };
 
-  setSliderDays = value => {
+  setSliderDays = (value) => {
     const { getHistorySymptom, patientId } = this.props;
 
     let days = (365 / 10) * value;
-    getHistorySymptom(patientId, days ? days : 1).then(res => {
+    getHistorySymptom(patientId, days ? days : 1).then((res) => {
       const { status, payload: { data: { symptom_parts = {} } = {} } = {} } =
         res || {};
       if (status) {
         let partsWithSymptoms = [
           ...Object.keys(symptom_parts[1]),
-          ...Object.keys(symptom_parts[2])
+          ...Object.keys(symptom_parts[2]),
         ];
         let symptomParts = { ...symptom_parts[1], ...symptom_parts[2] };
         this.setState({ partsWithSymptoms, symptomParts });
@@ -614,7 +614,7 @@ class SummaryTab extends Component {
     this.setState({ sliderDays: value });
   };
 
-  setDays = value => {
+  setDays = (value) => {
     this.setState({ sliderDays: value });
   };
 
@@ -628,7 +628,7 @@ class SummaryTab extends Component {
       partsWithSymptoms = [],
       symptomsModalKey,
       showModal,
-      loading
+      loading,
     } = this.state;
     if (loading) {
       return (
@@ -660,13 +660,13 @@ class SummaryTab extends Component {
               className={"wp100 hp100"}
             />
             {showFront
-              ? PART_LIST_FRONT.map(part => {
+              ? PART_LIST_FRONT.map((part) => {
                   const { key, areaStyle = {}, dotStyle = {} } = BODY[part];
                   const {
                     top: bpTop = 0,
                     left: bpLeft = 0,
                     height: bpHeight = 0,
-                    width: bpWidth = 0
+                    width: bpWidth = 0,
                   } = areaStyle || {};
                   const { top: dotTop = 0, left: dotLeft = 0 } = dotStyle || {};
                   return (
@@ -677,7 +677,7 @@ class SummaryTab extends Component {
                         top: `${bpTop}px`,
                         left: `${bpLeft}px`,
                         height: `${bpHeight}px`,
-                        width: `${bpWidth}px`
+                        width: `${bpWidth}px`,
                       }}
                     >
                       <div
@@ -690,20 +690,20 @@ class SummaryTab extends Component {
                           backgroundColor: partsWithSymptoms.includes(key)
                             ? "rgba(236,88,0,0.8)"
                             : "rgba(0,0,0,0)",
-                          borderRadius: "50%"
+                          borderRadius: "50%",
                         }}
                         onClick={this.showSymptomsOfPart(key)}
                       />
                     </div>
                   );
                 })
-              : PART_LIST_BACK.map(part => {
+              : PART_LIST_BACK.map((part) => {
                   const { key, areaStyle = {}, dotStyle = {} } = BODY[part];
                   const {
                     top: bpTop = 0,
                     left: bpLeft = 0,
                     height: bpHeight = 0,
-                    width: bpWidth = 0
+                    width: bpWidth = 0,
                   } = areaStyle || {};
                   const { top: dotTop = 0, left: dotLeft = 0 } = dotStyle || {};
                   return (
@@ -714,7 +714,7 @@ class SummaryTab extends Component {
                         top: `${bpTop}px`,
                         left: `${bpLeft}px`,
                         height: `${bpHeight}px`,
-                        width: `${bpWidth}px`
+                        width: `${bpWidth}px`,
                       }}
                     >
                       <div
@@ -731,7 +731,7 @@ class SummaryTab extends Component {
                             ? "rgba(236,88,0,0.8)"
                             : "rgba(0,0,0,0)",
                           // cursor: partsWithSymptoms.includes(key) ? "pointer" : '',
-                          borderRadius: "50%"
+                          borderRadius: "50%",
                         }}
                         onClick={this.showSymptomsOfPart(key)}
                       />
