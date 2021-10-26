@@ -14,8 +14,8 @@ class ProviderTermsMappingsWrapper extends BaseProviderTermsMapping {
       basic_info: {
         id,
         provider_id,
-        terms_and_conditions_id
-      }
+        terms_and_conditions_id,
+      },
     };
   };
 }
@@ -25,7 +25,7 @@ export default async (data = null, id = null) => {
     return new ProviderTermsMappingsWrapper(data);
   }
   const response = await providerTermsMappingsService.getSingleEntityByData({
-    id
+    id,
   });
   return new ProviderTermsMappingsWrapper(response);
 };

@@ -15,11 +15,11 @@ module.exports = {
         dob: "1994-09-02 12:05:21",
         details: JSON.stringify({
           allergies: "some allergies",
-          comorbidities: "some comorbidities"
+          comorbidities: "some comorbidities",
         }),
         uid: `ADH/${new Date().getFullYear()}/0001`,
         created_at: new Date(),
-        updated_at: new Date()
+        updated_at: new Date(),
       },
       {
         user_id: "6",
@@ -31,11 +31,11 @@ module.exports = {
         dob: "1997-09-02 12:05:21",
         details: JSON.stringify({
           allergies: "some allergies",
-          comorbidities: "some comorbidities"
+          comorbidities: "some comorbidities",
         }),
         uid: `ADH/${new Date().getFullYear()}/0001`,
         created_at: new Date(),
-        updated_at: new Date()
+        updated_at: new Date(),
       },
       {
         user_id: "7",
@@ -47,11 +47,11 @@ module.exports = {
         dob: "1997-09-02 12:05:21",
         details: JSON.stringify({
           allergies: "some allergies",
-          comorbidities: "some comorbidities"
+          comorbidities: "some comorbidities",
         }),
         uid: `ADH/${new Date().getFullYear()}/0001`,
         created_at: new Date(),
-        updated_at: new Date()
+        updated_at: new Date(),
       },
       {
         user_id: "8",
@@ -63,11 +63,11 @@ module.exports = {
         dob: "1997-09-02 12:05:21",
         details: JSON.stringify({
           allergies: "some allergies",
-          comorbidities: "some comorbidities"
+          comorbidities: "some comorbidities",
         }),
         uid: `ADH/${new Date().getFullYear()}/0001`,
         created_at: new Date(),
-        updated_at: new Date()
+        updated_at: new Date(),
       },
       {
         user_id: "9",
@@ -79,16 +79,16 @@ module.exports = {
         dob: "1997-09-02 12:05:21",
         details: JSON.stringify({
           allergies: "some allergies",
-          comorbidities: "some comorbidities"
+          comorbidities: "some comorbidities",
         }),
         uid: `ADH/${new Date().getFullYear()}/0001`,
         created_at: new Date(),
-        updated_at: new Date()
-      }
+        updated_at: new Date(),
+      },
     ]);
   },
 
   down: (queryInterface, Sequelize) => {
     return queryInterface.bulkDelete(TABLE_NAME, null, {});
-  }
+  },
 };

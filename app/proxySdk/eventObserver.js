@@ -10,7 +10,7 @@ const {
   SEND_NOTIFICATION,
   EMAIL_ERROR,
   NOTIFICATION_ERROR,
-  SMS_ERROR
+  SMS_ERROR,
 } = EVENTS;
 
 class EventObserver {
@@ -22,7 +22,7 @@ class EventObserver {
     try {
       let logger = new Logger("event_error", {
         eventType: type,
-        errorData: err
+        errorData: err,
       });
       logger.log();
     } catch (err) {

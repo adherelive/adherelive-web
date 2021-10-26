@@ -14,14 +14,14 @@ const { Option } = Select;
 class ChooseMedication extends Component {
   componentDidMount() {
     const {
-      form: { validateFields }
+      form: { validateFields },
     } = this.props;
     validateFields();
   }
 
   componentWillUnmount() {
     const {
-      form: { validateFields }
+      form: { validateFields },
     } = this.props;
     validateFields();
   }
@@ -32,12 +32,12 @@ class ChooseMedication extends Component {
       programs = {},
       otherUser: {
         programId: otherUserProgramId = [],
-        basicInfo: { category: otherUserCategory } = {}
+        basicInfo: { category: otherUserCategory } = {},
       } = {},
       currentUser: {
         programId: currentUserProgramId = [],
-        basicInfo: { category: currentUserCategory } = {}
-      } = {}
+        basicInfo: { category: currentUserCategory } = {},
+      } = {},
     } = this.props;
 
     let programId;
@@ -52,7 +52,7 @@ class ChooseMedication extends Component {
 
     if (programId) {
       const { products: productIds = [] } = programs[programId] || {};
-      productIds.forEach(productId => {
+      productIds.forEach((productId) => {
         const { name, _id } = products[productId] || {};
         if (_id) {
           options.push(
@@ -66,7 +66,7 @@ class ChooseMedication extends Component {
     return options;
   };
 
-  getParentNode = t => t.parentNode;
+  getParentNode = (t) => t.parentNode;
 
   getInitialValue = () => {
     const { purpose, event: { data = {} } = {} } = this.props;
@@ -82,7 +82,7 @@ class ChooseMedication extends Component {
     const {
       getFieldDecorator,
       getFieldError,
-      isFieldTouched
+      isFieldTouched,
       //getFieldValue
     } = form;
     const error = isFieldTouched(FIELD_NAME) && getFieldError(FIELD_NAME);
@@ -102,10 +102,10 @@ class ChooseMedication extends Component {
             rules: [
               {
                 required: true,
-                message: "Select a Medicine"
-              }
+                message: "Select a Medicine",
+              },
             ],
-            initialValue: medicine_id ? medicine_id : getInitialValue()
+            initialValue: medicine_id ? medicine_id : getInitialValue(),
           })(
             <Select
               className="full-width"
@@ -136,5 +136,5 @@ const Field = injectIntl(ChooseMedication);
 
 export default {
   field_name: FIELD_NAME,
-  render: props => <Field {...props} />
+  render: (props) => <Field {...props} />,
 };

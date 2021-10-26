@@ -4,13 +4,13 @@ import Tooltip from "antd/es/tooltip";
 
 import messages from "../messages";
 
-export default props => {
+export default (props) => {
   const {
     data: {
       basic_info: { id = null, name = "", type = "", amount = "" } = {},
       editDoctorProduct,
-      formatMessage
-    } = {}
+      formatMessage,
+    } = {},
   } = props || {};
 
   const { data: { doctors: { provider_id } = {} } = {} } = props;

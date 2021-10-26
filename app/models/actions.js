@@ -5,7 +5,7 @@ import { ACTION_TYPE } from "../../constant";
 
 export const ACTIONS = "actions";
 
-export const db = database => {
+export const db = (database) => {
   database.define(
     ACTIONS,
     {
@@ -13,36 +13,36 @@ export const db = database => {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
-        type: DataTypes.INTEGER
+        type: DataTypes.INTEGER,
       },
       care_plan_id: {
         type: DataTypes.INTEGER,
         allowNull: false,
         references: {
           model: {
-            tableName: CARE_PLANS
+            tableName: CARE_PLANS,
           },
-          key: "id"
-        }
+          key: "id",
+        },
       },
       type: {
         type: DataTypes.ENUM,
         values: [ACTION_TYPE.MEDICATION, ACTION_TYPE.WORKOUT, ACTION_TYPE.DIET],
-        allowNull: false
+        allowNull: false,
       },
       frequency_per_day: {
         type: DataTypes.INTEGER,
-        allowNull: false
+        allowNull: false,
       },
       reference_link: {
-        type: DataTypes.STRING(1000)
+        type: DataTypes.STRING(1000),
       },
       start_date: {
-        type: DataTypes.DATE
+        type: DataTypes.DATE,
       },
       end_date: {
-        type: DataTypes.DATE
-      }
+        type: DataTypes.DATE,
+      },
     },
     {
       underscored: true,
@@ -56,20 +56,20 @@ export const db = database => {
             frequency_per_day: this.frequency_per_day,
             reference_link: this.reference_link,
             start_date: this.start_date,
-            end_date: this.end_date
+            end_date: this.end_date,
           };
-        }
-      }
+        },
+      },
     }
   );
 };
 
-export const associate = database => {
+export const associate = (database) => {
   const { actions, care_plans } = database.models || {};
 
   // associations here (if any) ...
   actions.belongsTo(care_plans, {
     foreignKey: "care_plan_id",
-    targetKey: "id"
+    targetKey: "id",
   });
 };

@@ -17,7 +17,7 @@ class AddExercise extends Component {
       total_calories: 0,
       submitting: false,
       days: [],
-      time: ""
+      time: "",
     };
 
     this.FormWrapper = Form.create({ onFieldsChange: this.onFormFieldChanges })(
@@ -51,8 +51,8 @@ class AddExercise extends Component {
         const {
           all_workout_details: {
             days = [],
-            start_time: { hours = "", minutes = "" } = {}
-          } = {}
+            start_time: { hours = "", minutes = "" } = {},
+          } = {},
         } = this.props;
         const time = moment(`${hours}:${minutes}`, "HH:mm A").toISOString();
         this.setState({ days, time });
@@ -62,13 +62,13 @@ class AddExercise extends Component {
     }
   };
 
-  setTime = time => {
+  setTime = (time) => {
     this.setState({ time });
   };
 
-  formatMessage = data => this.props.intl.formatMessage(data);
+  formatMessage = (data) => this.props.intl.formatMessage(data);
 
-  setFinalDayData = data => {
+  setFinalDayData = (data) => {
     this.setState({ completeData: data });
   };
 
@@ -76,26 +76,26 @@ class AddExercise extends Component {
     const { close } = this.props;
     const {
       props: {
-        form: { resetFields }
-      }
+        form: { resetFields },
+      },
     } = this.formRef;
 
     this.setState({
       completeData: [],
       total_calories: 0,
       submitting: false,
-      time: ""
+      time: "",
     });
 
     resetFields();
     close();
   };
 
-  setNewTotalCal = newTotalCal => {
+  setNewTotalCal = (newTotalCal) => {
     this.setState({ total_calories: newTotalCal });
   };
 
-  setFormRef = formRef => {
+  setFormRef = (formRef) => {
     this.formRef = formRef;
     if (formRef) {
       this.setState({ formRef: true });
@@ -116,8 +116,8 @@ class AddExercise extends Component {
   handleSubmit = async () => {
     const {
       props: {
-        form: { validateFields }
-      }
+        form: { validateFields },
+      },
     } = this.formRef;
 
     const validated = this.validateExerciseData();
@@ -130,7 +130,7 @@ class AddExercise extends Component {
     const {
       completeData: workout_exercise_groups = [],
       total_calories = 0,
-      time = ""
+      time = "",
     } = this.state;
 
     const fomattedTime = moment(time).toISOString();
@@ -142,7 +142,7 @@ class AddExercise extends Component {
           start_date: moment_start_date,
           end_date: moment_end_date,
           what_not_to_do = "",
-          repeat_days = []
+          repeat_days = [],
         } = values;
 
         if (name.length === 0 || repeat_days.length === 0 || !care_plan_id) {
@@ -162,7 +162,7 @@ class AddExercise extends Component {
           start_date,
           end_date,
           not_to_do: what_not_to_do,
-          time: fomattedTime
+          time: fomattedTime,
         };
 
         this.setState({ submitting: true });
@@ -170,7 +170,7 @@ class AddExercise extends Component {
         const {
           status,
           statusCode,
-          payload: { data: resp_data = {}, message: resp_msg = "" } = {}
+          payload: { data: resp_data = {}, message: resp_msg = "" } = {},
         } = response || {};
 
         if (status) {
@@ -230,7 +230,7 @@ class AddExercise extends Component {
       setFormRef,
       getWorkoutComponent,
       setTime,
-      FormWrapper
+      FormWrapper,
     } = this;
     const { visible = false } = this.props;
     const { submitting = false, days = [], time = "" } = this.state;
@@ -244,7 +244,7 @@ class AddExercise extends Component {
           headerStyle={{
             position: "sticky",
             zIndex: "9999",
-            top: "0px"
+            top: "0px",
           }}
           destroyOnClose={true}
           onClose={onClose}

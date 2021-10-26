@@ -4,7 +4,7 @@ import messages from "../messages";
 import Tooltip from "antd/es/tooltip";
 import EyeFilled from "@ant-design/icons/EyeFilled";
 
-export default props => {
+export default (props) => {
   const { action, id, formatMessage, canViewDetails = false } = props || {};
   const { workoutData: { expired_on = null } = {} } = props || {};
 

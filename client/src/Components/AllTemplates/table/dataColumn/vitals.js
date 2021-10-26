@@ -1,11 +1,11 @@
 import React from "react";
 
-export default props => {
+export default (props) => {
   const {
     template_vital_ids,
     vitalsData = {},
     vital_templates = {},
-    repeat_intervals = {}
+    repeat_intervals = {},
   } = props;
 
   let vitals = [];
@@ -22,13 +22,13 @@ export default props => {
         description = "",
         duration = "",
         repeat_days = [],
-        repeat_interval_id = ""
+        repeat_interval_id = "",
       } = {},
       basic_info: {
         care_plan_template_id = "",
         id = "",
-        vital_template_id = ""
-      } = {}
+        vital_template_id = "",
+      } = {},
     } = vitalsData[key];
 
     const { basic_info: { name: vital_name = "" } = {} } =

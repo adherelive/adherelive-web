@@ -5,7 +5,7 @@ import {
   Switch,
   Redirect,
   useLocation,
-  withRouter
+  withRouter,
 } from "react-router-dom";
 import BlankState from "../../Components/Common/BlankState";
 import { PATH } from "../../constant";
@@ -85,7 +85,7 @@ const PaymentDetailsPage = lazy(() =>
   )
 );
 
-const ProviderDoctorDetailsComp = props => {
+const ProviderDoctorDetailsComp = (props) => {
   const { match: { params: { id } = {} } = {} } = props;
   return <ProviderDoctorDetailsPage id={id} />;
 };
@@ -94,7 +94,7 @@ class ProviderDoctor extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      redirecting: this.props.authRedirection
+      redirecting: this.props.authRedirection,
     };
   }
 

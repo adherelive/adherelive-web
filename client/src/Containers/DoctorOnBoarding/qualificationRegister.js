@@ -8,7 +8,7 @@ import {
   deleteDoctorQualificationImage,
   deleteDoctorRegistrationImage,
   registerRegistration,
-  callNewDoctorAction
+  callNewDoctorAction,
 } from "../../modules/onBoarding";
 import { connect } from "react-redux";
 import { searchCollege } from "../../modules/colleges";
@@ -17,10 +17,10 @@ import { searchDegree } from "../../modules/degrees";
 import { searchSpecialties } from "../../modules/specialities";
 import {
   getDoctorDetails,
-  getDoctorProfileDetails
+  getDoctorProfileDetails,
 } from "../../modules/doctors";
 
-const mapStateToProps = state => {
+const mapStateToProps = (state) => {
   console.log("STATEEEEEEEEEEEEEEEEEEEEE =====>", state);
   const {
     auth,
@@ -33,7 +33,7 @@ const mapStateToProps = state => {
     colleges,
     degrees,
     councils,
-    specialities
+    specialities,
   } = state;
   const { authenticated_user, authenticated_category } = auth;
   return {
@@ -48,29 +48,30 @@ const mapStateToProps = state => {
     degrees,
     councils,
     specialities,
-    authenticated_category
+    authenticated_category,
   };
 };
 
-const mapDispatchToProps = dispatch => {
+const mapDispatchToProps = (dispatch) => {
   return {
     signOut: () => dispatch(signOut()),
-    searchCollege: data => dispatch(searchCollege(data)),
-    searchCouncil: data => dispatch(searchCouncil(data)),
-    searchDegree: data => dispatch(searchDegree(data)),
-    doctorQualificationRegister: data =>
+    searchCollege: (data) => dispatch(searchCollege(data)),
+    searchCouncil: (data) => dispatch(searchCouncil(data)),
+    searchDegree: (data) => dispatch(searchDegree(data)),
+    doctorQualificationRegister: (data) =>
       dispatch(doctorQualificationRegister(data)),
-    getDoctorQualificationRegisterData: data =>
+    getDoctorQualificationRegisterData: (data) =>
       dispatch(getDoctorQualificationRegisterData(data)),
-    registerQualification: data => dispatch(registerQualification(data)),
-    registerRegistration: data => dispatch(registerRegistration(data)),
+    registerQualification: (data) => dispatch(registerQualification(data)),
+    registerRegistration: (data) => dispatch(registerRegistration(data)),
     deleteDoctorQualificationImage: (qualificationId, document) =>
       dispatch(deleteDoctorQualificationImage(qualificationId, document)),
     deleteDoctorRegistrationImage: (registrationId, document) =>
       dispatch(deleteDoctorRegistrationImage(registrationId, document)),
-    searchSpecialities: data => dispatch(searchSpecialties(data)),
-    callNewDoctorAction: doctor_id => dispatch(callNewDoctorAction(doctor_id)),
-    getDoctorProfileDetails: id => dispatch(getDoctorProfileDetails(id))
+    searchSpecialities: (data) => dispatch(searchSpecialties(data)),
+    callNewDoctorAction: (doctor_id) =>
+      dispatch(callNewDoctorAction(doctor_id)),
+    getDoctorProfileDetails: (id) => dispatch(getDoctorProfileDetails(id)),
   };
 };
 export default withRouter(

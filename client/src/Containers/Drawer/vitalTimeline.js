@@ -6,12 +6,12 @@ import { getVitalTimeline } from "../../modules/vitals";
 import { close } from "../../modules/drawer";
 import { DRAWER } from "../../constant";
 
-const mapStateToProps = state => {
+const mapStateToProps = (state) => {
   const {
     drawer: { visible, data: { type, payload: { id, loading } = {} } = {} },
     vitals = {},
     vital_templates = {},
-    schedule_events = {}
+    schedule_events = {},
   } = state;
 
   return {
@@ -20,14 +20,14 @@ const mapStateToProps = state => {
     vitals,
     vital_templates,
     schedule_events,
-    visible: visible && type === DRAWER.VITAL_RESPONSE_TIMELINE
+    visible: visible && type === DRAWER.VITAL_RESPONSE_TIMELINE,
   };
 };
 
-const mapDispatchToProps = dispatch => {
+const mapDispatchToProps = (dispatch) => {
   return {
     close: () => dispatch(close()),
-    getVitalTimeline: id => () => dispatch(getVitalTimeline(id))
+    getVitalTimeline: (id) => () => dispatch(getVitalTimeline(id)),
   };
 };
 

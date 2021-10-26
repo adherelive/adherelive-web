@@ -5,12 +5,12 @@ import { TABLE_NAME as portionTableName } from "../../models/portions";
 const DEFAULT_ORDER = [["created_at", "DESC"]];
 
 class FoodGroupService {
-  create = async data => {
+  create = async (data) => {
     const transaction = await Database.initTransaction();
     try {
       const record = await Database.getModel(TABLE_NAME).create(data, {
         raw: true,
-        transaction
+        transaction,
         // include: [
         // Database.getModel(portionTableName)
         // ]
@@ -23,14 +23,14 @@ class FoodGroupService {
     }
   };
 
-  getByData = async data => {
+  getByData = async (data) => {
     try {
       return await Database.getModel(TABLE_NAME).findOne({
         where: data,
         // include: [
         //   Database.getModel(portionTableName)
         // ],
-        raw: true
+        raw: true,
       });
     } catch (error) {
       throw error;
@@ -42,13 +42,13 @@ class FoodGroupService {
     try {
       const record = await Database.getModel(TABLE_NAME).update(data, {
         where: {
-          id
+          id,
         },
         // include: [
         //   Database.getModel(portionTableName)
         // ],
         raw: true,
-        transaction
+        transaction,
       });
       await transaction.commit();
       return record;
@@ -64,19 +64,19 @@ class FoodGroupService {
         where,
         order,
         attributes,
-        raw: true
+        raw: true,
       });
     } catch (error) {
       throw error;
     }
   };
 
-  delete = async id => {
+  delete = async (id) => {
     try {
       const record = await Database.getModel(TABLE_NAME).destroy({
         where: {
-          id
-        }
+          id,
+        },
       });
       return record;
     } catch (err) {

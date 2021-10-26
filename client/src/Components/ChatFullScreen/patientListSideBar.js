@@ -19,7 +19,7 @@ const PatientCard = ({
   setPatientId,
   patientId,
   patientName = "",
-  patientDp = ""
+  patientDp = "",
 }) => {
   let pic = patientName ? (
     <Avatar src={patientDp}>{patientName[0]}</Avatar>
@@ -42,12 +42,12 @@ class PatientListSideBar extends Component {
       docDp: "",
       allPatientIds: [],
       searchPatientIds: [],
-      searchText: ""
+      searchText: "",
     };
     // this.handlePatientSearch = throttle(this.handlePatientSearch.bind(this), 2000);
   }
 
-  handlePatientSearch = e => {
+  handlePatientSearch = (e) => {
     let { patients = {} } = this.props;
     let { allPatientIds } = this.state;
     let newsearchPatientIds = [];
@@ -55,14 +55,14 @@ class PatientListSideBar extends Component {
     // if (e) {
     //     if (e.target && e.target.value) {
     textToSearch = e.target.value;
-    newsearchPatientIds = allPatientIds.filter(patId => {
+    newsearchPatientIds = allPatientIds.filter((patId) => {
       const {
         basic_info: {
           id = 0,
           first_name = "",
           middle_name = "",
-          last_name = ""
-        } = {}
+          last_name = "",
+        } = {},
       } = patients[patId];
       let firstName = first_name ? first_name : "";
       let middleName = middle_name ? middle_name : "";
@@ -79,14 +79,14 @@ class PatientListSideBar extends Component {
     // if (textToSearch && newsearchPatientIds.length) {
     this.setState({
       searchText: textToSearch,
-      searchPatientIds: newsearchPatientIds
+      searchPatientIds: newsearchPatientIds,
     });
     // } else if (textToSearch) {
     //     this.setState({ searchText: textToSearch });
     // }
   };
 
-  formatMessage = data => this.props.intl.formatMessage(data);
+  formatMessage = (data) => this.props.intl.formatMessage(data);
 
   componentDidMount() {
     let { doctors = {}, authenticated_user = 1, patients = {} } = this.props;
@@ -99,8 +99,8 @@ class PatientListSideBar extends Component {
           first_name = "",
           middle_name = "",
           last_name = "",
-          profile_pic = ""
-        }
+          profile_pic = "",
+        },
       } = doc;
       if (parseInt(user_id) === parseInt(authenticated_user)) {
         doctorName = first_name
@@ -115,22 +115,22 @@ class PatientListSideBar extends Component {
       doctorName,
       doctorDp,
       allPatientIds: Object.keys(patients),
-      searchPatientIds: Object.keys(patients)
+      searchPatientIds: Object.keys(patients),
     });
   }
 
   renderPatients = () => {
     const { patients = {}, setPatientId, patientId = 1 } = this.props;
     const { searchPatientIds } = this.state;
-    let allPatients = Object.values(searchPatientIds).map(patient => {
+    let allPatients = Object.values(searchPatientIds).map((patient) => {
       const {
         basic_info: {
           id = 0,
           first_name = "",
           middle_name = "",
-          last_name = ""
+          last_name = "",
         } = {},
-        details: { profile_pic: patientDp = "" } = {}
+        details: { profile_pic: patientDp = "" } = {},
       } = patients[patient];
       return (
         <div

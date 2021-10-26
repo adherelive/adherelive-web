@@ -1,7 +1,7 @@
 import { TABLE_COLUMN, formatTransactionTableData } from "../helper";
 import { USER_CATEGORY } from "../../../../constant";
 
-export default data => {
+export default (data) => {
   const { id, authenticated_category } = data;
   const formattedData = formatTransactionTableData(data);
   const {
@@ -10,37 +10,37 @@ export default data => {
     paymentProductData,
     doctorData,
     transaction_ids,
-    users
+    users,
   } = formattedData || {};
 
   if (authenticated_category === USER_CATEGORY.PROVIDER) {
     return {
       key: id,
       [TABLE_COLUMN.ID.dataIndex]: {
-        transactionData
+        transactionData,
       },
       [TABLE_COLUMN.DOCTOR.dataIndex]: {
         doctorData,
-        users
+        users,
       },
       [TABLE_COLUMN.PATIENT.dataIndex]: {
-        patientData
+        patientData,
       },
       [TABLE_COLUMN.PAYMENT_PRODUCT.dataIndex]: {
-        paymentProductData
+        paymentProductData,
       },
       [TABLE_COLUMN.AMOUNT.dataIndex]: {
         transactionData,
-        transaction_ids
+        transaction_ids,
       },
       [TABLE_COLUMN.DATE.dataIndex]: {
         transactionData,
-        transaction_ids
+        transaction_ids,
       },
       [TABLE_COLUMN.STATUS.dataIndex]: {
         transactionData,
-        transaction_ids
-      }
+        transaction_ids,
+      },
     };
   } else if (
     authenticated_category === USER_CATEGORY.DOCTOR ||
@@ -49,26 +49,26 @@ export default data => {
     return {
       key: id,
       [TABLE_COLUMN.ID.dataIndex]: {
-        transactionData
+        transactionData,
       },
       [TABLE_COLUMN.PATIENT.dataIndex]: {
-        patientData
+        patientData,
       },
       [TABLE_COLUMN.PAYMENT_PRODUCT.dataIndex]: {
-        paymentProductData
+        paymentProductData,
       },
       [TABLE_COLUMN.AMOUNT.dataIndex]: {
         transactionData,
-        transaction_ids
+        transaction_ids,
       },
       [TABLE_COLUMN.DATE.dataIndex]: {
         transactionData,
-        transaction_ids
+        transaction_ids,
       },
       [TABLE_COLUMN.STATUS.dataIndex]: {
         transactionData,
-        transaction_ids
-      }
+        transaction_ids,
+      },
     };
   }
 };

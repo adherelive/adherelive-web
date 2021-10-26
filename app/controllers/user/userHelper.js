@@ -27,11 +27,11 @@ import {
   VERIFICATION_TYPE,
   NO_MEDICATION,
   NO_APPOINTMENT,
-  NO_ACTION
+  NO_ACTION,
 } from "../../../constant";
 import { completePath } from "../../helper/filePath";
 
-export const doctorQualificationData = async userId => {
+export const doctorQualificationData = async (userId) => {
   try {
     let speciality = "";
     let gender = "";
@@ -54,7 +54,7 @@ export const doctorQualificationData = async userId => {
         gender: docGender = "",
         registration_number: docRegistrationNumber = "",
         registration_council: docRegistrationCouncil = "",
-        registration_year: docRegistrationYear = ""
+        registration_year: docRegistrationYear = "",
       } = docInfo || {};
       speciality = docSpeciality;
       gender = docGender;
@@ -64,9 +64,8 @@ export const doctorQualificationData = async userId => {
 
       let docId = doctor.get("id");
 
-      let docQualifications = await qualificationService.getQualificationsByDoctorId(
-        docId
-      );
+      let docQualifications =
+        await qualificationService.getQualificationsByDoctorId(docId);
 
       for (let qualification of docQualifications) {
         console.log("QUALIFICATIONSSSSSSS=============>", qualification);
@@ -100,7 +99,7 @@ export const doctorQualificationData = async userId => {
       registration_year,
       registration_number,
       registration_council,
-      qualification_details
+      qualification_details,
     };
     return qualificationData;
   } catch (error) {
@@ -135,7 +134,7 @@ export const uploadImageS3 = async (userId, file, folder = "other") => {
     // };
     const fileUrl = "/" + file_name;
     await minioService.saveBufferObject(file.buffer, file_name, {
-      "Content-Type": file.mimetype
+      "Content-Type": file.mimetype,
     });
 
     // console.log("file urlll: ", process.config.minio.MINI);
@@ -168,7 +167,7 @@ export const checkUserCanRegister = async (email, creatorId = null) => {
       existingUserCategory === USER_CATEGORY.HSP
     ) {
       const existingUserRole = await userRolesService.getAllByData({
-        user_identity: userExits.get("id")
+        user_identity: userExits.get("id"),
       });
 
       if (existingUserRole && existingUserRole.length) {
@@ -224,14 +223,14 @@ export const createNewUser = async (
         password: hash,
         sign_in_type: "basic",
         category: category ? category : USER_CATEGORY.DOCTOR,
-        onboarded: false
+        onboarded: false,
         // system_generated_password
       });
     } else if (!userExists.get("password") && password) {
       /* this check if for doctors(added via providers) logging in for 1st time */
       const updatedUser = await userService.updateUser(
         {
-          password: hash
+          password: hash,
         },
         userExits.get("id")
       );
@@ -243,7 +242,7 @@ export const createNewUser = async (
     const userRole = await userRolesService.create({
       user_identity: userInfo.get("id"),
       linked_id: creatorId ? creatorId : null,
-      linked_with: creatorId ? USER_CATEGORY.PROVIDER : null
+      linked_with: creatorId ? USER_CATEGORY.PROVIDER : null,
     });
 
     if (userRole) {
@@ -255,11 +254,11 @@ export const createNewUser = async (
           charts:
             // category === USER_CATEGORY.DOCTOR
             // ?
-            [NO_MEDICATION, NO_APPOINTMENT, NO_ACTION]
+            [NO_MEDICATION, NO_APPOINTMENT, NO_ACTION],
           // :
           // [NO_APPOINTMENT , NO_ACTION]
         },
-        user_role_id: userRoleId
+        user_role_id: userRoleId,
       });
     }
 
@@ -267,7 +266,7 @@ export const createNewUser = async (
       user_id: userInfo.get("id"),
       request_id: link,
       status: "pending",
-      type: VERIFICATION_TYPE.SIGN_UP
+      type: VERIFICATION_TYPE.SIGN_UP,
     });
     let uId = userInfo.get("id");
 
@@ -283,8 +282,8 @@ export const createNewUser = async (
         subBodyText: "Please verify your account",
         buttonText: "Verify",
         host: process.config.WEB_URL,
-        contactTo: "customersupport@adhere.live"
-      }
+        contactTo: "customersupport@adhere.live",
+      },
     };
 
     Proxy_Sdk.execute(EVENTS.SEND_EMAIL, emailPayload);

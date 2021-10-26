@@ -10,7 +10,7 @@ import {
   NOTIFICATION_STAGES,
   NOTIFICATION_VERB,
   EVENT_TYPE,
-  AGORA_CALL_NOTIFICATION_TYPES
+  AGORA_CALL_NOTIFICATION_TYPES,
 } from "../../../constant";
 // import ScheduleEventService from "../../services/scheduleEvents/scheduleEvent.service";
 import ScheduleEventService from "../../services/scheduleEvents/scheduleEvent.service";
@@ -33,7 +33,7 @@ class NotificationController extends Controller {
     try {
       const {
         body: { activities } = {},
-        userDetails: { userId, userRoleId, userData: { category } = {} } = {}
+        userDetails: { userId, userRoleId, userData: { category } = {} } = {},
       } = req;
 
       const notificationIds = [];
@@ -86,7 +86,7 @@ class NotificationController extends Controller {
           loggedInUserRole: userRoleId,
           is_read: is_read,
           group_id,
-          category
+          category,
         });
 
         const {
@@ -117,7 +117,7 @@ class NotificationController extends Controller {
           exercise_details = null,
           exercises = null,
           repetitions = null,
-          workout_responses = null
+          workout_responses = null,
         } = details || {};
 
         // for (let each in appointments){
@@ -196,7 +196,7 @@ class NotificationController extends Controller {
         if (diet_food_group_mappings) {
           dietFoodGroupMappingData = {
             ...dietFoodGroupMappingData,
-            ...diet_food_group_mappings
+            ...diet_food_group_mappings,
           };
         }
 
@@ -247,7 +247,7 @@ class NotificationController extends Controller {
         if (workout_responses) {
           workoutResponseData = {
             ...workoutResponseData,
-            ...workout_responses
+            ...workout_responses,
           };
         }
       }
@@ -302,7 +302,7 @@ class NotificationController extends Controller {
           symptom_ids: Object.keys(symptomsData),
           diet_response_ids: Object.keys(dietResponseData),
           workout_response_ids: Object.keys(workoutResponseData),
-          upload_document_ids: Object.keys(uploadDocumentsData)
+          upload_document_ids: Object.keys(uploadDocumentsData),
         },
         "Notification data fetched successfully"
       );
@@ -317,14 +317,14 @@ class NotificationController extends Controller {
     try {
       const {
         body: { message = "", receiver_id = "", receiver_role_id = "" } = {},
-        userDetails = {}
+        userDetails = {},
       } = req || {};
 
       const {
         userId,
         userRoleId,
         userData: { category } = {},
-        userCategoryData: { basic_info: { full_name = "" } = {} } = {}
+        userCategoryData: { basic_info: { full_name = "" } = {} } = {},
       } = userDetails || {};
 
       const eventData = {
@@ -334,12 +334,12 @@ class NotificationController extends Controller {
           user_role_id: userRoleId,
           details: {
             name: full_name,
-            category
-          }
+            category,
+          },
         },
         details: {
-          message
-        }
+          message,
+        },
       };
 
       const chatJob = ChatJob.execute(MESSAGE_TYPES.USER_MESSAGE, eventData);

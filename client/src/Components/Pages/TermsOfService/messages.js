@@ -4,6 +4,6 @@ export default defineMessages({
   appName: {
     id: "app.terms.of.service.appName",
     description: "",
-    defaultMessage: "Adhere.Live"
-  }
+    defaultMessage: "Adhere.Live",
+  },
 });

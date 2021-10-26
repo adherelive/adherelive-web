@@ -5,7 +5,7 @@ function repetitionsReducer(state, data) {
   if (repetitions) {
     return {
       ...state,
-      ...repetitions
+      ...repetitions,
     };
   } else {
     return state;

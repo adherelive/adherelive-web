@@ -3,7 +3,7 @@ import moment from "moment";
 import {
   DEFAULT_PROVIDER,
   EVENT_TYPE,
-  NOTIFICATION_VERB
+  NOTIFICATION_VERB,
 } from "../../../../constant";
 
 import UserRoleService from "../../../services/userRoles/userRoles.service";
@@ -25,13 +25,13 @@ class ResponseJob extends VitalJob {
       actor: {
         id: actorId,
         user_role_id,
-        details: { name, category: actorCategory } = {}
+        details: { name, category: actorCategory } = {},
       } = {},
       vital_templates,
       vital_templates: { basic_info: { name: vitalName = "" } = {} } = {},
       vital = {},
       event_id = null,
-      patient_id = null
+      patient_id = null,
     } = _data || {};
 
     const templateData = [];
@@ -47,8 +47,8 @@ class ResponseJob extends VitalJob {
     const { rows: userRoles = [] } =
       (await UserRoleService.findAndCountAll({
         where: {
-          id: participants
-        }
+          id: participants,
+        },
       })) || {};
 
     let doctorRoleId = null;
@@ -75,7 +75,7 @@ class ResponseJob extends VitalJob {
     // }
 
     const userDevices = await UserDeviceService.getAllDeviceByData({
-      user_id: userIds
+      user_id: userIds,
     });
 
     if (userDevices.length > 0) {
@@ -90,7 +90,7 @@ class ResponseJob extends VitalJob {
       app_id: process.config.one_signal.app_id,
       headings: { en: `${name} added reading for ${vitalName} vital.` },
       contents: {
-        en: `Tap here to see ${vitalName} details.`
+        en: `Tap here to see ${vitalName} details.`,
       },
       include_player_ids: [...playerIds],
       priority: 10,
@@ -103,9 +103,9 @@ class ResponseJob extends VitalJob {
           vital_templates,
           patient_id,
           actorId,
-          doctorRoleId
-        }
-      }
+          doctorRoleId,
+        },
+      },
     });
 
     return templateData;
@@ -118,7 +118,7 @@ class ResponseJob extends VitalJob {
       participants = [],
       actor: { id: actorId, user_role_id } = {},
       event_id = null,
-      id = null
+      id = null,
     } = data || {};
 
     const templateData = [];
@@ -136,7 +136,7 @@ class ResponseJob extends VitalJob {
           verb: `${NOTIFICATION_VERB.VITAL_RESPONSE}:${currentTimeStamp}`,
           event: EVENT_TYPE.VITALS,
           time: currentTime,
-          create_time: currentTime
+          create_time: currentTime,
         });
       }
     }

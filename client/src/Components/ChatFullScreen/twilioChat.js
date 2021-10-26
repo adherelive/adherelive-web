@@ -8,7 +8,7 @@ import {
   Icon,
   Upload,
   Modal,
-  message
+  message,
 } from "antd";
 import moment from "moment";
 import Chat from "twilio-chat";
@@ -29,7 +29,7 @@ import { SwapOutlined, MoreOutlined } from "@ant-design/icons";
 import {
   CONSULTATION_FEE_TYPE_TEXT,
   USER_CATEGORY,
-  FEATURES
+  FEATURES,
 } from "../../constant";
 
 // import Button from "antd/es/button";
@@ -40,7 +40,7 @@ import { CHAT_MESSAGE_TYPE } from "../../constant";
 
 export const MENU_ITEMS = {
   TOGGLE_CHAT_MESSAGES_PERMISSION: "TOGGLE_CHAT_MESSAGES_PERMISSION",
-  TOGGLE_VIDEO_CALL_PERMISSION: "TOGGLE_VIDEO_CALL_PERMISSION"
+  TOGGLE_VIDEO_CALL_PERMISSION: "TOGGLE_VIDEO_CALL_PERMISSION",
 };
 
 const Header = ({
@@ -51,7 +51,7 @@ const Header = ({
   otherTyping = false,
   formatMessage,
   getMenu,
-  videoCallBlocked = false
+  videoCallBlocked = false,
 }) => {
   let pic = patientName ? (
     <Avatar src={patientDp}>{patientName[0]}</Avatar>
@@ -108,7 +108,7 @@ class ChatForm extends Component {
     this.state = {
       newMessage: "",
       fileList: [],
-      payment_products: {}
+      payment_products: {},
     };
   }
 
@@ -124,11 +124,11 @@ class ChatForm extends Component {
     }
   }
 
-  onMessageChanged = event => {
+  onMessageChanged = (event) => {
     this.setState({ newMessage: event.target.value });
   };
 
-  sendMessage = async event => {
+  sendMessage = async (event) => {
     if (event) {
       event.preventDefault();
     }
@@ -143,7 +143,7 @@ class ChatForm extends Component {
 
       if (channel) {
         const resp = await channel.sendMessage(message, {
-          sender_id: authenticated_user
+          sender_id: authenticated_user,
         });
       }
 
@@ -168,28 +168,28 @@ class ChatForm extends Component {
     this.sendMessage();
   };
 
-  beforeUpload = file => {
-    this.setState(state => ({
-      fileList: [...state.fileList, file]
+  beforeUpload = (file) => {
+    this.setState((state) => ({
+      fileList: [...state.fileList, file],
     }));
     return true;
   };
 
-  handleConsultationModal = e => {
+  handleConsultationModal = (e) => {
     e.preventDefault();
     this.setState({ viewConsultationModal: true });
   };
 
-  closeConsultationModal = e => {
+  closeConsultationModal = (e) => {
     e.preventDefault();
     this.setState({ viewConsultationModal: false });
   };
 
-  sendPaymentMessage = data => async e => {
+  sendPaymentMessage = (data) => async (e) => {
     const {
       authenticated_user,
       authenticated_category,
-      raiseChatNotificationFunc
+      raiseChatNotificationFunc,
     } = this.props;
     e.preventDefault();
     const { name, type, amount, productId } = data || {};
@@ -200,12 +200,12 @@ class ChatForm extends Component {
           payment_type: type,
           type: CHAT_MESSAGE_TYPE.CONSULTATION,
           amount,
-          productId
+          productId,
         },
         author: {
           id: authenticated_user,
-          category: authenticated_category
-        }
+          category: authenticated_category,
+        },
       })
     );
 
@@ -222,7 +222,7 @@ class ChatForm extends Component {
     const { payment_products } = this.state;
 
     console.log("098181302 payment_products ", { payment_products });
-    return Object.keys(payment_products).map(id => {
+    return Object.keys(payment_products).map((id) => {
       const { basic_info: { name, type, amount } = {} } =
         payment_products[id] || {};
 
@@ -234,7 +234,7 @@ class ChatForm extends Component {
             name,
             type,
             amount,
-            productId: id
+            productId: id,
           })}
         >
           <div className="flex justify-space-between align-center bw1 br5 p10">
@@ -342,7 +342,7 @@ class TwilioChat extends Component {
       message_numbers: 0,
 
       chatBlocked: false,
-      videoCallBlocked: false
+      videoCallBlocked: false,
     };
     this.channelName = "test";
   }
@@ -359,7 +359,7 @@ class TwilioChat extends Component {
     const response = await fetchChatAccessToken(authenticated_user);
     const {
       status = false,
-      payload: { data: { token: chatToken = "" } = {} } = {}
+      payload: { data: { token: chatToken = "" } = {} } = {},
     } = response;
 
     if (status) {
@@ -399,14 +399,14 @@ class TwilioChat extends Component {
     let otherUserLastConsumedMessageIndex = 0;
 
     await Promise.all(
-      members.map(async mem => {
+      members.map(async (mem) => {
         if (mem.identity !== `${authenticated_user}`) {
           const other_user = await mem.getUser();
 
           other_user_online = other_user.online;
           otherUserLastConsumedMessageIndex = mem.lastConsumedMessageIndex;
 
-          other_user.on("updated", obj => {
+          other_user.on("updated", (obj) => {
             console.log("user_updated", obj);
           });
         }
@@ -415,11 +415,11 @@ class TwilioChat extends Component {
     if (otherUserLastConsumedMessageIndex) {
       this.setState({
         other_user_online,
-        otherUserLastConsumedMessageIndex
+        otherUserLastConsumedMessageIndex,
       });
     } else {
       this.setState({
-        other_user_online
+        other_user_online,
       });
     }
   };
@@ -440,12 +440,12 @@ class TwilioChat extends Component {
     this.chatClient
       .initialize()
       .then(this.clientInitiated.bind(this))
-      .catch(err => {
+      .catch((err) => {
         console.log("chatClient AUTH error", err);
       });
   };
 
-  checkOtherTyping = obj => {
+  checkOtherTyping = (obj) => {
     const { authenticated_user = 1 } = this.props;
     const { identity = null } = obj;
     if (identity !== `${authenticated_user}`) {
@@ -453,7 +453,7 @@ class TwilioChat extends Component {
     }
   };
 
-  otherTypingStopped = obj => {
+  otherTypingStopped = (obj) => {
     const { authenticated_user = 1 } = this.props;
     const { identity = null } = obj;
     if (identity !== `${authenticated_user}`) {
@@ -466,19 +466,19 @@ class TwilioChat extends Component {
     this.setState({ chatReady: true }, () => {
       this.chatClient
         .getChannelByUniqueName(this.channelName)
-        .then(channel => {
+        .then((channel) => {
           if (channel) {
             return (this.channel = channel);
           }
         })
-        .catch(err => {
+        .catch((err) => {
           if (err.body.code === 50300) {
             return this.chatClient.createChannel({
-              uniqueName: this.channelName
+              uniqueName: this.channelName,
             });
           }
         })
-        .then(channel => {
+        .then((channel) => {
           this.channel = channel;
           window.channel = channel;
           if (channel.channelState.status !== "joined") {
@@ -490,10 +490,10 @@ class TwilioChat extends Component {
         .then(async () => {
           this.channel.getMessages().then(this.messagesLoaded);
           this.channel.on("messageAdded", this.messageAdded);
-          this.channel.on("typingStarted", obj => {
+          this.channel.on("typingStarted", (obj) => {
             this.checkOtherTyping(obj);
           });
-          this.channel.on("typingEnded", obj => {
+          this.channel.on("typingEnded", (obj) => {
             this.otherTypingStopped(obj);
           });
           const members = await this.channel.getMembers();
@@ -501,7 +501,7 @@ class TwilioChat extends Component {
           let otherUserLastConsumedMessageIndex = 0;
 
           await Promise.all(
-            members.map(async mem => {
+            members.map(async (mem) => {
               if (mem.identity !== `${authenticated_user}`) {
                 const other_user = await mem.getUser();
 
@@ -509,7 +509,7 @@ class TwilioChat extends Component {
                 otherUserLastConsumedMessageIndex =
                   mem.lastConsumedMessageIndex;
 
-                other_user.on("updated", obj => {
+                other_user.on("updated", (obj) => {
                   console.log("user_updated", obj);
                 });
               }
@@ -518,13 +518,13 @@ class TwilioChat extends Component {
           // console.log('didMount======================>clientInitiatedlast');
           this.setState({
             other_user_online,
-            otherUserLastConsumedMessageIndex
+            otherUserLastConsumedMessageIndex,
           });
         });
     });
   };
 
-  updateMessageRecieved = messages => {
+  updateMessageRecieved = (messages) => {
     const { otherUserLastConsumedMessageIndex } = this.state;
     const { authenticated_user } = this.props;
 
@@ -532,7 +532,7 @@ class TwilioChat extends Component {
       const {
         index,
         attributes: { sender_id } = {},
-        author
+        author,
       } = messageData.state;
       if (
         index <= otherUserLastConsumedMessageIndex &&
@@ -546,13 +546,12 @@ class TwilioChat extends Component {
     return messages;
   };
 
-  messagesLoaded = messagePage => {
+  messagesLoaded = (messagePage) => {
     const { roomId, addMessageOfChat } = this.props;
     if (messagePage.items.length) {
       let message = messagePage.items[0];
-      const {
-        channel: { channelState: { uniqueName = "" } = {} } = {}
-      } = message;
+      const { channel: { channelState: { uniqueName = "" } = {} } = {} } =
+        message;
       if (!uniqueName.localeCompare(roomId)) {
         // let messages = this.updateMessageRecieved(messagePage.items);
         addMessageOfChat(roomId, messagePage.items);
@@ -560,7 +559,7 @@ class TwilioChat extends Component {
     }
     this.setState(
       {
-        messagesLoading: false
+        messagesLoading: false,
       },
       this.scrollToBottom
     );
@@ -569,7 +568,7 @@ class TwilioChat extends Component {
     console.log("didMount======================>msgs loaded", moment());
   };
 
-  messageAdded = message => {
+  messageAdded = (message) => {
     const { roomId, addMessageOfChat } = this.props;
     addMessageOfChat(roomId, message);
     // this.setState((prevState, props) => {
@@ -581,12 +580,12 @@ class TwilioChat extends Component {
     this.channel.setAllMessagesConsumed();
   };
 
-  logOut = event => {
+  logOut = (event) => {
     event.preventDefault();
     this.setState({
       token: "",
       chatReady: false,
-      messages: []
+      messages: [],
     });
     this.chatClient.shutdown();
     this.channel = null;
@@ -620,9 +619,8 @@ class TwilioChat extends Component {
       "bot-msg-detail-container"
     )[0];
     const heading = Container.getElementsByClassName("bot-m-h")[0].innerHTML;
-    const msgDetailsContainer = Container.getElementsByClassName(
-      "bot-msg-details"
-    );
+    const msgDetailsContainer =
+      Container.getElementsByClassName("bot-msg-details");
 
     const msgChildNodes = msgDetailsContainer[0].children;
     const data1 = msgChildNodes[0].innerHTML;
@@ -644,13 +642,13 @@ class TwilioChat extends Component {
     return mess;
   };
 
-  unsetReplyId = e => {
+  unsetReplyId = (e) => {
     e.preventDefault();
     const { updateReplyMessageId } = this.props;
     updateReplyMessageId();
   };
 
-  handleReply = data => e => {
+  handleReply = (data) => (e) => {
     e.preventDefault();
     this.setState({ replyMeta: data });
   };
@@ -659,7 +657,7 @@ class TwilioChat extends Component {
     const menuList = this.getMenuList();
     return (
       <Menu>
-        {menuList.map(item => {
+        {menuList.map((item) => {
           const { label, pressHandler } = item;
           return (
             <Menu.Item onClick={pressHandler}>
@@ -682,7 +680,7 @@ class TwilioChat extends Component {
     return menuList;
   };
 
-  getMenuItemData = key => {
+  getMenuItemData = (key) => {
     const { chatBlocked, videoCallBlocked } = this.state;
     let label = "";
     switch (key) {
@@ -692,7 +690,7 @@ class TwilioChat extends Component {
           : this.formatMessage(messages.blockChatMessage);
         return {
           label: label,
-          pressHandler: this.toggleChatPermission
+          pressHandler: this.toggleChatPermission,
         };
       case MENU_ITEMS.TOGGLE_VIDEO_CALL_PERMISSION:
         label = videoCallBlocked
@@ -700,7 +698,7 @@ class TwilioChat extends Component {
           : this.formatMessage(messages.blockVideoCall);
         return {
           label: label,
-          pressHandler: this.toggleVideoCallPermission
+          pressHandler: this.toggleVideoCallPermission,
         };
       default:
         return;
@@ -730,7 +728,7 @@ class TwilioChat extends Component {
     this.setState({ chatBlocked, videoCallBlocked });
   };
 
-  getFeatureId = featureName => {
+  getFeatureId = (featureName) => {
     const { features = {} } = this.props;
     const featuresIds = Object.keys(features);
 
@@ -790,7 +788,7 @@ class TwilioChat extends Component {
     const block = videoCallBlocked ? false : true;
 
     const response = await this.props.toggleVideoPermission(patientId, {
-      block
+      block,
     });
 
     const { status = false, payload = {} } = response;
@@ -812,24 +810,24 @@ class TwilioChat extends Component {
     }
   };
 
-  raiseChatNotificationFunc = message => {
+  raiseChatNotificationFunc = (message) => {
     const {
       patientId = null,
       patients = {},
-      raiseChatNotification
+      raiseChatNotification,
     } = this.props;
 
     const {
       [patientId]: {
         basic_info: { user_id: patientUserId = null } = {},
-        user_role_id: patientRoleId = null
-      } = {}
+        user_role_id: patientRoleId = null,
+      } = {},
     } = patients;
 
     const data = {
       message,
       receiver_id: patientUserId,
-      receiver_role_id: patientRoleId
+      receiver_role_id: patientRoleId,
     };
 
     const resp = raiseChatNotification(data);
@@ -845,13 +843,13 @@ class TwilioChat extends Component {
       other_typing = false,
       otherUserLastConsumedMessageIndex,
       chatBlocked = false,
-      videoCallBlocked = false
+      videoCallBlocked = false,
     } = this.state;
     const {
       placeVideoCall,
       patientDp = "",
       patientName = "",
-      replyMessadeId = null
+      replyMessadeId = null,
     } = this.props;
     const { ...props } = this.props;
 

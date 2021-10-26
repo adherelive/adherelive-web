@@ -4,59 +4,59 @@ const messages = defineMessages({
   addNewMedicine: {
     id: "app.addMedicine.drawer.addNewMedicine",
     description: "",
-    defaultMessage: "Add New Medicine"
+    defaultMessage: "Add New Medicine",
   },
   submit: {
     id: "app.addMedicine.drawer.submit",
     description: "",
-    defaultMessage: "Submit"
+    defaultMessage: "Submit",
   },
   syrup: {
     id: "app.addMedicine.drawer.syrup",
     description: "",
-    defaultMessage: "Syrup"
+    defaultMessage: "Syrup",
   },
   tablet: {
     id: "app.addMedicine.drawer.tablet",
     description: "",
-    defaultMessage: "Tablet"
+    defaultMessage: "Tablet",
   },
   syringe: {
     id: "app.addMedicine.drawer.syringe",
     description: "",
-    defaultMessage: "Syringe"
+    defaultMessage: "Syringe",
   },
   medicineName: {
     id: "app.addMedicine.drawer.medicineName",
     description: "",
-    defaultMessage: "Medicine Name"
+    defaultMessage: "Medicine Name",
   },
   formulation: {
     id: "app.addMedicine.drawer.formulation",
     description: "",
-    defaultMessage: "Formulation"
+    defaultMessage: "Formulation",
   },
   fillFieldsError: {
     id: "app.addMedicine.drawer.fillFieldsError",
     description: "",
-    defaultMessage: "Please fill all the fields"
+    defaultMessage: "Please fill all the fields",
   },
   genericName: {
     id: "app.addMedicine.drawer.genericName",
     description: "",
-    defaultMessage: "Generic Name"
+    defaultMessage: "Generic Name",
   },
   submit_text: {
     id: "app.addMedicine.drawer.submit",
     description: "",
-    defaultMessage: "Submit"
+    defaultMessage: "Submit",
     // TODO: Duplicate entry, commenting
     //},
     //formulation: {
     //id: "app.addMedicine.drawer.formulation",
     //description: "",
     //defaultMessage: "Formulation"
-  }
+  },
 });
 
 export default messages;

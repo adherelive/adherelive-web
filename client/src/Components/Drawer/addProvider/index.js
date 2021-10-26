@@ -14,7 +14,7 @@ class addProviderDrawer extends Component {
     super(props);
     this.state = {
       disabledOk: false,
-      submitting: false
+      submitting: false,
     };
 
     this.FormWrapper = Form.create({ onFieldsChange: this.onFormFieldChanges })(
@@ -22,9 +22,9 @@ class addProviderDrawer extends Component {
     );
   }
 
-  onFormFieldChanges = props => {
+  onFormFieldChanges = (props) => {
     const {
-      form: { getFieldsError, isFieldsTouched }
+      form: { getFieldsError, isFieldsTouched },
     } = props;
     const { disabledOk } = this.state;
 
@@ -33,7 +33,7 @@ class addProviderDrawer extends Component {
       console.log("763132 isError --> ", {
         disabledOk,
         isError,
-        isFieldsTouched: isFieldsTouched()
+        isFieldsTouched: isFieldsTouched(),
       });
 
       if (disabledOk !== isError && isFieldsTouched()) {
@@ -46,34 +46,34 @@ class addProviderDrawer extends Component {
     // }
   };
 
-  hasErrors = fieldsError => {
+  hasErrors = (fieldsError) => {
     // let hasError = false;
 
     console.log("198273178 fieldsError --> ", { fieldsError });
-    return Object.keys(fieldsError).some(field => fieldsError[field]);
+    return Object.keys(fieldsError).some((field) => fieldsError[field]);
   };
 
-  setPassword = e => {
+  setPassword = (e) => {
     e.preventDefault();
     const { value } = e.target;
     this.setState({ password: value });
   };
 
-  formatMessage = data => this.props.intl.formatMessage(data);
+  formatMessage = (data) => this.props.intl.formatMessage(data);
 
   onClose = () => {
     const { close } = this.props;
     close();
   };
 
-  handleSubmit = e => {
+  handleSubmit = (e) => {
     e.preventDefault();
     const { formRef = {}, formatMessage } = this;
 
     const {
       props: {
-        form: { validateFields }
-      }
+        form: { validateFields },
+      },
     } = formRef;
 
     validateFields(async (err, values) => {
@@ -95,7 +95,7 @@ class addProviderDrawer extends Component {
           razorpay_account_name = "",
           icon = "",
           banner = "",
-          prescription_details = ""
+          prescription_details = "",
         } = values;
 
         const data = {
@@ -115,7 +115,7 @@ class addProviderDrawer extends Component {
           razorpay_account_name,
           icon,
           banner,
-          prescription_details
+          prescription_details,
         };
 
         try {
@@ -155,7 +155,7 @@ class addProviderDrawer extends Component {
     });
   };
 
-  setFormRef = formRef => {
+  setFormRef = (formRef) => {
     this.formRef = formRef;
     // if (formRef) {
     //   this.setState({ formRef: true });
@@ -165,17 +165,12 @@ class addProviderDrawer extends Component {
   render() {
     const { visible, loading } = this.props;
     const { disabledOk, submitting = false } = this.state;
-    const {
-      onClose,
-      formatMessage,
-      setFormRef,
-      handleSubmit,
-      FormWrapper
-    } = this;
+    const { onClose, formatMessage, setFormRef, handleSubmit, FormWrapper } =
+      this;
 
     const submitButtonProps = {
       disabled: disabledOk,
-      loading
+      loading,
     };
 
     if (visible !== true) {
@@ -191,7 +186,7 @@ class addProviderDrawer extends Component {
           headerStyle={{
             position: "sticky",
             zIndex: "9999",
-            top: "0px"
+            top: "0px",
           }}
           destroyOnClose={true}
           onClose={onClose}

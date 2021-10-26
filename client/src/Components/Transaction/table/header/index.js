@@ -11,7 +11,7 @@ import Status from "../dataColumn/status";
 import Date from "../dataColumn/date";
 import { USER_CATEGORY } from "../../../../constant";
 
-export default props => {
+export default (props) => {
   const { formatMessage, authenticated_category } = props || {};
 
   if (authenticated_category === USER_CATEGORY.PROVIDER) {
@@ -19,39 +19,39 @@ export default props => {
       {
         title: formatMessage(messages.transaction_id),
         ...TABLE_COLUMN.ID,
-        render: data => {
+        render: (data) => {
           const { transactionData } = data || {};
           return <TransactionId transactionData={transactionData} />;
-        }
+        },
       },
       {
         title: formatMessage(messages.doctor_header),
         ...TABLE_COLUMN.DOCTOR,
-        render: data => {
+        render: (data) => {
           const { doctorData, users } = data || {};
           return <Doctor doctorData={doctorData} users={users} />;
-        }
+        },
       },
       {
         title: formatMessage(messages.patient_header),
         ...TABLE_COLUMN.PATIENT,
-        render: data => {
+        render: (data) => {
           const { patientData } = data || {};
           return <Patient patientData={patientData} />;
-        }
+        },
       },
       {
         title: formatMessage(messages.paymentProduct_header),
         ...TABLE_COLUMN.PAYMENT_PRODUCT,
-        render: data => {
+        render: (data) => {
           const { paymentProductData } = data || {};
           return <PaymentProduct paymentProductData={paymentProductData} />;
-        }
+        },
       },
       {
         title: formatMessage(messages.amount_header),
         ...TABLE_COLUMN.AMOUNT,
-        render: data => {
+        render: (data) => {
           const { transactionData, transaction_ids } = data;
           return (
             <Amount
@@ -59,12 +59,12 @@ export default props => {
               transaction_ids={transaction_ids}
             />
           );
-        }
+        },
       },
       {
         title: formatMessage(messages.status_header),
         ...TABLE_COLUMN.STATUS,
-        render: data => {
+        render: (data) => {
           const { transactionData, transaction_ids } = data;
           return (
             <Status
@@ -78,12 +78,12 @@ export default props => {
           const { transactionData: { status } = {} } =
             record[TABLE_COLUMN.STATUS.dataIndex] || {};
           return value === status;
-        }
+        },
       },
       {
         title: formatMessage(messages.date_header),
         ...TABLE_COLUMN.DATE,
-        render: data => {
+        render: (data) => {
           const { transactionData, transaction_ids } = data;
           return (
             <Date
@@ -91,8 +91,8 @@ export default props => {
               transaction_ids={transaction_ids}
             />
           );
-        }
-      }
+        },
+      },
     ];
   } else if (
     authenticated_category === USER_CATEGORY.DOCTOR ||
@@ -102,31 +102,31 @@ export default props => {
       {
         title: formatMessage(messages.transaction_id),
         ...TABLE_COLUMN.ID,
-        render: data => {
+        render: (data) => {
           const { transactionData } = data || {};
           return <TransactionId transactionData={transactionData} />;
-        }
+        },
       },
       {
         title: formatMessage(messages.patient_header),
         ...TABLE_COLUMN.PATIENT,
-        render: data => {
+        render: (data) => {
           const { patientData } = data || {};
           return <Patient patientData={patientData} />;
-        }
+        },
       },
       {
         title: formatMessage(messages.paymentProduct_header),
         ...TABLE_COLUMN.PAYMENT_PRODUCT,
-        render: data => {
+        render: (data) => {
           const { paymentProductData } = data || {};
           return <PaymentProduct paymentProductData={paymentProductData} />;
-        }
+        },
       },
       {
         title: formatMessage(messages.amount_header),
         ...TABLE_COLUMN.AMOUNT,
-        render: data => {
+        render: (data) => {
           const { transactionData, transaction_ids } = data;
           return (
             <Amount
@@ -134,12 +134,12 @@ export default props => {
               transaction_ids={transaction_ids}
             />
           );
-        }
+        },
       },
       {
         title: formatMessage(messages.status_header),
         ...TABLE_COLUMN.STATUS,
-        render: data => {
+        render: (data) => {
           const { transactionData, transaction_ids } = data;
           return (
             <Status
@@ -153,12 +153,12 @@ export default props => {
           const { transactionData: { status } = {} } =
             record[TABLE_COLUMN.STATUS.dataIndex] || {};
           return value === status;
-        }
+        },
       },
       {
         title: formatMessage(messages.date_header),
         ...TABLE_COLUMN.DATE,
-        render: data => {
+        render: (data) => {
           const { transactionData, transaction_ids } = data;
           return (
             <Date
@@ -166,8 +166,8 @@ export default props => {
               transaction_ids={transaction_ids}
             />
           );
-        }
-      }
+        },
+      },
     ];
   }
 };

@@ -25,7 +25,7 @@ import {
   FINAL,
   PROBABLE,
   DIAGNOSIS_TYPE,
-  PATIENT_CONSTANTS
+  PATIENT_CONSTANTS,
 } from "../../../constant";
 import Footer from "../footer";
 
@@ -62,7 +62,7 @@ class EditPatientDrawer extends Component {
       treatment: null,
       severity: null,
       careplan_id: null,
-      submitting: false
+      submitting: false,
     };
     this.handleConditionSearch = throttle(
       this.handleConditionSearch.bind(this),
@@ -100,10 +100,10 @@ class EditPatientDrawer extends Component {
         height = "",
         weight = "",
         gender = "",
-        address = ""
+        address = "",
       } = {},
       details: { allergies = "", comorbidities = "" } = {},
-      dob = ""
+      dob = "",
     } = patientData || {};
 
     const { basic_info: { mobile_number = "", prefix = "" } = {} } =
@@ -117,8 +117,8 @@ class EditPatientDrawer extends Component {
         severity_id = null,
         symptoms = null,
         treatment_id = null,
-        diagnosis: { type = "2", description = "" } = {}
-      } = {}
+        diagnosis: { type = "2", description = "" } = {},
+      } = {},
     } = carePlanData || {};
 
     const formattedDate = this.getFormattedDate(dob);
@@ -143,12 +143,12 @@ class EditPatientDrawer extends Component {
         weight,
         symptoms,
         careplan_id,
-        address
+        address,
       });
     }
   }
 
-  setComorbiditiesNone = e => {
+  setComorbiditiesNone = (e) => {
     e.preventDefault();
     const { comorbidities = "" } = this.state;
     if (comorbidities === "none") {
@@ -158,7 +158,7 @@ class EditPatientDrawer extends Component {
     this.setState({ comorbidities: "none" });
   };
 
-  setAllergiesNone = e => {
+  setAllergiesNone = (e) => {
     e.preventDefault();
     const { allergies = "" } = this.state;
     if (allergies === "none") {
@@ -168,7 +168,7 @@ class EditPatientDrawer extends Component {
     this.setState({ allergies: "none" });
   };
 
-  getFormattedDate = dob => {
+  getFormattedDate = (dob) => {
     let date = new Date(dob);
     let year = date.getFullYear();
     let month = date.getMonth() + 1;
@@ -188,7 +188,7 @@ class EditPatientDrawer extends Component {
     const genderes = [
       { name: "Female", value: "f" },
       { name: "Male", value: "m" },
-      { name: "Other", value: "o" }
+      { name: "Other", value: "o" },
     ];
     let options = [];
 
@@ -203,7 +203,7 @@ class EditPatientDrawer extends Component {
     return options;
   };
 
-  setComorbidities = e => {
+  setComorbidities = (e) => {
     const value = e.target.value.trim();
 
     if (value.length > 0 || value === "") {
@@ -211,7 +211,7 @@ class EditPatientDrawer extends Component {
     }
   };
 
-  setPastedComorbidities = e => {
+  setPastedComorbidities = (e) => {
     e.preventDefault();
     let pastedValue = "";
     if (typeof e.clipboardData !== "undefined") {
@@ -222,7 +222,7 @@ class EditPatientDrawer extends Component {
     }
   };
 
-  setClinicalNotes = e => {
+  setClinicalNotes = (e) => {
     const value = e.target.value.trim();
 
     if (value.length > 0 || value === "") {
@@ -230,7 +230,7 @@ class EditPatientDrawer extends Component {
     }
   };
 
-  setSymptoms = e => {
+  setSymptoms = (e) => {
     const value = e.target.value.trim();
 
     if (value.length > 0 || value === "") {
@@ -238,7 +238,7 @@ class EditPatientDrawer extends Component {
     }
   };
 
-  setPastedClinicalNotes = e => {
+  setPastedClinicalNotes = (e) => {
     e.preventDefault();
     let pastedValue = "";
     if (typeof e.clipboardData !== "undefined") {
@@ -249,7 +249,7 @@ class EditPatientDrawer extends Component {
     }
   };
 
-  setPastedSymptoms = e => {
+  setPastedSymptoms = (e) => {
     e.preventDefault();
     let pastedValue = "";
     if (typeof e.clipboardData !== "undefined") {
@@ -260,7 +260,7 @@ class EditPatientDrawer extends Component {
     }
   };
 
-  setAllergies = e => {
+  setAllergies = (e) => {
     const value = e.target.value.trim();
 
     if (value.length > 0 || value === "") {
@@ -268,7 +268,7 @@ class EditPatientDrawer extends Component {
     }
   };
 
-  setPastedAllergies = e => {
+  setPastedAllergies = (e) => {
     e.preventDefault();
     let pastedValue = "";
     if (typeof e.clipboardData !== "undefined") {
@@ -279,7 +279,7 @@ class EditPatientDrawer extends Component {
     }
   };
 
-  setDiagnosis = e => {
+  setDiagnosis = (e) => {
     const value = e.target.value.trim();
 
     if (value.length > 0 || value === "") {
@@ -287,7 +287,7 @@ class EditPatientDrawer extends Component {
     }
   };
 
-  setPastedDiagnosis = e => {
+  setPastedDiagnosis = (e) => {
     e.preventDefault();
     let pastedValue = "";
     if (typeof e.clipboardData !== "undefined") {
@@ -298,20 +298,20 @@ class EditPatientDrawer extends Component {
     }
   };
 
-  setDiagnosisType = value => {
+  setDiagnosisType = (value) => {
     this.setState({ diagnosis_type: value });
   };
 
-  setTreatment = value => {
+  setTreatment = (value) => {
     console.log("TREATMENT VALUE", value);
     this.setState({ treatment: value });
   };
 
-  setSeverity = value => {
+  setSeverity = (value) => {
     this.setState({ severity: value });
   };
 
-  setCondition = async value => {
+  setCondition = async (value) => {
     const { searchTreatment } = this.props;
     this.setState({ condition: value });
 
@@ -319,7 +319,7 @@ class EditPatientDrawer extends Component {
 
     const {
       status,
-      payload: { data: { treatments = {} } = {}, message } = {}
+      payload: { data: { treatments = {} } = {}, message } = {},
     } = response;
     if (status) {
       this.setState({ treatments, treatment: "" });
@@ -374,10 +374,8 @@ class EditPatientDrawer extends Component {
         const { searchCondition } = this.props;
         this.setState({ fetchingCondition: true });
         const response = await searchCondition(data);
-        const {
-          status,
-          payload: { data: responseData, message } = {}
-        } = response;
+        const { status, payload: { data: responseData, message } = {} } =
+          response;
         if (status) {
           this.setState({ fetchingCondition: false });
         } else {
@@ -399,10 +397,8 @@ class EditPatientDrawer extends Component {
         const { searchTreatment } = this.props;
         this.setState({ fetchingTreatment: true });
         const response = await searchTreatment(data);
-        const {
-          status,
-          payload: { data: treatments, message } = {}
-        } = response;
+        const { status, payload: { data: treatments, message } = {} } =
+          response;
         if (status) {
           this.setState({ fetchingTreatment: false });
         } else {
@@ -440,7 +436,7 @@ class EditPatientDrawer extends Component {
     }
   }
 
-  setWeight = e => {
+  setWeight = (e) => {
     const { value } = e.target;
     const reg = /^-?\d*(\.\d*)?$/;
     if (value === "") {
@@ -459,7 +455,7 @@ class EditPatientDrawer extends Component {
     }
   };
 
-  setName = e => {
+  setName = (e) => {
     const { value } = e.target;
     const reg = /^[a-zA-Z][a-zA-Z\s]*$/;
     if (reg.test(value) || value === "") {
@@ -467,20 +463,20 @@ class EditPatientDrawer extends Component {
     }
   };
 
-  setPid = e => {
+  setPid = (e) => {
     const { value } = e.target;
     this.setState({ patient_uid: value.trim() });
   };
 
-  setGender = value => () => {
+  setGender = (value) => () => {
     this.setState({ gender: value });
   };
 
-  setDOB = e => {
+  setDOB = (e) => {
     this.setState({ date_of_birth: moment(e.target.value) });
   };
 
-  setHeight = e => {
+  setHeight = (e) => {
     const { value } = e.target;
     const reg = /^-?\d*(\.\d*)?$/;
     if (value === "") {
@@ -499,7 +495,7 @@ class EditPatientDrawer extends Component {
     }
   };
 
-  setAddress = e => {
+  setAddress = (e) => {
     e.preventDefault();
     const address = e.target.value;
     if (address.length > 0) {
@@ -511,7 +507,7 @@ class EditPatientDrawer extends Component {
     const {
       payload = {},
       doctors = {},
-      authenticated_user = null
+      authenticated_user = null,
     } = this.props;
     const { carePlanData } = payload || {};
     const { basic_info: { doctor_id = null } = {} } = carePlanData || {};
@@ -552,7 +548,7 @@ class EditPatientDrawer extends Component {
       height = "",
       weight = "",
       symptoms = "",
-      address = ""
+      address = "",
     } = this.state;
 
     let setDOB = moment(date_of_birth).format("YYYY-MM-DD");
@@ -1009,7 +1005,7 @@ class EditPatientDrawer extends Component {
       prefix = "",
       diagnosis_description = "",
       diagnosis_type = "",
-      careplan_id = null
+      careplan_id = null,
     } = this.state;
     let age = date_of_birth
       ? moment().diff(moment(date_of_birth), "years")
@@ -1071,7 +1067,7 @@ class EditPatientDrawer extends Component {
       height = "",
       weight = "",
       symptoms = "",
-      address = ""
+      address = "",
     } = this.state;
     const validate = this.validateData();
     const { submit } = this.props;
@@ -1094,7 +1090,7 @@ class EditPatientDrawer extends Component {
         height,
         weight,
         symptoms,
-        address
+        address,
       });
       // submit({ mobile_number, name, gender, date_of_birth, treatment_id: treatment, severity_id: severity, condition_id: condition, prefix ,allergies,diagnosis_description,diagnosis_type,comorbidities,clinical_notes,height,weight, symptoms})
     }
@@ -1118,7 +1114,7 @@ class EditPatientDrawer extends Component {
     height,
     weight,
     symptoms,
-    address
+    address,
   }) {
     try {
       const { updatePatientAndCareplan } = this.props;
@@ -1142,7 +1138,7 @@ class EditPatientDrawer extends Component {
         height,
         weight,
         symptoms,
-        address: address.trim()
+        address: address.trim(),
       });
       const { status, payload: { message: msg } = {} } = response;
 
@@ -1159,7 +1155,7 @@ class EditPatientDrawer extends Component {
     }
   }
 
-  formatMessage = data => this.props.intl.formatMessage(data);
+  formatMessage = (data) => this.props.intl.formatMessage(data);
 
   onClose = () => {
     const { close } = this.props;
@@ -1184,7 +1180,7 @@ class EditPatientDrawer extends Component {
       address: "",
       treatment: null,
       severity: null,
-      careplan_id: null
+      careplan_id: null,
     });
     close();
   };
@@ -1209,7 +1205,7 @@ class EditPatientDrawer extends Component {
           headerStyle={{
             position: "sticky",
             zIndex: "9999",
-            top: "0px"
+            top: "0px",
           }}
           onClose={onClose}
           visible={visible} // todo: change as per state, -- WIP --

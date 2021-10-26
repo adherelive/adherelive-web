@@ -5,10 +5,10 @@ import { open } from "../../modules/drawer";
 import { DRAWER } from "../../constant";
 import {
   addToWatchlist,
-  removePatientFromWatchlist
+  removePatientFromWatchlist,
 } from "../../modules/doctors";
 
-const mapStateToProps = state => {
+const mapStateToProps = (state) => {
   const {
     patients = {},
     doctors = {},
@@ -20,7 +20,7 @@ const mapStateToProps = state => {
     chats = {},
     users,
     auth: { authPermissions = [], authenticated_user } = {},
-    care_plans
+    care_plans,
   } = state;
 
   return {
@@ -36,19 +36,19 @@ const mapStateToProps = state => {
     users,
     care_plans,
     authPermissions,
-    authenticated_user
+    authenticated_user,
   };
 };
 
-const mapDispatchToProps = dispatch => {
+const mapDispatchToProps = (dispatch) => {
   return {
-    openPatientDetailsDrawer: payload =>
+    openPatientDetailsDrawer: (payload) =>
       dispatch(open({ type: DRAWER.PATIENT_DETAILS, payload })),
-    addToWatchlist: patient_id => dispatch(addToWatchlist(patient_id)),
-    removePatientFromWatchlist: patient_id =>
+    addToWatchlist: (patient_id) => dispatch(addToWatchlist(patient_id)),
+    removePatientFromWatchlist: (patient_id) =>
       dispatch(removePatientFromWatchlist(patient_id)),
-    openEditPatientDrawer: payload =>
-      dispatch(open({ type: DRAWER.EDIT_PATIENT, payload }))
+    openEditPatientDrawer: (payload) =>
+      dispatch(open({ type: DRAWER.EDIT_PATIENT, payload })),
   };
 };
 

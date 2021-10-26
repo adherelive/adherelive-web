@@ -9,7 +9,7 @@ const DropDownIcon = <img src={dropDownIcon} alt="d" className="w24 h24" />;
 
 const units = [
   { key: "mg", value: "mg" },
-  { key: "ml", value: "ml" }
+  { key: "ml", value: "ml" },
 ];
 const { Option } = Select;
 const { Item: FormItem } = Form;
@@ -17,19 +17,19 @@ const { Item: FormItem } = Form;
 class MedicationStrengthUnit extends Component {
   componentDidMount() {
     const {
-      form: { validateFields }
+      form: { validateFields },
     } = this.props;
     validateFields();
   }
 
   componentWillUnmount() {
     const {
-      form: { validateFields }
+      form: { validateFields },
     } = this.props;
     validateFields();
   }
 
-  getParentNode = t => t.parentNode;
+  getParentNode = (t) => t.parentNode;
 
   getUnitOption = () => {
     return units.map((unit, index) => {
@@ -57,12 +57,12 @@ class MedicationStrengthUnit extends Component {
       form,
       medications,
       payload: { id: medication_id } = {},
-      medicationData = {}
+      medicationData = {},
     } = this.props;
     const {
       getFieldDecorator,
       getFieldError,
-      isFieldTouched
+      isFieldTouched,
       //getFieldValue
     } = form;
 
@@ -89,9 +89,9 @@ class MedicationStrengthUnit extends Component {
               {
                 // required: true,
                 // message: "Select Strength Unit"
-              }
+              },
             ],
-            initialValue: unit ? unit : "mg"
+            initialValue: unit ? unit : "mg",
           })(
             <div />
             // <Select
@@ -122,5 +122,5 @@ const Field = injectIntl(MedicationStrengthUnit);
 
 export default {
   field_name: FIELD_NAME,
-  render: props => <Field {...props} />
+  render: (props) => <Field {...props} />,
 };

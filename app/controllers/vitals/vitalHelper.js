@@ -6,7 +6,7 @@ export const getVitalUpdateData = ({
   repeat_interval_id,
   repeat_days,
   description,
-  previousVital
+  previousVital,
 }) => {
   let prevDetails = { ...previousVital.getDetails() };
   let dataToUpdate = {};
@@ -22,7 +22,7 @@ export const getVitalUpdateData = ({
   if (!isEmpty(repeat_interval_id)) {
     dataToUpdate["details"] = {
       ...prevDetails,
-      repeat_interval_id
+      repeat_interval_id,
     };
     prevDetails = { ...prevDetails, repeat_interval_id };
   }
@@ -31,7 +31,7 @@ export const getVitalUpdateData = ({
     dataToUpdate["details"] = repeat_days;
     dataToUpdate["details"] = {
       ...prevDetails,
-      repeat_days
+      repeat_days,
     };
     prevDetails = { ...prevDetails, repeat_days };
   }

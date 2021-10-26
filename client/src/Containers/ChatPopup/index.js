@@ -8,16 +8,16 @@ import { getVitalOccurence } from "../../modules/vital_occurence";
 
 import {
   addMessageOfChat,
-  raiseChatNotification
+  raiseChatNotification,
 } from "../../modules/chatMessages";
 import { closePopUp, minimizePopUp, maximizePopUp } from "../../modules/chat";
 import {
   getAllFeatures,
   toggleChatPermission,
-  toggleVideoPermission
+  toggleVideoPermission,
 } from "../../modules/featuresMappings";
 
-const mapStateToProps = state => {
+const mapStateToProps = (state) => {
   const {
     twilio,
     users,
@@ -29,7 +29,7 @@ const mapStateToProps = state => {
     doctors,
     patients,
     features = {},
-    features_mappings = {}
+    features_mappings = {},
   } = state;
   return {
     twilio,
@@ -43,18 +43,18 @@ const mapStateToProps = state => {
     patients,
     features,
     features_mappings,
-    authenticated_category
+    authenticated_category,
   };
 };
 
-const mapDispatchToProps = dispatch => {
+const mapDispatchToProps = (dispatch) => {
   return {
-    fetchChatAccessToken: userId => dispatch(fetchChatAccessToken(userId)),
+    fetchChatAccessToken: (userId) => dispatch(fetchChatAccessToken(userId)),
     minimizePopUp: () => dispatch(minimizePopUp()),
     closePopUp: () => dispatch(closePopUp()),
     // getSymptomDetails: (id) => dispatch(getSymptomDetails(id)),
     maximizePopUp: () => dispatch(maximizePopUp()),
-    getSymptomDetails: data => dispatch(getSymptomDetails(data)),
+    getSymptomDetails: (data) => dispatch(getSymptomDetails(data)),
     addMessageOfChat: (roomId, messages) =>
       dispatch(addMessageOfChat(roomId, messages)),
     getVitalOccurence: () => dispatch(getVitalOccurence()),
@@ -63,7 +63,7 @@ const mapDispatchToProps = dispatch => {
       dispatch(toggleChatPermission(patientId, data)),
     toggleVideoPermission: (patientId, data) =>
       dispatch(toggleVideoPermission(patientId, data)),
-    raiseChatNotification: data => dispatch(raiseChatNotification(data))
+    raiseChatNotification: (data) => dispatch(raiseChatNotification(data)),
   };
 };
 

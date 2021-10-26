@@ -13,7 +13,7 @@ const { Item: FormItem } = Form;
 const FIELD_NAME = "start_date";
 
 class StartDate extends Component {
-  openCalendar = e => {
+  openCalendar = (e) => {
     e.preventDefault();
     const datePicker = window.document.getElementsByClassName(FIELD_NAME)[0];
 
@@ -28,9 +28,9 @@ class StartDate extends Component {
     }
   };
 
-  getParentNode = t => t.parentNode;
+  getParentNode = (t) => t.parentNode;
 
-  formatMessage = data => this.props.intl.formatMessage(data);
+  formatMessage = (data) => this.props.intl.formatMessage(data);
 
   getInitialValue = () => {
     const { purpose, event = {} } = this.props;
@@ -43,7 +43,7 @@ class StartDate extends Component {
     return initialValue;
   };
 
-  onBlur = date => () => {
+  onBlur = (date) => () => {
     this.props.adjustEventOnStartDateChange(date);
   };
 
@@ -62,7 +62,7 @@ class StartDate extends Component {
       purpose,
       medications,
       medicationData = {},
-      payload: { id: medication_id, canViewDetails = false } = {}
+      payload: { id: medication_id, canViewDetails = false } = {},
     } = this.props;
     const { getInitialValue } = this;
     // const repeat = getFieldValue(repeatTypeField.field_name);
@@ -71,9 +71,8 @@ class StartDate extends Component {
       medications[medication_id] || {};
 
     let finalStartDate = start_date;
-    const {
-      schedule_data: { start_date: startDate = "", duration } = {}
-    } = medicationData;
+    const { schedule_data: { start_date: startDate = "", duration } = {} } =
+      medicationData;
 
     if (Object.keys(medicationData).length) {
       finalStartDate = startDate ? startDate : moment();
@@ -91,7 +90,7 @@ class StartDate extends Component {
             {getFieldDecorator(FIELD_NAME, {
               initialValue: finalStartDate
                 ? moment(finalStartDate)
-                : getInitialValue()
+                : getInitialValue(),
             })(
               <DatePicker
                 className={`full-width ${FIELD_NAME} ant-date-custom-med wp100 edit-apoint-start-date`}
@@ -123,5 +122,5 @@ const Field = injectIntl(StartDate);
 
 export default {
   field_name: FIELD_NAME,
-  render: props => <Field {...props} />
+  render: (props) => <Field {...props} />,
 };

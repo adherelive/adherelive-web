@@ -6,7 +6,7 @@ import { USER_CATEGORY_ARRAY } from "./users";
 
 export const TABLE_NAME = "food_item_details";
 
-export const db = database => {
+export const db = (database) => {
   database.define(
     TABLE_NAME,
     {
@@ -14,61 +14,61 @@ export const db = database => {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
-        type: DataTypes.INTEGER
+        type: DataTypes.INTEGER,
       },
       food_item_id: {
         type: DataTypes.INTEGER,
-        allowNull: false
+        allowNull: false,
       },
       portion_id: {
         type: DataTypes.INTEGER,
-        allowNull: false
+        allowNull: false,
       },
       portion_size: {
         type: DataTypes.FLOAT(11, 2),
-        allowNull: false
+        allowNull: false,
       },
       calorific_value: {
-        type: DataTypes.FLOAT(11, 2)
+        type: DataTypes.FLOAT(11, 2),
       },
       carbs: {
-        type: DataTypes.FLOAT(11, 2)
+        type: DataTypes.FLOAT(11, 2),
       },
       proteins: {
-        type: DataTypes.FLOAT(11, 2)
+        type: DataTypes.FLOAT(11, 2),
       },
       fats: {
-        type: DataTypes.FLOAT(11, 2)
+        type: DataTypes.FLOAT(11, 2),
       },
       fibers: {
-        type: DataTypes.FLOAT(11, 2)
+        type: DataTypes.FLOAT(11, 2),
       },
       details: {
-        type: DataTypes.JSON
+        type: DataTypes.JSON,
       },
       creator_id: {
-        type: DataTypes.INTEGER
+        type: DataTypes.INTEGER,
       },
       creator_type: {
         type: DataTypes.ENUM,
-        values: USER_CATEGORY_ARRAY
-      }
+        values: USER_CATEGORY_ARRAY,
+      },
     },
     {
       underscored: true,
-      paranoid: true
+      paranoid: true,
     }
   );
 };
 
-export const associate = database => {
+export const associate = (database) => {
   // const {upload_documents} = database.models || {};
 
   // associations here (if any) ...
 
   database.models[TABLE_NAME].belongsTo(database.models[foodItemTableName], {
     foreignKey: "food_item_id",
-    targetKey: "id"
+    targetKey: "id",
   });
 
   // database.models[foodItemTableName].hasOne(database.models[TABLE_NAME], {
@@ -78,6 +78,6 @@ export const associate = database => {
 
   database.models[TABLE_NAME].belongsTo(database.models[portionTableName], {
     foreignKey: "portion_id",
-    targetKey: "id"
+    targetKey: "id",
   });
 };

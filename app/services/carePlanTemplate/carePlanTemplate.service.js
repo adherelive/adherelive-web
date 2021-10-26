@@ -14,11 +14,11 @@ import { TABLE_NAME as treatmentTableName } from "../../models/treatments";
 import { TABLE_NAME as medicineTableName } from "../../models/medicines";
 
 class CarePlanTemplateService {
-  getCarePlanTemplateById = async id => {
+  getCarePlanTemplateById = async (id) => {
     try {
       const carePlanTemplate = await Database.getModel(TABLE_NAME).findOne({
         where: {
-          id
+          id,
         },
         include: [
           Database.getModel(conditionTableName),
@@ -29,13 +29,13 @@ class CarePlanTemplateService {
             model: Database.getModel(medicationTemplateTableName),
             include: {
               model: Database.getModel(medicineTableName),
-              required: true
-            }
+              required: true,
+            },
           },
           Database.getModel(vitalTemplateTableName),
           Database.getModel(dietTemplateTableName),
-          Database.getModel(workoutTemplateTableName)
-        ]
+          Database.getModel(workoutTemplateTableName),
+        ],
       });
       return carePlanTemplate;
     } catch (error) {
@@ -43,7 +43,7 @@ class CarePlanTemplateService {
     }
   };
 
-  create = async data => {
+  create = async (data) => {
     try {
       const carePlanTemplate = await Database.getModel(TABLE_NAME).create(
         data,
@@ -53,8 +53,8 @@ class CarePlanTemplateService {
             Database.getModel(medicationTemplateTableName),
             Database.getModel(vitalTemplateTableName),
             Database.getModel(dietTemplateTableName),
-            Database.getModel(workoutTemplateTableName)
-          ]
+            Database.getModel(workoutTemplateTableName),
+          ],
         }
       );
       return carePlanTemplate;
@@ -70,15 +70,15 @@ class CarePlanTemplateService {
         data,
         {
           where: {
-            id
+            id,
           },
           include: [
             Database.getModel(appointmentTemplateTableName),
             Database.getModel(medicationTemplateTableName),
             Database.getModel(vitalTemplateTableName),
             Database.getModel(dietTemplateTableName),
-            Database.getModel(workoutTemplateTableName)
-          ]
+            Database.getModel(workoutTemplateTableName),
+          ],
         }
       );
       await transaction.commit();
@@ -99,7 +99,7 @@ class CarePlanTemplateService {
         where: {
           treatment_id,
           severity_id,
-          condition_id
+          condition_id,
         },
         include: [
           Database.getModel(conditionTableName),
@@ -110,13 +110,13 @@ class CarePlanTemplateService {
             model: Database.getModel(medicationTemplateTableName),
             include: {
               model: Database.getModel(medicineTableName),
-              required: true
-            }
+              required: true,
+            },
           },
           Database.getModel(vitalTemplateTableName),
           Database.getModel(dietTemplateTableName),
-          Database.getModel(workoutTemplateTableName)
-        ]
+          Database.getModel(workoutTemplateTableName),
+        ],
       });
       return carePlanTemplate;
     } catch (error) {
@@ -124,7 +124,7 @@ class CarePlanTemplateService {
     }
   };
 
-  getCarePlanTemplateData = async data => {
+  getCarePlanTemplateData = async (data) => {
     try {
       const { user_id, treatment_id, ...rest } = data;
       const carePlanTemplate = await Database.getModel(TABLE_NAME).findAll({
@@ -132,13 +132,13 @@ class CarePlanTemplateService {
           [Op.or]: [
             {
               treatment_id: { [Op.eq]: treatment_id },
-              user_id: { [Op.eq]: null }
+              user_id: { [Op.eq]: null },
             },
             {
-              user_id: { [Op.eq]: user_id }
-            }
+              user_id: { [Op.eq]: user_id },
+            },
           ],
-          ...rest
+          ...rest,
         },
         include: [
           Database.getModel(conditionTableName),
@@ -149,14 +149,14 @@ class CarePlanTemplateService {
             model: Database.getModel(medicationTemplateTableName),
             include: {
               model: Database.getModel(medicineTableName),
-              required: true
-            }
+              required: true,
+            },
           },
           Database.getModel(vitalTemplateTableName),
           Database.getModel(dietTemplateTableName),
-          Database.getModel(workoutTemplateTableName)
+          Database.getModel(workoutTemplateTableName),
         ],
-        order: [["updated_at", "DESC"]]
+        order: [["updated_at", "DESC"]],
       });
       return carePlanTemplate;
     } catch (error) {
@@ -164,10 +164,10 @@ class CarePlanTemplateService {
     }
   };
 
-  getSingleTemplateByData = async data => {
+  getSingleTemplateByData = async (data) => {
     try {
       const carePlanTemplate = await Database.getModel(TABLE_NAME).findOne({
-        where: data
+        where: data,
       });
       return carePlanTemplate;
     } catch (error) {
@@ -175,7 +175,7 @@ class CarePlanTemplateService {
     }
   };
 
-  addCarePlanTemplate = async data => {
+  addCarePlanTemplate = async (data) => {
     try {
       const carePlanTemplate = await Database.getModel(TABLE_NAME).create(data);
       return carePlanTemplate;
@@ -184,30 +184,30 @@ class CarePlanTemplateService {
     }
   };
 
-  deleteTemplate = async data => {
+  deleteTemplate = async (data) => {
     try {
       return await Database.getModel(TABLE_NAME).destroy({
-        where: data
+        where: data,
       });
     } catch (error) {
       throw error;
     }
   };
 
-  getAllTemplatesForDoctor = async data => {
+  getAllTemplatesForDoctor = async (data) => {
     try {
       const { user_id, ...rest } = data;
       const carePlanTemplate = await Database.getModel(TABLE_NAME).findAll({
         where: {
           [Op.or]: [
             {
-              user_id: { [Op.eq]: null }
+              user_id: { [Op.eq]: null },
             },
             {
-              user_id: { [Op.eq]: user_id }
-            }
+              user_id: { [Op.eq]: user_id },
+            },
           ],
-          ...rest
+          ...rest,
         },
         include: [
           Database.getModel(conditionTableName),
@@ -218,14 +218,14 @@ class CarePlanTemplateService {
             model: Database.getModel(medicationTemplateTableName),
             include: {
               model: Database.getModel(medicineTableName),
-              required: true
-            }
+              required: true,
+            },
           },
           Database.getModel(vitalTemplateTableName),
           Database.getModel(dietTemplateTableName),
-          Database.getModel(workoutTemplateTableName)
+          Database.getModel(workoutTemplateTableName),
         ],
-        order: [["updated_at", "DESC"]]
+        order: [["updated_at", "DESC"]],
       });
       return carePlanTemplate;
     } catch (error) {

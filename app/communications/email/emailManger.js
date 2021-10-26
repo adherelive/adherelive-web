@@ -23,10 +23,10 @@ class EmailManger {
       smtpTransport({
         auth: {
           // api_user:process.config.email.USER,
-          api_key: process.config.email.KEY
+          api_key: process.config.email.KEY,
           // api_user: 'adhere-tripock',
           // api_key: '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'
-        }
+        },
       })
     );
   }
@@ -51,30 +51,30 @@ class EmailManger {
     if (!emailPayload.toAddress)
       return {
         error: 1,
-        message: "undefined or invalid to address"
+        message: "undefined or invalid to address",
       };
 
     if (!emailPayload.title)
       return {
         error: 1,
-        message: "undefined or invalid email title"
+        message: "undefined or invalid email title",
       };
 
     if (!emailPayload.templateName)
       return {
         error: 1,
-        message: "invalid  or undefined template name"
+        message: "invalid  or undefined template name",
       };
 
     if (!emailPayload.templateData)
       return {
         error: 1,
-        message: "invalid or undefined template data"
+        message: "invalid or undefined template data",
       };
 
     return {
       error: 0,
-      message: "valid payload"
+      message: "valid payload",
     };
   }
 
@@ -267,7 +267,7 @@ class EmailManger {
         default:
           return {
             error: 1,
-            message: "invalid template name"
+            message: "invalid template name",
           };
       }
 

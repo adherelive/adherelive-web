@@ -9,53 +9,53 @@ module.exports = {
       id: {
         type: DataTypes.INTEGER,
         primaryKey: true,
-        autoIncrement: true
+        autoIncrement: true,
       },
       care_plan_id: {
         type: DataTypes.INTEGER,
         allowNull: false,
         references: {
           model: {
-            tableName: carePlanTableName
+            tableName: carePlanTableName,
           },
-          key: "id"
-        }
+          key: "id",
+        },
       },
       name: {
         type: DataTypes.STRING,
-        allowNull: false
+        allowNull: false,
       },
       total_calories: {
-        type: DataTypes.FLOAT(11, 2)
+        type: DataTypes.FLOAT(11, 2),
       },
       start_date: {
-        type: DataTypes.DATE
+        type: DataTypes.DATE,
       },
       end_date: {
-        type: DataTypes.DATE
+        type: DataTypes.DATE,
       },
       details: {
-        type: DataTypes.JSON
+        type: DataTypes.JSON,
       },
       time: {
         type: DataTypes.DATE,
-        allowNull: false
+        allowNull: false,
       },
       created_at: {
         allowNull: false,
-        type: DataTypes.DATE
+        type: DataTypes.DATE,
       },
       updated_at: {
         allowNull: false,
-        type: DataTypes.DATE
+        type: DataTypes.DATE,
       },
       deleted_at: {
-        type: DataTypes.DATE
-      }
+        type: DataTypes.DATE,
+      },
     });
   },
 
   down: (queryInterface, DataTypes) => {
     return queryInterface.dropTable(TABLE_NAME);
-  }
+  },
 };

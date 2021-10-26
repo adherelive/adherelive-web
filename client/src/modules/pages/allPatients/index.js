@@ -6,7 +6,7 @@ function getAllPatientIdsReducer(state, data) {
 
   if (watchlist && offset && watchlist === "0") {
     return {
-      ...paginated_all_patients
+      ...paginated_all_patients,
     };
   } else {
     return state;

@@ -11,7 +11,7 @@ export const raiseSuccess = (res, code = 200, data = {}, message) => {
 export const raiseServerError = (res, code = 500, error, message) => {
   const payload = {
     code: code,
-    error: errMessage.INTERNAL_SERVER_ERROR
+    error: errMessage.INTERNAL_SERVER_ERROR,
   };
   const response = new Response(false, payload.code);
   response.setError(payload.error);
@@ -22,7 +22,7 @@ export const raiseServerError = (res, code = 500, error, message) => {
 export const raiseClientError = (res, code = 422, error, message) => {
   const payload = {
     code: code,
-    error: error || errMessage.CLIENT_ERROR
+    error: error || errMessage.CLIENT_ERROR,
   };
 
   const response = new Response(false, payload.code);

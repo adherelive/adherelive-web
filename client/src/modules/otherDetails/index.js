@@ -2,7 +2,7 @@ import { doRequest } from "../../Helper/network";
 import {
   getMedicationDetailsUrl,
   getTermsAndPolicyUrl,
-  updateTermsAndPolicyUrl
+  updateTermsAndPolicyUrl,
 } from "../../Helper/urls/otherDetails";
 import { REQUEST_TYPE } from "../../constant";
 
@@ -18,25 +18,25 @@ const UPDATE_TERMS_AND_POLICY_START = "UPDATE_TERMS_AND_POLICY_START";
 const UPDATE_TERMS_AND_POLICY_COMPLETED = "UPDATE_TERMS_AND_POLICY_COMPLETED";
 const UPDATE_TERMS_AND_POLICY_FAILED = "UPDATE_TERMS_AND_POLICY_FAILED";
 
-export const getMedicationDetails = patientId => {
+export const getMedicationDetails = (patientId) => {
   let response = {};
-  return async dispatch => {
+  return async (dispatch) => {
     try {
       dispatch({ type: GET_MEDICATION_DETAILS_START });
       response = await doRequest({
         method: REQUEST_TYPE.GET,
-        url: getMedicationDetailsUrl(patientId)
+        url: getMedicationDetailsUrl(patientId),
       });
       const { status, payload: { data } = {} } = response || {};
       if (status === true) {
         dispatch({
           type: GET_MEDICATION_DETAILS_COMPLETE,
           payload: data,
-          data
+          data,
         });
       } else {
         dispatch({
-          type: GET_MEDICATION_DETAILS_FAILED
+          type: GET_MEDICATION_DETAILS_FAILED,
         });
       }
     } catch (error) {
@@ -46,24 +46,24 @@ export const getMedicationDetails = patientId => {
   };
 };
 
-export const getTermsAndPolicy = type => {
+export const getTermsAndPolicy = (type) => {
   let response = {};
-  return async dispatch => {
+  return async (dispatch) => {
     try {
       dispatch({ type: GET_TERMS_AND_POLICY_START });
       response = await doRequest({
         method: REQUEST_TYPE.GET,
-        url: getTermsAndPolicyUrl(type)
+        url: getTermsAndPolicyUrl(type),
       });
       const { status, payload: { data } = {} } = response || {};
       if (status === true) {
         dispatch({
           type: GET_TERMS_AND_POLICY_COMPLETED,
-          payload: data
+          payload: data,
         });
       } else {
         dispatch({
-          type: GET_TERMS_AND_POLICY_FAILED
+          type: GET_TERMS_AND_POLICY_FAILED,
         });
       }
     } catch (error) {
@@ -73,27 +73,27 @@ export const getTermsAndPolicy = type => {
   };
 };
 
-export const updateTermsAndPolicy = payload => {
+export const updateTermsAndPolicy = (payload) => {
   let response = {};
   console.log("0830929827398721 payload in module", payload);
-  return async dispatch => {
+  return async (dispatch) => {
     try {
       dispatch({ type: UPDATE_TERMS_AND_POLICY_START });
       response = await doRequest({
         method: REQUEST_TYPE.POST,
         url: updateTermsAndPolicyUrl(),
-        data: payload
+        data: payload,
       });
       console.log("09183013 response ---> ", response);
       const { status, payload: { data } = {} } = response || {};
       if (status === true) {
         dispatch({
           type: UPDATE_TERMS_AND_POLICY_COMPLETED,
-          payload: data
+          payload: data,
         });
       } else {
         dispatch({
-          type: UPDATE_TERMS_AND_POLICY_FAILED
+          type: UPDATE_TERMS_AND_POLICY_FAILED,
         });
       }
     } catch (error) {
@@ -108,8 +108,8 @@ function medicationDetailsReducer(state, data) {
   return {
     ...state,
     medication_details: {
-      ...data
-    }
+      ...data,
+    },
   };
 }
 
@@ -118,7 +118,7 @@ function otherDetailsReducer(state, data) {
   if (Object.keys(medication_details).length > 0) {
     return {
       ...state,
-      medication_details
+      medication_details,
     };
   } else {
     return state;

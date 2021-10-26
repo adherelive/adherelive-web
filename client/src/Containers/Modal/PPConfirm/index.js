@@ -3,15 +3,15 @@ import { withRouter } from "react-router-dom";
 import PPConfirm from "../../../Components/Modal/PPConfirm";
 import { getTermsAndPolicy } from "../../../modules/otherDetails";
 
-const mapStateToProps = state => {
+const mapStateToProps = (state) => {
   const {} = state;
 
   return {};
 };
 
-const mapDispatchToProps = dispatch => {
+const mapDispatchToProps = (dispatch) => {
   return {
-    getTermsAndPolicy: type => dispatch(getTermsAndPolicy(type))
+    getTermsAndPolicy: (type) => dispatch(getTermsAndPolicy(type)),
   };
 };
 

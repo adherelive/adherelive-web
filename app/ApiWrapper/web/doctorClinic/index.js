@@ -14,9 +14,9 @@ class DoctorClinicWrapper extends BaseDoctorClinic {
 
     let filteredTimeSlot = {};
 
-    Object.keys(time_slots).map(day => {
+    Object.keys(time_slots).map((day) => {
       let slots = [];
-      time_slots[day].forEach(slot => {
+      time_slots[day].forEach((slot) => {
         const { startTime, endTime } = slot || {};
         if (startTime !== "" && endTime !== "") {
           slots.push(slot);
@@ -28,13 +28,13 @@ class DoctorClinicWrapper extends BaseDoctorClinic {
       basic_info: {
         id,
         doctor_id,
-        name
+        name,
       },
       location,
       details: {
         ...details,
-        time_slots: filteredTimeSlot
-      }
+        time_slots: filteredTimeSlot,
+      },
     };
   };
 }

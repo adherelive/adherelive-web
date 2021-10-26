@@ -15,7 +15,7 @@ import {
   CONSULTATION_FEE,
   BILLING,
   PAYMENT_DETAILS,
-  TABLE_DEFAULT_BLANK_FIELD
+  TABLE_DEFAULT_BLANK_FIELD,
 } from "../../../constant";
 
 import AddConsultationFeeDrawer from "../../../Containers/Drawer/addConsultationFee";
@@ -28,7 +28,7 @@ import DoctorAccountDetails from "../../../Containers/DoctorAccountDetails";
 import {
   BarChartOutlined,
   CreditCardOutlined,
-  WalletOutlined
+  WalletOutlined,
 } from "@ant-design/icons";
 
 import messages from "./messages";
@@ -49,7 +49,7 @@ class DoctorSettingsPage extends Component {
       selectedKey: PAYMENT_DETAILS,
       noAccountDetails: true,
       account_details: {},
-      editDetailsSelectedID: null
+      editDetailsSelectedID: null,
     };
   }
 
@@ -77,7 +77,7 @@ class DoctorSettingsPage extends Component {
     this.handleGetAccountDetails();
   };
 
-  formatMessage = data => this.props.intl.formatMessage(data);
+  formatMessage = (data) => this.props.intl.formatMessage(data);
 
   setIsUpdated = () => {
     this.setState({ isUpdated: true });
@@ -92,7 +92,7 @@ class DoctorSettingsPage extends Component {
       const {
         status,
         payload: { data: { payment_products = {} } = {} } = {},
-        statusCode
+        statusCode,
       } = response || {};
 
       console.log("RESPONSEEEEEEEEEEEEEEEE ====>", response);
@@ -100,13 +100,13 @@ class DoctorSettingsPage extends Component {
         this.setState({
           fetchingDoctorPayments: false,
           doctorPaymentProducts: payment_products,
-          noDoctorPaymentProducts: false
+          noDoctorPaymentProducts: false,
         });
       } else if (!status && statusCode === 201) {
         this.setState({
           fetchingDoctorPayments: false,
           doctorPaymentProducts: {},
-          noDoctorPaymentProducts: true
+          noDoctorPaymentProducts: true,
         });
       } else {
         this.setState({ fetchingDoctorPayments: false });
@@ -128,7 +128,7 @@ class DoctorSettingsPage extends Component {
       if (status) {
         this.setState({
           fetchingAdminPayments: false,
-          defaultPaymentsProducts: payment_products
+          defaultPaymentsProducts: payment_products,
         });
       } else {
         this.setState({ fetchingAdminPayments: false });
@@ -145,7 +145,7 @@ class DoctorSettingsPage extends Component {
     openConsultationFeeDrawer();
   };
 
-  displayEditDoctorPaymentProduct = id => () => {
+  displayEditDoctorPaymentProduct = (id) => () => {
     const { openConsultationFeeDrawer } = this.props;
     const { doctorPaymentProducts } = this.state;
     const { [id]: paymentData } = doctorPaymentProducts;
@@ -158,7 +158,7 @@ class DoctorSettingsPage extends Component {
     openRazorpayAccountDetailsDrawer();
   };
 
-  displayEditRazorpayAccountDetails = fetchedAccountDetails_id => e => {
+  displayEditRazorpayAccountDetails = (fetchedAccountDetails_id) => (e) => {
     e.preventDefault();
     const { openEditRazorpayAccountDetailsDrawer } = this.props;
     this.setState({ editDetailsSelectedID: fetchedAccountDetails_id });
@@ -243,7 +243,7 @@ class DoctorSettingsPage extends Component {
       const {
         status,
         payload: { data: { payment_products = {} } = {} } = {},
-        statusCode
+        statusCode,
       } = response || {};
 
       if (status) {
@@ -302,13 +302,13 @@ class DoctorSettingsPage extends Component {
       const {
         status,
         payload: { data: { users = {}, account_details = {} } = {} } = {},
-        statusCode
+        statusCode,
       } = response || {};
 
       if (status && Object.keys(account_details).length > 0) {
         this.setState({
           account_details,
-          noAccountDetails: false
+          noAccountDetails: false,
         });
 
         // const {basic_info : {id='',customer_name='',account_number='',ifsc_code='',account_type='',account_mobile_number='',in_use=false,prefix='',upi_id=null} = {} } = Object.values(account_details)[0] || {};
@@ -345,7 +345,7 @@ class DoctorSettingsPage extends Component {
 
     for (let each in doctorPaymentProducts) {
       const {
-        basic_info: { id = null, name = "", type = "", amount = "" } = {}
+        basic_info: { id = null, name = "", type = "", amount = "" } = {},
       } = doctorPaymentProducts[each] || {};
       options.push(
         <div
@@ -378,13 +378,13 @@ class DoctorSettingsPage extends Component {
     return options;
   };
 
-  handleItemSelect = key => () => {
+  handleItemSelect = (key) => () => {
     const {
       users,
       history,
       authenticated_category,
       authenticated_user,
-      authPermissions = []
+      authPermissions = [],
     } = this.props;
     const current_user = users[authenticated_user];
     const { onboarded } = current_user;
@@ -413,11 +413,8 @@ class DoctorSettingsPage extends Component {
   };
 
   consultationFeeDisplay = () => {
-    const {
-      noDoctorPaymentProducts,
-      selectedKey,
-      doctorPaymentProducts
-    } = this.state;
+    const { noDoctorPaymentProducts, selectedKey, doctorPaymentProducts } =
+      this.state;
 
     const { displayEditDoctorPaymentProduct } = this;
 
@@ -440,11 +437,11 @@ class DoctorSettingsPage extends Component {
     );
   };
 
-  deleteAccountDetails = id => () => {
+  deleteAccountDetails = (id) => () => {
     this.handleDelete(id);
   };
 
-  handleDelete = id => {
+  handleDelete = (id) => {
     // e.preventDefault();
     const { warnNote } = this;
 
@@ -459,12 +456,12 @@ class DoctorSettingsPage extends Component {
           const {
             status,
             payload: { data: { users = {}, account_details = {} } = {} } = {},
-            statusCode
+            statusCode,
           } = response || {};
 
           if (status && Object.keys(account_details).length === 0) {
             this.setState({
-              noAccountDetails: true
+              noAccountDetails: true,
             });
           }
 
@@ -479,7 +476,7 @@ class DoctorSettingsPage extends Component {
           message.warn(this.formatMessage(messages.somethingWentWrong));
         }
       },
-      onCancel() {}
+      onCancel() {},
     });
   };
 
@@ -500,7 +497,7 @@ class DoctorSettingsPage extends Component {
 
     const providerid = this.isDoctorRoleAssociatedWithProvider() || null;
 
-    const accountDetails = Object.keys(account_details).map(account_id => {
+    const accountDetails = Object.keys(account_details).map((account_id) => {
       const {
         basic_info: {
           id,
@@ -511,8 +508,8 @@ class DoctorSettingsPage extends Component {
           account_mobile_number,
           prefix,
           upi_id,
-          in_use = false
-        } = {}
+          in_use = false,
+        } = {},
       } = account_details[account_id] || {};
 
       return (

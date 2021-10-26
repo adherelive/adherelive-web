@@ -23,11 +23,11 @@ const database = new Sequelize(
       max: 10,
       min: 0,
       acquire: 30000,
-      idle: 10000
+      idle: 10000,
     },
-    logging: function(str) {
+    logging: function (str) {
       Logger.debug("query", str);
-    }
+    },
   }
 );
 
@@ -36,11 +36,11 @@ database
   .then(() => {
     console.log("Db and tables have been created...");
   })
-  .catch(err => {
+  .catch((err) => {
     console.log("Db connect error is: ", err);
   });
 
-const addMedicine = async data => {
+const addMedicine = async (data) => {
   try {
     const { name, pillbox_id } = data || {};
     const medicine = await database.query(
@@ -51,9 +51,9 @@ const addMedicine = async data => {
           `${pillbox_id}`,
           "tablet",
           moment().format(),
-          moment().format()
+          moment().format(),
         ],
-        type: QueryTypes.INSERT
+        type: QueryTypes.INSERT,
       }
     );
 
@@ -74,7 +74,7 @@ fs.readFile(
     if (!err) {
       Papa.parse(file, {
         header: true,
-        step: async row => {
+        step: async (row) => {
           /*
            * Keys from csv file:
            * ID        :   Pillbox ID for medicine (pillbox_id)
@@ -88,14 +88,14 @@ fs.readFile(
               name: rxstring,
               pillbox_id: ID,
               created_at: new Date(),
-              updated_at: new Date()
+              updated_at: new Date(),
             };
 
             dataToWrite.push({
               name: rxstring,
               pillbox_id: ID,
               created_at: new Date(),
-              updated_at: new Date()
+              updated_at: new Date(),
             });
 
             // fs.writeFile('medicineDb.txt', JSON.stringify(dataToUpdate), "utf8", (err) => {
@@ -111,11 +111,11 @@ fs.readFile(
               .then(async () => {
                 await addMedicine({
                   pillbox_id: ID ? ID : null,
-                  name: rxstring ? rxstring : medicine_name
+                  name: rxstring ? rxstring : medicine_name,
                 });
                 console.log("Db and tables have been created...");
               })
-              .catch(err => {
+              .catch((err) => {
                 console.log("Db connect error is: ", err);
               });
 
@@ -124,14 +124,14 @@ fs.readFile(
             console.log("Row add error --> ", error);
           }
         },
-        complete: function(results) {
+        complete: function (results) {
           console.log("Finished:");
           // fs.writeFile('medicineDb.txt', JSON.stringify({dataToWrite}), "utf8", (err) => {
           //     if(err) {
           //         console.log("ERROR IN TESTONE ---> ", err);
           //     }
           // });
-        }
+        },
       });
     }
   }

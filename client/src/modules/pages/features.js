@@ -1,10 +1,10 @@
 export const SHOW_VERIFY_MODAL = "SHOW_VERIFY_MODAL";
 
-export const showVerifyModal = value => {
-  return async dispatch => {
+export const showVerifyModal = (value) => {
+  return async (dispatch) => {
     dispatch({
       type: SHOW_VERIFY_MODAL,
-      data: { showVerifyModal: value }
+      data: { showVerifyModal: value },
     });
   };
 };
@@ -14,7 +14,7 @@ function showModalReducer(state, data) {
   if (showVerifyModal !== null) {
     return {
       ...state,
-      showVerifyModal
+      showVerifyModal,
     };
   } else {
     return state;

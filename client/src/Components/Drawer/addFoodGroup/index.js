@@ -18,7 +18,7 @@ class AddFoodGroup extends Component {
       food_item_detail_id: null,
       visibleAddFoodDrawer: false,
       editable: false,
-      food_item_name: ""
+      food_item_name: "",
     };
 
     this.FormWrapper = Form.create({ onFieldsChange: this.onFormFieldChanges })(
@@ -26,15 +26,15 @@ class AddFoodGroup extends Component {
     );
   }
 
-  setEditable = val => {
+  setEditable = (val) => {
     this.setState({ editable: val });
   };
 
-  setFoodItemName = name => {
+  setFoodItemName = (name) => {
     this.setState({ food_item_name: name });
   };
 
-  setFoodItemDetailId = id => {
+  setFoodItemDetailId = (id) => {
     this.setState({ food_item_detail_id: id });
   };
 
@@ -46,9 +46,9 @@ class AddFoodGroup extends Component {
     this.setState({ visibleAddFoodDrawer: false });
   };
 
-  onFormFieldChanges = props => {
+  onFormFieldChanges = (props) => {
     const {
-      form: { getFieldsError, isFieldsTouched }
+      form: { getFieldsError, isFieldsTouched },
     } = props;
     const isError = hasErrors(getFieldsError());
     const { disabledSubmit } = this.state;
@@ -57,14 +57,14 @@ class AddFoodGroup extends Component {
     }
   };
 
-  handleSubmit = e => {
+  handleSubmit = (e) => {
     e.preventDefault();
     const {
       onSubmit,
       storeFoodItemAndDetails,
       searched_food_items = {},
       searched_food_item_details = {},
-      updateFoodItem
+      updateFoodItem,
     } = this.props;
 
     const { formRef = {} } = this;
@@ -72,13 +72,13 @@ class AddFoodGroup extends Component {
     const {
       food_item_detail_id = null,
       editable = false,
-      food_item_name = ""
+      food_item_name = "",
     } = this.state;
 
     const {
       props: {
-        form: { validateFields }
-      }
+        form: { validateFields },
+      },
     } = formRef;
 
     validateFields(async (err, values) => {
@@ -93,7 +93,7 @@ class AddFoodGroup extends Component {
           portion_id = null,
           calorific_value = null,
           serving = null,
-          notes = ""
+          notes = "",
         } = values;
 
         const food_item_id = parseInt(name);
@@ -108,7 +108,7 @@ class AddFoodGroup extends Component {
           food_item_detail_id: food_item_detail_id
             ? parseInt(food_item_detail_id)
             : null,
-          notes
+          notes,
         };
 
         const updateData = {
@@ -120,7 +120,7 @@ class AddFoodGroup extends Component {
           fats: fats ? parseFloat(fats) : null,
           fibers: fibers ? parseFloat(fibers) : null,
           portion_size: portion_size ? parseFloat(portion_size) : null,
-          calorific_value: calorific_value ? parseFloat(calorific_value) : null
+          calorific_value: calorific_value ? parseFloat(calorific_value) : null,
         };
 
         try {
@@ -132,11 +132,11 @@ class AddFoodGroup extends Component {
           if (editable) {
             const responseOnUpdate = await updateFoodItem({
               food_item_id,
-              data: updateData
+              data: updateData,
             });
             const {
               status,
-              payload: { data: resp_data = {}, message: resp_msg = "" } = {}
+              payload: { data: resp_data = {}, message: resp_msg = "" } = {},
             } = responseOnUpdate;
 
             if (status) {
@@ -158,7 +158,7 @@ class AddFoodGroup extends Component {
 
             storeFoodItemAndDetails({
               food_items: { ...toStoreFoodItem },
-              food_item_details: { ...toStoreDetail }
+              food_item_details: { ...toStoreDetail },
             });
 
             this.onClose();
@@ -170,28 +170,28 @@ class AddFoodGroup extends Component {
     });
   };
 
-  formatMessage = data => this.props.intl.formatMessage(data);
+  formatMessage = (data) => this.props.intl.formatMessage(data);
 
   onClose = () => {
     const { closeFoodGroupDrawer } = this.props;
     const { formRef } = this;
     const {
       props: {
-        form: { resetFields }
-      }
+        form: { resetFields },
+      },
     } = formRef;
 
     this.setState({
       food_item_detail_id: null,
       visibleAddFoodDrawer: false,
       editable: false,
-      food_item_name: ""
+      food_item_name: "",
     });
     resetFields();
     closeFoodGroupDrawer();
   };
 
-  setFormRef = formRef => {
+  setFormRef = (formRef) => {
     this.formRef = formRef;
     if (formRef) {
       this.setState({ formRef: true });
@@ -206,7 +206,7 @@ class AddFoodGroup extends Component {
       visibleAddFoodDrawer = false,
       food_item_detail_id = null,
       editable = false,
-      food_item_name = ""
+      food_item_name = "",
     } = this.state;
 
     const {
@@ -217,11 +217,11 @@ class AddFoodGroup extends Component {
       FormWrapper,
       setFoodItemDetailId,
       openAddFoodItemDrawer,
-      closeAddFoodItemDrawer
+      closeAddFoodItemDrawer,
     } = this;
 
     const submitButtonProps = {
-      disabled: disabledSubmit
+      disabled: disabledSubmit,
     };
 
     return (
@@ -232,7 +232,7 @@ class AddFoodGroup extends Component {
           headerStyle={{
             position: "sticky",
             zIndex: "9999",
-            top: "0px"
+            top: "0px",
           }}
           destroyOnClose={true}
           onClose={onClose}

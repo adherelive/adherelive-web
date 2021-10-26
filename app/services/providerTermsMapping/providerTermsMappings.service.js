@@ -12,7 +12,7 @@ class ProviderTermsMappingService {
     const transaction = await Database.initTransaction();
     try {
       const response = await Database.getModel(TABLE_NAME).create(data, {
-        transaction
+        transaction,
       });
       await transaction.commit();
       return response;
@@ -22,7 +22,7 @@ class ProviderTermsMappingService {
     }
   }
 
-  bulkCreate = async data => {
+  bulkCreate = async (data) => {
     try {
       const response = await Database.getModel(TABLE_NAME).bulkCreate(data);
       return response;
@@ -31,10 +31,10 @@ class ProviderTermsMappingService {
     }
   };
 
-  getSingleEntityByData = async data => {
+  getSingleEntityByData = async (data) => {
     try {
       const response = await Database.getModel(TABLE_NAME).findOne({
-        where: data
+        where: data,
       });
       return response;
     } catch (error) {
@@ -42,10 +42,10 @@ class ProviderTermsMappingService {
     }
   };
 
-  getAllByData = async data => {
+  getAllByData = async (data) => {
     try {
       const response = await Database.getModel(TABLE_NAME).findAll({
-        where: data
+        where: data,
         // raw: true,
         // nest: true,
       });
@@ -61,7 +61,7 @@ class ProviderTermsMappingService {
         where,
         order,
         attributes,
-        raw: true
+        raw: true,
       });
     } catch (error) {
       throw error;
@@ -74,7 +74,7 @@ class ProviderTermsMappingService {
         where,
         order,
         attributes,
-        raw: true
+        raw: true,
       });
     } catch (error) {
       throw error;
@@ -86,9 +86,9 @@ class ProviderTermsMappingService {
     try {
       const updatedRecord = await Database.getModel(TABLE_NAME).update(data, {
         where: {
-          id
+          id,
         },
-        transaction
+        transaction,
       });
       await transaction.commit();
       return updatedRecord;

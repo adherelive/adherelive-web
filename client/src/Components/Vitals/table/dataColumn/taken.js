@@ -1,6 +1,6 @@
 import React from "react";
 
-export default props => {
+export default (props) => {
   const { vitalData } = props || {};
   const { remaining = 0, total = 0 } = vitalData || {};
 

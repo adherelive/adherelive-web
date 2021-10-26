@@ -5,18 +5,18 @@ import { close } from "../../modules/drawer";
 import {
   getAdminPaymentProduct,
   getDoctorPaymentProduct,
-  addDoctorPaymentProduct
+  addDoctorPaymentProduct,
 } from "../../modules/doctors";
 import { authDoctorSelector } from "../../modules/doctors/selectors";
 
 // import { createReminder, updateReminder } from "../../modules/reminder"; // write to add to database
-const mapStateToProps = state => {
+const mapStateToProps = (state) => {
   const {
     auth: { auth_role = null } = {},
     user_roles = {},
     drawer: { visible, loading, data: { type, payload = {} } = {} },
     doctors,
-    users
+    users,
   } = state;
 
   const auth_doctor_id = authDoctorSelector(state);
@@ -28,16 +28,16 @@ const mapStateToProps = state => {
     loading,
     payload,
     doctors,
-    users
+    users,
   };
 };
 
-const mapDispatchToProps = dispatch => {
+const mapDispatchToProps = (dispatch) => {
   return {
     close: () => dispatch(close()),
     getAdminPaymentProduct: () => dispatch(getAdminPaymentProduct()),
     getDoctorPaymentProduct: () => dispatch(getDoctorPaymentProduct()),
-    addDoctorPaymentProduct: data => dispatch(addDoctorPaymentProduct(data))
+    addDoctorPaymentProduct: (data) => dispatch(addDoctorPaymentProduct(data)),
   };
 };
 

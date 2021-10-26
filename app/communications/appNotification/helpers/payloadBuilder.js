@@ -27,7 +27,7 @@ const {
   VITALS_DELETE,
   VITALS_SELF_CREATE,
   VITALS_SELF_DELETE,
-  VITALS_SELF_UPDATE
+  VITALS_SELF_UPDATE,
 } = require("../contants");
 
 const notificationMessage = require("../notificationMessages");
@@ -61,7 +61,7 @@ class PayloadBuilder {
       foreignId: `${payload.participantOne}-reminder-${payload._id}`,
       participantOne: payload.participantOne,
       participantTwo: payload.participantTwo,
-      createdAt: moment().format("DD-MM-YYYY HH:MM:SS")
+      createdAt: moment().format("DD-MM-YYYY HH:MM:SS"),
     };
 
     switch (this.activityType) {
@@ -70,8 +70,8 @@ class PayloadBuilder {
           ...newPayload,
           ...{
             message: notificationMessage.reminder.Create({}),
-            verb: REMINDER_CREATE
-          }
+            verb: REMINDER_CREATE,
+          },
         };
 
       case "update":
@@ -79,16 +79,16 @@ class PayloadBuilder {
           ...newPayload,
           ...{
             message: notificationMessage.reminder.Reschedule({}),
-            verb: REMINDER_UPDATE
-          }
+            verb: REMINDER_UPDATE,
+          },
         };
       case "now":
         return {
           ...newPayload,
           ...{
             message: notificationMessage.reminder.Now({}),
-            verb: REMINDER_NOW
-          }
+            verb: REMINDER_NOW,
+          },
         };
       default:
         return null;
@@ -103,7 +103,7 @@ class PayloadBuilder {
     let newPayload = {
       actor: payload.participantOne,
       object: `${payload.participantTwo}`,
-      foreign_id: `${payload._id}`
+      foreign_id: `${payload._id}`,
     };
 
     switch (this.activityType) {
@@ -111,30 +111,30 @@ class PayloadBuilder {
         return {
           ...newPayload,
           ...{
-            verb: APPOINTMENT_CREATE
-          }
+            verb: APPOINTMENT_CREATE,
+          },
         };
       case "reschedule":
         return {
           ...newPayload,
           ...{
-            verb: APPOINTMENT_UPDATE
-          }
+            verb: APPOINTMENT_UPDATE,
+          },
         };
 
       case "start":
         return {
           ...newPayload,
           ...{
-            verb: APPOINTMENT_START
-          }
+            verb: APPOINTMENT_START,
+          },
         };
       case "prior":
         return {
           ...newPayload,
           ...{
-            verb: APPOINTMENT_PRIOR
-          }
+            verb: APPOINTMENT_PRIOR,
+          },
         };
       default:
         return null;
@@ -153,18 +153,18 @@ class PayloadBuilder {
       foreignId: `${payload.participantOne}`,
       participantOne: payload.participantOne,
       participantTwo: payload.participantTwo,
-      createdAt: moment().format("DD-MM-YYYY HH:MM:SS")
+      createdAt: moment().format("DD-MM-YYYY HH:MM:SS"),
     };
     switch (this.action) {
       case "create":
         return {
           ...newPayload,
-          ...{ message: "" }
+          ...{ message: "" },
         };
       case "delete":
         return {
           ...newPayload,
-          ...{ message: "" }
+          ...{ message: "" },
         };
       default:
         return null;
@@ -182,7 +182,7 @@ class PayloadBuilder {
       object: `${payload.participantOne}-survey-${payload._id}`,
       foreignId: `${payload.participantOne}-survey-${payload._id}`,
       participantOne: payload.participantOne,
-      participantTwo: payload.participantTwo
+      participantTwo: payload.participantTwo,
     };
     switch (this.action) {
       case "create":
@@ -190,8 +190,8 @@ class PayloadBuilder {
           ...newPayload,
           ...{
             message: notificationMessage.survey.Create({}),
-            verb: SURVEY_CREATE
-          }
+            verb: SURVEY_CREATE,
+          },
         };
       default:
         return null;
@@ -209,7 +209,7 @@ class PayloadBuilder {
       object: `${payload.participantOne}-vitals-${payload._id}`,
       foreignId: `${payload.participantOne}-vitals-${payload._id}`,
       participantOne: payload.participantOne,
-      participantTwo: payload.participantTwo
+      participantTwo: payload.participantTwo,
     };
     switch (this.action) {
       case "create-self":
@@ -217,48 +217,48 @@ class PayloadBuilder {
           ...newPayload,
           ...{
             message: notificationMessage.vitals.SelfUpdate({}),
-            verb: VITALS_SELF_CREATE
-          }
+            verb: VITALS_SELF_CREATE,
+          },
         };
       case "update-self":
         return {
           ...newPayload,
           ...{
             messages: notificationMessage.vitals.SelfUpdate({}),
-            verb: VITALS_SELF_UPDATE
-          }
+            verb: VITALS_SELF_UPDATE,
+          },
         };
       case "delete-self":
         return {
           ...newPayload,
           ...{
             messages: notificationMessage.vitals.SelfUpdate({}),
-            verb: VITALS_SELF_DELETE
-          }
+            verb: VITALS_SELF_DELETE,
+          },
         };
       case "create":
         return {
           ...newPayload,
           ...{
             messages: notificationMessage.vitals.OtherUpdate({}),
-            verb: VITALS_CREATE
-          }
+            verb: VITALS_CREATE,
+          },
         };
       case "update":
         return {
           ...newPayload,
           ...{
             messages: notificationMessage.vitals.OtherUpdate({}),
-            verb: VITALS_UPDATE
-          }
+            verb: VITALS_UPDATE,
+          },
         };
       case "delete":
         return {
           ...newPayload,
           ...{
             messages: notificationMessage.vitals.OtherUpdate({}),
-            verb: VITALS_UPDATE
-          }
+            verb: VITALS_UPDATE,
+          },
         };
       default:
         return null;
@@ -292,4 +292,4 @@ class PayloadBuilder {
   }
 }
 
-module.exports = data => new PayloadBuilder(data);
+module.exports = (data) => new PayloadBuilder(data);

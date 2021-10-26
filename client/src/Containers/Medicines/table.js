@@ -9,27 +9,27 @@ import {
   resetSearchPrivate,
   resetSearchPublic,
   mapMedicineToPublic,
-  deleteMedicine
+  deleteMedicine,
 } from "../../modules/medicines";
 import { open } from "../../modules/drawer";
 import { DRAWER } from "../../constant";
 
-const mapStateToProps = state => {
+const mapStateToProps = (state) => {
   const {
     medicines = {},
     pages: { admin_medicines = {}, admin_search_medicines = {} } = {},
-    doctors = {}
+    doctors = {},
   } = state;
 
   return {
     medicines,
     admin_medicines,
     admin_search_medicines,
-    doctors
+    doctors,
   };
 };
 
-const mapDispatchToProps = dispatch => {
+const mapDispatchToProps = (dispatch) => {
   return {
     getPublicMedicines: ({ value, offset }) =>
       dispatch(getPublicMedicines({ value, offset })),
@@ -39,9 +39,9 @@ const mapDispatchToProps = dispatch => {
       dispatch(makeMedicinePublic({ medicine_id, offset })),
     resetSearchPrivate: () => dispatch(resetSearchPrivate()),
     resetSearchPublic: () => dispatch(resetSearchPublic()),
-    mapMedicineToPublic: medicine => dispatch(mapMedicineToPublic(medicine)),
+    mapMedicineToPublic: (medicine) => dispatch(mapMedicineToPublic(medicine)),
     deleteMedicine: ({ medicine_id, offset }) =>
-      dispatch(deleteMedicine({ medicine_id, offset }))
+      dispatch(deleteMedicine({ medicine_id, offset })),
   };
 };
 

@@ -24,9 +24,8 @@ class SpecialityController extends Controller {
         for (const speciality of specialities) {
           const specialityData = await SpecialityWrapper(speciality);
 
-          specialityDetails[
-            specialityData.getSpecialityId()
-          ] = specialityData.getBasicInfo();
+          specialityDetails[specialityData.getSpecialityId()] =
+            specialityData.getBasicInfo();
         }
 
         return raiseSuccess(
@@ -34,8 +33,8 @@ class SpecialityController extends Controller {
           200,
           {
             specialities: {
-              ...specialityDetails
-            }
+              ...specialityDetails,
+            },
           },
           "Specialities fetched successfully"
         );

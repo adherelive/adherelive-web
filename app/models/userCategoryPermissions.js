@@ -5,7 +5,7 @@ import { USER_CATEGORY_ARRAY } from "./users";
 
 export const TABLE_NAME = "user_category_permissions";
 
-export const db = database => {
+export const db = (database) => {
   database.define(
     TABLE_NAME,
     {
@@ -13,31 +13,31 @@ export const db = database => {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
-        type: DataTypes.INTEGER
+        type: DataTypes.INTEGER,
       },
       category: {
         type: DataTypes.ENUM,
-        values: USER_CATEGORY_ARRAY
+        values: USER_CATEGORY_ARRAY,
       },
       permission_id: {
         type: DataTypes.INTEGER,
         allowNull: false,
         references: {
           model: {
-            tableName: permissionTableName
+            tableName: permissionTableName,
           },
-          key: "id"
-        }
-      }
+          key: "id",
+        },
+      },
     },
     {
       underscored: true,
-      paranoid: true
+      paranoid: true,
     }
   );
 };
 
-export const associate = database => {
+export const associate = (database) => {
   // const {<TABLE_NAME>} = database.models || {};
   // associations here (if any) ...
 };

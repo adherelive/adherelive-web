@@ -12,8 +12,8 @@ class DegreeWrapper extends BaseDegree {
     return {
       basic_info: {
         id,
-        name
-      }
+        name,
+      },
     };
   };
 }

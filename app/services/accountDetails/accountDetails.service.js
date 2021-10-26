@@ -8,9 +8,9 @@ class AccountDetailsService {
     try {
       const accountDetails = await Database.getModel(TABLE_NAME).update(data, {
         where: {
-          id
+          id,
         },
-        transaction
+        transaction,
       });
       await transaction.commit();
       return accountDetails;
@@ -20,11 +20,11 @@ class AccountDetailsService {
     }
   };
 
-  addAccountDetails = async data => {
+  addAccountDetails = async (data) => {
     const transaction = await Database.initTransaction();
     try {
       const accountDetails = await Database.getModel(TABLE_NAME).create(data, {
-        transaction
+        transaction,
       });
       await transaction.commit();
       return accountDetails;
@@ -34,12 +34,12 @@ class AccountDetailsService {
     }
   };
 
-  getCurrentAccountByUserId = async user_id => {
+  getCurrentAccountByUserId = async (user_id) => {
     try {
       const accountDetails = await Database.getModel(TABLE_NAME).findOne({
         where: {
-          [Op.and]: [{ user_id }, { in_use: true }]
-        }
+          [Op.and]: [{ user_id }, { in_use: true }],
+        },
       });
       return accountDetails;
     } catch (error) {
@@ -47,12 +47,12 @@ class AccountDetailsService {
     }
   };
 
-  getAllAccountsForUser = async user_id => {
+  getAllAccountsForUser = async (user_id) => {
     try {
       const accountDetails = await Database.getModel(TABLE_NAME).findAll({
         where: {
-          user_id
-        }
+          user_id,
+        },
       });
       return accountDetails;
     } catch (error) {
@@ -60,10 +60,10 @@ class AccountDetailsService {
     }
   };
 
-  getByData = async data => {
+  getByData = async (data) => {
     try {
       const accountDetails = await Database.getModel(TABLE_NAME).findOne({
-        where: data
+        where: data,
       });
       return accountDetails;
     } catch (error) {
@@ -71,14 +71,14 @@ class AccountDetailsService {
     }
   };
 
-  updateInUseForAccount = async user_id => {
+  updateInUseForAccount = async (user_id) => {
     try {
       const accountDetails = await Database.getModel(TABLE_NAME).update(
         { in_use: false },
         {
           where: {
-            [Op.and]: [{ user_id }, { in_use: true }]
-          }
+            [Op.and]: [{ user_id }, { in_use: true }],
+          },
         }
       );
       return accountDetails;
@@ -87,12 +87,12 @@ class AccountDetailsService {
     }
   };
 
-  deleteAccountDetails = async id => {
+  deleteAccountDetails = async (id) => {
     try {
       const accountDetails = await Database.getModel(TABLE_NAME).destroy({
         where: {
-          id
-        }
+          id,
+        },
       });
       return accountDetails;
     } catch (error) {
@@ -105,9 +105,9 @@ class AccountDetailsService {
     try {
       const accountDetails = await Database.getModel(TABLE_NAME).update(data, {
         where: {
-          id
+          id,
         },
-        transaction
+        transaction,
       });
       await transaction.commit();
       return accountDetails;

@@ -1,7 +1,7 @@
 import {
   MAP_MEDICINE_TO_PUBLIC,
   GET_PUBLIC_MEDICINES_COMPLETED,
-  DELETE_MEDICINE_COMPLETED
+  DELETE_MEDICINE_COMPLETED,
 } from "../../medicines";
 
 const PUBLIC = "public";
@@ -12,7 +12,7 @@ function getPublicAdminMedicinesReducer(state, data) {
 
   if (medicines && type === PUBLIC) {
     return {
-      ...public_medicines
+      ...public_medicines,
     };
   } else {
     return state;
@@ -25,7 +25,7 @@ function mapMedicineToPublicReducer(state, data) {
     const { ["0"]: existing, ...rest } = state;
     const public_medicines = { ["0"]: { ...existing, ...medicine } };
     return {
-      ...public_medicines
+      ...public_medicines,
     };
   } else {
     return state;
@@ -41,7 +41,7 @@ function deleteMedicineReducer(state, data) {
       let updatedMed = { ...state };
       updatedMed[offset] = { ...rest };
       return {
-        ...updatedMed
+        ...updatedMed,
       };
     } else {
       return state;

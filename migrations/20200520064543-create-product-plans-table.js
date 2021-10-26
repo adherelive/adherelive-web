@@ -5,45 +5,45 @@ import {
   USER_CATEGORY,
   CURRENCY,
   BILLING_CYCLE,
-  REPEAT_TYPE
+  REPEAT_TYPE,
 } from "../constant";
 
 module.exports = {
   up: (queryInterface, Sequelize) => {
     /*
-                  Add altering commands here.
-                  Return a promise to correctly handle asynchronicity.
+                      Add altering commands here.
+                      Return a promise to correctly handle asynchronicity.
 
-                  Example:
-                  return queryInterface.createTable('users', { id: Sequelize.INTEGER });
-    */
+                      Example:
+                      return queryInterface.createTable('users', { id: Sequelize.INTEGER });
+        */
     return queryInterface.createTable(DB_TABLES.PRODUCT_PLANS, {
       id: {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
-        type: Sequelize.INTEGER
+        type: Sequelize.INTEGER,
       },
       provider_type: {
         type: Sequelize.ENUM,
-        values: [USER_CATEGORY.DOCTOR, USER_CATEGORY.PROVIDER]
+        values: [USER_CATEGORY.DOCTOR, USER_CATEGORY.PROVIDER],
       },
       provider_id: {
         type: Sequelize.INTEGER,
-        allowNull: false
+        allowNull: false,
       },
       description: {
         type: Sequelize.STRING(1000),
-        allowNull: false
+        allowNull: false,
       },
       subscription_charge: {
         type: Sequelize.STRING,
-        allowNull: false
+        allowNull: false,
       },
       currency: {
         type: Sequelize.ENUM,
         values: [CURRENCY.INR, CURRENCY.AUD, CURRENCY.USD],
-        allowNull: false
+        allowNull: false,
       },
       billing_cycle: {
         type: Sequelize.ENUM,
@@ -51,33 +51,33 @@ module.exports = {
           REPEAT_TYPE.YEARLY,
           REPEAT_TYPE.MONTHLY,
           REPEAT_TYPE.WEEKLY,
-          REPEAT_TYPE.DAILY
+          REPEAT_TYPE.DAILY,
         ],
-        allowNull: false
+        allowNull: false,
       },
       created_at: {
         allowNull: false,
-        type: Sequelize.DATE
+        type: Sequelize.DATE,
       },
       updated_at: {
         allowNull: false,
-        type: Sequelize.DATE
+        type: Sequelize.DATE,
       },
       deleted_at: {
         allowNull: true,
-        type: Sequelize.DATE
-      }
+        type: Sequelize.DATE,
+      },
     });
   },
 
   down: (queryInterface, Sequelize) => {
     /*
-                  Add reverting commands here.
-                  Return a promise to correctly handle asynchronicity.
+                      Add reverting commands here.
+                      Return a promise to correctly handle asynchronicity.
 
-                  Example:
-                  return queryInterface.dropTable('users');
-    */
+                      Example:
+                      return queryInterface.dropTable('users');
+        */
     return queryInterface.dropTable(DB_TABLES.PRODUCT_PLANS);
-  }
+  },
 };

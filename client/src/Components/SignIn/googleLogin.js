@@ -7,13 +7,13 @@ class LoginByGoogle extends Component {
     this.state = {};
   }
 
-  responseGoogle = response => {
+  responseGoogle = (response) => {
     console.log(response);
     // var res = response.profileObj;
     const tokenId = response.code;
     let data = {
       accessToken: response.accessToken,
-      tokenId: tokenId
+      tokenId: tokenId,
     };
     this.props.googleSignIn(data);
   };
@@ -22,7 +22,7 @@ class LoginByGoogle extends Component {
     return (
       <GoogleLogin
         clientId="398277517704-eqh1lvm3872s2a5t916kua18gp60steu.apps.googleusercontent.com"
-        render={renderProps => (
+        render={(renderProps) => (
           <div
             className="customGPlusSignIn"
             onClick={renderProps.onClick}

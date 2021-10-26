@@ -29,19 +29,19 @@ class VitalWrapper extends BaseVital {
       start_date,
       end_date,
       details,
-      description
+      description,
     } = _data || {};
 
     return {
       basic_info: {
         id,
         vital_template_id,
-        care_plan_id
+        care_plan_id,
       },
       details,
       start_date,
       end_date,
-      description
+      description,
     };
   };
 
@@ -49,15 +49,12 @@ class VitalWrapper extends BaseVital {
     const { getBasicInfo, getVitalId } = this;
     const EventService = new eventService();
 
-    const currentDate = moment()
-      .endOf("day")
-      .utc()
-      .toDate();
+    const currentDate = moment().endOf("day").utc().toDate();
 
     const scheduleEvents = await EventService.getAllPreviousByData({
       event_id: getVitalId(),
       date: currentDate,
-      event_type: EVENT_TYPE.VITALS
+      event_type: EVENT_TYPE.VITALS,
     });
 
     let vitalEvents = {};
@@ -99,9 +96,9 @@ class VitalWrapper extends BaseVital {
           ...getBasicInfo(),
           remaining,
           total: scheduleEvents.length,
-          upcoming_event_id: upcoming_event_id
-        }
-      }
+          upcoming_event_id: upcoming_event_id,
+        },
+      },
     };
   };
 
@@ -115,18 +112,17 @@ class VitalWrapper extends BaseVital {
     let wrapperQuery = {};
     if (vital_template) {
       wrapperQuery = {
-        data: vital_template
+        data: vital_template,
       };
     } else {
       wrapperQuery = {
-        id: getVitalTemplateId()
+        id: getVitalTemplateId(),
       };
     }
 
     const vitalTemplates = await VitalTemplateWrapper(wrapperQuery);
-    vitalTemplateData[
-      vitalTemplates.getVitalTemplateId()
-    ] = vitalTemplates.getBasicInfo();
+    vitalTemplateData[vitalTemplates.getVitalTemplateId()] =
+      vitalTemplates.getBasicInfo();
 
     if (care_plan) {
       const carePlans = await CarePlanWrapper(care_plan);
@@ -136,11 +132,11 @@ class VitalWrapper extends BaseVital {
     return {
       ...(await getAllInfo()),
       vital_templates: {
-        ...vitalTemplateData
+        ...vitalTemplateData,
       },
       care_plans: {
-        ...carePlanData
-      }
+        ...carePlanData,
+      },
     };
   };
 }

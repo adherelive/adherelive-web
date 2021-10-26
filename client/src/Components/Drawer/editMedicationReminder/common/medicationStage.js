@@ -16,7 +16,7 @@ import {
   Hits,
   SearchBox,
   Highlight,
-  connectSearchBox
+  connectSearchBox,
 } from "react-instantsearch-dom";
 import algoliasearch from "algoliasearch/lite";
 import { EditOutlined } from "@ant-design/icons";
@@ -36,7 +36,7 @@ class MedicationStage extends Component {
       fetchingMedicines: false,
       isSearching: false,
       medicine_name: "",
-      searching_medicine: false
+      searching_medicine: false,
     };
 
     this.handleMedicineSearch = throttle(
@@ -51,7 +51,7 @@ class MedicationStage extends Component {
       medications,
       medicationData,
       payload: { id: medication_id } = {},
-      medicines = {}
+      medicines = {},
     } = this.props;
 
     let { basic_info: { details: { medicine_id } = {} } = {} } =
@@ -66,7 +66,7 @@ class MedicationStage extends Component {
     const { basic_info: { name = "" } = {} } = medicines[medicine_id];
     this.setState({
       medicine_name: name,
-      medicine_id: medicine_id
+      medicine_id: medicine_id,
     });
   }
 
@@ -77,7 +77,7 @@ class MedicationStage extends Component {
 
     // const { basic_info: { details: { medicine_id } = {} } = {} } = medications[medication_id] || {};
 
-    return Object.keys(medicines).map(id => {
+    return Object.keys(medicines).map((id) => {
       const { basic_info: { name, type } = {} } = medicines[id] || {};
       return (
         <Option key={id} value={id}>
@@ -112,7 +112,7 @@ class MedicationStage extends Component {
   //   return initialValue;
   // };
 
-  getParentNode = t => t.parentNode;
+  getParentNode = (t) => t.parentNode;
 
   async handleMedicineSearch(data) {
     try {
@@ -144,7 +144,7 @@ class MedicationStage extends Component {
           type="search"
           placeholder="Type Medicine Name"
           value={currentRefinement}
-          onChange={event => {
+          onChange={(event) => {
             refine(event.currentTarget.value);
             this.setListVisible(event);
           }}
@@ -152,7 +152,7 @@ class MedicationStage extends Component {
         {isSearching ? (
           <button
             className="reset-btn"
-            onClick={event => {
+            onClick={(event) => {
               refine("");
               this.reset(event);
             }}
@@ -203,7 +203,7 @@ class MedicationStage extends Component {
     );
   };
 
-  onSearch = e => {
+  onSearch = (e) => {
     e.preventDefault();
     console.log("98172381723 e.currentTarget", e.currentTarget);
   };
@@ -218,7 +218,7 @@ class MedicationStage extends Component {
     }
   };
 
-  reset = e => {
+  reset = (e) => {
     e.preventDefault();
     const { isSearching = false } = this.state;
     if (isSearching === true) {
@@ -226,25 +226,25 @@ class MedicationStage extends Component {
     }
   };
 
-  setMedicineValue = (medicine_id, medicine_name) => e => {
+  setMedicineValue = (medicine_id, medicine_name) => (e) => {
     e.preventDefault();
     const {
       form: { setFieldsValue, getFieldValue },
       setFormulation,
-      enableSubmit
+      enableSubmit,
     } = this.props;
     setFieldsValue({ [FIELD_NAME]: medicine_id });
     this.setState({
       isSearching: false,
       medicine_name: medicine_name,
       searching_medicine: false,
-      medicine_id: medicine_id
+      medicine_id: medicine_id,
     });
 
     enableSubmit();
   };
 
-  isSearchingMedicine = e => {
+  isSearchingMedicine = (e) => {
     e.preventDefault();
     this.setState({ searching_medicine: true });
   };
@@ -255,7 +255,7 @@ class MedicationStage extends Component {
       medications,
       medicationData,
       payload: { id: medication_id } = {},
-      medicines = {}
+      medicines = {},
     } = this.props;
 
     // let { basic_info: { details: { medicine_id } = {} } = {} } = medications[medication_id] || {};
@@ -271,14 +271,14 @@ class MedicationStage extends Component {
       fetchingMedicines,
       medicine_name = "",
       medicine_id = null,
-      searching_medicine = false
+      searching_medicine = false,
     } = this.state;
 
     const {
       getStagesOption,
       getInitialValue,
       getParentNode,
-      handleMedicineSearch
+      handleMedicineSearch,
     } = this;
     // if (!program_has_medication_stage || (!!purpose && !!!getInitialValue())) {
     //   return null;
@@ -290,7 +290,7 @@ class MedicationStage extends Component {
     return (
       <FormItem>
         {getFieldDecorator(FIELD_NAME, {
-          initialValue: medicine_id
+          initialValue: medicine_id,
         })(
           <div className="ais-InstantSearch">
             <div className="form-headings">Search Medicine</div>
@@ -333,5 +333,5 @@ const Field = injectIntl(MedicationStage);
 
 export default {
   field_name: FIELD_NAME,
-  render: props => <Field {...props} />
+  render: (props) => <Field {...props} />,
 };

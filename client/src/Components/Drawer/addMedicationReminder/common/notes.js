@@ -8,7 +8,7 @@ const { TextArea } = Input;
 const { Item: FormItem } = Form;
 
 class Notes extends Component {
-  formatMessage = data => this.props.intl.formatMessage(data);
+  formatMessage = (data) => this.props.intl.formatMessage(data);
 
   getInitialValue = () => {
     const { purpose, event } = this.props;
@@ -22,14 +22,14 @@ class Notes extends Component {
 
   render() {
     const {
-      form: { getFieldDecorator }
+      form: { getFieldDecorator },
     } = this.props;
     const { formatMessage, getInitialValue } = this;
 
     return (
       <FormItem>
         {getFieldDecorator(FIELD_NAME, {
-          initialValue: getInitialValue()
+          initialValue: getInitialValue(),
         })(<TextArea placeholder={formatMessage(messages.notes)} autosize />)}
       </FormItem>
     );
@@ -40,5 +40,5 @@ const Field = injectIntl(Notes);
 
 export default {
   field_name: FIELD_NAME,
-  render: props => <Field {...props} />
+  render: (props) => <Field {...props} />,
 };

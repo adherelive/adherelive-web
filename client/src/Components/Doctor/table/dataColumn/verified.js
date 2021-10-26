@@ -2,10 +2,10 @@ import React from "react";
 import moment from "moment";
 import {
   CheckCircleTwoTone,
-  ExclamationCircleTwoTone
+  ExclamationCircleTwoTone,
 } from "@ant-design/icons";
 
-export default props => {
+export default (props) => {
   const { userData } = props || {};
   const { activated_on } = userData || {};
 

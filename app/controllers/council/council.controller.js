@@ -25,9 +25,8 @@ class CouncilController extends Controller {
         let councilApiData = {};
         for (const council of councilDetails) {
           const councilWrapper = await new CouncilWrapper(council);
-          councilApiData[
-            councilWrapper.getCouncilId()
-          ] = councilWrapper.getBasicInfo();
+          councilApiData[councilWrapper.getCouncilId()] =
+            councilWrapper.getBasicInfo();
         }
 
         return raiseSuccess(
@@ -35,8 +34,8 @@ class CouncilController extends Controller {
           200,
           {
             registration_councils: {
-              ...councilApiData
-            }
+              ...councilApiData,
+            },
           },
           "Councils fetched successfully"
         );

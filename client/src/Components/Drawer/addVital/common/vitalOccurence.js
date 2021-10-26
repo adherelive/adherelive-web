@@ -18,7 +18,7 @@ class VitalOccurence extends Component {
     super(props);
     this.state = {
       vitals: {},
-      fetchingVitals: false
+      fetchingVitals: false,
     };
   }
 
@@ -29,7 +29,7 @@ class VitalOccurence extends Component {
   getStagesOption = () => {
     if (!this.state.fetchingVitals) {
       const { getVitalOccurence } = this.props;
-      getVitalOccurence().then(res => {
+      getVitalOccurence().then((res) => {
         const { status = false } = res;
         if (status) {
           this.setState({ fetchingVitals: true });
@@ -39,19 +39,19 @@ class VitalOccurence extends Component {
     }
   };
 
-  getParentNode = t => t.parentNode;
+  getParentNode = (t) => t.parentNode;
 
   render() {
     const {
       form: { getFieldDecorator, getFieldError, isFieldTouched },
-      repeat_intervals
+      repeat_intervals,
     } = this.props;
 
     const { fetchingVitals } = this.state;
 
     const { getStagesOption, getParentNode, handleVitalSearch } = this;
 
-    const options = Object.keys(repeat_intervals).map(id => {
+    const options = Object.keys(repeat_intervals).map((id) => {
       const { text = "" } = repeat_intervals[id] || {};
       return (
         <Option key={id} value={id}>
@@ -105,5 +105,5 @@ const Field = injectIntl(VitalOccurence);
 
 export default {
   field_name: FIELD_NAME,
-  render: props => <Field {...props} />
+  render: (props) => <Field {...props} />,
 };

@@ -17,7 +17,7 @@ class AddDiet extends Component {
       total_calories: 0,
       submitting: false,
       timings: {},
-      loading: false
+      loading: false,
     };
 
     this.FormWrapper = Form.create({ onFieldsChange: this.onFormFieldChanges })(
@@ -43,12 +43,12 @@ class AddDiet extends Component {
       this.setState({ loading: true });
       const {
         getPatientPreferenceDietDetails,
-        payload: { patient_id = null } = {}
+        payload: { patient_id = null } = {},
       } = this.props;
       const response = await getPatientPreferenceDietDetails(patient_id);
       const {
         status,
-        payload: { data: resp_data = {}, message: resp_msg = "" } = {}
+        payload: { data: resp_data = {}, message: resp_msg = "" } = {},
       } = response;
       if (!status) {
         message.error(resp_msg);
@@ -79,9 +79,9 @@ class AddDiet extends Component {
     }
   };
 
-  formatMessage = data => this.props.intl.formatMessage(data);
+  formatMessage = (data) => this.props.intl.formatMessage(data);
 
-  setFinalDayData = data => {
+  setFinalDayData = (data) => {
     this.setState({ completeData: data });
   };
 
@@ -89,26 +89,26 @@ class AddDiet extends Component {
     const { close } = this.props;
     const {
       props: {
-        form: { resetFields }
-      }
+        form: { resetFields },
+      },
     } = this.formRef;
 
     this.setState({
       completeData: {},
       total_calories: 0,
       timings: {},
-      loading: false
+      loading: false,
     });
 
     resetFields();
     close();
   };
 
-  setNewTotalCal = newTotalCal => {
+  setNewTotalCal = (newTotalCal) => {
     this.setState({ total_calories: newTotalCal });
   };
 
-  setFormRef = formRef => {
+  setFormRef = (formRef) => {
     this.formRef = formRef;
     if (formRef) {
       this.setState({ formRef: true });
@@ -145,8 +145,8 @@ class AddDiet extends Component {
   handleSubmit = async () => {
     const {
       props: {
-        form: { validateFields }
-      }
+        form: { validateFields },
+      },
     } = this.formRef;
 
     const validated = this.validateDietData();
@@ -156,10 +156,8 @@ class AddDiet extends Component {
     }
 
     const { addDiet, carePlanId: care_plan_id = null } = this.props;
-    const {
-      completeData: diet_food_groups = {},
-      total_calories = 0
-    } = this.state;
+    const { completeData: diet_food_groups = {}, total_calories = 0 } =
+      this.state;
 
     validateFields(async (err, values) => {
       if (!err) {
@@ -168,7 +166,7 @@ class AddDiet extends Component {
           start_date: moment_start_date,
           end_date: moment_end_date,
           what_not_to_do,
-          repeat_days
+          repeat_days,
         } = values;
 
         if (name.length === 0 || repeat_days.length === 0 || !care_plan_id) {
@@ -187,7 +185,7 @@ class AddDiet extends Component {
           total_calories,
           start_date,
           end_date,
-          not_to_do: what_not_to_do
+          not_to_do: what_not_to_do,
         };
 
         this.setState({ submitting: true });
@@ -196,7 +194,7 @@ class AddDiet extends Component {
         const {
           status,
           statusCode,
-          payload: { data: resp_data = {}, message: resp_msg = "" } = {}
+          payload: { data: resp_data = {}, message: resp_msg = "" } = {},
         } = response || {};
 
         if (status) {
@@ -258,7 +256,7 @@ class AddDiet extends Component {
       onClose,
       setFormRef,
       getDietComponent,
-      FormWrapper
+      FormWrapper,
     } = this;
     const { visible = false } = this.props;
     const { submitting = false, loading = false } = this.state;
@@ -272,7 +270,7 @@ class AddDiet extends Component {
           headerStyle={{
             position: "sticky",
             zIndex: "9999",
-            top: "0px"
+            top: "0px",
           }}
           destroyOnClose={true}
           onClose={onClose}

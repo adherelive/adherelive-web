@@ -16,7 +16,7 @@ const FIELD_NAME = "end_date";
 const { Item: FormItem } = Form;
 
 class EndDate extends Component {
-  openCalendar = e => {
+  openCalendar = (e) => {
     e.preventDefault();
     const datePicker = window.document.getElementsByClassName(FIELD_NAME)[0];
 
@@ -31,13 +31,13 @@ class EndDate extends Component {
     }
   };
 
-  getParentNode = t => t.parentNode;
+  getParentNode = (t) => t.parentNode;
 
-  formatMessage = data => this.props.intl.formatMessage(data);
+  formatMessage = (data) => this.props.intl.formatMessage(data);
 
   getNewEndDate = () => {
     const {
-      form: { getFieldValue }
+      form: { getFieldValue },
     } = this.props;
 
     const repeat = getFieldValue(repeatField.field_name);
@@ -81,13 +81,13 @@ class EndDate extends Component {
       events = {},
       medications,
       medicationData = {},
-      payload: { id: medication_id } = {}
+      payload: { id: medication_id } = {},
     } = this.props;
 
     const { basic_info: { end_date } = {} } = medications[medication_id] || {};
     const {
       schedule_data: { end_date: endDate = "", duration } = {},
-      templatePage = false
+      templatePage = false,
     } = medicationData || {};
 
     let initialValue = this.getNewEndDate();
@@ -126,7 +126,7 @@ class EndDate extends Component {
       // medications,
       // medicationData = {},
       // payload: { id: medication_id } = {}
-      payload: { canViewDetails = false } = {}
+      payload: { canViewDetails = false } = {},
     } = this.props;
     const { formatMessage, openCalendar, getInitialValue, calendarComp } = this;
 
@@ -153,7 +153,7 @@ class EndDate extends Component {
     // }
 
     console.log("918371723 getFieldValue", {
-      value: getFieldValue(FIELD_NAME)
+      value: getFieldValue(FIELD_NAME),
     });
 
     return (
@@ -165,7 +165,7 @@ class EndDate extends Component {
 
           <FormItem className="wp100">
             {getFieldDecorator(FIELD_NAME, {
-              initialValue: getInitialValue()
+              initialValue: getInitialValue(),
             })(
               <DatePicker
                 className={`full-width ${FIELD_NAME} ant-date-custom-med wp100`}
@@ -199,5 +199,5 @@ const Field = injectIntl(EndDate);
 
 export default {
   field_name: FIELD_NAME,
-  render: props => <Field {...props} />
+  render: (props) => <Field {...props} />,
 };

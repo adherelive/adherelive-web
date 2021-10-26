@@ -1,7 +1,7 @@
 export const getAuthCategory = ({ doctors, authenticated_user }) => {
   let userData = {};
   if (doctors) {
-    Object.keys(doctors).forEach(id => {
+    Object.keys(doctors).forEach((id) => {
       const { basic_info: { user_id } = {} } = doctors[id] || {};
 
       if (user_id === authenticated_user) {
@@ -19,7 +19,7 @@ export const getFullName = ({ first_name, middle_name, last_name }) => {
   }${last_name ? ` ${last_name}` : ""}`;
 };
 
-export const isJSON = obj => {
+export const isJSON = (obj) => {
   obj = typeof obj !== "string" ? JSON.stringify(obj) : obj;
 
   try {
@@ -34,6 +34,6 @@ export const isJSON = obj => {
 export const getAbbreviation = (str = "") => {
   return str
     .split(" ")
-    .map(word => word.charAt(0))
+    .map((word) => word.charAt(0))
     .join(" ");
 };

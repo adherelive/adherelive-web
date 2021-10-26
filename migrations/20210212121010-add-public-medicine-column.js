@@ -6,11 +6,11 @@ module.exports = {
   up: (queryInterface, Sequelize) => {
     return queryInterface.addColumn(TABLE_NAME, "public_medicine", {
       type: Sequelize.BOOLEAN,
-      defaultValue: true
+      defaultValue: true,
     });
   },
 
   down: (queryInterface, Sequelize) => {
     return queryInterface.removeColumn(TABLE_NAME, "public_medicine");
-  }
+  },
 };

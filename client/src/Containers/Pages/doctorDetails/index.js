@@ -6,14 +6,14 @@ import {
   verifyDoctor,
   addRazorpayId,
   deactivateDoctor,
-  activateDoctor
+  activateDoctor,
 } from "../../../modules/doctors";
 import { getDoctorAccountDetails } from "../../../modules/accountDetails";
 // import {verifyDoctor} from "../../../modules/doctors";
 // import {open} from "../../../modules/drawer";
 // import {DRAWER} from "../../../constant";
 
-const mapStateToProps = state => {
+const mapStateToProps = (state) => {
   const {
     users = {},
     doctors = {},
@@ -25,7 +25,7 @@ const mapStateToProps = state => {
     degrees = {},
     colleges = {},
     councils = {},
-    specialities = {}
+    specialities = {},
   } = state;
   const { qualification_ids = [], clinic_ids = [], doctor_ids = [] } = pages;
   return {
@@ -41,18 +41,19 @@ const mapStateToProps = state => {
     degrees,
     colleges,
     councils,
-    specialities
+    specialities,
   };
 };
 
-const mapDispatchToProps = dispatch => {
+const mapDispatchToProps = (dispatch) => {
   return {
-    verifyDoctor: id => dispatch(verifyDoctor(id)),
-    getDoctorDetails: id => () => dispatch(getDoctorDetails(id)),
+    verifyDoctor: (id) => dispatch(verifyDoctor(id)),
+    getDoctorDetails: (id) => () => dispatch(getDoctorDetails(id)),
     addRazorpayId: (id, payload) => dispatch(addRazorpayId(id, payload)),
-    getDoctorAccountDetails: id => () => dispatch(getDoctorAccountDetails(id)),
-    deactivateDoctor: doctor_id => dispatch(deactivateDoctor(doctor_id)),
-    activateDoctor: user_id => dispatch(activateDoctor(user_id))
+    getDoctorAccountDetails: (id) => () =>
+      dispatch(getDoctorAccountDetails(id)),
+    deactivateDoctor: (doctor_id) => dispatch(deactivateDoctor(doctor_id)),
+    activateDoctor: (user_id) => dispatch(activateDoctor(user_id)),
   };
 };
 const mergePropsToState = (stateProps, dispatchProps, ownProps) => {
@@ -69,7 +70,7 @@ const mergePropsToState = (stateProps, dispatchProps, ownProps) => {
     degrees,
     colleges,
     councils,
-    specialities
+    specialities,
   } = stateProps;
   const {
     getDoctorDetails,
@@ -77,7 +78,7 @@ const mergePropsToState = (stateProps, dispatchProps, ownProps) => {
     addRazorpayId,
     getDoctorAccountDetails,
     deactivateDoctor,
-    activateDoctor
+    activateDoctor,
   } = dispatchProps;
   const { id } = ownProps;
 
@@ -104,7 +105,7 @@ const mergePropsToState = (stateProps, dispatchProps, ownProps) => {
     getDoctorDetails: getDoctorAllDetails,
     getDoctorAccountDetails: getCurrentDoctorAccountDetails,
     deactivateDoctor,
-    activateDoctor
+    activateDoctor,
   };
 };
 

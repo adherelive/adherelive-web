@@ -27,7 +27,7 @@ const FIELDS = [
   CARBS,
   PROTEINS,
   FIBERS,
-  CALORIFIC_VALUE
+  CALORIFIC_VALUE,
 ];
 
 class AddFoodItemForm extends Component {
@@ -57,23 +57,23 @@ class AddFoodItemForm extends Component {
     });
   };
 
-  handlePortionSelect = value => {
+  handlePortionSelect = (value) => {
     const { form: { setFieldsValue } = {} } = this.props;
 
     setFieldsValue({ [PORTION_ID]: value });
   };
 
-  formatMessage = data => this.props.intl.formatMessage(data);
+  formatMessage = (data) => this.props.intl.formatMessage(data);
 
   render() {
     const {
-      form: { getFieldDecorator, isFieldTouched, getFieldError }
+      form: { getFieldDecorator, isFieldTouched, getFieldError },
     } = this.props;
 
     const { formatMessage } = this;
 
     let fieldsError = {};
-    FIELDS.forEach(value => {
+    FIELDS.forEach((value) => {
       const error = isFieldTouched(value) && getFieldError(value);
       fieldsError = { ...fieldsError, [value]: error };
     });
@@ -89,9 +89,9 @@ class AddFoodItemForm extends Component {
             rules: [
               {
                 required: true,
-                message: formatMessage(messages.name_required_error)
-              }
-            ]
+                message: formatMessage(messages.name_required_error),
+              },
+            ],
           })(<Input type="string" max="500" />)}
         </FormItem>
 
@@ -106,9 +106,11 @@ class AddFoodItemForm extends Component {
                 rules: [
                   {
                     required: true,
-                    message: formatMessage(messages.portion_size_required_error)
-                  }
-                ]
+                    message: formatMessage(
+                      messages.portion_size_required_error
+                    ),
+                  },
+                ],
               })(<Input type="number" min="1" />)}
             </FormItem>
           </div>
@@ -122,9 +124,9 @@ class AddFoodItemForm extends Component {
                 rules: [
                   {
                     required: true,
-                    message: formatMessage(messages.portion_id_required_error)
-                  }
-                ]
+                    message: formatMessage(messages.portion_id_required_error),
+                  },
+                ],
               })(
                 <Select
                   className="drawer-select"

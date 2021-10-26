@@ -64,7 +64,7 @@ router.use(async (req, res, next) => {
       const decodedAccessToken = await jwt.verify(accessToken, secret);
       const { userRoleId: decodedUserRoleId = null } = decodedAccessToken || {};
       const userRoleDetails = await userRolesService.getSingleUserRoleByData({
-        id: decodedUserRoleId
+        id: decodedUserRoleId,
       });
       if (userRoleDetails) {
         const userRole = await UserRoleWrapper(userRoleDetails);
@@ -73,14 +73,14 @@ router.use(async (req, res, next) => {
         userRoleData = userRole.getBasicInfo();
       } else {
         req.userDetails = {
-          exists: false
+          exists: false,
         };
         next();
         return;
       }
     } else {
       req.userDetails = {
-        exists: false
+        exists: false,
       };
       next();
       return;
@@ -98,13 +98,13 @@ router.use(async (req, res, next) => {
         userId,
         userData: userData.getBasicInfo,
         userCategoryData,
-        userCategoryId
+        userCategoryId,
       };
 
       req.permissions = await user.getPermissions();
     } else {
       req.userDetails = {
-        exists: false
+        exists: false,
       };
     }
     next();
@@ -112,7 +112,7 @@ router.use(async (req, res, next) => {
   } catch (err) {
     console.log("89127381723 err -->", err);
     req.userDetails = {
-      exists: false
+      exists: false,
     };
     next();
     return;

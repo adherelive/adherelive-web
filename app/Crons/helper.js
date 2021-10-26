@@ -18,7 +18,7 @@ export const uploadDocument = async ({
   fileName,
   id,
   folder,
-  doHashing
+  doHashing,
 }) => {
   try {
     Log.info(`fileName : ${fileName}`);
@@ -69,11 +69,11 @@ export const getNotificationUsers = async (type, event_id) => {
   }
 };
 
-const appointmentUsers = async appointment_id => {
+const appointmentUsers = async (appointment_id) => {
   try {
     const careplanAppointment =
       (await carePlanAppointmentService.getCareplanByAppointment({
-        appointment_id
+        appointment_id,
       })) || {};
 
     const { care_plan_id } = await careplanAppointment;
@@ -86,25 +86,25 @@ const appointmentUsers = async appointment_id => {
     return [
       patientUserRoleId,
       carePlan.getUserRoleId(),
-      ...carePlan.getCareplnSecondaryProfiles()
+      ...carePlan.getCareplnSecondaryProfiles(),
     ];
   } catch (error) {
     throw error;
   }
 };
 
-const dietUsers = async diet_id => {
+const dietUsers = async (diet_id) => {
   try {
   } catch (error) {
     throw error;
   }
 };
 
-const workoutUsers = async workout_id => {};
+const workoutUsers = async (workout_id) => {};
 
-const medicationUsers = async medication_id => {};
+const medicationUsers = async (medication_id) => {};
 
-const vitalUsers = async vital_id => {
+const vitalUsers = async (vital_id) => {
   try {
     const vital = await VitalWrapper({ id: vital_id });
     const carePlan = await CareplanWrapper(null, vital.getCarePlanId());
@@ -115,11 +115,11 @@ const vitalUsers = async vital_id => {
     return [
       patientUserRoleId,
       carePlan.getUserRoleId(),
-      ...carePlan.getCareplnSecondaryProfiles()
+      ...carePlan.getCareplnSecondaryProfiles(),
     ];
   } catch (error) {
     throw error;
   }
 };
 
-const careplanActivationUsers = async care_plan_id => {};
+const careplanActivationUsers = async (care_plan_id) => {};

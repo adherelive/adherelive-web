@@ -5,17 +5,17 @@ import { close } from "../../modules/drawer";
 import {
   createCareplanTemplate,
   deleteCareplanTemplateRelated,
-  updateCareplanTemplate
+  updateCareplanTemplate,
 } from "../../modules/carePlanTemplates";
 import { getAllTemplatesForDoctor } from "../../modules/carePlanTemplates";
 
 // import { createReminder, updateReminder } from "../../modules/reminder"; // write to add to database
-const mapStateToProps = state => {
+const mapStateToProps = (state) => {
   const {
     auth: {
       authPermissions = [],
       authenticated_user = 1,
-      authenticated_category
+      authenticated_category,
     } = {},
     drawer: { visible, loading, data: { type, payload = {} } = {} },
     doctors = {},
@@ -29,7 +29,7 @@ const mapStateToProps = state => {
     medicines = {},
     pages: { care_plan_template_ids = [] } = {},
     repeat_intervals = {},
-    exercise_contents = {}
+    exercise_contents = {},
   } = state;
 
   return {
@@ -50,30 +50,30 @@ const mapStateToProps = state => {
     medicines,
     care_plan_template_ids,
     repeat_intervals,
-    exercise_contents
+    exercise_contents,
   };
 };
 
-const mapDispatchToProps = dispatch => {
+const mapDispatchToProps = (dispatch) => {
   return {
     close: () => dispatch(close()),
-    createCareplanTemplate: payload =>
+    createCareplanTemplate: (payload) =>
       dispatch(createCareplanTemplate(payload)),
     deleteCareplanTemplateRelated: ({
       careplan_template_id,
       other_id,
-      other_type
+      other_type,
     }) =>
       dispatch(
         deleteCareplanTemplateRelated({
           careplan_template_id,
           other_id,
-          other_type
+          other_type,
         })
       ),
     updateCareplanTemplate: (id, payload) =>
       dispatch(updateCareplanTemplate(id, payload)),
-    getAllTemplatesForDoctor: () => dispatch(getAllTemplatesForDoctor())
+    getAllTemplatesForDoctor: () => dispatch(getAllTemplatesForDoctor()),
   };
 };
 

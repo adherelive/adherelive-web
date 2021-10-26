@@ -28,7 +28,7 @@ import {
   EVENT_LONG_TERM_VALUE,
   EVENT_STATUS,
   EVENT_TYPE,
-  USER_CATEGORY
+  USER_CATEGORY,
 } from "../../../../constant";
 import moment from "moment";
 
@@ -38,7 +38,7 @@ export const getCareplanData = async ({
   carePlans = [],
   userCategory,
   doctorId,
-  userRoleId
+  userRoleId,
 }) => {
   try {
     let carePlanData = {};
@@ -64,11 +64,8 @@ export const getCareplanData = async ({
 
     for (let index = 0; index < carePlans.length; index++) {
       const careplan = await CarePlanWrapper(carePlans[index]);
-      const {
-        care_plans,
-        doctors,
-        doctor_id
-      } = await careplan.getReferenceInfo();
+      const { care_plans, doctors, doctor_id } =
+        await careplan.getReferenceInfo();
       carePlanData = { ...carePlanData, ...care_plans };
       carePlanIds.push(careplan.getCarePlanId());
 
@@ -77,7 +74,7 @@ export const getCareplanData = async ({
       const {
         medication_ids,
         appointment_ids,
-        basic_info: { user_role_id = null } = {}
+        basic_info: { user_role_id = null } = {},
       } = care_plans[careplan.getCarePlanId()] || {};
 
       const secondaryDoctorUserRoleIds =
@@ -90,7 +87,7 @@ export const getCareplanData = async ({
       // Log.debug("71237312 careplan --> ", moment(currentCareplanTime));
 
       const isUserRoleAllowed = [user_role_id, ...secondaryDoctorUserRoleIds]
-        .map(id => parseInt(id))
+        .map((id) => parseInt(id))
         .includes(userRoleId);
 
       if (
@@ -124,7 +121,7 @@ export const getCareplanData = async ({
         const {
           user_roles: secondaryUserRoles,
           doctors: secondaryDoctors,
-          providers: secondaryProviders
+          providers: secondaryProviders,
         } = await userRole.getAllInfo();
 
         doctorData = { ...doctorData, ...secondaryDoctors };
@@ -138,16 +135,14 @@ export const getCareplanData = async ({
     // appointments
     const allAppointments =
       (await appointmentService.getAppointmentByData({
-        id: appointmentIds
+        id: appointmentIds,
       })) || [];
 
     if (allAppointments.length > 0) {
       for (let index = 0; index < allAppointments.length; index++) {
         const appointment = await AppointmentWrapper(allAppointments[index]);
-        const {
-          appointments,
-          schedule_events
-        } = await appointment.getAllInfo();
+        const { appointments, schedule_events } =
+          await appointment.getAllInfo();
         appointmentData = { ...appointmentData, ...appointments };
         scheduleEventData = { ...scheduleEventData, ...schedule_events };
       }
@@ -156,17 +151,14 @@ export const getCareplanData = async ({
     // medications
     const allMedications =
       (await medicationReminderService.getAllMedicationByData({
-        id: medicationIds
+        id: medicationIds,
       })) || [];
 
     if (allMedications.length > 0) {
       for (let index = 0; index < allMedications.length; index++) {
         const medication = await MedicationWrapper(allMedications[index]);
-        const {
-          medications,
-          medicines,
-          schedule_events
-        } = await medication.getReferenceInfo();
+        const { medications, medicines, schedule_events } =
+          await medication.getReferenceInfo();
         medicationData = { ...medicationData, ...medications };
         medicineData = { ...medicineData, ...medicines };
         scheduleEventData = { ...scheduleEventData, ...schedule_events };
@@ -175,31 +167,31 @@ export const getCareplanData = async ({
 
     return {
       care_plans: {
-        ...carePlanData
+        ...carePlanData,
       },
       appointments: {
-        ...appointmentData
+        ...appointmentData,
       },
       medications: {
-        ...medicationData
+        ...medicationData,
       },
       medicines: {
-        ...medicineData
+        ...medicineData,
       },
       schedule_events: {
-        ...scheduleEventData
+        ...scheduleEventData,
       },
       doctors: {
-        ...doctorData
+        ...doctorData,
       },
       providers: {
-        ...providerData
+        ...providerData,
       },
       user_roles: {
-        ...userRoleData
+        ...userRoleData,
       },
       care_plan_ids: carePlanIds,
-      current_careplan_id: currentCareplanId
+      current_careplan_id: currentCareplanId,
     };
   } catch (error) {
     Log.debug("getCareplanData catch error", error);
@@ -211,7 +203,7 @@ export const createVitals = async ({
   data = [],
   carePlanId,
   authUser,
-  patientId
+  patientId,
 }) => {
   try {
     // vitals
@@ -231,7 +223,7 @@ export const createVitals = async ({
       userId: authUserId,
       category: authCategory,
       userCategoryData: authUserCategoryData,
-      userRoleId: authUserRoleId
+      userRoleId: authUserRoleId,
     } = authUser || {};
 
     // patient
@@ -247,7 +239,7 @@ export const createVitals = async ({
           start_date,
           end_date,
           repeat_days,
-          description
+          description,
         } = data[index];
 
         const addedVital = await vitalService.addVital({
@@ -257,9 +249,9 @@ export const createVitals = async ({
           description,
           details: {
             repeat_interval_id,
-            repeat_days
+            repeat_days,
           },
-          care_plan_id: carePlanId
+          care_plan_id: carePlanId,
         });
 
         const vital = await VitalWrapper({ data: addedVital });
@@ -278,8 +270,8 @@ export const createVitals = async ({
             repeat_days,
             duration: end_date
               ? moment(end_date).diff(moment(start_date), "days")
-              : EVENT_LONG_TERM_VALUE
-          }
+              : EVENT_LONG_TERM_VALUE,
+          },
         });
 
         // update vitalEvents for sqs
@@ -298,9 +290,9 @@ export const createVitals = async ({
             id: authUserId,
             user_role_id: authUserRoleId,
             category: authCategory,
-            userCategoryData: authUserCategoryData
+            userCategoryData: authUserCategoryData,
           },
-          vital_templates: vital_templates[vital.getVitalTemplateId()]
+          vital_templates: vital_templates[vital.getVitalTemplateId()],
         });
       }
     }
@@ -310,7 +302,7 @@ export const createVitals = async ({
       vitalEventsData,
       vitals: vitalData,
       vital_ids: vitalIds,
-      vital_templates: vitalTemplateData
+      vital_templates: vitalTemplateData,
     };
   } catch (error) {
     Log.debug("createVitals catch error", error);
@@ -322,7 +314,7 @@ export const createDiet = async ({
   data = [],
   carePlanId,
   authUser,
-  patientId
+  patientId,
 }) => {
   try {
     // vitals
@@ -345,7 +337,7 @@ export const createDiet = async ({
       category: authCategory,
       userCategoryData: { basic_info: { full_name } = {} },
       userCategoryData: authUserCategoryData,
-      userRoleId: authUserRole
+      userRoleId: authUserRole,
     } = authUser || {};
 
     // patient
@@ -364,20 +356,15 @@ export const createDiet = async ({
           details: {
             repeat_days = [],
             not_to_do = "",
-            diet_food_groups = {}
-          } = {}
+            diet_food_groups = {},
+          } = {},
         } = data[index];
 
         let startDate = start_date;
         let endDate = end_date;
         if (duration) {
-          startDate = moment()
-            .utc()
-            .toISOString();
-          endDate = moment()
-            .add("days", duration)
-            .utc()
-            .toISOString();
+          startDate = moment().utc().toISOString();
+          endDate = moment().add("days", duration).utc().toISOString();
         }
 
         const dietId = await dietService.create({
@@ -387,18 +374,13 @@ export const createDiet = async ({
           total_calories,
           diet_food_groups,
           details: { not_to_do, repeat_days },
-          care_plan_id: carePlanId
+          care_plan_id: carePlanId,
         });
 
         const dietWrapper = await DietWrapper({ id: dietId });
 
-        const {
-          diets,
-          food_groups,
-          portions,
-          food_items,
-          food_item_details
-        } = await dietWrapper.getReferenceInfo();
+        const { diets, food_groups, portions, food_items, food_item_details } =
+          await dietWrapper.getReferenceInfo();
 
         allDiets = { ...allDiets, ...diets };
         allFoodGroups = { ...allFoodGroups, ...food_groups };
@@ -417,8 +399,8 @@ export const createDiet = async ({
             not_to_do,
             repeat_days,
             diet_food_groups,
-            food_item_detail_ids: Object.keys(allFoodItemDetails) || []
-          }
+            food_item_detail_ids: Object.keys(allFoodItemDetails) || [],
+          },
         });
 
         // update dietEvents for sqs
@@ -433,8 +415,8 @@ export const createDiet = async ({
           actor: {
             id: authUserId,
             user_role_id: authUserRole,
-            details: { name: full_name, category: authCategory }
-          }
+            details: { name: full_name, category: authCategory },
+          },
         });
       }
     }
@@ -447,7 +429,7 @@ export const createDiet = async ({
       food_items: allFoodItems,
       food_item_details: allFoodItemDetails,
       portions: allPortions,
-      diet_ids: dietIds
+      diet_ids: dietIds,
     };
   } catch (error) {
     Log.debug("createDiet catch error", error);
@@ -459,7 +441,7 @@ export const createWorkout = async ({
   data = [],
   carePlanId,
   authUser,
-  patientId
+  patientId,
 }) => {
   try {
     let allWorkouts = {};
@@ -481,7 +463,7 @@ export const createWorkout = async ({
       category: authCategory,
       userCategoryData: { basic_info: { full_name } = {} },
       userCategoryData: authUserCategoryData,
-      userRoleId: authUserRole
+      userRoleId: authUserRole,
     } = authUser || {};
 
     // patient
@@ -501,20 +483,15 @@ export const createWorkout = async ({
           details: {
             repeat_days = [],
             not_to_do = "",
-            workout_exercise_groups = []
-          } = {}
+            workout_exercise_groups = [],
+          } = {},
         } = data[index];
 
         let startDate = start_date;
         let endDate = end_date;
         if (duration) {
-          startDate = moment()
-            .utc()
-            .toISOString();
-          endDate = moment()
-            .add("days", duration)
-            .utc()
-            .toISOString();
+          startDate = moment().utc().toISOString();
+          endDate = moment().add("days", duration).utc().toISOString();
         }
 
         const workoutId = await workoutService.create({
@@ -525,7 +502,7 @@ export const createWorkout = async ({
           total_calories,
           workout_exercise_groups,
           details: { not_to_do, repeat_days },
-          care_plan_id: carePlanId
+          care_plan_id: carePlanId,
         });
 
         const workoutWrapper = await WorkoutWrapper({ id: workoutId });
@@ -535,7 +512,7 @@ export const createWorkout = async ({
           exercise_groups,
           exercises,
           exercise_details,
-          repetitions
+          repetitions,
         } = await workoutWrapper.getReferenceInfo();
 
         allWorkouts = { ...allWorkouts, ...workouts };
@@ -556,8 +533,8 @@ export const createWorkout = async ({
             not_to_do,
             repeat_days,
             workout_exercise_groups,
-            exercise_detail_ids: Object.keys(allExerciseDetails) || []
-          }
+            exercise_detail_ids: Object.keys(allExerciseDetails) || [],
+          },
         });
 
         // update dietEvents for sqs
@@ -571,8 +548,8 @@ export const createWorkout = async ({
           actor: {
             id: authUserId,
             user_role_id: authUserRole,
-            details: { name: full_name, category: authCategory }
-          }
+            details: { name: full_name, category: authCategory },
+          },
         });
       }
     }
@@ -585,7 +562,7 @@ export const createWorkout = async ({
       exercises: allExercises,
       exercise_details: allExerciseDetails,
       repetitions: allRepetitions,
-      workout_ids: workoutIds
+      workout_ids: workoutIds,
     };
   } catch (error) {
     Log.debug("createWorkout catch error", error);
@@ -593,10 +570,9 @@ export const createWorkout = async ({
   }
 };
 
-export const getCarePlanAppointmentIds = async carePlanId => {
-  let carePlanAppointments = await carePlanAppointmentService.getAppointmentsByCarePlanId(
-    carePlanId
-  );
+export const getCarePlanAppointmentIds = async (carePlanId) => {
+  let carePlanAppointments =
+    await carePlanAppointmentService.getAppointmentsByCarePlanId(carePlanId);
   let carePlanAppointmentIds = [];
   for (let appointment of carePlanAppointments) {
     let appointmentId = appointment.get("appointment_id");
@@ -606,10 +582,9 @@ export const getCarePlanAppointmentIds = async carePlanId => {
   return carePlanAppointmentIds;
 };
 
-export const getCarePlanMedicationIds = async carePlanId => {
-  let carePlanMedications = await carePlanMedicationService.getMedicationsByCarePlanId(
-    carePlanId
-  );
+export const getCarePlanMedicationIds = async (carePlanId) => {
+  let carePlanMedications =
+    await carePlanMedicationService.getMedicationsByCarePlanId(carePlanId);
   let carePlanMedicationIds = [];
 
   for (let medication of carePlanMedications) {
@@ -620,7 +595,7 @@ export const getCarePlanMedicationIds = async carePlanId => {
   return carePlanMedicationIds;
 };
 
-export const getCarePlanSeverityDetails = async carePlanId => {
+export const getCarePlanSeverityDetails = async (carePlanId) => {
   let carePlan = await carePlanService.getCarePlanById(carePlanId);
 
   const carePlanApiWrapper = await CarePlanWrapper(carePlan);
@@ -656,6 +631,6 @@ export const getCarePlanSeverityDetails = async carePlanId => {
   return {
     treatment_id: treatment,
     severity_id: severity,
-    condition_id: condition
+    condition_id: condition,
   };
 };

@@ -1,6 +1,6 @@
 import moment from "moment";
 
-export default dob => {
+export default (dob) => {
   const now = moment();
   const then = moment(dob);
 

@@ -4,7 +4,7 @@ import { USER_CATEGORY } from "../../constant";
 import { TABLE_NAME } from "../models/foodItemDetails";
 
 module.exports = {
-  up: queryInterface => {
+  up: (queryInterface) => {
     return queryInterface.bulkInsert(TABLE_NAME, [
       {
         food_item_id: 1,
@@ -17,7 +17,7 @@ module.exports = {
         fibers: 100,
         creator_type: USER_CATEGORY.ADMIN,
         created_at: new Date(),
-        updated_at: new Date()
+        updated_at: new Date(),
       },
       {
         food_item_id: 2,
@@ -30,7 +30,7 @@ module.exports = {
         fibers: 200,
         creator_type: USER_CATEGORY.ADMIN,
         created_at: new Date(),
-        updated_at: new Date()
+        updated_at: new Date(),
       },
       {
         food_item_id: 3,
@@ -43,7 +43,7 @@ module.exports = {
         fibers: 300,
         creator_type: USER_CATEGORY.ADMIN,
         created_at: new Date(),
-        updated_at: new Date()
+        updated_at: new Date(),
       },
       {
         food_item_id: 4,
@@ -56,7 +56,7 @@ module.exports = {
         fibers: 400,
         creator_type: USER_CATEGORY.ADMIN,
         created_at: new Date(),
-        updated_at: new Date()
+        updated_at: new Date(),
       },
       {
         food_item_id: 5,
@@ -69,7 +69,7 @@ module.exports = {
         fibers: 500,
         creator_type: USER_CATEGORY.ADMIN,
         created_at: new Date(),
-        updated_at: new Date()
+        updated_at: new Date(),
       },
       {
         food_item_id: 6,
@@ -82,12 +82,12 @@ module.exports = {
         fibers: 600,
         creator_type: USER_CATEGORY.ADMIN,
         created_at: new Date(),
-        updated_at: new Date()
-      }
+        updated_at: new Date(),
+      },
     ]);
   },
 
-  down: queryInterface => {
+  down: (queryInterface) => {
     return queryInterface.bulkDelete(TABLE_NAME, null, {});
-  }
+  },
 };

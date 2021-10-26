@@ -5,9 +5,7 @@ import Response from "../../../app/helper/responseFormat";
 import { validationError } from "../../api/helper";
 
 const credentialsFormSchema = Joi.object().keys({
-  email: Joi.string()
-    .email()
-    .required(),
+  email: Joi.string().email().required(),
   password: Joi.string()
     .regex(/^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%^&*])(?=.{8,})/)
     .min(PASSWORD_LENGTH)
@@ -16,7 +14,7 @@ const credentialsFormSchema = Joi.object().keys({
     .required()
     .label(
       "Please acknowledge if you have read the terms of service and privacy policy"
-    )
+    ),
 });
 
 const updatedPasswordSchema = Joi.object().keys({
@@ -29,8 +27,8 @@ const updatedPasswordSchema = Joi.object().keys({
     ),
   confirm_password: Joi.when("password", {
     is: Joi.string(),
-    then: Joi.string().allow(Joi.ref("new_password"))
-  })
+    then: Joi.string().allow(Joi.ref("new_password")),
+  }),
 });
 
 const signInSchema = Joi.object().keys({
@@ -45,9 +43,7 @@ const signInSchema = Joi.object().keys({
     .regex(/^\d+$/)
     .required()
     .label("Please enter a valid mobile number"),
-  hash: Joi.string()
-    .optional()
-    .allow("", null)
+  hash: Joi.string().optional().allow("", null),
 });
 
 const otpSchema = Joi.object().keys({
@@ -55,32 +51,26 @@ const otpSchema = Joi.object().keys({
   otp: Joi.string()
     .length(4)
     .regex(/^[0-9]*$/)
-    .required()
+    .required(),
 });
 
 const doctorSignInSchema = Joi.object().keys({
-  email: Joi.string()
-    .email()
-    .required()
-    .label("Please enter valid email"),
-  password: Joi.string().required()
+  email: Joi.string().email().required().label("Please enter valid email"),
+  password: Joi.string().required(),
 });
 
 const forgotPasswordSchema = Joi.object().keys({
-  email: Joi.string()
-    .email()
-    .required()
-    .label("Please enter valid email")
+  email: Joi.string().email().required().label("Please enter valid email"),
 });
 
 const verifyLinkSchema = Joi.object().keys({
   link: Joi.string()
     .guid({ version: "uuidv4" })
     .required()
-    .label("Verification link is not correct")
+    .label("Verification link is not correct"),
 });
 
-const validateStartTime = startTime => {
+const validateStartTime = (startTime) => {
   const now = moment().subtract(3, "minutes");
   return moment(startTime).isAfter(now);
 };

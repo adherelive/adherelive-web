@@ -9,7 +9,7 @@ class AppointmentService {
     const transaction = await Database.initTransaction();
     try {
       const appointment = await Database.getModel(TABLE_NAME).create(data, {
-        transaction
+        transaction,
       });
       await transaction.commit();
       return appointment;
@@ -23,8 +23,8 @@ class AppointmentService {
     try {
       const appointment = await Database.getModel(TABLE_NAME).update(data, {
         where: {
-          id
-        }
+          id,
+        },
       });
       return appointment;
     } catch (err) {
@@ -32,12 +32,12 @@ class AppointmentService {
     }
   };
 
-  getAppointmentById = async id => {
+  getAppointmentById = async (id) => {
     try {
       const appointment = await Database.getModel(TABLE_NAME).findOne({
         where: {
-          id
-        }
+          id,
+        },
       });
       return appointment;
     } catch (err) {
@@ -48,32 +48,28 @@ class AppointmentService {
   getDoctorAppointmentsForDate = async ({
     today,
     participant_one_id,
-    participant_two_id
+    participant_two_id,
   }) => {
     try {
       const appointments = await Database.getModel(TABLE_NAME).findAll({
         where: {
           start_date: {
             [Op.between]: [
-              moment(today)
-                .startOf("day")
-                .toISOString(),
-              moment(today)
-                .endOf("day")
-                .toISOString()
-            ]
+              moment(today).startOf("day").toISOString(),
+              moment(today).endOf("day").toISOString(),
+            ],
           },
           [Op.or]: [
             {
               participant_one_id,
-              participant_one_type: USER_CATEGORY.DOCTOR
+              participant_one_type: USER_CATEGORY.DOCTOR,
             },
             {
               participant_two_id,
-              participant_two_type: USER_CATEGORY.DOCTOR
-            }
-          ]
-        }
+              participant_two_type: USER_CATEGORY.DOCTOR,
+            },
+          ],
+        },
       });
       return appointments;
     } catch (error) {
@@ -81,14 +77,14 @@ class AppointmentService {
     }
   };
 
-  getAppointmentByData = async data => {
+  getAppointmentByData = async (data) => {
     console.log("get appointment by data in service - Start");
     console.log(data);
     console.log("get appointment by data in service - End");
 
     try {
       const appointment = await Database.getModel(TABLE_NAME).findAll({
-        where: data
+        where: data,
       });
       return appointment;
     } catch (err) {
@@ -96,22 +92,22 @@ class AppointmentService {
     }
   };
 
-  getAppointmentForPatient = async patient_id => {
+  getAppointmentForPatient = async (patient_id) => {
     try {
       const appointments = await Database.getModel(TABLE_NAME).findAll({
         where: {
           [Op.or]: [
             {
               participant_two_id: patient_id,
-              participant_two_type: USER_CATEGORY.PATIENT
+              participant_two_type: USER_CATEGORY.PATIENT,
             },
             {
               participant_one_id: patient_id,
-              participant_one_type: USER_CATEGORY.PATIENT
-            }
-          ]
+              participant_one_type: USER_CATEGORY.PATIENT,
+            },
+          ],
         },
-        order: [["start_time", "DESC"]]
+        order: [["start_time", "DESC"]],
       });
       return appointments;
     } catch (error) {
@@ -119,21 +115,21 @@ class AppointmentService {
     }
   };
 
-  getAllAppointmentForDoctor = async doctor_id => {
+  getAllAppointmentForDoctor = async (doctor_id) => {
     try {
       const appointments = await Database.getModel(TABLE_NAME).findAll({
         where: {
           [Op.or]: [
             {
               participant_two_id: doctor_id,
-              participant_two_type: USER_CATEGORY.DOCTOR
+              participant_two_type: USER_CATEGORY.DOCTOR,
             },
             {
               participant_one_id: doctor_id,
-              participant_one_type: USER_CATEGORY.DOCTOR
-            }
-          ]
-        }
+              participant_one_type: USER_CATEGORY.DOCTOR,
+            },
+          ],
+        },
       });
       return appointments;
     } catch (error) {
@@ -143,35 +139,31 @@ class AppointmentService {
 
   getDayAppointmentForDoctor = async (doctor_id, date) => {
     try {
-      const startOfDay = moment(date)
-        .startOf("day")
-        .toISOString();
-      const endOfDay = moment(date)
-        .endOf("day")
-        .toISOString();
+      const startOfDay = moment(date).startOf("day").toISOString();
+      const endOfDay = moment(date).endOf("day").toISOString();
 
       const appointments = await Database.getModel(TABLE_NAME).findAll({
         where: {
           [Op.and]: [
             {
               start_date: {
-                [Op.between]: [startOfDay, endOfDay]
-              }
+                [Op.between]: [startOfDay, endOfDay],
+              },
             },
             {
               [Op.or]: [
                 {
                   participant_two_id: doctor_id,
-                  participant_two_type: USER_CATEGORY.DOCTOR
+                  participant_two_type: USER_CATEGORY.DOCTOR,
                 },
                 {
                   participant_one_id: doctor_id,
-                  participant_one_type: USER_CATEGORY.DOCTOR
-                }
-              ]
-            }
-          ]
-        }
+                  participant_one_type: USER_CATEGORY.DOCTOR,
+                },
+              ],
+            },
+          ],
+        },
       });
       return appointments;
     } catch (error) {
@@ -199,23 +191,23 @@ class AppointmentService {
           [Op.and]: [
             {
               start_date: {
-                [Op.between]: [startOfMonth, endOfMonth]
-              }
+                [Op.between]: [startOfMonth, endOfMonth],
+              },
             },
             {
               [Op.or]: [
                 {
                   participant_two_id: doctor_id,
-                  participant_two_type: USER_CATEGORY.DOCTOR
+                  participant_two_type: USER_CATEGORY.DOCTOR,
                 },
                 {
                   participant_one_id: doctor_id,
-                  participant_one_type: USER_CATEGORY.DOCTOR
-                }
-              ]
-            }
-          ]
-        }
+                  participant_one_type: USER_CATEGORY.DOCTOR,
+                },
+              ],
+            },
+          ],
+        },
       });
       return appointments;
     } catch (error) {
@@ -225,12 +217,8 @@ class AppointmentService {
 
   getMonthAppointmentCountForDoctor = async (doctor_id, date) => {
     try {
-      const startOfMonth = moment(date)
-        .startOf("month")
-        .toISOString();
-      const endOfMonth = moment(date)
-        .endOf("month")
-        .toISOString();
+      const startOfMonth = moment(date).startOf("month").toISOString();
+      const endOfMonth = moment(date).endOf("month").toISOString();
 
       const appointments = await Database.getModel(TABLE_NAME).findAll({
         attributes: ["start_date", [literal(`COUNT(*)`), "count"]],
@@ -239,23 +227,23 @@ class AppointmentService {
           [Op.and]: [
             {
               start_date: {
-                [Op.between]: [startOfMonth, endOfMonth]
-              }
+                [Op.between]: [startOfMonth, endOfMonth],
+              },
             },
             {
               [Op.or]: [
                 {
                   participant_two_id: doctor_id,
-                  participant_two_type: USER_CATEGORY.DOCTOR
+                  participant_two_type: USER_CATEGORY.DOCTOR,
                 },
                 {
                   participant_one_id: doctor_id,
-                  participant_one_type: USER_CATEGORY.DOCTOR
-                }
-              ]
-            }
-          ]
-        }
+                  participant_one_type: USER_CATEGORY.DOCTOR,
+                },
+              ],
+            },
+          ],
+        },
       });
       return appointments;
     } catch (error) {
@@ -277,32 +265,32 @@ class AppointmentService {
           [Op.or]: [
             {
               participant_one_id,
-              participant_one_type
+              participant_one_type,
             },
             {
               participant_two_id,
-              participant_two_type
-            }
+              participant_two_type,
+            },
           ],
           [Op.and]: {
             [Op.or]: [
               {
                 start_time: {
                   // [Op.or]: {
-                  [Op.between]: [start_time, end_time]
+                  [Op.between]: [start_time, end_time],
                   // }
-                }
+                },
               },
               {
                 end_time: {
                   // [Op.or]: {
-                  [Op.between]: [start_time, end_time]
+                  [Op.between]: [start_time, end_time],
                   // }
-                }
-              }
-            ]
-          }
-        }
+                },
+              },
+            ],
+          },
+        },
       });
       return appointments;
     } catch (error) {
@@ -310,12 +298,12 @@ class AppointmentService {
     }
   };
 
-  deleteAppointment = async id => {
+  deleteAppointment = async (id) => {
     try {
       const appointment = await Database.getModel(TABLE_NAME).destroy({
         where: {
-          id
-        }
+          id,
+        },
       });
       return appointment;
     } catch (err) {

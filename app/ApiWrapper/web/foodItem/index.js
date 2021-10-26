@@ -18,8 +18,8 @@ class FoodItemWrapper extends BaseFoodItem {
         id,
         name,
         creator_id,
-        creator_type
-      }
+        creator_type,
+      },
     };
   };
 
@@ -35,9 +35,8 @@ class FoodItemWrapper extends BaseFoodItem {
       for (let index = 0; index < allFoodItemDetails.length; index++) {
         const { id = null } = allFoodItemDetails[index] || {};
         const foodItemDetail = await FoodItemDetailsWrapper({ id });
-        foodItemsDetailsData[
-          foodItemDetail.getId()
-        ] = await foodItemDetail.getBasicInfo();
+        foodItemsDetailsData[foodItemDetail.getId()] =
+          await foodItemDetail.getBasicInfo();
         food_item_detail_ids.push(foodItemDetail.getId());
       }
     }
@@ -45,13 +44,13 @@ class FoodItemWrapper extends BaseFoodItem {
     return {
       food_items: {
         [this.getId()]: {
-          ...(await getAllInfo())
-        }
+          ...(await getAllInfo()),
+        },
       },
       food_item_details: {
-        ...foodItemsDetailsData
+        ...foodItemsDetailsData,
       },
-      food_item_detail_ids
+      food_item_detail_ids,
     };
   };
 
@@ -70,7 +69,7 @@ class FoodItemWrapper extends BaseFoodItem {
 
     return {
       ...getBasicInfo(),
-      food_item_detail_ids
+      food_item_detail_ids,
     };
   };
 }

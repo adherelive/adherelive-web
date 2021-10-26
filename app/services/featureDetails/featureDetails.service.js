@@ -2,10 +2,10 @@ import Database from "../../../libs/mysql";
 import { TABLE_NAME } from "../../models/featureDetails";
 
 class FeatureDetailsService {
-  getDetailsByData = async data => {
+  getDetailsByData = async (data) => {
     try {
       const featureDetails = Database.getModel(TABLE_NAME).findOne({
-        where: data
+        where: data,
       });
       return featureDetails;
     } catch (err) {
@@ -13,10 +13,10 @@ class FeatureDetailsService {
     }
   };
 
-  getManyByData = async data => {
+  getManyByData = async (data) => {
     try {
       const featureDetails = Database.getModel(TABLE_NAME).findAll({
-        where: data
+        where: data,
       });
       return featureDetails;
     } catch (err) {
@@ -29,10 +29,10 @@ class FeatureDetailsService {
     try {
       const featureDetails = await Database.getModel(TABLE_NAME).update(data, {
         where: {
-          feature_type
+          feature_type,
         },
         transaction,
-        returning: true
+        returning: true,
       });
       transaction.commit();
       console.log("FeatureDetails --> ", featureDetails);
@@ -44,7 +44,7 @@ class FeatureDetailsService {
     }
   };
 
-  add = async data => {
+  add = async (data) => {
     const transaction = await Database.initTransaction();
     try {
       const featureDetails = Database.getModel(TABLE_NAME).create(data);

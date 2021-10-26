@@ -10,10 +10,10 @@ import Options from "../dataColumn/options";
 
 const ALL_TABS = {
   PUBLIC: "1",
-  CREATOR: "2"
+  CREATOR: "2",
 };
 
-export default props => {
+export default (props) => {
   const { formatMessage, currentTab, getColumnSearchProps, changeTab } =
     props || {};
 
@@ -59,7 +59,7 @@ export default props => {
       render: (data = {}) => {
         return <MedicineName {...data} />;
       },
-      ...getColumnSearchProps(TABLE_COLUMN.MEDICINE_NAME.dataIndex)
+      ...getColumnSearchProps(TABLE_COLUMN.MEDICINE_NAME.dataIndex),
     },
     {
       title: formatMessage(messages.creatorName),
@@ -68,19 +68,19 @@ export default props => {
         const { medicineData = {}, doctors = {} } = data || {};
         return <CreatorName medicineData={medicineData} doctors={doctors} />;
       },
-      ...getColumnSearchProps(TABLE_COLUMN.CREATOR_NAME.dataIndex)
+      ...getColumnSearchProps(TABLE_COLUMN.CREATOR_NAME.dataIndex),
     },
     {
       title: formatMessage(messages.medicineType),
       ...TABLE_COLUMN.TYPE,
       render: (data = {}) => {
         return <Type {...data} formatMessage={formatMessage} />;
-      }
+      },
     },
     {
       title: formatMessage(messages.updatedAt),
       ...TABLE_COLUMN.UPDATED_AT,
-      render: (data = {}) => <UpdatedAt {...data} />
+      render: (data = {}) => <UpdatedAt {...data} />,
     },
     {
       title: "",
@@ -96,7 +96,7 @@ export default props => {
           mapMedicineToPublic,
           deleteMedicine,
           getPublicMedicines,
-          currentTab
+          currentTab,
         } = data;
         return (
           <Options
@@ -114,8 +114,8 @@ export default props => {
             changeTab={changeTab}
           />
         );
-      }
-    }
+      },
+    },
   ];
   // }
 };

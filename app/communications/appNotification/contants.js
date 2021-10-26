@@ -28,7 +28,7 @@ const constants = {
   PRESCRIPTION_UPDATE: "prescription update",
   PROGRAM: "program",
   PROGRAM_CREATE: "program create",
-  PROGRAM_UPDATE: "program update"
+  PROGRAM_UPDATE: "program update",
 };
 
 module.exports = constants;

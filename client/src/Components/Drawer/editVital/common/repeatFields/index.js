@@ -13,10 +13,10 @@ import { ALTERNATE_DAYS, DAYS } from "../../../../../constant";
 const RadioButton = Radio.Button;
 const RadioGroup = Radio.Group;
 
-export default props => {
+export default (props) => {
   const {
     form: { getFieldValue },
-    payload: { canViewDetails = false } = {}
+    payload: { canViewDetails = false } = {},
   } = props;
 
   let start = getFieldValue(startDate.field_name);
@@ -33,7 +33,7 @@ export default props => {
     if (selectedDaysArray.length == 7) {
       selectedDaysRadio = 1;
     } else if (selectedDaysArray.length == 4) {
-      ALTERNATE_DAYS.map(value => {
+      ALTERNATE_DAYS.map((value) => {
         if (!selectedDaysArray.includes(value)) {
           selectedDaysRadio = null;
         }

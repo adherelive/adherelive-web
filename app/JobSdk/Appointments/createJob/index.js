@@ -3,7 +3,7 @@ import moment from "moment";
 import {
   DEFAULT_PROVIDER,
   EVENT_TYPE,
-  USER_CATEGORY
+  USER_CATEGORY,
 } from "../../../../constant";
 
 import UserRoleService from "../../../services/userRoles/userRoles.service";
@@ -35,9 +35,9 @@ class CreateJob extends AppointmentJob {
       actor: {
         id: actorId,
         user_role_id,
-        details: { name, category: actorCategory } = {}
+        details: { name, category: actorCategory } = {},
       } = {},
-      event_id = null
+      event_id = null,
     } = getAppointmentData() || {};
 
     const templateData = [];
@@ -53,8 +53,8 @@ class CreateJob extends AppointmentJob {
     const { rows: userRoles = [] } =
       (await UserRoleService.findAndCountAll({
         where: {
-          id: participants
-        }
+          id: participants,
+        },
       })) || {};
 
     let providerId = null;
@@ -74,14 +74,14 @@ class CreateJob extends AppointmentJob {
     let providerName = DEFAULT_PROVIDER;
     if (providerId) {
       const provider = await ProviderService.getProviderByData({
-        id: providerId
+        id: providerId,
       });
       const { name } = provider || {};
       providerName = name;
     }
 
     const userDevices = await UserDeviceService.getAllDeviceByData({
-      user_id: userIds
+      user_id: userIds,
     });
 
     if (userDevices.length > 0) {
@@ -101,12 +101,12 @@ class CreateJob extends AppointmentJob {
           actorCategory === USER_CATEGORY.HSP
             ? "Dr."
             : ""
-        }${name} created an appointment with you. Tap here to know more!`
+        }${name} created an appointment with you. Tap here to know more!`,
       },
       include_player_ids: [...playerIds],
       priority: 10,
       android_channel_id: process.config.one_signal.urgent_channel_id,
-      data: { url: "/appointments", params: getAppointmentData() }
+      data: { url: "/appointments", params: getAppointmentData() },
     });
 
     return templateData;
@@ -118,11 +118,11 @@ class CreateJob extends AppointmentJob {
       participants = [],
       actor: {
         id: actorId,
-        user_role_id
+        user_role_id,
         // details: { name, category: actorCategory } = {}
       } = {},
       // appointmentId,
-      event_id
+      event_id,
     } = getAppointmentData() || {};
 
     const templateData = [];
@@ -140,7 +140,7 @@ class CreateJob extends AppointmentJob {
           // message: `${name}(${actorCategory}) has created an appointment with you`,
           event: EVENT_TYPE.APPOINTMENT,
           time: `${currentTime}`,
-          create_time: `${currentTime}`
+          create_time: `${currentTime}`,
         });
       }
     }

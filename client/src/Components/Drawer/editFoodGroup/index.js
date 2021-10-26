@@ -18,7 +18,7 @@ class EditFoodGroup extends Component {
       food_item_detail_id: null,
       visibleAddFoodDrawer: false,
       editable: false,
-      food_item_name: ""
+      food_item_name: "",
     };
 
     this.FormWrapper = Form.create({ onFieldsChange: this.onFormFieldChanges })(
@@ -26,15 +26,15 @@ class EditFoodGroup extends Component {
     );
   }
 
-  setEditable = val => {
+  setEditable = (val) => {
     this.setState({ editable: val });
   };
 
-  setFoodItemName = name => {
+  setFoodItemName = (name) => {
     this.setState({ food_item_name: name });
   };
 
-  setFoodItemDetailId = id => {
+  setFoodItemDetailId = (id) => {
     this.setState({ food_item_detail_id: id });
   };
 
@@ -46,9 +46,9 @@ class EditFoodGroup extends Component {
     this.setState({ visibleAddFoodDrawer: false });
   };
 
-  onFormFieldChanges = props => {
+  onFormFieldChanges = (props) => {
     const {
-      form: { getFieldsError, isFieldsTouched }
+      form: { getFieldsError, isFieldsTouched },
     } = props;
     const isError = hasErrors(getFieldsError());
     const { disabledSubmit } = this.state;
@@ -57,7 +57,7 @@ class EditFoodGroup extends Component {
     }
   };
 
-  handleSubmit = e => {
+  handleSubmit = (e) => {
     e.preventDefault();
     const {
       onSubmit,
@@ -66,14 +66,14 @@ class EditFoodGroup extends Component {
       searched_food_item_details = {},
       editFoodGroupDetails,
       updateFoodItem,
-      food_item_details = {}
+      food_item_details = {},
     } = this.props;
     const { formRef = {} } = this;
 
     const {
       food_item_detail_id = null,
       editable = false,
-      food_item_name = ""
+      food_item_name = "",
     } = this.state;
 
     const {
@@ -81,13 +81,13 @@ class EditFoodGroup extends Component {
       food_group_index = null,
       similar_index = null,
       food_group_id = null,
-      serving: prev_serving = 1
+      serving: prev_serving = 1,
     } = editFoodGroupDetails || {};
 
     const {
       props: {
-        form: { validateFields }
-      }
+        form: { validateFields },
+      },
     } = formRef;
 
     validateFields(async (err, values) => {
@@ -102,7 +102,7 @@ class EditFoodGroup extends Component {
           portion_id = null,
           calorific_value = null,
           serving = null,
-          notes = ""
+          notes = "",
         } = values;
 
         const food_item_id = parseInt(name);
@@ -125,7 +125,7 @@ class EditFoodGroup extends Component {
           notes,
           prev_calorific_val,
           prev_serving,
-          ...(food_group_id && { food_group_id: food_group_id })
+          ...(food_group_id && { food_group_id: food_group_id }),
         };
 
         const updateData = {
@@ -136,7 +136,7 @@ class EditFoodGroup extends Component {
           fats: fats ? parseFloat(fats) : null,
           fibers: fibers ? parseFloat(fibers) : null,
           portion_size: portion_size ? parseFloat(portion_size) : null,
-          calorific_value: calorific_value ? parseFloat(calorific_value) : null
+          calorific_value: calorific_value ? parseFloat(calorific_value) : null,
         };
 
         try {
@@ -148,12 +148,12 @@ class EditFoodGroup extends Component {
           if (editable) {
             const responseOnUpdate = await updateFoodItem({
               food_item_id,
-              data: updateData
+              data: updateData,
             });
             const {
               status,
               statusCode,
-              payload: { data: resp_data = {}, message: resp_msg = "" } = {}
+              payload: { data: resp_data = {}, message: resp_msg = "" } = {},
             } = responseOnUpdate;
             if (status) {
               const { food_item_details = {} } = resp_data || {};
@@ -164,7 +164,7 @@ class EditFoodGroup extends Component {
                 onSubmit({
                   editedFoodGroupData,
                   food_group_index,
-                  similar_index
+                  similar_index,
                 });
                 this.onClose();
               } else {
@@ -178,7 +178,7 @@ class EditFoodGroup extends Component {
 
             storeFoodItemAndDetails({
               food_items: { ...toStoreFoodItem },
-              food_item_details: { ...toStoreDetail }
+              food_item_details: { ...toStoreDetail },
             });
 
             this.onClose();
@@ -190,29 +190,29 @@ class EditFoodGroup extends Component {
     });
   };
 
-  formatMessage = data => this.props.intl.formatMessage(data);
+  formatMessage = (data) => this.props.intl.formatMessage(data);
 
   onClose = () => {
     const { closeFoodGroupDrawer } = this.props;
     const { formRef } = this;
     const {
       props: {
-        form: { resetFields }
-      }
+        form: { resetFields },
+      },
     } = formRef;
 
     this.setState({
       food_item_detail_id: null,
       visibleAddFoodDrawer: false,
       editable: false,
-      food_item_name: ""
+      food_item_name: "",
     });
 
     resetFields();
     closeFoodGroupDrawer();
   };
 
-  setFormRef = formRef => {
+  setFormRef = (formRef) => {
     this.formRef = formRef;
     if (formRef) {
       this.setState({ formRef: true });
@@ -227,7 +227,7 @@ class EditFoodGroup extends Component {
       visibleAddFoodDrawer = false,
       food_item_detail_id = null,
       editable = false,
-      food_item_name = ""
+      food_item_name = "",
     } = this.state;
 
     const {
@@ -238,11 +238,11 @@ class EditFoodGroup extends Component {
       FormWrapper,
       setFoodItemDetailId,
       openAddFoodItemDrawer,
-      closeAddFoodItemDrawer
+      closeAddFoodItemDrawer,
     } = this;
 
     const submitButtonProps = {
-      disabled: disabledSubmit
+      disabled: disabledSubmit,
     };
 
     return (
@@ -253,7 +253,7 @@ class EditFoodGroup extends Component {
           headerStyle={{
             position: "sticky",
             zIndex: "9999",
-            top: "0px"
+            top: "0px",
           }}
           destroyOnClose={true}
           onClose={onClose}

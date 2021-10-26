@@ -17,7 +17,7 @@ fs.readFile(
     if (!err) {
       Papa.parse(file, {
         header: true,
-        step: async row => {
+        step: async (row) => {
           /*
            * Keys from csv file:
            * ID        :   Pillbox ID for medicine (pillbox_id)
@@ -29,7 +29,7 @@ fs.readFile(
 
             const medicineDetails = await medicineService.add({
               pillbox_id: ID,
-              name: rxstring
+              name: rxstring,
             });
             if (medicineDetails) {
               console.log("Row done -> ", medicineDetails);
@@ -38,9 +38,9 @@ fs.readFile(
             console.log("Row add error --> ", error);
           }
         },
-        complete: function(results) {
+        complete: function (results) {
           console.log("Finished:");
-        }
+        },
       });
     }
   }

@@ -15,7 +15,7 @@ function TokenGenerator(identity, deviceId) {
   // on a given device
   const ipmGrant = new IpMessagingGrant({
     serviceSid: process.config.twilio.TWILIO_CHAT_SERVICE_SID,
-    endpointId: endpointId
+    endpointId: endpointId,
   });
 
   // Create an access token which we will sign and return to the client,
@@ -52,5 +52,5 @@ function VideoTokenGenerator(identity) {
 
 module.exports = {
   generate: TokenGenerator,
-  VideoTokenGenerator: VideoTokenGenerator
+  VideoTokenGenerator: VideoTokenGenerator,
 };

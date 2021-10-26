@@ -8,7 +8,7 @@ import { USER_CATEGORY_ARRAY } from "./users";
 
 export const TABLE_NAME = "meal_templates";
 
-export const db = database => {
+export const db = (database) => {
   database.define(
     TABLE_NAME,
     {
@@ -16,33 +16,33 @@ export const db = database => {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
-        type: DataTypes.INTEGER
+        type: DataTypes.INTEGER,
       },
       name: {
         type: DataTypes.STRING,
-        allowNull: false
+        allowNull: false,
       },
       creator_id: {
         type: DataTypes.INTEGER,
-        allowNull: false
+        allowNull: false,
       },
       creator_type: {
         type: DataTypes.ENUM,
         values: USER_CATEGORY_ARRAY,
-        allowNull: false
+        allowNull: false,
       },
       details: {
-        type: DataTypes.JSON
-      }
+        type: DataTypes.JSON,
+      },
     },
     {
       underscored: true,
-      paranoid: true
+      paranoid: true,
     }
   );
 };
 
-export const associate = database => {
+export const associate = (database) => {
   // const {upload_documents} = database.models || {};
 
   // associations here (if any) ...
@@ -50,7 +50,7 @@ export const associate = database => {
   database.models[TABLE_NAME].belongsToMany(
     database.models[foodItemDetailsTableName],
     {
-      through: mealTemplateMappingTableName
+      through: mealTemplateMappingTableName,
     }
   );
 };

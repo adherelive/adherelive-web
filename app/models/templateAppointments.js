@@ -4,7 +4,7 @@ import { TABLE_NAME as carePlanTemplateTableName } from "./careplanTemplate";
 
 export const TABLE_NAME = "template_appointments";
 
-export const db = database => {
+export const db = (database) => {
   database.define(
     TABLE_NAME,
     {
@@ -12,38 +12,38 @@ export const db = database => {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
-        type: DataTypes.INTEGER
+        type: DataTypes.INTEGER,
       },
       care_plan_template_id: {
         type: DataTypes.INTEGER,
         allowNull: false,
         references: {
           model: {
-            tableName: carePlanTemplateTableName
+            tableName: carePlanTemplateTableName,
           },
-          key: "id"
-        }
+          key: "id",
+        },
       },
       reason: {
         type: DataTypes.STRING,
-        allowNull: false
+        allowNull: false,
       },
       time_gap: {
         type: DataTypes.STRING,
-        allowNull: false
+        allowNull: false,
       },
       details: {
         type: DataTypes.JSON,
-        allowNull: true
+        allowNull: true,
       },
       provider_id: {
         type: DataTypes.INTEGER,
-        allowNull: true
+        allowNull: true,
       },
       provider_name: {
         type: DataTypes.STRING(100),
-        allowNull: true
-      }
+        allowNull: true,
+      },
     },
     {
       underscored: true,
@@ -54,18 +54,18 @@ export const db = database => {
             id: this.id,
             care_plan_template_id: this.care_plan_template_id,
             time_gap: this.time_gap,
-            details: this.details
+            details: this.details,
           };
         },
         getId() {
           return this.id;
-        }
-      }
+        },
+      },
     }
   );
 };
 
-export const associate = database => {
+export const associate = (database) => {
   // const {TABLE_NAME} = database.models || {};
   // associations here (if any) ...
   // TemplateAppointment.belongsTo(CarePlanTemplate, {

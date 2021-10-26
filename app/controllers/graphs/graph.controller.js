@@ -7,7 +7,7 @@ import {
   NO_DIET,
   NO_WORKOUT,
   USER_CATEGORY,
-  CHART_DETAILS
+  CHART_DETAILS,
 } from "../../../constant";
 
 import userPreferenceService from "../../services/userPreferences/userPreference.service";
@@ -33,8 +33,8 @@ class GraphController extends Controller {
       const userPreference =
         (await userPreferenceService.findOne({
           where: {
-            user_role_id: userRoleId
-          }
+            user_role_id: userRoleId,
+          },
         })) || null;
 
       let chartData = {};
@@ -45,7 +45,7 @@ class GraphController extends Controller {
         );
         const charts = userPreferenceWrapper.getChartDetails() || [];
 
-        charts.forEach(chart => {
+        charts.forEach((chart) => {
           chartData[chart] = { ...CHART_DETAILS[chart] };
         });
 
@@ -54,11 +54,11 @@ class GraphController extends Controller {
           200,
           {
             user_preferences: {
-              ...userPreferenceWrapper.getChartInfo()
+              ...userPreferenceWrapper.getChartInfo(),
             },
             charts: {
-              ...chartData
-            }
+              ...chartData,
+            },
           },
           "Charts fetched successfully"
         );
@@ -114,11 +114,12 @@ class GraphController extends Controller {
         userId,
         userRoleId,
         userData: { category } = {},
-        userCategoryData: { basic_info: { id: doctorId } = {} } = {}
+        userCategoryData: { basic_info: { id: doctorId } = {} } = {},
       } = userDetails || {};
-      const userPreferenceData = await userPreferenceService.getPreferenceByData(
-        { user_role_id: userRoleId }
-      );
+      const userPreferenceData =
+        await userPreferenceService.getPreferenceByData({
+          user_role_id: userRoleId,
+        });
       const userPreference = await UserPreferenceWrapper(userPreferenceData);
 
       let chartData = {};
@@ -126,24 +127,24 @@ class GraphController extends Controller {
       let CHART_DETAILS = {
         [NO_MEDICATION]: {
           type: "no_medication",
-          name: "Missed Medication"
+          name: "Missed Medication",
         },
         [NO_APPOINTMENT]: {
           type: "no_appointment",
-          name: "Missed Appointment"
+          name: "Missed Appointment",
         },
         [NO_ACTION]: {
           type: "no_action",
-          name: "Missed Action"
+          name: "Missed Action",
         },
         [NO_DIET]: {
           type: "no_diet",
-          name: "Missed Diet"
+          name: "Missed Diet",
         },
         [NO_WORKOUT]: {
           type: "no_workout",
-          name: "Missed Workout"
-        }
+          name: "Missed Workout",
+        },
       };
 
       // Logger.debug("userPreference.getChartDetails().includes(id) ", userPreference.getChartDetails().includes(id));
@@ -156,30 +157,32 @@ class GraphController extends Controller {
 
       const updatedChart = [
         // ...userPreference.getChartDetails(),
-        ...chart_ids
+        ...chart_ids,
       ];
 
       const updatedDetails = {
         ...userPreference.getAllDetails(),
-        charts: updatedChart
+        charts: updatedChart,
       };
 
-      const updateUserPreference = await userPreferenceService.updateUserPreferenceData(
-        {
-          details: updatedDetails
-        },
-        userPreference.getUserPreferenceId()
-      );
+      const updateUserPreference =
+        await userPreferenceService.updateUserPreferenceData(
+          {
+            details: updatedDetails,
+          },
+          userPreference.getUserPreferenceId()
+        );
 
-      const updatedUserPreferenceData = await userPreferenceService.getPreferenceByData(
-        { user_role_id: userRoleId }
-      );
+      const updatedUserPreferenceData =
+        await userPreferenceService.getPreferenceByData({
+          user_role_id: userRoleId,
+        });
 
       const updatedUserPreference = await UserPreferenceWrapper(
         updatedUserPreferenceData
       );
 
-      updatedChart.forEach(chart => {
+      updatedChart.forEach((chart) => {
         chartData[chart] = CHART_DETAILS[chart];
       });
 
@@ -188,11 +191,11 @@ class GraphController extends Controller {
         200,
         {
           user_preferences: {
-            ...updatedUserPreference.getChartInfo()
+            ...updatedUserPreference.getChartInfo(),
           },
           charts: {
-            ...chartData
-          }
+            ...chartData,
+          },
         },
         "Charts added successfully"
       );
@@ -227,7 +230,7 @@ class GraphController extends Controller {
 
           const userPreferenceExists =
             (await userPreferenceService.getPreferenceByData({
-              user_role_id
+              user_role_id,
             })) || null;
 
           if (!userPreferenceExists) {
@@ -235,8 +238,8 @@ class GraphController extends Controller {
               user_id,
               user_role_id,
               details: {
-                charts: ["1", "2", "3", "4", "5"]
-              }
+                charts: ["1", "2", "3", "4", "5"],
+              },
             });
           }
         }

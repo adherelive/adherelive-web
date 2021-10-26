@@ -21,7 +21,7 @@ class MAccountDetailsWrapper extends BaseAccountDetails {
       razorpay_account_name,
       activated_on,
       prefix,
-      upi_id
+      upi_id,
     } = _data || {};
 
     return {
@@ -37,9 +37,9 @@ class MAccountDetailsWrapper extends BaseAccountDetails {
         in_use,
         razorpay_account_id,
         razorpay_account_name,
-        upi_id
+        upi_id,
       },
-      activated_on
+      activated_on,
     };
   };
 }

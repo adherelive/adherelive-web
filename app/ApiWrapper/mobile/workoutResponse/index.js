@@ -20,21 +20,21 @@ class WorkoutResponseWrapper extends BaseWorkoutResponse {
       sets,
       status,
       other_details,
-      updatedAt
+      updatedAt,
     } = _data;
     return {
       basic_info: {
         id,
         workout_id,
         exercise_group_id,
-        schedule_event_id
+        schedule_event_id,
       },
       repetition_id,
       repetition_value,
       sets,
       status,
       other_details,
-      updated_at: updatedAt
+      updated_at: updatedAt,
     };
   };
 
@@ -55,7 +55,7 @@ class WorkoutResponseWrapper extends BaseWorkoutResponse {
     // }
 
     return {
-      ...getBasicInfo()
+      ...getBasicInfo(),
       // upload_document_ids: allDocumentIds
     };
   };
@@ -74,7 +74,7 @@ class WorkoutResponseWrapper extends BaseWorkoutResponse {
     if (getScheduleEventId()) {
       const schduleEventRecord = await scheduleEventService.getEventByData({
         paranoid: false,
-        id: getScheduleEventId()
+        id: getScheduleEventId(),
       });
       if (schduleEventRecord) {
         const scheduleEvent = await EventWrapper(schduleEventRecord);
@@ -97,11 +97,11 @@ class WorkoutResponseWrapper extends BaseWorkoutResponse {
 
     return {
       workout_responses: {
-        [getId()]: getAllInfo()
+        [getId()]: getAllInfo(),
       },
       // upload_documents: allUploadDocuments,
       schedule_events: scheduleEventData,
-      workout_response_id: getId()
+      workout_response_id: getId(),
     };
   };
 }

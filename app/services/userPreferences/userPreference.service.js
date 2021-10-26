@@ -6,7 +6,7 @@ const DEFAULT_ORDER = [["created_at", "DESC"]];
 class UserPreferenceService {
   constructor() {}
 
-  addUserPreference = async data => {
+  addUserPreference = async (data) => {
     try {
       const userPreference = await Database.getModel(TABLE_NAME).create(data);
       return userPreference;
@@ -15,10 +15,10 @@ class UserPreferenceService {
     }
   };
 
-  getPreferenceByData = async data => {
+  getPreferenceByData = async (data) => {
     try {
       const userPreference = await Database.getModel(TABLE_NAME).findOne({
-        where: data
+        where: data,
       });
       return userPreference;
     } catch (error) {
@@ -31,9 +31,9 @@ class UserPreferenceService {
     try {
       const userPreference = await Database.getModel(TABLE_NAME).update(data, {
         where: {
-          id
+          id,
         },
-        transaction
+        transaction,
       });
       await transaction.commit();
       return userPreference;
@@ -46,7 +46,7 @@ class UserPreferenceService {
   findOne = async ({ where }) => {
     try {
       return await Database.getModel(TABLE_NAME).findOne({
-        where
+        where,
       });
     } catch (error) {
       throw error;
@@ -68,7 +68,7 @@ class UserPreferenceService {
         data,
         {
           updateOnDuplicate: ["user_role_id"],
-          transaction
+          transaction,
         }
       );
       transaction.commit();

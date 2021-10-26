@@ -1,26 +1,6 @@
 {
   "name": "adherelive-client",
   "version": "2.2.0",
-  "description": "All packages for the adherelive-client web application",
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/adherelive/adherelive-web.git"
-  },
-  "keywords": [
-    "adherelive",
-    "client",
-    "web",
-    "react",
-    "mobile",
-    "android",
-    "ios"
-  ],
-  "author": "gagneet.singh@adhere.live",
-  "license": "ISC",
-  "bugs": {
-    "url": "https://github.com/adherelive/adherelive-web/issues"
-  },
-  "homepage": "https://github.com/adherelive/adherelive-web#readme",
   "scripts": {
     "start": "react-app-rewired start",
     "build": "react-app-rewired build && cp -R build/* ../public/",

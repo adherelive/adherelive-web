@@ -13,7 +13,7 @@ class updateProviderDrawer extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      submitting: false
+      submitting: false,
     };
 
     this.FormWrapper = Form.create({ onFieldsChange: this.onFormFieldChanges })(
@@ -23,21 +23,21 @@ class updateProviderDrawer extends Component {
 
   componentDidMount() {}
 
-  formatMessage = data => this.props.intl.formatMessage(data);
+  formatMessage = (data) => this.props.intl.formatMessage(data);
 
   onClose = () => {
     const { close } = this.props;
     close();
   };
 
-  handleSubmit = e => {
+  handleSubmit = (e) => {
     e.preventDefault();
     const { formRef = {}, formatMessage } = this;
 
     const {
       props: {
-        form: { validateFields, resetFields }
-      }
+        form: { validateFields, resetFields },
+      },
     } = formRef;
 
     validateFields(async (err, values) => {
@@ -46,7 +46,7 @@ class updateProviderDrawer extends Component {
           payload = {},
           providers = {},
           users = {},
-          visible
+          visible,
         } = this.props;
         const { provider_id = null } = payload;
 
@@ -65,7 +65,7 @@ class updateProviderDrawer extends Component {
           razorpay_account_name = "",
           icon = "",
           banner = "",
-          prescription_details = ""
+          prescription_details = "",
         } = values;
 
         let data = {};
@@ -85,7 +85,7 @@ class updateProviderDrawer extends Component {
           razorpay_account_name,
           icon,
           banner,
-          prescription_details
+          prescription_details,
         };
 
         try {
@@ -124,7 +124,7 @@ class updateProviderDrawer extends Component {
     });
   };
 
-  setFormRef = formRef => {
+  setFormRef = (formRef) => {
     this.formRef = formRef;
     if (formRef) {
       this.setState({ formRef: true });
@@ -136,13 +136,8 @@ class updateProviderDrawer extends Component {
     const { provider_id = null } = payload;
     const { submitting = false } = this.state;
 
-    const {
-      onClose,
-      formatMessage,
-      setFormRef,
-      handleSubmit,
-      FormWrapper
-    } = this;
+    const { onClose, formatMessage, setFormRef, handleSubmit, FormWrapper } =
+      this;
 
     if (visible !== true) {
       return null;
@@ -157,7 +152,7 @@ class updateProviderDrawer extends Component {
           headerStyle={{
             position: "sticky",
             zIndex: "9999",
-            top: "0px"
+            top: "0px",
           }}
           destroyOnClose={true}
           onClose={onClose}

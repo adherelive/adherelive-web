@@ -3,7 +3,7 @@ function templateVitalsReducer(state, data) {
   if (template_vitals) {
     return {
       ...state,
-      ...template_vitals
+      ...template_vitals,
     };
   } else {
     return state;

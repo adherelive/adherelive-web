@@ -3,7 +3,7 @@ function doctorQualificationReducer(state, data) {
   if (doctor_qualifications) {
     return {
       ...state,
-      ...doctor_qualifications
+      ...doctor_qualifications,
     };
   } else {
     return state;

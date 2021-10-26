@@ -3,7 +3,7 @@ function typeDescriptionReducer(state, data) {
   if (type_description) {
     return {
       ...state,
-      ...type_description
+      ...type_description,
     };
   } else {
     return state;

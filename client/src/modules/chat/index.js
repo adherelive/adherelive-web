@@ -5,30 +5,30 @@ const CLOSE_POPUP = "CLOSE_POPUP";
 
 const intial_state = {
   minimized: false,
-  visible: false
+  visible: false,
 };
 
 export const openPopUp = () => {
   return {
-    type: OPEN_POPUP
+    type: OPEN_POPUP,
   };
 };
 
 export const closePopUp = () => {
   return {
-    type: CLOSE_POPUP
+    type: CLOSE_POPUP,
   };
 };
 
 export const minimizePopUp = () => {
   return {
-    type: MINIMIZED_POPUP
+    type: MINIMIZED_POPUP,
   };
 };
 
 export const maximizePopUp = () => {
   return {
-    type: MAXIMIZED_POPUP
+    type: MAXIMIZED_POPUP,
   };
 };
 
@@ -38,22 +38,22 @@ export default (state = intial_state, action) => {
     case MINIMIZED_POPUP:
       return {
         ...state,
-        minimized: true
+        minimized: true,
       };
     case OPEN_POPUP:
       return {
         ...state,
-        visible: true
+        visible: true,
       };
     case MAXIMIZED_POPUP:
       return {
         ...state,
-        minimized: false
+        minimized: false,
       };
     case CLOSE_POPUP:
       return {
         ...state,
-        visible: false
+        visible: false,
       };
     default:
       return state;

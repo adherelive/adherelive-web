@@ -1,9 +1,9 @@
 import React from "react";
 
-export default props => {
+export default (props) => {
   const {
     medicineData: { basic_info: { creator_id } = {} } = {},
-    doctors = {}
+    doctors = {},
   } = props || {};
   const { basic_info: { full_name = "" } = {} } = doctors || {};
 

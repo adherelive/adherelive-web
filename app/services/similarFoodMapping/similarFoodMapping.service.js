@@ -7,11 +7,11 @@ const DEFAULT_ORDER = [["created_at", "DESC"]];
 class SimilarFoodMappingService {
   constructor() {}
 
-  getByData = async data => {
+  getByData = async (data) => {
     try {
       const record = await Database.getModel(TABLE_NAME).findOne({
         where: data,
-        raw: true
+        raw: true,
       });
       return record;
     } catch (error) {
@@ -22,7 +22,7 @@ class SimilarFoodMappingService {
   getAll = async () => {
     try {
       const records = await Database.getModel(TABLE_NAME).findAll({
-        raw: true
+        raw: true,
       });
       return records;
     } catch (error) {
@@ -36,7 +36,7 @@ class SimilarFoodMappingService {
         where,
         order,
         attributes,
-        raw: true
+        raw: true,
       });
     } catch (error) {
       throw error;

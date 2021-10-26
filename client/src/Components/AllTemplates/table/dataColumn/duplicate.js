@@ -4,17 +4,17 @@ import message from "antd/es/message";
 import { CopyOutlined } from "@ant-design/icons";
 import Tooltip from "antd/es/tooltip";
 
-export default props => {
+export default (props) => {
   const { id, duplicateCareplanTemplate } = props || {};
 
-  const handleCreateDuplicate = async e => {
+  const handleCreateDuplicate = async (e) => {
     e.preventDefault();
     try {
       const response = await duplicateCareplanTemplate(id);
       const {
         payload: { data = {}, message: resp_message = "" } = {},
         status,
-        statusCode
+        statusCode,
       } = response;
       if (status) {
         message.success(resp_message);

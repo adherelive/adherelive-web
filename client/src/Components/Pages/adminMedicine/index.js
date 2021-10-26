@@ -12,7 +12,7 @@ const { TabPane } = Tabs;
 
 const ALL_TABS = {
   PUBLIC: "1",
-  CREATOR: "2"
+  CREATOR: "2",
 };
 
 class AdminMedicine extends Component {
@@ -21,7 +21,7 @@ class AdminMedicine extends Component {
     this.state = {
       totalPublicMedicinesCount: 0,
       totalPrivateMedicinesCount: 0,
-      currentTab: ALL_TABS.PUBLIC
+      currentTab: ALL_TABS.PUBLIC,
     };
   }
 
@@ -40,8 +40,8 @@ class AdminMedicine extends Component {
       const {
         payload: {
           data: { total_count = 0 } = {},
-          response: resp_msg = ""
-        } = {}
+          response: resp_msg = "",
+        } = {},
       } = response || {};
       this.setState({ totalPublicMedicinesCount: total_count });
     } catch (error) {
@@ -57,8 +57,8 @@ class AdminMedicine extends Component {
       const {
         payload: {
           data: { total_count = 0 } = {},
-          response: resp_msg = ""
-        } = {}
+          response: resp_msg = "",
+        } = {},
       } = response || {};
       this.setState({ totalPrivateMedicinesCount: total_count });
     } catch (error) {
@@ -66,14 +66,14 @@ class AdminMedicine extends Component {
     }
   }
 
-  changeTab = tab => {
+  changeTab = (tab) => {
     this.setState({ currentTab: tab });
   };
 
   formatMessage = (message, ...rest) =>
     this.props.intl.formatMessage(message, rest);
 
-  handleAddMedicine = e => {
+  handleAddMedicine = (e) => {
     e.preventDefault();
     const { openAddMedicineDrawer } = this.props;
     openAddMedicineDrawer();
@@ -99,7 +99,7 @@ class AdminMedicine extends Component {
     const {
       totalPublicMedicinesCount,
       totalPrivateMedicinesCount,
-      currentTab
+      currentTab,
     } = this.state;
 
     return (

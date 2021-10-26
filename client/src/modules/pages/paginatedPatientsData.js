@@ -4,7 +4,7 @@ import paginated_watchlist_patients from "./watchlistedPatients";
 
 const paginatedPatientIdsReducer = combineReducers({
   paginated_all_patients,
-  paginated_watchlist_patients
+  paginated_watchlist_patients,
 });
 
 export default (state, action) => {

@@ -8,7 +8,7 @@ import {
   getWorkoutsForPatientDetailsUrl,
   getWorkoutTimelineUrl,
   getWorkoutScheduleEventDetailsUrl,
-  updateWorkoutTotalCaloriesUrl
+  updateWorkoutTotalCaloriesUrl,
 } from "../../Helper/urls/workout";
 
 export const GET_WORKOUT_DETAILS_START = "GET_WORKOUT_DETAILS_START";
@@ -60,12 +60,12 @@ export const UPDATE_WORKOUT_TOTAL_CALORIES_FAILED =
 
 export const getWorkoutDetails = () => {
   let response = {};
-  return async dispatch => {
+  return async (dispatch) => {
     try {
       dispatch({ type: GET_WORKOUT_DETAILS_START });
       response = await doRequest({
         method: REQUEST_TYPE.GET,
-        url: getWorkoutDetailsUrl()
+        url: getWorkoutDetailsUrl(),
       });
 
       const { status, payload: { data, message = "" } = {} } = response || {};
@@ -73,12 +73,12 @@ export const getWorkoutDetails = () => {
       if (status === true) {
         dispatch({
           type: GET_WORKOUT_DETAILS_COMPLETED,
-          data
+          data,
         });
       } else {
         dispatch({
           type: GET_WORKOUT_DETAILS_FAILED,
-          message
+          message,
         });
       }
     } catch (error) {
@@ -88,15 +88,15 @@ export const getWorkoutDetails = () => {
   };
 };
 
-export const addWorkout = payload => {
+export const addWorkout = (payload) => {
   let response = {};
-  return async dispatch => {
+  return async (dispatch) => {
     try {
       dispatch({ type: ADD_WORKOUT_START });
       response = await doRequest({
         method: REQUEST_TYPE.POST,
         url: addWorkoutUrl(),
-        data: payload
+        data: payload,
       });
 
       const { status, payload: { data, message = "" } = {} } = response || {};
@@ -104,12 +104,12 @@ export const addWorkout = payload => {
       if (status === true) {
         dispatch({
           type: ADD_WORKOUT_COMPLETED,
-          data
+          data,
         });
       } else {
         dispatch({
           type: ADD_WORKOUT_FAILED,
-          message
+          message,
         });
       }
     } catch (error) {
@@ -119,14 +119,14 @@ export const addWorkout = payload => {
   };
 };
 
-export const getSingleWorkoutDetails = id => {
+export const getSingleWorkoutDetails = (id) => {
   let response = {};
-  return async dispatch => {
+  return async (dispatch) => {
     try {
       dispatch({ type: GET_SINGLE_WORKOUT_DETAILS_START });
       response = await doRequest({
         method: REQUEST_TYPE.GET,
-        url: getSingleWorkoutDetailsUrl(id)
+        url: getSingleWorkoutDetailsUrl(id),
       });
 
       const { status, payload: { data, message = "" } = {} } = response || {};
@@ -134,12 +134,12 @@ export const getSingleWorkoutDetails = id => {
       if (status === true) {
         dispatch({
           type: GET_SINGLE_WORKOUT_DETAILS_COMPLETED,
-          data
+          data,
         });
       } else {
         dispatch({
           type: GET_SINGLE_WORKOUT_DETAILS_FAILED,
-          message
+          message,
         });
       }
     } catch (error) {
@@ -149,14 +149,14 @@ export const getSingleWorkoutDetails = id => {
   };
 };
 
-export const getWorkoutsForPatient = patientId => {
+export const getWorkoutsForPatient = (patientId) => {
   let response = {};
-  return async dispatch => {
+  return async (dispatch) => {
     try {
       dispatch({ type: GET_WORKOUTS_FOR_PATIENT_START });
       response = await doRequest({
         method: REQUEST_TYPE.GET,
-        url: getWorkoutsForPatientDetailsUrl(patientId)
+        url: getWorkoutsForPatientDetailsUrl(patientId),
       });
 
       const { status, payload: { data, message = "" } = {} } = response || {};
@@ -164,12 +164,12 @@ export const getWorkoutsForPatient = patientId => {
       if (status === true) {
         dispatch({
           type: GET_WORKOUTS_FOR_PATIENT_COMPLETED,
-          data
+          data,
         });
       } else {
         dispatch({
           type: GET_WORKOUTS_FOR_PATIENT_FAILED,
-          message
+          message,
         });
       }
     } catch (error) {
@@ -181,13 +181,13 @@ export const getWorkoutsForPatient = patientId => {
 
 export const updateWorkout = (id, payload) => {
   let response = {};
-  return async dispatch => {
+  return async (dispatch) => {
     try {
       dispatch({ type: UPDATE_WORKOUT_START });
       response = await doRequest({
         method: REQUEST_TYPE.POST,
         url: updateWorkoutUrl(id),
-        data: payload
+        data: payload,
       });
 
       const { status, payload: { data, message = "" } = {} } = response || {};
@@ -195,12 +195,12 @@ export const updateWorkout = (id, payload) => {
       if (status === true) {
         dispatch({
           type: UPDATE_WORKOUT_COMPLETED,
-          data
+          data,
         });
       } else {
         dispatch({
           type: UPDATE_WORKOUT_FAILED,
-          message
+          message,
         });
       }
     } catch (error) {
@@ -210,13 +210,13 @@ export const updateWorkout = (id, payload) => {
   };
 };
 
-export const deleteWorkout = id => {
+export const deleteWorkout = (id) => {
   let response = {};
-  return async dispatch => {
+  return async (dispatch) => {
     try {
       response = await doRequest({
         method: REQUEST_TYPE.DELETE,
-        url: getSingleWorkoutDetailsUrl(id)
+        url: getSingleWorkoutDetailsUrl(id),
       });
 
       const { status, payload: { data: resp_data = {}, message = "" } = {} } =
@@ -224,18 +224,18 @@ export const deleteWorkout = id => {
 
       const data = {
         deleted_workout_id: id,
-        ...resp_data
+        ...resp_data,
       };
 
       if (status === true) {
         dispatch({
           type: DELETE_WORKOUT_COMPLETED,
-          data
+          data,
         });
       } else {
         dispatch({
           type: DELETE_WORKOUT_FAILED,
-          message
+          message,
         });
       }
     } catch (error) {
@@ -247,12 +247,12 @@ export const deleteWorkout = id => {
 
 export const updateWorkoutTotalCalories = ({ workout_id, total_calories }) => {
   let response = {};
-  return async dispatch => {
+  return async (dispatch) => {
     try {
       dispatch({ type: UPDATE_WORKOUT_TOTAL_CALORIES_START });
       response = await doRequest({
         method: REQUEST_TYPE.POST,
-        url: updateWorkoutTotalCaloriesUrl(workout_id, total_calories)
+        url: updateWorkoutTotalCaloriesUrl(workout_id, total_calories),
       });
 
       const { status, payload: { data, message = "" } = {} } = response || {};
@@ -260,12 +260,12 @@ export const updateWorkoutTotalCalories = ({ workout_id, total_calories }) => {
       if (status === true) {
         dispatch({
           type: UPDATE_WORKOUT_TOTAL_CALORIES_COMPLETED,
-          data
+          data,
         });
       } else {
         dispatch({
           type: UPDATE_WORKOUT_TOTAL_CALORIES_FAILED,
-          message
+          message,
         });
       }
     } catch (error) {
@@ -278,15 +278,15 @@ export const updateWorkoutTotalCalories = ({ workout_id, total_calories }) => {
   };
 };
 
-export const getWorkoutTimeline = workoutId => {
+export const getWorkoutTimeline = (workoutId) => {
   let response = {};
-  return async dispatch => {
+  return async (dispatch) => {
     try {
       dispatch({ type: GET_WORKOUT_TIMELINE_START });
 
       response = await doRequest({
         method: REQUEST_TYPE.GET,
-        url: getWorkoutTimelineUrl(workoutId)
+        url: getWorkoutTimelineUrl(workoutId),
       });
 
       const { status, payload: { data, message = "" } = {} } = response || {};
@@ -303,14 +303,14 @@ export const getWorkoutTimeline = workoutId => {
   };
 };
 
-export const getWorkoutScheduleEventDetails = schedule_event_id => {
+export const getWorkoutScheduleEventDetails = (schedule_event_id) => {
   let response = {};
-  return async dispatch => {
+  return async (dispatch) => {
     try {
       dispatch({ type: GET_WORKOUT_DETAILS_FOR_RESPONSE_START });
       response = await doRequest({
         method: REQUEST_TYPE.GET,
-        url: getWorkoutScheduleEventDetailsUrl(schedule_event_id)
+        url: getWorkoutScheduleEventDetailsUrl(schedule_event_id),
       });
 
       const { status, payload: { data, message = "" } = {} } = response || {};
@@ -339,7 +339,7 @@ function deleteWorkoutReducer(state, data) {
     if (workout) {
       let updatedWorkout = { ...rest };
       return {
-        ...updatedWorkout
+        ...updatedWorkout,
       };
     } else {
       return state;
@@ -354,7 +354,7 @@ function workoutsReducer(state, data) {
   if (workouts) {
     return {
       ...state,
-      ...workouts
+      ...workouts,
     };
   } else {
     return state;

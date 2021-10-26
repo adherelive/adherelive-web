@@ -18,9 +18,9 @@ class MealTemplateWrapper extends BaseMealTemplate {
         id,
         name,
         creator_id,
-        creator_type
+        creator_type,
       },
-      details
+      details,
     };
   };
 
@@ -38,7 +38,7 @@ class MealTemplateWrapper extends BaseMealTemplate {
     }
     return {
       ...getBasicInfo(),
-      food_item_detail_ids
+      food_item_detail_ids,
     };
   };
 
@@ -52,11 +52,10 @@ class MealTemplateWrapper extends BaseMealTemplate {
     if (allFoodItemDetails.length > 0) {
       for (let index = 0; index < allFoodItemDetails.length; index++) {
         const FoodItemDetails = await FoodItemDetailsWrapper({
-          data: allFoodItemDetails[index]
+          data: allFoodItemDetails[index],
         });
-        foodItemsDetailsData[
-          FoodItemDetails.getId()
-        ] = FoodItemDetails.getBasicInfo();
+        foodItemsDetailsData[FoodItemDetails.getId()] =
+          FoodItemDetails.getBasicInfo();
         food_item_detail_ids.push(FoodItemDetails.getId());
       }
     }
@@ -64,13 +63,13 @@ class MealTemplateWrapper extends BaseMealTemplate {
     return {
       meal_templates: {
         [getId()]: {
-          ...(await getAllInfo())
-        }
+          ...(await getAllInfo()),
+        },
       },
       food_item_details: {
-        ...foodItemsDetailsData
+        ...foodItemsDetailsData,
       },
-      food_item_detail_ids
+      food_item_detail_ids,
     };
   };
 }

@@ -3,32 +3,32 @@ import { REQUEST_TYPE } from "../../constant";
 import { searchFoodUrl } from "../../Helper/urls/foodItems";
 import {
   ADD_FOOD_ITEM_COMPLETED,
-  EDIT_FOOD_ITEM_COMPLETED
+  EDIT_FOOD_ITEM_COMPLETED,
 } from "../foodItems";
 
 export const SEARCH_FOOD_START = "SEARCH_FOOD_START";
 export const SEARCH_FOOD_COMPLETED = "SEARCH_FOOD_COMPLETED";
 export const SEARCH_FOOD_FAILED = "SEARCH_FOOD_FAILED";
 
-export const searchFood = value => {
+export const searchFood = (value) => {
   let response = {};
-  return async dispatch => {
+  return async (dispatch) => {
     try {
       response = await doRequest({
         method: REQUEST_TYPE.GET,
-        url: searchFoodUrl(value)
+        url: searchFoodUrl(value),
       });
 
       const { status, payload: { data, message = "" } = {} } = response || {};
       if (status === true) {
         dispatch({
           type: SEARCH_FOOD_COMPLETED,
-          data
+          data,
         });
       } else {
         dispatch({
           type: SEARCH_FOOD_FAILED,
-          message
+          message,
         });
       }
     } catch (error) {
@@ -42,7 +42,7 @@ function searchFoodItemReducer(state, data) {
   let { food_items = {} } = data || {};
   if (food_items) {
     return {
-      ...food_items
+      ...food_items,
     };
   } else {
     return state;
@@ -54,7 +54,7 @@ function addedNewItemDetailReducer(state, data) {
   if (food_items) {
     return {
       ...state,
-      ...food_items
+      ...food_items,
     };
   } else {
     return state;

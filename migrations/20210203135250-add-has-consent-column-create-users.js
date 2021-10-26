@@ -7,14 +7,14 @@ module.exports = {
     return Promise.all([
       queryInterface.addColumn(TABLE_NAME, "has_consent", {
         type: Sequelize.INTEGER,
-        defaultValue: false
-      })
+        defaultValue: false,
+      }),
     ]);
   },
 
   down: (queryInterface, Sequelize) => {
     return Promise.all([
-      queryInterface.removeColumn(TABLE_NAME, "has_consent")
+      queryInterface.removeColumn(TABLE_NAME, "has_consent"),
     ]);
-  }
+  },
 };

@@ -19,7 +19,7 @@ import { USER_CATEGORY } from "../../../constant";
 
 const Log = new Logger("TRANSACTION > HELPER");
 
-export const getProviderTransactions = async req => {
+export const getProviderTransactions = async (req) => {
   try {
     const { userDetails: { userRoleId } = {} } = req;
     const paymentProductService = new PaymentProductService();
@@ -29,7 +29,7 @@ export const getProviderTransactions = async req => {
     const allPaymentProducts =
       (await paymentProductService.getAllCreatorTypeProducts({
         creator_role_id: userRoleId,
-        creator_type: USER_CATEGORY.PROVIDER
+        creator_type: USER_CATEGORY.PROVIDER,
       })) || [];
 
     let paymentProductIds = [],
@@ -41,7 +41,7 @@ export const getProviderTransactions = async req => {
     if (allPaymentProducts.length > 0) {
       for (let index = 0; index < allPaymentProducts.length; index++) {
         const paymentProduct = await PaymentProductWrapper({
-          data: allPaymentProducts[index]
+          data: allPaymentProducts[index],
         });
         paymentProductIds.push(paymentProduct.getId());
 
@@ -54,32 +54,32 @@ export const getProviderTransactions = async req => {
           const creatorRoleId = paymentProduct.getCreatorRoleId();
 
           const creatorRole = await userRolesService.getSingleUserRoleByData({
-            id: creatorRoleId
+            id: creatorRoleId,
           });
           if (creatorRole) {
             const creatorRoleData = await UserRolesWrapper(creatorRole);
             userRoleData = {
               ...userRoleData,
-              ...{ [creatorRoleId]: creatorRoleData.getBasicInfo() }
+              ...{ [creatorRoleId]: creatorRoleData.getBasicInfo() },
             };
           }
 
           let doctor_user_id = null;
           const forUserRole = await userRolesService.getSingleUserRoleByData({
-            id: roleId
+            id: roleId,
           });
           if (forUserRole) {
             const forUserRoleData = await UserRolesWrapper(forUserRole);
             doctor_user_id = forUserRoleData.getUserId();
             userRoleData = {
               ...userRoleData,
-              ...{ [roleId]: forUserRoleData.getBasicInfo() }
+              ...{ [roleId]: forUserRoleData.getBasicInfo() },
             };
           }
           const doctor =
             (await doctorService.findOne({
               where: { user_id: doctor_user_id },
-              attributes: ["id"]
+              attributes: ["id"],
             })) || null;
           const { id: doctorId = null } = doctor || {};
 
@@ -90,7 +90,7 @@ export const getProviderTransactions = async req => {
 
     const allTransactions =
       (await transactionService.getAllByData({
-        payment_product_id: paymentProductIds
+        payment_product_id: paymentProductIds,
       })) || [];
 
     let transactionData = {};
@@ -105,13 +105,10 @@ export const getProviderTransactions = async req => {
     if (allTransactions.length > 0) {
       for (let index = 0; index < allTransactions.length; index++) {
         const transaction = await TransactionWrapper({
-          data: allTransactions[index]
+          data: allTransactions[index],
         });
-        const {
-          transactions,
-          payment_products,
-          transaction_id
-        } = await transaction.getReferenceInfo();
+        const { transactions, payment_products, transaction_id } =
+          await transaction.getReferenceInfo();
         transactionData = { ...transactionData, ...transactions };
         transactionIds.push(transaction_id);
         paymentProductData = { ...paymentProductData, ...payment_products };
@@ -120,27 +117,27 @@ export const getProviderTransactions = async req => {
           const payeeRoleId = transaction.getPayeeId();
           let patient_user_id = null;
           const payeeRole = await userRolesService.getSingleUserRoleByData({
-            id: payeeRoleId
+            id: payeeRoleId,
           });
           if (payeeRole) {
             const payeeRoleData = await UserRolesWrapper(payeeRole);
             patient_user_id = payeeRoleData.getUserId();
             userRoleData = {
               ...userRoleData,
-              ...{ [payeeRoleData.getId()]: payeeRoleData.getBasicInfo() }
+              ...{ [payeeRoleData.getId()]: payeeRoleData.getBasicInfo() },
             };
           }
 
           const requestorRole = await userRolesService.getSingleUserRoleByData({
-            id: transaction.getRequestorId()
+            id: transaction.getRequestorId(),
           });
           if (requestorRole) {
             const requestorRoleData = await UserRolesWrapper(requestorRole);
             userRoleData = {
               ...userRoleData,
               ...{
-                [requestorRoleData.getId()]: requestorRoleData.getBasicInfo()
-              }
+                [requestorRoleData.getId()]: requestorRoleData.getBasicInfo(),
+              },
             };
           }
 
@@ -156,7 +153,7 @@ export const getProviderTransactions = async req => {
     // get all doctors
     const allDoctors =
       (await doctorService.getAllDoctorByData({
-        id: doctorIds
+        id: doctorIds,
       })) || [];
 
     if (allDoctors.length > 0) {
@@ -171,7 +168,7 @@ export const getProviderTransactions = async req => {
     // get all patients
     const allPatients =
       (await patientService.getPatientByData({
-        id: patientIds
+        id: patientIds,
       })) || [];
 
     if (allPatients.length > 0) {
@@ -185,24 +182,24 @@ export const getProviderTransactions = async req => {
 
     return {
       transactions: {
-        ...transactionData
+        ...transactionData,
       },
       payment_products: {
-        ...paymentProductData
+        ...paymentProductData,
       },
       doctors: {
-        ...doctorData
+        ...doctorData,
       },
       patients: {
-        ...patientData
+        ...patientData,
       },
       users: {
-        ...userData
+        ...userData,
       },
       user_roles: {
-        ...userRoleData
+        ...userRoleData,
       },
-      transaction_ids: transactionIds
+      transaction_ids: transactionIds,
     };
   } catch (error) {
     Log.debug("getProviderTransactions catch error", error);
@@ -210,7 +207,7 @@ export const getProviderTransactions = async req => {
   }
 };
 
-export const getDoctorTransactions = async req => {
+export const getDoctorTransactions = async (req) => {
   try {
     const { userDetails: { userCategoryId, userRoleId } = {} } = req;
     const paymentProductService = new PaymentProductService();
@@ -221,7 +218,7 @@ export const getDoctorTransactions = async req => {
     const allPaymentProducts =
       (await paymentProductService.getAllCreatorTypeProducts({
         creator_role_id: userRoleId,
-        creator_type: [USER_CATEGORY.DOCTOR, USER_CATEGORY.HSP]
+        creator_type: [USER_CATEGORY.DOCTOR, USER_CATEGORY.HSP],
       })) || [];
 
     let userRoleData = {};
@@ -231,7 +228,7 @@ export const getDoctorTransactions = async req => {
     if (allPaymentProducts.length > 0) {
       for (let index = 0; index < allPaymentProducts.length; index++) {
         const paymentProduct = await PaymentProductWrapper({
-          data: allPaymentProducts[index]
+          data: allPaymentProducts[index],
         });
         paymentProductIds.push(paymentProduct.getId());
 
@@ -244,33 +241,33 @@ export const getDoctorTransactions = async req => {
           const creatorRoleId = paymentProduct.getCreatorRoleId();
 
           const creatorRole = await userRolesService.getSingleUserRoleByData({
-            id: creatorRoleId
+            id: creatorRoleId,
           });
           if (creatorRole) {
             const creatorRoleData = await UserRolesWrapper(creatorRole);
             userRoleData = {
               ...userRoleData,
-              ...{ [creatorRoleId]: creatorRoleData.getBasicInfo() }
+              ...{ [creatorRoleId]: creatorRoleData.getBasicInfo() },
             };
           }
 
           let doctor_user_id = null;
           const forUserRole = await userRolesService.getSingleUserRoleByData({
-            id: roleId
+            id: roleId,
           });
           if (forUserRole) {
             const forUserRoleData = await UserRolesWrapper(forUserRole);
             doctor_user_id = forUserRoleData.getUserId();
             userRoleData = {
               ...userRoleData,
-              ...{ [roleId]: forUserRoleData.getBasicInfo() }
+              ...{ [roleId]: forUserRoleData.getBasicInfo() },
             };
           }
 
           const doctor =
             (await doctorService.findOne({
               where: { user_id: doctor_user_id },
-              attributes: ["id"]
+              attributes: ["id"],
             })) || null;
           const { id: doctorId = null } = doctor || {};
 
@@ -281,7 +278,7 @@ export const getDoctorTransactions = async req => {
 
     const allTransactions =
       (await transactionService.getAllByData({
-        payment_product_id: paymentProductIds
+        payment_product_id: paymentProductIds,
       })) || [];
 
     let transactionData = {};
@@ -296,13 +293,10 @@ export const getDoctorTransactions = async req => {
     if (allTransactions.length > 0) {
       for (let index = 0; index < allTransactions.length; index++) {
         const transaction = await TransactionWrapper({
-          data: allTransactions[index]
+          data: allTransactions[index],
         });
-        const {
-          transactions,
-          payment_products,
-          transaction_id
-        } = await transaction.getReferenceInfo();
+        const { transactions, payment_products, transaction_id } =
+          await transaction.getReferenceInfo();
         transactionData = { ...transactionData, ...transactions };
         transactionIds.push(transaction_id);
         paymentProductData = { ...paymentProductData, ...payment_products };
@@ -311,27 +305,27 @@ export const getDoctorTransactions = async req => {
           const payeeRoleId = transaction.getPayeeId();
           let patient_user_id = null;
           const payeeRole = await userRolesService.getSingleUserRoleByData({
-            id: payeeRoleId
+            id: payeeRoleId,
           });
           if (payeeRole) {
             const payeeRoleData = await UserRolesWrapper(payeeRole);
             patient_user_id = payeeRoleData.getUserId();
             userRoleData = {
               ...userRoleData,
-              ...{ [payeeRoleData.getId()]: payeeRoleData.getBasicInfo() }
+              ...{ [payeeRoleData.getId()]: payeeRoleData.getBasicInfo() },
             };
           }
 
           const requestorRole = await userRolesService.getSingleUserRoleByData({
-            id: transaction.getRequestorId()
+            id: transaction.getRequestorId(),
           });
           if (requestorRole) {
             const requestorRoleData = await UserRolesWrapper(requestorRole);
             userRoleData = {
               ...userRoleData,
               ...{
-                [requestorRoleData.getId()]: requestorRoleData.getBasicInfo()
-              }
+                [requestorRoleData.getId()]: requestorRoleData.getBasicInfo(),
+              },
             };
           }
 
@@ -347,7 +341,7 @@ export const getDoctorTransactions = async req => {
     // get all doctors
     const allDoctors =
       (await doctorService.getAllDoctorByData({
-        id: doctorIds
+        id: doctorIds,
       })) || [];
 
     if (allDoctors.length > 0) {
@@ -362,7 +356,7 @@ export const getDoctorTransactions = async req => {
     // get all patients
     const allPatients =
       (await patientService.getPatientByData({
-        id: patientIds
+        id: patientIds,
       })) || [];
 
     if (allPatients.length > 0) {
@@ -376,24 +370,24 @@ export const getDoctorTransactions = async req => {
 
     return {
       transactions: {
-        ...transactionData
+        ...transactionData,
       },
       payment_products: {
-        ...paymentProductData
+        ...paymentProductData,
       },
       doctors: {
-        ...doctorData
+        ...doctorData,
       },
       patients: {
-        ...patientData
+        ...patientData,
       },
       users: {
-        ...userData
+        ...userData,
       },
       user_roles: {
-        ...userRoleData
+        ...userRoleData,
       },
-      transaction_ids: transactionIds
+      transaction_ids: transactionIds,
     };
   } catch (error) {
     Log.debug("getDoctorTransactions catch error", error);

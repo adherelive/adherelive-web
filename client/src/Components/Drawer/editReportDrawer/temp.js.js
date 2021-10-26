@@ -14,7 +14,7 @@ import {
   PlusOutlined,
   EyeTwoTone,
   DownloadOutlined,
-  LoadingOutlined
+  LoadingOutlined,
 } from "@ant-design/icons";
 
 import messages from "./message";
@@ -28,11 +28,11 @@ class editReportDrawer extends Component {
       uploading: false,
       new_documents: [],
       name: "",
-      uploaded_documents: []
+      uploaded_documents: [],
     };
   }
 
-  formatMessage = data => this.props.intl.formatMessage(data);
+  formatMessage = (data) => this.props.intl.formatMessage(data);
 
   // componentDidMount(){
   //     const {payload : {report_id},patient_id} = this.props;
@@ -47,7 +47,7 @@ class editReportDrawer extends Component {
     try {
       const {
         payload: { report_id },
-        patient_id
+        patient_id,
       } = this.props;
       const { getAllReports } = this.props;
       let uploaded_documents = [];
@@ -70,7 +70,7 @@ class editReportDrawer extends Component {
 
       this.setState({
         name,
-        uploaded_documents
+        uploaded_documents,
       });
     } catch (error) {
       console.log("error", error);
@@ -88,27 +88,27 @@ class editReportDrawer extends Component {
     return uploading ? <LoadingOutlined /> : <PlusOutlined />;
   };
 
-  setName = e => {
+  setName = (e) => {
     e.preventDefault();
     const { value } = e.target;
     this.setState({ name: value });
   };
 
-  handleDocumentViewOpen = src => () => {
+  handleDocumentViewOpen = (src) => () => {
     this.setState({
       viewModalVisible: true,
-      viewModalSrc: src
+      viewModalSrc: src,
     });
   };
 
   handleDocumentViewClose = () => {
     this.setState({
       viewModalVisible: false,
-      viewModalSrc: ""
+      viewModalSrc: "",
     });
   };
 
-  handleDelete = delete_src => e => {
+  handleDelete = (delete_src) => (e) => {
     e.preventDefault();
     const { new_documents } = this.state;
     let indexToDelete = -1;
@@ -220,7 +220,7 @@ class editReportDrawer extends Component {
     const fileReader = new FileReader();
     const fileUrl = URL.createObjectURL(file.originFileObj);
 
-    const existing = new_documents.filter(document => {
+    const existing = new_documents.filter((document) => {
       const { name } = document || {};
       return name === file.name;
     });
@@ -229,7 +229,7 @@ class editReportDrawer extends Component {
       newDocuments.push({
         name: file.name,
         src: fileUrl,
-        file
+        file,
       });
     }
 
@@ -241,7 +241,7 @@ class editReportDrawer extends Component {
       getUploadButton,
       formatMessage,
       getUploadedDocuments,
-      handleUploadChange
+      handleUploadChange,
     } = this;
 
     const { name } = this.state;
@@ -307,8 +307,8 @@ class editReportDrawer extends Component {
         status = false,
         payload: {
           message: respMessage = "",
-          data: { new_documents: response_documents = {} } = {}
-        } = {}
+          data: { new_documents: response_documents = {} } = {},
+        } = {},
       } = response;
 
       if (status) {
@@ -331,15 +331,13 @@ class editReportDrawer extends Component {
       const data = {
         name,
         patient_id,
-        new_documents
+        new_documents,
       };
 
       const response = await addReport(data);
 
-      const {
-        status = false,
-        payload: { message: respMessage = "" } = {}
-      } = response;
+      const { status = false, payload: { message: respMessage = "" } = {} } =
+        response;
 
       if (status) {
         this.setState({
@@ -349,7 +347,7 @@ class editReportDrawer extends Component {
           // TODO: Duplicate entry, commenting
           //uploading: false,
           new_documents: [],
-          name: ""
+          name: "",
         });
         close();
         message.success(respMessage);
@@ -363,7 +361,7 @@ class editReportDrawer extends Component {
     }
   }
 
-  handleSubmit = e => {
+  handleSubmit = (e) => {
     e.preventDefault();
     this.submitData();
   };
@@ -392,11 +390,11 @@ class editReportDrawer extends Component {
           viewModalSrc: "",
           uploading: false,
           new_documents: [],
-          name: ""
+          name: "",
         });
         close();
       },
-      onCancel() {}
+      onCancel() {},
     });
   };
 
@@ -413,7 +411,7 @@ class editReportDrawer extends Component {
         viewModalSrc: "",
         uploading: false,
         new_documents: [],
-        name: ""
+        name: "",
       });
 
       close();
@@ -430,7 +428,7 @@ class editReportDrawer extends Component {
       formatMessage,
       handleDocumentViewClose,
       renderAddReport,
-      handleSubmit
+      handleSubmit,
     } = this;
 
     const { viewModalVisible, viewModalSrc } = this.state;
@@ -441,7 +439,7 @@ class editReportDrawer extends Component {
 
     const disabledSubmit = !name || Object.keys(new_documents).length === 0;
     const submitButtonProps = {
-      disabled: disabledSubmit
+      disabled: disabledSubmit,
     };
 
     return (
@@ -453,7 +451,7 @@ class editReportDrawer extends Component {
           headerStyle={{
             position: "sticky",
             zIndex: "9999",
-            top: "0px"
+            top: "0px",
           }}
           visible={visible}
           onClose={onClose}
@@ -479,7 +477,7 @@ class editReportDrawer extends Component {
           footer={[
             <Button key="back" onClick={handleDocumentViewClose}>
               Close
-            </Button>
+            </Button>,
           ]}
         >
           <img

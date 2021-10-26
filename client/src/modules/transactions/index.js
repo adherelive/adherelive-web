@@ -6,7 +6,7 @@ function transactionReducer(state, data) {
   if (transactions) {
     return {
       ...state,
-      ...transactions
+      ...transactions,
     };
   } else {
     return state;

@@ -25,7 +25,7 @@ class ReportController extends Controller {
     try {
       const {
         body: { name, test_date, patient_id, documents = [] },
-        userDetails: { userData: { category }, userCategoryId } = {}
+        userDetails: { userData: { category }, userCategoryId } = {},
       } = req;
 
       // create reports
@@ -35,7 +35,7 @@ class ReportController extends Controller {
         patient_id,
         test_date,
         uploader_id: userCategoryId,
-        uploader_type: category
+        uploader_type: category,
       });
 
       const report = await ReportWrapper({ data: addReport });
@@ -47,7 +47,7 @@ class ReportController extends Controller {
           name,
           document: getFilePath(file),
           parent_type: DOCUMENT_PARENT_TYPE.REPORT,
-          parent_id: report.getId()
+          parent_id: report.getId(),
         });
         // const documentExists =
         //   (await uploadDocumentService.getDocumentByName({
@@ -65,7 +65,7 @@ class ReportController extends Controller {
         res,
         200,
         {
-          ...(await report.getReferenceInfo())
+          ...(await report.getReferenceInfo()),
         },
         "Report added successfully"
       );
@@ -91,11 +91,11 @@ class ReportController extends Controller {
       const { originalname } = file || {};
       const fileUrl = await ReportHelper.uploadReport({
         file,
-        id: patient_id
+        id: patient_id,
       });
       documents.push({
         name: originalname,
-        file: fileUrl
+        file: fileUrl,
       });
       // }
 
@@ -103,7 +103,7 @@ class ReportController extends Controller {
         res,
         200,
         {
-          documents
+          documents,
         },
         "Files uploaded successfully"
       );
@@ -118,7 +118,7 @@ class ReportController extends Controller {
     try {
       const {
         params: { id } = {},
-        body: { name, test_date, documents = [] } = {}
+        body: { name, test_date, documents = [] } = {},
       } = req;
       Log.info(`Report : id = ${id}`);
 
@@ -160,7 +160,7 @@ class ReportController extends Controller {
             name,
             document: getFilePath(file),
             parent_id: existingReport.getId(),
-            parent_type: DOCUMENT_PARENT_TYPE.REPORT
+            parent_type: DOCUMENT_PARENT_TYPE.REPORT,
           })) || null;
 
         if (!documentExists) {
@@ -168,7 +168,7 @@ class ReportController extends Controller {
             name,
             document: getFilePath(file),
             parent_id: existingReport.getId(),
-            parent_type: DOCUMENT_PARENT_TYPE.REPORT
+            parent_type: DOCUMENT_PARENT_TYPE.REPORT,
           });
         }
       }
@@ -179,7 +179,7 @@ class ReportController extends Controller {
         res,
         200,
         {
-          ...(await updatedReport.getReferenceInfo())
+          ...(await updatedReport.getReferenceInfo()),
         },
         "Report updated successfully"
       );
@@ -205,7 +205,7 @@ class ReportController extends Controller {
       }
 
       const response = await uploadDocumentService.deleteDocumentByData({
-        id: document_id
+        id: document_id,
       });
       Log.debug("response", response);
 

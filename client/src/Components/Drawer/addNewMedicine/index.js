@@ -17,7 +17,7 @@ class AddMedicine extends Component {
     this.state = {
       visible: true,
       disabledSubmit: true,
-      submitting: false
+      submitting: false,
     };
 
     this.FormWrapper = Form.create({ onFieldsChange: this.onFormFieldChanges })(
@@ -25,9 +25,9 @@ class AddMedicine extends Component {
     );
   }
 
-  onFormFieldChanges = props => {
+  onFormFieldChanges = (props) => {
     const {
-      form: { getFieldsError, isFieldsTouched }
+      form: { getFieldsError, isFieldsTouched },
     } = props;
     const isError = hasErrors(getFieldsError());
     const { disabledSubmit } = this.state;
@@ -36,7 +36,7 @@ class AddMedicine extends Component {
     }
   };
 
-  handleSubmit = e => {
+  handleSubmit = (e) => {
     e.preventDefault();
     //props
     //   state
@@ -44,8 +44,8 @@ class AddMedicine extends Component {
 
     const {
       props: {
-        form: { validateFields, resetFields }
-      }
+        form: { validateFields, resetFields },
+      },
     } = formRef;
 
     validateFields(async (err, values) => {
@@ -56,7 +56,7 @@ class AddMedicine extends Component {
           addNewMedicine,
           addAdminMedicine,
           setNewMedicineId,
-          auth: { authenticated_category } = {}
+          auth: { authenticated_category } = {},
         } = this.props;
 
         const addMedicine =
@@ -74,7 +74,7 @@ class AddMedicine extends Component {
         const {
           status,
           statusCode,
-          payload: { data = {}, message: respMsg = "" } = {}
+          payload: { data = {}, message: respMsg = "" } = {},
         } = response || {};
         if (status) {
           const { medicines = {} } = data || {};
@@ -94,21 +94,21 @@ class AddMedicine extends Component {
     });
   };
 
-  formatMessage = data => this.props.intl.formatMessage(data);
+  formatMessage = (data) => this.props.intl.formatMessage(data);
 
   onClose = () => {
     const { close } = this.props;
     const { formRef } = this;
     const {
       props: {
-        form: { resetFields }
-      }
+        form: { resetFields },
+      },
     } = formRef;
     resetFields();
     close();
   };
 
-  setFormRef = formRef => {
+  setFormRef = (formRef) => {
     this.formRef = formRef;
     if (formRef) {
       this.setState({ formRef: true });
@@ -119,16 +119,11 @@ class AddMedicine extends Component {
     const { visible } = this.props;
     const { disabledSubmit, submitting = false } = this.state;
 
-    const {
-      onClose,
-      formatMessage,
-      setFormRef,
-      handleSubmit,
-      FormWrapper
-    } = this;
+    const { onClose, formatMessage, setFormRef, handleSubmit, FormWrapper } =
+      this;
 
     const submitButtonProps = {
-      disabled: disabledSubmit
+      disabled: disabledSubmit,
     };
 
     return (
@@ -141,7 +136,7 @@ class AddMedicine extends Component {
           headerStyle={{
             position: "sticky",
             zIndex: "9999",
-            top: "0px"
+            top: "0px",
           }}
           maskClosable={false}
           destroyOnClose={true}

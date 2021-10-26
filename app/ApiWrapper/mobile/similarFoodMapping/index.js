@@ -13,8 +13,8 @@ class SimilarFoodMappingWrapper extends BaseSimilarFoodMapping {
       basic_info: {
         id,
         related_to_id,
-        secondary_id
-      }
+        secondary_id,
+      },
     };
   };
 }

@@ -28,7 +28,7 @@ class TestAgoraVideo extends Component {
     this.rtc = {
       client: null,
       localAudioTrack: null,
-      localVideoTrack: null
+      localVideoTrack: null,
     };
 
     this.state = {
@@ -40,7 +40,7 @@ class TestAgoraVideo extends Component {
       // TODO: Values repeated, but with different boolean. Commenting
       //isVideoOn: false,
       //isAudioOn: true,
-      roomId: null
+      roomId: null,
     };
 
     this.audioInterval = null;
@@ -179,7 +179,7 @@ class TestAgoraVideo extends Component {
       match: { params: { room_id } = {} } = {},
       doctors,
       patients,
-      auth: { authenticated_category } = {}
+      auth: { authenticated_category } = {},
     } = this.props;
 
     const patientUserId = getPatientFromRoomId(room_id);
@@ -193,14 +193,14 @@ class TestAgoraVideo extends Component {
       authenticated_category === USER_CATEGORY.DOCTOR ||
       authenticated_category === USER_CATEGORY.HSP
     ) {
-      Object.keys(doctors).forEach(id => {
+      Object.keys(doctors).forEach((id) => {
         const { basic_info: { user_id } = {} } = doctors[id] || {};
         if (`${user_id}` === doctorUserId) {
           selfData = doctors[id] || {};
         }
       });
 
-      Object.keys(patients).forEach(id => {
+      Object.keys(patients).forEach((id) => {
         const { basic_info: { user_id } = {} } = patients[id] || {};
         if (`${user_id}` === patientUserId) {
           remoteData = patients[id] || {};
@@ -217,11 +217,11 @@ class TestAgoraVideo extends Component {
     this.setState({ testing: true });
 
     AgoraRTC.getDevices()
-      .then(async devices => {
-        const audioDevices = devices.filter(function(device) {
+      .then(async (devices) => {
+        const audioDevices = devices.filter(function (device) {
           return device.kind === "audioinput";
         });
-        const videoDevices = devices.filter(function(device) {
+        const videoDevices = devices.filter(function (device) {
           return device.kind === "videoinput";
         });
 
@@ -230,8 +230,8 @@ class TestAgoraVideo extends Component {
         return await Promise.all([
           AgoraRTC.createCameraVideoTrack({ cameraId: selectedCameraId }),
           AgoraRTC.createMicrophoneAudioTrack({
-            microphoneId: selectedMicrophoneId
-          })
+            microphoneId: selectedMicrophoneId,
+          }),
         ]);
       })
       .then(([videoTrack, audioTrack]) => {
@@ -313,7 +313,7 @@ class TestAgoraVideo extends Component {
               strokeWidth={10}
               strokeColor={{
                 from: "#108ee9",
-                to: "#87d068"
+                to: "#87d068",
               }}
             />
           </div>
@@ -328,8 +328,8 @@ class TestAgoraVideo extends Component {
     const {
       remoteData: {
         basic_info: { full_name } = {},
-        details: { profile_pic } = {}
-      } = {}
+        details: { profile_pic } = {},
+      } = {},
     } = getVideoParticipants();
 
     return (

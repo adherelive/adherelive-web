@@ -28,8 +28,8 @@ class PaymentController extends Controller {
         userDetails: {
           userCategoryId,
           userRoleId,
-          userData: { category = "" } = {}
-        } = {}
+          userData: { category = "" } = {},
+        } = {},
       } = req;
 
       let doctorRoleId = userRoleId;
@@ -45,7 +45,7 @@ class PaymentController extends Controller {
         const doctor =
           (await doctorService.findOne({
             where: { id: doctor_id },
-            attributes: ["user_id"]
+            attributes: ["user_id"],
           })) || null;
         const { user_id: doctorUserId = null } = doctor || {};
         const userRole =
@@ -53,9 +53,9 @@ class PaymentController extends Controller {
             where: {
               user_identity: doctorUserId,
               linked_id: userCategoryId,
-              linked_with: USER_CATEGORY.PROVIDER
+              linked_with: USER_CATEGORY.PROVIDER,
             },
-            attributes: ["id"]
+            attributes: ["id"],
           })) || null;
 
         if (!userRole) {
@@ -74,15 +74,16 @@ class PaymentController extends Controller {
 
       if (id) {
         // update
-        const updatePaymentProductData = await paymentProductService.updateDoctorProduct(
-          {
-            ...rest
-          },
-          id
-        );
+        const updatePaymentProductData =
+          await paymentProductService.updateDoctorProduct(
+            {
+              ...rest,
+            },
+            id
+          );
 
         paymentProduct = await PaymentProductWrapper({
-          id
+          id,
         });
       } else {
         const paymentProductData = await paymentProductService.addDoctorProduct(
@@ -92,13 +93,13 @@ class PaymentController extends Controller {
             creator_type: category,
             for_user_role_id: doctorRoleId,
             for_user_type: doctor_id ? for_user_type : category,
-            product_user_type: "patient" // todo: change to constant in model
+            product_user_type: "patient", // todo: change to constant in model
           }
         );
 
         if (paymentProductData) {
           paymentProduct = await PaymentProductWrapper({
-            data: paymentProductData
+            data: paymentProductData,
           });
         }
       }
@@ -112,8 +113,8 @@ class PaymentController extends Controller {
           200,
           {
             payment_products: {
-              ...paymentProducts
-            }
+              ...paymentProducts,
+            },
           },
           "Consultation Product added successfully"
         );
@@ -139,11 +140,10 @@ class PaymentController extends Controller {
       const { id } = body || {};
 
       const paymentProductService = new PaymentProductService();
-      const deletedDoctorProduct = await paymentProductService.deleteDoctorProduct(
-        {
-          id: id
-        }
-      );
+      const deletedDoctorProduct =
+        await paymentProductService.deleteDoctorProduct({
+          id: id,
+        });
       return raiseSuccess(res, 200, {}, "doctor product record destroyed");
     } catch (error) {
       Log.debug("83901283091298 delete doctor product error", error);
@@ -158,9 +158,9 @@ class PaymentController extends Controller {
         userDetails: {
           userCategoryId,
           userRoleId,
-          userData: { category = "" } = {}
+          userData: { category = "" } = {},
         } = {},
-        query: { doctor_id = null } = {}
+        query: { doctor_id = null } = {},
       } = req;
 
       let doctorRoleId = userRoleId;
@@ -173,7 +173,7 @@ class PaymentController extends Controller {
         const doctor =
           (await doctorService.findOne({
             where: { id: doctor_id },
-            attributes: ["user_id"]
+            attributes: ["user_id"],
           })) || null;
         const { user_id: doctorUserId = null } = doctor || {};
         const userRole =
@@ -181,9 +181,9 @@ class PaymentController extends Controller {
             where: {
               user_identity: doctorUserId,
               linked_id: userCategoryId,
-              linked_with: USER_CATEGORY.PROVIDER
+              linked_with: USER_CATEGORY.PROVIDER,
             },
-            attributes: ["id"]
+            attributes: ["id"],
           })) || null;
 
         if (!userRole) {
@@ -202,7 +202,7 @@ class PaymentController extends Controller {
         (await paymentProductService.getAllCreatorTypeProducts({
           for_user_type: [USER_CATEGORY.DOCTOR, USER_CATEGORY.HSP],
           for_user_role_id: doctorRoleId,
-          product_user_type: "patient"
+          product_user_type: "patient",
         })) || [];
 
       let paymentProductData = [...doctorPaymentProductData];
@@ -212,11 +212,10 @@ class PaymentController extends Controller {
 
         for (let i = 0; i < paymentProductData.length; i++) {
           const paymentProduct = await PaymentProductWrapper({
-            data: paymentProductData[i]
+            data: paymentProductData[i],
           });
-          paymentProducts[
-            paymentProduct.getId()
-          ] = paymentProduct.getBasicInfo();
+          paymentProducts[paymentProduct.getId()] =
+            paymentProduct.getBasicInfo();
         }
 
         return raiseSuccess(
@@ -224,8 +223,8 @@ class PaymentController extends Controller {
           200,
           {
             payment_products: {
-              ...paymentProducts
-            }
+              ...paymentProducts,
+            },
           },
           "Default consultation products fetched successfully"
         );
@@ -247,20 +246,20 @@ class PaymentController extends Controller {
     const { raiseSuccess, raiseClientError, raiseServerError } = this;
     try {
       const paymentProductService = new PaymentProductService();
-      const paymentProductData = await paymentProductService.getAllCreatorTypeProducts(
-        { creator_type: USER_CATEGORY.ADMIN }
-      );
+      const paymentProductData =
+        await paymentProductService.getAllCreatorTypeProducts({
+          creator_type: USER_CATEGORY.ADMIN,
+        });
 
       if (paymentProductData.length > 0) {
         let paymentProducts = {};
 
         for (let i = 0; i < paymentProductData.length; i++) {
           const paymentProduct = await PaymentProductWrapper({
-            data: paymentProductData[i]
+            data: paymentProductData[i],
           });
-          paymentProducts[
-            paymentProduct.getId()
-          ] = paymentProduct.getBasicInfo();
+          paymentProducts[paymentProduct.getId()] =
+            paymentProduct.getBasicInfo();
         }
 
         return raiseSuccess(
@@ -268,8 +267,8 @@ class PaymentController extends Controller {
           200,
           {
             payment_products: {
-              ...paymentProducts
-            }
+              ...paymentProducts,
+            },
           },
           "Default consultation products fetched successfully"
         );

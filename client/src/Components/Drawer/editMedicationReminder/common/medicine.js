@@ -12,7 +12,7 @@ import {
   TagFilled,
   TagOutlined,
   StarOutlined,
-  StarFilled
+  StarFilled,
 } from "@ant-design/icons";
 
 const { Item: FormItem } = Form;
@@ -28,7 +28,7 @@ class Medicine extends Component {
       searching: false,
       defaultSet: false,
       medicine_id: null,
-      medicine_name: ""
+      medicine_name: "",
     };
   }
 
@@ -39,7 +39,7 @@ class Medicine extends Component {
     const {
       payload: { id: medication_id } = {},
       medicines = {},
-      medicationData = {}
+      medicationData = {},
     } = this.props;
 
     this.setState({ defaultHits });
@@ -58,12 +58,12 @@ class Medicine extends Component {
 
       this.setState({
         medicine_id: medIdInt,
-        medicine_name: medicine
+        medicine_name: medicine,
       });
     }
   }
 
-  formatMessage = data => this.props.intl.formatMessage(data);
+  formatMessage = (data) => this.props.intl.formatMessage(data);
 
   componentDidUpdate(prevProps, prevState) {
     const { visible: prev_visible = false } = prevProps;
@@ -77,7 +77,7 @@ class Medicine extends Component {
     const { newMedicineId } = this.props;
     const {
       form: { setFieldsValue, getFieldValue },
-      setFormulation
+      setFormulation,
     } = this.props;
     if (prev_newMedicineId !== newMedicineId) {
       const { medicines = {} } = this.props;
@@ -87,13 +87,13 @@ class Medicine extends Component {
       setFieldsValue({ [FIELD_NAME]: medicineId });
       this.setState({
         medicine_name: name,
-        medicine_id: medicineId
+        medicine_id: medicineId,
       });
       enableSubmit();
     }
   }
 
-  handleAddMedicineOpen = e => {
+  handleAddMedicineOpen = (e) => {
     e.preventDefault();
     // e.stopPropagation();
     const { openAddMedicineDrawer, setMedicineVal } = this.props;
@@ -107,18 +107,18 @@ class Medicine extends Component {
     const {
       payload: { id: medication_id } = {},
       medications = {},
-      medicines = {}
+      medicines = {},
     } = this.props;
 
     const { basic_info: { details: { medicine_id: medId = null } = {} } = {} } =
       medications[medication_id] || {};
     const {
-      basic_info: { name: default_name = "", id: default_id = null } = {}
+      basic_info: { name: default_name = "", id: default_id = null } = {},
     } = medicines[medId] || {};
 
     this.setState({
       medicine_id: medId,
-      medicine_name: default_name
+      medicine_name: default_name,
     });
   };
 
@@ -129,7 +129,7 @@ class Medicine extends Component {
       const {
         status,
         statusCode,
-        payload: { data: resp_data = {}, message: resp_msg = "" } = {}
+        payload: { data: resp_data = {}, message: resp_msg = "" } = {},
       } = response;
       if (!status) {
         message.error(resp_msg);
@@ -139,7 +139,7 @@ class Medicine extends Component {
     }
   };
 
-  handleSearch = async input => {
+  handleSearch = async (input) => {
     const hits = await algoliaSearchHelper(input);
     this.setState({ inputText: input });
     this.setState({ hits });
@@ -157,7 +157,7 @@ class Medicine extends Component {
               part.toLowerCase() === highlight.toLowerCase()
                 ? {
                     fontWeight: "bold",
-                    backgroundColor: "orange"
+                    backgroundColor: "orange",
                   }
                 : {}
             }
@@ -176,12 +176,15 @@ class Medicine extends Component {
       inputText = "",
       searching = false,
       medicine_name: med_name = "",
-      medicine_id: med_id = null
+      medicine_id: med_id = null,
     } = this.state;
 
     for (let each in hits) {
-      const { name = "", medicine_id = null, generic_name = "" } =
-        hits[each] || {};
+      const {
+        name = "",
+        medicine_id = null,
+        generic_name = "",
+      } = hits[each] || {};
       const text1 = this.getHighlightedText(name, inputText);
       const text2 = this.getHighlightedText(generic_name, inputText);
       if (isDefault ? medicine_id !== med_id : true) {
@@ -297,12 +300,12 @@ class Medicine extends Component {
       favourite_medicine_ids = [],
       favourites_data,
       setFavMedicineValue,
-      medicines = {}
+      medicines = {},
     } = this.props;
     const {
       searching = false,
       medicine_name: med_name = "",
-      medicine_id: med_id = null
+      medicine_id: med_id = null,
     } = this.state;
 
     const options = [];
@@ -315,7 +318,7 @@ class Medicine extends Component {
         const key = Object.keys(marked_favourites_data)[0] || null;
 
         const {
-          basic_info: { name: medicine_name = "", id: medicine_id = null } = {}
+          basic_info: { name: medicine_name = "", id: medicine_id = null } = {},
         } = marked_favourites_data[key];
         if (medicine_id != med_id) {
           options.push(
@@ -398,7 +401,7 @@ class Medicine extends Component {
       hits = {},
       inputText = "",
       searching = false,
-      defaultHits = {}
+      defaultHits = {},
     } = this.state;
     const { favourite_medicine_ids = [] } = this.props;
 
@@ -411,49 +414,49 @@ class Medicine extends Component {
       } else {
         return this.getSearchingResultOptions({
           hits: defaultHits,
-          isDefault: true
+          isDefault: true,
         });
       }
     }
   };
 
-  getParentNode = t => t.parentNode;
+  getParentNode = (t) => t.parentNode;
 
-  onDropdownVisibleChange = isOpen => {
+  onDropdownVisibleChange = (isOpen) => {
     this.setState({ searching: isOpen });
   };
 
-  onOptionSelect = value => {
+  onOptionSelect = (value) => {
     const { medicines = {}, enableSubmit } = this.props;
     const {
-      form: { setFieldsValue, getFieldValue }
+      form: { setFieldsValue, getFieldValue },
     } = this.props;
     const { basic_info: { name: med_name = "", id: temp_id = null } = {} } =
       medicines[value] || {};
     this.setState({
       medicine_id: value,
       inputText: "",
-      medicine_name: med_name
+      medicine_name: med_name,
     });
     setFieldsValue({ [FIELD_NAME]: value });
     enableSubmit();
   };
 
-  handleAddFavourites = id => async e => {
+  handleAddFavourites = (id) => async (e) => {
     try {
       e.preventDefault();
       e.stopPropagation();
       const { markFavourite } = this.props;
       const data = {
         type: "medicine",
-        id
+        id,
       };
 
       const response = await markFavourite(data);
       const {
         status,
         statusCode,
-        payload: { data: resp_data = {}, message: resp_msg = "" } = {}
+        payload: { data: resp_data = {}, message: resp_msg = "" } = {},
       } = response;
       if (status) {
         message.success(resp_msg);
@@ -465,21 +468,21 @@ class Medicine extends Component {
     }
   };
 
-  handleremoveFavourites = id => async e => {
+  handleremoveFavourites = (id) => async (e) => {
     try {
       e.preventDefault();
       e.stopPropagation();
       const { removeFavourite } = this.props;
       const data = {
         type: "medicine",
-        typeId: id
+        typeId: id,
       };
 
       const response = await removeFavourite(data);
       const {
         status,
         statusCode,
-        payload: { data: resp_data = {}, message: resp_msg = "" } = {}
+        payload: { data: resp_data = {}, message: resp_msg = "" } = {},
       } = response;
       if (status) {
         message.success(resp_msg);
@@ -497,14 +500,14 @@ class Medicine extends Component {
       form: { getFieldDecorator, getFieldError, isFieldTouched, getFieldValue },
       setFormulation,
       favourite_medicine_ids = [],
-      payload: { canViewDetails = false } = {}
+      payload: { canViewDetails = false } = {},
     } = this.props;
 
     // console.log("45238646283743284 =================>>>>>>>>",{props:this.props});
     return (
       <FormItem label={"Medicine"}>
         {getFieldDecorator(FIELD_NAME, {
-          initialValue: medicine_id ? medicine_id : ""
+          initialValue: medicine_id ? medicine_id : "",
         })(
           <Select
             onSearch={this.handleSearch}
@@ -532,5 +535,5 @@ const Field = injectIntl(Medicine);
 
 export default {
   field_name: FIELD_NAME,
-  render: props => <Field {...props} />
+  render: (props) => <Field {...props} />,
 };

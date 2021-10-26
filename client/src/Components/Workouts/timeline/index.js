@@ -21,23 +21,23 @@ const TIMELINE_STATUS = {
   [DATE]: {
     key: DATE,
     dot: "",
-    color: "blue"
+    color: "blue",
   },
   [COMPLETED]: {
     key: COMPLETED,
     dot: <CheckCircleOutlined />,
-    color: "green"
+    color: "green",
   },
   [EXPIRED]: {
     key: EXPIRED,
     dot: <ClockCircleOutlined />,
-    color: "red"
+    color: "red",
   },
   [CANCELLED]: {
     key: CANCELLED,
     dot: <StopOutlined style={{ color: "#FFCC00" }} />,
-    color: "yellow"
-  }
+    color: "yellow",
+  },
 };
 
 class WorkoutTimeline extends Component {
@@ -46,7 +46,7 @@ class WorkoutTimeline extends Component {
     this.state = {
       loading: true,
       workout_timeline: {},
-      workout_date_ids: []
+      workout_date_ids: [],
     };
   }
 
@@ -72,8 +72,8 @@ class WorkoutTimeline extends Component {
         status,
         payload: {
           data: { workout_timeline = {}, workout_date_ids = [] } = {},
-          message: responseMessage
-        } = {}
+          message: responseMessage,
+        } = {},
       } = response || {};
       if (status === true) {
         this.setState({ workout_timeline, workout_date_ids, loading: false });
@@ -93,7 +93,7 @@ class WorkoutTimeline extends Component {
   getEventsForDay = (events, date) => {
     const { intl: { formatMessage } = {}, workout_name = "" } = this.props;
 
-    return events.map(event => {
+    return events.map((event) => {
       const {
         id,
         status,
@@ -102,7 +102,7 @@ class WorkoutTimeline extends Component {
         updated_at = null,
         workout_responses = {},
         total = 0,
-        complete = 0
+        complete = 0,
       } = event || {};
       const { time = null } = workouts[workout_id] || {};
       const schedule_event_id = id;
@@ -226,7 +226,7 @@ class WorkoutTimeline extends Component {
     const { workout_timeline = {}, workout_date_ids = [] } = this.state;
     const { getEventsForDay } = this;
 
-    return workout_date_ids.map(date => {
+    return workout_date_ids.map((date) => {
       const eventsForDay = workout_timeline[date] || {};
       return (
         <Fragment key={`${date}`}>

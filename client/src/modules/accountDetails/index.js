@@ -4,7 +4,7 @@ import { getDoctorAccountDetailsUrl } from "../../Helper/urls/doctor";
 import {
   accountDetailsUrl,
   updateAccountDetailsUrl,
-  accountDetailsForCreatedByProviderUrl
+  accountDetailsForCreatedByProviderUrl,
 } from "../../Helper/urls/accounts";
 
 export const GET_DOCTOR_ACCOUNT_DETAILS_START =
@@ -32,15 +32,15 @@ export const UPDATE_ACCOUNT_DETAILS_COMPLETE =
   "UPDATE_ACCOUNT_DETAILS_COMPLETE";
 export const UPDATE_ACCOUNT_DETAILS_FAILED = "UPDATE_ACCOUNT_DETAILS_FAILED";
 
-export const getDoctorAccountDetails = id => {
+export const getDoctorAccountDetails = (id) => {
   let response = {};
-  return async dispatch => {
+  return async (dispatch) => {
     try {
       dispatch({ type: GET_DOCTOR_ACCOUNT_DETAILS_START });
 
       response = await doRequest({
         method: REQUEST_TYPE.GET,
-        url: getDoctorAccountDetailsUrl(id)
+        url: getDoctorAccountDetailsUrl(id),
       });
 
       const { status, payload: { data = {}, error = {} } = {} } =
@@ -49,7 +49,7 @@ export const getDoctorAccountDetails = id => {
         dispatch({
           type: GET_DOCTOR_ACCOUNT_DETAILS_COMPLETED,
           payload: data,
-          data
+          data,
         });
       } else {
         dispatch({ type: GET_DOCTOR_ACCOUNT_DETAILS_FAILED, payload: error });
@@ -64,18 +64,18 @@ export const getDoctorAccountDetails = id => {
 
 export const getAccountDetails = (provider_id = null) => {
   let response = {};
-  return async dispatch => {
+  return async (dispatch) => {
     try {
       dispatch({ type: GET_ACCOUNT_DETAILS });
       if (!provider_id) {
         response = await doRequest({
           method: REQUEST_TYPE.GET,
-          url: accountDetailsUrl()
+          url: accountDetailsUrl(),
         });
       } else {
         response = await doRequest({
           method: REQUEST_TYPE.GET,
-          url: accountDetailsForCreatedByProviderUrl(provider_id)
+          url: accountDetailsForCreatedByProviderUrl(provider_id),
         });
       }
 
@@ -84,12 +84,12 @@ export const getAccountDetails = (provider_id = null) => {
         dispatch({
           type: GET_ACCOUNT_DETAILS_COMPLETE,
           data: data,
-          payload: data
+          payload: data,
         });
       } else {
         dispatch({
           type: GET_ACCOUNT_DETAILS_FAILED,
-          error
+          error,
         });
       }
     } catch (error) {
@@ -99,15 +99,15 @@ export const getAccountDetails = (provider_id = null) => {
   };
 };
 
-export const addAccountDetails = payload => {
+export const addAccountDetails = (payload) => {
   let response = {};
-  return async dispatch => {
+  return async (dispatch) => {
     try {
       dispatch({ type: ADD_ACCOUNT_DETAILS });
       response = await doRequest({
         method: REQUEST_TYPE.POST,
         url: accountDetailsUrl(),
-        data: payload
+        data: payload,
       });
 
       const { status, payload: { data, error } = {} } = response || {};
@@ -115,12 +115,12 @@ export const addAccountDetails = payload => {
         dispatch({
           type: ADD_ACCOUNT_DETAILS_COMPLETE,
           data: data,
-          payload: data
+          payload: data,
         });
       } else {
         dispatch({
           type: ADD_ACCOUNT_DETAILS_FAILED,
-          error
+          error,
         });
       }
     } catch (error) {
@@ -130,14 +130,14 @@ export const addAccountDetails = payload => {
   };
 };
 
-export const deleteAccountDetails = id => {
+export const deleteAccountDetails = (id) => {
   let response = {};
-  return async dispatch => {
+  return async (dispatch) => {
     try {
       dispatch({ type: DELETE_ACCOUNT_DETAILS });
       response = await doRequest({
         method: REQUEST_TYPE.DELETE,
-        url: updateAccountDetailsUrl(id)
+        url: updateAccountDetailsUrl(id),
       });
 
       const { status, payload: { data, error } = {} } = response || {};
@@ -149,12 +149,12 @@ export const deleteAccountDetails = id => {
         dispatch({
           type: DELETE_ACCOUNT_DETAILS_COMPLETE,
           data: data,
-          payload: data
+          payload: data,
         });
       } else {
         dispatch({
           type: DELETE_ACCOUNT_DETAILS_FAILED,
-          error
+          error,
         });
       }
     } catch (error) {
@@ -166,13 +166,13 @@ export const deleteAccountDetails = id => {
 
 export const updateAccountDetails = (id, payload) => {
   let response = {};
-  return async dispatch => {
+  return async (dispatch) => {
     try {
       dispatch({ type: UPDATE_ACCOUNT_DETAILS });
       response = await doRequest({
         method: REQUEST_TYPE.POST,
         url: updateAccountDetailsUrl(id),
-        data: payload
+        data: payload,
       });
 
       const { status, payload: { data, error } = {} } = response || {};
@@ -180,12 +180,12 @@ export const updateAccountDetails = (id, payload) => {
         dispatch({
           type: UPDATE_ACCOUNT_DETAILS_COMPLETE,
           data: data,
-          payload: data
+          payload: data,
         });
       } else {
         dispatch({
           type: UPDATE_ACCOUNT_DETAILS_FAILED,
-          error
+          error,
         });
       }
     } catch (error) {
@@ -200,7 +200,7 @@ function accountDetailsReducer(state, data) {
   if (Object.keys(account_details).length > 0) {
     return {
       ...state,
-      ...account_details
+      ...account_details,
     };
   } else {
     return state;
@@ -212,7 +212,7 @@ function deleteAccountDetailsComplete(state, data) {
   if (id) {
     const { [id.toString()]: detail, ...rest } = state;
     return {
-      ...rest
+      ...rest,
     };
   } else {
     return state;

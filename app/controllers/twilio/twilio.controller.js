@@ -35,7 +35,7 @@ class TwilioController extends Controller {
     const { raiseSuccess, raiseServerError } = this;
     try {
       const {
-        userDetails: { userRoleId }
+        userDetails: { userRoleId },
       } = req;
       const userId = userRoleId ? userRoleId : null;
       const identity = userId ? userId : faker.name.findName();
@@ -59,11 +59,10 @@ class TwilioController extends Controller {
     try {
       const { roomId } = req.params;
 
-      const connectedParticipantsList = await twilioService.getRoomConnectedParticipants(
-        roomId
-      );
+      const connectedParticipantsList =
+        await twilioService.getRoomConnectedParticipants(roomId);
       let connectedParticipants = {};
-      connectedParticipantsList.forEach(participant => {
+      connectedParticipantsList.forEach((participant) => {
         const { status, identity } = participant;
         connectedParticipants[identity] = status;
       });

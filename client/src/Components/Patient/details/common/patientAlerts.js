@@ -11,7 +11,7 @@ class PatientAlerts extends Component {
     this.state = {
       loading: true,
       areEvents: true,
-      last_visit: []
+      last_visit: [],
     };
   }
 
@@ -123,7 +123,7 @@ class PatientAlerts extends Component {
     const { intl: { formatMessage } = {} } = this.props;
     const {
       status,
-      details: { vital_templates: { basic_info: { name } = {} } = {} } = {}
+      details: { vital_templates: { basic_info: { name } = {} } = {} } = {},
     } = data || {};
 
     return (
@@ -203,13 +203,8 @@ class PatientAlerts extends Component {
   };
 
   getScheduleEvent = ({ data, time }) => {
-    const {
-      getMedication,
-      getVitals,
-      getAppointment,
-      getDiets,
-      getWorkouts
-    } = this;
+    const { getMedication, getVitals, getAppointment, getDiets, getWorkouts } =
+      this;
     const { event_type } = data || {};
 
     switch (event_type) {
@@ -231,7 +226,7 @@ class PatientAlerts extends Component {
     const { last_visit } = this.state;
     console.log("7263423847628346872347238", { last_visit });
 
-    const events = last_visit.map(details => {
+    const events = last_visit.map((details) => {
       const { event_type, id, updatedAt } = details || {};
 
       switch (event_type) {
@@ -240,7 +235,7 @@ class PatientAlerts extends Component {
         default:
           return this.getScheduleEvent({
             data: schedule_events[id],
-            time: updatedAt
+            time: updatedAt,
           });
       }
     });

@@ -11,28 +11,28 @@ const { Item: FormItem } = Form;
 class Formulation extends Component {
   componentDidMount() {
     const {
-      form: { validateFields }
+      form: { validateFields },
     } = this.props;
     validateFields();
   }
 
   componentWillUnmount() {
     const {
-      form: { validateFields }
+      form: { validateFields },
     } = this.props;
     validateFields();
   }
 
-  getParentNode = t => t.parentNode;
+  getParentNode = (t) => t.parentNode;
 
-  formatMessage = data => this.props.intl.formatMessage(data);
+  formatMessage = (data) => this.props.intl.formatMessage(data);
 
   render() {
     const {
       form,
       medicationData = {},
       payload: { id: medication_id, canViewDetails = false } = {},
-      medications
+      medications,
     } = this.props;
     const { getFieldDecorator, getFieldError, isFieldTouched } = form;
     const error = isFieldTouched(FIELD_NAME) && getFieldError(FIELD_NAME);
@@ -54,7 +54,7 @@ class Formulation extends Component {
 
         <FormItem validateStatus={error ? "error" : ""} help={error || ""}>
           {getFieldDecorator(FIELD_NAME, {
-            initialValue: description
+            initialValue: description,
           })(
             <TextArea
               autoFocus
@@ -75,5 +75,5 @@ const Field = injectIntl(Formulation);
 
 export default {
   field_name: FIELD_NAME,
-  render: props => <Field {...props} />
+  render: (props) => <Field {...props} />,
 };

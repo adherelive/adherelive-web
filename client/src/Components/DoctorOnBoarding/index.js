@@ -13,7 +13,7 @@ import {
   Modal,
   TimePicker,
   Icon,
-  message
+  message,
 } from "antd";
 import SideMenu from "./sidebar";
 import { REQUEST_TYPE } from "../../constant";
@@ -66,7 +66,7 @@ class Register extends Component {
       clinicsKeys: [],
       docs: [],
       fileList: [],
-      step: 0
+      step: 0,
     };
   }
 
@@ -94,7 +94,7 @@ class Register extends Component {
     reader.readAsDataURL(img);
   };
 
-  beforeUpload = file => {
+  beforeUpload = (file) => {
     const isJpgOrPng = file.type === "image/jpeg" || file.type === "image/png";
     if (!isJpgOrPng) {
       message.error("You can only upload JPG/PNG file!");
@@ -126,7 +126,7 @@ class Register extends Component {
     this.setState({ clinics: newClinics, clinicsKeys: newclinicsKeys });
   };
 
-  deleteClinic = key => () => {
+  deleteClinic = (key) => () => {
     let { clinics = {}, clinicsKeys = [] } = this.state;
     let newClinics = clinics;
     let newclinicsKeys = clinicsKeys;
@@ -137,7 +137,7 @@ class Register extends Component {
 
   handleCancel = () => this.setState({ previewVisible: false });
 
-  deleteEducation = key => () => {
+  deleteEducation = (key) => () => {
     let { education = {}, educationKeys = [] } = this.state;
     let newEducation = education;
     let newEducationKeys = educationKeys;
@@ -146,63 +146,63 @@ class Register extends Component {
     this.setState({ education: newEducation, educationKeys: newEducationKeys });
   };
 
-  handleChange = info => {
+  handleChange = (info) => {
     // if (info.file.status === 'uploading') {
     //   this.setState({ loading: true });
     //   return;
     // }
     // if (info.file.status === 'done') {
     // Get this url from response in real world.
-    this.getBase64(info.file.originFileObj, imageUrl =>
+    this.getBase64(info.file.originFileObj, (imageUrl) =>
       this.setState({
         imageUrl,
-        loading: false
+        loading: false,
       })
     );
   };
   //   };
 
-  setName = e => {
+  setName = (e) => {
     this.setState({ name: e.target.value });
   };
 
-  setSpeciality = e => {
+  setSpeciality = (e) => {
     this.setState({ speciality: e.target.value });
   };
 
-  setRegNo = e => {
+  setRegNo = (e) => {
     this.setState({ registrationNumber: e.target.value });
   };
 
-  setRegCouncil = e => {
+  setRegCouncil = (e) => {
     this.setState({ registrationCouncil: e.target.value });
   };
 
-  setRegYear = e => {
+  setRegYear = (e) => {
     this.setState({ registrationYear: e.target.value });
   };
 
-  setNumber = e => {
+  setNumber = (e) => {
     this.setState({ phone_no: e.target.value });
   };
 
-  setCategory = value => {
+  setCategory = (value) => {
     this.setState({ category: value });
   };
 
-  setGender = value => {
+  setGender = (value) => {
     this.setState({ gender: value });
   };
 
-  setCity = e => {
+  setCity = (e) => {
     this.setState({ city: e.target.value });
   };
 
-  setEmail = e => {
+  setEmail = (e) => {
     this.setState({ email: e.target.value });
   };
 
-  setPrefix = value => {
+  setPrefix = (value) => {
     this.setState({ prefix: value });
   };
 
@@ -239,14 +239,14 @@ class Register extends Component {
     this.setState({ clinics: newClinics });
   };
 
-  setClinicStartTime = key => (time, timeString) => {
+  setClinicStartTime = (key) => (time, timeString) => {
     let { clinics = {} } = this.state;
     let newClinics = clinics;
     newClinics[key].startTime = time;
     this.setState({ clinics: newClinics });
   };
 
-  setClinicEndTime = key => (time, timeString) => {
+  setClinicEndTime = (key) => (time, timeString) => {
     let { clinics = {} } = this.state;
     let newClinics = clinics;
     newClinics[key].endTime = time;
@@ -267,7 +267,7 @@ class Register extends Component {
   getCategoryOptions = () => {
     const genderes = [
       { name: "Doctor", value: "dactor" },
-      { name: "Patient", value: "patient" }
+      { name: "Patient", value: "patient" },
     ];
     let options = [];
 
@@ -286,7 +286,7 @@ class Register extends Component {
     const genderes = [
       { name: "Female", value: "f" },
       { name: "Male", value: "m" },
-      { name: "Other", value: "o" }
+      { name: "Other", value: "o" },
     ];
     let options = [];
 
@@ -319,44 +319,40 @@ class Register extends Component {
         this.setState({
           fileList: [],
           docs: [],
-          education: newEducation
+          education: newEducation,
         });
       }
     });
   };
 
-  customRequest = key => ({
-    file,
-    filename,
-    onError,
-    onProgress,
-    onSuccess
-  }) => {
-    const { onUploadComplete } = this;
+  customRequest =
+    (key) =>
+    ({ file, filename, onError, onProgress, onSuccess }) => {
+      const { onUploadComplete } = this;
 
-    const { docs, fileList, education } = this.state;
-    // setTimeout(() => {
-    //     education[key].photo.forEach((item,index)=>{
-    //         item.status='done'
-    //     })
-    // },100);
+      const { docs, fileList, education } = this.state;
+      // setTimeout(() => {
+      //     education[key].photo.forEach((item,index)=>{
+      //         item.status='done'
+      //     })
+      // },100);
 
-    let data = new FormData();
-    data.append("files", file, file.name);
-    doRequest({
-      method: REQUEST_TYPE.POST,
-      data: data,
-      url: getUploadURL()
-    }).then(response => {
-      onUploadComplete(response.payload.data, key);
-    });
+      let data = new FormData();
+      data.append("files", file, file.name);
+      doRequest({
+        method: REQUEST_TYPE.POST,
+        data: data,
+        url: getUploadURL(),
+      }).then((response) => {
+        onUploadComplete(response.payload.data, key);
+      });
 
-    return {
-      abort() {}
+      return {
+        abort() {},
+      };
     };
-  };
 
-  handleChangeList = key => info => {
+  handleChangeList = (key) => (info) => {
     const fileList = info.fileList;
     let { education = {} } = this.state;
     let newEducation = education;
@@ -376,7 +372,7 @@ class Register extends Component {
     this.setState({ education: newEducation });
   };
 
-  handleRemoveList = key => file => {
+  handleRemoveList = (key) => (file) => {
     let { education = {} } = this.state;
     let newEducation = education;
     let deleteIndex = -1;
@@ -402,16 +398,16 @@ class Register extends Component {
     this.setState({ education: newEducation });
   };
 
-  getBase64File = file => {
+  getBase64File = (file) => {
     return new Promise((resolve, reject) => {
       const reader = new FileReader();
       reader.readAsDataURL(file);
       reader.onload = () => resolve(reader.result);
-      reader.onerror = error => reject(error);
+      reader.onerror = (error) => reject(error);
     });
   };
 
-  handlePreview = async file => {
+  handlePreview = async (file) => {
     if (!file.url && !file.preview) {
       file.preview = await this.getBase64File(file.originFileObj);
     }
@@ -420,7 +416,7 @@ class Register extends Component {
       previewImage: file.url || file.preview,
       previewVisible: true,
       previewTitle:
-        file.name || file.url.substring(file.url.lastIndexOf("/") + 1)
+        file.name || file.url.substring(file.url.lastIndexOf("/") + 1),
     });
   };
 
@@ -431,7 +427,7 @@ class Register extends Component {
       fileList = [],
       previewImage = "",
       previewTitle = "",
-      previewVisible = false
+      previewVisible = false,
     } = this.state;
 
     const uploadButton = (
@@ -441,7 +437,7 @@ class Register extends Component {
     );
     return (
       <div className="flex direction-column">
-        {educationKeys.map(key => {
+        {educationKeys.map((key) => {
           let { photo = [] } = education[key];
           return (
             <div key={key}>
@@ -458,19 +454,19 @@ class Register extends Component {
               <Input
                 placeholder="Degree"
                 className={"form-inputs"}
-                onChange={e => this.setDegree(key, e)}
+                onChange={(e) => this.setDegree(key, e)}
               />
               <div className="form-headings">College</div>
               <Input
                 placeholder="College"
                 className={"form-inputs"}
-                onChange={e => this.setCollege(key, e)}
+                onChange={(e) => this.setCollege(key, e)}
               />
               <div className="form-headings">Year</div>
               <Input
                 placeholder="Year"
                 className={"form-inputs"}
-                onChange={e => this.setYear(key, e)}
+                onChange={(e) => this.setYear(key, e)}
               />
               <div className="form-headings">Photo</div>
               <div className="qualification-photo-uploads">
@@ -513,7 +509,7 @@ class Register extends Component {
 
     return (
       <div className="flex direction-column">
-        {clinicsKeys.map(key => {
+        {clinicsKeys.map((key) => {
           return (
             <div key={key}>
               {clinicsKeys.indexOf(key) > 0 ? (
@@ -529,13 +525,13 @@ class Register extends Component {
               <Input
                 placeholder="Clinic name"
                 className={"form-inputs"}
-                onChange={e => this.setClinicName(key, e)}
+                onChange={(e) => this.setClinicName(key, e)}
               />
               <div className="form-headings">Location</div>
               <Input
                 placeholder="Location"
                 className={"form-inputs"}
-                onChange={e => this.setClinicLocation(key, e)}
+                onChange={(e) => this.setClinicLocation(key, e)}
               />
               <div className="flex justify-space-between mb10">
                 <div className="flex direction-column">
@@ -554,11 +550,11 @@ class Register extends Component {
     );
   };
 
-  uploadDp = file => {
+  uploadDp = (file) => {
     const { imageUrl } = this.state;
 
     return {
-      abort() {}
+      abort() {},
     };
   };
 

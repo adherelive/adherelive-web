@@ -12,50 +12,50 @@ module.exports = {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
-        type: Sequelize.INTEGER
+        type: Sequelize.INTEGER,
       },
       portion_id: {
         type: Sequelize.INTEGER,
         allowNull: false,
         references: {
           model: {
-            tableName: portionTableName
+            tableName: portionTableName,
           },
-          key: "id"
-        }
+          key: "id",
+        },
       },
       food_item_detail_id: {
         type: Sequelize.INTEGER,
         allowNull: false,
         references: {
           model: {
-            tableName: foodItemDetailsTableName
+            tableName: foodItemDetailsTableName,
           },
-          key: "id"
-        }
+          key: "id",
+        },
       },
       serving: {
         type: Sequelize.FLOAT(11, 2),
-        allowNull: false
+        allowNull: false,
       },
       details: {
-        type: Sequelize.JSON
+        type: Sequelize.JSON,
       },
       created_at: {
         allowNull: false,
-        type: Sequelize.DATE
+        type: Sequelize.DATE,
       },
       updated_at: {
         allowNull: false,
-        type: Sequelize.DATE
+        type: Sequelize.DATE,
       },
       deleted_at: {
-        type: Sequelize.DATE
-      }
+        type: Sequelize.DATE,
+      },
     });
   },
 
   down: (queryInterface, Sequelize) => {
     return queryInterface.dropTable(TABLE_NAME);
-  }
+  },
 };

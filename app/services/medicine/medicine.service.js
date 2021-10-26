@@ -5,7 +5,7 @@ import { TABLE_NAME } from "../../models/medicines";
 class MedicineService {
   constructor() {}
 
-  add = async data => {
+  add = async (data) => {
     try {
       const medicine = await Database.getModel(TABLE_NAME).create(data);
       return medicine;
@@ -14,14 +14,14 @@ class MedicineService {
     }
   };
 
-  search = async data => {
+  search = async (data) => {
     try {
       const medicine = await Database.getModel(TABLE_NAME).findAll({
         where: {
           name: {
-            [Op.like]: `${data}%`
-          }
-        }
+            [Op.like]: `${data}%`,
+          },
+        },
       });
       return medicine;
     } catch (error) {
@@ -46,14 +46,14 @@ class MedicineService {
 
           [Op.or]: {
             name: {
-              [Op.like]: `%${data}%`
+              [Op.like]: `%${data}%`,
             },
             creator_id: {
-              [Op.in]: doctorIds
-            }
-          }
+              [Op.in]: doctorIds,
+            },
+          },
         },
-        order: [["updated_at", "DESC"]]
+        order: [["updated_at", "DESC"]],
       });
 
       console.log(
@@ -64,7 +64,7 @@ class MedicineService {
           limit,
           public_medicine,
           doctorIds,
-          medicine
+          medicine,
         }
       );
       return medicine;
@@ -84,24 +84,24 @@ class MedicineService {
               {
                 [Op.or]: {
                   name: {
-                    [Op.like]: `%${data}%`
+                    [Op.like]: `%${data}%`,
                   },
                   creator_id: {
-                    [Op.in]: doctorIds
-                  }
-                }
-              }
-            ]
-          }
+                    [Op.in]: doctorIds,
+                  },
+                },
+              },
+            ],
+          },
         });
       } else {
         count = await Database.getModel(TABLE_NAME).count({
           where: {
             name: {
-              [Op.like]: `%${data}%`
+              [Op.like]: `%${data}%`,
             },
-            public_medicine
-          }
+            public_medicine,
+          },
         });
       }
 
@@ -111,12 +111,12 @@ class MedicineService {
     }
   };
 
-  getMedicineById = async id => {
+  getMedicineById = async (id) => {
     try {
       const medicine = await Database.getModel(TABLE_NAME).findOne({
         where: {
-          id
-        }
+          id,
+        },
       });
       return medicine;
     } catch (error) {
@@ -124,10 +124,10 @@ class MedicineService {
     }
   };
 
-  getMedicineByData = async data => {
+  getMedicineByData = async (data) => {
     try {
       const medicine = await Database.getModel(TABLE_NAME).findAll({
-        where: data
+        where: data,
       });
       return medicine;
     } catch (error) {
@@ -138,7 +138,7 @@ class MedicineService {
   getAllMedicines = async () => {
     try {
       const medicine = await Database.getModel(TABLE_NAME).findAll({
-        raw: true
+        raw: true,
       });
       return medicine;
     } catch (error) {
@@ -150,8 +150,8 @@ class MedicineService {
     try {
       const medicine = await Database.getModel(TABLE_NAME).update(data, {
         where: {
-          id
-        }
+          id,
+        },
       });
       return medicine;
     } catch (err) {
@@ -159,12 +159,12 @@ class MedicineService {
     }
   };
 
-  deleteMedicine = async id => {
+  deleteMedicine = async (id) => {
     try {
       const medicine = await Database.getModel(TABLE_NAME).destroy({
         where: {
-          id
-        }
+          id,
+        },
       });
       return medicine;
     } catch (err) {

@@ -12,8 +12,8 @@ class SeverityWrapper extends BaseSeverity {
     return {
       basic_info: {
         id,
-        name
-      }
+        name,
+      },
     };
   };
 }

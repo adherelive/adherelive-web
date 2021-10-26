@@ -1,7 +1,7 @@
 // TODO: Check why this is included, as the "surveySDK" does not exist
 // const { SURVEY_TEMPLATE } = require("../surveySdk");
 
-export const preparePatientSurveyMailData = async data => {
+export const preparePatientSurveyMailData = async (data) => {
   const { careCoachName, templateId, surveyId, userName } = data;
   const preparedData = {};
   const surveyTemplateDetail = await SURVEY_TEMPLATE({ _id: templateId }).get();
@@ -9,7 +9,7 @@ export const preparePatientSurveyMailData = async data => {
     title = "",
     questions = [],
     description = "",
-    time_to_complete = ""
+    time_to_complete = "",
   } = surveyTemplateDetail[0];
   const totalQuestion = questions.length;
   preparedData.UserName = userName;

@@ -12,14 +12,14 @@ class CollegeService {
     }
   };
 
-  search = async data => {
+  search = async (data) => {
     try {
       const college = await Database.getModel(TABLE_NAME).findAll({
         where: {
           name: {
-            [Op.like]: `%${data}%`
-          }
-        }
+            [Op.like]: `%${data}%`,
+          },
+        },
       });
       return college;
     } catch (error) {
@@ -27,10 +27,10 @@ class CollegeService {
     }
   };
 
-  getByData = async data => {
+  getByData = async (data) => {
     try {
       const college = await Database.getModel(TABLE_NAME).findOne({
-        where: data
+        where: data,
       });
       return college;
     } catch (error) {
@@ -38,10 +38,10 @@ class CollegeService {
     }
   };
 
-  getCollegeByData = async data => {
+  getCollegeByData = async (data) => {
     try {
       const college = await Database.getModel(TABLE_NAME).findAll({
-        where: data
+        where: data,
       });
       return college;
     } catch (error) {
@@ -49,7 +49,7 @@ class CollegeService {
     }
   };
 
-  create = async data => {
+  create = async (data) => {
     try {
       const college = await Database.getModel(TABLE_NAME).create(data);
       return college;

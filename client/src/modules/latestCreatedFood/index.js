@@ -3,17 +3,17 @@ import { ADD_FOOD_ITEM_COMPLETED } from "../foodItems";
 const CLEAR_LATEST_CREATED_FOOD_ITEM = "CLEAR_LATEST_CREATED_FOOD_ITEM";
 
 export const clearLatestCreatedFoodItem = () => {
-  return async dispatch => {
+  return async (dispatch) => {
     try {
       const data = {
         food_items: {},
         food_item_details: {},
-        created: false
+        created: false,
       };
 
       dispatch({
         type: CLEAR_LATEST_CREATED_FOOD_ITEM,
-        data
+        data,
       });
     } catch (error) {
       console.log("CLEAR_LATEST_CREATED_FOOD_ITEM ERROR --> ", error);
@@ -28,7 +28,7 @@ function latestFoodItemCreatedReducer(state, data) {
     return {
       food_items: { ...food_items },
       food_item_details: { ...food_item_details },
-      created: true
+      created: true,
     };
   } else {
     return state;
@@ -39,7 +39,7 @@ function clearDataReducer(state, data) {
   return {
     food_items: {},
     food_item_details: {},
-    created: false
+    created: false,
   };
 }
 

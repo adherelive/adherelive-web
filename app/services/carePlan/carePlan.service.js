@@ -29,7 +29,7 @@ class CarePlanService {
     }
   }
 
-  getCarePlanByData = async data => {
+  getCarePlanByData = async (data) => {
     try {
       const { user_role_id = null, ...rest } = data || {};
 
@@ -37,10 +37,11 @@ class CarePlanService {
       if (user_role_id) {
         secondaryDoctorQuery.push(
           {
-            "$careplan_secondary_doctor_mappings.secondary_doctor_role_id$": user_role_id
+            "$careplan_secondary_doctor_mappings.secondary_doctor_role_id$":
+              user_role_id,
           },
           {
-            user_role_id
+            user_role_id,
           }
         );
       }
@@ -49,10 +50,10 @@ class CarePlanService {
         where: {
           [Op.or]: [
             {
-              ...rest
+              ...rest,
             },
-            ...secondaryDoctorQuery
-          ]
+            ...secondaryDoctorQuery,
+          ],
         },
         include: [
           Database.getModel(patientTableName),
@@ -65,16 +66,16 @@ class CarePlanService {
               model: Database.getModel(medicationTableName),
               include: {
                 model: Database.getModel(medicineTableName),
-                required: true
-              }
+                required: true,
+              },
               // required: true
-            }
+            },
           },
           {
             model: Database.getModel(careplanSecondaryDoctorMappingsTableName),
-            required: false
-          }
-        ]
+            required: false,
+          },
+        ],
       });
       return carePlan;
     } catch (error) {
@@ -82,7 +83,7 @@ class CarePlanService {
     }
   };
 
-  getCarePlanById = async id => {
+  getCarePlanById = async (id) => {
     try {
       const carePlan = await Database.getModel(TABLE_NAME).findOne({
         where: { id },
@@ -97,16 +98,16 @@ class CarePlanService {
               model: Database.getModel(medicationTableName),
               include: {
                 model: Database.getModel(medicineTableName),
-                required: true
-              }
+                required: true,
+              },
               // required: true
-            }
+            },
           },
           {
             model: Database.getModel(careplanSecondaryDoctorMappingsTableName),
-            required: false
-          }
-        ]
+            required: false,
+          },
+        ],
       });
       return carePlan;
     } catch (error) {
@@ -129,17 +130,17 @@ class CarePlanService {
               model: Database.getModel(medicationTableName),
               include: {
                 model: Database.getModel(medicineTableName),
-                required: true
-              }
+                required: true,
+              },
               // required: true
-            }
+            },
           },
           {
             model: Database.getModel(careplanSecondaryDoctorMappingsTableName),
-            required: false
-          }
+            required: false,
+          },
         ],
-        order
+        order,
       });
       return carePlan;
     } catch (error) {
@@ -147,7 +148,7 @@ class CarePlanService {
     }
   };
 
-  getMultipleCarePlanByData = async data => {
+  getMultipleCarePlanByData = async (data) => {
     try {
       const { user_role_id = null, ...rest } = data || {};
 
@@ -155,10 +156,11 @@ class CarePlanService {
       if (user_role_id) {
         secondaryDoctorQuery.push(
           {
-            "$careplan_secondary_doctor_mappings.secondary_doctor_role_id$": user_role_id
+            "$careplan_secondary_doctor_mappings.secondary_doctor_role_id$":
+              user_role_id,
           },
           {
-            user_role_id
+            user_role_id,
           }
         );
       }
@@ -167,10 +169,10 @@ class CarePlanService {
         where: {
           [Op.or]: [
             {
-              ...rest
+              ...rest,
             },
-            ...secondaryDoctorQuery
-          ]
+            ...secondaryDoctorQuery,
+          ],
         },
         include: [
           Database.getModel(patientTableName),
@@ -183,22 +185,22 @@ class CarePlanService {
               model: Database.getModel(medicationTableName),
               include: {
                 model: Database.getModel(medicineTableName),
-                required: true
-              }
+                required: true,
+              },
               // required: true
-            }
+            },
           },
           {
             model: Database.getModel(careplanSecondaryDoctorMappingsTableName),
-            required: false
-          }
+            required: false,
+          },
           // {
           //   model: Database.getModel(carePlanVitalTableName),
           //   raw: true,
           //   attributes: ["vital_id"]
           // }
         ],
-        order: [["created_at", "DESC"]]
+        order: [["created_at", "DESC"]],
       });
       return carePlan;
     } catch (error) {
@@ -211,9 +213,9 @@ class CarePlanService {
     try {
       const carePlan = await Database.getModel(TABLE_NAME).update(data, {
         where: {
-          id
+          id,
         },
-        transaction
+        transaction,
       });
       await transaction.commit();
       return carePlan;
@@ -223,7 +225,7 @@ class CarePlanService {
     }
   };
 
-  addCarePlan = async data => {
+  addCarePlan = async (data) => {
     try {
       const carePlan = await Database.getModel(TABLE_NAME).create(data);
       return carePlan;
@@ -232,11 +234,11 @@ class CarePlanService {
     }
   };
 
-  getAllPatients = async data => {
+  getAllPatients = async (data) => {
     try {
       const carePlan = await Database.getModel(TABLE_NAME).findAll({
         where: data,
-        attributes: ["patient_id"]
+        attributes: ["patient_id"],
       });
       return carePlan;
     } catch (error) {
@@ -244,11 +246,11 @@ class CarePlanService {
     }
   };
 
-  getAllDoctors = async data => {
+  getAllDoctors = async (data) => {
     try {
       const carePlan = await Database.getModel(TABLE_NAME).findAll({
         where: data,
-        attributes: ["doctor_id"]
+        attributes: ["doctor_id"],
       });
       return carePlan;
     } catch (error) {
@@ -265,17 +267,17 @@ class CarePlanService {
         where: {
           [Op.or]: [
             {
-              user_role_id: userRoleId
+              user_role_id: userRoleId,
             },
             {
               id: {
-                [Op.in]: careplanIdsAsSecondaryDoctor
-              }
-            }
-          ]
+                [Op.in]: careplanIdsAsSecondaryDoctor,
+              },
+            },
+          ],
         },
         distinct: true,
-        col: "patient_id"
+        col: "patient_id",
       });
       return carePlan;
     } catch (error) {
@@ -294,17 +296,17 @@ class CarePlanService {
           patient_id: watchlistPatientIds,
           [Op.or]: [
             {
-              user_role_id: userRoleId
+              user_role_id: userRoleId,
             },
             {
               id: {
-                [Op.in]: careplanIdsAsSecondaryDoctor
-              }
-            }
-          ]
+                [Op.in]: careplanIdsAsSecondaryDoctor,
+              },
+            },
+          ],
         },
         distinct: true,
-        col: "patient_id"
+        col: "patient_id",
       });
       return carePlan;
     } catch (error) {
@@ -312,7 +314,7 @@ class CarePlanService {
     }
   };
 
-  getPaginatedDataOfPatients = async data => {
+  getPaginatedDataOfPatients = async (data) => {
     const {
       offset,
       limit,
@@ -323,7 +325,7 @@ class CarePlanService {
       createdAtOrder,
       nameOrder,
       userRoleId,
-      secondary_careplan_ids = null
+      secondary_careplan_ids = null,
     } = data;
     const sortBy = sortByName
       ? `t3.first_name ${nameOrder ? "desc" : "asc"}`
@@ -379,7 +381,7 @@ class CarePlanService {
     }
   };
 
-  searchDiagnosisType = async searchDisagnosisType => {
+  searchDiagnosisType = async (searchDisagnosisType) => {
     try {
       const intType = parseInt(searchDisagnosisType);
       const query = `SELECT id AS careplan_id , JSON_UNQUOTE(JSON_EXTRACT(details,'$.diagnosis.type')) AS  diagnosis 
@@ -394,7 +396,7 @@ class CarePlanService {
     }
   };
 
-  searchDiagnosisDescription = async seachDiagnosisText => {
+  searchDiagnosisDescription = async (seachDiagnosisText) => {
     try {
       const query = `SELECT id AS careplan_id , JSON_UNQUOTE(JSON_EXTRACT(details,'$.diagnosis.description')) AS  diagnosis 
         FROM adhere.care_plans
@@ -408,7 +410,7 @@ class CarePlanService {
     }
   };
 
-  searchtreatmentIds = async treatmentIds => {
+  searchtreatmentIds = async (treatmentIds) => {
     try {
       const query = `SELECT id AS careplan_id , JSON_UNQUOTE(JSON_EXTRACT(details,'$.treatment_id')) AS  diagnosis 
         FROM adhere.care_plans
@@ -417,7 +419,7 @@ class CarePlanService {
       const [careplans, metaData] = await Database.performRawQuery(query);
 
       console.log("35732432542730078783246722 === = ==========>>>", {
-        careplans
+        careplans,
       });
 
       return careplans;
@@ -434,7 +436,7 @@ class CarePlanService {
     limit,
     watchlist,
     user_role_id,
-    secondary_careplan_ids = null
+    secondary_careplan_ids = null,
   }) => {
     // const patientWatchlistedIds = watchlistPatientIds.length ? watchlistPatientIds.toString() : null ;
 
@@ -484,13 +486,13 @@ class CarePlanService {
     try {
       const carePlans = await Database.performRawQuery(query, {
         raw: true,
-        type: QueryTypes.SELECT
+        type: QueryTypes.SELECT,
       });
 
       const carePlanCount =
         (await Database.performRawQuery(countQuery, {
           raw: true,
-          type: QueryTypes.SELECT
+          type: QueryTypes.SELECT,
         })) || [];
 
       // console.log("910238102 carePlanCount", carePlanCount);
@@ -519,19 +521,20 @@ class CarePlanService {
     where,
     order = DEFAULT_ORDER,
     attributes,
-    userRoleId
+    userRoleId,
   }) => {
     try {
       return await Database.getModel(TABLE_NAME).findAndCountAll({
         where: {
           [Op.or]: [
             {
-              ...where
+              ...where,
             },
             {
-              "$careplan_secondary_doctor_mappings.secondary_doctor_role_id$": userRoleId
-            }
-          ]
+              "$careplan_secondary_doctor_mappings.secondary_doctor_role_id$":
+                userRoleId,
+            },
+          ],
         },
         include: [
           Database.getModel(patientTableName),
@@ -544,15 +547,15 @@ class CarePlanService {
               model: Database.getModel(medicationTableName),
               include: {
                 model: Database.getModel(medicineTableName),
-                required: true
-              }
+                required: true,
+              },
               // required: true
-            }
+            },
           },
           {
             model: Database.getModel(careplanSecondaryDoctorMappingsTableName),
-            required: false
-          }
+            required: false,
+          },
           // {
           //   model: Database.getModel(carePlanVitalTableName),
           //   raw: true,
@@ -561,7 +564,7 @@ class CarePlanService {
         ],
         order,
         attributes,
-        raw: true
+        raw: true,
       });
     } catch (error) {
       throw error;

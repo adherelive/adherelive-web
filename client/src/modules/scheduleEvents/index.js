@@ -3,11 +3,11 @@ import { REQUEST_TYPE } from "../../constant";
 import {
   getScheduleEventsUrl,
   getAppointmentCompleteUrl,
-  getAllMissedScheduleEventsUrl
+  getAllMissedScheduleEventsUrl,
 } from "../../Helper/urls/event";
 import {
   getCalenderDataCountForDayUrl,
-  getCalenderDataForDayUrl
+  getCalenderDataForDayUrl,
 } from "../../Helper/urls/provider";
 import { getPatientLastVisitAlertUrl } from "../../Helper/url/patients";
 
@@ -43,15 +43,15 @@ export const GET_ALL_MISSED_SCHEDULE_EVENTS_COMPLETED =
 export const GET_ALL_MISSED_SCHEDULE_EVENTS_FAILED =
   "GET_ALL_MISSED_SCHEDULE_EVENTS_FAILED";
 
-export const getScheduleEvents = payload => {
+export const getScheduleEvents = (payload) => {
   let response = {};
-  return async dispatch => {
+  return async (dispatch) => {
     try {
       dispatch({ type: GET_SCHEDULE_EVENTS_START });
 
       response = await doRequest({
         method: REQUEST_TYPE.GET,
-        url: getScheduleEventsUrl()
+        url: getScheduleEventsUrl(),
       });
 
       const { status, payload: { data = {}, error = {} } = {} } =
@@ -59,12 +59,12 @@ export const getScheduleEvents = payload => {
       if (status === true) {
         dispatch({
           type: GET_SCHEDULE_EVENTS_COMPLETED,
-          payload: data
+          payload: data,
         });
       } else {
         dispatch({
           type: GET_SCHEDULE_EVENTS_FAILED,
-          payload: error
+          payload: error,
         });
       }
     } catch (error) {
@@ -74,15 +74,15 @@ export const getScheduleEvents = payload => {
   };
 };
 
-export const getCalenderDataCountForDay = date => {
+export const getCalenderDataCountForDay = (date) => {
   let response = {};
-  return async dispatch => {
+  return async (dispatch) => {
     try {
       dispatch({ type: GET_CALENDER_DATA_COUNT_START });
 
       response = await doRequest({
         method: REQUEST_TYPE.GET,
-        url: getCalenderDataCountForDayUrl(date)
+        url: getCalenderDataCountForDayUrl(date),
       });
 
       const { status, payload: { data = {}, error = {} } = {} } =
@@ -90,12 +90,12 @@ export const getCalenderDataCountForDay = date => {
       if (status === true) {
         dispatch({
           type: GET_CALENDER_DATA_COUNT_COMPLETED,
-          payload: data
+          payload: data,
         });
       } else {
         dispatch({
           type: GET_CALENDER_DATA_COUNT_FAILED,
-          payload: error
+          payload: error,
         });
       }
     } catch (error) {
@@ -107,13 +107,13 @@ export const getCalenderDataCountForDay = date => {
 
 export const getCalenderDataForDay = (date, type) => {
   let response = {};
-  return async dispatch => {
+  return async (dispatch) => {
     try {
       dispatch({ type: GET_CALENDER_DATA_FOR_DAY_START });
 
       response = await doRequest({
         method: REQUEST_TYPE.GET,
-        url: getCalenderDataForDayUrl(date, type)
+        url: getCalenderDataForDayUrl(date, type),
       });
 
       const { status, payload: { data = {}, error = {} } = {} } =
@@ -122,12 +122,12 @@ export const getCalenderDataForDay = (date, type) => {
         dispatch({
           type: GET_CALENDER_DATA_FOR_DAY_COMPLETED,
           payload: data,
-          data
+          data,
         });
       } else {
         dispatch({
           type: GET_CALENDER_DATA_FOR_DAY_FAILED,
-          payload: error
+          payload: error,
         });
       }
     } catch (error) {
@@ -137,28 +137,28 @@ export const getCalenderDataForDay = (date, type) => {
   };
 };
 
-export const getLastVisitAlerts = id => {
+export const getLastVisitAlerts = (id) => {
   let response = {};
-  return async dispatch => {
+  return async (dispatch) => {
     try {
       dispatch({
-        type: GET_LAST_VISIT_ALERTS
+        type: GET_LAST_VISIT_ALERTS,
       });
       response = await doRequest({
         method: REQUEST_TYPE.GET,
-        url: getPatientLastVisitAlertUrl(id)
+        url: getPatientLastVisitAlertUrl(id),
       });
 
       const { status, payload: { data, error } = {} } = response || {};
       if (status === true) {
         dispatch({
           type: GET_LAST_VISIT_ALERTS_COMPLETE,
-          data: data
+          data: data,
         });
       } else {
         dispatch({
           type: GET_LAST_VISIT_ALERTS_FAILED,
-          error
+          error,
         });
       }
     } catch (error) {
@@ -168,25 +168,25 @@ export const getLastVisitAlerts = id => {
   };
 };
 
-export const markAppointmentComplete = id => {
+export const markAppointmentComplete = (id) => {
   let response = {};
-  return async dispatch => {
+  return async (dispatch) => {
     try {
       response = await doRequest({
         method: REQUEST_TYPE.POST,
-        url: getAppointmentCompleteUrl(id)
+        url: getAppointmentCompleteUrl(id),
       });
 
       const { status, payload: { data, error } = {} } = response || {};
       if (status === true) {
         dispatch({
           type: APPOINTMENT_STATUS_UPDATE_COMPLETED,
-          data: data
+          data: data,
         });
       } else {
         dispatch({
           type: APPOINTMENT_STATUS_UPDATE_FAILED,
-          error
+          error,
         });
       }
     } catch (error) {
@@ -198,25 +198,25 @@ export const markAppointmentComplete = id => {
 
 export const getAllMissedScheduleEvents = () => {
   let response = {};
-  return async dispatch => {
+  return async (dispatch) => {
     try {
       dispatch({ type: GET_ALL_MISSED_SCHEDULE_EVENTS_START });
 
       response = await doRequest({
         method: REQUEST_TYPE.GET,
-        url: getAllMissedScheduleEventsUrl()
+        url: getAllMissedScheduleEventsUrl(),
       });
 
       const { status, payload: { data, error } = {} } = response || {};
       if (status === true) {
         dispatch({
           type: GET_ALL_MISSED_SCHEDULE_EVENTS_COMPLETED,
-          data: data
+          data: data,
         });
       } else {
         dispatch({
           type: GET_ALL_MISSED_SCHEDULE_EVENTS_FAILED,
-          error
+          error,
         });
       }
     } catch (error) {
@@ -231,7 +231,7 @@ function eventReducer(state, data) {
   if (Object.keys(schedule_events).length > 0) {
     return {
       ...state,
-      ...schedule_events
+      ...schedule_events,
     };
   } else {
     return state;

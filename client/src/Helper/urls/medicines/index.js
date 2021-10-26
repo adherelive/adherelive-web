@@ -1,4 +1,4 @@
-export const searchMedicines = data => {
+export const searchMedicines = (data) => {
   return `/medicines?value=${data}`;
 };
 
@@ -26,10 +26,10 @@ export const getPrivateMedicinesUrl = ({ value, offset }) => {
   }
 };
 
-export const makeMedicinePublicUrl = medicine_id => {
+export const makeMedicinePublicUrl = (medicine_id) => {
   return `/admin/medicines/${medicine_id}/public`;
 };
 
-export const deleteMedicineUrl = medicine_id => {
+export const deleteMedicineUrl = (medicine_id) => {
   return `/admin/medicines/${medicine_id}`;
 };

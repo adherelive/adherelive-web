@@ -3,7 +3,7 @@ import moment from "moment";
 
 const PROVIDER_ADHERE = "Adhere";
 
-export const formatReferenceId = id => {
+export const formatReferenceId = (id) => {
   return `${PROVIDER_ADHERE.substring(
     0,
     3

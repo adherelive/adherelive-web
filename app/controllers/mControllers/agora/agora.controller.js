@@ -4,7 +4,7 @@ import Controller from "../../";
 import {
   USER_CATEGORY,
   EVENT_STATUS,
-  AGORA_CALL_NOTIFICATION_TYPES
+  AGORA_CALL_NOTIFICATION_TYPES,
 } from "../../../../constant";
 
 import Log from "../../../../libs/log_new";
@@ -23,7 +23,7 @@ class AgoraController extends Controller {
     try {
       const {
         params: { id = null } = {},
-        userDetails: { userRoleId, userData: { category } = {} } = {}
+        userDetails: { userRoleId, userData: { category } = {} } = {},
       } = req;
       let doctorRoleId = null,
         patientRoleId = null;
@@ -61,8 +61,8 @@ class AgoraController extends Controller {
           userId,
           userRoleId,
           userData: { category } = {},
-          userCategoryData: { basic_info: { full_name } = {} } = {}
-        } = {}
+          userCategoryData: { basic_info: { full_name } = {} } = {},
+        } = {},
       } = req;
 
       let doctorRoleId = null,
@@ -90,8 +90,8 @@ class AgoraController extends Controller {
         actor: {
           id: userId,
           user_role_id: userRoleId,
-          details: { name: full_name, category }
-        }
+          details: { name: full_name, category },
+        },
       };
 
       const agoraJob = AgoraJob.execute(
@@ -125,8 +125,8 @@ class AgoraController extends Controller {
           userId,
           userRoleId,
           userData: { category } = {},
-          userCategoryData: { basic_info: { full_name } = {} } = {}
-        } = {}
+          userCategoryData: { basic_info: { full_name } = {} } = {},
+        } = {},
       } = req;
 
       const agoraJob = AgoraJob.execute(EVENT_STATUS.STARTED, {
@@ -135,8 +135,8 @@ class AgoraController extends Controller {
         actor: {
           id: userId,
           user_role_id: userRoleId,
-          details: { name: full_name, category }
-        }
+          details: { name: full_name, category },
+        },
       });
       await NotificationSdk.execute(agoraJob);
 

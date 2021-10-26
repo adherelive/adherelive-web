@@ -25,9 +25,8 @@ class CollegeController extends Controller {
         let collegeApiData = {};
         for (const college of collegeDetails) {
           const collegeWrapper = await new CollegeWrapper(college);
-          collegeApiData[
-            collegeWrapper.getCollegeId()
-          ] = collegeWrapper.getBasicInfo();
+          collegeApiData[collegeWrapper.getCollegeId()] =
+            collegeWrapper.getBasicInfo();
         }
 
         return raiseSuccess(
@@ -35,8 +34,8 @@ class CollegeController extends Controller {
           200,
           {
             colleges: {
-              ...collegeApiData
-            }
+              ...collegeApiData,
+            },
           },
           "Colleges fetched successfully"
         );

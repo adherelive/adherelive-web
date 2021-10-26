@@ -10,10 +10,10 @@ export default class RepetitionService {
     }
   };
 
-  getByData = async data => {
+  getByData = async (data) => {
     try {
       const repetition = await Database.getModel(TABLE_NAME).findOne({
-        where: data
+        where: data,
       });
       return repetition;
     } catch (error) {
@@ -30,14 +30,14 @@ export default class RepetitionService {
     }
   };
 
-  search = async data => {
+  search = async (data) => {
     try {
       const repetitions = await Database.getModel(TABLE_NAME).findAll({
         where: {
           type: {
-            [Op.like]: `%${data}%`
-          }
-        }
+            [Op.like]: `%${data}%`,
+          },
+        },
       });
       return repetitions;
     } catch (error) {

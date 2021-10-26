@@ -15,8 +15,8 @@ class UserVerificationsService {
     try {
       const verification = await Database.getModel(TABLE_NAME).findOne({
         where: {
-          request_id: link
-        }
+          request_id: link,
+        },
       });
       return verification;
     } catch (err) {
@@ -28,8 +28,8 @@ class UserVerificationsService {
     try {
       const verification = await Database.getModel(TABLE_NAME).update(data, {
         where: {
-          request_id: link
-        }
+          request_id: link,
+        },
       });
       return verification;
     } catch (error) {
@@ -37,10 +37,10 @@ class UserVerificationsService {
     }
   };
 
-  getRequestByData = async data => {
+  getRequestByData = async (data) => {
     try {
       const verification = await Database.getModel(TABLE_NAME).findOne({
-        where: data
+        where: data,
       });
       return verification;
     } catch (err) {

@@ -5,7 +5,7 @@ import { Calendar, message, Drawer, Icon } from "antd";
 import moment from "moment";
 import {
   APPOINTMENT_TYPE_TITLE,
-  TABLE_DEFAULT_BLANK_FIELD
+  TABLE_DEFAULT_BLANK_FIELD,
 } from "../../../constant";
 import messages from "./messages";
 import { InfoCircleOutlined } from "@ant-design/icons";
@@ -13,12 +13,12 @@ import Tooltip from "antd/es/tooltip";
 
 const MODE = {
   MONTH: "m",
-  DAY: "d"
+  DAY: "d",
 };
 
 const PANEL = {
   YEAR: "year",
-  MONTH: "month"
+  MONTH: "month",
 };
 
 class ProviderDoctorCalneder extends Component {
@@ -29,7 +29,7 @@ class ProviderDoctorCalneder extends Component {
       currentDateSelected: "",
       isDateDataVisible: false,
       panelSelected: PANEL.MONTH,
-      panelMonth: ""
+      panelMonth: "",
     };
   }
 
@@ -46,7 +46,7 @@ class ProviderDoctorCalneder extends Component {
     try {
       const { getCalenderDataForDay } = this.props;
 
-      getCalenderDataForDay(ISOdate, type).then(response => {
+      getCalenderDataForDay(ISOdate, type).then((response) => {
         const { status, payload: { data, message } = {} } = response;
       });
     } catch (error) {
@@ -55,7 +55,7 @@ class ProviderDoctorCalneder extends Component {
     }
   };
 
-  formatMessage = data => this.props.intl.formatMessage(data);
+  formatMessage = (data) => this.props.intl.formatMessage(data);
 
   getListData = (appointmentIds = []) => {
     const { appointments = {}, doctors = {}, patients = {} } = this.props;
@@ -69,15 +69,15 @@ class ProviderDoctorCalneder extends Component {
             critical = false,
             reason = "",
             type = "1",
-            type_description = ""
+            type_description = "",
           } = {},
           start_date = "",
           start_time = "",
           end_date = "",
-          end_time = ""
+          end_time = "",
         } = {},
         participant_one: { id: p1_id = "", category: p1_category = "" } = {},
-        participant_two: { id: p2_id = "", category: p2_category = "" }
+        participant_two: { id: p2_id = "", category: p2_category = "" },
       } = appointments[id] || {};
 
       let doctor_name = "";
@@ -87,15 +87,15 @@ class ProviderDoctorCalneder extends Component {
           basic_info: {
             first_name: doctor_first_name = "",
             middle_name: doctor_middle_name = "",
-            last_name: doctor_last_name = ""
-          } = {}
+            last_name: doctor_last_name = "",
+          } = {},
         } = doctors[p1_id] || {};
         let {
           basic_info: {
             first_name: patient_first_name = "",
             middle_name: patient_middle_name = "",
-            last_name: patient_last_name = ""
-          } = {}
+            last_name: patient_last_name = "",
+          } = {},
         } = patients[p2_id] || {};
         doctor_name = doctor_first_name
           ? `${doctor_first_name} ${
@@ -112,15 +112,15 @@ class ProviderDoctorCalneder extends Component {
           basic_info: {
             first_name: doctor_first_name = "",
             middle_name: doctor_middle_name = "",
-            last_name: doctor_last_name = ""
-          } = {}
+            last_name: doctor_last_name = "",
+          } = {},
         } = doctors[p2_id] || {};
         let {
           basic_info: {
             first_name: patient_first_name = "",
             middle_name: patient_middle_name = "",
-            last_name: patient_last_name = ""
-          } = {}
+            last_name: patient_last_name = "",
+          } = {},
         } = patients[p1_id] || {};
         doctor_name = doctor_first_name
           ? `${doctor_first_name} ${
@@ -167,12 +167,9 @@ class ProviderDoctorCalneder extends Component {
     return listData;
   };
 
-  dateCellRender = value => {
+  dateCellRender = (value) => {
     const { date_wise_appointments = {} } = this.props;
-    const currentDate = moment(value)
-      .utcOffset(0)
-      .startOf("day")
-      .toISOString();
+    const currentDate = moment(value).utcOffset(0).startOf("day").toISOString();
 
     if (date_wise_appointments[currentDate]) {
       const appointmentIds = date_wise_appointments[currentDate] || [];
@@ -183,16 +180,13 @@ class ProviderDoctorCalneder extends Component {
     }
   };
 
-  monthCellRender = value => {
+  monthCellRender = (value) => {
     const { getCalenderDataForDay } = this.props;
     const ISOdate = moment(value).toISOString();
   };
 
   onPanelChange = (value, mode) => {
-    const panelDate = moment(value)
-      .utcOffset(0)
-      .startOf("day")
-      .toISOString();
+    const panelDate = moment(value).utcOffset(0).startOf("day").toISOString();
 
     if (mode === PANEL.MONTH) {
       const check = moment(value, "YYYY/MM/DD");
@@ -202,19 +196,19 @@ class ProviderDoctorCalneder extends Component {
       this.handleGetDayData(panelDate, type);
       this.setState({
         panelSelected: PANEL.MONTH,
-        panelMonth
+        panelMonth,
       });
     } else {
       const check = moment(value, "YYYY/MM/DD");
       const panelMonth = check.format("M");
       this.setState({
         panelSelected: PANEL.YEAR,
-        panelMonth
+        panelMonth,
       });
     }
   };
 
-  onSelect = value => {
+  onSelect = (value) => {
     const { panelSelected = PANEL.MONTH } = this.state;
     if (panelSelected === PANEL.MONTH) {
       const selectedDate = moment(value)
@@ -224,13 +218,13 @@ class ProviderDoctorCalneder extends Component {
 
       this.setState({
         currentDateSelected: selectedDate,
-        isDateDataVisible: true
+        isDateDataVisible: true,
       });
     } else {
       this.setState({
         currentDateSelected: "",
         isDateDataVisible: false,
-        panelSelected: PANEL.MONTH
+        panelSelected: PANEL.MONTH,
       });
     }
   };
@@ -238,7 +232,7 @@ class ProviderDoctorCalneder extends Component {
   close = () => {
     this.setState({
       isDateDataVisible: false,
-      currentDateSelected: ""
+      currentDateSelected: "",
     });
   };
 
@@ -251,7 +245,7 @@ class ProviderDoctorCalneder extends Component {
       date_wise_appointments = {},
       doctors = {},
       patients = {},
-      users = {}
+      users = {},
     } = this.props || {};
 
     const thisDaysAppointments =
@@ -264,15 +258,15 @@ class ProviderDoctorCalneder extends Component {
             critical = false,
             reason = "",
             type = "1",
-            type_description = ""
+            type_description = "",
           } = {},
           start_date = "",
           start_time = "",
           end_date = "",
-          end_time = ""
+          end_time = "",
         } = {},
         participant_one: { id: p1_id = "", category: p1_category = "" } = {},
-        participant_two: { id: p2_id = "", category: p2_category = "" }
+        participant_two: { id: p2_id = "", category: p2_category = "" },
       } = appointments[each] || {};
       let doctor_name = "";
       let patient_name = "";
@@ -281,15 +275,15 @@ class ProviderDoctorCalneder extends Component {
           basic_info: {
             first_name: doctor_first_name = "",
             middle_name: doctor_middle_name = "",
-            last_name: doctor_last_name = ""
-          } = {}
+            last_name: doctor_last_name = "",
+          } = {},
         } = doctors[p1_id] || {};
         let {
           basic_info: {
             first_name: patient_first_name = "",
             middle_name: patient_middle_name = "",
-            last_name: patient_last_name = ""
-          } = {}
+            last_name: patient_last_name = "",
+          } = {},
         } = patients[p2_id] || {};
         doctor_name = doctor_first_name
           ? `${doctor_first_name} ${
@@ -306,15 +300,15 @@ class ProviderDoctorCalneder extends Component {
           basic_info: {
             first_name: doctor_first_name = "",
             middle_name: doctor_middle_name = "",
-            last_name: doctor_last_name = ""
-          } = {}
+            last_name: doctor_last_name = "",
+          } = {},
         } = doctors[p2_id] || {};
         let {
           basic_info: {
             first_name: patient_first_name = "",
             middle_name: patient_middle_name = "",
-            last_name: patient_last_name = ""
-          } = {}
+            last_name: patient_last_name = "",
+          } = {},
         } = patients[p1_id] || {};
         doctor_name = doctor_first_name
           ? `${doctor_first_name} ${
@@ -412,7 +406,7 @@ class ProviderDoctorCalneder extends Component {
       isDateDataVisible = false,
       //  mode = MODE.MONTH
       panelSelected = PANEL.YEAR,
-      panelMonth
+      panelMonth,
     } = this.state;
 
     console.log("987432846723894023987487 RENDEr ------>", { panelMonth });
@@ -426,7 +420,7 @@ class ProviderDoctorCalneder extends Component {
             onPanelChange={this.onPanelChange}
             onSelect={this.onSelect}
             mode={panelSelected}
-            disabledDate={current => {
+            disabledDate={(current) => {
               const check = moment(current, "YYYY/MM/DD");
               const currentMonth = check.format("M");
               return (
@@ -444,7 +438,7 @@ class ProviderDoctorCalneder extends Component {
           headerStyle={{
             position: "sticky",
             zIndex: "9999",
-            top: "0px"
+            top: "0px",
           }}
           onClose={this.close}
           visible={isDateDataVisible}

@@ -10,7 +10,7 @@ import Severity from "../datacolumn/severity";
 import StartDate from "../datacolumn/startDate";
 import CreatedAt from "../datacolumn/createdAt";
 
-export default props => {
+export default (props) => {
   const { formatMessage, tabChanged, tabState, getColumnSearchProps } =
     props || {};
 
@@ -19,7 +19,7 @@ export default props => {
     filter_treatment,
     offset,
     sort_createdAt,
-    sort_name
+    sort_name,
   } = tabState;
 
   return [
@@ -27,7 +27,7 @@ export default props => {
       title: "Patient",
       ...TABLE_COLUMN.PID,
 
-      render: data => {
+      render: (data) => {
         const {
           patientData,
           addToWatchlist,
@@ -39,7 +39,7 @@ export default props => {
           tabChanged,
           offset,
           paginatedPatientData,
-          auth_role
+          auth_role,
         } = data || {};
 
         return (
@@ -59,18 +59,18 @@ export default props => {
         );
       },
       sorter: () => null,
-      sortOrder: sort_name === null ? null : sort_name === 0 ? ASCEND : DESCEND
+      sortOrder: sort_name === null ? null : sort_name === 0 ? ASCEND : DESCEND,
     },
     {
       title: formatMessage(messages.diagnosis),
       ...TABLE_COLUMN.DIAGNOSIS,
-      render: carePlanData => <Diagnosis {...carePlanData} />,
-      ...getColumnSearchProps(TABLE_COLUMN.DIAGNOSIS.dataIndex)
+      render: (carePlanData) => <Diagnosis {...carePlanData} />,
+      ...getColumnSearchProps(TABLE_COLUMN.DIAGNOSIS.dataIndex),
     },
     {
       title: formatMessage(messages.treatment),
       ...TABLE_COLUMN.TREATMENT,
-      render: data => {
+      render: (data) => {
         const { patientData, treatmentData, carePlanData } = data;
         return (
           <Treatment
@@ -80,24 +80,24 @@ export default props => {
           />
         );
       },
-      ...getColumnSearchProps(TABLE_COLUMN.TREATMENT.dataIndex)
+      ...getColumnSearchProps(TABLE_COLUMN.TREATMENT.dataIndex),
     },
     {
       title: formatMessage(messages.severity),
       ...TABLE_COLUMN.SEVERITY,
-      render: treatmentData => <Severity {...treatmentData} />
+      render: (treatmentData) => <Severity {...treatmentData} />,
     },
     {
       title: formatMessage(messages.start_date),
       ...TABLE_COLUMN.START_DATE,
-      render: carePlanData => <StartDate {...carePlanData} />
+      render: (carePlanData) => <StartDate {...carePlanData} />,
     },
     {
       title: "Created At",
       ...TABLE_COLUMN.CREATED_AT,
-      render: patientData => <CreatedAt {...patientData} />,
+      render: (patientData) => <CreatedAt {...patientData} />,
       sorter: () => null,
-      sortOrder: sort_createdAt === 0 ? DESCEND : ASCEND
-    }
+      sortOrder: sort_createdAt === 0 ? DESCEND : ASCEND,
+    },
   ];
 };

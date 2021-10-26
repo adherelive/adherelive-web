@@ -12,7 +12,7 @@ class PatientPaymentConsentMappingService {
     const transaction = await Database.initTransaction();
     try {
       const response = await Database.getModel(TABLE_NAME).create(data, {
-        transaction
+        transaction,
       });
       await transaction.commit();
       return response;
@@ -22,10 +22,10 @@ class PatientPaymentConsentMappingService {
     }
   }
 
-  getSingleEntityByData = async data => {
+  getSingleEntityByData = async (data) => {
     try {
       const response = await Database.getModel(TABLE_NAME).findOne({
-        where: data
+        where: data,
       });
       return response;
     } catch (error) {
@@ -33,10 +33,10 @@ class PatientPaymentConsentMappingService {
     }
   };
 
-  getAllByData = async data => {
+  getAllByData = async (data) => {
     try {
       const response = await Database.getModel(TABLE_NAME).findAll({
-        where: data
+        where: data,
         // raw: true,
         // nest: true,
       });
@@ -52,7 +52,7 @@ class PatientPaymentConsentMappingService {
         where,
         order,
         attributes,
-        raw: true
+        raw: true,
       });
     } catch (error) {
       throw error;
@@ -65,7 +65,7 @@ class PatientPaymentConsentMappingService {
         where,
         order,
         attributes,
-        raw: true
+        raw: true,
       });
     } catch (error) {
       throw error;
@@ -77,9 +77,9 @@ class PatientPaymentConsentMappingService {
     try {
       const updatedRecord = await Database.getModel(TABLE_NAME).update(data, {
         where: {
-          id
+          id,
         },
-        transaction
+        transaction,
       });
       await transaction.commit();
       return updatedRecord;

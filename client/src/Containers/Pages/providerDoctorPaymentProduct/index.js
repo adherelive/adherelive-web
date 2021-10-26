@@ -5,28 +5,28 @@ import {
   getAdminPaymentProduct,
   getDoctorPaymentProduct,
   addDoctorPaymentProduct,
-  deleteDoctorPaymentProduct
+  deleteDoctorPaymentProduct,
 } from "../../../modules/doctors";
 import { open } from "../../../modules/drawer";
 import { DRAWER } from "../../../constant";
 
-const mapStateToProps = state => {
+const mapStateToProps = (state) => {
   const { users = {} } = state;
 
   return {
-    users
+    users,
   };
 };
 
-const mapDispatchToProps = dispatch => {
+const mapDispatchToProps = (dispatch) => {
   return {
     getAdminPaymentProduct: () => dispatch(getAdminPaymentProduct()),
-    getDoctorPaymentProduct: data => dispatch(getDoctorPaymentProduct(data)),
-    addDoctorPaymentProduct: data => dispatch(addDoctorPaymentProduct(data)),
-    openConsultationFeeDrawer: payload =>
+    getDoctorPaymentProduct: (data) => dispatch(getDoctorPaymentProduct(data)),
+    addDoctorPaymentProduct: (data) => dispatch(addDoctorPaymentProduct(data)),
+    openConsultationFeeDrawer: (payload) =>
       dispatch(open({ type: DRAWER.ADD_CONSULTATION_FEE, payload })),
-    deleteDoctorPaymentProduct: data =>
-      dispatch(deleteDoctorPaymentProduct(data))
+    deleteDoctorPaymentProduct: (data) =>
+      dispatch(deleteDoctorPaymentProduct(data)),
   };
 };
 

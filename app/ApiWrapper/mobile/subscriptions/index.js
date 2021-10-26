@@ -18,7 +18,7 @@ class SubscriptionWrapper extends BaseSubscription {
       subscriber_id,
       activated_on,
       renew_on,
-      expired_on
+      expired_on,
     } = _data || {};
 
     return {
@@ -26,11 +26,11 @@ class SubscriptionWrapper extends BaseSubscription {
         id,
         payment_product_id,
         subscriber_id,
-        subscriber_type
+        subscriber_type,
       },
       activated_on,
       renew_on,
-      expired_on
+      expired_on,
     };
   };
 
@@ -38,9 +38,9 @@ class SubscriptionWrapper extends BaseSubscription {
     const { getId, getBasicInfo } = this;
     return {
       subscriptions: {
-        [getId()]: getBasicInfo()
+        [getId()]: getBasicInfo(),
       },
-      subscription_id: getId()
+      subscription_id: getId(),
     };
   };
 
@@ -50,15 +50,15 @@ class SubscriptionWrapper extends BaseSubscription {
 
       const { payment_products } = _data || {};
       const paymentProduct = await PaymentProductWrapper({
-        data: payment_products
+        data: payment_products,
       });
 
       return {
         ...(await getAllInfo()),
         payment_products: {
-          [paymentProduct.getId()]: paymentProduct.getBasicInfo()
+          [paymentProduct.getId()]: paymentProduct.getBasicInfo(),
         },
-        payment_product_id: paymentProduct.getId()
+        payment_product_id: paymentProduct.getId(),
       };
     } catch (error) {
       throw error;

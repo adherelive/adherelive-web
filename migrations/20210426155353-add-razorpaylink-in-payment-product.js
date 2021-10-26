@@ -7,11 +7,11 @@ module.exports = {
     return queryInterface.addColumn(TABLE_NAME, "razorpay_link", {
       type: Sequelize.STRING,
       allowNull: true,
-      defaultValue: null
+      defaultValue: null,
     });
   },
 
   down: (queryInterface, Sequelize) => {
     return queryInterface.removeColumn(TABLE_NAME, "razorpay_link");
-  }
+  },
 };

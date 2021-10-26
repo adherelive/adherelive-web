@@ -4,433 +4,433 @@ const messages = defineMessages({
   profile_edit: {
     id: "app.patient_profile.profile_edit",
     description: "Edit button in Patient Card",
-    defaultMessage: "Edit"
+    defaultMessage: "Edit",
   },
   profile_chat: {
     id: "app.patient_profile.profile_chat",
     description: "Chat button in Patient Card",
-    defaultMessage: "Chat"
+    defaultMessage: "Chat",
   },
   medications: {
     id: "app.patient_profile.medications",
     description: "Header in treatment Details",
-    defaultMessage: "Medications"
+    defaultMessage: "Medications",
   },
   vitals: {
     id: "app.patient_profile.vitals",
     description: "Header in treatment Details",
-    defaultMessage: "Vitals"
+    defaultMessage: "Vitals",
   },
   appointments: {
     id: "app.patient_profile.appointments",
     description: "Header in treatment Details",
-    defaultMessage: "Appointments"
+    defaultMessage: "Appointments",
   },
   actions: {
     id: "app.patient_profile.actions",
     description: "Header in treatment Details",
-    defaultMessage: "Actions"
+    defaultMessage: "Actions",
   },
   treatment_details: {
     id: "app.patient_profile.treatment_details",
     description: "Header in treatment Details",
-    defaultMessage: "Details"
+    defaultMessage: "Details",
   },
   upload_docs: {
     id: "app.patient_profile.upload_docs",
     description: "Header in treatment Details",
-    defaultMessage: "Upload Documents"
+    defaultMessage: "Upload Documents",
   },
   treatment_header: {
     id: "app.patient_profile.treatment_header",
     description: "Header in treatment Header",
-    defaultMessage: "Treatment"
+    defaultMessage: "Treatment",
   },
   treatment_severity: {
     id: "app.patient_profile.treatment_severity",
     description: "Header in treatment Severity",
-    defaultMessage: "Severity"
+    defaultMessage: "Severity",
   },
   treatment_condition: {
     id: "app.patient_profile.treatment_condition",
     description: "Header in treatment Condition",
-    defaultMessage: "Condition"
+    defaultMessage: "Condition",
   },
   treatment_doctor: {
     id: "app.patient_profile.treatment_doctor",
     description: "Header in treatment Doctor",
-    defaultMessage: "Doctor"
+    defaultMessage: "Doctor",
   },
   treatment_start_date: {
     id: "app.patient_profile.treatment_start_date",
     description: "Header in treatment Start Date",
-    defaultMessage: "Start Date"
+    defaultMessage: "Start Date",
   },
   treatment_provider: {
     id: "app.patient_profile.treatment_provider",
     description: "Header in treatment Provider",
-    defaultMessage: "Provider"
+    defaultMessage: "Provider",
   },
   hospital: {
     id: "app.patient_profile.hospital",
     description: "Hospital in treatment Provider",
-    defaultMessage: "Hospital"
+    defaultMessage: "Hospital",
   },
   alerts_last_visit: {
     id: "app.patient_profile.alerts_last_visit",
     description: "Header in Alerts from last visit card",
-    defaultMessage: "Alerts from last visit"
+    defaultMessage: "Alerts from last visit",
   },
   new_symptoms_header: {
     id: "app.patient_profile.new_symptoms_header",
     description: "Header in new symptoms",
-    defaultMessage: "New Symptoms"
+    defaultMessage: "New Symptoms",
   },
   missed_appointment_header: {
     id: "app.patient_profile.missed_appointment_header",
     description: "Header in missed appointment",
-    defaultMessage: "Missed Appointment"
+    defaultMessage: "Missed Appointment",
   },
   patient_profile_header: {
     id: "app.patient_profile.patient_profile_header",
     description: "Patient Profile Header",
-    defaultMessage: "Patient Details"
+    defaultMessage: "Patient Details",
   },
   use_template: {
     id: "app.patient_profile.use_template",
     description: "Patient Profile Header",
-    defaultMessage: "Use Template"
+    defaultMessage: "Use Template",
   },
   create_template: {
     id: "app.patient_profile.create_template",
     description: "Patient Profile Header",
-    defaultMessage: "Create Template"
+    defaultMessage: "Create Template",
   },
   add_medication: {
     id: "app.patient_profile.addMedication",
     description: "Patient Profile Header",
-    defaultMessage: "Add Medication"
+    defaultMessage: "Add Medication",
   },
   nothing_to_show: {
     id: "app.patient_profile.nothing_to_show",
     description: "Patient Profile Header",
-    defaultMessage: "No Medications or Appointments to Show"
+    defaultMessage: "No Medications or Appointments to Show",
   },
   no_show: {
     id: "app.patient_profile.no_show",
     description: "Patient Profile Header",
     defaultMessage:
-      "No Medications, Appointments, Reports, Symptoms, Actions, Diets or Workouts to Show"
+      "No Medications, Appointments, Reports, Symptoms, Actions, Diets or Workouts to Show",
   },
   no_appointment: {
     id: "app.patient_profile.no_appointment",
     description: "Patient Profile Header",
-    defaultMessage: "No Appointments to Show"
+    defaultMessage: "No Appointments to Show",
   },
   no_medication: {
     id: "app.patient_profile.no_medication",
     description: "Patient Profile Header",
-    defaultMessage: "No Medications to Show"
+    defaultMessage: "No Medications to Show",
   },
   no_vital: {
     id: "app.patient_profile.no_vital",
     description: "Patient Profile Header",
-    defaultMessage: "No Actions to Show"
+    defaultMessage: "No Actions to Show",
   },
   no_diet: {
     id: "app.patient_profile.no_diet",
     description: "Patient Profile Header",
-    defaultMessage: "No Diet to Show"
+    defaultMessage: "No Diet to Show",
   },
   no_workout: {
     id: "app.patient_profile.no_workout",
     description: "Patient Profile Header",
-    defaultMessage: "No Workout to Show"
+    defaultMessage: "No Workout to Show",
   },
   somethingWentWrong: {
     id: "app.patient_profile.somethingWentWrong",
     description: "Patient Profile Header",
-    defaultMessage: "Something went wrong."
+    defaultMessage: "Something went wrong.",
   },
   carePlanUpdated: {
     id: "app.patient_profile.carePlanUpdated",
     description: "Patient Profile Header",
-    defaultMessage: "Care Plan updated successfully."
+    defaultMessage: "Care Plan updated successfully.",
   },
   slotPresent: {
     id: "app.patient_profile.slotPresent",
     description: "Patient Profile Header",
-    defaultMessage: "Appointment slots already present for selected timings!"
+    defaultMessage: "Appointment slots already present for selected timings!",
   },
   symptoms: {
     id: "app.patient_profile.symptoms",
     description: "Patient Profile Header",
-    defaultMessage: "Symptoms"
+    defaultMessage: "Symptoms",
   },
   leftEye: {
     id: "app.bodyParts.leftEye",
     description: "Body parts",
-    defaultMessage: "Left Eye"
+    defaultMessage: "Left Eye",
   },
   rightEye: {
     id: "app.bodyParts.rightEye",
     description: "Body parts",
-    defaultMessage: "Right Eye"
+    defaultMessage: "Right Eye",
   },
   leftEar: {
     id: "app.bodyParts.leftEar",
     description: "Body parts",
-    defaultMessage: "Left Ear"
+    defaultMessage: "Left Ear",
   },
   rightEar: {
     id: "app.bodyParts.rightEar",
     description: "Body parts",
-    defaultMessage: "Right Ear"
+    defaultMessage: "Right Ear",
   },
   nose: {
     id: "app.bodyParts.nose",
     description: "Body parts",
-    defaultMessage: "Nose"
+    defaultMessage: "Nose",
   },
   mouth: {
     id: "app.bodyParts.mouth",
     description: "Body parts",
-    defaultMessage: "Mouth"
+    defaultMessage: "Mouth",
   },
   neck: {
     id: "app.bodyParts.neck",
     description: "Body parts",
-    defaultMessage: "Neck"
+    defaultMessage: "Neck",
   },
   leftShoulder: {
     id: "app.bodyParts.leftShoulder",
     description: "Body parts",
-    defaultMessage: "Left Shoulder"
+    defaultMessage: "Left Shoulder",
   },
   rightShoulder: {
     id: "app.bodyParts.rightShoulder",
     description: "Body parts",
-    defaultMessage: "Right Shoulder"
+    defaultMessage: "Right Shoulder",
   },
   chest: {
     id: "app.bodyParts.chest",
     description: "Body parts",
-    defaultMessage: "Chest"
+    defaultMessage: "Chest",
   },
   leftArm: {
     id: "app.bodyParts.leftArm",
     description: "Body parts",
-    defaultMessage: "Left Arm"
+    defaultMessage: "Left Arm",
   },
   rightArm: {
     id: "app.bodyParts.rightArm",
     description: "Body parts",
-    defaultMessage: "Right Arm"
+    defaultMessage: "Right Arm",
   },
   leftElbow: {
     id: "app.bodyParts.leftElbow",
     description: "Body parts",
-    defaultMessage: "Left Elbow"
+    defaultMessage: "Left Elbow",
   },
   rightElbow: {
     id: "app.bodyParts.rightElbow",
     description: "Body parts",
-    defaultMessage: "Right Elbow"
+    defaultMessage: "Right Elbow",
   },
   leftForearm: {
     id: "app.bodyParts.leftForearm",
     description: "Body parts",
-    defaultMessage: "Left Forearm"
+    defaultMessage: "Left Forearm",
   },
   rightForearm: {
     id: "app.bodyParts.rightForearm",
     description: "Body parts",
-    defaultMessage: "Right Forearm"
+    defaultMessage: "Right Forearm",
   },
   leftWrist: {
     id: "app.bodyParts.leftWrist",
     description: "Body parts",
-    defaultMessage: "Left Wrist"
+    defaultMessage: "Left Wrist",
   },
   rightWrist: {
     id: "app.bodyParts.rightWrist",
     description: "Body parts",
-    defaultMessage: "Right Wrist"
+    defaultMessage: "Right Wrist",
   },
   leftHand: {
     id: "app.bodyParts.leftHand",
     description: "Body parts",
-    defaultMessage: "Left Hand"
+    defaultMessage: "Left Hand",
   },
   rightHand: {
     id: "app.bodyParts.rightHand",
     description: "Body parts",
-    defaultMessage: "Right Hand"
+    defaultMessage: "Right Hand",
   },
   leftHandFingers: {
     id: "app.bodyParts.leftHandFingers",
     description: "Body parts",
-    defaultMessage: "Left Hand Fingers"
+    defaultMessage: "Left Hand Fingers",
   },
   rightHandFingers: {
     id: "app.bodyParts.rightHandFingers",
     description: "Body parts",
-    defaultMessage: "Right Hand Fingers"
+    defaultMessage: "Right Hand Fingers",
   },
   stomach: {
     id: "app.bodyParts.stomach",
     description: "Body parts",
-    defaultMessage: "Stomach"
+    defaultMessage: "Stomach",
   },
   abdomen: {
     id: "app.bodyParts.abdomen",
     description: "Body parts",
-    defaultMessage: "Abdomen"
+    defaultMessage: "Abdomen",
   },
   leftHip: {
     id: "app.bodyParts.leftHip",
     description: "Body parts",
-    defaultMessage: "Left Hip"
+    defaultMessage: "Left Hip",
   },
   rightHip: {
     id: "app.bodyParts.rightHip",
     description: "Body parts",
-    defaultMessage: "Right Hip"
+    defaultMessage: "Right Hip",
   },
   leftThigh: {
     id: "app.bodyParts.leftThigh",
     description: "Body parts",
-    defaultMessage: "Left Thigh"
+    defaultMessage: "Left Thigh",
   },
   rightThigh: {
     id: "app.bodyParts.rightThigh",
     description: "Body parts",
-    defaultMessage: "Right Thigh"
+    defaultMessage: "Right Thigh",
   },
   rectum: {
     id: "app.bodyParts.rectum",
     description: "Body parts",
-    defaultMessage: "Rectum"
+    defaultMessage: "Rectum",
   },
   urinary: {
     id: "app.bodyParts.urinary",
     description: "Body parts",
-    defaultMessage: "Urinary Bladder"
+    defaultMessage: "Urinary Bladder",
   },
   leftKnee: {
     id: "app.bodyParts.leftKnee",
     description: "Body parts",
-    defaultMessage: "Left Knee"
+    defaultMessage: "Left Knee",
   },
   rightKnee: {
     id: "app.bodyParts.rightKnee",
     description: "Body parts",
-    defaultMessage: "Right Knee"
+    defaultMessage: "Right Knee",
   },
   leftShin: {
     id: "app.bodyParts.leftShin",
     description: "Body parts",
-    defaultMessage: "Left Shin"
+    defaultMessage: "Left Shin",
   },
   rightShin: {
     id: "app.bodyParts.rightShin",
     description: "Body parts",
-    defaultMessage: "Right Shin"
+    defaultMessage: "Right Shin",
   },
   leftAnkle: {
     id: "app.bodyParts.leftAnkle",
     description: "Body parts",
-    defaultMessage: "Left Ankle"
+    defaultMessage: "Left Ankle",
   },
   rightAnkle: {
     id: "app.bodyParts.rightAnkle",
     description: "Body parts",
-    defaultMessage: "Right Ankle"
+    defaultMessage: "Right Ankle",
   },
   leftFoot: {
     id: "app.bodyParts.leftFoot",
     description: "Body parts",
-    defaultMessage: "Left Foot"
+    defaultMessage: "Left Foot",
   },
   rightFoot: {
     id: "app.bodyParts.rightFoot",
     description: "Body parts",
-    defaultMessage: "Right Foot"
+    defaultMessage: "Right Foot",
   },
   leftToe: {
     id: "app.bodyParts.leftToe",
     description: "Body parts",
-    defaultMessage: "Left Toe"
+    defaultMessage: "Left Toe",
   },
   rightToe: {
     id: "app.bodyParts.rightToe",
     description: "Body parts",
-    defaultMessage: "Right Toe"
+    defaultMessage: "Right Toe",
   },
   head: {
     id: "app.bodyParts.head",
     description: "Body parts",
-    defaultMessage: "Head"
+    defaultMessage: "Head",
   },
   left: {
     id: "app.bleedArea.left",
     description: "Bleed Area Screen",
-    defaultMessage: "Left"
+    defaultMessage: "Left",
   },
   right: {
     id: "app.bleedArea.right",
     description: "Bleed Area Screen",
-    defaultMessage: "Right"
+    defaultMessage: "Right",
   },
   front: {
     id: "app.bleedArea.front",
     description: "Bleed Area Screen",
-    defaultMessage: "Front"
+    defaultMessage: "Front",
   },
   back: {
     id: "app.bleedArea.back",
     description: "Bleed Area Screen",
-    defaultMessage: "Back"
+    defaultMessage: "Back",
   },
   leftHamString: {
     id: "app.bleedArea.leftHamString",
     description: "Bleed Area Screen",
-    defaultMessage: "Left Hamstring"
+    defaultMessage: "Left Hamstring",
   },
   rightHamString: {
     id: "app.bleedArea.rightHamString",
     description: "Bleed Area Screen",
-    defaultMessage: "Right Hamstring"
+    defaultMessage: "Right Hamstring",
   },
   lowerBack: {
     id: "app.bleedArea.lowerBack",
     description: "Bleed Area Screen",
-    defaultMessage: "Lower Back"
+    defaultMessage: "Lower Back",
   },
   leftTricep: {
     id: "app.bleedArea.leftTricep",
     description: "Bleed Area Screen",
-    defaultMessage: "Left Tricep"
+    defaultMessage: "Left Tricep",
   },
   rightTricep: {
     id: "app.bleedArea.rightTricep",
     description: "Bleed Area Screen",
-    defaultMessage: "Right Tricep"
+    defaultMessage: "Right Tricep",
   },
   leftCalf: {
     id: "app.bleedArea.leftCalf",
     description: "Bleed Area Screen",
-    defaultMessage: "Left Calf"
+    defaultMessage: "Left Calf",
   },
   rightCalf: {
     id: "app.bleedArea.rightCalf",
     description: "Bleed Area Screen",
-    defaultMessage: "Right Calf"
+    defaultMessage: "Right Calf",
   },
   activeCareplan: {
     id: "app.patient_profile.active",
     description: "Active",
-    defaultMessage: "Active"
+    defaultMessage: "Active",
   },
   // inactiveCareplan: {
   //     id: "app.patient_profile.inactive",
@@ -440,161 +440,161 @@ const messages = defineMessages({
   newTreatmentPlan: {
     id: "app.patient_profile.newTreatmentPlan",
     description: "",
-    defaultMessage: " Treatment Plan"
+    defaultMessage: " Treatment Plan",
   },
   consent_details_text: {
     id: "app.patient_profile.consent.details.text",
     description: "",
     defaultMessage:
-      "An OTP will be sent to patient's registered phone number. Please consult the patient for OTP to proceed with consent approval"
+      "An OTP will be sent to patient's registered phone number. Please consult the patient for OTP to proceed with consent approval",
   },
   sent_otp_consent_details_text: {
     id: "app.patient_profile.sent.otp.consent.details.text",
     description: "",
     defaultMessage:
-      "An OTP has been sent to patient's registered phone number. Please consult the patient for OTP"
+      "An OTP has been sent to patient's registered phone number. Please consult the patient for OTP",
   },
   enter_otp_text: {
     id: "app.patient_profile.enter.otp.text",
     description: "",
-    defaultMessage: "Enter OTP from patient below"
+    defaultMessage: "Enter OTP from patient below",
   },
   verify_otp_text: {
     id: "app.patient_profile.verify.otp.text",
     description: "",
-    defaultMessage: "Verify"
+    defaultMessage: "Verify",
   },
   cancel_text: {
     id: "app.patient_profile.cancel.modal.text",
     description: "",
-    defaultMessage: "Cancel"
+    defaultMessage: "Cancel",
   },
   resend_otp_text: {
     id: "app.patient_profile.resend.otp.text",
     description: "",
-    defaultMessage: "Resend OTP"
+    defaultMessage: "Resend OTP",
   },
   consent_modal_title_text: {
     id: "app.patient_profile.consent.modal.title.text",
     description: "",
-    defaultMessage: "Consent Verification"
+    defaultMessage: "Consent Verification",
   },
   show_more_text: {
     id: "app.patient_profile.show.more.text",
     description: "",
-    defaultMessage: "Show More"
+    defaultMessage: "Show More",
   },
   comorbidities_text: {
     id: "app.patient_profile.comorbidities.text",
     description: "",
-    defaultMessage: "Comorbidities"
+    defaultMessage: "Comorbidities",
   },
   allergies_text: {
     id: "app.patient_profile.allergies.text",
     description: "",
-    defaultMessage: "Allergies"
+    defaultMessage: "Allergies",
   },
   chat_icon_text: {
     id: "app.patient_profile.chat.icon.text",
     description: "",
-    defaultMessage: "Chat"
+    defaultMessage: "Chat",
   },
   video_icon_text: {
     id: "app.patient_profile.video.icon.text",
     description: "",
-    defaultMessage: "Video Call"
+    defaultMessage: "Video Call",
   },
   complete_text: {
     id: "app.patient_profile.complete.button.text",
     description: "",
-    defaultMessage: "Complete"
+    defaultMessage: "Complete",
   },
   clinical_notes: {
     id: "app.patient_profile.clinical.notes.text",
     description: "",
-    defaultMessage: "Clinical Notes"
+    defaultMessage: "Clinical Notes",
   },
   diagnosis_type: {
     id: "app.patient_profile.diagnosis.type",
     description: "",
-    defaultMessage: "Diagnosis Type"
+    defaultMessage: "Diagnosis Type",
   },
   diagnosis_text: {
     id: "app.patient_profile.diagnosis.text",
     description: "",
-    defaultMessage: "Diagnosis"
+    defaultMessage: "Diagnosis",
   },
   symptoms_text: {
     id: "app.patient_profile.symptom.text",
     description: "",
-    defaultMessage: "Symptoms"
+    defaultMessage: "Symptoms",
   },
   edit_patient: {
     id: "app.patient_profile.edit.patient",
     description: "",
-    defaultMessage: "Edit"
+    defaultMessage: "Edit",
   },
   upload_reports: {
     id: "app.patient_profile.upload.reports",
     description: "",
-    defaultMessage: "Upload Reports"
+    defaultMessage: "Upload Reports",
   },
   reports: {
     id: "app.patient_profile.reports",
     description: "",
-    defaultMessage: "Reports"
+    defaultMessage: "Reports",
   },
   food_items: {
     id: "app.patient_profile.food.items",
     description: "",
-    defaultMessage: "Food Items"
+    defaultMessage: "Food Items",
   },
   diet: {
     id: "app.patient_profile.diet",
     description: "",
-    defaultMessage: "Diet"
+    defaultMessage: "Diet",
   },
   workout: {
     id: "app.patient_profile.workout",
     description: "",
-    defaultMessage: "Workout"
+    defaultMessage: "Workout",
   },
   secondary_doctor: {
     id: "app.patient_profile.secondary_doctor",
     description: "",
-    defaultMessage: "Doctor"
+    defaultMessage: "Doctor",
   },
   prescription: {
     id: "app.patient_profile.prescription",
     description: "",
-    defaultMessage: "Prescription"
+    defaultMessage: "Prescription",
   },
   emptyAppointmentTable: {
     id: "app.appointment.table.emptyAppointmentTable",
     description: "",
-    defaultMessage: "No Appointment Data added yet"
+    defaultMessage: "No Appointment Data added yet",
   },
   videoCallBlocked: {
     id: "app.appointment.table.videoCallBlocked",
     description: "",
     defaultMessage:
-      "You can not call this user as call feature is blocked for this user."
+      "You can not call this user as call feature is blocked for this user.",
   },
   edit: {
     id: "app.appointment.table.edit",
     description: "",
-    defaultMessage: "Edit"
+    defaultMessage: "Edit",
   },
   view: {
     id: "app.appointment.table.view",
     description: "",
-    defaultMessage: "View"
+    defaultMessage: "View",
   },
   providers: {
     id: "app.appointment.table.providers",
     description: "",
-    defaultMessage: "Providers"
-  }
+    defaultMessage: "Providers",
+  },
 });
 
 export default messages;

@@ -2,10 +2,10 @@ import Database from "../../../libs/mysql";
 import { TABLE_NAME } from "../../models/carePlanMedications";
 
 class CarePlanMedicationService {
-  getAllByData = async data => {
+  getAllByData = async (data) => {
     try {
       const carePlanMedications = await Database.getModel(TABLE_NAME).findAll({
-        where: data
+        where: data,
       });
       return carePlanMedications;
     } catch (error) {
@@ -13,10 +13,10 @@ class CarePlanMedicationService {
     }
   };
 
-  getCarePlanMedicationByData = async data => {
+  getCarePlanMedicationByData = async (data) => {
     try {
       const carePlanMedications = await Database.getModel(TABLE_NAME).findAll({
-        where: data
+        where: data,
       });
       return carePlanMedications;
     } catch (error) {
@@ -24,12 +24,12 @@ class CarePlanMedicationService {
     }
   };
 
-  deleteCarePlanMedicationByMedicationId = async medication_id => {
+  deleteCarePlanMedicationByMedicationId = async (medication_id) => {
     try {
       const carePlanMedications = await Database.getModel(TABLE_NAME).destroy({
         where: {
-          medication_id
-        }
+          medication_id,
+        },
       });
       return carePlanMedications;
     } catch (err) {
@@ -37,21 +37,21 @@ class CarePlanMedicationService {
     }
   };
 
-  getCareplanByMedication = async data => {
+  getCareplanByMedication = async (data) => {
     try {
       return await Database.getModel(TABLE_NAME).findOne({
         where: data,
-        attributes: ["care_plan_id"]
+        attributes: ["care_plan_id"],
       });
     } catch (error) {
       throw error;
     }
   };
 
-  getMedicationsByCarePlanId = async care_plan_id => {
+  getMedicationsByCarePlanId = async (care_plan_id) => {
     try {
       const carePlanMedications = await Database.getModel(TABLE_NAME).findAll({
-        where: { care_plan_id }
+        where: { care_plan_id },
       });
       return carePlanMedications;
     } catch (error) {
@@ -59,7 +59,7 @@ class CarePlanMedicationService {
     }
   };
 
-  addCarePlanMedication = async data => {
+  addCarePlanMedication = async (data) => {
     try {
       const carePlanMedication = await Database.getModel(TABLE_NAME).create(
         data

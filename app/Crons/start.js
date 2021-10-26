@@ -27,9 +27,7 @@ const Log = new Logger("CRON > START");
 class StartCron {
   getScheduleData = async () => {
     const scheduleEventService = new ScheduleEventService();
-    const currentTime = moment()
-      .utc()
-      .toISOString();
+    const currentTime = moment().utc().toISOString();
     Log.info(`currentTime : ${currentTime}`);
     const scheduleEvents = await scheduleEventService.getStartEventByData(
       currentTime
@@ -78,14 +76,14 @@ class StartCron {
     }
   };
 
-  handleVitalStart = async event => {
+  handleVitalStart = async (event) => {
     try {
       const eventId = event.getEventId();
       const scheduleEventService = new ScheduleEventService();
       const scheduleEventId = event.getScheduleEventId();
       const updateEventStatus = await scheduleEventService.update(
         {
-          status: EVENT_STATUS.SCHEDULED
+          status: EVENT_STATUS.SCHEDULED,
         },
         scheduleEventId
       );
@@ -102,8 +100,8 @@ class StartCron {
         eventStage: NOTIFICATION_STAGES.START,
         event: {
           ...event.getData(),
-          details: { ...details, participants }
-        }
+          details: { ...details, participants },
+        },
       });
       NotificationSdk.execute(job);
     } catch (error) {
@@ -111,14 +109,14 @@ class StartCron {
     }
   };
 
-  handleAppointmentStart = async event => {
+  handleAppointmentStart = async (event) => {
     try {
       const eventId = event.getEventId();
       const scheduleEventId = event.getScheduleEventId();
       const scheduleEventService = new ScheduleEventService();
       const updateEventStatus = await scheduleEventService.update(
         {
-          status: EVENT_STATUS.SCHEDULED
+          status: EVENT_STATUS.SCHEDULED,
         },
         scheduleEventId
       );
@@ -131,7 +129,7 @@ class StartCron {
       const { details } = event.getData() || {};
       const appointmentJob = AppointmentJob.execute(EVENT_STATUS.STARTED, {
         ...event.getData(),
-        details: { ...details, participants }
+        details: { ...details, participants },
       });
       await NotificationSdk.execute(appointmentJob);
 
@@ -146,7 +144,7 @@ class StartCron {
     }
   };
 
-  handleMedicationStart = async event => {
+  handleMedicationStart = async (event) => {
     try {
       const eventId = event.getEventId();
       const scheduleEventId = event.getScheduleEventId();
@@ -157,13 +155,13 @@ class StartCron {
       if (medication) {
         const updateEventStatus = await scheduleEventService.update(
           {
-            status: EVENT_STATUS.SCHEDULED
+            status: EVENT_STATUS.SCHEDULED,
           },
           scheduleEventId
         );
 
         const eventScheduleData = await scheduleEventService.getEventByData({
-          id: scheduleEventId
+          id: scheduleEventId,
         });
 
         const medicationJob = MedicationJob.execute(
@@ -175,7 +173,7 @@ class StartCron {
       } else {
         const cancelledEvent = await scheduleEventService.update(
           {
-            status: EVENT_STATUS.CANCELLED
+            status: EVENT_STATUS.CANCELLED,
           },
           scheduleEventId
         );
@@ -192,7 +190,7 @@ class StartCron {
     }
   };
 
-  handleDietStart = async event => {
+  handleDietStart = async (event) => {
     try {
       const eventId = event.getEventId();
       const scheduleEventId = event.getScheduleEventId();
@@ -204,13 +202,13 @@ class StartCron {
       if (dietExists) {
         await scheduleEventService.update(
           {
-            status: EVENT_STATUS.SCHEDULED
+            status: EVENT_STATUS.SCHEDULED,
           },
           scheduleEventId
         );
 
         const eventScheduleData = await scheduleEventService.getEventByData({
-          id: scheduleEventId
+          id: scheduleEventId,
         });
 
         const dietJob = DietJob.execute(
@@ -221,7 +219,7 @@ class StartCron {
       } else {
         await scheduleEventService.update(
           {
-            status: EVENT_STATUS.CANCELLED
+            status: EVENT_STATUS.CANCELLED,
           },
           scheduleEventId
         );
@@ -231,7 +229,7 @@ class StartCron {
     }
   };
 
-  handleWorkoutStart = async event => {
+  handleWorkoutStart = async (event) => {
     try {
       const eventId = event.getEventId();
       const scheduleEventId = event.getScheduleEventId();
@@ -244,13 +242,13 @@ class StartCron {
       if (workoutExists) {
         await scheduleEventService.update(
           {
-            status: EVENT_STATUS.SCHEDULED
+            status: EVENT_STATUS.SCHEDULED,
           },
           scheduleEventId
         );
 
         const eventScheduleData = await scheduleEventService.getEventByData({
-          id: scheduleEventId
+          id: scheduleEventId,
         });
 
         const workoutJob = WorkoutJob.execute(
@@ -261,7 +259,7 @@ class StartCron {
       } else {
         await scheduleEventService.update(
           {
-            status: EVENT_STATUS.CANCELLED
+            status: EVENT_STATUS.CANCELLED,
           },
           scheduleEventId
         );
@@ -271,20 +269,20 @@ class StartCron {
     }
   };
 
-  handleCarePlanStart = async event => {
+  handleCarePlanStart = async (event) => {
     try {
       const eventId = event.getEventId();
       const scheduleEventId = event.getScheduleEventId();
       const scheduleEventService = new ScheduleEventService();
       const updateEventStatus = await scheduleEventService.update(
         {
-          status: EVENT_STATUS.SCHEDULED
+          status: EVENT_STATUS.SCHEDULED,
         },
         scheduleEventId
       );
 
       const eventScheduleData = await scheduleEventService.getEventByData({
-        id: scheduleEventId
+        id: scheduleEventId,
       });
 
       const carePlanJob = CarePlanJob.execute(

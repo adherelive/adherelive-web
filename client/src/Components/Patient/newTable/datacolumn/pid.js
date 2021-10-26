@@ -17,24 +17,24 @@ class Watchlist extends Component {
     const { currentTab, handleGetPatients, tabChanged } = this.props;
   }
 
-  formatMessage = data => this.props.intl.formatMessage(data);
+  formatMessage = (data) => this.props.intl.formatMessage(data);
 
-  addThisToWatchlist = e => {
+  addThisToWatchlist = (e) => {
     e.preventDefault();
     const {
       patientData: { id, first_name, middle_name, last_name } = {},
       addToWatchlist,
-      handleGetPatients
+      handleGetPatients,
     } = this.props || {};
 
-    addToWatchlist(id).then(response => {
+    addToWatchlist(id).then((response) => {
       const { status, message: errMessage } = response || {};
       if (status === true) {
         message.success(
           `${getFullName({
             first_name,
             middle_name,
-            last_name
+            last_name,
           })} ${this.formatMessage(messages.addedToWatchlist)}`
         );
       } else {
@@ -45,22 +45,22 @@ class Watchlist extends Component {
     handleGetPatients();
   };
 
-  removeFromWatchlist = e => {
+  removeFromWatchlist = (e) => {
     e.preventDefault();
     const {
       patientData: { id, first_name, middle_name, last_name } = {},
       removePatientFromWatchlist,
-      handleGetPatients
+      handleGetPatients,
     } = this.props || {};
 
-    removePatientFromWatchlist(id).then(response => {
+    removePatientFromWatchlist(id).then((response) => {
       const { status, message: errMessage } = response || {};
       if (status === true) {
         message.success(
           `${getFullName({
             first_name,
             middle_name,
-            last_name
+            last_name,
           })} ${this.formatMessage(messages.removedFromWatchlist)}`
         );
       } else {
@@ -71,7 +71,7 @@ class Watchlist extends Component {
     handleGetPatients();
   };
 
-  stopEventBubbling = e => {
+  stopEventBubbling = (e) => {
     e.stopPropagation();
   };
 
@@ -81,7 +81,7 @@ class Watchlist extends Component {
     const {
       patientData: { first_name, middle_name, last_name, id } = {},
       onRowClick,
-      doctorData: { watchlist_ids = [] } = {}
+      doctorData: { watchlist_ids = [] } = {},
     } = this.props || {};
 
     const { patientData: { age, gender = "" } = {}, auth_role = null } =

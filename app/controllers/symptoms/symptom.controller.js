@@ -36,12 +36,8 @@ class SymptomController extends Controller {
         if (symptomExists) {
           const symptom = await SymptomWrapper({ data: symptomExists });
           const { symptoms } = await symptom.getAllInfo();
-          const {
-            users,
-            upload_documents,
-            patients,
-            doctors
-          } = await symptom.getReferenceInfo();
+          const { users, upload_documents, patients, doctors } =
+            await symptom.getReferenceInfo();
           symptomData = { ...symptomData, ...symptoms };
           userData = { ...userData, ...users };
           documentData = { ...documentData, ...upload_documents };
@@ -55,20 +51,20 @@ class SymptomController extends Controller {
         200,
         {
           symptoms: {
-            ...symptomData
+            ...symptomData,
           },
           upload_documents: {
-            ...documentData
+            ...documentData,
           },
           users: {
-            ...userData
+            ...userData,
           },
           doctors: {
-            ...doctorData
+            ...doctorData,
           },
           patients: {
-            ...patientData
-          }
+            ...patientData,
+          },
         },
         "Symptom details fetched successfully"
       );

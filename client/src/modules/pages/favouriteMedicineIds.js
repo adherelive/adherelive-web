@@ -1,7 +1,7 @@
 import {
   GET_FAVOURITES_COMPLETED,
   MARK_FAVOURITE_COMPLETED,
-  REMOVE_FAVOURITE_COMPLETED
+  REMOVE_FAVOURITE_COMPLETED,
 } from "../favouritesData";
 
 function favouriteMedicineIdsReducer(state, data) {

@@ -49,14 +49,14 @@ const FIELDS = [
   UPI_ID,
   RAZORPAY_ACCOUNT_ID,
   RAZORPAY_ACCOUNT_NAME,
-  PRESCRIPTION_DETAILS
+  PRESCRIPTION_DETAILS,
 ];
 
 class AddProviderForm extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      account_type_exists: false
+      account_type_exists: false,
     };
   }
 
@@ -65,14 +65,14 @@ class AddProviderForm extends Component {
     validateFields();
   }
 
-  getParentNode = t => t.parentNode;
+  getParentNode = (t) => t.parentNode;
 
-  formatMessage = data => this.props.intl.formatMessage(data);
+  formatMessage = (data) => this.props.intl.formatMessage(data);
 
-  setAccountType = type => e => {
+  setAccountType = (type) => (e) => {
     e.preventDefault();
     const {
-      form: { setFieldsValue }
+      form: { setFieldsValue },
     } = this.props;
 
     setFieldsValue({ [ACCOUNT_TYPE]: type });
@@ -103,7 +103,7 @@ class AddProviderForm extends Component {
     );
   };
 
-  handleCloseWarning = e => {
+  handleCloseWarning = (e) => {
     e.preventDefault();
     const { warnNote } = this;
 
@@ -119,13 +119,13 @@ class AddProviderForm extends Component {
       onOk: async () => {
         this.resetAllAccount();
       },
-      onCancel() {}
+      onCancel() {},
     });
   };
 
   render() {
     const {
-      form: { getFieldDecorator, isFieldTouched, getFieldError, getFieldValue }
+      form: { getFieldDecorator, isFieldTouched, getFieldError, getFieldValue },
     } = this.props;
 
     const { formatMessage } = this;
@@ -138,7 +138,7 @@ class AddProviderForm extends Component {
     }
 
     let fieldsError = {};
-    FIELDS.forEach(value => {
+    FIELDS.forEach((value) => {
       const error = isFieldTouched(value) && getFieldError(value);
       fieldsError = { ...fieldsError, [value]: error };
     });
@@ -159,13 +159,13 @@ class AddProviderForm extends Component {
             rules: [
               {
                 type: "email",
-                message: formatMessage(messages.valid_email_text)
+                message: formatMessage(messages.valid_email_text),
               },
               {
                 required: true,
-                message: formatMessage(messages.email_required_text)
-              }
-            ]
+                message: formatMessage(messages.email_required_text),
+              },
+            ],
           })(<Input type="string" />)}
         </FormItem>
 
@@ -180,14 +180,14 @@ class AddProviderForm extends Component {
             rules: [
               {
                 required: true,
-                message: formatMessage(messages.password_required_text)
-              }
-            ]
+                message: formatMessage(messages.password_required_text),
+              },
+            ],
           })(
             <Password
               type="string"
               placeholder="Input password"
-              iconRender={visible =>
+              iconRender={(visible) =>
                 visible ? <EyeTwoTone /> : <EyeInvisibleOutlined />
               }
             />
@@ -205,14 +205,14 @@ class AddProviderForm extends Component {
             rules: [
               {
                 required: true,
-                message: formatMessage(messages.confirm_password_required_text)
-              }
-            ]
+                message: formatMessage(messages.confirm_password_required_text),
+              },
+            ],
           })(
             <Password
               type="string"
               placeholder="Input Confirm password"
-              iconRender={visible =>
+              iconRender={(visible) =>
                 visible ? <EyeTwoTone /> : <EyeInvisibleOutlined />
               }
             />
@@ -230,9 +230,9 @@ class AddProviderForm extends Component {
             rules: [
               {
                 required: true,
-                message: formatMessage(messages.name_error)
-              }
-            ]
+                message: formatMessage(messages.name_error),
+              },
+            ],
           })(<Input type="string" />)}
         </FormItem>
 
@@ -268,9 +268,9 @@ class AddProviderForm extends Component {
             rules: [
               {
                 required: true,
-                message: formatMessage(messages.address_required_text)
-              }
-            ]
+                message: formatMessage(messages.address_required_text),
+              },
+            ],
           })(<Input type="string" />)}
         </FormItem>
 
@@ -304,13 +304,13 @@ class AddProviderForm extends Component {
                   display: "flex",
                   flexDirection: "row",
                   alignItems: "center",
-                  justifyContent: "space-between"
+                  justifyContent: "space-between",
                 }}
                 value={account_type_val}
               >
                 <Radio.Button
                   style={{
-                    width: "50%"
+                    width: "50%",
                   }}
                   value={SAVINGS}
                   onClick={this.setAccountType(SAVINGS)}
@@ -320,7 +320,7 @@ class AddProviderForm extends Component {
 
                 <Radio.Button
                   style={{
-                    width: "50%"
+                    width: "50%",
                   }}
                   value={CURRENT}
                   onClick={this.setAccountType(CURRENT)}
@@ -343,9 +343,9 @@ class AddProviderForm extends Component {
             rules: [
               {
                 required: account_type_exists,
-                message: formatMessage(messages.beneficiary_name_error)
-              }
-            ]
+                message: formatMessage(messages.beneficiary_name_error),
+              },
+            ],
           })(<Input type="string" disabled={!account_type_exists} />)}
         </FormItem>
 
@@ -360,9 +360,9 @@ class AddProviderForm extends Component {
             rules: [
               {
                 required: account_type_exists,
-                message: formatMessage(messages.account_num_error)
-              }
-            ]
+                message: formatMessage(messages.account_num_error),
+              },
+            ],
           })(<Input type="number" disabled={!account_type_exists} />)}
         </FormItem>
 
@@ -377,9 +377,9 @@ class AddProviderForm extends Component {
             rules: [
               {
                 required: account_type_exists,
-                message: formatMessage(messages.ifsc_error)
-              }
-            ]
+                message: formatMessage(messages.ifsc_error),
+              },
+            ],
           })(<Input type="string" disabled={!account_type_exists} />)}
         </FormItem>
 

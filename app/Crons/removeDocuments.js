@@ -4,7 +4,7 @@ import Logger from "../../libs/log";
 import {
   DOCUMENT_PARENT_TYPE,
   PRESCRIPTION_PDF_FOLDER,
-  S3_DOWNLOAD_FOLDER
+  S3_DOWNLOAD_FOLDER,
 } from "../../constant";
 import * as UploadHelper from "./helper";
 
@@ -15,13 +15,13 @@ import documentService from "../services/uploadDocuments/uploadDocuments.service
 const AWS_FOLDER_NAME = {
   PRESCRIPTION_PDF: "prescription_pdfs",
   DANGLING: "dangling",
-  OTHERS: "others"
+  OTHERS: "others",
 };
 
 const Log = new Logger("CRON > REMOVE_DOCUMENTS");
 
 class RemoveDocuments {
-  checkIfAnyLocalDocumentExists = async path => {
+  checkIfAnyLocalDocumentExists = async (path) => {
     let isFolderEmpty = false;
     if (!fs.existsSync(path)) {
       isFolderEmpty = true;
@@ -32,11 +32,11 @@ class RemoveDocuments {
     return !isFolderEmpty;
   };
 
-  isDirEmpty = async dirname => {
+  isDirEmpty = async (dirname) => {
     return (await fs.readdirSync(dirname).length) === 0;
   };
 
-  getAWSFolderName = path => {
+  getAWSFolderName = (path) => {
     switch (path) {
       case PRESCRIPTION_PDF_FOLDER:
         return AWS_FOLDER_NAME.PRESCRIPTION_PDF;
@@ -45,12 +45,12 @@ class RemoveDocuments {
     }
   };
 
-  readDirectory = path => {
+  readDirectory = (path) => {
     try {
       const { readFiles, getAWSFolderName } = this;
       const upload = path === PRESCRIPTION_PDF_FOLDER ? true : false;
       const uploadFolderName = getAWSFolderName(path);
-      fs.readdir(path, function(err, files) {
+      fs.readdir(path, function (err, files) {
         if (err) {
           Log.debug(
             "REMOVE_DOCUMENTS: could not list the directory ---->",
@@ -82,7 +82,7 @@ class RemoveDocuments {
     try {
       Log.info(`File got to read is: file = ${file}, fileName = ${fileName}`);
       const { deleteFile, uploadOnAWS } = this;
-      fs.readFile(file, function(err, data) {
+      fs.readFile(file, function (err, data) {
         if (err) {
           throw err;
         }
@@ -110,7 +110,7 @@ class RemoveDocuments {
         fileName,
         id,
         folder,
-        doHashing: id !== AWS_FOLDER_NAME.OTHERS ? true : false
+        doHashing: id !== AWS_FOLDER_NAME.OTHERS ? true : false,
       });
 
       if (id !== AWS_FOLDER_NAME.OTHERS) {
@@ -118,7 +118,7 @@ class RemoveDocuments {
           parent_type: DOCUMENT_PARENT_TYPE.PRESCRIPTION_PDF,
           parent_id: id,
           document: fileUrl,
-          name: fileName
+          name: fileName,
         });
       }
     } catch (error) {
@@ -126,9 +126,9 @@ class RemoveDocuments {
     }
   };
 
-  deleteFile = path => {
+  deleteFile = (path) => {
     try {
-      fs.unlink(path, function(err) {
+      fs.unlink(path, function (err) {
         console.log("ERRor got in the unlink the file is: ", err);
       });
     } catch (error) {

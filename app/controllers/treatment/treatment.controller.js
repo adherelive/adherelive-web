@@ -25,9 +25,8 @@ class TreatmentController extends Controller {
       let treatmentApiData = {};
       for (const treatment of treatmentDetails) {
         const treatmentWrapper = await new TreatmentWrapper(treatment);
-        treatmentApiData[
-          treatmentWrapper.getTreatmentId()
-        ] = treatmentWrapper.getBasicInfo();
+        treatmentApiData[treatmentWrapper.getTreatmentId()] =
+          treatmentWrapper.getBasicInfo();
       }
 
       return raiseSuccess(
@@ -35,8 +34,8 @@ class TreatmentController extends Controller {
         200,
         {
           treatments: {
-            ...treatmentApiData
-          }
+            ...treatmentApiData,
+          },
         },
         "Treatments fetched successfully"
       );

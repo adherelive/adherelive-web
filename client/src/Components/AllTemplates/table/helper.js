@@ -2,21 +2,21 @@ export const TABLE_COLUMN = {
   NAME: {
     key: "NAME",
     dataIndex: "NAME",
-    fixed: "left"
+    fixed: "left",
   },
   CREATED_AT: {
     key: "CREATED_AT",
     width: 300,
-    dataIndex: "CREATED_AT"
+    dataIndex: "CREATED_AT",
   },
   EDIT: {
     key: "EDIT",
     dataIndex: "EDIT",
-    width: 100
-  }
+    width: 100,
+  },
 };
 
-export const formatTemplateTableData = data => {
+export const formatTemplateTableData = (data) => {
   let {
     id,
     care_plan_templates,
@@ -24,7 +24,7 @@ export const formatTemplateTableData = data => {
     template_appointments,
     template_medications,
     template_vitals,
-    vital_templates
+    vital_templates,
   } = data || {};
 
   const templateData = care_plan_templates[id] || {};
@@ -32,7 +32,7 @@ export const formatTemplateTableData = data => {
   const {
     template_appointment_ids = [],
     template_medication_ids = [],
-    template_vital_ids = []
+    template_vital_ids = [],
   } = care_plan_templates[id] || {};
   let medicationsData = {};
   let appointmentsData = {};
@@ -59,6 +59,6 @@ export const formatTemplateTableData = data => {
     vital_templates,
     template_medication_ids,
     template_appointment_ids,
-    template_vital_ids
+    template_vital_ids,
   };
 };

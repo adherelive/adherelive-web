@@ -8,18 +8,18 @@ module.exports = {
       queryInterface.changeColumn(TABLE_NAME, "marked_favourite_type", {
         allowNull: false,
         type: Sequelize.ENUM,
-        values: USER_FAV_ALL_TYPES
+        values: USER_FAV_ALL_TYPES,
       }),
       queryInterface.addColumn(TABLE_NAME, "details", {
-        type: Sequelize.JSON
-      })
+        type: Sequelize.JSON,
+      }),
     ]);
   },
 
   down: (queryInterface, Sequelize) => {
     return Promise.all([
       queryInterface.changeColumn(TABLE_NAME, "marked_favourite_type"),
-      queryInterface.removeColumn(TABLE_NAME, "details")
+      queryInterface.removeColumn(TABLE_NAME, "details"),
     ]);
-  }
+  },
 };

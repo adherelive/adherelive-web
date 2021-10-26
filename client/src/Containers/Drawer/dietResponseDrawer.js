@@ -5,17 +5,17 @@ import DietResponseDrawer from "../../Components/Drawer/dietResponses";
 import { close } from "../../modules/drawer";
 import { DRAWER } from "../../constant";
 
-const mapStateToProps = state => {
+const mapStateToProps = (state) => {
   const {
     drawer: {
       visible,
-      data: { type, payload: { diet_id, diet_name, loading } = {} } = {}
+      data: { type, payload: { diet_id, diet_name, loading } = {} } = {},
     },
     diets = {},
     schedule_events = {},
     upload_documents = {},
     pages: { diet_response_ids = [] } = {},
-    diet_responses = {}
+    diet_responses = {},
   } = state;
 
   return {
@@ -27,13 +27,13 @@ const mapStateToProps = state => {
     schedule_events,
     upload_documents,
     diet_response_ids,
-    diet_responses
+    diet_responses,
   };
 };
 
-const mapDispatchToProps = dispatch => {
+const mapDispatchToProps = (dispatch) => {
   return {
-    close: () => dispatch(close())
+    close: () => dispatch(close()),
   };
 };
 

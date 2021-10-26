@@ -3,7 +3,7 @@ import moment from "moment";
 import {
   EVENT_TYPE,
   NOTIFICATION_VERB,
-  DEFAULT_PROVIDER
+  DEFAULT_PROVIDER,
 } from "../../../../constant";
 
 import UserRoleService from "../../../services/userRoles/userRoles.service";
@@ -26,11 +26,11 @@ class StartJob extends DietJob {
         participants = [],
         actor: {
           id: actorId,
-          user_role_id
+          user_role_id,
           // details: { name, category: actorCategory } = {}
-        } = {}
+        } = {},
       },
-      id
+      id,
     } = getDietData() || {};
 
     const templateData = [];
@@ -40,8 +40,8 @@ class StartJob extends DietJob {
     const { rows: userRoles = [] } =
       (await UserRoleService.findAndCountAll({
         where: {
-          id: participants
-        }
+          id: participants,
+        },
       })) || {};
 
     let providerId = null;
@@ -60,14 +60,14 @@ class StartJob extends DietJob {
     let providerName = DEFAULT_PROVIDER;
     if (providerId) {
       const provider = await ProviderService.getProviderByData({
-        id: providerId
+        id: providerId,
       });
       const { name } = provider || {};
       providerName = name;
     }
 
     const userDevices = await UserDeviceService.getAllDeviceByData({
-      user_id: userIds
+      user_id: userIds,
     });
 
     if (userDevices.length > 0) {
@@ -89,12 +89,12 @@ class StartJob extends DietJob {
       app_id: process.config.one_signal.app_id,
       headings: { en: `Diet Reminder (${providerName})` },
       contents: {
-        en: `Please update your ${dietName} response. Tap here to proceed!`
+        en: `Please update your ${dietName} response. Tap here to proceed!`,
       },
       include_player_ids: [...playerIds],
       priority: 10,
       android_channel_id: process.config.one_signal.urgent_channel_id,
-      data: { url: `/${NOTIFICATION_VERB.DIET_START}`, params: getDietData() }
+      data: { url: `/${NOTIFICATION_VERB.DIET_START}`, params: getDietData() },
     });
 
     return templateData;
@@ -108,11 +108,11 @@ class StartJob extends DietJob {
         actor: {
           id: actorId,
           user_role_id,
-          details: { name, category: actorCategory } = {}
-        } = {}
+          details: { name, category: actorCategory } = {},
+        } = {},
       },
       id,
-      start_time
+      start_time,
     } = getDietData() || {};
 
     const templateData = [];
@@ -128,7 +128,7 @@ class StartJob extends DietJob {
           verb: `${NOTIFICATION_VERB.DIET_START}:${currentTimeStamp}`,
           event: EVENT_TYPE.DIET,
           time: start_time,
-          start_time: start_time
+          start_time: start_time,
         });
       }
     }

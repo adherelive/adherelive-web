@@ -19,7 +19,7 @@ class Field extends Component {
     this.state = {
       imageUrl: null,
       viewModalVisible: false,
-      viewModalSrc: ""
+      viewModalSrc: "",
     };
   }
 
@@ -30,14 +30,14 @@ class Field extends Component {
   handleDocumentViewClose = () => {
     this.setState({
       viewModalVisible: false,
-      viewModalSrc: ""
+      viewModalSrc: "",
     });
   };
 
-  handleDocumentViewOpen = src => () => {
+  handleDocumentViewOpen = (src) => () => {
     this.setState({
       viewModalVisible: true,
-      viewModalSrc: src
+      viewModalSrc: src,
     });
   };
 
@@ -45,7 +45,7 @@ class Field extends Component {
     const {
       provider_id,
       providers = {},
-      form: { setFieldsValue } = {}
+      form: { setFieldsValue } = {},
     } = this.props;
 
     const { details: { banner = null } = {} } = providers[provider_id] || {};
@@ -59,7 +59,7 @@ class Field extends Component {
   formatMessage = (message, data = {}) =>
     this.props.intl.formatMessage(message, data);
 
-  fieldsError = FIELD_NAME => {
+  fieldsError = (FIELD_NAME) => {
     const { form: { isFieldTouched, getFieldError } = {} } = this.props;
     const error = isFieldTouched(FIELD_NAME) && getFieldError(FIELD_NAME);
     return error;
@@ -90,7 +90,7 @@ class Field extends Component {
     this.setState({ imageUrl: fileUrl });
   };
 
-  handleIconRemove = file => {
+  handleIconRemove = (file) => {
     const { form: { setFieldsValue } = {} } = this.props;
     this.setState({ imageUrl: null });
     setFieldsValue({ [FIELD_NAME]: null });
@@ -153,7 +153,7 @@ class Field extends Component {
     const {
       imageUrl,
       viewModalVisible = false,
-      viewModalSrc = ""
+      viewModalSrc = "",
     } = this.state;
     const { formatMessage, fieldsError, getLogo, getFormContent } = this;
 
@@ -183,7 +183,7 @@ class Field extends Component {
           footer={[
             <Button key="back" onClick={this.handleDocumentViewClose}>
               Close
-            </Button>
+            </Button>,
           ]}
         >
           <img
@@ -199,5 +199,5 @@ class Field extends Component {
 
 export default {
   field_name: FIELD_NAME,
-  render: props => <Field {...props} />
+  render: (props) => <Field {...props} />,
 };

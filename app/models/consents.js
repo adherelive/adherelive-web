@@ -6,58 +6,58 @@ import { TABLE_NAME as userRoleTableName } from "./userRoles";
 
 export const TABLE_NAME = "consents";
 
-export const db = database => {
+export const db = (database) => {
   database.define(
     TABLE_NAME,
     {
       id: {
         type: DataTypes.INTEGER,
         primaryKey: true,
-        autoIncrement: true
+        autoIncrement: true,
       },
       type: {
         type: DataTypes.STRING,
-        allowNull: false
+        allowNull: false,
       },
       doctor_id: {
         type: DataTypes.INTEGER,
         allowNull: false,
         references: {
           model: {
-            tableName: doctorTableName
+            tableName: doctorTableName,
           },
-          key: "id"
-        }
+          key: "id",
+        },
       },
       patient_id: {
         type: DataTypes.INTEGER,
         allowNull: false,
         references: {
           model: {
-            tableName: patientTableName
+            tableName: patientTableName,
           },
-          key: "id"
-        }
+          key: "id",
+        },
       },
       user_role_id: {
         type: DataTypes.INTEGER,
         allowNull: false,
         references: {
           model: {
-            tableName: userRoleTableName
+            tableName: userRoleTableName,
           },
-          key: "id"
-        }
+          key: "id",
+        },
       },
       details: {
-        type: DataTypes.JSON
+        type: DataTypes.JSON,
       },
       activated_on: {
-        type: DataTypes.DATE
+        type: DataTypes.DATE,
       },
       expired_on: {
-        type: DataTypes.DATE
-      }
+        type: DataTypes.DATE,
+      },
     },
     {
       underscored: true,
@@ -69,27 +69,27 @@ export const db = database => {
             type: this.type,
             details: this.details,
             activated_on: this.activated_on,
-            expired_on: this.expired_on
+            expired_on: this.expired_on,
           };
-        }
-      }
+        },
+      },
     }
   );
 };
 
-export const associate = database => {
+export const associate = (database) => {
   database.models[TABLE_NAME].hasOne(database.models[patientTableName], {
     foreignKey: "id",
-    sourceKey: "patient_id"
+    sourceKey: "patient_id",
   });
 
   database.models[TABLE_NAME].hasOne(database.models[doctorTableName], {
     foreignKey: "id",
-    sourceKey: "doctor_id"
+    sourceKey: "doctor_id",
   });
 
   database.models[TABLE_NAME].hasOne(database.models[userRoleTableName], {
     foreignKey: "id",
-    sourceKey: "user_role_id"
+    sourceKey: "user_role_id",
   });
 };

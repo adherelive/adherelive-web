@@ -9,7 +9,7 @@ import { CURRENT_TAB } from "../../Dashboard";
 
 export const SORTING_TYPE = {
   SORT_BY_DATE: "0",
-  SORT_BY_NAME: "1"
+  SORT_BY_NAME: "1",
 };
 
 class patientTable extends Component {
@@ -20,7 +20,7 @@ class patientTable extends Component {
       pageSize: 0,
       loading: false,
       total: null,
-      tabChanged: false
+      tabChanged: false,
     };
   }
 
@@ -31,12 +31,10 @@ class patientTable extends Component {
   async componentDidUpdate(prevProps, prevState) {
     const {
       currentTab: prev_currentTab = "",
-      sortingType: prev_sortingType = SORTING_TYPE.SORT_BY_NAME
+      sortingType: prev_sortingType = SORTING_TYPE.SORT_BY_NAME,
     } = prevProps;
-    const {
-      currentTab = "",
-      sortingType = SORTING_TYPE.SORT_BY_NAME
-    } = this.props;
+    const { currentTab = "", sortingType = SORTING_TYPE.SORT_BY_NAME } =
+      this.props;
     const { offset, tabChanged = false } = this.state;
 
     if (currentTab !== prev_currentTab) {
@@ -68,14 +66,14 @@ class patientTable extends Component {
       const payload = {
         offset: state_offset,
         sort_by_name: sortingType,
-        watchlist: is_watchlist_flag
+        watchlist: is_watchlist_flag,
       };
       this.setState({ loading: true });
       const response = await getPatientsPaginated(payload);
       const {
         status,
         statusCode,
-        payload: { data = {}, message: msg = "" } = {}
+        payload: { data = {}, message: msg = "" } = {},
       } = response || {};
       const { offset = "", pageSize = "", total = null } = ({} = data || {});
 
@@ -109,7 +107,7 @@ class patientTable extends Component {
       removePatientFromWatchlist,
       openEditPatientDrawer,
       paginated_patient_ids = {},
-      tabChanged
+      tabChanged,
     } = this.props;
 
     const { offset = 0 } = this.state;
@@ -118,13 +116,13 @@ class patientTable extends Component {
 
     const {
       paginated_all_patient_ids = {},
-      paginated_watchlist_patient_ids = {}
+      paginated_watchlist_patient_ids = {},
     } = paginated_patient_ids;
     let doctor_id = null;
 
     const { onRowClick, handleGetPatients } = this;
 
-    Object.keys(doctors).forEach(id => {
+    Object.keys(doctors).forEach((id) => {
       const { basic_info: { user_id = null } = {} } = doctors[id] || {};
 
       if (user_id === authenticated_user) {
@@ -152,7 +150,7 @@ class patientTable extends Component {
     let patients = {};
     if (currentTab === CURRENT_TAB.ALL_PATIENTS) {
       patients = Object.keys(temp_patients)
-        .filter(key => arrayOfIds.includes(parseInt(key)))
+        .filter((key) => arrayOfIds.includes(parseInt(key)))
         .reduce((obj, key) => {
           obj[key] = temp_patients[key];
           return obj;
@@ -160,7 +158,7 @@ class patientTable extends Component {
     } else {
       patients = Object.keys(temp_patients)
         .filter(
-          key =>
+          (key) =>
             arrayOfIds.includes(parseInt(key)) &&
             doc_watchlist_patient_ids.includes(parseInt(key))
         )
@@ -199,21 +197,21 @@ class patientTable extends Component {
       handleGetPatients,
       currentTab,
       offset,
-      paginated_patient_ids
+      paginated_patient_ids,
     };
 
     if (sortingType === SORTING_TYPE.SORT_BY_DATE) {
-      return patientIdsArr.map(id => {
+      return patientIdsArr.map((id) => {
         return generateRow({ id, ...props });
       });
     } else {
-      return patientIdsArr.map(id => {
+      return patientIdsArr.map((id) => {
         return generateRow({ id, ...props });
       });
     }
   };
 
-  onRowClick = key => event => {
+  onRowClick = (key) => (event) => {
     event.preventDefault();
     const { openPatientDetailsDrawer } = this.props;
     openPatientDetailsDrawer({ patient_id: key });
@@ -229,32 +227,28 @@ class patientTable extends Component {
     }
   };
 
-  formatMessage = data => this.props.intl.formatMessage(data);
+  formatMessage = (data) => this.props.intl.formatMessage(data);
 
   getLoadingComponent = () => {
     const antIcon = <Icon type="loading" style={{ fontSize: 24 }} spin />;
     return {
-      indicator: antIcon
+      indicator: antIcon,
     };
   };
 
   render() {
-    const {
-      getDataSource,
-      onPageChange,
-      formatMessage,
-      getLoadingComponent
-    } = this;
+    const { getDataSource, onPageChange, formatMessage, getLoadingComponent } =
+      this;
     const {
       pageSize = 10,
       loading = false,
       total = null,
-      tabChanged = false
+      tabChanged = false,
     } = this.state;
 
     const { toggleSort, sortingType = SORTING_TYPE.SORT_BY_NAME } = this.props;
     const patientLocale = {
-      emptyText: formatMessage(messages.emptyPatientTable)
+      emptyText: formatMessage(messages.emptyPatientTable),
     };
 
     return (
@@ -266,7 +260,7 @@ class patientTable extends Component {
           formatMessage,
           className: "pointer",
           toggleSort,
-          sortingType
+          sortingType,
         })}
         dataSource={getDataSource()}
         scroll={{ x: 1600 }}
@@ -277,7 +271,7 @@ class patientTable extends Component {
           onChange: (page, pageSize) => {
             onPageChange(page, pageSize);
           },
-          ...(tabChanged && { current: 1 })
+          ...(tabChanged && { current: 1 }),
         }}
         locale={patientLocale}
       />

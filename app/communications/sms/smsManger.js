@@ -7,7 +7,7 @@ class SmsManager {
     AWS.config.update({
       accessKeyId: process.config.aws.access_key_id,
       secretAccessKey: process.config.aws.access_key,
-      region: process.config.aws.region
+      region: process.config.aws.region,
     });
 
     this.TopicArn = process.config.aws.topic_arn;
@@ -17,8 +17,8 @@ class SmsManager {
     this.sns.setSMSAttributes({
       attributes: {
         DefaultSenderID: "ADHERE-LIVE",
-        DefaultSMSType: "Transactional"
-      }
+        DefaultSMSType: "Transactional",
+      },
     });
   }
 
@@ -80,11 +80,11 @@ class SmsManager {
       await this.sns
         .publish(smsData)
         .promise()
-        .then(data => {
+        .then((data) => {
           log.info("sms sent...........!!", data);
           smsSent = true;
         })
-        .catch(error => {
+        .catch((error) => {
           log.info("sending sms error ------->>>>", error);
           smsSent = false;
         });
@@ -126,23 +126,23 @@ class SmsManager {
     if (!smsData.countryCode)
       return {
         error: 1,
-        message: "invalid or empty country code!!"
+        message: "invalid or empty country code!!",
       };
 
     if (!smsData.phoneNumber)
       return {
         error: 1,
-        message: "invalid or empty phone number!!"
+        message: "invalid or empty phone number!!",
       };
 
     if (!smsData.message)
       return {
         error: 1,
-        message: "message can't be empty"
+        message: "message can't be empty",
       };
     return {
       error: 0,
-      message: "valid"
+      message: "valid",
     };
   }
 }

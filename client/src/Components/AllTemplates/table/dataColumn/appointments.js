@@ -1,7 +1,7 @@
 import React from "react";
 import moment from "moment";
 
-export default props => {
+export default (props) => {
   const { template_appointment_ids, appointmentsData = {} } = props;
 
   let appointments = [];
@@ -17,7 +17,7 @@ export default props => {
     const {
       reason = "",
       details: { description = "", date = "", start_time = "" } = {},
-      time_gap = ""
+      time_gap = "",
     } = appointmentsData[key] || {};
 
     appointments.push(

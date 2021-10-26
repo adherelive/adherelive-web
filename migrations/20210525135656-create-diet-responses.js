@@ -13,27 +13,27 @@ module.exports = {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
-        type: DataTypes.INTEGER
+        type: DataTypes.INTEGER,
       },
       diet_id: {
         type: DataTypes.INTEGER,
         allowNull: false,
         references: {
           model: {
-            tableName: dietTableName
+            tableName: dietTableName,
           },
-          key: "id"
-        }
+          key: "id",
+        },
       },
       schedule_event_id: {
         type: DataTypes.INTEGER,
         allowNull: false,
         references: {
           model: {
-            tableName: scheduleEventsTable
+            tableName: scheduleEventsTable,
           },
-          key: "id"
-        }
+          key: "id",
+        },
       },
       status: {
         type: DataTypes.ENUM,
@@ -42,34 +42,34 @@ module.exports = {
           DIET_RESPONSE_STATUS.DONE,
           DIET_RESPONSE_STATUS.EXPIRED,
           DIET_RESPONSE_STATUS.PARTIALLY_DONE,
-          DIET_RESPONSE_STATUS.SKIPPED
-        ]
+          DIET_RESPONSE_STATUS.SKIPPED,
+        ],
       },
       document_uploaded: {
         type: DataTypes.BOOLEAN,
-        defaultValue: false
+        defaultValue: false,
       },
       response_text: {
-        type: DataTypes.STRING(2000)
+        type: DataTypes.STRING(2000),
       },
       other_details: {
-        type: DataTypes.JSON
+        type: DataTypes.JSON,
       },
       created_at: {
         allowNull: false,
-        type: DataTypes.DATE
+        type: DataTypes.DATE,
       },
       updated_at: {
         allowNull: false,
-        type: DataTypes.DATE
+        type: DataTypes.DATE,
       },
       deleted_at: {
-        type: DataTypes.DATE
-      }
+        type: DataTypes.DATE,
+      },
     });
   },
 
   down: (queryInterface, DataTypes) => {
     return queryInterface.dropTable(TABLE_NAME);
-  }
+  },
 };

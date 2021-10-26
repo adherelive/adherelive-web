@@ -9,7 +9,7 @@ function paymentProductsReducer(state, data) {
   if (payment_products) {
     return {
       ...state,
-      ...payment_products
+      ...payment_products,
     };
   } else {
     return state;
@@ -23,7 +23,7 @@ function deletePaymentProduct(state, data) {
     const { [id.toString()]: product, ...rest } = state;
 
     return {
-      ...rest
+      ...rest,
     };
   } else {
     return state;

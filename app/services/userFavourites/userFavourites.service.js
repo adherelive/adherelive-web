@@ -10,12 +10,12 @@ const Logger = new Log("WEB > USER_FAVOURITES > SERVICE");
 class UserFavouritesService {
   constructor() {}
 
-  markFavourite = async data => {
+  markFavourite = async (data) => {
     const transaction = await Database.initTransaction();
     try {
       const markedRecord = await Database.getModel(TABLE_NAME).create(data, {
         raw: true,
-        transaction
+        transaction,
       });
       await transaction.commit();
       return markedRecord;
@@ -25,11 +25,11 @@ class UserFavouritesService {
     }
   };
 
-  getAllFavourites = async data => {
+  getAllFavourites = async (data) => {
     try {
       const favourite = await Database.getModel(TABLE_NAME).findAll({
         where: data,
-        raw: true
+        raw: true,
       });
       return favourite;
     } catch (error) {
@@ -37,11 +37,11 @@ class UserFavouritesService {
     }
   };
 
-  findExistingFavourite = async data => {
+  findExistingFavourite = async (data) => {
     try {
       const existing = await Database.getModel(TABLE_NAME).findOne({
         where: data,
-        raw: true
+        raw: true,
       });
       return existing;
     } catch (error) {
@@ -49,11 +49,11 @@ class UserFavouritesService {
     }
   };
 
-  getByData = async data => {
+  getByData = async (data) => {
     try {
       const favourite = await Database.getModel(TABLE_NAME).findOne({
         where: data,
-        raw: true
+        raw: true,
       });
       return favourite;
     } catch (error) {
@@ -61,13 +61,13 @@ class UserFavouritesService {
     }
   };
 
-  delete = async id => {
+  delete = async (id) => {
     try {
       const deleteFavourite = await Database.getModel(TABLE_NAME).destroy({
         where: {
-          id
+          id,
         },
-        paranoid: false
+        paranoid: false,
       });
       return deleteFavourite;
     } catch (error) {

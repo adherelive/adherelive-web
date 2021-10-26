@@ -12,7 +12,7 @@ import {
   FileOutlined,
   ProfileOutlined,
   AccountBookOutlined,
-  WalletOutlined
+  WalletOutlined,
 } from "@ant-design/icons";
 import messages from "./messages";
 import config from "../../config";
@@ -44,19 +44,19 @@ const PRIVACY_PAGE_URL = `${config.WEB_URL}${PATH.PRIVACY_POLICY}`;
 const SIDEBAR_NAVIGATION = {
   SUB_MENU: {
     SETTINGS: "SETTINGS",
-    PRIVACY_POLICY: "PRIVACY_POLICY"
-  }
+    PRIVACY_POLICY: "PRIVACY_POLICY",
+  },
 };
 
 class SideMenu extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      selectedKeys: ""
+      selectedKeys: "",
     };
   }
 
-  formatMessage = message => this.props.intl.formatMessage(message);
+  formatMessage = (message) => this.props.intl.formatMessage(message);
 
   handleLogout = async () => {
     const { logOut } = this.props;
@@ -90,7 +90,7 @@ class SideMenu extends Component {
         onOk: async () => {
           this.handleItemSelectForRedirect({ key });
         },
-        onCancel() {}
+        onCancel() {},
       });
     } catch (error) {
       console.log("err --->", error);
@@ -104,7 +104,7 @@ class SideMenu extends Component {
       authenticated_category,
       authenticated_user,
       authPermissions = [],
-      openAppointmentDrawer
+      openAppointmentDrawer,
     } = this.props;
     const { handleLogout } = this;
     const current_user = users[authenticated_user];
@@ -179,7 +179,7 @@ class SideMenu extends Component {
       authenticated_user,
       authPermissions = [],
       openAppointmentDrawer,
-      switchUserRole
+      switchUserRole,
     } = this.props;
     const { handleLogout } = this;
     const current_user = users[authenticated_user];
@@ -289,7 +289,7 @@ class SideMenu extends Component {
     }
   };
 
-  getOnboardedByDetails = provider_id => {
+  getOnboardedByDetails = (provider_id) => {
     const { providers } = this.props;
     const { formatMessage } = this;
 
@@ -309,7 +309,7 @@ class SideMenu extends Component {
     }
   };
 
-  handleManageAccount = e => {
+  handleManageAccount = (e) => {
     e.preventDefault();
     e.stopPropagation();
 
@@ -318,7 +318,7 @@ class SideMenu extends Component {
     // history.push();
   };
 
-  handleNavigate = path => e => {
+  handleNavigate = (path) => (e) => {
     e.preventDefault();
     const { history } = this.props;
     switch (path) {
@@ -341,7 +341,7 @@ class SideMenu extends Component {
 
     let doctorId = null;
 
-    Object.keys(doctors).forEach(id => {
+    Object.keys(doctors).forEach((id) => {
       const { basic_info: { user_id } = {} } = doctors[id] || {};
       if (user_id === user_identity) {
         doctorId = id;
@@ -384,17 +384,17 @@ class SideMenu extends Component {
       doctors,
       providers,
       authenticated_user,
-      authDoctor
+      authDoctor,
     } = this.props;
     const {
       // getOnboardedByDetails,
       // handleManageAccount,
       getProviderIcon,
       formatMessage,
-      getProviderUserRoleIcon
+      getProviderUserRoleIcon,
     } = this;
 
-    return user_role_ids.map(id => {
+    return user_role_ids.map((id) => {
       const { basic_info: { user_identity, linked_id } = {} } =
         user_roles[id] || {};
 
@@ -447,7 +447,7 @@ class SideMenu extends Component {
           position: "absolute",
           bottom: 10,
           left: 50,
-          minWidth: 300
+          minWidth: 300,
         }}
         key={"sub"}
         defaultSelectedKeys={[`${ACCOUNT}.${auth_role}`]}
@@ -496,13 +496,8 @@ class SideMenu extends Component {
   };
 
   getProviderIcon = (className = "w35 h35", userRoleId = null) => {
-    const {
-      auth_role,
-      user_roles,
-      providers,
-      authDoctor,
-      doctor_provider_id
-    } = this.props;
+    const { auth_role, user_roles, providers, authDoctor, doctor_provider_id } =
+      this.props;
 
     let currentUserRoleId = auth_role;
     if (userRoleId) {
@@ -522,7 +517,7 @@ class SideMenu extends Component {
           >
             {name
               .split(" ")
-              .map(word => word.charAt(0).toUpperCase())
+              .map((word) => word.charAt(0).toUpperCase())
               .join(" ")}
           </div>
           // <div className={"bg-grey br50 w30 h30"}>{name.split(" ").map(word => word.charAt(0).toUpperCase()).join(" ")}</div>
@@ -560,7 +555,7 @@ class SideMenu extends Component {
         >
           {name
             .split(" ")
-            .map(word => word.charAt(0).toUpperCase())
+            .map((word) => word.charAt(0).toUpperCase())
             .join(" ")}
         </div>
       );
@@ -621,7 +616,7 @@ class SideMenu extends Component {
       authenticated_category,
       intl: { formatMessage } = {},
       doctor_provider_id = null,
-      notification_count = {}
+      notification_count = {},
     } = this.props;
 
     const { handleItemSelect, getProviderIcon } = this;
@@ -640,8 +635,8 @@ class SideMenu extends Component {
           user_id = 0,
           profile_pic = "",
           first_name = " ",
-          last_name = " "
-        } = {}
+          last_name = " ",
+        } = {},
       } = doctor;
 
       if (user_id === authenticated_user) {
@@ -656,7 +651,7 @@ class SideMenu extends Component {
     if (user_name) {
       initials = user_name
         .split(" ")
-        .map(n => (n && n.length > 0 && n[0] ? n[0].toUpperCase() : ""))
+        .map((n) => (n && n.length > 0 && n[0] ? n[0].toUpperCase() : ""))
         .join("");
     }
 

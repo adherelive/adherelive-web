@@ -11,12 +11,12 @@ module.exports = {
         severity_id: "1",
         condition_id: "1",
         created_at: new Date(),
-        updated_at: new Date()
-      }
+        updated_at: new Date(),
+      },
     ]);
   },
 
   down: (queryInterface, Sequelize) => {
     return queryInterface.bulkDelete(TABLE_NAME, null, {});
-  }
+  },
 };

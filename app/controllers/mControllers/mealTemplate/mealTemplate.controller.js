@@ -23,8 +23,8 @@ class MealTemplateController extends Controller {
         body,
         userDetails: {
           userCategoryId = null,
-          userData: { category = null } = {}
-        } = {}
+          userData: { category = null } = {},
+        } = {},
       } = req;
       const { food_item_detail_ids: foodItemDetails = [], name = "" } =
         body || {};
@@ -33,7 +33,7 @@ class MealTemplateController extends Controller {
 
       const mealTemplateExistsForName =
         (await mealTemplateService.findOne({
-          name
+          name,
         })) || null;
 
       if (mealTemplateExistsForName) {
@@ -50,9 +50,9 @@ class MealTemplateController extends Controller {
           meal: {
             name,
             creator_id: userCategoryId,
-            creator_type: category
+            creator_type: category,
           },
-          foodItemDetails
+          foodItemDetails,
         })) || null;
 
       if (mealTemplateId !== null) {
@@ -62,7 +62,7 @@ class MealTemplateController extends Controller {
           res,
           200,
           {
-            ...(await mealTemplates.getReferenceInfo())
+            ...(await mealTemplates.getReferenceInfo()),
           },
           "Meal Template created successfully"
         );
@@ -86,7 +86,7 @@ class MealTemplateController extends Controller {
       Log.debug("update meal template request", req.body);
       const {
         params: { id } = {},
-        body: { name, food_item_detail_ids: foodItemDetails = [] } = {}
+        body: { name, food_item_detail_ids: foodItemDetails = [] } = {},
       } = req;
 
       const mealTemplateService = new MealTemplateService();
@@ -118,10 +118,10 @@ class MealTemplateController extends Controller {
 
       const isMealTemplateUpdate = await mealTemplateService.update({
         meal: {
-          name
+          name,
         },
         foodItemDetails,
-        id
+        id,
       });
 
       if (!isMealTemplateUpdate) {
@@ -134,14 +134,14 @@ class MealTemplateController extends Controller {
       }
 
       const updatedMealTemplate = await MealTemplateWrapper({
-        id
+        id,
       });
 
       return raiseSuccess(
         res,
         200,
         {
-          ...(await updatedMealTemplate.getReferenceInfo())
+          ...(await updatedMealTemplate.getReferenceInfo()),
         },
         "Meal Template updated successfully"
       );
@@ -159,12 +159,12 @@ class MealTemplateController extends Controller {
       const mealTemplateService = new MealTemplateService();
 
       const templateFound = await mealTemplateService.findOne({
-        id: template_id
+        id: template_id,
       });
 
       if (templateFound) {
         const deleted = await mealTemplateService.delete({
-          template_id
+          template_id,
         });
 
         return raiseSuccess(res, 200, {}, "Meal Template deleted");

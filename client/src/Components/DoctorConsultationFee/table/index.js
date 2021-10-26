@@ -31,7 +31,7 @@ class ConsultationFeeTable extends Component {
       const {
         status,
         statusCode,
-        payload: { data = {}, message: message_resp_msg = "" } = {}
+        payload: { data = {}, message: message_resp_msg = "" } = {},
       } = response || {};
       if (!status && statusCode !== 201) {
         message.warn(message_resp_msg);
@@ -46,11 +46,11 @@ class ConsultationFeeTable extends Component {
   getLoadingComponent = () => {
     const antIcon = <Icon type="loading" style={{ fontSize: 24 }} spin />;
     return {
-      indicator: antIcon
+      indicator: antIcon,
     };
   };
 
-  formatMessage = data => this.props.intl.formatMessage(data);
+  formatMessage = (data) => this.props.intl.formatMessage(data);
 
   getDataSource = () => {
     const {
@@ -59,7 +59,7 @@ class ConsultationFeeTable extends Component {
       deleteDoctorPaymentProduct,
       openConsultationFeeDrawer,
       intl: { formatMessage } = {},
-      payment_products = {}
+      payment_products = {},
     } = this.props;
 
     // const {onRowClick} = this;
@@ -76,7 +76,7 @@ class ConsultationFeeTable extends Component {
             openConsultationFeeDrawer,
             formatMessage,
             doctors,
-            editable: creator_role_id === for_user_role_id ? true : false
+            editable: creator_role_id === for_user_role_id ? true : false,
           })
         );
       }
@@ -90,22 +90,22 @@ class ConsultationFeeTable extends Component {
       // onRow,
       onSelectChange,
       // getLoadingComponent,
-      getDataSource
+      getDataSource,
     } = this;
 
     const rowSelection = {
-      onChange: onSelectChange
+      onChange: onSelectChange,
     };
 
     const {
       loading,
       pagination_bottom,
       authPermissions = [],
-      intl: { formatMessage } = {}
+      intl: { formatMessage } = {},
     } = this.props;
 
     const locale = {
-      emptyText: this.formatMessage(messages.emptyConsultationTable)
+      emptyText: this.formatMessage(messages.emptyConsultationTable),
     };
 
     return (
@@ -115,12 +115,12 @@ class ConsultationFeeTable extends Component {
         // loading={loading === true ? getLoadingComponent() : false}
         columns={getColumn({
           formatMessage,
-          className: "pointer"
+          className: "pointer",
         })}
         dataSource={getDataSource()}
         scroll={{ x: "100%" }}
         pagination={{
-          position: "top"
+          position: "top",
           // pageSize: 6
         }}
         locale={locale}

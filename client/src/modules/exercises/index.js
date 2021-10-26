@@ -3,7 +3,7 @@ import { REQUEST_TYPE } from "../../constant";
 import {
   addExerciseUrl,
   updateExerciseUrl,
-  uploadExerciseContentUrl
+  uploadExerciseContentUrl,
 } from "../../Helper/urls/exercises";
 
 // import {GET_SINGLE_DIET_DETAILS_COMPLETED} from "../../modules/diets";
@@ -23,26 +23,26 @@ export const UPLOAD_EXERCISE_CONTENT_FAILED = "UPLOAD_EXERCISE_CONTENT_FAILED";
 
 export const STORE_EXERCISE_AND_DETAILS = "STORE_EXERCISE_AND_DETAILS";
 
-export const addExercise = payload => {
+export const addExercise = (payload) => {
   let response = {};
-  return async dispatch => {
+  return async (dispatch) => {
     try {
       response = await doRequest({
         method: REQUEST_TYPE.POST,
         url: addExerciseUrl(),
-        data: payload
+        data: payload,
       });
 
       const { status, payload: { data, message = "" } = {} } = response || {};
       if (status === true) {
         dispatch({
           type: ADD_EXERCISE_COMPLETED,
-          data
+          data,
         });
       } else {
         dispatch({
           type: ADD_EXERCISE_FAILED,
-          message
+          message,
         });
       }
     } catch (error) {
@@ -54,24 +54,24 @@ export const addExercise = payload => {
 
 export const updateExercise = ({ exercise_id, data: payload }) => {
   let response = {};
-  return async dispatch => {
+  return async (dispatch) => {
     try {
       response = await doRequest({
         method: REQUEST_TYPE.POST,
         url: updateExerciseUrl(exercise_id),
-        data: payload
+        data: payload,
       });
 
       const { status, payload: { data, message = "" } = {} } = response || {};
       if (status === true) {
         dispatch({
           type: EDIT_EXERCISE_COMPLETED,
-          data
+          data,
         });
       } else {
         dispatch({
           type: EDIT_EXERCISE_FAILED,
-          message
+          message,
         });
       }
     } catch (error) {
@@ -81,14 +81,14 @@ export const updateExercise = ({ exercise_id, data: payload }) => {
   };
 };
 
-export const storeExerciseAndDetails = data => {
-  return async dispatch => {
+export const storeExerciseAndDetails = (data) => {
+  return async (dispatch) => {
     try {
       const { exercises, exercise_details } = data;
       if (exercises && exercise_details) {
         dispatch({
           type: STORE_EXERCISE_AND_DETAILS,
-          data
+          data,
         });
       }
     } catch (error) {
@@ -97,26 +97,26 @@ export const storeExerciseAndDetails = data => {
   };
 };
 
-export const uploadExerciseContent = payload => {
+export const uploadExerciseContent = (payload) => {
   let response = {};
-  return async dispatch => {
+  return async (dispatch) => {
     try {
       response = await doRequest({
         method: REQUEST_TYPE.POST,
         url: uploadExerciseContentUrl(),
-        data: payload
+        data: payload,
       });
 
       const { status, payload: { data, message = "" } = {} } = response || {};
       if (status === true) {
         dispatch({
           type: UPLOAD_EXERCISE_CONTENT_COMPLETED,
-          data
+          data,
         });
       } else {
         dispatch({
           type: UPLOAD_EXERCISE_CONTENT_FAILED,
-          message
+          message,
         });
       }
     } catch (error) {
@@ -131,7 +131,7 @@ function exerciseReducer(state, data) {
   if (exercises) {
     return {
       ...state,
-      ...exercises
+      ...exercises,
     };
   } else {
     return state;

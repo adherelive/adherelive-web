@@ -5,7 +5,7 @@ import { close } from "../../modules/drawer";
 import {
   getMedications,
   updateMedication,
-  deleteMedication
+  deleteMedication,
 } from "../../modules/medications";
 import { getMedicationDetails } from "../../modules/otherDetails";
 import { searchMedicine, addMedicine } from "../../modules/medicines";
@@ -14,10 +14,10 @@ import { getPatientCarePlanDetails } from "../../modules/carePlans";
 import {
   markFavourite,
   getFavourites,
-  removeFavourite
+  removeFavourite,
 } from "../../modules/favouritesData/index";
 
-const mapStateToProps = state => {
+const mapStateToProps = (state) => {
   const { auth } = state;
   const { authenticated_user, authenticated_category } = auth;
   const {
@@ -28,7 +28,7 @@ const mapStateToProps = state => {
     patients,
     doctors = {},
     favourites_data = {},
-    pages: { favourite_medicine_ids = [] } = {}
+    pages: { favourite_medicine_ids = [] } = {},
   } = state;
 
   return {
@@ -43,25 +43,25 @@ const mapStateToProps = state => {
     authenticated_user,
     authenticated_category,
     favourites_data,
-    favourite_medicine_ids
+    favourite_medicine_ids,
   };
 };
 
-const mapDispatchToProps = dispatch => {
+const mapDispatchToProps = (dispatch) => {
   return {
     close: () => dispatch(close()),
-    updateMedicationReminder: data => dispatch(updateMedication(data)),
-    getMedicationDetails: id => dispatch(getMedicationDetails(id)),
-    searchMedicine: data => dispatch(searchMedicine(data)),
-    deleteMedication: id => dispatch(deleteMedication(id)),
-    getMedications: id => dispatch(getMedications(id)),
-    getPatientCarePlanDetails: patientId =>
+    updateMedicationReminder: (data) => dispatch(updateMedication(data)),
+    getMedicationDetails: (id) => dispatch(getMedicationDetails(id)),
+    searchMedicine: (data) => dispatch(searchMedicine(data)),
+    deleteMedication: (id) => dispatch(deleteMedication(id)),
+    getMedications: (id) => dispatch(getMedications(id)),
+    getPatientCarePlanDetails: (patientId) =>
       dispatch(getPatientCarePlanDetails(patientId)),
-    addNewMedicine: data => dispatch(addMedicine(data)),
-    markFavourite: payload => dispatch(markFavourite(payload)),
+    addNewMedicine: (data) => dispatch(addMedicine(data)),
+    markFavourite: (payload) => dispatch(markFavourite(payload)),
     getFavourites: ({ type }) => dispatch(getFavourites({ type })),
     removeFavourite: ({ typeId, type }) =>
-      dispatch(removeFavourite({ typeId, type }))
+      dispatch(removeFavourite({ typeId, type })),
   };
 };
 

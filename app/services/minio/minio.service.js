@@ -18,7 +18,7 @@ class MinioService {
     AWS.config.update({
       accessKeyId: process.config.aws.access_key_id,
       secretAccessKey: process.config.aws.access_key,
-      region: process.config.aws.region
+      region: process.config.aws.region,
     });
     this.s3Client = new AWS.S3();
     this.bucket = process.config.minio.MINIO_BUCKET_NAME;
@@ -51,11 +51,11 @@ class MinioService {
               Action: ["s3:GetObject"],
               Effect: "Allow",
               Principal: {
-                AWS: ["*"]
+                AWS: ["*"],
               },
-              Resource: [`arn:aws:s3:::${bucket_name}/*`] //${bucket_name}
-            }
-          ]
+              Resource: [`arn:aws:s3:::${bucket_name}/*`], //${bucket_name}
+            },
+          ],
         };
 
         result = await this.s3Client.makeBucket(
@@ -109,11 +109,11 @@ class MinioService {
     }
   }
 
-  getSignedUrl = path => {
+  getSignedUrl = (path) => {
     return this.s3Client.getSignedUrl("getObject", {
       Bucket: this.bucket,
       Key: path.substring(1, path.length),
-      Expires: 60 * parseInt(process.config.s3.EXPIRY_TIME)
+      Expires: 60 * parseInt(process.config.s3.EXPIRY_TIME),
     });
   };
 
@@ -146,7 +146,7 @@ class MinioService {
           Bucket: this.bucket,
           Key: file,
           Body: buffer,
-          ContentType: metaData["Content-Type"]
+          ContentType: metaData["Content-Type"],
         },
         this.callback
       );
@@ -173,9 +173,9 @@ class MinioService {
       const test = await this.getSignedUrl(objectName);
 
       return new Promise((resolve, reject) => {
-        https.get(test, response => {
+        https.get(test, (response) => {
           const stream = response.pipe(file);
-          stream.on("finish", res => {
+          stream.on("finish", (res) => {
             resolve(true);
           });
         });
@@ -207,7 +207,7 @@ class MinioService {
           Bucket: this.bucket,
           Key: file,
           Body: buffer,
-          ContentType: metaData["Content-Type"]
+          ContentType: metaData["Content-Type"],
         },
         this.callback
       );
@@ -238,7 +238,7 @@ class MinioService {
           Bucket: this.bucket,
           Key: file,
           Body: buffer,
-          ContentType: metaData["Content-Type"]
+          ContentType: metaData["Content-Type"],
         },
         this.callback
       );

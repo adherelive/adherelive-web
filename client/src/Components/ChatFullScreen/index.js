@@ -19,24 +19,24 @@ class ChatFullScreen extends Component {
       patientUserId: 1,
       patientId: 1,
       placeCall: false,
-      replyMessadeId: null
+      replyMessadeId: null,
     };
   }
 
   componentDidMount() {
     let {
       match: {
-        params: { patient_id }
+        params: { patient_id },
       },
       doctors = {},
       patients = {},
-      authenticated_user = 1
+      authenticated_user = 1,
     } = this.props;
 
     let doctorUserId = ""; //user_id of doctor
     let {
       basic_info: { user_id: patientUserId = "" } = {},
-      user_role_id: patientRoleId = null
+      user_role_id: patientRoleId = null,
     } = patients[patient_id] || {};
     // for (let doc of Object.values(doctors)) {
     //   let {
@@ -56,17 +56,17 @@ class ChatFullScreen extends Component {
       doctorUserId,
       roomId,
       patientUserId: patientUserId,
-      patientId: patient_id
+      patientId: patient_id,
     });
   }
 
   async componentDidUpdate(prevProps, prevState) {
     const {
       notification_redirect: { patient_id = null } = {},
-      resetNotificationRedirect
+      resetNotificationRedirect,
     } = this.props;
     const {
-      notification_redirect: { patient_id: prev_patient_id = null } = {}
+      notification_redirect: { patient_id: prev_patient_id = null } = {},
     } = prevProps;
     if (patient_id && patient_id !== prev_patient_id) {
       await this.handleRedirectUpdate();
@@ -80,7 +80,7 @@ class ChatFullScreen extends Component {
       patients = {},
       authenticated_user = 1,
       doctors = {},
-      resetNotificationRedirect
+      resetNotificationRedirect,
     } = this.props;
 
     let doctorUserId = null;
@@ -90,7 +90,7 @@ class ChatFullScreen extends Component {
 
     for (let doc of Object.values(doctors)) {
       let {
-        basic_info: { user_id, id = 1 }
+        basic_info: { user_id, id = 1 },
       } = doc;
       if (parseInt(user_id) === parseInt(authenticated_user)) {
         doctorUserId = user_id;
@@ -103,7 +103,7 @@ class ChatFullScreen extends Component {
       doctorUserId,
       roomId,
       patientUserId: patientUserId,
-      patientId: patient_id
+      patientId: patient_id,
     });
   };
 
@@ -112,11 +112,11 @@ class ChatFullScreen extends Component {
 
     if (currentId !== newId && newId === null && currentId !== null) {
       this.setState({
-        replyMessadeId: newId
+        replyMessadeId: newId,
       });
     } else if (currentId !== newId && newId !== null && currentId === null) {
       this.setState({
-        replyMessadeId: newId
+        replyMessadeId: newId,
       });
     }
   };
@@ -139,7 +139,7 @@ class ChatFullScreen extends Component {
     );
   };
 
-  formatMessage = data => this.props.intl.formatMessage(data);
+  formatMessage = (data) => this.props.intl.formatMessage(data);
 
   checkVideoCallIsBlocked = () => {
     const { features_mappings = {} } = this.props;
@@ -157,7 +157,7 @@ class ChatFullScreen extends Component {
     return videoCallBlocked;
   };
 
-  getFeatureId = featureName => {
+  getFeatureId = (featureName) => {
     const { features = {} } = this.props;
     const featuresIds = Object.keys(features);
 
@@ -175,26 +175,26 @@ class ChatFullScreen extends Component {
   getOtherUserCategoryId = () => {
     const {
       match: {
-        params: { patient_id = null }
-      }
+        params: { patient_id = null },
+      },
     } = this.props;
     return patient_id;
   };
 
-  setPatientId = patient_id => () => {
+  setPatientId = (patient_id) => () => {
     const { doctorUserId } = this.state;
 
     const { patients = {}, auth_role: doctorRoleId = null } = this.props;
     const {
       basic_info: { user_id: patientUserId = "" } = {},
-      user_role_id: patientRoleId = null
+      user_role_id: patientRoleId = null,
     } = patients[patient_id];
 
     const roomId = getRoomId(doctorRoleId, patientRoleId);
     this.setState({
       patientUserId: patientUserId,
       patientId: patient_id,
-      roomId
+      roomId,
     });
   };
 
@@ -228,9 +228,9 @@ class ChatFullScreen extends Component {
         first_name = "",
         middle_name = "",
         last_name = "",
-        full_name = ""
+        full_name = "",
       } = {},
-      details: { profile_pic: patientDp = "" } = {}
+      details: { profile_pic: patientDp = "" } = {},
     } = patients[patientId] || {};
     return (
       <div className="chat-screen-container">

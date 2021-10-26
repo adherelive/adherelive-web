@@ -21,7 +21,7 @@ class AddExerciseGroup extends Component {
       editable: false,
       exercise_name: "",
       uploadedVideoUrl: "",
-      videoContentType: null
+      videoContentType: null,
     };
 
     this.FormWrapper = Form.create({ onFieldsChange: this.onFormFieldChanges })(
@@ -29,23 +29,23 @@ class AddExerciseGroup extends Component {
     );
   }
 
-  setUploadedVideoUrl = url => {
+  setUploadedVideoUrl = (url) => {
     this.setState({ uploadedVideoUrl: url });
   };
 
-  setVideoContentType = type => {
+  setVideoContentType = (type) => {
     this.setState({ videoContentType: type });
   };
 
-  setEditable = val => {
+  setEditable = (val) => {
     this.setState({ editable: val });
   };
 
-  setExerciseName = name => {
+  setExerciseName = (name) => {
     this.setState({ exercise_name: name });
   };
 
-  setExerciseDetailId = id => {
+  setExerciseDetailId = (id) => {
     this.setState({ exercise_detail_id: id });
   };
 
@@ -57,9 +57,9 @@ class AddExerciseGroup extends Component {
     this.setState({ visibleAddExerciseDrawer: false });
   };
 
-  onFormFieldChanges = props => {
+  onFormFieldChanges = (props) => {
     const {
-      form: { getFieldsError, isFieldsTouched }
+      form: { getFieldsError, isFieldsTouched },
     } = props;
     const isError = hasErrors(getFieldsError());
     const { disabledSubmit } = this.state;
@@ -68,14 +68,14 @@ class AddExerciseGroup extends Component {
     }
   };
 
-  handleSubmit = e => {
+  handleSubmit = (e) => {
     e.preventDefault();
     const {
       onSubmit,
       storeExerciseAndDetails,
       searched_exercises = {},
       searched_exercise_details = {},
-      updateExercise
+      updateExercise,
     } = this.props;
 
     const { formRef = {} } = this;
@@ -83,17 +83,17 @@ class AddExerciseGroup extends Component {
     const {
       exercise_detail_id = null,
       editable = false,
-      exercise_name = ""
+      exercise_name = "",
     } = this.state;
     const {
       uploadedVideoUrl = "",
-      videoContentType: video_content_type = null
+      videoContentType: video_content_type = null,
     } = this.state;
 
     const {
       props: {
-        form: { validateFields }
-      }
+        form: { validateFields },
+      },
     } = formRef;
 
     validateFields(async (err, values) => {
@@ -105,7 +105,7 @@ class AddExerciseGroup extends Component {
           repetition_id = null,
           calorific_value = null,
           video_content = "",
-          notes = ""
+          notes = "",
         } = values;
 
         let video = {};
@@ -116,7 +116,7 @@ class AddExerciseGroup extends Component {
           }
           video = {
             content_type: video_content_type,
-            content: video_content
+            content: video_content,
           };
         }
 
@@ -132,7 +132,7 @@ class AddExerciseGroup extends Component {
           exercise_detail_id: exercise_detail_id
             ? parseInt(exercise_detail_id)
             : null,
-          notes
+          notes,
         };
 
         const updateData = {
@@ -144,7 +144,7 @@ class AddExerciseGroup extends Component {
             ? parseInt(repetition_value)
             : null,
           calorific_value: calorific_value ? parseFloat(calorific_value) : null,
-          video
+          video,
         };
 
         try {
@@ -156,11 +156,11 @@ class AddExerciseGroup extends Component {
           // if(editable){
           const responseOnUpdate = await updateExercise({
             exercise_id,
-            data: updateData
+            data: updateData,
           });
           const {
             status,
-            payload: { data: resp_data = {}, message: resp_msg = "" } = {}
+            payload: { data: resp_data = {}, message: resp_msg = "" } = {},
           } = responseOnUpdate;
 
           if (status) {
@@ -197,28 +197,28 @@ class AddExerciseGroup extends Component {
     });
   };
 
-  formatMessage = data => this.props.intl.formatMessage(data);
+  formatMessage = (data) => this.props.intl.formatMessage(data);
 
   onClose = () => {
     const { closeExerciseGroupDrawer } = this.props;
     const { formRef } = this;
     const {
       props: {
-        form: { resetFields }
-      }
+        form: { resetFields },
+      },
     } = formRef;
 
     this.setState({
       exercise_detail_id: null,
       visibleAddExerciseDrawer: false,
       editable: false,
-      exercise_name: ""
+      exercise_name: "",
     });
     resetFields();
     closeExerciseGroupDrawer();
   };
 
-  setFormRef = formRef => {
+  setFormRef = (formRef) => {
     this.formRef = formRef;
     if (formRef) {
       this.setState({ formRef: true });
@@ -233,7 +233,7 @@ class AddExerciseGroup extends Component {
       visibleAddExerciseDrawer = false,
       exercise_detail_id = null,
       editable = false,
-      exercise_name = ""
+      exercise_name = "",
     } = this.state;
 
     const {
@@ -244,11 +244,11 @@ class AddExerciseGroup extends Component {
       FormWrapper,
       setExerciseDetailId,
       openAddExerciseDrawer,
-      closeAddExerciseDrawer
+      closeAddExerciseDrawer,
     } = this;
 
     const submitButtonProps = {
-      disabled: disabledSubmit
+      disabled: disabledSubmit,
     };
 
     return (
@@ -259,7 +259,7 @@ class AddExerciseGroup extends Component {
           headerStyle={{
             position: "sticky",
             zIndex: "9999",
-            top: "0px"
+            top: "0px",
           }}
           destroyOnClose={true}
           onClose={onClose}

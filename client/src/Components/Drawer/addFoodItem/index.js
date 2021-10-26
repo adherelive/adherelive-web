@@ -16,7 +16,7 @@ class AddFoodItem extends Component {
     this.state = {
       visible: true,
       disabledSubmit: true,
-      submitting: false
+      submitting: false,
     };
 
     this.FormWrapper = Form.create({ onFieldsChange: this.onFormFieldChanges })(
@@ -24,9 +24,9 @@ class AddFoodItem extends Component {
     );
   }
 
-  onFormFieldChanges = props => {
+  onFormFieldChanges = (props) => {
     const {
-      form: { getFieldsError, isFieldsTouched }
+      form: { getFieldsError, isFieldsTouched },
     } = props;
     const isError = hasErrors(getFieldsError());
     const { disabledSubmit } = this.state;
@@ -35,15 +35,15 @@ class AddFoodItem extends Component {
     }
   };
 
-  handleSubmit = e => {
+  handleSubmit = (e) => {
     e.preventDefault();
     const { addFoodItem } = this.props;
     const { formRef = {}, formatMessage } = this;
 
     const {
       props: {
-        form: { validateFields, resetFields }
-      }
+        form: { validateFields, resetFields },
+      },
     } = formRef;
 
     validateFields(async (err, values) => {
@@ -56,7 +56,7 @@ class AddFoodItem extends Component {
           fats = null,
           carbs = null,
           fibers = null,
-          calorific_value = null
+          calorific_value = null,
         } = values;
 
         const name = initail_name.trim();
@@ -69,7 +69,7 @@ class AddFoodItem extends Component {
           fats: fats ? parseFloat(fats) : null,
           carbs: carbs ? parseFloat(carbs) : null,
           fibers: fibers ? parseFloat(fibers) : null,
-          calorific_value: calorific_value ? parseFloat(calorific_value) : null
+          calorific_value: calorific_value ? parseFloat(calorific_value) : null,
         };
 
         try {
@@ -80,8 +80,8 @@ class AddFoodItem extends Component {
             statusCode: code,
             payload: {
               message: errorMessage = "",
-              error: { error_type = "" } = {}
-            }
+              error: { error_type = "" } = {},
+            },
           } = response || {};
 
           if (!status) {
@@ -101,7 +101,7 @@ class AddFoodItem extends Component {
     });
   };
 
-  formatMessage = data => this.props.intl.formatMessage(data);
+  formatMessage = (data) => this.props.intl.formatMessage(data);
 
   onClose = () => {
     const { closeAddFoodItemDrawer } = this.props;
@@ -109,19 +109,19 @@ class AddFoodItem extends Component {
     const { formRef } = this;
     const {
       props: {
-        form: { resetFields }
-      }
+        form: { resetFields },
+      },
     } = formRef;
     this.setState({
       visible: true,
       disabledSubmit: true,
-      submitting: false
+      submitting: false,
     });
     resetFields();
     closeAddFoodItemDrawer();
   };
 
-  setFormRef = formRef => {
+  setFormRef = (formRef) => {
     this.formRef = formRef;
     if (formRef) {
       this.setState({ formRef: true });
@@ -132,16 +132,11 @@ class AddFoodItem extends Component {
     const { visible } = this.props;
     const { disabledSubmit, submitting = false } = this.state;
 
-    const {
-      onClose,
-      formatMessage,
-      setFormRef,
-      handleSubmit,
-      FormWrapper
-    } = this;
+    const { onClose, formatMessage, setFormRef, handleSubmit, FormWrapper } =
+      this;
 
     const submitButtonProps = {
-      disabled: disabledSubmit
+      disabled: disabledSubmit,
     };
 
     return (
@@ -152,7 +147,7 @@ class AddFoodItem extends Component {
           headerStyle={{
             position: "sticky",
             zIndex: "9999",
-            top: "0px"
+            top: "0px",
           }}
           destroyOnClose={true}
           onClose={onClose}

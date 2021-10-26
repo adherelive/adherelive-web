@@ -3,14 +3,14 @@ import Register from "../../Components/Register";
 import { signOut } from "../../modules/auth";
 import { connect } from "react-redux";
 
-const mapStateToProps = state => {
+const mapStateToProps = (state) => {
   const { graphs, pages: { notification_count = {} } = {} } = state;
   return { graphs, notification_count };
 };
 
-const mapDispatchToProps = dispatch => {
+const mapDispatchToProps = (dispatch) => {
   return {
-    signOut: () => dispatch(signOut())
+    signOut: () => dispatch(signOut()),
   };
 };
 

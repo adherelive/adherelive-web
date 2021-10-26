@@ -30,9 +30,8 @@ class DoctorWrapper extends BaseDoctor {
 
     if (speciality) {
       const specialityDetails = await SpecialityWrapper(speciality);
-      specialityData[
-        specialityDetails.getSpecialityId()
-      ] = specialityDetails.getBasicInfo();
+      specialityData[specialityDetails.getSpecialityId()] =
+        specialityDetails.getBasicInfo();
     }
 
     if (user) {
@@ -42,14 +41,14 @@ class DoctorWrapper extends BaseDoctor {
 
     return {
       doctors: {
-        [getDoctorId()]: await getAllInfo()
+        [getDoctorId()]: await getAllInfo(),
       },
       specialities: {
-        ...specialityData
+        ...specialityData,
       },
       users: {
-        ...userData
-      }
+        ...userData,
+      },
     };
   };
 
@@ -68,7 +67,7 @@ class DoctorWrapper extends BaseDoctor {
       activated_on,
       profile_pic,
       signature_pic,
-      full_name
+      full_name,
     } = _data || {};
     return {
       basic_info: {
@@ -82,10 +81,10 @@ class DoctorWrapper extends BaseDoctor {
         city,
         speciality_id,
         profile_pic: completePath(profile_pic),
-        signature_pic: completePath(signature_pic)
+        signature_pic: completePath(signature_pic),
       },
       qualifications,
-      activated_on
+      activated_on,
     };
   };
 
@@ -105,7 +104,7 @@ class DoctorWrapper extends BaseDoctor {
       city,
       speciality_id,
       razorpay_account_id,
-      signature_pic
+      signature_pic,
     } = _data || {};
 
     const consentService = new ConsentService();
@@ -114,7 +113,7 @@ class DoctorWrapper extends BaseDoctor {
     // });
 
     const watchlistPatients = await doctorService.getAllWatchlist({
-      doctor_id: getDoctorId()
+      doctor_id: getDoctorId(),
     });
 
     let watchlist_patient_ids = [];
@@ -145,12 +144,12 @@ class DoctorWrapper extends BaseDoctor {
     const { rows: userRoles } =
       (await userRoleService.findAndCountAll({
         where: {
-          user_identity: this.getUserId()
+          user_identity: this.getUserId(),
         },
-        attributes: ["id"]
+        attributes: ["id"],
       })) || [];
 
-    const userRoleIds = userRoles.map(userRole => userRole.id);
+    const userRoleIds = userRoles.map((userRole) => userRole.id);
 
     let carePlanIds = {};
     let watchlistPatientIds = {};
@@ -159,7 +158,7 @@ class DoctorWrapper extends BaseDoctor {
       let patientIds = [];
 
       const consents = await consentService.getAllByData({
-        user_role_id: userRoleIds[index]
+        user_role_id: userRoleIds[index],
       });
 
       if (consents.length > 0) {
@@ -191,16 +190,16 @@ class DoctorWrapper extends BaseDoctor {
           where: {
             [Op.or]: [
               { user_role_id: userRoleIds[index] },
-              { patient_id: patientIds }
-            ]
+              { patient_id: patientIds },
+            ],
           },
           order: [["expired_on", "ASC"]],
           attributes: ["id"],
-          userRoleId: userRoleIds[index]
+          userRoleId: userRoleIds[index],
         })) || [];
 
       carePlanIds[userRoleIds[index]] = [
-        ...new Set(doctorCarePlans.map(carePlan => carePlan.id))
+        ...new Set(doctorCarePlans.map((carePlan) => carePlan.id)),
       ];
     }
 
@@ -266,7 +265,7 @@ class DoctorWrapper extends BaseDoctor {
         full_name,
         speciality_id,
         profile_pic: completePath(profile_pic),
-        signature_pic: completePath(signature_pic)
+        signature_pic: completePath(signature_pic),
       },
       city,
       qualifications,
@@ -274,7 +273,7 @@ class DoctorWrapper extends BaseDoctor {
       care_plan_ids: carePlanIds,
       watchlist_patient_ids,
       razorpay_account_id,
-      watchlist_ids: watchlistPatientIds
+      watchlist_ids: watchlistPatientIds,
       // provider_id: providerId
     };
   };

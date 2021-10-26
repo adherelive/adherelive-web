@@ -15,7 +15,7 @@ class TwilioController extends Controller {
     try {
       const deviceId = req.query.device ? req.query.device : "application";
       const {
-        userDetails: { userId, userRoleId }
+        userDetails: { userId, userRoleId },
       } = req;
       const identity = req.query.identity
         ? req.query.identity
@@ -47,7 +47,7 @@ class TwilioController extends Controller {
     try {
       // const userId = req.query.userId ? req.query.userId : null;
       const {
-        userDetails: { userId, userRoleId }
+        userDetails: { userId, userRoleId },
       } = req;
       const identity = userRoleId ? `${userRoleId}` : faker.name.findName();
 
@@ -78,11 +78,10 @@ class TwilioController extends Controller {
     try {
       const { roomId } = req.params;
 
-      const connectedParticipantsList = await twilioService.getRoomConnectedParticipants(
-        roomId
-      );
+      const connectedParticipantsList =
+        await twilioService.getRoomConnectedParticipants(roomId);
       let connectedParticipants = {};
-      connectedParticipantsList.forEach(participant => {
+      connectedParticipantsList.forEach((participant) => {
         const { status, identity } = participant;
         connectedParticipants[identity] = status;
       });
@@ -91,7 +90,7 @@ class TwilioController extends Controller {
         res,
         200,
         {
-          connectedParticipants
+          connectedParticipants,
         },
         "Fetched Connected Participants"
       );

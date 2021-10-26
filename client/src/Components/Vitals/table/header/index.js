@@ -8,28 +8,28 @@ import TimelineButton from "../dataColumn/timelineButton";
 import EditButton from "../dataColumn/editButton";
 import Description from "../dataColumn/description";
 
-export default props => {
+export default (props) => {
   const { formatMessage } = props || {};
 
   return [
     {
       title: formatMessage(messages.vital_name),
       ...TABLE_COLUMN.VITAL,
-      render: data => {
+      render: (data) => {
         const { vitalTemplateData } = data || {};
         return <Vital vitalTemplateData={vitalTemplateData} />;
-      }
+      },
     },
     {
       title: formatMessage(messages.taken_vs_total),
       ...TABLE_COLUMN.TAKEN,
 
-      render: ({ vitalData }) => <Taken vitalData={vitalData} />
+      render: ({ vitalData }) => <Taken vitalData={vitalData} />,
     },
     {
       title: formatMessage(messages.description),
       ...TABLE_COLUMN.DESCRIPTION,
-      render: ({ vitalData }) => <Description vitalData={vitalData} />
+      render: ({ vitalData }) => <Description vitalData={vitalData} />,
     },
     {
       title: "Adherence",
@@ -41,7 +41,7 @@ export default props => {
           action={openResponseDrawer}
           id={id}
         />
-      )
+      ),
     },
     {
       title: "",
@@ -54,7 +54,7 @@ export default props => {
           action={openEditDrawer}
           canViewDetails={canViewDetails}
         />
-      )
-    }
+      ),
+    },
   ];
 };

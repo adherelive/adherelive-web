@@ -3,7 +3,7 @@ function templateMedicationsReducer(state, data) {
   if (template_medications) {
     return {
       ...state,
-      ...template_medications
+      ...template_medications,
     };
   } else {
     return state;

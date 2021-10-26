@@ -20,9 +20,9 @@ class PatientOtpJob extends AuthJob {
           mainBodyText: "OTP for the patient login on AdhereLive is",
           subBodyText: otp,
           host: process.config.WEB_URL,
-          contactTo: process.config.app.support_email
-        }
-      }
+          contactTo: process.config.app.support_email,
+        },
+      },
     ];
 
     return templateData;
@@ -35,8 +35,8 @@ class PatientOtpJob extends AuthJob {
     const templateData = [
       {
         phoneNumber: `+${prefix}${phoneNumber}`,
-        message: `Hello from AdhereLive! Your One Time Password is ${otp}`
-      }
+        message: `Hello from AdhereLive! Your One Time Password is ${otp}`,
+      },
     ];
 
     return templateData;

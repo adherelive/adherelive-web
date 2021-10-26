@@ -39,12 +39,12 @@ export default async (req, res, next) => {
     if (err.name === "TokenExpiredError") {
       payload = {
         code: 401,
-        error: "session expired"
+        error: "session expired",
       };
     } else {
       payload = {
         code: 500,
-        error: errMessage.INTERNAL_SERVER_ERROR
+        error: errMessage.INTERNAL_SERVER_ERROR,
       };
     }
 

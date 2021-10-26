@@ -17,8 +17,8 @@ class ChatController extends Controller {
         userDetails: {
           userId,
           userData: { category } = {},
-          userCategoryData: { basic_info: { full_name } = {} } = {}
-        } = {}
+          userCategoryData: { basic_info: { full_name } = {} } = {},
+        } = {},
       } = req;
 
       const { doctor_id, patient_id, message } = body || {};
@@ -27,16 +27,16 @@ class ChatController extends Controller {
         id: userId,
         details: {
           category,
-          name: full_name
-        }
+          name: full_name,
+        },
       };
 
       const notificationData = {
         actor,
         participants: [doctor_id, patient_id],
         details: {
-          message
-        }
+          message,
+        },
       };
 
       const UserMessageJob = ChatJob.execute();

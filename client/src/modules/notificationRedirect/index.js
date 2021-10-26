@@ -1,14 +1,14 @@
 const DO_NOTIFICATION_REDIRECT = "DO_NOTIFICATION_REDIRECT";
 const RESET_NOTIFICATION_REDIRECT = "RESET_NOTIFICATION_REDIRECT";
 
-export const doNotificationRedirect = payload => {
+export const doNotificationRedirect = (payload) => {
   let response = {};
-  return async dispatch => {
+  return async (dispatch) => {
     try {
       // console.log("673823876123123719283",{payload});
       dispatch({
         type: DO_NOTIFICATION_REDIRECT,
-        payload: { notification_redirect: { ...payload } }
+        payload: { notification_redirect: { ...payload } },
       });
     } catch (error) {
       console.log("DO_NOTIFICATION_REDIRECT error ---> ", error);
@@ -20,11 +20,11 @@ export const doNotificationRedirect = payload => {
 
 export const resetNotificationRedirect = () => {
   let response = {};
-  return async dispatch => {
+  return async (dispatch) => {
     try {
       dispatch({
         type: RESET_NOTIFICATION_REDIRECT,
-        payload: { notification_redirect: {} }
+        payload: { notification_redirect: {} },
       });
     } catch (error) {
       console.log("RESET_NOTIFICATION_REDIRECT error ---> ", error);
@@ -39,7 +39,7 @@ function notificationRedirectReducer(state, data) {
   if (Object.keys(notification_redirect).length > 0) {
     return {
       ...state,
-      ...notification_redirect
+      ...notification_redirect,
     };
   } else {
     return state;
@@ -52,7 +52,7 @@ function resetNotificationRedirectReducer(state, data) {
     console.log("49872947472987412874812", { data });
 
     return {
-      ...notification_redirect
+      ...notification_redirect,
     };
   } else {
     return state;

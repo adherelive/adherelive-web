@@ -10,7 +10,7 @@ export const validateAccountData = ({
   razorpay_account_id,
   razorpay_account_name,
   prefix,
-  account_mobile_number
+  account_mobile_number,
 }) => {
   let data = {};
 

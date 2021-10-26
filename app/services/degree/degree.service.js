@@ -12,14 +12,14 @@ class DegreeService {
     }
   };
 
-  search = async data => {
+  search = async (data) => {
     try {
       const degree = await Database.getModel(TABLE_NAME).findAll({
         where: {
           name: {
-            [Op.like]: `%${data}%`
-          }
-        }
+            [Op.like]: `%${data}%`,
+          },
+        },
       });
       return degree;
     } catch (error) {
@@ -27,10 +27,10 @@ class DegreeService {
     }
   };
 
-  getByData = async data => {
+  getByData = async (data) => {
     try {
       const degree = await Database.getModel(TABLE_NAME).findOne({
-        where: data
+        where: data,
       });
       return degree;
     } catch (error) {
@@ -38,10 +38,10 @@ class DegreeService {
     }
   };
 
-  getDegreeByData = async data => {
+  getDegreeByData = async (data) => {
     try {
       const degree = await Database.getModel(TABLE_NAME).findAll({
-        where: data
+        where: data,
       });
       return degree;
     } catch (error) {
@@ -49,7 +49,7 @@ class DegreeService {
     }
   };
 
-  create = async data => {
+  create = async (data) => {
     try {
       const degree = await Database.getModel(TABLE_NAME).create(data);
       return degree;

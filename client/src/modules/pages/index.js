@@ -48,7 +48,7 @@ const rootReducer = combineReducers({
   user_role_ids,
   notification_count,
   diet_response_ids,
-  workout_response_ids
+  workout_response_ids,
 });
 
 export default (state, action) => {

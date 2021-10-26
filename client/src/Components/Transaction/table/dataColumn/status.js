@@ -2,14 +2,14 @@ import React from "react";
 import TableStatus from "../../../../Helper/TableStatus";
 import { TABLE_STATUS } from "../../../../constant";
 
-export default props => {
+export default (props) => {
   const { transactionData } = props || {};
   const { status = "" } = transactionData || {};
 
   const type = TABLE_STATUS.TRANSACTION_TABLE;
   const displayProps = {
     status,
-    type
+    type,
   };
 
   return (

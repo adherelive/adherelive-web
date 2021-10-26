@@ -38,14 +38,14 @@ const addMessagesForChat = (state, data) => {
   return { ...state };
 };
 
-export const raiseChatNotification = payload => {
+export const raiseChatNotification = (payload) => {
   let response = {};
-  return async dispatch => {
+  return async (dispatch) => {
     try {
       response = await doRequest({
         method: REQUEST_TYPE.POST,
         url: fetchRaiseChatNotificationUrl(),
-        data: payload
+        data: payload,
       });
 
       const { status, payload: { error = "", data = {} } = {} } =
@@ -58,11 +58,11 @@ export const raiseChatNotification = payload => {
 };
 
 export const addMessageOfChat = (room_id, messages) => {
-  return async dispatch => {
+  return async (dispatch) => {
     try {
       dispatch({
         type: ADD_MESSAGE_FOR_CHAT_COMPLETED,
-        payload: { room_id, messages }
+        payload: { room_id, messages },
       });
     } catch (error) {}
   };

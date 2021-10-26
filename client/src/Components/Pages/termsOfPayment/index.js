@@ -11,11 +11,11 @@ class TermsOfPayment extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      value: ""
+      value: "",
     };
   }
 
-  formatMessage = message => this.props.intl.formatMessage(message);
+  formatMessage = (message) => this.props.intl.formatMessage(message);
 
   async componentDidMount() {
     const { getTAC } = this.props;
@@ -32,7 +32,7 @@ class TermsOfPayment extends Component {
       if (status === true) {
         const { terms_and_conditions = {} } = data;
         const {
-          basic_info: { terms_type = "", details: { content = {} } = {} } = {}
+          basic_info: { terms_type = "", details: { content = {} } = {} } = {},
         } = terms_and_conditions[tacId] || {};
 
         this.setState({ value: content });

@@ -1,6 +1,6 @@
 import {
   GET_SEARCH_TREATMENT_PATIENTS_COMPLETED,
-  GET_SEARCH_DIAGNOSIS_PATIENTS_COMPLETED
+  GET_SEARCH_DIAGNOSIS_PATIENTS_COMPLETED,
 } from "../paginatedPatients";
 
 function getSearchAllPatientIdsReducer(state, data) {
@@ -10,7 +10,7 @@ function getSearchAllPatientIdsReducer(state, data) {
 
   if (watchlist && offset && watchlist === "0" && patient_table_search) {
     return {
-      ...patient_table_search_all_patients
+      ...patient_table_search_all_patients,
     };
   } else {
     return state;

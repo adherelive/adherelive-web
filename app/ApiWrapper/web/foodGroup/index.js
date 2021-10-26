@@ -20,9 +20,9 @@ class FoodGroupWrapper extends BaseFoodGroup {
         id,
         portion_id,
         serving,
-        food_item_detail_id
+        food_item_detail_id,
       },
-      details
+      details,
     };
   };
 
@@ -30,7 +30,7 @@ class FoodGroupWrapper extends BaseFoodGroup {
     const { getBasicInfo } = this;
 
     return {
-      ...getBasicInfo()
+      ...getBasicInfo(),
     };
   };
 
@@ -40,7 +40,7 @@ class FoodGroupWrapper extends BaseFoodGroup {
 
     const foodItemDetailsId = await this.getFoodItemDetailsId();
     const foodItemDetailsData = await FoodItemDetailsWrapper({
-      id: foodItemDetailsId
+      id: foodItemDetailsId,
     });
 
     const portion_id = this.getPortionId();
@@ -50,12 +50,12 @@ class FoodGroupWrapper extends BaseFoodGroup {
 
     return {
       food_groups: {
-        [`${getId()}`]: { ...(await getBasicInfo()) }
+        [`${getId()}`]: { ...(await getBasicInfo()) },
       },
       portions: {
-        ...portionData
+        ...portionData,
       },
-      ...(await foodItemDetailsData.getReferenceInfo())
+      ...(await foodItemDetailsData.getReferenceInfo()),
     };
   };
 }

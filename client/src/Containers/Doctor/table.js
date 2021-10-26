@@ -4,13 +4,13 @@ import { withRouter } from "react-router-dom";
 import { getAllDoctors, getAllDoctorsForProvider } from "../../modules/doctors";
 import { USER_CATEGORY } from "../../constant";
 
-const mapStateToProps = state => {
+const mapStateToProps = (state) => {
   const {
     doctors = {},
     users = {},
     pages: { doctor_ids = [], user_ids = [] } = {},
     specialities = {},
-    auth = {}
+    auth = {},
   } = state;
 
   return {
@@ -19,26 +19,20 @@ const mapStateToProps = state => {
     specialities,
     doctor_ids,
     user_ids,
-    auth
+    auth,
   };
 };
 
-const mapDispatchToProps = dispatch => {
+const mapDispatchToProps = (dispatch) => {
   return {
     getAllDoctors: () => dispatch(getAllDoctors()),
-    getAllDoctorsForProvider: () => dispatch(getAllDoctorsForProvider())
+    getAllDoctorsForProvider: () => dispatch(getAllDoctorsForProvider()),
   };
 };
 
 const mergeProps = (stateProps, dispatchProps, ownProps) => {
-  const {
-    doctors,
-    users,
-    specialities,
-    doctor_ids,
-    user_ids,
-    auth
-  } = stateProps;
+  const { doctors, users, specialities, doctor_ids, user_ids, auth } =
+    stateProps;
 
   const { getAllDoctors, getAllDoctorsForProvider } = dispatchProps;
 
@@ -54,7 +48,7 @@ const mergeProps = (stateProps, dispatchProps, ownProps) => {
     getAllDoctors:
       authenticated_category === USER_CATEGORY.PROVIDER
         ? getAllDoctorsForProvider
-        : getAllDoctors
+        : getAllDoctors,
   };
 };
 

@@ -3,7 +3,7 @@ function templateDietsReducer(state, data) {
   if (template_diets) {
     return {
       ...state,
-      ...template_diets
+      ...template_diets,
     };
   } else {
     return state;

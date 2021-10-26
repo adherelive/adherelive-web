@@ -5,12 +5,12 @@ import MedicationTimelineDrawer from "../../Components/Drawer/medicationTimeline
 import { close } from "../../modules/drawer";
 import { DRAWER } from "../../constant";
 
-const mapStateToProps = state => {
+const mapStateToProps = (state) => {
   const {
     drawer: { visible, data: { type, payload: { id, loading } = {} } = {} },
     medications = {},
     schedule_events = {},
-    medicines = {}
+    medicines = {},
   } = state;
 
   return {
@@ -19,13 +19,13 @@ const mapStateToProps = state => {
     medications,
     schedule_events,
     visible: visible && type === DRAWER.MEDICATION_RESPONSE_TIMELINE,
-    medicines
+    medicines,
   };
 };
 
-const mapDispatchToProps = dispatch => {
+const mapDispatchToProps = (dispatch) => {
   return {
-    close: () => dispatch(close())
+    close: () => dispatch(close()),
   };
 };
 

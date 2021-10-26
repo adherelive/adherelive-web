@@ -27,7 +27,7 @@ class ResetPassword extends Component {
       const {
         status,
         statusCode,
-        payload: { message: resMessage = "" } = {}
+        payload: { message: resMessage = "" } = {},
       } = response;
       if (!status) {
         if (statusCode == 422) {
@@ -43,13 +43,13 @@ class ResetPassword extends Component {
     }
   }
 
-  handleResetPassword = async e => {
+  handleResetPassword = async (e) => {
     e.preventDefault();
     const {
       form: { validateFields, getFieldsValue },
       resetPassword,
       // match: { path } = {},
-      history
+      history,
     } = this.props;
     this.setState({ loading: true });
     // todo: check how to use validateFields here as that is causing promise related error
@@ -58,12 +58,12 @@ class ResetPassword extends Component {
       try {
         const response = await resetPassword({
           new_password,
-          confirm_password
+          confirm_password,
         });
         const {
           status = false,
           statusCode,
-          payload: { message: resMessage } = {}
+          payload: { message: resMessage } = {},
         } = response;
         if (status) {
           message.success(resMessage, 4);
@@ -138,10 +138,10 @@ class ResetPassword extends Component {
 
   render() {
     const {
-      form: { getFieldDecorator, isFieldTouched, getFieldError }
+      form: { getFieldDecorator, isFieldTouched, getFieldError },
     } = this.props;
     let fieldsError = {};
-    FIELDS.forEach(value => {
+    FIELDS.forEach((value) => {
       const error = isFieldTouched(value) && getFieldError(value);
       fieldsError = { ...fieldsError, [value]: error };
     });
@@ -170,7 +170,7 @@ class ResetPassword extends Component {
                 >
                   <div className="fs16 medium tal">New Password</div>
                   {getFieldDecorator(PASSWORD, {
-                    rules: [{ required: true, message: "Enter your password" }]
+                    rules: [{ required: true, message: "Enter your password" }],
                   })(<Password placeholder="Password" className="h40" />)}
                 </FormItem>
 
@@ -183,9 +183,9 @@ class ResetPassword extends Component {
                     rules: [
                       { required: true, message: "Enter your password" },
                       {
-                        validator: this.compareToFirstPassword
-                      }
-                    ]
+                        validator: this.compareToFirstPassword,
+                      },
+                    ],
                   })(
                     <Password placeholder="Confirm Password" className="h40" />
                   )}

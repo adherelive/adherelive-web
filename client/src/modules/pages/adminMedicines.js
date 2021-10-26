@@ -4,7 +4,7 @@ import private_medicines from "./adminPrivate";
 
 const adminMedicineReducer = combineReducers({
   public_medicines,
-  private_medicines
+  private_medicines,
 });
 
 export default (state, action) => {

@@ -13,7 +13,7 @@ class MissedAppointmentsDrawer extends Component {
       missed_appointments: {},
       criticalAppointmentIds: [],
       nonCriticalAppointmentIds: [],
-      fetching: false
+      fetching: false,
     };
   }
 
@@ -53,14 +53,14 @@ class MissedAppointmentsDrawer extends Component {
   //
   // }
 
-  formatMessage = data => this.props.intl.formatMessage(data);
+  formatMessage = (data) => this.props.intl.formatMessage(data);
 
   onClose = () => {
     const { close } = this.props;
     close();
   };
 
-  handlePatientDetailsRedirect = patient_id => e => {
+  handlePatientDetailsRedirect = (patient_id) => (e) => {
     const { authenticated_category } = this.props;
 
     if (authenticated_category === USER_CATEGORY.PROVIDER) {
@@ -94,19 +94,19 @@ class MissedAppointmentsDrawer extends Component {
             basic_info: {
               details: {
                 type_description: typeDescription = "",
-                type = ""
-              } = {}
+                type = "",
+              } = {},
             } = {},
 
             participant_one: {
               category: participant_one_category = "",
-              id: participant_one_id = ""
+              id: participant_one_id = "",
             },
             participant_two: {
               category: participant_two_category = "",
-              id: participant_two_id = ""
-            }
-          } = {}
+              id: participant_two_id = "",
+            },
+          } = {},
         } = eachAppointmentEvent;
 
         if (participant_one_category === USER_CATEGORY.PATIENT) {
@@ -125,8 +125,8 @@ class MissedAppointmentsDrawer extends Component {
           id: pId = "",
           first_name = "",
           middle_name = "",
-          last_name = ""
-        }
+          last_name = "",
+        },
       } = patients[participant_id] || {};
 
       let pName = `${first_name} ${getName(middle_name)} ${getName(last_name)}`;

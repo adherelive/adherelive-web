@@ -18,8 +18,8 @@ class CarePlanAppointmentWrapper extends BaseCarePlanAppointment {
       basic_info: {
         id,
         care_plan_id,
-        appointment_id
-      }
+        appointment_id,
+      },
     };
   };
 
@@ -29,7 +29,7 @@ class CarePlanAppointmentWrapper extends BaseCarePlanAppointment {
       getCarePlanAppointmentId,
       getAppointmentId,
       getCarePlanId,
-      _data
+      _data,
     } = this;
 
     const appointment = await appointmentService.getAppointmentById(
@@ -42,17 +42,17 @@ class CarePlanAppointmentWrapper extends BaseCarePlanAppointment {
 
     return {
       care_plan_appointments: {
-        [getCarePlanAppointmentId()]: getBasicInfo()
+        [getCarePlanAppointmentId()]: getBasicInfo(),
       },
       appointments: {
-        [getAppointmentId()]: appointmentData.getBasicInfo()
+        [getAppointmentId()]: appointmentData.getBasicInfo(),
       },
       care_plans: {
         [getCarePlanId()]: {
           ...(await carePlanData.getAllInfo()),
-          care_plan_appointment_ids: [getCarePlanAppointmentId()]
-        }
-      }
+          care_plan_appointment_ids: [getCarePlanAppointmentId()],
+        },
+      },
     };
   };
 }
@@ -61,8 +61,7 @@ export default async (data = null, id = null) => {
   if (data) {
     return new CarePlanAppointmentWrapper(data);
   }
-  const carePlan = await carePlanAppointmentService.getSingleCarePlanAppointmentByData(
-    { id }
-  );
+  const carePlan =
+    await carePlanAppointmentService.getSingleCarePlanAppointmentByData({ id });
   return new CarePlanAppointmentWrapper(carePlan);
 };

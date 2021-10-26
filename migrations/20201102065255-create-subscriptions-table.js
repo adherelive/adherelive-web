@@ -12,53 +12,53 @@ module.exports = {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
-        type: DataTypes.INTEGER
+        type: DataTypes.INTEGER,
       },
       payment_product_id: {
         type: DataTypes.INTEGER,
         allowNull: false,
         references: {
           model: {
-            tableName: paymentProductPlansTableName
+            tableName: paymentProductPlansTableName,
           },
-          key: "id"
-        }
+          key: "id",
+        },
       },
       subscriber_type: {
         type: DataTypes.ENUM,
         values: USER_CATEGORY_ARRAY,
-        allowNull: false
+        allowNull: false,
       },
       subscriber_id: {
         type: DataTypes.INTEGER,
-        allowNull: false
+        allowNull: false,
       },
       activated_on: {
-        type: DataTypes.DATE
+        type: DataTypes.DATE,
       },
       renew_on: {
-        type: DataTypes.DATE
+        type: DataTypes.DATE,
       },
       expired_on: {
         type: DataTypes.DATE,
-        allowNull: false
+        allowNull: false,
       },
       created_at: {
         allowNull: false,
-        type: DataTypes.DATE
+        type: DataTypes.DATE,
       },
       updated_at: {
         allowNull: false,
-        type: DataTypes.DATE
+        type: DataTypes.DATE,
       },
       deleted_at: {
         allowNull: true,
-        type: DataTypes.DATE
-      }
+        type: DataTypes.DATE,
+      },
     });
   },
 
   down: (queryInterface, Sequelize) => {
     return queryInterface.dropTable(TABLE_NAME);
-  }
+  },
 };

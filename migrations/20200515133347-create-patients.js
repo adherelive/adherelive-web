@@ -11,79 +11,79 @@ module.exports = {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
-        type: Sequelize.INTEGER
+        type: Sequelize.INTEGER,
       },
       user_id: {
         type: Sequelize.INTEGER,
         allowNull: false,
         references: {
           model: {
-            tableName: userTableName
+            tableName: userTableName,
           },
-          key: "id"
-        }
+          key: "id",
+        },
       },
       gender: {
         type: Sequelize.ENUM,
         values: [GENDER.MALE, GENDER.FEMALE, GENDER.OTHER, BLANK_STATE],
-        defaultValue: BLANK_STATE
+        defaultValue: BLANK_STATE,
       },
       first_name: {
         type: Sequelize.STRING(100),
-        allowNull: true
+        allowNull: true,
       },
       middle_name: {
         type: Sequelize.STRING(100),
-        allowNull: true
+        allowNull: true,
       },
       last_name: {
         type: Sequelize.STRING(100),
-        allowNull: true
+        allowNull: true,
       },
       age: {
-        type: Sequelize.STRING
+        type: Sequelize.STRING,
       },
       dob: {
         type: Sequelize.DATE,
-        allowNull: true
+        allowNull: true,
       },
       address: {
         type: Sequelize.STRING,
-        allowNull: true
+        allowNull: true,
       },
       height: {
         type: Sequelize.STRING,
-        allowNull: true
+        allowNull: true,
       },
       weight: {
         type: Sequelize.STRING,
-        allowNull: true
+        allowNull: true,
       },
       activated_on: {
-        type: Sequelize.DATE
+        type: Sequelize.DATE,
       },
       uid: {
-        type: Sequelize.STRING
+        type: Sequelize.STRING,
       },
       details: {
-        type: Sequelize.JSON
+        type: Sequelize.JSON,
       },
       created_at: {
         allowNull: false,
-        type: Sequelize.DATE
+        type: Sequelize.DATE,
       },
       updated_at: {
         allowNull: false,
-        type: Sequelize.DATE
+        type: Sequelize.DATE,
       },
       deleted_at: {
         allowNull: true,
-        type: Sequelize.DATE
-      }
+        type: Sequelize.DATE,
+      },
     });
   },
 
   down: (queryInterface, Sequelize) => {
     return queryInterface.dropTable(TABLE_NAME);
-  }
+  },
 };

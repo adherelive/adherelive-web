@@ -6,26 +6,26 @@ export const GET_NOTIFICATION_START = "GET_NOTIFICATION_START";
 export const GET_NOTIFICATION_COMPLETED = "GET_NOTIFICATION_COMPLETED";
 export const GET_NOTIFICATION_FAILED = "GET_NOTIFICATION_FAILED";
 
-export const getNotification = value => {
+export const getNotification = (value) => {
   let response = {};
-  return async dispatch => {
+  return async (dispatch) => {
     try {
       response = await doRequest({
         method: REQUEST_TYPE.POST,
         url: getNotifications(),
-        data: value
+        data: value,
       });
 
       const { status, payload: { data, message = "" } = {} } = response || {};
       if (status === true) {
         dispatch({
           type: GET_NOTIFICATION_COMPLETED,
-          data
+          data,
         });
       } else {
         dispatch({
           type: GET_NOTIFICATION_FAILED,
-          message
+          message,
         });
       }
     } catch (error) {
@@ -40,7 +40,7 @@ function notificationReducer(state, data) {
   if (notifications) {
     return {
       ...state,
-      ...notifications
+      ...notifications,
     };
   } else {
     return state;

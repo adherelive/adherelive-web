@@ -5,7 +5,7 @@ import { TABLE_NAME as carePlanTemplateTableName } from "./careplanTemplate";
 
 export const TABLE_NAME = "template_workouts";
 
-export const db = database => {
+export const db = (database) => {
   database.define(
     TABLE_NAME,
     {
@@ -13,52 +13,47 @@ export const db = database => {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
-        type: DataTypes.INTEGER
+        type: DataTypes.INTEGER,
       },
       care_plan_template_id: {
         type: DataTypes.INTEGER,
         allowNull: false,
         references: {
           model: {
-            tableName: carePlanTemplateTableName
+            tableName: carePlanTemplateTableName,
           },
-          key: "id"
-        }
+          key: "id",
+        },
       },
       name: {
         type: DataTypes.STRING,
-        allowNull: false
+        allowNull: false,
       },
       total_calories: {
-        type: DataTypes.FLOAT(11, 2)
+        type: DataTypes.FLOAT(11, 2),
       },
       duration: {
-        type: DataTypes.INTEGER
+        type: DataTypes.INTEGER,
       },
       time: {
         type: DataTypes.DATE,
         set(value) {
           if (value) {
-            this.setDataValue(
-              "time",
-              moment(value)
-                .seconds(0)
-                .toISOString()
-            );
+            this.setDataValue("time", moment(value).seconds(0).toISOString());
           } else {
             this.setDataValue("time", null);
           }
-        }
+        },
       },
       details: {
-        type: DataTypes.JSON
-      }
+        type: DataTypes.JSON,
+      },
     },
     {
       underscored: true,
-      paranoid: true
+      paranoid: true,
     }
   );
 };
 
-export const associate = database => {};
+export const associate = (database) => {};

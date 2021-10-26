@@ -3,47 +3,47 @@ export const TABLE_COLUMN = {
     key: "PID",
     dataIndex: "PID",
     width: 200,
-    fixed: "left"
+    fixed: "left",
   },
   WATCHLIST: {
     key: "WATCHLIST",
-    dataIndex: "WATCHLIST"
+    dataIndex: "WATCHLIST",
   },
   CONDITION: {
     key: "CONDITION",
-    dataIndex: "CONDITION"
+    dataIndex: "CONDITION",
   },
   TREATMENT: {
     key: "TREATMENT",
-    dataIndex: "TREATMENT"
+    dataIndex: "TREATMENT",
   },
   SEVERITY: {
     key: "SEVERITY",
-    dataIndex: "SEVERITY"
+    dataIndex: "SEVERITY",
   },
   AGE: {
     key: "AGE",
-    dataIndex: "AGE"
+    dataIndex: "AGE",
   },
   START_DATE: {
     key: "START_DATE",
-    dataIndex: "START_DATE"
+    dataIndex: "START_DATE",
   },
   DOCTOR: {
     key: "DOCTOR",
-    dataIndex: "DOCTOR"
+    dataIndex: "DOCTOR",
   },
   DIAGNOSIS: {
     key: "DIAGNOSIS",
-    dataIndex: "DIAGNOSIS"
+    dataIndex: "DIAGNOSIS",
   },
   CREATED_AT: {
     key: "CREATED_AT",
-    dataIndex: "CREATED_AT"
-  }
+    dataIndex: "CREATED_AT",
+  },
 };
 
-export const formatPatientTableData = data => {
+export const formatPatientTableData = (data) => {
   let {
     id,
     patients,
@@ -57,12 +57,12 @@ export const formatPatientTableData = data => {
     users,
     care_plans,
     authenticated_user,
-    openEditPatientDrawer
+    openEditPatientDrawer,
   } = data || {};
 
   let doctor_id = null;
 
-  Object.keys(doctors).forEach(id => {
+  Object.keys(doctors).forEach((id) => {
     const { basic_info: { user_id } = {} } = doctors[id] || {};
 
     if (user_id === authenticated_user) {
@@ -81,7 +81,7 @@ export const formatPatientTableData = data => {
     let {
       doctor_id: doctorId = 1,
       patient_id,
-      id: carePlanId = 1
+      id: carePlanId = 1,
     } = basic_info;
     if (`${doctorId}` === doctor_id) {
       if (`${patient_id}` === id) {
@@ -89,8 +89,8 @@ export const formatPatientTableData = data => {
           details: {
             treatment_id: cTreatment = "",
             condition_id: cCondition = "",
-            severity_id: cSeverity = ""
-          } = {}
+            severity_id: cSeverity = "",
+          } = {},
         } = carePlan || {};
         let { basic_info: { name: treatmentName = "" } = {} } =
           treatments[cTreatment] || {};
@@ -107,7 +107,7 @@ export const formatPatientTableData = data => {
           ...care_plans[carePlanId],
           treatment,
           condition,
-          severity
+          severity,
         };
       }
     }
@@ -118,7 +118,7 @@ export const formatPatientTableData = data => {
     treatment,
     condition,
     severity,
-    carePlanData
+    carePlanData,
   };
 
   const { basic_info: { name: carePlanName } = {}, activated_on } =
@@ -128,13 +128,13 @@ export const formatPatientTableData = data => {
     basic_info: { user_id },
     treatment_id,
     provider_id,
-    chats: patientChatIds = []
+    chats: patientChatIds = [],
   } = patientData || {};
 
   const {} = users[user_id] || {};
   let chatData = {};
 
-  chat_ids.forEach(id => {
+  chat_ids.forEach((id) => {
     const { doctor_id: chatDoctorId } = chats[id] || {};
     if (doctor_id === chatDoctorId) {
       chatData = { ...chats[id] };
@@ -152,6 +152,6 @@ export const formatPatientTableData = data => {
     treatmentData,
     chatData,
     carePlanData,
-    openEditPatientDrawer
+    openEditPatientDrawer,
   };
 };

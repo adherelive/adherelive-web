@@ -12,12 +12,12 @@ class PermissionWrapper extends BasePermission {
     return {
       basic_info: {
         id,
-        type
-      }
+        type,
+      },
     };
   };
 }
 
-export default data => {
+export default (data) => {
   return new PermissionWrapper(data);
 };

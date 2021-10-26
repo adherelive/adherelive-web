@@ -4,26 +4,26 @@ import { DRAWER } from "../../constant";
 import { close } from "../../modules/drawer";
 import { uploadReport, addReport } from "../../modules/reports";
 
-const mapStateToProps = state => {
+const mapStateToProps = (state) => {
   const {
     drawer: { visible, loading, data: { type, payload = {} } = {} },
-    reports = {}
+    reports = {},
   } = state;
 
   return {
     visible: visible && type === DRAWER.ADD_REPORT,
     loading,
     payload,
-    reports
+    reports,
   };
 };
 
-const mapDispatchToProps = dispatch => {
+const mapDispatchToProps = (dispatch) => {
   return {
     close: () => dispatch(close()),
     uploadReport: (patient_id, payload) =>
       dispatch(uploadReport(patient_id, payload)),
-    addReport: payload => dispatch(addReport(payload))
+    addReport: (payload) => dispatch(addReport(payload)),
   };
 };
 

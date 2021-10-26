@@ -8,10 +8,10 @@ import messages from "../messages";
 const TABLET = "tablet";
 const SYRUP = "syrup";
 
-export default props => {
+export default (props) => {
   const {
     medicineData: { basic_info: { type = "" } = {} } = {},
-    formatMessage
+    formatMessage,
   } = props || {};
 
   console.log("103712398 type", { type });

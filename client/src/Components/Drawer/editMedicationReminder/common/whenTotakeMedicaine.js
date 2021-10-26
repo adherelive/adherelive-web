@@ -44,7 +44,7 @@ const ALL_OPTIONS_ARRAY = [
   BEFORE_DINNER,
   WITH_DINNER,
   AFTER_DINNER,
-  BEFORE_SLEEP
+  BEFORE_SLEEP,
 ];
 
 const { Option } = Select;
@@ -60,7 +60,7 @@ class WhenToTakeMedication extends Component {
     const { medication_details = {} } = props;
     const { timings = {} } = medication_details || {};
     let statusList = {};
-    Object.keys(timings).forEach(id => {
+    Object.keys(timings).forEach((id) => {
       const { text, time } = timings[id];
       statusList[id] = `${text} (${moment(time).format("hh:mm A")})`;
     });
@@ -73,13 +73,13 @@ class WhenToTakeMedication extends Component {
       status: statusList,
       total_status,
       selected_timing: {},
-      nugget_selected: null
+      nugget_selected: null,
     };
   }
 
   componentDidMount() {
     const {
-      form: { validateFields }
+      form: { validateFields },
     } = this.props;
     const { setWhenToTakeInitialValues, formatWhenToTakeButtons } = this;
     validateFields();
@@ -94,12 +94,12 @@ class WhenToTakeMedication extends Component {
       onClickBd,
       onClickTds,
       onCLickSos,
-      getKeys
+      getKeys,
     } = this;
     this.WHEN_TO_TAKE_BUTTONS = { ...WHEN_TO_TAKE_BUTTONS };
 
     const keys = getKeys();
-    Object.keys(WHEN_TO_TAKE_BUTTONS).forEach(index => {
+    Object.keys(WHEN_TO_TAKE_BUTTONS).forEach((index) => {
       const { id, whenToTakeCount } = WHEN_TO_TAKE_BUTTONS[index] || {};
 
       let additionalData = {};
@@ -115,25 +115,25 @@ class WhenToTakeMedication extends Component {
         case WHEN_TO_TAKE_BUTTONS.OD.whenToTakeCount:
           additionalData = {
             setter: onClickOd,
-            text: formatMessage(messages.od)
+            text: formatMessage(messages.od),
           };
           break;
         case WHEN_TO_TAKE_BUTTONS.BD.whenToTakeCount:
           additionalData = {
             setter: onClickBd,
-            text: formatMessage(messages.bd)
+            text: formatMessage(messages.bd),
           };
           break;
         case WHEN_TO_TAKE_BUTTONS.TDS.whenToTakeCount:
           additionalData = {
             setter: onClickTds,
-            text: formatMessage(messages.tds)
+            text: formatMessage(messages.tds),
           };
           break;
         case WHEN_TO_TAKE_BUTTONS.SOS.whenToTakeCount:
           additionalData = {
             setter: onCLickSos,
-            text: formatMessage(messages.sos)
+            text: formatMessage(messages.sos),
           };
           break;
         default:
@@ -142,7 +142,7 @@ class WhenToTakeMedication extends Component {
 
       this.WHEN_TO_TAKE_BUTTONS[index] = {
         ...this.WHEN_TO_TAKE_BUTTONS[index],
-        ...additionalData
+        ...additionalData,
       };
     });
   };
@@ -154,7 +154,7 @@ class WhenToTakeMedication extends Component {
       payload: { id: medication_id } = {},
       addMedication,
       // editMedication,
-      form: { getFieldDecorator } = {}
+      form: { getFieldDecorator } = {},
     } = this.props;
     let { basic_info: { details: { when_to_take = [] } = {} } = {} } =
       medications[medication_id] || {};
@@ -170,9 +170,8 @@ class WhenToTakeMedication extends Component {
       when_to_take = ["4"];
     }
 
-    let {
-      schedule_data: { when_to_take: frequency = [] } = {}
-    } = medicationData;
+    let { schedule_data: { when_to_take: frequency = [] } = {} } =
+      medicationData;
 
     if (when_to_take.length === 1) {
       if (when_to_take[0] === BEFORE_MEALS_ARRAY_OD[0]) {
@@ -181,7 +180,7 @@ class WhenToTakeMedication extends Component {
         this.setState({ nugget_selected: 2 });
       }
       getFieldDecorator(FIELD_NAME_ABBR, {
-        initialValue: WHEN_TO_TAKE_BUTTONS.OD.id
+        initialValue: WHEN_TO_TAKE_BUTTONS.OD.id,
       });
     } else if (when_to_take.length === 2) {
       if (
@@ -196,7 +195,7 @@ class WhenToTakeMedication extends Component {
         this.setState({ nugget_selected: 2 });
       }
       getFieldDecorator(FIELD_NAME_ABBR, {
-        initialValue: WHEN_TO_TAKE_BUTTONS.BD.id
+        initialValue: WHEN_TO_TAKE_BUTTONS.BD.id,
       });
     } else if (when_to_take.length === 3) {
       if (
@@ -213,11 +212,11 @@ class WhenToTakeMedication extends Component {
         this.setState({ nugget_selected: 2 });
       }
       getFieldDecorator(FIELD_NAME_ABBR, {
-        initialValue: WHEN_TO_TAKE_BUTTONS.TDS.id
+        initialValue: WHEN_TO_TAKE_BUTTONS.TDS.id,
       });
     } else if (when_to_take.length === 0) {
       getFieldDecorator(FIELD_NAME_ABBR, {
-        initialValue: WHEN_TO_TAKE_BUTTONS.SOS.id
+        initialValue: WHEN_TO_TAKE_BUTTONS.SOS.id,
       });
     }
 
@@ -228,7 +227,7 @@ class WhenToTakeMedication extends Component {
 
     this.setState({
       selected_timing: statusList,
-      selected_timing_overall: [...when_to_take]
+      selected_timing_overall: [...when_to_take],
     });
   };
 
@@ -245,32 +244,32 @@ class WhenToTakeMedication extends Component {
       const { timings } = medication_details || {};
       this.setState({
         // count: [timings],
-        remaining_timing: { ...timings }
+        remaining_timing: { ...timings },
       });
     }
   }
 
   componentWillUnmount() {
     const {
-      form: { validateFields }
+      form: { validateFields },
     } = this.props;
     validateFields();
   }
 
-  formatMessage = data => this.props.intl.formatMessage(data);
+  formatMessage = (data) => this.props.intl.formatMessage(data);
 
-  getParentNode = t => t.parentNode;
+  getParentNode = (t) => t.parentNode;
 
-  getUpdatedList = k => {
+  getUpdatedList = (k) => {
     const {
       selected_timing = {},
       total_status,
-      selected_timing_overall = []
+      selected_timing_overall = [],
     } = this.state;
 
     let current_status = [];
 
-    Object.keys(selected_timing).forEach(id => {
+    Object.keys(selected_timing).forEach((id) => {
       if (id === `${k}`) {
         current_status.push(selected_timing[id]);
       } else {
@@ -278,13 +277,13 @@ class WhenToTakeMedication extends Component {
     });
 
     const remaining_status = total_status.filter(
-      s => !selected_timing_overall.includes(s)
+      (s) => !selected_timing_overall.includes(s)
     );
 
     const all_timings = [...current_status, ...remaining_status];
 
     let uniqueTimings = [];
-    all_timings.forEach(timing => {
+    all_timings.forEach((timing) => {
       if (!uniqueTimings.includes(timing)) {
         uniqueTimings.push(timing);
       }
@@ -293,13 +292,13 @@ class WhenToTakeMedication extends Component {
     return uniqueTimings;
   };
 
-  getUnitOption = k => {
+  getUnitOption = (k) => {
     const { status } = this.state;
     const { getUpdatedList } = this;
     // let getList = getUpdatedList(k);
     const getList = ALL_OPTIONS_ARRAY;
 
-    return getList.map(id => {
+    return getList.map((id) => {
       const text = status[id];
       return (
         <Option key={`s-${k}.${id}`} value={id}>
@@ -314,10 +313,10 @@ class WhenToTakeMedication extends Component {
     // const keys = new Set([...selected_timing_overall, value]);
     const updatedSelectTiming = {
       ...selected_timing,
-      [select_box_id]: value
+      [select_box_id]: value,
     };
     this.setState({
-      selected_timing: updatedSelectTiming
+      selected_timing: updatedSelectTiming,
     });
     this.handleRadioButtonChange();
   };
@@ -350,7 +349,7 @@ class WhenToTakeMedication extends Component {
     let flag = true;
 
     const seletedValues = Object.values(getFieldValue([FIELD_NAME]))[0];
-    seletedValues.forEach(eachVal => {
+    seletedValues.forEach((eachVal) => {
       if (!check.includes(eachVal)) {
         flag = false;
       }
@@ -361,7 +360,7 @@ class WhenToTakeMedication extends Component {
     }
   };
 
-  handleDeselect = value => {
+  handleDeselect = (value) => {
     // const updateField = selected_timing_overall.filter(
     //   (field) => field !== value
     // );
@@ -370,33 +369,33 @@ class WhenToTakeMedication extends Component {
     });
   };
 
-  remove = k => {
+  remove = (k) => {
     const { selected_timing_overall, selected_timing } = this.state;
     const { form } = this.props;
     const { getFieldValue, setFieldsValue } = form;
     const selected = getFieldValue(`${FIELD_NAME}[${k}]`) || [];
 
     let selectedTimingUpdate = {};
-    Object.keys(selected_timing).forEach(id => {
+    Object.keys(selected_timing).forEach((id) => {
       if (k !== parseInt(id)) {
         selectedTimingUpdate[k] = selected_timing[k] || {};
       }
     });
 
     this.setState({
-      selected_timing_overall: selected_timing_overall.filter(field => {
+      selected_timing_overall: selected_timing_overall.filter((field) => {
         return selected !== field;
-      })
+      }),
       // selected_timing: selectedTimingUpdate,
     });
     const keys = getFieldValue("keys");
 
     setFieldsValue({
-      keys: keys.filter(key => key !== k)
+      keys: keys.filter((key) => key !== k),
     });
   };
 
-  getInitialValue = k => {
+  getInitialValue = (k) => {
     const { total_status, nugget_selected } = this.state;
 
     return total_status[k];
@@ -409,15 +408,11 @@ class WhenToTakeMedication extends Component {
       payload: { id: medication_id, canViewDetails = false } = {},
       medicationData = {},
       addMedication,
-      editMedication
+      editMedication,
     } = this.props;
     // const { count } = this.state;
-    const {
-      handleSelect,
-      handleDeselect,
-      getInitialValue,
-      formatMessage
-    } = this;
+    const { handleSelect, handleDeselect, getInitialValue, formatMessage } =
+      this;
     const { getFieldDecorator, getFieldValue, setFieldsValue } = form;
 
     let keysTemp = getFieldValue("keys");
@@ -428,7 +423,7 @@ class WhenToTakeMedication extends Component {
       medications[medication_id] || {};
     let {
       schedule_data: { when_to_take: frequency = [] } = {},
-      details: { when_to_take: frequency2 = [] } = {}
+      details: { when_to_take: frequency2 = [] } = {},
     } = medicationData;
 
     if (frequency.length) {
@@ -444,7 +439,7 @@ class WhenToTakeMedication extends Component {
     }
 
     getFieldDecorator("keys", {
-      initialValue: when_to_take.map((id, index) => parseInt(id) - 1)
+      initialValue: when_to_take.map((id, index) => parseInt(id) - 1),
     });
     let keys = getFieldValue("keys");
 
@@ -489,20 +484,20 @@ class WhenToTakeMedication extends Component {
                   rules: [
                     {
                       required: true,
-                      message: "Select The Time"
-                    }
+                      message: "Select The Time",
+                    },
                   ],
 
                   initialValue:
                     nugget_selected && initialValuesArray[k]
                       ? initialValuesArray[k]
-                      : getInitialValue(k)
+                      : getInitialValue(k),
                 })(
                   <Select
                     className="wp100 drawer-select"
                     autoComplete="off"
                     placeholder={formatMessage(messages.select_timing)}
-                    onSelect={value => handleSelect(value, k)}
+                    onSelect={(value) => handleSelect(value, k)}
                     onDeselect={handleDeselect}
                     suffixIcon={null}
                     disabled={canViewDetails}
@@ -537,11 +532,11 @@ class WhenToTakeMedication extends Component {
 
     this.setState({ nugget_selected: null });
     setFieldsValue({
-      keys: [0]
+      keys: [0],
     });
     setFieldsValue({
       [FIELD_NAME]: AFTER_MEALS_ARRAY_OD,
-      [FIELD_NAME_ABBR]: WHEN_TO_TAKE_BUTTONS.OD.id
+      [FIELD_NAME_ABBR]: WHEN_TO_TAKE_BUTTONS.OD.id,
     });
     enableSubmit();
   };
@@ -561,11 +556,11 @@ class WhenToTakeMedication extends Component {
     }
     this.setState({ nugget_selected: null });
     setFieldsValue({
-      keys: [0, 1]
+      keys: [0, 1],
     });
     setFieldsValue({
       [FIELD_NAME]: AFTER_MEALS_ARRAY_BD,
-      [FIELD_NAME_ABBR]: WHEN_TO_TAKE_BUTTONS.BD.id
+      [FIELD_NAME_ABBR]: WHEN_TO_TAKE_BUTTONS.BD.id,
     });
     enableSubmit();
   };
@@ -586,7 +581,7 @@ class WhenToTakeMedication extends Component {
     setFieldsValue({
       keys: [0, 1, 2],
       [FIELD_NAME]: AFTER_MEALS_ARRAY_TDS,
-      [FIELD_NAME_ABBR]: WHEN_TO_TAKE_BUTTONS.TDS.id
+      [FIELD_NAME_ABBR]: WHEN_TO_TAKE_BUTTONS.TDS.id,
     });
     enableSubmit();
   };
@@ -607,13 +602,13 @@ class WhenToTakeMedication extends Component {
     setFieldsValue({
       keys: [],
       [FIELD_NAME]: [],
-      [FIELD_NAME_ABBR]: WHEN_TO_TAKE_BUTTONS.SOS.id
+      [FIELD_NAME_ABBR]: WHEN_TO_TAKE_BUTTONS.SOS.id,
     });
     enableSubmit();
     // setFieldsValue({[FIELD_NAME]:AFTER_MEALS_ARRAY_TDS});
   };
 
-  setAllMealsBefore = e => {
+  setAllMealsBefore = (e) => {
     e.preventDefault();
     const { form, enableSubmit } = this.props;
     const { getFieldValue, setFieldsValue } = form;
@@ -623,7 +618,7 @@ class WhenToTakeMedication extends Component {
     if (keys.length === 1) {
       setFieldsValue(
         {
-          keys: [0]
+          keys: [0],
         },
         async () => {
           setFieldsValue({ [FIELD_NAME]: BEFORE_MEALS_ARRAY_OD });
@@ -633,7 +628,7 @@ class WhenToTakeMedication extends Component {
     } else if (keys.length === 2) {
       setFieldsValue(
         {
-          keys: [0, 1]
+          keys: [0, 1],
         },
         async () => {
           setFieldsValue({ [FIELD_NAME]: BEFORE_MEALS_ARRAY_BD });
@@ -643,7 +638,7 @@ class WhenToTakeMedication extends Component {
     } else if (keys.length === 3) {
       setFieldsValue(
         {
-          keys: [0, 1, 2]
+          keys: [0, 1, 2],
         },
         async () => {
           setFieldsValue({ [FIELD_NAME]: BEFORE_MEALS_ARRAY_TDS });
@@ -653,7 +648,7 @@ class WhenToTakeMedication extends Component {
     }
   };
 
-  setAllMealsAfter = e => {
+  setAllMealsAfter = (e) => {
     e.preventDefault();
     const { form, enableSubmit } = this.props;
     const { getFieldValue, setFieldsValue } = form;
@@ -663,7 +658,7 @@ class WhenToTakeMedication extends Component {
     if (keys.length === 1) {
       setFieldsValue(
         {
-          keys: [0]
+          keys: [0],
         },
         async () => {
           setFieldsValue({ [FIELD_NAME]: AFTER_MEALS_ARRAY_OD });
@@ -673,7 +668,7 @@ class WhenToTakeMedication extends Component {
     } else if (keys.length === 2) {
       setFieldsValue(
         {
-          keys: [0, 1]
+          keys: [0, 1],
         },
         async () => {
           setFieldsValue({ [FIELD_NAME]: AFTER_MEALS_ARRAY_BD });
@@ -683,7 +678,7 @@ class WhenToTakeMedication extends Component {
     } else if (keys.length === 3) {
       setFieldsValue(
         {
-          keys: [0, 1, 2]
+          keys: [0, 1, 2],
         },
         async () => {
           setFieldsValue({ [FIELD_NAME]: AFTER_MEALS_ARRAY_TDS });
@@ -700,18 +695,18 @@ class WhenToTakeMedication extends Component {
     const lastKey = keys[keys.length - 1];
     const nextKeys = keys.concat(lastKey + 1);
     form.setFieldsValue({
-      keys: nextKeys
+      keys: nextKeys,
     });
     key_field++;
     this.setState({
       selected_timing_overall: [
         ...selected_timing_overall,
-        this.getInitialValue(lastKey + 1)
+        this.getInitialValue(lastKey + 1),
       ],
       selected_timing: {
         ...selected_timing,
-        [lastKey + 1]: this.getInitialValue(lastKey + 1)
-      }
+        [lastKey + 1]: this.getInitialValue(lastKey + 1),
+      },
     });
   };
 
@@ -719,7 +714,7 @@ class WhenToTakeMedication extends Component {
     const { WHEN_TO_TAKE_BUTTONS = {}, getKeys } = this;
     const keys = getKeys();
 
-    return Object.keys(WHEN_TO_TAKE_BUTTONS).map(index => {
+    return Object.keys(WHEN_TO_TAKE_BUTTONS).map((index) => {
       const { id, setter, text, whenToTakeCount } =
         WHEN_TO_TAKE_BUTTONS[index] || {};
 
@@ -741,14 +736,14 @@ class WhenToTakeMedication extends Component {
       form: { getFieldDecorator } = {},
       payload = {},
       medications,
-      medicationData: templateMedication = null
+      medicationData: templateMedication = null,
     } = this.props;
     const { WHEN_TO_TAKE_BUTTONS = {}, getRadioOptions } = this;
     const { id: medication_id = null, canViewDetails = false } = payload || {};
     const {
       basic_info: {
-        details: { when_to_take_abbr: existingWhenToTake = null } = {}
-      } = {}
+        details: { when_to_take_abbr: existingWhenToTake = null } = {},
+      } = {},
     } = medications[medication_id] || {};
 
     let whenToTake = null;
@@ -817,7 +812,7 @@ class WhenToTakeMedication extends Component {
       return (
         <Fragment>
           {getFieldDecorator(FIELD_NAME_ABBR, {
-            initialValue: whenToTake
+            initialValue: whenToTake,
           })(
             <RadioGroup
               className="flex justify-content-end radio-formulation flex-wrap"
@@ -842,7 +837,7 @@ class WhenToTakeMedication extends Component {
       // onClickOd,
       // onClickBd,
       // onClickTds,
-      getWhenToTakeButtons
+      getWhenToTakeButtons,
     } = this;
     const { getFieldValue } = form;
     const keys = getFieldValue("keys") || [];
@@ -927,5 +922,5 @@ const Field = injectIntl(WhenToTakeMedication);
 export default {
   fieLd_name: FIELD_NAME,
   field_name_abbr: FIELD_NAME_ABBR,
-  render: props => <Field {...props} />
+  render: (props) => <Field {...props} />,
 };

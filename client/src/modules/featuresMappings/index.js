@@ -3,7 +3,7 @@ import { REQUEST_TYPE } from "../../constant";
 import {
   fetchGetAllFeaturesUrl,
   fetchToggleChatPermissionUrl,
-  fetchToggleVideoCallPermissionUrl
+  fetchToggleVideoCallPermissionUrl,
 } from "../../Helper/urls/features";
 import { UPDATE_FEATURES } from "../features";
 
@@ -12,12 +12,12 @@ const initialState = {};
 const UPDATE_FEATURES_MAPPINGS = "UPDATE_FEATURES_MAPPINGS";
 
 export const getAllFeatures = () => {
-  return async dispatch => {
+  return async (dispatch) => {
     let response = {};
     try {
       response = await doRequest({
         method: REQUEST_TYPE.GET,
-        url: fetchGetAllFeaturesUrl()
+        url: fetchGetAllFeaturesUrl(),
       });
 
       const { payload = {}, status = false } = response || {};
@@ -28,11 +28,11 @@ export const getAllFeatures = () => {
         const { data: { features = {}, feature_mappings = {} } = {} } = payload;
         dispatch({
           type: UPDATE_FEATURES,
-          payload: features
+          payload: features,
         });
         dispatch({
           type: UPDATE_FEATURES_MAPPINGS,
-          payload: feature_mappings
+          payload: feature_mappings,
         });
       }
     } catch (err) {
@@ -43,13 +43,13 @@ export const getAllFeatures = () => {
 };
 
 export const toggleChatPermission = (patientId, data) => {
-  return async dispatch => {
+  return async (dispatch) => {
     let response = {};
     try {
       response = await doRequest({
         method: REQUEST_TYPE.POST,
         data: data,
-        url: fetchToggleChatPermissionUrl(patientId)
+        url: fetchToggleChatPermissionUrl(patientId),
       });
 
       const { payload = {}, status = false } = response || {};
@@ -60,7 +60,7 @@ export const toggleChatPermission = (patientId, data) => {
         const { data: { feature_mappings = {} } = {} } = payload;
         dispatch({
           type: UPDATE_FEATURES_MAPPINGS,
-          payload: feature_mappings
+          payload: feature_mappings,
         });
       }
     } catch (err) {
@@ -71,13 +71,13 @@ export const toggleChatPermission = (patientId, data) => {
 };
 
 export const toggleVideoPermission = (patientId, data) => {
-  return async dispatch => {
+  return async (dispatch) => {
     let response = {};
     try {
       response = await doRequest({
         method: REQUEST_TYPE.POST,
         data: data,
-        url: fetchToggleVideoCallPermissionUrl(patientId)
+        url: fetchToggleVideoCallPermissionUrl(patientId),
       });
 
       const { payload = {}, status = false } = response || {};
@@ -88,7 +88,7 @@ export const toggleVideoPermission = (patientId, data) => {
         const { data: { feature_mappings = {} } = {} } = payload;
         dispatch({
           type: UPDATE_FEATURES_MAPPINGS,
-          payload: feature_mappings
+          payload: feature_mappings,
         });
       }
     } catch (err) {
@@ -98,14 +98,14 @@ export const toggleVideoPermission = (patientId, data) => {
   };
 };
 
-export default function(state = initialState, action) {
+export default function (state = initialState, action) {
   const { type, payload = {} } = action;
 
   switch (type) {
     case UPDATE_FEATURES_MAPPINGS:
       return {
         ...state,
-        ...payload
+        ...payload,
       };
     default:
       return state;

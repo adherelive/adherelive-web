@@ -12,8 +12,8 @@ class SpecialityWrapper extends BaseSpeciality {
     return {
       basic_info: {
         id,
-        name
-      }
+        name,
+      },
     };
   };
 }

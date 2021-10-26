@@ -39,7 +39,7 @@ class ActivePatient {
           (await DoctorProviderMappingService.getAllDoctorIds(
             provider.getProviderId()
           )) || [];
-        doctors.forEach(doctor => {
+        doctors.forEach((doctor) => {
           const { doctor_id } = doctor || {};
           doctorIds = [...doctorIds, doctor_id];
         });
@@ -58,7 +58,7 @@ class ActivePatient {
       const doctorIds = await this.getAllDoctors();
       const careplans =
         (await CarePlanService.getMultipleCarePlanByData({
-          doctor_id: doctorIds
+          doctor_id: doctorIds,
         })) || [];
 
       let carePlanData = {};
@@ -88,31 +88,31 @@ class ActivePatient {
           medication_ids,
           vital_ids,
           diet_ids,
-          workout_ids
+          workout_ids,
         } = carePlanData[id] || {};
 
         const events =
           (await eventService.getAllEventStatusByData({
             appointment: {
               event_id: appointment_ids,
-              event_type: EVENT_TYPE.APPOINTMENT
+              event_type: EVENT_TYPE.APPOINTMENT,
             },
             medication: {
               event_id: medication_ids,
-              event_type: EVENT_TYPE.MEDICATION_REMINDER
+              event_type: EVENT_TYPE.MEDICATION_REMINDER,
             },
             vital: {
               event_id: vital_ids,
-              event_type: EVENT_TYPE.VITALS
+              event_type: EVENT_TYPE.VITALS,
             },
             diet: {
               event_id: diet_ids,
-              event_type: EVENT_TYPE.DIET
+              event_type: EVENT_TYPE.DIET,
             },
             workout: {
               event_id: workout_ids,
-              event_type: EVENT_TYPE.WORKOUT
-            }
+              event_type: EVENT_TYPE.WORKOUT,
+            },
           })) || [];
         Log.info(
           `Total events :: ${events.length} :: for careplan id :: ${id}`
@@ -123,7 +123,7 @@ class ActivePatient {
 
         let pendingEventCount = 0;
 
-        events.forEach(event => {
+        events.forEach((event) => {
           const { status } = event || {};
           /*
            *
@@ -152,9 +152,7 @@ class ActivePatient {
         if (events.length > 0 && events.length === passedEventCount) {
           await CarePlanService.updateCarePlan(
             {
-              expired_on: moment()
-                .utc()
-                .toISOString()
+              expired_on: moment().utc().toISOString(),
             },
             id
           );

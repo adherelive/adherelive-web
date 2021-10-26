@@ -7,7 +7,7 @@ class pnManger {
     AWS.config.update({
       accessKeyId: process.config.aws.access_key_id,
       secretAccessKey: process.config.aws.access_key,
-      region: process.config.aws.region
+      region: process.config.aws.region,
     });
     this.sns = new AWS.SNS();
   }
@@ -27,7 +27,7 @@ class pnManger {
           ? await this.sns
               .createPlatformEndpoint({
                 PlatformApplicationArn: process.config.aws.platform_arn,
-                Token: token
+                Token: token,
               })
               .promise()
           : payload.targetArn;
@@ -46,7 +46,7 @@ class pnManger {
         .publish({
           Message: tranformedPayload,
           MessageStructure: "json",
-          TargetArn: PNendpointArn
+          TargetArn: PNendpointArn,
         })
         .promise();
       return PNpublishResponse;
@@ -57,7 +57,7 @@ class pnManger {
     if (!payload.type || ["ios", "android"].indexOf(payload.type) == -1)
       return {
         error: 1,
-        message: "invalid or undefined type"
+        message: "invalid or undefined type",
       };
 
     if (payload.type == "android") {
@@ -72,11 +72,11 @@ class pnManger {
     if (!payload.alert)
       return {
         error: 1,
-        message: "invalid or empty alert!!"
+        message: "invalid or empty alert!!",
       };
     return {
       error: 0,
-      message: "valid apns payload"
+      message: "valid apns payload",
     };
   }
 
@@ -84,17 +84,17 @@ class pnManger {
     if (!payload.data)
       return {
         error: 1,
-        message: "invalid  or empty message!!"
+        message: "invalid  or empty message!!",
       };
     if (!payload.notification)
       return {
         error: 1,
-        message: "invalid or empty notification"
+        message: "invalid or empty notification",
       };
 
     return {
       error: 0,
-      message: "valid gcm payload"
+      message: "valid gcm payload",
     };
   }
 }

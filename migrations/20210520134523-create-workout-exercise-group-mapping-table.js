@@ -10,27 +10,27 @@ module.exports = {
       id: {
         type: DataTypes.INTEGER,
         primaryKey: true,
-        autoIncrement: true
+        autoIncrement: true,
       },
       workout_id: {
         type: DataTypes.INTEGER,
         allowNull: false,
         references: {
           model: {
-            tableName: workoutTableName
+            tableName: workoutTableName,
           },
-          key: "id"
-        }
+          key: "id",
+        },
       },
       exercise_group_id: {
         type: DataTypes.INTEGER,
         allowNull: false,
         references: {
           model: {
-            tableName: exerciseGroupTableName
+            tableName: exerciseGroupTableName,
           },
-          key: "id"
-        }
+          key: "id",
+        },
       },
       // time: {
       //   type: DataTypes.DATE,
@@ -38,19 +38,19 @@ module.exports = {
       // },
       created_at: {
         type: DataTypes.DATE,
-        allowNull: false
+        allowNull: false,
       },
       updated_at: {
         type: DataTypes.DATE,
-        allowNull: false
+        allowNull: false,
       },
       deleted_at: {
-        type: DataTypes.DATE
-      }
+        type: DataTypes.DATE,
+      },
     });
   },
 
   down: (queryInterface, DataTypes) => {
     return queryInterface.dropTable(TABLE_NAME);
-  }
+  },
 };

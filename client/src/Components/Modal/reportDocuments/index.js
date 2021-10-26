@@ -13,7 +13,7 @@ class ReportDocuments extends Component {
     super(props);
     this.state = {
       viewModalVisible: false,
-      viewModalSrc: ""
+      viewModalSrc: "",
     };
   }
 
@@ -36,17 +36,17 @@ class ReportDocuments extends Component {
     );
   };
 
-  handleDocumentViewOpen = src => () => {
+  handleDocumentViewOpen = (src) => () => {
     this.setState({
       viewModalVisible: true,
-      viewModalSrc: src
+      viewModalSrc: src,
     });
   };
 
   handleDocumentViewClose = () => {
     this.setState({
       viewModalVisible: false,
-      viewModalSrc: ""
+      viewModalSrc: "",
     });
   };
 
@@ -69,7 +69,7 @@ class ReportDocuments extends Component {
         footer={null}
       >
         <div className="flex flex-wrap wp100">
-          {Object.keys(documentData).map(id => {
+          {Object.keys(documentData).map((id) => {
             const { basic_info: { name, document: src } = {} } =
               documentData[id] || {};
 
@@ -114,7 +114,7 @@ class ReportDocuments extends Component {
             footer={[
               <Button key="back" onClick={handleDocumentViewClose}>
                 Close
-              </Button>
+              </Button>,
             ]}
           >
             <img

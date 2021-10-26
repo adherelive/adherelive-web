@@ -10,16 +10,16 @@ module.exports = {
         values: [
           USER_CATEGORY.DOCTOR,
           USER_CATEGORY.PATIENT,
-          USER_CATEGORY.HSP
+          USER_CATEGORY.HSP,
         ],
-        allowNull: false
-      })
+        allowNull: false,
+      }),
     ]);
   },
 
   down: (queryInterface, Sequelize) => {
     return Promise.all([
-      queryInterface.changeColumn(TABLE_NAME, "uploader_type")
+      queryInterface.changeColumn(TABLE_NAME, "uploader_type"),
     ]);
-  }
+  },
 };

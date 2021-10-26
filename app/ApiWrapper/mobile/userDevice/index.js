@@ -9,7 +9,7 @@ class UserDeviceWrapper extends BaseUserDevice {
   getAllInfo = () => {
     const { _data } = this;
     return {
-      ..._data
+      ..._data,
     };
   };
 }

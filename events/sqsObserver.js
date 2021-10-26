@@ -7,7 +7,7 @@ import {
   handleCarePlans,
   handleAppointmentsTimeAssignment,
   handleDiet,
-  handleWorkout
+  handleWorkout,
 } from "./helper";
 
 const Log = new Logger("EVENTS > SQS_OBSERVER");
@@ -15,7 +15,7 @@ const Log = new Logger("EVENTS > SQS_OBSERVER");
 export default class SqsObserver {
   constructor() {}
 
-  observe = async service => {
+  observe = async (service) => {
     try {
       const eventMessage = await service.receiveMessage();
       Log.debug("eventMessage", eventMessage);

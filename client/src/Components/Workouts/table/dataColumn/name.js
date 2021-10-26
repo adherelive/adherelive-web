@@ -1,10 +1,10 @@
 import React from "react";
 import messages from "../messages";
 
-export default props => {
+export default (props) => {
   const {
     workoutData: { basic_info: { name } = {}, expired_on = null } = {},
-    formatMessage
+    formatMessage,
   } = props || {};
   return (
     <div className="flex direction-column  ">

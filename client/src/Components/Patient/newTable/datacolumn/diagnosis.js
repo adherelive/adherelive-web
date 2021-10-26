@@ -1,14 +1,14 @@
 import React from "react";
 import {
   DIAGNOSIS_TYPE,
-  TABLE_DEFAULT_BLANK_FIELD
+  TABLE_DEFAULT_BLANK_FIELD,
 } from "../../../../constant";
 
-export default props => {
+export default (props) => {
   const {
     carePlanData: {
-      details: { diagnosis: { description = "", type = "2" } = {} } = {}
-    } = {}
+      details: { diagnosis: { description = "", type = "2" } = {} } = {},
+    } = {},
   } = props || {};
 
   const diagnosisType = DIAGNOSIS_TYPE[type];

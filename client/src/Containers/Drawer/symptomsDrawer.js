@@ -5,18 +5,18 @@ import { close } from "../../modules/drawer";
 import {
   getMedications,
   addMedicationReminder,
-  addCarePlanMedicationReminder
+  addCarePlanMedicationReminder,
 } from "../../modules/medications";
 import { getMedicationDetails } from "../../modules/otherDetails";
 import { getAppointments } from "../../modules/appointments";
 import { searchMedicine } from "../../modules/medicines";
 // import { createReminder, updateReminder } from "../../modules/reminder"; // write to add to database
-const mapStateToProps = state => {
+const mapStateToProps = (state) => {
   const {
     drawer: { visible, loading, data: { type, payload = {} } = {} },
     other_details: { medication_details = {} } = {},
     medicines,
-    upload_documents = {}
+    upload_documents = {},
   } = state;
 
   return {
@@ -25,13 +25,13 @@ const mapStateToProps = state => {
     payload,
     medication_details,
     medicines,
-    upload_documents
+    upload_documents,
   };
 };
 
-const mapDispatchToProps = dispatch => {
+const mapDispatchToProps = (dispatch) => {
   return {
-    close: () => dispatch(close())
+    close: () => dispatch(close()),
   };
 };
 

@@ -4,18 +4,18 @@ const user_categories = {
   doctor: "Doctor",
   admin: "Admin",
   programAdmin: "Program Admin",
-  superAdmin: "Super Admin"
+  superAdmin: "Super Admin",
 };
 
 const notificationMessages = {
   reminder: {
-    Create: data => {
+    Create: (data) => {
       return `${data.name} (${data.category}) has set Reminder for you`;
     },
-    Reschedule: data => {
+    Reschedule: (data) => {
       return `${data.category} (${data.name}) has rescheduled the Reminder`;
     },
-    Now: data => {
+    Now: (data) => {
       switch (data.nowType) {
         case "P2P":
           return `You have ${data.reminderName} now for ${data.time}`;
@@ -26,78 +26,78 @@ const notificationMessages = {
         case "C2C":
           return `${data.name} (${data.category}) is having ${data.reminderName} for ${data.time}`;
       }
-    }
+    },
   },
   appointment: {
-    Create: data => {
+    Create: (data) => {
       return `${data.name} (${
         user_categories[data.category]
       })  has created an Appointment for you`;
     },
-    Reschedule: data => {
+    Reschedule: (data) => {
       return `${data.name} (${
         user_categories[data.category]
       }) has rescheduled the Appointment`;
     },
-    Prior: data => {
+    Prior: (data) => {
       return `You have an Appointment with ${data.name} (${
         user_categories[data.category]
       }) in ${data.time}`;
     },
-    Now: data => {
+    Now: (data) => {
       return `You have an Appointment with ${data.name} (${
         user_categories[data.category]
       }) now`;
     },
-    Delete: data => {
+    Delete: (data) => {
       return `${data.name} (${
         user_categories[data.category]
       }) has deleted the Appointment`;
-    }
+    },
   },
   survey: {
-    Create: data => {
+    Create: (data) => {
       return `${data.name} (${
         user_categories[data.category]
       }) has sent you survey ${data.title}`;
     },
-    Answered: data => {
+    Answered: (data) => {
       return `Patient ${data.name} has responded to survey ${data.title}`;
     },
 
-    Complete: data => {
+    Complete: (data) => {
       return `Survey ${data.title} has been completed`;
-    }
+    },
   },
   article: {
-    Create: data => {
+    Create: (data) => {
       return `${data.name} (${
         user_categories[data.category]
       }) has shared an Article with you ${data.title}`;
-    }
+    },
   },
   patient: {
-    Discharge: data => {
+    Discharge: (data) => {
       return `Patient ${data.name} has been discharged from program ${data.title}`;
-    }
+    },
   },
   adverseEvent: {
-    Add: data => {
+    Add: (data) => {
       return `${data.name} seems to have a ${data.concern} like for ${data.duration} after the medication`;
-    }
+    },
   },
   vitals: {
-    SelfUpdate: data => {
+    SelfUpdate: (data) => {
       return `${data.name} (${
         user_categories[data.category]
       }) has updated the Vitals`;
     },
-    OtherUpdate: data => {
+    OtherUpdate: (data) => {
       return `${data.name} (${
         user_categories[data.category]
       }) has updated your Vitals`;
-    }
-  }
+    },
+  },
 };
 
 module.exports = notificationMessages;

@@ -17,14 +17,14 @@ import UserRoleWrapper from "../../../ApiWrapper/mobile/userRoles";
 import {
   getCarePlanAppointmentIds,
   getCarePlanMedicationIds,
-  getCarePlanSeverityDetails
+  getCarePlanSeverityDetails,
 } from "./carePlanHelper";
 import {
   EVENT_LONG_TERM_VALUE,
   EVENT_STATUS,
   EVENT_TYPE,
   USER_CATEGORY,
-  WHEN_TO_TAKE_ABBREVATIONS
+  WHEN_TO_TAKE_ABBREVATIONS,
 } from "../../../../constant";
 import doctorService from "../../../services/doctor/doctor.service";
 import DoctorWrapper from "../../../ApiWrapper/mobile/doctor";
@@ -63,7 +63,7 @@ class CarePlanController extends Controller {
         condition_id,
         severity_id,
         name: newTemplateName,
-        createTemplate = false
+        createTemplate = false,
       } = req.body;
 
       const { userDetails, permissions = [] } = req;
@@ -72,7 +72,7 @@ class CarePlanController extends Controller {
         userRoleId,
         userData: { category } = {},
         userCategoryId,
-        userCategoryData
+        userCategoryData,
       } = userDetails || {};
       const QueueService = new queueService();
 
@@ -97,12 +97,11 @@ class CarePlanController extends Controller {
         );
       }
 
-      const templateNameCheck = await carePlanTemplateService.getSingleTemplateByData(
-        {
+      const templateNameCheck =
+        await carePlanTemplateService.getSingleTemplateByData({
           name: newTemplateName,
-          user_id: userId
-        }
-      );
+          user_id: userId,
+        });
 
       if (templateNameCheck) {
         return raiseClientError(
@@ -156,7 +155,7 @@ class CarePlanController extends Controller {
               participant_two = {},
               date = "",
               start_time = "",
-              end_time = ""
+              end_time = "",
             } = {},
             reason = "",
             time_gap = "",
@@ -165,7 +164,7 @@ class CarePlanController extends Controller {
             type = "",
             type_description = "",
             critical = false,
-            radiology_type = ""
+            radiology_type = "",
           } = appointmentsData[i];
 
           const { id: participant_two_id, category: participant_two_type } =
@@ -213,25 +212,23 @@ class CarePlanController extends Controller {
               type,
               type_description,
               critical,
-              radiology_type
-            }
+              radiology_type,
+            },
           };
 
           const baseAppointment = await appointmentService.addAppointment(
             appointment_data
           );
 
-          const newAppointment = await carePlanAppointmentService.addCarePlanAppointment(
-            {
+          const newAppointment =
+            await carePlanAppointmentService.addCarePlanAppointment({
               care_plan_id,
-              appointment_id: baseAppointment.get("id")
-            }
-          );
+              appointment_id: baseAppointment.get("id"),
+            });
 
           const appointmentData = await AppointmentWrapper(baseAppointment);
-          appointmentApiDetails[
-            appointmentData.getAppointmentId()
-          ] = appointmentData.getBasicInfo();
+          appointmentApiDetails[appointmentData.getAppointmentId()] =
+            appointmentData.getBasicInfo();
           appointment_ids.push(appointmentData.getAppointmentId());
 
           appointmentsArr.push({
@@ -244,8 +241,8 @@ class CarePlanController extends Controller {
               type_description,
               critical,
               appointment_type: type,
-              radiology_type
-            }
+              radiology_type,
+            },
           });
 
           appointmentEventData.push({
@@ -253,7 +250,7 @@ class CarePlanController extends Controller {
             event_id: appointmentData.getAppointmentId(),
             user_role_id: userRoleId,
             start_time,
-            end_time
+            end_time,
           });
 
           // const sqsResponse = await QueueService.sendMessage(
@@ -283,8 +280,8 @@ class CarePlanController extends Controller {
           actor: {
             id: userId,
             user_role_id: userRoleId,
-            category
-          }
+            category,
+          },
         };
       }
 
@@ -319,10 +316,10 @@ class CarePlanController extends Controller {
               start_time = "",
               repeat_interval = "",
               medication_stage = "",
-              critical = false
+              critical = false,
             } = {},
             medicine_id = "",
-            medicine_type = "1"
+            medicine_type = "1",
           } = medication;
 
           const dataToSave = {
@@ -347,8 +344,8 @@ class CarePlanController extends Controller {
               when_to_take,
               when_to_take_abbr,
               medication_stage,
-              critical
-            }
+              critical,
+            },
           };
 
           const mReminderDetails = await medicationReminderService.addMReminder(
@@ -359,17 +356,16 @@ class CarePlanController extends Controller {
 
           const data_to_create = {
             care_plan_id,
-            medication_id: medicationWrapper.getMReminderId()
+            medication_id: medicationWrapper.getMReminderId(),
           };
 
-          let newMedication = await carePlanMedicationService.addCarePlanMedication(
-            data_to_create
-          );
+          let newMedication =
+            await carePlanMedicationService.addCarePlanMedication(
+              data_to_create
+            );
 
-          const {
-            medications,
-            medicines
-          } = await medicationWrapper.getReferenceInfo();
+          const { medications, medicines } =
+            await medicationWrapper.getReferenceInfo();
           medicationApiDetails = { ...medicationApiDetails, ...medications };
           medicineApiDetails = { ...medicineApiDetails, ...medicines };
 
@@ -390,8 +386,8 @@ class CarePlanController extends Controller {
               medicine_type,
               duration: end_date
                 ? moment(end_date).diff(moment(start_date), "days")
-                : EVENT_LONG_TERM_VALUE
-            }
+                : EVENT_LONG_TERM_VALUE,
+            },
           });
         }
       }
@@ -399,8 +395,8 @@ class CarePlanController extends Controller {
       carePlanScheduleData = {
         ...(permissions.includes(PERMISSIONS.MEDICATIONS.ADD) && {
           ...carePlanScheduleData,
-          medication_ids
-        })
+          medication_ids,
+        }),
       };
 
       // vitals ----------------------------------------
@@ -409,12 +405,12 @@ class CarePlanController extends Controller {
         vital_ids,
         vital_templates,
         vitalEventsData = [],
-        carePlanTemplateVitals = []
+        carePlanTemplateVitals = [],
       } = await carePlanHelper.createVitals({
         data: vitalData,
         carePlanId: care_plan_id,
         authUser: { category, userId, userCategoryData, userRoleId },
-        patientId: carePlanData.getPatientId()
+        patientId: carePlanData.getPatientId(),
       });
 
       // diets ----------------------------------------
@@ -426,12 +422,12 @@ class CarePlanController extends Controller {
         portions,
         diet_ids,
         dietEventData,
-        carePlanTemplateDiets
+        carePlanTemplateDiets,
       } = await carePlanHelper.createDiet({
         data: dietData,
         carePlanId: care_plan_id,
         authUser: { category, userId, userCategoryData, userRoleId },
-        patientId: carePlanData.getPatientId()
+        patientId: carePlanData.getPatientId(),
       });
 
       // workouts ----------------------------------------
@@ -443,12 +439,12 @@ class CarePlanController extends Controller {
         repetitions,
         workout_ids,
         workoutEventData,
-        carePlanTemplateWorkouts
+        carePlanTemplateWorkouts,
       } = await carePlanHelper.createWorkout({
         data: workoutData,
         carePlanId: care_plan_id,
         authUser: { category, userId, userCategoryData, userRoleId },
-        patientId: carePlanData.getPatientId()
+        patientId: carePlanData.getPatientId(),
       });
 
       let carePlanTemplate = null;
@@ -462,11 +458,11 @@ class CarePlanController extends Controller {
           user_id: userId,
           template_appointments: [...appointmentsArr],
           ...(permissions.includes(PERMISSIONS.MEDICATIONS.ADD) && {
-            template_medications: [...medicationsArr]
+            template_medications: [...medicationsArr],
           }),
           template_vitals: [...carePlanTemplateVitals],
           template_diets: [...carePlanTemplateDiets],
-          template_workouts: [...carePlanTemplateWorkouts]
+          template_workouts: [...carePlanTemplateWorkouts],
         });
 
         carePlanTemplate = await CarePlanTemplateWrapper(
@@ -488,7 +484,7 @@ class CarePlanController extends Controller {
         ...vitalEventsData,
         ...dietEventData,
         ...workoutEventData,
-        carePlanScheduleData
+        carePlanScheduleData,
       ]);
 
       return this.raiseSuccess(
@@ -500,20 +496,20 @@ class CarePlanController extends Controller {
               ...carePlanData.getBasicInfo(),
               appointment_ids,
               ...(permissions.includes(PERMISSIONS.MEDICATIONS.ADD) && {
-                medication_ids
+                medication_ids,
               }),
               vital_ids,
               diet_ids,
-              workout_ids
-            }
+              workout_ids,
+            },
           },
           appointments: {
-            ...appointmentApiDetails
+            ...appointmentApiDetails,
           },
           ...(permissions.includes(PERMISSIONS.MEDICATIONS.ADD) && {
             medications: {
-              ...medicationApiDetails
-            }
+              ...medicationApiDetails,
+            },
           }),
           vitals,
           vital_templates,
@@ -530,7 +526,9 @@ class CarePlanController extends Controller {
           exercise_details,
           repetitions,
 
-          ...(carePlanTemplate ? await carePlanTemplate.getReferenceInfo() : {})
+          ...(carePlanTemplate
+            ? await carePlanTemplate.getReferenceInfo()
+            : {}),
         },
         "Care plan medications, appointments, actions, diets and exercises added successfully"
       );
@@ -558,7 +556,7 @@ class CarePlanController extends Controller {
       const eventData = await scheduleEventService.getEventByData({
         event_id: care_plan_id,
         status: EVENT_STATUS.SCHEDULED,
-        event_type: EVENT_TYPE.CARE_PLAN_ACTIVATION
+        event_type: EVENT_TYPE.CARE_PLAN_ACTIVATION,
       });
 
       if (!eventData || !Object.keys(eventData)) {
@@ -579,7 +577,7 @@ class CarePlanController extends Controller {
           {
             status: EVENT_STATUS.PENDING,
             start_time: care_plan_start_time,
-            end_time
+            end_time,
           },
           schedule_event_id_value
         );
@@ -590,9 +588,9 @@ class CarePlanController extends Controller {
           {
             care_plans: {
               [carePlanData.getCarePlanId()]: {
-                ...carePlanData.getBasicInfo()
-              }
-            }
+                ...carePlanData.getBasicInfo(),
+              },
+            },
           },
           "Care plan delayed successfully."
         );
@@ -605,8 +603,8 @@ class CarePlanController extends Controller {
           medications = {},
           medication_ids = [],
           actor: { id: organizer_id = null, category } = {},
-          actor = {}
-        } = {}
+          actor = {},
+        } = {},
       } = eventData;
       const medicationsData = JSON.parse(medications);
 
@@ -620,9 +618,8 @@ class CarePlanController extends Controller {
         // Log.debug("1698727 medications", medicationsData);
         // Log.debug("1698727 index", index);
         // const currentMedication =
-        const {
-          schedule_data: { end_date = "", start_date = "" } = {}
-        } = medicationsData[index];
+        const { schedule_data: { end_date = "", start_date = "" } = {} } =
+          medicationsData[index];
 
         const duration = end_date
           ? moment(end_date).diff(moment(start_date), "days")
@@ -630,22 +627,20 @@ class CarePlanController extends Controller {
 
         const updatedStartDate = moment().utc();
         const updatedEndDate = duration
-          ? moment(updatedStartDate)
-              .utc()
-              .add(duration, "days")
+          ? moment(updatedStartDate).utc().add(duration, "days")
           : EVENT_LONG_TERM_VALUE;
 
         // check for medication
         const medicationExists =
           (await medicationReminderService.getMedication({
-            id: medication_ids[index]
+            id: medication_ids[index],
           })) || null;
 
         if (medicationExists) {
           await medicationReminderService.updateMedication(
             {
               start_date: updatedStartDate,
-              end_date: updatedEndDate
+              end_date: updatedEndDate,
             },
             medication_ids[index]
           );
@@ -658,19 +653,16 @@ class CarePlanController extends Controller {
           // medicationApiDetails[
           //     medication.getMReminderId()
           //     ] = await medication.getAllInfo();
-          const {
-            medications,
-            medicines
-          } = await medication.getReferenceInfo();
+          const { medications, medicines } =
+            await medication.getReferenceInfo();
           medicationApiDetails = { ...medicationApiDetails, ...medications };
           // medicationIds.push(medication.getMReminderId());
           medicineApiDetails = { ...medicineApiDetails, ...medicines };
 
           const patient = await PatientWrapper(null, patient_id);
 
-          const {
-            details: { when_to_take, when_to_take_abbr = null } = {}
-          } = medication.getDetails();
+          const { details: { when_to_take, when_to_take_abbr = null } = {} } =
+            medication.getDetails();
 
           if (when_to_take_abbr !== WHEN_TO_TAKE_ABBREVATIONS.SOS) {
             eventScheduleData.push({
@@ -684,7 +676,7 @@ class CarePlanController extends Controller {
               when_to_take,
               // participant_one: patient.getUserId(),
               // participant_two: organizer_id,
-              actor
+              actor,
             });
           }
         }
@@ -802,7 +794,7 @@ class CarePlanController extends Controller {
 
       await scheduleEventService.update(
         {
-          status: EVENT_STATUS.COMPLETED
+          status: EVENT_STATUS.COMPLETED,
         },
         schedule_event_id_value
       );
@@ -814,15 +806,15 @@ class CarePlanController extends Controller {
           care_plans: {
             [carePlanData.getCarePlanId()]: {
               ...carePlanData.getBasicInfo(),
-              medication_ids
-            }
+              medication_ids,
+            },
           },
           medications: {
-            ...medicationApiDetails
+            ...medicationApiDetails,
           },
           medicines: {
-            ...medicineApiDetails
-          }
+            ...medicineApiDetails,
+          },
         },
         "Care plan activated successfully."
       );
@@ -840,8 +832,8 @@ class CarePlanController extends Controller {
           userId,
           userRoleId = null,
           userData: { category } = {},
-          permissions = []
-        } = {}
+          permissions = [],
+        } = {},
       } = req;
 
       let show = false;
@@ -849,7 +841,7 @@ class CarePlanController extends Controller {
       let carePlan = await carePlanService.getSingleCarePlanByData({
         patient_id,
         ...((category === USER_CATEGORY.DOCTOR ||
-          category === USER_CATEGORY.HSP) && { user_role_id: userRoleId })
+          category === USER_CATEGORY.HSP) && { user_role_id: userRoleId }),
       });
 
       let cPdetails = carePlan.get("details") ? carePlan.get("details") : {};
@@ -857,12 +849,12 @@ class CarePlanController extends Controller {
       let { shown = false } = cPdetails;
       let carePlanId = carePlan.get("id");
       let carePlanTemplateId = carePlan.get("care_plan_template_id");
-      let carePlanMedications = await carePlanMedicationService.getMedicationsByCarePlanId(
-        carePlanId
-      );
-      let carePlanAppointments = await carePlanAppointmentService.getAppointmentsByCarePlanId(
-        carePlanId
-      );
+      let carePlanMedications =
+        await carePlanMedicationService.getMedicationsByCarePlanId(carePlanId);
+      let carePlanAppointments =
+        await carePlanAppointmentService.getAppointmentsByCarePlanId(
+          carePlanId
+        );
 
       let carePlanAppointmentIds = await getCarePlanAppointmentIds(carePlanId);
       let carePlanMedicationIds = await getCarePlanMedicationIds(carePlanId);
@@ -877,7 +869,7 @@ class CarePlanController extends Controller {
         ...carePlanApiWrapper.getBasicInfo(),
         ...carePlanSeverityDetails,
         carePlanMedicationIds,
-        carePlanAppointmentIds
+        carePlanAppointmentIds,
       };
 
       let templateMedications = {};
@@ -889,12 +881,14 @@ class CarePlanController extends Controller {
         !carePlanMedications.length &&
         !carePlanAppointments.length
       ) {
-        templateMedications = await templateMedicationService.getMedicationsByCarePlanTemplateId(
-          carePlanTemplateId
-        );
-        templateAppointments = await templateAppointmentService.getAppointmentsByCarePlanTemplateId(
-          carePlanTemplateId
-        );
+        templateMedications =
+          await templateMedicationService.getMedicationsByCarePlanTemplateId(
+            carePlanTemplateId
+          );
+        templateAppointments =
+          await templateAppointmentService.getAppointmentsByCarePlanTemplateId(
+            carePlanTemplateId
+          );
         if (
           permissions.includes(PERMISSIONS.MEDICATIONS.VIEW) &&
           templateMedications.length
@@ -983,12 +977,12 @@ class CarePlanController extends Controller {
           care_plans: { ...carePlanApiData },
           show,
           ...(permissions.includes(PERMISSIONS.MEDICATIONS.VIEW) && {
-            medicationsOfTemplate
+            medicationsOfTemplate,
           }),
           appointmentsOfTemplate,
           carePlanMedications,
           carePlanAppointments,
-          carePlanTemplateId
+          carePlanTemplateId,
         },
         "patient care plan details fetched successfully"
       );
@@ -1010,7 +1004,7 @@ class CarePlanController extends Controller {
       const carePlanId = care_plan_id;
       const dataToAdd = {
         care_plan_id,
-        secondary_doctor_role_id: user_role_id
+        secondary_doctor_role_id: user_role_id,
       };
       const existingMapping =
         (await careplanSecondaryDoctorMappingService.getByData(dataToAdd)) ||
@@ -1046,7 +1040,7 @@ class CarePlanController extends Controller {
             doctors = {},
             providers = {},
             user_roles = {},
-            secondary_doctor_user_role_ids = []
+            secondary_doctor_user_role_ids = [],
           } = await carePlan.getAllInfo();
 
           carePlanApiData[carePlanApiWrapper.getCarePlanId()] = {
@@ -1055,7 +1049,7 @@ class CarePlanController extends Controller {
             carePlanMedicationIds,
             carePlanAppointmentIds,
             vital_ids,
-            secondary_doctor_user_role_ids
+            secondary_doctor_user_role_ids,
           };
 
           // if(addUserToChat) {
@@ -1070,7 +1064,7 @@ class CarePlanController extends Controller {
               care_plans: { ...carePlanApiData },
               doctors,
               providers,
-              user_roles
+              user_roles,
             },
             "Profile added successfully"
           );

@@ -14,8 +14,8 @@ class ExerciseWrapper extends BaseExercise {
     return {
       basic_info: {
         id,
-        name
-      }
+        name,
+      },
     };
   };
 
@@ -34,7 +34,7 @@ class ExerciseWrapper extends BaseExercise {
 
     return {
       ...getBasicInfo(),
-      exercise_detail_ids
+      exercise_detail_ids,
     };
   };
 
@@ -48,12 +48,10 @@ class ExerciseWrapper extends BaseExercise {
     if (exerciseDetails.length > 0) {
       for (let index = 0; index < exerciseDetails.length; index++) {
         const exerciseDetail = await ExerciseDetailWrapper({
-          data: exerciseDetails[index]
+          data: exerciseDetails[index],
         });
-        const {
-          exercise_details,
-          repetitions
-        } = await exerciseDetail.getReferenceInfo();
+        const { exercise_details, repetitions } =
+          await exerciseDetail.getReferenceInfo();
         allExerciseDetails = { ...allExerciseDetails, ...exercise_details };
         allRepetitions = { ...allRepetitions, ...repetitions };
       }
@@ -62,15 +60,15 @@ class ExerciseWrapper extends BaseExercise {
     return {
       exercises: {
         [getId()]: {
-          ...(await getAllInfo())
-        }
+          ...(await getAllInfo()),
+        },
       },
       exercise_details: {
-        ...allExerciseDetails
+        ...allExerciseDetails,
       },
       repetitions: {
-        ...allRepetitions
-      }
+        ...allRepetitions,
+      },
     };
   };
 }

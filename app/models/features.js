@@ -3,7 +3,7 @@ import { DataTypes } from "sequelize";
 
 export const TABLE_NAME = "features";
 
-export const db = database => {
+export const db = (database) => {
   database.define(
     TABLE_NAME,
     {
@@ -11,16 +11,16 @@ export const db = database => {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
-        type: DataTypes.INTEGER
+        type: DataTypes.INTEGER,
       },
       name: {
         type: DataTypes.STRING,
-        allowNull: false
+        allowNull: false,
       },
       details: {
         type: DataTypes.JSON,
-        allowNull: true
-      }
+        allowNull: true,
+      },
     },
     {
       underscored: true,
@@ -30,15 +30,15 @@ export const db = database => {
           return {
             id: this.id,
             name: this.name,
-            details: this.details
+            details: this.details,
           };
-        }
-      }
+        },
+      },
     }
   );
 };
 
-export const associate = database => {
+export const associate = (database) => {
   // const {TABLE_NAME} = database.models || {};
   // associations here (if any) ...
 };

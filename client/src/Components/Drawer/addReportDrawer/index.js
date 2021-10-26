@@ -17,7 +17,7 @@ import {
   PlusOutlined,
   EyeTwoTone,
   DownloadOutlined,
-  LoadingOutlined
+  LoadingOutlined,
 } from "@ant-design/icons";
 
 import messages from "./message";
@@ -32,11 +32,11 @@ class addReportDrawer extends Component {
       documents: [],
       name: "",
       test_date: "",
-      submitting: false
+      submitting: false,
     };
   }
 
-  formatMessage = data => this.props.intl.formatMessage(data);
+  formatMessage = (data) => this.props.intl.formatMessage(data);
 
   componentDidMount() {}
 
@@ -45,27 +45,27 @@ class addReportDrawer extends Component {
     return uploading ? <LoadingOutlined /> : <PlusOutlined />;
   };
 
-  setName = e => {
+  setName = (e) => {
     e.preventDefault();
     const { value } = e.target;
     this.setState({ name: value });
   };
 
-  handleDocumentViewOpen = src => () => {
+  handleDocumentViewOpen = (src) => () => {
     this.setState({
       viewModalVisible: true,
-      viewModalSrc: src
+      viewModalSrc: src,
     });
   };
 
   handleDocumentViewClose = () => {
     this.setState({
       viewModalVisible: false,
-      viewModalSrc: ""
+      viewModalSrc: "",
     });
   };
 
-  handleDelete = delete_src => e => {
+  handleDelete = (delete_src) => (e) => {
     e.preventDefault();
     const { documents } = this.state;
     let indexToDelete = -1;
@@ -174,7 +174,7 @@ class addReportDrawer extends Component {
     const fileReader = new FileReader();
     const fileUrl = URL.createObjectURL(file.originFileObj);
 
-    const existing = documents.filter(document => {
+    const existing = documents.filter((document) => {
       const { name } = document || {};
       return name === file.name;
     });
@@ -182,14 +182,14 @@ class addReportDrawer extends Component {
       newDocuments.push({
         name: file.name,
         src: fileUrl,
-        file
+        file,
       });
     }
 
     this.setState({ documents: [...documents, ...newDocuments] });
   };
 
-  setTestDate = value => {
+  setTestDate = (value) => {
     this.setState({ test_date: moment(value) });
   };
 
@@ -199,7 +199,7 @@ class addReportDrawer extends Component {
       formatMessage,
       getUploadedDocuments,
       handleUploadChange,
-      setTestDate
+      setTestDate,
     } = this;
 
     const { name = "", test_date } = this.state;
@@ -273,15 +273,15 @@ class addReportDrawer extends Component {
 
         this.setState({
           uploading: true,
-          submitting: true
+          submitting: true,
         });
         const response = await uploadReport(patient_id, data);
         const {
           status = false,
           payload: {
             message: respMessage = "",
-            data: { documents: response_documents = [] } = {}
-          } = {}
+            data: { documents: response_documents = [] } = {},
+          } = {},
         } = response;
 
         if (!status) {
@@ -312,15 +312,13 @@ class addReportDrawer extends Component {
         name,
         patient_id,
         documents,
-        test_date
+        test_date,
       };
 
       const response = await addReport(data);
 
-      const {
-        status = false,
-        payload: { message: respMessage = "" } = {}
-      } = response;
+      const { status = false, payload: { message: respMessage = "" } = {} } =
+        response;
 
       if (status) {
         this.setState({
@@ -330,7 +328,7 @@ class addReportDrawer extends Component {
           documents: [],
           name: "",
           test_date: "",
-          submitting: false
+          submitting: false,
         });
         close();
         message.success(respMessage);
@@ -345,7 +343,7 @@ class addReportDrawer extends Component {
     }
   }
 
-  handleSubmit = e => {
+  handleSubmit = (e) => {
     e.preventDefault();
     this.submitData();
   };
@@ -375,11 +373,11 @@ class addReportDrawer extends Component {
           uploading: false,
           documents: [],
           name: "",
-          test_date: ""
+          test_date: "",
         });
         close();
       },
-      onCancel() {}
+      onCancel() {},
     });
   };
 
@@ -397,7 +395,7 @@ class addReportDrawer extends Component {
         uploading: false,
         documents: [],
         name: "",
-        test_date: ""
+        test_date: "",
       });
 
       close();
@@ -413,7 +411,7 @@ class addReportDrawer extends Component {
       formatMessage,
       handleDocumentViewClose,
       renderAddReport,
-      handleSubmit
+      handleSubmit,
     } = this;
 
     const { viewModalVisible, viewModalSrc } = this.state;
@@ -425,7 +423,7 @@ class addReportDrawer extends Component {
     const disabledSubmit =
       !name || Object.keys(documents).length === 0 || !test_date;
     const submitButtonProps = {
-      disabled: disabledSubmit
+      disabled: disabledSubmit,
     };
 
     return (
@@ -437,7 +435,7 @@ class addReportDrawer extends Component {
           headerStyle={{
             position: "sticky",
             zIndex: "9999",
-            top: "0px"
+            top: "0px",
           }}
           visible={visible}
           onClose={onClose}
@@ -464,7 +462,7 @@ class addReportDrawer extends Component {
           footer={[
             <Button key="back" onClick={handleDocumentViewClose}>
               Close
-            </Button>
+            </Button>,
           ]}
         >
           <img

@@ -7,7 +7,7 @@ import { TABLE_NAME as similarFoodMappingTableName } from "../../models/similarF
 const DEFAULT_ORDER = [["created_at", "DESC"]];
 
 class DietFoodGroupMappingService {
-  create = async data => {
+  create = async (data) => {
     const transaction = await Database.initTransaction();
     try {
       const record = await Database.getModel(TABLE_NAME).create(data, {
@@ -16,8 +16,8 @@ class DietFoodGroupMappingService {
         include: [
           Database.getModel(foodGroupTableName),
           Database.getModel(dietTableName),
-          Database.getModel(similarFoodMappingTableName)
-        ]
+          Database.getModel(similarFoodMappingTableName),
+        ],
       });
       await transaction.commit();
       return record;
@@ -42,15 +42,15 @@ class DietFoodGroupMappingService {
   //   }
   // };
 
-  getByData = async data => {
+  getByData = async (data) => {
     try {
       const record = await Database.getModel(TABLE_NAME).findOne({
         where: data,
         include: [
           Database.getModel(foodGroupTableName),
           Database.getModel(dietTableName),
-          Database.getModel(similarFoodMappingTableName)
-        ]
+          Database.getModel(similarFoodMappingTableName),
+        ],
       });
 
       return JSON.parse(JSON.stringify(record));
@@ -64,15 +64,15 @@ class DietFoodGroupMappingService {
     try {
       const record = await Database.getModel(TABLE_NAME).update(data, {
         where: {
-          id
+          id,
         },
         include: [
           Database.getModel(foodGroupTableName),
           Database.getModel(dietTableName),
-          Database.getModel(similarFoodMappingTableName)
+          Database.getModel(similarFoodMappingTableName),
         ],
         raw: true,
-        transaction
+        transaction,
       });
       await transaction.commit();
       return record;
@@ -88,19 +88,19 @@ class DietFoodGroupMappingService {
         where,
         order,
         attributes,
-        raw: true
+        raw: true,
       });
     } catch (error) {
       throw error;
     }
   };
 
-  delete = async id => {
+  delete = async (id) => {
     try {
       const record = await Database.getModel(TABLE_NAME).destroy({
         where: {
-          id
-        }
+          id,
+        },
       });
       return record;
     } catch (err) {

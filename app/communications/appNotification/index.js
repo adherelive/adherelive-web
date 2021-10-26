@@ -42,9 +42,7 @@ class AppNotification {
 
       const { buildPayload = {} } = data;
       if (!isEmpty(buildPayload)) {
-        NOTIFIER(buildPayload)
-          .connect()
-          .sendNotification();
+        NOTIFIER(buildPayload).connect().sendNotification();
 
         // notificationLogger.success(
         //   "notification send successfully with payload",
@@ -59,6 +57,6 @@ class AppNotification {
   }
 }
 
-module.exports = payload => {
+module.exports = (payload) => {
   return new AppNotification(payload);
 };

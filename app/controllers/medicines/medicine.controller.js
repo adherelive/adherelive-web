@@ -34,11 +34,10 @@ class MedicineController extends Controller {
 
       if (medicineDetails.length > 0) {
         let medicineApiData = {};
-        await medicineDetails.forEach(async medicine => {
+        await medicineDetails.forEach(async (medicine) => {
           const medicineWrapper = await new MedicineWrapper(medicine);
-          medicineApiData[
-            medicineWrapper.getMedicineId()
-          ] = medicineWrapper.getBasicInfo();
+          medicineApiData[medicineWrapper.getMedicineId()] =
+            medicineWrapper.getBasicInfo();
         });
 
         return raiseSuccess(
@@ -46,8 +45,8 @@ class MedicineController extends Controller {
           200,
           {
             medicines: {
-              ...medicineApiData
-            }
+              ...medicineApiData,
+            },
           },
           "medicine data fetched successfully"
         );
@@ -73,7 +72,7 @@ class MedicineController extends Controller {
       const algoliaService = new AlgoliaService();
 
       const {
-        userCategoryData: { basic_info: { id: categoryId = null } = {} } = {}
+        userCategoryData: { basic_info: { id: categoryId = null } = {} } = {},
       } = userDetails || {};
 
       const { name = "", type = "" } = body;
@@ -83,7 +82,7 @@ class MedicineController extends Controller {
         creator_id: categoryId,
         created_at: new Date(),
         type,
-        public_medicine: false
+        public_medicine: false,
       };
 
       const medicineDetails = await medicineService.add(new_medicine_data);
@@ -100,8 +99,9 @@ class MedicineController extends Controller {
         200,
         {
           medicines: {
-            [medicineApiDetails.getMedicineId()]: medicineApiDetails.getBasicInfo()
-          }
+            [medicineApiDetails.getMedicineId()]:
+              medicineApiDetails.getBasicInfo(),
+          },
         },
         "New medicine added successfully."
       );
@@ -125,7 +125,7 @@ class MedicineController extends Controller {
         created_at: new Date(),
         public_medicine: true,
         type,
-        details: { generic_name }
+        details: { generic_name },
       };
 
       const medicineDetails = await medicineService.add(new_medicine_data);
@@ -142,8 +142,9 @@ class MedicineController extends Controller {
         200,
         {
           medicines: {
-            [medicineApiDetails.getMedicineId()]: medicineApiDetails.getBasicInfo()
-          }
+            [medicineApiDetails.getMedicineId()]:
+              medicineApiDetails.getBasicInfo(),
+          },
         },
         "New medicine added successfully."
       );
@@ -184,8 +185,9 @@ class MedicineController extends Controller {
         200,
         {
           medicines: {
-            [medicineApiDetails.getMedicineId()]: medicineApiDetails.getBasicInfo()
-          }
+            [medicineApiDetails.getMedicineId()]:
+              medicineApiDetails.getBasicInfo(),
+          },
         },
         "Medicine is made public to all doctors successfully."
       );
@@ -206,7 +208,7 @@ class MedicineController extends Controller {
       const doctorDetails = await doctorService.search(value);
 
       if (doctorDetails && doctorDetails.length > 0) {
-        await doctorDetails.forEach(async doctor => {
+        await doctorDetails.forEach(async (doctor) => {
           const doctorWrapper = await DoctorWrapper(doctor);
           doctorIds.push(doctorWrapper.getDoctorId());
         });
@@ -242,17 +244,16 @@ class MedicineController extends Controller {
         doctorDetails,
         value,
         offset,
-        public_medicine
+        public_medicine,
       });
 
       const creatorIds = [];
       if (medicineDetails.length > 0) {
         let medicineApiData = {};
-        await medicineDetails.forEach(async medicine => {
+        await medicineDetails.forEach(async (medicine) => {
           const medicineWrapper = await new MedicineWrapper(medicine);
-          medicineApiData[
-            medicineWrapper.getMedicineId()
-          ] = medicineWrapper.getAllInfo();
+          medicineApiData[medicineWrapper.getMedicineId()] =
+            medicineWrapper.getAllInfo();
 
           const creator_id = medicineWrapper.getCreatorId();
 
@@ -263,9 +264,8 @@ class MedicineController extends Controller {
 
         for (const id of creatorIds) {
           const doctorApiWrapper = await DoctorWrapper(null, id);
-          doctors[
-            doctorApiWrapper.getDoctorId()
-          ] = doctorApiWrapper.getBasicInfo();
+          doctors[doctorApiWrapper.getDoctorId()] =
+            doctorApiWrapper.getBasicInfo();
         }
 
         return raiseSuccess(
@@ -275,9 +275,9 @@ class MedicineController extends Controller {
             total_count,
             page_size: limit,
             medicines: {
-              ...medicineApiData
+              ...medicineApiData,
             },
-            doctors
+            doctors,
           },
           "Medicine data fetched successfully"
         );
@@ -307,16 +307,15 @@ class MedicineController extends Controller {
       const algoliaService = new AlgoliaService();
 
       // delete template medication wrt medicine_id
-      const templateMedication = await TemplateMedicationService.deleteMedication(
-        {
-          medicine_id
-        }
-      );
+      const templateMedication =
+        await TemplateMedicationService.deleteMedication({
+          medicine_id,
+        });
 
       // delete medications wrt medicine_id
       const medicationData =
         (await MedicationService.getAllMedicationByData({
-          medicine_id
+          medicine_id,
         })) || [];
 
       let medicationIds = [];
@@ -334,12 +333,13 @@ class MedicineController extends Controller {
       const scheduleEventService = new ScheduleEventService();
       const deleteScheduleEvents = await scheduleEventService.deleteBatch({
         event_type: EVENT_TYPE.MEDICATION_REMINDER,
-        event_id: medicationIds
+        event_id: medicationIds,
       });
 
-      const deleteCareplanMedications = await CareplanMedicationService.deleteCarePlanMedicationByMedicationId(
-        medicationIds
-      );
+      const deleteCareplanMedications =
+        await CareplanMedicationService.deleteCarePlanMedicationByMedicationId(
+          medicationIds
+        );
       const deleteMedications = await MedicationService.deleteMedication(
         medicationIds
       );

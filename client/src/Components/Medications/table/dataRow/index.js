@@ -1,12 +1,12 @@
 import { TABLE_COLUMN, formatMedicationTableData } from "../helper";
 
-export default data => {
+export default (data) => {
   const {
     id,
     openResponseDrawer,
     openEditDrawer,
     formatMessage,
-    canViewDetails = false
+    canViewDetails = false,
   } = data;
   const formattedData = formatMedicationTableData(data);
   const { medicationData, medicationTemplateData } = formattedData || {};
@@ -15,27 +15,27 @@ export default data => {
     key: id,
     [TABLE_COLUMN.MEDICINE.dataIndex]: {
       medicationTemplateData,
-      medicationData
+      medicationData,
     },
     [TABLE_COLUMN.TAKEN.dataIndex]: {
-      medicationData
+      medicationData,
     },
     [TABLE_COLUMN.INTAKE.dataIndex]: {
-      medicationData
+      medicationData,
     },
     [TABLE_COLUMN.DURATION.dataIndex]: {
-      medicationData
+      medicationData,
     },
     [TABLE_COLUMN.TIMELINE.dataIndex]: {
       id,
       openResponseDrawer,
-      formatMessage
+      formatMessage,
     },
     [TABLE_COLUMN.EDIT.dataIndex]: {
       id,
       openEditDrawer,
       formatMessage,
-      canViewDetails
-    }
+      canViewDetails,
+    },
   };
 };

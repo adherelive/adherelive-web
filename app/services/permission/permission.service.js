@@ -9,7 +9,7 @@ class PermissionService {
       await Database.getModel(TABLE_NAME).destroy({
         // truncate: true,
         where: {},
-        force: true
+        force: true,
       });
 
       return true;
@@ -18,12 +18,13 @@ class PermissionService {
     }
   };
 
-  bulkCreate = async permissions => {
+  bulkCreate = async (permissions) => {
     const transaction = await Database.initTransaction();
     try {
-      const createdPermissions = await Database.getModel(
-        TABLE_NAME
-      ).bulkCreate(permissions, { transaction });
+      const createdPermissions = await Database.getModel(TABLE_NAME).bulkCreate(
+        permissions,
+        { transaction }
+      );
 
       await transaction.commit();
       return createdPermissions;
@@ -33,12 +34,12 @@ class PermissionService {
     }
   };
 
-  getPermissionsById = async data => {
+  getPermissionsById = async (data) => {
     try {
       const permissions = Database.getModel(TABLE_NAME).findAll({
         where: {
-          id: data
-        }
+          id: data,
+        },
       });
       return permissions;
     } catch (error) {

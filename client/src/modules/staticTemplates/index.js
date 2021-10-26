@@ -3,7 +3,7 @@ function staticTemplatesReducer(state, data) {
   if (static_templates) {
     return {
       ...state,
-      ...static_templates
+      ...static_templates,
     };
   } else {
     return state;

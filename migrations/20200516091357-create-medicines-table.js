@@ -10,39 +10,39 @@ module.exports = {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
-        type: Sequelize.INTEGER
+        type: Sequelize.INTEGER,
       },
       name: {
         type: Sequelize.STRING(1000),
-        allowNull: false
+        allowNull: false,
       },
       type: {
         type: Sequelize.STRING,
         // values: [MEDICINE_TYPE.TABLET, MEDICINE_TYPE.INJECTION],
-        defaultValue: MEDICINE_TYPE.TABLET
+        defaultValue: MEDICINE_TYPE.TABLET,
       },
       description: {
-        type: Sequelize.STRING(1000)
+        type: Sequelize.STRING(1000),
       },
       details: {
-        type: Sequelize.JSON
+        type: Sequelize.JSON,
       },
       created_at: {
         allowNull: false,
-        type: Sequelize.DATE
+        type: Sequelize.DATE,
       },
       updated_at: {
         allowNull: false,
-        type: Sequelize.DATE
+        type: Sequelize.DATE,
       },
       deleted_at: {
         allowNull: true,
-        type: Sequelize.DATE
-      }
+        type: Sequelize.DATE,
+      },
     });
   },
 
   down: (queryInterface, Sequelize) => {
     return queryInterface.dropTable(TABLE_NAME);
-  }
+  },
 };

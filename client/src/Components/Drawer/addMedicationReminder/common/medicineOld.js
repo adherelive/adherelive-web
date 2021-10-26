@@ -15,7 +15,7 @@ import {
   SearchBox,
   Highlight,
   connectSearchBox,
-  connectHighlight
+  connectHighlight,
 } from "react-instantsearch-dom";
 
 import message from "antd/es/message";
@@ -42,7 +42,7 @@ class Medicine extends Component {
       searching_medicine: true,
       medicine_name: "",
       medicine_id: "",
-      inputText: ""
+      inputText: "",
     };
     const algoliaClient = this.algoliaClient();
     this.index = algoliaClient.initIndex(config.algolia.medicine_index);
@@ -64,7 +64,7 @@ class Medicine extends Component {
       const {
         status,
         statusCode,
-        payload: { data: resp_data = {}, message: resp_msg = "" } = {}
+        payload: { data: resp_data = {}, message: resp_msg = "" } = {},
       } = response;
       if (!status) {
         message.error(resp_msg);
@@ -77,9 +77,8 @@ class Medicine extends Component {
   componentDidUpdate(prevProps, prevState) {
     const { newMedicineId: prev_newMedicineId = null } = prevProps;
     const { newMedicineId } = this.props;
-    const {
-      favourite_medicine_ids: prev_favourite_medicine_ids = []
-    } = prevProps;
+    const { favourite_medicine_ids: prev_favourite_medicine_ids = [] } =
+      prevProps;
     const { favourite_medicine_ids = [] } = this.props;
     if (
       favourite_medicine_ids.length === 0 &&
@@ -88,7 +87,7 @@ class Medicine extends Component {
       this.handleMedicineSearch(" ");
     }
     const {
-      form: { setFieldsValue, getFieldValue }
+      form: { setFieldsValue, getFieldValue },
       // setFormulation
     } = this.props;
     if (prev_newMedicineId !== newMedicineId) {
@@ -100,7 +99,7 @@ class Medicine extends Component {
       this.setState({
         medicine_name: name,
         searching_medicine: false,
-        medicineId
+        medicineId,
       });
       // setFormulation(medicineId);
       this.getNewDefaultMedicine(medicineId, name);
@@ -116,7 +115,7 @@ class Medicine extends Component {
     // const index = client.initIndex(config.algolia.medicine_index);
 
     this.index.search(medicineName).then(({ hits }) => {
-      defaultHit = hits.filter(hit => {
+      defaultHit = hits.filter((hit) => {
         const X = hit.medicine_id;
         return hit.medicine_id === medicine_id;
       });
@@ -124,7 +123,7 @@ class Medicine extends Component {
     });
   };
 
-  setInputText = value => {
+  setInputText = (value) => {
     this.setState({ inputText: value });
   };
 
@@ -142,7 +141,7 @@ class Medicine extends Component {
         medicine_id = null,
         name = "",
         generic_name = "",
-        objectID = null
+        objectID = null,
       } = hits[index];
       let final_name = name;
       let final_generic_name = generic_name;
@@ -185,7 +184,7 @@ class Medicine extends Component {
     return options;
   };
 
-  handleAddMedicineOpen = e => {
+  handleAddMedicineOpen = (e) => {
     e.preventDefault();
     e.stopPropagation();
     const { openAddMedicineDrawer, setMedicineVal } = this.props;
@@ -200,7 +199,7 @@ class Medicine extends Component {
       medicine_id = null,
       name = "",
       generic_name = "",
-      objectID = null
+      objectID = null,
     } = hit;
     const { value, searching_medicine } = this.state;
     const { formatMessage } = this;
@@ -226,7 +225,7 @@ class Medicine extends Component {
             <div className="fs18 fw800 black-85 medicine-selected pr10">
               <span
                 dangerouslySetInnerHTML={{
-                  __html: hit._highlightResult.name.value
+                  __html: hit._highlightResult.name.value,
                 }}
               ></span>
             </div>
@@ -248,7 +247,7 @@ class Medicine extends Component {
             <div className="fs18 fw800 black-85">
               <span
                 dangerouslySetInnerHTML={{
-                  __html: hit._highlightResult.name.value
+                  __html: hit._highlightResult.name.value,
                 }}
               ></span>
             </div>
@@ -258,7 +257,7 @@ class Medicine extends Component {
             <div className="fs16">
               <span
                 dangerouslySetInnerHTML={{
-                  __html: hit._highlightResult.generic_name.value
+                  __html: hit._highlightResult.generic_name.value,
                 }}
               ></span>
             </div>
@@ -292,34 +291,34 @@ class Medicine extends Component {
     );
   };
 
-  setMedicineValue = (medicine_id, medicine_name) => e => {
+  setMedicineValue = (medicine_id, medicine_name) => (e) => {
     e.preventDefault();
     const {
-      form: { setFieldsValue, getFieldValue }
+      form: { setFieldsValue, getFieldValue },
       // setFormulation
     } = this.props;
     setFieldsValue({ [FIELD_NAME]: medicine_id });
     this.setState({
       medicine_name: medicine_name,
       searching_medicine: false,
-      medicine_id
+      medicine_id,
     });
   };
 
   setFavMedicineValue = (medicine_id, medicine_name) => () => {
     const {
       form: { setFieldsValue, getFieldValue },
-      setFormulation
+      setFormulation,
     } = this.props;
     setFieldsValue({ [FIELD_NAME]: medicine_id });
     this.setState({
       medicine_name: medicine_name,
       searching_medicine: false,
-      medicine_id
+      medicine_id,
     });
   };
 
-  isSearchingMedicine = e => {
+  isSearchingMedicine = (e) => {
     e.preventDefault();
     this.setState({ searching_medicine: true });
   };
@@ -328,9 +327,9 @@ class Medicine extends Component {
     return algoliasearch(config.algolia.app_id, config.algolia.app_key);
   };
 
-  formatMessage = message => this.props.intl.formatMessage(message);
+  formatMessage = (message) => this.props.intl.formatMessage(message);
 
-  handleMedicineSearch = value => {
+  handleMedicineSearch = (value) => {
     this.searchValue(value);
     this.setInputText(value);
   };
@@ -352,14 +351,14 @@ class Medicine extends Component {
       const { value: state_value = "" } = this.state;
 
       const res = await this.index.search(value, {
-        filters: `creator_id:${doctor_id} OR public_medicine:true OR public_medicine:1`
+        filters: `creator_id:${doctor_id} OR public_medicine:true OR public_medicine:1`,
       });
       const { hits = {} } = res;
       if (value !== state_value) {
         this.setState({
           fetchingMedicines: false,
           hits,
-          value
+          value,
         });
       }
     } catch (error) {
@@ -367,26 +366,26 @@ class Medicine extends Component {
     }
   }
 
-  onOptionSelect = value => {
+  onOptionSelect = (value) => {
     // const { setFormulation } = this.props;
     // setFormulation(value);
     this.setState({ medicine_id: value, temp_medicine: value });
   };
 
-  dropdownVisible = open => {
+  dropdownVisible = (open) => {
     this.setState({ searching_medicine: open, temp_medicine: "" });
     if (open === false) {
       this.setState({ inputText: "" });
     }
   };
 
-  getParentNode = t => t.parentNode;
+  getParentNode = (t) => t.parentNode;
 
   handleOnBlur = () => {
     const { medicine_id = null } = this.state;
     if (medicine_id) {
       this.setState({
-        temp_medicine: medicine_id
+        temp_medicine: medicine_id,
       });
     }
   };
@@ -442,21 +441,21 @@ class Medicine extends Component {
     );
   };
 
-  handleAddFavourites = id => async e => {
+  handleAddFavourites = (id) => async (e) => {
     try {
       e.preventDefault();
       e.stopPropagation();
       const { markFavourite } = this.props;
       const data = {
         type: "medicine",
-        id
+        id,
       };
 
       const response = await markFavourite(data);
       const {
         status,
         statusCode,
-        payload: { data: resp_data = {}, message: resp_msg = "" } = {}
+        payload: { data: resp_data = {}, message: resp_msg = "" } = {},
       } = response;
       if (status) {
         message.success(resp_msg);
@@ -468,21 +467,21 @@ class Medicine extends Component {
     }
   };
 
-  handleremoveFavourites = id => async e => {
+  handleremoveFavourites = (id) => async (e) => {
     try {
       e.preventDefault();
       e.stopPropagation();
       const { removeFavourite } = this.props;
       const data = {
         type: "medicine",
-        typeId: id
+        typeId: id,
       };
 
       const response = await removeFavourite(data);
       const {
         status,
         statusCode,
-        payload: { data: resp_data = {}, message: resp_msg = "" } = {}
+        payload: { data: resp_data = {}, message: resp_msg = "" } = {},
       } = response;
       if (status) {
         message.success(resp_msg);
@@ -508,7 +507,7 @@ class Medicine extends Component {
         const key = Object.keys(marked_favourites_data)[0] || null;
 
         const {
-          basic_info: { name: medicine_name = "", id: medicine_id = null } = {}
+          basic_info: { name: medicine_name = "", id: medicine_id = null } = {},
         } = marked_favourites_data[key];
         options.push(
           <Option
@@ -546,7 +545,7 @@ class Medicine extends Component {
     const {
       form: { getFieldDecorator, getFieldError, isFieldTouched },
       setFormulation,
-      favourite_medicine_ids = []
+      favourite_medicine_ids = [],
     } = this.props;
 
     const {
@@ -554,14 +553,14 @@ class Medicine extends Component {
       searching_medicine = false,
       medicine_name: med_name = "",
       temp_medicine = "",
-      inputText = ""
+      inputText = "",
     } = this.state;
 
     const {
       getMedicineOptions,
       handleMedicineSearch,
       getParentNode,
-      getFavouriteOptions
+      getFavouriteOptions,
     } = this;
     const { newMedicineId = null } = this.props;
 
@@ -628,5 +627,5 @@ const Field = injectIntl(Medicine);
 
 export default {
   field_name: FIELD_NAME,
-  render: props => <Field {...props} />
+  render: (props) => <Field {...props} />,
 };

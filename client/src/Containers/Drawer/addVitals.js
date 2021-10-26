@@ -7,11 +7,11 @@ import { getVitalOccurence } from "../../modules/vital_occurence";
 import { addVital } from "../../modules/vitals";
 
 // import { createReminder, updateReminder } from "../../modules/reminder"; // write to add to database
-const mapStateToProps = state => {
+const mapStateToProps = (state) => {
   const {
     drawer: { visible, loading, data: { type, payload = {} } = {} },
     vital_templates,
-    repeat_intervals
+    repeat_intervals,
   } = state;
 
   return {
@@ -19,16 +19,16 @@ const mapStateToProps = state => {
     loading,
     payload,
     vital_templates,
-    repeat_intervals
+    repeat_intervals,
   };
 };
 
-const mapDispatchToProps = dispatch => {
+const mapDispatchToProps = (dispatch) => {
   return {
     close: () => dispatch(close()),
-    addVital: data => dispatch(addVital(data)),
-    searchVital: data => dispatch(searchVital(data)),
-    getVitalOccurence: () => dispatch(getVitalOccurence())
+    addVital: (data) => dispatch(addVital(data)),
+    searchVital: (data) => dispatch(searchVital(data)),
+    getVitalOccurence: () => dispatch(getVitalOccurence()),
   };
 };
 

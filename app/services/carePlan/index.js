@@ -43,7 +43,7 @@ export default class CarePlan {
     const { careplan_secondary_doctor_mappings = [] } = this._data || {};
 
     return careplan_secondary_doctor_mappings.map(
-      data => data.secondary_doctor_role_id
+      (data) => data.secondary_doctor_role_id
     );
   };
 

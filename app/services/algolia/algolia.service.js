@@ -35,10 +35,13 @@ export default class AlgoliaService {
           id,
           name,
           creator_id,
-          public_medicine = true
+          public_medicine = true,
         } = medicine;
-        const { classification = "", icd_code = "", generic_name = "" } =
-          details || {};
+        const {
+          classification = "",
+          icd_code = "",
+          generic_name = "",
+        } = details || {};
 
         const objectID = `${objectIdPrefix}-${id}`;
 
@@ -50,14 +53,14 @@ export default class AlgoliaService {
           medicine_id: id,
           creator_id,
           public_medicine: public_medicine == "1" ? true : false,
-          objectID
+          objectID,
         });
       }
 
       const clearResult = await index.clearObjects();
 
       const result = await index.saveObjects(updatedMedicine, {
-        autoGenerateObjectIDIfNotExist: true
+        autoGenerateObjectIDIfNotExist: true,
       });
 
       console.log("result ----. ", result);
@@ -66,7 +69,7 @@ export default class AlgoliaService {
         searchableAttributes: ["name", "generic_name", "classification"],
         attributesForFaceting: ["creator_id", "public_medicine"],
         highlightPreTag: '<em class="search-highlight">',
-        highlightPostTag: "</em>"
+        highlightPostTag: "</em>",
       });
 
       console.log("searchAttributes ----. ", searchAttributes);
@@ -77,7 +80,7 @@ export default class AlgoliaService {
     }
   };
 
-  addNewMedicineData = async medicineId => {
+  addNewMedicineData = async (medicineId) => {
     try {
       const index = this.client.initIndex(
         process.config.algolia.medicine_index
@@ -93,10 +96,13 @@ export default class AlgoliaService {
         let updatedMedicine = [];
         const {
           details,
-          basic_info: { id, name, creator_id, public_medicine } = {}
+          basic_info: { id, name, creator_id, public_medicine } = {},
         } = medicineWrapper.getAllInfo();
-        const { classification = "", icd_code = "", generic_name = "" } =
-          details || {};
+        const {
+          classification = "",
+          icd_code = "",
+          generic_name = "",
+        } = details || {};
 
         const objectID = `${objectIdPrefix}-${id}`;
 
@@ -108,12 +114,12 @@ export default class AlgoliaService {
           medicine_id: id,
           creator_id,
           public_medicine,
-          objectID
+          objectID,
         });
 
         const result = await index
           .saveObjects(updatedMedicine, {
-            autoGenerateObjectIDIfNotExist: true
+            autoGenerateObjectIDIfNotExist: true,
           })
           .wait();
 
@@ -127,7 +133,7 @@ export default class AlgoliaService {
     }
   };
 
-  updateMedicineData = async medicineId => {
+  updateMedicineData = async (medicineId) => {
     try {
       const index = this.client.initIndex(
         process.config.algolia.medicine_index
@@ -143,10 +149,13 @@ export default class AlgoliaService {
         let updatedMedicine = [];
         const {
           details,
-          basic_info: { id, name, creator_id, public_medicine } = {}
+          basic_info: { id, name, creator_id, public_medicine } = {},
         } = medicineWrapper.getAllInfo();
-        const { classification = "", icd_code = "", generic_name = "" } =
-          details || {};
+        const {
+          classification = "",
+          icd_code = "",
+          generic_name = "",
+        } = details || {};
 
         const objectID = `${objectIdPrefix}-${id}`;
 
@@ -158,7 +167,7 @@ export default class AlgoliaService {
           medicine_id: id,
           creator_id,
           public_medicine,
-          objectID
+          objectID,
         });
 
         const result = await index.partialUpdateObjects(updatedMedicine).wait();
@@ -173,7 +182,7 @@ export default class AlgoliaService {
     }
   };
 
-  deleteMedicineData = async medicineId => {
+  deleteMedicineData = async (medicineId) => {
     try {
       const index = this.client.initIndex(
         process.config.algolia.medicine_index

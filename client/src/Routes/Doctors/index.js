@@ -4,7 +4,7 @@ import {
   Route,
   Switch,
   Redirect,
-  withRouter
+  withRouter,
 } from "react-router-dom";
 import SideMenu from "../../Containers/Sidebar";
 import BlankState from "../../Components/Common/BlankState";
@@ -99,68 +99,68 @@ const DoctorTransactionPage = lazy(() =>
   )
 );
 
-const PatientDetailsComp = props => {
+const PatientDetailsComp = (props) => {
   const { match: { params: { patient_id } = {} } = {} } = props;
   return <PatientDetails patient_id={patient_id} />;
 };
 
-const RegisterProfileComp = props => {
+const RegisterProfileComp = (props) => {
   return <RegisterProfile {...props} />;
 };
 
-const ChatFullScreenComp = props => {
+const ChatFullScreenComp = (props) => {
   return <ChatFullScreen {...props} />;
 };
 
-const TestTwilioVideoComp = props => {
+const TestTwilioVideoComp = (props) => {
   return <TestTwilioVideo {...props} />;
 };
 
-const TwilioVideoComp = props => {
+const TwilioVideoComp = (props) => {
   return <TwilioVideo {...props} />;
 };
 
-const RegisterQualificationsComp = props => {
+const RegisterQualificationsComp = (props) => {
   return <RegisterQualifications {...props} />;
 };
 
-const RegisterClinicsComp = props => {
+const RegisterClinicsComp = (props) => {
   return <RegisterClinics {...props} />;
 };
 
-const DoctorProfilePageComp = props => {
+const DoctorProfilePageComp = (props) => {
   return <DoctorProfilePage {...props} />;
 };
 
-const DoctorSettingsPageComp = props => {
+const DoctorSettingsPageComp = (props) => {
   return <DoctorSettingsPage {...props} />;
 };
 
-const TermsOfServiceComp = props => {
+const TermsOfServiceComp = (props) => {
   return <TermsOfService {...props} />;
 };
 
-const TermsOfPaymentComp = props => {
+const TermsOfPaymentComp = (props) => {
   return <TermsOfPayment {...props} />;
 };
 
-const PrivacyPolicyComp = props => {
+const PrivacyPolicyComp = (props) => {
   return <PrivacyPolicy {...props} />;
 };
 
-const TemplatePageComp = props => {
+const TemplatePageComp = (props) => {
   return <TemplatePage {...props} />;
 };
 
-const DoctorTransactionPageComp = props => {
+const DoctorTransactionPageComp = (props) => {
   return <DoctorTransactionPage {...props} />;
 };
 
-const DashboardComp = props => {
+const DashboardComp = (props) => {
   return <Dashboard {...props} />;
 };
 
-const SideMenuComp = props => {
+const SideMenuComp = (props) => {
   const { location: { pathname = "" } = {} } = props;
   // console.log("102938138932 sidemenu component --> ", {props});
   if (
@@ -179,7 +179,7 @@ const SideMenuComp = props => {
   }
 };
 
-const NotificationDrawerComponent = props => {
+const NotificationDrawerComponent = (props) => {
   return <NotificationDrawer {...props} />;
 };
 
@@ -187,14 +187,14 @@ class Doctors extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      redirecting: this.props.authRedirection
+      redirecting: this.props.authRedirection,
     };
   }
 
   componentDidMount() {
     this.setState((prevState, prevProps) => {
       return {
-        redirecting: false
+        redirecting: false,
       };
     });
   }

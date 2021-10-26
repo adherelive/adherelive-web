@@ -5,10 +5,7 @@ import { PASSWORD_LENGTH } from "../../../constant";
 import Response from "../../../app/helper/responseFormat";
 
 const credentialsFormSchema = Joi.object().keys({
-  email: Joi.string()
-    .email()
-    .required()
-    .label("Please enter valid email"),
+  email: Joi.string().email().required().label("Please enter valid email"),
   password: Joi.string()
     .regex(/^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%^&*])(?=.{8,})/)
     .min(PASSWORD_LENGTH)
@@ -20,33 +17,27 @@ const credentialsFormSchema = Joi.object().keys({
     .required()
     .label(
       "Please acknowledge if you have read the terms of service and privacy policy"
-    )
+    ),
 });
 
 const signInSchema = Joi.object().keys({
-  email: Joi.string()
-    .email()
-    .required()
-    .label("Please enter valid email"),
+  email: Joi.string().email().required().label("Please enter valid email"),
   password: Joi.string()
     .required()
     .label(
       "Password must contain atleast 1 uppercase, lowercase, number & special character"
-    )
+    ),
 });
 
 const forgotPasswordSchema = Joi.object().keys({
-  email: Joi.string()
-    .email()
-    .required()
-    .label("Please enter valid email")
+  email: Joi.string().email().required().label("Please enter valid email"),
 });
 
 const verifyLinkSchema = Joi.object().keys({
   link: Joi.string()
     .guid({ version: "uuidv4" })
     .required()
-    .label("Verification link is not correct")
+    .label("Verification link is not correct"),
 });
 
 const matchPassword = (value, helpers) => {
@@ -68,10 +59,10 @@ const updatePasswordSchema = Joi.object().keys({
     ),
   confirm_password: Joi.string()
     .custom(matchPassword)
-    .label("Password does not match. Please try again")
+    .label("Password does not match. Please try again"),
 });
 
-const validateStartTime = startTime => {
+const validateStartTime = (startTime) => {
   const now = moment().subtract(3, "minutes");
   console.log(
     "START TIME TEST ----------- ",

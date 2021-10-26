@@ -4,7 +4,7 @@ import {
   TABLE_NAME,
   TRANSACTION_MODES,
   STATUS,
-  TRANSACTION_STATUS
+  TRANSACTION_STATUS,
 } from "../app/models/transactions";
 import { USER_CATEGORY_ARRAY } from "../app/models/users";
 import { DataTypes } from "sequelize";
@@ -17,68 +17,68 @@ module.exports = {
         type: DataTypes.INTEGER,
         primaryKey: true,
         autoIncrement: true,
-        allowNull: false
+        allowNull: false,
       },
       transaction_id: {
         type: DataTypes.STRING,
-        allowNull: false
+        allowNull: false,
       },
       payment_product_id: {
         type: DataTypes.INTEGER,
         allowNull: false,
         references: {
           model: {
-            tableName: paymentProductTableName
+            tableName: paymentProductTableName,
           },
-          key: "id"
-        }
+          key: "id",
+        },
       },
       mode: {
         type: DataTypes.ENUM,
-        values: TRANSACTION_MODES
+        values: TRANSACTION_MODES,
       },
       amount: {
         type: DataTypes.INTEGER,
-        allowNull: false
+        allowNull: false,
       },
       requestor_id: {
-        type: DataTypes.INTEGER
+        type: DataTypes.INTEGER,
       },
       requestor_type: {
         type: DataTypes.ENUM,
-        values: USER_CATEGORY_ARRAY
+        values: USER_CATEGORY_ARRAY,
       },
       payee_id: {
         type: DataTypes.INTEGER,
-        allowNull: false
+        allowNull: false,
       },
       payee_type: {
         type: DataTypes.ENUM,
-        values: USER_CATEGORY_ARRAY
+        values: USER_CATEGORY_ARRAY,
       },
       transaction_response: {
-        type: DataTypes.JSON
+        type: DataTypes.JSON,
       },
       status: {
         type: DataTypes.ENUM,
         values: TRANSACTION_STATUS,
-        defaultValue: STATUS.PENDING
+        defaultValue: STATUS.PENDING,
       },
       created_at: {
         allowNull: false,
-        type: DataTypes.DATE
+        type: DataTypes.DATE,
       },
       updated_at: {
         allowNull: false,
-        type: DataTypes.DATE
+        type: DataTypes.DATE,
       },
       deleted_at: {
-        type: DataTypes.DATE
-      }
+        type: DataTypes.DATE,
+      },
     });
   },
 
   down: (queryInterface, Sequelize) => {
     return queryInterface.dropTable(TABLE_NAME);
-  }
+  },
 };

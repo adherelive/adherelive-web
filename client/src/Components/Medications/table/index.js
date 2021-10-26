@@ -11,7 +11,7 @@ class MedicationTable extends Component {
 
     this.state = {
       loading: true,
-      medication_ids: []
+      medication_ids: [],
     };
   }
 
@@ -49,7 +49,7 @@ class MedicationTable extends Component {
       isOtherCarePlan,
       intl: { formatMessage } = {},
       care_plans,
-      auth_role = null
+      auth_role = null,
     } = this.props;
 
     const { medication_ids = [] } = care_plans || {};
@@ -62,7 +62,7 @@ class MedicationTable extends Component {
 
     const { openResponseDrawer, openEditDrawer } = this;
 
-    return medication_ids.map(id => {
+    return medication_ids.map((id) => {
       return generateRow({
         id,
         medications,
@@ -71,18 +71,18 @@ class MedicationTable extends Component {
         formatMessage,
         isOtherCarePlan,
         medicines,
-        canViewDetails
+        canViewDetails,
       });
     });
   };
 
-  openResponseDrawer = id => e => {
+  openResponseDrawer = (id) => (e) => {
     e.preventDefault();
     const {
       medicationResponseDrawer,
       isOtherCarePlan,
       auth_role = null,
-      care_plans = {}
+      care_plans = {},
     } = this.props;
     const { basic_info: { user_role_id = null } = {} } = care_plans || {};
     let canViewDetails = true;
@@ -92,14 +92,14 @@ class MedicationTable extends Component {
     medicationResponseDrawer({ id, loading: true });
   };
 
-  openEditDrawer = id => e => {
+  openEditDrawer = (id) => (e) => {
     e.preventDefault();
     const {
       editMedicationDrawer,
       isOtherCarePlan,
       patientId,
       auth_role = null,
-      care_plans = {}
+      care_plans = {},
     } = this.props;
     const { basic_info: { user_role_id = null } = {} } = care_plans || {};
     let canViewDetails = true;
@@ -111,16 +111,16 @@ class MedicationTable extends Component {
       id,
       patient_id: patientId,
       loading: true,
-      canViewDetails
+      canViewDetails,
     });
   };
 
-  formatMessage = data => this.props.intl.formatMessage(data);
+  formatMessage = (data) => this.props.intl.formatMessage(data);
 
   render() {
     // console.log("238423749823794729847293",{props:this.props});
     const locale = {
-      emptyText: this.formatMessage(messages.emptyMedicationTable)
+      emptyText: this.formatMessage(messages.emptyMedicationTable),
     };
 
     const { intl: { formatMessage } = {} } = this.props;
@@ -132,12 +132,12 @@ class MedicationTable extends Component {
         // loading={loading === true ? getLoadingComponent() : false}
         columns={getColumn({
           formatMessage,
-          className: "pointer"
+          className: "pointer",
         })}
         dataSource={getDataSource()}
         scroll={{ x: "100%" }}
         pagination={{
-          position: "bottom"
+          position: "bottom",
         }}
         locale={locale}
       />

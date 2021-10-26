@@ -21,16 +21,11 @@ const templateCreateCarePlanForm = Joi.object().keys({
   createTemplate: Joi.boolean(),
   name: Joi.string().when("createTemplate", {
     is: Joi.boolean().valid(true),
-    then: Joi.string()
-      .trim()
-      .required()
-      .messages({
-        "string.empty": "Template name cannot be empty"
-      }),
-    otherwise: Joi.string()
-      .optional()
-      .allow("")
-  })
+    then: Joi.string().trim().required().messages({
+      "string.empty": "Template name cannot be empty",
+    }),
+    otherwise: Joi.string().optional().allow(""),
+  }),
 });
 
 export const validateCreateCarePlanFromTemplate = (req, res, next) => {

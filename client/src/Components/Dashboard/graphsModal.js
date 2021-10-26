@@ -7,7 +7,7 @@ import {
   NO_MEDICATION,
   NO_DIET,
   NO_WORKOUT,
-  USER_CATEGORY
+  USER_CATEGORY,
 } from "../../constant";
 
 import { Button, Checkbox, Modal } from "antd";
@@ -34,7 +34,7 @@ class GraphsModal extends Component {
     handleOk(selectedGraphs);
   };
 
-  toggleGraphSelected = graph => () => {
+  toggleGraphSelected = (graph) => () => {
     let { selectedGraphs = [] } = this.state;
     if (selectedGraphs.includes(graph)) {
       selectedGraphs.splice(selectedGraphs.indexOf(graph), 1);
@@ -49,15 +49,15 @@ class GraphsModal extends Component {
     handleCancel();
   };
 
-  handleChangeAddress = address => {
+  handleChangeAddress = (address) => {
     this.setState({ address });
   };
 
-  handleSelect = address => {
+  handleSelect = (address) => {
     this.setState({ address });
   };
 
-  formatMessage = data => this.props.intl.formatMessage(data);
+  formatMessage = (data) => this.props.intl.formatMessage(data);
 
   render() {
     const { selectedGraphs = [] } = this.state;
@@ -75,11 +75,11 @@ class GraphsModal extends Component {
           </Button>,
           <Button key="submit" type="primary" onClick={this.handleSave}>
             {this.formatMessage(messages.submit)}
-          </Button>
+          </Button>,
         ]}
       >
         <div className="location-container">
-          {graphs.map(graph => {
+          {graphs.map((graph) => {
             return (
               <div
                 key={graph}

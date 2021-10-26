@@ -3,7 +3,7 @@ function dateWiseAppointmentsReducer(state, data) {
 
   if (date_wise_appointments) {
     return {
-      ...date_wise_appointments
+      ...date_wise_appointments,
     };
   } else {
     return state;

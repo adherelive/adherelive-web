@@ -4,11 +4,11 @@ import { TABLE_NAME } from "../../models/uploadDocuments";
 class UploadDocumentService {
   constructor() {}
 
-  addDocument = async data => {
+  addDocument = async (data) => {
     const transaction = await Database.initTransaction();
     try {
       const document = await Database.getModel(TABLE_NAME).create(data, {
-        transaction
+        transaction,
       });
       await transaction.commit();
       return document;
@@ -18,12 +18,12 @@ class UploadDocumentService {
     }
   };
 
-  getDocumentById = async id => {
+  getDocumentById = async (id) => {
     try {
       const documents = await Database.getModel(TABLE_NAME).findOne({
         where: {
-          id
-        }
+          id,
+        },
       });
       return documents;
     } catch (error) {
@@ -36,9 +36,9 @@ class UploadDocumentService {
       const documents = await Database.getModel(TABLE_NAME).findAll({
         where: {
           parent_type,
-          parent_id
+          parent_id,
           // deleted_at:null
-        }
+        },
       });
       return documents;
     } catch (error) {
@@ -53,8 +53,8 @@ class UploadDocumentService {
           parent_type,
           parent_id,
           document,
-          deleted_at: null
-        }
+          deleted_at: null,
+        },
       });
       return documents;
     } catch (error) {
@@ -68,8 +68,8 @@ class UploadDocumentService {
         where: {
           parent_type,
           parent_id,
-          deleted_at: null
-        }
+          deleted_at: null,
+        },
       });
       return documents;
     } catch (error) {
@@ -77,10 +77,10 @@ class UploadDocumentService {
     }
   };
 
-  getDocumentByName = async data => {
+  getDocumentByName = async (data) => {
     try {
       const document = await Database.getModel(TABLE_NAME).findOne({
-        where: data
+        where: data,
       });
       return document;
     } catch (error) {
@@ -88,10 +88,10 @@ class UploadDocumentService {
     }
   };
 
-  getAllByData = async data => {
+  getAllByData = async (data) => {
     try {
       const documents = await Database.getModel(TABLE_NAME).findAll({
-        where: data
+        where: data,
       });
       return documents;
     } catch (error) {
@@ -99,12 +99,12 @@ class UploadDocumentService {
     }
   };
 
-  deleteDocumentsOfAppointment = async id => {
+  deleteDocumentsOfAppointment = async (id) => {
     try {
       const documents = await Database.getModel(TABLE_NAME).destroy({
         where: {
-          id
-        }
+          id,
+        },
       });
       return documents;
     } catch (error) {
@@ -112,10 +112,10 @@ class UploadDocumentService {
     }
   };
 
-  deleteDocumentByData = async data => {
+  deleteDocumentByData = async (data) => {
     try {
       return await Database.getModel(TABLE_NAME).destroy({
-        where: data
+        where: data,
       });
     } catch (error) {
       throw error;

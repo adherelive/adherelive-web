@@ -4,23 +4,23 @@ const messages = defineMessages({
   appName: {
     id: "app.consentPage.appName",
     description: "",
-    defaultMessage: "Adhere.Live"
+    defaultMessage: "Adhere.Live",
   },
   tos: {
     id: "app.consentPage.tos",
     description: "",
-    defaultMessage: "Terms of Service"
+    defaultMessage: "Terms of Service",
   },
   giveConsent: {
     id: "app.consentPage.giveConsent",
     description: "",
-    defaultMessage: "I agree to terms of service"
+    defaultMessage: "I agree to terms of service",
   },
   submit: {
     id: "app.consentPage.submit",
     description: "",
-    defaultMessage: "Submit"
-  }
+    defaultMessage: "Submit",
+  },
 });
 
 export default messages;

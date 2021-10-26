@@ -22,8 +22,8 @@ class DietFoodGroupMappingWrapper extends BaseDietFoodGroupMapping {
         id,
         time,
         food_group_id,
-        diet_id
-      }
+        diet_id,
+      },
     };
   };
 
@@ -33,13 +33,11 @@ class DietFoodGroupMappingWrapper extends BaseDietFoodGroupMapping {
     let related_diet_food_group_mapping_ids = [];
     const diet_food_grouping_mapping_id = this.getId();
 
-    const {
-      count = null,
-      rows = []
-    } = await similarFoodMappingService.findAndCountAll({
-      where: { related_to_id: diet_food_grouping_mapping_id },
-      attributes: ["secondary_id"]
-    });
+    const { count = null, rows = [] } =
+      await similarFoodMappingService.findAndCountAll({
+        where: { related_to_id: diet_food_grouping_mapping_id },
+        attributes: ["secondary_id"],
+      });
 
     if (count && count > 0) {
       for (let i = 0; i < rows.length; i++) {
@@ -50,7 +48,7 @@ class DietFoodGroupMappingWrapper extends BaseDietFoodGroupMapping {
 
     return {
       ...getBasicInfo(),
-      related_diet_food_group_mapping_ids
+      related_diet_food_group_mapping_ids,
     };
   };
 
@@ -77,7 +75,7 @@ class DietFoodGroupMappingWrapper extends BaseDietFoodGroupMapping {
       food_groups = {},
       portions = {},
       food_item_details = {},
-      food_items = {}
+      food_items = {},
     } = await foodGroupData.getReferenceInfo();
 
     portionsApiData = { ...portions };
@@ -90,22 +88,19 @@ class DietFoodGroupMappingWrapper extends BaseDietFoodGroupMapping {
     if (similar_food_mappings.length > 0) {
       for (let index = 0; index < similar_food_mappings.length; index++) {
         const SimilarFoodMapingDetail = await SimilarFoodMappingWrapper({
-          data: similar_food_mappings[index]
+          data: similar_food_mappings[index],
         });
 
-        similarFoodMappingApiData[
-          SimilarFoodMapingDetail.getId()
-        ] = await SimilarFoodMapingDetail.getBasicInfo();
+        similarFoodMappingApiData[SimilarFoodMapingDetail.getId()] =
+          await SimilarFoodMapingDetail.getBasicInfo();
       }
     }
 
-    const {
-      count = null,
-      rows = []
-    } = await similarFoodMappingService.findAndCountAll({
-      where: { related_to_id: diet_food_grouping_mapping_id },
-      attributes: ["secondary_id"]
-    });
+    const { count = null, rows = [] } =
+      await similarFoodMappingService.findAndCountAll({
+        where: { related_to_id: diet_food_grouping_mapping_id },
+        attributes: ["secondary_id"],
+      });
 
     if (count && count > 0) {
       for (let i = 0; i < rows.length; i++) {
@@ -117,15 +112,15 @@ class DietFoodGroupMappingWrapper extends BaseDietFoodGroupMapping {
     return {
       diet_food_grouping_mappings: {
         [`${this.getId()}`]: {
-          ...(await this.getAllInfo())
-        }
+          ...(await this.getAllInfo()),
+        },
       },
       food_groups: { ...foodGroupsApiData },
       portions: { ...portionsApiData },
       food_items: { ...foodItemsApiData },
       food_item_details: { ...foodItemDetailsApiData },
       diets: { ...dietApiData },
-      similar_food_mappings: { ...similarFoodMappingApiData }
+      similar_food_mappings: { ...similarFoodMappingApiData },
     };
   };
 }
@@ -136,7 +131,7 @@ export default async ({ data = null, id = null }) => {
   }
   const dietFoodGroupMappingService = new DietFoodGroupMappingService();
   const dietFoodGroupMapping = await dietFoodGroupMappingService.getByData({
-    id
+    id,
   });
   return new DietFoodGroupMappingWrapper(dietFoodGroupMapping);
 };

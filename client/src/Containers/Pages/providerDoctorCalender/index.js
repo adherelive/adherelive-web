@@ -5,16 +5,16 @@ import { withRouter } from "react-router-dom";
 // import {DRAWER} from "../../../constant";
 import {
   getCalenderDataCountForDay,
-  getCalenderDataForDay
+  getCalenderDataForDay,
 } from "../../../modules/scheduleEvents";
 
-const mapStateToProps = state => {
+const mapStateToProps = (state) => {
   const {
     users = {},
     doctors = {},
     patients = {},
     date_wise_appointments = {},
-    appointments = {}
+    appointments = {},
   } = state;
 
   return {
@@ -22,16 +22,16 @@ const mapStateToProps = state => {
     doctors,
     patients,
     date_wise_appointments,
-    appointments
+    appointments,
   };
 };
 
-const mapDispatchToProps = dispatch => {
+const mapDispatchToProps = (dispatch) => {
   return {
-    getCalenderDataCountForDay: date =>
+    getCalenderDataCountForDay: (date) =>
       dispatch(getCalenderDataCountForDay(date)),
     getCalenderDataForDay: (date, type) =>
-      dispatch(getCalenderDataForDay(date, type))
+      dispatch(getCalenderDataForDay(date, type)),
   };
 };
 

@@ -13,9 +13,9 @@ class VitalTemplateWrapper extends BaseVitalTemplates {
       basic_info: {
         id,
         name,
-        unit
+        unit,
       },
-      details
+      details,
     };
   };
 }

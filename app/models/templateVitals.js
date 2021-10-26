@@ -5,7 +5,7 @@ import { TABLE_NAME as vitalTemplatesTableName } from "./vitalTemplates";
 
 export const TABLE_NAME = "template_vitals";
 
-export const db = database => {
+export const db = (database) => {
   database.define(
     TABLE_NAME,
     {
@@ -13,45 +13,45 @@ export const db = database => {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
-        type: DataTypes.INTEGER
+        type: DataTypes.INTEGER,
       },
       care_plan_template_id: {
         type: DataTypes.INTEGER,
         allowNull: false,
         references: {
           model: {
-            tableName: carePlanTemplateTableName
+            tableName: carePlanTemplateTableName,
           },
-          key: "id"
-        }
+          key: "id",
+        },
       },
       vital_template_id: {
         type: DataTypes.INTEGER,
         allowNull: false,
         references: {
           model: {
-            tableName: vitalTemplatesTableName
+            tableName: vitalTemplatesTableName,
           },
-          key: "id"
-        }
+          key: "id",
+        },
       },
       details: {
         type: DataTypes.JSON,
-        allowNull: true
-      }
+        allowNull: true,
+      },
     },
     {
       underscored: true,
-      paranoid: true
+      paranoid: true,
     }
   );
 };
 
-export const associate = database => {
+export const associate = (database) => {
   // const {TABLE_NAME} = database.models || {};
   // associations here (if any) ...
   database.models[TABLE_NAME].hasOne(database.models[vitalTemplatesTableName], {
     foreignKey: "id",
-    sourceKey: "vital_template_id"
+    sourceKey: "vital_template_id",
   });
 };

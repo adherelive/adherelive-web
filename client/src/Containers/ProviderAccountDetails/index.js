@@ -3,7 +3,7 @@ import ProviderAccountDetails from "../../Components/ProviderAccountDetails";
 import { withRouter } from "react-router-dom";
 import { getAccountDetails } from "../../modules/accountDetails";
 
-const mapStateToProps = state => {
+const mapStateToProps = (state) => {
   const {
     auth = {},
     users = {},
@@ -11,11 +11,11 @@ const mapStateToProps = state => {
     auth: {
       authPermissions = [],
       authenticated_user = 1,
-      authenticated_category
+      authenticated_category,
     } = {},
     account_details = {},
     user_roles = {},
-    providers = {}
+    providers = {},
   } = state;
 
   return {
@@ -27,14 +27,14 @@ const mapStateToProps = state => {
     authenticated_category,
     account_details,
     user_roles,
-    providers
+    providers,
   };
 };
 
-const mapDispatchToProps = dispatch => {
+const mapDispatchToProps = (dispatch) => {
   return {
     getAccountDetails: (provider_id = null) =>
-      dispatch(getAccountDetails(provider_id))
+      dispatch(getAccountDetails(provider_id)),
   };
 };
 

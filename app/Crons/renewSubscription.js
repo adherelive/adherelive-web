@@ -21,7 +21,7 @@ class RenewSubscription {
       if (subscriptions.length > 0) {
         for (let i = 0; i < subscriptions.length; i++) {
           const subscription = await SubscriptionWrapper({
-            data: subscriptions[i]
+            data: subscriptions[i],
           });
 
           let patientUserRoleId = null;
@@ -29,13 +29,11 @@ class RenewSubscription {
             patientUserRoleId = subscription.getSubscriberId();
           }
 
-          const {
-            payment_products,
-            payment_product_id
-          } = await subscription.getReferenceInfo();
+          const { payment_products, payment_product_id } =
+            await subscription.getReferenceInfo();
 
           const {
-            basic_info: { amount, name, type, creator_id, creator_type } = {}
+            basic_info: { amount, name, type, creator_id, creator_type } = {},
           } = payment_products[payment_product_id] || {};
 
           let doctorUserRoleId = null;
@@ -51,8 +49,8 @@ class RenewSubscription {
               name,
               amount,
               type,
-              productId: payment_product_id
-            }
+              productId: payment_product_id,
+            },
           });
 
           if (patientUserRoleId && doctorUserRoleId) {

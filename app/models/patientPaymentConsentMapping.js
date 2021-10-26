@@ -6,49 +6,49 @@ import { TABLE_NAME as doctorTableName } from "./doctors";
 
 export const TABLE_NAME = "patient_payment_consent_mappings";
 
-export const db = database => {
+export const db = (database) => {
   database.define(
     TABLE_NAME,
     {
       id: {
         type: DataTypes.INTEGER,
         primaryKey: true,
-        autoIncrement: true
+        autoIncrement: true,
       },
       doctor_id: {
         type: DataTypes.INTEGER,
         allowNull: false,
         references: {
           model: {
-            tableName: doctorTableName
+            tableName: doctorTableName,
           },
-          key: "id"
-        }
+          key: "id",
+        },
       },
       provider_terms_mapping_id: {
         type: DataTypes.INTEGER,
         allowNull: true,
         references: {
           model: {
-            tableName: providerTermsMapping
+            tableName: providerTermsMapping,
           },
-          key: "id"
-        }
+          key: "id",
+        },
       },
       patient_id: {
         type: DataTypes.INTEGER,
         allowNull: false,
         references: {
           model: {
-            tableName: patientTableName
+            tableName: patientTableName,
           },
-          key: "id"
-        }
+          key: "id",
+        },
       },
       payment_terms_accepted: {
         type: DataTypes.BOOLEAN,
-        defaultValue: false
-      }
+        defaultValue: false,
+      },
     },
     {
       underscored: true,
@@ -59,12 +59,12 @@ export const db = database => {
             id: this.id,
             patient_id: this.patient_id,
             provider_terms_mapping_id: this.provider_terms_mapping_id,
-            payment_terms_accepted: this.payment_terms_accepted
+            payment_terms_accepted: this.payment_terms_accepted,
           };
-        }
-      }
+        },
+      },
     }
   );
 };
 
-export const associate = database => {};
+export const associate = (database) => {};

@@ -24,7 +24,7 @@ class FoodItemDetailsWrapper extends BaseFoodItemDetails {
       portion_id,
       portion_size,
       creator_id,
-      creator_type
+      creator_type,
     } = _data || {};
 
     return {
@@ -39,9 +39,9 @@ class FoodItemDetailsWrapper extends BaseFoodItemDetails {
         portion_id,
         portion_size,
         creator_id,
-        creator_type
+        creator_type,
       },
-      details
+      details,
     };
   };
 
@@ -49,9 +49,8 @@ class FoodItemDetailsWrapper extends BaseFoodItemDetails {
     const foodItemId = this.getFoodItemId();
     const foodItemWrapper = await FoodItemWrapper({ id: foodItemId });
     let foodItemApiData = {};
-    foodItemApiData[
-      foodItemWrapper.getId()
-    ] = await foodItemWrapper.getBasicInfo();
+    foodItemApiData[foodItemWrapper.getId()] =
+      await foodItemWrapper.getBasicInfo();
     const portionId = this.getPortionId();
     const portionWrapper = await PortionWrapper({ id: portionId });
     let portionData = {};
@@ -59,14 +58,14 @@ class FoodItemDetailsWrapper extends BaseFoodItemDetails {
 
     return {
       food_item_details: {
-        [this.getId()]: { ...(await this.getBasicInfo()) }
+        [this.getId()]: { ...(await this.getBasicInfo()) },
       },
       food_items: {
-        ...foodItemApiData
+        ...foodItemApiData,
       },
       portions: {
-        ...portionData
-      }
+        ...portionData,
+      },
     };
   };
 
@@ -75,7 +74,7 @@ class FoodItemDetailsWrapper extends BaseFoodItemDetails {
     const portionWrapper = await PortionWrapper({ id: portionId });
     const portionData = await portionWrapper.getBasicInfo();
     return {
-      ...portionData
+      ...portionData,
     };
   };
 }

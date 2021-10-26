@@ -4,12 +4,13 @@ import { TABLE_NAME } from "../../models/doctorQualifications";
 class DoctorQualificationService {
   constructor() {}
 
-  addQualification = async data => {
+  addQualification = async (data) => {
     const transaction = await Database.initTransaction();
     try {
-      const doctorQualification = await Database.getModel(
-        TABLE_NAME
-      ).create(data, { transaction });
+      const doctorQualification = await Database.getModel(TABLE_NAME).create(
+        data,
+        { transaction }
+      );
       await transaction.commit();
       return doctorQualification;
     } catch (error) {
@@ -18,13 +19,13 @@ class DoctorQualificationService {
     }
   };
 
-  getQualificationsByDoctorId = async doctor_id => {
+  getQualificationsByDoctorId = async (doctor_id) => {
     try {
       const doctorQualification = await Database.getModel(TABLE_NAME).findAll({
         where: {
           doctor_id,
-          deleted_at: null
-        }
+          deleted_at: null,
+        },
       });
       return doctorQualification;
     } catch (error) {
@@ -32,13 +33,13 @@ class DoctorQualificationService {
     }
   };
 
-  getQualificationById = async id => {
+  getQualificationById = async (id) => {
     try {
       const doctorQualification = await Database.getModel(TABLE_NAME).findOne({
         where: {
           id,
-          deleted_at: null
-        }
+          deleted_at: null,
+        },
       });
       return doctorQualification;
     } catch (error) {
@@ -54,9 +55,9 @@ class DoctorQualificationService {
         {
           where: {
             id,
-            deleted_at: null
+            deleted_at: null,
           },
-          transaction
+          transaction,
         }
       );
       await transaction.commit();
@@ -67,13 +68,13 @@ class DoctorQualificationService {
     }
   };
 
-  getQualificationsByDoctorId = async doctor_id => {
+  getQualificationsByDoctorId = async (doctor_id) => {
     try {
       const doctorQualification = await Database.getModel(TABLE_NAME).findAll({
         where: {
           doctor_id,
-          deleted_at: null
-        }
+          deleted_at: null,
+        },
       });
       return doctorQualification;
     } catch (error) {
@@ -89,8 +90,8 @@ class DoctorQualificationService {
           degree,
           college,
           year,
-          deleted_at: null
-        }
+          deleted_at: null,
+        },
       });
       return doctorQualification;
     } catch (error) {

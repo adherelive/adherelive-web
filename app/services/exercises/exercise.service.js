@@ -8,7 +8,7 @@ import { TABLE_NAME } from "../../models/exercise";
 import { TABLE_NAME as exerciseDetailsTableName } from "../../models/exerciseDetails";
 import {
   TABLE_NAME as exerciseContentTableName,
-  VIDEO_TYPES
+  VIDEO_TYPES,
 } from "../../models/exerciseContents";
 import { TABLE_NAME as repetitionTableName } from "../../models/exerciseRepetition";
 import { getFilePath } from "../../helper/filePath";
@@ -19,7 +19,7 @@ export default class ExerciseService {
     exercise_details,
     exercise_content,
     auth,
-    transaction: continuedTransaction = null
+    transaction: continuedTransaction = null,
   }) => {
     const transaction = continuedTransaction
       ? continuedTransaction
@@ -31,7 +31,7 @@ export default class ExerciseService {
           await Database.getModel(TABLE_NAME).create(
             { ...exercise, ...auth },
             {
-              transaction
+              transaction,
             }
           )
         ).get({ plain: true }) || null;
@@ -45,7 +45,7 @@ export default class ExerciseService {
       ).create(
         { exercise_id: id, ...exercise_details, ...auth },
         {
-          transaction
+          transaction,
         }
       );
       const { id: detail_id = null } = createdExerciseDetail || {};
@@ -54,8 +54,8 @@ export default class ExerciseService {
       const {
         video: {
           content_type: video_content_type = VIDEO_TYPES.NONE,
-          content: video_content
-        } = {}
+          content: video_content,
+        } = {},
       } = exercise_content || {};
 
       if (video_content_type !== VIDEO_TYPES.NONE) {
@@ -68,10 +68,10 @@ export default class ExerciseService {
             exercise_id: id,
             video_content_type,
             video_content: videoContent,
-            ...auth
+            ...auth,
           },
           {
-            transaction
+            transaction,
           }
         );
       }
@@ -90,7 +90,7 @@ export default class ExerciseService {
     exerciseDetails,
     exercise_content,
     auth,
-    transaction: continuedTransaction = null
+    transaction: continuedTransaction = null,
   }) => {
     const transaction = continuedTransaction
       ? continuedTransaction
@@ -100,7 +100,7 @@ export default class ExerciseService {
         // To prevent the admin and user created exercise update, following check was added
         const exerciseExists =
           (await Database.getModel(TABLE_NAME).findOne({
-            where: { id }
+            where: { id },
           })) || null;
 
         if (exerciseExists) {
@@ -108,7 +108,7 @@ export default class ExerciseService {
           if (creator_type !== USER_CATEGORY.ADMIN) {
             await Database.getModel(TABLE_NAME).update(exercise, {
               where: { id },
-              transaction
+              transaction,
             });
           }
         }
@@ -123,8 +123,8 @@ export default class ExerciseService {
         (await Database.getModel(exerciseDetailsTableName).findOne({
           where: {
             repetition_id,
-            [Op.or]: [auth, { creator_type: USER_CATEGORY.ADMIN }]
-          }
+            [Op.or]: [auth, { creator_type: USER_CATEGORY.ADMIN }],
+          },
         })) || null;
 
       let detail_id = null;
@@ -136,9 +136,9 @@ export default class ExerciseService {
         if (creator_type !== USER_CATEGORY.ADMIN) {
           await Database.getModel(exerciseDetailsTableName).update(data, {
             where: {
-              id: exercise_detail_id
+              id: exercise_detail_id,
             },
-            transaction
+            transaction,
           });
         }
         detail_id = exercise_detail_id;
@@ -149,7 +149,7 @@ export default class ExerciseService {
         ).create(
           { ...data, exercise_id: id, ...auth },
           {
-            transaction
+            transaction,
           }
         );
 
@@ -161,8 +161,8 @@ export default class ExerciseService {
       const {
         video: {
           content_type: video_content_type = VIDEO_TYPES.NONE,
-          content: video_content
-        } = {}
+          content: video_content,
+        } = {},
       } = exercise_content || {};
 
       const videoContent =
@@ -176,8 +176,8 @@ export default class ExerciseService {
       ).findOne({
         where: {
           exercise_id: id,
-          ...auth
-        }
+          ...auth,
+        },
       });
 
       if (exerciseContentExists) {
@@ -186,9 +186,9 @@ export default class ExerciseService {
           {
             where: {
               exercise_id: id,
-              ...auth
+              ...auth,
             },
-            transaction
+            transaction,
           }
         );
       } else {
@@ -198,10 +198,10 @@ export default class ExerciseService {
               exercise_id: id,
               video_content_type,
               video_content: videoContent,
-              ...auth
+              ...auth,
             },
             {
-              transaction
+              transaction,
             }
           );
         }
@@ -223,7 +223,7 @@ export default class ExerciseService {
       let whereQuery = {};
       if (id) {
         whereQuery = {
-          id
+          id,
         };
       } else {
         whereQuery = {
@@ -231,9 +231,9 @@ export default class ExerciseService {
           [Op.or]: [
             auth,
             {
-              creator_type: USER_CATEGORY.ADMIN
-            }
-          ]
+              creator_type: USER_CATEGORY.ADMIN,
+            },
+          ],
         };
       }
 
@@ -242,9 +242,9 @@ export default class ExerciseService {
         include: [
           {
             model: Database.getModel(exerciseDetailsTableName),
-            include: [Database.getModel(repetitionTableName)]
-          }
-        ]
+            include: [Database.getModel(repetitionTableName)],
+          },
+        ],
       });
     } catch (error) {
       throw error;
@@ -262,14 +262,14 @@ export default class ExerciseService {
               where: {
                 [Op.or]: [
                   {
-                    creator_type: USER_CATEGORY.ADMIN
+                    creator_type: USER_CATEGORY.ADMIN,
                   },
-                  auth
-                ]
+                  auth,
+                ],
               },
-              include: [Database.getModel(repetitionTableName)]
-            }
-          ]
+              include: [Database.getModel(repetitionTableName)],
+            },
+          ],
           // limit,
           // offset
         })) || {}
@@ -286,15 +286,15 @@ export default class ExerciseService {
         [Op.or]: [
           {
             name: {
-              [Op.startsWith]: `%${search}`
-            }
+              [Op.startsWith]: `%${search}`,
+            },
           },
           {
             name: {
-              [Op.like]: `%${search}%`
-            }
-          }
-        ]
+              [Op.like]: `%${search}%`,
+            },
+          },
+        ],
       };
     }
     return {};

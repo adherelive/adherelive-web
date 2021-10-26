@@ -7,16 +7,16 @@ import { getVitalOccurence } from "../../modules/vital_occurence";
 import { fetchChatAccessToken } from "../../modules/twilio";
 import {
   addMessageOfChat,
-  raiseChatNotification
+  raiseChatNotification,
 } from "../../modules/chatMessages";
 
 import {
   toggleChatPermission,
   toggleVideoPermission,
-  getAllFeatures
+  getAllFeatures,
 } from "../../modules/featuresMappings";
 
-const mapStateToProps = state => {
+const mapStateToProps = (state) => {
   const {
     twilio,
     users,
@@ -27,7 +27,7 @@ const mapStateToProps = state => {
     doctors,
     patients,
     features = {},
-    features_mappings = {}
+    features_mappings = {},
   } = state;
   return {
     twilio,
@@ -40,16 +40,16 @@ const mapStateToProps = state => {
     patients,
     features,
     features_mappings,
-    authenticated_category
+    authenticated_category,
   };
 };
 
-const mapDispatchToProps = dispatch => {
+const mapDispatchToProps = (dispatch) => {
   return {
-    fetchChatAccessToken: userId => dispatch(fetchChatAccessToken(userId)),
+    fetchChatAccessToken: (userId) => dispatch(fetchChatAccessToken(userId)),
     addMessageOfChat: (roomId, messages) =>
       dispatch(addMessageOfChat(roomId, messages)),
-    getSymptomDetails: data => dispatch(getSymptomDetails(data)),
+    getSymptomDetails: (data) => dispatch(getSymptomDetails(data)),
     getVitalOccurence: () => dispatch(getVitalOccurence()),
     getDoctorConsultations: () => dispatch(getDoctorPaymentProduct()),
     toggleChatPermission: (patientId, data) =>
@@ -57,7 +57,7 @@ const mapDispatchToProps = dispatch => {
     toggleVideoPermission: (patientId, data) =>
       dispatch(toggleVideoPermission(patientId, data)),
     getAllFeatures: () => dispatch(getAllFeatures()),
-    raiseChatNotification: data => dispatch(raiseChatNotification(data))
+    raiseChatNotification: (data) => dispatch(raiseChatNotification(data)),
   };
 };
 

@@ -2012,18 +2012,18 @@ class PatientController extends Controller {
       let allPatientIds = [];
 
       /** TODO: Check if these are required now or not.
-        userId (auth) [DOCTOR]
+             userId (auth) [DOCTOR]
 
-        SORT
-        created_at [asc, desc]
-        name [asc, desc]
+             SORT
+             created_at [asc, desc]
+             name [asc, desc]
 
-        FILTER
-        diagnosis [description, type]
-        treatment
+             FILTER
+             diagnosis [description, type]
+             treatment
 
-        doctors -> careplans -> patients
-      */
+             doctors -> careplans -> patients
+             */
 
       const {
         offset = 0,

@@ -5,10 +5,10 @@ import { TABLE_NAME } from "../../models/portions";
 class PortionServiceService {
   constructor() {}
 
-  getByData = async data => {
+  getByData = async (data) => {
     try {
       const portion = await Database.getModel(TABLE_NAME).findOne({
-        where: data
+        where: data,
       });
       return portion;
     } catch (error) {
@@ -25,14 +25,14 @@ class PortionServiceService {
     }
   };
 
-  search = async data => {
+  search = async (data) => {
     try {
       const portions = await Database.getModel(TABLE_NAME).findAll({
         where: {
           name: {
-            [Op.like]: `%${data}%`
-          }
-        }
+            [Op.like]: `%${data}%`,
+          },
+        },
       });
       return portions;
     } catch (error) {

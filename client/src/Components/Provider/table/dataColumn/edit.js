@@ -2,7 +2,7 @@ import React from "react";
 import Tooltip from "antd/es/tooltip";
 import edit_image from "../../../../Assets/images/edit.svg";
 
-export default props => {
+export default (props) => {
   const { openEditProviderDrawer } = props;
   const { basic_info: { id: provider_id } = {} } = props || {};
 

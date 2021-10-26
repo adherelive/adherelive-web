@@ -14,9 +14,9 @@ class TemplateVitalWrapper extends BaseTemplateVital {
       basic_info: {
         id,
         care_plan_template_id,
-        vital_template_id
+        vital_template_id,
       },
-      details
+      details,
     };
   };
 }

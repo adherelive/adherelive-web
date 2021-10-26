@@ -6,22 +6,22 @@ import { USER_CATEGORY } from "../../constant";
 
 export const TABLE_NAME = "workout_templates";
 
-export const db = database => {
+export const db = (database) => {
   database.define(
     TABLE_NAME,
     {
       id: {
         type: DataTypes.INTEGER,
         primaryKey: true,
-        autoIncrement: true
+        autoIncrement: true,
       },
       name: {
         type: DataTypes.STRING(1000),
-        allowNull: false
+        allowNull: false,
       },
       creator_id: {
         type: DataTypes.INTEGER,
-        allowNull: false
+        allowNull: false,
       },
       creator_type: {
         type: DataTypes.ENUM,
@@ -29,24 +29,24 @@ export const db = database => {
           USER_CATEGORY.DOCTOR,
           USER_CATEGORY.PROVIDER,
           USER_CATEGORY.ADMIN,
-          USER_CATEGORY.HSP
+          USER_CATEGORY.HSP,
         ],
         defaultValue: USER_CATEGORY.DOCTOR,
-        allowNull: false
-      }
+        allowNull: false,
+      },
     },
     {
       underscored: true,
-      paranoid: true
+      paranoid: true,
     }
   );
 };
 
-export const associate = database => {
+export const associate = (database) => {
   database.models[TABLE_NAME].belongsToMany(
     database.models[exerciseDetailTableName],
     {
-      through: workoutTemplateExerciseMappingTableName
+      through: workoutTemplateExerciseMappingTableName,
     }
   );
 };

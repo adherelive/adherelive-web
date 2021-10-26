@@ -47,7 +47,7 @@ class ScheduleEventWrapper extends BaseScheduleEvent {
       medications,
       vitals,
       diets,
-      workouts
+      workouts,
     };
   };
 
@@ -64,7 +64,7 @@ class ScheduleEventWrapper extends BaseScheduleEvent {
       start_time,
       end_time,
       updated_at,
-      deleted_at
+      deleted_at,
     } = _data || {};
 
     return {
@@ -78,7 +78,7 @@ class ScheduleEventWrapper extends BaseScheduleEvent {
       start_time,
       end_time,
       updated_at,
-      deleted_at
+      deleted_at,
     };
   };
 
@@ -104,9 +104,9 @@ class ScheduleEventWrapper extends BaseScheduleEvent {
 
     return {
       schedule_events: {
-        [getScheduleEventId()]: getAllInfo()
+        [getScheduleEventId()]: getAllInfo(),
       },
-      ...eventTypeData
+      ...eventTypeData,
     };
   };
 }

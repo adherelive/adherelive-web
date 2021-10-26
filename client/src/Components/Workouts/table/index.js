@@ -14,7 +14,7 @@ class WorkoutTable extends Component {
 
     this.state = {
       loading: false,
-      workout_ids: []
+      workout_ids: [],
     };
   }
 
@@ -26,7 +26,7 @@ class WorkoutTable extends Component {
     const { care_plans = {}, carePlanId = null } = this.props;
     const {
       carePlanId: prev_carePlanId = null,
-      care_plans: prev_care_plans = {}
+      care_plans: prev_care_plans = {},
     } = prevProps || {};
     const { workout_ids = [] } = care_plans[carePlanId] || {};
     const { workout_ids: prev_workout_ids = [] } =
@@ -46,14 +46,14 @@ class WorkoutTable extends Component {
         carePlanId = null,
         care_plans,
         patientId,
-        workouts = {}
+        workouts = {},
       } = this.props;
       this.setState({ loading: true });
       const response = await getWorkoutsForPatient(patientId);
       const {
         status,
         statusCode,
-        payload: { data = {}, message: resp_msg = "" } = {}
+        payload: { data = {}, message: resp_msg = "" } = {},
       } = response || {};
       if (!status && statusCode !== 422) {
         message.warn(resp_msg);
@@ -64,7 +64,7 @@ class WorkoutTable extends Component {
 
       this.setState({
         loading: false,
-        workout_ids
+        workout_ids,
       });
     } catch (error) {
       this.setState({ loading: false });
@@ -78,7 +78,7 @@ class WorkoutTable extends Component {
       workouts = {},
       auth_role = null,
       care_plans = {},
-      carePlanId = null
+      carePlanId = null,
     } = this.props;
 
     const { workout_ids = [] } = this.state;
@@ -92,7 +92,7 @@ class WorkoutTable extends Component {
 
     const { openResponseDrawer, openEditDrawer } = this;
 
-    return workout_ids.map(id => {
+    return workout_ids.map((id) => {
       const workoutData = workouts[id] || {};
       return generateRow({
         id,
@@ -101,12 +101,12 @@ class WorkoutTable extends Component {
         openEditDrawer,
         formatMessage,
         isOtherCarePlan,
-        canViewDetails
+        canViewDetails,
       });
     });
   };
 
-  openResponseDrawer = workout_id => e => {
+  openResponseDrawer = (workout_id) => (e) => {
     e.preventDefault();
     const {
       openWorkoutResponseDrawer,
@@ -114,7 +114,7 @@ class WorkoutTable extends Component {
       auth_role = null,
       care_plans = {},
       carePlanId,
-      workouts = {}
+      workouts = {},
     } = this.props;
     const { basic_info: { name = "" } = {} } = workouts[workout_id] || {};
     const { basic_info: { user_role_id = null } = {} } =
@@ -126,11 +126,11 @@ class WorkoutTable extends Component {
     openWorkoutResponseDrawer({
       workout_id,
       workout_name: name,
-      loading: true
+      loading: true,
     });
   };
 
-  openEditDrawer = workout_id => e => {
+  openEditDrawer = (workout_id) => (e) => {
     e.preventDefault();
     const {
       openEditWorkoutDrawer,
@@ -139,7 +139,7 @@ class WorkoutTable extends Component {
       auth_role = null,
       care_plans = {},
       carePlanId,
-      workouts = {}
+      workouts = {},
     } = this.props;
     const { details: { repeat_days = [] } = {} } = workouts[workout_id];
     const { basic_info: { user_role_id = null } = {} } =
@@ -153,22 +153,22 @@ class WorkoutTable extends Component {
       patient_id: patientId,
       careplan_id: carePlanId,
       repeat_days,
-      canViewDetails
+      canViewDetails,
     });
   };
 
-  formatMessage = data => this.props.intl.formatMessage(data);
+  formatMessage = (data) => this.props.intl.formatMessage(data);
 
   getLoadingComponent = () => {
     const antIcon = <Icon type="loading" style={{ fontSize: 24 }} spin />;
     return {
-      indicator: antIcon
+      indicator: antIcon,
     };
   };
 
   render() {
     const locale = {
-      emptyText: this.formatMessage(messages.no_workouts)
+      emptyText: this.formatMessage(messages.no_workouts),
     };
 
     const { intl: { formatMessage } = {} } = this.props;
@@ -182,12 +182,12 @@ class WorkoutTable extends Component {
         loading={loading === true ? getLoadingComponent() : false}
         columns={getColumn({
           formatMessage,
-          className: "pointer"
+          className: "pointer",
         })}
         dataSource={getDataSource()}
         scroll={{ x: "100%" }}
         pagination={{
-          position: "bottom"
+          position: "bottom",
         }}
         locale={locale}
       />

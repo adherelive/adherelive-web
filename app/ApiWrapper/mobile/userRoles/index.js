@@ -28,7 +28,7 @@ class MUserRoleWrapper extends BaseUserRole {
       linked_with,
       created_at,
       deleted_at,
-      updated_at
+      updated_at,
     } = _data || {};
 
     return {
@@ -36,11 +36,11 @@ class MUserRoleWrapper extends BaseUserRole {
         id,
         user_identity,
         linked_id,
-        linked_with
+        linked_with,
       },
       updated_at,
       deleted_at,
-      created_at
+      created_at,
     };
   };
 
@@ -48,7 +48,7 @@ class MUserRoleWrapper extends BaseUserRole {
     const {
       _data: { id, linked_id, linked_with } = {},
       getBasicInfo,
-      getUser
+      getUser,
     } = this;
 
     const { doctor } = getUser() || {};
@@ -150,12 +150,12 @@ class MUserRoleWrapper extends BaseUserRole {
 
     return {
       user_roles: {
-        [id]: getBasicInfo()
+        [id]: getBasicInfo(),
       },
       doctors,
       patients,
       providers,
-      admins
+      admins,
     };
   };
 }

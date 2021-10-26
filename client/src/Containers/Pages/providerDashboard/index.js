@@ -6,18 +6,18 @@ import { getAllMissedScheduleEvents } from "../../../modules/scheduleEvents";
 import { DRAWER } from "../../../constant";
 import { open } from "../../../modules/drawer";
 
-const mapStateToProps = state => {
+const mapStateToProps = (state) => {
   const {
     auth: {
       authPermissions = [],
       authenticated_user = 1,
-      authenticated_category
+      authenticated_category,
     } = {},
     pages: { dashboard = {} } = {},
     users = {},
     doctors = {},
     providers = {},
-    graphs = {}
+    graphs = {},
   } = state;
 
   return {
@@ -28,14 +28,14 @@ const mapStateToProps = state => {
     authPermissions,
     authenticated_user,
     authenticated_category,
-    dashboard
+    dashboard,
   };
 };
 
-const mapDispatchToProps = dispatch => {
+const mapDispatchToProps = (dispatch) => {
   return {
     getGraphs: () => dispatch(getGraphs()),
-    updateGraphs: data => dispatch(updateGraphs(data)),
+    updateGraphs: (data) => dispatch(updateGraphs(data)),
     getAllMissedScheduleEvents: () => dispatch(getAllMissedScheduleEvents()),
     openMissedMedicationDrawer: () =>
       dispatch(open({ type: DRAWER.MISSED_MEDICATION })),
@@ -44,7 +44,7 @@ const mapDispatchToProps = dispatch => {
     openMissedVitalDrawer: () => dispatch(open({ type: DRAWER.MISSED_VITAL })),
     openMissedDietDrawer: () => dispatch(open({ type: DRAWER.MISSED_DIET })),
     openMissedWorkoutDrawer: () =>
-      dispatch(open({ type: DRAWER.MISSED_WORKOUT }))
+      dispatch(open({ type: DRAWER.MISSED_WORKOUT })),
   };
 };
 

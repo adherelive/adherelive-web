@@ -28,9 +28,8 @@ class MobileMedicineController extends Controller {
       if (allMedicine.length > 0) {
         for (const medicine of allMedicine) {
           const medicineApiWrapper = await MedicineApiWrapper(medicine);
-          medicineApiDetails[
-            medicineApiWrapper.getMedicineId()
-          ] = medicineApiWrapper.getBasicInfo();
+          medicineApiDetails[medicineApiWrapper.getMedicineId()] =
+            medicineApiWrapper.getBasicInfo();
         }
       } else {
       }
@@ -55,7 +54,7 @@ class MobileMedicineController extends Controller {
       const algoliaService = new AlgoliaService();
 
       const {
-        userCategoryData: { basic_info: { id: categoryId = null } = {} } = {}
+        userCategoryData: { basic_info: { id: categoryId = null } = {} } = {},
       } = userDetails || {};
 
       const { name = "", type = "" } = body;
@@ -65,7 +64,7 @@ class MobileMedicineController extends Controller {
         creator_id: categoryId,
         created_at: new Date(),
         type,
-        public_medicine: false
+        public_medicine: false,
       };
 
       const medicineDetails = await medicineService.add(new_medicine_data);
@@ -82,9 +81,10 @@ class MobileMedicineController extends Controller {
         200,
         {
           medicines: {
-            [medicineApiDetails.getMedicineId()]: medicineApiDetails.getBasicInfo()
+            [medicineApiDetails.getMedicineId()]:
+              medicineApiDetails.getBasicInfo(),
           },
-          medicine_ids: [medicineApiDetails.getMedicineId()]
+          medicine_ids: [medicineApiDetails.getMedicineId()],
         },
         "New medicine added successfully."
       );

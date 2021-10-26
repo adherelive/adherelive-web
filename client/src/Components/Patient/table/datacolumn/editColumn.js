@@ -9,7 +9,7 @@ class editPatientColumn extends Component {
 
   componentDidMount() {}
 
-  handleEditPatientDrawer = e => {
+  handleEditPatientDrawer = (e) => {
     e.preventDefault();
 
     const { openEditPatientDrawer, patientData, carePlanData } = this.props;

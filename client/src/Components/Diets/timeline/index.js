@@ -20,23 +20,23 @@ const TIMELINE_STATUS = {
   [DATE]: {
     key: DATE,
     dot: "",
-    color: "blue"
+    color: "blue",
   },
   [COMPLETED]: {
     key: COMPLETED,
     dot: <CheckCircleOutlined />,
-    color: "green"
+    color: "green",
   },
   [EXPIRED]: {
     key: EXPIRED,
     dot: <ClockCircleOutlined />,
-    color: "red"
+    color: "red",
   },
   [CANCELLED]: {
     key: CANCELLED,
     dot: <StopOutlined style={{ color: "#FFCC00" }} />,
-    color: "yellow"
-  }
+    color: "yellow",
+  },
 };
 
 class DietTimeline extends Component {
@@ -47,7 +47,7 @@ class DietTimeline extends Component {
       diet_timeline: {},
       diet_date_ids: [],
       imageModalVisible: false,
-      imageToShow: ""
+      imageToShow: "",
     };
   }
 
@@ -100,8 +100,8 @@ class DietTimeline extends Component {
         status,
         payload: {
           data: { diet_timeline = {}, diet_date_ids = [] } = {},
-          message: responseMessage
-        } = {}
+          message: responseMessage,
+        } = {},
       } = response || {};
       if (status === true) {
         this.setState({ diet_timeline, diet_date_ids, loading: false });
@@ -117,7 +117,7 @@ class DietTimeline extends Component {
     upload_documents,
     upload_document_ids,
     resp_updated_at,
-    response_text
+    response_text,
   }) => {
     let dataTorender = [];
 
@@ -149,7 +149,7 @@ class DietTimeline extends Component {
             paddingTop: imageUrl && imageUrl.length ? 0 : 5,
             borderRadius: 2,
             marginTop: 12,
-            width: 300
+            width: 300,
           }}
         >
           {imageUrl && imageUrl.length ? (
@@ -168,23 +168,23 @@ class DietTimeline extends Component {
     return dataTorender;
   };
 
-  openModal = url => () => {
+  openModal = (url) => () => {
     this.setState({ imageToShow: url }, () =>
       this.setState({ imageModalVisible: true })
     );
   };
 
-  getEventsForDay = events => {
+  getEventsForDay = (events) => {
     const { intl: { formatMessage } = {} } = this.props;
 
-    return events.map(event => {
+    return events.map((event) => {
       const { id, status, end_time } = event || {};
       const {
         details: { time_text = "" } = {},
         updated_at = "",
         diet_response_id = null,
         diet_responses = {},
-        upload_documents = {}
+        upload_documents = {},
       } = event;
 
       switch (status) {
@@ -208,7 +208,7 @@ class DietTimeline extends Component {
                 const {
                   response_text = "",
                   upload_document_ids = [],
-                  updated_at: resp_updated_at = ""
+                  updated_at: resp_updated_at = "",
                 } = diet_responses[response_id] || {};
                 return (
                   <div
@@ -219,7 +219,7 @@ class DietTimeline extends Component {
                       upload_documents,
                       upload_document_ids,
                       resp_updated_at,
-                      response_text
+                      response_text,
                     })}
                   </div>
                 );
@@ -263,7 +263,7 @@ class DietTimeline extends Component {
     const { diet_timeline = {}, diet_date_ids = [] } = this.state;
     const { getEventsForDay } = this;
 
-    return diet_date_ids.map(date => {
+    return diet_date_ids.map((date) => {
       const eventsForDay = diet_timeline[date] || {};
       return (
         <Fragment key={`${date}`}>

@@ -1,7 +1,7 @@
 import {
   GET_PRIVATE_MEDICINES_COMPLETED,
   MAKE_MEDICINE_PUBLIC_COMPLETED,
-  DELETE_MEDICINE_COMPLETED
+  DELETE_MEDICINE_COMPLETED,
 } from "../../medicines";
 
 const PRIVATE = "private";
@@ -11,7 +11,7 @@ function getPrivateAdminMedicinesReducer(state, data) {
   const private_medicines = { ...state, [offset]: medicines };
   if (medicines && type === PRIVATE) {
     return {
-      ...private_medicines
+      ...private_medicines,
     };
   } else {
     return state;
@@ -43,7 +43,7 @@ function deleteMedicineReducer(state, data) {
       let updatedMed = { ...state };
       updatedMed[offset] = { ...rest };
       return {
-        ...updatedMed
+        ...updatedMed,
       };
     } else {
       return state;

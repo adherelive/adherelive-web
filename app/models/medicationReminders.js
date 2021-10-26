@@ -5,7 +5,7 @@ import { TABLE_NAME as medicineTableName } from "./medicines";
 
 export const TABLE_NAME = "medications";
 
-export const db = database => {
+export const db = (database) => {
   database.define(
     TABLE_NAME,
     {
@@ -13,49 +13,49 @@ export const db = database => {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
-        type: DataTypes.INTEGER
+        type: DataTypes.INTEGER,
       },
       participant_id: {
         type: DataTypes.INTEGER,
-        allowNull: false
+        allowNull: false,
       },
       organizer_type: {
         type: DataTypes.ENUM,
         values: [
           USER_CATEGORY.DOCTOR,
           USER_CATEGORY.PATIENT,
-          USER_CATEGORY.CARE_TAKER
-        ]
+          USER_CATEGORY.CARE_TAKER,
+        ],
       },
       organizer_id: {
         type: DataTypes.INTEGER,
-        allowNull: false
+        allowNull: false,
       },
       medicine_id: {
         type: DataTypes.INTEGER,
         allowNull: false,
         references: {
           model: {
-            tableName: medicineTableName
+            tableName: medicineTableName,
           },
-          key: "id"
-        }
+          key: "id",
+        },
       },
       description: {
-        type: DataTypes.STRING(1000)
+        type: DataTypes.STRING(1000),
       },
       start_date: {
-        type: DataTypes.DATE
+        type: DataTypes.DATE,
       },
       end_date: {
-        type: DataTypes.DATE
+        type: DataTypes.DATE,
       },
       rr_rule: {
-        type: DataTypes.STRING(1000)
+        type: DataTypes.STRING(1000),
       },
       details: {
-        type: DataTypes.JSON
-      }
+        type: DataTypes.JSON,
+      },
     },
     {
       underscored: true,
@@ -71,21 +71,21 @@ export const db = database => {
             start_date: this.start_date,
             end_date: this.end_date,
             rr_rule: this.rr_rule,
-            details: this.details
+            details: this.details,
           };
         },
         getId() {
           return this.id;
-        }
-      }
+        },
+      },
     }
   );
 };
 
-export const associate = database => {
+export const associate = (database) => {
   // associations here (if any) ...
   database.models[TABLE_NAME].hasOne(database.models[medicineTableName], {
     sourceKey: "medicine_id",
-    foreignKey: "id"
+    foreignKey: "id",
   });
 };

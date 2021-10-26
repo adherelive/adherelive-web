@@ -10,21 +10,21 @@ import StartDate from "../datacolumn/startDate";
 import CreatedAt from "../datacolumn/createdAt";
 import moment from "moment";
 
-export default props => {
+export default (props) => {
   const { formatMessage, getColumnSearchProps } = props || {};
 
   return [
     {
       title: "Patient",
       ...TABLE_COLUMN.PID,
-      render: data => {
+      render: (data) => {
         const {
           patientData,
           chatData,
           addToWatchlist,
           doctorData,
           onRowClick,
-          removePatientFromWatchlist
+          removePatientFromWatchlist,
         } = data || {};
         return (
           <PID
@@ -36,18 +36,18 @@ export default props => {
             removePatientFromWatchlist={removePatientFromWatchlist}
           />
         );
-      }
+      },
     },
     {
       title: formatMessage(messages.diagnosis),
       ...TABLE_COLUMN.DIAGNOSIS,
-      render: patientData => <Diagnosis {...patientData} />,
-      ...getColumnSearchProps(TABLE_COLUMN.DIAGNOSIS.dataIndex)
+      render: (patientData) => <Diagnosis {...patientData} />,
+      ...getColumnSearchProps(TABLE_COLUMN.DIAGNOSIS.dataIndex),
     },
     {
       title: formatMessage(messages.treatment),
       ...TABLE_COLUMN.TREATMENT,
-      render: data => {
+      render: (data) => {
         const { patientData, treatmentData, carePlanData } = data;
         // console.log("82346234236492347 ========>",{treatmentData,carePlanData})
         return (
@@ -58,17 +58,17 @@ export default props => {
           />
         );
       },
-      ...getColumnSearchProps(TABLE_COLUMN.TREATMENT.dataIndex)
+      ...getColumnSearchProps(TABLE_COLUMN.TREATMENT.dataIndex),
     },
     {
       title: formatMessage(messages.severity),
       ...TABLE_COLUMN.SEVERITY,
-      render: treatmentData => <Severity {...treatmentData} />
+      render: (treatmentData) => <Severity {...treatmentData} />,
     },
     {
       title: formatMessage(messages.start_date),
       ...TABLE_COLUMN.START_DATE,
-      render: carePlanData => <StartDate {...carePlanData} />,
+      render: (carePlanData) => <StartDate {...carePlanData} />,
       sorter: (a, b) => {
         // console.log("38712397182 a, b", {a, b});
 
@@ -82,12 +82,12 @@ export default props => {
         } else {
           return -1;
         }
-      }
+      },
     },
     {
       title: formatMessage(messages.createdAt),
       ...TABLE_COLUMN.CREATED_AT,
-      render: patientData => <CreatedAt {...patientData} />,
+      render: (patientData) => <CreatedAt {...patientData} />,
       sorter: (a, b) => {
         // console.log("38712397182 a, b", {a, b});
 
@@ -101,7 +101,7 @@ export default props => {
         } else {
           return -1;
         }
-      }
-    }
+      },
+    },
   ];
 };

@@ -11,20 +11,20 @@ class MealTemplatesService {
     try {
       const mealTemplate = await Database.getModel(TABLE_NAME).create(meal, {
         raw: true,
-        transaction
+        transaction,
       });
 
       const { id: meal_template_id } = mealTemplate || {};
 
       // create food items mappings
-      const foodItemDetailsMapping = foodItemDetails.map(id => {
+      const foodItemDetailsMapping = foodItemDetails.map((id) => {
         return { meal_template_id, food_item_detail_id: id };
       });
       await Database.getModel(mealTemplateMappingsTableName).bulkCreate(
         foodItemDetailsMapping,
         {
           raw: true,
-          transaction
+          transaction,
         }
       );
 
@@ -36,18 +36,18 @@ class MealTemplatesService {
     }
   };
 
-  findOne = async data => {
+  findOne = async (data) => {
     try {
       const mealTemplate = await Database.getModel(TABLE_NAME).findOne({
         where: data,
-        include: [Database.getModel(foodtemDetailsTableName)]
+        include: [Database.getModel(foodtemDetailsTableName)],
       });
 
       /* nested raw true is not allowed by sequelize
-        Links:
-        https://github.com/sequelize/sequelize/issues/3897 (closed)
-        https://github.com/sequelize/sequelize/issues/5193 (open)
-      */
+              Links:
+              https://github.com/sequelize/sequelize/issues/3897 (closed)
+              https://github.com/sequelize/sequelize/issues/5193 (open)
+            */
       return JSON.parse(JSON.stringify(mealTemplate));
     } catch (error) {
       throw error;
@@ -60,10 +60,10 @@ class MealTemplatesService {
       // update name for template if needed
       await Database.getModel(TABLE_NAME).update(meal, {
         where: {
-          id
+          id,
         },
         raw: true,
-        transaction
+        transaction,
       });
 
       // check for existing mappings wrt food items and new ones
@@ -72,7 +72,7 @@ class MealTemplatesService {
       const { food_item_details = [] } = existingMealTemplate || {};
 
       const existingFoodItemDetails =
-        food_item_details.map(foodItemDetail => foodItemDetail.id) || [];
+        food_item_details.map((foodItemDetail) => foodItemDetail.id) || [];
 
       let newFoodItemDetails = [];
       for (let index = 0; index < foodItemDetails.length; index++) {
@@ -80,7 +80,7 @@ class MealTemplatesService {
         if (existingFoodItemDetails.indexOf(currentFoodItemDetailsId) === -1) {
           newFoodItemDetails.push({
             meal_template_id: id,
-            food_item_detail_id: currentFoodItemDetailsId
+            food_item_detail_id: currentFoodItemDetailsId,
           });
         } else {
           continue;
@@ -92,21 +92,21 @@ class MealTemplatesService {
         newFoodItemDetails,
         {
           raw: true,
-          transaction
+          transaction,
         }
       );
 
       // filter out all food items that are to be removed from mapping
       const foodItemsDetailsToDelete = existingFoodItemDetails.filter(
-        foodItemDetailsId => foodItemDetails.indexOf(foodItemDetailsId) === -1
+        (foodItemDetailsId) => foodItemDetails.indexOf(foodItemDetailsId) === -1
       );
 
       // delete existing mappings for old food items
       await Database.getModel(mealTemplateMappingsTableName).destroy({
         where: {
-          food_item_detail_id: foodItemsDetailsToDelete
+          food_item_detail_id: foodItemsDetailsToDelete,
         },
-        transaction
+        transaction,
       });
 
       await transaction.commit();
@@ -117,11 +117,11 @@ class MealTemplatesService {
     }
   };
 
-  getByData = async data => {
+  getByData = async (data) => {
     try {
       return await Database.getModel(TABLE_NAME).findOne({
         where: data,
-        raw: true
+        raw: true,
       });
     } catch (error) {
       throw error;
@@ -135,7 +135,7 @@ class MealTemplatesService {
         order,
         include: [Database.getModel(foodtemDetailsTableName)],
         attributes,
-        raw: true
+        raw: true,
       });
     } catch (error) {
       throw error;
@@ -147,16 +147,16 @@ class MealTemplatesService {
     try {
       await Database.getModel(mealTemplateMappingsTableName).destroy({
         where: {
-          meal_template_id: template_id
+          meal_template_id: template_id,
         },
-        transaction
+        transaction,
       });
 
       await Database.getModel(TABLE_NAME).destroy({
         where: {
-          id: template_id
+          id: template_id,
         },
-        transaction
+        transaction,
       });
 
       await transaction.commit();

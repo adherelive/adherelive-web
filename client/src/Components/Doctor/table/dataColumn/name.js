@@ -2,12 +2,12 @@ import React from "react";
 import {
   TABLE_DEFAULT_BLANK_FIELD,
   TABLE_STATUS,
-  USER_CATEGORY
+  USER_CATEGORY,
 } from "../../../../constant";
 import TableStatus from "../../../../Helper/TableStatus";
 import messages from "../messages";
 
-export default props => {
+export default (props) => {
   const { doctorData, userData, formatMessage } = props || {};
   const { basic_info: { full_name, gender, profile_pic } = {} } =
     doctorData || {};
@@ -28,7 +28,7 @@ export default props => {
   const type = TABLE_STATUS.ADMIN_DOCTOR_TABLE;
   const displayProps = {
     status,
-    type
+    type,
   };
 
   return (

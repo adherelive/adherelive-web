@@ -11,7 +11,7 @@ class ClinicRegister extends Component {
       address: "",
       pincode: "",
       addressManual: "",
-      landmark: ""
+      landmark: "",
     };
     this.myRef = React.createRef();
   }
@@ -21,17 +21,17 @@ class ClinicRegister extends Component {
       address: "",
       pincode: "",
       addressManual: "",
-      landmark: ""
+      landmark: "",
     });
   }
 
-  setManualAddress = e => {
+  setManualAddress = (e) => {
     this.setState({ addressManual: e.target.value });
   };
 
-  formatMessage = data => this.props.intl.formatMessage(data);
+  formatMessage = (data) => this.props.intl.formatMessage(data);
 
-  setManualPincode = e => {
+  setManualPincode = (e) => {
     const { value } = e.target;
     const reg = /^-?\d*(\.\d*)?$/;
     if ((!isNaN(value) && reg.test(value)) || value === "" || value === "-") {
@@ -39,7 +39,7 @@ class ClinicRegister extends Component {
     }
   };
 
-  setManualLandMark = e => {
+  setManualLandMark = (e) => {
     this.setState({ landmark: e.target.value });
   };
 
@@ -48,7 +48,7 @@ class ClinicRegister extends Component {
       address = "",
       pincode = "",
       addressManual = "",
-      landmark = ""
+      landmark = "",
     } = this.state;
     let { handleOk } = this.props;
     let manual =
@@ -62,11 +62,11 @@ class ClinicRegister extends Component {
       address: "",
       pincode: "",
       addressManual: "",
-      landmark: ""
+      landmark: "",
     });
   };
 
-  handleChange = address => {
+  handleChange = (address) => {
     this.setState({ address });
   };
 
@@ -78,7 +78,7 @@ class ClinicRegister extends Component {
       address: "",
       pincode: "",
       addressManual: "",
-      landmark: ""
+      landmark: "",
     });
   };
 
@@ -86,11 +86,11 @@ class ClinicRegister extends Component {
     this.myRef.current.value = "";
   };
 
-  handleChangeAddress = address => {
+  handleChangeAddress = (address) => {
     this.setState({ address });
   };
 
-  handleSelect = address => {
+  handleSelect = (address) => {
     this.setState({ address });
   };
 
@@ -99,7 +99,7 @@ class ClinicRegister extends Component {
       address = "",
       addressManual = "",
       pincode = "",
-      landmark = ""
+      landmark = "",
     } = this.state;
 
     const { visible, location } = this.props;
@@ -115,7 +115,7 @@ class ClinicRegister extends Component {
           </Button>,
           <Button key="submit" type="primary" onClick={this.handleSave}>
             {this.formatMessage(messages.submit)}
-          </Button>
+          </Button>,
         ]}
       >
         <div className="location-container">
@@ -138,25 +138,25 @@ class ClinicRegister extends Component {
               getInputProps,
               suggestions,
               getSuggestionItemProps,
-              loading
+              loading,
             }) => (
               <div>
                 <Input
                   disabled={addressManual ? true : false}
                   {...getInputProps({
                     placeholder: this.formatMessage(messages.searchAddress),
-                    className: "form-inputs-google"
+                    className: "form-inputs-google",
                   })}
                 />
                 <div className="google-places-autocomplete__suggestions-container">
                   {loading && <div>Loading...</div>}
-                  {suggestions.map(suggestion => {
+                  {suggestions.map((suggestion) => {
                     const className = "google-places-autocomplete__suggestion";
                     // inline style for demonstration purpose
                     return (
                       <div
                         {...getSuggestionItemProps(suggestion, {
-                          className
+                          className,
                         })}
                       >
                         <span>{suggestion.description}</span>

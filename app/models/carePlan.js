@@ -10,7 +10,7 @@ import { TABLE_NAME as careplanSecondaryDoctorMappingsTableName } from "./carepl
 
 export const TABLE_NAME = "care_plans";
 
-export const db = database => {
+export const db = (database) => {
   database.define(
     TABLE_NAME,
     {
@@ -18,67 +18,67 @@ export const db = database => {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
-        type: DataTypes.INTEGER
+        type: DataTypes.INTEGER,
       },
       doctor_id: {
         type: DataTypes.INTEGER,
         allowNull: false,
         references: {
           model: {
-            tableName: doctorTableName
+            tableName: doctorTableName,
           },
-          key: "id"
-        }
+          key: "id",
+        },
       },
       patient_id: {
         type: DataTypes.INTEGER,
         allowNull: false,
         references: {
           model: {
-            tableName: patientTableName
+            tableName: patientTableName,
           },
-          key: "id"
-        }
+          key: "id",
+        },
       },
       care_plan_template_id: {
         type: DataTypes.INTEGER,
         allowNull: true,
         references: {
           model: {
-            tableName: carePlanTemplateTableName
+            tableName: carePlanTemplateTableName,
           },
-          key: "id"
-        }
+          key: "id",
+        },
       },
       details: {
-        type: DataTypes.JSON
+        type: DataTypes.JSON,
       },
       activated_on: {
-        type: DataTypes.DATE
+        type: DataTypes.DATE,
       },
       renew_on: {
-        type: DataTypes.DATE
+        type: DataTypes.DATE,
       },
       user_role_id: {
         type: DataTypes.INTEGER,
         allowNull: true,
         references: {
           model: {
-            tableName: userRolesTableName
+            tableName: userRolesTableName,
           },
-          key: "id"
-        }
+          key: "id",
+        },
       },
       channel_id: {
-        type: DataTypes.STRING
+        type: DataTypes.STRING,
       },
       expired_on: {
-        type: DataTypes.DATE
+        type: DataTypes.DATE,
       },
       created_at: {
         type: DataTypes.DATE,
-        allowNull: false
-      }
+        allowNull: false,
+      },
     },
     {
       underscored: true,
@@ -95,41 +95,41 @@ export const db = database => {
             details: this.details,
             activated_on: this.activated_on,
             renew_on: this.renew_on,
-            expired_on: this.expired_on
+            expired_on: this.expired_on,
           };
         },
         getId() {
           return this.id;
-        }
-      }
+        },
+      },
     }
   );
 };
 
-export const associate = database => {
+export const associate = (database) => {
   // associations here (if any) ...
   database.models[TABLE_NAME].belongsTo(database.models[patientTableName], {
     foreignKey: "patient_id",
-    targetKey: "id"
+    targetKey: "id",
     // foreignKey: "user_id",
     // targetKey: "id"
   });
 
   database.models[TABLE_NAME].belongsTo(database.models[userRolesTableName], {
     foreignKey: "user_role_id",
-    targetKey: "id"
+    targetKey: "id",
   });
 
   database.models[TABLE_NAME].hasOne(database.models[doctorTableName], {
     foreignKey: "id",
-    sourceKey: "doctor_id"
+    sourceKey: "doctor_id",
   });
 
   database.models[TABLE_NAME].hasMany(
     database.models[carePlanAppointmentTableName],
     {
       foreignKey: "care_plan_id",
-      sourceKey: "id"
+      sourceKey: "id",
     }
   );
 
@@ -137,7 +137,7 @@ export const associate = database => {
     database.models[carePlanMedicationTableName],
     {
       foreignKey: "care_plan_id",
-      sourceKey: "id"
+      sourceKey: "id",
     }
   );
 
@@ -145,7 +145,7 @@ export const associate = database => {
     database.models[careplanSecondaryDoctorMappingsTableName],
     {
       foreignKey: "care_plan_id",
-      sourceKey: "id"
+      sourceKey: "id",
     }
   );
 };

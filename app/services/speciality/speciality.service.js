@@ -12,10 +12,10 @@ class SpecialityService {
     }
   };
 
-  getSpecialityByData = async data => {
+  getSpecialityByData = async (data) => {
     try {
       const speciality = await Database.getModel(TABLE_NAME).findOne({
-        where: data
+        where: data,
       });
       return speciality;
     } catch (err) {
@@ -23,14 +23,14 @@ class SpecialityService {
     }
   };
 
-  search = async data => {
+  search = async (data) => {
     try {
       const speciality = await Database.getModel(TABLE_NAME).findAll({
         where: {
           name: {
-            [Op.like]: `${data}%`
-          }
-        }
+            [Op.like]: `${data}%`,
+          },
+        },
       });
       return speciality;
     } catch (error) {
@@ -38,7 +38,7 @@ class SpecialityService {
     }
   };
 
-  create = async data => {
+  create = async (data) => {
     try {
       const speciality = await Database.getModel(TABLE_NAME).create(data);
       return speciality;

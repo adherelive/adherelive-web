@@ -5,7 +5,7 @@ import { TABLE_NAME as appointmentTableName } from "./appointments";
 
 export const TABLE_NAME = "care_plan_appointments";
 
-export const db = database => {
+export const db = (database) => {
   database.define(
     TABLE_NAME,
     {
@@ -13,28 +13,28 @@ export const db = database => {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
-        type: DataTypes.INTEGER
+        type: DataTypes.INTEGER,
       },
       care_plan_id: {
         type: DataTypes.INTEGER,
         allowNull: false,
         references: {
           model: {
-            tableName: carePlanTableName
+            tableName: carePlanTableName,
           },
-          key: "id"
-        }
+          key: "id",
+        },
       },
       appointment_id: {
         type: DataTypes.INTEGER,
         allowNull: false,
         references: {
           model: {
-            tableName: appointmentTableName
+            tableName: appointmentTableName,
           },
-          key: "id"
-        }
-      }
+          key: "id",
+        },
+      },
     },
     {
       underscored: true,
@@ -44,21 +44,21 @@ export const db = database => {
           return {
             id: this.id,
             care_plan_id: this.care_plan_id,
-            appointment_id: this.appointment_id
+            appointment_id: this.appointment_id,
           };
         },
         getId() {
           return this.id;
-        }
-      }
+        },
+      },
     }
   );
 };
 
-export const associate = database => {
+export const associate = (database) => {
   // associations here (if any) ...
   database.models[TABLE_NAME].hasOne(database.models[appointmentTableName], {
     foreignKey: "id",
-    targetKey: "appointment_id"
+    targetKey: "appointment_id",
   });
 };

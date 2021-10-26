@@ -4,7 +4,7 @@ import {
   markFavouriteUrl,
   getFavouritesUrl,
   removeFavouritesUrl,
-  removeFavouriteRecordUrl
+  removeFavouriteRecordUrl,
 } from "../../Helper/urls/markFavourite";
 
 export const MARK_FAVOURITE = "MARK_FAVOURITE";
@@ -24,14 +24,14 @@ export const REMOVE_FAVOURITE_RECORD_COMPLETED =
   "REMOVE_FAVOURITE_RECORD_COMPLETED";
 export const REMOVE_FAVOURITE_RECORD_FAILED = "REMOVE_FAVOURITE_RECORD_FAILED";
 
-export const markFavourite = payload => {
+export const markFavourite = (payload) => {
   let response = {};
-  return async dispatch => {
+  return async (dispatch) => {
     try {
       response = await doRequest({
         method: REQUEST_TYPE.POST,
         url: markFavouriteUrl(),
-        data: payload
+        data: payload,
       });
 
       const { status, payload: { data: respData, message = "" } = {} } =
@@ -43,12 +43,12 @@ export const markFavourite = payload => {
         data["id"] = id.toString();
         dispatch({
           type: MARK_FAVOURITE_COMPLETED,
-          data
+          data,
         });
       } else {
         dispatch({
           type: MARK_FAVOURITE_FAILED,
-          message
+          message,
         });
       }
     } catch (error) {
@@ -60,23 +60,23 @@ export const markFavourite = payload => {
 
 export const getFavourites = ({ type }) => {
   let response = {};
-  return async dispatch => {
+  return async (dispatch) => {
     try {
       response = await doRequest({
         method: REQUEST_TYPE.GET,
-        url: getFavouritesUrl({ type })
+        url: getFavouritesUrl({ type }),
       });
 
       const { status, payload: { data, message = "" } = {} } = response || {};
       if (status === true) {
         dispatch({
           type: GET_FAVOURITES_COMPLETED,
-          data
+          data,
         });
       } else {
         dispatch({
           type: GET_FAVOURITES_FAILED,
-          message
+          message,
         });
       }
     } catch (error) {
@@ -88,11 +88,11 @@ export const getFavourites = ({ type }) => {
 
 export const removeFavourite = ({ typeId, type }) => {
   let response = {};
-  return async dispatch => {
+  return async (dispatch) => {
     try {
       response = await doRequest({
         method: REQUEST_TYPE.DELETE,
-        url: removeFavouritesUrl({ typeId, type })
+        url: removeFavouritesUrl({ typeId, type }),
       });
 
       const { status, payload: { data: resp_data, message = "" } = {} } =
@@ -111,12 +111,12 @@ export const removeFavourite = ({ typeId, type }) => {
         }
         dispatch({
           type: REMOVE_FAVOURITE_COMPLETED,
-          data
+          data,
         });
       } else {
         dispatch({
           type: REMOVE_FAVOURITE_FAILED,
-          message
+          message,
         });
       }
     } catch (error) {
@@ -126,13 +126,13 @@ export const removeFavourite = ({ typeId, type }) => {
   };
 };
 
-export const removeFavouriteByRecordId = id => {
+export const removeFavouriteByRecordId = (id) => {
   let response = {};
-  return async dispatch => {
+  return async (dispatch) => {
     try {
       response = await doRequest({
         method: REQUEST_TYPE.DELETE,
-        url: removeFavouriteRecordUrl(id)
+        url: removeFavouriteRecordUrl(id),
       });
 
       const { status, payload: { data: resp_data, message = "" } = {} } =
@@ -143,12 +143,12 @@ export const removeFavouriteByRecordId = id => {
 
         dispatch({
           type: REMOVE_FAVOURITE_RECORD_COMPLETED,
-          data
+          data,
         });
       } else {
         dispatch({
           type: REMOVE_FAVOURITE_RECORD_FAILED,
-          message
+          message,
         });
       }
     } catch (error) {
@@ -164,7 +164,7 @@ function removeFavouriteReducer(state, data) {
     const { [removed_record_key.toString()]: record, ...rest } = state || {};
 
     return {
-      ...rest
+      ...rest,
     };
   } else {
     return state;
@@ -177,7 +177,7 @@ function removeFavouriteRecord(state, data) {
     const { [removed_record_id.toString()]: record, ...rest } = state || {};
 
     return {
-      ...rest
+      ...rest,
     };
   } else {
     return state;
@@ -189,7 +189,7 @@ function getFavouriteReducer(state, data) {
   if (favourites_data) {
     return {
       ...state,
-      ...favourites_data
+      ...favourites_data,
     };
   } else {
     return state;

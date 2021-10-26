@@ -7,14 +7,14 @@ module.exports = {
     return Promise.all([
       queryInterface.changeColumn(TABLE_NAME, "feature_type", {
         type: Sequelize.ENUM,
-        values: [...Object.values(FEATURE_TYPE)]
-      })
+        values: [...Object.values(FEATURE_TYPE)],
+      }),
     ]);
   },
 
   down: (queryInterface, Sequelize) => {
     return Promise.all([
-      queryInterface.changeColumn(TABLE_NAME, "feature_type")
+      queryInterface.changeColumn(TABLE_NAME, "feature_type"),
     ]);
-  }
+  },
 };

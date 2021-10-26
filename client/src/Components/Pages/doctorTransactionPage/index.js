@@ -8,7 +8,7 @@ class doctorTransactionPage extends Component {
     super(props);
   }
 
-  formatMessage = data => this.props.intl.formatMessage(data);
+  formatMessage = (data) => this.props.intl.formatMessage(data);
 
   render() {
     return (

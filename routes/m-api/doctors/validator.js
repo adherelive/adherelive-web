@@ -4,15 +4,9 @@ import moment from "moment";
 import { validationError } from "../../api/helper";
 
 const updateDoctorSchema = Joi.object().keys({
-  name: Joi.string()
-    .required()
-    .label("Name cannot be empty"),
-  city: Joi.string()
-    .required()
-    .label("City cannot be empty"),
-  category: Joi.string()
-    .required()
-    .label("Category cannot be empty"),
+  name: Joi.string().required().label("Name cannot be empty"),
+  city: Joi.string().required().label("City cannot be empty"),
+  category: Joi.string().required().label("Category cannot be empty"),
   mobile_number: Joi.string()
     .min(10)
     .max(10)
@@ -23,12 +17,8 @@ const updateDoctorSchema = Joi.object().keys({
     .required()
     .regex(/^\d+$/)
     .label("Prefix cannot be empty"),
-  profile_pic: Joi.string()
-    .required()
-    .label("Profile pic cannot be empty"),
-  signature_pic: Joi.string()
-    .required()
-    .label("Signature pic cannot be empty")
+  profile_pic: Joi.string().required().label("Profile pic cannot be empty"),
+  signature_pic: Joi.string().required().label("Signature pic cannot be empty"),
 });
 
 const addPatientForm = Joi.object().keys({
@@ -38,40 +28,16 @@ const addPatientForm = Joi.object().keys({
     .regex(/^\d+$/)
     .required()
     .label("Please enter correct mobile number"),
-  name: Joi.string()
-    .optional()
-    .allow("", null),
-  patient_uid: Joi.string()
-    .optional()
-    .allow("", null),
-  gender: Joi.string()
-    .length(1)
-    .optional()
-    .allow("", null),
-  date_of_birth: Joi.date()
-    .required()
-    .label("Please enter date of birth"),
-  prefix: Joi.string()
-    .regex(/^\d+$/)
-    .required()
-    .label("Please select prefix"),
-  comorbidities: Joi.string()
-    .trim()
-    .optional()
-    .allow("", null),
-  allergies: Joi.string()
-    .trim()
-    .optional()
-    .allow("", null),
-  clinical_notes: Joi.string()
-    .trim()
-    .optional()
-    .allow("", null),
+  name: Joi.string().optional().allow("", null),
+  patient_uid: Joi.string().optional().allow("", null),
+  gender: Joi.string().length(1).optional().allow("", null),
+  date_of_birth: Joi.date().required().label("Please enter date of birth"),
+  prefix: Joi.string().regex(/^\d+$/).required().label("Please select prefix"),
+  comorbidities: Joi.string().trim().optional().allow("", null),
+  allergies: Joi.string().trim().optional().allow("", null),
+  clinical_notes: Joi.string().trim().optional().allow("", null),
   diagnosis_type: Joi.number().required(),
-  diagnosis_description: Joi.string()
-    .trim()
-    .max(500)
-    .required(),
+  diagnosis_description: Joi.string().trim().max(500).required(),
   treatment_id: Joi.number()
     .required()
     .label("Incorrect Treatment value selected"),
@@ -83,22 +49,13 @@ const addPatientForm = Joi.object().keys({
     .optional()
     .allow("", null)
     .label("Incorrect Condition value selected"),
-  height: Joi.string()
-    .optional()
-    .allow("", null),
-  weight: Joi.string()
-    .optional()
-    .allow("", null),
-  symptoms: Joi.string()
-    .trim()
-    .optional()
-    .allow("", null),
-  address: Joi.string()
-    .optional()
-    .allow("", null)
+  height: Joi.string().optional().allow("", null),
+  weight: Joi.string().optional().allow("", null),
+  symptoms: Joi.string().trim().optional().allow("", null),
+  address: Joi.string().optional().allow("", null),
 });
 
-const validDOB = date => {
+const validDOB = (date) => {
   return moment().diff(date, "d") <= 0;
 };
 

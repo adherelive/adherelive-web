@@ -5,16 +5,16 @@ export default defineMessages({
     id: "app.blankState.404.message",
     description: "",
     defaultMessage:
-      "The link you clicked may be broken or the page may have been removed or renamed"
+      "The link you clicked may be broken or the page may have been removed or renamed",
   },
   goBack: {
     id: "app.blankState.go.back",
     description: "",
-    defaultMessage: "Go Back"
+    defaultMessage: "Go Back",
   },
   companyName: {
     id: "app.blankState.company.name",
     description: "",
-    defaultMessage: "Adhere.Live"
-  }
+    defaultMessage: "Adhere.Live",
+  },
 });

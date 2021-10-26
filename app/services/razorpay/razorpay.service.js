@@ -4,7 +4,7 @@ class RazorpayService {
   constructor() {
     this.razorpay = new Razorpay({
       key_id: process.config.razorpay.key,
-      key_secret: process.config.razorpay.secret
+      key_secret: process.config.razorpay.secret,
     });
   }
 

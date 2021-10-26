@@ -8,16 +8,14 @@ import { PATH } from "../../constant";
 
 class BlankState extends Component {
   componentDidMount() {
-    const {
-      auth: { authenticated } = {},
-      location: { pathname } = {}
-    } = this.props;
+    const { auth: { authenticated } = {}, location: { pathname } = {} } =
+      this.props;
     if (!authenticated) {
       this.props.history.push(pathname);
     }
   }
 
-  goHome = e => {
+  goHome = (e) => {
     e.preventDefault();
     // this.props.resetUnauthorizedError();
 

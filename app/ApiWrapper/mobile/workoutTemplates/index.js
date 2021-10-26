@@ -15,10 +15,10 @@ class WorkoutTemplateWrapper extends BaseWorkoutTemplate {
     return {
       basic_info: {
         id,
-        name
+        name,
       },
       creator_id,
-      creator_type
+      creator_type,
     };
   };
 
@@ -37,7 +37,7 @@ class WorkoutTemplateWrapper extends BaseWorkoutTemplate {
 
     return {
       ...getBasicInfo(),
-      exercise_detail_ids
+      exercise_detail_ids,
     };
   };
 
@@ -52,12 +52,10 @@ class WorkoutTemplateWrapper extends BaseWorkoutTemplate {
     if (exerciseDetails) {
       for (let index = 0; index < exerciseDetails.length; index++) {
         const exerciseDetail = await ExerciseDetailWrapper({
-          data: exerciseDetails[index]
+          data: exerciseDetails[index],
         });
-        const {
-          exercise_details,
-          repetitions
-        } = await exerciseDetail.getReferenceInfo();
+        const { exercise_details, repetitions } =
+          await exerciseDetail.getReferenceInfo();
         allExerciseDetails = { ...allExerciseDetails, ...exercise_details };
         allRepetitions = { ...allRepetitions, ...repetitions };
       }
@@ -66,11 +64,11 @@ class WorkoutTemplateWrapper extends BaseWorkoutTemplate {
     return {
       workout_templates: {
         [getId()]: {
-          ...(await getAllInfo())
-        }
+          ...(await getAllInfo()),
+        },
       },
       exercise_details: allExerciseDetails,
-      repetitions: allRepetitions
+      repetitions: allRepetitions,
     };
   };
 }

@@ -22,7 +22,7 @@ class FoodItemsService {
       let foodItem = await this.getFoodItem({
         name: food_item_name,
         creator_id,
-        creator_type
+        creator_type,
       });
 
       // if doesn't , create
@@ -31,11 +31,11 @@ class FoodItemsService {
           {
             name: food_item_name,
             creator_id,
-            creator_type
+            creator_type,
           },
           {
             raw: true,
-            transaction
+            transaction,
           }
         );
       }
@@ -47,7 +47,7 @@ class FoodItemsService {
         food_item_id,
         creator_id,
         creator_type,
-        ...rest
+        ...rest,
       };
 
       // detail create
@@ -55,7 +55,7 @@ class FoodItemsService {
       const foodItemDetail =
         (await Database.getModel(foodItemDetailTableName).create(itemData, {
           raw: true,
-          transaction
+          transaction,
         })) || {};
 
       const { id: food_item_detail_id = null } = foodItemDetail || {};
@@ -69,11 +69,11 @@ class FoodItemsService {
     }
   };
 
-  getByData = async data => {
+  getByData = async (data) => {
     try {
       return await Database.getModel(TABLE_NAME).findOne({
         where: data,
-        raw: true
+        raw: true,
       });
     } catch (error) {
       throw error;
@@ -87,16 +87,16 @@ class FoodItemsService {
           [Op.or]: [
             {
               name,
-              creator_type: USER_CATEGORY.ADMIN
+              creator_type: USER_CATEGORY.ADMIN,
             },
             {
               name,
               creator_id,
-              creator_type
-            }
-          ]
+              creator_type,
+            },
+          ],
         },
-        raw: true
+        raw: true,
       });
     } catch (error) {
       throw error;
@@ -107,7 +107,7 @@ class FoodItemsService {
     food_item_id,
     portion_id,
     creator_id,
-    creator_type
+    creator_type,
   }) => {
     try {
       return await Database.getModel(foodItemDetailTableName).findOne({
@@ -116,17 +116,17 @@ class FoodItemsService {
             {
               food_item_id,
               portion_id,
-              creator_type: USER_CATEGORY.ADMIN
+              creator_type: USER_CATEGORY.ADMIN,
             },
             {
               food_item_id,
               portion_id,
               creator_id,
-              creator_type
-            }
-          ]
+              creator_type,
+            },
+          ],
         },
-        raw: true
+        raw: true,
       });
     } catch (error) {
       throw error;
@@ -140,7 +140,7 @@ class FoodItemsService {
     foodItemDetailData,
     toUpdate,
     canUpdateFoodItem,
-    canUpdateFoodItemDetails
+    canUpdateFoodItemDetails,
   }) => {
     const transaction = await Database.initTransaction();
     try {
@@ -148,10 +148,10 @@ class FoodItemsService {
       if (canUpdateFoodItem) {
         await Database.getModel(TABLE_NAME).update(foodItemData, {
           where: {
-            id: food_item_id
+            id: food_item_id,
           },
           raw: true,
-          transaction
+          transaction,
         });
       }
 
@@ -166,10 +166,10 @@ class FoodItemsService {
         foodItemDetail =
           (await Database.getModel(foodItemDetailTableName).update(rest, {
             where: {
-              id: item_detail_id
+              id: item_detail_id,
             },
             raw: true,
-            transaction
+            transaction,
           })) || {};
 
         food_item_detail_id = item_detail_id;
@@ -179,7 +179,7 @@ class FoodItemsService {
             foodItemDetailData,
             {
               raw: true,
-              transaction
+              transaction,
             }
           )) || {};
 
@@ -203,7 +203,7 @@ class FoodItemsService {
         order,
         include: [Database.getModel(foodItemDetailTableName)],
         attributes,
-        raw: true
+        raw: true,
       });
     } catch (error) {
       throw error;
@@ -243,18 +243,18 @@ class FoodItemsService {
           [Op.or]: [
             {
               name: {
-                [Op.like]: `%${name}%`
+                [Op.like]: `%${name}%`,
               },
-              creator_type: USER_CATEGORY.ADMIN
+              creator_type: USER_CATEGORY.ADMIN,
             },
             {
               name: {
-                [Op.like]: `%${name}%`
+                [Op.like]: `%${name}%`,
               },
               creator_id,
-              creator_type
-            }
-          ]
+              creator_type,
+            },
+          ],
         },
         include: [
           {
@@ -262,16 +262,16 @@ class FoodItemsService {
             where: {
               [Op.or]: [
                 {
-                  creator_type: USER_CATEGORY.ADMIN
+                  creator_type: USER_CATEGORY.ADMIN,
                 },
                 {
                   creator_id,
-                  creator_type
-                }
-              ]
-            }
-          }
-        ]
+                  creator_type,
+                },
+              ],
+            },
+          },
+        ],
       });
 
       return JSON.parse(JSON.stringify(records));
@@ -280,18 +280,18 @@ class FoodItemsService {
     }
   };
 
-  findOne = async data => {
+  findOne = async (data) => {
     try {
       const records = await Database.getModel(TABLE_NAME).findOne({
         where: data,
-        include: [Database.getModel(foodItemDetailTableName)]
+        include: [Database.getModel(foodItemDetailTableName)],
       });
 
       /* nested raw true is not allowed by sequelize
-        Links:
-        https://github.com/sequelize/sequelize/issues/3897 (closed)
-        https://github.com/sequelize/sequelize/issues/5193 (open)
-      */
+              Links:
+              https://github.com/sequelize/sequelize/issues/3897 (closed)
+              https://github.com/sequelize/sequelize/issues/5193 (open)
+            */
       return JSON.parse(JSON.stringify(records));
     } catch (error) {
       throw error;

@@ -9,7 +9,7 @@ class TemplateTable extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      loading: false
+      loading: false,
     };
   }
 
@@ -17,7 +17,7 @@ class TemplateTable extends Component {
     const {} = this.props;
   }
 
-  onRowClick = key => event => {
+  onRowClick = (key) => (event) => {
     event.preventDefault();
   };
 
@@ -25,18 +25,18 @@ class TemplateTable extends Component {
     const { onRowClick } = this;
     const { key } = record;
     return {
-      onClick: onRowClick(key)
+      onClick: onRowClick(key),
     };
   };
 
-  onSelectChange = selectedRowKeys => {
+  onSelectChange = (selectedRowKeys) => {
     this.setState({ selectedRows: selectedRowKeys });
   };
 
   getLoadingComponent = () => {
     const antIcon = <Icon type="loading" style={{ fontSize: 24 }} spin />;
     return {
-      indicator: antIcon
+      indicator: antIcon,
     };
   };
 
@@ -59,12 +59,12 @@ class TemplateTable extends Component {
       vital_templates = {},
       repeat_intervals = {},
       duplicateCareplanTemplate,
-      handleOpenEditDrawer
+      handleOpenEditDrawer,
     } = this.props;
 
     console.log("19873781293 care_plan_template_ids", care_plan_template_ids);
 
-    return care_plan_template_ids.map(id => {
+    return care_plan_template_ids.map((id) => {
       return generateRow({
         id,
         authenticated_category,
@@ -82,7 +82,7 @@ class TemplateTable extends Component {
         vital_templates,
         repeat_intervals,
         duplicateCareplanTemplate,
-        handleOpenEditDrawer
+        handleOpenEditDrawer,
       });
     });
   };
@@ -94,7 +94,7 @@ class TemplateTable extends Component {
     console.log("12837919827 loading", { loading });
 
     const templateLocale = {
-      emptyText: formatMessage(messages.emptyTemplateTable)
+      emptyText: formatMessage(messages.emptyTemplateTable),
     };
 
     return (
@@ -105,13 +105,13 @@ class TemplateTable extends Component {
           loading={loading === true ? getLoadingComponent() : false}
           columns={getColumn({
             formatMessage,
-            className: "pointer"
+            className: "pointer",
           })}
           dataSource={getDataSource()}
           scroll={{ x: "100%" }}
           pagination={{
             position: "top",
-            pageSize: 10
+            pageSize: 10,
           }}
           locale={templateLocale}
         />

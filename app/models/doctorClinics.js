@@ -4,7 +4,7 @@ import { TABLE_NAME as doctorTableName } from "./doctors";
 
 export const TABLE_NAME = "doctor_clinics";
 
-export const db = database => {
+export const db = (database) => {
   database.define(
     TABLE_NAME,
     {
@@ -12,30 +12,30 @@ export const db = database => {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
-        type: DataTypes.INTEGER
+        type: DataTypes.INTEGER,
       },
       doctor_id: {
         type: DataTypes.INTEGER,
         allowNull: false,
         references: {
           model: {
-            tableName: doctorTableName
+            tableName: doctorTableName,
           },
-          key: "id"
-        }
+          key: "id",
+        },
       },
       name: {
         type: DataTypes.STRING(200),
-        allowNull: false
+        allowNull: false,
       },
       location: {
         type: DataTypes.STRING(400),
-        allowNull: false
+        allowNull: false,
       },
       details: {
         type: DataTypes.JSON,
-        allowNull: true
-      }
+        allowNull: true,
+      },
     },
     {
       underscored: true,
@@ -49,20 +49,20 @@ export const db = database => {
             location: this.location,
             start_time: this.start_time,
             end_time: this.end_time,
-            details: this.details
+            details: this.details,
           };
-        }
-      }
+        },
+      },
     }
   );
 };
 
-export const associate = database => {
+export const associate = (database) => {
   const { doctor_clinics, doctors } = database.models || {};
 
   // associations here (if any) ...
   doctor_clinics.belongsTo(doctors, {
     foreignKey: "doctor_id",
-    targetKey: "id"
+    targetKey: "id",
   });
 };

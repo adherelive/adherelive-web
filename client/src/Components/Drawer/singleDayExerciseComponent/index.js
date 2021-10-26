@@ -16,11 +16,11 @@ class DayWorkout extends Component {
       addExerciseGroupDrawerVisible: false,
       editExerciseGroupDrawerVisible: false,
       editExerciseGroupDetails: {},
-      selectedExerciseGroupIndex: null
+      selectedExerciseGroupIndex: null,
     };
   }
 
-  formatMessage = data => this.props.intl.formatMessage(data);
+  formatMessage = (data) => this.props.intl.formatMessage(data);
 
   getSetWiseCalorificValue = ({ exercise_detail_id, sets: setVal }) => {
     let calVal = 0;
@@ -31,7 +31,7 @@ class DayWorkout extends Component {
     return calVal;
   };
 
-  addExerciseGroup = async data => {
+  addExerciseGroup = async (data) => {
     // Add Exercise Group onSubmit
 
     // updates workout's completeData for new entry
@@ -39,7 +39,7 @@ class DayWorkout extends Component {
       setFinalDayData,
       completeData,
       total_calories = 0,
-      setNewTotalCal
+      setNewTotalCal,
     } = this.props;
 
     const { exercise_detail_id = null, sets = 1 } = data;
@@ -52,21 +52,19 @@ class DayWorkout extends Component {
     setNewTotalCal(newTotalCalories);
   };
 
-  handleEditExerciseGroupSubmit = async exerciseGroupDrawerData => {
+  handleEditExerciseGroupSubmit = async (exerciseGroupDrawerData) => {
     // updates workout's completeData for updated entry
     this.editExerciseGroup(exerciseGroupDrawerData);
   };
 
-  editExerciseGroup = async exerciseGroupDrawerData => {
-    const {
-      exercise_group_index,
-      editedExerciseGroupData
-    } = exerciseGroupDrawerData;
+  editExerciseGroup = async (exerciseGroupDrawerData) => {
+    const { exercise_group_index, editedExerciseGroupData } =
+      exerciseGroupDrawerData;
     let {
       setFinalDayData,
       completeData,
       total_calories = 0,
-      setNewTotalCal
+      setNewTotalCal,
     } = this.props;
     let timeData = completeData || [];
 
@@ -74,14 +72,14 @@ class DayWorkout extends Component {
       exercise_detail_id = null,
       sets = 1,
       prev_calorific_val = 0,
-      prev_sets = 1
+      prev_sets = 1,
     } = editedExerciseGroupData || {};
 
     console.log("61278312546125461254612", { exerciseGroupDrawerData });
 
     if (timeData.length && timeData[exercise_group_index]) {
       timeData[exercise_group_index] = {
-        ...editedExerciseGroupData
+        ...editedExerciseGroupData,
       };
     }
 
@@ -89,7 +87,7 @@ class DayWorkout extends Component {
 
     const calVal = this.getSetWiseCalorificValue({
       exercise_detail_id,
-      sets
+      sets,
     });
 
     const totalPrevCalVal = prev_calorific_val * prev_sets || 0;
@@ -105,12 +103,16 @@ class DayWorkout extends Component {
       completeData = [],
       time = moment(),
       exercise_details = {},
-      canOnlyView = false
+      canOnlyView = false,
     } = this.props;
 
     for (let i = 0; i < completeData.length; i++) {
-      const { exercise_group_id = null, sets, exercise_detail_id, notes } =
-        completeData[i] || {};
+      const {
+        exercise_group_id = null,
+        sets,
+        exercise_detail_id,
+        notes,
+      } = completeData[i] || {};
 
       const { basic_info: { repetition_id = null } = {} } =
         exercise_details[exercise_detail_id] || {};
@@ -123,7 +125,7 @@ class DayWorkout extends Component {
         repetition_id,
         sets,
         notes,
-        exercise_group_id
+        exercise_group_id,
       });
 
       const Comp = (
@@ -166,7 +168,7 @@ class DayWorkout extends Component {
 
   openAddExerciseGroupDrawer = () => {
     this.setState({
-      addExerciseGroupDrawerVisible: true // open add exercise group drawer
+      addExerciseGroupDrawerVisible: true, // open add exercise group drawer
     });
   };
 
@@ -174,7 +176,7 @@ class DayWorkout extends Component {
     this.setState({ addExerciseGroupDrawerVisible: false });
   };
 
-  handleOpenEditExerciseGroupDrawer = data => () => {
+  handleOpenEditExerciseGroupDrawer = (data) => () => {
     const { exercise_group_id = null, ...rest } = data || {};
     let editData = { ...rest };
 
@@ -184,51 +186,54 @@ class DayWorkout extends Component {
     }
     this.setState({
       editExerciseGroupDrawerVisible: true,
-      editExerciseGroupDetails: editData
+      editExerciseGroupDetails: editData,
     });
   };
 
   closeEditExerciseGroupDrawer = () => {
     this.setState({
       editExerciseGroupDrawerVisible: false,
-      editExerciseGroupDetails: {}
+      editExerciseGroupDetails: {},
     });
   };
 
-  handleDeleteExerciseGroup = ({ exercise_group_index }) => async () => {
-    const {
-      completeData,
-      setDeletedExerciseGroupId,
-      exercise_details,
-      total_calories = 0,
-      setNewTotalCal,
-      setFinalDayData
-    } = this.props;
+  handleDeleteExerciseGroup =
+    ({ exercise_group_index }) =>
+    async () => {
+      const {
+        completeData,
+        setDeletedExerciseGroupId,
+        exercise_details,
+        total_calories = 0,
+        setNewTotalCal,
+        setFinalDayData,
+      } = this.props;
 
-    let timeData = completeData || [];
-    const exerciseGroup = timeData[exercise_group_index] || {};
+      let timeData = completeData || [];
+      const exerciseGroup = timeData[exercise_group_index] || {};
 
-    let newCompleteData = completeData;
+      let newCompleteData = completeData;
 
-    const { exercise_detail_id = null, sets = 1 } = exerciseGroup || {};
+      const { exercise_detail_id = null, sets = 1 } = exerciseGroup || {};
 
-    const { calorific_value = 0 } = exercise_details[exercise_detail_id] || {};
-    const newCalories = total_calories - calorific_value * sets;
+      const { calorific_value = 0 } =
+        exercise_details[exercise_detail_id] || {};
+      const newCalories = total_calories - calorific_value * sets;
 
-    const { exercise_group_id = null } = exerciseGroup;
+      const { exercise_group_id = null } = exerciseGroup;
 
-    if (exercise_group_id) {
-      setDeletedExerciseGroupId(exercise_group_id);
-    }
+      if (exercise_group_id) {
+        setDeletedExerciseGroupId(exercise_group_id);
+      }
 
-    if (Object.keys(exerciseGroup).length) {
-      timeData.splice(exercise_group_index, 1);
-    }
+      if (Object.keys(exerciseGroup).length) {
+        timeData.splice(exercise_group_index, 1);
+      }
 
-    newCompleteData = timeData;
-    await setFinalDayData(newCompleteData);
-    setNewTotalCal(newCalories);
-  };
+      newCompleteData = timeData;
+      await setFinalDayData(newCompleteData);
+      setNewTotalCal(newCalories);
+    };
 
   getExerciseItemComponent = ({
     exercise_group_index,
@@ -236,7 +241,7 @@ class DayWorkout extends Component {
     repetition_id,
     sets,
     notes,
-    exercise_group_id
+    exercise_group_id,
   }) => {
     const { handleOpenEditExerciseGroupDrawer } = this;
 
@@ -244,7 +249,7 @@ class DayWorkout extends Component {
       exercises,
       exercise_details,
       repetitions,
-      canOnlyView = false
+      canOnlyView = false,
     } = this.props;
 
     const { basic_info: { exercise_id = null, repetition_value = null } = {} } =
@@ -272,7 +277,7 @@ class DayWorkout extends Component {
                     detail_id: exercise_detail_id,
                     exercise_id,
                     notes,
-                    exercise_group_id
+                    exercise_group_id,
                   })}
                 />
               )}
@@ -282,7 +287,7 @@ class DayWorkout extends Component {
                 <DeleteOutlined
                   className={"pointer align-self-end ml10 "}
                   onClick={this.handleDeleteExerciseGroup({
-                    exercise_group_index
+                    exercise_group_index,
                   })}
                   style={{ fontSize: "18px", color: "#6d7278" }}
                 />
@@ -310,13 +315,13 @@ class DayWorkout extends Component {
       addExerciseGroupDrawerVisible = false,
       editExerciseGroupDrawerVisible,
       editExerciseGroupDetails,
-      selectedExerciseGroupIndex = null
+      selectedExerciseGroupIndex = null,
     } = this.state;
 
     const {
       closeAddExerciseGroupDrawer,
       closeEditExerciseGroupDrawer,
-      addExerciseGroup
+      addExerciseGroup,
     } = this;
 
     return (

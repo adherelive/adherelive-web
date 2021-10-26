@@ -12,8 +12,8 @@ class CouncilWrapper extends BaseCouncil {
     return {
       basic_info: {
         id,
-        name
-      }
+        name,
+      },
     };
   };
 }

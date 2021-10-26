@@ -16,24 +16,24 @@ class DoctorService {
         include: [
           {
             model: Database.getModel(userTableName),
-            paranoid
+            paranoid,
           },
-          Database.getModel(specialityTableName)
-        ]
+          Database.getModel(specialityTableName),
+        ],
       });
     } catch (error) {
       throw error;
     }
   };
 
-  getAllDoctorByData = async data => {
+  getAllDoctorByData = async (data) => {
     try {
       const doctor = await Database.getModel(TABLE_NAME).findAll({
         where: data,
         include: [
           Database.getModel(userTableName),
-          Database.getModel(specialityTableName)
-        ]
+          Database.getModel(specialityTableName),
+        ],
       });
       return doctor;
     } catch (error) {
@@ -41,11 +41,11 @@ class DoctorService {
     }
   };
 
-  addDoctor = async data => {
+  addDoctor = async (data) => {
     const transaction = await Database.initTransaction();
     try {
       const doctor = await Database.getModel(TABLE_NAME).create(data, {
-        transaction
+        transaction,
       });
 
       await transaction.commit();
@@ -61,9 +61,9 @@ class DoctorService {
     try {
       const doctor = await Database.getModel(TABLE_NAME).update(data, {
         where: {
-          id
+          id,
         },
-        transaction
+        transaction,
       });
       await transaction.commit();
       return doctor;
@@ -76,7 +76,7 @@ class DoctorService {
   getAllDoctors = async () => {
     try {
       const doctors = await Database.getModel(TABLE_NAME).findAll({
-        include: Database.getModel(specialityTableName)
+        include: Database.getModel(specialityTableName),
       });
       return doctors;
     } catch (err) {
@@ -84,7 +84,7 @@ class DoctorService {
     }
   };
 
-  createNewWatchlistRecord = async watchlist_data => {
+  createNewWatchlistRecord = async (watchlist_data) => {
     const transaction = await Database.initTransaction();
     try {
       const newWatchlistRecord = await Database.getModel(
@@ -99,13 +99,13 @@ class DoctorService {
     }
   };
 
-  getAllWatchlist = async data => {
+  getAllWatchlist = async (data) => {
     try {
       const watchlistRecord = await Database.getModel(
         watchlistTableName
       ).findAll({
         where: data,
-        raw: true
+        raw: true,
       });
       return watchlistRecord;
     } catch (error) {
@@ -113,7 +113,7 @@ class DoctorService {
     }
   };
 
-  deleteWatchlistRecord = async watchlist_data => {
+  deleteWatchlistRecord = async (watchlist_data) => {
     const transaction = await Database.initTransaction();
     try {
       const { patient_id, doctor_id, user_role_id } = watchlist_data;
@@ -123,8 +123,8 @@ class DoctorService {
         where: {
           patient_id,
           doctor_id,
-          user_role_id
-        }
+          user_role_id,
+        },
       });
       await transaction.commit();
       return deletedWatchlistDetails;
@@ -134,13 +134,13 @@ class DoctorService {
     }
   };
 
-  getDoctorByUserId = async user_id => {
+  getDoctorByUserId = async (user_id) => {
     try {
       const doctor = await Database.getModel(TABLE_NAME).findOne({
         where: {
-          user_id
+          user_id,
         },
-        include: Database.getModel(specialityTableName)
+        include: Database.getModel(specialityTableName),
       });
       return doctor;
     } catch (error) {
@@ -187,7 +187,7 @@ class DoctorService {
   //   }
   // };
 
-  search = async value => {
+  search = async (value) => {
     try {
       let firstName = value;
       let middleName = value;
@@ -210,28 +210,28 @@ class DoctorService {
           [Op.or]: [
             {
               first_name: {
-                [Op.like]: `%${firstName}%`
-              }
+                [Op.like]: `%${firstName}%`,
+              },
             },
             {
               middle_name: {
                 [Op.or]: [
                   { [Op.like]: `%${middleName}%` },
-                  { [Op.like]: `%${firstName}%` }
-                ]
-              }
+                  { [Op.like]: `%${firstName}%` },
+                ],
+              },
             },
             {
               last_name: {
-                [Op.like]: `%${lastName}%`
-              }
-            }
-          ]
-        }
+                [Op.like]: `%${lastName}%`,
+              },
+            },
+          ],
+        },
       });
       console.log("329847562389462364872384122 ===============>", {
         doctor,
-        value
+        value,
       });
 
       return doctor;
@@ -246,7 +246,7 @@ class DoctorService {
         where,
         order,
         attributes,
-        raw: true
+        raw: true,
       });
     } catch (error) {
       throw error;
@@ -262,27 +262,27 @@ class DoctorService {
           [Op.or]: [
             {
               first_name: {
-                [Op.like]: `%${firstName}%`
-              }
+                [Op.like]: `%${firstName}%`,
+              },
             },
             {
               middle_name: {
-                [Op.like]: `%${middleName}%`
-              }
+                [Op.like]: `%${middleName}%`,
+              },
             },
             {
               last_name: {
-                [Op.like]: `%${lastName}%`
-              }
-            }
-          ]
+                [Op.like]: `%${lastName}%`,
+              },
+            },
+          ],
         },
         include: [
           {
-            model: Database.getModel(userTableName)
-          }
+            model: Database.getModel(userTableName),
+          },
         ],
-        limit
+        limit,
       });
 
       return doctor;

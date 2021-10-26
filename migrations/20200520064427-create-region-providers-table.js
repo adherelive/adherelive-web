@@ -5,62 +5,62 @@ import { DB_TABLES } from "../constant";
 module.exports = {
   up: (queryInterface, Sequelize) => {
     /*
-      Add altering commands here.
-      Return a promise to correctly handle asynchronicity.
+          Add altering commands here.
+          Return a promise to correctly handle asynchronicity.
 
-      Example:
-      return queryInterface.createTable('users', { id: Sequelize.INTEGER });
-    */
+          Example:
+          return queryInterface.createTable('users', { id: Sequelize.INTEGER });
+        */
     return queryInterface.createTable(DB_TABLES.REGION_PROVIDERS, {
       id: {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
-        type: Sequelize.INTEGER
+        type: Sequelize.INTEGER,
       },
       region_id: {
         type: Sequelize.INTEGER,
         allowNull: false,
         references: {
           model: {
-            tableName: DB_TABLES.REGIONS
+            tableName: DB_TABLES.REGIONS,
           },
-          key: "id"
-        }
+          key: "id",
+        },
       },
       provider_id: {
         type: Sequelize.INTEGER,
         allowNull: false,
         references: {
           model: {
-            tableName: DB_TABLES.PROVIDERS
+            tableName: DB_TABLES.PROVIDERS,
           },
-          key: "id"
-        }
+          key: "id",
+        },
       },
       created_at: {
         allowNull: false,
-        type: Sequelize.DATE
+        type: Sequelize.DATE,
       },
       updated_at: {
         allowNull: false,
-        type: Sequelize.DATE
+        type: Sequelize.DATE,
       },
       deleted_at: {
         allowNull: true,
-        type: Sequelize.DATE
-      }
+        type: Sequelize.DATE,
+      },
     });
   },
 
   down: (queryInterface, Sequelize) => {
     /*
-      Add reverting commands here.
-      Return a promise to correctly handle asynchronicity.
+          Add reverting commands here.
+          Return a promise to correctly handle asynchronicity.
 
-      Example:
-      return queryInterface.dropTable('users');
-    */
+          Example:
+          return queryInterface.dropTable('users');
+        */
     return queryInterface.dropTable(DB_TABLES.REGION_PROVIDERS);
-  }
+  },
 };

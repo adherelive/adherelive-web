@@ -4,16 +4,16 @@ import UserConsent from "../../../Components/Pages/userConsentPage";
 import { giveUserConsent, getInitialData } from "../../../modules/auth";
 import { getTermsAndPolicy } from "../../../modules/otherDetails";
 
-const mapStateToProps = state => {
+const mapStateToProps = (state) => {
   const {} = state;
   return {};
 };
 
-const mapDispatchToProps = dispatch => {
+const mapDispatchToProps = (dispatch) => {
   return {
-    giveUserConsent: payload => dispatch(giveUserConsent(payload)),
+    giveUserConsent: (payload) => dispatch(giveUserConsent(payload)),
     getInitialData: () => dispatch(getInitialData()),
-    getTermsAndPolicy: type => dispatch(getTermsAndPolicy(type))
+    getTermsAndPolicy: (type) => dispatch(getTermsAndPolicy(type)),
   };
 };
 

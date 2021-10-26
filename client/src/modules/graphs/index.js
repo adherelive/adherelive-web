@@ -4,7 +4,7 @@ import {
   REQUEST_TYPE,
   USER_CATEGORY,
   PATH,
-  ONBOARDING_STATUS
+  ONBOARDING_STATUS,
 } from "../../constant";
 import { doRequest } from "../../Helper/network";
 
@@ -23,7 +23,7 @@ function graphReducer(state, data) {
   if (charts) {
     return {
       ...state,
-      ...charts
+      ...charts,
     };
   } else {
     return state;
@@ -32,29 +32,29 @@ function graphReducer(state, data) {
 
 export const getGraphs = () => {
   let response = {};
-  return async dispatch => {
+  return async (dispatch) => {
     try {
       dispatch({ type: GET_GRAPHS });
 
       response = await doRequest({
         method: REQUEST_TYPE.GET,
-        url: Graphs.getGraphsUrl()
+        url: Graphs.getGraphsUrl(),
       });
 
       const {
         status,
-        payload: { error = "", data: { charts = {} } = {} } = {}
+        payload: { error = "", data: { charts = {} } = {} } = {},
       } = response || {};
 
       if (status === false) {
         dispatch({
           type: GET_GRAPHS_COMPLETED_WITH_ERROR,
-          payload: { error }
+          payload: { error },
         });
       } else if (status === true) {
         dispatch({
           type: GET_GRAPHS_COMPLETED,
-          data: { charts }
+          data: { charts },
         });
       }
     } catch (err) {
@@ -66,32 +66,32 @@ export const getGraphs = () => {
   };
 };
 
-export const updateGraphs = payload => {
+export const updateGraphs = (payload) => {
   let response = {};
-  return async dispatch => {
+  return async (dispatch) => {
     try {
       dispatch({ type: UPDATE_GRAPHS });
 
       response = await doRequest({
         method: REQUEST_TYPE.POST,
         url: Graphs.addGraphsUrl(),
-        data: payload
+        data: payload,
       });
 
       const {
         status,
-        payload: { error = "", data: { charts = {} } = {} } = {}
+        payload: { error = "", data: { charts = {} } = {} } = {},
       } = response || {};
 
       if (status === false) {
         dispatch({
           type: UPDATE_GRAPHS_COMPLETED_WITH_ERROR,
-          payload: { error }
+          payload: { error },
         });
       } else if (status === true) {
         dispatch({
           type: UPDATE_GRAPHS_COMPLETED,
-          data: { charts }
+          data: { charts },
         });
       }
     } catch (err) {

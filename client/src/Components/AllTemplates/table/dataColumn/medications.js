@@ -9,18 +9,18 @@ import {
   MEDICATION_TIMING_MINUTES,
   TABLET,
   SYRUP,
-  MEDICINE_FORM_TYPE
+  MEDICINE_FORM_TYPE,
 } from "../../../../constant";
 import moment from "moment";
 import TabletIcon from "../../../../Assets/images/tabletIcon3x.png";
 import InjectionIcon from "../../../../Assets/images/injectionIcon3x.png";
 import SyrupIcon from "../../../../Assets/images/pharmacy.png";
 
-export default props => {
+export default (props) => {
   const {
     template_medication_ids,
     medicationsData = {},
-    medicines = {}
+    medicines = {},
   } = props;
   //   const { medicationsData : { basic_info: { medicine_id  = '' } = {} } = {}  , template_medication_ids } = props || {};
 
@@ -39,8 +39,8 @@ export default props => {
         when_to_take = "",
         start_date = moment(),
         medicine_type = "1",
-        repeat_days = []
-      } = {}
+        repeat_days = [],
+      } = {},
     } = medicationsData[key];
     const medicineType = MEDICINE_FORM_TYPE[medicine_type] || "";
     const { basic_info: { name: medicine = "" } = {} } =
@@ -75,7 +75,7 @@ export default props => {
         let newMinDiff = moment()
           .set({
             hour: MEDICATION_TIMING_HOURS[wtt],
-            minute: MEDICATION_TIMING_MINUTES[wtt]
+            minute: MEDICATION_TIMING_MINUTES[wtt],
           })
           .diff(moment());
         minDiff =

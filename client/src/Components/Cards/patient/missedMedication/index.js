@@ -3,9 +3,9 @@ import moment from "moment";
 import messages from "../messages";
 
 const getTimings = (timings = {}) => {
-  return Object.keys(timings).map(date => {
+  return Object.keys(timings).map((date) => {
     const startTimeArray = timings[date] || {};
-    const timesArr = startTimeArray.map(timeObj => {
+    const timesArr = startTimeArray.map((timeObj) => {
       const { end_time } = timeObj || {};
       return moment(end_time).format("hh:mm A");
     });
@@ -18,7 +18,7 @@ const getTimings = (timings = {}) => {
   });
 };
 
-export default props => {
+export default (props) => {
   const { formatMessage, onClick, name, time, medicineName } = props;
   return (
     <div className="bw-cool-grey br5 mb10 p10">

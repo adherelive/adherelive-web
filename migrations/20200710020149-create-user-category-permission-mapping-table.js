@@ -11,7 +11,7 @@ module.exports = {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
-        type: Sequelize.INTEGER
+        type: Sequelize.INTEGER,
       },
       category: {
         type: Sequelize.ENUM,
@@ -20,35 +20,35 @@ module.exports = {
           USER_CATEGORY.DOCTOR,
           USER_CATEGORY.ADMIN,
           USER_CATEGORY.CARE_TAKER,
-          USER_CATEGORY.PROVIDER
-        ]
+          USER_CATEGORY.PROVIDER,
+        ],
       },
       permission_id: {
         type: Sequelize.INTEGER,
         allowNull: false,
         references: {
           model: {
-            tableName: permissionTableName
+            tableName: permissionTableName,
           },
-          key: "id"
-        }
+          key: "id",
+        },
       },
       created_at: {
         allowNull: false,
-        type: Sequelize.DATE
+        type: Sequelize.DATE,
       },
       updated_at: {
         allowNull: false,
-        type: Sequelize.DATE
+        type: Sequelize.DATE,
       },
       deleted_at: {
         allowNull: true,
-        type: Sequelize.DATE
-      }
+        type: Sequelize.DATE,
+      },
     });
   },
 
   down: (queryInterface, Sequelize) => {
     return queryInterface.dropTable(TABLE_NAME);
-  }
+  },
 };

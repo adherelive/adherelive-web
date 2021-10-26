@@ -4,12 +4,12 @@ import DoctorConsultationFeeTable from "../../Components/DoctorConsultationFee/t
 import { authDoctorSelector } from "../../modules/doctors/selectors";
 import {
   getDoctorPaymentProduct,
-  deleteDoctorPaymentProduct
+  deleteDoctorPaymentProduct,
 } from "../../modules/doctors";
 import { open } from "../../modules/drawer";
 import { DRAWER } from "../../constant";
 
-const mapStateToProps = state => {
+const mapStateToProps = (state) => {
   const {
     doctors = {},
     auth = {},
@@ -18,8 +18,8 @@ const mapStateToProps = state => {
     auth: {
       authPermissions = [],
       authenticated_user = 1,
-      authenticated_category
-    } = {}
+      authenticated_category,
+    } = {},
   } = state;
 
   const auth_doctor_id = authDoctorSelector(state);
@@ -33,17 +33,17 @@ const mapStateToProps = state => {
     //doctors,
     authPermissions,
     authenticated_user,
-    authenticated_category
+    authenticated_category,
   };
 };
 
-const mapDispatchToProps = dispatch => {
+const mapDispatchToProps = (dispatch) => {
   return {
-    getDoctorPaymentProduct: data => dispatch(getDoctorPaymentProduct(data)),
-    openConsultationFeeDrawer: payload =>
+    getDoctorPaymentProduct: (data) => dispatch(getDoctorPaymentProduct(data)),
+    openConsultationFeeDrawer: (payload) =>
       dispatch(open({ type: DRAWER.ADD_CONSULTATION_FEE, payload })),
-    deleteDoctorPaymentProduct: data =>
-      dispatch(deleteDoctorPaymentProduct(data))
+    deleteDoctorPaymentProduct: (data) =>
+      dispatch(deleteDoctorPaymentProduct(data)),
   };
 };
 

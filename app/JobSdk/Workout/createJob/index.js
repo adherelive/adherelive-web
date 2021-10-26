@@ -8,7 +8,7 @@ import UserDeviceWrapper from "../../../ApiWrapper/mobile/userDevice";
 import {
   EVENT_TYPE,
   NOTIFICATION_VERB,
-  DEFAULT_PROVIDER
+  DEFAULT_PROVIDER,
 } from "../../../../constant";
 
 class CreateJob extends WorkoutJob {
@@ -23,8 +23,8 @@ class CreateJob extends WorkoutJob {
       actor: {
         id: actorId,
         user_role_id,
-        details: { name, category: actorCategory } = {}
-      } = {}
+        details: { name, category: actorCategory } = {},
+      } = {},
     } = getWorkoutData() || {};
 
     const templateData = [];
@@ -34,8 +34,8 @@ class CreateJob extends WorkoutJob {
     const { rows: userRoles = [] } =
       (await UserRoleService.findAndCountAll({
         where: {
-          id: participants
-        }
+          id: participants,
+        },
       })) || {};
 
     let providerId = null;
@@ -54,14 +54,14 @@ class CreateJob extends WorkoutJob {
     let providerName = DEFAULT_PROVIDER;
     if (providerId) {
       const provider = await ProviderService.getProviderByData({
-        id: providerId
+        id: providerId,
       });
       const { name } = provider || {};
       providerName = name;
     }
 
     const userDevices = await UserDeviceService.getAllDeviceByData({
-      user_id: userIds
+      user_id: userIds,
     });
 
     if (userDevices.length > 0) {
@@ -76,15 +76,15 @@ class CreateJob extends WorkoutJob {
       app_id: process.config.one_signal.app_id,
       headings: { en: `Workout Created (${providerName})` },
       contents: {
-        en: `${name}(${actorCategory}) has created a workout with you. Tap here to know more!`
+        en: `${name}(${actorCategory}) has created a workout with you. Tap here to know more!`,
       },
       include_player_ids: [...playerIds],
       priority: 10,
       android_channel_id: process.config.one_signal.urgent_channel_id,
       data: {
         url: `/${NOTIFICATION_VERB.WORKOUT_CREATION}`,
-        params: getWorkoutData()
-      }
+        params: getWorkoutData(),
+      },
     });
 
     return templateData;
@@ -95,7 +95,7 @@ class CreateJob extends WorkoutJob {
     const {
       participants = [],
       actor: { id: actorId, user_role_id } = {},
-      event_id
+      event_id,
     } = getWorkoutData() || {};
 
     const templateData = [];
@@ -112,7 +112,7 @@ class CreateJob extends WorkoutJob {
           verb: `${NOTIFICATION_VERB.WORKOUT_CREATION}:${currentTimeStamp}`,
           event: EVENT_TYPE.WORKOUT,
           time: currentTime,
-          create_time: `${currentTime}`
+          create_time: `${currentTime}`,
         });
       }
     }

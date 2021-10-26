@@ -9,7 +9,7 @@ class ProviderAccountDetails extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      noAccountDetails: true
+      noAccountDetails: true,
     };
   }
 
@@ -28,14 +28,14 @@ class ProviderAccountDetails extends Component {
     this.handleGetAccountDetails();
   }
 
-  formatMessage = data => this.props.intl.formatMessage(data);
+  formatMessage = (data) => this.props.intl.formatMessage(data);
 
   async handleGetAccountDetails() {
     try {
       const {
         getAccountDetails,
         providers = {},
-        authenticated_user = {}
+        authenticated_user = {},
       } = this.props;
       let provider_id = null;
 
@@ -52,12 +52,12 @@ class ProviderAccountDetails extends Component {
       const {
         status,
         payload: { data: { users = {}, account_details = {} } = {} } = {},
-        statusCode
+        statusCode,
       } = response || {};
 
       if (status && Object.keys(account_details).length > 0) {
         this.setState({
-          noAccountDetails: false
+          noAccountDetails: false,
         });
       }
     } catch (err) {
@@ -70,7 +70,7 @@ class ProviderAccountDetails extends Component {
     const { account_details } = this.props;
     let details = [];
 
-    const accountDetails = Object.keys(account_details).map(account_id => {
+    const accountDetails = Object.keys(account_details).map((account_id) => {
       const {
         basic_info: {
           id,
@@ -81,8 +81,8 @@ class ProviderAccountDetails extends Component {
           account_mobile_number,
           prefix,
           upi_id,
-          in_use = false
-        } = {}
+          in_use = false,
+        } = {},
       } = account_details[account_id] || {};
 
       return (

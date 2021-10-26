@@ -13,7 +13,7 @@ export default async (payload = {}) => {
     const { link } = payload;
     const data = {
       $desktop_url: `${temp_app_link}/verify/${link}`,
-      data: { type: EVENT_TYPE.INVITATION, link }
+      data: { type: EVENT_TYPE.INVITATION, link },
     };
     // console.log("=======================", event_type, payload);
     // switch (event_type) {

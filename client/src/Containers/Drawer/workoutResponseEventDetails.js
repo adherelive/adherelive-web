@@ -6,7 +6,7 @@ import { getWorkoutScheduleEventDetails } from "../../modules/workouts";
 import { close } from "../../modules/drawer";
 import { DRAWER } from "../../constant";
 
-const mapStateToProps = state => {
+const mapStateToProps = (state) => {
   const {
     workouts = {},
     schedule_events = {},
@@ -17,7 +17,7 @@ const mapStateToProps = state => {
     exercise_details = {},
     exercise_contents = {},
     workout_exercise_groups = [],
-    repetitions = {}
+    repetitions = {},
   } = state;
 
   return {
@@ -30,15 +30,15 @@ const mapStateToProps = state => {
     exercise_details,
     exercise_contents,
     workout_exercise_groups,
-    repetitions
+    repetitions,
   };
 };
 
-const mapDispatchToProps = dispatch => {
+const mapDispatchToProps = (dispatch) => {
   return {
     close: () => dispatch(close()),
-    getWorkoutScheduleEventDetails: schedule_event_id =>
-      dispatch(getWorkoutScheduleEventDetails(schedule_event_id))
+    getWorkoutScheduleEventDetails: (schedule_event_id) =>
+      dispatch(getWorkoutScheduleEventDetails(schedule_event_id)),
   };
 };
 

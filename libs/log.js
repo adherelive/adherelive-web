@@ -8,7 +8,7 @@ class Log {
       "------------------------------------------------------------------------------------------------------";
   }
 
-  fileName = filename => {
+  fileName = (filename) => {
     this.source = filename;
     return this;
   };
@@ -28,7 +28,7 @@ class Log {
 
   objectInfo = (msg, obj) => {
     let data = "";
-    Object.keys(obj).forEach(prop => {
+    Object.keys(obj).forEach((prop) => {
       data += `${prop} : ${obj[prop]}\n`;
     });
 
@@ -81,7 +81,7 @@ class Log {
       4000: "",
       5000: "",
       6000: "",
-      7000: ""
+      7000: "",
     };
     return statement[code];
   }
@@ -132,6 +132,6 @@ class Log {
   }
 }
 
-module.exports = filename => {
+module.exports = (filename) => {
   return new Log(filename);
 };

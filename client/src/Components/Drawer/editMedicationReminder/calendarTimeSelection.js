@@ -38,7 +38,7 @@ class CalendarComponent extends Component {
     onEventDurationChange(start, end);
   };
 
-  eventDragStop = event => {};
+  eventDragStop = (event) => {};
 
   componentDidMount() {
     this.adjustCurrentEvent();
@@ -53,7 +53,7 @@ class CalendarComponent extends Component {
     if (currentEvent && currentEvent.length > 0) {
       currentEvent[0].scrollIntoView({
         // behavior: "smooth",
-        block: "center"
+        block: "center",
       });
     }
   };
@@ -66,7 +66,7 @@ class CalendarComponent extends Component {
       eventResize,
       eventResizeStop,
       eventResizeStart,
-      eventDrop
+      eventDrop,
     } = this;
     return (
       <div id="12717728812718t27182t1">
@@ -74,7 +74,7 @@ class CalendarComponent extends Component {
           header={{
             left: "",
             center: "",
-            right: ""
+            right: "",
           }}
           defaultDate={event.start ? event.start : null}
           events={event.start ? [event, ...bookedEvents] : []}
@@ -100,7 +100,7 @@ class CalendarTimeSelection extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      bookedEvents: []
+      bookedEvents: [],
     };
   }
 
@@ -109,13 +109,11 @@ class CalendarTimeSelection extends Component {
   }
 
   componentDidUpdate(prevProps, prevState) {
-    const {
-      startDate,
-      otherUser: { basicInfo: { _id } = {} } = {}
-    } = this.props;
+    const { startDate, otherUser: { basicInfo: { _id } = {} } = {} } =
+      this.props;
     const {
       startDate: prevDate,
-      otherUser: { basicInfo: { _id: prevUser } = {} } = {}
+      otherUser: { basicInfo: { _id: prevUser } = {} } = {},
     } = prevProps;
 
     if (prevUser !== _id || prevDate !== startDate) {
@@ -127,7 +125,7 @@ class CalendarTimeSelection extends Component {
     const {
       startDate,
       otherUser: { basicInfo: { _id } = {} } = {},
-      eventMode
+      eventMode,
     } = this.props;
 
     if (
@@ -141,15 +139,15 @@ class CalendarTimeSelection extends Component {
         url: getBookedSlotsURL(),
         params: {
           startDate: startDate.clone().format("YYYY-MM-DD"),
-          userId: _id
-        }
+          userId: _id,
+        },
       });
 
       const { status, payload = {} } = response;
       if (status) {
         const { data: { bookedSlots } = [] } = payload;
         //for more appointments option got to https://fullcalendar.io/docs/event-parsing
-        const bookedEvents = bookedSlots.map(event => {
+        const bookedEvents = bookedSlots.map((event) => {
           const { start, end } = event;
           return {
             start,
@@ -157,7 +155,7 @@ class CalendarTimeSelection extends Component {
             editable: false,
             startEditable: false,
             durationEditable: false,
-            className: "booked"
+            className: "booked",
           };
         });
         this.setState({ bookedEvents });
@@ -165,14 +163,14 @@ class CalendarTimeSelection extends Component {
     }
   };
 
-  formatMessage = messageId => {
+  formatMessage = (messageId) => {
     const {
-      intl: { formatMessage }
+      intl: { formatMessage },
     } = this.props;
     return formatMessage(messageId);
   };
 
-  getParentNode = t => t.parentNode;
+  getParentNode = (t) => t.parentNode;
 
   render() {
     const {
@@ -187,8 +185,8 @@ class CalendarTimeSelection extends Component {
       onNext,
       disabled,
       otherUser: {
-        basicInfo: { name, profilePicLink = userPlaceHolder } = {}
-      } = {}
+        basicInfo: { name, profilePicLink = userPlaceHolder } = {},
+      } = {},
     } = this.props;
     const { formatMessage } = this;
 
@@ -200,7 +198,7 @@ class CalendarTimeSelection extends Component {
       event = {
         start: eventStartTime,
         end: eventEndTime,
-        className: "current"
+        className: "current",
       };
     }
 
@@ -209,7 +207,7 @@ class CalendarTimeSelection extends Component {
         ...event,
         editable: false,
         startEditable: false,
-        durationEditable: false
+        durationEditable: false,
       };
     }
 

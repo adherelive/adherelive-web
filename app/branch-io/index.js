@@ -7,7 +7,7 @@ export default async function createLink(data = {}) {
     // WRITE DEFAULT ANDROID AND IOS REDIRECT
     const res = await axios.post(process.config.branch_io.base_url, {
       branch_key: process.config.branch_io.key,
-      data
+      data,
     });
 
     console.log("dara====", res);

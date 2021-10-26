@@ -6,13 +6,13 @@ import { open } from "../../modules/drawer";
 import { getMedications } from "../../modules/medications";
 import { DRAWER } from "../../constant";
 
-const mapStateToProps = state => {
+const mapStateToProps = (state) => {
   const {
     medications = {},
     auth: { auth_role = null } = {},
     pages: { medication_ids = [] } = {},
     care_plans = {},
-    medicines = {}
+    medicines = {},
   } = state;
 
   return {
@@ -20,18 +20,18 @@ const mapStateToProps = state => {
     medication_ids,
     care_plans,
     medicines,
-    auth_role
+    auth_role,
   };
 };
 
-const mapDispatchToProps = dispatch => {
+const mapDispatchToProps = (dispatch) => {
   return {
-    getPatientMedications: id => () => dispatch(getMedications(id)),
-    editMedicationDrawer: payload =>
+    getPatientMedications: (id) => () => dispatch(getMedications(id)),
+    editMedicationDrawer: (payload) =>
       dispatch(open({ type: DRAWER.EDIT_MEDICATION, payload })),
-    medicationResponseDrawer: payload =>
+    medicationResponseDrawer: (payload) =>
       dispatch(open({ type: DRAWER.MEDICATION_RESPONSE_TIMELINE, payload })),
-    getMedications: id => dispatch(getMedications(id))
+    getMedications: (id) => dispatch(getMedications(id)),
   };
 };
 
@@ -41,13 +41,13 @@ const mergeProps = (stateProps, dispatchProps, ownProps) => {
     // medication_ids,
     care_plans,
     medicines,
-    auth_role
+    auth_role,
   } = stateProps;
 
   const {
     getPatientMedications,
     editMedicationDrawer,
-    medicationResponseDrawer
+    medicationResponseDrawer,
   } = dispatchProps;
 
   const { patientId, carePlanId } = ownProps;
@@ -62,7 +62,7 @@ const mergeProps = (stateProps, dispatchProps, ownProps) => {
     editMedicationDrawer,
     medicationResponseDrawer,
     medicines,
-    auth_role
+    auth_role,
   };
 };
 

@@ -13,8 +13,8 @@ module.exports = {
         EVENT_TYPE.VITALS,
         EVENT_TYPE.CARE_PLAN_ACTIVATION,
         EVENT_TYPE.DIET,
-        EVENT_TYPE.WORKOUT
-      ]
+        EVENT_TYPE.WORKOUT,
+      ],
     });
   },
 
@@ -26,8 +26,8 @@ module.exports = {
         EVENT_TYPE.REMINDER,
         EVENT_TYPE.MEDICATION_REMINDER,
         EVENT_TYPE.VITALS,
-        EVENT_TYPE.CARE_PLAN_ACTIVATION
-      ]
+        EVENT_TYPE.CARE_PLAN_ACTIVATION,
+      ],
     });
-  }
+  },
 };

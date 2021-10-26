@@ -9,7 +9,7 @@ import {
   BODY,
   PARTS_GRAPH,
   BODY_VIEW,
-  BODY_SIDE_TEXT
+  BODY_SIDE_TEXT,
 } from "../../constant";
 import messages from "./messages";
 import { injectIntl } from "react-intl";
@@ -44,7 +44,7 @@ class symptomBotMessage extends Component {
     );
   };
 
-  replyToMessage = e => {
+  replyToMessage = (e) => {
     e.preventDefault();
     const { updateReplyMessageId, handleReply } = this.props;
     if (typeof updateReplyMessageId === "function") {
@@ -55,7 +55,7 @@ class symptomBotMessage extends Component {
     }
   };
 
-  getText = symptom_text => {
+  getText = (symptom_text) => {
     let text = "";
     text = (
       <div>
@@ -69,11 +69,10 @@ class symptomBotMessage extends Component {
 
   getImagesMedia = (image_document_ids, upload_documents) => {
     const imagesMediaArray = [];
-    image_document_ids.forEach(image_doc_id => {
+    image_document_ids.forEach((image_doc_id) => {
       let imageMessage = "";
-      const { basic_info: { document: img_src = "" } = {} } = upload_documents[
-        image_doc_id
-      ];
+      const { basic_info: { document: img_src = "" } = {} } =
+        upload_documents[image_doc_id];
       imageMessage = <div>{this.getImage(img_src)}</div>;
       imagesMediaArray.push(imageMessage);
     });
@@ -84,10 +83,10 @@ class symptomBotMessage extends Component {
   getAudioMedia = (audio_document_ids, upload_documents) => {
     const audioMediaArray = [];
 
-    audio_document_ids.forEach(audio_doc_id => {
+    audio_document_ids.forEach((audio_doc_id) => {
       let audioMessage = "";
       const {
-        basic_info: { document: audio_src = "", name: audio_name = "" } = {}
+        basic_info: { document: audio_src = "", name: audio_name = "" } = {},
       } = upload_documents[audio_doc_id];
       // console.log("upload_documents",upload_documents);
       let audio_type = "mp3";
@@ -105,10 +104,10 @@ class symptomBotMessage extends Component {
   getVideoMedia = (video_document_ids, upload_documents) => {
     const videoMediaArray = [];
 
-    video_document_ids.forEach(video_doc_id => {
+    video_document_ids.forEach((video_doc_id) => {
       let videoMessage = "";
       const {
-        basic_info: { document: video_src = "", name: video_name = "" } = {}
+        basic_info: { document: video_src = "", name: video_name = "" } = {},
       } = upload_documents[video_doc_id];
 
       let video_type = "mp4";
@@ -124,7 +123,7 @@ class symptomBotMessage extends Component {
     return videoMediaArray;
   };
 
-  getPatientAvatar = patientDp => {
+  getPatientAvatar = (patientDp) => {
     return (
       <span className="twilio-avatar">
         <Avatar src={patientDp} />
@@ -132,7 +131,7 @@ class symptomBotMessage extends Component {
     );
   };
 
-  getMessageTime = message => {
+  getMessageTime = (message) => {
     let mess = "";
     mess = (
       <div className="chat-time start">
@@ -142,7 +141,7 @@ class symptomBotMessage extends Component {
     return mess;
   };
 
-  getImage = img_src => {
+  getImage = (img_src) => {
     let mess = "";
     mess = (
       <div className="media-container ">
@@ -294,7 +293,7 @@ class symptomBotMessage extends Component {
       message,
       patientDp,
       symptoms,
-      upload_documents = {}
+      upload_documents = {},
     } = this.props;
 
     const body = JSON.parse(this_body);
@@ -312,7 +311,7 @@ class symptomBotMessage extends Component {
         audio_document_ids = [],
         image_document_ids = [],
         video_document_ids = [],
-        config: { side = "1", parts = [], duration = "" } = {}
+        config: { side = "1", parts = [], duration = "" } = {},
       } = symptoms[symptom_id] || {};
 
       const imagesMediaArray = this.getImagesMedia(
@@ -329,13 +328,13 @@ class symptomBotMessage extends Component {
       );
       const textMessage = this.getText(symptom_text);
 
-      imagesMediaArray.forEach(each => {
+      imagesMediaArray.forEach((each) => {
         allMediaArray.push(each);
       });
-      videoMediaArray.forEach(each => {
+      videoMediaArray.forEach((each) => {
         allMediaArray.push(each);
       });
-      audioMediaArray.forEach(each => {
+      audioMediaArray.forEach((each) => {
         allMediaArray.push(each);
       });
       allMediaArray.push(textMessage);

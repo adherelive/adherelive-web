@@ -5,7 +5,7 @@ import { close } from "../../modules/drawer";
 import { DRAWER } from "../../constant";
 import { addExercise, uploadExerciseContent } from "../../modules/exercises";
 
-const mapStateToProps = state => {
+const mapStateToProps = (state) => {
   const { auth } = state;
   const { authenticated_user, authenticated_category } = auth;
   const {
@@ -13,7 +13,7 @@ const mapStateToProps = state => {
     repetitions,
     care_plans,
     exercises,
-    exercise_details
+    exercise_details,
   } = state;
 
   return {
@@ -24,15 +24,15 @@ const mapStateToProps = state => {
     repetitions,
     care_plans,
     exercises,
-    exercise_details
+    exercise_details,
   };
 };
 
-const mapDispatchToProps = dispatch => {
+const mapDispatchToProps = (dispatch) => {
   return {
     close: () => dispatch(close()),
-    addExercise: data => dispatch(addExercise(data)),
-    uploadExerciseContent: data => dispatch(uploadExerciseContent(data))
+    addExercise: (data) => dispatch(addExercise(data)),
+    uploadExerciseContent: (data) => dispatch(uploadExerciseContent(data)),
   };
 };
 

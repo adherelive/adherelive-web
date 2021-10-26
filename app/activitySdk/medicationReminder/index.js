@@ -5,7 +5,7 @@ import {
   onRescheduled,
   onStart,
   onUpdate,
-  onPassed
+  onPassed,
 } from "../helper";
 import { ACTIVITIES } from "../activityType";
 

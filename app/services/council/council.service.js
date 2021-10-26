@@ -12,14 +12,14 @@ class CouncilService {
     }
   };
 
-  search = async data => {
+  search = async (data) => {
     try {
       const council = await Database.getModel(TABLE_NAME).findAll({
         where: {
           name: {
-            [Op.like]: `%${data}%`
-          }
-        }
+            [Op.like]: `%${data}%`,
+          },
+        },
       });
       return council;
     } catch (error) {
@@ -27,10 +27,10 @@ class CouncilService {
     }
   };
 
-  getByData = async data => {
+  getByData = async (data) => {
     try {
       const council = await Database.getModel(TABLE_NAME).findOne({
-        where: data
+        where: data,
       });
       return council;
     } catch (error) {
@@ -38,10 +38,10 @@ class CouncilService {
     }
   };
 
-  getCouncilByData = async data => {
+  getCouncilByData = async (data) => {
     try {
       const council = await Database.getModel(TABLE_NAME).findAll({
-        where: data
+        where: data,
       });
       return council;
     } catch (error) {
@@ -49,7 +49,7 @@ class CouncilService {
     }
   };
 
-  create = async data => {
+  create = async (data) => {
     try {
       const council = await Database.getModel(TABLE_NAME).create(data);
       return council;

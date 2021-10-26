@@ -3,7 +3,7 @@ function exerciseContentsReducer(state, data) {
   if (exercise_contents) {
     return {
       ...state,
-      ...exercise_contents
+      ...exercise_contents,
     };
   } else {
     return state;

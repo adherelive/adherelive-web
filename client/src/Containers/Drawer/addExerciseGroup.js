@@ -6,12 +6,12 @@ import {
   addExercise,
   storeExerciseAndDetails,
   updateExercise,
-  uploadExerciseContent
+  uploadExerciseContent,
 } from "../../modules/exercises";
 import { searchExercise } from "../../modules/searchedExercises";
 import { clearLatestCreatedExercise } from "../../modules/latestCreatedExercise";
 
-const mapStateToProps = state => {
+const mapStateToProps = (state) => {
   const { auth } = state;
   const { authenticated_user, authenticated_category } = auth;
   const {
@@ -24,7 +24,7 @@ const mapStateToProps = state => {
     searched_exercise_details,
     doctors,
     latest_created_exercise,
-    exercise_contents
+    exercise_contents,
   } = state;
 
   return {
@@ -40,20 +40,20 @@ const mapStateToProps = state => {
     searched_exercise_details,
     doctors,
     latest_created_exercise,
-    exercise_contents
+    exercise_contents,
   };
 };
 
-const mapDispatchToProps = dispatch => {
+const mapDispatchToProps = (dispatch) => {
   return {
     close: () => dispatch(close()),
-    addExercise: data => dispatch(addExercise(data)),
+    addExercise: (data) => dispatch(addExercise(data)),
     updateExercise: ({ exercise_id, data }) =>
       dispatch(updateExercise({ exercise_id, data })),
-    searchExercise: value => dispatch(searchExercise(value)),
-    storeExerciseAndDetails: data => dispatch(storeExerciseAndDetails(data)),
+    searchExercise: (value) => dispatch(searchExercise(value)),
+    storeExerciseAndDetails: (data) => dispatch(storeExerciseAndDetails(data)),
     clearLatestCreatedExercise: () => dispatch(clearLatestCreatedExercise()),
-    uploadExerciseContent: data => dispatch(uploadExerciseContent(data))
+    uploadExerciseContent: (data) => dispatch(uploadExerciseContent(data)),
   };
 };
 

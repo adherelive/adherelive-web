@@ -5,12 +5,12 @@ import { getAllProviders } from "../../modules/providers";
 import { USER_CATEGORY, DRAWER } from "../../constant";
 import { open } from "../../modules/drawer";
 
-const mapStateToProps = state => {
+const mapStateToProps = (state) => {
   const {
     providers = {},
     users = {},
     pages: { provider_ids = [], user_ids = [] } = {},
-    auth = {}
+    auth = {},
   } = state;
 
   return {
@@ -18,15 +18,15 @@ const mapStateToProps = state => {
     users,
     auth,
     provider_ids,
-    user_ids
+    user_ids,
   };
 };
 
-const mapDispatchToProps = dispatch => {
+const mapDispatchToProps = (dispatch) => {
   return {
     getAllProviders: () => dispatch(getAllProviders()),
-    openEditProviderDrawer: payload => () =>
-      dispatch(open({ type: DRAWER.EDIT_PROVIDER, payload }))
+    openEditProviderDrawer: (payload) => () =>
+      dispatch(open({ type: DRAWER.EDIT_PROVIDER, payload })),
   };
 };
 
@@ -44,7 +44,7 @@ const mergeProps = (stateProps, dispatchProps, ownProps) => {
     provider_ids,
     user_ids,
     getAllProviders,
-    openEditProviderDrawer
+    openEditProviderDrawer,
   };
 };
 

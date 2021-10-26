@@ -4,7 +4,7 @@ function workoutResponseReducer(state, data) {
   if (workout_responses) {
     return {
       ...state,
-      ...workout_responses
+      ...workout_responses,
     };
   } else {
     return state;

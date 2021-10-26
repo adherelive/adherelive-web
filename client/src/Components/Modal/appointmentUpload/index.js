@@ -11,7 +11,7 @@ import {
   EyeTwoTone,
   DownloadOutlined,
   // CloudDownloadOutlined,
-  LoadingOutlined
+  LoadingOutlined,
 } from "@ant-design/icons";
 import confirm from "antd/es/modal/confirm";
 
@@ -21,42 +21,36 @@ class AppointmentUploadModal extends Component {
     this.state = {
       viewModalVisible: false,
       viewModalSrc: "",
-      uploading: false
+      uploading: false,
     };
   }
 
-  formatMessage = message => this.props.intl.formatMessage(message);
+  formatMessage = (message) => this.props.intl.formatMessage(message);
 
-  customRequestUploadDocuments = id => async ({
-    file,
-    filename,
-    onError,
-    onProgress,
-    onSuccess
-  }) => {
-    const { uploadAppointmentDocs } = this.props;
+  customRequestUploadDocuments =
+    (id) =>
+    async ({ file, filename, onError, onProgress, onSuccess }) => {
+      const { uploadAppointmentDocs } = this.props;
 
-    let data = new FormData();
-    data.append("files", file);
+      let data = new FormData();
+      data.append("files", file);
 
-    this.setState({ uploading: true });
+      this.setState({ uploading: true });
 
-    const response = await uploadAppointmentDocs(data);
+      const response = await uploadAppointmentDocs(data);
 
-    const {
-      status = false,
-      payload: { message: respMessage = "" } = {}
-    } = response;
+      const { status = false, payload: { message: respMessage = "" } = {} } =
+        response;
 
-    if (status) {
-      this.setState({ uploading: false });
-      message.success(respMessage);
-    } else {
-      message.warn(respMessage);
-    }
-  };
+      if (status) {
+        this.setState({ uploading: false });
+        message.success(respMessage);
+      } else {
+        message.warn(respMessage);
+      }
+    };
 
-  handleDelete = (id, src) => e => {
+  handleDelete = (id, src) => (e) => {
     e.preventDefault();
     const { warnNote } = this;
 
@@ -67,10 +61,8 @@ class AppointmentUploadModal extends Component {
         try {
           const { deleteAppointmentDocs } = this.props;
           const response = await deleteAppointmentDocs(id);
-          const {
-            status,
-            payload: { data, message: respMessage } = {}
-          } = response;
+          const { status, payload: { data, message: respMessage } = {} } =
+            response;
           if (status) {
             message.success(respMessage);
           } else {
@@ -81,7 +73,7 @@ class AppointmentUploadModal extends Component {
           message.warn(this.formatMessage(messages.somethingWentWrong));
         }
       },
-      onCancel() {}
+      onCancel() {},
     });
   };
 
@@ -164,14 +156,14 @@ class AppointmentUploadModal extends Component {
   handleDocumentViewOpen = (id, src) => () => {
     this.setState({
       viewModalVisible: true,
-      viewModalSrc: src
+      viewModalSrc: src,
     });
   };
 
   handleDocumentViewClose = () => {
     this.setState({
       viewModalVisible: false,
-      viewModalSrc: ""
+      viewModalSrc: "",
     });
   };
 
@@ -180,7 +172,7 @@ class AppointmentUploadModal extends Component {
     const { getImageView, getFileView } = this;
     const { appointment_document_ids } = appointments || {};
 
-    return appointment_document_ids.map(id => {
+    return appointment_document_ids.map((id) => {
       const { basic_info: { document } = {} } = upload_documents[id] || {};
 
       const documentExtension = document.substring(
@@ -213,7 +205,7 @@ class AppointmentUploadModal extends Component {
       customRequestUploadDocuments,
       getUploadedDocuments,
       handleDocumentViewClose,
-      getUploadButton
+      getUploadButton,
     } = this;
 
     const { viewModalVisible = false, viewModalSrc = "" } = this.state;
@@ -262,7 +254,7 @@ class AppointmentUploadModal extends Component {
           footer={[
             <Button key="back" onClick={handleDocumentViewClose}>
               Close
-            </Button>
+            </Button>,
           ]}
         >
           <img

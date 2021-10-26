@@ -4,7 +4,7 @@ import { REQUEST_TYPE } from "../../constant";
 import {
   getPatientsPaginatedUrl,
   getSearchTreatmentPaginatedPatientsUrl,
-  getSearchDiagnosisPaginatedPatientsUrl
+  getSearchDiagnosisPaginatedPatientsUrl,
 } from "../../Helper/urls/patients";
 
 export const GET_PATIENT_PAGINATED = "GET_PATIENT_PAGINATED";
@@ -30,10 +30,10 @@ export const getPatientsPaginated = ({
   filter_diagnosis,
   filter_treatment,
   offset,
-  watchlist = 0
+  watchlist = 0,
 }) => {
   let response = {};
-  return async dispatch => {
+  return async (dispatch) => {
     try {
       dispatch({ type: GET_PATIENT_PAGINATED });
 
@@ -45,8 +45,8 @@ export const getPatientsPaginated = ({
           filter_diagnosis,
           filter_treatment,
           offset,
-          watchlist
-        })
+          watchlist,
+        }),
       });
 
       let { status, payload: { data = {} } = {} } = response || {};
@@ -56,11 +56,11 @@ export const getPatientsPaginated = ({
         data["offset"] = offset.toString();
         dispatch({
           type: GET_PATIENT_PAGINATED_COMPLETED,
-          data
+          data,
         });
       } else {
         dispatch({
-          type: GET_PATIENT_PAGINATED_FAILED
+          type: GET_PATIENT_PAGINATED_FAILED,
         });
       }
     } catch (err) {
@@ -75,10 +75,10 @@ export const getPatientsPaginated = ({
 export const searchTreatmentPaginatedPatients = ({
   filter_treatment,
   offset,
-  watchlist = 0
+  watchlist = 0,
 }) => {
   let response = {};
-  return async dispatch => {
+  return async (dispatch) => {
     try {
       dispatch({ type: GET_SEARCH_TREATMENT_PATIENTS });
 
@@ -87,8 +87,8 @@ export const searchTreatmentPaginatedPatients = ({
         url: getSearchTreatmentPaginatedPatientsUrl({
           filter_treatment,
           offset,
-          watchlist
-        })
+          watchlist,
+        }),
       });
 
       let { status, payload: { data = {} } = {} } = response || {};
@@ -99,11 +99,11 @@ export const searchTreatmentPaginatedPatients = ({
         data["patient_table_search"] = true;
         dispatch({
           type: GET_SEARCH_TREATMENT_PATIENTS_COMPLETED,
-          data
+          data,
         });
       } else {
         dispatch({
-          type: GET_SEARCH_TREATMENT_PATIENTS_FAILED
+          type: GET_SEARCH_TREATMENT_PATIENTS_FAILED,
         });
       }
     } catch (err) {
@@ -118,10 +118,10 @@ export const searchTreatmentPaginatedPatients = ({
 export const searchDiagnosisPaginatedPatients = ({
   filter_diagnosis,
   offset,
-  watchlist = 0
+  watchlist = 0,
 }) => {
   let response = {};
-  return async dispatch => {
+  return async (dispatch) => {
     try {
       dispatch({ type: GET_SEARCH_DIAGNOSIS_PATIENTS });
 
@@ -130,8 +130,8 @@ export const searchDiagnosisPaginatedPatients = ({
         url: getSearchDiagnosisPaginatedPatientsUrl({
           filter_diagnosis,
           offset,
-          watchlist
-        })
+          watchlist,
+        }),
       });
 
       let { status, payload: { data = {} } = {} } = response || {};
@@ -142,11 +142,11 @@ export const searchDiagnosisPaginatedPatients = ({
         data["patient_table_search"] = true;
         dispatch({
           type: GET_SEARCH_DIAGNOSIS_PATIENTS_COMPLETED,
-          data
+          data,
         });
       } else {
         dispatch({
-          type: GET_SEARCH_DIAGNOSIS_PATIENTS_FAILED
+          type: GET_SEARCH_DIAGNOSIS_PATIENTS_FAILED,
         });
       }
     } catch (err) {
@@ -163,7 +163,7 @@ function paginatedPatientReducer(state, data) {
   if (paginated_patients_data) {
     return {
       ...state,
-      ...paginated_patients_data
+      ...paginated_patients_data,
     };
   } else {
     return state;

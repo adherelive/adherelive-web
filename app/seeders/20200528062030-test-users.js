@@ -21,7 +21,7 @@ module.exports = {
         prefix: "91",
         activated_on: new Date(),
         created_at: new Date(),
-        updated_at: new Date()
+        updated_at: new Date(),
       },
       {
         user_name: "patientOne",
@@ -35,7 +35,7 @@ module.exports = {
         prefix: "91",
         activated_on: new Date(),
         created_at: new Date(),
-        updated_at: new Date()
+        updated_at: new Date(),
       },
       {
         user_name: "doctorTwo",
@@ -50,7 +50,7 @@ module.exports = {
         prefix: "91",
         activated_on: new Date(),
         created_at: new Date(),
-        updated_at: new Date()
+        updated_at: new Date(),
       },
       {
         user_name: "Admin",
@@ -64,7 +64,7 @@ module.exports = {
         prefix: "91",
         activated_on: new Date(),
         created_at: new Date(),
-        updated_at: new Date()
+        updated_at: new Date(),
       },
       {
         user_name: "Provider",
@@ -78,7 +78,7 @@ module.exports = {
         prefix: "91",
         activated_on: new Date(),
         created_at: new Date(),
-        updated_at: new Date()
+        updated_at: new Date(),
       },
       {
         user_name: "patientTwo",
@@ -92,7 +92,7 @@ module.exports = {
         prefix: "91",
         activated_on: new Date(),
         created_at: new Date(),
-        updated_at: new Date()
+        updated_at: new Date(),
       },
       {
         user_name: "patientThree",
@@ -106,7 +106,7 @@ module.exports = {
         prefix: "91",
         activated_on: new Date(),
         created_at: new Date(),
-        updated_at: new Date()
+        updated_at: new Date(),
       },
       {
         user_name: "patientFour",
@@ -120,7 +120,7 @@ module.exports = {
         prefix: "91",
         activated_on: new Date(),
         created_at: new Date(),
-        updated_at: new Date()
+        updated_at: new Date(),
       },
       {
         user_name: "patientFive",
@@ -134,12 +134,12 @@ module.exports = {
         prefix: "91",
         activated_on: new Date(),
         created_at: new Date(),
-        updated_at: new Date()
-      }
+        updated_at: new Date(),
+      },
     ]);
   },
 
   down: (queryInterface, Sequelize) => {
     return queryInterface.bulkDelete(TABLE_NAME, null, {});
-  }
+  },
 };

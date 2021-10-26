@@ -6,18 +6,18 @@ import {
   getAdminPaymentProduct,
   getDoctorPaymentProduct,
   addDoctorPaymentProduct,
-  deleteDoctorPaymentProduct
+  deleteDoctorPaymentProduct,
 } from "../../../modules/doctors";
 import {
   addAccountDetails,
   getAccountDetails,
   deleteAccountDetails,
-  updateAccountDetails
+  updateAccountDetails,
 } from "../../../modules/accountDetails";
 import { open } from "../../../modules/drawer";
 import { DRAWER } from "../../../constant";
 
-const mapStateToProps = state => {
+const mapStateToProps = (state) => {
   const {
     auth,
     user_roles = {},
@@ -26,9 +26,9 @@ const mapStateToProps = state => {
     auth: {
       authPermissions = [],
       authenticated_user = 1,
-      authenticated_category
+      authenticated_category,
     } = {},
-    account_details = {}
+    account_details = {},
   } = state;
 
   return {
@@ -39,30 +39,30 @@ const mapStateToProps = state => {
     authenticated_user,
     authenticated_category,
     account_details,
-    user_roles
+    user_roles,
   };
 };
 
-const mapDispatchToProps = dispatch => {
+const mapDispatchToProps = (dispatch) => {
   return {
-    getDoctorDetails: id => () => dispatch(getDoctorProfileDetails()),
+    getDoctorDetails: (id) => () => dispatch(getDoctorProfileDetails()),
     getAdminPaymentProduct: () => dispatch(getAdminPaymentProduct()),
     getDoctorPaymentProduct: () => dispatch(getDoctorPaymentProduct()),
-    addDoctorPaymentProduct: data => dispatch(addDoctorPaymentProduct(data)),
-    openConsultationFeeDrawer: payload =>
+    addDoctorPaymentProduct: (data) => dispatch(addDoctorPaymentProduct(data)),
+    openConsultationFeeDrawer: (payload) =>
       dispatch(open({ type: DRAWER.ADD_CONSULTATION_FEE, payload })),
-    deleteDoctorPaymentProduct: data =>
+    deleteDoctorPaymentProduct: (data) =>
       dispatch(deleteDoctorPaymentProduct(data)),
-    openRazorpayAccountDetailsDrawer: payload =>
+    openRazorpayAccountDetailsDrawer: (payload) =>
       dispatch(open({ type: DRAWER.ADD_RAZORPAY_ACCOUNT_DETAILS })),
-    openEditRazorpayAccountDetailsDrawer: payload =>
+    openEditRazorpayAccountDetailsDrawer: (payload) =>
       dispatch(open({ type: DRAWER.EDIT_RAZORPAY_ACCOUNT_DETAILS })),
-    addAccountDetails: payload => dispatch(addAccountDetails(payload)),
+    addAccountDetails: (payload) => dispatch(addAccountDetails(payload)),
     getAccountDetails: (provider_id = null) =>
       dispatch(getAccountDetails(provider_id)),
-    deleteAccountDetails: id => dispatch(deleteAccountDetails(id)),
+    deleteAccountDetails: (id) => dispatch(deleteAccountDetails(id)),
     updateAccountDetails: (id, payload) =>
-      dispatch(updateAccountDetails(id, payload))
+      dispatch(updateAccountDetails(id, payload)),
   };
 };
 

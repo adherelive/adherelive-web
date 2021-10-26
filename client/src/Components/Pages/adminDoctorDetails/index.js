@@ -11,7 +11,7 @@ import {
   ExclamationCircleTwoTone,
   ArrowLeftOutlined,
   FileTextOutlined,
-  EditOutlined
+  EditOutlined,
 } from "@ant-design/icons";
 
 import { Input } from "antd";
@@ -21,7 +21,7 @@ import messages from "./messages";
 import {
   TABLE_DEFAULT_BLANK_FIELD,
   DAYS_TEXT_NUM,
-  ACCOUNT_STATUS
+  ACCOUNT_STATUS,
 } from "../../../constant";
 import { PageLoading } from "../../../Helper/loading/pageLoading";
 import { withRouter } from "react-router-dom";
@@ -41,7 +41,7 @@ class AdminDoctorDetails extends Component {
       razorpayAccountName: "",
       account_details: {},
       active: true,
-      user_id: null
+      user_id: null,
     };
   }
 
@@ -55,7 +55,7 @@ class AdminDoctorDetails extends Component {
     // }
   }
 
-  formatMessage = data => this.props.intl.formatMessage(data);
+  formatMessage = (data) => this.props.intl.formatMessage(data);
 
   getInitialData = async () => {
     try {
@@ -66,8 +66,8 @@ class AdminDoctorDetails extends Component {
         status,
         payload: {
           data: { doctors = {}, users = {} } = {},
-          message: { message: responseMessage } = {}
-        } = {}
+          message: { message: responseMessage } = {},
+        } = {},
       } = response || {};
 
       if (status === true) {
@@ -75,47 +75,50 @@ class AdminDoctorDetails extends Component {
         const { deleted_at = "" } = users[user_id] || {};
 
         this.setState({
-          user_id
+          user_id,
         });
 
         if (deleted_at) {
           this.setState({
-            active: false
+            active: false,
           });
         }
 
         const response = await getDoctorAccountDetails();
         const {
           status,
-          payload: { data: { account_details } = {}, message: respMessage } = {}
+          payload: {
+            data: { account_details } = {},
+            message: respMessage,
+          } = {},
         } = response || {};
 
         if (status === true) {
           this.setState({
             loading: false,
-            account_details
+            account_details,
           });
         } else {
           this.setState({
-            loading: false
+            loading: false,
           });
           message.warn(respMessage);
         }
       } else {
         this.setState({
-          loading: false
+          loading: false,
         });
         message.warn(responseMessage);
       }
     } catch (error) {
       this.setState({
-        loading: false
+        loading: false,
       });
       message.warn("Somthing wen't wrong, please try again later");
     }
   };
 
-  handleBack = e => {
+  handleBack = (e) => {
     e.preventDefault();
     const { history } = this.props;
     history.goBack();
@@ -136,26 +139,26 @@ class AdminDoctorDetails extends Component {
     );
   };
 
-  openAddRazorpayIdModal = e => {
+  openAddRazorpayIdModal = (e) => {
     e.preventDefault();
     this.setState({ razorpayModalVisible: true });
   };
 
-  handleRazorpayModalClose = e => {
+  handleRazorpayModalClose = (e) => {
     e.preventDefault();
     this.setState({
       razorpayModalVisible: false,
-      razorpayId: ""
+      razorpayId: "",
     });
   };
 
-  setRazorpayId = e => {
+  setRazorpayId = (e) => {
     e.preventDefault();
     const { value } = e.target;
     this.setState({ razorpayId: value });
   };
 
-  setRazorpayAccountName = e => {
+  setRazorpayAccountName = (e) => {
     e.preventDefault();
     const { value } = e.target;
     this.setState({ razorpayAccountName: value });
@@ -194,7 +197,7 @@ class AdminDoctorDetails extends Component {
           console.log("doctorDeactivate UI error --> ", error);
         }
       },
-      onCancel() {}
+      onCancel() {},
     });
   };
 
@@ -205,7 +208,7 @@ class AdminDoctorDetails extends Component {
       if (razorpayId) {
         const response = await addRazorpayId(id, {
           account_id: razorpayId,
-          account_name: razorpayAccountName
+          account_name: razorpayAccountName,
         });
         const { status, payload: { data: { account_details } = {} } = {} } =
           response || {};
@@ -220,7 +223,7 @@ class AdminDoctorDetails extends Component {
 
         this.setState({
           razorpayModalVisible: false,
-          razorpayId: ""
+          razorpayId: "",
         });
       } else {
         message.warn(this.formatMessage(messages.addValidRazorpayIdError));
@@ -235,7 +238,7 @@ class AdminDoctorDetails extends Component {
     const { doctors, id } = this.props;
     const { razorpayModalVisible } = this.state;
     const {
-      formatMessage
+      formatMessage,
       // handleProfilePicModalClose
     } = this;
 
@@ -257,7 +260,7 @@ class AdminDoctorDetails extends Component {
             onClick={() => this.handleRazorpayIdSubmit()}
           >
             {this.formatMessage(messages.submit)}
-          </Button>
+          </Button>,
         ]}
       >
         <div className="form-headings flex align-center justify-start">
@@ -285,11 +288,8 @@ class AdminDoctorDetails extends Component {
 
   getDoctorBasicDetails = () => {
     const { id, doctors, users, specialities } = this.props;
-    const {
-      formatMessage,
-      handleProfilePicModalOpen,
-      handleCloseWarning
-    } = this;
+    const { formatMessage, handleProfilePicModalOpen, handleCloseWarning } =
+      this;
 
     const {
       basic_info: {
@@ -300,15 +300,15 @@ class AdminDoctorDetails extends Component {
         profile_pic,
         gender,
         city,
-        speciality_id
-      } = {}
+        speciality_id,
+      } = {},
     } = doctors[id] || {};
     const {
       basic_info: { email, mobile_number, prefix } = {},
       onboarded,
       onboarding_status,
       activated_on,
-      deleted_at = null
+      deleted_at = null,
     } = users[user_id] || {};
 
     const { basic_info: { name: specialityName } = {} } =
@@ -471,7 +471,7 @@ class AdminDoctorDetails extends Component {
     );
   };
 
-  handlePictureModal = id => e => {
+  handlePictureModal = (id) => (e) => {
     e.preventDefault();
     this.setState({ modalVisible: true, selectedDocumentId: id });
   };
@@ -482,7 +482,7 @@ class AdminDoctorDetails extends Component {
       doctors,
       doctor_registrations,
       upload_documents,
-      councils = {}
+      councils = {},
     } = this.props;
     const { formatMessage, handlePictureModal } = this;
 
@@ -492,7 +492,7 @@ class AdminDoctorDetails extends Component {
       const {
         basic_info: { number, registration_council_id, year } = {},
         expiry_date,
-        upload_document_ids
+        upload_document_ids,
       } = doctor_registrations[registration_id] || {};
 
       const { basic_info: { name: registrationCouncilName } = {} } =
@@ -557,7 +557,7 @@ class AdminDoctorDetails extends Component {
               </div>
 
               <div className="flex align-center flex-wrap">
-                {upload_document_ids.map(id => {
+                {upload_document_ids.map((id) => {
                   const { basic_info: { document } = {} } =
                     upload_documents[id] || {};
 
@@ -609,7 +609,7 @@ class AdminDoctorDetails extends Component {
     });
   };
 
-  handleDocumentDownload = id => e => {
+  handleDocumentDownload = (id) => (e) => {
     e.preventDefault();
   };
 
@@ -620,7 +620,7 @@ class AdminDoctorDetails extends Component {
       doctor_qualifications,
       upload_documents,
       degrees = {},
-      colleges = {}
+      colleges = {},
     } = this.props;
     const { formatMessage, handlePictureModal } = this;
 
@@ -629,7 +629,7 @@ class AdminDoctorDetails extends Component {
     return doctor_qualification_ids.map((qualification_id, index) => {
       const {
         basic_info: { degree_id, college_id, year } = {},
-        upload_document_ids = []
+        upload_document_ids = [],
       } = doctor_qualifications[qualification_id] || {};
 
       const { basic_info: { name: collegeName } = {} } =
@@ -687,7 +687,7 @@ class AdminDoctorDetails extends Component {
 
               {/*qualification_documents*/}
               <div className="flex align-center flex-wrap">
-                {upload_document_ids.map(id => {
+                {upload_document_ids.map((id) => {
                   const { basic_info: { document } = {} } =
                     upload_documents[id] || {};
 
@@ -738,7 +738,7 @@ class AdminDoctorDetails extends Component {
     });
   };
 
-  getFullDayText = day => {
+  getFullDayText = (day) => {
     if (day.length === 1) {
       return DAYS_TEXT_NUM[day].toLocaleUpperCase();
     }
@@ -755,7 +755,7 @@ class AdminDoctorDetails extends Component {
       const {
         basic_info: { name } = {},
         location,
-        details: { time_slots = [] } = {}
+        details: { time_slots = [] } = {},
       } = doctor_clinics[clinic_id] || {};
 
       return (
@@ -838,7 +838,7 @@ class AdminDoctorDetails extends Component {
     });
   };
 
-  handleActivate = async e => {
+  handleActivate = async (e) => {
     e.preventDefault();
     const { activateDoctor, id } = this.props;
     const { user_id = null } = this.state;
@@ -858,25 +858,16 @@ class AdminDoctorDetails extends Component {
   };
 
   getFooter = () => {
-    const {
-      id,
-      doctors,
-      users,
-      doctor_qualifications,
-      doctor_registrations
-    } = this.props;
-    const {
-      formatMessage,
-      handleVerify,
-      handleCloseWarning,
-      handleActivate
-    } = this;
+    const { id, doctors, users, doctor_qualifications, doctor_registrations } =
+      this.props;
+    const { formatMessage, handleVerify, handleCloseWarning, handleActivate } =
+      this;
     const { active = true } = this.state;
 
     const {
       doctor_qualification_ids = [],
       doctor_registration_ids = [],
-      basic_info: { user_id } = {}
+      basic_info: { user_id } = {},
     } = doctors[id] || {};
 
     const { activated_on } = users[user_id] || {};
@@ -889,9 +880,8 @@ class AdminDoctorDetails extends Component {
     let no_registration_docs = 0;
     if (doctor_qualification_ids.length) {
       for (const i in doctor_qualification_ids) {
-        let { upload_document_ids } = doctor_qualifications[
-          doctor_qualification_ids[i]
-        ];
+        let { upload_document_ids } =
+          doctor_qualifications[doctor_qualification_ids[i]];
         if (upload_document_ids.length == 0) {
           no_qualification_docs = 1;
         }
@@ -899,9 +889,8 @@ class AdminDoctorDetails extends Component {
     }
     if (doctor_registration_ids.length) {
       for (const i in doctor_registration_ids) {
-        let { upload_document_ids } = doctor_registrations[
-          doctor_registration_ids[i]
-        ];
+        let { upload_document_ids } =
+          doctor_registrations[doctor_registration_ids[i]];
         if (upload_document_ids.length == 0) {
           no_registration_docs = 1;
         }
@@ -946,7 +935,7 @@ class AdminDoctorDetails extends Component {
     );
   };
 
-  handleVerify = async e => {
+  handleVerify = async (e) => {
     e.preventDefault();
     if (parseInt(e.target.dataset.q)) {
       message.warn(this.formatMessage(messages.noUploadQualificationDocuments));
@@ -972,7 +961,7 @@ class AdminDoctorDetails extends Component {
     }
   };
 
-  handlePictureModalClose = e => {
+  handlePictureModalClose = (e) => {
     e.preventDefault();
     this.setState({ modalVisible: false });
   };
@@ -1003,12 +992,12 @@ class AdminDoctorDetails extends Component {
     );
   };
 
-  handleProfilePicModalOpen = e => {
+  handleProfilePicModalOpen = (e) => {
     e.preventDefault();
     this.setState({ profilePicModalVisible: true });
   };
 
-  handleProfilePicModalClose = e => {
+  handleProfilePicModalClose = (e) => {
     e.preventDefault();
     this.setState({ profilePicModalVisible: false });
   };
@@ -1040,7 +1029,7 @@ class AdminDoctorDetails extends Component {
     const { account_details } = this.state;
     const { formatMessage } = this;
 
-    return Object.keys(account_details).map(id => {
+    return Object.keys(account_details).map((id) => {
       const {
         basic_info: {
           customer_name,
@@ -1052,8 +1041,8 @@ class AdminDoctorDetails extends Component {
           prefix,
           in_use,
           razorpay_account_id,
-          razorpay_account_name
-        } = {}
+          razorpay_account_name,
+        } = {},
       } = account_details[id] || {};
 
       return (
@@ -1166,13 +1155,13 @@ class AdminDoctorDetails extends Component {
       getProfilePicModal,
       getRazorpayModal,
       getDoctorAccountDetails,
-      openAddRazorpayIdModal
+      openAddRazorpayIdModal,
     } = this;
 
     const {
       doctor_clinic_ids = [],
       doctor_qualification_ids = [],
-      doctor_registration_ids = []
+      doctor_registration_ids = [],
     } = doctors[id] || {};
 
     if (loading) {

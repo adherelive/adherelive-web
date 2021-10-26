@@ -3,18 +3,18 @@ import { ADD_EXERCISE_COMPLETED } from "../exercises";
 const CLEAR_LATEST_CREATED_EXERCISE = "CLEAR_LATEST_CREATED_EXERCISE";
 
 export const clearLatestCreatedExercise = () => {
-  return async dispatch => {
+  return async (dispatch) => {
     try {
       const data = {
         exercises: {},
         exercise_details: {},
         exercise_contents: {},
-        created: false
+        created: false,
       };
 
       dispatch({
         type: CLEAR_LATEST_CREATED_EXERCISE,
-        data
+        data,
       });
     } catch (error) {
       console.log("CLEAR_LATEST_CREATED_EXERCISE ERROR --> ", error);
@@ -28,7 +28,7 @@ function latestExerciseCreatedReducer(state, data) {
     exercise_details: payloadExerciseDetails = {},
     exercise_id = null,
     exercise_detail_id = null,
-    exercise_contents = {}
+    exercise_contents = {},
   } = data || {};
   let createdExerciseData = {},
     createdExerciseDetaildData = {};
@@ -42,7 +42,7 @@ function latestExerciseCreatedReducer(state, data) {
       exercises: { ...createdExerciseData },
       exercise_details: { ...createdExerciseDetaildData },
       exercise_contents,
-      created: true
+      created: true,
     };
   } else {
     return state;
@@ -54,7 +54,7 @@ function clearDataReducer(state, data) {
     exercises: {},
     exercise_details: {},
     exercise_contents: {},
-    created: false
+    created: false,
   };
 }
 

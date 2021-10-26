@@ -7,25 +7,25 @@ import { open } from "../../modules/drawer";
 import { getMedications } from "../../modules/medications";
 import { DRAWER } from "../../constant";
 
-const mapStateToProps = state => {
+const mapStateToProps = (state) => {
   const {
     drawer: { visible, data: { type, payload: { id, loading } = {} } = {} },
     medications = {},
-    schedule_events = {}
+    schedule_events = {},
   } = state;
 
   return {
     id,
     medications,
-    schedule_events
+    schedule_events,
   };
 };
 
-const mapDispatchToProps = dispatch => {
+const mapDispatchToProps = (dispatch) => {
   return {
-    getMedicationTimeline: id => () => dispatch(getMedicationTimeline(id)),
-    medicationResponseDrawer: payload =>
-      dispatch(open({ type: DRAWER.MEDICATION_RESPONSE_TIMELINE, payload }))
+    getMedicationTimeline: (id) => () => dispatch(getMedicationTimeline(id)),
+    medicationResponseDrawer: (payload) =>
+      dispatch(open({ type: DRAWER.MEDICATION_RESPONSE_TIMELINE, payload })),
   };
 };
 
@@ -35,7 +35,7 @@ const mergeProps = (stateProps, dispatchProps, ownProps) => {
   const {
     getMedicationTimeline,
     medicationResponseDrawer,
-    editMedicationDrawer
+    editMedicationDrawer,
   } = dispatchProps;
 
   return {
@@ -44,7 +44,7 @@ const mergeProps = (stateProps, dispatchProps, ownProps) => {
     schedule_events,
     medicationResponseDrawer,
     editMedicationDrawer,
-    getMedicationTimeline: getMedicationTimeline(id)
+    getMedicationTimeline: getMedicationTimeline(id),
   };
 };
 
