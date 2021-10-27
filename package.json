@@ -1,6 +1,6 @@
 {
   "name": "adherelive",
-  "version": "2.2.0",
+  "version": "2.2.1",
   "description": "All packages for the adherelive web application",
   "main": "constant.js",
   "repository": {
