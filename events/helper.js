@@ -125,7 +125,7 @@ export const handleAppointments = async (appointment) => {
 
 export const handleMedications = async (data) => {
   try {
-    console.log("123803821 data ", data);
+    console.log("data for handle medications ---> ", data);
     const {
       patient_id,
       event_id,
@@ -174,7 +174,7 @@ export const handleMedications = async (data) => {
           patientPreference
         );
 
-        Log.debug("21397193871379832203 createMedicationSchedule -->", {
+        Log.debug("create medication schedule ---> ", {
           startTime,
           text: MEDICATION_TIMING[timing],
         });
@@ -757,7 +757,7 @@ export const handleCarePlans = async (data) => {
     };
 
     Log.debug(
-      "------------> Schedule events data for careplan activation is: ",
+      "---> Schedule events data for careplan activation is: ",
       scheduleEvents
     );
 

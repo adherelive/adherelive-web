@@ -240,6 +240,110 @@ class CarePlanTemplateWrapper extends BaseCarePlanTemplate {
       care_plan_template_id: this.getCarePlanTemplateId(),
     };
   };
+
+  getReferenceInfoWithImp = async () => {
+    const {
+      getTemplateAppointments,
+      getTemplateMedications,
+      getTemplateVitals,
+      getTemplateDiets,
+      getTemplateWorkouts,
+    } = this;
+
+    let templateAppointments = [];
+    let templateMedications = [];
+    let medicines = [];
+
+    let appointmentIds = [];
+    let medicationIds = [];
+    let medicineIds = [];
+
+    for (const templateAppointment of getTemplateAppointments()) {
+      const data = await TemplateAppointmentWrapper(templateAppointment);
+      templateAppointments[data.getTemplateAppointmentId()] =
+        data.getBasicInfo();
+      appointmentIds.push(data.getTemplateAppointmentId());
+    }
+
+    for (const templateMedication of getTemplateMedications()) {
+      const data = await TemplateMedicationWrapper(templateMedication);
+      templateMedications[data.getTemplateMedicationId()] = data.getBasicInfo();
+      medicationIds.push(data.getTemplateMedicationId());
+      medicineIds.push(data.getTemplateMedicineId());
+      // const medicineData = await MedicineWrapper(data.getMedicines());
+      // medicines[medicineData.getMedicineId()] = medicineData.getBasicInfo();
+    }
+
+    // vital templates (careplan_template)
+    let templateVitalIds = [];
+    let templateVitals = {};
+
+    // vital templates (vitals)
+
+    const allVitals = getTemplateVitals();
+    if (allVitals.length > 0) {
+      for (let index = 0; index < allVitals.length; index++) {
+        const templateVital = await TemplateVitalWrapper({
+          data: allVitals[index],
+        });
+        templateVitals[templateVital.getId()] = templateVital.getBasicInfo();
+        templateVitalIds.push(templateVital.getId());
+      }
+    }
+
+    // diet_templates
+    let templateDietIds = [];
+    const allDiets = getTemplateDiets() || [];
+    if (allDiets.length > 0) {
+      for (let index = 0; index < allDiets.length; index++) {
+        const templateDiet = await TemplateDietWrapper({
+          data: allDiets[index],
+        });
+        templateDietIds.push(templateDiet.getId());
+      }
+    }
+    // workout_templates
+    let templateWorkoutIds = [];
+    const allWorkouts = getTemplateWorkouts() || [];
+    if (allWorkouts.length > 0) {
+      for (let index = 0; index < allWorkouts.length; index++) {
+        const templateWorkout = await TemplateWorkoutWrapper({
+          data: allWorkouts[index],
+        });
+        templateWorkoutIds.push(templateWorkout.getId());
+      }
+    }
+    const medicineData = await medicineService.getMedicineByData({
+      id: medicineIds,
+    });
+    for (const medicine of medicineData) {
+      const data = await MedicineWrapper(medicine);
+      medicines[data.getMedicineId()] = data.getBasicInfo();
+    }
+
+    return {
+      care_plan_templates: {
+        [this.getCarePlanTemplateId()]: {
+          ...this.getBasicInfo(),
+          template_appointment_ids: appointmentIds,
+          template_medication_ids: medicationIds,
+          template_vital_ids: templateVitalIds,
+          template_diet_ids: templateDietIds,
+          template_workout_ids: templateWorkoutIds,
+        },
+      },
+      template_appointments: {
+        ...templateAppointments,
+      },
+      template_medications: {
+        ...templateMedications,
+      },
+      medicines: {
+        ...medicines,
+      },
+      care_plan_template_id: this.getCarePlanTemplateId(),
+    };
+  };
 }
 
 export default async (data = null, id = null) => {
