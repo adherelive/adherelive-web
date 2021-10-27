@@ -11,6 +11,7 @@ resources:
 variables:
   tag: '$(Build.BuildId)'
   ImageNames: 'gagneet/adherelive:portal_demo'
+  firstArg: '--no-cache'
 
 stages:
   - stage: Build
@@ -31,6 +32,8 @@ stages:
               dockerComposefile: '$(Build.SourcesDirectory)/docker-compose.yml'
               dockerComposeCommand: build node
               buildImages: true
+              dockerComposeFileArgs: |
+                firstArg=$(firstArg)
               additionalImagetags: |
                 $(ImageNames)
           - task: Docker@2
