@@ -10,7 +10,7 @@ resources:
 
 variables:
   tag: '$(Build.BuildId)'
-  ImageNames: '/adherelive:portal_demo'
+  ImageNames: gagneet' + '/adherelive:portal_demo'
 
 stages:
   - stage: Build
