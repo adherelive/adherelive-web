@@ -197,6 +197,15 @@ class CarePlanWrapper extends BaseCarePlan {
   };
 }
 
+getReferenceInfoWithImp = async () => {
+  const { _data, getCarePlanId, getAllInfo } = this;
+  return {
+    care_plans: {
+      [getCarePlanId()]: await getAllInfo(),
+    },
+  };
+};
+
 export default async (data = null, id = null) => {
   if (data) {
     return new CarePlanWrapper(data);

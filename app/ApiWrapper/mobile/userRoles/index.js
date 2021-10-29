@@ -158,6 +158,30 @@ class MUserRoleWrapper extends BaseUserRole {
       admins,
     };
   };
+
+  getAllInfoWithImp = async () => {
+    const {
+      _data: { id, linked_id, linked_with } = {},
+      getBasicInfo,
+      getUser,
+    } = this;
+
+    const { doctor } = getUser() || {};
+    let providers = {};
+
+    if (doctor && doctor.id) {
+      if (linked_with === USER_CATEGORY.PROVIDER && linked_id) {
+        const providerData = await ProviderWrapper(null, linked_id);
+        providers = { [linked_id]: await providerData.getAllInfo() };
+      }
+    }
+    return {
+      user_roles: {
+        [id]: getBasicInfo(),
+      },
+      providers,
+    };
+  };
 }
 
 export default async (data = null, id = null) => {

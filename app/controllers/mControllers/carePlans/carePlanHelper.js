@@ -37,14 +37,11 @@ const Log = new Logger("CARE_PLAN > HELPER");
 export const getCareplanDataWithImp = async ({
   carePlans = [],
   userCategory,
-  doctorId,
   userRoleId,
 }) => {
   try {
     let carePlanData = {};
     let carePlanIds = [];
-
-    let appointmentData = {};
     let appointmentIds = [];
 
     let medicationData = {};
@@ -62,12 +59,9 @@ export const getCareplanDataWithImp = async ({
 
     for (let index = 0; index < carePlans.length; index++) {
       const careplan = await CarePlanWrapper(carePlans[index]);
-      const { care_plans, doctors, doctor_id } =
-        await careplan.getReferenceInfo();
-      carePlanData = { ...carePlanData, ...care_plans };
-      carePlanIds.push(careplan.getCarePlanId());
+      const { care_plans } = await careplan.getReferenceInfoWithImp();
 
-      doctorData = { ...doctorData, ...doctors };
+      carePlanIds.push(careplan.getCarePlanId());
 
       const {
         medication_ids,
@@ -80,10 +74,6 @@ export const getCareplanDataWithImp = async ({
       appointmentIds = [...appointmentIds, ...appointment_ids];
       medicationIds = [...medicationIds, ...medication_ids];
 
-      // get latest careplan id
-      // Log.debug("7123731 careplan --> ", careplan.getCreatedAt());
-      // Log.debug("71237312 careplan --> ", moment(currentCareplanTime));
-
       const isUserRoleAllowed = [user_role_id, ...secondaryDoctorUserRoleIds]
         .map((id) => parseInt(id))
         .includes(userRoleId);
@@ -93,7 +83,6 @@ export const getCareplanDataWithImp = async ({
           userCategory === USER_CATEGORY.HSP) &&
         isUserRoleAllowed
       ) {
-        // if(userCategory === USER_CATEGORY.DOCTOR && doctorId === doctor_id) {
         if (
           moment(careplan.getCreatedAt()).diff(
             moment(currentCareplanTime),
@@ -115,37 +104,18 @@ export const getCareplanDataWithImp = async ({
           null,
           secondaryDoctorUserRoleIds[index]
         );
-
+        // check done
         const {
           user_roles: secondaryUserRoles,
-          doctors: secondaryDoctors,
           providers: secondaryProviders,
-        } = await userRole.getAllInfo();
+        } = await userRole.getAllInfoWithImp();
 
-        doctorData = { ...doctorData, ...secondaryDoctors };
         providerData = { ...providerData, ...secondaryProviders };
         userRoleData = { ...userRoleData, ...secondaryUserRoles };
       }
     }
 
     Log.info(`8912731893 currentCareplanId ${currentCareplanId}`);
-
-    // appointments
-    const allAppointments =
-      (await appointmentService.getAppointmentByData({
-        id: appointmentIds,
-      })) || [];
-
-    if (allAppointments.length > 0) {
-      for (let index = 0; index < allAppointments.length; index++) {
-        const appointment = await AppointmentWrapper(allAppointments[index]);
-        const { appointments, schedule_events } =
-          await appointment.getAllInfo();
-        appointmentData = { ...appointmentData, ...appointments };
-        scheduleEventData = { ...scheduleEventData, ...schedule_events };
-      }
-    }
-
     // medications
     const allMedications =
       (await medicationReminderService.getAllMedicationByData({
@@ -155,6 +125,7 @@ export const getCareplanDataWithImp = async ({
     if (allMedications.length > 0) {
       for (let index = 0; index < allMedications.length; index++) {
         const medication = await MedicationWrapper(allMedications[index]);
+        // check done.
         const { medications, schedule_events } =
           await medication.getReferenceInfoWithImp();
         medicationData = { ...medicationData, ...medications };
@@ -163,23 +134,8 @@ export const getCareplanDataWithImp = async ({
     }
 
     return {
-      care_plans: {
-        ...carePlanData,
-      },
-      appointments: {
-        ...appointmentData,
-      },
       medications: {
         ...medicationData,
-      },
-      medicines: {
-        ...medicineData,
-      },
-      schedule_events: {
-        ...scheduleEventData,
-      },
-      doctors: {
-        ...doctorData,
       },
       providers: {
         ...providerData,
