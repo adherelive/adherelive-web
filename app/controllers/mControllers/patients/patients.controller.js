@@ -556,9 +556,7 @@ class MPatientController extends Controller {
           },
           care_plan_template_ids: [...carePlanTemplateIds],
           current_careplan_id: latestCarePlanId,
-          medicines: {
-            ...medicineApiData,
-          },
+          
           template_appointments: {
             ...templateAppointmentData,
           },
