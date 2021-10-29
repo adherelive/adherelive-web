@@ -10,6 +10,7 @@ resources:
 
 variables:
   tag: '$(Build.BuildId)'
+  dockerhubNS: 'gagneet'
   ImageNames: 'adherelive:portal_demo'
 
 stages:
@@ -32,12 +33,16 @@ stages:
               dockerComposeCommand: build node
               qualifyImageNames: true
               buildImages: true
-              additionalImagetags: $(ImageNames)
+              additionalImagetags: $(dockerhubNS)/$(ImageNames)
+          - task: Docker@2
+            displayName: Login to Docker Hub
+            inputs:
+              command: login
+              containerRegistry: portal_demo
           - task: Docker@2
             displayName: Push image to dockerhub registry
             inputs:
               containerRegistry: portal_demo
-              repository: $(ImageNames)
+              repository: $(dockerhubNS)/$(ImageNames)
               command: push
-              tags: |
-                $(tag)
+              tags: $(dockerhubNS)/$(ImageNames)
