@@ -415,20 +415,17 @@ class MPatientController extends Controller {
         );
       }
 
-      let doctorData = {};
       let allProvidersData = {};
       let allUserRoleData = {};
-      let carePlanApiDetails = {};
+
       let templateMedicationData = {};
       let templateAppointmentData = {};
       let otherCarePlanTemplates = {};
-      let appointmentApiDetails = {};
-      let scheduleEventData = {};
+
       let medicationApiDetails = {};
-      let medicineApiData = {};
+
       let carePlanTemplateIds = [];
       let latestCarePlanId = null;
-      let carePlanIds = [];
       let treatmentIds = [];
 
       // get all careplans attached to patient
@@ -439,60 +436,32 @@ class MPatientController extends Controller {
         })) || [];
 
       if (carePlans.length > 0) {
+        // check done.
         const {
-          care_plans,
-          medicines,
-          appointments,
           medications,
-          schedule_events,
-          doctors,
           providers = {},
           user_roles = {},
           care_plan_ids,
           current_careplan_id,
-        } = await carePlanHelper.getCareplanData({
+        } = await carePlanHelper.getCareplanDataWithImp({
           carePlans,
           userCategory: category,
           doctorId: userCategoryId,
           userRoleId,
         });
 
-        // care plans
-        carePlanApiDetails = { ...carePlanApiDetails, ...care_plans };
-
-        // care plan ids
         carePlanIds = [...care_plan_ids];
-
-        // latest care plan id
         latestCarePlanId = current_careplan_id;
-
-        // doctors
-        doctorData = { ...doctorData, ...doctors };
-
-        // appointments
-        appointmentApiDetails = { ...appointmentApiDetails, ...appointments };
-
-        // medications
         medicationApiDetails = { ...medicationApiDetails, ...medications };
-
-        // schedule events
-        scheduleEventData = { ...scheduleEventData, ...schedule_events };
-
-        // medicines
-        medicineApiData = { ...medicineApiData, ...medicines };
-
         allProvidersData = { ...allProvidersData, ...providers };
-
         allUserRoleData = { ...allUserRoleData, ...user_roles };
 
-        // get all treatment ids from careplan for templates
         Object.keys(care_plans).forEach((id) => {
           const { details: { treatment_id } = {} } = care_plans[id] || {};
           treatmentIds.push(treatment_id);
         });
       }
 
-      // get all careplan templates for user(doctor)
       const carePlanTemplates =
         (await carePlanTemplateService.getCarePlanTemplateData({
           user_id: userId,
@@ -504,12 +473,11 @@ class MPatientController extends Controller {
           const carePlanTemplate = await CarePlanTemplateWrapper(
             carePlanTemplates[index]
           );
-
+          // check done.
           const {
             care_plan_templates,
             template_appointments,
             template_medications,
-            medicines,
           } = await carePlanTemplate.getReferenceInfoWithImp();
 
           carePlanTemplateIds = [
@@ -532,7 +500,6 @@ class MPatientController extends Controller {
             ...templateMedicationData,
             ...template_medications,
           };
-          medicineApiData = { ...medicineApiData, ...medicines };
         }
       } else {
         carePlanTemplateIds.push("1");
@@ -548,15 +515,12 @@ class MPatientController extends Controller {
         res,
         200,
         {
-          care_plans: {
-            ...carePlanApiDetails,
-          },
           care_plan_templates: {
             ...otherCarePlanTemplates,
           },
           care_plan_template_ids: [...carePlanTemplateIds],
           current_careplan_id: latestCarePlanId,
-          
+
           template_appointments: {
             ...templateAppointmentData,
           },
