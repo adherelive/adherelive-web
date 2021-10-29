@@ -10,7 +10,7 @@ resources:
 
 variables:
   tag: '$(Build.BuildId)'
-  ImageNames: 'gagneet/adherelive:portal_demo'
+  ImageNames: 'adherelive:portal_demo'
 
 stages:
   - stage: Build
@@ -24,15 +24,15 @@ stages:
           - task: DockerCompose@0
             displayName: Build an image
             inputs:
-              projectName: $(Build.Repository.Name)
+              projectName: $(ImageNames)
               containerregistrytype: Container Registry
               dockerRegistryEndpoint: portal_demo
               action: Run a Docker Compose command
               dockerComposefile: '$(Build.SourcesDirectory)/docker-compose.yml'
               dockerComposeCommand: build node
+              qualifyImageNames: true
               buildImages: true
-              additionalImagetags: |
-                $(ImageNames)
+              additionalImagetags: $(ImageNames)
           - task: Docker@2
             displayName: Push image to dockerhub registry
             inputs:
