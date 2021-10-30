@@ -120,7 +120,7 @@
     "react-markdown": "^7.0.1",
     "request": "^2.88.2",
     "rrule": "2.6.8",
-    "sequelize": "^6.6.5",
+    "sequelize": "^6.7.0",
     "sequelize-cli": "^6.2.0",
     "twilio": "3.68.0",
     "uuid": "^8.3.2"
