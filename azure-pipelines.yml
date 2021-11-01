@@ -35,15 +35,14 @@ stages:
               qualifyImageNames: true
               buildImages: true
               additionalImagetags: $(ImageTag)
-          - task: Docker@2
-            displayName: Login to Docker Hub
+          - task: DockerCompose@0
+            displayName: Push an image
             inputs:
-              command: login
-              containerRegistry: portal_demo
-          - task: Docker@2
-            displayName: Push image to dockerhub registry
-            inputs:
-              containerRegistry: portal_demo
-              repository: $(dockerhubNS)/$(ImageNames)
-              command: push
-              tags: $(ImageTag)
+              projectName: $(dockerhubNS)/$(ImageNames)
+              containerregistrytype: Container Registry
+              dockerRegistryEndpoint: portal_demo
+              action: Push services
+              dockerComposefile: '$(Build.SourcesDirectory)/docker-compose.yml'
+              includeSourceTags: true
+              includeLatestTag: true
+              qualifyImageNames: true
