@@ -13,6 +13,11 @@ variables:
   dockerhubNS: 'gagneet'
   ImageNames: 'adherelive'
   ImageTag: 'portal_demo'
+  azureSubscriptionEndpoint: 'AdhereLive'
+  azureSubscriptionId: 'AdhereLive'
+  azureContainerRegistry: 'adherelivedemo.azurecr.io'
+  firstArg: 'build'
+  secondArg: 'node'
 
 stages:
   - stage: Build
@@ -24,25 +29,26 @@ stages:
           vmImage: ubuntu-latest
         steps:
           - task: DockerCompose@0
-            displayName: Build an image
+            displayName: Build services
             inputs:
-              projectName: $(dockerhubNS)/$(ImageNames)
-              containerregistrytype: Container Registry
-              dockerRegistryEndpoint: portal_demo
-              action: Run a Docker Compose command
-              dockerComposefile: '$(Build.SourcesDirectory)/docker-compose.yml'
-              dockerComposeCommand: build node
+              action: Build services
+              azureSubscriptionEndpoint: $(azureSubscriptionEndpoint)
+              azureContainerRegistry: $(azureContainerRegistry)
+              dockerComposeFile: $(Build.SourceDirectory)/docker-compose.yml
+              projectName: $(Build.Repository.Name)
               qualifyImageNames: true
-              buildImages: true
-              additionalImagetags: $(ImageTag)
+              additionalImageTags: $(Build.BuildId)
+              dockerComposeFileArgs: |
+                firstArg=$(firstArg)
+                secondArg=$(secondArg)
           - task: DockerCompose@0
-            displayName: Push an image
+            displayName: Push services
             inputs:
-              projectName: $(dockerhubNS)/$(ImageNames)
-              containerregistrytype: Container Registry
-              dockerRegistryEndpoint: portal_demo
               action: Push services
-              dockerComposefile: '$(Build.SourcesDirectory)/docker-compose.yml'
-              includeSourceTags: true
-              includeLatestTag: true
+              azureSubscriptionEndpoint: $(azureSubscriptionEndpoint)
+              azureContainerRegistry: $(azureContainerRegistry)
+              dockerComposeFile: $(Build.SourceDirectory)/docker-compose.yml
+              projectName: $(Build.Repository.Name)
               qualifyImageNames: true
+              additionalImageTags: $(Build.BuildId)
+              
