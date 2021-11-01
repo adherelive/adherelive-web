@@ -13,7 +13,7 @@ variables:
   dockerhubNS: 'gagneet'
   ImageNames: 'adherelive'
   ImageTag: 'portal_demo'
-  azureSubscriptionEndpoint: 'AdhereLive'
+  azureSubscriptionEndpoint: 'adherelive-demo'
   azureSubscriptionId: 'AdhereLive'
   azureContainerRegistry: 'adherelivedemo.azurecr.io'
   firstArg: 'build'
