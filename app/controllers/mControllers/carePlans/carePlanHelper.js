@@ -34,6 +34,124 @@ import moment from "moment";
 
 const Log = new Logger("CARE_PLAN > HELPER");
 
+export const getCareplanDataWithImp = async ({
+  carePlans = [],
+  userCategory,
+  userRoleId,
+}) => {
+  try {
+    let carePlanData = {};
+    let carePlanIds = [];
+    let appointmentIds = [];
+
+    let medicationData = {};
+    let medicationIds = [];
+
+    let scheduleEventData = {};
+
+    let doctorData = {};
+
+    let providerData = {};
+    let userRoleData = {};
+
+    let currentCareplanTime = null;
+    let currentCareplanId = null;
+
+    for (let index = 0; index < carePlans.length; index++) {
+      const careplan = await CarePlanWrapper(carePlans[index]);
+      const { care_plans } = await careplan.getReferenceInfoWithImp();
+
+      carePlanIds.push(careplan.getCarePlanId());
+
+      const {
+        medication_ids,
+        appointment_ids,
+        basic_info: { user_role_id = null } = {},
+      } = care_plans[careplan.getCarePlanId()] || {};
+
+      const secondaryDoctorUserRoleIds =
+        careplan.getCareplnSecondaryProfiles() || [];
+      appointmentIds = [...appointmentIds, ...appointment_ids];
+      medicationIds = [...medicationIds, ...medication_ids];
+
+      const isUserRoleAllowed = [user_role_id, ...secondaryDoctorUserRoleIds]
+        .map((id) => parseInt(id))
+        .includes(userRoleId);
+
+      if (
+        (userCategory === USER_CATEGORY.DOCTOR ||
+          userCategory === USER_CATEGORY.HSP) &&
+        isUserRoleAllowed
+      ) {
+        if (
+          moment(careplan.getCreatedAt()).diff(
+            moment(currentCareplanTime),
+            "minutes"
+          ) > 0
+        ) {
+          currentCareplanTime = careplan.getCreatedAt();
+          currentCareplanId = careplan.getCarePlanId();
+        }
+
+        if (currentCareplanTime === null) {
+          currentCareplanTime = careplan.getCreatedAt();
+          currentCareplanId = careplan.getCarePlanId();
+        }
+      }
+
+      for (let index = 0; index < secondaryDoctorUserRoleIds.length; index++) {
+        const userRole = await UserRoleWrapper(
+          null,
+          secondaryDoctorUserRoleIds[index]
+        );
+        // check done
+        const {
+          user_roles: secondaryUserRoles,
+          providers: secondaryProviders,
+        } = await userRole.getAllInfoWithImp();
+
+        providerData = { ...providerData, ...secondaryProviders };
+        userRoleData = { ...userRoleData, ...secondaryUserRoles };
+      }
+    }
+
+    Log.info(`8912731893 currentCareplanId ${currentCareplanId}`);
+    // medications
+    const allMedications =
+      (await medicationReminderService.getAllMedicationByData({
+        id: medicationIds,
+      })) || [];
+
+    if (allMedications.length > 0) {
+      for (let index = 0; index < allMedications.length; index++) {
+        const medication = await MedicationWrapper(allMedications[index]);
+        // check done.
+        const { medications, schedule_events } =
+          await medication.getReferenceInfoWithImp();
+        medicationData = { ...medicationData, ...medications };
+        scheduleEventData = { ...scheduleEventData, ...schedule_events };
+      }
+    }
+
+    return {
+      medications: {
+        ...medicationData,
+      },
+      providers: {
+        ...providerData,
+      },
+      user_roles: {
+        ...userRoleData,
+      },
+      care_plan_ids: carePlanIds,
+      current_careplan_id: currentCareplanId,
+    };
+  } catch (error) {
+    Log.debug("getCareplanData catch error", error);
+    return {};
+  }
+};
+
 export const getCareplanData = async ({
   carePlans = [],
   userCategory,

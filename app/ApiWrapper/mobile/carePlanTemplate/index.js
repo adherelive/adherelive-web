@@ -252,8 +252,7 @@ class CarePlanTemplateWrapper extends BaseCarePlanTemplate {
 
     let templateAppointments = [];
     let templateMedications = [];
-    let medicines = [];
-
+    
     let appointmentIds = [];
     let medicationIds = [];
     let medicineIds = [];
@@ -313,14 +312,6 @@ class CarePlanTemplateWrapper extends BaseCarePlanTemplate {
         templateWorkoutIds.push(templateWorkout.getId());
       }
     }
-    const medicineData = await medicineService.getMedicineByData({
-      id: medicineIds,
-    });
-    for (const medicine of medicineData) {
-      const data = await MedicineWrapper(medicine);
-      medicines[data.getMedicineId()] = data.getBasicInfo();
-    }
-
     return {
       care_plan_templates: {
         [this.getCarePlanTemplateId()]: {
@@ -338,9 +329,7 @@ class CarePlanTemplateWrapper extends BaseCarePlanTemplate {
       template_medications: {
         ...templateMedications,
       },
-      medicines: {
-        ...medicines,
-      },
+     
       care_plan_template_id: this.getCarePlanTemplateId(),
     };
   };

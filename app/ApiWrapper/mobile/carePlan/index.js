@@ -195,6 +195,15 @@ class CarePlanWrapper extends BaseCarePlan {
       doctor_id,
     };
   };
+
+  getReferenceInfoWithImp = async () => {
+    const { _data, getCarePlanId, getAllInfo } = this;
+    return {
+      care_plans: {
+        [getCarePlanId()]: await getAllInfo(),
+      },
+    };
+  };
 }
 
 export default async (data = null, id = null) => {
