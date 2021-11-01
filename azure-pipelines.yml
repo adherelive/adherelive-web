@@ -16,8 +16,6 @@ variables:
   azureSubscriptionEndpoint: 'adherelive-demo'
   azureSubscriptionId: 'AdhereLive'
   azureContainerRegistry: 'adherelivedemo.azurecr.io'
-  firstArg: 'build'
-  secondArg: 'node'
 
 stages:
   - stage: Build
@@ -34,20 +32,19 @@ stages:
               action: Build services
               azureSubscriptionEndpoint: $(azureSubscriptionEndpoint)
               azureContainerRegistry: $(azureContainerRegistry)
-              dockerComposeFile: $(Build.SourceDirectory)/docker-compose.yml
+              dockerComposeFile: '$(Build.SourcesDirectory)/docker-compose.yml'
+              dockerComposeCommand: build node
               projectName: $(Build.Repository.Name)
               qualifyImageNames: true
+              buildImages: true
               additionalImageTags: $(Build.BuildId)
-              dockerComposeFileArgs: |
-                firstArg=$(firstArg)
-                secondArg=$(secondArg)
           - task: DockerCompose@0
             displayName: Push services
             inputs:
               action: Push services
               azureSubscriptionEndpoint: $(azureSubscriptionEndpoint)
               azureContainerRegistry: $(azureContainerRegistry)
-              dockerComposeFile: $(Build.SourceDirectory)/docker-compose.yml
+              dockerComposeFile: '$(Build.SourcesDirectory)/docker-compose.yml'
               projectName: $(Build.Repository.Name)
               qualifyImageNames: true
               additionalImageTags: $(Build.BuildId)
