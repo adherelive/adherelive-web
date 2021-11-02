@@ -5,6 +5,11 @@
 trigger:
   - development
 
+pool:
+  vmImage:
+    publisher: microsoft
+    offer: UbuntuServer
+
 resources:
   - repo: self
 
@@ -16,11 +21,12 @@ variables:
   azureSubscriptionEndpoint: 'adherelive-demo'
   azureSubscriptionId: 'AdhereLive'
   azureContainerRegistry: 'adherelivedemo.azurecr.io'
+  azureEnvironment: 'AdhereLive-Demo'
 
 stages:
   - stage: Build
     displayName: Build image
-    jobs:
+    jobs:                
       - job: Build
         displayName: Build
         pool:
@@ -48,4 +54,20 @@ stages:
               projectName: $(Build.Repository.Name)
               qualifyImageNames: true
               additionalImageTags: $(Build.BuildId)
-              
+      - deployment: VMDeploy
+        displayName: Deploy to Azure
+        environment: 
+          name: $(azureEnvironment)
+          resourceType: VirtualMachine
+          tags: 'adherelive-demo'
+        strategy: 
+          runOnce:
+            deploy:
+              steps:
+                - script: |
+                    name: 'Deploy to Azure'
+                    commands:
+                      - 'cd /home/azureuser/adhere'
+                      - 'docker-compose -f docker-compose-demo-ssl.yaml down'
+                      - 'docker pull adherelivedemo.azurecr.io/adhereliveadhereliveweb_node'
+                      - 'docker-compose -f docker-compose-demo-ssl.yaml up -d'                 
