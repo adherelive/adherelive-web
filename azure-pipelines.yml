@@ -52,6 +52,9 @@ stages:
               projectName: $(Build.Repository.Name)
               qualifyImageNames: true
               additionalImageTags: $(Build.BuildId)
+  - stage: Test
+    displayName: Test & deploy image
+    jobs:
       - deployment: VMDeploy
         displayName: Deploy to Azure VM
         environment: 
