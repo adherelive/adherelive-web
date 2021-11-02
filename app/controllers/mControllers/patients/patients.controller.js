@@ -450,16 +450,16 @@ class MPatientController extends Controller {
           userRoleId,
         });
 
-        carePlanIds = [...care_plan_ids];
+        //        carePlanIds = [...care_plan_ids];
         latestCarePlanId = current_careplan_id;
         medicationApiDetails = { ...medicationApiDetails, ...medications };
         allProvidersData = { ...allProvidersData, ...providers };
         allUserRoleData = { ...allUserRoleData, ...user_roles };
-
+        /*
         Object.keys(care_plans).forEach((id) => {
           const { details: { treatment_id } = {} } = care_plans[id] || {};
           treatmentIds.push(treatment_id);
-        });
+        });*/
       }
 
       const carePlanTemplates =
