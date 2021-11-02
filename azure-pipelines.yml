@@ -67,5 +67,5 @@ stages:
               steps:
                 - task: ShellScript@2
                   inputs:
-                    scriptPath: /home/azureuser/docker-up.sh
+                    scriptPath: /home/azureuser/install-image.sh
                     failOnStandardError: false
