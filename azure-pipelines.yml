@@ -5,6 +5,9 @@
 trigger:
   - development
 
+pool:
+  vmImage: ubuntu-latest
+
 resources:
   - repo: self
 
@@ -13,36 +16,50 @@ variables:
   dockerhubNS: 'gagneet'
   ImageNames: 'adherelive'
   ImageTag: 'portal_demo'
+  azureSubscriptionEndpoint: 'adherelive-demo'
+  azureSubscriptionId: 'AdhereLive'
+  azureContainerRegistry: 'adherelivedemo.azurecr.io'
+  azureEnvironment: 'AdhereLive-Demo'
 
 stages:
   - stage: Build
     displayName: Build image
-    jobs:
+    jobs:                
       - job: Build
         displayName: Build
         pool:
           vmImage: ubuntu-latest
         steps:
           - task: DockerCompose@0
-            displayName: Build an image
+            displayName: Build services
             inputs:
-              projectName: $(dockerhubNS)/$(ImageNames)
-              containerregistrytype: Container Registry
-              dockerRegistryEndpoint: portal_demo
-              action: Run a Docker Compose command
-              dockerComposefile: '$(Build.SourcesDirectory)/docker-compose.yml'
+              action: Build services
+              azureSubscriptionEndpoint: $(azureSubscriptionEndpoint)
+              azureContainerRegistry: $(azureContainerRegistry)
+              dockerComposeFile: '$(Build.SourcesDirectory)/docker-compose.yml'
               dockerComposeCommand: build node
+              projectName: $(Build.Repository.Name)
               qualifyImageNames: true
               buildImages: true
-              additionalImagetags: $(ImageTag)
+              additionalImageTags: $(Build.BuildId)
           - task: DockerCompose@0
-            displayName: Push an image
+            displayName: Push services
             inputs:
-              projectName: $(dockerhubNS)/$(ImageNames)
-              containerregistrytype: Container Registry
-              dockerRegistryEndpoint: portal_demo
               action: Push services
-              dockerComposefile: '$(Build.SourcesDirectory)/docker-compose.yml'
-              includeSourceTags: true
-              includeLatestTag: true
+              azureSubscriptionEndpoint: $(azureSubscriptionEndpoint)
+              azureContainerRegistry: $(azureContainerRegistry)
+              dockerComposeFile: '$(Build.SourcesDirectory)/docker-compose.yml'
+              projectName: $(Build.Repository.Name)
               qualifyImageNames: true
+              additionalImageTags: $(Build.BuildId)
+      - deployment: VMDeploy
+        displayName: Deploy to Azure VM
+        environment: 
+          name: $(azureEnvironment)
+          resourceType: VirtualMachine
+          tags: 'adherelive-demo'
+        strategy: 
+          runOnce:
+            deploy:
+              steps:
+                - script: 'docker-up.sh'
