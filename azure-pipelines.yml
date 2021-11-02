@@ -52,6 +52,9 @@ stages:
               projectName: $(Build.Repository.Name)
               qualifyImageNames: true
               additionalImageTags: $(Build.BuildId)
+  - stage: Test
+    displayName: Test & deploy image
+    jobs:
       - deployment: VMDeploy
         displayName: Deploy to Azure VM
         environment: 
@@ -62,4 +65,7 @@ stages:
           runOnce:
             deploy:
               steps:
-                - script: 'docker-up.sh'
+                - task: ShellScript@2
+                  inputs:
+                    scriptPath: /home/azureuser/docker-up.sh
+                    failOnStandardError: false
