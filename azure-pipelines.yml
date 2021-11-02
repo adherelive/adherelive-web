@@ -63,9 +63,7 @@ stages:
             deploy:
               steps:
                 - script: |
-                    name: 'Deploy to Azure'
-                    commands:
-                      - 'cd /home/azureuser/adhere'
-                      - 'docker-compose -f docker-compose-demo-ssl.yaml down'
-                      - 'docker pull adherelivedemo.azurecr.io/adhereliveadhereliveweb_node'
-                      - 'docker-compose -f docker-compose-demo-ssl.yaml up -d'                 
+                    - 'cd /home/azureuser/adhere'
+                    - 'docker-compose -f docker-compose-demo-ssl.yaml down'
+                    - 'docker pull adherelivedemo.azurecr.io/adhereliveadhereliveweb_node'
+                    - 'docker-compose -f docker-compose-demo-ssl.yaml up -d'
