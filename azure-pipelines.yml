@@ -6,9 +6,7 @@ trigger:
   - development
 
 pool:
-  vmImage:
-    publisher: microsoft
-    offer: UbuntuServer
+  vmImage: ubuntu-latest
 
 resources:
   - repo: self
@@ -55,7 +53,7 @@ stages:
               qualifyImageNames: true
               additionalImageTags: $(Build.BuildId)
       - deployment: VMDeploy
-        displayName: Deploy to Azure
+        displayName: Deploy to Azure VM
         environment: 
           name: $(azureEnvironment)
           resourceType: VirtualMachine
