@@ -62,9 +62,4 @@ stages:
           runOnce:
             deploy:
               steps:
-                - script: |
-                  cd /home/azureuser/adhere
-                  docker-compose -f docker-compose-demo-ssl.yaml down
-                  docker pull adherelivedemo.azurecr.io/adhereliveadhereliveweb_node
-                  docker-compose -f docker-compose-demo-ssl.yaml up -d
-                  docker-compose -f docker-compose-demo-ssl.yaml logs -f --tail=1000 node
+                - script: 'docker-up.sh'
