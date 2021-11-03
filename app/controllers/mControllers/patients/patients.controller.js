@@ -836,6 +836,26 @@ class MPatientController extends Controller {
         }
       }
 
+      /*
+      care_plans: {
+            ...carePlanApiDetails,
+          },
+          care_plan_templates: {
+            ...otherCarePlanTemplates,
+          },
+          care_plan_template_ids: [...carePlanTemplateIds],
+          current_careplan_id: latestCarePlanId,
+
+          template_appointments: {
+            ...templateAppointmentData,
+          },
+          template_medications: {
+            ...templateMedicationData,
+          },
+          vital_templates: {
+            ...vitalTemplateData,
+          },
+          */
       return this.raiseSuccess(
         res,
         200,
