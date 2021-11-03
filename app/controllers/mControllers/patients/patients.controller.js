@@ -417,7 +417,7 @@ class MPatientController extends Controller {
 
       let allProvidersData = {};
       let allUserRoleData = {};
-
+      let carePlanApiDetails = {};
       let templateMedicationData = {};
       let templateAppointmentData = {};
       let otherCarePlanTemplates = {};
@@ -427,6 +427,9 @@ class MPatientController extends Controller {
       let carePlanTemplateIds = [];
       let latestCarePlanId = null;
       let treatmentIds = [];
+
+      // for vitals
+      let vitalTemplateData = {};
 
       // get all careplans attached to patient
       const carePlans =
@@ -451,6 +454,8 @@ class MPatientController extends Controller {
           userRoleId,
         });
 
+        // care plans
+        carePlanApiDetails = { ...carePlanApiDetails, ...care_plans };
         //        carePlanIds = [...care_plan_ids];
         latestCarePlanId = current_careplan_id;
         medicationApiDetails = { ...medicationApiDetails, ...medications };
@@ -479,6 +484,7 @@ class MPatientController extends Controller {
             care_plan_templates,
             template_appointments,
             template_medications,
+            vital_templates,
           } = await carePlanTemplate.getReferenceInfoWithImp();
 
           carePlanTemplateIds = [
@@ -492,6 +498,10 @@ class MPatientController extends Controller {
           otherCarePlanTemplates = {
             ...otherCarePlanTemplates,
             ...care_plan_templates,
+          };
+          vitalTemplateData = {
+            ...vitalTemplateData,
+            ...vital_templates,
           };
           templateAppointmentData = {
             ...templateAppointmentData,
@@ -516,6 +526,9 @@ class MPatientController extends Controller {
         res,
         200,
         {
+          care_plans: {
+            ...carePlanApiDetails,
+          },
           care_plan_templates: {
             ...otherCarePlanTemplates,
           },
@@ -527,6 +540,9 @@ class MPatientController extends Controller {
           },
           template_medications: {
             ...templateMedicationData,
+          },
+          vital_templates: {
+            ...vitalTemplateData,
           },
         },
         "Patient care plan details fetched successfully"
