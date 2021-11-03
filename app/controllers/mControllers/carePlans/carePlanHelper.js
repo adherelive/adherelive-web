@@ -60,7 +60,7 @@ export const getCareplanDataWithImp = async ({
     for (let index = 0; index < carePlans.length; index++) {
       const careplan = await CarePlanWrapper(carePlans[index]);
       const { care_plans } = await careplan.getReferenceInfoWithImp();
-
+      carePlanData = { ...carePlanData, ...care_plans };
       carePlanIds.push(careplan.getCarePlanId());
 
       const {
@@ -136,6 +136,9 @@ export const getCareplanDataWithImp = async ({
     return {
       medications: {
         ...medicationData,
+      },
+      care_plans: {
+        ...carePlanData,
       },
       providers: {
         ...providerData,

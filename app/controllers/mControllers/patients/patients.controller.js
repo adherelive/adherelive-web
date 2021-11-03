@@ -394,7 +394,7 @@ class MPatientController extends Controller {
   };
 
   //TODO: need to delete below function if all working fine in mobile app.
-  getPatientCarePlanDetails = async (req, res) => {
+  getPatientCarePlanDetailsWithImp = async (req, res) => {
     try {
       const { id: patient_id = 1 } = req.params;
       const {
@@ -440,6 +440,7 @@ class MPatientController extends Controller {
         const {
           medications,
           providers = {},
+          care_plans,
           user_roles = {},
           care_plan_ids,
           current_careplan_id,
@@ -455,11 +456,11 @@ class MPatientController extends Controller {
         medicationApiDetails = { ...medicationApiDetails, ...medications };
         allProvidersData = { ...allProvidersData, ...providers };
         allUserRoleData = { ...allUserRoleData, ...user_roles };
-        /*
+
         Object.keys(care_plans).forEach((id) => {
           const { details: { treatment_id } = {} } = care_plans[id] || {};
           treatmentIds.push(treatment_id);
-        });*/
+        });
       }
 
       const carePlanTemplates =
@@ -537,7 +538,7 @@ class MPatientController extends Controller {
   };
 
   //TODO: need to delete below function if all working fine in mobile app.
-  getPatientCarePlanDetailsWithDel = async (req, res) => {
+  getPatientCarePlanDetails = async (req, res) => {
     try {
       const { id: patient_id = 1 } = req.params;
       const {
