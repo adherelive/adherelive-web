@@ -48,7 +48,7 @@ router.get(
 router.get(
   "/:id/careplan-details",
   Authenticated,
-  PatientController.getPatientCarePlanDetails
+  PatientController.getPatientCarePlanDetailsWithImp
 );
 
 router.get(
