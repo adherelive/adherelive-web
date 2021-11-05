@@ -7,102 +7,103 @@ import Log from "../../../libs/log_new";
 Log.fileName("WEB > TWILIO > CONTROLLER");
 
 class TwilioController extends Controller {
-    constructor() {
-        super();
+  constructor() {
+    super();
+  }
+
+  generateTwilioChatAccessToken = async (req, res) => {
+    const { raiseSuccess, raiseServerError } = this;
+    try {
+      const deviceId = req.query.device;
+      const identity = req.query.identity;
+
+      const token = await twilioService.chatTokenGenerator(identity, deviceId);
+
+      return raiseSuccess(
+        res,
+        200,
+        { identity: identity, token: token },
+        "Created new chat token with userId"
+      );
+    } catch (error) {
+      Log.debug("generateTwilioChatAccessToken 500 error", error);
+      return raiseServerError(res);
     }
+  };
 
-    generateTwilioChatAccessToken = async (req, res) => {
-        const {raiseSuccess, raiseServerError} = this;
-        try {
-            const deviceId = req.query.device;
-            const identity = req.query.identity;
+  generateTwilioVideoAccessToken = async (req, res) => {
+    const { raiseSuccess, raiseServerError } = this;
+    try {
+      const {
+        userDetails: { userRoleId },
+      } = req;
+      const userId = userRoleId ? userRoleId : null;
+      const identity = userId ? userId : faker.name.findName();
 
-            const token = await twilioService.chatTokenGenerator(identity, deviceId);
+      const token = await twilioService.videoTokenGenerator(identity);
 
-            return raiseSuccess(
-                res,
-                200,
-                {identity: identity, token: token},
-                "Created new chat token with userId"
-            );
-        } catch (error) {
-            Log.debug("generateTwilioChatAccessToken 500 error", error);
-            return raiseServerError(res);
-        }
-    };
+      return raiseSuccess(
+        res,
+        200,
+        { identity: identity, token: token },
+        "Created new video token"
+      );
+    } catch (error) {
+      Log.debug("generateTwilioVideoAccessToken 500 error", error);
+      return raiseServerError(res);
+    }
+  };
 
-    generateTwilioVideoAccessToken = async (req, res) => {
-        const {raiseSuccess, raiseServerError} = this;
-        try {
-            const {userDetails: {userRoleId}} = req;
-            const userId = userRoleId ? userRoleId : null;
-            const identity = userId ? userId : faker.name.findName();
+  getConnectedParticipants = async (req, res) => {
+    const { raiseSuccess, raiseServerError } = this;
+    try {
+      const { roomId } = req.params;
 
-            const token = await twilioService.videoTokenGenerator(identity);
+      const connectedParticipantsList =
+        await twilioService.getRoomConnectedParticipants(roomId);
+      let connectedParticipants = {};
+      connectedParticipantsList.forEach((participant) => {
+        const { status, identity } = participant;
+        connectedParticipants[identity] = status;
+      });
 
-            return raiseSuccess(
-                res,
-                200,
-                {identity: identity, token: token},
-                "Created new video token"
-            );
-        } catch (error) {
-            Log.debug("generateTwilioVideoAccessToken 500 error", error);
-            return raiseServerError(res);
-        }
-    };
+      return raiseSuccess(
+        res,
+        200,
+        { connectedParticipants },
+        "Fetched Connected Participants"
+      );
+    } catch (error) {
+      Log.debug("getConnectedParticipants 500 error", error);
+      return raiseServerError(res);
+    }
+  };
 
-    getConnectedParticipants = async (req, res) => {
-        const {raiseSuccess, raiseServerError} = this;
-        try {
-            const {roomId} = req.params;
+  deleteChat = async (req, res) => {
+    const { raiseSuccess, raiseServerError } = this;
+    try {
+      const allChannels = await twilioService.deleteAllMessages();
 
-            const connectedParticipantsList = await twilioService.getRoomConnectedParticipants(
-                roomId
-            );
-            let connectedParticipants = {};
-            connectedParticipantsList.forEach(participant => {
-                const {status, identity} = participant;
-                connectedParticipants[identity] = status;
-            });
+      return raiseSuccess(res, 200, {}, "DELETED ALL CHAT MESSAGES");
+    } catch (error) {
+      Log.debug("deleteChat 500 error", error);
+      return raiseServerError(res);
+    }
+  };
 
-            return raiseSuccess(
-                res,
-                200,
-                {connectedParticipants},
-                "Fetched Connected Participants"
-            );
-        } catch (error) {
-            Log.debug("getConnectedParticipants 500 error", error);
-            return raiseServerError(res);
-        }
-    };
+  getAllChats = async (req, res) => {
+    const { raiseSuccess, raiseServerError } = this;
+    try {
+      const allChannels = await twilioService.getAllMessages();
 
-    deleteChat = async (req, res) => {
-        const {raiseSuccess, raiseServerError} = this;
-        try {
-            const allChannels = await twilioService.deleteAllMessages();
+      Log.debug("all Channels", allChannels);
 
-            return raiseSuccess(res, 200, {}, "DELETED ALL CHAT MESSAGES");
-        } catch (error) {
-            Log.debug("deleteChat 500 error", error);
-            return raiseServerError(res);
-        }
-    };
-
-    getAllChats = async (req, res) => {
-        const {raiseSuccess, raiseServerError} = this;
-        try {
-            const allChannels = await twilioService.getAllMessages();
-
-            Log.debug("all Channels", allChannels);
-
-            return raiseSuccess(res, 200, {}, "GET ALL CHAT MESSAGES");
-        } catch (error) {
-            Log.debug("deleteChat 500 error", error);
-            return raiseServerError(res);
-        }
-    };
+      return raiseSuccess(res, 200, {}, "GET ALL CHAT MESSAGES");
+    } catch (error) {
+      Log.debug("deleteChat 500 error", error);
+      return raiseServerError(res);
+    }
+  };
 }
 
 export default new TwilioController();

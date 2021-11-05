@@ -1,4 +1,4 @@
-import {combineReducers} from "redux";
+import { combineReducers } from "redux";
 import graphs from "./graphs";
 import users from "./user";
 import auth from "./auth";
@@ -23,7 +23,7 @@ import doctor_qualifications from "./doctorQualifications";
 import doctor_registrations from "./doctorRegistrations";
 import template_appointments from "./templateAppointments";
 import template_medications from "./templateMedications";
-import template_vitals from "./templateVitals"
+import template_vitals from "./templateVitals";
 import template_diets from "./templateDiets";
 import template_workouts from "./templateWorkouts";
 import care_plan_templates from "./carePlanTemplates";
@@ -78,91 +78,91 @@ import exercise_groups from "./exerciseGroups";
 import workout_exercise_groups from "./workoutExerciseGroups";
 
 const rootReducer = combineReducers({
-    auth,
-    users,
-    graphs,
-    patients,
-    doctors,
-    providers,
-    treatments,
-    conditions,
-    severity,
-    medications,
-    pages,
-    chats,
-    drawer,
-    appointments,
-    medicines,
-    other_details,
-    onBoarding,
-    care_plans,
-    doctor_clinics,
-    doctor_qualifications,
-    doctor_registrations,
-    upload_documents,
-    template_appointments,
-    template_medications,
-    template_vitals,
-    template_diets,
-    template_workouts,
-    care_plan_templates,
-    show_template_drawer,
-    colleges,
-    degrees,
-    councils,
-    static_templates,
-    specialities,
-    twilio,
-    chatMessages,
-    notifications,
-    symptoms,
-    vital_templates,
-    vitals,
-    repeat_intervals,
-    schedule_events,
-    account_details,
-    features,
-    features_mappings,
-    reports,
-    transactions,
-    payment_products,
-    date_wise_appointments,
-    favourites_data,
-    agora,
-    user_roles,
-    emails,
-    terms_and_conditions,
-    notification_redirect,
-    portions,
-    food_items,
-    food_item_details,
-    searched_food_items,
-    searched_food_item_details,
-    diets,
-    latest_created_food,
-    diet_food_group_mappings,
-    diet_responses,
-    repetitions,
-    exercises,
-    exercise_details,
-    searched_exercises,
-    searched_exercise_details,
-    latest_created_exercise,
-    workouts,
-    all_workout_details,
-    exercise_contents,
-    workout_responses,
-    exercise_groups,
-    workout_exercise_groups
+  auth,
+  users,
+  graphs,
+  patients,
+  doctors,
+  providers,
+  treatments,
+  conditions,
+  severity,
+  medications,
+  pages,
+  chats,
+  drawer,
+  appointments,
+  medicines,
+  other_details,
+  onBoarding,
+  care_plans,
+  doctor_clinics,
+  doctor_qualifications,
+  doctor_registrations,
+  upload_documents,
+  template_appointments,
+  template_medications,
+  template_vitals,
+  template_diets,
+  template_workouts,
+  care_plan_templates,
+  show_template_drawer,
+  colleges,
+  degrees,
+  councils,
+  static_templates,
+  specialities,
+  twilio,
+  chatMessages,
+  notifications,
+  symptoms,
+  vital_templates,
+  vitals,
+  repeat_intervals,
+  schedule_events,
+  account_details,
+  features,
+  features_mappings,
+  reports,
+  transactions,
+  payment_products,
+  date_wise_appointments,
+  favourites_data,
+  agora,
+  user_roles,
+  emails,
+  terms_and_conditions,
+  notification_redirect,
+  portions,
+  food_items,
+  food_item_details,
+  searched_food_items,
+  searched_food_item_details,
+  diets,
+  latest_created_food,
+  diet_food_group_mappings,
+  diet_responses,
+  repetitions,
+  exercises,
+  exercise_details,
+  searched_exercises,
+  searched_exercise_details,
+  latest_created_exercise,
+  workouts,
+  all_workout_details,
+  exercise_contents,
+  workout_responses,
+  exercise_groups,
+  workout_exercise_groups,
 });
 
 export default (state, action) => {
-    if (action.type === "SIGNING_OUT_COMPLETED") {
-        Object.keys(state).forEach(keys => {
-            if (keys !== "auth" && keys !== "countryCities") {
-                state[keys] = {};
-            }
-        });
-    }
-    return rootReducer(state, action);
+  if (action.type === "SIGNING_OUT_COMPLETED") {
+    Object.keys(state).forEach((keys) => {
+      if (keys !== "auth" && keys !== "countryCities") {
+        state[keys] = {};
+      }
+    });
+  }
+  return rootReducer(state, action);
 };

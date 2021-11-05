@@ -1,19 +1,19 @@
-import {connect} from "react-redux";
+import { connect } from "react-redux";
 import AdminDoctorPage from "../../../Components/Pages/adminDoctor";
-import {withRouter} from "react-router-dom";
+import { withRouter } from "react-router-dom";
 // import {open} from "../../../modules/drawer";
 // import {DRAWER} from "../../../constant";
 
-const mapStateToProps = state => {
-    const {} = state;
+const mapStateToProps = (state) => {
+  const {} = state;
 
-    return {};
+  return {};
 };
 
-const mapDispatchToProps = dispatch => {
-    return {};
+const mapDispatchToProps = (dispatch) => {
+  return {};
 };
 
 export default withRouter(
-    connect(mapStateToProps, mapDispatchToProps)(AdminDoctorPage)
+  connect(mapStateToProps, mapDispatchToProps)(AdminDoctorPage)
 );

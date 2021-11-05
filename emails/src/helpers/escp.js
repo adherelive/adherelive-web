@@ -6,5 +6,5 @@
  * {{{firstName}}}
  */
 module.exports = function (content) {
-    return "<%- " + content + " %>";
+  return "<%- " + content + " %>";
 };

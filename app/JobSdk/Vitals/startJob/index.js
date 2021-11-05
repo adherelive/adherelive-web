@@ -1,6 +1,6 @@
 import VitalJob from "../";
 import moment from "moment";
-import {DEFAULT_PROVIDER, EVENT_TYPE} from "../../../../constant";
+import { DEFAULT_PROVIDER, EVENT_TYPE } from "../../../../constant";
 
 import UserRoleService from "../../../services/userRoles/userRoles.service";
 import ProviderService from "../../../services/provider/provider.service";
@@ -10,131 +10,134 @@ import UserDeviceWrapper from "../../../ApiWrapper/mobile/userDevice";
 import VitalWrapper from "../../../ApiWrapper/mobile/vitals";
 
 class StartJob extends VitalJob {
-    constructor(data) {
-        super(data);
+  constructor(data) {
+    super(data);
+  }
+
+  getPushAppTemplate = async () => {
+    const { _data } = this;
+    const {
+      details: {
+        participants = [],
+        actor: {
+          id: actorId,
+          user_role_id,
+          details: { name, category: actorCategory } = {},
+        } = {},
+
+        vital_templates,
+        vital_templates: { basic_info: { name: vitalName = "" } = {} } = {},
+      } = {},
+      event_id,
+      // eventId = null,
+    } = _data || {};
+
+    const templateData = [];
+    const playerIds = [];
+    const userIds = [];
+
+    const vitals = await VitalWrapper({ id: event_id });
+    const { vitals: latestVital } = await vitals.getAllInfo();
+
+    // participants.forEach(participant => {
+    //   if (participant !== user_role_id) {
+    //     userRoleIds.push(participant);
+    //   }
+    // });
+
+    const { rows: userRoles = [] } =
+      (await UserRoleService.findAndCountAll({
+        where: {
+          id: participants,
+        },
+      })) || {};
+
+    let providerId = null;
+
+    for (const userRole of userRoles) {
+      const { id, user_identity, linked_id } = userRole || {};
+      if (id !== user_role_id) {
+        userIds.push(user_identity);
+      } else {
+        if (linked_id) {
+          providerId = linked_id;
+        }
+      }
     }
 
-    getPushAppTemplate = async () => {
-        const {_data} = this;
-        const {
-            details: {
-                participants = [],
-                actor: {
-                    id: actorId,
-                    user_role_id,
-                    details: {name, category: actorCategory} = {},
-                } = {},
+    // provider
+    let providerName = DEFAULT_PROVIDER;
+    if (providerId) {
+      const provider = await ProviderService.getProviderByData({
+        id: providerId,
+      });
+      const { name } = provider || {};
+      providerName = name;
+    }
 
-                vital_templates,
-                vital_templates: {basic_info: {name: vitalName = ""} = {}} = {},
-            } = {},
-            event_id
-            // eventId = null,
-        } = _data || {};
+    const userDevices = await UserDeviceService.getAllDeviceByData({
+      user_id: userIds,
+    });
 
-        const templateData = [];
-        const playerIds = [];
-        const userIds = [];
+    if (userDevices.length > 0) {
+      for (const device of userDevices) {
+        const userDevice = await UserDeviceWrapper({ data: device });
+        playerIds.push(userDevice.getOneSignalDeviceId());
+      }
+    }
 
-        const vitals = await VitalWrapper({id: event_id});
-        const {vitals: latestVital} = await vitals.getAllInfo();
+    templateData.push({
+      small_icon: process.config.app.icon_android,
+      app_id: process.config.one_signal.app_id, // TODO: add the same in pushNotification handler in notificationSdk
+      headings: { en: `${vitalName} Reminder` },
+      contents: {
+        en: `Tap here to update your ${vitalName}`,
+      },
+      // buttons: [{ id: "yes", text: "Yes" }, { id: "no", text: "No" }],
+      include_player_ids: [...playerIds],
+      priority: 10,
+      android_channel_id: process.config.one_signal.urgent_channel_id,
+      data: {
+        url: "/vitals",
+        vital: latestVital[event_id],
+        vital_template: vital_templates,
+        type: "modal",
+      },
+    });
 
-        // participants.forEach(participant => {
-        //   if (participant !== user_role_id) {
-        //     userRoleIds.push(participant);
-        //   }
-        // });
+    return templateData;
+  };
 
-        const {rows: userRoles = []} = await UserRoleService.findAndCountAll({
-            where: {
-                id: participants
-            }
-        }) || {};
+  getInAppTemplate = () => {
+    const { getData } = this;
+    const data = getData();
+    const {
+      details: { participants = [], actor: { id: actorId, user_role_id } = {} },
+      id = null,
+      start_time = null,
+      event_id = null,
+    } = data || {};
 
-        let providerId = null;
-
-        for (const userRole of userRoles) {
-            const {id, user_identity, linked_id} = userRole || {};
-            if (id !== user_role_id) {
-                userIds.push(user_identity);
-            } else {
-                if (linked_id) {
-                    providerId = linked_id;
-                }
-            }
-        }
-
-        // provider
-        let providerName = DEFAULT_PROVIDER;
-        if (providerId) {
-            const provider = await ProviderService.getProviderByData({id: providerId});
-            const {name} = provider || {};
-            providerName = name;
-        }
-
-        const userDevices = await UserDeviceService.getAllDeviceByData({
-            user_id: userIds,
-        });
-
-        if (userDevices.length > 0) {
-            for (const device of userDevices) {
-                const userDevice = await UserDeviceWrapper({data: device});
-                playerIds.push(userDevice.getOneSignalDeviceId());
-            }
-        }
-
+    const templateData = [];
+    const now = moment();
+    const currentTimeStamp = now.unix();
+    for (const participant of participants) {
+      if (participant !== user_role_id) {
         templateData.push({
-            small_icon: process.config.app.icon_android,
-            app_id: process.config.one_signal.app_id, // TODO: add the same in pushNotification handler in notificationSdk
-            headings: {en: `${vitalName} Reminder`},
-            contents: {
-                en: `Tap here to update your ${vitalName}`,
-            },
-            // buttons: [{ id: "yes", text: "Yes" }, { id: "no", text: "No" }],
-            include_player_ids: [...playerIds],
-            priority: 10,
-            android_channel_id: process.config.one_signal.urgent_channel_id,
-            data: {
-                url: "/vitals",
-                vital: latestVital[event_id],
-                vital_template: vital_templates,
-                type: "modal",
-            },
+          actor: actorId,
+          actorRoleId: user_role_id,
+          object: `${participant}`,
+          foreign_id: `${event_id}`,
+          verb: `vital_start:${currentTimeStamp}`,
+          event: EVENT_TYPE.VITALS,
+          time: start_time,
+          start_time: start_time,
         });
+      }
+    }
 
-        return templateData;
-    };
-
-    getInAppTemplate = () => {
-        const {getData} = this;
-        const data = getData();
-        const {
-            details: {participants = [], actor: {id: actorId, user_role_id} = {}},
-            id = null,
-            start_time = null,
-            event_id = null,
-        } = data || {};
-
-        const templateData = [];
-        const now = moment();
-        const currentTimeStamp = now.unix();
-        for (const participant of participants) {
-            if (participant !== user_role_id) {
-                templateData.push({
-                    actor: actorId,
-                    actorRoleId: user_role_id,
-                    object: `${participant}`,
-                    foreign_id: `${event_id}`,
-                    verb: `vital_start:${currentTimeStamp}`,
-                    event: EVENT_TYPE.VITALS,
-                    time: start_time,
-                    start_time: start_time,
-                });
-            }
-        }
-
-        return templateData;
-    };
+    return templateData;
+  };
 }
 
 export default StartJob;

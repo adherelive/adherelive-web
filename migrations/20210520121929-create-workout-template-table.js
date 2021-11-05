@@ -1,49 +1,49 @@
-'use strict';
+"use strict";
 
-import {TABLE_NAME} from "../app/models/workoutTemplate";
-import {USER_CATEGORY} from "../constant";
+import { TABLE_NAME } from "../app/models/workoutTemplate";
+import { USER_CATEGORY } from "../constant";
 
 module.exports = {
-    up: (queryInterface, DataTypes) => {
-        return queryInterface.createTable(TABLE_NAME, {
-            id: {
-                type: DataTypes.INTEGER,
-                primaryKey: true,
-                autoIncrement: true,
-            },
-            name: {
-                type: DataTypes.STRING(1000),
-                allowNull: false,
-            },
-            creator_id: {
-                type: DataTypes.INTEGER,
-                allowNull: false,
-            },
-            creator_type: {
-                type: DataTypes.ENUM,
-                values: [
-                    USER_CATEGORY.DOCTOR,
-                    USER_CATEGORY.PROVIDER,
-                    USER_CATEGORY.ADMIN,
-                ],
-                defaultValue: USER_CATEGORY.DOCTOR,
-                allowNull: false,
-            },
-            created_at: {
-                allowNull: false,
-                type: DataTypes.DATE,
-            },
-            updated_at: {
-                allowNull: false,
-                type: DataTypes.DATE,
-            },
-            deleted_at: {
-                type: DataTypes.DATE,
-            },
-        });
-    },
+  up: (queryInterface, DataTypes) => {
+    return queryInterface.createTable(TABLE_NAME, {
+      id: {
+        type: DataTypes.INTEGER,
+        primaryKey: true,
+        autoIncrement: true,
+      },
+      name: {
+        type: DataTypes.STRING(1000),
+        allowNull: false,
+      },
+      creator_id: {
+        type: DataTypes.INTEGER,
+        allowNull: false,
+      },
+      creator_type: {
+        type: DataTypes.ENUM,
+        values: [
+          USER_CATEGORY.DOCTOR,
+          USER_CATEGORY.PROVIDER,
+          USER_CATEGORY.ADMIN,
+        ],
+        defaultValue: USER_CATEGORY.DOCTOR,
+        allowNull: false,
+      },
+      created_at: {
+        allowNull: false,
+        type: DataTypes.DATE,
+      },
+      updated_at: {
+        allowNull: false,
+        type: DataTypes.DATE,
+      },
+      deleted_at: {
+        type: DataTypes.DATE,
+      },
+    });
+  },
 
-    down: (queryInterface, DataTypes) => {
-        return queryInterface.dropTable(TABLE_NAME);
-    }
+  down: (queryInterface, DataTypes) => {
+    return queryInterface.dropTable(TABLE_NAME);
+  },
 };

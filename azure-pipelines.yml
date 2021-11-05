@@ -1,0 +1,43 @@
+# Docker
+# Build a Docker image
+# https://docs.microsoft.com/azure/devops/pipelines/languages/docker
+
+trigger:
+  - development
+
+resources:
+  - repo: self
+
+variables:
+  tag: '$(Build.BuildId)'
+  ImageNames: 'gagneet/adherelive:portal_demo'
+
+stages:
+  - stage: Build
+    displayName: Build image
+    jobs:
+      - job: Build
+        displayName: Build
+        pool:
+          vmImage: ubuntu-latest
+        steps:
+          - task: DockerCompose@0
+            displayName: Build an image
+            inputs:
+              projectName: $(Build.Repository.Name)
+              containerregistrytype: Container Registry
+              dockerRegistryEndpoint: portal_demo
+              action: Run a Docker Compose command
+              dockerComposefile: '$(Build.SourcesDirectory)/docker-compose.yml'
+              dockerComposeCommand: build node
+              buildImages: true
+              additionalImagetags: |
+                $(ImageNames)
+          - task: Docker@2
+            displayName: Push image to dockerhub registry
+            inputs:
+              containerRegistry: $(portal_demo)
+              repository: $(ImageNames)
+              command: push
+              tags: |
+                $(tag)

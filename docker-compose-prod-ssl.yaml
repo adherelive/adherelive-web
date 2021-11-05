@@ -23,7 +23,6 @@ services:
     entrypoint: "/bin/sh -c 'trap exit TERM; while :; do certbot renew; sleep 12h & wait $${!}; done;'"
 
   node:
-    #image: irikeish/adhere:portal
     image: gagneet/adherelive:portal
     command: [ "npm", "run", "start" ]
     ports:
@@ -40,7 +39,7 @@ services:
       #mysql:
       #image: mysql:latest
       #ports:
-      #- 3308:3306
+      #- 3306:3306
       #expose:
       #- 3306
       #volumes:
@@ -95,7 +94,7 @@ services:
       MINIO_SECRET_KEY: "${MINIO_SECRET_KEY}"
     command: server http://minio{1...4}/export
 
-## By default this config uses default local driver,
+## By default, this config uses default local driver,
 ## For custom volumes replace with volume driver configuration.
 volumes:
   mysql:

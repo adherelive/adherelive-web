@@ -1,54 +1,40 @@
 import userController from "../../../app/controllers/user/user.controller";
-
-const express = require("express");
-const router = express.Router();
 import mUserController from "../../../app/controllers/mControllers/user/user.controller";
 import * as validator from "./validator";
 import Authenticate from "../middlewares/auth";
+import userDeviceRouter from "../userDevice";
 
+const express = require("express");
+const router = express.Router();
 const multer = require("multer");
 const storage = multer.memoryStorage();
-const upload = multer({dest: "../../../app/public/", storage: storage});
-
-import userDeviceRouter from "../userDevice";
+const upload = multer({ dest: "../../../app/public/", storage: storage });
 
 const PASSWORD_LENGTH = 8;
 
+router.post("/sign-in", validator.validateSignInData, mUserController.signIn);
+
+router.post("/consent", Authenticate, mUserController.giveConsent);
+
 router.post(
-    "/sign-in",
-    validator.validateSignInData,
-    mUserController.signIn,
+  "/verify-otp",
+  validator.validateOtpData,
+  mUserController.verifyOtp
 );
 
 router.post(
-    "/consent",
-    Authenticate,
-    mUserController.giveConsent
+  "/doctors/sign-in",
+  validator.validateDoctorSignInData,
+  mUserController.doctorSignIn
 );
 
 router.post(
-    "/verify-otp",
-    validator.validateOtpData,
-    mUserController.verifyOtp
+  "/sign-up",
+  validator.validateCredentialsData,
+  mUserController.signUp
 );
 
-router.post(
-    "/doctors/sign-in",
-    validator.validateDoctorSignInData,
-    mUserController.doctorSignIn
-);
-
-router.post(
-    "/sign-up",
-    validator.validateCredentialsData,
-    mUserController.signUp,
-);
-
-router.get(
-    "/get-basic-info",
-    Authenticate,
-    mUserController.onAppStart,
-);
+router.get("/get-basic-info", Authenticate, mUserController.onAppStart);
 
 // router.post(
 //     "/googleSignIn",
@@ -63,28 +49,28 @@ router.get(
 router.post("/sign-out", Authenticate, mUserController.signOut);
 
 router.post(
-    "/forgot-password",
-    validator.forgotPassword,
-    mUserController.forgotPassword
+  "/forgot-password",
+  validator.forgotPassword,
+  mUserController.forgotPassword
 );
 
 router.post(
-    "/verify-password/:link",
-    validator.verifyLink,
-    mUserController.verifyPasswordResetLink
+  "/verify-password/:link",
+  validator.verifyLink,
+  mUserController.verifyPasswordResetLink
 );
 
 router.post(
-    "/verify/:link",
-    validator.verifyLink,
-    mUserController.verifyPatientLink
+  "/verify/:link",
+  validator.verifyLink,
+  mUserController.verifyPatientLink
 );
 
 router.post(
-    "/password-reset",
-    Authenticate,
-    validator.updatePasswordForm,
-    mUserController.updateUserPassword
+  "/password-reset",
+  Authenticate,
+  validator.updatePasswordForm,
+  mUserController.updateUserPassword
 );
 
 router.use("/devices", userDeviceRouter);
