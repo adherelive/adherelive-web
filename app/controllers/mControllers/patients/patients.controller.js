@@ -633,6 +633,7 @@ class MPatientController extends Controller {
       let templateVitalData = {};
       let templateDietData = {};
       let templateWorkoutData = {};
+      let carePlanApiDetails = {};
 
       console.log("get PatientCarePlanDetails Called - 7" + this.getTime());
       // for vitals
@@ -646,6 +647,9 @@ class MPatientController extends Controller {
             doctorId: userCategoryId,
             userRoleId,
           });
+
+        // care plans
+        carePlanApiDetails = { ...carePlanApiDetails, ...care_plans };
 
         console.log("get PatientCarePlanDetails Called - 8" + this.getTime());
         // care plan ids
@@ -739,6 +743,14 @@ class MPatientController extends Controller {
         res,
         200,
         {
+          // added by gaurav start
+          //care plan - > care_plans
+          care_plans: {
+            ...carePlanApiDetails,
+          },
+          // vital_templates
+
+          // added by gaurav end
           current_careplan_id: latestCarePlanId,
           care_plan_ids: carePlanIds,
           care_plan_template_ids: [...carePlanTemplateIds],
@@ -759,6 +771,9 @@ class MPatientController extends Controller {
             ...templateDietData,
           },
           template_workouts: templateWorkoutData,
+          vital_templates: {
+            ...vitalTemplateData,
+          },
         },
         "Patient care plan details fetched successfully"
       );
