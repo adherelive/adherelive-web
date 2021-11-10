@@ -42,6 +42,151 @@ class WorkoutController extends Controller {
 
   create = async (req, res) => {
     const { raiseSuccess, raiseClientError, raiseServerError } = this;
+
+    try {
+      const { body, userDetails } = req;
+
+      Log.debug("request body", body);
+
+      const {
+        userId,
+        userRoleId,
+        userData: { category } = {},
+        userCategoryData: { basic_info: { full_name = "" } = {} } = {},
+      } = userDetails || {};
+
+      const {
+        name = "",
+        care_plan_id = null,
+        start_date,
+        end_date = null,
+        total_calories = null,
+        not_to_do = "",
+        repeat_days = [],
+        time = null,
+        workout_exercise_groups = [],
+      } = body;
+
+      const careplanWrapper = await CareplanWrapper(null, care_plan_id);
+      const current_careplan_doctor_id = await careplanWrapper.getDoctorId();
+      const patientId = await careplanWrapper.getPatientId();
+      const patient = await PatientWrapper(null, patientId);
+      const { user_role_id: patientRoleId } = await patient.getAllInfo();
+
+      const { count = 0, rows = [] } = await carePlanService.findAndCountAll({
+        where: {
+          doctor_id: current_careplan_doctor_id,
+          patient_id: patientId,
+          user_role_id: userRoleId,
+        },
+        attributes: ["id"],
+        userRoleId: userRoleId,
+      });
+
+      if (count > 0) {
+        // new
+        for (let each in rows) {
+          const { id: careplan_id = null } = rows[each] || {};
+          const eachCareplanWrapper = await CareplanWrapper(null, careplan_id);
+          if (eachCareplanWrapper) {
+            const { workout_ids = [] } = await eachCareplanWrapper.getAllInfo();
+
+            for (let id of workout_ids) {
+              const workoutWrapper = await WorkoutWrapper({ id });
+              const workoutTime = await workoutWrapper.getTime();
+              const fomattedTime = moment(time).toISOString();
+              const formattedWorkoutTime = moment(workoutTime).toISOString();
+              if (fomattedTime === formattedWorkoutTime) {
+                return raiseClientError(
+                  res,
+                  422,
+                  {},
+                  `Workout for this patient with same time already exists`
+                );
+              }
+            }
+          }
+        }
+      }
+
+      // old
+      const workoutService = new WorkoutService();
+
+      const workoutExists =
+        (await workoutService.findOne({ name, care_plan_id })) || null;
+
+      if (workoutExists) {
+        return raiseClientError(
+          res,
+          422,
+          {},
+          `Workout with name ${name} already exists`
+        );
+      }
+
+      const workout_id = await workoutService.create({
+        name,
+        care_plan_id,
+        start_date,
+        end_date,
+        total_calories,
+        workout_exercise_groups,
+        time,
+        details: { not_to_do, repeat_days },
+      });
+
+      const workout = await WorkoutWrapper({ id: workout_id });
+
+      const carePlanId = workout.getCareplanId();
+
+      const eventScheduleData = {
+        patient_user_id: patient.getUserId(),
+        type: EVENT_TYPE.WORKOUT,
+        event_id: workout.getId(),
+        // status: EVENT_STATUS.SCHEDULED,
+        start_date,
+        end_date,
+        participants: [userRoleId, patientRoleId],
+        actor: {
+          id: userId,
+          user_role_id: userRoleId,
+          details: { name: full_name, category },
+        },
+      };
+
+      const queueService = new QueueService();
+      const sqsResponse = await queueService.sendMessage(eventScheduleData);
+
+      Log.debug("sqsResponse ---> ", sqsResponse);
+
+      const workoutJob = WorkoutJob.execute(
+        EVENT_STATUS.SCHEDULED,
+        eventScheduleData
+      );
+
+      await NotificationSdk.execute(workoutJob);
+
+      return raiseSuccess(
+        res,
+        200,
+        {
+          ...(await workout.getReferenceInfo()),
+          care_plans: {
+            [careplanWrapper.getCarePlanId()]:
+              await careplanWrapper.getAllInfo(),
+          },
+        },
+        "Workout created successfully."
+      );
+    } catch (error) {
+      Log.debug("create 500 - workout controller created", error);
+      return raiseServerError(res);
+    }
+  };
+
+  // Past
+  createWithDel = async (req, res) => {
+    const { raiseSuccess, raiseClientError, raiseServerError } = this;
     try {
       const { body, userDetails } = req;
       Log.debug("request body", body);
