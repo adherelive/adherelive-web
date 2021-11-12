@@ -60,7 +60,7 @@ import userRolesService from "../../../services/userRoles/userRoles.service";
 import UserWrapper from "../../../ApiWrapper/mobile/user";
 import UserRolesWrapper from "../../../ApiWrapper/mobile/userRoles";
 import CarePlanWrapper from "../../../ApiWrapper/mobile/carePlan";
-import CarePlanTemplateWrapper from "../../../ApiWrapper/mobile/carePlanTemplate";
+import CarePlanTemplateWrapper from "../../../ApiWrapper/web/carePlanTemplate";
 import AppointmentWrapper from "../../../ApiWrapper/mobile/appointments";
 // import TemplateMedicationWrapper from "../../../ApiWrapper/mobile/templateMedication";
 // import TemplateAppointmentWrapper from "../../../ApiWrapper/mobile/templateAppointment";
@@ -75,6 +75,7 @@ import PatientConsentMappingWrapper from "../../../ApiWrapper/mobile/patientPaym
 import carePlanTemplateService from "../../../services/carePlanTemplate/carePlanTemplate.service";
 import SymptomService from "../../../services/symptom/symptom.service";
 import qualificationService from "../../../services/doctorQualifications/doctorQualification.service";
+
 import moment from "moment";
 import {
   BODY_VIEW,
