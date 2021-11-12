@@ -363,7 +363,7 @@ class PatientController extends Controller {
       console.log("get PatientCarePlanDetails Called - 7" + this.getTime());
       // for vitals
       let vitalTemplateData = {};
-
+      let care_planss = null;
       if (carePlans.length > 0) {
         const { care_plans, care_plan_ids, current_careplan_id } =
           await carePlanHelper.getCareplanDataWithImp({
@@ -372,7 +372,7 @@ class PatientController extends Controller {
             doctorId: userCategoryId,
             userRoleId,
           });
-
+        care_planss = care_plans;
         console.log("get PatientCarePlanDetails Called - 8" + this.getTime());
         // care plan ids
         carePlanIds = [...care_plan_ids];
@@ -465,6 +465,7 @@ class PatientController extends Controller {
         res,
         200,
         {
+          care_plans: care_planss,
           current_careplan_id: latestCarePlanId,
           care_plan_ids: carePlanIds,
           care_plan_template_ids: [...carePlanTemplateIds],
