@@ -12,22 +12,22 @@ import WorkoutService from "../services/workouts/workout.service";
 // WRAPPERS ---------------
 import ScheduleEventWrapper from "../ApiWrapper/common/scheduleEvents";
 
-import * as CronHelper from "./helper";
-
 import JobSdk from "../JobSdk";
 import NotificationSdk from "../NotificationSdk";
 import AppointmentJob from "../JobSdk/Appointments/observer";
 import MedicationJob from "../JobSdk/Medications/observer";
 import CarePlanJob from "../JobSdk/CarePlan/observer";
 import DietJob from "../JobSdk/Diet/observer";
-import WorkoutJob from "../JobSdk/Workout/observer";
+import WorkoutJob from "../JobSdk/Workout/observer"
 
 const Log = new Logger("CRON > START");
 
 class StartCron {
   getScheduleData = async () => {
     const scheduleEventService = new ScheduleEventService();
-    const currentTime = moment().utc().toISOString();
+    const currentTime = moment()
+      .utc()
+      .toISOString();
     Log.info(`currentTime : ${currentTime}`);
     const scheduleEvents = await scheduleEventService.getStartEventByData(
       currentTime
@@ -88,20 +88,10 @@ class StartCron {
         scheduleEventId
       );
 
-      const { details } = event.getData();
-
-      const participants = await CronHelper.getNotificationUsers(
-        EVENT_TYPE.VITALS,
-        eventId
-      );
-
       const job = JobSdk.execute({
         eventType: EVENT_TYPE.VITALS,
         eventStage: NOTIFICATION_STAGES.START,
-        event: {
-          ...event.getData(),
-          details: { ...details, participants },
-        },
+        event,
       });
       NotificationSdk.execute(job);
     } catch (error) {
@@ -121,16 +111,14 @@ class StartCron {
         scheduleEventId
       );
 
-      const participants = await CronHelper.getNotificationUsers(
-        EVENT_TYPE.APPOINTMENT,
-        eventId
-      );
-
-      const { details } = event.getData() || {};
-      const appointmentJob = AppointmentJob.execute(EVENT_STATUS.STARTED, {
-        ...event.getData(),
-        details: { ...details, participants },
+      const eventScheduleData = await scheduleEventService.getEventByData({
+        id: scheduleEventId,
       });
+
+      const appointmentJob = AppointmentJob.execute(
+        EVENT_STATUS.STARTED,
+        eventScheduleData
+      );
       await NotificationSdk.execute(appointmentJob);
 
       // const job = JobSdk.execute({

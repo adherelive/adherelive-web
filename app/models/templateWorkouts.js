@@ -39,11 +39,16 @@ export const db = (database) => {
         type: DataTypes.DATE,
         set(value) {
           if (value) {
-            this.setDataValue("time", moment(value).seconds(0).toISOString());
+            this.setDataValue(
+              "time",
+              moment(value)
+                .seconds(0)
+                .toISOString()
+            );
           } else {
             this.setDataValue("time", null);
           }
-        },
+        }
       },
       details: {
         type: DataTypes.JSON,

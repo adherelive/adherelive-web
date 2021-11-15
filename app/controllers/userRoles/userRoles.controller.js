@@ -26,7 +26,7 @@ class UserRoleController extends Controller {
     try {
       const { userDetails: { userId = null } = {} } = req;
 
-      if (!userId) {
+      if(!userId) {
         return raiseClientError(res, 422, {}, "UNAUTHORIZED");
       }
 
@@ -55,10 +55,11 @@ class UserRoleController extends Controller {
           user_roles: userRoleData = {},
         } = userRoleAllInfo || {};
 
-        if (userRoleDoctors && Object.keys(userRoleDoctors).length) {
-          for (let i in userRoleDoctors) {
+
+        if(userRoleDoctors && Object.keys(userRoleDoctors).length){
+          for(let i in userRoleDoctors){
             const each = userRoleDoctors[i] || {};
-            const { watchlist_ids = [] } = each;
+            const {watchlist_ids = []} = each ; 
           }
         }
 
@@ -66,12 +67,12 @@ class UserRoleController extends Controller {
         providers = { ...providers, ...userRoleProviders };
         admins = { ...admins, ...userRoleAdmins };
         patients = { ...patients, ...userRolePatients };
-        user_roles = { ...user_roles, ...userRoleData };
+        user_roles = {...user_roles, ...userRoleData};
       }
 
-      const user = await userService.getUserById(userId);
-      const userDataWrapper = await UserWrapper(user);
-      const userData = userDataWrapper.getBasicInfo();
+        const user = await userService.getUserById(userId);
+        const userDataWrapper = await UserWrapper(user);
+        const userData = userDataWrapper.getBasicInfo();
 
       return raiseSuccess(
         res,
@@ -96,8 +97,10 @@ class UserRoleController extends Controller {
   switchRoleId = async (req, res) => {
     const { raiseSuccess, raiseClientError, raiseServerError } = this;
     try {
-      const { userDetails: { userId } = {}, body: { userRoleId = null } = {} } =
-        req;
+      const {
+        userDetails: { userId } = {},
+        body: { userRoleId = null } = {},
+      } = req;
 
       const { count, rows } =
         (await userRoleService.findAndCountAll({

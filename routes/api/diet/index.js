@@ -4,23 +4,61 @@ const router = express.Router();
 import Authenticate from "../middleware/auth";
 import Diet from "../../../app/controllers/diet/diet.controller";
 
-router.get("/", Authenticate, Diet.getDietsByCareplan);
+router.get(
+    "/",
+    Authenticate,
+    Diet.getDietsByCareplan
+);
 
-router.get("/all-diets", Authenticate, Diet.getAllDietsForDoctor);
+router.get(
+    "/all-diets",
+    Authenticate,
+    Diet.getAllDietsForDoctor
+);
 
-router.get("/:id/timeline", Authenticate, Diet.getDietResponseTimeline);
 
-router.get("/details/patients/:patient_id", Authenticate, Diet.getDetails);
+router.get(
+    "/:id/timeline",
+    Authenticate,
+    Diet.getDietResponseTimeline
+);
 
-router.get("/:id", Authenticate, Diet.get);
 
-router.post("/update-calories", Authenticate, Diet.updateTotalCalories);
+router.get(
+    "/details/patients/:patient_id",
+    Authenticate,
+    Diet.getDetails
+);
 
-router.post("/:id", Authenticate, Diet.update);
+router.get(
+    "/:id",
+    Authenticate,
+    Diet.get
+);
 
-router.post("/", Authenticate, Diet.create);
+router.post(
+    "/update-calories",
+    Authenticate,
+    Diet.updateTotalCalories
+);
 
-router.delete("/:id", Authenticate, Diet.delete);
+router.post(
+    "/:id",
+    Authenticate,
+    Diet.update
+);
+
+router.post(
+    "/",
+    Authenticate,
+    Diet.create
+);
+
+router.delete(
+    "/:id",
+    Authenticate,
+    Diet.delete
+);
 
 // router.post(
 //     "/",
@@ -33,5 +71,7 @@ router.delete("/:id", Authenticate, Diet.delete);
 //     Authenticate,
 //     Diet.update
 // );
+
+
 
 module.exports = router;

@@ -4,23 +4,23 @@ const messages = defineMessages({
   organizer: {
     id: "app.appointment.table.organizer",
     description: "",
-    defaultMessage: "Organizer",
+    defaultMessage: "Organizer"
   },
   appointment_date: {
     id: "app.appointment.table.appointment.date",
     description: "",
-    defaultMessage: "Date",
+    defaultMessage: "Date"
   },
   timing_text: {
     id: "app.appointment.table.timing.text",
     description: "",
-    defaultMessage: "Timing",
+    defaultMessage: "Timing"
   },
   description: {
     id: "app.appointment.table.description",
     description: "",
-    defaultMessage: "Description",
-  },
+    defaultMessage: "Description"
+  }
 });
 
 export default messages;

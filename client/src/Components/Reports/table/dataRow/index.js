@@ -1,9 +1,9 @@
 import { TABLE_COLUMN, formatReportData } from "../helper";
 
-export default (data) => {
-  const { formatMessage, openEditDrawer, id, openModal } = data;
+export default data => {
+  const {  formatMessage, openEditDrawer ,id, openModal } = data;
   const formattedData = formatReportData(data);
-  const { reportData, uploaderData, documentData } = formattedData || {};
+  const {reportData, uploaderData, documentData} = formattedData || {};
 
   return {
     key: id,
@@ -12,19 +12,17 @@ export default (data) => {
       uploaderData,
     },
     [TABLE_COLUMN.TIME.dataIndex]: {
-      reportData,
+      reportData
     },
     [TABLE_COLUMN.REPORT_DOCUMENTS.dataIndex]: {
       documentData,
-      openModal,
+      openModal
     },
     [TABLE_COLUMN.EDIT.dataIndex]: {
       openEditDrawer,
       formatMessage,
       id,
-      reportData,
-      uploaderData,
-      documentData,
+      reportData, uploaderData, documentData
     },
   };
 };

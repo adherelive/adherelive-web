@@ -1,14 +1,9 @@
-"use strict";
+'use strict';
 
-import {
-  TABLE_NAME,
-  TRANSACTION_MODES,
-  STATUS,
-  TRANSACTION_STATUS,
-} from "../app/models/transactions";
-import { USER_CATEGORY_ARRAY } from "../app/models/users";
-import { DataTypes } from "sequelize";
-import { TABLE_NAME as paymentProductTableName } from "../app/models/paymentProducts";
+import {TABLE_NAME, TRANSACTION_MODES, STATUS, TRANSACTION_STATUS} from "../app/models/transactions";
+import {USER_CATEGORY_ARRAY} from "../app/models/users";
+import {DataTypes} from "sequelize";
+import {TABLE_NAME as paymentProductTableName} from "../app/models/paymentProducts";
 
 module.exports = {
   up: (queryInterface, Sequelize) => {
@@ -30,8 +25,8 @@ module.exports = {
           model: {
             tableName: paymentProductTableName,
           },
-          key: "id",
-        },
+          key: 'id'
+        }
       },
       mode: {
         type: DataTypes.ENUM,
@@ -80,5 +75,5 @@ module.exports = {
 
   down: (queryInterface, Sequelize) => {
     return queryInterface.dropTable(TABLE_NAME);
-  },
+  }
 };

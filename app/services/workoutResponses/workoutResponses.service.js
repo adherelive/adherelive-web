@@ -1,57 +1,59 @@
 import Database from "../../../libs/mysql";
 import { TABLE_NAME } from "../../models/workoutResponses";
 
-const DEFAULT_ORDER = [["created_at", "DESC"]];
+const DEFAULT_ORDER = [["created_at","DESC"]];
 
 class WorkoutResponsesService {
+
   create = async (data) => {
     const transaction = await Database.initTransaction();
     try {
-      const record = await Database.getModel(TABLE_NAME).create(data, {
-        raw: true,
-        transaction,
-      });
-      await transaction.commit();
-      return record.id;
-    } catch (error) {
-      await transaction.rollback();
-      throw error;
+        const record = await Database.getModel(TABLE_NAME).create(data, {
+            raw: true,
+            transaction
+        });
+        await transaction.commit();
+        return record.id;
+    } catch(error) {
+        await transaction.rollback();
+        throw error;
     }
   };
 
   bulkCreate = async (data) => {
     const transaction = await Database.initTransaction();
     try {
-      const record = await Database.getModel(TABLE_NAME).bulkCreate(data, {
-        transaction,
-      });
-      await transaction.commit();
-      return record;
-    } catch (error) {
-      await transaction.rollback();
-      throw error;
+        const record = await Database.getModel(TABLE_NAME).bulkCreate(data, {
+            transaction
+        });
+        await transaction.commit();
+        return record;
+    } catch(error) {
+        await transaction.rollback();
+        throw error;
     }
   };
 
-  findOne = async (data) => {
+  findOne = async data => {
     try {
       return await Database.getModel(TABLE_NAME).findOne({
-        where: data,
-        raw: true,
-      });
-    } catch (error) {
-      throw error;
+            where: data,
+            raw: true
+        });
+    } catch(error) {
+        throw error;
     }
   };
 
-  update = async ({ id, ...data }) => {
+
+  update = async ({id, ...data}) => {
     const transaction = await Database.initTransaction();
     try {
       await Database.getModel(TABLE_NAME).update(data, {
         where: {
           id,
         },
-        transaction,
+        transaction
       });
       await transaction.commit();
       return true;
@@ -61,7 +63,7 @@ class WorkoutResponsesService {
     }
   };
 
-  findAndCountAll = async ({ where, order = DEFAULT_ORDER, attributes }) => {
+  findAndCountAll = async ({where, order = DEFAULT_ORDER, attributes}) => {
     try {
       return await Database.getModel(TABLE_NAME).findAndCountAll({
         where,
@@ -73,11 +75,13 @@ class WorkoutResponsesService {
     }
   };
 
-  findOne = async (data) => {
+ 
+
+   findOne = async (data) => {
     try {
       const diet = await Database.getModel(TABLE_NAME).findOne({
         where: data,
-        raw: true,
+        raw: true
       });
       return diet;
     } catch (error) {
@@ -89,7 +93,7 @@ class WorkoutResponsesService {
     try {
       const record = await Database.getModel(TABLE_NAME).destroy({
         where: {
-          id,
+          id
         },
       });
       return record;
@@ -97,6 +101,8 @@ class WorkoutResponsesService {
       throw err;
     }
   };
+
+
 }
 
 export default WorkoutResponsesService;

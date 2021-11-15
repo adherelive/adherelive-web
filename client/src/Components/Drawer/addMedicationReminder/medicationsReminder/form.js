@@ -30,7 +30,6 @@ import {
   TABLET,
   MEDICINE_UNITS,
 } from "../../../../constant";
-
 const InputGroup = Input.Group;
 const { Item: FormItem } = Form;
 
@@ -351,11 +350,17 @@ class AddMedicationReminderForm extends Component {
               : startTime,
           [startDateField.field_name]:
             startDate && startDate !== null
-              ? startDate.clone().startOf("day").toISOString()
+              ? startDate
+                  .clone()
+                  .startOf("day")
+                  .toISOString()
               : startDate,
           [endDateField.field_name]:
             endDate && endDate !== null
-              ? endDate.clone().endOf("day").toISOString()
+              ? endDate
+                  .clone()
+                  .endOf("day")
+                  .toISOString()
               : endDate,
         };
 

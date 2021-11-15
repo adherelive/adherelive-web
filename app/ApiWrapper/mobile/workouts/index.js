@@ -19,7 +19,7 @@ class WorkoutWrapper extends BaseWorkout {
       total_calories,
       details,
       time,
-      expired_on,
+      expired_on
     } = _data || {};
 
     return {
@@ -33,7 +33,7 @@ class WorkoutWrapper extends BaseWorkout {
       end_date,
       total_calories,
       details,
-      expired_on,
+      expired_on
     };
   };
 
@@ -41,7 +41,7 @@ class WorkoutWrapper extends BaseWorkout {
     const { getBasicInfo, getExerciseGroups } = this;
 
     let exercise_group_ids = [];
-    // workout_exercise_group_mapping_ids = [];
+      // workout_exercise_group_mapping_ids = [];
     const exerciseMappings = getExerciseGroups() || [];
     if (exerciseMappings.length > 0) {
       // add exercise mapping ids | exercise group ids here
@@ -69,7 +69,7 @@ class WorkoutWrapper extends BaseWorkout {
     const { getId, getAllInfo, getExerciseGroups } = this;
 
     // let allWorkoutExerciseGroupMappings = {},
-    let allExerciseGroups = {},
+      let allExerciseGroups = {},
       allExerciseDetails = {},
       allExercises = {},
       allRepetitions = {};
@@ -99,6 +99,7 @@ class WorkoutWrapper extends BaseWorkout {
         // };
       }
     }
+
 
     return {
       workouts: {

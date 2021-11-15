@@ -315,7 +315,7 @@ class PatientDetailsDrawer extends Component {
         patient_full_name === "" ||
         patient_full_name === null
       ) {
-        full_name = `AdhereLive Patient: ${id}`;
+        full_name = `Adhere patient ${id}`;
       }
       options.push(
         <Option
@@ -566,8 +566,10 @@ class PatientDetailsDrawer extends Component {
         const { searchCondition } = this.props;
         this.setState({ fetchingCondition: true });
         const response = await searchCondition(data);
-        const { status, payload: { data: responseData, message } = {} } =
-          response;
+        const {
+          status,
+          payload: { data: responseData, message } = {},
+        } = response;
         if (status) {
           this.setState({ fetchingCondition: false });
         } else {
@@ -589,8 +591,10 @@ class PatientDetailsDrawer extends Component {
         const { searchTreatment } = this.props;
         this.setState({ fetchingTreatment: true });
         const response = await searchTreatment(data);
-        const { status, payload: { data: treatments, message } = {} } =
-          response;
+        const {
+          status,
+          payload: { data: treatments, message } = {},
+        } = response;
         if (status) {
           this.setState({ fetchingTreatment: false });
         } else {
@@ -726,15 +730,13 @@ class PatientDetailsDrawer extends Component {
         {/* us */}
         <Option value="1">
           <div className="flex align-center">
-            <img src={us} className="w16 h16" />
-            <div className="ml4">+1</div>
+            <img src={us} className="w16 h16" /> <div className="ml4">+1</div>
           </div>
         </Option>
         {/* uk */}
         <Option value="44">
           <div className="flex align-center">
-            <img src={uk} className="w16 h16" />
-            <div className="ml4">+44</div>
+            <img src={uk} className="w16 h16" /> <div className="ml4">+44</div>
           </div>
         </Option>
         {/* china */}
@@ -823,8 +825,8 @@ class PatientDetailsDrawer extends Component {
           addonBefore={prefixSelector}
           className={"form-inputs-ap"}
           placeholder={this.formatMessage(messages.phoneNo)}
-          minLength={6}
-          maxLength={12}
+          minLength={10}
+          maxLength={10}
           value={mobile_number}
           onChange={this.setNumber}
           addonAfter={fetchingPatients ? spin : null}

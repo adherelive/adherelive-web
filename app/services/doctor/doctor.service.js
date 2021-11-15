@@ -4,9 +4,8 @@ import { TABLE_NAME as watchlistTableName } from "../../models/doctor_patient_wa
 import { TABLE_NAME as specialityTableName } from "../../models/specialities";
 import { TABLE_NAME as userTableName } from "../../models/users";
 import { Op } from "sequelize";
-import { separateNameForSearch } from "../../helper/common/index";
 
-const DEFAULT_ORDER = [["created_at", "DESC"]];
+const DEFAULT_ORDER = [["created_at","DESC"]];
 
 class DoctorService {
   getDoctorByData = async (data, paranoid = true) => {
@@ -16,24 +15,21 @@ class DoctorService {
         include: [
           {
             model: Database.getModel(userTableName),
-            paranoid,
+            paranoid
           },
-          Database.getModel(specialityTableName),
-        ],
+          Database.getModel(specialityTableName)
+        ]
       });
     } catch (error) {
       throw error;
     }
   };
 
-  getAllDoctorByData = async (data) => {
+  getAllDoctorByData = async data => {
     try {
       const doctor = await Database.getModel(TABLE_NAME).findAll({
         where: data,
-        include: [
-          Database.getModel(userTableName),
-          Database.getModel(specialityTableName),
-        ],
+        include: [Database.getModel(userTableName), Database.getModel(specialityTableName)]
       });
       return doctor;
     } catch (error) {
@@ -41,11 +37,11 @@ class DoctorService {
     }
   };
 
-  addDoctor = async (data) => {
+  addDoctor = async data => {
     const transaction = await Database.initTransaction();
     try {
       const doctor = await Database.getModel(TABLE_NAME).create(data, {
-        transaction,
+        transaction
       });
 
       await transaction.commit();
@@ -61,9 +57,9 @@ class DoctorService {
     try {
       const doctor = await Database.getModel(TABLE_NAME).update(data, {
         where: {
-          id,
+          id
         },
-        transaction,
+        transaction
       });
       await transaction.commit();
       return doctor;
@@ -76,7 +72,7 @@ class DoctorService {
   getAllDoctors = async () => {
     try {
       const doctors = await Database.getModel(TABLE_NAME).findAll({
-        include: Database.getModel(specialityTableName),
+        include: Database.getModel(specialityTableName)
       });
       return doctors;
     } catch (err) {
@@ -84,7 +80,7 @@ class DoctorService {
     }
   };
 
-  createNewWatchlistRecord = async (watchlist_data) => {
+  createNewWatchlistRecord = async watchlist_data => {
     const transaction = await Database.initTransaction();
     try {
       const newWatchlistRecord = await Database.getModel(
@@ -99,13 +95,13 @@ class DoctorService {
     }
   };
 
-  getAllWatchlist = async (data) => {
+  getAllWatchlist = async data => {
     try {
       const watchlistRecord = await Database.getModel(
         watchlistTableName
       ).findAll({
         where: data,
-        raw: true,
+        raw: true
       });
       return watchlistRecord;
     } catch (error) {
@@ -113,18 +109,18 @@ class DoctorService {
     }
   };
 
-  deleteWatchlistRecord = async (watchlist_data) => {
+  deleteWatchlistRecord = async watchlist_data => {
     const transaction = await Database.initTransaction();
     try {
-      const { patient_id, doctor_id, user_role_id } = watchlist_data;
+      const { patient_id, doctor_id,user_role_id } = watchlist_data;
       const deletedWatchlistDetails = await Database.getModel(
         watchlistTableName
       ).destroy({
         where: {
           patient_id,
           doctor_id,
-          user_role_id,
-        },
+          user_role_id
+        }
       });
       await transaction.commit();
       return deletedWatchlistDetails;
@@ -134,13 +130,13 @@ class DoctorService {
     }
   };
 
-  getDoctorByUserId = async (user_id) => {
+  getDoctorByUserId = async user_id => {
     try {
       const doctor = await Database.getModel(TABLE_NAME).findOne({
         where: {
-          user_id,
+          user_id
         },
-        include: Database.getModel(specialityTableName),
+        include: Database.getModel(specialityTableName)
       });
       return doctor;
     } catch (error) {
@@ -178,7 +174,7 @@ class DoctorService {
   //             }
   //           }
   //         ]
-
+          
   //       }
   //     });
   //     return doctor;
@@ -187,7 +183,7 @@ class DoctorService {
   //   }
   // };
 
-  search = async (value) => {
+  search = async value => {
     try {
       let firstName = value;
       let middleName = value;
@@ -210,29 +206,27 @@ class DoctorService {
           [Op.or]: [
             {
               first_name: {
-                [Op.like]: `%${firstName}%`,
-              },
+                [Op.like]: `%${firstName}%`
+              }
             },
             {
               middle_name: {
-                [Op.or]: [
-                  { [Op.like]: `%${middleName}%` },
-                  { [Op.like]: `%${firstName}%` },
-                ],
-              },
-            },
+                [Op.or]:[
+                  {[Op.like]: `%${middleName}%`},
+                  {[Op.like]: `%${firstName}%`}
+                ]
+              }
+            },  
             {
               last_name: {
-                [Op.like]: `%${lastName}%`,
-              },
-            },
-          ],
-        },
+                [Op.like]: `%${lastName}%`
+              }
+            }
+          ]
+          
+        }
       });
-      console.log("329847562389462364872384122 ===============>", {
-        doctor,
-        value,
-      });
+      console.log("329847562389462364872384122 ===============>",{doctor,value});
 
       return doctor;
     } catch (error) {
@@ -240,54 +234,16 @@ class DoctorService {
     }
   };
 
-  findOne = async ({ where, order = DEFAULT_ORDER, attributes }) => {
+  findOne = async ({where, order = DEFAULT_ORDER, attributes}) => {
     try {
       return await Database.getModel(TABLE_NAME).findOne({
         where,
         order,
         attributes,
-        raw: true,
+        raw: true
       });
     } catch (error) {
       throw error;
-    }
-  };
-
-  searchByName = async ({ value, limit }) => {
-    try {
-      const { firstName, middleName, lastName } = separateNameForSearch(value);
-
-      const doctor = await Database.getModel(TABLE_NAME).findAll({
-        where: {
-          [Op.or]: [
-            {
-              first_name: {
-                [Op.like]: `%${firstName}%`,
-              },
-            },
-            {
-              middle_name: {
-                [Op.like]: `%${middleName}%`,
-              },
-            },
-            {
-              last_name: {
-                [Op.like]: `%${lastName}%`,
-              },
-            },
-          ],
-        },
-        include: [
-          {
-            model: Database.getModel(userTableName),
-          },
-        ],
-        limit,
-      });
-
-      return doctor;
-    } catch (err) {
-      throw err;
     }
   };
 }

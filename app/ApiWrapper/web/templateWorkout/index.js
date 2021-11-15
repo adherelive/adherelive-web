@@ -49,8 +49,7 @@ class TemplateWorkoutWrapper extends BaseTemplateWorkout {
 
     if (workout_exercise_groups.length) {
       for (let index = 0; index < workout_exercise_groups.length; index++) {
-        const { exercise_detail_id = null } =
-          workout_exercise_groups[index] || [];
+        const { exercise_detail_id = null } = workout_exercise_groups[index] || [];
         exercise_detail_ids.push(exercise_detail_id);
       }
     }
@@ -67,7 +66,7 @@ class TemplateWorkoutWrapper extends BaseTemplateWorkout {
           },
         })) || {};
 
-      exerciseDetails = rows;
+        exerciseDetails = rows;
     }
 
     let allExerciseDetails = {};
@@ -78,8 +77,11 @@ class TemplateWorkoutWrapper extends BaseTemplateWorkout {
         const exerciseDetail = await ExerciseDetailWrapper({
           data: exerciseDetails[index],
         });
-        const { exercise_details, exercises, repetitions } =
-          await exerciseDetail.getReferenceInfo();
+        const {
+          exercise_details,
+          exercises,
+          repetitions,
+        } = await exerciseDetail.getReferenceInfo();
         allExerciseDetails = { ...allExerciseDetails, ...exercise_details };
         allExercises = { ...allExercises, ...exercises };
         allRepetitions = { ...allRepetitions, ...repetitions };

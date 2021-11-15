@@ -16,20 +16,17 @@ import {
   updatePatientAndCareplanUrl,
   deactivateDoctorURL,
   activateDoctorURL,
-  searchDoctorEmailUrl,
-  searchDoctorNameUrl,
+  searchDoctorEmailUrl
 } from "../../Helper/urls/doctor";
 
+
 import { getAllDoctorsForProviderUrl } from "../../Helper/urls/provider";
+
 import { accountDetailsUrl } from "../../Helper/urls/accounts";
 
 export const SEARCH_DOCTOR_START = "SEARCH_DOCTOR_START";
 export const SEARCH_DOCTOR_COMPLETE = "SEARCH_DOCTOR_COMPLETE";
 export const SEARCH_DOCTOR_FAILED = "SEARCH_DOCTOR_FAILED";
-
-export const SEARCH_DOCTOR_NAME_START = "SEARCH_DOCTOR_NAME_START";
-export const SEARCH_DOCTOR_NAME_COMPLETE = "SEARCH_DOCTOR_NAME_COMPLETE";
-export const SEARCH_DOCTOR_NAME_FAILED = "SEARCH_DOCTOR_NAME_FAILED";
 
 export const GET_DOCTOR_DETAILS_START = "GET_DOCTOR_DETAILS_START";
 export const GET_DOCTOR_DETAILS_COMPLETE = "GET_DOCTOR_DETAILS_COMPLETE";
@@ -117,12 +114,12 @@ export const ACTIVATE_DOCTOR_FAILED = "ACTIVATE_DOCTOR_FAILED";
 
 export const searchDoctorEmail = (email) => {
   let response = {};
-  return async (dispatch) => {
+  return async dispatch => {
     try {
       dispatch({ type: SEARCH_DOCTOR_START });
       response = await doRequest({
         method: REQUEST_TYPE.GET,
-        url: searchDoctorEmailUrl(email),
+        url: searchDoctorEmailUrl(email)
       });
 
       const { status, payload: { data, error } = {} } = response || {};
@@ -131,12 +128,12 @@ export const searchDoctorEmail = (email) => {
         dispatch({
           type: SEARCH_DOCTOR_COMPLETE,
           data: data,
-          payload: data,
+          payload: data
         });
       } else {
         dispatch({
           type: SEARCH_DOCTOR_FAILED,
-          error,
+          error
         });
       }
     } catch (error) {
@@ -144,48 +141,17 @@ export const searchDoctorEmail = (email) => {
     }
     return response;
   };
-};
-
-export const searchDoctorName = (name) => {
-  let response = {};
-  return async (dispatch) => {
-    try {
-      dispatch({ type: SEARCH_DOCTOR_NAME_START });
-      response = await doRequest({
-        method: REQUEST_TYPE.GET,
-        url: searchDoctorNameUrl(name),
-      });
-
-      const { status, payload: { data, error } = {} } = response || {};
-
-      if (status === true) {
-        dispatch({
-          type: SEARCH_DOCTOR_NAME_COMPLETE,
-          data: data,
-          payload: data,
-        });
-      } else {
-        dispatch({
-          type: SEARCH_DOCTOR_NAME_FAILED,
-          error,
-        });
-      }
-    } catch (error) {
-      console.log("SEARCH_DOCTOR_NAME ERROR --> ", error);
-    }
-    return response;
-  };
-};
+}
 
 export const updateDoctor = (user_id, updateData) => {
   let response = {};
-  return async (dispatch) => {
+  return async dispatch => {
     try {
       dispatch({ type: UPDATE_DOCTOR_START });
       response = await doRequest({
         method: REQUEST_TYPE.POST,
         url: updateDoctorURL(user_id),
-        data: updateData,
+        data: updateData
       });
 
       const { status, payload: { data, error } = {} } = response || {};
@@ -193,12 +159,12 @@ export const updateDoctor = (user_id, updateData) => {
         dispatch({
           type: UPDATE_DOCTOR_COMPLETE,
           data: data,
-          payload: data,
+          payload: data
         });
       } else {
         dispatch({
           type: UPDATE_DOCTOR_FAILED,
-          error,
+          error
         });
       }
     } catch (error) {
@@ -210,13 +176,13 @@ export const updateDoctor = (user_id, updateData) => {
 
 export const updatePatientAndCareplan = (careplan_id, payload) => {
   let response = {};
-  return async (dispatch) => {
+  return async dispatch => {
     try {
       dispatch({ type: UPDATE_PATIENT_AND_CAREPLAN });
       response = await doRequest({
         method: REQUEST_TYPE.POST,
         url: updatePatientAndCareplanUrl(careplan_id),
-        data: payload,
+        data: payload
       });
 
       const { status, payload: { data, error } = {} } = response || {};
@@ -224,12 +190,12 @@ export const updatePatientAndCareplan = (careplan_id, payload) => {
         dispatch({
           type: UPDATE_PATIENT_AND_CAREPLAN_COMPLETE,
           data: data,
-          payload: data,
+          payload: data
         });
       } else {
         dispatch({
           type: UPDATE_PATIENT_AND_CAREPLAN_FAILED,
-          error,
+          error
         });
       }
     } catch (error) {
@@ -241,12 +207,12 @@ export const updatePatientAndCareplan = (careplan_id, payload) => {
 
 export const getAdminPaymentProduct = () => {
   let response = {};
-  return async (dispatch) => {
+  return async dispatch => {
     try {
       dispatch({ type: GET_ADMIN_PAYMENT_PRODUCT });
       response = await doRequest({
         method: REQUEST_TYPE.GET,
-        url: getAdminPaymentProductUrl(),
+        url: getAdminPaymentProductUrl()
       });
 
       const { status, payload: { data, error } = {} } = response || {};
@@ -254,12 +220,12 @@ export const getAdminPaymentProduct = () => {
         dispatch({
           type: GET_ADMIN_PAYMENT_PRODUCT_COMPLETE,
           data: data,
-          payload: data,
+          payload: data
         });
       } else {
         dispatch({
           type: GET_ADMIN_PAYMENT_PRODUCT_FAILED,
-          error,
+          error
         });
       }
     } catch (error) {
@@ -271,12 +237,12 @@ export const getAdminPaymentProduct = () => {
 
 export const getAllDoctorsForProvider = () => {
   let response = {};
-  return async (dispatch) => {
+  return async dispatch => {
     try {
       dispatch({ type: GET_ALL_DOCTORS_FOR_PROVIDER });
       response = await doRequest({
         method: REQUEST_TYPE.GET,
-        url: getAllDoctorsForProviderUrl(),
+        url: getAllDoctorsForProviderUrl()
       });
 
       const { status, payload: { data, error } = {} } = response || {};
@@ -284,12 +250,12 @@ export const getAllDoctorsForProvider = () => {
         dispatch({
           type: GET_ALL_DOCTORS_FOR_PROVIDER_COMPLETE,
           data: data,
-          payload: data,
+          payload: data
         });
       } else {
         dispatch({
           type: GET_ALL_DOCTORS_FOR_PROVIDER_FAILED,
-          error,
+          error
         });
       }
     } catch (error) {
@@ -301,19 +267,19 @@ export const getAllDoctorsForProvider = () => {
 
 export const getDoctorPaymentProduct = (params = null) => {
   let response = {};
-  return async (dispatch) => {
+  return async dispatch => {
     try {
       dispatch({ type: GET_DOCTOR_PAYMENT_PRODUCT });
       if (params) {
         response = await doRequest({
           method: REQUEST_TYPE.GET,
           url: getDoctorPaymentProductUrl(),
-          params,
+          params
         });
       } else {
         response = await doRequest({
           method: REQUEST_TYPE.GET,
-          url: getDoctorPaymentProductUrl(),
+          url: getDoctorPaymentProductUrl()
         });
       }
 
@@ -322,12 +288,12 @@ export const getDoctorPaymentProduct = (params = null) => {
         dispatch({
           type: GET_DOCTOR_PAYMENT_PRODUCT_COMPLETE,
           data: data,
-          payload: data,
+          payload: data
         });
       } else {
         dispatch({
           type: GET_DOCTOR_PAYMENT_PRODUCT_FAILED,
-          error,
+          error
         });
       }
     } catch (error) {
@@ -337,15 +303,15 @@ export const getDoctorPaymentProduct = (params = null) => {
   };
 };
 
-export const addDoctorPaymentProduct = (payload) => {
+export const addDoctorPaymentProduct = payload => {
   let response = {};
-  return async (dispatch) => {
+  return async dispatch => {
     try {
       dispatch({ type: ADD_DOCTOR_PAYMENT_PRODUCT });
       response = await doRequest({
         method: REQUEST_TYPE.POST,
         url: addDoctorPaymentPoductUrl(),
-        data: payload,
+        data: payload
       });
 
       const { status, payload: { data, error } = {} } = response || {};
@@ -353,12 +319,12 @@ export const addDoctorPaymentProduct = (payload) => {
         dispatch({
           type: ADD_DOCTOR_PAYMENT_PRODUCT_COMPLETE,
           data: data,
-          payload: data,
+          payload: data
         });
       } else {
         dispatch({
           type: ADD_DOCTOR_PAYMENT_PRODUCT_FAILED,
-          error,
+          error
         });
       }
     } catch (error) {
@@ -368,32 +334,32 @@ export const addDoctorPaymentProduct = (payload) => {
   };
 };
 
-export const deleteDoctorPaymentProduct = (payload) => {
+export const deleteDoctorPaymentProduct = payload => {
   let response = {};
-  return async (dispatch) => {
+  return async dispatch => {
     try {
       dispatch({ type: DELETE_DOCTOR_PAYMENT_PRODUCT });
       response = await doRequest({
         method: REQUEST_TYPE.DELETE,
         url: addDoctorPaymentPoductUrl(),
-        data: payload,
+        data: payload
       });
 
       const { status, payload: { data, error } = {} } = response || {};
-      const { id = null } = payload;
+      const {id = null} = payload;
       if (status === true) {
-        if (id) {
+        if(id){
           data["id"] = id;
         }
         dispatch({
           type: DELETE_DOCTOR_PAYMENT_PRODUCT_COMPLETE,
           data: data,
-          payload: data,
+          payload: data
         });
       } else {
         dispatch({
           type: DELETE_DOCTOR_PAYMENT_PRODUCT_FAILED,
-          error,
+          error
         });
       }
     } catch (error) {
@@ -403,15 +369,15 @@ export const deleteDoctorPaymentProduct = (payload) => {
   };
 };
 
-export const addToWatchlist = (patient_id) => {
+export const addToWatchlist = patient_id => {
   let response = {};
-  return async (dispatch) => {
+  return async dispatch => {
     try {
       dispatch({ type: ADD_PATIENT_TO_WATCHLIST });
 
       response = await doRequest({
         method: REQUEST_TYPE.POST,
-        url: patientWatchlistUrl(patient_id),
+        url: patientWatchlistUrl(patient_id)
       });
 
       const { status, payload: { error = "", data = {} } = {} } =
@@ -420,12 +386,12 @@ export const addToWatchlist = (patient_id) => {
       if (status === false) {
         dispatch({
           type: ADD_PATIENT_TO_WATCHLIST_FAILED,
-          payload: { error },
+          payload: { error }
         });
       } else if (status === true) {
         dispatch({
           type: ADD_PATIENT_TO_WATCHLIST_COMPLETE,
-          data: data,
+          data: data
         });
       }
     } catch (error) {
@@ -437,15 +403,15 @@ export const addToWatchlist = (patient_id) => {
   };
 };
 
-export const removePatientFromWatchlist = (patient_id) => {
+export const removePatientFromWatchlist = patient_id => {
   let response = {};
-  return async (dispatch) => {
+  return async dispatch => {
     try {
       dispatch({ type: REMOVE_PATIENT_FROM_WATCHLIST });
 
       response = await doRequest({
         method: REQUEST_TYPE.DELETE,
-        url: patientWatchlistUrl(patient_id),
+        url: patientWatchlistUrl(patient_id)
       });
 
       const { status, payload: { error = "", data = {} } = {} } =
@@ -454,12 +420,12 @@ export const removePatientFromWatchlist = (patient_id) => {
       if (status === false) {
         dispatch({
           type: REMOVE_PATIENT_FROM_WATCHLIST_FAILED,
-          payload: { error },
+          payload: { error }
         });
       } else if (status === true) {
         dispatch({
           type: REMOVE_PATIENT_FROM_WATCHLIST_COMPLETE,
-          data: data,
+          data: data
         });
       }
     } catch (error) {
@@ -471,14 +437,14 @@ export const removePatientFromWatchlist = (patient_id) => {
   };
 };
 
-export const verifyDoctor = (id) => {
+export const verifyDoctor = id => {
   let response = {};
-  return async (dispatch) => {
+  return async dispatch => {
     try {
       dispatch({ type: VERIFY_DOCTOR_START });
       response = await doRequest({
         method: REQUEST_TYPE.POST,
-        url: getVerifyDoctorUrl(id),
+        url: getVerifyDoctorUrl(id)
       });
 
       const { status, payload: { data, error } = {} } = response || {};
@@ -486,12 +452,12 @@ export const verifyDoctor = (id) => {
         dispatch({
           type: VERIFY_DOCTOR_COMPLETE,
           data: data,
-          payload: data,
+          payload: data
         });
       } else {
         dispatch({
           type: VERIFY_DOCTOR_FAILED,
-          error,
+          error
         });
       }
     } catch (error) {
@@ -503,12 +469,12 @@ export const verifyDoctor = (id) => {
 
 export const getAllDoctors = () => {
   let response = {};
-  return async (dispatch) => {
+  return async dispatch => {
     try {
       dispatch({ type: GET_ALL_DOCTORS_START });
       response = await doRequest({
         method: REQUEST_TYPE.GET,
-        url: getAllDoctorsUrl(),
+        url: getAllDoctorsUrl()
       });
 
       const { status, payload: { data, error } = {} } = response || {};
@@ -516,12 +482,12 @@ export const getAllDoctors = () => {
         dispatch({
           type: GET_ALL_DOCTORS_COMPLETE,
           data: data,
-          payload: data,
+          payload: data
         });
       } else {
         dispatch({
           type: GET_ALL_DOCTORS_FAILED,
-          error,
+          error
         });
       }
     } catch (error) {
@@ -531,26 +497,26 @@ export const getAllDoctors = () => {
   };
 };
 
-export const getDoctorDetails = (id) => {
+export const getDoctorDetails = id => {
   let response = {};
-  return async (dispatch) => {
+  return async dispatch => {
     try {
       dispatch({ type: GET_DOCTOR_DETAILS_START });
       response = await doRequest({
         method: REQUEST_TYPE.GET,
-        url: getDoctorDetailsUrl(id),
+        url: getDoctorDetailsUrl(id)
       });
       const { status, payload: { data, error } = {} } = response || {};
       if (status === true) {
         dispatch({
           type: GET_DOCTOR_DETAILS_COMPLETE,
           data: data,
-          payload: data,
+          payload: data
         });
       } else {
         dispatch({
           type: GET_DOCTOR_DETAILS_FAILED,
-          error,
+          error
         });
       }
     } catch (error) {
@@ -560,26 +526,26 @@ export const getDoctorDetails = (id) => {
   };
 };
 
-export const getDoctorProfileDetails = (id = null) => {
+export const getDoctorProfileDetails = (id=null) => {
   let response = {};
-  return async (dispatch) => {
+  return async dispatch => {
     try {
       dispatch({ type: GET_DOCTOR_DETAILS_START });
       response = await doRequest({
         method: REQUEST_TYPE.GET,
-        url: getDoctorProfileDetailsUrl(id),
+        url: getDoctorProfileDetailsUrl(id)
       });
       const { status, payload: { data, error } = {} } = response || {};
       if (status === true) {
         dispatch({
           type: GET_DOCTOR_DETAILS_COMPLETE,
           data: data,
-          payload: data,
+          payload: data
         });
       } else {
         dispatch({
           type: GET_DOCTOR_DETAILS_FAILED,
-          error,
+          error
         });
       }
     } catch (error) {
@@ -623,25 +589,25 @@ export const getDoctorProfileDetails = (id = null) => {
 
 export const addRazorpayId = (id, payload) => {
   let response = {};
-  return async (dispatch) => {
+  return async dispatch => {
     try {
       dispatch({ type: ADD_RAZORPAY_ID });
       response = await doRequest({
         method: REQUEST_TYPE.POST,
         url: addRazorpayIdUrl(id),
-        data: payload,
+        data: payload
       });
       const { status, payload: { data, error } = {} } = response || {};
       if (status === true) {
         dispatch({
           type: ADD_RAZORPAY_ID_COMPLETE,
           data: data,
-          payload: data,
+          payload: data
         });
       } else {
         dispatch({
           type: ADD_RAZORPAY_ID_FAILED,
-          error,
+          error
         });
       }
     } catch (error) {
@@ -653,24 +619,24 @@ export const addRazorpayId = (id, payload) => {
 
 export const deactivateDoctor = (doctor_id) => {
   let response = {};
-  return async (dispatch) => {
+  return async dispatch => {
     try {
       dispatch({ type: DEACTIVATE_DOCTOR_START });
       response = await doRequest({
         method: REQUEST_TYPE.DELETE,
-        url: deactivateDoctorURL(doctor_id),
+        url: deactivateDoctorURL(doctor_id)
       });
       const { status, payload: { data, error } = {} } = response || {};
       if (status === true) {
         dispatch({
           type: DEACTIVATE_DOCTOR_COMPLETE,
           data: data,
-          payload: data,
+          payload: data
         });
       } else {
         dispatch({
           type: DEACTIVATE_DOCTOR_FAILED,
-          error,
+          error
         });
       }
     } catch (error) {
@@ -680,26 +646,27 @@ export const deactivateDoctor = (doctor_id) => {
   };
 };
 
+
 export const activateDoctor = (user_id) => {
   let response = {};
-  return async (dispatch) => {
+  return async dispatch => {
     try {
       dispatch({ type: ACTIVATE_DOCTOR_START });
       response = await doRequest({
         method: REQUEST_TYPE.POST,
-        url: activateDoctorURL(user_id),
+        url: activateDoctorURL(user_id)
       });
       const { status, payload: { data, error } = {} } = response || {};
       if (status === true) {
         dispatch({
           type: ACTIVATE_DOCTOR_COMPLETE,
           data: data,
-          payload: data,
+          payload: data
         });
       } else {
         dispatch({
           type: ACTIVATE_DOCTOR_FAILED,
-          error,
+          error
         });
       }
     } catch (error) {
@@ -708,6 +675,8 @@ export const activateDoctor = (user_id) => {
     return response;
   };
 };
+
+
 
 // export const getAccountDetails = () => {
 //   let response = {};
@@ -745,7 +714,7 @@ function doctorReducer(state, data) {
   if (doctors) {
     return {
       ...state,
-      ...doctors,
+      ...doctors
     };
   } else {
     return state;

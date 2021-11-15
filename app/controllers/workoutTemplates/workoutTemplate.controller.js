@@ -72,7 +72,7 @@ class WorkoutTemplateController extends Controller {
         );
       }
     } catch (error) {
-      Log.debug("create 500 - workout controller", error);
+      Log.debug("create 500", error);
       return raiseServerError(res);
     }
   };

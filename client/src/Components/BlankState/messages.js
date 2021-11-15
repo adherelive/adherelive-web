@@ -1,11 +1,12 @@
 import { defineMessages } from "react-intl";
 
 const messages = defineMessages({
+
   description: {
     id: "app.blankstate.description",
     description: "Click Here to Go Home",
-    defaultMessage: "Description",
-  },
+    defaultMessage: "Description"
+  }
 });
 
 export default messages;

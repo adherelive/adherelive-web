@@ -1,15 +1,16 @@
 import React, { Component, Fragment } from "react";
 import { Select, Form } from "antd";
 import { injectIntl } from "react-intl";
-import { MEDICINE_UNITS, MEDICINE_TYPE } from "../../../../constant";
+import { MEDICINE_UNITS, MEDICINE_TYPE } from '../../../../constant';
 // import chooseMedicationField from "./medicationStage";
 import chooseMedicationField from "./medicine";
 
 const FIELD_NAME = "unit";
 
+
 const units = [
   { key: "mg", value: "mg" },
-  { key: "ml", value: "ml" },
+  { key: "ml", value: "ml" }
 ];
 const { Option } = Select;
 const { Item: FormItem } = Form;
@@ -17,19 +18,18 @@ const { Item: FormItem } = Form;
 class MedicationStrengthUnit extends Component {
   componentDidMount() {
     const {
-      form: { validateFields },
+      form: { validateFields }
     } = this.props;
     validateFields();
   }
-
   componentWillUnmount() {
     const {
-      form: { validateFields },
+      form: { validateFields }
     } = this.props;
     validateFields();
   }
 
-  getParentNode = (t) => t.parentNode;
+  getParentNode = t => t.parentNode;
 
   getUnitOption = () => {
     return units.map((unit, index) => {
@@ -42,24 +42,22 @@ class MedicationStrengthUnit extends Component {
   };
 
   getInitialValue = () => {
-    const {
-      purpose,
-      event: { data = {} } = {},
+    const { purpose, event: { data = {} } = {},
       form: { getFieldValue },
-      medicines,
-    } = this.props;
+      medicines } = this.props;
     let medicine = getFieldValue(chooseMedicationField.field_name);
-    let { basic_info: { type: medType = "" } = {} } = medicines[medicine] || {};
+    let { basic_info: { type: medType = '' } = {} } = medicines[medicine] || {};
 
     let initialValue = MEDICINE_UNITS.MG;
 
     if (medType === MEDICINE_TYPE.INJECTION) {
-      initialValue = MEDICINE_UNITS.ML;
+      initialValue = MEDICINE_UNITS.ML
     }
 
     if (purpose) {
       initialValue = data[FIELD_NAME];
     }
+
 
     return initialValue;
   };
@@ -69,7 +67,7 @@ class MedicationStrengthUnit extends Component {
     const {
       getFieldDecorator,
       getFieldError,
-      isFieldTouched,
+      isFieldTouched
       //getFieldValue
     } = form;
     const error = isFieldTouched(FIELD_NAME) && getFieldError(FIELD_NAME);
@@ -78,15 +76,18 @@ class MedicationStrengthUnit extends Component {
 
     return (
       <Fragment>
-        <FormItem validateStatus={error ? "error" : ""} help={error || ""}>
+        <FormItem
+          validateStatus={error ? "error" : ""}
+          help={error || ""}
+        >
           {getFieldDecorator(FIELD_NAME, {
             rules: [
               {
                 required: true,
-                message: "Select Strength Unit",
-              },
+                message: "Select Strength Unit"
+              }
             ],
-            initialValue: getInitialValue(),
+            initialValue: getInitialValue()
           })(
             <div></div>
             // <Select
@@ -117,5 +118,5 @@ const Field = injectIntl(MedicationStrengthUnit);
 
 export default {
   field_name: FIELD_NAME,
-  render: (props) => <Field {...props} />,
+  render: props => <Field {...props} />
 };

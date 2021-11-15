@@ -14,8 +14,8 @@ class FeatureMappingWrapper extends BaseFeatureMapping {
         id,
         doctor_id,
         patient_id,
-        feature_id,
-      },
+        feature_id
+      }
     };
   };
 }

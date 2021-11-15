@@ -7,9 +7,9 @@ export const SEARCH_TREATMENTS_START = "SEARCH_TREATMENTS_START";
 export const SEARCH_TREATMENTS_COMPLETED = "SEARCH_TREATMENTS_COMPLETED";
 export const SEARCH_TREATMENTS_FAILED = "SEARCH_TREATMENTS_FAILED";
 
-export const searchTreatment = (value) => {
+export const searchTreatment = value => {
   let response = {};
-  return async (dispatch) => {
+  return async dispatch => {
     try {
       response = await doRequest({
         method: REQUEST_TYPE.GET,
@@ -20,19 +20,19 @@ export const searchTreatment = (value) => {
       if (status === true) {
         dispatch({
           type: SEARCH_TREATMENTS_COMPLETED,
-          data,
+          data
         });
       } else {
         dispatch({
           type: SEARCH_TREATMENTS_FAILED,
-          message,
+          message
         });
       }
     } catch (error) {
       console.log("SEARCH TREATMENTS MODULE catch error -> ", error);
     }
     return response;
-  };
+  }
 };
 
 function treatmentReducer(state, data) {

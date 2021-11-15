@@ -1,6 +1,5 @@
 import { Sequelize } from "sequelize";
 import Logger from "./log";
-
 const Log = new Logger("SEQUELIZE QUERY");
 // const Config = require("../config/config");
 // Config();
@@ -17,7 +16,6 @@ import * as CarePlans from "../app/models/carePlan";
 import * as CarePlanAppointments from "../app/models/carePlanAppointments";
 import * as CarePlanMedications from "../app/models/carePlanMedications";
 import * as CarePlanTemplates from "../app/models/careplanTemplate";
-import * as CareplanSecondaryDoctorMappings from "../app/models/careplanSecondaryDoctorMappings";
 import * as Clinics from "../app/models/clinics";
 import * as Colleges from "../app/models/college";
 import * as Conditions from "../app/models/conditions";
@@ -113,6 +111,7 @@ import * as WorkoutExerciseGroupMapping from "../app/models/workoutExerciseGroup
 import * as WorkoutTemplates from "../app/models/workoutTemplate";
 import * as WorkoutTemplateExerciseMapping from "../app/models/workoutTemplateExerciseMapping";
 
+
 // Models List...
 const models = [
   AccountDetails,
@@ -126,7 +125,6 @@ const models = [
   CarePlanAppointments,
   CarePlanMedications,
   CarePlanTemplates,
-  CareplanSecondaryDoctorMappings,
   Clinics,
   Colleges,
   Conditions,
@@ -166,7 +164,7 @@ const models = [
   MealTemplateFoodItemMapping,
 
   ScheduleEvents,
-
+  
   OtpVerifications,
 
   PatientCareTakers,
@@ -221,7 +219,7 @@ const models = [
   WorkoutResponses,
   WorkoutExerciseGroupMapping,
   WorkoutTemplates,
-  WorkoutTemplateExerciseMapping,
+  WorkoutTemplateExerciseMapping
 ];
 
 class Database {
@@ -242,11 +240,11 @@ class Database {
             max: 10,
             min: 0,
             acquire: 30000,
-            idle: 10000,
+            idle: 10000
           },
-          logging: function (str) {
+          logging: function(str) {
             Log.debug("query", str);
-          },
+          }
         }
       );
     }
@@ -254,11 +252,12 @@ class Database {
     return Database.connection;
   };
 
-  static getModel = (dbName) => Database.connection.models[dbName];
+  static getModel = dbName => Database.connection.models[dbName];
 
   static initTransaction = () => Database.connection.transaction();
 
-  static performRawQuery = async (query, options = {}) => {
+
+  static performRawQuery = async(query, options = {}) => {
     const database = await Database.getDatabase();
     return await database.queryInterface.sequelize.query(query, options);
   };

@@ -10,7 +10,6 @@ import UserWrapper from "../../app/ApiWrapper/web/user";
 import UserRoleWrapper from "../../app/ApiWrapper/mobile/userRoles";
 
 import Logger from "../../libs/log";
-
 const Log = new Logger("API > INDEX");
 
 import userRouter from "./user";
@@ -51,12 +50,9 @@ import portionRouter from "./portion";
 import exerciseRouter from "./exercises";
 import workoutRouter from "./workouts";
 
-router.use(async function (req, res, next) {
+router.use(async function(req, res, next) {
   try {
-    let accessToken,
-      userId = null,
-      userRoleId,
-      userRoleData;
+    let accessToken, userId = null, userRoleId, userRoleData;
     const { cookies = {} } = req;
     if (cookies.accessToken) {
       accessToken = cookies.accessToken;
@@ -74,28 +70,23 @@ router.use(async function (req, res, next) {
 
     if (accessToken) {
       const decodedAccessToken = await jwt.verify(accessToken, secret);
-      const {
-        userRoleId: decodedUserRoleId = null,
-        userId: decodedUserTokenUserId = null,
-      } = decodedAccessToken || {};
-      const userRoleDetails = await userRolesService.getSingleUserRoleByData({
-        id: decodedUserRoleId,
-      });
-      if (userRoleDetails) {
+      const { userRoleId: decodedUserRoleId = null, userId: decodedUserTokenUserId = null } = decodedAccessToken || {};
+      const userRoleDetails = await userRolesService.getSingleUserRoleByData({id: decodedUserRoleId});
+      if(userRoleDetails) {
         const userRole = await UserRoleWrapper(userRoleDetails);
         userId = userRole.getUserId();
         userRoleId = parseInt(decodedUserRoleId);
         userRoleData = userRole.getBasicInfo();
       } else {
         req.userDetails = {
-          exists: false,
+          exists: false
         };
         next();
         return;
       }
     } else {
       req.userDetails = {
-        exists: false,
+        exists: false
       };
       next();
       return;
@@ -113,13 +104,13 @@ router.use(async function (req, res, next) {
         userId,
         userData: userData.getBasicInfo,
         userCategoryData,
-        userCategoryId,
+        userCategoryId
       };
 
       req.permissions = await user.getPermissions();
     } else {
       req.userDetails = {
-        exists: false,
+        exists: false
       };
     }
     next();
@@ -127,7 +118,7 @@ router.use(async function (req, res, next) {
   } catch (err) {
     Log.debug("API INDEX CATCH ERROR ", err);
     req.userDetails = {
-      exists: false,
+      exists: false
     };
     next();
     return;
@@ -163,14 +154,14 @@ router.use("/providers", providersRouter);
 router.use("/features", featuresRouter);
 router.use("/reports", reportRouter);
 router.use("/transactions", transactionRouter);
-router.use("/favourites", userFavourites);
+router.use("/favourites",userFavourites);
 router.use("/agora", agoraRouter);
 router.use("/adhoc", adhocRouter);
-router.use("/user-roles", userRoles);
-router.use("/food-items", foodItemsRouter);
-router.use("/meal/templates", mealTemplateRouter);
-router.use("/diet", dietRouter);
-router.use("/portions", portionRouter);
+router.use("/user-roles",userRoles);
+router.use("/food-items",foodItemsRouter);
+router.use("/meal/templates",mealTemplateRouter);
+router.use("/diet",dietRouter);
+router.use("/portions",portionRouter);
 router.use("/exercises", exerciseRouter);
 router.use("/workout", workoutRouter);
 

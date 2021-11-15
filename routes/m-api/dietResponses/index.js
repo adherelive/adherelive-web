@@ -11,18 +11,18 @@ const upload = multer({ dest: "../../../app/public/", storage: storage });
 const router = express.Router();
 
 router.post(
-  "/",
-  Authenticate,
-  Authorize(USER_CATEGORY.PATIENT),
-  DietResponse.create
+    "/",
+    Authenticate,
+    Authorize(USER_CATEGORY.PATIENT),
+    DietResponse.create
 );
 
 router.post(
-  "/upload",
-  Authenticate,
-  Authorize(USER_CATEGORY.PATIENT),
-  upload.single("files"),
-  DietResponse.upload
+    "/upload",
+    Authenticate,
+    Authorize(USER_CATEGORY.PATIENT),
+    upload.single("files"),
+    DietResponse.upload
 );
 
 export default router;

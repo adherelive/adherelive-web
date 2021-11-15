@@ -5,35 +5,35 @@ import { TABLE_NAME as termsAndConditions } from "./termsAndConditions";
 
 export const TABLE_NAME = "provider_terms_mappings";
 
-export const db = (database) => {
+export const db = database => {
   database.define(
     TABLE_NAME,
     {
       id: {
         type: DataTypes.INTEGER,
         primaryKey: true,
-        autoIncrement: true,
+        autoIncrement: true
       },
       provider_id: {
         type: DataTypes.INTEGER,
         allowNull: false,
         references: {
           model: {
-            tableName: providerTableName,
+            tableName: providerTableName
           },
-          key: "id",
-        },
+          key: "id"
+        }
       },
       terms_and_conditions_id: {
         type: DataTypes.INTEGER,
         allowNull: true,
         references: {
           model: {
-            tableName: termsAndConditions,
+            tableName: termsAndConditions
           },
-          key: "id",
-        },
-      },
+          key: "id"
+        }
+      }
     },
     {
       underscored: true,
@@ -41,19 +41,19 @@ export const db = (database) => {
       getterMethods: {
         getBasicInfo() {
           return {
-            id: this.id,
-            provider_id: this.provider_id,
-            terms_and_conditions_id: this.terms_and_conditions_id,
+              id: this.id,
+              provider_id: this.provider_id,
+              terms_and_conditions_id: this.terms_and_conditions_id
           };
-        },
-      },
+        }
+      }
     }
   );
 };
 
-export const associate = (database) => {
-  database.models[TABLE_NAME].belongsTo(database.models[providerTableName], {
-    foreignKey: "provider_id",
-    targetKey: "id",
-  });
+export const associate = database => {
+    database.models[TABLE_NAME].belongsTo(database.models[providerTableName], {
+        foreignKey: "provider_id",
+        targetKey: "id"
+    });
 };

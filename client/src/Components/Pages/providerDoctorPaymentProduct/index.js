@@ -21,7 +21,7 @@ class ProviderDoctorPaymentProduct extends Component {
       doctorPaymentProducts: {},
       noDoctorPaymentProducts: true,
       isUpdated: false,
-      loading: false,
+      loading:false
     };
   }
 
@@ -33,27 +33,27 @@ class ProviderDoctorPaymentProduct extends Component {
 
   async handleGetDoctorPaymentProduct(id) {
     try {
-      this.setState({ fetchingDoctorPayments: true, loading: true });
+      this.setState({ fetchingDoctorPayments: true ,loading:true});
       const { getDoctorPaymentProduct } = this.props;
       const response = await getDoctorPaymentProduct({ doctor_id: id });
       const {
         status,
         payload: { data: { payment_products = {} } = {} } = {},
-        statusCode,
+        statusCode
       } = response || {};
       if (status && statusCode === 200) {
         this.setState({
           fetchingDoctorPayments: false,
           doctorPaymentProducts: payment_products,
           noDoctorPaymentProducts: false,
-          loading: false,
+          loading:false
         });
       } else if (!status && statusCode === 201) {
         this.setState({
           fetchingDoctorPayments: false,
           doctorPaymentProducts: {},
           noDoctorPaymentProducts: true,
-          loading: false,
+          loading:false
         });
       } else {
         this.setState({ fetchingDoctorPayments: false });
@@ -75,7 +75,7 @@ class ProviderDoctorPaymentProduct extends Component {
       if (status) {
         this.setState({
           fetchingAdminPayments: false,
-          defaultPaymentsProducts: payment_products,
+          defaultPaymentsProducts: payment_products
         });
       } else {
         this.setState({ fetchingAdminPayments: false });
@@ -87,7 +87,7 @@ class ProviderDoctorPaymentProduct extends Component {
     }
   }
 
-  formatMessage = (data) => this.props.intl.formatMessage(data);
+  formatMessage = data => this.props.intl.formatMessage(data);
 
   setIsUpdated = () => {
     this.setState({ isUpdated: true });
@@ -118,13 +118,9 @@ class ProviderDoctorPaymentProduct extends Component {
   };
 
   consultationFeeDisplay = () => {
-    const {
-      noDoctorPaymentProducts,
-      doctorPaymentProducts,
-      loading = false,
-    } = this.state;
-    const { match: { params: { id: doctor_id = null } = {} } = {} } =
-      this.props;
+    const { noDoctorPaymentProducts, doctorPaymentProducts ,loading = false} = this.state;
+    const { match: { params: { id :doctor_id = null } = {} } = {} } = this.props;
+
 
     if (loading) {
       return <Loading />;
@@ -148,6 +144,7 @@ class ProviderDoctorPaymentProduct extends Component {
               {/* <DoctorConsultationFeeTable
                 doctor_id={doctor_id}
               /> */}
+
             </div>
           )}
         </div>
@@ -160,7 +157,7 @@ class ProviderDoctorPaymentProduct extends Component {
     openConsultationFeeDrawer();
   };
 
-  displayEditDoctorPaymentProduct = (id) => () => {
+  displayEditDoctorPaymentProduct = id => () => {
     const { openConsultationFeeDrawer } = this.props;
     const { doctorPaymentProducts } = this.state;
     const { [id]: paymentData } = doctorPaymentProducts;
@@ -179,7 +176,7 @@ class ProviderDoctorPaymentProduct extends Component {
       const {
         status,
         payload: { data: { payment_products = {} } = {} } = {},
-        statusCode,
+        statusCode
       } = response || {};
 
       if (status) {
@@ -221,7 +218,7 @@ class ProviderDoctorPaymentProduct extends Component {
     );
   };
 
-  handleBack = (e) => {
+  handleBack = e => {
     e.preventDefault();
     const { history } = this.props;
     history.goBack();

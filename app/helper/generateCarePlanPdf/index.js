@@ -206,8 +206,6 @@ export default async (pdfData, signatureImage) => {
         );
       }
 
-      let singleDietDetailYLevel;
-
       if (doc.y + 3 * MEDIUM_FONT > PAGE_END_LIMIT) {
         addPageAndNumber(doc);
         singleDietDetailYLevel = DOC_MARGIN;
@@ -227,7 +225,7 @@ export default async (pdfData, signatureImage) => {
       doc
         .fontSize(SHORT_FONT_SIZE)
         .text(
-          "Note: This prescription is generated on the AdhereLive platform.",
+          "Note: This prescription is generated on Adhere.",
           DOC_MARGIN,
           doc.y + 20
         );
@@ -241,7 +239,7 @@ export default async (pdfData, signatureImage) => {
       pageCount = 1;
       doc.end();
     } catch (err) {
-      console.log("Error in the generation of the prescription: ", err);
+      console.log("Error got in the generation of pdf is: ", err);
       resolve(null);
     }
   });
@@ -469,7 +467,7 @@ function printDiet(
 
         singleDietDetailYLevel = doc.y;
 
-        similar && notes && similar.length === 0 && notes.length
+        similar.length === 0 && notes.length
           ? doc
               .fillColor("#212b36")
               .font(BOLD_FONT)
@@ -705,11 +703,8 @@ function printWorkout(
     for (let each in workout_exercise_groups) {
       const exerciseGroupArrayForEach = workout_exercise_groups[each] || [];
 
-      const {
-        exercise_detail_id = null,
-        notes = "",
-        sets = null,
-      } = exerciseGroupArrayForEach || {};
+      const { exercise_detail_id = null, notes = "", sets = null } =
+        exerciseGroupArrayForEach || {};
 
       const {
         basic_info: {
@@ -883,7 +878,7 @@ function printDoctorBlockData(
     prefix = "",
     providerLogo = "",
     providerName = "",
-    providerAddress = "",
+    providerAddress = ""
   } = formatDoctorsData(
     doctors,
     users,
@@ -906,15 +901,17 @@ function printDoctorBlockData(
     doctorBlockStartX = doc.x + 100;
 
     doc
-      .fontSize(BOLD_FONT_SIZE)
-      .font(MEDIUM_FONT)
-      .text(`${providerName}`, doctorBlockStartX, doctorBlockStartY);
+    .fontSize(BOLD_FONT_SIZE)
+    .font(MEDIUM_FONT)
+    .text(`${providerName}`, doctorBlockStartX, doctorBlockStartY);
 
     doc
-      .fontSize(NORMAL_FONT_SIZE)
-      .font(MEDIUM_FONT)
-      .text(`${providerAddress}`, doctorBlockStartX, doc.y);
+    .fontSize(NORMAL_FONT_SIZE)
+    .font(MEDIUM_FONT)
+    .text(`${providerAddress}`, doctorBlockStartX, doc.y);
   }
+
+  
 
   doc
     .fillColor("#3f76cd")
@@ -957,8 +954,7 @@ function printDoctorBlockData(
 
   if (providerPrescriptionDetails) {
     let fontSize =
-      NORMAL_FONT_SIZE -
-      2 * Math.ceil(providerPrescriptionDetails.length / 150);
+    NORMAL_FONT_SIZE - 2 * Math.ceil(providerPrescriptionDetails.length / 150);
 
     doc
       .font(REGULAR_FONT)
@@ -968,7 +964,8 @@ function printDoctorBlockData(
         height: 30,
       });
 
-    doctorDetailsEnd = doc.y;
+
+      doctorDetailsEnd = doc.y;
 
     // while (height > providerDetailsHeight && textFontSize > 1) {
     //   textFontSize = textFontSize - 1;
@@ -996,10 +993,10 @@ function printDoctorBlockData(
   // generateHr(doc, doc.y + 10);
 
   // if (providerIcon) {
-  doc.image(`${__dirname}/qr-code.png`, 480, doctorBlockStartY, {
-    width: 80,
-    height: 80,
-  });
+    doc.image(`${__dirname}/qr-code.png`, 480, doctorBlockStartY, {
+      width: 80,
+      height: 80,
+    });
   // }
 
   return doctorDetailsEnd;
@@ -1396,13 +1393,6 @@ function printCarePlanData({
       medicationYLevel = medicationYLevelEnd + NORMAL_FONT_SIZE + 12;
 
       // checkAndAddNewPage(doc);
-
-      if (doc.y > PAGE_END_LIMIT) {
-        if (pageCount === 1) {
-          addPageFooter(doc, providerPrescriptionDetails);
-        }
-        // addPageAndNumber(doc);
-      }
     }
 
     // if(doc.y > PAGE_END_LIMIT) {
@@ -1603,8 +1593,9 @@ function formatCarePlanData(carePlans, conditions) {
   const conditionIds = Object.keys(conditions);
   if (conditionIds && conditionIds.length) {
     const conditionId = conditionIds[0];
-    const { [conditionId]: { basic_info: { name = "" } = {} } = {} } =
-      conditions;
+    const {
+      [conditionId]: { basic_info: { name = "" } = {} } = {},
+    } = conditions;
     condition = name;
   }
 
@@ -1675,8 +1666,8 @@ function formatDoctorsData(
 
   if (Object.keys(providers).length > 0) {
     const {
-      basic_info: { user_id: providerUserId, name, address } = {},
-      details: { icon: providerIcon } = {},
+        basic_info: { user_id: providerUserId, name, address } = {},
+        details: { icon: providerIcon } = {},
     } = providers || {};
     providerName = name;
     providerAddress = address;
@@ -1694,8 +1685,9 @@ function formatDoctorsData(
 
   const degreeIds = Object.keys(degrees);
   for (const id of degreeIds) {
-    const { [id]: { basic_info: { name: degreeName = "" } = {} } = {} } =
-      degrees;
+    const {
+      [id]: { basic_info: { name: degreeName = "" } = {} } = {},
+    } = degrees;
     degree = degreeName ? degree + `${degreeName}, ` : degree;
   }
 

@@ -84,7 +84,6 @@
   justify-content: space-between;
   align-items: center;
 }
-
 .chat-patientListheader-PopUp-minimized {
   height: 35px;
   width: 300px;
@@ -115,14 +114,12 @@
     height: 100%;
     overflow-x: hidden;
     background-color: #ebeff4;
-
     .chat-messages {
       display: flex;
       height: auto;
       padding: 5px 24px;
       width: 100%;
       flex-direction: column;
-
       &.end {
         justify-content: flex-end;
       }
@@ -131,11 +128,9 @@
     .chat-avatar {
       display: flex;
       height: auto;
-
       &.left {
         margin-left: 8px;
       }
-
       &.right {
         margin-right: 8px;
       }
@@ -150,18 +145,15 @@
       border-radius: 6px;
       background-color: rgba(78, 216, 218, 0.2);
       align-self: flex-start;
-
       &.end {
         align-self: flex-end;
         text-align: end;
       }
-
       .chat-media-message-text {
         .chat-media-message-image {
           height: 120px;
           max-width: 200px;
         }
-
         &:hover {
           color: @primary-color;
         }
@@ -177,7 +169,6 @@
       font-size: 12px;
       color: #aab0b3;
       padding: 2px;
-
       &.start {
         align-self: flex-start;
         margin-left: 32px;
@@ -206,19 +197,16 @@
   align-items: center;
   background-color: white;
   border-top: 0.1pt solid @dark-brown-grey;
-
   .footer-left {
     display: flex;
     height: 100%;
     width: 20%;
     justify-content: center;
     align-items: center;
-
     .back-image {
       cursor: pointer;
     }
   }
-
   .footer-right {
     display: flex;
     height: 100%;
@@ -229,19 +217,15 @@
       display: flex;
       width: 100%;
       justify-content: space-around;
-
       .form-input {
         display: flex;
         width: 80%;
-
         .ant-input {
           border-radius: 16px;
         }
-
         .form-button {
           display: flex;
         }
-
         .ant-btn {
           border: 1px solid #fff;
           height: 100%;
@@ -266,20 +250,16 @@
     display: flex;
     width: 100%;
     justify-content: space-between;
-
     .form-input {
       display: flex;
       flex-grow: 1;
       margin-right: 10px;
-
       .ant-input {
         border-radius: 16px;
       }
-
       .form-button {
         display: flex;
       }
-
       .ant-btn {
         border: 1px solid #fff;
         height: 100%;
@@ -315,18 +295,15 @@
   flex-direction: column;
   justify-content: space-between;
   color: #212b36;
-
   .bot-m-h {
     font-size: 17px;
     font-weight: 600;
     letter-spacing: 0.05rem;
   }
-
   .bot-msg-details {
     .dot {
       color: #a6a8a9;
     }
-
     & > span {
       padding: 2px;
       font-size: 17px;
@@ -336,41 +313,39 @@
 }
 
 .media-container {
-  background-color: inherit;
-  height: auto;
-  width: 90%;
-  margin: 20px auto;
-  position: relative;
-
-  .symptom-image {
-    max-width: 100%;
-    min-width: 100%;
+    background-color: inherit;
     height: auto;
-    object-fit: fill;
-    margin: 0px;
+    width: 90%;
+    margin: 20px auto;
+    position: relative;
+    .symptom-image {
+      max-width: 100%;
+      min-width: 100%;
+      height: auto;
+      object-fit: fill;
+      margin: 0px;
+    }
   }
-}
 
 .media-container:hover .button {
   opacity: 1;
   // display: block;
 }
-
 .media-container:hover .overlay {
   display: block;
   background: rgba(0, 0, 0, 0.5);
 }
 
-.audio-overlay {
+.audio-overlay{
   display: block;
   background-color: transparent;
 }
 
 .media-container:hover .doc-opt {
   visibility: visible;
-}
+}  
 
-.media-doc-container {
+.media-doc-container{
   position: absolute;
   right: 20px;
   color: white;
@@ -379,12 +354,13 @@
   flex-direction: row-reverse;
   // align-items: center;
   // justify-content: space-evenly;
-  .doc-opt {
+  .doc-opt{
     visibility: hidden;
+  
   }
 }
-
-.download-icon {
+  
+.download-icon{
   position: absolute;
   top: 10%;
   right: 0;
@@ -397,10 +373,8 @@
   align-items: center;
   justify-content: space-around;
 }
-
 .text-msg-container {
   max-width: 100%;
-
   & > span {
     font-size: 1rem;
     color: #212b36;
@@ -424,11 +398,9 @@
   height: 32px;
   opacity: 0.3;
 }
-
 .close-reply:hover {
   opacity: 1;
 }
-
 .close-reply:before,
 .close-reply:after {
   position: absolute;
@@ -438,11 +410,9 @@
   width: 2px;
   background-color: #333;
 }
-
 .close-reply:before {
   transform: rotate(45deg);
 }
-
 .close-reply:after {
   transform: rotate(-45deg);
 }

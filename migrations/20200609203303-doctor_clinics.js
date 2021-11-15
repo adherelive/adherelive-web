@@ -1,7 +1,7 @@
-"use strict";
+'use strict';
 
-import { TABLE_NAME } from "../app/models/doctorClinics";
-import { TABLE_NAME as doctorTableName } from "../app/models/doctors";
+import {TABLE_NAME} from "../app/models/doctorClinics";
+import {TABLE_NAME as doctorTableName} from "../app/models/doctors";
 
 module.exports = {
   up: (queryInterface, Sequelize) => {
@@ -10,7 +10,7 @@ module.exports = {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
-        type: Sequelize.INTEGER,
+        type: Sequelize.INTEGER
       },
       doctor_id: {
         type: Sequelize.INTEGER,
@@ -19,8 +19,8 @@ module.exports = {
           model: {
             tableName: doctorTableName,
           },
-          key: "id",
-        },
+          key: 'id'
+        }
       },
       name: {
         type: Sequelize.STRING(200),
@@ -32,24 +32,24 @@ module.exports = {
       },
       details: {
         type: Sequelize.JSON,
-        allowNull: true,
+        allowNull: true
       },
       created_at: {
         allowNull: false,
-        type: Sequelize.DATE,
+        type: Sequelize.DATE
       },
       updated_at: {
         allowNull: false,
-        type: Sequelize.DATE,
+        type: Sequelize.DATE
       },
       deleted_at: {
         allowNull: true,
-        type: Sequelize.DATE,
-      },
+        type: Sequelize.DATE
+      }
     });
-  },
+    },
 
   down: (queryInterface, Sequelize) => {
     return queryInterface.dropTable(TABLE_NAME);
-  },
+  }
 };

@@ -5,15 +5,15 @@ import { getAllTemplatesForDoctor } from "../../modules/carePlanTemplates";
 import {
   createCareplanTemplate,
   updateCareplanTemplate,
-  duplicateCareplanTemplate,
+  duplicateCareplanTemplate
 } from "../../modules/carePlanTemplates";
 
-const mapStateToProps = (state) => {
+const mapStateToProps = state => {
   const {
     auth: {
       authPermissions = [],
       authenticated_user = 1,
-      authenticated_category,
+      authenticated_category
     } = {},
     doctors = {},
     care_plan_templates = {},
@@ -41,19 +41,19 @@ const mapStateToProps = (state) => {
     vital_templates,
     medicines,
     care_plan_template_ids,
-    repeat_intervals,
+    repeat_intervals
   };
 };
 
-const mapDispatchToProps = (dispatch) => {
+const mapDispatchToProps = dispatch => {
   return {
     getAllTemplatesForDoctor: () => dispatch(getAllTemplatesForDoctor()),
-    createCareplanTemplate: (payload) =>
+    createCareplanTemplate: payload =>
       dispatch(createCareplanTemplate(payload)),
     updateCareplanTemplate: (id, payload) =>
       dispatch(updateCareplanTemplate(id, payload)),
-    duplicateCareplanTemplate: (careplan_template_id) =>
-      dispatch(duplicateCareplanTemplate(careplan_template_id)),
+    duplicateCareplanTemplate: careplan_template_id =>
+      dispatch(duplicateCareplanTemplate(careplan_template_id))
   };
 };
 

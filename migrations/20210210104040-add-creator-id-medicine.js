@@ -8,7 +8,7 @@ module.exports = {
     return Promise.all([
       queryInterface.addColumn(TABLE_NAME, "creator_id", {
         type: Sequelize.INTEGER,
-        allowNull: true,
+        allowNull: true
       }),
       // queryInterface.changeColumn(TABLE_NAME, "type",{
       //   type: Sequelize.ENUM,
@@ -26,6 +26,6 @@ module.exports = {
       //   values: [MEDICINE_TYPE.TABLET, MEDICINE_TYPE.INJECTION],
       //   defaultValue: MEDICINE_TYPE.TABLET
       // })
-    ]);
-  },
+  ])
+  }
 };

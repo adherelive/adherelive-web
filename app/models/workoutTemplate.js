@@ -1,7 +1,7 @@
 "use strict";
 import { DataTypes } from "sequelize";
-import { TABLE_NAME as exerciseDetailTableName } from "./exerciseDetails";
-import { TABLE_NAME as workoutTemplateExerciseMappingTableName } from "./workoutTemplateExerciseMapping";
+import {TABLE_NAME as exerciseDetailTableName} from "./exerciseDetails";
+import {TABLE_NAME as workoutTemplateExerciseMappingTableName} from "./workoutTemplateExerciseMapping";
 import { USER_CATEGORY } from "../../constant";
 
 export const TABLE_NAME = "workout_templates";
@@ -29,7 +29,7 @@ export const db = (database) => {
           USER_CATEGORY.DOCTOR,
           USER_CATEGORY.PROVIDER,
           USER_CATEGORY.ADMIN,
-          USER_CATEGORY.HSP,
+          USER_CATEGORY.HSP
         ],
         defaultValue: USER_CATEGORY.DOCTOR,
         allowNull: false,

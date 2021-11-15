@@ -1,6 +1,6 @@
 import { USER_CATEGORY } from "../../constant";
 
-export const getUserDetails = (data) => {
+export const getUserDetails = data => {
   const { type, id, patients, doctors, care_takers } = data || {};
   switch (type) {
     case USER_CATEGORY.PATIENT:

@@ -1,41 +1,40 @@
 import { TABLE_COLUMN } from "../helper";
 
-export default (data) => {
-  const {
-    id,
+export default data => {
+  const { id,
     openResponseDrawer,
     openEditDrawer,
     dietData,
     formatMessage,
-    canViewDetails = false,
+    canViewDetails = false
   } = data;
 
   return {
     key: id,
     [TABLE_COLUMN.NAME.dataIndex]: {
-      dietData,
-      formatMessage,
+        dietData,
+        formatMessage
     },
     [TABLE_COLUMN.DURATION.dataIndex]: {
-      dietData,
+        dietData
     },
     [TABLE_COLUMN.REPEAT_DAYS.dataIndex]: {
-      dietData,
+      dietData
     },
     [TABLE_COLUMN.CALORIES.dataIndex]: {
-      dietData,
+      dietData
     },
     [TABLE_COLUMN.TIMELINE.dataIndex]: {
       id,
       openResponseDrawer,
-      formatMessage,
+      formatMessage
     },
     [TABLE_COLUMN.EDIT.dataIndex]: {
       id,
       dietData,
       openEditDrawer,
       formatMessage,
-      canViewDetails,
+      canViewDetails
     },
   };
 };

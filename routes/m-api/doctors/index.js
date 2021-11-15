@@ -1,21 +1,17 @@
-// import userController from "../../../app/controllers/user/user.controller";
+import userController from "../../../app/controllers/user/user.controller";
+
+const express = require("express");
+const router = express.Router();
 import Authenticate from "../middlewares/auth";
 import * as validator from "./validator";
-
-import isAllowed from "../../middlewares/permissions";
-import PERMISSIONS from "../../../config/permissions";
+const multer = require("multer");
+const storage = multer.memoryStorage();
+const upload = multer({ dest: "../../../app/public/", storage: storage });
 
 import mDoctorController from "../../../app/controllers/mControllers/doctors/doctor.controller";
 import { isDoctor } from "../middlewares/doctor";
 import PaymentController from "../../../app/controllers/mControllers/payments/payment.controller";
 import CarePlanTemplate from "../../../app/controllers/carePlanTemplate/carePlanTemplate.controller";
-
-const multer = require("multer");
-const storage = multer.memoryStorage();
-const upload = multer({ dest: "../../../app/public/", storage: storage });
-
-const express = require("express");
-const router = express.Router();
 
 router.post(
   "/",
@@ -32,8 +28,6 @@ router.post(
   // todo :: wip
   mDoctorController.updateDoctorQualificationRegistration
 );
-
-router.get("/search-name", Authenticate, mDoctorController.searchDoctorName);
 
 router.get(
   "/patients",
@@ -161,16 +155,9 @@ router.post(
 );
 
 router.get(
-  "/treatment/templates",
-  Authenticate,
-  CarePlanTemplate.getAllForDoctor
+    "/treatment/templates",
+    Authenticate,
+    CarePlanTemplate.getAllForDoctor
 );
-
-// router.post(
-//   "/profile",
-//   Authenticate,
-//   isAllowed(PERMISSIONS.DOCTORS.ADD_PROFILE),
-//   mDoctorController.addProfile
-// );
 
 module.exports = router;

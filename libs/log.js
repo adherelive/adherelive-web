@@ -28,21 +28,19 @@ class Log {
 
   objectInfo = (msg, obj) => {
     let data = "";
-    Object.keys(obj).forEach((prop) => {
+    Object.keys(obj).forEach(prop => {
       data += `${prop} : ${obj[prop]}\n`;
     });
 
-    console.log(
-      `${this.source} ${this.getLogDate()} \n\n${msg} -> \n\n ${data} \n`
-    );
+    console.log(`${this.source} ${this.getLogDate()} \n\n${msg} -> \n\n ${data} \n`);
   };
 
   request(data) {
     console.log(
-      `${this._dashString}\n${this.getLogDate()} [${chalk.yellow(
-        this.source
-      )}] \n\n--- REQUEST ---\n\n`,
-      data
+        `${this._dashString}\n${this.getLogDate()} [${chalk.yellow(
+            this.source
+        )}] \n\n--- REQUEST ---\n\n`,
+        data
     );
   }
 
@@ -81,7 +79,7 @@ class Log {
       4000: "",
       5000: "",
       6000: "",
-      7000: "",
+      7000: ""
     };
     return statement[code];
   }
@@ -132,6 +130,6 @@ class Log {
   }
 }
 
-module.exports = (filename) => {
+module.exports = filename => {
   return new Log(filename);
 };

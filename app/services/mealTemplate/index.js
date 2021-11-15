@@ -1,26 +1,28 @@
-export default class MealTemplate {
-  constructor(data) {
-    this._data = data;
-  }
+export default class  MealTemplate {
 
-  getId = () => {
-    return this._data.id;
-  };
+    constructor(data){
+        this._data = data;   
+    }
 
-  getName = () => {
-    return this._data.name;
-  };
+    getId = () => {
+        return this._data.id;
+    }
 
-  getCreatorId = () => {
-    return this._data.creator_id;
-  };
+    getName = () => {
+        return this._data.name;
+    }
 
-  getDetails = () => {
-    return this._data.details;
-  };
+    getCreatorId = () => {
+        return this._data.creator_id;
+    }
 
-  getFoodItemDetails = () => {
-    console.log("1230998213 this._data.food_items", this._data);
-    return this._data.food_item_details || [];
-  };
+    getDetails = () => {
+        return this._data.details;
+    }
+
+    getFoodItemDetails = () => {
+        console.log("1230998213 this._data.food_items", this._data);
+        return this._data.food_item_details || [];
+    }
+    
 }

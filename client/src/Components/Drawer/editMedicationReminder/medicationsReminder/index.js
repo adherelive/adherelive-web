@@ -175,11 +175,8 @@ class EditMedicationReminder extends Component {
 
     validateFields(async (err, values) => {
       if (!err) {
-        const {
-          when_to_take = [],
-          keys = [],
-          when_to_take_abbr = null,
-        } = values || {};
+        const { when_to_take = [], keys = [], when_to_take_abbr = null } =
+          values || {};
         let data_to_submit = {};
         const startTime = values[startTimeField.field_name];
         const startDate = values[startDateField.field_name];
@@ -305,8 +302,11 @@ class EditMedicationReminder extends Component {
       content: <div>{warnNote()}</div>,
       onOk: async () => {
         this.setState({ loading: true });
-        const { deleteMedication, getMedications, getPatientCarePlanDetails } =
-          this.props;
+        const {
+          deleteMedication,
+          getMedications,
+          getPatientCarePlanDetails,
+        } = this.props;
         const response = await deleteMedication(id);
         const { status, payload: { message: respMessage = "" } = {} } =
           response || {};
@@ -365,10 +365,15 @@ class EditMedicationReminder extends Component {
       hideMedication,
       loading = false,
       intl: { formatMessage },
-      payload = {},
+      payload={}
     } = this.props;
-    const { onClose, setFormRef, FormWrapper, handleSubmit, getDeleteButton } =
-      this;
+    const {
+      onClose,
+      setFormRef,
+      FormWrapper,
+      handleSubmit,
+      getDeleteButton,
+    } = this;
     const { disabledOk, submitting = false } = this.state;
 
     const submitButtonProps = {
@@ -401,8 +406,10 @@ class EditMedicationReminder extends Component {
         className="ant-drawer"
         title={
           canViewDetails
-            ? formatMessage(messages.viewHeader)
-            : editMedication
+          ?
+          formatMessage(messages.viewHeader)
+          :
+          editMedication
             ? formatMessage(messages.medication)
             : addMedication
             ? "Add Medication"
@@ -426,8 +433,11 @@ class EditMedicationReminder extends Component {
           setNewMedicineId={this.setNewMedicineId}
         />
 
-        {!canViewDetails && (
-          <Footer
+        {
+          !canViewDetails
+          &&
+          (
+            <Footer
             className="flex justify-space-between"
             onSubmit={handleSubmit}
             onClose={editMedication || addMedication ? hideMedication : onClose}
@@ -436,7 +446,9 @@ class EditMedicationReminder extends Component {
             cancelComponent={getDeleteButton()}
             submitting={submitting}
           />
-        )}
+          )
+        }
+       
       </Drawer>
     );
   }

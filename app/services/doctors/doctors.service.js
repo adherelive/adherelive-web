@@ -1,18 +1,17 @@
 import Database from "../../../libs/mysql";
-import { TABLE_NAME } from "../../models/doctors";
-import { TABLE_NAME as specialityTableName } from "../../models/specialities";
+import {TABLE_NAME} from "../../models/doctors";
+import {TABLE_NAME as specialityTableName} from "../../models/specialities";
 
-const DEFAULT_ORDER = [["created_at", "DESC"]];
+
+const DEFAULT_ORDER = [["created_at","DESC"]];
 
 class DoctorsService {
   constructor() {}
 
-  addDoctor = async (data) => {
+  addDoctor = async data => {
     const transaction = await Database.initTransaction();
     try {
-      const doctor = await Database.getModel(TABLE_NAME).create(data, {
-        transaction,
-      });
+      const doctor = await Database.getModel(TABLE_NAME).create(data, { transaction });
 
       await transaction.commit();
       return doctor;
@@ -22,13 +21,13 @@ class DoctorsService {
     }
   };
 
-  getDoctorByUserId = async (user_id) => {
+  getDoctorByUserId = async user_id => {
     try {
       const doctor = await Database.getModel(TABLE_NAME).findOne({
         where: {
           user_id,
         },
-        include: Database.getModel(specialityTableName),
+        include: Database.getModel(specialityTableName)
       });
       return doctor;
     } catch (error) {
@@ -41,9 +40,9 @@ class DoctorsService {
     try {
       const doctor = await Database.getModel(TABLE_NAME).update(data, {
         where: {
-          id,
+          id
         },
-        transaction,
+        transaction
       });
       await transaction.commit();
       return doctor;
@@ -53,10 +52,10 @@ class DoctorsService {
     }
   };
 
-  getDoctorByData = async (data) => {
+  getDoctorByData = async data => {
     try {
       const doctor = await Database.getModel(TABLE_NAME).findAll({
-        where: data,
+        where: data
       });
       return doctor;
     } catch (error) {
@@ -64,13 +63,13 @@ class DoctorsService {
     }
   };
 
-  findOne = async ({ where, order = DEFAULT_ORDER, attributes }) => {
+  findOne = async ({where, order = DEFAULT_ORDER, attributes}) => {
     try {
       return await Database.getModel(TABLE_NAME).findOne({
         where,
         order,
         attributes,
-        raw: true,
+        raw: true
       });
     } catch (error) {
       throw error;

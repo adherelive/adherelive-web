@@ -68,7 +68,7 @@ class StartDate extends Component {
     return (
       <div className="flex flex-grow-1 row align-items-center">
         <div className="pr8 wp100">
-          <div className="flex  row mb-4">
+          <div className='flex  row mb-4'>
             <span className="form-label">From</span>
             <div className="star-red">*</div>
           </div>
@@ -77,8 +77,8 @@ class StartDate extends Component {
               rules: [
                 {
                   required: true,
-                  message: "Please enter start date",
-                },
+                  message: "Please enter start date"
+                }
               ],
               initialValue: getInitialValue(),
             })(

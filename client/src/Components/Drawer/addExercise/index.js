@@ -15,9 +15,9 @@ class AddExercise extends Component {
     this.state = {
       visible: true,
       disabledSubmit: true,
-      submitting: false,
-      uploadedVideoUrl: "",
-      videoContentType: null,
+      submitting:false,
+      uploadedVideoUrl:'',
+      videoContentType:null
     };
 
     this.FormWrapper = Form.create({ onFieldsChange: this.onFormFieldChanges })(
@@ -26,13 +26,14 @@ class AddExercise extends Component {
   }
 
   setUploadedVideoUrl = (url) => {
-    this.setState({ uploadedVideoUrl: url });
-  };
+    this.setState({uploadedVideoUrl:url});
+  }
 
-  setVideoContentType = (type) => {
-    this.setState({ videoContentType: type });
-  };
-
+  setVideoContentType = ( type )=>{
+    this.setState({videoContentType:type});
+  }
+ 
+ 
   onFormFieldChanges = (props) => {
     const {
       form: { getFieldsError, isFieldsTouched },
@@ -48,10 +49,7 @@ class AddExercise extends Component {
     e.preventDefault();
     const { addExercise } = this.props;
     const { formRef = {}, formatMessage } = this;
-    const {
-      uploadedVideoUrl = "",
-      videoContentType: video_content_type = null,
-    } = this.state;
+    const { uploadedVideoUrl = '' , videoContentType : video_content_type = null } = this.state;
 
     const {
       props: {
@@ -62,62 +60,63 @@ class AddExercise extends Component {
     validateFields(async (err, values) => {
       if (!err) {
         let {
-          name: initail_name,
-          repetition_id = null,
-          repetition_value = 1,
-          calorific_value = null,
-          video_content = "",
+          name:initail_name,
+          repetition_id=null,
+          repetition_value=1,
+          calorific_value = null ,
+          video_content='',
         } = values;
 
         const name = initail_name.trim();
         let video = {};
 
-        if (video_content.length) {
-          if (video_content_type === VIDEO_TYPES.UPLOAD) {
+        if(video_content.length){
+          if(video_content_type === VIDEO_TYPES.UPLOAD ){
             video_content = uploadedVideoUrl;
-          }
+          }  
           video = {
-            content_type: video_content_type,
-            content: video_content,
+            content_type:video_content_type,
+            content:video_content
           };
+
         }
 
         const data = {
-          name,
-          repetition_id: repetition_id ? parseInt(repetition_id) : null,
-          repetition_value: repetition_value
-            ? parseInt(repetition_value)
-            : null,
-          calorific_value: calorific_value ? parseFloat(calorific_value) : null,
-          video,
+            name,
+            repetition_id:  repetition_id ? parseInt(repetition_id) : null ,
+            repetition_value:  repetition_value ? parseInt(repetition_value) : null,
+            calorific_value:  calorific_value ? parseFloat(calorific_value) : null ,
+            video
         };
 
-        try {
-          this.setState({ submitting: true });
-          const response = await addExercise(data);
-          const {
-            status,
-            statusCode: code,
-            payload: {
-              message: errorMessage = "",
-              error: { error_type = "" } = {},
-            },
-          } = response || {};
+      
+          try {
+            this.setState({submitting:true});
+            const response = await addExercise(data);
+            const {
+              status,
+              statusCode: code,
+              payload: { message: errorMessage = "", error: { error_type = "" } = {} },
+            } = response || {};
 
-          if (!status) {
-            message.error(errorMessage);
-          } else {
-            message.success(errorMessage);
-          }
-          this.setState({ submitting: false });
+           
+            if(!status){
+                message.error(errorMessage);
+            }else{
+                message.success(errorMessage);
+            }
+            this.setState({submitting:false});
 
-          if (status) {
-            this.onClose();
+            if(status){
+              this.onClose();
+            }
+            
+
+          } catch (error) {
+            this.setState({submitting:false});
           }
-        } catch (error) {
-          this.setState({ submitting: false });
+  
         }
-      }
     });
   };
 
@@ -135,7 +134,7 @@ class AddExercise extends Component {
     this.setState({
       visible: true,
       disabledSubmit: true,
-      submitting: false,
+      submitting:false
     });
     resetFields();
     closeAddExerciseDrawer();
@@ -150,14 +149,21 @@ class AddExercise extends Component {
 
   render() {
     const { visible } = this.props;
-    const { disabledSubmit, submitting = false } = this.state;
+    const { disabledSubmit , submitting=false } = this.state;
 
-    const { onClose, formatMessage, setFormRef, handleSubmit, FormWrapper } =
-      this;
+
+    const {
+      onClose,
+      formatMessage,
+      setFormRef,
+      handleSubmit,
+      FormWrapper,
+    } = this;
 
     const submitButtonProps = {
       disabled: disabledSubmit,
     };
+
 
     return (
       <Fragment>
@@ -167,20 +173,21 @@ class AddExercise extends Component {
           headerStyle={{
             position: "sticky",
             zIndex: "9999",
-            top: "0px",
+            top: "0px"
           }}
           destroyOnClose={true}
-          onClose={onClose}
+
+          onClose={ onClose}
           visible={visible}
-          width={"35%"}
+          width={'35%'}
           title={formatMessage(messages.add_exercise)}
+      
         >
-          <FormWrapper
+          <FormWrapper 
             wrappedComponentRef={setFormRef}
             setUploadedVideoUrl={this.setUploadedVideoUrl}
             setVideoContentType={this.setVideoContentType}
-            {...this.props}
-          />
+           {...this.props} />
 
           <Footer
             onSubmit={handleSubmit}

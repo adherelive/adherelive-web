@@ -13,14 +13,14 @@ class SignIn extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      login: true,
+      login: true
     };
   }
 
   async componentDidMount() {
-    const { match: { params = {} } = {}, history } = this.props;
-    const { link = "" } = params;
-    const { formatMessage } = this;
+    const { match : { params = {} } = {} , history } = this.props;
+    const { link = "" } = params ;   
+    const {formatMessage} = this;
     if (link) {
       const { verifyUser } = this.props;
       let response = await verifyUser(link);
@@ -33,7 +33,7 @@ class SignIn extends Component {
     }
   }
 
-  formatMessage = (data) => this.props.intl.formatMessage(data);
+  formatMessage = data => this.props.intl.formatMessage(data);
 
   toggleLogin = () => {
     let { login } = this.state;
@@ -48,21 +48,16 @@ class SignIn extends Component {
   };
 
   render() {
-    const { auth: { authenticated_user } = {} } = this.props;
+    const { auth: {authenticated_user} = {} } = this.props;
     const { login } = this.state;
-    const { formatMessage, toggleLogin } = this;
+    const { formatMessage , toggleLogin } = this;
     return (
-      <div
-        className={`wp100 landing-background flex direction-column justify-center align-center ${
-          authenticated_user ? "hp100" : ""
-        }`}
-        style={{ overflowY: "hidden" }}
-      >
+      <div className={`wp100 landing-background flex direction-column justify-center align-center ${authenticated_user ? "hp100" : ""}`} style={{overflowY: "hidden"}}>
         <div className="hp100 wp75">
           <div className="mt40 wp100 mt24 flex justify-space-between align-center direction-row ">
             <div className="flex direction-row align-center">
               <img
-                alt="adherelive-logo"
+                alt="adhere-logo"
                 src={CompanyIcon}
                 className="company-logo"
               />
@@ -73,26 +68,136 @@ class SignIn extends Component {
 
             <div className="flex direction-row align-center">
               <div className="text-white fs16 mr16 ">
-                {login
-                  ? this.formatMessage(messages.newToAdhere)
-                  : this.formatMessage(messages.alreadyAUser)}
+                {login ? this.formatMessage(messages.newToAdhere) : this.formatMessage(messages.alreadyAUser) }
               </div>
               <div
                 className="signup-button medium pointer"
                 onClick={toggleLogin}
               >
-                {login
-                  ? formatMessage(messages.signup)
-                  : formatMessage(messages.login)}
+                {login ? formatMessage(messages.signup) : formatMessage(messages.login) }
               </div>
             </div>
           </div>
-          {}
-          {login ? (
-            <LoginComponent {...this.props} />
-          ) : (
-            <SignUpComponent {...this.props} />
-          )}
+
+            {/* <div className="form-background-box">
+              {login ? (
+                <Spring
+                  from={{ opacity: 0 }}
+                  to={{ opacity: 1 }}
+                  config={{ delay: 500, duration: 500 }}
+                >
+                  {props => (
+                    <div
+                      className=" flex direction-column flex1 wp100 hp100"
+                      style={props}
+                    >
+                      <div className=" login-description ml22 relative">
+                        <div className="flex direction-column align-center justify-center hp100">
+                          
+                         <div className=" h100 wp60 relative minw150" > 
+                            <div className="absolute t-50 h50 wp100 tac lighter-gray fs14 " >{this.formatMessage(messages.adhereAssociation)}</div>
+                            <div>
+                              <img src={loginLogo} style={{width:'100%',height:"100%"}} alt="subharti-logo" ></img>
+                            </div>
+                          </div>
+                         
+                            <div className="login-small-div" >
+                              <div className="login-line"></div>
+                              <div className="tac mt14 light-brown-gray fs14" >
+                                {this.formatMessage(messages.contactUsStart)}{` `}<a href={`mailto:${config.ADHERE_LIVE_CONTACT_LINK}?subject=${config.mail.LOGIN_CONTACT_MESSAGE}`} target={"_blank"}  className="light-brown-gray"  >{this.formatMessage(messages.contactUs)}</a>
+                              </div>
+                            </div>
+                          
+                        </div>
+                      </div>
+                     
+                      
+                    </div>
+                  )}
+                </Spring>
+              ) : (
+                <Spring
+                  from={{ opacity: 0 }}
+                  to={{ opacity: 1 }}
+                  config={{ delay: 2000, duration: 1000 }}
+                >
+                  {props => (
+                       <div
+                       className=" flex align-end direction-column flex1 wp100 hp100"
+                       style={props}
+                     >
+                       <div className=" login-description mr22 relative">
+                         <div className="flex direction-column align-center justify-center hp100">
+                           
+                          <div className=" h100 wp60 relative  minw150" > 
+                          <div className="absolute t-50 h50 wp100 tac lighter-gray fs14 " >{this.formatMessage(messages.adhereAssociation)}</div>
+                            <div>
+                              <img src={loginLogo} style={{width:'100%',height:"100%"}} alt="subharti-logo" ></img>
+                            </div>
+                           </div>
+                          
+                             <div className="login-small-div" >
+                               <div className="login-line"></div>
+                               <div className="tac mt14 light-brown-gray fs14" >
+                                {this.formatMessage(messages.contactUsStart)}{` `}<a href={`mailto:${config.ADHERE_LIVE_CONTACT_LINK}?subject=${config.mail.LOGIN_CONTACT_MESSAGE}`} target={"_blank"}  className="light-brown-gray"  >{this.formatMessage(messages.contactUs)}</a>
+                              </div>
+                             </div>
+                           
+                         </div>
+                       </div>
+                      
+                       
+                     </div>
+                  )}
+                </Spring>
+              )}
+            </div>
+            {login ? (
+              <Spring
+                from={{ right: "60%", opacity: 0 }}
+                to={{ right: "15%", opacity: 1 }}
+              >
+                {props => (
+                  // <div style={props}>
+                  <div className="form-container" style={props}>
+                    <div className="mb8 fs24 fw600 pt20 flex direction-column tal">
+                      {this.formatMessage(messages.loginToDashboard)}
+                    </div>
+                    <div className="mb12 fs14  flex direction-column tal">
+                      {this.formatMessage(messages.enterCredentials)}
+                    </div>
+
+                    <SignInForm
+                      signIn={signIn}
+                      getInitialData={getInitialData}
+                      getUserRoles={getUserRoles}
+                      redirectToForgotPassword={this.redirectToForgotPassword}
+                    />
+                    <div className="flex direction-column justify-space-between align-center">
+                      {/* <LoginByGoogle googleSignIn={googleSignIn}/> */}
+                      {/* <LoginByFacebook facebookSignIn={facebookSignIn}/> */}
+                    {/* </div>
+
+                    <div className="flex mt12 wp100 justify-center">
+                      <div className="medium fs12">
+                        {this.formatMessage(messages.issue)}
+                      </div>
+                    </div>
+                    <div className="flex wp100 justify-center">
+                      <a href={`mailto:${config.ADHERE_LIVE_CONTACT_LINK}?subject=${config.mail.LOGIN_CONTACT_MESSAGE}`} target={"_blank"} className="medium fs14 dark-sky-blue pointer">
+                        {this.formatMessage(messages.contactSupport)}
+                      </a>
+                    </div>
+                  </div> */}
+          {
+            login
+            ?
+            <LoginComponent { ...this.props} />
+            :
+            <SignUpComponent { ...this.props} />
+          }
+
+         
         </div>
       </div>
     );
@@ -100,3 +205,4 @@ class SignIn extends Component {
 }
 
 export default injectIntl(SignIn);
+

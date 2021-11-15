@@ -60,22 +60,24 @@ class StartDate extends Component {
       disabledStartDate,
       purpose,
       vitals,
-      payload: { id: vital_id, canViewDetails = false } = {},
+      payload: { id: vital_id ,canViewDetails=false} = {}
     } = this.props;
     const { formatMessage, openCalendar, getInitialValue, calendarComp } = this;
-    let { start_date = "" } = vitals[vital_id] || {};
+    let { start_date = '' } = vitals[vital_id] || {};
     const value = getFieldValue(FIELD_NAME);
 
-    const { vitalData = {} } = this.props;
-    const { start_date: existing_start_date = null } = vitalData || {};
-    if (existing_start_date) {
-      start_date = existing_start_date;
+    const {vitalData = {}} = this.props;
+    const {start_date : existing_start_date=null} = vitalData || {};
+    if(existing_start_date){
+      start_date=existing_start_date;
     }
+
+
 
     return (
       <div className="wp100 flex align-center">
         <div className="pr8 wp100">
-          <div className="flex row">
+          <div className='flex row'>
             <span className="form-label">From</span>
             <div className="star-red">*</div>
           </div>

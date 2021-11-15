@@ -7,6 +7,7 @@ import DietController from "../../../app/controllers/mControllers/diet/diet.cont
 
 router.post("/", isPatient, Authenticated, PatientController.mUpdatePatient);
 
+
 router.post(
   "/consents/payments",
   Authenticated,
@@ -48,7 +49,7 @@ router.get(
 router.get(
   "/:id/careplan-details",
   Authenticated,
-  PatientController.getPatientCarePlanDetailsWithImp
+  PatientController.getPatientCarePlanDetails
 );
 
 router.get(
@@ -70,12 +71,16 @@ router.get(
 );
 
 router.get(
-  "/:patient_id/reports",
-  Authenticated,
-  PatientController.getPatientReports
+    "/:patient_id/reports",
+    Authenticated,
+    PatientController.getPatientReports
 );
 
-router.get("/diet", Authenticated, DietController.getPatientDiets);
+router.get(
+  "/diet",
+  Authenticated,
+  DietController.getPatientDiets
+);
 
 router.get(
   "/searchpatient",

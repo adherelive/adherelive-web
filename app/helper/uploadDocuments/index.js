@@ -8,7 +8,7 @@ const Log = new Logger("UPLOAD > HELPER");
 
 export const upload = async ({ file, id, folder }) => {
   try {
-    const { mimetype } = file || {};
+    const {mimetype} = file || {};
     const fileName = file.originalname.replace(/\s+/g, "");
     Log.info(`fileName : ${fileName}`);
     await minioService.createBucket();
@@ -26,9 +26,10 @@ export const upload = async ({ file, id, folder }) => {
     let metaData = null;
     // const isImage = mimetype.split("/")[0] === "image";
     // if(isImage) {
-    metaData = {
-      "Content-Type": `${mimetype}`,
-    };
+        metaData = {
+            "Content-Type":
+            `${mimetype}`
+        };
     // }
 
     const filePath = `${folder}/${encodedFileName}`;

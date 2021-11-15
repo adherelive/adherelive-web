@@ -20,7 +20,7 @@ class DietWrapper extends BaseDiet {
       end_date,
       care_plan_id,
       details,
-      expired_on,
+      expired_on
     } = _data || {};
 
     return {
@@ -33,7 +33,7 @@ class DietWrapper extends BaseDiet {
         care_plan_id,
       },
       details,
-      expired_on,
+      expired_on
     };
   };
 
@@ -79,7 +79,7 @@ class DietWrapper extends BaseDiet {
     return {
       diets: {
         [getId()]: {
-          ...getAllInfo(),
+          ...(getAllInfo()),
         },
       },
       diet_food_group_mappings: dietFoodGroupMappingData,

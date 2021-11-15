@@ -8,7 +8,7 @@ import {
   FULL_DAYS,
   FULL_DAYS_NUMBER,
   USER_CATEGORY,
-  DAYS_TEXT_NUM_SHORT,
+  DAYS_TEXT_NUM_SHORT
 } from "../../constant";
 import UploadSteps from "./steps";
 import LocationModal from "./locationmodal";
@@ -24,7 +24,7 @@ const dayTimings = {
   [FULL_DAYS.THU]: [{ startTime: "", endTime: "" }],
   [FULL_DAYS.FRI]: [{ startTime: "", endTime: "" }],
   [FULL_DAYS.SAT]: [{ startTime: "", endTime: "" }],
-  [FULL_DAYS.SUN]: [{ startTime: "", endTime: "" }],
+  [FULL_DAYS.SUN]: [{ startTime: "", endTime: "" }]
 };
 
 const DAY_SELECTED_DEFAULT = {
@@ -34,7 +34,7 @@ const DAY_SELECTED_DEFAULT = {
   [FULL_DAYS.THU]: false,
   [FULL_DAYS.FRI]: false,
   [FULL_DAYS.SAT]: false,
-  [FULL_DAYS.SUN]: false,
+  [FULL_DAYS.SUN]: false
 };
 
 class ClinicRegister extends Component {
@@ -46,7 +46,7 @@ class ClinicRegister extends Component {
       visible: false,
       timingsVisible: false,
       doctor_id: "",
-      existingClinincsKeys: [],
+      existingClinincsKeys: []
     };
   }
 
@@ -58,8 +58,8 @@ class ClinicRegister extends Component {
       name: "",
       location: "",
       timings: {},
-      daySelected: { ...DAY_SELECTED_DEFAULT },
-      clinic_id: "",
+      daySelected: {...DAY_SELECTED_DEFAULT},
+      clinic_id: ""
     };
     let clinicsKeys = [key1];
     this.setDoctorID();
@@ -71,7 +71,10 @@ class ClinicRegister extends Component {
     this.setState({});
   }
 
+
+
   fetchData = async () => {
+   
     const url = window.location.href.split("/");
     const { authenticated_category } = this.props;
     const { getDoctorProfileDetails } = this.props;
@@ -85,7 +88,7 @@ class ClinicRegister extends Component {
     for (let doctor of Object.values(doctors)) {
       const {
         basic_info: { user_id = 0, id = 0 } = {},
-        doctor_clinic_ids = [],
+        doctor_clinic_ids = []
       } = doctor || {};
 
       if (parseInt(user_id) === parseInt(authenticated_user)) {
@@ -93,20 +96,14 @@ class ClinicRegister extends Component {
       }
 
       const url = window.location.href.split("/");
-      const current_doc_id = url.length > 4 ? url[url.length - 1] : 0;
+      const current_doc_id=url.length > 4 ? url[url.length - 1] : 0;
 
-      if (
-        authenticated_category === USER_CATEGORY.PROVIDER &&
-        parseInt(id) === parseInt(current_doc_id)
-      ) {
+      if(authenticated_category === USER_CATEGORY.PROVIDER && parseInt(id) === parseInt(current_doc_id) ){
         docClinicIds = doctor_clinic_ids;
         await getDoctorProfileDetails(id);
       }
 
-      if (
-        authenticated_category === USER_CATEGORY.DOCTOR ||
-        authenticated_category === USER_CATEGORY.HSP
-      ) {
+      if (authenticated_category === USER_CATEGORY.DOCTOR || authenticated_category === USER_CATEGORY.HSP) {
         await getDoctorProfileDetails(id);
       }
     }
@@ -117,6 +114,7 @@ class ClinicRegister extends Component {
     let existingClinincsKeys = [];
 
     if (docClinicIds.length > 0) {
+
       for (let eachClinic of docClinicIds) {
         let key = uuid();
 
@@ -124,7 +122,7 @@ class ClinicRegister extends Component {
         let {
           basic_info: { id = "", name = "" },
           location = "",
-          details: { time_slots = {} } = {},
+          details: { time_slots = {} } = {}
         } = doctor_clinics[eachClinic] || {};
 
         let timings = {};
@@ -141,7 +139,7 @@ class ClinicRegister extends Component {
 
           if (Object.keys(time_slots[each]).length === 0) {
             timings[DAYS_TEXT_NUM_SHORT[index]] = [
-              { startTime: "", endTime: "" },
+              { startTime: "", endTime: "" }
             ];
             daySelected[DAYS_TEXT_NUM_SHORT[index]] = false;
           } else {
@@ -175,8 +173,8 @@ class ClinicRegister extends Component {
         name: "",
         location: "",
         timings: {},
-        daySelected: { ...DAY_SELECTED_DEFAULT },
-        clinic_id: "",
+        daySelected: {...DAY_SELECTED_DEFAULT},
+        clinic_id: ""
       };
       clinicsKeys = [key];
     }
@@ -184,7 +182,7 @@ class ClinicRegister extends Component {
     this.setState({
       clinics,
       clinicsKeys,
-      existingClinincsKeys,
+      existingClinincsKeys
     });
   };
 
@@ -225,7 +223,7 @@ class ClinicRegister extends Component {
     this.setState({ clinics: newClinics });
   };
 
-  formatMessage = (data) => this.props.intl.formatMessage(data);
+  formatMessage = data => this.props.intl.formatMessage(data);
 
   addClinic = () => {
     let key = uuid();
@@ -247,14 +245,14 @@ class ClinicRegister extends Component {
         [FULL_DAYS.THU]: false,
         [FULL_DAYS.FRI]: false,
         [FULL_DAYS.SAT]: false,
-        [FULL_DAYS.SUN]: false,
-      },
+        [FULL_DAYS.SUN]: false
+      }
     };
     newclinicsKeys.unshift(key);
     this.setState({ clinics: newClinics, clinicsKeys: newclinicsKeys });
   };
 
-  deleteClinic = (key) => () => {
+  deleteClinic = key => () => {
     let { clinics = {}, clinicsKeys = [] } = this.state;
     let newClinics = clinics;
     let newclinicsKeys = clinicsKeys;
@@ -263,16 +261,16 @@ class ClinicRegister extends Component {
     this.setState({ clinics: newClinics, clinicsKeys: newclinicsKeys });
   };
 
-  setModalVisible = (key) => () => {
+  setModalVisible = key => () => {
     this.setState({ visible: true, clinicKeyOfModal: key });
   };
 
-  setModalTimingVisible = (key) => () => {
+  setModalTimingVisible = key => () => {
     this.setState({ timingsVisible: true, clinicKeyOfModalTiming: key });
   };
 
-  renderTimings = (timings) => {
-    return Object.keys(timings).map((day) => {
+  renderTimings = timings => {
+    return Object.keys(timings).map(day => {
       return (
         <div className="wp100 flex flex-start">
           <div className="fs14 medium wp15">{`${day} :`}</div>
@@ -310,13 +308,9 @@ class ClinicRegister extends Component {
 
     return (
       <div className="flex direction-column">
-        {clinicsKeys.map((key) => {
-          let {
-            location = "",
-            name = "",
-            timings = {},
-            daySelected = {},
-          } = clinics[key] || {};
+        {clinicsKeys.map(key => {
+          let { location = "", name = "", timings = {}, daySelected = {} } =
+            clinics[key] || {};
           let isClinicOpen = false;
           for (let day in daySelected) {
             if (daySelected[day]) {
@@ -349,7 +343,7 @@ class ClinicRegister extends Component {
                 placeholder={this.formatMessage(messages.clinicName)}
                 className={"form-inputs"}
                 value={name}
-                onChange={(e) => this.setClinicName(key, e)}
+                onChange={e => this.setClinicName(key, e)}
               />
               <div className="form-headings">
                 {this.formatMessage(messages.location)}
@@ -434,8 +428,8 @@ class ClinicRegister extends Component {
     );
   };
 
-  validateClinics = (newClinics) => {
-    console.log("11983721 newClinics --> ", { newClinics });
+  validateClinics = newClinics => {
+    console.log("11983721 newClinics --> ", {newClinics});
     for (let edu of newClinics) {
       let { name = "", location = "", timings = [] } = edu;
 
@@ -450,7 +444,7 @@ class ClinicRegister extends Component {
     return true;
   };
 
-  duplicateClinics = (newClinics) => {
+  duplicateClinics = newClinics => {
     for (let edu in newClinics) {
       let { name = "" } = newClinics[edu];
 
@@ -489,7 +483,7 @@ class ClinicRegister extends Component {
     const { doctor_id, clinics = {} } = this.state;
 
     if (validate) {
-      let newClinics = Object.values(clinics);
+        let newClinics = Object.values(clinics);
       for (let clinic of newClinics) {
         let { timings = {} } = clinic;
         let time_slots = {
@@ -499,7 +493,7 @@ class ClinicRegister extends Component {
           [FULL_DAYS_NUMBER.THU]: timings[FULL_DAYS.THU],
           [FULL_DAYS_NUMBER.FRI]: timings[FULL_DAYS.FRI],
           [FULL_DAYS_NUMBER.SAT]: timings[FULL_DAYS.SAT],
-          [FULL_DAYS_NUMBER.SUN]: timings[FULL_DAYS.SUN],
+          [FULL_DAYS_NUMBER.SUN]: timings[FULL_DAYS.SUN]
         };
         clinic.time_slots = time_slots;
         delete clinic.timings;
@@ -508,7 +502,7 @@ class ClinicRegister extends Component {
       }
       const data = { clinics: newClinics, doctor_id };
       const { doctorClinicRegister } = this.props;
-      doctorClinicRegister(data).then((response) => {
+      doctorClinicRegister(data).then(response => {
         const { status, message: errorMessage } = response;
         if (status) {
           showVerifyModal(true);
@@ -523,8 +517,7 @@ class ClinicRegister extends Component {
               history.replace(PATH.LANDING_PAGE);
             }
           } else if (
-            (authenticated_category === USER_CATEGORY.DOCTOR ||
-              authenticated_category === USER_CATEGORY.HSP) &&
+            ( authenticated_category === USER_CATEGORY.DOCTOR || authenticated_category === USER_CATEGORY.HSP ) &&
             window.location.href.includes(PATH.REGISTER_FROM_MY_PROFILE)
           ) {
             history.replace(PATH.PROFILE);
@@ -565,8 +558,7 @@ class ClinicRegister extends Component {
         history.replace(`${PATH.REGISTER_QUALIFICATIONS}/${doctor_id}`);
       }
     } else if (
-      (authenticated_category === USER_CATEGORY.DOCTOR ||
-        authenticated_category === USER_CATEGORY.HSP) &&
+      (authenticated_category === USER_CATEGORY.DOCTOR || authenticated_category === USER_CATEGORY.HSP) &&
       window.location.href.includes(PATH.REGISTER_FROM_MY_PROFILE)
     ) {
       history.replace(PATH.PROFILE);
@@ -580,7 +572,7 @@ class ClinicRegister extends Component {
 
   handleCancelTiming = () => this.setState({ timingsVisible: false });
 
-  handleOk = (location) => {
+  handleOk = location => {
     const { clinicKeyOfModal = "", clinics } = this.state;
     let newClinics = clinics;
     newClinics[clinicKeyOfModal].location = location;
@@ -604,13 +596,13 @@ class ClinicRegister extends Component {
       clinics,
       clinicKeyOfModal,
       timingsVisible = false,
-      clinicKeyOfModalTiming,
+      clinicKeyOfModalTiming
     } = this.state;
     const {
       authenticated_user = "",
       authenticated_category = "",
       users,
-      getDoctorQualificationRegisterData,
+      getDoctorQualificationRegisterData
     } = this.props;
 
     let currClinicTimings = {};
@@ -628,7 +620,7 @@ class ClinicRegister extends Component {
     let daySelectForModal =
       clinicKeyOfModalTiming && Object.keys(currClinicDaySelect).length
         ? currClinicDaySelect
-        : { ...DAY_SELECTED_DEFAULT };
+        : {...DAY_SELECTED_DEFAULT};
 
     return (
       <Fragment>
@@ -682,5 +674,4 @@ class ClinicRegister extends Component {
     );
   }
 }
-
 export default withRouter(injectIntl(ClinicRegister));

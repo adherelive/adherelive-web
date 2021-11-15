@@ -21,5 +21,5 @@ export default class ExerciseDetail {
 
   getExercise = () => {
     return this._data.exercise ? this._data.exercise : null;
-  };
+  }
 }

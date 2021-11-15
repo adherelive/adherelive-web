@@ -1,10 +1,6 @@
 import DietJob from "../";
 import moment from "moment";
-import {
-  EVENT_TYPE,
-  NOTIFICATION_VERB,
-  DEFAULT_PROVIDER,
-} from "../../../../constant";
+import { EVENT_TYPE, NOTIFICATION_VERB, DEFAULT_PROVIDER } from "../../../../constant";
 
 import UserRoleService from "../../../services/userRoles/userRoles.service";
 import ProviderService from "../../../services/provider/provider.service";
@@ -23,7 +19,10 @@ class PriorJob extends DietJob {
         diet_id = null,
         diets = {},
         participants = [],
-        actor: { id: actorId, user_role_id } = {},
+        actor: {
+          id: actorId,
+          user_role_id,
+        } = {}
       } = {},
     } = getDietData() || {};
 
@@ -31,18 +30,17 @@ class PriorJob extends DietJob {
     const playerIds = [];
     const userIds = [];
 
-    const { rows: userRoles = [] } =
-      (await UserRoleService.findAndCountAll({
-        where: {
-          id: participants,
-        },
-      })) || {};
+    const {rows: userRoles = []} = await UserRoleService.findAndCountAll({
+      where: {
+        id: participants
+      }
+    }) || {};
 
     let providerId = null;
-    for (const userRole of userRoles) {
-      const { id, user_identity, linked_id } = userRole || {};
-      if (id === user_role_id) {
-        if (linked_id) {
+    for(const userRole of userRoles) {
+      const {id, user_identity, linked_id} = userRole || {};
+      if(id === user_role_id) {
+        if(linked_id) {
           providerId = linked_id;
         }
       } else {
@@ -51,11 +49,9 @@ class PriorJob extends DietJob {
     }
 
     let providerName = DEFAULT_PROVIDER;
-    if (providerId) {
-      const provider = await ProviderService.getProviderByData({
-        id: providerId,
-      });
-      const { name } = provider || {};
+    if(providerId) {
+      const provider = await ProviderService.getProviderByData({id: providerId});
+      const {name} = provider || {};
       providerName = name;
     }
 
@@ -72,8 +68,8 @@ class PriorJob extends DietJob {
 
     // diet name
     let dietName = "Diet";
-    if (diet_id) {
-      const { basic_info: { name } = {} } = diets[diet_id] || {};
+    if(diet_id) {
+      const {basic_info: {name} = {}} = diets[diet_id] || {};
       dietName = name;
     }
 
@@ -98,7 +94,10 @@ class PriorJob extends DietJob {
     const {
       details: {
         participants = [],
-        actor: { id: actorId, user_role_id } = {},
+        actor: {
+          id: actorId,
+          user_role_id
+        } = {},
       } = {},
       id,
     } = getDietData() || {};
@@ -109,14 +108,14 @@ class PriorJob extends DietJob {
     for (const participant of participants) {
       if (participant !== user_role_id) {
         templateData.push({
-          actor: actorId,
-          actorRoleId: user_role_id,
-          object: `${participant}`,
-          foreign_id: `${id}`,
-          verb: `${NOTIFICATION_VERB.DIET_PRIOR}:${currentTimeStamp}`,
-          event: EVENT_TYPE.DIET,
-          time: currentTime,
-          create_time: `${currentTime}`,
+            actor: actorId,
+            actorRoleId: user_role_id,
+            object: `${participant}`,
+            foreign_id: `${id}`,
+            verb: `${NOTIFICATION_VERB.DIET_PRIOR}:${currentTimeStamp}`,
+            event: EVENT_TYPE.DIET,
+            time: currentTime,
+            create_time: `${currentTime}`
         });
       }
     }

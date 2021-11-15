@@ -38,7 +38,7 @@ class AddPatientJob extends AuthJob {
         const templateData = [
             {
                 phoneNumber: `+${prefix}${phoneNumber}`,
-                message: `Hello from AdhereLive! Please click the link to verify your number. ${universalLink}`
+                message: `Hello from Adhere! Please click the link to verify your number. ${universalLink}`
             }
         ];
 

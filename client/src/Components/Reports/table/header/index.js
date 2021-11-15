@@ -7,7 +7,7 @@ import Edit from "../dataColumn/edit";
 import Date from "../dataColumn/date";
 import ReportDocuments from "../dataColumn/reportDocuments";
 
-export default (props) => {
+export default props => {
   const { formatMessage } = props || {};
 
   return [
@@ -16,24 +16,26 @@ export default (props) => {
       ...TABLE_COLUMN.NAME,
       render: (props) => {
         // const { vitalTemplateData } = data || {};
-        return <Name {...props} />;
-      },
+        return (
+          <Name {...props} />
+        );
+      }
     },
     {
       title: formatMessage(messages.time),
       ...TABLE_COLUMN.TIME,
 
-      render: (props) => <Date {...props} />,
+      render: (props) => <Date  {...props}/>
     },
     {
       title: formatMessage(messages.report_documents),
       ...TABLE_COLUMN.REPORT_DOCUMENTS,
-      render: (props) => <ReportDocuments {...props} />,
+      render: (props) => <ReportDocuments  {...props}/>
     },
     {
-      title: "",
+      title:'',
       ...TABLE_COLUMN.EDIT,
-      render: (props) => <Edit {...props} />,
-    },
+      render: (props) => <Edit {...props}/>
+    }
   ];
 };

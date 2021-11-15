@@ -141,8 +141,9 @@ class ExerciseController extends Controller {
             exercise_id: exerciseId,
             auth: { creator_id: userCategoryId, creator_type: category },
           });
-          exerciseContentData[exerciseContentWrapper.getId()] =
-            exerciseContentWrapper.getBasicInfo();
+          exerciseContentData[
+            exerciseContentWrapper.getId()
+          ] = exerciseContentWrapper.getBasicInfo();
         }
 
         return raiseSuccess(
@@ -160,7 +161,7 @@ class ExerciseController extends Controller {
         return raiseClientError(res, 422, {}, "Please check details entered");
       }
     } catch (error) {
-      Log.debug("create 500 error - exercise created successfully", error);
+      Log.debug("create 500", error);
       return raiseServerError(res);
     }
   };
@@ -212,28 +213,26 @@ class ExerciseController extends Controller {
         }
       }
 
-      const {
-        isUpdated: isExerciseUpdated = false,
-        exercise_id,
-        detail_id,
-      } = (await exerciseService.update({
-        exercise: { name },
-        id,
-        exerciseDetails: {
-          exercise_detail_id,
-          data: { repetition_id, repetition_value, calorific_value },
-        },
-        exercise_content: {
-          video,
-        },
-        auth: {
-          creator_id: userCategoryId,
-          creator_type: category,
-        },
-      })) || false;
+      const { isUpdated: isExerciseUpdated = false, exercise_id, detail_id } =
+        (await exerciseService.update({
+          exercise: { name },
+          id,
+          exerciseDetails: {
+            exercise_detail_id,
+            data: { repetition_id, repetition_value, calorific_value },
+          },
+          exercise_content: {
+            video,
+          },
+          auth: {
+            creator_id: userCategoryId,
+            creator_type: category,
+          },
+        })) || false;
 
       exerciseId = exercise_id;
       detailId = detail_id;
+
 
       if (isExerciseUpdated) {
         const updatedExercise = await ExerciseWrapper({ id });
@@ -251,8 +250,9 @@ class ExerciseController extends Controller {
             exercise_id: id,
             auth: { creator_id: userCategoryId, creator_type: category },
           });
-          exerciseContentData[exerciseContentWrapper.getId()] =
-            exerciseContentWrapper.getBasicInfo();
+          exerciseContentData[
+            exerciseContentWrapper.getId()
+          ] = exerciseContentWrapper.getBasicInfo();
         }
 
         return raiseSuccess(
@@ -306,8 +306,11 @@ class ExerciseController extends Controller {
           const exercise = await ExerciseWrapper({
             data: searchedExercises[index],
           });
-          const { exercises, exercise_details, repetitions } =
-            await exercise.getReferenceInfo();
+          const {
+            exercises,
+            exercise_details,
+            repetitions,
+          } = await exercise.getReferenceInfo();
           allExercises = { ...allExercises, ...exercises };
           allExerciseDetails = { ...allExerciseDetails, ...exercise_details };
           allRepetitions = { ...allRepetitions, ...repetitions };
@@ -330,8 +333,9 @@ class ExerciseController extends Controller {
             const exerciseContent = await ExerciseContentWrapper({
               data: exerciseContents[index],
             });
-            allExerciseContents[exerciseContent.getId()] =
-              exerciseContent.getBasicInfo();
+            allExerciseContents[
+              exerciseContent.getId()
+            ] = exerciseContent.getBasicInfo();
           }
         }
 
@@ -361,7 +365,7 @@ class ExerciseController extends Controller {
   };
 
   uploadContent = async (req, res) => {
-    const { raiseSuccess, raiseServerError, raiseClientError } = this;
+    const { raiseSuccess, raiseServerError,raiseClientError } = this;
     try {
       const { file, userDetails: { userId } = {} } = req;
 

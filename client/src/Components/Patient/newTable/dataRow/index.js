@@ -1,21 +1,12 @@
 import { TABLE_COLUMN, formatPatientTableData } from "../helper";
 
-export default (data) => {
-  const {
-    id,
-    addToWatchlist,
-    onRowClick,
-    removePatientFromWatchlist,
-    currentTab,
-    handleGetPatients,
-    tabChanged,
-    offset,
-    paginatedPatientData,
-    auth_role,
-  } = data;
+export default data => {
+  const { id,addToWatchlist, onRowClick,removePatientFromWatchlist,
+    currentTab,handleGetPatients,tabChanged , offset , paginatedPatientData , auth_role} = data;
+
 
   const formattedData = formatPatientTableData(data);
-  const { patientData, treatmentData, doctorData, carePlanData } =
+  const { patientData, treatmentData, doctorData,  carePlanData} =
     formattedData || {};
 
   return {
@@ -31,30 +22,30 @@ export default (data) => {
       tabChanged,
       offset,
       paginatedPatientData,
-      auth_role,
+      auth_role
     },
     [TABLE_COLUMN.DIAGNOSIS.dataIndex]: {
       // patientData
-      carePlanData,
+      carePlanData
     },
     [TABLE_COLUMN.TREATMENT.dataIndex]: {
       treatmentData,
-      carePlanData,
+      carePlanData
     },
     [TABLE_COLUMN.SEVERITY.dataIndex]: {
       treatmentData,
-      carePlanData,
+      carePlanData
     },
     [TABLE_COLUMN.START_DATE.dataIndex]: {
       treatmentData,
-      carePlanData,
+      carePlanData
     },
     [TABLE_COLUMN.DOCTOR.dataIndex]: {
       patientData,
-      doctorData,
+      doctorData
     },
     [TABLE_COLUMN.CREATED_AT.dataIndex]: {
-      patientData,
+      patientData
     },
   };
 };

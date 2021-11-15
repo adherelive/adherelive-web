@@ -2,12 +2,13 @@ const AWS = require("aws-sdk");
 const log = require("../../../libs/log")("communications ---> smsManger");
 const axios = require("axios");
 
+
 class SmsManager {
   constructor() {
     AWS.config.update({
       accessKeyId: process.config.aws.access_key_id,
       secretAccessKey: process.config.aws.access_key,
-      region: process.config.aws.region,
+      region: process.config.aws.region
     });
 
     this.TopicArn = process.config.aws.topic_arn;
@@ -16,9 +17,9 @@ class SmsManager {
 
     this.sns.setSMSAttributes({
       attributes: {
-        DefaultSenderID: "ADHERE-LIVE",
-        DefaultSMSType: "Transactional",
-      },
+        'DefaultSenderID':'ADHERE-LIVE',
+        'DefaultSMSType': 'Transactional',
+      }
     });
   }
 
@@ -77,17 +78,15 @@ class SmsManager {
 
       let smsSent = false;
 
-      await this.sns
-        .publish(smsData)
-        .promise()
-        .then((data) => {
-          log.info("sms sent...........!!", data);
-          smsSent = true;
-        })
-        .catch((error) => {
-          log.info("sending sms error ------->>>>", error);
-          smsSent = false;
-        });
+      await this.sns.publish(smsData).promise().then(
+          (data) => {
+            log.info("sms sent...........!!", data);
+            smsSent = true;
+          }
+      ).catch(error => {
+        log.info("sending sms error ------->>>>", error);
+        smsSent = false;
+      });
 
       return smsSent;
 
@@ -112,7 +111,7 @@ class SmsManager {
   }
 
   smsDataTransformer(smsData) {
-    let smsTransformedData = {}; // new Object();
+    let smsTransformedData = new Object();
     smsTransformedData.PhoneNumber = smsData.phoneNumber;
     // smsTransformedData.countryCode = smsData.countryCode;
     smsTransformedData.Message = smsData.message;
@@ -126,23 +125,23 @@ class SmsManager {
     if (!smsData.countryCode)
       return {
         error: 1,
-        message: "invalid or empty country code!!",
+        message: "invalid or empty country code!!"
       };
 
     if (!smsData.phoneNumber)
       return {
         error: 1,
-        message: "invalid or empty phone number!!",
+        message: "invalid or empty phone number!!"
       };
 
     if (!smsData.message)
       return {
         error: 1,
-        message: "message can't be empty",
+        message: "message can't be empty"
       };
     return {
       error: 0,
-      message: "valid",
+      message: "valid"
     };
   }
 }

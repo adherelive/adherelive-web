@@ -11,7 +11,7 @@ const {
   SURVEY,
   PROGRAM,
   PRESCRIPTION,
-  VITALS,
+  VITALS
 } = require("../contants");
 
 const NOTIFICATION_ENUM = [
@@ -22,7 +22,7 @@ const NOTIFICATION_ENUM = [
   SURVEY,
   PROGRAM,
   PRESCRIPTION,
-  VITALS,
+  VITALS
 ];
 
 const actionList = {
@@ -30,7 +30,7 @@ const actionList = {
   RESCHEDULE: "reschedule",
   START: "start",
   PROIR: "prior",
-  DELETE: "delete",
+  DELETE: "delete"
 };
 
 class SendNotificationValidator {

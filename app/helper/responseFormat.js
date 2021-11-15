@@ -4,7 +4,6 @@ class Response {
     this.statusCode = statusCode;
     this.data = {};
   }
-
   /**
    * @api {OPTIONS} /response Response format
    * @apiName responseFormat
@@ -95,23 +94,18 @@ class Response {
   getData() {
     return this.data;
   }
-
   setMessage(message) {
     this.message = message;
   }
-
   getMessage() {
     return this.message;
   }
-
   setError(error) {
     this.error = Object.assign({}, error);
   }
-
   getError() {
     return this.error;
   }
-
   /**
    * @api {OPTIONS} /getResponse Generates response
    * @apiName getResponse
@@ -128,18 +122,18 @@ class Response {
     if (this.getStatus()) {
       payload = {
         data: this.getData(),
-        message: this.getMessage(),
+        message: this.getMessage()
       };
     } else {
       payload = {
         error: this.getError(),
-        message: this.getMessage(),
+        message: this.getMessage()
       };
     }
     return {
       status: this.getStatus(),
       statusCode: this.getStatusCode(),
-      payload: payload,
+      payload: payload
     };
   }
 }

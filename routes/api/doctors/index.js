@@ -8,9 +8,6 @@ import PaymentController from "../../../app/controllers/payments/payment.control
 import CarePlanTemplate from "../../../app/controllers/carePlanTemplate/carePlanTemplate.controller";
 import * as validator from "./validator";
 
-import isAllowed from "../../middlewares/permissions";
-import PERMISSIONS from "../../../config/permissions";
-
 const router = express.Router();
 const multer = require("multer");
 const storage = multer.memoryStorage();
@@ -23,9 +20,11 @@ router.post(
   DoctorController.addDoctor
 );
 
-router.get("/search-mail", Authenticate, DoctorController.searchDoctor);
+router.get(
+  "/search-mail",
+  Authenticate,
+  DoctorController.searchDoctor);
 
-router.get("/search-name", Authenticate, DoctorController.searchDoctorName);
 
 router.post(
   "/upload",
@@ -125,13 +124,6 @@ router.delete(
   PaymentController.removeDoctorPaymentProduct
 );
 
-// router.post(
-//   "/profile",
-//   Authenticate,
-//   isAllowed(PERMISSIONS.DOCTORS.ADD_PROFILE),
-//   DoctorController.addProfile
-// );
-
 router.post(
   "/:id",
   Authenticate,
@@ -167,19 +159,17 @@ router.get(
 );
 
 router.get(
-  "/treatment/templates",
-  Authenticate,
-  CarePlanTemplate.getAllForDoctor
+    "/treatment/templates",
+    Authenticate,
+    CarePlanTemplate.getAllForDoctor
 );
 
 router.get("/:doctor_id", Authenticate, DoctorController.getAllDoctorDetails);
 
-router.delete("/:doctor_id", Authenticate, DoctorController.deactivateDoctor);
+router.delete("/:doctor_id",Authenticate,DoctorController.deactivateDoctor);
 
-router.post(
-  "/activate/:user_id",
-  Authenticate,
-  DoctorController.activateDoctor
-);
+router.post("/activate/:user_id",Authenticate,DoctorController.activateDoctor);
+
+
 
 module.exports = router;

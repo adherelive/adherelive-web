@@ -1,10 +1,6 @@
 import AppointmentJob from "../";
 import moment from "moment";
-import {
-  DEFAULT_PROVIDER,
-  EVENT_TYPE,
-  USER_CATEGORY,
-} from "../../../../constant";
+import { DEFAULT_PROVIDER,EVENT_TYPE, USER_CATEGORY } from "../../../../constant";
 
 import UserRoleService from "../../../services/userRoles/userRoles.service";
 import ProviderService from "../../../services/provider/provider.service";
@@ -36,21 +32,21 @@ class UpdateJob extends AppointmentJob {
     const playerIds = [];
     const userIds = [];
 
-    const { rows: userRoles = [] } =
-      (await UserRoleService.findAndCountAll({
-        where: {
-          id: participants,
-        },
-      })) || {};
+    const {rows: userRoles = []} = await UserRoleService.findAndCountAll({
+      where: {
+        id: participants
+      }
+    }) || {};
 
     let providerId = null;
 
-    for (const userRole of userRoles) {
-      const { id, user_identity, linked_id } = userRole || {};
-      if (id !== user_role_id) {
+    for(const userRole of userRoles) {
+      const {id, user_identity, linked_id} = userRole || {};
+      if(id !== user_role_id) {
         userIds.push(user_identity);
-      } else {
-        if (linked_id) {
+      } 
+      else {
+        if(linked_id) {
           providerId = linked_id;
         }
       }
@@ -58,11 +54,9 @@ class UpdateJob extends AppointmentJob {
 
     // provider
     let providerName = DEFAULT_PROVIDER;
-    if (providerId) {
-      const provider = await ProviderService.getProviderByData({
-        id: providerId,
-      });
-      const { name } = provider || {};
+    if(providerId) {
+      const provider = await ProviderService.getProviderByData({id: providerId});
+      const {name} = provider || {};
       providerName = name;
     }
 
@@ -86,10 +80,7 @@ class UpdateJob extends AppointmentJob {
       headings: { en: `Appointment Update (${providerName})` },
       contents: {
         en: `${
-          actorCategory === USER_CATEGORY.DOCTOR ||
-          actorCategory === USER_CATEGORY.HSP
-            ? "Dr."
-            : ""
+          actorCategory === USER_CATEGORY.DOCTOR || actorCategory === USER_CATEGORY.HSP ? "Dr." : ""
         }${name} updated an appointment with you. Tap here to know more!`,
       },
       include_player_ids: [...playerIds],

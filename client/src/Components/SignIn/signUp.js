@@ -25,15 +25,15 @@ class SignUp extends Component {
     this.state = {
       login: true,
       readTermsOfService: false,
-      openTOSModal: false,
+      openTOSModal: false
     };
   }
 
   componentDidMount() {}
 
-  formatMessage = (data) => this.props.intl.formatMessage(data);
+  formatMessage = data => this.props.intl.formatMessage(data);
 
-  openTOSModalComp = (e) => {
+  openTOSModalComp = e => {
     e.preventDefault();
 
     const { readTermsOfService } = this.state;
@@ -51,7 +51,7 @@ class SignUp extends Component {
 
     this.props.form.validateFields((err, values) => {
       if (!err) {
-        signUp({ ...values, readTermsOfService }).then((response) => {
+        signUp({ ...values, readTermsOfService }).then(response => {
           const { status } = response;
           if (status) {
             this.props.form.resetFields();
@@ -59,7 +59,7 @@ class SignUp extends Component {
           } else {
             let {
               payload: { error = {}, message: responseMessage = "" } = {},
-              statusCode = "",
+              statusCode = ""
             } = response;
 
             if (statusCode === 400 || statusCode === 422) {
@@ -76,7 +76,7 @@ class SignUp extends Component {
     });
   };
 
-  closeTOSModal = (e) => {
+  closeTOSModal = e => {
     this.setState({ openTOSModal: false });
   };
 
@@ -105,48 +105,45 @@ class SignUp extends Component {
     );
   };
 
-  updateReadTermsOfService = (e) => {
+  updateReadTermsOfService = e => {
     const { readTermsOfService, openTOSModal } = this.state;
 
     if (readTermsOfService) {
       // if true before
       this.setState({
         readTermsOfService: !readTermsOfService,
-        openTOSModal: false,
+        openTOSModal: false
       });
     } else {
       this.setState({
         // readTermsOfService: !readTermsOfService,
-        openTOSModal: true,
+        openTOSModal: true
       });
     }
   };
 
   modalAcceptTOS = (e) => {
-    const { readTermsOfService, openTOSModal } = this.state;
+      const { readTermsOfService, openTOSModal } = this.state;
 
-    this.setState({
-      readTermsOfService: !readTermsOfService,
-      openTOSModal: false,
-    });
+      this.setState({readTermsOfService: !readTermsOfService, openTOSModal: false});
   };
 
   render() {
     const {
-      form: { getFieldDecorator, isFieldTouched, getFieldError },
+      form: { getFieldDecorator, isFieldTouched, getFieldError }
     } = this.props;
     const { readTermsOfService, openTOSModal } = this.state;
     let fieldsError = {};
-    FIELDS.forEach((value) => {
+    FIELDS.forEach(value => {
       const error = isFieldTouched(value) && getFieldError(value);
       fieldsError = { ...fieldsError, [value]: error };
     });
     const {
       handleSignUp,
       openTOSModalComp,
-      modalAcceptTOS,
+        modalAcceptTOS,
       closeTOSModal,
-      tosComponent,
+      tosComponent
     } = this;
     return (
       <Fragment>
@@ -162,13 +159,13 @@ class SignUp extends Component {
               rules: [
                 {
                   required: true,
-                  message: this.formatMessage(messages.enterEmail),
+                  message: this.formatMessage(messages.enterEmail)
                 },
                 {
                   type: "email",
-                  message: this.formatMessage(messages.enterValidEmail),
-                },
-              ],
+                  message: this.formatMessage(messages.enterValidEmail)
+                }
+              ]
             })(<Input type="text" placeholder="Email" className="h40" />)}
           </FormItem>
 
@@ -183,9 +180,9 @@ class SignUp extends Component {
               rules: [
                 {
                   required: true,
-                  message: this.formatMessage(messages.enterPassword),
-                },
-              ],
+                  message: this.formatMessage(messages.enterPassword)
+                }
+              ]
             })(<Password placeholder="Password" className="h40" />)}
           </FormItem>
 

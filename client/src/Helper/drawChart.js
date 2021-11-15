@@ -1,9 +1,9 @@
 import * as Chart from "chart.js";
 import { GRAPH_COLORS } from "../constant";
 
-export default (data) => {
+export default data => {
   const { dashboard_report = [] } = data || {};
-  dashboard_report.forEach((report) => {
+  dashboard_report.forEach(report => {
     const { id, data: graphContent } = report || {};
     const { total, critical } = graphContent || {};
     const { dark, light } = GRAPH_COLORS[id] || {};
@@ -17,21 +17,21 @@ export default (data) => {
           {
             data: [
               parseFloat(critical),
-              parseFloat(total) - parseFloat(critical),
+              parseFloat(total) - parseFloat(critical)
             ],
             backgroundColor: [dark, light],
             borderColor: [dark, light],
-            borderWidth: 1,
-          },
-        ],
+            borderWidth: 1
+          }
+        ]
       },
       options: {
         cutoutPercentage: 75,
         legend: {
-          display: false,
+          display: false
         },
-        responsive: true,
-      },
+        responsive: true
+      }
     });
   });
 };

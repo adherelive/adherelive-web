@@ -18,14 +18,14 @@ class MinioService {
     AWS.config.update({
       accessKeyId: process.config.aws.access_key_id,
       secretAccessKey: process.config.aws.access_key,
-      region: process.config.aws.region,
+      region: process.config.aws.region
     });
     this.s3Client = new AWS.S3();
     this.bucket = process.config.minio.MINIO_BUCKET_NAME;
   }
 
   callback = (error, data) => {
-    if (error) {
+    if(error) {
       // throw error;
       console.log("0983128930218 error", error);
     } else {
@@ -51,11 +51,11 @@ class MinioService {
               Action: ["s3:GetObject"],
               Effect: "Allow",
               Principal: {
-                AWS: ["*"],
+                AWS: ["*"]
               },
-              Resource: [`arn:aws:s3:::${bucket_name}/*`], //${bucket_name}
-            },
-          ],
+              Resource: [`arn:aws:s3:::${bucket_name}/*`] //${bucket_name}
+            }
+          ]
         };
 
         result = await this.s3Client.makeBucket(
@@ -68,16 +68,16 @@ class MinioService {
           JSON.stringify(policy)
         );
 
-        // AdhereLive logo for email
+        // Adhere logo for email
         // after upload (to access) : https://{DOMAIN}/{BUCKET_NAME}/logo.png
         fs.readFile(`${__dirname}/../../../other/logo.png`, (err, data) => {
-          if (!err) {
+               if (!err) {
             const emailLogo = this.saveBufferObject(data, "logo.png");
             Log.debug("emailLogo", emailLogo);
           } else {
             Log.debug("err", err);
           }
-          if (!err) {
+     if (!err) {
             const emailLogo = this.saveBufferObject(data, "logo.png");
             Log.debug("emailLogo", emailLogo);
           } else {
@@ -87,20 +87,15 @@ class MinioService {
 
         // Push Notification audio for android
         // after upload (to access) : https://{DOMAIN}/{BUCKET_NAME}/push_notification_sound.wav
-        fs.readFile(
-          `${__dirname}/../../../other/push_notification_sound.wav`,
-          (err, data) => {
-            if (!err) {
-              const audioObject = this.saveAudioObject(
-                data,
-                "push_notification_sound.wav"
-              );
-              Log.debug("audioObject", audioObject);
-            } else {
-              Log.debug("err", err);
-            }
+        fs.readFile(`${__dirname}/../../../other/push_notification_sound.wav`, (err, data) => {
+          if (!err) {
+            const audioObject = this.saveAudioObject(data, "push_notification_sound.wav");
+            Log.debug("audioObject", audioObject);
+          } else {
+            Log.debug("err", err);
           }
-        );
+        });
+
       }
       return result;
     } catch (err) {
@@ -113,9 +108,9 @@ class MinioService {
     return this.s3Client.getSignedUrl("getObject", {
       Bucket: this.bucket,
       Key: path.substring(1, path.length),
-      Expires: 60 * parseInt(process.config.s3.EXPIRY_TIME),
+      Expires: 60 * parseInt(process.config.s3.EXPIRY_TIME)
     });
-  };
+  }
 
   async saveFileObject(filepath, file, metaData) {
     try {
@@ -141,14 +136,12 @@ class MinioService {
       }
 
       console.log("091381293 buffer", file);
-      let result = await this.s3Client.putObject(
-        {
-          Bucket: this.bucket,
-          Key: file,
-          Body: buffer,
-          ContentType: metaData["Content-Type"],
-        },
-        this.callback
+      let result = await this.s3Client.putObject({
+        Bucket: this.bucket,
+        Key: file,
+        Body: buffer,
+        ContentType: metaData["Content-Type"]
+        }, this.callback
       );
 
       // let url = this.s3Client.getSignedUrl("getObject", {
@@ -173,13 +166,14 @@ class MinioService {
       const test = await this.getSignedUrl(objectName);
 
       return new Promise((resolve, reject) => {
-        https.get(test, (response) => {
+        https.get(test, response => {
           const stream = response.pipe(file);
           stream.on("finish", (res) => {
             resolve(true);
-          });
+          })
         });
       });
+
     } catch (err) {
       console.log("Error got in the download file object: ", err);
       throw err;
@@ -202,14 +196,12 @@ class MinioService {
       }
 
       console.log("091381293 audio buffer", file);
-      let result = await this.s3Client.putObject(
-        {
-          Bucket: this.bucket,
-          Key: file,
-          Body: buffer,
-          ContentType: metaData["Content-Type"],
-        },
-        this.callback
+      let result = await this.s3Client.putObject({
+            Bucket: this.bucket,
+            Key: file,
+            Body: buffer,
+            ContentType: metaData["Content-Type"]
+          }, this.callback
       );
 
       // let result = await this.s3Client.putObject(
@@ -233,14 +225,12 @@ class MinioService {
       }
 
       console.log("091381293 video buffer", file);
-      let result = await this.s3Client.putObject(
-        {
-          Bucket: this.bucket,
-          Key: file,
-          Body: buffer,
-          ContentType: metaData["Content-Type"],
-        },
-        this.callback
+      let result = await this.s3Client.putObject({
+            Bucket: this.bucket,
+            Key: file,
+            Body: buffer,
+            ContentType: metaData["Content-Type"]
+          }, this.callback
       );
 
       // let result = await this.s3Client.putObject(

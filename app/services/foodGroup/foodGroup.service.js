@@ -1,41 +1,42 @@
 import Database from "../../../libs/mysql";
-import { TABLE_NAME } from "../../models/foodGroups";
-import { TABLE_NAME as portionTableName } from "../../models/portions";
-
-const DEFAULT_ORDER = [["created_at", "DESC"]];
+import {TABLE_NAME} from "../../models/foodGroups";
+import {TABLE_NAME as portionTableName } from "../../models/portions";
+const DEFAULT_ORDER = [["created_at","DESC"]];
 
 class FoodGroupService {
+
   create = async (data) => {
     const transaction = await Database.initTransaction();
     try {
-      const record = await Database.getModel(TABLE_NAME).create(data, {
-        raw: true,
-        transaction,
-        // include: [
-        // Database.getModel(portionTableName)
-        // ]
-      });
-      await transaction.commit();
-      return record;
-    } catch (error) {
-      await transaction.rollback();
-      throw error;
+        const record = await Database.getModel(TABLE_NAME).create(data, {
+            raw: true,
+            transaction,
+            // include: [
+              // Database.getModel(portionTableName)
+            // ]
+        });
+        await transaction.commit();
+        return record;
+    } catch(error) {
+        await transaction.rollback();
+        throw error;
     }
   };
 
-  getByData = async (data) => {
+  getByData = async data => {
     try {
       return await Database.getModel(TABLE_NAME).findOne({
-        where: data,
-        // include: [
-        //   Database.getModel(portionTableName)
-        // ],
-        raw: true,
-      });
-    } catch (error) {
-      throw error;
+            where: data,
+            // include: [
+            //   Database.getModel(portionTableName)
+            // ],
+            raw: true
+        });
+    } catch(error) {
+        throw error;
     }
   };
+
 
   update = async (data, id) => {
     const transaction = await Database.initTransaction();
@@ -48,7 +49,7 @@ class FoodGroupService {
         //   Database.getModel(portionTableName)
         // ],
         raw: true,
-        transaction,
+        transaction
       });
       await transaction.commit();
       return record;
@@ -58,24 +59,25 @@ class FoodGroupService {
     }
   };
 
-  findAndCountAll = async ({ where, order = DEFAULT_ORDER, attributes }) => {
+  findAndCountAll = async ({where, order = DEFAULT_ORDER, attributes}) => {
     try {
       return await Database.getModel(TABLE_NAME).findAndCountAll({
         where,
         order,
         attributes,
-        raw: true,
+        raw: true
       });
     } catch (error) {
       throw error;
     }
   };
 
+
   delete = async (id) => {
     try {
       const record = await Database.getModel(TABLE_NAME).destroy({
         where: {
-          id,
+          id
         },
       });
       return record;
@@ -83,6 +85,8 @@ class FoodGroupService {
       throw err;
     }
   };
+
+
 }
 
 export default FoodGroupService;

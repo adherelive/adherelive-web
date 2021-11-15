@@ -7,10 +7,9 @@ import {
   onStart,
   onUpdate,
   onPassed,
-  onMarkInComplete,
+  onMarkInComplete
 } from "../helper";
 import { ACTIVITIES } from "../activityType";
-
 const { ActivitySdk } = require("../");
 const { FOLLOW_UP } = ACTIVITIES;
 

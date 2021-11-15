@@ -6,7 +6,7 @@ import Log from "../../../libs/log";
 const Logger = new Log("WEB > PAYMENT_PRODUCTS > SERVICES");
 
 export default class PaymentProductService {
-  getByData = async (data) => {
+  getByData = async data => {
     try {
       const paymentProducts = await Database.getModel(TABLE_NAME).findOne({
         where: data,
@@ -22,7 +22,7 @@ export default class PaymentProductService {
     try {
       const paymentProducts = await Database.getModel(TABLE_NAME).findAll({
         where: data,
-        raw: true,
+        raw: true
       });
       return paymentProducts;
     } catch (error) {
@@ -30,10 +30,10 @@ export default class PaymentProductService {
     }
   };
 
-  addDoctorProduct = async (data) => {
+  addDoctorProduct = async data => {
     try {
       const paymentProduct = await Database.getModel(TABLE_NAME).create(data, {
-        raw: true,
+        raw: true
       });
       return paymentProduct;
     } catch (error) {
@@ -46,9 +46,9 @@ export default class PaymentProductService {
     try {
       const paymentProduct = await Database.getModel(TABLE_NAME).update(data, {
         where: {
-          id,
+          id
         },
-        transaction,
+        transaction
       });
       await transaction.commit();
       return paymentProduct;
@@ -58,12 +58,14 @@ export default class PaymentProductService {
     }
   };
 
-  deleteDoctorProduct = async ({ id = null }) => {
+  deleteDoctorProduct = async ({
+    id = null
+  }) => {
     try {
       const deletedDoctorProduct = await Database.getModel(TABLE_NAME).destroy({
         where: {
-          id,
-        },
+          id
+        }
       });
       //   Logger.debug("7657890765",deletedDoctorProduct);
       return deletedDoctorProduct;
@@ -73,18 +75,19 @@ export default class PaymentProductService {
   };
   //   Logger.debug("7657890765",deletedDoctorProduct);
 
-  deleteDoctorProductById = async (id) => {
+  deleteDoctorProductById = async id => {
     try {
       const deletedDoctorProduct = await Database.getModel(TABLE_NAME).destroy({
         where: {
-          id,
-        },
+          id
+        }
       });
       return deletedDoctorProduct;
     } catch (error) {
       throw error;
     }
   };
+
 
   getAll = async () => {
     try {

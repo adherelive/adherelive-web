@@ -25,23 +25,23 @@ export const db = (database) => {
         allowNull: false,
       },
       portion_size: {
-        type: DataTypes.FLOAT(11, 2),
-        allowNull: false,
+        type: DataTypes.FLOAT(11,2),
+        allowNull: false
       },
       calorific_value: {
-        type: DataTypes.FLOAT(11, 2),
+        type: DataTypes.FLOAT(11,2),
       },
       carbs: {
-        type: DataTypes.FLOAT(11, 2),
+        type: DataTypes.FLOAT(11,2),
       },
       proteins: {
-        type: DataTypes.FLOAT(11, 2),
+        type: DataTypes.FLOAT(11,2),
       },
       fats: {
-        type: DataTypes.FLOAT(11, 2),
+        type: DataTypes.FLOAT(11,2),
       },
       fibers: {
-        type: DataTypes.FLOAT(11, 2),
+        type: DataTypes.FLOAT(11,2),
       },
       details: {
         type: DataTypes.JSON,
@@ -50,8 +50,8 @@ export const db = (database) => {
         type: DataTypes.INTEGER,
       },
       creator_type: {
-        type: DataTypes.ENUM,
-        values: USER_CATEGORY_ARRAY,
+          type: DataTypes.ENUM,
+          values: USER_CATEGORY_ARRAY,
       },
     },
     {
@@ -66,6 +66,8 @@ export const associate = (database) => {
 
   // associations here (if any) ...
 
+  
+
   database.models[TABLE_NAME].belongsTo(database.models[foodItemTableName], {
     foreignKey: "food_item_id",
     targetKey: "id",
@@ -74,10 +76,13 @@ export const associate = (database) => {
   // database.models[foodItemTableName].hasOne(database.models[TABLE_NAME], {
   //   foreignKey: "food_item_id",
   //   sourceKey: "id",
-  // }); //
+  // }); // 
 
   database.models[TABLE_NAME].belongsTo(database.models[portionTableName], {
     foreignKey: "portion_id",
     targetKey: "id",
   });
+
+  
+
 };

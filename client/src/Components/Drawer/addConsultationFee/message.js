@@ -4,88 +4,88 @@ const messages = defineMessages({
   addConsultationFee: {
     id: "app.addConsultationFee.addFee",
     description: "",
-    defaultMessage: "Add New Consultation Fee",
+    defaultMessage: "Add New Consultation Fee"
   },
   cancel: {
     id: "app.addConsultationFee.cancel",
     description: "",
-    defaultMessage: "Cancel",
+    defaultMessage: "Cancel"
   },
   submit: {
     id: "app.addConsultationFee.submit",
     description: "",
-    defaultMessage: "Submit",
+    defaultMessage: "Submit"
   },
   somethingWentWrong: {
     id: "app.addConsultationFee.somethingWentWrong",
     description: "",
-    defaultMessage: "Something went wrong",
+    defaultMessage: "Something went wrong"
   },
   validdobError: {
     id: "app.addConsultationFee.validdobError",
     description: "",
-    defaultMessage: "Please enter a valid Date of Birth .",
+    defaultMessage: "Please enter a valid Date of Birth ."
   },
   writeHere: {
     id: "app.addConsultationFee.writeHere",
     description: "",
-    defaultMessage: "Write here",
+    defaultMessage: "Write here"
   },
   defaultConsultationOptions: {
     id: "app.addConsultationFee.defaultConsultationOptions",
     description: "",
-    defaultMessage: "Default Consultation Options",
+    defaultMessage: "Default Consultation Options"
   },
   consultationFeeName: {
     id: "app.addConsultationFee.consultationFeeName",
     description: "",
-    defaultMessage: "Consultation Fee Name",
+    defaultMessage: "Consultation Fee Name"
   },
   consultationFee: {
     id: "app.addConsultationFee.consultationFee",
     description: "",
-    defaultMessage: "Consultation Fee",
+    defaultMessage: "Consultation Fee"
   },
   consultationFeeType: {
     id: "app.addConsultationFee.consultationFeeType",
     description: "",
-    defaultMessage: "Consultation Fee Type",
+    defaultMessage: "Consultation Fee Type"
   },
   ConsultationFeeNameError: {
     id: "app.addConsultationFee.ConsultationFeeNameError",
     description: "",
-    defaultMessage: "Please select a Consultation Name.",
+    defaultMessage: "Please select a Consultation Name."
   },
   ConsultationFeeTypeError: {
     id: "app.addConsultationFee.ConsultationFeeTypeError",
     description: "",
-    defaultMessage: "Please select a Consultation Type.",
+    defaultMessage: "Please select a Consultation Type."
   },
   ConsultationFeeAmountError: {
     id: "app.addConsultationFee.ConsultationFeeAmountError",
     description: "",
-    defaultMessage: "Please select a Consultation Fee Amount.",
+    defaultMessage: "Please select a Consultation Fee Amount."
   },
   ConsultationFeeAddSuccess: {
     id: "app.addConsultationFee.ConsultationFeeAddSuccess",
     description: "",
-    defaultMessage: "New Consultation Fee created successfully",
+    defaultMessage: "New Consultation Fee created successfully"
   },
   editConsultationFee: {
     id: "app.addConsultationFee.editConsultationFee",
     description: "",
-    defaultMessage: "Edit Consultation Fee",
+    defaultMessage: "Edit Consultation Fee"
   },
   ConsultationFeeEditSuccess: {
     id: "app.addConsultationFee.ConsultationFeeEditSuccess",
     description: "",
-    defaultMessage: "Consultation Fee edited successfully",
+    defaultMessage: "Consultation Fee edited successfully"
   },
   razorpayLink: {
     id: "app.addConsultationFee.razorpayLink",
     description: "",
-    defaultMessage: "Razorpay Link",
-  },
+    defaultMessage: "Razorpay Link"
+  }
 });
 
 export default messages;

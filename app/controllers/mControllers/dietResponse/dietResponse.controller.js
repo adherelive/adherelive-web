@@ -89,20 +89,16 @@ class DietResponseController extends Controller {
 
       const responseExists = await dietResponseService.getByData({
         diet_id,
-        schedule_event_id,
+        schedule_event_id
       });
 
-      if (category !== USER_CATEGORY.PATIENT) {
+      if(category !== USER_CATEGORY.PATIENT){
         return raiseClientError(res, 422, {}, "Unauthorized");
       }
 
-      if (responseExists) {
-        return raiseClientError(
-          res,
-          422,
-          {},
-          "Diet already captured for this time."
-        );
+      if(responseExists){
+        return raiseClientError(res, 422, {}, "Diet already captured for this time.");
+
       }
 
       const dietResponseId =
@@ -131,7 +127,7 @@ class DietResponseController extends Controller {
           actor: {
             id: userId,
             user_role_id: userRoleId,
-            details: { name: full_name, category },
+            details: {name: full_name, category},
           },
           id: dietResponseId,
           ...(await dietResponse.getReferenceInfo()),
@@ -143,7 +139,7 @@ class DietResponseController extends Controller {
         return raiseClientError(res, 422, {}, "Please check details entered");
       }
     } catch (error) {
-      Log.debug("create 500 - diet response controller", error);
+      Log.debug("create 500", error);
       return raiseServerError(res);
     }
   };

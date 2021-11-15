@@ -7,25 +7,15 @@ import CarePlanController from "../../../app/controllers/carePlans/carePlan.cont
 import * as validator from "./validator";
 import isAllowed from "../../middlewares/permissions";
 import PERMISSIONS from "../../../config/permissions";
-
 const router = express.Router();
 
 // router.post('/create-medications-and-appointments/:carePlanId',
-
-router.post(
-  "/profile",
-  Authenticated,
-  isAllowed(PERMISSIONS.CARE_PLAN.ADD_PROFILE),
-  CarePlanController.addProfile
-);
-
-router.post(
-  "/:carePlanId",
-  Authenticated,
-  // Authorize(USER_CATEGORY.DOCTOR),
-  isAllowed(PERMISSIONS.CARE_PLAN_TEMPLATE.ADD),
-  validator.validateCreateCarePlanFromTemplate,
-  CarePlanController.createFromTemplate
+router.post('/:carePlanId',
+    Authenticated,
+    // Authorize(USER_CATEGORY.DOCTOR),
+    isAllowed(PERMISSIONS.CARE_PLAN_TEMPLATE.ADD),
+    validator.validateCreateCarePlanFromTemplate,
+    CarePlanController.createFromTemplate
 );
 
 // router.get('/patient-care-plan-details/:patientId',

@@ -9,7 +9,7 @@ class PermissionService {
       await Database.getModel(TABLE_NAME).destroy({
         // truncate: true,
         where: {},
-        force: true,
+        force: true
       });
 
       return true;
@@ -21,10 +21,9 @@ class PermissionService {
   bulkCreate = async (permissions) => {
     const transaction = await Database.initTransaction();
     try {
-      const createdPermissions = await Database.getModel(TABLE_NAME).bulkCreate(
-        permissions,
-        { transaction }
-      );
+      const createdPermissions = await Database.getModel(
+        TABLE_NAME
+      ).bulkCreate(permissions, { transaction });
 
       await transaction.commit();
       return createdPermissions;

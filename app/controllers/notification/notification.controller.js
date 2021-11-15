@@ -5,13 +5,7 @@ import { getDataForNotification } from "./notification.controller.helper";
 import ChatJob from "../../JobSdk/Chat/observer";
 import NotificationSdk from "../../NotificationSdk";
 
-import {
-  MESSAGE_TYPES,
-  NOTIFICATION_STAGES,
-  NOTIFICATION_VERB,
-  EVENT_TYPE,
-  AGORA_CALL_NOTIFICATION_TYPES,
-} from "../../../constant";
+import { MESSAGE_TYPES, NOTIFICATION_STAGES, NOTIFICATION_VERB , EVENT_TYPE , AGORA_CALL_NOTIFICATION_TYPES} from "../../../constant"
 // import ScheduleEventService from "../../services/scheduleEvents/scheduleEvent.service";
 import ScheduleEventService from "../../services/scheduleEvents/scheduleEvent.service";
 import userService from "../../services/user/user.service";
@@ -31,10 +25,7 @@ class NotificationController extends Controller {
   getNotifications = async (req, res) => {
     const { raiseSuccess, raiseServerError } = this;
     try {
-      const {
-        body: { activities } = {},
-        userDetails: { userId, userRoleId, userData: { category } = {} } = {},
-      } = req;
+      const { body: { activities } = {}, userDetails: { userId, userRoleId, userData: { category } = {} } = {} } = req;
 
       const notificationIds = [];
 
@@ -53,7 +44,7 @@ class NotificationController extends Controller {
       let scheduleEventsData = {};
       let symptomsData = {};
       let vitalTemplatesData = {};
-
+      
       // diets
       let dietData = {};
       let dietFoodGroupMappingData = {};
@@ -86,7 +77,7 @@ class NotificationController extends Controller {
           loggedInUserRole: userRoleId,
           is_read: is_read,
           group_id,
-          category,
+          category
         });
 
         const {
@@ -135,9 +126,10 @@ class NotificationController extends Controller {
         //   }
         // }
 
+
         // for(let each in notifications){
         //   const noti = notifications[each] ;
-        //   const {stage = '',foreign_id=null , type = '' , actor = null } = noti ;
+        //   const {stage = '',foreign_id=null , type = '' , actor = null } = noti ; 
 
         //   let actor_category_id = null;
         //   let actor_category_type = '' ;
@@ -151,12 +143,12 @@ class NotificationController extends Controller {
         //     // if(user){
         //     //   const userData= await UserWrapper(user);
         //     //   const {userCategoryId} = await userData.getCategoryInfo();
-        //     //   const category = await userData.getCategory();
+        //     //   const category = await userData.getCategory(); 
         //     //   actor_category_type = category;
         //     //   actor_category_id = userCategoryId;
 
         //     //   notifications[each] = { ...noti, actor_category_type, actor_category_id };
-
+              
         //     // }
         //   }
 
@@ -168,16 +160,17 @@ class NotificationController extends Controller {
 
         //     if(scheduleEventData){
         //       const scheduleEventDetails = await ScheduleEventWrapper(scheduleEventData);
-        //       scheduleEventsData[scheduleEventDetails.getScheduleEventId()] =
+        //       scheduleEventsData[scheduleEventDetails.getScheduleEventId()] = 
         //         scheduleEventDetails.getAllInfo();
         //     }
         //   }
 
         // }
 
+
         notificationData = { ...notificationData, ...notifications };
         userData = { ...userData, ...users };
-        userRoleData = { ...userRoleData, ...user_roles };
+        userRoleData = {...userRoleData, ...user_roles}
         doctorData = { ...doctorData, ...doctors };
         patientData = { ...patientData, ...patients };
         appointmentData = { ...appointmentData, ...appointments };
@@ -185,70 +178,64 @@ class NotificationController extends Controller {
         medicineData = { ...medicineData, ...medicines };
         vitalsData = { ...vitalsData, ...vitals };
         carePlansData = { ...carePlansData, ...care_plans };
-        scheduleEventsData = { ...scheduleEventsData, ...schedule_events };
-        symptomsData = { ...symptomsData, ...symptoms };
-        vitalTemplatesData = { ...vitalTemplatesData, ...vital_templates };
+        scheduleEventsData = { ...scheduleEventsData, ...schedule_events};
+        symptomsData = {...symptomsData, ...symptoms};
+        vitalTemplatesData = {...vitalTemplatesData, ...vital_templates};
 
-        if (diets) {
-          dietData = { ...dietData, ...diets };
+        if(diets) {
+          dietData = {...dietData, ...diets};
         }
 
-        if (diet_food_group_mappings) {
-          dietFoodGroupMappingData = {
-            ...dietFoodGroupMappingData,
-            ...diet_food_group_mappings,
-          };
+        if(diet_food_group_mappings) {
+          dietFoodGroupMappingData = {...dietFoodGroupMappingData, ...diet_food_group_mappings};
         }
 
-        if (food_groups) {
-          foodGroupData = { ...foodGroupData, ...food_groups };
+        if(food_groups) {
+          foodGroupData = {...foodGroupData, ...food_groups};
         }
 
-        if (food_item_details) {
-          foodItemDetailData = { ...foodItemDetailData, ...food_item_details };
+        if(food_item_details) {
+          foodItemDetailData = {...foodItemDetailData, ...food_item_details};
         }
 
-        if (food_items) {
-          foodItemData = { ...foodItemData, ...food_items };
+        if(food_items) {
+          foodItemData = {...foodItemData, ...food_items};
         }
 
-        if (portions) {
-          portionData = { ...portionData, ...portions };
+        if(portions) {
+          portionData = {...portionData, ...portions};
         }
 
-        if (diet_responses) {
-          dietResponseData = { ...dietResponseData, ...diet_responses };
+        if(diet_responses) {
+          dietResponseData = {...dietResponseData, ...diet_responses};
         }
 
-        if (upload_documents) {
-          uploadDocumentsData = { ...uploadDocumentsData, ...upload_documents };
+        if(upload_documents) {
+          uploadDocumentsData = {...uploadDocumentsData, ...upload_documents};
         }
 
-        if (workouts) {
-          workoutData = { ...workoutData, ...workouts };
+        if(workouts) {
+          workoutData = {...workoutData, ...workouts};
         }
 
-        if (exercise_groups) {
-          exerciseGroupData = { ...exerciseGroupData, ...exercise_groups };
+        if(exercise_groups) {
+          exerciseGroupData = {...exerciseGroupData, ...exercise_groups};
         }
 
-        if (exercise_details) {
-          exerciseDetailData = { ...exerciseDetailData, ...exercise_details };
+        if(exercise_details) {
+          exerciseDetailData = {...exerciseDetailData, ...exercise_details};
         }
 
-        if (exercises) {
-          exerciseData = { ...exerciseData, ...exercises };
+        if(exercises) {
+          exerciseData = {...exerciseData, ...exercises};
         }
 
-        if (repetitions) {
-          repetitionData = { ...repetitionData, ...repetitions };
+        if(repetitions) {
+          repetitionData = {...repetitionData, ...repetitions};
         }
 
-        if (workout_responses) {
-          workoutResponseData = {
-            ...workoutResponseData,
-            ...workout_responses,
-          };
+        if(workout_responses) {
+          workoutResponseData = {...workoutResponseData, ...workout_responses};
         }
       }
 
@@ -267,7 +254,7 @@ class NotificationController extends Controller {
           vitals: vitalsData,
           vital_templates: vitalTemplatesData,
           care_plans: carePlansData,
-          schedule_events: scheduleEventsData,
+          schedule_events:scheduleEventsData,
           symptoms: symptomsData,
 
           // diets
@@ -312,20 +299,18 @@ class NotificationController extends Controller {
     }
   };
 
-  raiseChatNotification = async (req, res) => {
+  raiseChatNotification = async(req, res) => {
     const { raiseSuccess, raiseServerError } = this;
-    try {
-      const {
-        body: { message = "", receiver_id = "", receiver_role_id = "" } = {},
-        userDetails = {},
-      } = req || {};
+    try{
+      const { body: { message = "", receiver_id = "", receiver_role_id = "" } = {}, userDetails  = {} } = req || {};
 
       const {
         userId,
         userRoleId,
         userData: { category } = {},
-        userCategoryData: { basic_info: { full_name = "" } = {} } = {},
+        userCategoryData: { basic_info: { full_name = "" } = {} } = {}
       } = userDetails || {};
+
 
       const eventData = {
         participants: [userRoleId, receiver_role_id],
@@ -334,23 +319,33 @@ class NotificationController extends Controller {
           user_role_id: userRoleId,
           details: {
             name: full_name,
-            category,
-          },
+            category
+          }
         },
         details: {
-          message,
-        },
+          message
+        }
       };
 
-      const chatJob = ChatJob.execute(MESSAGE_TYPES.USER_MESSAGE, eventData);
+      const chatJob = ChatJob.execute(
+        MESSAGE_TYPES.USER_MESSAGE,
+        eventData
+      );
       await NotificationSdk.execute(chatJob);
 
-      return raiseSuccess(res, 200, {}, "Notification sent successfully.");
-    } catch (error) {
+      return raiseSuccess(
+        res,
+        200,
+        {
+        },
+        "Notification sent successfully."
+      );
+
+    } catch(error) {
       Log.debug("raiseChatNotification 500 error", error);
       return raiseServerError(res);
     }
-  };
+  }
 }
 
 export default new NotificationController();

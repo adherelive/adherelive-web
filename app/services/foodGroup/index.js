@@ -1,25 +1,28 @@
 export default class FoodGroup {
-  constructor(data) {
-    this._data = data;
-  }
 
-  getId = () => {
-    return this._data.id;
-  };
+    constructor(data){
+        this._data=data;
+    }
 
-  getPortionSize = () => {
-    return this._data.portion_size;
-  };
+    getId = () => {
+        return this._data.id;
+    }
 
-  getPortionId = () => {
-    return this._data.portion_id;
-  };
+    getPortionSize = () => {
+        return this._data.portion_size;
+    }
 
-  getServing = () => {
-    return this._data.serving;
-  };
+    getPortionId = () => {
+        return this._data.portion_id;
+    }
+    
+    getServing = () => {
+        return this._data.serving;
+    }
 
-  getFoodItemDetailsId = () => {
-    return this._data.food_item_detail_id;
-  };
+    getFoodItemDetailsId = () => {
+        return this._data.food_item_detail_id;
+    }
+
+   
 }

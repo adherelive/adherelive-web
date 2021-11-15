@@ -2,7 +2,7 @@
 
 import { TABLE_NAME } from "../app/models/foodItems";
 import { TABLE_NAME as portionTableName } from "../app/models/portions";
-import { USER_CATEGORY_ARRAY } from "../app/models/users";
+import {USER_CATEGORY_ARRAY} from "../app/models/users";
 
 module.exports = {
   up: (queryInterface, Sequelize) => {
@@ -17,12 +17,12 @@ module.exports = {
         type: Sequelize.STRING,
         allowNull: false,
       },
-      creator_id: {
+      creator_id:{
         type: Sequelize.INTEGER,
       },
-      creator_type: {
+      creator_type:{
         type: Sequelize.ENUM,
-        values: USER_CATEGORY_ARRAY,
+        values: USER_CATEGORY_ARRAY
       },
       created_at: {
         allowNull: false,

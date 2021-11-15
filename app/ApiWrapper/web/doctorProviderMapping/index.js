@@ -14,8 +14,8 @@ class DoctorProviderMappingWrapper extends BaseProvider {
       basic_info: {
         id,
         doctor_id,
-        provider_id,
-      },
+        provider_id
+      }
     };
   };
 }
@@ -25,7 +25,8 @@ export default async (data = null, id = null) => {
     return new DoctorProviderMappingWrapper(data);
   }
 
-  const provider =
-    await doctorProviderMappingService.getDoctorProviderMappingByData({ id });
+  const provider = await doctorProviderMappingService.getDoctorProviderMappingByData(
+    { id }
+  );
   return new DoctorProviderMappingWrapper(provider);
 };

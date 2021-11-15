@@ -4,6 +4,7 @@ import { TABLE_NAME as portionTableName } from "./portions";
 
 import { USER_CATEGORY_ARRAY } from "./users";
 
+
 export const TABLE_NAME = "food_items";
 
 export const db = (database) => {
@@ -24,8 +25,8 @@ export const db = (database) => {
         type: DataTypes.INTEGER,
       },
       creator_type: {
-        type: DataTypes.ENUM,
-        values: USER_CATEGORY_ARRAY,
+          type: DataTypes.ENUM,
+          values: USER_CATEGORY_ARRAY
       },
     },
     {
@@ -47,4 +48,6 @@ export const associate = (database) => {
       sourceKey: "id",
     }
   );
+
+  
 };

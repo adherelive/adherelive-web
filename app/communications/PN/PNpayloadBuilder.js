@@ -10,7 +10,7 @@ class PNpayloadBuilder {
     this.smsPayload.GCM = {};
     let content = {
       data: this.inputPayload.data,
-      notification: this.inputPayload.notification,
+      notification: this.inputPayload.notification
     };
     this.smsPayload.GCM = JSON.stringify(content);
   }
@@ -21,8 +21,8 @@ class PNpayloadBuilder {
       aps: {
         alert: this.inputPayload.alert,
         sound: this.inputPayload.sound || "default",
-        badge: this.inputPayload.badge || 1,
-      },
+        badge: this.inputPayload.badge || 1
+      }
     };
     this.smsPayload.APNS = JSON.stringify(content);
   }

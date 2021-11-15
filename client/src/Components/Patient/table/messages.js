@@ -4,97 +4,97 @@ const messages = defineMessages({
   pid: {
     id: "app.patient.table.pid",
     description: "",
-    defaultMessage: "PID",
+    defaultMessage: "PID"
   },
   condition: {
     id: "app.patient.table.condition",
     description: "",
-    defaultMessage: "Condition",
+    defaultMessage: "Condition"
   },
   diagnosis: {
     id: "app.patient.table.diagnosis",
     description: "",
-    defaultMessage: "Diagnosis",
+    defaultMessage: "Diagnosis"
   },
   treatment: {
     id: "app.patient.table.treatment",
     description: "",
-    defaultMessage: "Treatment",
+    defaultMessage: "Treatment"
   },
   severity: {
     id: "app.patient.table.severity",
     description: "",
-    defaultMessage: "Severity",
+    defaultMessage: "Severity"
   },
   age: {
     id: "app.patient.table.age",
     description: "",
-    defaultMessage: "Age",
+    defaultMessage: "Age"
   },
   start_date: {
     id: "app.patient.table.start.date",
     description: "",
-    defaultMessage: "Start Date",
+    defaultMessage: "Start Date"
   },
   createdAt: {
     id: "app.patient.table.createdAt",
     description: "",
-    defaultMessage: "Created At",
+    defaultMessage: "Created At"
   },
   doctor: {
     id: "app.patient.table.doctor",
     description: "",
-    defaultMessage: "Doctor",
+    defaultMessage: "Doctor"
   },
   provider: {
     id: "app.patient.table.provider",
     description: "",
-    defaultMessage: "Provider",
+    defaultMessage: "Provider"
   },
   new_symptoms: {
     id: "app.patient.table.new.symptoms",
     description: "",
-    defaultMessage: "New Symptom",
+    defaultMessage: "New Symptom"
   },
   watchlist: {
     id: "app.patient.table.watchlist",
     description: "",
-    defaultMessage: "Watchlist",
+    defaultMessage: "Watchlist"
   },
   addedToWatchlist: {
     id: "app.patient.table.addedToWatchlist",
     description: "",
-    defaultMessage: "added to watchlist",
+    defaultMessage: "added to watchlist"
   },
   removedFromWatchlist: {
     id: "app.patient.table.removedFromWatchlist",
     description: "",
-    defaultMessage: "removed from watchlist",
+    defaultMessage: "removed from watchlist"
   },
   emptyPatientTable: {
     id: "app.patient.table.emptyPatientTable",
     description: "",
-    defaultMessage: "No Patient added yet",
+    defaultMessage: "No Patient added yet"
   },
   removeFromWatchlist: {
     id: "app.patient.table.removeFromWatchlist",
     description: "",
-    defaultMessage: "Remove from watchlist",
+    defaultMessage: "Remove from watchlist"
   },
   addToWatchlist: {
     id: "app.patient.table.addToWatchlist",
     description: "",
-    defaultMessage: "Add to watchlist",
+    defaultMessage: "Add to watchlist"
   },
   searchText: {
     id: "app.patient.table.searchText",
     description: "",
-    defaultMessage: "Search",
+    defaultMessage: "Search"
   },
   resetText: {
-    id: "app.patient.table.resetText",
-    description: "",
-    defaultMessage: "Reset",
+      id: "app.patient.table.resetText",
+      description: "",
+      defaultMessage: "Reset"
   },
 });
 

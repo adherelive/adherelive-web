@@ -1,11 +1,11 @@
 import { connect } from "react-redux";
 import { withRouter } from "react-router-dom";
-import ProviderDoctorDetails from "../../../Components/Pages/providerDoctorDetails";
+import ProviderDoctorDetails from "../../../Components/Pages/providerDoctorDetails"
 
 const mapStateToProps = (state) => {
-  const { doctors, auth, users } = state;
+  const {doctors, auth, users} = state;
 
-  return { doctors, auth, users };
+  return {doctors, auth, users};
 };
 
 const mapDispatchToProps = (dispatch) => {
@@ -13,5 +13,8 @@ const mapDispatchToProps = (dispatch) => {
 };
 
 export default withRouter(
-  connect(mapStateToProps, mapDispatchToProps)(ProviderDoctorDetails)
+    connect(
+        mapStateToProps,
+        mapDispatchToProps
+    )(ProviderDoctorDetails)
 );

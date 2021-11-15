@@ -3,7 +3,7 @@ import { injectIntl } from "react-intl";
 import { Button, Input, Form, message } from "antd";
 import messages from "./message";
 import { withRouter } from "react-router-dom";
-import { PATH } from "../../constant";
+import {PATH} from "../../constant";
 import config from "../../config";
 
 const { Item: FormItem } = Form;
@@ -16,46 +16,42 @@ const FIELDS = [EMAIL, PASSWORD];
 
 const TOS_PAGE_URL = `${config.WEB_URL}${PATH.TERMS_OF_SERVICE}`;
 const PRIVACY_PAGE_URL = `${config.WEB_URL}${PATH.PRIVACY_POLICY}`;
-
 class SignIn extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      login: true,
+      login: true
     };
   }
 
-  handleSignIn = async (e) => {
+  handleSignIn = async e => {
     e.preventDefault();
     const {
       form: { validateFields },
       signIn,
       getInitialData,
       getUserRoles,
-      history,
+      history
     } = this.props;
-
+    
     this.setState({ loading: true });
     validateFields(async (err, { email, password }) => {
       if (!err) {
         try {
           const response = await signIn({ email, password });
-          const {
-            status = false,
-            statusCode,
-            payload: { data = {}, message: resp_msg } = {},
-          } = response;
-          const { users = {}, auth_user = "", hasConsent } = data || {};
+          const { status = false, statusCode , payload :{ data={} ,message:resp_msg}={}} = response;
+          const {users={},auth_user='', hasConsent} = data || {};
 
           if (status) {
             message.success(this.formatMessage(messages.loginSuccessfull), 4);
-            if (hasConsent) {
+            if(hasConsent){
               getInitialData();
               getUserRoles();
-            } else {
+            }else{
               history.push(PATH.CONSENT);
             }
-          } else {
+          }
+          else{
             if (statusCode === 422) {
               message.error(this.formatMessage(messages.emailDoesNotxist), 4);
             } else {
@@ -75,11 +71,12 @@ class SignIn extends Component {
     });
   };
 
-  formatMessage = (data) => this.props.intl.formatMessage(data);
+  formatMessage = data => this.props.intl.formatMessage(data);
 
   tosComponent = () => {
     return (
       <div className="flex mb20">
+
         <div className="slate-grey mt-10 fs12 p10 medium">
           <span>{this.formatMessage(messages.agreeSigninPPText)}</span>{" "}
           <a href={PRIVACY_PAGE_URL} target={"_blank"}>
@@ -93,16 +90,17 @@ class SignIn extends Component {
   render() {
     const {
       form: { getFieldDecorator, isFieldTouched, getFieldError },
-      redirectToForgotPassword,
+      redirectToForgotPassword
     } = this.props;
     let fieldsError = {};
-    FIELDS.forEach((value) => {
+    FIELDS.forEach(value => {
       const error = isFieldTouched(value) && getFieldError(value);
       fieldsError = { ...fieldsError, [value]: error };
     });
-    const { handleSignIn, tosComponent } = this;
+    const { handleSignIn ,tosComponent } = this;
     return (
-      <Form onSubmit={handleSignIn} className="login-form">
+
+                <Form onSubmit={handleSignIn} className="login-form">
         <FormItem
           validateStatus={fieldsError[EMAIL] ? "error" : ""}
           help={fieldsError[EMAIL] || ""}
@@ -114,13 +112,13 @@ class SignIn extends Component {
             rules: [
               {
                 required: true,
-                message: this.formatMessage(messages.enterEmail),
+                message: this.formatMessage(messages.enterEmail)
               },
               {
                 type: "email",
-                message: this.formatMessage(messages.enterValidEmail),
-              },
-            ],
+                message: this.formatMessage(messages.enterValidEmail)
+              }
+            ]
           })(<Input type="text" placeholder="Email" className="h40" />)}
         </FormItem>
 
@@ -135,9 +133,9 @@ class SignIn extends Component {
             rules: [
               {
                 required: true,
-                message: this.formatMessage(messages.enterPassword),
-              },
-            ],
+                message: this.formatMessage(messages.enterPassword)
+              }
+            ]
           })(<Password placeholder="Password" className="h40" />)}
         </FormItem>
         {tosComponent()}
@@ -162,8 +160,8 @@ class SignIn extends Component {
           </Button>
           <div className="flex justify-space-between direction-column align-end">
             {/* <span className="login-form-forgot inline-flex">
-                <Link to="/forgot-password">Forgot password?</Link>
-                </span> */}
+<Link to="/forgot-password">Forgot password?</Link>
+</span> */}
             {/*              <p>*/}
             {/*                  Or{" "}*/}
             {/*                  <span>*/}
@@ -173,14 +171,10 @@ class SignIn extends Component {
           </div>
         </FormItem>
       </Form>
+  
+
     );
   }
 }
 
-// TODO: antd v4x has deprecated Form.create. Need to change to not use the Form.create
-//const NormalLoginForm = ({ name: "signin_form" })(injectIntl(SignIn));
-
-export default withRouter(
-  Form.create({ name: "signin_form" })(injectIntl(SignIn))
-);
-//export default withRouter(mapStateToProps, mapDispatchToProps)(NormalLoginForm);
+export default withRouter(Form.create({ name: "signin_form" })(injectIntl(SignIn)));

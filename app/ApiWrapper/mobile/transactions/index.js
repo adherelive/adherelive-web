@@ -24,7 +24,7 @@ class TransactionWrapper extends BaseTransaction {
       payee_id,
       payee_type,
       status,
-      transaction_response,
+      transaction_response
     } = _data;
 
     return {
@@ -33,48 +33,46 @@ class TransactionWrapper extends BaseTransaction {
         transaction_id,
         payment_product_id,
         mode,
-        amount,
+        amount
       },
       status,
       requestor: {
         id: requestor_id,
-        category: requestor_type,
+        category: requestor_type
       },
       payee: {
         id: payee_id,
-        category: payee_type,
+        category: payee_type
       },
-      transaction_response,
+      transaction_response
     };
   };
 
   getAllInfo = async () => {
-    const { getBasicInfo, getId } = this;
+    const {getBasicInfo, getId} = this;
     return {
       transactions: {
-        [getId()]: getBasicInfo(),
+        [getId()]: getBasicInfo()
       },
-      transaction_id: getId(),
+      transaction_id: getId()
     };
   };
 
   getReferenceInfo = async () => {
     try {
-      const { getAllInfo, _data } = this;
-      const { payment_product } = _data || {};
+      const {getAllInfo, _data} = this;
+      const {payment_product} = _data || {};
 
-      const paymentProducts = await PaymentProductWrapper({
-        data: payment_product,
-      });
+      const paymentProducts = await PaymentProductWrapper({data: payment_product});
 
       return {
-        ...(await getAllInfo()),
+        ...await getAllInfo(),
         payment_products: {
-          [paymentProducts.getId()]: paymentProducts.getBasicInfo(),
+          [paymentProducts.getId()]: paymentProducts.getBasicInfo()
         },
         payment_product_id: paymentProducts.getId(),
       };
-    } catch (error) {
+    } catch(error) {
       throw error;
     }
   };
@@ -88,7 +86,7 @@ export default async ({ data = null, id = null }) => {
     const transactionService = new TransactionService();
     const transaction = await transactionService.getByData({ id });
     return new TransactionWrapper(transaction);
-  } catch (error) {
+  } catch(error) {
     throw error;
   }
 };

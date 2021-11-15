@@ -3,7 +3,7 @@ import {
   BrowserRouter as Router,
   Route,
   Switch,
-  withRouter,
+  withRouter
 } from "react-router-dom";
 import { PATH } from "../../../constant";
 import SideMenu from "../../../Containers/Sidebar";
@@ -57,13 +57,13 @@ const AdminMedicines = lazy(() =>
   )
 );
 
-const SideMenuComp = (props) => {
+const SideMenuComp = props => {
   const { location: { pathname = "" } = {} } = props;
   if (
     !(
       pathname.includes("patient-consulting") ||
       pathname.includes("terms-of-service") ||
-      pathname.includes("privacy-policy") ||
+      pathname.includes("privacy-policy") || 
       pathname.includes("terms-of-payment")
     )
   ) {
@@ -73,7 +73,7 @@ const SideMenuComp = (props) => {
   }
 };
 
-const AdminDoctorDetailsPageComp = (props) => {
+const AdminDoctorDetailsPageComp = props => {
   const { match: { params: { id } = {} } = {} } = props;
   return <AdminDoctorDetailsPage id={id} />;
 };
@@ -82,7 +82,7 @@ class AdminDoctor extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      redirecting: this.props.authRedirection,
+      redirecting: this.props.authRedirection
     };
   }
 
@@ -91,7 +91,7 @@ class AdminDoctor extends Component {
     const isSideMenuVisible = !(
       pathname.includes("patient-consulting") ||
       pathname.includes("terms-of-service") ||
-      pathname.includes("privacy-policy") ||
+      pathname.includes("privacy-policy") || 
       pathname.includes("terms-of-payment")
     );
     return (
@@ -148,7 +148,7 @@ class AdminDoctor extends Component {
                   path={PATH.ADMIN.ALL_MEDICINES}
                   component={AdminMedicines}
                 />
-                <Route path={PATH.LANDING_PAGE} component={AdminDoctorPage} />
+                <Route  path={PATH.LANDING_PAGE} component={AdminDoctorPage} />
                 {/* <Route path={""} component={BlankState} /> */}
               </Switch>
             </div>

@@ -8,7 +8,6 @@ import CompanyIcon from "../../../Assets/images/logo3x.png";
 import messages from "./message";
 import ReactMarkdown from "react-markdown";
 import { PATH } from "../../../constant";
-
 const TERMS_OF_SERVICE = "terms_of_service";
 
 class UserConsent extends Component {
@@ -77,7 +76,7 @@ class UserConsent extends Component {
           <div className="mt40 wp100 mt24 flex justify-space-between align-center direction-row ">
             <div className="flex direction-row align-center">
               <img
-                alt="adherelive-logo"
+                alt="adhere-logo"
                 src={CompanyIcon}
                 className="company-logo"
               />
@@ -102,7 +101,7 @@ class UserConsent extends Component {
                 <Checkbox
                   checked={checked}
                   onClick={this.markChecked}
-                  //   className="mt20"
+                //   className="mt20"
                 >
                   <span className="fs20 fw600 ml12">
                     {this.formatMessage(messages.giveConsent)}

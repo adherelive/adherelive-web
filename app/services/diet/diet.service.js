@@ -352,10 +352,10 @@ class DietService {
       });
 
       /* nested raw true is not allowed by sequelize
-              Links:
-              https://github.com/sequelize/sequelize/issues/3897 (closed)
-              https://github.com/sequelize/sequelize/issues/5193 (open)
-            */
+      Links:
+      https://github.com/sequelize/sequelize/issues/3897 (closed)
+      https://github.com/sequelize/sequelize/issues/5193 (open)
+      */
       return JSON.parse(JSON.stringify(diet));
     } catch (error) {
       throw error;
@@ -366,7 +366,7 @@ class DietService {
     const transaction = await Database.initTransaction();
     try {
       // diet food group mappings
-
+      
       // const { count: totalFoodGroupMappings, rows: allFoodGroupMappings = [] } =
       //   (await Database.getModel(dietFoodGroupMappingTableName).findAndCountAll(
       //     {
@@ -430,15 +430,12 @@ class DietService {
 
       // todo: delete all diet responses and it's uploaded documents (if needed)
 
-      await Database.getModel(TABLE_NAME).update(
-        { expired_on: moment() },
-        {
-          where: {
+      await Database.getModel(TABLE_NAME).update({expired_on:moment()},{
+        where: {
             id,
-          },
-          transaction,
-        }
-      );
+        },
+        transaction
+      });
 
       // await Database.getModel(TABLE_NAME).destroy({
       //   where: {
@@ -960,19 +957,17 @@ class DietService {
     }
   };
 
-  updateDietTotalCalories = async ({ total_calories, diet_id }) => {
+  updateDietTotalCalories = async ({total_calories,diet_id}) => {
     const transaction = await Database.initTransaction();
     try {
-      await Database.getModel(TABLE_NAME).update(
-        { total_calories, diet_id },
-        {
-          where: {
-            id: diet_id,
-          },
-          raw: true,
-          transaction,
-        }
-      );
+    
+      await Database.getModel(TABLE_NAME).update({total_calories,diet_id}, {
+        where: {
+          id: diet_id,
+        },
+        raw: true,
+        transaction,
+      });
 
       await transaction.commit();
       return true;
@@ -982,6 +977,7 @@ class DietService {
       throw error;
     }
   };
+
 }
 
 export default DietService;

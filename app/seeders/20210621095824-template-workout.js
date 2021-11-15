@@ -10,7 +10,9 @@ module.exports = {
         name: "Test Workout",
         duration: 7,
         total_calories: 1000,
-        time: moment().seconds(0).toDate(),
+        time: moment()
+          .seconds(0)
+          .toDate(),
         details: JSON.stringify({
           not_to_do: "",
           repeat_days: ["Sun", "Mon"],

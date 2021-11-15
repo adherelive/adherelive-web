@@ -9,14 +9,14 @@ class Watchlist extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      isAdded: false,
+      isAdded: false
     };
   }
 
   componentDidMount() {
     const {
       patientData: { basic_info: { id } = {} } = {},
-      doctorData: { watchlist_patient_ids = [] } = {},
+      doctorData: { watchlist_patient_ids = [] } = {}
     } = this.props || {};
 
     if (watchlist_patient_ids.includes(id)) {
@@ -28,13 +28,13 @@ class Watchlist extends Component {
     const {
       patientData: { basic_info: { id: prev_id } = {} } = {},
       doctorData: {
-        watchlist_patient_ids: prev_watchlist_patient_ids = [],
+        watchlist_patient_ids: prev_watchlist_patient_ids = []
       } = {},
     } = prevProps || {};
 
     const {
       patientData: { basic_info: { id } = {} } = {},
-      doctorData: { watchlist_patient_ids = [] } = {},
+      doctorData: { watchlist_patient_ids = [] } = {}
     } = this.props || {};
 
     if (
@@ -42,30 +42,30 @@ class Watchlist extends Component {
       !watchlist_patient_ids.includes(id)
     ) {
       this.setState({
-        isAdded: watchlist_patient_ids.includes(id),
+        isAdded: watchlist_patient_ids.includes(id)
       });
     }
   }
 
-  formatMessage = (data) => this.props.intl.formatMessage(data);
-
-  addThisToWatchlist = (e) => {
+  formatMessage = data => this.props.intl.formatMessage(data);
+  
+  addThisToWatchlist = e => {
     e.preventDefault();
     const {
       patientData: {
-        basic_info: { id, first_name, middle_name, last_name } = {},
+        basic_info: { id, first_name, middle_name, last_name } = {}
       } = {},
-      addToWatchlist,
+      addToWatchlist
     } = this.props || {};
 
-    addToWatchlist(id).then((response) => {
+    addToWatchlist(id).then(response => {
       const { status, message: errMessage } = response || {};
       if (status === true) {
         message.success(
           `${getFullName({
             first_name,
             middle_name,
-            last_name,
+            last_name
           })} ${this.formatMessage(messages.addedToWatchlist)}`
         );
       } else {
@@ -74,27 +74,27 @@ class Watchlist extends Component {
     });
 
     this.setState({
-      isAdded: true,
+      isAdded: true
     });
   };
 
-  removeFromWatchlist = (e) => {
+  removeFromWatchlist = e => {
     e.preventDefault();
     const {
       patientData: {
-        basic_info: { id, first_name, middle_name, last_name } = {},
+        basic_info: { id, first_name, middle_name, last_name } = {}
       } = {},
-      removePatientFromWatchlist,
+      removePatientFromWatchlist
     } = this.props || {};
 
-    removePatientFromWatchlist(id).then((response) => {
+    removePatientFromWatchlist(id).then(response => {
       const { status, message: errMessage } = response || {};
       if (status === true) {
         message.success(
           `${getFullName({
             first_name,
             middle_name,
-            last_name,
+            last_name
           })} ${this.formatMessage(messages.removedFromWatchlist)}`
         );
       } else {
@@ -103,11 +103,11 @@ class Watchlist extends Component {
     });
 
     this.setState({
-      isAdded: false,
+      isAdded: false
     });
   };
 
-  stopEventBubbling = (e) => {
+  stopEventBubbling = e => {
     e.stopPropagation();
   };
 

@@ -9,7 +9,7 @@ import Button from "antd/es/button";
 
 import EditVitalForm from "./form";
 
-import { MEDICINE_UNITS } from "../../../../constant";
+import { MEDICINE_UNITS } from '../../../../constant'
 import messages from "../message";
 import Footer from "../../footer";
 import startTimeField from "../common/startTime";
@@ -21,6 +21,7 @@ import instructions from "../common/instructions";
 import vitalOccurence from "../common/vitalOccurence";
 import vitalNameField from "../common/vitalName";
 
+
 class EditVital extends Component {
   constructor(props) {
     super(props);
@@ -29,7 +30,7 @@ class EditVital extends Component {
       disabledOk: true,
       fieldChanged: false,
       members: [],
-      submitting: false,
+      submitting:false
     };
     this.FormWrapper = Form.create({ onFieldsChange: this.onFormFieldChanges })(
       EditVitalForm
@@ -44,7 +45,7 @@ class EditVital extends Component {
 
   enableSubmit = () => {
     this.setState({ disabledOk: false });
-  };
+  }
 
   handleCancel = (e) => {
     if (e) {
@@ -65,14 +66,12 @@ class EditVital extends Component {
 
   onClose = () => {
     const { close } = this.props;
-    this.setState(
-      {
-        disabledOk: true,
-      },
-      () => {
-        close();
-      }
-    );
+    this.setState({
+      disabledOk: true,
+    }, () => {
+      close();
+
+    });
     // close();
   };
 
@@ -95,7 +94,9 @@ class EditVital extends Component {
 
     const { vitalData = {} } = this.props;
 
+
     validateFields(async (err, values) => {
+
       if (!err) {
         const { when_to_take = [], keys = [] } = values || {};
         let data_to_submit = {};
@@ -104,24 +105,29 @@ class EditVital extends Component {
         const repeatDays = values[repeatDaysField.field_name];
         const description = values[instructions.field_name];
         const repeat_interval_id = values[vitalOccurence.field_name];
-        const vital_template_id = values[vitalNameField.field_name]
-          ? values[vitalNameField.field_name]
-          : "";
+        const vital_template_id = values[vitalNameField.field_name] ? values[vitalNameField.field_name] : '';
+
 
         data_to_submit = {
-          id: vital_id ? vital_id : "",
-          vital_template_id: vital_template_id ? vital_template_id : "",
+          id: vital_id ? vital_id : '',
+          vital_template_id: vital_template_id ? vital_template_id : '',
           repeat_interval_id,
           description,
           [startDateField.field_name]:
             startDate && startDate !== null
-              ? startDate.clone().toISOString()
+              ? startDate
+                .clone()
+                .toISOString()
               : startDate,
           [endDateField.field_name]:
             endDate && endDate !== null
-              ? endDate.clone().toISOString()
+              ? endDate
+                .clone()
+                .toISOString()
               : endDate,
+
         };
+
 
         if (repeatDays) {
           data_to_submit = {
@@ -130,17 +136,22 @@ class EditVital extends Component {
           };
         }
         if (!startDate || !repeat_interval_id || !repeatDays) {
-          message.error("Please fill all details.");
-        } else if (endDate && moment(endDate).isBefore(moment(startDate))) {
-          message.error("Please select valid dates for vitals");
-        } else if (editVital) {
-          console.log("18923172 data within", { data: data_to_submit });
+
+          message.error('Please fill all details.')
+        }
+        else if (endDate && moment(endDate).isBefore(moment(startDate))) {
+          message.error('Please select valid dates for vitals')
+        }
+        else if (editVital) {
+          console.log("18923172 data within", {data: data_to_submit});
           editVital(data_to_submit);
-        } else if (addVital) {
+        }
+        else if (addVital) {
           addVital(data_to_submit);
-        } else {
+        }
+        else{
           try {
-            this.setState({ submitting: true });
+            this.setState({submitting:true});
             const response = await updateVital(data_to_submit);
             const { status, payload: { message: msg } = {} } = response;
             if (status === true) {
@@ -149,13 +160,15 @@ class EditVital extends Component {
             } else {
               message.error(msg);
             }
+            
+            this.setState({submitting:false});
 
-            this.setState({ submitting: false });
           } catch (error) {
-            this.setState({ submitting: false });
+            this.setState({submitting:false});
             console.log("add vital reminder ui error -----> ", error);
           }
         }
+
       } else {
         message.error(formatMessage(messages.fill_all_details));
       }
@@ -190,14 +203,12 @@ class EditVital extends Component {
     const { basic_info: { name } = {} } = medicines[medicine_id] || {};
 
     confirm({
-      title: `Are you sure you want to delete medication of ${name} for ${first_name} ${
-        middle_name ? `${middle_name} ` : ""
-      }${last_name ? last_name : ""}?`,
+      title: `Are you sure you want to delete medication of ${name} for ${first_name} ${middle_name ? `${middle_name} ` : ""
+        }${last_name ? last_name : ""}?`,
       content: <div>{warnNote()}</div>,
       onOk: async () => {
         this.setState({ loading: true });
-        const { deleteMedication, getMedications, getPatientCarePlanDetails } =
-          this.props;
+        const { deleteMedication, getMedications, getPatientCarePlanDetails } = this.props;
         const response = await deleteMedication(id);
         const { status } = response || {};
         if (status === true) {
@@ -205,7 +216,7 @@ class EditVital extends Component {
           getMedications(patient_id);
         }
       },
-      onCancel() {},
+      onCancel() { },
     });
   };
 
@@ -234,6 +245,7 @@ class EditVital extends Component {
           <div className="ml4">Delete</div>
         </div>
       </Button>
+
     );
   };
 
@@ -247,21 +259,28 @@ class EditVital extends Component {
       hideVital,
       vitalVisible = false,
       vitalData = {},
-      payload: { canViewDetails = false } = {},
+      payload:{canViewDetails=false}={}
     } = this.props;
 
-    const { onClose, setFormRef, FormWrapper, handleSubmit, getDeleteButton } =
-      this;
-    const { disabledOk, submitting = false } = this.state;
+    const {
+      onClose,
+      setFormRef,
+      FormWrapper,
+      handleSubmit,
+      getDeleteButton,
+    } = this;
+    const { disabledOk , submitting = false } = this.state;
 
     const enableSubmit = () => {
       this.setState({ disabledOk: true });
-    };
+    }
 
     const submitButtonProps = {
       disabled: disabledOk,
       loading: loading,
     };
+
+
 
     return (
       <Drawer
@@ -273,37 +292,35 @@ class EditVital extends Component {
         headerStyle={{
           position: "sticky",
           zIndex: "9999",
-          top: "0px",
+          top: "0px"
         }}
         className="ant-drawer"
         // title={formatMessage(messages.title)}
         title={
           canViewDetails
-            ? formatMessage(messages.viewDetails)
-            : editVital
-            ? formatMessage(messages.vital)
-            : addVital
-            ? formatMessage(messages.addVital)
-            : formatMessage(messages.title)
-        }
+          ? formatMessage(messages.viewDetails)
+          :
+          editVital ? formatMessage(messages.vital) : addVital ? formatMessage(messages.addVital) : formatMessage(messages.title)}
+
       >
-        <FormWrapper
-          wrappedComponentRef={setFormRef}
-          enableSubmit={this.enableSubmit}
-          {...this.props}
-        />
-        {!canViewDetails && (
-          <Footer
-            className="flex justify-space-between"
-            onSubmit={handleSubmit}
-            onClose={onClose}
-            submitText={formatMessage(messages.update_button_text)}
-            submitButtonProps={submitButtonProps}
-            cancelComponent={getDeleteButton()}
-            enableSubmit={this.enableSubmit}
-            submitting={submitting}
-          />
-        )}
+        <FormWrapper wrappedComponentRef={setFormRef} enableSubmit={this.enableSubmit} {...this.props} />
+        {
+          !canViewDetails
+          &&
+          (
+            <Footer
+              className="flex justify-space-between"
+              onSubmit={handleSubmit}
+              onClose={onClose}
+              submitText={formatMessage(messages.update_button_text)}
+              submitButtonProps={submitButtonProps}
+              cancelComponent={getDeleteButton()}
+              enableSubmit={this.enableSubmit}
+              submitting={submitting}
+            />
+          )
+        }
+        
       </Drawer>
     );
   }

@@ -9,54 +9,57 @@ import messages from "./messages";
 import AddExerciseGroupForm from "./form";
 import Footer from "../footer";
 import AddExerciseDrawer from "../../../Containers/Drawer/addExercise";
-import message from "antd/es/message";
+import message from  "antd/es/message";
 import { VIDEO_TYPES } from "../../../constant";
 
 class AddExerciseGroup extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      exercise_detail_id: null,
-      visibleAddExerciseDrawer: false,
-      editable: false,
-      exercise_name: "",
-      uploadedVideoUrl: "",
-      videoContentType: null,
+      exercise_detail_id:null,
+      visibleAddExerciseDrawer:false,
+      editable:false,
+      exercise_name:'',
+      uploadedVideoUrl:'',
+      videoContentType:null
     };
 
     this.FormWrapper = Form.create({ onFieldsChange: this.onFormFieldChanges })(
-      AddExerciseGroupForm
+        AddExerciseGroupForm
     );
   }
 
   setUploadedVideoUrl = (url) => {
-    this.setState({ uploadedVideoUrl: url });
-  };
+    this.setState({uploadedVideoUrl:url});
+  }
 
-  setVideoContentType = (type) => {
-    this.setState({ videoContentType: type });
-  };
+  setVideoContentType = ( type )=>{
+    this.setState({videoContentType:type});
+  }
+ 
 
   setEditable = (val) => {
-    this.setState({ editable: val });
-  };
+    this.setState({editable:val});
+  }
 
   setExerciseName = (name) => {
-    this.setState({ exercise_name: name });
-  };
+    this.setState({exercise_name:name});
+  }
+
 
   setExerciseDetailId = (id) => {
-    this.setState({ exercise_detail_id: id });
-  };
+    this.setState({exercise_detail_id:id});
+  }
 
   openAddExerciseDrawer = () => {
-    this.setState({ visibleAddExerciseDrawer: true });
-  };
+    this.setState({visibleAddExerciseDrawer:true});
+  }
 
   closeAddExerciseDrawer = () => {
-    this.setState({ visibleAddExerciseDrawer: false });
-  };
-
+    this.setState({visibleAddExerciseDrawer:false});
+  }
+ 
+ 
   onFormFieldChanges = (props) => {
     const {
       form: { getFieldsError, isFieldsTouched },
@@ -70,137 +73,125 @@ class AddExerciseGroup extends Component {
 
   handleSubmit = (e) => {
     e.preventDefault();
-    const {
-      onSubmit,
-      storeExerciseAndDetails,
-      searched_exercises = {},
-      searched_exercise_details = {},
-      updateExercise,
+    const {  
+      onSubmit , 
+      storeExerciseAndDetails ,
+      searched_exercises = {} ,
+      searched_exercise_details = {} ,
+      updateExercise 
     } = this.props;
 
     const { formRef = {} } = this;
 
-    const {
-      exercise_detail_id = null,
-      editable = false,
-      exercise_name = "",
-    } = this.state;
-    const {
-      uploadedVideoUrl = "",
-      videoContentType: video_content_type = null,
-    } = this.state;
+    const { exercise_detail_id = null , editable = false , exercise_name = '' } = this.state;
+    const { uploadedVideoUrl = '' , videoContentType : video_content_type = null } = this.state;
+
 
     const {
       props: {
         form: { validateFields },
       },
     } = formRef;
-
+    
     validateFields(async (err, values) => {
       if (!err) {
         let {
-          name = null,
-          sets = null,
-          repetition_value = null,
-          repetition_id = null,
-          calorific_value = null,
-          video_content = "",
-          notes = "",
+          name=null,
+          sets=null,
+          repetition_value=null,
+          repetition_id=null,
+          calorific_value=null,
+          video_content='',
+          notes=''
         } = values;
 
         let video = {};
 
-        if (video_content.length) {
-          if (video_content_type === VIDEO_TYPES.UPLOAD) {
+        if(video_content.length){
+          if(video_content_type === VIDEO_TYPES.UPLOAD ){
             video_content = uploadedVideoUrl;
-          }
+          }  
           video = {
-            content_type: video_content_type,
-            content: video_content,
+            content_type:video_content_type,
+            content:video_content
           };
+
         }
 
         const exercise_id = parseInt(name);
-        const exercise_detail =
-          searched_exercise_details[exercise_detail_id] || {};
-        const exercise = searched_exercises[exercise_id] || {};
-
-        let data = {
-          // will be used to display exercise group details in workout drawer
-          repetition_id: repetition_id ? parseInt(repetition_id) : null,
-          sets: sets ? parseInt(sets) : 1,
-          exercise_detail_id: exercise_detail_id
-            ? parseInt(exercise_detail_id)
-            : null,
-          notes,
+        const exercise_detail = searched_exercise_details[exercise_detail_id] || {} ;
+        const exercise = searched_exercises[exercise_id] || {} ;
+        
+        let data = { // will be used to display exercise group details in workout drawer
+          repetition_id : repetition_id ? parseInt(repetition_id) : null ,
+          sets : sets ? parseInt(sets) : 1,
+          exercise_detail_id : exercise_detail_id ? parseInt(exercise_detail_id) : null,
+          notes
         };
 
-        const updateData = {
-          // will be used to update the details of food item
-          name: exercise_name,
+
+        const updateData={ // will be used to update the details of food item
+          name:exercise_name,
           exercise_detail_id,
-          repetition_id: repetition_id ? parseInt(repetition_id) : null,
-          repetition_value: repetition_value
-            ? parseInt(repetition_value)
-            : null,
-          calorific_value: calorific_value ? parseFloat(calorific_value) : null,
-          video,
+          repetition_id : repetition_id ? parseInt(repetition_id) : null,
+          repetition_value : repetition_value ? parseInt(repetition_value) : null,
+          calorific_value : calorific_value ? parseFloat(calorific_value) : null,
+          video
         };
 
-        try {
-          let toStoreExercise = {},
-            toStoreDetail = {};
-          toStoreExercise[exercise_id] = exercise;
-          toStoreDetail[exercise_detail_id] = exercise_detail || {};
+          try {
+            let toStoreExercise = {} , toStoreDetail = {};
+            toStoreExercise[exercise_id]=exercise;
+            toStoreDetail[exercise_detail_id]=exercise_detail || {} ;
 
-          // if(editable){
-          const responseOnUpdate = await updateExercise({
-            exercise_id,
-            data: updateData,
-          });
-          const {
-            status,
-            payload: { data: resp_data = {}, message: resp_msg = "" } = {},
-          } = responseOnUpdate;
+            // if(editable){
+              const responseOnUpdate = await updateExercise({exercise_id,data:updateData});
+              const {status,payload:{data:resp_data={},message:resp_msg=''} ={} } = responseOnUpdate;
+              
+              if(status){
 
-          if (status) {
-            const { exercise_details = {}, exercise_detail_id = null } =
-              resp_data || {};
+                const { exercise_details = {} , exercise_detail_id = null } = resp_data || {};
 
-            if (exercise_detail_id) {
-              data[`exercise_detail_id`] = parseInt(exercise_detail_id);
-              onSubmit(data);
-              this.onClose();
-            } else {
-              message.warn(this.formatMessage(messages.somethingWentWrong));
-            }
-          } else {
-            message.warn(resp_msg);
+                if( exercise_detail_id ){
+                  data[`exercise_detail_id`]=parseInt(exercise_detail_id);
+                  onSubmit(data); 
+                  this.onClose();
+                }else{
+                  message.warn(this.formatMessage(messages.somethingWentWrong));
+
+                }
+
+              }else{
+
+                message.warn(resp_msg);
+
+              }
+              
+            // }
+            // else {
+
+            //   onSubmit(data); 
+
+            //   storeExerciseAndDetails({
+            //     exercises:{...toStoreExercise},
+            //     exercise_details:{...toStoreDetail}
+            //   });
+
+            //   this.onClose();
+            // }
+
+          } catch (error) {
+            this.setState({submitting:false});
           }
-
-          // }
-          // else {
-
-          //   onSubmit(data);
-
-          //   storeExerciseAndDetails({
-          //     exercises:{...toStoreExercise},
-          //     exercise_details:{...toStoreDetail}
-          //   });
-
-          //   this.onClose();
-          // }
-        } catch (error) {
-          this.setState({ submitting: false });
+  
         }
-      }
     });
   };
 
   formatMessage = (data) => this.props.intl.formatMessage(data);
 
   onClose = () => {
-    const { closeExerciseGroupDrawer } = this.props;
+    const {  closeExerciseGroupDrawer } = this.props;
     const { formRef } = this;
     const {
       props: {
@@ -209,10 +200,10 @@ class AddExerciseGroup extends Component {
     } = formRef;
 
     this.setState({
-      exercise_detail_id: null,
-      visibleAddExerciseDrawer: false,
-      editable: false,
-      exercise_name: "",
+      exercise_detail_id:null,
+      visibleAddExerciseDrawer:false,
+      editable:false,
+      exercise_name:''
     });
     resetFields();
     closeExerciseGroupDrawer();
@@ -225,16 +216,12 @@ class AddExerciseGroup extends Component {
     }
   };
 
+
   render() {
     const { visible = true } = this.props;
-    const {
-      disabledSubmit,
-      submitting = false,
-      visibleAddExerciseDrawer = false,
-      exercise_detail_id = null,
-      editable = false,
-      exercise_name = "",
-    } = this.state;
+    const { disabledSubmit ,
+      submitting=false , visibleAddExerciseDrawer = false , 
+      exercise_detail_id = null ,editable=false , exercise_name = '' } = this.state;
 
     const {
       onClose,
@@ -244,12 +231,14 @@ class AddExerciseGroup extends Component {
       FormWrapper,
       setExerciseDetailId,
       openAddExerciseDrawer,
-      closeAddExerciseDrawer,
+      closeAddExerciseDrawer
     } = this;
 
     const submitButtonProps = {
       disabled: disabledSubmit,
     };
+
+
 
     return (
       <Fragment>
@@ -259,17 +248,17 @@ class AddExerciseGroup extends Component {
           headerStyle={{
             position: "sticky",
             zIndex: "9999",
-            top: "0px",
+            top: "0px"
           }}
           destroyOnClose={true}
-          onClose={onClose}
+
+          onClose={ onClose}
           visible={visible}
-          width={"35%"}
+          width={'35%'}
           title={"Add Exercise"}
+      
         >
-          <FormWrapper
-            wrappedComponentRef={setFormRef}
-            {...this.props}
+          <FormWrapper wrappedComponentRef={setFormRef} {...this.props}
             setExerciseDetailId={setExerciseDetailId}
             openAddExerciseDrawer={openAddExerciseDrawer}
             exercise_detail_id={exercise_detail_id}
@@ -279,8 +268,8 @@ class AddExerciseGroup extends Component {
             setUploadedVideoUrl={this.setUploadedVideoUrl}
             setVideoContentType={this.setVideoContentType}
             visibleAddExerciseDrawer={visibleAddExerciseDrawer}
-          />
-
+           />
+        
           <Footer
             onSubmit={handleSubmit}
             onClose={onClose}

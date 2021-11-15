@@ -15,8 +15,8 @@ class DoctorQualificationWrapper extends BaseDoctorQualification {
         doctor_id,
         degree_id,
         college_id,
-        year,
-      },
+        year
+      }
     };
   };
 }
@@ -25,7 +25,8 @@ export default async (data = null, id = null) => {
   if (data) {
     return new DoctorQualificationWrapper(data);
   }
-  const doctorQualification =
-    await doctorQualificationService.getQualificationById(id);
+  const doctorQualification = await doctorQualificationService.getQualificationById(
+    id
+  );
   return new DoctorQualificationWrapper(doctorQualification.get());
 };

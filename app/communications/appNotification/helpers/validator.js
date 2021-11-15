@@ -9,7 +9,7 @@ const {
   SURVEY,
   PROGRAM,
   PRESCRIPTION,
-  VITALS,
+  VITALS
 } = require("../contants");
 
 const NOTIFICATION_ENUM = [
@@ -20,7 +20,7 @@ const NOTIFICATION_ENUM = [
   SURVEY,
   PROGRAM,
   PRESCRIPTION,
-  VITALS,
+  VITALS
 ];
 
 class Validator {
@@ -54,10 +54,10 @@ class Validator {
       if (isEmpty(reminderData.participantTwo))
         throw new Error("participant two is undefined or invalid");
       let participantOneData = await userServices.getUser({
-        _id: reminderData.participantOne,
+        _id: reminderData.participantOne
       });
       let participantTwoData = await userServices.getUser({
-        _id: reminderData.participantTwo,
+        _id: reminderData.participantTwo
       });
 
       if (isEmpty(participantOneData))
@@ -101,17 +101,17 @@ class Validator {
       let sendTo;
 
       let participantOneData = await userServices.getUser({
-        _id: appointmentData.participantOne,
+        _id: appointmentData.participantOne
       });
 
       let participantTwoData = await userServices.getUser({
-        _id: appointmentData.participantTwo,
+        _id: appointmentData.participantTwo
       });
       if (!isEmpty(this.sendTo)) {
         if (
           [
             appointmentData.participantOne.toString(),
-            appointmentData.participantTwo.toString(),
+            appointmentData.participantTwo.toString()
           ].indexOf(this.sendTo.toString()) == -1
         )
           throw new Error("user is not participant for this appointment");
@@ -150,8 +150,8 @@ class Validator {
             category: participantOneData.category,
             contact: participantOneData.email,
             gender: participantOneData.gender,
-            status: participantOneData.status,
-          },
+            status: participantOneData.status
+          }
         },
         ...{
           participantTwoDetails: {
@@ -159,12 +159,12 @@ class Validator {
             category: participantTwoData.category,
             contact: participantTwoData.email,
             gender: participantTwoData.gender,
-            status: participantTwoData.status,
-          },
+            status: participantTwoData.status
+          }
         },
         ...{
-          sendTo: sendTo,
-        },
+          sendTo: sendTo
+        }
       };
       // console.log("result at validator app", result);
       return result;
@@ -335,4 +335,4 @@ class Validator {
   }
 }
 
-module.exports = (data) => new Validator(data);
+module.exports = data => new Validator(data);

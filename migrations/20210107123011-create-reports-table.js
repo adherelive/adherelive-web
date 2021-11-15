@@ -1,8 +1,8 @@
-"use strict";
-import { DataTypes } from "sequelize";
-import { TABLE_NAME } from "../app/models/reports";
-import { TABLE_NAME as patientTableName } from "../app/models/patients";
-import { USER_CATEGORY } from "../constant";
+'use strict';
+import {DataTypes} from "sequelize";
+import {TABLE_NAME} from "../app/models/reports";
+import {TABLE_NAME as patientTableName} from "../app/models/patients";
+import {USER_CATEGORY} from "../constant";
 
 module.exports = {
   up: (queryInterface, Sequelize) => {
@@ -11,17 +11,17 @@ module.exports = {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
-        type: DataTypes.INTEGER,
+        type: DataTypes.INTEGER
       },
       patient_id: {
         type: DataTypes.INTEGER,
         allowNull: false,
         references: {
           model: {
-            tableName: patientTableName,
+            tableName: patientTableName
           },
-          key: "id",
-        },
+          key: "id"
+        }
       },
       name: {
         type: DataTypes.STRING,
@@ -41,20 +41,20 @@ module.exports = {
       },
       created_at: {
         allowNull: false,
-        type: DataTypes.DATE,
+        type: DataTypes.DATE
       },
       updated_at: {
         allowNull: false,
-        type: DataTypes.DATE,
+        type: DataTypes.DATE
       },
       deleted_at: {
         allowNull: true,
-        type: DataTypes.DATE,
-      },
+        type: DataTypes.DATE
+      }
     });
   },
 
   down: (queryInterface, Sequelize) => {
     return queryInterface.dropTable(TABLE_NAME);
-  },
+  }
 };

@@ -4,79 +4,70 @@ import { Doctor } from "../../Helper/urls";
 
 import { sendPasswordMailUrl } from "../../Helper/urls/provider";
 
+
+
 export const SEND_PASSWORD_MAIL = "SEND_PASSWORD_MAIL";
 export const SEND_PASSWORD_MAIL_COMPLETED = "SEND_PASSWORD_MAIL_COMPLETED";
-export const SEND_PASSWORD_MAIL_COMPLETED_WITH_ERROR =
-  "SEND_PASSWORD_MAIL_COMPLETED_WITH_ERROR";
+export const SEND_PASSWORD_MAIL_COMPLETED_WITH_ERROR = "SEND_PASSWORD_MAIL_COMPLETED_WITH_ERROR";
+
 
 export const DOCTOR_PROFILE_UPDATE = "DOCTOR_PROFILE_UPDATE";
-export const DOCTOR_PROFILE_UPDATE_COMPLETED =
-  "DOCTOR_PROFILE_UPDATE_COMPLETED";
-export const DOCTOR_PROFILE_UPDATE_COMPLETED_WITH_ERROR =
-  "DOCTOR_PROFILE_UPDATE_COMPLETED_WITH_ERROR";
+export const DOCTOR_PROFILE_UPDATE_COMPLETED = "DOCTOR_PROFILE_UPDATE_COMPLETED";
+export const DOCTOR_PROFILE_UPDATE_COMPLETED_WITH_ERROR = "DOCTOR_PROFILE_UPDATE_COMPLETED_WITH_ERROR";
 
 export const DOCTOR_QUALIFICATION_UPDATE = "DOCTOR_QUALIFICATION_UPDATE";
-export const DOCTOR_QUALIFICATION_UPDATE_COMPLETED =
-  "DOCTOR_QUALIFICATION_UPDATE_COMPLETED";
-export const DOCTOR_QUALIFICATION_UPDATE_COMPLETED_WITH_ERROR =
-  "DOCTOR_QUALIFICATION_UPDATE_COMPLETED_WITH_ERROR";
+export const DOCTOR_QUALIFICATION_UPDATE_COMPLETED = "DOCTOR_QUALIFICATION_UPDATE_COMPLETED";
+export const DOCTOR_QUALIFICATION_UPDATE_COMPLETED_WITH_ERROR = "DOCTOR_QUALIFICATION_UPDATE_COMPLETED_WITH_ERROR";
 
 export const DOCTOR_CLINIC_UPDATE = "DOCTOR_CLINIC_UPDATE";
 export const DOCTOR_CLINIC_UPDATE_COMPLETED = "DOCTOR_CLINIC_UPDATE_COMPLETED";
-export const DOCTOR_CLINIC_UPDATE_COMPLETED_WITH_ERROR =
-  "DOCTOR_CLINIC_UPDATE_COMPLETED_WITH_ERROR";
+export const DOCTOR_CLINIC_UPDATE_COMPLETED_WITH_ERROR = "DOCTOR_CLINIC_UPDATE_COMPLETED_WITH_ERROR";
 
 export const GET_DOCTOR_PROFILE_DATA = "GET_DOCTOR_PROFILE_DATA";
-export const GET_DOCTOR_PROFILE_DATA_COMPLETED =
-  "GET_DOCTOR_PROFILE_DATA_COMPLETED";
-export const GET_DOCTOR_PROFILE_DATA_COMPLETED_WITH_ERROR =
-  "GET_DOCTOR_PROFILE_DATA_COMPLETED_WITH_ERROR";
+export const GET_DOCTOR_PROFILE_DATA_COMPLETED = "GET_DOCTOR_PROFILE_DATA_COMPLETED";
+export const GET_DOCTOR_PROFILE_DATA_COMPLETED_WITH_ERROR = "GET_DOCTOR_PROFILE_DATA_COMPLETED_WITH_ERROR";
 
 export const GET_DOCTOR_QUALIFICATION_DATA = "GET_DOCTOR_QUALIFICATION_DATA";
-export const GET_DOCTOR_QUALIFICATION_DATA_COMPLETED =
-  "GET_DOCTOR_QUALIFICATION_DATA_COMPLETED";
-export const GET_DOCTOR_QUALIFICATION_DATA_COMPLETED_WITH_ERROR =
-  "GET_DOCTOR_QUALIFICATION_DATA_COMPLETED_WITH_ERROR";
+export const GET_DOCTOR_QUALIFICATION_DATA_COMPLETED = "GET_DOCTOR_QUALIFICATION_DATA_COMPLETED";
+export const GET_DOCTOR_QUALIFICATION_DATA_COMPLETED_WITH_ERROR = "GET_DOCTOR_QUALIFICATION_DATA_COMPLETED_WITH_ERROR";
 
 export const DELETE_QUALIFICATION_IMAGE = "DELETE_QUALIFICATION_IMAGE";
-export const DELETE_QUALIFICATION_IMAGE_COMPLETED =
-  "DELETE_QUALIFICATION_IMAGE_COMPLETED";
-export const DELETE_QUALIFICATION_IMAGE_COMPLETED_WITH_ERROR =
-  "DELETE_QUALIFICATION_IMAGE_COMPLETED_WITH_ERROR";
+export const DELETE_QUALIFICATION_IMAGE_COMPLETED = "DELETE_QUALIFICATION_IMAGE_COMPLETED";
+export const DELETE_QUALIFICATION_IMAGE_COMPLETED_WITH_ERROR = "DELETE_QUALIFICATION_IMAGE_COMPLETED_WITH_ERROR";
 
 export const DELETE_REGISTRATION_IMAGE = "DELETE_REGISTRATION_IMAGE";
-export const DELETE_REGISTRATION_IMAGE_COMPLETED =
-  "DELETE_REGISTRATION_IMAGE_COMPLETED";
-export const DELETE_REGISTRATION_IMAGE_COMPLETED_WITH_ERROR =
-  "DELETE_REGISTRATION_IMAGE_COMPLETED_WITH_ERROR";
+export const DELETE_REGISTRATION_IMAGE_COMPLETED = "DELETE_REGISTRATION_IMAGE_COMPLETED";
+export const DELETE_REGISTRATION_IMAGE_COMPLETED_WITH_ERROR = "DELETE_REGISTRATION_IMAGE_COMPLETED_WITH_ERROR";
+
 
 export const REGISTER_QUALIFICATION = "REGISTER_QUALIFICATION";
-export const REGISTER_QUALIFICATION_COMPLETED =
-  "REGISTER_QUALIFICATION_COMPLETED";
-export const REGISTER_QUALIFICATION_COMPLETED_WITH_ERROR =
-  "REGISTER_QUALIFICATION_COMPLETED_WITH_ERROR";
+export const REGISTER_QUALIFICATION_COMPLETED = "REGISTER_QUALIFICATION_COMPLETED";
+export const REGISTER_QUALIFICATION_COMPLETED_WITH_ERROR = "REGISTER_QUALIFICATION_COMPLETED_WITH_ERROR";
 
 export const REGISTER_REGISTRATION = "REGISTER_REGISTRATION";
-export const REGISTER_REGISTRATION_COMPLETED =
-  "REGISTER_REGISTRATION_COMPLETED";
-export const REGISTER_REGISTRATION_COMPLETED_WITH_ERROR =
-  "REGISTER_REGISTRATION_COMPLETED_WITH_ERROR";
+export const REGISTER_REGISTRATION_COMPLETED = "REGISTER_REGISTRATION_COMPLETED";
+export const REGISTER_REGISTRATION_COMPLETED_WITH_ERROR = "REGISTER_REGISTRATION_COMPLETED_WITH_ERROR";
 
-export const NEW_DOCTOR = "NEW_DOCTOR";
+
+export const NEW_DOCTOR="NEW_DOCTOR";
 
 export const callNewDoctorAction = (doctor_id) => {
   return async (dispatch) => {
     try {
-      dispatch({
-        type: NEW_DOCTOR,
-        data: { doctor_id },
-      });
+      
+        dispatch ({
+          type : NEW_DOCTOR,
+          data: {doctor_id}
+        })
+      
     } catch (err) {
       console.log("New Doctor Error", err);
       throw err;
     }
-  };
-};
+
+  }
+
+}
 
 export const doctorProfileRegister = (payload) => {
   let response = {};
@@ -93,7 +84,7 @@ export const doctorProfileRegister = (payload) => {
       const { status, payload: { error = "", data = {} } = {} } =
         response || {};
 
-      const { doctors = {} } = data;
+       const {doctors = {}} = data; 
 
       if (status === false) {
         dispatch({
@@ -101,17 +92,23 @@ export const doctorProfileRegister = (payload) => {
           payload: { error },
         });
       } else if (status === true) {
-        const { doctors = {} } = data || {};
+
+        const {doctors = {}} = data || {};
+        
+
 
         dispatch({
           type: DOCTOR_PROFILE_UPDATE_COMPLETED,
-          data: data,
+          data: data
         });
 
-        if (Object.keys(doctors).length > 0) {
+        if(Object.keys(doctors).length > 0)
+        {
           const doctor_id = Object.keys(doctors)[0];
           callNewDoctorAction(doctor_id);
         }
+
+
       }
     } catch (err) {
       console.log("err signin", err);
@@ -121,6 +118,8 @@ export const doctorProfileRegister = (payload) => {
     return response;
   };
 };
+
+
 
 export const sendPasswordMail = (payload) => {
   let response = {};
@@ -134,21 +133,21 @@ export const sendPasswordMail = (payload) => {
         data: payload,
       });
 
+
       const { status, payload: { error = "", data = {} } = {} } =
         response || {};
 
-      if (status === true) {
-        dispatch({
-          type: SEND_PASSWORD_MAIL_COMPLETED,
-          payload: data,
-          data,
-        });
-      } else {
-        dispatch({
-          type: SEND_PASSWORD_MAIL_COMPLETED_WITH_ERROR,
-          payload: error,
-        });
-      }
+        if (status === true) {
+          dispatch({
+            type: SEND_PASSWORD_MAIL_COMPLETED,
+            payload: data,
+            data
+          });
+        } else {
+          dispatch({ type: SEND_PASSWORD_MAIL_COMPLETED_WITH_ERROR, payload: error });
+        }
+
+  
     } catch (err) {
       console.log("err password mail", err);
       throw err;
@@ -157,6 +156,10 @@ export const sendPasswordMail = (payload) => {
     return response;
   };
 };
+
+
+
+
 
 export const doctorQualificationRegister = (payload) => {
   let response = {};
@@ -179,6 +182,7 @@ export const doctorQualificationRegister = (payload) => {
           payload: { error },
         });
       } else if (status === true) {
+
         dispatch({
           type: DOCTOR_QUALIFICATION_UPDATE_COMPLETED,
           data: data,
@@ -205,7 +209,8 @@ export const doctorClinicRegister = (payload) => {
         data: payload,
       });
 
-      const { status, payload: { error = "", data = {} } = {} } =
+    
+        const { status, payload: { error = "", data = {} } = {} } =
         response || {};
 
       if (status === false) {
@@ -214,6 +219,7 @@ export const doctorClinicRegister = (payload) => {
           payload: { error },
         });
       } else if (status === true) {
+
         dispatch({
           type: DOCTOR_CLINIC_UPDATE_COMPLETED,
           // payload: {
@@ -255,7 +261,7 @@ export const getDoctorProfileRegisterData = (userId) => {
         dispatch({
           type: GET_DOCTOR_PROFILE_DATA_COMPLETED,
           payload: {
-            profileData,
+            profileData
           },
         });
       }
@@ -266,11 +272,11 @@ export const getDoctorProfileRegisterData = (userId) => {
 
     return response;
   };
-};
+}
 
 export const getDoctorQualificationRegisterData = (payload) => {
   let response = {};
-  const { doctor_id = "" } = payload || {};
+  const {doctor_id = ""} = payload || {};
   return async (dispatch) => {
     try {
       dispatch({ type: GET_DOCTOR_QUALIFICATION_DATA });
@@ -284,7 +290,7 @@ export const getDoctorQualificationRegisterData = (payload) => {
       const { status, payload: { error = "", data = {} } = {} } =
         response || {};
 
-      console.log("01831283908 response ---> ", { payload, response });
+      console.log("01831283908 response ---> ", {payload, response});
 
       if (status === false) {
         dispatch({
@@ -295,7 +301,7 @@ export const getDoctorQualificationRegisterData = (payload) => {
         // const { qualificationData, registration_details, upload_documents } = data;
         dispatch({
           type: GET_DOCTOR_QUALIFICATION_DATA_COMPLETED,
-          data: data,
+          data: data
         });
       }
     } catch (err) {
@@ -305,7 +311,7 @@ export const getDoctorQualificationRegisterData = (payload) => {
 
     return response;
   };
-};
+}
 
 export const registerQualification = (payload) => {
   let response = {};
@@ -315,7 +321,7 @@ export const registerQualification = (payload) => {
       response = await doRequest({
         method: REQUEST_TYPE.POST,
         url: Doctor.getRegisterQualificationUrl(),
-        data: payload,
+        data: payload
       });
 
       const { status, payload: { error = "", data = {} } = {} } =
@@ -340,7 +346,8 @@ export const registerQualification = (payload) => {
 
     return response;
   };
-};
+}
+
 
 export const registerRegistration = (payload) => {
   let response = {};
@@ -350,7 +357,7 @@ export const registerRegistration = (payload) => {
       response = await doRequest({
         method: REQUEST_TYPE.POST,
         url: Doctor.getRegisterRegistrationUrl(),
-        data: payload,
+        data: payload
       });
 
       const { status, payload: { error = "", data = {} } = {} } =
@@ -375,7 +382,7 @@ export const registerRegistration = (payload) => {
 
     return response;
   };
-};
+}
 
 export const deleteDoctorQualificationImage = (qualificationId, document) => {
   let response = {};
@@ -398,6 +405,7 @@ export const deleteDoctorQualificationImage = (qualificationId, document) => {
           payload: { error },
         });
       } else if (status === true) {
+
         dispatch({
           type: DELETE_QUALIFICATION_IMAGE_COMPLETED,
           data: {},
@@ -410,7 +418,8 @@ export const deleteDoctorQualificationImage = (qualificationId, document) => {
 
     return response;
   };
-};
+}
+
 
 export const deleteDoctorRegistrationImage = (registrationId, document) => {
   let response = {};
@@ -424,7 +433,8 @@ export const deleteDoctorRegistrationImage = (registrationId, document) => {
         data: { document },
       });
 
-      const { status, payload: { error = "" } = {} } = response || {};
+      const { status, payload: { error = "" } = {} } =
+        response || {};
 
       if (status === false) {
         dispatch({
@@ -432,6 +442,7 @@ export const deleteDoctorRegistrationImage = (registrationId, document) => {
           payload: { error },
         });
       } else if (status === true) {
+
         dispatch({
           type: DELETE_REGISTRATION_IMAGE_COMPLETED,
           data: {},
@@ -444,32 +455,34 @@ export const deleteDoctorRegistrationImage = (registrationId, document) => {
 
     return response;
   };
-};
+}
 
 export default (state = {}, action) => {
   const { data, type } = action;
   switch (type) {
+    
     case NEW_DOCTOR:
-      const { doctor_id = "" } = data;
-      if (doctor_id) {
+      const {doctor_id = ''} = data;
+      if(doctor_id){
         return {
           ...state,
-          new_doctor_created_id: doctor_id,
-        };
-      } else {
-        return { ...state };
+          new_doctor_created_id:doctor_id
+        }   
+      }else{
+        return {...state}
       }
+      
 
     case GET_DOCTOR_PROFILE_DATA_COMPLETED:
       return {
-        profileData: data.profileData,
+        profileData: data.profileData
       };
 
     case GET_DOCTOR_QUALIFICATION_DATA_COMPLETED:
       return {
         qualificationData: data.qualificationData,
         registration_details: data.registration_details,
-        upload_documents: data.upload_documents,
+        upload_documents: data.upload_documents
       };
     default:
       return state;

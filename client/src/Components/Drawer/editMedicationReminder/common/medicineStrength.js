@@ -13,19 +13,18 @@ const MAXIMUM_LENGTH = 10000;
 class MedicationStrength extends Component {
   componentDidMount() {
     const {
-      form: { validateFields },
+      form: { validateFields }
     } = this.props;
     validateFields();
   }
-
   componentWillUnmount() {
     const {
-      form: { validateFields },
+      form: { validateFields }
     } = this.props;
     validateFields();
   }
 
-  getParentNode = (t) => t.parentNode;
+  getParentNode = t => t.parentNode;
 
   getInitialValue = () => {
     const { purpose, event: { data = {} } = {} } = this.props;
@@ -37,22 +36,15 @@ class MedicationStrength extends Component {
   };
 
   render() {
-    const {
-      form,
-      medications,
-      payload: { id: medication_id } = {},
-      medicationData = {},
-      payload: { canViewDetails = false } = {},
-    } = this.props;
+    const { form, medications, payload: { id: medication_id } = {}, medicationData = {} , payload : { canViewDetails = false } = {} } = this.props;
     const {
       getFieldDecorator,
       getFieldError,
-      isFieldTouched,
+      isFieldTouched
       //getFieldValue
     } = form;
 
-    let { basic_info: { details: { strength } = {} } = {} } =
-      medications[medication_id] || {};
+    let { basic_info: { details: { strength } = {} } = {} } = medications[medication_id] || {};
 
     let { schedule_data: { strength: dose = 0 } = {} } = medicationData;
     if (dose) {
@@ -63,6 +55,7 @@ class MedicationStrength extends Component {
     return (
       <Fragment>
         <FormItem
+
           className="flex-1 align-self-end wp100"
           validateStatus={error ? "error" : ""}
           // className='wp80'
@@ -72,22 +65,16 @@ class MedicationStrength extends Component {
             rules: [
               {
                 required: true,
-                message: "Enter Medicine Strength.  ",
+                message: "Enter Medicine Strength.  "
               },
               {
                 type: "number",
                 max: MAXIMUM_LENGTH,
-                message: "Please enter valid strength",
-              },
+                message: "Please enter valid strength"
+              }
             ],
-            initialValue: strength ? strength : null,
-          })(
-            <InputNumber
-              min={1}
-              style={{ width: "100%" }}
-              disabled={canViewDetails}
-            />
-          )}
+            initialValue: strength ? strength : null
+          })(<InputNumber min={1} style={{ width: "100%" }} disabled={canViewDetails} />)}
         </FormItem>
       </Fragment>
     );
@@ -100,5 +87,5 @@ const Field = injectIntl(MedicationStrength);
 export default {
   field_name: FIELD_NAME,
   maximum_length: MAXIMUM_LENGTH,
-  render: (props) => <Field {...props} />,
+  render: props => <Field {...props} />
 };

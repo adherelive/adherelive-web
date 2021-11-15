@@ -15,22 +15,16 @@ router.get(
   "/",
   Authenticate,
   // validate.search,
-  Authorize(USER_CATEGORY.DOCTOR, USER_CATEGORY.HSP),
+  Authorize(USER_CATEGORY.DOCTOR,USER_CATEGORY.HSP),
   Exercise.search
 );
 
-router.post(
-  "/",
-  Authenticate,
-  Authorize(USER_CATEGORY.DOCTOR, USER_CATEGORY.HSP),
-  validate.create,
-  Exercise.create
-);
+router.post("/", Authenticate, Authorize(USER_CATEGORY.DOCTOR,USER_CATEGORY.HSP), validate.create, Exercise.create);
 
 router.post(
   "/upload",
   Authenticate,
-  Authorize(USER_CATEGORY.DOCTOR, USER_CATEGORY.HSP),
+  Authorize(USER_CATEGORY.DOCTOR,USER_CATEGORY.HSP),
   upload.single("files"),
   Exercise.uploadContent
 );
@@ -38,7 +32,7 @@ router.post(
 router.post(
   "/:id",
   Authenticate,
-  Authorize(USER_CATEGORY.DOCTOR, USER_CATEGORY.HSP),
+  Authorize(USER_CATEGORY.DOCTOR,USER_CATEGORY.HSP),
   // validate.update,
   Exercise.update
 );

@@ -327,7 +327,6 @@ class ChatPopUp extends Component {
       this.scrollToBottom();
     }
   }
-
   tick = async () => {
     const { authenticated_user } = this.props;
     const members = this.channel ? await this.channel.getMembers() : [];
@@ -769,10 +768,7 @@ class ChatPopUp extends Component {
 
   toggleChatPermission = async () => {
     const { authenticated_category, patientId } = this.props;
-    if (
-      authenticated_category !== USER_CATEGORY.DOCTOR &&
-      authenticated_category !== USER_CATEGORY.HSP
-    ) {
+    if (authenticated_category !== USER_CATEGORY.DOCTOR && authenticated_category !== USER_CATEGORY.HSP) {
       return;
     }
 
@@ -801,10 +797,7 @@ class ChatPopUp extends Component {
 
   toggleVideoCallPermission = async () => {
     const { authenticated_category, patientId } = this.props;
-    if (
-      authenticated_category !== USER_CATEGORY.DOCTOR &&
-      authenticated_category !== USER_CATEGORY.HSP
-    ) {
+    if (authenticated_category !== USER_CATEGORY.DOCTOR && authenticated_category !== USER_CATEGORY.HSP) {
       return;
     }
 

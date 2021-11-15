@@ -32,7 +32,9 @@ export default class Appointment {
 
   getFormattedStartDate = () => {
     const start_date = this._data.get("start_date");
-    const date = moment(start_date).startOf("day").toISOString();
+    const date = moment(start_date)
+      .startOf("day")
+      .toISOString();
     return date;
   };
 

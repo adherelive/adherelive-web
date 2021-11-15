@@ -30,7 +30,7 @@ import {
   BODY_VIEW,
   BODY_SIDE,
   USER_CATEGORY,
-  EVENT_TYPE,
+  EVENT_TYPE
 } from "../../constant";
 import BotMessage from "./botMessage";
 import { getFullName, isJSON } from "../../Helper/common";
@@ -44,7 +44,7 @@ class MediaComponent extends Component {
       url: "",
       blobUrl: "",
       message: "",
-      imageModalVisible: false,
+      imageModalVisible: false
     };
   }
 
@@ -85,15 +85,15 @@ class MediaComponent extends Component {
   openModal = () => {
     this.setState({ imageModalVisible: true });
   };
-  onClickDownloader = (e) => {
+  onClickDownloader = e => {
     e.preventDefault();
     const { url, message } = this.state;
     if (url && url.length > 0) {
       fetch(url, {
-        method: "GET",
+        method: "GET"
       })
-        .then((response) => response.blob())
-        .then((blob) => {
+        .then(response => response.blob())
+        .then(blob => {
           const blobUrl = window.URL.createObjectURL(new Blob([blob]));
           const downloader = document.createElement("a");
           downloader.href = blobUrl;
@@ -117,9 +117,9 @@ class MediaComponent extends Component {
     }
   };
 
-  onDownloadClick = (e) => {
+  onDownloadClick = (e)  => {
     e.stopPropagation();
-  };
+  }
 
   getMedia = () => {
     const { message } = this.props;
@@ -128,29 +128,34 @@ class MediaComponent extends Component {
       if (message.media.contentType.indexOf("image") !== -1) {
         return (
           <Fragment>
+            
             {url.length > 0 ? (
-              <div onClick={this.openModal} className="media-container">
-                <div className="overlay"></div>
-                <div
-                  className="
+              <div onClick={this.openModal} className="media-container"  >
+                  <div className="overlay" ></div>
+                          <div
+                          className="
                           media-doc-container
                           rI2p
                           z999
                           white
-                          "
-                >
-                  <a
-                    onClick={this.onDownloadClick}
-                    download={`image-${Download}`}
-                    className="doc-opt pointer "
-                    href={Download}
-                    target={"_blank"}
-                    style={{ color: "white" }}
-                  >
-                    <DownloadOutlined className="fs18  " twoToneColor="white" />
-                  </a>
-                </div>
+                          " 
+                          >
+                              <a
+                                  onClick = {this.onDownloadClick}
+                                  download={`image-${Download}`}
+                                  className="doc-opt pointer "
+                                  href={Download}
+                                  target={"_blank"}
+                                  style={{color:"white"}}
+                                  >
+                                  <DownloadOutlined 
+                                  className="fs18  "
+                                  twoToneColor="white"
+                                  />
+                              </a>    
+                      </div>
 
+                
                 <img className="wp100 pointer" src={url} alt="Uploaded Image" />
               </div>
             ) : (
@@ -166,20 +171,21 @@ class MediaComponent extends Component {
       } else if (message.media.contentType.includes("audio")) {
         // console.log("18939712 File", { url, cT: message.media.contentType });
         return (
-          <div className="flex align-center justify-center">
+          <div className="flex align-center justify-center" >
             <ReactAudioPlayer
-              src={url}
-              // autoPlay
-              controls
-              className="bg-current-message"
-              // style={{background: "#3d77d2"}}
-            />
+            src={url}
+            // autoPlay
+            controls
+            className="bg-current-message"
+            // style={{background: "#3d77d2"}}
+          />
           </div>
         );
       } else {
         return (
           // <div onClick={this.onClickDownloader}>{message.media.filename}</div>
           <div className="downloadable-file">
+            
             <img src={File} className="h20 mr10" />
             <div className="fs14 mr10">
               {message.media.filename.length <= 12
@@ -212,7 +218,7 @@ class ChatMessageDetails extends Component {
       loadingMessageDetails: false,
       message_numbers: 0,
       vital_repeat_intervals: {},
-      message_ids_length: 0,
+      message_ids_length:0
     };
   }
 
@@ -230,54 +236,62 @@ class ChatMessageDetails extends Component {
     this.fetchVitalDetails();
   }
 
-  handleGetSymptomDetails = async ({ message_ids_length }) => {
-    try {
-      const { roomId, chatMessages, getSymptomDetails } = this.props;
+  handleGetSymptomDetails = async({message_ids_length}) => {
+    try{
+      const { roomId, chatMessages , getSymptomDetails} = this.props;
+      
+      const { messageIds = [] , messages = {} } = chatMessages[roomId] || {};
+      let symtomMessageIds=[];
 
-      const { messageIds = [], messages = {} } = chatMessages[roomId] || {};
-      let symtomMessageIds = [];
+      await this.setState({message_ids_length: messageIds.length});
 
-      await this.setState({ message_ids_length: messageIds.length });
 
-      const newIdsLengthArr = messageIds.slice(message_ids_length) || [];
-      const newIdsLength = newIdsLengthArr.length || 0;
+        const newIdsLengthArr = messageIds.slice(message_ids_length) || [];
+        const newIdsLength = newIdsLengthArr.length || 0;
 
-      if (newIdsLength && newIdsLength > 0) {
-        for (let each of newIdsLengthArr) {
-          const { state: { body: jsonBody = "" } = {} } = messages[each] || {};
-          if (isJSON(jsonBody)) {
-            const body = JSON.parse(jsonBody);
-            const { symptom_id = null } = body || {};
-            const { type = "" } = body;
-            if (type === CHAT_MESSAGE_TYPE.SYMPTOM && symptom_id) {
-              symtomMessageIds.push(symptom_id);
+        if(newIdsLength && newIdsLength>0 ){
+
+
+          for(let each of newIdsLengthArr){
+            const {state: { body : jsonBody = '' } = {} } = messages[each] || {};
+            if(isJSON(jsonBody)){
+    
+              const body = JSON.parse(jsonBody);
+              const {symptom_id = null } = body || {};
+              const {type = '' } = body;
+              if( type === CHAT_MESSAGE_TYPE.SYMPTOM && symptom_id ){
+                symtomMessageIds.push(symptom_id);
+              }
+
+    
             }
+
           }
+
+
+          if(symtomMessageIds.length){
+            const res = await getSymptomDetails(symtomMessageIds);
+          }
+
+
         }
 
-        if (symtomMessageIds.length) {
-          const res = await getSymptomDetails(symtomMessageIds);
-        }
-      }
-    } catch (error) {
-      console.log("error", error);
+
+  
+    }catch(error){
+      console.log("error",error);
     }
-  };
+  }
 
-  componentDidUpdate() {
+   componentDidUpdate() {
     const { roomId, chatMessages } = this.props;
-    const {
-      message_numbers,
-      loadSymptoms,
-      message_ids_length = 0,
-    } = this.state;
+    const { message_numbers, loadSymptoms , message_ids_length = 0 } = this.state;
     const { messageIds = [] } = chatMessages[roomId] || {};
 
-    if (
-      chatMessages[roomId] != undefined &&
-      messageIds.length !== message_ids_length
-    ) {
-      this.handleGetSymptomDetails({ message_ids_length });
+
+    if( chatMessages[roomId] != undefined && messageIds.length !== message_ids_length ){
+      this.handleGetSymptomDetails({message_ids_length});
+
     }
 
     if (
@@ -288,15 +302,18 @@ class ChatMessageDetails extends Component {
     ) {
       this.setState({ loadSymptoms: true, message_numbers: messageIds.length });
     }
+
+
+
   }
 
-  formatMessage = (data) => this.props.intl.formatMessage(data);
+  formatMessage = data => this.props.intl.formatMessage(data);
 
-  fetchMessageDetails = (data) => {
+  fetchMessageDetails = data => {
     const { messages: messagesArray = [] } = data || {};
     const { getSymptomDetails } = this.props;
     let adhere_bot_messages = {
-      symptom_ids: [],
+      symptom_ids: []
     };
     for (let i in messagesArray) {
       let message = messagesArray[i];
@@ -310,7 +327,7 @@ class ChatMessageDetails extends Component {
       }
     }
     this.setState({ loadSymptoms: false, loadingMessageDetails: true });
-    getSymptomDetails(adhere_bot_messages["symptom_ids"]).then((res) => {
+    getSymptomDetails(adhere_bot_messages["symptom_ids"]).then(res => {
       if (res) {
         this.setState({ loadingMessageDetails: false });
         this.scrollToBottom();
@@ -320,13 +337,13 @@ class ChatMessageDetails extends Component {
 
   fetchVitalDetails = () => {
     const { getVitalOccurence } = this.props;
-    getVitalOccurence().then((res) => {
+    getVitalOccurence().then(res => {
       const { status = false } = res;
       if (status) {
         const { payload: { data } = {} } = res;
         const { repeat_intervals = {} } = data;
         this.setState({
-          vital_repeat_intervals: repeat_intervals,
+          vital_repeat_intervals: repeat_intervals
         });
       }
     });
@@ -352,31 +369,22 @@ class ChatMessageDetails extends Component {
         authorName = getFullName({ first_name, middle_name, last_name });
         break;
       case USER_CATEGORY.HSP:
-        const {
-          basic_info: {
-            first_name: hsp_first_name,
-            middle_name: hsp_middle_name,
-            last_name: hsp_last_name,
-          } = {},
-        } = doctors[id] || {};
-        authorName = getFullName({
-          first_name: hsp_first_name,
-          middle_name: hsp_middle_name,
-          last_name: hsp_last_name,
-        });
+        const { basic_info: { first_name : hsp_first_name, middle_name: hsp_middle_name, last_name: hsp_last_name } = {} } =
+          doctors[id] || {};
+        authorName = getFullName({ first_name:hsp_first_name, middle_name:hsp_middle_name, last_name:hsp_last_name });
         break;
       case USER_CATEGORY.PATIENT:
         const {
           basic_info: {
             first_name: p_first_name,
             middle_name: p_middle_name,
-            last_name: p_last_name,
-          } = {},
+            last_name: p_last_name
+          } = {}
         } = patients[id] || {};
         authorName = getFullName({
           first_name: p_first_name,
           middle_name: p_middle_name,
-          last_name: p_last_name,
+          last_name: p_last_name
         });
         break;
       default:
@@ -434,7 +442,7 @@ class ChatMessageDetails extends Component {
           vitals[vital_id] || {};
         const {
           basic_info: { name: vitalName } = {},
-          details: { template } = {},
+          details: { template } = {}
         } = vital_templates[vital_template_id] || {};
 
         return (
@@ -470,18 +478,17 @@ class ChatMessageDetails extends Component {
     }
   };
 
-  getMessageComp = (messageArr) => {
+  getMessageComp = messageArr => {
     const {
       authenticated_user,
       otherUserLastConsumedMessageIndex,
-      handleReply,
+      handleReply
     } = this.props;
     const { getMetaBlock } = this;
 
     const messageToRender = [];
     messageArr.forEach((message, index) => {
-      const { state: { attributes: { sender_id } = {}, author, body } = {} } =
-        message || {};
+      const { state: { attributes : {sender_id} = {}, author, body } = {} } = message || {};
 
       const prevMessage = messageArr[index - 1] || null;
 
@@ -523,10 +530,7 @@ class ChatMessageDetails extends Component {
         return;
       }
 
-      if (
-        (sender_id && sender_id === `${authenticated_user}`) ||
-        author === `${authenticated_user}`
-      ) {
+      if ((sender_id && sender_id === `${authenticated_user}`) || author === `${authenticated_user}`) {
         // RIGHT
 
         // media types here
@@ -561,44 +565,38 @@ class ChatMessageDetails extends Component {
         if (isJSON(body)) {
           const parsedMessage = JSON.parse(body);
           console.log("128781732 parsedMessage ---> ", parsedMessage);
-          const {
-            text,
-            meta: { productId = null } = {},
-            meta,
-          } = parsedMessage || {};
+          const { text, meta: {productId = null} = {}, meta } = parsedMessage || {};
 
-          if (productId) {
-            const { amount, type, name } = meta || {};
+          if(productId) {
+            const {amount, type, name} = meta || {};
             messageToRender.push(
-              <div className="wp100 flex justify-end">
-                <div className="flex direction-column bg-current-message wp40 mr10 mb10 mt20 ml10 br5">
-                  {/*{getMetaBlock(parsedMessage, true)}*/}
-                  <div className="wp100 p10 br5 text-white fs16 fw600 word-wrap tac">
-                    {`Pay Rs.${amount}`}
-                  </div>
-                  <div className="wp100 p10 br5 text-white fs16 fw600 word-wrap tac">
-                    {`For ${name}`}
-                  </div>
-                  {/* date here */}
-                  <div className="flex justify-space-between mr-4 text-white pl6 pr6">
-                    <div>
-                      {moment(message.state.timestamp).format("h:mm A")}
+                <div className="wp100 flex justify-end">
+                  <div className="flex direction-column bg-current-message wp40 mr10 mb10 mt20 ml10 br5">
+                    {/*{getMetaBlock(parsedMessage, true)}*/}
+                    <div className="wp100 p10 br5 text-white fs16 fw600 word-wrap tac">
+                      {`Pay Rs.${amount}`}
                     </div>
-                    <img
-                      className={
-                        index < otherUserLastConsumedMessageIndex
-                          ? `h14 mt4`
-                          : `h12 mt4`
-                      }
-                      src={
-                        index <= otherUserLastConsumedMessageIndex
-                          ? DoubleTick
-                          : SingleTick
-                      }
-                    />
+                    <div className="wp100 p10 br5 text-white fs16 fw600 word-wrap tac">
+                      {`For ${name}`}
+                    </div>
+                    {/* date here */}
+                    <div className="flex justify-space-between mr-4 text-white pl6 pr6">
+                      <div>{moment(message.state.timestamp).format("h:mm A")}</div>
+                      <img
+                          className={
+                            index < otherUserLastConsumedMessageIndex
+                                ? `h14 mt4`
+                                : `h12 mt4`
+                          }
+                          src={
+                            index <= otherUserLastConsumedMessageIndex
+                                ? DoubleTick
+                                : SingleTick
+                          }
+                      />
+                    </div>
                   </div>
                 </div>
-              </div>
             );
             return;
           }
@@ -632,25 +630,26 @@ class ChatMessageDetails extends Component {
         } else {
           messageToRender.push(
             <div className="wp100 flex justify-end">
-              <div className="direction-column bg-current-message wp40 mt10 mb10 ml10 mr10 p10 br5 text-white">
-                <div className="fs16 fw600 word-wrap">{body}</div>
-                <div className="flex justify-space-between mr-4 text-white pl6 pr6">
-                  <div>{moment(message.state.timestamp).format("h:mm A")}</div>
-                  <img
-                    className={
-                      index < otherUserLastConsumedMessageIndex
-                        ? `h14 mt4`
-                        : `h12 mt4`
-                    }
-                    src={
-                      index <= otherUserLastConsumedMessageIndex
-                        ? DoubleTick
-                        : SingleTick
-                    }
-                  />
+                <div className="direction-column bg-current-message wp40 mt10 mb10 ml10 mr10 p10 br5 text-white">
+                  <div className="fs16 fw600 word-wrap">{body}</div>
+                  <div className="flex justify-space-between mr-4 text-white pl6 pr6">
+                    <div>{moment(message.state.timestamp).format("h:mm A")}</div>
+                    <img
+                        className={
+                          index < otherUserLastConsumedMessageIndex
+                              ? `h14 mt4`
+                              : `h12 mt4`
+                        }
+                        src={
+                          index <= otherUserLastConsumedMessageIndex
+                              ? DoubleTick
+                              : SingleTick
+                        }
+                    />
+                  </div>
                 </div>
-              </div>
-              {/* date here */}
+                {/* date here */}
+
             </div>
           );
         }
@@ -719,25 +718,26 @@ class ChatMessageDetails extends Component {
         } else {
           messageToRender.push(
             <div className="wp100 flex justify-start">
-              <div className="direction-column bg-other-message wp40 mt10 mb10 ml10 mr10 p10 br5 fs16 fw500 word-wrap">
-                <div className="fs16 fw600 word-wrap">{body}</div>
-                {/* date here */}
-                <div className="flex justify-space-between mr-4 pl6 pr6">
-                  <div>{moment(message.state.timestamp).format("h:mm A")}</div>
-                  <img
-                    className={
-                      index < otherUserLastConsumedMessageIndex
-                        ? `h14 mt4`
-                        : `h12 mt4`
-                    }
-                    src={
-                      index <= otherUserLastConsumedMessageIndex
-                        ? DoubleTick
-                        : SingleTick
-                    }
-                  />
+                <div className="direction-column bg-other-message wp40 mt10 mb10 ml10 mr10 p10 br5 fs16 fw500 word-wrap">
+                  <div className="fs16 fw600 word-wrap">{body}</div>
+                  {/* date here */}
+                  <div className="flex justify-space-between mr-4 pl6 pr6">
+                    <div>{moment(message.state.timestamp).format("h:mm A")}</div>
+                    <img
+                        className={
+                          index < otherUserLastConsumedMessageIndex
+                              ? `h14 mt4`
+                              : `h12 mt4`
+                        }
+                        src={
+                          index <= otherUserLastConsumedMessageIndex
+                              ? DoubleTick
+                              : SingleTick
+                        }
+                    />
+                  </div>
                 </div>
-              </div>
+
             </div>
           );
         }
@@ -748,7 +748,7 @@ class ChatMessageDetails extends Component {
   };
 
   render() {
-    console.log("342423432432", { props: this.props }); // TODO: Added
+    console.log("342423432432",{props:this.props});
     const {
       // authenticated_user,
       // users,

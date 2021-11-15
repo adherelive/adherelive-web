@@ -23,43 +23,43 @@ export const PATH = {
   RESET_PASSWORD: "/reset-password/:link",
   REGISTER_FROM_PROFILE: "/register-from-profile",
   REGISTER_FROM_MY_PROFILE: "/register-from-my-profile",
-  TERMS_OF_PAYMENT: "/terms-of-payment/:id",
+  TERMS_OF_PAYMENT:"/terms-of-payment/:id",
   PATIENT: {
     PA: "/patients",
-    DETAILS: "/patients/:patient_id",
+    DETAILS: "/patients/:patient_id"
   },
   ADMIN: {
     DOCTORS: {
       ROOT: "/doctors",
-      DETAILS: "/doctors/:id",
+      DETAILS: "/doctors/:id"
     },
     TOS_PP_EDITOR: "/details",
-    ALL_PROVIDERS: "/providers",
-    ALL_MEDICINES: "/medicines",
+    ALL_PROVIDERS : "/providers",
+    ALL_MEDICINES: "/medicines"
   },
   PROVIDER: {
     ROOT: "/provider",
     DOCTORS: {
       DETAILS: "/doctors/:id",
-      PAYMENT_PRODUCTS: "/doctors/:id/payment-products",
+      PAYMENT_PRODUCTS: "/doctors/:id/payment-products"
     },
     CALENDER: "/calender",
-    TRANSACTION_DETAILS: "/transaction-details",
-    PAYMENT_DETAILS: "/payment-details",
+    TRANSACTION_DETAILS:"/transaction-details",
+    PAYMENT_DETAILS:"/payment-details"
   },
-  DOCTOR: {
-    TRANSACTION_DETAILS: "/transaction-details",
+  DOCTOR:{
+    TRANSACTION_DETAILS:"/transaction-details"
   },
   TERMS_OF_SERVICE: "/terms-of-service",
   PRIVACY_POLICY: "/privacy-policy",
-  TEMPLATES: "/templates",
-  CONSENT: "/consent",
+  TEMPLATES:"/templates",
+  CONSENT:"/consent"
 };
 
 export const AGORA_CALL_NOTIFICATION_TYPES = {
   START_CALL: "START_CALL",
-  MISSED_CALL: "MISSED_CALL",
-};
+  MISSED_CALL: "MISSED_CALL"
+}
 
 export const NOTIFICATION_STAGES = {
   CREATE: "Create",
@@ -71,23 +71,25 @@ export const NOTIFICATION_STAGES = {
   SHARE: "Share",
   EDIT_NOTES: "Edit_Notes",
   APPROVED: "Approve",
-  RESPONSE_ADDED: "Response_added",
+  RESPONSE_ADDED:"Response_added"
 };
 
 export const HTTP_CODE_SERVER_ERROR = 500;
 
 export const CHAT_MESSAGE_DETAILS = {
-  SYMPTOMS: "symptoms",
+  SYMPTOMS: "symptoms"
 };
 export const USER_ADHERE_BOT = "adhere_bot";
 export const CHAT_MESSAGE_TYPE = {
   SYMPTOM: "symptoms",
   VITAL: "vitals",
-  CONSULTATION: "consultation_fees",
+  CONSULTATION:"consultation_fees",
 };
 
 export const TEXT_KEY = "text";
 export const TIME_KEY = "time";
+
+
 
 export const AFTER_WAKEUP = "1";
 export const BEFORE_BREAKFAST = "2";
@@ -102,58 +104,61 @@ export const WITH_DINNER = "10";
 export const AFTER_DINNER = "11";
 export const BEFORE_SLEEP = "12";
 
+
 export const NOON = "13";
+
 
 export const MEDICATION_TIMING = {
   [AFTER_WAKEUP]: {
     [TEXT_KEY]: "After Wake Up",
-    [TIME_KEY]: "8:00am",
+    [TIME_KEY]: "8:00am"
   },
   [BEFORE_BREAKFAST]: {
     [TEXT_KEY]: "Before Breakfast",
-    [TIME_KEY]: "8:30am",
+    [TIME_KEY]:"8:30am"
   },
   [AFTER_BREAKFAST]: {
     [TEXT_KEY]: "After Breakfast",
-    [TIME_KEY]: "9:30am",
+    [TIME_KEY]: "9:30am"
   },
   [BEFORE_LUNCH]: {
     [TEXT_KEY]: "Before Lunch",
-    [TIME_KEY]: "12:30pm",
+    [TIME_KEY]: "12:30pm"
   },
   [WITH_LUNCH]: {
     [TEXT_KEY]: "With Lunch",
-    [TIME_KEY]: "1:00pm",
+    [TIME_KEY]: "1:00pm"
   },
   [AFTER_LUNCH]: {
     [TEXT_KEY]: "After Lunch",
-    [TIME_KEY]: "1:30pm",
+    [TIME_KEY]: "1:30pm"
   },
   [BEFORE_EVENING_SNACK]: {
     [TEXT_KEY]: "Before Evening Snacks",
-    [TIME_KEY]: "3:30pm",
+    [TIME_KEY]: "3:30pm"
   },
   [AFTER_EVENING_SNACK]: {
     [TEXT_KEY]: "After Evening Snacks",
-    [TIME_KEY]: "4:30pm",
+    [TIME_KEY]: "4:30pm"
   },
   [BEFORE_DINNER]: {
     [TEXT_KEY]: "Before Dinner",
-    [TIME_KEY]: "7:30pm",
+    [TIME_KEY]: "7:30pm"
   },
   [WITH_DINNER]: {
     [TEXT_KEY]: "With Dinner",
-    [TIME_KEY]: "8:00pm",
+    [TIME_KEY]: "8:00pm"
   },
   [AFTER_DINNER]: {
     [TEXT_KEY]: "After Dinner",
-    [TIME_KEY]: "8:30pm",
+    [TIME_KEY]: "8:30pm"
   },
   [BEFORE_SLEEP]: {
     [TEXT_KEY]: "Before Sleeping",
-    [TIME_KEY]: "11:00pm",
-  },
+    [TIME_KEY]: "11:00pm"
+  }
 };
+
 
 export const MEDICATION_TIMING_HOURS = {
   [BEFORE_BREAKFAST]: 8,
@@ -165,7 +170,7 @@ export const MEDICATION_TIMING_HOURS = {
   [AFTER_EVENING_SNACK]: 18,
   [BEFORE_DINNER]: 19,
   [AFTER_DINNER]: 20,
-  [BEFORE_SLEEP]: 22,
+  [BEFORE_SLEEP]: 22
 };
 
 export const MEDICATION_TIMING_MINUTES = {
@@ -178,13 +183,13 @@ export const MEDICATION_TIMING_MINUTES = {
   [AFTER_EVENING_SNACK]: 0,
   [BEFORE_DINNER]: 30,
   [AFTER_DINNER]: 30,
-  [BEFORE_SLEEP]: 30,
+  [BEFORE_SLEEP]: 30
 };
 
 export const ONBOARDING_STATUS = {
   PROFILE_REGISTERED: "profile_registered",
   QUALIFICATION_REGISTERED: "qualification_registered",
-  CLINIC_REGISTERED: "CLINIC_registered",
+  CLINIC_REGISTERED: "CLINIC_registered"
 };
 
 export const CRITICAL = "1";
@@ -200,18 +205,18 @@ export const GENDER = {
   [MALE]: {
     value: "male",
     view: "M",
-    label: "MALE",
+    label: "MALE"
   },
   [FEMALE]: {
     value: "female",
     view: "F",
-    label: "FEMALE",
+    label: "FEMALE"
   },
   [OTHER]: {
     value: "other",
     view: "O",
-    label: "OTHER",
-  },
+    label: "OTHER"
+  }
 };
 
 export const SYMPTOMS = "symptoms";
@@ -230,23 +235,23 @@ export const PATIENT_BOX_CONTENT = {
   [SYMPTOMS]: {
     text: "Symptoms",
     background_color: "light-aqua",
-    border_color: "dark-aqua",
+    border_color: "dark-aqua"
   },
   [MISSED_MEDICATION]: {
     text: "Missed Medication",
     background_color: "light-purple",
-    border_color: "dark-purple",
+    border_color: "dark-purple"
   },
   [MISSED_APPOINTMENTS]: {
     text: "Missed Appointments",
     background_color: "light-orange",
-    border_color: "dark-orange",
+    border_color: "dark-orange"
   },
   [MISSED_ACTIONS]: {
     text: "Missed Actions",
     background_color: "light-blue",
-    border_color: "dark-blue",
-  },
+    border_color: "dark-blue"
+  }
 };
 
 export const DRAWER = {
@@ -266,27 +271,26 @@ export const DRAWER = {
   ADD_RAZORPAY_ACCOUNT_DETAILS: "ADD_RAZORPAY_ACCOUNT_DETAILS",
   EDIT_RAZORPAY_ACCOUNT_DETAILS: "EDIT_RAZORPAY_ACCOUNT_DETAILS",
   EDIT_PATIENT: "EDIT_PATIENT",
-  ADD_PROVIDER: "ADD_PROVIDER",
-  EDIT_PROVIDER: "EDIT_PROVIDER",
-  ADD_REPORT: "ADD_REPORT",
+  ADD_PROVIDER:"ADD_PROVIDER",
+  EDIT_PROVIDER:"EDIT_PROVIDER",
+  ADD_REPORT:"ADD_REPORT",
   EDIT_REPORT: "EDIT_REPORT",
-  MISSED_MEDICATION: "MISSED_MEDICATION",
-  MISSED_APPOINTMENT: "MISSED_APPOINTMENT",
-  MISSED_VITAL: "MISSED_VITAL",
-  CREATE_CAREPLAN_TEMPLATE: "CREATE_CAREPLAN_TEMPLATE",
-  EDIT_CAREPLAN_TEMPLATE: "EDIT_CAREPLAN_TEMPLATE",
-  ADD_MEDICINES: "ADD_MEDICINES",
-  ADD_FOOD_ITEM: "ADD_FOOD_ITEM",
-  ADD_DIET: "ADD_DIET",
-  EDIT_DIET: "EDIT_DIET",
-  DIET_RESPONSE: "DIET_RESPONSE",
-  ADD_WORKOUT: "ADD_WORKOUT",
-  EDIT_WORKOUT: "EDIT_WORKOUT",
-  WORKOUT_RESPONSE: "WORKOUT_RESPONSE",
-  WORKOUT_RESPONSE_DETALS: "WORKOUT_RESPONSE_DETALS",
-  MISSED_DIET: "MISSED_DIET",
-  MISSED_WORKOUT: "MISSED_WORKOUT",
-  ADD_SECONDARY_DOCTOR: "ADD_SECONDARY_DOCTOR",
+  MISSED_MEDICATION:"MISSED_MEDICATION",
+  MISSED_APPOINTMENT:"MISSED_APPOINTMENT",
+  MISSED_VITAL:"MISSED_VITAL",
+  CREATE_CAREPLAN_TEMPLATE:"CREATE_CAREPLAN_TEMPLATE",
+  EDIT_CAREPLAN_TEMPLATE:"EDIT_CAREPLAN_TEMPLATE",
+  ADD_MEDICINES:"ADD_MEDICINES",
+  ADD_FOOD_ITEM:"ADD_FOOD_ITEM",
+  ADD_DIET:"ADD_DIET",
+  EDIT_DIET:"EDIT_DIET",
+  DIET_RESPONSE:"DIET_RESPONSE",
+  ADD_WORKOUT:"ADD_WORKOUT",
+  EDIT_WORKOUT:"EDIT_WORKOUT",
+  WORKOUT_RESPONSE:"WORKOUT_RESPONSE",
+  WORKOUT_RESPONSE_DETALS:"WORKOUT_RESPONSE_DETALS",
+  MISSED_DIET:"MISSED_DIET",
+  MISSED_WORKOUT:"MISSED_WORKOUT",
 };
 
 export const USER_CATEGORY = {
@@ -298,13 +302,13 @@ export const USER_CATEGORY = {
   PHARMACY_ADMIN: "pharmacyAdmin",
   ADMIN: "admin",
   PROVIDER: "provider",
-  HSP: "hsp",
+  HSP:"hsp"
 };
 
 export const ACTIVITY_TYPE = {
   VISIT: "visit",
   CALL: "call",
-  CHAT: "chat",
+  CHAT: "chat"
 };
 
 export const PERMISSIONS = {
@@ -322,7 +326,7 @@ export const PERMISSIONS = {
   ADD_CAREPLAN: "ADD_CAREPLAN",
 };
 
-export const USER_PERMISSIONS = {
+export const USER_PERMISSIONS =  {
   /* [A] */
 
   APPOINTMENTS: {
@@ -330,7 +334,7 @@ export const USER_PERMISSIONS = {
     UPDATE: "UPDATE_APPOINTMENT",
     VIEW: "VIEW_APPOINTMENT",
     DELETE: "DELETE_APPOINTMENT",
-    TEMPLATE: "TEMPLATE_APPOINTMENT",
+    TEMPLATE:"TEMPLATE_APPOINTMENT"
   },
 
   ACCOUNT: {
@@ -342,7 +346,7 @@ export const USER_PERMISSIONS = {
   CARE_PLAN: {
     ADD: "ADD_CARE_PLAN",
     UPDATE: "UPDATE_CARE_PLAN",
-    VIEW: "VIEW_CARE_PLAN",
+    VIEW: "VIEW_CARE_PLAN"
   },
 
   CARE_PLAN_TEMPLATE: {
@@ -350,7 +354,7 @@ export const USER_PERMISSIONS = {
     UPDATE: "UPDATE_CARE_PLAN_TEMPLATE",
     VIEW: "VIEW_CARE_PLAN_TEMPLATE",
     DUPLICATE: "DUPLICATE_CARE_PLAN_TEMPLATE",
-    DELETE: "DELETE_CARE_PLAN_TEMPLATE",
+    DELETE: "DELETE_CARE_PLAN_TEMPLATE"
   },
 
   CALENDER: {
@@ -364,7 +368,7 @@ export const USER_PERMISSIONS = {
     UPDATE: "UPDATE_DIET",
     VIEW: "VIEW_DIET",
     DELETE: "DELETE_DIET",
-    TEMPLATE: "TEMPLATE_DIET",
+    TEMPLATE:"TEMPLATE_DIET"
   },
 
   DOCTORS: {
@@ -388,7 +392,7 @@ export const USER_PERMISSIONS = {
     VIEW: "VIEW_MEDICATION",
     VIEW_TIMELINE: "VIEW_TIMELINE_MEDICATION",
     DELETE: "DELETE_MEDICATION",
-    TEMPLATE: "TEMPLATE_MEDICATION",
+    TEMPLATE:"TEMPLATE_MEDICATION"
   },
 
   /* [P] */
@@ -404,13 +408,13 @@ export const USER_PERMISSIONS = {
     VIEW: "VIEW_PAYMENT_PRODUCT",
   },
 
-  /* [R] */
+   /* [R] */
 
-  REPORTS: {
+   REPORTS: {
     ADD: "ADD_REPORT",
     UPDATE: "UPDATE_REPORT",
     VIEW: "VIEW_REPORT",
-    DELETE: "DELETE_REPORT",
+    DELETE: "DELETE_REPORT"
   },
 
   /* [V] */
@@ -420,7 +424,7 @@ export const USER_PERMISSIONS = {
     UPDATE: "UPDATE_VITAL",
     VIEW: "VIEW_VITAL",
     DELETE: "DELETE_VITAL",
-    TEMPLATE: "TEMPLATE_VITAL",
+    TEMPLATE:"TEMPLATE_VITAL"
   },
 
   /* [W] */
@@ -430,9 +434,11 @@ export const USER_PERMISSIONS = {
     UPDATE: "UPDATE_WORKOUT",
     VIEW: "VIEW_WORKOUT",
     DELETE: "DELETE_WORKOUT",
-    TEMPLATE: "TEMPLATE_WORKOUT",
+    TEMPLATE:"TEMPLATE_WORKOUT"
   },
+
 };
+
 
 const DAY = "1";
 const MONTH = "2";
@@ -441,20 +447,20 @@ const YEAR = "3";
 export const AGE_TYPE = {
   [DAY]: "d",
   [MONTH]: "m",
-  [YEAR]: "y",
+  [YEAR]: "y"
 };
 
 export const APPOINTMENT_TYPE = {
   FOLLOWUP: "followup",
   MEDICATION: "medication",
-  MATERIAL_DELIVERY: "material_delivery",
+  MATERIAL_DELIVERY: "material_delivery"
 };
 
 export const USER_STATUS = {
   ENROLLED: "ENROLLED",
   DISCHARGED: "DISCHARGED",
   INACTIVE: "INACTIVE",
-  DROPPED: "DROPPED",
+  DROPPED: "DROPPED"
 };
 
 export const REPEAT_TYPE = {
@@ -462,7 +468,7 @@ export const REPEAT_TYPE = {
   DAILY: "daily",
   WEEKLY: "weekly",
   MONTHLY: "monthly",
-  YEARLY: "yearly",
+  YEARLY: "yearly"
 };
 
 export const REPEAT_OPTION = [
@@ -470,7 +476,7 @@ export const REPEAT_OPTION = [
   { label: "Repeats Daily", key: REPEAT_TYPE.DAILY },
   { label: "Repeats Weekly", key: REPEAT_TYPE.WEEKLY },
   { label: "Repeats Monthly", key: REPEAT_TYPE.MONTHLY },
-  { label: "Repeats Yearly", key: REPEAT_TYPE.YEARLY },
+  { label: "Repeats Yearly", key: REPEAT_TYPE.YEARLY }
 ];
 
 export const EVENT_ACTION = {
@@ -480,7 +486,7 @@ export const EVENT_ACTION = {
   ADD_NOTES: "ADD_NOTES",
   DELETE_REMINDER: "DELETE_REMINDER",
   ADD_PRODUCT: "ADD_PRODUCT",
-  EDIT_PRODUCT: "EDIT_PRODUCT",
+  EDIT_PRODUCT: "EDIT_PRODUCT"
 };
 
 export const DAYS = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
@@ -492,7 +498,7 @@ export const DAYS_TEXT = {
   Thu: "thursday",
   Fri: "friday",
   Sat: "saturday",
-  Sun: "sunday",
+  Sun: "sunday"
 };
 
 export const ALTERNATE_DAYS = ["Sun", "Tue", "Thu", "Sat"];
@@ -504,27 +510,27 @@ export const DAYS_NUMBER = {
   Thu: 4,
   Fri: 5,
   Sat: 6,
-  Sun: 7,
+  Sun: 7
 };
 
 export const DAYS_TEXT_NUM = {
-  1: "sunday",
-  2: "monday",
-  3: "tuesday",
-  4: "wednesday",
-  5: "thursday",
-  6: "friday",
-  7: "saturday",
+  "1": "sunday",
+  "2": "monday",
+  "3": "tuesday",
+  "4": "wednesday",
+  "5": "thursday",
+  "6": "friday",
+  "7": "saturday"
 };
 
 export const DAYS_TEXT_NUM_SHORT = {
-  1: "Mon",
-  2: "Tue",
-  3: "Wed",
-  4: "Thu",
-  5: "Fri",
-  6: "Sat",
-  7: "Sun",
+  "1": "Mon",
+  "2": "Tue",
+  "3": "Wed",
+  "4": "Thu",
+  "5": "Fri",
+  "6": "Sat",
+  "7": "Sun"
 };
 
 export const HOST = "/api";
@@ -540,8 +546,8 @@ export const EVENT_TYPE = {
   MEDICATION_REMINDER: "medication-reminder",
   SYMPTOMS: "symptoms",
   VITALS: "vitals",
-  DIET: "diet",
-  WORKOUT: "workout",
+  DIET:"diet",
+  WORKOUT:"workout"
 };
 
 export const EVENT_STATUS = {
@@ -549,34 +555,35 @@ export const EVENT_STATUS = {
   PENDING: "pending",
   COMPLETED: "completed",
   EXPIRED: "expired",
-  CANCELLED: "cancelled",
+  CANCELLED: "cancelled"
 };
+
 
 //request type
 export const REQUEST_TYPE = {
   POST: "post",
   GET: "get",
   PUT: "put",
-  DELETE: "delete",
+  DELETE: "delete"
 };
 
 export const SEVERITY_STATUS = {
   [CRITICAL]: {
     text: "Critical",
-    color: "red",
+    color: "red"
   },
   [LOW]: {
     text: "Low",
-    color: "green",
+    color: "green"
   },
   [HIGH]: {
     text: "High",
-    color: "red",
+    color: "red"
   },
   [MEDIUM]: {
     text: "Medium",
-    color: "black",
-  },
+    color: "black"
+  }
 };
 
 // export const NO_ADHERENCE = "1";
@@ -592,7 +599,7 @@ export const CHART_TITLE = {
   [NO_APPOINTMENT]: "Missed Appointments",
   [NO_ACTION]: "Missed Actions",
   [NO_DIET]: "Missed Diet",
-  [NO_WORKOUT]: "Missed Workout",
+  [NO_WORKOUT]: "Missed Workout"
 };
 
 export const GRAPH_COLORS = {
@@ -609,62 +616,63 @@ export const GRAPH_COLORS = {
     light: "#d3adf7",
     className: {
       dark: "bg-dark-purple",
-      light: "bg-light-purple",
-    },
+      light: "bg-light-purple"
+    }
   },
   [NO_APPOINTMENT]: {
     dark: "#fa8c16",
     light: "#ffd591",
     className: {
       dark: "bg-dark-orange",
-      light: "bg-light-orange",
-    },
+      light: "bg-light-orange"
+    }
   },
   [NO_ACTION]: {
     dark: "#597ef7",
     light: "#adc6ff",
     className: {
       dark: "bg-dark-blue",
-      light: "bg-light-blue",
-    },
+      light: "bg-light-blue"
+    }
   },
   [NO_DIET]: {
     dark: "#A0522D",
     light: "#F5DEB3",
     className: {
       dark: "bg-dark-brown",
-      light: "bg-light-brown",
-    },
+      light: "bg-light-brown"
+    }
+
   },
   [NO_WORKOUT]: {
     dark: "#00FF7F",
     light: "#90EE90",
     className: {
       dark: "bg-spring-green",
-      light: "bg-light-green",
-    },
-  },
+      light: "bg-light-green"
+    }
+  }
 };
 
 export const GRAPH_TYPE = {
   // [NO_ADHERENCE]: 'donut',
   [NO_MEDICATION]: "donut",
-  [NO_APPOINTMENT]: "donut",
+  [NO_APPOINTMENT]: "donut"
   // [NO_ACTION]: 'donut',
   // [TEST_ONE]: 'donut'
 };
 
 export const SYMPTOM = {
   NEW: "Yes",
-  OLD: "--",
+  OLD: "--"
 };
 
 export const TRAUMA = "1";
 
 export const CONDITIONS = {
   [TRAUMA]: {
-    value: "Trauma",
-  },
+    value: "Trauma"
+  }
 };
 
 export const TABLE_DEFAULT_BLANK_FIELD = "--";
@@ -676,18 +684,18 @@ export const SYRINGE = "3";
 export const MEDICINE_FORM_TYPE = {
   [TABLET]: { name: "tablet" },
   [SYRUP]: { name: "syrup" },
-  [SYRINGE]: { name: "syringe" },
+  [SYRINGE]: { name: "syringe" }
 };
 
 export const MEDICINE_TYPE = {
   TABLET: "tablet",
   INJECTION: "injection",
-  SYRUP: "syrup",
+  SYRUP: "syrup"
 };
 
 export const MEDICINE_UNITS = {
   MG: "1",
-  ML: "2",
+  ML: "2"
 };
 
 export const FULL_DAYS = {
@@ -697,7 +705,7 @@ export const FULL_DAYS = {
   WED: "Wed",
   THU: "Thu",
   FRI: "Fri",
-  SAT: "Sat",
+  SAT: "Sat"
 };
 
 export const FULL_DAYS_NUMBER = {
@@ -707,7 +715,7 @@ export const FULL_DAYS_NUMBER = {
   WED: "4",
   THU: "5",
   FRI: "6",
-  SAT: "7",
+  SAT: "7"
 };
 
 export const DAYS_LIST = [
@@ -717,7 +725,7 @@ export const DAYS_LIST = [
   FULL_DAYS.THU,
   FULL_DAYS.FRI,
   FULL_DAYS.SAT,
-  FULL_DAYS.SUN,
+  FULL_DAYS.SUN
 ];
 
 export const DAYS_KEYS = ["MON", "TUE", "WED", "THU", "FRI", "SAT", "SUN"];
@@ -834,23 +842,23 @@ export const PARTS_GRAPH = {
   [LEFT_HAMSTRING]: { name: "Left Hamstring" },
   [RIGHT_HAMSTRING]: { name: "Right Hamstring" },
   [LEFT_CALF]: { name: "Left Calf" },
-  [RIGHT_CALF]: { name: "Right Calf" },
+  [RIGHT_CALF]: { name: "Right Calf" }
 };
 
 export const BODY_VIEW = {
   FRONT: "1",
-  BACK: "2",
+  BACK: "2"
 };
 
 export const BODY_SIDE = {
   1: "FRONT",
-  2: "BACK",
+  2: "BACK"
 };
 
-export const BODY_SIDE_TEXT = {
+export const BODY_SIDE_TEXT  ={
   1: "Front",
-  2: "Back",
-};
+  2: "Back"
+}
 export const PARTS = {
   HEAD: "HEAD",
   RIGHT_EYE: "RIGHT_EYE",
@@ -892,7 +900,7 @@ export const PARTS = {
   RIGHT_TOE: "RIGHT_TOE",
   LEFT_TOE: "LEFT_TOE",
   RECTUM: "RECTUM",
-  URINARY_BLADDER: "URINARY_BLADDER",
+  URINARY_BLADDER: "URINARY_BLADDER"
 };
 
 export const PART_LIST = [
@@ -950,7 +958,7 @@ export const PART_LIST = [
   LEFT_HAMSTRING,
   RIGHT_HAMSTRING,
   LEFT_CALF,
-  RIGHT_CALF,
+  RIGHT_CALF
 ];
 
 export const PART_LIST_CODES = {
@@ -1008,7 +1016,7 @@ export const PART_LIST_CODES = {
   LEFT_HAMSTRING: LEFT_HAMSTRING,
   RIGHT_HAMSTRING: RIGHT_HAMSTRING,
   LEFT_CALF: LEFT_CALF,
-  RIGHT_CALF: RIGHT_CALF,
+  RIGHT_CALF: RIGHT_CALF
 };
 
 export const PART_LIST_FRONT = [
@@ -1050,7 +1058,7 @@ export const PART_LIST_FRONT = [
   RIGHT_TOE,
   LEFT_TOE,
   RECTUM,
-  URINARY_BLADDER,
+  URINARY_BLADDER
 ];
 
 export const PART_LIST_BACK = [
@@ -1069,7 +1077,7 @@ export const PART_LIST_BACK = [
   LEFT_HAMSTRING,
   RIGHT_HAMSTRING,
   LEFT_CALF,
-  RIGHT_CALF,
+  RIGHT_CALF
 ];
 
 export const BODY = {
@@ -1079,12 +1087,12 @@ export const BODY = {
       height: 30,
       width: 68,
       top: 5,
-      left: 90,
+      left: 90
     },
     dotStyle: {
       top: 14,
-      left: 28,
-    },
+      left: 28
+    }
   },
   [HEAD_BACK]: {
     key: HEAD_BACK,
@@ -1092,12 +1100,12 @@ export const BODY = {
       height: 30,
       width: 68,
       top: 5,
-      left: 90,
+      left: 90
     },
     dotStyle: {
       top: 14,
-      left: 28,
-    },
+      left: 28
+    }
   },
   [RIGHT_EYE]: {
     key: RIGHT_EYE,
@@ -1105,12 +1113,12 @@ export const BODY = {
       top: 30,
       left: 92,
       height: 18,
-      width: 35,
+      width: 35
     },
     dotStyle: {
       top: 6,
-      left: 14,
-    },
+      left: 14
+    }
   },
   [LEFT_EYE]: {
     key: LEFT_EYE,
@@ -1118,12 +1126,12 @@ export const BODY = {
       top: 30,
       left: 125,
       height: 18,
-      width: 35,
+      width: 35
     },
     dotStyle: {
       top: 6,
-      left: 4,
-    },
+      left: 4
+    }
   },
   [RIGHT_EAR]: {
     key: RIGHT_EAR,
@@ -1131,12 +1139,12 @@ export const BODY = {
       top: 38,
       left: 78,
       height: 22,
-      width: 30,
+      width: 30
     },
     dotStyle: {
       top: 4,
-      left: 10,
-    },
+      left: 10
+    }
   },
   [LEFT_EAR]: {
     key: LEFT_EAR,
@@ -1144,12 +1152,12 @@ export const BODY = {
       top: 38,
       left: 140,
       height: 22,
-      width: 30,
+      width: 30
     },
     dotStyle: {
       top: 4,
-      left: 6,
-    },
+      left: 6
+    }
   },
   [NOSE]: {
     key: NOSE,
@@ -1157,12 +1165,12 @@ export const BODY = {
       top: 44,
       left: 113,
       height: 15,
-      width: 22,
+      width: 22
     },
     dotStyle: {
       top: 2,
-      left: 4,
-    },
+      left: 4
+    }
   },
   [MOUTH]: {
     key: MOUTH,
@@ -1170,12 +1178,12 @@ export const BODY = {
       top: 56,
       left: 105,
       height: 18,
-      width: 42,
+      width: 42
     },
     dotStyle: {
       top: 4,
-      left: 14,
-    },
+      left: 14
+    }
   },
   [NECK]: {
     key: NECK,
@@ -1183,12 +1191,12 @@ export const BODY = {
       top: 70,
       left: 100,
       height: 34,
-      width: 48,
+      width: 48
     },
     dotStyle: {
       top: 6,
-      left: 18,
-    },
+      left: 18
+    }
   },
 
   [NECK_BACK]: {
@@ -1197,12 +1205,12 @@ export const BODY = {
       top: 70,
       left: 100,
       height: 34,
-      width: 48,
+      width: 48
     },
     dotStyle: {
       top: 6,
-      left: 18,
-    },
+      left: 18
+    }
   },
   [RIGHT_SHOULDER]: {
     key: RIGHT_SHOULDER,
@@ -1210,12 +1218,12 @@ export const BODY = {
       top: 95,
       left: 40,
       height: 40,
-      width: 40,
+      width: 40
     },
     dotStyle: {
       top: 8,
-      left: 20,
-    },
+      left: 20
+    }
     //areaStyle: { top: 144, left: 66 }
   },
   [LEFT_SHOULDER]: {
@@ -1224,12 +1232,12 @@ export const BODY = {
       top: 95,
       left: 158,
       height: 40,
-      width: 40,
+      width: 40
     },
     dotStyle: {
       top: 8,
-      right: 10,
-    },
+      right: 10
+    }
     //areaStyle: { top: 144, left: 210 }
   },
   [LEFT_SHOULDER_BACK]: {
@@ -1238,12 +1246,12 @@ export const BODY = {
       top: 95,
       left: 40,
       height: 40,
-      width: 40,
+      width: 40
     },
     dotStyle: {
       top: 8,
-      left: 20,
-    },
+      left: 20
+    }
     //areaStyle: { top: 144, left: 66 }
   },
   [RIGHT_SHOULDER_BACK]: {
@@ -1252,12 +1260,12 @@ export const BODY = {
       top: 95,
       left: 158,
       height: 40,
-      width: 40,
+      width: 40
     },
     dotStyle: {
       top: 8,
-      right: 10,
-    },
+      right: 10
+    }
     //areaStyle: { top: 144, left: 210 }
   },
   [CHEST]: {
@@ -1266,12 +1274,12 @@ export const BODY = {
       top: 100,
       left: 80,
       height: 50,
-      width: 88,
+      width: 88
     },
     dotStyle: {
       top: 20,
-      left: 36,
-    },
+      left: 36
+    }
     //areaStyle: { top: 180, left: 138 }
   },
   [BACK]: {
@@ -1280,12 +1288,12 @@ export const BODY = {
       top: 100,
       left: 80,
       height: 50,
-      width: 88,
+      width: 88
     },
     dotStyle: {
       top: 20,
-      left: 36,
-    },
+      left: 36
+    }
     //areaStyle: { top: 180, left: 138 }
   },
   [RIGHT_ARM]: {
@@ -1294,12 +1302,12 @@ export const BODY = {
       top: 120,
       left: 45,
       height: 60,
-      width: 40,
+      width: 40
     },
     dotStyle: {
       top: 30,
-      left: 15,
-    },
+      left: 15
+    }
     //areaStyle: { top: 200, left: 60 }
   },
   [LEFT_ARM]: {
@@ -1308,12 +1316,12 @@ export const BODY = {
       top: 120,
       left: 165,
       height: 60,
-      width: 40,
+      width: 40
     },
     dotStyle: {
       top: 30,
-      right: 15,
-    },
+      right: 15
+    }
     //areaStyle: { top: 200, left: 216 }
   },
   [LEFT_TRICEP]: {
@@ -1322,12 +1330,12 @@ export const BODY = {
       top: 120,
       left: 45,
       height: 60,
-      width: 40,
+      width: 40
     },
     dotStyle: {
       top: 30,
-      left: 15,
-    },
+      left: 15
+    }
     //areaStyle: { top: 200, left: 60 }
   },
   [RIGHT_TRICEP]: {
@@ -1336,12 +1344,12 @@ export const BODY = {
       top: 120,
       left: 165,
       height: 60,
-      width: 40,
+      width: 40
     },
     dotStyle: {
       top: 30,
-      right: 15,
-    },
+      right: 15
+    }
     //areaStyle: { top: 200, left: 216 }
   },
   [RIGHT_ELBOW]: {
@@ -1350,12 +1358,12 @@ export const BODY = {
       top: 160,
       left: 45,
       height: 40,
-      width: 40,
+      width: 40
     },
     dotStyle: {
       top: 15,
-      left: 14,
-    },
+      left: 14
+    }
     //areaStyle: { top: 252, left: 54 }
   },
   [LEFT_ELBOW]: {
@@ -1364,12 +1372,12 @@ export const BODY = {
       top: 160,
       left: 166,
       height: 40,
-      width: 40,
+      width: 40
     },
     dotStyle: {
       top: 15,
-      right: 14,
-    },
+      right: 14
+    }
     //areaStyle: { top: 252, left: 220 }
   },
   [STOMACH]: {
@@ -1378,13 +1386,13 @@ export const BODY = {
       top: 170,
       left: 90,
       height: 40,
-      width: 70,
+      width: 70
       // backgroundColor: "blue",
     },
     dotStyle: {
       top: 20,
-      left: 30,
-    },
+      left: 30
+    }
     //areaStyle: { top: 275, left: 138 }
   },
   [ABDOMEN]: {
@@ -1393,12 +1401,12 @@ export const BODY = {
       top: 210,
       left: 90,
       height: 40,
-      width: 70,
+      width: 70
     },
     dotStyle: {
       top: 15,
-      left: 28,
-    },
+      left: 28
+    }
     //areaStyle: { top: 330, left: 138 }
   },
 
@@ -1408,12 +1416,12 @@ export const BODY = {
       top: 210,
       left: 90,
       height: 40,
-      width: 70,
+      width: 70
     },
     dotStyle: {
       top: 15,
-      left: 28,
-    },
+      left: 28
+    }
     //areaStyle: { top: 330, left: 138 }
   },
   [RIGHT_FOREARM]: {
@@ -1422,12 +1430,12 @@ export const BODY = {
       top: 200,
       left: 30,
       height: 50,
-      width: 40,
+      width: 40
     },
     dotStyle: {
       top: 20,
-      left: 14,
-    },
+      left: 14
+    }
     //areaStyle: { top: 310, left: 44 }
   },
   [LEFT_FOREARM]: {
@@ -1436,12 +1444,12 @@ export const BODY = {
       top: 200,
       left: 180,
       height: 50,
-      width: 40,
+      width: 40
     },
     dotStyle: {
       top: 20,
-      right: 14,
-    },
+      right: 14
+    }
     //areaStyle: { top: 310, left: 230 }
   },
   [LEFT_FOREARM_BACK]: {
@@ -1450,12 +1458,12 @@ export const BODY = {
       top: 200,
       left: 30,
       height: 50,
-      width: 40,
+      width: 40
     },
     dotStyle: {
       top: 20,
-      left: 14,
-    },
+      left: 14
+    }
     //areaStyle: { top: 310, left: 44 }
   },
   [RIGHT_FOREARM_BACK]: {
@@ -1464,12 +1472,12 @@ export const BODY = {
       top: 200,
       left: 180,
       height: 50,
-      width: 40,
+      width: 40
     },
     dotStyle: {
       top: 20,
-      right: 14,
-    },
+      right: 14
+    }
     //areaStyle: { top: 310, left: 230 }
   },
   [RIGHT_WRIST]: {
@@ -1478,12 +1486,12 @@ export const BODY = {
       top: 240,
       left: 25,
       height: 28,
-      width: 30,
+      width: 30
     },
     dotStyle: {
       top: 10,
-      left: 8,
-    },
+      left: 8
+    }
     //areaStyle: { top: 360, left: 32 }
   },
   [LEFT_WRIST]: {
@@ -1492,12 +1500,12 @@ export const BODY = {
       top: 240,
       left: 200,
       height: 28,
-      width: 30,
+      width: 30
     },
     dotStyle: {
       top: 10,
-      right: 8,
-    },
+      right: 8
+    }
     //areaStyle: { top: 360, left: 242 }
   },
   [RIGHT_HAND]: {
@@ -1506,12 +1514,12 @@ export const BODY = {
       top: 270,
       left: 10,
       height: 25,
-      width: 40,
+      width: 40
     },
     dotStyle: {
       top: 4,
-      left: 18,
-    },
+      left: 18
+    }
     //areaStyle: { top: 384, left: 26 }
   },
   [LEFT_HAND]: {
@@ -1520,12 +1528,12 @@ export const BODY = {
       top: 270,
       left: 200,
       height: 25,
-      width: 40,
+      width: 40
     },
     dotStyle: {
       top: 4,
-      right: 18,
-    },
+      right: 18
+    }
     //areaStyle: { top: 384, left: 248 }
   },
   [RIGHT_HAND_FINGER]: {
@@ -1534,13 +1542,13 @@ export const BODY = {
       top: 295,
       left: 10,
       height: 40,
-      width: 40,
+      width: 40
       // backgroundColor: "blue",
     },
     dotStyle: {
       top: 4,
-      left: 14,
-    },
+      left: 14
+    }
     //areaStyle: { top: 408, left: 24 }
   },
   [LEFT_HAND_FINGER]: {
@@ -1549,12 +1557,12 @@ export const BODY = {
       top: 295,
       left: 200,
       height: 40,
-      width: 40,
+      width: 40
     },
     dotStyle: {
       top: 4,
-      right: 14,
-    },
+      right: 14
+    }
     //areaStyle: { top: 408, left: 250 }
   },
   [LEFT_HIP]: {
@@ -1563,12 +1571,12 @@ export const BODY = {
       top: 235,
       left: 70,
       height: 50,
-      width: 50,
+      width: 50
     },
     dotStyle: {
       top: 20,
-      left: 30,
-    },
+      left: 30
+    }
     //areaStyle: { top: 390, left: 104 }
   },
   [RECTUM]: {
@@ -1577,12 +1585,12 @@ export const BODY = {
       top: 240,
       left: 100,
       height: 20,
-      width: 50,
+      width: 50
     },
     dotStyle: {
       top: 6,
-      right: 18,
-    },
+      right: 18
+    }
     //areaStyle: { top: 390, left: 172 }
   },
   [URINARY_BLADDER]: {
@@ -1592,12 +1600,12 @@ export const BODY = {
       left: 100,
       height: 30,
       // backgroundColor: "green",
-      width: 50,
+      width: 50
     },
     dotStyle: {
       top: 8,
-      right: 20,
-    },
+      right: 20
+    }
     //areaStyle: { top: 390, left: 172 }
   },
   [RIGHT_HIP]: {
@@ -1606,12 +1614,12 @@ export const BODY = {
       top: 235,
       left: 125,
       height: 50,
-      width: 50,
+      width: 50
     },
     dotStyle: {
       top: 20,
-      right: 25,
-    },
+      right: 25
+    }
     //areaStyle: { top: 390, left: 172 }
   },
   [RIGHT_THIGH]: {
@@ -1620,12 +1628,12 @@ export const BODY = {
       top: 285,
       left: 70,
       height: 80,
-      width: 60,
+      width: 60
     },
     dotStyle: {
       top: 35,
-      left: 25,
-    },
+      left: 25
+    }
     //areaStyle: { top: 470, left: 104 }
   },
   [LEFT_THIGH]: {
@@ -1634,12 +1642,12 @@ export const BODY = {
       top: 285,
       left: 130,
       height: 80,
-      width: 60,
+      width: 60
     },
     dotStyle: {
       top: 35,
-      right: 30,
-    },
+      right: 30
+    }
     //areaStyle: { top: 470, left: 172 }
   },
   [LEFT_HAMSTRING]: {
@@ -1648,12 +1656,12 @@ export const BODY = {
       top: 285,
       left: 70,
       height: 80,
-      width: 60,
+      width: 60
     },
     dotStyle: {
       top: 35,
-      left: 25,
-    },
+      left: 25
+    }
     //areaStyle: { top: 470, left: 104 }
   },
   [RIGHT_HAMSTRING]: {
@@ -1662,12 +1670,12 @@ export const BODY = {
       top: 285,
       left: 130,
       height: 80,
-      width: 60,
+      width: 60
     },
     dotStyle: {
       top: 35,
-      right: 30,
-    },
+      right: 30
+    }
     //areaStyle: { top: 470, left: 172 }
   },
   [RIGHT_KNEE]: {
@@ -1676,12 +1684,12 @@ export const BODY = {
       top: 365,
       left: 80,
       height: 50,
-      width: 45,
+      width: 45
     },
     dotStyle: {
       top: 15,
-      left: 18,
-    },
+      left: 18
+    }
     //areaStyle: { top: 548, left: 104 }
   },
   [LEFT_KNEE]: {
@@ -1690,12 +1698,12 @@ export const BODY = {
       top: 365,
       left: 130,
       height: 50,
-      width: 45,
+      width: 45
     },
     dotStyle: {
       top: 15,
-      right: 18,
-    },
+      right: 18
+    }
     //areaStyle: { top: 548, left: 172 }
   },
   [RIGHT_SHIN]: {
@@ -1704,12 +1712,12 @@ export const BODY = {
       top: 415,
       left: 80,
       height: 60,
-      width: 45,
+      width: 45
     },
     dotStyle: {
       top: 20,
-      left: 22,
-    },
+      left: 22
+    }
     //areaStyle: { top: 640, left: 104 }
   },
   [LEFT_SHIN]: {
@@ -1718,12 +1726,12 @@ export const BODY = {
       top: 415,
       left: 130,
       height: 60,
-      width: 45,
+      width: 45
     },
     dotStyle: {
       top: 20,
-      right: 22,
-    },
+      right: 22
+    }
     //areaStyle: { top: 640, left: 172 }
   },
   [LEFT_CALF]: {
@@ -1732,12 +1740,12 @@ export const BODY = {
       top: 415,
       left: 80,
       height: 60,
-      width: 45,
+      width: 45
     },
     dotStyle: {
       top: 20,
-      left: 22,
-    },
+      left: 22
+    }
     //areaStyle: { top: 640, left: 104 }
   },
   [RIGHT_CALF]: {
@@ -1746,12 +1754,12 @@ export const BODY = {
       top: 415,
       left: 130,
       height: 60,
-      width: 45,
+      width: 45
     },
     dotStyle: {
       top: 20,
-      right: 22,
-    },
+      right: 22
+    }
     //areaStyle: { top: 640, left: 172 }
   },
   [RIGHT_ANKLE]: {
@@ -1760,12 +1768,12 @@ export const BODY = {
       top: 470,
       left: 102,
       height: 25,
-      width: 30,
+      width: 30
     },
     dotStyle: {
       top: 10,
-      left: 8,
-    },
+      left: 8
+    }
     //areaStyle: { top: 700, left: 108 }
   },
   [LEFT_ANKLE]: {
@@ -1774,12 +1782,12 @@ export const BODY = {
       top: 470,
       left: 132,
       height: 25,
-      width: 30,
+      width: 30
     },
     dotStyle: {
       top: 10,
-      right: 12,
-    },
+      right: 12
+    }
     //areaStyle: { top: 700, left: 168 }
   },
   [RIGHT_FOOT]: {
@@ -1788,13 +1796,13 @@ export const BODY = {
       top: 490,
       left: 94,
       height: 20,
-      width: 35,
+      width: 35
       // backgroundColor: "blue",
     },
     dotStyle: {
       top: 4,
-      left: 12,
-    },
+      left: 12
+    }
     //areaStyle: { top: 720, left: 108 }
   },
   [LEFT_FOOT]: {
@@ -1803,13 +1811,13 @@ export const BODY = {
       top: 490,
       left: 130,
       height: 20,
-      width: 35,
+      width: 35
       // backgroundColor: "blue",
     },
     dotStyle: {
       top: 4,
-      right: 12,
-    },
+      right: 12
+    }
     //areaStyle: { top: 720, left: 168 }
   },
   [RIGHT_TOE]: {
@@ -1818,12 +1826,12 @@ export const BODY = {
       top: 733,
       left: 84,
       height: 20,
-      width: 40,
+      width: 40
     },
     dotStyle: {
       top: 4,
-      left: 20,
-    },
+      left: 20
+    }
     //areaStyle: { top: 740, left: 108 }
   },
   [LEFT_TOE]: {
@@ -1832,25 +1840,25 @@ export const BODY = {
       top: 733,
       left: 165,
       height: 20,
-      width: 40,
+      width: 40
     },
     dotStyle: {
       top: 4,
-      right: 20,
-    },
+      right: 20
+    }
     //areaStyle: { top: 740, left: 168 }
-  },
+  }
 };
 
 // -------- REPEAT INTERVAL,Occurence VITALS
 
 export const REPEAT_INTERVAL_VITALS = {
-  1: "Once",
-  2: "Every hour",
-  3: "Every 2 hour",
-  4: "Every 4 hour",
-  5: "Every 6 hour",
-  6: "Every 12 hour",
+  "1": "Once",
+  "2": "Every hour",
+  "3": "Every 2 hour",
+  "4": "Every 4 hour",
+  "5": "Every 6 hour",
+  "6": "Every 12 hour"
 };
 
 export const FINAL = "1";
@@ -1859,17 +1867,17 @@ export const PROBABLE = "2";
 export const DIAGNOSIS_TYPE = {
   [FINAL]: {
     diagnosis_type: "1",
-    value: "Final",
+    value: "Final"
   },
   [PROBABLE]: {
     diagnosis_type: "2",
-    value: "Probable",
-  },
+    value: "Probable"
+  }
 };
 
 export const CONSULTATION_FEE_TYPE_TEXT = {
-  1: "One Time Fee",
-  2: "Monthly Subscription",
+  "1": "One Time Fee",
+  "2": "Monthly Subscription"
 };
 
 //payment -------->
@@ -1882,7 +1890,7 @@ export const CURRENT = "current";
 
 export const ACCOUNT_TYPES = {
   [SAVINGS]: "Savings",
-  [CURRENT]: "Current",
+  [CURRENT]: "Current"
 };
 
 export const MEDICAL_TEST = "1";
@@ -1891,31 +1899,34 @@ export const RADIOLOGY = "3";
 
 export const APPOINTMENT_TYPE_TITLE = {
   [MEDICAL_TEST]: {
-    title: "Medical Test",
+    title: "Medical Test"
   },
   [CONSULTATION]: {
-    title: "Consultation",
+    title: "Consultation"
   },
   [RADIOLOGY]: {
-    title: "Radiology",
-  },
+    title: "Radiology"
+  }
 };
 
 export const PATIENT_CONSTANTS = {
   MAX_HEIGHT_ALLOWED: 999,
-  MAX_WEIGHT_ALLOWED: 999,
+  MAX_WEIGHT_ALLOWED: 999
 };
 
 export const FEATURES = {
   CHAT: "Chat",
   VIDEO_CALL: "Video Call",
-  AUDIO_CALL: "Audio Call",
+  AUDIO_CALL: "Audio Call"
 };
 
+
 export const TABLE_STATUS = {
-  TRANSACTION_TABLE: "transaction_table",
-  ADMIN_DOCTOR_TABLE: "admin_doctor_table",
+  TRANSACTION_TABLE:"transaction_table",
+  ADMIN_DOCTOR_TABLE:"admin_doctor_table"
 };
+
+
 
 export const TRANSACTION_STATUS = {
   PENDING: "pending",
@@ -1923,61 +1934,64 @@ export const TRANSACTION_STATUS = {
   STARTED: "started",
   CANCELLED: "cancelled",
   EXPIRED: "expired",
-  ACCEPTED: "accepted",
+  ACCEPTED: "accepted"
 };
 
 export const ACCOUNT_STATUS = {
-  INACTIVE: "INACTIVE",
-  ACTIVE: "ACTIVE",
+  INACTIVE:"INACTIVE",
+  ACTIVE:"ACTIVE"
 };
 
-export const DELETE_TEMPLATE_RELATED_TYPE = {
-  MEDICATION: "medication",
-  APPOINTMENT: "appointment",
-  VITAL: "vital",
-  DIET: "diet",
-  WORKOUT: "workout",
-};
+export const DELETE_TEMPLATE_RELATED_TYPE={
+  MEDICATION:"medication",
+  APPOINTMENT:"appointment",
+  VITAL:"vital",
+  DIET:"diet",
+  WORKOUT:"workout"
+}
+
 
 export const FAVOURITE_TYPE = {
   MEDICINE: "medicine",
   MEDICAL_TESTS: "medical_tests",
-  RADIOLOGY: "radiology",
+  RADIOLOGY: "radiology"
 };
 
-export const USER_FAV_ALL_TYPES = [
+export const USER_FAV_ALL_TYPES=[
   FAVOURITE_TYPE.MEDICINE,
   FAVOURITE_TYPE.MEDICAL_TESTS,
-  FAVOURITE_TYPE.RADIOLOGY,
-];
+  FAVOURITE_TYPE.RADIOLOGY
+]
 
-export const WHEN_TO_TAKE_ABBR_TYPES = {
-  OD: "1",
-  BD: "2",
-  TD: "3",
-  SOS: "4",
-};
+export const WHEN_TO_TAKE_ABBR_TYPES={
+  OD:"1",
+  BD:"2",
+  TD:"3",
+  SOS:"4"
+}
+
 
 export const LOCAL_STORAGE = {
-  LOCAL_IS_AUDIO_ON: "localIsAudioOn",
-  LOCAL_IS_VIDEO_ON: "localIsVideoOn",
-};
+  LOCAL_IS_AUDIO_ON:"localIsAudioOn",
+  LOCAL_IS_VIDEO_ON:"localIsVideoOn"
+}
 
 export const ASCEND = "ascend";
 export const DESCEND = "descend";
 
-export const TYPE_SYMPTOMS = "Symptoms";
-export const TYPE_APPOINTMENTS = "Appointments";
+export const TYPE_SYMPTOMS="Symptoms";
+export const TYPE_APPOINTMENTS="Appointments";
 export const TYPE_VITALS = "vitals";
 export const TYPE_USER_MESSAGE = "UserMessage";
-export const TYPE_DIETS = "diets";
-export const TYPE_WORKOUTS = "workouts";
+export const TYPE_DIETS="diets";
+export const TYPE_WORKOUTS="workouts";
 
 export const VIDEO_TYPES = {
   URL: "url",
   UPLOAD: "upload",
-  NONE: "none",
+  NONE: "none"
 };
+
 
 export const WAKE_UP = "1";
 export const BREAKFAST = "2";
@@ -1993,36 +2007,36 @@ export const MEAL_TIMINGS = [
   LUNCH,
   EVENING,
   DINNER,
-  SLEEP,
+  SLEEP
 ];
 
 export const PATIENT_MEAL_TIMINGS = {
   [WAKE_UP]: {
     time: "2020-09-24T08:00:00+05:30",
-    text: "Immediately After Wakeup",
+    text: "Immediately After Wakeup"
   },
   [BREAKFAST]: {
     time: "2020-09-24T09:00:00+05:30",
-    text: "Breakfast",
+    text: "Breakfast"
   },
   [LUNCH]: {
     time: "2020-09-24T13:00:00+05:30",
-    text: "Lunch",
+    text: "Lunch"
   },
   [EVENING]: {
     time: "2020-09-24T16:00:00+05:30",
-    text: "Evening",
+    text: "Evening"
   },
   [DINNER]: {
     time: "2020-09-24T20:00:00+05:30",
-    text: "Dinner",
+    text: "Dinner"
   },
   [SLEEP]: {
     time: "2020-09-24T23:00:00+05:30",
-    text: "Before Sleep",
+    text: "Before Sleep"
   },
   [MID_MORNING]: {
     time: "2020-09-24T11:00:00+05:30",
-    text: "Mid Morning",
+    text: "Mid Morning"
   },
 };

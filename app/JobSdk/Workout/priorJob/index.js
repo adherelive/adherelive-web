@@ -1,10 +1,6 @@
 import WorkoutJob from "../";
 import moment from "moment";
-import {
-  EVENT_TYPE,
-  NOTIFICATION_VERB,
-  DEFAULT_PROVIDER,
-} from "../../../../constant";
+import { EVENT_TYPE, NOTIFICATION_VERB, DEFAULT_PROVIDER } from "../../../../constant";
 
 import UserRoleService from "../../../services/userRoles/userRoles.service";
 import ProviderService from "../../../services/provider/provider.service";
@@ -23,7 +19,10 @@ class PriorJob extends WorkoutJob {
         workouts = {},
         workout_id = null,
         participants = [],
-        actor: { id: actorId, user_role_id } = {},
+        actor: {
+          id: actorId,
+          user_role_id
+        } = {}
       } = {},
     } = getWorkoutData() || {};
 
@@ -31,19 +30,18 @@ class PriorJob extends WorkoutJob {
     const playerIds = [];
     const userIds = [];
 
-    const { rows: userRoles = [] } =
-      (await UserRoleService.findAndCountAll({
-        where: {
-          id: participants,
-        },
-      })) || {};
+    const {rows: userRoles = []} = await UserRoleService.findAndCountAll({
+      where: {
+        id: participants
+      }
+    }) || {};
 
     let providerId = null;
-    for (const userRole of userRoles) {
-      const { id, user_identity, linked_id } = userRole || {};
-
-      if (id === user_role_id) {
-        if (linked_id) {
+    for(const userRole of userRoles) {
+      const {id, user_identity, linked_id} = userRole || {};
+     
+      if(id === user_role_id) {
+        if(linked_id) {
           providerId = linked_id;
         }
       } else {
@@ -52,11 +50,9 @@ class PriorJob extends WorkoutJob {
     }
 
     let providerName = DEFAULT_PROVIDER;
-    if (providerId) {
-      const provider = await ProviderService.getProviderByData({
-        id: providerId,
-      });
-      const { name } = provider || {};
+    if(providerId) {
+      const provider = await ProviderService.getProviderByData({id: providerId});
+      const {name} = provider || {};
       providerName = name;
     }
 
@@ -72,8 +68,8 @@ class PriorJob extends WorkoutJob {
     }
 
     let workoutName = "";
-    if (workout_id) {
-      const { basic_info: { name } = {} } = workouts[workout_id] || {};
+    if(workout_id) {
+      const {basic_info: {name} = {}} = workouts[workout_id] || {};
       workoutName = name;
     }
 
@@ -87,10 +83,7 @@ class PriorJob extends WorkoutJob {
       include_player_ids: [...playerIds],
       priority: 10,
       android_channel_id: process.config.one_signal.urgent_channel_id,
-      data: {
-        url: `/${NOTIFICATION_VERB.WORKOUT_PRIOR}`,
-        params: getWorkoutData(),
-      },
+      data: { url: `/${NOTIFICATION_VERB.WORKOUT_PRIOR}`, params: getWorkoutData() },
     });
 
     return templateData;
@@ -101,7 +94,10 @@ class PriorJob extends WorkoutJob {
     const {
       details: {
         participants = [],
-        actor: { id: actorId, user_role_id } = {},
+        actor: {
+          id: actorId,
+          user_role_id
+        } = {},
       } = {},
       id,
     } = getWorkoutData() || {};
@@ -112,14 +108,14 @@ class PriorJob extends WorkoutJob {
     for (const participant of participants) {
       if (participant !== user_role_id) {
         templateData.push({
-          actor: actorId,
-          actorRoleId: user_role_id,
-          object: `${participant}`,
-          foreign_id: `${id}`,
-          verb: `${NOTIFICATION_VERB.WORKOUT_PRIOR}:${currentTimeStamp}`,
-          event: EVENT_TYPE.WORKOUT,
-          time: currentTime,
-          create_time: `${currentTime}`,
+            actor: actorId,
+            actorRoleId: user_role_id,
+            object: `${participant}`,
+            foreign_id: `${id}`,
+            verb: `${NOTIFICATION_VERB.WORKOUT_PRIOR}:${currentTimeStamp}`,
+            event: EVENT_TYPE.WORKOUT,
+            time: currentTime,
+            create_time: `${currentTime}`
         });
       }
     }

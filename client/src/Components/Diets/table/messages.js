@@ -4,52 +4,52 @@ const messages = defineMessages({
   medicine_name: {
     id: "app.diets.table.diets.name",
     description: "",
-    defaultMessage: "Diets",
+    defaultMessage: "Diets"
   },
   name: {
     id: "app.diets.table.name",
     description: "",
-    defaultMessage: "Name",
+    defaultMessage: "Name"
   },
   duration: {
     id: "app.diets.table.duration",
     description: "",
-    defaultMessage: "Duration",
+    defaultMessage: "Duration"
   },
   repeat_days: {
     id: "app.diets.table.repeat.days",
     description: "",
-    defaultMessage: "Repeat Days",
+    defaultMessage: "Repeat Days"
   },
   calories: {
     id: "app.diets.table.diets.calories",
     description: "",
-    defaultMessage: "Calories",
+    defaultMessage: "Calories"
   },
   no_diets: {
     id: "app.diets.table.diets.no.diets",
     description: "",
-    defaultMessage: "No Diets added yet",
+    defaultMessage: "No Diets added yet"
   },
   edit: {
     id: "app.diets.table.diets.edit",
     description: "",
-    defaultMessage: "Edit",
+    defaultMessage: "Edit"
   },
   view: {
     id: "app.diets.table.diets.view",
     description: "",
-    defaultMessage: "View",
+    defaultMessage: "View"
   },
   response_timeline: {
     id: "app.diets.table.diets.responseTimeline",
     description: "",
-    defaultMessage: "Response Timeline",
+    defaultMessage: "Response Timeline"
   },
   deactivated: {
     id: "app.diets.table.diets.deactivated",
     description: "",
-    defaultMessage: "Deactivated",
+    defaultMessage: "Deactivated"
   },
 });
 

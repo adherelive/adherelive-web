@@ -86,23 +86,24 @@ class AppointmentWrapper extends BaseAppointment {
         if (scheduleEvent.getStatus() === EVENT_STATUS.SCHEDULED) {
           activeEventId = scheduleEvent.getScheduleEventId();
         }
-        scheduleData[scheduleEvent.getScheduleEventId()] =
-          scheduleEvent.getAllInfo();
+        scheduleData[
+          scheduleEvent.getScheduleEventId()
+        ] = scheduleEvent.getAllInfo();
       }
     }
 
     let uploadDocumentsData = {};
     let uploadDocumentIds = [];
-    const uploadDocuments =
-      await documentService.getDoctorQualificationDocuments(
-        DOCUMENT_PARENT_TYPE.APPOINTMENT_DOC,
-        id
-      );
+    const uploadDocuments = await documentService.getDoctorQualificationDocuments(
+      DOCUMENT_PARENT_TYPE.APPOINTMENT_DOC,
+      id
+    );
 
     for (const uploadDocument of uploadDocuments) {
       const uploadDocumentData = await UploadDocumentWrapper(uploadDocument);
-      uploadDocumentsData[uploadDocumentData.getUploadDocumentId()] =
-        uploadDocumentData.getBasicInfo();
+      uploadDocumentsData[
+        uploadDocumentData.getUploadDocumentId()
+      ] = uploadDocumentData.getBasicInfo();
       uploadDocumentIds.push(uploadDocumentData.getUploadDocumentId());
     }
 

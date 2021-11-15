@@ -1,5 +1,4 @@
 import { Proxy_Sdk, EVENTS } from ".";
-
 const eventExecutor = require("./eventExecutor");
 const Logger = require("./libs/logger");
 const Log = require("../../libs/log")("proxySdk:EventObserver");
@@ -10,7 +9,7 @@ const {
   SEND_NOTIFICATION,
   EMAIL_ERROR,
   NOTIFICATION_ERROR,
-  SMS_ERROR,
+  SMS_ERROR
 } = EVENTS;
 
 class EventObserver {
@@ -22,7 +21,7 @@ class EventObserver {
     try {
       let logger = new Logger("event_error", {
         eventType: type,
-        errorData: err,
+        errorData: err
       });
       logger.log();
     } catch (err) {

@@ -1,6 +1,5 @@
 import Log from "../libs/log";
 import schedule from "node-schedule";
-
 const Logger = new Log("EVENT SCHEDULE CREATOR");
 
 // FOR TEST...
@@ -17,14 +16,14 @@ import queueService from "../app/services/awsQueue/queue.service";
 // });
 
 const SqsObserver = import("./sqsObserver")
-  .then((module) => {
+  .then(module => {
     const sqs = new module.default();
     const QueueService = new queueService();
     const cron = schedule.scheduleJob("*/30 * * * * *", async () => {
       await sqs.observe(QueueService);
     });
   })
-  .catch((err) => {
+  .catch(err => {
     console.log("dynamic import err", err);
   });
 

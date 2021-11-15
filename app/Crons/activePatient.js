@@ -152,7 +152,9 @@ class ActivePatient {
         if (events.length > 0 && events.length === passedEventCount) {
           await CarePlanService.updateCarePlan(
             {
-              expired_on: moment().utc().toISOString(),
+              expired_on: moment()
+                .utc()
+                .toISOString(),
             },
             id
           );

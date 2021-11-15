@@ -17,7 +17,7 @@ import {
   PlusOutlined,
   EyeTwoTone,
   DownloadOutlined,
-  LoadingOutlined,
+  LoadingOutlined
 } from "@ant-design/icons";
 
 import messages from "./message";
@@ -33,12 +33,12 @@ class editReportDrawer extends Component {
       name: "",
       test_date: "",
       exisiting_documents: [],
-      enableModal: false,
-      submitting: false,
+      enableModal:false,
+      submitting:false
     };
   }
 
-  formatMessage = (data) => this.props.intl.formatMessage(data);
+  formatMessage = data => this.props.intl.formatMessage(data);
 
   componentDidMount() {}
 
@@ -65,7 +65,7 @@ class editReportDrawer extends Component {
     this.setState({
       name,
       exisiting_documents,
-      test_date: moment(test_date),
+      test_date: moment(test_date)
     });
   };
 
@@ -74,31 +74,37 @@ class editReportDrawer extends Component {
     return uploading ? <LoadingOutlined /> : <PlusOutlined />;
   };
 
-  setName = (e) => {
+  setName = e => {
     e.preventDefault();
     const { value } = e.target;
     this.setState({ name: value });
   };
 
-  handleDocumentViewOpen = (src) => () => {
-    this.setState({
-      viewModalVisible: true,
-      viewModalSrc: src,
-    });
+  handleDocumentViewOpen = src => () => {
+  
+      this.setState({
+        viewModalVisible: true,
+        viewModalSrc: src
+      });
+
+    
+    
   };
 
   handleDocumentViewClose = () => {
     this.setState({
       viewModalVisible: false,
-      viewModalSrc: "",
+      viewModalSrc: ""
     });
   };
 
-  handleExistingDelete = (delete_id) => (e) => {
+  handleExistingDelete = delete_id => e => {
     e.preventDefault();
     this.confirmExisitngDelete(delete_id);
+    
   };
-
+  
+   
   exsitingDeleteWarnNote = () => {
     return (
       <div className="pt16">
@@ -119,25 +125,26 @@ class editReportDrawer extends Component {
       onOk: async () => {
         const { deleteReport } = this.props;
         const { exisiting_documents } = this.state;
-
-        deleteReport(delete_id).then((response) => {
+    
+        deleteReport(delete_id).then(response => {
           const {
             status,
-            payload: { message: msg = "" },
+            payload: { message: msg = "" }
           } = response;
-
+    
           if (status) {
             const { exisiting_documents } = this.state;
             let indexToDelete = -1;
             for (let eachIndex in exisiting_documents) {
-              const { basic_info: { id = "" } = {} } =
-                exisiting_documents[eachIndex];
+              const { basic_info: { id = "" } = {} } = exisiting_documents[
+                eachIndex
+              ];
               if (id === delete_id) {
                 indexToDelete = eachIndex;
                 break;
               }
             }
-
+    
             if (indexToDelete > -1) {
               exisiting_documents.splice(indexToDelete, 1);
               this.setState({ exisiting_documents });
@@ -148,11 +155,12 @@ class editReportDrawer extends Component {
           }
         });
       },
-      onCancel() {},
+      onCancel() {}
     });
   };
 
-  handleDelete = (delete_src) => (e) => {
+  handleDelete = delete_src => e => {
+    
     e.preventDefault();
     const { new_documents } = this.state;
     let indexToDelete = -1;
@@ -166,9 +174,8 @@ class editReportDrawer extends Component {
 
     if (indexToDelete > -1) {
       new_documents.splice(indexToDelete, 1);
-      this.setState({
-        new_documents,
-      });
+      this.setState({ 
+        new_documents });
       message.success(this.formatMessage(messages.deleteSuccess));
     }
   };
@@ -223,37 +230,44 @@ class editReportDrawer extends Component {
         </div>
         <div className="overlay"></div>
         <div className="absolute tp45 l0 wp100 flex justify-center align-space-evenly doc-container ">
-          {id ? (
-            <DeleteTwoTone
-              className={"del doc-opt"}
-              // className="w20 "
-              onClick={this.handleExistingDelete(id)}
-              twoToneColor="#fff"
-            />
-          ) : (
-            <DeleteTwoTone
-              className={"del doc-opt"}
-              // className="w20 "
-              onClick={this.handleDelete(src)}
-              twoToneColor="#fff"
-            />
-          )}
+              {id
+                ?
+                <DeleteTwoTone
+                  className={"del doc-opt"}
+                  // className="w20 "
+                  onClick={this.handleExistingDelete(id)}
+                  twoToneColor="#fff"
+                />
+                :
+                <DeleteTwoTone
+                className={"del doc-opt"}
+                // className="w20 "
+                onClick={this.handleDelete( src)}
+                twoToneColor="#fff"
+                />
+                }
+              
+                <a
+                  download={name}
+                  href={src}
+                  target={"_self"}
+                  className={"del doc-opt ml4 mb4"}
+                  style={{color:"#fff"}}
 
-          <a
-            download={name}
-            href={src}
-            target={"_self"}
-            className={"del doc-opt ml4 mb4"}
-            style={{ color: "#fff" }}
-          >
-            <DownloadOutlined className="fs18 " twoToneColor="#fff" />
-          </a>
+                >
+                  <DownloadOutlined 
+                   className="fs18 "
+                   twoToneColor="#fff"
+                  />
+                </a>
+                
+
         </div>
       </div>
     );
   };
 
-  createMarkup = (content) => {
+  createMarkup = content => {
     return { __html: content };
   };
 
@@ -304,7 +318,7 @@ class editReportDrawer extends Component {
                   extension: documentExtension,
                   index,
                   name,
-                  id,
+                  id
                 })}
           </div>
         </div>
@@ -313,6 +327,7 @@ class editReportDrawer extends Component {
   };
 
   handleUploadChange = ({ file }) => {
+    
     const { new_documents = [] } = this.state;
     console.log("287423 file ---> ", { file });
 
@@ -321,7 +336,7 @@ class editReportDrawer extends Component {
     const fileReader = new FileReader();
     const fileUrl = URL.createObjectURL(file.originFileObj);
 
-    const existing = new_documents.filter((document) => {
+    const existing = new_documents.filter(document => {
       const { name } = document || {};
       return name === file.name;
     });
@@ -330,19 +345,20 @@ class editReportDrawer extends Component {
       newDocuments.push({
         name: file.name,
         src: fileUrl,
-        file,
+        file
       });
 
-      this.setState({ enableModal: true });
+      this.setState({ enableModal:true})
     }
 
     console.log("287423 new_documents", { newDocuments });
     this.setState({
-      new_documents: [...new_documents, ...newDocuments],
-    });
+       new_documents: [...new_documents, ...newDocuments],
+      
+     });
   };
 
-  setTestDate = (value) => {
+  setTestDate = value => {
     this.setState({ test_date: moment(value).format("YYYY-MM-DD") });
   };
 
@@ -353,7 +369,7 @@ class editReportDrawer extends Component {
       getUploadedDocuments,
       handleUploadChange,
       getExistingDocuments,
-      setTestDate,
+      setTestDate
     } = this;
 
     const { name = "", test_date } = this.state;
@@ -433,14 +449,14 @@ class editReportDrawer extends Component {
         const { originFileObj = {} } = file;
         data.set("files", originFileObj);
 
-        this.setState({ uploading: true, submitting: true });
+        this.setState({ uploading: true , submitting:true });
         const response = await uploadReport(patient_id, data);
         const {
           status = false,
           payload: {
             message: respMessage = "",
-            data: { documents: response_documents = [] } = {},
-          } = {},
+            data: { documents: response_documents = [] } = {}
+          } = {}
         } = response;
 
         if (!status) {
@@ -458,7 +474,7 @@ class editReportDrawer extends Component {
     } catch (error) {
       console.log("error", error);
       message.warn(this.formatMessage(messages.somethingWentWrong));
-      this.setState({ uploading: false, submitting: false });
+      this.setState({ uploading: false,submitting:false });
     }
   }
 
@@ -486,13 +502,15 @@ class editReportDrawer extends Component {
         name,
         patient_id,
         documents: documents,
-        test_date,
+        test_date
       };
 
       const response = await updateReport(report_id, data);
 
-      const { status = false, payload: { message: respMessage = "" } = {} } =
-        response;
+      const {
+        status = false,
+        payload: { message: respMessage = "" } = {}
+      } = response;
 
       if (status) {
         this.setState({
@@ -502,7 +520,7 @@ class editReportDrawer extends Component {
           new_documents: [],
           name: "",
           test_date: "",
-          exisiting_documents: [],
+          exisiting_documents: []
         });
         close();
         message.success(respMessage);
@@ -510,15 +528,15 @@ class editReportDrawer extends Component {
         message.warn(respMessage);
       }
 
-      this.setState({ submitting: false });
+      this.setState({submitting:false});
     } catch (error) {
       console.log("error", error);
       message.warn(this.formatMessage(messages.somethingWentWrong));
-      this.setState({ uploading: false, submitting: false });
+      this.setState({ uploading: false , submitting:false });
     }
   }
 
-  handleSubmit = (e) => {
+  handleSubmit = e => {
     e.preventDefault();
     this.submitData();
   };
@@ -549,11 +567,11 @@ class editReportDrawer extends Component {
           new_documents: [],
           name: "",
           test_date: "",
-          exisiting_documents: [],
+          exisiting_documents: []
         });
         close();
       },
-      onCancel() {},
+      onCancel() {}
     });
   };
 
@@ -561,8 +579,8 @@ class editReportDrawer extends Component {
     const { close } = this.props;
     const { handleCloseWarning } = this;
 
-    const { name, new_documents, enableModal } = this.state;
-    if ((name || Object.keys(new_documents).length > 0) && enableModal) {
+    const { name, new_documents,enableModal } = this.state;
+    if ( (name || Object.keys(new_documents).length > 0) && enableModal ) {
       handleCloseWarning();
     } else {
       this.setState({
@@ -572,19 +590,18 @@ class editReportDrawer extends Component {
         new_documents: [],
         name: "",
         test_date: "",
-        exisiting_documents: [],
+        exisiting_documents: []
       });
 
       close();
     }
   };
-
   render() {
     const { visible } = this.props;
     const {
       name = "",
       new_documents = [],
-      exisiting_documents = [],
+      exisiting_documents = []
     } = this.state;
 
     const {
@@ -592,19 +609,12 @@ class editReportDrawer extends Component {
       formatMessage,
       handleDocumentViewClose,
       renderAddReport,
-      handleSubmit,
+      handleSubmit
     } = this;
 
-    const {
-      viewModalVisible,
-      viewModalSrc,
-      enableModal,
-      submitting = false,
-    } = this.state;
-    console.log(
-      "786578326427348234762427394823 enableModal  --->",
-      viewModalVisible && enableModal
-    );
+    const { viewModalVisible, viewModalSrc ,enableModal,submitting=false} = this.state;
+    console.log("786578326427348234762427394823 enableModal  --->",(viewModalVisible && enableModal));
+
 
     if (visible !== true) {
       return null;
@@ -613,7 +623,7 @@ class editReportDrawer extends Component {
     const disabledSubmit =
       !name || (new_documents.length === 0 && exisiting_documents.length === 0);
     const submitButtonProps = {
-      disabled: disabledSubmit,
+      disabled: disabledSubmit
     };
 
     return (
@@ -625,7 +635,7 @@ class editReportDrawer extends Component {
           headerStyle={{
             position: "sticky",
             zIndex: "9999",
-            top: "0px",
+            top: "0px"
           }}
           visible={visible}
           onClose={onClose}
@@ -652,7 +662,7 @@ class editReportDrawer extends Component {
           footer={[
             <Button key="back" onClick={handleDocumentViewClose}>
               Close
-            </Button>,
+            </Button>
           ]}
         >
           <img

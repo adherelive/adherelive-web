@@ -13,31 +13,23 @@ import { fetchChatAccessToken } from "../../modules/twilio";
 import { searchPatientFromNum } from "../../modules/patients";
 import {
   addToWatchlist,
-  removePatientFromWatchlist,
+  removePatientFromWatchlist
 } from "../../modules/doctors";
 import { showVerifyModal } from "../../modules/pages/features";
 import { getAllFeatures } from "../../modules/featuresMappings";
 import { DRAWER } from "../../constant";
 import { open } from "../../modules/drawer";
 import { getAllMissedScheduleEvents } from "../../modules/scheduleEvents";
-import { setUnseenNotificationCount } from "../../modules/pages/NotificationCount";
+import { setUnseenNotificationCount }  from "../../modules/pages/NotificationCount";
 import { getAllDietsForDoctor } from "../../modules/diets";
 
-const mapStateToProps = (state) => {
+const mapStateToProps = state => {
   const {
     graphs,
-    auth: {
-      authenticated_category,
-      authPermissions = [],
-      authenticated_user = 1,
-      auth_role = null,
-      notificationToken = "",
-      feedId = "",
-      doctor_provider_id = "",
-    } = {},
+    auth: {authenticated_category, authPermissions = [], authenticated_user = 1  , auth_role = null, notificationToken = '' , feedId = '' , doctor_provider_id = ''  } = {},
     treatments = {},
     conditions = {},
-    pages: { ui_features = {}, dashboard = {} } = {},
+    pages: { ui_features = {} ,dashboard ={}} = {},
     severity = {},
     chats,
     drawer,
@@ -46,8 +38,7 @@ const mapStateToProps = (state) => {
     doctors = {},
     features = {},
     features_mappings = {},
-    providers = {},
-    care_plans = {},
+    providers = {}
   } = state;
   return {
     notificationToken,
@@ -70,42 +61,42 @@ const mapStateToProps = (state) => {
     dashboard,
     doctor_provider_id,
     providers,
-    auth_role,
-    care_plans,
+    auth_role
   };
 };
 
-const mapDispatchToProps = (dispatch) => {
+const mapDispatchToProps = dispatch => {
   return {
     signOut: () => dispatch(signOut()),
     getGraphs: () => dispatch(getGraphs()),
-    updateGraphs: (data) => dispatch(updateGraphs(data)),
+    updateGraphs: data => dispatch(updateGraphs(data)),
     getInitialData: () => dispatch(getInitialData()),
-    searchMedicine: (value) => dispatch(searchMedicine(value)),
-    searchCondition: (value) => dispatch(searchCondition(value)),
-    searchTreatment: (value) => dispatch(searchTreatment(value)),
-    searchSeverity: (value) => dispatch(searchSeverity(value)),
-    addPatient: (data) => dispatch(addPatient(data)),
+    searchMedicine: value => dispatch(searchMedicine(value)),
+    searchCondition: value => dispatch(searchCondition(value)),
+    searchTreatment: value => dispatch(searchTreatment(value)),
+    searchSeverity: value => dispatch(searchSeverity(value)),
+    addPatient: data => dispatch(addPatient(data)),
     closePopUp: () => dispatch(closePopUp()),
-    fetchChatAccessToken: (userId) => dispatch(fetchChatAccessToken(userId)),
-    searchPatientFromNum: (value) => dispatch(searchPatientFromNum(value)),
-    addToWatchlist: (patient_id) => dispatch(addToWatchlist(patient_id)),
-    removePatientFromWatchlist: (patient_id) =>
+    fetchChatAccessToken: userId => dispatch(fetchChatAccessToken(userId)),
+    searchPatientFromNum: value => dispatch(searchPatientFromNum(value)),
+    addToWatchlist: patient_id => dispatch(addToWatchlist(patient_id)),
+    removePatientFromWatchlist: patient_id =>
       dispatch(removePatientFromWatchlist(patient_id)),
-    showVerifyModal: (data) => dispatch(showVerifyModal(data)),
+    showVerifyModal: data => dispatch(showVerifyModal(data)),
     getAllFeatures: () => dispatch(getAllFeatures()),
     openMissedMedicationDrawer: () =>
-      dispatch(open({ type: DRAWER.MISSED_MEDICATION })),
+    dispatch(open({ type: DRAWER.MISSED_MEDICATION})),
     openMissedAppointmentDrawer: () =>
-      dispatch(open({ type: DRAWER.MISSED_APPOINTMENT })),
-    openMissedVitalDrawer: () => dispatch(open({ type: DRAWER.MISSED_VITAL })),
+    dispatch(open({ type: DRAWER.MISSED_APPOINTMENT})),
+    openMissedVitalDrawer: () =>
+    dispatch(open({ type: DRAWER.MISSED_VITAL})),
     getAllMissedScheduleEvents: () => dispatch(getAllMissedScheduleEvents()),
-    setUnseenNotificationCount: (count) =>
-      dispatch(setUnseenNotificationCount(count)),
-    getAllDietsForDoctor: () => dispatch(getAllDietsForDoctor()),
-    openMissedDietDrawer: () => dispatch(open({ type: DRAWER.MISSED_DIET })),
+    setUnseenNotificationCount : (count) => dispatch(setUnseenNotificationCount(count)),
+    getAllDietsForDoctor:() => dispatch(getAllDietsForDoctor()),
+    openMissedDietDrawer: () =>
+    dispatch(open({ type: DRAWER.MISSED_DIET})),
     openMissedWorkoutDrawer: () =>
-      dispatch(open({ type: DRAWER.MISSED_WORKOUT })),
+    dispatch(open({ type: DRAWER.MISSED_WORKOUT})),
   };
 };
 

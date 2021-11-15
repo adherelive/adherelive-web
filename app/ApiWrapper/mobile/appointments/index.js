@@ -2,7 +2,7 @@ import BaseAppointment from "../../../services/appointment";
 import {
   EVENT_STATUS,
   EVENT_TYPE,
-  DOCUMENT_PARENT_TYPE,
+  DOCUMENT_PARENT_TYPE
 } from "../../../../constant";
 
 import appointmentService from "../../../services/appointment/appointment.service";
@@ -36,12 +36,12 @@ class MAppointmentWrapper extends BaseAppointment {
       end_time,
       provider_id,
       provider_name,
-      rr_rule = "",
+      rr_rule = ""
     } = _data || {};
     const updatedDetails = {
       ...details,
       start_time,
-      end_time,
+      end_time
     };
     return {
       basic_info: {
@@ -49,23 +49,23 @@ class MAppointmentWrapper extends BaseAppointment {
         description,
         details: updatedDetails,
         start_date,
-        end_date,
+        end_date
       },
       participant_one: {
         id: participant_one_id,
-        category: participant_one_type,
+        category: participant_one_type
       },
       participant_two: {
         id: participant_two_id,
-        category: participant_two_type,
+        category: participant_two_type
       },
       organizer: {
         id: organizer_id,
-        category: organizer_type,
+        category: organizer_type
       },
       rr_rule,
       provider_id,
-      provider_name,
+      provider_name
     };
   };
 
@@ -74,16 +74,13 @@ class MAppointmentWrapper extends BaseAppointment {
     const { id } = _data;
 
     // get careplan attached to appointment
-    const appointmentCareplan =
-      (await carePlanAppointmentService.getCareplanByAppointment({
-        appointment_id: id,
-      })) || null;
-    const { care_plan_id = null } = appointmentCareplan || {};
+    const appointmentCareplan = await carePlanAppointmentService.getCareplanByAppointment({appointment_id: id}) || null;
+    const {care_plan_id = null} = appointmentCareplan || {};
 
     const scheduleEventService = new ScheduleEventService();
     const scheduleEventData = await scheduleEventService.getAllEventByData({
       event_id: id,
-      event_type: EVENT_TYPE.APPOINTMENT,
+      event_type: EVENT_TYPE.APPOINTMENT
     });
 
     let activeEventId = null;
@@ -96,23 +93,24 @@ class MAppointmentWrapper extends BaseAppointment {
           activeEventId = scheduleEvent.getScheduleEventId();
         }
 
-        scheduleData[scheduleEvent.getScheduleEventId()] =
-          scheduleEvent.getAllInfo();
+        scheduleData[
+          scheduleEvent.getScheduleEventId()
+        ] = scheduleEvent.getAllInfo();
       }
     }
 
     let uploadDocumentsData = {};
     let uploadDocumentIds = [];
-    const uploadDocuments =
-      await documentService.getDoctorQualificationDocuments(
-        DOCUMENT_PARENT_TYPE.APPOINTMENT_DOC,
-        id
-      );
+    const uploadDocuments = await documentService.getDoctorQualificationDocuments(
+      DOCUMENT_PARENT_TYPE.APPOINTMENT_DOC,
+      id
+    );
 
     for (const uploadDocument of uploadDocuments) {
       const uploadDocumentData = await UploadDocumentWrapper(uploadDocument);
-      uploadDocumentsData[uploadDocumentData.getUploadDocumentId()] =
-        uploadDocumentData.getBasicInfo();
+      uploadDocumentsData[
+        uploadDocumentData.getUploadDocumentId()
+      ] = uploadDocumentData.getBasicInfo();
       uploadDocumentIds.push(uploadDocumentData.getUploadDocumentId());
     }
 
@@ -122,16 +120,16 @@ class MAppointmentWrapper extends BaseAppointment {
           ...getBasicInfo(),
           active_event_id: activeEventId,
           appointment_document_ids: uploadDocumentIds,
-          care_plan_id,
-        },
+          care_plan_id
+        }
       },
       schedule_events: {
-        ...scheduleData,
+        ...scheduleData
       },
       appointment_docs: {
-        ...uploadDocumentsData,
+        ...uploadDocumentsData
       },
-      appointment_id: id,
+      appointment_id: id
     };
   };
 

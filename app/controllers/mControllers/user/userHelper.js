@@ -10,11 +10,11 @@ import {
   EMAIL_TEMPLATE_NAME,
   USER_CATEGORY,
   DOCUMENT_PARENT_TYPE,
-  ONBOARDING_STATUS,
+  ONBOARDING_STATUS
 } from "../../../../constant";
-import { completePath } from "../../../helper/filePath";
+import {completePath} from "../../../helper/filePath";
 
-export const doctorQualificationData = async (userId) => {
+export const doctorQualificationData = async userId => {
   try {
     let speciality = "";
     let gender = "";
@@ -37,7 +37,7 @@ export const doctorQualificationData = async (userId) => {
         gender: docGender = "",
         registration_number: docRegistrationNumber = "",
         registration_council: docRegistrationCouncil = "",
-        registration_year: docRegistrationYear = "",
+        registration_year: docRegistrationYear = ""
       } = docInfo || {};
       speciality = docSpeciality;
       gender = docGender;
@@ -47,8 +47,9 @@ export const doctorQualificationData = async (userId) => {
 
       let docId = doctor.get("id");
 
-      let docQualifications =
-        await qualificationService.getQualificationsByDoctorId(docId);
+      let docQualifications = await qualificationService.getQualificationsByDoctorId(
+        docId
+      );
 
       for (let qualification of docQualifications) {
         console.log("QUALIFICATIONSSSSSSS=============>", qualification);
@@ -86,7 +87,7 @@ export const doctorQualificationData = async (userId) => {
       registration_year,
       registration_number,
       registration_council,
-      qualification_details,
+      qualification_details
     };
     return qualificationData;
   } catch (error) {
@@ -116,7 +117,7 @@ export const uploadImageS3 = async (userId, file) => {
 
     const metaData = {
       "Content-Type":
-        "application/	application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+        "application/	application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
     };
 
     console.log("816575641 ---------------> ", file_name);
@@ -155,7 +156,8 @@ export const downloadFileFromS3 = async (objectName, filePath) => {
   }
 };
 
-export const getServerSpecificConstants = () => {
+
+export const getServerSpecificConstants  = () => {
   const server_constants = {
     GETSTREAM_API_KEY: process.config.getstream.key,
     GETSTREAM_APP_ID: process.config.getstream.appId,
@@ -164,13 +166,14 @@ export const getServerSpecificConstants = () => {
 
     AGORA_APP_ID: process.config.agora.app_id,
 
-    RAZORPAY_KEY: process.config.razorpay.key,
+    RAZORPAY_KEY :process.config.razorpay.key,
 
     ALGOLIA_APP_ID: process.config.algolia.app_id,
     ALGOLIA_APP_KEY: process.config.algolia.app_key,
     ALGOLIA_MEDICINE_INDEX: process.config.algolia.medicine_index,
-    ONE_SIGNAL_APP_ID: process.config.one_signal.app_id,
-  };
+    ONE_SIGNAL_APP_ID: process.config.one_signal.app_id
+  } 
+
 
   return server_constants;
-};
+}

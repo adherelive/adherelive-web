@@ -23,7 +23,7 @@ export const db = (database) => {
       },
       details: {
         type: DataTypes.JSON,
-      },
+      }
     },
     {
       underscored: true,

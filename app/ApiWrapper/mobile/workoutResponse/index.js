@@ -71,15 +71,13 @@ class WorkoutResponseWrapper extends BaseWorkoutResponse {
     const scheduleEventService = new ScheduleEventService();
 
     let scheduleEventData = {};
-    if (getScheduleEventId()) {
-      const schduleEventRecord = await scheduleEventService.getEventByData({
-        paranoid: false,
-        id: getScheduleEventId(),
-      });
-      if (schduleEventRecord) {
-        const scheduleEvent = await EventWrapper(schduleEventRecord);
-        scheduleEventData[getScheduleEventId()] = scheduleEvent.getAllInfo();
-      }
+    if(getScheduleEventId()) {
+        const schduleEventRecord = await scheduleEventService.getEventByData({paranoid:false,id:getScheduleEventId()});
+        if(schduleEventRecord){
+            const scheduleEvent = await EventWrapper(schduleEventRecord);
+            scheduleEventData[getScheduleEventId()] = scheduleEvent.getAllInfo();
+        }
+        
     }
 
     // let allUploadDocuments = {};

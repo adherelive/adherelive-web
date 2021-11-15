@@ -9,53 +9,53 @@ module.exports = {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
-        type: Sequelize.INTEGER,
+        type: Sequelize.INTEGER
       },
       user_name: {
         type: Sequelize.STRING,
         unique: true,
-        allowNull: true,
+        allowNull: true
       },
       email: {
         type: Sequelize.STRING,
-        allowNull: true,
+        allowNull: true
       },
       prefix: {
         type: Sequelize.STRING,
-        allowNull: true,
+        allowNull: true
       },
       mobile_number: {
         type: Sequelize.STRING,
         // unique: true,
-        allowNull: true,
+        allowNull: true
       },
       password: {
         type: Sequelize.STRING(1000),
-        allowNull: true,
+        allowNull: true
       },
       sign_in_type: {
         type: Sequelize.ENUM,
         values: ["basic", "google", "facebook"],
-        allowNull: false,
+        allowNull: false
       },
       category: {
         type: Sequelize.ENUM,
         values: ["patient", "care_taker", "doctor", "provider", "admin"],
-        allowNull: false,
+        allowNull: false
       },
       activated_on: {
-        type: Sequelize.DATE,
+        type: Sequelize.DATE
       },
       onboarded: {
-        type: Sequelize.BOOLEAN,
+        type: Sequelize.BOOLEAN
       },
       onboarding_status: {
         type: Sequelize.STRING,
-        allowNull: true,
+        allowNull: true
       },
       verified: {
         type: Sequelize.BOOLEAN,
-        defaultValue: false,
+        defaultValue: false
       },
       // system_generated_password: {
       //   type: Sequelize.BOOLEAN,
@@ -63,19 +63,19 @@ module.exports = {
       // },
       created_at: {
         allowNull: false,
-        type: Sequelize.DATE,
+        type: Sequelize.DATE
       },
       updated_at: {
         allowNull: false,
-        type: Sequelize.DATE,
+        type: Sequelize.DATE
       },
       deleted_at: {
         allowNull: true,
-        type: Sequelize.DATE,
-      },
+        type: Sequelize.DATE
+      }
     });
   },
   down: (queryInterface, Sequelize) => {
     return queryInterface.dropTable(TABLE_NAME);
-  },
+  }
 };

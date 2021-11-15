@@ -2,10 +2,10 @@ import Database from "../../../libs/mysql";
 import { TABLE_NAME } from "../../models/features";
 
 class FeaturesService {
-  getAllFeatures = async (data) => {
+  getAllFeatures = async data => {
     try {
       const features = await Database.getModel(TABLE_NAME).findAll({
-        raw: true,
+        raw: true
       });
       return features;
     } catch (error) {
@@ -13,10 +13,10 @@ class FeaturesService {
     }
   };
 
-  getFeatureByName = async (name) => {
+  getFeatureByName = async name => {
     try {
       const feature = await Database.getModel(TABLE_NAME).findOne({
-        where: { name },
+        where: { name }
       });
       return feature;
     } catch (error) {

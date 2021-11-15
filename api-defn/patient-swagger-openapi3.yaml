@@ -1,6 +1,6 @@
 openapi: 3.0.1
 info:
-  title: AdhereLive API
+  title: Adherence Live API
   description: "# Description \n This API offers a collection of operations for the\
     \ provision of Health related information from the database and is designed to\
     \ support intelligent workflow solutions.\n ## Common Status Codes \n 
@@ -19,76 +19,76 @@ info:
     \ |**503 Service Unavailable**    | The service is temporarily unavailable.                          | \n "
   termsOfService: http://adhere.live/terms/
   contact:
-    email: info@adhere.live
+    email: development@adhere.live
   version: 0.1.0
 externalDocs:
   description: Find out more about Adhere
   url: http://adhere.live
 servers:
-  - url: https://api.adhere.live/api/v0.1
-  - url: http://api.adhere.live/api/v0.1
+- url: https://api.adhere.live/api/v0.1
+- url: http://api.adhere.live/api/v0.1
 tags:
-  - name: adherence
-    description: Hospital Patient Adherence System
-    externalDocs:
-      description: Contact Us for more information
-      url: http://adhere.live/contactus
-  - name: provider
-    description: Hospital Provider Information
-  - name: patient
-    description: INformation about the Patient and his Medication
-    externalDocs:
-      description: Mobile application, which informs the patient about his medication
-        careplan
-      url: http://adhere.live/patient
+- name: adherence
+  description: Hospital Patient Adherence System
+  externalDocs:
+    description: Contact Us for more information
+    url: http://adhere.live/contactus
+- name: provider
+  description: Hospital Provider Information
+- name: patient
+  description: INformation about the Patient and his Medication
+  externalDocs:
+    description: Mobile application, which informs the patient about his medication
+      careplan
+    url: http://adhere.live/patient
 paths:
   /dashboards/graphs/{number}/{ClinicianID}/{ProviderID}:
     get:
       tags:
-        - Adhere Live, Dashboard
+      - Adhere Live, Dashboard
       summary: Fetch all the values for the graphs/analytics to be displayed on the
         main page
       description: The top graphs to be shown on the dashboard page. The number is
         the total graphs that will be fetched and displayed on the dashboard page.
       operationId: getAllGraphs
       parameters:
-        - name: X-Client-Id
-          in: header
-          description: Client ID
-          required: true
-          schema:
-            type: string
-        - name: Content-Type
-          in: header
-          description: Content type - always application/json.
-          required: true
-          schema:
-            type: string
-        - name: X-Party-Id
-          in: header
-          description: Party ID of the service client (optional).
-          schema:
-            type: string
-        - name: number
-          in: path
-          description: The total number of graphs to be shown on the main dashboard
-            page
-          required: true
-          schema:
-            type: integer
-        - name: ClinicianID
-          in: path
-          description: The logged in User ID for the Clinician
-          required: true
-          schema:
-            type: string
-        - name: ProviderID
-          in: path
-          description: THe logged in ID of the Provider for which the Clinician belongs
-            to
-          required: true
-          schema:
-            type: string
+      - name: X-Client-Id
+        in: header
+        description: Client ID
+        required: true
+        schema:
+          type: string
+      - name: Content-Type
+        in: header
+        description: Content type - always application/json.
+        required: true
+        schema:
+          type: string
+      - name: X-Party-Id
+        in: header
+        description: Party ID of the service client (optional).
+        schema:
+          type: string
+      - name: number
+        in: path
+        description: The total number of graphs to be shown on the main dashboard
+          page
+        required: true
+        schema:
+          type: integer
+      - name: ClinicianID
+        in: path
+        description: The logged in User ID for the Clinician
+        required: true
+        schema:
+          type: string
+      - name: ProviderID
+        in: path
+        description: THe logged in ID of the Provider for which the Clinician belongs
+          to
+        required: true
+        schema:
+          type: string
       responses:
         200:
           description: Graph data received
@@ -116,64 +116,64 @@ paths:
                 $ref: '#/components/schemas/Graphs'
         400:
           description: Invalid number supplied
-          content: { }
+          content: {}
         404:
           description: Graph not found
-          content: { }
+          content: {}
         405:
           description: Validation exception
-          content: { }
+          content: {}
       security:
-        - adhere_auth:
-            - write:patients
-            - read:patients
+      - adhere_auth:
+        - write:patients
+        - read:patients
   /dashboards/patients/{number}/{ClinicianID}/{ProviderID}:
     get:
       tags:
-        - Adhere Live, Dashboard
+      - Adhere Live, Dashboard
       summary: Fetch all the patients for a particular Clinician and Provider
       description: We shall be displaying only a set of 5 patients at one time. The
         additional patients shall be fetched when the user clicks on the NEXT button
         in pagination.
       operationId: getAllPatients
       parameters:
-        - name: X-Client-Id
-          in: header
-          description: Client ID
-          required: true
-          schema:
-            type: string
-        - name: Content-Type
-          in: header
-          description: Content type - always application/json.
-          required: true
-          schema:
-            type: string
-        - name: X-Party-Id
-          in: header
-          description: Party ID of the service client (optional).
-          schema:
-            type: string
-        - name: number
-          in: path
-          description: Multiple patients object that need to be retrieved for the Clinician
-            and Provider ID's. This defines how many can be on a single dashboard page
-          required: true
-          schema:
-            type: string
-        - name: ClinicianID
-          in: path
-          description: The logged in User ID for the Clinician
-          required: true
-          schema:
-            type: string
-        - name: ProviderID
-          in: path
-          description: THe logged in ID of the Provider for which the Clinician belongs
-            to
-          required: true
-          schema:
-            type: string
+      - name: X-Client-Id
+        in: header
+        description: Client ID
+        required: true
+        schema:
+          type: string
+      - name: Content-Type
+        in: header
+        description: Content type - always application/json.
+        required: true
+        schema:
+          type: string
+      - name: X-Party-Id
+        in: header
+        description: Party ID of the service client (optional).
+        schema:
+          type: string
+      - name: number
+        in: path
+        description: Multiple patients object that need to be retrieved for the Clinician
+          and Provider ID's. This defines how many can be on a single dashboard page
+        required: true
+        schema:
+          type: string
+      - name: ClinicianID
+        in: path
+        description: The logged in User ID for the Clinician
+        required: true
+        schema:
+          type: string
+      - name: ProviderID
+        in: path
+        description: THe logged in ID of the Provider for which the Clinician belongs
+          to
+        required: true
+        schema:
+          type: string
       responses:
         200:
           description: Patients for Clinician->Provider retrived
@@ -201,42 +201,42 @@ paths:
                 $ref: '#/components/schemas/Patients'
         400:
           description: Invalid ID supplied
-          content: { }
+          content: {}
         404:
           description: No records found
-          content: { }
+          content: {}
         405:
           description: Validation exception
-          content: { }
+          content: {}
       security:
-        - adhere_auth:
-            - write:patients
-            - read:patients
+      - adhere_auth:
+        - write:patients
+        - read:patients
   /patient:
     put:
       tags:
-        - Adhere Live, Patient
+      - Adhere Live, Patient
       summary: Update an existing patient
       description: Update the existing Patient record in Database for a Clinician
       operationId: updatePatient
       parameters:
-        - name: X-Client-Id
-          in: header
-          description: Client ID
-          required: true
-          schema:
-            type: string
-        - name: Content-Type
-          in: header
-          description: Content type - always application/json.
-          required: true
-          schema:
-            type: string
-        - name: X-Party-Id
-          in: header
-          description: Party ID of the service client (optional).
-          schema:
-            type: string
+      - name: X-Client-Id
+        in: header
+        description: Client ID
+        required: true
+        schema:
+          type: string
+      - name: Content-Type
+        in: header
+        description: Content type - always application/json.
+        required: true
+        schema:
+          type: string
+      - name: X-Party-Id
+        in: header
+        description: Party ID of the service client (optional).
+        schema:
+          type: string
       requestBody:
         description: Patient object that needs to be updated for the Clinician and
           the Provider
@@ -251,45 +251,45 @@ paths:
       responses:
         200:
           description: Patient Record Updated
-          content: { }
+          content: {}
         400:
           description: Invalid ID supplied
-          content: { }
+          content: {}
         404:
           description: Patient not found
-          content: { }
+          content: {}
         405:
           description: Validation exception
-          content: { }
+          content: {}
       security:
-        - adhere_auth:
-            - write:patients
-            - read:patients
+      - adhere_auth:
+        - write:patients
+        - read:patients
       x-codegen-request-body-name: body
     post:
       tags:
-        - Adhere Live, Patient
+      - Adhere Live, Patient
       summary: Add a new patient
       description: Create a New Patient in the Database
       operationId: addPatient
       parameters:
-        - name: X-Client-Id
-          in: header
-          description: Client ID
-          required: true
-          schema:
-            type: string
-        - name: Content-Type
-          in: header
-          description: Content type - always application/json.
-          required: true
-          schema:
-            type: string
-        - name: X-Party-Id
-          in: header
-          description: Party ID of the service client (optional).
-          schema:
-            type: string
+      - name: X-Client-Id
+        in: header
+        description: Client ID
+        required: true
+        schema:
+          type: string
+      - name: Content-Type
+        in: header
+        description: Content type - always application/json.
+        required: true
+        schema:
+          type: string
+      - name: X-Party-Id
+        in: header
+        description: Party ID of the service client (optional).
+        schema:
+          type: string
       requestBody:
         description: Patient object that needs to be added for the Clinician and Provider
         content:
@@ -303,48 +303,48 @@ paths:
       responses:
         201:
           description: Patient Record Created
-          content: { }
+          content: {}
         405:
           description: Invalid input
-          content: { }
+          content: {}
       security:
-        - adhere_auth:
-            - write:patients
-            - read:patients
+      - adhere_auth:
+        - write:patients
+        - read:patients
       x-codegen-request-body-name: body
   /patient/{patientId}:
     get:
       tags:
-        - Adhere Live, Patient
+      - Adhere Live, Patient
       summary: Retrive information about an existing patient
       description: Get the information for a Patient from the Database, this will
         be a multiple patient ID record?
       operationId: getPatient
       parameters:
-        - name: X-Client-Id
-          in: header
-          description: Client ID
-          required: true
-          schema:
-            type: string
-        - name: Content-Type
-          in: header
-          description: Content type - always application/json.
-          required: true
-          schema:
-            type: string
-        - name: X-Party-Id
-          in: header
-          description: Party ID of the service client (optional).
-          schema:
-            type: string
-        - name: patientId
-          in: path
-          description: Patient object that needs to be retrieved for the Clinician and
-            the Provider
-          required: true
-          schema:
-            type: integer
+      - name: X-Client-Id
+        in: header
+        description: Client ID
+        required: true
+        schema:
+          type: string
+      - name: Content-Type
+        in: header
+        description: Content type - always application/json.
+        required: true
+        schema:
+          type: string
+      - name: X-Party-Id
+        in: header
+        description: Party ID of the service client (optional).
+        schema:
+          type: string
+      - name: patientId
+        in: path
+        description: Patient object that needs to be retrieved for the Clinician and
+          the Provider
+        required: true
+        schema:
+          type: integer
       responses:
         200:
           description: Patients for Clinician->Provider retrived
@@ -372,17 +372,17 @@ paths:
                 $ref: '#/components/schemas/Patient'
         400:
           description: Invalid ID supplied
-          content: { }
+          content: {}
         404:
           description: Patient not found
-          content: { }
+          content: {}
         405:
           description: Validation exception
-          content: { }
+          content: {}
       security:
-        - adhere_auth:
-            - write:patients
-            - read:patients
+      - adhere_auth:
+        - write:patients
+        - read:patients
 components:
   schemas:
     Category:
@@ -397,13 +397,13 @@ components:
         name: Category
     Clinician:
       required:
-        - clinicianName
-        - createdDate
-        - emailId
-        - firstName
-        - lastName
-        - phoneNumber
-        - status
+      - clinicianName
+      - createdDate
+      - emailId
+      - firstName
+      - lastName
+      - phoneNumber
+      - status
       type: object
       properties:
         id:
@@ -428,13 +428,13 @@ components:
           type: string
           description: patient status for a Clinician
           enum:
-            - individual
-            - withProvider
+          - individual
+          - withProvider
       xml:
         name: Clinician
     Graphs:
       required:
-        - totalGraphs
+      - totalGraphs
       type: object
       properties:
         totalGraphs:
@@ -466,8 +466,8 @@ components:
         name: Tag
     Patient:
       required:
-        - createdDate
-        - status
+      - createdDate
+      - status
       type: object
       properties:
         id:
@@ -502,9 +502,9 @@ components:
           type: string
           description: patient status for a Clinician
           enum:
-            - current
-            - previous
-            - notAPatient
+          - current
+          - previous
+          - notAPatient
       xml:
         name: Patient
     Patients:
@@ -518,8 +518,8 @@ components:
         items:
           type: object
           allOf:
-            - type: array
-            - $ref: '#/components/schemas/Patient'
+          - type: array
+          - $ref: '#/components/schemas/Patient'
     ApiResponse:
       type: object
       properties:
@@ -562,7 +562,7 @@ components:
   securitySchemes:
     adhere_auth:
       type: oauth2
-      description: AdhereLive OAuth2 Provider
+      description: Adhere OAuth2 Provider
       flows:
         implicit:
           authorizationUrl: http://adhere.live/oauth/dialog

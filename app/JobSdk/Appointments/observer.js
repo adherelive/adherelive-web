@@ -1,4 +1,4 @@
-import { EVENT_STATUS, NOTIFICATION_STAGES } from "../../../constant";
+import {EVENT_STATUS, NOTIFICATION_STAGES} from "../../../constant";
 import CreateJob from "./createJob";
 import PriorJob from "./priorJob";
 import StartJob from "./startJob";

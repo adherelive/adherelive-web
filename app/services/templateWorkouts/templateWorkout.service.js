@@ -20,10 +20,9 @@ export default class TemplateWorkoutService {
   update = async (data, id) => {
     const transaction = await Database.initTransaction();
     try {
-      const updateTemplateWorkout = await Database.getModel(TABLE_NAME).update(
-        data,
-        { where: { id }, transaction }
-      );
+      const updateTemplateWorkout = await Database.getModel(
+        TABLE_NAME
+      ).update(data, { where: { id }, transaction });
       await transaction.commit();
       return updateTemplateWorkout;
     } catch (error) {

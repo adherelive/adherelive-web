@@ -4,83 +4,83 @@ const message = defineMessages({
   add_exercise_group: {
     id: "app.drawer.edit.exercise.group.title",
     description: "",
-    defaultMessage: "Edit Exercise",
+    defaultMessage: "Edit Exercise"
   },
   exercise: {
     id: "app.drawer.edit.exercise.group.name",
     description: "",
-    defaultMessage: "Exercise",
+    defaultMessage: "Exercise"
   },
   repetition_value: {
     id: "app.drawer.edit.exercise.group.repetition.value",
     description: "",
-    defaultMessage: "Repeats",
+    defaultMessage: "Repeats"
   },
   repetition_type: {
     id: "app.drawer.edit.exercise.group.repetition.type",
     description: "",
-    defaultMessage: "Repeat Type",
+    defaultMessage: "Repeat Type"
   },
   sets: {
     id: "app.drawer.edit.exercise.group.sets",
     description: "",
-    defaultMessage: "Sets",
+    defaultMessage: "Sets"
   },
   calories: {
     id: "app.drawer.edit.exercise.group.calories",
     description: "",
-    defaultMessage: "Calories",
+    defaultMessage: "Calories"
   },
-  exercise_required_error: {
+  exercise_required_error:{
     id: "app.drawer.edit.exercise.group.exercise.error",
     description: "",
-    defaultMessage: "Exercise is a required field",
+    defaultMessage: "Exercise is a required field"
   },
-  repetition_id_required_error: {
+  repetition_id_required_error:{
     id: "app.drawer.edit.exercise.group.repetition.id.error",
     description: "",
-    defaultMessage: "Repetition Type is a required field",
+    defaultMessage: "Repetition Type is a required field"
   },
-  repetition_value_required_error: {
+  repetition_value_required_error:{
     id: "app.drawer.edit.exercise.group.repeition.value.error",
     description: "",
-    defaultMessage: "Repetition value is a required field",
+    defaultMessage: "Repetition value is a required field"
   },
-  sets_required_error: {
+  sets_required_error:{
     id: "app.drawer.edit.food.group.sets.error",
     description: "",
-    defaultMessage: "Sets is a required field",
+    defaultMessage: "Sets is a required field"
   },
-  note: {
+  note:{
     id: "app.drawer.edit.exercise.group.portion.submit.note",
     description: "",
-    defaultMessage: "Note",
+    defaultMessage: "Note"
   },
-  submit_text: {
+  submit_text:{
     id: "app.drawer.edit.exercise.group.portion.submit.text",
     description: "",
-    defaultMessage: "Submit",
+    defaultMessage: "Submit"
   },
-  add_new_exercise_details: {
+  add_new_exercise_details:{
     id: "app.drawer.edit.exercise.group.edit.new.details",
     description: "",
-    defaultMessage: "Add New Exercise ",
+    defaultMessage: "Add New Exercise "
   },
   search_exercise: {
     id: "app.drawer.edit.exercise.group.search.exercise",
     description: "",
-    defaultMessage: "Search Exercise",
+    defaultMessage: "Search Exercise"
   },
   somethingWentWrong: {
     id: "app.drawer.edit.exercise.group.something.went.wrong",
     description: "",
-    defaultMessage: "Something went wrong",
+    defaultMessage: "Something went wrong"
   },
-  videoUrl: {
+  videoUrl:{
     id: "app.drawer.edit.exercise.group.videoUrl",
     description: "",
-    defaultMessage: "Video URL",
-  },
+    defaultMessage: "Video URL"
+  }
 });
 
 export default message;

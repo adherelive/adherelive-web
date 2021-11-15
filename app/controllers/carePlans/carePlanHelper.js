@@ -21,7 +21,6 @@ import VitalWrapper from "../../ApiWrapper/web/vitals";
 import PatientWrapper from "../../ApiWrapper/web/patient";
 import DietWrapper from "../../ApiWrapper/web/diet";
 import WorkoutWrapper from "../../ApiWrapper/web/workouts";
-import UserRoleWrapper from "../../ApiWrapper/web/userRoles";
 
 import Logger from "../../../libs/log";
 import {
@@ -33,128 +32,6 @@ import {
 import moment from "moment";
 
 const Log = new Logger("CARE_PLAN > HELPER");
-
-/**
- *
- *medicines,
- medications,
- appointments,
- doctors,
- providers = {},
- user_roles = {},
- schedule_events,
- */
-
-function getTime() {
-  let date_ob = new Date();
-  let date = ("0" + date_ob.getDate()).slice(-2);
-
-  // current month
-  let month = ("0" + (date_ob.getMonth() + 1)).slice(-2);
-
-  // current year
-  let year = date_ob.getFullYear();
-
-  // current hours
-  let hours = date_ob.getHours();
-
-  // current minutes
-  let minutes = date_ob.getMinutes();
-
-  // current seconds
-  let seconds = date_ob.getSeconds();
-  return (
-    year +
-    "-" +
-    month +
-    "-" +
-    date +
-    " " +
-    hours +
-    ":" +
-    minutes +
-    ":" +
-    seconds
-  );
-}
-
-export const getCareplanDataWithImp = async ({
-  carePlans = [],
-  userCategory,
-  doctorId,
-  userRoleId,
-}) => {
-  console.log("get getCareplanDataWithImp Called - 1 " + getTime());
-  try {
-    let carePlanData = {};
-    let carePlanIds = [];
-    let appointmentIds = [];
-    let medicationIds = [];
-    let currentCareplanTime = null;
-    let currentCareplanId = null;
-    console.log("get getCareplanDataWithImp Called - 2 " + getTime());
-    for (let index = 0; index < carePlans.length; index++) {
-      const careplan = await CarePlanWrapper(carePlans[index]);
-      console.log("get getCareplanDataWithImp Called - 3 " + getTime());
-      const { care_plans } = await careplan.getReferenceInfoWithImp();
-      console.log("get getCareplanDataWithImp Called - 4 " + getTime());
-      carePlanData = { ...carePlanData, ...care_plans };
-      carePlanIds.push(careplan.getCarePlanId());
-      console.log("get getCareplanDataWithImp Called - 5 " + getTime());
-      const {
-        medication_ids,
-        appointment_ids,
-        basic_info: { user_role_id = null } = {},
-      } = care_plans[careplan.getCarePlanId()] || {};
-      console.log("get getCareplanDataWithImp Called - 6 " + getTime());
-      // appointmentIds = [...appointmentIds, ...appointment_ids];
-      // medicationIds = [...medicationIds, ...medication_ids];
-
-      const secondaryDoctorUserRoleIds =
-        careplan.getCareplnSecondaryProfiles() || [];
-      console.log("get getCareplanDataWithImp Called - 7 " + getTime());
-      const isUserRoleAllowed = [user_role_id, ...secondaryDoctorUserRoleIds]
-        .map((id) => parseInt(id))
-        .includes(userRoleId);
-      // get latest careplan id
-      console.log("get getCareplanDataWithImp Called - 8 " + getTime());
-      if (
-        (userCategory === USER_CATEGORY.DOCTOR ||
-          userCategory === USER_CATEGORY.HSP) &&
-        isUserRoleAllowed
-      ) {
-        console.log("get getCareplanDataWithImp Called - 9 " + getTime());
-        // if(userCategory === USER_CATEGORY.DOCTOR && doctorId === doctor_id) {
-        if (
-          moment(careplan.getCreatedAt()).diff(
-            moment(currentCareplanTime),
-            "minutes"
-          ) > 0
-        ) {
-          console.log("get getCareplanDataWithImp Called - 10 " + getTime());
-          currentCareplanTime = careplan.getCreatedAt();
-          currentCareplanId = careplan.getCarePlanId();
-        }
-
-        if (currentCareplanTime === null) {
-          currentCareplanTime = careplan.getCreatedAt();
-          currentCareplanId = careplan.getCarePlanId();
-        }
-      }
-    }
-    console.log("get getCareplanDataWithImp Called - 11 " + getTime());
-    return {
-      care_plans: {
-        ...carePlanData,
-      },
-      care_plan_ids: carePlanIds,
-      current_careplan_id: currentCareplanId,
-    };
-  } catch (error) {
-    Log.debug("getCareplanData catch error", error);
-    return {};
-  }
-};
 
 export const getCareplanData = async ({
   carePlans = [],
@@ -178,16 +55,16 @@ export const getCareplanData = async ({
 
     let doctorData = {};
 
-    let providerData = {};
-    let userRoleData = {};
-
     let currentCareplanTime = null;
     let currentCareplanId = null;
 
     for (let index = 0; index < carePlans.length; index++) {
       const careplan = await CarePlanWrapper(carePlans[index]);
-      const { care_plans, doctors, doctor_id } =
-        await careplan.getReferenceInfo();
+      const {
+        care_plans,
+        doctors,
+        doctor_id,
+      } = await careplan.getReferenceInfo();
       carePlanData = { ...carePlanData, ...care_plans };
       carePlanIds.push(careplan.getCarePlanId());
 
@@ -201,17 +78,12 @@ export const getCareplanData = async ({
       appointmentIds = [...appointmentIds, ...appointment_ids];
       medicationIds = [...medicationIds, ...medication_ids];
 
-      const secondaryDoctorUserRoleIds =
-        careplan.getCareplnSecondaryProfiles() || [];
+      console.log("327423546325475234723", { user_role_id, userRoleId });
 
-      const isUserRoleAllowed = [user_role_id, ...secondaryDoctorUserRoleIds]
-        .map((id) => parseInt(id))
-        .includes(userRoleId);
       // get latest careplan id
       if (
-        (userCategory === USER_CATEGORY.DOCTOR ||
-          userCategory === USER_CATEGORY.HSP) &&
-        isUserRoleAllowed
+        (userCategory === USER_CATEGORY.DOCTOR || userCategory === USER_CATEGORY.HSP) &&
+        user_role_id.toString() === userRoleId.toString()
       ) {
         // if(userCategory === USER_CATEGORY.DOCTOR && doctorId === doctor_id) {
         if (
@@ -228,25 +100,12 @@ export const getCareplanData = async ({
           currentCareplanTime = careplan.getCreatedAt();
           currentCareplanId = careplan.getCarePlanId();
         }
-      }
 
-      for (let index = 0; index < secondaryDoctorUserRoleIds.length; index++) {
-        const userRole = await UserRoleWrapper(
-          null,
-          secondaryDoctorUserRoleIds[index]
-        );
-
-        const {
-          user_roles: secondaryUserRoles,
-          doctors: secondaryDoctors,
-          providers: secondaryProviders,
-        } = await userRole.getAllInfo();
-
-        doctorData = { ...doctorData, ...secondaryDoctors };
-        providerData = { ...providerData, ...secondaryProviders };
-        userRoleData = { ...userRoleData, ...secondaryUserRoles };
+        console.log("3486587364873658746385763847", { currentCareplanId });
       }
     }
+
+    Log.info(`8912731893 currentCareplanId ${currentCareplanId}`);
 
     // appointments
     const allAppointments =
@@ -257,8 +116,10 @@ export const getCareplanData = async ({
     if (allAppointments.length > 0) {
       for (let index = 0; index < allAppointments.length; index++) {
         const appointment = await AppointmentWrapper(allAppointments[index]);
-        const { appointments, schedule_events } =
-          await appointment.getAllInfo();
+        const {
+          appointments,
+          schedule_events,
+        } = await appointment.getAllInfo();
         appointmentData = { ...appointmentData, ...appointments };
         scheduleEventData = { ...scheduleEventData, ...schedule_events };
       }
@@ -298,12 +159,6 @@ export const getCareplanData = async ({
       },
       doctors: {
         ...doctorData,
-      },
-      providers: {
-        ...providerData,
-      },
-      user_roles: {
-        ...userRoleData,
       },
       care_plan_ids: carePlanIds,
       current_careplan_id: currentCareplanId,
@@ -450,7 +305,7 @@ export const createDiet = async ({
       category: authCategory,
       userCategoryData: { basic_info: { full_name } = {} },
       userCategoryData: authUserCategoryData,
-      userRoleId: authUserRole,
+      userRoleId: authUserRole
     } = authUser || {};
 
     // patient
@@ -484,8 +339,13 @@ export const createDiet = async ({
 
         const dietWrapper = await DietWrapper({ id: dietId });
 
-        const { diets, food_groups, portions, food_items, food_item_details } =
-          await dietWrapper.getReferenceInfo();
+        const {
+          diets,
+          food_groups,
+          portions,
+          food_items,
+          food_item_details,
+        } = await dietWrapper.getReferenceInfo();
 
         allDiets = { ...allDiets, ...diets };
         allFoodGroups = { ...allFoodGroups, ...food_groups };
@@ -667,8 +527,9 @@ export const createWorkout = async ({
 };
 
 export const getCarePlanAppointmentIds = async (carePlanId) => {
-  let carePlanAppointments =
-    await carePlanAppointmentService.getAppointmentsByCarePlanId(carePlanId);
+  let carePlanAppointments = await carePlanAppointmentService.getAppointmentsByCarePlanId(
+    carePlanId
+  );
   let carePlanAppointmentIds = [];
   for (let appointment of carePlanAppointments) {
     let appointmentId = appointment.get("appointment_id");
@@ -679,8 +540,9 @@ export const getCarePlanAppointmentIds = async (carePlanId) => {
 };
 
 export const getCarePlanMedicationIds = async (carePlanId) => {
-  let carePlanMedications =
-    await carePlanMedicationService.getMedicationsByCarePlanId(carePlanId);
+  let carePlanMedications = await carePlanMedicationService.getMedicationsByCarePlanId(
+    carePlanId
+  );
   let carePlanMedicationIds = [];
 
   for (let medication of carePlanMedications) {
@@ -702,7 +564,7 @@ export const getCarePlanSeverityDetails = async (carePlanId) => {
   let carePlanTemplate = {};
 
   const templateId = carePlanApiWrapper.getCarePlanTemplateId();
-  if (templateId) {
+  if(templateId){
     carePlanTemplate = await carePlanTemplateService.getCarePlanTemplateById(
       templateId
     );

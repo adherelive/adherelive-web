@@ -22,7 +22,9 @@ class PassedCron {
   getScheduleData = async () => {
     const scheduleEventService = new ScheduleEventService();
 
-    const currentTime = moment().utc().toISOString();
+    const currentTime = moment()
+      .utc()
+      .toISOString();
     Log.info(`currentTime : ${currentTime}`);
     const scheduleEvents = await scheduleEventService.getPassedEventData(
       currentTime
@@ -75,7 +77,9 @@ class PassedCron {
   handleDietPassed = async (event) => {
     try {
       const scheduleEventService = new ScheduleEventService();
-      const currentTime = moment().utc().toDate();
+      const currentTime = moment()
+        .utc()
+        .toDate();
 
       if (
         moment(currentTime).diff(event.getStartTime(), "minutes") >=
@@ -96,7 +100,9 @@ class PassedCron {
   handleWorkoutPassed = async (event) => {
     try {
       const scheduleEventService = new ScheduleEventService();
-      const currentTime = moment().utc().toDate();
+      const currentTime = moment()
+        .utc()
+        .toDate();
 
       if (
         moment(currentTime).diff(event.getStartTime(), "minutes") >=
@@ -117,10 +123,13 @@ class PassedCron {
   handleVitalPassed = async (event) => {
     try {
       const scheduleEventService = new ScheduleEventService();
-      const currentTime = moment().utc().toDate();
+      const currentTime = moment()
+        .utc()
+        .toDate();
       const eventId = event.getEventId();
-      const { details: { repeat_interval_id: repeatIntervalId = "" } = {} } =
-        event.getDetails();
+      const {
+        details: { repeat_interval_id: repeatIntervalId = "" } = {},
+      } = event.getDetails();
 
       const vitalData = await FeatureDetailService.getDetailsByData({
         feature_type: FEATURE_TYPE.VITAL,
@@ -154,7 +163,9 @@ class PassedCron {
   handleMedicationPassed = async (event) => {
     try {
       const scheduleEventService = new ScheduleEventService();
-      const currentTime = moment().utc().toDate();
+      const currentTime = moment()
+        .utc()
+        .toDate();
 
       console.log("937123873289 ", {
         condition:
@@ -207,7 +218,9 @@ class PassedCron {
   handleAppointmentPassed = async (event) => {
     try {
       const scheduleEventService = new ScheduleEventService();
-      const currentTime = moment().utc().toDate();
+      const currentTime = moment()
+        .utc()
+        .toDate();
 
       if (
         moment(currentTime).diff(event.getEndTime(), "hours") >
@@ -228,7 +241,9 @@ class PassedCron {
   handleCarePlanPassed = async (event) => {
     try {
       const scheduleEventService = new ScheduleEventService();
-      const currentTime = moment().utc().toDate();
+      const currentTime = moment()
+        .utc()
+        .toDate();
 
       const carePlanStartTime = new moment.utc();
       const carePlanEndTime = new moment.utc(carePlanStartTime).add(2, "hours");

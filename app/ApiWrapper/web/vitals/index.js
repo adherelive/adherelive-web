@@ -11,7 +11,7 @@ import CarePlanWrapper from "../../../ApiWrapper/web/carePlan";
 import moment from "moment";
 import eventService from "../../../services/scheduleEvents/scheduleEvent.service";
 import EventWrapper from "../../common/scheduleEvents";
-import { EVENT_STATUS, EVENT_TYPE, FEATURE_TYPE } from "../../../../constant";
+import {EVENT_STATUS, EVENT_TYPE, FEATURE_TYPE} from "../../../../constant";
 import FeatureDetailService from "../../../services/featureDetails/featureDetails.service";
 import FeatureDetailWrapper from "../featureDetails";
 
@@ -38,12 +38,12 @@ class VitalWrapper extends BaseVital {
       basic_info: {
         id,
         vital_template_id,
-        care_plan_id,
+        care_plan_id
       },
       details,
       start_date,
       end_date,
-      description,
+      description
     };
   };
 
@@ -52,12 +52,15 @@ class VitalWrapper extends BaseVital {
 
     const EventService = new eventService();
 
-    const currentDate = moment().endOf("day").utc().toDate();
+    const currentDate = moment()
+      .endOf("day")
+      .utc()
+      .toDate();
 
     const scheduleEvents = await EventService.getAllPastData({
       startDate: getStartDate(),
       event_id: getVitalId(),
-      date: currentDate,
+      date: currentDate
     });
 
     let vitalEvents = {};
@@ -65,37 +68,37 @@ class VitalWrapper extends BaseVital {
     let latestPendingEventId;
 
     const vitalData = await FeatureDetailService.getDetailsByData({
-      feature_type: FEATURE_TYPE.VITAL,
+      feature_type: FEATURE_TYPE.VITAL
     });
 
     const vitalDetails = await FeatureDetailWrapper(vitalData);
     const { repeat_intervals = {} } = vitalDetails.getFeatureDetails() || {};
 
-    const scheduleEventIds = [];
-    for (const events of scheduleEvents) {
-      const scheduleEvent = await EventWrapper(events);
-      const x = scheduleEvent.getAllInfo();
-      // Log.debug("28739812372 scheduleEvent.getAllInfo() ---> ", x.details.details.repeat_interval_id);
-      if (scheduleEvent.getEventType() === EVENT_TYPE.VITALS) {
-        scheduleEventIds.push(scheduleEvent.getScheduleEventId());
+        const scheduleEventIds = [];
+        for(const events of scheduleEvents) {
+            const scheduleEvent = await EventWrapper(events);
+            const x = scheduleEvent.getAllInfo();
+          // Log.debug("28739812372 scheduleEvent.getAllInfo() ---> ", x.details.details.repeat_interval_id);
+            if(scheduleEvent.getEventType() === EVENT_TYPE.VITALS) {
+              scheduleEventIds.push(scheduleEvent.getScheduleEventId());
 
-        if (scheduleEvent.getStatus() !== EVENT_STATUS.COMPLETED) {
-          if (!latestPendingEventId) {
-            latestPendingEventId = scheduleEvent.getScheduleEventId();
-          }
-          remaining++;
+              if(scheduleEvent.getStatus() !== EVENT_STATUS.COMPLETED) {
+                if(!latestPendingEventId) {
+                  latestPendingEventId = scheduleEvent.getScheduleEventId();
+                }
+                remaining++;
+              }
+            }
         }
-      }
-    }
 
     return {
       vitals: {
         [getVitalId()]: {
           ...getBasicInfo(),
           remaining,
-          total: scheduleEventIds.length,
-        },
-      },
+          total: scheduleEventIds.length
+        }
+      }
     };
   };
 
@@ -107,33 +110,35 @@ class VitalWrapper extends BaseVital {
     const carePlanData = {};
 
     let wrapperQuery = {};
-    if (vital_template) {
+    if(vital_template) {
       wrapperQuery = {
-        data: vital_template,
+        data: vital_template
       };
+
     } else {
-      wrapperQuery = {
-        id: getVitalTemplateId(),
-      };
+     wrapperQuery = {
+       id: getVitalTemplateId()
+     };
     }
 
     const vitalTemplates = await VitalTemplateWrapper(wrapperQuery);
-    vitalTemplateData[vitalTemplates.getVitalTemplateId()] =
-      vitalTemplates.getBasicInfo();
+    vitalTemplateData[
+        vitalTemplates.getVitalTemplateId()
+        ] = vitalTemplates.getBasicInfo();
 
-    if (care_plan) {
+    if(care_plan) {
       const carePlans = await CarePlanWrapper(care_plan);
       carePlanData[carePlans.getCarePlanId()] = await carePlans.getAllInfo();
     }
 
     return {
-      ...(await getAllInfo()),
+      ...await getAllInfo(),
       vital_templates: {
-        ...vitalTemplateData,
+        ...vitalTemplateData
       },
       care_plans: {
-        ...carePlanData,
-      },
+        ...carePlanData
+      }
     };
   };
 }

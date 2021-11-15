@@ -3,7 +3,7 @@ import Database from "../../../libs/mysql";
 // TABLES
 import { TABLE_NAME } from "../../models/providerTermsMappings";
 
-const DEFAULT_ORDER = [["created_at", "DESC"]];
+const DEFAULT_ORDER = [["created_at","DESC"]];
 
 class ProviderTermsMappingService {
   constructor() {}
@@ -12,7 +12,7 @@ class ProviderTermsMappingService {
     const transaction = await Database.initTransaction();
     try {
       const response = await Database.getModel(TABLE_NAME).create(data, {
-        transaction,
+        transaction
       });
       await transaction.commit();
       return response;
@@ -22,19 +22,21 @@ class ProviderTermsMappingService {
     }
   }
 
-  bulkCreate = async (data) => {
+  bulkCreate = async data => {
     try {
-      const response = await Database.getModel(TABLE_NAME).bulkCreate(data);
+      const response = await Database.getModel(TABLE_NAME).bulkCreate(
+        data
+      );
       return response;
     } catch (error) {
       throw error;
     }
   };
 
-  getSingleEntityByData = async (data) => {
+  getSingleEntityByData = async data => {
     try {
       const response = await Database.getModel(TABLE_NAME).findOne({
-        where: data,
+        where: data
       });
       return response;
     } catch (error) {
@@ -42,10 +44,10 @@ class ProviderTermsMappingService {
     }
   };
 
-  getAllByData = async (data) => {
+  getAllByData = async data => {
     try {
       const response = await Database.getModel(TABLE_NAME).findAll({
-        where: data,
+        where: data
         // raw: true,
         // nest: true,
       });
@@ -55,26 +57,26 @@ class ProviderTermsMappingService {
     }
   };
 
-  findAndCountAll = async ({ where, order = DEFAULT_ORDER, attributes }) => {
+  findAndCountAll = async ({where, order = DEFAULT_ORDER, attributes}) => {
     try {
       return await Database.getModel(TABLE_NAME).findAndCountAll({
         where,
         order,
         attributes,
-        raw: true,
+        raw: true
       });
     } catch (error) {
       throw error;
     }
   };
 
-  findOne = async ({ where, order = DEFAULT_ORDER, attributes }) => {
+  findOne = async ({where, order = DEFAULT_ORDER, attributes}) => {
     try {
       return await Database.getModel(TABLE_NAME).findOne({
         where,
         order,
         attributes,
-        raw: true,
+        raw: true
       });
     } catch (error) {
       throw error;
@@ -86,9 +88,9 @@ class ProviderTermsMappingService {
     try {
       const updatedRecord = await Database.getModel(TABLE_NAME).update(data, {
         where: {
-          id,
+          id
         },
-        transaction,
+        transaction
       });
       await transaction.commit();
       return updatedRecord;
@@ -97,6 +99,7 @@ class ProviderTermsMappingService {
       throw error;
     }
   };
+
 }
 
 export default new ProviderTermsMappingService();

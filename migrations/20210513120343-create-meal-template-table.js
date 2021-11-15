@@ -1,8 +1,9 @@
-"use strict";
+'use strict';
 
-import { TABLE_NAME } from "../app/models/mealTemplates";
+import {TABLE_NAME} from "../app/models/mealTemplates";
 
-import { USER_CATEGORY_ARRAY } from "../app/models/users";
+import {USER_CATEGORY_ARRAY} from "../app/models/users";
+
 
 module.exports = {
   up: (queryInterface, Sequelize) => {
@@ -11,39 +12,39 @@ module.exports = {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
-        type: Sequelize.INTEGER,
+        type: Sequelize.INTEGER
       },
-      creator_id: {
+      creator_id:{
         type: Sequelize.INTEGER,
         allowNull: false,
       },
-      creator_type: {
+      creator_type:{
         type: Sequelize.ENUM,
         values: USER_CATEGORY_ARRAY,
-        allowNull: false,
+        allowNull: false
       },
-      name: {
+      name : {
         type: Sequelize.STRING,
         allowNull: false,
       },
-      details: {
-        type: Sequelize.JSON,
+      details:{
+        type: Sequelize.JSON
       },
       created_at: {
         allowNull: false,
-        type: Sequelize.DATE,
+        type: Sequelize.DATE
       },
       updated_at: {
         allowNull: false,
-        type: Sequelize.DATE,
+        type: Sequelize.DATE
       },
       deleted_at: {
-        type: Sequelize.DATE,
-      },
+        type: Sequelize.DATE
+      }
     });
   },
 
   down: (queryInterface, Sequelize) => {
     return queryInterface.dropTable(TABLE_NAME);
-  },
+  }
 };

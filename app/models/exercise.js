@@ -20,7 +20,7 @@ export const db = (database) => {
         allowNull: false,
       },
       creator_id: {
-        type: DataTypes.INTEGER,
+        type: DataTypes.INTEGER
       },
       creator_type: {
         type: DataTypes.ENUM,
@@ -28,7 +28,7 @@ export const db = (database) => {
           USER_CATEGORY.DOCTOR,
           USER_CATEGORY.PROVIDER,
           USER_CATEGORY.ADMIN,
-          USER_CATEGORY.HSP,
+          USER_CATEGORY.HSP
         ],
         defaultValue: USER_CATEGORY.ADMIN,
       },

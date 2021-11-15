@@ -20,10 +20,10 @@ module.exports = {
           medication_stage: "",
           duration: 5,
           description: "Don't eat for 30 minutes after taking this medication",
-          medicine_type: "2",
+          medicine_type: "2"
         }),
         created_at: new Date(),
-        updated_at: new Date(),
+        updated_at: new Date()
       },
       {
         care_plan_template_id: 1,
@@ -40,15 +40,15 @@ module.exports = {
           medication_stage: "",
           duration: 6,
           description: "Take after eating",
-          medicine_type: "2",
+          medicine_type: "2"
         }),
         created_at: new Date(),
-        updated_at: new Date(),
-      },
+        updated_at: new Date()
+      }
     ]);
   },
 
   down: (queryInterface, Sequelize) => {
     return queryInterface.bulkDelete(TABLE_NAME, null, {});
-  },
+  }
 };

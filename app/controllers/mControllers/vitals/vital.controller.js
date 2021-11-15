@@ -104,11 +104,7 @@ class VitalController extends Controller {
           start_date,
           end_date,
           details: vitals.getBasicInfo(),
-          participants: [
-            userRoleId,
-            patientUserRoleId,
-            ...carePlan.getCareplnSecondaryProfiles(),
-          ],
+          participants: [userRoleId, patientUserRoleId],
           actor: {
             id: userId,
             user_role_id: userRoleId,
@@ -154,7 +150,7 @@ class VitalController extends Controller {
         );
       }
     } catch (error) {
-      Log.debug("create 500 error - vitals already added", error);
+      Log.debug("vitals create 500 error", error);
       return raiseServerError(res);
     }
   };
@@ -212,11 +208,7 @@ class VitalController extends Controller {
           start_date,
           end_date,
           details: vitals.getBasicInfo(),
-          participants: [
-            userRoleId,
-            patientUserRoleId,
-            ...carePlan.getCareplnSecondaryProfiles(),
-          ],
+          participants: [userRoleId, patientUserRoleId],
           actor: {
             id: userId,
             user_role_id: userRoleId,
@@ -259,7 +251,7 @@ class VitalController extends Controller {
         );
       }
     } catch (error) {
-      Log.debug("create 500 error - vitals updated", error);
+      Log.debug("vitals create 500 error", error);
       return raiseServerError(res);
     }
   };
@@ -302,8 +294,9 @@ class VitalController extends Controller {
       if (Object.keys(vitalTemplates).length > 0) {
         for (const data of vitalTemplates) {
           const vitalData = await VitalTemplateWrapper({ data });
-          templateDetails[vitalData.getVitalTemplateId()] =
-            vitalData.getBasicInfo();
+          templateDetails[
+            vitalData.getVitalTemplateId()
+          ] = vitalData.getBasicInfo();
           templateIds.push(vitalData.getVitalTemplateId());
         }
 
@@ -333,7 +326,10 @@ class VitalController extends Controller {
       Log.debug("req.params --->", req.params);
       const {
         params: { id } = {},
-        userDetails: { userRoleId, userData: { category } = {} } = {},
+        userDetails: {
+          userRoleId,
+          userData: { category } = {},
+        } = {},
         body: { response } = {},
       } = req;
       const EventService = new eventService();
@@ -346,7 +342,9 @@ class VitalController extends Controller {
 
       Log.info(`event_id ${event_id}`);
 
-      const createdTime = moment().utc().toISOString();
+      const createdTime = moment()
+        .utc()
+        .toISOString();
 
       const event = await EventWrapper(null, event_id);
 
@@ -405,7 +403,8 @@ class VitalController extends Controller {
       });
 
       const twilioMsg = await twilioService.addSymptomMessage(
-        carePlan.getChannelId(),
+        doctorRoleId,
+        userRoleId,
         chatJSON
       );
 
@@ -437,12 +436,8 @@ class VitalController extends Controller {
         event_id: vital.getVitalId(),
         event_type: EVENT_TYPE.VITALS,
         vital: vital.getBasicInfo(),
-        participants: [
-          doctorRoleId,
-          userRoleId,
-          ...carePlan.getCareplnSecondaryProfiles(),
-        ],
-        // participant_role_ids: [doctorRoleId, userRoleId, ...carePlan.getCareplnSecondaryProfiles()],
+        participants: [doctorRoleId, userRoleId],
+        participant_role_ids: [doctorRoleId, userRoleId],
         actor: {
           id: patientData.getUserId(),
           user_role_id: userRoleId,
@@ -483,17 +478,20 @@ class VitalController extends Controller {
       const { params: { id } = {} } = req;
       const EventService = new eventService();
 
-      const today = moment().utc().toISOString();
+      const today = moment()
+        .utc()
+        .toISOString();
 
       const vital = await VitalWrapper({ id });
 
-      const completeEvents =
-        await EventService.getAllPassedAndCompletedEventsData({
+      const completeEvents = await EventService.getAllPassedAndCompletedEventsData(
+        {
           event_id: id,
           event_type: EVENT_TYPE.VITALS,
           date: vital.getStartDate(),
           sort: "DESC",
-        });
+        }
+      );
 
       let dateWiseVitalData = {};
 

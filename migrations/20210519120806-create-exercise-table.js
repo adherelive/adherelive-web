@@ -25,7 +25,7 @@ module.exports = {
           USER_CATEGORY.PROVIDER,
           USER_CATEGORY.ADMIN,
         ],
-        defaultValue: USER_CATEGORY.ADMIN,
+        defaultValue: USER_CATEGORY.ADMIN
       },
       created_at: {
         allowNull: false,

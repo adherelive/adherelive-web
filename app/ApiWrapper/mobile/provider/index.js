@@ -13,18 +13,10 @@ class ProviderWrapper extends BaseProvider {
 
   getBasicInfo = () => {
     const { _data } = this;
-    const {
-      id,
-      name,
-      address,
-      city,
-      state,
-      user_id,
-      activated_on,
-      details = {},
-    } = _data || {};
+    const { id, name, address, city, state, user_id, activated_on, details = {} } =
+      _data || {};
 
-    const { icon, banner } = details || {};
+      const {icon, banner} = details || {};
 
     return {
       basic_info: {
@@ -33,14 +25,14 @@ class ProviderWrapper extends BaseProvider {
         name,
         address,
         city,
-        state,
+        state
       },
       details: {
         ...details,
         icon: completePath(icon),
         banner: completePath(banner),
       },
-      activated_on,
+      activated_on
     };
   };
 
@@ -49,12 +41,11 @@ class ProviderWrapper extends BaseProvider {
     const { id, name, address, city, state, user_id, activated_on, details } =
       _data || {};
 
-    const { icon } = details || {};
+      const {icon} = details || {};
 
-    const providerDoctors =
-      await doctorProviderMappingService.getDoctorProviderMappingByData({
-        provider_id: id,
-      });
+    const providerDoctors = await doctorProviderMappingService.getDoctorProviderMappingByData(
+      { provider_id: id }
+    );
 
     const doctor_ids = [];
     for (const doctor of providerDoctors) {
@@ -68,38 +59,39 @@ class ProviderWrapper extends BaseProvider {
         name,
         address,
         city,
-        state,
+        state
       },
       details: {
         ...details,
-        icon: completePath(icon),
+        icon: completePath(icon)
       },
       activated_on,
-      doctor_ids,
+      doctor_ids
     };
   };
 
-  getReferenceInfo = async () => {
-    try {
-      const { _data, getBasicInfo, getProviderId } = this;
-      const { user } = _data;
 
-      const userData = await UserWrapper(user.get());
+getReferenceInfo = async () => {
+  try {
+    const {_data, getBasicInfo, getProviderId} = this;
+    const {user} = _data;
 
-      return {
-        providers: {
-          [getProviderId()]: getBasicInfo(),
-        },
-        users: {
-          [userData.getId()]: userData.getBasicInfo(),
-        },
-        user_id: userData.getId(),
-        provider_id: getProviderId(),
-      };
-    } catch (error) {
-      throw error;
-    }
-  };
+    const userData = await UserWrapper(user.get());
+
+    return {
+      providers: {
+        [getProviderId()]: getBasicInfo()
+      },
+      users: {
+        [userData.getId()] : userData.getBasicInfo()
+      },
+      user_id: userData.getId(),
+      provider_id: getProviderId()
+    };
+  } catch(error) {
+    throw error;
+  }
+};
 }
 
 export default async (data = null, id = null) => {

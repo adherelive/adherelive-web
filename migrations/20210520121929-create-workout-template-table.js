@@ -1,6 +1,6 @@
-"use strict";
+'use strict';
 
-import { TABLE_NAME } from "../app/models/workoutTemplate";
+import {TABLE_NAME} from "../app/models/workoutTemplate";
 import { USER_CATEGORY } from "../constant";
 
 module.exports = {
@@ -45,5 +45,5 @@ module.exports = {
 
   down: (queryInterface, DataTypes) => {
     return queryInterface.dropTable(TABLE_NAME);
-  },
+  }
 };

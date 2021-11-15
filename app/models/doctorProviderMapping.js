@@ -5,7 +5,7 @@ import { TABLE_NAME as providerTableName } from "./providers";
 
 export const TABLE_NAME = "doctor_provider_mappings";
 
-export const db = (database) => {
+export const db = database => {
   database.define(
     TABLE_NAME,
     {
@@ -13,28 +13,28 @@ export const db = (database) => {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
-        type: DataTypes.INTEGER,
+        type: DataTypes.INTEGER
       },
       doctor_id: {
         type: DataTypes.INTEGER,
         allowNull: false,
         references: {
           model: {
-            tableName: doctorTableName,
+            tableName: doctorTableName
           },
-          key: "id",
-        },
+          key: "id"
+        }
       },
       provider_id: {
         type: DataTypes.INTEGER,
         allowNull: false,
         references: {
           model: {
-            tableName: providerTableName,
+            tableName: providerTableName
           },
-          key: "id",
-        },
-      },
+          key: "id"
+        }
+      }
     },
     {
       underscored: true,
@@ -44,21 +44,21 @@ export const db = (database) => {
           return {
             id: this.id,
             doctor_id: this.doctor_id,
-            provider_id: this.provider_id,
+            provider_id: this.provider_id
           };
         },
         getId() {
           return this.id;
-        },
-      },
+        }
+      }
     }
   );
 };
 
-export const associate = (database) => {
+export const associate = database => {
   // associations here (if any) ...
   database.models[TABLE_NAME].hasOne(database.models[doctorTableName], {
     foreignKey: "id",
-    targetKey: "doctor_id",
+    targetKey: "doctor_id"
   });
 };

@@ -74,7 +74,6 @@ class Medicine extends Component {
     this.setState({ inputText: input });
     this.setState({ hits });
   };
-
   getHighlightedText(text, highlight) {
     const parts = text.split(new RegExp(`(${highlight})`, "gi"));
     return (
@@ -97,7 +96,7 @@ class Medicine extends Component {
   }
 
   isMedicineFavorite = (id) => {
-    const { favourite_medicine_ids = [] } = this.props;
+    const {favourite_medicine_ids = []} = this.props;
 
     // return favourite_medicine_ids.includes(parseInt(id));
     return favourite_medicine_ids.includes(id.toString());
@@ -115,13 +114,10 @@ class Medicine extends Component {
     const { getHighlightedText, isMedicineFavorite } = this;
 
     for (let each in hits) {
-      const {
-        name = "",
-        medicine_id = null,
-        generic_name = "",
-      } = hits[each] || {};
+      const { name = "", medicine_id = null, generic_name = "" } =
+        hits[each] || {};
 
-      // default without selected
+        // default without selected
 
       if (isDefault ? medicine_id !== selectedMedicineId : true) {
         // check for add last selected option only for default hits case and not searching --->
@@ -260,8 +256,10 @@ class Medicine extends Component {
 
     const options = [];
 
-    const { medicine_name: med_name = "", medicine_id: med_id = null } =
-      this.state;
+    const {
+      medicine_name: med_name = "",
+      medicine_id: med_id = null,
+    } = this.state;
 
     for (let each in favourites_data) {
       const { basic_info = {}, marked_favourites_data = {} } =
@@ -362,10 +360,7 @@ class Medicine extends Component {
         return this.getFavouriteOptions();
       } else {
         // return this.getDefaultResultOptions(defaultHits);
-        return this.getSearchingResultOptions({
-          hits: defaultHits,
-          isDefault: true,
-        });
+        return this.getSearchingResultOptions({hits: defaultHits, isDefault: true});
       }
     }
   };

@@ -31,7 +31,7 @@ class ExerciseWrapper extends BaseExercise {
         exercise_detail_ids.push(id);
       }
     }
-
+    
     return {
       ...getBasicInfo(),
       exercise_detail_ids,
@@ -50,8 +50,10 @@ class ExerciseWrapper extends BaseExercise {
         const exerciseDetail = await ExerciseDetailWrapper({
           data: exerciseDetails[index],
         });
-        const { exercise_details, repetitions } =
-          await exerciseDetail.getReferenceInfo();
+        const {
+          exercise_details,
+          repetitions,
+        } = await exerciseDetail.getReferenceInfo();
         allExerciseDetails = { ...allExerciseDetails, ...exercise_details };
         allRepetitions = { ...allRepetitions, ...repetitions };
       }

@@ -16,7 +16,7 @@ const FIELD_NAME = "end_date";
 const { Item: FormItem } = Form;
 
 class EndDate extends Component {
-  openCalendar = (e) => {
+  openCalendar = e => {
     e.preventDefault();
     const datePicker = window.document.getElementsByClassName(FIELD_NAME)[0];
 
@@ -31,13 +31,13 @@ class EndDate extends Component {
     }
   };
 
-  getParentNode = (t) => t.parentNode;
+  getParentNode = t => t.parentNode;
 
-  formatMessage = (data) => this.props.intl.formatMessage(data);
+  formatMessage = data => this.props.intl.formatMessage(data);
 
   getNewEndDate = () => {
     const {
-      form: { getFieldValue },
+      form: { getFieldValue }
     } = this.props;
 
     const repeat = getFieldValue(repeatField.field_name);
@@ -75,20 +75,10 @@ class EndDate extends Component {
   };
 
   getInitialValue = () => {
-    const {
-      purpose,
-      event = {},
-      events = {},
-      medications,
-      medicationData = {},
-      payload: { id: medication_id } = {},
-    } = this.props;
+    const { purpose, event = {}, events = {}, medications, medicationData = {}, payload: { id: medication_id } = {} } = this.props;
 
     const { basic_info: { end_date } = {} } = medications[medication_id] || {};
-    const {
-      schedule_data: { end_date: endDate = "", duration } = {},
-      templatePage = false,
-    } = medicationData || {};
+    const { schedule_data: { end_date:endDate = '', duration } = {} , templatePage=false } = medicationData || {} ;
 
     let initialValue = this.getNewEndDate();
     if (purpose) {
@@ -100,11 +90,12 @@ class EndDate extends Component {
 
     let finalEndDate = moment(end_date).clone();
 
+    
     if (Object.keys(medicationData).length) {
-      finalEndDate = endDate ? endDate : moment().add(7, "days");
+      finalEndDate = endDate ? endDate : moment().add(7, 'days');
 
-      if (duration) {
-        finalEndDate = moment().add(parseInt(duration), "days");
+      if(duration) {
+        finalEndDate = moment().add((parseInt(duration)),'days');
       }
     }
 
@@ -126,7 +117,7 @@ class EndDate extends Component {
       // medications,
       // medicationData = {},
       // payload: { id: medication_id } = {}
-      payload: { canViewDetails = false } = {},
+      payload:{canViewDetails=false}={}
     } = this.props;
     const { formatMessage, openCalendar, getInitialValue, calendarComp } = this;
 
@@ -135,6 +126,7 @@ class EndDate extends Component {
 
     // let finalEndDate = moment(end_date).clone();
 
+    
     // if (Object.keys(medicationData).length) {
     //   finalEndDate = endDate ? endDate : moment().add(7, 'days');
 
@@ -149,23 +141,21 @@ class EndDate extends Component {
     //   }else if(duration === null){
     //     finalEndDate = null;
     //   }
-
+     
     // }
 
-    console.log("918371723 getFieldValue", {
-      value: getFieldValue(FIELD_NAME),
-    });
+    console.log("918371723 getFieldValue", {value: getFieldValue(FIELD_NAME)});
 
     return (
       <div className="flex flex-grow-1 row align-items-center">
         <div className="pl8 wp100">
-          <div className="flex  row mb-4">
+          <div className='flex  row mb-4' >
             <span className="form-label">To</span>
           </div>
-
+          
           <FormItem className="wp100">
             {getFieldDecorator(FIELD_NAME, {
-              initialValue: getInitialValue(),
+              initialValue: getInitialValue()
             })(
               <DatePicker
                 className={`full-width ${FIELD_NAME} ant-date-custom-med wp100`}
@@ -173,8 +163,7 @@ class EndDate extends Component {
                 showToday={false}
                 // suffixIcon={calendarComp()}
                 disabled={
-                  getFieldError(repeatIntervalField.field_name) !== undefined ||
-                  canViewDetails
+                  getFieldError(repeatIntervalField.field_name) !== undefined || canViewDetails
                 }
                 // allowClear={false}
                 disabledDate={disabledEndDate}
@@ -199,5 +188,5 @@ const Field = injectIntl(EndDate);
 
 export default {
   field_name: FIELD_NAME,
-  render: (props) => <Field {...props} />,
+  render: props => <Field {...props} />
 };

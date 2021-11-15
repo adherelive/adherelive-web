@@ -9,16 +9,17 @@ import {
   getAppointmentsDetailsUrl,
 } from "../../Helper/urls/appointments";
 
+
+
+
 export const ADD_APPOINTMENT_START = "ADD_APPOINTMENT_START";
 export const ADD_APPOINTMENT_COMPLETE = "ADD_APPOINTMENT_COMPLETE";
 export const ADD_APPOINTMENT_FAILED = "ADD_APPOINTMENT_FAILED";
 
-export const ADD_CARE_PLAN_APPOINTMENT_START =
-  "ADD_CARE_PLAN_APPOINTMENT_START";
-export const ADD_CARE_PLAN_APPOINTMENT_COMPLETE =
-  "ADD_CARE_PLAN_APPOINTMENT_COMPLETE";
-export const ADD_CARE_PLAN_APPOINTMENT_FAILED =
-  "ADD_CARE_PLAN_APPOINTMENT_FAILED";
+
+export const ADD_CARE_PLAN_APPOINTMENT_START = "ADD_CARE_PLAN_APPOINTMENT_START";
+export const ADD_CARE_PLAN_APPOINTMENT_COMPLETE = "ADD_CARE_PLAN_APPOINTMENT_COMPLETE";
+export const ADD_CARE_PLAN_APPOINTMENT_FAILED = "ADD_CARE_PLAN_APPOINTMENT_FAILED";
 
 export const UPDATE_APPOINTMENT_START = "UPDATE_APPOINTMENT_START";
 export const UPDATE_APPOINTMENT_COMPLETE = "UPDATE_APPOINTMENT_COMPLETE";
@@ -28,15 +29,15 @@ export const GET_APPOINTMENTS_START = "GET_APPOINTMENTS_START";
 export const GET_APPOINTMENTS_COMPLETE = "GET_APPOINTMENTS_COMPLETE";
 export const GET_APPOINTMENTS_FAILED = "GET_APPOINTMENTS_FAILED";
 
+
 export const GET_APPOINTMENTS_DETAILS = "GET_APPOINTMENTS_DETAILS";
-export const GET_APPOINTMENTS_DETAILS_COMPLETE =
-  "GET_APPOINTMENTS_DETAILS_COMPLETE";
-export const GET_APPOINTMENTS_DETAILS_FAILED =
-  "GET_APPOINTMENTS_DETAILS_FAILED";
+export const GET_APPOINTMENTS_DETAILS_COMPLETE = "GET_APPOINTMENTS_DETAILS_COMPLETE";
+export const GET_APPOINTMENTS_DETAILS_FAILED = "GET_APPOINTMENTS_DETAILS_FAILED";
 
 export const DELETE_APPOINTMENTS_START = "DELETE_APPOINTMENTS_START";
 export const DELETE_APPOINTMENTS_COMPLETE = "DELETE_APPOINTMENTS_COMPLETE";
 export const DELETE_APPOINTMENTS_FAILED = "DELETE_APPOINTMENTS_FAILED";
+
 
 export const addAppointment = (payload) => {
   let response = {};
@@ -82,6 +83,7 @@ export const addCarePlanAppointment = (payload, carePlanId) => {
         data: payload,
       });
 
+
       const { status, payload: { data = {}, error = {} } = {} } =
         response || {};
       if (status === true) {
@@ -114,6 +116,7 @@ export const updateAppointment = (payload) => {
         url: updateAppointmentUrl(id),
         data: rest,
       });
+
 
       const { status, payload: { data = {}, error = {} } = {} } =
         response || {};
@@ -163,6 +166,7 @@ export const getAppointments = (id) => {
     return response;
   };
 };
+
 
 export const getAppointmentsDetails = () => {
   let response = {};
@@ -221,6 +225,10 @@ export const deleteAppointment = (id) => {
     return response;
   };
 };
+
+
+
+
 
 function appointmentReducer(state, data) {
   const { appointments = {} } = data || {};

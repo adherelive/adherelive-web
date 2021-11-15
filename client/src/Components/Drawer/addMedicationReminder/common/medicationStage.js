@@ -17,7 +17,7 @@ import {
   Hits,
   SearchBox,
   Highlight,
-  connectSearchBox,
+  connectSearchBox
 } from "react-instantsearch-dom";
 import algoliasearch from "algoliasearch/lite";
 import { connectHits } from "react-instantsearch-dom";
@@ -36,7 +36,7 @@ class MedicationStage extends Component {
       isSearching: false,
       medicine_name: "",
       searching_medicine: false,
-      state_hits: {},
+      state_hits: {}
     };
 
     this.handleMedicineSearch = throttle(
@@ -48,10 +48,11 @@ class MedicationStage extends Component {
   componentDidUpdate(prevProps, prevState) {
     console.log("PREV PROPS =====>", prevProps);
     console.log("Prosssssssssss ----->", this.props);
+
   }
 
   Hits = ({ hits }) => {
-    console.log("7654678743576890", { hits, length: hits.length });
+    console.log("7654678743576890", {hits, length: hits.length});
 
     // let list = [];
     // for(let hit of hits){
@@ -67,7 +68,7 @@ class MedicationStage extends Component {
 
     return (
       <ol>
-        {hits.map((hit) => (
+        {hits.map(hit => (
           <li key={hit.objectID}>{this.searchOptions({ hit })}</li>
         ))}
       </ol>
@@ -107,12 +108,12 @@ class MedicationStage extends Component {
       */}
 
         <Select
-          onSearch={(value) => {
+          onSearch={value => {
             console.log("5464564524354654634  Search--->", value);
             refine(value);
             // this.setListVisible(value);
           }}
-          onChange={(value) => {
+          onChange={value => {
             console.log("5464564524354654634 --->", value);
             // refine(value);
           }}
@@ -120,7 +121,7 @@ class MedicationStage extends Component {
           showSearch
           placeholder={"Type Medicine Name"}
           value={currentRefinement}
-          onSelect={(value) => {
+          onSelect={value => {
             console.log("5464564524354654634 Select -->", value);
             // refine(value);
           }}
@@ -139,13 +140,11 @@ class MedicationStage extends Component {
     );
   };
 
-  CustomSearchBox = connectSearchBox(this.SearchBox);
-
   getStagesOption = () => {
     const { medicines = {} } = this.props;
     // let medicationStagesOption = [];
 
-    return Object.keys(medicines).map((id) => {
+    return Object.keys(medicines).map(id => {
       const { basic_info: { name } = {} } = medicines[id] || {};
       return (
         <Option key={id} value={id}>
@@ -155,7 +154,7 @@ class MedicationStage extends Component {
     });
   };
 
-  getParentNode = (t) => t.parentNode;
+  getParentNode = t => t.parentNode;
 
   async handleMedicineSearch(data) {
     try {
@@ -163,8 +162,10 @@ class MedicationStage extends Component {
         const { searchMedicine } = this.props;
         this.setState({ fetchingMedicines: true });
         const response = await searchMedicine(data);
-        const { status, payload: { data: responseData, message } = {} } =
-          response;
+        const {
+          status,
+          payload: { data: responseData, message } = {}
+        } = response;
         if (status) {
           this.setState({ fetchingMedicines: false });
         } else {
@@ -224,12 +225,12 @@ class MedicationStage extends Component {
     );
   };
 
-  onSearch = (e) => {
+  onSearch = e => {
     e.preventDefault();
     // console.log("98172381723 e.currentTarget", e.currentTarget);
   };
 
-  setListVisible = (value) => {
+  setListVisible = value => {
     const { isSearching = false } = this.state;
 
     if (isSearching === true) {
@@ -239,7 +240,7 @@ class MedicationStage extends Component {
     }
   };
 
-  reset = (e) => {
+  reset = e => {
     e.preventDefault();
     const { isSearching = false } = this.state;
     if (isSearching === true) {
@@ -247,36 +248,38 @@ class MedicationStage extends Component {
     }
   };
 
-  setMedicineValue = (medicine_id, medicine_name) => (e) => {
+  setMedicineValue = (medicine_id, medicine_name) => e => {
     e.preventDefault();
     const {
       form: { setFieldsValue, getFieldValue },
-      setFormulation,
+      setFormulation
     } = this.props;
     setFieldsValue({ [FIELD_NAME]: medicine_id });
     this.setState({
       isSearching: false,
       medicine_name: medicine_name,
-      searching_medicine: false,
+      searching_medicine: false
     });
   };
 
-  isSearchingMedicine = (e) => {
+  isSearchingMedicine = e => {
     e.preventDefault();
     console.log("7865467890765467890");
     this.setState({ searching_medicine: true });
   };
 
+  CustomSearchBox = connectSearchBox(this.SearchBox);
+
   render() {
     const {
       form: { getFieldDecorator, getFieldError, isFieldTouched },
-      setFormulation,
+      setFormulation
     } = this.props;
 
     const {
       fetchingMedicines,
       medicine_name = "",
-      searching_medicine = false,
+      searching_medicine = false
     } = this.state;
     const { isSearching = false } = this.state;
 
@@ -288,6 +291,7 @@ class MedicationStage extends Component {
 
     // const error = isFieldTouched(FIELD_NAME) && getFieldError(FIELD_NAME);
     const { CustomSearchBox } = this;
+
 
     return (
       <FormItem>
@@ -339,5 +343,5 @@ const Field = injectIntl(MedicationStage);
 
 export default {
   field_name: FIELD_NAME,
-  render: (props) => <Field {...props} />,
+  render: props => <Field {...props} />
 };

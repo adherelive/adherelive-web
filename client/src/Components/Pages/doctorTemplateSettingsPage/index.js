@@ -11,14 +11,14 @@ class TemplatePage extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      loading: false,
-    };
+      loading: false
+    }
   }
 
   componentDidMount() {
     this.handleGetAllTemplates();
     const { getVitalOccurence } = this.props;
-    getVitalOccurence().then((res) => {
+    getVitalOccurence().then(res => {
       const { status = false } = res;
       if (status) {
       }
@@ -30,15 +30,15 @@ class TemplatePage extends Component {
   async handleGetAllTemplates() {
     const { getAllTemplatesForDoctor } = this.props;
     try {
-      this.setState({ loading: true });
+      this.setState({loading: true});
       const response = await getAllTemplatesForDoctor();
       const { status, payload: { data = {}, message: msg = "" } = {} } =
         response || {};
       if (!status) {
         message.warn(msg);
-        this.setState({ loading: false });
+        this.setState({loading: false});
       } else {
-        this.setState({ loading: false });
+        this.setState({loading: false});
       }
     } catch (error) {
       console.log("error ===>", error);
@@ -50,7 +50,7 @@ class TemplatePage extends Component {
     // console.log("3289467832482354723874792384 UPDATEEEEEEEEEEEEEEEEEE");
   }
 
-  formatMessage = (data) => this.props.intl.formatMessage(data);
+  formatMessage = data => this.props.intl.formatMessage(data);
 
   async handleGetMedicationDetails(patientId = "0") {
     try {
@@ -59,7 +59,7 @@ class TemplatePage extends Component {
       const {
         status,
         statusCode,
-        payload: { data = {}, message: msg = "" } = {},
+        payload: { data = {}, message: msg = "" } = {}
       } = response;
 
       if (!status) {
@@ -75,13 +75,11 @@ class TemplatePage extends Component {
     openCreateCareplanTemplateDrawer({});
   };
 
-  handleOpenEditDrawer =
-    ({ id }) =>
-    (e) => {
-      e.preventDefault();
-      const { openEditCareplanTemplateDrawer } = this.props;
-      openEditCareplanTemplateDrawer({ id });
-    };
+  handleOpenEditDrawer = ({ id }) => e => {
+    e.preventDefault();
+    const { openEditCareplanTemplateDrawer } = this.props;
+    openEditCareplanTemplateDrawer({ id });
+  };
 
   async handleGetAllData() {
     const { getAppointmentsDetails, searchMedicine } = this.props || {};
@@ -91,7 +89,7 @@ class TemplatePage extends Component {
       const {
         payload: { data: apptData = {}, message: apptMessage = "" } = {},
         status: apptStatus = "",
-        statusCode: apptStatusCode = "",
+        statusCode: apptStatusCode = ""
       } = apptResponse || {};
 
       if (!apptStatus) {
@@ -125,7 +123,7 @@ class TemplatePage extends Component {
   };
 
   render() {
-    const { loading } = this.state;
+    const {loading} = this.state;
     return (
       <div>
         <div>

@@ -19,7 +19,7 @@ class WorkoutWrapper extends BaseWorkout {
       total_calories,
       details,
       time,
-      expired_on,
+      expired_on
     } = _data || {};
 
     return {
@@ -33,7 +33,7 @@ class WorkoutWrapper extends BaseWorkout {
       end_date,
       total_calories,
       details,
-      expired_on,
+      expired_on
     };
   };
 

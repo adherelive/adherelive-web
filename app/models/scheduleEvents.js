@@ -58,13 +58,23 @@ export const db = (database) => {
       start_time: {
         type: DataTypes.DATE,
         set(val) {
-          this.setDataValue("start_time", moment(val).seconds(0).toISOString());
+          this.setDataValue(
+            "start_time",
+            moment(val)
+              .seconds(0)
+              .toISOString()
+          );
         },
       },
       end_time: {
         type: DataTypes.DATE,
         set(val) {
-          this.setDataValue("end_time", moment(val).seconds(0).toISOString());
+          this.setDataValue(
+            "end_time",
+            moment(val)
+              .seconds(0)
+              .toISOString()
+          );
         },
       },
       created_at: {

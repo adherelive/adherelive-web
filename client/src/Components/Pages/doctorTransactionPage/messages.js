@@ -4,8 +4,9 @@ const messages = defineMessages({
   transaction_table_header: {
     id: "app.doctor.transaction.details.transactionsText",
     description: "",
-    defaultMessage: "Transactions",
+    defaultMessage: "Transactions"
   },
+  
 });
 
 export default messages;

@@ -5,11 +5,11 @@ import {
   EVENT_STATUS,
   EVENT_TYPE,
   USER_CATEGORY,
-  OFFLINE_SYNC_DATA_TASKS,
+  OFFLINE_SYNC_DATA_TASKS
 } from "../../../../constant";
 import {
   syncMedicationReminderStatus,
-  syncVitalsResponseData,
+  syncVitalsResponseData
 } from "./eventSyncHelper";
 
 const Log = new Logger("MOBILE > SYNC > CONTROLLER");
@@ -24,7 +24,7 @@ class SyncController extends Controller {
     try {
       const { body } = req;
       const {
-        [OFFLINE_SYNC_DATA_TASKS.SYNC_EVENTS_DATA]: event_sync_data = {},
+        [OFFLINE_SYNC_DATA_TASKS.SYNC_EVENTS_DATA]: event_sync_data = {}
       } = body;
       Log.debug("data got from body is: ", event_sync_data);
 
@@ -43,12 +43,14 @@ class SyncController extends Controller {
     const { raiseSuccess, raiseClientError, raiseServerError } = this;
     try {
       const { body: { event_sync_data = {} } = {} } = req;
-      const { userDetails: { userRoleId } = {} } = req;
+      const {
+        userDetails: { userRoleId } = {},
+      } = req;
       const {
         event_type = null,
         event_data = {},
         event_id = null,
-        update_time = null,
+        update_time = null
       } = event_sync_data;
       Log.debug("data got from body is: ", event_type, event_id);
 
@@ -64,20 +66,18 @@ class SyncController extends Controller {
           {
             schedule_events: {
               [eventApiDetails.getEventId()]: {
-                ...eventApiDetails.getAllInfo(),
-              },
-            },
+                ...eventApiDetails.getAllInfo()
+              }
+            }
           },
           "Medication reminder event status updated successfully"
         );
       } else if (event_type === EVENT_TYPE.VITALS) {
-        const { syncEventApiDetails, vitalApiDetails, vitalTemplate } =
-          await syncVitalsResponseData(
-            event_data,
-            update_time,
-            res,
-            userRoleId
-          );
+        const {
+          syncEventApiDetails,
+          vitalApiDetails,
+          vitalTemplate
+        } = await syncVitalsResponseData(event_data, update_time, res, userRoleId);
         console.log("Got data in the sync controller: ");
         return raiseSuccess(
           res,
@@ -86,9 +86,9 @@ class SyncController extends Controller {
             ...(await vitalApiDetails.getAllInfo()),
             schedule_events: {
               [syncEventApiDetails.getEventId()]: {
-                ...syncEventApiDetails.getAllInfo(),
-              },
-            },
+                ...syncEventApiDetails.getAllInfo()
+              }
+            }
           },
           `${vitalTemplate.getName().toUpperCase()} vital updated successfully`
         );

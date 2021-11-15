@@ -1,19 +1,21 @@
 export default class WorkoutResponses {
-  constructor(data) {
-    this._data = data;
-  }
 
-  getId = () => {
-    return this._data.id;
-  };
+    constructor(data){
+        this._data=data;
+    }
 
-  getScheduleEventId = () => {
-    return this._data.schedule_event_id;
-  };
+    getId = () => {
+        return this._data.id;
+    }
 
-  getExerciseGroupId = () => this._data.exercise_group_id;
+    getScheduleEventId = () => {
+        return this._data.schedule_event_id;
+    }
 
-  getStatus = () => {
-    return this._data.status;
-  };
+    getExerciseGroupId = () => this._data.exercise_group_id;
+
+    getStatus = () => {
+        return this._data.status;
+    }
+
 }

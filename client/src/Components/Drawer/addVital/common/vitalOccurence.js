@@ -18,41 +18,43 @@ class VitalOccurence extends Component {
     super(props);
     this.state = {
       vitals: {},
-      fetchingVitals: false,
+      fetchingVitals: false
     };
-  }
 
-  componentDidMount() {
+  }
+  componentDidMount(){
     this.getStagesOption();
   }
-
   getStagesOption = () => {
-    if (!this.state.fetchingVitals) {
-      const { getVitalOccurence } = this.props;
-      getVitalOccurence().then((res) => {
+    if(!this.state.fetchingVitals){
+      const {  getVitalOccurence } = this.props;
+      getVitalOccurence().then(res=>{
         const { status = false } = res;
-        if (status) {
-          this.setState({ fetchingVitals: true });
+        if(status){
+          this.setState({fetchingVitals:true})
         }
       });
-    } else {
-    }
-  };
+    }else{
 
-  getParentNode = (t) => t.parentNode;
+    }
+    
+  };
+    
+  getParentNode = t => t.parentNode;
+
 
   render() {
     const {
       form: { getFieldDecorator, getFieldError, isFieldTouched },
-      repeat_intervals,
+      repeat_intervals
     } = this.props;
 
     const { fetchingVitals } = this.state;
 
     const { getStagesOption, getParentNode, handleVitalSearch } = this;
 
-    const options = Object.keys(repeat_intervals).map((id) => {
-      const { text = "" } = repeat_intervals[id] || {};
+    const options = Object.keys(repeat_intervals).map(id => {
+      const { text = '' } = repeat_intervals[id] || {};
       return (
         <Option key={id} value={id}>
           {text}
@@ -63,6 +65,7 @@ class VitalOccurence extends Component {
     // if (!program_has_medication_stage || (!!purpose && !!!getInitialValue())) {
     //   return null;
     // }
+
 
     // const error = isFieldTouched(FIELD_NAME) && getFieldError(FIELD_NAME);
 
@@ -77,9 +80,7 @@ class VitalOccurence extends Component {
           // ]
         })(
           <Select
-            notFoundContent={
-              !fetchingVitals ? <Spin size="small" /> : "No match found"
-            }
+            notFoundContent={!fetchingVitals ? <Spin size="small" /> : 'No match found'}
             className="drawer-select"
             placeholder="Select Occurence"
             showSearch
@@ -92,6 +93,7 @@ class VitalOccurence extends Component {
                 .indexOf(input.toLowerCase()) >= 0
             }
             getPopupContainer={getParentNode}
+
           >
             {options}
           </Select>
@@ -105,5 +107,5 @@ const Field = injectIntl(VitalOccurence);
 
 export default {
   field_name: FIELD_NAME,
-  render: (props) => <Field {...props} />,
+  render: props => <Field {...props} />
 };

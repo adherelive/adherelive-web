@@ -8,19 +8,19 @@ module.exports = {
     return Promise.all([
       queryInterface.addColumn(TABLE_NAME, "for_user_id", {
         type: Sequelize.INTEGER,
-        allowNull: false,
+        allowNull: false
       }),
       queryInterface.addColumn(TABLE_NAME, "for_user_type", {
         type: Sequelize.ENUM,
-        values: USER_CATEGORY_ARRAY,
-      }),
+        values: USER_CATEGORY_ARRAY
+      })
     ]);
   },
 
   down: (queryInterface, Sequelize) => {
     return Promise.all([
       queryInterface.removeColumn(TABLE_NAME, "for_user_id"),
-      queryInterface.removeColumn(TABLE_NAME, "for_user_type"),
+      queryInterface.removeColumn(TABLE_NAME, "for_user_type")
     ]);
-  },
+  }
 };

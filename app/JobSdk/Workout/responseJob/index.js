@@ -20,8 +20,8 @@ class ResponseJob extends WorkoutJob {
       actor: {
         id: actorId,
         user_role_id,
-        details: { name, category: actorCategory } = {},
-      } = {},
+        details: { name, category: actorCategory } = {}
+      } = {}
     } = _data || {};
 
     const templateData = [];
@@ -30,27 +30,27 @@ class ResponseJob extends WorkoutJob {
     const userRoleIds = [];
     let doctorRoleId = null;
 
-    participants.forEach((participant) => {
+    participants.forEach(participant => {
       if (participant !== user_role_id) {
         doctorRoleId = participant;
         userRoleIds.push(participant);
       }
     });
 
-    const { rows: userRoles = [] } =
-      (await UserRoleService.findAndCountAll({
-        where: {
-          id: userRoleIds,
-        },
-      })) || {};
+    const {rows: userRoles = []} = await UserRoleService.findAndCountAll({
+      where: {
+        id: userRoleIds
+      }
+    }) || {};
 
-    for (const userRole of userRoles) {
-      const { user_identity } = userRole || {};
+    for(const userRole of userRoles) {
+      const {user_identity} = userRole || {};
       userIds.push(user_identity);
     }
 
+
     const userDevices = await UserDeviceService.getAllDeviceByData({
-      user_id: userIds,
+      user_id: userIds
     });
 
     if (userDevices.length > 0) {
@@ -61,8 +61,8 @@ class ResponseJob extends WorkoutJob {
     }
 
     let workoutName = "";
-    if (workout_id) {
-      const { basic_info: { name } = {} } = workouts[workout_id] || {};
+    if(workout_id) {
+      const {basic_info: {name} = {}} = workouts[workout_id] || {};
       workoutName = name;
     }
 
@@ -71,15 +71,15 @@ class ResponseJob extends WorkoutJob {
       app_id: process.config.one_signal.app_id,
       headings: { en: `${name} added response for workout.` },
       contents: {
-        en: `Tap here to see ${workoutName} response details.`,
+        en: `Tap here to see ${workoutName} response details.`
       },
       include_player_ids: [...playerIds],
       priority: 10,
       android_channel_id: process.config.one_signal.urgent_channel_id,
       data: {
         url: `/${NOTIFICATION_VERB.WORKOUT_RESPONSE}`,
-        params: { ...this.getWorkoutData(), doctorRoleId },
-      },
+        params: {...this.getWorkoutData(), doctorRoleId}
+      }
     });
 
     return templateData;
@@ -89,9 +89,8 @@ class ResponseJob extends WorkoutJob {
     const { getWorkoutData } = this;
     const data = getWorkoutData();
     const {
-      participants = [],
-      actor: { id: actorId, user_role_id } = {},
-      id = null,
+      participants = [], actor: { id: actorId, user_role_id} = {},
+      id = null
     } = data || {};
 
     const templateData = [];
@@ -109,7 +108,7 @@ class ResponseJob extends WorkoutJob {
           verb: `${NOTIFICATION_VERB.WORKOUT_RESPONSE}:${currentTimeStamp}`,
           event: EVENT_TYPE.WORKOUT,
           time: currentTime,
-          create_time: currentTime,
+          create_time: currentTime
         });
       }
     }

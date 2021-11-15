@@ -56,6 +56,7 @@ class AdhocController extends Controller {
             linked_id,
             linked_with,
           });
+
         }
       }
 
@@ -160,17 +161,17 @@ class AdhocController extends Controller {
             paymentProduct.getForUserRoleId()
           )) || {};
 
-        let forUserRoleId = null;
+          let forUserRoleId = null;
 
-        if (forUserId) {
-          forUserRoleId =
+          if(forUserId) {
+            forUserRoleId =
             (await userRoleService.findOne({
               where: {
                 user_identity: forUserId,
               },
               attributes: ["id"],
             })) || null;
-        }
+          }
 
         const { user_id: creatorUserId } =
           (await getUserDetails(
@@ -178,30 +179,29 @@ class AdhocController extends Controller {
             paymentProduct.getCreatorRoleId()
           )) || {};
 
-        let creatorRoleId = null;
+          let creatorRoleId = null;
 
-        if (creatorUserId) {
-          creatorRoleId =
-            (await userRoleService.findOne({
-              where: {
-                user_identity: creatorUserId,
-              },
-              attributes: ["id"],
-            })) || null;
-        }
+          if(creatorUserId) {
+            creatorRoleId =
+          (await userRoleService.findOne({
+            where: {
+              user_identity: creatorUserId,
+            },
+            attributes: ["id"],
+          })) || null;
+          }
 
         if (forUserRoleId && creatorRoleId) {
           const { id: for_user_role_id = 0 } = forUserRoleId || {};
           const { id: creator_role_id = null } = creatorRoleId || {};
 
-          const paymentProductUpdateResponse =
-            await paymentProductService.updateDoctorProduct(
-              {
-                for_user_role_id,
-                creator_role_id,
-              },
-              paymentProduct.getId()
-            );
+          const paymentProductUpdateResponse = await paymentProductService.updateDoctorProduct(
+            {
+              for_user_role_id,
+              creator_role_id,
+            },
+            paymentProduct.getId()
+          );
         }
       }
 
@@ -222,11 +222,10 @@ class AdhocController extends Controller {
             const userRoleWrapper = await UserRoleWrapper(userRole);
             const userRoleId = userRoleWrapper.getId();
             let recordData = { ...watchlistWrapper, user_role_id: userRoleId };
-            const updatedRecord =
-              await doctorPatientWatchlistService.updateRecord(
-                recordData,
-                recordId
-              );
+            const updatedRecord = await doctorPatientWatchlistService.updateRecord(
+              recordData,
+              recordId
+            );
           }
         }
       }
@@ -371,8 +370,7 @@ class AdhocController extends Controller {
       }
 
       // delete previous user permissions
-      const isPreviousUserPermissionsDeleted =
-        await userPermissionService.deleteAll();
+      const isPreviousUserPermissionsDeleted = await userPermissionService.deleteAll();
 
       // delete previous permissions
       if (isPreviousUserPermissionsDeleted) {
@@ -427,35 +425,6 @@ class AdhocController extends Controller {
       }
     } catch (error) {
       Log.debug("updatePermissions 500", error);
-      return raiseServerError(res);
-    }
-  };
-
-  updateChannels = async (req, res) => {
-    const { raiseSuccess, raiseServerError } = this;
-    try {
-      const channelSeparator = process.config.twilio.CHANNEL_SERVER;
-
-      const careplans = (await carePlanService.getAll()) || [];
-
-      if (careplans.length) {
-        for (let index = 0; index < careplans.length; index++) {
-          const { id, patient_id, user_role_id } = careplans[index] || {};
-
-          Log.debug(
-            "1231023 ",
-            `${user_role_id}-${channelSeparator}-${patient_id}`
-          );
-          await carePlanService.updateCarePlan(
-            { channel_id: `${user_role_id}-${channelSeparator}-${patient_id}` },
-            id
-          );
-        }
-
-        return raiseSuccess(res, 200, {}, "Channels updated successfully");
-      }
-    } catch (error) {
-      Log.debug("updateChannels 500", error);
       return raiseServerError(res);
     }
   };

@@ -4,7 +4,7 @@ import {
   Route,
   Switch,
   Redirect,
-  withRouter,
+  withRouter
 } from "react-router-dom";
 import SideMenu from "../../Containers/Sidebar";
 import BlankState from "../../Components/Common/BlankState";
@@ -87,80 +87,81 @@ const PrivacyPolicy = lazy(() =>
   )
 );
 
-const TemplatePage = lazy(() =>
-  import(
-    /* webpackChunkName: "TemplatePage" */ "../../Containers/Pages/doctorTemplateSettingsPage"
-  )
+const TemplatePage = lazy(() => 
+    import (
+        /* webpackChunkName: "TemplatePage" */ "../../Containers/Pages/doctorTemplateSettingsPage"
+    )
 );
 
-const DoctorTransactionPage = lazy(() =>
-  import(
-    /* webpackChunkName: "DoctorTransactionPage" */ "../../Containers/Pages/doctorTransactionPage"
-  )
+const DoctorTransactionPage = lazy(() => 
+    import(
+      /* webpackChunkName: "DoctorTransactionPage" */ "../../Containers/Pages/doctorTransactionPage"
+
+    )
 );
 
-const PatientDetailsComp = (props) => {
+const PatientDetailsComp = props => {
   const { match: { params: { patient_id } = {} } = {} } = props;
   return <PatientDetails patient_id={patient_id} />;
 };
 
-const RegisterProfileComp = (props) => {
-  return <RegisterProfile {...props} />;
-};
+const RegisterProfileComp = props => {
+  return <RegisterProfile {...props} /> ;
+}
 
-const ChatFullScreenComp = (props) => {
-  return <ChatFullScreen {...props} />;
-};
+const ChatFullScreenComp = props => {
+  return <ChatFullScreen { ...props } />;
+}
 
-const TestTwilioVideoComp = (props) => {
-  return <TestTwilioVideo {...props} />;
-};
+const TestTwilioVideoComp = props => {
+  return <TestTwilioVideo {...props} /> ;
+}
 
-const TwilioVideoComp = (props) => {
-  return <TwilioVideo {...props} />;
-};
+const TwilioVideoComp = props => {
+  return <TwilioVideo {...props}/> ;
+}
 
-const RegisterQualificationsComp = (props) => {
-  return <RegisterQualifications {...props} />;
-};
+const RegisterQualificationsComp = props => {
+  return <RegisterQualifications {...props} /> ;
+}
 
-const RegisterClinicsComp = (props) => {
-  return <RegisterClinics {...props} />;
-};
+const RegisterClinicsComp = props => {
+  return <RegisterClinics {...props} /> ;
+}
 
-const DoctorProfilePageComp = (props) => {
+const DoctorProfilePageComp = props => {
   return <DoctorProfilePage {...props} />;
-};
+}
 
-const DoctorSettingsPageComp = (props) => {
-  return <DoctorSettingsPage {...props} />;
-};
+const DoctorSettingsPageComp = props => {
+  return <DoctorSettingsPage {...props} /> ;
+}
 
-const TermsOfServiceComp = (props) => {
+const TermsOfServiceComp = props => {
   return <TermsOfService {...props} />;
-};
+}
 
-const TermsOfPaymentComp = (props) => {
-  return <TermsOfPayment {...props} />;
-};
+const TermsOfPaymentComp = props => {
+  return <TermsOfPayment {...props}/>;
+}
 
-const PrivacyPolicyComp = (props) => {
+const PrivacyPolicyComp = props => {
   return <PrivacyPolicy {...props} />;
-};
+}
 
-const TemplatePageComp = (props) => {
-  return <TemplatePage {...props} />;
-};
+const TemplatePageComp = props => {
+  return <TemplatePage {...props}/> ;
+}
 
-const DoctorTransactionPageComp = (props) => {
-  return <DoctorTransactionPage {...props} />;
-};
+const DoctorTransactionPageComp = props => {
+  return <DoctorTransactionPage {...props} /> ;
+}
 
-const DashboardComp = (props) => {
+const DashboardComp = props => {
   return <Dashboard {...props} />;
-};
+}
 
-const SideMenuComp = (props) => {
+const SideMenuComp = props => {
   const { location: { pathname = "" } = {} } = props;
   // console.log("102938138932 sidemenu component --> ", {props});
   if (
@@ -171,6 +172,7 @@ const SideMenuComp = (props) => {
       pathname.includes("video") ||
       pathname.includes("sign-in") ||
       pathname.includes("terms-of-payment")
+
     )
   ) {
     return <SideMenu {...props} />;
@@ -179,22 +181,24 @@ const SideMenuComp = (props) => {
   }
 };
 
-const NotificationDrawerComponent = (props) => {
-  return <NotificationDrawer {...props} />;
+const NotificationDrawerComponent = props => {
+
+    return <NotificationDrawer {...props} />;
+ 
 };
 
 class Doctors extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      redirecting: this.props.authRedirection,
+      redirecting: this.props.authRedirection
     };
   }
 
   componentDidMount() {
     this.setState((prevState, prevProps) => {
       return {
-        redirecting: false,
+        redirecting: false
       };
     });
   }
@@ -218,11 +222,7 @@ class Doctors extends Component {
             <SideMenuComp {...this.props} />
             <div
               className={
-                isNotChatComponent
-                  ? pathname.includes("video")
-                    ? "video-page"
-                    : `container`
-                  : "container-chat-page"
+                isNotChatComponent ? pathname.includes("video") ? "video-page" : `container` : "container-chat-page"
               }
             >
               <Switch>
@@ -268,9 +268,9 @@ class Doctors extends Component {
                 />
 
                 <Route
-                  exact
-                  path={`${PATH.REGISTER_FROM_MY_PROFILE}${PATH.REGISTER_QUALIFICATIONS}`}
-                  component={RegisterQualificationsComp}
+                exact
+                path={`${PATH.REGISTER_FROM_MY_PROFILE}${PATH.REGISTER_QUALIFICATIONS}`}
+                component={RegisterQualificationsComp}
                 />
 
                 <Route
@@ -316,34 +316,36 @@ class Doctors extends Component {
                 />
 
                 <Route
-                  exact
-                  path={PATH.TERMS_OF_SERVICE}
-                  component={TermsOfServiceComp}
+                    exact
+                    path={PATH.TERMS_OF_SERVICE}
+                    component={TermsOfServiceComp}
                 />
-
+                
                 <Route
                   exact
                   path={PATH.TERMS_OF_PAYMENT}
                   component={TermsOfPaymentComp}
                 />
                 <Route
-                  exact
-                  path={PATH.PRIVACY_POLICY}
-                  component={PrivacyPolicyComp}
+                    exact
+                    path={PATH.PRIVACY_POLICY}
+                    component={PrivacyPolicyComp}
                 />
 
                 <Route
-                  exact
-                  path={PATH.TEMPLATES}
-                  component={TemplatePageComp}
+                    exact
+                    path={PATH.TEMPLATES}
+                    component={TemplatePageComp}
                 />
+
 
                 <Route
-                  exact
-                  path={PATH.DOCTOR.TRANSACTION_DETAILS}
-                  component={DoctorTransactionPageComp}
+                 exact
+                 path={PATH.DOCTOR.TRANSACTION_DETAILS}
+                 component={DoctorTransactionPageComp}
                 />
 
+                
                 {/* <Route
                   exact
                   path={PATH.DASHBOARD}

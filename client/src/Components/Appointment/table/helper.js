@@ -1,4 +1,4 @@
-import { getUserDetails } from "../../../Helper/userDetails";
+import {getUserDetails} from "../../../Helper/userDetails";
 
 export const TABLE_COLUMN = {
   ORGANIZER: {
@@ -20,25 +20,20 @@ export const TABLE_COLUMN = {
     key: "DESCRIPTION",
     dataIndex: "DESCRIPTION",
     // width: 100
-  },
+  }
 };
 
-export const formatAppointmentTableData = (data) => {
+export const formatAppointmentTableData = data => {
   const { appointments, id, doctors, patients, care_takers } = data || {};
 
-  const { organizer: { id: organizer_id, category } = {} } =
-    appointments[id] || {};
+  const {
+    organizer: {id: organizer_id, category} = {}
+  } = appointments[id] || {};
 
-  const userData = getUserDetails({
-    type: category,
-    id: organizer_id,
-    doctors,
-    patients,
-    care_takers,
-  });
+  const userData = getUserDetails({type: category, id: organizer_id, doctors, patients, care_takers});
 
   return {
-    appointmentData: appointments[id],
-    userData,
+    appointmentData : appointments[id],
+    userData
   };
 };

@@ -7,7 +7,7 @@ import {
   EVENT_TYPE,
   USER_STATUS,
   ACTIVITY_TYPE,
-  APPOINTMENT_TYPE,
+  APPOINTMENT_TYPE
 } from "../../../../constant";
 import messages from "../message";
 // import dropDownIcon from "../../../../Assets/images/material-icons-black-arrow-drop-down.svg";
@@ -91,18 +91,18 @@ const FIELD_NAME = "participantTwo";
 class Participants extends Component {
   componentDidMount() {
     const {
-      form: { validateFields },
+      form: { validateFields }
     } = this.props;
     validateFields();
   }
 
-  getParentNode = (t) => t.parentNode;
+  getParentNode = t => t.parentNode;
 
   getInitialValue = () => {
     const {
       currentUser: { basicInfo: { category }, programIds = [] } = {},
       purpose,
-      otherUser: { basicInfo: { _id } = {} } = {},
+      otherUser: { basicInfo: { _id } = {} } = {}
     } = this.props;
 
     if (purpose) {
@@ -116,12 +116,12 @@ class Participants extends Component {
     }
   };
 
-  insertUserEntry = (users) => {
+  insertUserEntry = users => {
     const userOptions = [];
-    users.forEach((user) => {
+    users.forEach(user => {
       const {
         basicInfo: { _id, name, profilePicLink = userPlaceHolder },
-        personalInfo: { dob, gender } = {},
+        personalInfo: { dob, gender } = {}
       } = user;
       const years = dob && moment().diff(dob, "years", false);
       userOptions.push(
@@ -141,20 +141,18 @@ class Participants extends Component {
   getParticipantOption = () => {
     const { members = [] } = this.props;
     let options = [];
-    const doctors = members.filter((member) => {
+    const doctors = members.filter(member => {
       const { basicInfo: { category } = {} } = member || {};
-      return (
-        category === USER_CATEGORY.DOCTOR || category === USER_CATEGORY.HSP
-      );
+      return (category === USER_CATEGORY.DOCTOR || category === USER_CATEGORY.HSP);
     });
-    const patients = members.filter((member) => {
+    const patients = members.filter(member => {
       const { basicInfo: { category } = {}, status } = member || {};
 
       return (
         category === USER_CATEGORY.PATIENT && status === USER_STATUS.ENROLLED
       );
     });
-    const careCoach = members.filter((member) => {
+    const careCoach = members.filter(member => {
       const { basicInfo: { category } = {} } = member || {};
 
       return category === USER_CATEGORY.CARE_COACH;
@@ -184,17 +182,17 @@ class Participants extends Component {
     return options;
   };
 
-  formatMessage = (data) => this.props.intl.formatMessage(data);
+  formatMessage = data => this.props.intl.formatMessage(data);
 
-  onChangeParticpantRadioGroup = (e) => {
+  onChangeParticpantRadioGroup = e => {
     e.preventDefault();
     const {
       members = [],
-      form: { setFieldsValue },
+      form: { setFieldsValue }
     } = this.props;
     const value = e.target.value;
     let category;
-    members.forEach((member) => {
+    members.forEach(member => {
       const { basicInfo: { _id, category: memberCategory } = {} } = member;
       if (_id === value) {
         category = memberCategory;
@@ -203,7 +201,7 @@ class Participants extends Component {
     if (category === USER_CATEGORY.DOCTOR || category === USER_CATEGORY.HSP) {
       setFieldsValue({
         [activityTypeField.field_name]: APPOINTMENT_TYPE.FOLLOWUP,
-        [activityModeField.field_name]: ACTIVITY_TYPE.CHAT,
+        [activityModeField.field_name]: ACTIVITY_TYPE.CHAT
       });
     }
   };
@@ -221,14 +219,14 @@ class Participants extends Component {
       currentUser: { basicInfo: { category }, programIds = [] } = {},
       eventMode = "appointment",
       purpose,
-      setParticipantTwo,
+      setParticipantTwo
     } = this.props;
     const {
       getParticipantOption,
       formatMessage,
       onChangeParticpantRadioGroup,
       getInitialValue,
-      onChangeParticipant,
+      onChangeParticipant
     } = this;
 
     const participantError =
@@ -254,8 +252,7 @@ class Participants extends Component {
       <Fragment>
         <div>
           {(USER_CATEGORY.CARE_COACH === "PATIENT" ||
-            category === USER_CATEGORY.DOCTOR ||
-            category === USER_CATEGORY.HSP) && (
+            (category  === USER_CATEGORY.DOCTOR || category  === USER_CATEGORY.HSP) ) && (
             <FormItem
               label={`${
                 eventMode === EVENT_TYPE.APPOINTMENT
@@ -269,10 +266,10 @@ class Participants extends Component {
                 rules: [
                   {
                     required: true,
-                    message: "Enter participant",
-                  },
+                    message: "Enter participant"
+                  }
                 ],
-                initialValue: getInitialValue(),
+                initialValue: getInitialValue()
               })(
                 <Select
                   className="user-select"
@@ -308,10 +305,10 @@ class Participants extends Component {
                 rules: [
                   {
                     required: true,
-                    message: "Enter participant",
-                  },
+                    message: "Enter participant"
+                  }
                 ],
-                initialValue: getInitialValue(),
+                initialValue: getInitialValue()
               })(
                 <RadioGroup
                   className="radio-group-tab"
@@ -347,5 +344,5 @@ const Field = injectIntl(Participants);
 
 export default {
   field_name: FIELD_NAME,
-  render: (props) => <Field {...props} />,
+  render: props => <Field {...props} />
 };

@@ -32,7 +32,7 @@ class MealTemplateWrapper extends BaseMealTemplate {
 
     if (allFoodItemDetails.length > 0) {
       for (let index = 0; index < allFoodItemDetails.length; index++) {
-        const { id } = allFoodItemDetails[index];
+        const {id} = allFoodItemDetails[index];
         food_item_detail_ids.push(id);
       }
     }
@@ -51,11 +51,8 @@ class MealTemplateWrapper extends BaseMealTemplate {
     let food_item_detail_ids = [];
     if (allFoodItemDetails.length > 0) {
       for (let index = 0; index < allFoodItemDetails.length; index++) {
-        const FoodItemDetails = await FoodItemDetailsWrapper({
-          data: allFoodItemDetails[index],
-        });
-        foodItemsDetailsData[FoodItemDetails.getId()] =
-          FoodItemDetails.getBasicInfo();
+        const FoodItemDetails = await FoodItemDetailsWrapper({ data: allFoodItemDetails[index] });
+        foodItemsDetailsData[FoodItemDetails.getId()] = FoodItemDetails.getBasicInfo();
         food_item_detail_ids.push(FoodItemDetails.getId());
       }
     }

@@ -5,7 +5,7 @@ export const saveFileIntoUserBucket = async ({
   service,
   file,
   user_id,
-  file_path,
+  file_path
 }) => {
   try {
     await service.createBucket();

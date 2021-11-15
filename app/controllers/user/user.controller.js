@@ -17,8 +17,9 @@ import severityService from "../../services/severity/severity.service";
 import conditionService from "../../services/condition/condition.service";
 import providerService from "../../services/provider/provider.service";
 import doctorProviderMappingService from "../../services/doctorProviderMapping/doctorProviderMapping.service";
-import userRolesService from "../../services/userRoles/userRoles.service";
+import userRolesService from '../../services/userRoles/userRoles.service';
 import doctorPatientWatchlistService from "../../services/doctorPatientWatchlist/doctorPatientWatchlist.service";
+
 
 import UserWrapper from "../../ApiWrapper/web/user";
 import DoctorWrapper from "../../ApiWrapper/web/doctor";
@@ -32,16 +33,20 @@ import DoctorProviderMappingWrapper from "../../ApiWrapper/web/doctorProviderMap
 import UserRolesWrapper from "../../ApiWrapper/web/userRoles";
 import DoctorPatientWatchlistWrapper from "../../ApiWrapper/web/doctorPatientWatchlist";
 
+
 import doctorService from "../../services/doctors/doctors.service";
 import UserVerificationServices from "../../services/userVerifications/userVerifications.services";
 import Controller from "../index";
-import { uploadImageS3, createNewUser } from "./userHelper";
+import {
+  uploadImageS3,
+  createNewUser
+} from "./userHelper";
 import { v4 as uuidv4 } from "uuid";
 import constants from "../../../config/constants";
 import {
   EMAIL_TEMPLATE_NAME,
   USER_CATEGORY,
-  VERIFICATION_TYPE,
+  VERIFICATION_TYPE
 } from "../../../constant";
 import { Proxy_Sdk, EVENTS } from "../../proxySdk";
 // import  EVENTS from "../../proxySdk/proxyEvents";
@@ -60,28 +65,22 @@ class UserController extends Controller {
     super();
   }
 
-  signUp = async (req, res) => {
-    const { raiseClientError, raiseServerError, raiseSuccess } = this;
+  signUp= async (req, res) => {
+    const {raiseClientError, raiseServerError, raiseSuccess} = this;
     try {
-      const { body: { password, email, readTermsOfService = false } = {} } =
-        req;
+        const {body: {password, email, readTermsOfService = false} = {}} = req;
 
-      if (!readTermsOfService) {
-        return this.raiseClientError(
-          res,
-          422,
-          {},
-          "Please read our Terms of Service before signing up"
-        );
+      if(!readTermsOfService) {
+        return this.raiseClientError(res, 422, {}, "Please read our Terms of Service before signing up");
       }
 
       const newUser = await createNewUser(email, password, null);
 
       return raiseSuccess(
-        res,
-        200,
-        {},
-        "Signed up successfully. Please check your email to proceed"
+          res,
+          200,
+          {},
+          "Signed up successfully. Please check your email to proceed"
       );
     } catch (err) {
       Logger.debug("signup 500", err);
@@ -99,21 +98,19 @@ class UserController extends Controller {
         // return res.status(500).json(response.getResponse());
       }
     }
-  };
+  }
 
   verifyUser = async (req, res) => {
-    const { raiseSuccess, raiseClientError, raiseServerError } = this;
+    const {raiseSuccess, raiseClientError, raiseServerError} = this;
     try {
-      const { params: { link } = {} } = req;
+      const {params: {link} = {}} = req;
       Logger.info(`(request)(param) LINK :: ${link}`);
-      const verifications = await UserVerificationServices.getRequestByLink(
-        link
-      );
+      const verifications = await UserVerificationServices.getRequestByLink(link);
 
-      const { user_id: userId } = verifications.get("") || {};
+      const {user_id: userId} = verifications.get("") || {};
 
       const userData = await userService.getUserById(userId);
-      const { verified: isVerified } = userData.get("") || {};
+      const {verified: isVerified} = userData.get("") || {};
 
       if (!isVerified) {
         await UserVerificationServices.updateVerification(
@@ -122,7 +119,7 @@ class UserController extends Controller {
         );
 
         // let activated_on = moment();
-        const user = await userService.updateUser({ verified: true }, userId);
+        const user = await userService.updateUser({verified: true}, userId);
 
         const expiresIn = process.config.TOKEN_EXPIRE_TIME; // expires in 30 day
 
@@ -130,17 +127,19 @@ class UserController extends Controller {
 
         const accessToken = await jwt.sign(
           {
-            userId,
+            userId
           },
           secret,
           {
-            expiresIn,
+            expiresIn
           }
         );
 
         const appNotification = new AppNotification();
 
-        const notificationToken = appNotification.getUserToken(`${userId}`);
+        const notificationToken = appNotification.getUserToken(
+          `${userId}`
+        );
         // const feedId = base64.encode(`${userId}`);
 
         const apiUserDetails = await UserWrapper(null, userId);
@@ -148,13 +147,13 @@ class UserController extends Controller {
         const dataToSend = {
           users: {
             [apiUserDetails.getId()]: {
-              ...apiUserDetails.getBasicInfo(),
-            },
+              ...apiUserDetails.getBasicInfo()
+            }
           },
           notificationToken: notificationToken,
           feedId: `${userId}`,
           auth_user: apiUserDetails.getId(),
-          auth_category: apiUserDetails.getCategory(),
+          auth_category: apiUserDetails.getCategory()
         };
 
         // res.redirect("/sign-in");
@@ -162,7 +161,7 @@ class UserController extends Controller {
           expires: new Date(
             Date.now() + process.config.INVITE_EXPIRE_TIME * 86400000
           ),
-          httpOnly: true,
+          httpOnly: true
         });
 
         return raiseSuccess(
@@ -190,7 +189,7 @@ class UserController extends Controller {
     try {
       const { email, password } = req.body;
       const user = await userService.getUserByEmail({
-        email,
+        email
       });
 
       if (!user) {
@@ -198,7 +197,7 @@ class UserController extends Controller {
       }
 
       const userRole = await userRolesService.getFirstUserRole(user.get("id"));
-      if (!userRole) {
+      if(!userRole) {
         return this.raiseClientError(res, 422, {}, "User doesn't exists");
       }
 
@@ -233,7 +232,7 @@ class UserController extends Controller {
 
           const updateUser = await userService.updateUser(
             {
-              password: hash,
+              password: hash
             },
             user.get("id")
           );
@@ -255,17 +254,19 @@ class UserController extends Controller {
         const secret = process.config.TOKEN_SECRET_KEY;
         const accessToken = await jwt.sign(
           {
-            userRoleId,
+            userRoleId
           },
           secret,
           {
-            expiresIn,
+            expiresIn
           }
         );
 
         const appNotification = new AppNotification();
 
-        const notificationToken = appNotification.getUserToken(`${userRoleId}`);
+        const notificationToken = appNotification.getUserToken(
+          `${userRoleId}`
+        );
         const feedId = base64.encode(`${userRoleId}`);
 
         // Logger.debug("notificationToken --> ", notificationToken);
@@ -298,7 +299,7 @@ class UserController extends Controller {
           expires: new Date(
             Date.now() + process.config.INVITE_EXPIRE_TIME * 86400000
           ),
-          httpOnly: true,
+          httpOnly: true
         });
 
         // res.cookie("notificationToken", notificationToken, {
@@ -328,58 +329,51 @@ class UserController extends Controller {
       Logger.debug("signIn 500 error ----> ", error);
 
       // notification
-      const crashJob = await AdhocJob.execute("crash", { apiName: "signIn" });
+      const crashJob = await AdhocJob.execute("crash", {apiName: "signIn"});
       Proxy_Sdk.execute(EVENTS.SEND_EMAIL, crashJob.getEmailTemplate());
 
       return this.raiseServerError(res);
     }
   };
 
-  giveConsent = async (req, res) => {
-    const { raiseClientError } = this;
-    try {
-      const {
-        userDetails: { userId, userRoleId } = {},
-        body: { agreeConsent } = {},
-      } = req;
+  giveConsent = async (req,res) => {
+    const {raiseClientError} = this;
+    try{
+      const {userDetails: {userId, userRoleId} = {}, body: {agreeConsent} = {}} = req;
 
-      Logger.info(
-        `1897389172 agreeConsent :: ${agreeConsent} | userId : ${userId}`
-      );
+      Logger.info(`1897389172 agreeConsent :: ${agreeConsent} | userId : ${userId}`);
 
-      if (!agreeConsent) {
-        return raiseClientError(
-          res,
-          422,
-          {},
-          "Cannot proceed without accepting Terms of Service"
-        );
+      if(!agreeConsent) {
+        return raiseClientError(res, 422, {}, "Cannot proceed without accepting Terms of Service");
       }
 
       //update
       await userService.updateUser(
-        {
-          has_consent: agreeConsent,
-        },
-        userId
+          {
+            has_consent: agreeConsent
+          },
+          userId
       );
+
 
       const expiresIn = process.config.TOKEN_EXPIRE_TIME; // expires in 30 day
 
       const secret = process.config.TOKEN_SECRET_KEY;
       const accessToken = await jwt.sign(
-        {
-          userRoleId,
-        },
-        secret,
-        {
-          expiresIn,
-        }
+          {
+            userRoleId
+          },
+          secret,
+          {
+            expiresIn
+          }
       );
 
       const appNotification = new AppNotification();
 
-      const notificationToken = appNotification.getUserToken(`${userRoleId}`);
+      const notificationToken = appNotification.getUserToken(
+          `${userRoleId}`
+      );
       const feedId = base64.encode(`${userRoleId}`);
 
       const userRef = await userService.getUserData({ id: userId });
@@ -401,27 +395,29 @@ class UserController extends Controller {
         notificationToken: notificationToken,
         feedId,
         hasConsent: apiUserDetails.getConsent(),
-        auth_category: apiUserDetails.getCategory(),
+        auth_category: apiUserDetails.getCategory()
       };
 
       res.cookie("accessToken", accessToken, {
         expires: new Date(
-          Date.now() + process.config.INVITE_EXPIRE_TIME * 86400000
+            Date.now() + process.config.INVITE_EXPIRE_TIME * 86400000
         ),
-        httpOnly: true,
+        httpOnly: true
       });
 
       return this.raiseSuccess(
-        res,
-        200,
-        { ...dataToSend },
-        "Initial data retrieved successfully"
+          res,
+          200,
+          { ...dataToSend },
+          "Initial data retrieved successfully"
       );
-    } catch (error) {
+
+
+    }catch(error){
       Logger.debug("giveConsent 500 error ----> ", error);
       return this.raiseServerError(res);
     }
-  };
+  }
 
   async signInGoogle(req, res) {
     const authCode = req.body.tokenId;
@@ -436,7 +432,7 @@ class UserController extends Controller {
       const idToken = tokens.tokens.id_token;
       const ticket = await client.verifyIdToken({
         idToken: idToken,
-        audience: CLIENT_ID,
+        audience: CLIENT_ID
       });
 
       const accessToken = tokens.tokens.access_token;
@@ -454,11 +450,11 @@ class UserController extends Controller {
       const accessTokenCombined = await jwt.sign(
         {
           userId: userId,
-          accessToken: accessToken,
+          accessToken: accessToken
         },
         secret,
         {
-          expiresIn,
+          expiresIn
         }
       );
 
@@ -468,7 +464,7 @@ class UserController extends Controller {
         // expires: new Date(
         //     Date.now() + process.config.INVITE_EXPIRE_TIME * 86400000
         // ),
-        httpOnly: true,
+        httpOnly: true
       });
 
       let response = new Response(true, 200);
@@ -504,11 +500,11 @@ class UserController extends Controller {
             const accessTokenCombined = await jwt.sign(
               {
                 userId: userId,
-                accessToken: accessToken,
+                accessToken: accessToken
               },
               secret,
               {
-                expiresIn,
+                expiresIn
               }
             );
 
@@ -516,12 +512,12 @@ class UserController extends Controller {
               // expires: new Date(
               //     Date.now() + process.config.INVITE_EXPIRE_TIME * 86400000
               // ),
-              httpOnly: true,
+              httpOnly: true
             });
 
             let resp = new Response(true, 200);
             resp.setData({
-              users: {},
+              users: {}
             });
             resp.setMessage("Sign in successful!");
             return res.status(resp.getStatusCode()).send(resp.getResponse());
@@ -548,7 +544,7 @@ class UserController extends Controller {
           userRoleId,
           userData,
           userData: { category } = {},
-          userCategoryData: uC = {},
+          userCategoryData: uC = {}
         } = req.userDetails;
 
         // const user = await userService.getUserById(userId);
@@ -573,7 +569,7 @@ class UserController extends Controller {
 
         let treatmentIds = [];
         let conditionIds = [];
-        let doctorProviderId = null;
+        let doctorProviderId=null;
 
         switch (category) {
           case USER_CATEGORY.PATIENT:
@@ -585,15 +581,10 @@ class UserController extends Controller {
               userCategoryApiWrapper = await DoctorWrapper(userCategoryData);
 
               let watchlist_patient_ids = [];
-              const watchlistRecords =
-                await doctorPatientWatchlistService.getAllByData({
-                  user_role_id: userRoleId,
-                });
-              if (watchlistRecords && watchlistRecords.length) {
-                for (let i = 0; i < watchlistRecords.length; i++) {
-                  const watchlistWrapper = await DoctorPatientWatchlistWrapper(
-                    watchlistRecords[i]
-                  );
+              const watchlistRecords = await doctorPatientWatchlistService.getAllByData({user_role_id:userRoleId});
+              if(watchlistRecords && watchlistRecords.length){
+                for(let i = 0 ; i<watchlistRecords.length ; i++){
+                  const watchlistWrapper = await DoctorPatientWatchlistWrapper(watchlistRecords[i]);
                   const patientId = await watchlistWrapper.getPatientId();
                   watchlist_patient_ids.push(patientId);
                 }
@@ -602,29 +593,31 @@ class UserController extends Controller {
               let allInfo = {};
               allInfo = await userCategoryApiWrapper.getAllInfo();
               delete allInfo.watchlist_patient_ids;
-              allInfo["watchlist_patient_ids"] = watchlist_patient_ids;
+              allInfo['watchlist_patient_ids']=watchlist_patient_ids;
 
               userCategoryId = userCategoryApiWrapper.getDoctorId();
-              userCaregoryApiData[userCategoryApiWrapper.getDoctorId()] =
-                allInfo;
+              userCaregoryApiData[
+                userCategoryApiWrapper.getDoctorId()
+              ] = allInfo;
 
-              const record = await userRolesService.getSingleUserRoleByData({
-                id: userRoleId,
-              });
-              const { linked_with = "", linked_id = null } = record || {};
-              if (linked_with === USER_CATEGORY.PROVIDER) {
+
+              const record = await userRolesService.getSingleUserRoleByData({id:userRoleId});
+              const {linked_with = '',linked_id = null } = record || {};
+              if (linked_with === USER_CATEGORY.PROVIDER ) {
+                
                 const providerId = linked_id;
-                doctorProviderId = providerId;
+                doctorProviderId=providerId;
                 const providerWrapper = await ProvidersWrapper(
                   null,
                   providerId
                 );
-                providerApiData[providerId] =
-                  await providerWrapper.getAllInfo();
+                providerApiData[
+                  providerId
+                ] = await providerWrapper.getAllInfo();
               }
 
               careplanData = await carePlanService.getCarePlanByData({
-                user_role_id: userRoleId,
+                user_role_id:userRoleId
               });
 
               for (const carePlan of careplanData) {
@@ -636,15 +629,18 @@ class UserController extends Controller {
                   appointment_ids = [],
                   medication_ids = [],
                   vital_ids = [],
-                  diet_ids = [],
+                  diet_ids = []
                 } = await carePlanApiWrapper.getAllInfo();
 
                 let carePlanSeverityDetails = await getCarePlanSeverityDetails(
                   carePlanId
                 );
 
-                const { treatment_id, severity_id, condition_id } =
-                  carePlanApiWrapper.getCarePlanDetails();
+                const {
+                  treatment_id,
+                  severity_id,
+                  condition_id
+                } = carePlanApiWrapper.getCarePlanDetails();
                 treatmentIds.push(treatment_id);
                 conditionIds.push(condition_id);
                 carePlanApiData[carePlanApiWrapper.getCarePlanId()] =
@@ -655,7 +651,7 @@ class UserController extends Controller {
                     medication_ids,
                     appointment_ids,
                     vital_ids,
-                    diet_ids,
+                    diet_ids
                   };
               }
             }
@@ -666,15 +662,10 @@ class UserController extends Controller {
               userCategoryApiWrapper = await DoctorWrapper(userCategoryData);
 
               let watchlist_patient_ids = [];
-              const watchlistRecords =
-                await doctorPatientWatchlistService.getAllByData({
-                  user_role_id: userRoleId,
-                });
-              if (watchlistRecords && watchlistRecords.length) {
-                for (let i = 0; i < watchlistRecords.length; i++) {
-                  const watchlistWrapper = await DoctorPatientWatchlistWrapper(
-                    watchlistRecords[i]
-                  );
+              const watchlistRecords = await doctorPatientWatchlistService.getAllByData({user_role_id:userRoleId});
+              if(watchlistRecords && watchlistRecords.length){
+                for(let i = 0 ; i<watchlistRecords.length ; i++){
+                  const watchlistWrapper = await DoctorPatientWatchlistWrapper(watchlistRecords[i]);
                   const patientId = await watchlistWrapper.getPatientId();
                   watchlist_patient_ids.push(patientId);
                 }
@@ -683,29 +674,31 @@ class UserController extends Controller {
               let allInfo = {};
               allInfo = await userCategoryApiWrapper.getAllInfo();
               delete allInfo.watchlist_patient_ids;
-              allInfo["watchlist_patient_ids"] = watchlist_patient_ids;
+              allInfo['watchlist_patient_ids']=watchlist_patient_ids;
 
               userCategoryId = userCategoryApiWrapper.getDoctorId();
-              userCaregoryApiData[userCategoryApiWrapper.getDoctorId()] =
-                allInfo;
+              userCaregoryApiData[
+                userCategoryApiWrapper.getDoctorId()
+              ] = allInfo;
 
-              const record = await userRolesService.getSingleUserRoleByData({
-                id: userRoleId,
-              });
-              const { linked_with = "", linked_id = null } = record || {};
-              if (linked_with === USER_CATEGORY.PROVIDER) {
+
+              const record = await userRolesService.getSingleUserRoleByData({id:userRoleId});
+              const {linked_with = '',linked_id = null } = record || {};
+              if (linked_with === USER_CATEGORY.PROVIDER ) {
+                
                 const providerId = linked_id;
-                doctorProviderId = providerId;
+                doctorProviderId=providerId;
                 const providerWrapper = await ProvidersWrapper(
                   null,
                   providerId
                 );
-                providerApiData[providerId] =
-                  await providerWrapper.getAllInfo();
+                providerApiData[
+                  providerId
+                ] = await providerWrapper.getAllInfo();
               }
 
               careplanData = await carePlanService.getCarePlanByData({
-                user_role_id: userRoleId,
+                user_role_id:userRoleId
               });
 
               for (const carePlan of careplanData) {
@@ -716,15 +709,18 @@ class UserController extends Controller {
                 const {
                   appointment_ids = [],
                   vital_ids = [],
-                  diet_ids = [],
+                  diet_ids = []
                 } = await carePlanApiWrapper.getAllInfo();
 
                 let carePlanSeverityDetails = await getCarePlanSeverityDetails(
                   carePlanId
                 );
 
-                const { treatment_id, severity_id, condition_id } =
-                  carePlanApiWrapper.getCarePlanDetails();
+                const {
+                  treatment_id,
+                  severity_id,
+                  condition_id
+                } = carePlanApiWrapper.getCarePlanDetails();
                 treatmentIds.push(treatment_id);
                 conditionIds.push(condition_id);
                 carePlanApiData[carePlanApiWrapper.getCarePlanId()] =
@@ -734,24 +730,25 @@ class UserController extends Controller {
                     ...carePlanSeverityDetails,
                     appointment_ids,
                     vital_ids,
-                    diet_ids,
+                    diet_ids
                   };
               }
             }
             break;
           case USER_CATEGORY.PROVIDER:
             userCategoryData = await providerService.getProviderByData({
-              user_id: userId,
+              user_id: userId
             });
             if (userCategoryData) {
               userCategoryApiWrapper = await ProvidersWrapper(userCategoryData);
-              userCaregoryApiData[userCategoryApiWrapper.getProviderId()] =
-                await userCategoryApiWrapper.getAllInfo();
+              userCaregoryApiData[
+                userCategoryApiWrapper.getProviderId()
+              ] = await userCategoryApiWrapper.getAllInfo();
             }
             break;
           default:
             userCategoryData = await doctorService.getDoctorByData({
-              user_id: userId,
+              user_id: userId
             });
         }
 
@@ -762,7 +759,7 @@ class UserController extends Controller {
 
         // todo: as of now, get all patients
         const patientsData = await patientService.getPatientByData({
-          id: patientIds,
+          id: patientIds
         });
 
         let patientApiDetails = {};
@@ -770,8 +767,9 @@ class UserController extends Controller {
         if (patientsData) {
           for (const patient of patientsData) {
             const patientWrapper = await PatientWrapper(patient);
-            patientApiDetails[patientWrapper.getPatientId()] =
-              await patientWrapper.getAllInfo();
+            patientApiDetails[
+              patientWrapper.getPatientId()
+            ] = await patientWrapper.getAllInfo();
             userIds.push(patientWrapper.getUserId());
           }
         }
@@ -781,14 +779,15 @@ class UserController extends Controller {
 
         if (userIds.length > 1) {
           const allUserData = await userService.getUserByData({ id: userIds });
-          await allUserData.forEach(async (user) => {
+          await allUserData.forEach(async user => {
             apiUserDetails = await UserWrapper(user.get());
             userApiData[apiUserDetails.getId()] = apiUserDetails.getBasicInfo();
           });
         } else {
           apiUserDetails = await UserWrapper(userData);
-          userApiData[apiUserDetails.getUserId()] =
-            apiUserDetails.getBasicInfo();
+          userApiData[
+            apiUserDetails.getUserId()
+          ] = apiUserDetails.getBasicInfo();
         }
 
         // treatments
@@ -798,8 +797,9 @@ class UserController extends Controller {
         for (const treatment of treatmentDetails) {
           const treatmentWrapper = await TreatmentWrapper(treatment);
           treatmentIds.push(treatmentWrapper.getTreatmentId());
-          treatmentApiDetails[treatmentWrapper.getTreatmentId()] =
-            treatmentWrapper.getBasicInfo();
+          treatmentApiDetails[
+            treatmentWrapper.getTreatmentId()
+          ] = treatmentWrapper.getBasicInfo();
         }
 
         // severity
@@ -810,21 +810,23 @@ class UserController extends Controller {
         for (const severity of severityDetails) {
           const severityWrapper = await SeverityWrapper(severity);
           severityIds.push(severityWrapper.getSeverityId());
-          severityApiDetails[severityWrapper.getSeverityId()] =
-            severityWrapper.getBasicInfo();
+          severityApiDetails[
+            severityWrapper.getSeverityId()
+          ] = severityWrapper.getBasicInfo();
         }
 
         // conditions
         let conditionApiDetails = {};
         const conditionDetails = await conditionService.getAllByData({
-          id: conditionIds,
+          id: conditionIds
         });
         conditionIds = [];
         for (const condition of conditionDetails) {
           const conditionWrapper = await ConditionWrapper(condition);
           conditionIds.push(conditionWrapper.getConditionId());
-          conditionApiDetails[conditionWrapper.getConditionId()] =
-            conditionWrapper.getBasicInfo();
+          conditionApiDetails[
+            conditionWrapper.getConditionId()
+          ] = conditionWrapper.getBasicInfo();
         }
 
         let permissions = [];
@@ -836,51 +838,48 @@ class UserController extends Controller {
 
         // speciality temp todo
         let referenceData = {};
-        if (
-          (category === USER_CATEGORY.DOCTOR ||
-            category === USER_CATEGORY.HSP) &&
-          userCategoryApiWrapper
-        ) {
+        if ( (category === USER_CATEGORY.DOCTOR || category === USER_CATEGORY.HSP ) && userCategoryApiWrapper) {
           referenceData = await userCategoryApiWrapper.getReferenceInfo();
         }
 
         const appNotification = new AppNotification();
 
         const notificationToken = appNotification.getUserToken(`${userRoleId}`);
+        const feedId = base64.encode(`${userId}`);
 
         // firebase keys
         const firebase_keys = {
           apiKey: process.config.firebase.api_key,
           appId: process.config.firebase.app_id,
           measurementId: process.config.firebase.measurement_id,
-          projectId: process.config.firebase.project_id,
+          projectId: process.config.firebase.project_id
         };
 
         let response = {
           ...referenceData,
           users: {
-            ...userApiData,
+            ...userApiData
           },
           [`${category}s`]: {
-            ...userCaregoryApiData,
+            ...userCaregoryApiData
           },
           patients: {
-            ...patientApiDetails,
+            ...patientApiDetails
           },
           care_plans: {
-            ...carePlanApiData,
+            ...carePlanApiData
           },
           notificationToken: notificationToken,
           feedId: `${userRoleId}`,
           firebase_keys,
           severity: {
-            ...severityApiDetails,
+            ...severityApiDetails
           },
           treatments: {
-            ...treatmentApiDetails,
+            ...treatmentApiDetails
           },
           conditions: {
-            ...conditionApiDetails,
+            ...conditionApiDetails
           },
           permissions,
           severity_ids: severityIds,
@@ -889,12 +888,10 @@ class UserController extends Controller {
           auth_user: userId,
           auth_category: category,
           auth_role: userRoleId,
-          [category === USER_CATEGORY.DOCTOR || category === USER_CATEGORY.HSP
-            ? "doctor_provider_id"
-            : ""]:
+          [category === USER_CATEGORY.DOCTOR || category === USER_CATEGORY.HSP  ? "doctor_provider_id" : ""]:
             category === USER_CATEGORY.DOCTOR || category === USER_CATEGORY.HSP
-              ? doctorProviderId
-              : "",
+            ? doctorProviderId
+            : "",  
         };
 
         if (category !== USER_CATEGORY.PROVIDER) {
@@ -935,7 +932,7 @@ class UserController extends Controller {
     const { userId = "3" } = userDetails || {};
     const file = req.file;
 
-    const { type } = body || {};
+    const {type} = body || {};
 
     Logger.debug("file", file);
     // const fileExt= file.originalname.replace(/\s+/g, '');
@@ -945,7 +942,7 @@ class UserController extends Controller {
         res,
         200,
         {
-          files: files,
+          files: files
         },
         "files uploaded successfully"
       );
@@ -968,7 +965,7 @@ class UserController extends Controller {
         category,
         mobile_number,
         prefix,
-        onboarding_status: ONBOARDING_STATUS.PROFILE_REGISTERED,
+        onboarding_status: ONBOARDING_STATUS.PROFILE_REGISTERED
       };
       console.log("USERRRRRRRR1111111", user_data_to_update);
       console.log("REQUESTTTTTTTT BODYYYYYY", req.body);
@@ -992,11 +989,13 @@ class UserController extends Controller {
       if (doctorExist) {
         let doctor_data = {
           city,
-          profile_pic: profile_pic ? getFilePath(profile_pic) : null,
+          profile_pic: profile_pic
+            ? getFilePath(profile_pic)
+            : null,
           first_name,
           middle_name,
           last_name,
-          address: city,
+          address: city
         };
         let doctor_id = doctorExist.get("id");
         doctor = await doctorService.updateDoctor(doctor_data, doctor_id);
@@ -1005,11 +1004,13 @@ class UserController extends Controller {
         let doctor_data = {
           user_id,
           city,
-          profile_pic: profile_pic ? getFilePath(profile_pic) : null,
+          profile_pic: profile_pic
+            ? getFilePath(profile_pic)
+            : null,
           first_name,
           middle_name,
           last_name,
-          address: city,
+          address: city
         };
         doctor = await doctorService.addDoctor(doctor_data);
         console.log("DOCTORRRRRELSEEEEE", doctor, doctor.getBasicInfo);
@@ -1022,7 +1023,7 @@ class UserController extends Controller {
         res,
         200,
         {
-          doctor,
+          doctor
         },
         "doctor profile updated successfully"
       );
@@ -1053,7 +1054,7 @@ class UserController extends Controller {
         email: eMail = "",
         category: docCategory = "",
         mobile_number: mobNo = "",
-        prefix: pre = "",
+        prefix: pre = ""
       } = userInfo;
 
       email = eMail;
@@ -1071,7 +1072,7 @@ class UserController extends Controller {
           middle_name = "",
           last_name = "",
           city: docCity = "",
-          profile_pic: docPic = "",
+          profile_pic: docPic = ""
         } = docInfo || {};
 
         Logger.debug(
@@ -1087,7 +1088,9 @@ class UserController extends Controller {
         }`;
 
         city = docCity;
-        profile_pic = docPic ? completePath(docPic) : null;
+        profile_pic = docPic
+          ? completePath(docPic)
+          : null;
       }
 
       const profileData = {
@@ -1097,7 +1100,7 @@ class UserController extends Controller {
         mobile_number,
         prefix,
         profile_pic,
-        email,
+        email
       };
 
       console.log("FINAL+++================>", profileData);
@@ -1106,7 +1109,7 @@ class UserController extends Controller {
         res,
         200,
         {
-          profileData,
+          profileData
         },
         " get doctor profile successfull"
       );
@@ -1121,27 +1124,28 @@ class UserController extends Controller {
       speciality = "",
       gender = "",
       qualification_details = [],
-      registration_details = [],
+      registration_details = []
     } = req.body;
 
     const { userDetails: { userId: user_id } = {} } = req || {};
     try {
       let user = userService.getUserById(user_id);
       let user_data_to_update = {
-        onboarding_status: ONBOARDING_STATUS.QUALIFICATION_REGISTERED,
+        onboarding_status: ONBOARDING_STATUS.QUALIFICATION_REGISTERED
       };
       let doctor = await doctorService.getDoctorByUserId(user_id);
       let doctor_id = doctor.get("id");
       let doctor_data = {
         gender,
-        speciality,
+        speciality
       };
       let updatedDoctor = await doctorService.updateDoctor(
         doctor_data,
         doctor_id
       );
-      let qualificationsOfDoctor =
-        await qualificationService.getQualificationsByDoctorId(doctor_id);
+      let qualificationsOfDoctor = await qualificationService.getQualificationsByDoctorId(
+        doctor_id
+      );
 
       let newQualifications = [];
       for (let item of qualification_details) {
@@ -1150,7 +1154,7 @@ class UserController extends Controller {
           year = "",
           college = "",
           photos = [],
-          id = 0,
+          id = 0
         } = item;
         console.log("QUALIFICATIONS ITEMMMMMMMMMMMMMMMM", item, id);
         if (id && id != "0") {
@@ -1164,7 +1168,7 @@ class UserController extends Controller {
             doctor_id,
             degree,
             year,
-            college,
+            college
           });
           console.log("QUALIFICATIONS ITEMMMMMMMMMMMMMMMM", qualification);
         }
@@ -1187,8 +1191,9 @@ class UserController extends Controller {
       }
 
       // REGISTRATION FOR DOCTOR
-      const registrationsOfDoctor =
-        await registrationService.getRegistrationByDoctorId(doctor_id);
+      const registrationsOfDoctor = await registrationService.getRegistrationByDoctorId(
+        doctor_id
+      );
 
       let newRegistrations = [];
       for (const item of registration_details) {
@@ -1206,7 +1211,7 @@ class UserController extends Controller {
             number,
             year,
             council,
-            expiry_date,
+            expiry_date
           });
           console.log("REGISTRATION ITEMMMMMMMMMMMMMMMM", registration);
         }
@@ -1254,25 +1259,25 @@ class UserController extends Controller {
       const doctor = await doctorService.getDoctorByUserId(userId);
       // let doctor_id = doctor.get("id");
 
-      const doctorRegistrationDetails =
-        await registrationService.getRegistrationByDoctorId(doctor.get("id"));
+      const doctorRegistrationDetails = await registrationService.getRegistrationByDoctorId(
+        doctor.get("id")
+      );
 
       let doctorRegistrationApiDetails = {};
       let uploadDocumentApiDetails = {};
       let upload_document_ids = [];
 
-      await doctorRegistrationDetails.forEach(async (doctorRegistration) => {
+      await doctorRegistrationDetails.forEach(async doctorRegistration => {
         const doctorRegistrationWrapper = await DoctorRegistrationWrapper(
           doctorRegistration
         );
 
-        const registrationDocuments =
-          await documentService.getDoctorQualificationDocuments(
-            DOCUMENT_PARENT_TYPE.DOCTOR_REGISTRATION,
-            doctorRegistrationWrapper.getDoctorRegistrationId()
-          );
+        const registrationDocuments = await documentService.getDoctorQualificationDocuments(
+          DOCUMENT_PARENT_TYPE.DOCTOR_REGISTRATION,
+          doctorRegistrationWrapper.getDoctorRegistrationId()
+        );
 
-        await registrationDocuments.forEach(async (document) => {
+        await registrationDocuments.forEach(async document => {
           const uploadDocumentWrapper = await UploadDocumentWrapper(document);
           uploadDocumentApiDetails[
             uploadDocumentWrapper.getUploadDocumentId()
@@ -1284,7 +1289,7 @@ class UserController extends Controller {
           doctorRegistrationWrapper.getDoctorRegistrationId()
         ] = {
           ...doctorRegistrationWrapper.getBasicInfo(),
-          upload_document_ids,
+          upload_document_ids
         };
 
         upload_document_ids = [];
@@ -1295,11 +1300,11 @@ class UserController extends Controller {
         200,
         {
           doctor_registrations: {
-            ...doctorRegistrationApiDetails,
+            ...doctorRegistrationApiDetails
           },
           upload_documents: {
-            ...uploadDocumentApiDetails,
-          },
+            ...uploadDocumentApiDetails
+          }
         },
         "doctor registration data fetched successfully"
       );
@@ -1318,8 +1323,9 @@ class UserController extends Controller {
       const doctor = await doctorService.getDoctorByUserId(userId);
       // let doctor_id = doctor.get("id");
 
-      const doctorRegistrationDetails =
-        await registrationService.getRegistrationByDoctorId(doctor.get("id"));
+      const doctorRegistrationDetails = await registrationService.getRegistrationByDoctorId(
+        doctor.get("id")
+      );
 
       // Logger.debug("283462843 ", doctorRegistrationDetails);
 
@@ -1332,13 +1338,12 @@ class UserController extends Controller {
           doctorRegistration
         );
 
-        const registrationDocuments =
-          await uploadDocumentService.getDoctorQualificationDocuments(
-            DOCUMENT_PARENT_TYPE.DOCTOR_REGISTRATION,
-            doctorRegistrationWrapper.getDoctorRegistrationId()
-          );
+        const registrationDocuments = await uploadDocumentService.getDoctorQualificationDocuments(
+          DOCUMENT_PARENT_TYPE.DOCTOR_REGISTRATION,
+          doctorRegistrationWrapper.getDoctorRegistrationId()
+        );
 
-        await registrationDocuments.forEach(async (document) => {
+        await registrationDocuments.forEach(async document => {
           const uploadDocumentWrapper = await UploadDocumentWrapper(document);
           uploadDocumentApiDetails[
             uploadDocumentWrapper.getUploadDocumentId()
@@ -1354,7 +1359,7 @@ class UserController extends Controller {
           doctorRegistrationWrapper.getDoctorRegistrationId()
         ] = {
           ...doctorRegistrationWrapper.getBasicInfo(),
-          upload_document_ids,
+          upload_document_ids
         };
 
         upload_document_ids = [];
@@ -1371,11 +1376,11 @@ class UserController extends Controller {
         {
           qualificationData,
           registration_details: {
-            ...doctorRegistrationApiDetails,
+            ...doctorRegistrationApiDetails
           },
           upload_documents: {
-            ...uploadDocumentApiDetails,
-          },
+            ...uploadDocumentApiDetails
+          }
         },
         " get doctor qualification successfull"
       );
@@ -1400,7 +1405,7 @@ class UserController extends Controller {
         res,
         200,
         {
-          files: files,
+          files: files
         },
         "doctor qualification updated successfully"
       );
@@ -1435,7 +1440,7 @@ class UserController extends Controller {
         res,
         200,
         {
-          files: files,
+          files: files
         },
         "doctor qualification updated successfully"
       );
@@ -1530,7 +1535,7 @@ class UserController extends Controller {
         gender = "",
         speciality = "",
         qualification_details = [],
-        registration = {},
+        registration = {}
       } = body || {};
 
       let doctor = await doctorService.getDoctorByUserId(userId);
@@ -1552,8 +1557,9 @@ class UserController extends Controller {
         gender,
         speciality
       );
-      let qualificationsOfDoctor =
-        await qualificationService.getQualificationsByDoctorId(doctor_id);
+      let qualificationsOfDoctor = await qualificationService.getQualificationsByDoctorId(
+        doctor_id
+      );
 
       let newQualifications = [];
       for (let item of qualification_details) {
@@ -1562,7 +1568,7 @@ class UserController extends Controller {
           year = "",
           college = "",
           photos = [],
-          id = 0,
+          id = 0
         } = item;
         console.log("QUALIFICATIONS ITEMMMMMMMMMMMMMMMM", item, id);
         if (id && id != "0") {
@@ -1576,7 +1582,7 @@ class UserController extends Controller {
             doctor_id,
             degree,
             year,
-            college,
+            college
           });
           console.log("QUALIFICATIONS ITEMMMMMMMMMMMMMMMM", qualification);
         }
@@ -1605,7 +1611,7 @@ class UserController extends Controller {
         year: registration_year = "",
         expiryDate: expiry_date = "",
         id: registration_id = 0,
-        photos: registration_photos = [],
+        photos: registration_photos = []
       } = registration || {};
 
       console.log(
@@ -1638,7 +1644,7 @@ class UserController extends Controller {
           number,
           council,
           year: registration_year,
-          expiry_date,
+          expiry_date
         });
 
         registration_id = docRegistration.get("id");
@@ -1662,7 +1668,7 @@ class UserController extends Controller {
               parent_id: docRegistration.get("id"),
               document: photo.includes(process.config.minio.MINIO_BUCKET_NAME)
                 ? getFilePath(photo)
-                : photo,
+                : photo
             });
           }
         }
@@ -1720,7 +1726,7 @@ class UserController extends Controller {
             parent_id: registration_id,
             document: photo.includes(process.config.minio.MINIO_BUCKET_NAME)
               ? getFilePath(photo)
-              : photo,
+              : photo
             // .includes(process.config.minio.MINIO_BUCKET_NAME) ? photo.split(process.config.minio.MINIO_BUCKET_NAME)[1] : photo,
           });
         }
@@ -1730,7 +1736,7 @@ class UserController extends Controller {
         res,
         200,
         {
-          registration_id,
+          registration_id
         },
         "registrations updated successfully"
       );
@@ -1757,13 +1763,8 @@ class UserController extends Controller {
           doctor_id
         );
       }
-      let {
-        degree = "",
-        year = "",
-        college = "",
-        id = 0,
-        photos = [],
-      } = qualification || {};
+      let { degree = "", year = "", college = "", id = 0, photos = [] } =
+        qualification || {};
       let qualification_id = id;
       let parent_type = DOCUMENT_PARENT_TYPE.DOCTOR_QUALIFICATION;
       let parent_id = qualification_id;
@@ -1781,7 +1782,7 @@ class UserController extends Controller {
           doctor_id,
           degree,
           year,
-          college,
+          college
         });
         qualification_id = docQualification.get("id");
 
@@ -1804,7 +1805,7 @@ class UserController extends Controller {
               parent_id: qualification_id,
               document: photo.includes(process.config.minio.MINIO_BUCKET_NAME)
                 ? getFilePath(photo)
-                : photo,
+                : photo
             });
           }
         }
@@ -1866,7 +1867,7 @@ class UserController extends Controller {
             parent_id: qualification_id,
             document: photo.includes(process.config.minio.MINIO_BUCKET_NAME)
               ? getFilePath(photo)
-              : photo,
+              : photo
           });
           // }
         }
@@ -1877,7 +1878,7 @@ class UserController extends Controller {
         res,
         200,
         {
-          qualification_id,
+          qualification_id
         },
         "qualifications updated successfully"
       );
@@ -1895,8 +1896,8 @@ class UserController extends Controller {
         200,
         {
           time_slots: {
-            ...CLINIC_TIME_SLOTS,
-          },
+            ...CLINIC_TIME_SLOTS
+          }
         },
         "clinic time slots fetched successfully"
       );
@@ -1917,26 +1918,26 @@ class UserController extends Controller {
 
       // console.log('DOCTORRRR UUSER', doctor_id, '    HDJDH 9088      ', '    DEJIDJ*(*)    ', doctor);
 
-      clinics.forEach(async (item) => {
+      clinics.forEach(async item => {
         let newItem = item;
         let { name = "", location = "", time_slots = [] } = item;
 
         const details = {
-          time_slots,
+          time_slots
         };
 
         let clinic = await clinicService.addClinic({
           doctor_id,
           name,
           location,
-          details,
+          details
         });
       });
 
       let updateUser = await userService.updateUser(
         {
           onboarded: true,
-          onboarding_status: ONBOARDING_STATUS.CLINIC_REGISTERED,
+          onboarding_status: ONBOARDING_STATUS.CLINIC_REGISTERED
         },
         user_id
       );
@@ -1959,7 +1960,7 @@ class UserController extends Controller {
       prefix = "",
       treatment_id = "1",
       severity_id = "1",
-      condition_id = "1",
+      condition_id = "1"
     } = req.body;
     // const{userId:user_id=1}=req.params;
     const { userDetails: { userId: user_id } = {} } = req;
@@ -1975,12 +1976,12 @@ class UserController extends Controller {
         password: hash,
         sign_in_type: "basic",
         category: "patient",
-        onboarded: false,
+        onboarded: false
       });
 
       let newUId = user.get("id");
 
-      const { first_name, middle_name, last_name } = getSeparateName(name);
+      const {first_name, middle_name, last_name} = getSeparateName(name);
 
       // let patientName = name.split(" ");
       // let first_name = patientName[0];
@@ -2003,16 +2004,15 @@ class UserController extends Controller {
         user_id: newUId,
         birth_date,
         age,
-        uid,
+        uid
       });
 
       let doctor = await doctorService.getDoctorByUserId(user_id);
-      let carePlanTemplate =
-        await carePlanTemplateService.getCarePlanTemplateByData(
-          treatment_id,
-          severity_id,
-          condition_id
-        );
+      let carePlanTemplate = await carePlanTemplateService.getCarePlanTemplateByData(
+        treatment_id,
+        severity_id,
+        condition_id
+      );
       const patient_id = patient.get("id");
       const doctor_id = doctor.get("id");
 
@@ -2034,14 +2034,14 @@ class UserController extends Controller {
         doctor_id,
         care_plan_template_id,
         details,
-        expired_on: moment(),
+        expired_on: moment()
       });
 
       let carePlanNew = await carePlanService.getSingleCarePlanByData({
         patient_id,
         doctor_id,
         care_plan_template_id,
-        details,
+        details
       });
       const carePlanId = carePlanNew.get("id");
 
@@ -2063,7 +2063,7 @@ class UserController extends Controller {
       const { raiseClientError, raiseSuccess } = this;
       const { email } = req.body;
       const userExists = await userService.getUserByEmail({
-        email,
+        email
       });
 
       if (userExists) {
@@ -2074,7 +2074,7 @@ class UserController extends Controller {
           user_id: userWrapper.getId(),
           request_id: link,
           status: "pending",
-          type: VERIFICATION_TYPE.FORGOT_PASSWORD,
+          type: VERIFICATION_TYPE.FORGOT_PASSWORD
         });
 
         Logger.debug(
@@ -2084,19 +2084,19 @@ class UserController extends Controller {
 
         const emailPayload = {
           toAddress: email,
-          title: "AdhereLive: Reset your password",
+          title: "Adhere Reset Password",
           templateData: {
             email,
             link: process.config.app.reset_password + link,
             host: process.config.WEB_URL,
             title: "Doctor",
             inviteCard: "",
-            mainBodyText: "Thank you for requesting a password reset",
+            mainBodyText: "Thank you for requesting password reset",
             subBodyText: "Please click below to reset your account password",
             buttonText: "Reset Password",
-            contactTo: "customersupport@adhere.live",
+            contactTo: "patientEngagement@adhere.com"
           },
-          templateName: EMAIL_TEMPLATE_NAME.FORGOT_PASSWORD,
+          templateName: EMAIL_TEMPLATE_NAME.FORGOT_PASSWORD
         };
 
         console.log("91397138923 emailPayload -------------->", emailPayload);
@@ -2120,7 +2120,7 @@ class UserController extends Controller {
         "Thanks! If there is an account associated with the email, we will send the password reset link to it"
       );
     } catch (error) {
-      Logger.debug("Forgot Password - 500 Error", error);
+      Logger.debug("forgot password 500 error", error);
       return raiseServerError(res);
     }
   };
@@ -2146,19 +2146,13 @@ class UserController extends Controller {
         const expiresIn = process.config.TOKEN_EXPIRE_TIME; // expires in 30 day
 
         const secret = process.config.TOKEN_SECRET_KEY;
-
-        const userRole = await userRolesService.getFirstUserRole(
-          linkVerificationData.getUserId()
-        );
-
-        const { id: userRoleId } = userRole || {};
         const accessToken = await jwt.sign(
           {
-            userRoleId,
+            userId: linkVerificationData.getUserId()
           },
           secret,
           {
-            expiresIn,
+            expiresIn
           }
         );
 
@@ -2166,7 +2160,7 @@ class UserController extends Controller {
           expires: new Date(
             Date.now() + process.config.INVITE_EXPIRE_TIME * 86400000
           ),
-          httpOnly: true,
+          httpOnly: true
         });
 
         return raiseSuccess(
@@ -2175,9 +2169,9 @@ class UserController extends Controller {
           {
             users: {
               [userData.getId()]: {
-                ...userData.getBasicInfo(),
-              },
-            },
+                ...userData.getBasicInfo()
+              }
+            }
           },
           "Email verified for password reset"
         );
@@ -2200,7 +2194,7 @@ class UserController extends Controller {
     try {
       const {
         userDetails: { userId },
-        body: { new_password, confirm_password } = {},
+        body: { new_password, confirm_password } = {}
       } = req;
 
       if (new_password !== confirm_password) {
@@ -2216,7 +2210,7 @@ class UserController extends Controller {
 
       const updateUser = await userService.updateUser(
         {
-          password: hash,
+          password: hash
           // system_generated_password: false
         },
         userId

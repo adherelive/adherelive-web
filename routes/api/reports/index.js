@@ -10,26 +10,30 @@ const upload = multer({ dest: "../../../app/public/", storage: storage });
 const router = express.Router();
 
 router.post(
-  "/",
-  Authenticated,
-  // validate.addReportForm,
-  Report.addReports
+    "/",
+    Authenticated,
+    // validate.addReportForm,
+    Report.addReports
 );
 
 router.post(
-  "/upload/:patient_id",
-  Authenticated,
-  upload.single("files"),
-  Report.uploadReportDocuments
+    "/upload/:patient_id",
+    Authenticated,
+    upload.single("files"),
+    Report.uploadReportDocuments
 );
 
 router.post(
-  "/:id",
-  Authenticated,
-  // validate.addReportForm,
-  Report.updateReports
+    "/:id",
+    Authenticated,
+    // validate.addReportForm,
+    Report.updateReports
 );
 
-router.delete("/:document_id", Authenticated, Report.deleteReportDocument);
+router.delete(
+    "/:document_id",
+    Authenticated,
+    Report.deleteReportDocument
+);
 
 module.exports = router;

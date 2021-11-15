@@ -7,7 +7,7 @@ import * as PaymentHelper from "./helper";
 // SERVICES...
 import PaymentProductService from "../../services/paymentProducts/paymentProduct.service";
 import userRolesService from "../../services/userRoles/userRoles.service";
-import doctorService from "../../services/doctor/doctor.service";
+import doctorService from "../../services/doctor/doctor.service"
 
 // WRAPPERS...
 import PaymentProductWrapper from "../../ApiWrapper/web/paymentProducts";
@@ -25,43 +25,32 @@ class PaymentController extends Controller {
     try {
       const {
         body,
-        userDetails: {
-          userCategoryId,
-          userRoleId,
-          userData: { category = "" } = {},
-        } = {},
+        userDetails: { userCategoryId, userRoleId, userData: { category = "" } = {} } = {}
       } = req;
 
       let doctorRoleId = userRoleId;
 
-      const { doctor_id = null, for_user_type = USER_CATEGORY.DOCTOR } =
-        body || {};
+      const { doctor_id = null , for_user_type = USER_CATEGORY.DOCTOR } = body || {};
 
       if (doctor_id) {
         if (category !== USER_CATEGORY.PROVIDER) {
           return raiseClientError(res, 401, {}, "UNAUTHORIZED");
         }
 
-        const doctor =
-          (await doctorService.findOne({
-            where: { id: doctor_id },
-            attributes: ["user_id"],
-          })) || null;
-        const { user_id: doctorUserId = null } = doctor || {};
-        const userRole =
-          (await userRolesService.findOne({
-            where: {
-              user_identity: doctorUserId,
-              linked_id: userCategoryId,
-              linked_with: USER_CATEGORY.PROVIDER,
-            },
-            attributes: ["id"],
-          })) || null;
+        const doctor = await doctorService.findOne({where: {id: doctor_id}, attributes: ["user_id"]}) || null;
+        const {user_id: doctorUserId = null} = doctor || {};
+        const userRole = await userRolesService.findOne({where: {
+          user_identity: doctorUserId,
+          linked_id: userCategoryId,
+          linked_with: USER_CATEGORY.PROVIDER
+         },
+         attributes: ["id"]
+       }) || null;
 
         if (!userRole) {
-          return raiseClientError(res, 401, {}, "UNAUTHORIZED");
+        return raiseClientError(res, 401, {}, "UNAUTHORIZED");
         }
-        const { id: doctor_role_id = null } = userRole || {};
+        const {id: doctor_role_id = null} = userRole || {};
         doctorRoleId = doctor_role_id;
       }
 
@@ -74,16 +63,15 @@ class PaymentController extends Controller {
 
       if (id) {
         // update
-        const updatePaymentProductData =
-          await paymentProductService.updateDoctorProduct(
-            {
-              ...rest,
-            },
-            id
-          );
+        const updatePaymentProductData = await paymentProductService.updateDoctorProduct(
+          {
+            ...rest
+          },
+          id
+        );
 
         paymentProduct = await PaymentProductWrapper({
-          id,
+          id
         });
       } else {
         const paymentProductData = await paymentProductService.addDoctorProduct(
@@ -92,14 +80,14 @@ class PaymentController extends Controller {
             creator_role_id: userRoleId,
             creator_type: category,
             for_user_role_id: doctorRoleId,
-            for_user_type: doctor_id ? for_user_type : category,
-            product_user_type: "patient", // todo: change to constant in model
+            for_user_type: doctor_id ? for_user_type : category ,
+            product_user_type: "patient" // todo: change to constant in model
           }
         );
 
         if (paymentProductData) {
           paymentProduct = await PaymentProductWrapper({
-            data: paymentProductData,
+            data: paymentProductData
           });
         }
       }
@@ -113,8 +101,8 @@ class PaymentController extends Controller {
           200,
           {
             payment_products: {
-              ...paymentProducts,
-            },
+              ...paymentProducts
+            }
           },
           "Consultation Product added successfully"
         );
@@ -137,13 +125,14 @@ class PaymentController extends Controller {
     try {
       const { body } = req;
 
-      const { id } = body || {};
+      const {id} = body || {};
 
       const paymentProductService = new PaymentProductService();
-      const deletedDoctorProduct =
-        await paymentProductService.deleteDoctorProduct({
-          id: id,
-        });
+      const deletedDoctorProduct = await paymentProductService.deleteDoctorProduct(
+        {
+          id: id
+        }
+      );
       return raiseSuccess(res, 200, {}, "doctor product record destroyed");
     } catch (error) {
       Log.debug("83901283091298 delete doctor product error", error);
@@ -158,9 +147,9 @@ class PaymentController extends Controller {
         userDetails: {
           userCategoryId,
           userRoleId,
-          userData: { category = "" } = {},
+          userData: { category = "" } = {}
         } = {},
-        query: { doctor_id = null } = {},
+        query: { doctor_id = null } = {}
       } = req;
 
       let doctorRoleId = userRoleId;
@@ -170,26 +159,20 @@ class PaymentController extends Controller {
           return raiseClientError(res, 401, {}, "UNAUTHORIZED");
         }
 
-        const doctor =
-          (await doctorService.findOne({
-            where: { id: doctor_id },
-            attributes: ["user_id"],
-          })) || null;
-        const { user_id: doctorUserId = null } = doctor || {};
-        const userRole =
-          (await userRolesService.findOne({
-            where: {
-              user_identity: doctorUserId,
-              linked_id: userCategoryId,
-              linked_with: USER_CATEGORY.PROVIDER,
-            },
-            attributes: ["id"],
-          })) || null;
+        const doctor = await doctorService.findOne({where: {id: doctor_id}, attributes: ["user_id"]}) || null;
+        const {user_id: doctorUserId = null} = doctor || {};
+        const userRole = await userRolesService.findOne({where: {
+          user_identity: doctorUserId,
+          linked_id: userCategoryId,
+          linked_with: USER_CATEGORY.PROVIDER
+         },
+         attributes: ["id"]
+       }) || null;
 
         if (!userRole) {
-          return raiseClientError(res, 401, {}, "UNAUTHORIZED");
+        return raiseClientError(res, 401, {}, "UNAUTHORIZED");
         }
-        const { id: doctor_role_id = null } = userRole || {};
+        const {id: doctor_role_id = null} = userRole || {};
         doctorRoleId = doctor_role_id;
       }
 
@@ -198,12 +181,13 @@ class PaymentController extends Controller {
       }
 
       const paymentProductService = new PaymentProductService();
-      const doctorPaymentProductData =
-        (await paymentProductService.getAllCreatorTypeProducts({
-          for_user_type: [USER_CATEGORY.DOCTOR, USER_CATEGORY.HSP],
+      const doctorPaymentProductData = await paymentProductService.getAllCreatorTypeProducts(
+        {
+          for_user_type: [USER_CATEGORY.DOCTOR,USER_CATEGORY.HSP],
           for_user_role_id: doctorRoleId,
-          product_user_type: "patient",
-        })) || [];
+          product_user_type: "patient"
+        }
+      ) || [];
 
       let paymentProductData = [...doctorPaymentProductData];
 
@@ -212,10 +196,11 @@ class PaymentController extends Controller {
 
         for (let i = 0; i < paymentProductData.length; i++) {
           const paymentProduct = await PaymentProductWrapper({
-            data: paymentProductData[i],
+            data: paymentProductData[i]
           });
-          paymentProducts[paymentProduct.getId()] =
-            paymentProduct.getBasicInfo();
+          paymentProducts[
+            paymentProduct.getId()
+          ] = paymentProduct.getBasicInfo();
         }
 
         return raiseSuccess(
@@ -223,8 +208,8 @@ class PaymentController extends Controller {
           200,
           {
             payment_products: {
-              ...paymentProducts,
-            },
+              ...paymentProducts
+            }
           },
           "Default consultation products fetched successfully"
         );
@@ -246,20 +231,20 @@ class PaymentController extends Controller {
     const { raiseSuccess, raiseClientError, raiseServerError } = this;
     try {
       const paymentProductService = new PaymentProductService();
-      const paymentProductData =
-        await paymentProductService.getAllCreatorTypeProducts({
-          creator_type: USER_CATEGORY.ADMIN,
-        });
+      const paymentProductData = await paymentProductService.getAllCreatorTypeProducts(
+        { creator_type: USER_CATEGORY.ADMIN }
+      );
 
       if (paymentProductData.length > 0) {
         let paymentProducts = {};
 
         for (let i = 0; i < paymentProductData.length; i++) {
           const paymentProduct = await PaymentProductWrapper({
-            data: paymentProductData[i],
+            data: paymentProductData[i]
           });
-          paymentProducts[paymentProduct.getId()] =
-            paymentProduct.getBasicInfo();
+          paymentProducts[
+            paymentProduct.getId()
+          ] = paymentProduct.getBasicInfo();
         }
 
         return raiseSuccess(
@@ -267,8 +252,8 @@ class PaymentController extends Controller {
           200,
           {
             payment_products: {
-              ...paymentProducts,
-            },
+              ...paymentProducts
+            }
           },
           "Default consultation products fetched successfully"
         );

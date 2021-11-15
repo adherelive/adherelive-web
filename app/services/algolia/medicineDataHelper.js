@@ -5,50 +5,49 @@ Config();
 
 export const getMedicineData = async () => {
   return new Promise((res, rej) => {
-    if (process.config.app.medicine_data === "SUBHARTI") {
-      fs.readFile(
-        __dirname + "/data/subharti_medicine.json",
-        async (error, data) => {
-          if (error) {
-            console.error("error in reading medicine data", error);
-            rej(error);
-          }
-          let updatedMedicine = [];
+    if(process.config.app.medicine_data === "SUBHARTI") {
+      fs.readFile(__dirname + "/data/subharti_medicine.json", async (error, data) => {
+        if (error) {
+          console.error("error in reading medicine data", error);
+          rej(error);
+        }
+        let updatedMedicine = [];
 
-          const medicine = JSON.parse(data.toString());
+        const medicine = JSON.parse(data.toString());
 
-          for (let i = 0; i < medicine.length; i++) {
-            const { medicine_short_name = "", category = "" } =
-              medicine[i] || {};
+        for (let i = 0; i < medicine.length; i++) {
+          const {
+            medicine_short_name = "",
+              category = "",
+          } = medicine[i] || {};
 
-            // for (const indiaName of updatedIndiaName) {
-            const details = { ...medicine[i] };
+          // for (const indiaName of updatedIndiaName) {
+            const details = {...medicine[i]};
             updatedMedicine.push({
               name: medicine_short_name,
               type: category.toLowerCase(),
               description: "",
               details: JSON.stringify(details),
               created_at: new Date(),
-              updated_at: new Date(),
+              updated_at: new Date()
             });
-            // }
+          // }
 
-            // if (!updatedIndiaName.length && !internationalNameList.length) {
-            //   const details = {...medicine[i], india_name: [...updatedIndiaName]};
-            //   updatedMedicine.push({
-            //     name: generic_name,
-            //     type: "tablet",
-            //     description: "",
-            //     details: JSON.stringify(details),
-            //     created_at: new Date(),
-            //     updated_at: new Date()
-            //   });
-            // }
-          }
-
-          res(updatedMedicine);
+          // if (!updatedIndiaName.length && !internationalNameList.length) {
+          //   const details = {...medicine[i], india_name: [...updatedIndiaName]};
+          //   updatedMedicine.push({
+          //     name: generic_name,
+          //     type: "tablet",
+          //     description: "",
+          //     details: JSON.stringify(details),
+          //     created_at: new Date(),
+          //     updated_at: new Date()
+          //   });
+          // }
         }
-      );
+
+        res(updatedMedicine);
+      });
     } else {
       fs.readFile(__dirname + "/data/medicine.json", async (error, data) => {
         if (error) {
@@ -65,13 +64,13 @@ export const getMedicineData = async () => {
             icd_code,
             classification,
             india_name,
-            international_name,
+            international_name
           } = medicine[i] || {};
           let updatedIndiaName = [...india_name];
           const internationalNameList =
-            international_name && international_name.length
-              ? international_name.split(",")
-              : [];
+              international_name && international_name.length
+                  ? international_name.split(",")
+                  : [];
           if (updatedIndiaName.includes("More...")) {
             const moreElement = updatedIndiaName.indexOf("More...");
             updatedIndiaName.splice(moreElement, 1);
@@ -85,7 +84,7 @@ export const getMedicineData = async () => {
               description: "",
               details: JSON.stringify(details),
               created_at: new Date(),
-              updated_at: new Date(),
+              updated_at: new Date()
             });
           }
 
@@ -97,22 +96,19 @@ export const getMedicineData = async () => {
               description: "",
               details: JSON.stringify(details),
               created_at: new Date(),
-              updated_at: new Date(),
+              updated_at: new Date()
             });
           }
 
           if (!updatedIndiaName.length && !internationalNameList.length) {
-            const details = {
-              ...medicine[i],
-              india_name: [...updatedIndiaName],
-            };
+            const details = { ...medicine[i], india_name: [...updatedIndiaName] };
             updatedMedicine.push({
               name: generic_name,
               type: "tablet",
               description: "",
               details: JSON.stringify(details),
               created_at: new Date(),
-              updated_at: new Date(),
+              updated_at: new Date()
             });
           }
         }

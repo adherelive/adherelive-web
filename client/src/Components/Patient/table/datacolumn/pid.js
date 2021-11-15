@@ -11,7 +11,7 @@ class Watchlist extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      isAdded: false,
+      isAdded: false
     };
   }
 
@@ -19,6 +19,7 @@ class Watchlist extends Component {
     const {
       patientData: { basic_info: { id } = {} } = {},
       doctorData: { watchlist_patient_ids = [] } = {},
+      
     } = this.props || {};
 
     if (watchlist_patient_ids.includes(id)) {
@@ -30,13 +31,14 @@ class Watchlist extends Component {
     const {
       patientData: { basic_info: { id: prev_id } = {} } = {},
       doctorData: {
-        watchlist_patient_ids: prev_watchlist_patient_ids = [],
-      } = {},
+        watchlist_patient_ids: prev_watchlist_patient_ids = []
+      } = {}
     } = prevProps || {};
 
     const {
       patientData: { basic_info: { id } = {} } = {},
       doctorData: { watchlist_patient_ids = [] } = {},
+      
     } = this.props || {};
 
     if (
@@ -44,30 +46,31 @@ class Watchlist extends Component {
       !watchlist_patient_ids.includes(id)
     ) {
       this.setState({
-        isAdded: watchlist_patient_ids.includes(id),
+        isAdded: watchlist_patient_ids.includes(id)
       });
     }
   }
+  
+  formatMessage = data => this.props.intl.formatMessage(data);
 
-  formatMessage = (data) => this.props.intl.formatMessage(data);
 
-  addThisToWatchlist = (e) => {
+  addThisToWatchlist = e => {
     e.preventDefault();
     const {
       patientData: {
-        basic_info: { id, first_name, middle_name, last_name } = {},
+        basic_info: { id, first_name, middle_name, last_name } = {}
       } = {},
-      addToWatchlist,
+      addToWatchlist
     } = this.props || {};
 
-    addToWatchlist(id).then((response) => {
+    addToWatchlist(id).then(response => {
       const { status, message: errMessage } = response || {};
       if (status === true) {
         message.success(
           `${getFullName({
             first_name,
             middle_name,
-            last_name,
+            last_name
           })} ${this.formatMessage(messages.addedToWatchlist)}`
         );
       } else {
@@ -76,27 +79,29 @@ class Watchlist extends Component {
     });
 
     this.setState({
-      isAdded: true,
+      isAdded: true
     });
   };
 
-  removeFromWatchlist = (e) => {
+
+
+  removeFromWatchlist = e => {
     e.preventDefault();
     const {
       patientData: {
-        basic_info: { id, first_name, middle_name, last_name } = {},
+        basic_info: { id, first_name, middle_name, last_name } = {}
       } = {},
-      removePatientFromWatchlist,
+      removePatientFromWatchlist
     } = this.props || {};
 
-    removePatientFromWatchlist(id).then((response) => {
+    removePatientFromWatchlist(id).then(response => {
       const { status, message: errMessage } = response || {};
       if (status === true) {
         message.success(
           `${getFullName({
             first_name,
             middle_name,
-            last_name,
+            last_name
           })} ${this.formatMessage(messages.removedFromWatchlist)}`
         );
       } else {
@@ -105,25 +110,25 @@ class Watchlist extends Component {
     });
 
     this.setState({
-      isAdded: false,
+      isAdded: false
     });
   };
 
-  stopEventBubbling = (e) => {
+  stopEventBubbling = e => {
     e.stopPropagation();
   };
 
   render() {
     const { isAdded } = this.state;
 
-    const { formatMessage } = this;
+    const {formatMessage}=this;
 
     const {
       patientData: {
-        basic_info: { first_name, middle_name, last_name, id } = {},
+        basic_info: { first_name, middle_name, last_name, id } = {}
       } = {},
       chatData: { messages: { unread = "0" } = {} } = {},
-      onRowClick,
+      onRowClick
     } = this.props || {};
 
     const { patientData: { basic_info: { age, gender = "" } = {} } = {} } =
@@ -136,9 +141,7 @@ class Watchlist extends Component {
       >
         <div className="wp100 p10 flex direction-column align-left ">
           <div className="fw600 tab-color ">
-            {`${getName(first_name)}  ${getName(middle_name)} ${getName(
-              last_name
-            )}`}
+            {`${getName(first_name)}  ${getName(middle_name)} ${getName(last_name)}`}
           </div>
           <div className="flex direction-row  align-left">
             <div>{age ? `${age}` : "--"}</div>
@@ -159,7 +162,7 @@ class Watchlist extends Component {
           onClick={this.stopEventBubbling}
         >
           {isAdded ? (
-            <Tooltip title={formatMessage(messages.removeFromWatchlist)}>
+            <Tooltip title={formatMessage(messages.removeFromWatchlist)} >
               <Icon
                 type="eye"
                 className="fs20"
@@ -168,15 +171,16 @@ class Watchlist extends Component {
               />
             </Tooltip>
           ) : (
-            <Tooltip title={formatMessage(messages.addToWatchlist)}>
+            <Tooltip title={formatMessage(messages.addToWatchlist)} >
               <Icon
-                type="eye-invisible"
-                theme="filled"
-                className="fs20"
-                value={isAdded}
-                onClick={this.addThisToWatchlist}
-              />
+              type="eye-invisible"
+              theme="filled"
+              className="fs20"
+              value={isAdded}
+              onClick={this.addThisToWatchlist}
+            />
             </Tooltip>
+            
           )}
         </div>
       </div>
@@ -185,3 +189,4 @@ class Watchlist extends Component {
 }
 
 export default injectIntl(Watchlist);
+

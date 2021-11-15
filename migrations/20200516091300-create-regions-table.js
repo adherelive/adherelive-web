@@ -1,6 +1,6 @@
-"use strict";
+'use strict';
 
-import { DB_TABLES } from "../constant";
+import {DB_TABLES} from "../constant";
 
 module.exports = {
   up: (queryInterface, Sequelize) => {
@@ -9,7 +9,7 @@ module.exports = {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
-        type: Sequelize.INTEGER,
+        type: Sequelize.INTEGER
       },
       name: {
         type: Sequelize.STRING,
@@ -20,20 +20,20 @@ module.exports = {
       },
       created_at: {
         allowNull: false,
-        type: Sequelize.DATE,
+        type: Sequelize.DATE
       },
       updated_at: {
         allowNull: false,
-        type: Sequelize.DATE,
+        type: Sequelize.DATE
       },
       deleted_at: {
         allowNull: true,
-        type: Sequelize.DATE,
-      },
+        type: Sequelize.DATE
+      }
     });
   },
 
   down: (queryInterface, Sequelize) => {
     return queryInterface.dropTable(DB_TABLES.REGIONS);
-  },
+  }
 };

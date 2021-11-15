@@ -21,7 +21,7 @@ class AccountDetailsWrapper extends BaseAccountDetails {
       razorpay_account_name,
       activated_on,
       prefix,
-      upi_id,
+      upi_id
     } = _data || {};
 
     return {
@@ -37,9 +37,9 @@ class AccountDetailsWrapper extends BaseAccountDetails {
         razorpay_account_id,
         razorpay_account_name,
         prefix,
-        upi_id,
+        upi_id
       },
-      activated_on,
+      activated_on
     };
   };
 }

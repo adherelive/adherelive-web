@@ -1,8 +1,8 @@
-"use strict";
+'use strict';
 
-import { TABLE_NAME } from "../app/models/carePlanAppointments";
-import { TABLE_NAME as carePlanTableName } from "../app/models/carePlan";
-import { TABLE_NAME as appointmentTableName } from "../app/models/appointments";
+import {TABLE_NAME} from "../app/models/carePlanAppointments";
+import {TABLE_NAME as carePlanTableName} from "../app/models/carePlan";
+import {TABLE_NAME as appointmentTableName} from "../app/models/appointments";
 
 module.exports = {
   up: (queryInterface, Sequelize) => {
@@ -11,7 +11,7 @@ module.exports = {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
-        type: Sequelize.INTEGER,
+        type: Sequelize.INTEGER
       },
       care_plan_id: {
         type: Sequelize.INTEGER,
@@ -20,8 +20,8 @@ module.exports = {
           model: {
             tableName: carePlanTableName,
           },
-          key: "id",
-        },
+          key: 'id'
+        }
       },
       appointment_id: {
         type: Sequelize.INTEGER,
@@ -30,26 +30,26 @@ module.exports = {
           model: {
             tableName: appointmentTableName,
           },
-          key: "id",
-        },
+          key: 'id'
+        }
       },
 
       created_at: {
         allowNull: false,
-        type: Sequelize.DATE,
+        type: Sequelize.DATE
       },
       updated_at: {
         allowNull: false,
-        type: Sequelize.DATE,
+        type: Sequelize.DATE
       },
       deleted_at: {
         allowNull: true,
-        type: Sequelize.DATE,
-      },
+        type: Sequelize.DATE
+      }
     });
   },
 
   down: (queryInterface, Sequelize) => {
     return queryInterface.dropTable(TABLE_NAME);
-  },
+  }
 };

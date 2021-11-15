@@ -4,13 +4,10 @@ import PatientDetailsDrawer from "../../Components/Drawer/PatientDetails";
 import { DRAWER } from "../../constant";
 import { close } from "../../modules/drawer";
 import { getMedications } from "../../modules/medications";
-import { setPatientForChat, setCareplanForChat } from "../../modules/twilio";
+import { setPatientForChat } from "../../modules/twilio";
 import { openPopUp } from "../../modules/chat";
-import {
-  getAppointments,
-  getAppointmentsDetails,
-} from "../../modules/appointments";
-import { getPatientMissedEvents } from "../../modules/patients";
+import {getAppointments , getAppointmentsDetails }  from '../../modules/appointments';
+import {getPatientMissedEvents} from "../../modules/patients";
 
 const mapStateToProps = (state) => {
   const {
@@ -27,7 +24,7 @@ const mapStateToProps = (state) => {
     care_plans,
     medicines,
     chats,
-    auth,
+      auth
   } = state;
   return {
     visible: visible && type === DRAWER.PATIENT_DETAILS,
@@ -44,7 +41,7 @@ const mapStateToProps = (state) => {
     payload,
     medicines,
     chats,
-    auth,
+    auth
   };
 };
 
@@ -53,13 +50,11 @@ const mapDispatchToProps = (dispatch) => {
     close: () => dispatch(close()),
     getMedications: (id) => dispatch(getMedications(id)),
     setPatientForChat: (patient_id) => dispatch(setPatientForChat(patient_id)),
-    setCareplanForChat: (care_plan_id) =>
-      dispatch(setCareplanForChat(care_plan_id)),
     openPopUp: () => dispatch(openPopUp()),
-    getAppointments: (id) => dispatch(getAppointments(id)),
-    getAppointmentsDetails: () => dispatch(getAppointmentsDetails()),
-    getPatientMissedEvents: (patient_id) =>
-      dispatch(getPatientMissedEvents(patient_id)),
+    getAppointments :(id) => dispatch(getAppointments(id)),
+    getAppointmentsDetails : () => dispatch(getAppointmentsDetails()),
+    getPatientMissedEvents : (patient_id) => dispatch(getPatientMissedEvents(patient_id))
+
   };
 };
 

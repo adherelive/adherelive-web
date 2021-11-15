@@ -5,7 +5,6 @@ import specialityService from "../../../services/speciality/speciality.service";
 import SpecialityWrapper from "../../../ApiWrapper/mobile/speciality";
 
 const Log = new Logger("SPECIALITY MOBILE CONTROLLER");
-
 class SpecialityController extends Controller {
   constructor() {
     super();
@@ -24,8 +23,9 @@ class SpecialityController extends Controller {
         for (const speciality of specialities) {
           const specialityData = await SpecialityWrapper(speciality);
 
-          specialityDetails[specialityData.getSpecialityId()] =
-            specialityData.getBasicInfo();
+          specialityDetails[
+            specialityData.getSpecialityId()
+          ] = specialityData.getBasicInfo();
         }
 
         return raiseSuccess(
@@ -33,8 +33,8 @@ class SpecialityController extends Controller {
           200,
           {
             specialities: {
-              ...specialityDetails,
-            },
+              ...specialityDetails
+            }
           },
           "Specialities fetched successfully"
         );

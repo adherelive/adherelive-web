@@ -35,7 +35,7 @@ class UserWrapper extends BaseUser {
       // system_generated_password,
       prefix,
       deleted_at,
-      has_consent,
+      has_consent
     } = _data || {};
     return {
       basic_info: {
@@ -43,7 +43,7 @@ class UserWrapper extends BaseUser {
         user_name,
         email,
         mobile_number,
-        prefix,
+        prefix
       },
       sign_in_type,
       onboarded,
@@ -51,7 +51,7 @@ class UserWrapper extends BaseUser {
       category,
       activated_on,
       deleted_at,
-      has_consent,
+      has_consent
       // system_generated_password
     };
   };
@@ -64,19 +64,19 @@ class UserWrapper extends BaseUser {
       const doctorData = await DoctorWrapper(doctor);
       return {
         userCategoryData: await doctorData.getAllInfo(),
-        userCategoryId: doctorData.getDoctorId(),
+        userCategoryId: doctorData.getDoctorId()
       };
     } else if (patient) {
       const patientData = await PatientWrapper(patient);
       return {
         userCategoryData: patientData.getBasicInfo(),
-        userCategoryId: patientData.getPatientId(),
+        userCategoryId: patientData.getPatientId()
       };
-    } else if (provider) {
+    } else if(provider) {
       const providerData = await ProviderWrapper(provider);
       return {
         userCategoryData: providerData.getBasicInfo(),
-        userCategoryId: providerData.getProviderId(),
+        userCategoryId: providerData.getProviderId()
       };
     }
   };
@@ -85,7 +85,7 @@ class UserWrapper extends BaseUser {
     const { getCategory } = this;
     try {
       const permissionsData = await userPermissionService.getPermissionsByData({
-        category: getCategory(),
+        category: getCategory()
       });
       let permission_ids = [];
       let permissionData = [];
@@ -120,14 +120,14 @@ class UserWrapper extends BaseUser {
     let permissions = [];
 
     if (isActivated()) {
-      permissions = await getPermissions();
+     permissions = await getPermissions();
     }
 
     return {
       users: {
-        [getId()]: getBasicInfo(),
+        [getId()]: getBasicInfo()
       },
-      permissions,
+      permissions
     };
   };
 
@@ -135,6 +135,7 @@ class UserWrapper extends BaseUser {
     const { getId, getBasicInfo, _data } = this;
 
     const { doctor, patient } = _data;
+
 
     const doctors = {};
     const patients = {};
@@ -158,12 +159,12 @@ class UserWrapper extends BaseUser {
 
     return {
       users: {
-        [getId()]: getBasicInfo(),
+        [getId()]: getBasicInfo()
       },
       doctors,
       patients,
       patient_id,
-      doctor_id,
+      doctor_id
     };
   };
 }

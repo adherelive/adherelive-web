@@ -24,7 +24,7 @@ module.exports = {
               canHaveOptionValue: true,
               field_name: "number_input_9580A8A2-DC82-4FD8-B210-BA383CD21E2D",
               label: "Systolic",
-              dirty: false,
+              dirty: false
             },
             {
               id: "C1989A61-1515-4248-98B4-984774FAF531",
@@ -40,12 +40,12 @@ module.exports = {
               canHaveOptionValue: true,
               field_name: "number_input_9580A8A2-DC82-4FD8-B110-BA383CD21E2D",
               label: "Diastolic",
-              dirty: false,
-            },
-          ],
+              dirty: false
+            }
+          ]
         }),
         created_at: new Date(),
-        updated_at: new Date(),
+        updated_at: new Date()
       },
       {
         name: "SpO2",
@@ -66,12 +66,12 @@ module.exports = {
               canHaveOptionValue: true,
               field_name: "number_input_9580A8A2-DC82-4FD8-B210-BA383CD21E2D",
               label: "spO2Label",
-              dirty: false,
-            },
-          ],
+              dirty: false
+            }
+          ]
         }),
         created_at: new Date(),
-        updated_at: new Date(),
+        updated_at: new Date()
       },
       {
         name: "Heart rate",
@@ -92,12 +92,12 @@ module.exports = {
               canHaveOptionValue: true,
               field_name: "number_input_9580A8A2-DC82-4FD8-B210-BA383CD21E2D",
               label: "pulse per minute",
-              dirty: false,
-            },
-          ],
+              dirty: false
+            }
+          ]
         }),
         created_at: new Date(),
-        updated_at: new Date(),
+        updated_at: new Date()
       },
       {
         name: "Temperature",
@@ -118,7 +118,7 @@ module.exports = {
               canHaveOptionValue: true,
               field_name: "number_input_9580A8A2-DC82-4FD8-B210-BA383CD21E2D",
               label: "Celsius",
-              dirty: false,
+              dirty: false
             },
             {
               id: "C1989A61-1515-4248-98B4-984774FAF531",
@@ -134,12 +134,12 @@ module.exports = {
               canHaveOptionValue: true,
               field_name: "number_input_9580A8A2-DC82-4FD8-B210-BA383CD21E2D",
               label: "Fahrenheit",
-              dirty: false,
-            },
-          ],
+              dirty: false
+            }
+          ]
         }),
         created_at: new Date(),
-        updated_at: new Date(),
+        updated_at: new Date()
       },
       {
         name: "Fluid Intake/Output (Urine)",
@@ -160,7 +160,7 @@ module.exports = {
               canHaveOptionValue: true,
               field_name: "number_input_9580A8A2-DC82-4FD8-B210-BA383CD21E2D",
               label: "Celsius",
-              dirty: false,
+              dirty: false
             },
             {
               id: "C1989A61-1515-4248-98B4-984774FFF531",
@@ -176,12 +176,12 @@ module.exports = {
               canHaveOptionValue: true,
               field_name: "number_input_9580A8A2-DC82-4FD8-B210-BA383CD21E2D",
               label: "Fahrenheit",
-              dirty: false,
-            },
-          ],
+              dirty: false
+            }
+          ]
         }),
         created_at: new Date(),
-        updated_at: new Date(),
+        updated_at: new Date()
       },
       {
         name: "Blood Glucose",
@@ -202,12 +202,12 @@ module.exports = {
               canHaveOptionValue: true,
               field_name: "number_input_9580A8A2-DC82-4FD8-B210-BA383CD21E2D",
               label: "milligrams per decilitre ",
-              dirty: false,
-            },
-          ],
+              dirty: false
+            }
+          ]
         }),
         created_at: new Date(),
-        updated_at: new Date(),
+        updated_at: new Date()
       },
       {
         name: "Peak expiratory flow volume",
@@ -228,17 +228,17 @@ module.exports = {
               canHaveOptionValue: true,
               field_name: "number_input_9580A8A2-DC82-4FD8-B210-BA383CD21E2D",
               label: "Peak expiratory flow volume",
-              dirty: false,
-            },
-          ],
+              dirty: false
+            }
+          ]
         }),
         created_at: new Date(),
-        updated_at: new Date(),
+        updated_at: new Date()
       },
     ]);
   },
 
   down: (queryInterface, Sequelize) => {
     return queryInterface.bulkDelete(TABLE_NAME, null, {});
-  },
+  }
 };

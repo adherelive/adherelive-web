@@ -1,7 +1,7 @@
-"use strict";
+'use strict';
 
-import { TABLE_NAME, VIDEO_TYPES } from "../app/models/exerciseContents";
-import { TABLE_NAME as exerciseTableName } from "../app/models/exercise";
+import {TABLE_NAME, VIDEO_TYPES} from "../app/models/exerciseContents";
+import {TABLE_NAME as exerciseTableName} from "../app/models/exercise";
 
 import { USER_CATEGORY } from "../constant";
 
@@ -12,20 +12,20 @@ module.exports = {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
-        type: DataTypes.INTEGER,
+        type: DataTypes.INTEGER
       },
       exercise_id: {
         type: DataTypes.INTEGER,
         allowNull: false,
         references: {
           model: {
-            tableName: exerciseTableName,
+            tableName: exerciseTableName
           },
-          key: "id",
-        },
+          key: "id"
+        }
       },
       creator_id: {
-        type: DataTypes.INTEGER,
+        type: DataTypes.INTEGER
       },
       creator_type: {
         type: DataTypes.ENUM,
@@ -39,7 +39,7 @@ module.exports = {
       video_content_type: {
         type: DataTypes.ENUM,
         values: [VIDEO_TYPES.URL, VIDEO_TYPES.UPLOAD, VIDEO_TYPES.NONE],
-        defaultValue: VIDEO_TYPES.NONE,
+        defaultValue: VIDEO_TYPES.NONE
       },
       video_content: {
         type: DataTypes.STRING,
@@ -49,20 +49,20 @@ module.exports = {
       },
       created_at: {
         allowNull: false,
-        type: DataTypes.DATE,
+        type: DataTypes.DATE
       },
       updated_at: {
         allowNull: false,
-        type: DataTypes.DATE,
+        type: DataTypes.DATE
       },
       deleted_at: {
         allowNull: true,
-        type: DataTypes.DATE,
-      },
+        type: DataTypes.DATE
+      }
     });
   },
 
   down: (queryInterface) => {
     return queryInterface.dropTable(TABLE_NAME);
-  },
+  }
 };

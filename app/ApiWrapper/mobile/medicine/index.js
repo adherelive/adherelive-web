@@ -8,8 +8,7 @@ class MobileMedicineWrapper extends BaseMedicine {
 
   getBasicInfo = () => {
     const { _data } = this;
-    const { id, name, type, description, creator_id, public_medicine } =
-      _data || {};
+    const { id, name, type, description, creator_id, public_medicine } = _data || {};
     return {
       basic_info: {
         id,
@@ -17,8 +16,8 @@ class MobileMedicineWrapper extends BaseMedicine {
         type,
         description,
         creator_id,
-        public_medicine,
-      },
+        public_medicine
+      }
     };
   };
 
@@ -26,11 +25,10 @@ class MobileMedicineWrapper extends BaseMedicine {
     const { _data, getExistingData, setCurrentData, _objectName } = this;
 
     let cumulativeData = {};
-    _data.forEach((data) => {
+    _data.forEach(data => {
       // setCurrentData(data);
       // const medicineData = getExistingData();
-      const { id, name, type, description, creator_id, public_medicine } =
-        data || {};
+      const { id, name, type, description, creator_id, public_medicine} = data || {};
       cumulativeData[id] = {
         basic_info: {
           id,
@@ -38,31 +36,22 @@ class MobileMedicineWrapper extends BaseMedicine {
           type,
           description,
           creator_id,
-          public_medicine,
-        },
+          public_medicine
+        }
       };
     });
 
     return {
       [_objectName]: {
-        ...cumulativeData,
-      },
+        ...cumulativeData
+      }
     };
   };
 
   getAllInfo = () => {
     const { _data } = this;
-    const {
-      id,
-      name,
-      type,
-      description,
-      creator_id,
-      details,
-      public_medicine,
-      updatedAt,
-      createdAt,
-    } = _data || {};
+    const { id, name, type, description, creator_id, 
+      details, public_medicine, updatedAt, createdAt } = _data || {};
 
     return {
       basic_info: {
@@ -71,11 +60,11 @@ class MobileMedicineWrapper extends BaseMedicine {
         type,
         description,
         creator_id,
-        public_medicine,
+        public_medicine
       },
       details,
       updated_at: updatedAt,
-      created_at: createdAt,
+      created_at: createdAt
     };
   };
 }

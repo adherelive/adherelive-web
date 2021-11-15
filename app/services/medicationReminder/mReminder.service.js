@@ -1,6 +1,6 @@
 import Database from "../../../libs/mysql";
-import { TABLE_NAME } from "../../models/medicationReminders";
-import { TABLE_NAME as medicineTableName } from "../../models/medicines";
+import {TABLE_NAME} from "../../models/medicationReminders";
+import {TABLE_NAME as medicineTableName} from "../../models/medicines";
 
 class MReminderService {
   async addMReminder(data) {
@@ -32,9 +32,9 @@ class MReminderService {
         include: [
           {
             model: Database.getModel(medicineTableName),
-            required: true,
-          },
-        ],
+            required: true
+          }
+        ]
       });
       return medication;
     } catch (err) {
@@ -49,9 +49,9 @@ class MReminderService {
         include: [
           {
             model: Database.getModel(medicineTableName),
-            required: true,
-          },
-        ],
+            required: true
+          }
+        ]
       });
       return medications;
     } catch (error) {
@@ -79,11 +79,11 @@ class MReminderService {
         include: [
           {
             model: Database.getModel(medicineTableName),
-            required: true,
-          },
-        ],
+            required: true
+          }
+        ]
       });
-    } catch (error) {
+    } catch(error) {
       throw error;
     }
   };

@@ -11,15 +11,16 @@ module.exports = {
           USER_CATEGORY.DOCTOR,
           USER_CATEGORY.PROVIDER,
           USER_CATEGORY.ADMIN,
-          USER_CATEGORY.HSP,
+          USER_CATEGORY.HSP
         ],
-      }),
+      })
     ]);
   },
 
   down: (queryInterface, Sequelize) => {
     return Promise.all([
       queryInterface.changeColumn(TABLE_NAME, "creator_type"),
+
     ]);
-  },
+  }
 };

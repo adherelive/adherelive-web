@@ -23,11 +23,7 @@ class MobileFeatureController extends Controller {
     const { raiseServerError, raiseSuccess } = this;
     try {
       const {
-        userDetails: {
-          userRoleId = null,
-          userData: { category } = {},
-          userCategoryId,
-        } = {},
+        userDetails: { userRoleId = null , userData: { category } = {}, userCategoryId } = {}
       } = req;
 
       let featureMappings = {};
@@ -39,7 +35,7 @@ class MobileFeatureController extends Controller {
         case USER_CATEGORY.PATIENT:
           careplanData =
             (await carePlanService.getCarePlanByData({
-              patient_id: userCategoryId,
+              patient_id: userCategoryId
             })) || [];
 
           for (let index = 0; index < careplanData.length; index++) {
@@ -52,7 +48,7 @@ class MobileFeatureController extends Controller {
         case USER_CATEGORY.DOCTOR:
           careplanData =
             (await carePlanService.getCarePlanByData({
-              user_role_id: userRoleId,
+              user_role_id:userRoleId
             })) || [];
 
           for (let index = 0; index < careplanData.length; index++) {
@@ -65,7 +61,7 @@ class MobileFeatureController extends Controller {
         case USER_CATEGORY.HSP:
           careplanData =
             (await carePlanService.getCarePlanByData({
-              user_role_id: userRoleId,
+              user_role_id:userRoleId
             })) || [];
 
           for (let index = 0; index < careplanData.length; index++) {
@@ -83,14 +79,15 @@ class MobileFeatureController extends Controller {
             ? userCategoryId
             : otherUserCategoryId;
         const doctorId =
-          category === USER_CATEGORY.DOCTOR || category === USER_CATEGORY.HSP
+          (category === USER_CATEGORY.DOCTOR || category === USER_CATEGORY.HSP)
             ? userCategoryId
             : otherUserCategoryId;
-        const patientFeatures =
-          await doctorPatientFeatureMappingService.getByData({
+        const patientFeatures = await doctorPatientFeatureMappingService.getByData(
+          {
             patient_id: patientId,
-            doctor_id: doctorId,
-          });
+            doctor_id: doctorId
+          }
+        );
 
         let doctorFeatureIds = [];
 
@@ -101,7 +98,7 @@ class MobileFeatureController extends Controller {
         }
         featureMappings = {
           ...featureMappings,
-          ...{ [otherUserCategoryId]: doctorFeatureIds },
+          ...{ [otherUserCategoryId]: doctorFeatureIds }
         };
       }
 
@@ -114,11 +111,11 @@ class MobileFeatureController extends Controller {
 
       const dataToSend = {
         feature_mappings: {
-          ...featureMappings,
+          ...featureMappings
         },
         features: {
-          ...features,
-        },
+          ...features
+        }
       };
 
       return raiseSuccess(

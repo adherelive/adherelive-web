@@ -4,23 +4,24 @@ const messages = defineMessages({
   name: {
     id: "app.providers.table.name",
     description: "",
-    defaultMessage: "Name",
+    defaultMessage: "Name"
   },
   address: {
     id: "app.providers.table.address",
     description: "",
-    defaultMessage: "Address",
+    defaultMessage: "Address"
   },
   contact_details: {
     id: "app.providers.table.contact_details",
     description: "",
-    defaultMessage: "Contact Details",
+    defaultMessage: "Contact Details"
   },
   providers: {
     id: "app.doctor.table.providers.title",
     description: "",
-    defaultMessage: "Providers",
+    defaultMessage: "Providers"
   },
+
 });
 
 export default messages;

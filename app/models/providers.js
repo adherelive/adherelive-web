@@ -4,7 +4,7 @@ import { TABLE_NAME as userTableName } from "./users";
 
 export const TABLE_NAME = "providers";
 
-export const db = (database) => {
+export const db = database => {
   database.define(
     TABLE_NAME,
     {
@@ -12,39 +12,39 @@ export const db = (database) => {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
-        type: DataTypes.INTEGER,
+        type: DataTypes.INTEGER
       },
       user_id: {
         type: DataTypes.INTEGER,
         allowNull: false,
         references: {
           model: {
-            tableName: userTableName,
+            tableName: userTableName
           },
-          key: "id",
-        },
+          key: "id"
+        }
       },
       name: {
         type: DataTypes.STRING,
-        allowNull: false,
+        allowNull: false
       },
       address: {
-        type: DataTypes.STRING,
+        type: DataTypes.STRING
       },
       city: {
         type: DataTypes.STRING,
-        allowNull: true,
+        allowNull: true
       },
       state: {
         type: DataTypes.STRING,
-        allowNull: true,
+        allowNull: true
       },
       activated_on: {
-        type: DataTypes.DATE,
+        type: DataTypes.DATE
       },
       details: {
-        type: DataTypes.JSON,
-      },
+        type: DataTypes.JSON
+      }
     },
     {
       underscored: true,
@@ -58,17 +58,17 @@ export const db = (database) => {
             address: this.address,
             city: this.city,
             state: this.state,
-            activated_on: this.activated_on,
+            activated_on: this.activated_on
           };
-        },
-      },
+        }
+      }
     }
   );
 };
 
-export const associate = (database) => {
+export const associate = database => {
   database.models[TABLE_NAME].belongsTo(database.models[userTableName], {
     foreignKey: "user_id",
-    targetKey: "id",
+    targetKey: "id"
   });
 };

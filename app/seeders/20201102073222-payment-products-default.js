@@ -1,7 +1,7 @@
-"use strict";
+'use strict';
 
-import { TABLE_NAME, PAYMENT_TYPE } from "../models/paymentProducts";
-import { USER_CATEGORY } from "../../constant";
+import {TABLE_NAME, PAYMENT_TYPE} from "../models/paymentProducts";
+import {USER_CATEGORY} from "../../constant";
 
 module.exports = {
   up: (queryInterface) => {
@@ -13,7 +13,7 @@ module.exports = {
         product_user_type: "patient",
         for_user_role_id: 0,
         created_at: new Date(),
-        updated_at: new Date(),
+        updated_at: new Date()
       },
       {
         name: "Offline Consultation",
@@ -22,7 +22,7 @@ module.exports = {
         product_user_type: "patient",
         for_user_role_id: 0,
         created_at: new Date(),
-        updated_at: new Date(),
+        updated_at: new Date()
       },
       {
         name: "Adherence Monitoring",
@@ -31,12 +31,12 @@ module.exports = {
         product_user_type: "patient",
         for_user_role_id: 0,
         created_at: new Date(),
-        updated_at: new Date(),
-      },
+        updated_at: new Date()
+      }
     ]);
   },
 
   down: (queryInterface) => {
     return queryInterface.bulkDelete(TABLE_NAME, null, {});
-  },
+  }
 };

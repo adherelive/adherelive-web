@@ -7,7 +7,7 @@ import { TABLE_NAME as featureTableName } from "./features";
 
 export const TABLE_NAME = "doctor_patient_feature_mappings";
 
-export const db = (database) => {
+export const db = database => {
   database.define(
     TABLE_NAME,
     {
@@ -15,38 +15,38 @@ export const db = (database) => {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
-        type: DataTypes.INTEGER,
+        type: DataTypes.INTEGER
       },
       doctor_id: {
         type: DataTypes.INTEGER,
         allowNull: false,
         references: {
           model: {
-            tableName: doctorTableName,
+            tableName: doctorTableName
           },
-          key: "id",
-        },
+          key: "id"
+        }
       },
       patient_id: {
         type: DataTypes.INTEGER,
         allowNull: false,
         references: {
           model: {
-            tableName: patientTableName,
+            tableName: patientTableName
           },
-          key: "id",
-        },
+          key: "id"
+        }
       },
       feature_id: {
         type: DataTypes.INTEGER,
         allowNull: false,
         references: {
           model: {
-            tableName: featureTableName,
+            tableName: featureTableName
           },
-          key: "id",
-        },
-      },
+          key: "id"
+        }
+      }
     },
     {
       underscored: true,
@@ -56,31 +56,31 @@ export const db = (database) => {
           return {
             id: this.id,
             name: this.name,
-            details: this.details,
+            details: this.details
           };
-        },
-      },
+        }
+      }
     }
   );
 };
 
-export const associate = (database) => {
+export const associate = database => {
   const { doctor_patient_feature_mappings, features, doctors, patients } =
     database.models || {};
 
   // associations here (if any) ...
   doctor_patient_feature_mappings.belongsTo(features, {
     foreignKey: "feature_id",
-    targetKey: "id",
+    targetKey: "id"
   });
 
   doctor_patient_feature_mappings.belongsTo(doctors, {
     foreignKey: "doctor_id",
-    targetKey: "id",
+    targetKey: "id"
   });
 
   doctor_patient_feature_mappings.belongsTo(patients, {
     foreignKey: "patient_id",
-    targetKey: "id",
+    targetKey: "id"
   });
 };

@@ -14,8 +14,7 @@ module.exports = () => {
       appointment_wait_time_hours: process.env.APPOINTMENT_WAIT_TIME_HOURS,
       default_currency: process.env.DEFAULT_CURRENCY,
       medicine_data: process.env.MEDICINE_INSTANCE,
-      careplan_activation_reschedule_hours:
-        process.env.CAREPLAN_ACTIVATION_RESCHEDULE_HOURS,
+      careplan_activation_reschedule_hours: process.env.CAREPLAN_ACTIVATION_RESCHEDULE_HOURS,
       icon_android: process.env.ANDROID_ICON_NAME,
       otp_live_minutes: process.env.OTP_LIVE_MINUTES,
       appointment_prior_time: process.env.APPOINTMENT_PRIOR_NOTIFY_MINUTES,
@@ -33,20 +32,20 @@ module.exports = () => {
       app_key: process.env.ALGOLIA_APP_KEY,
       backend_key: process.env.ALGOLIA_BACKEND_KEY,
       medicine_index: process.env.ALGOLIA_MEDICINE_INDEX,
-      object_id_prefix: process.env.ALGOLIA_OBJECT_ID_PREFIX,
+      object_id_prefix: process.env.ALGOLIA_OBJECT_ID_PREFIX
     },
     razorpay: {
       key: process.env.RAZORPAY_KEY,
       secret: process.env.RAZORPAY_SECRET,
     },
     event: {
-      count: process.env.EVENT_FETCH_COUNT,
+      count: process.env.EVENT_FETCH_COUNT
     },
     email: {
       USER: process.env.SENDGRID_USER,
       KEY: process.env.SENDGRID_API_KEY,
       FROM: process.env.SENDGRID_FROM_ADDRESS,
-      FROM_NAME: process.env.SENDGRID_FROM_NAME,
+      FROM_NAME: process.env.SENDGRID_FROM_NAME
     },
     sqs: {
       domain_url: process.env.SQS_DOMAIN_URL,
@@ -61,7 +60,7 @@ module.exports = () => {
       port: process.env.DB_PORT,
       username: process.env.DB_USER,
       password: process.env.DB_PASSWORD,
-      dialect: process.env.DB_DIALECT,
+      dialect: process.env.DB_DIALECT
     },
     getstream: {
       key: process.env.GETSTREAM_API_KEY,
@@ -77,7 +76,7 @@ module.exports = () => {
       aws_provider_bucket: process.env.AWS_PROVIDER_BUCKET,
       aws_booking_request_bucket: process.env.AWS_BOOKING_REQUEST_BUCKET,
       aws_prescription_bucket: process.env.AWS_PRESCRIPTION_BUCKET,
-      device_token: process.env.device_token,
+      device_token: process.env.device_token
     },
     twilio: {
       TWILIO_ACCOUNT_SID: process.env.TWILIO_ACCOUNT_SID,
@@ -95,7 +94,7 @@ module.exports = () => {
       MINIO_REGION: process.env.MINIO_REGION,
       MINIO_ENDPOINT: process.env.MINIO_ENDPOINT,
       MINIO_BUCKET_NAME: process.env.MINIO_BUCKET_NAME,
-      MINIO_S3_HOST: process.env.S3_HOST,
+      MINIO_S3_HOST: process.env.S3_HOST
     },
     firebase: {
       api_key: process.env.FIREBASE_API_KEY,
@@ -104,31 +103,31 @@ module.exports = () => {
       project_id: process.env.FIREBASE_PROJECT_ID,
     },
     s3: {
-      EXPIRY_TIME: process.env.EXPIRY_TIME,
+      EXPIRY_TIME: process.env.EXPIRY_TIME
     },
     GOOGLE_KEYS: {
       CLIENT_ID: process.env.GOOGLE_CLIENT_ID,
       CLIENT_SECRET: process.env.GOOGLE_CLIENT_SECRET,
-      REDIRECT_URI: process.env.GOOGLE_REDIRECT_URI,
+      REDIRECT_URI: process.env.GOOGLE_REDIRECT_URI
     },
     FACEBOOK_KEYS: {
       APP_TOKEN: process.env.FACEBOOK_APP_TOKEN,
-      SECRET_TOKEN: process.env.FACEBOOK_SECRET_TOKEN,
+      SECRET_TOKEN: process.env.FACEBOOK_SECRET_TOKEN
     },
     smtp: {
       source_address: process.env.SOURCE_ADDRESS,
       reply_to_address: process.env.REPLY_TO_ADDRESS,
       user: process.env.SMTP_USER,
-      secret_key: process.env.SMTP_KEY,
+      secret_key: process.env.SMTP_KEY
     },
     branch_io: {
       key: process.env.BRANCH_IO_KEY,
-      base_url: process.env.BRANCH_IO_BASE_URL,
+      base_url: process.env.BRANCH_IO_BASE_URL
     },
     one_signal: {
       app_id: process.env.ONE_SIGNAL_APP_ID,
       key: process.env.ONE_SIGNAL_KEY,
-      urgent_channel_id: process.env.URGENT_CHANNEL_ID,
+      urgent_channel_id: process.env.URGENT_CHANNEL_ID
     },
     agora: {
       app_id: process.env.AGORA_APP_ID,
@@ -153,9 +152,7 @@ module.exports = () => {
     MSG91_SMS_URL: process.env.MSG91_SMS_URL,
     MSG91_SENDER: process.env.MSG91_SENDER,
     ADMIN_MEDICINE_ONE_PAGE_LIMIT: process.env.ADMIN_MEDICINE_ONE_PAGE_LIMIT,
-    PATIENT_LIST_SIZE_LIMIT: process.env.PATIENT_LIST_SIZE_LIMIT,
-    DOCTOR_NAME_SEARCH_LIST_SIZE_LIMIT:
-      process.env.DOCTOR_NAME_SEARCH_LIST_SIZE_LIMIT,
+    PATIENT_LIST_SIZE_LIMIT: process.env.PATIENT_LIST_SIZE_LIMIT
   };
 };
 

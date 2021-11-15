@@ -5,7 +5,7 @@ import { signOut } from "../../modules/auth";
 import { getUserRoles } from "../../modules/userRoles";
 
 const mapStateToProps = (state) => {
-  const { auth, users, doctors } = state;
+  const { auth, users ,doctors} = state;
   const { authenticated_user, authenticated_category, hasConsent } = auth;
 
   return {

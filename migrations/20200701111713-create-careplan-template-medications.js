@@ -1,8 +1,8 @@
-"use strict";
+'use strict';
 
-import { TABLE_NAME } from "../app/models/templateMedications";
-import { TABLE_NAME as medicineTableName } from "../app/models/medicines";
-import { TABLE_NAME as carePlanTemplateTableName } from "../app/models/careplanTemplate";
+import {TABLE_NAME} from "../app/models/templateMedications";
+import {TABLE_NAME as medicineTableName} from "../app/models/medicines";
+import {TABLE_NAME as carePlanTemplateTableName} from "../app/models/careplanTemplate";
 
 module.exports = {
   up: (queryInterface, Sequelize) => {
@@ -11,7 +11,7 @@ module.exports = {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
-        type: Sequelize.INTEGER,
+        type: Sequelize.INTEGER
       },
       care_plan_template_id: {
         type: Sequelize.INTEGER,
@@ -20,8 +20,8 @@ module.exports = {
           model: {
             tableName: carePlanTemplateTableName,
           },
-          key: "id",
-        },
+          key: 'id'
+        }
       },
       medicine_id: {
         type: Sequelize.INTEGER,
@@ -30,29 +30,29 @@ module.exports = {
           model: {
             tableName: medicineTableName,
           },
-          key: "id",
-        },
+          key: 'id'
+        }
       },
       schedule_data: {
         type: Sequelize.JSON,
-        allowNull: true,
+        allowNull: true
       },
       created_at: {
         allowNull: false,
-        type: Sequelize.DATE,
+        type: Sequelize.DATE
       },
       updated_at: {
         allowNull: false,
-        type: Sequelize.DATE,
+        type: Sequelize.DATE
       },
       deleted_at: {
         allowNull: true,
-        type: Sequelize.DATE,
-      },
+        type: Sequelize.DATE
+      }
     });
   },
 
   down: (queryInterface, Sequelize) => {
     return queryInterface.dropTable(TABLE_NAME);
-  },
+  }
 };

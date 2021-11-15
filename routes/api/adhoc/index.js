@@ -4,28 +4,35 @@ const router = express.Router();
 import adhocController from "../../../app/controllers/adhoc/adhoc.controller";
 import Authenticated from "../middleware/auth";
 
-router.post("/purge/sqs", Authenticated, adhocController.purgeSqsQueue);
-
 router.post(
-  "/populate-user-roles",
-  Authenticated,
-  adhocController.migrateAllUsersToUserRoles
+    "/purge/sqs",
+    Authenticated,
+    adhocController.purgeSqsQueue
 );
 
-router.post("/test-api", Authenticated, adhocController.testApi);
-
 router.post(
-  "/patient/update-timings",
-  Authenticated,
-  adhocController.updatePatientTimings
+    "/populate-user-roles",
+    Authenticated,
+    adhocController.migrateAllUsersToUserRoles
 );
 
-router.post("/permissions", Authenticated, adhocController.updatePermissions);
-
 router.post(
-  "/careplan/channels",
-  Authenticated,
-  adhocController.updateChannels
+    "/test-api",
+    Authenticated,
+    adhocController.testApi
 );
 
+router.post(
+    "/patient/update-timings",
+    Authenticated,
+    adhocController.updatePatientTimings
+);
+
+router.post(
+    "/permissions",
+    Authenticated,
+    adhocController.updatePermissions
+);
+
+  
 module.exports = router;

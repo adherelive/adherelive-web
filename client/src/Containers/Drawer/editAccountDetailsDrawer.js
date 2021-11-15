@@ -1,24 +1,20 @@
 import { connect } from "react-redux";
 import editAccountDetailsDrawer from "../../Components/Drawer/editAccountDetails";
-import {
-  getAccountDetails,
-  updateAccountDetails,
-} from "../../modules/accountDetails";
-import { addAccountDetails } from "../../modules/accountDetails";
+import {getAccountDetails,updateAccountDetails} from "../../modules/accountDetails";
+import {addAccountDetails} from "../../modules/accountDetails";
 import { DRAWER } from "../../constant";
 import { close } from "../../modules/drawer";
-import {
-  getAdminPaymentProduct,
-  getDoctorPaymentProduct,
-  addDoctorPaymentProduct,
-} from "../../modules/doctors";
+import {getAdminPaymentProduct,getDoctorPaymentProduct,addDoctorPaymentProduct} from "../../modules/doctors";
+
 
 // import { createReminder, updateReminder } from "../../modules/reminder"; // write to add to database
-const mapStateToProps = (state) => {
+const mapStateToProps = state => {
   const {
-    account_details,
-    drawer: { visible, loading, data: { type, payload = {} } = {} },
+    account_details ,
+    drawer: { visible, loading, data: { type, payload = {} } = {} }
   } = state;
+
+  
 
   return {
     account_details,
@@ -28,13 +24,12 @@ const mapStateToProps = (state) => {
   };
 };
 
-const mapDispatchToProps = (dispatch) => {
+const mapDispatchToProps = dispatch => {
   return {
     close: () => dispatch(close()),
-    getAccountDetails: (provider_id = null) =>
-      dispatch(getAccountDetails(provider_id)),
-    updateAccountDetails: (id, payload) =>
-      dispatch(updateAccountDetails(id, payload)),
+    getAccountDetails: (provider_id=null) => dispatch(getAccountDetails(provider_id)),
+    updateAccountDetails : (id,payload) => dispatch(updateAccountDetails(id,payload))
+
   };
 };
 

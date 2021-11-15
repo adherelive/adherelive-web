@@ -1,16 +1,16 @@
-"use strict";
-import { TABLE_NAME } from "../app/models/consents";
+'use strict';
+import {TABLE_NAME} from "../app/models/consents";
 
 module.exports = {
   up: (queryInterface, Sequelize) => {
     return Promise.all([
       queryInterface.addColumn(TABLE_NAME, "user_role_id", {
-        type: Sequelize.INTEGER,
-      }),
+        type: Sequelize.INTEGER
+      })
     ]);
   },
 
   down: (queryInterface, Sequelize) => {
-    return queryInterface.removeColumn(TABLE_NAME, "user_role_id");
-  },
+    return queryInterface.removeColumn(TABLE_NAME, "user_role_id")
+  }
 };

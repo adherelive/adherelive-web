@@ -5,7 +5,6 @@ import generateRow from "./dataRow";
 import getColumn from "./header";
 // import { getAppointmentsForPatientUrl } from "../../../Helper/url/appointments";
 import messages from "./messages";
-
 class PatientTable extends Component {
   constructor(props) {
     super(props);
@@ -20,32 +19,32 @@ class PatientTable extends Component {
   //   };
   // };
 
-  onSelectChange = (selectedRowKeys) => {
+  onSelectChange = selectedRowKeys => {
     this.setState({ selectedRows: selectedRowKeys });
   };
 
   getLoadingComponent = () => {
     const antIcon = <Icon type="loading" style={{ fontSize: 24 }} spin />;
     return {
-      indicator: antIcon,
+      indicator: antIcon
     };
   };
 
   getDataSource = () => {
     const { appointments, users, doctors, patients } = this.props;
 
-    return Object.keys(appointments).map((id) => {
+    return Object.keys(appointments).map(id => {
       return generateRow({
         id,
         appointments,
         users,
         doctors,
-        patients,
+        patients
       });
     });
   };
 
-  formatMessage = (data) => this.intl.formatMessage(data);
+  formatMessage = data => this.intl.formatMessage(data);
 
   render() {
     const { onRow, onSelectChange, getLoadingComponent, getDataSource } = this;
@@ -54,11 +53,15 @@ class PatientTable extends Component {
     //   onChange: onSelectChange
     // };
 
-    const { loading, intl: { formatMessage } = {} } = this.props;
+    const {
+      loading,
+      intl: { formatMessage } = {}
+    } = this.props;
 
     const locale = {
-      emptyText: this.formatMessage(messages.emptyAppointmentTable),
+      emptyText: this.formatMessage(messages.emptyAppointmentTable)
     };
+
 
     return (
       <Table
@@ -69,7 +72,7 @@ class PatientTable extends Component {
         locale={locale}
         columns={getColumn({
           formatMessage,
-          className: "pointer",
+          className: "pointer"
         })}
         dataSource={getDataSource()}
         scroll={{ x: 1600 }}

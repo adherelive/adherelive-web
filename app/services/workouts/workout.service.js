@@ -5,7 +5,7 @@ import { TABLE_NAME as exerciseDetailTableName } from "../../models/exerciseDeta
 import { TABLE_NAME as exerciseTableName } from "../../models/exercise";
 import { TABLE_NAME as repetitionTableName } from "../../models/exerciseRepetition";
 import { TABLE_NAME as workoutExerciseGroupMappingTableName } from "../../models/workoutExerciseGroupMapping";
-import { TABLE_NAME as scheduleEventTableName } from "../../models/scheduleEvents";
+import {TABLE_NAME as scheduleEventTableName} from "../../models/scheduleEvents";
 import { EVENT_TYPE } from "../../../constant";
 import moment from "moment";
 
@@ -124,66 +124,68 @@ export default class WorkoutService {
         transaction,
       });
 
-      for (let index = 0; index < workout_exercise_groups.length; index++) {
-        const {
-          exercise_group_id = null,
-          sets,
-          exercise_detail_id,
-          notes,
-        } = workout_exercise_groups[index];
+        for (let index = 0; index < workout_exercise_groups.length; index++) {
+          const {
+            exercise_group_id = null,
+            sets,
+            exercise_detail_id,
+            notes,
+          } = workout_exercise_groups[index];
 
-        if (exercise_group_id) {
-          // update
-          await Database.getModel(exerciseGroupTableName).update(
-            {
-              sets,
-              exercise_detail_id,
-              details: { notes },
-            },
-            {
-              where: { id: exercise_group_id },
-              transaction,
-            }
-          );
+          if (exercise_group_id) {
+            // update
+            await Database.getModel(exerciseGroupTableName).update(
+              {
+                sets,
+                exercise_detail_id,
+                details: { notes },
+              },
+              {
+                where: { id: exercise_group_id },
+                transaction,
+              }
+            );
 
-          // await Database.getModel(
-          //   workoutExerciseGroupMappingTableName
-          // ).update(
-          //   {
-          //     time,
-          //   },
-          //   {
-          //     where: {exercise_group_id},
-          //     transaction,
-          //   }
-          // );
-        } else {
-          // create
-          const exerciseGroup = await Database.getModel(
-            exerciseGroupTableName
-          ).create(
-            {
-              sets,
-              exercise_detail_id,
-              details: { notes },
-            },
-            {
-              transaction,
-            }
-          );
+            // await Database.getModel(
+            //   workoutExerciseGroupMappingTableName
+            // ).update(
+            //   {
+            //     time,
+            //   },
+            //   {
+            //     where: {exercise_group_id},
+            //     transaction,
+            //   }
+            // );
+          } else {
+            // create
+            const exerciseGroup = await Database.getModel(
+              exerciseGroupTableName
+            ).create(
+              {
+                sets,
+                exercise_detail_id,
+                details: { notes },
+              },
+              {
+                transaction,
+              }
+            );
 
-          await Database.getModel(workoutExerciseGroupMappingTableName).create(
-            {
-              // time,
-              workout_id,
-              exercise_group_id: exerciseGroup.id,
-            },
-            {
-              transaction,
-            }
-          );
+            await Database.getModel(
+              workoutExerciseGroupMappingTableName
+            ).create(
+              {
+                // time,
+                workout_id,
+                exercise_group_id: exerciseGroup.id,
+              },
+              {
+                transaction,
+              }
+            );
+          }
         }
-      }
 
       // workout update
       await Database.getModel(TABLE_NAME).update(workoutData, {
@@ -248,15 +250,12 @@ export default class WorkoutService {
         transaction,
       });
 
-      await Database.getModel(TABLE_NAME).update(
-        { expired_on: moment() },
-        {
-          where: {
+      await Database.getModel(TABLE_NAME).update({expired_on:moment()},{
+        where: {
             id,
-          },
-          transaction,
-        }
-      );
+        },
+        transaction
+      });
 
       // data for workout delete
       // await Database.getModel(TABLE_NAME).destroy({
@@ -272,16 +271,18 @@ export default class WorkoutService {
     }
   };
 
-  updateWorkotTotalCalories = async ({ workout_id, total_calories }) => {
-    const transaction = await Database.initTransaction();
+
+  updateWorkotTotalCalories = async ({
+    workout_id,
+    total_calories
+  }) => {
+    const transaction =  await Database.initTransaction();
     try {
-      await Database.getModel(TABLE_NAME).update(
-        { workout_id, total_calories },
-        {
-          where: { id: workout_id },
-          transaction,
-        }
-      );
+
+      await Database.getModel(TABLE_NAME).update({workout_id,total_calories},{
+        where: { id: workout_id },
+        transaction,
+      });
       await transaction.commit();
       return true;
     } catch (error) {

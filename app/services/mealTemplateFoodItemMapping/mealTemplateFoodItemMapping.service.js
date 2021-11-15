@@ -1,25 +1,26 @@
 import Database from "../../../libs/mysql";
-import { TABLE_NAME } from "../../models/mealTemplateFoodItemMapping";
+import {TABLE_NAME} from "../../models/mealTemplateFoodItemMapping";
 
-const DEFAULT_ORDER = [["created_at", "DESC"]];
+const DEFAULT_ORDER = [["created_at","DESC"]];
 
 class MealTemplateFoodItemMappingService {
+
   create = async (data) => {
     const transaction = await Database.initTransaction();
     try {
-      const record = await Database.getModel(TABLE_NAME).create(data, {
-        raw: true,
-        transaction,
-        // include: [
-        // Database.getModel(mealTemplateTableName),
-        // Database.getModel(foodItemTableName),
-        // ]
-      });
-      await transaction.commit();
-      return record;
-    } catch (error) {
-      await transaction.rollback();
-      throw error;
+        const record = await Database.getModel(TABLE_NAME).create(data, {
+            raw: true,
+            transaction,
+            // include: [
+                // Database.getModel(mealTemplateTableName),
+                // Database.getModel(foodItemTableName),
+              // ]
+        });
+        await transaction.commit();
+        return record;
+    } catch(error) {
+        await transaction.rollback();
+        throw error;
     }
   };
 
@@ -31,11 +32,11 @@ class MealTemplateFoodItemMappingService {
           id,
         },
         // include: [
-        // Database.getModel(mealTemplateTableName),
-        // Database.getModel(foodItemTableName),
+          // Database.getModel(mealTemplateTableName),
+          // Database.getModel(foodItemTableName),
         // ],
         raw: true,
-        transaction,
+        transaction
       });
       await transaction.commit();
       return record;
@@ -45,39 +46,43 @@ class MealTemplateFoodItemMappingService {
     }
   };
 
-  getByData = async (data) => {
+  getByData = async data => {
     try {
       return await Database.getModel(TABLE_NAME).findOne({
-        where: data,
-        // include: [
-        // Database.getModel(mealTemplateTableName),
-        // Database.getModel(foodItemTableName),
-        // ],
-        raw: true,
-      });
-    } catch (error) {
-      throw error;
+            where: data,
+            // include: [
+              // Database.getModel(mealTemplateTableName),
+              // Database.getModel(foodItemTableName),
+            // ],
+            raw: true
+        });
+    } catch(error) {
+        throw error;
     }
   };
 
-  findAndCountAll = async ({ where, order = DEFAULT_ORDER, attributes }) => {
+
+  
+
+  findAndCountAll = async ({where, order = DEFAULT_ORDER, attributes}) => {
     try {
       return await Database.getModel(TABLE_NAME).findAndCountAll({
         where,
         order,
         attributes,
-        raw: true,
+        raw: true
       });
     } catch (error) {
       throw error;
     }
   };
 
+
   delete = async (id) => {
     try {
       const record = await Database.getModel(TABLE_NAME).destroy({
         where: {
-          id,
+          id
         },
       });
       return record;
@@ -85,6 +90,8 @@ class MealTemplateFoodItemMappingService {
       throw err;
     }
   };
+
+
 }
 
 export default MealTemplateFoodItemMappingService;

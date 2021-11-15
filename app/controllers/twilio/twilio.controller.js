@@ -3,7 +3,6 @@ import twilioService from "../../services/twilio/twilio.service";
 import Controller from "../";
 
 import Log from "../../../libs/log_new";
-
 Log.fileName("WEB > TWILIO > CONTROLLER");
 
 class TwilioController extends Controller {
@@ -34,9 +33,7 @@ class TwilioController extends Controller {
   generateTwilioVideoAccessToken = async (req, res) => {
     const { raiseSuccess, raiseServerError } = this;
     try {
-      const {
-        userDetails: { userRoleId },
-      } = req;
+      const {userDetails: {userRoleId}} = req;
       const userId = userRoleId ? userRoleId : null;
       const identity = userId ? userId : faker.name.findName();
 
@@ -59,10 +56,11 @@ class TwilioController extends Controller {
     try {
       const { roomId } = req.params;
 
-      const connectedParticipantsList =
-        await twilioService.getRoomConnectedParticipants(roomId);
+      const connectedParticipantsList = await twilioService.getRoomConnectedParticipants(
+        roomId
+      );
       let connectedParticipants = {};
-      connectedParticipantsList.forEach((participant) => {
+      connectedParticipantsList.forEach(participant => {
         const { status, identity } = participant;
         connectedParticipants[identity] = status;
       });
@@ -84,7 +82,12 @@ class TwilioController extends Controller {
     try {
       const allChannels = await twilioService.deleteAllMessages();
 
-      return raiseSuccess(res, 200, {}, "DELETED ALL CHAT MESSAGES");
+      return raiseSuccess(
+          res,
+          200,
+          { },
+          "DELETED ALL CHAT MESSAGES"
+      );
     } catch (error) {
       Log.debug("deleteChat 500 error", error);
       return raiseServerError(res);
@@ -98,7 +101,12 @@ class TwilioController extends Controller {
 
       Log.debug("all Channels", allChannels);
 
-      return raiseSuccess(res, 200, {}, "GET ALL CHAT MESSAGES");
+      return raiseSuccess(
+          res,
+          200,
+          { },
+          "GET ALL CHAT MESSAGES"
+      );
     } catch (error) {
       Log.debug("deleteChat 500 error", error);
       return raiseServerError(res);

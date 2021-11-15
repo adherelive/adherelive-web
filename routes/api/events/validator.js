@@ -7,19 +7,21 @@ const appointmentFormSchema = Joi.object().keys({
   participant_two: Joi.object()
     .keys({
       id: Joi.number().required(),
-      category: Joi.string().required(),
+      category: Joi.string().required()
     })
     .required(),
   date: Joi.date().required(),
   start_time: Joi.date().required(),
   end_time: Joi.date().required(),
-  description: Joi.string().optional().allow(""),
+  description: Joi.string()
+    .optional()
+    .allow(""),
   organizer: Joi.object()
     .keys({
       id: Joi.number().required(),
-      category: Joi.string().required(),
+      category: Joi.string().required()
     })
-    .optional(),
+    .optional()
   // TODO: rr_rule here?
 });
 
@@ -38,10 +40,10 @@ const medicationReminderFormSchema = Joi.object().keys({
   medicine_type: Joi.string().required(),
   participant_id: Joi.number().optional().allow(""),
   critical: Joi.boolean().optional().allow(""),
-  description: Joi.string().max(500, "utf-8").optional().allow(""),
+  description: Joi.string().max(500, 'utf-8').optional().allow("")
 });
 
-const validateStartTime = (startTime) => {
+const validateStartTime = startTime => {
   const now = moment().subtract(3, "minutes");
   return moment(startTime).isAfter(now);
 };
@@ -66,12 +68,7 @@ export const validateMedicationReminderData = (req, res, next) => {
   //     // return res.status(422).json(response.getResponse());
   // }
   if (end_date && !validateTimeInterval(start_date, end_date)) {
-    return raiseClientError(
-      res,
-      422,
-      {},
-      "start date should be less than end date"
-    );
+    return raiseClientError(res, 422, {}, "start date should be less than end date");
     // const response = new Response(false, 422);
     // response.setError({ error: "start time should be less than end time" });
     // return res.status(422).json(response.getResponse());

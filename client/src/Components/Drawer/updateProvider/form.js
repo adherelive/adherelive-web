@@ -436,7 +436,10 @@ class UpdateProviderForm extends Component {
         >
           {getFieldDecorator(PRESCRIPTION_DETAILS, {
             initialValue: initial_prescription_details,
-          })(<TextArea rows={3} className="mb40" maxLength={300} />)}
+          })(<
+            TextArea rows={3} className="mb40" 
+            maxLength={300}
+            />)}
         </FormItem>
       </Form>
     );

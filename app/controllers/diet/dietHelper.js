@@ -97,12 +97,12 @@ export const getTimings = (userTimings) => {
             time: value,
           };
           break;
-        case MID_MORNING:
-          allDietTimings[MID_MORNING] = {
-            text: "Mid Morning",
-            time: value,
-          };
-          break;
+          case MID_MORNING:
+            allDietTimings[MID_MORNING] = {
+              text: "Mid Morning",
+              time: value,
+            };
+            break;
         case LUNCH:
           allDietTimings[LUNCH] = {
             text: "Lunch",
@@ -130,6 +130,7 @@ export const getTimings = (userTimings) => {
           break;
       }
     });
+
 
     console.log("12098128 allDietTimings", allDietTimings);
 

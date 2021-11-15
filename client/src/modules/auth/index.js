@@ -92,10 +92,7 @@ function setAuthRedirect(user, isInitial = false) {
     category = USER_CATEGORY.DOCTOR,
   } = user;
   let authRedirect = "";
-  if (
-    !onboarded &&
-    (category == USER_CATEGORY.DOCTOR || category == USER_CATEGORY.HSP)
-  ) {
+  if (!onboarded && (category == USER_CATEGORY.DOCTOR || category == USER_CATEGORY.HSP ) ) {
     if (onboarding_status == ONBOARDING_STATUS.PROFILE_REGISTERED) {
       authRedirect = PATH.REGISTER_QUALIFICATIONS;
     } else if (
@@ -130,10 +127,7 @@ function setAuthRedirectSignIn(user, isInitial = false) {
   } = user;
 
   let authRedirect = "/";
-  if (
-    !onboarded &&
-    (category == USER_CATEGORY.DOCTOR || category == USER_CATEGORY.HSP)
-  ) {
+  if (!onboarded && (category == USER_CATEGORY.DOCTOR || category == USER_CATEGORY.HSP) ) {
     if (onboarding_status == ONBOARDING_STATUS.PROFILE_REGISTERED) {
       authRedirect = PATH.REGISTER_QUALIFICATIONS;
     } else if (
@@ -682,6 +676,7 @@ export default (state = AUTH_INITIAL_STATE, action = {}) => {
   const { type, payload } = action;
   switch (type) {
     case GETTING_INITIAL_DATA_COMPLETED:
+
       return {
         authenticated: true,
         authenticated_category: payload.authCategory,

@@ -5,7 +5,7 @@ import ProviderService from "../../../services/provider/provider.service";
 import UserRoleService from "../../../services/userRoles/userRoles.service";
 import UserDeviceService from "../../../services/userDevices/userDevice.service";
 import UserDeviceWrapper from "../../../ApiWrapper/mobile/userDevice";
-import { EVENT_TYPE, DEFAULT_PROVIDER } from "../../../../constant";
+import { EVENT_TYPE, DEFAULT_PROVIDER} from "../../../../constant";
 
 class UpdateJob extends MedicationJob {
   constructor(data) {
@@ -28,19 +28,18 @@ class UpdateJob extends MedicationJob {
     const playerIds = [];
     const userIds = [];
 
-    const { rows: userRoles = [] } =
-      (await UserRoleService.findAndCountAll({
-        where: {
-          id: participants,
-        },
-      })) || {};
+    const {rows: userRoles = []} = await UserRoleService.findAndCountAll({
+      where: {
+        id: participants
+      }
+    }) || {};
 
     let providerId = null;
-    for (const userRole of userRoles) {
-      const { id, user_identity, linked_id } = userRole || {};
+    for(const userRole of userRoles) {
+      const {id, user_identity, linked_id} = userRole || {};
 
-      if (id === user_role_id) {
-        if (linked_id) {
+      if(id === user_role_id) {
+        if(linked_id) {
           providerId = linked_id;
         }
       } else {
@@ -49,11 +48,9 @@ class UpdateJob extends MedicationJob {
     }
 
     let providerName = DEFAULT_PROVIDER;
-    if (providerId) {
-      const provider = await ProviderService.getProviderByData({
-        id: providerId,
-      });
-      const { name } = provider || {};
+    if(providerId) {
+      const provider = await ProviderService.getProviderByData({id: providerId});
+      const {name} = provider || {};
       providerName = name;
     }
 

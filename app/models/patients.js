@@ -7,7 +7,7 @@ import { TABLE_NAME as careplanTableName } from "./carePlan";
 
 export const TABLE_NAME = "patients";
 
-export const db = (database) => {
+export const db = database => {
   database.define(
     TABLE_NAME,
     {
@@ -15,22 +15,22 @@ export const db = (database) => {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
-        type: DataTypes.INTEGER,
+        type: DataTypes.INTEGER
       },
       user_id: {
         type: DataTypes.INTEGER,
         allowNull: false,
         references: {
           model: {
-            tableName: userTableName,
+            tableName: userTableName
           },
-          key: "id",
-        },
+          key: "id"
+        }
       },
       gender: {
         type: DataTypes.ENUM,
         values: [GENDER.MALE, GENDER.FEMALE, GENDER.OTHER],
-        allowNull: true,
+        allowNull: true
       },
       first_name: {
         type: DataTypes.STRING(100),
@@ -44,7 +44,7 @@ export const db = (database) => {
           } else {
             this.setDataValue("first_name", null);
           }
-        },
+        }
       },
       middle_name: {
         type: DataTypes.STRING(100),
@@ -58,7 +58,7 @@ export const db = (database) => {
           } else {
             this.setDataValue("middle_name", null);
           }
-        },
+        }
       },
       last_name: {
         type: DataTypes.STRING(100),
@@ -67,58 +67,53 @@ export const db = (database) => {
           if (value) {
             this.setDataValue(
               "last_name",
-              value
-                .split(" ")
-                .map((text) => text.charAt(0).toUpperCase() + text.slice(1))
-                .join(" ")
+              value.split(" ").map(text => text.charAt(0).toUpperCase() + text.slice(1)).join(" ")
             );
           } else {
             this.setDataValue("last_name", null);
           }
-        },
+        }
       },
       age: {
-        type: DataTypes.STRING,
+        type: DataTypes.STRING
       },
       dob: {
         type: DataTypes.DATE,
-        allowNull: true,
+        allowNull: true
       },
       address: {
         type: DataTypes.STRING,
-        allowNull: true,
+        allowNull: true
       },
       height: {
         type: DataTypes.INTEGER,
-        allowNull: true,
+        allowNull: true
       },
       weight: {
         type: DataTypes.INTEGER,
-        allowNull: true,
+        allowNull: true
       },
       activated_on: {
-        type: DataTypes.DATE,
+        type: DataTypes.DATE
       },
       uid: {
-        type: DataTypes.STRING,
+        type: DataTypes.STRING
       },
       details: {
-        type: DataTypes.JSON,
+        type: DataTypes.JSON
       },
       payment_terms_accepted: {
         type: DataTypes.BOOLEAN,
-        defaultValue: false,
+        defaultValue: false
       },
       full_name: {
         type: DataTypes.VIRTUAL,
         get() {
-          return !this.first_name
-            ? null
-            : `${this.first_name}${
-                this.middle_name ? ` ${this.middle_name}` : ""
-              }${this.last_name ? ` ${this.last_name}` : ""}`;
-        },
-      },
+          return !this.first_name? null: `${this.first_name}${
+            this.middle_name ? ` ${this.middle_name}` : ""
+          }${this.last_name ? ` ${this.last_name}` : ""}`;
+        }
+      }
     },
     {
       underscored: true,
@@ -136,29 +131,29 @@ export const db = (database) => {
             activated_on: this.activated_on,
             details: this.details,
             height: this.height,
-            weight: this.weight,
+            weight: this.weight
           };
         },
         getId() {
           return this.id;
-        },
-      },
+        }
+      }
     }
   );
 };
 
-export const associate = (database) => {
+export const associate = database => {
   database.models[TABLE_NAME].belongsTo(database.models[userTableName], {
     foreignKey: "user_id",
-    targetKey: "id",
+    targetKey: "id"
   });
 
   database.models[TABLE_NAME].hasMany(database.models[reportTableName], {
-    foreignKey: "patient_id",
+    foreignKey: "patient_id"
   });
 
   database.models[TABLE_NAME].belongsTo(database.models[careplanTableName], {
     foreignKey: "id",
-    targetKey: "patient_id",
+    targetKey:"patient_id"
   });
 };

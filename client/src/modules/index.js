@@ -23,7 +23,7 @@ import doctor_qualifications from "./doctorQualifications";
 import doctor_registrations from "./doctorRegistrations";
 import template_appointments from "./templateAppointments";
 import template_medications from "./templateMedications";
-import template_vitals from "./templateVitals";
+import template_vitals from "./templateVitals"
 import template_diets from "./templateDiets";
 import template_workouts from "./templateWorkouts";
 import care_plan_templates from "./carePlanTemplates";
@@ -47,7 +47,7 @@ import features from "./features";
 import features_mappings from "./featuresMappings";
 import reports from "./reports";
 import transactions from "./transactions";
-import payment_products from "./paymentProducts";
+import payment_products from "./paymentProducts"; 
 import date_wise_appointments from "./dateWiseAppointments";
 import favourites_data from "./favouritesData";
 import agora from "./agora";
@@ -153,12 +153,12 @@ const rootReducer = combineReducers({
   exercise_contents,
   workout_responses,
   exercise_groups,
-  workout_exercise_groups,
+  workout_exercise_groups
 });
 
 export default (state, action) => {
   if (action.type === "SIGNING_OUT_COMPLETED") {
-    Object.keys(state).forEach((keys) => {
+    Object.keys(state).forEach(keys => {
       if (keys !== "auth" && keys !== "countryCities") {
         state[keys] = {};
       }

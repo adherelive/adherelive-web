@@ -18,64 +18,67 @@ class VitalOccurence extends Component {
     super(props);
     this.state = {
       vitals: {},
-      fetchingVitals: false,
+      fetchingVitals: false
     };
-  }
 
-  componentDidMount() {
+  }
+  componentDidMount(){
     this.getStagesOption();
   }
-
   getStagesOption = () => {
-    if (!this.state.fetchingVitals) {
-      const { getVitalOccurence } = this.props;
-      getVitalOccurence().then((res) => {
+    if(!this.state.fetchingVitals){
+      const {  getVitalOccurence } = this.props;
+      getVitalOccurence().then(res=>{
         const { status = false } = res;
-        if (status) {
-          this.setState({ fetchingVitals: true });
+        if(status){
+          this.setState({fetchingVitals:true})
         }
       });
-    } else {
-    }
-  };
+    }else{
 
-  getParentNode = (t) => t.parentNode;
+    }
+    
+  };
+    
+  getParentNode = t => t.parentNode;
 
   occurenceEdited = (e) => {
     const {
       form: { setFieldsValue, validateFields },
-      enableSubmit,
+      enableSubmit
     } = this.props;
-
+    
     enableSubmit();
-  };
+  }
 
   render() {
     const {
       form: { getFieldDecorator, getFieldError, isFieldTouched },
       repeat_intervals,
-      payload: { id: vital_id, canViewDetails = false } = {},
-      vitals,
+      payload: { id:vital_id, canViewDetails = false }={},
+      vitals
     } = this.props;
-    const { details: { repeat_interval_id } = {} } = vitals[vital_id] || {};
+    const { details : { repeat_interval_id } = {} } = vitals[vital_id] || {};
     const { fetchingVitals } = this.state;
 
     const { getStagesOption, getParentNode, handleVitalSearch } = this;
 
-    const { vitalData = {} } = this.props;
-    let { repeat_interval_id: existing_repeat_interval_id = "" } =
-      vitalData || {};
+    
+    const {vitalData = {}} = this.props;
+    let{repeat_interval_id : existing_repeat_interval_id =''}=vitalData||{};
 
-    if (!existing_repeat_interval_id) {
-      const { details: { repeat_interval_id: vital_repeat_int_id = "" } = {} } =
-        vitalData || {};
+    if(!existing_repeat_interval_id){
+      const {details :{ repeat_interval_id : vital_repeat_int_id  = ''} = {} }=vitalData || {};
       existing_repeat_interval_id = vital_repeat_int_id;
     }
 
-    const options = Object.keys(repeat_intervals).map((id) => {
-      const { text = "" } = repeat_intervals[id] || {};
+    const options = Object.keys(repeat_intervals).map(id => {
+      const { text = '' } = repeat_intervals[id] || {};
       return (
-        <Option key={id} value={id} onClick={this.occurenceEdited}>
+        <Option key={id} value={id}
+        onClick={this.occurenceEdited}
+        >  
+        
           {text}
         </Option>
       );
@@ -85,19 +88,16 @@ class VitalOccurence extends Component {
     //   return null;
     // }
 
+
     // const error = isFieldTouched(FIELD_NAME) && getFieldError(FIELD_NAME);
 
     return (
       <FormItem>
         {getFieldDecorator(FIELD_NAME, {
-          initialValue: existing_repeat_interval_id
-            ? existing_repeat_interval_id
-            : repeat_interval_id,
+          initialValue:existing_repeat_interval_id ? existing_repeat_interval_id : repeat_interval_id
         })(
           <Select
-            notFoundContent={
-              !fetchingVitals ? <Spin size="small" /> : "No match found"
-            }
+            notFoundContent={!fetchingVitals ? <Spin size="small" /> : 'No match found'}
             className="drawer-select"
             placeholder="Select Occurence"
             showSearch
@@ -124,5 +124,5 @@ const Field = injectIntl(VitalOccurence);
 
 export default {
   field_name: FIELD_NAME,
-  render: (props) => <Field {...props} />,
+  render: props => <Field {...props} />
 };

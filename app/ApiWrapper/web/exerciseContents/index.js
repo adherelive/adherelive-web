@@ -20,10 +20,7 @@ class ExerciseContentWrapper extends BaseExerciseContent {
       video_content,
     } = _data || {};
 
-    const videoContent =
-      video_content_type === VIDEO_TYPES.UPLOAD
-        ? completePath(video_content)
-        : video_content;
+    const videoContent = video_content_type === VIDEO_TYPES.UPLOAD ? completePath(video_content) : video_content;
     return {
       basic_info: {
         id,

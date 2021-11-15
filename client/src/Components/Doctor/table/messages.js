@@ -4,82 +4,82 @@ const messages = defineMessages({
   organizer: {
     id: "app.doctors.table.organizer",
     description: "",
-    defaultMessage: "Organizer",
+    defaultMessage: "Organizer"
   },
   appointment_date: {
     id: "app.doctors.table.appointment.date",
     description: "",
-    defaultMessage: "Date",
+    defaultMessage: "Date"
   },
   timing_text: {
     id: "app.doctors.table.timing.text",
     description: "",
-    defaultMessage: "Timing",
+    defaultMessage: "Timing"
   },
   description: {
     id: "app.doctors.table.description",
     description: "",
-    defaultMessage: "Description",
+    defaultMessage: "Description"
   },
   name: {
     id: "app.doctors.table.name",
     description: "",
-    defaultMessage: "Name",
+    defaultMessage: "Name"
   },
   verified: {
     id: "app.doctors.table.verified",
     description: "",
-    defaultMessage: "Verified",
+    defaultMessage: "Verified"
   },
   speciality: {
     id: "app.doctors.table.speciality",
     description: "",
-    defaultMessage: "Speciality",
+    defaultMessage: "Speciality"
   },
   address: {
     id: "app.doctors.table.address",
     description: "",
-    defaultMessage: "City",
+    defaultMessage: "City"
   },
   contact_details: {
     id: "app.doctors.table.contact_details",
     description: "",
-    defaultMessage: "Contact Details",
+    defaultMessage: "Contact Details"
   },
   doctors: {
     id: "app.doctor.table.doctors.title",
     description: "",
-    defaultMessage: "Doctors",
+    defaultMessage: "Doctors"
   },
   profiles: {
     id: "app.doctor.table.profiles.title",
     description: "",
-    defaultMessage: "Profiles",
+    defaultMessage: "Profiles"
   },
-  active_header: {
+  active_header : {
     id: "app.doctor.tableactive.header",
     description: "",
-    defaultMessage: "Active",
+    defaultMessage: "Active"
   },
-  active: {
+  active : {
     id: "app.doctor.active",
     description: "",
-    defaultMessage: "Active",
+    defaultMessage: "Active"
   },
-  inactive: {
+  inactive : {
     id: "app.doctor.tableactive.inactive",
     description: "",
-    defaultMessage: "Inactive",
+    defaultMessage: "Inactive"
   },
-  emptyDoctorTable: {
+  emptyDoctorTable:{
     id: "app.doctor.table.emptyDoctorTable",
     description: "",
-    defaultMessage: "No Doctors added for the user yet",
+    defaultMessage: "No Doctors added for the user yet"
   },
-  typeText: {
+  typeText:{
     id: "app.doctor.table.typeText",
     description: "",
-    defaultMessage: "Type : {category}",
+    defaultMessage: "Type : {category}"
   },
 });
 

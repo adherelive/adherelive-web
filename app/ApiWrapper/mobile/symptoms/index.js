@@ -30,10 +30,10 @@ class SymptomWrapper extends BaseSymptom {
       basic_info: {
         id,
         patient_id,
-        care_plan_id,
+        care_plan_id
       },
       config,
-      text,
+      text
     };
   };
 
@@ -42,7 +42,7 @@ class SymptomWrapper extends BaseSymptom {
 
     const symptomFiles =
       (await DocumentService.getAllByData({
-        parent_id: getSymptomId(),
+        parent_id: getSymptomId()
       })) || [];
 
     const audioDocumentIds = [];
@@ -73,10 +73,10 @@ class SymptomWrapper extends BaseSymptom {
         ...(await this.getBasicInfo()),
         image_document_ids: imageDocumentIds,
         audio_document_ids: audioDocumentIds,
-        video_document_ids: videoDocumentIds,
+        video_document_ids: videoDocumentIds
       },
       type: ACTIVITY_TYPE.SYMPTOM,
-      createdAt: getUnformattedCreateDate(),
+      createdAt: getUnformattedCreateDate()
     };
   };
 
@@ -85,7 +85,7 @@ class SymptomWrapper extends BaseSymptom {
 
     const symptomFiles =
       (await DocumentService.getAllByData({
-        parent_id: getSymptomId(),
+        parent_id: getSymptomId()
       })) || [];
 
     const audioDocumentIds = [];
@@ -118,9 +118,9 @@ class SymptomWrapper extends BaseSymptom {
           image_document_ids: imageDocumentIds,
           audio_document_ids: audioDocumentIds,
           video_document_ids: videoDocumentIds,
-          snapshot: "",
-        },
-      },
+          snapshot: ""
+        }
+      }
     };
   };
 
@@ -145,7 +145,7 @@ class SymptomWrapper extends BaseSymptom {
 
     const symptomFiles =
       (await DocumentService.getAllByData({
-        parent_id: getSymptomId(),
+        parent_id: getSymptomId()
       })) || [];
 
     if (symptomFiles.length > 0) {
@@ -157,17 +157,17 @@ class SymptomWrapper extends BaseSymptom {
 
     return {
       users: {
-        ...userData,
+        ...userData
       },
       upload_documents: {
-        ...documentData,
+        ...documentData
       },
       patients: {
-        [patients.getPatientId()]: patients.getBasicInfo(),
+        [patients.getPatientId()]: patients.getBasicInfo()
       },
       doctors: {
-        [doctors.getDoctorId()]: doctors.getBasicInfo(),
-      },
+        [doctors.getDoctorId()]: doctors.getBasicInfo()
+      }
       // care_plans: {
       //     [carePlans.getCarePlanId()]: carePlans.getBasicInfo()
       // }

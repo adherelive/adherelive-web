@@ -36,9 +36,9 @@ export const db = (database) => {
           USER_CATEGORY.DOCTOR,
           USER_CATEGORY.PROVIDER,
           USER_CATEGORY.ADMIN,
-          USER_CATEGORY.HSP,
+          USER_CATEGORY.HSP
         ],
-        defaultValue: USER_CATEGORY.ADMIN,
+        defaultValue: USER_CATEGORY.ADMIN
       },
       calorific_value: {
         type: DataTypes.FLOAT(11, 2),
@@ -53,7 +53,7 @@ export const db = (database) => {
 
 export const associate = (database) => {
   database.models[TABLE_NAME].belongsTo(database.models[exerciseTableName], {
-    foreignKey: "exercise_id",
+    foreignKey:"exercise_id",
     targetKey: "id",
   });
 

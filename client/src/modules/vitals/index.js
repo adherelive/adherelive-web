@@ -6,12 +6,9 @@ import {
   getUpdateVitalURL,
 } from "../../Helper/urls/vitals";
 
-import {
-  getEditVitalResponseUrl,
-  getDeleteVitalResponseUrl,
-} from "../../Helper/urls/event";
+import {getEditVitalResponseUrl, getDeleteVitalResponseUrl} from "../../Helper/urls/event";
 
-import { getPatientVitalsURL } from "../../Helper/urls/patients";
+import {getPatientVitalsURL} from "../../Helper/urls/patients";
 
 export const ADD_VITAL_START = "ADD_VITAL_START";
 export const ADD_VITAL_COMPLETED = "ADD_VITAL_COMPLETED";
@@ -34,8 +31,7 @@ export const EDIT_VITAL_RESPONSE_COMPLETED = "EDIT_VITAL_RESPONSE_COMPLETED";
 export const EDIT_VITAL_RESPONSE_FAILED = "EDIT_VITAL_RESPONSE_FAILED";
 
 export const DELETE_VITAL_RESPONSE_START = "DELETE_VITAL_RESPONSE_START";
-export const DELETE_VITAL_RESPONSE_COMPLETED =
-  "DELETE_VITAL_RESPONSE_COMPLETED";
+export const DELETE_VITAL_RESPONSE_COMPLETED = "DELETE_VITAL_RESPONSE_COMPLETED";
 export const DELETE_VITAL_RESPONSE_FAILED = "DELETE_VITAL_RESPONSE_FAILED";
 
 export const addVital = (payload) => {
@@ -77,7 +73,7 @@ export const getVitals = (carePlanId) => {
       });
 
       const { status, payload: { data = {}, error = {} } = {} } =
-        response || {};
+      response || {};
       console.log("3912312789 response -> ", response);
       if (status === true) {
         dispatch({ type: GET_VITALS_COMPLETE, payload: data, data });
@@ -104,7 +100,7 @@ export const getVitalTimeline = (vitalId) => {
       });
 
       const { status, payload: { data = {}, error = {} } = {} } =
-        response || {};
+      response || {};
       if (status === true) {
         dispatch({ type: GET_VITALS_TIMELINE_COMPLETE, payload: data, data });
       } else {
@@ -122,7 +118,7 @@ export const updateVital = (payload) => {
   let response = {};
   return async (dispatch) => {
     try {
-      const { id, ...rest } = payload || {};
+      const {id, ...rest} = payload || {};
       dispatch({ type: UPDATE_VITAL_START });
 
       response = await doRequest({
@@ -132,7 +128,7 @@ export const updateVital = (payload) => {
       });
 
       const { status, payload: { data = {}, error = {} } = {} } =
-        response || {};
+      response || {};
       if (status === true) {
         dispatch({ type: UPDATE_VITAL_COMPLETED, payload: data, data });
       } else {
@@ -148,7 +144,7 @@ export const updateVital = (payload) => {
 
 /****************  EDIT VITAL RESPONSE  ****************/
 
-export const editVitalResponse = ({ id, index, value }) => {
+export const editVitalResponse = ({id, index, value}) => {
   let response = {};
   return async (dispatch) => {
     try {
@@ -156,12 +152,12 @@ export const editVitalResponse = ({ id, index, value }) => {
 
       response = await doRequest({
         method: REQUEST_TYPE.POST,
-        url: getEditVitalResponseUrl({ id, index }),
-        data: { value },
+        url: getEditVitalResponseUrl({id, index}),
+        data: {value},
       });
 
       const { status, payload: { data = {}, error = {} } = {} } =
-        response || {};
+      response || {};
       if (status === true) {
         dispatch({ type: EDIT_VITAL_RESPONSE_COMPLETED, payload: data, data });
       } else {
@@ -177,7 +173,7 @@ export const editVitalResponse = ({ id, index, value }) => {
 
 /****************  DELETE VITAL RESPONSE  ****************/
 
-export const deleteVitalResponse = ({ id, index }) => {
+export const deleteVitalResponse = ({id, index}) => {
   let response = {};
   return async (dispatch) => {
     try {
@@ -185,17 +181,13 @@ export const deleteVitalResponse = ({ id, index }) => {
 
       response = await doRequest({
         method: REQUEST_TYPE.DELETE,
-        url: getDeleteVitalResponseUrl({ id, index }),
+        url: getDeleteVitalResponseUrl({id, index}),
       });
 
       const { status, payload: { data = {}, error = {} } = {} } =
-        response || {};
+      response || {};
       if (status === true) {
-        dispatch({
-          type: DELETE_VITAL_RESPONSE_COMPLETED,
-          payload: data,
-          data,
-        });
+        dispatch({ type: DELETE_VITAL_RESPONSE_COMPLETED, payload: data, data });
       } else {
         dispatch({ type: DELETE_VITAL_RESPONSE_FAILED, payload: error });
       }
@@ -227,9 +219,9 @@ function vitalTimelineReducer(state, data) {
       views: {
         timeline: {
           vital_timeline,
-          vital_date_ids,
-        },
-      },
+          vital_date_ids
+        }
+      }
     };
   } else {
     return state;
@@ -245,3 +237,5 @@ export default (state = {}, action) => {
       return vitalsReducer(state, payload);
   }
 };
+
+

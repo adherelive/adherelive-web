@@ -10,75 +10,75 @@ module.exports = {
       id: {
         type: DataTypes.INTEGER,
         primaryKey: true,
-        autoIncrement: true,
+        autoIncrement: true
       },
       user_id: {
         type: DataTypes.INTEGER,
         allowNull: false,
         references: {
           model: {
-            tableName: userTableName,
+            tableName: userTableName
           },
-          key: "id",
-        },
+          key: "id"
+        }
       },
       customer_name: {
         type: DataTypes.STRING(100),
-        allowNull: false,
+        allowNull: false
       },
       account_number: {
         type: DataTypes.STRING,
-        allowNull: false,
+        allowNull: false
       },
       upi_id: {
         type: DataTypes.STRING,
-        allowNull: true,
+        allowNull: true
       },
       ifsc_code: {
         type: DataTypes.STRING,
-        allowNull: false,
+        allowNull: false
       },
       account_type: {
         type: DataTypes.ENUM,
         values: [ACCOUNT_TYPES.SAVINGS, ACCOUNT_TYPES.CURRENT],
-        allowNull: false,
+        allowNull: false
       },
       account_mobile_number: {
         type: DataTypes.STRING,
-        allow_null: false,
+        allow_null: false
       },
       prefix: {
         type: Sequelize.STRING,
-        allowNull: true,
+        allowNull: true
       },
       in_use: {
         type: DataTypes.BOOLEAN,
-        defaultValue: false,
+        defaultValue: false
       },
       razorpay_account_id: {
         type: DataTypes.STRING,
-        allowNull: true,
+        allowNull: true
       },
       razorpay_account_name: {
         type: DataTypes.STRING,
-        allowNull: true,
+        allowNull: true
       },
       created_at: {
         allowNull: false,
-        type: Sequelize.DATE,
+        type: Sequelize.DATE
       },
       updated_at: {
         allowNull: false,
-        type: Sequelize.DATE,
+        type: Sequelize.DATE
       },
       deleted_at: {
         allowNull: true,
-        type: Sequelize.DATE,
-      },
+        type: Sequelize.DATE
+      }
     });
   },
 
   down: (queryInterface, Sequelize) => {
     return queryInterface.dropTable(TABLE_NAME);
-  },
+  }
 };

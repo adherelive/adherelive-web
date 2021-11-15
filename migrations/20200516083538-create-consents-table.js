@@ -1,9 +1,9 @@
-"use strict";
+'use strict';
 
-import { DataTypes } from "sequelize";
-import { TABLE_NAME } from "../app/models/consents";
-import { TABLE_NAME as doctorTableName } from "../app/models/doctors";
-import { TABLE_NAME as patientTableName } from "../app/models/patients";
+import {DataTypes} from "sequelize";
+import {TABLE_NAME} from "../app/models/consents";
+import {TABLE_NAME as doctorTableName} from "../app/models/doctors";
+import {TABLE_NAME as patientTableName} from "../app/models/patients";
 
 module.exports = {
   up: (queryInterface, Sequelize) => {
@@ -12,7 +12,7 @@ module.exports = {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
-        type: Sequelize.INTEGER,
+        type: Sequelize.INTEGER
       },
       type: {
         type: Sequelize.STRING,
@@ -25,8 +25,8 @@ module.exports = {
           model: {
             tableName: doctorTableName,
           },
-          key: "id",
-        },
+          key: 'id'
+        }
       },
       patient_id: {
         type: DataTypes.INTEGER,
@@ -35,8 +35,8 @@ module.exports = {
           model: {
             tableName: patientTableName,
           },
-          key: "id",
-        },
+          key: 'id'
+        }
       },
       details: {
         type: Sequelize.JSON,
@@ -49,20 +49,20 @@ module.exports = {
       },
       created_at: {
         allowNull: false,
-        type: Sequelize.DATE,
+        type: Sequelize.DATE
       },
       updated_at: {
         allowNull: false,
-        type: Sequelize.DATE,
+        type: Sequelize.DATE
       },
       deleted_at: {
         allowNull: true,
-        type: Sequelize.DATE,
-      },
+        type: Sequelize.DATE
+      }
     });
   },
 
   down: (queryInterface, Sequelize) => {
     return queryInterface.dropTable(TABLE_NAME);
-  },
+  }
 };

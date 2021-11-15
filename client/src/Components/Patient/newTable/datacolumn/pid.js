@@ -14,27 +14,33 @@ class Watchlist extends Component {
   }
 
   componentDidMount() {
-    const { currentTab, handleGetPatients, tabChanged } = this.props;
+    const {currentTab,handleGetPatients,tabChanged}=this.props;
   }
 
-  formatMessage = (data) => this.props.intl.formatMessage(data);
+ 
+  
+  formatMessage = data => this.props.intl.formatMessage(data);
 
-  addThisToWatchlist = (e) => {
+
+  addThisToWatchlist = e => {
     e.preventDefault();
     const {
-      patientData: { id, first_name, middle_name, last_name } = {},
+      patientData: {
+         id, first_name, middle_name, last_name
+      } = {},
       addToWatchlist,
-      handleGetPatients,
+      handleGetPatients
     } = this.props || {};
 
-    addToWatchlist(id).then((response) => {
+
+    addToWatchlist(id).then(response => {
       const { status, message: errMessage } = response || {};
       if (status === true) {
         message.success(
           `${getFullName({
             first_name,
             middle_name,
-            last_name,
+            last_name
           })} ${this.formatMessage(messages.addedToWatchlist)}`
         );
       } else {
@@ -42,25 +48,31 @@ class Watchlist extends Component {
       }
     });
 
+
     handleGetPatients();
+
   };
 
-  removeFromWatchlist = (e) => {
+
+
+  removeFromWatchlist = e => {
     e.preventDefault();
     const {
-      patientData: { id, first_name, middle_name, last_name } = {},
+      patientData: {
+          id, first_name, middle_name, last_name 
+      } = {},
       removePatientFromWatchlist,
-      handleGetPatients,
+      handleGetPatients
     } = this.props || {};
 
-    removePatientFromWatchlist(id).then((response) => {
+    removePatientFromWatchlist(id).then(response => {
       const { status, message: errMessage } = response || {};
       if (status === true) {
         message.success(
           `${getFullName({
             first_name,
             middle_name,
-            last_name,
+            last_name
           })} ${this.formatMessage(messages.removedFromWatchlist)}`
         );
       } else {
@@ -68,27 +80,34 @@ class Watchlist extends Component {
       }
     });
 
+
     handleGetPatients();
+
   };
 
-  stopEventBubbling = (e) => {
+  stopEventBubbling = e => {
     e.stopPropagation();
   };
 
   render() {
-    const { formatMessage } = this;
+
+
+    const {formatMessage}=this;
 
     const {
-      patientData: { first_name, middle_name, last_name, id } = {},
+      patientData: {
+          first_name, middle_name, last_name, id 
+      } = {},
       onRowClick,
-      doctorData: { watchlist_ids = [] } = {},
+      doctorData: { watchlist_ids = []} = {}
     } = this.props || {};
 
-    const { patientData: { age, gender = "" } = {}, auth_role = null } =
-      this.props || {};
+    const { patientData: 
+         { age, gender = "" } = {},
+         auth_role=null }
+           = this.props || {};
 
-    const watchlist_patient_ids =
-      (auth_role && watchlist_ids[auth_role.toString()]) || [];
+    const  watchlist_patient_ids = auth_role && watchlist_ids[auth_role.toString()] || [];      
 
     const isAdded = watchlist_patient_ids.includes(id);
 
@@ -99,27 +118,22 @@ class Watchlist extends Component {
       >
         <div className="wp100 p10 flex direction-column align-left ">
           <div className="fw600 tab-color ">
-            {`${getName(first_name)}  ${getName(middle_name)} ${getName(
-              last_name
-            )}`}
+            {`${getName(first_name)}  ${getName(middle_name)} ${getName(last_name)}`}
           </div>
           <div className="flex direction-row  align-left">
             <div>{age ? `${age}` : TABLE_DEFAULT_BLANK_FIELD}</div>
 
-            <div>
-              {gender
-                ? `, ${gender.toUpperCase()}`
-                : `, ${TABLE_DEFAULT_BLANK_FIELD}`}
-            </div>
+            <div>{gender ? `, ${gender.toUpperCase()}` : `, ${TABLE_DEFAULT_BLANK_FIELD}`}</div>
           </div>
         </div>
+        
 
         <div
           className=" flex align-center justify-space-between"
           onClick={this.stopEventBubbling}
         >
           {isAdded ? (
-            <Tooltip title={formatMessage(messages.removeFromWatchlist)}>
+            <Tooltip title={formatMessage(messages.removeFromWatchlist)} >
               <Icon
                 type="eye"
                 className="fs20"
@@ -128,15 +142,16 @@ class Watchlist extends Component {
               />
             </Tooltip>
           ) : (
-            <Tooltip title={formatMessage(messages.addToWatchlist)}>
+            <Tooltip title={formatMessage(messages.addToWatchlist)} >
               <Icon
-                type="eye-invisible"
-                theme="filled"
-                className="fs20"
-                value={isAdded}
-                onClick={this.addThisToWatchlist}
-              />
+              type="eye-invisible"
+              theme="filled"
+              className="fs20"
+              value={isAdded}
+              onClick={this.addThisToWatchlist}
+            />
             </Tooltip>
+            
           )}
         </div>
       </div>
@@ -145,3 +160,4 @@ class Watchlist extends Component {
 }
 
 export default injectIntl(Watchlist);
+

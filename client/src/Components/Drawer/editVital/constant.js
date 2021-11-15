@@ -1,7 +1,7 @@
 import {
   USER_CATEGORY,
   ACTIVITY_TYPE,
-  APPOINTMENT_TYPE,
+  APPOINTMENT_TYPE
 } from "../../../constant";
 import messages from "./message";
 
@@ -14,289 +14,289 @@ const APPOINTMENT_FOR_CREATE_CONFIG = {
         {
           value: APPOINTMENT_TYPE.FOLLOWUP,
           label: messages.followup,
-          disable: false,
+          disable: false
         },
         {
           value: APPOINTMENT_TYPE.MEDICATION,
           label: messages.medication,
-          disable: false,
+          disable: false
         },
         {
           value: APPOINTMENT_TYPE.MATERIAL_DELIVERY,
           label: messages.materialDelivery,
-          disable: false,
-        },
+          disable: false
+        }
       ],
       mode: {
         [APPOINTMENT_TYPE.FOLLOWUP]: [
           {
             value: ACTIVITY_TYPE.CALL,
             label: messages.call,
-            disable: false,
+            disable: false
           },
           {
             value: ACTIVITY_TYPE.CHAT,
             label: messages.textEmail,
-            disable: false,
+            disable: false
           },
           {
             value: ACTIVITY_TYPE.VISIT,
             label: messages.visit,
-            disable: false,
-          },
+            disable: false
+          }
         ],
         [APPOINTMENT_TYPE.MATERIAL_DELIVERY]: [
           {
             value: ACTIVITY_TYPE.CALL,
             label: messages.call,
-            disable: true,
+            disable: true
           },
           {
             value: ACTIVITY_TYPE.CHAT,
             label: messages.textEmail,
-            disable: true,
+            disable: true
           },
           {
             value: ACTIVITY_TYPE.VISIT,
             label: messages.visit,
-            disable: false,
-          },
+            disable: false
+          }
         ],
         [APPOINTMENT_TYPE.MEDICATION]: [
           {
             value: ACTIVITY_TYPE.CALL,
             label: messages.call,
-            disable: false,
+            disable: false
           },
           {
             value: ACTIVITY_TYPE.CHAT,
             label: messages.textEmail,
-            disable: false,
+            disable: false
           },
           {
             value: ACTIVITY_TYPE.VISIT,
             label: messages.visit,
-            disable: false,
-          },
-        ],
-      },
+            disable: false
+          }
+        ]
+      }
     },
     [USER_CATEGORY.DOCTOR]: {
       activity: [
         {
           value: APPOINTMENT_TYPE.FOLLOWUP,
           label: messages.followup,
-          disable: false,
+          disable: false
         },
         {
           value: APPOINTMENT_TYPE.MEDICATION,
           label: messages.medication,
-          disable: false,
+          disable: false
         },
         {
           value: APPOINTMENT_TYPE.MATERIAL_DELIVERY,
           label: messages.materialDelivery,
-          disable: false,
-        },
+          disable: false
+        }
       ],
       mode: {
         [APPOINTMENT_TYPE.FOLLOWUP]: [
           {
             value: ACTIVITY_TYPE.CALL,
             label: messages.call,
-            disable: false,
+            disable: false
           },
           {
             value: ACTIVITY_TYPE.CHAT,
             label: messages.textEmail,
-            disable: false,
+            disable: false
           },
           {
             value: ACTIVITY_TYPE.VISIT,
             label: messages.visit,
-            disable: false,
-          },
+            disable: false
+          }
         ],
         [APPOINTMENT_TYPE.MATERIAL_DELIVERY]: [
           {
             value: ACTIVITY_TYPE.CALL,
             label: messages.call,
-            disable: true,
+            disable: true
           },
           {
             value: ACTIVITY_TYPE.CHAT,
             label: messages.textEmail,
-            disable: true,
+            disable: true
           },
           {
             value: ACTIVITY_TYPE.VISIT,
             label: messages.visit,
-            disable: false,
-          },
+            disable: false
+          }
         ],
         [APPOINTMENT_TYPE.MEDICATION]: [
           {
             value: ACTIVITY_TYPE.CALL,
             label: messages.call,
-            disable: false,
+            disable: false
           },
           {
             value: ACTIVITY_TYPE.CHAT,
             label: messages.textEmail,
-            disable: false,
+            disable: false
           },
           {
             value: ACTIVITY_TYPE.VISIT,
             label: messages.visit,
-            disable: false,
-          },
-        ],
-      },
+            disable: false
+          }
+        ]
+      }
     },
     [DEFAULT]: {
       activity: [
         {
           value: APPOINTMENT_TYPE.FOLLOWUP,
           label: messages.followup,
-          disable: false,
+          disable: false
         },
         {
           value: APPOINTMENT_TYPE.MEDICATION,
           label: messages.medication,
-          disable: false,
+          disable: false
         },
         {
           value: APPOINTMENT_TYPE.MATERIAL_DELIVERY,
           label: messages.materialDelivery,
-          disable: false,
-        },
+          disable: false
+        }
       ],
       mode: {
         [APPOINTMENT_TYPE.FOLLOWUP]: [
           {
             value: ACTIVITY_TYPE.CALL,
             label: messages.call,
-            disable: false,
+            disable: false
           },
           {
             value: ACTIVITY_TYPE.CHAT,
             label: messages.textEmail,
-            disable: false,
+            disable: false
           },
           {
             value: ACTIVITY_TYPE.VISIT,
             label: messages.visit,
-            disable: false,
-          },
+            disable: false
+          }
         ],
         [APPOINTMENT_TYPE.MATERIAL_DELIVERY]: [
           {
             value: ACTIVITY_TYPE.CALL,
             label: messages.call,
-            disable: true,
+            disable: true
           },
           {
             value: ACTIVITY_TYPE.CHAT,
             label: messages.textEmail,
-            disable: true,
+            disable: true
           },
           {
             value: ACTIVITY_TYPE.VISIT,
             label: messages.visit,
-            disable: false,
-          },
+            disable: false
+          }
         ],
         [APPOINTMENT_TYPE.MEDICATION]: [
           {
             value: ACTIVITY_TYPE.CALL,
             label: messages.call,
-            disable: false,
+            disable: false
           },
           {
             value: ACTIVITY_TYPE.CHAT,
             label: messages.textEmail,
-            disable: false,
+            disable: false
           },
           {
             value: ACTIVITY_TYPE.VISIT,
             label: messages.visit,
-            disable: false,
-          },
-        ],
-      },
+            disable: false
+          }
+        ]
+      }
     },
     [USER_CATEGORY.DOCTOR]: {
       activity: [
         {
           value: APPOINTMENT_TYPE.FOLLOWUP,
           label: messages.followup,
-          disable: false,
+          disable: false
         },
         {
           value: APPOINTMENT_TYPE.MEDICATION,
           label: messages.medication,
-          disable: false,
+          disable: false
         },
         {
           value: APPOINTMENT_TYPE.MATERIAL_DELIVERY,
           label: messages.materialDelivery,
-          disable: false,
-        },
+          disable: false
+        }
       ],
       mode: {
         [APPOINTMENT_TYPE.FOLLOWUP]: [
           {
             value: ACTIVITY_TYPE.CALL,
             label: messages.call,
-            disable: false,
+            disable: false
           },
           {
             value: ACTIVITY_TYPE.CHAT,
             label: messages.textEmail,
-            disable: false,
+            disable: false
           },
           {
             value: ACTIVITY_TYPE.VISIT,
             label: messages.visit,
-            disable: false,
-          },
+            disable: false
+          }
         ],
         [APPOINTMENT_TYPE.MATERIAL_DELIVERY]: [
           {
             value: ACTIVITY_TYPE.CALL,
             label: messages.call,
-            disable: true,
+            disable: true
           },
           {
             value: ACTIVITY_TYPE.CHAT,
             label: messages.textEmail,
-            disable: true,
+            disable: true
           },
           {
             value: ACTIVITY_TYPE.VISIT,
             label: messages.visit,
-            disable: false,
-          },
+            disable: false
+          }
         ],
         [APPOINTMENT_TYPE.MEDICATION]: [
           {
             value: ACTIVITY_TYPE.CALL,
             label: messages.call,
-            disable: false,
+            disable: false
           },
           {
             value: ACTIVITY_TYPE.CHAT,
             label: messages.textEmail,
-            disable: false,
+            disable: false
           },
           {
             value: ACTIVITY_TYPE.VISIT,
             label: messages.visit,
-            disable: false,
-          },
-        ],
-      },
-    },
+            disable: false
+          }
+        ]
+      }
+    }
   },
   [USER_CATEGORY.PATIENT]: {
     [USER_CATEGORY.DOCTOR]: {
@@ -304,184 +304,184 @@ const APPOINTMENT_FOR_CREATE_CONFIG = {
         {
           value: APPOINTMENT_TYPE.FOLLOWUP,
           label: messages.followup,
-          disable: false,
+          disable: false
         },
         {
           value: APPOINTMENT_TYPE.MEDICATION,
           label: messages.medication,
-          disable: true,
+          disable: true
         },
         {
           value: APPOINTMENT_TYPE.MATERIAL_DELIVERY,
           label: messages.materialDelivery,
-          disable: true,
-        },
+          disable: true
+        }
       ],
       mode: {
         [APPOINTMENT_TYPE.FOLLOWUP]: [
           {
             value: ACTIVITY_TYPE.CALL,
             label: messages.call,
-            disable: true,
+            disable: true
           },
           {
             value: ACTIVITY_TYPE.CHAT,
             label: messages.textEmail,
-            disable: false,
+            disable: false
           },
           {
             value: ACTIVITY_TYPE.VISIT,
             label: messages.visit,
-            disable: true,
-          },
-        ],
-      },
+            disable: true
+          }
+        ]
+      }
     },
     [USER_CATEGORY.CARE_COACH]: {
       activity: [
         {
           value: APPOINTMENT_TYPE.FOLLOWUP,
           label: messages.followup,
-          disable: false,
+          disable: false
         },
         {
           value: APPOINTMENT_TYPE.MEDICATION,
           label: messages.medication,
-          disable: false,
+          disable: false
         },
         {
           value: APPOINTMENT_TYPE.MATERIAL_DELIVERY,
           label: messages.materialDelivery,
-          disable: false,
-        },
+          disable: false
+        }
       ],
       mode: {
         [APPOINTMENT_TYPE.FOLLOWUP]: [
           {
             value: ACTIVITY_TYPE.CALL,
             label: messages.call,
-            disable: false,
+            disable: false
           },
           {
             value: ACTIVITY_TYPE.CHAT,
             label: messages.textEmail,
-            disable: false,
+            disable: false
           },
           {
             value: ACTIVITY_TYPE.VISIT,
             label: messages.visit,
-            disable: false,
-          },
+            disable: false
+          }
         ],
         [APPOINTMENT_TYPE.MATERIAL_DELIVERY]: [
           {
             value: ACTIVITY_TYPE.CALL,
             label: messages.call,
-            disable: true,
+            disable: true
           },
           {
             value: ACTIVITY_TYPE.CHAT,
             label: messages.textEmail,
-            disable: true,
+            disable: true
           },
           {
             value: ACTIVITY_TYPE.VISIT,
             label: messages.visit,
-            disable: false,
-          },
+            disable: false
+          }
         ],
         [APPOINTMENT_TYPE.MEDICATION]: [
           {
             value: ACTIVITY_TYPE.CALL,
             label: messages.call,
-            disable: false,
+            disable: false
           },
           {
             value: ACTIVITY_TYPE.CHAT,
             label: messages.textEmail,
-            disable: false,
+            disable: false
           },
           {
             value: ACTIVITY_TYPE.VISIT,
             label: messages.visit,
-            disable: false,
-          },
-        ],
-      },
+            disable: false
+          }
+        ]
+      }
     },
     [DEFAULT]: {
       activity: [
         {
           value: APPOINTMENT_TYPE.FOLLOWUP,
           label: messages.followup,
-          disable: false,
+          disable: false
         },
         {
           value: APPOINTMENT_TYPE.MEDICATION,
           label: messages.medication,
-          disable: false,
+          disable: false
         },
         {
           value: APPOINTMENT_TYPE.MATERIAL_DELIVERY,
           label: messages.materialDelivery,
-          disable: false,
-        },
+          disable: false
+        }
       ],
       mode: {
         [APPOINTMENT_TYPE.FOLLOWUP]: [
           {
             value: ACTIVITY_TYPE.CALL,
             label: messages.call,
-            disable: false,
+            disable: false
           },
           {
             value: ACTIVITY_TYPE.CHAT,
             label: messages.textEmail,
-            disable: false,
+            disable: false
           },
           {
             value: ACTIVITY_TYPE.VISIT,
             label: messages.visit,
-            disable: false,
-          },
+            disable: false
+          }
         ],
         [APPOINTMENT_TYPE.MATERIAL_DELIVERY]: [
           {
             value: ACTIVITY_TYPE.CALL,
             label: messages.call,
-            disable: true,
+            disable: true
           },
           {
             value: ACTIVITY_TYPE.CHAT,
             label: messages.textEmail,
-            disable: true,
+            disable: true
           },
           {
             value: ACTIVITY_TYPE.VISIT,
             label: messages.visit,
-            disable: false,
-          },
+            disable: false
+          }
         ],
         [APPOINTMENT_TYPE.MEDICATION]: [
           {
             value: ACTIVITY_TYPE.CALL,
             label: messages.call,
-            disable: false,
+            disable: false
           },
           {
             value: ACTIVITY_TYPE.CHAT,
             label: messages.textEmail,
-            disable: false,
+            disable: false
           },
           {
             value: ACTIVITY_TYPE.VISIT,
             label: messages.visit,
-            disable: false,
-          },
-        ],
-      },
-    },
-  },
+            disable: false
+          }
+        ]
+      }
+    }
+  }
 };
 
 const getAppointmentDataForEdit = (event = {}, viewer, other) => {
@@ -492,72 +492,72 @@ const getAppointmentDataForEdit = (event = {}, viewer, other) => {
       {
         value: APPOINTMENT_TYPE.FOLLOWUP,
         label: messages.followup,
-        disable: activityType !== APPOINTMENT_TYPE.FOLLOWUP,
+        disable: activityType !== APPOINTMENT_TYPE.FOLLOWUP
       },
       {
         value: APPOINTMENT_TYPE.MEDICATION,
         label: messages.medication,
-        disable: activityType !== APPOINTMENT_TYPE.MEDICATION,
+        disable: activityType !== APPOINTMENT_TYPE.MEDICATION
       },
       {
         value: APPOINTMENT_TYPE.MATERIAL_DELIVERY,
         label: messages.materialDelivery,
-        disable: activityType !== APPOINTMENT_TYPE.MATERIAL_DELIVERY,
-      },
+        disable: activityType !== APPOINTMENT_TYPE.MATERIAL_DELIVERY
+      }
     ],
     mode: {
       [APPOINTMENT_TYPE.FOLLOWUP]: [
         {
           value: ACTIVITY_TYPE.CALL,
           label: messages.call,
-          disable: activityMode !== ACTIVITY_TYPE.CALL,
+          disable: activityMode !== ACTIVITY_TYPE.CALL
         },
         {
           value: ACTIVITY_TYPE.CHAT,
           label: messages.textEmail,
-          disable: activityMode !== ACTIVITY_TYPE.CHAT,
+          disable: activityMode !== ACTIVITY_TYPE.CHAT
         },
         {
           value: ACTIVITY_TYPE.VISIT,
           label: messages.visit,
-          disable: activityMode !== ACTIVITY_TYPE.VISIT,
-        },
+          disable: activityMode !== ACTIVITY_TYPE.VISIT
+        }
       ],
       [APPOINTMENT_TYPE.MATERIAL_DELIVERY]: [
         {
           value: ACTIVITY_TYPE.CALL,
           label: messages.call,
-          disable: activityMode !== ACTIVITY_TYPE.CALL,
+          disable: activityMode !== ACTIVITY_TYPE.CALL
         },
         {
           value: ACTIVITY_TYPE.CHAT,
           label: messages.textEmail,
-          disable: activityMode !== ACTIVITY_TYPE.CHAT,
+          disable: activityMode !== ACTIVITY_TYPE.CHAT
         },
         {
           value: ACTIVITY_TYPE.VISIT,
           label: messages.visit,
-          disable: activityMode !== ACTIVITY_TYPE.VISIT,
-        },
+          disable: activityMode !== ACTIVITY_TYPE.VISIT
+        }
       ],
       [APPOINTMENT_TYPE.MEDICATION]: [
         {
           value: ACTIVITY_TYPE.CALL,
           label: messages.call,
-          disable: activityMode !== ACTIVITY_TYPE.CALL,
+          disable: activityMode !== ACTIVITY_TYPE.CALL
         },
         {
           value: ACTIVITY_TYPE.CHAT,
           label: messages.textEmail,
-          disable: activityMode !== ACTIVITY_TYPE.CHAT,
+          disable: activityMode !== ACTIVITY_TYPE.CHAT
         },
         {
           value: ACTIVITY_TYPE.VISIT,
           label: messages.visit,
-          disable: activityMode !== ACTIVITY_TYPE.VISIT,
-        },
-      ],
-    },
+          disable: activityMode !== ACTIVITY_TYPE.VISIT
+        }
+      ]
+    }
   };
 };
 
@@ -569,7 +569,7 @@ export const getActivityBetween = ({
   viewer = {},
   other = {},
   event = {},
-  edit = false,
+  edit = false
 }) => {
   const { basicInfo: { category: viewerCategory } = {} } = viewer;
   const { basicInfo: { category: otherCategory = DEFAULT } = {} } = other;

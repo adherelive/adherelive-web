@@ -15,7 +15,7 @@ const Log = new Logger("EVENTS > SQS_OBSERVER");
 export default class SqsObserver {
   constructor() {}
 
-  observe = async (service) => {
+  observe = async service => {
     try {
       const eventMessage = await service.receiveMessage();
       Log.debug("eventMessage", eventMessage);
@@ -26,12 +26,12 @@ export default class SqsObserver {
 
           Log.debug("observer message --> ", data);
 
-          if (Array.isArray(data)) {
-            for (let index = 0; index < data.length; index++) {
-              await this.execute({ data: data[index], service, message });
+          if(Array.isArray(data)) {
+            for(let index = 0; index < data.length; index++) {
+              await this.execute({data: data[index], service, message});
             }
           } else {
-            await this.execute({ data, service, message });
+            await this.execute({data, service, message});
           }
         }
       }
@@ -40,9 +40,10 @@ export default class SqsObserver {
     }
   };
 
-  execute = async ({ data, service, message }) => {
+  execute = async ({data, service, message}) => {
     try {
       const { type = "" } = data || {};
+
 
       let response = false;
 
@@ -78,12 +79,12 @@ export default class SqsObserver {
 
       if (response === true) {
         const deleteMessage = await service.deleteMessage(
-          message.ReceiptHandle
+            message.ReceiptHandle
         );
 
         Log.debug("deleteMessage 81723912 ", deleteMessage);
       }
-    } catch (error) {
+    } catch(error) {
       Log.debug("execute catch error", error);
     }
   };

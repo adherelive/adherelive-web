@@ -7,14 +7,14 @@ import messages from "./message";
 import Drawer from "antd/es/drawer";
 import message from "antd/es/message";
 
-import AddProviderForm from "./form";
+import AddProviderForm from  "./form";
 
 class addProviderDrawer extends Component {
   constructor(props) {
     super(props);
     this.state = {
       disabledOk: false,
-      submitting: false,
+      submitting:false
     };
 
     this.FormWrapper = Form.create({ onFieldsChange: this.onFormFieldChanges })(
@@ -30,14 +30,10 @@ class addProviderDrawer extends Component {
 
     if (isFieldsTouched()) {
       const isError = this.hasErrors(getFieldsError());
-      console.log("763132 isError --> ", {
-        disabledOk,
-        isError,
-        isFieldsTouched: isFieldsTouched(),
-      });
+      console.log("763132 isError --> ", {disabledOk, isError, isFieldsTouched: isFieldsTouched()});
 
       if (disabledOk !== isError && isFieldsTouched()) {
-        // if (isError && isFieldsTouched()) {
+      // if (isError && isFieldsTouched()) {
         this.setState({ disabledOk: isError });
       }
     }
@@ -49,24 +45,28 @@ class addProviderDrawer extends Component {
   hasErrors = (fieldsError) => {
     // let hasError = false;
 
-    console.log("198273178 fieldsError --> ", { fieldsError });
+    console.log("198273178 fieldsError --> ", {fieldsError});
     return Object.keys(fieldsError).some((field) => fieldsError[field]);
+    
   };
 
-  setPassword = (e) => {
+
+
+  setPassword = e => {
     e.preventDefault();
     const { value } = e.target;
-    this.setState({ password: value });
-  };
+      this.setState({password:value})
+  }
 
-  formatMessage = (data) => this.props.intl.formatMessage(data);
+
+  formatMessage = data => this.props.intl.formatMessage(data);
 
   onClose = () => {
     const { close } = this.props;
     close();
   };
 
-  handleSubmit = (e) => {
+  handleSubmit = (e) =>{
     e.preventDefault();
     const { formRef = {}, formatMessage } = this;
 
@@ -79,24 +79,25 @@ class addProviderDrawer extends Component {
     validateFields(async (err, values) => {
       if (!err) {
         let {
-          name = "",
-          prefix = "91",
-          mobile_number = "",
-          email = "",
-          address = "",
-          password = "",
-          confirm_password = "",
-          account_type = "",
-          customer_name = "",
-          account_number = "",
-          ifsc_code = "",
-          upi_id = "",
-          razorpay_account_id = "",
-          razorpay_account_name = "",
-          icon = "",
-          banner = "",
-          prescription_details = "",
+          name='',
+          prefix='91',
+          mobile_number='',
+          email='',
+          address='',
+          password='',
+          confirm_password='',
+          account_type='',
+          customer_name='',
+          account_number='',
+          ifsc_code='',
+          upi_id='',
+          razorpay_account_id='',
+          razorpay_account_name='' ,
+          icon = '',
+          banner = '',
+          prescription_details = ''
         } = values;
+
 
         const data = {
           name,
@@ -112,48 +113,51 @@ class addProviderDrawer extends Component {
           ifsc_code,
           upi_id,
           razorpay_account_id,
-          razorpay_account_name,
+          razorpay_account_name ,
           icon,
           banner,
-          prescription_details,
-        };
+          prescription_details
+          };
 
-        try {
-          const { addProvider } = this.props;
+          try {
+            const {addProvider}=this.props;
 
-          this.setState({ submitting: true });
+            this.setState({submitting:true});
 
-          const response = await addProvider(data);
-          const { status, payload: { message: msg } = {} } = response;
-          if (status) {
-            message.success(formatMessage(messages.addProviderSuccess));
-            this.onClose();
-          } else {
-            message.warn(msg);
+            const response = await addProvider(data);
+            const { status, payload: { message: msg } = {} } = response;
+            if (status) {
+              message.success(formatMessage(messages.addProviderSuccess));
+              this.onClose();
+            } else {
+                message.warn(msg);
+            }
+
+            this.setState({submitting:false});
+
+          } catch (err) {
+            console.log("err", err);
+            this.setState({submitting:false});
+            message.warn(formatMessage(messages.somethingWentWrong));
           }
-
-          this.setState({ submitting: false });
-        } catch (err) {
-          console.log("err", err);
-          this.setState({ submitting: false });
-          message.warn(formatMessage(messages.somethingWentWrong));
-        }
+        
       } else {
         console.log("18731297 err --> ", err);
-        let allErrors = "";
-        for (let each in err) {
-          const { errors = [] } = err[each] || {};
-          for (let error of errors) {
-            const { message = "" } = error;
-            allErrors = allErrors + message + ".";
+        let allErrors = '';
+        for(let each in err){
+          const {errors = [] } = err[each] || {};
+          for(let error of errors ){
+            const {message = ''} = error;
+            allErrors = allErrors + message+".";
           }
         }
         message.warn(allErrors);
 
         return;
       }
+
     });
-  };
+  }
 
   setFormRef = (formRef) => {
     this.formRef = formRef;
@@ -164,13 +168,18 @@ class addProviderDrawer extends Component {
 
   render() {
     const { visible, loading } = this.props;
-    const { disabledOk, submitting = false } = this.state;
-    const { onClose, formatMessage, setFormRef, handleSubmit, FormWrapper } =
-      this;
+    const {disabledOk , submitting=false} = this.state;
+    const {
+      onClose,
+      formatMessage,
+      setFormRef,
+      handleSubmit,
+      FormWrapper,
+    } = this;
 
     const submitButtonProps = {
       disabled: disabledOk,
-      loading,
+      loading
     };
 
     if (visible !== true) {
@@ -186,7 +195,7 @@ class addProviderDrawer extends Component {
           headerStyle={{
             position: "sticky",
             zIndex: "9999",
-            top: "0px",
+            top: "0px"
           }}
           destroyOnClose={true}
           onClose={onClose}
@@ -197,7 +206,8 @@ class addProviderDrawer extends Component {
           {/* {this.renderAddProviderForm()} */}
           <FormWrapper wrappedComponentRef={setFormRef} {...this.props} />
 
-          <Footer
+        
+            <Footer
             onSubmit={handleSubmit}
             onClose={onClose}
             submitText={this.formatMessage(messages.submit)}

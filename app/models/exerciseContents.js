@@ -8,7 +8,7 @@ export const TABLE_NAME = "exercise_contents";
 export const VIDEO_TYPES = {
   URL: "url",
   UPLOAD: "upload",
-  NONE: "none",
+  NONE: "none"
 };
 
 export const db = (database) => {
@@ -40,14 +40,14 @@ export const db = (database) => {
           USER_CATEGORY.DOCTOR,
           USER_CATEGORY.PROVIDER,
           USER_CATEGORY.ADMIN,
-          USER_CATEGORY.HSP,
+          USER_CATEGORY.HSP
         ],
         defaultValue: USER_CATEGORY.ADMIN,
       },
       video_content_type: {
         type: DataTypes.ENUM,
         values: [VIDEO_TYPES.URL, VIDEO_TYPES.UPLOAD, VIDEO_TYPES.NONE],
-        defaultValue: VIDEO_TYPES.NONE,
+        defaultValue: VIDEO_TYPES.NONE
       },
       video_content: {
         type: DataTypes.STRING,
@@ -74,8 +74,11 @@ export const associate = (database) => {
   //   targetKey: "id"
   // });
 
-  database.models[TABLE_NAME].belongsTo(database.models[exerciseTableName], {
-    foreignKey: "exercise_id",
-    targetKey: "id",
-  });
+  database.models[TABLE_NAME].belongsTo(
+    database.models[exerciseTableName],
+    {
+      foreignKey: "exercise_id",
+      targetKey: "id",
+    }
+  );
 };

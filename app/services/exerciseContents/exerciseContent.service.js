@@ -28,7 +28,7 @@ export default class ExerciseContentService {
     }
   };
 
-  findAndCountAll = async (data) => {
+  findAndCountAll= async (data) => {
     try {
       return await Database.getModel(TABLE_NAME).findAndCountAll({
         where: data,

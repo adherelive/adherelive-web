@@ -1,8 +1,8 @@
 "use strict";
 
 import { USER_CATEGORY } from "../constant";
-import { TABLE_NAME } from "../app/models/medicationReminders";
-import { TABLE_NAME as medicineTableName } from "../app/models/medicines";
+import {TABLE_NAME} from "../app/models/medicationReminders";
+import {TABLE_NAME as medicineTableName} from "../app/models/medicines";
 
 module.exports = {
   up: (queryInterface, Sequelize) => {
@@ -11,23 +11,19 @@ module.exports = {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
-        type: Sequelize.INTEGER,
+        type: Sequelize.INTEGER
       },
       participant_id: {
         type: Sequelize.INTEGER,
-        allowNull: false,
+        allowNull: false
       },
       organizer_type: {
         type: Sequelize.ENUM,
-        values: [
-          USER_CATEGORY.DOCTOR,
-          USER_CATEGORY.PATIENT,
-          USER_CATEGORY.CARE_TAKER,
-        ],
+        values: [USER_CATEGORY.DOCTOR, USER_CATEGORY.PATIENT, USER_CATEGORY.CARE_TAKER]
       },
       organizer_id: {
         type: Sequelize.INTEGER,
-        allowNull: false,
+        allowNull: false
       },
       medicine_id: {
         type: Sequelize.INTEGER,
@@ -40,36 +36,36 @@ module.exports = {
         },
       },
       description: {
-        type: Sequelize.STRING(1000),
+        type: Sequelize.STRING(1000)
       },
       start_date: {
-        type: Sequelize.DATE,
+        type: Sequelize.DATE
       },
       end_date: {
-        type: Sequelize.DATE,
+        type: Sequelize.DATE
       },
       rr_rule: {
-        type: Sequelize.STRING(1000),
+        type: Sequelize.STRING(1000)
       },
       details: {
-        type: Sequelize.JSON,
+        type: Sequelize.JSON
       },
       created_at: {
         allowNull: false,
-        type: Sequelize.DATE,
+        type: Sequelize.DATE
       },
       updated_at: {
         allowNull: false,
-        type: Sequelize.DATE,
+        type: Sequelize.DATE
       },
       deleted_at: {
         allowNull: true,
-        type: Sequelize.DATE,
-      },
+        type: Sequelize.DATE
+      }
     });
   },
 
   down: (queryInterface, Sequelize) => {
     return queryInterface.dropTable(TABLE_NAME);
-  },
+  }
 };

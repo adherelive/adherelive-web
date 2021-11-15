@@ -3,7 +3,7 @@ import { FieldTimeOutlined } from "@ant-design/icons";
 import Tooltip from "antd/es/tooltip";
 import messages from "../messages";
 
-export default (props) => {
+export default props => {
   const { action, formatMessage, id } = props || {};
 
   return (

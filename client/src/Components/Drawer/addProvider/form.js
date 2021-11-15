@@ -431,7 +431,9 @@ class AddProviderForm extends Component {
           {getFieldDecorator(
             PRESCRIPTION_DETAILS,
             {}
-          )(<TextArea rows={3} className="mb40" maxLength={300} />)}
+          )(<TextArea rows={3} className="mb40" 
+            maxLength={300}
+          />)}
         </FormItem>
       </Form>
     );

@@ -38,6 +38,7 @@ export const getVerifyUserUrl = (link) => {
   return `/auth/register/${link}`;
 };
 
+
 export const giveUserConsentUrl = () => {
   return `/auth/consent`;
 };

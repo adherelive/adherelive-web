@@ -47,10 +47,10 @@ module.exports = {
           USER_CATEGORY.PROVIDER,
           USER_CATEGORY.ADMIN,
         ],
-        defaultValue: USER_CATEGORY.ADMIN,
+        defaultValue: USER_CATEGORY.ADMIN
       },
       calorific_value: {
-        type: DataTypes.FLOAT(11, 2),
+        type: DataTypes.FLOAT(11,2),
       },
       created_at: {
         allowNull: false,

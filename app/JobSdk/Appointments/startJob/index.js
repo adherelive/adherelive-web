@@ -32,9 +32,9 @@ class StartJob extends AppointmentJob {
         actor: {
           id: actorId,
           user_role_id,
-          details: { name, category: actorCategory } = {},
-        } = {},
-      },
+          details: { name, category: actorCategory } = {}
+        } = {}
+      }
     } = getAppointmentData() || {};
 
     const templateData = [];
@@ -49,35 +49,32 @@ class StartJob extends AppointmentJob {
     //   }
     // });
 
-    const { rows: userRoles = [] } =
-      (await UserRoleService.findAndCountAll({
-        where: {
-          id: participants,
-        },
-      })) || {};
+    const {rows: userRoles = []} = await UserRoleService.findAndCountAll({
+      where: {
+        id: participants
+      }
+    }) || {};
 
     let providerId = null;
 
-    for (const userRole of userRoles) {
-      const { user_identity, linked_id } = userRole || {};
-      userIds.push(user_identity);
-      if (linked_id) {
-        providerId = linked_id;
-      }
+    for(const userRole of userRoles) {
+      const {user_identity, linked_id} = userRole || {};
+        userIds.push(user_identity);
+        if(linked_id) {
+          providerId = linked_id;
+        }
     }
 
     // provider
     let providerName = DEFAULT_PROVIDER;
-    if (providerId) {
-      const provider = await ProviderService.getProviderByData({
-        id: providerId,
-      });
-      const { name } = provider || {};
+    if(providerId) {
+      const provider = await ProviderService.getProviderByData({id: providerId});
+      const {name} = provider || {};
       providerName = name;
     }
 
     const userDevices = await UserDeviceService.getAllDeviceByData({
-      user_id: userIds,
+      user_id: userIds
     });
 
     if (userDevices.length > 0) {
@@ -88,22 +85,22 @@ class StartJob extends AppointmentJob {
     }
 
     // for (const participant of participants) {
-    // if (participant !== actorId) { // todo: add actor after testing (deployment)
+      // if (participant !== actorId) { // todo: add actor after testing (deployment)
 
-    templateData.push({
-      small_icon: process.config.app.icon_android,
-      app_id: process.config.one_signal.app_id, // TODO: add the same in pushNotification handler in notificationSdk
-      headings: { en: `Appointment Started (${providerName})` },
-      contents: {
-        en: `Appointment with ${name}(${actorCategory}) is started! Tap here to join`,
-      },
-      // buttons: [{ id: "yes", text: "Yes" }, { id: "no", text: "No" }],
-      include_player_ids: [...playerIds],
-      priority: 10,
-      android_channel_id: process.config.one_signal.urgent_channel_id,
-      data: { url: "/appointments", params: getAppointmentData() },
-    });
-    // }
+      templateData.push({
+        small_icon: process.config.app.icon_android,
+        app_id: process.config.one_signal.app_id, // TODO: add the same in pushNotification handler in notificationSdk
+        headings: { en: `Appointment Started (${providerName})` },
+        contents: {
+          en: `Appointment with ${name}(${actorCategory}) is started! Tap here to join`
+        },
+        // buttons: [{ id: "yes", text: "Yes" }, { id: "no", text: "No" }],
+        include_player_ids: [...playerIds],
+        priority: 10,
+        android_channel_id: process.config.one_signal.urgent_channel_id,
+        data: { url: "/appointments", params: getAppointmentData() }
+      });
+      // }
     // }
 
     return templateData;
@@ -117,11 +114,11 @@ class StartJob extends AppointmentJob {
         actor: {
           id: actorId,
           user_role_id,
-          details: { name, category: actorCategory } = {},
-        } = {},
+          details: { name, category: actorCategory } = {}
+        } = {}
       },
       id,
-      start_time,
+      start_time
     } = getAppointmentData() || {};
 
     const templateData = [];
@@ -136,7 +133,7 @@ class StartJob extends AppointmentJob {
         verb: `appointment_start:${currentTimeStamp}`,
         event: EVENT_TYPE.APPOINTMENT,
         time: start_time,
-        start_time: `${start_time}`,
+        start_time: `${start_time}`
       });
     }
     return templateData;

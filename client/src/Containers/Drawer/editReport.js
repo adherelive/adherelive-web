@@ -7,34 +7,34 @@ import {
   addReport,
   fetchReports,
   deleteReport,
-  updateReport,
-} from "../../modules/reports";
+  updateReport} from "../../modules/reports";
 
-const mapStateToProps = (state) => {
+const mapStateToProps = state => {
+    
   const {
-    drawer: { visible, loading, data: { type, payload = {} } = {} },
-    reports = {},
-  } = state;
+    drawer: { visible, loading, data: { type, payload = {} } = {} }, 
+    reports ={} } = state;
 
   return {
     visible: visible && type === DRAWER.EDIT_REPORT,
     loading,
     payload,
-    reports,
+    reports
   };
 };
 
-const mapDispatchToProps = (dispatch) => {
+const mapDispatchToProps = dispatch => {
   return {
     close: () => dispatch(close()),
-    uploadReport: (patient_id, payload) =>
-      dispatch(uploadReport(patient_id, payload)),
-    addReport: (payload) => dispatch(addReport(payload)),
-    getAllReports: (patient_id) => dispatch(fetchReports(patient_id)),
-    deleteReport: (doc_id) => dispatch(deleteReport(doc_id)),
-    updateReport: (report_id, payload) =>
-      dispatch(updateReport(report_id, payload)),
+    uploadReport : (patient_id,payload) => dispatch(uploadReport(patient_id,payload)),
+    addReport : (payload) => dispatch(addReport(payload)),
+    getAllReports : (patient_id) => dispatch(fetchReports(patient_id)),
+    deleteReport : (doc_id) => dispatch(deleteReport(doc_id)),
+    updateReport : (report_id,payload) => dispatch(updateReport(report_id,payload))
   };
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(editReportDrawer);
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(editReportDrawer);

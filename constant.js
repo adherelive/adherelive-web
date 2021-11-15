@@ -486,7 +486,6 @@ export const DOSE_UNIT = {
 export const TEXT_KEY = "text";
 export const TIME_KEY = "time";
 
-export const WITH_BREAKFAST = "0";
 export const AFTER_WAKEUP = "1";
 export const BEFORE_BREAKFAST = "2";
 export const AFTER_BREAKFAST = "3";
@@ -503,10 +502,6 @@ export const BEFORE_SLEEP = "12";
 export const DIET_TIMINGS = {};
 
 export const MEDICATION_TIMING = {
-  [WITH_BREAKFAST]: {
-    [TEXT_KEY]: "With Breakfast",
-    [TIME_KEY]: "2020-09-24T03:30:00.000Z",
-  },
   [AFTER_WAKEUP]: {
     [TEXT_KEY]: "After Wake Up",
     [TIME_KEY]: "2020-09-24T02:30:00.000Z",
@@ -996,7 +991,7 @@ export const USER_FAV_USER_CATEGORY = [
   USER_CATEGORY.ADMIN,
   USER_CATEGORY.CARE_TAKER,
   USER_CATEGORY.PROVIDER,
-  USER_CATEGORY.HSP,
+  USER_CATEGORY.HSP
 ];
 
 export const FAVOURITE_TYPE = {
@@ -1029,18 +1024,18 @@ export const RADIOLOGY_SUB_TYPES = {
 };
 
 export const RADIOLOGY_SUB_CATEGORY_DATA = {
-  1: { name: RADIOLOGY_SUB_TYPES.CT_SCAN, id: 1 },
-  2: { name: RADIOLOGY_SUB_TYPES.NUCLEAR_MEDICINE, id: 2 },
-  3: { name: RADIOLOGY_SUB_TYPES.ULTRASOUND, id: 3 },
-  4: { name: RADIOLOGY_SUB_TYPES.XRAY, id: 4 },
-  5: { name: RADIOLOGY_SUB_TYPES.MRI, id: 5 },
-  6: { name: RADIOLOGY_SUB_TYPES.ECHO_AND_DOPPLER, id: 6 },
-  7: { name: RADIOLOGY_SUB_TYPES.CT_ANGIO, id: 7 },
+  "1": { name: RADIOLOGY_SUB_TYPES.CT_SCAN, id: 1 },
+  "2": { name: RADIOLOGY_SUB_TYPES.NUCLEAR_MEDICINE, id: 2 },
+  "3": { name: RADIOLOGY_SUB_TYPES.ULTRASOUND, id: 3 },
+  "4": { name: RADIOLOGY_SUB_TYPES.XRAY, id: 4 },
+  "5": { name: RADIOLOGY_SUB_TYPES.MRI, id: 5 },
+  "6": { name: RADIOLOGY_SUB_TYPES.ECHO_AND_DOPPLER, id: 6 },
+  "7": { name: RADIOLOGY_SUB_TYPES.CT_ANGIO, id: 7 },
 };
 
 export const RADIOLOGY_CATEGORY_DATA = {
   [RADIOLOGY_SUB_TYPES.CT_SCAN]: {
-    1: {
+    "1": {
       index: 1,
       name: "",
       items: [
@@ -1073,7 +1068,7 @@ export const RADIOLOGY_CATEGORY_DATA = {
         "CECT UPPER ABDOMEN",
       ],
     },
-    2: {
+    "2": {
       index: 2,
       name: "HEAD",
       items: [
@@ -1087,17 +1082,17 @@ export const RADIOLOGY_CATEGORY_DATA = {
         "HEAD - SELLA TURCICA-AXIAL+ CORONAL -CONTRAST",
       ],
     },
-    3: {
+    "3": {
       index: 3,
       name: "EAR",
       items: ["EAR + HRCT - PLAIN", "EAR + HRCT - CONTRAST"],
     },
-    4: {
+    "4": {
       index: 4,
       name: "ORBIT",
       items: ["ORBIT AXIAL & CORONAL (CONTRAST)"],
     },
-    5: {
+    "5": {
       index: 5,
       name: "FACE",
       items: [
@@ -1109,12 +1104,12 @@ export const RADIOLOGY_CATEGORY_DATA = {
         "PNS - AXIAL & CORONAL - CONTRAST",
       ],
     },
-    6: {
+    "6": {
       index: 6,
       name: "DENTAL",
       items: ["DENTA SCAN (PLAIN)"],
     },
-    7: {
+    "7": {
       index: 7,
       name: "NECK",
       items: [
@@ -1124,7 +1119,7 @@ export const RADIOLOGY_CATEGORY_DATA = {
         "NECK & UPPER CHEST (CONTRAST)",
       ],
     },
-    8: {
+    "8": {
       index: 8,
       name: "CHEST",
       items: [
@@ -1140,7 +1135,7 @@ export const RADIOLOGY_CATEGORY_DATA = {
         "CHEST - HRCT + CECT + BRONCHOSCOPY (CONTRAST)",
       ],
     },
-    9: {
+    "9": {
       index: 9,
       name: "SPINE",
       items: [
@@ -1152,7 +1147,7 @@ export const RADIOLOGY_CATEGORY_DATA = {
         "SPINE - SACROILIAC JOINTS",
       ],
     },
-    10: {
+    "10": {
       index: 10,
       name: "ABDOMEN",
       items: [
@@ -1167,7 +1162,7 @@ export const RADIOLOGY_CATEGORY_DATA = {
         "ABDOMEN - WHOLE ABDOMEN WITH ABDOMINAL ANGIO (CONTRAST)",
       ],
     },
-    11: {
+    "11": {
       index: 11,
       name: "EXTREMITIES",
       items: [
@@ -1180,7 +1175,7 @@ export const RADIOLOGY_CATEGORY_DATA = {
     },
   },
   [RADIOLOGY_SUB_TYPES.NUCLEAR_MEDICINE]: {
-    1: {
+    "1": {
       index: 1,
       name: "",
       items: [
@@ -1231,7 +1226,7 @@ export const RADIOLOGY_CATEGORY_DATA = {
     },
   },
   [RADIOLOGY_SUB_TYPES.ULTRASOUND]: {
-    1: {
+    "1": {
       index: 1,
       name: "",
       items: [
@@ -1255,7 +1250,7 @@ export const RADIOLOGY_CATEGORY_DATA = {
         "U/S FOLLICULAR STUDY (SINGLE DAY)",
       ],
     },
-    2: {
+    "2": {
       index: 2,
       name: "OBSTETRIC ULTRASOUND",
       items: [
@@ -1293,7 +1288,7 @@ export const RADIOLOGY_CATEGORY_DATA = {
     },
   },
   [RADIOLOGY_SUB_TYPES.XRAY]: {
-    1: {
+    "1": {
       index: 1,
       name: "",
       items: [
@@ -1334,7 +1329,7 @@ export const RADIOLOGY_CATEGORY_DATA = {
         "XRAY TM JOINTS - LEFT OBLIQUE VIEW",
       ],
     },
-    2: {
+    "2": {
       index: 2,
       name: "",
       items: [
@@ -1378,7 +1373,7 @@ export const RADIOLOGY_CATEGORY_DATA = {
         "XRAY KNEE JOINT AP & LATERAL VIEWS (ERECT STANDING)",
       ],
     },
-    3: {
+    "3": {
       index: 3,
       name: "",
       items: [
@@ -1391,12 +1386,12 @@ export const RADIOLOGY_CATEGORY_DATA = {
         "XRAY STYLOID PROCESS",
       ],
     },
-    4: {
+    "4": {
       index: 4,
       name: "MAMMOGRAPHY",
       items: ["MAMMOGRAM (BOTH BREASTS )", "MAMMOGRRAM (ONE BREAST)"],
     },
-    5: {
+    "5": {
       index: 5,
       name: "OPG",
       items: [
@@ -1408,7 +1403,7 @@ export const RADIOLOGY_CATEGORY_DATA = {
         "OBLIQUE LATERAL - BODY",
       ],
     },
-    6: {
+    "6": {
       index: 6,
       name: "DEXA-BONE DENSITOMETRY",
       items: [
@@ -1417,7 +1412,7 @@ export const RADIOLOGY_CATEGORY_DATA = {
         "WHOLE BODY DEXA including BODY FAT ANALYSIS",
       ],
     },
-    7: {
+    "7": {
       index: 7,
       name: "",
       items: [
@@ -1430,7 +1425,7 @@ export const RADIOLOGY_CATEGORY_DATA = {
     },
   },
   [RADIOLOGY_SUB_TYPES.MRI]: {
-    1: {
+    "1": {
       index: 1,
       name: "",
       items: [
@@ -1446,7 +1441,7 @@ export const RADIOLOGY_CATEGORY_DATA = {
         "MRI PITUITARY GLAND",
       ],
     },
-    2: {
+    "2": {
       index: 2,
       name: "",
       items: [
@@ -1503,7 +1498,7 @@ export const RADIOLOGY_CATEGORY_DATA = {
     },
   },
   [RADIOLOGY_SUB_TYPES.ECHO_AND_DOPPLER]: {
-    1: {
+    "1": {
       index: 1,
       name: "",
       items: [
@@ -1519,7 +1514,7 @@ export const RADIOLOGY_CATEGORY_DATA = {
     },
   },
   [RADIOLOGY_SUB_TYPES.CT_ANGIO]: {
-    1: {
+    "1": {
       index: 1,
       name: "",
       items: [
@@ -1537,49 +1532,49 @@ export const RADIOLOGY_CATEGORY_DATA = {
 };
 
 export const RADIOLOGY_DATA = {
-  1: {
+  "1": {
     id: 1,
     name: RADIOLOGY_SUB_TYPES.CT_SCAN,
     data: {
       ...RADIOLOGY_CATEGORY_DATA[RADIOLOGY_SUB_TYPES.CT_SCAN],
     },
   },
-  2: {
+  "2": {
     id: 2,
     name: RADIOLOGY_SUB_TYPES.NUCLEAR_MEDICINE,
     data: {
       ...RADIOLOGY_CATEGORY_DATA[RADIOLOGY_SUB_TYPES.NUCLEAR_MEDICINE],
     },
   },
-  3: {
+  "3": {
     id: 3,
     name: RADIOLOGY_SUB_TYPES.ULTRASOUND,
     data: {
       ...RADIOLOGY_CATEGORY_DATA[RADIOLOGY_SUB_TYPES.ULTRASOUND],
     },
   },
-  4: {
+  "4": {
     id: 4,
     name: RADIOLOGY_SUB_TYPES.XRAY,
     data: {
       ...RADIOLOGY_CATEGORY_DATA[RADIOLOGY_SUB_TYPES.XRAY],
     },
   },
-  5: {
+  "5": {
     id: 5,
     name: RADIOLOGY_SUB_TYPES.MRI,
     data: {
       ...RADIOLOGY_CATEGORY_DATA[RADIOLOGY_SUB_TYPES.MRI],
     },
   },
-  6: {
+  "6": {
     id: 6,
     name: RADIOLOGY_SUB_TYPES.ECHO_AND_DOPPLER,
     data: {
       ...RADIOLOGY_CATEGORY_DATA[RADIOLOGY_SUB_TYPES.ECHO_AND_DOPPLER],
     },
   },
-  7: {
+  "7": {
     id: 7,
     name: RADIOLOGY_SUB_TYPES.CT_ANGIO,
     data: {

@@ -35,7 +35,7 @@ class addAccountDetailsDrawer extends Component {
       account_type: "",
       use_as_main: false,
       upi_id: "",
-      submitting: false,
+      submitting:false
     };
   }
 
@@ -49,7 +49,7 @@ class addAccountDetailsDrawer extends Component {
   //
   // }
 
-  setLinkedAccountName = (e) => {
+  setLinkedAccountName = e => {
     e.preventDefault();
     const { value } = e.target;
     const reg = /^[a-zA-Z][a-zA-Z\s]*$/;
@@ -58,33 +58,33 @@ class addAccountDetailsDrawer extends Component {
     }
   };
 
-  setPhoneNumber = (e) => {
+  setPhoneNumber = e => {
     e.preventDefault();
     const { value } = e.target;
 
     this.setState({ account_mobile_number: e.target.value });
   };
 
-  setAccountNumber = (e) => {
+  setAccountNumber = e => {
     e.preventDefault();
     const { value } = e.target;
     this.setState({ account_number: value });
   };
 
-  setAccountType = (value) => {
+  setAccountType = value => {
     this.setState({ account_type: value });
   };
 
-  setPrefix = (value) => {
+  setPrefix = value => {
     this.setState({ prefix: value });
   };
 
-  set_ifsc_code = (e) => {
+  set_ifsc_code = e => {
     e.preventDefault();
     const { value } = e.target;
     this.setState({ ifsc_code: value });
   };
-  setMain = (e) => {
+  setMain = e => {
     e.preventDefault();
     const { use_as_main } = this.state;
     if (use_as_main) {
@@ -94,7 +94,7 @@ class addAccountDetailsDrawer extends Component {
     }
   };
 
-  setUPIidValue = (e) => {
+  setUPIidValue = e => {
     e.preventDefault();
     const { value } = e.target;
     this.setState({ upi_id: value });
@@ -109,7 +109,7 @@ class addAccountDetailsDrawer extends Component {
       ifsc_code = "",
       account_number = "",
       use_as_main = false,
-      upi_id = "",
+      upi_id = ""
     } = this.state;
 
     const prefixSelector = (
@@ -135,15 +135,13 @@ class addAccountDetailsDrawer extends Component {
         {/* us */}
         <Option value="1">
           <div className="flex align-center">
-            <img src={us} className="w16 h16" />
-            <div className="ml4">+1</div>
+            <img src={us} className="w16 h16" /> <div className="ml4">+1</div>
           </div>
         </Option>
         {/* uk */}
         <Option value="44">
           <div className="flex align-center">
-            <img src={uk} className="w16 h16" />
-            <div className="ml4">+44</div>
+            <img src={uk} className="w16 h16" /> <div className="ml4">+44</div>
           </div>
         </Option>
         {/* china */}
@@ -289,14 +287,14 @@ class addAccountDetailsDrawer extends Component {
                 display: "flex",
                 flexDirection: "row",
                 alignItems: "center",
-                justifyContent: "space-between",
+                justifyContent: "space-between"
               }}
             >
               <Radio.Button
                 style={{
                   width: "40%",
                   marginBottom: "10px",
-                  marginTop: "10px",
+                  marginTop: "10px"
                 }}
                 value={SAVINGS}
                 onClick={() => {
@@ -310,7 +308,7 @@ class addAccountDetailsDrawer extends Component {
                 style={{
                   width: "40%",
                   marginBottom: "10px",
-                  marginTop: "10px",
+                  marginTop: "10px"
                 }}
                 value={CURRENT}
                 onClick={() => {
@@ -373,7 +371,7 @@ class addAccountDetailsDrawer extends Component {
     );
   };
 
-  formatMessage = (data) => this.props.intl.formatMessage(data);
+  formatMessage = data => this.props.intl.formatMessage(data);
 
   onClose = () => {
     const { close } = this.props;
@@ -385,7 +383,7 @@ class addAccountDetailsDrawer extends Component {
       ifsc_code: "",
       account_type: "",
       use_as_main: false,
-      upi_id: "",
+      upi_id: ""
     });
     close();
   };
@@ -397,7 +395,7 @@ class addAccountDetailsDrawer extends Component {
       prefix = "",
       account_number = "",
       ifsc_code = "",
-      account_type = "",
+      account_type = ""
     } = this.state;
 
     if (!prefix) {
@@ -435,8 +433,9 @@ class addAccountDetailsDrawer extends Component {
     ifsc_code,
     account_type,
     use_as_main = false,
-    upi_id,
+    upi_id
   }) => {
+
     this.handleSubmit({
       customer_name,
       account_mobile_number,
@@ -445,7 +444,7 @@ class addAccountDetailsDrawer extends Component {
       ifsc_code,
       account_type,
       use_as_main,
-      upi_id,
+      upi_id
     });
   };
 
@@ -457,10 +456,10 @@ class addAccountDetailsDrawer extends Component {
     ifsc_code,
     account_type,
     use_as_main,
-    upi_id,
+    upi_id
   }) {
     try {
-      this.setState({ submitting: true });
+      this.setState({submitting:true});
 
       const { addAccountDetails, updateAccountDetailsAdded } = this.props;
       const response = await addAccountDetails({
@@ -471,7 +470,7 @@ class addAccountDetailsDrawer extends Component {
         ifsc_code,
         account_type,
         use_as_main,
-        upi_id,
+        upi_id
       });
       const { status, payload: { message: msg } = {} } = response;
       if (status) {
@@ -479,13 +478,14 @@ class addAccountDetailsDrawer extends Component {
         updateAccountDetailsAdded();
         this.onClose();
       } else {
-        message.warn(msg);
+          message.warn(msg);
       }
 
-      this.setState({ submitting: false });
+      this.setState({submitting:false});
+
     } catch (err) {
       console.log("err", err);
-      this.setState({ submitting: false });
+      this.setState({submitting:false});
       message.warn(this.formatMessage(messages.somethingWentWrong));
     }
   }
@@ -499,7 +499,7 @@ class addAccountDetailsDrawer extends Component {
       ifsc_code = "",
       account_type = "",
       use_as_main = false,
-      upi_id = "",
+      upi_id = ""
     } = this.state;
     const validate = this.validateData();
     const { submit } = this;
@@ -512,7 +512,7 @@ class addAccountDetailsDrawer extends Component {
         ifsc_code,
         account_type,
         use_as_main,
-        upi_id,
+        upi_id
       });
     }
   };
@@ -521,11 +521,11 @@ class addAccountDetailsDrawer extends Component {
     const { renderAddAccountDetailsForm } = this;
     const { visible } = this.props;
     const {
-      onClose,
+      onClose
       //  renderAddNewConsultationFee
     } = this;
 
-    const { submitting = false } = this.state;
+    const {submitting = false} = this.state;
 
     if (visible !== true) {
       return null;
@@ -540,7 +540,7 @@ class addAccountDetailsDrawer extends Component {
           headerStyle={{
             position: "sticky",
             zIndex: "9999",
-            top: "0px",
+            top: "0px"
           }}
           destroyOnClose={true}
           onClose={onClose}
@@ -549,19 +549,23 @@ class addAccountDetailsDrawer extends Component {
         >
           {renderAddAccountDetailsForm()}
 
-          <Footer
+         <Footer
             onSubmit={this.onSubmit}
             onClose={this.onClose}
             submitText={this.formatMessage(messages.submit)}
             submitButtonProps={{}}
+
             cancelComponent={
               <Button onClick={this.onClose} style={{ marginRight: 8 }}>
-                {this.formatMessage(messages.cancel)}
-              </Button>
+              {this.formatMessage(messages.cancel)}
+            </Button>
             }
-            submitting={submitting}
-          />
 
+            submitting={submitting}
+
+          /> 
+
+        
           {/* <div className="add-patient-footer">
             <Button onClick={this.onClose} style={{ marginRight: 8 }}>
               {this.formatMessage(messages.cancel)}
@@ -570,6 +574,8 @@ class addAccountDetailsDrawer extends Component {
               {this.formatMessage(messages.submit)}
             </Button>
           </div> */}
+
+          
         </Drawer>
       </Fragment>
     );

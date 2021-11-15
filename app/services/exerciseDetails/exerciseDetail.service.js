@@ -70,10 +70,7 @@ export default class ExerciseDetailService {
       return (
         (await Database.getModel(TABLE_NAME).findAndCountAll({
           where: query,
-          include: [
-            Database.getModel(repetitionTableName),
-            Database.getModel(exerciseTableName),
-          ],
+          include: [Database.getModel(repetitionTableName), Database.getModel(exerciseTableName)],
           // limit,
           // offset
         })) || {}

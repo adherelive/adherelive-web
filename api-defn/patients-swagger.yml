@@ -1,7 +1,7 @@
 swagger: '2.0'
 info:
   version: 0.1.0
-  title: AdhereLive API
+  title: Adherence Live API
   description: |-
     # Description 
      This API offers a collection of operations for the provision of Health related information from the database and is designed to support intelligent workflow solutions.
@@ -19,10 +19,10 @@ info:
      |**429 Too Many Requests**      | The user has sent too many requests beyond the throttling limit. | 
      |**500 Internal Server Error**  | An unexpected internal error occurred.                           | 
      |**503 Service Unavailable**    | The service is temporarily unavailable.                          | 
-
+     
   termsOfService: 'http://adhere.live/terms/'
   contact:
-    email: info@adhere.live
+    email: development@adhere.live
 host: api.adhere.live
 basePath: /api/v0.1
 tags:
@@ -293,7 +293,7 @@ paths:
               format: date-time
               description: The UTC date/time at which the current rate limit window resets.
           schema:
-            $ref: '#/definitions/Patient'
+            $ref: '#/definitions/Patient'          
         '400':
           description: Invalid ID supplied
         '404':
@@ -485,5 +485,5 @@ definitions:
       message:
         type: string
 externalDocs:
-  description: Find out more about AdhereLive
+  description: Find out more about Adhere
   url: 'http://adhere.live'

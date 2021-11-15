@@ -95,8 +95,9 @@ class CarePlanTemplateWrapper extends BaseCarePlanTemplate {
 
     for (const templateAppointment of getTemplateAppointments()) {
       const data = await TemplateAppointmentWrapper(templateAppointment);
-      templateAppointments[data.getTemplateAppointmentId()] =
-        data.getBasicInfo();
+      templateAppointments[
+        data.getTemplateAppointmentId()
+      ] = data.getBasicInfo();
       appointmentIds.push(data.getTemplateAppointmentId());
     }
 
@@ -141,8 +142,9 @@ class CarePlanTemplateWrapper extends BaseCarePlanTemplate {
         const vitalTemplate = await VitalTemplateWrapper({
           data: allVitalTemplates[index],
         });
-        vitalTemplates[vitalTemplate.getVitalTemplateId()] =
-          vitalTemplate.getBasicInfo();
+        vitalTemplates[
+          vitalTemplate.getVitalTemplateId()
+        ] = vitalTemplate.getBasicInfo();
       }
     }
 
@@ -159,8 +161,12 @@ class CarePlanTemplateWrapper extends BaseCarePlanTemplate {
         const templateDiet = await TemplateDietWrapper({
           data: allDiets[index],
         });
-        const { template_diets, portions, food_item_details, food_items } =
-          await templateDiet.getReferenceInfo();
+        const {
+          template_diets,
+          portions,
+          food_item_details,
+          food_items,
+        } = await templateDiet.getReferenceInfo();
         allTemplateDiets = { ...allTemplateDiets, ...template_diets };
         allFoodItemDetails = { ...allFoodItemDetails, ...food_item_details };
         allFoodItems = { ...allFoodItems, ...food_items };
@@ -182,15 +188,20 @@ class CarePlanTemplateWrapper extends BaseCarePlanTemplate {
         const templateWorkout = await TemplateWorkoutWrapper({
           data: allWorkouts[index],
         });
-        const { template_workouts, repetitions, exercise_details, exercises } =
-          await templateWorkout.getReferenceInfo();
+        const {
+          template_workouts,
+          repetitions,
+          exercise_details,
+          exercises,
+        } = await templateWorkout.getReferenceInfo();
         allTemplateWorkouts = { ...allTemplateWorkouts, ...template_workouts };
         allExerciseDetails = { ...allExerciseDetails, ...exercise_details };
         allExercises = { ...allExercises, ...exercises };
-        allRepetitions = { ...allRepetitions, ...repetitions };
+        allRepetitions = {...allRepetitions, ...repetitions};
         templateWorkoutIds.push(templateWorkout.getId());
       }
     }
+
 
     const medicineData = await medicineService.getMedicineByData({
       id: medicineIds,
@@ -240,129 +251,14 @@ class CarePlanTemplateWrapper extends BaseCarePlanTemplate {
       care_plan_template_id: this.getCarePlanTemplateId(),
     };
   };
-
-  getReferenceInfoWithImp = async () => {
-    const {
-      getTemplateAppointments,
-      getTemplateMedications,
-      getTemplateVitals,
-      getTemplateDiets,
-      getTemplateWorkouts,
-    } = this;
-
-    let templateAppointments = [];
-    let templateMedications = [];
-
-    let appointmentIds = [];
-    let medicationIds = [];
-    let medicineIds = [];
-
-    for (const templateAppointment of getTemplateAppointments()) {
-      const data = await TemplateAppointmentWrapper(templateAppointment);
-      templateAppointments[data.getTemplateAppointmentId()] =
-        data.getBasicInfo();
-      appointmentIds.push(data.getTemplateAppointmentId());
-    }
-
-    for (const templateMedication of getTemplateMedications()) {
-      const data = await TemplateMedicationWrapper(templateMedication);
-      templateMedications[data.getTemplateMedicationId()] = data.getBasicInfo();
-      medicationIds.push(data.getTemplateMedicationId());
-      medicineIds.push(data.getTemplateMedicineId());
-      // const medicineData = await MedicineWrapper(data.getMedicines());
-      // medicines[medicineData.getMedicineId()] = medicineData.getBasicInfo();
-    }
-
-    // vital templates (careplan_template)
-    let templateVitalIds = [];
-    let templateVitals = {};
-    // vital templates (vitals)
-    let vitalTemplateIds = [];
-    // vital templates (vitals)
-
-    const allVitals = getTemplateVitals();
-    if (allVitals.length > 0) {
-      for (let index = 0; index < allVitals.length; index++) {
-        const templateVital = await TemplateVitalWrapper({
-          data: allVitals[index],
-        });
-        templateVitals[templateVital.getId()] = templateVital.getBasicInfo();
-        templateVitalIds.push(templateVital.getId());
-        vitalTemplateIds.push(templateVital.getVitalTemplateId());
-      }
-    }
-
-    // get vital templates
-    let vitalTemplates = {};
-
-    const allVitalTemplates =
-      (await vitalTemplateService.getAllByData({
-        id: vitalTemplateIds,
-      })) || [];
-
-    if (allVitalTemplates.length > 0) {
-      for (let index = 0; index < allVitalTemplates.length; index++) {
-        const vitalTemplate = await VitalTemplateWrapper({
-          data: allVitalTemplates[index],
-        });
-        vitalTemplates[vitalTemplate.getVitalTemplateId()] =
-          vitalTemplate.getBasicInfo();
-      }
-    }
-
-    // diet_templates
-    let templateDietIds = [];
-    const allDiets = getTemplateDiets() || [];
-    if (allDiets.length > 0) {
-      for (let index = 0; index < allDiets.length; index++) {
-        const templateDiet = await TemplateDietWrapper({
-          data: allDiets[index],
-        });
-        templateDietIds.push(templateDiet.getId());
-      }
-    }
-    // workout_templates
-    let templateWorkoutIds = [];
-    const allWorkouts = getTemplateWorkouts() || [];
-    if (allWorkouts.length > 0) {
-      for (let index = 0; index < allWorkouts.length; index++) {
-        const templateWorkout = await TemplateWorkoutWrapper({
-          data: allWorkouts[index],
-        });
-        templateWorkoutIds.push(templateWorkout.getId());
-      }
-    }
-    return {
-      care_plan_templates: {
-        [this.getCarePlanTemplateId()]: {
-          ...this.getBasicInfo(),
-          template_appointment_ids: appointmentIds,
-          template_medication_ids: medicationIds,
-          template_vital_ids: templateVitalIds,
-          template_diet_ids: templateDietIds,
-          template_workout_ids: templateWorkoutIds,
-        },
-      },
-      vital_templates: {
-        ...vitalTemplates,
-      },
-      template_appointments: {
-        ...templateAppointments,
-      },
-      template_medications: {
-        ...templateMedications,
-      },
-
-      care_plan_template_id: this.getCarePlanTemplateId(),
-    };
-  };
 }
 
 export default async (data = null, id = null) => {
   if (data) {
     return new CarePlanTemplateWrapper(data);
   }
-  const carePlanTemplate =
-    await carePlanTemplateService.getCarePlanTemplateById(id);
+  const carePlanTemplate = await carePlanTemplateService.getCarePlanTemplateById(
+    id
+  );
   return new CarePlanTemplateWrapper(carePlanTemplate);
 };

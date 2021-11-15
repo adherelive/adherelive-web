@@ -2,7 +2,7 @@ export const getSymptomsDetailsUrl = () => {
   return `/symptoms`;
 };
 
-export const getSymptomTimeLineUrl = (patient_id) => {
+export const getSymptomTimeLineUrl = patient_id => {
   return `/patients/${patient_id}/symptoms/`;
 };
 

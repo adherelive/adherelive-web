@@ -3,7 +3,7 @@
 import { TABLE_NAME } from "../app/models/foodItemDetails";
 import { TABLE_NAME as portionTableName } from "../app/models/portions";
 import { TABLE_NAME as foodItemTableName } from "../app/models/foodItemDetails";
-import { USER_CATEGORY_ARRAY } from "../app/models/users";
+import {USER_CATEGORY_ARRAY} from "../app/models/users";
 
 module.exports = {
   up: (queryInterface, Sequelize) => {
@@ -35,33 +35,33 @@ module.exports = {
         },
       },
       portion_size: {
-        type: Sequelize.FLOAT(11, 2),
-        allowNull: false,
+        type: Sequelize.FLOAT(11,2),
+        allowNull: false
       },
       calorific_value: {
-        type: Sequelize.FLOAT(11, 2),
+        type: Sequelize.FLOAT(11,2),
       },
       carbs: {
-        type: Sequelize.FLOAT(11, 2),
+        type: Sequelize.FLOAT(11,2),
       },
       proteins: {
-        type: Sequelize.FLOAT(11, 2),
+        type: Sequelize.FLOAT(11,2),
       },
       fats: {
-        type: Sequelize.FLOAT(11, 2),
+        type: Sequelize.FLOAT(11,2),
       },
       fibers: {
-        type: Sequelize.FLOAT(11, 2),
+        type: Sequelize.FLOAT(11,2),
       },
       details: {
         type: Sequelize.JSON,
       },
-      creator_id: {
-        type: Sequelize.INTEGER,
+      creator_id:{
+        type: Sequelize.INTEGER
       },
-      creator_type: {
+      creator_type:{
         type: Sequelize.ENUM,
-        values: USER_CATEGORY_ARRAY,
+        values: USER_CATEGORY_ARRAY
       },
       created_at: {
         allowNull: false,

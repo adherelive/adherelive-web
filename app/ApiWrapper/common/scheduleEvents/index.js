@@ -64,7 +64,7 @@ class ScheduleEventWrapper extends BaseScheduleEvent {
       start_time,
       end_time,
       updated_at,
-      deleted_at,
+      deleted_at
     } = _data || {};
 
     return {
@@ -78,7 +78,7 @@ class ScheduleEventWrapper extends BaseScheduleEvent {
       start_time,
       end_time,
       updated_at,
-      deleted_at,
+      deleted_at
     };
   };
 

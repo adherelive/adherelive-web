@@ -1,35 +1,27 @@
 import { TABLE_COLUMN } from "../helper";
 
-export default (data) => {
-  const {
-    id = null,
-    medicineData = {},
-    doctors = {},
-    makeMedicinePublic,
-    currentPage = null,
-    getPrivateMedicines,
-    changeLoading,
-    searchText = "",
-    mapMedicineToPublic,
-    deleteMedicine,
-    getPublicMedicines,
-    currentTab,
-  } = data;
+export default data => {
+  const { id = null ,medicineData = {} , doctors={} , makeMedicinePublic , currentPage = null,
+  getPrivateMedicines,changeLoading , searchText='' , mapMedicineToPublic  , deleteMedicine ,
+  getPublicMedicines,
+  currentTab
+} = data;
+
 
   return {
     key: id,
     [TABLE_COLUMN.MEDICINE_NAME.dataIndex]: {
-      medicineData,
+      medicineData
     },
     [TABLE_COLUMN.CREATOR_NAME.dataIndex]: {
       medicineData,
-      doctors,
+      doctors
     },
     [TABLE_COLUMN.TYPE.dataIndex]: {
-      medicineData,
+      medicineData
     },
     [TABLE_COLUMN.UPDATED_AT.dataIndex]: {
-      medicineData,
+      medicineData
     },
     [TABLE_COLUMN.OPTIONS.dataIndex]: {
       medicineData,
@@ -41,7 +33,7 @@ export default (data) => {
       mapMedicineToPublic,
       deleteMedicine,
       getPublicMedicines,
-      currentTab,
-    },
+      currentTab
+    }
   };
 };

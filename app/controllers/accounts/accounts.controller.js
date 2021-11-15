@@ -29,12 +29,13 @@ class MobileAccountsController extends Controller {
         account_mobile_number,
         prefix,
         use_as_main = false,
-        upi_id = null,
+        upi_id = null
       } = req.body;
 
       if (use_as_main) {
-        const updatedDetails =
-          await accountDetailsService.updateInUseForAccount(userId);
+        const updatedDetails = await accountDetailsService.updateInUseForAccount(
+          userId
+        );
       }
 
       const accountData = {
@@ -46,7 +47,7 @@ class MobileAccountsController extends Controller {
         user_id: userId,
         prefix,
         in_use: use_as_main,
-        upi_id,
+        upi_id
       };
 
       let accountDetails = {};
@@ -69,11 +70,11 @@ class MobileAccountsController extends Controller {
         200,
         {
           users: {
-            [userWrapper.getId()]: userWrapper.getBasicInfo(),
+            [userWrapper.getId()]: userWrapper.getBasicInfo()
           },
           account_details: {
-            [accountWrapper.getId()]: accountWrapper.getBasicInfo(),
-          },
+            [accountWrapper.getId()]: accountWrapper.getBasicInfo()
+          }
         },
         "Account details updated successfully."
       );
@@ -87,62 +88,74 @@ class MobileAccountsController extends Controller {
     const { raiseSuccess, raiseClientError, raiseServerError } = this;
     try {
       const { userDetails: { userId } = {} } = req;
-      Logger.debug("6564546787654678787678965678", req.query);
+      Logger.debug("6564546787654678787678965678",req.query);
 
-      const { query: { all_accounts = 0, provider_id = null } = {} } = req;
+      const { query: { all_accounts = 0 ,  provider_id = null } = {} } = req;
       const get_all_accounts = all_accounts == 0 ? false : true;
 
       let accountDetails = {};
       let accountWrapperDetails = {};
       let accountWrapper = null;
 
-      if (provider_id) {
-        let providerApiData = {},
-          allUsers = {};
+      if(provider_id){
+        
+    
+          let providerApiData = {} , allUsers = {} ;
 
-        const providerWrapper = await ProviderWrapper(null, provider_id);
-        providerApiData[providerWrapper.getProviderId()] =
-          providerWrapper.getBasicInfo();
-        const providerUserId = await providerWrapper.getUserId();
-        const accountDetails =
-          (await accountDetailsService.getAllAccountsForUser(providerUserId)) ||
-          [];
+          const providerWrapper = await ProviderWrapper(null,provider_id);
+          providerApiData[providerWrapper.getProviderId()] = providerWrapper.getBasicInfo();
+          const providerUserId = await providerWrapper.getUserId();
+          const accountDetails = await accountDetailsService.getAllAccountsForUser(
+            providerUserId
+          ) || [];
 
-        const providerUserWrapper = await UserWrapper(null, providerUserId);
-        allUsers[providerUserWrapper.getId()] =
-          providerUserWrapper.getBasicInfo();
+          const providerUserWrapper = await UserWrapper(null,providerUserId);
+          allUsers[providerUserWrapper.getId()] = providerUserWrapper.getBasicInfo();
 
-        if (accountDetails && accountDetails.length) {
-          for (const account of accountDetails) {
-            accountWrapper = await AccountsWrapper(account);
-            accountWrapperDetails[accountWrapper.getId()] =
-              accountWrapper.getBasicInfo();
+          if (accountDetails && accountDetails.length) {
+            for (const account of accountDetails) {
+              accountWrapper = await AccountsWrapper(account);
+              accountWrapperDetails[
+                accountWrapper.getId()
+              ] = accountWrapper.getBasicInfo();
+            }
+          }else{
+            return raiseClientError(
+              res,
+              422,
+              {},
+              "No account Details Found"
+            );
           }
-        } else {
-          return raiseClientError(res, 422, {}, "No account Details Found");
-        }
 
-        const userWrapper = await UserWrapper(null, userId);
+          
 
-        allUsers[userWrapper.getId()] = userWrapper.getBasicInfo();
-        return raiseSuccess(
-          res,
-          200,
-          {
-            users: {
-              ...allUsers,
+          const userWrapper = await UserWrapper(null, userId);
+
+          allUsers[userWrapper.getId()] = userWrapper.getBasicInfo();
+          return raiseSuccess(
+            res,
+            200,
+            {
+              users: {
+                ...allUsers
+              },
+              account_details: {
+                ...accountWrapperDetails
+              },
+              providers:{
+                ...providerApiData
+              }
             },
-            account_details: {
-              ...accountWrapperDetails,
-            },
-            providers: {
-              ...providerApiData,
-            },
-          },
-          "Account details fetched successfully."
-        );
+            "Account details fetched successfully."
+          );
+
+      
+         
+        
       }
 
+      
       if (get_all_accounts) {
         accountDetails = await accountDetailsService.getAllAccountsForUser(
           userId
@@ -151,8 +164,9 @@ class MobileAccountsController extends Controller {
         if (accountDetails) {
           for (const account of accountDetails) {
             accountWrapper = await AccountsWrapper(account);
-            accountWrapperDetails[accountWrapper.getId()] =
-              accountWrapper.getBasicInfo();
+            accountWrapperDetails[
+              accountWrapper.getId()
+            ] = accountWrapper.getBasicInfo();
           }
         }
       } else {
@@ -163,8 +177,9 @@ class MobileAccountsController extends Controller {
 
         if (accountDetails) {
           accountWrapper = await AccountsWrapper(accountDetails);
-          accountWrapperDetails[accountWrapper.getId()] =
-            accountWrapper.getBasicInfo();
+          accountWrapperDetails[
+            accountWrapper.getId()
+          ] = accountWrapper.getBasicInfo();
         }
       }
 
@@ -175,11 +190,11 @@ class MobileAccountsController extends Controller {
         200,
         {
           users: {
-            [userWrapper.getId()]: userWrapper.getBasicInfo(),
+            [userWrapper.getId()]: userWrapper.getBasicInfo()
           },
           account_details: {
-            ...accountWrapperDetails,
-          },
+            ...accountWrapperDetails
+          }
         },
         "Account details fetched successfully."
       );
@@ -208,8 +223,9 @@ class MobileAccountsController extends Controller {
         if (accountDetails) {
           for (const account of accountDetails) {
             accountWrapper = await AccountsWrapper(account);
-            accountWrapperDetails[accountWrapper.getId()] =
-              accountWrapper.getBasicInfo();
+            accountWrapperDetails[
+              accountWrapper.getId()
+            ] = accountWrapper.getBasicInfo();
           }
         }
       } else {
@@ -221,8 +237,9 @@ class MobileAccountsController extends Controller {
 
         if (accountDetails) {
           accountWrapper = await AccountsWrapper(accountDetails);
-          accountWrapperDetails[accountWrapper.getId()] =
-            accountWrapper.getBasicInfo();
+          accountWrapperDetails[
+            accountWrapper.getId()
+          ] = accountWrapper.getBasicInfo();
         }
       }
 
@@ -231,8 +248,8 @@ class MobileAccountsController extends Controller {
         200,
         {
           account_details: {
-            ...accountWrapperDetails,
-          },
+            ...accountWrapperDetails
+          }
         },
         "Account details added successfully."
       );
@@ -257,8 +274,9 @@ class MobileAccountsController extends Controller {
         );
       }
 
-      const deleteAccountDetails =
-        await accountDetailsService.deleteAccountDetails(id);
+      const deleteAccountDetails = await accountDetailsService.deleteAccountDetails(
+        id
+      );
       let accountDetails = {};
       let accountWrapperDetails = {};
       let accountWrapper = null;
@@ -267,21 +285,23 @@ class MobileAccountsController extends Controller {
       );
 
       if (accountDetails) {
-        Logger.debug("234543453245", accountDetails);
+        Logger.debug("234543453245",accountDetails);
         for (const account of accountDetails) {
           accountWrapper = await AccountsWrapper(account);
-          accountWrapperDetails[accountWrapper.getId()] =
-            accountWrapper.getBasicInfo();
+          accountWrapperDetails[
+            accountWrapper.getId()
+          ] = accountWrapper.getBasicInfo();
         }
       }
+
 
       return raiseSuccess(
         res,
         200,
         {
           account_details: {
-            ...accountWrapperDetails,
-          },
+            ...accountWrapperDetails
+          }
         },
         "Account details deleted successfully."
       );

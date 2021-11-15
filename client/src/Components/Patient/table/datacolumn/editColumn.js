@@ -7,22 +7,23 @@ class editPatientColumn extends Component {
     super(props);
   }
 
-  componentDidMount() {}
+  componentDidMount(){}
 
   handleEditPatientDrawer = (e) => {
-    e.preventDefault();
+      e.preventDefault();
+      
+      const {openEditPatientDrawer,patientData,carePlanData} = this.props;
+      openEditPatientDrawer({patientData,carePlanData});
+  }
 
-    const { openEditPatientDrawer, patientData, carePlanData } = this.props;
-    openEditPatientDrawer({ patientData, carePlanData });
-  };
-
-  render() {
-    return (
-      <div className="edit-patient" onClick={this.handleEditPatientDrawer}>
+  render(){
+      return (
+        <div className="edit-patient" onClick={this.handleEditPatientDrawer}>
         <img src={edit_image} className="edit-patient-icon" />
       </div>
-    );
+      )
   }
+
 }
 
 export default injectIntl(editPatientColumn);

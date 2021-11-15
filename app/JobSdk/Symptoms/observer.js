@@ -1,4 +1,4 @@
-import { EVENT_STATUS } from "../../../constant";
+import {EVENT_STATUS} from "../../../constant";
 import CreateJob from "./createJob";
 
 class SymptomsObserver {

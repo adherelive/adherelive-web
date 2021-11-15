@@ -1,11 +1,11 @@
-"use strict";
+'use strict';
 
-import { DB_TABLES } from "../constant";
-import { TABLE_NAME } from "../app/models/careplanTemplate";
-import { TABLE_NAME as treatmentTableName } from "../app/models/treatments";
-import { TABLE_NAME as severityTableName } from "../app/models/severity";
-import { TABLE_NAME as conditionTableName } from "../app/models/conditions";
-import { TABLE_NAME as userTableName } from "../app/models/users";
+import {DB_TABLES} from "../constant";
+import {TABLE_NAME} from "../app/models/careplanTemplate";
+import {TABLE_NAME as treatmentTableName} from "../app/models/treatments";
+import {TABLE_NAME as severityTableName} from "../app/models/severity";
+import {TABLE_NAME as conditionTableName} from "../app/models/conditions";
+import {TABLE_NAME as userTableName} from "../app/models/users";
 
 module.exports = {
   up: (queryInterface, Sequelize) => {
@@ -14,7 +14,7 @@ module.exports = {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
-        type: Sequelize.INTEGER,
+        type: Sequelize.INTEGER
       },
       name: {
         type: Sequelize.STRING,
@@ -65,20 +65,20 @@ module.exports = {
       },
       created_at: {
         allowNull: false,
-        type: Sequelize.DATE,
+        type: Sequelize.DATE
       },
       updated_at: {
         allowNull: false,
-        type: Sequelize.DATE,
+        type: Sequelize.DATE
       },
       deleted_at: {
         allowNull: true,
-        type: Sequelize.DATE,
-      },
+        type: Sequelize.DATE
+      }
     });
   },
 
   down: (queryInterface, Sequelize) => {
     return queryInterface.dropTable(TABLE_NAME);
-  },
+  }
 };

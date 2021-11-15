@@ -1,36 +1,31 @@
 import { TABLE_COLUMN, formatAppointmentTableData } from "../helper";
 
-export default (data) => {
-  const {
-    id,
-    openResponseDrawer,
-    openEditDrawer,
-    formatMessage,
-    canViewDetails = false,
-  } = data;
+export default data => {
+  const { id, openResponseDrawer, openEditDrawer, formatMessage , canViewDetails = false } = data;
   const formattedData = formatAppointmentTableData(data);
-  const { vitalData, vitalTemplateData } = formattedData || {};
+  const { vitalData, vitalTemplateData } =
+    formattedData || {};
   return {
     key: id,
     [TABLE_COLUMN.VITAL.dataIndex]: {
-      vitalTemplateData,
+      vitalTemplateData
     },
     [TABLE_COLUMN.TAKEN.dataIndex]: {
-      vitalData,
+      vitalData
     },
     [TABLE_COLUMN.DESCRIPTION.dataIndex]: {
-      vitalData,
+      vitalData
     },
     [TABLE_COLUMN.TIMELINE.dataIndex]: {
       id,
       openResponseDrawer,
-      formatMessage,
+      formatMessage
     },
     [TABLE_COLUMN.EDIT.dataIndex]: {
       id,
       openEditDrawer,
       formatMessage,
-      canViewDetails,
+      canViewDetails
     },
   };
 };

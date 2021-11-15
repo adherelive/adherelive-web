@@ -160,7 +160,9 @@ class LongTerm {
         event_id: medicationId,
         details,
         //   status: EVENT_STATUS.SCHEDULED,
-        start_date: moment().utc().toISOString(),
+        start_date: moment()
+          .utc()
+          .toISOString(),
         end_date: null,
         when_to_take,
         participants,
@@ -225,7 +227,9 @@ class LongTerm {
         event_id: vitalId,
         event_type: EVENT_TYPE.VITALS,
         critical: false,
-        start_date: moment().utc().toISOString(),
+        start_date: moment()
+          .utc()
+          .toISOString(),
         end_date: null,
         details: vitals.getBasicInfo(),
         participants,
@@ -274,7 +278,9 @@ class LongTerm {
         patient_id: patientUserId,
         type: EVENT_TYPE.DIET,
         event_id: dietId,
-        start_date: moment().utc().toISOString(),
+        start_date: moment()
+          .utc()
+          .toISOString(),
         end_date: null,
         participants,
         actor,
@@ -319,7 +325,9 @@ class LongTerm {
         patient_id: patientUserId,
         type: EVENT_TYPE.WORKOUT,
         event_id: workoutId,
-        start_date: moment().utc().toISOString(),
+        start_date: moment()
+          .utc()
+          .toISOString(),
         end_date: null,
         participants,
         actor,

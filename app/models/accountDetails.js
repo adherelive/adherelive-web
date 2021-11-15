@@ -5,78 +5,78 @@ export const TABLE_NAME = "account_details";
 
 export const ACCOUNT_TYPES = {
   SAVINGS: "savings",
-  CURRENT: "current",
+  CURRENT: "current"
 };
 
-export const db = (database) => {
+export const db = database => {
   database.define(
     TABLE_NAME,
     {
       id: {
         type: DataTypes.INTEGER,
         primaryKey: true,
-        autoIncrement: true,
+        autoIncrement: true
       },
       user_id: {
         type: DataTypes.INTEGER,
         allowNull: false,
         references: {
           model: {
-            tableName: userTableName,
+            tableName: userTableName
           },
-          key: "id",
-        },
+          key: "id"
+        }
       },
       customer_name: {
         type: DataTypes.STRING(100),
-        allowNull: false,
+        allowNull: false
       },
       account_number: {
         type: DataTypes.STRING,
-        allowNull: false,
+        allowNull: false
       },
       upi_id: {
         type: DataTypes.STRING,
-        allowNull: true,
+        allowNull: true
       },
       ifsc_code: {
         type: DataTypes.STRING,
-        allowNull: false,
+        allowNull: false
       },
       account_type: {
         type: DataTypes.ENUM,
         values: [ACCOUNT_TYPES.SAVINGS, ACCOUNT_TYPES.CURRENT],
-        allowNull: false,
+        allowNull: false
       },
       account_mobile_number: {
         type: DataTypes.STRING,
-        allow_null: false,
+        allow_null: false
       },
       prefix: {
         type: DataTypes.STRING,
-        allowNull: true,
+        allowNull: true
       },
       in_use: {
         type: DataTypes.BOOLEAN,
-        defaultValue: false,
+        defaultValue: false
       },
       razorpay_account_id: {
         type: DataTypes.STRING,
-        allowNull: true,
+        allowNull: true
       },
       razorpay_account_name: {
         type: DataTypes.STRING,
-        allowNull: true,
-      },
+        allowNull: true
+      }
     },
     {
       underscored: true,
-      paranoid: true,
+      paranoid: true
     }
   );
 };
 
-export const associate = (database) => {
+export const associate = database => {
   // database.models[TABLE_NAME].belongsTo(database.models[userTableName], {
   //     foreignKey:"user_id",
   //     targetKey:"id"

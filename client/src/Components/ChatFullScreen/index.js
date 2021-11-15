@@ -10,6 +10,8 @@ import { message } from "antd";
 import messages from "./messages";
 import NotificationDrawer from "../../Containers/Drawer/notificationDrawer";
 
+
+
 class ChatFullScreen extends Component {
   constructor(props) {
     super(props);
@@ -19,25 +21,23 @@ class ChatFullScreen extends Component {
       patientUserId: 1,
       patientId: 1,
       placeCall: false,
-      replyMessadeId: null,
+      replyMessadeId: null
     };
   }
 
   componentDidMount() {
     let {
       match: {
-        params: { patient_id },
+        params: { patient_id }
       },
       doctors = {},
       patients = {},
-      authenticated_user = 1,
+      authenticated_user = 1
     } = this.props;
 
     let doctorUserId = ""; //user_id of doctor
-    let {
-      basic_info: { user_id: patientUserId = "" } = {},
-      user_role_id: patientRoleId = null,
-    } = patients[patient_id] || {};
+    let { basic_info: { user_id: patientUserId = "" } = {} , user_role_id  : patientRoleId= null  } =
+      patients[patient_id] || {};
     // for (let doc of Object.values(doctors)) {
     //   let {
     //     basic_info: { user_id, id = 1 }
@@ -47,7 +47,7 @@ class ChatFullScreen extends Component {
     //   }
     // }
 
-    const { auth_role: doctorRoleId = null } = this.props;
+    const {auth_role : doctorRoleId = null  } = this.props ;
     // const roomId = getRoomId(doctorUserId, patientUserId);
 
     const roomId = getRoomId(doctorRoleId, patientRoleId);
@@ -56,74 +56,65 @@ class ChatFullScreen extends Component {
       doctorUserId,
       roomId,
       patientUserId: patientUserId,
-      patientId: patient_id,
+      patientId: patient_id
     });
+
+
   }
 
-  async componentDidUpdate(prevProps, prevState) {
-    const {
-      notification_redirect: { patient_id = null } = {},
-      resetNotificationRedirect,
-    } = this.props;
-    const {
-      notification_redirect: { patient_id: prev_patient_id = null } = {},
-    } = prevProps;
-    if (patient_id && patient_id !== prev_patient_id) {
+  async componentDidUpdate(prevProps,prevState){
+    const {notification_redirect : {patient_id = null} = {}  , resetNotificationRedirect } =this.props;
+    const {notification_redirect : { patient_id : prev_patient_id = null } = {} } = prevProps ; 
+    if(patient_id && patient_id !== prev_patient_id){
       await this.handleRedirectUpdate();
       resetNotificationRedirect();
     }
   }
 
   handleRedirectUpdate = () => {
-    const {
-      notification_redirect: { patient_id = null } = {},
-      patients = {},
-      authenticated_user = 1,
-      doctors = {},
-      resetNotificationRedirect,
-    } = this.props;
+      const {notification_redirect : {patient_id = null} = {} ,patients = {} , authenticated_user = 1 , doctors = {} , resetNotificationRedirect } =this.props;
+    
+      let doctorUserId = null;
 
-    let doctorUserId = null;
+      const { basic_info : { user_id : patientUserId= null  } ={} } = patients[patient_id] || {};
 
-    const { basic_info: { user_id: patientUserId = null } = {} } =
-      patients[patient_id] || {};
-
-    for (let doc of Object.values(doctors)) {
-      let {
-        basic_info: { user_id, id = 1 },
-      } = doc;
-      if (parseInt(user_id) === parseInt(authenticated_user)) {
-        doctorUserId = user_id;
+      for (let doc of Object.values(doctors)) {
+        let {
+          basic_info: { user_id, id = 1 }
+        } = doc;
+        if (parseInt(user_id) === parseInt(authenticated_user)) {
+          doctorUserId = user_id;
+        }
       }
-    }
 
-    const roomId = getRoomId(doctorUserId, patientUserId);
+      const roomId = getRoomId(doctorUserId, patientUserId);
 
-    this.setState({
-      doctorUserId,
-      roomId,
-      patientUserId: patientUserId,
-      patientId: patient_id,
-    });
-  };
+      this.setState({
+          doctorUserId,
+          roomId,
+          patientUserId: patientUserId,
+          patientId: patient_id
+      });
+ 
+  }
 
   updateReplyMessageId = (newId = null) => {
     const { replyMessadeId: currentId } = this.state;
 
     if (currentId !== newId && newId === null && currentId !== null) {
       this.setState({
-        replyMessadeId: newId,
+        replyMessadeId: newId
       });
     } else if (currentId !== newId && newId !== null && currentId === null) {
       this.setState({
-        replyMessadeId: newId,
+        replyMessadeId: newId
       });
     }
   };
 
   openVideoChatTab = async () => {
     const { roomId = "" } = this.state;
-
+    
     await this.props.getAllFeatures();
 
     const videoCallBlocked = this.checkVideoCallIsBlocked();
@@ -139,7 +130,7 @@ class ChatFullScreen extends Component {
     );
   };
 
-  formatMessage = (data) => this.props.intl.formatMessage(data);
+  formatMessage = data => this.props.intl.formatMessage(data);
 
   checkVideoCallIsBlocked = () => {
     const { features_mappings = {} } = this.props;
@@ -157,7 +148,7 @@ class ChatFullScreen extends Component {
     return videoCallBlocked;
   };
 
-  getFeatureId = (featureName) => {
+  getFeatureId = featureName => {
     const { features = {} } = this.props;
     const featuresIds = Object.keys(features);
 
@@ -175,26 +166,25 @@ class ChatFullScreen extends Component {
   getOtherUserCategoryId = () => {
     const {
       match: {
-        params: { patient_id = null },
-      },
+        params: { patient_id = null }
+      }
     } = this.props;
     return patient_id;
   };
 
-  setPatientId = (patient_id) => () => {
+  setPatientId = patient_id => () => {
     const { doctorUserId } = this.state;
-
-    const { patients = {}, auth_role: doctorRoleId = null } = this.props;
-    const {
-      basic_info: { user_id: patientUserId = "" } = {},
-      user_role_id: patientRoleId = null,
-    } = patients[patient_id];
+    
+    const { patients = {} , auth_role : doctorRoleId = null  } = this.props;
+    const { basic_info: { user_id: patientUserId = "" } = {} , user_role_id : patientRoleId = null } = patients[
+      patient_id
+    ];
 
     const roomId = getRoomId(doctorRoleId, patientRoleId);
     this.setState({
       patientUserId: patientUserId,
       patientId: patient_id,
-      roomId,
+      roomId
     });
   };
 
@@ -221,16 +211,11 @@ class ChatFullScreen extends Component {
   render() {
     let { roomId, patientId, doctorUserId, replyMessadeId } = this.state;
 
-    let { patients = {}, getDoctorConsultations } = this.props;
+    let { patients = {}, getDoctorConsultations  } = this.props;
 
     const {
-      basic_info: {
-        first_name = "",
-        middle_name = "",
-        last_name = "",
-        full_name = "",
-      } = {},
-      details: { profile_pic: patientDp = "" } = {},
+      basic_info: { first_name = "", middle_name = "", last_name = "", full_name = "" } = {},
+      details: { profile_pic: patientDp = "" } = {}
     } = patients[patientId] || {};
     return (
       <div className="chat-screen-container">
@@ -260,6 +245,7 @@ class ChatFullScreen extends Component {
               patientId={patientId}
             />
           </div>
+
         </Fragment>
       </div>
     );

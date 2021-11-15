@@ -4,19 +4,15 @@ import { connect } from "react-redux";
 import { getAllFeatures } from "../../modules/featuresMappings";
 import { resetNotificationRedirect } from "../../modules/notificationRedirect";
 
-const mapStateToProps = (state) => {
+const mapStateToProps = state => {
   const {
-    auth: {
-      authPermissions = [],
-      authenticated_user = 1,
-      auth_role = null,
-    } = {},
+    auth: { authPermissions = [], authenticated_user = 1 , auth_role = null } = {},
     users = {},
     patients = {},
     doctors = {},
     features = {},
     features_mappings = {},
-    notification_redirect = {},
+    notification_redirect = {}
   } = state;
   return {
     users,
@@ -27,14 +23,15 @@ const mapStateToProps = (state) => {
     features,
     features_mappings,
     notification_redirect,
-    auth_role,
+    auth_role
   };
 };
 
-const mapDispatchToProps = (dispatch) => {
+const mapDispatchToProps = dispatch => {
   return {
     getAllFeatures: () => dispatch(getAllFeatures()),
-    resetNotificationRedirect: () => dispatch(resetNotificationRedirect()),
+    resetNotificationRedirect:() => dispatch(resetNotificationRedirect())
+
   };
 };
 

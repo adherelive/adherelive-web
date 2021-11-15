@@ -13,8 +13,8 @@ class Scheduler {
         status: { $in: ["pending"] },
         startTime: {
           $gt: startTime,
-          $lte: checkDateTime,
-        },
+          $lte: checkDateTime
+        }
       });
       return schedules;
     } catch (error) {
@@ -28,8 +28,8 @@ class Scheduler {
       const schedules = await schedulerModule.find({
         status: { $in: ["pending", "started"] },
         endTime: {
-          $lte: currentDateTime,
-        },
+          $lte: currentDateTime
+        }
       });
       return schedules;
     } catch (error) {
@@ -71,7 +71,6 @@ class Scheduler {
       throw error;
     }
   }
-
   async addScheduledJob(data) {
     try {
     } catch (error) {

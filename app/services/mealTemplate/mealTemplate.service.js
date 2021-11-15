@@ -40,14 +40,16 @@ class MealTemplatesService {
     try {
       const mealTemplate = await Database.getModel(TABLE_NAME).findOne({
         where: data,
-        include: [Database.getModel(foodtemDetailsTableName)],
+        include: [
+          Database.getModel(foodtemDetailsTableName),
+        ],
       });
 
       /* nested raw true is not allowed by sequelize
-              Links:
-              https://github.com/sequelize/sequelize/issues/3897 (closed)
-              https://github.com/sequelize/sequelize/issues/5193 (open)
-            */
+      Links:
+      https://github.com/sequelize/sequelize/issues/3897 (closed)
+      https://github.com/sequelize/sequelize/issues/5193 (open)
+      */
       return JSON.parse(JSON.stringify(mealTemplate));
     } catch (error) {
       throw error;
@@ -57,8 +59,8 @@ class MealTemplatesService {
   update = async ({ meal = {}, foodItemDetails = [], id }) => {
     const transaction = await Database.initTransaction();
     try {
-      // update name for template if needed
-      await Database.getModel(TABLE_NAME).update(meal, {
+       // update name for template if needed
+       await Database.getModel(TABLE_NAME).update(meal, {
         where: {
           id,
         },
@@ -67,12 +69,12 @@ class MealTemplatesService {
       });
 
       // check for existing mappings wrt food items and new ones
-      const existingMealTemplate = (await this.findOne({ id })) || null;
+      const existingMealTemplate = (await this.findOne({id})) || null;
 
       const { food_item_details = [] } = existingMealTemplate || {};
 
       const existingFoodItemDetails =
-        food_item_details.map((foodItemDetail) => foodItemDetail.id) || [];
+      food_item_details.map((foodItemDetail) => foodItemDetail.id) || [];
 
       let newFoodItemDetails = [];
       for (let index = 0; index < foodItemDetails.length; index++) {
@@ -117,23 +119,26 @@ class MealTemplatesService {
     }
   };
 
-  getByData = async (data) => {
+  getByData = async data => {
     try {
       return await Database.getModel(TABLE_NAME).findOne({
-        where: data,
-        raw: true,
-      });
-    } catch (error) {
-      throw error;
+            where: data,
+            raw: true
+        });
+    } catch(error) {
+        throw error;
     }
   };
 
+  
   findAndCountAll = async ({ where, order = DEFAULT_ORDER, attributes }) => {
     try {
       return await Database.getModel(TABLE_NAME).findAndCountAll({
         where,
         order,
-        include: [Database.getModel(foodtemDetailsTableName)],
+        include: [
+          Database.getModel(foodtemDetailsTableName),
+        ],
         attributes,
         raw: true,
       });
@@ -142,9 +147,11 @@ class MealTemplatesService {
     }
   };
 
+  
   delete = async ({ template_id = null }) => {
     const transaction = await Database.initTransaction();
     try {
+
       await Database.getModel(mealTemplateMappingsTableName).destroy({
         where: {
           meal_template_id: template_id,
@@ -154,7 +161,7 @@ class MealTemplatesService {
 
       await Database.getModel(TABLE_NAME).destroy({
         where: {
-          id: template_id,
+          id:template_id,
         },
         transaction,
       });

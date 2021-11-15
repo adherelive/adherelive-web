@@ -1,9 +1,9 @@
-"use strict";
+'use strict';
 
-import { TABLE_NAME } from "../app/models/doctorQualifications";
-import { TABLE_NAME as collegeTableName } from "../app/models/college";
-import { TABLE_NAME as doctorTableName } from "../app/models/doctors";
-import { TABLE_NAME as degreeTableName } from "../app/models/degree";
+import {TABLE_NAME} from "../app/models/doctorQualifications";
+import {TABLE_NAME as collegeTableName} from "../app/models/college";
+import {TABLE_NAME as doctorTableName} from "../app/models/doctors";
+import {TABLE_NAME as degreeTableName} from "../app/models/degree";
 
 module.exports = {
   up: (queryInterface, Sequelize) => {
@@ -12,7 +12,7 @@ module.exports = {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
-        type: Sequelize.INTEGER,
+        type: Sequelize.INTEGER
       },
       doctor_id: {
         type: Sequelize.INTEGER,
@@ -21,49 +21,49 @@ module.exports = {
           model: {
             tableName: doctorTableName,
           },
-          key: "id",
-        },
+          key: 'id'
+        }
       },
       degree_id: {
         type: Sequelize.INTEGER,
         allowNull: false,
         references: {
           model: {
-            tableName: degreeTableName,
+            tableName: degreeTableName
           },
-          key: "id",
-        },
+          key: "id"
+        }
       },
       college_id: {
         type: Sequelize.INTEGER,
         allowNull: false,
         references: {
           model: {
-            tableName: collegeTableName,
+            tableName: collegeTableName
           },
-          key: "id",
-        },
+          key: "id"
+        }
       },
       year: {
         type: Sequelize.INTEGER,
-        allowNull: false,
+        allowNull: false
       },
       created_at: {
         allowNull: false,
-        type: Sequelize.DATE,
+        type: Sequelize.DATE
       },
       updated_at: {
         allowNull: false,
-        type: Sequelize.DATE,
+        type: Sequelize.DATE
       },
       deleted_at: {
         allowNull: true,
-        type: Sequelize.DATE,
-      },
+        type: Sequelize.DATE
+      }
     });
-  },
+    },
 
   down: (queryInterface, Sequelize) => {
     return queryInterface.dropTable(TABLE_NAME);
-  },
+  }
 };

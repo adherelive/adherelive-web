@@ -53,7 +53,7 @@ class MUserWrapper extends BaseUser {
     const { getCategory } = this;
     try {
       const permissionsData = await userPermissionService.getPermissionsByData({
-        category: getCategory(),
+        category: getCategory()
       });
       let permission_ids = [];
       let permissionData = [];

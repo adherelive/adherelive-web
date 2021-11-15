@@ -35,7 +35,7 @@ export const syncMedicationReminderStatus = async (
     const mEventDetails = await eventService.update(eventDetails, event_id);
 
     const updatedEventDetails = await eventService.getEventByData({
-      id: event_id,
+      id: event_id
     });
 
     const eventApiDetails = await EventWrapper(updatedEventDetails);
@@ -46,12 +46,7 @@ export const syncMedicationReminderStatus = async (
   }
 };
 
-export const syncVitalsResponseData = async (
-  event_data,
-  createdTime,
-  res,
-  userRoleId
-) => {
+export const syncVitalsResponseData = async (event_data, createdTime, res, userRoleId) => {
   try {
     const eventService = new EventService();
     const { vital_id = null, data = {} } = event_data;
@@ -67,7 +62,7 @@ export const syncVitalsResponseData = async (
     console.log(`vital ${vital.getVitalId()} ${vital.getVitalTemplateId()}`);
 
     const vitalTemplate = await VitalTemplateWrapper({
-      id: vital.getVitalTemplateId(),
+      id: vital.getVitalTemplateId()
     });
 
     console.log(`event.getStatus() ${event.getStatus()}`);
@@ -76,16 +71,16 @@ export const syncVitalsResponseData = async (
 
     prevResponse.unshift({
       value: rest,
-      createdTime,
+      createdTime
     });
 
     const updateEvent = await eventService.update(
       {
         details: {
           ...event.getDetails(),
-          response: prevResponse,
+          response: prevResponse
         },
-        status: EVENT_STATUS.COMPLETED,
+        status: EVENT_STATUS.COMPLETED
       },
       event_id
     );
@@ -110,7 +105,7 @@ export const syncVitalsResponseData = async (
     );
 
     const updatedEventDetails = await eventService.getEventByData({
-      id: event_id,
+      id: event_id
     });
 
     const eventApiDetails = await EventWrapper(updatedEventDetails);
@@ -118,7 +113,7 @@ export const syncVitalsResponseData = async (
     return {
       syncEventApiDetails: eventApiDetails,
       vitalApiDetails: vital,
-      vitalTemplate,
+      vitalTemplate
     };
   } catch (error) {
     console.log("$$$$$$$$$$$$ error: ", error);

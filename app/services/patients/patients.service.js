@@ -3,9 +3,9 @@ import Database from "../../../libs/mysql";
 import { Op } from "sequelize";
 import { TABLE_NAME } from "../../models/patients";
 import { TABLE_NAME as userTableName } from "../../models/users";
-import { TABLE_NAME as careplanTableName } from "../../models/carePlan";
+import {TABLE_NAME as careplanTableName} from "../../models/carePlan";
 import Log from "../../../libs/log";
-import { TABLE_NAME as doctorTableName } from "../../models/doctors";
+import {TABLE_NAME as doctorTableName} from "../../models/doctors";
 
 const Logger = new Log("WEB > PATIENTS > CONTROLLER");
 
@@ -40,9 +40,9 @@ class PatientsService {
       // todo: change to update when sign-in flow done for mobile
       const patient = await Database.getModel(TABLE_NAME).update(data, {
         where: {
-          id,
+          id
         },
-        transaction,
+        transaction
       });
       await transaction.commit();
       return patient;
@@ -52,11 +52,11 @@ class PatientsService {
     }
   };
 
-  addPatient = async (data) => {
+  addPatient = async data => {
     const transaction = await Database.initTransaction();
     try {
       const patient = await Database.getModel(TABLE_NAME).create(data, {
-        transaction,
+        transaction
       });
       await transaction.commit();
       return patient;
@@ -66,11 +66,11 @@ class PatientsService {
     }
   };
 
-  getPatientByData = async (data) => {
+  getPatientByData = async data => {
     try {
       const patient = await Database.getModel(TABLE_NAME).findAll({
         where: data,
-        include: [Database.getModel(userTableName)],
+        include: [Database.getModel(userTableName)]
       });
       return patient;
     } catch (error) {
@@ -78,15 +78,15 @@ class PatientsService {
     }
   };
 
-  getPatientById = async (data) => {
+  getPatientById = async data => {
     try {
       const patient = await Database.getModel(TABLE_NAME).findOne({
         where: data,
         include: [
           {
-            model: Database.getModel(userTableName),
-          },
-        ],
+            model: Database.getModel(userTableName)
+          }
+        ]
       });
       return patient;
     } catch (error) {
@@ -94,17 +94,17 @@ class PatientsService {
     }
   };
 
-  getPatientByIdForPatientSearch = async (id) => {
+  getPatientByIdForPatientSearch = async id => {
     try {
       const patient = await Database.getModel(TABLE_NAME).findOne({
         where: {
-          id,
+          id
         },
         include: [
           {
-            model: Database.getModel(userTableName),
-          },
-        ],
+            model: Database.getModel(userTableName)
+          }
+        ]
       });
       Logger.debug("GETPDATA--------------->", id);
       Logger.debug("PATIENTTTTTTTT====>", patient);
@@ -114,12 +114,12 @@ class PatientsService {
     }
   };
 
-  getPatientByUserId = async (user_id) => {
+  getPatientByUserId = async user_id => {
     try {
       const patient = await Database.getModel(TABLE_NAME).findOne({
         where: {
-          user_id,
-        },
+          user_id
+        }
       });
       return patient;
     } catch (error) {
@@ -154,33 +154,33 @@ class PatientsService {
               [Op.or]: [
                 {
                   first_name: {
-                    [Op.like]: `%${firstName}%`,
-                  },
+                    [Op.like]: `%${firstName}%`
+                  }
                 },
                 {
                   middle_name: {
-                    [Op.like]: `%${middleName}%`,
-                  },
+                    [Op.like]: `%${middleName}%`
+                  }
                 },
                 {
                   last_name: {
-                    [Op.like]: `%${lastName}%`,
-                  },
-                },
-              ],
+                    [Op.like]: `%${lastName}%`
+                  }
+                }
+              ]
             },
             {
               id: {
-                [Op.in]: patientIdsForThisDoc,
-              },
-            },
-          ],
+                [Op.in]: patientIdsForThisDoc
+              }
+            }
+          ]
         },
         include: [
           {
-            model: Database.getModel(userTableName),
-          },
-        ],
+            model: Database.getModel(userTableName)
+          }
+        ]
       });
 
       return patient;
@@ -196,21 +196,21 @@ class PatientsService {
           [Op.and]: [
             {
               mobile_number: {
-                [Op.like]: `${value}%`,
-              },
+                [Op.like]: `${value}%`
+              }
             },
             {
               id: {
-                [Op.in]: userIdsForForPatientForDoc,
-              },
-            },
-          ],
+                [Op.in]: userIdsForForPatientForDoc
+              }
+            }
+          ]
         },
         include: [
           {
-            model: Database.getModel(TABLE_NAME),
-          },
-        ],
+            model: Database.getModel(TABLE_NAME)
+          }
+        ]
       });
       return user;
     } catch (err) {
@@ -218,27 +218,32 @@ class PatientsService {
     }
   };
 
-  getPaginatedPatients = async ({ doctor_id, order }) => {
+  getPaginatedPatients = async ({doctor_id, order}) => {
+
     const query = `
     SELECT cp.doctor_id, cp.patient_id FROM ${careplanTableName} AS cp
     
     `;
     try {
       return await Database.getModel(TABLE_NAME).findAll({
-        attributes: ["each", []],
+        attributes: [
+          "each",
+          []
+        ],
         include: [
           {
             model: Database.getModel(careplanTableName),
             where: {
-              "$care_plan.doctor_id$": doctor_id,
+              '$care_plan.doctor_id$': doctor_id,
             },
           },
         ],
-        having: Sequelize.literal(``),
+        having:Sequelize.literal(``),
         order: [["first_name", "ASC"]],
         raw: true,
       });
-    } catch (error) {
+
+    } catch(error) {
       throw error;
     }
   };

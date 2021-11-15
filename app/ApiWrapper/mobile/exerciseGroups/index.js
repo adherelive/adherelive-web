@@ -28,12 +28,7 @@ class ExerciseGroupWrapper extends BaseExerciseGroup {
   };
 
   getReferenceInfo = async () => {
-    const {
-      getId,
-      getExerciseDetails,
-      getWorkoutExerciseGroupMappings,
-      getAllInfo,
-    } = this;
+    const { getId, getExerciseDetails, getWorkoutExerciseGroupMappings, getAllInfo } = this;
 
     // get exercise details
     // let allExerciseGroup = {};
@@ -45,8 +40,11 @@ class ExerciseGroupWrapper extends BaseExerciseGroup {
       const exerciseDetail = await ExerciseDetailWrapper({
         data: exerciseDetails,
       });
-      const { exercise_details, repetitions, exercises } =
-        await exerciseDetail.getReferenceInfo();
+      const {
+        exercise_details,
+        repetitions,
+        exercises,
+      } = await exerciseDetail.getReferenceInfo();
 
       // const {id, workout_id, exercise_group_id, time} = getWorkoutExerciseGroupMappings();
 

@@ -41,11 +41,14 @@ class TransactionController extends Controller {
     try {
       const {
         body: { payment_product_id, currency, isUpi = false },
-        userDetails: { userRoleId, userData: { category } = {} } = {},
+        userDetails: {
+          userRoleId,
+          userData: { category } = {}
+        } = {}
       } = req;
 
       const paymentProduct = await PaymentProductWrapper({
-        id: payment_product_id,
+        id: payment_product_id
       });
 
       const transactionService = new TransactionService();
@@ -62,26 +65,26 @@ class TransactionController extends Controller {
           requestor_id: requestorId,
           requestor_type: requestorType,
           payee_id: userRoleId,
-          payee_type: category,
+          payee_type: category
           // transaction_response: {
           //     order_id
           // },
         });
 
         const transactions = await TransactionWrapper({
-          data: generateTransaction,
+          data: generateTransaction
         });
 
         const requestor_id = transactions.getRequestorId();
-        const requestorRole =
-          (await userRolesService.findOne({
-            where: { id: requestor_id },
-            attributes: ["user_identity"],
-          })) || null;
+        const requestorRole = await userRolesService.findOne({
+          where: {id: requestor_id},
+          attributes: ["user_identity"]
+        }) || null;
 
-        const { user_identity = null } = requestorRole || {};
-        const accountDetails =
-          await accountDetailService.getCurrentAccountByUserId(user_identity);
+        const { user_identity = null} = requestorRole || {};
+        const accountDetails = await accountDetailService.getCurrentAccountByUserId(
+          user_identity
+        );
         const accountDetialsWrapper = await AccountDetailsWrapper(
           accountDetails
         );
@@ -92,13 +95,13 @@ class TransactionController extends Controller {
           200,
           {
             payment_products: {
-              [paymentProduct.getId()]: paymentProduct.getBasicInfo(),
+              [paymentProduct.getId()]: paymentProduct.getBasicInfo()
             },
             transactions: {
-              [transactions.getId()]: transactions.getBasicInfo(),
+              [transactions.getId()]: transactions.getBasicInfo()
             },
             transaction_id: transactions.getId(),
-            upi_id,
+            upi_id
           },
           "UPI Order created successfully"
         );
@@ -108,15 +111,15 @@ class TransactionController extends Controller {
         const razorpayService = new RazorpayService();
         const order = await razorpayService.createOrder({
           currency: process.config.app.default_currency,
-          amount: paymentProduct.getAmount() * 100,
+          amount: paymentProduct.getAmount() * 100
         });
 
         const { error = null, id } = order || {};
         if (!error) {
           // transaction create here
 
-          const generateTransaction =
-            await transactionService.createTransaction({
+          const generateTransaction = await transactionService.createTransaction(
+            {
               payment_product_id,
               transaction_id: generateTransactionId(userRoleId),
               mode: CHECKOUT,
@@ -126,27 +129,28 @@ class TransactionController extends Controller {
               payee_id: userRoleId,
               payee_type: category,
               transaction_response: {
-                order_id: id,
-              },
-            });
+                order_id: id
+              }
+            }
+          );
 
           const transactions = await TransactionWrapper({
-            data: generateTransaction,
+            data: generateTransaction
           });
           return raiseSuccess(
             res,
             200,
             {
               razorpay_orders: {
-                ...order,
+                ...order
               },
               payment_products: {
-                [paymentProduct.getId()]: paymentProduct.getBasicInfo(),
+                [paymentProduct.getId()]: paymentProduct.getBasicInfo()
               },
               transactions: {
-                [transactions.getId()]: transactions.getBasicInfo(),
+                [transactions.getId()]: transactions.getBasicInfo()
               },
-              transaction_id: transactions.getId(),
+              transaction_id: transactions.getId()
             },
             "Order created successfully"
           );
@@ -175,14 +179,14 @@ class TransactionController extends Controller {
           transaction_response,
           isUpi = false,
           txnId,
-          currency = "INR",
+          currency = "INR"
         } = {},
         userDetails: {
           userId,
           userData: { category } = {},
           userCategoryId,
-          userRoleId,
-        } = {},
+          userRoleId
+        } = {}
       } = req;
       const oldTransaction = await TransactionWrapper({ id });
 
@@ -193,9 +197,9 @@ class TransactionController extends Controller {
           {
             transaction_response: {
               ...oldTransaction.getTransactionResponse(),
-              bank_transaction_id: txnId,
+              bank_transaction_id: txnId
             },
-            status: STATUS.COMPLETED,
+            status: STATUS.COMPLETED
           },
           id
         );
@@ -207,17 +211,17 @@ class TransactionController extends Controller {
           200,
           {
             transactions: {
-              [transaction.getId()]: transaction.getBasicInfo(),
+              [transaction.getId()]: transaction.getBasicInfo()
             },
-            transaction_id: transaction.getId(),
+            transaction_id: transaction.getId()
           },
           "UPI Payment completed successfully"
         );
       }
 
       const isVerified = TransactionHelper.verifyTransaction(
-        transaction_response,
-        oldTransaction
+          transaction_response,
+          oldTransaction
       );
 
       Log.info(`transaction verified : ${isVerified}`);
@@ -227,9 +231,9 @@ class TransactionController extends Controller {
           {
             transaction_response: {
               ...oldTransaction.getTransactionResponse(),
-              ...transaction_response,
+              ...transaction_response
             },
-            status: STATUS.COMPLETED,
+            status: STATUS.COMPLETED
           },
           id
         );
@@ -241,8 +245,10 @@ class TransactionController extends Controller {
 
         const transaction = await TransactionWrapper({ id });
 
-        const { payment_products, payment_product_id } =
-          await transaction.getReferenceInfo();
+        const {
+          payment_products,
+          payment_product_id
+        } = await transaction.getReferenceInfo();
 
         const { basic_info: { type, amount: paymentAmount } = {} } =
           payment_products[payment_product_id] || {};
@@ -256,47 +262,55 @@ class TransactionController extends Controller {
           const subscriptionExists = await subscriptionService.getByData({
             payment_product_id,
             subscriber_id: userRoleId,
-            subscriber_type: category,
+            subscriber_type: category
           });
 
           if (subscriptionExists) {
             // update subscription
-            const updateSubscription =
-              await subscriptionService.updateSubscription({
-                renew_on: moment().add(1, "years").toISOString(),
+            const updateSubscription = await subscriptionService.updateSubscription(
+              {
+                renew_on: moment()
+                  .add(1, "years")
+                  .toISOString(),
                 expired_on: moment()
                   .add(1, "years")
                   .add(1, "month")
-                  .toISOString(),
-              });
+                  .toISOString()
+              }
+            );
 
             Log.debug("updateSubscription --> ", updateSubscription);
 
             const subscriptions = await SubscriptionWrapper({
-              id: subscriptionExists.id,
+              id: subscriptionExists.id
             });
-            subscriptionData[subscriptions.getId()] =
-              subscriptions.getBasicInfo();
+            subscriptionData[
+              subscriptions.getId()
+            ] = subscriptions.getBasicInfo();
           } else {
             // create subscription
-            const addSubscription =
-              await subscriptionService.createSubscription({
+            const addSubscription = await subscriptionService.createSubscription(
+              {
                 payment_product_id,
                 subscriber_id: userRoleId,
                 subscriber_type: category,
                 activated_on: moment().toISOString(),
-                renew_on: moment().add(1, "years").toISOString(),
+                renew_on: moment()
+                  .add(1, "years")
+                  .toISOString(),
                 expired_on: moment()
                   .add(1, "years")
                   .add(1, "month")
-                  .toISOString(),
-              });
+                  .toISOString()
+              }
+            );
 
             const subscriptions = await SubscriptionWrapper({
-              data: addSubscription,
+              data: addSubscription
             });
-            subscriptionData[subscriptions.getId()] =
-              subscriptions.getBasicInfo();
+            subscriptionData[
+              subscriptions.getId()
+            ] = subscriptions.getBasicInfo();
           }
         }
 
@@ -307,20 +321,20 @@ class TransactionController extends Controller {
           case USER_CATEGORY.HSP:
           case USER_CATEGORY.PROVIDER:
             const requestor_id = transaction.getRequestorId();
-            const requestorRole =
-              (await userRolesService.findOne({
-                where: { id: requestor_id },
-                attributes: ["user_identity"],
-              })) || null;
-            const { user_identity = null } = requestorRole || {};
+            const requestorRole = await userRolesService.findOne({
+              where: {id: requestor_id},
+              attributes: ["user_identity"]
+            }) || null;
+            const { user_identity = null} = requestorRole || {};
             accountUserId = user_identity;
             break;
           default:
             break;
         }
 
-        const accountDetails =
-          await accountDetailService.getCurrentAccountByUserId(accountUserId);
+        const accountDetails = await accountDetailService.getCurrentAccountByUserId(
+          accountUserId
+        );
         const account = await AccountDetailsWrapper(accountDetails);
         const accountId = account.getRazorpayAccountId();
 
@@ -332,7 +346,7 @@ class TransactionController extends Controller {
           const transfer = await razorpayService.directTransfer({
             account: accountId,
             amount: parseInt(paymentAmount) * 100,
-            currency: process.config.app.default_currency, // todo: payment specific currency
+            currency: process.config.app.default_currency // todo: payment specific currency
           });
         } else {
           // todo: method to notify doctor about the same
@@ -345,12 +359,12 @@ class TransactionController extends Controller {
           200,
           {
             transactions: {
-              [transaction.getId()]: transaction.getBasicInfo(),
+              [transaction.getId()]: transaction.getBasicInfo()
             },
             subscriptions: {
-              ...subscriptionData,
+              ...subscriptionData
             },
-            transaction_id: transaction.getId(),
+            transaction_id: transaction.getId()
           },
           "Payment completed successfully"
         );
@@ -373,8 +387,8 @@ class TransactionController extends Controller {
         userDetails: {
           userId,
           userData: { category } = {},
-          userCategoryId,
-        } = {},
+          userCategoryId
+        } = {}
       } = req;
       const oldTransaction = await TransactionWrapper({ id });
 
@@ -391,9 +405,9 @@ class TransactionController extends Controller {
           {
             transaction_response: {
               ...oldTransaction.getTransactionResponse(),
-              ...transaction_response,
+              ...transaction_response
             },
-            status: STATUS.COMPLETED,
+            status: STATUS.COMPLETED
           },
           id
         );
@@ -409,9 +423,9 @@ class TransactionController extends Controller {
           200,
           {
             transactions: {
-              [transaction.getId()]: transaction.getBasicInfo(),
+              [transaction.getId()]: transaction.getBasicInfo()
             },
-            transaction_id: transaction.getId(),
+            transaction_id: transaction.getId()
           },
           "Payment completed successfully"
         );
