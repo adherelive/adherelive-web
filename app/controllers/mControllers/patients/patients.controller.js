@@ -657,16 +657,49 @@ class MPatientController extends Controller {
         carePlanIds = [...care_plan_ids];
 
         // latest care plan id
-        latestCarePlanId = current_careplan_id;
 
         console.log("get PatientCarePlanDetails Called - 9" + this.getTime());
         // get all treatment ids from careplan for templates
         Object.keys(care_plans).forEach((id) => {
           const { details: { treatment_id } = {} } = care_plans[id] || {};
           treatmentIds.push(treatment_id);
+
+          //
+
+          /*
+          "care_plans": {
+                "1": {
+                    "basic_info": {
+                        "id": 1,
+                        "doctor_id": 1,
+                        "patient_id": 1,
+                        "care_plan_template_id": null,
+                        "user_role_id": 1
+                    },
+                    "details": {
+                        "severity_id": 1,
+                        "condition_id": 1,
+                        "treatment_id": 1
+                    },*/
+          console.log("===========test=========");
+          console.log(patient_id);
+          console.log(id["basic_info"]["patient_id"]);
+
+          console.log("===========testEnd=========");
+          console.log(id);
+          if (id["basic_info"]["patient_id"] === patient_id) {
+            console.log("===========test=========");
+            console.log(patient_id);
+            console.log(id["basic_info"]["patient_id"]);
+            latestCarePlanId = id["basic_info"]["id"];
+            console.log("===========testEnd=========");
+            console.log(id);
+          }
         });
+
         console.log("get PatientCarePlanDetails Called - 10" + this.getTime());
       }
+
       console.log("get PatientCarePlanDetails Called - 11" + this.getTime());
       // get all careplan templates for user(doctor)
       const carePlanTemplates =

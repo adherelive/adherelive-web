@@ -378,13 +378,25 @@ class PatientController extends Controller {
         carePlanIds = [...care_plan_ids];
 
         // latest care plan id
-        latestCarePlanId = current_careplan_id;
+        // latestCarePlanId = current_careplan_id;
 
         console.log("get PatientCarePlanDetails Called - 9" + this.getTime());
         // get all treatment ids from careplan for templates
+
         Object.keys(care_plans).forEach((id) => {
           const { details: { treatment_id } = {} } = care_plans[id] || {};
           treatmentIds.push(treatment_id);
+          let careplan = care_plans[id];
+          console.log("===========test=========");
+          console.log(careplan);
+          console.log(patient_id);
+          console.log(careplan["basic_info"]["patient_id"] === patient_id);
+          console.log(careplan["basic_info"]["patient_id"]);
+          console.log("===========testEnd=========");
+          console.log(careplan);
+          if (careplan["basic_info"]["patient_id"] == patient_id) {
+            latestCarePlanId = id;
+          }
         });
         console.log("get PatientCarePlanDetails Called - 10" + this.getTime());
       }
