@@ -497,6 +497,10 @@ class PatientController extends Controller {
         });
       console.log("gauravsharma===");
       console.log(patientCarePlans);
+
+      if (patientCarePlans.length > 0) {
+        latestCarePlanId = patientCarePlans[0];
+      }
       return raiseSuccess(
         res,
         200,
