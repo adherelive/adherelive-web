@@ -2058,7 +2058,7 @@ class PatientController extends Controller {
 
       let rowData = [];
 
-      let count = null;
+      let count = 0;
       let treatments = {};
 
       // careplan ids as secondary doctor
@@ -2252,7 +2252,7 @@ class PatientController extends Controller {
         {
           rowData,
           treatments,
-          total: patientsCount,
+          total: count,
         },
         "success"
       );
