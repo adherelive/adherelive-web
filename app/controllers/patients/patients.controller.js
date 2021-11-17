@@ -330,6 +330,18 @@ class PatientController extends Controller {
           userData: { category } = {},
         } = {},
       } = req;
+      console.log("============gauravuserdetails=======================");
+      console.log("userdetails", req.userDetails);
+      console.log(userRoleId);
+      /*
+      const { [doctorId]: { care_plan_ids } = {} } = doctors || {};
+      const newData = care_plan_ids[authUserRole] || {};
+      console.log(care_plan_ids);
+      */
+      const newData =
+        req.userDetails.userCategoryData.care_plan_ids[userRoleId];
+
+      console.log(newData);
       console.log("get PatientCarePlanDetails Called - 4" + this.getTime());
       if (!patient_id) {
         return raiseClientError(
@@ -472,6 +484,22 @@ class PatientController extends Controller {
           },
         };
         console.log("get PatientCarePlanDetails Called - 16" + this.getTime());
+      }
+      const patientCarePlans =
+        newData.length > 0 &&
+        newData.filter((id) => {
+          const { basic_info: { patient_id: carePlanPatientId = "0" } = {} } =
+            care_planss[id] || {};
+
+          if (carePlanPatientId == patient_id) {
+            return id;
+          }
+        });
+      console.log("gauravsharma===");
+      console.log(patientCarePlans);
+
+      if (patientCarePlans.length > 0) {
+        latestCarePlanId = patientCarePlans[0];
       }
       return raiseSuccess(
         res,
@@ -2245,14 +2273,14 @@ class PatientController extends Controller {
           }
         }
       }
-
+      //count
       return raiseSuccess(
         res,
         200,
         {
           rowData,
           treatments,
-          total: count,
+          total: 10,
         },
         "success"
       );
