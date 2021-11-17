@@ -140,6 +140,8 @@ class LongTerm {
 
       const { id: actorId } = actor || {};
 
+      const { user_role_id } = actor || {};
+
       let patientUserRoleId = null;
       for (const participant of participants) {
         if (participant !== user_role_id) {

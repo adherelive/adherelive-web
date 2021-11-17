@@ -2048,6 +2048,8 @@ class PatientController extends Controller {
       } = query || {};
 
       const limit = process.config.PATIENT_LIST_SIZE_LIMIT;
+      // 0
+
       const offsetLimit = parseInt(limit, 10) * parseInt(offset, 10);
       const endLimit = parseInt(limit, 10);
       const getWatchListPatients = parseInt(watchlist, 10) === 0 ? 0 : 1;
@@ -2056,7 +2058,7 @@ class PatientController extends Controller {
 
       let rowData = [];
 
-      let count = null;
+      let count = 0;
       let treatments = {};
 
       // careplan ids as secondary doctor
@@ -2206,7 +2208,6 @@ class PatientController extends Controller {
               secondary_careplan_ids,
             })) || [];
         }
-
         if (patientsForDoctor.length > 0) {
           for (let index = 0; index < patientsForDoctor.length; index++) {
             const {
@@ -2251,7 +2252,7 @@ class PatientController extends Controller {
         {
           rowData,
           treatments,
-          total: allPatientIds.length,
+          total: count,
         },
         "success"
       );
