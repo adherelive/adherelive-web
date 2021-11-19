@@ -2273,7 +2273,7 @@ class PatientController extends Controller {
         {
           rowData,
           treatments,
-          total: 10,
+          total: count,
         },
         "success"
       );
