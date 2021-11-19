@@ -394,18 +394,10 @@ class PatientController extends Controller {
 
         console.log("get PatientCarePlanDetails Called - 9" + this.getTime());
         // get all treatment ids from careplan for templates
-
         Object.keys(care_plans).forEach((id) => {
           const { details: { treatment_id } = {} } = care_plans[id] || {};
           treatmentIds.push(treatment_id);
           let careplan = care_plans[id];
-          console.log("===========test=========");
-          console.log(careplan);
-          console.log(patient_id);
-          console.log(careplan["basic_info"]["patient_id"] === patient_id);
-          console.log(careplan["basic_info"]["patient_id"]);
-          console.log("===========testEnd=========");
-          console.log(careplan);
           if (careplan["basic_info"]["patient_id"] == patient_id) {
             latestCarePlanId = id;
           }
@@ -485,6 +477,7 @@ class PatientController extends Controller {
         };
         console.log("get PatientCarePlanDetails Called - 16" + this.getTime());
       }
+
       const patientCarePlans =
         newData.length > 0 &&
         newData.filter((id) => {
@@ -2280,7 +2273,7 @@ class PatientController extends Controller {
         {
           rowData,
           treatments,
-          total: 10,
+          total: count,
         },
         "success"
       );
