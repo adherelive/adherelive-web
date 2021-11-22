@@ -338,8 +338,10 @@ class PatientController extends Controller {
       const newData = care_plan_ids[authUserRole] || {};
       console.log(care_plan_ids);
       */
-      const newData =
-        req.userDetails.userCategoryData.care_plan_ids[userRoleId];
+      let newData = [];
+      if (req.userDetails.userCategoryData.care_plan_ids) {
+        newData = req.userDetails.userCategoryData.care_plan_ids[userRoleId];
+      }
 
       console.log(newData);
       console.log("get PatientCarePlanDetails Called - 4" + this.getTime());
