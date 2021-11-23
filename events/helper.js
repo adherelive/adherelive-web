@@ -62,12 +62,14 @@ const scheduleService = new ScheduleService();
 
 const getUserPreferences = async (user_id) => {
   try {
-    Log.info(`user_id : ${user_id}`);
-    const userPreference = await UserPreferenceService.getPreferenceByData({
-      user_id,
-    });
-    const { timings = {} } = userPreference.get("details") || {};
-    return timings;
+    if (user_id != null) {
+      Log.info(`user_id : ${user_id}`);
+      const userPreference = await UserPreferenceService.getPreferenceByData({
+        user_id,
+      });
+      const { timings = {} } = userPreference.get("details") || {};
+      return timings;
+    }
   } catch (error) {
     Log.debug("userPreferences catch error", error);
   }
@@ -498,7 +500,7 @@ export const handleVitals = async (vital) => {
       }
     } else {
       for (let i = 0; i < allDays.length; i++) {
-        console.log("Wake Up Time Value: ", WAKE_UP, timings[this.WAKE_UP]);
+        // console.log("Wake Up Time Value: ", WAKE_UP, timings[this.WAKE_UP]);
         const { value: wakeUpTime } = timings[WAKE_UP];
         const { value: sleepTime } = timings[SLEEP];
 
@@ -783,10 +785,12 @@ const getWakeUp = (timings) => {
 };
 
 const getBreakfast = (timings) => {
-  const { value } = timings[BREAKFAST] || {};
-  const hours = moment(value).hours();
-  const minutes = moment(value).minutes();
-  return { hours, minutes };
+  if (timings) {
+    const { value } = timings[BREAKFAST] || {};
+    const hours = moment(value).hours();
+    const minutes = moment(value).minutes();
+    return { hours, minutes };
+  }
 };
 
 const getMidMorning = (timings) => {
@@ -811,10 +815,12 @@ const getEvening = (timings) => {
 };
 
 const getDinner = (timings) => {
-  const { value } = timings[DINNER] || {};
-  const hours = moment(value).hours();
-  const minutes = moment(value).minutes();
-  return { hours, minutes };
+  if (timings) {
+    const { value } = timings[DINNER] || {};
+    const hours = moment(value).hours();
+    const minutes = moment(value).minutes();
+    return { hours, minutes };
+  }
 };
 
 const getSleep = (timings) => {
@@ -829,7 +835,11 @@ const getDietTimings = (date, timing, patientPreference) => {
     case WAKE_UP:
       const { hours: wakeupHour, minutes: wakeupMinute } =
         getWakeUp(patientPreference) || {};
-      return moment(date).set("hours", wakeupHour).set("minutes", wakeupMinute);
+      return moment(date).set({
+        hour: parseInt(wakeupHour, 10),
+        minute: parseInt(wakeupMinute, 10),
+      });
+    //.set("hours", wakeupHour).set("minutes", wakeupMinute);
     case BREAKFAST:
       const { hours: breakfastHour, minutes: breakfastMinute } =
         getBreakfast(patientPreference) || {};
@@ -845,7 +855,11 @@ const getDietTimings = (date, timing, patientPreference) => {
     case LUNCH:
       const { hours: lunchHour, minutes: lunchMinute } =
         getLunch(patientPreference) || {};
-      return moment(date).set("hours", lunchHour).set("minutes", lunchMinute);
+      return moment(date).set({
+        hour: parseInt(lunchHour, 10),
+        minute: parseInt(lunchMinute, 10),
+      });
+    // set("hours", lunchHour).set("minutes", lunchMinute);
     case EVENING:
       const { hours: eveningHour, minutes: eveningMinute } =
         getEvening(patientPreference) || {};
@@ -855,11 +869,19 @@ const getDietTimings = (date, timing, patientPreference) => {
     case DINNER:
       const { hours: dinnerHour, minutes: dinnerMinute } =
         getLunch(patientPreference) || {};
-      return moment(date).set("hours", dinnerHour).set("minutes", dinnerMinute);
+      return moment(date).set({
+        hour: parseInt(dinnerHour, 10),
+        minute: parseInt(dinnerMinute, 10),
+      });
+    // set("hours", dinnerHour).set("minutes", dinnerMinute);
     case SLEEP:
       const { hours: sleepHour, minutes: sleepMinute } =
         getLunch(patientPreference) || {};
-      return moment(date).set("hours", sleepHour).set("minutes", sleepMinute);
+      return moment(date).set({
+        hour: parseInt(sleepHour, 10),
+        minute: parseInt(sleepMinute, 10),
+      });
+    //.set("hours", sleepHour).set("minutes", sleepMinute);
     default:
       return moment(date);
   }
@@ -874,66 +896,98 @@ const updateMedicationTiming = (date, timing, patientPreference) => {
   switch (timing) {
     case AFTER_WAKEUP:
       const { hours: awh, minutes: awm } = getWakeUp(patientPreference) || {};
-      return moment(date).set("hours", awh).set("minutes", awm);
+      return moment(date).set({
+        hour: parseInt(awh, 10),
+        minute: parseInt(awm, 10),
+      });
+    //set("hours", awh).set("minutes", awm);
     case BEFORE_BREAKFAST:
       const { hours: bbh, minutes: bbm } =
         getBreakfast(patientPreference) || {};
       return moment(date)
-        .set("hours", bbh)
-        .set("minutes", bbm)
+        .set({ hour: parseInt(bbh, 10), minute: parseInt(bbm, 10) })
         .subtract(30, "minutes");
+    // .set("hours", bbh)
+    // .set("minutes", bbm)
+    // .subtract(30, "minutes");
     case AFTER_BREAKFAST:
       const { hours: abh, minutes: abm } =
         getBreakfast(patientPreference) || {};
       return moment(date)
-        .set("hours", abh)
-        .set("minutes", abm)
+        .set({ hour: parseInt(abh, 10), minute: parseInt(abm, 10) })
         .add(30, "minutes");
+    // .set("hours", abh)
+    // .set("minutes", abm)
+    // .add(30, "minutes");
     case BEFORE_LUNCH:
       const { hours: blh, minutes: blm } = getLunch(patientPreference) || {};
       return moment(date)
-        .set("hours", blh)
-        .set("minutes", blm)
+        .set({ hour: parseInt(blh, 10), minute: parseInt(blm, 10) })
         .subtract(30, "minutes");
+    // .set("hours", blh)
+    // .set("minutes", blm)
+    // .subtract(30, "minutes");
     case WITH_LUNCH:
       const { hours: wlh, minutes: wlm } = getLunch(patientPreference) || {};
-      return moment(date).set("hours", wlh).set("minutes", wlm);
+      return moment(date).set({
+        hour: parseInt(wlh, 10),
+        minute: parseInt(wlm, 10),
+      });
+    // .set("hours", wlh).set("minutes", wlm);
     case AFTER_LUNCH:
       const { hours: alh, minutes: alm } = getLunch(patientPreference) || {};
       return moment(date)
-        .set("hours", alh)
-        .set("minutes", alm)
+        .set({ hour: parseInt(alh, 10), minute: parseInt(alm, 10) })
         .add(30, "minutes");
+    // .set("hours", alh)
+    // .set("minutes", alm)
+    // .add(30, "minutes");
     case BEFORE_EVENING_SNACK:
       const { hours: beh, minutes: bem } = getEvening(patientPreference) || {};
       return moment(date)
-        .set("hours", beh)
-        .set("minutes", bem)
+        .set({ hour: parseInt(beh, 10), minute: parseInt(bem, 10) })
         .subtract(30, "minutes");
+    // .set("hours", beh)
+    // .set("minutes", bem)
+    // .subtract(30, "minutes");
     case AFTER_EVENING_SNACK:
       const { hours: aeh, minutes: aem } = getEvening(patientPreference) || {};
       return moment(date)
-        .set("hours", aeh)
-        .set("minutes", aem)
+        .set({ hour: parseInt(aeh, 10), minute: parseInt(aem, 10) })
         .add(30, "minutes");
+    // .set("hours", aeh)
+    // .set("minutes", aem)
+    // .add(30, "minutes");
     case BEFORE_DINNER:
       const { hours: bdh, minutes: bdm } = getDinner(patientPreference) || {};
       return moment(date)
-        .set("hours", bdh)
-        .set("minutes", bdm)
+        .set({ hour: parseInt(bdh, 10), minute: parseInt(bdm, 10) })
         .subtract(30, "minutes");
+    // .set("hours", bdh)
+    // .set("minutes", bdm)
+    // .subtract(30, "minutes");
     case WITH_DINNER:
       const { hours: wdh, minutes: wdm } = getDinner(patientPreference) || {};
-      return moment(date).set("hours", wdh).set("minutes", wdm);
+      return moment(date).set({
+        hour: parseInt(wdh, 10),
+        minute: parseInt(wdm, 10),
+      });
+    // .set("hours", wdh).set("minutes", wdm);
     case AFTER_DINNER:
       const { hours: adh, minutes: adm } = getDinner(patientPreference) || {};
       return moment(date)
-        .set("hours", adh)
-        .set("minutes", adm)
+        .set({ hour: parseInt(adh, 10), minute: parseInt(adm, 10) })
         .add(30, "minutes");
+    // .set("hours", adh)
+    // .set("minutes", adm)
+    // .add(30, "minutes");
     case BEFORE_SLEEP:
       const { hours: bsh, minutes: bsm } = getSleep(patientPreference) || {};
-      return moment(date).set("hours", bsh).set("minutes", bsm);
+      return moment(date).set({
+        hour: parseInt(bsh, 10),
+        minute: parseInt(bsm, 10),
+      });
+    // .set("hours", bsh).set("minutes", bsm);
     default:
       return moment(date);
   }
