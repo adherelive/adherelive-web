@@ -30,7 +30,11 @@ module.exports = {
         created_at: new Date(),
         updated_at: new Date(),
       },
-      { name: "ENT", created_at: new Date(), updated_at: new Date() },
+      { 
+        name: "ENT", 
+        created_at: new Date(), 
+        updated_at: new Date() 
+      },
       {
         name: "Family Medicine",
         created_at: new Date(),

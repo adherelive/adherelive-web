@@ -16,11 +16,15 @@ module.exports = {
         updated_at: new Date(),
       },
       {
-        name: "D.M. NEPHROLOGY",
+        name: "D.M. Nephrology",
         created_at: new Date(),
         updated_at: new Date(),
       },
-      { name: "M.CH. Urology", created_at: new Date(), updated_at: new Date() },
+      { 
+        name: "M.CH. Urology",
+        created_at: new Date(),
+        updated_at: new Date()
+      },
       {
         name: "M.CH. Cardio Vascular & Thoracic Surgery",
         created_at: new Date(),
@@ -101,7 +105,11 @@ module.exports = {
         created_at: new Date(),
         updated_at: new Date(),
       },
-      { name: "D.M. Virology", created_at: new Date(), updated_at: new Date() },
+      {
+        name: "D.M. Virology",
+        created_at: new Date(),
+        updated_at: new Date()
+      },
       {
         name: "M.CH. Vascular Surgery",
         created_at: new Date(),

@@ -36,7 +36,7 @@ module.exports = {
         updated_at: new Date(),
       },
       {
-        name: "g",
+        name: "gm",
         created_at: new Date(),
         updated_at: new Date(),
       },
