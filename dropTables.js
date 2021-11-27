@@ -8,7 +8,7 @@ import { models } from "./libs/mysql";
 const rollback = async () => {
   return await Promise.all(
     map(models, (key) => {
-      console.log("1823982 key --> ", key.db);
+      console.log("MySQL map models key ---> ", key.db);
       if (["sequelize", "Sequelize"].includes(key)) return null;
 
       return key.db.destroy({ where: {}, force: true });

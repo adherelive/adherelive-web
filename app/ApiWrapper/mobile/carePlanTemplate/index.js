@@ -252,7 +252,6 @@ class CarePlanTemplateWrapper extends BaseCarePlanTemplate {
 
     let templateAppointments = [];
     let templateMedications = [];
-    let medicines = [];
 
     let appointmentIds = [];
     let medicationIds = [];
@@ -277,7 +276,8 @@ class CarePlanTemplateWrapper extends BaseCarePlanTemplate {
     // vital templates (careplan_template)
     let templateVitalIds = [];
     let templateVitals = {};
-
+    // vital templates (vitals)
+    let vitalTemplateIds = [];
     // vital templates (vitals)
 
     const allVitals = getTemplateVitals();
@@ -288,6 +288,25 @@ class CarePlanTemplateWrapper extends BaseCarePlanTemplate {
         });
         templateVitals[templateVital.getId()] = templateVital.getBasicInfo();
         templateVitalIds.push(templateVital.getId());
+        vitalTemplateIds.push(templateVital.getVitalTemplateId());
+      }
+    }
+
+    // get vital templates
+    let vitalTemplates = {};
+
+    const allVitalTemplates =
+      (await vitalTemplateService.getAllByData({
+        id: vitalTemplateIds,
+      })) || [];
+
+    if (allVitalTemplates.length > 0) {
+      for (let index = 0; index < allVitalTemplates.length; index++) {
+        const vitalTemplate = await VitalTemplateWrapper({
+          data: allVitalTemplates[index],
+        });
+        vitalTemplates[vitalTemplate.getVitalTemplateId()] =
+          vitalTemplate.getBasicInfo();
       }
     }
 
@@ -313,14 +332,6 @@ class CarePlanTemplateWrapper extends BaseCarePlanTemplate {
         templateWorkoutIds.push(templateWorkout.getId());
       }
     }
-    const medicineData = await medicineService.getMedicineByData({
-      id: medicineIds,
-    });
-    for (const medicine of medicineData) {
-      const data = await MedicineWrapper(medicine);
-      medicines[data.getMedicineId()] = data.getBasicInfo();
-    }
-
     return {
       care_plan_templates: {
         [this.getCarePlanTemplateId()]: {
@@ -332,15 +343,16 @@ class CarePlanTemplateWrapper extends BaseCarePlanTemplate {
           template_workout_ids: templateWorkoutIds,
         },
       },
+      vital_templates: {
+        ...vitalTemplates,
+      },
       template_appointments: {
         ...templateAppointments,
       },
       template_medications: {
         ...templateMedications,
       },
-      medicines: {
-        ...medicines,
-      },
+
       care_plan_template_id: this.getCarePlanTemplateId(),
     };
   };

@@ -78,6 +78,7 @@ class MUserWrapper extends BaseUser {
     }
   };
 
+  /*
   getCategoryInfo = async () => {
     const { _data } = this;
     const { doctor = null, patient = null } = _data || {};
@@ -93,6 +94,31 @@ class MUserWrapper extends BaseUser {
       return {
         userCategoryData: patientData.getBasicInfo(),
         userCategoryId: patientData.getPatientId(),
+      };
+    }
+  };
+  */
+  getCategoryInfo = async () => {
+    const { _data } = this;
+    const { doctor = null, patient = null, provider = null } = _data || {};
+
+    if (doctor) {
+      const doctorData = await DoctorWrapper(doctor);
+      return {
+        userCategoryData: await doctorData.getAllInfo(),
+        userCategoryId: doctorData.getDoctorId(),
+      };
+    } else if (patient) {
+      const patientData = await PatientWrapper(patient);
+      return {
+        userCategoryData: patientData.getBasicInfo(),
+        userCategoryId: patientData.getPatientId(),
+      };
+    } else if (provider) {
+      const providerData = await ProviderWrapper(provider);
+      return {
+        userCategoryData: providerData.getBasicInfo(),
+        userCategoryId: providerData.getProviderId(),
       };
     }
   };

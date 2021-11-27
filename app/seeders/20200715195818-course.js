@@ -23,7 +23,7 @@ module.exports = {
       { 
         name: "M.CH. Urology",
         created_at: new Date(),
-        updated_at: new Date()
+        updated_at: new Date(),
       },
       {
         name: "M.CH. Cardio Vascular & Thoracic Surgery",

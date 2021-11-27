@@ -103,7 +103,6 @@ Now,
 
 1. `docker-compose exec node bash`
 2. `npm run seed`
-
 ---
 
 ### If you have volume mounted

@@ -330,6 +330,18 @@ class PatientController extends Controller {
           userData: { category } = {},
         } = {},
       } = req;
+      console.log("============gauravuserdetails=======================");
+      console.log("userdetails", req.userDetails);
+      console.log(userRoleId);
+      /*
+      const { [doctorId]: { care_plan_ids } = {} } = doctors || {};
+      const newData = care_plan_ids[authUserRole] || {};
+      console.log(care_plan_ids);
+      */
+      const newData =
+        req.userDetails.userCategoryData.care_plan_ids[userRoleId];
+
+      console.log(newData);
       console.log("get PatientCarePlanDetails Called - 4" + this.getTime());
       if (!patient_id) {
         return raiseClientError(
@@ -363,7 +375,7 @@ class PatientController extends Controller {
       console.log("get PatientCarePlanDetails Called - 7" + this.getTime());
       // for vitals
       let vitalTemplateData = {};
-
+      let care_planss = null;
       if (carePlans.length > 0) {
         const { care_plans, care_plan_ids, current_careplan_id } =
           await carePlanHelper.getCareplanDataWithImp({
@@ -372,19 +384,23 @@ class PatientController extends Controller {
             doctorId: userCategoryId,
             userRoleId,
           });
-
+        care_planss = care_plans;
         console.log("get PatientCarePlanDetails Called - 8" + this.getTime());
         // care plan ids
         carePlanIds = [...care_plan_ids];
 
         // latest care plan id
-        latestCarePlanId = current_careplan_id;
+        // latestCarePlanId = current_careplan_id;
 
         console.log("get PatientCarePlanDetails Called - 9" + this.getTime());
         // get all treatment ids from careplan for templates
         Object.keys(care_plans).forEach((id) => {
           const { details: { treatment_id } = {} } = care_plans[id] || {};
           treatmentIds.push(treatment_id);
+          let careplan = care_plans[id];
+          if (careplan["basic_info"]["patient_id"] == patient_id) {
+            latestCarePlanId = id;
+          }
         });
         console.log("get PatientCarePlanDetails Called - 10" + this.getTime());
       }
@@ -461,10 +477,28 @@ class PatientController extends Controller {
         };
         console.log("get PatientCarePlanDetails Called - 16" + this.getTime());
       }
+
+      const patientCarePlans =
+        newData.length > 0 &&
+        newData.filter((id) => {
+          const { basic_info: { patient_id: carePlanPatientId = "0" } = {} } =
+            care_planss[id] || {};
+
+          if (carePlanPatientId == patient_id) {
+            return id;
+          }
+        });
+      console.log("gauravsharma===");
+      console.log(patientCarePlans);
+
+      if (patientCarePlans.length > 0) {
+        latestCarePlanId = patientCarePlans[0];
+      }
       return raiseSuccess(
         res,
         200,
         {
+          care_plans: care_planss,
           current_careplan_id: latestCarePlanId,
           care_plan_ids: carePlanIds,
           care_plan_template_ids: [...carePlanTemplateIds],
@@ -2035,6 +2069,8 @@ class PatientController extends Controller {
       } = query || {};
 
       const limit = process.config.PATIENT_LIST_SIZE_LIMIT;
+      // 0
+
       const offsetLimit = parseInt(limit, 10) * parseInt(offset, 10);
       const endLimit = parseInt(limit, 10);
       const getWatchListPatients = parseInt(watchlist, 10) === 0 ? 0 : 1;
@@ -2043,7 +2079,7 @@ class PatientController extends Controller {
 
       let rowData = [];
 
-      let count = null;
+      let count = 0;
       let treatments = {};
 
       // careplan ids as secondary doctor
@@ -2193,7 +2229,6 @@ class PatientController extends Controller {
               secondary_careplan_ids,
             })) || [];
         }
-
         if (patientsForDoctor.length > 0) {
           for (let index = 0; index < patientsForDoctor.length; index++) {
             const {
@@ -2231,14 +2266,14 @@ class PatientController extends Controller {
           }
         }
       }
-
+      //count
       return raiseSuccess(
         res,
         200,
         {
           rowData,
           treatments,
-          total: allPatientIds.length,
+          total: count,
         },
         "success"
       );

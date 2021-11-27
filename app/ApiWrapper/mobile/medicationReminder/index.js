@@ -105,6 +105,41 @@ class MobileMReminderWrapper extends BaseMedicationReminder {
     };
   };
 
+  getReferenceInfoWithImp = async () => {
+    const { getAllInfo, getMReminderId, getMedicineId, _data } = this;
+    const EventService = new eventService();
+    const scheduleEvents = await EventService.getAllPreviousByData({
+      event_id: getMReminderId(),
+      date: moment().utc().toDate(),
+      event_type: EVENT_TYPE.MEDICATION_REMINDER,
+    });
+
+    const scheduleEventIds = [];
+    let scheduleEventData = {};
+    for (const events of scheduleEvents) {
+      const scheduleEvent = await EventWrapper(events);
+      scheduleEventIds.push(scheduleEvent.getScheduleEventId());
+
+      scheduleEventData[scheduleEvent.getScheduleEventId()] =
+        scheduleEvent.getAllInfo();
+    }
+
+    const { medications } = await getAllInfo();
+    const medicationData = medications[getMReminderId()] || {};
+
+    return {
+      medications: {
+        [getMReminderId()]: {
+          ...medicationData,
+          event_ids: scheduleEventIds,
+        },
+      },
+      schedule_events: {
+        ...scheduleEventData,
+      },
+    };
+  };
+
   getReferenceInfo = async () => {
     const { getAllInfo, getMReminderId, getMedicineId, _data } = this;
     const { medicine } = _data || {};

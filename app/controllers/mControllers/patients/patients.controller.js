@@ -60,7 +60,7 @@ import userRolesService from "../../../services/userRoles/userRoles.service";
 import UserWrapper from "../../../ApiWrapper/mobile/user";
 import UserRolesWrapper from "../../../ApiWrapper/mobile/userRoles";
 import CarePlanWrapper from "../../../ApiWrapper/mobile/carePlan";
-import CarePlanTemplateWrapper from "../../../ApiWrapper/mobile/carePlanTemplate";
+import CarePlanTemplateWrapper from "../../../ApiWrapper/web/carePlanTemplate";
 import AppointmentWrapper from "../../../ApiWrapper/mobile/appointments";
 // import TemplateMedicationWrapper from "../../../ApiWrapper/mobile/templateMedication";
 // import TemplateAppointmentWrapper from "../../../ApiWrapper/mobile/templateAppointment";
@@ -75,6 +75,7 @@ import PatientConsentMappingWrapper from "../../../ApiWrapper/mobile/patientPaym
 import carePlanTemplateService from "../../../services/carePlanTemplate/carePlanTemplate.service";
 import SymptomService from "../../../services/symptom/symptom.service";
 import qualificationService from "../../../services/doctorQualifications/doctorQualification.service";
+
 import moment from "moment";
 import {
   BODY_VIEW,
@@ -394,7 +395,7 @@ class MPatientController extends Controller {
   };
 
   //TODO: need to delete below function if all working fine in mobile app.
-  getPatientCarePlanDetails = async (req, res) => {
+  getPatientCarePlanDetailsWithImp1 = async (req, res) => {
     try {
       const { id: patient_id = 1 } = req.params;
       const {
@@ -415,21 +416,21 @@ class MPatientController extends Controller {
         );
       }
 
-      let doctorData = {};
       let allProvidersData = {};
       let allUserRoleData = {};
       let carePlanApiDetails = {};
       let templateMedicationData = {};
       let templateAppointmentData = {};
       let otherCarePlanTemplates = {};
-      let appointmentApiDetails = {};
-      let scheduleEventData = {};
+
       let medicationApiDetails = {};
-      let medicineApiData = {};
+
       let carePlanTemplateIds = [];
       let latestCarePlanId = null;
-      let carePlanIds = [];
       let treatmentIds = [];
+
+      // for vitals
+      let vitalTemplateData = {};
 
       // get all careplans attached to patient
       const carePlans =
@@ -439,18 +440,15 @@ class MPatientController extends Controller {
         })) || [];
 
       if (carePlans.length > 0) {
+        // check done.
         const {
-          care_plans,
-          medicines,
-          appointments,
           medications,
-          schedule_events,
-          doctors,
           providers = {},
+          care_plans,
           user_roles = {},
           care_plan_ids,
           current_careplan_id,
-        } = await carePlanHelper.getCareplanData({
+        } = await carePlanHelper.getCareplanDataWithImp({
           carePlans,
           userCategory: category,
           doctorId: userCategoryId,
@@ -459,40 +457,18 @@ class MPatientController extends Controller {
 
         // care plans
         carePlanApiDetails = { ...carePlanApiDetails, ...care_plans };
-
-        // care plan ids
-        carePlanIds = [...care_plan_ids];
-
-        // latest care plan id
+        //        carePlanIds = [...care_plan_ids];
         latestCarePlanId = current_careplan_id;
-
-        // doctors
-        doctorData = { ...doctorData, ...doctors };
-
-        // appointments
-        appointmentApiDetails = { ...appointmentApiDetails, ...appointments };
-
-        // medications
         medicationApiDetails = { ...medicationApiDetails, ...medications };
-
-        // schedule events
-        scheduleEventData = { ...scheduleEventData, ...schedule_events };
-
-        // medicines
-        medicineApiData = { ...medicineApiData, ...medicines };
-
         allProvidersData = { ...allProvidersData, ...providers };
-
         allUserRoleData = { ...allUserRoleData, ...user_roles };
 
-        // get all treatment ids from careplan for templates
         Object.keys(care_plans).forEach((id) => {
           const { details: { treatment_id } = {} } = care_plans[id] || {};
           treatmentIds.push(treatment_id);
         });
       }
 
-      // get all careplan templates for user(doctor)
       const carePlanTemplates =
         (await carePlanTemplateService.getCarePlanTemplateData({
           user_id: userId,
@@ -504,12 +480,12 @@ class MPatientController extends Controller {
           const carePlanTemplate = await CarePlanTemplateWrapper(
             carePlanTemplates[index]
           );
-
+          // check done.
           const {
             care_plan_templates,
             template_appointments,
             template_medications,
-            medicines,
+            vital_templates,
           } = await carePlanTemplate.getReferenceInfoWithImp();
 
           carePlanTemplateIds = [
@@ -524,6 +500,10 @@ class MPatientController extends Controller {
             ...otherCarePlanTemplates,
             ...care_plan_templates,
           };
+          vitalTemplateData = {
+            ...vitalTemplateData,
+            ...vital_templates,
+          };
           templateAppointmentData = {
             ...templateAppointmentData,
             ...template_appointments,
@@ -532,7 +512,6 @@ class MPatientController extends Controller {
             ...templateMedicationData,
             ...template_medications,
           };
-          medicineApiData = { ...medicineApiData, ...medicines };
         }
       } else {
         carePlanTemplateIds.push("1");
@@ -556,14 +535,15 @@ class MPatientController extends Controller {
           },
           care_plan_template_ids: [...carePlanTemplateIds],
           current_careplan_id: latestCarePlanId,
-          medicines: {
-            ...medicineApiData,
-          },
+
           template_appointments: {
             ...templateAppointmentData,
           },
           template_medications: {
             ...templateMedicationData,
+          },
+          vital_templates: {
+            ...vitalTemplateData,
           },
         },
         "Patient care plan details fetched successfully"
@@ -574,8 +554,272 @@ class MPatientController extends Controller {
     }
   };
 
+  // Copy from the Web
+
+  getTime = () => {
+    let date_ob = new Date();
+    let date = ("0" + date_ob.getDate()).slice(-2);
+
+    // current month
+    let month = ("0" + (date_ob.getMonth() + 1)).slice(-2);
+
+    // current year
+    let year = date_ob.getFullYear();
+
+    // current hours
+    let hours = date_ob.getHours();
+
+    // current minutes
+    let minutes = date_ob.getMinutes();
+
+    // current seconds
+    let seconds = date_ob.getSeconds();
+    return (
+      year +
+      "-" +
+      month +
+      "-" +
+      date +
+      " " +
+      hours +
+      ":" +
+      minutes +
+      ":" +
+      seconds
+    );
+  };
+
+  getPatientCarePlanDetailsWithImp = async (req, res) => {
+    console.log("get PatientCarePlanDetails Called - 1" + this.getTime());
+    const { raiseSuccess, raiseClientError, raiseServerError } = this;
+    try {
+      console.log("get PatientCarePlanDetails Called - 2" + this.getTime());
+      const { id: patient_id = 1 } = req.params;
+      console.log("get PatientCarePlanDetails Called - 3" + this.getTime());
+      Logger.info(`params: patient_id = ${patient_id}`);
+      const {
+        userDetails: {
+          userRoleId = null,
+          userId,
+          userCategoryId,
+          userData: { category } = {},
+        } = {},
+      } = req;
+      console.log("get PatientCarePlanDetails Called - 4" + this.getTime());
+      if (!patient_id) {
+        return raiseClientError(
+          res,
+          422,
+          {},
+          "Please select correct patient to continue"
+        );
+      }
+      console.log("get PatientCarePlanDetails Called - 5" + this.getTime());
+
+      // get all careplans attached to patient
+      const carePlans =
+        (await carePlanService.getMultipleCarePlanByData({
+          patient_id,
+          user_role_id: userRoleId,
+        })) || [];
+      console.log("get PatientCarePlanDetails Called - 6" + this.getTime());
+      let treatmentIds = [];
+      let carePlanIds = [];
+      let latestCarePlanId = null;
+      let templateMedicationData = {};
+      let templateAppointmentData = {};
+      let otherCarePlanTemplates = {};
+      let carePlanTemplateIds = [];
+      // for care plan templates
+      let templateVitalData = {};
+      let templateDietData = {};
+      let templateWorkoutData = {};
+      let carePlanApiDetails = {};
+
+      console.log("get PatientCarePlanDetails Called - 7" + this.getTime());
+      // for vitals
+      let vitalTemplateData = {};
+
+      if (carePlans.length > 0) {
+        const { care_plans, care_plan_ids, current_careplan_id } =
+          await carePlanHelper.getCareplanDataWithImp({
+            carePlans,
+            userCategory: category,
+            doctorId: userCategoryId,
+            userRoleId,
+          });
+
+        // care plans
+        carePlanApiDetails = { ...carePlanApiDetails, ...care_plans };
+
+        console.log("get PatientCarePlanDetails Called - 8" + this.getTime());
+        // care plan ids
+        carePlanIds = [...care_plan_ids];
+
+        // latest care plan id
+
+        console.log("get PatientCarePlanDetails Called - 9" + this.getTime());
+        // get all treatment ids from careplan for templates
+        Object.keys(care_plans).forEach((id) => {
+          const { details: { treatment_id } = {} } = care_plans[id] || {};
+          treatmentIds.push(treatment_id);
+
+          //
+
+          /*
+          "care_plans": {
+                "1": {
+                    "basic_info": {
+                        "id": 1,
+                        "doctor_id": 1,
+                        "patient_id": 1,
+                        "care_plan_template_id": null,
+                        "user_role_id": 1
+                    },
+                    "details": {
+                        "severity_id": 1,
+                        "condition_id": 1,
+                        "treatment_id": 1
+                    },*/
+          console.log("===========test=========");
+          console.log(patient_id);
+          console.log(id["basic_info"]["patient_id"]);
+
+          console.log("===========testEnd=========");
+          console.log(id);
+          if (id["basic_info"]["patient_id"] === patient_id) {
+            console.log("===========test=========");
+            console.log(patient_id);
+            console.log(id["basic_info"]["patient_id"]);
+            latestCarePlanId = id["basic_info"]["id"];
+            console.log("===========testEnd=========");
+            console.log(id);
+          }
+        });
+
+        console.log("get PatientCarePlanDetails Called - 10" + this.getTime());
+      }
+
+      console.log("get PatientCarePlanDetails Called - 11" + this.getTime());
+      // get all careplan templates for user(doctor)
+      const carePlanTemplates =
+        (await carePlanTemplateService.getCarePlanTemplateData({
+          user_id: userId,
+          treatment_id: treatmentIds,
+        })) || [];
+      console.log("get PatientCarePlanDetails Called - 12" + this.getTime());
+      if (carePlanTemplates.length > 0) {
+        console.log("get PatientCarePlanDetails Called - 13" + this.getTime());
+        for (let index = 0; index < carePlanTemplates.length; index++) {
+          const carePlanTemplate = await CarePlanTemplateWrapper(
+            carePlanTemplates[index]
+          );
+
+          const {
+            care_plan_templates,
+            template_appointments,
+            template_medications,
+            template_vitals,
+            template_diets,
+            template_workouts,
+            vital_templates,
+          } = await carePlanTemplate.getReferenceInfoWithImp();
+
+          carePlanTemplateIds = [
+            ...new Set([
+              ...carePlanTemplateIds,
+              ...Object.keys(care_plan_templates),
+            ]),
+          ];
+          // carePlanTemplateIds.push(...Object.keys(care_plan_templates));
+          otherCarePlanTemplates = {
+            ...otherCarePlanTemplates,
+            ...care_plan_templates,
+          };
+          templateAppointmentData = {
+            ...templateAppointmentData,
+            ...template_appointments,
+          };
+          templateMedicationData = {
+            ...templateMedicationData,
+            ...template_medications,
+          };
+          templateVitalData = {
+            ...templateVitalData,
+            ...template_vitals,
+          };
+          templateDietData = {
+            ...templateDietData,
+            ...template_diets,
+          };
+          templateWorkoutData = {
+            ...templateWorkoutData,
+            ...template_workouts,
+          };
+          vitalTemplateData = {
+            ...vitalTemplateData,
+            ...vital_templates,
+          };
+        }
+        console.log("get PatientCarePlanDetails Called - 14" + this.getTime());
+      } else {
+        console.log("get PatientCarePlanDetails Called - 15" + this.getTime());
+        carePlanTemplateIds.push("1");
+        otherCarePlanTemplates["1"] = {
+          basic_info: {
+            id: "1",
+            name: "Blank Template",
+          },
+        };
+        console.log("get PatientCarePlanDetails Called - 16" + this.getTime());
+      }
+      return raiseSuccess(
+        res,
+        200,
+        {
+          // added by gaurav start
+          //care plan - > care_plans
+          care_plans: {
+            ...carePlanApiDetails,
+          },
+          // vital_templates
+
+          // added by gaurav end
+          current_careplan_id: latestCarePlanId,
+          care_plan_ids: carePlanIds,
+          care_plan_template_ids: [...carePlanTemplateIds],
+          care_plan_templates: {
+            ...otherCarePlanTemplates,
+          },
+
+          template_appointments: {
+            ...templateAppointmentData,
+          },
+          template_medications: {
+            ...templateMedicationData,
+          },
+          template_vitals: {
+            ...templateVitalData,
+          },
+          template_diets: {
+            ...templateDietData,
+          },
+          template_workouts: templateWorkoutData,
+          vital_templates: {
+            ...vitalTemplateData,
+          },
+        },
+        "Patient care plan details fetched successfully"
+      );
+    } catch (error) {
+      // Logger.debug("get careplan 500 error ---> ", error);
+      console.log("GET PATIENT DETAILS ERROR careplan --> ", error);
+      return raiseServerError(res);
+    }
+  };
+
   //TODO: need to delete below function if all working fine in mobile app.
-  getPatientCarePlanDetailsWithDel = async (req, res) => {
+  getPatientCarePlanDetails = async (req, res) => {
     try {
       const { id: patient_id = 1 } = req.params;
       const {
@@ -857,6 +1101,26 @@ class MPatientController extends Controller {
         }
       }
 
+      /*
+      care_plans: {
+            ...carePlanApiDetails,
+          },
+          care_plan_templates: {
+            ...otherCarePlanTemplates,
+          },
+          care_plan_template_ids: [...carePlanTemplateIds],
+          current_careplan_id: latestCarePlanId,
+
+          template_appointments: {
+            ...templateAppointmentData,
+          },
+          template_medications: {
+            ...templateMedicationData,
+          },
+          vital_templates: {
+            ...vitalTemplateData,
+          },
+          */
       return this.raiseSuccess(
         res,
         200,
