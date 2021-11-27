@@ -6,7 +6,7 @@ module.exports = {
   up: (queryInterface, Sequelize) => {
     return queryInterface.bulkInsert(TABLE_NAME, [
       {
-        name: "Test Provider",
+        name: "Provider Hospital",
         user_id: "5",
         created_at: new Date(),
         updated_at: new Date(),

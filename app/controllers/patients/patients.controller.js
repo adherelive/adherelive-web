@@ -936,8 +936,8 @@ class PatientController extends Controller {
           const user = await UserWrapper(userData.get());
 
           const { users, patients, patient_id } = await user.getReferenceInfo();
-          Logger.debug("232323num", users);
-          Logger.debug("232323num", patients);
+          Logger.debug("Search Patient Users", users);
+          Logger.debug("Search Patient Patients", patients);
           patientIds.push(patient_id);
           userDetails = { ...userDetails, ...users };
           patientDetails = { ...patientDetails, ...patients };

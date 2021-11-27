@@ -11,7 +11,7 @@ module.exports = {
         time_gap: "14",
         provider_id: "1",
         details: JSON.stringify({
-          description: "Please fast before 12 hours",
+          description: "Please fast for 12 hours before the test",
           appointment_type: "1",
           type_description: "Blood Test",
           critical: false,
@@ -25,7 +25,7 @@ module.exports = {
         time_gap: "18",
         provider_id: "2",
         details: JSON.stringify({
-          description: "We will do a checkup in the morning too.",
+          description: "We will do a checkup in the morning of the Surgery",
           appointment_type: "1",
           type_description: "Blood Test",
           critical: true,

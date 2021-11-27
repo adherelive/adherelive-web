@@ -39,7 +39,7 @@ module.exports = {
           repeat_interval: 0,
           medication_stage: "",
           duration: 6,
-          description: "Take after eating",
+          description: "Take after eating something",
           medicine_type: "2",
         }),
         created_at: new Date(),

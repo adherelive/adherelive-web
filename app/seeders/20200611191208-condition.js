@@ -6,6 +6,12 @@ module.exports = {
   up: (queryInterface, Sequelize) => {
     return queryInterface.bulkInsert(TABLE_NAME, [
       {
+        code: "1",
+        name: "Unconfirmed",
+        created_at: "2020-07-28 09:49:15",
+        updated_at: "2020-07-28 09:49:15",
+      },
+      {
         code: "A000",
         name: "Cholera due to Vibrio cholerae 01, biovar cholerae",
         created_at: "2020-07-28 09:49:15",
@@ -32,12 +38,6 @@ module.exports = {
       {
         code: "A0101",
         name: "Typhoid meningitis",
-        created_at: "2020-07-28 09:49:15",
-        updated_at: "2020-07-28 09:49:15",
-      },
-      {
-        code: "1",
-        name: "Unconfirmed",
         created_at: "2020-07-28 09:49:15",
         updated_at: "2020-07-28 09:49:15",
       },
