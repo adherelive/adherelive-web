@@ -43,6 +43,7 @@ export const db = (database) => {
           USER_CATEGORY.DOCTOR,
           USER_CATEGORY.PATIENT,
           USER_CATEGORY.HSP,
+          USER_CATEGORY.ADMIN,
         ],
         allowNull: false,
       },

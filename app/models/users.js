@@ -8,9 +8,9 @@ export const TABLE_NAME = "users";
 
 export const USER_CATEGORY_ARRAY = [
   USER_CATEGORY.DOCTOR,
-  USER_CATEGORY.HSP,
   USER_CATEGORY.PATIENT,
   USER_CATEGORY.CARE_TAKER,
+  USER_CATEGORY.HSP,
   USER_CATEGORY.PROVIDER,
   USER_CATEGORY.ADMIN,
 ];
@@ -65,9 +65,9 @@ export const db = (database) => {
           USER_CATEGORY.DOCTOR,
           USER_CATEGORY.PATIENT,
           USER_CATEGORY.CARE_TAKER,
+          USER_CATEGORY.HSP,
           USER_CATEGORY.PROVIDER,
           USER_CATEGORY.ADMIN,
-          USER_CATEGORY.HSP,
         ],
         required: true,
       },

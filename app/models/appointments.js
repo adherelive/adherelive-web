@@ -40,9 +40,9 @@ export const db = (database) => {
         type: DataTypes.ENUM,
         values: [
           USER_CATEGORY.DOCTOR,
+          USER_CATEGORY.HSP,
           USER_CATEGORY.PATIENT,
           USER_CATEGORY.CARE_TAKER,
-          USER_CATEGORY.HSP,
         ],
       },
       organizer_id: {

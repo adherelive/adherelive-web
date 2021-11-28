@@ -9,12 +9,12 @@ module.exports = {
         allowNull: false,
         type: Sequelize.ENUM,
         values: [
+          USER_CATEGORY.DOCTOR,
           USER_CATEGORY.PATIENT,
           USER_CATEGORY.CARE_TAKER,
-          USER_CATEGORY.DOCTOR,
+          USER_CATEGORY.HSP,
           USER_CATEGORY.PROVIDER,
           USER_CATEGORY.ADMIN,
-          USER_CATEGORY.HSP,
         ],
       }),
     ]);

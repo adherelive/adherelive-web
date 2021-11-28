@@ -11,12 +11,12 @@ import {
 module.exports = {
   up: (queryInterface, Sequelize) => {
     /*
-                      Add altering commands here.
-                      Return a promise to correctly handle asynchronicity.
+      Add altering commands here.
+      Return a promise to correctly handle asynchronicity.
 
-                      Example:
-                      return queryInterface.createTable('users', { id: Sequelize.INTEGER });
-        */
+      Example:
+      return queryInterface.createTable('users', { id: Sequelize.INTEGER });
+    */
     return queryInterface.createTable(DB_TABLES.PRODUCT_PLANS, {
       id: {
         allowNull: false,
@@ -26,7 +26,11 @@ module.exports = {
       },
       provider_type: {
         type: Sequelize.ENUM,
-        values: [USER_CATEGORY.DOCTOR, USER_CATEGORY.PROVIDER],
+        values: [
+          USER_CATEGORY.DOCTOR,
+          USER_CATEGORY.PROVIDER,
+          USER_CATEGORY.HSP,
+        ],
       },
       provider_id: {
         type: Sequelize.INTEGER,

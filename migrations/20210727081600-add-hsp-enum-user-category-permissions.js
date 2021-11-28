@@ -9,11 +9,11 @@ module.exports = {
       type: Sequelize.ENUM,
       values: [
         USER_CATEGORY.DOCTOR,
-        USER_CATEGORY.HSP,
         USER_CATEGORY.PATIENT,
+        USER_CATEGORY.CARE_TAKER,
+        USER_CATEGORY.HSP,
         USER_CATEGORY.PROVIDER,
         USER_CATEGORY.ADMIN,
-        USER_CATEGORY.CARE_TAKER,
       ],
     });
   },
@@ -24,9 +24,10 @@ module.exports = {
       values: [
         USER_CATEGORY.DOCTOR,
         USER_CATEGORY.PATIENT,
+        USER_CATEGORY.CARE_TAKER,
+        USER_CATEGORY.HSP,
         USER_CATEGORY.PROVIDER,
         USER_CATEGORY.ADMIN,
-        USER_CATEGORY.CARE_TAKER,
       ],
     });
   },

@@ -16,7 +16,11 @@ export const db = (database) => {
       },
       provider_type: {
         type: DataTypes.ENUM,
-        values: [USER_CATEGORY.DOCTOR, USER_CATEGORY.PROVIDER],
+        values: [
+          USER_CATEGORY.DOCTOR,
+          USER_CATEGORY.PROVIDER,
+          USER_CATEGORY.HSP,
+        ],
       },
       provider_id: {
         type: DataTypes.INTEGER,
