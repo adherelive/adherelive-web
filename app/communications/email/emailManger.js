@@ -24,7 +24,7 @@ class EmailManger {
         auth: {
           // api_user:process.config.email.USER,
           api_key: process.config.email.KEY,
-          // api_user: 'adhere-tripock',
+          // api_user: 'adherelive-demo',
           // api_key: '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'
         },
       })

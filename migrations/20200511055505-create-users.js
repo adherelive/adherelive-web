@@ -40,7 +40,7 @@ module.exports = {
       },
       category: {
         type: Sequelize.ENUM,
-        values: ["patient", "care_taker", "doctor", "provider", "admin"],
+        values: ["patient", "care_taker", "doctor", "provider", "admin", "hsp"],
         allowNull: false,
       },
       activated_on: {

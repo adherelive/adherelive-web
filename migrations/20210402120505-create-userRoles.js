@@ -25,7 +25,14 @@ module.exports = {
       },
       linked_with: {
         type: Sequelize.ENUM,
-        values: [USER_CATEGORY.PROVIDER, USER_CATEGORY.ADMIN],
+        values: [
+          USER_CATEGORY.PROVIDER,
+          USER_CATEGORY.ADMIN,
+          USER_CATEGORY.PATIENT,
+          USER_CATEGORY.DOCTOR,
+          USER_CATEGORY.HSP,
+          USER_CATEGORY.CARE_TAKER,
+        ],
         allowNull: true,
       },
       linked_id: {
