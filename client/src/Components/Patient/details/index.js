@@ -1320,7 +1320,7 @@ class PatientDetails extends Component {
           </Menu.Item>
         )}
 
-        {authPermissions.includes(USER_PERMISSIONS.CARE_PLAN.ADD) && (
+        {authPermissions.includes(USER_PERMISSIONS.DOCTORS.ADD) && (
           <Menu.Item onClick={this.handleAddDoctorToCareplan}>
             <div>{this.formatMessage(messages.secondary_doctor)}</div>
           </Menu.Item>
