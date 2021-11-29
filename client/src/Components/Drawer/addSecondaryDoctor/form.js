@@ -78,7 +78,10 @@ class AddSecondaryDoctor extends Component {
       } = doctors[doctor_id] || {};
 
       let provider_name = "";
-      if (provider_id) {
+      console.log("=============Gaurav New Chanages==========");
+      console.log(providers);
+      console.log(provider_id);
+      if (provider_id && providers) {
         const { basic_info: { name } = {} } = providers[provider_id];
         provider_name = name;
       }
