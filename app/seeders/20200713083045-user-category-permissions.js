@@ -109,6 +109,12 @@ module.exports = {
       },
       {
         category: USER_CATEGORY.DOCTOR,
+        permission_id: "23",
+        created_at: new Date(),
+        updated_at: new Date(),
+      },
+      {
+        category: USER_CATEGORY.DOCTOR,
         permission_id: "22",
         created_at: new Date(),
         updated_at: new Date(),
@@ -182,6 +188,12 @@ module.exports = {
       {
         category: USER_CATEGORY.DOCTOR,
         permission_id: "38",
+        created_at: new Date(),
+        updated_at: new Date(),
+      },
+      {
+        category: USER_CATEGORY.DOCTOR,
+        permission_id: "39",
         created_at: new Date(),
         updated_at: new Date(),
       },
@@ -398,6 +410,12 @@ module.exports = {
       {
         category: USER_CATEGORY.ADMIN,
         permission_id: "22",
+        created_at: new Date(),
+        updated_at: new Date(),
+      },
+      {
+        category: USER_CATEGORY.ADMIN,
+        permission_id: "23",
         created_at: new Date(),
         updated_at: new Date(),
       },

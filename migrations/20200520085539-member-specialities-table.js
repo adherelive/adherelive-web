@@ -30,7 +30,11 @@ module.exports = {
       },
       member_type: {
         type: Sequelize.ENUM,
-        values: [USER_CATEGORY.DOCTOR, USER_CATEGORY.PROVIDER],
+        values: [
+          USER_CATEGORY.DOCTOR,
+          USER_CATEGORY.PROVIDER,
+          USER_CATEGORY.HSP,
+        ],
       },
       member_id: {
         type: Sequelize.INTEGER,

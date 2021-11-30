@@ -287,7 +287,7 @@ class LongTerm {
       const queueService = new QueueService();
       await queueService.sendMessage(eventScheduleData);
     } catch (error) {
-      Log.debug("createVitalEvents error", error);
+      Log.debug("createDietEvents error", error);
       throw error;
     }
   };
@@ -332,7 +332,7 @@ class LongTerm {
       const queueService = new QueueService();
       await queueService.sendMessage(eventScheduleData);
     } catch (error) {
-      Log.debug("createVitalEvents error", error);
+      Log.debug("createWorkoutEvents error", error);
       throw error;
     }
   };

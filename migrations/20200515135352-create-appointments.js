@@ -14,14 +14,28 @@ module.exports = {
       },
       participant_one_type: {
         type: Sequelize.ENUM,
-        values: [USER_CATEGORY.DOCTOR, USER_CATEGORY.PATIENT],
+        values: [
+          USER_CATEGORY.DOCTOR,
+          USER_CATEGORY.PATIENT,
+          USER_CATEGORY.CARE_TAKER,
+          USER_CATEGORY.HSP,
+          USER_CATEGORY.PROVIDER,
+          USER_CATEGORY.ADMIN,
+        ],
       },
       participant_one_id: {
         type: Sequelize.INTEGER,
       },
       participant_two_type: {
         type: Sequelize.ENUM,
-        values: [USER_CATEGORY.DOCTOR, USER_CATEGORY.PATIENT],
+        values: [
+          USER_CATEGORY.DOCTOR,
+          USER_CATEGORY.PATIENT,
+          USER_CATEGORY.CARE_TAKER,
+          USER_CATEGORY.HSP,
+          USER_CATEGORY.PROVIDER,
+          USER_CATEGORY.ADMIN,
+        ],
       },
       participant_two_id: {
         type: Sequelize.INTEGER,
@@ -32,6 +46,9 @@ module.exports = {
           USER_CATEGORY.DOCTOR,
           USER_CATEGORY.PATIENT,
           USER_CATEGORY.CARE_TAKER,
+          USER_CATEGORY.HSP,
+          USER_CATEGORY.PROVIDER,
+          USER_CATEGORY.ADMIN,
         ],
       },
       organizer_id: {

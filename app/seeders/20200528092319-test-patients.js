@@ -46,7 +46,7 @@ module.exports = {
         address: "Gurgaon",
         dob: "1991-05-15 09:00:00",
         details: JSON.stringify({
-          allergies: "No Allergies",
+          allergies: "Allergies B",
           comorbidities: "Comorbidities B",
         }),
         uid: `ADH/${new Date().getFullYear()}/0002`,

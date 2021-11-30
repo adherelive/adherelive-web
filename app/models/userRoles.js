@@ -26,7 +26,14 @@ export const db = (database) => {
       },
       linked_with: {
         type: DataTypes.ENUM,
-        values: [USER_CATEGORY.PROVIDER, USER_CATEGORY.ADMIN, USER_CATEGORY.DOCTOR, USER_CATEGORY.PATIENT, USER_CATEGORY.HSP],
+        values: [
+          USER_CATEGORY.DOCTOR,
+          USER_CATEGORY.PATIENT,
+          USER_CATEGORY.HSP,
+          USER_CATEGORY.CARE_TAKER,
+          USER_CATEGORY.PROVIDER,
+          USER_CATEGORY.ADMIN,
+        ],
         allowNull: true,
       },
       linked_id: {
