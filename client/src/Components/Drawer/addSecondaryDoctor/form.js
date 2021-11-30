@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import isEmpty from "../../../Helper/is-empty";
 import { injectIntl } from "react-intl";
 import Select from "antd/es/select";
 import SecondaryDoctorForm from "./form";
@@ -81,7 +82,7 @@ class AddSecondaryDoctor extends Component {
       console.log("=============Gaurav New Chanages==========");
       console.log(providers);
       console.log(provider_id);
-      if (provider_id && providers) {
+      if (provider_id && !isEmply(providers)) {
         const { basic_info: { name } = {} } = providers[provider_id];
         provider_name = name;
       }
