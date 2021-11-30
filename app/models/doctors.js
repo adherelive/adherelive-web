@@ -2,7 +2,7 @@
 import { DataTypes } from "sequelize";
 import { TABLE_NAME as userTableName } from "./users";
 import { TABLE_NAME as specialityTableName } from "./specialities";
-import { GENDER } from "../../constant";
+import { GENDER, BLANK_STATE } from "../../constant";
 
 export const TABLE_NAME = "doctors";
 

@@ -1,6 +1,6 @@
 "use strict";
 
-import { GENDER } from "../constant";
+import { GENDER, BLANK_STATE } from "../constant";
 import { TABLE_NAME } from "../app/models/doctors";
 import { TABLE_NAME as userTableName } from "../app/models/users";
 import { TABLE_NAME as specialityTableName } from "../app/models/specialities";
