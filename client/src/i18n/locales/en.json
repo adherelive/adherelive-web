@@ -1219,7 +1219,7 @@
   "app.patient.table.emptyTemplateTable": "No Template added yet",
   "app.patient.table.new.symptoms": "New Symptom",
   "app.patient.table.pid": "PID",
-  "app.patient.table.provider": "Provider",
+  "app.patient.table.provider": "Additional Provider",
   "app.patient.table.removeFromWatchlist": "Remove from watchlist",
   "app.patient.table.removedFromWatchlist": "removed from watchlist",
   "app.patient.table.resetText": "Reset",
