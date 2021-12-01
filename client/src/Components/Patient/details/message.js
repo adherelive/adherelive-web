@@ -593,7 +593,7 @@ const messages = defineMessages({
   providers: {
     id: "app.appointment.table.providers",
     description: "",
-    defaultMessage: "Providers",
+    defaultMessage: "Additional Providers",
   },
 });
 
