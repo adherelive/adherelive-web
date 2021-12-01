@@ -82,7 +82,7 @@ class AddSecondaryDoctor extends Component {
       console.log("=============Gaurav New Chanages==========");
       console.log(providers);
       console.log(provider_id);
-      if (provider_id && !isEmply(providers)) {
+      if (provider_id && !isEmpty(providers)) {
         const { basic_info: { name } = {} } = providers[provider_id];
         provider_name = name;
       }
