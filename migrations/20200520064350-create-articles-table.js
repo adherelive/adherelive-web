@@ -5,12 +5,12 @@ import { DB_TABLES, ARTICLE_TYPE } from "../constant";
 module.exports = {
   up: (queryInterface, Sequelize) => {
     /*
-          Add altering commands here.
-          Return a promise to correctly handle asynchronicity.
+              Add altering commands here.
+              Return a promise to correctly handle asynchronicity.
 
-          Example:
-          return queryInterface.createTable('users', { id: Sequelize.INTEGER });
-        */
+              Example:
+              return queryInterface.createTable('users', { id: Sequelize.INTEGER });
+            */
     return queryInterface.createTable(DB_TABLES.ARTICLES, {
       id: {
         allowNull: false,
@@ -45,12 +45,12 @@ module.exports = {
 
   down: (queryInterface, Sequelize) => {
     /*
-          Add reverting commands here.
-          Return a promise to correctly handle asynchronicity.
+              Add reverting commands here.
+              Return a promise to correctly handle asynchronicity.
 
-          Example:
-          return queryInterface.dropTable('users');
-        */
+              Example:
+              return queryInterface.dropTable('users');
+            */
     return queryInterface.dropTable(DB_TABLES.ARTICLES);
   },
 };

@@ -7,7 +7,7 @@ module.exports = {
   up: (queryInterface) => {
     return queryInterface.bulkInsert(TABLE_NAME, [
       {
-        name: "Tele-Medicine",
+        name: "Telemedicine",
         type: PAYMENT_TYPE.ONE_TIME,
         creator_type: USER_CATEGORY.ADMIN,
         product_user_type: "patient",

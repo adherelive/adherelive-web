@@ -109,14 +109,12 @@ router.use(async (req, res, next) => {
       };
     }
     next();
-    return;
   } catch (err) {
     console.log("89127381723 err -->", err);
     req.userDetails = {
       exists: false,
     };
     next();
-    return;
   }
 });
 

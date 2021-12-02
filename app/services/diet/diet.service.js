@@ -36,10 +36,10 @@ class DietService {
 
   //     // some conditions to consider: same food item should not be added
   //     // multiple times at same time.
-  //     // but same food item can be added as similar food item but it will come single entry
+  //     // but same food item can be added as similar food item, but it will come single entry
   //     // from frontend.
 
-  //     // have to check that what will happen if same entry goes into foodgroups.
+  //     // have to check that what will happen if same entry goes into food-groups.
   //     // have to create similar food groups
   //     const { id: diet_id } = diet || {};
 
@@ -352,10 +352,10 @@ class DietService {
       });
 
       /* nested raw true is not allowed by sequelize
-              Links:
-              https://github.com/sequelize/sequelize/issues/3897 (closed)
-              https://github.com/sequelize/sequelize/issues/5193 (open)
-            */
+                    Links:
+                    https://github.com/sequelize/sequelize/issues/3897 (closed)
+                    https://github.com/sequelize/sequelize/issues/5193 (open)
+                  */
       return JSON.parse(JSON.stringify(diet));
     } catch (error) {
       throw error;

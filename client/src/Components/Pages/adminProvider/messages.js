@@ -4,7 +4,7 @@ export default defineMessages({
   providers: {
     id: "app.admin.providers.providers.text",
     description: "",
-    defaultMessage: "Providers",
+    defaultMessage: "Additional Providers",
   },
   add: {
     id: "app.admin.providers.add.text",

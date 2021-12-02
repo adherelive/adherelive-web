@@ -30,10 +30,10 @@ module.exports = {
         created_at: new Date(),
         updated_at: new Date(),
       },
-      { 
-        name: "ENT", 
-        created_at: new Date(), 
-        updated_at: new Date() 
+      {
+        name: "ENT",
+        created_at: new Date(),
+        updated_at: new Date(),
       },
       {
         name: "Family Medicine",
@@ -116,7 +116,7 @@ module.exports = {
         updated_at: new Date(),
       },
       {
-        name: "Radiodiagnosis",
+        name: "Radio Diagnosis",
         created_at: new Date(),
         updated_at: new Date(),
       },

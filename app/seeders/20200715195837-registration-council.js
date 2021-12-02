@@ -2,7 +2,7 @@
 
 import { TABLE_NAME } from "../models/registrationCouncil";
 
-const SUBHARTI_REGISTRATION_COUNCIL = [
+const REGISTRATION_COUNCIL = [
   {
     name: "Andhra Pradesh Medical Council",
     created_at: new Date(),

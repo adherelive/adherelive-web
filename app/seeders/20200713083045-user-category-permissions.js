@@ -109,13 +109,13 @@ module.exports = {
       },
       {
         category: USER_CATEGORY.DOCTOR,
-        permission_id: "23",
+        permission_id: "22",
         created_at: new Date(),
         updated_at: new Date(),
       },
       {
         category: USER_CATEGORY.DOCTOR,
-        permission_id: "22",
+        permission_id: "23",
         created_at: new Date(),
         updated_at: new Date(),
       },

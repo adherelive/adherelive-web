@@ -268,7 +268,7 @@ class AddFoodGroupForm extends Component {
   handleDifferentPortionSelect =
     ({ editable }) =>
     () => {
-      // non existing details for item
+      // non-existing details for item
 
       const {
         form: { setFieldsValue } = {},

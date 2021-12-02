@@ -34,7 +34,7 @@ export default defineMessages({
   all_providers: {
     id: "app.dashboard.sidebar.menu.all.providers",
     description: "",
-    defaultMessage: "Providers",
+    defaultMessage: "Additional Providers",
   },
   calender: {
     id: "app.dashboard.sidebar.menu.calender",

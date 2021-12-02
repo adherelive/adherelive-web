@@ -45,7 +45,7 @@
       "helper/*",
       "libs/*"
     ],
-    "delay": "2500"
+    "delay": 2500
   },
   "husky": {
     "hooks": {

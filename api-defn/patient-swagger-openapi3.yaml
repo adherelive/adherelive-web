@@ -17,22 +17,21 @@ info:
     \ |**429 Too Many Requests**      | The user has sent too many requests beyond the throttling limit. | \n 
     \ |**500 Internal Server Error**  | An unexpected internal error occurred.                           | \n 
     \ |**503 Service Unavailable**    | The service is temporarily unavailable.                          | \n "
-  termsOfService: http://adhere.live/terms/
+  termsOfService: https://adhere.live/terms/
   contact:
     email: info@adhere.live
   version: 0.1.0
 externalDocs:
   description: Find out more about Adhere
-  url: http://adhere.live
+  url: https://adhere.live
 servers:
   - url: https://api.adhere.live/api/v0.1
-  - url: http://api.adhere.live/api/v0.1
 tags:
   - name: adherence
     description: Hospital Patient Adherence System
     externalDocs:
       description: Contact Us for more information
-      url: http://adhere.live/contactus
+      url: https://adhere.live/contactus
   - name: provider
     description: Hospital Provider Information
   - name: patient
@@ -40,7 +39,7 @@ tags:
     externalDocs:
       description: Mobile application, which informs the patient about his medication
         careplan
-      url: http://adhere.live/patient
+      url: https://adhere.live/patient
 paths:
   /dashboards/graphs/{number}/{ClinicianID}/{ProviderID}:
     get:

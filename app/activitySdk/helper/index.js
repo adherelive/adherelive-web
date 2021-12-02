@@ -26,7 +26,6 @@ const notify = (participants, payload) => {
     log.info(`going to notify: ${payload} to ${participantTwo}`);
     NotificationSdk.execute(participantTwo, payload);
   }
-  return;
 };
 
 const logActivity = async ({

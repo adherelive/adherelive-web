@@ -334,10 +334,10 @@ class PatientController extends Controller {
       console.log("userdetails", req.userDetails);
       console.log(userRoleId);
       /*
-      const { [doctorId]: { care_plan_ids } = {} } = doctors || {};
-      const newData = care_plan_ids[authUserRole] || {};
-      console.log(care_plan_ids);
-      */
+            const { [doctorId]: { care_plan_ids } = {} } = doctors || {};
+            const newData = care_plan_ids[authUserRole] || {};
+            console.log(care_plan_ids);
+            */
       let newData = [];
       if (req.userDetails.userCategoryData.care_plan_ids) {
         newData = req.userDetails.userCategoryData.care_plan_ids[userRoleId];

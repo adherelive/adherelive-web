@@ -118,8 +118,6 @@ class updateProviderDrawer extends Component {
           }
         }
         message.warn(allErrors);
-
-        return;
       }
     });
   };

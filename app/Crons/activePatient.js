@@ -128,7 +128,7 @@ class ActivePatient {
           /*
            *
            * checking if any event is either completed or expired to count as passed.
-           * in future, might have to include cancelled status
+           * in the future, might have to include cancelled status
            *
            * */
           if (

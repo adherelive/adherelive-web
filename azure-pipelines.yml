@@ -57,11 +57,11 @@ stages:
     jobs:
       - deployment: VMDeploy
         displayName: Deploy to Azure VM
-        environment: 
+        environment:
           name: $(azureEnvironment)
           resourceType: VirtualMachine
           tags: 'adherelive-demo'
-        strategy: 
+        strategy:
           runOnce:
             deploy:
               steps:
