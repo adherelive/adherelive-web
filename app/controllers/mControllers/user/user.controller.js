@@ -550,6 +550,7 @@ class MobileUserController extends Controller {
       return raiseServerError(res);
     }
   };
+  doctorProviderId;
 
   async signInFacebook(req, res) {
     const { accessToken } = req.body;
@@ -800,14 +801,14 @@ class MobileUserController extends Controller {
               allUserRolesData[index]
             );
 
-            userRolesData[apiUserRoleDetails.getId()] =
-              apiUserRoleDetails.getBasicInfo();
-
-            if (apiUserRoleDetails.getLinkedId()) {
-              providerWrapper = await ProvidersWrapper(
-                null,
-                apiUserRoleDetails.getLinkedId()
-              );
+            const record = await userRolesService.getSingleUserRoleByData({
+              id: userRoleId,
+            });
+            const { linked_with = "", linked_id = null } = record || {};
+            if (linked_with === USER_CATEGORY.PROVIDER) {
+              const providerId = linked_id;
+              this.doctorProviderId = providerId;
+              providerWrapper = await ProvidersWrapper(null, providerId);
               providerApiData = {
                 ...providerApiData,
                 [providerWrapper.getProviderId()]:
