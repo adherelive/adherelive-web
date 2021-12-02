@@ -667,20 +667,20 @@ class MPatientController extends Controller {
           //
 
           /*
-          "care_plans": {
-                "1": {
-                    "basic_info": {
-                        "id": 1,
-                        "doctor_id": 1,
-                        "patient_id": 1,
-                        "care_plan_template_id": null,
-                        "user_role_id": 1
-                    },
-                    "details": {
-                        "severity_id": 1,
-                        "condition_id": 1,
-                        "treatment_id": 1
-                    },*/
+                    "care_plans": {
+                          "1": {
+                              "basic_info": {
+                                  "id": 1,
+                                  "doctor_id": 1,
+                                  "patient_id": 1,
+                                  "care_plan_template_id": null,
+                                  "user_role_id": 1
+                              },
+                              "details": {
+                                  "severity_id": 1,
+                                  "condition_id": 1,
+                                  "treatment_id": 1
+                              },*/
           console.log("===========test=========");
           console.log(patient_id);
           console.log(id["basic_info"]["patient_id"]);
@@ -1102,25 +1102,25 @@ class MPatientController extends Controller {
       }
 
       /*
-      care_plans: {
-            ...carePlanApiDetails,
-          },
-          care_plan_templates: {
-            ...otherCarePlanTemplates,
-          },
-          care_plan_template_ids: [...carePlanTemplateIds],
-          current_careplan_id: latestCarePlanId,
+            care_plans: {
+                  ...carePlanApiDetails,
+                },
+                care_plan_templates: {
+                  ...otherCarePlanTemplates,
+                },
+                care_plan_template_ids: [...carePlanTemplateIds],
+                current_careplan_id: latestCarePlanId,
 
-          template_appointments: {
-            ...templateAppointmentData,
-          },
-          template_medications: {
-            ...templateMedicationData,
-          },
-          vital_templates: {
-            ...vitalTemplateData,
-          },
-          */
+                template_appointments: {
+                  ...templateAppointmentData,
+                },
+                template_medications: {
+                  ...templateMedicationData,
+                },
+                vital_templates: {
+                  ...vitalTemplateData,
+                },
+                */
       return this.raiseSuccess(
         res,
         200,

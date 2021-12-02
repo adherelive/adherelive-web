@@ -565,6 +565,7 @@ export const getInitialData = () => {
       });
 
       const { status, payload: { error, data } = {} } = response || {};
+      console.log("Status for the Initial data load: ", status);
 
       if (status === false) {
         dispatch({
@@ -588,6 +589,8 @@ export const getInitialData = () => {
         let authRedirection = setAuthRedirect(users[auth_user], true);
         const { has_consent = false } = users[auth_user] || {};
 
+        console.log("Value of the FireBase keys: ", firebase_keys);
+
         dispatch({
           type: GETTING_INITIAL_DATA_COMPLETED,
           payload: {
@@ -609,7 +612,7 @@ export const getInitialData = () => {
         });
       }
     } catch (err) {
-      console.log("err getinitial", err);
+      console.log("err get initial data", err);
       throw err;
     }
     return response;

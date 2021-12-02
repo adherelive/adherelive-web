@@ -4,7 +4,6 @@ export const makeQueryString = (data) => {
   if (data) {
     return querystring.stringify(data);
   } else {
-    return;
   }
 };
 

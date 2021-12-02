@@ -149,8 +149,6 @@ class addProviderDrawer extends Component {
           }
         }
         message.warn(allErrors);
-
-        return;
       }
     });
   };

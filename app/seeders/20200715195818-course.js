@@ -20,7 +20,7 @@ module.exports = {
         created_at: new Date(),
         updated_at: new Date(),
       },
-      { 
+      {
         name: "M.CH. Urology",
         created_at: new Date(),
         updated_at: new Date(),
@@ -108,7 +108,7 @@ module.exports = {
       {
         name: "D.M. Virology",
         created_at: new Date(),
-        updated_at: new Date()
+        updated_at: new Date(),
       },
       {
         name: "M.CH. Vascular Surgery",
