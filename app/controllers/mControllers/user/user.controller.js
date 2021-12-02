@@ -800,20 +800,23 @@ class MobileUserController extends Controller {
               allUserRolesData[index]
             );
 
-            userRolesData[apiUserRoleDetails.getId()] =
-              apiUserRoleDetails.getBasicInfo();
-
-            if (apiUserRoleDetails.getLinkedId()) {
-              providerWrapper = await ProvidersWrapper(
-                null,
-                apiUserRoleDetails.getLinkedId()
-              );
+            const record = await userRolesService.getSingleUserRoleByData({
+              id: userRoleId,
+            });
+            const { linked_with = "", linked_id = null } = record || {};
+            if (linked_with === USER_CATEGORY.PROVIDER) {
+              const providerId = linked_id;
+              doctorProviderId = providerId;
+              providerWrapper = await ProvidersWrapper(null, providerId);
               providerApiData = {
                 ...providerApiData,
                 [providerWrapper.getProviderId()]:
                   await providerWrapper.getAllInfo(),
               };
             }
+
+            userRolesData[apiUserRoleDetails.getId()] =
+              apiUserRoleDetails.getBasicInfo();
           }
         } else {
           apiUserDetails = await MUserWrapper(null, userId);
