@@ -113,6 +113,10 @@ class MPatientController extends Controller {
   mUpdatePatient = async (req, res) => {
     try {
       // console.log("-------------- req.body ------------", req.body);
+      console.log("=============IN Mobile Controller 1=================");
+      console.log(userDetails);
+      console.log(body);
+      console.log("==================================================");
       const { userDetails, body } = req;
       const { profile_pic, name, email, timings = {} } = body || {};
       const { userId = "3" } = userDetails || {};
