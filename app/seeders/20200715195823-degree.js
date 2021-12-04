@@ -21,7 +21,7 @@ module.exports = {
         updated_at: new Date(),
       },
       {
-        name: "M.D. (DERM.,VENE. & LEPROSY)/(DERMATOLOGY)/(SKIN & VENEREAL DISEASES)/(VENEREOLOGY)",
+        name: "M.D. (DERMATOLOGY)/(SKIN & VENEREAL DISEASES)/(VENEREOLOGY)",
         created_at: new Date(),
         updated_at: new Date(),
       },
@@ -208,7 +208,7 @@ module.exports = {
         updated_at: new Date(),
       },
       {
-        name: "M.Ch. (Neuro Surgery)",
+        name: "M.Ch. (Neurosurgery)",
         created_at: new Date(),
         updated_at: new Date(),
       },

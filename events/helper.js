@@ -467,7 +467,7 @@ export const handleVitals = async (vital) => {
     
     if (key === REPEAT_INTERVAL.ONCE) {
       for (let i = 0; i < allDays.length; i++) {
-        // **** TAKING WAKE UP TIME AS TIME FOR REPEAT INTERVAL = ONCE ****
+        // **** TAKING WAKE-UP TIME AS TIME FOR REPEAT INTERVAL = ONCE ****
         
         const {value: wakeUpTime} = timings[WAKE_UP];
         

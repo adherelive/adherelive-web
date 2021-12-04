@@ -61,7 +61,7 @@ module.exports = {
         updated_at: new Date(),
       },
       {
-        name: "M.CH. Neuro Surgery",
+        name: "M.CH. Neurosurgery",
         created_at: new Date(),
         updated_at: new Date(),
       },
@@ -71,7 +71,7 @@ module.exports = {
         updated_at: new Date(),
       },
       {
-        name: "M.CH. Plastic & Reconstructructive Surgery",
+        name: "M.CH. Plastic & Reconstructive Surgery",
         created_at: new Date(),
         updated_at: new Date(),
       },

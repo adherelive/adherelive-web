@@ -116,7 +116,7 @@ module.exports = {
         updated_at: new Date(),
       },
       {
-        name: "Radiodiagnosis",
+        name: "Radio Diagnosis",
         created_at: new Date(),
         updated_at: new Date(),
       },

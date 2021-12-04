@@ -693,7 +693,7 @@ class MReminderController extends Controller {
   //      *
   //      * for the same ids, fetch scheduleEvents based on event_id and event_type that are expired
   //      *
-  //      * then proceed with the filter of critical and non critical based on critical column in schedule events 0 -> false 1 -> true
+  //      * then proceed with the filter of critical and noncritical based on critical column in schedule events 0 -> false 1 -> true
   //      *
   //      * other:
   //      *   follow snake casing for response as followed across the apis

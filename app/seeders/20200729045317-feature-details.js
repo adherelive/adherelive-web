@@ -33,7 +33,7 @@ module.exports = {
             1: [
               "Blood test",
               "Urine tests",
-              "Complete Bllod Count",
+              "Complete Blood Count",
               "Liver Function Tests (LFT)",
               "Imaging tests",
               "Kidney Biopsy",
@@ -68,7 +68,7 @@ module.exports = {
             2: {
               basic_info: {
                 id: 2,
-                name: "Columbia Asia",
+                name: "Columbia Asia Hospitals",
                 address: null,
                 city: null,
                 state: null,
@@ -95,7 +95,7 @@ module.exports = {
             5: {
               basic_info: {
                 id: 5,
-                name: "Self",
+                name: "Self Clinic/Hospital",
                 address: null,
                 city: null,
                 state: null,
@@ -127,7 +127,7 @@ module.exports = {
             1: [
               "Blood test",
               "Urine tests",
-              "Complete Bllod Count",
+              "Complete Blood Count",
               "Liver Function Tests (LFT)",
               "Imaging tests",
               "Kidney Biopsy",
@@ -189,7 +189,7 @@ module.exports = {
             5: {
               basic_info: {
                 id: 5,
-                name: "Self",
+                name: "Self Clinic/Hospital",
                 address: null,
                 city: null,
                 state: null,

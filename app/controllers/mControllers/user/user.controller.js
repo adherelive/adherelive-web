@@ -64,6 +64,8 @@ import {getSeparateName} from "../../../helper/common";
 const Logger = new Log("MOBILE USER CONTROLLER");
 
 class MobileUserController extends Controller {
+  doctorProviderId;
+  
   constructor() {
     super();
   }
@@ -806,7 +808,7 @@ class MobileUserController extends Controller {
             const {linked_with = "", linked_id = null} = record || {};
             if (linked_with === USER_CATEGORY.PROVIDER) {
               const providerId = linked_id;
-              doctorProviderId = providerId;
+              this.doctorProviderId = providerId;
               providerWrapper = await ProvidersWrapper(null, providerId);
               providerApiData = {
                 ...providerApiData,

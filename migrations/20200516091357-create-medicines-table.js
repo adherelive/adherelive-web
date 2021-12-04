@@ -17,7 +17,7 @@ module.exports = {
         allowNull: false,
       },
       type: {
-        type: Sequelize.STRING,
+        type: Sequelize.STRING(1000),
         // values: [MEDICINE_TYPE.TABLET, MEDICINE_TYPE.INJECTION],
         defaultValue: MEDICINE_TYPE.TABLET,
       },

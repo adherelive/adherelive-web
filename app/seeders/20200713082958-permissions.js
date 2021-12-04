@@ -51,7 +51,7 @@ module.exports = {
         updated_at: new Date(),
       },
       {
-        type: "ADD_CAREPLAN",
+        type: "ADD_CARE_PLAN",
         created_at: new Date(),
         updated_at: new Date(),
       },
