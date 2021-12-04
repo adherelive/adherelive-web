@@ -1,9 +1,9 @@
 export default class TemplateWorkout {
-    constructor(data) {
-        this._data = data;
-    }
+  constructor(data) {
+    this._data = data;
+  }
 
-    getId = () => this._data.id;
+  getId = () => this._data.id;
 
-    getDetails = () => this._data.details || {};
+  getDetails = () => this._data.details || {};
 }

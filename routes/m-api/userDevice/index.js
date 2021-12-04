@@ -5,16 +5,12 @@ import UserDeviceController from "../../../app/controllers/mControllers/userDevi
 import * as validator from "./validator";
 
 router.post(
-    "/",
-    Authenticate,
-    validator.addUserDeviceSchema,
-    UserDeviceController.create
+  "/",
+  Authenticate,
+  validator.addUserDeviceSchema,
+  UserDeviceController.create
 );
 
-router.delete(
-    "/",
-    Authenticate,
-    UserDeviceController.delete
-)
+router.delete("/", Authenticate, UserDeviceController.delete);
 
 module.exports = router;

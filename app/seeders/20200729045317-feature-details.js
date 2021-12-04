@@ -189,7 +189,7 @@ module.exports = {
             5: {
               basic_info: {
                 id: 5,
-                name: "Self",
+                name: "Self Clinic/Hospital",
                 address: null,
                 city: null,
                 state: null,

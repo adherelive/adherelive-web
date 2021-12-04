@@ -1,3 +1,3 @@
 export const getAllTransactionsUrl = () => {
-    return `/transactions`;
+  return `/transactions`;
 };

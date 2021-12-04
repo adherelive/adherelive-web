@@ -1,3 +1,3 @@
 export const searchCouncils = (data) => {
-    return `/councils?value=${data}`;
+  return `/councils?value=${data}`;
 };

@@ -1,13 +1,13 @@
 export default class FeatureDetails {
-    constructor(data) {
-        this._data = data;
-    }
+  constructor(data) {
+    this._data = data;
+  }
 
-    getFeatureType = () => {
-        return this._data.get("feature_type");
-    };
+  getFeatureType = () => {
+    return this._data.get("feature_type");
+  };
 
-    getFeatureDetails = () => {
-        return this._data.get("details");
-    };
+  getFeatureDetails = () => {
+    return this._data.get("details");
+  };
 }

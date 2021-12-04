@@ -1,9 +1,9 @@
 export default class DoctorClinic {
-    constructor(data) {
-        this._data = data;
-    }
+  constructor(data) {
+    this._data = data;
+  }
 
-    getDoctorClinicId = () => {
-        return this._data.get("id");
-    };
+  getDoctorClinicId = () => {
+    return this._data.get("id");
+  };
 }

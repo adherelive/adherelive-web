@@ -14,23 +14,15 @@ import EventController from "../../../app/controllers/scheduleEvents/event.contr
 //     MedicationReminder.getMedicationDetails
 // );
 
-router.get(
-    "/missed",
-    Authenticate,
-    EventController.getAllMissedEvents
-);
+router.get("/missed", Authenticate, EventController.getAllMissedEvents);
 
 router.get(
-    "/missed/:patient_id",
-    Authenticate,
-    EventController.getPatientMissedEvents
+  "/missed/:patient_id",
+  Authenticate,
+  EventController.getPatientMissedEvents
 );
 
-router.get(
-    "/:patient_id",
-    Authenticate,
-    EventController.getAllEvents
-);
+router.get("/:patient_id", Authenticate, EventController.getAllEvents);
 
 // router.post(
 //     "/medication-reminder/:patient_id",
@@ -46,22 +38,18 @@ router.get(
 //     MedicationReminder.createCarePlanMedication
 // );
 
-router.post(
-    "/:id/complete",
-    Authenticate,
-    EventController.markEventComplete
-);
+router.post("/:id/complete", Authenticate, EventController.markEventComplete);
 
 router.post(
-    "/:id/vitals/response",
-    Authenticate,
-    EventController.updateVitalResponse
+  "/:id/vitals/response",
+  Authenticate,
+  EventController.updateVitalResponse
 );
 
 router.delete(
-    "/:id/vitals/response",
-    Authenticate,
-    EventController.deleteVitalResponse
+  "/:id/vitals/response",
+  Authenticate,
+  EventController.deleteVitalResponse
 );
 
 module.exports = router;

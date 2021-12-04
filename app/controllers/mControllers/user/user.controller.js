@@ -64,6 +64,8 @@ import { getSeparateName } from "../../../helper/common";
 const Logger = new Log("MOBILE USER CONTROLLER");
 
 class MobileUserController extends Controller {
+  doctorProviderId;
+
   constructor() {
     super();
   }
@@ -550,7 +552,6 @@ class MobileUserController extends Controller {
       return raiseServerError(res);
     }
   };
-  doctorProviderId;
 
   async signInFacebook(req, res) {
     const { accessToken } = req.body;
@@ -815,6 +816,9 @@ class MobileUserController extends Controller {
                   await providerWrapper.getAllInfo(),
               };
             }
+
+            userRolesData[apiUserRoleDetails.getId()] =
+              apiUserRoleDetails.getBasicInfo();
           }
         } else {
           apiUserDetails = await MUserWrapper(null, userId);

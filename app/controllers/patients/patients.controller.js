@@ -106,7 +106,10 @@ class PatientController extends Controller {
       const { pid, profile_pic, name, email = "" } = body || {};
       const { userId = "3" } = userDetails || {};
 
-      console.log("\n\n PROFILE PIC FILE \n", req);
+      console.log("==============in Web Controller================");
+      console.log(userDetails);
+      console.log(body);
+      console.log("===============================================");
 
       if (email) {
         const updateUserDetails = await userService.updateEmail(
@@ -2048,18 +2051,18 @@ class PatientController extends Controller {
       let allPatientIds = [];
 
       /** TODO: Check if these are required now or not.
-             userId (auth) [DOCTOR]
-
-             SORT
-             created_at [asc, desc]
-             name [asc, desc]
-
-             FILTER
-             diagnosis [description, type]
-             treatment
-
-             doctors -> careplans -> patients
-             */
+       userId (auth) [DOCTOR]
+       
+       SORT
+       created_at [asc, desc]
+       name [asc, desc]
+       
+       FILTER
+       diagnosis [description, type]
+       treatment
+       
+       doctors -> careplans -> patients
+       */
 
       const {
         offset = 0,

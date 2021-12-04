@@ -1,8 +1,7 @@
 export const getNotifications = () => {
-    return `/notifications`;
+  return `/notifications`;
 };
 
-
 export const fetchRaiseChatNotificationUrl = () => {
-    return "/notifications/chat-notfication";
+  return "/notifications/chat-notfication";
 };

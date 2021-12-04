@@ -1,34 +1,31 @@
 export default class UserRoles {
-    constructor(data) {
-        this._data = data;
-    }
+  constructor(data) {
+    this._data = data;
+  }
 
-    getId = () => {
-        return this._data.id;
-    };
+  getId = () => {
+    return this._data.id;
+  };
 
-    getUserId = () => {
-        return this._data.user_identity;
-    }
+  getUserId = () => {
+    return this._data.user_identity;
+  };
 
-    getLinkedId = () => {
-        return this._data.linked_id;
-    }
+  getLinkedId = () => {
+    return this._data.linked_id;
+  };
 
-    getLinkedWith = () => {
-        return this._data.linked_with;
-    }
+  getLinkedWith = () => {
+    return this._data.linked_with;
+  };
 
-    getUser = () => this._data.user;
+  getUser = () => this._data.user;
 
-    // getCategoryId = () => {
-    //     return this._data.category_id
-    // }
+  // getCategoryId = () => {
+  //     return this._data.category_id
+  // }
 
-    // getCategoryType = () => {
-    //     return this._data.category_type
-    // }
-
+  // getCategoryType = () => {
+  //     return this._data.category_type
+  // }
 }
-
-

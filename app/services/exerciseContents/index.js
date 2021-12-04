@@ -1,13 +1,13 @@
 export default class ExerciseContent {
-    constructor(data) {
-        this._data = data;
-    }
+  constructor(data) {
+    this._data = data;
+  }
 
-    getId = () => this._data.id;
+  getId = () => this._data.id;
 
-    getExerciseId = () => this._data.exercise_id;
+  getExerciseId = () => this._data.exercise_id;
 
-    getVideoType = () => this._data.video_content_type;
+  getVideoType = () => this._data.video_content_type;
 
-    getVideo = () => this._data.video_content;
+  getVideo = () => this._data.video_content;
 }
