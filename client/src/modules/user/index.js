@@ -7,7 +7,7 @@ const intial_state = {
     gender: "M",
     phone_number: "+919810739699",
     email_id: "gagneet@gmail.com",
-    patient_id: ATD001005,
+    patient_id: "ATD/001/005",
     profile_picture:
       "https://www.gravatar.com/avatar/205e460b479e2e5b48aec07710c08d50",
     treatment_details: {
