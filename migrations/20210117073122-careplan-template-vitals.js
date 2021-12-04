@@ -1,10 +1,10 @@
 "use strict";
 
-import { DataTypes } from "sequelize";
+import {DataTypes} from "sequelize";
 
-import { TABLE_NAME } from "../app/models/templateVitals";
-import { TABLE_NAME as carePlanTemplateTableName } from "../app/models/careplanTemplate";
-import { TABLE_NAME as vitalTemplatesTableName } from "../app/models/vitalTemplates";
+import {TABLE_NAME} from "../app/models/templateVitals";
+import {TABLE_NAME as carePlanTemplateTableName} from "../app/models/careplanTemplate";
+import {TABLE_NAME as vitalTemplatesTableName} from "../app/models/vitalTemplates";
 
 module.exports = {
   up: (queryInterface, Sequelize) => {
@@ -53,7 +53,7 @@ module.exports = {
       },
     });
   },
-
+  
   down: (queryInterface, Sequelize) => {
     return queryInterface.dropTable(TABLE_NAME);
   },

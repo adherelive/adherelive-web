@@ -1,8 +1,8 @@
 "use strict";
 
-import { TABLE_NAME } from "../app/models/workoutExerciseGroupMapping";
-import { TABLE_NAME as workoutTableName } from "../app/models/workoutExerciseGroupMapping";
-import { TABLE_NAME as exerciseGroupTableName } from "../app/models/exerciseGroup";
+import {TABLE_NAME} from "../app/models/workoutExerciseGroupMapping";
+import {TABLE_NAME as workoutTableName} from "../app/models/workoutExerciseGroupMapping";
+import {TABLE_NAME as exerciseGroupTableName} from "../app/models/exerciseGroup";
 
 module.exports = {
   up: (queryInterface, DataTypes) => {
@@ -49,7 +49,7 @@ module.exports = {
       },
     });
   },
-
+  
   down: (queryInterface, DataTypes) => {
     return queryInterface.dropTable(TABLE_NAME);
   },

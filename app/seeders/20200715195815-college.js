@@ -1,6 +1,6 @@
 "use strict";
 
-import { TABLE_NAME } from "../models/college";
+import {TABLE_NAME} from "../models/college";
 
 module.exports = {
   up: (queryInterface, Sequelize) => {
@@ -3427,7 +3427,7 @@ module.exports = {
       },
     ]);
   },
-
+  
   down: (queryInterface, Sequelize) => {
     return queryInterface.bulkDelete(TABLE_NAME, null, {});
   },

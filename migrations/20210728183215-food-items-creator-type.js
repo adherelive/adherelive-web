@@ -1,6 +1,6 @@
 "use strict";
-import { TABLE_NAME } from "../app/models/foodItems";
-import { USER_CATEGORY } from "../constant";
+import {TABLE_NAME} from "../app/models/foodItems";
+import {USER_CATEGORY} from "../constant";
 
 module.exports = {
   up: (queryInterface, Sequelize) => {
@@ -16,7 +16,7 @@ module.exports = {
       }),
     ]);
   },
-
+  
   down: (queryInterface, Sequelize) => {
     return Promise.all([
       queryInterface.changeColumn(TABLE_NAME, "creator_type"),

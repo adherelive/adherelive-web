@@ -1,5 +1,5 @@
 export const getVideoAccessToken = (userId) => {
-    return `/agora/video/token/${userId}`;
+  return `/agora/video/token/${userId}`;
 };
 
 export const startCall = () => `/agora/start`;

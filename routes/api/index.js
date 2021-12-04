@@ -57,21 +57,21 @@ router.use(async function (req, res, next) {
       userId = null,
       userRoleId,
       userRoleData;
-    const { cookies = {} } = req;
+    const {cookies = {}} = req;
     if (cookies.accessToken) {
       accessToken = cookies.accessToken;
     }
-
+    
     //  ----- FOR API TEST POSTMAN ------
-
+    
     // console.log("------------ ACCESS TOKEN ---------> ", req.headers);
-    const { accesstoken: aT = "" } = req.headers || {};
+    const {accesstoken: aT = ""} = req.headers || {};
     if (aT) {
       accessToken = aT;
     }
-
+    
     const secret = process.config.TOKEN_SECRET_KEY;
-
+    
     if (accessToken) {
       const decodedAccessToken = await jwt.verify(accessToken, secret);
       const {
@@ -100,12 +100,12 @@ router.use(async function (req, res, next) {
       next();
       return;
     }
-
+    
     const userData = await userService.getUser(userId);
     if (userData) {
       const user = await UserWrapper(userData);
-      const { userCategoryData, userCategoryId } =
-        (await user.getCategoryInfo()) || {};
+      const {userCategoryData, userCategoryId} =
+      (await user.getCategoryInfo()) || {};
       req.userDetails = {
         exists: true,
         userRoleId,
@@ -115,7 +115,7 @@ router.use(async function (req, res, next) {
         userCategoryData,
         userCategoryId,
       };
-
+      
       req.permissions = await user.getPermissions();
     } else {
       req.userDetails = {

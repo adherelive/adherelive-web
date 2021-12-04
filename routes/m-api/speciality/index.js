@@ -5,9 +5,9 @@ import Authenticate from "../middlewares/auth";
 import SpecialityController from "../../../app/controllers/mControllers/speciality/speciality.controller";
 
 router.get(
-    "/",
-    Authenticate,
-    SpecialityController.searchSpeciality
+  "/",
+  Authenticate,
+  SpecialityController.searchSpeciality
 );
 
 module.exports = router;

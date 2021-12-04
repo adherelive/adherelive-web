@@ -1,5 +1,5 @@
-import React, { Component } from "react";
-import { injectIntl } from "react-intl";
+import React, {Component} from "react";
+import {injectIntl} from "react-intl";
 import generateRow from "./dataRow";
 import getColumn from "./header";
 import message from "antd/es/message";
@@ -11,26 +11,26 @@ import messages from "./messages";
 class WorkoutTable extends Component {
   constructor(props) {
     super(props);
-
+    
     this.state = {
       loading: false,
       workout_ids: [],
     };
   }
-
+  
   async componentDidMount() {
     await this.getAllWorkouts();
   }
-
+  
   async componentDidUpdate(prevProps, prevState) {
-    const { care_plans = {}, carePlanId = null } = this.props;
+    const {care_plans = {}, carePlanId = null} = this.props;
     const {
       carePlanId: prev_carePlanId = null,
       care_plans: prev_care_plans = {},
     } = prevProps || {};
-    const { workout_ids = [] } = care_plans[carePlanId] || {};
-    const { workout_ids: prev_workout_ids = [] } =
-      prev_care_plans[prev_carePlanId] || {};
+    const {workout_ids = []} = care_plans[carePlanId] || {};
+    const {workout_ids: prev_workout_ids = []} =
+    prev_care_plans[prev_carePlanId] || {};
     if (
       prev_workout_ids.length !== workout_ids.length ||
       carePlanId != prev_carePlanId
@@ -38,7 +38,7 @@ class WorkoutTable extends Component {
       await this.getAllWorkouts();
     }
   }
-
+  
   getAllWorkouts = async () => {
     try {
       const {
@@ -48,50 +48,50 @@ class WorkoutTable extends Component {
         patientId,
         workouts = {},
       } = this.props;
-      this.setState({ loading: true });
+      this.setState({loading: true});
       const response = await getWorkoutsForPatient(patientId);
       const {
         status,
         statusCode,
-        payload: { data = {}, message: resp_msg = "" } = {},
+        payload: {data = {}, message: resp_msg = ""} = {},
       } = response || {};
       if (!status && statusCode !== 422) {
         message.warn(resp_msg);
       }
-
-      const { workout_ids = [] } = care_plans[carePlanId] || {};
-      console.log("234623426384762742342", { workout_ids, workouts });
-
+      
+      const {workout_ids = []} = care_plans[carePlanId] || {};
+      console.log("234623426384762742342", {workout_ids, workouts});
+      
       this.setState({
         loading: false,
         workout_ids,
       });
     } catch (error) {
-      this.setState({ loading: false });
+      this.setState({loading: false});
     }
   };
-
+  
   getDataSource = () => {
     const {
       isOtherCarePlan,
-      intl: { formatMessage } = {},
+      intl: {formatMessage} = {},
       workouts = {},
       auth_role = null,
       care_plans = {},
       carePlanId = null,
     } = this.props;
-
-    const { workout_ids = [] } = this.state;
-
-    const { basic_info: { user_role_id = null } = {} } =
-      care_plans[carePlanId] || {};
+    
+    const {workout_ids = []} = this.state;
+    
+    const {basic_info: {user_role_id = null} = {}} =
+    care_plans[carePlanId] || {};
     let canViewDetails = true;
     if (!isOtherCarePlan && user_role_id.toString() === auth_role.toString()) {
       canViewDetails = false;
     }
-
-    const { openResponseDrawer, openEditDrawer } = this;
-
+    
+    const {openResponseDrawer, openEditDrawer} = this;
+    
     return workout_ids.map((id) => {
       const workoutData = workouts[id] || {};
       return generateRow({
@@ -105,7 +105,7 @@ class WorkoutTable extends Component {
       });
     });
   };
-
+  
   openResponseDrawer = (workout_id) => (e) => {
     e.preventDefault();
     const {
@@ -116,9 +116,9 @@ class WorkoutTable extends Component {
       carePlanId,
       workouts = {},
     } = this.props;
-    const { basic_info: { name = "" } = {} } = workouts[workout_id] || {};
-    const { basic_info: { user_role_id = null } = {} } =
-      care_plans[carePlanId] || {};
+    const {basic_info: {name = ""} = {}} = workouts[workout_id] || {};
+    const {basic_info: {user_role_id = null} = {}} =
+    care_plans[carePlanId] || {};
     let canViewDetails = true;
     if (!isOtherCarePlan && user_role_id.toString() === auth_role.toString()) {
       canViewDetails = false;
@@ -129,7 +129,7 @@ class WorkoutTable extends Component {
       loading: true,
     });
   };
-
+  
   openEditDrawer = (workout_id) => (e) => {
     e.preventDefault();
     const {
@@ -141,9 +141,9 @@ class WorkoutTable extends Component {
       carePlanId,
       workouts = {},
     } = this.props;
-    const { details: { repeat_days = [] } = {} } = workouts[workout_id];
-    const { basic_info: { user_role_id = null } = {} } =
-      care_plans[carePlanId] || {};
+    const {details: {repeat_days = []} = {}} = workouts[workout_id];
+    const {basic_info: {user_role_id = null} = {}} =
+    care_plans[carePlanId] || {};
     let canViewDetails = true;
     if (!isOtherCarePlan && user_role_id.toString() === auth_role.toString()) {
       canViewDetails = false;
@@ -156,26 +156,26 @@ class WorkoutTable extends Component {
       canViewDetails,
     });
   };
-
+  
   formatMessage = (data) => this.props.intl.formatMessage(data);
-
+  
   getLoadingComponent = () => {
-    const antIcon = <Icon type="loading" style={{ fontSize: 24 }} spin />;
+    const antIcon = <Icon type="loading" style={{fontSize: 24}} spin/>;
     return {
       indicator: antIcon,
     };
   };
-
+  
   render() {
     const locale = {
       emptyText: this.formatMessage(messages.no_workouts),
     };
-
-    const { intl: { formatMessage } = {} } = this.props;
-    const { getLoadingComponent, getDataSource } = this;
-
-    const { loading = false } = this.state;
-
+    
+    const {intl: {formatMessage} = {}} = this.props;
+    const {getLoadingComponent, getDataSource} = this;
+    
+    const {loading = false} = this.state;
+    
     return (
       <Table
         rowClassName={() => "pointer"}
@@ -185,7 +185,7 @@ class WorkoutTable extends Component {
           className: "pointer",
         })}
         dataSource={getDataSource()}
-        scroll={{ x: "100%" }}
+        scroll={{x: "100%"}}
         pagination={{
           position: "bottom",
         }}

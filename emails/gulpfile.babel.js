@@ -132,7 +132,7 @@ function watch() {
 function inliner(css) {
   var css = fs.readFileSync(css).toString();
   var mqCss = siphon(css);
-
+  
   var pipe = lazypipe()
     .pipe($.inlineCss, {
       applyStyleTags: false,
@@ -152,7 +152,7 @@ function inliner(css) {
       collapseWhitespace: true,
       minifyCSS: true,
     });
-
+  
   return pipe();
 }
 
@@ -165,7 +165,7 @@ function creds(done) {
     beep();
     console.log(
       "[AWS]".bold.red +
-        " Sorry, there was an issue locating your config.json. Please see README.md"
+      " Sorry, there was an issue locating your config.json. Please see README.md"
     );
     process.exit();
   }
@@ -180,17 +180,17 @@ function aws() {
   var headers = {
     "Cache-Control": "max-age=315360000, no-transform, public",
   };
-
+  
   return (
     gulp
       .src("./dist/assets/img/*")
       // publisher will add Content-Length, Content-Type and headers specified above
       // If not specified it will set x-amz-acl to public-read by default
       .pipe(publisher.publish(headers))
-
+      
       // create a cache file to speed up consecutive uploads
       //.pipe(publisher.cache())
-
+      
       // print upload updates to console
       .pipe($.awspublish.reporter())
   );
@@ -200,7 +200,7 @@ function aws() {
 function litmus() {
   var awsURL =
     !!CONFIG && !!CONFIG.aws && !!CONFIG.aws.url ? CONFIG.aws.url : false;
-
+  
   return gulp
     .src("dist/**/*.html")
     .pipe($.if(!!awsURL, $.replace(/=('|")(\/?assets\/img)/g, "=$1" + awsURL)))
@@ -212,11 +212,11 @@ function litmus() {
 function mail() {
   var awsURL =
     !!CONFIG && !!CONFIG.aws && !!CONFIG.aws.url ? CONFIG.aws.url : false;
-
+  
   if (EMAIL) {
     CONFIG.mail.to = [EMAIL];
   }
-
+  
   return gulp
     .src("dist/**/*.html")
     .pipe($.if(!!awsURL, $.replace(/=('|")(\/?assets\/img)/g, "=$1" + awsURL)))
@@ -228,7 +228,7 @@ function mail() {
 function zip() {
   var dist = "dist";
   var ext = ".html";
-
+  
   function getHtmlFiles(dir) {
     return fs.readdirSync(dir).filter(function (file) {
       var fileExt = path.join(dir, file);
@@ -236,34 +236,34 @@ function zip() {
       return fs.statSync(fileExt).isFile() && isHtml;
     });
   }
-
+  
   var htmlFiles = getHtmlFiles(dist);
-
+  
   var moveTasks = htmlFiles.map(function (file) {
     var sourcePath = path.join(dist, file);
     var fileName = path.basename(sourcePath, ext);
-
+    
     var moveHTML = gulp.src(sourcePath).pipe(
       $.rename(function (path) {
         path.dirname = fileName;
         return path;
       })
     );
-
+    
     var moveImages = gulp
       .src(sourcePath)
-      .pipe($.htmlSrc({ selector: "img" }))
+      .pipe($.htmlSrc({selector: "img"}))
       .pipe(
         $.rename(function (path) {
           path.dirname = fileName + path.dirname.replace("dist", "");
           return path;
         })
       );
-
+    
     return merge(moveHTML, moveImages)
       .pipe($.zip(fileName + ".zip"))
       .pipe(gulp.dest("dist"));
   });
-
+  
   return merge(moveTasks);
 }

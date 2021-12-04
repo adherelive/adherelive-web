@@ -8,9 +8,9 @@ class FoodItemDetailsWrapper extends BaseFoodItemDetails {
   constructor(data) {
     super(data);
   }
-
+  
   getBasicInfo = () => {
-    const { _data } = this;
+    const {_data} = this;
     const {
       id,
       food_item_id,
@@ -25,7 +25,7 @@ class FoodItemDetailsWrapper extends BaseFoodItemDetails {
       creator_id,
       creator_type,
     } = _data || {};
-
+    
     return {
       basic_info: {
         id,
@@ -43,21 +43,21 @@ class FoodItemDetailsWrapper extends BaseFoodItemDetails {
       details,
     };
   };
-
+  
   getReferenceInfo = async () => {
     const foodItemId = this.getFoodItemId();
-    const foodItemWrapper = await FoodItemWrapper({ id: foodItemId });
+    const foodItemWrapper = await FoodItemWrapper({id: foodItemId});
     let foodItemApiData = {};
     foodItemApiData[foodItemWrapper.getId()] =
       await foodItemWrapper.getBasicInfo();
     const portionId = this.getPortionId();
-    const portionWrapper = await PortionWrapper({ id: portionId });
+    const portionWrapper = await PortionWrapper({id: portionId});
     let portionData = {};
     portionData[portionId] = portionWrapper.getBasicInfo();
-
+    
     return {
       food_item_details: {
-        [this.getId()]: { ...(await this.getBasicInfo()) },
+        [this.getId()]: {...(await this.getBasicInfo())},
       },
       food_items: {
         ...foodItemApiData,
@@ -67,10 +67,10 @@ class FoodItemDetailsWrapper extends BaseFoodItemDetails {
       },
     };
   };
-
+  
   getPortionDetails = async () => {
     const portionId = this.getPortionId();
-    const portionWrapper = await PortionWrapper({ id: portionId });
+    const portionWrapper = await PortionWrapper({id: portionId});
     const portionData = await portionWrapper.getBasicInfo();
     return {
       ...portionData,
@@ -78,12 +78,12 @@ class FoodItemDetailsWrapper extends BaseFoodItemDetails {
   };
 }
 
-export default async ({ data = null, id = null }) => {
+export default async ({data = null, id = null}) => {
   if (data !== null) {
     return new FoodItemDetailsWrapper(data);
   }
   const foodItemDetailsService = new FoodItemDetailsService();
-  const foodItemDetail = await foodItemDetailsService.findOne({ id });
-
+  const foodItemDetail = await foodItemDetailsService.findOne({id});
+  
   return new FoodItemDetailsWrapper(foodItemDetail);
 };

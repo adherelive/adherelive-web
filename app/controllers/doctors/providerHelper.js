@@ -8,11 +8,11 @@ import UserWrapper from "../../ApiWrapper/web/user";
 import DoctorWrapper from "../../ApiWrapper/web/doctor";
 import ProviderWrapper from "../../ApiWrapper/web/provider";
 
-import { createNewUser } from "../user/userHelper";
-import { generatePassword } from "../helper/passwordGenerator";
+import {createNewUser} from "../user/userHelper";
+import {generatePassword} from "../helper/passwordGenerator";
 
-import { ONBOARDING_STATUS, USER_CATEGORY } from "../../../constant";
-import { getFilePath } from "../../helper/filePath";
+import {ONBOARDING_STATUS, USER_CATEGORY} from "../../../constant";
+import {getFilePath} from "../../helper/filePath";
 
 export const addProviderDoctor = async (
   req,
@@ -22,9 +22,9 @@ export const addProviderDoctor = async (
 ) => {
   try {
     const {
-      userDetails: { userId, userData: { category: userCategory } = {} } = {},
+      userDetails: {userId, userData: {category: userCategory} = {}} = {},
     } = req;
-
+    
     const {
       name,
       city,
@@ -36,56 +36,56 @@ export const addProviderDoctor = async (
       email,
       doctor_id = null,
     } = req.body;
-
+    
     if (userCategory !== USER_CATEGORY.PROVIDER) {
       return raiseClientError(res, 401, {}, "UNAUTHORIZED");
     }
-
+    
     const providerData = await providerService.getProviderByData({
       user_id: userId,
     });
-
+    
     const provider = await ProviderWrapper(providerData);
     const providerId = provider.getProviderId();
-
+    
     let prevDoctor = null,
       prevDoctorData = null;
-
+    
     if (doctor_id) {
       prevDoctor = await doctorService.getDoctorByData({
         id: doctor_id,
       });
-
+      
       if (!prevDoctor) {
         return raiseClientError(res, 422, {}, "Invalid doctor");
       }
       prevDoctorData = await DoctorWrapper(prevDoctor);
     }
-
+    
     const doctorName = name.split(" ");
-
+    
     const user_data_to_update = {
       category,
       mobile_number,
       prefix,
       onboarding_status: null,
     };
-
+    
     // Mobile number validation
     const mobileNumberExist =
       (await userService.getUserByData({
         mobile_number,
       })) || [];
-
+    
     if (mobileNumberExist && mobileNumberExist.length) {
       const prevUser = await UserWrapper(mobileNumberExist[0].get());
       const prevUserId = prevUser.getId();
-
+      
       let doctorUserIdTemp = null;
       const doctorUserDetailsTemp = await userService.getUserByEmail({
         email,
       });
-
+      
       if (doctorUserDetailsTemp) {
         const doctorUserWrapper = await UserWrapper(doctorUserDetailsTemp);
         doctorUserIdTemp = doctorUserWrapper.getId();
@@ -106,14 +106,14 @@ export const addProviderDoctor = async (
         );
       }
     }
-
+    
     let doctorUserId = null;
-
-    const doctorUserDetails = await userService.getUserByEmail({ email });
+    
+    const doctorUserDetails = await userService.getUserByEmail({email});
     if (doctorUserDetails && doctor_id) {
       const doctorUserWrapper = await UserWrapper(doctorUserDetails);
       doctorUserId = doctorUserWrapper.getId();
-
+      
       if (!doctor_id || doctorUserId !== prevDoctorData.getUserId()) {
         return raiseClientError(res, 422, {}, "Email already exists.");
       }
@@ -121,7 +121,7 @@ export const addProviderDoctor = async (
       // const password = generatePassword();
       doctorUserId = await createNewUser(email, null, providerId, category);
     }
-
+    
     let doctor = {};
     let doctorExist = await doctorService.getDoctorByData({
       user_id: doctorUserId,
@@ -132,9 +132,9 @@ export const addProviderDoctor = async (
       doctorName.length === 3
         ? doctorName[2]
         : doctorName.length === 2
-        ? doctorName[1]
-        : "";
-
+          ? doctorName[1]
+          : "";
+    
     if (doctorExist) {
       let doctor_data = {
         city,
@@ -162,28 +162,28 @@ export const addProviderDoctor = async (
       user_data_to_update,
       doctorUserId
     );
-
+    
     const updatedUser = await userService.getUserById(doctorUserId);
-
+    
     const userData = await UserWrapper(updatedUser.get());
-
+    
     const updatedDoctor = await doctorService.getDoctorByData({
       user_id: doctorUserId,
     });
     const doctorData = await DoctorWrapper(updatedDoctor);
-
+    
     if (!doctorExist) {
       const doctorId = doctorData.getDoctorId();
-
+      
       if (providerId) {
-        const mappingData = { doctor_id: doctorId, provider_id: providerId };
+        const mappingData = {doctor_id: doctorId, provider_id: providerId};
         const response =
           await doctorProviderMappingService.createDoctorProviderMapping(
             mappingData
           );
       }
     }
-
+    
     return raiseSuccess(
       res,
       200,

@@ -4,7 +4,7 @@ import mReminderService from "../../../services/medicationReminder/mReminder.ser
 import carePlanMedicationService from "../../../services/carePlanMedication/carePlanMedication.service";
 import eventService from "../../../services/scheduleEvents/scheduleEvent.service";
 import moment from "moment";
-import { EVENT_STATUS, EVENT_TYPE } from "../../../../constant";
+import {EVENT_STATUS, EVENT_TYPE} from "../../../../constant";
 import EventWrapper from "../../common/scheduleEvents";
 import MedicineWrapper from "../../mobile/medicine";
 
@@ -12,9 +12,9 @@ class MobileMReminderWrapper extends BaseMedicationReminder {
   constructor(data) {
     super(data);
   }
-
+  
   getBasicInfo = () => {
-    const { _data } = this;
+    const {_data} = this;
     const {
       id,
       participant_id,
@@ -42,32 +42,32 @@ class MobileMReminderWrapper extends BaseMedicationReminder {
       rr_rule,
     };
   };
-
+  
   getAllInfo = async () => {
-    const { getBasicInfo, getMReminderId } = this;
+    const {getBasicInfo, getMReminderId} = this;
     const EventService = new eventService();
-
+    
     const currentDate = moment().endOf("day").utc().toDate();
-
+    
     // get careplan attached to medication
     const medicationCareplan =
       (await carePlanMedicationService.getCareplanByMedication({
         medication_id: getMReminderId(),
       })) || null;
-    const { care_plan_id = null } = medicationCareplan || {};
-
+    const {care_plan_id = null} = medicationCareplan || {};
+    
     const scheduleEvents =
       (await EventService.getAllPreviousByData({
         event_id: getMReminderId(),
         date: currentDate,
         event_type: EVENT_TYPE.MEDICATION_REMINDER,
       })) || [];
-
+    
     let medicationEvents = {};
     let remaining = 0;
     let latestPendingEventId = null;
     let latestPendingDate = null;
-
+    
     // get next due date for medication
     const nextDueEvent =
       (await EventService.getEventByData({
@@ -75,14 +75,14 @@ class MobileMReminderWrapper extends BaseMedicationReminder {
         event_id: getMReminderId(),
         event_type: EVENT_TYPE.MEDICATION_REMINDER,
       })) || null;
-
+    
     latestPendingDate = nextDueEvent ? nextDueEvent.get("start_time") : null;
-
+    
     const scheduleEventIds = [];
     for (const events of scheduleEvents) {
       const scheduleEvent = await EventWrapper(events);
       scheduleEventIds.push(scheduleEvent.getScheduleEventId());
-
+      
       if (scheduleEvent.getStatus() !== EVENT_STATUS.COMPLETED) {
         if (!latestPendingEventId) {
           latestPendingEventId = scheduleEvent.getScheduleEventId();
@@ -90,7 +90,7 @@ class MobileMReminderWrapper extends BaseMedicationReminder {
         remaining++;
       }
     }
-
+    
     return {
       medications: {
         [getMReminderId()]: {
@@ -104,29 +104,29 @@ class MobileMReminderWrapper extends BaseMedicationReminder {
       },
     };
   };
-
+  
   getReferenceInfoWithImp = async () => {
-    const { getAllInfo, getMReminderId, getMedicineId, _data } = this;
+    const {getAllInfo, getMReminderId, getMedicineId, _data} = this;
     const EventService = new eventService();
     const scheduleEvents = await EventService.getAllPreviousByData({
       event_id: getMReminderId(),
       date: moment().utc().toDate(),
       event_type: EVENT_TYPE.MEDICATION_REMINDER,
     });
-
+    
     const scheduleEventIds = [];
     let scheduleEventData = {};
     for (const events of scheduleEvents) {
       const scheduleEvent = await EventWrapper(events);
       scheduleEventIds.push(scheduleEvent.getScheduleEventId());
-
+      
       scheduleEventData[scheduleEvent.getScheduleEventId()] =
         scheduleEvent.getAllInfo();
     }
-
-    const { medications } = await getAllInfo();
+    
+    const {medications} = await getAllInfo();
     const medicationData = medications[getMReminderId()] || {};
-
+    
     return {
       medications: {
         [getMReminderId()]: {
@@ -139,40 +139,40 @@ class MobileMReminderWrapper extends BaseMedicationReminder {
       },
     };
   };
-
+  
   getReferenceInfo = async () => {
-    const { getAllInfo, getMReminderId, getMedicineId, _data } = this;
-    const { medicine } = _data || {};
+    const {getAllInfo, getMReminderId, getMedicineId, _data} = this;
+    const {medicine} = _data || {};
     const EventService = new eventService();
-
+    
     let medicineData = {};
-
+    
     // medicine
     if (medicine) {
       medicineData = await MedicineWrapper(medicine);
     } else {
       medicineData = await MedicineWrapper(null, getMedicineId());
     }
-
+    
     const scheduleEvents = await EventService.getAllPreviousByData({
       event_id: getMReminderId(),
       date: moment().utc().toDate(),
       event_type: EVENT_TYPE.MEDICATION_REMINDER,
     });
-
+    
     const scheduleEventIds = [];
     let scheduleEventData = {};
     for (const events of scheduleEvents) {
       const scheduleEvent = await EventWrapper(events);
       scheduleEventIds.push(scheduleEvent.getScheduleEventId());
-
+      
       scheduleEventData[scheduleEvent.getScheduleEventId()] =
         scheduleEvent.getAllInfo();
     }
-
-    const { medications } = await getAllInfo();
+    
+    const {medications} = await getAllInfo();
     const medicationData = medications[getMReminderId()] || {};
-
+    
     return {
       medications: {
         [getMReminderId()]: {
@@ -194,6 +194,6 @@ export default async (data = null, id = null) => {
   if (data) {
     return new MobileMReminderWrapper(data);
   }
-  const medicationReminder = await mReminderService.getMedication({ id });
+  const medicationReminder = await mReminderService.getMedication({id});
   return new MobileMReminderWrapper(medicationReminder);
 };

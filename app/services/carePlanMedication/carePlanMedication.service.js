@@ -1,5 +1,5 @@
 import Database from "../../../libs/mysql";
-import { TABLE_NAME } from "../../models/carePlanMedications";
+import {TABLE_NAME} from "../../models/carePlanMedications";
 
 class CarePlanMedicationService {
   getAllByData = async (data) => {
@@ -12,7 +12,7 @@ class CarePlanMedicationService {
       throw error;
     }
   };
-
+  
   getCarePlanMedicationByData = async (data) => {
     try {
       const carePlanMedications = await Database.getModel(TABLE_NAME).findAll({
@@ -23,7 +23,7 @@ class CarePlanMedicationService {
       throw error;
     }
   };
-
+  
   deleteCarePlanMedicationByMedicationId = async (medication_id) => {
     try {
       const carePlanMedications = await Database.getModel(TABLE_NAME).destroy({
@@ -36,7 +36,7 @@ class CarePlanMedicationService {
       throw err;
     }
   };
-
+  
   getCareplanByMedication = async (data) => {
     try {
       return await Database.getModel(TABLE_NAME).findOne({
@@ -47,18 +47,18 @@ class CarePlanMedicationService {
       throw error;
     }
   };
-
+  
   getMedicationsByCarePlanId = async (care_plan_id) => {
     try {
       const carePlanMedications = await Database.getModel(TABLE_NAME).findAll({
-        where: { care_plan_id },
+        where: {care_plan_id},
       });
       return carePlanMedications;
     } catch (error) {
       throw error;
     }
   };
-
+  
   addCarePlanMedication = async (data) => {
     try {
       const carePlanMedication = await Database.getModel(TABLE_NAME).create(

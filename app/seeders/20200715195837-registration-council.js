@@ -1,6 +1,6 @@
 "use strict";
 
-import { TABLE_NAME } from "../models/registrationCouncil";
+import {TABLE_NAME} from "../models/registrationCouncil";
 
 const SUBHARTI_REGISTRATION_COUNCIL = [
   {
@@ -425,7 +425,7 @@ module.exports = {
       ]
     );
   },
-
+  
   down: (queryInterface, Sequelize) => {
     return queryInterface.bulkDelete(TABLE_NAME, null, {});
   },

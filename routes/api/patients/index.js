@@ -4,7 +4,7 @@ import PatientController from "../../../app/controllers/patients/patients.contro
 import multer from "multer";
 
 var storage = multer.memoryStorage();
-var upload = multer({ dest: "../app/public/", storage: storage });
+var upload = multer({dest: "../app/public/", storage: storage});
 
 const router = express.Router();
 

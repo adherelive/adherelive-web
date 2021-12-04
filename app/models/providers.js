@@ -1,6 +1,6 @@
 "use strict";
-import { DataTypes } from "sequelize";
-import { TABLE_NAME as userTableName } from "./users";
+import {DataTypes} from "sequelize";
+import {TABLE_NAME as userTableName} from "./users";
 
 export const TABLE_NAME = "providers";
 

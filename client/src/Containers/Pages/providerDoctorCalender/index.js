@@ -1,6 +1,6 @@
-import { connect } from "react-redux";
+import {connect} from "react-redux";
 import ProviderDoctorCalender from "../../../Components/Pages/providerDoctorCalender";
-import { withRouter } from "react-router-dom";
+import {withRouter} from "react-router-dom";
 // import {open} from "../../../modules/drawer";
 // import {DRAWER} from "../../../constant";
 import {
@@ -16,7 +16,7 @@ const mapStateToProps = (state) => {
     date_wise_appointments = {},
     appointments = {},
   } = state;
-
+  
   return {
     users,
     doctors,

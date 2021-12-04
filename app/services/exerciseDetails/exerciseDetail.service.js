@@ -1,32 +1,32 @@
-import { Op } from "sequelize";
+import {Op} from "sequelize";
 
 import Database from "../../../libs/mysql";
-import { TABLE_NAME } from "../../models/exerciseDetails";
-import { TABLE_NAME as repetitionTableName } from "../../models/exerciseRepetition";
-import { TABLE_NAME as exerciseTableName } from "../../models/exercise";
+import {TABLE_NAME} from "../../models/exerciseDetails";
+import {TABLE_NAME as repetitionTableName} from "../../models/exerciseRepetition";
+import {TABLE_NAME as exerciseTableName} from "../../models/exercise";
 
-import { USER_CATEGORY } from "../../../constant";
+import {USER_CATEGORY} from "../../../constant";
 
 export default class ExerciseDetailService {
   create = async ({
-    exerciseDetails,
-    auth,
-    transaction: continuedTransaction = null,
-  }) => {
+                    exerciseDetails,
+                    auth,
+                    transaction: continuedTransaction = null,
+                  }) => {
     const transaction = continuedTransaction
       ? continuedTransaction
       : await Database.initTransaction();
     try {
       const createdExerciseDetail =
         (await Database.getModel(TABLE_NAME).create(
-          { ...exerciseDetails, ...auth },
+          {...exerciseDetails, ...auth},
           {
             transaction,
           }
         )) || null;
-
-      const { id } = createdExerciseDetail || {};
-
+      
+      const {id} = createdExerciseDetail || {};
+      
       await transaction.commit();
       return id;
     } catch (error) {
@@ -34,8 +34,8 @@ export default class ExerciseDetailService {
       throw error;
     }
   };
-
-  findOne = async ({ auth = {}, id, ...data }) => {
+  
+  findOne = async ({auth = {}, id, ...data}) => {
     try {
       let whereQuery = {};
       if (id) {
@@ -53,7 +53,7 @@ export default class ExerciseDetailService {
           ],
         };
       }
-
+      
       return (
         (await Database.getModel(TABLE_NAME).findOne({
           where: whereQuery,
@@ -64,8 +64,8 @@ export default class ExerciseDetailService {
       throw error;
     }
   };
-
-  findAndCountAll = async ({ query = {}, auth = {}, limit, offset }) => {
+  
+  findAndCountAll = async ({query = {}, auth = {}, limit, offset}) => {
     try {
       return (
         (await Database.getModel(TABLE_NAME).findAndCountAll({
@@ -82,8 +82,8 @@ export default class ExerciseDetailService {
       throw error;
     }
   };
-
-  queryBuilder = ({ exercise_id = null, auth = {} }) => {
+  
+  queryBuilder = ({exercise_id = null, auth = {}}) => {
     if (exercise_id) {
       return {
         exercise_id,

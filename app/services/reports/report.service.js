@@ -1,9 +1,10 @@
 import Database from "../../../libs/mysql";
-import { TABLE_NAME } from "../../models/reports";
+import {TABLE_NAME} from "../../models/reports";
 
 export default class ReportService {
-  constructor() {}
-
+  constructor() {
+  }
+  
   addReport = async (data) => {
     const transaction = await Database.initTransaction();
     try {
@@ -18,8 +19,8 @@ export default class ReportService {
       throw error;
     }
   };
-
-  updateReport = async ({ data, id }) => {
+  
+  updateReport = async ({data, id}) => {
     const transaction = await Database.initTransaction();
     try {
       const report = await Database.getModel(TABLE_NAME).update(data, {
@@ -37,7 +38,7 @@ export default class ReportService {
       throw error;
     }
   };
-
+  
   getReportByData = async (data) => {
     try {
       return await Database.getModel(TABLE_NAME).findOne({
@@ -48,7 +49,7 @@ export default class ReportService {
       throw error;
     }
   };
-
+  
   getAllReportByData = async (data) => {
     try {
       return await Database.getModel(TABLE_NAME).findAll({
@@ -60,7 +61,7 @@ export default class ReportService {
       throw error;
     }
   };
-
+  
   latestReportAndCount = async (data) => {
     try {
       return await Database.getModel(TABLE_NAME).findAndCountAll({

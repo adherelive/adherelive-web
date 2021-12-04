@@ -1,5 +1,5 @@
 import Joi from "joi";
-import { validationError } from "../../helper";
+import {validationError} from "../../helper";
 
 // schema
 const createExerciseSchema = Joi.object({
@@ -36,11 +36,11 @@ const createExerciseSchema = Joi.object({
 });
 
 export const create = (req, res, next) => {
-  const { body: data = {} } = req;
-  const isValid = createExerciseSchema.validate(data, { convert: false });
-
-  const { error: { details = [] } = {} } = isValid || {};
-
+  const {body: data = {}} = req;
+  const isValid = createExerciseSchema.validate(data, {convert: false});
+  
+  const {error: {details = []} = {}} = isValid || {};
+  
   if (details.length > 0) {
     return validationError(res, details[0].message);
   } else {

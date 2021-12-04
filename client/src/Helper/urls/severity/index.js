@@ -1,3 +1,3 @@
 export const searchSeverities = (data) => {
-    return `/severity?value=${data}`;
+  return `/severity?value=${data}`;
 };

@@ -1,7 +1,7 @@
 // const express = require("express");
 import express from "express";
 import Authenticate from "../middleware/auth";
-import { isDoctor } from "../middleware/doctor";
+import {isDoctor} from "../middleware/doctor";
 import DoctorController from "../../../app/controllers/doctors/doctor.controller";
 import FeaturesController from "../../../app/controllers/features/features.controller";
 

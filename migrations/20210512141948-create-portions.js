@@ -1,6 +1,6 @@
 "use strict";
 
-import { TABLE_NAME } from "../app/models/portions";
+import {TABLE_NAME} from "../app/models/portions";
 
 module.exports = {
   up: (queryInterface, Sequelize) => {
@@ -28,7 +28,7 @@ module.exports = {
       },
     });
   },
-
+  
   down: (queryInterface, Sequelize) => {
     return queryInterface.dropTable(TABLE_NAME);
   },

@@ -5,11 +5,11 @@ class TemplateVitalWrapper extends BaseTemplateVital {
   constructor(data) {
     super(data);
   }
-
+  
   getBasicInfo = () => {
-    const { _data } = this;
-    const { id, care_plan_template_id, vital_template_id, details } =
-      _data || {};
+    const {_data} = this;
+    const {id, care_plan_template_id, vital_template_id, details} =
+    _data || {};
     return {
       basic_info: {
         id,
@@ -21,11 +21,11 @@ class TemplateVitalWrapper extends BaseTemplateVital {
   };
 }
 
-export default async ({ data = null, id = null }) => {
+export default async ({data = null, id = null}) => {
   if (data !== null) {
     return new TemplateVitalWrapper(data);
   }
   const templateVitalService = new TemplateVitalService();
-  const templateVital = await templateVitalService.getByData({ id });
+  const templateVital = await templateVitalService.getByData({id});
   return new TemplateVitalWrapper(templateVital);
 };

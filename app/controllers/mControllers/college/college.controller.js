@@ -10,17 +10,17 @@ class CollegeController extends Controller {
   constructor() {
     super();
   }
-
+  
   getAll = async (req, res) => {
-    const { raiseSuccess, raiseClientError, raiseServerError } = this;
+    const {raiseSuccess, raiseClientError, raiseServerError} = this;
     try {
-      const { query } = req;
-      const { value } = query || {};
-
+      const {query} = req;
+      const {value} = query || {};
+      
       // Logger.debug("value in req", value);
-
+      
       const collegeDetails = await collegeService.search(value);
-
+      
       if (collegeDetails.length > 0) {
         let collegeApiData = {};
         for (const college of collegeDetails) {
@@ -28,7 +28,7 @@ class CollegeController extends Controller {
           collegeApiData[collegeWrapper.getCollegeId()] =
             collegeWrapper.getBasicInfo();
         }
-
+        
         return raiseSuccess(
           res,
           200,

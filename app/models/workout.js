@@ -1,8 +1,8 @@
 "use strict";
-import { DataTypes } from "sequelize";
-import { TABLE_NAME as carePlanTableName } from "./carePlan";
-import { TABLE_NAME as exerciseGroupTableName } from "./exerciseGroup";
-import { TABLE_NAME as workoutExerciseGroupMappingTableName } from "./workoutExerciseGroupMapping";
+import {DataTypes} from "sequelize";
+import {TABLE_NAME as carePlanTableName} from "./carePlan";
+import {TABLE_NAME as exerciseGroupTableName} from "./exerciseGroup";
+import {TABLE_NAME as workoutExerciseGroupMappingTableName} from "./workoutExerciseGroupMapping";
 
 export const TABLE_NAME = "workouts";
 
@@ -56,7 +56,7 @@ export const associate = (database) => {
     foreignKey: "care_plan_id",
     targetKey: "id",
   });
-
+  
   database.models[TABLE_NAME].belongsToMany(
     database.models[exerciseGroupTableName],
     {

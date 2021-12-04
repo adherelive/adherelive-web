@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React, {Component} from "react";
 import GoogleLogin from "react-google-login";
 
 class LoginByGoogle extends Component {
@@ -6,7 +6,7 @@ class LoginByGoogle extends Component {
     super(props);
     this.state = {};
   }
-
+  
   responseGoogle = (response) => {
     console.log(response);
     // var res = response.profileObj;
@@ -17,7 +17,7 @@ class LoginByGoogle extends Component {
     };
     this.props.googleSignIn(data);
   };
-
+  
   render() {
     return (
       <GoogleLogin

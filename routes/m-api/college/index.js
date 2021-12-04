@@ -5,9 +5,9 @@ import Authenticate from "../middlewares/auth";
 import College from "../../../app/controllers/mControllers/college/college.controller";
 
 router.get(
-    "/",
-    Authenticate,
-    College.getAll
+  "/",
+  Authenticate,
+  College.getAll
 );
 
 module.exports = router;

@@ -1,6 +1,6 @@
-import { Op } from "sequelize";
+import {Op} from "sequelize";
 import Database from "../../../libs/mysql";
-import { TABLE_NAME } from "../../models/treatments";
+import {TABLE_NAME} from "../../models/treatments";
 
 class TreatmentService {
   getAll = async (data) => {
@@ -11,7 +11,7 @@ class TreatmentService {
       throw error;
     }
   };
-
+  
   search = async (data) => {
     try {
       const treatment = await Database.getModel(TABLE_NAME).findAll({
@@ -26,7 +26,7 @@ class TreatmentService {
       throw error;
     }
   };
-
+  
   searchByName = async (data) => {
     try {
       const treatment = await Database.getModel(TABLE_NAME).findAll({
@@ -41,7 +41,7 @@ class TreatmentService {
       throw error;
     }
   };
-
+  
   getByData = async (data) => {
     try {
       const treatment = await Database.getModel(TABLE_NAME).findOne({

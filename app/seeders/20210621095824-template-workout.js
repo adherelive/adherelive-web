@@ -1,6 +1,6 @@
 "use strict";
 import moment from "moment";
-import { TABLE_NAME } from "../models/templateWorkouts";
+import {TABLE_NAME} from "../models/templateWorkouts";
 
 module.exports = {
   up: (queryInterface) => {
@@ -32,7 +32,7 @@ module.exports = {
       },
     ]);
   },
-
+  
   down: (queryInterface) => {
     return queryInterface.bulkDelete(TABLE_NAME, null, {});
   },

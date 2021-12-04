@@ -10,17 +10,17 @@ class SeverityController extends Controller {
   constructor() {
     super();
   }
-
+  
   getAll = async (req, res) => {
-    const { raiseSuccess, raiseClientError, raiseServerError } = this;
+    const {raiseSuccess, raiseClientError, raiseServerError} = this;
     try {
-      const { query } = req;
-      const { value } = query || {};
-
+      const {query} = req;
+      const {value} = query || {};
+      
       // Logger.debug("value in req", value);
-
+      
       const severityDetails = await severityService.search(value);
-
+      
       if (severityDetails.length > 0) {
         let severityApiData = {};
         for (const severity of severityDetails) {
@@ -28,7 +28,7 @@ class SeverityController extends Controller {
           severityApiData[severityWrapper.getSeverityId()] =
             severityWrapper.getBasicInfo();
         }
-
+        
         return raiseSuccess(
           res,
           200,

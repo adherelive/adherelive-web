@@ -33,7 +33,7 @@ export const maximizePopUp = () => {
 };
 
 export default (state = intial_state, action) => {
-  const { type, data } = action;
+  const {type, data} = action;
   switch (type) {
     case MINIMIZED_POPUP:
       return {

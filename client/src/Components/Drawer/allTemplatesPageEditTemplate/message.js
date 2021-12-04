@@ -1,4 +1,4 @@
-import { defineMessages } from "react-intl";
+import {defineMessages} from "react-intl";
 
 const messages = defineMessages({
   medicine: {
@@ -118,7 +118,7 @@ const messages = defineMessages({
     description: "",
     defaultMessage: "Please add medications and appointments for template.",
   },
-
+  
   note: {
     id: "app.allTemplatesEditDrawer.note",
     description: "",

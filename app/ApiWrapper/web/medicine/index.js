@@ -5,11 +5,11 @@ class MedicineWrapper extends BaseMedicine {
   constructor(data) {
     super(data);
   }
-
+  
   getBasicInfo = () => {
-    const { _data } = this;
-    const { id, name, type, description, creator_id, public_medicine } =
-      _data || {};
+    const {_data} = this;
+    const {id, name, type, description, creator_id, public_medicine} =
+    _data || {};
     return {
       basic_info: {
         id,
@@ -21,16 +21,16 @@ class MedicineWrapper extends BaseMedicine {
       },
     };
   };
-
+  
   getBasicInfoBulk = () => {
-    const { _arrData, getExistingData, setCurrentData, _objectName } = this;
-
+    const {_arrData, getExistingData, setCurrentData, _objectName} = this;
+    
     let cumulativeData = {};
     _arrData.forEach((data) => {
       setCurrentData(data);
       const medicineData = getExistingData();
-      const { id, name, type, description, creator_id, public_medicine } =
-        medicineData || {};
+      const {id, name, type, description, creator_id, public_medicine} =
+      medicineData || {};
       cumulativeData[id] = {
         basic_info: {
           id,
@@ -42,16 +42,16 @@ class MedicineWrapper extends BaseMedicine {
         },
       };
     });
-
+    
     return {
       [_objectName]: {
         ...cumulativeData,
       },
     };
   };
-
+  
   getAllInfo = () => {
-    const { _data } = this;
+    const {_data} = this;
     const {
       id,
       name,
@@ -63,7 +63,7 @@ class MedicineWrapper extends BaseMedicine {
       updatedAt,
       createdAt,
     } = _data || {};
-
+    
     return {
       basic_info: {
         id,

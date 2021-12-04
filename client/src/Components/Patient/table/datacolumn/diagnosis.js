@@ -8,13 +8,13 @@ export default (props) => {
   const {
     patientData: {
       carePlanData: {
-        details: { diagnosis: { description = "", type = "1" } = {} } = {},
+        details: {diagnosis: {description = "", type = "1"} = {}} = {},
       } = {},
     } = {},
   } = props || {};
   const diagnosisType = DIAGNOSIS_TYPE[type];
   const diagnosisTypeValue = diagnosisType["value"] || "";
-
+  
   return (
     <div>
       <div className="flex direction-column">

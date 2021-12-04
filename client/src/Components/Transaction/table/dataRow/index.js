@@ -1,8 +1,8 @@
-import { TABLE_COLUMN, formatTransactionTableData } from "../helper";
-import { USER_CATEGORY } from "../../../../constant";
+import {TABLE_COLUMN, formatTransactionTableData} from "../helper";
+import {USER_CATEGORY} from "../../../../constant";
 
 export default (data) => {
-  const { id, authenticated_category } = data;
+  const {id, authenticated_category} = data;
   const formattedData = formatTransactionTableData(data);
   const {
     transactionData,
@@ -12,7 +12,7 @@ export default (data) => {
     transaction_ids,
     users,
   } = formattedData || {};
-
+  
   if (authenticated_category === USER_CATEGORY.PROVIDER) {
     return {
       key: id,

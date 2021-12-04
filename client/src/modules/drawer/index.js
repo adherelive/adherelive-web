@@ -28,10 +28,10 @@ export const open = (data) => {
 
 export const close = () => {
   return (dispatch, getState) => {
-    const { drawer } = getState();
-    const { data } = drawer || {};
-    const { type, drawer_stack = [] } = data || {};
-
+    const {drawer} = getState();
+    const {data} = drawer || {};
+    const {type, drawer_stack = []} = data || {};
+    
     const prevData = drawer_stack[drawer_stack.length - 1];
     if (prevData) {
       if (Object.keys(prevData)[0] === type) {
@@ -47,14 +47,14 @@ export const close = () => {
       const type = Object.keys(remainingData)[0];
       return dispatch({
         type: OPEN_DRAWER,
-        data: { type, drawer_stack },
+        data: {type, drawer_stack},
       });
     }
   };
 };
 
 export default (state = intial_state, action) => {
-  const { type, data } = action;
+  const {type, data} = action;
   switch (type) {
     case OPEN_DRAWER:
       return {

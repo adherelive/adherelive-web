@@ -1,5 +1,5 @@
 import Logger from "../../../../libs/log";
-import { FAVOURITE_TYPE, MEDICAL_TEST } from "../../../../constant";
+import {FAVOURITE_TYPE, MEDICAL_TEST} from "../../../../constant";
 
 // SERVICES
 import FavoriteService from "../../../services/userFavourites/userFavourites.service";
@@ -13,7 +13,7 @@ export const getFavoriteInDetails = async (
 ) => {
   try {
     let response = {};
-
+    
     switch (type) {
       case FAVOURITE_TYPE.MEDICAL_TESTS:
         const medicalTestTypes = await medicalTestFavorites(
@@ -22,7 +22,7 @@ export const getFavoriteInDetails = async (
         );
         response = {
           ...typeDescription,
-          ...{ [MEDICAL_TEST]: medicalTestTypes },
+          ...{[MEDICAL_TEST]: medicalTestTypes},
         };
         return response;
       case FAVOURITE_TYPE.RADIOLOGY:
@@ -33,7 +33,7 @@ export const getFavoriteInDetails = async (
         response = radiologyTypes;
         return response;
     }
-
+    
     return response;
   } catch (error) {
     Log.debug("mgetFavouriteInDetails error", error);
@@ -43,22 +43,22 @@ export const getFavoriteInDetails = async (
 
 const medicalTestFavorites = async (userTypeData, types) => {
   try {
-    const { id: user_category_id, category: user_category_type } =
-      userTypeData || {};
+    const {id: user_category_id, category: user_category_type} =
+    userTypeData || {};
     const allMedicalTestFavorites =
       (await FavoriteService.getAllFavourites({
         user_category_id,
         user_category_type,
         marked_favourite_type: FAVOURITE_TYPE.MEDICAL_TESTS,
       })) || [];
-
+    
     let favoriteIndices = {};
-
+    
     for (const medicalTestFavorite of allMedicalTestFavorites) {
-      const { marked_favourite_id = null, id = null } = medicalTestFavorite;
+      const {marked_favourite_id = null, id = null} = medicalTestFavorite;
       favoriteIndices[marked_favourite_id] = id;
     }
-
+    
     const favIndicesList = Object.keys(favoriteIndices);
     let updatedTypes = [],
       favTypesList = [],
@@ -67,7 +67,7 @@ const medicalTestFavorites = async (userTypeData, types) => {
       let favoriteId = null;
       if (favIndicesList.indexOf(`${idx}`) > -1) {
         favoriteId = favoriteIndices[idx];
-        favTypesList.push({ name: type, favorite_id: favoriteId, index: idx });
+        favTypesList.push({name: type, favorite_id: favoriteId, index: idx});
       } else {
         notFavTypesList.push({
           name: type,
@@ -76,7 +76,7 @@ const medicalTestFavorites = async (userTypeData, types) => {
         });
       }
     }
-
+    
     updatedTypes = [...favTypesList, ...notFavTypesList];
     return updatedTypes;
   } catch (error) {
@@ -86,17 +86,17 @@ const medicalTestFavorites = async (userTypeData, types) => {
 
 const radiologyTypeFavorites = async (userTypeData, types) => {
   try {
-    const { id: user_category_id, category: user_category_type } =
-      userTypeData || {};
+    const {id: user_category_id, category: user_category_type} =
+    userTypeData || {};
     const allRadiologyFavorites =
       (await FavoriteService.getAllFavourites({
         user_category_id,
         user_category_type,
         marked_favourite_type: FAVOURITE_TYPE.RADIOLOGY,
       })) || [];
-
+    
     let favoriteIndices = {};
-
+    
     for (const radiologyFavorite of allRadiologyFavorites) {
       const {
         marked_favourite_id = null,
@@ -106,7 +106,7 @@ const radiologyTypeFavorites = async (userTypeData, types) => {
           selected_radiology_index = null,
         } = {},
       } = radiologyFavorite;
-
+      
       if (
         marked_favourite_id !== null &&
         sub_category_id !== null &&
@@ -114,17 +114,17 @@ const radiologyTypeFavorites = async (userTypeData, types) => {
       ) {
         favoriteIndices[
           `${marked_favourite_id}-${sub_category_id}-${selected_radiology_index}`
-        ] = id;
+          ] = id;
       }
     }
-
+    
     const favIndicesList = Object.keys(favoriteIndices);
-
+    
     for (const typeId of Object.keys(types)) {
-      let { [typeId]: { data = {}, id = null, name: typeName } = {} } = types;
-
+      let {[typeId]: {data = {}, id = null, name: typeName} = {}} = types;
+      
       const subTypesIds = Object.keys(data);
-
+      
       for (const subTypeId of subTypesIds) {
         const {
           [subTypeId]: {
@@ -140,20 +140,20 @@ const radiologyTypeFavorites = async (userTypeData, types) => {
           let favoriteId = null;
           if (favIndicesList.indexOf(`${id}-${index}-${idx}`) > -1) {
             favoriteId = favoriteIndices[`${id}-${index}-${idx}`];
-            favoriteItems.push({ name: type, favorite_id: favoriteId });
+            favoriteItems.push({name: type, favorite_id: favoriteId});
           } else {
-            nonFavoriteItems.push({ name: type, favorite_id: null });
+            nonFavoriteItems.push({name: type, favorite_id: null});
           }
           // updatedItems.push({name: type, favorite_id: favoriteId})
         }
         updatedItems = [...favoriteItems, ...nonFavoriteItems];
         data = {
           ...data,
-          [subTypeId]: { name: subTypeName, index, items: updatedItems },
+          [subTypeId]: {name: subTypeName, index, items: updatedItems},
         };
       }
-
-      types = { ...types, [typeId]: { id, data, name: typeName } };
+      
+      types = {...types, [typeId]: {id, data, name: typeName}};
     }
     return types;
   } catch (error) {

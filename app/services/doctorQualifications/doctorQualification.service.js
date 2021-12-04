@@ -1,15 +1,16 @@
 import Database from "../../../libs/mysql";
-import { TABLE_NAME } from "../../models/doctorQualifications";
+import {TABLE_NAME} from "../../models/doctorQualifications";
 
 class DoctorQualificationService {
-  constructor() {}
-
+  constructor() {
+  }
+  
   addQualification = async (data) => {
     const transaction = await Database.initTransaction();
     try {
       const doctorQualification = await Database.getModel(TABLE_NAME).create(
         data,
-        { transaction }
+        {transaction}
       );
       await transaction.commit();
       return doctorQualification;
@@ -18,7 +19,7 @@ class DoctorQualificationService {
       throw error;
     }
   };
-
+  
   getQualificationsByDoctorId = async (doctor_id) => {
     try {
       const doctorQualification = await Database.getModel(TABLE_NAME).findAll({
@@ -32,7 +33,7 @@ class DoctorQualificationService {
       throw error;
     }
   };
-
+  
   getQualificationById = async (id) => {
     try {
       const doctorQualification = await Database.getModel(TABLE_NAME).findOne({
@@ -46,7 +47,7 @@ class DoctorQualificationService {
       throw error;
     }
   };
-
+  
   updateQualification = async (data, id) => {
     const transaction = await Database.initTransaction();
     try {
@@ -67,7 +68,7 @@ class DoctorQualificationService {
       throw error;
     }
   };
-
+  
   getQualificationsByDoctorId = async (doctor_id) => {
     try {
       const doctorQualification = await Database.getModel(TABLE_NAME).findAll({
@@ -81,7 +82,7 @@ class DoctorQualificationService {
       throw error;
     }
   };
-
+  
   getQualificationByData = async (doctor_id, degree, college, year) => {
     try {
       const doctorQualification = await Database.getModel(TABLE_NAME).findOne({

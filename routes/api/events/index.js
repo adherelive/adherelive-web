@@ -15,21 +15,21 @@ import EventController from "../../../app/controllers/scheduleEvents/event.contr
 // );
 
 router.get(
-    "/missed",
-    Authenticate,
-    EventController.getAllMissedEvents
+  "/missed",
+  Authenticate,
+  EventController.getAllMissedEvents
 );
 
 router.get(
-    "/missed/:patient_id",
-    Authenticate,
-    EventController.getPatientMissedEvents
+  "/missed/:patient_id",
+  Authenticate,
+  EventController.getPatientMissedEvents
 );
 
 router.get(
-    "/:patient_id",
-    Authenticate,
-    EventController.getAllEvents
+  "/:patient_id",
+  Authenticate,
+  EventController.getAllEvents
 );
 
 // router.post(
@@ -47,21 +47,21 @@ router.get(
 // );
 
 router.post(
-    "/:id/complete",
-    Authenticate,
-    EventController.markEventComplete
+  "/:id/complete",
+  Authenticate,
+  EventController.markEventComplete
 );
 
 router.post(
-    "/:id/vitals/response",
-    Authenticate,
-    EventController.updateVitalResponse
+  "/:id/vitals/response",
+  Authenticate,
+  EventController.updateVitalResponse
 );
 
 router.delete(
-    "/:id/vitals/response",
-    Authenticate,
-    EventController.deleteVitalResponse
+  "/:id/vitals/response",
+  Authenticate,
+  EventController.deleteVitalResponse
 );
 
 module.exports = router;

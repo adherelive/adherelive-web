@@ -14,24 +14,24 @@ class WorkoutTemplateController extends Controller {
   constructor() {
     super();
   }
-
+  
   create = async (req, res) => {
-    const { raiseSuccess, raiseClientError, raiseServerError } = this;
+    const {raiseSuccess, raiseClientError, raiseServerError} = this;
     try {
-      const { body, userDetails } = req;
+      const {body, userDetails} = req;
       Log.debug("create request", body);
-
-      const { name, exercise_detail_ids: exerciseDetails = [] } = body || {};
-      const { userData: { category } = {}, userCategoryId } = userDetails || {};
-
+      
+      const {name, exercise_detail_ids: exerciseDetails = []} = body || {};
+      const {userData: {category} = {}, userCategoryId} = userDetails || {};
+      
       const workoutTemplateService = new WorkoutTemplateService();
-
+      
       // check if name already exists
       const workoutTemplateExistsForName =
         (await workoutTemplateService.findOne({
           name,
         })) || null;
-
+      
       if (workoutTemplateExistsForName) {
         return raiseClientError(
           res,
@@ -40,7 +40,7 @@ class WorkoutTemplateController extends Controller {
           `Workout Template already exists with ${name}`
         );
       }
-
+      
       const workoutTemplateId =
         (await workoutTemplateService.create({
           workoutTemplate: {
@@ -50,12 +50,12 @@ class WorkoutTemplateController extends Controller {
           },
           exerciseDetails,
         })) || null;
-
+      
       if (workoutTemplateId !== null) {
         const workoutTemplates = await WorkoutTemplateWrapper({
           id: workoutTemplateId,
         });
-
+        
         return raiseSuccess(
           res,
           200,
@@ -77,19 +77,19 @@ class WorkoutTemplateController extends Controller {
       return raiseServerError(res);
     }
   };
-
+  
   update = async (req, res) => {
-    const { raiseSuccess, raiseClientError, raiseServerError } = this;
+    const {raiseSuccess, raiseClientError, raiseServerError} = this;
     try {
-      const { body, params, userDetails } = req;
-      Log.debug("update request", { body, params });
-
-      const { id } = params || {};
-      const { name, exercise_detail_ids: exerciseDetails = [] } = body || {};
-      const { userData: { category } = {}, userCategoryId } = userDetails || {};
-
+      const {body, params, userDetails} = req;
+      Log.debug("update request", {body, params});
+      
+      const {id} = params || {};
+      const {name, exercise_detail_ids: exerciseDetails = []} = body || {};
+      const {userData: {category} = {}, userCategoryId} = userDetails || {};
+      
       const workoutTemplateService = new WorkoutTemplateService();
-
+      
       // check if name already exists
       // todo: up for discussion
       const workoutTemplateExists =
@@ -98,10 +98,10 @@ class WorkoutTemplateController extends Controller {
           creator_id: userCategoryId,
           creator_type: category,
         })) || null;
-
+      
       if (workoutTemplateExists) {
-        const { id: existing_template_id } = workoutTemplateExists || {};
-
+        const {id: existing_template_id} = workoutTemplateExists || {};
+        
         if (parseInt(id) !== existing_template_id) {
           return raiseClientError(
             res,
@@ -111,7 +111,7 @@ class WorkoutTemplateController extends Controller {
           );
         }
       }
-
+      
       const isWorkoutTemplateUpdated =
         (await workoutTemplateService.update({
           workoutTemplate: {
@@ -120,10 +120,10 @@ class WorkoutTemplateController extends Controller {
           exerciseDetails,
           id,
         })) || false;
-
+      
       if (isWorkoutTemplateUpdated) {
-        const updatedWorkoutTemplate = await WorkoutTemplateWrapper({ id });
-
+        const updatedWorkoutTemplate = await WorkoutTemplateWrapper({id});
+        
         return raiseSuccess(
           res,
           200,
@@ -145,23 +145,23 @@ class WorkoutTemplateController extends Controller {
       return raiseServerError(res);
     }
   };
-
+  
   delete = async (req, res) => {
-    const { raiseSuccess, raiseClientError, raiseServerError } = this;
+    const {raiseSuccess, raiseClientError, raiseServerError} = this;
     try {
-      const { params } = req;
+      const {params} = req;
       Log.debug("delete request", params);
-
-      const { id } = params || {};
-
+      
+      const {id} = params || {};
+      
       const workoutTemplateService = new WorkoutTemplateService();
-
+      
       // check if name already exists
       const workoutTemplateExists =
         (await workoutTemplateService.findOne({
           id,
         })) || null;
-
+      
       if (!workoutTemplateExists) {
         return raiseClientError(
           res,
@@ -170,10 +170,10 @@ class WorkoutTemplateController extends Controller {
           "Workout Template does not exists"
         );
       }
-
+      
       const deleteWorkoutTemplate =
-        (await workoutTemplateService.delete({ id })) || false;
-
+        (await workoutTemplateService.delete({id})) || false;
+      
       if (deleteWorkoutTemplate) {
         return raiseSuccess(
           res,

@@ -1,7 +1,7 @@
-import { connect } from "react-redux";
+import {connect} from "react-redux";
 import editReportDrawer from "../../Components/Drawer/editReportDrawer";
-import { DRAWER } from "../../constant";
-import { close } from "../../modules/drawer";
+import {DRAWER} from "../../constant";
+import {close} from "../../modules/drawer";
 import {
   uploadReport,
   addReport,
@@ -12,10 +12,10 @@ import {
 
 const mapStateToProps = (state) => {
   const {
-    drawer: { visible, loading, data: { type, payload = {} } = {} },
+    drawer: {visible, loading, data: {type, payload = {}} = {}},
     reports = {},
   } = state;
-
+  
   return {
     visible: visible && type === DRAWER.EDIT_REPORT,
     loading,

@@ -80,16 +80,16 @@ import {
   CONSULTATION,
 } from "../../../constant";
 import generateOTP from "../../helper/generateOtp";
-import { EVENTS, Proxy_Sdk } from "../../proxySdk";
+import {EVENTS, Proxy_Sdk} from "../../proxySdk";
 // import carePlan from "../../ApiWrapper/web/carePlan";
 import generatePDF from "../../helper/generateCarePlanPdf";
-import { downloadFileFromS3 } from "../user/userHelper";
-import { getFilePath } from "../../helper/filePath";
-import { checkAndCreateDirectory, getSeparateName } from "../../helper/common";
+import {downloadFileFromS3} from "../user/userHelper";
+import {getFilePath} from "../../helper/filePath";
+import {checkAndCreateDirectory, getSeparateName} from "../../helper/common";
 import PERMISSIONS from "../../../config/permissions";
 // helpers
 import * as carePlanHelper from "../carePlans/carePlanHelper";
-import { getDoctorCurrentTime } from "../../helper/getUserTime";
+import {getDoctorCurrentTime} from "../../helper/getUserTime";
 
 const path = require("path");
 
@@ -99,27 +99,27 @@ class PatientController extends Controller {
   constructor() {
     super();
   }
-
+  
   updatePatient = async (req, res) => {
     try {
-      const { userDetails, body, file } = req;
-      const { pid, profile_pic, name, email = "" } = body || {};
-      const { userId = "3" } = userDetails || {};
-
+      const {userDetails, body, file} = req;
+      const {pid, profile_pic, name, email = ""} = body || {};
+      const {userId = "3"} = userDetails || {};
+      
       console.log("==============in Web Controller================");
       console.log(userDetails);
       console.log(body);
       console.log("===============================================");
-
+      
       if (email) {
         const updateUserDetails = await userService.updateEmail(
-          { email },
+          {email},
           userId
         );
       }
-
+      
       const splitName = name.split(" ");
-
+      
       // todo minio configure here
       if (profile_pic) {
         await minioService.createBucket();
@@ -139,12 +139,12 @@ class PatientController extends Controller {
         };
         const fileUrl = folder + "/" + file_name;
         await minioService.saveBufferObject(fileStream, fileUrl, metaData);
-
+        
         console.log("file urlll: ", process.config.minio.MINI);
       }
-
-      const { first_name, middle_name, last_name } = getSeparateName(name);
-
+      
+      const {first_name, middle_name, last_name} = getSeparateName(name);
+      
       const patientData = {
         user_id: userId,
         first_name,
@@ -157,7 +157,7 @@ class PatientController extends Controller {
       };
       // add patient for userId
       const patientDetails = await patientService.update(patientData);
-
+      
       return this.raiseSuccess(
         res,
         200,
@@ -175,34 +175,34 @@ class PatientController extends Controller {
       return this.raiseServerError(res, 500, error, error.getMessage());
     }
   };
-
+  
   getPatientAppointments = async (req, res) => {
-    const { raiseServerError, raiseSuccess } = this;
+    const {raiseServerError, raiseSuccess} = this;
     try {
-      const { params: { id } = {}, userDetails: { userId } = {} } = req;
-
+      const {params: {id} = {}, userDetails: {userId} = {}} = req;
+      
       const appointmentList = await appointmentService.getAppointmentForPatient(
         id
       );
       // Logger.debug("appointmentList", appointmentList);
-
+      
       // if (appointmentList.length > 0) {
       let appointmentApiData = {};
       let appointmentDocuments = {};
       let appointment_ids = [];
-
+      
       for (const appointment of appointmentList) {
         const appointmentWrapper = await AppointmentWrapper(appointment);
         appointmentApiData[appointmentWrapper.getAppointmentId()] =
           appointmentWrapper.getBasicInfo();
-
-        const { appointment_docs } =
+        
+        const {appointment_docs} =
           await appointmentWrapper.getReferenceInfo();
-
-        appointmentDocuments = { ...appointmentDocuments, ...appointment_docs };
+        
+        appointmentDocuments = {...appointmentDocuments, ...appointment_docs};
         appointment_ids.push(appointmentWrapper.getAppointmentId());
       }
-
+      
       return raiseSuccess(
         res,
         200,
@@ -222,49 +222,49 @@ class PatientController extends Controller {
       raiseServerError(res);
     }
   };
-
+  
   getPatientMedications = async (req, res) => {
-    const { raiseSuccess, raiseServerError } = this;
+    const {raiseSuccess, raiseServerError} = this;
     try {
-      const { params: { id } = {} } = req;
-
+      const {params: {id} = {}} = req;
+      
       const medicationDetails =
         await medicationReminderService.getMedicationsForParticipant({
           participant_id: id,
         });
-
+      
       // console.log("712367132 medicationDetails --> ", medicationDetails);
       // Logger.debug("medication details", medicationDetails);
-
+      
       let medicationApiData = {};
       let medicineId = [];
-
+      
       for (const medication of medicationDetails) {
         const medicationWrapper = await MReminderWrapper(medication);
-        const { medications } = await medicationWrapper.getAllInfo();
-        medicationApiData = { ...medicationApiData, ...medications };
+        const {medications} = await medicationWrapper.getAllInfo();
+        medicationApiData = {...medicationApiData, ...medications};
         // medicationApiData[
         //   medicationWrapper.getMReminderId()
         // ] = medicationWrapper.getBasicInfo();
         medicineId.push(medicationWrapper.getMedicineId());
       }
-
+      
       Logger.debug("medicineId", medicationDetails);
-
+      
       const medicineData = await medicineService.getMedicineByData({
         id: medicineId,
       });
-
+      
       let medicineApiData = {};
-
+      
       for (const medicine of medicineData) {
         const medicineWrapper = await MedicineApiWrapper(medicine);
         medicineApiData[medicineWrapper.getMedicineId()] =
           medicineWrapper.getBasicInfo();
       }
-
+      
       Logger.debug("medicineData", medicineData);
-
+      
       return raiseSuccess(
         res,
         200,
@@ -283,23 +283,23 @@ class PatientController extends Controller {
       return raiseServerError(res);
     }
   };
-
+  
   getTime = () => {
     let date_ob = new Date();
     let date = ("0" + date_ob.getDate()).slice(-2);
-
+    
     // current month
     let month = ("0" + (date_ob.getMonth() + 1)).slice(-2);
-
+    
     // current year
     let year = date_ob.getFullYear();
-
+    
     // current hours
     let hours = date_ob.getHours();
-
+    
     // current minutes
     let minutes = date_ob.getMinutes();
-
+    
     // current seconds
     let seconds = date_ob.getSeconds();
     return (
@@ -316,13 +316,13 @@ class PatientController extends Controller {
       seconds
     );
   };
-
+  
   getPatientCarePlanDetails = async (req, res) => {
     console.log("get PatientCarePlanDetails Called - 1" + this.getTime());
-    const { raiseSuccess, raiseClientError, raiseServerError } = this;
+    const {raiseSuccess, raiseClientError, raiseServerError} = this;
     try {
       console.log("get PatientCarePlanDetails Called - 2" + this.getTime());
-      const { id: patient_id = 1 } = req.params;
+      const {id: patient_id = 1} = req.params;
       console.log("get PatientCarePlanDetails Called - 3" + this.getTime());
       Logger.info(`params: patient_id = ${patient_id}`);
       const {
@@ -330,7 +330,7 @@ class PatientController extends Controller {
           userRoleId = null,
           userId,
           userCategoryId,
-          userData: { category } = {},
+          userData: {category} = {},
         } = {},
       } = req;
       console.log("============gauravuserdetails=======================");
@@ -345,7 +345,7 @@ class PatientController extends Controller {
       if (req.userDetails.userCategoryData.care_plan_ids) {
         newData = req.userDetails.userCategoryData.care_plan_ids[userRoleId];
       }
-
+      
       console.log(newData);
       console.log("get PatientCarePlanDetails Called - 4" + this.getTime());
       if (!patient_id) {
@@ -357,7 +357,7 @@ class PatientController extends Controller {
         );
       }
       console.log("get PatientCarePlanDetails Called - 5" + this.getTime());
-
+      
       // get all careplans attached to patient
       const carePlans =
         (await carePlanService.getMultipleCarePlanByData({
@@ -376,13 +376,13 @@ class PatientController extends Controller {
       let templateVitalData = {};
       let templateDietData = {};
       let templateWorkoutData = {};
-
+      
       console.log("get PatientCarePlanDetails Called - 7" + this.getTime());
       // for vitals
       let vitalTemplateData = {};
       let care_planss = null;
       if (carePlans.length > 0) {
-        const { care_plans, care_plan_ids, current_careplan_id } =
+        const {care_plans, care_plan_ids, current_careplan_id} =
           await carePlanHelper.getCareplanDataWithImp({
             carePlans,
             userCategory: category,
@@ -393,14 +393,14 @@ class PatientController extends Controller {
         console.log("get PatientCarePlanDetails Called - 8" + this.getTime());
         // care plan ids
         carePlanIds = [...care_plan_ids];
-
+        
         // latest care plan id
         // latestCarePlanId = current_careplan_id;
-
+        
         console.log("get PatientCarePlanDetails Called - 9" + this.getTime());
         // get all treatment ids from careplan for templates
         Object.keys(care_plans).forEach((id) => {
-          const { details: { treatment_id } = {} } = care_plans[id] || {};
+          const {details: {treatment_id} = {}} = care_plans[id] || {};
           treatmentIds.push(treatment_id);
           let careplan = care_plans[id];
           if (careplan["basic_info"]["patient_id"] == patient_id) {
@@ -423,7 +423,7 @@ class PatientController extends Controller {
           const carePlanTemplate = await CarePlanTemplateWrapper(
             carePlanTemplates[index]
           );
-
+          
           const {
             care_plan_templates,
             template_appointments,
@@ -433,7 +433,7 @@ class PatientController extends Controller {
             template_workouts,
             vital_templates,
           } = await carePlanTemplate.getReferenceInfoWithImp();
-
+          
           carePlanTemplateIds = [
             ...new Set([
               ...carePlanTemplateIds,
@@ -482,20 +482,20 @@ class PatientController extends Controller {
         };
         console.log("get PatientCarePlanDetails Called - 16" + this.getTime());
       }
-
+      
       const patientCarePlans =
         newData.length > 0 &&
         newData.filter((id) => {
-          const { basic_info: { patient_id: carePlanPatientId = "0" } = {} } =
-            care_planss[id] || {};
-
+          const {basic_info: {patient_id: carePlanPatientId = "0"} = {}} =
+          care_planss[id] || {};
+          
           if (carePlanPatientId == patient_id) {
             return id;
           }
         });
       console.log("gauravsharma===");
       console.log(patientCarePlans);
-
+      
       if (patientCarePlans.length > 0) {
         latestCarePlanId = patientCarePlans[0];
       }
@@ -510,7 +510,7 @@ class PatientController extends Controller {
           care_plan_templates: {
             ...otherCarePlanTemplates,
           },
-
+          
           template_appointments: {
             ...templateAppointmentData,
           },
@@ -533,40 +533,40 @@ class PatientController extends Controller {
       return raiseServerError(res);
     }
   };
-
+  
   getPatientSymptoms = async (req, res) => {
-    const { raiseSuccess, raiseServerError, raiseClientError } = this;
+    const {raiseSuccess, raiseServerError, raiseClientError} = this;
     try {
       Logger.debug("req.params ----->", req.params);
       const {
-        params: { patient_id } = {},
+        params: {patient_id} = {},
         userDetails: {
           userId,
           userRoleId = null,
-          userData: { category } = {},
+          userData: {category} = {},
         } = {},
       } = req;
-
+      
       const carePlanData = await carePlanService.getSingleCarePlanByData({
         patient_id,
         ...((category === USER_CATEGORY.DOCTOR ||
-          category === USER_CATEGORY.HSP) && { user_role_id: userRoleId }),
+          category === USER_CATEGORY.HSP) && {user_role_id: userRoleId}),
       });
       const carePlan = await CarePlanWrapper(carePlanData);
-
+      
       const symptomData = await SymptomService.getAllByData({
         patient_id,
         // care_plan_id: carePlan.getCarePlanId()
       });
-
+      
       let uploadDocumentData = {};
       const dateWiseSymptoms = {};
       let symptomDates = [];
-
+      
       if (symptomData.length > 0) {
         for (const data of symptomData) {
-          const symptom = await SymptomWrapper({ data });
-
+          const symptom = await SymptomWrapper({data});
+          
           Logger.debug("symptom created date ---> ", symptom.getCreatedDate());
           const symptomDetails = await symptom.getDateWiseInfo();
           if (dateWiseSymptoms.hasOwnProperty(symptom.getCreatedDate())) {
@@ -575,18 +575,18 @@ class PatientController extends Controller {
             dateWiseSymptoms[symptom.getCreatedDate()] = [];
             dateWiseSymptoms[symptom.getCreatedDate()].push(symptomDetails);
           }
-          const { upload_documents } = await symptom.getReferenceInfo();
-          uploadDocumentData = { ...uploadDocumentData, ...upload_documents };
+          const {upload_documents} = await symptom.getReferenceInfo();
+          uploadDocumentData = {...uploadDocumentData, ...upload_documents};
           if (symptomDates.indexOf(symptom.getCreatedDate()) === -1) {
             symptomDates.push(symptom.getCreatedDate());
           }
         }
-
+        
         symptomDates.sort((a, b) => {
           if (moment(a).isBefore(moment(b))) return 1;
-
+          
           if (moment(a).isAfter(moment(b))) return -1;
-
+          
           return 0;
         });
         // console.log("incident=============>", incidentLogs);
@@ -594,16 +594,16 @@ class PatientController extends Controller {
         symptomDates.forEach((date) => {
           const data = dateWiseSymptoms[date] || [];
           data.sort((activityA, activityB) => {
-            const { createdAt: a } = activityA;
-            const { createdAt: b } = activityB;
+            const {createdAt: a} = activityA;
+            const {createdAt: b} = activityB;
             if (moment(a).isBefore(moment(b))) return 1;
-
+            
             if (moment(a).isAfter(moment(b))) return -1;
-
+            
             return 0;
           });
         });
-
+        
         return raiseSuccess(
           res,
           200,
@@ -634,7 +634,7 @@ class PatientController extends Controller {
       return raiseServerError(res);
     }
   };
-
+  
   // getPatientVitals = async (req, res) => {
   //   const { raiseSuccess, raiseServerError, raiseClientError } = this;
   //   try {
@@ -642,26 +642,26 @@ class PatientController extends Controller {
   //     const {userDetails = {}} = req;
   //     const { params: { careplan_id } = {} ,userDetails : { userData: { category } = {}  } } = req;
   //     const {userRoleId = null } = userDetails  ;
-
+  
   //     let carePlan =null;
   //     let allVitals = [];
   //     carePlan = await carePlanService.getSingleCarePlanByData({
   //       id: careplan_id,
   //       [category === USER_CATEGORY.DOCTOR && 'user_role_id' ] : category === USER_CATEGORY.DOCTOR && userRoleId
   //     });
-
+  
   //     if(carePlan){
-
+  
   //       allVitals = await VitalService.getAllByData({
   //         care_plan_id: carePlan.get("id")
   //       });
-
+  
   //     }
-
+  
   //     let vitalDetails = {};
   //     let vitalTemplateDetails = {};
   //     let carePlanTemplateDetails = {};
-
+  
   //     if (allVitals.length > 0) {
   //       for (const vitalData of allVitals) {
   //         const vital = await VitalWrapper(vitalData);
@@ -670,9 +670,9 @@ class PatientController extends Controller {
   //           vital_templates,
   //           care_plans
   //         } = await vital.getReferenceInfo();
-
+  
   //         vitalDetails = { ...vitalDetails, ...vitals };
-
+  
   //         vitalTemplateDetails = {
   //           ...vitalTemplateDetails,
   //           ...vital_templates
@@ -682,7 +682,7 @@ class PatientController extends Controller {
   //           ...care_plans
   //         };
   //       }
-
+  
   //       return raiseSuccess(
   //         res,
   //         200,
@@ -713,23 +713,23 @@ class PatientController extends Controller {
   //     return raiseServerError(res);
   //   }
   // };
-
+  
   getPatientVitals = async (req, res) => {
-    const { raiseSuccess, raiseServerError, raiseClientError } = this;
+    const {raiseSuccess, raiseServerError, raiseClientError} = this;
     try {
       Logger.debug("34554321345324", req.params);
-      const { params: { careplan_id } = {} } = req;
+      const {params: {careplan_id} = {}} = req;
       let patient_id = null;
-
+      
       const careplanWrapper = await CarePlanWrapper(null, careplan_id);
       if (careplanWrapper) {
         patient_id = await careplanWrapper.getPatientId();
       }
-
+      
       const carePlans = await carePlanService.getMultipleCarePlanByData({
         patient_id,
       });
-
+      
       /* incoming change from release/adhere branch */
       // const carePlan = await carePlanService.getSingleCarePlanByData({
       //   id: careplan_id,
@@ -737,30 +737,30 @@ class PatientController extends Controller {
       // const allVitals = await VitalService.getAllByData({
       //   care_plan_id: carePlan.get("id"),
       // });
-
+      
       let allVitals = [];
-
+      
       for (const carePlan of carePlans) {
         const vitals = await VitalService.getAllByData({
           care_plan_id: carePlan.get("id"),
         });
-
+        
         allVitals = [...allVitals, ...vitals];
       }
-
+      
       let vitalDetails = {};
       let vitalTemplateDetails = {};
       let carePlanTemplateDetails = {};
-
+      
       if (allVitals.length > 0) {
         for (const vitalData of allVitals) {
           const vital = await VitalWrapper(vitalData);
-          const { vitals } = await vital.getAllInfo();
-          const { vital_templates, care_plans } =
+          const {vitals} = await vital.getAllInfo();
+          const {vital_templates, care_plans} =
             await vital.getReferenceInfo();
-
-          vitalDetails = { ...vitalDetails, ...vitals };
-
+          
+          vitalDetails = {...vitalDetails, ...vitals};
+          
           vitalTemplateDetails = {
             ...vitalTemplateDetails,
             ...vital_templates,
@@ -770,7 +770,7 @@ class PatientController extends Controller {
             ...care_plans,
           };
         }
-
+        
         return raiseSuccess(
           res,
           200,
@@ -801,43 +801,43 @@ class PatientController extends Controller {
       return raiseServerError(res);
     }
   };
-
+  
   getPatientPartSymptoms = async (req, res) => {
-    const { raiseSuccess, raiseServerError, raiseClientError } = this;
+    const {raiseSuccess, raiseServerError, raiseClientError} = this;
     try {
       Logger.debug("req.params ----->", req.params);
       const {
-        query: { duration = "5" } = {},
-        params: { patient_id } = {},
-        userDetails: { userId } = {},
+        query: {duration = "5"} = {},
+        params: {patient_id} = {},
+        userDetails: {userId} = {},
       } = req;
-
+      
       const currentTime = moment().utc().toISOString();
       const historyTime = moment()
         .subtract(duration, "days")
         .utc()
         .toISOString();
-
+      
       const symptomData = await SymptomService.getFilteredData({
         patient_id,
         start_time: historyTime,
         end_time: currentTime,
       });
-
+      
       let uploadDocumentData = {};
-
+      
       const sideWiseParts = {};
-
+      
       const frontPart = {};
       const backPart = {};
-
+      
       if (symptomData.length > 0) {
         for (const data of symptomData) {
-          const symptom = await SymptomWrapper({ data });
+          const symptom = await SymptomWrapper({data});
           const symptomDetails = await symptom.getDateWiseInfo();
-
+          
           // DATA FORMATTED FOR SIDE AND PART WISE ORDER
-
+          
           if (symptom.getSide() === BODY_VIEW.FRONT) {
             if (frontPart.hasOwnProperty(symptom.getPart())) {
               frontPart[symptom.getPart()].push(symptomDetails);
@@ -853,31 +853,31 @@ class PatientController extends Controller {
               backPart[symptom.getPart()].push(symptomDetails);
             }
           }
-
-          const { upload_documents } = await symptom.getReferenceInfo();
-          uploadDocumentData = { ...uploadDocumentData, ...upload_documents };
+          
+          const {upload_documents} = await symptom.getReferenceInfo();
+          uploadDocumentData = {...uploadDocumentData, ...upload_documents};
         }
-
+        
         for (const side of Object.values(BODY_VIEW)) {
           if (side === BODY_VIEW.FRONT) {
-            sideWiseParts[side] = { ...frontPart };
+            sideWiseParts[side] = {...frontPart};
           } else {
-            sideWiseParts[side] = { ...backPart };
+            sideWiseParts[side] = {...backPart};
           }
         }
-
+        
         Object.values(BODY_VIEW).forEach((side) => {
           const sideData = sideWiseParts[side] || {};
           if (sideData) {
             Object.keys(sideData).forEach((part) => {
               const data = sideData[part] || [];
               data.sort((activityA, activityB) => {
-                const { createdAt: a } = activityA;
-                const { createdAt: b } = activityB;
+                const {createdAt: a} = activityA;
+                const {createdAt: b} = activityB;
                 if (moment(a).isBefore(moment(b))) return 1;
-
+                
                 if (moment(a).isAfter(moment(b))) return -1;
-
+                
                 return 0;
               });
             });
@@ -885,7 +885,7 @@ class PatientController extends Controller {
             sideWiseParts[side] = [];
           }
         });
-
+        
         return raiseSuccess(
           res,
           200,
@@ -922,30 +922,30 @@ class PatientController extends Controller {
       return raiseServerError(res);
     }
   };
-
+  
   searchPatient = async (req, res) => {
-    const { raiseSuccess, raiseServerError } = this;
+    const {raiseSuccess, raiseServerError} = this;
     try {
       Logger.info(`searchPatient request query : ${req.query.value}`);
-      const { query: { value = "" } = {} } = req;
-
+      const {query: {value = ""} = {}} = req;
+      
       const users = await userService.getPatientByMobile(value);
-
+      
       if (users.length > 0) {
         let userDetails = {};
         let patientDetails = {};
         const patientIds = [];
         for (const userData of users) {
           const user = await UserWrapper(userData.get());
-
-          const { users, patients, patient_id } = await user.getReferenceInfo();
+          
+          const {users, patients, patient_id} = await user.getReferenceInfo();
           Logger.debug("Search Patient Users", users);
           Logger.debug("Search Patient Patients", patients);
           patientIds.push(patient_id);
-          userDetails = { ...userDetails, ...users };
-          patientDetails = { ...patientDetails, ...patients };
+          userDetails = {...userDetails, ...users};
+          patientDetails = {...patientDetails, ...patients};
         }
-
+        
         return raiseSuccess(
           res,
           200,
@@ -973,13 +973,13 @@ class PatientController extends Controller {
       return raiseServerError(res);
     }
   };
-
+  
   searchPatientForDoctor = async (req, res) => {
-    const { raiseSuccess, raiseServerError } = this;
+    const {raiseSuccess, raiseServerError} = this;
     try {
-      const { userDetails: { userRoleId = null, userId } = {} } = req;
-      const { query: { value = "" } = {} } = req;
-
+      const {userDetails: {userRoleId = null, userId} = {}} = req;
+      const {query: {value = ""} = {}} = req;
+      
       const isNumber = !isNaN(value);
       let doctorData = {};
       const patientIdsForThisDoc = [];
@@ -988,21 +988,21 @@ class PatientController extends Controller {
       const doctorDetails = await DoctorWrapper(doctor);
       doctorData[doctorDetails.getDoctorId()] =
         await doctorDetails.getAllInfo();
-      const { care_plan_ids: all_care_plan_ids = [] } =
+      const {care_plan_ids: all_care_plan_ids = []} =
         doctorData[doctorDetails.getDoctorId()];
       const care_plan_ids = all_care_plan_ids[userRoleId.toString()] || [];
-
+      
       // console.log("32894723648723648726348762387462837462873462783",{care_plan_ids});
-
+      
       for (const each_id of care_plan_ids) {
         let thisCarePlanData = await userService.getCarePlanData(each_id);
-        const { dataValues: { patient_id = null } = {} } = thisCarePlanData;
+        const {dataValues: {patient_id = null} = {}} = thisCarePlanData;
         patientIdsForThisDoc.push(patient_id);
-        const { dataValues: { user_id = null } = {} } =
+        const {dataValues: {user_id = null} = {}} =
           await patientService.getPatientByIdForPatientSearch(patient_id);
         userIdsForForPatientForDoc.push(user_id);
       }
-
+      
       if (!isNumber) {
         const allPatients = await patientService.getPatientForDoctor(
           value,
@@ -1012,17 +1012,17 @@ class PatientController extends Controller {
           let userDetails = {};
           let patientDetails = {};
           const patientIds = [];
-
+          
           for (const patientData of allPatients) {
             const patient = await PatientWrapper(patientData, null);
-            const { patients, users } = await patient.getReferenceInfo();
-            const { basic_info: { id: current_patient_id = null } = {} } =
+            const {patients, users} = await patient.getReferenceInfo();
+            const {basic_info: {id: current_patient_id = null} = {}} =
               Object.values(patients)[0];
             patientIds.push(current_patient_id);
-            userDetails = { ...userDetails, ...users };
-            patientDetails = { ...patientDetails, ...patients };
+            userDetails = {...userDetails, ...users};
+            patientDetails = {...patientDetails, ...patients};
           }
-
+          
           return raiseSuccess(
             res,
             200,
@@ -1050,21 +1050,21 @@ class PatientController extends Controller {
           value,
           userIdsForForPatientForDoc
         );
-
+        
         if (users.length > 0) {
           let userDetails = {};
           let patientDetails = {};
           const patientIds = [];
           for (const userData of users) {
             const user = await UserWrapper(userData.get());
-
-            const { users, patients, patient_id } =
+            
+            const {users, patients, patient_id} =
               await user.getReferenceInfo();
             patientIds.push(patient_id);
-            userDetails = { ...userDetails, ...users };
-            patientDetails = { ...patientDetails, ...patients };
+            userDetails = {...userDetails, ...users};
+            patientDetails = {...patientDetails, ...patients};
           }
-
+          
           return raiseSuccess(
             res,
             200,
@@ -1093,34 +1093,34 @@ class PatientController extends Controller {
       return raiseServerError(res);
     }
   };
-
+  
   patientConsentRequest = async (req, res) => {
-    const { raiseSuccess, raiseServerError } = this;
+    const {raiseSuccess, raiseServerError} = this;
     try {
       const {
-        params: { id: patient_id } = {},
-        userDetails: { userId, userRoleId } = {},
+        params: {id: patient_id} = {},
+        userDetails: {userId, userRoleId} = {},
       } = req;
-
+      
       const patient = await PatientWrapper(null, patient_id);
-
-      const { users } = await patient.getReferenceInfo();
-      const { basic_info: { prefix, mobile_number, email } = {} } =
+      
+      const {users} = await patient.getReferenceInfo();
+      const {basic_info: {prefix, mobile_number, email} = {}} =
         users[patient.getUserId()];
-
+      
       Logger.debug("patient_id ---> ", mobile_number);
-
+      
       const otp = generateOTP();
-
+      
       await otpVerificationService.delete({
         user_id: patient.getUserId(),
       });
-
+      
       await otpVerificationService.create({
         user_id: patient.getUserId(),
         otp,
       });
-
+      
       if (process.config.app.env === "development") {
         const emailPayload = {
           title: "OTP Consent verification for patient",
@@ -1151,16 +1151,16 @@ class PatientController extends Controller {
           };
           Proxy_Sdk.execute(EVENTS.SEND_EMAIL, emailPayload);
         }
-
+        
         const smsPayload = {
           // countryCode: prefix,
           phoneNumber: `+${prefix}${mobile_number}`, // mobile_number
           message: `Hello from AdhereLive! Your OTP for consent request is ${otp}`,
         };
-
+        
         Proxy_Sdk.execute(EVENTS.SEND_SMS, smsPayload);
       }
-
+      
       return raiseSuccess(
         res,
         200,
@@ -1174,85 +1174,85 @@ class PatientController extends Controller {
       return raiseServerError(res);
     }
   };
-
+  
   patientConsentVerification = async (req, res) => {
-    const { raiseSuccess, raiseClientError, raiseServerError } = this;
+    const {raiseSuccess, raiseClientError, raiseServerError} = this;
     try {
       const {
-        body: { otp, user_id } = {},
+        body: {otp, user_id} = {},
         userDetails: {
           userRoleId = null,
           userId,
-          userData: { category } = {},
+          userData: {category} = {},
         } = {},
       } = req;
-
+      
       // service instance
       const consentService = new ConsentService();
-
+      
       const otpVerification = await otpVerificationService.getOtpByData({
         otp,
         user_id,
       });
-
+      
       if (otpVerification.length > 0) {
         // helper variables
         let doctorData = {};
         const doctorIds = [];
         let consentDoctorId = null;
-
-        const destroyOtp = await otpVerificationService.delete({ user_id });
-
+        
+        const destroyOtp = await otpVerificationService.delete({user_id});
+        
         const user = await UserWrapper(null, user_id);
-        const { patient_id } = await user.getReferenceInfo();
-
+        const {patient_id} = await user.getReferenceInfo();
+        
         const patient = await PatientWrapper(null, patient_id);
-
+        
         let authDoctor = null;
-
+        
         if (
           category === USER_CATEGORY.DOCTOR ||
           category === USER_CATEGORY.HSP
         ) {
-          authDoctor = await doctorService.getDoctorByData({ user_id: userId });
+          authDoctor = await doctorService.getDoctorByData({user_id: userId});
         }
-
+        
         const consentData = await consentService.create({
           type: CONSENT_TYPE.CARE_PLAN,
           doctor_id: authDoctor.get("id"),
           patient_id,
           user_role_id: userRoleId,
         });
-        const consents = await ConsentWrapper({ data: consentData });
-
+        const consents = await ConsentWrapper({data: consentData});
+        
         const carePlans = await carePlanService.getCarePlanByData({
           patient_id,
         });
-
+        
         if (carePlans.length > 0) {
           for (let i = 0; i < carePlans.length; i++) {
             const carePlan = await CarePlanWrapper(carePlans[i]);
             doctorIds.push(carePlan.getDoctorId());
           }
         }
-
+        
         if (doctorIds.length > 0) {
           const doctors = await doctorService.getAllDoctorByData({
             id: doctorIds,
           });
-
+          
           if (doctors.length > 0) {
             for (let i = 0; i < doctors.length; i++) {
               const doctor = await DoctorWrapper(doctors[i]);
               doctorData[doctor.getDoctorId()] = await doctor.getAllInfo();
-
+              
               if (doctor.getUserId() === userId) {
                 consentDoctorId = doctor.getDoctorId();
               }
             }
           }
         }
-
+        
         return raiseSuccess(
           res,
           200,
@@ -1285,9 +1285,9 @@ class PatientController extends Controller {
       return raiseServerError(res);
     }
   };
-
+  
   createNewCareplanforPatient = async (req, res) => {
-    const { raiseSuccess, raiseClientError, raiseServerError } = this;
+    const {raiseSuccess, raiseClientError, raiseServerError} = this;
     try {
       const {
         clinical_notes = "",
@@ -1298,34 +1298,34 @@ class PatientController extends Controller {
         condition_id,
         symptoms = "",
       } = req.body;
-
+      
       const {
-        params: { patient_id } = {},
-        userDetails: { userRoleId = null, userId } = {},
+        params: {patient_id} = {},
+        userDetails: {userRoleId = null, userId} = {},
       } = req;
-
+      
       let userData = null;
       let patientData = null;
       let patientOtherDetails = {};
       let carePlanOtherDetails = {};
-
+      
       if (clinical_notes) {
         carePlanOtherDetails["clinical_notes"] = clinical_notes;
       }
       if (symptoms) {
         carePlanOtherDetails["symptoms"] = symptoms;
       }
-
+      
       if (clinical_notes) {
         carePlanOtherDetails["clinical_notes"] = clinical_notes;
       }
       if (symptoms) {
         carePlanOtherDetails["symptoms"] = symptoms;
       }
-
+      
       patientData = await PatientWrapper(null, patient_id);
-
-      const doctor = await doctorService.getDoctorByData({ user_id: userId });
+      
+      const doctor = await doctorService.getDoctorByData({user_id: userId});
       const carePlanTemplate =
         await carePlanTemplateService.getCarePlanTemplateData({
           treatment_id,
@@ -1334,7 +1334,7 @@ class PatientController extends Controller {
           user_id: userId,
         });
       const care_plan_template_id = null;
-
+      
       const details = {
         treatment_id,
         severity_id,
@@ -1345,7 +1345,7 @@ class PatientController extends Controller {
         },
         ...carePlanOtherDetails,
       };
-
+      
       const carePlan = await carePlanService.addCarePlan({
         patient_id,
         user_role_id: userRoleId,
@@ -1354,29 +1354,29 @@ class PatientController extends Controller {
         details,
         created_at: moment(),
       });
-
+      
       const carePlanData = await CarePlanWrapper(carePlan);
       const care_plan_id = await carePlanData.getCarePlanId();
       let doctorData = {};
       const doctorIds = [];
-
+      
       const carePlans = await carePlanService.getCarePlanByData({
         patient_id,
         user_role_id: userRoleId,
       });
-
+      
       if (carePlans.length > 0) {
         for (let i = 0; i < carePlans.length; i++) {
           const carePlan = await CarePlanWrapper(carePlans[i]);
           doctorIds.push(carePlan.getDoctorId());
         }
       }
-
+      
       if (doctorIds.length > 0) {
         const doctors = await doctorService.getAllDoctorByData({
           id: doctorIds,
         });
-
+        
         if (doctors.length > 0) {
           for (let i = 0; i < doctors.length; i++) {
             const doctor = await DoctorWrapper(doctors[i]);
@@ -1384,7 +1384,7 @@ class PatientController extends Controller {
           }
         }
       }
-
+      
       return this.raiseSuccess(
         res,
         200,
@@ -1404,39 +1404,39 @@ class PatientController extends Controller {
       return raiseServerError(res);
     }
   };
-
+  
   getPatientReports = async (req, res) => {
-    const { raiseSuccess, raiseClientError, raiseServerError } = this;
+    const {raiseSuccess, raiseClientError, raiseServerError} = this;
     try {
       const {
-        params: { patient_id } = {},
-        userDetails: { userCategoryId } = {},
+        params: {patient_id} = {},
+        userDetails: {userCategoryId} = {},
       } = req;
       Logger.info(`params: patient_id = ${patient_id}`);
-
+      
       if (!patient_id) {
         return raiseClientError(res, 422, {}, "Please select correct patient");
       }
-
+      
       const reportService = new ReportService();
       const allReports =
         (await reportService.getAllReportByData({
           patient_id,
         })) || [];
-
+      
       let reportData = {};
       let documentData = {};
-
+      
       let doctorIds = [];
       let reportIds = [];
-
+      
       for (let index = 0; index < allReports.length; index++) {
-        const report = await ReportWrapper({ data: allReports[index] });
-        const { reports, upload_documents } = await report.getReferenceInfo();
+        const report = await ReportWrapper({data: allReports[index]});
+        const {reports, upload_documents} = await report.getReferenceInfo();
         reportIds.push(report.getId());
-        reportData = { ...reportData, ...reports };
-        documentData = { ...documentData, ...upload_documents };
-
+        reportData = {...reportData, ...reports};
+        documentData = {...documentData, ...upload_documents};
+        
         // collect other doctor ids
         if (
           (report.getUploaderType() === USER_CATEGORY.DOCTOR ||
@@ -1446,7 +1446,7 @@ class PatientController extends Controller {
           doctorIds.push(report.getUploaderId());
         }
       }
-
+      
       // get other doctor basic details
       // todo: check with others if this data is already present for multi careplan
       let doctorData = {};
@@ -1455,13 +1455,13 @@ class PatientController extends Controller {
           (await doctorService.getAllDoctorByData({
             id: doctorIds,
           })) || [];
-
+        
         for (let index = 0; index < allDoctors.length; index++) {
           const doctor = await DoctorWrapper(allDoctors[index]);
           doctorData[doctor.getDoctorId()] = await doctor.getAllInfo();
         }
       }
-
+      
       return raiseSuccess(
         res,
         200,
@@ -1484,25 +1484,25 @@ class PatientController extends Controller {
       return raiseServerError(res);
     }
   };
-
+  
   generatePrescription = async (req, res) => {
-    const { raiseSuccess, raiseClientError, raiseServerError } = this;
+    const {raiseSuccess, raiseClientError, raiseServerError} = this;
     try {
-      const { care_plan_id = null } = req.params;
+      const {care_plan_id = null} = req.params;
       const {
         userDetails: {
           userId,
           userRoleId = null,
-          userData: { category } = {},
+          userData: {category} = {},
         } = {},
         permissions = [],
       } = req;
       const dietService = new DietService();
       const workoutService = new WorkoutService();
       // const carePlanId = parseInt(care_plan_id);
-
+      
       let dataForPdf = {};
-
+      
       let usersData = {};
       let userRolesData = {};
       let qualifications = {};
@@ -1512,17 +1512,17 @@ class PatientController extends Controller {
       let medications = {};
       let medicines = {};
       let nextAppointmentDuration = null;
-
+      
       if (!care_plan_id) {
         return raiseClientError(res, 422, {}, "Invalid Care Plan.");
       }
-
+      
       const carePlan = await carePlanService.getCarePlanById(care_plan_id);
       const carePlanData = await CarePlanWrapper(carePlan);
       const curr_patient_id = carePlanData.getPatientId();
-
+      
       const doctorUserRoleId = carePlanData.getUserRoleId();
-
+      
       if (
         `${doctorUserRoleId}` !== `${userRoleId}` &&
         category !== USER_CATEGORY.PATIENT
@@ -1544,17 +1544,17 @@ class PatientController extends Controller {
           [doctorUserRoleId]: userRolesWrapper.getBasicInfo(),
         };
       }
-
+      
       const carePlanCreatedDate = carePlanData.getCreatedAt();
-
+      
       const {
-        details: { condition_id = null } = {},
+        details: {condition_id = null} = {},
         medication_ids = [],
         appointment_ids = [],
         diet_ids = [],
         workout_ids = [],
       } = await carePlanData.getAllInfo();
-
+      
       const conditionData = await conditionService.getByData({
         id: condition_id,
       });
@@ -1562,20 +1562,20 @@ class PatientController extends Controller {
         const condition = await ConditionWrapper(conditionData);
         conditions[condition_id] = condition.getBasicInfo();
       }
-
+      
       if (permissions.includes(PERMISSIONS.MEDICATIONS.ADD)) {
         for (const medicationId of medication_ids) {
           const medication = await medicationReminderService.getMedication({
             id: medicationId,
           });
-
+          
           if (medication) {
             const medicationWrapper = await MReminderWrapper(medication);
             const medicineId = medicationWrapper.getMedicineId();
             const medicineData = await medicineService.getMedicineByData({
               id: medicineId,
             });
-
+            
             for (const medicine of medicineData) {
               const medicineWrapper = await MedicineApiWrapper(medicine);
               medicines = {
@@ -1588,40 +1588,40 @@ class PatientController extends Controller {
             }
             medications = {
               ...medications,
-              ...{ [medicationId]: medicationWrapper.getBasicInfo() },
+              ...{[medicationId]: medicationWrapper.getBasicInfo()},
             };
           }
         }
       }
-
+      
       const now = moment();
       let nextAppointment = null;
-
+      
       let suggestedInvestigations = [];
       for (const appointmentId of appointment_ids) {
         const appointment = await appointmentService.getAppointmentById(
           appointmentId
         );
-
+        
         if (appointment) {
           const appointmentWrapper = await AppointmentWrapper(appointment);
-
+          
           const startDate = appointmentWrapper.getStartTime();
           const startDateObj = moment(startDate);
-
+          
           const diff = startDateObj.diff(now);
-
+          
           if (diff > 0) {
             if (!nextAppointment || nextAppointment.diff(startDateObj) > 0) {
               nextAppointment = startDateObj;
             }
           }
-
-          const { type } = appointmentWrapper.getDetails() || {};
-
+          
+          const {type} = appointmentWrapper.getDetails() || {};
+          
           if (type !== CONSULTATION) {
-            const { type_description = "", radiology_type = "" } =
-              appointmentWrapper.getDetails() || {};
+            const {type_description = "", radiology_type = ""} =
+            appointmentWrapper.getDetails() || {};
             suggestedInvestigations.push({
               type,
               type_description,
@@ -1631,79 +1631,79 @@ class PatientController extends Controller {
           }
         }
       }
-
+      
       let dietApiData = {},
         dietIds = [],
         workoutApiData = {},
         workoutIds = [];
-
+      
       // diet
       for (const id of diet_ids) {
-        const diet = await dietService.getByData({ id });
-
+        const diet = await dietService.getByData({id});
+        
         if (diet) {
-          const dietData = await dietService.findOne({ id });
-          const dietWrapper = await DietWrapper({ data: dietData });
+          const dietData = await dietService.findOne({id});
+          const dietWrapper = await DietWrapper({data: dietData});
           const expired_on = await dietWrapper.getExpiredOn();
-
+          
           if (expired_on) {
             continue;
           }
-
+          
           const referenceInfo = await dietWrapper.getReferenceInfo();
-
+          
           let dietFoodGroupsApidata = {},
             dietBasicInfo = {};
-
+          
           dietBasicInfo[dietWrapper.getId()] = await dietWrapper.getBasicInfo();
-
+          
           const {
             diet_food_group_mappings = {},
             food_groups = {},
             food_items = {},
             food_item_details = {},
           } = referenceInfo || {};
-
+          
           const timeWise = await DietHelper.getTimeWiseDietFoodGroupMappings({
             diet_food_group_mappings,
           });
-
+          
           for (let eachTime in timeWise) {
-            const { mappingIds = [] } = timeWise[eachTime] || {};
-
+            const {mappingIds = []} = timeWise[eachTime] || {};
+            
             for (let ele of mappingIds) {
               let primary = null,
                 related_diet_food_group_mapping_ids = [];
-
+              
               if (Array.isArray(ele)) {
                 ele.sort(function (a, b) {
                   return a - b;
                 });
-
+                
                 primary = ele[0] || null;
                 related_diet_food_group_mapping_ids = ele.slice(1);
               } else {
                 primary = ele;
               }
-
+              
               let currentfodmattedData = {};
-
+              
               // const related_diet_food_group_mapping_ids = mappingIds.slice(1);
               let similarFoodGroups = [],
                 notes = "";
-
+              
               const current_mapping = diet_food_group_mappings[primary] || {};
-              const { basic_info: { time = "", food_group_id = null } = {} } =
+              const {basic_info: {time = "", food_group_id = null} = {}} =
                 current_mapping;
               const {
-                basic_info: { food_item_detail_id = null, serving = null } = {},
+                basic_info: {food_item_detail_id = null, serving = null} = {},
                 details = {},
               } = food_groups[food_group_id] || {};
-              const { basic_info: { portion_id = null } = {} } =
-                food_item_details[food_item_detail_id] || {};
-
+              const {basic_info: {portion_id = null} = {}} =
+              food_item_details[food_item_detail_id] || {};
+              
               if (details) {
-                const { notes: detail_notes = "" } = details;
+                const {notes: detail_notes = ""} = details;
                 notes = detail_notes;
               }
               if (related_diet_food_group_mapping_ids.length) {
@@ -1714,7 +1714,7 @@ class PatientController extends Controller {
                 ) {
                   const similarMappingId =
                     related_diet_food_group_mapping_ids[i];
-
+                  
                   const {
                     basic_info: {
                       food_group_id: similar_food_group_id = null,
@@ -1727,17 +1727,17 @@ class PatientController extends Controller {
                     } = {},
                     details: similar_details = {},
                   } = food_groups[similar_food_group_id] || {};
-
+                  
                   const {
-                    basic_info: { portion_id: similar_portion_id = null } = {},
+                    basic_info: {portion_id: similar_portion_id = null} = {},
                   } = food_item_details[similar_food_item_detail_id] || {};
-
+                  
                   let similar_notes = "";
                   if (similar_details) {
-                    const { notes = "" } = similar_details || {};
+                    const {notes = ""} = similar_details || {};
                     similar_notes = notes;
                   }
-
+                  
                   const similarData = {
                     serving: similar_serving,
                     portion_id: similar_portion_id,
@@ -1745,12 +1745,12 @@ class PatientController extends Controller {
                     food_group_id: similar_food_group_id,
                     notes: similar_notes,
                   };
-
+                  
                   similarFoodGroups.push(similarData);
                   // delete diet_food_group_mappings[similarMappingId];
                 }
               }
-
+              
               currentfodmattedData = {
                 serving,
                 portion_id,
@@ -1759,14 +1759,14 @@ class PatientController extends Controller {
                 food_item_detail_id,
                 similar: [...similarFoodGroups],
               };
-
+              
               const currentDietDataForTime = dietFoodGroupsApidata[time] || [];
               currentDietDataForTime.push(currentfodmattedData);
-
+              
               dietFoodGroupsApidata[`${time}`] = [...currentDietDataForTime];
             }
           }
-
+          
           dietApiData[id] = {
             diets: {
               ...dietBasicInfo,
@@ -1777,35 +1777,35 @@ class PatientController extends Controller {
             food_items,
             food_item_details,
           };
-
+          
           dietIds.push(id);
         }
       }
-
+      
       for (const id of workout_ids) {
-        const workout = await workoutService.findOne({ id });
-
+        const workout = await workoutService.findOne({id});
+        
         if (workout) {
-          const workoutWrapper = await WorkoutWrapper({ data: workout });
+          const workoutWrapper = await WorkoutWrapper({data: workout});
           const expired_on = await workoutWrapper.getExpiredOn();
           if (expired_on) {
             continue;
           }
-
+          
           let workout_exercise_groups = [];
-          const { exercises, exercise_groups, exercise_details } =
+          const {exercises, exercise_groups, exercise_details} =
             await workoutWrapper.getReferenceInfo();
-
+          
           for (const exerciseGroupId of Object.keys(exercise_groups)) {
             const {
-              basic_info: { id: exercise_group_id, exercise_detail_id } = {},
+              basic_info: {id: exercise_group_id, exercise_detail_id} = {},
               sets,
               details = {},
             } = exercise_groups[exerciseGroupId] || {};
-
-            const { basic_info: { exercise_id } = {} } =
-              exercise_details[exercise_detail_id] || {};
-
+            
+            const {basic_info: {exercise_id} = {}} =
+            exercise_details[exercise_detail_id] || {};
+            
             workout_exercise_groups.push({
               exercise_group_id,
               exercise_detail_id,
@@ -1813,77 +1813,77 @@ class PatientController extends Controller {
               ...details,
             });
           }
-
+          
           workoutApiData[workoutWrapper.getId()] = {
             ...(await workoutWrapper.getReferenceInfo()),
             workout_exercise_groups,
           };
-
+          
           workoutIds.push(workoutWrapper.getId());
         }
       }
-
+      
       // sort suggested investigations
       const sortedInvestigations = suggestedInvestigations.sort((a, b) => {
-        const { start_date: aStartDate } = a || {};
-        const { start_date: bStartDate } = b || {};
-
+        const {start_date: aStartDate} = a || {};
+        const {start_date: bStartDate} = b || {};
+        
         if (moment(bStartDate).diff(moment(aStartDate), "minutes") > 0) {
           return 1;
         } else {
           return -1;
         }
       });
-
+      
       // Logger.debug(
       //   "98273917312 sortedInvestigations ",
       //   sortedInvestigations
       // );
-
+      
       if (nextAppointment) {
         nextAppointmentDuration =
           nextAppointment.diff(now, "days") !== 0
             ? `${nextAppointment.diff(now, "days")} days`
             : `${nextAppointment.diff(now, "hours")} hours`;
       }
-
+      
       let patient = null;
-
+      
       if (category === USER_CATEGORY.DOCTOR || category === USER_CATEGORY.HSP) {
-        patient = await patientService.getPatientById({ id: curr_patient_id });
+        patient = await patientService.getPatientById({id: curr_patient_id});
       } else {
         patient = await patientService.getPatientByUserId(userId);
       }
-
+      
       const patientData = await PatientWrapper(patient);
-
+      
       const timingPreference = await userPreferenceService.getPreferenceByData({
         user_id: patientData.getUserId(),
       });
       const userPrefOptions = await UserPreferenceWrapper(timingPreference);
-      const { timings: userTimings = {} } = userPrefOptions.getAllDetails();
+      const {timings: userTimings = {}} = userPrefOptions.getAllDetails();
       const timings = DietHelper.getTimings(userTimings);
-
-      const { doctors, doctor_id } = await carePlanData.getReferenceInfo();
-
+      
+      const {doctors, doctor_id} = await carePlanData.getReferenceInfo();
+      
       const {
         [doctor_id]: {
-          basic_info: { signature_pic = "", full_name = "", profile_pic } = {},
+          basic_info: {signature_pic = "", full_name = "", profile_pic} = {},
         } = {},
       } = doctors;
-
+      
       checkAndCreateDirectory(S3_DOWNLOAD_FOLDER);
-
+      
       const doctorSignImage = `${S3_DOWNLOAD_FOLDER}/${full_name}.jpeg`;
-
+      
       const downloadImage = await downloadFileFromS3(
         getFilePath(signature_pic),
         doctorSignImage
       );
-
+      
       const doctorQualifications =
         await qualificationService.getQualificationsByDoctorId(doctor_id);
-
+      
       await doctorQualifications.forEach(async (doctorQualification) => {
         const doctorQualificationWrapper = await QualificationWrapper(
           doctorQualification
@@ -1892,105 +1892,105 @@ class PatientController extends Controller {
         const degreeWrapper = await DegreeWrapper(null, degreeId);
         degrees[degreeId] = degreeWrapper.getBasicInfo();
       });
-
+      
       const doctorRegistrations =
         await doctorRegistrationService.getRegistrationByDoctorId(doctor_id);
-
+      
       for (const doctorRegistration of doctorRegistrations) {
         const registrationData = await RegistrationWrapper(doctorRegistration);
         const council_id = registrationData.getCouncilId();
         const councilWrapper = await CouncilWrapper(null, council_id);
-
+        
         const regData = registrationData.getBasicInfo();
-        const { basic_info: { number = "" } = {} } = regData;
+        const {basic_info: {number = ""} = {}} = regData;
         registrationsData[registrationData.getDoctorRegistrationId()] = {
           number,
           council: councilWrapper.getBasicInfo(),
         };
       }
-
+      
       const {
-        [`${doctor_id}`]: { basic_info: { user_id: doctorUserId = null } = {} },
+        [`${doctor_id}`]: {basic_info: {user_id: doctorUserId = null} = {}},
       } = doctors;
-
+      
       let user_ids = [doctorUserId, userId];
       if (category === USER_CATEGORY.DOCTOR || category === USER_CATEGORY.HSP) {
         const curr_data = await patientData.getAllInfo();
-        const { basic_info: { user_id: curr_p_user_id = "" } = {} } =
-          curr_data || {};
+        const {basic_info: {user_id: curr_p_user_id = ""} = {}} =
+        curr_data || {};
         user_ids = [doctorUserId, curr_p_user_id];
       }
-
+      
       for (const id of user_ids) {
         const intId = parseInt(id);
         const user = await userService.getUserById(intId);
-
+        
         if (user) {
           const userWrapper = await UserWrapper(user.get());
-          usersData = { ...usersData, ...{ [id]: userWrapper.getBasicInfo() } };
+          usersData = {...usersData, ...{[id]: userWrapper.getBasicInfo()}};
         }
       }
-
+      
       // provider data
       const {
         [doctorUserRoleId]: {
-          basic_info: { linked_id: provider_id = null } = {},
+          basic_info: {linked_id: provider_id = null} = {},
         } = {},
       } = userRolesData || {};
-
+      
       let providerData = {};
-
+      
       let providerIcon = "";
       let providerPrescriptionDetails = "";
       if (provider_id) {
         const providerWrapper = await ProviderWrapper(null, provider_id);
-        const { providers, users } = await providerWrapper.getReferenceInfo();
-
-        const { details: { icon = null, prescription_details = "" } = {} } =
-          providers[provider_id] || {};
+        const {providers, users} = await providerWrapper.getReferenceInfo();
+        
+        const {details: {icon = null, prescription_details = ""} = {}} =
+        providers[provider_id] || {};
         checkAndCreateDirectory(S3_DOWNLOAD_FOLDER_PROVIDER);
         providerPrescriptionDetails = prescription_details;
         if (icon) {
           providerIcon = `${S3_DOWNLOAD_FOLDER_PROVIDER}/provider-${provider_id}-icon.jpeg`;
-
+          
           const downloadProviderImage = await downloadFileFromS3(
             getFilePath(icon),
             providerIcon
           );
         }
-
-        providerData = { ...providers[provider_id] };
-        usersData = { ...usersData, ...users };
+        
+        providerData = {...providers[provider_id]};
+        usersData = {...usersData, ...users};
       }
-
+      
       const portionServiceService = new PortionServiceService();
       const allPortions = await portionServiceService.getAll();
       let portionApiData = {};
-
+      
       for (let each in allPortions) {
         const portion = allPortions[each] || {};
-        const portionWrapper = await PortionWrapper({ data: portion });
+        const portionWrapper = await PortionWrapper({data: portion});
         portionApiData[portionWrapper.getId()] = portionWrapper.getBasicInfo();
       }
-
+      
       const repetitionService = new RepetitionService();
       let repetitionApiData = {};
-
-      const { count, rows: repetitions = [] } =
-        (await repetitionService.findAndCountAll()) || {};
+      
+      const {count, rows: repetitions = []} =
+      (await repetitionService.findAndCountAll()) || {};
       if (count) {
         for (let index = 0; index < repetitions.length; index++) {
-          const { id, type } = repetitions[index] || {};
-          repetitionApiData[id] = { id, type };
+          const {id, type} = repetitions[index] || {};
+          repetitionApiData[id] = {id, type};
         }
       }
-
+      
       dataForPdf = {
-        users: { ...usersData },
+        users: {...usersData},
         ...(permissions.includes(PERMISSIONS.MEDICATIONS.ADD) && {
           medications,
         }),
-        ...(permissions.includes(PERMISSIONS.MEDICATIONS.ADD) && { medicines }),
+        ...(permissions.includes(PERMISSIONS.MEDICATIONS.ADD) && {medicines}),
         care_plans: {
           [carePlanData.getCarePlanId()]: {
             ...carePlanData.getBasicInfo(),
@@ -1998,8 +1998,8 @@ class PatientController extends Controller {
         },
         doctors,
         degrees,
-        portions: { ...portionApiData },
-        repetitions: { ...repetitionApiData },
+        portions: {...portionApiData},
+        repetitions: {...repetitionApiData},
         conditions,
         providers: providerData,
         providerIcon,
@@ -2010,10 +2010,10 @@ class PatientController extends Controller {
         nextAppointmentDuration,
         suggestedInvestigations: sortedInvestigations,
         patients: {
-          ...{ [patientData.getPatientId()]: patientData.getBasicInfo() },
+          ...{[patientData.getPatientId()]: patientData.getBasicInfo()},
         },
-        diets_formatted_data: { ...dietApiData },
-        workouts_formatted_data: { ...workoutApiData },
+        diets_formatted_data: {...dietApiData},
+        workouts_formatted_data: {...workoutApiData},
         workout_ids: workoutIds,
         diet_ids: dietIds,
         timings,
@@ -2021,11 +2021,11 @@ class PatientController extends Controller {
           "Do MMMM YYYY, hh:mm a"
         ),
       };
-
+      
       checkAndCreateDirectory(PRESCRIPTION_PDF_FOLDER);
       const pdfFileName = await generatePDF(dataForPdf, doctorSignImage);
       const pdfFile = `${pdfFileName}.pdf`;
-
+      
       const options = {
         root: path.join(__dirname, `../../../${PRESCRIPTION_PDF_FOLDER}/`),
       };
@@ -2035,35 +2035,35 @@ class PatientController extends Controller {
       return raiseServerError(res);
     }
   };
-
+  
   getAllPatientsPagination = async (req, res) => {
-    const { raiseSuccess, raiseClientError, raiseServerError } = this;
+    const {raiseSuccess, raiseClientError, raiseServerError} = this;
     try {
-      const { query, userDetails } = req;
-
+      const {query, userDetails} = req;
+      
       const {
         userId,
         userRoleId,
-        userData: { category } = {},
+        userData: {category} = {},
         userCategoryId,
       } = userDetails || {};
-
+      
       let allPatientIds = [];
-
+      
       /** TODO: Check if these are required now or not.
-             userId (auth) [DOCTOR]
-
-             SORT
-             created_at [asc, desc]
-             name [asc, desc]
-
-             FILTER
-             diagnosis [description, type]
-             treatment
-
-             doctors -> careplans -> patients
-             */
-
+       userId (auth) [DOCTOR]
+       
+       SORT
+       created_at [asc, desc]
+       name [asc, desc]
+       
+       FILTER
+       diagnosis [description, type]
+       treatment
+       
+       doctors -> careplans -> patients
+       */
+      
       const {
         offset = 0,
         sort_name = null,
@@ -2072,21 +2072,21 @@ class PatientController extends Controller {
         filter_diagnosis = null,
         watchlist = 0,
       } = query || {};
-
+      
       const limit = process.config.PATIENT_LIST_SIZE_LIMIT;
       // 0
-
+      
       const offsetLimit = parseInt(limit, 10) * parseInt(offset, 10);
       const endLimit = parseInt(limit, 10);
       const getWatchListPatients = parseInt(watchlist, 10) === 0 ? 0 : 1;
-
+      
       let patientsForDoctor = [];
-
+      
       let rowData = [];
-
+      
       let count = 0;
       let treatments = {};
-
+      
       // careplan ids as secondary doctor
       const {
         count: careplansCount = 0,
@@ -2096,30 +2096,30 @@ class PatientController extends Controller {
           secondary_doctor_role_id: userRoleId,
         },
       });
-
+      
       let careplanIdsAsSecondaryDoctor = [];
-
+      
       if (careplansCount) {
         for (let each of careplanAsSecondaryDoctor) {
-          const { care_plan: { id = null, patient_id = null } = {} } =
-            each || {};
+          const {care_plan: {id = null, patient_id = null} = {}} =
+          each || {};
           careplanIdsAsSecondaryDoctor.push(id);
         }
       }
-
+      
       const secondary_careplan_ids = careplanIdsAsSecondaryDoctor.toString()
         ? careplanIdsAsSecondaryDoctor.toString()
         : null;
-
+      
       if (category === USER_CATEGORY.DOCTOR || category === USER_CATEGORY.HSP) {
         let watchlistQuery = "";
         const doctor = await doctorService.getDoctorByData({
           user_id: userId,
         });
-
+        
         if (doctor && getWatchListPatients) {
           const doctorData = await DoctorWrapper(doctor);
-
+          
           const doctorAllInfo = await doctorData.getAllInfo();
           // let { watchlist_patient_ids = []} = doctorAllInfo || {};
           let watchlist_patient_ids = [];
@@ -2127,9 +2127,9 @@ class PatientController extends Controller {
             await doctorPatientWatchlistService.getAllByData({
               user_role_id: userRoleId,
             });
-
+          
           // watchlisted patient ids
-
+          
           if (watchlistRecords && watchlistRecords.length) {
             for (let i = 0; i < watchlistRecords.length; i++) {
               const watchlistWrapper = await DoctorPatientWatchlistWrapper(
@@ -2149,7 +2149,7 @@ class PatientController extends Controller {
           //   : null; // if no patient id watchlisted , check patinetIds for (null) as watchlist_patient_ids=[]
           // watchlistQuery = `AND carePlan.doctor_id = ${userCategoryId} AND carePlan.patient_id IN (${watchlist_patient_ids})`;
         }
-
+        
         // filter to get name sorted paginated data
         if (sort_name) {
           const order = sort_name === "0" ? "ASC" : "DESC";
@@ -2167,7 +2167,7 @@ class PatientController extends Controller {
             })) || [];
         } else if (sort_createdAt) {
           // filter to get date sorted paginated data
-
+          
           const order = sort_createdAt === "0" ? "ASC" : "DESC";
           [count, patientsForDoctor] =
             (await carePlanService.getPaginatedPatients({
@@ -2182,7 +2182,7 @@ class PatientController extends Controller {
         } else if (filter_treatment) {
           const allTreatments =
             (await treatmentService.searchByName(filter_treatment)) || [];
-
+          
           // get all treatment
           if (allTreatments.length > 0) {
             for (let index = 0; index < allTreatments.length; index++) {
@@ -2192,7 +2192,7 @@ class PatientController extends Controller {
                 [treatment.getTreatmentId()]: treatment.getBasicInfo(),
               };
             }
-
+            
             const treatmentIds =
               allTreatments.map((treatment) => treatment.id) || [];
             [count, patientsForDoctor] =
@@ -2210,9 +2210,9 @@ class PatientController extends Controller {
           }
         } else if (filter_diagnosis) {
           // diagnosis filter
-
+          
           let diagnosis_type = null;
-
+          
           if (DIAGNOSIS_TYPE.FINAL.text.includes(filter_diagnosis)) {
             diagnosis_type = DIAGNOSIS_TYPE.FINAL.id;
           } else if (DIAGNOSIS_TYPE.PROBABLE.text.includes(filter_diagnosis)) {
@@ -2245,17 +2245,17 @@ class PatientController extends Controller {
               ...patient
             } = patientsForDoctor[index] || {};
             patient["care_plan_id"] = care_plan_id;
-            const { id = null } = { ...patient };
-
+            const {id = null} = {...patient};
+            
             if (allPatientIds.includes(id)) {
               continue;
             }
-
+            
             allPatientIds.push(id);
             const patientData = await PatientWrapper(null, id);
-            const { user_role_id = null } = await patientData.getAllInfo();
+            const {user_role_id = null} = await patientData.getAllInfo();
             patient["user_role_id"] = user_role_id;
-
+            
             rowData.push({
               care_plans: {
                 id: care_plan_id,
@@ -2287,12 +2287,12 @@ class PatientController extends Controller {
       return raiseServerError(res);
     }
   };
-
+  
   acceptPaymentsTerms = async (req, res) => {
-    const { raiseClientError } = this;
+    const {raiseClientError} = this;
     try {
-      const { userDetails: { userId } = {}, body: { acceptTerms } = {} } = req;
-
+      const {userDetails: {userId} = {}, body: {acceptTerms} = {}} = req;
+      
       if (!acceptTerms) {
         return raiseClientError(
           res,
@@ -2301,7 +2301,7 @@ class PatientController extends Controller {
           "Cannot proceed further without accepting Terms of Payments"
         );
       }
-
+      
       const patient = await patientService.getPatientByUserId(userId);
       const patientApiWrapper = await PatientWrapper(patient);
       const updatePatient = await patientService.update(
@@ -2310,21 +2310,21 @@ class PatientController extends Controller {
         },
         patientApiWrapper.getPatientId()
       );
-
+      
       const updatePatientApiWrapper = await PatientWrapper(
         null,
         patientApiWrapper.getPatientId()
       );
-
+      
       const dataToSend = {
         [updatePatientApiWrapper.getPatientId()]:
           updatePatientApiWrapper.getBasicInfo(),
       };
-
+      
       return this.raiseSuccess(
         res,
         200,
-        { patients: dataToSend },
+        {patients: dataToSend},
         "Payment terms changed successfully."
       );
     } catch (error) {

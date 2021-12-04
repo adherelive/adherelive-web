@@ -1,8 +1,8 @@
-import React, { Component } from "react";
-import { Button, Input, Form, message } from "antd";
+import React, {Component} from "react";
+import {Button, Input, Form, message} from "antd";
 import CompanyIcon from "../../Assets/images/logo3x.png";
 
-const { Item: FormItem } = Form;
+const {Item: FormItem} = Form;
 
 const EMAIL = "email";
 
@@ -13,26 +13,27 @@ class ForgotPassword extends Component {
     super(props);
     this.state = {};
   }
-
-  async componentDidMount() {}
-
+  
+  async componentDidMount() {
+  }
+  
   handleForgotPassword = async (e) => {
     e.preventDefault();
     const {
-      form: { validateFields },
+      form: {validateFields},
       forgotPassword,
       // match: { path } = {},
       // history
     } = this.props;
-    this.setState({ loading: true });
-    validateFields(async (err, { email }) => {
+    this.setState({loading: true});
+    validateFields(async (err, {email}) => {
       if (!err) {
         try {
-          const response = await forgotPassword({ email });
+          const response = await forgotPassword({email});
           const {
             status = false,
             statusCode,
-            payload: { message: resMessage } = {},
+            payload: {message: resMessage} = {},
           } = response;
           if (status) {
             message.success(resMessage, 4);
@@ -40,13 +41,13 @@ class ForgotPassword extends Component {
             if (statusCode === 422) {
               message.error(resMessage, 4);
             } else {
-              this.setState({ loading: false });
+              this.setState({loading: false});
               message.error(resMessage, 4);
             }
           }
         } catch (err) {
           console.log("298293 err ----> ", err);
-          this.setState({ loading: false });
+          this.setState({loading: false});
           message.error("Something went wrong, Please try again", 4);
         }
       } else {
@@ -55,27 +56,27 @@ class ForgotPassword extends Component {
     });
     // signIn();
   };
-
+  
   render() {
     const {
-      form: { getFieldDecorator, isFieldTouched, getFieldError },
+      form: {getFieldDecorator, isFieldTouched, getFieldError},
     } = this.props;
     let fieldsError = {};
     FIELDS.forEach((value) => {
       const error = isFieldTouched(value) && getFieldError(value);
-      fieldsError = { ...fieldsError, [value]: error };
+      fieldsError = {...fieldsError, [value]: error};
     });
-    const { handleForgotPassword } = this;
-
+    const {handleForgotPassword} = this;
+    
     return (
       <div className="wp100 landing-background flex direction-column justify-center align-center">
         <div className="hp100 wp75">
           <div className="mt40 wp100 mt24 flex justify-space-between align-center direction-row ">
             <div className="flex direction-row align-center">
-              <img alt="" src={CompanyIcon} className="company-logo" />
+              <img alt="" src={CompanyIcon} className="company-logo"/>
               <div className="text-white fs28 medium italic">Adhere.Live</div>
             </div>
-
+            
             <div className="flex direction-row align-center"></div>
           </div>
           <div className="center-container">
@@ -83,12 +84,12 @@ class ForgotPassword extends Component {
               <div className="mb8 fs24 fw600 pt20 flex direction-column tal">
                 Forgot Password
               </div>
-
+              
               <Form onSubmit={handleForgotPassword} className="login-form">
                 <FormItem
-
-                // validateStatus={fieldsError[EMAIL] ? "error" : ""}
-                // help={fieldsError[EMAIL] || ""}
+                  
+                  // validateStatus={fieldsError[EMAIL] ? "error" : ""}
+                  // help={fieldsError[EMAIL] || ""}
                 >
                   <div className="fs16 medium tal mt8">Registered Email</div>
                   {getFieldDecorator(EMAIL, {
@@ -102,9 +103,9 @@ class ForgotPassword extends Component {
                         message: "Please enter a valid email!",
                       },
                     ],
-                  })(<Input type="text" placeholder="Email" className="h40" />)}
+                  })(<Input type="text" placeholder="Email" className="h40"/>)}
                 </FormItem>
-
+                
                 {/* <div classname='fs12 medium dark-sky-blue mt4 tar'>Forgot Password?</div> */}
                 <FormItem>
                   <Button
@@ -119,7 +120,7 @@ class ForgotPassword extends Component {
                   <div className="flex justify-space-between direction-column mt10 align-end"></div>
                 </FormItem>
               </Form>
-
+              
               <div className="flex direction-column justify-space-between align-center"></div>
             </div>
           </div>

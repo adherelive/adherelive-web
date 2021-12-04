@@ -1,8 +1,8 @@
 "use strict";
-import { DataTypes } from "sequelize";
-import { USER_CATEGORY } from "../../constant";
-import { TABLE_NAME as exerciseTableName } from "./exercise";
-import { TABLE_NAME as repetitionTableName } from "./exerciseRepetition";
+import {DataTypes} from "sequelize";
+import {USER_CATEGORY} from "../../constant";
+import {TABLE_NAME as exerciseTableName} from "./exercise";
+import {TABLE_NAME as repetitionTableName} from "./exerciseRepetition";
 
 export const TABLE_NAME = "exercise_details";
 
@@ -56,7 +56,7 @@ export const associate = (database) => {
     foreignKey: "exercise_id",
     targetKey: "id",
   });
-
+  
   database.models[TABLE_NAME].belongsTo(database.models[repetitionTableName], {
     foreignKey: "repetition_id",
     targetKey: "id",

@@ -1,9 +1,10 @@
 import Database from "../../../libs/mysql";
-import { TABLE_NAME } from "../../models/uploadDocuments";
+import {TABLE_NAME} from "../../models/uploadDocuments";
 
 class UploadDocumentService {
-  constructor() {}
-
+  constructor() {
+  }
+  
   addDocument = async (data) => {
     const transaction = await Database.initTransaction();
     try {
@@ -17,7 +18,7 @@ class UploadDocumentService {
       throw error;
     }
   };
-
+  
   getDocumentById = async (id) => {
     try {
       const documents = await Database.getModel(TABLE_NAME).findOne({
@@ -30,7 +31,7 @@ class UploadDocumentService {
       throw error;
     }
   };
-
+  
   getDoctorQualificationDocuments = async (parent_type, parent_id) => {
     try {
       const documents = await Database.getModel(TABLE_NAME).findAll({
@@ -45,7 +46,7 @@ class UploadDocumentService {
       throw error;
     }
   };
-
+  
   getDocumentByData = async (parent_type, parent_id, document) => {
     try {
       const documents = await Database.getModel(TABLE_NAME).findOne({
@@ -61,7 +62,7 @@ class UploadDocumentService {
       throw error;
     }
   };
-
+  
   deleteDocumentsOfQualification = async (parent_type, parent_id) => {
     try {
       const documents = await Database.getModel(TABLE_NAME).destroy({
@@ -76,7 +77,7 @@ class UploadDocumentService {
       throw error;
     }
   };
-
+  
   getDocumentByName = async (data) => {
     try {
       const document = await Database.getModel(TABLE_NAME).findOne({
@@ -87,7 +88,7 @@ class UploadDocumentService {
       throw error;
     }
   };
-
+  
   getAllByData = async (data) => {
     try {
       const documents = await Database.getModel(TABLE_NAME).findAll({
@@ -98,7 +99,7 @@ class UploadDocumentService {
       throw error;
     }
   };
-
+  
   deleteDocumentsOfAppointment = async (id) => {
     try {
       const documents = await Database.getModel(TABLE_NAME).destroy({
@@ -111,7 +112,7 @@ class UploadDocumentService {
       throw error;
     }
   };
-
+  
   deleteDocumentByData = async (data) => {
     try {
       return await Database.getModel(TABLE_NAME).destroy({
@@ -121,7 +122,7 @@ class UploadDocumentService {
       throw error;
     }
   };
-
+  
   getAll = async () => {
     try {
       return await Database.getModel(TABLE_NAME).findAll();

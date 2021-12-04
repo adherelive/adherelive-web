@@ -1,23 +1,24 @@
 import Database from "../../../libs/mysql";
-import { USER_CATEGORY } from "../../../constant";
-import { Op } from "sequelize";
+import {USER_CATEGORY} from "../../../constant";
+import {Op} from "sequelize";
 
 // TABLES
-import { TABLE_NAME } from "../../models/users";
+import {TABLE_NAME} from "../../models/users";
 // import { TABLE_NAME as permissionTableName } from "../../models/permissions";
-import { TABLE_NAME as doctorTableName } from "../../models/doctors";
-import { TABLE_NAME as patientTableName } from "../../models/patients";
-import { TABLE_NAME as userDeviceTableName } from "../../models/userDevices";
-import { TABLE_NAME as carePlanTableName } from "../../models/carePlan";
-import { TABLE_NAME as providerTableName } from "../../models/providers";
+import {TABLE_NAME as doctorTableName} from "../../models/doctors";
+import {TABLE_NAME as patientTableName} from "../../models/patients";
+import {TABLE_NAME as userDeviceTableName} from "../../models/userDevices";
+import {TABLE_NAME as carePlanTableName} from "../../models/carePlan";
+import {TABLE_NAME as providerTableName} from "../../models/providers";
 
 import Log from "../../../libs/log";
 
 const Logger = new Log("WEB > PATIENTS > CONTROLLER");
 
 class UserService {
-  constructor() {}
-
+  constructor() {
+  }
+  
   async getAll() {
     try {
       const user = await Database.getModel(TABLE_NAME).findAll();
@@ -27,7 +28,7 @@ class UserService {
       throw err;
     }
   }
-
+  
   getUser = async (id) => {
     try {
       const user = await Database.getModel(TABLE_NAME).findOne({
@@ -46,10 +47,10 @@ class UserService {
       throw err;
     }
   };
-
+  
   async getUserByEmail(data) {
     try {
-      const { email } = data;
+      const {email} = data;
       const user = await Database.getModel(TABLE_NAME).findOne({
         where: {
           email,
@@ -74,7 +75,7 @@ class UserService {
       throw error;
     }
   }
-
+  
   getUserByNumber = async (data) => {
     try {
       const user = await Database.getModel(TABLE_NAME).findOne({
@@ -88,7 +89,7 @@ class UserService {
       throw error;
     }
   };
-
+  
   getUserById = async (id) => {
     try {
       const user = await Database.getModel(TABLE_NAME).findOne({
@@ -112,7 +113,7 @@ class UserService {
       throw err;
     }
   };
-
+  
   getUserByData = async (data) => {
     try {
       const user = await Database.getModel(TABLE_NAME).findAll({
@@ -124,7 +125,7 @@ class UserService {
       throw err;
     }
   };
-
+  
   async addUser(data) {
     const transaction = await Database.initTransaction();
     try {
@@ -138,7 +139,7 @@ class UserService {
       throw err;
     }
   }
-
+  
   updateEmail = async (data, id) => {
     const transaction = await Database.initTransaction();
     try {
@@ -155,7 +156,7 @@ class UserService {
       throw error;
     }
   };
-
+  
   updateUser = async (data, id) => {
     const transaction = await Database.initTransaction();
     try {
@@ -172,7 +173,7 @@ class UserService {
       throw error;
     }
   };
-
+  
   getPatientByMobile = async (mobile_number) => {
     try {
       const user = await Database.getModel(TABLE_NAME).findAll({
@@ -191,7 +192,7 @@ class UserService {
       throw err;
     }
   };
-
+  
   // getUserByUsername = async user_name => {
   //   try {
   //     const user = await Database.getModel(TABLE_NAME).findOne({
@@ -212,7 +213,7 @@ class UserService {
   //     throw err;
   //   }
   // };
-
+  
   getUserData = async (data) => {
     try {
       const user = await Database.getModel(TABLE_NAME).findOne({
@@ -223,7 +224,7 @@ class UserService {
       throw error;
     }
   };
-
+  
   getUserByDevices = async (data) => {
     try {
       const user = await Database.getModel(TABLE_NAME).findOne({
@@ -235,7 +236,7 @@ class UserService {
       throw error;
     }
   };
-
+  
   getCarePlanData = async (id) => {
     try {
       const carePlan = await Database.getModel(carePlanTableName).findOne({
@@ -248,8 +249,8 @@ class UserService {
       throw error;
     }
   };
-
-  deleteUser = async ({ id }) => {
+  
+  deleteUser = async ({id}) => {
     try {
       const users = await Database.getModel(TABLE_NAME).destroy({
         where: {
@@ -261,11 +262,11 @@ class UserService {
       throw err;
     }
   };
-
-  activateUser = async ({ id }) => {
+  
+  activateUser = async ({id}) => {
     try {
       const users = await Database.getModel(TABLE_NAME).update(
-        { deleted_at: null },
+        {deleted_at: null},
         {
           where: {
             id,
@@ -278,7 +279,7 @@ class UserService {
       throw err;
     }
   };
-
+  
   searchMail = async (value) => {
     try {
       const matchingUsers = await Database.getModel(TABLE_NAME).findAll({

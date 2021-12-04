@@ -1,11 +1,11 @@
 "use strict";
-import { DataTypes } from "sequelize";
-import { TABLE_NAME as workoutTableName } from "./workout";
-import { TABLE_NAME as exerciseGroupTableName } from "./exerciseGroup";
-import { TABLE_NAME as repetitionTableName } from "./exerciseRepetition";
-import { TABLE_NAME as scheduleEventsTable } from "./scheduleEvents";
+import {DataTypes} from "sequelize";
+import {TABLE_NAME as workoutTableName} from "./workout";
+import {TABLE_NAME as exerciseGroupTableName} from "./exerciseGroup";
+import {TABLE_NAME as repetitionTableName} from "./exerciseRepetition";
+import {TABLE_NAME as scheduleEventsTable} from "./scheduleEvents";
 
-import { WORKOUT_RESPONSE_STATUS } from "../../constant";
+import {WORKOUT_RESPONSE_STATUS} from "../../constant";
 
 export const TABLE_NAME = "workout_responses";
 
@@ -88,4 +88,5 @@ export const db = (database) => {
   );
 };
 
-export const associate = (database) => {};
+export const associate = (database) => {
+};

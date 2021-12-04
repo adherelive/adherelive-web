@@ -5,9 +5,9 @@ import Authenticate from "../middleware/auth";
 import Council from "../../../app/controllers/council/council.controller";
 
 router.get(
-    "/",
-    Authenticate,
-    Council.getAll
+  "/",
+  Authenticate,
+  Council.getAll
 );
 
 module.exports = router;

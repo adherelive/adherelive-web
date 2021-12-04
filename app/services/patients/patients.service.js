@@ -1,17 +1,18 @@
 import Sequelize from "sequelize";
 import Database from "../../../libs/mysql";
-import { Op } from "sequelize";
-import { TABLE_NAME } from "../../models/patients";
-import { TABLE_NAME as userTableName } from "../../models/users";
-import { TABLE_NAME as careplanTableName } from "../../models/carePlan";
+import {Op} from "sequelize";
+import {TABLE_NAME} from "../../models/patients";
+import {TABLE_NAME as userTableName} from "../../models/users";
+import {TABLE_NAME as careplanTableName} from "../../models/carePlan";
 import Log from "../../../libs/log";
-import { TABLE_NAME as doctorTableName } from "../../models/doctors";
+import {TABLE_NAME as doctorTableName} from "../../models/doctors";
 
 const Logger = new Log("WEB > PATIENTS > CONTROLLER");
 
 class PatientsService {
-  constructor() {}
-
+  constructor() {
+  }
+  
   getAll = async () => {
     try {
       const patients = await Database.getModel(TABLE_NAME).findAll();
@@ -20,12 +21,12 @@ class PatientsService {
       throw error;
     }
   };
-
+  
   updatePatient = async (modelInstance, data) => {
     const transaction = await Database.initTransaction();
     try {
       // todo: change to update when sign-in flow done for mobile
-      const patient = await modelInstance.update({ ...data }, { transaction });
+      const patient = await modelInstance.update({...data}, {transaction});
       await transaction.commit();
       return patient;
     } catch (error) {
@@ -33,7 +34,7 @@ class PatientsService {
       throw error;
     }
   };
-
+  
   update = async (data, id) => {
     const transaction = await Database.initTransaction();
     try {
@@ -51,7 +52,7 @@ class PatientsService {
       throw error;
     }
   };
-
+  
   addPatient = async (data) => {
     const transaction = await Database.initTransaction();
     try {
@@ -65,7 +66,7 @@ class PatientsService {
       throw error;
     }
   };
-
+  
   getPatientByData = async (data) => {
     try {
       const patient = await Database.getModel(TABLE_NAME).findAll({
@@ -77,7 +78,7 @@ class PatientsService {
       throw error;
     }
   };
-
+  
   getPatientById = async (data) => {
     try {
       const patient = await Database.getModel(TABLE_NAME).findOne({
@@ -93,7 +94,7 @@ class PatientsService {
       throw error;
     }
   };
-
+  
   getPatientByIdForPatientSearch = async (id) => {
     try {
       const patient = await Database.getModel(TABLE_NAME).findOne({
@@ -113,7 +114,7 @@ class PatientsService {
       throw error;
     }
   };
-
+  
   getPatientByUserId = async (user_id) => {
     try {
       const patient = await Database.getModel(TABLE_NAME).findOne({
@@ -126,14 +127,14 @@ class PatientsService {
       throw error;
     }
   };
-
+  
   getPatientForDoctor = async (value, patientIdsForThisDoc) => {
     try {
       let firstName = value;
       let middleName = value;
       let lastName = value;
       const name = value.split(" ");
-
+      
       if (name.length > 1) {
         if (name.length === 2) {
           firstName = name[0];
@@ -144,9 +145,9 @@ class PatientsService {
           lastName = name[2];
         }
       }
-
+      
       Logger.debug("2313131231", isNaN(value));
-
+      
       const patient = await Database.getModel(TABLE_NAME).findAll({
         where: {
           [Op.and]: [
@@ -182,13 +183,13 @@ class PatientsService {
           },
         ],
       });
-
+      
       return patient;
     } catch (err) {
       throw err;
     }
   };
-
+  
   getPatientByMobileForDoctor = async (value, userIdsForForPatientForDoc) => {
     try {
       const user = await Database.getModel(userTableName).findAll({
@@ -217,8 +218,8 @@ class PatientsService {
       throw err;
     }
   };
-
-  getPaginatedPatients = async ({ doctor_id, order }) => {
+  
+  getPaginatedPatients = async ({doctor_id, order}) => {
     const query = `
     SELECT cp.doctor_id, cp.patient_id FROM ${careplanTableName} AS cp
     

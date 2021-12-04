@@ -5,9 +5,9 @@ class MAccountDetailsWrapper extends BaseAccountDetails {
   constructor(data) {
     super(data);
   }
-
+  
   getBasicInfo = () => {
-    const { _data } = this;
+    const {_data} = this;
     const {
       id,
       user_id,
@@ -23,7 +23,7 @@ class MAccountDetailsWrapper extends BaseAccountDetails {
       prefix,
       upi_id,
     } = _data || {};
-
+    
     return {
       basic_info: {
         id,
@@ -48,6 +48,6 @@ export default async (data = null, id = null) => {
   if (data) {
     return new MAccountDetailsWrapper(data);
   }
-  const accountDetails = await accountDetailsService.getByData({ id });
+  const accountDetails = await accountDetailsService.getByData({id});
   return new MAccountDetailsWrapper(accountDetails);
 };

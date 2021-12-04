@@ -7,10 +7,10 @@ class ExerciseGroupWrapper extends BaseExerciseGroup {
   constructor(data) {
     super(data);
   }
-
+  
   getBasicInfo = () => {
-    const { _data: { id, exercise_detail_id, sets, details } = {} } = this;
-
+    const {_data: {id, exercise_detail_id, sets, details} = {}} = this;
+    
     return {
       basic_info: {
         id,
@@ -20,13 +20,13 @@ class ExerciseGroupWrapper extends BaseExerciseGroup {
       details,
     };
   };
-
+  
   getAllInfo = () => {
-    const { getBasicInfo } = this;
-
+    const {getBasicInfo} = this;
+    
     return getBasicInfo();
   };
-
+  
   getReferenceInfo = async () => {
     const {
       getId,
@@ -34,7 +34,7 @@ class ExerciseGroupWrapper extends BaseExerciseGroup {
       getWorkoutExerciseGroupMappings,
       getAllInfo,
     } = this;
-
+    
     // get exercise details
     // let allExerciseGroup = {};
     let allExerciseDetails = {};
@@ -45,11 +45,11 @@ class ExerciseGroupWrapper extends BaseExerciseGroup {
       const exerciseDetail = await ExerciseDetailWrapper({
         data: exerciseDetails,
       });
-      const { exercise_details, repetitions, exercises } =
+      const {exercise_details, repetitions, exercises} =
         await exerciseDetail.getReferenceInfo();
-
+      
       // const {id, workout_id, exercise_group_id, time} = getWorkoutExerciseGroupMappings();
-
+      
       allExerciseDetails = exercise_details;
       allRepetitions = repetitions;
       allExercises = exercises;
@@ -59,7 +59,7 @@ class ExerciseGroupWrapper extends BaseExerciseGroup {
       //   }
       // };
     }
-
+    
     return {
       exercise_groups: {
         [getId()]: getAllInfo(),
@@ -72,11 +72,11 @@ class ExerciseGroupWrapper extends BaseExerciseGroup {
   };
 }
 
-export default async ({ data = null, id = null }) => {
+export default async ({data = null, id = null}) => {
   if (data) {
     return new ExerciseGroupWrapper(data);
   }
   const exerciseGroupService = new ExerciseGroupService();
-  const exerciseGroup = await exerciseGroupService.findOne({ id });
+  const exerciseGroup = await exerciseGroupService.findOne({id});
   return new ExerciseGroupWrapper(exerciseGroup);
 };

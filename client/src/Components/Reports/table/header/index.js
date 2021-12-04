@@ -1,6 +1,6 @@
 import React from "react";
 
-import { TABLE_COLUMN } from "../helper";
+import {TABLE_COLUMN} from "../helper";
 import messages from "../message";
 import Name from "../dataColumn/name";
 import Edit from "../dataColumn/edit";
@@ -8,8 +8,8 @@ import Date from "../dataColumn/date";
 import ReportDocuments from "../dataColumn/reportDocuments";
 
 export default (props) => {
-  const { formatMessage } = props || {};
-
+  const {formatMessage} = props || {};
+  
   return [
     {
       title: formatMessage(messages.report_name),
@@ -22,7 +22,7 @@ export default (props) => {
     {
       title: formatMessage(messages.time),
       ...TABLE_COLUMN.TIME,
-
+      
       render: (props) => <Date {...props} />,
     },
     {

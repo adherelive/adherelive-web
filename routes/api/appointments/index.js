@@ -3,12 +3,12 @@ const router = express.Router();
 
 const multer = require("multer");
 const storage = multer.memoryStorage();
-const upload = multer({ dest: "../../../app/public/", storage: storage });
+const upload = multer({dest: "../../../app/public/", storage: storage});
 
 import Authenticate from "../middleware/auth";
 import Appointment from "../../../app/controllers/appointments/appointment.controller";
 import * as validator from "./validator";
-import { isDoctor } from "../middleware/doctor";
+import {isDoctor} from "../middleware/doctor";
 
 router.get("/details", Authenticate, Appointment.getAppointmentDetails);
 

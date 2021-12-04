@@ -1,29 +1,29 @@
-import React, { Component } from "react";
-import { Form, Input } from "antd";
-import { injectIntl } from "react-intl";
-import { isNumber } from "../../../../Helper/validation";
+import React, {Component} from "react";
+import {Form, Input} from "antd";
+import {injectIntl} from "react-intl";
+import {isNumber} from "../../../../Helper/validation";
 import messages from "../message";
 import repeatTypeField from "./repeatType";
-import { REPEAT_TYPE } from "../../../../constant";
+import {REPEAT_TYPE} from "../../../../constant";
 
-const { Item: FormItem } = Form;
+const {Item: FormItem} = Form;
 const FIELD_NAME = "repeatInterval";
 
 class RepeatInterval extends Component {
   componentDidMount() {
     const {
-      form: { validateFields },
+      form: {validateFields},
     } = this.props;
     validateFields();
   }
-
+  
   componentWillUnmount() {
     const {
-      form: { validateFields },
+      form: {validateFields},
     } = this.props;
     validateFields();
   }
-
+  
   validateRepeatInterval = (rule, value, callback) => {
     const res = isNumber(value);
     if (value && res.valid === false) {
@@ -34,10 +34,10 @@ class RepeatInterval extends Component {
       callback();
     }
   };
-
+  
   getRepeatTypeStr = () => {
     const {
-      form: { getFieldValue },
+      form: {getFieldValue},
     } = this.props;
     const repeatType = getFieldValue(repeatTypeField.field_name);
     switch (repeatType) {
@@ -51,33 +51,33 @@ class RepeatInterval extends Component {
         return "";
     }
   };
-
+  
   getInitialValue = () => {
     let initialValue;
-    const { purpose, event, medicationData = {} } = this.props;
-    let { schedule_data: { repeat_interval = "" } = {} } = medicationData;
+    const {purpose, event, medicationData = {}} = this.props;
+    let {schedule_data: {repeat_interval = ""} = {}} = medicationData;
     initialValue = repeat_interval;
     if (purpose) {
-      const { data: { repeatInterval } = {} } = event;
+      const {data: {repeatInterval} = {}} = event;
       initialValue = repeatInterval;
     }
     return initialValue;
   };
-
+  
   onChangeRepeatInterval = (e) => {
-    const { adjustEndDate } = this.props;
+    const {adjustEndDate} = this.props;
     const val = e.target.value;
     const res = isNumber(val);
     if (val && !!res.valid && val < 1000) {
       adjustEndDate(e.target.value);
     }
   };
-
+  
   render() {
     const {
-      form: { getFieldDecorator, getFieldError, isFieldTouched },
+      form: {getFieldDecorator, getFieldError, isFieldTouched},
       adjustEndDate,
-      intl: { formatMessage },
+      intl: {formatMessage},
     } = this.props;
     const {
       validateRepeatInterval,
@@ -85,10 +85,10 @@ class RepeatInterval extends Component {
       getInitialValue,
       onChangeRepeatInterval,
     } = this;
-
+    
     const repeatIntervalError =
       isFieldTouched(FIELD_NAME) && getFieldError(FIELD_NAME);
-
+    
     return (
       <div className="ml16">
         <FormItem
@@ -103,7 +103,7 @@ class RepeatInterval extends Component {
                 required: true,
                 message: formatMessage(messages.repeatIntervalError),
               },
-
+              
               {
                 validator: validateRepeatInterval,
               },
@@ -114,7 +114,7 @@ class RepeatInterval extends Component {
               onChange={onChangeRepeatInterval}
               className="full-width repeat-interval"
               min={1}
-              style={{ width: "100%" }}
+              style={{width: "100%"}}
             />
           )}
           <div className="repeat-type">{getRepeatTypeStr()}</div>

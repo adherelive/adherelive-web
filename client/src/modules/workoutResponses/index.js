@@ -1,6 +1,6 @@
 function workoutResponseReducer(state, data) {
-  const { workout_responses } = data || {};
-
+  const {workout_responses} = data || {};
+  
   if (workout_responses) {
     return {
       ...state,
@@ -12,7 +12,7 @@ function workoutResponseReducer(state, data) {
 }
 
 export default (state = {}, action) => {
-  const { type, data } = action;
+  const {type, data} = action;
   switch (type) {
     default:
       return workoutResponseReducer(state, data);

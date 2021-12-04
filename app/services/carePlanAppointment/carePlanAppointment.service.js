@@ -1,5 +1,5 @@
 import Database from "../../../libs/mysql";
-import { TABLE_NAME } from "../../models/carePlanAppointments";
+import {TABLE_NAME} from "../../models/carePlanAppointments";
 
 class CarePlanAppointmentService {
   getAllByData = async (data) => {
@@ -12,7 +12,7 @@ class CarePlanAppointmentService {
       throw error;
     }
   };
-
+  
   getCarePlanAppointmentsByData = async (data) => {
     try {
       const carePlanAppointments = await Database.getModel(TABLE_NAME).findAll({
@@ -23,7 +23,7 @@ class CarePlanAppointmentService {
       throw error;
     }
   };
-
+  
   getSingleCarePlanAppointmentByData = async (data) => {
     try {
       const carePlanAppointment = await Database.getModel(TABLE_NAME).findOne({
@@ -34,7 +34,7 @@ class CarePlanAppointmentService {
       throw error;
     }
   };
-
+  
   getCareplanByAppointment = async (data) => {
     try {
       return await Database.getModel(TABLE_NAME).findOne({
@@ -45,18 +45,18 @@ class CarePlanAppointmentService {
       throw error;
     }
   };
-
+  
   getAppointmentsByCarePlanId = async (care_plan_id) => {
     try {
       const carePlanAppointments = await Database.getModel(TABLE_NAME).findAll({
-        where: { care_plan_id },
+        where: {care_plan_id},
       });
       return carePlanAppointments;
     } catch (error) {
       throw error;
     }
   };
-
+  
   deleteCarePlanAppointmentByAppointmentId = async (appointment_id) => {
     try {
       const carePlanAppointments = await Database.getModel(TABLE_NAME).destroy({
@@ -69,7 +69,7 @@ class CarePlanAppointmentService {
       throw err;
     }
   };
-
+  
   addCarePlanAppointment = async (data) => {
     try {
       const carePlanAppointment = await Database.getModel(TABLE_NAME).create(

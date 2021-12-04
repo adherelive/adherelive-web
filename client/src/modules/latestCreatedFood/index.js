@@ -1,4 +1,4 @@
-import { ADD_FOOD_ITEM_COMPLETED } from "../foodItems";
+import {ADD_FOOD_ITEM_COMPLETED} from "../foodItems";
 
 const CLEAR_LATEST_CREATED_FOOD_ITEM = "CLEAR_LATEST_CREATED_FOOD_ITEM";
 
@@ -10,7 +10,7 @@ export const clearLatestCreatedFoodItem = () => {
         food_item_details: {},
         created: false,
       };
-
+      
       dispatch({
         type: CLEAR_LATEST_CREATED_FOOD_ITEM,
         data,
@@ -22,12 +22,12 @@ export const clearLatestCreatedFoodItem = () => {
 };
 
 function latestFoodItemCreatedReducer(state, data) {
-  const { food_items, food_item_details } = data || {};
-
+  const {food_items, food_item_details} = data || {};
+  
   if (food_items) {
     return {
-      food_items: { ...food_items },
-      food_item_details: { ...food_item_details },
+      food_items: {...food_items},
+      food_item_details: {...food_item_details},
       created: true,
     };
   } else {
@@ -44,7 +44,7 @@ function clearDataReducer(state, data) {
 }
 
 export default (state = {}, action) => {
-  const { type, data } = action;
+  const {type, data} = action;
   switch (type) {
     case ADD_FOOD_ITEM_COMPLETED:
       return latestFoodItemCreatedReducer(state, data);

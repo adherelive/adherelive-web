@@ -9,8 +9,8 @@ import uploadDocumentService from "../../../services/uploadDocuments/uploadDocum
 import ReportWrapper from "../../../ApiWrapper/mobile/reports";
 import DoctorWrapper from "../../../ApiWrapper/mobile/doctor";
 
-import { DOCUMENT_PARENT_TYPE, USER_CATEGORY } from "../../../../constant";
-import { getFilePath } from "../../../helper/filePath";
+import {DOCUMENT_PARENT_TYPE, USER_CATEGORY} from "../../../../constant";
+import {getFilePath} from "../../../helper/filePath";
 import * as ReportHelper from "../../reports/reportHelper";
 
 const Log = new Logger("MOBILE > CONTROLLER > REPORTS");
@@ -19,15 +19,15 @@ class ReportController extends Controller {
   constructor() {
     super();
   }
-
+  
   addReports = async (req, res) => {
-    const { raiseSuccess, raiseServerError } = this;
+    const {raiseSuccess, raiseServerError} = this;
     try {
       const {
-        body: { name, test_date, patient_id, documents = [] },
-        userDetails: { userData: { category }, userCategoryId } = {},
+        body: {name, test_date, patient_id, documents = []},
+        userDetails: {userData: {category}, userCategoryId} = {},
       } = req;
-
+      
       // create reports
       const reportService = new ReportService();
       const addReport = await reportService.addReport({
@@ -37,12 +37,12 @@ class ReportController extends Controller {
         uploader_id: userCategoryId,
         uploader_type: category,
       });
-
-      const report = await ReportWrapper({ data: addReport });
-
+      
+      const report = await ReportWrapper({data: addReport});
+      
       // add documents
       for (let index = 0; index < documents.length; index++) {
-        const { name, file } = documents[index] || {};
+        const {name, file} = documents[index] || {};
         await uploadDocumentService.addDocument({
           name,
           document: getFilePath(file),
@@ -60,7 +60,7 @@ class ReportController extends Controller {
         // if (!documentExists) {
         // }
       }
-
+      
       return raiseSuccess(
         res,
         200,
@@ -74,22 +74,22 @@ class ReportController extends Controller {
       return raiseServerError(res);
     }
   };
-
+  
   uploadReportDocuments = async (req, res) => {
-    const { raiseSuccess, raiseClientError, raiseServerError } = this;
+    const {raiseSuccess, raiseClientError, raiseServerError} = this;
     try {
-      const { file = null, params: { patient_id = "NA" } = {} } = req;
+      const {file = null, params: {patient_id = "NA"} = {}} = req;
       Log.info(`patient_id : ${patient_id}`);
       Log.debug("files", file);
-
+      
       if (!file) {
         return raiseClientError(res, 422, {}, "Please select files to upload");
       }
-
+      
       let documents = [];
-
+      
       // for (let index = 0; index < files.length; index++) {
-      const { originalname } = file || {};
+      const {originalname} = file || {};
       const fileUrl = await ReportHelper.uploadReport({
         file,
         id: patient_id,
@@ -99,7 +99,7 @@ class ReportController extends Controller {
         file: fileUrl,
       });
       // }
-
+      
       return raiseSuccess(
         res,
         200,
@@ -113,30 +113,30 @@ class ReportController extends Controller {
       return raiseServerError(res);
     }
   };
-
+  
   latestReport = async (req, res) => {
-    const { raiseSuccess, raiseClientError, raiseServerError } = this;
+    const {raiseSuccess, raiseClientError, raiseServerError} = this;
     try {
       const {
-        query: { patient_id } = {},
-        userDetails: { userData: { category } = {}, userCategoryId } = {},
+        query: {patient_id} = {},
+        userDetails: {userData: {category} = {}, userCategoryId} = {},
       } = req;
       Log.info(`query: patient_id : ${patient_id}`);
-
+      
       if (!patient_id) {
         return raiseClientError(res, 422, {}, "Please select correct patient");
       }
-
+      
       const reportService = new ReportService();
-      const { count, rows: allReports = [] } =
-        (await reportService.latestReportAndCount({
-          patient_id,
-        })) || {};
-
+      const {count, rows: allReports = []} =
+      (await reportService.latestReportAndCount({
+        patient_id,
+      })) || {};
+      
       if (allReports.length > 0) {
-        const report = await ReportWrapper({ data: allReports[0] });
+        const report = await ReportWrapper({data: allReports[0]});
         let doctors = {};
-
+        
         if (
           (category === USER_CATEGORY.DOCTOR ||
             category === USER_CATEGORY.HSP) &&
@@ -145,7 +145,7 @@ class ReportController extends Controller {
           const doctor = await DoctorWrapper(null, report.getUploaderId());
           doctors[doctor.getDoctorId()] = await doctor.getAllInfo();
         }
-
+        
         return raiseSuccess(
           res,
           200,
@@ -166,13 +166,13 @@ class ReportController extends Controller {
       return raiseServerError(res);
     }
   };
-
+  
   deleteReportDocument = async (req, res) => {
-    const { raiseSuccess, raiseClientError, raiseServerError } = this;
+    const {raiseSuccess, raiseClientError, raiseServerError} = this;
     try {
-      const { params: { document_id } = {} } = req;
+      const {params: {document_id} = {}} = req;
       Log.info(`params: document_id = ${document_id}`);
-
+      
       if (!document_id) {
         return raiseClientError(
           res,
@@ -181,12 +181,12 @@ class ReportController extends Controller {
           "Please select correct document to delete"
         );
       }
-
+      
       const response = await uploadDocumentService.deleteDocumentByData({
         id: document_id,
       });
       Log.debug("response", response);
-
+      
       return raiseSuccess(res, 200, {}, "Document deleted successfully");
     } catch (error) {
       Log.debug("deleteReportDocument 500 error", error);

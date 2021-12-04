@@ -1,5 +1,5 @@
-import React, { Component, Fragment } from "react";
-import { Form, Input, Button, Spin, Avatar, Upload, Modal } from "antd";
+import React, {Component, Fragment} from "react";
+import {Form, Input, Button, Spin, Avatar, Upload, Modal} from "antd";
 import moment from "moment";
 import Chat from "twilio-chat";
 import DoubleTick from "../../Assets/images/double-tick-indicator.png";
@@ -12,7 +12,7 @@ import Maximize from "../../Assets/images/maximize.png";
 import Download from "../../Assets/images/down-arrow.png";
 import File from "../../Assets/images/file.png";
 import messages from "./messages";
-import { injectIntl } from "react-intl";
+import {injectIntl} from "react-intl";
 import humanBody from "../../Assets/images/humanBodyFront.jpeg";
 import humanBodyBack from "../../Assets/images/humanBodyBack.jpeg";
 import bodyImage from "../../../src/Assets/images/body.jpg";
@@ -33,7 +33,7 @@ import {
   EVENT_TYPE,
 } from "../../constant";
 import BotMessage from "./botMessage";
-import { getFullName, isJSON } from "../../Helper/common";
+import {getFullName, isJSON} from "../../Helper/common";
 import ReactAudioPlayer from "react-audio-player";
 import DownloadOutlined from "@ant-design/icons/DownloadOutlined";
 
@@ -47,15 +47,16 @@ class MediaComponent extends Component {
       imageModalVisible: false,
     };
   }
-
+  
   componentDidMount() {
-    const { message } = this.props;
-    this.setState({ message: message }, this.getUrl);
+    const {message} = this.props;
+    this.setState({message: message}, this.getUrl);
     // this.getUrl(message);
   }
-
-  componentWillUnmount() {}
-
+  
+  componentWillUnmount() {
+  }
+  
   imageModal = () => {
     return (
       <Modal
@@ -79,15 +80,15 @@ class MediaComponent extends Component {
     );
   };
   closeModal = () => {
-    this.setState({ imageModalVisible: false });
+    this.setState({imageModalVisible: false});
   };
-
+  
   openModal = () => {
-    this.setState({ imageModalVisible: true });
+    this.setState({imageModalVisible: true});
   };
   onClickDownloader = (e) => {
     e.preventDefault();
-    const { url, message } = this.state;
+    const {url, message} = this.state;
     if (url && url.length > 0) {
       fetch(url, {
         method: "GET",
@@ -105,26 +106,26 @@ class MediaComponent extends Component {
         });
     }
   };
-
+  
   getUrl = async () => {
-    const { message } = this.state;
-    const { document = null } = message.media;
+    const {message} = this.state;
+    const {document = null} = message.media;
     if (document != null) {
-      this.setState({ url: document });
+      this.setState({url: document});
     } else {
       const url = await message.media.getContentTemporaryUrl();
-      this.setState({ url: url });
+      this.setState({url: url});
     }
   };
-
+  
   onDownloadClick = (e) => {
     e.stopPropagation();
   };
-
+  
   getMedia = () => {
-    const { message } = this.props;
+    const {message} = this.props;
     if (message && message.media) {
-      const { url = "", blobUrl = "" } = this.state;
+      const {url = "", blobUrl = ""} = this.state;
       if (message.media.contentType.indexOf("image") !== -1) {
         return (
           <Fragment>
@@ -145,13 +146,13 @@ class MediaComponent extends Component {
                     className="doc-opt pointer "
                     href={Download}
                     target={"_blank"}
-                    style={{ color: "white" }}
+                    style={{color: "white"}}
                   >
-                    <DownloadOutlined className="fs18  " twoToneColor="white" />
+                    <DownloadOutlined className="fs18  " twoToneColor="white"/>
                   </a>
                 </div>
-
-                <img className="wp100 pointer" src={url} alt="Uploaded Image" />
+                
+                <img className="wp100 pointer" src={url} alt="Uploaded Image"/>
               </div>
             ) : (
               <img
@@ -180,7 +181,7 @@ class MediaComponent extends Component {
         return (
           // <div onClick={this.onClickDownloader}>{message.media.filename}</div>
           <div className="downloadable-file">
-            <img src={File} className="h20 mr10" />
+            <img src={File} className="h20 mr10"/>
             <div className="fs14 mr10">
               {message.media.filename.length <= 12
                 ? message.media.filename
@@ -195,10 +196,10 @@ class MediaComponent extends Component {
         );
       }
     }
-
+    
     return <div>{this.props.formatMessage(messages.cantDisplay)}</div>;
   };
-
+  
   render() {
     return <Fragment>{this.getMedia()}</Fragment>;
   }
@@ -215,9 +216,9 @@ class ChatMessageDetails extends Component {
       message_ids_length: 0,
     };
   }
-
+  
   scrollToBottom = () => {
-    const { chats: { minimized = false } = {} } = this.props;
+    const {chats: {minimized = false} = {}} = this.props;
     this.props.scrollToBottom();
     // if (!minimized) {
     //     const chatEndElement = document.getElementById("chatEnd");
@@ -225,36 +226,36 @@ class ChatMessageDetails extends Component {
     //     chatEndElement.scrollIntoView({ behavior: "smooth" });
     // }
   };
-
+  
   componentDidMount() {
     this.fetchVitalDetails();
   }
-
-  handleGetSymptomDetails = async ({ message_ids_length }) => {
+  
+  handleGetSymptomDetails = async ({message_ids_length}) => {
     try {
-      const { roomId, chatMessages, getSymptomDetails } = this.props;
-
-      const { messageIds = [], messages = {} } = chatMessages[roomId] || {};
+      const {roomId, chatMessages, getSymptomDetails} = this.props;
+      
+      const {messageIds = [], messages = {}} = chatMessages[roomId] || {};
       let symtomMessageIds = [];
-
-      await this.setState({ message_ids_length: messageIds.length });
-
+      
+      await this.setState({message_ids_length: messageIds.length});
+      
       const newIdsLengthArr = messageIds.slice(message_ids_length) || [];
       const newIdsLength = newIdsLengthArr.length || 0;
-
+      
       if (newIdsLength && newIdsLength > 0) {
         for (let each of newIdsLengthArr) {
-          const { state: { body: jsonBody = "" } = {} } = messages[each] || {};
+          const {state: {body: jsonBody = ""} = {}} = messages[each] || {};
           if (isJSON(jsonBody)) {
             const body = JSON.parse(jsonBody);
-            const { symptom_id = null } = body || {};
-            const { type = "" } = body;
+            const {symptom_id = null} = body || {};
+            const {type = ""} = body;
             if (type === CHAT_MESSAGE_TYPE.SYMPTOM && symptom_id) {
               symtomMessageIds.push(symptom_id);
             }
           }
         }
-
+        
         if (symtomMessageIds.length) {
           const res = await getSymptomDetails(symtomMessageIds);
         }
@@ -263,45 +264,45 @@ class ChatMessageDetails extends Component {
       console.log("error", error);
     }
   };
-
+  
   componentDidUpdate() {
-    const { roomId, chatMessages } = this.props;
+    const {roomId, chatMessages} = this.props;
     const {
       message_numbers,
       loadSymptoms,
       message_ids_length = 0,
     } = this.state;
-    const { messageIds = [] } = chatMessages[roomId] || {};
-
+    const {messageIds = []} = chatMessages[roomId] || {};
+    
     if (
       chatMessages[roomId] != undefined &&
       messageIds.length !== message_ids_length
     ) {
-      this.handleGetSymptomDetails({ message_ids_length });
+      this.handleGetSymptomDetails({message_ids_length});
     }
-
+    
     if (
       chatMessages[roomId] != undefined &&
       messageIds.length > 0 &&
       message_numbers != messageIds.length &&
       !loadSymptoms
     ) {
-      this.setState({ loadSymptoms: true, message_numbers: messageIds.length });
+      this.setState({loadSymptoms: true, message_numbers: messageIds.length});
     }
   }
-
+  
   formatMessage = (data) => this.props.intl.formatMessage(data);
-
+  
   fetchMessageDetails = (data) => {
-    const { messages: messagesArray = [] } = data || {};
-    const { getSymptomDetails } = this.props;
+    const {messages: messagesArray = []} = data || {};
+    const {getSymptomDetails} = this.props;
     let adhere_bot_messages = {
       symptom_ids: [],
     };
     for (let i in messagesArray) {
       let message = messagesArray[i];
-
-      const { author = "", body = "" } = message.state;
+      
+      const {author = "", body = ""} = message.state;
       if (author === USER_ADHERE_BOT) {
         const message_type = body.split(":");
         if (message_type[0] && message_type[0] == CHAT_MESSAGE_TYPE.SYMPTOM) {
@@ -309,29 +310,29 @@ class ChatMessageDetails extends Component {
         }
       }
     }
-    this.setState({ loadSymptoms: false, loadingMessageDetails: true });
+    this.setState({loadSymptoms: false, loadingMessageDetails: true});
     getSymptomDetails(adhere_bot_messages["symptom_ids"]).then((res) => {
       if (res) {
-        this.setState({ loadingMessageDetails: false });
+        this.setState({loadingMessageDetails: false});
         this.scrollToBottom();
       }
     });
   };
-
+  
   fetchVitalDetails = () => {
-    const { getVitalOccurence } = this.props;
+    const {getVitalOccurence} = this.props;
     getVitalOccurence().then((res) => {
-      const { status = false } = res;
+      const {status = false} = res;
       if (status) {
-        const { payload: { data } = {} } = res;
-        const { repeat_intervals = {} } = data;
+        const {payload: {data} = {}} = res;
+        const {repeat_intervals = {}} = data;
         this.setState({
           vital_repeat_intervals: repeat_intervals,
         });
       }
     });
   };
-
+  
   getBlankStateComp = () => {
     return (
       <div className="flex wp100 hp100 align-center justify-center">
@@ -339,17 +340,17 @@ class ChatMessageDetails extends Component {
       </div>
     );
   };
-
-  getAuthor = ({ id, category }) => {
-    const { doctors, patients } = this.props;
-
+  
+  getAuthor = ({id, category}) => {
+    const {doctors, patients} = this.props;
+    
     let authorName = "";
-
+    
     switch (category) {
       case USER_CATEGORY.DOCTOR:
-        const { basic_info: { first_name, middle_name, last_name } = {} } =
-          doctors[id] || {};
-        authorName = getFullName({ first_name, middle_name, last_name });
+        const {basic_info: {first_name, middle_name, last_name} = {}} =
+        doctors[id] || {};
+        authorName = getFullName({first_name, middle_name, last_name});
         break;
       case USER_CATEGORY.HSP:
         const {
@@ -382,27 +383,27 @@ class ChatMessageDetails extends Component {
       default:
         break;
     }
-
+    
     return authorName;
   };
-
+  
   getMetaBlock = (metaContent, isCurrent) => {
-    console.log("1038193280 metaContent", { metaContent });
-    const { meta, author = {} } = metaContent || {};
-
+    console.log("1038193280 metaContent", {metaContent});
+    const {meta, author = {}} = metaContent || {};
+    
     if (isJSON(meta)) {
-      console.log("081231982310 meta", { meta });
-      const { type } = meta || {};
+      console.log("081231982310 meta", {meta});
+      const {type} = meta || {};
       if (type === EVENT_TYPE.SYMPTOMS) {
-        const { symptom_id, symptoms } = meta;
-        const { config: { side, parts } = {} } = symptoms[symptom_id] || {};
-
+        const {symptom_id, symptoms} = meta;
+        const {config: {side, parts} = {}} = symptoms[symptom_id] || {};
+        
         // parts...
-        const { name: partName } = PARTS_GRAPH[parts] || {};
-
+        const {name: partName} = PARTS_GRAPH[parts] || {};
+        
         // side...
         const sideName = BODY_SIDE[side] || {};
-
+        
         return (
           <div
             className={`br5 mt6 mb6 ml6 mr6 flex direction-column justify-space-between ${
@@ -426,17 +427,17 @@ class ChatMessageDetails extends Component {
           </div>
         );
       }
-
+      
       if (type === EVENT_TYPE.VITALS) {
-        const { vital_id, vitals, vital_templates } = meta;
-
-        const { basic_info: { vital_template_id } = {} } =
-          vitals[vital_id] || {};
+        const {vital_id, vitals, vital_templates} = meta;
+        
+        const {basic_info: {vital_template_id} = {}} =
+        vitals[vital_id] || {};
         const {
-          basic_info: { name: vitalName } = {},
-          details: { template } = {},
+          basic_info: {name: vitalName} = {},
+          details: {template} = {},
         } = vital_templates[vital_template_id] || {};
-
+        
         return (
           <div
             className={`br5 mt6 mb6 ml6 mr6 flex direction-column justify-space-between ${
@@ -469,22 +470,22 @@ class ChatMessageDetails extends Component {
       );
     }
   };
-
+  
   getMessageComp = (messageArr) => {
     const {
       authenticated_user,
       otherUserLastConsumedMessageIndex,
       handleReply,
     } = this.props;
-    const { getMetaBlock } = this;
-
+    const {getMetaBlock} = this;
+    
     const messageToRender = [];
     messageArr.forEach((message, index) => {
-      const { state: { attributes: { sender_id } = {}, author, body } = {} } =
-        message || {};
-
+      const {state: {attributes: {sender_id} = {}, author, body} = {}} =
+      message || {};
+      
       const prevMessage = messageArr[index - 1] || null;
-
+      
       if (prevMessage) {
         if (
           !moment(message.state.timestamp).isSame(
@@ -509,7 +510,7 @@ class ChatMessageDetails extends Component {
           </div>
         );
       }
-
+      
       if (author === USER_ADHERE_BOT) {
         messageToRender.push(
           <BotMessage
@@ -522,13 +523,13 @@ class ChatMessageDetails extends Component {
         );
         return;
       }
-
+      
       if (
         (sender_id && sender_id === `${authenticated_user}`) ||
         author === `${authenticated_user}`
       ) {
         // RIGHT
-
+        
         // media types here
         if (message.type === "media") {
           messageToRender.push(
@@ -556,19 +557,19 @@ class ChatMessageDetails extends Component {
           );
           return;
         }
-
+        
         // replies
         if (isJSON(body)) {
           const parsedMessage = JSON.parse(body);
           console.log("128781732 parsedMessage ---> ", parsedMessage);
           const {
             text,
-            meta: { productId = null } = {},
+            meta: {productId = null} = {},
             meta,
           } = parsedMessage || {};
-
+          
           if (productId) {
-            const { amount, type, name } = meta || {};
+            const {amount, type, name} = meta || {};
             messageToRender.push(
               <div className="wp100 flex justify-end">
                 <div className="flex direction-column bg-current-message wp40 mr10 mb10 mt20 ml10 br5">
@@ -602,7 +603,7 @@ class ChatMessageDetails extends Component {
             );
             return;
           }
-
+          
           messageToRender.push(
             <div className="wp100 flex justify-end">
               <div className="flex direction-column bg-current-message wp40 mr10 mb10 mt10 ml10 br5">
@@ -656,7 +657,7 @@ class ChatMessageDetails extends Component {
         }
       } else {
         // LEFT
-
+        
         // media types here
         if (message.type === "media") {
           messageToRender.push(
@@ -684,13 +685,13 @@ class ChatMessageDetails extends Component {
           );
           return;
         }
-
+        
         // replies
         if (isJSON(body)) {
           const parsedMessage = JSON.parse(body);
           console.log("128781732 parsedMessage ---> ", parsedMessage);
-          const { text } = parsedMessage || {};
-
+          const {text} = parsedMessage || {};
+          
           messageToRender.push(
             <div className="wp100 flex justify-start">
               <div className="flex direction-column bg-other-message wp40 mr10 mb10 mt10 ml10 br5">
@@ -742,12 +743,12 @@ class ChatMessageDetails extends Component {
         }
       }
     });
-
+    
     return messageToRender;
   };
-
+  
   render() {
-    console.log("342423432432", { props: this.props }); // TODO: Added
+    console.log("342423432432", {props: this.props}); // TODO: Added
     const {
       // authenticated_user,
       // users,
@@ -759,9 +760,9 @@ class ChatMessageDetails extends Component {
       // otherUserLastConsumedMessageIndex,
       // getVitalOccurence
     } = this.props;
-
-    const { getBlankStateComp, getMessageComp } = this;
-
+    
+    const {getBlankStateComp, getMessageComp} = this;
+    
     // const { messageIds = [] } = chatMessages[roomId] || {};
     // const {
     //   loadSymptoms,
@@ -776,16 +777,16 @@ class ChatMessageDetails extends Component {
     // ) {
     //   this.fetchMessageDetails(chatMessages[roomId]);
     // }
-
-    const { messages: messagesArray = [] } = chatMessages[roomId] || {};
-
+    
+    const {messages: messagesArray = []} = chatMessages[roomId] || {};
+    
     if (messagesArray.length === 0) {
       return getBlankStateComp();
     }
-
+    
     if (messagesArray.length > 0) {
       // const messagesToRender = [];
-
+      
       return (
         <div className="wp100 bg-chat-color">
           {getMessageComp(messagesArray)}
@@ -801,7 +802,7 @@ class ChatMessageDetails extends Component {
       //           "date"
       //         )
       //       : false;
-
+      
       //   if (!sameDate) {
       //     messagesToRender.push(
       //       <div className="mt16 mb16 flex wp100 text-grey justify-center fs12">
@@ -817,7 +818,7 @@ class ChatMessageDetails extends Component {
       //     : {};
       //   let mess = "";
       //   const body = message.state.body;
-
+      
       //   if (message.state.author == USER_ADHERE_BOT) {
       //     mess = (
       //       <BotMessage
@@ -834,7 +835,7 @@ class ChatMessageDetails extends Component {
       //         {parseInt(message.state.author) !==
       //         parseInt(authenticated_user) ? null : (
       //           // Human wrapper code ------>>>>>>>
-
+      
       //           // mess = (
       //           // <Fragment key={message.state.sid}>
       //           // <div className="chat-messages">
@@ -872,7 +873,7 @@ class ChatMessageDetails extends Component {
       //           // width: parts[0] === key ? 12 : 0,
       //           // backgroundColor: parts[0] === key ? "rgba(236,88,0,0.8)" : 'rgba(0,0,0,0)',
       //           // borderRadius: '50%',
-
+      
       //           // // height: 12,
       //           // // width: 12 ,
       //           // // backgroundColor: "red",
@@ -904,7 +905,7 @@ class ChatMessageDetails extends Component {
       //           // width: parts[0] === key ? 12 : 0,
       //           // backgroundColor: parts[0] === key ? "rgba(236,88,0,0.8)" : 'rgba(0,0,0,0)',
       //           // borderRadius: '50%',
-
+      
       //           // // height: 12,
       //           // // width: 12 ,
       //           // // backgroundColor: "red",
@@ -916,7 +917,7 @@ class ChatMessageDetails extends Component {
       //           // );
       //           // }))}
       //           // {/* <img src={bodyImage} height={260} width={200}></img> */}
-
+      
       //           // </div>) : null}
       //           // {text.length ? (
       //           // <Fragment>
@@ -983,9 +984,9 @@ class ChatMessageDetails extends Component {
       //           // </Fragment >
       //           // );
       //           // <<<<<<< ---------------------<<<<<
-
+      
       //           // <div className="chat-messages">
-
+      
       //           //     <div className="chat-avatar">
       //           //         <span className="twilio-avatar">
       //           //             <Avatar src={patientDp} />
@@ -1005,7 +1006,7 @@ class ChatMessageDetails extends Component {
       //           //     </div>
       //           //     {/* </div> */}
       //           // </div>
-
+      
       //           <div className="chat-messages end">
       //             {message.type === "media" ? (
       //               <div className="chat-text end">

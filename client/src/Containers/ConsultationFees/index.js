@@ -4,24 +4,24 @@ import ConsultationFeeTable from "../../Components/Pages/doctorSettingsPage/cons
 import {authDoctorSelector} from "../../modules/doctors/selectors"
 
 const mapStateToProps = state => {
-    const {
-        doctors,
-        auth,
-        users,
-    } = state;
-
-    const auth_doctor_id = authDoctorSelector(state);
-
-    return {
-        doctors: doctors[auth_doctor_id],
-    };
+  const {
+    doctors,
+    auth,
+    users,
+  } = state;
+  
+  const auth_doctor_id = authDoctorSelector(state);
+  
+  return {
+    doctors: doctors[auth_doctor_id],
+  };
 };
 
 const mapDispatchToProps = dispatch => {
-    return {};
+  return {};
 };
 
 export default withRouter(connect(
-    mapStateToProps,
-    mapDispatchToProps
+  mapStateToProps,
+  mapDispatchToProps
 )(ConsultationFeeTable));

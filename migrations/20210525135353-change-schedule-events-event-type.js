@@ -1,6 +1,6 @@
 "use strict";
-import { TABLE_NAME } from "../app/models/scheduleEvents";
-import { EVENT_TYPE } from "../constant";
+import {TABLE_NAME} from "../app/models/scheduleEvents";
+import {EVENT_TYPE} from "../constant";
 
 module.exports = {
   up: (queryInterface, Sequelize) => {
@@ -17,7 +17,7 @@ module.exports = {
       ],
     });
   },
-
+  
   down: (queryInterface, Sequelize) => {
     return queryInterface.changeColumn(TABLE_NAME, "event_type", {
       type: Sequelize.ENUM,

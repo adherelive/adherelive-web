@@ -5,15 +5,15 @@ import NotificationController from "../../../app/controllers/notification/notifi
 const router = express.Router();
 
 router.post(
-    "/",
-    Authenticate,
-    NotificationController.getNotifications
+  "/",
+  Authenticate,
+  NotificationController.getNotifications
 );
 
 router.post(
-    "/chat-notfication",
-    Authenticate,
-    NotificationController.raiseChatNotification
+  "/chat-notfication",
+  Authenticate,
+  NotificationController.raiseChatNotification
 );
 
 module.exports = router;

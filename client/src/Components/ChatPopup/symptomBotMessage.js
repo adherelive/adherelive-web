@@ -1,4 +1,4 @@
-import React, { Component, Fragment } from "react";
+import React, {Component, Fragment} from "react";
 import {
   USER_ADHERE_BOT,
   CHAT_MESSAGE_TYPE,
@@ -12,8 +12,8 @@ import {
   BODY_SIDE_TEXT,
 } from "../../constant";
 import messages from "./messages";
-import { injectIntl } from "react-intl";
-import { Form, Input, Button, Spin, Avatar, Upload, Modal } from "antd";
+import {injectIntl} from "react-intl";
+import {Form, Input, Button, Spin, Avatar, Upload, Modal} from "antd";
 import moment from "moment";
 
 import DownloadOutlined from "@ant-design/icons/DownloadOutlined";
@@ -25,11 +25,12 @@ class symptomBotMessage extends Component {
     //   replyMessage : ''
     // }
   }
-
-  componentDidMount() {}
-
+  
+  componentDidMount() {
+  }
+  
   getEllipsis = (message, side, parts) => {
-    const { handleReply } = this.props;
+    const {handleReply} = this.props;
     return (
       <div className="wp100 tar fs20 pr20">
         <span
@@ -43,18 +44,18 @@ class symptomBotMessage extends Component {
       </div>
     );
   };
-
+  
   replyToMessage = (e) => {
     e.preventDefault();
-    const { updateReplyMessageId, handleReply } = this.props;
+    const {updateReplyMessageId, handleReply} = this.props;
     if (typeof updateReplyMessageId === "function") {
       const node = e.target;
-
+      
       const id = node.getAttribute("meta-id");
       updateReplyMessageId(id);
     }
   };
-
+  
   getText = (symptom_text) => {
     let text = "";
     text = (
@@ -66,27 +67,27 @@ class symptomBotMessage extends Component {
     );
     return text;
   };
-
+  
   getImagesMedia = (image_document_ids, upload_documents) => {
     const imagesMediaArray = [];
     image_document_ids.forEach((image_doc_id) => {
       let imageMessage = "";
-      const { basic_info: { document: img_src = "" } = {} } =
+      const {basic_info: {document: img_src = ""} = {}} =
         upload_documents[image_doc_id];
       imageMessage = <div>{this.getImage(img_src)}</div>;
       imagesMediaArray.push(imageMessage);
     });
-
+    
     return imagesMediaArray;
   };
-
+  
   getAudioMedia = (audio_document_ids, upload_documents) => {
     const audioMediaArray = [];
-
+    
     audio_document_ids.forEach((audio_doc_id) => {
       let audioMessage = "";
       const {
-        basic_info: { document: audio_src = "", name: audio_name = "" } = {},
+        basic_info: {document: audio_src = "", name: audio_name = ""} = {},
       } = upload_documents[audio_doc_id];
       // console.log("upload_documents",upload_documents);
       let audio_type = "mp3";
@@ -97,40 +98,40 @@ class symptomBotMessage extends Component {
       audioMessage = <div>{this.getAudio(audio_src, audio_type)}</div>;
       audioMediaArray.push(audioMessage);
     });
-
+    
     return audioMediaArray;
   };
-
+  
   getVideoMedia = (video_document_ids, upload_documents) => {
     const videoMediaArray = [];
-
+    
     video_document_ids.forEach((video_doc_id) => {
       let videoMessage = "";
       const {
-        basic_info: { document: video_src = "", name: video_name = "" } = {},
+        basic_info: {document: video_src = "", name: video_name = ""} = {},
       } = upload_documents[video_doc_id];
-
+      
       let video_type = "mp4";
       // video_type = video_name.split('.')[1];
       video_name.split(".")[1] === ""
         ? (video_type = "mp4")
         : (video_type = video_name.split(".")[1]);
       videoMessage = <div>{this.getVideo(video_src, video_type)}</div>;
-
+      
       videoMediaArray.push(videoMessage);
     });
-
+    
     return videoMediaArray;
   };
-
+  
   getPatientAvatar = (patientDp) => {
     return (
       <span className="twilio-avatar">
-        <Avatar src={patientDp} />
+        <Avatar src={patientDp}/>
       </span>
     );
   };
-
+  
   getMessageTime = (message) => {
     let mess = "";
     mess = (
@@ -140,7 +141,7 @@ class symptomBotMessage extends Component {
     );
     return mess;
   };
-
+  
   getImage = (img_src) => {
     let mess = "";
     mess = (
@@ -156,18 +157,18 @@ class symptomBotMessage extends Component {
             className="doc-opt "
             href={img_src}
             target={"_blank"}
-            style={{ color: "#fff" }}
+            style={{color: "#fff"}}
           >
-            <DownloadOutlined className="fs18 pointer " twoToneColor="#fff" />
+            <DownloadOutlined className="fs18 pointer " twoToneColor="#fff"/>
           </a>
         </div>
-
+        
         <img className="symptom-image " src={img_src} alt="Symptom Image"></img>
       </div>
     );
     return mess;
   };
-
+  
   getAudio = (audio_src, audio_type) => {
     let mess = "";
     mess = (
@@ -186,9 +187,9 @@ class symptomBotMessage extends Component {
             className="doc-opt pointer "
             href={audio_src}
             target={"_blank"}
-            style={{ color: "black" }}
+            style={{color: "black"}}
           >
-            <DownloadOutlined className="fs18  " twoToneColor="black" />
+            <DownloadOutlined className="fs18  " twoToneColor="black"/>
           </a>
         </div>
         <audio controls className="symptom-audio" width="100%" height="100%">
@@ -204,7 +205,7 @@ class symptomBotMessage extends Component {
     );
     return mess;
   };
-
+  
   getVideo = (video_src, video_type) => {
     let mess = "";
     mess = (
@@ -221,9 +222,9 @@ class symptomBotMessage extends Component {
             className="doc-opt pointer "
             href={video_src}
             target={"_blank"}
-            style={{ color: "#fff" }}
+            style={{color: "#fff"}}
           >
-            <DownloadOutlined className="fs18  " twoToneColor="#fff" />
+            <DownloadOutlined className="fs18  " twoToneColor="#fff"/>
           </a>
         </div>
         <video controls width="100%" height="100%">
@@ -235,16 +236,16 @@ class symptomBotMessage extends Component {
     );
     return mess;
   };
-
+  
   getSymptomMessage = (message, side, parts) => {
     if (side === "" || parts.length === 0) {
       return "";
     }
-
+    
     const part = PARTS_GRAPH[7].name;
     const body_side = BODY_SIDE_TEXT[side] || "";
     let mess = "";
-
+    
     mess = (
       <div>
         <div
@@ -252,7 +253,7 @@ class symptomBotMessage extends Component {
           id={`${message.state.sid}-symptom`}
         >
           <span className="bot-m-h ">Symptom</span>
-
+          
           <div className="bot-msg-details">
             <span className="fs14 fw500  ">{body_side}</span>
             <span className="dot">&bull;</span>
@@ -263,7 +264,7 @@ class symptomBotMessage extends Component {
     );
     return mess;
   };
-
+  
   getFinalMessage = (message, patientDp, side, parts, allMediaArray) => {
     let mess = "";
     mess = (
@@ -283,10 +284,10 @@ class symptomBotMessage extends Component {
         </div>
       </div>
     );
-
+    
     return mess;
   };
-
+  
   getAllMedia = () => {
     const {
       body: this_body,
@@ -295,25 +296,25 @@ class symptomBotMessage extends Component {
       symptoms,
       upload_documents = {},
     } = this.props;
-
+    
     const body = JSON.parse(this_body);
-
+    
     const symptom_id = body.symptom_id;
     const allMediaArray = [];
     let finalMessage = "";
     if (symptom_id != undefined) {
       // const {upload_documents = {} } = body;
-
+      
       // const { text : symptom_text = '' , audio_document_ids = [], image_document_ids=[] ,video_document_ids = [], config : {side = '1' , parts = [] , duration='' }} = {} = body.symptoms[symptom_id] || {};
-
+      
       const {
         text: symptom_text = "",
         audio_document_ids = [],
         image_document_ids = [],
         video_document_ids = [],
-        config: { side = "1", parts = [], duration = "" } = {},
+        config: {side = "1", parts = [], duration = ""} = {},
       } = symptoms[symptom_id] || {};
-
+      
       const imagesMediaArray = this.getImagesMedia(
         image_document_ids,
         upload_documents
@@ -327,7 +328,7 @@ class symptomBotMessage extends Component {
         upload_documents
       );
       const textMessage = this.getText(symptom_text);
-
+      
       imagesMediaArray.forEach((each) => {
         allMediaArray.push(each);
       });
@@ -346,14 +347,14 @@ class symptomBotMessage extends Component {
         allMediaArray
       );
     }
-
+    
     return finalMessage;
   };
-
+  
   render() {
     // const {allMedia} = this.state;
     const finalMessage = this.getAllMedia();
-
+    
     return finalMessage;
   }
 }

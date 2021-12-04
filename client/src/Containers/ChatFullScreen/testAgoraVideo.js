@@ -1,6 +1,6 @@
-import { connect } from "react-redux";
+import {connect} from "react-redux";
 import TestAgoraVideo from "../../Components/ChatFullScreen/testAgoraVideo";
-import { fetchVideoAccessToken } from "../../modules/agora";
+import {fetchVideoAccessToken} from "../../modules/agora";
 
 const mapStateToProps = (state) => {
   const {
@@ -10,7 +10,7 @@ const mapStateToProps = (state) => {
     patients = {},
     doctors = {},
   } = state;
-  return { agora, users, auth, patients, doctors };
+  return {agora, users, auth, patients, doctors};
 };
 
 const mapDispatchToProps = (dispatch) => {

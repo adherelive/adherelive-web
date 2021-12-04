@@ -6,17 +6,17 @@ import * as validator from "./validator";
 const router = express.Router();
 
 router.post(
-    "/",
-    Authenticate,
-    // validator.validatePaymentOrderData,
-    TransactionController.createOrder
+  "/",
+  Authenticate,
+  // validator.validatePaymentOrderData,
+  TransactionController.createOrder
 );
 
 router.post(
-    "/:id",
-    Authenticate,
-    // validator.validateTransactionUpdateData,
-    TransactionController.processTransaction
+  "/:id",
+  Authenticate,
+  // validator.validateTransactionUpdateData,
+  TransactionController.processTransaction
 );
 
 export default router;

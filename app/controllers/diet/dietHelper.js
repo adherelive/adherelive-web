@@ -12,23 +12,23 @@ import Logger from "../../../libs/log";
 const Log = new Logger("DIET > HELPER");
 
 export const getTimeWiseDietFoodGroupMappings = async ({
-  diet_food_group_mappings,
-}) => {
+                                                         diet_food_group_mappings,
+                                                       }) => {
   try {
     let timeWiseData = {};
     let allIds = [];
-
+    
     for (let each in diet_food_group_mappings) {
       const {
-        basic_info: { day = null, time = null } = {},
+        basic_info: {day = null, time = null} = {},
         related_diet_food_group_mapping_ids = [],
       } = diet_food_group_mappings[each] || {};
-
+      
       const forTime = timeWiseData[time] || {};
-
-      let { mappingIds = [] } = forTime || {};
+      
+      let {mappingIds = []} = forTime || {};
       const eachInt = parseInt(each);
-
+      
       if (related_diet_food_group_mapping_ids.length) {
         let tempArr = mappingIds.slice();
         for (let id of mappingIds) {
@@ -54,7 +54,7 @@ export const getTimeWiseDietFoodGroupMappings = async ({
         mappingIds.push(eachInt);
         allIds.push(eachInt);
       }
-
+      
       timeWiseData = {
         ...timeWiseData,
         [`${time}`]: {
@@ -63,7 +63,7 @@ export const getTimeWiseDietFoodGroupMappings = async ({
         },
       };
     }
-
+    
     return timeWiseData;
   } catch (error) {
     throw error;
@@ -82,8 +82,8 @@ export const getTimings = (userTimings) => {
   try {
     const allDietTimings = {};
     Object.keys(userTimings).forEach((userTimingId) => {
-      const { value } = userTimings[userTimingId] || {};
-
+      const {value} = userTimings[userTimingId] || {};
+      
       switch (userTimingId) {
         case WAKE_UP:
           allDietTimings[WAKE_UP] = {
@@ -115,7 +115,7 @@ export const getTimings = (userTimings) => {
             time: value,
           };
           break;
-
+        
         case DINNER:
           allDietTimings[DINNER] = {
             text: "Dinner",
@@ -130,9 +130,9 @@ export const getTimings = (userTimings) => {
           break;
       }
     });
-
+    
     console.log("12098128 allDietTimings", allDietTimings);
-
+    
     return allDietTimings;
   } catch (error) {
     console.log("120982189 error", error);

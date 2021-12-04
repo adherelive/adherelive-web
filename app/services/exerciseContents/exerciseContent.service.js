@@ -1,6 +1,6 @@
 import Database from "../../../libs/mysql";
 
-import { TABLE_NAME } from "../../models/exerciseContents";
+import {TABLE_NAME} from "../../models/exerciseContents";
 
 export default class ExerciseContentService {
   create = async (data) => {
@@ -9,7 +9,7 @@ export default class ExerciseContentService {
       const exerciseContent = await Database.getModel(TABLE_NAME).create(data, {
         transaction,
       });
-
+      
       await transaction.commit();
       return exerciseContent;
     } catch (error) {
@@ -17,7 +17,7 @@ export default class ExerciseContentService {
       throw error;
     }
   };
-
+  
   findOne = async (data) => {
     try {
       return await Database.getModel(TABLE_NAME).findOne({
@@ -27,7 +27,7 @@ export default class ExerciseContentService {
       throw error;
     }
   };
-
+  
   findAndCountAll = async (data) => {
     try {
       return await Database.getModel(TABLE_NAME).findAndCountAll({

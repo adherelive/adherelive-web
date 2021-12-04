@@ -1,7 +1,7 @@
 "use strict";
 
-import { TABLE_NAME } from "../app/models/medicines";
-import { MEDICINE_TYPE } from "../constant";
+import {TABLE_NAME} from "../app/models/medicines";
+import {MEDICINE_TYPE} from "../constant";
 
 module.exports = {
   up: (queryInterface, Sequelize) => {
@@ -17,7 +17,7 @@ module.exports = {
       // })
     ]);
   },
-
+  
   down: (queryInterface, Sequelize) => {
     return Promise.all([
       queryInterface.removeColumn(TABLE_NAME, "creator_id"),

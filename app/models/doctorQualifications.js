@@ -1,8 +1,8 @@
 "use strict";
-import { DataTypes } from "sequelize";
-import { TABLE_NAME as doctorTableName } from "./doctors";
-import { TABLE_NAME as degreeTableName } from "./degree";
-import { TABLE_NAME as collegeTableName } from "./college";
+import {DataTypes} from "sequelize";
+import {TABLE_NAME as doctorTableName} from "./doctors";
+import {TABLE_NAME as degreeTableName} from "./degree";
+import {TABLE_NAME as collegeTableName} from "./college";
 
 export const TABLE_NAME = "doctor_qualifications";
 

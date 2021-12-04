@@ -1,23 +1,23 @@
-import React, { Component } from "react";
-import { injectIntl } from "react-intl";
+import React, {Component} from "react";
+import {injectIntl} from "react-intl";
 import messages from "./messages";
 // import {formatMessage} from "react-intl/src/format";
-import { withRouter } from "react-router-dom";
+import {withRouter} from "react-router-dom";
 
 class Steps extends Component {
   constructor(props) {
     super(props);
     this.state = {};
   }
-
+  
   formatMessage = (data) => this.props.intl.formatMessage(data);
-
+  
   render() {
-    const { current = 0 } = this.props;
+    const {current = 0} = this.props;
     return (
       <div className="custom-steps-container">
         <div className="step-line-container h60">
-          <div className="step-line-active" />
+          <div className="step-line-active"/>
         </div>
         <div className="step-data-container ">
           <div className="step-active-text">
@@ -28,7 +28,7 @@ class Steps extends Component {
           </div>
         </div>
         <div className="step-line-container h80">
-          <div className={current >= 1 ? "step-line-active" : "step-line"} />
+          <div className={current >= 1 ? "step-line-active" : "step-line"}/>
         </div>
         <div className="step-data-container">
           <div
@@ -49,7 +49,7 @@ class Steps extends Component {
           </div>
         </div>
         <div className="step-line-container h80">
-          <div className={current >= 2 ? "step-line-active" : "step-line"} />
+          <div className={current >= 2 ? "step-line-active" : "step-line"}/>
         </div>
         <div className="step-data-container">
           <div
@@ -70,7 +70,7 @@ class Steps extends Component {
           </div>
         </div>
         <div className="step-line-container h100">
-          <div className="step-line" />
+          <div className="step-line"/>
         </div>
       </div>
     );

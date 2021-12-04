@@ -1,4 +1,4 @@
-import { AGORA_CALL_NOTIFICATION_TYPES } from "../../../constant";
+import {AGORA_CALL_NOTIFICATION_TYPES} from "../../../constant";
 
 export const NOTIFICATION_URLS = {
   [AGORA_CALL_NOTIFICATION_TYPES.START_CALL]: "agora-video-call-start",
@@ -9,13 +9,13 @@ export default class AgoraJob {
   constructor(data) {
     this._data = data;
   }
-
+  
   getAgoraData = () => {
     return this._data;
   };
-
+  
   getNotificationUrl = (type) => {
-    const { [type]: url } = NOTIFICATION_URLS;
+    const {[type]: url} = NOTIFICATION_URLS;
     return url;
   };
 }

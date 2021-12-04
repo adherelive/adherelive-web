@@ -1,8 +1,8 @@
 "use strict";
-import { DataTypes } from "sequelize";
-import { SPECIALITIES } from "./specialities";
+import {DataTypes} from "sequelize";
+import {SPECIALITIES} from "./specialities";
 
-import { USER_CATEGORY } from "../../constant";
+import {USER_CATEGORY} from "../../constant";
 
 export const MEMBER_SPECIALITIES = "member_specialities";
 
@@ -57,8 +57,8 @@ export const db = (database) => {
 };
 
 export const associate = (database) => {
-  const { member_specialities, specialities } = database.models || {};
-
+  const {member_specialities, specialities} = database.models || {};
+  
   // associations here (if any) ...
   member_specialities.belongsTo(specialities, {
     foreignKey: "speciality_id",

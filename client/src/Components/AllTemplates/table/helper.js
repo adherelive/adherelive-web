@@ -26,9 +26,9 @@ export const formatTemplateTableData = (data) => {
     template_vitals,
     vital_templates,
   } = data || {};
-
+  
   const templateData = care_plan_templates[id] || {};
-
+  
   const {
     template_appointment_ids = [],
     template_medication_ids = [],
@@ -37,19 +37,19 @@ export const formatTemplateTableData = (data) => {
   let medicationsData = {};
   let appointmentsData = {};
   let vitalsData = {};
-
+  
   for (let each of template_medication_ids) {
     medicationsData[each] = template_medications[each];
   }
-
+  
   for (let each of template_appointment_ids) {
     appointmentsData[each] = template_appointments[each];
   }
-
+  
   for (let each of template_vital_ids) {
     vitalsData[each] = template_vitals[each];
   }
-
+  
   return {
     templateData,
     medicationsData,

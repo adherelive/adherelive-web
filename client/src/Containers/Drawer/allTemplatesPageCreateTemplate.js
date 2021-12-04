@@ -1,7 +1,7 @@
-import { connect } from "react-redux";
+import {connect} from "react-redux";
 import TemplatePageCreateDrawer from "../../Components/Drawer/allTemplatesPageCreateTemplate";
-import { DRAWER } from "../../constant";
-import { close } from "../../modules/drawer";
+import {DRAWER} from "../../constant";
+import {close} from "../../modules/drawer";
 import {
   createCareplanTemplate,
   getAllTemplatesForDoctor,
@@ -10,13 +10,13 @@ import {
 // import { createReminder, updateReminder } from "../../modules/reminder"; // write to add to database
 const mapStateToProps = (state) => {
   const {
-    auth: { authPermissions = [], authenticated_category } = {},
-    drawer: { visible, loading, data: { type, payload = {} } = {} },
+    auth: {authPermissions = [], authenticated_category} = {},
+    drawer: {visible, loading, data: {type, payload = {}} = {}},
     vital_templates,
     repeat_intervals,
     exercise_contents = {},
   } = state;
-
+  
   return {
     authPermissions,
     authenticated_category,

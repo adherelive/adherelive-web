@@ -1,9 +1,9 @@
-import React, { Component } from "react";
-import { injectIntl } from "react-intl";
+import React, {Component} from "react";
+import {injectIntl} from "react-intl";
 import moment from "../../../../Helper/moment";
 import messages from "./messages";
 
-import { EVENT_TYPE, EVENT_STATUS } from "../../../../constant";
+import {EVENT_TYPE, EVENT_STATUS} from "../../../../constant";
 
 class PatientAlerts extends Component {
   constructor(props) {
@@ -14,47 +14,47 @@ class PatientAlerts extends Component {
       last_visit: [],
     };
   }
-
+  
   componentDidMount() {
-    const { last_visit } = this.state;
+    const {last_visit} = this.state;
     if (last_visit.length === 0) {
       this.getAlertData();
     }
   }
-
+  
   getAlertData = async () => {
     try {
-      this.setState({ loading: true });
-      const { getLastVisitAlerts } = this.props;
+      this.setState({loading: true});
+      const {getLastVisitAlerts} = this.props;
       const response = await getLastVisitAlerts();
-      const { status, payload: { data: { last_visit = [] } = {} } = {} } =
-        response || {};
+      const {status, payload: {data: {last_visit = []} = {}} = {}} =
+      response || {};
       if (status === true) {
-        this.setState({ last_visit, loading: false });
+        this.setState({last_visit, loading: false});
       }
       if (last_visit.length === 0) {
-        this.setState({ areEvents: false, loading: false });
+        this.setState({areEvents: false, loading: false});
       } else {
-        this.setState({ loading: false });
+        this.setState({loading: false});
       }
     } catch (error) {
-      this.setState({ loading: false });
+      this.setState({loading: false});
     }
   };
-
+  
   getBlankState = () => {
-    const { intl: { formatMessage } = {} } = this.props;
+    const {intl: {formatMessage} = {}} = this.props;
     return (
       <div className="wp100 flex align-center justify-center pt20 pb20 fs20 fw500">
         {formatMessage(messages.blank_state_text)}
       </div>
     );
   };
-
-  getSymptom = ({ id, time }) => {
-    const { symptoms, intl: { formatMessage } = {} } = this.props;
-    const { text } = symptoms[id] || {};
-
+  
+  getSymptom = ({id, time}) => {
+    const {symptoms, intl: {formatMessage} = {}} = this.props;
+    const {text} = symptoms[id] || {};
+    
     return (
       <div
         key={`symptom-${time}`}
@@ -68,11 +68,11 @@ class PatientAlerts extends Component {
       </div>
     );
   };
-
-  getMedication = ({ data, time }) => {
-    const { intl: { formatMessage } = {} } = this.props;
-    const { status, details } = data || {};
-
+  
+  getMedication = ({data, time}) => {
+    const {intl: {formatMessage} = {}} = this.props;
+    const {status, details} = data || {};
+    
     return (
       <div
         key={`medication-${time}`}
@@ -93,11 +93,11 @@ class PatientAlerts extends Component {
       </div>
     );
   };
-
-  getAppointment = ({ data, time }) => {
-    const { intl: { formatMessage } = {} } = this.props;
-    const { status } = data || {};
-
+  
+  getAppointment = ({data, time}) => {
+    const {intl: {formatMessage} = {}} = this.props;
+    const {status} = data || {};
+    
     return (
       <div
         key={`appointment-${time}`}
@@ -118,14 +118,14 @@ class PatientAlerts extends Component {
       </div>
     );
   };
-
-  getVitals = ({ data, time }) => {
-    const { intl: { formatMessage } = {} } = this.props;
+  
+  getVitals = ({data, time}) => {
+    const {intl: {formatMessage} = {}} = this.props;
     const {
       status,
-      details: { vital_templates: { basic_info: { name } = {} } = {} } = {},
+      details: {vital_templates: {basic_info: {name} = {}} = {}} = {},
     } = data || {};
-
+    
     return (
       <div
         key={`vital-${time}`}
@@ -147,12 +147,12 @@ class PatientAlerts extends Component {
       </div>
     );
   };
-
-  getDiets = ({ data, time }) => {
-    const { intl: { formatMessage } = {} } = this.props;
-    const { status } = data || {};
-    const { details: { diets = {}, diet_id = null } = {} } = data || {};
-    const { basic_info: { name = "" } = {} } = diets[diet_id] || {};
+  
+  getDiets = ({data, time}) => {
+    const {intl: {formatMessage} = {}} = this.props;
+    const {status} = data || {};
+    const {details: {diets = {}, diet_id = null} = {}} = data || {};
+    const {basic_info: {name = ""} = {}} = diets[diet_id] || {};
     return (
       <div
         key={`diet-${time}`}
@@ -174,12 +174,12 @@ class PatientAlerts extends Component {
       </div>
     );
   };
-
-  getWorkouts = ({ data, time }) => {
-    const { intl: { formatMessage } = {} } = this.props;
-    const { status } = data || {};
-    const { details: { workouts = {}, workout_id = null } = {} } = data || {};
-    const { basic_info: { name = "" } = {} } = workouts[workout_id] || {};
+  
+  getWorkouts = ({data, time}) => {
+    const {intl: {formatMessage} = {}} = this.props;
+    const {status} = data || {};
+    const {details: {workouts = {}, workout_id = null} = {}} = data || {};
+    const {basic_info: {name = ""} = {}} = workouts[workout_id] || {};
     return (
       <div
         key={`workout-${time}`}
@@ -201,37 +201,37 @@ class PatientAlerts extends Component {
       </div>
     );
   };
-
-  getScheduleEvent = ({ data, time }) => {
-    const { getMedication, getVitals, getAppointment, getDiets, getWorkouts } =
+  
+  getScheduleEvent = ({data, time}) => {
+    const {getMedication, getVitals, getAppointment, getDiets, getWorkouts} =
       this;
-    const { event_type } = data || {};
-
+    const {event_type} = data || {};
+    
     switch (event_type) {
       case EVENT_TYPE.MEDICATION_REMINDER:
-        return getMedication({ data, time });
+        return getMedication({data, time});
       case EVENT_TYPE.APPOINTMENT:
-        return getAppointment({ data, time });
+        return getAppointment({data, time});
       case EVENT_TYPE.VITALS:
-        return getVitals({ data, time });
+        return getVitals({data, time});
       case EVENT_TYPE.DIET:
-        return getDiets({ data, time });
+        return getDiets({data, time});
       case EVENT_TYPE.WORKOUT:
-        return getWorkouts({ data, time });
+        return getWorkouts({data, time});
     }
   };
-
+  
   getEvents = () => {
-    const { schedule_events } = this.props;
-    const { last_visit } = this.state;
-    console.log("7263423847628346872347238", { last_visit });
-
+    const {schedule_events} = this.props;
+    const {last_visit} = this.state;
+    console.log("7263423847628346872347238", {last_visit});
+    
     const events = last_visit.map((details) => {
-      const { event_type, id, updatedAt } = details || {};
-
+      const {event_type, id, updatedAt} = details || {};
+      
       switch (event_type) {
         case EVENT_TYPE.SYMPTOMS:
-          return this.getSymptom({ time: updatedAt, id });
+          return this.getSymptom({time: updatedAt, id});
         default:
           return this.getScheduleEvent({
             data: schedule_events[id],
@@ -239,19 +239,19 @@ class PatientAlerts extends Component {
           });
       }
     });
-
+    
     return events;
   };
-
+  
   render() {
-    const { intl: { formatMessage } = {} } = this.props;
-    const { loading, areEvents, last_visit = [] } = this.state;
-    const { getBlankState, getEvents } = this;
-
+    const {intl: {formatMessage} = {}} = this.props;
+    const {loading, areEvents, last_visit = []} = this.state;
+    const {getBlankState, getEvents} = this;
+    
     if (loading) {
       return null;
     }
-
+    
     return (
       <div className="br10 p10 wp100 bg-rosy-pink">
         <div className="wp100 pl6 pt10 pb10 flex align-center bb-light-grey">

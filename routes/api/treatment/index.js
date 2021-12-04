@@ -5,9 +5,9 @@ import Authenticate from "../middleware/auth";
 import Treatment from "../../../app/controllers/treatment/treatment.controller";
 
 router.get(
-    "/",
-    Authenticate,
-    Treatment.getAll
+  "/",
+  Authenticate,
+  Treatment.getAll
 );
 
 module.exports = router;

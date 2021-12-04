@@ -1,3 +1,3 @@
 export const getPortionsUrl = () => {
-    return `/portions`;
+  return `/portions`;
 };

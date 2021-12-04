@@ -11,7 +11,7 @@ import CarePlanWrapper from "../../../ApiWrapper/web/carePlan";
 import moment from "moment";
 import eventService from "../../../services/scheduleEvents/scheduleEvent.service";
 import EventWrapper from "../../common/scheduleEvents";
-import { EVENT_STATUS, EVENT_TYPE, FEATURE_TYPE } from "../../../../constant";
+import {EVENT_STATUS, EVENT_TYPE, FEATURE_TYPE} from "../../../../constant";
 import FeatureDetailService from "../../../services/featureDetails/featureDetails.service";
 import FeatureDetailWrapper from "../featureDetails";
 
@@ -21,9 +21,9 @@ class VitalWrapper extends BaseVital {
   constructor(data) {
     super(data);
   }
-
+  
   getBasicInfo = () => {
-    const { _data } = this;
+    const {_data} = this;
     const {
       id,
       vital_template_id,
@@ -33,7 +33,7 @@ class VitalWrapper extends BaseVital {
       details,
       description,
     } = _data || {};
-
+    
     return {
       basic_info: {
         id,
@@ -46,31 +46,31 @@ class VitalWrapper extends BaseVital {
       description,
     };
   };
-
+  
   getAllInfo = async () => {
-    const { getBasicInfo, getVitalId, getStartDate } = this;
-
+    const {getBasicInfo, getVitalId, getStartDate} = this;
+    
     const EventService = new eventService();
-
+    
     const currentDate = moment().endOf("day").utc().toDate();
-
+    
     const scheduleEvents = await EventService.getAllPastData({
       startDate: getStartDate(),
       event_id: getVitalId(),
       date: currentDate,
     });
-
+    
     let vitalEvents = {};
     let remaining = 0;
     let latestPendingEventId;
-
+    
     const vitalData = await FeatureDetailService.getDetailsByData({
       feature_type: FEATURE_TYPE.VITAL,
     });
-
+    
     const vitalDetails = await FeatureDetailWrapper(vitalData);
-    const { repeat_intervals = {} } = vitalDetails.getFeatureDetails() || {};
-
+    const {repeat_intervals = {}} = vitalDetails.getFeatureDetails() || {};
+    
     const scheduleEventIds = [];
     for (const events of scheduleEvents) {
       const scheduleEvent = await EventWrapper(events);
@@ -78,7 +78,7 @@ class VitalWrapper extends BaseVital {
       // Log.debug("28739812372 scheduleEvent.getAllInfo() ---> ", x.details.details.repeat_interval_id);
       if (scheduleEvent.getEventType() === EVENT_TYPE.VITALS) {
         scheduleEventIds.push(scheduleEvent.getScheduleEventId());
-
+        
         if (scheduleEvent.getStatus() !== EVENT_STATUS.COMPLETED) {
           if (!latestPendingEventId) {
             latestPendingEventId = scheduleEvent.getScheduleEventId();
@@ -87,7 +87,7 @@ class VitalWrapper extends BaseVital {
         }
       }
     }
-
+    
     return {
       vitals: {
         [getVitalId()]: {
@@ -98,14 +98,14 @@ class VitalWrapper extends BaseVital {
       },
     };
   };
-
+  
   getReferenceInfo = async () => {
-    const { _data, getAllInfo, getVitalTemplateId } = this;
-    const { vital_template, care_plan } = _data || {};
-
+    const {_data, getAllInfo, getVitalTemplateId} = this;
+    const {vital_template, care_plan} = _data || {};
+    
     const vitalTemplateData = {};
     const carePlanData = {};
-
+    
     let wrapperQuery = {};
     if (vital_template) {
       wrapperQuery = {
@@ -116,16 +116,16 @@ class VitalWrapper extends BaseVital {
         id: getVitalTemplateId(),
       };
     }
-
+    
     const vitalTemplates = await VitalTemplateWrapper(wrapperQuery);
     vitalTemplateData[vitalTemplates.getVitalTemplateId()] =
       vitalTemplates.getBasicInfo();
-
+    
     if (care_plan) {
       const carePlans = await CarePlanWrapper(care_plan);
       carePlanData[carePlans.getCarePlanId()] = await carePlans.getAllInfo();
     }
-
+    
     return {
       ...(await getAllInfo()),
       vital_templates: {
@@ -138,10 +138,10 @@ class VitalWrapper extends BaseVital {
   };
 }
 
-export default async ({ data = null, id = null }) => {
+export default async ({data = null, id = null}) => {
   if (data) {
     return new VitalWrapper(data);
   }
-  const vital = await VitalService.getByData({ id });
+  const vital = await VitalService.getByData({id});
   return new VitalWrapper(vital);
 };

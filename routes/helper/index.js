@@ -13,7 +13,7 @@ export const raiseClientError = (res, code = 422, error, message) => {
     code: code,
     error: error || errMessage.CLIENT_ERROR,
   };
-
+  
   const response = new Response(false, payload.code);
   response.setError(payload.error);
   response.setMessage(message);

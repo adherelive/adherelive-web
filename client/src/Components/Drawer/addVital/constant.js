@@ -485,8 +485,8 @@ const APPOINTMENT_FOR_CREATE_CONFIG = {
 };
 
 const getAppointmentDataForEdit = (event = {}, viewer, other) => {
-  const { activityType, activityMode } = event;
-
+  const {activityType, activityMode} = event;
+  
   return {
     activity: [
       {
@@ -566,13 +566,13 @@ const getAppointmentDataForCreate = (viewer, other) => {
 };
 
 export const getActivityBetween = ({
-  viewer = {},
-  other = {},
-  event = {},
-  edit = false,
-}) => {
-  const { basicInfo: { category: viewerCategory } = {} } = viewer;
-  const { basicInfo: { category: otherCategory = DEFAULT } = {} } = other;
+                                     viewer = {},
+                                     other = {},
+                                     event = {},
+                                     edit = false,
+                                   }) => {
+  const {basicInfo: {category: viewerCategory} = {}} = viewer;
+  const {basicInfo: {category: otherCategory = DEFAULT} = {}} = other;
   if (edit) {
     return getAppointmentDataForEdit(event, viewerCategory, otherCategory);
   } else {

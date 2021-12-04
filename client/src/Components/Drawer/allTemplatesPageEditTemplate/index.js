@@ -1,6 +1,6 @@
-import { Drawer } from "antd";
-import React, { Component, Fragment } from "react";
-import { injectIntl } from "react-intl";
+import {Drawer} from "antd";
+import React, {Component, Fragment} from "react";
+import {injectIntl} from "react-intl";
 import {
   DELETE_TEMPLATE_RELATED_TYPE,
   MEDICATION_TIMING,
@@ -30,7 +30,7 @@ import SyrupIcon from "../../../Assets/images/pharmacy.png";
 import uuid from "react-uuid";
 import messages from "./message";
 import Input from "antd/es/input";
-import { PoweroffOutlined } from "@ant-design/icons";
+import {PoweroffOutlined} from "@ant-design/icons";
 
 class TemplatePageCreateDrawer extends Component {
   constructor(props) {
@@ -73,20 +73,21 @@ class TemplatePageCreateDrawer extends Component {
       isWorkoutVisible: false,
     };
   }
-
-  componentDidMount() {}
-
+  
+  componentDidMount() {
+  }
+  
   componentDidUpdate(prevProps, prevState) {
     const {
       visible: prev_visible = false,
-      payload: { id: prev_id = null } = {},
+      payload: {id: prev_id = null} = {},
     } = prevProps || {};
-    const { visible = false, payload: { id: careplanTemplateID = null } = {} } =
+    const {visible = false, payload: {id: careplanTemplateID = null} = {}} =
       this.props;
-
+    
     if (visible && visible !== prev_visible) {
       console.log("3278562473254623 ==>", this.props);
-
+      
       let templateAppointments = {};
       let templateMedications = {};
       let templateVitals = {};
@@ -117,7 +118,7 @@ class TemplatePageCreateDrawer extends Component {
       let vitalIds = {};
       let dietIds = {};
       let workoutIds = {};
-
+      
       const {
         care_plan_templates = {},
         template_appointments = {},
@@ -126,20 +127,20 @@ class TemplatePageCreateDrawer extends Component {
         template_diets = {},
         template_workouts = {},
       } = this.props;
-
+      
       const {
-        basic_info: { name: careplanTemplateName = "", id = "" } = {},
+        basic_info: {name: careplanTemplateName = "", id = ""} = {},
         template_appointment_ids = [],
         template_medication_ids = [],
         template_vital_ids = [],
         template_diet_ids = [],
         template_workout_ids = [],
       } = care_plan_templates[careplanTemplateID] || {};
-
+      
       for (let aId of template_appointment_ids) {
         let newAppointment = {};
         let {
-          basic_info: { id: appointmentId = "" } = {},
+          basic_info: {id: appointmentId = ""} = {},
           reason = "",
           time_gap = null,
           details: {
@@ -153,13 +154,13 @@ class TemplatePageCreateDrawer extends Component {
           provider_id = "",
           provider_name = "",
         } = template_appointments[aId];
-
+        
         if (time_gap !== null) {
           date = moment().add(parseInt(time_gap), "days");
         } else {
           date = null;
         }
-
+        
         newAppointment = {
           id: appointmentId,
           reason,
@@ -175,15 +176,15 @@ class TemplatePageCreateDrawer extends Component {
           provider_id,
           provider_name,
         };
-
+        
         templateAppointments[aId] = newAppointment;
         appointmentIdsTemp[aId] = appointmentId;
       }
-
+      
       for (let mId of template_medication_ids) {
         let newMedication = {};
         const {
-          basic_info: { medicine_id = "", id: medicationId = "" } = {},
+          basic_info: {medicine_id = "", id: medicationId = ""} = {},
           schedule_data: {
             unit = "",
             repeat = "",
@@ -197,7 +198,7 @@ class TemplatePageCreateDrawer extends Component {
             when_to_take_abbr = "",
           } = {},
         } = template_medications[mId] || {};
-
+        
         newMedication = {
           id: medicationId,
           medicine_id,
@@ -214,16 +215,16 @@ class TemplatePageCreateDrawer extends Component {
             when_to_take_abbr,
           },
         };
-
+        
         templateMedications[mId] = newMedication;
         medicationIdsTemp[mId] = medicationId;
       }
-
+      
       for (let vId of template_vital_ids) {
         let newVital = {};
-
+        
         const {
-          basic_info: { vital_template_id = "", id: vitalId = "" } = {},
+          basic_info: {vital_template_id = "", id: vitalId = ""} = {},
           details: {
             duration = "",
             description = "",
@@ -231,7 +232,7 @@ class TemplatePageCreateDrawer extends Component {
             repeat_interval_id = "",
           } = {},
         } = template_vitals[vId];
-
+        
         newVital = {
           id: vitalId,
           vital_template_id,
@@ -242,11 +243,11 @@ class TemplatePageCreateDrawer extends Component {
             repeat_interval_id,
           },
         };
-
+        
         templateVitals[vId] = newVital;
         vitalIdsTemp[vId] = vitalId;
       }
-
+      
       for (let dId of template_diet_ids) {
         const {
           basic_info: {
@@ -263,14 +264,14 @@ class TemplatePageCreateDrawer extends Component {
             diet_food_groups = {},
           } = {},
         } = template_diets[dId] || {};
-
+        
         // const s_date=moment().toISOString();
         // const e_date=moment().add(parseInt(duration), 'days').toISOString();
-
+        
         // if(duration === null){
         //     e_date = null;
         // }
-
+        
         templateDiets[dId] = {
           id: dietId,
           care_plan_template_id,
@@ -283,10 +284,10 @@ class TemplatePageCreateDrawer extends Component {
             diet_food_groups,
           },
         };
-
+        
         dietIdsTemp[dId] = dietId;
       }
-
+      
       for (let wId of template_workout_ids) {
         const {
           basic_info: {
@@ -317,16 +318,16 @@ class TemplatePageCreateDrawer extends Component {
             workout_exercise_groups,
           },
         };
-
+        
         console.log("757567686478621371623712", {
           templateWorkouts,
           template_workout_ids,
           W: template_workouts[wId],
         });
-
+        
         workoutIdsTemp[wId] = workoutId;
       }
-
+      
       if (Object.keys(templateMedications).length) {
         for (let mId of Object.keys(templateMedications)) {
           let key = uuid();
@@ -343,7 +344,7 @@ class TemplatePageCreateDrawer extends Component {
           appointmentIds[key] = appointmentIdsTemp[aId];
         }
       }
-
+      
       if (Object.keys(templateVitals).length) {
         for (let vId of Object.keys(templateVitals)) {
           let key = uuid();
@@ -352,7 +353,7 @@ class TemplatePageCreateDrawer extends Component {
           vitalIds[key] = vitalIdsTemp[vId];
         }
       }
-
+      
       if (Object.keys(templateDiets).length) {
         for (let dId of Object.keys(templateDiets)) {
           let key = uuid();
@@ -361,9 +362,9 @@ class TemplatePageCreateDrawer extends Component {
           dietIds[key] = dietIdsTemp[dId];
         }
       }
-
-      console.log("757567686478621371623712 -==>> ", { templateWorkouts });
-
+      
+      console.log("757567686478621371623712 -==>> ", {templateWorkouts});
+      
       if (Object.keys(templateWorkouts).length) {
         for (let wId of Object.keys(templateWorkouts)) {
           let key = uuid();
@@ -372,13 +373,13 @@ class TemplatePageCreateDrawer extends Component {
           workoutIds[key] = workoutIdsTemp[wId];
         }
       }
-
+      
       console.log("757567686478621371623712 @@@@@@@@@@@ ", {
         newWorkouts,
         newWorkoutKeys,
         workoutIds,
       });
-
+      
       this.setState(
         {
           name: careplanTemplateName,
@@ -413,19 +414,19 @@ class TemplatePageCreateDrawer extends Component {
       );
     }
   }
-
+  
   formatMessage = (data) => this.props.intl.formatMessage(data);
-
+  
   showInnerForm = (innerFormType, innerFormKey) => () => {
     if (innerFormType === EVENT_TYPE.DIET) {
-      this.setState({ isDietVisible: true });
+      this.setState({isDietVisible: true});
     } else if (innerFormType === EVENT_TYPE.WORKOUT) {
-      this.setState({ isWorkoutVisible: true });
+      this.setState({isWorkoutVisible: true});
     }
-
-    this.setState({ innerFormType, innerFormKey, showInner: true });
+    
+    this.setState({innerFormType, innerFormKey, showInner: true});
   };
-
+  
   onCloseInner = () => {
     this.setState({
       showInner: false,
@@ -433,62 +434,62 @@ class TemplatePageCreateDrawer extends Component {
       isWorkoutVisible: false,
     });
   };
-
+  
   showAddMedication = () => {
-    this.setState({ showAddMedicationInner: true });
+    this.setState({showAddMedicationInner: true});
   };
-
+  
   closeAddMedication = () => {
-    this.setState({ showAddMedicationInner: false });
+    this.setState({showAddMedicationInner: false});
   };
-
+  
   showAddAppointment = () => {
-    this.setState({ showAddAppointmentInner: true });
+    this.setState({showAddAppointmentInner: true});
   };
-
+  
   closeAddAppointment = () => {
-    this.setState({ showAddAppointmentInner: false });
+    this.setState({showAddAppointmentInner: false});
   };
-
+  
   showAddVital = () => {
-    this.setState({ showAddVitalInner: true });
+    this.setState({showAddVitalInner: true});
   };
-
+  
   closeAddVital = () => {
-    this.setState({ showAddVitalInner: false });
+    this.setState({showAddVitalInner: false});
   };
-
+  
   showAddDiet = () => {
     this.setState({
       showAddDietInner: true,
       isDietVisible: true,
     });
   };
-
+  
   closeAddDiet = () => {
     this.setState({
       showAddDietInner: false,
       isDietVisible: false,
     });
   };
-
+  
   showAddWorkout = () => {
     this.setState({
       showAddWorkoutInner: true,
       isWorkoutVisible: true,
     });
   };
-
+  
   closeAddWorkout = () => {
     this.setState({
       showAddWorkoutInner: false,
       isWorkoutVisible: false,
     });
   };
-
+  
   async handleDeleteTemplateMed(key) {
-    const { deleteCareplanTemplateRelated } = this.props;
-    const { carePlanTemplateId = null, medicationIds = {} } = this.state;
+    const {deleteCareplanTemplateRelated} = this.props;
+    const {carePlanTemplateId = null, medicationIds = {}} = this.state;
     try {
       const other_id = medicationIds[key] || null;
       const response = await deleteCareplanTemplateRelated({
@@ -499,13 +500,13 @@ class TemplatePageCreateDrawer extends Component {
       const {
         status,
         statusCode,
-        payload: { data = {}, message: msg = "" } = {},
+        payload: {data = {}, message: msg = ""} = {},
       } = response;
       if (status) {
-        let { deleteMedicationKeys = [] } = this.state;
+        let {deleteMedicationKeys = []} = this.state;
         delete medicationIds[key];
         deleteMedicationKeys.splice(deleteMedicationKeys.indexOf(key), 1);
-        this.setState({ deleteMedicationKeys, medicationIds });
+        this.setState({deleteMedicationKeys, medicationIds});
         // message.success(msg);
       } else {
         message.warn(msg);
@@ -515,10 +516,10 @@ class TemplatePageCreateDrawer extends Component {
       message.warn(error);
     }
   }
-
+  
   async handleDeleteTemplateAppointment(key) {
-    const { deleteCareplanTemplateRelated } = this.props;
-    const { carePlanTemplateId = null, appointmentIds = {} } = this.state;
+    const {deleteCareplanTemplateRelated} = this.props;
+    const {carePlanTemplateId = null, appointmentIds = {}} = this.state;
     try {
       const other_id = appointmentIds[key] || null;
       const response = await deleteCareplanTemplateRelated({
@@ -526,17 +527,17 @@ class TemplatePageCreateDrawer extends Component {
         other_id,
         other_type: DELETE_TEMPLATE_RELATED_TYPE.APPOINTMENT,
       });
-
+      
       const {
         status,
         statusCode,
-        payload: { data = {}, message: msg = "" } = {},
+        payload: {data = {}, message: msg = ""} = {},
       } = response;
       if (status) {
-        let { deleteAppointmentKeys = [] } = this.state;
+        let {deleteAppointmentKeys = []} = this.state;
         delete appointmentIds[key];
         deleteAppointmentKeys.splice(deleteAppointmentKeys.indexOf(key), 1);
-        this.setState({ deleteAppointmentKeys, appointmentIds });
+        this.setState({deleteAppointmentKeys, appointmentIds});
         // message.success(msg);
       } else {
         message.warn(msg);
@@ -546,10 +547,10 @@ class TemplatePageCreateDrawer extends Component {
       message.warn(error);
     }
   }
-
+  
   async handleDeleteTemplateVital(key) {
-    const { deleteCareplanTemplateRelated } = this.props;
-    const { carePlanTemplateId = null, vitalIds = {} } = this.state;
+    const {deleteCareplanTemplateRelated} = this.props;
+    const {carePlanTemplateId = null, vitalIds = {}} = this.state;
     try {
       const other_id = vitalIds[key] || null;
       const response = await deleteCareplanTemplateRelated({
@@ -557,17 +558,17 @@ class TemplatePageCreateDrawer extends Component {
         other_id,
         other_type: DELETE_TEMPLATE_RELATED_TYPE.VITAL,
       });
-
+      
       const {
         status,
         statusCode,
-        payload: { data = {}, message: msg = "" } = {},
+        payload: {data = {}, message: msg = ""} = {},
       } = response;
       if (status) {
-        let { deleteVitalKeys = [] } = this.state;
+        let {deleteVitalKeys = []} = this.state;
         delete vitalIds[key];
         deleteVitalKeys.splice(deleteVitalKeys.indexOf(key), 1);
-        this.setState({ deleteVitalKeys, vitalIds });
+        this.setState({deleteVitalKeys, vitalIds});
         // message.success(msg);
       } else {
         message.warn(msg);
@@ -577,10 +578,10 @@ class TemplatePageCreateDrawer extends Component {
       message.warn(error);
     }
   }
-
+  
   async handleDeleteTemplateDiet(key) {
-    const { deleteCareplanTemplateRelated } = this.props;
-    const { carePlanTemplateId = null, dietIds = {} } = this.state;
+    const {deleteCareplanTemplateRelated} = this.props;
+    const {carePlanTemplateId = null, dietIds = {}} = this.state;
     try {
       const other_id = dietIds[key] || null;
       const response = await deleteCareplanTemplateRelated({
@@ -588,17 +589,17 @@ class TemplatePageCreateDrawer extends Component {
         other_id,
         other_type: DELETE_TEMPLATE_RELATED_TYPE.DIET,
       });
-
+      
       const {
         status,
         statusCode,
-        payload: { data = {}, message: msg = "" } = {},
+        payload: {data = {}, message: msg = ""} = {},
       } = response;
       if (status) {
-        let { deleteDietKeys = [] } = this.state;
+        let {deleteDietKeys = []} = this.state;
         delete dietIds[key];
         deleteDietKeys.splice(deleteDietKeys.indexOf(key), 1);
-        this.setState({ deleteDietKeys, dietIds });
+        this.setState({deleteDietKeys, dietIds});
         // message.success(msg);
       } else {
         message.warn(msg);
@@ -608,10 +609,10 @@ class TemplatePageCreateDrawer extends Component {
       message.warn(error);
     }
   }
-
+  
   async handleDeleteTemplateWorkout(key) {
-    const { deleteCareplanTemplateRelated } = this.props;
-    const { carePlanTemplateId = null, workoutIds = {} } = this.state;
+    const {deleteCareplanTemplateRelated} = this.props;
+    const {carePlanTemplateId = null, workoutIds = {}} = this.state;
     try {
       const other_id = workoutIds[key] || null;
       const response = await deleteCareplanTemplateRelated({
@@ -619,17 +620,17 @@ class TemplatePageCreateDrawer extends Component {
         other_id,
         other_type: DELETE_TEMPLATE_RELATED_TYPE.WORKOUT,
       });
-
+      
       const {
         status,
         statusCode,
-        payload: { data = {}, message: msg = "" } = {},
+        payload: {data = {}, message: msg = ""} = {},
       } = response;
       if (status) {
-        let { deleteWorkoutKeys = [] } = this.state;
+        let {deleteWorkoutKeys = []} = this.state;
         delete workoutIds[key];
         deleteWorkoutKeys.splice(deleteWorkoutKeys.indexOf(key), 1);
-        this.setState({ deleteWorkoutKeys, workoutIds });
+        this.setState({deleteWorkoutKeys, workoutIds});
         // message.success(msg);
       } else {
         message.warn(msg);
@@ -639,7 +640,7 @@ class TemplatePageCreateDrawer extends Component {
       message.warn(error);
     }
   }
-
+  
   deleteEntry = () => {
     let {
       appointments = {},
@@ -665,7 +666,7 @@ class TemplatePageCreateDrawer extends Component {
       deleteDietKeys = [],
       deleteWorkoutKeys = [],
     } = this.state;
-
+    
     const key = innerFormKey;
     if (medicationIds[key]) {
       deleteMedicationKeys.push(key);
@@ -678,7 +679,7 @@ class TemplatePageCreateDrawer extends Component {
     } else if (workoutIds[key]) {
       deleteWorkoutKeys.push(key);
     }
-
+    
     if (innerFormType == EVENT_TYPE.MEDICATION_REMINDER) {
       delete medications[innerFormKey];
       medicationKeys.splice(medicationKeys.indexOf(innerFormKey), 1);
@@ -695,7 +696,7 @@ class TemplatePageCreateDrawer extends Component {
       delete workouts[innerFormKey];
       workoutKeys.splice(workoutKeys.indexOf(innerFormKey), 1);
     }
-
+    
     this.setState({
       appointments,
       appointmentKeys,
@@ -711,11 +712,11 @@ class TemplatePageCreateDrawer extends Component {
     });
     this.onCloseInner();
   };
-
+  
   setTemplateName = (event) => {
-    this.setState({ name: event.target.value, templateEdited: true });
+    this.setState({name: event.target.value, templateEdited: true});
   };
-
+  
   validateData = (
     medicationsData,
     appointmentsData,
@@ -728,7 +729,7 @@ class TemplatePageCreateDrawer extends Component {
       message.error(this.formatMessage(messages.giveName));
       return false;
     }
-
+    
     for (let medication of medicationsData) {
       const {
         medicine_id = "",
@@ -745,7 +746,7 @@ class TemplatePageCreateDrawer extends Component {
           description = "",
         } = {},
       } = medication || {};
-
+      
       // console.log("198623861283 check", {
       //     condition: !medicine_id || !unit || !repeat || (unit !== MEDICINE_UNITS.ML && !quantity) ||  !repeat_days.length ||
       //         !medicine_type || (!duration && duration !== null) || !strength  || !when_to_take.length,
@@ -760,7 +761,7 @@ class TemplatePageCreateDrawer extends Component {
       //     duration,
       //     when_to_take
       // });
-
+      
       if (
         !medicine_id ||
         !unit ||
@@ -772,12 +773,12 @@ class TemplatePageCreateDrawer extends Component {
         !strength
       ) {
         // console.log("8932648723648723462387",{flag1:!medicine_type,flag2:(!duration && duration !== null),flag3:!strength,duration});
-
+        
         message.error("Medication Error");
         return false;
       }
     }
-
+    
     for (let appointment of appointmentsData) {
       const {
         reason = "",
@@ -793,7 +794,7 @@ class TemplatePageCreateDrawer extends Component {
         provider_id = "",
         // provider_name =''
       } = appointment || {};
-
+      
       if (
         !reason ||
         (!time_gap && time_gap !== null) ||
@@ -813,13 +814,13 @@ class TemplatePageCreateDrawer extends Component {
         //        dateIsssss:date,
         //        appointmentsData
         //    });
-
+        
         message.error(this.formatMessage(messages.appointmentError));
-
+        
         return false;
       }
     }
-
+    
     for (let vital of vitalsData) {
       const {
         vital_template_id,
@@ -830,7 +831,7 @@ class TemplatePageCreateDrawer extends Component {
           repeat_interval_id,
         } = {},
       } = vital;
-
+      
       if (
         !vital_template_id ||
         (!duration && duration !== null) ||
@@ -839,11 +840,11 @@ class TemplatePageCreateDrawer extends Component {
         !repeat_interval_id
       ) {
         message.error(this.formatMessage(messages.vitalError));
-
+        
         return false;
       }
     }
-
+    
     for (let diet of dietData) {
       const {
         id = null,
@@ -857,25 +858,25 @@ class TemplatePageCreateDrawer extends Component {
           diet_food_groups = {},
         } = {},
       } = diet;
-
+      
       if (
         repeat_days.length === 0 ||
         !name ||
         Object.keys(diet_food_groups).length === 0
       ) {
         message.error(this.formatMessage(messages.dietError));
-
+        
         return false;
       }
     }
-
+    
     for (let workout of workoutData) {
       const {
         name = "",
         time = null,
-        details: { repeat_days = [], workout_exercise_groups = {} } = {},
+        details: {repeat_days = [], workout_exercise_groups = {}} = {},
       } = workout;
-
+      
       if (
         !time ||
         repeat_days.length === 0 ||
@@ -883,13 +884,13 @@ class TemplatePageCreateDrawer extends Component {
         Object.keys(workout_exercise_groups).length === 0
       ) {
         message.error(this.formatMessage(messages.workoutError));
-
+        
         return false;
       }
     }
     return true;
   };
-
+  
   onSubmit = async () => {
     let {
       medications = {},
@@ -910,7 +911,7 @@ class TemplatePageCreateDrawer extends Component {
     let vitalsData = Object.values(vitals);
     let dietData = Object.values(diets);
     let workoutData = Object.values(workouts);
-
+    
     if (
       authenticated_category === USER_CATEGORY.HSP &&
       Object.keys(medications).length
@@ -918,7 +919,7 @@ class TemplatePageCreateDrawer extends Component {
       message.error(this.formatMessage(messages.medicationAccessError));
       return;
     }
-
+    
     let validate = this.validateData(
       medicationsData,
       appointmentsData,
@@ -942,7 +943,7 @@ class TemplatePageCreateDrawer extends Component {
         const deleteVitalArr = deleteVitalKeys;
         const deleteDietArr = deleteDietKeys;
         const deleteWorkoutArr = deleteWorkoutKeys;
-        this.setState({ submitting: true });
+        this.setState({submitting: true});
         const response = await updateCareplanTemplate(carePlanTemplateId, {
           medicationsData,
           appointmentsData,
@@ -951,9 +952,9 @@ class TemplatePageCreateDrawer extends Component {
           workoutData,
           name,
         });
-
+        
         const {
-          payload: { data = {}, message: res_msg = "" },
+          payload: {data = {}, message: res_msg = ""},
           status,
           statusCode,
         } = response || {};
@@ -961,23 +962,23 @@ class TemplatePageCreateDrawer extends Component {
           for (let key of deleteMedArr) {
             this.handleDeleteTemplateMed(key);
           }
-
+          
           for (let key of deleteAppArr) {
             this.handleDeleteTemplateAppointment(key);
           }
-
+          
           for (let key of deleteVitalArr) {
             this.handleDeleteTemplateVital(key);
           }
-
+          
           for (let key of deleteDietArr) {
             this.handleDeleteTemplateDiet(key);
           }
-
+          
           for (let key of deleteWorkoutArr) {
             this.handleDeleteTemplateWorkout(key);
           }
-
+          
           message.success(res_msg);
           this.setState({
             showInner: false,
@@ -1018,15 +1019,15 @@ class TemplatePageCreateDrawer extends Component {
         } else {
           message.error(res_msg);
         }
-        this.setState({ submitting: false });
+        this.setState({submitting: false});
       } catch (error) {
         console.log("error -->", error);
-        this.setState({ submitting: false });
+        this.setState({submitting: false});
         message.warn(error);
       }
     }
   };
-
+  
   warnNote = () => {
     return (
       <div className="pt16">
@@ -1037,11 +1038,11 @@ class TemplatePageCreateDrawer extends Component {
       </div>
     );
   };
-
+  
   handleCloseWarning = () => {
-    const { warnNote } = this;
-    const { close, getAllTemplatesForDoctor } = this.props;
-
+    const {warnNote} = this;
+    const {close, getAllTemplatesForDoctor} = this.props;
+    
     confirm({
       title: `${this.formatMessage(messages.closeMessage)}`,
       content: <div>{warnNote()}</div>,
@@ -1083,12 +1084,13 @@ class TemplatePageCreateDrawer extends Component {
         await getAllTemplatesForDoctor();
         close();
       },
-      onCancel() {},
+      onCancel() {
+      },
     });
   };
-
+  
   onClose = async () => {
-    const { close, getAllTemplatesForDoctor } = this.props;
+    const {close, getAllTemplatesForDoctor} = this.props;
     const {
       name = "",
       medicationKeys = [],
@@ -1102,7 +1104,7 @@ class TemplatePageCreateDrawer extends Component {
       this.handleCloseWarning();
       return;
     }
-
+    
     this.setState({
       showInner: false,
       medications: {},
@@ -1138,10 +1140,10 @@ class TemplatePageCreateDrawer extends Component {
       templateEdited: false,
     });
     await getAllTemplatesForDoctor();
-
+    
     close();
   };
-
+  
   renderTemplateDetails = () => {
     const {
       medications = {},
@@ -1157,14 +1159,14 @@ class TemplatePageCreateDrawer extends Component {
       carePlanTemplateIds = [],
       name = "",
     } = this.state;
-
+    
     const {
       care_plan_templates = {},
       repeat_intervals = {},
       vital_templates = {},
       medicines = {},
     } = this.props;
-
+    
     return (
       <div className="template-block">
         <div className="wp100 flex direction-row align-center ">
@@ -1173,18 +1175,18 @@ class TemplatePageCreateDrawer extends Component {
           </div>
           <div className="star-red fs22">*</div>
         </div>
-
+        
         <div className="wp100 flex align-center justify-space-between">
           <Input
             placeholder={this.formatMessage(messages.namePlaceholder)}
             className={"form-inputs wp100 "}
             onChange={this.setTemplateName}
-            style={{ width: "100%", alignSelf: "flex-start" }}
+            style={{width: "100%", alignSelf: "flex-start"}}
             value={name}
             required={true}
           />
         </div>
-
+        
         <div className="wp100 flex align-center justify-space-between">
           <div className="form-category-headings-ap ">{"Medications"}</div>
           {medicationKeys.length > 0 ? (
@@ -1197,7 +1199,7 @@ class TemplatePageCreateDrawer extends Component {
             </div>
           )}
         </div>
-
+        
         {medicationKeys.map((key) => {
           let {
             medicine_id = "",
@@ -1214,9 +1216,9 @@ class TemplatePageCreateDrawer extends Component {
               when_to_take_abbr = "",
             } = {},
           } = medications[key];
-
-          const { basic_info: { name: medicine = "" } = {} } =
-            medicines[medicine_id] || {};
+          
+          const {basic_info: {name: medicine = ""} = {}} =
+          medicines[medicine_id] || {};
           console.log("3278562473254623 ===> when_to_take", {
             when_to_take,
             med: medications[key],
@@ -1225,11 +1227,11 @@ class TemplatePageCreateDrawer extends Component {
           let nextDueTime = moment().format("HH:MM A");
           let closestWhenToTake = 0;
           let minDiff = 0;
-
+          
           const date = moment();
           const dow = date.day();
           let dayNum = dow;
-
+          
           if (
             typeof DAYS_TEXT_NUM_SHORT[dow] !== "undefined" &&
             !repeat_days.includes(DAYS_TEXT_NUM_SHORT[dow])
@@ -1237,7 +1239,7 @@ class TemplatePageCreateDrawer extends Component {
             while (
               typeof DAYS_TEXT_NUM_SHORT[dayNum] !== "undefined" &&
               !repeat_days.includes(DAYS_TEXT_NUM_SHORT[dayNum])
-            ) {
+              ) {
               if (dayNum > 7) {
                 dayNum = 1;
               } else {
@@ -1246,7 +1248,7 @@ class TemplatePageCreateDrawer extends Component {
             }
             start_date = moment().isoWeekday(dayNum);
           }
-
+          
           if (moment(start_date).isSame(moment(), "D")) {
             if (when_to_take.length > 0) {
               for (let wtt of when_to_take) {
@@ -1260,15 +1262,15 @@ class TemplatePageCreateDrawer extends Component {
                   minDiff === 0 && newMinDiff > 0
                     ? newMinDiff
                     : newMinDiff > 0 && newMinDiff < minDiff
-                    ? newMinDiff
-                    : minDiff;
+                      ? newMinDiff
+                      : minDiff;
                 closestWhenToTake =
                   minDiff === newMinDiff ? wtt : closestWhenToTake;
               }
             }
           }
           let medTimingsToShow = "";
-
+          
           if (when_to_take.length > 0) {
             for (let wtt in when_to_take) {
               let timing_temp = MEDICATION_TIMING[when_to_take[wtt]];
@@ -1286,7 +1288,7 @@ class TemplatePageCreateDrawer extends Component {
           }
           nextDueTime =
             MEDICATION_TIMING[closestWhenToTake ? closestWhenToTake : "4"].time;
-
+          
           let nextDue = null;
           if (when_to_take.length > 0) {
             const whenTotakeTime =
@@ -1299,7 +1301,7 @@ class TemplatePageCreateDrawer extends Component {
           } else {
             nextDue = this.formatMessage(messages.sosMessage);
           }
-
+          
           return (
             <div className="flex wp100 flex-grow-1 align-center" key={key}>
               <div className="drawer-block">
@@ -1314,18 +1316,18 @@ class TemplatePageCreateDrawer extends Component {
                           medicine_type === TABLET
                             ? TabletIcon
                             : medicine_type === SYRUP
-                            ? SyrupIcon
-                            : InjectionIcon
+                              ? SyrupIcon
+                              : InjectionIcon
                         }
                         className={"medication-image-tablet"}
                       />
                     )}
                   </div>
-
+                  
                   <Icon
                     type="edit"
                     className="ml20"
-                    style={{ color: "#4a90e2" }}
+                    style={{color: "#4a90e2"}}
                     theme="filled"
                     onClick={this.showInnerForm(
                       EVENT_TYPE.MEDICATION_REMINDER,
@@ -1333,7 +1335,7 @@ class TemplatePageCreateDrawer extends Component {
                     )}
                   />
                 </div>
-
+                
                 <div className="drawer-block-description">
                   {medTimingsToShow}
                 </div>
@@ -1342,7 +1344,7 @@ class TemplatePageCreateDrawer extends Component {
             </div>
           );
         })}
-
+        
         <div className="wp100 flex align-center justify-space-between">
           <div className="form-category-headings-ap align-self-start">
             {this.formatMessage(messages.appointments)}
@@ -1364,10 +1366,10 @@ class TemplatePageCreateDrawer extends Component {
           });
           let {
             reason = "",
-            details: { description = "", date = "" } = {},
+            details: {description = "", date = ""} = {},
             time_gap = "",
           } = appointments[key];
-
+          
           return (
             <div className="flex wp100 flex-grow-1 align-center" key={key}>
               <div className="drawer-block">
@@ -1376,7 +1378,7 @@ class TemplatePageCreateDrawer extends Component {
                   <Icon
                     type="edit"
                     className="ml20"
-                    style={{ color: "#4a90e2" }}
+                    style={{color: "#4a90e2"}}
                     theme="filled"
                     onClick={this.showInnerForm(EVENT_TYPE.APPOINTMENT, key)}
                   />
@@ -1385,15 +1387,15 @@ class TemplatePageCreateDrawer extends Component {
                   {date
                     ? `After ${moment(date).diff(moment(), "days") + 1} days`
                     : time_gap
-                    ? `After ${time_gap} days`
-                    : ""}
+                      ? `After ${time_gap} days`
+                      : ""}
                 </div>
                 <div className="drawer-block-description">{`Notes:${description}`}</div>
               </div>
             </div>
           );
         })}
-
+        
         <div className="wp100 flex align-center justify-space-between">
           <div className="form-category-headings-ap align-self-start">
             {this.formatMessage(messages.actions)}
@@ -1418,12 +1420,12 @@ class TemplatePageCreateDrawer extends Component {
               repeat_interval_id = "",
             } = {},
           } = vitals[key];
-
-          const { basic_info: { name: vital_name = "" } = {} } =
+          
+          const {basic_info: {name: vital_name = ""} = {}} =
             vital_templates[vital_template_id];
           const repeatObj = repeat_intervals[repeat_interval_id];
           const vital_repeat = repeatObj["text"];
-
+          
           return (
             <div className="flex wp100 flex-grow-1 align-center" key={key}>
               <div className="drawer-block">
@@ -1432,7 +1434,7 @@ class TemplatePageCreateDrawer extends Component {
                   <Icon
                     type="edit"
                     className="ml20"
-                    style={{ color: "#4a90e2" }}
+                    style={{color: "#4a90e2"}}
                     theme="filled"
                     onClick={this.showInnerForm(EVENT_TYPE.VITALS, key)}
                   />
@@ -1443,7 +1445,7 @@ class TemplatePageCreateDrawer extends Component {
             </div>
           );
         })}
-
+        
         <div className="wp100 flex align-center justify-space-between">
           <div className="form-category-headings-ap align-self-start">
             {this.formatMessage(messages.diets)}
@@ -1462,11 +1464,11 @@ class TemplatePageCreateDrawer extends Component {
           const {
             name = "",
             total_calories = 0,
-            details: { repeat_days = [] } = {},
+            details: {repeat_days = []} = {},
           } = diets[key] || {};
-
+          
           const repeat = repeat_days.length ? repeat_days.toString() : "";
-
+          
           return (
             <div className="flex wp100 flex-grow-1 align-center" key={key}>
               <div className="drawer-block">
@@ -1475,7 +1477,7 @@ class TemplatePageCreateDrawer extends Component {
                   <Icon
                     type="edit"
                     className="ml20"
-                    style={{ color: "#4a90e2" }}
+                    style={{color: "#4a90e2"}}
                     theme="filled"
                     onClick={this.showInnerForm(EVENT_TYPE.DIET, key)}
                   />
@@ -1488,7 +1490,7 @@ class TemplatePageCreateDrawer extends Component {
             </div>
           );
         })}
-
+        
         <div className="wp100 flex align-center justify-space-between">
           <div className="form-category-headings-ap align-self-start">
             {this.formatMessage(messages.workouts)}
@@ -1507,11 +1509,11 @@ class TemplatePageCreateDrawer extends Component {
           const {
             name = "",
             total_calories = 0,
-            details: { repeat_days = [] } = {},
+            details: {repeat_days = []} = {},
           } = workouts[key] || {};
-
+          
           const repeat = repeat_days.length ? repeat_days.toString() : "";
-
+          
           return (
             <div className="flex wp100 flex-grow-1 align-center" key={key}>
               <div className="drawer-block">
@@ -1520,7 +1522,7 @@ class TemplatePageCreateDrawer extends Component {
                   <Icon
                     type="edit"
                     className="ml20"
-                    style={{ color: "#4a90e2" }}
+                    style={{color: "#4a90e2"}}
                     theme="filled"
                     onClick={this.showInnerForm(EVENT_TYPE.WORKOUT, key)}
                   />
@@ -1536,21 +1538,21 @@ class TemplatePageCreateDrawer extends Component {
       </div>
     );
   };
-
+  
   getDuration = (startDate, endDate) => {
     return moment(endDate)
       .startOf("day")
       .diff(moment(startDate).startOf("day"), "days");
   };
-
+  
   editMedication = (data) => {
     let {
       medications = {},
       innerFormKey = "",
       medicationIds = {},
     } = this.state;
-    let { medicines } = this.props;
-    const { getDuration } = this;
+    let {medicines} = this.props;
+    const {getDuration} = this;
     let newMedication = medications[innerFormKey];
     const {
       end_date = "",
@@ -1567,15 +1569,15 @@ class TemplatePageCreateDrawer extends Component {
       when_to_take = ["3"],
       when_to_take_abbr = "",
     } = data;
-
-    const { basic_info: { name = "", type = "" } = {} } =
+    
+    const {basic_info: {name = "", type = ""} = {}} =
       medicines[medicine_id];
-
+    
     let duration = getDuration(start_date, end_date);
     if (!end_date) {
       duration = null;
     }
-
+    
     newMedication = {
       medicine_id,
       schedule_data: {
@@ -1591,21 +1593,21 @@ class TemplatePageCreateDrawer extends Component {
         when_to_take_abbr,
       },
     };
-
+    
     if (medicationIds[innerFormKey]) {
       const id = medicationIds[innerFormKey];
       newMedication["id"] = id;
     }
-
+    
     medications[innerFormKey] = newMedication;
-    this.setState({ medications, templateEdited: true }, () => {
+    this.setState({medications, templateEdited: true}, () => {
       this.onCloseInner();
     });
   };
-
+  
   editVital = (data) => {
-    let { vitals = {}, innerFormKey = "", vitalIds = {} } = this.state;
-    let { vital_templates = {} } = this.props;
+    let {vitals = {}, innerFormKey = "", vitalIds = {}} = this.state;
+    let {vital_templates = {}} = this.props;
     let newVital = vitals[innerFormKey] || {};
     const {
       end_date = "",
@@ -1615,18 +1617,18 @@ class TemplatePageCreateDrawer extends Component {
       repeat_interval_id = "",
       description = "",
     } = data;
-
-    const { basic_info: { name = "" } = {} } =
+    
+    const {basic_info: {name = ""} = {}} =
       vital_templates[vital_template_id];
     let vitalExist = false;
-
+    
     let duration = moment(end_date).diff(moment(start_date), "days");
     if (!end_date) {
       duration = null;
     }
-
+    
     for (let key of Object.keys(vitals)) {
-      let { vital_template_id: vId = "" } = vitals[key];
+      let {vital_template_id: vId = ""} = vitals[key];
       const vital = vitals[key];
       if (
         parseInt(vital_template_id) === parseInt(vId) &&
@@ -1635,7 +1637,7 @@ class TemplatePageCreateDrawer extends Component {
         vitalExist = true;
       }
     }
-
+    
     const s_date = moment(start_date);
     let e_date = "";
     if (end_date === null) {
@@ -1655,28 +1657,28 @@ class TemplatePageCreateDrawer extends Component {
           repeat_interval_id,
         },
       };
-
+      
       if (vitalIds[innerFormKey]) {
         const id = vitalIds[innerFormKey];
         newVital["id"] = id;
       }
-
+      
       vitals[innerFormKey] = newVital;
-
-      this.setState({ vitals, templateEdited: true }, () => {
+      
+      this.setState({vitals, templateEdited: true}, () => {
         this.onCloseInner();
         // this.props.dispatchClose();
       });
     }
   };
-
+  
   editAppointment = (data) => {
     const {
       appointments = {},
       innerFormKey = "",
       appointmentIds = {},
     } = this.state;
-
+    
     let {
       date = {},
       description = "",
@@ -1693,19 +1695,19 @@ class TemplatePageCreateDrawer extends Component {
       treatment_id = "",
       reason = "",
     } = data;
-
+    
     let newAppointment = appointments[innerFormKey];
-
+    
     const today = moment();
     const selectedDate = date;
     let diff = selectedDate.diff(today, "days");
     const time_gap = typeof diff === "number" ? diff + 1 : 0;
-
+    
     if (!date || !start_time) {
       message.error(this.formatMessage(messages.appointmentError));
       return;
     }
-
+    
     newAppointment = {
       reason,
       time_gap,
@@ -1720,18 +1722,18 @@ class TemplatePageCreateDrawer extends Component {
       provider_id,
       provider_name,
     };
-
+    
     if (appointmentIds[innerFormKey]) {
       const id = appointmentIds[innerFormKey];
       newAppointment["id"] = id;
     }
-
+    
     appointments[innerFormKey] = newAppointment;
-    this.setState({ appointments, templateEdited: true }, () => {
+    this.setState({appointments, templateEdited: true}, () => {
       this.onCloseInner();
     });
   };
-
+  
   addMedication = (data) => {
     const {
       end_date = "",
@@ -1748,18 +1750,18 @@ class TemplatePageCreateDrawer extends Component {
       when_to_take = ["3"],
       when_to_take_abbr = "",
     } = data;
-
-    let { medications = {}, medicationKeys = [] } = this.state;
-    let { medicines } = this.props;
+    
+    let {medications = {}, medicationKeys = []} = this.state;
+    let {medicines} = this.props;
     let newMedication = {};
-    const { basic_info: { name = "", type = "" } = {} } =
-      medicines[medicine_id] || {};
-
+    const {basic_info: {name = "", type = ""} = {}} =
+    medicines[medicine_id] || {};
+    
     let duration = moment(end_date).diff(moment(start_date), "days");
     if (!end_date) {
       duration = null;
     }
-
+    
     newMedication = {
       medicine_id,
       schedule_data: {
@@ -1778,31 +1780,31 @@ class TemplatePageCreateDrawer extends Component {
     let key = uuid();
     let medicineExist = false;
     for (let medication of Object.values(medications)) {
-      let { medicine_id: medId = 1 } = medication;
+      let {medicine_id: medId = 1} = medication;
       if (parseInt(medicine_id) === parseInt(medId)) {
         medicineExist = true;
       }
     }
-
+    
     if (medicineExist) {
       message.error(this.formatMessage(messages.medicationExist));
     } else {
       medicationKeys.push(key);
       medications[key] = newMedication;
       this.setState(
-        { medications, medicationKeys, templateEdited: true },
+        {medications, medicationKeys, templateEdited: true},
         () => {
           this.closeAddMedication();
         }
       );
     }
   };
-
+  
   addVital = (data) => {
-    const { vital_templates = {} } = this.props;
+    const {vital_templates = {}} = this.props;
     let newVital = {};
-    let { vitals = {}, vitalKeys = [] } = this.state;
-
+    let {vitals = {}, vitalKeys = []} = this.state;
+    
     const {
       end_date = "",
       vital_template_id = "",
@@ -1811,24 +1813,24 @@ class TemplatePageCreateDrawer extends Component {
       repeat_interval_id = "",
       description = "",
     } = data;
-
-    const { basic_info: { name = "" } = {} } =
+    
+    const {basic_info: {name = ""} = {}} =
       vital_templates[vital_template_id];
-
+    
     let duration = moment(end_date).diff(moment(start_date), "days");
     if (!end_date) {
       duration = null;
     }
-
+    
     let key = uuid();
     let vitalExist = false;
     for (let vital of Object.values(vitals)) {
-      let { vital_template_id: vId = "" } = vital;
+      let {vital_template_id: vId = ""} = vital;
       if (parseInt(vital_template_id) === parseInt(vId)) {
         vitalExist = true;
       }
     }
-
+    
     if (vitalExist) {
       message.error(this.formatMessage(messages.vitalExist));
     } else {
@@ -1842,14 +1844,14 @@ class TemplatePageCreateDrawer extends Component {
           repeat_interval_id,
         },
       };
-      this.setState({ vitals, vitalKeys, templateEdited: true }, () => {
+      this.setState({vitals, vitalKeys, templateEdited: true}, () => {
         this.closeAddVital();
       });
     }
   };
-
+  
   addAppointment = (data) => {
-    let { appointments = {}, appointmentKeys = [] } = this.state;
+    let {appointments = {}, appointmentKeys = []} = this.state;
     let key = uuid();
     let {
       date = {},
@@ -1865,17 +1867,17 @@ class TemplatePageCreateDrawer extends Component {
       reason = "",
     } = data;
     let newAppointment = {};
-
+    
     const today = moment();
     const selectedDate = date;
     let diff = selectedDate.diff(today, "days");
     const time_gap = typeof diff === "number" ? diff + 1 : 0;
-
+    
     if (!date || !start_time) {
       message.error(this.formatMessage(messages.appointmentError));
       return;
     }
-
+    
     newAppointment = {
       reason,
       time_gap,
@@ -1890,20 +1892,20 @@ class TemplatePageCreateDrawer extends Component {
       provider_id,
       provider_name,
     };
-
+    
     appointments[key] = newAppointment;
     appointmentKeys.push(key);
     this.setState(
-      { appointments, appointmentKeys, templateEdited: true },
+      {appointments, appointmentKeys, templateEdited: true},
       () => {
         this.closeAddAppointment();
       }
     );
   };
-
+  
   addDiet = (data) => {
-    let { diets = {}, dietKeys = [] } = this.state;
-
+    let {diets = {}, dietKeys = []} = this.state;
+    
     const {
       name = "",
       repeat_days = [],
@@ -1913,22 +1915,22 @@ class TemplatePageCreateDrawer extends Component {
       end_date = "",
       not_to_do = "",
     } = data;
-
+    
     let key = uuid();
-
+    
     let dietNameExists = false;
     for (let diet of Object.values(diets)) {
-      let { name: existing_name = "" } = diet;
+      let {name: existing_name = ""} = diet;
       if (name === existing_name) {
         dietNameExists = true;
       }
     }
-
+    
     let duration = moment(end_date).diff(moment(start_date), "days") || null;
     if (!end_date) {
       duration = null;
     }
-
+    
     if (dietNameExists) {
       message.error(this.formatMessage(messages.dietNameExist));
     } else {
@@ -1943,16 +1945,16 @@ class TemplatePageCreateDrawer extends Component {
           diet_food_groups,
         },
       };
-
-      this.setState({ diets, dietKeys, templateEdited: true }, () => {
+      
+      this.setState({diets, dietKeys, templateEdited: true}, () => {
         this.closeAddDiet();
       });
     }
   };
-
+  
   editDiet = (data) => {
-    let { diets = {}, innerFormKey = "", dietIds = [] } = this.state;
-
+    let {diets = {}, innerFormKey = "", dietIds = []} = this.state;
+    
     const {
       name = "",
       repeat_days = [],
@@ -1962,21 +1964,21 @@ class TemplatePageCreateDrawer extends Component {
       end_date = "",
       not_to_do = "",
     } = data;
-
+    
     let dietNameExists = false;
     for (let dietKey in diets) {
       const diet = diets[dietKey];
-      let { name: existing_name = "" } = diet;
+      let {name: existing_name = ""} = diet;
       if (name === existing_name && dietKey !== innerFormKey) {
         dietNameExists = true;
       }
     }
-
+    
     let duration = moment(end_date).diff(moment(start_date), "days") || null;
     if (!end_date) {
       duration = null;
     }
-
+    
     if (dietNameExists) {
       message.error(this.formatMessage(messages.dietNameExist));
     } else {
@@ -1990,22 +1992,22 @@ class TemplatePageCreateDrawer extends Component {
           diet_food_groups,
         },
       };
-
+      
       if (dietIds[innerFormKey]) {
         const id = dietIds[innerFormKey];
         newDiet["id"] = id;
       }
-
+      
       diets[innerFormKey] = newDiet;
-      this.setState({ diets, templateEdited: true }, () => {
+      this.setState({diets, templateEdited: true}, () => {
         this.onCloseInner();
       });
     }
   };
-
+  
   addWorkout = (data) => {
-    let { workouts = {}, workoutKeys = [] } = this.state;
-
+    let {workouts = {}, workoutKeys = []} = this.state;
+    
     const {
       name = "",
       repeat_days = [],
@@ -2016,22 +2018,22 @@ class TemplatePageCreateDrawer extends Component {
       not_to_do = "",
       time = null,
     } = data;
-
+    
     let key = uuid();
-
+    
     let workoutNameExists = false;
     for (let workout of Object.values(workouts)) {
-      let { name: existing_name = "" } = workout;
+      let {name: existing_name = ""} = workout;
       if (name === existing_name) {
         workoutNameExists = true;
       }
     }
-
+    
     let duration = moment(end_date).diff(moment(start_date), "days") || null;
     if (!end_date) {
       duration = null;
     }
-
+    
     if (workoutNameExists) {
       message.error(this.formatMessage(messages.workoutNameExist));
     } else {
@@ -2047,16 +2049,16 @@ class TemplatePageCreateDrawer extends Component {
           workout_exercise_groups,
         },
       };
-
-      this.setState({ workouts, workoutKeys, templateEdited: true }, () => {
+      
+      this.setState({workouts, workoutKeys, templateEdited: true}, () => {
         this.closeAddWorkout();
       });
     }
   };
-
+  
   editWorkout = (data) => {
-    let { workouts = {}, innerFormKey = "", workoutIds = [] } = this.state;
-
+    let {workouts = {}, innerFormKey = "", workoutIds = []} = this.state;
+    
     const {
       name = "",
       repeat_days = [],
@@ -2067,21 +2069,21 @@ class TemplatePageCreateDrawer extends Component {
       not_to_do = "",
       time = null,
     } = data;
-
+    
     let workoutNameExists = false;
     for (let workoutKey in workouts) {
       const workout = workouts[workoutKey];
-      let { name: existing_name = "" } = workout;
+      let {name: existing_name = ""} = workout;
       if (name === existing_name && workoutKey !== innerFormKey) {
         workoutNameExists = true;
       }
     }
-
+    
     let duration = moment(end_date).diff(moment(start_date), "days") || null;
     if (!end_date) {
       duration = null;
     }
-
+    
     if (workoutNameExists) {
       message.error(this.formatMessage(messages.workoutNameExist));
     } else {
@@ -2096,19 +2098,19 @@ class TemplatePageCreateDrawer extends Component {
           workout_exercise_groups,
         },
       };
-
+      
       if (workoutIds[innerFormKey]) {
         const id = workoutIds[innerFormKey];
         newWorkout["id"] = id;
       }
-
+      
       workouts[innerFormKey] = newWorkout;
-      this.setState({ workouts, templateEdited: true }, () => {
+      this.setState({workouts, templateEdited: true}, () => {
         this.onCloseInner();
       });
     }
   };
-
+  
   warnNoteTemplateDelete = () => {
     return (
       <div className="pt16">
@@ -2119,26 +2121,26 @@ class TemplatePageCreateDrawer extends Component {
       </div>
     );
   };
-
+  
   handleTemplateDelete = (e) => {
     e.preventDefault();
-    const { warnNoteTemplateDelete } = this;
-    const { close } = this.props;
-
+    const {warnNoteTemplateDelete} = this;
+    const {close} = this.props;
+    
     confirm({
       title: `${this.formatMessage(messages.deleteTemplateNote)}`,
       content: <div>{warnNoteTemplateDelete()}</div>,
       onOk: async () => {
-        const { deleteCareplanTemplateRelated, getAllTemplatesForDoctor } =
+        const {deleteCareplanTemplateRelated, getAllTemplatesForDoctor} =
           this.props;
-        const { carePlanTemplateId = null } = this.state;
+        const {carePlanTemplateId = null} = this.state;
         try {
           const response = await deleteCareplanTemplateRelated({
             careplan_template_id: carePlanTemplateId,
           });
-
+          
           const {
-            payload: { data = {}, message: msg = "" } = {},
+            payload: {data = {}, message: msg = ""} = {},
             status,
             statusCode,
           } = response || {};
@@ -2152,7 +2154,7 @@ class TemplatePageCreateDrawer extends Component {
           console.log("Delete Template Error --->", error);
           message.warn(error);
         }
-
+        
         this.setState({
           showInner: false,
           medications: {},
@@ -2187,13 +2189,14 @@ class TemplatePageCreateDrawer extends Component {
           deleteWorkoutKeys: [],
           templateEdited: false,
         });
-
+        
         close();
       },
-      onCancel() {},
+      onCancel() {
+      },
     });
   };
-
+  
   render() {
     let {
       showInner,
@@ -2215,12 +2218,12 @@ class TemplatePageCreateDrawer extends Component {
       isDietVisible = false,
       isWorkoutVisible = false,
     } = this.state;
-    const { onClose, renderTemplateDetails } = this;
+    const {onClose, renderTemplateDetails} = this;
     let medicationData =
       innerFormKey && innerFormType == EVENT_TYPE.MEDICATION_REMINDER
         ? medications[innerFormKey]
         : {};
-
+    
     let appointmentData =
       innerFormKey && innerFormType == EVENT_TYPE.APPOINTMENT
         ? appointments[innerFormKey]
@@ -2237,22 +2240,22 @@ class TemplatePageCreateDrawer extends Component {
       innerFormKey && innerFormType == EVENT_TYPE.WORKOUT
         ? workouts[innerFormKey]
         : {};
-
+    
     console.log("42364872634872638476283746237", {
       state: this.state,
       workoutData,
     });
-
-    const { visible = false, close } = this.props;
-
+    
+    const {visible = false, close} = this.props;
+    
     if (medicationData) {
       medicationData.templatePage = true;
     }
-
+    
     if (visible !== true) {
       return null;
     }
-
+    
     return (
       <Fragment>
         <Drawer
@@ -2271,9 +2274,9 @@ class TemplatePageCreateDrawer extends Component {
           visible={visible}
         >
           {renderTemplateDetails()}
-
+          
           {/* edit */}
-
+          
           {innerFormKey && innerFormType == EVENT_TYPE.MEDICATION_REMINDER && (
             <EditMedicationReminder
               medicationData={medicationData}
@@ -2283,7 +2286,7 @@ class TemplatePageCreateDrawer extends Component {
               deleteMedicationOfTemplate={this.deleteEntry}
             />
           )}
-
+          
           {innerFormKey && innerFormType == EVENT_TYPE.APPOINTMENT && (
             <EditAppointmentDrawer
               appointmentData={appointmentData}
@@ -2293,7 +2296,7 @@ class TemplatePageCreateDrawer extends Component {
               deleteAppointmentOfTemplate={this.deleteEntry}
             />
           )}
-
+          
           {innerFormKey && innerFormType == EVENT_TYPE.VITALS && (
             <EditVitalDrawer
               vitalData={vitalData}
@@ -2303,7 +2306,7 @@ class TemplatePageCreateDrawer extends Component {
               deleteVitalOfTemplate={this.deleteEntry}
             />
           )}
-
+          
           {innerFormKey && innerFormType == EVENT_TYPE.DIET && (
             <EditDietDrawer
               dietData={dietData}
@@ -2314,7 +2317,7 @@ class TemplatePageCreateDrawer extends Component {
               isDietVisible={isDietVisible}
             />
           )}
-
+          
           {innerFormKey && innerFormType == EVENT_TYPE.WORKOUT && (
             <EditWorkoutDrawer
               workoutData={workoutData}
@@ -2325,7 +2328,7 @@ class TemplatePageCreateDrawer extends Component {
               isWorkoutVisible={isWorkoutVisible}
             />
           )}
-
+          
           {/* add */}
           {showAddMedicationInner && (
             <EditMedicationReminder
@@ -2334,7 +2337,7 @@ class TemplatePageCreateDrawer extends Component {
               hideMedication={this.closeAddMedication}
             />
           )}
-
+          
           {showAddAppointmentInner && (
             <EditAppointmentDrawer
               appointmentVisible={showAddAppointmentInner}
@@ -2342,7 +2345,7 @@ class TemplatePageCreateDrawer extends Component {
               hideAppointment={this.closeAddAppointment}
             />
           )}
-
+          
           {showAddVitalInner && (
             <EditVitalDrawer
               vitalVisible={showAddVitalInner}
@@ -2350,7 +2353,7 @@ class TemplatePageCreateDrawer extends Component {
               hideVital={this.closeAddVital}
             />
           )}
-
+          
           {showAddDietInner && (
             <EditDietDrawer
               dietVisible={showAddDietInner}
@@ -2359,7 +2362,7 @@ class TemplatePageCreateDrawer extends Component {
               isDietVisible={isDietVisible}
             />
           )}
-
+          
           {showAddWorkoutInner && (
             <EditWorkoutDrawer
               workoutVisible={showAddWorkoutInner}
@@ -2368,7 +2371,7 @@ class TemplatePageCreateDrawer extends Component {
               isWorkoutVisible={isWorkoutVisible}
             />
           )}
-
+          
           <div className="add-patient-footer">
             <Button
               onClick={this.handleTemplateDelete}
@@ -2382,7 +2385,7 @@ class TemplatePageCreateDrawer extends Component {
               onClick={this.onSubmit}
               type="primary"
               disabled={!name || !templateEdited}
-              icon={submitting ? <PoweroffOutlined /> : null}
+              icon={submitting ? <PoweroffOutlined/> : null}
               loading={submitting}
             >
               {this.formatMessage(messages.submit)}

@@ -1,11 +1,11 @@
-import { connect } from "react-redux";
-import { withRouter } from "react-router-dom";
+import {connect} from "react-redux";
+import {withRouter} from "react-router-dom";
 import PrivacyPolicy from "../../../Components/Pages/PrivacyPolicy";
-import { getTermsAndPolicy } from "../../../modules/otherDetails";
+import {getTermsAndPolicy} from "../../../modules/otherDetails";
 
 const mapStateToProps = (state) => {
   const {} = state;
-
+  
   return {};
 };
 

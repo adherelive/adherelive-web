@@ -3,7 +3,7 @@ import Authenticate from "../middleware/auth";
 import Authorize from "../middleware/authorize";
 
 import WorkoutResponse from "../../../app/controllers/workoutResponses/workoutResponse.controller";
-import { USER_CATEGORY } from "../../../constant";
+import {USER_CATEGORY} from "../../../constant";
 
 const router = express.Router();
 

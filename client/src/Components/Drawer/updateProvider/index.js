@@ -1,13 +1,13 @@
-import React, { Component, Fragment } from "react";
-import { injectIntl } from "react-intl";
-import { Drawer, Select, Input } from "antd";
+import React, {Component, Fragment} from "react";
+import {injectIntl} from "react-intl";
+import {Drawer, Select, Input} from "antd";
 import message from "antd/es/message";
 import Footer from "../footer";
 import Form from "antd/es/form";
 import messages from "./message";
 
 import UpdateProviderForm from "./form";
-import { SAVINGS, CURRENT, ACCOUNT_TYPES } from "../../../constant";
+import {SAVINGS, CURRENT, ACCOUNT_TYPES} from "../../../constant";
 
 class updateProviderDrawer extends Component {
   constructor(props) {
@@ -15,31 +15,32 @@ class updateProviderDrawer extends Component {
     this.state = {
       submitting: false,
     };
-
-    this.FormWrapper = Form.create({ onFieldsChange: this.onFormFieldChanges })(
+    
+    this.FormWrapper = Form.create({onFieldsChange: this.onFormFieldChanges})(
       UpdateProviderForm
     );
   }
-
-  componentDidMount() {}
-
+  
+  componentDidMount() {
+  }
+  
   formatMessage = (data) => this.props.intl.formatMessage(data);
-
+  
   onClose = () => {
-    const { close } = this.props;
+    const {close} = this.props;
     close();
   };
-
+  
   handleSubmit = (e) => {
     e.preventDefault();
-    const { formRef = {}, formatMessage } = this;
-
+    const {formRef = {}, formatMessage} = this;
+    
     const {
       props: {
-        form: { validateFields, resetFields },
+        form: {validateFields, resetFields},
       },
     } = formRef;
-
+    
     validateFields(async (err, values) => {
       if (!err) {
         const {
@@ -48,8 +49,8 @@ class updateProviderDrawer extends Component {
           users = {},
           visible,
         } = this.props;
-        const { provider_id = null } = payload;
-
+        const {provider_id = null} = payload;
+        
         let {
           name = "",
           prefix = "91",
@@ -67,9 +68,9 @@ class updateProviderDrawer extends Component {
           banner = "",
           prescription_details = "",
         } = values;
-
+        
         let data = {};
-
+        
         data = {
           name,
           prefix,
@@ -87,33 +88,33 @@ class updateProviderDrawer extends Component {
           banner,
           prescription_details,
         };
-
+        
         try {
-          const { updateProvider } = this.props;
-          this.setState({ submitting: true });
+          const {updateProvider} = this.props;
+          this.setState({submitting: true});
           const response = await updateProvider(provider_id, data);
-
-          const { status, payload: { message: msg } = {} } = response;
+          
+          const {status, payload: {message: msg} = {}} = response;
           if (status) {
             message.success(this.formatMessage(messages.updateProviderSuccess));
             this.onClose();
           } else {
             message.warn(msg);
           }
-
-          this.setState({ submitting: false });
+          
+          this.setState({submitting: false});
         } catch (err) {
           console.log("err", err);
-          this.setState({ submitting: false });
+          this.setState({submitting: false});
           message.warn(this.formatMessage(messages.somethingWentWrong));
         }
       } else {
         console.log("18731297 err --> ", err);
         let allErrors = "";
         for (let each in err) {
-          const { errors = [] } = err[each] || {};
+          const {errors = []} = err[each] || {};
           for (let error of errors) {
-            const { message = "" } = error;
+            const {message = ""} = error;
             allErrors = allErrors + message + ".";
           }
         }
@@ -121,26 +122,26 @@ class updateProviderDrawer extends Component {
       }
     });
   };
-
+  
   setFormRef = (formRef) => {
     this.formRef = formRef;
     if (formRef) {
-      this.setState({ formRef: true });
+      this.setState({formRef: true});
     }
   };
-
+  
   render() {
-    const { payload = {}, providers = {}, users = {}, visible } = this.props;
-    const { provider_id = null } = payload;
-    const { submitting = false } = this.state;
-
-    const { onClose, formatMessage, setFormRef, handleSubmit, FormWrapper } =
+    const {payload = {}, providers = {}, users = {}, visible} = this.props;
+    const {provider_id = null} = payload;
+    const {submitting = false} = this.state;
+    
+    const {onClose, formatMessage, setFormRef, handleSubmit, FormWrapper} =
       this;
-
+    
     if (visible !== true) {
       return null;
     }
-
+    
     return (
       <Fragment>
         <Drawer
@@ -163,7 +164,7 @@ class updateProviderDrawer extends Component {
             {...this.props}
             provider_id={provider_id}
           />
-
+          
           <Footer
             onSubmit={this.handleSubmit}
             onClose={onClose}

@@ -1,18 +1,18 @@
-import { connect } from "react-redux";
-import { withRouter } from "react-router-dom";
+import {connect} from "react-redux";
+import {withRouter} from "react-router-dom";
 import MedicationTimelineDrawer from "../../Components/Drawer/medicationTimeline";
 
-import { close } from "../../modules/drawer";
-import { DRAWER } from "../../constant";
+import {close} from "../../modules/drawer";
+import {DRAWER} from "../../constant";
 
 const mapStateToProps = (state) => {
   const {
-    drawer: { visible, data: { type, payload: { id, loading } = {} } = {} },
+    drawer: {visible, data: {type, payload: {id, loading} = {}} = {}},
     medications = {},
     schedule_events = {},
     medicines = {},
   } = state;
-
+  
   return {
     id,
     loading,

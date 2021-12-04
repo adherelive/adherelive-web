@@ -8,21 +8,21 @@ class ChatController extends Controller {
   constructor() {
     super();
   }
-
+  
   notify = async (req, res) => {
-    const { raiseSuccess, raiseClientError, raiseServerError } = this;
+    const {raiseSuccess, raiseClientError, raiseServerError} = this;
     try {
       const {
         body,
         userDetails: {
           userId,
-          userData: { category } = {},
-          userCategoryData: { basic_info: { full_name } = {} } = {},
+          userData: {category} = {},
+          userCategoryData: {basic_info: {full_name} = {}} = {},
         } = {},
       } = req;
-
-      const { doctor_id, patient_id, message } = body || {};
-
+      
+      const {doctor_id, patient_id, message} = body || {};
+      
       const actor = {
         id: userId,
         details: {
@@ -30,7 +30,7 @@ class ChatController extends Controller {
           name: full_name,
         },
       };
-
+      
       const notificationData = {
         actor,
         participants: [doctor_id, patient_id],
@@ -38,7 +38,7 @@ class ChatController extends Controller {
           message,
         },
       };
-
+      
       const UserMessageJob = ChatJob.execute();
     } catch (error) {
       Log.debug("notify 500 error", error);

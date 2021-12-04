@@ -23,7 +23,7 @@ class MinioService {
     this.s3Client = new AWS.S3();
     this.bucket = process.config.minio.MINIO_BUCKET_NAME;
   }
-
+  
   callback = (error, data) => {
     if (error) {
       // throw error;
@@ -32,7 +32,7 @@ class MinioService {
       console.log("093818932 response data", data);
     }
   };
-
+  
   async createBucket() {
     try {
       let result;
@@ -57,17 +57,17 @@ class MinioService {
             },
           ],
         };
-
+        
         result = await this.s3Client.makeBucket(
           process.config.minio.MINIO_BUCKET_NAME,
           process.config.minio.MINIO_REGION
         );
-
+        
         await this.s3Client.setBucketPolicy(
           process.config.minio.MINIO_BUCKET_NAME,
           JSON.stringify(policy)
         );
-
+        
         // AdhereLive logo for email
         // after upload (to access) : https://{DOMAIN}/{BUCKET_NAME}/logo.png
         fs.readFile(`${__dirname}/../../../other/logo.png`, (err, data) => {
@@ -84,7 +84,7 @@ class MinioService {
             Log.debug("err", err);
           }
         });
-
+        
         // Push Notification audio for android
         // after upload (to access) : https://{DOMAIN}/{BUCKET_NAME}/push_notification_sound.wav
         fs.readFile(
@@ -108,7 +108,7 @@ class MinioService {
       throw err;
     }
   }
-
+  
   getSignedUrl = (path) => {
     return this.s3Client.getSignedUrl("getObject", {
       Bucket: this.bucket,
@@ -116,11 +116,11 @@ class MinioService {
       Expires: 60 * parseInt(process.config.s3.EXPIRY_TIME),
     });
   };
-
+  
   async saveFileObject(filepath, file, metaData) {
     try {
       if (metaData == null || metaData == undefined) {
-        metaData = { "Content-Type": "application/octet-stream" };
+        metaData = {"Content-Type": "application/octet-stream"};
       }
       let result = await this.s3Client.fPutObject(
         this.bucket,
@@ -133,13 +133,13 @@ class MinioService {
       throw err;
     }
   }
-
+  
   async saveBufferObject(buffer, file, metaData) {
     try {
       if (metaData == null || metaData == undefined) {
-        metaData = { "Content-Type": "application/octet-stream" };
+        metaData = {"Content-Type": "application/octet-stream"};
       }
-
+      
       console.log("091381293 buffer", file);
       let result = await this.s3Client.putObject(
         {
@@ -150,7 +150,7 @@ class MinioService {
         },
         this.callback
       );
-
+      
       // let url = this.s3Client.getSignedUrl("getObject", {
       //   Bucket: this.bucket,
       //   Key: file,
@@ -158,20 +158,20 @@ class MinioService {
       // });
       //
       // console.log("81238712 url", url);
-
+      
       return result;
     } catch (err) {
       console.log("minio error ---------------------------\n\n\n", err);
       // throw err;
     }
   }
-
+  
   async downloadFileObject(objectName, filePath) {
     try {
       const file = fs.createWriteStream(filePath);
-
+      
       const test = await this.getSignedUrl(objectName);
-
+      
       return new Promise((resolve, reject) => {
         https.get(test, (response) => {
           const stream = response.pipe(file);
@@ -185,7 +185,7 @@ class MinioService {
       throw err;
     }
   }
-
+  
   async removeObject(file) {
     try {
       let result = await this.s3Client.removeObject(this.bucket, file);
@@ -194,13 +194,13 @@ class MinioService {
       throw err;
     }
   }
-
+  
   saveAudioObject = async (buffer, file, metaData = null) => {
     try {
       if (metaData === null || metaData === undefined) {
-        metaData = { "Content-Type": "audio/mpeg" };
+        metaData = {"Content-Type": "audio/mpeg"};
       }
-
+      
       console.log("091381293 audio buffer", file);
       let result = await this.s3Client.putObject(
         {
@@ -211,27 +211,27 @@ class MinioService {
         },
         this.callback
       );
-
+      
       // let result = await this.s3Client.putObject(
       //   this.bucket,
       //   file,
       //   buffer,
       //   metaData
       // );
-
+      
       return result;
     } catch (err) {
       Log.debug("saveAudioObject error", err);
       // throw err;
     }
   };
-
+  
   saveVideoObject = async (buffer, file, metaData = null) => {
     try {
       if (metaData === null || metaData === undefined) {
-        metaData = { "Content-Type": "video/mp4" };
+        metaData = {"Content-Type": "video/mp4"};
       }
-
+      
       console.log("091381293 video buffer", file);
       let result = await this.s3Client.putObject(
         {
@@ -242,14 +242,14 @@ class MinioService {
         },
         this.callback
       );
-
+      
       // let result = await this.s3Client.putObject(
       //   this.bucket,
       //   file,
       //   buffer,
       //   metaData
       // );
-
+      
       return result;
     } catch (err) {
       Log.debug("saveVideoObject error", err);

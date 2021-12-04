@@ -1,8 +1,8 @@
 "use strict";
 
-import { TABLE_NAME } from "../app/models/treatmentConditionMapping";
-import { TABLE_NAME as treatmentTableName } from "../app/models/treatments";
-import { TABLE_NAME as conditionTableName } from "../app/models/conditions";
+import {TABLE_NAME} from "../app/models/treatmentConditionMapping";
+import {TABLE_NAME as treatmentTableName} from "../app/models/treatments";
+import {TABLE_NAME as conditionTableName} from "../app/models/conditions";
 
 module.exports = {
   up: (queryInterface, Sequelize) => {
@@ -47,7 +47,7 @@ module.exports = {
       },
     });
   },
-
+  
   down: (queryInterface, Sequelize) => {
     return queryInterface.dropTable(TABLE_NAME);
   },

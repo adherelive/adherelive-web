@@ -1,5 +1,5 @@
-import React, { Component } from "react";
-import { injectIntl } from "react-intl";
+import React, {Component} from "react";
+import {injectIntl} from "react-intl";
 import {
   CHART_TITLE,
   NO_ACTION,
@@ -9,7 +9,7 @@ import {
   NO_WORKOUT,
 } from "../../../constant";
 
-import { Button, Checkbox, Modal } from "antd";
+import {Button, Checkbox, Modal} from "antd";
 
 const graphs = [NO_ACTION, NO_APPOINTMENT, NO_MEDICATION, NO_DIET, NO_WORKOUT];
 
@@ -19,23 +19,23 @@ class GraphsModal extends Component {
     this.state = {};
     this.myRef = React.createRef();
   }
-
+  
   componentDidMount() {
-    const { selectedGraphs = [] } = this.props;
-    this.setState({ selectedGraphs });
+    const {selectedGraphs = []} = this.props;
+    this.setState({selectedGraphs});
   }
-
+  
   handleSave = () => {
-    let { selectedGraphs } = this.state;
-    let { handleOk } = this.props;
-
+    let {selectedGraphs} = this.state;
+    let {handleOk} = this.props;
+    
     handleOk(selectedGraphs);
     // this.setState({
     // });
   };
-
+  
   toggleGraphSelected = (graph) => () => {
-    let { selectedGraphs = [] } = this.state;
+    let {selectedGraphs = []} = this.state;
     if (selectedGraphs.includes(graph)) {
       selectedGraphs.splice(selectedGraphs.indexOf(graph), 1);
     } else {
@@ -43,16 +43,16 @@ class GraphsModal extends Component {
     }
     this.setState(selectedGraphs);
   };
-
+  
   handleClose = () => {
-    const { handleCancel } = this.props;
+    const {handleCancel} = this.props;
     handleCancel();
   };
-
+  
   render() {
-    const { selectedGraphs = [] } = this.state;
-
-    const { visible } = this.props;
+    const {selectedGraphs = []} = this.state;
+    
+    const {visible} = this.props;
     return (
       <Modal
         visible={visible}

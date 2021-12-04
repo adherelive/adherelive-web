@@ -1,5 +1,5 @@
-import React, { Component } from "react";
-import { injectIntl } from "react-intl";
+import React, {Component} from "react";
+import {injectIntl} from "react-intl";
 import generateRow from "./dataRow";
 import getColumn from "./header";
 import Table from "antd/es/table";
@@ -8,21 +8,21 @@ import messages from "./messages";
 class VitalTable extends Component {
   constructor(props) {
     super(props);
-
+    
     this.state = {
       loading: true,
       vital_ids: [],
     };
   }
-
+  
   componentDidMount() {
     this.getVitals();
   }
-
+  
   componentDidUpdate(prevProps, prevState, snapshot) {
-    const { care_plans: { vital_ids = [] } = {} } = this.props;
-    const { care_plans: { vital_ids: prev_vital_ids = [] } = {} } = prevProps;
-
+    const {care_plans: {vital_ids = []} = {}} = this.props;
+    const {care_plans: {vital_ids: prev_vital_ids = []} = {}} = prevProps;
+    
     let isDifferent = false;
     if (vital_ids.length > 0 && prev_vital_ids.length > 0) {
       if (vital_ids[0] !== prev_vital_ids[0]) {
@@ -31,48 +31,48 @@ class VitalTable extends Component {
     } else if (vital_ids.length > 0 || prev_vital_ids.length > 0) {
       isDifferent = true;
     }
-
+    
     if (vital_ids.length !== prev_vital_ids.length || isDifferent) {
       this.getVitals();
-      this.setState({ vital_ids });
+      this.setState({vital_ids});
     }
   }
-
+  
   getVitals = async () => {
     try {
-      const { getPatientVitals } = this.props;
-      const { loading } = this.state;
+      const {getPatientVitals} = this.props;
+      const {loading} = this.state;
       const response = await getPatientVitals();
       console.log("139871283 response", response);
-      const { status, payload: { data: { vital_ids = [] } = {} } = {} } =
-        response || {};
-      this.setState({ vital_ids, loading: false });
+      const {status, payload: {data: {vital_ids = []} = {}} = {}} =
+      response || {};
+      this.setState({vital_ids, loading: false});
     } catch (error) {
-      this.setState({ loading: false });
+      this.setState({loading: false});
     }
   };
-
+  
   getDataSource = () => {
     const {
       vitals,
       care_plans,
       vital_templates,
-      intl: { formatMessage } = {},
+      intl: {formatMessage} = {},
       isOtherCarePlan,
       auth_role = null,
     } = this.props;
     // const {vital_ids} = this.state;
-
-    console.log("23943278648726348723", { props: this.props });
-    const { vital_ids = [] } = care_plans || {};
-    const { openResponseDrawer, openEditDrawer } = this;
-    const { basic_info: { user_role_id = null } = {} } = care_plans || {};
-
+    
+    console.log("23943278648726348723", {props: this.props});
+    const {vital_ids = []} = care_plans || {};
+    const {openResponseDrawer, openEditDrawer} = this;
+    const {basic_info: {user_role_id = null} = {}} = care_plans || {};
+    
     let canViewDetails = true;
     if (!isOtherCarePlan && user_role_id.toString() === auth_role.toString()) {
       canViewDetails = false;
     }
-
+    
     return vital_ids.map((id) => {
       return generateRow({
         id,
@@ -86,7 +86,7 @@ class VitalTable extends Component {
       });
     });
   };
-
+  
   openResponseDrawer = (id) => (e) => {
     e.preventDefault();
     const {
@@ -95,14 +95,14 @@ class VitalTable extends Component {
       auth_role = null,
       care_plans = {},
     } = this.props;
-    const { basic_info: { user_role_id = null } = {} } = care_plans || {};
+    const {basic_info: {user_role_id = null} = {}} = care_plans || {};
     let canViewDetails = true;
     if (!isOtherCarePlan && user_role_id.toString() === auth_role.toString()) {
       canViewDetails = false;
     }
-    vitalResponseDrawer({ id, loading: true, canViewDetails });
+    vitalResponseDrawer({id, loading: true, canViewDetails});
   };
-
+  
   openEditDrawer = (id) => (e) => {
     e.preventDefault();
     const {
@@ -111,24 +111,24 @@ class VitalTable extends Component {
       auth_role = null,
       care_plans = {},
     } = this.props;
-    const { basic_info: { user_role_id = null } = {} } = care_plans || {};
+    const {basic_info: {user_role_id = null} = {}} = care_plans || {};
     let canViewDetails = true;
     if (!isOtherCarePlan && user_role_id.toString() === auth_role.toString()) {
       canViewDetails = false;
     }
-    editVitalDrawer({ id, loading: true, canViewDetails });
+    editVitalDrawer({id, loading: true, canViewDetails});
   };
-
+  
   formatMessage = (data) => this.props.intl.formatMessage(data);
-
+  
   render() {
-    const { intl: { formatMessage } = {} } = this.props;
-    const { getLoadingComponent, getDataSource } = this;
-
+    const {intl: {formatMessage} = {}} = this.props;
+    const {getLoadingComponent, getDataSource} = this;
+    
     const vitalLocale = {
       emptyText: this.formatMessage(messages.emptyVitalTable),
     };
-
+    
     return (
       <Table
         rowClassName={() => "pointer"}
@@ -138,7 +138,7 @@ class VitalTable extends Component {
           className: "pointer",
         })}
         dataSource={getDataSource()}
-        scroll={{ x: "100%" }}
+        scroll={{x: "100%"}}
         pagination={{
           position: "bottom",
         }}

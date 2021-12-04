@@ -1,18 +1,18 @@
-import { connect } from "react-redux";
+import {connect} from "react-redux";
 import updateProviderDrawer from "../../Components/Drawer/updateProvider";
-import { updateProvider } from "../../modules/providers";
-import { uploadDocument } from "../../modules/auth";
-import { DRAWER } from "../../constant";
-import { close } from "../../modules/drawer";
+import {updateProvider} from "../../modules/providers";
+import {uploadDocument} from "../../modules/auth";
+import {DRAWER} from "../../constant";
+import {close} from "../../modules/drawer";
 
 const mapStateToProps = (state) => {
   const {
-    drawer: { visible, loading, data: { type, payload = {} } = {} },
+    drawer: {visible, loading, data: {type, payload = {}} = {}},
     providers = {},
     users = {},
     account_details = {},
   } = state;
-
+  
   return {
     visible: visible && type === DRAWER.EDIT_PROVIDER,
     loading,

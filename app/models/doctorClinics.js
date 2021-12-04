@@ -1,6 +1,6 @@
 "use strict";
-import { DataTypes } from "sequelize";
-import { TABLE_NAME as doctorTableName } from "./doctors";
+import {DataTypes} from "sequelize";
+import {TABLE_NAME as doctorTableName} from "./doctors";
 
 export const TABLE_NAME = "doctor_clinics";
 
@@ -58,8 +58,8 @@ export const db = (database) => {
 };
 
 export const associate = (database) => {
-  const { doctor_clinics, doctors } = database.models || {};
-
+  const {doctor_clinics, doctors} = database.models || {};
+  
   // associations here (if any) ...
   doctor_clinics.belongsTo(doctors, {
     foreignKey: "doctor_id",

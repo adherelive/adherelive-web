@@ -1,7 +1,7 @@
-import { withRouter } from "react-router-dom";
+import {withRouter} from "react-router-dom";
 import ForgotPassword from "../../Components/forgotPassword";
-import { forgotPassword } from "../../modules/auth";
-import { connect } from "react-redux";
+import {forgotPassword} from "../../modules/auth";
+import {connect} from "react-redux";
 
 const mapStateToProps = (state) => {
   const {} = state;

@@ -1,12 +1,13 @@
-import { EVENT_STATUS, NOTIFICATION_STAGES } from "../../../constant";
+import {EVENT_STATUS, NOTIFICATION_STAGES} from "../../../constant";
 import CreateJob from "./createJob";
 import PriorJob from "./priorJob";
 import StartJob from "./startJob";
 import UpdateJob from "./updateJob";
 
 class AppointmentObserver {
-  constructor() {}
-
+  constructor() {
+  }
+  
   execute = (typeStatus, eventDetails) => {
     switch (typeStatus) {
       case EVENT_STATUS.SCHEDULED:

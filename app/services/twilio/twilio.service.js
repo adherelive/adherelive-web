@@ -14,25 +14,26 @@ const authToken = process.config.twilio.TWILIO_AUTH_TOKEN;
 const Logger = new Log("TWILIO SERVICES");
 
 class TwilioService {
-  constructor() {}
-
+  constructor() {
+  }
+  
   async createRoom(name) {
     const client = require("twilio")(accountSid, authToken);
     let createdRoom;
     client.video.rooms
-      .create({ uniqueName: name })
+      .create({uniqueName: name})
       .then((room) => (createdRoom = room));
     return createdRoom;
   }
-
+  
   getRoomId = (doctor, patient) => {
     return `${doctor}-${process.config.twilio.CHANNEL_SERVER}-${patient}`;
   };
-
+  
   async chatTokenGenerator(identity, deviceId) {
     const token = new AccessToken(accountSid, apiKey, apiSecret);
     token.identity = identity;
-
+    
     const appName = "TwilioChat";
     const endpointId = appName + ":" + identity + ":" + deviceId;
     const ipmGrant = new IpMessagingGrant({
@@ -40,20 +41,20 @@ class TwilioService {
       endpointId: endpointId,
     });
     token.addGrant(ipmGrant);
-
+    
     return token.toJwt();
   }
-
+  
   async videoTokenGenerator(identity) {
     const token = new AccessToken(accountSid, apiKey, apiSecret);
     token.identity = identity;
-
+    
     const grant = new VideoGrant();
     token.addGrant(grant);
-
+    
     return token.toJwt();
   }
-
+  
   async getRoomConnectedParticipants(roomId) {
     return new Promise(async (res, rej) => {
       try {
@@ -71,25 +72,25 @@ class TwilioService {
       }
     });
   }
-
+  
   addSymptomMessage = async (channel_id, message) => {
     try {
       const client = require("twilio")(accountSid, authToken);
-
+      
       const channelExists = await client.chat
         .services(process.config.twilio.TWILIO_CHAT_SERVICE_SID)
         .channels(channel_id);
-
+      
       if (!channelExists) {
         const newChannel = await client.chat
           .services(process.config.twilio.TWILIO_CHAT_SERVICE_SID)
           .channel.create(channel_id);
       }
-
+      
       const channel = await client.chat
         .services(process.config.twilio.TWILIO_CHAT_SERVICE_SID)
         .channels(channel_id);
-
+      
       // issue: http for development
       // link: https://support.twilio.com/hc/en-us/articles/360007130274-Requirements-for-Connecting-to-the-Twilio-REST-API-and-Troubleshooting-Common-Issues
       channel.messages
@@ -104,20 +105,20 @@ class TwilioService {
           console.error("Failed to send message");
           console.error(err);
         });
-
+      
       Logger.debug("channel -> ", channel);
     } catch (error) {
       Logger.debug("addSymptom message 500 error", error);
     }
   };
-
+  
   addUserMessage = async (doctor, patient, message) => {
     try {
       const client = require("twilio")(accountSid, authToken);
       const channel = await client.chat
         .services(process.config.twilio.TWILIO_CHAT_SERVICE_SID)
         .channels(this.getRoomId(doctor, patient));
-
+      
       // issue: http for development
       // link: https://support.twilio.com/hc/en-us/articles/360007130274-Requirements-for-Connecting-to-the-Twilio-REST-API-and-Troubleshooting-Common-Issues
       channel.messages
@@ -132,14 +133,14 @@ class TwilioService {
           console.error("Failed to send message");
           console.error(err);
         });
-
+      
       Logger.debug("channel -> ", channel);
     } catch (error) {
       Logger.debug("addUserMessage 500 error", error);
       throw error;
     }
   };
-
+  
   getAllMessages = async () => {
     try {
       const client = require("twilio")(accountSid, authToken);
@@ -155,8 +156,8 @@ class TwilioService {
           let friendlyNames = [];
           let channelData = {};
           for (let i = 0; i < channels.length; i++) {
-            const { sid, uniqueName, friendlyName } = channels[i] || {};
-
+            const {sid, uniqueName, friendlyName} = channels[i] || {};
+            
             if (
               uniqueName &&
               uniqueName.includes(process.config.twilio.CHANNEL_SERVER)
@@ -177,7 +178,7 @@ class TwilioService {
       Logger.debug("addSymptom message 500 error", error);
     }
   };
-
+  
   deleteAllMessages = async () => {
     try {
       const client = require("twilio")(accountSid, authToken);
@@ -191,8 +192,8 @@ class TwilioService {
         .then((channels) => {
           let channelsName = [];
           for (let i = 0; i < channels.length; i++) {
-            const { sid, uniqueName } = channels[i] || {};
-
+            const {sid, uniqueName} = channels[i] || {};
+            
             if (
               uniqueName &&
               uniqueName.includes(process.config.twilio.CHANNEL_SERVER)
@@ -215,7 +216,7 @@ class TwilioService {
             });
           }
         });
-
+      
       // issue: http for development
       // link: https://support.twilio.com/hc/en-us/articles/360007130274-Requirements-for-Connecting-to-the-Twilio-REST-API-and-Troubleshooting-Common-Issues
       // channel.messages.create({
@@ -233,15 +234,15 @@ class TwilioService {
       Logger.debug("addSymptom message 500 error", error);
     }
   };
-
+  
   addMember = async (channelName, identity) => {
     try {
       const client = require("twilio")(accountSid, authToken);
       const newMember = await client.chat
         .services(process.config.twilio.TWILIO_CHAT_SERVICE_SID)
         .channels(channelName)
-        .members.create({ identity });
-
+        .members.create({identity});
+      
       return newMember ? true : false;
     } catch (error) {
       Logger.debug("addMember 500 error", error);

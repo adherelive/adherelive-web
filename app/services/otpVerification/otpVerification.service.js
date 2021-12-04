@@ -1,7 +1,7 @@
-import { Op } from "sequelize";
+import {Op} from "sequelize";
 import moment from "moment";
 import Database from "../../../libs/mysql";
-import { TABLE_NAME } from "../../models/otpVerifications";
+import {TABLE_NAME} from "../../models/otpVerifications";
 
 class OtpVerificationService {
   create = async (data) => {
@@ -12,10 +12,10 @@ class OtpVerificationService {
       throw error;
     }
   };
-
+  
   getOtpByData = async (data) => {
     try {
-      const { otp, user_id } = data; //otp,
+      const {otp, user_id} = data; //otp,
       const otpDetails = await Database.getModel(TABLE_NAME).findAll({
         limit: 1,
         where: {
@@ -33,10 +33,10 @@ class OtpVerificationService {
       throw error;
     }
   };
-
+  
   delete = async (data) => {
     try {
-      const { otp, user_id } = data;
+      const {otp, user_id} = data;
       const otpDetails = await Database.getModel(TABLE_NAME).destroy({
         where: {
           user_id,

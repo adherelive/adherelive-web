@@ -11,7 +11,7 @@
 // };
 
 function allProvidersPageReducer(state, data) {
-  const { provider_ids } = data || {};
+  const {provider_ids} = data || {};
   if (provider_ids) {
     return [...provider_ids];
   } else {
@@ -20,7 +20,7 @@ function allProvidersPageReducer(state, data) {
 }
 
 export default (state = [], action) => {
-  const { type, data } = action;
+  const {type, data} = action;
   switch (type) {
     default:
       return allProvidersPageReducer(state, data);

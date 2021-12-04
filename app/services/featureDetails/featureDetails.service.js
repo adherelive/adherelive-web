@@ -1,5 +1,5 @@
 import Database from "../../../libs/mysql";
-import { TABLE_NAME } from "../../models/featureDetails";
+import {TABLE_NAME} from "../../models/featureDetails";
 
 class FeatureDetailsService {
   getDetailsByData = async (data) => {
@@ -12,7 +12,7 @@ class FeatureDetailsService {
       throw err;
     }
   };
-
+  
   getManyByData = async (data) => {
     try {
       const featureDetails = Database.getModel(TABLE_NAME).findAll({
@@ -23,7 +23,7 @@ class FeatureDetailsService {
       throw err;
     }
   };
-
+  
   update = async (data, feature_type) => {
     const transaction = await Database.initTransaction();
     try {
@@ -43,7 +43,7 @@ class FeatureDetailsService {
       throw err;
     }
   };
-
+  
   add = async (data) => {
     const transaction = await Database.initTransaction();
     try {

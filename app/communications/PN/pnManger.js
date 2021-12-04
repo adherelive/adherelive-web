@@ -11,7 +11,7 @@ class pnManger {
     });
     this.sns = new AWS.SNS();
   }
-
+  
   async sendPN(payload, token) {
     try {
       //
@@ -25,13 +25,13 @@ class pnManger {
       let PNendpointData =
         payload.type == "android"
           ? await this.sns
-              .createPlatformEndpoint({
-                PlatformApplicationArn: process.config.aws.platform_arn,
-                Token: token,
-              })
-              .promise()
+            .createPlatformEndpoint({
+              PlatformApplicationArn: process.config.aws.platform_arn,
+              Token: token,
+            })
+            .promise()
           : payload.targetArn;
-
+      
       Log.success("endpointArn creation successfull!!");
       let PNendpointArn =
         payload.type == "android" ? PNendpointData.EndpointArn : PNendpointData;
@@ -50,16 +50,17 @@ class pnManger {
         })
         .promise();
       return PNpublishResponse;
-    } catch (err) {}
+    } catch (err) {
+    }
   }
-
+  
   validatePayload(payload) {
     if (!payload.type || ["ios", "android"].indexOf(payload.type) == -1)
       return {
         error: 1,
         message: "invalid or undefined type",
       };
-
+    
     if (payload.type == "android") {
       return this.validateGCMpayload(payload);
     }
@@ -67,7 +68,7 @@ class pnManger {
       return this.validateAPNpayload(payload);
     }
   }
-
+  
   validateAPNpayload(payload) {
     if (!payload.alert)
       return {
@@ -79,7 +80,7 @@ class pnManger {
       message: "valid apns payload",
     };
   }
-
+  
   validateGCMpayload(payload) {
     if (!payload.data)
       return {
@@ -91,7 +92,7 @@ class pnManger {
         error: 1,
         message: "invalid or empty notification",
       };
-
+    
     return {
       error: 0,
       message: "valid gcm payload",

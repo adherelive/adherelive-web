@@ -1,8 +1,8 @@
 import Database from "../../../libs/mysql";
-import { TABLE_NAME } from "../../models/dietFoodGroupMapping";
-import { TABLE_NAME as foodGroupTableName } from "../../models/foodGroups";
-import { TABLE_NAME as dietTableName } from "../../models/diet";
-import { TABLE_NAME as similarFoodMappingTableName } from "../../models/similarFoodMapping";
+import {TABLE_NAME} from "../../models/dietFoodGroupMapping";
+import {TABLE_NAME as foodGroupTableName} from "../../models/foodGroups";
+import {TABLE_NAME as dietTableName} from "../../models/diet";
+import {TABLE_NAME as similarFoodMappingTableName} from "../../models/similarFoodMapping";
 
 const DEFAULT_ORDER = [["created_at", "DESC"]];
 
@@ -26,7 +26,7 @@ class DietFoodGroupMappingService {
       throw error;
     }
   };
-
+  
   // getByData = async data => {
   //   try {
   //     return await Database.getModel(TABLE_NAME).findOne({
@@ -41,7 +41,7 @@ class DietFoodGroupMappingService {
   //       throw error;
   //   }
   // };
-
+  
   getByData = async (data) => {
     try {
       const record = await Database.getModel(TABLE_NAME).findOne({
@@ -52,13 +52,13 @@ class DietFoodGroupMappingService {
           Database.getModel(similarFoodMappingTableName),
         ],
       });
-
+      
       return JSON.parse(JSON.stringify(record));
     } catch (error) {
       throw error;
     }
   };
-
+  
   update = async (data, id) => {
     const transaction = await Database.initTransaction();
     try {
@@ -81,8 +81,8 @@ class DietFoodGroupMappingService {
       throw error;
     }
   };
-
-  findAndCountAll = async ({ where, order = DEFAULT_ORDER, attributes }) => {
+  
+  findAndCountAll = async ({where, order = DEFAULT_ORDER, attributes}) => {
     try {
       return await Database.getModel(TABLE_NAME).findAndCountAll({
         where,
@@ -94,7 +94,7 @@ class DietFoodGroupMappingService {
       throw error;
     }
   };
-
+  
   delete = async (id) => {
     try {
       const record = await Database.getModel(TABLE_NAME).destroy({

@@ -5,9 +5,9 @@ class ConsentWrapper extends BaseConsent {
   constructor(data) {
     super(data);
   }
-
+  
   getBasicInfo = () => {
-    const { _data } = this;
+    const {_data} = this;
     const {
       id,
       type,
@@ -17,7 +17,7 @@ class ConsentWrapper extends BaseConsent {
       activated_on,
       expire_on,
     } = _data || {};
-
+    
     return {
       basic_info: {
         id,
@@ -32,11 +32,11 @@ class ConsentWrapper extends BaseConsent {
   };
 }
 
-export default async ({ data = null, id = null }) => {
+export default async ({data = null, id = null}) => {
   if (data) {
     return new ConsentWrapper(data);
   }
   const consentService = new ConsentService();
-  const consent = await consentService.getByData({ id });
+  const consent = await consentService.getByData({id});
   return new ConsentWrapper(consent);
 };

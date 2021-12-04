@@ -1,6 +1,6 @@
 "use strict";
 
-import { TABLE_NAME } from "../models/exerciseRepetition";
+import {TABLE_NAME} from "../models/exerciseRepetition";
 
 module.exports = {
   up: (queryInterface) => {
@@ -37,7 +37,7 @@ module.exports = {
       },
     ]);
   },
-
+  
   down: (queryInterface) => {
     return queryInterface.bulkDelete(TABLE_NAME, null, {});
   },

@@ -1,9 +1,9 @@
-import React, { Component, Fragment } from "react";
-import { injectIntl } from "react-intl";
-import { Drawer, message, Spin } from "antd";
-import { USER_CATEGORY } from "../../../constant";
+import React, {Component, Fragment} from "react";
+import {injectIntl} from "react-intl";
+import {Drawer, message, Spin} from "antd";
+import {USER_CATEGORY} from "../../../constant";
 import messages from "./message";
-import { getName } from "../../../Helper/validation";
+import {getName} from "../../../Helper/validation";
 import MissedAppointmentCard from "../../Cards/patient/missedAppointment";
 
 class MissedAppointmentsDrawer extends Component {
@@ -16,11 +16,11 @@ class MissedAppointmentsDrawer extends Component {
       fetching: false,
     };
   }
-
+  
   componentDidMount() {
     // this.handleGetMissedAppointments();
   }
-
+  
   //   async handleGetMissedAppointments(){
   //     try {
   //         const {getAllMissedScheduleEvents} = this.props;
@@ -52,29 +52,29 @@ class MissedAppointmentsDrawer extends Component {
   //     }
   //
   // }
-
+  
   formatMessage = (data) => this.props.intl.formatMessage(data);
-
+  
   onClose = () => {
-    const { close } = this.props;
+    const {close} = this.props;
     close();
   };
-
+  
   handlePatientDetailsRedirect = (patient_id) => (e) => {
-    const { authenticated_category } = this.props;
-
+    const {authenticated_category} = this.props;
+    
     if (authenticated_category === USER_CATEGORY.PROVIDER) {
       return;
     }
-
-    const { history } = this.props;
+    
+    const {history} = this.props;
     this.onClose();
     history.push(`/patients/${patient_id}`);
   };
-
+  
   getAppointmentList = () => {
-    const { patients = {}, missed_appointments = {} } = this.props;
-    const { handlePatientDetailsRedirect } = this;
+    const {patients = {}, missed_appointments = {}} = this.props;
+    const {handlePatientDetailsRedirect} = this;
     const appointmentList = [];
     const criticalList = [];
     const nonCriticalList = [];
@@ -82,7 +82,7 @@ class MissedAppointmentsDrawer extends Component {
     let type_description = "";
     let isCritical = false;
     let participant_id = "";
-
+    
     for (let appointment in missed_appointments) {
       const eachAppointmentEventArray = missed_appointments[appointment];
       for (let eachAppointmentEvent of eachAppointmentEventArray) {
@@ -97,7 +97,7 @@ class MissedAppointmentsDrawer extends Component {
                 type = "",
               } = {},
             } = {},
-
+            
             participant_one: {
               category: participant_one_category = "",
               id: participant_one_id = "",
@@ -108,18 +108,18 @@ class MissedAppointmentsDrawer extends Component {
             },
           } = {},
         } = eachAppointmentEvent;
-
+        
         if (participant_one_category === USER_CATEGORY.PATIENT) {
           participant_id = participant_one_id;
         } else {
           participant_id = participant_two_id;
         }
-
+        
         isCritical = critical;
         timings.push(start_time);
         type_description = typeDescription;
       }
-
+      
       const {
         basic_info: {
           id: pId = "",
@@ -128,10 +128,10 @@ class MissedAppointmentsDrawer extends Component {
           last_name = "",
         },
       } = patients[participant_id] || {};
-
+      
       let pName = `${first_name} ${getName(middle_name)} ${getName(last_name)}`;
       let treatment_type = type_description.length > 0 ? type_description : " ";
-
+      
       if (isCritical) {
         criticalList.push(
           <MissedAppointmentCard
@@ -154,7 +154,7 @@ class MissedAppointmentsDrawer extends Component {
         );
       }
     }
-
+    
     appointmentList.push(
       <div>
         <div>
@@ -183,14 +183,14 @@ class MissedAppointmentsDrawer extends Component {
         </div>
       </div>
     );
-
+    
     return appointmentList;
   };
-
+  
   render() {
-    const { visible = false } = this.props;
-    const { fetching } = this.state;
-
+    const {visible = false} = this.props;
+    const {fetching} = this.state;
+    
     if (visible !== true) {
       return null;
     }
@@ -206,7 +206,7 @@ class MissedAppointmentsDrawer extends Component {
         >
           <div className="mt20 black-85 wp100">
             {fetching ? (
-              <Spin size="small" className="flex align-center justify-center" />
+              <Spin size="small" className="flex align-center justify-center"/>
             ) : (
               this.getAppointmentList()
             )}

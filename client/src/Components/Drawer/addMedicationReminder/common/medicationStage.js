@@ -1,5 +1,5 @@
-import React, { Component } from "react";
-import { injectIntl } from "react-intl";
+import React, {Component} from "react";
+import {injectIntl} from "react-intl";
 
 import throttle from "lodash-es/throttle";
 
@@ -10,7 +10,7 @@ import message from "antd/es/message";
 import config from "../../../../config";
 import Tooltip from "antd/es/tooltip";
 
-import { EditOutlined, CloseCircleOutlined } from "@ant-design/icons";
+import {EditOutlined, CloseCircleOutlined} from "@ant-design/icons";
 
 import {
   InstantSearch,
@@ -20,10 +20,10 @@ import {
   connectSearchBox,
 } from "react-instantsearch-dom";
 import algoliasearch from "algoliasearch/lite";
-import { connectHits } from "react-instantsearch-dom";
+import {connectHits} from "react-instantsearch-dom";
 
-const { Item: FormItem } = Form;
-const { Option } = Select;
+const {Item: FormItem} = Form;
+const {Option} = Select;
 
 const FIELD_NAME = "medicine_id";
 
@@ -38,21 +38,21 @@ class MedicationStage extends Component {
       searching_medicine: false,
       state_hits: {},
     };
-
+    
     this.handleMedicineSearch = throttle(
       this.handleMedicineSearch.bind(this),
       2000
     );
   }
-
+  
   componentDidUpdate(prevProps, prevState) {
     console.log("PREV PROPS =====>", prevProps);
     console.log("Prosssssssssss ----->", this.props);
   }
-
-  Hits = ({ hits }) => {
-    console.log("7654678743576890", { hits, length: hits.length });
-
+  
+  Hits = ({hits}) => {
+    console.log("7654678743576890", {hits, length: hits.length});
+    
     // let list = [];
     // for(let hit of hits){
     //   const {medicine_id = null , name ='' , generic_name ='' } = hit;
@@ -62,23 +62,23 @@ class MedicationStage extends Component {
     //   >{this.searchOptions({hit})}</Option>)
     // }
     // return list;
-
+    
     // // console.log("76543456735467890",hits);
-
+    
     return (
       <ol>
         {hits.map((hit) => (
-          <li key={hit.objectID}>{this.searchOptions({ hit })}</li>
+          <li key={hit.objectID}>{this.searchOptions({hit})}</li>
         ))}
       </ol>
     );
   };
-
+  
   CustomHits = connectHits(this.Hits);
-
-  SearchBox = ({ currentRefinement, isSearchStalled, refine }) => {
-    const { searching_medicine = true, isSearching = true } = this.state;
-    const { CustomHits } = this;
+  
+  SearchBox = ({currentRefinement, isSearchStalled, refine}) => {
+    const {searching_medicine = true, isSearching = true} = this.state;
+    const {CustomHits} = this;
     return (
       <form noValidate action="" role="search" className="medicine-search-form">
         {/* <input
@@ -105,7 +105,7 @@ class MedicationStage extends Component {
         null
     }
       */}
-
+        
         <Select
           onSearch={(value) => {
             console.log("5464564524354654634  Search--->", value);
@@ -128,25 +128,25 @@ class MedicationStage extends Component {
         >
           <Option key="Options-med">
             {" "}
-            <CustomHits />
+            <CustomHits/>
           </Option>
-
+          
           {/* {<CustomHits key={"medicine-ol"} />} */}
         </Select>
-
+        
         {/* <CustomHits key={"medicine-ol"} /> */}
       </form>
     );
   };
-
+  
   CustomSearchBox = connectSearchBox(this.SearchBox);
-
+  
   getStagesOption = () => {
-    const { medicines = {} } = this.props;
+    const {medicines = {}} = this.props;
     // let medicationStagesOption = [];
-
+    
     return Object.keys(medicines).map((id) => {
-      const { basic_info: { name } = {} } = medicines[id] || {};
+      const {basic_info: {name} = {}} = medicines[id] || {};
       return (
         <Option key={id} value={id}>
           {name}
@@ -154,49 +154,49 @@ class MedicationStage extends Component {
       );
     });
   };
-
+  
   getParentNode = (t) => t.parentNode;
-
+  
   async handleMedicineSearch(data) {
     try {
       if (data) {
-        const { searchMedicine } = this.props;
-        this.setState({ fetchingMedicines: true });
+        const {searchMedicine} = this.props;
+        this.setState({fetchingMedicines: true});
         const response = await searchMedicine(data);
-        const { status, payload: { data: responseData, message } = {} } =
+        const {status, payload: {data: responseData, message} = {}} =
           response;
         if (status) {
-          this.setState({ fetchingMedicines: false });
+          this.setState({fetchingMedicines: false});
         } else {
-          this.setState({ fetchingMedicines: false });
+          this.setState({fetchingMedicines: false});
         }
       } else {
-        this.setState({ fetchingMedicines: false });
+        this.setState({fetchingMedicines: false});
       }
     } catch (err) {
       console.log("err", err);
       message.warn("Something wen't wrong. Please try again later");
-      this.setState({ fetchingMedicines: false });
+      this.setState({fetchingMedicines: false});
     }
   }
-
+  
   algoliaClient = () => {
     return algoliasearch(config.algolia.app_id, config.algolia.app_key);
   };
-
-  searchOptions = ({ hit }) => {
+  
+  searchOptions = ({hit}) => {
     console.log("6543234678987542356789");
-    const { medicine_id = null, name = "", generic_name = "" } = hit;
+    const {medicine_id = null, name = "", generic_name = ""} = hit;
     let final_name = name;
     let final_generic_name = generic_name;
-
+    
     if (name === generic_name) {
       console.log("675456789763445", name);
       final_generic_name = "";
     }
-
+    
     // console.log("4353465332423673543453453",hit);
-
+    
     return (
       <div
         key={medicine_id}
@@ -211,7 +211,7 @@ class MedicationStage extends Component {
               </Highlight>
             </div>
           </Tooltip>
-
+          
           <Tooltip title="Generic Name">
             <div className="fs16">
               <Highlight attribute="generic_name" hit={hit}>
@@ -223,72 +223,72 @@ class MedicationStage extends Component {
       </div>
     );
   };
-
+  
   onSearch = (e) => {
     e.preventDefault();
     // console.log("98172381723 e.currentTarget", e.currentTarget);
   };
-
+  
   setListVisible = (value) => {
-    const { isSearching = false } = this.state;
-
+    const {isSearching = false} = this.state;
+    
     if (isSearching === true) {
-      this.setState({ isSearching: false });
+      this.setState({isSearching: false});
     } else {
-      this.setState({ isSearching: true });
+      this.setState({isSearching: true});
     }
   };
-
+  
   reset = (e) => {
     e.preventDefault();
-    const { isSearching = false } = this.state;
+    const {isSearching = false} = this.state;
     if (isSearching === true) {
-      this.setState({ isSearching: false });
+      this.setState({isSearching: false});
     }
   };
-
+  
   setMedicineValue = (medicine_id, medicine_name) => (e) => {
     e.preventDefault();
     const {
-      form: { setFieldsValue, getFieldValue },
+      form: {setFieldsValue, getFieldValue},
       setFormulation,
     } = this.props;
-    setFieldsValue({ [FIELD_NAME]: medicine_id });
+    setFieldsValue({[FIELD_NAME]: medicine_id});
     this.setState({
       isSearching: false,
       medicine_name: medicine_name,
       searching_medicine: false,
     });
   };
-
+  
   isSearchingMedicine = (e) => {
     e.preventDefault();
     console.log("7865467890765467890");
-    this.setState({ searching_medicine: true });
+    this.setState({searching_medicine: true});
   };
-
+  
   render() {
     const {
-      form: { getFieldDecorator, getFieldError, isFieldTouched },
+      form: {getFieldDecorator, getFieldError, isFieldTouched},
       setFormulation,
     } = this.props;
-
+    
     const {
       fetchingMedicines,
       medicine_name = "",
       searching_medicine = false,
     } = this.state;
-    const { isSearching = false } = this.state;
-
-    const { getStagesOption, getParentNode, handleMedicineSearch } = this;
-
+    const {isSearching = false} = this.state;
+    
+    const {getStagesOption, getParentNode, handleMedicineSearch} = this;
+    
     // if (!program_has_medication_stage || (!!purpose && !!!getInitialValue())) {
     //   return null;
     // }
-
+    
     // const error = isFieldTouched(FIELD_NAME) && getFieldError(FIELD_NAME);
-    const { CustomSearchBox } = this;
-
+    const {CustomSearchBox} = this;
+    
     return (
       <FormItem>
         {getFieldDecorator(
@@ -297,7 +297,7 @@ class MedicationStage extends Component {
         )(
           <div className="ais-InstantSearch">
             <div className="form-headings">Search Medicine</div>
-
+            
             <InstantSearch
               indexName={config.algolia.medicine_index}
               searchClient={this.algoliaClient()}
@@ -307,7 +307,7 @@ class MedicationStage extends Component {
                 {medicine_name && !searching_medicine ? (
                   <>
                     <span className="fs20 ml20">{medicine_name}</span>
-                    <span style={{ marginLeft: "5px" }}>
+                    <span style={{marginLeft: "5px"}}>
                       <EditOutlined
                         onClick={this.isSearchingMedicine}
                         title={"Edit Medicine"}
@@ -315,9 +315,9 @@ class MedicationStage extends Component {
                     </span>
                   </>
                 ) : (
-                  <CustomSearchBox />
+                  <CustomSearchBox/>
                 )}
-
+                
                 {/* {isSearching && */}
                 {/* <div>
                     <Hits

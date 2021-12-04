@@ -1,4 +1,4 @@
-import { defineMessages } from "react-intl";
+import {defineMessages} from "react-intl";
 
 export default defineMessages({
   schedule: {
@@ -136,7 +136,7 @@ export default defineMessages({
     description: "",
     defaultMessage: "Activity",
   },
-
+  
   followup: {
     id: "app.event.followup",
     description: "",
@@ -167,7 +167,7 @@ export default defineMessages({
     description: "",
     defaultMessage: "Video Call",
   },
-
+  
   from: {
     id: "app.event.from",
     description: "",
@@ -301,7 +301,7 @@ export default defineMessages({
     description: "",
     defaultMessage: "Edit Medication",
   },
-
+  
   update_button_text: {
     id: "medication_reminder.drawer.edit.buttom.text",
     description: "",

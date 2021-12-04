@@ -1,6 +1,6 @@
-import { doRequest } from "../../Helper/network";
-import { Twilio } from "../../Helper/urls";
-import { REQUEST_TYPE } from "../../constant";
+import {doRequest} from "../../Helper/network";
+import {Twilio} from "../../Helper/urls";
+import {REQUEST_TYPE} from "../../constant";
 
 const intialState = {};
 
@@ -21,22 +21,22 @@ const SET_PATIENT_FOR_CHAT_COMPLETED = "SET_PATIENT_FOR_CHAT_COMPLETED";
 const SET_CARE_PLAN_FOR_CHAT_COMPLETED = "SET_CARE_PLAN_FOR_CHAT_COMPLETED";
 
 const setTwilioAccessToken = (state, data) => {
-  const { identity = {}, token = {} } = data;
-  return { ...state, identity: identity, videoToken: token };
+  const {identity = {}, token = {}} = data;
+  return {...state, identity: identity, videoToken: token};
 };
 
 const setTwilioChatAccessToken = (state, data) => {
-  const { token = {} } = data;
-  return { ...state, chatToken: token };
+  const {token = {}} = data;
+  return {...state, chatToken: token};
 };
 
 const setPatientIdForChat = (state, data) => {
-  const { patient_id = "" } = data;
-  return { ...state, patientId: patient_id };
+  const {patient_id = ""} = data;
+  return {...state, patientId: patient_id};
 };
 
 const setCareplanIdForChat = (state, data) => {
-  const { care_plan_id = null } = data;
+  const {care_plan_id = null} = data;
   return {
     ...state,
     care_plan_id,
@@ -46,15 +46,15 @@ const setCareplanIdForChat = (state, data) => {
 export const fetchVideoAccessToken = (userId) => {
   return async (dispatch) => {
     try {
-      dispatch({ type: FETCHING_TWILIO_VIDEO_ACCESS_TOKEN });
+      dispatch({type: FETCHING_TWILIO_VIDEO_ACCESS_TOKEN});
       let response = await doRequest({
         method: REQUEST_TYPE.GET,
         url: Twilio.getTwilioVideoAccessToken(),
-        params: { userId: userId },
+        params: {userId: userId},
       });
-
-      const { status, payload } = response;
-
+      
+      const {status, payload} = response;
+      
       if (status === true) {
         dispatch({
           type: FETCHING_TWILIO_VIDEO_ACCESS_TOKEN_COMPLETED,
@@ -66,7 +66,8 @@ export const fetchVideoAccessToken = (userId) => {
           payload: payload.error,
         });
       }
-    } catch (error) {}
+    } catch (error) {
+    }
   };
 };
 
@@ -74,15 +75,15 @@ export const fetchChatAccessToken = (userId) => {
   let response = {};
   return async (dispatch) => {
     try {
-      dispatch({ type: FETCHING_TWILIO_CHAT_ACCESS_TOKEN });
+      dispatch({type: FETCHING_TWILIO_CHAT_ACCESS_TOKEN});
       response = await doRequest({
         method: REQUEST_TYPE.GET,
         url: Twilio.getTwilioChatAccessToken(),
-        params: { identity: userId, device: "browser" },
+        params: {identity: userId, device: "browser"},
       });
-
-      const { status, payload } = response;
-
+      
+      const {status, payload} = response;
+      
       if (status === true) {
         dispatch({
           type: FETCHING_TWILIO_CHAT_ACCESS_TOKEN_COMPLETED,
@@ -94,7 +95,8 @@ export const fetchChatAccessToken = (userId) => {
           payload: payload.error,
         });
       }
-    } catch (error) {}
+    } catch (error) {
+    }
     return response;
   };
 };
@@ -104,9 +106,10 @@ export const setPatientForChat = (patient_id) => {
     try {
       dispatch({
         type: SET_PATIENT_FOR_CHAT_COMPLETED,
-        payload: { patient_id },
+        payload: {patient_id},
       });
-    } catch (error) {}
+    } catch (error) {
+    }
   };
 };
 
@@ -115,14 +118,15 @@ export const setCareplanForChat = (care_plan_id) => {
     try {
       dispatch({
         type: SET_CARE_PLAN_FOR_CHAT_COMPLETED,
-        payload: { care_plan_id },
+        payload: {care_plan_id},
       });
-    } catch (error) {}
+    } catch (error) {
+    }
   };
 };
 
 export default (state = intialState, action) => {
-  const { type, payload = {} } = action;
+  const {type, payload = {}} = action;
   switch (type) {
     case FETCHING_TWILIO_VIDEO_ACCESS_TOKEN_COMPLETED: {
       return setTwilioAccessToken(state, payload);

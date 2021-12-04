@@ -4,7 +4,7 @@ import Authorize from "../middlewares/authorize";
 import workoutResponseRouter from "../workoutResponses";
 
 import Workout from "../../../app/controllers/mControllers/workouts/workout.controller";
-import { USER_CATEGORY } from "../../../constant";
+import {USER_CATEGORY} from "../../../constant";
 
 const router = express.Router();
 

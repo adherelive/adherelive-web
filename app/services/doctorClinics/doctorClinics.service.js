@@ -1,9 +1,10 @@
 import Database from "../../../libs/mysql";
-import { TABLE_NAME } from "../../models/doctorClinics";
+import {TABLE_NAME} from "../../models/doctorClinics";
 
 class DoctorClinicService {
-  constructor() {}
-
+  constructor() {
+  }
+  
   addClinic = async (data) => {
     const transaction = await Database.initTransaction();
     try {
@@ -17,7 +18,7 @@ class DoctorClinicService {
       throw error;
     }
   };
-
+  
   updateClinic = async (data, id) => {
     const transaction = await Database.initTransaction();
     try {
@@ -32,12 +33,12 @@ class DoctorClinicService {
       return doctorClinic;
     } catch (error) {
       console.log("76578976546786546789 error --->", error);
-
+      
       await transaction.rollback();
       throw error;
     }
   };
-
+  
   getClinicForDoctor = async (doctor_id) => {
     try {
       const doctorClinic = await Database.getModel(TABLE_NAME).findAll({
@@ -50,7 +51,7 @@ class DoctorClinicService {
       throw error;
     }
   };
-
+  
   getClinicById = async (id) => {
     try {
       const doctorClinic = await Database.getModel(TABLE_NAME).findOne({

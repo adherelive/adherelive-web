@@ -1,4 +1,4 @@
-import { defineMessages } from "react-intl";
+import {defineMessages} from "react-intl";
 
 const message = defineMessages({
   add_exercise: {

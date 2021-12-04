@@ -1,10 +1,11 @@
-import { Op } from "sequelize";
+import {Op} from "sequelize";
 import Database from "../../../libs/mysql";
-import { TABLE_NAME } from "../../models/medicines";
+import {TABLE_NAME} from "../../models/medicines";
 
 class MedicineService {
-  constructor() {}
-
+  constructor() {
+  }
+  
   add = async (data) => {
     try {
       const medicine = await Database.getModel(TABLE_NAME).create(data);
@@ -13,7 +14,7 @@ class MedicineService {
       throw err;
     }
   };
-
+  
   search = async (data) => {
     try {
       const medicine = await Database.getModel(TABLE_NAME).findAll({
@@ -28,7 +29,7 @@ class MedicineService {
       throw error;
     }
   };
-
+  
   searchMedicineForAdmin = async (
     data,
     offset,
@@ -43,7 +44,7 @@ class MedicineService {
         limit,
         where: {
           public_medicine,
-
+          
           [Op.or]: {
             name: {
               [Op.like]: `%${data}%`,
@@ -55,7 +56,7 @@ class MedicineService {
         },
         order: [["updated_at", "DESC"]],
       });
-
+      
       console.log(
         "329847562389462364872384122 ************************************8******8888",
         {
@@ -72,7 +73,7 @@ class MedicineService {
       throw error;
     }
   };
-
+  
   getMedicineCountForAdmin = async (data, public_medicine, doctorIds) => {
     try {
       let count = 0;
@@ -80,7 +81,7 @@ class MedicineService {
         count = await Database.getModel(TABLE_NAME).count({
           where: {
             [Op.and]: [
-              { public_medicine },
+              {public_medicine},
               {
                 [Op.or]: {
                   name: {
@@ -104,13 +105,13 @@ class MedicineService {
           },
         });
       }
-
+      
       return count;
     } catch (error) {
       throw error;
     }
   };
-
+  
   getMedicineById = async (id) => {
     try {
       const medicine = await Database.getModel(TABLE_NAME).findOne({
@@ -123,7 +124,7 @@ class MedicineService {
       throw error;
     }
   };
-
+  
   getMedicineByData = async (data) => {
     try {
       const medicine = await Database.getModel(TABLE_NAME).findAll({
@@ -134,7 +135,7 @@ class MedicineService {
       throw error;
     }
   };
-
+  
   getAllMedicines = async () => {
     try {
       const medicine = await Database.getModel(TABLE_NAME).findAll({
@@ -145,7 +146,7 @@ class MedicineService {
       throw error;
     }
   };
-
+  
   updateMedicine = async (data, id) => {
     try {
       const medicine = await Database.getModel(TABLE_NAME).update(data, {
@@ -158,7 +159,7 @@ class MedicineService {
       throw err;
     }
   };
-
+  
   deleteMedicine = async (id) => {
     try {
       const medicine = await Database.getModel(TABLE_NAME).destroy({

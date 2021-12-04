@@ -1,7 +1,7 @@
 "use strict";
-import { DataTypes } from "sequelize";
-import { TABLE_NAME as doctorTableName } from "./doctors";
-import { TABLE_NAME as providerTableName } from "./providers";
+import {DataTypes} from "sequelize";
+import {TABLE_NAME as doctorTableName} from "./doctors";
+import {TABLE_NAME as providerTableName} from "./providers";
 
 export const TABLE_NAME = "doctor_provider_mappings";
 

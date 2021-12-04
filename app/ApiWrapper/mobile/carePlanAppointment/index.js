@@ -9,11 +9,11 @@ class CarePlanAppointmentWrapper extends BaseCarePlanAppointment {
   constructor(data) {
     super(data);
   }
-
+  
   getBasicInfo = () => {
-    const { _data } = this;
-    const { id, care_plan_id, appointment_id } = _data || {};
-
+    const {_data} = this;
+    const {id, care_plan_id, appointment_id} = _data || {};
+    
     return {
       basic_info: {
         id,
@@ -22,7 +22,7 @@ class CarePlanAppointmentWrapper extends BaseCarePlanAppointment {
       },
     };
   };
-
+  
   getReferenceInfo = async () => {
     const {
       getBasicInfo,
@@ -31,15 +31,15 @@ class CarePlanAppointmentWrapper extends BaseCarePlanAppointment {
       getCarePlanId,
       _data,
     } = this;
-
+    
     const appointment = await appointmentService.getAppointmentById(
       getAppointmentId()
     );
     const appointmentData = await AppointmentWrapper(appointment);
-
+    
     const carePlan = await carePlanService.getCarePlanById(getCarePlanId());
     const carePlanData = await CarePlanWrapper(carePlan);
-
+    
     return {
       care_plan_appointments: {
         [getCarePlanAppointmentId()]: getBasicInfo(),
@@ -62,6 +62,6 @@ export default async (data = null, id = null) => {
     return new CarePlanAppointmentWrapper(data);
   }
   const carePlan =
-    await carePlanAppointmentService.getSingleCarePlanAppointmentByData({ id });
+    await carePlanAppointmentService.getSingleCarePlanAppointmentByData({id});
   return new CarePlanAppointmentWrapper(carePlan);
 };

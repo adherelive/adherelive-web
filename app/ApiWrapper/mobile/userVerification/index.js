@@ -5,11 +5,11 @@ class UserVerificationWrapper extends BaseUserVerification {
   constructor(data) {
     super(data);
   }
-
+  
   getBasicInfo = () => {
-    const { _data } = this;
-    const { id, user_id, request_id, status, type } = _data || {};
-
+    const {_data} = this;
+    const {id, user_id, request_id, status, type} = _data || {};
+    
     return {
       basic_info: {
         id,

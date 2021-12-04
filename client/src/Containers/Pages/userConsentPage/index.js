@@ -1,8 +1,8 @@
-import { connect } from "react-redux";
-import { withRouter } from "react-router-dom";
+import {connect} from "react-redux";
+import {withRouter} from "react-router-dom";
 import UserConsent from "../../../Components/Pages/userConsentPage";
-import { giveUserConsent, getInitialData } from "../../../modules/auth";
-import { getTermsAndPolicy } from "../../../modules/otherDetails";
+import {giveUserConsent, getInitialData} from "../../../modules/auth";
+import {getTermsAndPolicy} from "../../../modules/otherDetails";
 
 const mapStateToProps = (state) => {
   const {} = state;

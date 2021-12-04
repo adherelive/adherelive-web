@@ -1,6 +1,6 @@
-import React, { Component, Fragment } from "react";
-import { injectIntl } from "react-intl";
-import { Button, Drawer } from "antd";
+import React, {Component, Fragment} from "react";
+import {injectIntl} from "react-intl";
+import {Button, Drawer} from "antd";
 import messages from "./messages";
 import SingleDayComponent from "../singleDayComponent/index";
 import message from "antd/es/message";
@@ -23,29 +23,29 @@ class EditDiet extends Component {
       deletedFoodGroupIds: [],
       canOnlyView: false,
     };
-
-    this.FormWrapper = Form.create({ onFieldsChange: this.onFormFieldChanges })(
+    
+    this.FormWrapper = Form.create({onFieldsChange: this.onFormFieldChanges})(
       DietFieldsForm
     );
   }
-
+  
   async componentDidMount() {
-    const { dietData = {}, editTemplateDiet = null } = this.props;
-
+    const {dietData = {}, editTemplateDiet = null} = this.props;
+    
     await this.getAllPortions();
-
+    
     if (editTemplateDiet !== null) {
-      const { total_calories, details: { diet_food_groups = {} } = {} } =
-        dietData || {};
-
+      const {total_calories, details: {diet_food_groups = {}} = {}} =
+      dietData || {};
+      
       this.setState({
-        completeData: { ...diet_food_groups },
+        completeData: {...diet_food_groups},
         initialFormData: {},
         total_calories,
       });
     }
   }
-
+  
   async componentDidUpdate(prevProps, prevState) {
     const {
       isDietVisible = false,
@@ -60,51 +60,51 @@ class EditDiet extends Component {
       await this.setPatientPreferenceTimings();
       await this.getDietDetails();
     }
-
+    
     if (isDietVisible && isDietVisible !== prev_isDietVisible) {
-      const { total_calories, details: { diet_food_groups = {} } = {} } =
-        dietData || {};
-
+      const {total_calories, details: {diet_food_groups = {}} = {}} =
+      dietData || {};
+      
       this.setState({
-        completeData: { ...diet_food_groups },
+        completeData: {...diet_food_groups},
         initialFormData: {},
         total_calories,
       });
     }
   }
-
+  
   setPatientPreferenceTimings = async () => {
     try {
-      this.setState({ loading: true });
+      this.setState({loading: true});
       const {
         getPatientPreferenceDietDetails,
-        payload: { patient_id = null } = {},
+        payload: {patient_id = null} = {},
       } = this.props;
       const response = await getPatientPreferenceDietDetails(patient_id);
       const {
         status,
-        payload: { data: resp_data = {}, message: resp_msg = "" } = {},
+        payload: {data: resp_data = {}, message: resp_msg = ""} = {},
       } = response;
       if (!status) {
         message.error(resp_msg);
       } else {
-        const { timings = {} } = resp_data || {};
-        this.setState({ timings });
+        const {timings = {}} = resp_data || {};
+        this.setState({timings});
       }
-
-      this.setState({ loading: false });
+      
+      this.setState({loading: false});
     } catch (error) {
-      this.setState({ loading: false });
+      this.setState({loading: false});
       console.log("error => ", error);
     }
   };
-
+  
   setDeletedFoodGroupId = (id) => {
-    const { deletedFoodGroupIds = [] } = this.state;
+    const {deletedFoodGroupIds = []} = this.state;
     deletedFoodGroupIds.push(id);
-    this.setState({ deletedFoodGroupIds });
+    this.setState({deletedFoodGroupIds});
   };
-
+  
   getDietDetails = async () => {
     try {
       const {
@@ -117,13 +117,13 @@ class EditDiet extends Component {
         diet_id = null,
         canViewDetails = false,
       } = payload || {};
-
-      this.setState({ loading: true });
-
+      
+      this.setState({loading: true});
+      
       const response = await getSingleDietData(diet_id);
-      const { status, payload: { data = {}, message: resp_msg = "" } = {} } =
-        response || {};
-
+      const {status, payload: {data = {}, message: resp_msg = ""} = {}} =
+      response || {};
+      
       if (!status) {
         message.warn(resp_msg);
       } else {
@@ -132,7 +132,7 @@ class EditDiet extends Component {
           diet_food_groups = {},
           food_groups_total_calories = 0,
         } = data || {};
-
+        
         const {
           basic_info: {
             name = "",
@@ -140,58 +140,58 @@ class EditDiet extends Component {
             start_date = "",
             end_date = "",
           } = {},
-          details: { not_to_do = "" } = {},
+          details: {not_to_do = ""} = {},
           expired_on = null,
         } = diets[diet_id] || {};
-
+        
         if (total_calories !== food_groups_total_calories) {
           const updateCalResponse = await updateDietTotalCalories({
             total_calories: food_groups_total_calories,
             diet_id,
           });
-
+          
           const {
             status: updateCalStatus,
-            payload: { message: updateCal_resp_msg = "" } = {},
+            payload: {message: updateCal_resp_msg = ""} = {},
           } = updateCalResponse || {};
           if (!updateCalStatus) {
             message.warn(updateCal_resp_msg);
           }
         }
-
+        
         const initialFormData = {
           name,
           start_date,
           end_date,
           not_to_do,
         };
-
+        
         this.setState({
-          completeData: { ...diet_food_groups },
+          completeData: {...diet_food_groups},
           initialFormData,
           care_plan_id,
           total_calories: food_groups_total_calories,
         });
-
+        
         if (expired_on || canViewDetails) {
-          this.setState({ canOnlyView: true });
+          this.setState({canOnlyView: true});
         }
       }
-
-      this.setState({ loading: false });
+      
+      this.setState({loading: false});
     } catch (error) {
-      this.setState({ loading: false });
-      console.log("error ===>", { error });
+      this.setState({loading: false});
+      console.log("error ===>", {error});
     }
   };
-
+  
   getAllPortions = async () => {
     try {
-      const { getPortions } = this.props;
+      const {getPortions} = this.props;
       const response = await getPortions();
-      const { status, payload: { message: resp_msg = "" } = {} } =
-        response || {};
-
+      const {status, payload: {message: resp_msg = ""} = {}} =
+      response || {};
+      
       if (!status) {
         message.error(resp_msg);
       }
@@ -199,21 +199,21 @@ class EditDiet extends Component {
       message.error(error);
     }
   };
-
+  
   formatMessage = (data) => this.props.intl.formatMessage(data);
-
+  
   setFinalDayData = (data) => {
-    this.setState({ completeData: data });
+    this.setState({completeData: data});
   };
-
+  
   onClose = () => {
-    const { close } = this.props;
+    const {close} = this.props;
     const {
       props: {
-        form: { resetFields },
+        form: {resetFields},
       },
     } = this.formRef;
-
+    
     this.setState({
       completeData: {},
       total_calories: 0,
@@ -224,56 +224,56 @@ class EditDiet extends Component {
       deletedFoodGroupIds: [],
       canOnlyView: false,
     });
-
+    
     resetFields();
     close();
   };
-
+  
   setNewTotalCal = (newTotalCal) => {
-    this.setState({ total_calories: newTotalCal });
+    this.setState({total_calories: newTotalCal});
   };
-
+  
   setFormRef = (formRef) => {
     this.formRef = formRef;
     if (formRef) {
-      this.setState({ formRef: true });
+      this.setState({formRef: true});
     }
   };
-
+  
   validateDietData = () => {
-    const { completeData: diet_food_groups = {} } = this.state;
-
+    const {completeData: diet_food_groups = {}} = this.state;
+    
     if (Object.keys(diet_food_groups).length === 0) {
       message.warn(this.formatMessage(messages.addDietDetails));
       return false;
     }
-
+    
     let allEmpty = true;
-
+    
     for (let each in diet_food_groups) {
       const eachArr = diet_food_groups[each] || [];
-
+      
       if (eachArr.length > 0) {
         allEmpty = false;
         break;
       }
     }
-
+    
     if (allEmpty) {
       message.warn(this.formatMessage(messages.addDietDetails));
       return false;
     }
-
+    
     return true;
   };
-
+  
   handleSubmit = async () => {
     const {
       props: {
-        form: { validateFields },
+        form: {validateFields},
       },
     } = this.formRef;
-
+    
     const {
       updateDiet,
       carePlanId: care_plan_id = null,
@@ -286,13 +286,13 @@ class EditDiet extends Component {
       total_calories = 0,
       deletedFoodGroupIds = [],
     } = this.state;
-    const { diet_id = null } = payload || {};
+    const {diet_id = null} = payload || {};
     const validated = this.validateDietData();
-
+    
     if (!validated) {
       return;
     }
-
+    
     validateFields(async (err, values) => {
       if (!err) {
         let {
@@ -302,7 +302,7 @@ class EditDiet extends Component {
           what_not_to_do,
           repeat_days,
         } = values;
-
+        
         if (
           name.length === 0 ||
           repeat_days.length === 0 ||
@@ -313,10 +313,10 @@ class EditDiet extends Component {
           message.warn(this.formatMessage(messages.fillAlldetails));
           return false;
         }
-
+        
         const start_date = moment_start_date.toISOString();
         const end_date = moment_end_date ? moment_end_date.toISOString() : null;
-
+        
         const data = {
           name,
           repeat_days,
@@ -328,16 +328,16 @@ class EditDiet extends Component {
           not_to_do: what_not_to_do,
           delete_food_group_ids: deletedFoodGroupIds,
         };
-
-        this.setState({ submitting: true });
-
+        
+        this.setState({submitting: true});
+        
         if (addTemplateDiet === null && editTemplateDiet === null) {
           // normal edit diet
           const response = await updateDiet(data, diet_id);
           const {
             status,
             statusCode,
-            payload: { data: resp_data = {}, message: resp_msg = "" } = {},
+            payload: {data: resp_data = {}, message: resp_msg = ""} = {},
           } = response || {};
           if (status) {
             message.success(resp_msg);
@@ -345,44 +345,44 @@ class EditDiet extends Component {
           } else {
             message.warn(resp_msg);
           }
-
-          this.setState({ submitting: false });
+          
+          this.setState({submitting: false});
         } else {
           // using template
-
+          
           if (addTemplateDiet) {
             addTemplateDiet(data);
           } else if (editTemplateDiet) {
             editTemplateDiet(data);
           }
         }
-
-        this.setState({ submitting: false });
+        
+        this.setState({submitting: false});
       } else {
         let allErrors = "";
         for (let each in err) {
-          const { errors = [] } = err[each] || {};
+          const {errors = []} = err[each] || {};
           for (let error of errors) {
-            const { message = "" } = error;
+            const {message = ""} = error;
             allErrors = allErrors + message + ".";
           }
         }
         message.warn(allErrors);
-        this.setState({ submitting: false });
+        this.setState({submitting: false});
         return false;
       }
     });
   };
-
+  
   getDietComponent = () => {
-    const { setFinalDayData, setNewTotalCal, setDeletedFoodGroupId } = this;
+    const {setFinalDayData, setNewTotalCal, setDeletedFoodGroupId} = this;
     const {
       completeData = {},
       total_calories = 0,
       timings = {},
       canOnlyView = false,
     } = this.state;
-
+    
     return (
       <div>
         <div className="fs16 fw700 wp100  mt20 flex justify-space-between">
@@ -391,7 +391,7 @@ class EditDiet extends Component {
             total_calories >= 0 ? total_calories : "--"
           }${" "}Cal`}</div>
         </div>
-
+        
         <SingleDayComponent
           setFinalDayData={setFinalDayData}
           setNewTotalCal={setNewTotalCal}
@@ -405,25 +405,25 @@ class EditDiet extends Component {
       </div>
     );
   };
-
+  
   handleDelete = () => {
-    const { warnNote } = this;
+    const {warnNote} = this;
     const {
-      payload: { diet_id = null, patient_id } = {},
+      payload: {diet_id = null, patient_id} = {},
       getPatientCarePlanDetails,
     } = this.props || {};
-
+    
     confirm({
       title: `${this.formatMessage(messages.warnNote)}`,
       content: <div>{warnNote()}</div>,
       onOk: async () => {
         try {
-          const { deleteDiet } = this.props;
+          const {deleteDiet} = this.props;
           const response = (await deleteDiet(diet_id)) || {};
           const {
             status,
             statusCode,
-            payload: { data: resp_data = {}, message: resp_msg = "" } = {},
+            payload: {data: resp_data = {}, message: resp_msg = ""} = {},
           } = response || {};
           if (status) {
             message.success(resp_msg);
@@ -437,10 +437,11 @@ class EditDiet extends Component {
           message.warn(this.formatMessage(messages.somethingWentWrong));
         }
       },
-      onCancel() {},
+      onCancel() {
+      },
     });
   };
-
+  
   warnNote = () => {
     return (
       <div className="pt16">
@@ -451,20 +452,20 @@ class EditDiet extends Component {
       </div>
     );
   };
-
+  
   getDeleteButton = () => {
-    const { handleDelete } = this;
-    const { loading, deleteDietOfTemplate, hideDiet, addTemplateDiet } =
+    const {handleDelete} = this;
+    const {loading, deleteDietOfTemplate, hideDiet, addTemplateDiet} =
       this.props;
-
+    
     if (addTemplateDiet) {
       return (
-        <Button onClick={hideDiet} style={{ marginRight: 8 }}>
+        <Button onClick={hideDiet} style={{marginRight: 8}}>
           Cancel
         </Button>
       );
     }
-
+    
     return (
       <Button
         type={"danger"}
@@ -479,7 +480,7 @@ class EditDiet extends Component {
       </Button>
     );
   };
-
+  
   render() {
     const {
       formatMessage,
@@ -489,7 +490,7 @@ class EditDiet extends Component {
       getDeleteButton,
       FormWrapper,
     } = this;
-    const { visible = false } = this.props;
+    const {visible = false} = this.props;
     const {
       dietVisible = false,
       hideDiet = null,
@@ -502,7 +503,7 @@ class EditDiet extends Component {
       loading = false,
       canOnlyView = false,
     } = this.state;
-
+    
     return (
       <Fragment>
         <Drawer
@@ -510,10 +511,10 @@ class EditDiet extends Component {
             canOnlyView
               ? formatMessage(messages.viewDetails)
               : editTemplateDiet === null && addTemplateDiet === null
-              ? formatMessage(messages.editDiet)
-              : addTemplateDiet
-              ? formatMessage(messages.addDietText)
-              : formatMessage(messages.editDiet)
+                ? formatMessage(messages.editDiet)
+                : addTemplateDiet
+                  ? formatMessage(messages.addDietText)
+                  : formatMessage(messages.editDiet)
           }
           placement="right"
           maskClosable={false}
@@ -529,7 +530,7 @@ class EditDiet extends Component {
         >
           {loading ? (
             <div className="hp100 wp100 flex direction-column align-center justify-center z1">
-              <Loading className={"wp100"} />
+              <Loading className={"wp100"}/>
             </div>
           ) : (
             <div className="wp100">
@@ -540,7 +541,7 @@ class EditDiet extends Component {
                 initialFormData={initialFormData}
                 canOnlyView={canOnlyView}
               />
-
+              
               {!canOnlyView && (
                 <Footer
                   className="flex justify-space-between"

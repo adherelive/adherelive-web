@@ -1,24 +1,24 @@
-import { connect } from "react-redux";
+import {connect} from "react-redux";
 import AddConsultationFee from "../../Components/Drawer/addConsultationFee";
-import { DRAWER } from "../../constant";
-import { close } from "../../modules/drawer";
+import {DRAWER} from "../../constant";
+import {close} from "../../modules/drawer";
 import {
   getAdminPaymentProduct,
   getDoctorPaymentProduct,
   addDoctorPaymentProduct,
 } from "../../modules/doctors";
-import { authDoctorSelector } from "../../modules/doctors/selectors";
+import {authDoctorSelector} from "../../modules/doctors/selectors";
 
 // import { createReminder, updateReminder } from "../../modules/reminder"; // write to add to database
 const mapStateToProps = (state) => {
   const {
-    auth: { auth_role = null } = {},
+    auth: {auth_role = null} = {},
     user_roles = {},
-    drawer: { visible, loading, data: { type, payload = {} } = {} },
+    drawer: {visible, loading, data: {type, payload = {}} = {}},
     doctors,
     users,
   } = state;
-
+  
   const auth_doctor_id = authDoctorSelector(state);
   return {
     auth_role,

@@ -1,6 +1,6 @@
 import React from "react";
 
-import { TABLE_COLUMN } from "../helper";
+import {TABLE_COLUMN} from "../helper";
 import messages from "../messages";
 import PID from "../datacolumn/pid";
 import Diagnosis from "../datacolumn/diagnosis";
@@ -11,8 +11,8 @@ import CreatedAt from "../datacolumn/createdAt";
 import moment from "moment";
 
 export default (props) => {
-  const { formatMessage, getColumnSearchProps } = props || {};
-
+  const {formatMessage, getColumnSearchProps} = props || {};
+  
   return [
     {
       title: "Patient",
@@ -48,7 +48,7 @@ export default (props) => {
       title: formatMessage(messages.treatment),
       ...TABLE_COLUMN.TREATMENT,
       render: (data) => {
-        const { patientData, treatmentData, carePlanData } = data;
+        const {patientData, treatmentData, carePlanData} = data;
         // console.log("82346234236492347 ========>",{treatmentData,carePlanData})
         return (
           <Treatment
@@ -71,12 +71,12 @@ export default (props) => {
       render: (carePlanData) => <StartDate {...carePlanData} />,
       sorter: (a, b) => {
         // console.log("38712397182 a, b", {a, b});
-
-        const { carePlanData: { activated_on: aActivatedOn } = {} } =
-          a[TABLE_COLUMN.START_DATE.dataIndex] || {};
-        const { carePlanData: { activated_on: bActivatedOn } = {} } =
-          b[TABLE_COLUMN.START_DATE.dataIndex] || {};
-
+        
+        const {carePlanData: {activated_on: aActivatedOn} = {}} =
+        a[TABLE_COLUMN.START_DATE.dataIndex] || {};
+        const {carePlanData: {activated_on: bActivatedOn} = {}} =
+        b[TABLE_COLUMN.START_DATE.dataIndex] || {};
+        
         if (moment(aActivatedOn).isBefore(moment(bActivatedOn))) {
           return 1;
         } else {
@@ -90,12 +90,12 @@ export default (props) => {
       render: (patientData) => <CreatedAt {...patientData} />,
       sorter: (a, b) => {
         // console.log("38712397182 a, b", {a, b});
-
-        const { patientData: { created_at: aCreatedAt } = {} } =
-          a[TABLE_COLUMN.CREATED_AT.dataIndex] || {};
-        const { patientData: { created_at: bCreatedAt } = {} } =
-          b[TABLE_COLUMN.CREATED_AT.dataIndex] || {};
-
+        
+        const {patientData: {created_at: aCreatedAt} = {}} =
+        a[TABLE_COLUMN.CREATED_AT.dataIndex] || {};
+        const {patientData: {created_at: bCreatedAt} = {}} =
+        b[TABLE_COLUMN.CREATED_AT.dataIndex] || {};
+        
         if (moment(aCreatedAt).isBefore(moment(bCreatedAt))) {
           return 1;
         } else {

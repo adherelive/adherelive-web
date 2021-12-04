@@ -1,5 +1,5 @@
-import React, { Component } from "react";
-import { injectIntl } from "react-intl";
+import React, {Component} from "react";
+import {injectIntl} from "react-intl";
 import Drawer from "antd/es/drawer";
 
 import WorkoutTimeline from "../../../Containers/Workouts/timeline";
@@ -15,40 +15,40 @@ class WorkoutResponseDrawer extends Component {
       date: null,
     };
   }
-
+  
   onClose = () => {
-    const { close } = this.props;
+    const {close} = this.props;
     close();
   };
-
-  openWorkoutResponseDetails = ({ schedule_event_id, date }) => {
+  
+  openWorkoutResponseDetails = ({schedule_event_id, date}) => {
     this.setState({
       detailsDrawerVisible: true,
       schedule_event_id,
       date,
     });
   };
-
+  
   closeWorkoutResponseDetails = () => {
     this.setState({
       detailsDrawerVisible: false,
       schedule_event_id: null,
     });
   };
-
+  
   render() {
     const {
       visible,
-      intl: { formatMessage } = {},
+      intl: {formatMessage} = {},
       workout_name = "",
     } = this.props;
-    const { onClose } = this;
+    const {onClose} = this;
     const {
       schedule_event_id = null,
       detailsDrawerVisible = false,
       date = null,
     } = this.state;
-
+    
     return (
       <Drawer
         placement="right"
@@ -56,7 +56,7 @@ class WorkoutResponseDrawer extends Component {
         onClose={onClose}
         visible={visible}
         width={"35%"}
-        title={formatMessage({ ...messages.title }, { workout_name })}
+        title={formatMessage({...messages.title}, {workout_name})}
         headerStyle={{
           position: "sticky",
           zIndex: "9999",

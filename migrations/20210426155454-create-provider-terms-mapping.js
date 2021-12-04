@@ -1,8 +1,8 @@
 "use strict";
 
-import { TABLE_NAME } from "../app/models/providerTermsMappings";
-import { TABLE_NAME as providerTableName } from "../app/models/providers";
-import { TABLE_NAME as termsAndConditions } from "../app/models/termsAndConditions";
+import {TABLE_NAME} from "../app/models/providerTermsMappings";
+import {TABLE_NAME as providerTableName} from "../app/models/providers";
+import {TABLE_NAME as termsAndConditions} from "../app/models/termsAndConditions";
 
 module.exports = {
   up: (queryInterface, Sequelize) => {
@@ -46,7 +46,7 @@ module.exports = {
       },
     });
   },
-
+  
   down: (queryInterface, Sequelize) => {
     return queryInterface.dropTable(TABLE_NAME);
   },

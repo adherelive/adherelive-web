@@ -1,7 +1,7 @@
 "use strict";
-import { DataTypes } from "sequelize";
-import { TABLE_NAME as providerTableName } from "./providers";
-import { TABLE_NAME as termsAndConditions } from "./termsAndConditions";
+import {DataTypes} from "sequelize";
+import {TABLE_NAME as providerTableName} from "./providers";
+import {TABLE_NAME as termsAndConditions} from "./termsAndConditions";
 
 export const TABLE_NAME = "provider_terms_mappings";
 

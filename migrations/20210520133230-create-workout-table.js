@@ -1,7 +1,7 @@
 "use strict";
 
-import { TABLE_NAME } from "../app/models/workout";
-import { TABLE_NAME as carePlanTableName } from "../app/models/carePlan";
+import {TABLE_NAME} from "../app/models/workout";
+import {TABLE_NAME as carePlanTableName} from "../app/models/carePlan";
 
 module.exports = {
   up: (queryInterface, DataTypes) => {
@@ -54,7 +54,7 @@ module.exports = {
       },
     });
   },
-
+  
   down: (queryInterface, DataTypes) => {
     return queryInterface.dropTable(TABLE_NAME);
   },

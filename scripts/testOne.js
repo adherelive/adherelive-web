@@ -2,7 +2,7 @@ import Papa from "papaparse";
 import fs from "fs";
 import path from "path";
 import moment from "moment";
-import Sequelize, { QueryTypes } from "sequelize";
+import Sequelize, {QueryTypes} from "sequelize";
 // const Config = require("../config/config");
 // Config();
 
@@ -42,7 +42,7 @@ database
 
 const addMedicine = async (data) => {
   try {
-    const { name, pillbox_id } = data || {};
+    const {name, pillbox_id} = data || {};
     const medicine = await database.query(
       "INSERT INTO `medicines` (`name`, `pillbox_id`, `type`, `created_at`, `updated_at`) VALUES (?, ?, ?, ?, ?);",
       {
@@ -56,7 +56,7 @@ const addMedicine = async (data) => {
         type: QueryTypes.INSERT,
       }
     );
-
+    
     Logger.debug("addMedicine ---> ", medicine);
   } catch (error) {
     throw error;
@@ -69,7 +69,7 @@ let dataToWrite = [];
 
 fs.readFile(
   path.join(__dirname, "Pillbox.csv"),
-  { encoding: "utf-8" },
+  {encoding: "utf-8"},
   (err, file) => {
     if (!err) {
       Papa.parse(file, {
@@ -81,31 +81,31 @@ fs.readFile(
            * rxstring  :   Full name of medicine (name)
            * */
           try {
-            const { data } = row || {};
-            const { ID, rxstring, medicine_name } = data || {};
-
+            const {data} = row || {};
+            const {ID, rxstring, medicine_name} = data || {};
+            
             let dataToUpdate = {
               name: rxstring,
               pillbox_id: ID,
               created_at: new Date(),
               updated_at: new Date(),
             };
-
+            
             dataToWrite.push({
               name: rxstring,
               pillbox_id: ID,
               created_at: new Date(),
               updated_at: new Date(),
             });
-
+            
             // fs.writeFile('medicineDb.txt', JSON.stringify(dataToUpdate), "utf8", (err) => {
             //     if(err) {
             //         console.log("ERROR IN TESTONE ---> ", err);
             //     }
             // });
-
+            
             dataToUpdate = {};
-
+            
             database
               .authenticate()
               .then(async () => {
@@ -118,7 +118,7 @@ fs.readFile(
               .catch((err) => {
                 console.log("Db connect error is: ", err);
               });
-
+            
             // await addMedicine({pillbox_id: ID, name: rxstring});
           } catch (error) {
             console.log("Row add error --> ", error);

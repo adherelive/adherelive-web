@@ -1,3 +1,3 @@
 export const searchTreatments = (data) => {
-    return `/treatments?condition_id=${data}`;
+  return `/treatments?condition_id=${data}`;
 };

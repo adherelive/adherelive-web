@@ -25,12 +25,12 @@ export const TABLE_COLUMN = {
 };
 
 export const formatAppointmentTableData = (data) => {
-  const { vitals, id, vital_templates } = data || {};
-
-  const { basic_info: { vital_template_id } = {} } = vitals[id] || {};
-
+  const {vitals, id, vital_templates} = data || {};
+  
+  const {basic_info: {vital_template_id} = {}} = vitals[id] || {};
+  
   const vitalTemplateData = vital_templates[vital_template_id] || {};
-
+  
   return {
     vitalTemplateData,
     vitalData: vitals[id],

@@ -621,13 +621,13 @@ export const CHART_DETAILS = {
 
 export const PERMISSIONS = {
   ADD_PATIENT: "ADD_PATIENT",
-
+  
   ADD_APPOINTMENT: "ADD_APPOINTMENT",
   EDIT_APPOINTMENT: "EDIT_APPOINTMENT",
-
+  
   ADD_MEDICATION: "ADD_MEDICATION",
   EDIT_MEDICATION: "EDIT_MEDICATION",
-
+  
   ADD_CARE_PLAN_TEMPLATE: "ADD_CARE_PLAN_TEMPLATE",
 };
 
@@ -699,9 +699,9 @@ const SYRUP = "2";
 const INJECTION = "3";
 
 export const MEDICINE_FORM_TYPE = {
-  [TABLET]: { name: "tablet" },
-  [SYRUP]: { name: "syrup" },
-  [INJECTION]: { name: "injection" },
+  [TABLET]: {name: "tablet"},
+  [SYRUP]: {name: "syrup"},
+  [INJECTION]: {name: "injection"},
 };
 
 // MEDICINE FORMULATION ----------------------------------------------
@@ -710,14 +710,14 @@ export const CATEGORY_ONE = {
   index: "1",
   name: "",
   items: [
-    { name: "TABLET", defaultUnit: MG, id: 1 },
-    { name: "SYRUP", defaultUnit: ML, id: 2 },
-    { name: "CAPSULE", defaultUnit: MG, id: 3 },
-    { name: "SUSPENSION", defaultUnit: MG, id: 4 },
-    { name: "GELS", defaultUnit: ML, id: 5 },
-    { name: "LOTIONS", defaultUnit: ML, id: 6 },
-    { name: "LINIMENTS", defaultUnit: ML, id: 7 },
-    { name: "LOZENGES", defaultUnit: MG, id: 8 },
+    {name: "TABLET", defaultUnit: MG, id: 1},
+    {name: "SYRUP", defaultUnit: ML, id: 2},
+    {name: "CAPSULE", defaultUnit: MG, id: 3},
+    {name: "SUSPENSION", defaultUnit: MG, id: 4},
+    {name: "GELS", defaultUnit: ML, id: 5},
+    {name: "LOTIONS", defaultUnit: ML, id: 6},
+    {name: "LINIMENTS", defaultUnit: ML, id: 7},
+    {name: "LOZENGES", defaultUnit: MG, id: 8},
   ],
 };
 
@@ -725,10 +725,10 @@ export const CATEGORY_TWO = {
   index: "2",
   name: "",
   items: [
-    { name: "SPRAY", defaultUnit: ML, id: 9 },
-    { name: "NEBULISER", defaultUnit: MG, id: 10 },
-    { name: "CREAM", defaultUnit: ML, id: 11 },
-    { name: "OINTMENT", defaultUnit: ML, id: 12 },
+    {name: "SPRAY", defaultUnit: ML, id: 9},
+    {name: "NEBULISER", defaultUnit: MG, id: 10},
+    {name: "CREAM", defaultUnit: ML, id: 11},
+    {name: "OINTMENT", defaultUnit: ML, id: 12},
   ],
 };
 
@@ -736,26 +736,26 @@ export const CATEGORY_THREE = {
   index: "3",
   name: "",
   items: [
-    { name: "RECTAL SUPPOSITORY", defaultUnit: MG, id: 13 },
-    { name: "RECTAL ENEMA", defaultUnit: MG, id: 14 },
-    { name: "PESSARIES OF VAGINAL", defaultUnit: MG, id: 15 },
+    {name: "RECTAL SUPPOSITORY", defaultUnit: MG, id: 13},
+    {name: "RECTAL ENEMA", defaultUnit: MG, id: 14},
+    {name: "PESSARIES OF VAGINAL", defaultUnit: MG, id: 15},
   ],
 };
 
 export const CATEGORY_FOUR = {
   index: "4",
   name: "",
-  items: [{ name: "INHALER", defaultUnit: ML, id: 16 }],
+  items: [{name: "INHALER", defaultUnit: ML, id: 16}],
 };
 
 export const CATEGORY_FIVE = {
   index: "5",
   name: "INJECTION",
   items: [
-    { name: "I/D INTRDERMAL", defaultUnit: ML, id: 17 },
-    { name: "S/C SUBCUTANEOUS", defaultUnit: ML, id: 18 },
-    { name: "I/M INTRAMUSCULAR", defaultUnit: ML, id: 19 },
-    { name: "I/V INTRAVENOUS", defaultUnit: ML, id: 20 },
+    {name: "I/D INTRDERMAL", defaultUnit: ML, id: 17},
+    {name: "S/C SUBCUTANEOUS", defaultUnit: ML, id: 18},
+    {name: "I/M INTRAMUSCULAR", defaultUnit: ML, id: 19},
+    {name: "I/V INTRAVENOUS", defaultUnit: ML, id: 20},
   ],
 };
 
@@ -834,61 +834,61 @@ const LEFT_CALF = "54";
 const RIGHT_CALF = "55";
 
 export const PARTS_GRAPH = {
-  [HEAD]: { name: "Head" },
-  [RIGHT_EYE]: { name: "Right Eye" },
-  [LEFT_EYE]: { name: "Left Eye" },
-  [RIGHT_EAR]: { name: "Right Ear" },
-  [LEFT_EAR]: { name: "Left Ear" },
-  [NOSE]: { name: "Nose" },
-  [MOUTH]: { name: "Mouth" },
-  [NECK]: { name: "Neck" },
-  [RIGHT_SHOULDER]: { name: "Right Shoulder" },
-  [LEFT_SHOULDER]: { name: "Left Shoulder" },
-  [CHEST]: { name: "Chest" },
-  [RIGHT_ARM]: { name: "Right Arm" },
-  [LEFT_ARM]: { name: "Left Arm" },
-  [RIGHT_ELBOW]: { name: "Right Elbow" },
-  [LEFT_ELBOW]: { name: "Left Elbow" },
-  [STOMACH]: { name: "Stomach" },
-  [ABDOMEN]: { name: "Abdomen" },
-  [RIGHT_FOREARM]: { name: "Right Forearm" },
-  [LEFT_FOREARM]: { name: "Left Forearm" },
-  [RIGHT_WRIST]: { name: "Right Wrist" },
-  [LEFT_WRIST]: { name: "Left Wrist" },
-  [RIGHT_HAND]: { name: "Right Hand" },
-  [LEFT_HAND]: { name: "Left Hand" },
-  [RIGHT_HAND_FINGER]: { name: "Right Hand Finger" },
-  [LEFT_HAND_FINGER]: { name: "Left Hand Finger" },
-  [RIGHT_HIP]: { name: "Right Hip" },
-  [LEFT_HIP]: { name: "Left Hip" },
-  [RIGHT_THIGH]: { name: "Right Thigh" },
-  [LEFT_THIGH]: { name: "Left Thigh" },
-  [RIGHT_KNEE]: { name: "Right Knee" },
-  [LEFT_KNEE]: { name: "Left Knee" },
-  [RIGHT_SHIN]: { name: "Right Shin" },
-  [LEFT_SHIN]: { name: "Left Shin" },
-  [RIGHT_ANKLE]: { name: "Right Ankle" },
-  [LEFT_ANKLE]: { name: "Left Ankle" },
-  [RIGHT_FOOT]: { name: "Right Foot" },
-  [LEFT_FOOT]: { name: "Left Foot" },
-  [RIGHT_TOE]: { name: "Right Toe" },
-  [LEFT_TOE]: { name: "Left Toe" },
-  [RECTUM]: { name: "Rectum" },
-  [URINARY_BLADDER]: { name: "Urinary Bladder" },
-  [HEAD_BACK]: { name: "Head" },
-  [NECK_BACK]: { name: "Neck" },
-  [RIGHT_SHOULDER_BACK]: { name: "Right Shoulder" },
-  [LEFT_SHOULDER_BACK]: { name: "Left Shoulder" },
-  [BACK]: { name: "Back" },
-  [LOWER_BACK]: { name: "Lower Back" },
-  [LEFT_TRICEP]: { name: "Left Tricep" },
-  [RIGHT_TRICEP]: { name: "Right Tricep" },
-  [LEFT_FOREARM_BACK]: { name: "Left  Forearm" },
-  [RIGHT_FOREARM_BACK]: { name: "Right Forearm" },
-  [LEFT_HAMSTRING]: { name: "Left Hamstring" },
-  [RIGHT_HAMSTRING]: { name: "Right Hamstring" },
-  [LEFT_CALF]: { name: "Left Calf" },
-  [RIGHT_CALF]: { name: "Right Calf" },
+  [HEAD]: {name: "Head"},
+  [RIGHT_EYE]: {name: "Right Eye"},
+  [LEFT_EYE]: {name: "Left Eye"},
+  [RIGHT_EAR]: {name: "Right Ear"},
+  [LEFT_EAR]: {name: "Left Ear"},
+  [NOSE]: {name: "Nose"},
+  [MOUTH]: {name: "Mouth"},
+  [NECK]: {name: "Neck"},
+  [RIGHT_SHOULDER]: {name: "Right Shoulder"},
+  [LEFT_SHOULDER]: {name: "Left Shoulder"},
+  [CHEST]: {name: "Chest"},
+  [RIGHT_ARM]: {name: "Right Arm"},
+  [LEFT_ARM]: {name: "Left Arm"},
+  [RIGHT_ELBOW]: {name: "Right Elbow"},
+  [LEFT_ELBOW]: {name: "Left Elbow"},
+  [STOMACH]: {name: "Stomach"},
+  [ABDOMEN]: {name: "Abdomen"},
+  [RIGHT_FOREARM]: {name: "Right Forearm"},
+  [LEFT_FOREARM]: {name: "Left Forearm"},
+  [RIGHT_WRIST]: {name: "Right Wrist"},
+  [LEFT_WRIST]: {name: "Left Wrist"},
+  [RIGHT_HAND]: {name: "Right Hand"},
+  [LEFT_HAND]: {name: "Left Hand"},
+  [RIGHT_HAND_FINGER]: {name: "Right Hand Finger"},
+  [LEFT_HAND_FINGER]: {name: "Left Hand Finger"},
+  [RIGHT_HIP]: {name: "Right Hip"},
+  [LEFT_HIP]: {name: "Left Hip"},
+  [RIGHT_THIGH]: {name: "Right Thigh"},
+  [LEFT_THIGH]: {name: "Left Thigh"},
+  [RIGHT_KNEE]: {name: "Right Knee"},
+  [LEFT_KNEE]: {name: "Left Knee"},
+  [RIGHT_SHIN]: {name: "Right Shin"},
+  [LEFT_SHIN]: {name: "Left Shin"},
+  [RIGHT_ANKLE]: {name: "Right Ankle"},
+  [LEFT_ANKLE]: {name: "Left Ankle"},
+  [RIGHT_FOOT]: {name: "Right Foot"},
+  [LEFT_FOOT]: {name: "Left Foot"},
+  [RIGHT_TOE]: {name: "Right Toe"},
+  [LEFT_TOE]: {name: "Left Toe"},
+  [RECTUM]: {name: "Rectum"},
+  [URINARY_BLADDER]: {name: "Urinary Bladder"},
+  [HEAD_BACK]: {name: "Head"},
+  [NECK_BACK]: {name: "Neck"},
+  [RIGHT_SHOULDER_BACK]: {name: "Right Shoulder"},
+  [LEFT_SHOULDER_BACK]: {name: "Left Shoulder"},
+  [BACK]: {name: "Back"},
+  [LOWER_BACK]: {name: "Lower Back"},
+  [LEFT_TRICEP]: {name: "Left Tricep"},
+  [RIGHT_TRICEP]: {name: "Right Tricep"},
+  [LEFT_FOREARM_BACK]: {name: "Left  Forearm"},
+  [RIGHT_FOREARM_BACK]: {name: "Right Forearm"},
+  [LEFT_HAMSTRING]: {name: "Left Hamstring"},
+  [RIGHT_HAMSTRING]: {name: "Right Hamstring"},
+  [LEFT_CALF]: {name: "Left Calf"},
+  [RIGHT_CALF]: {name: "Right Calf"},
 };
 
 export const BODY_VIEW = {
@@ -1029,13 +1029,13 @@ export const RADIOLOGY_SUB_TYPES = {
 };
 
 export const RADIOLOGY_SUB_CATEGORY_DATA = {
-  1: { name: RADIOLOGY_SUB_TYPES.CT_SCAN, id: 1 },
-  2: { name: RADIOLOGY_SUB_TYPES.NUCLEAR_MEDICINE, id: 2 },
-  3: { name: RADIOLOGY_SUB_TYPES.ULTRASOUND, id: 3 },
-  4: { name: RADIOLOGY_SUB_TYPES.XRAY, id: 4 },
-  5: { name: RADIOLOGY_SUB_TYPES.MRI, id: 5 },
-  6: { name: RADIOLOGY_SUB_TYPES.ECHO_AND_DOPPLER, id: 6 },
-  7: { name: RADIOLOGY_SUB_TYPES.CT_ANGIO, id: 7 },
+  1: {name: RADIOLOGY_SUB_TYPES.CT_SCAN, id: 1},
+  2: {name: RADIOLOGY_SUB_TYPES.NUCLEAR_MEDICINE, id: 2},
+  3: {name: RADIOLOGY_SUB_TYPES.ULTRASOUND, id: 3},
+  4: {name: RADIOLOGY_SUB_TYPES.XRAY, id: 4},
+  5: {name: RADIOLOGY_SUB_TYPES.MRI, id: 5},
+  6: {name: RADIOLOGY_SUB_TYPES.ECHO_AND_DOPPLER, id: 6},
+  7: {name: RADIOLOGY_SUB_TYPES.CT_ANGIO, id: 7},
 };
 
 export const RADIOLOGY_CATEGORY_DATA = {

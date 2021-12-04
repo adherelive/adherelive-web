@@ -1,7 +1,7 @@
-import React, { Component, Fragment } from "react";
-import { Select, Form, Radio, Icon } from "antd";
+import React, {Component, Fragment} from "react";
+import {Select, Form, Radio, Icon} from "antd";
 // import { MinusCircleOutlined } from "@ant-design/icons";
-import { injectIntl } from "react-intl";
+import {injectIntl} from "react-intl";
 import dropDownIcon from "../../../../Assets/images/material-icons-black-arrow-drop-down.svg";
 import messages from "../message";
 // import WhenToTakeForm from "./whenToTakeSelectForm";
@@ -11,7 +11,7 @@ const RadioButton = Radio.Button;
 const RadioGroup = Radio.Group;
 
 // const DropDownIcon = <img src={dropDownIcon} alt="d" className="w24 h24" />;
-const { Item: FormItem } = Form;
+const {Item: FormItem} = Form;
 
 // const AFTER_WAKEUP="1";
 // const BEFORE_BREAKFAST = "2";
@@ -44,7 +44,7 @@ const AFTER_MEALS_ARRAY_BD = [AFTER_BREAKFAST, AFTER_LUNCH];
 const BEFORE_MEALS_ARRAY_TDS = [BEFORE_BREAKFAST, BEFORE_LUNCH, BEFORE_DINNER];
 const AFTER_MEALS_ARRAY_TDS = [AFTER_BREAKFAST, AFTER_LUNCH, AFTER_DINNER];
 
-const { Option } = Select;
+const {Option} = Select;
 
 const FIELD_NAME = "when_to_take";
 const FIELD_NAME_ABBR = "when_to_take_abbr";
@@ -73,14 +73,14 @@ export const WHEN_TO_TAKE_BUTTONS = {
 class WhenToTakeMedication extends Component {
   constructor(props) {
     super(props);
-    const { medication_details = {} } = props;
-    const { timings = {} } = medication_details || {};
+    const {medication_details = {}} = props;
+    const {timings = {}} = medication_details || {};
     let statusList = {};
     Object.keys(timings).forEach((id) => {
-      const { text, time } = timings[id];
+      const {text, time} = timings[id];
       statusList[id] = `${text} (${moment(time).format("hh:mm A")})`;
     });
-
+    
     let total_status = Object.keys(statusList);
     this.state = {
       count: [0],
@@ -91,9 +91,9 @@ class WhenToTakeMedication extends Component {
       nugget_selected: null,
     };
   }
-
+  
   formatWhenToTakeButtons = () => {
-    const { form: { getFieldDecorator } = {} } = this.props;
+    const {form: {getFieldDecorator} = {}} = this.props;
     const {
       formatMessage,
       onClickOd,
@@ -102,21 +102,21 @@ class WhenToTakeMedication extends Component {
       onCLickSos,
       getKeys,
     } = this;
-    this.WHEN_TO_TAKE_BUTTONS = { ...WHEN_TO_TAKE_BUTTONS };
-
+    this.WHEN_TO_TAKE_BUTTONS = {...WHEN_TO_TAKE_BUTTONS};
+    
     const keys = getKeys();
     Object.keys(WHEN_TO_TAKE_BUTTONS).forEach((index) => {
-      const { id, whenToTakeCount } = WHEN_TO_TAKE_BUTTONS[index] || {};
-
+      const {id, whenToTakeCount} = WHEN_TO_TAKE_BUTTONS[index] || {};
+      
       let additionalData = {};
-
+      
       // set initial value for button
       if (keys.length === whenToTakeCount) {
         getFieldDecorator(FIELD_NAME_ABBR, {
           initialValue: id,
         });
       }
-
+      
       switch (whenToTakeCount) {
         case WHEN_TO_TAKE_BUTTONS.OD.whenToTakeCount:
           additionalData = {
@@ -145,63 +145,63 @@ class WhenToTakeMedication extends Component {
         default:
           break;
       }
-
+      
       this.WHEN_TO_TAKE_BUTTONS[index] = {
         ...this.WHEN_TO_TAKE_BUTTONS[index],
         ...additionalData,
       };
     });
   };
-
+  
   componentDidMount() {
     const {
-      form: { validateFields },
+      form: {validateFields},
       // medication_details: { timings = {} } = {},
     } = this.props;
-    const { formatWhenToTakeButtons } = this;
+    const {formatWhenToTakeButtons} = this;
     validateFields();
-
+    
     formatWhenToTakeButtons();
     this.setState({
       // count: [1],
       selected_timing: {},
     });
   }
-
+  
   componentDidUpdate(prevProps, prevState) {
-    const { medication_details } = this.props;
-    const { medication_details: prev_medication_details } = prevProps;
-    const { form } = this.props;
-    const { getFieldValue, setFieldsValue } = form;
-
+    const {medication_details} = this.props;
+    const {medication_details: prev_medication_details} = prevProps;
+    const {form} = this.props;
+    const {getFieldValue, setFieldsValue} = form;
+    
     if (
       Object.keys(medication_details).length !==
       Object.keys(prev_medication_details).length
     ) {
-      const { timings } = medication_details || {};
+      const {timings} = medication_details || {};
       this.setState({
         // count: [timings],
-        remaining_timing: { ...timings },
+        remaining_timing: {...timings},
       });
     }
-
+    
     // const keys = getFieldValue("keys") || [];
     // const {nugget_selected} = this.state;
   }
-
+  
   componentWillUnmount() {
     const {
-      form: { validateFields },
+      form: {validateFields},
     } = this.props;
     validateFields();
   }
-
+  
   getKeys = () => this.props.form.getFieldValue("keys");
-
+  
   formatMessage = (data) => this.props.intl.formatMessage(data);
-
+  
   getParentNode = (t) => t.parentNode;
-
+  
   // getUpdatedList = (k) => {
   //   const {
   //     selected_timing = {},
@@ -237,18 +237,18 @@ class WhenToTakeMedication extends Component {
   //
   //   return uniqueTimings;
   // };
-
+  
   getUnitOption = (k) => {
-    const { status } = this.state;
+    const {status} = this.state;
     // const { getUpdatedList } = this;
     // const  getList = getUpdatedList(k);
-    const { medication_details = {} } = this.props;
-    const { timings = {} } = medication_details || {};
+    const {medication_details = {}} = this.props;
+    const {timings = {}} = medication_details || {};
     let getList = [];
     Object.keys(timings).forEach((id) => {
       getList.push(id);
     });
-
+    
     return getList.map((id) => {
       const text = status[id];
       return (
@@ -258,7 +258,7 @@ class WhenToTakeMedication extends Component {
       );
     });
   };
-
+  
   // onAddMoreClick = (e) => {
   //   e.preventDefault();
   //   const { medication_details: { timings } = {} } = this.props;
@@ -266,20 +266,20 @@ class WhenToTakeMedication extends Component {
   //   if (count.length === Object.keys(timings).length) {
   //     return null;
   //   }
-
+  
   //   let updatedOptions = {};
   //   Object.keys(remaining_timing).forEach((id) => {
   //     if (parseInt(id) !== selected_timing) {
   //       updatedOptions[id] = { ...timings[id] };
   //     }
   //   });
-
+  
   //   this.setState({
   //     count: [...count, remaining_timing],
   //     remaining_timing: { ...updatedOptions },
   //   });
   // };
-
+  
   // deleteOnClick = (e) => {
   //   e.preventDefault();
   //   const id = e.target.value;
@@ -292,7 +292,7 @@ class WhenToTakeMedication extends Component {
   //     remaining_timing: { ...remaining_timing, [`${id}`]: timings[id] },
   //   });
   // };
-
+  
   // getSelectRender = () => {
   //   const { timings, selected_timing, count } = this.state;
   //   let selectComp = [];
@@ -308,16 +308,16 @@ class WhenToTakeMedication extends Component {
   //       );
   //     });
   //   });
-
+  
   //   return selectComp;
   // };
-
+  
   handleSelect = (value, select_box_id) => {
     // const { form } = this.props;
     // const { getFieldValue, setFieldsValue } = form;
-    const { selected_timing = {} } = this.state;
+    const {selected_timing = {}} = this.state;
     // const keys = new Set([...selected_timing_overall, value]);
-
+    
     const updatedSelectTiming = {
       ...selected_timing,
       [select_box_id]: value,
@@ -325,19 +325,19 @@ class WhenToTakeMedication extends Component {
     this.setState({
       selected_timing: updatedSelectTiming,
     });
-
+    
     this.handleRadioButtonChange();
   };
-
+  
   handleRadioButtonChange = () => {
-    const { form: { getFieldValue } = {} } = this.props;
-    const { nugget_selected } = this.state;
-    const { getKeys } = this;
-
+    const {form: {getFieldValue} = {}} = this.props;
+    const {nugget_selected} = this.state;
+    const {getKeys} = this;
+    
     const keys = getKeys();
-
+    
     let check = [];
-
+    
     if (nugget_selected === 1) {
       if (keys.length === 1) {
         check = BEFORE_MEALS_ARRAY_OD;
@@ -355,21 +355,21 @@ class WhenToTakeMedication extends Component {
         check = AFTER_MEALS_ARRAY_TDS;
       }
     }
-
+    
     let flag = true;
-
+    
     const seletedValues = Object.values(getFieldValue([FIELD_NAME]))[0];
     seletedValues.forEach((eachVal) => {
       if (!check.includes(eachVal)) {
         flag = false;
       }
     });
-
+    
     if (flag === false) {
-      this.setState({ nugget_selected: null });
+      this.setState({nugget_selected: null});
     }
   };
-
+  
   handleDeselect = (value) => {
     // const { selected_timing_overall } = this.state;
     // const updateField = selected_timing_overall.filter(
@@ -379,43 +379,43 @@ class WhenToTakeMedication extends Component {
       // selected_timing_overall: updateField
     });
   };
-
+  
   remove = (k) => {
-    const { selected_timing_overall, selected_timing } = this.state;
-    const { form } = this.props;
-    const { getKeys } = this;
-    const { getFieldValue, setFieldsValue } = form;
+    const {selected_timing_overall, selected_timing} = this.state;
+    const {form} = this.props;
+    const {getKeys} = this;
+    const {getFieldValue, setFieldsValue} = form;
     const selected = getFieldValue(`${FIELD_NAME}[${k}]`) || [];
-
+    
     let updatedSelectedTimings = {};
     Object.keys(selected_timing).forEach((id) => {
       if (id !== `${k}`) {
         updatedSelectedTimings[id] = selected_timing[id];
       }
     });
-
+    
     this.setState({
       selected_timing_overall: selected_timing_overall.filter((field) => {
         return selected === field;
       }),
-      selected_timing: { ...updatedSelectedTimings },
+      selected_timing: {...updatedSelectedTimings},
     });
     // const keys = getFieldValue("keys");
-
+    
     setFieldsValue({
       keys: getKeys().filter((key) => key !== k),
     });
   };
-
+  
   // getInitialValue = (k) => {
   //   const { total_status,nugget_selected } = this.state;
   //   // return total_status[k];
   //   return k;
   // };
-
+  
   getFormItems = () => {
-    const { form } = this.props;
-    const { count } = this.state;
+    const {form} = this.props;
+    const {count} = this.state;
     const {
       handleSelect,
       handleDeselect,
@@ -430,9 +430,9 @@ class WhenToTakeMedication extends Component {
       getFieldValue,
       // setFieldsValue
     } = form;
-
+    
     // const {nugget_selected} = this.state;
-
+    
     getFieldDecorator("keys", {
       initialValue: count.map((id, index) => id),
     });
@@ -440,7 +440,7 @@ class WhenToTakeMedication extends Component {
     const keys = getKeys();
     let initialValuesArray;
     // const error = isFieldTouched(FIELD_NAME) && getFieldError(FIELD_NAME);
-
+    
     if (keys.length === 1) {
       // keys = [0]
       initialValuesArray = AFTER_MEALS_ARRAY_OD;
@@ -451,7 +451,7 @@ class WhenToTakeMedication extends Component {
       // keys = [0,1,2]
       initialValuesArray = AFTER_MEALS_ARRAY_TDS;
     }
-
+    
     if (keys.length === 0) {
       return (
         <div className="pt10 pb10 fs16 fw600">
@@ -459,7 +459,7 @@ class WhenToTakeMedication extends Component {
         </div>
       );
     }
-
+    
     return keys.map((k, index) => {
       return (
         <Fragment>
@@ -509,15 +509,15 @@ class WhenToTakeMedication extends Component {
       );
     });
   };
-
+  
   onClickOd = () => {
-    const { form } = this.props;
-    const { setFieldsValue } = form;
+    const {form} = this.props;
+    const {setFieldsValue} = form;
     // const { selected_timing } = this.state;
-    const { getKeys, WHEN_TO_TAKE_BUTTONS } = this;
-
+    const {getKeys, WHEN_TO_TAKE_BUTTONS} = this;
+    
     // const keys = form.getFieldValue("keys");
-
+    
     const keys = getKeys();
     if (keys.length === 3) {
       this.remove(keys[2]);
@@ -525,8 +525,8 @@ class WhenToTakeMedication extends Component {
     } else if (keys.length === 2) {
       this.remove(keys[1]);
     }
-
-    this.setState({ nugget_selected: null });
+    
+    this.setState({nugget_selected: null});
     setFieldsValue({
       keys: [0],
     });
@@ -536,23 +536,23 @@ class WhenToTakeMedication extends Component {
     });
   };
   onClickBd = () => {
-    const { form: { setFieldsValue } = {} } = this.props;
-    const { getKeys, WHEN_TO_TAKE_BUTTONS } = this;
+    const {form: {setFieldsValue} = {}} = this.props;
+    const {getKeys, WHEN_TO_TAKE_BUTTONS} = this;
     // const {
     //   setFieldsValue
     // } = form;
-
+    
     // const { selected_timing } = this.state;
     // const keys = form.getFieldValue("keys");
-
+    
     const keys = getKeys();
-
+    
     if (keys.length === 3) {
       this.remove(keys[2]);
     } else if (keys.length === 1) {
       this.add();
     }
-    this.setState({ nugget_selected: null });
+    this.setState({nugget_selected: null});
     setFieldsValue({
       keys: [0, 1],
     });
@@ -561,13 +561,13 @@ class WhenToTakeMedication extends Component {
       [FIELD_NAME_ABBR]: WHEN_TO_TAKE_BUTTONS.BD.id,
     });
   };
-
+  
   onClickTds = () => {
-    const { form } = this.props;
-    const { setFieldsValue } = form;
-
+    const {form} = this.props;
+    const {setFieldsValue} = form;
+    
     // const { selected_timing } = this.state;
-    const { WHEN_TO_TAKE_BUTTONS, getKeys } = this;
+    const {WHEN_TO_TAKE_BUTTONS, getKeys} = this;
     const keys = getKeys();
     if (keys.length === 2) {
       this.add();
@@ -575,7 +575,7 @@ class WhenToTakeMedication extends Component {
       this.add();
       this.add();
     }
-    this.setState({ nugget_selected: null });
+    this.setState({nugget_selected: null});
     setFieldsValue({
       keys: [0, 1, 2],
     });
@@ -584,12 +584,12 @@ class WhenToTakeMedication extends Component {
       [FIELD_NAME_ABBR]: WHEN_TO_TAKE_BUTTONS.TDS.id,
     });
   };
-
+  
   onCLickSos = () => {
-    const { form: { setFieldsValue } = {} } = this.props;
-    const { WHEN_TO_TAKE_BUTTONS } = this;
+    const {form: {setFieldsValue} = {}} = this.props;
+    const {WHEN_TO_TAKE_BUTTONS} = this;
     // const {getKeys} = this;
-
+    
     // const keys = getKeys();
     // if (keys.length === 2) {
     //   this.add();
@@ -605,10 +605,10 @@ class WhenToTakeMedication extends Component {
     });
     // setFieldsValue({[FIELD_NAME]:AFTER_MEALS_ARRAY_TDS});
   };
-
+  
   add = () => {
-    const { form } = this.props;
-    const { selected_timing } = this.state;
+    const {form} = this.props;
+    const {selected_timing} = this.state;
     const keys = form.getFieldValue("keys");
     let whenToTakeValues = {};
     keys.forEach((id) => {
@@ -620,9 +620,9 @@ class WhenToTakeMedication extends Component {
       // [`Fields[${id_checklist_field}]`]: null,
       // [`Status[${id_checklist_field}]`]: null
     });
-
-    const updatedSelectedTimings = { ...selected_timing, ...whenToTakeValues };
-
+    
+    const updatedSelectedTimings = {...selected_timing, ...whenToTakeValues};
+    
     key_field++;
     this.setState({
       selected_timing_overall: Object.keys(updatedSelectedTimings).map(
@@ -631,63 +631,63 @@ class WhenToTakeMedication extends Component {
       selected_timing: updatedSelectedTimings,
     });
   };
-
+  
   setAllMealsBefore = () => {
-    const { form } = this.props;
-    const { getFieldValue, setFieldsValue } = form;
+    const {form} = this.props;
+    const {getFieldValue, setFieldsValue} = form;
     const keys = getFieldValue("keys") || [];
-    this.setState({ nugget_selected: 1 });
+    this.setState({nugget_selected: 1});
     if (keys.length === 1) {
       setFieldsValue({
         keys: [0],
       });
-      setFieldsValue({ [FIELD_NAME]: BEFORE_MEALS_ARRAY_OD });
+      setFieldsValue({[FIELD_NAME]: BEFORE_MEALS_ARRAY_OD});
     } else if (keys.length === 2) {
       setFieldsValue({
         keys: [0, 1],
       });
-      setFieldsValue({ [FIELD_NAME]: BEFORE_MEALS_ARRAY_BD });
+      setFieldsValue({[FIELD_NAME]: BEFORE_MEALS_ARRAY_BD});
     } else if (keys.length === 3) {
       setFieldsValue({
         keys: [0, 1, 2],
       });
-      setFieldsValue({ [FIELD_NAME]: BEFORE_MEALS_ARRAY_TDS });
+      setFieldsValue({[FIELD_NAME]: BEFORE_MEALS_ARRAY_TDS});
     }
   };
-
+  
   setAllMealsAfter = () => {
-    const { form } = this.props;
-    const { getFieldValue, setFieldsValue } = form;
+    const {form} = this.props;
+    const {getFieldValue, setFieldsValue} = form;
     const keys = getFieldValue("keys") || [];
-    this.setState({ nugget_selected: 2 });
+    this.setState({nugget_selected: 2});
     if (keys.length === 1) {
       setFieldsValue({
         keys: [0],
       });
-      setFieldsValue({ [FIELD_NAME]: AFTER_MEALS_ARRAY_OD });
+      setFieldsValue({[FIELD_NAME]: AFTER_MEALS_ARRAY_OD});
     } else if (keys.length === 2) {
       setFieldsValue({
         keys: [0, 1],
       });
-      setFieldsValue({ [FIELD_NAME]: AFTER_MEALS_ARRAY_BD });
+      setFieldsValue({[FIELD_NAME]: AFTER_MEALS_ARRAY_BD});
     } else if (keys.length === 3) {
       setFieldsValue({
         keys: [0, 1, 2],
       });
-      setFieldsValue({ [FIELD_NAME]: AFTER_MEALS_ARRAY_TDS });
+      setFieldsValue({[FIELD_NAME]: AFTER_MEALS_ARRAY_TDS});
     }
   };
-
+  
   getRadioOptions = () => {
-    const { WHEN_TO_TAKE_BUTTONS = {}, getKeys } = this;
+    const {WHEN_TO_TAKE_BUTTONS = {}, getKeys} = this;
     const keys = getKeys();
-
-    console.log("0281329312 WHEN_TO_TAKE_BUTTONS", { WHEN_TO_TAKE_BUTTONS });
-
+    
+    console.log("0281329312 WHEN_TO_TAKE_BUTTONS", {WHEN_TO_TAKE_BUTTONS});
+    
     return Object.keys(WHEN_TO_TAKE_BUTTONS).map((index) => {
-      const { id, setter, text, whenToTakeCount } =
-        WHEN_TO_TAKE_BUTTONS[index] || {};
-
+      const {id, setter, text, whenToTakeCount} =
+      WHEN_TO_TAKE_BUTTONS[index] || {};
+      
       return (
         <RadioButton
           value={id}
@@ -700,11 +700,11 @@ class WhenToTakeMedication extends Component {
       );
     });
   };
-
+  
   getWhenToTakeButtons = () => {
-    const { form: { getFieldDecorator } = {} } = this.props;
-    const { WHEN_TO_TAKE_BUTTONS = {}, getRadioOptions } = this;
-
+    const {form: {getFieldDecorator} = {}} = this.props;
+    const {WHEN_TO_TAKE_BUTTONS = {}, getRadioOptions} = this;
+    
     // const keys = getKeys();
     if (Object.keys(WHEN_TO_TAKE_BUTTONS).length > 0) {
       return (
@@ -726,9 +726,9 @@ class WhenToTakeMedication extends Component {
       return null;
     }
   };
-
+  
   render() {
-    const { form } = this.props;
+    const {form} = this.props;
     const {
       getFormItems,
       formatMessage,
@@ -747,11 +747,11 @@ class WhenToTakeMedication extends Component {
     } = form;
     const keys = getKeys() || [];
     // const error = isFieldTouched(FIELD_NAME) && getFieldError(FIELD_NAME);
-
+    
     // const { getInitialValue } = this;
-
-    const { nugget_selected } = this.state;
-
+    
+    const {nugget_selected} = this.state;
+    
     return (
       <Fragment>
         <div className="flex align-items-end justify-content-space-between">
@@ -759,7 +759,7 @@ class WhenToTakeMedication extends Component {
             <label htmlFor="quantity" className="form-label " title="Quantity">
               {formatMessage(messages.timing)}
             </label>
-
+            
             <div className="star-red">*</div>
           </div>
           {/* <div className="label-color fontsize12 mb8">
@@ -787,9 +787,9 @@ class WhenToTakeMedication extends Component {
         {/*    </RadioGroup>*/}
         {/*)}*/}
         {getWhenToTakeButtons()}
-
+        
         {getFormItems()}
-
+        
         {/* {keys.length !== 0 && (
           <RadioGroup
             className="flex justify-content-end radio-formulation mb10"

@@ -1,12 +1,12 @@
-import React, { Component, Fragment } from "react";
-import { injectIntl } from "react-intl";
+import React, {Component, Fragment} from "react";
+import {injectIntl} from "react-intl";
 import messages from "./message";
 import message from "antd/es/message";
-import { getName } from "../../Helper/validation";
-import { withRouter } from "react-router-dom";
+import {getName} from "../../Helper/validation";
+import {withRouter} from "react-router-dom";
 import throttle from "lodash-es/throttle";
 import debounce from "lodash-es/debounce";
-import { SearchOutlined } from "@ant-design/icons";
+import {SearchOutlined} from "@ant-design/icons";
 
 import {
   Drawer,
@@ -23,7 +23,7 @@ import {
   Avatar,
 } from "antd";
 
-const { Option } = Select;
+const {Option} = Select;
 
 class SearchPatient extends Component {
   constructor(props) {
@@ -34,33 +34,34 @@ class SearchPatient extends Component {
       patient_ids: [],
       users: {},
     };
-
+    
     this.handlePatientSearch = debounce(
       this.handlePatientSearch.bind(this),
       200
     );
   }
-
-  componentDidMount() {}
-
+  
+  componentDidMount() {
+  }
+  
   formatMessage = (data) => this.props.intl.formatMessage(data);
-
+  
   handlePatientDetailsRedirect = (patient_id) => {
     // e.preventDefault();
-    const { history } = this.props;
+    const {history} = this.props;
     history.push(`/patients/${patient_id}`);
   };
-
+  
   setInput = (value) => {
-    const { searchPatientForDoctor } = this.props;
-
-    this.setState({ searchInput: value });
-
+    const {searchPatientForDoctor} = this.props;
+    
+    this.setState({searchInput: value});
+    
     {
       this.handlePatientSearch(value);
     }
   };
-
+  
   getMenuItem = (
     first_name,
     middle_name,
@@ -74,7 +75,7 @@ class SearchPatient extends Component {
     let initials = `${first_name ? first_name[0] : ""}${
       last_name ? last_name[0] : ""
     }`;
-
+    
     return (
       <div
         className="flex direction-row  justify-space-between"
@@ -85,7 +86,7 @@ class SearchPatient extends Component {
             {initials ? (
               <Avatar src={profile_pic}>{initials}</Avatar>
             ) : (
-              <Avatar icon="user" />
+              <Avatar icon="user"/>
             )}
           </Tooltip>
         </div>
@@ -104,17 +105,17 @@ class SearchPatient extends Component {
       </div>
     );
   };
-
+  
   getPatientOptions = () => {
-    const { patients } = this.props;
-    const { patient_ids, users, searchInput = "" } = this.state;
+    const {patients} = this.props;
+    const {patient_ids, users, searchInput = ""} = this.state;
     let options = [];
-    const { fetchingPatients } = this.state;
-
+    const {fetchingPatients} = this.state;
+    
     for (let id of patient_ids) {
       const {
-        basic_info: { first_name, middle_name, last_name, user_id = null } = {},
-        details: { profile_pic = null } = {},
+        basic_info: {first_name, middle_name, last_name, user_id = null} = {},
+        details: {profile_pic = null} = {},
       } = patients[id] || {};
       const {
         basic_info: {
@@ -143,7 +144,7 @@ class SearchPatient extends Component {
         </Option>
       );
     }
-
+    
     if (
       options.length === 0 &&
       searchInput !== "" &&
@@ -155,16 +156,16 @@ class SearchPatient extends Component {
         </Option>
       );
     }
-
+    
     return options;
   };
-
+  
   async handlePatientSearch(data) {
     try {
       if (data) {
-        this.setState({ fetchingPatients: true });
-
-        const { searchPatientForDoctor, patients } = this.props;
+        this.setState({fetchingPatients: true});
+        
+        const {searchPatientForDoctor, patients} = this.props;
         const response = await searchPatientForDoctor(data);
         const {
           status,
@@ -176,7 +177,7 @@ class SearchPatient extends Component {
             },
           } = {},
         } = response || {};
-
+        
         if (status) {
           if (response_patient_ids.length > 0) {
             this.setState({
@@ -204,18 +205,18 @@ class SearchPatient extends Component {
       }
     } catch (err) {
       console.log("err23423423423423432432432", err);
-      this.setState({ patient_ids: [], fetchingPatients: false });
+      this.setState({patient_ids: [], fetchingPatients: false});
       message.warn(this.formatMessage(messages.somethingWentWrongError));
     }
   }
-
+  
   patientChanged = (patient_id) => {
     this.handlePatientDetailsRedirect(patient_id);
   };
-
+  
   render() {
-    const { searchInput = "" } = this.state;
-    const { formatMessage } = this;
+    const {searchInput = ""} = this.state;
+    const {formatMessage} = this;
     return (
       <div className="flex direction-row justify-space-between align-center w400 ">
         <Select
@@ -223,7 +224,7 @@ class SearchPatient extends Component {
           value={this.formatMessage(messages.searchPatient)}
           className=" w400  patient-search "
           notFoundContent={
-            this.state.fetchingPatients ? <Spin size="small" /> : ""
+            this.state.fetchingPatients ? <Spin size="small"/> : ""
           }
           showSearch
           onSearch={this.setInput}
@@ -236,7 +237,7 @@ class SearchPatient extends Component {
               .toLowerCase()
               .indexOf(option.props.children.toString().toLowerCase()) > -1
           }
-          suffixIcon={<SearchOutlined className="patient-search-icon" />}
+          suffixIcon={<SearchOutlined className="patient-search-icon"/>}
         >
           {this.getPatientOptions()}
         </Select>

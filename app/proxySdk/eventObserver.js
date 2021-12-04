@@ -1,4 +1,4 @@
-import { Proxy_Sdk, EVENTS } from ".";
+import {Proxy_Sdk, EVENTS} from ".";
 
 const eventExecutor = require("./eventExecutor");
 const Logger = require("./libs/logger");
@@ -17,7 +17,7 @@ class EventObserver {
   constructor() {
     this._event = Proxy_Sdk;
   }
-
+  
   async errorEventHandler(err, type) {
     try {
       let logger = new Logger("event_error", {
@@ -29,18 +29,18 @@ class EventObserver {
       throw err;
     }
   }
-
+  
   runObservers() {
     this._event.on(SEND_EMAIL, eventExecutor.sendMail);
-
+    
     Log.info(`Observing EMAIL events..!!`);
     this._event.on(SEND_SMS, eventExecutor.sendSms);
     Log.info(`Observing SMS events..!!`);
-
+    
     //error event observers
     Log.info(`Observing EMAIL ERROR events..!!`);
     this._event.on(EMAIL_ERROR, this.errorEventHandler);
-
+    
     Log.info(`Observing SMS ERROR events..!!`);
     this._event.on(SMS_ERROR, this.errorEventHandler);
   }

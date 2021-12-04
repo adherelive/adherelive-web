@@ -10,9 +10,9 @@ class DietWrapper extends BaseDiet {
   constructor(data) {
     super(data);
   }
-
+  
   getBasicInfo = () => {
-    const { _data } = this;
+    const {_data} = this;
     const {
       id,
       name,
@@ -23,7 +23,7 @@ class DietWrapper extends BaseDiet {
       details,
       expired_on,
     } = _data || {};
-
+    
     return {
       basic_info: {
         id,
@@ -37,14 +37,14 @@ class DietWrapper extends BaseDiet {
       expired_on,
     };
   };
-
+  
   getReferenceInfo = async () => {
-    const { getDietFoodGroupMappings } = this;
+    const {getDietFoodGroupMappings} = this;
     const dietFoodGroupMappings = getDietFoodGroupMappings() || [];
-
+    
     const careplanId = await this.getCareplanId();
     const careplanData = await CareplanWrapper(null, careplanId);
-
+    
     let dietFoodGroupMappingData = {},
       dietsApiData = {},
       foodGroupsApiData = {},
@@ -53,15 +53,15 @@ class DietWrapper extends BaseDiet {
       foodItemDetailsApiData = {};
     let careplanApiData = {},
       similiarFoodMappingApiData;
-
+    
     if (dietFoodGroupMappings.length > 0) {
       for (let i = 0; i < dietFoodGroupMappings.length; i++) {
         const mapping = dietFoodGroupMappings[i];
-        const { id = null } = mapping || {};
+        const {id = null} = mapping || {};
         const dietFoodGroupMappingWrapper = await DietFoodGroupMappingWrapper({
           id,
         });
-
+        
         const {
           diet_food_grouping_mappings = {},
           food_groups = {},
@@ -71,15 +71,15 @@ class DietWrapper extends BaseDiet {
           food_item_details = {},
           similar_food_mappings = {},
         } = await dietFoodGroupMappingWrapper.getReferenceInfo();
-
+        
         dietFoodGroupMappingData = {
           ...dietFoodGroupMappingData,
           ...diet_food_grouping_mappings,
         };
-        foodGroupsApiData = { ...foodGroupsApiData, ...food_groups };
-        dietsApiData = { ...dietsApiData, ...diets };
-        portionsApiData = { ...portionsApiData, ...portions };
-        foodItemsApiData = { ...foodItemsApiData, ...food_items };
+        foodGroupsApiData = {...foodGroupsApiData, ...food_groups};
+        dietsApiData = {...dietsApiData, ...diets};
+        portionsApiData = {...portionsApiData, ...portions};
+        foodItemsApiData = {...foodItemsApiData, ...food_items};
         foodItemDetailsApiData = {
           ...foodItemDetailsApiData,
           ...food_item_details,
@@ -90,15 +90,15 @@ class DietWrapper extends BaseDiet {
         };
       }
     }
-
+    
     careplanApiData[careplanData.getCarePlanId()] =
       await careplanData.getAllInfo();
-
+    
     return {
       diets: {
         ...dietsApiData,
       },
-      care_plans: { ...careplanApiData },
+      care_plans: {...careplanApiData},
       diet_food_group_mappings: {
         ...dietFoodGroupMappingData,
       },
@@ -119,16 +119,16 @@ class DietWrapper extends BaseDiet {
       },
     };
   };
-
+  
   getAllInfo = async () => {
-    const { getDietFoodGroupMappings, getBasicInfo } = this;
+    const {getDietFoodGroupMappings, getBasicInfo} = this;
     let diet_food_group_mapping_ids = [];
-
+    
     const allMappings = getDietFoodGroupMappings() || [];
-
+    
     if (allMappings.length > 0) {
       for (let index = 0; index < allMappings.length; index++) {
-        const { id } = allMappings[index];
+        const {id} = allMappings[index];
         diet_food_group_mapping_ids.push(id);
       }
     }
@@ -139,11 +139,11 @@ class DietWrapper extends BaseDiet {
   };
 }
 
-export default async ({ data = null, id = null }) => {
+export default async ({data = null, id = null}) => {
   if (data !== null) {
     return new DietWrapper(data);
   }
   const dietService = new DietService();
-  const diet = await dietService.findOne({ id });
+  const diet = await dietService.findOne({id});
   return new DietWrapper(diet);
 };

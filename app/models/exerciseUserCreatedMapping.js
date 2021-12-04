@@ -1,6 +1,6 @@
 "use strict";
-import { DataTypes } from "sequelize";
-import { USER_CATEGORY } from "../../constant";
+import {DataTypes} from "sequelize";
+import {USER_CATEGORY} from "../../constant";
 // import { TABLE_NAME as exerciseTableName } from "./exercise";
 
 export const TABLE_NAME = "exercise_user_created_mappings";

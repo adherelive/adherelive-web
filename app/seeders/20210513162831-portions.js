@@ -1,6 +1,6 @@
 "use strict";
 
-import { TABLE_NAME } from "../models/portions";
+import {TABLE_NAME} from "../models/portions";
 
 module.exports = {
   up: (queryInterface) => {
@@ -52,7 +52,7 @@ module.exports = {
       },
     ]);
   },
-
+  
   down: (queryInterface) => {
     return queryInterface.bulkDelete(TABLE_NAME, null, {});
   },

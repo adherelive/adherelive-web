@@ -1,8 +1,8 @@
 "use strict";
-import { DataTypes } from "sequelize";
-import { TABLE_NAME as portionTableName } from "./portions";
+import {DataTypes} from "sequelize";
+import {TABLE_NAME as portionTableName} from "./portions";
 // import { TABLE_NAME as foodItemTableName } from "./foodItems";
-import { TABLE_NAME as foodItemDetailsTableName } from "./foodItemDetails";
+import {TABLE_NAME as foodItemDetailsTableName} from "./foodItemDetails";
 // import {TABLE_NAME as dietFoodGroupMappingTableName} from "./dietFoodGroupMapping";
 
 export const TABLE_NAME = "food_groups";
@@ -43,13 +43,13 @@ export const db = (database) => {
 export const associate = (database) => {
   // const {TABLE_NAME} = database.models || {};
   // associations here (if any) ...
-
+  
   // associations here (if any) ...
   database.models[TABLE_NAME].hasOne(database.models[portionTableName], {
     foreignKey: "id",
     sourceKey: "portion_id",
   });
-
+  
   database.models[TABLE_NAME].hasOne(
     database.models[foodItemDetailsTableName],
     {

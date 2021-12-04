@@ -10,10 +10,10 @@ import moment from "moment";
 
 export const getTimings = (timings) => {
   let formattedTimings = [];
-
+  
   Object.keys(timings).forEach((id) => {
-    const { value } = timings[id] || {};
-
+    const {value} = timings[id] || {};
+    
     switch (id) {
       case WAKE_UP:
         formattedTimings.push({
@@ -85,6 +85,6 @@ export const getTimings = (timings) => {
         break;
     }
   });
-
+  
   return formattedTimings;
 };

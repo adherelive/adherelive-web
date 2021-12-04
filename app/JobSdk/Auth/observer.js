@@ -1,12 +1,13 @@
-import { EVENT_TYPE, NOTIFICATION_VERB } from "../../../constant";
+import {EVENT_TYPE, NOTIFICATION_VERB} from "../../../constant";
 import OtpJob from "./otpJob";
 import AddPatientJob from "./addPatientJob";
 import DeactivateDoctorJob from "./deactivateDoctorJob";
 import ActivateDoctorJob from "./activateDoctorJob";
 
 class AuthObserver {
-  constructor() {}
-
+  constructor() {
+  }
+  
   execute = (typeStatus, eventDetails) => {
     switch (typeStatus) {
       case EVENT_TYPE.OTP:

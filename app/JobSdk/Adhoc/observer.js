@@ -1,8 +1,9 @@
 import CrashJob from "./crash";
 
 class AdhocObserver {
-  constructor() {}
-
+  constructor() {
+  }
+  
   execute = (status, details) => {
     switch (status) {
       case "crash":

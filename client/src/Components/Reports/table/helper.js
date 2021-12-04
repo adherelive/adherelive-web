@@ -1,4 +1,4 @@
-import { USER_CATEGORY } from "../../../constant";
+import {USER_CATEGORY} from "../../../constant";
 
 export const TABLE_COLUMN = {
   NAME: {
@@ -22,34 +22,34 @@ export const TABLE_COLUMN = {
 };
 
 export const formatReportData = ({
-  id,
-  reports,
-  patients,
-  doctors,
-  upload_documents,
-}) => {
+                                   id,
+                                   reports,
+                                   patients,
+                                   doctors,
+                                   upload_documents,
+                                 }) => {
   const reportData = reports[id] || {};
-
+  
   const {
-    basic_info: { patient_id } = {},
-    uploader: { id: uploaderId, category: uploaderCategory } = {},
+    basic_info: {patient_id} = {},
+    uploader: {id: uploaderId, category: uploaderCategory} = {},
     report_document_ids = [],
   } = reportData || {};
-
+  
   const patientData = patients[patient_id] || {};
-
+  
   const uploaderData =
     uploaderCategory === USER_CATEGORY.DOCTOR ||
     uploaderCategory === USER_CATEGORY.HSP
       ? doctors[uploaderId]
       : patients[uploaderId];
-
+  
   // documents
   let documentData = {};
   report_document_ids.forEach((documentId) => {
     documentData[documentId] = upload_documents[documentId] || {};
   });
-
+  
   return {
     reportData,
     patientData,

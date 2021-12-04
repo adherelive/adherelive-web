@@ -15,7 +15,7 @@ module.exports = () => {
       default_currency: process.env.DEFAULT_CURRENCY,
       medicine_data: process.env.MEDICINE_INSTANCE,
       careplan_activation_reschedule_hours:
-        process.env.CAREPLAN_ACTIVATION_RESCHEDULE_HOURS,
+      process.env.CAREPLAN_ACTIVATION_RESCHEDULE_HOURS,
       icon_android: process.env.ANDROID_ICON_NAME,
       otp_live_minutes: process.env.OTP_LIVE_MINUTES,
       appointment_prior_time: process.env.APPOINTMENT_PRIOR_NOTIFY_MINUTES,
@@ -155,7 +155,7 @@ module.exports = () => {
     ADMIN_MEDICINE_ONE_PAGE_LIMIT: process.env.ADMIN_MEDICINE_ONE_PAGE_LIMIT,
     PATIENT_LIST_SIZE_LIMIT: process.env.PATIENT_LIST_SIZE_LIMIT,
     DOCTOR_NAME_SEARCH_LIST_SIZE_LIMIT:
-      process.env.DOCTOR_NAME_SEARCH_LIST_SIZE_LIMIT,
+    process.env.DOCTOR_NAME_SEARCH_LIST_SIZE_LIMIT,
   };
 };
 

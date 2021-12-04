@@ -3,7 +3,7 @@ import messages from "../messages";
 
 export default (props) => {
   const {
-    dietData: { basic_info: { name } = {}, expired_on = null } = {},
+    dietData: {basic_info: {name} = {}, expired_on = null} = {},
     formatMessage,
   } = props || {};
   return (

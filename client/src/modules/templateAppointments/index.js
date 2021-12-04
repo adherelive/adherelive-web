@@ -1,5 +1,5 @@
 function templateAppointmentsReducer(state, data) {
-  const { template_appointments } = data || {};
+  const {template_appointments} = data || {};
   if (template_appointments) {
     return {
       ...state,
@@ -11,7 +11,7 @@ function templateAppointmentsReducer(state, data) {
 }
 
 export default (state = {}, action) => {
-  const { type, data } = action;
+  const {type, data} = action;
   switch (type) {
     default:
       return templateAppointmentsReducer(state, data);

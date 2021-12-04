@@ -1,9 +1,9 @@
 "use strict";
 
-import { TABLE_NAME } from "../app/models/foodItemDetails";
-import { TABLE_NAME as portionTableName } from "../app/models/portions";
-import { TABLE_NAME as foodItemTableName } from "../app/models/foodItemDetails";
-import { USER_CATEGORY_ARRAY } from "../app/models/users";
+import {TABLE_NAME} from "../app/models/foodItemDetails";
+import {TABLE_NAME as portionTableName} from "../app/models/portions";
+import {TABLE_NAME as foodItemTableName} from "../app/models/foodItemDetails";
+import {USER_CATEGORY_ARRAY} from "../app/models/users";
 
 module.exports = {
   up: (queryInterface, Sequelize) => {
@@ -77,7 +77,7 @@ module.exports = {
       },
     });
   },
-
+  
   down: (queryInterface, Sequelize) => {
     return queryInterface.dropTable(TABLE_NAME);
   },

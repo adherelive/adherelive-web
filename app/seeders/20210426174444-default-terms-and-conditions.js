@@ -1,7 +1,7 @@
 "use strict";
 
-import { TABLE_NAME } from "../models/termsAndConditions";
-import { TERMS_AND_CONDITIONS_TYPES } from "../../constant";
+import {TABLE_NAME} from "../models/termsAndConditions";
+import {TERMS_AND_CONDITIONS_TYPES} from "../../constant";
 
 module.exports = {
   up: (queryInterface) => {
@@ -20,7 +20,7 @@ module.exports = {
       },
     ]);
   },
-
+  
   down: (queryInterface) => {
     return queryInterface.bulkDelete(TABLE_NAME, null, {});
   },

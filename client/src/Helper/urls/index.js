@@ -6,10 +6,10 @@ import * as Twilio from './twilio';
 import * as Agora from "./agora";
 
 export {
-    Auth,
-    User,
-    Event,
-    Doctor,
-    Twilio,
-    Agora,
+  Auth,
+  User,
+  Event,
+  Doctor,
+  Twilio,
+  Agora,
 };

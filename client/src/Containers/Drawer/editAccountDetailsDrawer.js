@@ -1,12 +1,12 @@
-import { connect } from "react-redux";
+import {connect} from "react-redux";
 import editAccountDetailsDrawer from "../../Components/Drawer/editAccountDetails";
 import {
   getAccountDetails,
   updateAccountDetails,
 } from "../../modules/accountDetails";
-import { addAccountDetails } from "../../modules/accountDetails";
-import { DRAWER } from "../../constant";
-import { close } from "../../modules/drawer";
+import {addAccountDetails} from "../../modules/accountDetails";
+import {DRAWER} from "../../constant";
+import {close} from "../../modules/drawer";
 import {
   getAdminPaymentProduct,
   getDoctorPaymentProduct,
@@ -17,9 +17,9 @@ import {
 const mapStateToProps = (state) => {
   const {
     account_details,
-    drawer: { visible, loading, data: { type, payload = {} } = {} },
+    drawer: {visible, loading, data: {type, payload = {}} = {}},
   } = state;
-
+  
   return {
     account_details,
     visible: visible && type === DRAWER.EDIT_RAZORPAY_ACCOUNT_DETAILS,

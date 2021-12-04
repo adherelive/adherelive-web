@@ -5,9 +5,9 @@ import Authenticate from "../middleware/auth";
 import Severity from "../../../app/controllers/severity/severity.controller";
 
 router.get(
-    "/",
-    Authenticate,
-    Severity.getAll
+  "/",
+  Authenticate,
+  Severity.getAll
 );
 
 module.exports = router;

@@ -2,7 +2,7 @@
 import express from "express";
 import Authenticate from "../middlewares/auth";
 import FoodItemController from "../../../app/controllers/mControllers/foodtems/foodItems.controller";
-import { isDoctor } from "../middlewares/doctor";
+import {isDoctor} from "../middlewares/doctor";
 import * as Validator from "./validate";
 
 const router = express.Router();

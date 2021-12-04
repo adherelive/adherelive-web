@@ -18,9 +18,9 @@ class AppointmentWrapper extends BaseAppointment {
   constructor(data) {
     super(data);
   }
-
+  
   getBasicInfo = () => {
-    const { _data } = this;
+    const {_data} = this;
     const {
       id,
       participant_one_id,
@@ -66,20 +66,20 @@ class AppointmentWrapper extends BaseAppointment {
       provider_name,
     };
   };
-
+  
   getAllInfo = async () => {
-    const { getBasicInfo, _data } = this;
-    const { id } = _data;
-
+    const {getBasicInfo, _data} = this;
+    const {id} = _data;
+    
     const scheduleEventService = new ScheduleEventService();
     const scheduleEventData = await scheduleEventService.getAllEventByData({
       event_id: id,
       event_type: EVENT_TYPE.APPOINTMENT,
     });
-
+    
     let activeEventId = null;
     let scheduleData = {};
-
+    
     if (scheduleEventData.length > 0) {
       for (let i = 0; i < scheduleEventData.length; i++) {
         const scheduleEvent = await EventWrapper(scheduleEventData[i]);
@@ -90,7 +90,7 @@ class AppointmentWrapper extends BaseAppointment {
           scheduleEvent.getAllInfo();
       }
     }
-
+    
     let uploadDocumentsData = {};
     let uploadDocumentIds = [];
     const uploadDocuments =
@@ -98,20 +98,20 @@ class AppointmentWrapper extends BaseAppointment {
         DOCUMENT_PARENT_TYPE.APPOINTMENT_DOC,
         id
       );
-
+    
     for (const uploadDocument of uploadDocuments) {
       const uploadDocumentData = await UploadDocumentWrapper(uploadDocument);
       uploadDocumentsData[uploadDocumentData.getUploadDocumentId()] =
         uploadDocumentData.getBasicInfo();
       uploadDocumentIds.push(uploadDocumentData.getUploadDocumentId());
     }
-
+    
     // care_plan_id
-    const { care_plan_id = null } =
-      (await careplanAppointmentService.getCareplanByAppointment({
-        appointment_id: id,
-      })) || {};
-
+    const {care_plan_id = null} =
+    (await careplanAppointmentService.getCareplanByAppointment({
+      appointment_id: id,
+    })) || {};
+    
     return {
       appointments: {
         [`${id}`]: {
@@ -130,10 +130,10 @@ class AppointmentWrapper extends BaseAppointment {
       appointment_id: id,
     };
   };
-
+  
   getReferenceInfo = async () => {
-    const { getAllInfo } = this;
-
+    const {getAllInfo} = this;
+    
     return getAllInfo();
   };
 }

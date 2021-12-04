@@ -1,4 +1,4 @@
-const { isEmpty } = require("lodash");
+const {isEmpty} = require("lodash");
 const eventServices = require("../../../services/event/event.service");
 const userServices = require("../../../services/user/user.service");
 const {
@@ -28,7 +28,7 @@ class Validator {
     this.notificatonID = data.notificationId;
     this.sendTo = data.sendTo || null;
   }
-
+  
   type(type) {
     if (NOTIFICATION_ENUM.indexOf(type) != -1) {
       this.notificationType = type;
@@ -37,7 +37,7 @@ class Validator {
       throw new Error("invalid notification type!!");
     }
   }
-
+  
   async isValidReminderData() {
     try {
       let reminderData = await eventServices.getEventById(this.notificatonID);
@@ -48,7 +48,7 @@ class Validator {
       ) {
         throw new Error("event doesn't belong to reminder category");
       }
-
+      
       if (isEmpty(reminderData.participantOne))
         throw new Error("participant one data is undefined or invalid");
       if (isEmpty(reminderData.participantTwo))
@@ -59,12 +59,12 @@ class Validator {
       let participantTwoData = await userServices.getUser({
         _id: reminderData.participantTwo,
       });
-
+      
       if (isEmpty(participantOneData))
         throw new Error("participant one doesn't exist");
       if (isEmpty(participantTwoData))
         throw new Error("participant two doesn't exist");
-
+      
       if (isEmpty(reminderData.details))
         throw new Error("reminder details doesn't exist");
       if (isEmpty(reminderData.details.startTime))
@@ -72,13 +72,13 @@ class Validator {
       if (isEmpty(reminderData.details.endTime))
         throw new Error("end time for reminder is undefined");
       // if (isEmpty(reminderData.details.notes))
-
+      
       //   if (isEmpty(reminderData.details.title))
     } catch (err) {
       throw err;
     }
   }
-
+  
   async isValidAppointementData() {
     try {
       let appointmentData = await eventServices.getEventById(
@@ -87,23 +87,23 @@ class Validator {
       // console.log("appointment data", appointmentData);
       if (isEmpty(appointmentData))
         throw new Error("no such appointment created");
-
+      
       if (
         isEmpty(appointmentData.eventCategory) ||
         appointmentData.eventCategory.toLowerCase() != APPOINTMENT
       )
         throw new Error("event doesn't belong to appointment category");
-
+      
       if (isEmpty(appointmentData.participantOne))
         throw new Error("no participant one data");
       if (isEmpty(appointmentData.participantTwo))
         throw new Error("no participant two data");
       let sendTo;
-
+      
       let participantOneData = await userServices.getUser({
         _id: appointmentData.participantOne,
       });
-
+      
       let participantTwoData = await userServices.getUser({
         _id: appointmentData.participantTwo,
       });
@@ -120,28 +120,28 @@ class Validator {
         //   ? "participantOne"
         //   : "participantTwo";
       }
-
+      
       if (isEmpty(participantOneData))
         throw new Error("participant one doesn't exist");
-
+      
       if (isEmpty(participantTwoData))
         throw new Error("participant two doesn't exist");
-
+      
       if (isEmpty(appointmentData.details))
         throw new Error("appointment details doesn't exist");
-
+      
       if (isEmpty(appointmentData.details.startTime))
         throw new Error("startTime invalid or undefined");
-
+      
       if (isEmpty(appointmentData.details.endTime))
         throw new Error("endTime invalid or undefined");
-
+      
       if (isEmpty(appointmentData.details.activityMode))
         throw new Error("invalid or undefined activity mode");
-
+      
       if (isEmpty(appointmentData.details.activityType))
         throw new Error("invalid or undefined activity type");
-
+      
       let result = {
         ...appointmentData,
         ...{
@@ -172,10 +172,10 @@ class Validator {
       throw err;
     }
   }
-
+  
   async isValidArticleData() {
-    let payload = !isEmpty(arguments) ? arguments[0] : { ...{}, ...this.data };
-
+    let payload = !isEmpty(arguments) ? arguments[0] : {...{}, ...this.data};
+    
     if (isEmpty(payload)) return false;
     if (
       isEmpty(payload.eventCategory) ||
@@ -194,9 +194,9 @@ class Validator {
     // }
     return true;
   }
-
+  
   async isValidSurveyData() {
-    let payload = !isEmpty(arguments) ? arguments[0] : { ...{}, ...this.data };
+    let payload = !isEmpty(arguments) ? arguments[0] : {...{}, ...this.data};
     if (isEmpty(payload)) return false;
     if (
       isEmpty(payload.eventCategory) ||
@@ -212,9 +212,9 @@ class Validator {
     // }
     return true;
   }
-
+  
   async isValidPatientDischargeData() {
-    let payload = !isEmpty(arguments) ? arguments[0] : { ...{}, ...this.data };
+    let payload = !isEmpty(arguments) ? arguments[0] : {...{}, ...this.data};
     if (isEmpty(payload)) return false;
     if (
       isEmpty(payload.eventCategory) ||
@@ -222,7 +222,7 @@ class Validator {
     ) {
       return false;
     }
-
+    
     // if (this.type === "create") {
     //   //validation related to create patient Discharge
     // }
@@ -231,9 +231,9 @@ class Validator {
     // }
     return true;
   }
-
+  
   async isValidAdverseEventData() {
-    let payload = !isEmpty(arguments) ? arguments[0] : { ...{}, ...this.data };
+    let payload = !isEmpty(arguments) ? arguments[0] : {...{}, ...this.data};
     if (isEmpty(payload)) return false;
     if (
       isEmpty(payload.eventCategory) ||
@@ -241,7 +241,7 @@ class Validator {
     ) {
       return false;
     }
-
+    
     // if (this.type === "create") {
     //   //validation related to create reminder
     // }
@@ -250,9 +250,9 @@ class Validator {
     // }
     return true;
   }
-
+  
   async isValidVitalsData() {
-    let payload = !isEmpty(arguments) ? arguments[0] : { ...{}, ...this.data };
+    let payload = !isEmpty(arguments) ? arguments[0] : {...{}, ...this.data};
     if (isEmpty(payload)) return false;
     if (
       isEmpty(payload.eventCategory) ||
@@ -260,7 +260,7 @@ class Validator {
     ) {
       return false;
     }
-
+    
     // if (this.type === "create") {
     //   //validation related to create reminder
     // }
@@ -269,9 +269,9 @@ class Validator {
     // }
     return true;
   }
-
+  
   async isValidPrescriptionData() {
-    let payload = !isEmpty(arguments) ? arguments[0] : { ...{}, ...this.data };
+    let payload = !isEmpty(arguments) ? arguments[0] : {...{}, ...this.data};
     if (isEmpty(payload)) return false;
     if (
       isEmpty(payload.eventCategory) ||
@@ -287,9 +287,9 @@ class Validator {
     // }
     return true;
   }
-
+  
   async isValidProgramData() {
-    let payload = !isEmpty(arguments) ? arguments[0] : { ...{}, ...this.data };
+    let payload = !isEmpty(arguments) ? arguments[0] : {...{}, ...this.data};
     if (isEmpty(payload)) return false;
     if (
       isEmpty(payload.eventCategory) ||
@@ -305,7 +305,7 @@ class Validator {
     // }
     return true;
   }
-
+  
   async isValid() {
     let notificatonID = this.notificatonID;
     if (isEmpty(this.notificationType))
