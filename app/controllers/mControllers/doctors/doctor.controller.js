@@ -221,6 +221,9 @@ class MobileDoctorController extends Controller {
   };
 
   addPatient = async (req, res) => {
+    console.log("=========================");
+    console.log(req.body);
+    console.log("=========================");
     try {
       Logger.request(req.body);
       const {
@@ -243,6 +246,7 @@ class MobileDoctorController extends Controller {
         symptoms = "",
         address = "",
       } = req.body;
+      console.log(req.body);
       const {
         userDetails: {
           userRoleId = null,
@@ -252,27 +256,29 @@ class MobileDoctorController extends Controller {
       } = req;
 
       const userExists = await userService.getPatientByMobile(mobile_number);
-
+      console.log("=======1");
       let userData = null;
       let patientData = null;
       let patientOtherDetails = {};
       let carePlanOtherDetails = {};
       let patientFeatureIds = [];
-
+      console.log("=======2");
       if (comorbidities) {
         patientOtherDetails["comorbidities"] = comorbidities;
       }
+      console.log("=======3");
       if (allergies) {
         patientOtherDetails["allergies"] = allergies;
       }
+      console.log("=======4");
       if (clinical_notes) {
         carePlanOtherDetails["clinical_notes"] = clinical_notes;
       }
-
+      console.log("=======5");
       if (symptoms) {
         carePlanOtherDetails["symptoms"] = symptoms;
       }
-
+      console.log("=======6");
       const doctor = await doctorService.getDoctorByData({ user_id: userId });
 
       // name split
@@ -292,7 +298,7 @@ class MobileDoctorController extends Controller {
         userData = await UserWrapper(userExists[0].get());
         const { patient_id } = await userData.getReferenceInfo();
         patientData = await PatientWrapper(null, patient_id);
-
+        console.log("=======7");
         const previousDetails = patientData.getDetails();
         const updateResponse = await patientsService.update(
           {
@@ -309,6 +315,7 @@ class MobileDoctorController extends Controller {
           },
           patient_id
         );
+        console.log("=======7");
         Logger.debug("Patient updateResponse ", updateResponse);
 
         patientData = await PatientWrapper(null, patient_id);
@@ -328,7 +335,7 @@ class MobileDoctorController extends Controller {
           activated_on: moment().format(),
         });
         userData = await UserWrapper(user.get());
-
+        console.log("=======8");
         if (clinical_notes) {
           carePlanOtherDetails["clinical_notes"] = clinical_notes;
         }
@@ -338,7 +345,7 @@ class MobileDoctorController extends Controller {
         }
 
         let newUserId = userData.getId();
-
+        console.log("=======9");
         // const uid = uuidv4();
         const birth_date = moment(date_of_birth);
         const age = getAge(date_of_birth);
@@ -358,15 +365,17 @@ class MobileDoctorController extends Controller {
           weight,
           address,
         });
-        const userRoleWrapper = await UserRoleWrapper(userRole);
-        const newUserRoleId = await userRoleWrapper.getId();
-
+        // const userRoleWrapper = await UserRoleWrapper(userRole);
+        // const newUserRoleId = await userRoleWrapper.getId();
+        console.log("=======10");
         const patientWrapper = await PatientWrapper(patient);
         const patientUserId = await patientWrapper.getUserId();
         const userRole = await userRolesService.create({
           user_identity: patientUserId,
         });
-
+        const userRoleWrapper = await UserRoleWrapper(userRole);
+        const newUserRoleId = await userRoleWrapper.getId();
+        console.log("=======11");
         await UserPreferenceService.addUserPreference({
           user_id: newUserId,
           details: {
@@ -374,7 +383,7 @@ class MobileDoctorController extends Controller {
           },
           user_role_id: newUserRoleId,
         });
-
+        console.log("=======12");
         const uid = patient_uid
           ? patient_uid
           : getReferenceId(patient.get("id"));
@@ -383,7 +392,7 @@ class MobileDoctorController extends Controller {
         patientData = await PatientWrapper(null, patient.get("id"));
 
         const features = await featuresService.getAllFeatures();
-
+        console.log("=======13");
         for (const feature of features) {
           const { id: featureId } = feature;
           const featureMappingData =
@@ -397,7 +406,7 @@ class MobileDoctorController extends Controller {
           }
         }
       }
-
+      console.log("=======14");
       const carePlanTemplate =
         await carePlanTemplateService.getCarePlanTemplateData({
           treatment_id,
@@ -405,7 +414,7 @@ class MobileDoctorController extends Controller {
           condition_id,
           user_id: userId,
         });
-
+      console.log("=======15");
       const patient_id = patientData.getPatientId();
       const care_plan_template_id = null;
 
@@ -419,7 +428,7 @@ class MobileDoctorController extends Controller {
         },
         ...carePlanOtherDetails,
       };
-
+      console.log("=======16");
       const carePlan = await carePlanService.addCarePlan({
         patient_id,
         doctor_id: doctor.get("id"),
@@ -429,7 +438,7 @@ class MobileDoctorController extends Controller {
         // channel_id: getRoomId(userRoleId, patient_id),
         created_at: moment(),
       });
-
+      console.log("=======17");
       const { id: carePlanId } = carePlan || {};
       const { user_role_id: patientRoleId } = await patientData.getAllInfo();
 
@@ -439,7 +448,7 @@ class MobileDoctorController extends Controller {
         },
         carePlanId
       );
-
+      console.log("=======18");
       const carePlanData = await CarePlanWrapper(carePlan);
 
       let templateMedicationData = {};
@@ -457,7 +466,7 @@ class MobileDoctorController extends Controller {
         status: "pending",
         type: VERIFICATION_TYPE.PATIENT_SIGN_UP,
       });
-
+      console.log("=======19");
       const universalLink = await getUniversalLink({
         event_type: VERIFICATION_TYPE.PATIENT_SIGN_UP,
         link,
@@ -470,7 +479,7 @@ class MobileDoctorController extends Controller {
         phoneNumber: `+${prefix}${mobile_number}`, // mobile_number
         message: `Hello from AdhereLive! Please click the link to verify your number. ${universalLink}`,
       };
-
+      console.log("=======20");
       // if(process.config.app.env === "development") {
       const emailPayload = {
         title: "Mobile Patient Verification mail",
@@ -491,7 +500,7 @@ class MobileDoctorController extends Controller {
       // } else {
       //   Proxy_Sdk.execute(EVENTS.SEND_SMS, smsPayload);
       // }
-
+      console.log("=======21");
       let otherCarePlanTemplates = {};
 
       let carePlanTemplateIds = [];
@@ -529,7 +538,7 @@ class MobileDoctorController extends Controller {
           },
         };
       }
-
+      console.log("=======21");
       return this.raiseSuccess(
         res,
         200,

@@ -106,7 +106,10 @@ class PatientController extends Controller {
       const { pid, profile_pic, name, email = "" } = body || {};
       const { userId = "3" } = userDetails || {};
 
-      console.log("\n\n PROFILE PIC FILE \n", req);
+      console.log("==============in Web Controller================");
+      console.log(userDetails);
+      console.log(body);
+      console.log("===============================================");
 
       if (email) {
         const updateUserDetails = await userService.updateEmail(
