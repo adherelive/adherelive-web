@@ -1,7 +1,7 @@
-import { TABLE_COLUMN, formatAppointmentTableData } from "../helper";
+import {TABLE_COLUMN, formatAppointmentTableData} from "../helper";
 
 export default (data) => {
-  const { id } = data;
+  const {id} = data;
   const formattedData = formatAppointmentTableData(data);
   const {
     appointmentData,

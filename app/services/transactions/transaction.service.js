@@ -1,6 +1,6 @@
 import Database from "../../../libs/mysql";
-import { TABLE_NAME } from "../../models/transactions";
-import { TABLE_NAME as paymentProductTableName } from "../../models/paymentProducts";
+import {TABLE_NAME} from "../../models/transactions";
+import {TABLE_NAME as paymentProductTableName} from "../../models/paymentProducts";
 
 class TransactionService {
   createTransaction = async (data) => {
@@ -13,7 +13,7 @@ class TransactionService {
       throw error;
     }
   };
-
+  
   getByData = async (data) => {
     try {
       const transaction = await Database.getModel(TABLE_NAME).findOne({
@@ -33,7 +33,7 @@ class TransactionService {
       throw error;
     }
   };
-
+  
   getAllByData = async (data) => {
     try {
       const transaction = await Database.getModel(TABLE_NAME).findAll({
@@ -54,7 +54,7 @@ class TransactionService {
       throw error;
     }
   };
-
+  
   updateTransaction = async (data, id) => {
     const transaction = await Database.initTransaction();
     try {

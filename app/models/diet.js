@@ -1,7 +1,7 @@
 "use strict";
-import { DataTypes } from "sequelize";
-import { TABLE_NAME as carePlanTableName } from "./carePlan";
-import { TABLE_NAME as dietFoodGroupMappingTableName } from "./dietFoodGroupMapping";
+import {DataTypes} from "sequelize";
+import {TABLE_NAME as carePlanTableName} from "./carePlan";
+import {TABLE_NAME as dietFoodGroupMappingTableName} from "./dietFoodGroupMapping";
 
 export const TABLE_NAME = "diet";
 
@@ -53,7 +53,7 @@ export const associate = (database) => {
     foreignKey: "id",
     sourceKey: "care_plan_id",
   });
-
+  
   database.models[TABLE_NAME].hasMany(
     database.models[dietFoodGroupMappingTableName],
     {

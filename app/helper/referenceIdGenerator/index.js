@@ -1,4 +1,4 @@
-import { USER_REFERENCE_ID_SIZE } from "../../../constant";
+import {USER_REFERENCE_ID_SIZE} from "../../../constant";
 import moment from "moment";
 
 const PROVIDER_ADHERE = "Adhere";

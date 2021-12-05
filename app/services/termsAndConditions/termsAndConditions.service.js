@@ -1,5 +1,5 @@
 import Database from "../../../libs/mysql";
-import { TABLE_NAME } from "../../models/termsAndConditions";
+import {TABLE_NAME} from "../../models/termsAndConditions";
 
 class TermsAndConditionsService {
   create = async (data) => {
@@ -12,7 +12,7 @@ class TermsAndConditionsService {
       throw error;
     }
   };
-
+  
   getByData = async (data) => {
     try {
       const tac = await Database.getModel(TABLE_NAME).findOne({

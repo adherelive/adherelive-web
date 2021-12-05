@@ -1,12 +1,12 @@
-import { doRequest } from "../../Helper/network";
-import { REQUEST_TYPE } from "../../constant";
+import {doRequest} from "../../Helper/network";
+import {REQUEST_TYPE} from "../../constant";
 
 import {
   getAllProvidersUrl,
   updateProviderUrl,
 } from "../../Helper/urls/provider";
 
-import { getAllTransactionsUrl } from "../../Helper/urls/transactions";
+import {getAllTransactionsUrl} from "../../Helper/urls/transactions";
 
 export const GET_ALL_TRANSACTIONS_START = "GET_ALL_TRANSACTIONS_START";
 export const GET_ALL_TRANSACTIONS_COMPLETE = "GET_ALL_TRANSACTIONS_COMPLETE";
@@ -28,15 +28,15 @@ export const getAllProviders = () => {
   let response = {};
   return async (dispatch) => {
     try {
-      dispatch({ type: GET_ALL_PROVIDERS_START });
+      dispatch({type: GET_ALL_PROVIDERS_START});
       response = await doRequest({
         method: REQUEST_TYPE.GET,
         url: getAllProvidersUrl(),
       });
-
+      
       // console.log("78654546576877653546576654565768 --------->",response);
-
-      const { status, payload: { data, error } = {} } = response || {};
+      
+      const {status, payload: {data, error} = {}} = response || {};
       if (status === true) {
         dispatch({
           type: GET_ALL_PROVIDERS_COMPLETE,
@@ -60,15 +60,15 @@ export const getAllTransactions = () => {
   let response = {};
   return async (dispatch) => {
     try {
-      dispatch({ type: GET_ALL_TRANSACTIONS_START });
+      dispatch({type: GET_ALL_TRANSACTIONS_START});
       response = await doRequest({
         method: REQUEST_TYPE.GET,
         url: getAllTransactionsUrl(),
       });
-
+      
       // console.log("78654546576877653546576654565768 --------->",response);
-
-      const { status, payload: { data, error } = {} } = response || {};
+      
+      const {status, payload: {data, error} = {}} = response || {};
       if (status === true) {
         dispatch({
           type: GET_ALL_TRANSACTIONS_COMPLETE,
@@ -92,14 +92,14 @@ export const addProvider = (payload) => {
   let response = {};
   return async (dispatch) => {
     try {
-      dispatch({ type: ADD_PROVIDER_START });
+      dispatch({type: ADD_PROVIDER_START});
       response = await doRequest({
         method: REQUEST_TYPE.POST,
         url: getAllProvidersUrl(),
         data: payload,
       });
-
-      const { status, payload: { data, error } = {} } = response || {};
+      
+      const {status, payload: {data, error} = {}} = response || {};
       if (status === true) {
         dispatch({
           type: ADD_PROVIDER_COMPLETE,
@@ -123,14 +123,14 @@ export const updateProvider = (id, payload) => {
   let response = {};
   return async (dispatch) => {
     try {
-      dispatch({ type: UPDATE_PROVIDER_START });
+      dispatch({type: UPDATE_PROVIDER_START});
       response = await doRequest({
         method: REQUEST_TYPE.POST,
         url: updateProviderUrl(id),
         data: payload,
       });
-
-      const { status, payload: { data, error } = {} } = response || {};
+      
+      const {status, payload: {data, error} = {}} = response || {};
       if (status === true) {
         dispatch({
           type: UPDATE_PROVIDER_COMPLETE,
@@ -151,7 +151,7 @@ export const updateProvider = (id, payload) => {
 };
 
 function providersReducer(state, data) {
-  const { providers } = data || {};
+  const {providers} = data || {};
   if (providers) {
     return {
       ...state,
@@ -163,7 +163,7 @@ function providersReducer(state, data) {
 }
 
 export default (state = {}, action) => {
-  const { type, data } = action;
+  const {type, data} = action;
   switch (type) {
     default:
       return providersReducer(state, data);

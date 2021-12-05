@@ -5,7 +5,7 @@ class PaymentProductWrapper extends BasePaymentProduct {
   constructor(data) {
     super(data);
   }
-
+  
   getBasicInfo = () => {
     const {
       id,
@@ -24,7 +24,7 @@ class PaymentProductWrapper extends BasePaymentProduct {
     //      type, details, amount,
     //      product_user_type, for_user_id, for_user_type,
     //     razorpay_link} = this._data;
-
+    
     return {
       basic_info: {
         id,
@@ -41,19 +41,21 @@ class PaymentProductWrapper extends BasePaymentProduct {
       razorpay_link,
     };
   };
-
-  getAllInfo = () => {};
-
-  getReferenceInfo = () => {};
+  
+  getAllInfo = () => {
+  };
+  
+  getReferenceInfo = () => {
+  };
 }
 
-export default async ({ data = null, id = null }) => {
+export default async ({data = null, id = null}) => {
   try {
     if (data) {
       return new PaymentProductWrapper(data);
     }
     const paymentProductService = new PaymentProductService();
-    const paymentProduct = await paymentProductService.getByData({ id });
+    const paymentProduct = await paymentProductService.getByData({id});
     return new PaymentProductWrapper(paymentProduct);
   } catch (error) {
     throw error;

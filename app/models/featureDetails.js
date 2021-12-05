@@ -1,6 +1,6 @@
 "use strict";
-import { DataTypes } from "sequelize";
-import { FEATURE_TYPE } from "../../constant";
+import {DataTypes} from "sequelize";
+import {FEATURE_TYPE} from "../../constant";
 
 export const TABLE_NAME = "feature_details";
 

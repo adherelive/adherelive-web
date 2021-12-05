@@ -1,5 +1,5 @@
-import React, { Component } from "react";
-import { injectIntl } from "react-intl";
+import React, {Component} from "react";
+import {injectIntl} from "react-intl";
 import Drawer from "antd/es/drawer";
 
 import MedicationTimeline from "../../../Containers/Medications/timeline";
@@ -9,24 +9,24 @@ class MedicationTimelineDrawer extends Component {
   constructor(props) {
     super(props);
   }
-
+  
   onClose = () => {
-    const { close } = this.props;
+    const {close} = this.props;
     close();
   };
-
+  
   drawerTitle = () => {
-    const { medications, id, medicines } = this.props;
-    const { basic_info: { details: { medicine_id = "" } = {} } = {} } =
-      medications[id] || {};
-    const { basic_info: { name = "" } = {} } = medicines[medicine_id] || {};
+    const {medications, id, medicines} = this.props;
+    const {basic_info: {details: {medicine_id = ""} = {}} = {}} =
+    medications[id] || {};
+    const {basic_info: {name = ""} = {}} = medicines[medicine_id] || {};
     return name;
   };
-
+  
   render() {
-    const { visible, intl: { formatMessage } = {} } = this.props;
-    const { onClose, drawerTitle } = this;
-
+    const {visible, intl: {formatMessage} = {}} = this.props;
+    const {onClose, drawerTitle} = this;
+    
     return (
       <Drawer
         placement="right"
@@ -38,7 +38,7 @@ class MedicationTimelineDrawer extends Component {
           {
             ...messages.medication_timeline,
           },
-          { name: drawerTitle() }
+          {name: drawerTitle()}
         )}
         headerStyle={{
           position: "sticky",

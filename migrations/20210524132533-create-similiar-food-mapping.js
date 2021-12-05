@@ -1,7 +1,7 @@
 "use strict";
 
-import { TABLE_NAME } from "../app/models/similarFoodMapping";
-import { TABLE_NAME as dietFoodGroupMappingTableName } from "../app/models/dietFoodGroupMapping";
+import {TABLE_NAME} from "../app/models/similarFoodMapping";
+import {TABLE_NAME as dietFoodGroupMappingTableName} from "../app/models/dietFoodGroupMapping";
 
 module.exports = {
   up: (queryInterface, Sequelize) => {
@@ -45,7 +45,7 @@ module.exports = {
       },
     });
   },
-
+  
   down: (queryInterface, Sequelize) => {
     return queryInterface.dropTable(TABLE_NAME);
   },

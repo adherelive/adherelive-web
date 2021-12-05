@@ -1,6 +1,6 @@
 import React from "react";
 
-import { TABLE_COLUMN } from "../helper";
+import {TABLE_COLUMN} from "../helper";
 import messages from "../messages";
 import Name from "../dataColumn/name";
 import Duration from "../dataColumn/duration";
@@ -10,39 +10,39 @@ import Edit from "../dataColumn/edit";
 import TimelineButton from "../dataColumn/timelineButton";
 
 export default (props) => {
-  const { formatMessage } = props || {};
-
+  const {formatMessage} = props || {};
+  
   return [
     {
       title: formatMessage(messages.name),
       ...TABLE_COLUMN.NAME,
       render: (data) => {
-        const { dietData, formatMessage } = data || {};
-        return <Name dietData={dietData} formatMessage={formatMessage} />;
+        const {dietData, formatMessage} = data || {};
+        return <Name dietData={dietData} formatMessage={formatMessage}/>;
       },
     },
     {
       title: formatMessage(messages.duration),
       ...TABLE_COLUMN.DURATION,
-
-      render: ({ dietData }) => <Duration dietData={dietData} />,
+      
+      render: ({dietData}) => <Duration dietData={dietData}/>,
     },
     {
       title: formatMessage(messages.repeat_days),
       ...TABLE_COLUMN.REPEAT_DAYS,
-
-      render: ({ dietData }) => <RepeatDays dietData={dietData} />,
+      
+      render: ({dietData}) => <RepeatDays dietData={dietData}/>,
     },
     {
       title: formatMessage(messages.calories),
       ...TABLE_COLUMN.CALORIES,
-      render: ({ dietData }) => <Calories dietData={dietData} />,
+      render: ({dietData}) => <Calories dietData={dietData}/>,
     },
     {
       title: "Adherence",
       ...TABLE_COLUMN.TIMELINE,
-
-      render: ({ openResponseDrawer, formatMessage, id }) => (
+      
+      render: ({openResponseDrawer, formatMessage, id}) => (
         <TimelineButton
           formatMessage={formatMessage}
           openResponseDrawer={openResponseDrawer}
@@ -53,14 +53,14 @@ export default (props) => {
     {
       title: "",
       ...TABLE_COLUMN.EDIT,
-
+      
       render: ({
-        openEditDrawer,
-        formatMessage,
-        id,
-        dietData,
-        canViewDetails,
-      }) => (
+                 openEditDrawer,
+                 formatMessage,
+                 id,
+                 dietData,
+                 canViewDetails,
+               }) => (
         <Edit
           formatMessage={formatMessage}
           id={id}

@@ -1,5 +1,5 @@
-import React, { Component, Fragment } from "react";
-import { injectIntl } from "react-intl";
+import React, {Component, Fragment} from "react";
+import {injectIntl} from "react-intl";
 import {
   Tabs,
   Button,
@@ -16,12 +16,12 @@ import {
   Spin,
 } from "antd";
 import SideMenu from "./sidebar";
-import { REQUEST_TYPE, PATH, USER_CATEGORY } from "../../constant";
+import {REQUEST_TYPE, PATH, USER_CATEGORY} from "../../constant";
 import UploadSteps from "./steps";
-import { getUploadURL } from "../../Helper/urls/user";
-import { doRequest } from "../../Helper/network";
+import {getUploadURL} from "../../Helper/urls/user";
+import {doRequest} from "../../Helper/network";
 import plus from "../../Assets/images/plus.png";
-import { withRouter } from "react-router-dom";
+import {withRouter} from "react-router-dom";
 // import GooglePlacesAutocomplete from 'react-google-places-autocomplete';
 import PlacesAutocomplete, {
   geocodeByAddress,
@@ -42,7 +42,7 @@ import switzerland from "../../Assets/images/switzerland.png";
 import france from "../../Assets/images/france.png";
 import messages from "./messages";
 
-const { Option } = Select;
+const {Option} = Select;
 
 class Profileregister extends Component {
   constructor(props) {
@@ -65,11 +65,11 @@ class Profileregister extends Component {
       existingDoctorId: null,
     };
   }
-
+  
   componentDidMount = async () => {
     this.fetchData();
   };
-
+  
   fetchData = async () => {
     const {
       authenticated_user = "",
@@ -77,15 +77,15 @@ class Profileregister extends Component {
       users,
       getDoctorQualificationRegisterData,
     } = this.props;
-
-    const { basic_info: { id = 1 } = {} } = authenticated_user;
-
+    
+    const {basic_info: {id = 1} = {}} = authenticated_user;
+    
     const url = window.location.href.split("/");
-
+    
     let doctor_id = url.length > 4 ? url[url.length - 1] : "";
-
-    const { doctors } = this.props;
-
+    
+    const {doctors} = this.props;
+    
     const {
       basic_info: {
         email = "",
@@ -95,7 +95,7 @@ class Profileregister extends Component {
       category = "",
     } = users[authenticated_user] || {};
     await getDoctorQualificationRegisterData();
-
+    
     if (
       authenticated_category === USER_CATEGORY.DOCTOR ||
       authenticated_category === USER_CATEGORY.HSP
@@ -122,17 +122,17 @@ class Profileregister extends Component {
         } = doctor || {};
         if (parseInt(user_id) === parseInt(authenticated_user)) {
           let final_city = "";
-
+          
           if (city === "") {
             final_city = city_temp;
           } else {
             final_city = city;
           }
-
+          
           let name = first_name
             ? `${first_name} ${middle_name ? `${middle_name} ` : ""}${
-                last_name ? `${last_name} ` : ""
-              }`
+              last_name ? `${last_name} ` : ""
+            }`
             : "";
           this.setState({
             name,
@@ -151,15 +151,15 @@ class Profileregister extends Component {
       this.getDoctorInitialData(doctor_id);
     }
   };
-
+  
   async getDoctorInitialData(doctor_id = null) {
     try {
-      const { getDoctorDetails } = this.props;
+      const {getDoctorDetails} = this.props;
       const response = await getDoctorDetails(doctor_id);
-
-      const { status, payload: { data, message } = {} } = response;
+      
+      const {status, payload: {data, message} = {}} = response;
       if (status) {
-        const { doctors = {}, users = {} } = data || {};
+        const {doctors = {}, users = {}} = data || {};
         const {
           basic_info: {
             user_id = 0,
@@ -181,13 +181,13 @@ class Profileregister extends Component {
           category = "",
         } = users[user_id] || {};
         let final_city = "";
-
+        
         if (city === "") {
           final_city = city_temp;
         } else {
           final_city = city;
         }
-
+        
         this.setState({
           email,
           mobile_number,
@@ -195,11 +195,11 @@ class Profileregister extends Component {
           prefix: newPrefix ? newPrefix : "91",
           doctor_id,
         });
-
+        
         let name = first_name
           ? `${first_name} ${middle_name ? `${middle_name} ` : ""}${
-              last_name ? `${last_name} ` : ""
-            }`
+            last_name ? `${last_name} ` : ""
+          }`
           : "";
         this.setState({
           name,
@@ -210,7 +210,7 @@ class Profileregister extends Component {
           signature_pic,
         });
       } else {
-        const { doctors = {}, users = {} } = this.props;
+        const {doctors = {}, users = {}} = this.props;
         const {
           basic_info: {
             user_id = 0,
@@ -223,7 +223,7 @@ class Profileregister extends Component {
           } = {},
           city: city_temp = "",
         } = doctors[doctor_id] || {};
-
+        
         const {
           basic_info: {
             email = "",
@@ -233,24 +233,24 @@ class Profileregister extends Component {
           category = "",
         } = users[user_id] || {};
         let final_city = "";
-
+        
         if (city === "") {
           final_city = city_temp;
         } else {
           final_city = city;
         }
-
+        
         this.setState({
           email,
           mobile_number,
           category,
           prefix: newPrefix ? newPrefix : "91",
         });
-
+        
         let name = first_name
           ? `${first_name} ${middle_name ? `${middle_name} ` : ""}${
-              last_name ? `${last_name} ` : ""
-            }`
+            last_name ? `${last_name} ` : ""
+          }`
           : "";
         this.setState({
           name,
@@ -266,44 +266,44 @@ class Profileregister extends Component {
       message.warn("Something went wrong. Please try again later");
     }
   }
-
+  
   setName = (e) => {
     // this.setState({ name: e.target.value });
-    const { value } = e.target;
+    const {value} = e.target;
     const reg = /^[a-zA-Z][a-zA-Z\s]*$/;
     if (reg.test(value) || value === "") {
-      this.setState({ name: e.target.value });
+      this.setState({name: e.target.value});
     }
   };
-
+  
   setCategory = (value) => {
-    this.setState({ category: value });
+    this.setState({category: value});
   };
-
+  
   setPrefix = (value) => {
-    this.setState({ prefix: value });
+    this.setState({prefix: value});
   };
-
+  
   setEmail = (value) => {
-    this.setState({ email: value, existingDoctor: true });
+    this.setState({email: value, existingDoctor: true});
     message.info(this.formatMessage(messages.mailInUse));
   };
-
+  
   formatMessage = (data) => this.props.intl.formatMessage(data);
-
+  
   setCity = (e) => {
-    this.setState({ city: e.target.value });
+    this.setState({city: e.target.value});
   };
-
+  
   getCategoryOptions = () => {
     const genderes = [
-      { name: "Doctor", value: USER_CATEGORY.DOCTOR },
-      { name: "HSP", value: USER_CATEGORY.HSP },
+      {name: "Doctor", value: USER_CATEGORY.DOCTOR},
+      {name: "HSP", value: USER_CATEGORY.HSP},
     ];
     let options = [];
-
+    
     for (let id = 0; id < genderes.length; ++id) {
-      const { name, value } = genderes[id];
+      const {name, value} = genderes[id];
       options.push(
         <Option key={id} value={value} name={name}>
           {name}
@@ -321,8 +321,8 @@ class Profileregister extends Component {
       url: getUploadURL(),
     }).then((response) => {
       if (response.status) {
-        let { files = [] } = response.payload.data;
-        this.setState({ profile_pic_url: files[0] });
+        let {files = []} = response.payload.data;
+        this.setState({profile_pic_url: files[0]});
       } else {
         message.error(this.formatMessage(messages.somethingWentWrong));
       }
@@ -331,16 +331,17 @@ class Profileregister extends Component {
     // return file;
     // const { profile_pic } = this.state;
     // setTimeout(() => {
-
+    
     //     profile_pic.status='done'
-
+    
     // },100);
-
+    
     return {
-      abort() {},
+      abort() {
+      },
     };
   };
-
+  
   uploadSignature = (file) => {
     let data = new FormData();
     data.append("files", file, file.name);
@@ -350,18 +351,19 @@ class Profileregister extends Component {
       url: getUploadURL(),
     }).then((response) => {
       if (response.status) {
-        let { files = [] } = response.payload.data;
-        this.setState({ signature_pic_url: files[0] });
+        let {files = []} = response.payload.data;
+        this.setState({signature_pic_url: files[0]});
       } else {
         message.error(this.formatMessage(messages.somethingWentWrong));
       }
     });
-
+    
     return {
-      abort() {},
+      abort() {
+      },
     };
   };
-
+  
   beforeUpload = (file) => {
     const isJpgOrPng = file.type === "image/jpeg" || file.type === "image/png";
     if (!isJpgOrPng) {
@@ -369,7 +371,7 @@ class Profileregister extends Component {
     }
     return isJpgOrPng;
   };
-
+  
   handleChange = (info) => {
     // if (info.file.status === 'uploading') {
     //   this.setState({ loading: true });
@@ -378,7 +380,7 @@ class Profileregister extends Component {
     // if (info.file.status === 'done') {
     // Get this url from response in real world.
     //   let {file={}}=info;
-
+    
     this.getBase64(info.file.originFileObj, (profile_pic) => {
       // console.log("5645452413256547345224121",profile_pic)
       this.setState({
@@ -387,7 +389,7 @@ class Profileregister extends Component {
       });
     });
   };
-
+  
   handleSignatureUploadChange = (info) => {
     this.getBase64(info.file.originFileObj, (signature_pic) =>
       this.setState({
@@ -396,13 +398,13 @@ class Profileregister extends Component {
       })
     );
   };
-
+  
   validateEmail = (email) => {
     const re =
       /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
     return re.test(String(email).toLowerCase());
   };
-
+  
   validateData = () => {
     let {
       name = "",
@@ -416,7 +418,7 @@ class Profileregister extends Component {
       signature_pic_url = "",
       signature_pic_url_saved = "",
     } = this.state;
-
+    
     if (!category) {
       message.error(this.formatMessage(messages.profileTypeError));
       return false;
@@ -444,15 +446,15 @@ class Profileregister extends Component {
     }
     return true;
   };
-
+  
   onNextClick = () => {
-    const { history, authenticated_user = 1 } = this.props;
-    const { existingDoctor = false, existingDoctorId = null } = this.state;
-
+    const {history, authenticated_user = 1} = this.props;
+    const {existingDoctor = false, existingDoctorId = null} = this.state;
+    
     // const { basic_info: { id = "" } = {} } = users[authenticated_user] || {};
     const validate = this.validateData();
     if (validate) {
-      const { doctorProfileRegister, authenticated_category = "" } = this.props;
+      const {doctorProfileRegister, authenticated_category = ""} = this.props;
       const {
         name = "",
         email = "",
@@ -483,7 +485,7 @@ class Profileregister extends Component {
         //     history.replace(PATH.LANDING_PAGE);
         //     return;
         // }
-
+        
         data["is_provider"] = true;
         data["doctor_id"] = doctor_id;
         data["existing"] = existingDoctor;
@@ -499,23 +501,23 @@ class Profileregister extends Component {
           statusCode,
           payload: {
             message: res_message = "",
-            data: { doctors: response_doctors = {} } = {},
+            data: {doctors: response_doctors = {}} = {},
           } = {},
         } = response;
-
+        
         // console.log("98326472647623742634732",{response});
         if (status) {
           message.success(this.formatMessage(messages.doctorAddSuccess));
-
-          const { basic_info: { id: doctor_id = null } = {} } =
-            Object.values(response_doctors)[0] || {};
+          
+          const {basic_info: {id: doctor_id = null} = {}} =
+          Object.values(response_doctors)[0] || {};
           if (authenticated_category === USER_CATEGORY.PROVIDER) {
-            console.log("98326472647623742634732 =>>>", { existingDoctor });
+            console.log("98326472647623742634732 =>>>", {existingDoctor});
             if (existingDoctor) {
               history.replace(PATH.LANDING_PAGE);
               return;
             }
-
+            
             this.handleSendPasswordMail(doctor_id);
             history.replace(`${PATH.REGISTER_QUALIFICATIONS}/${doctor_id}`);
           } else {
@@ -527,20 +529,20 @@ class Profileregister extends Component {
       });
     }
   };
-
+  
   async handleSendPasswordMail(doctor_id) {
     try {
       // if (data) {
-      const { sendPasswordMail } = this.props;
-      const response = await sendPasswordMail({ doctor_id });
-      const { status } = response;
+      const {sendPasswordMail} = this.props;
+      const response = await sendPasswordMail({doctor_id});
+      const {status} = response;
     } catch (err) {
       console.log("err", err);
       message.warn("Something wen't wrong. Please try again later");
-      this.setState({ fetchingSpeciality: false });
+      this.setState({fetchingSpeciality: false});
     }
   }
-
+  
   getBase64 = (img, callback) => {
     const reader = new FileReader();
     // console.log("5645452413256547345224121 img-->",img);
@@ -549,25 +551,25 @@ class Profileregister extends Component {
       reader.readAsDataURL(img);
     }
   };
-
+  
   handleChangeCity = (address) => {
-    this.setState({ city: address });
+    this.setState({city: address});
   };
-
+  
   handleSelect = (address) => {
-    this.setState({ city: address });
+    this.setState({city: address});
   };
   setNumber = (e) => {
-    const { value } = e.target;
+    const {value} = e.target;
     const reg = /^-?\d*(\.\d*)?$/;
     if ((!isNaN(value) && reg.test(value)) || value === "" || value === "-") {
-      this.setState({ mobile_number: e.target.value });
+      this.setState({mobile_number: e.target.value});
     }
   };
-
+  
   // '.' at the end or only '-' in the input box.
   onBlur = () => {
-    const { value, onBlur, onChange } = this.props;
+    const {value, onBlur, onChange} = this.props;
     let valueTemp = value;
     if (value.charAt(value.length - 1) === "." || value === "-") {
       valueTemp = value.slice(0, -1);
@@ -577,39 +579,39 @@ class Profileregister extends Component {
       onBlur();
     }
   };
-
+  
   searchEmail = async (email) => {
     try {
-      const { searchDoctorEmail } = this.props;
-      this.setState({ searchingMail: true });
+      const {searchDoctorEmail} = this.props;
+      this.setState({searchingMail: true});
       const response = await searchDoctorEmail(email);
       const {
         status,
         statusCode,
-        payload: { message: res_message = "" } = {},
+        payload: {message: res_message = ""} = {},
       } = response || {};
-
+      
       if (!status && statusCode !== 422) {
         message.error(res_message);
       }
-      this.setState({ searchingMail: false });
-
+      this.setState({searchingMail: false});
+      
       if (email.length) {
-        this.setState({ email });
+        this.setState({email});
       }
     } catch (error) {
-      this.setState({ searchingMail: false });
+      this.setState({searchingMail: false});
       console.log("error ===>", error);
     }
   };
-
+  
   setEmailMatchingDoctor = (id) => () => {
-    this.setState({ existingDoctorId: id });
+    this.setState({existingDoctorId: id});
   };
-
+  
   getEmailOptions = () => {
-    const { emails = {} } = this.props;
-
+    const {emails = {}} = this.props;
+    
     return Object.keys(emails).map((id) => {
       const email = emails[id];
       return (
@@ -623,22 +625,22 @@ class Profileregister extends Component {
       );
     });
   };
-
+  
   onEmailBlur = async (value) => {
     try {
-      const { searchDoctorEmail } = this.props;
-      const { email: mailId = "" } = this.state;
+      const {searchDoctorEmail} = this.props;
+      const {email: mailId = ""} = this.state;
       const typed_email = mailId.trim();
       let flag = false,
         selectedId = null;
       if (typed_email.length) {
         const response = await searchDoctorEmail(typed_email);
-        const { payload: { data: { emails = {} } = {} } = {} } = response || {};
+        const {payload: {data: {emails = {}} = {}} = {}} = response || {};
         if (Object.keys(emails).length) {
           for (let i in emails) {
             const each = emails[i];
             // console.log("983264573542654326 ===>",{typed_email,each});
-
+            
             if (typed_email === each) {
               message.info(this.formatMessage(messages.mailInUse));
               selectedId = i;
@@ -648,17 +650,17 @@ class Profileregister extends Component {
           }
         }
       }
-
+      
       if (flag) {
-        this.setState({ existingDoctor: true, existingDoctorId: selectedId });
+        this.setState({existingDoctor: true, existingDoctorId: selectedId});
       } else {
-        this.setState({ existingDoctor: false, existingDoctorId: typed_email });
+        this.setState({existingDoctor: false, existingDoctorId: typed_email});
       }
     } catch (error) {
       console.log("error", error);
     }
   };
-
+  
   renderProfileForm = () => {
     let {
       name = "",
@@ -676,7 +678,7 @@ class Profileregister extends Component {
       users,
       getDoctorQualificationRegisterData,
     } = this.props;
-
+    
     const prefixSelector = (
       <Select
         className="flex align-center h50 w80"
@@ -686,92 +688,92 @@ class Profileregister extends Component {
         {/* india */}
         <Option value="91">
           <div className="flex align-center">
-            <img src={india} className="w16 h16" />
+            <img src={india} className="w16 h16"/>
             <div className="ml4">+91</div>
           </div>
         </Option>
         {/* australia */}
         <Option value="61">
           <div className="flex align-center">
-            <img src={australia} className="w16 h16" />
+            <img src={australia} className="w16 h16"/>
             <div className="ml4">+61</div>
           </div>
         </Option>
         {/* us */}
         <Option value="1">
           <div className="flex align-center">
-            <img src={us} className="w16 h16" />
+            <img src={us} className="w16 h16"/>
             <div className="ml4">+1</div>
           </div>
         </Option>
         {/* uk */}
         <Option value="44">
           <div className="flex align-center">
-            <img src={uk} className="w16 h16" />
+            <img src={uk} className="w16 h16"/>
             <div className="ml4">+44</div>
           </div>
         </Option>
         {/* china */}
         <Option value="86">
           <div className="flex align-center">
-            <img src={china} className="w16 h16" />
+            <img src={china} className="w16 h16"/>
             <div className="ml4">+86</div>
           </div>
         </Option>
         {/* japan */}
         <Option value="81">
           <div className="flex align-center">
-            <img src={japan} className="w16 h16" />
+            <img src={japan} className="w16 h16"/>
             <div className="ml4">+81</div>
           </div>
         </Option>
         {/* germany */}
         <Option value="49">
           <div className="flex align-center">
-            <img src={germany} className="w16 h16" />
+            <img src={germany} className="w16 h16"/>
             <div className="ml4">+49</div>
           </div>
         </Option>
         {/* france */}
         <Option value="33">
           <div className="flex align-center">
-            <img src={france} className="w16 h16" />
+            <img src={france} className="w16 h16"/>
             <div className="ml4">+33</div>
           </div>
         </Option>
         {/* switzerland */}
         <Option value="41">
           <div className="flex align-center">
-            <img src={switzerland} className="w16 h16" />
+            <img src={switzerland} className="w16 h16"/>
             <div className="ml4">+41</div>
           </div>
         </Option>
-
+        
         {/* russia */}
         <Option value="7">
           <div className="flex align-center">
-            <img src={russia} className="w16 h16" />
+            <img src={russia} className="w16 h16"/>
             <div className="ml4">+7</div>
           </div>
         </Option>
         {/* south africa */}
         <Option value="27">
           <div className="flex align-center">
-            <img src={southAfrica} className="w16 h16" />
+            <img src={southAfrica} className="w16 h16"/>
             <div className="ml4">+27</div>
           </div>
         </Option>
         {/* pakistan */}
         <Option value="92">
           <div className="flex align-center">
-            <img src={pakistan} className="w16 h16" />
+            <img src={pakistan} className="w16 h16"/>
             <div className="ml4">+92</div>
           </div>
         </Option>
         {/* bangladesh */}
         <Option value="880">
           <div className="flex align-center">
-            <img src={bangladesh} className="w16 h16" />
+            <img src={bangladesh} className="w16 h16"/>
             <div className="ml4">+880</div>
           </div>
         </Option>
@@ -779,11 +781,11 @@ class Profileregister extends Component {
     );
     const uploadButton = (
       <div>
-        <img src={plus} className={"w22 h22"} />
+        <img src={plus} className={"w22 h22"}/>
       </div>
     );
-    const { profile_pic, signature_pic, searchingMail = false } = this.state;
-
+    const {profile_pic, signature_pic, searchingMail = false} = this.state;
+    
     return (
       <div className="form-block">
         <div className="form-headings">
@@ -808,18 +810,18 @@ class Profileregister extends Component {
           onChange={this.handleChange}
         >
           {profile_pic ? (
-            <img src={profile_pic} alt="avatar" style={{ width: "100%" }} />
+            <img src={profile_pic} alt="avatar" style={{width: "100%"}}/>
           ) : profile_pic_url_saved ? (
             <img
               src={profile_pic_url_saved}
               alt="avatar"
-              style={{ width: "100%" }}
+              style={{width: "100%"}}
             />
           ) : (
             uploadButton
           )}
         </Upload>
-
+        
         <div className="form-headings mb6">
           {this.formatMessage(messages.signaturePicture)}
         </div>
@@ -835,19 +837,19 @@ class Profileregister extends Component {
             <img
               src={signature_pic}
               alt="signature picture"
-              style={{ width: "100%" }}
+              style={{width: "100%"}}
             />
           ) : signature_pic_url_saved ? (
             <img
               src={signature_pic_url_saved}
               alt="signature picture"
-              style={{ width: "100%" }}
+              style={{width: "100%"}}
             />
           ) : (
             uploadButton
           )}
         </Upload>
-
+        
         <div className="form-headings mt18">
           {this.formatMessage(messages.name)}
         </div>
@@ -858,7 +860,7 @@ class Profileregister extends Component {
           className={"form-inputs"}
           onChange={this.setName}
         />
-
+        
         <div className="form-headings">
           {this.formatMessage(messages.phoneNo)}
         </div>
@@ -870,11 +872,11 @@ class Profileregister extends Component {
           value={mobile_number}
           onChange={this.setNumber}
         />
-
+        
         <div className="form-headings">
           {this.formatMessage(messages.email)}
         </div>
-
+        
         <Select
           className="form-inputs"
           onSearch={this.searchEmail}
@@ -890,7 +892,7 @@ class Profileregister extends Component {
           value={email}
           notFoundContent={
             searchingMail ? (
-              <Spin size="small" />
+              <Spin size="small"/>
             ) : email.length ? (
               "No match found"
             ) : null
@@ -905,7 +907,7 @@ class Profileregister extends Component {
         >
           {this.getEmailOptions()}
         </Select>
-
+        
         <div className="form-headings">{this.formatMessage(messages.city)}</div>
         <PlacesAutocomplete
           value={city}
@@ -913,11 +915,11 @@ class Profileregister extends Component {
           onSelect={this.handleSelect}
         >
           {({
-            getInputProps,
-            suggestions,
-            getSuggestionItemProps,
-            loading,
-          }) => (
+              getInputProps,
+              suggestions,
+              getSuggestionItemProps,
+              loading,
+            }) => (
             <div>
               <Input
                 {...getInputProps({
@@ -947,7 +949,7 @@ class Profileregister extends Component {
       </div>
     );
   };
-
+  
   render() {
     const {
       authenticated_user = "",
@@ -955,8 +957,8 @@ class Profileregister extends Component {
       users,
       getDoctorQualificationRegisterData,
     } = this.props;
-    const { existingDoctor = false, existingDoctorId = null } = this.state;
-
+    const {existingDoctor = false, existingDoctorId = null} = this.state;
+    
     return (
       <Fragment>
         {/* <SideMenu {...this.props} /> */}
@@ -972,7 +974,7 @@ class Profileregister extends Component {
           )}
           <div className="registration-body">
             <div className="flex mt36">
-              <UploadSteps current={0} />
+              <UploadSteps current={0}/>
             </div>
             <div className="flex mb100">{this.renderProfileForm()}</div>
           </div>
@@ -980,7 +982,7 @@ class Profileregister extends Component {
             <div className={"footer-text-inactive"}>
               {this.formatMessage(messages.back)}
             </div>
-
+            
             <div className={"footer-text-active"} onClick={this.onNextClick}>
               {this.formatMessage(messages.next)}
             </div>

@@ -5,4 +5,4 @@ import * as Doctor from "./doctor";
 import * as Twilio from "./twilio";
 import * as Agora from "./agora";
 
-export { Auth, User, Event, Doctor, Twilio, Agora };
+export {Auth, User, Event, Doctor, Twilio, Agora};

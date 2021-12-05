@@ -1,5 +1,5 @@
 function conditionPageReducer(state, data) {
-  const { condition_ids } = data || {};
+  const {condition_ids} = data || {};
   if (condition_ids) {
     return [...condition_ids];
   } else {
@@ -8,7 +8,7 @@ function conditionPageReducer(state, data) {
 }
 
 export default (state = [], action) => {
-  const { type, data } = action;
+  const {type, data} = action;
   switch (type) {
     default:
       return conditionPageReducer(state, data);

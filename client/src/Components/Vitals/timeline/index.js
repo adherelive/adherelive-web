@@ -1,5 +1,5 @@
-import React, { Component, Fragment } from "react";
-import { injectIntl } from "react-intl";
+import React, {Component, Fragment} from "react";
+import {injectIntl} from "react-intl";
 import moment from "moment";
 import Loading from "../../Common/Loading";
 import messages from "./messages";
@@ -14,7 +14,7 @@ import Button from "antd/es/button";
 import Form from "antd/es/form";
 import Input from "antd/es/input";
 
-const { Item: TimelineItem } = Timeline;
+const {Item: TimelineItem} = Timeline;
 
 const COMPLETED = "completed";
 const EXPIRED = "expired";
@@ -28,12 +28,12 @@ const TIMELINE_STATUS = {
   },
   [COMPLETED]: {
     key: COMPLETED,
-    dot: <CheckCircleOutlined />,
+    dot: <CheckCircleOutlined/>,
     color: "green",
   },
   [EXPIRED]: {
     key: EXPIRED,
-    dot: <ClockCircleOutlined />,
+    dot: <ClockCircleOutlined/>,
     color: "red",
   },
 };
@@ -45,86 +45,86 @@ class VitalTimeline extends Component {
       loading: true,
     };
   }
-
+  
   componentDidMount() {
     this.getTimelineData();
   }
-
+  
   formatMessage = (data) => this.props.intl.formatMessage(data);
-
+  
   componentDidUpdate(prevProps, prevState, snapshot) {
-    const { id: prevId } = prevProps;
-    const { id } = this.props;
+    const {id: prevId} = prevProps;
+    const {id} = this.props;
     if (id && id !== prevId) {
       this.getTimelineData();
     }
   }
-
+  
   getTimelineData = async () => {
-    const { getVitalTimeline } = this.props;
+    const {getVitalTimeline} = this.props;
     try {
-      this.setState({ loading: true });
+      this.setState({loading: true});
       const response = await getVitalTimeline();
       const {
         status,
         payload: {
-          data: { vital_timeline = {}, vital_date_ids = [] } = {},
+          data: {vital_timeline = {}, vital_date_ids = []} = {},
           message: responseMessage,
         } = {},
       } = response || {};
       if (status === true) {
-        this.setState({ vital_timeline, vital_date_ids, loading: false });
+        this.setState({vital_timeline, vital_date_ids, loading: false});
       } else {
-        this.setState({ loading: false });
+        this.setState({loading: false});
       }
     } catch (error) {
-      this.setState({ loading: false });
+      this.setState({loading: false});
     }
   };
-
+  
   getVitalTemplate = (responseId, event) => {
-    const { id, status, end_time, details = {} } = event || {};
+    const {id, status, end_time, details = {}} = event || {};
     const {
-      response: { values, currentTime } = {},
-      vital_templates: { details: { template } = {} } = {},
+      response: {values, currentTime} = {},
+      vital_templates: {details: {template} = {}} = {},
     } = details;
-
+    
     let currentTemplate = {};
-
-    console.log("819287213 ", { details, template });
-
+    
+    console.log("819287213 ", {details, template});
+    
     template.forEach((data) => {
-      const { id } = data || {};
+      const {id} = data || {};
       if (id === responseId) {
         currentTemplate = data;
       }
     });
     return currentTemplate;
   };
-
+  
   openEditVitalResponseModal = (data) => (e) => {
     e.preventDefault();
-    const { response: { value = {} } = {} } = data || {};
+    const {response: {value = {}} = {}} = data || {};
     this.setState({
       vitalResponseData: data,
-      updateValue: { ...value },
+      updateValue: {...value},
       modalVisible: true,
     });
   };
-
+  
   handleEditVitalResponse = (data) => async (e) => {
     e.preventDefault();
-    const { editVitalResponse } = this.props;
-    const { updateValue } = this.state;
-    console.log("018238129 updateValue --> ", { updateValue });
+    const {editVitalResponse} = this.props;
+    const {updateValue} = this.state;
+    console.log("018238129 updateValue --> ", {updateValue});
     // editVitalResponse(data);
     try {
-      this.setState({ responseLoading: true });
-      const response = await editVitalResponse({ ...data, value: updateValue });
+      this.setState({responseLoading: true});
+      const response = await editVitalResponse({...data, value: updateValue});
       const {
         status,
         payload: {
-          data: { vital_date_ids, vital_timeline } = {},
+          data: {vital_date_ids, vital_timeline} = {},
           message: responseMessage = "",
         } = {},
       } = response;
@@ -137,29 +137,29 @@ class VitalTimeline extends Component {
         });
         message.success(responseMessage);
       } else {
-        this.setState({ responseLoading: false });
+        this.setState({responseLoading: false});
         message.warn(responseMessage);
       }
     } catch (error) {
-      this.setState({ responseLoading: false });
+      this.setState({responseLoading: false});
       console.log("handleEditVitalResponse catch error", error);
     }
   };
-
+  
   handleDeleteVitalResponse = (data) => async (e) => {
     e.preventDefault();
-    const { deleteVitalResponse } = this.props;
+    const {deleteVitalResponse} = this.props;
     try {
       const response = await deleteVitalResponse(data);
       const {
         status,
         payload: {
-          data: { vital_date_ids, vital_timeline } = {},
+          data: {vital_date_ids, vital_timeline} = {},
           message: responseMessage = "",
         } = {},
       } = response;
       if (status === true) {
-        this.setState({ vital_date_ids, vital_timeline });
+        this.setState({vital_date_ids, vital_timeline});
         message.success(responseMessage);
       } else {
         message.warn(responseMessage);
@@ -168,15 +168,15 @@ class VitalTimeline extends Component {
       console.log("handleDeleteVitalResponse catch error", error);
     }
   };
-
+  
   getEventsForDay = (events) => {
-    const { intl: { formatMessage } = {}, canViewDetails = false } = this.props;
+    const {intl: {formatMessage} = {}, canViewDetails = false} = this.props;
     const {
       getVitalTemplate,
       openEditVitalResponseModal,
       handleDeleteVitalResponse,
     } = this;
-
+    
     return events.map((event) => {
       const {
         id,
@@ -186,11 +186,11 @@ class VitalTimeline extends Component {
         updated_at = "",
       } = event || {};
       // const { response: { value = {}, currentTime } = {} } = details;
-      const { response = [] } = details;
-
+      const {response = []} = details;
+      
       if (response.length > 0) {
         return response.map((res, responseIndex) => {
-          const { value = {}, createdTime } = res || {};
+          const {value = {}, createdTime} = res || {};
           switch (status) {
             case COMPLETED:
               return (
@@ -207,11 +207,11 @@ class VitalTimeline extends Component {
                       </div>
                       {/*<div className="">*/}
                       {Object.keys(value).map((fieldId, index) => {
-                        const { label, placeholder } = getVitalTemplate(
+                        const {label, placeholder} = getVitalTemplate(
                           fieldId,
                           event
                         );
-
+                        
                         return (
                           <div
                             key={`${id}-${fieldId}-${index}`}
@@ -253,7 +253,7 @@ class VitalTimeline extends Component {
                           {/*</div>*/}
                         </div>
                       )}
-
+                      
                       {/*</div>*/}
                     </TimelineItem>
                   )}
@@ -292,11 +292,11 @@ class VitalTimeline extends Component {
       }
     });
   };
-
+  
   getTimeline = () => {
-    const { vital_timeline, vital_date_ids } = this.state;
-    const { getEventsForDay } = this;
-
+    const {vital_timeline, vital_date_ids} = this.state;
+    const {getEventsForDay} = this;
+    
     return vital_date_ids.map((date) => {
       const eventsForDay = vital_timeline[date] || {};
       return (
@@ -313,41 +313,41 @@ class VitalTimeline extends Component {
       );
     });
   };
-
+  
   closeModal = (e) => {
-    this.setState({ modalVisible: false });
+    this.setState({modalVisible: false});
   };
-
+  
   handleResponseUpdate = (fieldId) => (e) => {
     e.preventDefault();
     console.log("1908381293 fieldId, value", {
       fieldId,
       value: e.target.value,
     });
-    let { updateValue = {} } = this.state;
-
+    let {updateValue = {}} = this.state;
+    
     updateValue[fieldId] = e.target.value;
-    this.setState({ updateValue });
+    this.setState({updateValue});
   };
-
+  
   getVitalResponseModal = () => {
     const {
       modalVisible = false,
       vitalResponseData = {},
       responseLoading,
     } = this.state;
-    const { closeModal, getVitalTemplate, handleResponseUpdate } = this;
-
-    console.log("18737129 vitalResponseData", { vitalResponseData });
-
-    const { response, event, id, index } = vitalResponseData || {};
-    const { value } = response || {};
-
+    const {closeModal, getVitalTemplate, handleResponseUpdate} = this;
+    
+    console.log("18737129 vitalResponseData", {vitalResponseData});
+    
+    const {response, event, id, index} = vitalResponseData || {};
+    const {value} = response || {};
+    
     return (
       <Modal
         visible={modalVisible}
         onCancel={closeModal}
-        onOk={this.handleEditVitalResponse({ id, index })}
+        onOk={this.handleEditVitalResponse({id, index})}
         closable
         title={this.formatMessage(messages.edit_response_title_text)}
         okButtonProps={{
@@ -355,15 +355,15 @@ class VitalTimeline extends Component {
         }}
       >
         {Object.keys(value).map((fieldId, index) => {
-          const { label, placeholder } = getVitalTemplate(fieldId, event);
-
+          const {label, placeholder} = getVitalTemplate(fieldId, event);
+          
           return (
             <Fragment>
               <div
                 key={`${id}-${fieldId}-${index}`}
                 className="mb4 fs14 fw500"
               >{`${label}:`}</div>
-
+              
               <Input
                 defaultValue={value[fieldId]}
                 suffix={placeholder}
@@ -376,16 +376,16 @@ class VitalTimeline extends Component {
       </Modal>
     );
   };
-
+  
   render() {
     // const {id} = this.props;
-    const { loading, modalVisible } = this.state;
-    const { getTimeline, getVitalResponseModal } = this;
-
+    const {loading, modalVisible} = this.state;
+    const {getTimeline, getVitalResponseModal} = this;
+    
     if (loading === true) {
-      return <Loading />;
+      return <Loading/>;
     }
-
+    
     return (
       <Fragment>
         <div className="wp100 flex direction-column align-start">

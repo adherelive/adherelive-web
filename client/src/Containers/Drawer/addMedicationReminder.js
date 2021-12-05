@@ -1,15 +1,15 @@
-import { connect } from "react-redux";
+import {connect} from "react-redux";
 import AddMedicationReminder from "../../Components/Drawer/addMedicationReminder/medicationsReminder";
-import { DRAWER } from "../../constant";
-import { close } from "../../modules/drawer";
+import {DRAWER} from "../../constant";
+import {close} from "../../modules/drawer";
 import {
   getMedications,
   addMedicationReminder,
   addCarePlanMedicationReminder,
 } from "../../modules/medications";
-import { getMedicationDetails } from "../../modules/otherDetails";
-import { getAppointments } from "../../modules/appointments";
-import { searchMedicine, addMedicine } from "../../modules/medicines";
+import {getMedicationDetails} from "../../modules/otherDetails";
+import {getAppointments} from "../../modules/appointments";
+import {searchMedicine, addMedicine} from "../../modules/medicines";
 import {
   markFavourite,
   getFavourites,
@@ -17,17 +17,17 @@ import {
 } from "../../modules/favouritesData/index";
 
 const mapStateToProps = (state) => {
-  const { auth } = state;
-  const { authenticated_user, authenticated_category } = auth;
+  const {auth} = state;
+  const {authenticated_user, authenticated_category} = auth;
   const {
-    drawer: { visible, loading, data: { type, payload = {} } = {} },
-    other_details: { medication_details = {} } = {},
+    drawer: {visible, loading, data: {type, payload = {}} = {}},
+    other_details: {medication_details = {}} = {},
     medicines,
     doctors = {},
     favourites_data = {},
-    pages: { favourite_medicine_ids = [] } = {},
+    pages: {favourite_medicine_ids = []} = {},
   } = state;
-
+  
   return {
     visible: visible && type === DRAWER.ADD_MEDICATION_REMINDER,
     loading,
@@ -55,9 +55,9 @@ const mapDispatchToProps = (dispatch) => {
     getAppointments: (id) => dispatch(getAppointments(id)),
     addNewMedicine: (data) => dispatch(addMedicine(data)),
     markFavourite: (payload) => dispatch(markFavourite(payload)),
-    getFavourites: ({ type }) => dispatch(getFavourites({ type })),
-    removeFavourite: ({ typeId, type }) =>
-      dispatch(removeFavourite({ typeId, type })),
+    getFavourites: ({type}) => dispatch(getFavourites({type})),
+    removeFavourite: ({typeId, type}) =>
+      dispatch(removeFavourite({typeId, type})),
   };
 };
 

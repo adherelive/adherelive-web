@@ -1,6 +1,6 @@
 "use strict";
-import { DataTypes } from "sequelize";
-import { ARTICLE_TYPE } from "../../constant";
+import {DataTypes} from "sequelize";
+import {ARTICLE_TYPE} from "../../constant";
 
 export const ARTICLES = "articles";
 

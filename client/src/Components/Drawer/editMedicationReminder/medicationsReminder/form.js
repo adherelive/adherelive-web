@@ -1,5 +1,5 @@
-import React, { Component, Fragment } from "react";
-import { Form, Button, Input, message, Radio } from "antd";
+import React, {Component, Fragment} from "react";
+import {Form, Button, Input, message, Radio} from "antd";
 import moment from "moment";
 import participantsField from "../common/participants";
 import startTimeField from "../common/startTime";
@@ -22,7 +22,7 @@ import instructions from "../common/instructions";
 import formulation from "../common/formulation";
 
 import messages from "../message";
-import { hasErrors, isNumber } from "../../../../Helper/validation";
+import {hasErrors, isNumber} from "../../../../Helper/validation";
 import {
   REPEAT_TYPE,
   USER_CATEGORY,
@@ -31,7 +31,7 @@ import {
 } from "../../../../constant";
 
 const InputGroup = Input.Group;
-const { Item: FormItem } = Form;
+const {Item: FormItem} = Form;
 
 const UNIT_FIELD = "unit";
 
@@ -43,11 +43,11 @@ class EditMedicationReminderForm extends Component {
     super(props);
     this.state = {};
   }
-
+  
   componentDidMount() {
     this.scrollToTop();
     const {
-      form: { validateFields },
+      form: {validateFields},
       // currentUser: {
       //   basicInfo: { _id, category },
       //   programId = []
@@ -55,18 +55,18 @@ class EditMedicationReminderForm extends Component {
       fetchMedicationStages,
       fetchProgramProducts,
     } = this.props;
-    const { programId } = [];
-    const { _id } = "23";
-    const { category } = "PATIENT";
+    const {programId} = [];
+    const {_id} = "23";
+    const {category} = "PATIENT";
     validateFields();
-
+    
     if (category === USER_CATEGORY.PATIENT) {
       fetchProgramProducts(programId[0]);
       fetchMedicationStages(_id).then((response) => {
-        const { status, payload } = response;
+        const {status, payload} = response;
         if (status) {
           const {
-            data: { medicationStages = [], program_has_medication_stage } = {},
+            data: {medicationStages = [], program_has_medication_stage} = {},
           } = payload;
           if (medicationStages.length > 0) {
             this.setState({
@@ -83,7 +83,7 @@ class EditMedicationReminderForm extends Component {
       });
     }
   }
-
+  
   scrollToTop = () => {
     let antForm = document.getElementsByClassName("Form")[0];
     let antDrawerBody = antForm.parentNode;
@@ -91,43 +91,43 @@ class EditMedicationReminderForm extends Component {
     antDrawerBody.scrollIntoView(true);
     antDrawerWrapperBody.scrollTop -= 200;
   };
-
+  
   formatMessage = (data) => this.props.intl.formatMessage(data);
-
+  
   setUnit = (e) => {
     e.preventDefault();
     const {
-      form: { setFieldsValue },
+      form: {setFieldsValue},
     } = this.props;
-    setFieldsValue({ [UNIT_FIELD]: e.target.value });
+    setFieldsValue({[UNIT_FIELD]: e.target.value});
   };
-
+  
   handleCancel = (e) => {
     if (e) {
       e.preventDefault();
     }
-    const { close } = this.props;
+    const {close} = this.props;
     close();
   };
-
+  
   getNewEndDate = (repeatValue) => {
     const {
-      form: { getFieldValue },
+      form: {getFieldValue},
     } = this.props;
-
+    
     let repeat = getFieldValue(repeatField.field_name);
-
+    
     let selectedDays = getFieldValue(repeatDaysField.field_name);
     let repeatInterval = getFieldValue(repeatIntervalField.field_name);
-
+    
     if (repeatValue) {
       repeatInterval = repeatValue;
     }
-
+    
     // if(!repeat){
-
+    
     // }
-
+    
     const startDate = getFieldValue(startDateField.field_name);
     let startDateDay = startDate
       ? moment(startDate).format("ddd")
@@ -144,28 +144,28 @@ class EditMedicationReminderForm extends Component {
       for (let day of selectedDays) {
         let dayNo = DAYS_NUMBER[day];
         let dayDiff = dayNo - startDayNumber;
-
+        
         dayDiffPos =
           dayDiffPos === 0 && dayDiff > 0
             ? dayDiff
             : dayDiff > 0 && dayDiff < dayDiffPos
-            ? dayDiff
-            : dayDiffPos;
+              ? dayDiff
+              : dayDiffPos;
         dayDiffNeg =
           dayDiffNeg === 0 && dayDiff < 0
             ? dayDiff
             : dayDiff < 0 && Math.abs(dayDiff) > Math.abs(dayDiffNeg)
-            ? dayDiff
-            : dayDiffNeg;
+              ? dayDiff
+              : dayDiffNeg;
       }
-
+      
       daysToAdd = dayDiffPos ? dayDiffPos : 7 + dayDiffNeg;
     }
-
+    
     let newEndDate;
-
+    
     const startDateCopy = startDate.clone().endOf("day");
-
+    
     const res = isNumber(repeatInterval);
     if (repeat === REPEAT_TYPE.DAILY || res.valid === true) {
       switch (repeat) {
@@ -189,150 +189,154 @@ class EditMedicationReminderForm extends Component {
           break;
       }
     }
-
+    
     if (!newEndDate) {
       newEndDate = startDateCopy;
     }
-
+    
     return moment(newEndDate).add(daysToAdd, "days");
   };
-
+  
   adjustEndDate = (repeatValue) => {
     const {
-      form: { setFieldsValue },
+      form: {setFieldsValue},
     } = this.props;
     const endDate = this.getNewEndDate(repeatValue);
     if (endDate) {
-      setFieldsValue({ [endDateField.field_name]: endDate });
+      setFieldsValue({[endDateField.field_name]: endDate});
     }
   };
-
+  
   adjustEventOnStartDateChange = (prevDate) => {
     const {
-      form: { getFieldValue, setFieldsValue, validateFields },
+      form: {getFieldValue, setFieldsValue, validateFields},
     } = this.props;
-
+    
     const eventStartTime = getFieldValue(startTimeField.field_name);
-
+    
     if (prevDate.isSame(eventStartTime, "date")) {
       return;
     }
-
+    
     const startDate = getFieldValue(startDateField.field_name);
-
+    
     const newMonth = startDate.get("month");
     const newDate = startDate.get("date");
     const newYear = startDate.get("year");
-
+    
     let newEventStartTime;
-
+    
     if (eventStartTime) {
       newEventStartTime = eventStartTime
         .clone()
-        .set({ month: newMonth, year: newYear, date: newDate });
+        .set({month: newMonth, year: newYear, date: newDate});
     }
-
+    
     setFieldsValue({
       [startTimeField.field_name]: newEventStartTime,
     });
     // this.adjustEndDate();
     validateFields([startTimeField.field_name]);
   };
-
-  onChangeEventStartTime = (startTime) => {};
-
+  
+  onChangeEventStartTime = (startTime) => {
+  };
+  
   onStartDateChange = (currentDate) => {
     const {
-      form: { setFieldsValue },
+      form: {setFieldsValue},
     } = this.props;
-
+    
     if (currentDate && currentDate.isValid) {
-      setFieldsValue({ [startDateField.field_name]: currentDate });
+      setFieldsValue({[startDateField.field_name]: currentDate});
       this.adjustEventOnStartDateChange();
     }
   };
-
+  
   disabledStartDate = (current) => {
     // Can not select days before today
-    return current && current <= moment().subtract({ day: 1 });
+    return current && current <= moment().subtract({day: 1});
   };
-
+  
   disabledEndDate = (current) => {
     const endDate = this.getNewEndDate();
     if (endDate) {
       return current && current < endDate;
     }
   };
-
-  onEndDateChange = () => {};
-
-  onStartTimeChange = () => {};
-
-  onEndTimeChange = () => {};
-
+  
+  onEndDateChange = () => {
+  };
+  
+  onStartTimeChange = () => {
+  };
+  
+  onEndTimeChange = () => {
+  };
+  
   onEventDurationChange = (start, end) => {
     const {
-      form: { setFieldsValue, validateFields },
+      form: {setFieldsValue, validateFields},
     } = this.props;
     setFieldsValue({
       [startTimeField.field_name]: start,
     });
     validateFields([startTimeField.field_name]);
   };
-
+  
   onPrev = () => {
     const {
-      form: { getFieldValue, setFieldsValue },
+      form: {getFieldValue, setFieldsValue},
     } = this.props;
     const startDate = getFieldValue(startDateField.field_name);
     if (startDate !== null) {
       const newStartDate = startDate.clone().subtract(1, "days");
-      setFieldsValue({ [startDateField.field_name]: newStartDate });
+      setFieldsValue({[startDateField.field_name]: newStartDate});
       this.adjustEventOnStartDateChange();
     }
   };
-
+  
   onNext = () => {
     const {
-      form: { getFieldValue, setFieldsValue },
+      form: {getFieldValue, setFieldsValue},
     } = this.props;
     const startDate = getFieldValue(startDateField.field_name);
     if (startDate !== null) {
       const newStartDate = startDate.clone().add(1, "days");
-      setFieldsValue({ [startDateField.field_name]: newStartDate });
+      setFieldsValue({[startDateField.field_name]: newStartDate});
       this.adjustEventOnStartDateChange();
     }
   };
-
+  
   getOtherUser = () => {
     const {
-      form: { getFieldValue },
+      form: {getFieldValue},
       members = [],
     } = this.props;
     let otherUser;
-
+    
     const otherUserId = getFieldValue(participantsField.field_name);
     const n = members.length;
     for (let i = 0; i < n; i++) {
       const member = members[i] || {};
       const {
-        basicInfo: { _id },
+        basicInfo: {_id},
       } = member;
       if (otherUserId === _id) {
         otherUser = member;
         break;
       }
     }
-
+    
     return otherUser;
   };
-
+  
   addMedicationReminder = (e) => {
     e.preventDefault();
     const {
-      form: { validateFields },
+      form: {validateFields},
       addMedicationReminder,
-      payload: { patient_id = "2" } = {},
+      payload: {patient_id = "2"} = {},
     } = this.props;
     validateFields(async (err, values) => {
       if (!err) {
@@ -344,9 +348,9 @@ class EditMedicationReminderForm extends Component {
         data_to_submit = {
           ...values,
           id: patient_id,
-
+          
           repeat: "weekly",
-
+          
           [startTimeField.field_name]:
             startTime && startTime !== null
               ? startTime.startOf("minute").toISOString()
@@ -360,7 +364,7 @@ class EditMedicationReminderForm extends Component {
               ? endDate.clone().endOf("day").toISOString()
               : endDate,
         };
-
+        
         if (repeatDays) {
           data_to_submit = {
             ...data_to_submit,
@@ -369,7 +373,7 @@ class EditMedicationReminderForm extends Component {
         }
         try {
           const response = await addMedicationReminder(data_to_submit);
-          const { status, payload: { message: msg } = {} } = response;
+          const {status, payload: {message: msg} = {}} = response;
           if (status === true) {
             message.success(msg);
           } else {
@@ -381,16 +385,16 @@ class EditMedicationReminderForm extends Component {
       }
     });
   };
-
+  
   // onPatientChange = () => {
   //   const {
   //     form: { setFieldsValue },
   //     fetchProgramProducts,
   //     fetchMedicationStages
   //   } = this.props;
-
+  
   //   const otherUser = this.getOtherUser();
-
+  
   //   if (otherUser) {
   //     const {
   //       basicInfo: { _id },
@@ -419,14 +423,14 @@ class EditMedicationReminderForm extends Component {
   //     setFieldsValue({ [chooseMedicationField.field_name]: null });
   //   }
   // };
-
+  
   setEndDateOneWeek = (e) => {
     e.preventDefault();
     const {
-      form: { setFieldsValue, getFieldValue },
+      form: {setFieldsValue, getFieldValue},
       enableSubmit,
     } = this.props;
-
+    
     const startDate = getFieldValue(startDateField.field_name);
     let newEndDate = moment(startDate).add(1, "week");
     setFieldsValue({
@@ -434,14 +438,14 @@ class EditMedicationReminderForm extends Component {
     });
     enableSubmit();
   };
-
+  
   setEndDateTwoWeek = (e) => {
     e.preventDefault();
     const {
-      form: { setFieldsValue, getFieldValue },
+      form: {setFieldsValue, getFieldValue},
       enableSubmit,
     } = this.props;
-
+    
     const startDate = getFieldValue(startDateField.field_name);
     let newEndDate = moment(startDate).add(2, "week");
     setFieldsValue({
@@ -449,27 +453,27 @@ class EditMedicationReminderForm extends Component {
     });
     enableSubmit();
   };
-
+  
   setEndDateLongTime = (e) => {
     e.preventDefault();
     const {
-      form: { setFieldsValue },
+      form: {setFieldsValue},
       enableSubmit,
     } = this.props;
-
+    
     setFieldsValue({
       [endDateField.field_name]: null,
     });
     enableSubmit();
   };
-
+  
   getFooter = () => {
     const {
-      form: { getFieldsError },
+      form: {getFieldsError},
       requesting,
     } = this.props;
-    const { formatMessage, handleCancel } = this;
-
+    const {formatMessage, handleCancel} = this;
+    
     return (
       <div className="footer">
         <div className="flex fr h100">
@@ -488,22 +492,22 @@ class EditMedicationReminderForm extends Component {
       </div>
     );
   };
-
+  
   setStrength = (e) => {
     e.preventDefault();
     const {
-      form: { setFieldsValue, getFieldValue, validateFields },
+      form: {setFieldsValue, getFieldValue, validateFields},
       enableSubmit,
     } = this.props;
     const currentValue = getFieldValue(medicineStrengthField.field_name) || 0.0;
     setFieldsValue({
       [medicineStrengthField.field_name]:
-        parseFloat(currentValue) + parseFloat(e.target.value),
+      parseFloat(currentValue) + parseFloat(e.target.value),
     });
     validateFields([medicineStrengthField.field_name]);
     enableSubmit();
   };
-
+  
   render() {
     const {
       disabledEndDate,
@@ -518,37 +522,37 @@ class EditMedicationReminderForm extends Component {
       setEndDateLongTime,
       setStrength,
     } = this;
-
+    
     const {
-      form: { getFieldValue, setFieldsValue },
+      form: {getFieldValue, setFieldsValue},
       enableSubmit,
-      payload: { canViewDetails = false } = {},
+      payload: {canViewDetails = false} = {},
     } = this.props;
-
+    
     const otherUser = this.getOtherUser();
-
+    
     const startTime = getFieldValue(startTimeField.field_name);
     let medicineUnit = getFieldValue(medicineStrengthUnitField.field_name);
     let endTime;
-
+    
     if (startTime && startTime.isValid) {
       endTime = startTime.clone().add("minutes", 3);
     }
-
+    
     const currentMLCalibValue =
       getFieldValue(medicineStrengthField.field_name) || 0.0;
-
+    
     const startDate = getFieldValue(startDateField.field_name);
-
+    
     const medicineVal = getFieldValue(chooseMedicationField.field_name);
-
+    
     if (medicineVal && typeof medicineVal !== "number") {
       setFieldsValue({
         [chooseMedicationField.field_name]: parseInt(medicineVal),
       });
       enableSubmit();
     }
-
+    
     return (
       <Fragment>
         <Form className="event-form pb80 wp100 Form">
@@ -562,17 +566,17 @@ class EditMedicationReminderForm extends Component {
             ...this.props,
             ...this.state
           })} */}
-
-          {chooseMedicationField.render({ ...this.props, otherUser })}
+          
+          {chooseMedicationField.render({...this.props, otherUser})}
           {criticalMedicationField.render(this.props)}
           {formulation.render(this.props)}
-
+          
           <div className="flex align-items-end justify-content-space-between">
             <div className="flex direction-row flex-grow-1">
               <label htmlFor="dose" className="form-label" title="Dose">
                 {formatMessage(messages.dose)}
               </label>
-
+              
               <div className="star-red">*</div>
             </div>
             {/* <div className="label-color fontsize12 mb8">
@@ -666,13 +670,13 @@ class EditMedicationReminderForm extends Component {
             {medicineStrengthField.render(this.props)}
             {medicineStrengthUnitField.render(this.props)}
           </InputGroup>
-
+          
           {medicineUnit !== MEDICINE_UNITS.ML && (
             <div id="quantity">{medicineQuantityField.render(this.props)}</div>
           )}
-
+          
           <div id="timing">{whenToTakeMedicineField.render(this.props)}</div>
-
+          
           <RepeatFields
             {...this.props}
             formatMessage={formatMessage}
@@ -684,9 +688,9 @@ class EditMedicationReminderForm extends Component {
             setEndDateTwoWeek={setEndDateTwoWeek}
             setEndDateLongTime={setEndDateLongTime}
           />
-
+          
           {instructions.render(this.props)}
-
+          
           {/*{getFooter()}*/}
         </Form>
       </Fragment>

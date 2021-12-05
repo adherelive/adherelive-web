@@ -1,8 +1,8 @@
 "use strict";
 
-import { USER_CATEGORY } from "../constant";
-import { TABLE_NAME } from "../app/models/userCategoryPermissions";
-import { TABLE_NAME as permissionTableName } from "../app/models/permissions";
+import {USER_CATEGORY} from "../constant";
+import {TABLE_NAME} from "../app/models/userCategoryPermissions";
+import {TABLE_NAME as permissionTableName} from "../app/models/permissions";
 
 module.exports = {
   up: (queryInterface, Sequelize) => {
@@ -48,7 +48,7 @@ module.exports = {
       },
     });
   },
-
+  
   down: (queryInterface, Sequelize) => {
     return queryInterface.dropTable(TABLE_NAME);
   },

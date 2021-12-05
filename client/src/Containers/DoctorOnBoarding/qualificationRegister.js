@@ -1,6 +1,6 @@
-import { withRouter } from "react-router-dom";
+import {withRouter} from "react-router-dom";
 import QualificationRegister from "../../Components/DoctorOnBoarding/qualificationRegister";
-import { signOut } from "../../modules/auth";
+import {signOut} from "../../modules/auth";
 import {
   doctorQualificationRegister,
   getDoctorQualificationRegisterData,
@@ -10,11 +10,11 @@ import {
   registerRegistration,
   callNewDoctorAction,
 } from "../../modules/onBoarding";
-import { connect } from "react-redux";
-import { searchCollege } from "../../modules/colleges";
-import { searchCouncil } from "../../modules/councils";
-import { searchDegree } from "../../modules/degrees";
-import { searchSpecialties } from "../../modules/specialities";
+import {connect} from "react-redux";
+import {searchCollege} from "../../modules/colleges";
+import {searchCouncil} from "../../modules/councils";
+import {searchDegree} from "../../modules/degrees";
+import {searchSpecialties} from "../../modules/specialities";
 import {
   getDoctorDetails,
   getDoctorProfileDetails,
@@ -35,7 +35,7 @@ const mapStateToProps = (state) => {
     councils,
     specialities,
   } = state;
-  const { authenticated_user, authenticated_category } = auth;
+  const {authenticated_user, authenticated_category} = auth;
   return {
     authenticated_user,
     doctors,

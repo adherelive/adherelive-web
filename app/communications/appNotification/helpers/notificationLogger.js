@@ -5,8 +5,8 @@ const moment = require("moment");
 
 let notificationSchema = new mongoose.Schema(
   {
-    data: { type: mongoose.Schema.Types.Mixed },
-    status: { type: String, required: true },
+    data: {type: mongoose.Schema.Types.Mixed},
+    status: {type: String, required: true},
   },
   {
     collation: collectionName,
@@ -24,7 +24,7 @@ const notificationLogger = {
     //   data
     // );
     notificationModel
-      .insertMany({ data, status: "success" })
+      .insertMany({data, status: "success"})
       .then((result) => {
         // console.log(
         //   chalk.blue(
@@ -52,7 +52,7 @@ const notificationLogger = {
       errObj
     );
     notificationModel
-      .insertMany({ data, status: "failed" })
+      .insertMany({data, status: "failed"})
       .then((result) => {
         console.log(
           chalk.blue(

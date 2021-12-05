@@ -1,5 +1,5 @@
-import React, { Component } from "react";
-import { injectIntl } from "react-intl";
+import React, {Component} from "react";
+import {injectIntl} from "react-intl";
 import Drawer from "antd/es/drawer";
 
 import DietTimeline from "../../../Containers/Diets/timeline";
@@ -9,20 +9,20 @@ class dietResponseDrawer extends Component {
   constructor(props) {
     super(props);
   }
-
+  
   onClose = () => {
-    const { close } = this.props;
+    const {close} = this.props;
     close();
   };
-
+  
   render() {
     const {
       visible,
-      intl: { formatMessage } = {},
+      intl: {formatMessage} = {},
       diet_name = "",
     } = this.props;
-    const { onClose } = this;
-
+    const {onClose} = this;
+    
     return (
       <Drawer
         placement="right"
@@ -30,7 +30,7 @@ class dietResponseDrawer extends Component {
         onClose={onClose}
         visible={visible}
         width={"35%"}
-        title={formatMessage({ ...messages.title }, { diet_name })}
+        title={formatMessage({...messages.title}, {diet_name})}
         headerStyle={{
           position: "sticky",
           zIndex: "9999",

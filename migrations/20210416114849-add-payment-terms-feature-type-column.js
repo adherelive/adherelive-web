@@ -1,6 +1,6 @@
 "use strict";
-import { TABLE_NAME } from "../app/models/featureDetails";
-import { FEATURE_TYPE } from "../constant";
+import {TABLE_NAME} from "../app/models/featureDetails";
+import {FEATURE_TYPE} from "../constant";
 
 module.exports = {
   up: (queryInterface, Sequelize) => {
@@ -11,7 +11,7 @@ module.exports = {
       }),
     ]);
   },
-
+  
   down: (queryInterface, Sequelize) => {
     return Promise.all([
       queryInterface.changeColumn(TABLE_NAME, "feature_type"),

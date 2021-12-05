@@ -1,6 +1,6 @@
 import Database from "../../../libs/mysql";
-import { TABLE_NAME } from "../../models/medicationReminders";
-import { TABLE_NAME as medicineTableName } from "../../models/medicines";
+import {TABLE_NAME} from "../../models/medicationReminders";
+import {TABLE_NAME as medicineTableName} from "../../models/medicines";
 
 class MReminderService {
   async addMReminder(data) {
@@ -11,7 +11,7 @@ class MReminderService {
       throw err;
     }
   }
-
+  
   updateMedication = async (data, id) => {
     try {
       const medication = await Database.getModel(TABLE_NAME).update(data, {
@@ -24,7 +24,7 @@ class MReminderService {
       throw err;
     }
   };
-
+  
   getMedication = async (data) => {
     try {
       const medication = await Database.getModel(TABLE_NAME).findOne({
@@ -41,7 +41,7 @@ class MReminderService {
       throw err;
     }
   };
-
+  
   getMedicationsForParticipant = async (data) => {
     try {
       const medications = await Database.getModel(TABLE_NAME).findAll({
@@ -58,7 +58,7 @@ class MReminderService {
       throw error;
     }
   };
-
+  
   deleteMedication = async (id) => {
     try {
       const medication = await Database.getModel(TABLE_NAME).destroy({
@@ -71,7 +71,7 @@ class MReminderService {
       throw err;
     }
   };
-
+  
   getAllMedicationByData = async (data) => {
     try {
       return await Database.getModel(TABLE_NAME).findAll({

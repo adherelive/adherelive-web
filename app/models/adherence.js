@@ -1,5 +1,5 @@
 "use strict";
-import { DataTypes } from "sequelize";
+import {DataTypes} from "sequelize";
 import * as ActionDetails from "./actionDetails";
 
 export const TABLE_NAME = "adherence";
@@ -36,8 +36,8 @@ export const db = (database) => {
 };
 
 export const associate = (database) => {
-  const { adherence, action_details } = database.models || {};
-
+  const {adherence, action_details} = database.models || {};
+  
   // associations here (if any) ...
   adherence.belongsTo(action_details, {
     foreignKey: "action_details_id",

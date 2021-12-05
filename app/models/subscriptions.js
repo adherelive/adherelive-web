@@ -1,7 +1,7 @@
 "use strict";
-import { DataTypes } from "sequelize";
-import { TABLE_NAME as paymentProductPlansTableName } from "./paymentProducts";
-import { USER_CATEGORY_ARRAY } from "./users";
+import {DataTypes} from "sequelize";
+import {TABLE_NAME as paymentProductPlansTableName} from "./paymentProducts";
+import {USER_CATEGORY_ARRAY} from "./users";
 
 export const TABLE_NAME = "subscriptions";
 

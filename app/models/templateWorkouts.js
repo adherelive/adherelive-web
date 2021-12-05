@@ -1,7 +1,7 @@
 "use strict";
-import { DataTypes } from "sequelize";
+import {DataTypes} from "sequelize";
 import moment from "moment";
-import { TABLE_NAME as carePlanTemplateTableName } from "./careplanTemplate";
+import {TABLE_NAME as carePlanTemplateTableName} from "./careplanTemplate";
 
 export const TABLE_NAME = "template_workouts";
 
@@ -56,4 +56,5 @@ export const db = (database) => {
   );
 };
 
-export const associate = (database) => {};
+export const associate = (database) => {
+};

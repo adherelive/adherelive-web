@@ -1,6 +1,6 @@
 import React from "react";
 
-import { TABLE_COLUMN } from "../helper";
+import {TABLE_COLUMN} from "../helper";
 import messages from "../messages";
 import MedicineName from "../dataColumn/medicineName";
 import CreatorName from "../dataColumn/creatorName";
@@ -14,9 +14,9 @@ const ALL_TABS = {
 };
 
 export default (props) => {
-  const { formatMessage, currentTab, getColumnSearchProps, changeTab } =
-    props || {};
-
+  const {formatMessage, currentTab, getColumnSearchProps, changeTab} =
+  props || {};
+  
   // if(currentTab === ALL_TABS.PUBLIC){
   //   return [
   //     {
@@ -49,9 +49,9 @@ export default (props) => {
   //       render: (data={}) => <Options {...data} formatMessage={formatMessage} />
   //     }
   //   ];
-
+  
   // }else{
-
+  
   return [
     {
       title: formatMessage(messages.medicineName),
@@ -65,8 +65,8 @@ export default (props) => {
       title: formatMessage(messages.creatorName),
       ...TABLE_COLUMN.CREATOR_NAME,
       render: (data = {}) => {
-        const { medicineData = {}, doctors = {} } = data || {};
-        return <CreatorName medicineData={medicineData} doctors={doctors} />;
+        const {medicineData = {}, doctors = {}} = data || {};
+        return <CreatorName medicineData={medicineData} doctors={doctors}/>;
       },
       ...getColumnSearchProps(TABLE_COLUMN.CREATOR_NAME.dataIndex),
     },
@@ -74,7 +74,7 @@ export default (props) => {
       title: formatMessage(messages.medicineType),
       ...TABLE_COLUMN.TYPE,
       render: (data = {}) => {
-        return <Type {...data} formatMessage={formatMessage} />;
+        return <Type {...data} formatMessage={formatMessage}/>;
       },
     },
     {

@@ -1,13 +1,14 @@
 import Database from "../../../libs/mysql";
 
 // TABLES
-import { TABLE_NAME } from "../../models/patientPaymentConsentMapping";
+import {TABLE_NAME} from "../../models/patientPaymentConsentMapping";
 
 const DEFAULT_ORDER = [["created_at", "DESC"]];
 
 class PatientPaymentConsentMappingService {
-  constructor() {}
-
+  constructor() {
+  }
+  
   async create(data) {
     const transaction = await Database.initTransaction();
     try {
@@ -21,7 +22,7 @@ class PatientPaymentConsentMappingService {
       throw err;
     }
   }
-
+  
   getSingleEntityByData = async (data) => {
     try {
       const response = await Database.getModel(TABLE_NAME).findOne({
@@ -32,7 +33,7 @@ class PatientPaymentConsentMappingService {
       throw error;
     }
   };
-
+  
   getAllByData = async (data) => {
     try {
       const response = await Database.getModel(TABLE_NAME).findAll({
@@ -45,8 +46,8 @@ class PatientPaymentConsentMappingService {
       throw error;
     }
   };
-
-  findAndCountAll = async ({ where, order = DEFAULT_ORDER, attributes }) => {
+  
+  findAndCountAll = async ({where, order = DEFAULT_ORDER, attributes}) => {
     try {
       return await Database.getModel(TABLE_NAME).findAndCountAll({
         where,
@@ -58,8 +59,8 @@ class PatientPaymentConsentMappingService {
       throw error;
     }
   };
-
-  findOne = async ({ where, order = DEFAULT_ORDER, attributes }) => {
+  
+  findOne = async ({where, order = DEFAULT_ORDER, attributes}) => {
     try {
       return await Database.getModel(TABLE_NAME).findOne({
         where,
@@ -71,7 +72,7 @@ class PatientPaymentConsentMappingService {
       throw error;
     }
   };
-
+  
   update = async (data, id) => {
     const transaction = await Database.initTransaction();
     try {

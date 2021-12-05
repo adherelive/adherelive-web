@@ -1,10 +1,11 @@
-import { EVENT_STATUS } from "../../../constant";
+import {EVENT_STATUS} from "../../../constant";
 import StartJob from "./startJob";
 import MissedJob from "./missedJob";
 
 class AgoraObserver {
-  constructor() {}
-
+  constructor() {
+  }
+  
   execute = (typeStatus, eventDetails) => {
     switch (typeStatus) {
       case EVENT_STATUS.STARTED:

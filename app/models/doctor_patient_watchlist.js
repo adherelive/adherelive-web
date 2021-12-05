@@ -1,9 +1,9 @@
 "use strict";
-import { DataTypes } from "sequelize";
-import { TABLE_NAME as doctorTableName } from "./doctors";
-import { TABLE_NAME as patientTableName } from "./patients";
-import { TABLE_NAME as userRoleTableName } from "./userRoles";
-import { USER_CATEGORY, SIGN_IN_CATEGORY } from "../../constant";
+import {DataTypes} from "sequelize";
+import {TABLE_NAME as doctorTableName} from "./doctors";
+import {TABLE_NAME as patientTableName} from "./patients";
+import {TABLE_NAME as userRoleTableName} from "./userRoles";
+import {USER_CATEGORY, SIGN_IN_CATEGORY} from "../../constant";
 
 export const TABLE_NAME = "doctor_patient_watchlists";
 
@@ -66,18 +66,18 @@ export const db = (database) => {
 
 export const associate = (database) => {
   // const {TABLE_NAME} = database.models || {};
-
+  
   // associations here (if any) ...
   database.models[TABLE_NAME].belongsTo(database.models[doctorTableName], {
     foreignKey: "doctor_id",
     targetKey: "id",
   });
-
+  
   database.models[TABLE_NAME].belongsTo(database.models[patientTableName], {
     foreignKey: "patient_id",
     targetKey: "id",
   });
-
+  
   database.models[TABLE_NAME].belongsTo(database.models[userRoleTableName], {
     foreignKey: "user_role_id",
     targetKey: "id",

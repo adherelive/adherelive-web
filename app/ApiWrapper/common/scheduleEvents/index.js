@@ -4,7 +4,7 @@ import ScheduleEventService from "../../../services/scheduleEvents/scheduleEvent
 
 import AppointmentWrapper from "../../web/appointments";
 import MedicationWrapper from "../../web/medicationReminder";
-import { EVENT_TYPE } from "../../../../constant";
+import {EVENT_TYPE} from "../../../../constant";
 
 import Log from "../../../../libs/log";
 
@@ -14,16 +14,16 @@ class ScheduleEventWrapper extends BaseScheduleEvent {
   constructor(data) {
     super(data);
   }
-
+  
   getDateWiseInfo = () => {
-    const { _data, getEventType, getScheduleEventId } = this;
-
+    const {_data, getEventType, getScheduleEventId} = this;
+    
     const appointments = [];
     const medications = [];
     const vitals = [];
     const diets = [];
     const workouts = [];
-
+    
     switch (getEventType()) {
       case EVENT_TYPE.APPOINTMENT:
         appointments.push(getScheduleEventId());
@@ -50,9 +50,9 @@ class ScheduleEventWrapper extends BaseScheduleEvent {
       workouts,
     };
   };
-
+  
   getAllInfo = () => {
-    const { _data } = this;
+    const {_data} = this;
     const {
       id,
       critical,
@@ -66,7 +66,7 @@ class ScheduleEventWrapper extends BaseScheduleEvent {
       updated_at,
       deleted_at,
     } = _data || {};
-
+    
     return {
       id,
       critical,
@@ -81,27 +81,27 @@ class ScheduleEventWrapper extends BaseScheduleEvent {
       deleted_at,
     };
   };
-
+  
   getReferenceInfo = async () => {
-    const { getAllInfo, getScheduleEventId, getEventId, getEventType } = this;
-
+    const {getAllInfo, getScheduleEventId, getEventId, getEventType} = this;
+    
     let eventTypeData = {};
-
+    
     switch (getEventType()) {
       case EVENT_TYPE.APPOINTMENT:
         const appointment = await AppointmentWrapper(null, getEventId());
-        const { appointments } = await appointment.getAllInfo();
-        eventTypeData = { appointments };
+        const {appointments} = await appointment.getAllInfo();
+        eventTypeData = {appointments};
         break;
       case EVENT_TYPE.MEDICATION_REMINDER:
         const medication = await MedicationWrapper(null, getEventId());
-        const { medications, medicines } = await medication.getReferenceInfo();
-        eventTypeData = { medications, medicines };
+        const {medications, medicines} = await medication.getReferenceInfo();
+        eventTypeData = {medications, medicines};
         break;
       default:
         break;
     }
-
+    
     return {
       schedule_events: {
         [getScheduleEventId()]: getAllInfo(),
@@ -116,6 +116,6 @@ export default async (data = null, id = null) => {
     return new ScheduleEventWrapper(data);
   }
   const scheduleEventService = new ScheduleEventService();
-  const scheduleEvent = await scheduleEventService.getEventByData({ id });
+  const scheduleEvent = await scheduleEventService.getEventByData({id});
   return new ScheduleEventWrapper(scheduleEvent);
 };

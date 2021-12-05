@@ -1,6 +1,6 @@
 "use strict";
 
-import { TABLE_NAME } from "../models/userPreferences";
+import {TABLE_NAME} from "../models/userPreferences";
 
 module.exports = {
   up: (queryInterface, Sequelize) => {
@@ -191,7 +191,7 @@ module.exports = {
       },
     ]);
   },
-
+  
   down: (queryInterface, Sequelize) => {
     return queryInterface.bulkDelete(TABLE_NAME, null, {});
   },

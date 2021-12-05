@@ -1,6 +1,6 @@
 import Database from "../../../libs/mysql";
-import { TABLE_NAME } from "../../models/providers";
-import { TABLE_NAME as userTableName } from "../../models/users";
+import {TABLE_NAME} from "../../models/providers";
+import {TABLE_NAME as userTableName} from "../../models/users";
 
 class ProviderService {
   getAll = async () => {
@@ -11,7 +11,7 @@ class ProviderService {
       throw err;
     }
   };
-
+  
   getProviderByData = async (data) => {
     try {
       const provider = await Database.getModel(TABLE_NAME).findOne({
@@ -23,7 +23,7 @@ class ProviderService {
       throw err;
     }
   };
-
+  
   getAllProviders = async () => {
     try {
       return await Database.getModel(TABLE_NAME).findAll({
@@ -33,7 +33,7 @@ class ProviderService {
       throw err;
     }
   };
-
+  
   addProvider = async (data) => {
     const transaction = await Database.initTransaction();
     try {
@@ -47,7 +47,7 @@ class ProviderService {
       throw err;
     }
   };
-
+  
   updateProvider = async (data, id) => {
     const transaction = await Database.initTransaction();
     try {

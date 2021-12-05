@@ -29,13 +29,13 @@ export const TABLE_COLUMN = {
 };
 
 export const formatMedicationTableData = (data) => {
-  const { medications, id, medicines } = data || {};
-
-  const { basic_info: { details: { medicine_id } = {} } = {} } =
-    medications[id] || {};
-
+  const {medications, id, medicines} = data || {};
+  
+  const {basic_info: {details: {medicine_id} = {}} = {}} =
+  medications[id] || {};
+  
   const medicationTemplateData = medicines[medicine_id] || {};
-
+  
   return {
     medicationTemplateData,
     medicationData: medications[id],

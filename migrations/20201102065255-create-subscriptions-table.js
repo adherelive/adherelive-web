@@ -1,9 +1,9 @@
 "use strict";
 
-import { DataTypes } from "sequelize";
-import { TABLE_NAME } from "../app/models/subscriptions";
-import { TABLE_NAME as paymentProductPlansTableName } from "../app/models/paymentProducts";
-import { USER_CATEGORY_ARRAY } from "../app/models/users";
+import {DataTypes} from "sequelize";
+import {TABLE_NAME} from "../app/models/subscriptions";
+import {TABLE_NAME as paymentProductPlansTableName} from "../app/models/paymentProducts";
+import {USER_CATEGORY_ARRAY} from "../app/models/users";
 
 module.exports = {
   up: (queryInterface, Sequelize) => {
@@ -57,7 +57,7 @@ module.exports = {
       },
     });
   },
-
+  
   down: (queryInterface, Sequelize) => {
     return queryInterface.dropTable(TABLE_NAME);
   },

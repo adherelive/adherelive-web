@@ -6,10 +6,10 @@ import Authorize from "../middlewares/authorize";
 import Exercise from "../../../app/controllers/mControllers/exercises/exercise.controller";
 
 import * as validate from "./validate";
-import { USER_CATEGORY } from "../../../constant";
+import {USER_CATEGORY} from "../../../constant";
 
 const storage = multer.memoryStorage();
-const upload = multer({ dest: "../../../app/public/", storage: storage });
+const upload = multer({dest: "../../../app/public/", storage: storage});
 
 const router = express.Router();
 

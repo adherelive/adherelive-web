@@ -1,6 +1,6 @@
 "use strict";
 
-import { TABLE_NAME } from "../models/degree";
+import {TABLE_NAME} from "../models/degree";
 
 module.exports = {
   up: (queryInterface, Sequelize) => {
@@ -45,7 +45,7 @@ module.exports = {
         created_at: new Date(),
         updated_at: new Date(),
       },
-      { name: "M.S. (E.N.T.)", created_at: new Date(), updated_at: new Date() },
+      {name: "M.S. (E.N.T.)", created_at: new Date(), updated_at: new Date()},
       {
         name: "M.D. (PSYCHIATRY)",
         created_at: new Date(),
@@ -284,7 +284,7 @@ module.exports = {
       },
     ]);
   },
-
+  
   down: (queryInterface, Sequelize) => {
     return queryInterface.bulkDelete(TABLE_NAME, null, {});
   },

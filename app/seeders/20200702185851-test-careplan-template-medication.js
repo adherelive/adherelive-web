@@ -1,6 +1,6 @@
 "use strict";
 
-import { TABLE_NAME } from "../models/templateMedications";
+import {TABLE_NAME} from "../models/templateMedications";
 
 module.exports = {
   up: (queryInterface, Sequelize) => {
@@ -47,7 +47,7 @@ module.exports = {
       },
     ]);
   },
-
+  
   down: (queryInterface, Sequelize) => {
     return queryInterface.bulkDelete(TABLE_NAME, null, {});
   },

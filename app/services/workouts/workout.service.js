@@ -1,21 +1,21 @@
 import Database from "../../../libs/mysql";
-import { TABLE_NAME } from "../../models/workout";
-import { TABLE_NAME as exerciseGroupTableName } from "../../models/exerciseGroup";
-import { TABLE_NAME as exerciseDetailTableName } from "../../models/exerciseDetails";
-import { TABLE_NAME as exerciseTableName } from "../../models/exercise";
-import { TABLE_NAME as repetitionTableName } from "../../models/exerciseRepetition";
-import { TABLE_NAME as workoutExerciseGroupMappingTableName } from "../../models/workoutExerciseGroupMapping";
-import { TABLE_NAME as scheduleEventTableName } from "../../models/scheduleEvents";
-import { EVENT_TYPE } from "../../../constant";
+import {TABLE_NAME} from "../../models/workout";
+import {TABLE_NAME as exerciseGroupTableName} from "../../models/exerciseGroup";
+import {TABLE_NAME as exerciseDetailTableName} from "../../models/exerciseDetails";
+import {TABLE_NAME as exerciseTableName} from "../../models/exercise";
+import {TABLE_NAME as repetitionTableName} from "../../models/exerciseRepetition";
+import {TABLE_NAME as workoutExerciseGroupMappingTableName} from "../../models/workoutExerciseGroupMapping";
+import {TABLE_NAME as scheduleEventTableName} from "../../models/scheduleEvents";
+import {EVENT_TYPE} from "../../../constant";
 import moment from "moment";
 
 const DEFAULT_ORDER = [["created_at", "DESC"]];
 
 export default class WorkoutService {
   create = async ({
-    transaction: continuedTransaction = null,
-    ...workoutData
-  }) => {
+                    transaction: continuedTransaction = null,
+                    ...workoutData
+                  }) => {
     const transaction = continuedTransaction
       ? continuedTransaction
       : await Database.initTransaction();
@@ -45,20 +45,20 @@ export default class WorkoutService {
           transaction,
         }
       );
-
-      const { id: workout_id } = workout || {};
-
+      
+      const {id: workout_id} = workout || {};
+      
       // create mappings
       for (let index = 0; index < workout_exercise_groups.length; index++) {
         const currentExerciseCollection = workout_exercise_groups[index] || {};
-
+        
         const {
           sets,
           exercise_detail_id,
           notes,
           // similar = [],
         } = currentExerciseCollection || {};
-
+        
         // create exercise group
         const exerciseGroup = await Database.getModel(
           exerciseGroupTableName
@@ -66,13 +66,13 @@ export default class WorkoutService {
           {
             sets,
             exercise_detail_id,
-            details: { notes },
+            details: {notes},
           },
           {
             transaction,
           }
         );
-
+        
         // create workout exercise group mapping
         (await Database.getModel(workoutExerciseGroupMappingTableName).create(
           {
@@ -85,7 +85,7 @@ export default class WorkoutService {
           }
         )) || null;
       }
-
+      
       await transaction.commit();
       return workout_id;
     } catch (error) {
@@ -93,20 +93,20 @@ export default class WorkoutService {
       throw error;
     }
   };
-
+  
   update = async ({
-    workout_exercise_groups,
-    delete_exercise_group_ids,
-    workout_id,
-    transaction: continuedTransaction = null,
-    ...workoutData
-  }) => {
+                    workout_exercise_groups,
+                    delete_exercise_group_ids,
+                    workout_id,
+                    transaction: continuedTransaction = null,
+                    ...workoutData
+                  }) => {
     const transaction = continuedTransaction
       ? continuedTransaction
       : await Database.initTransaction();
     try {
       // delete previous workout group ids
-
+      
       // delete mappings
       await Database.getModel(workoutExerciseGroupMappingTableName).destroy({
         where: {
@@ -115,7 +115,7 @@ export default class WorkoutService {
         },
         transaction,
       });
-
+      
       // delete exercise groups
       await Database.getModel(exerciseGroupTableName).destroy({
         where: {
@@ -123,7 +123,7 @@ export default class WorkoutService {
         },
         transaction,
       });
-
+      
       for (let index = 0; index < workout_exercise_groups.length; index++) {
         const {
           exercise_group_id = null,
@@ -131,21 +131,21 @@ export default class WorkoutService {
           exercise_detail_id,
           notes,
         } = workout_exercise_groups[index];
-
+        
         if (exercise_group_id) {
           // update
           await Database.getModel(exerciseGroupTableName).update(
             {
               sets,
               exercise_detail_id,
-              details: { notes },
+              details: {notes},
             },
             {
-              where: { id: exercise_group_id },
+              where: {id: exercise_group_id},
               transaction,
             }
           );
-
+          
           // await Database.getModel(
           //   workoutExerciseGroupMappingTableName
           // ).update(
@@ -165,13 +165,13 @@ export default class WorkoutService {
             {
               sets,
               exercise_detail_id,
-              details: { notes },
+              details: {notes},
             },
             {
               transaction,
             }
           );
-
+          
           await Database.getModel(workoutExerciseGroupMappingTableName).create(
             {
               // time,
@@ -184,10 +184,10 @@ export default class WorkoutService {
           );
         }
       }
-
+      
       // workout update
       await Database.getModel(TABLE_NAME).update(workoutData, {
-        where: { id: workout_id },
+        where: {id: workout_id},
         transaction,
       });
       await transaction.commit();
@@ -197,8 +197,8 @@ export default class WorkoutService {
       throw error;
     }
   };
-
-  delete = async ({ id, transaction: continuedTransaction = null }) => {
+  
+  delete = async ({id, transaction: continuedTransaction = null}) => {
     const transaction = continuedTransaction
       ? continuedTransaction
       : await Database.initTransaction();
@@ -214,7 +214,7 @@ export default class WorkoutService {
       //   },
       //   attributes: ["exercise_group_id"],
       // });
-
+      
       // let exerciseGroupIds = [];
       // if (totalExerciseGroupMappings) {
       //   for (let index = 0; index < allExerciseGroupMappings.length; index++) {
@@ -222,7 +222,7 @@ export default class WorkoutService {
       //     exerciseGroupIds.push(exercise_group_id);
       //   }
       // }
-
+      
       // // exercise groups
       // await Database.getModel(exerciseGroupTableName).destroy({
       //   where: {
@@ -230,7 +230,7 @@ export default class WorkoutService {
       //   },
       //   transaction,
       // });
-
+      
       // // workout exercise group mappings
       // await Database.getModel(workoutExerciseGroupMappingTableName).destroy({
       //   where: {
@@ -238,7 +238,7 @@ export default class WorkoutService {
       //   },
       //   transaction,
       // });
-
+      
       // schedule event created
       await Database.getModel(scheduleEventTableName).destroy({
         where: {
@@ -247,9 +247,9 @@ export default class WorkoutService {
         },
         transaction,
       });
-
+      
       await Database.getModel(TABLE_NAME).update(
-        { expired_on: moment() },
+        {expired_on: moment()},
         {
           where: {
             id,
@@ -257,13 +257,13 @@ export default class WorkoutService {
           transaction,
         }
       );
-
+      
       // data for workout delete
       // await Database.getModel(TABLE_NAME).destroy({
       //   where: { id },
       //   transaction,
       // });
-
+      
       await transaction.commit();
       return true;
     } catch (error) {
@@ -271,14 +271,14 @@ export default class WorkoutService {
       throw error;
     }
   };
-
-  updateWorkotTotalCalories = async ({ workout_id, total_calories }) => {
+  
+  updateWorkotTotalCalories = async ({workout_id, total_calories}) => {
     const transaction = await Database.initTransaction();
     try {
       await Database.getModel(TABLE_NAME).update(
-        { workout_id, total_calories },
+        {workout_id, total_calories},
         {
-          where: { id: workout_id },
+          where: {id: workout_id},
           transaction,
         }
       );
@@ -289,7 +289,7 @@ export default class WorkoutService {
       throw error;
     }
   };
-
+  
   findOne = async (data) => {
     try {
       return await Database.getModel(TABLE_NAME).findOne({
@@ -313,8 +313,8 @@ export default class WorkoutService {
       throw error;
     }
   };
-
-  findAndCountAll = async ({ where, order = DEFAULT_ORDER, attributes }) => {
+  
+  findAndCountAll = async ({where, order = DEFAULT_ORDER, attributes}) => {
     try {
       return Database.getModel(TABLE_NAME).findAndCountAll({
         where,

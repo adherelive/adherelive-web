@@ -1,27 +1,27 @@
-import { withRouter } from "react-router-dom";
+import {withRouter} from "react-router-dom";
 import Dashboard from "../../Components/Dashboard";
-import { signOut, getInitialData } from "../../modules/auth";
-import { addPatient } from "../../modules/patients";
-import { searchMedicine } from "../../modules/medicines";
-import { searchTreatment } from "../../modules/treatments";
-import { searchCondition } from "../../modules/conditions";
-import { searchSeverity } from "../../modules/severity";
-import { getGraphs, updateGraphs } from "../../modules/graphs";
-import { connect } from "react-redux";
-import { closePopUp } from "../../modules/chat";
-import { fetchChatAccessToken } from "../../modules/twilio";
-import { searchPatientFromNum } from "../../modules/patients";
+import {signOut, getInitialData} from "../../modules/auth";
+import {addPatient} from "../../modules/patients";
+import {searchMedicine} from "../../modules/medicines";
+import {searchTreatment} from "../../modules/treatments";
+import {searchCondition} from "../../modules/conditions";
+import {searchSeverity} from "../../modules/severity";
+import {getGraphs, updateGraphs} from "../../modules/graphs";
+import {connect} from "react-redux";
+import {closePopUp} from "../../modules/chat";
+import {fetchChatAccessToken} from "../../modules/twilio";
+import {searchPatientFromNum} from "../../modules/patients";
 import {
   addToWatchlist,
   removePatientFromWatchlist,
 } from "../../modules/doctors";
-import { showVerifyModal } from "../../modules/pages/features";
-import { getAllFeatures } from "../../modules/featuresMappings";
-import { DRAWER } from "../../constant";
-import { open } from "../../modules/drawer";
-import { getAllMissedScheduleEvents } from "../../modules/scheduleEvents";
-import { setUnseenNotificationCount } from "../../modules/pages/NotificationCount";
-import { getAllDietsForDoctor } from "../../modules/diets";
+import {showVerifyModal} from "../../modules/pages/features";
+import {getAllFeatures} from "../../modules/featuresMappings";
+import {DRAWER} from "../../constant";
+import {open} from "../../modules/drawer";
+import {getAllMissedScheduleEvents} from "../../modules/scheduleEvents";
+import {setUnseenNotificationCount} from "../../modules/pages/NotificationCount";
+import {getAllDietsForDoctor} from "../../modules/diets";
 
 const mapStateToProps = (state) => {
   const {
@@ -37,7 +37,7 @@ const mapStateToProps = (state) => {
     } = {},
     treatments = {},
     conditions = {},
-    pages: { ui_features = {}, dashboard = {} } = {},
+    pages: {ui_features = {}, dashboard = {}} = {},
     severity = {},
     chats,
     drawer,
@@ -95,17 +95,17 @@ const mapDispatchToProps = (dispatch) => {
     showVerifyModal: (data) => dispatch(showVerifyModal(data)),
     getAllFeatures: () => dispatch(getAllFeatures()),
     openMissedMedicationDrawer: () =>
-      dispatch(open({ type: DRAWER.MISSED_MEDICATION })),
+      dispatch(open({type: DRAWER.MISSED_MEDICATION})),
     openMissedAppointmentDrawer: () =>
-      dispatch(open({ type: DRAWER.MISSED_APPOINTMENT })),
-    openMissedVitalDrawer: () => dispatch(open({ type: DRAWER.MISSED_VITAL })),
+      dispatch(open({type: DRAWER.MISSED_APPOINTMENT})),
+    openMissedVitalDrawer: () => dispatch(open({type: DRAWER.MISSED_VITAL})),
     getAllMissedScheduleEvents: () => dispatch(getAllMissedScheduleEvents()),
     setUnseenNotificationCount: (count) =>
       dispatch(setUnseenNotificationCount(count)),
     getAllDietsForDoctor: () => dispatch(getAllDietsForDoctor()),
-    openMissedDietDrawer: () => dispatch(open({ type: DRAWER.MISSED_DIET })),
+    openMissedDietDrawer: () => dispatch(open({type: DRAWER.MISSED_DIET})),
     openMissedWorkoutDrawer: () =>
-      dispatch(open({ type: DRAWER.MISSED_WORKOUT })),
+      dispatch(open({type: DRAWER.MISSED_WORKOUT})),
   };
 };
 

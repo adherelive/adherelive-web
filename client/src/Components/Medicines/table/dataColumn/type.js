@@ -10,12 +10,12 @@ const SYRUP = "syrup";
 
 export default (props) => {
   const {
-    medicineData: { basic_info: { type = "" } = {} } = {},
+    medicineData: {basic_info: {type = ""} = {}} = {},
     formatMessage,
   } = props || {};
-
-  console.log("103712398 type", { type });
-
+  
+  console.log("103712398 type", {type});
+  
   return (
     <div className="flex align-center">
       <Tooltip
@@ -23,8 +23,8 @@ export default (props) => {
           type === TABLET || type === "tablets"
             ? formatMessage(messages.tablet)
             : type === SYRUP
-            ? formatMessage(messages.syrup)
-            : formatMessage(messages.syringe)
+              ? formatMessage(messages.syrup)
+              : formatMessage(messages.syringe)
         }
         className="flex align-center justify-start"
       >
@@ -34,12 +34,12 @@ export default (props) => {
             type === TABLET || type === "tablets"
               ? TabletIcon
               : type === SYRUP
-              ? SyrupIcon
-              : InjectionIcon
+                ? SyrupIcon
+                : InjectionIcon
           }
           alt="medicine icon"
         />
-
+        
         <span className="fs14 fw600 italic">{type.toUpperCase()}</span>
       </Tooltip>
     </div>

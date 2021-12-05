@@ -1,5 +1,5 @@
 "use strict";
-import { DataTypes } from "sequelize";
+import {DataTypes} from "sequelize";
 
 export const PATIENT_CARE_TAKERS = "patient_care_takers";
 

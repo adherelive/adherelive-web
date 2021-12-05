@@ -1,5 +1,5 @@
-import { connect } from "react-redux";
-import { withRouter } from "react-router-dom";
+import {connect} from "react-redux";
+import {withRouter} from "react-router-dom";
 import TosPPEditorPage from "../../../Components/Pages/tosPPEditorPage";
 import {
   getTermsAndPolicy,
@@ -8,7 +8,7 @@ import {
 
 const mapStateToProps = (state) => {
   const {} = state;
-
+  
   return {};
 };
 

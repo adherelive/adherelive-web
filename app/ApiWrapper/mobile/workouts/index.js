@@ -7,9 +7,9 @@ class WorkoutWrapper extends BaseWorkout {
   constructor(data) {
     super(data);
   }
-
+  
   getBasicInfo = () => {
-    const { _data } = this;
+    const {_data} = this;
     const {
       id,
       name,
@@ -21,7 +21,7 @@ class WorkoutWrapper extends BaseWorkout {
       time,
       expired_on,
     } = _data || {};
-
+    
     return {
       basic_info: {
         id,
@@ -36,10 +36,10 @@ class WorkoutWrapper extends BaseWorkout {
       expired_on,
     };
   };
-
+  
   getAllInfo = () => {
-    const { getBasicInfo, getExerciseGroups } = this;
-
+    const {getBasicInfo, getExerciseGroups} = this;
+    
     let exercise_group_ids = [];
     // workout_exercise_group_mapping_ids = [];
     const exerciseMappings = getExerciseGroups() || [];
@@ -64,16 +64,16 @@ class WorkoutWrapper extends BaseWorkout {
       // workout_exercise_group_mapping_ids,
     };
   };
-
+  
   getReferenceInfo = async () => {
-    const { getId, getAllInfo, getExerciseGroups } = this;
-
+    const {getId, getAllInfo, getExerciseGroups} = this;
+    
     // let allWorkoutExerciseGroupMappings = {},
     let allExerciseGroups = {},
       allExerciseDetails = {},
       allExercises = {},
       allRepetitions = {};
-
+    
     const exerciseMappings = getExerciseGroups() || [];
     if (exerciseMappings.length > 0) {
       // add exercise mapping ids | exercise group ids here
@@ -88,18 +88,18 @@ class WorkoutWrapper extends BaseWorkout {
           exercises,
           repetitions,
         } = await exerciseGroup.getReferenceInfo();
-
-        allExerciseGroups = { ...allExerciseGroups, ...exercise_groups };
-        allExerciseDetails = { ...allExerciseDetails, ...exercise_details };
-        allExercises = { ...allExercises, ...exercises };
-        allRepetitions = { ...allRepetitions, ...repetitions };
+        
+        allExerciseGroups = {...allExerciseGroups, ...exercise_groups};
+        allExerciseDetails = {...allExerciseDetails, ...exercise_details};
+        allExercises = {...allExercises, ...exercises};
+        allRepetitions = {...allRepetitions, ...repetitions};
         // allWorkoutExerciseGroupMappings = {
         //   ...allWorkoutExerciseGroupMappings,
         //   ...workout_exercise_group_mappings,
         // };
       }
     }
-
+    
     return {
       workouts: {
         [getId()]: getAllInfo(),
@@ -113,11 +113,11 @@ class WorkoutWrapper extends BaseWorkout {
   };
 }
 
-export default async ({ data = null, id = null }) => {
+export default async ({data = null, id = null}) => {
   if (data) {
     return new WorkoutWrapper(data);
   }
   const workoutService = new WorkoutService();
-  const workout = await workoutService.findOne({ id });
+  const workout = await workoutService.findOne({id});
   return new WorkoutWrapper(workout);
 };

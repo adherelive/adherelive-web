@@ -10,7 +10,7 @@ class Scheduler {
       const checkTime = currentDateTime.getTime() + timeGap;
       const checkDateTime = new Date(checkTime);
       const schedules = await schedulerModule.find({
-        status: { $in: ["pending"] },
+        status: {$in: ["pending"]},
         startTime: {
           $gt: startTime,
           $lte: checkDateTime,
@@ -21,12 +21,12 @@ class Scheduler {
       throw error;
     }
   }
-
+  
   async fetchPassedJobs() {
     try {
       const currentDateTime = new Date();
       const schedules = await schedulerModule.find({
-        status: { $in: ["pending", "started"] },
+        status: {$in: ["pending", "started"]},
         endTime: {
           $lte: currentDateTime,
         },
@@ -36,10 +36,10 @@ class Scheduler {
       throw error;
     }
   }
-
-  async updateScheduledJob({ id, status, previousStatus, previousStartTime }) {
+  
+  async updateScheduledJob({id, status, previousStatus, previousStartTime}) {
     try {
-      let scheduleEventData = await schedulerModule.find({ _id: id });
+      let scheduleEventData = await schedulerModule.find({_id: id});
       console.log(
         "scheduleEventData==================>",
         scheduleEventData,
@@ -62,8 +62,8 @@ class Scheduler {
           }
         }
         let updatedJob = await schedulerModule.findOneAndUpdate(
-          { _id: id },
-          { status: status }
+          {_id: id},
+          {status: status}
         );
         return updatedJob;
       }
@@ -71,7 +71,7 @@ class Scheduler {
       throw error;
     }
   }
-
+  
   async addScheduledJob(data) {
     try {
     } catch (error) {

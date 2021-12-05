@@ -1,12 +1,13 @@
 import Database from "../../../libs/mysql";
-import { Op } from "sequelize";
-import { TABLE_NAME } from "../../models/similarFoodMapping";
+import {Op} from "sequelize";
+import {TABLE_NAME} from "../../models/similarFoodMapping";
 
 const DEFAULT_ORDER = [["created_at", "DESC"]];
 
 class SimilarFoodMappingService {
-  constructor() {}
-
+  constructor() {
+  }
+  
   getByData = async (data) => {
     try {
       const record = await Database.getModel(TABLE_NAME).findOne({
@@ -18,7 +19,7 @@ class SimilarFoodMappingService {
       throw error;
     }
   };
-
+  
   getAll = async () => {
     try {
       const records = await Database.getModel(TABLE_NAME).findAll({
@@ -29,8 +30,8 @@ class SimilarFoodMappingService {
       throw error;
     }
   };
-
-  findAndCountAll = async ({ where, order = DEFAULT_ORDER, attributes }) => {
+  
+  findAndCountAll = async ({where, order = DEFAULT_ORDER, attributes}) => {
     try {
       return await Database.getModel(TABLE_NAME).findAndCountAll({
         where,

@@ -1,6 +1,6 @@
 "use strict";
 
-import { TABLE_NAME } from "../app/models/medicines";
+import {TABLE_NAME} from "../app/models/medicines";
 
 module.exports = {
   up: (queryInterface, Sequelize) => {
@@ -9,7 +9,7 @@ module.exports = {
       defaultValue: true,
     });
   },
-
+  
   down: (queryInterface, Sequelize) => {
     return queryInterface.removeColumn(TABLE_NAME, "public_medicine");
   },

@@ -5,11 +5,11 @@ class TemplateMedicationWrapper extends BaseTemplateMedication {
   constructor(data) {
     super(data);
   }
-
+  
   getBasicInfo = () => {
-    const { _data } = this;
-    const { id, care_plan_template_id, medicine_id, schedule_data } =
-      _data || {};
+    const {_data} = this;
+    const {id, care_plan_template_id, medicine_id, schedule_data} =
+    _data || {};
     return {
       basic_info: {
         id,
@@ -26,6 +26,6 @@ export default async (data = null, id = null) => {
     return new TemplateMedicationWrapper(data);
   }
   const templateMedication =
-    await templateMedicationService.getSingleTemplateMedicationByData({ id });
+    await templateMedicationService.getSingleTemplateMedicationByData({id});
   return new TemplateMedicationWrapper(templateMedication.get());
 };

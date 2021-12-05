@@ -1,4 +1,4 @@
-import { TABLE_COLUMN } from "../helper";
+import {TABLE_COLUMN} from "../helper";
 
 export default (data) => {
   const {
@@ -9,7 +9,7 @@ export default (data) => {
     formatMessage,
     canViewDetails = false,
   } = data;
-
+  
   return {
     key: id,
     [TABLE_COLUMN.NAME.dataIndex]: {

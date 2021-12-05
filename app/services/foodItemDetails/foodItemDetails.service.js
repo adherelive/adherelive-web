@@ -1,11 +1,11 @@
-import { Op } from "sequelize";
+import {Op} from "sequelize";
 import Database from "../../../libs/mysql";
 
-import { TABLE_NAME } from "../../models/foodItemDetails";
-import { TABLE_NAME as portionTableName } from "../../models/portions";
-import { TABLE_NAME as foodItemTableName } from "../../models/foodItems";
+import {TABLE_NAME} from "../../models/foodItemDetails";
+import {TABLE_NAME as portionTableName} from "../../models/portions";
+import {TABLE_NAME as foodItemTableName} from "../../models/foodItems";
 
-import { USER_CATEGORY } from "../../../constant";
+import {USER_CATEGORY} from "../../../constant";
 
 const DEFAULT_ORDER = [["created_at", "DESC"]];
 
@@ -24,8 +24,8 @@ class FoodItemsService {
       throw error;
     }
   };
-
-  search = async ({ food_item_id, creator_id, creator_type }) => {
+  
+  search = async ({food_item_id, creator_id, creator_type}) => {
     try {
       return await Database.getModel(TABLE_NAME).findAll({
         where: {
@@ -47,7 +47,7 @@ class FoodItemsService {
       throw error;
     }
   };
-
+  
   getByData = async (data) => {
     try {
       return await Database.getModel(TABLE_NAME).findOne({
@@ -59,7 +59,7 @@ class FoodItemsService {
       throw error;
     }
   };
-
+  
   findOne = async (data) => {
     try {
       const records = await Database.getModel(TABLE_NAME).findOne({
@@ -69,7 +69,7 @@ class FoodItemsService {
           Database.getModel(portionTableName),
         ],
       });
-
+      
       /* nested raw true is not allowed by sequelize
                     Links:
                     https://github.com/sequelize/sequelize/issues/3897 (closed)
@@ -80,7 +80,7 @@ class FoodItemsService {
       throw error;
     }
   };
-
+  
   update = async (data, id) => {
     const transaction = await Database.initTransaction();
     try {
@@ -98,8 +98,8 @@ class FoodItemsService {
       throw error;
     }
   };
-
-  findAndCountAll = async ({ where, order = DEFAULT_ORDER, attributes }) => {
+  
+  findAndCountAll = async ({where, order = DEFAULT_ORDER, attributes}) => {
     try {
       return await Database.getModel(TABLE_NAME).findAndCountAll({
         where,

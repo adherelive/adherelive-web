@@ -1,6 +1,6 @@
 "use strict";
-import { DataTypes } from "sequelize";
-import { CONSENTS } from "./consents";
+import {DataTypes} from "sequelize";
+import {CONSENTS} from "./consents";
 
 export const CLINICS = "clinics";
 
@@ -55,8 +55,8 @@ export const db = (database) => {
 };
 
 export const associate = (database) => {
-  const { clinics, consents } = database.models || {};
-
+  const {clinics, consents} = database.models || {};
+  
   // associations here (if any) ...
   // clinics.hasOne(consents, {
   //     foreignKey: "consent_id",

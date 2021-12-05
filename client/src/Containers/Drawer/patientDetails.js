@@ -1,20 +1,20 @@
-import { connect } from "react-redux";
-import { withRouter } from "react-router-dom";
+import {connect} from "react-redux";
+import {withRouter} from "react-router-dom";
 import PatientDetailsDrawer from "../../Components/Drawer/PatientDetails";
-import { DRAWER } from "../../constant";
-import { close } from "../../modules/drawer";
-import { getMedications } from "../../modules/medications";
-import { setPatientForChat, setCareplanForChat } from "../../modules/twilio";
-import { openPopUp } from "../../modules/chat";
+import {DRAWER} from "../../constant";
+import {close} from "../../modules/drawer";
+import {getMedications} from "../../modules/medications";
+import {setPatientForChat, setCareplanForChat} from "../../modules/twilio";
+import {openPopUp} from "../../modules/chat";
 import {
   getAppointments,
   getAppointmentsDetails,
 } from "../../modules/appointments";
-import { getPatientMissedEvents } from "../../modules/patients";
+import {getPatientMissedEvents} from "../../modules/patients";
 
 const mapStateToProps = (state) => {
   const {
-    drawer: { visible, data: { type, payload = {} } = {} },
+    drawer: {visible, data: {type, payload = {}} = {}},
     patients,
     doctors,
     providers,

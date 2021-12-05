@@ -1,11 +1,11 @@
-import React, { Component, Fragment } from "react";
-import { injectIntl } from "react-intl";
+import React, {Component, Fragment} from "react";
+import {injectIntl} from "react-intl";
 
 // antd models
 import InputNumber from "antd/es/input-number";
 import Form from "antd/es/form";
 
-const { Item: FormItem } = Form;
+const {Item: FormItem} = Form;
 
 const FIELD_NAME = "strength";
 const MAXIMUM_LENGTH = 10000;
@@ -13,31 +13,31 @@ const MAXIMUM_LENGTH = 10000;
 class MedicationStrength extends Component {
   componentDidMount() {
     const {
-      form: { validateFields },
+      form: {validateFields},
     } = this.props;
     validateFields();
   }
-
+  
   componentWillUnmount() {
     const {
-      form: { validateFields },
+      form: {validateFields},
     } = this.props;
     validateFields();
   }
-
+  
   getParentNode = (t) => t.parentNode;
-
+  
   getInitialValue = () => {
-    const { purpose, event: { data = {} } = {} } = this.props;
+    const {purpose, event: {data = {}} = {}} = this.props;
     let initialValue;
     if (purpose) {
       initialValue = data[FIELD_NAME];
     }
     return initialValue;
   };
-
+  
   render() {
-    const { form } = this.props;
+    const {form} = this.props;
     const {
       getFieldDecorator,
       getFieldError,
@@ -45,11 +45,11 @@ class MedicationStrength extends Component {
       medication,
       getFieldValue,
     } = form;
-
+    
     const error = isFieldTouched(FIELD_NAME) && getFieldError(FIELD_NAME);
-
-    const { getInitialValue } = this;
-
+    
+    const {getInitialValue} = this;
+    
     return (
       <Fragment>
         <FormItem
@@ -70,7 +70,7 @@ class MedicationStrength extends Component {
               },
             ],
             initialValue: getInitialValue(),
-          })(<InputNumber min={1} style={{ width: "100%" }} />)}
+          })(<InputNumber min={1} style={{width: "100%"}}/>)}
         </FormItem>
       </Fragment>
     );

@@ -1,8 +1,8 @@
 "use strict";
-import { DataTypes } from "sequelize";
-import { TABLE_NAME as UserCategoryPermissionTableName } from "./userCategoryPermissions";
-import { TABLE_NAME as providerTableName } from "./providers";
-import { USER_CATEGORY, SIGN_IN_CATEGORY } from "../../constant";
+import {DataTypes} from "sequelize";
+import {TABLE_NAME as UserCategoryPermissionTableName} from "./userCategoryPermissions";
+import {TABLE_NAME as providerTableName} from "./providers";
+import {USER_CATEGORY, SIGN_IN_CATEGORY} from "../../constant";
 
 export const TABLE_NAME = "users";
 
@@ -89,7 +89,7 @@ export const db = (database) => {
       //   type: DataTypes.BOOLEAN,
       //   defaultValue: false
       // },
-
+      
       has_consent: {
         type: DataTypes.BOOLEAN,
         defaultValue: false,
@@ -134,34 +134,34 @@ export const associate = (database) => {
     user_devices,
     account_details,
   } = database.models || {};
-
+  
   // associations here (if any) ...
   users.hasOne(doctors, {
     sourceKey: "id",
     foreignKey: "user_id",
   });
-
+  
   users.hasOne(patients, {
     sourceKey: "id",
     foreignKey: "user_id",
   });
-
+  
   database.models[TABLE_NAME].hasOne(database.models[providerTableName], {
     sourceKey: "id",
     foreignKey: "user_id",
   });
-
+  
   users.belongsToMany(permissions, {
     through: UserCategoryPermissionTableName,
     sourceKey: "category",
     foreignKey: "category",
   });
-
+  
   users.hasMany(user_devices, {
     sourceKey: "id",
     foreignKey: "user_id",
   });
-
+  
   users.hasMany(account_details, {
     sourceKey: "id",
     foreignKey: "user_id",

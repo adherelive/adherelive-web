@@ -1,7 +1,7 @@
 "use strict";
-import { DataTypes } from "sequelize";
-import { TABLE_NAME as patientTableName } from "./patients";
-import { TABLE_NAME as carePlanTableName } from "./carePlan";
+import {DataTypes} from "sequelize";
+import {TABLE_NAME as patientTableName} from "./patients";
+import {TABLE_NAME as carePlanTableName} from "./carePlan";
 
 export const TABLE_NAME = "symptoms";
 
@@ -55,14 +55,14 @@ export const db = (database) => {
 };
 
 export const associate = (database) => {
-  const { symptoms, patients, care_plans } = database.models || {};
-
+  const {symptoms, patients, care_plans} = database.models || {};
+  
   // associations here (if any) ...
   symptoms.hasOne(patients, {
     foreignKey: "id",
     sourceKey: "patient_id",
   });
-
+  
   symptoms.hasOne(care_plans, {
     foreignKey: "id",
     sourceKey: "care_plan_id",

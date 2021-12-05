@@ -5,10 +5,10 @@ class VitalTemplateWrapper extends BaseVitalTemplates {
   constructor(data) {
     super(data);
   }
-
+  
   getBasicInfo = () => {
-    const { _data } = this;
-    const { name, id, unit, details } = _data || {};
+    const {_data} = this;
+    const {name, id, unit, details} = _data || {};
     return {
       basic_info: {
         id,
@@ -20,10 +20,10 @@ class VitalTemplateWrapper extends BaseVitalTemplates {
   };
 }
 
-export default async ({ data = null, id = null }) => {
+export default async ({data = null, id = null}) => {
   if (data) {
     return new VitalTemplateWrapper(data);
   }
-  const vitalTemplate = await VitalTemplateService.getByData({ id });
+  const vitalTemplate = await VitalTemplateService.getByData({id});
   return new VitalTemplateWrapper(vitalTemplate);
 };

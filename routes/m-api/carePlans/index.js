@@ -6,7 +6,7 @@ import CarePlanController from "../../../app/controllers/mControllers/carePlans/
 // var storage = multer.memoryStorage();
 // var upload = multer({ dest: "../app/public/", storage: storage });
 import * as validator from "./validator";
-import { USER_CATEGORY } from "../../../constant";
+import {USER_CATEGORY} from "../../../constant";
 import isAllowed from "../../middlewares/permissions";
 import PERMISSIONS from "../../../config/permissions";
 

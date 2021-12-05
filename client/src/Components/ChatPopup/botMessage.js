@@ -1,4 +1,4 @@
-import React, { Component, Fragment } from "react";
+import React, {Component, Fragment} from "react";
 import {
   USER_ADHERE_BOT,
   CHAT_MESSAGE_TYPE,
@@ -12,18 +12,18 @@ import {
   BODY_SIDE,
 } from "../../constant";
 import messages from "./messages";
-import { injectIntl } from "react-intl";
+import {injectIntl} from "react-intl";
 import SymptomBotMessage from "./symptomBotMessage";
 import VitalBotMessage from "./vitalBotMessages";
-import { Form, Input, Button, Spin, Avatar, Upload, Modal } from "antd";
+import {Form, Input, Button, Spin, Avatar, Upload, Modal} from "antd";
 import moment from "moment";
-import { isJSON } from "../../Helper/common";
+import {isJSON} from "../../Helper/common";
 
 class botMessage extends Component {
   constructor(props) {
     super(props);
   }
-
+  
   getBotMessage = () => {
     const {
       body: this_body,
@@ -31,12 +31,12 @@ class botMessage extends Component {
       patientDp,
       vital_repeat_intervals,
     } = this.props;
-
+    
     if (!isJSON(this_body)) {
       return null;
     }
     const body = JSON.parse(this_body);
-    const { type } = body;
+    const {type} = body;
     if (type === CHAT_MESSAGE_TYPE.SYMPTOM) {
       return <SymptomBotMessage {...this.props} />;
     } else if (type === CHAT_MESSAGE_TYPE.VITAL) {
@@ -57,7 +57,7 @@ class botMessage extends Component {
             ) : (
               <div className="chat-text ">{message.state.body}</div>
             )}
-
+            
             <div className="chat-time start">
               {moment(message.state.timestamp).format("H:mm")}
             </div>
@@ -66,7 +66,7 @@ class botMessage extends Component {
       );
     }
   };
-
+  
   render() {
     const mess = this.getBotMessage();
     return (

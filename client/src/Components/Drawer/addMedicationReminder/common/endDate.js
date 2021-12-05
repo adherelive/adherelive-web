@@ -1,6 +1,6 @@
-import React, { Component } from "react";
-import { injectIntl } from "react-intl";
-import { DatePicker, Form } from "antd";
+import React, {Component} from "react";
+import {injectIntl} from "react-intl";
+import {DatePicker, Form} from "antd";
 import moment from "moment";
 
 import messages from "../message";
@@ -9,17 +9,17 @@ import repeatIntervalField from "./repeatInterval";
 import repeatField from "./repeatType";
 import startDateField from "./startDate";
 
-import { REPEAT_TYPE } from "../../../../constant";
-import { isNumber } from "../../../../Helper/validation";
+import {REPEAT_TYPE} from "../../../../constant";
+import {isNumber} from "../../../../Helper/validation";
 
 const FIELD_NAME = "end_date";
-const { Item: FormItem } = Form;
+const {Item: FormItem} = Form;
 
 class EndDate extends Component {
   openCalendar = (e) => {
     e.preventDefault();
     const datePicker = window.document.getElementsByClassName(FIELD_NAME)[0];
-
+    
     if (datePicker) {
       const firstChild = datePicker.firstChild;
       if (firstChild) {
@@ -30,22 +30,22 @@ class EndDate extends Component {
       }
     }
   };
-
+  
   getParentNode = (t) => t.parentNode;
-
+  
   formatMessage = (data) => this.props.intl.formatMessage(data);
-
+  
   getNewEndDate = () => {
     const {
-      form: { getFieldValue },
+      form: {getFieldValue},
     } = this.props;
-
+    
     const repeat = getFieldValue(repeatField.field_name);
     const repeatInterval = getFieldValue(repeatIntervalField.field_name);
     const startDate = getFieldValue(startDateField.field_name);
-
+    
     let newEndDate;
-
+    
     const startDateCopy = startDate.clone().startOf("day");
     const res = isNumber(repeatInterval);
     if (repeat === REPEAT_TYPE.DAILY || res.valid === true) {
@@ -70,39 +70,39 @@ class EndDate extends Component {
           break;
       }
     }
-
+    
     return newEndDate;
   };
-
+  
   getInitialValue = () => {
-    const { purpose, event = {}, events = {} } = this.props;
-
+    const {purpose, event = {}, events = {}} = this.props;
+    
     let initialValue = this.getNewEndDate();
     if (purpose) {
-      const { eventId } = event;
-      const { endDate } = events[eventId] || {};
+      const {eventId} = event;
+      const {endDate} = events[eventId] || {};
       const actualEndDate = new moment(endDate);
       initialValue =
         actualEndDate < initialValue ? initialValue : actualEndDate;
     }
     return initialValue;
   };
-
+  
   calendarComp = () => {
     return (
       <div className="flex justify-center align-center">
-        <img src={calendar} alt="calender icon" className="w20" />
+        <img src={calendar} alt="calender icon" className="w20"/>
       </div>
     );
   };
-
+  
   render() {
     const {
-      form: { getFieldDecorator, getFieldError },
+      form: {getFieldDecorator, getFieldError},
       disabledEndDate,
     } = this.props;
-    const { formatMessage, openCalendar, getInitialValue, calendarComp } = this;
-
+    const {formatMessage, openCalendar, getInitialValue, calendarComp} = this;
+    
     return (
       <div className="flex flex-grow-1 row align-items-center">
         <div className="wp100">
@@ -124,7 +124,7 @@ class EndDate extends Component {
                 // allowClear={false}
                 disabledDate={disabledEndDate}
                 getCalendarContainer={this.getParentNode}
-                popupStyle={{ left: 0 }}
+                popupStyle={{left: 0}}
               />
             )}
             {/*<img*/}
@@ -137,7 +137,7 @@ class EndDate extends Component {
         </div>
       </div>
     );
-
+    
     // return (
     //   <div className="flex align-center">
     //     <div className="pl8 wp100">

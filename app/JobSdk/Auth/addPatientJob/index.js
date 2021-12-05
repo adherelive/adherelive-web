@@ -1,15 +1,15 @@
 import AuthJob from "../";
-import { EMAIL_TEMPLATE_NAME } from "../../../../constant";
+import {EMAIL_TEMPLATE_NAME} from "../../../../constant";
 
 class AddPatientJob extends AuthJob {
   constructor(data) {
     super(data);
   }
-
+  
   getEmailTemplate = () => {
-    const { getData } = this;
-    const { details: { universalLink } = {} } = getData() || {};
-
+    const {getData} = this;
+    const {details: {universalLink} = {}} = getData() || {};
+    
     const templateData = [
       {
         title: "Mobile Patient Verification mail",
@@ -27,22 +27,22 @@ class AddPatientJob extends AuthJob {
         },
       },
     ];
-
+    
     return templateData;
   };
-
+  
   getSmsTemplate = () => {
-    const { getData } = this;
-    const { details: { prefix, phoneNumber, universalLink } = {} } =
-      getData() || {};
-
+    const {getData} = this;
+    const {details: {prefix, phoneNumber, universalLink} = {}} =
+    getData() || {};
+    
     const templateData = [
       {
         phoneNumber: `+${prefix}${phoneNumber}`,
         message: `Hello from AdhereLive! Please click the link to verify your number. ${universalLink}`,
       },
     ];
-
+    
     return templateData;
   };
 }

@@ -1,8 +1,8 @@
 "use strict";
 
-import { DataTypes } from "sequelize";
-import { TABLE_NAME as userRoleTableName } from "./userRoles";
-import { TABLE_NAME as careplanTableName } from "./carePlan";
+import {DataTypes} from "sequelize";
+import {TABLE_NAME as userRoleTableName} from "./userRoles";
+import {TABLE_NAME as careplanTableName} from "./carePlan";
 
 export const TABLE_NAME = "careplan_secondary_doctor_mappings";
 
@@ -54,15 +54,15 @@ export const db = (database) => {
 };
 
 export const associate = (database) => {
-  const { careplan_secondary_doctor_mappings, care_plans, user_roles } =
-    database.models || {};
-
+  const {careplan_secondary_doctor_mappings, care_plans, user_roles} =
+  database.models || {};
+  
   // associations here (if any) ...
   careplan_secondary_doctor_mappings.belongsTo(care_plans, {
     foreignKey: "care_plan_id",
     targetKey: "id",
   });
-
+  
   careplan_secondary_doctor_mappings.belongsTo(user_roles, {
     foreignKey: "secondary_doctor_role_id",
     targetKey: "id",

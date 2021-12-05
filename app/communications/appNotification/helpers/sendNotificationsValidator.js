@@ -1,4 +1,4 @@
-const { isEmpty } = require("lodash");
+const {isEmpty} = require("lodash");
 const eventServices = require("../../../services/event/event.service");
 const userServices = require("../../../services/user/user.service");
 const NOTIFIER = require("./notify");
@@ -42,31 +42,31 @@ class SendNotificationValidator {
       throw new Error("invalid notification type!!");
     }
   }
-
+  
   action(actionName) {
     this.actionType = actionName;
     return this;
   }
-
+  
   async sendNotification(validData) {
     console.log("validData===========>", this.actionType);
-
+    
     return result;
   }
-
+  
   async isValidReminderData() {
     try {
     } catch (err) {
       throw err;
     }
   }
-
+  
   async isValidAppointementData(validData) {
     try {
       switch (this.actionType) {
         case actionList.CREATE:
           return await this.sendNotification(validData);
-
+        
         case actionList.RESCHEDULE:
           return await this.sendNotification(validData);
           break;
@@ -76,7 +76,7 @@ class SendNotificationValidator {
         case actionList.START:
           this.sendNotification(validData);
           break;
-
+        
         default:
           break;
       }
@@ -84,25 +84,32 @@ class SendNotificationValidator {
       throw err;
     }
   }
-
-  async isValidArticleData() {}
-
-  async isValidSurveyData() {}
-
-  async isValidPatientDischargeData() {}
-
-  async isValidAdverseEventData() {}
-
-  async isValidVitalsData() {}
-
-  async isValidPrescriptionData() {}
-
-  async isValidProgramData() {}
-
+  
+  async isValidArticleData() {
+  }
+  
+  async isValidSurveyData() {
+  }
+  
+  async isValidPatientDischargeData() {
+  }
+  
+  async isValidAdverseEventData() {
+  }
+  
+  async isValidVitalsData() {
+  }
+  
+  async isValidPrescriptionData() {
+  }
+  
+  async isValidProgramData() {
+  }
+  
   async shouldSendNotificationTo(validData) {
     if (isEmpty(this.notificationType))
       throw new Error("invalid or undefined notification type");
-
+    
     switch (this.notificationType) {
       case APPOINTMENT:
         return await this.isValidAppointementData(validData);

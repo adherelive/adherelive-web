@@ -1,6 +1,6 @@
 import BasePatient from "../../../services/patients";
 import patientService from "../../../services/patients/patients.service";
-import { completePath } from "../../../helper/filePath";
+import {completePath} from "../../../helper/filePath";
 
 import UserWrapper from "../user";
 import userRoleWrapper from "../userRoles";
@@ -12,9 +12,9 @@ class MPatientWrapper extends BasePatient {
   constructor(data) {
     super(data);
   }
-
+  
   getBasicInfo = () => {
-    const { _data } = this;
+    const {_data} = this;
     const {
       id,
       user_id,
@@ -34,13 +34,13 @@ class MPatientWrapper extends BasePatient {
       payment_terms_accepted,
       createdAt: created_at,
     } = _data || {};
-    const { profile_pic } = details || {};
-
+    const {profile_pic} = details || {};
+    
     const updatedDetails = {
       ...details,
       profile_pic: profile_pic ? completePath(profile_pic) : null,
     };
-
+    
     return {
       basic_info: {
         id,
@@ -63,40 +63,40 @@ class MPatientWrapper extends BasePatient {
       created_at,
     };
   };
-
+  
   getAllInfo = async () => {
-    const { _data, getBasicInfo, getPatientId } = this;
-
+    const {_data, getBasicInfo, getPatientId} = this;
+    
     const order = [["created_at", "DESC"]];
-    const data = { patient_id: getPatientId() };
+    const data = {patient_id: getPatientId()};
     console.log(data);
     let carePlan = await carePlanService.getSingleCarePlanByData(data, order);
     console.log("we are at mobile wrapper.");
     console.log(carePlan);
     let carePlanId = null;
     if (carePlan != null) carePlanId = carePlan.get("id") || null;
-
-    const { user_id = null } = _data || {};
+    
+    const {user_id = null} = _data || {};
     let user_role_id = null;
     const userRole = await userRolesService.getFirstUserRole(user_id);
     if (userRole) {
       const userRoleData = await userRoleWrapper(userRole);
       user_role_id = userRoleData.getId();
     }
-
+    
     return {
       ...getBasicInfo(),
       care_plan_id: carePlanId,
       user_role_id,
     };
   };
-
+  
   getReferenceInfo = async () => {
-    const { _data, getBasicInfo, getPatientId } = this;
-    const { user } = _data || {};
-
+    const {_data, getBasicInfo, getPatientId} = this;
+    const {user} = _data || {};
+    
     const users = await UserWrapper(user.get());
-
+    
     return {
       patients: {
         [getPatientId()]: getBasicInfo(),
@@ -112,6 +112,6 @@ export default async (data = null, id = null) => {
   if (data) {
     return new MPatientWrapper(data);
   }
-  const patient = await patientService.getPatientById({ id });
+  const patient = await patientService.getPatientById({id});
   return new MPatientWrapper(patient);
 };

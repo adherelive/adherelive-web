@@ -1,4 +1,4 @@
-import { default as hasPermissions } from "./permissions";
+import {default as hasPermissions} from "./permissions";
 
 export default {
   hasPermissions,

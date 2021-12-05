@@ -1,4 +1,4 @@
-import { defineMessages } from "react-intl";
+import {defineMessages} from "react-intl";
 
 const messages = defineMessages({
   imageTypeError: {
@@ -116,7 +116,7 @@ const messages = defineMessages({
     description: "",
     defaultMessage: "Back",
   },
-
+  
   speciality: {
     id: "app.doctorOnBoarding.speciality",
     description: "",

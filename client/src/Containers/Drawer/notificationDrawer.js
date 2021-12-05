@@ -1,15 +1,15 @@
-import { connect } from "react-redux";
-import { withRouter } from "react-router-dom";
+import {connect} from "react-redux";
+import {withRouter} from "react-router-dom";
 import NotificationDrawer from "../../Components/Drawer/notification";
-import { close } from "../../modules/drawer";
-import { DRAWER } from "../../constant";
-import { getNotification } from "../../modules/notifications";
-import { doNotificationRedirect } from "../../modules/notificationRedirect";
-import { setUnseenNotificationCount } from "../../modules/pages/NotificationCount";
+import {close} from "../../modules/drawer";
+import {DRAWER} from "../../constant";
+import {getNotification} from "../../modules/notifications";
+import {doNotificationRedirect} from "../../modules/notificationRedirect";
+import {setUnseenNotificationCount} from "../../modules/pages/NotificationCount";
 
 const mapStateToProps = (state) => {
   const {
-    drawer: { visible, loading, data: { type, payload = {} } = {} },
+    drawer: {visible, loading, data: {type, payload = {}} = {}},
     patients,
     treatments,
     care_plans,

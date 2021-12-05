@@ -1,7 +1,7 @@
 "use strict";
 
-import { TABLE_NAME } from "../app/models/scheduleEvents";
-import { EVENT_STATUS } from "../constant";
+import {TABLE_NAME} from "../app/models/scheduleEvents";
+import {EVENT_STATUS} from "../constant";
 
 module.exports = {
   up: (queryInterface, Sequelize) => {
@@ -22,7 +22,7 @@ module.exports = {
       }),
     ]);
   },
-
+  
   down: (queryInterface, Sequelize) => {
     return Promise.all([queryInterface.changeColumn(TABLE_NAME, "status")]);
   },

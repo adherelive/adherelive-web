@@ -1,12 +1,12 @@
-import { connect } from "react-redux";
-import { withRouter } from "react-router-dom";
-import { getLastVisitAlerts } from "../../../../modules/scheduleEvents";
+import {connect} from "react-redux";
+import {withRouter} from "react-router-dom";
+import {getLastVisitAlerts} from "../../../../modules/scheduleEvents";
 import PatientAlerts from "../../../../Components/Patient/details/common/patientAlerts";
 
 const mapStateToProps = (state) => {
-  const { schedule_events, symptoms } = state || {};
-
-  return { schedule_events, symptoms };
+  const {schedule_events, symptoms} = state || {};
+  
+  return {schedule_events, symptoms};
 };
 
 const mapDispatchToProps = (dispatch) => {
@@ -16,12 +16,12 @@ const mapDispatchToProps = (dispatch) => {
 };
 
 const mergeProps = (stateProps, dispatchProps, ownProps) => {
-  const { schedule_events, symptoms } = stateProps;
-
-  const { getLastVisitAlerts } = dispatchProps;
-
-  const { patientId } = ownProps;
-
+  const {schedule_events, symptoms} = stateProps;
+  
+  const {getLastVisitAlerts} = dispatchProps;
+  
+  const {patientId} = ownProps;
+  
   return {
     schedule_events,
     symptoms,

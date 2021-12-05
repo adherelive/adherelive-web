@@ -1,5 +1,5 @@
-import { doRequest } from "../../Helper/network";
-import { REQUEST_TYPE } from "../../constant";
+import {doRequest} from "../../Helper/network";
+import {REQUEST_TYPE} from "../../constant";
 
 import {
   getPatientsPaginatedUrl,
@@ -25,18 +25,18 @@ export const GET_SEARCH_DIAGNOSIS_PATIENTS_FAILED =
   "GET_SEARCH_DIAGNOSIS_PATIENTS_FAILED";
 
 export const getPatientsPaginated = ({
-  sort_createdAt,
-  sort_name,
-  filter_diagnosis,
-  filter_treatment,
-  offset,
-  watchlist = 0,
-}) => {
+                                       sort_createdAt,
+                                       sort_name,
+                                       filter_diagnosis,
+                                       filter_treatment,
+                                       offset,
+                                       watchlist = 0,
+                                     }) => {
   let response = {};
   return async (dispatch) => {
     try {
-      dispatch({ type: GET_PATIENT_PAGINATED });
-
+      dispatch({type: GET_PATIENT_PAGINATED});
+      
       response = await doRequest({
         method: REQUEST_TYPE.GET,
         url: getPatientsPaginatedUrl({
@@ -48,9 +48,9 @@ export const getPatientsPaginated = ({
           watchlist,
         }),
       });
-
-      let { status, payload: { data = {} } = {} } = response || {};
-
+      
+      let {status, payload: {data = {}} = {}} = response || {};
+      
       if (status === true) {
         data["watchlist"] = watchlist.toString();
         data["offset"] = offset.toString();
@@ -67,21 +67,21 @@ export const getPatientsPaginated = ({
       console.log("GET_PATIENT_PAGINATED err ======>>>>>", err);
       throw err;
     }
-
+    
     return response;
   };
 };
 
 export const searchTreatmentPaginatedPatients = ({
-  filter_treatment,
-  offset,
-  watchlist = 0,
-}) => {
+                                                   filter_treatment,
+                                                   offset,
+                                                   watchlist = 0,
+                                                 }) => {
   let response = {};
   return async (dispatch) => {
     try {
-      dispatch({ type: GET_SEARCH_TREATMENT_PATIENTS });
-
+      dispatch({type: GET_SEARCH_TREATMENT_PATIENTS});
+      
       response = await doRequest({
         method: REQUEST_TYPE.GET,
         url: getSearchTreatmentPaginatedPatientsUrl({
@@ -90,9 +90,9 @@ export const searchTreatmentPaginatedPatients = ({
           watchlist,
         }),
       });
-
-      let { status, payload: { data = {} } = {} } = response || {};
-
+      
+      let {status, payload: {data = {}} = {}} = response || {};
+      
       if (status === true) {
         data["watchlist"] = watchlist.toString();
         data["offset"] = offset.toString();
@@ -110,21 +110,21 @@ export const searchTreatmentPaginatedPatients = ({
       console.log("GET_SEARCH_TREATMENT_PATIENTS err ======>>>>>", err);
       throw err;
     }
-
+    
     return response;
   };
 };
 
 export const searchDiagnosisPaginatedPatients = ({
-  filter_diagnosis,
-  offset,
-  watchlist = 0,
-}) => {
+                                                   filter_diagnosis,
+                                                   offset,
+                                                   watchlist = 0,
+                                                 }) => {
   let response = {};
   return async (dispatch) => {
     try {
-      dispatch({ type: GET_SEARCH_DIAGNOSIS_PATIENTS });
-
+      dispatch({type: GET_SEARCH_DIAGNOSIS_PATIENTS});
+      
       response = await doRequest({
         method: REQUEST_TYPE.GET,
         url: getSearchDiagnosisPaginatedPatientsUrl({
@@ -133,9 +133,9 @@ export const searchDiagnosisPaginatedPatients = ({
           watchlist,
         }),
       });
-
-      let { status, payload: { data = {} } = {} } = response || {};
-
+      
+      let {status, payload: {data = {}} = {}} = response || {};
+      
       if (status === true) {
         data["watchlist"] = watchlist.toString();
         data["offset"] = offset.toString();
@@ -153,13 +153,13 @@ export const searchDiagnosisPaginatedPatients = ({
       console.log("GET_SEARCH_DIAGNOSIS_PATIENTS err ======>>>>>", err);
       throw err;
     }
-
+    
     return response;
   };
 };
 
 function paginatedPatientReducer(state, data) {
-  const { paginated_patients_data } = data || {};
+  const {paginated_patients_data} = data || {};
   if (paginated_patients_data) {
     return {
       ...state,
@@ -171,7 +171,7 @@ function paginatedPatientReducer(state, data) {
 }
 
 export default (state = {}, action) => {
-  const { type, data } = action;
+  const {type, data} = action;
   switch (type) {
     default:
       return paginatedPatientReducer(state, data);

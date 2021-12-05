@@ -64,7 +64,7 @@ const notificationMessages = {
     Answered: (data) => {
       return `Patient ${data.name} has responded to survey ${data.title}`;
     },
-
+    
     Complete: (data) => {
       return `Survey ${data.title} has been completed`;
     },

@@ -1,8 +1,8 @@
 "use strict";
 
-import { TABLE_NAME } from "../app/models/doctorRegistrations";
-import { TABLE_NAME as doctorTableName } from "../app/models/doctors";
-import { TABLE_NAME as registrationCouncilTableName } from "../app/models/registrationCouncil";
+import {TABLE_NAME} from "../app/models/doctorRegistrations";
+import {TABLE_NAME as doctorTableName} from "../app/models/doctors";
+import {TABLE_NAME as registrationCouncilTableName} from "../app/models/registrationCouncil";
 
 module.exports = {
   up: (queryInterface, Sequelize) => {
@@ -59,7 +59,7 @@ module.exports = {
       },
     });
   },
-
+  
   down: (queryInterface, Sequelize) => {
     return queryInterface.dropTable(TABLE_NAME);
   },

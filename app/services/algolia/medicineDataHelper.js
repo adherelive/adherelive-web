@@ -14,15 +14,15 @@ export const getMedicineData = async () => {
             rej(error);
           }
           let updatedMedicine = [];
-
+          
           const medicine = JSON.parse(data.toString());
-
+          
           for (let i = 0; i < medicine.length; i++) {
-            const { medicine_short_name = "", category = "" } =
-              medicine[i] || {};
-
+            const {medicine_short_name = "", category = ""} =
+            medicine[i] || {};
+            
             // for (const indiaName of updatedIndiaName) {
-            const details = { ...medicine[i] };
+            const details = {...medicine[i]};
             updatedMedicine.push({
               name: medicine_short_name,
               type: category.toLowerCase(),
@@ -32,7 +32,7 @@ export const getMedicineData = async () => {
               updated_at: new Date(),
             });
             // }
-
+            
             // if (!updatedIndiaName.length && !internationalNameList.length) {
             //   const details = {...medicine[i], india_name: [...updatedIndiaName]};
             //   updatedMedicine.push({
@@ -45,7 +45,7 @@ export const getMedicineData = async () => {
             //   });
             // }
           }
-
+          
           res(updatedMedicine);
         }
       );
@@ -56,9 +56,9 @@ export const getMedicineData = async () => {
           rej(error);
         }
         let updatedMedicine = [];
-
+        
         const medicine = JSON.parse(data.toString());
-
+        
         for (let i = 0; i < medicine.length; i++) {
           const {
             generic_name,
@@ -76,9 +76,9 @@ export const getMedicineData = async () => {
             const moreElement = updatedIndiaName.indexOf("More...");
             updatedIndiaName.splice(moreElement, 1);
           }
-
+          
           for (const indiaName of updatedIndiaName) {
-            const details = { ...medicine[i], india_name: updatedIndiaName };
+            const details = {...medicine[i], india_name: updatedIndiaName};
             updatedMedicine.push({
               name: indiaName,
               type: "tablet",
@@ -88,9 +88,9 @@ export const getMedicineData = async () => {
               updated_at: new Date(),
             });
           }
-
+          
           for (const internationalName of internationalNameList) {
-            const details = { ...medicine[i], india_name: updatedIndiaName };
+            const details = {...medicine[i], india_name: updatedIndiaName};
             updatedMedicine.push({
               name: internationalName.trim(),
               type: "tablet",
@@ -100,7 +100,7 @@ export const getMedicineData = async () => {
               updated_at: new Date(),
             });
           }
-
+          
           if (!updatedIndiaName.length && !internationalNameList.length) {
             const details = {
               ...medicine[i],
@@ -116,7 +116,7 @@ export const getMedicineData = async () => {
             });
           }
         }
-
+        
         res(updatedMedicine);
       });
     }

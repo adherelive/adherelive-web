@@ -1,6 +1,6 @@
-import { Op } from "sequelize";
+import {Op} from "sequelize";
 import Database from "../../../libs/mysql";
-import { TABLE_NAME } from "../../models/course";
+import {TABLE_NAME} from "../../models/course";
 
 class CourseService {
   getAll = async () => {
@@ -11,7 +11,7 @@ class CourseService {
       throw error;
     }
   };
-
+  
   search = async (data) => {
     try {
       const course = await Database.getModel(TABLE_NAME).findAll({
@@ -26,7 +26,7 @@ class CourseService {
       throw error;
     }
   };
-
+  
   getByData = async (data) => {
     try {
       const course = await Database.getModel(TABLE_NAME).findOne({

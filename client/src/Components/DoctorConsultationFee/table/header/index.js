@@ -1,6 +1,6 @@
 import React from "react";
 
-import { TABLE_COLUMN } from "../helper";
+import {TABLE_COLUMN} from "../helper";
 import messages from "../messages";
 import Amount from "../datacolumn/amount";
 import Name from "../datacolumn/name";
@@ -9,8 +9,8 @@ import Delete from "../datacolumn/deleteButton";
 import Edit from "../datacolumn/edit";
 
 export default (props) => {
-  const { formatMessage } = props || {};
-
+  const {formatMessage} = props || {};
+  
   return [
     {
       // title: formatMessage(messages.pid),

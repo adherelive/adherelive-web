@@ -1,8 +1,8 @@
 "use strict";
-import { TABLE_NAME } from "../app/models/patientPaymentConsentMapping";
-import { TABLE_NAME as providerTermsMapping } from "../app/models/providerTermsMappings";
-import { TABLE_NAME as patientTableName } from "../app/models/patients";
-import { TABLE_NAME as doctorTableName } from "../app/models/doctors";
+import {TABLE_NAME} from "../app/models/patientPaymentConsentMapping";
+import {TABLE_NAME as providerTermsMapping} from "../app/models/providerTermsMappings";
+import {TABLE_NAME as patientTableName} from "../app/models/patients";
+import {TABLE_NAME as doctorTableName} from "../app/models/doctors";
 
 module.exports = {
   up: (queryInterface, Sequelize) => {
@@ -60,7 +60,7 @@ module.exports = {
       },
     });
   },
-
+  
   down: (queryInterface, Sequelize) => {
     return queryInterface.dropTable(TABLE_NAME);
   },

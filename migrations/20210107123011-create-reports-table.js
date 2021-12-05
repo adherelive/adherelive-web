@@ -1,8 +1,8 @@
 "use strict";
-import { DataTypes } from "sequelize";
-import { TABLE_NAME } from "../app/models/reports";
-import { TABLE_NAME as patientTableName } from "../app/models/patients";
-import { USER_CATEGORY } from "../constant";
+import {DataTypes} from "sequelize";
+import {TABLE_NAME} from "../app/models/reports";
+import {TABLE_NAME as patientTableName} from "../app/models/patients";
+import {USER_CATEGORY} from "../constant";
 
 module.exports = {
   up: (queryInterface, Sequelize) => {
@@ -57,7 +57,7 @@ module.exports = {
       },
     });
   },
-
+  
   down: (queryInterface, Sequelize) => {
     return queryInterface.dropTable(TABLE_NAME);
   },

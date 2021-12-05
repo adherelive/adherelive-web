@@ -1,6 +1,6 @@
 "use strict";
-import { DataTypes } from "sequelize";
-import { ACTIONS } from "./actions";
+import {DataTypes} from "sequelize";
+import {ACTIONS} from "./actions";
 
 export const ACTION_DETAILS = "action_details";
 
@@ -45,8 +45,8 @@ export const db = (database) => {
 };
 
 export const associate = (database) => {
-  const { action_details, actions } = database.models || {};
-
+  const {action_details, actions} = database.models || {};
+  
   // action_details.belongsTo(actions, {
   //     foreignKey: "action_id",
   //     targetKey: "id"

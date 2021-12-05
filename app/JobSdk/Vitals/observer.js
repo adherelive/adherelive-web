@@ -1,12 +1,13 @@
-import { NOTIFICATION_STAGES } from "../../../constant";
+import {NOTIFICATION_STAGES} from "../../../constant";
 import CreateJob from "./createJob";
 import StartJob from "./startJob";
 import UpdateJob from "./updateJob";
 import ResponseJob from "./responseJob";
 
 class VitalObserver {
-  constructor() {}
-
+  constructor() {
+  }
+  
   execute = (typeStatus, eventDetails) => {
     switch (typeStatus) {
       case NOTIFICATION_STAGES.CREATE:

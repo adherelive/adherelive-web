@@ -1,8 +1,8 @@
 "use strict";
 
-import { TABLE_NAME } from "../app/models/vitals";
-import { TABLE_NAME as vitalTemplateTableName } from "../app/models/vitalTemplates";
-import { TABLE_NAME as carePlanTableName } from "../app/models/carePlan";
+import {TABLE_NAME} from "../app/models/vitals";
+import {TABLE_NAME as vitalTemplateTableName} from "../app/models/vitalTemplates";
+import {TABLE_NAME as carePlanTableName} from "../app/models/carePlan";
 
 module.exports = {
   up: (queryInterface, Sequelize) => {
@@ -59,7 +59,7 @@ module.exports = {
       },
     });
   },
-
+  
   down: (queryInterface, Sequelize) => {
     return queryInterface.dropTable(TABLE_NAME);
   },

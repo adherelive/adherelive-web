@@ -27,7 +27,11 @@ services:
     command: [ "npm", "run", "start" ]
     ports:
       - "5000:5000"
+      #- "3000:3000"
+    #command: [ "npm", "run", "dev" ]
+    #tty: true
     volumes:
+      #- ./:/usr/src/app
       - ./.node_env:/usr/src/app/.env
     links:
       #- mysql
@@ -39,7 +43,7 @@ services:
       #mysql:
       #image: mysql:latest
       #ports:
-      #- 3306:3306
+      #- "3306:3306"
       #expose:
       #- 3306
       #volumes:
@@ -63,10 +67,10 @@ services:
 
   minio2:
     image: minio/minio
-    ports:
-      - "9002:9000"
     volumes:
       - adhere_storage_stack2:/export
+    ports:
+      - "9002:9000"
     environment:
       MINIO_ACCESS_KEY: "${MINIO_ACCESS_KEY}"
       MINIO_SECRET_KEY: "${MINIO_SECRET_KEY}"
@@ -74,10 +78,10 @@ services:
 
   minio3:
     image: minio/minio
-    ports:
-      - "9003:9000"
     volumes:
       - adhere_storage_stack3:/export
+    ports:
+      - "9003:9000"
     environment:
       MINIO_ACCESS_KEY: "${MINIO_ACCESS_KEY}"
       MINIO_SECRET_KEY: "${MINIO_SECRET_KEY}"
@@ -85,10 +89,10 @@ services:
 
   minio4:
     image: minio/minio
-    ports:
-      - "9004:9000"
     volumes:
       - adhere_storage_stack4:/export
+    ports:
+      - "9004:9000"
     environment:
       MINIO_ACCESS_KEY: "${MINIO_ACCESS_KEY}"
       MINIO_SECRET_KEY: "${MINIO_SECRET_KEY}"

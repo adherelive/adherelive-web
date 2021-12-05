@@ -27,7 +27,7 @@ const intial_state = {
 };
 
 function userReducer(state, data) {
-  const { users = {} } = data || {};
+  const {users = {}} = data || {};
   if (Object.keys(users).length > 0) {
     return {
       ...state,
@@ -39,7 +39,7 @@ function userReducer(state, data) {
 }
 
 export default (state = intial_state, action) => {
-  const { type, data } = action;
+  const {type, data} = action;
   switch (type) {
     default:
       return userReducer(state, data);

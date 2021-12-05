@@ -1,5 +1,5 @@
 function foodGroupMappingsReducer(state, data) {
-  const { diet_food_group_mappings } = data || {};
+  const {diet_food_group_mappings} = data || {};
   if (diet_food_group_mappings) {
     return {
       ...state,
@@ -11,7 +11,7 @@ function foodGroupMappingsReducer(state, data) {
 }
 
 export default (state = [], action) => {
-  const { type, data } = action;
+  const {type, data} = action;
   switch (type) {
     default:
       return foodGroupMappingsReducer(state, data);

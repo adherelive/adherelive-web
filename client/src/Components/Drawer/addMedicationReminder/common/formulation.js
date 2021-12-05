@@ -1,60 +1,60 @@
-import React, { Component, Fragment } from "react";
-import { Select, Form } from "antd";
-import { injectIntl } from "react-intl";
-import { MEDICINE_UNITS } from "../../../../constant";
+import React, {Component, Fragment} from "react";
+import {Select, Form} from "antd";
+import {injectIntl} from "react-intl";
+import {MEDICINE_UNITS} from "../../../../constant";
 import messages from "../message";
 import unitField from "./medicationStrengthUnit";
 
 const FIELD_NAME = "formulation";
 
-const { Option, OptGroup } = Select;
-const { Item: FormItem } = Form;
+const {Option, OptGroup} = Select;
+const {Item: FormItem} = Form;
 
 class Formulation extends Component {
   componentDidMount() {
     const {
-      form: { validateFields },
+      form: {validateFields},
     } = this.props;
     validateFields();
   }
-
+  
   componentWillUnmount() {
     const {
-      form: { validateFields },
+      form: {validateFields},
     } = this.props;
     validateFields();
   }
-
+  
   getParentNode = (t) => t.parentNode;
-
+  
   formatMessage = (data) => this.props.intl.formatMessage(data);
-
+  
   setUnitMg = () => {
     const {
-      form: { setFieldsValue },
+      form: {setFieldsValue},
     } = this.props;
-    setFieldsValue({ [unitField.field_name]: MEDICINE_UNITS.MG });
+    setFieldsValue({[unitField.field_name]: MEDICINE_UNITS.MG});
   };
-
+  
   setUnitMl = () => {
     const {
-      form: { setFieldsValue },
+      form: {setFieldsValue},
     } = this.props;
-    setFieldsValue({ [unitField.field_name]: MEDICINE_UNITS.ML });
+    setFieldsValue({[unitField.field_name]: MEDICINE_UNITS.ML});
   };
-
+  
   getStringFormat = (str) => {
     return str
       ? `${str.charAt(0).toUpperCase()}${str.substring(1, str.length)}`
       : "";
   };
-
+  
   getOptions = (items, category) => {
-    const { getStringFormat } = this;
-
+    const {getStringFormat} = this;
+    
     return items.map((item) => {
-      const { name, defaultUnit, id } = item || {};
-
+      const {name, defaultUnit, id} = item || {};
+      
       const strId = id.toString();
       return (
         <Option
@@ -67,14 +67,14 @@ class Formulation extends Component {
       );
     });
   };
-
+  
   getFormulationOptions = () => {
-    const { medication_details: { medicine_type } = {} } = this.props;
-    const { getOptions, getStringFormat } = this;
-
+    const {medication_details: {medicine_type} = {}} = this.props;
+    const {getOptions, getStringFormat} = this;
+    
     return Object.keys(medicine_type).map((id) => {
-      const { items, name } = medicine_type[id] || {};
-
+      const {items, name} = medicine_type[id] || {};
+      
       return (
         <OptGroup label={getStringFormat(name)}>
           {getOptions(items, id)}
@@ -82,13 +82,13 @@ class Formulation extends Component {
       );
     });
   };
-
+  
   handleSelect = (...args) => {
-    const { setUnitMg, setUnitMl } = this;
-    const { key = "" } = args[1] || {};
-
+    const {setUnitMg, setUnitMl} = this;
+    const {key = ""} = args[1] || {};
+    
     const formulationUnit = key ? key.split(":")[1] : null;
-
+    
     switch (formulationUnit) {
       case MEDICINE_UNITS.MG:
         setUnitMg();
@@ -100,13 +100,13 @@ class Formulation extends Component {
         break;
     }
   };
-
+  
   render() {
-    const { form } = this.props;
-    const { getFormulationOptions, handleSelect } = this;
-    const { getFieldDecorator, getFieldError, isFieldTouched } = form;
+    const {form} = this.props;
+    const {getFormulationOptions, handleSelect} = this;
+    const {getFieldDecorator, getFieldError, isFieldTouched} = form;
     const error = isFieldTouched(FIELD_NAME) && getFieldError(FIELD_NAME);
-
+    
     return (
       <div className="mb20 select-days-form-content">
         <div className="flex row">

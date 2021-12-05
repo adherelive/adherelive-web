@@ -1,7 +1,7 @@
 import React from "react";
 
-import { TABLE_COLUMN } from "../helper";
-import { ASCEND, DESCEND } from "../../../../constant";
+import {TABLE_COLUMN} from "../helper";
+import {ASCEND, DESCEND} from "../../../../constant";
 import messages from "../messages";
 import PID from "../datacolumn/pid";
 import Diagnosis from "../datacolumn/diagnosis";
@@ -11,9 +11,9 @@ import StartDate from "../datacolumn/startDate";
 import CreatedAt from "../datacolumn/createdAt";
 
 export default (props) => {
-  const { formatMessage, tabChanged, tabState, getColumnSearchProps } =
-    props || {};
-
+  const {formatMessage, tabChanged, tabState, getColumnSearchProps} =
+  props || {};
+  
   const {
     filter_diagnosis,
     filter_treatment,
@@ -21,12 +21,12 @@ export default (props) => {
     sort_createdAt,
     sort_name,
   } = tabState;
-
+  
   return [
     {
       title: "Patient",
       ...TABLE_COLUMN.PID,
-
+      
       render: (data) => {
         const {
           patientData,
@@ -41,7 +41,7 @@ export default (props) => {
           paginatedPatientData,
           auth_role,
         } = data || {};
-
+        
         return (
           <PID
             onRowClick={onRowClick}
@@ -71,7 +71,7 @@ export default (props) => {
       title: formatMessage(messages.treatment),
       ...TABLE_COLUMN.TREATMENT,
       render: (data) => {
-        const { patientData, treatmentData, carePlanData } = data;
+        const {patientData, treatmentData, carePlanData} = data;
         return (
           <Treatment
             patientData={patientData}

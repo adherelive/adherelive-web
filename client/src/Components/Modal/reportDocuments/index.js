@@ -1,12 +1,12 @@
-import React, { Fragment, Component } from "react";
+import React, {Fragment, Component} from "react";
 import Modal from "antd/es/modal";
-import { PaperClipOutlined } from "@ant-design/icons";
+import {PaperClipOutlined} from "@ant-design/icons";
 import messages from "./messages";
 import Tooltip from "antd/es/tooltip";
-import { injectIntl } from "react-intl";
+import {injectIntl} from "react-intl";
 import Button from "antd/es/button";
 
-import { EyeTwoTone } from "@ant-design/icons";
+import {EyeTwoTone} from "@ant-design/icons";
 
 class ReportDocuments extends Component {
   constructor(props) {
@@ -16,13 +16,14 @@ class ReportDocuments extends Component {
       viewModalSrc: "",
     };
   }
-
-  componentDidMount() {}
-
-  getImageView = ({ src = "", id, name }) => {
+  
+  componentDidMount() {
+  }
+  
+  getImageView = ({src = "", id, name}) => {
     return (
       <div className={"qualification-avatar-uploader "}>
-        <img src={src} className="wp100 hp100 br4" alt="report" />
+        <img src={src} className="wp100 hp100 br4" alt="report"/>
         <div className="overlay"></div>
         <div className="absolute tp45 l0 wp100 flex justify-center align-space-evenly doc-container">
           <EyeTwoTone
@@ -35,26 +36,26 @@ class ReportDocuments extends Component {
       </div>
     );
   };
-
+  
   handleDocumentViewOpen = (src) => () => {
     this.setState({
       viewModalVisible: true,
       viewModalSrc: src,
     });
   };
-
+  
   handleDocumentViewClose = () => {
     this.setState({
       viewModalVisible: false,
       viewModalSrc: "",
     });
   };
-
+  
   render() {
-    const { visible, onClose, formatMessage, documentData } = this.props || {};
-    const { getImageView, handleDocumentViewClose } = this;
-    const { viewModalVisible = false, viewModalSrc = "" } = this.state;
-
+    const {visible, onClose, formatMessage, documentData} = this.props || {};
+    const {getImageView, handleDocumentViewClose} = this;
+    const {viewModalVisible = false, viewModalSrc = ""} = this.state;
+    
     return (
       <Modal
         visible={visible}
@@ -70,14 +71,14 @@ class ReportDocuments extends Component {
       >
         <div className="flex flex-wrap wp100">
           {Object.keys(documentData).map((id) => {
-            const { basic_info: { name, document: src } = {} } =
-              documentData[id] || {};
-
+            const {basic_info: {name, document: src} = {}} =
+            documentData[id] || {};
+            
             const extension = name
               .substring(name.length - 5, name.length)
               .split(".")[1];
-            console.log("93291872 extension --> ", { name, extension });
-
+            console.log("93291872 extension --> ", {name, extension});
+            
             const isImage =
               extension === "png" ||
               extension === "jpg" ||
@@ -88,14 +89,14 @@ class ReportDocuments extends Component {
               <Fragment key={`report-document-${id}`}>
                 <Tooltip title={name} placement={"top"}>
                   {isImage ? (
-                    getImageView({ src, id, name })
+                    getImageView({src, id, name})
                   ) : (
                     <a
                       href={src}
                       target={"_blank"}
                       className="mr10 mb10 w100 h100 br5 bw-faint-grey flex align-center justify-center"
                     >
-                      <PaperClipOutlined className="black-85 fs20" />
+                      <PaperClipOutlined className="black-85 fs20"/>
                     </a>
                   )}
                 </Tooltip>

@@ -8,7 +8,7 @@ const express = require("express");
 const router = express.Router();
 const multer = require("multer");
 const storage = multer.memoryStorage();
-const upload = multer({ dest: "../../../app/public/", storage: storage });
+const upload = multer({dest: "../../../app/public/", storage: storage});
 
 const PASSWORD_LENGTH = 8;
 

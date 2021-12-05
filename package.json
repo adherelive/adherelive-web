@@ -34,7 +34,7 @@
     "undoSeed": "./node_modules/.bin/babel-node ./node_modules/.bin/sequelize db:seed:undo:all",
     "medicineDb": "./node_modules/.bin/babel-node scripts/testOne.js",
     "degreeDb": "./node_modules/.bin/babel-node scripts/degreeDb",
-    "rollback": "./node_modules/.bin/babel-node ./dropTables.js",
+    "rollback": "./node_modules/.bin/babel-node ./scripts/dropTables.js",
     "sqsCheck": "./node_modules/.bin/babel-node ./events/index.js"
   },
   "nodemonConfig": {

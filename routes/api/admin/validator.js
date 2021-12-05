@@ -1,6 +1,6 @@
 import Joi from "joi";
-import { validationError } from "../helper";
-import { PASSWORD_LENGTH } from "../../../constant";
+import {validationError} from "../helper";
+import {PASSWORD_LENGTH} from "../../../constant";
 
 const addProviderSchema = Joi.object().keys({
   email: Joi.string().email().required().label("Please enter valid email"),
@@ -30,11 +30,11 @@ const addProviderSchema = Joi.object().keys({
     .label("Please select correct prefix"),
   name: Joi.string().trim().required().label("Please enter name of provider"),
   address: Joi.string().trim().required().label("Please enter correct address"),
-
+  
   // custom ui
   icon: Joi.string().optional().allow(null, ""),
   banner: Joi.string().optional().allow(null, ""),
-
+  
   // account details
   razorpay_account_id: Joi.string().optional().allow("", null),
   razorpay_account_name: Joi.string().optional().allow("", null),
@@ -58,7 +58,7 @@ const addProviderSchema = Joi.object().keys({
   }),
   use_as_main: Joi.boolean().optional().default(true),
   upi_id: Joi.string().optional().allow("", null),
-
+  
   prescription_details: Joi.string().optional().allow("", null),
 });
 
@@ -79,11 +79,11 @@ const updateProviderSchema = Joi.object().keys({
     .label("Please select correct prefix"),
   name: Joi.string().trim().required().label("Please enter name of provider"),
   address: Joi.string().trim().required().label("Please enter correct address"),
-
+  
   // custom ui
   icon: Joi.string().optional().allow(null, ""),
   banner: Joi.string().optional().allow(null, ""),
-
+  
   // account details
   razorpay_account_id: Joi.string().optional().allow("", null),
   razorpay_account_name: Joi.string().optional().allow("", null),
@@ -107,7 +107,7 @@ const updateProviderSchema = Joi.object().keys({
   }),
   use_as_main: Joi.boolean().optional().default(true),
   upi_id: Joi.string().optional().allow("", null),
-
+  
   prescription_details: Joi.string().optional().allow("", null),
 });
 
@@ -118,7 +118,7 @@ const addMedicineSchema = Joi.object().keys({
 });
 
 export const validateAddProviderData = (req, res, next) => {
-  const { body: data = {} } = req;
+  const {body: data = {}} = req;
   const isValid = addProviderSchema.validate(data);
   if (isValid && isValid.error != null) {
     return validationError(res, isValid);
@@ -127,7 +127,7 @@ export const validateAddProviderData = (req, res, next) => {
 };
 
 export const validateUpdateProviderData = (req, res, next) => {
-  const { body: data = {} } = req;
+  const {body: data = {}} = req;
   const isValid = updateProviderSchema.validate(data);
   if (isValid && isValid.error != null) {
     return validationError(res, isValid);
@@ -136,7 +136,7 @@ export const validateUpdateProviderData = (req, res, next) => {
 };
 
 export const validateAddMedicineData = (req, res, next) => {
-  const { body: data = {} } = req;
+  const {body: data = {}} = req;
   const isValid = addMedicineSchema.validate(data);
   if (isValid && isValid.error != null) {
     return validationError(res, isValid);

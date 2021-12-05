@@ -19,12 +19,12 @@ class WorkoutResponseController extends Controller {
   constructor() {
     super();
   }
-
+  
   get = async (req, res) => {
-    const { raiseSuccess, raiseClientError, raiseServerError } = this;
+    const {raiseSuccess, raiseClientError, raiseServerError} = this;
     try {
-      const { query: { schedule_event_id } = {}, userDetails } = req;
-
+      const {query: {schedule_event_id} = {}, userDetails} = req;
+      
       if (!parseInt(schedule_event_id)) {
         return raiseClientError(
           res,
@@ -33,47 +33,47 @@ class WorkoutResponseController extends Controller {
           "Please select valid event id to continue"
         );
       }
-
-      const { userData: { category } = {}, userCategoryId } = userDetails;
-
+      
+      const {userData: {category} = {}, userCategoryId} = userDetails;
+      
       let auth = {
         creator_id: userCategoryId,
         creator_type: category,
       };
-
+      
       const workoutResponseService = new WorkoutResponseService();
-
-      const { count: totalWorkoutResponses, rows: workoutResponses = [] } =
+      
+      const {count: totalWorkoutResponses, rows: workoutResponses = []} =
         await workoutResponseService.findAndCountAll({
-          where: { schedule_event_id },
+          where: {schedule_event_id},
         });
-
+      
       // if (totalWorkoutResponses) {
-
+      
       const eventService = new EventService();
-
+      
       const eventData = await eventService.getEventByData({
         id: schedule_event_id,
         paranoid: false,
       });
-
+      
       const event = await EventWrapper(eventData);
-      const workout = await WorkoutWrapper({ id: event.getEventId() });
-
-      const { exercises, exercise_groups, exercise_details } =
+      const workout = await WorkoutWrapper({id: event.getEventId()});
+      
+      const {exercises, exercise_groups, exercise_details} =
         await workout.getReferenceInfo();
       const workoutCareplanId = await workout.getCareplanId();
       const careplanWrapper = await CareplanWrapper(null, workoutCareplanId);
       const careplanCreatorId = careplanWrapper.getDoctorId();
-
+      
       // exercise contents
       const exerciseContentService = new ExerciseContentService();
-      const { count: totalExerciseContent, rows: exerciseContents = [] } =
-        (await exerciseContentService.findAndCountAll({
-          exercise_id: Object.keys(exercises),
-          ...auth,
-        })) || {};
-
+      const {count: totalExerciseContent, rows: exerciseContents = []} =
+      (await exerciseContentService.findAndCountAll({
+        exercise_id: Object.keys(exercises),
+        ...auth,
+      })) || {};
+      
       let allExerciseContents = {};
       let allExerciseContentMappings = {};
       if (totalExerciseContent) {
@@ -87,62 +87,62 @@ class WorkoutResponseController extends Controller {
             exerciseContent.getId();
         }
       }
-
+      
       let allWorkoutResponseExerciseGroups = {};
       let allWorkoutResponses = {};
-
+      
       for (let index = 0; index < totalWorkoutResponses; index++) {
         const workoutResponse = await WorkoutResponseWrapper({
           data: workoutResponses[index],
         });
-
-        const { workout_responses } = await workoutResponse.getReferenceInfo();
-
+        
+        const {workout_responses} = await workoutResponse.getReferenceInfo();
+        
         allWorkoutResponseExerciseGroups[workoutResponse.getExerciseGroupId()] =
           workoutResponse.getId();
-
+        
         allWorkoutResponses = {
           ...allWorkoutResponses,
           ...workout_responses,
         };
       }
-
+      
       let workout_exercise_groups = [],
         exerciseContentData = {};
-
+      
       for (const exerciseGroupId of Object.keys(exercise_groups)) {
         const {
-          basic_info: { id: exercise_group_id, exercise_detail_id } = {},
+          basic_info: {id: exercise_group_id, exercise_detail_id} = {},
           sets,
           details = {},
         } = exercise_groups[exerciseGroupId] || {};
-
-        const { basic_info: { exercise_id } = {} } =
-          exercise_details[exercise_detail_id] || {};
-
+        
+        const {basic_info: {exercise_id} = {}} =
+        exercise_details[exercise_detail_id] || {};
+        
         const exerciseContentId =
           allExerciseContentMappings[exercise_id] || null;
-
+        
         const workoutResponseId =
           allWorkoutResponseExerciseGroups[exercise_group_id] || null;
-
+        
         let isContentAuthCreated = false;
-
+        
         if (exerciseContentId) {
           const exerciseContentWrapper = await ExerciseContentWrapper({
             id: exerciseContentId,
           });
-
+          
           exerciseContentData[exerciseContentWrapper.getId()] =
             exerciseContentWrapper.getBasicInfo();
-
-          const { creator_id } = exerciseContentWrapper.getBasicInfo();
-
+          
+          const {creator_id} = exerciseContentWrapper.getBasicInfo();
+          
           if (creator_id.toString() === careplanCreatorId.toString()) {
             isContentAuthCreated = true;
           }
         }
-
+        
         workout_exercise_groups.push({
           exercise_group_id,
           exercise_detail_id,
@@ -152,7 +152,7 @@ class WorkoutResponseController extends Controller {
           ...details,
         });
       }
-
+      
       return raiseSuccess(
         res,
         200,
@@ -163,7 +163,7 @@ class WorkoutResponseController extends Controller {
             [event.getScheduleEventId()]: event.getAllInfo(),
           },
           workout_exercise_groups,
-          exercise_contents: { ...exerciseContentData },
+          exercise_contents: {...exerciseContentData},
         },
         "Workout responses fetched succesfully"
       );

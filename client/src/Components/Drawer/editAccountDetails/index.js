@@ -1,5 +1,5 @@
-import React, { Component, Fragment } from "react";
-import { injectIntl } from "react-intl";
+import React, {Component, Fragment} from "react";
+import {injectIntl} from "react-intl";
 import {
   Drawer,
   Icon,
@@ -39,7 +39,7 @@ import TextArea from "antd/lib/input/TextArea";
 import messages from "./message";
 import Footer from "../footer";
 
-const { Option } = Select;
+const {Option} = Select;
 
 const RadioButton = Radio.Button;
 const RadioGroup = Radio.Group;
@@ -61,35 +61,36 @@ class editAccountDetailsDrawer extends Component {
       submitting: false,
     };
   }
-
-  componentDidMount() {}
-
+  
+  componentDidMount() {
+  }
+  
   componentDidUpdate(prevProps, prevState) {
-    const { visible: prev_visible } = prevProps;
-    const { visible } = this.props;
-    const { account_details = {} } = this.props;
+    const {visible: prev_visible} = prevProps;
+    const {visible} = this.props;
+    const {account_details = {}} = this.props;
     console.log("edit props", this.props);
     if (prev_visible !== visible) {
       this.handleGetAccountDetails();
     }
   }
-
+  
   async handleGetAccountDetails() {
     try {
       const {
-        payload: { account_detail_id: editDetailsSelectedID = null } = {},
+        payload: {account_detail_id: editDetailsSelectedID = null} = {},
       } = this.props;
-      const { getAccountDetails } = this.props;
+      const {getAccountDetails} = this.props;
       const response = await getAccountDetails();
       const {
         status,
-        payload: { data: { users = {}, account_details = {} } = {} } = {},
+        payload: {data: {users = {}, account_details = {}} = {}} = {},
         statusCode,
       } = response || {};
-
+      
       if (status && Object.keys(account_details).length > 0) {
-        this.setState({ account_details });
-
+        this.setState({account_details});
+        
         const {
           basic_info: {
             id = "",
@@ -120,59 +121,59 @@ class editAccountDetailsDrawer extends Component {
       message.warn(this.formatMessage(messages.somethingWentWrong));
     }
   }
-
+  
   setLinkedAccountName = (e) => {
     e.preventDefault();
-    const { value } = e.target;
+    const {value} = e.target;
     const reg = /^[a-zA-Z][a-zA-Z\s]*$/;
     if (reg.test(value) || value === "") {
-      this.setState({ customer_name: e.target.value });
+      this.setState({customer_name: e.target.value});
     }
   };
-
+  
   setPhoneNumber = (e) => {
     e.preventDefault();
-    const { value } = e.target;
-
-    this.setState({ account_mobile_number: e.target.value });
+    const {value} = e.target;
+    
+    this.setState({account_mobile_number: e.target.value});
   };
-
+  
   setAccountNumber = (e) => {
     e.preventDefault();
-    const { value } = e.target;
-    this.setState({ account_number: value });
+    const {value} = e.target;
+    this.setState({account_number: value});
   };
-
+  
   setAccountType = (value) => {
-    this.setState({ account_type: value });
+    this.setState({account_type: value});
   };
-
+  
   setPrefix = (value) => {
-    this.setState({ prefix: value });
+    this.setState({prefix: value});
   };
-
+  
   set_ifsc_code = (e) => {
     e.preventDefault();
-    const { value } = e.target;
-    this.setState({ ifsc_code: value });
+    const {value} = e.target;
+    this.setState({ifsc_code: value});
   };
-
+  
   setMain = (e) => {
     e.preventDefault();
-    const { use_as_main } = this.state;
+    const {use_as_main} = this.state;
     if (use_as_main) {
-      this.setState({ use_as_main: false });
+      this.setState({use_as_main: false});
     } else {
-      this.setState({ use_as_main: true });
+      this.setState({use_as_main: true});
     }
   };
-
+  
   setUPIidValue = (e) => {
     e.preventDefault();
-    const { value } = e.target;
-    this.setState({ upi_id: value });
+    const {value} = e.target;
+    this.setState({upi_id: value});
   };
-
+  
   renderAddAccountDetailsForm = () => {
     const {
       customer_name = "",
@@ -184,7 +185,7 @@ class editAccountDetailsDrawer extends Component {
       use_as_main = true,
       upi_id = null,
     } = this.state;
-
+    
     const prefixSelector = (
       <Select
         className="flex align-center h50 w80"
@@ -194,98 +195,98 @@ class editAccountDetailsDrawer extends Component {
         {/* india */}
         <Option value="91">
           <div className="flex align-center">
-            <img src={india} className="w16 h16" />
+            <img src={india} className="w16 h16"/>
             <div className="ml4">+91</div>
           </div>
         </Option>
         {/* australia */}
         <Option value="61">
           <div className="flex align-center">
-            <img src={australia} className="w16 h16" />
+            <img src={australia} className="w16 h16"/>
             <div className="ml4">+61</div>
           </div>
         </Option>
         {/* us */}
         <Option value="1">
           <div className="flex align-center">
-            <img src={us} className="w16 h16" />
+            <img src={us} className="w16 h16"/>
             <div className="ml4">+1</div>
           </div>
         </Option>
         {/* uk */}
         <Option value="44">
           <div className="flex align-center">
-            <img src={uk} className="w16 h16" />
+            <img src={uk} className="w16 h16"/>
             <div className="ml4">+44</div>
           </div>
         </Option>
         {/* china */}
         <Option value="86">
           <div className="flex align-center">
-            <img src={china} className="w16 h16" />
+            <img src={china} className="w16 h16"/>
             <div className="ml4">+86</div>
           </div>
         </Option>
         {/* japan */}
         <Option value="81">
           <div className="flex align-center">
-            <img src={japan} className="w16 h16" />
+            <img src={japan} className="w16 h16"/>
             <div className="ml4">+81</div>
           </div>
         </Option>
         {/* germany */}
         <Option value="49">
           <div className="flex align-center">
-            <img src={germany} className="w16 h16" />
+            <img src={germany} className="w16 h16"/>
             <div className="ml4">+49</div>
           </div>
         </Option>
         {/* france */}
         <Option value="33">
           <div className="flex align-center">
-            <img src={france} className="w16 h16" />
+            <img src={france} className="w16 h16"/>
             <div className="ml4">+33</div>
           </div>
         </Option>
         {/* switzerland */}
         <Option value="41">
           <div className="flex align-center">
-            <img src={switzerland} className="w16 h16" />
+            <img src={switzerland} className="w16 h16"/>
             <div className="ml4">+41</div>
           </div>
         </Option>
-
+        
         {/* russia */}
         <Option value="7">
           <div className="flex align-center">
-            <img src={russia} className="w16 h16" />
+            <img src={russia} className="w16 h16"/>
             <div className="ml4">+7</div>
           </div>
         </Option>
         {/* south africa */}
         <Option value="27">
           <div className="flex align-center">
-            <img src={southAfrica} className="w16 h16" />
+            <img src={southAfrica} className="w16 h16"/>
             <div className="ml4">+27</div>
           </div>
         </Option>
         {/* pakistan */}
         <Option value="92">
           <div className="flex align-center">
-            <img src={pakistan} className="w16 h16" />
+            <img src={pakistan} className="w16 h16"/>
             <div className="ml4">+92</div>
           </div>
         </Option>
         {/* bangladesh */}
         <Option value="880">
           <div className="flex align-center">
-            <img src={bangladesh} className="w16 h16" />
+            <img src={bangladesh} className="w16 h16"/>
             <div className="ml4">+880</div>
           </div>
         </Option>
       </Select>
     );
-
+    
     return (
       <div className="form-block-ap">
         <div
@@ -297,25 +298,25 @@ class editAccountDetailsDrawer extends Component {
             {this.formatMessage(messages.primaryDetails)}
           </span>
         </div>
-
+        
         <div>
           <div className="form-headings flex align-center justify-start">
             {this.formatMessage(messages.linkedAccountName)}
             <div className="star-red">*</div>
           </div>
-
+          
           <Input
             className={"form-inputs-ap"}
             value={customer_name}
             onChange={this.setLinkedAccountName}
             type="string"
           />
-
+          
           <div className="form-headings flex align-center justify-start">
             {this.formatMessage(messages.contactNumber)}
             <div className="star-red">*</div>
           </div>
-
+          
           <Input
             addonBefore={prefixSelector}
             className={"form-inputs-ap"}
@@ -340,7 +341,7 @@ class editAccountDetailsDrawer extends Component {
             {this.formatMessage(messages.accountNumber)}
             <div className="star-red">*</div>
           </div>
-
+          
           <Input
             className={"form-inputs-ap"}
             value={account_number}
@@ -348,12 +349,12 @@ class editAccountDetailsDrawer extends Component {
             type="number"
             maxLength={500}
           />
-
+          
           <div className="form-headings flex align-center justify-start">
             {this.formatMessage(messages.accountType)}
             <div className="star-red">*</div>
           </div>
-
+          
           <div className="add-patient-radio  wp100 mt6 mb18 flex">
             <Radio.Group
               buttonStyle="solid"
@@ -378,7 +379,7 @@ class editAccountDetailsDrawer extends Component {
               >
                 {ACCOUNT_TYPES[SAVINGS]}
               </Radio.Button>
-
+              
               <Radio.Button
                 style={{
                   width: "40%",
@@ -394,23 +395,23 @@ class editAccountDetailsDrawer extends Component {
               </Radio.Button>
             </Radio.Group>
           </div>
-
+          
           <div className="form-headings flex align-center justify-start">
             {this.formatMessage(messages.enterUPIID)}
           </div>
-
+          
           <Input
             className={"form-inputs-ap"}
             value={upi_id}
             onChange={this.setUPIidValue}
             type="string"
           />
-
+          
           <div className="form-headings flex align-center justify-start">
             {this.formatMessage(messages.ifsc)}
             <div className="star-red">*</div>
           </div>
-
+          
           <Input
             className={"form-inputs-ap"}
             value={ifsc_code}
@@ -418,20 +419,20 @@ class editAccountDetailsDrawer extends Component {
             type="string"
             maxLength={500}
           />
-
+          
           <div className="form-headings flex align-center justify-start">
             {this.formatMessage(messages.useAsMainAccount)}
           </div>
-
+          
           <Checkbox checked={use_as_main} onClick={this.setMain}>
             <span className="fs20 ml10">
               {this.formatMessage(messages.yes)}
             </span>
           </Checkbox>
         </div>
-
+        
         <div className="add-patient-footer">
-          <Button onClick={this.onClose} style={{ marginRight: 8 }}>
+          <Button onClick={this.onClose} style={{marginRight: 8}}>
             {this.formatMessage(messages.cancel)}
           </Button>
           <Button onClick={this.onSubmit} type="primary">
@@ -441,11 +442,11 @@ class editAccountDetailsDrawer extends Component {
       </div>
     );
   };
-
+  
   formatMessage = (data) => this.props.intl.formatMessage(data);
-
+  
   onClose = () => {
-    const { close } = this.props;
+    const {close} = this.props;
     this.setState({
       customer_name: "",
       account_mobile_number: "",
@@ -458,7 +459,7 @@ class editAccountDetailsDrawer extends Component {
     });
     close();
   };
-
+  
   validateData = () => {
     const {
       customer_name = "",
@@ -468,7 +469,7 @@ class editAccountDetailsDrawer extends Component {
       ifsc_code = "",
       account_type = "",
     } = this.state;
-
+    
     if (!prefix) {
       message.error(this.formatMessage(messages.prefixError));
       return false;
@@ -492,20 +493,20 @@ class editAccountDetailsDrawer extends Component {
       message.error(this.formatMessage(messages.account_typeError));
       return false;
     }
-
+    
     return true;
   };
-
+  
   submit = ({
-    customer_name,
-    account_mobile_number,
-    prefix,
-    account_number,
-    ifsc_code,
-    account_type,
-    use_as_main = false,
-    upi_id,
-  }) => {
+              customer_name,
+              account_mobile_number,
+              prefix,
+              account_number,
+              ifsc_code,
+              account_type,
+              use_as_main = false,
+              upi_id,
+            }) => {
     this.handleSubmit({
       customer_name,
       account_mobile_number,
@@ -517,21 +518,21 @@ class editAccountDetailsDrawer extends Component {
       upi_id,
     });
   };
-
+  
   async handleSubmit({
-    customer_name,
-    account_mobile_number,
-    prefix,
-    account_number,
-    ifsc_code,
-    account_type,
-    use_as_main,
-    upi_id,
-  }) {
+                       customer_name,
+                       account_mobile_number,
+                       prefix,
+                       account_number,
+                       ifsc_code,
+                       account_type,
+                       use_as_main,
+                       upi_id,
+                     }) {
     try {
-      const { updateAccountDetails, updateAccountDetailsAdded } = this.props;
-      const { accountDetailsId } = this.state;
-      this.setState({ submitting: true });
+      const {updateAccountDetails, updateAccountDetailsAdded} = this.props;
+      const {accountDetailsId} = this.state;
+      this.setState({submitting: true});
       const response = await updateAccountDetails(accountDetailsId, {
         customer_name,
         account_mobile_number,
@@ -542,20 +543,20 @@ class editAccountDetailsDrawer extends Component {
         use_as_main,
         upi_id,
       });
-      const { status, payload: { message: msg } = {} } = response;
+      const {status, payload: {message: msg} = {}} = response;
       if (status) {
         message.success(this.formatMessage(messages.editAccountDetailsSuccess));
         updateAccountDetailsAdded();
         this.onClose();
       }
-      this.setState({ submitting: false });
+      this.setState({submitting: false});
     } catch (err) {
       console.log("err", err);
-      this.setState({ submitting: false });
+      this.setState({submitting: false});
       message.warn(this.formatMessage(messages.somethingWentWrong));
     }
   }
-
+  
   onSubmit = () => {
     const {
       customer_name = "",
@@ -568,7 +569,7 @@ class editAccountDetailsDrawer extends Component {
       upi_id = null,
     } = this.state;
     const validate = this.validateData();
-    const { submit } = this;
+    const {submit} = this;
     if (validate) {
       submit({
         customer_name,
@@ -582,9 +583,9 @@ class editAccountDetailsDrawer extends Component {
       });
     }
   };
-
+  
   // onEdit = (accountDetailsId) => {
-
+  
   //     const { customer_name = '', account_mobile_number = '', prefix = '', account_number = '', ifsc_code = '', account_type = '' , use_as_main=false} = this.state;
   //     const validate = this.validateData();
   //     const { edit } = this;
@@ -592,15 +593,15 @@ class editAccountDetailsDrawer extends Component {
   //         edit(accountDetailsId,{ customer_name, account_mobile_number,prefix,account_number,ifsc_code,account_type,use_as_main})
   //     }
   // }
-
+  
   // edit = (accountDetailsId,{ customer_name, account_mobile_number,prefix,account_number,ifsc_code,account_type,use_as_main=false}) => {
-
+  
   //     this.handleEdit(accountDetailsId,{ customer_name, account_mobile_number,prefix,account_number,ifsc_code,account_type,use_as_main});
-
+  
   // }
-
+  
   // async handleEdit(accountDetailsId,{ customer_name, account_mobile_number,prefix,account_number,ifsc_code,account_type,use_as_main}){
-
+  
   //     try {
   //         const {updateAccountDetails,updateAccountDetailsAdded} = this.props;
   //         const response = await updateAccountDetails(accountDetailsId,{ customer_name, account_mobile_number,prefix,account_number,ifsc_code,account_type,use_as_main});
@@ -610,28 +611,28 @@ class editAccountDetailsDrawer extends Component {
   //             updateAccountDetailsAdded();
   //             this.onClose();
   //         }
-
+  
   //       } catch (err) {
   //         console.log("err", err);
   //         message.warn(this.formatMessage(messages.somethingWentWrong));
   //       }
-
+  
   // }
-
+  
   render() {
-    const { renderAddAccountDetailsForm } = this;
-    const { visible } = this.props;
+    const {renderAddAccountDetailsForm} = this;
+    const {visible} = this.props;
     const {
       onClose,
       //  renderAddNewConsultationFee
     } = this;
-
-    const { submitting = false } = this.state;
-
+    
+    const {submitting = false} = this.state;
+    
     if (visible !== true) {
       return null;
     }
-
+    
     return (
       <Fragment>
         <Drawer
@@ -649,20 +650,20 @@ class editAccountDetailsDrawer extends Component {
           width={`30%`}
         >
           {renderAddAccountDetailsForm()}
-
+          
           <Footer
             onSubmit={this.onSubmit}
             onClose={this.onClose}
             submitText={this.formatMessage(messages.submit)}
             submitButtonProps={{}}
             cancelComponent={
-              <Button onClick={this.onClose} style={{ marginRight: 8 }}>
+              <Button onClick={this.onClose} style={{marginRight: 8}}>
                 {this.formatMessage(messages.cancel)}
               </Button>
             }
             submitting={submitting}
           />
-
+          
           {/* <div className='add-patient-footer'>
                         <Button onClick={this.onClose} style={{ marginRight: 8 }}>
                             {this.formatMessage(messages.cancel)}

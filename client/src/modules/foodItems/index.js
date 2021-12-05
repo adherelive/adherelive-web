@@ -1,8 +1,8 @@
-import { doRequest } from "../../Helper/network";
-import { REQUEST_TYPE } from "../../constant";
-import { addFoodItemUrl, updateFoodItemUrl } from "../../Helper/urls/foodItems";
+import {doRequest} from "../../Helper/network";
+import {REQUEST_TYPE} from "../../constant";
+import {addFoodItemUrl, updateFoodItemUrl} from "../../Helper/urls/foodItems";
 
-import { GET_SINGLE_DIET_DETAILS_COMPLETED } from "../../modules/diets";
+import {GET_SINGLE_DIET_DETAILS_COMPLETED} from "../../modules/diets";
 
 export const ADD_FOOD_ITEM_START = "ADD_FOOD_ITEM_START";
 export const ADD_FOOD_ITEM_COMPLETED = "ADD_FOOD_ITEM_COMPLETED";
@@ -23,8 +23,8 @@ export const addFoodItem = (payload) => {
         url: addFoodItemUrl(),
         data: payload,
       });
-
-      const { status, payload: { data, message = "" } = {} } = response || {};
+      
+      const {status, payload: {data, message = ""} = {}} = response || {};
       if (status === true) {
         dispatch({
           type: ADD_FOOD_ITEM_COMPLETED,
@@ -43,7 +43,7 @@ export const addFoodItem = (payload) => {
   };
 };
 
-export const updateFoodItem = ({ food_item_id, data: payload }) => {
+export const updateFoodItem = ({food_item_id, data: payload}) => {
   let response = {};
   return async (dispatch) => {
     try {
@@ -52,8 +52,8 @@ export const updateFoodItem = ({ food_item_id, data: payload }) => {
         url: updateFoodItemUrl(food_item_id),
         data: payload,
       });
-
-      const { status, payload: { data, message = "" } = {} } = response || {};
+      
+      const {status, payload: {data, message = ""} = {}} = response || {};
       if (status === true) {
         dispatch({
           type: EDIT_FOOD_ITEM_COMPLETED,
@@ -75,7 +75,7 @@ export const updateFoodItem = ({ food_item_id, data: payload }) => {
 export const storeFoodItemAndDetails = (data) => {
   return async (dispatch) => {
     try {
-      const { food_items, food_item_details } = data;
+      const {food_items, food_item_details} = data;
       if (food_items && food_item_details) {
         dispatch({
           type: STORE_FOOD_ITEM_AND_DETAILS,
@@ -89,7 +89,7 @@ export const storeFoodItemAndDetails = (data) => {
 };
 
 function foodItemReducer(state, data) {
-  const { food_items } = data || {};
+  const {food_items} = data || {};
   if (food_items) {
     return {
       ...state,
@@ -101,7 +101,7 @@ function foodItemReducer(state, data) {
 }
 
 export default (state = {}, action) => {
-  const { type, data } = action || {};
+  const {type, data} = action || {};
   switch (type) {
     case ADD_FOOD_ITEM_COMPLETED:
       return foodItemReducer(state, data);

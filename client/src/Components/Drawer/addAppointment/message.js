@@ -1,4 +1,4 @@
-import { defineMessages } from "react-intl";
+import {defineMessages} from "react-intl";
 import messages from "../PatientDetails/message";
 
 const message = defineMessages({
@@ -122,7 +122,7 @@ const message = defineMessages({
     description: "",
     defaultMessage: "Enter description here",
   },
-
+  
   schedule: {
     id: "app.event.schedule",
     description: "",
@@ -258,7 +258,7 @@ const message = defineMessages({
     description: "",
     defaultMessage: "Activity",
   },
-
+  
   followup: {
     id: "app.event.followup",
     description: "",
@@ -289,7 +289,7 @@ const message = defineMessages({
     description: "",
     defaultMessage: "Video Call",
   },
-
+  
   from: {
     id: "app.event.from",
     description: "",

@@ -1,7 +1,7 @@
 "use strict";
-import { DataTypes } from "sequelize";
-import { REGIONS } from "./regions";
-import { PROVIDERS } from "./providers";
+import {DataTypes} from "sequelize";
+import {REGIONS} from "./regions";
+import {PROVIDERS} from "./providers";
 
 export const REGION_PROVIDERS = "region_providers";
 
@@ -53,14 +53,14 @@ export const db = (database) => {
 };
 
 export const associate = (database) => {
-  const { region_providers, regions, providers } = database.models || {};
-
+  const {region_providers, regions, providers} = database.models || {};
+  
   // associations here (if any) ...
   region_providers.hasOne(regions, {
     foreignKey: "region_id",
     targetKey: "id",
   });
-
+  
   // region_providers.hasOne(providers, {
   //     foreignKey: "provider_id",
   //     targetKey: "id"

@@ -1,6 +1,6 @@
 import Log from "../../../libs/log";
 
-const { RtcTokenBuilder, RtcRole } = require("agora-access-token");
+const {RtcTokenBuilder, RtcRole} = require("agora-access-token");
 
 const appID = process.config.agora.app_id;
 const appCertificate = process.config.agora.app_certificate;
@@ -8,12 +8,13 @@ const appCertificate = process.config.agora.app_certificate;
 const Logger = new Log("AGORA SERVICES");
 
 class AgoraService {
-  constructor() {}
-
+  constructor() {
+  }
+  
   getRoomId = (doctor, patient) => {
     return `${doctor}-${process.config.twilio.CHANNEL_SERVER}-${patient}`;
   };
-
+  
   async videoTokenGenerator(userId, channelName) {
     const role = RtcRole.PUBLISHER;
     const expirationTimeInSeconds = 86400;
@@ -28,7 +29,7 @@ class AgoraService {
       privilegeExpiredTs
     );
     // console.log("Token With Integer Number Uid: " + accessToken);
-
+    
     return accessToken;
   }
 }

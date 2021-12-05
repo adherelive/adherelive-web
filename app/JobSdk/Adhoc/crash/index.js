@@ -1,14 +1,14 @@
 import AdhocJob from "../index";
-import { EMAIL_TEMPLATE_NAME } from "../../../../constant";
+import {EMAIL_TEMPLATE_NAME} from "../../../../constant";
 
 export default class CrashJob extends AdhocJob {
   constructor(data) {
     super(data);
   }
-
+  
   getEmailTemplate = () => {
-    const { apiName } = this.getData();
-
+    const {apiName} = this.getData();
+    
     return {
       title: "Production Server Issue",
       toAddress: process.config.app.developer_email,

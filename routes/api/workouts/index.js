@@ -6,7 +6,7 @@ import workoutResponseRouter from "../workoutResponses";
 
 import Workout from "../../../app/controllers/workouts/workout.controller";
 
-import { USER_CATEGORY } from "../../../constant";
+import {USER_CATEGORY} from "../../../constant";
 
 const router = express.Router();
 

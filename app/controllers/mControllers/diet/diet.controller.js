@@ -19,7 +19,7 @@ import * as DietHelper from "../../diet/dietHelper";
 import DietJob from "../../../JobSdk/Diet/observer";
 import NotificationSdk from "../../../NotificationSdk";
 
-import { getTimeWiseDietFoodGroupMappings } from "../../diet/dietHelper";
+import {getTimeWiseDietFoodGroupMappings} from "../../diet/dietHelper";
 
 // import * as medicationHelper from "../../medicationReminder/medicationHelper";
 
@@ -41,31 +41,31 @@ class DietController extends Controller {
   constructor() {
     super();
   }
-
+  
   get = async (req, res) => {
-    const { raiseSuccess, raiseClientError, raiseServerError } = this;
+    const {raiseSuccess, raiseClientError, raiseServerError} = this;
     try {
       const {
-        params: { id = null } = {},
+        params: {id = null} = {},
         userDetails: {
           userCategoryId = null,
-          userData: { category = null } = {},
+          userData: {category = null} = {},
         } = {},
       } = req;
-
+      
       const dietService = await new DietService();
-      const dietData = await dietService.findOne({ id });
-
+      const dietData = await dietService.findOne({id});
+      
       if (!dietData) {
         return raiseClientError(res, 422, {}, `No Matching Diet Details Found`);
       }
-
-      const dietWrapper = await DietWrapper({ data: dietData });
+      
+      const dietWrapper = await DietWrapper({data: dietData});
       const careplan_id = dietWrapper.getCareplanId();
       const careplanWrapper = await CareplanWrapper(null, careplan_id);
       const doctor_id = await careplanWrapper.getDoctorId();
       const patient_id = careplanWrapper.getPatientId();
-
+      
       //other doctor's diet as food item and details only visible to creator doc
       if (
         userCategoryId.toString() !== doctor_id.toString() &&
@@ -78,15 +78,15 @@ class DietController extends Controller {
           `User Unauthorized to get Diet Details`
         );
       }
-
+      
       const referenceInfo = await dietWrapper.getReferenceInfo();
-
+      
       let dietApidata = {},
         dietBasicInfo = {},
         dietFoodGroupsTotalCalories = 0;
-
+      
       dietBasicInfo[dietWrapper.getId()] = await dietWrapper.getBasicInfo();
-
+      
       const {
         diet_food_group_mappings = {},
         food_groups = {},
@@ -94,63 +94,63 @@ class DietController extends Controller {
         food_item_details = {},
         portions = {},
       } = referenceInfo || {};
-
+      
       const timeWise = await getTimeWiseDietFoodGroupMappings({
         diet_food_group_mappings,
       });
-
+      
       // for(let each in timeWise){
       //   const eachTime = timeWise[each] || {};
       //   const { mappingIds = [] } = eachTime;
       //   console.log("864872342476823764826437",{mappingIds});
       // }
-
+      
       for (let eachTime in timeWise) {
-        const { mappingIds = [] } = timeWise[eachTime] || {};
+        const {mappingIds = []} = timeWise[eachTime] || {};
         // console.log("864872342476823764826437",{mappingIds});
-
+        
         for (let ele of mappingIds) {
           let primary = null,
             related_diet_food_group_mapping_ids = [];
-
+          
           if (Array.isArray(ele)) {
             ele.sort(function (a, b) {
               return a - b;
             });
-
+            
             primary = ele[0] || null;
             related_diet_food_group_mapping_ids = ele.slice(1);
           } else {
             primary = ele;
           }
-
+          
           let currentfodmattedData = {};
-
+          
           // const related_diet_food_group_mapping_ids = mappingIds.slice(1);
           let similarFoodGroups = [],
             notes = "";
-
+          
           const current_mapping = diet_food_group_mappings[primary] || {};
-          const { basic_info: { time = "", food_group_id = null } = {} } =
+          const {basic_info: {time = "", food_group_id = null} = {}} =
             current_mapping;
           const {
-            basic_info: { food_item_detail_id = null, serving = null } = {},
+            basic_info: {food_item_detail_id = null, serving = null} = {},
             details = {},
           } = food_groups[food_group_id] || {};
           const {
-            basic_info: { portion_id = null, calorific_value = 0 } = {},
+            basic_info: {portion_id = null, calorific_value = 0} = {},
           } = food_item_details[food_item_detail_id] || {};
-
+          
           if (details) {
-            const { notes: detail_notes = "" } = details;
+            const {notes: detail_notes = ""} = details;
             notes = detail_notes;
           }
-
+          
           if (serving) {
             dietFoodGroupsTotalCalories =
               dietFoodGroupsTotalCalories + serving * calorific_value;
           }
-
+          
           if (related_diet_food_group_mapping_ids.length) {
             for (
               let i = 0;
@@ -158,7 +158,7 @@ class DietController extends Controller {
               i++
             ) {
               const similarMappingId = related_diet_food_group_mapping_ids[i];
-
+              
               const {
                 basic_info: {
                   food_group_id: similar_food_group_id = null,
@@ -171,26 +171,26 @@ class DietController extends Controller {
                 } = {},
                 details: similar_details = {},
               } = food_groups[similar_food_group_id] || {};
-
+              
               const {
                 basic_info: {
                   portion_id: similar_portion_id = null,
                   calorific_value: similar_calorific_value = 0,
                 } = {},
               } = food_item_details[similar_food_item_detail_id] || {};
-
+              
               let similar_notes = "";
               if (similar_details) {
-                const { notes = "" } = similar_details || {};
+                const {notes = ""} = similar_details || {};
                 similar_notes = notes;
               }
-
+              
               if (similar_serving) {
                 dietFoodGroupsTotalCalories =
                   dietFoodGroupsTotalCalories +
                   similar_serving * similar_calorific_value;
               }
-
+              
               const similarData = {
                 serving: similar_serving,
                 portion_id: similar_portion_id,
@@ -198,12 +198,12 @@ class DietController extends Controller {
                 food_group_id: similar_food_group_id,
                 notes: similar_notes,
               };
-
+              
               similarFoodGroups.push(similarData);
               // delete diet_food_group_mappings[similarMappingId];
             }
           }
-
+          
           currentfodmattedData = {
             serving,
             portion_id,
@@ -212,14 +212,14 @@ class DietController extends Controller {
             food_item_detail_id,
             similar: [...similarFoodGroups],
           };
-
+          
           const currentDietDataForTime = dietApidata[time] || [];
           currentDietDataForTime.push(currentfodmattedData);
-
+          
           dietApidata[`${time}`] = [...currentDietDataForTime];
         }
       }
-
+      
       return raiseSuccess(
         res,
         200,
@@ -242,19 +242,19 @@ class DietController extends Controller {
       return raiseServerError(res);
     }
   };
-
+  
   create = async (req, res) => {
-    const { raiseSuccess, raiseClientError, raiseServerError } = this;
+    const {raiseSuccess, raiseClientError, raiseServerError} = this;
     try {
-      const { body, userDetails = {} } = req;
+      const {body, userDetails = {}} = req;
       Logger.debug("create request", body);
       const {
         userId,
         userRoleId,
-        userData: { category } = {},
-        userCategoryData: { basic_info: { full_name = "" } = {} } = {},
+        userData: {category} = {},
+        userCategoryData: {basic_info: {full_name = ""} = {}} = {},
       } = userDetails || {};
-
+      
       const {
         name = "",
         care_plan_id = null,
@@ -265,11 +265,11 @@ class DietController extends Controller {
         not_to_do = "",
         diet_food_groups = [],
       } = body;
-
+      
       const dietService = new DietService();
-
-      const diet = (await dietService.findOne({ name, care_plan_id })) || null;
-
+      
+      const diet = (await dietService.findOne({name, care_plan_id})) || null;
+      
       if (diet) {
         return raiseClientError(
           res,
@@ -278,7 +278,7 @@ class DietController extends Controller {
           `Diet with name ${name} already exists.`
         );
       }
-
+      
       const diet_id = await dietService.create({
         name,
         care_plan_id,
@@ -286,19 +286,19 @@ class DietController extends Controller {
         end_date,
         total_calories,
         diet_food_groups,
-        details: { not_to_do, repeat_days },
+        details: {not_to_do, repeat_days},
       });
-      const dietWrapper = await DietWrapper({ id: diet_id });
-
+      const dietWrapper = await DietWrapper({id: diet_id});
+      
       const referenceInfo = await dietWrapper.getReferenceInfo();
-
+      
       const carePlanId = dietWrapper.getCareplanId();
-
+      
       const careplanWrapper = await CareplanWrapper(null, carePlanId);
       const patientId = await careplanWrapper.getPatientId();
       const patient = await PatientWrapper(null, patientId);
-      const { user_role_id: patientRoleId } = await patient.getAllInfo();
-
+      const {user_role_id: patientRoleId} = await patient.getAllInfo();
+      
       const eventScheduleData = {
         patient_id: patient.getUserId(),
         type: EVENT_TYPE.DIET,
@@ -310,23 +310,23 @@ class DietController extends Controller {
         actor: {
           id: userId,
           user_role_id: userRoleId,
-          details: { name: full_name, category },
+          details: {name: full_name, category},
         },
       };
-
+      
       const QueueService = new queueService();
-
+      
       const sqsResponse = await QueueService.sendMessage(eventScheduleData);
-
+      
       Logger.debug("sqsResponse ---> ", sqsResponse);
-
+      
       const dietJob = DietJob.execute(
         EVENT_STATUS.SCHEDULED,
         eventScheduleData
       );
-
+      
       await NotificationSdk.execute(dietJob);
-
+      
       return raiseSuccess(
         res,
         200,
@@ -340,17 +340,17 @@ class DietController extends Controller {
       return raiseServerError(res);
     }
   };
-
+  
   getDetails = async (req, res) => {
-    const { raiseSuccess, raiseServerError } = this;
+    const {raiseSuccess, raiseServerError} = this;
     try {
-      const { params } = req;
+      const {params} = req;
       Logger.debug("getDetails request params", params);
-
-      const { patient_id } = params || {};
-
+      
+      const {patient_id} = params || {};
+      
       let timings = {};
-
+      
       if (parseInt(patient_id)) {
         const patient = await PatientWrapper(null, patient_id);
         const timingPreference =
@@ -358,18 +358,18 @@ class DietController extends Controller {
             user_id: patient.getUserId(),
           });
         const options = await UserPreferenceWrapper(timingPreference);
-        const { timings: userTimings = {} } = options.getAllDetails();
-
+        const {timings: userTimings = {}} = options.getAllDetails();
+        
         // const medicationTimings = medicationHelper.getTimings(userTimings);
-
+        
         // medicationTimings.sort((activityA, activityB) => {
         //   const { time: a } = activityA || {};
         //   const { time: b } = activityB || {};
         //   if (moment(a).isBefore(moment(b))) return -1;
-
+        
         //   if (moment(a).isAfter(moment(b))) return 1;
         // });
-
+        
         // medicationTimings.forEach((timing, index) => {
         //   timings[`${index + 1}`] = timing;
         // });
@@ -377,7 +377,7 @@ class DietController extends Controller {
       } else {
         timings = DietHelper.getTimings(PATIENT_MEAL_TIMINGS);
       }
-
+      
       return raiseSuccess(
         res,
         200,
@@ -392,34 +392,34 @@ class DietController extends Controller {
       return raiseServerError(res);
     }
   };
-
+  
   getDietsByCareplan = async (req, res) => {
-    const { raiseSuccess, raiseClientError, raiseServerError } = this;
+    const {raiseSuccess, raiseClientError, raiseServerError} = this;
     try {
-      const { query: { care_plan_id = null } = {} } = req;
+      const {query: {care_plan_id = null} = {}} = req;
       const dietService = await new DietService();
-      const { count = null, rows = [] } =
-        (await dietService.getAllForCareplanId({
-          where: {
-            care_plan_id,
-          },
-          attributes: ["id"],
-        })) || [];
-
+      const {count = null, rows = []} =
+      (await dietService.getAllForCareplanId({
+        where: {
+          care_plan_id,
+        },
+        attributes: ["id"],
+      })) || [];
+      
       let dietsApiData = {},
         diet_ids = [];
-
+      
       if (count === 0) {
         return raiseClientError(res, 422, {}, `No Diets Exist for careplan`);
       }
-
+      
       for (let i = 0; i < rows.length; i++) {
-        const { id = null } = rows[i] || {};
-        const dietWrapper = await DietWrapper({ id });
+        const {id = null} = rows[i] || {};
+        const dietWrapper = await DietWrapper({id});
         dietsApiData[dietWrapper.getId()] = await dietWrapper.getBasicInfo();
         diet_ids.push(dietWrapper.getId());
       }
-
+      
       return raiseSuccess(
         res,
         200,
@@ -436,9 +436,9 @@ class DietController extends Controller {
       return raiseServerError(res);
     }
   };
-
+  
   update = async (req, res) => {
-    const { raiseSuccess, raiseClientError, raiseServerError } = this;
+    const {raiseSuccess, raiseClientError, raiseServerError} = this;
     try {
       const {
         params = {},
@@ -446,21 +446,21 @@ class DietController extends Controller {
         userDetails: {
           userId,
           userRoleId,
-          userData: { category } = {},
-          userCategoryData: { basic_info: { full_name = "" } = {} } = {},
+          userData: {category} = {},
+          userCategoryData: {basic_info: {full_name = ""} = {}} = {},
         } = {},
       } = req;
-
-      const { id: diet_id = null } = params;
-
+      
+      const {id: diet_id = null} = params;
+      
       const dietService = new DietService();
-
-      const diet = await dietService.getByData({ id: diet_id });
-
+      
+      const diet = await dietService.getByData({id: diet_id});
+      
       if (!diet) {
         return raiseClientError(res, 422, {}, `No Matching Diet Details Found`);
       }
-
+      
       const {
         name = "",
         care_plan_id = null,
@@ -472,12 +472,12 @@ class DietController extends Controller {
         diet_food_groups = {},
         delete_food_group_ids = [],
       } = body;
-
+      
       const existingDiet =
-        (await dietService.getByData({ name, care_plan_id })) || null;
-
-      const { id = null } = existingDiet || {};
-
+        (await dietService.getByData({name, care_plan_id})) || null;
+      
+      const {id = null} = existingDiet || {};
+      
       if (existingDiet && id.toString() !== diet_id.toString()) {
         return raiseClientError(
           res,
@@ -486,7 +486,7 @@ class DietController extends Controller {
           `Diet Exists with the same name for patient`
         );
       }
-
+      
       const isUpdated = await dietService.update({
         diet_id,
         name,
@@ -499,25 +499,25 @@ class DietController extends Controller {
         diet_food_groups,
         delete_food_group_ids,
       });
-
+      
       let dietsApiData = {};
-
-      const dietWrapper = await DietWrapper({ id: diet_id });
+      
+      const dietWrapper = await DietWrapper({id: diet_id});
       dietsApiData[dietWrapper.getId()] = await dietWrapper.getBasicInfo();
-
+      
       // delete existing schedule events created
       const eventService = new EventService();
       await eventService.deleteBatch({
         event_id: diet_id,
         event_type: EVENT_TYPE.DIET,
       });
-
+      
       // create new schedule events
       const careplanWrapper = await CareplanWrapper(null, care_plan_id);
       const patientId = await careplanWrapper.getPatientId();
       const patient = await PatientWrapper(null, patientId);
-      const { user_role_id: patientRoleId } = await patient.getAllInfo();
-
+      const {user_role_id: patientRoleId} = await patient.getAllInfo();
+      
       const eventScheduleData = {
         patient_id: patient.getUserId(),
         type: EVENT_TYPE.DIET,
@@ -529,16 +529,16 @@ class DietController extends Controller {
         actor: {
           id: userId,
           user_role_id: userRoleId,
-          details: { name: full_name, category },
+          details: {name: full_name, category},
         },
       };
-
+      
       const QueueService = new queueService();
-
+      
       const sqsResponse = await QueueService.sendMessage(eventScheduleData);
-
+      
       Logger.debug("sqsResponse ---> ", sqsResponse);
-
+      
       return raiseSuccess(
         res,
         200,
@@ -554,17 +554,17 @@ class DietController extends Controller {
       return raiseServerError(res);
     }
   };
-
+  
   delete = async (req, res) => {
-    const { raiseSuccess, raiseClientError, raiseServerError } = this;
+    const {raiseSuccess, raiseClientError, raiseServerError} = this;
     try {
-      const { params: { id } = {} } = req;
-
+      const {params: {id} = {}} = req;
+      
       const dietService = new DietService();
-
+      
       // check if diet exists
-      const dietExists = (await dietService.findOne({ id })) || null;
-
+      const dietExists = (await dietService.findOne({id})) || null;
+      
       if (!dietExists) {
         return raiseClientError(
           res,
@@ -573,12 +573,12 @@ class DietController extends Controller {
           "Please select a valid diet to delete"
         );
       }
-
+      
       const isDeleted = await dietService.delete(id);
       let dietApiData = {};
-
+      
       if (isDeleted) {
-        const dietWrapper = await DietWrapper({ id });
+        const dietWrapper = await DietWrapper({id});
         dietApiData[dietWrapper.getId()] = dietWrapper.getBasicInfo();
         return raiseSuccess(
           res,
@@ -603,16 +603,16 @@ class DietController extends Controller {
       return raiseServerError(res);
     }
   };
-
+  
   getAllDietsForDoctor = async (req, res) => {
-    const { raiseSuccess, raiseClientError, raiseServerError } = this;
-
+    const {raiseSuccess, raiseClientError, raiseServerError} = this;
+    
     try {
-      const { userDetails = {} } = req;
-      const { userCategoryId = null, userRoleId = null } = userDetails || {};
-
+      const {userDetails = {}} = req;
+      const {userCategoryId = null, userRoleId = null} = userDetails || {};
+      
       let allDietsApiWrapper = {};
-
+      
       const allCareplansForDoctor =
         (await carePlanService.getCarePlanByData({
           doctor_id: userCategoryId,
@@ -621,8 +621,8 @@ class DietController extends Controller {
       const dietService = new DietService();
       if (allCareplansForDoctor.length) {
         for (let i = 0; i < allCareplansForDoctor.length; i++) {
-          const { id: care_plan_id = null } = allCareplansForDoctor[i] || {};
-          const { count = null, rows = [] } =
+          const {id: care_plan_id = null} = allCareplansForDoctor[i] || {};
+          const {count = null, rows = []} =
             await dietService.getAllForCareplanId({
               where: {
                 care_plan_id,
@@ -631,15 +631,15 @@ class DietController extends Controller {
             });
           if (count > 0) {
             for (let row of rows) {
-              const { id: dietId } = row || {};
-              const dietWrapper = await DietWrapper({ id: dietId });
+              const {id: dietId} = row || {};
+              const dietWrapper = await DietWrapper({id: dietId});
               allDietsApiWrapper[dietWrapper.getId()] =
                 await dietWrapper.getBasicInfo();
             }
           }
         }
       }
-
+      
       return raiseSuccess(
         res,
         200,
@@ -655,35 +655,35 @@ class DietController extends Controller {
       return raiseServerError(res);
     }
   };
-
+  
   getPatientDiets = async (req, res) => {
-    const { raiseSuccess, raiseClientError, raiseServerError } = this;
+    const {raiseSuccess, raiseClientError, raiseServerError} = this;
     try {
       const {
-        userDetails: { userData: { category } = {}, userCategoryId } = {},
+        userDetails: {userData: {category} = {}, userCategoryId} = {},
       } = req;
-
+      
       if (category !== USER_CATEGORY.PATIENT) {
         return raiseClientError(res, 422, {}, "UNAUTHORIZED");
       }
-
+      
       const dietService = new DietService();
-
+      
       let allDiets = {};
       let allDietFoodMappings = {};
       let allFoodGroups = {};
       let allPortions = {};
       let allFoodItems = {};
       let allFoodItemDetails = {};
-
+      
       const allCareplansForPatient =
         (await carePlanService.getCarePlanByData({
           patient_id: userCategoryId,
         })) || [];
       if (allCareplansForPatient.length) {
         for (let i = 0; i < allCareplansForPatient.length; i++) {
-          const { id: care_plan_id = null } = allCareplansForPatient[i] || {};
-          const { count = null, rows = [] } =
+          const {id: care_plan_id = null} = allCareplansForPatient[i] || {};
+          const {count = null, rows = []} =
             await dietService.getAllForCareplanId({
               where: {
                 care_plan_id,
@@ -692,12 +692,12 @@ class DietController extends Controller {
             });
           if (count > 0) {
             for (let row of rows) {
-              const { id: dietId } = row || {};
-              const dietWrapper = await DietWrapper({ id: dietId });
+              const {id: dietId} = row || {};
+              const dietWrapper = await DietWrapper({id: dietId});
               // allDietsApiWrapper[
               //   dietWrapper.getId()
               // ] = await dietWrapper.getBasicInfo();
-
+              
               const {
                 diets,
                 diet_food_group_mappings,
@@ -706,24 +706,24 @@ class DietController extends Controller {
                 food_items,
                 food_item_details,
               } = await dietWrapper.getReferenceInfo();
-
-              allDiets = { ...allDiets, ...diets };
+              
+              allDiets = {...allDiets, ...diets};
               allDietFoodMappings = {
                 ...allDietFoodMappings,
                 ...diet_food_group_mappings,
               };
-              allFoodGroups = { ...allFoodGroups, ...food_groups };
-              allFoodItems = { ...allFoodItems, ...food_items };
+              allFoodGroups = {...allFoodGroups, ...food_groups};
+              allFoodItems = {...allFoodItems, ...food_items};
               allFoodItemDetails = {
                 ...allFoodItemDetails,
                 ...food_item_details,
               };
-              allPortions = { ...allPortions, ...portions };
+              allPortions = {...allPortions, ...portions};
             }
           }
         }
       }
-
+      
       return raiseSuccess(
         res,
         200,
@@ -742,21 +742,21 @@ class DietController extends Controller {
       return raiseServerError(res);
     }
   };
-
+  
   getDietResponseTimeline = async (req, res) => {
-    const { raiseSuccess, raiseClientError, raiseServerError } = this;
+    const {raiseSuccess, raiseClientError, raiseServerError} = this;
     try {
       Logger.debug("73575273512732 req.params diet id---->", req.params);
-      const { params: { id } = {} } = req;
+      const {params: {id} = {}} = req;
       const eventService = new EventService();
-
+      
       const today = moment().utc().toISOString();
-
+      
       const dietService = new DietService();
       const dietResponsesService = new DietResponsesService();
-
-      const dietExists = (await dietService.findOne({ id })) || null;
-
+      
+      const dietExists = (await dietService.findOne({id})) || null;
+      
       if (!dietExists) {
         return raiseClientError(
           res,
@@ -765,9 +765,9 @@ class DietController extends Controller {
           "Please select a valid diet id to get timeline"
         );
       }
-
-      const diet = await DietWrapper({ id });
-
+      
+      const diet = await DietWrapper({id});
+      
       const completeEvents = await eventService.getAllPassedByData({
         event_id: id,
         event_type: EVENT_TYPE.DIET,
@@ -775,51 +775,51 @@ class DietController extends Controller {
         sort: "DESC",
         paranoid: false,
       });
-
+      
       let dateWiseDietData = {};
-
+      
       const timelineDates = [];
-
+      
       if (completeEvents.length > 0) {
         for (const scheduleEvent of completeEvents) {
           const event = await EventWrapper(scheduleEvent);
-
+          
           const dietResponseData = await dietResponsesService.getByData({
             diet_id: id,
             schedule_event_id: event.getScheduleEventId(),
           });
-
+          
           let allDietResponseData = {};
-
+          
           if (dietResponseData) {
             const dietResponse = await DietResponseWrapper({
               data: dietResponseData,
             });
-
-            const { diet_responses, upload_documents, diet_response_id } =
-              (await dietResponse.getReferenceInfo()) || {};
-
+            
+            const {diet_responses, upload_documents, diet_response_id} =
+            (await dietResponse.getReferenceInfo()) || {};
+            
             allDietResponseData = {
               diet_responses,
               upload_documents,
               diet_response_id,
             };
           }
-
+          
           let eventData = {
             ...(await event.getAllInfo()),
             ...allDietResponseData,
           };
-
+          
           if (dateWiseDietData.hasOwnProperty(event.getDate())) {
-            dateWiseDietData[event.getDate()].push({ ...eventData });
+            dateWiseDietData[event.getDate()].push({...eventData});
           } else {
             dateWiseDietData[event.getDate()] = [];
-            dateWiseDietData[event.getDate()].push({ ...eventData });
+            dateWiseDietData[event.getDate()].push({...eventData});
             timelineDates.push(event.getDate());
           }
         }
-
+        
         return raiseSuccess(
           res,
           200,
@@ -844,32 +844,32 @@ class DietController extends Controller {
       return raiseServerError(res);
     }
   };
-
+  
   updateTotalCalories = async (req, res) => {
-    const { raiseSuccess, raiseClientError, raiseServerError } = this;
+    const {raiseSuccess, raiseClientError, raiseServerError} = this;
     try {
-      const { query = {} } = req;
-
-      const { id: diet_id = null, total_calories = 0 } = query;
-
+      const {query = {}} = req;
+      
+      const {id: diet_id = null, total_calories = 0} = query;
+      
       const dietService = new DietService();
-
-      const diet = await dietService.getByData({ id: diet_id });
-
+      
+      const diet = await dietService.getByData({id: diet_id});
+      
       if (!diet) {
         return raiseClientError(res, 422, {}, `No Matching Diet Details Found`);
       }
-
+      
       const isUpdated = await dietService.updateDietTotalCalories({
         diet_id,
         total_calories,
       });
-
+      
       let dietsApiData = {};
-
-      const dietWrapper = await DietWrapper({ id: diet_id });
+      
+      const dietWrapper = await DietWrapper({id: diet_id});
       dietsApiData[dietWrapper.getId()] = await dietWrapper.getBasicInfo();
-
+      
       return raiseSuccess(
         res,
         200,

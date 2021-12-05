@@ -1,6 +1,6 @@
 "use strict";
 
-import { TABLE_NAME } from "../app/models/paymentProducts";
+import {TABLE_NAME} from "../app/models/paymentProducts";
 
 module.exports = {
   up: (queryInterface, Sequelize) => {
@@ -13,7 +13,7 @@ module.exports = {
       queryInterface.renameColumn(TABLE_NAME, "creator_id", "creator_role_id"),
     ]);
   },
-
+  
   down: (queryInterface, Sequelize) => {
     return Promise.all([
       queryInterface.renameColumn(

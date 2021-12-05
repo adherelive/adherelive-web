@@ -5,10 +5,10 @@ class FeatureMappingWrapper extends BaseFeatureMapping {
   constructor(data) {
     super(data);
   }
-
+  
   getBasicInfo = () => {
-    const { _data } = this;
-    const { id, doctor_id, patient_id, feature_id } = _data || {};
+    const {_data} = this;
+    const {id, doctor_id, patient_id, feature_id} = _data || {};
     return {
       basic_info: {
         id,

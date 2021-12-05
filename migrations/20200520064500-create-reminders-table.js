@@ -1,6 +1,6 @@
 "use strict";
 
-import { DB_TABLES, USER_CATEGORY } from "../constant";
+import {DB_TABLES, USER_CATEGORY} from "../constant";
 
 module.exports = {
   up: (queryInterface, Sequelize) => {
@@ -63,7 +63,7 @@ module.exports = {
       },
     });
   },
-
+  
   down: (queryInterface, Sequelize) => {
     /*
                           Add reverting commands here.

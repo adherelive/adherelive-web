@@ -10,7 +10,7 @@ export const addAdminMedicineUrl = () => {
   return `/admin/medicines`;
 };
 
-export const getPublicMedicinesUrl = ({ value, offset }) => {
+export const getPublicMedicinesUrl = ({value, offset}) => {
   if (value && value !== "") {
     return `/admin/medicines?value=${value}&offset=${offset}&public_medicine=1`;
   } else {
@@ -18,7 +18,7 @@ export const getPublicMedicinesUrl = ({ value, offset }) => {
   }
 };
 
-export const getPrivateMedicinesUrl = ({ value, offset }) => {
+export const getPrivateMedicinesUrl = ({value, offset}) => {
   if (value && value !== "") {
     return `/admin/medicines?value=${value}&offset=${offset}&public_medicine=0`;
   } else {

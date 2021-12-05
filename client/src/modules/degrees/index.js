@@ -1,6 +1,6 @@
-import { doRequest } from "../../Helper/network";
-import { REQUEST_TYPE } from "../../constant";
-import { searchDegrees } from "../../Helper/urls/degrees";
+import {doRequest} from "../../Helper/network";
+import {REQUEST_TYPE} from "../../constant";
+import {searchDegrees} from "../../Helper/urls/degrees";
 
 export const SEARCH_DEGREES_START = "SEARCH_DEGREES_START";
 export const SEARCH_DEGREES_COMPLETED = "SEARCH_DEGREES_COMPLETED";
@@ -14,8 +14,8 @@ export const searchDegree = (value) => {
         method: REQUEST_TYPE.GET,
         url: searchDegrees(value),
       });
-
-      const { status, payload: { data, message = "" } = {} } = response || {};
+      
+      const {status, payload: {data, message = ""} = {}} = response || {};
       if (status === true) {
         dispatch({
           type: SEARCH_DEGREES_COMPLETED,
@@ -35,7 +35,7 @@ export const searchDegree = (value) => {
 };
 
 function degreeReducer(state, data) {
-  const { degrees = {} } = data || {};
+  const {degrees = {}} = data || {};
   if (degrees) {
     return {
       ...state,
@@ -47,7 +47,7 @@ function degreeReducer(state, data) {
 }
 
 export default (state = {}, payload) => {
-  const { type, data } = payload || {};
+  const {type, data} = payload || {};
   switch (type) {
     case SEARCH_DEGREES_COMPLETED:
       return degreeReducer(state, data);

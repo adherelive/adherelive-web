@@ -1,13 +1,13 @@
 import AuthRoute from "../../Routes/Auth";
-import { withRouter } from "react-router-dom";
-import { connect } from "react-redux";
-import { signOut } from "../../modules/auth";
-import { getUserRoles } from "../../modules/userRoles";
+import {withRouter} from "react-router-dom";
+import {connect} from "react-redux";
+import {signOut} from "../../modules/auth";
+import {getUserRoles} from "../../modules/userRoles";
 
 const mapStateToProps = (state) => {
-  const { auth, users, doctors } = state;
-  const { authenticated_user, authenticated_category, hasConsent } = auth;
-
+  const {auth, users, doctors} = state;
+  const {authenticated_user, authenticated_category, hasConsent} = auth;
+  
   return {
     authenticated_user,
     users,

@@ -1,16 +1,16 @@
-import { connect } from "react-redux";
+import {connect} from "react-redux";
 import ChatPopUp from "../../Components/ChatPopup";
 
-import { fetchChatAccessToken } from "../../modules/twilio";
-import { getSymptomDetails } from "../../modules/symptoms";
+import {fetchChatAccessToken} from "../../modules/twilio";
+import {getSymptomDetails} from "../../modules/symptoms";
 
-import { getVitalOccurence } from "../../modules/vital_occurence";
+import {getVitalOccurence} from "../../modules/vital_occurence";
 
 import {
   addMessageOfChat,
   raiseChatNotification,
 } from "../../modules/chatMessages";
-import { closePopUp, minimizePopUp, maximizePopUp } from "../../modules/chat";
+import {closePopUp, minimizePopUp, maximizePopUp} from "../../modules/chat";
 import {
   getAllFeatures,
   toggleChatPermission,
@@ -21,7 +21,7 @@ const mapStateToProps = (state) => {
   const {
     twilio,
     users,
-    auth: { authenticated_user = 1, authenticated_category } = {},
+    auth: {authenticated_user = 1, authenticated_category} = {},
     chats,
     chatMessages,
     symptoms,

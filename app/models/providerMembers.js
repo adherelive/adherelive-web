@@ -1,8 +1,8 @@
 "use strict";
-import { DataTypes } from "sequelize";
-import { PROVIDERS } from "./providers";
+import {DataTypes} from "sequelize";
+import {PROVIDERS} from "./providers";
 
-import { USER_CATEGORY } from "../../constant";
+import {USER_CATEGORY} from "../../constant";
 
 export const PROVIDER_MEMBERS = "provider_members";
 
@@ -59,8 +59,8 @@ export const db = (database) => {
 };
 
 export const associate = (database) => {
-  const { providers, provider_members } = database.models || {};
-
+  const {providers, provider_members} = database.models || {};
+  
   // associations here (if any) ...
   provider_members.belongsTo(providers, {
     foreignKey: "provider_id",

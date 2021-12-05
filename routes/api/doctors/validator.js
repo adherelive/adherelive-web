@@ -1,8 +1,8 @@
 import Response from "../../../app/helper/responseFormat";
 import Joi from "@hapi/joi";
 import moment from "moment";
-import { validationError } from "../helper";
-import { USER_CATEGORY } from "../../../constant";
+import {validationError} from "../helper";
+import {USER_CATEGORY} from "../../../constant";
 
 const addDoctorForm = Joi.object().keys({
   name: Joi.string().optional().allow("", null),
@@ -192,7 +192,7 @@ const addClinicsForm = Joi.object().keys({
 });
 
 export const validateAddDoctorData = (req, res, next) => {
-  const { body: data = {} } = req;
+  const {body: data = {}} = req;
   const isValid = addDoctorForm.validate(data);
   if (isValid && isValid.error != null) {
     return validationError(res, isValid);
@@ -205,7 +205,7 @@ const validDOB = (date) => {
 };
 
 export const validateAddPatientData = (req, res, next) => {
-  const { body: data, data: { date_of_birth } = {} } = req;
+  const {body: data, data: {date_of_birth} = {}} = req;
   const isValid = addPatientForm.validate(data);
   if (isValid && isValid.error != null) {
     return validationError(res, isValid);
@@ -220,7 +220,7 @@ export const validateAddPatientData = (req, res, next) => {
 };
 
 export const validateDoctorQualificationData = (req, res, next) => {
-  const { body: data, data: {} = {} } = req;
+  const {body: data, data: {} = {}} = req;
   const isValid = addQualificationRegistrationForm.validate(data);
   if (isValid && isValid.error != null) {
     return validationError(res, isValid);
@@ -229,7 +229,7 @@ export const validateDoctorQualificationData = (req, res, next) => {
 };
 
 export const validateQualificationStepData = (req, res, next) => {
-  const { body: data, data: {} = {} } = req;
+  const {body: data, data: {} = {}} = req;
   const isValid = addQualificationStepForm.validate(data);
   if (isValid && isValid.error != null) {
     return validationError(res, isValid);
@@ -238,7 +238,7 @@ export const validateQualificationStepData = (req, res, next) => {
 };
 
 export const validateRegistrationStepData = (req, res, next) => {
-  const { body: data, data: {} = {} } = req;
+  const {body: data, data: {} = {}} = req;
   const isValid = addRegistrationStepForm.validate(data);
   if (isValid && isValid.error != null) {
     return validationError(res, isValid);
@@ -247,7 +247,7 @@ export const validateRegistrationStepData = (req, res, next) => {
 };
 
 export const validateClinicData = (req, res, next) => {
-  const { body: data, data: {} = {} } = req;
+  const {body: data, data: {} = {}} = req;
   const isValid = addClinicsForm.validate(data);
   if (isValid && isValid.error != null) {
     return validationError(res, isValid);

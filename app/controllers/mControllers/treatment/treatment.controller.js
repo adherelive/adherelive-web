@@ -12,24 +12,24 @@ class TreatmentController extends Controller {
   constructor() {
     super();
   }
-
+  
   getAll = async (req, res) => {
-    const { raiseSuccess, raiseClientError, raiseServerError } = this;
+    const {raiseSuccess, raiseClientError, raiseServerError} = this;
     try {
-      const { query } = req;
-      const { condition_id } = query || {};
-
+      const {query} = req;
+      const {condition_id} = query || {};
+      
       Logger.debug("condition_id in req", condition_id);
-
+      
       const treatmentDetails = await treatmentService.getAll();
-
+      
       let treatmentApiData = {};
       for (const treatment of treatmentDetails) {
         const treatmentWrapper = await new TreatmentWrapper(treatment);
         treatmentApiData[treatmentWrapper.getTreatmentId()] =
           treatmentWrapper.getBasicInfo();
       }
-
+      
       return raiseSuccess(
         res,
         200,

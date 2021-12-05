@@ -1,7 +1,7 @@
 "use strict";
-import { DataTypes } from "sequelize";
-import { TABLE_NAME as userTableName } from "./users";
-import { USER_CATEGORY } from "../../constant";
+import {DataTypes} from "sequelize";
+import {TABLE_NAME as userTableName} from "./users";
+import {USER_CATEGORY} from "../../constant";
 
 export const TABLE_NAME = "user_roles";
 

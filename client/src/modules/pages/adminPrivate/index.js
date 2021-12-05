@@ -7,8 +7,8 @@ import {
 const PRIVATE = "private";
 
 function getPrivateAdminMedicinesReducer(state, data) {
-  const { offset = 0, medicines, type = "" } = data || {};
-  const private_medicines = { ...state, [offset]: medicines };
+  const {offset = 0, medicines, type = ""} = data || {};
+  const private_medicines = {...state, [offset]: medicines};
   if (medicines && type === PRIVATE) {
     return {
       ...private_medicines,
@@ -19,12 +19,12 @@ function getPrivateAdminMedicinesReducer(state, data) {
 }
 
 function getMakeMedicinesPublicReducer(state, data) {
-  const { offset = 0 } = data || {};
-  const { medicines = {} } = data;
+  const {offset = 0} = data || {};
+  const {medicines = {}} = data;
   const id = Object.keys(medicines)[0] || null;
-  const { [id.toString()]: medicine, ...rest } = state[offset] || {};
+  const {[id.toString()]: medicine, ...rest} = state[offset] || {};
   const remainingKeyMedicinesLength = Object.keys(rest).length;
-
+  
   if (remainingKeyMedicinesLength === 0) {
     // to remove last medicine from private page after making public
     return rest;
@@ -34,14 +34,14 @@ function getMakeMedicinesPublicReducer(state, data) {
 }
 
 function deleteMedicineReducer(state, data) {
-  const { medicine_id, offset = null } = data || {};
-
+  const {medicine_id, offset = null} = data || {};
+  
   if (medicine_id) {
-    const { [medicine_id.toString()]: medicine, ...rest } = state[offset] || {};
-
+    const {[medicine_id.toString()]: medicine, ...rest} = state[offset] || {};
+    
     if (medicine) {
-      let updatedMed = { ...state };
-      updatedMed[offset] = { ...rest };
+      let updatedMed = {...state};
+      updatedMed[offset] = {...rest};
       return {
         ...updatedMed,
       };
@@ -54,7 +54,7 @@ function deleteMedicineReducer(state, data) {
 }
 
 export default (state = [], action) => {
-  const { type, data } = action;
+  const {type, data} = action;
   switch (type) {
     case GET_PRIVATE_MEDICINES_COMPLETED:
       return getPrivateAdminMedicinesReducer(state, data);

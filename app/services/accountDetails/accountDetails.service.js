@@ -1,6 +1,6 @@
 import Database from "../../../libs/mysql";
-import { TABLE_NAME } from "../../models/accountDetails";
-import { Op } from "sequelize";
+import {TABLE_NAME} from "../../models/accountDetails";
+import {Op} from "sequelize";
 
 class AccountDetailsService {
   update = async (data, id) => {
@@ -19,7 +19,7 @@ class AccountDetailsService {
       throw error;
     }
   };
-
+  
   addAccountDetails = async (data) => {
     const transaction = await Database.initTransaction();
     try {
@@ -33,12 +33,12 @@ class AccountDetailsService {
       throw error;
     }
   };
-
+  
   getCurrentAccountByUserId = async (user_id) => {
     try {
       const accountDetails = await Database.getModel(TABLE_NAME).findOne({
         where: {
-          [Op.and]: [{ user_id }, { in_use: true }],
+          [Op.and]: [{user_id}, {in_use: true}],
         },
       });
       return accountDetails;
@@ -46,7 +46,7 @@ class AccountDetailsService {
       throw error;
     }
   };
-
+  
   getAllAccountsForUser = async (user_id) => {
     try {
       const accountDetails = await Database.getModel(TABLE_NAME).findAll({
@@ -59,7 +59,7 @@ class AccountDetailsService {
       throw error;
     }
   };
-
+  
   getByData = async (data) => {
     try {
       const accountDetails = await Database.getModel(TABLE_NAME).findOne({
@@ -70,14 +70,14 @@ class AccountDetailsService {
       throw error;
     }
   };
-
+  
   updateInUseForAccount = async (user_id) => {
     try {
       const accountDetails = await Database.getModel(TABLE_NAME).update(
-        { in_use: false },
+        {in_use: false},
         {
           where: {
-            [Op.and]: [{ user_id }, { in_use: true }],
+            [Op.and]: [{user_id}, {in_use: true}],
           },
         }
       );
@@ -86,7 +86,7 @@ class AccountDetailsService {
       throw error;
     }
   };
-
+  
   deleteAccountDetails = async (id) => {
     try {
       const accountDetails = await Database.getModel(TABLE_NAME).destroy({
@@ -99,7 +99,7 @@ class AccountDetailsService {
       throw error;
     }
   };
-
+  
   update = async (data, id) => {
     const transaction = await Database.initTransaction();
     try {

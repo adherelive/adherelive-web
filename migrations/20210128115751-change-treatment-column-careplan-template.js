@@ -1,6 +1,6 @@
 "use strict";
-import { TABLE_NAME } from "../app/models/careplanTemplate";
-import { DataTypes } from "sequelize";
+import {TABLE_NAME} from "../app/models/careplanTemplate";
+import {DataTypes} from "sequelize";
 
 module.exports = {
   up: (queryInterface, Sequelize) => {
@@ -11,7 +11,7 @@ module.exports = {
       }),
     ]);
   },
-
+  
   down: (queryInterface, Sequelize) => {
     return Promise.all([
       queryInterface.changeColumn(TABLE_NAME, "treatment_id"),

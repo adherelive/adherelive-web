@@ -1,6 +1,6 @@
 "use strict";
 
-import { TABLE_NAME } from "../models/vitalTemplates";
+import {TABLE_NAME} from "../models/vitalTemplates";
 
 module.exports = {
   up: (queryInterface, Sequelize) => {
@@ -237,7 +237,7 @@ module.exports = {
       },
     ]);
   },
-
+  
   down: (queryInterface, Sequelize) => {
     return queryInterface.bulkDelete(TABLE_NAME, null, {});
   },

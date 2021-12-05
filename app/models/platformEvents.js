@@ -1,5 +1,5 @@
 "use strict";
-import { DataTypes } from "sequelize";
+import {DataTypes} from "sequelize";
 
 export const PLATFORM_EVENTS = "platform_events";
 

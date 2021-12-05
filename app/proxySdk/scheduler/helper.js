@@ -1,4 +1,4 @@
-import { REPEAT_TYPE } from "../../../constant";
+import {REPEAT_TYPE} from "../../../constant";
 
 const moment = require("moment");
 
@@ -23,7 +23,7 @@ function* nextEventTime(
   listOfDays
 ) {
   const noOfDaysInWeek = 7;
-
+  
   //for next day
   let noOfDays = 0;
   let curr = 0;
@@ -46,23 +46,23 @@ function* nextEventTime(
       .day(daysMap[listOfDays[curr]] + noOfDays)
       .clone();
     const end = endTime_copy.day(daysMap[listOfDays[curr]] + noOfDays).clone();
-
+    
     if (curr + 1 === totalNoOfDays) {
       noOfDays = noOfDays + repeatInterval * noOfDaysInWeek;
     }
     curr = (curr + 1) % totalNoOfDays;
-    yield { startTime: start, endTime: end, valid: startTime <= start };
+    yield {startTime: start, endTime: end, valid: startTime <= start};
   }
 }
 
 const getEventListByWeekly = async ({
-  startDate,
-  endDate,
-  eventStartTime,
-  eventEndTime,
-  repeatInterval,
-  listOfDays,
-}) => {
+                                      startDate,
+                                      endDate,
+                                      eventStartTime,
+                                      eventEndTime,
+                                      repeatInterval,
+                                      listOfDays,
+                                    }) => {
   console.log("start------------------------------------", eventStartTime);
   const eventGenartor = await nextEventTime(
     eventStartTime,
@@ -70,47 +70,47 @@ const getEventListByWeekly = async ({
     repeatInterval,
     listOfDays
   );
-
+  
   let events = [];
   const endOfEndDate = endDate.clone().endOf("day");
   while (true) {
     const event = eventGenartor.next().value;
-    const { startTime, endTime, valid } = event;
+    const {startTime, endTime, valid} = event;
     if (endTime <= endOfEndDate) {
       if (valid) {
-        events.push({ startTime: startTime, endTime: endTime });
+        events.push({startTime: startTime, endTime: endTime});
       }
     } else {
       break;
     }
   }
-
+  
   return events.map((eventDate) => {
     let start = eventDate.startTime;
     let end = eventDate.endTime;
-
+    
     if (isBeforeOffset(start)) {
-      start = start.clone().subtract({ days: 1 });
+      start = start.clone().subtract({days: 1});
     }
     if (isBeforeOffset(end)) {
-      end = end.clone().subtract({ days: 1 });
+      end = end.clone().subtract({days: 1});
     }
-
-    return { startTime: start, endTime: end };
+    
+    return {startTime: start, endTime: end};
   });
 };
 
 function getAllEventList({
-  startDate,
-  endDate,
-  eventStartTime,
-  eventEndTime,
-  toAdd,
-}) {
+                           startDate,
+                           endDate,
+                           eventStartTime,
+                           eventEndTime,
+                           toAdd,
+                         }) {
   let startTime = eventStartTime.clone();
   let endTime = eventEndTime.clone();
   const list = [];
-
+  
   for (let next = startDate; next < endDate; next = next.add(toAdd)) {
     list.push({
       startTime,
@@ -123,17 +123,17 @@ function getAllEventList({
 }
 
 function getEventList({
-  startDate,
-  endDate,
-  repeat,
-  eventStartTime,
-  eventEndTime,
-  repeatInterval,
-  listOfDays,
-}) {
+                        startDate,
+                        endDate,
+                        repeat,
+                        eventStartTime,
+                        eventEndTime,
+                        repeatInterval,
+                        listOfDays,
+                      }) {
   switch (repeat) {
     case REPEAT_TYPE.NONE:
-      return [{ startTime: eventStartTime, endTime: eventEndTime }];
+      return [{startTime: eventStartTime, endTime: eventEndTime}];
     case REPEAT_TYPE.WEEKLY:
       return getEventListByWeekly({
         startDate,
@@ -149,7 +149,7 @@ function getEventList({
         endDate,
         eventStartTime,
         eventEndTime,
-        toAdd: { days: 1 },
+        toAdd: {days: 1},
       });
     case REPEAT_TYPE.MONTHLY:
       return getAllEventList({
@@ -157,7 +157,7 @@ function getEventList({
         endDate,
         eventStartTime,
         eventEndTime,
-        toAdd: { months: repeatInterval },
+        toAdd: {months: repeatInterval},
       });
     case REPEAT_TYPE.YEARLY:
       return getAllEventList({
@@ -165,7 +165,7 @@ function getEventList({
         endDate,
         eventStartTime,
         eventEndTime,
-        toAdd: { years: repeatInterval },
+        toAdd: {years: repeatInterval},
       });
     default:
       return [];

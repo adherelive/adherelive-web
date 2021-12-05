@@ -1,4 +1,4 @@
-import { TABLE_COLUMN } from "../helper";
+import {TABLE_COLUMN} from "../helper";
 
 export default (data) => {
   const {
@@ -15,7 +15,7 @@ export default (data) => {
     getPublicMedicines,
     currentTab,
   } = data;
-
+  
   return {
     key: id,
     [TABLE_COLUMN.MEDICINE_NAME.dataIndex]: {

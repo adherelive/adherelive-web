@@ -9,12 +9,12 @@ export default async function createLink(data = {}) {
       branch_key: process.config.branch_io.key,
       data,
     });
-
+    
     console.log("dara====", res);
-
-    const { status } = res;
+    
+    const {status} = res;
     if (status === 200) {
-      const { data: { url } = {} } = res;
+      const {data: {url} = {}} = res;
       return url;
     }
   } catch (err) {

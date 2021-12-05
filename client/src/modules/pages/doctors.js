@@ -1,5 +1,5 @@
 function doctorPageReducer(state, data) {
-  const { doctor_ids } = data || {};
+  const {doctor_ids} = data || {};
   if (doctor_ids) {
     return [...doctor_ids];
   } else {
@@ -8,7 +8,7 @@ function doctorPageReducer(state, data) {
 }
 
 export default (state = [], action) => {
-  const { type, data } = action;
+  const {type, data} = action;
   switch (type) {
     default:
       return doctorPageReducer(state, data);

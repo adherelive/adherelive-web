@@ -29,20 +29,20 @@ class CarePlanTemplateController extends Controller {
   constructor() {
     super();
   }
-
+  
   create = async (req, res) => {
-    const { raiseSuccess, raiseClientError, raiseServerError } = this;
+    const {raiseSuccess, raiseClientError, raiseServerError} = this;
     try {
-      const { body } = req;
+      const {body} = req;
       const {
         userDetails: {
           userId,
-          userData: { category } = {},
+          userData: {category} = {},
           userCategoryId,
         } = {},
         permissions = [],
       } = req;
-
+      
       const {
         medicationsData,
         appointmentsData,
@@ -51,15 +51,15 @@ class CarePlanTemplateController extends Controller {
         workoutData = [],
         name,
       } = body || {};
-
+      
       Log.info(`name : ${name}`);
-
+      
       const existingTemplate =
         (await carePlanTemplateService.getSingleTemplateByData({
           name,
           user_id: userId,
         })) || null;
-
+      
       if (!existingTemplate) {
         const createTemplate =
           (await carePlanTemplateService.create({
@@ -73,56 +73,56 @@ class CarePlanTemplateController extends Controller {
             template_diets: dietData,
             template_workouts: workoutData,
           })) || null;
-
+        
         Log.debug("createTemplate value", createTemplate);
-
+        
         if (createTemplate) {
           const template = await CarePlanTemplateWrapper(createTemplate);
-
+          
           const allCareplanTemplates =
             (await carePlanTemplateService.getAllTemplatesForDoctor({
               user_id: userId,
             })) || [];
-
+          
           let carePlanTemplateIds = [];
-
+          
           if (allCareplanTemplates.length > 0) {
             for (let index = 0; index < allCareplanTemplates.length; index++) {
               const template = await CarePlanTemplateWrapper(
                 allCareplanTemplates[index]
               );
-
+              
               carePlanTemplateIds.push(template.getCarePlanTemplateId());
             }
           }
-
-          const { exercises: allExercises = {} } =
+          
+          const {exercises: allExercises = {}} =
             await template.getReferenceInfo();
-          console.log("8163812638162837612873618273712381", { allExercises });
-
+          console.log("8163812638162837612873618273712381", {allExercises});
+          
           let exerciseContentData = {};
           const exerciseContentService = new ExerciseContentService();
-
+          
           for (let each in allExercises) {
             const exercise = allExercises[each] || {};
-            const { basic_info: { id = null } = {} } = exercise || {};
+            const {basic_info: {id = null} = {}} = exercise || {};
             const exerciseContentExists =
               (await exerciseContentService.findOne({
                 exercise_id: id,
                 creator_id: userCategoryId,
                 creator_type: category,
               })) || null;
-
+            
             if (exerciseContentExists) {
               const exerciseContentWrapper = await ExerciseContentWrapper({
                 exercise_id: id,
-                auth: { creator_id: userCategoryId, creator_type: category },
+                auth: {creator_id: userCategoryId, creator_type: category},
               });
               exerciseContentData[exerciseContentWrapper.getId()] =
                 exerciseContentWrapper.getBasicInfo();
             }
           }
-
+          
           return raiseSuccess(
             res,
             200,
@@ -149,44 +149,44 @@ class CarePlanTemplateController extends Controller {
       return raiseServerError(res);
     }
   };
-
+  
   getAllForDoctor = async (req, res) => {
-    const { raiseSuccess, raiseServerError } = this;
+    const {raiseSuccess, raiseServerError} = this;
     try {
       const {
         userDetails: {
           userId,
-          userData: { category } = {},
+          userData: {category} = {},
           userCategoryId,
         } = {},
         permissions = [],
       } = req;
-
+      
       const allCareplanTemplates =
         (await carePlanTemplateService.getAllTemplatesForDoctor({
           user_id: userId,
         })) || [];
-
+      
       let carePlanTemplate = {};
       let templateAppointment = {};
       let templateMedication = {};
       let templateVital = {};
       let vitalTemplates = {};
       let medicineData = {};
-
+      
       let allTemplateDiets = {};
       let allFoodItems = {};
       let allFoodItemDetails = {};
       let allPortions = {};
-
+      
       let allTemplateWorkouts = {};
       let allExercises = {};
       let allExerciseDetails = {};
       let allRepetitions = {};
       let allExerciseContents = {};
-
+      
       let carePlanTemplateIds = [];
-
+      
       if (allCareplanTemplates.length > 0) {
         for (let index = 0; index < allCareplanTemplates.length; index++) {
           const template = await CarePlanTemplateWrapper(
@@ -208,67 +208,67 @@ class CarePlanTemplateController extends Controller {
             exercises,
             repetitions,
           } = await template.getReferenceInfo();
-
-          carePlanTemplate = { ...carePlanTemplate, ...care_plan_templates };
+          
+          carePlanTemplate = {...carePlanTemplate, ...care_plan_templates};
           carePlanTemplateIds.push(template.getCarePlanTemplateId());
-
+          
           templateAppointment = {
             ...templateAppointment,
             ...template_appointments,
           };
-
+          
           if (permissions.includes(PERMISSIONS.MEDICATIONS.TEMPLATE)) {
             templateMedication = {
               ...templateMedication,
               ...template_medications,
             };
           }
-
-          templateVital = { ...templateVital, ...template_vitals };
-
-          vitalTemplates = { ...vitalTemplates, ...vital_templates };
-
+          
+          templateVital = {...templateVital, ...template_vitals};
+          
+          vitalTemplates = {...vitalTemplates, ...vital_templates};
+          
           if (permissions.includes(PERMISSIONS.MEDICATIONS.TEMPLATE)) {
-            medicineData = { ...medicineData, ...medicines };
+            medicineData = {...medicineData, ...medicines};
           }
-
-          allTemplateDiets = { ...allTemplateDiets, ...template_diets };
-          allFoodItems = { ...allFoodItems, ...food_items };
-          allFoodItemDetails = { ...allFoodItemDetails, ...food_item_details };
-          allPortions = { ...allPortions, ...portions };
-
+          
+          allTemplateDiets = {...allTemplateDiets, ...template_diets};
+          allFoodItems = {...allFoodItems, ...food_items};
+          allFoodItemDetails = {...allFoodItemDetails, ...food_item_details};
+          allPortions = {...allPortions, ...portions};
+          
           allTemplateWorkouts = {
             ...allTemplateWorkouts,
             ...template_workouts,
           };
-          allExercises = { ...allExercises, ...exercises };
-          allExerciseDetails = { ...allExerciseDetails, ...exercise_details };
-          allRepetitions = { ...allRepetitions, ...repetitions };
+          allExercises = {...allExercises, ...exercises};
+          allExerciseDetails = {...allExerciseDetails, ...exercise_details};
+          allRepetitions = {...allRepetitions, ...repetitions};
         }
-
+        
         let exerciseContentData = {};
         const exerciseContentService = new ExerciseContentService();
-
+        
         for (let each in allExercises) {
           const exercise = allExercises[each] || {};
-          const { basic_info: { id = null } = {} } = exercise || {};
+          const {basic_info: {id = null} = {}} = exercise || {};
           const exerciseContentExists =
             (await exerciseContentService.findOne({
               exercise_id: id,
               creator_id: userCategoryId,
               creator_type: category,
             })) || null;
-
+          
           if (exerciseContentExists) {
             const exerciseContentWrapper = await ExerciseContentWrapper({
               exercise_id: id,
-              auth: { creator_id: userCategoryId, creator_type: category },
+              auth: {creator_id: userCategoryId, creator_type: category},
             });
             exerciseContentData[exerciseContentWrapper.getId()] =
               exerciseContentWrapper.getBasicInfo();
           }
         }
-
+        
         return raiseSuccess(
           res,
           200,
@@ -291,7 +291,7 @@ class CarePlanTemplateController extends Controller {
             food_items: allFoodItems,
             food_item_details: allFoodItemDetails,
             portions: allPortions,
-
+            
             template_workouts: allTemplateWorkouts,
             exercise_details: allExerciseDetails,
             exercises: allExercises,
@@ -299,7 +299,7 @@ class CarePlanTemplateController extends Controller {
             // exercise_contents: exerciseContentData,
             repetitions: allRepetitions,
             exercise_contents: allExerciseContents,
-
+            
             vital_templates: {
               ...vitalTemplates,
             },
@@ -320,22 +320,22 @@ class CarePlanTemplateController extends Controller {
       return raiseServerError(res);
     }
   };
-
+  
   duplicate = async (req, res) => {
-    const { raiseSuccess, raiseClientError, raiseServerError } = this;
+    const {raiseSuccess, raiseClientError, raiseServerError} = this;
     try {
-      const { params: { id } = {} } = req;
+      const {params: {id} = {}} = req;
       const {
         userDetails: {
           userId,
-          userData: { category } = {},
+          userData: {category} = {},
           userCategoryId,
         } = {},
         permissions = [],
       } = req;
-
+      
       Log.info(`careplan template id to duplicate : ${id}`);
-
+      
       if (!id) {
         return raiseClientError(
           res,
@@ -344,10 +344,10 @@ class CarePlanTemplateController extends Controller {
           "Please select correct template to duplicate"
         );
       }
-
+      
       const currentTemplate =
         (await carePlanTemplateService.getCarePlanTemplateById(id)) || null;
-
+      
       if (currentTemplate) {
         const template = await CarePlanTemplateWrapper(currentTemplate);
         const {
@@ -358,21 +358,21 @@ class CarePlanTemplateController extends Controller {
           template_diets,
           template_workouts,
         } = await template.getReferenceInfo();
-
+        
         const {
-          basic_info: { name, treatment_id, severity_id, condition_id } = {},
+          basic_info: {name, treatment_id, severity_id, condition_id} = {},
           template_appointment_ids,
           template_medication_ids,
           template_vital_ids,
           template_diet_ids,
           template_workout_ids,
         } = care_plan_templates[template.getCarePlanTemplateId()] || {};
-
+        
         // appointments
         const appointmentData = template_appointment_ids.map((id) => {
-          const { reason, time_gap, details, provider_id, provider_name } =
-            template_appointments[id] || {};
-
+          const {reason, time_gap, details, provider_id, provider_name} =
+          template_appointments[id] || {};
+          
           return {
             reason,
             time_gap,
@@ -381,46 +381,46 @@ class CarePlanTemplateController extends Controller {
             provider_name,
           };
         });
-
+        
         // medications
         let medicationData = {};
-
+        
         if (permissions.includes(PERMISSIONS.MEDICATIONS.TEMPLATE)) {
           medicationData = template_medication_ids.map((id) => {
             const {
-              basic_info: { medicine_id },
+              basic_info: {medicine_id},
               schedule_data,
             } = template_medications[id] || {};
-
+            
             return {
               medicine_id,
               schedule_data,
             };
           });
         }
-
+        
         // vitals (ACTIONS)
         const vitalData = template_vital_ids.map((id) => {
           const {
-            basic_info: { vital_template_id },
+            basic_info: {vital_template_id},
             details,
           } = template_vitals[id] || {};
-
+          
           return {
             vital_template_id,
             details,
           };
         });
-
+        
         // diets
         const dietData = template_diet_ids.map((id) => {
           const {
-            basic_info: { name },
+            basic_info: {name},
             total_calories,
             duration,
             details,
           } = template_diets[id] || {};
-
+          
           return {
             name: `${name} Copy`,
             total_calories,
@@ -428,17 +428,17 @@ class CarePlanTemplateController extends Controller {
             details,
           };
         });
-
+        
         // workouts
         const workoutData = template_workout_ids.map((id) => {
           const {
-            basic_info: { name },
+            basic_info: {name},
             total_calories,
             duration,
             time,
             details,
           } = template_workouts[id] || {};
-
+          
           return {
             name: `${name} Copy`,
             total_calories,
@@ -447,9 +447,9 @@ class CarePlanTemplateController extends Controller {
             details,
           };
         });
-
+        
         const duplicateName = `${name}${TEMPLATE_DUPLICATE_TEXT}`;
-
+        
         const newTemplateData = {
           name: duplicateName,
           treatment_id,
@@ -464,23 +464,23 @@ class CarePlanTemplateController extends Controller {
           template_diets: dietData,
           template_workouts: workoutData,
         };
-
+        
         // check for existing template names
         const existingTemplate =
           (await carePlanTemplateService.getSingleTemplateByData({
             name: duplicateName,
             user_id: userId,
           })) || null;
-
+        
         let isDuplicate = false;
-
+        
         if (existingTemplate) {
           // check if previousTemplate name is same
           if (id !== `${existingTemplate.get("id")}`) {
             isDuplicate = true;
           }
         }
-
+        
         if (!isDuplicate) {
           const createCarePlanTemplate = await carePlanTemplateService.create(
             newTemplateData
@@ -488,54 +488,54 @@ class CarePlanTemplateController extends Controller {
           const carePlanTemplate = await CarePlanTemplateWrapper(
             createCarePlanTemplate
           );
-
+          
           //------------------>>>
-
+          
           const allCareplanTemplates =
             (await carePlanTemplateService.getAllTemplatesForDoctor({
               user_id: userId,
             })) || [];
-
+          
           let carePlanTemplateIds = [];
-
+          
           if (allCareplanTemplates.length > 0) {
             for (let index = 0; index < allCareplanTemplates.length; index++) {
               const template = await CarePlanTemplateWrapper(
                 allCareplanTemplates[index]
               );
-
+              
               carePlanTemplateIds.push(template.getCarePlanTemplateId());
             }
           }
-
+          
           //<<---------------------
-
+          
           let exerciseContentData = {};
-          const { exercises: allExercises = {} } =
+          const {exercises: allExercises = {}} =
             await carePlanTemplate.getReferenceInfo();
-
+          
           const exerciseContentService = new ExerciseContentService();
-
+          
           for (let each in allExercises) {
             const exercise = allExercises[each] || {};
-            const { basic_info: { id = null } = {} } = exercise || {};
+            const {basic_info: {id = null} = {}} = exercise || {};
             const exerciseContentExists =
               (await exerciseContentService.findOne({
                 exercise_id: id,
                 creator_id: userCategoryId,
                 creator_type: category,
               })) || null;
-
+            
             if (exerciseContentExists) {
               const exerciseContentWrapper = await ExerciseContentWrapper({
                 exercise_id: id,
-                auth: { creator_id: userCategoryId, creator_type: category },
+                auth: {creator_id: userCategoryId, creator_type: category},
               });
               exerciseContentData[exerciseContentWrapper.getId()] =
                 exerciseContentWrapper.getBasicInfo();
             }
           }
-
+          
           return raiseSuccess(
             res,
             200,
@@ -567,23 +567,23 @@ class CarePlanTemplateController extends Controller {
       return raiseServerError(res);
     }
   };
-
+  
   update = async (req, res) => {
-    const { raiseSuccess, raiseClientError, raiseServerError } = this;
+    const {raiseSuccess, raiseClientError, raiseServerError} = this;
     try {
-      const { params: { id: careplanTemplateId } = {}, body = {} } = req;
+      const {params: {id: careplanTemplateId} = {}, body = {}} = req;
       Log.info(`careplan template id : ${careplanTemplateId}`);
       Log.debug("request body", body);
-
+      
       const {
         userDetails: {
           userId,
-          userData: { category } = {},
+          userData: {category} = {},
           userCategoryId,
         } = {},
         permissions = [],
       } = req;
-
+      
       if (!careplanTemplateId) {
         return raiseClientError(
           res,
@@ -592,7 +592,7 @@ class CarePlanTemplateController extends Controller {
           "Please select correct template to update"
         );
       }
-
+      
       const {
         medicationsData,
         appointmentsData,
@@ -601,23 +601,23 @@ class CarePlanTemplateController extends Controller {
         workoutData,
         name,
       } = body;
-
+      
       // check for existing template names
       const existingTemplate =
         (await carePlanTemplateService.getSingleTemplateByData({
           name,
           user_id: userId,
         })) || null;
-
+      
       let isDuplicate = false;
-
+      
       if (existingTemplate) {
         // check if previousTemplate name is same
         if (careplanTemplateId !== `${existingTemplate.get("id")}`) {
           isDuplicate = true;
         }
       }
-
+      
       if (!isDuplicate) {
         const updateTemplate =
           (await carePlanTemplateService.update(
@@ -626,11 +626,11 @@ class CarePlanTemplateController extends Controller {
             },
             careplanTemplateId
           )) || null;
-
+        
         // template appointments
         if (appointmentsData.length > 0) {
           for (let index = 0; index < appointmentsData.length; index++) {
-            const { id = null, ...rest } = appointmentsData[index] || {};
+            const {id = null, ...rest} = appointmentsData[index] || {};
             if (id) {
               // update
               await templateAppointmentService.update(rest, id);
@@ -643,14 +643,14 @@ class CarePlanTemplateController extends Controller {
             }
           }
         }
-
+        
         // template medications
         if (
           permissions.includes(PERMISSIONS.MEDICATIONS.TEMPLATE) &&
           medicationsData.length > 0
         ) {
           for (let index = 0; index < medicationsData.length; index++) {
-            const { id = null, ...rest } = medicationsData[index] || {};
+            const {id = null, ...rest} = medicationsData[index] || {};
             if (id) {
               // update
               await templateMedicationService.update(rest, id);
@@ -663,12 +663,12 @@ class CarePlanTemplateController extends Controller {
             }
           }
         }
-
+        
         // template vitals
         if (vitalsData.length > 0) {
           const templateVitalService = new TemplateVitalService();
           for (let index = 0; index < vitalsData.length; index++) {
-            const { id = null, ...rest } = vitalsData[index] || {};
+            const {id = null, ...rest} = vitalsData[index] || {};
             if (id) {
               // update
               await templateVitalService.update(rest, id);
@@ -681,7 +681,7 @@ class CarePlanTemplateController extends Controller {
             }
           }
         }
-
+        
         // template diets
         if (dietData.length > 0) {
           const templateDietService = new TemplateDietService();
@@ -692,7 +692,7 @@ class CarePlanTemplateController extends Controller {
               end_date,
               ...rest
             } = dietData[index] || {};
-
+            
             if (id) {
               // update
               await templateDietService.update(rest, id);
@@ -705,7 +705,7 @@ class CarePlanTemplateController extends Controller {
             }
           }
         }
-
+        
         // template workouts
         if (workoutData.length > 0) {
           const templateWorkoutService = new TemplateWorkoutService();
@@ -716,7 +716,7 @@ class CarePlanTemplateController extends Controller {
               end_date,
               ...rest
             } = workoutData[index] || {};
-
+            
             if (id) {
               // update
               await templateWorkoutService.update(rest, id);
@@ -729,41 +729,41 @@ class CarePlanTemplateController extends Controller {
             }
           }
         }
-
+        
         Log.debug("updateTemplate value", updateTemplate);
-
+        
         if (updateTemplate !== null && updateTemplate.length > 0) {
           const template = await CarePlanTemplateWrapper(
             null,
             careplanTemplateId
           );
-
+          
           let exerciseContentData = {};
-          const { exercises: allExercises = {} } =
+          const {exercises: allExercises = {}} =
             await template.getReferenceInfo();
-
+          
           const exerciseContentService = new ExerciseContentService();
-
+          
           for (let each in allExercises) {
             const exercise = allExercises[each] || {};
-            const { basic_info: { id = null } = {} } = exercise || {};
+            const {basic_info: {id = null} = {}} = exercise || {};
             const exerciseContentExists =
               (await exerciseContentService.findOne({
                 exercise_id: id,
                 creator_id: userCategoryId,
                 creator_type: category,
               })) || null;
-
+            
             if (exerciseContentExists) {
               const exerciseContentWrapper = await ExerciseContentWrapper({
                 exercise_id: id,
-                auth: { creator_id: userCategoryId, creator_type: category },
+                auth: {creator_id: userCategoryId, creator_type: category},
               });
               exerciseContentData[exerciseContentWrapper.getId()] =
                 exerciseContentWrapper.getBasicInfo();
             }
           }
-
+          
           return raiseSuccess(
             res,
             200,
@@ -794,12 +794,12 @@ class CarePlanTemplateController extends Controller {
       return raiseServerError(res);
     }
   };
-
+  
   delete = async (req, res) => {
-    const { raiseSuccess, raiseClientError, raiseServerError } = this;
+    const {raiseSuccess, raiseClientError, raiseServerError} = this;
     try {
       const {
-        params: { id } = {},
+        params: {id} = {},
         query: {
           appointment = null,
           medication = null,
@@ -809,21 +809,21 @@ class CarePlanTemplateController extends Controller {
         } = {},
         permissions = [],
       } = req;
-
+      
       Log.info(
         `Template = id : ${id} | appointment : ${appointment} | medication : ${medication} | vital : ${vital} | diet : ${diet} | workout : ${workout}`
       );
-
+      
       if (!id) {
         return raiseClientError(res, 422, {}, "Please select valid template");
       }
-
+      
       let templateData = {};
-
+      
       const templateVitalService = new TemplateVitalService();
       const templateDietService = new TemplateDietService();
       const templateWorkoutService = new TemplateWorkoutService();
-
+      
       if (appointment || medication || vital || diet || workout) {
         // appointment
         if (appointment) {
@@ -831,7 +831,7 @@ class CarePlanTemplateController extends Controller {
             id: appointment,
           });
         }
-
+        
         // medication
         if (
           permissions.includes(PERMISSIONS.MEDICATIONS.TEMPLATE) &&
@@ -841,28 +841,28 @@ class CarePlanTemplateController extends Controller {
             id: medication,
           });
         }
-
+        
         // vital
         if (vital) {
           await templateVitalService.deleteVital({
             id: vital,
           });
         }
-
+        
         // diet
         if (diet) {
           await templateDietService.delete({
             id: diet,
           });
         }
-
+        
         // workout
         if (workout) {
           await templateWorkoutService.delete({
             id: workout,
           });
         }
-
+        
         const updatedTemplate = await CarePlanTemplateWrapper(null, id);
         templateData = {
           ...templateData,
@@ -870,33 +870,33 @@ class CarePlanTemplateController extends Controller {
         };
       } else {
         // delete template
-
+        
         await carePlanTemplateService.deleteTemplate({
           id,
         });
-
+        
         // delete all other templates attached to template id
         await templateAppointmentService.deleteAppointment({
           care_plan_template_id: id,
         });
-
+        
         await templateMedicationService.deleteMedication({
           care_plan_template_id: id,
         });
-
+        
         await templateVitalService.deleteVital({
           care_plan_template_id: id,
         });
-
+        
         await templateDietService.delete({
           care_plan_template_id: id,
         });
-
+        
         await templateWorkoutService.delete({
           care_plan_template_id: id,
         });
       }
-
+      
       return raiseSuccess(
         res,
         200,

@@ -1,5 +1,5 @@
 "use strict";
-import { DataTypes } from "sequelize";
+import {DataTypes} from "sequelize";
 
 export const EMAIL_LOGGERS = "email_loggers";
 

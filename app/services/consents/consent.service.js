@@ -1,5 +1,5 @@
 import Database from "../../../libs/mysql";
-import { TABLE_NAME } from "../../models/consents";
+import {TABLE_NAME} from "../../models/consents";
 
 class ConsentService {
   create = async (data) => {
@@ -12,7 +12,7 @@ class ConsentService {
       throw error;
     }
   };
-
+  
   getByData = async (data) => {
     try {
       const consent = await Database.getModel(TABLE_NAME).findOne({
@@ -24,7 +24,7 @@ class ConsentService {
       throw error;
     }
   };
-
+  
   getAllByData = async (data) => {
     try {
       const consent = await Database.getModel(TABLE_NAME).findAll({

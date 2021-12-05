@@ -43,8 +43,8 @@ const validateTimeInterval = (startTime, endTime) => {
 };
 
 export const validateAppointmentFormData = (req, res, next) => {
-  const { body: data = {} } = req;
-  const { start_time, end_time } = data;
+  const {body: data = {}} = req;
+  const {start_time, end_time} = data;
   const isValid = appointmentFormSchema.validate(data);
   if (isValid && isValid.error != null) {
     const response = new Response(false, 422);

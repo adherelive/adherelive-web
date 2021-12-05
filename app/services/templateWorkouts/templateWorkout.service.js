@@ -1,5 +1,5 @@
 import Database from "../../../libs/mysql";
-import { TABLE_NAME } from "../../models/templateWorkouts";
+import {TABLE_NAME} from "../../models/templateWorkouts";
 
 export default class TemplateWorkoutService {
   create = async (data) => {
@@ -8,7 +8,7 @@ export default class TemplateWorkoutService {
       const templateWorkout = await Database.getModel(TABLE_NAME).create(data, {
         transaction,
       });
-
+      
       await transaction.commit();
       return templateWorkout;
     } catch (error) {
@@ -16,13 +16,13 @@ export default class TemplateWorkoutService {
       throw error;
     }
   };
-
+  
   update = async (data, id) => {
     const transaction = await Database.initTransaction();
     try {
       const updateTemplateWorkout = await Database.getModel(TABLE_NAME).update(
         data,
-        { where: { id }, transaction }
+        {where: {id}, transaction}
       );
       await transaction.commit();
       return updateTemplateWorkout;
@@ -31,7 +31,7 @@ export default class TemplateWorkoutService {
       throw error;
     }
   };
-
+  
   delete = async (data) => {
     const transaction = await Database.initTransaction();
     try {
@@ -48,8 +48,8 @@ export default class TemplateWorkoutService {
       throw error;
     }
   };
-
-  findOne = async ({ data }) => {
+  
+  findOne = async ({data}) => {
     try {
       return (
         (await Database.getModel(TABLE_NAME).findOne({

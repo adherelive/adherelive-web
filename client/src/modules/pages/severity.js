@@ -1,5 +1,5 @@
 function severityPageReducer(state, data) {
-  const { severity_ids } = data || {};
+  const {severity_ids} = data || {};
   if (severity_ids) {
     return [...severity_ids];
   } else {
@@ -8,7 +8,7 @@ function severityPageReducer(state, data) {
 }
 
 export default (state = [], action) => {
-  const { type, data } = action;
+  const {type, data} = action;
   switch (type) {
     default:
       return severityPageReducer(state, data);

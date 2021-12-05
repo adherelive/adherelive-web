@@ -1,6 +1,6 @@
-import { DataTypes } from "sequelize";
-import { TABLE_NAME as vitalTemplatesTableName } from "./vitalTemplates";
-import { TABLE_NAME as carePlanTableName } from "./carePlan";
+import {DataTypes} from "sequelize";
+import {TABLE_NAME as vitalTemplatesTableName} from "./vitalTemplates";
+import {TABLE_NAME as carePlanTableName} from "./carePlan";
 
 export const TABLE_NAME = "vitals";
 
@@ -59,7 +59,7 @@ export const associate = (database) => {
     foreignKey: "id",
     sourceKey: "vital_template_id",
   });
-
+  
   database.models[TABLE_NAME].hasOne(database.models[carePlanTableName], {
     foreignKey: "id",
     sourceKey: "care_plan_id",
