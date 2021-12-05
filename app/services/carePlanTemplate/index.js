@@ -34,7 +34,7 @@ export default class CarePlanTemplate {
   getTemplateVitals = () => {
     const {template_vitals = []} = this._data;
     return template_vitals;
-  };
+  }
   
   getTemplateDiets = () => {
     const {template_diets = []} = this._data;

@@ -1,5 +1,5 @@
 APP_KEY="Testing"
-APP_ENV=development
+APP_ENV=Development
 NODE_ENV=development
 APP_NAME="adherelive"
 

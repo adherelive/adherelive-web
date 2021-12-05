@@ -7,6 +7,5 @@ export default class ExerciseGroup {
   
   getExerciseDetails = () => this._data.exercise_detail || null;
   
-  getWorkoutExerciseGroupMappings = () =>
-    this._data.workout_exercise_group_mappings || {};
+  getWorkoutExerciseGroupMappings = () => this._data.workout_exercise_group_mappings || {};
 }

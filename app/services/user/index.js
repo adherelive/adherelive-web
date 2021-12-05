@@ -11,7 +11,7 @@ export default class User {
   
   getId = () => {
     return this._data.id;
-  };
+  }
   
   getConsent = () => this._data.has_consent;
   
@@ -21,11 +21,11 @@ export default class User {
   
   getCategory = () => {
     return this._data.category;
-  };
+  }
   
   getPassword = () => {
     return this._data.password;
-  };
+  }
   
   getEmail = () => {
     return this._data.email;
@@ -38,7 +38,7 @@ export default class User {
   
   getPermissionData = () => {
     return this._data.permissions;
-  };
+  }
   
   getPrefix = () => {
     return this._data.prefix;

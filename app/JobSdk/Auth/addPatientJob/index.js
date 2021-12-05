@@ -23,9 +23,9 @@ class AddPatientJob extends AuthJob {
           subBodyText: "Please verify your account",
           buttonText: "Verify",
           host: process.config.WEB_URL,
-          contactTo: process.config.app.support_email,
-        },
-      },
+          contactTo: process.config.app.support_email
+        }
+      }
     ];
     
     return templateData;
@@ -33,14 +33,13 @@ class AddPatientJob extends AuthJob {
   
   getSmsTemplate = () => {
     const {getData} = this;
-    const {details: {prefix, phoneNumber, universalLink} = {}} =
-    getData() || {};
+    const {details: {prefix, phoneNumber, universalLink} = {}} = getData() || {};
     
     const templateData = [
       {
         phoneNumber: `+${prefix}${phoneNumber}`,
-        message: `Hello from AdhereLive! Please click the link to verify your number. ${universalLink}`,
-      },
+        message: `Hello from AdhereLive! Please click the link to verify your number. ${universalLink}`
+      }
     ];
     
     return templateData;

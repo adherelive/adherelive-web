@@ -11,6 +11,10 @@ router.post(
   UserDeviceController.create
 );
 
-router.delete("/", Authenticate, UserDeviceController.delete);
+router.delete(
+  "/",
+  Authenticate,
+  UserDeviceController.delete
+)
 
 module.exports = router;

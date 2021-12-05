@@ -15,5 +15,5 @@ export default class WorkoutTemplate {
   
   getExerciseDetails = () => {
     return this._data.exercise_details ? this._data.exercise_details : null;
-  };
+  }
 }

@@ -9,15 +9,15 @@ export default class UserRoles {
   
   getUserId = () => {
     return this._data.user_identity;
-  };
+  }
   
   getLinkedId = () => {
     return this._data.linked_id;
-  };
+  }
   
   getLinkedWith = () => {
     return this._data.linked_with;
-  };
+  }
   
   getUser = () => this._data.user;
   
@@ -28,4 +28,7 @@ export default class UserRoles {
   // getCategoryType = () => {
   //     return this._data.category_type
   // }
+  
 }
+
+

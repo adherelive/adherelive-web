@@ -11,7 +11,7 @@ export const db = (database) => {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
-        type: DataTypes.INTEGER,
+        type: DataTypes.INTEGER
       },
       description: {
         type: DataTypes.STRING(1000),
@@ -27,13 +27,14 @@ export const db = (database) => {
             id: this.id,
             description: this.description,
           };
-        },
-      },
+        }
+      }
     }
   );
 };
 
 export const associate = (database) => {
   // const {TABLE_NAME} = database.models || {};
+  
   // associations here (if any) ...
 };

@@ -5,7 +5,7 @@ export default class Treatment {
   
   getExistingData = () => {
     return this._data;
-  };
+  }
   
   getTreatmentId() {
     return this._data.get("id");

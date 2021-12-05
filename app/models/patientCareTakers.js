@@ -11,7 +11,7 @@ export const db = (database) => {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
-        type: DataTypes.INTEGER,
+        type: DataTypes.INTEGER
       },
       patient_id: {
         type: DataTypes.INTEGER,
@@ -35,15 +35,16 @@ export const db = (database) => {
             id: this.id,
             patient_id: this.patient_id,
             care_taker_id: this.care_taker_id,
-            consent_id: this.consent_id,
+            consent_id: this.consent_id
           };
-        },
-      },
+        }
+      }
     }
   );
 };
 
 export const associate = (database) => {
   // const {TABLE_NAME} = database.models || {};
+  
   // associations here (if any) ...
 };

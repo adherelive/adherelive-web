@@ -11,7 +11,7 @@ export const db = (database) => {
         type: DataTypes.BIGINT,
         primaryKey: true,
         autoIncrement: true,
-        unsigned: true,
+        unsigned: true
       },
       data: {
         type: "json",
@@ -25,15 +25,17 @@ export const db = (database) => {
         getBasicInfo() {
           return {
             id: this.id,
-            data: this.data,
+            data: this.data
+            
           };
-        },
-      },
+        }
+      }
     }
   );
 };
 
 export const associate = (database) => {
   // const {TABLE_NAME} = database.models || {};
+  
   // associations here (if any) ...
 };

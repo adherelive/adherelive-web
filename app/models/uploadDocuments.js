@@ -11,23 +11,23 @@ export const db = (database) => {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
-        type: DataTypes.INTEGER,
+        type: DataTypes.INTEGER
       },
       parent_type: {
         type: DataTypes.STRING(200),
-        allowNull: false,
+        allowNull: false
       },
       parent_id: {
         allowNull: false,
-        type: DataTypes.INTEGER,
+        type: DataTypes.INTEGER
       },
       document: {
         type: DataTypes.STRING(1000),
-        allowNull: false,
+        allowNull: false
       },
       name: {
-        type: DataTypes.STRING(1000),
-      },
+        type: DataTypes.STRING(1000)
+      }
     },
     {
       underscored: true,
@@ -38,15 +38,16 @@ export const db = (database) => {
             id: this.id,
             parent_type: this.parent_type,
             parent_id: this.parent_id,
-            document: this.document,
+            document: this.document
           };
-        },
-      },
+        }
+      }
     }
   );
 };
 
 export const associate = (database) => {
   // const {upload_documents} = database.models || {};
+  
   // associations here (if any) ...
 };

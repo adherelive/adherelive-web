@@ -5,7 +5,7 @@ export default class Severity {
   
   getExistingData = () => {
     return this._data;
-  };
+  }
   
   getSeverityId() {
     return this._data.get("id");

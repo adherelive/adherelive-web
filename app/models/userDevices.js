@@ -11,7 +11,7 @@ export const db = (database) => {
       id: {
         type: DataTypes.INTEGER,
         primaryKey: true,
-        autoIncrement: true,
+        autoIncrement: true
       },
       user_id: {
         type: DataTypes.INTEGER,
@@ -20,8 +20,8 @@ export const db = (database) => {
           model: {
             tableName: userTableName,
           },
-          key: "id",
-        },
+          key: 'id'
+        }
       },
       platform: {
         type: DataTypes.STRING,
@@ -45,5 +45,6 @@ export const db = (database) => {
 
 export const associate = (database) => {
   // const {<TABLE_NAME>} = database.models || {};
+  
   // associations here (if any) ...
 };

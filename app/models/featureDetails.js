@@ -12,11 +12,11 @@ export const db = (database) => {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
-        type: DataTypes.INTEGER,
+        type: DataTypes.INTEGER
       },
       feature_type: {
         type: DataTypes.ENUM,
-        values: [...Object.values(FEATURE_TYPE)],
+        values: [...Object.values(FEATURE_TYPE)]
       },
       details: {
         type: DataTypes.JSON,
@@ -31,5 +31,6 @@ export const db = (database) => {
 
 export const associate = (database) => {
   // const {TABLE_NAME} = database.models || {};
+  
   // associations here (if any) ...
 };

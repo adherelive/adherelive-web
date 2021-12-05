@@ -14,7 +14,11 @@ import EventController from "../../../app/controllers/scheduleEvents/event.contr
 //     MedicationReminder.getMedicationDetails
 // );
 
-router.get("/missed", Authenticate, EventController.getAllMissedEvents);
+router.get(
+  "/missed",
+  Authenticate,
+  EventController.getAllMissedEvents
+);
 
 router.get(
   "/missed/:patient_id",
@@ -22,7 +26,11 @@ router.get(
   EventController.getPatientMissedEvents
 );
 
-router.get("/:patient_id", Authenticate, EventController.getAllEvents);
+router.get(
+  "/:patient_id",
+  Authenticate,
+  EventController.getAllEvents
+);
 
 // router.post(
 //     "/medication-reminder/:patient_id",
@@ -38,7 +46,11 @@ router.get("/:patient_id", Authenticate, EventController.getAllEvents);
 //     MedicationReminder.createCarePlanMedication
 // );
 
-router.post("/:id/complete", Authenticate, EventController.markEventComplete);
+router.post(
+  "/:id/complete",
+  Authenticate,
+  EventController.markEventComplete
+);
 
 router.post(
   "/:id/vitals/response",

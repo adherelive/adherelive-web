@@ -7,3 +7,4 @@ export default class College {
     return this._data.get("id");
   }
 }
+

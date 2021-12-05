@@ -14,4 +14,5 @@ export default class TermsAndConditions {
   getDetails = () => {
     return this._data.details;
   };
+  
 }

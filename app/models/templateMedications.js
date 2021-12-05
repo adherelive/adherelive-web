@@ -1,6 +1,6 @@
 "use strict";
 import {DataTypes} from "sequelize";
-import {TABLE_NAME as medicineTableName} from "./medicines"; // todo :: doesn't makes sense here
+import {TABLE_NAME as medicineTableName} from './medicines'; // todo :: doesn't makes sense here
 import {TABLE_NAME as carePlanTemplateTableName} from "./careplanTemplate";
 
 export const TABLE_NAME = "template_medications";
@@ -13,7 +13,7 @@ export const db = (database) => {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
-        type: DataTypes.INTEGER,
+        type: DataTypes.INTEGER
       },
       care_plan_template_id: {
         type: DataTypes.INTEGER,
@@ -22,8 +22,8 @@ export const db = (database) => {
           model: {
             tableName: carePlanTemplateTableName,
           },
-          key: "id",
-        },
+          key: 'id'
+        }
       },
       medicine_id: {
         type: DataTypes.INTEGER,
@@ -32,12 +32,12 @@ export const db = (database) => {
           model: {
             tableName: medicineTableName,
           },
-          key: "id",
-        },
+          key: 'id'
+        }
       },
       schedule_data: {
         type: DataTypes.JSON,
-        allowNull: true,
+        allowNull: true
       },
     },
     {
@@ -54,16 +54,17 @@ export const db = (database) => {
         },
         getId() {
           return this.id;
-        },
-      },
+        }
+      }
     }
   );
 };
+
 
 export const associate = (database) => {
   // associations here (if any) ...
   database.models[TABLE_NAME].hasOne(database.models[medicineTableName], {
     foreignKey: "id",
-    sourceKey: "medicine_id",
+    sourceKey: "medicine_id"
   });
 };

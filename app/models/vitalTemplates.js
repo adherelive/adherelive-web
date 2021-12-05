@@ -10,7 +10,7 @@ export const db = (database) => {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
-        type: DataTypes.INTEGER,
+        type: DataTypes.INTEGER
       },
       name: {
         type: DataTypes.STRING,
@@ -20,7 +20,7 @@ export const db = (database) => {
         type: DataTypes.STRING,
       },
       details: {
-        type: DataTypes.JSON,
+        type: DataTypes.JSON
       },
     },
     {
@@ -32,5 +32,6 @@ export const db = (database) => {
 
 export const associate = (database) => {
   // const {upload_documents} = database.models || {};
+  
   // associations here (if any) ...
 };

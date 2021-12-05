@@ -17,7 +17,7 @@ class Log {
   
   catchError = (message, error) => {
     console.log();
-  };
+  }
   
   debug(msg, code) {
     // console.log(
@@ -77,7 +77,7 @@ class Log {
       4000: "",
       5000: "",
       6000: "",
-      7000: "",
+      7000: ""
     };
     return statement[code];
   }
