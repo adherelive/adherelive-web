@@ -5,6 +5,6 @@ export const logEvent = ({client, ...data}) => {
   client.logEvent(config.FIREBASE_CHANNEL, {
     ...data,
     device: "web",
-    timestamp: moment().format("dd/mm/yyyy hh:mm A")
+    timestamp: moment().format("dd/mm/yyyy hh:mm A"),
   });
 };

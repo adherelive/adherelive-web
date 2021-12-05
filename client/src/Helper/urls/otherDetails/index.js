@@ -12,4 +12,4 @@ export const updateTermsAndPolicyUrl = () => {
 
 export const getTACUrl = (id) => {
   return `/admin/terms_and_conditions/${id}`;
-}
+};

@@ -4,6 +4,6 @@ export const getTwilioVideoAccessToken = () => {
 export const getTwilioChatAccessToken = () => {
   return "/twilio/getTwilioChatAccessToken";
 };
-export const getConnectedParticipants = roomId => {
+export const getConnectedParticipants = (roomId) => {
   return `/twilio/getConnectedParticipants/${roomId}`;
 };

@@ -15,4 +15,3 @@ export const getVitalTimelineURL = (id) => {
 export const getUpdateVitalURL = (id) => {
   return `/vitals/${id}`;
 };
-
