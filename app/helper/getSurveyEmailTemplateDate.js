@@ -2,9 +2,9 @@
 // const { SURVEY_TEMPLATE } = require("../surveySdk");
 
 export const preparePatientSurveyMailData = async (data) => {
-  const {careCoachName, templateId, surveyId, userName} = data;
+  const { careCoachName, templateId, surveyId, userName } = data;
   const preparedData = {};
-  const surveyTemplateDetail = await SURVEY_TEMPLATE({_id: templateId}).get();
+  const surveyTemplateDetail = await SURVEY_TEMPLATE({ _id: templateId }).get();
   const {
     title = "",
     questions = [],
@@ -13,7 +13,7 @@ export const preparePatientSurveyMailData = async (data) => {
   } = surveyTemplateDetail[0];
   const totalQuestion = questions.length;
   preparedData.UserName = userName;
-  preparedData.mainBodyText = `${careCoachName} invited you to Answer the following Survey`;
+  preparedData.mainBodyText = `${careCoachName} invited you to answer the following Survey`;
   preparedData.surveyTitle = title;
   preparedData.surveyDetail = `${totalQuestion} Questions. ${time_to_complete} to complete`;
   preparedData.surveyDescription = `${description}`;

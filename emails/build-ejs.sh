@@ -1,10 +1,7 @@
-
 target="./dist"
 dest="../app/views/emailTemplates"
 
 mkdir -p "$dest"
-
-
 
 
 let count=0
