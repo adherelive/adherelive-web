@@ -84,7 +84,7 @@ class AddSecondaryDoctor extends Component {
       //   basic_info: { first_name = "", middle_name = "", last_name = "" } = {},
       // } = doctors[doctor_id] || {};
 
-      // AKSHAY NEW CODE IMPLEMETATION
+      // AKSHAY NEW CODE IMPLEMETATION START
 
       const {
         [doctor_id]: { basic_info: { full_name = "" } = {} },
@@ -93,19 +93,23 @@ class AddSecondaryDoctor extends Component {
       const { basic_info: { linked_id = null } = {} } =
         userRoles[user_role_id] || {};
 
-      let provider_name = "";
+      // AKSHAY NEW CODE IMPLEMETATION END
 
+      let provider_name = "";
+      //PREV CODE START
       // if (provider_id && !isEmpty(providers)) {
       //   console.log(providers[provider_id]);
       //   const { basic_info: { name } = {} } = providers[provider_id];
       //   provider_name = name;
       // }
-
+      //PREV CODE END
+      // AKSHAY NEW CODE IMPLEMETATION START
       if (linked_id) {
         const { basic_info: { name } = {} } = providers[linked_id] || {};
 
         provider_name = name;
       }
+      // AKSHAY NEW CODE IMPLEMETATION END
 
       return (
         <Option key={user_role_id} value={user_role_id}>
