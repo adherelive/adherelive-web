@@ -868,6 +868,7 @@ class Profileregister extends Component {
           addonBefore={prefixSelector}
           className={"form-inputs"}
           placeholder={this.formatMessage(messages.phoneNo)}
+          minLength={6}
           maxLength={10}
           value={mobile_number}
           onChange={this.setNumber}
