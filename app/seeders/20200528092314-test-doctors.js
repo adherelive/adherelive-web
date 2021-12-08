@@ -8,7 +8,7 @@ module.exports = {
       {
         user_id: "1",
         gender: "m",
-        first_name: "Sparsh",
+        first_name: "Sparch",
         last_name: "Jaiswal",
         city: "New Delhi",
         speciality_id: "1",
