@@ -32,6 +32,7 @@ import doctorPatientFeatureMappingService from "../../services/doctorPatientFeat
 import careplanSecondaryDoctorMappingService from "../../services/careplanSecondaryDoctorMappings/careplanSecondaryDoctorMappings.service";
 // import TemplateMedicationWrapper from "../../ApiWrapper/web/templateMedication";
 // import TemplateAppointmentWrapper from "../../ApiWrapper/web/templateAppointment";
+import AppointmentWrapper from "../../ApiWrapper/web/appointments";
 import DegreeWrapper from "../../ApiWrapper/mobile/degree";
 import UserWrapper from "../../ApiWrapper/web/user";
 import DoctorWrapper from "../../ApiWrapper/web/doctor";
@@ -4101,14 +4102,20 @@ class DoctorController extends Controller {
       const doctorData = await doctorService.getDoctorByData({
         user_id: userId,
       });
-      // const providerData = await providerService.getProviderByData({
-      //   user_id: userId,
-      // });
+      console.log("===doctorData Start====");
+      console.log(doctorData);
+      console.log("===doctorData End====");
+
       const doctorWrap = await DoctorWrapper(doctorData);
       // const provider = await ProviderWrapper(providerData);
       // const providerId = provider.getProviderId();
+      console.log("=====doctorWrap Start======");
+      console.log(doctorWrap);
+      console.log("=====doctorWrap Start======");
       const doctorId = doctorWrap.getDoctorId();
-
+      console.log("=====Doctor Id Start=====");
+      console.log(doctorId);
+      console.log("=====Doctor Id End======");
       let userApiDetails = {};
       let doctorApiDetails = {};
       let patientsApiDetails = {};
@@ -4122,6 +4129,10 @@ class DoctorController extends Controller {
         linked_id: doctorId,
         linked_with: USER_CATEGORY.DOCTOR,
       });
+
+      console.log("=====UserRole Start=====");
+      console.log(UserRoles);
+      console.log("=====UserRole End=====");
 
       if (UserRoles && UserRoles.length) {
         for (let i = 0; i < UserRoles.length; i++) {
