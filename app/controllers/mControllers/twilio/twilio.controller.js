@@ -10,26 +10,26 @@ class TwilioController extends Controller {
   constructor() {
     super();
   }
-  
+
   generateTwilioChatAccessToken = async (req, res) => {
     try {
       const deviceId = req.query.device ? req.query.device : "application";
       const {
-        userDetails: {userId, userRoleId},
+        userDetails: { userId, userRoleId },
       } = req;
       const identity = req.query.identity
         ? req.query.identity
         : `${userRoleId}`;
-      
+
       const token = await twilioService.chatTokenGenerator(identity, deviceId);
-      
+
       return this.raiseSuccess(
         res,
         200,
-        {identity: identity, token: token},
+        { identity: identity, token: token },
         "Created new chat token."
       );
-      
+
       // const response = new Response(true, 200);
       // response.setData({ identity: identity, token: token });
       // response.setMessage("Created new chat token with userId");
@@ -42,24 +42,24 @@ class TwilioController extends Controller {
       // res.status(500).json(response.getResponse());
     }
   };
-  
+
   generateTwilioVideoAccessToken = async (req, res) => {
     try {
       // const userId = req.query.userId ? req.query.userId : null;
       const {
-        userDetails: {userId, userRoleId},
+        userDetails: { userId, userRoleId },
       } = req;
       const identity = userRoleId ? `${userRoleId}` : faker.name.findName();
-      
+
       const token = await twilioService.videoTokenGenerator(identity);
-      
+
       return this.raiseSuccess(
         res,
         200,
-        {identity: identity, token: token},
+        { identity: identity, token: token },
         "Created new video token."
       );
-      
+
       // const response = new Response(true, 200);
       // response.setData({ identity: identity, token: token });
       // response.setMessage("Created new video token with userId");
@@ -73,19 +73,19 @@ class TwilioController extends Controller {
       // res.status(500).json(response.getResponse());
     }
   };
-  
+
   getConnectedParticipants = async (req, res) => {
     try {
-      const {roomId} = req.params;
-      
+      const { roomId } = req.params;
+
       const connectedParticipantsList =
         await twilioService.getRoomConnectedParticipants(roomId);
       let connectedParticipants = {};
       connectedParticipantsList.forEach((participant) => {
-        const {status, identity} = participant;
+        const { status, identity } = participant;
         connectedParticipants[identity] = status;
       });
-      
+
       return this.raiseSuccess(
         res,
         200,

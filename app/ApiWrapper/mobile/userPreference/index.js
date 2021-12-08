@@ -5,10 +5,10 @@ class UserPreferenceWrapper extends BaseUserPreference {
   constructor(data) {
     super(data);
   }
-  
+
   getBasicInfo = () => {
-    const {_data} = this;
-    const {id, user_id, details} = _data || {};
+    const { _data } = this;
+    const { id, user_id, details } = _data || {};
     return {
       basic_info: {
         id,
@@ -17,10 +17,10 @@ class UserPreferenceWrapper extends BaseUserPreference {
       details,
     };
   };
-  
+
   getChartInfo = () => {
-    const {_data: {details: {charts = []}} = {}} = this;
-    
+    const { _data: { details: { charts = [] } } = {} } = this;
+
     return {
       charts,
     };

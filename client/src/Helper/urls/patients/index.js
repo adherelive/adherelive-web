@@ -31,7 +31,7 @@ export const generatePrescriptionUrl = (careplan_id) => {
 };
 
 export const getPatientsPaginatedUrl = (data) => {
-  const {sort_createdAt, sort_name, offset, watchlist} = data || {};
+  const { sort_createdAt, sort_name, offset, watchlist } = data || {};
   if (sort_name === null) {
     return `/patients/pagination?sort_createdAt=${sort_createdAt}&offset=${offset}&watchlist=${watchlist}`;
   } else {
@@ -40,11 +40,11 @@ export const getPatientsPaginatedUrl = (data) => {
 };
 
 export const getSearchTreatmentPaginatedPatientsUrl = (data) => {
-  const {filter_treatment, offset, watchlist} = data || {};
+  const { filter_treatment, offset, watchlist } = data || {};
   return `/patients/pagination?filter_treatment=${filter_treatment}&offset=${offset}&watchlist=${watchlist}`;
 };
 
 export const getSearchDiagnosisPaginatedPatientsUrl = (data) => {
-  const {filter_diagnosis, offset, watchlist} = data || {};
+  const { filter_diagnosis, offset, watchlist } = data || {};
   return `/patients/pagination?filter_diagnosis=${filter_diagnosis}&offset=${offset}&watchlist=${watchlist}`;
 };

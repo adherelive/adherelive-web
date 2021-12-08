@@ -1,4 +1,4 @@
-import {Sequelize} from "sequelize";
+import { Sequelize } from "sequelize";
 import Logger from "./log";
 
 const Log = new Logger("SEQUELIZE QUERY");
@@ -121,7 +121,7 @@ const models = [
   Adherence,
   Appointments,
   Articles,
-  
+
   CarePlans,
   CarePlanAppointments,
   CarePlanMedications,
@@ -132,7 +132,7 @@ const models = [
   Conditions,
   Consents,
   Course,
-  
+
   Degree,
   Diet,
   DietResponse,
@@ -144,7 +144,7 @@ const models = [
   Doctors,
   DoctorProviderMapping,
   DoctorPatientFeaturesMapping,
-  
+
   EmailLogger,
   EventHistory,
   Exercise,
@@ -152,23 +152,23 @@ const models = [
   ExerciseRepetitions,
   ExerciseGroup,
   ExerciseContent,
-  
+
   FeatureDetails,
   Features,
   FoodItems,
   FoodGroups,
   FoodItemDetails,
-  
+
   Medications,
   Medicines,
   MemberSpecialities,
   MealTemplates,
   MealTemplateFoodItemMapping,
-  
+
   ScheduleEvents,
-  
+
   OtpVerifications,
-  
+
   PatientCareTakers,
   Patients,
   Permissions,
@@ -180,20 +180,20 @@ const models = [
   PatientPaymentConsentMapping,
   ProviderTermsMapping,
   Portions,
-  
+
   RegionFeatures,
   RegionProviders,
   Regions,
   RegistrationCouncils,
   Reminders,
   Reports,
-  
+
   Severity,
   Speciality,
   Subscriptions,
   Symptoms,
   SimilarFoodMapping,
-  
+
   TemplateAppointments,
   TemplateMedications,
   TemplateVitals,
@@ -203,7 +203,7 @@ const models = [
   Treatments,
   Transactions,
   TermsAndConditions,
-  
+
   UploadDocuments,
   UserCategoryPermissions,
   UserDevices,
@@ -212,10 +212,10 @@ const models = [
   UserFavourites,
   UserVerifications,
   UserRoles,
-  
+
   Vitals,
   VitalTemplates,
-  
+
   Watchlist,
   Workouts,
   WorkoutResponses,
@@ -226,7 +226,7 @@ const models = [
 
 class Database {
   static connection = null;
-  
+
   static getDatabase = async () => {
     // console.log("=====", Database.connection);
     if (Database.connection === null) {
@@ -250,28 +250,28 @@ class Database {
         }
       );
     }
-    
+
     return Database.connection;
   };
-  
+
   static getModel = (dbName) => Database.connection.models[dbName];
-  
+
   static initTransaction = () => Database.connection.transaction();
-  
+
   static performRawQuery = async (query, options = {}) => {
     const database = await Database.getDatabase();
     return await database.queryInterface.sequelize.query(query, options);
   };
-  
+
   static init = async () => {
     try {
       const database = await Database.getDatabase();
       await database.authenticate();
-      
+
       for (const model of models) {
         model.db(database);
       }
-      
+
       for (const model of models) {
         model.associate(database);
       }

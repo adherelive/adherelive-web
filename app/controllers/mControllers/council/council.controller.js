@@ -10,17 +10,17 @@ class CouncilController extends Controller {
   constructor() {
     super();
   }
-  
+
   getAll = async (req, res) => {
-    const {raiseSuccess, raiseClientError, raiseServerError} = this;
+    const { raiseSuccess, raiseClientError, raiseServerError } = this;
     try {
-      const {query} = req;
-      const {value} = query || {};
-      
+      const { query } = req;
+      const { value } = query || {};
+
       // Logger.debug("value in req", value);
-      
+
       const councilDetails = await councilService.search(value);
-      
+
       if (councilDetails.length > 0) {
         let councilApiData = {};
         for (const council of councilDetails) {
@@ -28,7 +28,7 @@ class CouncilController extends Controller {
           councilApiData[councilWrapper.getCouncilId()] =
             councilWrapper.getBasicInfo();
         }
-        
+
         return raiseSuccess(
           res,
           200,

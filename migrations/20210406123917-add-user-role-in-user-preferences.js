@@ -1,6 +1,6 @@
 "use strict";
 
-import {TABLE_NAME} from "../app/models/userPreferences";
+import { TABLE_NAME } from "../app/models/userPreferences";
 
 module.exports = {
   up: (queryInterface, Sequelize) => {
@@ -10,7 +10,7 @@ module.exports = {
       }),
     ]);
   },
-  
+
   down: (queryInterface, Sequelize) => {
     return Promise.all([
       queryInterface.removeColumn(TABLE_NAME, "user_role_id"),

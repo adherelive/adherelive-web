@@ -1,9 +1,9 @@
 "use strict";
-import {DataTypes} from "sequelize";
-import {GENDER, BLANK_STATE} from "../../constant";
-import {TABLE_NAME as userTableName} from "./users";
-import {TABLE_NAME as reportTableName} from "./reports";
-import {TABLE_NAME as careplanTableName} from "./carePlan";
+import { DataTypes } from "sequelize";
+import { GENDER, BLANK_STATE } from "../../constant";
+import { TABLE_NAME as userTableName } from "./users";
+import { TABLE_NAME as reportTableName } from "./reports";
+import { TABLE_NAME as careplanTableName } from "./carePlan";
 
 export const TABLE_NAME = "patients";
 
@@ -115,8 +115,8 @@ export const db = (database) => {
           return !this.first_name
             ? null
             : `${this.first_name}${
-              this.middle_name ? ` ${this.middle_name}` : ""
-            }${this.last_name ? ` ${this.last_name}` : ""}`;
+                this.middle_name ? ` ${this.middle_name}` : ""
+              }${this.last_name ? ` ${this.last_name}` : ""}`;
         },
       },
     },
@@ -152,11 +152,11 @@ export const associate = (database) => {
     foreignKey: "user_id",
     targetKey: "id",
   });
-  
+
   database.models[TABLE_NAME].hasMany(database.models[reportTableName], {
     foreignKey: "patient_id",
   });
-  
+
   database.models[TABLE_NAME].belongsTo(database.models[careplanTableName], {
     foreignKey: "id",
     targetKey: "patient_id",

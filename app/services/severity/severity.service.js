@@ -1,6 +1,6 @@
-import {Op} from "sequelize";
+import { Op } from "sequelize";
 import Database from "../../../libs/mysql";
-import {TABLE_NAME} from "../../models/severity";
+import { TABLE_NAME } from "../../models/severity";
 
 class SeverityService {
   getAll = async () => {
@@ -11,7 +11,7 @@ class SeverityService {
       throw error;
     }
   };
-  
+
   search = async (data) => {
     try {
       const severity = await Database.getModel(TABLE_NAME).findAll({
@@ -26,7 +26,7 @@ class SeverityService {
       throw error;
     }
   };
-  
+
   getByData = async (data) => {
     try {
       const severity = await Database.getModel(TABLE_NAME).findOne({

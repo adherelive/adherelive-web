@@ -1,6 +1,6 @@
 "use strict";
 
-import {ACTION_TYPE, DB_TABLES} from "../constant";
+import { ACTION_TYPE, DB_TABLES } from "../constant";
 
 module.exports = {
   up: (queryInterface, Sequelize) => {
@@ -53,7 +53,7 @@ module.exports = {
       },
     });
   },
-  
+
   down: (queryInterface, Sequelize) => {
     return queryInterface.dropTable(DB_TABLES.ACTIONS);
   },

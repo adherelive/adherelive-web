@@ -2,7 +2,7 @@ import express from "express";
 import Authenticated from "../middleware/auth";
 import GraphController from "../../../app/controllers/graphs/graph.controller";
 
-import {check} from "express-validator";
+import { check } from "express-validator";
 
 const router = express.Router();
 

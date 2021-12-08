@@ -1,6 +1,6 @@
 const AWS = require("aws-sdk");
 const path = require("path");
-const {existsSync} = require("fs");
+const { existsSync } = require("fs");
 const ejs = require("ejs");
 const emailPayloadBuilder = require("./emailPayloadBuilder");
 const Log = require("../../../libs/log")("communications --> emailManger");
@@ -14,11 +14,11 @@ class EmailManger {
     //   secretAccessKey: process.config.aws.access_key,
     //   region: process.config.aws.region
     // });
-    
+
     // this.ses = new AWS.SES({
     //   apiVersion: "2010-12-01"
     // });
-    
+
     this.smtpTransporter = nodemailer.createTransport(
       smtpTransport({
         auth: {
@@ -30,7 +30,7 @@ class EmailManger {
       })
     );
   }
-  
+
   genrateEmailTemplateString(name, data, options) {
     let filepath = path.join(__dirname, "/../../views/emailTemplates/");
     return new Promise((resolve, reject) => {
@@ -42,7 +42,7 @@ class EmailManger {
       });
     });
   }
-  
+
   emailPayloadValidator(emailPayload) {
     console.log(
       "Email Payloader Validator -------------------->   ",
@@ -53,31 +53,31 @@ class EmailManger {
         error: 1,
         message: "undefined or invalid to address",
       };
-    
+
     if (!emailPayload.title)
       return {
         error: 1,
         message: "undefined or invalid email title",
       };
-    
+
     if (!emailPayload.templateName)
       return {
         error: 1,
         message: "invalid  or undefined template name",
       };
-    
+
     if (!emailPayload.templateData)
       return {
         error: 1,
         message: "invalid or undefined template data",
       };
-    
+
     return {
       error: 0,
       message: "valid payload",
     };
   }
-  
+
   async emailPayloadTransformer(payload) {
     try {
       console.log(
@@ -226,7 +226,7 @@ class EmailManger {
             {}
           );
           break;
-        
+
         case "medicationReminder":
           templateString = await this.genrateEmailTemplateString(
             "medicationReminder",
@@ -234,7 +234,7 @@ class EmailManger {
             {}
           );
           break;
-        
+
         case "benefitPlan":
           templateString = await this.genrateEmailTemplateString(
             "benefitPlan",
@@ -270,7 +270,7 @@ class EmailManger {
             message: "invalid template name",
           };
       }
-      
+
       let content = payloadBuilder
         .createToAddress()
         .createCcAddress()
@@ -287,7 +287,7 @@ class EmailManger {
       console.log("in payload transform", err);
     }
   }
-  
+
   async sendEmail(emailPayload) {
     try {
       let payload = await this.emailPayloadTransformer(emailPayload);
@@ -302,7 +302,7 @@ class EmailManger {
       Log.info("Transforming email payload to aws payload!!");
       console.log("payload ===>", payload);
       if (payload.error && payload.error == 1) return payload;
-      
+
       Log.info("Email payload transformed successfully!!");
       Log.info("Sending email......!!");
       // let publishResponse = this.ses
@@ -320,7 +320,7 @@ class EmailManger {
       // delete payload.ReplyToAddresses;
       //
       const publishResponse = await this.smtpTransporter.sendMail(payload);
-      
+
       return publishResponse;
     } catch (err) {
       console.log(err);

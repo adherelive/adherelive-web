@@ -324,7 +324,7 @@ export const PERMISSIONS = {
 
 export const USER_PERMISSIONS = {
   /* [A] */
-  
+
   APPOINTMENTS: {
     ADD: "ADD_APPOINTMENT",
     UPDATE: "UPDATE_APPOINTMENT",
@@ -332,19 +332,19 @@ export const USER_PERMISSIONS = {
     DELETE: "DELETE_APPOINTMENT",
     TEMPLATE: "TEMPLATE_APPOINTMENT",
   },
-  
+
   ACCOUNT: {
     VERIFIED: "VERIFIED_ACCOUNT",
   },
-  
+
   /* [C] */
-  
+
   CARE_PLAN: {
     ADD: "ADD_CARE_PLAN",
     UPDATE: "UPDATE_CARE_PLAN",
     VIEW: "VIEW_CARE_PLAN",
   },
-  
+
   CARE_PLAN_TEMPLATE: {
     ADD: "ADD_CARE_PLAN_TEMPLATE",
     UPDATE: "UPDATE_CARE_PLAN_TEMPLATE",
@@ -352,13 +352,13 @@ export const USER_PERMISSIONS = {
     DUPLICATE: "DUPLICATE_CARE_PLAN_TEMPLATE",
     DELETE: "DELETE_CARE_PLAN_TEMPLATE",
   },
-  
+
   CALENDER: {
     VIEW: "VIEW_CALENDER",
   },
-  
+
   /* [D] */
-  
+
   DIETS: {
     ADD: "ADD_DIET",
     UPDATE: "UPDATE_DIET",
@@ -366,22 +366,22 @@ export const USER_PERMISSIONS = {
     DELETE: "DELETE_DIET",
     TEMPLATE: "TEMPLATE_DIET",
   },
-  
+
   DOCTORS: {
     ADD: "ADD_DOCTOR",
     UPDATE: "UPDATE_DOCTOR",
     VIEW: "VIEW_DOCTOR",
   },
-  
+
   /* [G] */
-  
+
   GRAPHS: {
     ADD: "ADD_GRAPH",
     UPDATE: "UPDATE_GRAPH",
   },
-  
+
   /* [M] */
-  
+
   MEDICATIONS: {
     ADD: "ADD_MEDICATION",
     UPDATE: "UPDATE_MEDICATION",
@@ -390,31 +390,31 @@ export const USER_PERMISSIONS = {
     DELETE: "DELETE_MEDICATION",
     TEMPLATE: "TEMPLATE_MEDICATION",
   },
-  
+
   /* [P] */
-  
+
   PATIENTS: {
     ADD: "ADD_PATIENT",
     UPDATE: "UPDATE_PATIENT",
     VIEW: "VIEW_PATIENT",
   },
-  
+
   PAYMENT_PRODUCT: {
     ADD: "ADD_PAYMENT_PRODUCT",
     VIEW: "VIEW_PAYMENT_PRODUCT",
   },
-  
+
   /* [R] */
-  
+
   REPORTS: {
     ADD: "ADD_REPORT",
     UPDATE: "UPDATE_REPORT",
     VIEW: "VIEW_REPORT",
     DELETE: "DELETE_REPORT",
   },
-  
+
   /* [V] */
-  
+
   VITALS: {
     ADD: "ADD_VITAL",
     UPDATE: "UPDATE_VITAL",
@@ -422,9 +422,9 @@ export const USER_PERMISSIONS = {
     DELETE: "DELETE_VITAL",
     TEMPLATE: "TEMPLATE_VITAL",
   },
-  
+
   /* [W] */
-  
+
   WORKOUTS: {
     ADD: "ADD_WORKOUT",
     UPDATE: "UPDATE_WORKOUT",
@@ -466,11 +466,11 @@ export const REPEAT_TYPE = {
 };
 
 export const REPEAT_OPTION = [
-  {label: "Does not repeat", key: REPEAT_TYPE.NONE},
-  {label: "Repeats Daily", key: REPEAT_TYPE.DAILY},
-  {label: "Repeats Weekly", key: REPEAT_TYPE.WEEKLY},
-  {label: "Repeats Monthly", key: REPEAT_TYPE.MONTHLY},
-  {label: "Repeats Yearly", key: REPEAT_TYPE.YEARLY},
+  { label: "Does not repeat", key: REPEAT_TYPE.NONE },
+  { label: "Repeats Daily", key: REPEAT_TYPE.DAILY },
+  { label: "Repeats Weekly", key: REPEAT_TYPE.WEEKLY },
+  { label: "Repeats Monthly", key: REPEAT_TYPE.MONTHLY },
+  { label: "Repeats Yearly", key: REPEAT_TYPE.YEARLY },
 ];
 
 export const EVENT_ACTION = {
@@ -674,9 +674,9 @@ export const SYRUP = "2";
 export const SYRINGE = "3";
 
 export const MEDICINE_FORM_TYPE = {
-  [TABLET]: {name: "tablet"},
-  [SYRUP]: {name: "syrup"},
-  [SYRINGE]: {name: "syringe"},
+  [TABLET]: { name: "tablet" },
+  [SYRUP]: { name: "syrup" },
+  [SYRINGE]: { name: "syringe" },
 };
 
 export const MEDICINE_TYPE = {
@@ -779,62 +779,62 @@ const LEFT_CALF = "54";
 const RIGHT_CALF = "55";
 
 export const PARTS_GRAPH = {
-  [HEAD]: {name: "Head"},
-  [RIGHT_EYE]: {name: "Right Eye"},
-  [LEFT_EYE]: {name: "Left Eye"},
-  [RIGHT_EAR]: {name: "Right Ear"},
-  [LEFT_EAR]: {name: "Left Ear"},
-  [NOSE]: {name: "Nose"},
-  [MOUTH]: {name: "Mouth"},
-  [NECK]: {name: "Neck"},
-  [RIGHT_SHOULDER]: {name: "Right Shoulder"},
-  [LEFT_SHOULDER]: {name: "Left Shoulder"},
-  [CHEST]: {name: "Chest"},
-  [RIGHT_ARM]: {name: "Right Arm"},
-  [LEFT_ARM]: {name: "Left Arm"},
-  [RIGHT_ELBOW]: {name: "Right Elbow"},
-  [LEFT_ELBOW]: {name: "Left Elbow"},
-  [STOMACH]: {name: "Stomach"},
-  [ABDOMEN]: {name: "Abdomen"},
-  [RIGHT_FOREARM]: {name: "Right Forearm"},
-  [LEFT_FOREARM]: {name: "Left Forearm"},
-  [RIGHT_WRIST]: {name: "Right Wrist"},
-  [LEFT_WRIST]: {name: "Left Wrist"},
-  [RIGHT_HAND]: {name: "Right Hand"},
-  [LEFT_HAND]: {name: "Left Hand"},
-  [RIGHT_HAND_FINGER]: {name: "Right Hand Finger"},
-  [LEFT_HAND_FINGER]: {name: "Left Hand Finger"},
-  [RIGHT_HIP]: {name: "Right Hip"},
-  [LEFT_HIP]: {name: "Left Hip"},
-  [RIGHT_THIGH]: {name: "Right Thigh"},
-  [LEFT_THIGH]: {name: "Left Thigh"},
-  [RIGHT_KNEE]: {name: "Right Knee"},
-  [LEFT_KNEE]: {name: "Left Knee"},
-  [RIGHT_SHIN]: {name: "Right Shin"},
-  [LEFT_SHIN]: {name: "Left Shin"},
-  [RIGHT_ANKLE]: {name: "Right Ankle"},
-  [LEFT_ANKLE]: {name: "Left Ankle"},
-  [RIGHT_FOOT]: {name: "Right Foot"},
-  [LEFT_FOOT]: {name: "Left Foot"},
-  [RIGHT_TOE]: {name: "Right Toe"},
-  [LEFT_TOE]: {name: "Left Toe"},
-  [RECTUM]: {name: "Rectum"},
-  [URINARY_BLADDER]: {name: "Urinary Bladder"},
-  
-  [HEAD_BACK]: {name: "Head"},
-  [NECK_BACK]: {name: "Neck"},
-  [RIGHT_SHOULDER_BACK]: {name: "Right Shoulder"},
-  [LEFT_SHOULDER_BACK]: {name: "Left Shoulder"},
-  [BACK]: {name: "Back"},
-  [LOWER_BACK]: {name: "Lower Back"},
-  [LEFT_TRICEP]: {name: "Left Tricep"},
-  [RIGHT_TRICEP]: {name: "Right Tricep"},
-  [LEFT_FOREARM_BACK]: {name: "Left  Forearm"},
-  [RIGHT_FOREARM_BACK]: {name: "Right Forearm"},
-  [LEFT_HAMSTRING]: {name: "Left Hamstring"},
-  [RIGHT_HAMSTRING]: {name: "Right Hamstring"},
-  [LEFT_CALF]: {name: "Left Calf"},
-  [RIGHT_CALF]: {name: "Right Calf"},
+  [HEAD]: { name: "Head" },
+  [RIGHT_EYE]: { name: "Right Eye" },
+  [LEFT_EYE]: { name: "Left Eye" },
+  [RIGHT_EAR]: { name: "Right Ear" },
+  [LEFT_EAR]: { name: "Left Ear" },
+  [NOSE]: { name: "Nose" },
+  [MOUTH]: { name: "Mouth" },
+  [NECK]: { name: "Neck" },
+  [RIGHT_SHOULDER]: { name: "Right Shoulder" },
+  [LEFT_SHOULDER]: { name: "Left Shoulder" },
+  [CHEST]: { name: "Chest" },
+  [RIGHT_ARM]: { name: "Right Arm" },
+  [LEFT_ARM]: { name: "Left Arm" },
+  [RIGHT_ELBOW]: { name: "Right Elbow" },
+  [LEFT_ELBOW]: { name: "Left Elbow" },
+  [STOMACH]: { name: "Stomach" },
+  [ABDOMEN]: { name: "Abdomen" },
+  [RIGHT_FOREARM]: { name: "Right Forearm" },
+  [LEFT_FOREARM]: { name: "Left Forearm" },
+  [RIGHT_WRIST]: { name: "Right Wrist" },
+  [LEFT_WRIST]: { name: "Left Wrist" },
+  [RIGHT_HAND]: { name: "Right Hand" },
+  [LEFT_HAND]: { name: "Left Hand" },
+  [RIGHT_HAND_FINGER]: { name: "Right Hand Finger" },
+  [LEFT_HAND_FINGER]: { name: "Left Hand Finger" },
+  [RIGHT_HIP]: { name: "Right Hip" },
+  [LEFT_HIP]: { name: "Left Hip" },
+  [RIGHT_THIGH]: { name: "Right Thigh" },
+  [LEFT_THIGH]: { name: "Left Thigh" },
+  [RIGHT_KNEE]: { name: "Right Knee" },
+  [LEFT_KNEE]: { name: "Left Knee" },
+  [RIGHT_SHIN]: { name: "Right Shin" },
+  [LEFT_SHIN]: { name: "Left Shin" },
+  [RIGHT_ANKLE]: { name: "Right Ankle" },
+  [LEFT_ANKLE]: { name: "Left Ankle" },
+  [RIGHT_FOOT]: { name: "Right Foot" },
+  [LEFT_FOOT]: { name: "Left Foot" },
+  [RIGHT_TOE]: { name: "Right Toe" },
+  [LEFT_TOE]: { name: "Left Toe" },
+  [RECTUM]: { name: "Rectum" },
+  [URINARY_BLADDER]: { name: "Urinary Bladder" },
+
+  [HEAD_BACK]: { name: "Head" },
+  [NECK_BACK]: { name: "Neck" },
+  [RIGHT_SHOULDER_BACK]: { name: "Right Shoulder" },
+  [LEFT_SHOULDER_BACK]: { name: "Left Shoulder" },
+  [BACK]: { name: "Back" },
+  [LOWER_BACK]: { name: "Lower Back" },
+  [LEFT_TRICEP]: { name: "Left Tricep" },
+  [RIGHT_TRICEP]: { name: "Right Tricep" },
+  [LEFT_FOREARM_BACK]: { name: "Left  Forearm" },
+  [RIGHT_FOREARM_BACK]: { name: "Right Forearm" },
+  [LEFT_HAMSTRING]: { name: "Left Hamstring" },
+  [RIGHT_HAMSTRING]: { name: "Right Hamstring" },
+  [LEFT_CALF]: { name: "Left Calf" },
+  [RIGHT_CALF]: { name: "Right Calf" },
 };
 
 export const BODY_VIEW = {
@@ -1190,7 +1190,7 @@ export const BODY = {
       left: 18,
     },
   },
-  
+
   [NECK_BACK]: {
     key: NECK_BACK,
     areaStyle: {
@@ -1401,7 +1401,7 @@ export const BODY = {
     },
     //areaStyle: { top: 330, left: 138 }
   },
-  
+
   [LOWER_BACK]: {
     key: LOWER_BACK,
     areaStyle: {

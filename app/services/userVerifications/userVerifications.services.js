@@ -1,5 +1,5 @@
 import Database from "../../../libs/mysql";
-import {TABLE_NAME} from "../../models/userVerifications";
+import { TABLE_NAME } from "../../models/userVerifications";
 
 class UserVerificationsService {
   async addRequest(data) {
@@ -10,7 +10,7 @@ class UserVerificationsService {
       throw err;
     }
   }
-  
+
   async getRequestByLink(link) {
     try {
       const verification = await Database.getModel(TABLE_NAME).findOne({
@@ -23,7 +23,7 @@ class UserVerificationsService {
       throw err;
     }
   }
-  
+
   updateVerification = async (data, link) => {
     try {
       const verification = await Database.getModel(TABLE_NAME).update(data, {
@@ -36,7 +36,7 @@ class UserVerificationsService {
       throw error;
     }
   };
-  
+
   getRequestByData = async (data) => {
     try {
       const verification = await Database.getModel(TABLE_NAME).findOne({

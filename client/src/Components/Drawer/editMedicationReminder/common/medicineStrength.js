@@ -1,11 +1,11 @@
-import React, {Component, Fragment} from "react";
-import {injectIntl} from "react-intl";
+import React, { Component, Fragment } from "react";
+import { injectIntl } from "react-intl";
 
 // antd models
 import InputNumber from "antd/es/input-number";
 import Form from "antd/es/form";
 
-const {Item: FormItem} = Form;
+const { Item: FormItem } = Form;
 
 const FIELD_NAME = "strength";
 const MAXIMUM_LENGTH = 10000;
@@ -13,36 +13,36 @@ const MAXIMUM_LENGTH = 10000;
 class MedicationStrength extends Component {
   componentDidMount() {
     const {
-      form: {validateFields},
+      form: { validateFields },
     } = this.props;
     validateFields();
   }
-  
+
   componentWillUnmount() {
     const {
-      form: {validateFields},
+      form: { validateFields },
     } = this.props;
     validateFields();
   }
-  
+
   getParentNode = (t) => t.parentNode;
-  
+
   getInitialValue = () => {
-    const {purpose, event: {data = {}} = {}} = this.props;
+    const { purpose, event: { data = {} } = {} } = this.props;
     let initialValue;
     if (purpose) {
       initialValue = data[FIELD_NAME];
     }
     return initialValue;
   };
-  
+
   render() {
     const {
       form,
       medications,
-      payload: {id: medication_id} = {},
+      payload: { id: medication_id } = {},
       medicationData = {},
-      payload: {canViewDetails = false} = {},
+      payload: { canViewDetails = false } = {},
     } = this.props;
     const {
       getFieldDecorator,
@@ -50,16 +50,16 @@ class MedicationStrength extends Component {
       isFieldTouched,
       //getFieldValue
     } = form;
-    
-    let {basic_info: {details: {strength} = {}} = {}} =
-    medications[medication_id] || {};
-    
-    let {schedule_data: {strength: dose = 0} = {}} = medicationData;
+
+    let { basic_info: { details: { strength } = {} } = {} } =
+      medications[medication_id] || {};
+
+    let { schedule_data: { strength: dose = 0 } = {} } = medicationData;
     if (dose) {
       strength = parseInt(dose);
     }
     const error = isFieldTouched(FIELD_NAME) && getFieldError(FIELD_NAME);
-    
+
     return (
       <Fragment>
         <FormItem
@@ -84,7 +84,7 @@ class MedicationStrength extends Component {
           })(
             <InputNumber
               min={1}
-              style={{width: "100%"}}
+              style={{ width: "100%" }}
               disabled={canViewDetails}
             />
           )}

@@ -1,7 +1,7 @@
 import Response from "../../../app/helper/responseFormat";
 import Joi from "@hapi/joi";
 import moment from "moment";
-import {validationError} from "../../api/helper";
+import { validationError } from "../../api/helper";
 
 const updateDoctorSchema = Joi.object().keys({
   name: Joi.string().required().label("Name cannot be empty"),
@@ -60,7 +60,7 @@ const validDOB = (date) => {
 };
 
 export const validateAddPatientData = (req, res, next) => {
-  const {body: data, data: {date_of_birth} = {}} = req;
+  const { body: data, data: { date_of_birth } = {} } = req;
   const isValid = addPatientForm.validate(data);
   if (isValid && isValid.error != null) {
     return validationError(res, isValid);
@@ -82,16 +82,16 @@ export const validateAddPatientData = (req, res, next) => {
 };
 
 export const validateUpdateDoctorData = (req, res, next) => {
-  const {body: data = {}} = req;
+  const { body: data = {} } = req;
   const isValid = updateDoctorSchema.validate(data);
   if (isValid && isValid.error != null) {
-    const {error: {details} = {}} = isValid || {};
-    const {type, context: {label} = {}} = details[0] || {};
+    const { error: { details } = {} } = isValid || {};
+    const { type, context: { label } = {} } = details[0] || {};
     let errorMessage = label;
-    
+
     switch (type) {
       case "string.pattern.base":
-        const {context: {key} = {}} = details[0] || {};
+        const { context: { key } = {} } = details[0] || {};
         if (key === "mobile_number") {
           errorMessage = "Please check the mobile number entered";
         } else {

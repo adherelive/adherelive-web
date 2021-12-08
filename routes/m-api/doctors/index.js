@@ -6,13 +6,13 @@ import isAllowed from "../../middlewares/permissions";
 import PERMISSIONS from "../../../config/permissions";
 
 import mDoctorController from "../../../app/controllers/mControllers/doctors/doctor.controller";
-import {isDoctor} from "../middlewares/doctor";
+import { isDoctor } from "../middlewares/doctor";
 import PaymentController from "../../../app/controllers/mControllers/payments/payment.controller";
 import CarePlanTemplate from "../../../app/controllers/carePlanTemplate/carePlanTemplate.controller";
 
 const multer = require("multer");
 const storage = multer.memoryStorage();
-const upload = multer({dest: "../../../app/public/", storage: storage});
+const upload = multer({ dest: "../../../app/public/", storage: storage });
 
 const express = require("express");
 const router = express.Router();

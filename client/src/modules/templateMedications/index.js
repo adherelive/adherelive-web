@@ -1,5 +1,5 @@
 function templateMedicationsReducer(state, data) {
-  const {template_medications} = data || {};
+  const { template_medications } = data || {};
   if (template_medications) {
     return {
       ...state,
@@ -11,7 +11,7 @@ function templateMedicationsReducer(state, data) {
 }
 
 export default (state = {}, action) => {
-  const {type, data} = action;
+  const { type, data } = action;
   switch (type) {
     default:
       return templateMedicationsReducer(state, data);

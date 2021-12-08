@@ -1,4 +1,4 @@
-import {combineReducers} from "redux";
+import { combineReducers } from "redux";
 import graphs from "./graphs";
 import users from "./user";
 import auth from "./auth";

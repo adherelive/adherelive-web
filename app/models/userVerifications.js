@@ -1,7 +1,7 @@
 "use strict";
-import {DataTypes} from "sequelize";
-import {TABLE_NAME as userTableName} from "./users";
-import {VERIFICATION_TYPE} from "../../constant";
+import { DataTypes } from "sequelize";
+import { TABLE_NAME as userTableName } from "./users";
+import { VERIFICATION_TYPE } from "../../constant";
 
 export const TABLE_NAME = "user_verifications";
 
@@ -59,8 +59,8 @@ export const db = (database) => {
 };
 
 export const associate = (database) => {
-  const {user_verifications, users} = database.models || {};
-  
+  const { user_verifications, users } = database.models || {};
+
   // associations here (if any) ...
   user_verifications.belongsTo(users, {
     foreignKey: "user_id",

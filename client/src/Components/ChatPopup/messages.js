@@ -1,4 +1,4 @@
-import {defineMessages} from "react-intl";
+import { defineMessages } from "react-intl";
 
 const messages = defineMessages({
   searchPatient: {
@@ -31,7 +31,7 @@ const messages = defineMessages({
     description: "Click Here to Go Home",
     defaultMessage: "offline",
   },
-  
+
   today: {
     id: "app.chatFullScreen.today",
     description: "Click Here to Go Home",

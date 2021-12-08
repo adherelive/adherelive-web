@@ -16,10 +16,10 @@ class Logger {
       default:
         break;
     }
-    
+
     this.loggerPayload = payload;
   }
-  
+
   async log() {
     if (!this.loggerPayload) throw new Error("Invalid data to log");
     // let result = new this._model(this.loggerPayload);

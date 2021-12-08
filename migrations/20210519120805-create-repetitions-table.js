@@ -1,6 +1,6 @@
 "use strict";
 
-import {TABLE_NAME} from "../app/models/exerciseRepetition";
+import { TABLE_NAME } from "../app/models/exerciseRepetition";
 
 module.exports = {
   up: (queryInterface, DataTypes) => {
@@ -27,7 +27,7 @@ module.exports = {
       },
     });
   },
-  
+
   down: (queryInterface, Sequelize) => {
     return queryInterface.dropTable(TABLE_NAME);
   },
