@@ -5,19 +5,19 @@ class DoctorClinicWrapper extends BaseDoctorClinic {
   constructor(data) {
     super(data);
   }
-  
+
   getBasicInfo = () => {
-    const {_data} = this;
-    const {id, doctor_id, name, location, details} = _data || {};
-    
-    const {time_slots} = details || {};
-    
+    const { _data } = this;
+    const { id, doctor_id, name, location, details } = _data || {};
+
+    const { time_slots } = details || {};
+
     let filteredTimeSlot = {};
-    
+
     Object.keys(time_slots).map((day) => {
       let slots = [];
       time_slots[day].forEach((slot) => {
-        const {startTime, endTime} = slot || {};
+        const { startTime, endTime } = slot || {};
         if (startTime !== "" && endTime !== "") {
           slots.push(slot);
         }

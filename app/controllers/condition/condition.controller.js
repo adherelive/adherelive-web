@@ -10,17 +10,17 @@ class ConditionController extends Controller {
   constructor() {
     super();
   }
-  
+
   search = async (req, res) => {
-    const {raiseSuccess, raiseClientError, raiseServerError} = this;
+    const { raiseSuccess, raiseClientError, raiseServerError } = this;
     try {
-      const {query} = req;
-      const {value} = query || {};
-      
+      const { query } = req;
+      const { value } = query || {};
+
       // Logger.debug("value in req", value);
-      
+
       const conditionDetails = await conditionService.search(value);
-      
+
       if (conditionDetails.length > 0) {
         let conditionApiData = {};
         for (const condition of conditionDetails) {
@@ -28,7 +28,7 @@ class ConditionController extends Controller {
           conditionApiData[conditionWrapper.getConditionId()] =
             conditionWrapper.getBasicInfo();
         }
-        
+
         return raiseSuccess(
           res,
           200,

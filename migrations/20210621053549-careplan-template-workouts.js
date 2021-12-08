@@ -1,7 +1,7 @@
 "use strict";
 
-import {TABLE_NAME} from "../app/models/templateWorkouts";
-import {TABLE_NAME as carePlanTemplateTableName} from "../app/models/careplanTemplate";
+import { TABLE_NAME } from "../app/models/templateWorkouts";
+import { TABLE_NAME as carePlanTemplateTableName } from "../app/models/careplanTemplate";
 
 module.exports = {
   up: (queryInterface, DataTypes) => {
@@ -52,7 +52,7 @@ module.exports = {
       },
     });
   },
-  
+
   down: (queryInterface) => {
     return queryInterface.dropTable(TABLE_NAME);
   },

@@ -1,7 +1,7 @@
 // import { TREATMENT_INITIAL_STATE } from "../../data";
-import {doRequest} from "../../Helper/network";
-import {REQUEST_TYPE} from "../../constant";
-import {searchSeverities} from "../../Helper/urls/severity";
+import { doRequest } from "../../Helper/network";
+import { REQUEST_TYPE } from "../../constant";
+import { searchSeverities } from "../../Helper/urls/severity";
 
 export const SEARCH_SEVERITY_START = "SEARCH_SEVERITY_START";
 export const SEARCH_SEVERITY_COMPLETED = "SEARCH_SEVERITY_COMPLETED";
@@ -15,8 +15,8 @@ export const searchSeverity = (value) => {
         method: REQUEST_TYPE.GET,
         url: searchSeverities(value),
       });
-      
-      const {status, payload: {data, message = ""} = {}} = response || {};
+
+      const { status, payload: { data, message = "" } = {} } = response || {};
       if (status === true) {
         dispatch({
           type: SEARCH_SEVERITY_COMPLETED,
@@ -36,7 +36,7 @@ export const searchSeverity = (value) => {
 };
 
 function severityReducer(state, data) {
-  const {severity} = data || {};
+  const { severity } = data || {};
   if (severity) {
     return {
       ...state,
@@ -48,7 +48,7 @@ function severityReducer(state, data) {
 }
 
 export default (state = {}, action) => {
-  const {type, data} = action;
+  const { type, data } = action;
   switch (type) {
     case SEARCH_SEVERITY_COMPLETED:
       return severityReducer(state, data);

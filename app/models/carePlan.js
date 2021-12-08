@@ -1,12 +1,12 @@
 "use strict";
-import {DataTypes} from "sequelize";
-import {TABLE_NAME as doctorTableName} from "./doctors";
-import {TABLE_NAME as patientTableName} from "./patients";
-import {TABLE_NAME as carePlanTemplateTableName} from "./careplanTemplate";
-import {TABLE_NAME as carePlanAppointmentTableName} from "./carePlanAppointments";
-import {TABLE_NAME as carePlanMedicationTableName} from "./carePlanMedications";
-import {TABLE_NAME as userRolesTableName} from "./userRoles";
-import {TABLE_NAME as careplanSecondaryDoctorMappingsTableName} from "./careplanSecondaryDoctorMappings";
+import { DataTypes } from "sequelize";
+import { TABLE_NAME as doctorTableName } from "./doctors";
+import { TABLE_NAME as patientTableName } from "./patients";
+import { TABLE_NAME as carePlanTemplateTableName } from "./careplanTemplate";
+import { TABLE_NAME as carePlanAppointmentTableName } from "./carePlanAppointments";
+import { TABLE_NAME as carePlanMedicationTableName } from "./carePlanMedications";
+import { TABLE_NAME as userRolesTableName } from "./userRoles";
+import { TABLE_NAME as careplanSecondaryDoctorMappingsTableName } from "./careplanSecondaryDoctorMappings";
 
 export const TABLE_NAME = "care_plans";
 
@@ -114,17 +114,17 @@ export const associate = (database) => {
     // foreignKey: "user_id",
     // targetKey: "id"
   });
-  
+
   database.models[TABLE_NAME].belongsTo(database.models[userRolesTableName], {
     foreignKey: "user_role_id",
     targetKey: "id",
   });
-  
+
   database.models[TABLE_NAME].hasOne(database.models[doctorTableName], {
     foreignKey: "id",
     sourceKey: "doctor_id",
   });
-  
+
   database.models[TABLE_NAME].hasMany(
     database.models[carePlanAppointmentTableName],
     {
@@ -132,7 +132,7 @@ export const associate = (database) => {
       sourceKey: "id",
     }
   );
-  
+
   database.models[TABLE_NAME].hasMany(
     database.models[carePlanMedicationTableName],
     {
@@ -140,7 +140,7 @@ export const associate = (database) => {
       sourceKey: "id",
     }
   );
-  
+
   database.models[TABLE_NAME].hasMany(
     database.models[careplanSecondaryDoctorMappingsTableName],
     {

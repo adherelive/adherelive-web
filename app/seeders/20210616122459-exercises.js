@@ -1,7 +1,7 @@
 "use strict";
 
-import {USER_CATEGORY} from "../../constant";
-import {TABLE_NAME} from "../models/exercise";
+import { USER_CATEGORY } from "../../constant";
+import { TABLE_NAME } from "../models/exercise";
 
 module.exports = {
   up: (queryInterface) => {
@@ -38,7 +38,7 @@ module.exports = {
       },
     ]);
   },
-  
+
   down: (queryInterface, Sequelize) => {
     return queryInterface.bulkDelete(TABLE_NAME, null, {});
   },

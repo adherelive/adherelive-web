@@ -1,7 +1,7 @@
 "use strict";
-import {DataTypes} from "sequelize";
-import {TABLE_NAME as carePlanTableName} from "./carePlan";
-import {TABLE_NAME as appointmentTableName} from "./appointments";
+import { DataTypes } from "sequelize";
+import { TABLE_NAME as carePlanTableName } from "./carePlan";
+import { TABLE_NAME as appointmentTableName } from "./appointments";
 
 export const TABLE_NAME = "care_plan_appointments";
 

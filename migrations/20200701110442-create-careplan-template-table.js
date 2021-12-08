@@ -1,11 +1,11 @@
 "use strict";
 
-import {DB_TABLES} from "../constant";
-import {TABLE_NAME} from "../app/models/careplanTemplate";
-import {TABLE_NAME as treatmentTableName} from "../app/models/treatments";
-import {TABLE_NAME as severityTableName} from "../app/models/severity";
-import {TABLE_NAME as conditionTableName} from "../app/models/conditions";
-import {TABLE_NAME as userTableName} from "../app/models/users";
+import { DB_TABLES } from "../constant";
+import { TABLE_NAME } from "../app/models/careplanTemplate";
+import { TABLE_NAME as treatmentTableName } from "../app/models/treatments";
+import { TABLE_NAME as severityTableName } from "../app/models/severity";
+import { TABLE_NAME as conditionTableName } from "../app/models/conditions";
+import { TABLE_NAME as userTableName } from "../app/models/users";
 
 module.exports = {
   up: (queryInterface, Sequelize) => {
@@ -77,7 +77,7 @@ module.exports = {
       },
     });
   },
-  
+
   down: (queryInterface, Sequelize) => {
     return queryInterface.dropTable(TABLE_NAME);
   },

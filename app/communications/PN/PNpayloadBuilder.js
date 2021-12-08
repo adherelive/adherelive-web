@@ -5,7 +5,7 @@ class PNpayloadBuilder {
     if (this.inputPayload.type == "ios") this.buildAPNS();
     if (this.inputPayload.type == "android") this.buildGCM();
   }
-  
+
   buildGCM() {
     this.smsPayload.GCM = {};
     let content = {
@@ -14,7 +14,7 @@ class PNpayloadBuilder {
     };
     this.smsPayload.GCM = JSON.stringify(content);
   }
-  
+
   buildAPNS() {
     this.smsPayload.APNS = {};
     let content = {
@@ -26,7 +26,7 @@ class PNpayloadBuilder {
     };
     this.smsPayload.APNS = JSON.stringify(content);
   }
-  
+
   getPayload() {
     return this.smsPayload;
   }

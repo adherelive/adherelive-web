@@ -1,7 +1,7 @@
 import Joi from "@hapi/joi";
 import moment from "moment";
-import {validationError} from "../helper";
-import {PASSWORD_LENGTH} from "../../../constant";
+import { validationError } from "../helper";
+import { PASSWORD_LENGTH } from "../../../constant";
 import Response from "../../../app/helper/responseFormat";
 
 const credentialsFormSchema = Joi.object().keys({
@@ -35,14 +35,14 @@ const forgotPasswordSchema = Joi.object().keys({
 
 const verifyLinkSchema = Joi.object().keys({
   link: Joi.string()
-    .guid({version: "uuidv4"})
+    .guid({ version: "uuidv4" })
     .required()
     .label("Verification link is not correct"),
 });
 
 const matchPassword = (value, helpers) => {
-  const {state: {ancestors = []} = {}} = helpers || {};
-  const {new_password} = ancestors[0] || {};
+  const { state: { ancestors = [] } = {} } = helpers || {};
+  const { new_password } = ancestors[0] || {};
   if (new_password === value) {
     return value;
   } else {
@@ -78,12 +78,12 @@ const validateTimeInterval = (startTime, endTime) => {
 };
 
 export const validateCredentialsData = (req, res, next) => {
-  const {body: data = {}} = req;
+  const { body: data = {} } = req;
   const isValid = credentialsFormSchema.validate(data);
   console.log("18923718923 isValid ---> ", isValid);
   if (isValid && isValid.error != null) {
-    const {error: {details} = {}} = isValid || {};
-    const {context: {label} = {}} = details[0] || {};
+    const { error: { details } = {} } = isValid || {};
+    const { context: { label } = {} } = details[0] || {};
     // return raiseClientError(res, 422, isValid.error, "please check filled details");
     const response = new Response(false, 422);
     response.setError(isValid.error);
@@ -94,7 +94,7 @@ export const validateCredentialsData = (req, res, next) => {
 };
 
 export const validateUpdatePasswordData = (req, res, next) => {
-  const {body: data = {}} = req;
+  const { body: data = {} } = req;
   const isValid = updatePasswordSchema.validate(data);
   if (isValid && isValid.error != null) {
     return validationError(res, isValid);
@@ -103,7 +103,7 @@ export const validateUpdatePasswordData = (req, res, next) => {
 };
 
 export const forgotPasswordForm = (req, res, next) => {
-  const {body: data = {}} = req;
+  const { body: data = {} } = req;
   const isValid = forgotPasswordSchema.validate(data);
   if (isValid && isValid.error != null) {
     return validationError(res, isValid);
@@ -112,7 +112,7 @@ export const forgotPasswordForm = (req, res, next) => {
 };
 
 export const verifyLinkValidation = (req, res, next) => {
-  const {params: data = {}} = req;
+  const { params: data = {} } = req;
   const isValid = verifyLinkSchema.validate(data);
   if (isValid && isValid.error != null) {
     return validationError(res, isValid);
@@ -121,7 +121,7 @@ export const verifyLinkValidation = (req, res, next) => {
 };
 
 export const validateSignInData = (req, res, next) => {
-  const {body: data = {}} = req;
+  const { body: data = {} } = req;
   const isValid = signInSchema.validate(data);
   console.log("18923718923 isValid ---> ", isValid);
   if (isValid && isValid.error != null) {

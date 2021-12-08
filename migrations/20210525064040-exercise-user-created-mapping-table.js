@@ -1,8 +1,8 @@
 "use strict";
 
-import {TABLE_NAME} from "../app/models/exerciseUserCreatedMapping";
-import {TABLE_NAME as exerciseTableName} from "../app/models/exercise";
-import {USER_CATEGORY} from "../constant";
+import { TABLE_NAME } from "../app/models/exerciseUserCreatedMapping";
+import { TABLE_NAME as exerciseTableName } from "../app/models/exercise";
+import { USER_CATEGORY } from "../constant";
 
 module.exports = {
   up: (queryInterface, DataTypes) => {
@@ -48,7 +48,7 @@ module.exports = {
       },
     });
   },
-  
+
   down: (queryInterface, Sequelize) => {
     return queryInterface.dropTable(TABLE_NAME);
   },

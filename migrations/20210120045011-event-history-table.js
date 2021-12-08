@@ -1,7 +1,7 @@
 "use strict";
 
-import {TABLE_NAME} from "../app/models/eventHistory";
-import {DataTypes} from "sequelize";
+import { TABLE_NAME } from "../app/models/eventHistory";
+import { DataTypes } from "sequelize";
 
 module.exports = {
   up: (queryInterface, Sequelize) => {
@@ -33,7 +33,7 @@ module.exports = {
       },
     });
   },
-  
+
   down: (queryInterface, Sequelize) => {
     return queryInterface.dropTable(TABLE_NAME, {});
   },

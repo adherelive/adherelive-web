@@ -1,5 +1,5 @@
 const moment = require("moment");
-const {isEmpty} = require("lodash");
+const { isEmpty } = require("lodash");
 const {
   ARTICLE,
   ARTICLE_CREATE,
@@ -37,22 +37,22 @@ class PayloadBuilder {
   constructor(data) {
     this.data = data;
   }
-  
+
   action(actionName) {
     this.activityType = actionName;
     return this;
   }
-  
+
   type(type) {
     this.notificationType = type;
     return this;
   }
-  
+
   getReminderPayload() {
     let payload = !isEmpty(arguments)
-      ? {...{}, ...arguments[0]}
-      : {...{}, ...this.data};
-    
+      ? { ...{}, ...arguments[0] }
+      : { ...{}, ...this.data };
+
     let newPayload = {
       eventId: payload._id,
       category: payload.eventCategory,
@@ -63,7 +63,7 @@ class PayloadBuilder {
       participantTwo: payload.participantTwo,
       createdAt: moment().format("DD-MM-YYYY HH:MM:SS"),
     };
-    
+
     switch (this.activityType) {
       case "create":
         return {
@@ -73,7 +73,7 @@ class PayloadBuilder {
             verb: REMINDER_CREATE,
           },
         };
-      
+
       case "update":
         return {
           ...newPayload,
@@ -94,18 +94,18 @@ class PayloadBuilder {
         return null;
     }
   }
-  
+
   getAppointmentPayload() {
     let payload = !isEmpty(arguments)
-      ? {...{}, ...arguments[0]}
-      : {...{}, ...this.data};
+      ? { ...{}, ...arguments[0] }
+      : { ...{}, ...this.data };
     // console.log("app payload========>", this.activityType);
     let newPayload = {
       actor: payload.participantOne,
       object: `${payload.participantTwo}`,
       foreign_id: `${payload._id}`,
     };
-    
+
     switch (this.activityType) {
       case "create":
         return {
@@ -121,7 +121,7 @@ class PayloadBuilder {
             verb: APPOINTMENT_UPDATE,
           },
         };
-      
+
       case "start":
         return {
           ...newPayload,
@@ -140,11 +140,11 @@ class PayloadBuilder {
         return null;
     }
   }
-  
+
   getArticlePayload() {
     let payload = !isEmpty(arguments)
-      ? {...{}, ...arguments[0]}
-      : {...{}, ...this.data};
+      ? { ...{}, ...arguments[0] }
+      : { ...{}, ...this.data };
     let newPayload = {
       eventId: payload._id,
       category: payload.eventCategory,
@@ -159,22 +159,22 @@ class PayloadBuilder {
       case "create":
         return {
           ...newPayload,
-          ...{message: ""},
+          ...{ message: "" },
         };
       case "delete":
         return {
           ...newPayload,
-          ...{message: ""},
+          ...{ message: "" },
         };
       default:
         return null;
     }
   }
-  
+
   getSurveyPayload() {
     let payload = !isEmpty(arguments)
-      ? {...{}, ...arguments[0]}
-      : {...{}, ...this.data};
+      ? { ...{}, ...arguments[0] }
+      : { ...{}, ...this.data };
     let newPayload = {
       eventId: payload._id,
       category: payload.eventCategory,
@@ -197,11 +197,11 @@ class PayloadBuilder {
         return null;
     }
   }
-  
+
   getVitalsPayload() {
     let payload = !isEmpty(arguments)
-      ? {...{}, ...arguments[0]}
-      : {...{}, ...this.data};
+      ? { ...{}, ...arguments[0] }
+      : { ...{}, ...this.data };
     let newPayload = {
       eventId: payload._id,
       category: payload.eventCategory,
@@ -264,12 +264,12 @@ class PayloadBuilder {
         return null;
     }
   }
-  
+
   getBuild() {
     try {
-      let payload = {...{}, ...this.data};
+      let payload = { ...{}, ...this.data };
       // console.log("payload @ getBuild", payload);
-      
+
       switch (this.notificationType) {
         case APPOINTMENT:
           return this.getAppointmentPayload(payload);

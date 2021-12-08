@@ -1,5 +1,5 @@
 import Database from "../../../libs/mysql";
-import {TABLE_NAME} from "../../models/templateAppointments";
+import { TABLE_NAME } from "../../models/templateAppointments";
 
 class TemplateAppointmentService {
   getTemplateAppointmentByData = async (data) => {
@@ -12,7 +12,7 @@ class TemplateAppointmentService {
       throw error;
     }
   };
-  
+
   getSingleTemplateAppointmentsByData = async (data) => {
     try {
       const templateAppointment = await Database.getModel(TABLE_NAME).findOne({
@@ -23,7 +23,7 @@ class TemplateAppointmentService {
       throw error;
     }
   };
-  
+
   getAppointmentsByCarePlanTemplateId = async (care_plan_template_id) => {
     try {
       const templateAppointments = await Database.getModel(TABLE_NAME).findAll({
@@ -34,7 +34,7 @@ class TemplateAppointmentService {
       throw error;
     }
   };
-  
+
   addTemplateAppointment = async (data) => {
     try {
       const templateAppointment = await Database.getModel(TABLE_NAME).create(
@@ -45,7 +45,7 @@ class TemplateAppointmentService {
       throw error;
     }
   };
-  
+
   deleteAppointment = async (data) => {
     try {
       return await Database.getModel(TABLE_NAME).destroy({
@@ -55,7 +55,7 @@ class TemplateAppointmentService {
       throw error;
     }
   };
-  
+
   update = async (data, id) => {
     const transaction = await Database.initTransaction();
     try {

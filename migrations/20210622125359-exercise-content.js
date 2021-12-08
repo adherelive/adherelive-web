@@ -1,9 +1,9 @@
 "use strict";
 
-import {TABLE_NAME, VIDEO_TYPES} from "../app/models/exerciseContents";
-import {TABLE_NAME as exerciseTableName} from "../app/models/exercise";
+import { TABLE_NAME, VIDEO_TYPES } from "../app/models/exerciseContents";
+import { TABLE_NAME as exerciseTableName } from "../app/models/exercise";
 
-import {USER_CATEGORY} from "../constant";
+import { USER_CATEGORY } from "../constant";
 
 module.exports = {
   up: (queryInterface, DataTypes) => {
@@ -61,7 +61,7 @@ module.exports = {
       },
     });
   },
-  
+
   down: (queryInterface) => {
     return queryInterface.dropTable(TABLE_NAME);
   },
