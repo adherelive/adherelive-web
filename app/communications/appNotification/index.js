@@ -7,23 +7,23 @@ const validator = require("./helpers/validator");
 const SendNotificationValidator = require("./helpers/sendNotificationsValidator");
 const payloadBuilder = require("./helpers/payloadBuilder");
 const NOTIFIER = require("./helpers/notify");
-const {notificationLogger} = require("./helpers/notificationLogger");
+const { notificationLogger } = require("./helpers/notificationLogger");
 
 class AppNotification {
   constructor(payload) {
     this.payload = payload;
   }
-  
+
   action(action) {
     this.actionType = action;
     return this;
   }
-  
+
   type(type) {
     this.notificationType = type;
     return this;
   }
-  
+
   // notifyStreamBased() {
   //   // let payload = JSON.parse(JSON.stringify(this.payload));
   //   let sourceStream = new stream.PassThrough();
@@ -34,16 +34,16 @@ class AppNotification {
   //     .pipe(transfromStream())
   //     .pipe(notifyStream());
   // }
-  
+
   async notify() {
     try {
       var data = Object.assign({}, this.payload);
       // console.log("came in appNootification ==========>", data);
-      
-      const {buildPayload = {}} = data;
+
+      const { buildPayload = {} } = data;
       if (!isEmpty(buildPayload)) {
         NOTIFIER(buildPayload).connect().sendNotification();
-        
+
         // notificationLogger.success(
         //   "notification send successfully with payload",
         //   buildPayload

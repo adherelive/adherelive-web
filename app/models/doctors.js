@@ -1,8 +1,8 @@
 "use strict";
-import {DataTypes} from "sequelize";
-import {TABLE_NAME as userTableName} from "./users";
-import {TABLE_NAME as specialityTableName} from "./specialities";
-import {GENDER, BLANK_STATE} from "../../constant";
+import { DataTypes } from "sequelize";
+import { TABLE_NAME as userTableName } from "./users";
+import { TABLE_NAME as specialityTableName } from "./specialities";
+import { GENDER, BLANK_STATE } from "../../constant";
 
 export const TABLE_NAME = "doctors";
 
@@ -74,8 +74,8 @@ export const db = (database) => {
           return !this.first_name
             ? null
             : `${this.first_name}${
-              this.middle_name ? ` ${this.middle_name}` : ""
-            }${this.last_name ? ` ${this.last_name}` : ""}`;
+                this.middle_name ? ` ${this.middle_name}` : ""
+              }${this.last_name ? ` ${this.last_name}` : ""}`;
         },
       },
     },
@@ -109,12 +109,12 @@ export const db = (database) => {
 
 export const associate = (database) => {
   // associations here (if any) ...
-  
+
   database.models[TABLE_NAME].belongsTo(database.models[userTableName], {
     foreignKey: "user_id",
     targetKey: "id",
   });
-  
+
   database.models[TABLE_NAME].hasOne(database.models[specialityTableName], {
     foreignKey: "id",
     sourceKey: "speciality_id",

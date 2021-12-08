@@ -1,6 +1,6 @@
 "use strict";
-import {DataTypes} from "sequelize";
-import {CURRENCY, REPEAT_TYPE, USER_CATEGORY} from "../../constant";
+import { DataTypes } from "sequelize";
+import { CURRENCY, REPEAT_TYPE, USER_CATEGORY } from "../../constant";
 
 export const PRODUCT_PLANS = "product_plans";
 

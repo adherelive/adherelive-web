@@ -5,9 +5,9 @@ class TemplateAppointmentWrapper extends BaseTemplateAppointment {
   constructor(data) {
     super(data);
   }
-  
+
   getBasicInfo = () => {
-    const {_data} = this;
+    const { _data } = this;
     const {
       id,
       care_plan_template_id,

@@ -1,14 +1,14 @@
-import React, {Component} from "react";
-import {injectIntl} from "react-intl";
-import {Radio, Form} from "antd";
+import React, { Component } from "react";
+import { injectIntl } from "react-intl";
+import { Radio, Form } from "antd";
 
 import messages from "../message";
-import {getActivityBetween} from "../constant";
+import { getActivityBetween } from "../constant";
 import activityModeField from "./activityMode";
 
-const {Group: RadioGroup, Button: RadioButton} = Radio;
+const { Group: RadioGroup, Button: RadioButton } = Radio;
 
-const {Item: FormItem} = Form;
+const { Item: FormItem } = Form;
 
 const FIELD_NAME = "activityType";
 
@@ -28,88 +28,88 @@ class AppointmentType extends Component {
   //     }
   //   }
   // }
-  
+
   onChangeActivityType = (e) => {
     e.preventDefault();
     const activityType = e.target.value;
-    
+
     const {
       currentUser,
       data,
-      form: {getFieldValue, setFieldsValue},
+      form: { getFieldValue, setFieldsValue },
       otherUser,
       purpose,
     } = this.props;
-    
+
     const config = getActivityBetween({
       viewer: currentUser,
       other: otherUser,
       event: data,
       edit: !!purpose,
     });
-    
-    const {mode = {}} = config;
-    
+
+    const { mode = {} } = config;
+
     const prevActivityMode = getFieldValue(activityModeField.field_name);
-    
+
     const activityModeOption = mode[activityType] || [];
-    
+
     for (const modeData of activityModeOption) {
-      const {value, disable} = modeData;
+      const { value, disable } = modeData;
       if (disable === false) {
-        setFieldsValue({[activityModeField.field_name]: value});
+        setFieldsValue({ [activityModeField.field_name]: value });
         break;
       }
     }
-    
+
     for (const modeData of activityModeOption) {
-      const {value, disable} = modeData;
+      const { value, disable } = modeData;
       if (disable === false && prevActivityMode === value) {
-        setFieldsValue({[activityModeField.field_name]: value});
+        setFieldsValue({ [activityModeField.field_name]: value });
         break;
       }
     }
   };
-  
+
   formatMessage = (data) => this.props.intl.formatMessage(data);
-  
+
   getInitialValue = () => {
     let initialValue;
-    
-    const {currentUser, data, otherUser, purpose, event} = this.props;
-    
+
+    const { currentUser, data, otherUser, purpose, event } = this.props;
+
     if (purpose) {
-      const {data: {activityType} = {}} = event;
+      const { data: { activityType } = {} } = event;
       return activityType;
     }
-    
+
     const config = getActivityBetween({
       viewer: currentUser,
       other: otherUser,
       event: data,
       edit: !!purpose,
     });
-    const {activity = []} = config;
-    
+    const { activity = [] } = config;
+
     if (activity.length > 0) {
       initialValue = activity[0].value;
     }
-    
+
     return initialValue;
   };
-  
+
   getAppointmentTypeRadioOption = () => {
-    const {currentUser, data, otherUser, purpose} = this.props;
-    const {formatMessage} = this;
-    
+    const { currentUser, data, otherUser, purpose } = this.props;
+    const { formatMessage } = this;
+
     const config = getActivityBetween({
       viewer: currentUser,
       other: otherUser,
       event: data,
       edit: !!purpose,
     });
-    const {activity = []} = config;
-    
+    const { activity = [] } = config;
+
     return activity.map((option) => {
       return (
         <RadioButton
@@ -123,10 +123,10 @@ class AppointmentType extends Component {
       );
     });
   };
-  
+
   render() {
     const {
-      form: {getFieldDecorator},
+      form: { getFieldDecorator },
       purpose,
     } = this.props;
     const {
@@ -135,7 +135,7 @@ class AppointmentType extends Component {
       getAppointmentTypeRadioOption,
       getInitialValue,
     } = this;
-    
+
     // if (activity.length === 1) {
     //   return (
     //     <div className="flex justify-content-start align-items-start mb24">

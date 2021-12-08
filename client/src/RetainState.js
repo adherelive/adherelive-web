@@ -1,25 +1,25 @@
-import {SIGNING_COMPLETED} from "./modules/auth";
-import {SIGNING_COMPLETED_WITH_ERROR} from "./modules/auth";
+import { SIGNING_COMPLETED } from "./modules/auth";
+import { SIGNING_COMPLETED_WITH_ERROR } from "./modules/auth";
 
 import {
   GOOGLE_SIGNING_COMPLETED,
   GOOGLE_SIGNING_COMPLETED_WITH_ERROR,
 } from "./modules/auth";
 
-import {SIGNING, SIGNING_UP} from "./modules/auth";
-import {SIGNING_UP_COMPLETED} from "./modules/auth";
-import {SIGNING_UP_COMPLETED_WITH_ERROR} from "./modules/auth";
+import { SIGNING, SIGNING_UP } from "./modules/auth";
+import { SIGNING_UP_COMPLETED } from "./modules/auth";
+import { SIGNING_UP_COMPLETED_WITH_ERROR } from "./modules/auth";
 
-import {VALIDATING_LINK} from "./modules/auth";
-import {VALIDATING_LINK_COMPLETED} from "./modules/auth";
-import {VALIDATING_LINK_COMPLETED_WITH_ERROR} from "./modules/auth";
+import { VALIDATING_LINK } from "./modules/auth";
+import { VALIDATING_LINK_COMPLETED } from "./modules/auth";
+import { VALIDATING_LINK_COMPLETED_WITH_ERROR } from "./modules/auth";
 
-import {GETTING_INITIAL_DATA} from "./modules/auth";
-import {GETTING_INITIAL_DATA_COMPLETED} from "./modules/auth";
-import {GETTING_INITIAL_DATA_COMPLETED_WITH_ERROR} from "./modules/auth";
+import { GETTING_INITIAL_DATA } from "./modules/auth";
+import { GETTING_INITIAL_DATA_COMPLETED } from "./modules/auth";
+import { GETTING_INITIAL_DATA_COMPLETED_WITH_ERROR } from "./modules/auth";
 
-import {RESET_ERROR} from "./modules/auth";
-import {RESET_PASSWORD_LINK_COMPLETED} from "./modules/auth";
+import { RESET_ERROR } from "./modules/auth";
+import { RESET_PASSWORD_LINK_COMPLETED } from "./modules/auth";
 // import { CLEAR_MSG } from "./modules/successMsg";
 
 // import {
@@ -35,7 +35,7 @@ import {RESET_PASSWORD_LINK_COMPLETED} from "./modules/auth";
 
 const retainState = (store) => (next) => (action) => {
   const storeInstance = store.getState();
-  const {auth: {authenticated = false} = {}} = storeInstance;
+  const { auth: { authenticated = false } = {} } = storeInstance;
   if (authenticated) {
     next(action);
   } else {

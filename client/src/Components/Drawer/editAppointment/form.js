@@ -1,27 +1,27 @@
-import React, {Component, Fragment} from "react";
-import {injectIntl} from "react-intl";
+import React, { Component, Fragment } from "react";
+import { injectIntl } from "react-intl";
 
 import Form from "antd/es/form";
 import Select from "antd/es/select";
 import DatePicker from "antd/es/date-picker";
 import Input from "antd/es/input";
 import TextArea from "antd/es/input/TextArea";
-import {Checkbox} from "antd";
+import { Checkbox } from "antd";
 
 import messages from "./message";
 import moment from "moment";
 import calendar from "../../../Assets/images/calendar1.svg";
-import {ClockCircleOutlined} from "@ant-design/icons";
+import { ClockCircleOutlined } from "@ant-design/icons";
 import Dropdown from "antd/es/dropdown";
 import TimeKeeper from "react-timekeeper";
-import {FAVOURITE_TYPE, MEDICAL_TEST, RADIOLOGY} from "../../../constant";
+import { FAVOURITE_TYPE, MEDICAL_TEST, RADIOLOGY } from "../../../constant";
 import StarOutlined from "@ant-design/icons/StarOutlined";
 import StarFilled from "@ant-design/icons/StarFilled";
 import Tooltip from "antd/es/tooltip";
 import message from "antd/es/message";
 
-const {Item: FormItem} = Form;
-const {Option, OptGroup} = Select;
+const { Item: FormItem } = Form;
+const { Option, OptGroup } = Select;
 
 const PATIENT = "patient";
 const DATE = "date";
@@ -60,11 +60,11 @@ class EditAppointmentForm extends Component {
       typeDescValue: "",
     };
   }
-  
+
   // openCalendar = (e) => {
   //   e.preventDefault();
   //   const datePicker = window.document.getElementsByClassName(DATE);
-  
+
   //   if (datePicker) {
   //     const firstChild = datePicker.firstChild;
   //     if (firstChild) {
@@ -80,15 +80,15 @@ class EditAppointmentForm extends Component {
     let {
       appointments,
       appointmentData,
-      payload: {id: appointment_id, patient_id} = {},
+      payload: { id: appointment_id, patient_id } = {},
     } = this.props;
-    
+
     let {
       basic_info: {
-        details: {type = "", type_description: type_desc_initial = ""} = {},
+        details: { type = "", type_description: type_desc_initial = "" } = {},
       } = {},
     } = appointments[appointment_id] || {};
-    
+
     const {
       schedule_data: {
         appointment_type = "",
@@ -100,60 +100,60 @@ class EditAppointmentForm extends Component {
         type_description: details_type_desc = "",
       } = {},
     } = appointmentData || {};
-    
+
     const appt_tye = appointment_type
       ? appointment_type
       : details_appointment_type;
     type = appt_tye ? appt_tye : shedule_data_type ? shedule_data_type : type;
-    
+
     let {
       static_templates: {
-        appointments: {radiology_type_data = {}} = {},
+        appointments: { radiology_type_data = {} } = {},
       } = {},
     } = this.props;
-    
+
     let {
-      static_templates: {appointments: {type_description = {}} = {}} = {},
+      static_templates: { appointments: { type_description = {} } = {} } = {},
     } = this.props;
     let descArray = type_description[type] ? type_description[type] : [];
-    this.setState({typeDescription: descArray});
-    
+    this.setState({ typeDescription: descArray });
+
     if (!type_desc_initial) {
       type_desc_initial = scheduled_data_type_desc
         ? scheduled_data_type_desc
         : details_type_desc;
     }
-    
+
     if (type === RADIOLOGY) {
       let radiology_id = null;
       for (let each in radiology_type_data) {
-        const {name = "", id = null} = radiology_type_data[each];
-        
+        const { name = "", id = null } = radiology_type_data[each];
+
         if (name === type_desc_initial) {
           radiology_id = id;
           break;
         }
       }
-      
+
       this.setState({
         radiologyTypeSelected: radiology_id,
       });
     }
-    
+
     this.getMedicalTestFavourites();
     this.getRadiologyFavourites();
   };
-  
+
   getMedicalTestFavourites = async () => {
     try {
-      const {getFavourites} = this.props;
+      const { getFavourites } = this.props;
       const MedicalTestsResponse = await getFavourites({
         type: FAVOURITE_TYPE.MEDICAL_TESTS,
       });
       const {
         status,
         statusCode,
-        payload: {data = {}, message: resp_msg = ""} = {},
+        payload: { data = {}, message: resp_msg = "" } = {},
       } = MedicalTestsResponse || {};
       if (!status) {
         message.error(resp_msg);
@@ -162,17 +162,17 @@ class EditAppointmentForm extends Component {
       console.log("MedicalTests Get errrrorrrr ===>", error);
     }
   };
-  
+
   getRadiologyFavourites = async () => {
     try {
-      const {getFavourites} = this.props;
+      const { getFavourites } = this.props;
       const RadiologyResponse = await getFavourites({
         type: FAVOURITE_TYPE.RADIOLOGY,
       });
       const {
         status,
         statusCode,
-        payload: {data = {}, message: resp_msg = ""} = {},
+        payload: { data = {}, message: resp_msg = "" } = {},
       } = RadiologyResponse || {};
       if (!status) {
         message.error(resp_msg);
@@ -181,7 +181,7 @@ class EditAppointmentForm extends Component {
       console.log("RadiologyResponse Get errrrorrrr ===>", error);
     }
   };
-  
+
   scrollToTop = () => {
     let antForm = document.getElementsByClassName("Form")[0];
     let antDrawerBody = antForm.parentNode;
@@ -189,41 +189,41 @@ class EditAppointmentForm extends Component {
     antDrawerBody.scrollIntoView(true);
     antDrawerWrapperBody.scrollTop -= 200;
   };
-  
+
   fetchPatients = async (data) => {
     try {
     } catch (err) {
       console.log("err", err);
     }
   };
-  
+
   getParentNode = (t) => t.parentNode;
-  
+
   formatMessage = (data) => this.props.intl.formatMessage(data);
-  
+
   getInitialValue = () => {
     const {
       patientId,
-      payload: {patient_id},
+      payload: { patient_id },
       patients,
     } = this.props;
     let pId = patientId ? patientId.toString() : patient_id;
-    const {patients: {basic_info: {first_name, last_name} = {}} = {}} =
-    patients[pId] || {};
+    const { patients: { basic_info: { first_name, last_name } = {} } = {} } =
+      patients[pId] || {};
     // if (first_name && last_name) {
     return `${pId}`;
     // } else {
     // return null;
     // }
   };
-  
+
   getPatientOptions = () => {
-    const {patientId, patients, payload: {patient_id} = {}} = this.props;
-    
+    const { patientId, patients, payload: { patient_id } = {} } = this.props;
+
     let pId = patientId ? patientId.toString() : patient_id;
-    const {basic_info: {first_name, middle_name, last_name} = {}} =
-    patients[pId] || {};
-    
+    const { basic_info: { first_name, middle_name, last_name } = {} } =
+      patients[pId] || {};
+
     // const patientOptions = patients.map((patient) => {
     // const { first_name, last_name, id } = patient || {};
     return (
@@ -234,73 +234,73 @@ class EditAppointmentForm extends Component {
       </Option>
     );
     // });
-    
+
     // return patientOptions;
   };
-  
+
   calendarComp = () => {
     return (
       <div className="flex justify-center align-center">
-        <img src={calendar} alt="calender icon" className="w20"/>
+        <img src={calendar} alt="calender icon" className="w20" />
       </div>
     );
   };
-  
+
   disabledDate = (current) => {
     // Can not select days before today and today
-    
+
     return (
       current &&
       (current < moment().startOf("day") || current > moment().add(1, "year"))
     );
   };
-  
+
   // onBlur = date => () => {
   //   this.adjustEventOnStartDateChange(date);
   // };
-  
+
   handleDateSelect = (date) => () => {
-    const {form: {setFieldsValue, getFieldValue} = {}} = this.props;
+    const { form: { setFieldsValue, getFieldValue } = {} } = this.props;
     const startDate = getFieldValue(DATE);
-    
+
     if (!date || !startDate) {
       return;
     }
-    
+
     const eventStartTime = getFieldValue(START_TIME);
     if (date.isSame(eventStartTime, "date")) {
       return;
     }
-    
+
     const eventEndTime = getFieldValue(END_TIME);
-    
+
     const newMonth = startDate.get("month");
     const newDate = startDate.get("date");
     const newYear = startDate.get("year");
-    
+
     let newEventStartTime;
     let newEventEndTime;
-    
+
     if (eventStartTime) {
       newEventStartTime = eventStartTime
         .clone()
-        .set({month: newMonth, year: newYear, date: newDate});
+        .set({ month: newMonth, year: newYear, date: newDate });
     }
-    
+
     if (eventEndTime) {
       newEventEndTime = eventEndTime
         .clone()
-        .set({month: newMonth, year: newYear, date: newDate});
+        .set({ month: newMonth, year: newYear, date: newDate });
     }
-    
+
     setFieldsValue({
       [START_TIME]: newEventStartTime,
       [END_TIME]: newEventEndTime,
     });
   };
-  
+
   handleStartTimeChange = (time, str) => {
-    const {form: {setFieldsValue, getFieldValue} = {}} = this.props;
+    const { form: { setFieldsValue, getFieldValue } = {} } = this.props;
     const startTime = getFieldValue(START_TIME);
     const startDate = getFieldValue(DATE);
     if (startDate) {
@@ -311,8 +311,8 @@ class EditAppointmentForm extends Component {
       let newEventEndTime;
       newEventStartTime = time
         ? moment(time)
-          .clone()
-          .set({month: newMonth, year: newYear, date: newDate})
+            .clone()
+            .set({ month: newMonth, year: newYear, date: newDate })
         : null;
       newEventEndTime = newEventStartTime
         ? moment(newEventStartTime).add("minutes", 30)
@@ -327,9 +327,9 @@ class EditAppointmentForm extends Component {
       });
     }
   };
-  
+
   handleEndTimeChange = (time, str) => {
-    const {form: {setFieldsValue, getFieldValue} = {}} = this.props;
+    const { form: { setFieldsValue, getFieldValue } = {} } = this.props;
     const startTime = getFieldValue(START_TIME);
     const startDate = getFieldValue(DATE);
     if (startDate) {
@@ -340,37 +340,37 @@ class EditAppointmentForm extends Component {
       let newEventEndTime;
       newEventStartTime = startTime
         ? moment(startTime)
-          .clone()
-          .set({month: newMonth, year: newYear, date: newDate})
+            .clone()
+            .set({ month: newMonth, year: newYear, date: newDate })
         : null;
       newEventEndTime = time
-        ? time.clone().set({month: newMonth, year: newYear, date: newDate})
+        ? time.clone().set({ month: newMonth, year: newYear, date: newDate })
         : null;
       setFieldsValue({
         [START_TIME]: newEventStartTime,
         [END_TIME]: newEventEndTime,
       });
     } else {
-      setFieldsValue({[END_TIME]: moment(time)});
+      setFieldsValue({ [END_TIME]: moment(time) });
     }
   };
-  
+
   getPatientName = () => {
-    const {patientId, patients, payload: {patient_id} = {}} = this.props;
-    
+    const { patientId, patients, payload: { patient_id } = {} } = this.props;
+
     let pId = patientId ? patientId.toString() : patient_id;
-    const {basic_info: {first_name, middle_name, last_name} = {}} =
-    patients[pId] || {};
+    const { basic_info: { first_name, middle_name, last_name } = {} } =
+      patients[pId] || {};
     return `${first_name} ${middle_name ? `${middle_name} ` : ""}${
       last_name ? `${last_name} ` : ""
     }`;
   };
-  
+
   getTreatmentOption = () => {
-    let {treatments = {}} = this.props;
+    let { treatments = {} } = this.props;
     let newTreatments = [];
     for (let treatment of Object.values(treatments)) {
-      let {basic_info: {id = 0, name = ""} = {}} = treatment;
+      let { basic_info: { id = 0, name = "" } = {} } = treatment;
       newTreatments.push(
         <Option key={id} value={id}>
           {name}
@@ -379,31 +379,31 @@ class EditAppointmentForm extends Component {
     }
     return newTreatments;
   };
-  
+
   calendarComp = () => {
     return (
       <div className="flex justify-center align-center">
-        <img src={calendar} alt="calender icon" className="w20"/>
+        <img src={calendar} alt="calender icon" className="w20" />
       </div>
     );
   };
-  
+
   getStartTime = () => {
-    const {form: {getFieldValue} = {}} = this.props;
+    const { form: { getFieldValue } = {} } = this.props;
     return moment(getFieldValue(START_TIME)).format("hh:mm A");
   };
-  
+
   getEndTime = () => {
-    const {form: {getFieldValue} = {}} = this.props;
+    const { form: { getFieldValue } = {} } = this.props;
     if (getFieldValue(END_TIME)) {
       return moment(getFieldValue(END_TIME)).format("hh:mm A");
     }
     return null;
   };
-  
+
   handleTimeSelect = (type) => (time) => {
-    const {form: {setFieldsValue} = {}, enableSubmit} = this.props;
-    const {hour24, minute} = time || {};
+    const { form: { setFieldsValue } = {}, enableSubmit } = this.props;
+    const { hour24, minute } = time || {};
     if (type === START_TIME) {
       setFieldsValue({
         [START_TIME]: moment().hour(hour24).minute(minute),
@@ -418,32 +418,32 @@ class EditAppointmentForm extends Component {
     }
     enableSubmit();
   };
-  
+
   handleTypeSelect = (value) => {
-    const {form: {setFieldsValue} = {}} = this.props;
-    
+    const { form: { setFieldsValue } = {} } = this.props;
+
     // resetFields([APPOINTMENT_TYPE_DESCRIPTION]);
-    setFieldsValue({[APPOINTMENT_TYPE_DESCRIPTION]: null});
-    
+    setFieldsValue({ [APPOINTMENT_TYPE_DESCRIPTION]: null });
+
     let {
-      static_templates: {appointments: {type_description = {}} = {}} = {},
+      static_templates: { appointments: { type_description = {} } = {} } = {},
     } = this.props;
     let descArray = type_description[value] ? type_description[value] : [];
-    
+
     if (value !== RADIOLOGY) {
-      this.setState({radiologyTypeSelected: null});
+      this.setState({ radiologyTypeSelected: null });
     }
-    
-    this.setState({typeDescription: descArray});
+
+    this.setState({ typeDescription: descArray });
   };
-  
+
   getTypeOption = () => {
     let {
-      static_templates: {appointments: {appointment_type = {}} = {}} = {},
+      static_templates: { appointments: { appointment_type = {} } = {} } = {},
     } = this.props;
     let newTypes = [];
     for (let type of Object.keys(appointment_type)) {
-      let {title = ""} = appointment_type[type] || {};
+      let { title = "" } = appointment_type[type] || {};
       newTypes.push(
         <Option key={type} value={type}>
           {title}
@@ -452,21 +452,21 @@ class EditAppointmentForm extends Component {
     }
     return newTypes;
   };
-  
+
   setRadiologyTypeSelected = (id) => () => {
     const IdStr = id.toString();
-    this.setState({radiologyTypeSelected: IdStr});
+    this.setState({ radiologyTypeSelected: IdStr });
     const {
       static_templates: {
-        appointments: {radiology_type_data = {}} = {},
+        appointments: { radiology_type_data = {} } = {},
       } = {},
     } = this.props;
     // const temp = radiology_type_data[IdStr];
   };
-  
+
   getOtherOptions = () => {
-    const {typeDescription = []} = this.state;
-    
+    const { typeDescription = [] } = this.state;
+
     return Object.values(typeDescription).map((description, index) => {
       return (
         <Option key={`${index}-${description}`} value={description}>
@@ -475,13 +475,13 @@ class EditAppointmentForm extends Component {
       );
     });
   };
-  
+
   getMedicalTestOptions = () => {
-    const {typeDescription = [], descDropDownOpen = false} = this.state;
-    
+    const { typeDescription = [], descDropDownOpen = false } = this.state;
+
     return typeDescription.map((description) => {
-      const {name, favorite_id, index} = description || {};
-      
+      const { name, favorite_id, index } = description || {};
+
       return (
         <Option key={`${index}-${name}`} value={name}>
           <div className="pointer flex wp100  align-center justify-space-between">
@@ -493,12 +493,12 @@ class EditAppointmentForm extends Component {
               >
                 {favorite_id ? (
                   <StarFilled
-                    style={{fontSize: "20px", color: "#f9c216"}}
+                    style={{ fontSize: "20px", color: "#f9c216" }}
                     onClick={this.handleremoveMedicalTestFavourites(index)}
                   />
                 ) : (
                   <StarOutlined
-                    style={{fontSize: "20px", color: "#f9c216"}}
+                    style={{ fontSize: "20px", color: "#f9c216" }}
                     onClick={this.handleAddMedicalTestFavourites(index)}
                   />
                 )}
@@ -509,13 +509,13 @@ class EditAppointmentForm extends Component {
       );
     });
   };
-  
+
   getRadiologyOptions = () => {
-    const {typeDescription = {}} = this.state;
-    const {setRadiologyTypeSelected} = this;
-    
+    const { typeDescription = {} } = this.state;
+    const { setRadiologyTypeSelected } = this;
+
     return Object.keys(typeDescription).map((id, index) => {
-      const {name} = typeDescription[id] || {};
+      const { name } = typeDescription[id] || {};
       return (
         <Option
           key={`${id}-${name}`}
@@ -527,16 +527,16 @@ class EditAppointmentForm extends Component {
       );
     });
   };
-  
+
   getTypeDescriptionOption = () => {
     const {
-      form: {getFieldValue},
+      form: { getFieldValue },
     } = this.props;
-    const {getMedicalTestOptions, getRadiologyOptions, getOtherOptions} =
+    const { getMedicalTestOptions, getRadiologyOptions, getOtherOptions } =
       this;
-    
+
     const typeValue = getFieldValue(APPOINTMENT_TYPE);
-    
+
     switch (typeValue) {
       case MEDICAL_TEST:
         return getMedicalTestOptions();
@@ -546,12 +546,12 @@ class EditAppointmentForm extends Component {
         return getOtherOptions();
     }
   };
-  
+
   handleProviderSearch = (data) => {
     try {
-      const {form: {setFieldsValue} = {}} = this.props;
+      const { form: { setFieldsValue } = {} } = this.props;
       if (data) {
-        setFieldsValue({[PROVIDER_ID]: data});
+        setFieldsValue({ [PROVIDER_ID]: data });
       }
     } catch (err) {
       console.log("err", err);
@@ -559,22 +559,22 @@ class EditAppointmentForm extends Component {
       // this.setState({ fetchingMedicines: false });
     }
   };
-  
+
   getProviderOption = () => {
     let {
-      static_templates: {appointments: {providers = {}} = {}} = {},
+      static_templates: { appointments: { providers = {} } = {} } = {},
       appointments,
       appointmentData,
-      payload: {id: appointment_id} = {},
+      payload: { id: appointment_id } = {},
     } = this.props;
-    let {provider_name = ""} = appointments[appointment_id] || {};
-    
-    const {provider_name: provName = ""} = appointmentData || {};
+    let { provider_name = "" } = appointments[appointment_id] || {};
+
+    const { provider_name: provName = "" } = appointmentData || {};
     provider_name = provName ? provName : provider_name;
     let newTypes = [];
-    
+
     for (let provider of Object.values(providers)) {
-      let {basic_info: {id = "0", name = ""} = {}} = provider;
+      let { basic_info: { id = "0", name = "" } = {} } = provider;
       newTypes.push(
         <Option key={id} value={parseInt(id)}>
           {name}
@@ -590,10 +590,10 @@ class EditAppointmentForm extends Component {
     }
     return newTypes;
   };
-  
+
   getTimePicker = (type) => {
-    const {form: {getFieldValue} = {}} = this.props;
-    const {handleTimeSelect} = this;
+    const { form: { getFieldValue } = {} } = this.props;
+    const { handleTimeSelect } = this;
     let timeValue = "";
     if (type === START_TIME) {
       timeValue = getFieldValue(START_TIME);
@@ -614,43 +614,43 @@ class EditAppointmentForm extends Component {
       />
     );
   };
-  
+
   DescDropDownVisibleChange = (open) => {
-    this.setState({descDropDownOpen: open});
+    this.setState({ descDropDownOpen: open });
   };
-  
+
   handleTypeDescriptionUpdate = async () => {
-    const {form: {getFieldValue} = {}, getAppointmentsDetails} = this.props;
-    
+    const { form: { getFieldValue } = {}, getAppointmentsDetails } = this.props;
+
     const response = await getAppointmentsDetails();
-    const {status, payload: {data} = {}} = response || {};
+    const { status, payload: { data } = {} } = response || {};
     if (status === true) {
       const {
-        static_templates: {appointments: {type_description = {}} = {}} = {},
+        static_templates: { appointments: { type_description = {} } = {} } = {},
       } = data || {};
       const value = getFieldValue(APPOINTMENT_TYPE) || null;
       const descArray = type_description[value] ? type_description[value] : [];
-      
-      this.setState({typeDescription: descArray});
+
+      this.setState({ typeDescription: descArray });
     }
   };
-  
+
   handleAddMedicalTestFavourites = (id) => async (e) => {
     try {
       e.preventDefault();
       e.stopPropagation();
-      const {markFavourite} = this.props;
-      const {handleTypeDescriptionUpdate} = this;
+      const { markFavourite } = this.props;
+      const { handleTypeDescriptionUpdate } = this;
       const data = {
         type: FAVOURITE_TYPE.MEDICAL_TESTS,
         id,
       };
-      
+
       const response = await markFavourite(data);
       const {
         status,
         statusCode,
-        payload: {data: resp_data = {}, message: resp_msg = ""} = {},
+        payload: { data: resp_data = {}, message: resp_msg = "" } = {},
       } = response;
       if (status) {
         message.success(resp_msg);
@@ -662,23 +662,23 @@ class EditAppointmentForm extends Component {
       console.log("error", error);
     }
   };
-  
+
   handleremoveMedicalTestFavourites = (id) => async (e) => {
     try {
       e.preventDefault();
       e.stopPropagation();
-      const {removeFavourite} = this.props;
-      const {handleTypeDescriptionUpdate} = this;
+      const { removeFavourite } = this.props;
+      const { handleTypeDescriptionUpdate } = this;
       const data = {
         type: FAVOURITE_TYPE.MEDICAL_TESTS,
         typeId: id,
       };
-      
+
       const response = await removeFavourite(data);
       const {
         status,
         statusCode,
-        payload: {data: resp_data = {}, message: resp_msg = ""} = {},
+        payload: { data: resp_data = {}, message: resp_msg = "" } = {},
       } = response;
       if (status) {
         message.success(resp_msg);
@@ -687,23 +687,23 @@ class EditAppointmentForm extends Component {
         message.error(resp_msg);
       }
     } catch (error) {
-      console.log("error", {error});
+      console.log("error", { error });
     }
   };
-  
+
   //======================================================================================>>>>
   getRadiologyDescriptionName = (name = "") => {
     return name.length > 30 ? `${name.substring(0, 31)}..` : name;
   };
-  
+
   getRadiologyDescriptionOptions = (items, each) => {
-    const {radiologyTypeSelected = null, radiologyDropDownVisible = false} =
+    const { radiologyTypeSelected = null, radiologyDropDownVisible = false } =
       this.state;
-    const {getRadiologyDescriptionName} = this;
-    
+    const { getRadiologyDescriptionName } = this;
+
     return items.map((item, index) => {
-      const {name, favorite_id} = item || {};
-      
+      const { name, favorite_id } = item || {};
+
       return (
         <Option
           key={`${each}:${name}-radiology-type`}
@@ -718,7 +718,7 @@ class EditAppointmentForm extends Component {
             ) : (
               <Tooltip title={name}>{name}</Tooltip>
             )}
-            
+
             <div className="wp10">
               {radiologyDropDownVisible ? (
                 <Tooltip
@@ -731,14 +731,14 @@ class EditAppointmentForm extends Component {
                 >
                   {favorite_id ? (
                     <StarFilled
-                      style={{fontSize: "20px", color: "#f9c216"}}
+                      style={{ fontSize: "20px", color: "#f9c216" }}
                       onClick={this.handleremoveRadiologyFavourites(
                         favorite_id
                       )}
                     />
                   ) : (
                     <StarOutlined
-                      style={{fontSize: "20px", color: "#f9c216"}}
+                      style={{ fontSize: "20px", color: "#f9c216" }}
                       onClick={this.handleAddRadiologyFavourites({
                         id: radiologyTypeSelected,
                         sub_category_id: each,
@@ -754,26 +754,26 @@ class EditAppointmentForm extends Component {
       );
     });
   };
-  
+
   getRadiologyTypeDescriptionOption = () => {
-    const {radiologyTypeSelected = null} = this.state;
+    const { radiologyTypeSelected = null } = this.state;
     const {
       static_templates: {
-        appointments: {radiology_type_data = {}} = {},
+        appointments: { radiology_type_data = {} } = {},
       } = {},
     } = this.props;
     const radiology_type = radiology_type_data[radiologyTypeSelected];
-    
+
     console.log(
       "0271273819823 radiology_type_data, radiologyTypeSelected, radiology_type",
-      {radiology_type_data, radiologyTypeSelected, radiology_type}
+      { radiology_type_data, radiologyTypeSelected, radiology_type }
     );
-    
-    const {data: radiologyTypeDescription = {}} = radiology_type || {};
-    
+
+    const { data: radiologyTypeDescription = {} } = radiology_type || {};
+
     return Object.keys(radiologyTypeDescription).map((id) => {
-      const {items, name} = radiologyTypeDescription[id] || {};
-      
+      const { items, name } = radiologyTypeDescription[id] || {};
+
       return (
         <OptGroup label={name} key={`${name}`}>
           {this.getRadiologyDescriptionOptions(items, id)}
@@ -781,54 +781,54 @@ class EditAppointmentForm extends Component {
       );
     });
   };
-  
+
   handleAddRadiologyFavourites =
-    ({id, sub_category_id, selected_radiology_index}) =>
-      async (e) => {
-        try {
-          e.preventDefault();
-          e.stopPropagation();
-          const {markFavourite} = this.props;
-          const {handleTypeDescriptionUpdate} = this;
-          const data = {
-            type: FAVOURITE_TYPE.RADIOLOGY,
-            id,
-            details: {
-              sub_category_id,
-              selected_radiology_index,
-            },
-          };
-          
-          const response = await markFavourite(data);
-          const {
-            status,
-            statusCode,
-            payload: {data: resp_data = {}, message: resp_msg = ""} = {},
-          } = response;
-          if (status) {
-            message.success(resp_msg);
-            // this.getRadiologyFavourites();
-            await handleTypeDescriptionUpdate();
-          } else {
-            message.error(resp_msg);
-          }
-        } catch (error) {
-          console.log("error", error);
+    ({ id, sub_category_id, selected_radiology_index }) =>
+    async (e) => {
+      try {
+        e.preventDefault();
+        e.stopPropagation();
+        const { markFavourite } = this.props;
+        const { handleTypeDescriptionUpdate } = this;
+        const data = {
+          type: FAVOURITE_TYPE.RADIOLOGY,
+          id,
+          details: {
+            sub_category_id,
+            selected_radiology_index,
+          },
+        };
+
+        const response = await markFavourite(data);
+        const {
+          status,
+          statusCode,
+          payload: { data: resp_data = {}, message: resp_msg = "" } = {},
+        } = response;
+        if (status) {
+          message.success(resp_msg);
+          // this.getRadiologyFavourites();
+          await handleTypeDescriptionUpdate();
+        } else {
+          message.error(resp_msg);
         }
-      };
-  
+      } catch (error) {
+        console.log("error", error);
+      }
+    };
+
   handleremoveRadiologyFavourites = (recordID) => async (e) => {
     try {
       e.preventDefault();
       e.stopPropagation();
-      const {removeFavouriteRecord} = this.props;
-      const {handleTypeDescriptionUpdate} = this;
-      
+      const { removeFavouriteRecord } = this.props;
+      const { handleTypeDescriptionUpdate } = this;
+
       const response = await removeFavouriteRecord(recordID);
       const {
         status,
         statusCode,
-        payload: {data: resp_data = {}, message: resp_msg = ""} = {},
+        payload: { data: resp_data = {}, message: resp_msg = "" } = {},
       } = response;
       if (status) {
         message.success(resp_msg);
@@ -838,40 +838,40 @@ class EditAppointmentForm extends Component {
         message.error(resp_msg);
       }
     } catch (error) {
-      console.log("error", {error});
+      console.log("error", { error });
     }
   };
-  
+
   RadiologyDropDownVisibleChange = (open) => {
-    this.setState({radiologyDropDownVisible: open});
+    this.setState({ radiologyDropDownVisible: open });
   };
-  
+
   handleTypeDescriptionSelect = (value) => {
     const {
-      form: {setFieldsValue, getFieldValue, rese} = {},
-      static_templates: {appointments: {type_description = {}} = {}} = {},
+      form: { setFieldsValue, getFieldValue, rese } = {},
+      static_templates: { appointments: { type_description = {} } = {} } = {},
     } = this.props;
-    
-    const {typeDescValue = ""} = this.state;
-    
+
+    const { typeDescValue = "" } = this.state;
+
     if (value != typeDescValue) {
-      setFieldsValue({[RADIOLOGY_TYPE]: null});
+      setFieldsValue({ [RADIOLOGY_TYPE]: null });
     }
-    
-    this.setState({typeDescValue: value});
+
+    this.setState({ typeDescValue: value });
   };
-  
+
   render() {
     let {
-      form: {getFieldDecorator, isFieldTouched, getFieldError, getFieldValue},
-      
+      form: { getFieldDecorator, isFieldTouched, getFieldError, getFieldValue },
+
       appointments,
       appointmentData,
       patientId,
       carePlan = {},
-      payload: {id: appointment_id, patient_id, canViewDetails = false} = {},
+      payload: { id: appointment_id, patient_id, canViewDetails = false } = {},
     } = this.props;
-    const {radiologyTypeSelected = null} = this.state;
+    const { radiologyTypeSelected = null } = this.state;
     // const { fetchingPatients, typeDescription } = this.state;
     const {
       formatMessage,
@@ -903,13 +903,13 @@ class EditAppointmentForm extends Component {
       provider_name = "",
     } = appointments[appointment_id] || {};
     provider_id = provider_name ? provider_name : provider_id;
-    
+
     if (Object.values(carePlan).length) {
-      let {treatment_id: newTreatment = ""} = carePlan;
+      let { treatment_id: newTreatment = "" } = carePlan;
       treatment_id = newTreatment;
     }
     const currentDate = moment(getFieldValue(DATE));
-    
+
     let {
       reason: res = "",
       provider_id: provId = 0,
@@ -931,44 +931,44 @@ class EditAppointmentForm extends Component {
     type = appointment_type
       ? appointment_type
       : schedule_data_type
-        ? schedule_data_type
-        : type;
+      ? schedule_data_type
+      : type;
     type_description = typeDes ? typeDes : type_description;
     provider_id = provName ? provName : provId ? provId : provider_id;
     critical = critic ? critic : critical;
     if (res) {
       //toDo remove when real templates are created and handle accordingly
-      
+
       let minutesToAdd = 30 - (moment().minutes() % 30);
       start_time = startTime
         ? moment(startTime)
         : res === "Surgery"
-          ? moment().add("days", 18).add("minutes", minutesToAdd)
-          : moment().add("days", 14).add("minutes", minutesToAdd);
+        ? moment().add("days", 18).add("minutes", minutesToAdd)
+        : moment().add("days", 14).add("minutes", minutesToAdd);
       end_time = endTime
         ? moment(endTime)
         : res === "Surgery"
-          ? moment()
+        ? moment()
             .add("days", 18)
             .add("minutes", minutesToAdd + 30)
-          : moment()
+        : moment()
             .add("days", 14)
             .add("minutes", minutesToAdd + 30);
       start_date = Date
         ? moment(Date)
         : res === "Surgery"
-          ? moment().add("days", 18)
-          : moment().add("days", 14);
+        ? moment().add("days", 18)
+        : moment().add("days", 14);
     }
-    
+
     let appt_type_desc = "";
-    
-    const {schedule_data = {}} = appointmentData || {};
-    
+
+    const { schedule_data = {} } = appointmentData || {};
+
     if (!radiology_type) {
       radiology_type = scheduled_data_radiology_type;
     }
-    
+
     if (!type || !type_description || !schedule_data) {
       let {
         details: {
@@ -983,32 +983,32 @@ class EditAppointmentForm extends Component {
       start_date = date;
       radiology_type = radio_type ? radio_type : radiology_type;
     }
-    
+
     if (!start_time) {
       let minutesToAdd = 30 - (moment().minutes() % 30);
       start_time = moment().add("minutes", minutesToAdd);
     }
-    
+
     if (!end_time) {
       let minutesToAdd = 30 - (moment().minutes() % 30);
       end_time = moment().add("minutes", minutesToAdd + 30);
     }
-    
+
     if (!start_date) {
       // let minutesToAdd = 30 - (moment().minutes()) % 30;
       start_date = moment().add("days", 2);
     }
-    
+
     let fieldsError = {};
     FIELDS.forEach((value) => {
       const error = isFieldTouched(value) && getFieldError(value);
-      fieldsError = {...fieldsError, [value]: error};
+      fieldsError = { ...fieldsError, [value]: error };
     });
-    
+
     let appointmentType = getFieldValue(APPOINTMENT_TYPE) || null;
-    
+
     const typeValue = getFieldValue(APPOINTMENT_TYPE);
-    
+
     return (
       <Form className="fw700 wp100 pb30 Form">
         <FormItem
@@ -1017,9 +1017,9 @@ class EditAppointmentForm extends Component {
         >
           {getFieldDecorator(PATIENT, {
             initialValue: pId,
-          })(<div/>)}
+          })(<div />)}
         </FormItem>
-        
+
         <div className="flex mt24 direction-row flex-grow-1">
           <label
             htmlFor="type"
@@ -1028,13 +1028,13 @@ class EditAppointmentForm extends Component {
           >
             {formatMessage(messages.appointmentType)}
           </label>
-          
+
           <div className="star-red">*</div>
         </div>
-        
+
         <FormItem
-          // label={formatMessage(messages.appointmentType)}
-          // className='mt24'
+        // label={formatMessage(messages.appointmentType)}
+        // className='mt24'
         >
           {getFieldDecorator(APPOINTMENT_TYPE, {
             initialValue: type ? type : null,
@@ -1050,9 +1050,9 @@ class EditAppointmentForm extends Component {
             </Select>
           )}
         </FormItem>
-        
+
         {/* //////// */}
-        
+
         {typeValue !== RADIOLOGY && (
           <Fragment>
             <div className="flex mt24 direction-row flex-grow-1">
@@ -1063,12 +1063,12 @@ class EditAppointmentForm extends Component {
               >
                 {formatMessage(messages.appointmentTypeDescription)}
               </label>
-              
+
               <div className="star-red">*</div>
             </div>
             <FormItem
-              // label={formatMessage(messages.appointmentTypeDescription)}
-              // className='mt24'
+            // label={formatMessage(messages.appointmentTypeDescription)}
+            // className='mt24'
             >
               {getFieldDecorator(APPOINTMENT_TYPE_DESCRIPTION, {
                 rules: [
@@ -1104,7 +1104,7 @@ class EditAppointmentForm extends Component {
             </FormItem>
           </Fragment>
         )}
-        
+
         {typeValue === RADIOLOGY && (
           <Fragment>
             <div className="flex mt24 direction-row flex-grow-1">
@@ -1115,16 +1115,16 @@ class EditAppointmentForm extends Component {
               >
                 {typeValue === RADIOLOGY
                   ? `${formatMessage(messages.radiology)} ${formatMessage(
-                    messages.appointmentTypeDescription
-                  )}`
+                      messages.appointmentTypeDescription
+                    )}`
                   : formatMessage(messages.appointmentTypeDescription)}
               </label>
-              
+
               <div className="star-red">*</div>
             </div>
             <FormItem
-              // label={formatMessage(messages.appointmentTypeDescription)}
-              // className='mt24'
+            // label={formatMessage(messages.appointmentTypeDescription)}
+            // className='mt24'
             >
               {getFieldDecorator(APPOINTMENT_TYPE_DESCRIPTION, {
                 rules: [
@@ -1158,12 +1158,12 @@ class EditAppointmentForm extends Component {
                 </Select>
               )}
             </FormItem>
-            
+
             <div className="flex mt24 direction-row flex-grow-1">
               <label htmlFor="type description" className="form-label">
                 {formatMessage(messages.radiologyTypeDesc)}
               </label>
-              
+
               <div className="star-red">*</div>
             </div>
             <FormItem>
@@ -1200,9 +1200,9 @@ class EditAppointmentForm extends Component {
             </FormItem>
           </Fragment>
         )}
-        
+
         {/* //////// */}
-        
+
         <div className="flex mt24 direction-row flex-grow-1">
           <label
             htmlFor="provider"
@@ -1211,12 +1211,12 @@ class EditAppointmentForm extends Component {
           >
             {formatMessage(messages.provider)}
           </label>
-          
+
           <div className="star-red">*</div>
         </div>
         <FormItem
-          // label={formatMessage(messages.provider)}
-          // className='mt24'
+        // label={formatMessage(messages.provider)}
+        // className='mt24'
         >
           {getFieldDecorator(PROVIDER_ID, {
             initialValue: provider_id ? provider_id : null,
@@ -1241,7 +1241,7 @@ class EditAppointmentForm extends Component {
             </Select>
           )}
         </FormItem>
-        
+
         <FormItem className="flex-1 wp100 critical-checkbox">
           {getFieldDecorator(CRITICAL, {
             valuePropName: "checked",
@@ -1252,7 +1252,7 @@ class EditAppointmentForm extends Component {
             </Checkbox>
           )}
         </FormItem>
-        
+
         <div className="flex mt24 direction-row flex-grow-1 mt-6">
           <label
             htmlFor="date"
@@ -1261,7 +1261,7 @@ class EditAppointmentForm extends Component {
           >
             {formatMessage(messages.start_date)}
           </label>
-          
+
           <div className="star-red">*</div>
         </div>
         <FormItem
@@ -1282,7 +1282,7 @@ class EditAppointmentForm extends Component {
             />
           )}
         </FormItem>
-        
+
         <div className="wp100 mt-6 flex justify-space-between align-center flex-1">
           <div className="flex flex-1 direction-column mr16">
             <div className="flex mt24 direction-row flex-grow-1">
@@ -1293,7 +1293,7 @@ class EditAppointmentForm extends Component {
               >
                 {formatMessage(messages.start_time)}
               </label>
-              
+
               <div className="star-red">*</div>
             </div>
             <FormItem
@@ -1323,13 +1323,13 @@ class EditAppointmentForm extends Component {
                     } `}
                   >
                     <div>{getStartTime()}</div>
-                    <ClockCircleOutlined/>
+                    <ClockCircleOutlined />
                   </div>
                 </Dropdown>
               )}
             </FormItem>
           </div>
-          
+
           <div className="flex flex-1 direction-column">
             <div className="flex mt24 direction-row flex-grow-1">
               <label
@@ -1339,7 +1339,7 @@ class EditAppointmentForm extends Component {
               >
                 {formatMessage(messages.end_time)}
               </label>
-              
+
               <div className="star-red">*</div>
             </div>
             <FormItem
@@ -1369,14 +1369,14 @@ class EditAppointmentForm extends Component {
                     } `}
                   >
                     <div>{getEndTime()}</div>
-                    <ClockCircleOutlined/>
+                    <ClockCircleOutlined />
                   </div>
                 </Dropdown>
               )}
             </FormItem>
           </div>
         </div>
-        
+
         <FormItem
           // label={formatMessage(messages.treatment_text)}
           // className="full-width ant-date-custom"
@@ -1385,7 +1385,7 @@ class EditAppointmentForm extends Component {
           {getFieldDecorator(TREATMENT, {
             initialValue: treatment_id ? treatment_id : null,
           })(
-            <div/>
+            <div />
             // <Input
             //   autoFocus
             //   placeholder={formatMessage(messages.treatment_text_placeholder)}
@@ -1403,7 +1403,7 @@ class EditAppointmentForm extends Component {
             // </Select>
           )}
         </FormItem>
-        
+
         <div className="flex mt24 direction-row flex-grow-1">
           <label
             htmlFor="purpose"
@@ -1412,7 +1412,7 @@ class EditAppointmentForm extends Component {
           >
             {formatMessage(messages.purpose_text)}
           </label>
-          
+
           <div className="star-red">*</div>
         </div>
         <FormItem
@@ -1436,7 +1436,7 @@ class EditAppointmentForm extends Component {
             />
           )}
         </FormItem>
-        
+
         <div className="flex mt24 direction-row flex-grow-1">
           <label
             htmlFor="notes"

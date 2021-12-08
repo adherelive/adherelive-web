@@ -110,12 +110,12 @@ export const activateDoctorURL = (user_id) => {
 };
 
 export const getPatientsPaginatedUrl = ({
-                                          offset,
-                                          watchlist,
-                                          sort_by_name,
-                                          created_at_order,
-                                          name_order,
-                                        }) => {
+  offset,
+  watchlist,
+  sort_by_name,
+  created_at_order,
+  name_order,
+}) => {
   return `/doctors/patients?offset=${offset}&watchlist=${watchlist}&sort_by_name=${sort_by_name}&created_at_order=${created_at_order}&name_order=${name_order}`;
 };
 

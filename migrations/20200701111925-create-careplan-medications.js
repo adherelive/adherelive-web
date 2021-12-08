@@ -1,8 +1,8 @@
 "use strict";
 
-import {TABLE_NAME} from "../app/models/carePlanMedications";
-import {TABLE_NAME as carePlanTableName} from "../app/models/carePlan";
-import {TABLE_NAME as medicationTableName} from "../app/models/medicationReminders";
+import { TABLE_NAME } from "../app/models/carePlanMedications";
+import { TABLE_NAME as carePlanTableName } from "../app/models/carePlan";
+import { TABLE_NAME as medicationTableName } from "../app/models/medicationReminders";
 
 module.exports = {
   up: (queryInterface, Sequelize) => {
@@ -33,7 +33,7 @@ module.exports = {
           key: "id",
         },
       },
-      
+
       created_at: {
         allowNull: false,
         type: Sequelize.DATE,
@@ -48,7 +48,7 @@ module.exports = {
       },
     });
   },
-  
+
   down: (queryInterface, Sequelize) => {
     return queryInterface.dropTable(TABLE_NAME);
   },

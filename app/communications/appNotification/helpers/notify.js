@@ -7,7 +7,7 @@ class Notifier {
     this.payload = payload;
     this.stream = stream;
   }
-  
+
   connect() {
     try {
       // console.log("payload at connect", this.payload);
@@ -28,7 +28,7 @@ class Notifier {
       console.log("err", err.message);
     }
   }
-  
+
   getUserToken(userId) {
     try {
       this.client = this.stream.connect(this.key, this.secretKey);
@@ -45,37 +45,37 @@ class Notifier {
       throw err;
     }
   }
-  
+
   async sendNotification() {
     try {
       let data =
         arguments && arguments[0]
           ? arguments[0]
           : Object.assign({}, this.payload);
-      
+
       let result = {};
       // console.log("notification payload=>>>>>>>>>>>>>>>>>", data);
       const feed = this.client.feed("notification", data.object);
       // console.log("Data....OBBBjeeeect: ", data.object);
       // console.log("FFFFFEeeeeeedddddd: ", feed);
-      
+
       const response = await feed.addActivity(data);
-      
+
       console.log("response", response);
-      
+
       return result;
     } catch (err) {
       console.log("Error", err);
     }
   }
-  
+
   async updateNotification() {
     try {
     } catch (err) {
       console.log(err);
     }
   }
-  
+
   async deleteNotification() {
     try {
     } catch (err) {

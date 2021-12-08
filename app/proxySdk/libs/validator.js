@@ -23,4 +23,4 @@ let validateSmsData = (smsData) => {
   if (isValid.error != null) throw isValid.error;
   return isValid;
 };
-module.exports = {validateMailData, validateSmsData};
+module.exports = { validateMailData, validateSmsData };

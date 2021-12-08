@@ -1,6 +1,6 @@
-import {Op} from "sequelize";
+import { Op } from "sequelize";
 import Database from "../../../libs/mysql";
-import {TABLE_NAME} from "../../models/registrationCouncil";
+import { TABLE_NAME } from "../../models/registrationCouncil";
 
 class CouncilService {
   getAll = async () => {
@@ -11,7 +11,7 @@ class CouncilService {
       throw error;
     }
   };
-  
+
   search = async (data) => {
     try {
       const council = await Database.getModel(TABLE_NAME).findAll({
@@ -26,7 +26,7 @@ class CouncilService {
       throw error;
     }
   };
-  
+
   getByData = async (data) => {
     try {
       const council = await Database.getModel(TABLE_NAME).findOne({
@@ -37,7 +37,7 @@ class CouncilService {
       throw error;
     }
   };
-  
+
   getCouncilByData = async (data) => {
     try {
       const council = await Database.getModel(TABLE_NAME).findAll({
@@ -48,7 +48,7 @@ class CouncilService {
       throw error;
     }
   };
-  
+
   create = async (data) => {
     try {
       const council = await Database.getModel(TABLE_NAME).create(data);

@@ -1,6 +1,6 @@
-import {Op} from "sequelize";
+import { Op } from "sequelize";
 import Database from "../../../libs/mysql";
-import {TABLE_NAME} from "../../models/conditions";
+import { TABLE_NAME } from "../../models/conditions";
 
 class ConditionService {
   getAll = async () => {
@@ -11,7 +11,7 @@ class ConditionService {
       throw error;
     }
   };
-  
+
   search = async (data) => {
     try {
       const condition = await Database.getModel(TABLE_NAME).findAll({
@@ -26,7 +26,7 @@ class ConditionService {
       throw error;
     }
   };
-  
+
   getAllByData = async (data) => {
     try {
       const condition = await Database.getModel(TABLE_NAME).findAll({
@@ -37,7 +37,7 @@ class ConditionService {
       throw error;
     }
   };
-  
+
   getByData = async (data) => {
     try {
       const condition = await Database.getModel(TABLE_NAME).findOne({

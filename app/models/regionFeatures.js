@@ -1,6 +1,6 @@
 "use strict";
-import {DataTypes} from "sequelize";
-import {FEATURES} from "./features";
+import { DataTypes } from "sequelize";
+import { FEATURES } from "./features";
 
 export const REGION_FEATURES = "region_features";
 
@@ -44,8 +44,8 @@ export const db = (database) => {
 };
 
 export const associate = (database) => {
-  const {region_features, features} = database.models || {};
-  
+  const { region_features, features } = database.models || {};
+
   // associations here (if any) ...
   region_features.belongsTo(features, {
     foreignKey: "feature_id",

@@ -1,7 +1,7 @@
 "use strict";
 
-import {TABLE_NAME} from "../app/models/paymentProducts";
-import {USER_CATEGORY_ARRAY} from "../app/models/users";
+import { TABLE_NAME } from "../app/models/paymentProducts";
+import { USER_CATEGORY_ARRAY } from "../app/models/users";
 
 module.exports = {
   up: (queryInterface, Sequelize) => {
@@ -16,7 +16,7 @@ module.exports = {
       }),
     ]);
   },
-  
+
   down: (queryInterface, Sequelize) => {
     return Promise.all([
       queryInterface.removeColumn(TABLE_NAME, "for_user_id"),

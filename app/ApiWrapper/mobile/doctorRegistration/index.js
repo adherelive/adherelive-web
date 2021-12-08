@@ -5,9 +5,9 @@ class MobileDoctorRegistrationWrapper extends BaseDoctorRegistration {
   constructor(data) {
     super(data);
   }
-  
+
   getBasicInfo = () => {
-    const {_data} = this;
+    const { _data } = this;
     const {
       id,
       doctor_id,

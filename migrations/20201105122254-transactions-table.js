@@ -6,9 +6,9 @@ import {
   STATUS,
   TRANSACTION_STATUS,
 } from "../app/models/transactions";
-import {USER_CATEGORY_ARRAY} from "../app/models/users";
-import {DataTypes} from "sequelize";
-import {TABLE_NAME as paymentProductTableName} from "../app/models/paymentProducts";
+import { USER_CATEGORY_ARRAY } from "../app/models/users";
+import { DataTypes } from "sequelize";
+import { TABLE_NAME as paymentProductTableName } from "../app/models/paymentProducts";
 
 module.exports = {
   up: (queryInterface, Sequelize) => {
@@ -77,7 +77,7 @@ module.exports = {
       },
     });
   },
-  
+
   down: (queryInterface, Sequelize) => {
     return queryInterface.dropTable(TABLE_NAME);
   },

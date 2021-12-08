@@ -1,5 +1,5 @@
-import React, {Component, Fragment} from "react";
-import {injectIntl} from "react-intl";
+import React, { Component, Fragment } from "react";
+import { injectIntl } from "react-intl";
 import messages from "../message";
 
 // antd models
@@ -10,7 +10,7 @@ import Radio from "antd/es/radio";
 const RadioButton = Radio.Button;
 const RadioGroup = Radio.Group;
 
-const {Item: FormItem} = Form;
+const { Item: FormItem } = Form;
 
 const FIELD_NAME = "quantity";
 const MAXIMUM_LENGTH = 10000;
@@ -18,24 +18,24 @@ const MAXIMUM_LENGTH = 10000;
 class MedicineQuantity extends Component {
   componentDidMount() {
     const {
-      form: {validateFields},
+      form: { validateFields },
     } = this.props;
     validateFields();
   }
-  
+
   componentWillUnmount() {
     const {
-      form: {validateFields},
+      form: { validateFields },
     } = this.props;
     validateFields();
   }
-  
+
   formatMessage = (data) => this.props.intl.formatMessage(data);
-  
+
   onRadioChange = (e) => {
     e.preventDefault();
     const {
-      form: {setFieldsValue, getFieldValue},
+      form: { setFieldsValue, getFieldValue },
       enableSubmit,
     } = this.props;
     const currentValue = getFieldValue(FIELD_NAME) || 0.0;
@@ -44,37 +44,37 @@ class MedicineQuantity extends Component {
     });
     enableSubmit();
   };
-  
+
   getInitialValue = () => {
-    const {purpose, event: {data = {}} = {}} = this.props;
+    const { purpose, event: { data = {} } = {} } = this.props;
     let initialValue;
     if (purpose) {
       initialValue = data[FIELD_NAME];
     }
     return initialValue;
   };
-  
+
   render() {
     const {
       form,
       medications,
-      payload: {id: medication_id, canViewDetails = false} = {},
+      payload: { id: medication_id, canViewDetails = false } = {},
       medicationData = {},
     } = this.props;
-    const {getFieldDecorator, getFieldError, isFieldTouched, getFieldValue} =
+    const { getFieldDecorator, getFieldError, isFieldTouched, getFieldValue } =
       form;
-    
-    const {onRadioChange, formatMessage, getInitialValue} = this;
-    
-    let {basic_info: {details: {quantity} = {}} = {}} =
-    medications[medication_id] || {};
-    let {schedule_data: {quantity: quant = ""} = {}} = medicationData;
+
+    const { onRadioChange, formatMessage, getInitialValue } = this;
+
+    let { basic_info: { details: { quantity } = {} } = {} } =
+      medications[medication_id] || {};
+    let { schedule_data: { quantity: quant = "" } = {} } = medicationData;
     if (quant) {
       quantity = parseFloat(quant);
     }
-    
+
     const error = isFieldTouched(FIELD_NAME) && getFieldError(FIELD_NAME);
-    
+
     return (
       <Fragment>
         <div className="flex align-items-end justify-content-space-between">
@@ -82,7 +82,7 @@ class MedicineQuantity extends Component {
             <label htmlFor="quantity" className="form-label" title="Quantity">
               {formatMessage(messages.quantity)}
             </label>
-            
+
             <div className="star-red">*</div>
           </div>
           {/* <div className="label-color fontsize12 mb8">
@@ -123,7 +123,7 @@ class MedicineQuantity extends Component {
           })(
             <InputNumber
               min={0.01}
-              style={{width: "100%"}}
+              style={{ width: "100%" }}
               disabled={canViewDetails}
             />
           )}

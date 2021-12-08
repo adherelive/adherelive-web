@@ -6,7 +6,7 @@ import * as validator from "./validator";
 
 const multer = require("multer");
 const storage = multer.memoryStorage();
-const upload = multer({dest: "../../../app/public/", storage: storage});
+const upload = multer({ dest: "../../../app/public/", storage: storage });
 
 router.get("/register/:link", userController.verifyUser);
 

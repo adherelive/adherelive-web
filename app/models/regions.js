@@ -1,5 +1,5 @@
 "use strict";
-import {DataTypes} from "sequelize";
+import { DataTypes } from "sequelize";
 
 export const REGIONS = "regions";
 

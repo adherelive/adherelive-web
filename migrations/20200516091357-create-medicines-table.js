@@ -1,7 +1,7 @@
 "use strict";
 
-import {MEDICINE_TYPE} from "../constant";
-import {TABLE_NAME} from "../app/models/medicines";
+import { MEDICINE_TYPE } from "../constant";
+import { TABLE_NAME } from "../app/models/medicines";
 
 module.exports = {
   up: (queryInterface, Sequelize) => {
@@ -41,7 +41,7 @@ module.exports = {
       },
     });
   },
-  
+
   down: (queryInterface, Sequelize) => {
     return queryInterface.dropTable(TABLE_NAME);
   },

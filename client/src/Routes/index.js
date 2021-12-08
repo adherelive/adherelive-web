@@ -1,6 +1,6 @@
-import React, {Component, lazy, Fragment} from "react";
+import React, { Component, lazy, Fragment } from "react";
 // import Footer from "../Containers/Footer";
-import {BrowserRouter as Router} from "react-router-dom";
+import { BrowserRouter as Router } from "react-router-dom";
 import Loading from "../Components/Common/Loading";
 
 const Global = lazy(() => import(/* webpackChunkName: "Global"*/ "./Global"));
@@ -16,43 +16,43 @@ export default class Routes extends Component {
       loading: true,
     };
   }
-  
+
   componentDidMount() {
     this.getInitialData();
   }
-  
+
   getInitialData = async () => {
     try {
-      const {getInitialData} = this.props;
-      this.setState({loading: true});
+      const { getInitialData } = this.props;
+      this.setState({ loading: true });
       const response = await getInitialData();
-      
-      const {status} = response || {};
+
+      const { status } = response || {};
       if (status === true) {
-        this.setState({loading: false});
+        this.setState({ loading: false });
       } else {
-        this.setState({loading: false});
+        this.setState({ loading: false });
       }
     } catch (error) {
       console.log("getInitialData catch error", error);
     }
   };
-  
+
   render() {
-    const {authenticated, unauthorizedError} = this.props;
-    const {loading} = this.state;
+    const { authenticated, unauthorizedError } = this.props;
+    const { loading } = this.state;
     // if (authenticated !== true && authenticated !== false) {
     //     return <div>Loading</div>;
     // }
-    
+
     if (loading) {
       return (
         <div className="wp100 hauto flex align-center justify-center">
-          <Loading/>
+          <Loading />
         </div>
       );
     }
-    
+
     return (
       <Fragment>
         <Router>

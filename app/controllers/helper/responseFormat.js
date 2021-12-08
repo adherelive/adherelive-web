@@ -4,7 +4,7 @@ class Response {
     this.statusCode = statusCode;
     this.data = {};
   }
-  
+
   /**
    * @api {OPTIONS} /response Response format
    * @apiName responseFormat
@@ -47,19 +47,19 @@ class Response {
   setStatus(status) {
     this.status = status;
   }
-  
+
   setStatusCode(statusCode) {
     this.statusCode = statusCode;
   }
-  
+
   getStatus() {
     return this.status;
   }
-  
+
   getStatusCode() {
     return this.statusCode;
   }
-  
+
   /**
    * @api {OPTIONS} /setData Sets data field
    * @apiName setData
@@ -83,35 +83,35 @@ class Response {
     } else if (arguments.length == 2) {
       let key = arguments["0"];
       let value = arguments["1"];
-      this.data = Object.assign({}, {[key]: value});
+      this.data = Object.assign({}, { [key]: value });
     }
   }
-  
+
   addData(args) {
     const data = this.data;
-    this.data = {...data, ...args};
+    this.data = { ...data, ...args };
   }
-  
+
   getData() {
     return this.data;
   }
-  
+
   setMessage(message) {
     this.message = message;
   }
-  
+
   getMessage() {
     return this.message;
   }
-  
+
   setError(error) {
     this.error = Object.assign({}, error);
   }
-  
+
   getError() {
     return this.error;
   }
-  
+
   /**
    * @api {OPTIONS} /getResponse Generates response
    * @apiName getResponse

@@ -1,11 +1,11 @@
 import React from "react";
-import {MailOutlined, PhoneOutlined} from "@ant-design/icons";
-import {TABLE_DEFAULT_BLANK_FIELD} from "../../../../constant";
+import { MailOutlined, PhoneOutlined } from "@ant-design/icons";
+import { TABLE_DEFAULT_BLANK_FIELD } from "../../../../constant";
 
 export default (props) => {
-  const {userData} = props || {};
-  const {basic_info: {mobile_number, email} = {}} = userData || {};
-  
+  const { userData } = props || {};
+  const { basic_info: { mobile_number, email } = {} } = userData || {};
+
   return (
     <div className="flex direction-column">
       <div className="flex direction-row align-center">

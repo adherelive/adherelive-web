@@ -1,6 +1,6 @@
 "use strict";
 
-import {DB_TABLES} from "../constant";
+import { DB_TABLES } from "../constant";
 
 module.exports = {
   up: (queryInterface, Sequelize) => {
@@ -32,7 +32,7 @@ module.exports = {
       },
     });
   },
-  
+
   down: (queryInterface, Sequelize) => {
     return queryInterface.dropTable(DB_TABLES.REGIONS);
   },
