@@ -1,6 +1,6 @@
 "use strict";
 
-import {TABLE_NAME} from "../models/doctors";
+import { TABLE_NAME } from "../models/doctors";
 
 module.exports = {
   up: (queryInterface, Sequelize) => {
@@ -8,7 +8,7 @@ module.exports = {
       {
         user_id: "1",
         gender: "m",
-        first_name: "Sparch",
+        first_name: "Sparsh",
         last_name: "Jaiswal",
         city: "New Delhi",
         speciality_id: "1",
@@ -27,7 +27,7 @@ module.exports = {
       },
     ]);
   },
-  
+
   down: (queryInterface, Sequelize) => {
     return queryInterface.bulkDelete(TABLE_NAME, null, {});
   },
