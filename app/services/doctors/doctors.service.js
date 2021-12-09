@@ -1,20 +1,19 @@
 import Database from "../../../libs/mysql";
-import {TABLE_NAME} from "../../models/doctors";
-import {TABLE_NAME as specialityTableName} from "../../models/specialities";
+import { TABLE_NAME } from "../../models/doctors";
+import { TABLE_NAME as specialityTableName } from "../../models/specialities";
 
 const DEFAULT_ORDER = [["created_at", "DESC"]];
 
 class DoctorsService {
-  constructor() {
-  }
-  
+  constructor() {}
+
   addDoctor = async (data) => {
     const transaction = await Database.initTransaction();
     try {
       const doctor = await Database.getModel(TABLE_NAME).create(data, {
         transaction,
       });
-      
+
       await transaction.commit();
       return doctor;
     } catch (error) {
@@ -22,7 +21,7 @@ class DoctorsService {
       throw error;
     }
   };
-  
+
   getDoctorByUserId = async (user_id) => {
     try {
       const doctor = await Database.getModel(TABLE_NAME).findOne({
@@ -36,7 +35,7 @@ class DoctorsService {
       throw error;
     }
   };
-  
+
   updateDoctor = async (data, id) => {
     const transaction = await Database.initTransaction();
     try {
@@ -53,7 +52,7 @@ class DoctorsService {
       throw error;
     }
   };
-  
+
   getDoctorByData = async (data) => {
     try {
       const doctor = await Database.getModel(TABLE_NAME).findAll({
@@ -64,8 +63,8 @@ class DoctorsService {
       throw error;
     }
   };
-  
-  findOne = async ({where, order = DEFAULT_ORDER, attributes}) => {
+
+  findOne = async ({ where, order = DEFAULT_ORDER, attributes }) => {
     try {
       return await Database.getModel(TABLE_NAME).findOne({
         where,

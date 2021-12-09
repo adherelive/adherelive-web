@@ -1,8 +1,8 @@
 "use strict";
 
-import {TABLE_NAME} from "../app/models/patients";
-import {TABLE_NAME as userTableName} from "../app/models/users";
-import {GENDER, BLANK_STATE} from "../constant";
+import { TABLE_NAME } from "../app/models/patients";
+import { TABLE_NAME as userTableName } from "../app/models/users";
+import { GENDER, BLANK_STATE } from "../constant";
 
 module.exports = {
   up: (queryInterface, Sequelize) => {
@@ -82,7 +82,7 @@ module.exports = {
       },
     });
   },
-  
+
   down: (queryInterface, Sequelize) => {
     return queryInterface.dropTable(TABLE_NAME);
   },

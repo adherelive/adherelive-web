@@ -1,12 +1,11 @@
 import Database from "../../../libs/mysql";
-import {TABLE_NAME} from "../../models/userPreferences";
+import { TABLE_NAME } from "../../models/userPreferences";
 
 const DEFAULT_ORDER = [["created_at", "DESC"]];
 
 class UserPreferenceService {
-  constructor() {
-  }
-  
+  constructor() {}
+
   addUserPreference = async (data) => {
     try {
       const userPreference = await Database.getModel(TABLE_NAME).create(data);
@@ -15,7 +14,7 @@ class UserPreferenceService {
       throw error;
     }
   };
-  
+
   getPreferenceByData = async (data) => {
     try {
       const userPreference = await Database.getModel(TABLE_NAME).findOne({
@@ -26,7 +25,7 @@ class UserPreferenceService {
       throw error;
     }
   };
-  
+
   updateUserPreferenceData = async (data, id) => {
     const transaction = await Database.initTransaction();
     try {
@@ -43,8 +42,8 @@ class UserPreferenceService {
       throw error;
     }
   };
-  
-  findOne = async ({where}) => {
+
+  findOne = async ({ where }) => {
     try {
       return await Database.getModel(TABLE_NAME).findOne({
         where,
@@ -53,7 +52,7 @@ class UserPreferenceService {
       throw error;
     }
   };
-  
+
   getAll = async () => {
     try {
       return await Database.getModel(TABLE_NAME).findAll();
@@ -61,8 +60,8 @@ class UserPreferenceService {
       throw error;
     }
   };
-  
-  bulkUpdate = async ({data}) => {
+
+  bulkUpdate = async ({ data }) => {
     const transaction = await Database.initTransaction();
     try {
       const userPreferences = await Database.getModel(TABLE_NAME).bulkCreate(

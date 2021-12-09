@@ -1,10 +1,9 @@
 import Database from "../../../libs/mysql";
-import {TABLE_NAME} from "../../models/doctorRegistrations";
+import { TABLE_NAME } from "../../models/doctorRegistrations";
 
 class DoctorRegistrationService {
-  constructor() {
-  }
-  
+  constructor() {}
+
   addRegistration = async (data) => {
     try {
       const doctorRegistration = await Database.getModel(TABLE_NAME).create(
@@ -15,7 +14,7 @@ class DoctorRegistrationService {
       throw error;
     }
   };
-  
+
   getRegistrationByDoctorId = async (doctor_id) => {
     try {
       const doctorRegistration = await Database.getModel(TABLE_NAME).findAll({
@@ -29,7 +28,7 @@ class DoctorRegistrationService {
       throw error;
     }
   };
-  
+
   getRegistrationById = async (id) => {
     try {
       const doctorRegistration = await Database.getModel(TABLE_NAME).findOne({
@@ -43,7 +42,7 @@ class DoctorRegistrationService {
       throw error;
     }
   };
-  
+
   updateRegistration = async (data, id) => {
     try {
       const doctorRegistration = await Database.getModel(TABLE_NAME).update(
@@ -60,7 +59,7 @@ class DoctorRegistrationService {
       throw error;
     }
   };
-  
+
   getRegistrationByData = async (number, council, year, expiry_date) => {
     try {
       const doctorRegistration = await Database.getModel(TABLE_NAME).findOne({

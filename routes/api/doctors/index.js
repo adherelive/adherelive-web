@@ -1,8 +1,8 @@
 // const express = require("express");
 import express from "express";
 import Authenticate from "../middleware/auth";
-import {isDoctor} from "../middleware/doctor";
-import {isDoctorOrProvider} from "../middleware/isDoctorOrProvider";
+import { isDoctor } from "../middleware/doctor";
+import { isDoctorOrProvider } from "../middleware/isDoctorOrProvider";
 import DoctorController from "../../../app/controllers/doctors/doctor.controller";
 import PaymentController from "../../../app/controllers/payments/payment.controller";
 import CarePlanTemplate from "../../../app/controllers/carePlanTemplate/carePlanTemplate.controller";
@@ -14,7 +14,7 @@ import PERMISSIONS from "../../../config/permissions";
 const router = express.Router();
 const multer = require("multer");
 const storage = multer.memoryStorage();
-const upload = multer({dest: "../../../app/public/", storage: storage});
+const upload = multer({ dest: "../../../app/public/", storage: storage });
 
 router.post(
   "/",
@@ -26,6 +26,12 @@ router.post(
 router.get("/search-mail", Authenticate, DoctorController.searchDoctor);
 
 router.get("/search-name", Authenticate, DoctorController.searchDoctorName);
+
+router.get(
+  "/day-appointments",
+  Authenticate,
+  DoctorController.getAppointmentForDoctors
+);
 
 router.post(
   "/upload",

@@ -28,9 +28,7 @@
     ]
   },
   "mail": {
-    "to": [
-      "example@domain.com"
-    ],
+    "to": ["example@domain.com"],
     "from": "Company name <info@company.com",
     "smtp": {
       "auth": {

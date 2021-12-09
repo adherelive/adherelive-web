@@ -1,6 +1,6 @@
 "use strict";
 
-import {TABLE_NAME} from "../app/models/uploadDocuments";
+import { TABLE_NAME } from "../app/models/uploadDocuments";
 
 module.exports = {
   up: (queryInterface, Sequelize) => {
@@ -40,7 +40,7 @@ module.exports = {
       },
     });
   },
-  
+
   down: (queryInterface, Sequelize) => {
     return queryInterface.dropTable(TABLE_NAME);
   },

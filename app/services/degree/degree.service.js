@@ -1,6 +1,6 @@
-import {Op} from "sequelize";
+import { Op } from "sequelize";
 import Database from "../../../libs/mysql";
-import {TABLE_NAME} from "../../models/degree";
+import { TABLE_NAME } from "../../models/degree";
 
 class DegreeService {
   getAll = async () => {
@@ -11,7 +11,7 @@ class DegreeService {
       throw error;
     }
   };
-  
+
   search = async (data) => {
     try {
       const degree = await Database.getModel(TABLE_NAME).findAll({
@@ -26,7 +26,7 @@ class DegreeService {
       throw error;
     }
   };
-  
+
   getByData = async (data) => {
     try {
       const degree = await Database.getModel(TABLE_NAME).findOne({
@@ -37,7 +37,7 @@ class DegreeService {
       throw error;
     }
   };
-  
+
   getDegreeByData = async (data) => {
     try {
       const degree = await Database.getModel(TABLE_NAME).findAll({
@@ -48,7 +48,7 @@ class DegreeService {
       throw error;
     }
   };
-  
+
   create = async (data) => {
     try {
       const degree = await Database.getModel(TABLE_NAME).create(data);

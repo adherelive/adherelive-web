@@ -1,7 +1,7 @@
 "use strict";
-import {DataTypes} from "sequelize";
-import {TABLE_NAME as userTableName} from "./users";
-import {TABLE_NAME as userRoleTableName} from "./userRoles";
+import { DataTypes } from "sequelize";
+import { TABLE_NAME as userTableName } from "./users";
+import { TABLE_NAME as userRoleTableName } from "./userRoles";
 
 export const TABLE_NAME = "user_preferences";
 
@@ -47,7 +47,7 @@ export const db = (database) => {
 
 export const associate = (database) => {
   // const {upload_documents} = database.models || {};
-  
+
   // associations here (if any) ...
   database.models[TABLE_NAME].belongsTo(database.models[userRoleTableName], {
     foreignKey: "user_role_id",

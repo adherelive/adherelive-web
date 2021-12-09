@@ -10,17 +10,17 @@ class DegreeController extends Controller {
   constructor() {
     super();
   }
-  
+
   getAll = async (req, res) => {
-    const {raiseSuccess, raiseClientError, raiseServerError} = this;
+    const { raiseSuccess, raiseClientError, raiseServerError } = this;
     try {
-      const {query} = req;
-      const {value} = query || {};
-      
+      const { query } = req;
+      const { value } = query || {};
+
       // Logger.debug("value in req", value);
-      
+
       const degreeDetails = await degreeService.search(value);
-      
+
       if (degreeDetails.length > 0) {
         let degreeApiData = {};
         for (const degree of degreeDetails) {
@@ -28,7 +28,7 @@ class DegreeController extends Controller {
           degreeApiData[degreeWrapper.getDegreeId()] =
             degreeWrapper.getBasicInfo();
         }
-        
+
         return raiseSuccess(
           res,
           200,

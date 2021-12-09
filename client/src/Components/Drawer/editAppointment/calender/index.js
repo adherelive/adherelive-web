@@ -1,6 +1,6 @@
-import React, {Component, Fragment} from "react";
-import {injectIntl} from "react-intl";
-import {DatePicker} from "antd";
+import React, { Component, Fragment } from "react";
+import { injectIntl } from "react-intl";
+import { DatePicker } from "antd";
 import FullCalendar from "fullcalendar-reactwrapper";
 import "fullcalendar-reactwrapper/dist/css/fullcalendar.min.css";
 // // import isEqual from "lodash-es/isEqual";
@@ -10,48 +10,44 @@ import prev from "../../../../Assets/images/ico-calendar-nav-prev.svg";
 import dropDownIcon from "../../../../Assets/images/ico-dropdown.svg";
 import userPlaceHolder from "../../../../Assets/images/ico-placeholder-userdp.svg";
 
-import {doRequest} from "../../../../Helper/network";
-import {getBookedSlotsURL} from "../../../../Helper/urls/event";
+import { doRequest } from "../../../../Helper/network";
+import { getBookedSlotsURL } from "../../../../Helper/urls/event";
 
 import messages from "../message";
 import moment from "moment";
-import {EVENT_TYPE} from "../../../../constant";
+import { EVENT_TYPE } from "../../../../constant";
 
-const DropDownIcon = <img src={dropDownIcon} alt="d" className="w14 h14"/>;
+const DropDownIcon = <img src={dropDownIcon} alt="d" className="w14 h14" />;
 
 class CalendarComponent extends Component {
   eventResize = (event, duration) => {
-    const {start, end} = event;
-    const {onEventDurationChange} = this.props;
+    const { start, end } = event;
+    const { onEventDurationChange } = this.props;
     onEventDurationChange(start, end);
   };
-  
-  eventResizeStart = (event, ...args) => {
-  };
-  
-  eventResizeStop = (event, ...args) => {
-  };
-  
-  eventDragStart = (event, args) => {
-  };
-  
+
+  eventResizeStart = (event, ...args) => {};
+
+  eventResizeStop = (event, ...args) => {};
+
+  eventDragStart = (event, args) => {};
+
   eventDrop = (event, duration) => {
-    const {start, end} = event;
-    const {onEventDurationChange} = this.props;
+    const { start, end } = event;
+    const { onEventDurationChange } = this.props;
     onEventDurationChange(start, end);
   };
-  
-  eventDragStop = (event) => {
-  };
-  
+
+  eventDragStop = (event) => {};
+
   componentDidMount() {
     this.adjustCurrentEvent();
   }
-  
+
   componentDidUpdate(prevProps, prevState) {
     this.adjustCurrentEvent();
   }
-  
+
   adjustCurrentEvent = () => {
     const currentEvent = window.document.getElementsByClassName("current");
     if (currentEvent && currentEvent.length > 0) {
@@ -61,9 +57,9 @@ class CalendarComponent extends Component {
       });
     }
   };
-  
+
   render() {
-    const {event, bookedEvents} = this.props;
+    const { event, bookedEvents } = this.props;
     const {
       eventDragStart,
       eventDragStop,
@@ -107,31 +103,31 @@ class CalendarTimeSelection extends Component {
       bookedEvents: [],
     };
   }
-  
+
   componentDidMount() {
     this.getBookedSlots();
   }
-  
+
   componentDidUpdate(prevProps, prevState) {
-    const {startDate, otherUser: {basicInfo: {_id} = {}} = {}} =
+    const { startDate, otherUser: { basicInfo: { _id } = {} } = {} } =
       this.props;
     const {
       startDate: prevDate,
-      otherUser: {basicInfo: {_id: prevUser} = {}} = {},
+      otherUser: { basicInfo: { _id: prevUser } = {} } = {},
     } = prevProps;
-    
+
     if (prevUser !== _id || prevDate !== startDate) {
       this.getBookedSlots();
     }
   }
-  
+
   getBookedSlots = async () => {
     const {
       startDate,
-      otherUser: {basicInfo: {_id} = {}} = {},
+      otherUser: { basicInfo: { _id } = {} } = {},
       eventMode,
     } = this.props;
-    
+
     if (
       eventMode === EVENT_TYPE.APPOINTMENT &&
       startDate &&
@@ -146,13 +142,13 @@ class CalendarTimeSelection extends Component {
           userId: _id,
         },
       });
-      
-      const {status, payload = {}} = response;
+
+      const { status, payload = {} } = response;
       if (status) {
-        const {data: {bookedSlots} = []} = payload;
+        const { data: { bookedSlots } = [] } = payload;
         //for more appointments option got to https://fullcalendar.io/docs/event-parsing
         const bookedEvents = bookedSlots.map((event) => {
-          const {start, end} = event;
+          const { start, end } = event;
           return {
             start,
             end,
@@ -162,20 +158,20 @@ class CalendarTimeSelection extends Component {
             className: "booked",
           };
         });
-        this.setState({bookedEvents});
+        this.setState({ bookedEvents });
       }
     }
   };
-  
+
   formatMessage = (messageId) => {
     const {
-      intl: {formatMessage},
+      intl: { formatMessage },
     } = this.props;
     return formatMessage(messageId);
   };
-  
+
   getParentNode = (t) => t.parentNode;
-  
+
   render() {
     const {
       className,
@@ -189,15 +185,15 @@ class CalendarTimeSelection extends Component {
       onNext,
       disabled,
       otherUser: {
-        basicInfo: {name, profilePicLink = userPlaceHolder} = {},
+        basicInfo: { name, profilePicLink = userPlaceHolder } = {},
       } = {},
     } = this.props;
-    const {formatMessage} = this;
-    
-    const {bookedEvents = []} = this.state;
-    
+    const { formatMessage } = this;
+
+    const { bookedEvents = [] } = this.state;
+
     let event = {};
-    
+
     if (eventStartTime && eventEndTime) {
       event = {
         start: eventStartTime,
@@ -205,7 +201,7 @@ class CalendarTimeSelection extends Component {
         className: "current",
       };
     }
-    
+
     if (disabled) {
       event = {
         ...event,
@@ -214,18 +210,18 @@ class CalendarTimeSelection extends Component {
         durationEditable: false,
       };
     }
-    
+
     let today = false;
     if (startDate && startDate !== null) {
       if (startDate.isValid) {
         today = moment().isSame(startDate, "day");
       }
     }
-    
+
     return (
       <div className={`${className} calendar-selection`}>
-        <div className="mask"/>
-        
+        <div className="mask" />
+
         <Fragment>
           <div className=" header fs16 dark medium">
             {formatMessage(messages.chooseWhen)}
@@ -266,7 +262,7 @@ class CalendarTimeSelection extends Component {
               <div className={"flex-1 flex justify-end align-center mr8 ml8"}>
                 {name && (
                   <div className="flex justify-start align-center bg-transparent">
-                    <img alt={"u"} src={profilePicLink}/>
+                    <img alt={"u"} src={profilePicLink} />
                     <div className="deep-sea-blue fs12 medium mr8">{`${name}'s Calendar`}</div>
                   </div>
                 )}
@@ -274,7 +270,7 @@ class CalendarTimeSelection extends Component {
             </Fragment>
           </div>
         </Fragment>
-        
+
         <CalendarComponent
           onEventDurationChange={onEventDurationChange}
           event={event}

@@ -5,16 +5,16 @@ import mReminderService from "../../../services/medicationReminder/mReminder.ser
 import MedicineWrapper from "../medicine";
 import EventService from "../../../services/scheduleEvents/scheduleEvent.service";
 import moment from "moment";
-import {EVENT_STATUS, EVENT_TYPE} from "../../../../constant";
+import { EVENT_STATUS, EVENT_TYPE } from "../../../../constant";
 import EventWrapper from "../../common/scheduleEvents";
 
 class MReminderWrapper extends BaseMedicationReminder {
   constructor(data) {
     super(data);
   }
-  
+
   getBasicInfo = () => {
-    const {_data} = this;
+    const { _data } = this;
     const {
       id,
       participant_id,
@@ -42,28 +42,28 @@ class MReminderWrapper extends BaseMedicationReminder {
       rr_rule,
     };
   };
-  
+
   getAllInfo = async () => {
-    const {getBasicInfo, getMReminderId} = this;
+    const { getBasicInfo, getMReminderId } = this;
     const eventService = new EventService();
-    
+
     const currentDate = moment().endOf("day").utc().toDate();
-    
+
     const scheduleEvents = await eventService.getAllPreviousByData({
       event_id: getMReminderId(),
       date: currentDate,
       event_type: EVENT_TYPE.MEDICATION_REMINDER,
     });
-    
+
     let medicationEvents = {};
     let remaining = 0;
     let latestPendingEventId;
-    
+
     const scheduleEventIds = [];
     for (const events of scheduleEvents) {
       const scheduleEvent = await EventWrapper(events);
       scheduleEventIds.push(scheduleEvent.getScheduleEventId());
-      
+
       if (scheduleEvent.getStatus() !== EVENT_STATUS.COMPLETED) {
         if (!latestPendingEventId) {
           latestPendingEventId = scheduleEvent.getScheduleEventId();
@@ -71,7 +71,7 @@ class MReminderWrapper extends BaseMedicationReminder {
         remaining++;
       }
     }
-    
+
     return {
       medications: {
         [getMReminderId()]: {
@@ -84,16 +84,16 @@ class MReminderWrapper extends BaseMedicationReminder {
     };
   };
   getReferenceInfo = async () => {
-    const {getAllInfo, getMedicineId, _data} = this;
-    const {medicine} = _data || {};
+    const { getAllInfo, getMedicineId, _data } = this;
+    const { medicine } = _data || {};
     let medicineData = null;
-    
+
     if (medicine) {
       medicineData = await MedicineWrapper(medicine);
     } else {
       medicineData = await MedicineWrapper(null, getMedicineId());
     }
-    
+
     return {
       ...(await getAllInfo()),
       medicines: {
@@ -107,6 +107,6 @@ export default async (data = null, id = null) => {
   if (data) {
     return new MReminderWrapper(data);
   }
-  const medicationReminder = await mReminderService.getMedication({id});
+  const medicationReminder = await mReminderService.getMedication({ id });
   return new MReminderWrapper(medicationReminder);
 };

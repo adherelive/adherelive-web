@@ -1,5 +1,5 @@
-import React, {Component, Fragment} from "react";
-import {injectIntl} from "react-intl";
+import React, { Component, Fragment } from "react";
+import { injectIntl } from "react-intl";
 
 import DoctorTable from "../../../Containers/Doctor/table";
 import messages from "./messages";
@@ -8,7 +8,7 @@ class AdminDoctorPage extends Component {
   constructor(props) {
     super(props);
   }
-  
+
   render() {
     return (
       <Fragment>
@@ -17,7 +17,7 @@ class AdminDoctorPage extends Component {
             {this.props.intl.formatMessage(messages.profiles)}
           </div>
           <div className="wp100 pl14 pr14 flex align-center justify-center">
-            <DoctorTable/>
+            <DoctorTable />
           </div>
         </div>
       </Fragment>

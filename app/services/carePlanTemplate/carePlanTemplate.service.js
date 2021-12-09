@@ -1,17 +1,17 @@
-import {Op} from "sequelize";
+import { Op } from "sequelize";
 import Database from "../../../libs/mysql";
 
-import {TABLE_NAME} from "../../models/careplanTemplate";
-import {TABLE_NAME as appointmentTemplateTableName} from "../../models/templateAppointments";
-import {TABLE_NAME as medicationTemplateTableName} from "../../models/templateMedications";
-import {TABLE_NAME as vitalTemplateTableName} from "../../models/templateVitals";
-import {TABLE_NAME as dietTemplateTableName} from "../../models/templateDiets";
-import {TABLE_NAME as workoutTemplateTableName} from "../../models/templateWorkouts";
+import { TABLE_NAME } from "../../models/careplanTemplate";
+import { TABLE_NAME as appointmentTemplateTableName } from "../../models/templateAppointments";
+import { TABLE_NAME as medicationTemplateTableName } from "../../models/templateMedications";
+import { TABLE_NAME as vitalTemplateTableName } from "../../models/templateVitals";
+import { TABLE_NAME as dietTemplateTableName } from "../../models/templateDiets";
+import { TABLE_NAME as workoutTemplateTableName } from "../../models/templateWorkouts";
 
-import {TABLE_NAME as conditionTableName} from "../../models/conditions";
-import {TABLE_NAME as severityTableName} from "../../models/severity";
-import {TABLE_NAME as treatmentTableName} from "../../models/treatments";
-import {TABLE_NAME as medicineTableName} from "../../models/medicines";
+import { TABLE_NAME as conditionTableName } from "../../models/conditions";
+import { TABLE_NAME as severityTableName } from "../../models/severity";
+import { TABLE_NAME as treatmentTableName } from "../../models/treatments";
+import { TABLE_NAME as medicineTableName } from "../../models/medicines";
 
 class CarePlanTemplateService {
   getCarePlanTemplateById = async (id) => {
@@ -42,7 +42,7 @@ class CarePlanTemplateService {
       throw error;
     }
   };
-  
+
   create = async (data) => {
     try {
       const carePlanTemplate = await Database.getModel(TABLE_NAME).create(
@@ -62,7 +62,7 @@ class CarePlanTemplateService {
       throw error;
     }
   };
-  
+
   update = async (data, id) => {
     const transaction = await Database.initTransaction();
     try {
@@ -88,7 +88,7 @@ class CarePlanTemplateService {
       throw error;
     }
   };
-  
+
   getCarePlanTemplateByData = async (
     treatment_id,
     severity_id,
@@ -123,19 +123,19 @@ class CarePlanTemplateService {
       throw error;
     }
   };
-  
+
   getCarePlanTemplateData = async (data) => {
     try {
-      const {user_id, treatment_id, ...rest} = data;
+      const { user_id, treatment_id, ...rest } = data;
       const carePlanTemplate = await Database.getModel(TABLE_NAME).findAll({
         where: {
           [Op.or]: [
             {
-              treatment_id: {[Op.eq]: treatment_id},
-              user_id: {[Op.eq]: null},
+              treatment_id: { [Op.eq]: treatment_id },
+              user_id: { [Op.eq]: null },
             },
             {
-              user_id: {[Op.eq]: user_id},
+              user_id: { [Op.eq]: user_id },
             },
           ],
           ...rest,
@@ -163,7 +163,7 @@ class CarePlanTemplateService {
       throw error;
     }
   };
-  
+
   getSingleTemplateByData = async (data) => {
     try {
       const carePlanTemplate = await Database.getModel(TABLE_NAME).findOne({
@@ -174,7 +174,7 @@ class CarePlanTemplateService {
       throw error;
     }
   };
-  
+
   addCarePlanTemplate = async (data) => {
     try {
       const carePlanTemplate = await Database.getModel(TABLE_NAME).create(data);
@@ -183,7 +183,7 @@ class CarePlanTemplateService {
       throw error;
     }
   };
-  
+
   deleteTemplate = async (data) => {
     try {
       return await Database.getModel(TABLE_NAME).destroy({
@@ -193,18 +193,18 @@ class CarePlanTemplateService {
       throw error;
     }
   };
-  
+
   getAllTemplatesForDoctor = async (data) => {
     try {
-      const {user_id, ...rest} = data;
+      const { user_id, ...rest } = data;
       const carePlanTemplate = await Database.getModel(TABLE_NAME).findAll({
         where: {
           [Op.or]: [
             {
-              user_id: {[Op.eq]: null},
+              user_id: { [Op.eq]: null },
             },
             {
-              user_id: {[Op.eq]: user_id},
+              user_id: { [Op.eq]: user_id },
             },
           ],
           ...rest,

@@ -1,5 +1,5 @@
-import React, {Component, Fragment} from "react";
-import {injectIntl} from "react-intl";
+import React, { Component, Fragment } from "react";
+import { injectIntl } from "react-intl";
 import FormItem from "antd/lib/form/FormItem";
 
 class WhenToTakeForm extends Component {
@@ -9,19 +9,19 @@ class WhenToTakeForm extends Component {
       count: [],
     };
   }
-  
+
   componentDidMount() {
-    const {medication_details: {timings = {}} = {}} = this.props;
+    const { medication_details: { timings = {} } = {} } = this.props;
     this.setState({
       count: [timings],
     });
   }
-  
+
   getUnitOption = (index) => {
-    const {count} = this.state;
+    const { count } = this.state;
     const timings = count[index] || {};
     return Object.keys(timings).map((id) => {
-      const {text, time} = timings[id] || {};
+      const { text, time } = timings[id] || {};
       return (
         <Option key={`${index}.${id}.${time}`} value={id}>
           {`${text} (${time})`}
@@ -29,10 +29,10 @@ class WhenToTakeForm extends Component {
       );
     });
   };
-  
+
   getFormItems = () => {
-    const {form} = this.props;
-    const {count} = this.state;
+    const { form } = this.props;
+    const { count } = this.state;
     const {
       getFieldDecorator,
       getFieldError,
@@ -75,9 +75,9 @@ class WhenToTakeForm extends Component {
       );
     });
   };
-  
+
   render() {
-    const {getFormItems} = this;
+    const { getFormItems } = this;
     return (
       <Fragment>
         <FormItem>{getFormItems()}</FormItem>

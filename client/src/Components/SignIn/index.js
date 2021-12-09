@@ -1,12 +1,12 @@
-import React, {Component} from "react";
-import {message} from "antd";
+import React, { Component } from "react";
+import { message } from "antd";
 import LoginComponent from "./toggleLogin";
 import SignUpComponent from "./toggleSignup";
 
 import CompanyIcon from "../../Assets/images/logo3x.png";
-import {PATH} from "../../constant";
+import { PATH } from "../../constant";
 
-import {injectIntl} from "react-intl";
+import { injectIntl } from "react-intl";
 import messages from "./message";
 
 class SignIn extends Component {
@@ -16,15 +16,15 @@ class SignIn extends Component {
       login: true,
     };
   }
-  
+
   async componentDidMount() {
-    const {match: {params = {}} = {}, history} = this.props;
-    const {link = ""} = params;
-    const {formatMessage} = this;
+    const { match: { params = {} } = {}, history } = this.props;
+    const { link = "" } = params;
+    const { formatMessage } = this;
     if (link) {
-      const {verifyUser} = this.props;
+      const { verifyUser } = this.props;
       let response = await verifyUser(link);
-      const {status} = response;
+      const { status } = response;
       if (!status) {
         message.error(formatMessage(messages.linkExpired));
       } else {
@@ -32,31 +32,31 @@ class SignIn extends Component {
       }
     }
   }
-  
+
   formatMessage = (data) => this.props.intl.formatMessage(data);
-  
+
   toggleLogin = () => {
-    let {login} = this.state;
+    let { login } = this.state;
     let newLogin = !login;
-    
-    this.setState({login: newLogin});
+
+    this.setState({ login: newLogin });
   };
-  
+
   redirectToForgotPassword = () => {
-    const {history} = this.props;
+    const { history } = this.props;
     history.push(PATH.FORGOT_PASSWORD);
   };
-  
+
   render() {
-    const {auth: {authenticated_user} = {}} = this.props;
-    const {login} = this.state;
-    const {formatMessage, toggleLogin} = this;
+    const { auth: { authenticated_user } = {} } = this.props;
+    const { login } = this.state;
+    const { formatMessage, toggleLogin } = this;
     return (
       <div
         className={`wp100 landing-background flex direction-column justify-center align-center ${
           authenticated_user ? "hp100" : ""
         }`}
-        style={{overflowY: "hidden"}}
+        style={{ overflowY: "hidden" }}
       >
         <div className="hp100 wp75">
           <div className="mt40 wp100 mt24 flex justify-space-between align-center direction-row ">
@@ -70,7 +70,7 @@ class SignIn extends Component {
                 {formatMessage(messages.appName)}
               </div>
             </div>
-            
+
             <div className="flex direction-row align-center">
               <div className="text-white fs16 mr16 ">
                 {login

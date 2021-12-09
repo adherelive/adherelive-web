@@ -1,10 +1,9 @@
-import {withRouter} from "react-router-dom";
+import { withRouter } from "react-router-dom";
 import Validation from "../../Components/Validation";
-import {verifyUser} from "../../modules/auth";
-import {connect} from "react-redux";
+import { verifyUser } from "../../modules/auth";
+import { connect } from "react-redux";
 
-const mapStateToProps = (state) => {
-};
+const mapStateToProps = (state) => {};
 
 const mapDispatchToProps = (dispatch) => {
   return {

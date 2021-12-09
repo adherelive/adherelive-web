@@ -21,8 +21,7 @@ import Activity from "../app/activitySdk/activityObserver";
 Database.init();
 
 const Events = import("../events")
-  .then((module) => {
-  })
+  .then((module) => {})
   .catch((err) => {
     console.log("event module error", err);
   });
@@ -72,7 +71,7 @@ const perDayCron = schedule.scheduleJob(rule, async () => {
 EventObserver.runObservers();
 Activity.runObservers();
 
-app.use(express.json({limit: "50mb"}));
+app.use(express.json({ limit: "50mb" }));
 app.use(
   express.urlencoded({
     extended: true,

@@ -1,6 +1,6 @@
 import React from "react";
 
-import {TABLE_COLUMN} from "../helper";
+import { TABLE_COLUMN } from "../helper";
 import messages from "../messages";
 import Name from "../dataColumn/name";
 import Verified from "../dataColumn/verified";
@@ -10,14 +10,14 @@ import ContactDetails from "../dataColumn/contactDetails";
 import Active from "../dataColumn/active";
 
 export default (props) => {
-  const {formatMessage} = props || {};
-  
+  const { formatMessage } = props || {};
+
   return [
     {
       title: formatMessage(messages.name),
       ...TABLE_COLUMN.NAME,
       render: (data) => {
-        const {doctorData, userData, formatMessage} = data || {};
+        const { doctorData, userData, formatMessage } = data || {};
         return (
           <Name
             doctorData={doctorData}

@@ -1,7 +1,7 @@
 "use strict";
 
-import {EVENT_STATUS, EVENT_TYPE} from "../constant";
-import {TABLE_NAME} from "../app/models/scheduleEvents";
+import { EVENT_STATUS, EVENT_TYPE } from "../constant";
+import { TABLE_NAME } from "../app/models/scheduleEvents";
 
 module.exports = {
   up: (queryInterface, Sequelize) => {
@@ -63,7 +63,7 @@ module.exports = {
       },
     });
   },
-  
+
   down: (queryInterface, Sequelize) => {
     return queryInterface.dropTable(TABLE_NAME);
   },

@@ -1,6 +1,6 @@
 "use strict";
-import {DataTypes} from "sequelize";
-import {USER_CATEGORY} from "../../constant";
+import { DataTypes } from "sequelize";
+import { USER_CATEGORY } from "../../constant";
 
 export const REMINDERS = "reminders";
 

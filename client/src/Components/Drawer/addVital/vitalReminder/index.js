@@ -1,6 +1,6 @@
-import React, {Component, Fragment} from "react";
-import {Drawer, Form, message} from "antd";
-import {injectIntl} from "react-intl";
+import React, { Component, Fragment } from "react";
+import { Drawer, Form, message } from "antd";
+import { injectIntl } from "react-intl";
 
 import moment from "moment";
 import AddVitalsForm from "./form";
@@ -17,68 +17,67 @@ import vitalOccurence from "../common/vitalOccurence";
 class AddVitals extends Component {
   constructor(props) {
     super(props);
-    
+
     this.state = {
       disabledOk: true,
       fieldChanged: false,
       members: [],
       submitting: false,
     };
-    this.FormWrapper = Form.create({onFieldsChange: this.onFormFieldChanges})(
+    this.FormWrapper = Form.create({ onFieldsChange: this.onFormFieldChanges })(
       AddVitalsForm
     );
   }
-  
-  componentDidMount() {
-  }
-  
+
+  componentDidMount() {}
+
   hasErrors = (fieldsError) => {
     return Object.keys(fieldsError).some((field) => fieldsError[field]);
   };
-  
+
   onFormFieldChanges = (props, allvalues) => {
     const {
-      form: {getFieldsError, isFieldsTouched},
+      form: { getFieldsError, isFieldsTouched },
     } = props;
     const isError = this.hasErrors(getFieldsError());
-    const {disabledOk} = this.state;
+    const { disabledOk } = this.state;
     if (disabledOk !== isError && isFieldsTouched()) {
-      this.setState({disabledOk: isError, fieldChanged: true});
+      this.setState({ disabledOk: isError, fieldChanged: true });
     }
   };
-  
+
   handleCancel = (e) => {
     if (e) {
       e.preventDefault();
     }
-    const {close} = this.props;
+    const { close } = this.props;
     close();
   };
-  
+
   formatMessage = (data) => this.props.intl.formatMessage(data);
-  
+
   setFormRef = (formRef) => {
     this.formRef = formRef;
     if (formRef) {
-      this.setState({formRef: true});
+      this.setState({ formRef: true });
     }
   };
-  
+
   onClose = () => {
-    const {close} = this.props;
+    const { close } = this.props;
     close();
   };
-  
+
   handleSubmit = async () => {
-    const {addVital, carePlanId, close} = this.props;
-    
-    const {formRef = {}, formatMessage} = this;
+    const { addVital, carePlanId, close } = this.props;
+
+    const { formRef = {}, formatMessage } = this;
     const {
       props: {
-        form: {validateFields},
+        form: { validateFields },
       },
     } = formRef;
-    
+
     validateFields(async (err, values) => {
       if (!err) {
         console.log("8326589623895723956832", values);
@@ -101,7 +100,7 @@ class AddVitals extends Component {
           [endDateField.field_name]:
             endDate && endDate !== null ? endDate.clone().format() : endDate,
         };
-        
+
         if (repeatDays) {
           data_to_submit = {
             ...data_to_submit,
@@ -128,19 +127,19 @@ class AddVitals extends Component {
           message.error("Please select valid dates for vital");
         } else {
           try {
-            this.setState({submitting: true});
+            this.setState({ submitting: true });
             const response = await addVital(data_to_submit);
-            const {status, payload: {message: msg} = {}} = response;
+            const { status, payload: { message: msg } = {} } = response;
             if (status === true) {
               message.success(msg);
               close();
             } else {
               message.error(msg);
             }
-            this.setState({submitting: false});
+            this.setState({ submitting: false });
           } catch (error) {
             console.log("add vital ui error -----> ", error);
-            this.setState({submitting: false});
+            this.setState({ submitting: false });
           }
         }
       } else {
@@ -148,21 +147,21 @@ class AddVitals extends Component {
       }
     });
   };
-  
+
   render() {
     const {
       visible,
       loading = false,
-      intl: {formatMessage},
+      intl: { formatMessage },
     } = this.props;
-    const {onClose, setFormRef, FormWrapper, handleSubmit} = this;
-    const {disabledSubmit, submitting = false} = this.state;
+    const { onClose, setFormRef, FormWrapper, handleSubmit } = this;
+    const { disabledSubmit, submitting = false } = this.state;
     // const submitButtonProps = {
     //   disabled: disabledSubmit,
     //   loading: loading
     // };
-    const {members} = this.state;
-    
+    const { members } = this.state;
+
     return (
       <Fragment>
         <Drawer
@@ -177,7 +176,7 @@ class AddVitals extends Component {
           onClose={onClose}
           visible={visible}
           // closeIcon={<img src={backArrow} />}
-          
+
           destroyOnClose={true}
           className="ant-drawer"
           title={formatMessage(messages.title)}

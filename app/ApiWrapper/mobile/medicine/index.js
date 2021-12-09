@@ -5,11 +5,11 @@ class MobileMedicineWrapper extends BaseMedicine {
   constructor(data) {
     super(data);
   }
-  
+
   getBasicInfo = () => {
-    const {_data} = this;
-    const {id, name, type, description, creator_id, public_medicine} =
-    _data || {};
+    const { _data } = this;
+    const { id, name, type, description, creator_id, public_medicine } =
+      _data || {};
     return {
       basic_info: {
         id,
@@ -21,16 +21,16 @@ class MobileMedicineWrapper extends BaseMedicine {
       },
     };
   };
-  
+
   getBasicInfoBulk = () => {
-    const {_data, getExistingData, setCurrentData, _objectName} = this;
-    
+    const { _data, getExistingData, setCurrentData, _objectName } = this;
+
     let cumulativeData = {};
     _data.forEach((data) => {
       // setCurrentData(data);
       // const medicineData = getExistingData();
-      const {id, name, type, description, creator_id, public_medicine} =
-      data || {};
+      const { id, name, type, description, creator_id, public_medicine } =
+        data || {};
       cumulativeData[id] = {
         basic_info: {
           id,
@@ -42,16 +42,16 @@ class MobileMedicineWrapper extends BaseMedicine {
         },
       };
     });
-    
+
     return {
       [_objectName]: {
         ...cumulativeData,
       },
     };
   };
-  
+
   getAllInfo = () => {
-    const {_data} = this;
+    const { _data } = this;
     const {
       id,
       name,
@@ -63,7 +63,7 @@ class MobileMedicineWrapper extends BaseMedicine {
       updatedAt,
       createdAt,
     } = _data || {};
-    
+
     return {
       basic_info: {
         id,
