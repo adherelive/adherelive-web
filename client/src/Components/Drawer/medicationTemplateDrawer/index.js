@@ -52,6 +52,7 @@ const TemplateNameModal = ({
   saveTemplate,
   skip,
   formatMessage,
+  disable,
 }) => {
   return (
     <Modal
@@ -77,7 +78,10 @@ const TemplateNameModal = ({
             {formatMessage(messages.saveTemplate)}{" "}
           </div>
         </div>
-        <div className="template-name-modal-skip-button" onClick={skip}>
+        <div
+          className="template-name-modal-skip-button"
+          onClick={!disable ? skip : ""}
+        >
           <div className="template-name-modal-skip-text">
             {formatMessage(messages.skip)}{" "}
           </div>
@@ -117,6 +121,7 @@ class TemplateDrawer extends Component {
       templateEdited: false,
       isDietVisible: false,
       isWorkoutVisible: false,
+      disable: false,
     };
   }
 
@@ -1573,9 +1578,24 @@ class TemplateDrawer extends Component {
   };
 
   submitWithOutName = () => {
-    this.setState({ name: "", createTemplate: false }, () => {
-      this.onSubmit();
-    });
+    // AKSHAY NEW CODE IMPLEMENTATION STARTED
+    this.setState(
+      {
+        disable: true,
+        name: "",
+        createTemplate: false,
+        // showTemplateNameModal: false,
+      },
+      () =>
+        setTimeout(() => {
+          this.onSubmit();
+        }, 500)
+    );
+    // AKSHAY NEW CODE IMPLEMENTATION ENDED
+    //PREV CODE
+    // this.setState({ name: "", createTemplate: false }, () => {
+    //   this.onSubmit();
+    // });
   };
 
   onSubmit = () => {
@@ -2456,16 +2476,19 @@ class TemplateDrawer extends Component {
             </Button>
           </div>
         </Drawer>
-        <TemplateNameModal
-          visible={this.state.showTemplateNameModal}
-          hideModal={this.hideNameModal}
-          carePlanTemplateId={carePlanTemplateId}
-          carePlanName={carePlanName}
-          changeTemplateName={this.setTemplateName}
-          saveTemplate={this.submitWithName}
-          skip={this.submitWithOutName}
-          formatMessage={this.formatMessage}
-        />
+        {this.state.showTemplateNameModal === true && (
+          <TemplateNameModal
+            visible={this.state.showTemplateNameModal}
+            hideModal={this.hideNameModal}
+            carePlanTemplateId={carePlanTemplateId}
+            carePlanName={carePlanName}
+            changeTemplateName={this.setTemplateName}
+            saveTemplate={this.submitWithName}
+            skip={this.submitWithOutName}
+            formatMessage={this.formatMessage}
+            disable={this.state.disable}
+          />
+        )}
       </Fragment>
     );
   }
