@@ -13,6 +13,10 @@ export const getCalenderDataCountForDayUrl = (date) => {
 export const getCalenderDataForDayUrl = (date, type) => {
   return `/providers/day-appointments?value=${date}&type=${type}`;
 };
+// AKSHAY NEW CODE IMPLEMETATION
+export const getDoctorsCalenderDataForDayUrl = (date, type) => {
+  return `/doctors/day-appointments?value=${date}&type=${type}`;
+};
 
 export const getAllProvidersUrl = () => {
   return `/admin/providers`;
