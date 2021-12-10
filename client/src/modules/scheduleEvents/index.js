@@ -1,5 +1,5 @@
-import {doRequest} from "../../Helper/network";
-import {REQUEST_TYPE} from "../../constant";
+import { doRequest } from "../../Helper/network";
+import { REQUEST_TYPE } from "../../constant";
 import {
   getScheduleEventsUrl,
   getAppointmentCompleteUrl,
@@ -8,8 +8,9 @@ import {
 import {
   getCalenderDataCountForDayUrl,
   getCalenderDataForDayUrl,
+  getDoctorsCalenderDataForDayUrl,
 } from "../../Helper/urls/provider";
-import {getPatientLastVisitAlertUrl} from "../../Helper/url/patients";
+import { getPatientLastVisitAlertUrl } from "../../Helper/url/patients";
 
 export const GET_SCHEDULE_EVENTS_START = "GET_SCHEDULE_EVENTS_START";
 export const GET_SCHEDULE_EVENTS_COMPLETED = "GET_SCHEDULE_EVENTS_COMPLETED";
@@ -47,15 +48,15 @@ export const getScheduleEvents = (payload) => {
   let response = {};
   return async (dispatch) => {
     try {
-      dispatch({type: GET_SCHEDULE_EVENTS_START});
-      
+      dispatch({ type: GET_SCHEDULE_EVENTS_START });
+
       response = await doRequest({
         method: REQUEST_TYPE.GET,
         url: getScheduleEventsUrl(),
       });
-      
-      const {status, payload: {data = {}, error = {}} = {}} =
-      response || {};
+
+      const { status, payload: { data = {}, error = {} } = {} } =
+        response || {};
       if (status === true) {
         dispatch({
           type: GET_SCHEDULE_EVENTS_COMPLETED,
@@ -78,15 +79,15 @@ export const getCalenderDataCountForDay = (date) => {
   let response = {};
   return async (dispatch) => {
     try {
-      dispatch({type: GET_CALENDER_DATA_COUNT_START});
-      
+      dispatch({ type: GET_CALENDER_DATA_COUNT_START });
+
       response = await doRequest({
         method: REQUEST_TYPE.GET,
         url: getCalenderDataCountForDayUrl(date),
       });
-      
-      const {status, payload: {data = {}, error = {}} = {}} =
-      response || {};
+
+      const { status, payload: { data = {}, error = {} } = {} } =
+        response || {};
       if (status === true) {
         dispatch({
           type: GET_CALENDER_DATA_COUNT_COMPLETED,
@@ -109,15 +110,48 @@ export const getCalenderDataForDay = (date, type) => {
   let response = {};
   return async (dispatch) => {
     try {
-      dispatch({type: GET_CALENDER_DATA_FOR_DAY_START});
-      
+      dispatch({ type: GET_CALENDER_DATA_FOR_DAY_START });
+
       response = await doRequest({
         method: REQUEST_TYPE.GET,
         url: getCalenderDataForDayUrl(date, type),
       });
-      
-      const {status, payload: {data = {}, error = {}} = {}} =
-      response || {};
+
+      const { status, payload: { data = {}, error = {} } = {} } =
+        response || {};
+      if (status === true) {
+        dispatch({
+          type: GET_CALENDER_DATA_FOR_DAY_COMPLETED,
+          payload: data,
+          data,
+        });
+      } else {
+        dispatch({
+          type: GET_CALENDER_DATA_FOR_DAY_FAILED,
+          payload: error,
+        });
+      }
+    } catch (error) {
+      console.log("GET_CALENDER_DATA_FOR_DAY error ----> ", error);
+    }
+    return response;
+  };
+};
+
+// AKSHAY NEW CODE IMPLEMENTATION
+export const getDoctorsCalenderDataForDay = (date, type) => {
+  let response = {};
+  return async (dispatch) => {
+    try {
+      dispatch({ type: GET_CALENDER_DATA_FOR_DAY_START });
+
+      response = await doRequest({
+        method: REQUEST_TYPE.GET,
+        url: getDoctorsCalenderDataForDayUrl(date, type),
+      });
+
+      const { status, payload: { data = {}, error = {} } = {} } =
+        response || {};
       if (status === true) {
         dispatch({
           type: GET_CALENDER_DATA_FOR_DAY_COMPLETED,
@@ -148,8 +182,8 @@ export const getLastVisitAlerts = (id) => {
         method: REQUEST_TYPE.GET,
         url: getPatientLastVisitAlertUrl(id),
       });
-      
-      const {status, payload: {data, error} = {}} = response || {};
+
+      const { status, payload: { data, error } = {} } = response || {};
       if (status === true) {
         dispatch({
           type: GET_LAST_VISIT_ALERTS_COMPLETE,
@@ -176,8 +210,8 @@ export const markAppointmentComplete = (id) => {
         method: REQUEST_TYPE.POST,
         url: getAppointmentCompleteUrl(id),
       });
-      
-      const {status, payload: {data, error} = {}} = response || {};
+
+      const { status, payload: { data, error } = {} } = response || {};
       if (status === true) {
         dispatch({
           type: APPOINTMENT_STATUS_UPDATE_COMPLETED,
@@ -200,14 +234,14 @@ export const getAllMissedScheduleEvents = () => {
   let response = {};
   return async (dispatch) => {
     try {
-      dispatch({type: GET_ALL_MISSED_SCHEDULE_EVENTS_START});
-      
+      dispatch({ type: GET_ALL_MISSED_SCHEDULE_EVENTS_START });
+
       response = await doRequest({
         method: REQUEST_TYPE.GET,
         url: getAllMissedScheduleEventsUrl(),
       });
-      
-      const {status, payload: {data, error} = {}} = response || {};
+
+      const { status, payload: { data, error } = {} } = response || {};
       if (status === true) {
         dispatch({
           type: GET_ALL_MISSED_SCHEDULE_EVENTS_COMPLETED,
@@ -227,7 +261,7 @@ export const getAllMissedScheduleEvents = () => {
 };
 
 function eventReducer(state, data) {
-  const {schedule_events = {}} = data || {};
+  const { schedule_events = {} } = data || {};
   if (Object.keys(schedule_events).length > 0) {
     return {
       ...state,
@@ -239,7 +273,7 @@ function eventReducer(state, data) {
 }
 
 export default (state = {}, action = {}) => {
-  const {type, data} = action;
+  const { type, data } = action;
   switch (type) {
     default:
       return eventReducer(state, data);
