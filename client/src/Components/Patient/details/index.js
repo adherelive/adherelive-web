@@ -1120,7 +1120,7 @@ class PatientDetails extends Component {
           end_time,
           description = "",
         } = {},
-        organizer: { id: organizer_id } = {},
+        organizer: { id: organizer_id, name = "" } = {},
         active_event_id = null,
       } = appointments[id] || {};
       // const { basic_info: { user_name = "", full_name } = {} } = users[organizer_id] || {};
@@ -1129,7 +1129,7 @@ class PatientDetails extends Component {
       return {
         // organizer: organizer_type === "doctor" ? doctors[organizer_id] : patients[organizer_id].
         key: id,
-        organizer: `Dr. ${docName}`,
+        organizer: `Dr. ${name}`,
         date: `${moment(start_date).format("LL")}`,
         time: `${
           start_time
