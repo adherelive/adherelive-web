@@ -50,10 +50,11 @@ class AddSecondaryDoctor extends Component {
         this.setState({ rowData: [] });
         message.error(res_message);
       }
-      const { rowData = [] } = data || {};
+      const { rowData = [], user_roles = {} } = data || {};
       this.setState({
         rowData,
         searchingName: false,
+        user_roles: user_roles,
       });
     } catch (error) {
       this.setState({ searchingName: false });
@@ -62,7 +63,11 @@ class AddSecondaryDoctor extends Component {
   };
 
   getNameOptions = () => {
-    const { rowData = [], dropDownVisible = false } = this.state;
+    const {
+      rowData = [],
+      dropDownVisible = false,
+      user_roles = {},
+    } = this.state;
     const {
       doctors = {},
       providers = {},
@@ -70,7 +75,9 @@ class AddSecondaryDoctor extends Component {
       userRoles = {},
     } = this.props;
     // console.log("467236472647264782",{rowData});
-
+    console.log("doctors", doctors);
+    console.log("providers", providers);
+    console.log("userRoles", userRoles);
     return Object.keys(rowData).map((id) => {
       const rowDataObj = rowData[id] || {};
       const { doctor_id, provider_id, user_id, user_role_id } =
@@ -91,7 +98,7 @@ class AddSecondaryDoctor extends Component {
       } = doctors || {};
 
       const { basic_info: { linked_id = null } = {} } =
-        userRoles[user_role_id] || {};
+        user_roles[user_role_id] || {};
 
       // AKSHAY NEW CODE IMPLEMETATION END
 
@@ -110,6 +117,8 @@ class AddSecondaryDoctor extends Component {
         provider_name = name;
       }
       // AKSHAY NEW CODE IMPLEMETATION END
+
+      console.log(provider_name);
 
       return (
         <Option key={user_role_id} value={user_role_id}>
