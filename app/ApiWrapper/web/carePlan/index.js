@@ -2,6 +2,7 @@ import BaseCarePlan from "../../../services/carePlan";
 import carePlanService from "../../../services/carePlan/carePlan.service";
 import VitalService from "../../../services/vitals/vital.service";
 import DietService from "../../../services/diet/diet.service";
+// import DoctorService from "../../../services/doctor/doctor.service";
 import WorkoutService from "../../../services/workouts/workout.service";
 import CareplanSecondaryDoctorMappingsService from "../../../services/careplanSecondaryDoctorMappings/careplanSecondaryDoctorMappings.service";
 import DoctorService from "../../../services/doctor/doctor.service";
@@ -10,15 +11,15 @@ import DoctorWrapper from "../doctor";
 import PatientWrapper from "../patient";
 import UserRoleWrapper from "../userRoles";
 import ProviderWrapper from "../provider";
-import {USER_CATEGORY} from "../../../../constant";
+import { USER_CATEGORY } from "../../../../constant";
 
 class CarePlanWrapper extends BaseCarePlan {
   constructor(data) {
     super(data);
   }
-  
+
   getBasicInfo = () => {
-    const {_data} = this;
+    const { _data } = this;
     const {
       id,
       doctor_id,
@@ -31,7 +32,7 @@ class CarePlanWrapper extends BaseCarePlan {
       user_role_id,
       channel_id,
     } = _data || {};
-    
+
     return {
       basic_info: {
         id,
@@ -47,35 +48,35 @@ class CarePlanWrapper extends BaseCarePlan {
       channel_id,
     };
   };
-  
+
   getAllInfo = async () => {
-    const {_data, getBasicInfo, getCarePlanId} = this;
+    const { _data, getBasicInfo, getCarePlanId } = this;
     let doctorData = {},
       providersApiData = {},
       userRolesApiData = {};
-    const {care_plan_appointments = [], care_plan_medications = []} =
-    _data || {};
-    
+    const { care_plan_appointments = [], care_plan_medications = [] } =
+      _data || {};
+
     const vitals =
-      (await VitalService.getAllByData({care_plan_id: getCarePlanId()})) ||
+      (await VitalService.getAllByData({ care_plan_id: getCarePlanId() })) ||
       [];
-    
+
     const vitalIds = [];
     if (vitals.length > 0) {
       vitals.forEach((vital) => {
         vitalIds.push(vital.get("id"));
       });
     }
-    
+
     const dietService = new DietService();
-    const {rows: diets = []} =
-    (await dietService.findAndCountAll({
-      where: {care_plan_id: getCarePlanId()},
-      attributes: ["id"],
-    })) || {};
-    
+    const { rows: diets = [] } =
+      (await dietService.findAndCountAll({
+        where: { care_plan_id: getCarePlanId() },
+        attributes: ["id"],
+      })) || {};
+
     const dietIds = [];
-    
+
     if (diets.length > 0) {
       diets.forEach((diet) => {
         if (dietIds.indexOf(diet.id) === -1) {
@@ -83,16 +84,16 @@ class CarePlanWrapper extends BaseCarePlan {
         }
       });
     }
-    
+
     const workoutService = new WorkoutService();
-    const {rows: workouts = []} =
-    (await workoutService.findAndCountAll({
-      where: {care_plan_id: getCarePlanId()},
-      attributes: ["id"],
-    })) || {};
-    
+    const { rows: workouts = [] } =
+      (await workoutService.findAndCountAll({
+        where: { care_plan_id: getCarePlanId() },
+        attributes: ["id"],
+      })) || {};
+
     const workoutIds = [];
-    
+
     if (workouts.length > 0) {
       workouts.forEach((workout) => {
         if (workoutIds.indexOf(workout.id) === -1) {
@@ -100,12 +101,25 @@ class CarePlanWrapper extends BaseCarePlan {
         }
       });
     }
-    
+
     const secondary_doctor_user_role_ids =
       this.getCareplnSecondaryProfiles() || [];
-    
+
+    // get care plan basci info
+    const basic_info = getBasicInfo();
+    //doctor.
+    console.log();
+    if (basic_info["basic_info"]["doctor_id"])
+      basic_info["basic_info"]["doctor"] =
+        await DoctorService.getDoctorByUserId(
+          basic_info["basic_info"]["doctor_id"]
+        );
+    // get doctor by doctoriD.
+    console.log("mytest====");
+    console.log(basic_info);
+    console.log("mytest====");
     return {
-      ...getBasicInfo(),
+      ...basic_info,
       appointment_ids: care_plan_appointments.map((appointment) =>
         appointment.get("appointment_id")
       ),
@@ -118,44 +132,44 @@ class CarePlanWrapper extends BaseCarePlan {
       secondary_doctor_user_role_ids,
     };
   };
-  
+
   getReferenceInfoWithImp = async () => {
-    const {getCarePlanId, getAllInfo} = this;
-    
+    const { getCarePlanId, getAllInfo } = this;
+
     return {
       care_plans: {
         [getCarePlanId()]: await getAllInfo(),
       },
     };
   };
-  
+
   getReferenceInfo = async () => {
-    const {_data, getCarePlanId, getAllInfo} = this;
-    const {doctor, patient} = _data || {};
-    
+    const { _data, getCarePlanId, getAllInfo } = this;
+    const { doctor, patient } = _data || {};
+
     let doctorData = {},
       providersApiData = {},
       userRolesApiData = {};
     let doctor_id = null;
-    
+
     if (doctor) {
       const doctors = await DoctorWrapper(doctor);
       doctorData[doctors.getDoctorId()] = await doctors.getAllInfo();
       doctor_id = doctors.getDoctorId();
     }
-    
+
     let patientData = {};
     let patient_id = null;
-    
+
     if (patient) {
       const patients = await PatientWrapper(patient);
       patientData[patients.getPatientId()] = await patients.getAllInfo();
       patient_id = patients.getPatientId();
     }
-    
+
     const secondary_doctor_user_role_ids =
       this.getCareplnSecondaryProfiles() || [];
-    
+
     if (secondary_doctor_user_role_ids.length) {
       for (let each in secondary_doctor_user_role_ids) {
         const secondary_doctor_role_id = secondary_doctor_user_role_ids[each];
@@ -170,7 +184,7 @@ class CarePlanWrapper extends BaseCarePlan {
           doctorWrapper = await DoctorWrapper(doctor);
           doctorData[doctorWrapper.getDoctorId()] =
             await doctorWrapper.getAllInfo();
-          
+
           if (
             userRoleWrapper.getLinkedId() !== null &&
             userRoleWrapper.getLinkedWith() === USER_CATEGORY.PROVIDER
@@ -187,13 +201,13 @@ class CarePlanWrapper extends BaseCarePlan {
             };
             userRolesApiData = {
               ...userRolesApiData,
-              [userRoleWrapper.getId()]: {...userRoleWrapper.getBasicInfo()},
+              [userRoleWrapper.getId()]: { ...userRoleWrapper.getBasicInfo() },
             };
           }
         }
       }
     }
-    
+
     return {
       care_plans: {
         [getCarePlanId()]: await getAllInfo(),
@@ -204,8 +218,8 @@ class CarePlanWrapper extends BaseCarePlan {
       patients: {
         ...patientData,
       },
-      providers: {...providersApiData},
-      user_roles: {...userRolesApiData},
+      providers: { ...providersApiData },
+      user_roles: { ...userRolesApiData },
       doctor_id,
       patient_id,
       care_plan_id: getCarePlanId(),
@@ -217,6 +231,6 @@ export default async (data = null, id = null) => {
   if (data) {
     return new CarePlanWrapper(data);
   }
-  const carePlan = await carePlanService.getSingleCarePlanByData({id});
+  const carePlan = await carePlanService.getSingleCarePlanByData({ id });
   return new CarePlanWrapper(carePlan);
 };
