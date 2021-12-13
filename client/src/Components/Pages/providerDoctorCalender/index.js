@@ -56,9 +56,9 @@ class ProviderDoctorCalneder extends Component {
           const { status, payload: { data, message } = {} } = response;
         });
       } else {
-        // getDoctorsCalenderDataForDay(ISOdate, type).then((response) => {
-        //   const { status, payload: { data, message } = {} } = response;
-        // });
+        getDoctorsCalenderDataForDay(ISOdate, type).then((response) => {
+          const { status, payload: { data, message } = {} } = response;
+        });
       }
     } catch (error) {
       console.log("err --->", error);
