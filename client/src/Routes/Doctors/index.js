@@ -99,11 +99,11 @@ const DoctorTransactionPage = lazy(() =>
   )
 );
 // AKSHAY NEW CODE IMPLEMENTATION
-// const DoctorCalenderPage = lazy(() =>
-//   import(
-//     /* webpackChunkName: "DoctorCalenderPage" */ "../../Containers/Pages/providerDoctorCalender"
-//   )
-// );
+const DoctorCalenderPage = lazy(() =>
+  import(
+    /* webpackChunkName: "DoctorCalenderPage" */ "../../Containers/Pages/providerDoctorCalender"
+  )
+);
 
 const PatientDetailsComp = (props) => {
   const { match: { params: { patient_id } = {} } = {} } = props;
@@ -350,11 +350,11 @@ class Doctors extends Component {
                   component={DoctorTransactionPageComp}
                 />
                 {/* AKSHAY NEW CODE IMPLEMENTATION */}
-                {/* <Route
+                <Route
                   exact
                   path={PATH.PROVIDER.CALENDER}
                   component={DoctorCalenderPage}
-                /> */}
+                />
 
                 {/* <Route
                   exact

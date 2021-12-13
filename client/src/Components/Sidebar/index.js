@@ -743,7 +743,8 @@ class SideMenu extends Component {
           </MenuItem>
         )}
 
-        {authenticated_category === USER_CATEGORY.PROVIDER ? (
+        {authenticated_category === USER_CATEGORY.PROVIDER ||
+        USER_CATEGORY.DOCTOR ? (
           <MenuItem
             className="flex direction-column justify-center align-center p0"
             key={CALENDER}
