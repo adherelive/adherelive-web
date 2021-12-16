@@ -148,7 +148,7 @@ class DoctorService {
     }
   };
 
-  getDoctorByDoctorId = async (user_id) => {
+  getDoctorByDoctorId = async (id) => {
     try {
       const doctor = await Database.getModel(TABLE_NAME).findOne({
         where: {
