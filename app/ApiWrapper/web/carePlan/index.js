@@ -111,7 +111,7 @@ class CarePlanWrapper extends BaseCarePlan {
     console.log();
     if (basic_info["basic_info"]["doctor_id"])
       basic_info["basic_info"]["doctor"] =
-        await DoctorService.getDoctorByUserId(
+        await DoctorService.getDoctorByDoctorId(
           basic_info["basic_info"]["doctor_id"]
         );
     // get doctor by doctoriD.
