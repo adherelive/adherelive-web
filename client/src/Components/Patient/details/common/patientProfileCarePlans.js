@@ -11,6 +11,7 @@ import {
   TABLE_DEFAULT_BLANK_FIELD,
 } from "../../../../constant";
 import messages from "./messages";
+import isEmpty from "./../../../../Helper/is-empty";
 
 class PatientCarePlans extends Component {
   constructor(props) {
@@ -113,7 +114,7 @@ class PatientCarePlans extends Component {
                         messages.with_you_text
                       )} (${provider_name})`
                     : `${formatMessage(messages.with_you_text)} (Self)`
-                  : `Dr ${doctor.full_name}`
+                  : `Dr ${!isEmpty(doctor) && doctor.full_name}`
                 //PREV CHNAGES
                 // `Dr. ${getFullName({
                 //     first_name,

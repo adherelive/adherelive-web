@@ -369,9 +369,19 @@ const PatientProfileHeader = ({
   selectedCarePlanId,
   auth_role,
   user_role_id,
+  secondary_doctor_user_role_ids,
 }) => {
   console.log("3287642547652342", { selectedCarePlanId });
   console.log("AKSHAY NEW CHANGES");
+
+  console.log("showAddButton", showAddButton);
+  console.log("selectedCarePlanId", selectedCarePlanId);
+  console.log("auth_role", auth_role);
+  console.log("user_role_id", user_role_id);
+  // AKSHAY NEW CODE IMPLEMENTATION START
+  console.log(secondary_doctor_user_role_ids.includes(auth_role));
+  // AKSHAY NEW CODE IMPLEMENTATION END
+
   return (
     <div className="flex pt20 pr24 pb10 pl24">
       <div className="patient-profile-header flex-grow-0">
@@ -380,7 +390,9 @@ const PatientProfileHeader = ({
         </div>
       </div>
       <div className="flex-grow-1 tar">
-        {showAddButton && user_role_id.toString() === auth_role.toString() && (
+        {(showAddButton ||
+          user_role_id.toString() === auth_role.toString() ||
+          secondary_doctor_user_role_ids.includes(auth_role) === true) && (
           <Dropdown
             overlay={getMenu()}
             trigger={["click"]}
@@ -2573,6 +2585,7 @@ class PatientDetails extends Component {
             selectedCarePlanId={selectedCarePlanId}
             auth_role={auth_role}
             user_role_id={user_role_id}
+            secondary_doctor_user_role_ids={secondary_doctor_user_role_ids}
           />
 
           <div className="flex wp100">
