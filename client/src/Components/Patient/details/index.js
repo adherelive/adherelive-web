@@ -2717,6 +2717,9 @@ class PatientDetails extends Component {
                               patientId={patient_id}
                               carePlanId={carePlanId}
                               isOtherCarePlan={isOtherCarePlan}
+                              secondary_doctor_user_role_ids={
+                                secondary_doctor_user_role_ids
+                              }
                             />
                           ) : (
                             <div className="mt20">
