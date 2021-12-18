@@ -11,6 +11,7 @@ import {
   TABLE_DEFAULT_BLANK_FIELD,
 } from "../../../../constant";
 import messages from "./messages";
+import isEmpty from "./../../../../Helper/is-empty";
 
 class PatientCarePlans extends Component {
   constructor(props) {
@@ -68,6 +69,7 @@ class PatientCarePlans extends Component {
           doctor_id,
           patient_id: carePlanPatientId,
           user_role_id = null,
+          doctor = {},
         } = {},
         details: {
           treatment_id,
@@ -103,19 +105,23 @@ class PatientCarePlans extends Component {
             </div>
             <div className="fw700 brown-grey">{name}</div>
             <div className="fw700 brown-grey">
-              {doctorId === doctor_id
-                ? auth_role.toString() == user_role_id.toString()
-                  ? formatMessage(messages.with_you_text)
-                  : linked_id
-                  ? `${formatMessage(
-                      messages.with_you_text
-                    )} (${provider_name})`
-                  : `${formatMessage(messages.with_you_text)} (Self)`
-                : `Dr. ${getFullName({
-                    first_name,
-                    middle_name,
-                    last_name,
-                  })}`}
+              {
+                doctorId === doctor_id
+                  ? auth_role.toString() == user_role_id.toString()
+                    ? formatMessage(messages.with_you_text)
+                    : linked_id
+                    ? `${formatMessage(
+                        messages.with_you_text
+                      )} (${provider_name})`
+                    : `${formatMessage(messages.with_you_text)} (Self)`
+                  : `Dr ${!isEmpty(doctor) && doctor.full_name}`
+                //PREV CHNAGES
+                // `Dr. ${getFullName({
+                //     first_name,
+                //     middle_name,
+                //     last_name,
+                //   })}`
+              }
             </div>
           </div>
           <div className="fw700 brown-grey">

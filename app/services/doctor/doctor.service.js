@@ -148,6 +148,20 @@ class DoctorService {
     }
   };
 
+  getDoctorByDoctorId = async (id) => {
+    try {
+      const doctor = await Database.getModel(TABLE_NAME).findOne({
+        where: {
+          id,
+        },
+        include: Database.getModel(specialityTableName),
+      });
+      return doctor;
+    } catch (error) {
+      throw error;
+    }
+  };
+
   getAllDoctorsOnly = async () => {
     try {
       const doctors = await Database.getModel(TABLE_NAME).findAll();

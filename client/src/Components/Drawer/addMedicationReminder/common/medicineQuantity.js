@@ -72,7 +72,7 @@ class MedicineQuantity extends Component {
             <div className="star-red">*</div>
           </div>
           {/* <div className="label-color fontsize12 mb8">
-              
+            
             </div> */}
           <div className="flex-grow-0">
             <RadioGroup size="small" className="flex justify-content-end">

@@ -1,12 +1,12 @@
-import React, {Component, Fragment} from "react";
-import {injectIntl} from "react-intl";
-import {Menu, Tooltip, message, Avatar, Icon, Dropdown} from "antd";
-import {PATH, USER_CATEGORY, USER_PERMISSIONS} from "../../constant";
+import React, { Component, Fragment } from "react";
+import { injectIntl } from "react-intl";
+import { Menu, Tooltip, message, Avatar, Icon, Dropdown } from "antd";
+import { PATH, USER_CATEGORY, USER_PERMISSIONS } from "../../constant";
 import confirm from "antd/es/modal/confirm";
 
 import Logo from "../../Assets/images/logo3x.png";
 import dashboardIcon from "../../Assets/images/dashboard.svg";
-import {withRouter} from "react-router-dom";
+import { withRouter } from "react-router-dom";
 import {
   CalendarTwoTone,
   FileOutlined,
@@ -16,9 +16,9 @@ import {
 } from "@ant-design/icons";
 import messages from "./messages";
 import config from "../../config";
-import {getAbbreviation} from "../../Helper/common";
+import { getAbbreviation } from "../../Helper/common";
 
-const {Item: MenuItem} = Menu || {};
+const { Item: MenuItem } = Menu || {};
 
 const LOGO = "logo";
 const DASHBOARD = "dashboard";
@@ -55,23 +55,22 @@ class SideMenu extends Component {
       selectedKeys: "",
     };
   }
-  
+
   formatMessage = (message) => this.props.intl.formatMessage(message);
-  
+
   handleLogout = async () => {
-    const {logOut} = this.props;
+    const { logOut } = this.props;
     try {
       const response = await logOut();
-      const {status} = response || {};
+      const { status } = response || {};
       if (status === true) {
         message.success("Signed out successfully from AdhereLive platform");
       } else {
         message.warn("Something has gone wrong. Please try again later");
       }
-    } catch (error) {
-    }
+    } catch (error) {}
   };
-  
+
   warnNote = () => {
     return (
       <div className="pt16">
@@ -82,24 +81,23 @@ class SideMenu extends Component {
       </div>
     );
   };
-  
-  handleRedirect = ({key}) => {
+
+  handleRedirect = ({ key }) => {
     try {
       confirm({
         title: `Are you sure you wish to leave?`,
         content: <div>{this.warnNote()}</div>,
         onOk: async () => {
-          this.handleItemSelectForRedirect({key});
+          this.handleItemSelectForRedirect({ key });
         },
-        onCancel() {
-        },
+        onCancel() {},
       });
     } catch (error) {
       console.log("err --->", error);
     }
   };
-  
-  handleItemSelectForRedirect = ({key}) => {
+
+  handleItemSelectForRedirect = ({ key }) => {
     const {
       users,
       history,
@@ -108,10 +106,10 @@ class SideMenu extends Component {
       authPermissions = [],
       openAppointmentDrawer,
     } = this.props;
-    const {handleLogout} = this;
+    const { handleLogout } = this;
     const current_user = users[authenticated_user];
-    const {onboarded} = current_user;
-    
+    const { onboarded } = current_user;
+
     switch (key) {
       case LOGO:
       case DASHBOARD:
@@ -143,7 +141,7 @@ class SideMenu extends Component {
         break;
       case NOTIFICATIONS:
         if (authPermissions.includes(USER_PERMISSIONS.ACCOUNT.VERIFIED)) {
-          openAppointmentDrawer({doctorUserId: authenticated_user});
+          openAppointmentDrawer({ doctorUserId: authenticated_user });
         }
         break;
       case CALENDER:
@@ -170,10 +168,10 @@ class SideMenu extends Component {
         history.push(PATH.LANDING_PAGE);
         break;
     }
-    this.setState({selectedKeys: key});
+    this.setState({ selectedKeys: key });
   };
-  
-  handleItemSelect = async ({key}) => {
+
+  handleItemSelect = async ({ key }) => {
     const {
       users,
       history,
@@ -183,25 +181,25 @@ class SideMenu extends Component {
       openAppointmentDrawer,
       switchUserRole,
     } = this.props;
-    const {handleLogout} = this;
+    const { handleLogout } = this;
     const current_user = users[authenticated_user];
-    const {onboarded} = current_user;
-    
+    const { onboarded } = current_user;
+
     const url = window.location.href.split("/");
     let doctor_id = url.length > 4 ? url[url.length - 1] : "";
-    
+
     if (key.includes(ACCOUNT)) {
-      await switchUserRole({userRoleId: key.split(".")[1]});
+      await switchUserRole({ userRoleId: key.split(".")[1] });
       history.replace(PATH.LANDING_PAGE);
       window.location.reload();
     }
-    
+
     if (
       doctor_id &&
       authenticated_category === USER_CATEGORY.PROVIDER &&
       !window.location.href.includes(PATH.ADMIN.DOCTORS.ROOT)
     ) {
-      this.handleRedirect({key});
+      this.handleRedirect({ key });
     } else {
       switch (key) {
         case LOGO:
@@ -234,7 +232,7 @@ class SideMenu extends Component {
           break;
         case NOTIFICATIONS:
           if (authPermissions.includes(USER_PERMISSIONS.ACCOUNT.VERIFIED)) {
-            openAppointmentDrawer({doctorUserId: authenticated_user});
+            openAppointmentDrawer({ doctorUserId: authenticated_user });
           }
           break;
         case CALENDER:
@@ -287,21 +285,21 @@ class SideMenu extends Component {
           history.push(PATH.LANDING_PAGE);
           break;
       }
-      this.setState({selectedKeys: key});
+      this.setState({ selectedKeys: key });
     }
   };
-  
+
   getOnboardedByDetails = (provider_id) => {
-    const {providers} = this.props;
-    const {formatMessage} = this;
-    
-    const {details: {icon} = {}, basic_info: {name} = {}} =
-    providers[provider_id] || {};
-    
+    const { providers } = this.props;
+    const { formatMessage } = this;
+
+    const { details: { icon } = {}, basic_info: { name } = {} } =
+      providers[provider_id] || {};
+
     if (provider_id) {
       if (icon) {
         return (
-          <img src={icon} alt={"hospital logo"} className={"br50 w30 h30"}/>
+          <img src={icon} alt={"hospital logo"} className={"br50 w30 h30"} />
         );
       } else {
         return <div>{name}</div>;
@@ -310,19 +308,19 @@ class SideMenu extends Component {
       return <div>{formatMessage(messages.selfAccount)}</div>;
     }
   };
-  
+
   handleManageAccount = (e) => {
     e.preventDefault();
     e.stopPropagation();
-    
+
     // const { history } = this.props;
-    
+
     // history.push();
   };
-  
+
   handleNavigate = (path) => (e) => {
     e.preventDefault();
-    const {history} = this.props;
+    const { history } = this.props;
     switch (path) {
       case SIDEBAR_NAVIGATION.SUB_MENU.SETTINGS:
         history.push(PATH.SETTINGS);
@@ -334,25 +332,25 @@ class SideMenu extends Component {
         break;
     }
   };
-  
+
   getDoctorDetails = () => {
-    const {auth_role, user_roles, doctors} = this.props;
-    const {handleNavigate, formatMessage} = this;
-    
-    const {basic_info: {user_identity} = {}} = user_roles[auth_role] || {};
-    
+    const { auth_role, user_roles, doctors } = this.props;
+    const { handleNavigate, formatMessage } = this;
+
+    const { basic_info: { user_identity } = {} } = user_roles[auth_role] || {};
+
     let doctorId = null;
-    
+
     Object.keys(doctors).forEach((id) => {
-      const {basic_info: {user_id} = {}} = doctors[id] || {};
+      const { basic_info: { user_id } = {} } = doctors[id] || {};
       if (user_id === user_identity) {
         doctorId = id;
       }
     });
-    
-    const {basic_info: {full_name} = {}, profile_pic = null} =
-    doctors[doctorId] || {};
-    
+
+    const { basic_info: { full_name } = {}, profile_pic = null } =
+      doctors[doctorId] || {};
+
     return (
       <div className="p10 flex align-center justify-start wp100">
         <Avatar size={64} src={profile_pic} className="wp30">
@@ -364,7 +362,7 @@ class SideMenu extends Component {
             <div onClick={handleNavigate(SIDEBAR_NAVIGATION.SUB_MENU.SETTINGS)}>
               {formatMessage(messages.settings_text)}
             </div>
-            <div className="w5 h5 bg-dark-grey br50"/>
+            <div className="w5 h5 bg-dark-grey br50" />
             <div
               onClick={handleNavigate(
                 SIDEBAR_NAVIGATION.SUB_MENU.PRIVACY_POLICY
@@ -377,7 +375,7 @@ class SideMenu extends Component {
       </div>
     );
   };
-  
+
   getUserRoles = () => {
     const {
       user_roles,
@@ -395,24 +393,24 @@ class SideMenu extends Component {
       formatMessage,
       getProviderUserRoleIcon,
     } = this;
-    
+
     return user_role_ids.map((id) => {
-      const {basic_info: {user_identity, linked_id} = {}} =
-      user_roles[id] || {};
-      
-      const {basic_info: {email} = {}} = users[user_identity] || {};
-      
-      const {details: {icon} = {}, basic_info: {name} = {}} =
-      providers[linked_id] || {};
-      
+      const { basic_info: { user_identity, linked_id } = {} } =
+        user_roles[id] || {};
+
+      const { basic_info: { email } = {} } = users[user_identity] || {};
+
+      const { details: { icon } = {}, basic_info: { name } = {} } =
+        providers[linked_id] || {};
+
       let selfDoctorName = null;
       if (!linked_id) {
-        const {basic_info: {full_name} = {}} = authDoctor || {};
+        const { basic_info: { full_name } = {} } = authDoctor || {};
         selfDoctorName = full_name;
       }
-      
+
       const addedVia = linked_id ? name : formatMessage(messages.self_text);
-      
+
       return (
         // <Fragment>
         <Menu.Item key={`${ACCOUNT}.${id}`} className="pointer black-85">
@@ -429,7 +427,7 @@ class SideMenu extends Component {
         // </Fragment>
       );
     });
-    
+
     // return (
     //   <Fragment>
     //     <span className="p10">{formatMessage(messages.accounts_text)}</span>
@@ -437,10 +435,10 @@ class SideMenu extends Component {
     //   </Fragment>
     // );
   };
-  
+
   menu = () => {
-    const {auth_role} = this.props;
-    const {getUserRoles, getDoctorDetails, formatMessage} = this;
+    const { auth_role } = this.props;
+    const { getUserRoles, getDoctorDetails, formatMessage } = this;
     return (
       <Menu
         // className="fixed l70 b20" // b20
@@ -456,8 +454,8 @@ class SideMenu extends Component {
         onClick={this.handleItemSelect}
       >
         {getDoctorDetails()}
-        <Menu.Divider/>
-        
+        <Menu.Divider />
+
         {/* <span className="p10">{formatMessage(messages.accounts_text)}</span> */}
         <Menu.ItemGroup
           key="ACCOUNT"
@@ -466,18 +464,18 @@ class SideMenu extends Component {
           {getUserRoles()}
         </Menu.ItemGroup>
         {/* <Menu.Divider /> */}
-        
+
         {/* <Menu.Divider /> */}
         {/* <Menu.Item className="p10" key={PRIVACY_POLICY}>
           <a href={PRIVACY_PAGE_URL} target={"_blank"}>
             {this.formatMessage(messages.privacy_policy_text)}
           </a>
         </Menu.Item> */}
-        <Menu.Divider/>
+        <Menu.Divider />
         <Menu.Item className="pl24 pr80" key={PROFILE}>
           Profile
         </Menu.Item>
-        <Menu.Divider/>
+        <Menu.Divider />
         {/* <Menu.Item className="pl24 pr80" key={SETTINGS}>
           Settings
         </Menu.Item> */}
@@ -485,7 +483,7 @@ class SideMenu extends Component {
           {this.formatMessage(messages.templates)}
         </Menu.Item>
         {/* <Menu.Divider /> */}
-        
+
         <Menu.Item className="p10" key={LOG_OUT}>
           <div className="wp100 flex justify-center align-center">
             <span className="pt6 pb6 pl10 pr10 bw-cool-grey br5 wp50 tac">
@@ -496,22 +494,22 @@ class SideMenu extends Component {
       </Menu>
     );
   };
-  
+
   getProviderIcon = (className = "w35 h35", userRoleId = null) => {
-    const {auth_role, user_roles, providers, authDoctor, doctor_provider_id} =
+    const { auth_role, user_roles, providers, authDoctor, doctor_provider_id } =
       this.props;
-    
+
     let currentUserRoleId = auth_role;
     if (userRoleId) {
       currentUserRoleId = userRoleId;
     }
-    
+
     if (doctor_provider_id) {
-      const {basic_info: {name} = {}, details: {icon} = {}} =
-      providers[doctor_provider_id] || {};
-      
+      const { basic_info: { name } = {}, details: { icon } = {} } =
+        providers[doctor_provider_id] || {};
+
       if (icon) {
-        return <img alt={"Provider Icon"} src={icon} className={className}/>;
+        return <img alt={"Provider Icon"} src={icon} className={className} />;
       } else {
         return (
           <div
@@ -533,23 +531,23 @@ class SideMenu extends Component {
     //   );
     // }
   };
-  
+
   getProviderUserRoleIcon = (className = "w35 h35", linked_id = null) => {
-    const {providers = {}} = this.props;
+    const { providers = {} } = this.props;
     let src = "";
     const provider = providers[linked_id];
-    
+
     if (!provider) {
       return null;
     }
-    
-    const {basic_info: {name = ""} = {}, details: {icon = ""} = {}} =
-    provider || {};
-    
+
+    const { basic_info: { name = "" } = {}, details: { icon = "" } = {} } =
+      provider || {};
+
     src = icon;
-    
+
     if (src && src.length) {
-      return <img alt={"Provider Icon"} src={icon} className={className}/>;
+      return <img alt={"Provider Icon"} src={icon} className={className} />;
     } else {
       return (
         <div
@@ -563,19 +561,19 @@ class SideMenu extends Component {
       );
     }
   };
-  
+
   // render() {
   //   // const { selectedKeys } = this.state;
   //   const {user_roles, providers, currentUserRoleId, className = "h50", authDoctor} = this.props;
   //   const { getProviderIcon, handleItemSelect } = this;
-  
+
   //   const { basic_info: { linked_with, linked_id } = {} } =
   //     user_roles[currentUserRoleId] || {};
-  
+
   //   if (linked_with === USER_CATEGORY.PROVIDER && linked_id) {
   //     const { basic_info: { name } = {}, details: { icon } = {} } =
   //       providers[linked_id] || {};
-  
+
   //     if (icon) {
   //       return <img alt={"Provider Icon"} src={icon} className={className} />;
   //     } else {
@@ -588,7 +586,7 @@ class SideMenu extends Component {
   //         //       .join(" ")}
   //         //   </Avatar>
   //         // </div>
-  
+
   //         <div
   //           className={`${className} br5 bg-grey flex justify-center align-center`}
   //         >
@@ -607,7 +605,7 @@ class SideMenu extends Component {
   //     );
   //   }
   // };
-  
+
   render() {
     const {
       authenticated_user = 0,
@@ -616,21 +614,21 @@ class SideMenu extends Component {
       auth_role,
       user_roles,
       authenticated_category,
-      intl: {formatMessage} = {},
+      intl: { formatMessage } = {},
       doctor_provider_id = null,
       notification_count = {},
     } = this.props;
-    
-    const {handleItemSelect, getProviderIcon} = this;
-    
-    const {basic_info: {linked_id} = {}} = user_roles[auth_role] || {};
-    
-    const {unseen_notification_count: count = 0} = notification_count || {};
+
+    const { handleItemSelect, getProviderIcon } = this;
+
+    const { basic_info: { linked_id } = {} } = user_roles[auth_role] || {};
+
+    const { unseen_notification_count: count = 0 } = notification_count || {};
     const unseen_notification_count = parseInt(count);
     // console.log("2934y98237498238423 COUNTTTTTTTTTT",{unseen_notification_count});
     let dp = "";
     let initials = "";
-    
+
     for (let doctor of Object.values(doctors)) {
       let {
         basic_info: {
@@ -640,7 +638,7 @@ class SideMenu extends Component {
           last_name = " ",
         } = {},
       } = doctor;
-      
+
       if (user_id === authenticated_user) {
         dp = profile_pic;
         initials = `${first_name ? first_name[0] : ""}${
@@ -648,15 +646,15 @@ class SideMenu extends Component {
         }`;
       }
     }
-    let {basic_info: {user_name = ""} = {}} =
-    users[authenticated_user] || {};
+    let { basic_info: { user_name = "" } = {} } =
+      users[authenticated_user] || {};
     if (user_name) {
       initials = user_name
         .split(" ")
         .map((n) => (n && n.length > 0 && n[0] ? n[0].toUpperCase() : ""))
         .join("");
     }
-    
+
     return (
       <Menu
         // selectedKeys={[selectedKeys]}
@@ -668,9 +666,9 @@ class SideMenu extends Component {
           className="flex direction-column justify-center align-center p0"
           key={LOGO}
         >
-          <img className="w35" src={Logo} alt="Adherence logo"/>
+          <img className="w35" src={Logo} alt="Adherence logo" />
         </MenuItem>
-        
+
         <MenuItem
           className="flex direction-column justify-center align-center p0"
           key={DASHBOARD}
@@ -679,7 +677,7 @@ class SideMenu extends Component {
             placement="right"
             title={this.formatMessage(messages.dashboard)}
           >
-            <img alt={"Dashboard Icon"} src={dashboardIcon}/>
+            <img alt={"Dashboard Icon"} src={dashboardIcon} />
           </Tooltip>
         </MenuItem>
         {authenticated_category == USER_CATEGORY.DOCTOR ||
@@ -701,7 +699,7 @@ class SideMenu extends Component {
                   {initials ? (
                     <Avatar src={dp}>{initials}</Avatar>
                   ) : (
-                    <Avatar icon="user"/>
+                    <Avatar icon="user" />
                   )}
                 </div>
               </Dropdown>
@@ -719,7 +717,7 @@ class SideMenu extends Component {
               {initials ? (
                 <Avatar src={dp}>{initials}</Avatar>
               ) : (
-                <Avatar icon="user"/>
+                <Avatar icon="user" />
               )}
             </Tooltip>
           </MenuItem>
@@ -734,7 +732,7 @@ class SideMenu extends Component {
               placement="right"
               title={this.formatMessage(messages.notifications)}
             >
-              <Icon type="bell" theme="twoTone" twoToneColor="white"/>
+              <Icon type="bell" theme="twoTone" twoToneColor="white" />
               {/* className={`${unseen_notification_count>0 && "noti-icon"}`} */}
             </Tooltip>
             {unseen_notification_count ? (
@@ -744,8 +742,9 @@ class SideMenu extends Component {
             ) : null}
           </MenuItem>
         )}
-        
-        {authenticated_category === USER_CATEGORY.PROVIDER ? (
+
+        {authenticated_category === USER_CATEGORY.PROVIDER ||
+        USER_CATEGORY.DOCTOR ? (
           <MenuItem
             className="flex direction-column justify-center align-center p0"
             key={CALENDER}
@@ -754,11 +753,11 @@ class SideMenu extends Component {
               placement="right"
               title={this.formatMessage(messages.calender)}
             >
-              <CalendarTwoTone theme="twoTone" twoToneColor="white"/>
+              <CalendarTwoTone theme="twoTone" twoToneColor="white" />
             </Tooltip>
           </MenuItem>
         ) : null}
-        
+
         {authenticated_category === USER_CATEGORY.ADMIN ? (
           <MenuItem
             className="flex direction-column justify-center align-center p0"
@@ -768,11 +767,11 @@ class SideMenu extends Component {
               placement="right"
               title={formatMessage(messages.tos_pp_editor)}
             >
-              <FileOutlined style={{color: "#fff"}}/>
+              <FileOutlined style={{ color: "#fff" }} />
             </Tooltip>
           </MenuItem>
         ) : null}
-        
+
         {authenticated_category === USER_CATEGORY.ADMIN ? (
           <MenuItem
             className="flex direction-column justify-center align-center p0"
@@ -782,14 +781,14 @@ class SideMenu extends Component {
               placement="right"
               title={formatMessage(messages.all_providers)}
             >
-              <ProfileOutlined style={{color: "#fff"}}/>
+              <ProfileOutlined style={{ color: "#fff" }} />
             </Tooltip>
           </MenuItem>
         ) : null}
-        
+
         {authenticated_category === USER_CATEGORY.PROVIDER ||
         ((authenticated_category === USER_CATEGORY.DOCTOR ||
-            authenticated_category === USER_CATEGORY.HSP) &&
+          authenticated_category === USER_CATEGORY.HSP) &&
           linked_id === null &&
           Object.keys(doctors).length > 0) ? (
           <MenuItem
@@ -801,11 +800,11 @@ class SideMenu extends Component {
               title={this.formatMessage(messages.transactionDetails)}
             >
               {/* <AccountBookOutlined style={{color: "#fff"}} /> */}
-              <Icon style={{color: "#fff"}} type="swap"/>
+              <Icon style={{ color: "#fff" }} type="swap" />
             </Tooltip>
           </MenuItem>
         ) : null}
-        
+
         {authenticated_category === USER_CATEGORY.PROVIDER ? (
           <MenuItem
             className="flex direction-column justify-center align-center p0"
@@ -815,11 +814,11 @@ class SideMenu extends Component {
               placement="right"
               title={this.formatMessage(messages.paymentDetailsHeader)}
             >
-              <WalletOutlined style={{color: "#fff"}}/>
+              <WalletOutlined style={{ color: "#fff" }} />
             </Tooltip>
           </MenuItem>
         ) : null}
-        
+
         {authenticated_category === USER_CATEGORY.ADMIN ? (
           <MenuItem
             className="flex direction-column justify-center align-center p0"
@@ -830,7 +829,7 @@ class SideMenu extends Component {
               title={this.formatMessage(messages.medicineText)}
             >
               {/* <AccountBookOutlined style={{color: "#fff"}} /> */}
-              <Icon style={{color: "#fff"}} type="medicine-box"/>
+              <Icon style={{ color: "#fff" }} type="medicine-box" />
             </Tooltip>
           </MenuItem>
         ) : null}
