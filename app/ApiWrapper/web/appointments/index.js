@@ -21,8 +21,20 @@ class AppointmentWrapper extends BaseAppointment {
 
   getOrganizerDetails = async (organizer_id, organizer_type) => {
     let organizer = {};
+    console.log("organizer_id", organizer_id);
+    console.log("organizer_type", organizer_type);
     if (organizer_type === "doctor") {
       organizer = await doctorService.getDoctorByUserId(organizer_id);
+    }
+    return organizer;
+  };
+  // Gauarav changes
+  getOrganizerDetailsFromId = async (organizer_id, organizer_type) => {
+    let organizer = {};
+    console.log("organizer_id", organizer_id);
+    console.log("organizer_type", organizer_type);
+    if (organizer_type === "doctor") {
+      organizer = await doctorService.getDoctorByDoctorId(organizer_id);
     }
     return organizer;
   };
@@ -121,10 +133,12 @@ class AppointmentWrapper extends BaseAppointment {
         appointment_id: id,
       })) || {};
     let appointment = getBasicInfo();
-    let organizer = await this.getOrganizerDetails(
+    let organizer = await this.getOrganizerDetailsFromId(
       appointment.organizer.id,
       appointment.organizer.category
     );
+
+    console.log("organizer", organizer);
     appointment.organizer.name = `${organizer.first_name} ${organizer.last_name}`;
     // appointment.organizer.name =
     return {
