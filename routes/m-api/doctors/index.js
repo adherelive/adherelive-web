@@ -17,6 +17,14 @@ const upload = multer({ dest: "../../../app/public/", storage: storage });
 const express = require("express");
 const router = express.Router();
 
+// http://localhost:3000/api/doctors/day-appointments?value=2021-12-23T07:24:37.315Z&type=m
+
+router.get(
+  "/day-appointments",
+  Authenticate,
+  mDoctorController.getAppointmentForDoctors
+);
+
 router.post(
   "/",
   Authenticate,
