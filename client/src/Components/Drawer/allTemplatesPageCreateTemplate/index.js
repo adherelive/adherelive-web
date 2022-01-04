@@ -395,7 +395,7 @@ class TemplatePageCreateDrawer extends Component {
     let vitalsData = Object.values(vitals);
     let dietData = Object.values(diets);
     let workoutData = Object.values(workouts);
-    let is_public_in_provider = this.state.templateIsPrivate;
+    let is_public_in_provider = this.state.templateIsPrivate === true ? 1 : 0;
 
     if (
       authenticated_category === USER_CATEGORY.HSP &&
