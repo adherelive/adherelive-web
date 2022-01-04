@@ -89,7 +89,7 @@ export const db = (database) => {
           key: "id",
         },
       },
-      is_public_in_provier: {
+      is_public_in_provider: {
         type: DataTypes.BOOLEAN,
         defaultValue: false,
       },

@@ -198,11 +198,9 @@ class CarePlanTemplateService {
   user_id
   provider_id
   doctor_id
-
   user_id -> show
   provider_id & is_public_in_provier== true -> show
   user_id &
-
   */
 
   getAllTemplatesForDoctor = async (data) => {
@@ -222,7 +220,7 @@ class CarePlanTemplateService {
             },
             {
               provider_id: { [Op.eq]: provider_id },
-              is_public_in_provier: { [Op.eq]: true },
+              is_public_in_provider: { [Op.eq]: true },
             },
           ],
           ...rest,

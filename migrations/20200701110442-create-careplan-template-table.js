@@ -77,7 +77,7 @@ module.exports = {
         allowNull: true,
         type: Sequelize.DATE,
       },
-      is_public_in_provier: {
+      is_public_in_provider: {
         allowNull: false,
         type: Sequelize.BOOLEAN,
         defaultValue: false,
