@@ -43,9 +43,6 @@ class CarePlanTemplateController extends Controller {
         permissions = [],
       } = req;
 
-      console.log("\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n");
-      console.log("=======1234567890987654321234567890-0987654321=========");
-      console.log(userId);
       // will get userId From below data
       let doctor_id = null;
       let provider_id = null;
@@ -66,6 +63,7 @@ class CarePlanTemplateController extends Controller {
         dietData = [],
         workoutData = [],
         name,
+        is_public_in_provier,
       } = body || {};
 
       Log.info(`name : ${name}`);
@@ -90,6 +88,7 @@ class CarePlanTemplateController extends Controller {
             template_vitals: vitalsData,
             template_diets: dietData,
             template_workouts: workoutData,
+            is_public_in_provier: is_public_in_provier,
           })) || null;
 
         Log.debug("createTemplate value", createTemplate);
@@ -187,9 +186,6 @@ class CarePlanTemplateController extends Controller {
         doctor_id = req.userDetails.userCategoryData.basic_info.id;
       }
 
-      console.log("=9876543=987654=987654=987654");
-      console.log(req.userDetails);
-      console.log("=9876543=987654=987654=987654");
       if (req.userDetails.userRoleData.basic_info.linked_with === "provider") {
         provider_id = req.userDetails.userRoleData.basic_info.linked_id;
         doctor_id = req.userDetails.userCategoryData.basic_info.id;
