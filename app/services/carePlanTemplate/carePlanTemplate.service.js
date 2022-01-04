@@ -194,9 +194,23 @@ class CarePlanTemplateService {
     }
   };
 
+  /*
+  user_id
+  provider_id
+  doctor_id
+
+  user_id -> show
+  provider_id & is_public_in_provier== true -> show
+  user_id &
+
+  */
+
   getAllTemplatesForDoctor = async (data) => {
     try {
-      const { user_id, ...rest } = data;
+      const { user_id, doctor_id, provider_id, ...rest } = data;
+      console.log("=1=1=1==1=1=1=1==1=1=1=1==1=1=1=1=1");
+      console.log({ user_id, doctor_id, provider_id, rest });
+      console.log("=1=1=1==1=1=1=1==1=1=1=1==1=1=1=1=1");
       const carePlanTemplate = await Database.getModel(TABLE_NAME).findAll({
         where: {
           [Op.or]: [
@@ -205,6 +219,10 @@ class CarePlanTemplateService {
             },
             {
               user_id: { [Op.eq]: user_id },
+            },
+            {
+              provider_id: { [Op.eq]: provider_id },
+              is_public_in_provier: { [Op.eq]: true },
             },
           ],
           ...rest,

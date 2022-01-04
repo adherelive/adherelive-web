@@ -244,9 +244,10 @@ class Database {
             acquire: 30000,
             idle: 10000,
           },
-          logging: function (str) {
-            Log.debug("query", str);
-          },
+          logging: false,
+          // logging: function (str) {
+          //   Log.debug("query", str);
+          // },
         }
       );
     }
