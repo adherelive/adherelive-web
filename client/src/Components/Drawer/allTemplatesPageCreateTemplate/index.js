@@ -590,7 +590,10 @@ class TemplatePageCreateDrawer extends Component {
       repeat_intervals = {},
       vital_templates = {},
       medicines = {},
+      doctor_provider_id,
     } = this.props;
+
+    console.log(doctor_provider_id);
 
     return (
       <div className="template-block">
@@ -957,40 +960,46 @@ class TemplatePageCreateDrawer extends Component {
             </div>
           );
         })}
-        <div className="template-share-swicth">
-          <p
-            className={
-              !this.state.templateIsPrivate
-                ? "private-text active-text"
-                : "private-text"
-            }
-          >
-            Private
-          </p>
-          <Switch
-            checked={this.state.templateIsPrivate}
-            onChange={this.onChangeTemplateShare}
-          />
-          <p
-            className={
-              this.state.templateIsPrivate
-                ? "public-text active-text"
-                : "public-text"
-            }
-          >
-            Public
-          </p>
-        </div>
-        <div className="tepmale-share-note">
-          {" "}
-          {!this.state.templateIsPrivate ? (
-            <p>Note : This template is visible for the doctor itself</p>
-          ) : (
-            <p>
-              Note : This template is visible to all doctors within provider
-            </p>
-          )}
-        </div>
+        {/* AKSHAY NEW CODE IMPLEMENTATION */}
+        {doctor_provider_id !== null && (
+          <>
+            {" "}
+            <div className="template-share-swicth">
+              <p
+                className={
+                  !this.state.templateIsPrivate
+                    ? "private-text active-text"
+                    : "private-text"
+                }
+              >
+                Private
+              </p>
+              <Switch
+                checked={this.state.templateIsPrivate}
+                onChange={this.onChangeTemplateShare}
+              />
+              <p
+                className={
+                  this.state.templateIsPrivate
+                    ? "public-text active-text"
+                    : "public-text"
+                }
+              >
+                Public
+              </p>
+            </div>
+            <div className="tepmale-share-note">
+              {" "}
+              {!this.state.templateIsPrivate ? (
+                <p>Note : This template is visible for the doctor itself</p>
+              ) : (
+                <p>
+                  Note : This template is visible to all doctors within provider
+                </p>
+              )}
+            </div>
+          </>
+        )}
       </div>
     );
   };
