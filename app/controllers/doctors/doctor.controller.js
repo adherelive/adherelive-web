@@ -4088,7 +4088,11 @@ class DoctorController extends Controller {
     try {
       const {
         userDetails: { userId } = {},
-        query: { type = APPOINTMENT_QUERY_TYPE.DAY, value = null } = {},
+        query: {
+          type = APPOINTMENT_QUERY_TYPE.DAY,
+          value = null,
+          provider_id = 0,
+        } = {},
       } = req;
 
       const validDate = moment(value).isValid();
@@ -4159,6 +4163,7 @@ class DoctorController extends Controller {
             appointmentList =
               await appointmentService.getDayAppointmentForDoctor(
                 doctorId,
+                5,
                 value
               );
             break;
@@ -4166,6 +4171,7 @@ class DoctorController extends Controller {
             appointmentList =
               await appointmentService.getMonthAppointmentForDoctor(
                 doctorId,
+                5,
                 value
               );
             break;
