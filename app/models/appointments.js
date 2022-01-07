@@ -98,6 +98,7 @@ export const db = (database) => {
             end_date: this.end_date,
             rr_rule: this.rr_rule,
             start_time: this.start_time,
+            provider_id: this.provider_id,
             end_time: this.end_time,
             details: this.details,
           };
