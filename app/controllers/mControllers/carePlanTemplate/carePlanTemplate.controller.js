@@ -205,6 +205,8 @@ class CarePlanTemplateController extends Controller {
       const allCareplanTemplates =
         (await carePlanTemplateService.getAllTemplatesForDoctor({
           user_id: userId,
+          provider_id,
+          doctor_id,
         })) || [];
 
       let carePlanTemplate = {};
