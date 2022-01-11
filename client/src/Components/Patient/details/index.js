@@ -1738,7 +1738,9 @@ class PatientDetails extends Component {
     this.setState({ templateDrawerVisible: false });
   };
 
-  showTemplateDrawer = () => {
+  showTemplateDrawer = async () => {
+    const { getAllTemplatesForDoctor } = this.props;
+    await getAllTemplatesForDoctor();
     this.setState({ templateDrawerVisible: true });
   };
 

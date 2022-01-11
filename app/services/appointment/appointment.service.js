@@ -1,8 +1,8 @@
-import {Op, fn, literal, col} from "sequelize";
+import { Op, fn, literal, col } from "sequelize";
 import Database from "../../../libs/mysql";
 import moment from "moment";
-import {USER_CATEGORY} from "../../../constant";
-import {TABLE_NAME} from "../../models/appointments";
+import { USER_CATEGORY } from "../../../constant";
+import { TABLE_NAME } from "../../models/appointments";
 
 class AppointmentService {
   async addAppointment(data) {
@@ -18,7 +18,7 @@ class AppointmentService {
       throw err;
     }
   }
-  
+
   updateAppointment = async (id, data) => {
     try {
       const appointment = await Database.getModel(TABLE_NAME).update(data, {
@@ -31,7 +31,7 @@ class AppointmentService {
       throw err;
     }
   };
-  
+
   getAppointmentById = async (id) => {
     try {
       const appointment = await Database.getModel(TABLE_NAME).findOne({
@@ -44,12 +44,12 @@ class AppointmentService {
       throw err;
     }
   };
-  
+
   getDoctorAppointmentsForDate = async ({
-                                          today,
-                                          participant_one_id,
-                                          participant_two_id,
-                                        }) => {
+    today,
+    participant_one_id,
+    participant_two_id,
+  }) => {
     try {
       const appointments = await Database.getModel(TABLE_NAME).findAll({
         where: {
@@ -76,12 +76,12 @@ class AppointmentService {
       throw error;
     }
   };
-  
+
   getAppointmentByData = async (data) => {
     console.log("get appointment by data in service - Start");
     console.log(data);
     console.log("get appointment by data in service - End");
-    
+
     try {
       const appointment = await Database.getModel(TABLE_NAME).findAll({
         where: data,
@@ -91,7 +91,7 @@ class AppointmentService {
       throw err;
     }
   };
-  
+
   getAppointmentForPatient = async (patient_id) => {
     try {
       const appointments = await Database.getModel(TABLE_NAME).findAll({
@@ -114,7 +114,7 @@ class AppointmentService {
       throw error;
     }
   };
-  
+
   getAllAppointmentForDoctor = async (doctor_id) => {
     try {
       const appointments = await Database.getModel(TABLE_NAME).findAll({
@@ -136,12 +136,14 @@ class AppointmentService {
       throw error;
     }
   };
-  
-  getDayAppointmentForDoctor = async (doctor_id, date) => {
+
+  getDayAppointmentForDoctor = async (doctor_id, provider_id, date) => {
     try {
       const startOfDay = moment(date).startOf("day").toISOString();
       const endOfDay = moment(date).endOf("day").toISOString();
-      
+      console.log(provider_id + "==========");
+      console.log(provider_id);
+      console.log(provider_id + "==========");
       const appointments = await Database.getModel(TABLE_NAME).findAll({
         where: {
           [Op.and]: [
@@ -155,10 +157,12 @@ class AppointmentService {
                 {
                   participant_two_id: doctor_id,
                   participant_two_type: USER_CATEGORY.DOCTOR,
+                  provider_id: provider_id,
                 },
                 {
                   participant_one_id: doctor_id,
                   participant_one_type: USER_CATEGORY.DOCTOR,
+                  provider_id: provider_id,
                 },
               ],
             },
@@ -170,8 +174,8 @@ class AppointmentService {
       throw error;
     }
   };
-  
-  getMonthAppointmentForDoctor = async (doctor_id, value) => {
+
+  getMonthAppointmentForDoctor = async (doctor_id, provider_id, value) => {
     try {
       const month = moment(value).month();
       const year = moment(value).year();
@@ -185,41 +189,69 @@ class AppointmentService {
         .year(year)
         .endOf("month")
         .toISOString();
-      
-      const appointments = await Database.getModel(TABLE_NAME).findAll({
-        where: {
-          [Op.and]: [
-            {
-              start_date: {
-                [Op.between]: [startOfMonth, endOfMonth],
+      if (provider_id) {
+        const appointments = await Database.getModel(TABLE_NAME).findAll({
+          where: {
+            [Op.and]: [
+              {
+                start_date: {
+                  [Op.between]: [startOfMonth, endOfMonth],
+                },
               },
-            },
-            {
-              [Op.or]: [
-                {
-                  participant_two_id: doctor_id,
-                  participant_two_type: USER_CATEGORY.DOCTOR,
+              {
+                [Op.or]: [
+                  {
+                    participant_two_id: doctor_id,
+                    participant_two_type: USER_CATEGORY.DOCTOR,
+                    provider_id: provider_id,
+                  },
+                  {
+                    participant_one_id: doctor_id,
+                    participant_one_type: USER_CATEGORY.DOCTOR,
+                    provider_id: provider_id,
+                  },
+                ],
+              },
+            ],
+          },
+        });
+        return appointments;
+      } else {
+        const appointments = await Database.getModel(TABLE_NAME).findAll({
+          where: {
+            [Op.and]: [
+              {
+                start_date: {
+                  [Op.between]: [startOfMonth, endOfMonth],
                 },
-                {
-                  participant_one_id: doctor_id,
-                  participant_one_type: USER_CATEGORY.DOCTOR,
-                },
-              ],
-            },
-          ],
-        },
-      });
-      return appointments;
+              },
+              {
+                [Op.or]: [
+                  {
+                    participant_two_id: doctor_id,
+                    participant_two_type: USER_CATEGORY.DOCTOR,
+                  },
+                  {
+                    participant_one_id: doctor_id,
+                    participant_one_type: USER_CATEGORY.DOCTOR,
+                  },
+                ],
+              },
+            ],
+          },
+        });
+        return appointments;
+      }
     } catch (error) {
       throw error;
     }
   };
-  
+
   getMonthAppointmentCountForDoctor = async (doctor_id, date) => {
     try {
       const startOfMonth = moment(date).startOf("month").toISOString();
       const endOfMonth = moment(date).endOf("month").toISOString();
-      
+
       const appointments = await Database.getModel(TABLE_NAME).findAll({
         attributes: ["start_date", [literal(`COUNT(*)`), "count"]],
         group: ["start_date"],
@@ -250,7 +282,7 @@ class AppointmentService {
       throw error;
     }
   };
-  
+
   checkTimeSlot = async (
     start_time,
     end_time,
@@ -258,8 +290,8 @@ class AppointmentService {
     participantTwo = {}
   ) => {
     try {
-      const {participant_one_id, participant_one_type} = participantOne || {};
-      const {participant_two_id, participant_two_type} = participantTwo || {};
+      const { participant_one_id, participant_one_type } = participantOne || {};
+      const { participant_two_id, participant_two_type } = participantTwo || {};
       const appointments = await Database.getModel(TABLE_NAME).findAll({
         where: {
           [Op.or]: [
@@ -297,7 +329,7 @@ class AppointmentService {
       throw error;
     }
   };
-  
+
   deleteAppointment = async (id) => {
     try {
       const appointment = await Database.getModel(TABLE_NAME).destroy({

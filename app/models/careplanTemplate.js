@@ -9,6 +9,8 @@ import { TABLE_NAME as medicationTemplateTableName } from "./templateMedications
 import { TABLE_NAME as vitalTemplateTableName } from "./templateVitals";
 import { TABLE_NAME as dietTemplateTableName } from "./templateDiets";
 import { TABLE_NAME as workoutTemplateTableName } from "./templateWorkouts";
+import { TABLE_NAME as doctorTableName } from "./doctors";
+import { TABLE_NAME as provideTableName } from "./providers";
 
 export const TABLE_NAME = "care_plan_templates";
 
@@ -66,9 +68,40 @@ export const db = (database) => {
           key: "id",
         },
       },
+
+      doctor_id: {
+        type: DataTypes.INTEGER,
+        allowNull: true,
+        references: {
+          model: {
+            tableName: doctorTableName,
+          },
+          key: "id",
+        },
+      },
+      provider_id: {
+        type: DataTypes.INTEGER,
+        allowNull: true,
+        references: {
+          model: {
+            tableName: provideTableName,
+          },
+          key: "id",
+        },
+      },
+      is_public_in_provider: {
+        type: DataTypes.BOOLEAN,
+        defaultValue: false,
+      },
+      is_public_global: {
+        type: DataTypes.BOOLEAN,
+        defaultValue: false,
+      },
+
       details: {
         type: DataTypes.JSON,
       },
+
       // created_at: {
       //   allowNull: true,
       //   type: DataTypes.DATE
