@@ -5,7 +5,6 @@ const request = require("request");
 const chalk = require("chalk");
 import base64 from "js-base64";
 import bcrypt from "bcrypt";
-
 import Log from "../../../libs/log";
 // import fs from "fs";
 const Response = require("../helper/responseFormat");
