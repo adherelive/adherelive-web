@@ -418,7 +418,11 @@ class AddAppointmentForm extends Component {
     let newTypes = [];
     for (let provider of Object.values(providers)) {
       let { basic_info: { id = "0", name = "" } = {} } = provider;
-      if (name === "Self Clinic/Hospital" || name === "Subharti Hospital") {
+      if (
+        name === "Self Clinic/Hospital" ||
+        name === "Self" ||
+        name === "Subharti Hospital"
+      ) {
         newTypes.push(
           <Option key={id} value={parseInt(id)}>
             {name}
