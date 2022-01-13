@@ -58,9 +58,11 @@ class MedicationTable extends Component {
     const { basic_info: { user_role_id = null } = {} } = care_plans || {};
     let canViewDetails = true;
     if (
-      (!isOtherCarePlan && user_role_id.toString() === auth_role.toString()) ||
-      (!isEmpty(care_plans) &&
-        care_plans.secondary_doctor_user_role_ids.includes(auth_role) === true)
+      !isOtherCarePlan &&
+      user_role_id.toString() === auth_role.toString()
+      // ||
+      // (!isEmpty(care_plans) &&
+      //   care_plans.secondary_doctor_user_role_ids.includes(auth_role) === true)
     ) {
       canViewDetails = false;
     }
@@ -109,9 +111,11 @@ class MedicationTable extends Component {
     const { basic_info: { user_role_id = null } = {} } = care_plans || {};
     let canViewDetails = true;
     if (
-      (!isOtherCarePlan && user_role_id.toString() === auth_role.toString()) ||
-      (!isEmpty(care_plans) &&
-        care_plans.secondary_doctor_user_role_ids.includes(auth_role) === true)
+      !isOtherCarePlan &&
+      user_role_id.toString() === auth_role.toString()
+      // ||
+      // (!isEmpty(care_plans) &&
+      //   care_plans.secondary_doctor_user_role_ids.includes(auth_role) === true)
     ) {
       canViewDetails = false;
     }
