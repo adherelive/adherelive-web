@@ -151,7 +151,7 @@ class LongTerm {
       }
 
       const patientUserId = await this.getuserFromRole(patientUserRoleId);
-
+      if (!patientUserId) return;
       // const patientData = await patientsService.getPatientByUserId(patientUserId);
 
       // const patient = await PatientWrapper(patientData);
@@ -284,7 +284,7 @@ class LongTerm {
       }
 
       const patientUserId = await this.getuserFromRole(patientUserRoleId);
-
+      if (!patientUserId) return;
       const eventScheduleData = {
         patient_id: patientUserId,
         type: EVENT_TYPE.DIET,
@@ -329,7 +329,7 @@ class LongTerm {
       }
 
       const patientUserId = await this.getuserFromRole(patientUserRoleId);
-
+      if (!patientUserId) return;
       const eventScheduleData = {
         patient_id: patientUserId,
         type: EVENT_TYPE.WORKOUT,
