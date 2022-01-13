@@ -359,6 +359,7 @@ class PatientController extends Controller {
       console.log("get PatientCarePlanDetails Called - 5" + this.getTime());
 
       // get all careplans attached to patient
+      // const { care_plans } = await careplan.getReferenceInfoWithImp();
       const carePlans =
         (await carePlanService.getMultipleCarePlanByData({
           patient_id,
@@ -719,15 +720,30 @@ class PatientController extends Controller {
     try {
       Logger.debug("34554321345324", req.params);
       const { params: { careplan_id } = {} } = req;
+
+      const { userDetails: { userRoleId = null } = {} } = req;
       let patient_id = null;
 
       const careplanWrapper = await CarePlanWrapper(null, careplan_id);
       if (careplanWrapper) {
         patient_id = await careplanWrapper.getPatientId();
       }
+      console.log("098765432123456789876543");
+      console.log(patient_id);
+      console.log("098765432123456789876543");
+      // const carePlans =
+      //   (await carePlanService.getMultipleCarePlanByData({
+      //     patient_id,
+      //     user_role_id: userRoleId,
+      //   })) || [];
 
-      const carePlans = await carePlanService.getMultipleCarePlanByData({
-        patient_id,
+      const carePlans =
+        (await carePlanService.getMultipleCarePlanByData({
+          id: careplan_id,
+        })) || [];
+
+      const { care_plans } = await carePlanHelper.getCareplanDataWithImp({
+        carePlans,
       });
 
       /* incoming change from release/adhere branch */
@@ -739,7 +755,7 @@ class PatientController extends Controller {
       // });
 
       let allVitals = [];
-
+      console.log(care_plans);
       for (const carePlan of carePlans) {
         const vitals = await VitalService.getAllByData({
           care_plan_id: carePlan.get("id"),
@@ -765,10 +781,10 @@ class PatientController extends Controller {
             ...vitalTemplateDetails,
             ...vital_templates,
           };
-          carePlanTemplateDetails = {
-            ...carePlanTemplateDetails,
-            ...care_plans,
-          };
+          // carePlanTemplateDetails = {
+          //   ...carePlanTemplateDetails,
+          //   ...care_plans,
+          // };
         }
 
         return raiseSuccess(
@@ -781,9 +797,7 @@ class PatientController extends Controller {
             vital_templates: {
               ...vitalTemplateDetails,
             },
-            care_plans: {
-              ...carePlanTemplateDetails,
-            },
+            care_plans,
             vital_ids: Object.keys(vitalDetails),
           },
           "Vitals fetched successfully for the patient"
