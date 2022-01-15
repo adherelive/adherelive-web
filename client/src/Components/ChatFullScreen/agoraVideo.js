@@ -1,8 +1,8 @@
-import React, {Component} from "react";
-import {injectIntl} from "react-intl";
+import React, { Component } from "react";
+import { injectIntl } from "react-intl";
 import AgoraRTC from "agora-rtc-sdk-ng";
 
-import {getDoctorFromRoomId, getPatientFromRoomId} from "../../Helper/twilio";
+import { getDoctorFromRoomId, getPatientFromRoomId } from "../../Helper/twilio";
 
 import config from "../../config";
 // import StartCallIcon from "../../Assets/images/ico-vc-start-call.png";
@@ -12,11 +12,11 @@ import AudioDisabledIcon from "../../Assets/images/ico-vc-audio-off.png";
 import VideoIcon from "../../Assets/images/ico-vc-video.png";
 import VideoDisabledIcon from "../../Assets/images/ico-vc-video-off.png";
 import UserDpPlaceholder from "../../Assets/images/ico-placeholder-userdp.svg";
-import {USER_CATEGORY, LOCAL_STORAGE} from "../../constant";
+import { USER_CATEGORY, LOCAL_STORAGE } from "../../constant";
 import messages from "./messages";
 import Loading from "../Common/Loading";
 import Tooltip from "antd/es/tooltip";
-import {Button} from "antd";
+import { Button } from "antd";
 import firebase from "firebase/app";
 import "firebase/analytics";
 import * as FirebaseHelper from "../../Helper/firebase";
@@ -49,7 +49,7 @@ const ERROR_TYPES = {
 class AgoraVideo extends Component {
   constructor(props) {
     super(props);
-    
+
     this.rtc = {
       client: null,
       localAudioTrack: null,
@@ -57,7 +57,7 @@ class AgoraVideo extends Component {
       remoteAudioTrack: null,
       remoteVideoTrack: null,
     };
-    
+
     this.state = {
       loading: false,
       selfUid: null,
@@ -68,13 +68,13 @@ class AgoraVideo extends Component {
       remoteDisconnect: false,
       networkIssueFor: null,
     };
-    
+
     const {
       auth: {
-        firebase_keys: {apiKey, appId, projectId, measurementId} = {},
+        firebase_keys: { apiKey, appId, projectId, measurementId } = {},
       } = {},
     } = props;
-    
+
     const firebaseConfig = {
       authDomain: `${projectId}.firebaseapp.com`,
       databaseURL: `https://${projectId}.firebaseio.com`,
@@ -84,23 +84,26 @@ class AgoraVideo extends Component {
       projectId,
       measurementId,
     };
-    
+
     firebase.initializeApp(firebaseConfig);
     this.analytics = firebase.analytics();
   }
-  
+
   async componentDidMount() {
     await this.initialSetup();
   }
-  
+
   initialSetup = async () => {
     try {
-      const {fetchVideoAccessToken, room_id} = this.props;
-      
+      const { fetchVideoAccessToken, room_id } = this.props;
+
+      let token = await fetchVideoAccessToken(getPatientFromRoomId(room_id));
+      console.log(token);
+
       await fetchVideoAccessToken(getPatientFromRoomId(room_id));
       await this.init();
       await this.startVideoCall();
-      
+
       const urlParams = new URLSearchParams(window.location.search);
       const isAudioOnParam = urlParams.get("isAudioOn") === "true";
       const isVideoOnParam = urlParams.get("isVideoOn") === "true";
@@ -112,14 +115,14 @@ class AgoraVideo extends Component {
       );
       const localAudioBoolean = localAudioVal === "true";
       const localVideoBoolean = localVideoVal === "true";
-      
+
       if (
         (!localAudioVal && !isAudioOnParam) ||
         (localAudioVal && !localAudioBoolean)
       ) {
         await this.setAudioOff();
       }
-      
+
       if (
         (!localVideoVal && !isVideoOnParam) ||
         (localVideoVal && !localVideoBoolean)
@@ -130,44 +133,44 @@ class AgoraVideo extends Component {
       console.log("error in initial video call setup===>", error);
     }
   };
-  
+
   componentWillUnmount() {
     this.rtc.client.removeAllListeners();
   }
-  
+
   formatMessage = (message, data) =>
     this.props.intl.formatMessage(message, data);
-  
+
   getVideoOptions = () => {
-    const {agora: {video_token} = {}, room_id} = this.props;
-    
+    const { agora: { video_token } = {}, room_id } = this.props;
+
     return {
       appId: config.AGORA_APP_ID,
       channel: room_id,
       token: video_token,
     };
   };
-  
+
   init = () => {
-    const {auth: {authenticated_user} = {}, room_id} = this.props;
-    const {networkIssueFor} = this.state;
-    
-    this.rtc.client = AgoraRTC.createClient({mode: "rtc", codec: "h264"});
-    
+    const { auth: { authenticated_user } = {}, room_id } = this.props;
+    const { networkIssueFor } = this.state;
+
+    this.rtc.client = AgoraRTC.createClient({ mode: "rtc", codec: "h264" });
+
     this.rtc.client.on("user-published", async (user, mediaType) => {
       // Subscribe to a remote user.
       await this.rtc.client.subscribe(user, mediaType);
-      
+
       this.setState({
         remoteAdded: true,
         remoteUid: user.uid,
         networkIssueFor: null,
       });
-      
+
       // If the subscribed track is video.
       if (mediaType === "video") {
         this.remoteVideoTrack = user.videoTrack;
-        
+
         const playerContainer = document.createElement("div");
         playerContainer.className = "videoPlayer";
         playerContainer.id = user.uid.toString();
@@ -175,19 +178,19 @@ class AgoraVideo extends Component {
         childContainer1.appendChild(playerContainer);
         this.remoteVideoTrack.play(playerContainer);
       }
-      
+
       if (mediaType === "audio") {
         this.remoteAudioTrack = user.audioTrack;
         this.remoteAudioTrack.play();
       }
     });
-    
+
     this.rtc.client.on("user-unpublished", (user) => {
       const playerContainer = document.getElementById(user.uid);
       playerContainer && playerContainer.remove();
-      this.setState({remoteAdded: false});
+      this.setState({ remoteAdded: false });
     });
-    
+
     this.rtc.client.on("exception", (error) => {
       console.log("29810321 error", error);
       FirebaseHelper.logEvent({
@@ -197,10 +200,10 @@ class AgoraVideo extends Component {
         channel: room_id,
       });
     });
-    
+
     this.rtc.client.on(
       "network-quality",
-      ({uplinkNetworkQuality, downlinkNetworkQuality}) => {
+      ({ uplinkNetworkQuality, downlinkNetworkQuality }) => {
         if (
           uplinkNetworkQuality >= NETWORK_QUALITY.BAD ||
           downlinkNetworkQuality >= NETWORK_QUALITY.BAD
@@ -212,20 +215,20 @@ class AgoraVideo extends Component {
             channel: room_id,
           });
         }
-        
+
         if (
           uplinkNetworkQuality >= NETWORK_QUALITY.POOR ||
           downlinkNetworkQuality >= NETWORK_QUALITY.POOR
         ) {
-          this.setState({networkIssueFor: `${authenticated_user}`});
+          this.setState({ networkIssueFor: `${authenticated_user}` });
         } else {
           // if (networkIssueFor !== null) {
-          this.setState({networkIssueFor: null});
+          this.setState({ networkIssueFor: null });
           // }
         }
       }
     );
-    
+
     this.rtc.client.on("connection-state-change", (data) => {
       if (data === AGORA_CONNECTION_STATE.RECONNECTING) {
         // this.setState({networkIssue: true});
@@ -239,12 +242,12 @@ class AgoraVideo extends Component {
         // this.setState({networkIssue: false});
       }
     });
-    
+
     this.rtc.client.on("user-left", (user) => {
-      this.setState({networkIssueFor: `${user.uid}`});
+      this.setState({ networkIssueFor: `${user.uid}` });
     });
   };
-  
+
   publishTrack = async () => {
     this.rtc.localAudioTrack = await AgoraRTC.createMicrophoneAudioTrack();
     this.rtc.localVideoTrack = await AgoraRTC.createCameraVideoTrack();
@@ -253,13 +256,14 @@ class AgoraVideo extends Component {
       this.rtc.localVideoTrack,
     ]);
   };
-  
+
   startVideoCall = async () => {
     const {
-      auth: {authenticated_user, auth_role = null} = {},
+      auth: { authenticated_user, auth_role = null } = {},
       startCall,
       room_id,
     } = this.props;
+    console.log("this.props", this.props);
     try {
       const urlParams = new URLSearchParams(window.location.search);
       const isAudioOnParam = urlParams.get("isAudioOn") === "true";
@@ -270,10 +274,15 @@ class AgoraVideo extends Component {
       const localVideoVal = localStorage.getItem(
         LOCAL_STORAGE.LOCAL_IS_VIDEO_ON
       );
-      
-      const {appId, channel, token} = this.getVideoOptions();
-      
-      this.setState({loading: true});
+
+      const { appId, channel, token } = this.getVideoOptions();
+      console.log("appId", appId);
+      console.log("channel", channel);
+      console.log("token", token);
+      console.log("authenticated_user", authenticated_user);
+      console.log("auth_role", auth_role);
+
+      this.setState({ loading: true });
       const uid = await this.rtc.client.join(
         appId,
         channel,
@@ -282,21 +291,21 @@ class AgoraVideo extends Component {
         // authenticated_user
       );
       await this.publishTrack();
-      this.setState({selfUid: uid});
-      
+      this.setState({ selfUid: uid });
+
       // notify other participant
       await startCall();
-      
+
       if ((!localVideoVal && isVideoOnParam) || localVideoVal === "true") {
         // console.log("237642354623542387",{isVideoOnParam,flag1:(!localVideoVal && isVideoOnParam),flag2:(localVideoVal === "true")});
-        
+
         this.rtc.localVideoTrack.play("agora-self");
       }
-      
+
       const playerContainer = document.createElement("div");
       playerContainer.className = "videoPlayer";
       playerContainer.id = uid.toString();
-      this.setState({loading: false, isStart: true});
+      this.setState({ loading: false, isStart: true });
       const isAudioOnFlag =
         (!localAudioVal && isAudioOnParam) || localAudioVal === "true";
       // console.log("87345275632465236",{isAudioOnFlag});
@@ -312,38 +321,38 @@ class AgoraVideo extends Component {
       });
     }
   };
-  
+
   leaveCall = async () => {
     const {
-      auth: {authenticated_user} = {},
+      auth: { authenticated_user } = {},
       missedCall,
       room_id,
     } = this.props;
     try {
-      const {remoteAdded} = this.state;
+      const { remoteAdded } = this.state;
       // const { rtc, options } = this;
       await this.rtc.localVideoTrack.close();
       await this.rtc.localAudioTrack.close();
-      
+
       this.rtc.client.remoteUsers.forEach((user) => {
         const playerContainer = document.getElementById(user.uid);
         playerContainer && playerContainer.remove();
       });
-      this.setState({loading: true});
+      this.setState({ loading: true });
       await this.rtc.client.leave();
-      
+
       // notify missed call to other participant
       if (!remoteAdded) {
         await missedCall();
       }
-      
+
       // this.setState({
       //   remoteUid: null,
       //   isStart: false,
       //   remoteAdded: false,
       //   loading: false
       // });
-      
+
       localStorage.removeItem(LOCAL_STORAGE.LOCAL_IS_AUDIO_ON);
       localStorage.removeItem(LOCAL_STORAGE.LOCAL_IS_VIDEO_ON);
       window.close();
@@ -356,15 +365,15 @@ class AgoraVideo extends Component {
       });
     }
   };
-  
+
   toggleVideo = async () => {
-    const {auth: {authenticated_user} = {}, room_id} = this.props;
-    const {isVideoOn} = this.state;
+    const { auth: { authenticated_user } = {}, room_id } = this.props;
+    const { isVideoOn } = this.state;
     const newState = !isVideoOn;
     await this.rtc.localVideoTrack.setEnabled(!isVideoOn);
-    this.setState({isVideoOn: !isVideoOn});
+    this.setState({ isVideoOn: !isVideoOn });
     localStorage.setItem(LOCAL_STORAGE.LOCAL_IS_VIDEO_ON, newState);
-    
+
     if (newState) {
       try {
         this.rtc.localVideoTrack.play("agora-self");
@@ -378,12 +387,12 @@ class AgoraVideo extends Component {
       }
     }
   };
-  
+
   setfVideoOff = async () => {
-    const {auth: {authenticated_user} = {}, room_id} = this.props;
+    const { auth: { authenticated_user } = {}, room_id } = this.props;
     try {
       await this.rtc.localVideoTrack.setEnabled(false);
-      this.setState({isVideoOn: false});
+      this.setState({ isVideoOn: false });
     } catch (error) {
       FirebaseHelper.logEvent({
         client: this.analytics,
@@ -393,12 +402,12 @@ class AgoraVideo extends Component {
       });
     }
   };
-  
+
   setAudioOff = async () => {
-    const {auth: {authenticated_user} = {}, room_id} = this.props;
+    const { auth: { authenticated_user } = {}, room_id } = this.props;
     try {
       await this.rtc.localAudioTrack.setEnabled(false);
-      this.setState({isAudioOn: false});
+      this.setState({ isAudioOn: false });
     } catch (error) {
       FirebaseHelper.logEvent({
         client: this.analytics,
@@ -408,14 +417,14 @@ class AgoraVideo extends Component {
       });
     }
   };
-  
+
   toggleAudio = async () => {
-    const {auth: {authenticated_user} = {}, room_id} = this.props;
+    const { auth: { authenticated_user } = {}, room_id } = this.props;
     try {
-      const {isAudioOn} = this.state;
+      const { isAudioOn } = this.state;
       const newState = !isAudioOn;
       await this.rtc.localAudioTrack.setEnabled(!isAudioOn);
-      this.setState({isAudioOn: !isAudioOn});
+      this.setState({ isAudioOn: !isAudioOn });
       localStorage.setItem(LOCAL_STORAGE.LOCAL_IS_AUDIO_ON, newState);
     } catch (error) {
       FirebaseHelper.logEvent({
@@ -426,35 +435,35 @@ class AgoraVideo extends Component {
       });
     }
   };
-  
+
   getVideoParticipants = () => {
     const {
       room_id,
       doctors,
       patients,
-      auth: {authenticated_category} = {},
+      auth: { authenticated_category } = {},
     } = this.props;
-    
+
     const patientUserId = getPatientFromRoomId(room_id);
     const doctorUserId = getDoctorFromRoomId(room_id);
-    
+
     let remoteData = {};
     let selfData = {};
-    
+
     // selfUid
     if (
       authenticated_category === USER_CATEGORY.DOCTOR ||
       authenticated_category === USER_CATEGORY.HSP
     ) {
       Object.keys(doctors).forEach((id) => {
-        const {basic_info: {user_id} = {}} = doctors[id] || {};
+        const { basic_info: { user_id } = {} } = doctors[id] || {};
         if (`${user_id}` === doctorUserId) {
           selfData = doctors[id] || {};
         }
       });
-      
+
       Object.keys(patients).forEach((id) => {
-        const {basic_info: {user_id} = {}} = patients[id] || {};
+        const { basic_info: { user_id } = {} } = patients[id] || {};
         if (`${user_id}` === patientUserId) {
           remoteData = patients[id] || {};
         }
@@ -462,18 +471,18 @@ class AgoraVideo extends Component {
     } else {
       // todo: to modify and refractor based on future requirements
     }
-    
-    return {remoteData, selfData};
+
+    return { remoteData, selfData };
   };
-  
+
   getVideoButtons = () => {
-    const {isStart = false, isVideoOn} = this.state;
-    const {toggleVideo, formatMessage} = this;
-    
+    const { isStart = false, isVideoOn } = this.state;
+    const { toggleVideo, formatMessage } = this;
+
     if (!isStart) {
       return null;
     }
-    
+
     return (
       <div className="ml24">
         {isVideoOn ? (
@@ -481,50 +490,50 @@ class AgoraVideo extends Component {
             title={formatMessage(messages.disableVideo)}
             placement={"top"}
           >
-            <img src={VideoIcon} onClick={toggleVideo} alt="chatIcon"/>
+            <img src={VideoIcon} onClick={toggleVideo} alt="chatIcon" />
           </Tooltip>
         ) : (
           <Tooltip
             title={formatMessage(messages.enableVideo)}
             placement={"top"}
           >
-            <img src={VideoDisabledIcon} onClick={toggleVideo} alt="chatIcon"/>
+            <img src={VideoDisabledIcon} onClick={toggleVideo} alt="chatIcon" />
           </Tooltip>
         )}
       </div>
     );
   };
-  
+
   getAudioButtons = () => {
-    const {isStart = false, isAudioOn} = this.state;
-    const {toggleAudio, formatMessage} = this;
-    
+    const { isStart = false, isAudioOn } = this.state;
+    const { toggleAudio, formatMessage } = this;
+
     if (!isStart) {
       return null;
     }
-    
+
     return (
       <div className="ml24">
         {isAudioOn ? (
           <Tooltip title={formatMessage(messages.muteAudio)} placement={"top"}>
-            <img src={AudioIcon} onClick={toggleAudio} alt="chatIcon"/>
+            <img src={AudioIcon} onClick={toggleAudio} alt="chatIcon" />
           </Tooltip>
         ) : (
           <Tooltip
             title={formatMessage(messages.unMuteAudio)}
             placement={"top"}
           >
-            <img src={AudioDisabledIcon} onClick={toggleAudio} alt="chatIcon"/>
+            <img src={AudioDisabledIcon} onClick={toggleAudio} alt="chatIcon" />
           </Tooltip>
         )}
       </div>
     );
   };
-  
+
   getCallButtons = () => {
-    const {isStart} = this.state;
-    const {startVideoCall, leaveCall, formatMessage} = this;
-    
+    const { isStart } = this.state;
+    const { startVideoCall, leaveCall, formatMessage } = this;
+
     return (
       <div className={`${isStart ? "ml24" : null}`}>
         {!isStart ? (
@@ -552,36 +561,36 @@ class AgoraVideo extends Component {
       </div>
     );
   };
-  
+
   getNetworkIssueCard = () => {
-    const {auth: {authenticated_user} = {}} = this.props;
-    const {networkIssueFor} = this.state;
-    const {formatMessage, getVideoParticipants} = this;
-    
+    const { auth: { authenticated_user } = {} } = this.props;
+    const { networkIssueFor } = this.state;
+    const { formatMessage, getVideoParticipants } = this;
+
     // todo: change this way for name when working on group chat
     if (!networkIssueFor) {
       return null;
     }
-    
-    const {remoteData: {basic_info: {full_name} = {}} = {}} =
+
+    const { remoteData: { basic_info: { full_name } = {} } = {} } =
       getVideoParticipants();
-    
+
     const isRemote = networkIssueFor !== `${authenticated_user}` ? true : false;
-    
+
     return (
       <div className="fs16 p10 text-white tac bg_black-65">
         {isRemote
           ? formatMessage(
-            {...messages.RemoteNetworkIssue},
-            {name: full_name}
-          )
+              { ...messages.RemoteNetworkIssue },
+              { name: full_name }
+            )
           : formatMessage(messages.LocalNetworkIssue)}
       </div>
     );
   };
-  
+
   render() {
-    const {isStart, remoteAdded, loading} = this.state;
+    const { isStart, remoteAdded, loading } = this.state;
     const {
       getVideoParticipants,
       formatMessage,
@@ -590,26 +599,26 @@ class AgoraVideo extends Component {
       getCallButtons,
       getNetworkIssueCard,
     } = this;
-    
+
     const {
       remoteData: {
-        basic_info: {full_name} = {},
-        details: {profile_pic} = {},
+        basic_info: { full_name } = {},
+        details: { profile_pic } = {},
       } = {},
     } = getVideoParticipants();
-    
+
     return (
       <div className="wp100 hp100 bg-black relative">
         {/*   SELF VIEW   */}
         <div id={"agora-self"} className="wp25 h200 fixed b20 r20 z999"></div>
-        
+
         {/*   REMOTE VIEW   */}
         <div id={"agora-remote"} className="wp100 hp100">
           {getNetworkIssueCard()}
-          
+
           {loading && (
             <div className="hp100 wp100 flex direction-column align-center justify-center z1">
-              <Loading className={"wp100"} color="white"/>
+              <Loading className={"wp100"} color="white" />
             </div>
           )}
           {!remoteAdded && (
@@ -619,7 +628,7 @@ class AgoraVideo extends Component {
                 className="pointer h80 w80 br50 "
                 alt="userDp"
               />
-              
+
               <div className="text-white mt20">
                 {isStart ? (
                   <span>
@@ -627,7 +636,7 @@ class AgoraVideo extends Component {
                       {
                         ...messages.waitingForPatient,
                       },
-                      {name: full_name}
+                      { name: full_name }
                     )}
                   </span>
                 ) : (
@@ -637,14 +646,14 @@ class AgoraVideo extends Component {
             </div>
           )}
         </div>
-        
+
         <div className="absolute b10 wp100 flex justify-center ">
           {/*   AUDIO   */}
           {getAudioButtons()}
-          
+
           {/*   CALL   */}
           {!loading && getCallButtons()}
-          
+
           {/*   VIDEO   */}
           {getVideoButtons()}
         </div>
