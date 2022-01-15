@@ -4,6 +4,7 @@ const { RtcTokenBuilder, RtcRole } = require("agora-access-token");
 
 const appID = process.config.agora.app_id;
 const appCertificate = process.config.agora.app_certificate;
+let channelNameAgora = process.config.agora.app_channel_name;
 
 const Logger = new Log("AGORA SERVICES");
 
@@ -11,7 +12,12 @@ class AgoraService {
   constructor() {}
 
   getRoomId = (doctor, patient) => {
-    return `${doctor}-${process.config.agora.app_channel_name}-${patient}`;
+    //process.config.twilio.TWILIO_CHAT_SERVICE_SID,app_channel_name
+    if (!channelNameAgora) {
+      console.log("In if block");
+      channelNameAgora = "adherelive-demo";
+    }
+    return `${doctor}-${channelNameAgora}-${patient}`;
   };
 
   async videoTokenGenerator(userId, channelName) {
