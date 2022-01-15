@@ -14,10 +14,6 @@ const mapStateToProps = (state) => {
     patients = {},
     doctors = {},
   } = state;
-  return { agora, users, auth, patients, doctors };
-};
-
-const mapDispatchToProps = (dispatch) => {
   console.log(
     "=======================Map Dispatcher to Propos======================================"
   );
@@ -25,6 +21,10 @@ const mapDispatchToProps = (dispatch) => {
   console.log(
     "=======================Map Dispatcher to Propos======================================"
   );
+  return { agora, users, auth, patients, doctors };
+};
+
+const mapDispatchToProps = (dispatch) => {
   return {
     fetchVideoAccessToken: (userId) => dispatch(fetchVideoAccessToken(userId)),
     startCall: (roomId) => () => dispatch(startCall(roomId)),
