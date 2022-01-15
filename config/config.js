@@ -133,6 +133,7 @@ module.exports = () => {
     agora: {
       app_id: process.env.AGORA_APP_ID,
       app_certificate: process.env.AGORA_APP_CERTIFICATE,
+      app_channel_name: process.env.AGORA_APP_CHANNEL_NAME,
     },
     cookieKey: process.env.COOKIE_KEY,
     PORT: process.env.WEB_SERVER_PORT,

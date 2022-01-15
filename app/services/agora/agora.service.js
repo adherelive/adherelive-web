@@ -11,7 +11,7 @@ class AgoraService {
   constructor() {}
 
   getRoomId = (doctor, patient) => {
-    return `${doctor}-${process.config.twilio.CHANNEL_SERVER}-${patient}`;
+    return `${doctor}-${process.config.agora.app_channel_name}-${patient}`;
   };
 
   async videoTokenGenerator(userId, channelName) {
