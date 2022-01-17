@@ -1,4 +1,4 @@
-import React, {Component, Fragment} from "react";
+import React, { Component, Fragment } from "react";
 import {
   Form,
   Input,
@@ -21,7 +21,7 @@ import Maximize from "../../Assets/images/maximize.png";
 // import Download from "../../Assets/images/down-arrow.png";
 // import File from "../../Assets/images/file.png";
 import messages from "./messages";
-import {injectIntl} from "react-intl";
+import { injectIntl } from "react-intl";
 // import bodyImage from "../../../src/Assets/images/body.jpg";
 // import CloseChatIcon from "../../Assets/images/ico-vc-message-close.png";
 import CallIcon from "../../Assets/images/telephone.png";
@@ -37,24 +37,24 @@ import ChatMessageDetails from "./chatMessageDetails";
 
 import Menu from "antd/es/menu";
 import Dropdown from "antd/es/dropdown";
-import {MENU_ITEMS} from "../ChatFullScreen/twilioChat";
-import {MoreOutlined} from "@ant-design/icons";
+import { MENU_ITEMS } from "../ChatFullScreen/twilioChat";
+import { MoreOutlined } from "@ant-design/icons";
 
 import Tooltip from "antd/es/tooltip";
 
 const Header = ({
-                  placeVideoCall,
-                  patientName,
-                  patientDp = "",
-                  isOnline = false,
-                  onHeaderClick,
-                  close,
-                  maximizeChat,
-                  otherTyping = false,
-                  formatMessage,
-                  videoCallBlocked,
-                  getMenu,
-                }) => {
+  placeVideoCall,
+  patientName,
+  patientDp = "",
+  isOnline = false,
+  onHeaderClick,
+  close,
+  maximizeChat,
+  otherTyping = false,
+  formatMessage,
+  videoCallBlocked,
+  getMenu,
+}) => {
   // let pic = patientName ?
   //     <Avatar src={patientDp}>{patientName[0]}</Avatar> : <Avatar src={patientDp} icon="user" />
   return (
@@ -73,12 +73,12 @@ const Header = ({
             {otherTyping
               ? formatMessage(messages.typing)
               : isOnline
-                ? formatMessage(messages.online)
-                : formatMessage(messages.offline)}
+              ? formatMessage(messages.online)
+              : formatMessage(messages.offline)}
           </div>
         </div>
       </div>
-      
+
       <div className="flex direction-row align-center">
         {videoCallBlocked ? (
           <Tooltip
@@ -97,22 +97,22 @@ const Header = ({
             onClick={placeVideoCall}
           />
         )}
-        
+
         <img
           src={Maximize}
           className="callIcon-header-PopUp mr20"
           onClick={maximizeChat}
         />
-        
+
         <Dropdown
           overlay={getMenu()}
           trigger={["click"]}
           placement="bottomRight"
           className="mr20"
         >
-          <MoreOutlined className="text-white fs25 pointer"/>
+          <MoreOutlined className="text-white fs25 pointer" />
         </Dropdown>
-        
+
         <img
           src={Close}
           className="callIcon-header-PopUp mr20"
@@ -124,12 +124,12 @@ const Header = ({
 };
 
 const MinimizedHeader = ({
-                           placeVideoCall,
-                           patientName,
-                           isOnline = false,
-                           onHeaderClick,
-                           close,
-                         }) => {
+  placeVideoCall,
+  patientName,
+  isOnline = false,
+  onHeaderClick,
+  close,
+}) => {
   return (
     <div className="chat-patientListheader-PopUp-minimized">
       <div className="flex direction-row align-center">
@@ -162,29 +162,29 @@ class ChatForm extends Component {
       fileList: [],
     };
   }
-  
+
   onMessageChanged = (event) => {
-    this.setState({newMessage: event.target.value});
+    this.setState({ newMessage: event.target.value });
   };
-  
+
   sendMessage = async (event) => {
     if (event) {
       event.preventDefault();
     }
-    const {raiseChatNotificationFunc, authenticated_user} = this.props;
+    const { raiseChatNotificationFunc, authenticated_user } = this.props;
     let trimmedMessage = this.state.newMessage.trim();
     if (this.state.newMessage.length > 0 && trimmedMessage.length > 0) {
       const message = this.state.newMessage;
-      this.setState({newMessage: ""});
-      
-      const {channel = null} = this.props;
-      
+      this.setState({ newMessage: "" });
+
+      const { channel = null } = this.props;
+
       if (channel) {
         const resp = await channel.sendMessage(message, {
           sender_id: authenticated_user,
         });
       }
-      
+
       if (message) {
         raiseChatNotificationFunc(message);
       }
@@ -196,26 +196,26 @@ class ChatForm extends Component {
         const respo = await this.props.channel.sendMessage(formData, {
           sender_id: authenticated_user,
         });
-        
+
         raiseChatNotificationFunc(
           this.props.formatMessage(messages.newDocumentUploadedNotify)
         );
       }
-      this.setState({fileList: []});
+      this.setState({ fileList: [] });
     }
   };
-  
+
   handleUpload = () => {
     this.sendMessage();
   };
-  
+
   beforeUpload = (file) => {
     this.setState((state) => ({
       fileList: [...state.fileList, file],
     }));
     return true;
   };
-  
+
   render() {
     return (
       <Form
@@ -233,13 +233,13 @@ class ChatForm extends Component {
             suffix={
               <div className="form-button">
                 <Button htmlType="submit">
-                  <img src={Send} className="h20"/>
+                  <img src={Send} className="h20" />
                 </Button>
               </div>
             }
           />
         </div>
-        
+
         <Upload
           onClick
           customRequest={this.handleUpload}
@@ -251,7 +251,7 @@ class ChatForm extends Component {
         >
           <div className="chat-upload-btn">
             {/* <Icon type="paper-clip" className='h20 mt6' /> */}
-            <img src={PaperClip} className="h20 mt6 pointer"/>
+            <img src={PaperClip} className="h20 mt6 pointer" />
           </div>
         </Upload>
       </Form>
@@ -275,73 +275,73 @@ class ChatPopUp extends Component {
       loadSymptoms: true,
       loadingMessageDetails: false,
       message_numbers: 0,
-      
+
       chatBlocked: false,
       videoCallBlocked: false,
     };
     this.channelName = "test";
   }
-  
+
   scrollToBottom = () => {
-    const {chats: {minimized = false} = {}} = this.props;
+    const { chats: { minimized = false } = {} } = this.props;
     if (!minimized) {
       const chatEndElement = document.getElementById("chatEnd");
       chatEndElement.focus();
-      chatEndElement.scrollIntoView({behavior: "smooth"});
+      chatEndElement.scrollIntoView({ behavior: "smooth" });
     }
   };
-  
+
   componentDidMount = async () => {
     // this.getToken();
     const {
-      twilio: {chatToken = ""},
+      twilio: { chatToken = "" },
     } = this.props;
-    this.setState({token: chatToken}, this.getToken);
+    this.setState({ token: chatToken }, this.getToken);
     // this.scrollToBottom();
-    
+
     this.intervalID = setInterval(() => this.tick(), 2000);
     await this.props.getAllFeatures();
     this.checkChatAndVideoFeaturesAllowed();
   };
-  
+
   componentWillUnmount() {
     clearInterval(this.intervalID);
   }
-  
+
   componentDidUpdate(prevProps, prevState) {
-    const {roomId, chatMessages} = this.props;
-    const {message_numbers, loadSymptoms} = this.state;
-    const {messageIds = []} = chatMessages[roomId] || {};
+    const { roomId, chatMessages } = this.props;
+    const { message_numbers, loadSymptoms } = this.state;
+    const { messageIds = [] } = chatMessages[roomId] || {};
     if (
       chatMessages[roomId] != undefined &&
       messageIds.length > 0 &&
       message_numbers != messageIds.length &&
       !loadSymptoms
     ) {
-      this.setState({loadSymptoms: true, message_numbers: messageIds.length});
+      this.setState({ loadSymptoms: true, message_numbers: messageIds.length });
     }
-    const {roomId: prevRoomId} = prevProps;
+    const { roomId: prevRoomId } = prevProps;
     if (roomId !== prevRoomId) {
-      this.setState({messagesLoading: true});
+      this.setState({ messagesLoading: true });
       this.getToken();
       this.scrollToBottom();
     }
   }
-  
+
   tick = async () => {
-    const {authenticated_user} = this.props;
+    const { authenticated_user } = this.props;
     const members = this.channel ? await this.channel.getMembers() : [];
     let other_user_online = false;
     let otherUserLastConsumedMessageIndex = 0;
-    
+
     await Promise.all(
       members.map(async (mem) => {
         if (mem.identity !== `${authenticated_user}`) {
           const other_user = await mem.getUser();
-          
+
           other_user_online = other_user.online;
           otherUserLastConsumedMessageIndex = mem.lastConsumedMessageIndex;
-          
+
           other_user.on("updated", (obj) => {
             console.log("user_updated", obj);
           });
@@ -359,9 +359,9 @@ class ChatPopUp extends Component {
       });
     }
   };
-  
+
   formatMessage = (data) => this.props.intl.formatMessage(data);
-  
+
   getToken = () => {
     const {
       // match: {
@@ -369,8 +369,12 @@ class ChatPopUp extends Component {
       // },
       fetchChatAccessToken,
       authenticated_user,
+      carePlan,
     } = this.props;
-    this.channelName = roomId ? roomId : "test";
+    // this.channelName = roomId ? roomId : "test";
+    // AKSHAY NEW CODE IMPLEMENTATIONS
+    this.channelName = carePlan.channel_id;
+
     // fetchChatAccessToken(authenticated_user).then(result => {
     //     this.setState((prevState, props) => {
     //         return {
@@ -383,7 +387,7 @@ class ChatPopUp extends Component {
     //     );
     // });
   };
-  
+
   initChat = () => {
     this.chatClient = new Chat(this.state.token);
     this.chatClient
@@ -393,26 +397,26 @@ class ChatPopUp extends Component {
         console.log("79873973892 twilio chat connection error --> ", err);
       });
   };
-  
+
   checkOtherTyping = (obj) => {
-    const {authenticated_user = 1} = this.props;
-    const {identity = null} = obj;
+    const { authenticated_user = 1 } = this.props;
+    const { identity = null } = obj;
     if (identity !== `${authenticated_user}`) {
-      this.setState({other_typing: true});
+      this.setState({ other_typing: true });
     }
   };
-  
+
   otherTypingStopped = (obj) => {
-    const {authenticated_user = 1} = this.props;
-    const {identity = null} = obj;
+    const { authenticated_user = 1 } = this.props;
+    const { identity = null } = obj;
     if (identity !== `${authenticated_user}`) {
-      this.setState({other_typing: false});
+      this.setState({ other_typing: false });
     }
   };
-  
+
   clientInitiated = async () => {
-    const {authenticated_user} = this.props;
-    this.setState({chatReady: true}, () => {
+    const { authenticated_user } = this.props;
+    this.setState({ chatReady: true }, () => {
       this.chatClient
         .getChannelByUniqueName(this.channelName)
         .then((channel) => {
@@ -453,16 +457,16 @@ class ChatPopUp extends Component {
             this.otherTypingStopped(obj);
           });
           const members = await this.channel.getMembers();
-          
+
           members.map(async (mem) => {
             if (mem.identity !== `${authenticated_user}`) {
               const other_user = await mem.getUser();
-              
+
               this.setState({
                 other_user_online: other_user.online,
                 otherUserLastConsumedMessageIndex: mem.lastConsumedMessageIndex,
               });
-              
+
               other_user.on("updated", (obj) => {
                 console.log("user_updated", obj);
               });
@@ -471,14 +475,14 @@ class ChatPopUp extends Component {
         });
     });
   };
-  
+
   updateMessageRecieved = (messages) => {
-    const {otherUserLastConsumedMessageIndex} = this.state;
-    const {authenticated_user} = this.props;
+    const { otherUserLastConsumedMessageIndex } = this.state;
+    const { authenticated_user } = this.props;
     for (let messageData of messages) {
       const {
         index,
-        attributes: {sender_id} = {},
+        attributes: { sender_id } = {},
         author,
       } = messageData.state;
       if (
@@ -492,10 +496,10 @@ class ChatPopUp extends Component {
     }
     return messages;
   };
-  
+
   messagesLoaded = (messagePage) => {
     let messages = this.updateMessageRecieved(messagePage.items);
-    const {roomId, addMessageOfChat} = this.props;
+    const { roomId, addMessageOfChat } = this.props;
     addMessageOfChat(roomId, messages);
     this.setState(
       {
@@ -506,19 +510,19 @@ class ChatPopUp extends Component {
       this.scrollToBottom
     );
   };
-  
+
   messageAdded = (message) => {
-    const {roomId, addMessageOfChat} = this.props;
+    const { roomId, addMessageOfChat } = this.props;
     addMessageOfChat(roomId, message);
     // this.setState((prevState, props) => {
     //     const newVal = [...prevState.messages, message];
     //     return ({ messages: newVal })
     // });
-    
+
     this.scrollToBottom();
     this.channel.setAllMessagesConsumed();
   };
-  
+
   logOut = (event) => {
     event.preventDefault();
     this.setState({
@@ -529,7 +533,7 @@ class ChatPopUp extends Component {
     this.chatClient.shutdown();
     this.channel = null;
   };
-  
+
   // onClickDownloader = (link, name) => () => {
   //     // e.preventDefault();
   //     // const { url, message } = this.state;
@@ -596,7 +600,7 @@ class ChatPopUp extends Component {
   //             const message = messagesArray[i];
   //             const prevMessage = i > 1 ? messagesArray[i - 1] : 1;
   //             let sameDate = message && prevMessage && message.state && prevMessage.state ? moment(message.state.timestamp).isSame(moment(prevMessage.state.timestamp), 'date') : false;
-  
+
   //             // console.log("jskdjskjsd 23456789034567 messagesArray ------------> ", sameDate,message,prevMessage,message.state,prevMessage.state,moment(message.state.timestamp).isSame(moment(prevMessage.state.timestamp),'date'));
   //             if (!sameDate) {
   //                 messagesToRender.push(
@@ -677,50 +681,50 @@ class ChatPopUp extends Component {
   //         return "";
   //     }
   // }
-  
+
   checkChatAndVideoFeaturesAllowed = () => {
-    const {features_mappings = {}, patientId} = this.props;
+    const { features_mappings = {}, patientId } = this.props;
     let chatBlocked = false,
       videoCallBlocked = false;
-    
+
     const chatFeatureId = this.getFeatureId(FEATURES.CHAT);
     const videoCallFeatureId = this.getFeatureId(FEATURES.VIDEO_CALL);
-    const {[patientId]: mappingsData = []} = features_mappings;
+    const { [patientId]: mappingsData = [] } = features_mappings;
     if (mappingsData.indexOf(chatFeatureId) >= 0) {
       chatBlocked = false;
     } else {
       chatBlocked = true;
     }
-    
+
     if (mappingsData.indexOf(videoCallFeatureId) >= 0) {
       videoCallBlocked = false;
     } else {
       videoCallBlocked = true;
     }
-    this.setState({chatBlocked, videoCallBlocked});
+    this.setState({ chatBlocked, videoCallBlocked });
   };
-  
+
   getFeatureId = (featureName) => {
-    const {features = {}} = this.props;
+    const { features = {} } = this.props;
     const featuresIds = Object.keys(features);
-    
+
     for (const id of featuresIds) {
-      const {[id]: {name = null} = ({} = {})} = features;
-      
+      const { [id]: { name = null } = ({} = {}) } = features;
+
       if (name === featureName) {
         return parseInt(id, 10);
       }
     }
-    
+
     return null;
   };
-  
+
   getMenu = () => {
     const menuList = this.getMenuList();
     return (
       <Menu>
         {menuList.map((item, index) => {
-          const {label, pressHandler} = item;
+          const { label, pressHandler } = item;
           return (
             <Menu.Item onClick={pressHandler} key={`chat-popup-menu-${index}`}>
               <div className="tac">{label}</div>
@@ -730,7 +734,7 @@ class ChatPopUp extends Component {
       </Menu>
     );
   };
-  
+
   getMenuList = () => {
     const menuList = [];
     const menuItemsKeys = Object.keys(MENU_ITEMS);
@@ -738,12 +742,12 @@ class ChatPopUp extends Component {
       const menuItemData = this.getMenuItemData(MENU_ITEMS[key]);
       menuList.push(menuItemData);
     }
-    
+
     return menuList;
   };
-  
+
   getMenuItemData = (key) => {
-    const {chatBlocked, videoCallBlocked} = this.state;
+    const { chatBlocked, videoCallBlocked } = this.state;
     let label = "";
     switch (key) {
       case MENU_ITEMS.TOGGLE_CHAT_MESSAGES_PERMISSION:
@@ -766,100 +770,100 @@ class ChatPopUp extends Component {
         return;
     }
   };
-  
+
   toggleChatPermission = async () => {
-    const {authenticated_category, patientId} = this.props;
+    const { authenticated_category, patientId } = this.props;
     if (
       authenticated_category !== USER_CATEGORY.DOCTOR &&
       authenticated_category !== USER_CATEGORY.HSP
     ) {
       return;
     }
-    
-    const {chatBlocked} = this.state;
+
+    const { chatBlocked } = this.state;
     const mute = chatBlocked ? false : true;
-    
-    const response = await this.props.toggleChatPermission(patientId, {mute});
-    const {status = false, payload = {}} = response;
-    
+
+    const response = await this.props.toggleChatPermission(patientId, { mute });
+    const { status = false, payload = {} } = response;
+
     if (status) {
       const successMessage = chatBlocked
         ? this.formatMessage(messages.successInUnBlockingChatPermission)
         : this.formatMessage(messages.successInBlockingChatPermission);
       message.success(successMessage);
-      this.setState({chatBlocked: !chatBlocked});
+      this.setState({ chatBlocked: !chatBlocked });
     } else {
-      const {message = ""} = payload;
+      const { message = "" } = payload;
       const errorMessage = message
         ? message
         : chatBlocked
-          ? this.formatMessage(messages.errorInUnBlockingChatPermission)
-          : this.formatMessage(messages.errorInBlockingChatPermission);
+        ? this.formatMessage(messages.errorInUnBlockingChatPermission)
+        : this.formatMessage(messages.errorInBlockingChatPermission);
       message.error(errorMessage);
     }
   };
-  
+
   toggleVideoCallPermission = async () => {
-    const {authenticated_category, patientId} = this.props;
+    const { authenticated_category, patientId } = this.props;
     if (
       authenticated_category !== USER_CATEGORY.DOCTOR &&
       authenticated_category !== USER_CATEGORY.HSP
     ) {
       return;
     }
-    
-    const {videoCallBlocked} = this.state;
+
+    const { videoCallBlocked } = this.state;
     const block = videoCallBlocked ? false : true;
-    
+
     const response = await this.props.toggleVideoPermission(patientId, {
       block,
     });
-    
-    const {status = false, payload = {}} = response;
-    
+
+    const { status = false, payload = {} } = response;
+
     if (status) {
       const successMessage = videoCallBlocked
         ? this.formatMessage(messages.successInUnBlockingVideoPermission)
         : this.formatMessage(messages.successInBlockingVideoPermission);
       message.success(successMessage);
-      this.setState({videoCallBlocked: !videoCallBlocked});
+      this.setState({ videoCallBlocked: !videoCallBlocked });
     } else {
-      const {message = ""} = payload;
+      const { message = "" } = payload;
       const errorMessage = message
         ? message
         : videoCallBlocked
-          ? this.formatMessage(messages.errorInUnBlockingVideoPermission)
-          : this.formatMessage(messages.errorInBlockingVideoPermission);
+        ? this.formatMessage(messages.errorInUnBlockingVideoPermission)
+        : this.formatMessage(messages.errorInBlockingVideoPermission);
       message.error(errorMessage);
     }
   };
-  
+
   raiseChatNotificationFunc = (message) => {
     const {
       patientId = null,
       patients = {},
       raiseChatNotification,
     } = this.props;
-    
+
     const {
       [patientId]: {
-        basic_info: {user_id: patientUserId = null} = {},
+        basic_info: { user_id: patientUserId = null } = {},
         user_role_id: patientRoleId = null,
       } = {},
     } = patients;
-    
+
     const data = {
       message,
       receiver_id: patientUserId,
       receiver_role_id: patientRoleId,
     };
-    
+
     const resp = raiseChatNotification(data);
   };
-  
+
   render() {
-    const {ChatForm} = this;
-    const {chatMessages, roomId, authenticated_user} = this.props;
+    const { ChatForm } = this;
+    const { chatMessages, roomId, authenticated_user } = this.props;
     const {
       messagesLoading = false,
       other_user_online = false,
@@ -868,11 +872,11 @@ class ChatPopUp extends Component {
       chatBlocked,
       videoCallBlocked,
     } = this.state;
-    const {...props} = this.props;
+    const { ...props } = this.props;
     const {
       placeVideoCall,
       patientName = "",
-      chats: {minimized = false} = {},
+      chats: { minimized = false } = {},
       minimizePopUp,
       maximizePopUp,
       closePopUp,
@@ -888,7 +892,7 @@ class ChatPopUp extends Component {
         />
       );
     }
-    
+
     return (
       <Fragment>
         <div className={"popup-chatWindow"}>
@@ -908,7 +912,7 @@ class ChatPopUp extends Component {
             <div className="twilio-chat-body">
               {messagesLoading ? (
                 <div className="wp100 hp100 flex justify-center align-center">
-                  <Spin size="default"/>
+                  <Spin size="default" />
                 </div>
               ) : (
                 <ChatMessageDetails
@@ -919,16 +923,16 @@ class ChatPopUp extends Component {
                   }
                 />
               )}
-              <div id="chatEnd" style={{float: "left", clear: "both"}}/>
+              <div id="chatEnd" style={{ float: "left", clear: "both" }} />
             </div>
           </div>
-          
+
           {chatBlocked && (
             <div className="flex ml14 mr14 h55 text-center fs12 justify-center align-center ">
               {this.formatMessage(messages.chatBlockedMessage)}
             </div>
           )}
-          
+
           {!chatBlocked && (
             <div className="twilio-chat-footer-popUp">
               <div className="footer-right-popUp">
