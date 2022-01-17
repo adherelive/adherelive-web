@@ -2911,6 +2911,7 @@ class PatientDetails extends Component {
                 }
                 maximizeChat={this.maximizeChat}
                 patientId={patient_id}
+                carePlan={carePlan}
               />
             </div>
           )}
