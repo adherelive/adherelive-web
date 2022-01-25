@@ -702,10 +702,11 @@ class CarePlanController extends Controller {
           //   user_role_id
           // );
 
-          await carePlanService.updateCarePlan(
-            { channel_id: carePlan.getChannelId() + "_group" },
-            carePlanId
-          );
+          if (!carePlan.getChannelId().includes("group"))
+            await carePlanService.updateCarePlan(
+              { channel_id: carePlan.getChannelId() + "_group" },
+              carePlanId
+            );
 
           let carePlanAppointmentIds = await getCarePlanAppointmentIds(
             carePlanId
