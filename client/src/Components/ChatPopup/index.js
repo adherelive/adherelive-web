@@ -416,6 +416,7 @@ class ChatPopUp extends Component {
 
   clientInitiated = async () => {
     const { authenticated_user } = this.props;
+    console.log("this.channelName", this.channelName);
     this.setState({ chatReady: true }, () => {
       this.chatClient
         .getChannelByUniqueName(this.channelName)
