@@ -33,7 +33,6 @@ import ExerciseContentService from "../../services/exerciseContents/exerciseCont
 import WorkoutService from "../../services/workouts/workout.service";
 import userPreferenceService from "../../services/userPreferences/userPreference.service";
 import careplanSecondaryDoctorMappingService from "../../services/careplanSecondaryDoctorMappings/careplanSecondaryDoctorMappings.service";
-
 // WRAPPERS --------------------------------
 import ExerciseContentWrapper from "../../ApiWrapper/web/exerciseContents";
 import UserRolesWrapper from "../../ApiWrapper/web/userRoles";
@@ -63,9 +62,7 @@ import ProviderWrapper from "../../ApiWrapper/web/provider";
 import PortionWrapper from "../../ApiWrapper/web/portions";
 import WorkoutWrapper from "../../ApiWrapper/web/workouts";
 import UserPreferenceWrapper from "../../ApiWrapper/web/userPreference";
-
 import * as DietHelper from "../diet/dietHelper";
-
 import Log from "../../../libs/log";
 import moment from "moment";
 import {
@@ -79,13 +76,14 @@ import {
   S3_DOWNLOAD_FOLDER_PROVIDER,
   CONSULTATION,
 } from "../../../constant";
+import { getSeparateName, getRoomId } from "../../helper/common";
 import generateOTP from "../../helper/generateOtp";
 import { EVENTS, Proxy_Sdk } from "../../proxySdk";
 // import carePlan from "../../ApiWrapper/web/carePlan";
 import generatePDF from "../../helper/generateCarePlanPdf";
 import { downloadFileFromS3 } from "../user/userHelper";
 import { getFilePath } from "../../helper/filePath";
-import { checkAndCreateDirectory, getSeparateName } from "../../helper/common";
+import { checkAndCreateDirectory } from "../../helper/common";
 import PERMISSIONS from "../../../config/permissions";
 // helpers
 import * as carePlanHelper from "../carePlans/carePlanHelper";
@@ -105,21 +103,17 @@ class PatientController extends Controller {
       const { userDetails, body, file } = req;
       const { pid, profile_pic, name, email = "" } = body || {};
       const { userId = "3" } = userDetails || {};
-
       console.log("==============in Web Controller================");
       console.log(userDetails);
       console.log(body);
       console.log("===============================================");
-
       if (email) {
         const updateUserDetails = await userService.updateEmail(
           { email },
           userId
         );
       }
-
       const splitName = name.split(" ");
-
       // todo minio configure here
       if (profile_pic) {
         await minioService.createBucket();
@@ -139,7 +133,6 @@ class PatientController extends Controller {
         };
         const fileUrl = folder + "/" + file_name;
         await minioService.saveBufferObject(fileStream, fileUrl, metaData);
-
         console.log("file urlll: ", process.config.minio.MINI);
       }
 
@@ -1367,6 +1360,7 @@ class PatientController extends Controller {
         care_plan_template_id,
         details,
         created_at: moment(),
+        channel_id: getRoomId(userRoleId, patient_id),
       });
 
       const carePlanData = await CarePlanWrapper(carePlan);
