@@ -416,7 +416,6 @@ class ChatPopUp extends Component {
 
   clientInitiated = async () => {
     const { authenticated_user } = this.props;
-    console.log("this.channelName", this.channelName);
     this.setState({ chatReady: true }, () => {
       this.chatClient
         .getChannelByUniqueName(this.channelName)
@@ -500,8 +499,11 @@ class ChatPopUp extends Component {
 
   messagesLoaded = (messagePage) => {
     let messages = this.updateMessageRecieved(messagePage.items);
-    const { roomId, addMessageOfChat } = this.props;
-    addMessageOfChat(roomId, messages);
+    const { carePlan, roomId, addMessageOfChat } = this.props;
+    // AKSHAY NEW CODE IMPLEMENTATIONS
+    addMessageOfChat(carePlan.channel_id, messages);
+    // OLD CODE OF VINEET
+    // addMessageOfChat(roomId, message);
     this.setState(
       {
         messagesLoading: false,
@@ -513,8 +515,11 @@ class ChatPopUp extends Component {
   };
 
   messageAdded = (message) => {
-    const { roomId, addMessageOfChat } = this.props;
-    addMessageOfChat(roomId, message);
+    const { carePlan, roomId, addMessageOfChat } = this.props;
+    // AKSHAY NEW CODE IMPLEMENTATIONS
+    addMessageOfChat(carePlan.channel_id, message);
+    // OLD CODE OF VINEET
+    // addMessageOfChat(roomId, message);
     // this.setState((prevState, props) => {
     //     const newVal = [...prevState.messages, message];
     //     return ({ messages: newVal })
@@ -922,6 +927,8 @@ class ChatPopUp extends Component {
                   otherUserLastConsumedMessageIndex={
                     otherUserLastConsumedMessageIndex
                   }
+                  //AKSHAY NEW CODE IMPLEMENTATIONS
+                  channelId={this.props.carePlan.channel_id}
                 />
               )}
               <div id="chatEnd" style={{ float: "left", clear: "both" }} />
