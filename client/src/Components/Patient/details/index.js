@@ -1738,7 +1738,9 @@ class PatientDetails extends Component {
     this.setState({ templateDrawerVisible: false });
   };
 
-  showTemplateDrawer = () => {
+  showTemplateDrawer = async () => {
+    const { getAllTemplatesForDoctor } = this.props;
+    await getAllTemplatesForDoctor();
     this.setState({ templateDrawerVisible: true });
   };
 
@@ -2717,6 +2719,9 @@ class PatientDetails extends Component {
                               patientId={patient_id}
                               carePlanId={carePlanId}
                               isOtherCarePlan={isOtherCarePlan}
+                              secondary_doctor_user_role_ids={
+                                secondary_doctor_user_role_ids
+                              }
                             />
                           ) : (
                             <div className="mt20">
@@ -2906,6 +2911,7 @@ class PatientDetails extends Component {
                 }
                 maximizeChat={this.maximizeChat}
                 patientId={patient_id}
+                carePlan={carePlan}
               />
             </div>
           )}

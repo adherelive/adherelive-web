@@ -56,7 +56,8 @@ class CarePlanWrapper extends BaseCarePlan {
       userRolesApiData = {};
     const { care_plan_appointments = [], care_plan_medications = [] } =
       _data || {};
-
+    const secondary_doctor_user_role_ids =
+      this.getCareplnSecondaryProfiles() || [];
     const vitals =
       (await VitalService.getAllByData({ care_plan_id: getCarePlanId() })) ||
       [];
@@ -102,9 +103,6 @@ class CarePlanWrapper extends BaseCarePlan {
       });
     }
 
-    const secondary_doctor_user_role_ids =
-      this.getCareplnSecondaryProfiles() || [];
-
     // get care plan basci info
     const basic_info = getBasicInfo();
     //doctor.
@@ -134,8 +132,9 @@ class CarePlanWrapper extends BaseCarePlan {
   };
 
   getReferenceInfoWithImp = async () => {
-    const { getCarePlanId, getAllInfo } = this;
-
+    const { _data, getCarePlanId, getAllInfo } = this;
+    const secondary_doctor_user_role_ids =
+      this.getCareplnSecondaryProfiles() || [];
     return {
       care_plans: {
         [getCarePlanId()]: await getAllInfo(),

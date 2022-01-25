@@ -1,35 +1,57 @@
 import Log from "../../../libs/log";
 
-const {RtcTokenBuilder, RtcRole} = require("agora-access-token");
+const { RtcTokenBuilder, RtcRole } = require("agora-access-token");
 
 const appID = process.config.agora.app_id;
 const appCertificate = process.config.agora.app_certificate;
+let channelNameAgora = process.config.agora.app_channel_name;
 
 const Logger = new Log("AGORA SERVICES");
 
 class AgoraService {
-  constructor() {
-  }
-  
+  constructor() {}
+
   getRoomId = (doctor, patient) => {
-    return `${doctor}-${process.config.twilio.CHANNEL_SERVER}-${patient}`;
+    //process.config.twilio.TWILIO_CHAT_SERVICE_SID,app_channel_name
+    if (!channelNameAgora) {
+      console.log("In if block");
+      channelNameAgora = "adherelive-demo";
+    }
+    return `${doctor}-${channelNameAgora}-${patient}`;
   };
-  
+
   async videoTokenGenerator(userId, channelName) {
+    console.log("==================================================");
+    console.log("user id is" + userId);
+    // channelName = "7d72365eb983485397e3e3f9d460bdda";
+    console.log("channelName" + channelName);
+
+    let finalUserId = parseInt(userId);
+
+    console.log("==================================================");
     const role = RtcRole.PUBLISHER;
     const expirationTimeInSeconds = 86400;
     const currentTimestamp = Math.floor(Date.now() / 1000);
     const privilegeExpiredTs = currentTimestamp + expirationTimeInSeconds;
-    const accessToken = RtcTokenBuilder.buildTokenWithUid(
+    console.log({
       appID,
       appCertificate,
       channelName,
-      userId,
+      finalUserId,
+      role,
+      privilegeExpiredTs,
+    });
+    const accessToken = RtcTokenBuilder.buildTokenWithUid(
+      "e43158c06dc841ebb186afb1854a125c",
+      "7df432e4412e432bacf96881010a2f67",
+      channelName,
+      0,
       role,
       privilegeExpiredTs
     );
-    // console.log("Token With Integer Number Uid: " + accessToken);
-    
+    console.log("Token With Integer Number Uid: " + accessToken);
+
+    // return "006e43158c06dc841ebb186afb1854a125cIAD8D+NTIxnA2KTz0aSNmrRlFgdfEu0wQQPHrvhvEwYNDXyLSGQAAAAAEADC8VeA/67jYQEAAQD/ruNh";
     return accessToken;
   }
 }

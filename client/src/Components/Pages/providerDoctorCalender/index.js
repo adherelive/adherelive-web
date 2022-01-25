@@ -247,6 +247,15 @@ class ProviderDoctorCalneder extends Component {
     });
   };
 
+  // AKSHAY NEW CODE IMPLEMENTATION
+
+  openPatientDetails = (patientId) => {
+    const { history, authenticated_category } = this.props;
+    if (authenticated_category === "doctor") {
+      history.push(`/patients/${patientId}`);
+    }
+  };
+
   renderDateDetails = () => {
     const { currentDateSelected = "" } = this.state;
 
@@ -257,6 +266,7 @@ class ProviderDoctorCalneder extends Component {
       doctors = {},
       patients = {},
       users = {},
+      authenticated_category = {},
     } = this.props || {};
 
     const thisDaysAppointments =
@@ -348,7 +358,15 @@ class ProviderDoctorCalneder extends Component {
       details.push(
         <div
           key={`${each}-appointment`}
-          className="relative wp90 br5 bg-white flex-shrink-0 mt20 mb20 p10  ml10 mr10 chart-box-shadow  flex direction-column"
+          onClick={() =>
+            this.openPatientDetails(p1_category === "doctor" ? p2_id : p1_id)
+          }
+          className={
+            authenticated_category === "doctor"
+              ? "relative wp90 br5 bg-white flex-shrink-0 mt20 mb20 p10  ml10 mr10 chart-box-shadow doctor-hover-card flex direction-column"
+              : "relative wp90 br5 bg-white flex-shrink-0 mt20 mb20 p10  ml10 mr10 chart-box-shadow flex direction-column"
+          }
+          title="Redirected to patient details page"
         >
           <div className="absolute r10">
             {critical ? (

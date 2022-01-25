@@ -1,5 +1,5 @@
-import React, {Component} from "react";
-import {injectIntl} from "react-intl";
+import React, { Component } from "react";
+import { injectIntl } from "react-intl";
 import TemplateTable from "../../../Containers/allTemplates/index";
 import message from "antd/es/message";
 import Button from "antd/es/button";
@@ -14,54 +14,54 @@ class TemplatePage extends Component {
       loading: false,
     };
   }
-  
+
   componentDidMount() {
     this.handleGetAllTemplates();
-    const {getVitalOccurence} = this.props;
+    const { getVitalOccurence } = this.props;
     getVitalOccurence().then((res) => {
-      const {status = false} = res;
+      const { status = false } = res;
       if (status) {
       }
     });
     this.handleGetMedicationDetails("0");
     this.handleGetAllData();
   }
-  
+
   async handleGetAllTemplates() {
-    const {getAllTemplatesForDoctor} = this.props;
+    const { getAllTemplatesForDoctor } = this.props;
     try {
-      this.setState({loading: true});
+      this.setState({ loading: true });
       const response = await getAllTemplatesForDoctor();
-      const {status, payload: {data = {}, message: msg = ""} = {}} =
-      response || {};
+      const { status, payload: { data = {}, message: msg = "" } = {} } =
+        response || {};
       if (!status) {
         message.warn(msg);
-        this.setState({loading: false});
+        this.setState({ loading: false });
       } else {
-        this.setState({loading: false});
+        this.setState({ loading: false });
       }
     } catch (error) {
       console.log("error ===>", error);
       message.warn(error);
     }
   }
-  
+
   componentDidUpdate() {
     // console.log("3289467832482354723874792384 UPDATEEEEEEEEEEEEEEEEEE");
   }
-  
+
   formatMessage = (data) => this.props.intl.formatMessage(data);
-  
+
   async handleGetMedicationDetails(patientId = "0") {
     try {
-      const {getMedicationDetails} = this.props;
+      const { getMedicationDetails } = this.props;
       const response = await getMedicationDetails(patientId);
       const {
         status,
         statusCode,
-        payload: {data = {}, message: msg = ""} = {},
+        payload: { data = {}, message: msg = "" } = {},
       } = response;
-      
+
       if (!status) {
         message.error(msg);
       }
@@ -69,45 +69,45 @@ class TemplatePage extends Component {
       console.log("err ===>", error);
     }
   }
-  
+
   handleOpenCreateDrawer = () => {
-    const {openCreateCareplanTemplateDrawer} = this.props || {};
+    const { openCreateCareplanTemplateDrawer } = this.props || {};
     openCreateCareplanTemplateDrawer({});
   };
-  
+
   handleOpenEditDrawer =
-    ({id}) =>
-      (e) => {
-        e.preventDefault();
-        const {openEditCareplanTemplateDrawer} = this.props;
-        openEditCareplanTemplateDrawer({id});
-      };
-  
+    ({ id }) =>
+    (e) => {
+      e.preventDefault();
+      const { openEditCareplanTemplateDrawer } = this.props;
+      openEditCareplanTemplateDrawer({ id });
+    };
+
   async handleGetAllData() {
-    const {getAppointmentsDetails, searchMedicine} = this.props || {};
+    const { getAppointmentsDetails, searchMedicine } = this.props || {};
     try {
       const apptResponse = await getAppointmentsDetails();
-      
+
       const {
-        payload: {data: apptData = {}, message: apptMessage = ""} = {},
+        payload: { data: apptData = {}, message: apptMessage = "" } = {},
         status: apptStatus = "",
         statusCode: apptStatusCode = "",
       } = apptResponse || {};
-      
+
       if (!apptStatus) {
         message.error(apptMessage);
       }
-      
+
       searchMedicine(""); // to display medicine name of new med inside templateDrawer after editing med
     } catch (error) {
       console.log("error --->", error);
       message.warn(error);
     }
   }
-  
+
   getHeader = () => {
-    const {handleOpenCreateDrawer} = this;
-    
+    const { handleOpenCreateDrawer } = this;
+
     return (
       <div className="flex pt20  pb10 pl24 pr16">
         <div className="patient-profile-header flex-grow-0">
@@ -123,9 +123,9 @@ class TemplatePage extends Component {
       </div>
     );
   };
-  
+
   render() {
-    const {loading} = this.state;
+    const { loading } = this.state;
     return (
       <div>
         <div>
@@ -140,7 +140,7 @@ class TemplatePage extends Component {
             </div>
           </div>
         </div>
-        
+
         <TemplatePageCreateDrawer {...this.props} />
         <TemplatePageEditDrawer {...this.props} />
       </div>

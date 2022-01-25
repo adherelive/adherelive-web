@@ -1438,7 +1438,7 @@ class DoctorController extends Controller {
         care_plan_template_id,
         details,
         user_role_id: userRoleId,
-        // channel_id: getRoomId(userRoleId, patient_id),
+        channel_id: getRoomId(userRoleId, patient_id),
         created_at: moment(),
       });
 
@@ -1446,12 +1446,12 @@ class DoctorController extends Controller {
 
       const { user_role_id: patientRoleId } = await patientData.getAllInfo();
 
-      await carePlanService.updateCarePlan(
-        {
-          channel_id: getRoomId(userRoleId, patientRoleId),
-        },
-        carePlanId
-      );
+      // await carePlanService.updateCarePlan(
+      //   {
+      //     channel_id: getRoomId(userRoleId, patientRoleId),
+      //   },
+      //   carePlanId
+      // );
 
       const carePlanData = await CarePlanWrapper(null, carePlanId);
       // const care_plan_id = await carePlanData.getCarePlanId();
@@ -4088,7 +4088,11 @@ class DoctorController extends Controller {
     try {
       const {
         userDetails: { userId } = {},
-        query: { type = APPOINTMENT_QUERY_TYPE.DAY, value = null } = {},
+        query: {
+          type = APPOINTMENT_QUERY_TYPE.DAY,
+          value = null,
+          provider_id = 0,
+        } = {},
       } = req;
 
       const validDate = moment(value).isValid();
@@ -4159,6 +4163,7 @@ class DoctorController extends Controller {
             appointmentList =
               await appointmentService.getDayAppointmentForDoctor(
                 doctorId,
+                5,
                 value
               );
             break;
@@ -4166,6 +4171,7 @@ class DoctorController extends Controller {
             appointmentList =
               await appointmentService.getMonthAppointmentForDoctor(
                 doctorId,
+                5,
                 value
               );
             break;

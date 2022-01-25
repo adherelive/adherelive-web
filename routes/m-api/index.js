@@ -46,6 +46,7 @@ import dietRouter from "./diet";
 import portionRouter from "./portion";
 import exerciseRouter from "./exercises";
 import workoutRouter from "./workouts";
+import mProviderRouter from "./providers";
 
 router.use(async (req, res, next) => {
   try {
@@ -129,7 +130,7 @@ router.use("/medicines", mMedicineRouter);
 router.use("/charts", chartRouter);
 router.use("/twilio", twilioRouter);
 router.use("/agora", agoraRouter);
-
+router.use("/providers", mProviderRouter);
 router.use("/colleges", collegeRouter);
 router.use("/degrees", degreeRouter);
 router.use("/councils", councilRouter);

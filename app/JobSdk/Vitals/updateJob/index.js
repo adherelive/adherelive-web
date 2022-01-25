@@ -1,6 +1,6 @@
 import VitalJob from "../";
 import moment from "moment";
-import {getFullName} from "../../../helper/common";
+import { getFullName } from "../../../helper/common";
 import {
   DEFAULT_PROVIDER,
   EVENT_TYPE,
@@ -17,44 +17,44 @@ class UpdateJob extends VitalJob {
   constructor(data) {
     super(data);
   }
-  
+
   getPushAppTemplate = async () => {
-    const {getData} = this;
+    const { getData } = this;
     const {
       participants = [],
       actor: {
         id: actorId,
         userCategoryData: {
-          basic_info: {first_name, middle_name, last_name} = {},
+          basic_info: { first_name, middle_name, last_name } = {},
         } = {},
         category,
       } = {},
-      vital_templates: {basic_info: {name: vitalName = ""} = {}} = {},
+      vital_templates: { basic_info: { name: vitalName = "" } = {} } = {},
       eventId = null,
     } = getData() || {};
-    
+
     const templateData = [];
     const playerIds = [];
     const userIds = [];
-    
+
     // participants.forEach(participant => {
     //   if (participant !== user_role_id) {
     //     userRoleIds.push(participant);
     //   }
     // });
-    
-    const {rows: userRoles = []} =
-    (await UserRoleService.findAndCountAll({
-      where: {
-        id: participants,
-      },
-    })) || {};
-    
+
+    const { rows: userRoles = [] } =
+      (await UserRoleService.findAndCountAll({
+        where: {
+          id: participants,
+        },
+      })) || {};
+
     let providerId = null;
-    
+
     for (const userRole of userRoles) {
-      const {id, user_identity, linked_id} = userRole || {};
-      if (id !== user_role_id) {
+      const { id, user_identity, linked_id } = userRole || {};
+      if (user_role_id !== null && id !== user_role_id) {
         userIds.push(user_identity);
       } else {
         if (linked_id) {
@@ -62,32 +62,32 @@ class UpdateJob extends VitalJob {
         }
       }
     }
-    
+
     // provider
     let providerName = DEFAULT_PROVIDER;
     if (providerId) {
       const provider = await ProviderService.getProviderByData({
         id: providerId,
       });
-      const {name} = provider || {};
+      const { name } = provider || {};
       providerName = name;
     }
-    
+
     const userDevices = await UserDeviceService.getAllDeviceByData({
       user_id: userIds,
     });
-    
+
     if (userDevices.length > 0) {
       for (const device of userDevices) {
-        const userDevice = await UserDeviceWrapper({data: device});
+        const userDevice = await UserDeviceWrapper({ data: device });
         playerIds.push(userDevice.getOneSignalDeviceId());
       }
     }
-    
+
     templateData.push({
       small_icon: process.config.app.icon_android,
       app_id: process.config.one_signal.app_id, // TODO: add the same in pushNotification handler in notificationSdk
-      headings: {en: `Vital Update (${providerName})`},
+      headings: { en: `Vital Update (${providerName})` },
       contents: {
         en: `${getFullName({
           first_name,
@@ -99,23 +99,23 @@ class UpdateJob extends VitalJob {
       include_player_ids: [...playerIds],
       priority: 10,
       android_channel_id: process.config.one_signal.urgent_channel_id,
-      data: {url: "/vitals", params: getData()},
+      data: { url: "/vitals", params: getData() },
     });
-    
+
     return templateData;
   };
-  
+
   getInAppTemplate = () => {
-    const {getData} = this;
+    const { getData } = this;
     const {
       participants = [],
-      actor: {id: actorId, user_role_id} = {},
+      actor: { id: actorId, user_role_id } = {},
       event_id: eventId = null,
     } = getData() || {};
-    
+
     const templateData = [];
     const currentTime = new moment().utc().toISOString();
-    
+
     const now = moment();
     const currentTimeStamp = now.unix();
     for (const participant of participants) {
@@ -132,7 +132,7 @@ class UpdateJob extends VitalJob {
         });
       }
     }
-    
+
     return templateData;
   };
 }

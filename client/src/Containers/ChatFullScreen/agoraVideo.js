@@ -1,4 +1,4 @@
-import {connect} from "react-redux";
+import { connect } from "react-redux";
 import AgoraVideo from "../../Components/ChatFullScreen/agoraVideo";
 import {
   fetchVideoAccessToken,
@@ -14,7 +14,14 @@ const mapStateToProps = (state) => {
     patients = {},
     doctors = {},
   } = state;
-  return {agora, users, auth, patients, doctors};
+  console.log(
+    "=======================Map Dispatcher to Propos======================================"
+  );
+  console.log({ agora, users, auth, patients, doctors });
+  console.log(
+    "=======================Map Dispatcher to Propos======================================"
+  );
+  return { agora, users, auth, patients, doctors };
 };
 
 const mapDispatchToProps = (dispatch) => {
@@ -26,12 +33,12 @@ const mapDispatchToProps = (dispatch) => {
 };
 
 const mergeProps = (stateProps, dispatchProps, ownProps) => {
-  const {agora, users, auth, patients, doctors} = stateProps || {};
-  
-  const {fetchVideoAccessToken, startCall, missedCall} = dispatchProps || {};
-  
-  const {match: {params: {room_id} = {}} = {}} = ownProps || {};
-  
+  const { agora, users, auth, patients, doctors } = stateProps || {};
+
+  const { fetchVideoAccessToken, startCall, missedCall } = dispatchProps || {};
+  console.log({ fetchVideoAccessToken, startCall, missedCall });
+  const { match: { params: { room_id } = {} } = {} } = ownProps || {};
+
   return {
     agora,
     users,
