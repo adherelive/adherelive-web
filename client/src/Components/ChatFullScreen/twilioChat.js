@@ -37,6 +37,7 @@ import Menu from "antd/es/menu";
 import Dropdown from "antd/es/dropdown";
 import { CHAT_MESSAGE_TYPE } from "../../constant";
 // import { USER_ADHERE_BOT, CHAT_MESSAGE_TYPE, PARTS, PART_LIST_BACK, PART_LIST_CODES, PART_LIST_FRONT, BODY,PARTS_GRAPH,BODY_VIEW,BODY_SIDE } from "../../constant";
+import isEmpty from "../../Helper/is-empty";
 
 export const MENU_ITEMS = {
   TOGGLE_CHAT_MESSAGES_PERMISSION: "TOGGLE_CHAT_MESSAGES_PERMISSION",
@@ -425,10 +426,26 @@ class TwilioChat extends Component {
   };
 
   getToken = () => {
-    const { roomId } = this.props;
-    let channel = `careplan-${roomId.split("-")[0]}-${
-      roomId.split("-")[3]
-    }-adherelive-demo`;
+    const { roomId, care_plans, patientId } = this.props;
+    let channel = "";
+    // AKSHAY NEW CODE IMPLEMENTATIONS
+    if (!isEmpty(care_plans)) {
+      var filtered = Object.fromEntries(
+        Object.entries(care_plans).filter(
+          ([key, value]) =>
+            value.basic_info.patient_id == patientId &&
+            value.channel_id !== null &&
+            value.channel_id.split("-")[4] !== "demo_group"
+        )
+      );
+
+      for (const key in filtered) {
+        channel = filtered[key].channel_id;
+      }
+    }
+    // AKSHAY NEW CODE IMPLEMENTATIONS END
+
+    // let channel = "careplan-35-36-adherelive-demo";
     console.log("channel", channel);
     // this.channelName = roomId ? roomId : "test";
     // AKSHAY NEW CODE IMPLEMENTATIONS
@@ -558,10 +575,10 @@ class TwilioChat extends Component {
       let message = messagePage.items[0];
       const { channel: { channelState: { uniqueName = "" } = {} } = {} } =
         message;
-      if (!uniqueName.localeCompare(roomId)) {
-        // let messages = this.updateMessageRecieved(messagePage.items);
-        addMessageOfChat(roomId, messagePage.items);
-      }
+      // if (!uniqueName.localeCompare(roomId)) {
+      // let messages = this.updateMessageRecieved(messagePage.items);
+      addMessageOfChat(this.channelName, messagePage.items);
+      // }
     }
     this.setState(
       {
@@ -576,7 +593,7 @@ class TwilioChat extends Component {
 
   messageAdded = (message) => {
     const { roomId, addMessageOfChat } = this.props;
-    addMessageOfChat(roomId, message);
+    addMessageOfChat(this.channelName, message);
     // this.setState((prevState, props) => {
     //     const newVal = [...prevState.messages, message];
     //     return ({ messages: newVal })
@@ -885,6 +902,8 @@ class TwilioChat extends Component {
                 otherUserLastConsumedMessageIndex={
                   otherUserLastConsumedMessageIndex
                 }
+                //AKSHAY NEW CODE IMPLEMENTATIONS
+                channelId={this.channelName}
               />
             )}
             <div id="chatEnd" style={{ float: "left", clear: "both" }} />
