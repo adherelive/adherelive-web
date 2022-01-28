@@ -500,6 +500,7 @@ class ChatPopUp extends Component {
   messagesLoaded = (messagePage) => {
     let messages = this.updateMessageRecieved(messagePage.items);
     const { carePlan, roomId, addMessageOfChat } = this.props;
+    console.log("messages", messages);
     // AKSHAY NEW CODE IMPLEMENTATIONS
     addMessageOfChat(carePlan.channel_id, messages);
     // OLD CODE OF VINEET

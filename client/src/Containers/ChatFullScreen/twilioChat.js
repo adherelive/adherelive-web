@@ -1,10 +1,10 @@
-import {connect} from "react-redux";
+import { connect } from "react-redux";
 import TwilioChat from "../../Components/ChatFullScreen/twilioChat";
-import {getSymptomDetails} from "../../modules/symptoms";
-import {getDoctorPaymentProduct} from "../../modules/doctors";
-import {getVitalOccurence} from "../../modules/vital_occurence";
+import { getSymptomDetails } from "../../modules/symptoms";
+import { getDoctorPaymentProduct } from "../../modules/doctors";
+import { getVitalOccurence } from "../../modules/vital_occurence";
 
-import {fetchChatAccessToken} from "../../modules/twilio";
+import { fetchChatAccessToken } from "../../modules/twilio";
 import {
   addMessageOfChat,
   raiseChatNotification,
@@ -20,7 +20,7 @@ const mapStateToProps = (state) => {
   const {
     twilio,
     users,
-    auth: {authenticated_user = 1, authenticated_category} = {},
+    auth: { authenticated_user = 1, authenticated_category } = {},
     chatMessages,
     symptoms,
     upload_documents,
@@ -28,6 +28,8 @@ const mapStateToProps = (state) => {
     patients,
     features = {},
     features_mappings = {},
+    //AKSHAY NEW CODE IMPLEMENTATIONS
+    care_plans,
   } = state;
   return {
     twilio,
@@ -41,6 +43,7 @@ const mapStateToProps = (state) => {
     features,
     features_mappings,
     authenticated_category,
+    care_plans,
   };
 };
 

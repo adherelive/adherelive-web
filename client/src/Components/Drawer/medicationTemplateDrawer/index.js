@@ -37,6 +37,12 @@ import InjectionIcon from "../../../Assets/images/injectionIcon3x.png";
 import SyrupIcon from "../../../Assets/images/pharmacy.png";
 import uuid from "react-uuid";
 import messages from "./message";
+import addDays from "date-fns/addDays";
+import getDay from "date-fns/getDay";
+import getYear from "date-fns/getYear";
+import getMonth from "date-fns/getMonth";
+import getHours from "date-fns/getHours";
+import getMinutes from "date-fns/getMinutes";
 
 const { Option } = Select;
 const BLANK_TEMPLATE = "Blank Template";
@@ -1149,6 +1155,7 @@ class TemplateDrawer extends Component {
           </div>
         </div>
         {appointmentKeys.map((key) => {
+          console.log("Appointment keys", key);
           const {
             reason = "",
             schedule_data: {
@@ -1185,11 +1192,12 @@ class TemplateDrawer extends Component {
                   </div>
                 </div>
                 <div className="drawer-block-description">
-                  {date
-                    ? `After ${moment(date).diff(moment(), "days")} days`
-                    : time_gap
-                    ? `After ${time_gap - 1} days`
-                    : ""}
+                  {
+                    date && `After ${moment(date).diff(moment(), "days")} days`
+                    // : time_gap
+                    // ? `After ${time_gap - 1} days`
+                    // : ""
+                  }
                 </div>
                 <div className="drawer-block-description">{`Notes:${description}`}</div>
               </div>
@@ -1598,6 +1606,32 @@ class TemplateDrawer extends Component {
     // });
   };
 
+  // AKSHAY NEW CODE IMPLEMENTATIONS
+
+  convertMsToDays = (ms) => {
+    const msInOneSecond = 1000;
+    const secondsInOneMinute = 60;
+    const minutesInOneHour = 60;
+    const hoursInOneDay = 24;
+
+    const minutesInOneDay = hoursInOneDay * minutesInOneHour;
+    const secondsInOneDay = secondsInOneMinute * minutesInOneDay;
+    const msInOneDay = msInOneSecond * secondsInOneDay;
+
+    return Math.ceil(ms / msInOneDay);
+  };
+
+  getDaysBetweenDates = (dateOne, dateTwo) => {
+    let differenceInMs = dateTwo.getTime() - dateOne.getTime();
+
+    if (differenceInMs < 0) {
+      differenceInMs = dateOne.getTime() - dateTwo.getTime();
+    }
+
+    return this.convertMsToDays(differenceInMs);
+  };
+  // AKSHAY NEW CODE IMPLEMENTATIONS END
+
   onSubmit = () => {
     const {
       submit,
@@ -1624,6 +1658,16 @@ class TemplateDrawer extends Component {
     let vitalData = Object.values(vitals);
     let dietData = Object.values(diets);
     let workoutData = Object.values(workouts);
+
+    // AKSHAY NEW CODE IMPLEMENTATIONS
+
+    var currentDate = moment(new Date(), "YYYY/MM/DD");
+
+    var currentMonth = currentDate.format("M");
+    var currentDay = currentDate.format("D");
+    var currentYear = currentDate.format("YYYY");
+
+    // AKSHAY NEW CODE IMPLEMENTATIONS END
 
     for (let medication in medicationsData) {
       let newMed = medicationsData[medication];
@@ -1654,6 +1698,49 @@ class TemplateDrawer extends Component {
           medicationsData[medication].schedule_data.start_date
         ).add("days", duration);
       }
+
+      // AKSAHY NEW CODE IMPLEMENTATION
+      var medicineStartDate = moment(
+        medicationsData[medication].schedule_data.start_date,
+        "YYYY/MM/DD"
+      );
+      var medicineEndDate = moment(
+        medicationsData[medication].schedule_data.end_date,
+        "YYYY/MM/DD"
+      );
+
+      var medicineStartMonth = medicineStartDate.format("MM");
+      var medicineStartDay = medicineStartDate.format("DD");
+      var medicineStartYear = medicineStartDate.format("YYYY");
+      var medicineEndMonth = medicineEndDate.format("MM");
+      var medicineEndDay = medicineEndDate.format("DD");
+      var medicineEndYear = medicineEndDate.format("YYYY");
+      console.log(
+        `${medicineStartMonth}/${medicineStartDay}/${medicineStartYear}`
+      );
+      console.log(`${medicineEndMonth}/${medicineEndDay}/${medicineEndYear}`);
+      console.log(`${currentMonth}/${currentDay}/${currentYear}`);
+      if (
+        medicineStartDay < currentDay &&
+        medicineStartMonth <= currentMonth &&
+        medicineStartYear <= currentYear
+      ) {
+        const dateOne = new Date(
+          `${medicineStartMonth}/${medicineStartDay}/${medicineStartYear}`
+        ); // MM/DD/YYYY
+        const dateTwo = new Date(
+          `${medicineEndMonth}/${medicineEndDay}/${medicineEndYear}`
+        ); // MM/DD/YYYY
+
+        console.log(this.getDaysBetweenDates(dateOne, dateTwo)); // 10
+        medicationsData[medication].schedule_data.start_date =
+          new Date().toISOString();
+        medicationsData[medication].schedule_data.end_date = addDays(
+          new Date(),
+          this.getDaysBetweenDates(dateOne, dateTwo)
+        ).toISOString();
+      }
+      // AKSHAY NEW CODE IMPLEMENTATIONS END
     }
 
     for (let appointment in appointmentsData) {
@@ -1686,6 +1773,31 @@ class TemplateDrawer extends Component {
         appointmentsData[appointment].schedule_data.date = updatedDate;
       }
 
+      // AKSHAY NEW CODE IMPLEMENTATIONS
+
+      var appointmentDate = moment(
+        appointmentsData[appointment].schedule_data.date,
+        "YYYY/MM/DD"
+      );
+
+      var appointmentMonth = appointmentDate.format("M");
+      var appointmentDay = appointmentDate.format("D");
+      var appointmentYear = appointmentDate.format("YYYY");
+
+      if (
+        appointmentDay < currentDay &&
+        appointmentMonth <= currentMonth &&
+        appointmentYear <= currentYear
+      ) {
+        appointmentsData[appointment].schedule_data.date = addDays(
+          // new Date(appointmentsData[appointment].schedule_data.date),
+          new Date(),
+          Math.abs(moment(date).diff(moment(), "days"))
+        ).toISOString();
+      }
+
+      // AKSHAY NEW CODE IMPLEMENTATIONS END
+
       if (!start_time) {
         if (!date) {
           appointmentsData[appointment].schedule_data.start_time = moment(
@@ -1715,6 +1827,8 @@ class TemplateDrawer extends Component {
         appointmentsData[appointment].schedule_data.treatment_id = cPtreat;
       }
     }
+    console.log("medicationsData", medicationsData);
+    console.log("appointmentsData", appointmentsData);
 
     /////
 
