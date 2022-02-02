@@ -1797,11 +1797,13 @@ class TemplateDrawer extends Component {
         appointmentMonth <= currentMonth &&
         appointmentYear <= currentYear
       ) {
-        appointmentsData[appointment].schedule_data.date = addDays(
-          // new Date(appointmentsData[appointment].schedule_data.date),
-          new Date(),
-          Math.abs(moment(date).diff(moment(), "days"))
-        ).toISOString();
+        if (date) {
+          appointmentsData[appointment].schedule_data.date = addDays(
+            // new Date(appointmentsData[appointment].schedule_data.date),
+            new Date(),
+            Math.abs(moment(date).diff(moment(), "days"))
+          ).toISOString();
+        }
       }
 
       // AKSHAY NEW CODE IMPLEMENTATIONS END
@@ -1837,8 +1839,6 @@ class TemplateDrawer extends Component {
     }
     console.log("afetr medicationsData", medicationsData);
     console.log("after appointmentsData", appointmentsData);
-
-    /////
 
     if (
       authenticated_category === USER_CATEGORY.HSP &&

@@ -704,7 +704,7 @@ class CarePlanController extends Controller {
 
           if (!carePlan.getChannelId().includes("group"))
             await carePlanService.updateCarePlan(
-              { channel_id: carePlan.getChannelId() + "_group" },
+              { channel_id: carePlan.getChannelId() + care_plan_id + "_group" },
               carePlanId
             );
 

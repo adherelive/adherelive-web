@@ -2258,18 +2258,15 @@ class PatientDetails extends Component {
         <img src={noMedication} className="w200 h200" />
         <div className="fs20 fw700">{message}</div>
         {/* {showUseTemplate && (carePlanTemplateId || carePlanTemplateExists) ? ( */}
-        {!isOtherCarePlan && user_role_id.toString() === auth_role.toString() && (
-          <div
-            className="use-template-button"
-            onClick={this.showTemplateDrawer}
-          >
-            <div>
-              {firstTemplateName === BLANK_TEMPLATE
-                ? formatMessage(messages.create_template)
-                : formatMessage(messages.use_template)}
-            </div>
+        {/* {!isOtherCarePlan && user_role_id.toString() === auth_role.toString() && ( */}
+        <div className="use-template-button" onClick={this.showTemplateDrawer}>
+          <div>
+            {firstTemplateName === BLANK_TEMPLATE
+              ? formatMessage(messages.create_template)
+              : formatMessage(messages.use_template)}
           </div>
-        )}
+        </div>
+        {/* )} */}
         {/* ) :
                   showUseTemplate ? (
                     <div className='use-template-button' onClick={this.handleMedicationReminder}>
@@ -2854,38 +2851,36 @@ class PatientDetails extends Component {
               )}
             </div>
           </div>
-          {!isOtherCarePlan && (
-            <Fragment>
-              <AddMedicationReminder
-                patientId={patient_id}
-                carePlanId={carePlanId}
-              />
+          {/* AKSHAY NEW CODE IMPLEMENTATIONS */}
+          {/* {!isOtherCarePlan && ( */}
+          <Fragment>
+            <AddMedicationReminder
+              patientId={patient_id}
+              carePlanId={carePlanId}
+            />
 
-              <AddVitals carePlanId={carePlanId} />
-              <AddAppointmentDrawer carePlanId={carePlanId} />
-              <AddCareplanDrawer patientId={patient_id} />
-              <AddReportDrawer />
-              <AddFoodItem />
-              <AddDietDrawer carePlanId={carePlanId} />
-              <AddWorkoutDrawer
-                carePlanId={carePlanId}
-                patientId={patient_id}
-              />
+            <AddVitals carePlanId={carePlanId} />
+            <AddAppointmentDrawer carePlanId={carePlanId} />
+            <AddCareplanDrawer patientId={patient_id} />
+            <AddReportDrawer />
+            <AddFoodItem />
+            <AddDietDrawer carePlanId={carePlanId} />
+            <AddWorkoutDrawer carePlanId={carePlanId} patientId={patient_id} />
 
-              {templateDrawerVisible && (
-                <TemplateDrawer
-                  visible={templateDrawerVisible}
-                  submit={this.handleSubmitTemplate}
-                  dispatchClose={close}
-                  closeTemplateDrawer={onCloseTemplate}
-                  patientId={patient_id}
-                  carePlanTemplateIds={carePlanTemplateIds}
-                  carePlan={carePlan}
-                  {...this.props}
-                />
-              )}
-            </Fragment>
-          )}
+            {templateDrawerVisible && (
+              <TemplateDrawer
+                visible={templateDrawerVisible}
+                submit={this.handleSubmitTemplate}
+                dispatchClose={close}
+                closeTemplateDrawer={onCloseTemplate}
+                patientId={patient_id}
+                carePlanTemplateIds={carePlanTemplateIds}
+                carePlan={carePlan}
+                {...this.props}
+              />
+            )}
+          </Fragment>
+          {/* )} */}
 
           {popUpVisible && (
             <div
