@@ -237,18 +237,25 @@ class symptomBotMessage extends Component {
   };
 
   getSymptomMessage = (message, side, parts) => {
-    if (side === "" || parts.length === 0) {
-      return "";
-    }
+    console.log(
+      "JSON.parse(message.state.body);",
+      JSON.parse(message.state.body)
+    );
+    // OLD CODE
+    // if (side === "" || parts.length === 0) {
+    //   return "";
+    // }
 
     let parsedMessage = JSON.parse(message.state.body);
     // AKSHAY NEW CODE IMPLEMENTATIONS
     const { symptom_id, symptoms } = parsedMessage || {};
     const { config } = symptoms[symptom_id] || {};
+    console.log("symptoms[symptom_id]", symptoms[symptom_id]);
     // parts...
     const { name: partName = "" } = PARTS_GRAPH[config.parts] || {};
     // side...
-    const { name: sideName = "" } = BODY_SIDE_TEXT[config.side] || {};
+    const body_side = BODY_SIDE_TEXT[config.side] || {};
+
     // AKSHAY NEW CODE IMPLEMENTATIONS NED
 
     // OLD CODE
@@ -265,7 +272,7 @@ class symptomBotMessage extends Component {
           <span className="bot-m-h ">Symptom</span>
 
           <div className="bot-msg-details">
-            <span className="fs14 fw500  ">{sideName}</span>
+            <span className="fs14 fw500  ">{body_side}</span>
             <span className="dot">&bull;</span>
             <span className="side">{partName}</span>
           </div>

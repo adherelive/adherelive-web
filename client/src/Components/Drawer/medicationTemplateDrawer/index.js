@@ -1668,7 +1668,7 @@ class TemplateDrawer extends Component {
     var currentYear = currentDate.format("YYYY");
 
     // AKSHAY NEW CODE IMPLEMENTATIONS END
-
+    console.log("prvious medicationsData", medicationsData);
     for (let medication in medicationsData) {
       let newMed = medicationsData[medication];
       let {
@@ -1720,6 +1720,14 @@ class TemplateDrawer extends Component {
       );
       console.log(`${medicineEndMonth}/${medicineEndDay}/${medicineEndYear}`);
       console.log(`${currentMonth}/${currentDay}/${currentYear}`);
+      const dateOne = new Date(
+        `${medicineStartMonth}/${medicineStartDay}/${medicineStartYear}`
+      ); // MM/DD/YYYY
+      const dateTwo = new Date(
+        `${medicineEndMonth}/${medicineEndDay}/${medicineEndYear}`
+      ); // MM/DD/YYYY
+
+      console.log(this.getDaysBetweenDates(dateOne, dateTwo)); // 10
       if (
         medicineStartDay < currentDay &&
         medicineStartMonth <= currentMonth &&
@@ -1732,7 +1740,7 @@ class TemplateDrawer extends Component {
           `${medicineEndMonth}/${medicineEndDay}/${medicineEndYear}`
         ); // MM/DD/YYYY
 
-        console.log(this.getDaysBetweenDates(dateOne, dateTwo)); // 10
+        // console.log(this.getDaysBetweenDates(dateOne, dateTwo)); // 10
         medicationsData[medication].schedule_data.start_date =
           new Date().toISOString();
         medicationsData[medication].schedule_data.end_date = addDays(
@@ -1827,8 +1835,8 @@ class TemplateDrawer extends Component {
         appointmentsData[appointment].schedule_data.treatment_id = cPtreat;
       }
     }
-    console.log("medicationsData", medicationsData);
-    console.log("appointmentsData", appointmentsData);
+    console.log("afetr medicationsData", medicationsData);
+    console.log("after appointmentsData", appointmentsData);
 
     /////
 
