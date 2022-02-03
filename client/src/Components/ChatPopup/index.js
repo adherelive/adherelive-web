@@ -41,6 +41,7 @@ import { MENU_ITEMS } from "../ChatFullScreen/twilioChat";
 import { MoreOutlined } from "@ant-design/icons";
 
 import Tooltip from "antd/es/tooltip";
+import isEmpty from "../../Helper/is-empty";
 
 const Header = ({
   placeVideoCall,
@@ -370,10 +371,36 @@ class ChatPopUp extends Component {
       fetchChatAccessToken,
       authenticated_user,
       carePlan,
+      dashboardChat,
+      care_plans,
     } = this.props;
+    const { payload: { patient_id } = {} } = this.props;
+    let finalChannel = "";
+    if (dashboardChat == true) {
+      // AKSHAY NEW CODE IMPLEMENTATIONS
+      if (!isEmpty(care_plans)) {
+        var filtered = Object.fromEntries(
+          Object.entries(care_plans).filter(
+            ([key, value]) =>
+              value.basic_info.patient_id == patient_id &&
+              value.channel_id !== null &&
+              value.channel_id.split("-")[4] !== "demo_group"
+          )
+        );
+
+        for (const key in filtered) {
+          finalChannel = filtered[key].channel_id;
+        }
+      }
+    } else {
+      finalChannel = carePlan.channel_id;
+    }
+
+    console.log("finalChannel", finalChannel);
+
     // this.channelName = roomId ? roomId : "test";
     // AKSHAY NEW CODE IMPLEMENTATIONS
-    this.channelName = carePlan.channel_id;
+    this.channelName = finalChannel;
 
     // fetchChatAccessToken(authenticated_user).then(result => {
     //     this.setState((prevState, props) => {
@@ -499,9 +526,33 @@ class ChatPopUp extends Component {
 
   messagesLoaded = (messagePage) => {
     let messages = this.updateMessageRecieved(messagePage.items);
-    const { carePlan, roomId, addMessageOfChat } = this.props;
+    const { carePlan, roomId, addMessageOfChat, care_plans, dashboardChat } =
+      this.props;
+    const { payload: { patient_id } = {} } = this.props;
+    console.log("messages", messages);
     // AKSHAY NEW CODE IMPLEMENTATIONS
-    addMessageOfChat(carePlan.channel_id, messages);
+    let finalChannel = "";
+    if (dashboardChat == true) {
+      // AKSHAY NEW CODE IMPLEMENTATIONS
+      if (!isEmpty(care_plans)) {
+        var filtered = Object.fromEntries(
+          Object.entries(care_plans).filter(
+            ([key, value]) =>
+              value.basic_info.patient_id == patient_id &&
+              value.channel_id !== null &&
+              value.channel_id.split("-")[4] !== "demo_group"
+          )
+        );
+        console.log("filtered", filtered);
+        for (const key in filtered) {
+          finalChannel = filtered[key].channel_id;
+        }
+      }
+    } else {
+      finalChannel = carePlan.channel_id;
+    }
+    console.log("finalChannel", finalChannel);
+    addMessageOfChat(finalChannel, messages);
     // OLD CODE OF VINEET
     // addMessageOfChat(roomId, message);
     this.setState(
@@ -515,9 +566,32 @@ class ChatPopUp extends Component {
   };
 
   messageAdded = (message) => {
-    const { carePlan, roomId, addMessageOfChat } = this.props;
+    const { carePlan, roomId, addMessageOfChat, dashboardChat, care_plans } =
+      this.props;
+    const { payload: { patient_id } = {} } = this.props;
     // AKSHAY NEW CODE IMPLEMENTATIONS
-    addMessageOfChat(carePlan.channel_id, message);
+    let finalChannel = "";
+    if (dashboardChat == true) {
+      // AKSHAY NEW CODE IMPLEMENTATIONS
+      if (!isEmpty(care_plans)) {
+        var filtered = Object.fromEntries(
+          Object.entries(care_plans).filter(
+            ([key, value]) =>
+              value.basic_info.patient_id == patient_id &&
+              value.channel_id !== null &&
+              value.channel_id.split("-")[4] !== "demo_group"
+          )
+        );
+        console.log("filtered", filtered);
+        for (const key in filtered) {
+          finalChannel = filtered[key].channel_id;
+        }
+      }
+    } else {
+      finalChannel = carePlan.channel_id;
+    }
+    console.log("finalChannel", finalChannel);
+    addMessageOfChat(finalChannel, message);
     // OLD CODE OF VINEET
     // addMessageOfChat(roomId, message);
     // this.setState((prevState, props) => {
@@ -869,7 +943,15 @@ class ChatPopUp extends Component {
 
   render() {
     const { ChatForm } = this;
-    const { chatMessages, roomId, authenticated_user } = this.props;
+    const {
+      chatMessages,
+      roomId,
+      authenticated_user,
+      dashboardChat,
+      care_plans,
+      carePlan,
+    } = this.props;
+    const { payload: { patient_id } = {} } = this.props;
     const {
       messagesLoading = false,
       other_user_online = false,
@@ -897,6 +979,27 @@ class ChatPopUp extends Component {
           close={closePopUp}
         />
       );
+    }
+
+    let finalChannel = "";
+    if (dashboardChat == true) {
+      // AKSHAY NEW CODE IMPLEMENTATIONS
+      if (!isEmpty(care_plans)) {
+        var filtered = Object.fromEntries(
+          Object.entries(care_plans).filter(
+            ([key, value]) =>
+              value.basic_info.patient_id == patient_id &&
+              value.channel_id !== null &&
+              value.channel_id.split("-")[4] !== "demo_group"
+          )
+        );
+        console.log("filtered", filtered);
+        for (const key in filtered) {
+          finalChannel = filtered[key].channel_id;
+        }
+      }
+    } else {
+      finalChannel = carePlan.channel_id;
     }
 
     return (
@@ -928,7 +1031,7 @@ class ChatPopUp extends Component {
                     otherUserLastConsumedMessageIndex
                   }
                   //AKSHAY NEW CODE IMPLEMENTATIONS
-                  channelId={this.props.carePlan.channel_id}
+                  channelId={finalChannel}
                 />
               )}
               <div id="chatEnd" style={{ float: "left", clear: "both" }} />

@@ -18,6 +18,16 @@ class UpdateJob extends VitalJob {
     super(data);
   }
 
+  /**
+   * 
+   *  const {
+      participants = [],
+      actor: { id: actorId, user_role_id } = {},
+      event_id: eventId = null,
+    } = getData() || {};
+
+   */
+
   getPushAppTemplate = async () => {
     const { getData } = this;
     const {
@@ -28,6 +38,7 @@ class UpdateJob extends VitalJob {
           basic_info: { first_name, middle_name, last_name } = {},
         } = {},
         category,
+        user_role_id,
       } = {},
       vital_templates: { basic_info: { name: vitalName = "" } = {} } = {},
       eventId = null,
