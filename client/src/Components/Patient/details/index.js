@@ -287,8 +287,11 @@ const columns_appointments = [
       const { basic_info: { user_role_id = null } = {} } = carePlan || {};
       let canViewDetails = true;
       if (
-        !isOtherCarePlan &&
-        user_role_id.toString() === auth_role.toString()
+        (!isOtherCarePlan &&
+          user_role_id.toString() === auth_role.toString()) ||
+        // AKSHAY NEW CODE IMPLEMENTATIONS
+        (!isEmpty(carePlan) &&
+          carePlan.secondary_doctor_user_role_ids.includes(auth_role) === true)
       ) {
         canViewDetails = false;
       }
@@ -1562,8 +1565,11 @@ class PatientDetails extends Component {
       const { basic_info: { user_role_id = null } = {} } = carePlan || {};
       let canViewDetails = true;
       if (
-        !isOtherCarePlan &&
-        user_role_id.toString() === auth_role.toString()
+        (!isOtherCarePlan &&
+          user_role_id.toString() === auth_role.toString()) ||
+        // AKSHAY NEW CODE IMPLEMENTATIONS
+        (!isEmpty(carePlan) &&
+          carePlan.secondary_doctor_user_role_ids.includes(auth_role) === true)
       ) {
         canViewDetails = false;
       }
