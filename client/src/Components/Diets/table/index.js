@@ -7,6 +7,7 @@ import Table from "antd/es/table";
 import Icon from "antd/es/icon";
 
 import messages from "./messages";
+import isEmpty from "../../../Helper/is-empty";
 
 class DietTable extends Component {
   constructor(props) {
@@ -78,7 +79,14 @@ class DietTable extends Component {
     const { basic_info: { user_role_id = null } = {} } =
       care_plans[carePlanId] || {};
     let canViewDetails = true;
-    if (!isOtherCarePlan && user_role_id.toString() === auth_role.toString()) {
+    // AKSHAY NEW CODE IMPLEMENTATIONS
+    let careplanData = care_plans[carePlanId];
+    if (
+      (!isOtherCarePlan && user_role_id.toString() === auth_role.toString()) ||
+      (!isEmpty(careplanData) &&
+        careplanData.secondary_doctor_user_role_ids.includes(auth_role) ===
+          true)
+    ) {
       canViewDetails = false;
     }
 
@@ -133,7 +141,15 @@ class DietTable extends Component {
     const { basic_info: { user_role_id = null } = {} } =
       care_plans[carePlanId] || {};
     let canViewDetails = true;
-    if (!isOtherCarePlan && user_role_id.toString() === auth_role.toString()) {
+    // AKSHAY NEW CODE IMPLEMENTATIONS
+    console.log("care_plans diets", care_plans);
+    let careplanData = care_plans[carePlanId];
+    if (
+      (!isOtherCarePlan && user_role_id.toString() === auth_role.toString()) ||
+      (!isEmpty(careplanData) &&
+        careplanData.secondary_doctor_user_role_ids.includes(auth_role) ===
+          true)
+    ) {
       canViewDetails = false;
     }
     openEditDietDrawer({
