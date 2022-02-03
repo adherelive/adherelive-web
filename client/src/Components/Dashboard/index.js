@@ -1,7 +1,7 @@
-import React, {Component, Fragment} from "react";
-import {injectIntl} from "react-intl";
+import React, { Component, Fragment } from "react";
+import { injectIntl } from "react-intl";
 import messages from "./message";
-import {connect} from "getstream";
+import { connect } from "getstream";
 import {
   TABLE_DEFAULT_BLANK_FIELD,
   FEATURES,
@@ -21,13 +21,13 @@ import PatientDetailsDrawer from "../../Containers/Drawer/patientDetails";
 import ChatPopup from "../../Containers/ChatPopup";
 import AddPatientDrawer from "../Drawer/addPatient";
 import Loading from "../Common/Loading";
-import {withRouter} from "react-router-dom";
+import { withRouter } from "react-router-dom";
 import Donut from "../Common/graphs/donut";
 import GraphsModal from "./graphsModal";
-import {getPatientConsultingVideoUrl} from "../../Helper/url/patients";
-import {getPatientConsultingUrl} from "../../Helper/url/patients";
+import { getPatientConsultingVideoUrl } from "../../Helper/url/patients";
+import { getPatientConsultingUrl } from "../../Helper/url/patients";
 import config from "../../config";
-import {message, Button, Spin, Menu, Dropdown, Modal} from "antd";
+import { message, Button, Spin, Menu, Dropdown, Modal } from "antd";
 import SearchPatient from "../../Containers/SearchPatient";
 import MissedAppointmentsDrawer from "../../Containers/Drawer/missedAppointment";
 import MissedVitalsDrawer from "../../Containers/Drawer/missedVital";
@@ -36,10 +36,10 @@ import MissedDietsDrawer from "../../Containers/Drawer/missedDiet";
 import MissedWorkoutsDrawer from "../../Containers/Drawer/missedWorkout";
 
 // helpers...
-import {getRoomId} from "../../Helper/twilio";
+import { getRoomId } from "../../Helper/twilio";
 
-const {GETSTREAM_API_KEY, GETSTREAM_APP_ID} = config;
-const {TabPane} = Tabs;
+const { GETSTREAM_API_KEY, GETSTREAM_APP_ID } = config;
+const { TabPane } = Tabs;
 
 const CHART_MISSED_MEDICATION = "Missed Medication";
 const CHART_MISSED_APPOINTMENT = "Missed Appointment";
@@ -92,9 +92,9 @@ class Dashboard extends Component {
       },
     };
   }
-  
+
   async componentDidMount() {
-    const {authPermissions = []} = this.props;
+    const { authPermissions = [] } = this.props;
     const {
       searchMedicine,
       getGraphs,
@@ -105,22 +105,22 @@ class Dashboard extends Component {
       getAllFeatures,
       getAllMissedScheduleEvents,
     } = this.props;
-    
-    this.setState({loading: true});
-    
+
+    this.setState({ loading: true });
+
     closePopUp();
     let doctorUserId = ""; //user_id of doctor
     for (let doc of Object.values(doctors)) {
-      let {basic_info: {user_id, id = 1} = {}} = doc;
+      let { basic_info: { user_id, id = 1 } = {} } = doc;
       if (parseInt(user_id) === parseInt(authenticated_user)) {
         doctorUserId = authenticated_user;
       }
     }
-    this.setState({graphLoading: true, doctorUserId});
+    this.setState({ graphLoading: true, doctorUserId });
     getGraphs().then((response) => {
       const {
         status,
-        payload: {data: {user_preferences: {charts = []} = {}} = {}} = {},
+        payload: { data: { user_preferences: { charts = [] } = {} } = {} } = {},
       } = response;
       if (status) {
         this.setState({
@@ -129,12 +129,12 @@ class Dashboard extends Component {
           loading: false,
         });
       } else {
-        this.setState({loading: false});
+        this.setState({ loading: false });
       }
     });
-    
+
     if (authPermissions.length === 0) {
-      this.setState({showModal: true});
+      this.setState({ showModal: true });
     }
     fetchChatAccessToken(authenticated_user);
     searchMedicine("");
@@ -142,23 +142,23 @@ class Dashboard extends Component {
     getAllMissedScheduleEvents();
     this.initiateInAppNotificationObj();
   }
-  
+
   // handleGetAllDietsForDoctor = async() => {
   //   try{
   //     const { getAllDietsForDoctor } = this.props;
   //     const response = await getAllDietsForDoctor();
   //     const { status, payload: { message : resp_msg = ''  } = {}  } =
   //           response || {};
-  
+
   //     if(!status){
   //       message.warn(resp_msg);
-  
+
   //     }
   //   }catch(error){
   //     console.log("error ===========>>>",{error});
   //   }
   // }
-  
+
   // initiateInAppNotificationObj = () => {
   //   const { notificationToken, feedId, } = this.props;
   //   if (notificationToken || feedId) {
@@ -167,123 +167,123 @@ class Dashboard extends Component {
   //           notificationToken,
   //           GETSTREAM_APP_ID
   //       );
-  
+
   //       this.client = clientFeed;
-  
+
   //   }
-  
+
   //   this.updateUnseenNotificationData();
   // };
-  
+
   // getFeedData = async() => {
   //   let clientFeed = this.client.feed("notification", atob(this.feedId));
   //   const data = await clientFeed.get({ limit: 30 });
   //   return data;
   // }
-  
+
   // updateUnseenNotificationData = async () => {
   //   const data = await this.getFeedData();
   //   const { unseen = 0 } = data || {};
   //   this.props.updateUnseenInAppNotificationCount(unseen);
   // };
-  
+
   initiateInAppNotificationObj = () => {
-    const {notificationToken, feedId} = this.props;
-    const {updateUnseenNotificationData} = this;
-    
+    const { notificationToken, feedId } = this.props;
+    const { updateUnseenNotificationData } = this;
+
     if (notificationToken || feedId) {
       let clientFeed = connect(
         config.GETSTREAM_API_KEY,
         notificationToken,
         config.GETSTREAM_APP_ID
       );
-      
+
       this.client = clientFeed;
     }
-    
+
     updateUnseenNotificationData();
   };
-  
+
   getFeedData = async () => {
-    const {feedId} = this.props;
+    const { feedId } = this.props;
     const limit = config.REACT_APP_NOTIFICATION_ONE_TIME_LIMIT;
     let clientFeed = this.client.feed("notification", feedId);
-    
-    const data = await clientFeed.get({limit});
+
+    const data = await clientFeed.get({ limit });
     return data;
   };
-  
+
   updateUnseenNotificationData = async () => {
     const data = await this.getFeedData();
-    const {unseen = 0} = data || {};
-    const {setUnseenNotificationCount} = this.props;
+    const { unseen = 0 } = data || {};
+    const { setUnseenNotificationCount } = this.props;
     setUnseenNotificationCount(unseen);
   };
-  
-  changeTabState = ({currentTab, type, value}) => {
+
+  changeTabState = ({ currentTab, type, value }) => {
     let prevState = "";
     if (currentTab === CURRENT_TAB.ALL_PATIENTS) {
-      const {allPatientsTab = {}} = this.state;
+      const { allPatientsTab = {} } = this.state;
       prevState = allPatientsTab;
     } else {
-      const {watchlistTab = {}} = this.state;
+      const { watchlistTab = {} } = this.state;
       prevState = watchlistTab;
     }
-    
+
     let newState = prevState;
     newState[type] = value;
-    
+
     if (currentTab === CURRENT_TAB.ALL_PATIENTS) {
-      this.setState({allPatientsTab: newState});
+      this.setState({ allPatientsTab: newState });
     } else {
-      this.setState({watchwatchlistTab: newState});
+      this.setState({ watchwatchlistTab: newState });
     }
   };
-  
-  sortByName = ({currentTab}) => {
+
+  sortByName = ({ currentTab }) => {
     let prevState = "";
     if (currentTab === CURRENT_TAB.ALL_PATIENTS) {
-      const {allPatientsTab = {}} = this.state;
+      const { allPatientsTab = {} } = this.state;
       prevState = allPatientsTab;
     } else {
-      const {watchlistTab = {}} = this.state;
+      const { watchlistTab = {} } = this.state;
       prevState = watchlistTab;
     }
-    
+
     let newState = prevState;
     newState["sort_createdAt"] = null;
     newState["sort_name"] = 1;
-    
+
     if (currentTab === CURRENT_TAB.ALL_PATIENTS) {
-      this.setState({allPatientsTab: newState});
+      this.setState({ allPatientsTab: newState });
     } else {
-      this.setState({watchwatchlistTab: newState});
+      this.setState({ watchwatchlistTab: newState });
     }
   };
-  
-  sortByCreatedAt = ({currentTab}) => {
+
+  sortByCreatedAt = ({ currentTab }) => {
     let prevState = "";
     if (currentTab === CURRENT_TAB.ALL_PATIENTS) {
-      const {allPatientsTab = {}} = this.state;
+      const { allPatientsTab = {} } = this.state;
       prevState = allPatientsTab;
     } else {
-      const {watchlistTab = {}} = this.state;
+      const { watchlistTab = {} } = this.state;
       prevState = watchlistTab;
     }
-    
+
     let newState = prevState;
     newState["sort_createdAt"] = 1;
     newState["sort_name"] = null;
-    
+
     if (currentTab === CURRENT_TAB.ALL_PATIENTS) {
-      this.setState({allPatientsTab: newState});
+      this.setState({ allPatientsTab: newState });
     } else {
-      this.setState({watchwatchlistTab: newState});
+      this.setState({ watchwatchlistTab: newState });
     }
   };
-  
+
   getMenu = () => {
-    const {authPermissions = []} = this.props;
+    const { authPermissions = [] } = this.props;
     return (
       <Menu>
         {authPermissions.includes(USER_PERMISSIONS.PATIENTS.ADD) && (
@@ -299,30 +299,30 @@ class Dashboard extends Component {
       </Menu>
     );
   };
-  
+
   formatMessage = (data) => this.props.intl.formatMessage(data);
-  
+
   chartClicked = (name) => {
     if (name === CHART_MISSED_APPOINTMENT) {
-      const {openMissedAppointmentDrawer} = this.props;
+      const { openMissedAppointmentDrawer } = this.props;
       openMissedAppointmentDrawer();
     } else if (name === CHART_MISSED_ACTION) {
-      const {openMissedVitalDrawer} = this.props;
+      const { openMissedVitalDrawer } = this.props;
       openMissedVitalDrawer();
     } else if (name === CHART_MISSED_MEDICATION) {
-      const {openMissedMedicationDrawer} = this.props;
+      const { openMissedMedicationDrawer } = this.props;
       openMissedMedicationDrawer();
     } else if (name === CHART_MISSED_DIET) {
-      const {openMissedDietDrawer} = this.props;
+      const { openMissedDietDrawer } = this.props;
       openMissedDietDrawer();
     } else if (name === CHART_MISSED_WORKOUT) {
-      const {openMissedWorkoutDrawer} = this.props;
+      const { openMissedWorkoutDrawer } = this.props;
       openMissedWorkoutDrawer();
     }
   };
-  
+
   renderChartTabs = () => {
-    const {graphs, dashboard = {}} = this.props;
+    const { graphs, dashboard = {} } = this.props;
     const {
       medication_ids = {},
       appointment_ids = {},
@@ -350,7 +350,7 @@ class Dashboard extends Component {
       critical: workout_critical = [],
       non_critical: workout_non_critical = [],
     } = workout_ids;
-    
+
     const medication_total =
       medication_critical.length + medication_non_critical.length;
     const vital_total = vital_critical.length + vital_non_critical.length;
@@ -358,23 +358,23 @@ class Dashboard extends Component {
       appointment_critical.length + appointment_non_critical.length;
     const diet_total = diet_critical.length + diet_non_critical.length;
     const workout_total = workout_critical.length + workout_non_critical.length;
-    
-    const {graphsToShow, graphLoading} = this.state;
-    
+
+    const { graphsToShow, graphLoading } = this.state;
+
     // initial loading phase
     if (graphLoading) {
       return (
         <div className="flex flex-grow-1 wp100 align-center justify-center">
-          <Spin/>
+          <Spin />
         </div>
       );
     }
-    
+
     const chartBlocks = graphsToShow.map((id) => {
-      const {name, type = ""} = graphs[id] || {};
+      const { name, type = "" } = graphs[id] || {};
       let total = 0;
       let critical = 0;
-      
+
       if (type === MISSED_MEDICATION) {
         total = medication_total;
         critical = medication_critical.length;
@@ -391,7 +391,7 @@ class Dashboard extends Component {
         total = workout_total;
         critical = workout_critical.length;
       }
-      
+
       return (
         <div key={`donut-div-${id}`} onClick={() => this.chartClicked(name)}>
           <Donut
@@ -416,19 +416,19 @@ class Dashboard extends Component {
       return chartBlocks;
     }
   };
-  
+
   showAddPatientDrawer = () => {
-    this.setState({visible: true});
+    this.setState({ visible: true });
   };
   showEditGraphModal = () => {
-    this.setState({visibleModal: true});
+    this.setState({ visibleModal: true });
   };
-  
+
   addPatient = (data) => {
-    const {addPatient, authenticated_user} = this.props;
-    
-    const {basic_info: {id = 1} = {}} = authenticated_user || {};
-    this.setState({submitting: true});
+    const { addPatient, authenticated_user } = this.props;
+
+    const { basic_info: { id = 1 } = {} } = authenticated_user || {};
+    this.setState({ submitting: true });
     addPatient(data).then((response) => {
       let {
         status = false,
@@ -448,127 +448,127 @@ class Dashboard extends Component {
       if (status) {
         this.props.history.push({
           pathname: `/patients/${patient_id}`,
-          state: {showTemplateDrawer, currentCarePlanId},
+          state: { showTemplateDrawer, currentCarePlanId },
         });
-        
+
         // })
-        this.setState({submitting: false});
+        this.setState({ submitting: false });
       } else {
         if (statusCode === 422) {
           message.error(this.formatMessage(messages.patientExistError));
         } else {
           message.error(this.formatMessage(messages.somethingWentWrongError));
         }
-        
-        this.setState({submitting: false});
+
+        this.setState({ submitting: false });
       }
     });
   };
-  
+
   editDisplayGraphs = (data) => {
     let dataToUpdate = {};
     dataToUpdate.chart_ids = data;
-    let {updateGraphs} = this.props;
+    let { updateGraphs } = this.props;
     updateGraphs(dataToUpdate).then((response) => {
-      const {status} = response;
+      const { status } = response;
       if (status) {
-        this.setState({graphsToShow: data, visibleModal: false});
+        this.setState({ graphsToShow: data, visibleModal: false });
       } else {
         message.error(this.formatMessage(messages.somethingWentWrongError));
       }
     });
   };
-  
+
   hideAddPatientDrawer = () => {
-    this.setState({visible: false});
+    this.setState({ visible: false });
   };
-  
+
   hideEditGraphModal = () => {
-    this.setState({visibleModal: false});
+    this.setState({ visibleModal: false });
   };
-  
+
   openVideoChatTab = async () => {
     await this.props.getAllFeatures();
-    
+
     const videoCallBlocked = this.checkVideoCallIsBlocked();
-    
+
     if (videoCallBlocked) {
       message.error(this.formatMessage(messages.videoCallBlocked));
       return;
     }
     const {
       patients,
-      twilio: {care_plan_id: currentCareplanId = 1} = {},
+      twilio: { care_plan_id: currentCareplanId = 1 } = {},
       auth_role: doctorRoleId = null,
       care_plans,
     } = this.props;
-    const {doctorUserId} = this.state;
+    const { doctorUserId } = this.state;
     // let { basic_info: { user_id: patientUserId = "" } = {} , user_role_id : patientRoleId = null  } = patients[
     //   chatPatientId
     // ];
-    
+
     // const roomId = getRoomId(doctorRoleId, patientRoleId);
-    const {channel_id: roomId} = care_plans[currentCareplanId] || {};
-    
+    const { channel_id: roomId } = care_plans[currentCareplanId] || {};
+
     console.log("123921083 roomId", roomId);
-    
+
     window.open(
       `${config.WEB_URL}/test${getPatientConsultingVideoUrl(roomId)}`,
       "_blank"
     );
   };
-  
+
   checkVideoCallIsBlocked = () => {
-    const {features_mappings = {}} = this.props;
+    const { features_mappings = {} } = this.props;
     let videoCallBlocked = false;
     const videoCallFeatureId = this.getFeatureId(FEATURES.VIDEO_CALL);
     const otherUserCategoryId = this.getOtherUserCategoryId();
-    const {[otherUserCategoryId]: mappingsData = []} = features_mappings;
-    
+    const { [otherUserCategoryId]: mappingsData = [] } = features_mappings;
+
     if (mappingsData.indexOf(videoCallFeatureId) >= 0) {
       videoCallBlocked = false;
     } else {
       videoCallBlocked = true;
     }
-    
+
     return videoCallBlocked;
   };
-  
+
   getFeatureId = (featureName) => {
-    const {features = {}} = this.props;
+    const { features = {} } = this.props;
     const featuresIds = Object.keys(features);
-    
+
     for (const id of featuresIds) {
-      const {[id]: {name = null} = ({} = {})} = features;
-      
+      const { [id]: { name = null } = ({} = {}) } = features;
+
       if (name === featureName) {
         return parseInt(id, 10);
       }
     }
-    
+
     return null;
   };
-  
+
   getOtherUserCategoryId = () => {
     const {
-      twilio: {patientId = 1},
+      twilio: { patientId = 1 },
     } = this.props;
     return patientId;
   };
-  
+
   maximizeChat = () => {
     const {
       patients,
-      twilio: {patientId: chatPatientId = 1},
+      twilio: { patientId: chatPatientId = 1 },
     } = this.props;
     window.open(
       `${config.WEB_URL}${getPatientConsultingUrl(chatPatientId)}`,
       "_blank"
     );
   };
-  
+
   getVerifyModal = () => {
-    const {showVerifyModal = false} = this.props;
+    const { showVerifyModal = false } = this.props;
     return (
       <div className="wp100 flex justify-center align-center">
         <Modal
@@ -592,36 +592,36 @@ class Dashboard extends Component {
       </div>
     );
   };
-  
+
   closeModal = () => {
-    const {showVerifyModal} = this.props;
+    const { showVerifyModal } = this.props;
     showVerifyModal(false);
   };
-  
+
   changeTab = (tab) => {
-    this.setState({currentTab: tab});
+    this.setState({ currentTab: tab });
   };
-  
+
   getProviderBanner = () => {
-    const {providers = {}, doctor_provider_id = null} = this.props;
-    const {details: {banner = ""} = {}} =
-    providers[doctor_provider_id] || {};
-    
+    const { providers = {}, doctor_provider_id = null } = this.props;
+    const { details: { banner = "" } = {} } =
+      providers[doctor_provider_id] || {};
+
     if (!doctor_provider_id || !banner) {
       return null;
     }
-    
+
     return (
       <div>
         <img
           src={banner}
           alt="provider-banner"
-          style={{height: "80px", width: "auto"}}
+          style={{ height: "80px", width: "auto" }}
         />
       </div>
     );
   };
-  
+
   render() {
     const {
       doctors = {},
@@ -632,29 +632,30 @@ class Dashboard extends Component {
       severity,
       patients,
       authPermissions = [],
-      chats: {minimized = false, visible: popUpVisible = false},
-      drawer: {visible: drawerVisible = false} = {},
-      ui_features: {showVerifyModal = false} = {},
-      twilio: {patientId: chatPatientId = 1, care_plan_id},
+      chats: { minimized = false, visible: popUpVisible = false },
+      drawer: { visible: drawerVisible = false } = {},
+      ui_features: { showVerifyModal = false } = {},
+      twilio: { patientId: chatPatientId = 1, care_plan_id },
       auth_role: doctorRoleId = null,
       authenticated_category,
       care_plans,
     } = this.props;
-    
+    const { payload: { patient_id } = {} } = this.props;
+
     let doctorID = null;
     let docName = "";
     Object.keys(doctors).forEach((id) => {
-      const {basic_info: {user_id} = {}} = doctors[id] || {};
-      
+      const { basic_info: { user_id } = {} } = doctors[id] || {};
+
       if (user_id === authenticated_user) {
         doctorID = id;
       }
     });
-    const {basic_info: {full_name} = {}} = doctors[doctorID] || {};
+    const { basic_info: { full_name } = {} } = doctors[doctorID] || {};
     docName = full_name ? `Dr. ${full_name}` : TABLE_DEFAULT_BLANK_FIELD;
-    
+
     // console.log("198237837128 getCookie", this.getCookie("accessToken"));
-    
+
     const {
       formatMessage,
       renderChartTabs,
@@ -662,7 +663,7 @@ class Dashboard extends Component {
       changeTab,
       getProviderBanner,
     } = this;
-    
+
     let {
       basic_info: {
         user_id: patientUserId = "",
@@ -671,9 +672,9 @@ class Dashboard extends Component {
         last_name = "",
       } = {},
       user_role_id: patientRoleId = null,
-      details: {profile_pic: patientDp = ""} = {},
-    } = patients[chatPatientId] || {};
-    
+      details: { profile_pic: patientDp = "" } = {},
+    } = patients[patient_id] || {};
+
     const {
       visible,
       graphsToShow,
@@ -685,20 +686,20 @@ class Dashboard extends Component {
       allPatientsTab,
       watchlistTab,
     } = this.state;
-    
+
     // const roomId = getRoomId(doctorRoleId, patientRoleId);
-    
-    const {channel_id: roomId} = care_plans[care_plan_id] || {};
-    
+
+    const { channel_id: roomId } = care_plans[care_plan_id] || {};
+
     let bannerFlag = true;
-    const {providers = {}, doctor_provider_id = null} = this.props;
-    const {details: {banner = ""} = {}} =
-    providers[doctor_provider_id] || {};
-    
+    const { providers = {}, doctor_provider_id = null } = this.props;
+    const { details: { banner = "" } = {} } =
+      providers[doctor_provider_id] || {};
+
     if (!doctor_provider_id || !banner) {
       bannerFlag = false;
     }
-    
+
     if (
       Object.keys(graphs).length === 0 ||
       loading ||
@@ -706,11 +707,11 @@ class Dashboard extends Component {
     ) {
       return (
         <div className="hvh100 flex direction-column align-center justify-center">
-          <Loading className={"wp100"}/>
+          <Loading className={"wp100"} />
         </div>
       );
     }
-    
+
     return (
       <Fragment>
         <div className=" dashboard p20">
@@ -735,8 +736,8 @@ class Dashboard extends Component {
             {(authPermissions.includes(USER_PERMISSIONS.PATIENTS.ADD) ||
               authPermissions.includes(USER_PERMISSIONS.GRAPHS.UPDATE)) && (
               <div className="flex direction-row justify-space-between align-center w500">
-                <SearchPatient/>
-                
+                <SearchPatient />
+
                 <Dropdown
                   className={"mr10 "}
                   overlay={this.getMenu()}
@@ -754,11 +755,11 @@ class Dashboard extends Component {
               </div>
             )}
           </div>
-          
+
           {/* }   */}
-          
+
           {/* }   */}
-          
+
           {bannerFlag && (
             <div className="mt14">
               {docName !== "" ? (
@@ -772,15 +773,15 @@ class Dashboard extends Component {
               )}
             </div>
           )}
-          
+
           <section className="horizontal-scroll-wrapper pr10 mt10">
             {renderChartTabs()}
           </section>
-          
+
           <div className="mt20 fs20 fw700">
             {formatMessage(messages.patients)}
           </div>
-          
+
           <Tabs
             tabPosition="top"
             defaultActiveKey={CURRENT_TAB.ALL_PATIENTS}
@@ -805,7 +806,7 @@ class Dashboard extends Component {
                 />
               )}
             </TabPane>
-            
+
             <TabPane
               tab={
                 <span className="fs16 fw600">
@@ -826,17 +827,17 @@ class Dashboard extends Component {
             </TabPane>
           </Tabs>
         </div>
-        <PatientDetailsDrawer/>
+        <PatientDetailsDrawer />
         {popUpVisible && (
           <div
             className={
               drawerVisible && minimized
                 ? "chat-popup-minimized"
                 : drawerVisible && !minimized
-                  ? "chat-popup"
-                  : minimized
-                    ? "chat-popup-minimized-closedDrawer"
-                    : "chat-popup-closedDrawer"
+                ? "chat-popup"
+                : minimized
+                ? "chat-popup-minimized-closedDrawer"
+                : "chat-popup-closedDrawer"
             }
           >
             <ChatPopup
@@ -845,17 +846,18 @@ class Dashboard extends Component {
               patientName={
                 first_name
                   ? `${first_name} ${middle_name ? `${middle_name} ` : ""}${
-                    last_name ? `${last_name}` : ""
-                  }`
+                      last_name ? `${last_name}` : ""
+                    }`
                   : ""
               }
               maximizeChat={this.maximizeChat}
               patientDp={patientDp}
               patientId={chatPatientId}
+              dashboardChat={true}
             />
           </div>
         )}
-        
+
         <AddPatientDrawer
           searchCondition={this.props.searchCondition}
           searchTreatment={this.props.searchTreatment}
@@ -870,7 +872,7 @@ class Dashboard extends Component {
           patients={patients}
           submitting={submitting}
         />
-        
+
         {visibleModal && (
           <GraphsModal
             visible={visibleModal}
@@ -880,17 +882,17 @@ class Dashboard extends Component {
             authenticated_category={authenticated_category}
           />
         )}
-        
-        <MissedAppointmentsDrawer/>
-        
-        <MissedVitalsDrawer/>
-        
-        <MissedMedicationsDrawer/>
-        
-        <MissedDietsDrawer/>
-        
-        <MissedWorkoutsDrawer/>
-        
+
+        <MissedAppointmentsDrawer />
+
+        <MissedVitalsDrawer />
+
+        <MissedMedicationsDrawer />
+
+        <MissedDietsDrawer />
+
+        <MissedWorkoutsDrawer />
+
         {authPermissions.length === 0 ? (
           <div className="fixed b0 p20 bg-light-grey wp100">
             <div className="fs18 fw700">
