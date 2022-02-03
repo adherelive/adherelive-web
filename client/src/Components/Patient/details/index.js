@@ -608,11 +608,17 @@ const PatientTreatmentCard = ({
   doctors,
   user_roles,
   providers,
+  care_plans,
 }) => {
   const time = moment().format("Do MMMM YYYY, hh:mm a");
 
+  // AKSHY NEW CODE IMPLEMENTATIONS
+  let carePlan = care_plans[selectedCarePlanId] || {};
+
   const isPrescriptionOfCurrentDoc =
-    !isOtherCarePlan && user_role_id.toString() === auth_role.toString();
+    (!isOtherCarePlan && user_role_id.toString() === auth_role.toString()) ||
+    (!isEmpty(carePlan) &&
+      carePlan.secondary_doctor_user_role_ids.includes(auth_role) === true);
 
   let all_providers = "",
     count = 1;
@@ -2674,6 +2680,7 @@ class PatientDetails extends Component {
                 user_roles={user_roles}
                 doctors={doctors}
                 providers={providers}
+                care_plans={care_plans}
               />
             </div>
 
