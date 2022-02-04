@@ -1530,7 +1530,7 @@ class PatientController extends Controller {
       const curr_patient_id = carePlanData.getPatientId();
 
       const doctorUserRoleId = carePlanData.getUserRoleId();
-
+      /*
       if (
         `${doctorUserRoleId}` !== `${userRoleId}` &&
         category !== USER_CATEGORY.PATIENT
@@ -1541,7 +1541,7 @@ class PatientController extends Controller {
           {},
           "You don't have the rights to access this prescription."
         );
-      }
+      }*/
       const userRoles = await userRolesService.getSingleUserRoleByData({
         id: doctorUserRoleId,
       });
