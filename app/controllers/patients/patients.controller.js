@@ -2017,10 +2017,12 @@ class PatientController extends Controller {
       console.log(1);
       dataForPdf = {
         users: { ...usersData },
-        ...(permissions.includes(PERMISSIONS.MEDICATIONS.ADD) && {
+        ...(permissions.includes(PERMISSIONS.MEDICATIONS.VIEW) && {
           medications,
         }),
-        ...(permissions.includes(PERMISSIONS.MEDICATIONS.ADD) && { medicines }),
+        ...(permissions.includes(PERMISSIONS.MEDICATIONS.VIEW) && {
+          medicines,
+        }),
         care_plans: {
           [carePlanData.getCarePlanId()]: {
             ...carePlanData.getBasicInfo(),
