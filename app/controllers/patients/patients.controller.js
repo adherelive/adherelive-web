@@ -1510,7 +1510,7 @@ class PatientController extends Controller {
       const dietService = new DietService();
       const workoutService = new WorkoutService();
       // const carePlanId = parseInt(care_plan_id);
-      const doctor_id = req.userDetails.userCategoryData.basic_info.id;
+      let doctor_id = "";
       let dataForPdf = {};
 
       let usersData = {};
@@ -1878,8 +1878,10 @@ class PatientController extends Controller {
       console.log(1);
       if (category === USER_CATEGORY.DOCTOR || category === USER_CATEGORY.HSP) {
         patient = await patientService.getPatientById({ id: curr_patient_id });
+        doctor_id = req.userDetails.userCategoryData.basic_info.id;
       } else {
         patient = await patientService.getPatientByUserId(userId);
+        ({ doctor_id } = await carePlanData.getReferenceInfo());
       }
       console.log(1);
       const patientData = await PatientWrapper(patient);
