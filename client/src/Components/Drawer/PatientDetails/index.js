@@ -332,12 +332,12 @@ class PatientDetailsDrawer extends Component {
           carePlanAppointmentIds = [],
           carePlanMedicationIds = [],
         } = carePlan;
-
-        if (`${doctorId}` === `${doctor_id}`) {
-          if (`${patient_id}` === `${id}`) {
-            carePlanId = cpId;
-          }
+        // AKSHAY NEW CODE IMPLEMENTTATIONS
+        // if (`${doctorId}` === `${doctor_id}`) {
+        if (`${patient_id}` === `${id}`) {
+          carePlanId = cpId;
         }
+        // }
       }
 
       const {
