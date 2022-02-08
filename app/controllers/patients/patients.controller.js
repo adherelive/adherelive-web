@@ -1875,9 +1875,12 @@ class PatientController extends Controller {
 
       let patient = null;
       console.log(1);
-      if (category === USER_CATEGORY.DOCTOR || category === USER_CATEGORY.HSP) {
+      if (category === USER_CATEGORY.DOCTOR) {
         patient = await patientService.getPatientById({ id: curr_patient_id });
         doctor_id = req.userDetails.userCategoryData.basic_info.id;
+      } else if (category === USER_CATEGORY.HSP) {
+        patient = await patientService.getPatientById({ id: curr_patient_id });
+        ({ doctor_id } = await carePlanData.getReferenceInfo());
       } else {
         patient = await patientService.getPatientByUserId(userId);
         ({ doctor_id } = await carePlanData.getReferenceInfo());
