@@ -1583,43 +1583,42 @@ class PatientController extends Controller {
       }
       console.log(1);
 
-      if (permissions.includes(PERMISSIONS.MEDICATIONS.ADD)) {
-        console.log("===09876543212345678===");
-        console.log(medication_ids);
-        console.log("===09876543212345678===");
-        for (const medicationId of medication_ids) {
-          const medication = await medicationReminderService.getMedication({
-            id: medicationId,
+      // if (permissions.includes(PERMISSIONS.MEDICATIONS.ADD)) {
+      console.log("===09876543212345678===");
+      console.log(medication_ids);
+      console.log("===09876543212345678===");
+      for (const medicationId of medication_ids) {
+        const medication = await medicationReminderService.getMedication({
+          id: medicationId,
+        });
+        console.log(medication);
+
+        if (medication) {
+          const medicationWrapper = await MReminderWrapper(medication);
+          const medicineId = medicationWrapper.getMedicineId();
+          const medicineData = await medicineService.getMedicineByData({
+            id: medicineId,
           });
-          console.log(medication);
+          console.log("-=12-12-12-12-12=-12-12=-12=-12=-12-");
+          console.log(medicineData);
+          console.log("-=12-12-12-12-12=-12-12=-12=-12=-12-");
 
-          if (medication) {
-            const medicationWrapper = await MReminderWrapper(medication);
-            const medicineId = medicationWrapper.getMedicineId();
-            const medicineData = await medicineService.getMedicineByData({
-              id: medicineId,
-            });
-            console.log("-=12-12-12-12-12=-12-12=-12=-12=-12-");
-            console.log(medicineData);
-            console.log("-=12-12-12-12-12=-12-12=-12=-12=-12-");
-
-            for (const medicine of medicineData) {
-              const medicineWrapper = await MedicineApiWrapper(medicine);
-              medicines = {
-                ...medicines,
-                ...{
-                  [medicineWrapper.getMedicineId()]:
-                    medicineWrapper.getAllInfo(),
-                },
-              };
-            }
-            medications = {
-              ...medications,
-              ...{ [medicationId]: medicationWrapper.getBasicInfo() },
+          for (const medicine of medicineData) {
+            const medicineWrapper = await MedicineApiWrapper(medicine);
+            medicines = {
+              ...medicines,
+              ...{
+                [medicineWrapper.getMedicineId()]: medicineWrapper.getAllInfo(),
+              },
             };
           }
+          medications = {
+            ...medications,
+            ...{ [medicationId]: medicationWrapper.getBasicInfo() },
+          };
         }
       }
+      // }
       console.log(1);
       const now = moment();
       let nextAppointment = null;
