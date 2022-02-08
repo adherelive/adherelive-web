@@ -2231,7 +2231,9 @@ class MPatientController extends Controller {
         });
         doctor_id = req.userDetails.userCategoryData.basic_info.id;
       } else if (category === USER_CATEGORY.HSP) {
-        patient = await patientService.getPatientById({ id: curr_patient_id });
+        patient = await patientService.getPatientById({
+          id: carePlanPatientId,
+        });
         ({ doctor_id } = await carePlanData.getReferenceInfo());
       } else {
         patient = await patientService.getPatientByUserId(userId);
