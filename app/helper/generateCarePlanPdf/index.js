@@ -1261,7 +1261,10 @@ function printCarePlanData({
       const rXLabelEndLevelY = doc.y;
 
       const serialNoXStart = DOC_MARGIN;
-      const medicineXStart = DOC_MARGIN + 40;
+      // AKSHAY NEW CODE IMPLEMENTATIONS START
+      const drXStart = DOC_MARGIN + 50;
+      // AKSHAY NEW CODE IMPLEMENTATIONS END
+      const medicineXStart = DOC_MARGIN + 130;
       const dosageXStart = DOC_MARGIN + 210;
       const quantityXStart = DOC_MARGIN + 260;
       const frequencyXStart = DOC_MARGIN + 320;
@@ -1274,6 +1277,9 @@ function printCarePlanData({
         .fontSize(NORMAL_FONT_SIZE)
         .font(BOLD_FONT)
         .text("S.No.", serialNoXStart, rXLabelEndLevelY + 10)
+        // AKSHAY NEW CODE IMPLEMENTATIONS START
+        .text("Dr Name", drXStart, rXLabelEndLevelY + 10)
+        // AKSHAY NEW CODE IMPLEMENTATIONS END
         .text("Medicines", medicineXStart, rXLabelEndLevelY + 10)
         .text("Dosage", dosageXStart, rXLabelEndLevelY + 10)
         .text("Quantity", quantityXStart, rXLabelEndLevelY + 10)
@@ -1324,6 +1330,11 @@ function printCarePlanData({
           .fontSize(SHORT_FONT_SIZE)
           .font(MEDIUM_FONT)
           .text(`${index + 1}.`, serialNoXStart, medicationYLevel)
+          // AKSHAY NEW CODE IMPLEMENTATIONS START
+          .text(`dr akshay nagergoje.`, drXStart, medicationYLevel, {
+            width: medicineXStart - drXStart,
+          })
+          // AKSHAY NEW CODE IMPLEMENTATIONS END
           .text(`${medicineData}`, medicineXStart, medicationYLevel, {
             width: dosageXStart - medicineXStart,
           })
