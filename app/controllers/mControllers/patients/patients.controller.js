@@ -1877,6 +1877,8 @@ class MPatientController extends Controller {
         return raiseClientError(res, 422, {}, "Invalid Care plan.");
       }
 
+      console.log("genpre called");
+
       const carePlan = await carePlanService.getCarePlanById(carePlanId);
       const carePlanData = await CarePlanWrapper(carePlan);
 
@@ -1936,7 +1938,10 @@ class MPatientController extends Controller {
             id: medicineId,
           });
 
+          console.log("genpre-2-called", medicineData);
+
           for (const medicine of medicineData) {
+            console.log("genpre-3-called");
             const medicineWrapper = await MedicineApiWrapper(medicine);
             medicines = {
               ...medicines,

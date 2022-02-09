@@ -1614,7 +1614,7 @@ class PatientController extends Controller {
           }
           medications = {
             ...medications,
-            ...{ [medicationId]: medicationWrapper.getBasicInfo() },
+            ...{ [medicationId]: await medicationWrapper.getBasicInfo() },
           };
         }
       }

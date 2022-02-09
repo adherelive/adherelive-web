@@ -1261,7 +1261,9 @@ function printCarePlanData({
       const rXLabelEndLevelY = doc.y;
 
       const serialNoXStart = DOC_MARGIN;
-      const medicineXStart = DOC_MARGIN + 40;
+      const drXStart = DOC_MARGIN + 50;
+      // const medicineXStart = DOC_MARGIN + 40;
+      const medicineXStart = DOC_MARGIN + 130;
       const dosageXStart = DOC_MARGIN + 210;
       const quantityXStart = DOC_MARGIN + 260;
       const frequencyXStart = DOC_MARGIN + 320;
@@ -1274,6 +1276,7 @@ function printCarePlanData({
         .fontSize(NORMAL_FONT_SIZE)
         .font(BOLD_FONT)
         .text("S.No.", serialNoXStart, rXLabelEndLevelY + 10)
+        .text("Dr Name", drXStart, rXLabelEndLevelY + 10)
         .text("Medicines", medicineXStart, rXLabelEndLevelY + 10)
         .text("Dosage", dosageXStart, rXLabelEndLevelY + 10)
         .text("Quantity", quantityXStart, rXLabelEndLevelY + 10)
@@ -1286,11 +1289,15 @@ function printCarePlanData({
       medicationYLevel = doc.y + 10;
 
       for (const [index, medicationData] of medicationsList.entries()) {
+        console.log("popopopopopopopopopo");
+        console.log(medicationData);
+        console.log("popopopopopopopopopo");
         const {
           description,
           medicineName,
           medicineType,
           genericName,
+          organizer,
           strength,
           frequency,
           startDate,
@@ -1324,6 +1331,10 @@ function printCarePlanData({
           .fontSize(SHORT_FONT_SIZE)
           .font(MEDIUM_FONT)
           .text(`${index + 1}.`, serialNoXStart, medicationYLevel)
+
+          .text(`dr akshay nagergoje.`, drXStart, medicationYLevel, {
+            width: medicineXStart - drXStart,
+          })
           .text(`${medicineData}`, medicineXStart, medicationYLevel, {
             width: dosageXStart - medicineXStart,
           })
@@ -1813,6 +1824,7 @@ function formatMedicationsData(medications, medicines) {
           details = null,
         } = {},
         details: mobileDetails = null,
+        organizer,
       },
     } = medications;
 
@@ -1868,6 +1880,7 @@ function formatMedicationsData(medications, medicines) {
       // strength,
       strength: `${`${strength} ${unitToShow.toUpperCase()}`}`,
       quantity,
+      organizer,
       frequency: getWhenToTakeText(when_to_take.length),
       startDate,
       endDate,
