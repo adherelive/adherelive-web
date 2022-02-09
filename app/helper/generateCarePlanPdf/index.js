@@ -1177,283 +1177,302 @@ function printCarePlanData({
   suggestedInvestigations,
   providerPrescriptionDetails,
 }) {
-  const { diagnosis, condition, symptoms, clinicalNotes } = formatCarePlanData(
-    care_plans,
-    conditions
-  );
+  try {
+    const { diagnosis, condition, symptoms, clinicalNotes } =
+      formatCarePlanData(care_plans, conditions);
 
-  const medicationsList = formatMedicationsData(medications, medicines);
+    const medicationsList = formatMedicationsData(medications, medicines);
 
-  doc
-    .fillColor("#4a90e2")
-    .font(BOLD_FONT)
-    .text("RELEVANT HISTORY", DOC_MARGIN, horizontalLineLevel);
-
-  doc
-    .fillColor("#212b36")
-    .font(BOLD_FONT)
-    .text("Allergies: ", doc.x, doc.y + 10, { continued: true })
-    .font(REGULAR_FONT)
-    .text(`${allergies ? allergies : "--"}`, doc.x + 10, doc.y)
-    .font(BOLD_FONT)
-    .text("Comorbidities: ", doc.x, doc.y + 10, { continued: true })
-    .font(REGULAR_FONT)
-    .text(`${comorbidities ? comorbidities : "--"}`, doc.x + 10, doc.y);
-
-  const relevantHistoryEndLevel = doc.y + 10;
-
-  generateHr(doc, relevantHistoryEndLevel);
-
-  doc
-    .fillColor("#212b36")
-    .font(BOLD_FONT)
-    .text("Chief Complaints: ", DOC_MARGIN, relevantHistoryEndLevel + 10, {
-      continued: true,
-    })
-
-    .font(REGULAR_FONT)
-    .text(`${symptoms}`, DOC_MARGIN + 10, relevantHistoryEndLevel + 10);
-
-  const chiefComplaintsEndLevel = doc.y + 20;
-
-  doc
-    .font(BOLD_FONT)
-    .fontSize(NORMAL_FONT_SIZE)
-    .text("General Examination: ", DOC_MARGIN, chiefComplaintsEndLevel, {
-      continued: true,
-    })
-    .font(REGULAR_FONT)
-    .text(`${clinicalNotes}`, doc.x + 10, chiefComplaintsEndLevel);
-
-  const generalExaminationEndLevel = doc.y + 20;
-
-  doc
-    .font(BOLD_FONT)
-    .fontSize(NORMAL_FONT_SIZE)
-    .text("Diagnosis :", DOC_MARGIN, generalExaminationEndLevel, {
-      continued: true,
-    })
-    .font(REGULAR_FONT)
-    .text(`${diagnosis}`, doc.x + 10, generalExaminationEndLevel);
-
-  // doc
-  //   .text(
-  //     "DIAGNOSIS",
-  //     DOC_MARGIN,
-  //     relevantPointsEndLevel + DISTANCE_BETWEEN_ROWS
-  //   )
-  //   .text(
-  //     `${diagnosis}`,
-  //     doc.x + 250,
-  //     relevantPointsEndLevel + DISTANCE_BETWEEN_ROWS
-  //   );
-
-  const labFindingsEndLevel = doc.y;
-  let medicationYLevel = doc.y;
-
-  // MEDICATIONS
-
-  if (medicationsList.length > 0) {
-    doc
-      .font(BOLD_FONT)
-      .fontSize(BOLD_FONT_SIZE)
-      .text("Rx", DOC_MARGIN, labFindingsEndLevel + 15);
-
-    const rXLabelEndLevelY = doc.y;
-
-    const serialNoXStart = DOC_MARGIN;
-    const medicineXStart = DOC_MARGIN + 40;
-    const dosageXStart = DOC_MARGIN + 210;
-    const quantityXStart = DOC_MARGIN + 260;
-    const frequencyXStart = DOC_MARGIN + 320;
-    const timingFrequencyXStart = DOC_MARGIN + 390;
-
-    // generateHr(doc, doc.y);
-    // medicine table header
     doc
       .fillColor("#4a90e2")
-      .fontSize(NORMAL_FONT_SIZE)
       .font(BOLD_FONT)
-      .text("S.No.", serialNoXStart, rXLabelEndLevelY + 10)
-      .text("Medicines", medicineXStart, rXLabelEndLevelY + 10)
-      .text("Dosage", dosageXStart, rXLabelEndLevelY + 10)
-      .text("Quantity", quantityXStart, rXLabelEndLevelY + 10)
-      .text("Frequency", frequencyXStart, rXLabelEndLevelY + 10)
-      .text("Time-Duration", timingFrequencyXStart, rXLabelEndLevelY + 10);
+      .text("RELEVANT HISTORY", DOC_MARGIN, horizontalLineLevel);
 
-    // generateHr(doc, doc.y);
+    doc
+      .fillColor("#212b36")
+      .font(BOLD_FONT)
+      .text("Allergies: ", doc.x, doc.y + 10, { continued: true })
+      .font(REGULAR_FONT)
+      .text(`${allergies ? allergies : "--"}`, doc.x + 10, doc.y)
+      .font(BOLD_FONT)
+      .text("Comorbidities: ", doc.x, doc.y + 10, { continued: true })
+      .font(REGULAR_FONT)
+      .text(`${comorbidities ? comorbidities : "--"}`, doc.x + 10, doc.y);
 
-    const medicationTableHeaderEndYLevel = doc.y;
-    medicationYLevel = doc.y + 10;
+    const relevantHistoryEndLevel = doc.y + 10;
 
-    for (const [index, medicationData] of medicationsList.entries()) {
-      const {
-        description,
-        medicineName,
-        medicineType,
-        genericName,
-        strength,
-        frequency,
-        startDate,
-        quantity,
-        // endDate,
-        duration,
-        dosage,
-        timings,
-      } = medicationData;
-      // TODO: need to add type here.
-      let medi_type = CATEGORY_ONE.items.find((x) => x.id == medicineType).name;
-      const medicineData = `(${medi_type}) ${medicineName} `;
+    generateHr(doc, relevantHistoryEndLevel);
 
-      // .fontSize(MEDICINE_FONT_SIZE)
-      // .text(`${index + 1}.`, currentMedicationXLevel, medicationYLevel)
-      // .fontSize(SHORT_FONT_SIZE)
-      // .text("Rx", doc.x + 20, doc.y - (MEDICINE_FONT_SIZE + 5))
+    doc
+      .fillColor("#212b36")
+      .font(BOLD_FONT)
+      .text("Chief Complaints: ", DOC_MARGIN, relevantHistoryEndLevel + 10, {
+        continued: true,
+      })
 
-      if (doc.y + 3 * SHORT_FONT_SIZE > PAGE_END_LIMIT) {
-        if (pageCount === 1) {
-          addPageFooter(doc, providerPrescriptionDetails);
-        }
-        addPageAndNumber(doc);
-        medicationYLevel = DOC_MARGIN;
-      }
+      .font(REGULAR_FONT)
+      .text(`${symptoms}`, DOC_MARGIN + 10, relevantHistoryEndLevel + 10);
 
+    const chiefComplaintsEndLevel = doc.y + 20;
+
+    doc
+      .font(BOLD_FONT)
+      .fontSize(NORMAL_FONT_SIZE)
+      .text("General Examination: ", DOC_MARGIN, chiefComplaintsEndLevel, {
+        continued: true,
+      })
+      .font(REGULAR_FONT)
+      .text(`${clinicalNotes}`, doc.x + 10, chiefComplaintsEndLevel);
+
+    const generalExaminationEndLevel = doc.y + 20;
+
+    doc
+      .font(BOLD_FONT)
+      .fontSize(NORMAL_FONT_SIZE)
+      .text("Diagnosis :", DOC_MARGIN, generalExaminationEndLevel, {
+        continued: true,
+      })
+      .font(REGULAR_FONT)
+      .text(`${diagnosis}`, doc.x + 10, generalExaminationEndLevel);
+
+    // doc
+    //   .text(
+    //     "DIAGNOSIS",
+    //     DOC_MARGIN,
+    //     relevantPointsEndLevel + DISTANCE_BETWEEN_ROWS
+    //   )
+    //   .text(
+    //     `${diagnosis}`,
+    //     doc.x + 250,
+    //     relevantPointsEndLevel + DISTANCE_BETWEEN_ROWS
+    //   );
+
+    const labFindingsEndLevel = doc.y;
+    let medicationYLevel = doc.y;
+
+    // MEDICATIONS
+
+    if (medicationsList.length > 0) {
       doc
-        .fillColor("#212b36")
-        .fontSize(SHORT_FONT_SIZE)
-        .font(MEDIUM_FONT)
-        .text(`${index + 1}.`, serialNoXStart, medicationYLevel)
-        .text(`${medicineData}`, medicineXStart, medicationYLevel, {
-          width: dosageXStart - medicineXStart,
-        })
-        .text(`${genericName}`, medicineXStart, doc.y, {
-          width: dosageXStart - medicineXStart,
-        })
-        .text(
-          `Note: ${description ? description : "-"}`,
-          medicineXStart,
-          doc.y,
-          {
-            width: dosageXStart - medicineXStart,
+        .font(BOLD_FONT)
+        .fontSize(BOLD_FONT_SIZE)
+        .text("Rx", DOC_MARGIN, labFindingsEndLevel + 15);
+
+      const rXLabelEndLevelY = doc.y;
+
+      const serialNoXStart = DOC_MARGIN;
+      const drXStart = DOC_MARGIN + 50;
+      // const medicineXStart = DOC_MARGIN + 40;
+      const medicineXStart = DOC_MARGIN + 130;
+      const dosageXStart = DOC_MARGIN + 210;
+      const quantityXStart = DOC_MARGIN + 260;
+      const frequencyXStart = DOC_MARGIN + 320;
+      const timingFrequencyXStart = DOC_MARGIN + 390;
+
+      // generateHr(doc, doc.y);
+      // medicine table header
+      doc
+        .fillColor("#4a90e2")
+        .fontSize(NORMAL_FONT_SIZE)
+        .font(BOLD_FONT)
+        .text("S.No.", serialNoXStart, rXLabelEndLevelY + 10)
+        .text("Dr Name", drXStart, rXLabelEndLevelY + 10)
+        .text("Medicines", medicineXStart, rXLabelEndLevelY + 10)
+        .text("Dosage", dosageXStart, rXLabelEndLevelY + 10)
+        .text("Quantity", quantityXStart, rXLabelEndLevelY + 10)
+        .text("Frequency", frequencyXStart, rXLabelEndLevelY + 10)
+        .text("Time-Duration", timingFrequencyXStart, rXLabelEndLevelY + 10);
+
+      // generateHr(doc, doc.y);
+
+      const medicationTableHeaderEndYLevel = doc.y;
+      medicationYLevel = doc.y + 10;
+
+      for (const [index, medicationData] of medicationsList.entries()) {
+        console.log("popopopopopopopopopo");
+        console.log(medicationData);
+        console.log("popopopopopopopopopo");
+        const {
+          description,
+          medicineName,
+          medicineType,
+          genericName,
+          organizer,
+          strength,
+          frequency,
+          startDate,
+          quantity,
+          // endDate,
+          duration,
+          dosage,
+          timings,
+        } = medicationData;
+        // TODO: need to add type here.
+        let medi_type = CATEGORY_ONE.items.find(
+          (x) => x.id == medicineType
+        ).name;
+        const medicineData = `(${medi_type}) ${medicineName} `;
+
+        // .fontSize(MEDICINE_FONT_SIZE)
+        // .text(`${index + 1}.`, currentMedicationXLevel, medicationYLevel)
+        // .fontSize(SHORT_FONT_SIZE)
+        // .text("Rx", doc.x + 20, doc.y - (MEDICINE_FONT_SIZE + 5))
+
+        if (doc.y + 3 * SHORT_FONT_SIZE > PAGE_END_LIMIT) {
+          if (pageCount === 1) {
+            addPageFooter(doc, providerPrescriptionDetails);
           }
-        );
+          addPageAndNumber(doc);
+          medicationYLevel = DOC_MARGIN;
+        }
 
-      const medicationYLevelEnd = doc.y;
+        doc
+          .fillColor("#212b36")
+          .fontSize(SHORT_FONT_SIZE)
+          .font(MEDIUM_FONT)
+          .text(`${index + 1}.`, serialNoXStart, medicationYLevel)
 
-      // console.log("30183012093 medicationYLevelEnd, medicationYLevel",{medicationYLevelEnd, medicationYLevel, condition: (medicationYLevel - medicationYLevelEnd) > NORMAL_FONT_SIZE});
+          .text(`dr akshay nagergoje.`, drXStart, medicationYLevel, {
+            width: medicineXStart - drXStart,
+          })
+          .text(`${medicineData}`, medicineXStart, medicationYLevel, {
+            width: dosageXStart - medicineXStart,
+          })
+          .text(`${genericName}`, medicineXStart, doc.y, {
+            width: dosageXStart - medicineXStart,
+          })
+          .text(
+            `Note: ${description ? description : "-"}`,
+            medicineXStart,
+            doc.y,
+            {
+              width: dosageXStart - medicineXStart,
+            }
+          );
 
-      // if((medicationYLevel - medicationYLevelEnd) > NORMAL_FONT_SIZE) {
-      //   // addPageAndNumber(doc);
+        const medicationYLevelEnd = doc.y;
 
-      //   const {start, count} = doc.bufferedPageRange();
-      //   console.log("183129837129 count, start", {count, start});
-      //   doc.switchToPage(0);
-      // }
+        // console.log("30183012093 medicationYLevelEnd, medicationYLevel",{medicationYLevelEnd, medicationYLevel, condition: (medicationYLevel - medicationYLevelEnd) > NORMAL_FONT_SIZE});
 
-      // console.log("1936129387 doc.x, doc.y", {x: doc.x, y: doc.y});
-      // const {start, count} = doc.bufferedPageRange();
-      //   console.log("1833129837129 count, start", {count, start});
+        // if((medicationYLevel - medicationYLevelEnd) > NORMAL_FONT_SIZE) {
+        //   // addPageAndNumber(doc);
 
-      doc
-        .text(`${strength}`, dosageXStart, medicationYLevel)
-        .text(`${quantity ? quantity : "-"}`, quantityXStart, medicationYLevel)
-        .text(`${dosage}`, frequencyXStart, medicationYLevel, {
-          width: timingFrequencyXStart - frequencyXStart,
-        });
+        //   const {start, count} = doc.bufferedPageRange();
+        //   console.log("183129837129 count, start", {count, start});
+        //   doc.switchToPage(0);
+        // }
 
-      doc
-        .text(`${timings}`, timingFrequencyXStart, medicationYLevel)
+        // console.log("1936129387 doc.x, doc.y", {x: doc.x, y: doc.y});
+        // const {start, count} = doc.bufferedPageRange();
+        //   console.log("1833129837129 count, start", {count, start});
+
+        doc
+          .text(`${strength}`, dosageXStart, medicationYLevel)
+          .text(
+            `${quantity ? quantity : "-"}`,
+            quantityXStart,
+            medicationYLevel
+          )
+          .text(`${dosage}`, frequencyXStart, medicationYLevel, {
+            width: timingFrequencyXStart - frequencyXStart,
+          });
+
+        doc
+          .text(`${timings}`, timingFrequencyXStart, medicationYLevel)
+          // .text(
+          //   `${frequency}`,
+          //   timingFrequencyXStart,
+          //   doc.y
+          // )
+          .text(`${duration} day(s)`, timingFrequencyXStart, doc.y);
+
+        // if((medicationYLevel - doc.y) > NORMAL_FONT_SIZE) {
+        //   // addPageAndNumber(doc);
+
+        //   const {start, count} = doc.bufferedPageRange();
+        //   console.log("183129837129 count, start", {count, start});
+        //   doc.switchToPage(start);
+        // }
+        // .fontSize(NORMAL_FONT_SIZE - 1)
         // .text(
-        //   `${frequency}`,
-        //   timingFrequencyXStart,
+        //   `${strength}, ${
+        //     frequency ? frequency : ""
+        //   }, For ${duration} day(s) starting ${startDate}`,
+        //   medicationYLevel + 250,
         //   doc.y
         // )
-        .text(`${duration} day(s)`, timingFrequencyXStart, doc.y);
 
-      // if((medicationYLevel - doc.y) > NORMAL_FONT_SIZE) {
-      //   // addPageAndNumber(doc);
+        // if((medicationYLevel - medicationYLevelEnd) > NORMAL_FONT_SIZE) {
+        //   const {start, count} = doc.bufferedPageRange();
+        //   console.log("183129837129 count, start", {count, start});
+        //   doc.switchToPage(start);
+        // }
+        const horizontalLineY =
+          medicationYLevelEnd > doc.y ? medicationYLevelEnd : doc.y;
+        generateHr(doc, horizontalLineY + 5);
 
-      //   const {start, count} = doc.bufferedPageRange();
-      //   console.log("183129837129 count, start", {count, start});
-      //   doc.switchToPage(start);
+        medicationYLevel = medicationYLevelEnd + NORMAL_FONT_SIZE + 12;
+
+        // checkAndAddNewPage(doc);
+
+        if (doc.y > PAGE_END_LIMIT) {
+          if (pageCount === 1) {
+            addPageFooter(doc, providerPrescriptionDetails);
+          }
+          // addPageAndNumber(doc);
+        }
+      }
+
+      // if(doc.y > PAGE_END_LIMIT) {
+      //   addPageAndNumber(doc);
       // }
-      // .fontSize(NORMAL_FONT_SIZE - 1)
-      // .text(
-      //   `${strength}, ${
-      //     frequency ? frequency : ""
-      //   }, For ${duration} day(s) starting ${startDate}`,
-      //   medicationYLevel + 250,
-      //   doc.y
-      // )
+    }
 
-      // if((medicationYLevel - medicationYLevelEnd) > NORMAL_FONT_SIZE) {
-      //   const {start, count} = doc.bufferedPageRange();
-      //   console.log("183129837129 count, start", {count, start});
-      //   doc.switchToPage(start);
-      // }
-      const horizontalLineY =
-        medicationYLevelEnd > doc.y ? medicationYLevelEnd : doc.y;
-      generateHr(doc, horizontalLineY + 5);
+    // checkAndAddNewPage(doc);
 
-      medicationYLevel = medicationYLevelEnd + NORMAL_FONT_SIZE + 12;
+    if (!medicationsList.length > 0) {
+      medicationYLevel = generalExaminationEndLevel + NORMAL_FONT_SIZE + 12;
+    }
 
-      // checkAndAddNewPage(doc);
+    let docYLevel =
+      // workoutBlockLevelEnd
+      // ? workoutBlockLevelEnd
+      // : dietBlockLevelEnd ? dietBlockLevelEnd
+      // :
+      medicationYLevel;
+
+    doc
+      .font(BOLD_FONT)
+      .fontSize(NORMAL_FONT_SIZE)
+      .text("Suggested Investigation :", DOC_MARGIN, docYLevel + 10);
+
+    for (let index = 0; index < suggestedInvestigations.length; index++) {
+      const { type, type_description, radiology_type, start_date } =
+        suggestedInvestigations[index] || {};
+
+      doc
+        .font(REGULAR_FONT)
+        .text(
+          `${type_description}${radiology_type ? `-${radiology_type}` : ""}(${
+            APPOINTMENT_TYPE[type].title
+          }) on ${moment(start_date).format("DD/MM/YYYY")}`,
+          DOC_MARGIN,
+          doc.y + 5
+        );
 
       if (doc.y > PAGE_END_LIMIT) {
         if (pageCount === 1) {
           addPageFooter(doc, providerPrescriptionDetails);
         }
-        // addPageAndNumber(doc);
+        addPageAndNumber(doc);
       }
     }
 
-    // if(doc.y > PAGE_END_LIMIT) {
-    //   addPageAndNumber(doc);
-    // }
+    const suggestedInvestigationXLevelEnd = doc.x;
+    return suggestedInvestigationXLevelEnd;
+  } catch (ex) {
+    console.log(ex);
   }
-
-  // checkAndAddNewPage(doc);
-
-  if (!medicationsList.length > 0) {
-    medicationYLevel = generalExaminationEndLevel + NORMAL_FONT_SIZE + 12;
-  }
-
-  let docYLevel =
-    // workoutBlockLevelEnd
-    // ? workoutBlockLevelEnd
-    // : dietBlockLevelEnd ? dietBlockLevelEnd
-    // :
-    medicationYLevel;
-
-  doc
-    .font(BOLD_FONT)
-    .fontSize(NORMAL_FONT_SIZE)
-    .text("Suggested Investigation :", DOC_MARGIN, docYLevel + 10);
-
-  for (let index = 0; index < suggestedInvestigations.length; index++) {
-    const { type, type_description, radiology_type, start_date } =
-      suggestedInvestigations[index] || {};
-
-    doc
-      .font(REGULAR_FONT)
-      .text(
-        `${type_description}${radiology_type ? `-${radiology_type}` : ""}(${
-          APPOINTMENT_TYPE[type].title
-        }) on ${moment(start_date).format("DD/MM/YYYY")}`,
-        DOC_MARGIN,
-        doc.y + 5
-      );
-
-    if (doc.y > PAGE_END_LIMIT) {
-      if (pageCount === 1) {
-        addPageFooter(doc, providerPrescriptionDetails);
-      }
-      addPageAndNumber(doc);
-    }
-  }
-
-  const suggestedInvestigationXLevelEnd = doc.x;
-  return suggestedInvestigationXLevelEnd;
 }
 
 function addPageAndNumber(doc) {
@@ -1805,6 +1824,7 @@ function formatMedicationsData(medications, medicines) {
           details = null,
         } = {},
         details: mobileDetails = null,
+        organizer,
       },
     } = medications;
 
@@ -1860,6 +1880,7 @@ function formatMedicationsData(medications, medicines) {
       // strength,
       strength: `${`${strength} ${unitToShow.toUpperCase()}`}`,
       quantity,
+      organizer,
       frequency: getWhenToTakeText(when_to_take.length),
       startDate,
       endDate,

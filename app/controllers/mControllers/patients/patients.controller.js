@@ -1877,6 +1877,8 @@ class MPatientController extends Controller {
         return raiseClientError(res, 422, {}, "Invalid Care plan.");
       }
 
+      console.log("genpre called");
+
       const carePlan = await carePlanService.getCarePlanById(carePlanId);
       const carePlanData = await CarePlanWrapper(carePlan);
 
@@ -1923,36 +1925,38 @@ class MPatientController extends Controller {
         conditions[condition_id] = condition.getBasicInfo();
       }
 
-      if (permissions.includes(PERMISSIONS.MEDICATIONS.ADD)) {
-        for (const medicationId of medication_ids) {
-          const medication = await medicationReminderService.getMedication({
-            id: medicationId,
+      // if (permissions.includes(PERMISSIONS.MEDICATIONS.ADD)) {
+      for (const medicationId of medication_ids) {
+        const medication = await medicationReminderService.getMedication({
+          id: medicationId,
+        });
+
+        if (medication) {
+          const medicationWrapper = await MReminderWrapper(medication);
+          const medicineId = medicationWrapper.getMedicineId();
+          const medicineData = await medicineService.getMedicineByData({
+            id: medicineId,
           });
 
-          if (medication) {
-            const medicationWrapper = await MReminderWrapper(medication);
-            const medicineId = medicationWrapper.getMedicineId();
-            const medicineData = await medicineService.getMedicineByData({
-              id: medicineId,
-            });
+          console.log("genpre-2-called", medicineData);
 
-            for (const medicine of medicineData) {
-              const medicineWrapper = await MedicineApiWrapper(medicine);
-              medicines = {
-                ...medicines,
-                ...{
-                  [medicineWrapper.getMedicineId()]:
-                    medicineWrapper.getAllInfo(),
-                },
-              };
-            }
-            medications = {
-              ...medications,
-              ...{ [medicationId]: medicationWrapper.getBasicInfo() },
+          for (const medicine of medicineData) {
+            console.log("genpre-3-called");
+            const medicineWrapper = await MedicineApiWrapper(medicine);
+            medicines = {
+              ...medicines,
+              ...{
+                [medicineWrapper.getMedicineId()]: medicineWrapper.getAllInfo(),
+              },
             };
           }
+          medications = {
+            ...medications,
+            ...{ [medicationId]: medicationWrapper.getBasicInfo() },
+          };
         }
       }
+      // }
 
       const now = moment();
       let nextAppointment = null;
@@ -2222,11 +2226,26 @@ class MPatientController extends Controller {
       const { timings: userTimings = {} } = userPrefOptions.getAllDetails();
       const timings = DietHelper.getTimings(userTimings);
 
-      if (category === USER_CATEGORY.DOCTOR || category === USER_CATEGORY.HSP) {
-        patientUserId = patientData.getUserId();
+      // if (category === USER_CATEGORY.DOCTOR || category === USER_CATEGORY.HSP) {
+      //   patientUserId = patientData.getUserId();
+      // }
+      let doctor_id = "";
+      if (category === USER_CATEGORY.DOCTOR) {
+        patient = await patientService.getPatientById({
+          id: carePlanPatientId,
+        });
+        doctor_id = req.userDetails.userCategoryData.basic_info.id;
+      } else if (category === USER_CATEGORY.HSP) {
+        patient = await patientService.getPatientById({
+          id: carePlanPatientId,
+        });
+        ({ doctor_id } = await carePlanData.getReferenceInfo());
+      } else {
+        patient = await patientService.getPatientByUserId(userId);
+        ({ doctor_id } = await carePlanData.getReferenceInfo());
       }
 
-      const { doctors, doctor_id } = await carePlanData.getReferenceInfo();
+      const { doctors } = await carePlanData.getReferenceInfo();
 
       const {
         [doctor_id]: {
@@ -2342,10 +2361,12 @@ class MPatientController extends Controller {
 
       dataForPdf = {
         users: { ...usersData },
-        ...(permissions.includes(PERMISSIONS.MEDICATIONS.ADD) && {
-          medications,
-        }),
-        ...(permissions.includes(PERMISSIONS.MEDICATIONS.ADD) && { medicines }),
+        medications,
+        medicines,
+        // ...(permissions.includes(PERMISSIONS.MEDICATIONS.ADD) && {
+        //   medications,
+        // }),
+        // ...(permissions.includes(PERMISSIONS.MEDICATIONS.ADD) && { medicines }),
         care_plans: {
           [carePlanData.getCarePlanId()]: {
             ...carePlanData.getBasicInfo(),
