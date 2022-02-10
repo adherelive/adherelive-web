@@ -1,13 +1,13 @@
-import {Op} from "sequelize";
+import { Op } from "sequelize";
 
 import Database from "../../../libs/mysql";
-import {TABLE_NAME} from "../../models/diet";
-import {TABLE_NAME as careplanTableName} from "../../models/carePlan";
-import {TABLE_NAME as dietFoodGroupMappingTableName} from "../../models/dietFoodGroupMapping";
-import {TABLE_NAME as similiarFoodMappingTableName} from "../../models/similarFoodMapping";
-import {TABLE_NAME as foodGroupTableName} from "../../models/foodGroups";
-import {TABLE_NAME as scheduleEventTableName} from "../../models/scheduleEvents";
-import {DAYS_INTEGER, EVENT_TYPE} from "../../../constant";
+import { TABLE_NAME } from "../../models/diet";
+import { TABLE_NAME as careplanTableName } from "../../models/carePlan";
+import { TABLE_NAME as dietFoodGroupMappingTableName } from "../../models/dietFoodGroupMapping";
+import { TABLE_NAME as similiarFoodMappingTableName } from "../../models/similarFoodMapping";
+import { TABLE_NAME as foodGroupTableName } from "../../models/foodGroups";
+import { TABLE_NAME as scheduleEventTableName } from "../../models/scheduleEvents";
+import { DAYS_INTEGER, EVENT_TYPE } from "../../../constant";
 import moment from "moment";
 
 const DEFAULT_ORDER = [["created_at", "DESC"]];
@@ -25,7 +25,7 @@ class DietService {
   //       details = {},
   //       diet_food_groups = [],
   //     } = data || {};
-  
+
   //     const diet = await Database.getModel(TABLE_NAME).create(
   //       { name, care_plan_id, start_date, end_date, total_calories, details },
   //       {
@@ -33,16 +33,16 @@ class DietService {
   //         transaction,
   //       }
   //     );
-  
+
   //     // some conditions to consider: same food item should not be added
   //     // multiple times at same time.
   //     // but same food item can be added as similar food item, but it will come single entry
   //     // from frontend.
-  
+
   //     // have to check that what will happen if same entry goes into food-groups.
   //     // have to create similar food groups
   //     const { id: diet_id } = diet || {};
-  
+
   //     for (let index = 0; index < diet_food_groups.length; index++) {
   //       const {
   //         day = null,
@@ -56,7 +56,7 @@ class DietService {
   //         raw: true,
   //         transaction,
   //       });
-  
+
   //       let dietFoodGroupMappingData = [];
   //       let foodGroupToFoodItemDetailsMapping = {};
   //       for (let food_group of allFoodGroups) {
@@ -68,12 +68,12 @@ class DietService {
   //           time,
   //           day,
   //         });
-  
+
   //         foodGroupToFoodItemDetailsMapping[
   //           `${time}-${day}-${food_group_id}-${diet_id}`
   //         ] = food_item_detail_id;
   //       }
-  
+
   //       if (dietFoodGroupMappingData && dietFoodGroupMappingData.length) {
   //         const allDietFoodGroupMappings = await Database.getModel(
   //           dietFoodGroupMappingTableName
@@ -81,7 +81,7 @@ class DietService {
   //           raw: true,
   //           transaction,
   //         });
-  
+
   //         let reverseMapping = {};
   //         for (let allData of allDietFoodGroupMappings) {
   //           const { id, diet_id, food_group_id, time, day } = allData || {};
@@ -90,7 +90,7 @@ class DietService {
   //           } = foodGroupToFoodItemDetailsMapping;
   //           reverseMapping[food_item_details_id] = id;
   //         }
-  
+
   //         const similarFoodGroupIds = Object.keys(similar_food_groups);
   //         for (const primaryId of similarFoodGroupIds) {
   //           const { [primaryId]: relatedIds = [] } = similar_food_groups;
@@ -113,7 +113,7 @@ class DietService {
   //         }
   //       }
   //     }
-  
+
   //     await transaction.commit();
   //     return diet_id;
   //   } catch (error) {
@@ -121,15 +121,15 @@ class DietService {
   //     throw error;
   //   }
   // };
-  
+
   createDaysDiet = async (foodGroupsForDay, diet_id, transaction) => {
     try {
       for (let time of Object.keys(foodGroupsForDay)) {
         const foodGroupsArr = foodGroupsForDay[time] || {};
-        
+
         for (let index = 0; index < foodGroupsArr.length; index++) {
           const currentFoodCollection = foodGroupsArr[index] || {};
-          
+
           const {
             portion_id,
             serving,
@@ -137,7 +137,7 @@ class DietService {
             notes,
             similar = [],
           } = currentFoodCollection || {};
-          
+
           // main create
           const primaryFoodGroup = await Database.getModel(
             foodGroupTableName
@@ -146,13 +146,13 @@ class DietService {
               portion_id,
               serving,
               food_item_detail_id,
-              details: {notes},
+              details: { notes },
             },
             {
               transaction,
             }
           );
-          
+
           const primaryFoodGroupMapping =
             (await Database.getModel(dietFoodGroupMappingTableName).create(
               {
@@ -164,26 +164,26 @@ class DietService {
                 transaction,
               }
             )) || [];
-          
+
           let similarFoodGroupMappings = null;
-          
+
           // similar bulkCreate
           if (similar.length > 0) {
             let similarFoodGroupBulk = [];
             for (let i = 0; i < similar.length; i++) {
               const eachFoodGroup = similar[i] || {};
-              
-              const {portion_id, serving, food_item_detail_id, notes} =
-              eachFoodGroup || {};
-              
+
+              const { portion_id, serving, food_item_detail_id, notes } =
+                eachFoodGroup || {};
+
               similarFoodGroupBulk.push({
                 portion_id,
                 serving,
                 food_item_detail_id,
-                details: {notes},
+                details: { notes },
               });
             }
-            
+
             // main create
             const similarFoodGroups =
               (await Database.getModel(foodGroupTableName).bulkCreate(
@@ -192,7 +192,7 @@ class DietService {
                   transaction,
                 }
               )) || [];
-            
+
             const similarDietFoodGroupMappingBulk =
               similarFoodGroups.map((similarFoodGroup) => {
                 return {
@@ -201,14 +201,14 @@ class DietService {
                   food_group_id: similarFoodGroup.id,
                 };
               }) || [];
-            
+
             similarFoodGroupMappings =
               (await Database.getModel(
                 dietFoodGroupMappingTableName
-              ).bulkCreate(similarDietFoodGroupMappingBulk, {transaction})) ||
+              ).bulkCreate(similarDietFoodGroupMappingBulk, { transaction })) ||
               [];
           }
-          
+
           if (similarFoodGroupMappings) {
             const relatedIds =
               similarFoodGroupMappings.map((similarFoodGroupMapping) => {
@@ -217,7 +217,7 @@ class DietService {
                   related_to_id: primaryFoodGroupMapping.id,
                 };
               }) || [];
-            
+
             const similarFoodMapping = await Database.getModel(
               similiarFoodMappingTableName
             ).bulkCreate(relatedIds, {
@@ -227,13 +227,13 @@ class DietService {
           }
         }
       }
-      
+
       return true;
     } catch (error) {
       throw error;
     }
   };
-  
+
   create = async (data) => {
     const transaction = await Database.initTransaction();
     try {
@@ -246,27 +246,27 @@ class DietService {
         diet_food_groups = {},
         details,
       } = data || {};
-      
+
       // create diet
       const diet =
         (await Database.getModel(TABLE_NAME).create(
-          {name, care_plan_id, start_date, end_date, total_calories, details},
+          { name, care_plan_id, start_date, end_date, total_calories, details },
           {
             raw: true,
             transaction,
           }
         )) || null;
-      
-      const {id: diet_id} = diet || {};
-      
+
+      const { id: diet_id } = diet || {};
+
       let isCreated = false;
-      
+
       isCreated = await this.createDaysDiet(
         diet_food_groups,
         diet_id,
         transaction
       );
-      
+
       // if (isSameAllDays) {
       //   for (let day of Object.values(DAYS_INTEGER)) {
       //     isCreated = await this.createDaysDiet(
@@ -290,16 +290,16 @@ class DietService {
       //     );
       //   }
       // }
-      
+
       await transaction.commit();
-      
+
       return diet_id;
     } catch (error) {
       await transaction.rollback();
       throw error;
     }
   };
-  
+
   getByData = async (data) => {
     try {
       return await Database.getModel(TABLE_NAME).findOne({
@@ -310,7 +310,7 @@ class DietService {
       throw error;
     }
   };
-  
+
   // update = async (data, id) => {
   //   const transaction = await Database.initTransaction();
   //   try {
@@ -329,8 +329,8 @@ class DietService {
   //     throw error;
   //   }
   // };
-  
-  findAndCountAll = async ({where, order = DEFAULT_ORDER, attributes}) => {
+
+  findAndCountAll = async ({ where, order = DEFAULT_ORDER, attributes }) => {
     try {
       return await Database.getModel(TABLE_NAME).findAndCountAll({
         where,
@@ -343,14 +343,14 @@ class DietService {
       throw error;
     }
   };
-  
+
   findOne = async (data) => {
     try {
       const diet = await Database.getModel(TABLE_NAME).findOne({
         where: data,
         include: [Database.getModel(dietFoodGroupMappingTableName)],
       });
-      
+
       /* nested raw true is not allowed by sequelize
                     Links:
                     https://github.com/sequelize/sequelize/issues/3897 (closed)
@@ -361,12 +361,12 @@ class DietService {
       throw error;
     }
   };
-  
+
   delete = async (id) => {
     const transaction = await Database.initTransaction();
     try {
       // diet food group mappings
-      
+
       // const { count: totalFoodGroupMappings, rows: allFoodGroupMappings = [] } =
       //   (await Database.getModel(dietFoodGroupMappingTableName).findAndCountAll(
       //     {
@@ -377,7 +377,7 @@ class DietService {
       //       transaction,
       //     }
       //   )) || {};
-      
+
       // if (totalFoodGroupMappings) {
       //   let foodGroupIds = [];
       //   let dietFoodGroupMappingIds = [];
@@ -387,7 +387,7 @@ class DietService {
       //     foodGroupIds.push(food_group_id);
       //     dietFoodGroupMappingIds.push(diet_food_group_mapping_id);
       //   }
-      
+
       //   // delete similar mappings (if any)
       //   await Database.getModel(similiarFoodMappingTableName).destroy({
       //     where: {
@@ -402,7 +402,7 @@ class DietService {
       //     },
       //     transaction,
       //   });
-      
+
       //   // delete all food groups
       //   await Database.getModel(foodGroupTableName).destroy({
       //     where: {
@@ -410,7 +410,7 @@ class DietService {
       //     },
       //     transaction,
       //   });
-      
+
       //   // delete food group mappings
       //   await Database.getModel(dietFoodGroupMappingTableName).destroy({
       //     where: {
@@ -419,7 +419,7 @@ class DietService {
       //     transaction,
       //   });
       // }
-      
+
       // delete all schedule event created
       await Database.getModel(scheduleEventTableName).destroy({
         where: {
@@ -427,11 +427,11 @@ class DietService {
           event_type: EVENT_TYPE.DIET,
         },
       });
-      
+
       // todo: delete all diet responses and it's uploaded documents (if needed)
-      
+
       await Database.getModel(TABLE_NAME).update(
-        {expired_on: moment()},
+        { expired_on: moment() },
         {
           where: {
             id,
@@ -439,14 +439,14 @@ class DietService {
           transaction,
         }
       );
-      
+
       // await Database.getModel(TABLE_NAME).destroy({
       //   where: {
       //     id,
       //   },
       //   transaction,
       // });
-      
+
       await transaction.commit();
       return true;
     } catch (err) {
@@ -454,12 +454,12 @@ class DietService {
       throw err;
     }
   };
-  
+
   getAllForCareplanId = async ({
-                                 where,
-                                 order = DEFAULT_ORDER,
-                                 attributes,
-                               }) => {
+    where,
+    order = DEFAULT_ORDER,
+    attributes,
+  }) => {
     try {
       const records = await Database.getModel(TABLE_NAME).findAndCountAll({
         where,
@@ -472,7 +472,7 @@ class DietService {
       throw err;
     }
   };
-  
+
   update = async (data) => {
     const transaction = await Database.initTransaction();
     try {
@@ -488,34 +488,34 @@ class DietService {
         diet_food_groups = {},
         delete_food_group_ids = [],
       } = data || {};
-      
+
       for (let i = 0; i < delete_food_group_ids.length; i++) {
         const deleted_food_group_id = delete_food_group_ids[i];
-        
-        const {id: mappings_id = null} =
-        (await this.getDietFoodGroupMapping({
-          food_group_id: deleted_food_group_id,
-          diet_id,
-        })) || {};
-        
-        const {count: is_primary_to_count = null, rows = []} =
-        (await Database.getModel(
-          similiarFoodMappingTableName
-        ).findAndCountAll({
-          where: {
-            related_to_id: mappings_id,
-          },
-          order: DEFAULT_ORDER,
-          attributes: ["id"],
-          raw: true,
-        })) || {};
-        
+
+        const { id: mappings_id = null } =
+          (await this.getDietFoodGroupMapping({
+            food_group_id: deleted_food_group_id,
+            diet_id,
+          })) || {};
+
+        const { count: is_primary_to_count = null, rows = [] } =
+          (await Database.getModel(
+            similiarFoodMappingTableName
+          ).findAndCountAll({
+            where: {
+              related_to_id: mappings_id,
+            },
+            order: DEFAULT_ORDER,
+            attributes: ["id"],
+            raw: true,
+          })) || {};
+
         if (is_primary_to_count > 0) {
           // is primary
-          
+
           for (let row of rows) {
-            const {id: similar_record_id} = row || {};
-            
+            const { id: similar_record_id } = row || {};
+
             await Database.getModel(similiarFoodMappingTableName).destroy({
               where: {
                 id: similar_record_id,
@@ -525,26 +525,26 @@ class DietService {
           }
         } else {
           // is secondary
-          
+
           const {
             count: is_secondary_to_count = null,
             rows: secondary_rows = [],
           } =
-          (await Database.getModel(
-            similiarFoodMappingTableName
-          ).findAndCountAll({
-            where: {
-              secondary_id: mappings_id,
-            },
-            order: DEFAULT_ORDER,
-            attributes: ["id"],
-            raw: true,
-          })) || {};
-          
+            (await Database.getModel(
+              similiarFoodMappingTableName
+            ).findAndCountAll({
+              where: {
+                secondary_id: mappings_id,
+              },
+              order: DEFAULT_ORDER,
+              attributes: ["id"],
+              raw: true,
+            })) || {};
+
           if (is_secondary_to_count > 0) {
             for (let row of secondary_rows) {
-              const {id: similar_record_id} = row || {};
-              
+              const { id: similar_record_id } = row || {};
+
               await Database.getModel(similiarFoodMappingTableName).destroy({
                 where: {
                   id: similar_record_id,
@@ -554,14 +554,14 @@ class DietService {
             }
           }
         }
-        
+
         await Database.getModel(dietFoodGroupMappingTableName).destroy({
           where: {
             id: mappings_id,
           },
           transaction,
         });
-        
+
         await Database.getModel(foodGroupTableName).destroy({
           where: {
             id: deleted_food_group_id,
@@ -569,28 +569,28 @@ class DietService {
           transaction,
         });
       }
-      
+
       // loop over each diet food group entry based on time
       for (const time in diet_food_groups) {
         const foodGroupsForTime = diet_food_groups[time] || [];
-        
+
         // loop over each food group for the time
         for (let index = 0; index < foodGroupsForTime.length; index++) {
           const foodGroup = foodGroupsForTime[index] || {};
-          
+
           const {
             food_group_id = null,
             similar = [],
             notes,
             ...foodGroupData
           } = foodGroup || {};
-          
+
           let currentFoodGroupMappingId = null;
-          
+
           if (food_group_id) {
             // update
             await Database.getModel(foodGroupTableName).update(
-              {...foodGroupData, details: {notes}},
+              { ...foodGroupData, details: { notes } },
               {
                 where: {
                   id: food_group_id,
@@ -598,7 +598,7 @@ class DietService {
                 transaction,
               }
             );
-            
+
             const dietFoodGroupMapping = await Database.getModel(
               dietFoodGroupMappingTableName
             ).findOne({
@@ -608,19 +608,19 @@ class DietService {
               },
               attributes: ["id"],
             });
-            
+
             currentFoodGroupMappingId = dietFoodGroupMapping.id;
           } else {
             // create
             const createdFoodGroup =
               (await Database.getModel(foodGroupTableName).create(
-                {...foodGroupData, details: {notes}},
+                { ...foodGroupData, details: { notes } },
                 {
                   transaction,
                   raw: true,
                 }
               )) || {};
-            
+
             // add diet food group mapping
             const createdFoodGroupMapping =
               (await Database.getModel(dietFoodGroupMappingTableName).create(
@@ -633,10 +633,10 @@ class DietService {
                   transaction,
                 }
               )) || [];
-            
+
             currentFoodGroupMappingId = createdFoodGroupMapping.id;
           }
-          
+
           // if there is any similar food groups to update or add
           if (similar.length > 0) {
             let similarMappings = [];
@@ -651,12 +651,12 @@ class DietService {
                 notes,
                 ...similarFoodGroupData
               } = similarFoodGroup || {};
-              
+
               let currentSimilarFoodGroupMappingId = null;
               if (similar_food_group_id) {
                 // update
                 await Database.getModel(foodGroupTableName).update(
-                  {...similarFoodGroupData, details: {notes}},
+                  { ...similarFoodGroupData, details: { notes } },
                   {
                     where: {
                       id: similar_food_group_id,
@@ -664,7 +664,7 @@ class DietService {
                     transaction,
                   }
                 );
-                
+
                 // check if mapping exists
                 const similarDietFoodGroupMapping = await Database.getModel(
                   dietFoodGroupMappingTableName
@@ -675,10 +675,10 @@ class DietService {
                   },
                   attributes: ["id"],
                 });
-                
+
                 currentSimilarFoodGroupMappingId =
                   similarDietFoodGroupMapping.id;
-                
+
                 const similarMappingExists =
                   (await Database.getModel(
                     similiarFoodMappingTableName
@@ -688,7 +688,7 @@ class DietService {
                       secondary_id: currentSimilarFoodGroupMappingId,
                     },
                   })) || null;
-                
+
                 if (!similarMappingExists) {
                   // create new mapping
                   similarMappings.push({
@@ -698,16 +698,16 @@ class DietService {
                 }
               } else {
                 // create
-                
+
                 const createdSimilarFoodGroup =
                   (await Database.getModel(foodGroupTableName).create(
-                    {...similarFoodGroupData, details: {notes}},
+                    { ...similarFoodGroupData, details: { notes } },
                     {
                       transaction,
                       raw: true,
                     }
                   )) || {};
-                
+
                 // add diet food group mapping for similar
                 const createdSimilarFoodGroupMapping =
                   (await Database.getModel(
@@ -722,20 +722,20 @@ class DietService {
                       transaction,
                     }
                   )) || [];
-                
+
                 currentSimilarFoodGroupMappingId =
                   createdSimilarFoodGroupMapping.id;
-                
+
                 // add similar table row for newly created mapping
                 similarMappings.push({
                   related_to_id: currentFoodGroupMappingId,
                   secondary_id: currentSimilarFoodGroupMappingId,
                 });
               }
-              
+
               // end of similar specific for loop
             }
-            
+
             await Database.getModel(similiarFoodMappingTableName).bulkCreate(
               similarMappings,
               {
@@ -744,46 +744,46 @@ class DietService {
               }
             );
           }
-          
+
           // end of time specific for loop
         }
       }
-      
+
       // for( let time in diet_food_groups ){
-      
+
       //   const timeData = diet_food_groups[time] || [];
-      
+
       //   for( let food_group of timeData ){
-      
+
       //     let { similar = [] } = food_group;
-      
+
       //     const { food_group_id , mappingId:primary_mapping_id} = await this.getFoodGroupIdAndMappingId({
       //       food_group,
       //       transaction,
       //       diet_id,
       //       time
       //     });
-      
+
       //     if(similar.length && primary_mapping_id){
-      
+
       //         let similarFoodGroupMappingIds=[];
       //         for( let eachSimilar of similar ){
-      
+
       //           const {food_group_id : similar_food_group_id ,mappingId : similar_mappingId } = await this.getFoodGroupIdAndMappingId({
       //             food_group:eachSimilar,
       //             transaction,
       //             diet_id,
       //             time
       //           });
-      
+
       //           if(similar_mappingId){
       //             similarFoodGroupMappingIds.push(similar_mappingId);
       //           }
-      
+
       //         }
-      
+
       //         for(let each of similarFoodGroupMappingIds ){
-      
+
       //           const { id : existingId  } = await Database.getModel(similiarFoodMappingTableName).findOne({
       //             where : {
       //               secondary_id:each,
@@ -791,9 +791,9 @@ class DietService {
       //             },
       //             attributes:["id"]
       //           }) || {};
-      
+
       //           if(!existingId){
-      
+
       //             const similarFoodMapping = await Database.getModel(similiarFoodMappingTableName).create({
       //               secondary_id:each,
       //               related_to_id: primary_mapping_id
@@ -801,22 +801,22 @@ class DietService {
       //               raw: true,
       //               transaction,
       //             }) || {};
-      
+
       //           }
-      
+
       //         }
       //     }
       //   }
       // }
-      
+
       const dietDataToUpdate = {
         name,
         start_date,
         end_date,
         total_calories,
-        details: {not_to_do, repeat_days},
+        details: { not_to_do, repeat_days },
       };
-      
+
       await Database.getModel(TABLE_NAME).update(dietDataToUpdate, {
         where: {
           id: diet_id,
@@ -824,35 +824,35 @@ class DietService {
         raw: true,
         transaction,
       });
-      
+
       await transaction.commit();
       return true;
     } catch (error) {
       await transaction.rollback();
-      console.log("732452365462354623642783 >>>>>>>>>> >>>. ", {error});
+      console.log("732452365462354623642783 >>>>>>>>>> >>>. ", { error });
       throw error;
     }
   };
-  
+
   getFoodGroupIdAndMappingId = async ({
-                                        food_group,
-                                        // transaction,
-                                        diet_id,
-                                        time,
-                                      }) => {
+    food_group,
+    // transaction,
+    diet_id,
+    time,
+  }) => {
     try {
-      let {food_group_id = null} = food_group;
+      let { food_group_id = null } = food_group;
       let mappingId = null;
-      
+
       const {
         serving = null,
         portion_id = null,
         food_item_detail_id = null,
         notes = "",
       } = food_group || {};
-      
-      console.log("9867826816812631243684 =====>>> ", {food_group_id});
-      
+
+      console.log("9867826816812631243684 =====>>> ", { food_group_id });
+
       if (food_group_id) {
         const updateFoodGroupData = {
           serving,
@@ -860,7 +860,7 @@ class DietService {
           food_item_detail_id,
           notes,
         };
-        
+
         await Database.getModel(foodGroupTableName).update(
           updateFoodGroupData,
           {
@@ -871,16 +871,16 @@ class DietService {
             // transaction
           }
         );
-        
+
         const getMappingRespo =
           (await this.getDietFoodGroupMapping({
             food_group_id,
             diet_id,
           })) || {};
-        
-        const {id: mappings_id = null} = getMappingRespo;
+
+        const { id: mappings_id = null } = getMappingRespo;
         mappingId = mappings_id;
-        
+
         console.log("9867826816812631243684 ############ ", {
           getMappingRespo,
           mappingId,
@@ -892,14 +892,14 @@ class DietService {
               serving,
               portion_id,
               food_item_detail_id,
-              details: notes ? {notes} : {},
+              details: notes ? { notes } : {},
             },
             {
               // transaction,
             }
           )) || {};
-        
-        const {id: new_group_id} = newFoodGroup || {};
+
+        const { id: new_group_id } = newFoodGroup || {};
         food_group_id = new_group_id;
         const newMapping =
           (await Database.getModel(dietFoodGroupMappingTableName).create(
@@ -912,27 +912,27 @@ class DietService {
               // transaction,
             }
           )) || {};
-        
-        const {id: new_mapping_id} = newMapping;
+
+        const { id: new_mapping_id } = newMapping;
         mappingId = new_mapping_id;
       }
-      
+
       console.log("9867826816812631243684 @@@@@@@@@@@@@@@ ", {
         food_group_id,
         mappingId,
       });
-      
-      return {food_group_id, mappingId};
+
+      return { food_group_id, mappingId };
     } catch (error) {
       throw error;
     }
   };
-  
+
   getAllSimilarRecordsForData = async ({
-                                         where,
-                                         order = DEFAULT_ORDER,
-                                         attributes,
-                                       }) => {
+    where,
+    order = DEFAULT_ORDER,
+    attributes,
+  }) => {
     try {
       const records = await Database.getModel(
         similiarFoodMappingTableName
@@ -947,7 +947,7 @@ class DietService {
       throw err;
     }
   };
-  
+
   getDietFoodGroupMapping = async (data) => {
     try {
       return await Database.getModel(dietFoodGroupMappingTableName).findOne({
@@ -959,12 +959,12 @@ class DietService {
       throw error;
     }
   };
-  
-  updateDietTotalCalories = async ({total_calories, diet_id}) => {
+
+  updateDietTotalCalories = async ({ total_calories, diet_id }) => {
     const transaction = await Database.initTransaction();
     try {
       await Database.getModel(TABLE_NAME).update(
-        {total_calories, diet_id},
+        { total_calories, diet_id },
         {
           where: {
             id: diet_id,
@@ -973,12 +973,12 @@ class DietService {
           transaction,
         }
       );
-      
+
       await transaction.commit();
       return true;
     } catch (error) {
       await transaction.rollback();
-      console.log("732452365462354623642783 >>>>>>>>>> >>>. ", {error});
+      console.log("732452365462354623642783 >>>>>>>>>> >>>. ", { error });
       throw error;
     }
   };

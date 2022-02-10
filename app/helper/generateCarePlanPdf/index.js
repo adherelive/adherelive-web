@@ -290,11 +290,11 @@ function printDiet(
 
   const serialNoXStart = DOC_MARGIN;
   // AKSHAY NEW CODE IMPLEMENTATIONS START
-  const drNameDietXStart = DOC_MARGIN + 50;
+  // const drNameDietXStart = DOC_MARGIN + 50;
   // AKSHAY NEW CODE IMPLEMENTATIONS END
-  const dietNameXStart = DOC_MARGIN + 150;
-  const dietDetailsTimeXStart = DOC_MARGIN + 230;
-  const dietDetailsDataXStart = DOC_MARGIN + 350;
+  const dietNameXStart = DOC_MARGIN + 40;
+  const dietDetailsTimeXStart = DOC_MARGIN + 120;
+  const dietDetailsDataXStart = DOC_MARGIN + 200;
   const startDateXStart = DOC_MARGIN + 430;
   const endDateXStart = DOC_MARGIN + 560;
 
@@ -304,8 +304,8 @@ function printDiet(
     .font(BOLD_FONT)
     .text("S.No.", serialNoXStart, dietsHeaderEnds + 20)
     // AKSHAY NEW CODE IMPLEMENTATIONS START
-    .font(BOLD_FONT)
-    .text("Provider Name", drNameDietXStart, dietsHeaderEnds + 20)
+    // .font(BOLD_FONT)
+    // .text("Provider Name", drNameDietXStart, dietsHeaderEnds + 20)
     // AKSHAY NEW CODE IMPLEMENTATIONS END
     .font(BOLD_FONT)
     .text("Diet Name", dietNameXStart, dietsHeaderEnds + 20)
@@ -377,9 +377,9 @@ function printDiet(
       .font(MEDIUM_FONT)
       .text(`${dietCount}.`, serialNoXStart, basicDetailsYLevel)
       // AKSHAY NEW CODE IMPLEMENTATIONS START
-      .text(`Dr akshay`, drNameDietXStart, basicDetailsYLevel, {
-        width: dietNameXStart - drNameDietXStart,
-      })
+      // .text(`Dr akshay`, drNameDietXStart, basicDetailsYLevel, {
+      //   width: dietNameXStart - drNameDietXStart,
+      // })
       // AKSHAY NEW CODE IMPLEMENTATIONS END
       .text(`${diet_name}`, dietNameXStart, basicDetailsYLevel, {
         width: dietDetailsTimeXStart - dietNameXStart,
@@ -613,11 +613,11 @@ function printWorkout(
 ) {
   const serialNoXStart = DOC_MARGIN;
   // AKSHAY NEW CODE IMPLEMENTATIONS START
-  const drNameWorkoutXStart = DOC_MARGIN + 50;
+  // const drNameWorkoutXStart = DOC_MARGIN + 50;
   // AKSHAY NEW CODE IMPLEMENTATIONS END
-  const workoutNameXStart = DOC_MARGIN + 150;
-  const workoutTimeXStart = DOC_MARGIN + 260;
-  const workoutDetailsDataXStart = DOC_MARGIN + 330;
+  const workoutNameXStart = DOC_MARGIN + 40;
+  const workoutTimeXStart = DOC_MARGIN + 160;
+  const workoutDetailsDataXStart = DOC_MARGIN + 230;
   const startDateXStart = DOC_MARGIN + 430;
   const endDateXStart = DOC_MARGIN + 560;
 
@@ -634,8 +634,8 @@ function printWorkout(
     .font(BOLD_FONT)
     .text("S.No.", serialNoXStart, workoutsHeaderEnds + 20)
     // AKSHAY NEW CODE IMPLEMENTATIONS START
-    .font(BOLD_FONT)
-    .text("Provider Name", drNameWorkoutXStart, workoutsHeaderEnds + 20)
+    // .font(BOLD_FONT)
+    // .text("Provider Name", drNameWorkoutXStart, workoutsHeaderEnds + 20)
     // AKSHAY NEW CODE IMPLEMENTATIONS END
     .font(BOLD_FONT)
     .text("Workout Name", workoutNameXStart, workoutsHeaderEnds + 20)
@@ -707,9 +707,9 @@ function printWorkout(
       .font(MEDIUM_FONT)
       .text(`${workoutCount}.`, serialNoXStart, basicDetailsYLevel)
       // AKSHAY NEW CODE IMPLEMENTATIONS START
-      .text(`Dr akshay`, drNameWorkoutXStart, basicDetailsYLevel, {
-        width: workoutNameXStart - drNameWorkoutXStart,
-      })
+      // .text(`Dr akshay`, drNameWorkoutXStart, basicDetailsYLevel, {
+      //   width: workoutNameXStart - drNameWorkoutXStart,
+      // })
       // AKSHAY NEW CODE IMPLEMENTATIONS END
       .text(`${workout_name}`, workoutNameXStart, basicDetailsYLevel, {
         width: workoutTimeXStart - workoutNameXStart,
@@ -1356,7 +1356,7 @@ function printCarePlanData({
           .font(MEDIUM_FONT)
           .text(`${index + 1}.`, serialNoXStart, medicationYLevel)
 
-          .text(`Dr akshay`, drXStart, medicationYLevel, {
+          .text(`${organizer.name}`, drXStart, medicationYLevel, {
             width: medicineXStart - drXStart,
           })
           .text(`${medicineData}`, medicineXStart, medicationYLevel, {
@@ -1471,7 +1471,7 @@ function printCarePlanData({
       .text("Suggested Investigation :", DOC_MARGIN, docYLevel + 10);
 
     for (let index = 0; index < suggestedInvestigations.length; index++) {
-      const { type, type_description, radiology_type, start_date } =
+      const { type, type_description, radiology_type, start_date, organizer } =
         suggestedInvestigations[index] || {};
 
       doc
@@ -1479,7 +1479,9 @@ function printCarePlanData({
         .text(
           `${type_description}${radiology_type ? `-${radiology_type}` : ""}(${
             APPOINTMENT_TYPE[type].title
-          }) on ${moment(start_date).format("DD/MM/YYYY")}`,
+          }) on ${moment(start_date).format("DD/MM/YYYY")} by ${
+            organizer.name
+          }`,
           DOC_MARGIN,
           doc.y + 5
         );
