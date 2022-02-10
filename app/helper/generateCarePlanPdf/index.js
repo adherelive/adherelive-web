@@ -1447,7 +1447,7 @@ function printCarePlanData({
       .text("Suggested Investigation :", DOC_MARGIN, docYLevel + 10);
 
     for (let index = 0; index < suggestedInvestigations.length; index++) {
-      const { type, type_description, radiology_type, start_date } =
+      const { type, type_description, radiology_type, start_date, organizer } =
         suggestedInvestigations[index] || {};
 
       doc
@@ -1455,7 +1455,9 @@ function printCarePlanData({
         .text(
           `${type_description}${radiology_type ? `-${radiology_type}` : ""}(${
             APPOINTMENT_TYPE[type].title
-          }) on ${moment(start_date).format("DD/MM/YYYY")}`,
+          }) on ${moment(start_date).format("DD/MM/YYYY")} by ${
+            organizer.name
+          }`,
           DOC_MARGIN,
           doc.y + 5
         );
