@@ -289,12 +289,9 @@ function printDiet(
   const dietsHeaderEnds = doc.y;
 
   const serialNoXStart = DOC_MARGIN;
-  // AKSHAY NEW CODE IMPLEMENTATIONS START
-  const drNameDietXStart = DOC_MARGIN + 50;
-  // AKSHAY NEW CODE IMPLEMENTATIONS END
-  const dietNameXStart = DOC_MARGIN + 150;
-  const dietDetailsTimeXStart = DOC_MARGIN + 230;
-  const dietDetailsDataXStart = DOC_MARGIN + 350;
+  const dietNameXStart = DOC_MARGIN + 40;
+  const dietDetailsTimeXStart = DOC_MARGIN + 120;
+  const dietDetailsDataXStart = DOC_MARGIN + 200;
   const startDateXStart = DOC_MARGIN + 430;
   const endDateXStart = DOC_MARGIN + 560;
 
@@ -303,10 +300,6 @@ function printDiet(
     .fontSize(NORMAL_FONT_SIZE)
     .font(BOLD_FONT)
     .text("S.No.", serialNoXStart, dietsHeaderEnds + 20)
-    // AKSHAY NEW CODE IMPLEMENTATIONS START
-    .font(BOLD_FONT)
-    .text("Provider Name", drNameDietXStart, dietsHeaderEnds + 20)
-    // AKSHAY NEW CODE IMPLEMENTATIONS END
     .font(BOLD_FONT)
     .text("Diet Name", dietNameXStart, dietsHeaderEnds + 20)
     .font(BOLD_FONT)
@@ -376,11 +369,6 @@ function printDiet(
       .fontSize(SHORT_FONT_SIZE)
       .font(MEDIUM_FONT)
       .text(`${dietCount}.`, serialNoXStart, basicDetailsYLevel)
-      // AKSHAY NEW CODE IMPLEMENTATIONS START
-      .text(`Dr akshay`, drNameDietXStart, basicDetailsYLevel, {
-        width: dietNameXStart - drNameDietXStart,
-      })
-      // AKSHAY NEW CODE IMPLEMENTATIONS END
       .text(`${diet_name}`, dietNameXStart, basicDetailsYLevel, {
         width: dietDetailsTimeXStart - dietNameXStart,
       })
@@ -432,14 +420,11 @@ function printDiet(
           food_items[food_item_id] || {};
         const { basic_info: { name: portion_type = "" } = {} } =
           portions[portion_id] || {};
-
         let singleData = `${serving}x${" "}${portion_size}${" "}${portion_type}${" "}${food_name}${
           similar.length > 0 && notes.length ? `${" "}(${notes})${" "}` : ""
         }`;
-
         for (let i in similar) {
           const eachSimilar = similar[i] || {};
-
           const {
             food_group_id = null,
             food_item_detail_id = null,
@@ -447,7 +432,6 @@ function printDiet(
             portion_id = null,
             serving = null,
           } = eachSimilar || {};
-
           const {
             basic_info: { food_item_id = null, portion_size = null } = {},
           } = food_item_details[food_item_detail_id] || {};
@@ -455,19 +439,16 @@ function printDiet(
             food_items[food_item_id] || {};
           const { basic_info: { name: portion_type = "" } = {} } =
             portions[portion_id] || {};
-
           singleData =
             singleData +
             `${" "}/${" "}${serving}x${" "}${portion_size}${" "}${portion_type}${" "}${food_name}${
               notes.length ? `${" "}(${notes})${" "}` : ""
             }`;
         }
-
         if (doc.y + 3 * MEDIUM_FONT > PAGE_END_LIMIT) {
           addPageAndNumber(doc);
           singleDietDetailYLevel = DOC_MARGIN;
         }
-
         doc
           .fillColor("#212b36")
           .font(MEDIUM_FONT)
@@ -479,9 +460,7 @@ function printDiet(
               width: startDateXStart - dietDetailsDataXStart,
             }
           );
-
         singleDietDetailYLevel = doc.y;
-
         similar && notes && similar.length === 0 && notes.length
           ? doc
               .fillColor("#212b36")
@@ -505,20 +484,15 @@ function printDiet(
                 }
               )
           : null;
-
         if (doc.y + 3 * SHORT_FONT_SIZE > PAGE_END_LIMIT) {
           addPageAndNumber(doc);
           singleDietDetailYLevel = DOC_MARGIN;
         }
-
         singleDietDetailYLevel = doc.y;
       }
-
       singleDietDetailYLevel = doc.y + 20;
     }
-
     singleDietDetailYLevel = doc.y;
-
     doc
       .fillColor("#212b36")
       .font(BOLD_FONT)
@@ -540,9 +514,7 @@ function printDiet(
           width: startDateXStart - dietDetailsTimeXStart,
         }
       );
-
     singleDietDetailYLevel = doc.y;
-
     doc
       .font(BOLD_FONT)
       .text(
@@ -563,9 +535,7 @@ function printDiet(
           width: startDateXStart - dietDetailsTimeXStart,
         }
       );
-
     singleDietDetailYLevel = doc.y;
-
     doc
       .font(BOLD_FONT)
       .text(
@@ -586,24 +556,17 @@ function printDiet(
           width: startDateXStart - dietDetailsTimeXStart,
         }
       );
-
     singleDietDetailYLevel = doc.y;
-
     generateHr(doc, singleDietDetailYLevel + 10);
-
     singleDietDetailYLevel = doc.y;
-
     dietCount++;
-
     if (doc.y + 3 * SHORT_FONT_SIZE > PAGE_END_LIMIT) {
       addPageAndNumber(doc);
       singleDietDetailYLevel = DOC_MARGIN;
     }
   }
-
   return doc.y + 20;
 }
-
 function printWorkout(
   doc,
   dietYLevel,
@@ -612,31 +575,21 @@ function printWorkout(
   workout_ids
 ) {
   const serialNoXStart = DOC_MARGIN;
-  // AKSHAY NEW CODE IMPLEMENTATIONS START
-  const drNameWorkoutXStart = DOC_MARGIN + 50;
-  // AKSHAY NEW CODE IMPLEMENTATIONS END
-  const workoutNameXStart = DOC_MARGIN + 150;
-  const workoutTimeXStart = DOC_MARGIN + 260;
-  const workoutDetailsDataXStart = DOC_MARGIN + 330;
+  const workoutNameXStart = DOC_MARGIN + 40;
+  const workoutTimeXStart = DOC_MARGIN + 160;
+  const workoutDetailsDataXStart = DOC_MARGIN + 230;
   const startDateXStart = DOC_MARGIN + 430;
   const endDateXStart = DOC_MARGIN + 560;
-
   doc
     .font(BOLD_FONT)
     .fontSize(BOLD_FONT_SIZE)
     .text("WORKOUT", DOC_MARGIN, dietYLevel);
-
   const workoutsHeaderEnds = doc.y;
-
   doc
     .fillColor("#4a90e2")
     .fontSize(NORMAL_FONT_SIZE)
     .font(BOLD_FONT)
     .text("S.No.", serialNoXStart, workoutsHeaderEnds + 20)
-    // AKSHAY NEW CODE IMPLEMENTATIONS START
-    .font(BOLD_FONT)
-    .text("Provider Name", drNameWorkoutXStart, workoutsHeaderEnds + 20)
-    // AKSHAY NEW CODE IMPLEMENTATIONS END
     .font(BOLD_FONT)
     .text("Workout Name", workoutNameXStart, workoutsHeaderEnds + 20)
     .font(BOLD_FONT)
@@ -647,23 +600,19 @@ function printWorkout(
     .text("Duration", startDateXStart, workoutsHeaderEnds + 20)
     .font(BOLD_FONT);
   // .text("End Date",endDateXStart, workoutsHeaderEnds + 20)
-
   let workoutCount = 1;
   let singleWorkoutDetailYLevel = doc.y;
-
   for (let each in workouts_formatted_data) {
     if (doc.y + 3 * SHORT_FONT_SIZE > PAGE_END_LIMIT) {
       addPageAndNumber(doc);
       singleWorkoutDetailYLevel = DOC_MARGIN;
     }
-
     const {
       workouts = {},
       exercises = {},
       exercise_details = {},
       workout_exercise_groups = {},
     } = workouts_formatted_data[each];
-
     const {
       basic_info: { name: workout_name } = {},
       details: { not_to_do = "", repeat_days = [] } = {},
@@ -672,18 +621,15 @@ function printWorkout(
       end_date = null,
       total_calories = 0,
     } = workouts[Object.keys(workouts)[0]] || {};
-
     let basicDetailsYLevel = singleWorkoutDetailYLevel + 20,
       formattedStartDate = "--",
       formattedEndDate = "--";
-
     if (start_date) {
       formattedStartDate = moment(start_date);
     }
     if (end_date) {
       formattedEndDate = moment(end_date);
     }
-
     let duration = null;
     let durationText = "";
     if (end_date) {
@@ -697,7 +643,6 @@ function printWorkout(
         }${days > 0 ? `${days}${" "}${days > 1 ? "days" : "day"}` : ""} `;
       }
     }
-
     const formattedTime = getConvertedTime({ time: workoutTime }).format(
       "hh:mm A"
     );
@@ -706,11 +651,6 @@ function printWorkout(
       .fontSize(SHORT_FONT_SIZE)
       .font(MEDIUM_FONT)
       .text(`${workoutCount}.`, serialNoXStart, basicDetailsYLevel)
-      // AKSHAY NEW CODE IMPLEMENTATIONS START
-      .text(`Dr akshay`, drNameWorkoutXStart, basicDetailsYLevel, {
-        width: workoutNameXStart - drNameWorkoutXStart,
-      })
-      // AKSHAY NEW CODE IMPLEMENTATIONS END
       .text(`${workout_name}`, workoutNameXStart, basicDetailsYLevel, {
         width: workoutTimeXStart - workoutNameXStart,
       })
@@ -726,16 +666,13 @@ function printWorkout(
         }
       );
     // .text(`${formattedEndDate}`, endDateXStart, basicDetailsYLevel)
-
     for (let each in workout_exercise_groups) {
       const exerciseGroupArrayForEach = workout_exercise_groups[each] || [];
-
       const {
         exercise_detail_id = null,
         notes = "",
         sets = null,
       } = exerciseGroupArrayForEach || {};
-
       const {
         basic_info: {
           exercise_id = null,
@@ -746,14 +683,11 @@ function printWorkout(
       const { basic_info: { name: exercise_name = "" } = {} } =
         exercises[exercise_id] || {};
       const { type: repetition_type = "" } = repetitions[repetition_id] || {};
-
       let singleData = `${sets}${" "}set${" "}x${" "}${repetition_value}${" "}${repetition_type}${" "}${exercise_name}`;
-
       if (doc.y + 3 * MEDIUM_FONT > PAGE_END_LIMIT) {
         addPageAndNumber(doc);
         singleWorkoutDetailYLevel = DOC_MARGIN;
       }
-
       doc
         .fillColor("#212b36")
         .font(MEDIUM_FONT)
@@ -765,9 +699,7 @@ function printWorkout(
             width: startDateXStart - workoutDetailsDataXStart,
           }
         );
-
       singleWorkoutDetailYLevel = doc.y;
-
       notes.length
         ? doc
             .fillColor("#212b36")
@@ -791,17 +723,13 @@ function printWorkout(
               }
             )
         : null;
-
       if (doc.y + 3 * SHORT_FONT_SIZE > PAGE_END_LIMIT) {
         addPageAndNumber(doc);
         singleWorkoutDetailYLevel = DOC_MARGIN;
       }
-
       singleWorkoutDetailYLevel = doc.y;
     }
-
     singleWorkoutDetailYLevel = doc.y;
-
     doc
       .fillColor("#212b36")
       .font(BOLD_FONT)
@@ -823,9 +751,7 @@ function printWorkout(
           width: startDateXStart - workoutDetailsDataXStart,
         }
       );
-
     singleWorkoutDetailYLevel = doc.y;
-
     doc
       .font(BOLD_FONT)
       .text(
@@ -846,9 +772,7 @@ function printWorkout(
           width: startDateXStart - workoutDetailsDataXStart,
         }
       );
-
     singleWorkoutDetailYLevel = doc.y;
-
     doc
       .font(BOLD_FONT)
       .text(
@@ -869,24 +793,17 @@ function printWorkout(
           width: startDateXStart - workoutDetailsDataXStart,
         }
       );
-
     singleWorkoutDetailYLevel = doc.y;
-
     generateHr(doc, singleWorkoutDetailYLevel + 10);
-
     singleWorkoutDetailYLevel = doc.y;
-
     workoutCount++;
-
     if (doc.y + 3 * SHORT_FONT_SIZE > PAGE_END_LIMIT) {
       addPageAndNumber(doc);
       singleWorkoutDetailYLevel = DOC_MARGIN;
     }
   }
-
   return doc.y + 20;
 }
-
 function printDoctorBlockData(
   doc,
   doctors,
@@ -917,46 +834,36 @@ function printDoctorBlockData(
     providers,
     doctor_id
   );
-
   let doctorBlockStartX = doc.x;
-
   let doctorBlockStartY = doc.y;
-
   if (providerIcon) {
     doc.image(`${providerIcon}`, DOC_MARGIN, doctorBlockStartY, {
       width: 80,
       height: 80,
     });
-
     doctorBlockStartX = doc.x + 100;
-
     doc
       .fontSize(BOLD_FONT_SIZE)
       .font(MEDIUM_FONT)
       .text(`${providerName}`, doctorBlockStartX, doctorBlockStartY);
-
     doc
       .fontSize(NORMAL_FONT_SIZE)
       .font(MEDIUM_FONT)
       .text(`${providerAddress}`, doctorBlockStartX, doc.y);
   }
-
   doc
     .fillColor("#3f76cd")
     .fontSize(BOLD_FONT_SIZE)
     .font(BOLD_FONT)
     .text(`Dr. ${doctorName}`, doctorBlockStartX, doc.y);
-
   const doctorNameEndsY = doc.y;
   // const providerDetailsStart = doc.x + 250;
   // const providerDetailsEnd = doc.x + 380;
-
   // temp | remove after provider logo
   // doc.rect(400, doctorBlockStartX, 100, 100).fill("#ecf0f1");
   // doc.image(`${imageUrl}`, 400, doctorBlockStartX, { width: 120, height: 40 });
   // .text("\n");
   const fullDegree = degree ? `${degree}, MBBS` : "MBBS";
-
   doc
     .fontSize(NORMAL_FONT_SIZE)
     .fillColor("#212b36")
@@ -967,24 +874,18 @@ function printDoctorBlockData(
     .text(`Email: ${doctorEmail}`, doc.x, doc.y)
     .text(`Phone: +${prefix}-${doctorMobileNumber}`, doc.x, doc.y)
     .text(`Address: ${city}`, doc.x, doc.y);
-
   let doctorDetailsEnd = doc.y;
-
   // const providerDetailsHeight = doctorDetailsEnd - doctorNameEndsY;
   // let textFontSize = NORMAL_FONT_SIZE;
-
   // doc.fontSize(textFontSize);
-
   // let height = doc.heightOfString(providerPrescriptionDetails, {
   //   lineGap: 0,
   //   width: providerDetailsEnd - providerDetailsStart,
   // });
-
   if (providerPrescriptionDetails) {
     let fontSize =
       NORMAL_FONT_SIZE -
       2 * Math.ceil(providerPrescriptionDetails.length / 150);
-
     doc
       .font(REGULAR_FONT)
       .fontSize(fontSize)
@@ -992,9 +893,7 @@ function printDoctorBlockData(
         width: 500 - 30,
         height: 30,
       });
-
     doctorDetailsEnd = doc.y;
-
     // while (height > providerDetailsHeight && textFontSize > 1) {
     //   textFontSize = textFontSize - 1;
     //   doc.fontSize(textFontSize);
@@ -1003,7 +902,6 @@ function printDoctorBlockData(
     //     width: providerDetailsEnd - providerDetailsStart,
     //   });
     // }
-
     // doc
     //   .fontSize(textFontSize)
     //   .fillColor("#212b36")
@@ -1017,19 +915,15 @@ function printDoctorBlockData(
     //     }
     //   );
   }
-
   // generateHr(doc, doc.y + 10);
-
   // if (providerIcon) {
   doc.image(`${__dirname}/qr-code.png`, 480, doctorBlockStartY, {
     width: 80,
     height: 80,
   });
   // }
-
   return doctorDetailsEnd;
 }
-
 function printPatientBlockData(
   doc,
   patients,
@@ -1041,7 +935,6 @@ function printPatientBlockData(
   const month = creationDateObj.get("month") + 1;
   const date = creationDateObj.get("date");
   const year = creationDateObj.get("year");
-
   const {
     name: patientName = "",
     address = "",
@@ -1053,7 +946,6 @@ function printPatientBlockData(
     prefix = "",
     uid = "",
   } = formatPatientData(patients, users);
-
   doc
     .fontSize(NORMAL_FONT_SIZE)
     .font(BOLD_FONT)
@@ -1065,7 +957,6 @@ function printPatientBlockData(
     {
       continued: true,
     };
-
   doc
     .fontSize(NORMAL_FONT_SIZE)
     .font(BOLD_FONT)
@@ -1078,7 +969,6 @@ function printPatientBlockData(
       DOC_MARGIN + 410,
       doctorBlockEndRowLevel + 20
     );
-
   // doc
   //   .text(
   //     "\n Name of Patient",
@@ -1088,15 +978,12 @@ function printPatientBlockData(
   //   .text(`${patientName}`, 190, doc.y - NORMAL_FONT_SIZE - 1, {
   //     width: MAX_WIDTH,
   //   });
-
   const patientNameEnds = doc.y;
-
   // doc
   //   .text("Age", 390, dateOfConsultationEnds + 4)
   //   .text(`${age}`, doc.x + 35, dateOfConsultationEnds + 4)
   //   .text("Gender", doc.x + 55, dateOfConsultationEnds + 4)
   //   .text(`${gender ? gender : ""}`, doc.x + 60, dateOfConsultationEnds + 4);
-
   doc
     .fontSize(NORMAL_FONT_SIZE)
     .font(BOLD_FONT)
@@ -1105,9 +992,7 @@ function printPatientBlockData(
     })
     .font(REGULAR_FONT)
     .text(`+${prefix}-${mobile_number}`, DOC_MARGIN + 10, patientNameEnds + 10);
-
   const mobileNumberEnds = doc.y;
-
   doc
     .fontSize(NORMAL_FONT_SIZE)
     .font(BOLD_FONT)
@@ -1116,16 +1001,13 @@ function printPatientBlockData(
     })
     .font(REGULAR_FONT)
     .text(uid, DOC_MARGIN + 10, mobileNumberEnds + 10);
-
   const patientIdEnds = doc.y;
-
   doc
     .fontSize(NORMAL_FONT_SIZE)
     .font(BOLD_FONT)
     .text("Address :", DOC_MARGIN, patientIdEnds + 10, { continued: true })
     .font(REGULAR_FONT)
     .text(`${address ? address : "--"}`, DOC_MARGIN + 10, patientIdEnds + 10);
-
   // doc
   //   .fillColor("black")
   //   .fontSize(NORMAL_FONT_SIZE)
@@ -1135,9 +1017,7 @@ function printPatientBlockData(
   //   .text(`${address ? address : ""}`, 190, doc.y - NORMAL_FONT_SIZE, {
   //     width: MAX_WIDTH,
   //   });
-
   const addressEndRowLevel = doc.y;
-
   // doc
   //   .text("Height", 390, patientNameEnds)
   //   .text(`${height === null ? "--" : height} cm`, 440, patientNameEnds)
@@ -1147,7 +1027,6 @@ function printPatientBlockData(
   //     440,
   //     patientNameEnds + DISTANCE_BETWEEN_ROWS
   //   );
-
   doc
     .fontSize(NORMAL_FONT_SIZE)
     .font(BOLD_FONT)
@@ -1185,10 +1064,8 @@ function printPatientBlockData(
       DOC_MARGIN + 110,
       addressEndRowLevel + 10
     );
-
   return doc.y + 10;
 }
-
 function printCarePlanData({
   doc,
   horizontalLineLevel,
@@ -1204,14 +1081,11 @@ function printCarePlanData({
   try {
     const { diagnosis, condition, symptoms, clinicalNotes } =
       formatCarePlanData(care_plans, conditions);
-
     const medicationsList = formatMedicationsData(medications, medicines);
-
     doc
       .fillColor("#4a90e2")
       .font(BOLD_FONT)
       .text("RELEVANT HISTORY", DOC_MARGIN, horizontalLineLevel);
-
     doc
       .fillColor("#212b36")
       .font(BOLD_FONT)
@@ -1222,23 +1096,17 @@ function printCarePlanData({
       .text("Comorbidities: ", doc.x, doc.y + 10, { continued: true })
       .font(REGULAR_FONT)
       .text(`${comorbidities ? comorbidities : "--"}`, doc.x + 10, doc.y);
-
     const relevantHistoryEndLevel = doc.y + 10;
-
     generateHr(doc, relevantHistoryEndLevel);
-
     doc
       .fillColor("#212b36")
       .font(BOLD_FONT)
       .text("Chief Complaints: ", DOC_MARGIN, relevantHistoryEndLevel + 10, {
         continued: true,
       })
-
       .font(REGULAR_FONT)
       .text(`${symptoms}`, DOC_MARGIN + 10, relevantHistoryEndLevel + 10);
-
     const chiefComplaintsEndLevel = doc.y + 20;
-
     doc
       .font(BOLD_FONT)
       .fontSize(NORMAL_FONT_SIZE)
@@ -1247,9 +1115,7 @@ function printCarePlanData({
       })
       .font(REGULAR_FONT)
       .text(`${clinicalNotes}`, doc.x + 10, chiefComplaintsEndLevel);
-
     const generalExaminationEndLevel = doc.y + 20;
-
     doc
       .font(BOLD_FONT)
       .fontSize(NORMAL_FONT_SIZE)
@@ -1258,7 +1124,6 @@ function printCarePlanData({
       })
       .font(REGULAR_FONT)
       .text(`${diagnosis}`, doc.x + 10, generalExaminationEndLevel);
-
     // doc
     //   .text(
     //     "DIAGNOSIS",
@@ -1270,29 +1135,23 @@ function printCarePlanData({
     //     doc.x + 250,
     //     relevantPointsEndLevel + DISTANCE_BETWEEN_ROWS
     //   );
-
     const labFindingsEndLevel = doc.y;
     let medicationYLevel = doc.y;
-
     // MEDICATIONS
-
     if (medicationsList.length > 0) {
       doc
         .font(BOLD_FONT)
         .fontSize(BOLD_FONT_SIZE)
         .text("Rx", DOC_MARGIN, labFindingsEndLevel + 15);
-
       const rXLabelEndLevelY = doc.y;
-
       const serialNoXStart = DOC_MARGIN;
       const drXStart = DOC_MARGIN + 50;
       // const medicineXStart = DOC_MARGIN + 40;
-      const medicineXStart = DOC_MARGIN + 150;
-      const dosageXStart = DOC_MARGIN + 230;
-      const quantityXStart = DOC_MARGIN + 280;
-      const frequencyXStart = DOC_MARGIN + 340;
-      const timingFrequencyXStart = DOC_MARGIN + 430;
-
+      const medicineXStart = DOC_MARGIN + 130;
+      const dosageXStart = DOC_MARGIN + 210;
+      const quantityXStart = DOC_MARGIN + 260;
+      const frequencyXStart = DOC_MARGIN + 320;
+      const timingFrequencyXStart = DOC_MARGIN + 390;
       // generateHr(doc, doc.y);
       // medicine table header
       doc
@@ -1300,18 +1159,15 @@ function printCarePlanData({
         .fontSize(NORMAL_FONT_SIZE)
         .font(BOLD_FONT)
         .text("S.No.", serialNoXStart, rXLabelEndLevelY + 10)
-        .text("Provider Name", drXStart, rXLabelEndLevelY + 10)
+        .text("Dr Name", drXStart, rXLabelEndLevelY + 10)
         .text("Medicines", medicineXStart, rXLabelEndLevelY + 10)
         .text("Dosage", dosageXStart, rXLabelEndLevelY + 10)
         .text("Quantity", quantityXStart, rXLabelEndLevelY + 10)
         .text("Frequency", frequencyXStart, rXLabelEndLevelY + 10)
         .text("Time-Duration", timingFrequencyXStart, rXLabelEndLevelY + 10);
-
       // generateHr(doc, doc.y);
-
       const medicationTableHeaderEndYLevel = doc.y;
       medicationYLevel = doc.y + 10;
-
       for (const [index, medicationData] of medicationsList.entries()) {
         console.log("popopopopopopopopopo");
         console.log(medicationData);
@@ -1336,12 +1192,10 @@ function printCarePlanData({
           (x) => x.id == medicineType
         ).name;
         const medicineData = `(${medi_type}) ${medicineName} `;
-
         // .fontSize(MEDICINE_FONT_SIZE)
         // .text(`${index + 1}.`, currentMedicationXLevel, medicationYLevel)
         // .fontSize(SHORT_FONT_SIZE)
         // .text("Rx", doc.x + 20, doc.y - (MEDICINE_FONT_SIZE + 5))
-
         if (doc.y + 3 * SHORT_FONT_SIZE > PAGE_END_LIMIT) {
           if (pageCount === 1) {
             addPageFooter(doc, providerPrescriptionDetails);
@@ -1349,14 +1203,12 @@ function printCarePlanData({
           addPageAndNumber(doc);
           medicationYLevel = DOC_MARGIN;
         }
-
         doc
           .fillColor("#212b36")
           .fontSize(SHORT_FONT_SIZE)
           .font(MEDIUM_FONT)
           .text(`${index + 1}.`, serialNoXStart, medicationYLevel)
-
-          .text(`Dr akshay`, drXStart, medicationYLevel, {
+          .text(`dr akshay nagergoje.`, drXStart, medicationYLevel, {
             width: medicineXStart - drXStart,
           })
           .text(`${medicineData}`, medicineXStart, medicationYLevel, {
@@ -1373,23 +1225,17 @@ function printCarePlanData({
               width: dosageXStart - medicineXStart,
             }
           );
-
         const medicationYLevelEnd = doc.y;
-
         // console.log("30183012093 medicationYLevelEnd, medicationYLevel",{medicationYLevelEnd, medicationYLevel, condition: (medicationYLevel - medicationYLevelEnd) > NORMAL_FONT_SIZE});
-
         // if((medicationYLevel - medicationYLevelEnd) > NORMAL_FONT_SIZE) {
         //   // addPageAndNumber(doc);
-
         //   const {start, count} = doc.bufferedPageRange();
         //   console.log("183129837129 count, start", {count, start});
         //   doc.switchToPage(0);
         // }
-
         // console.log("1936129387 doc.x, doc.y", {x: doc.x, y: doc.y});
         // const {start, count} = doc.bufferedPageRange();
         //   console.log("1833129837129 count, start", {count, start});
-
         doc
           .text(`${strength}`, dosageXStart, medicationYLevel)
           .text(
@@ -1400,7 +1246,6 @@ function printCarePlanData({
           .text(`${dosage}`, frequencyXStart, medicationYLevel, {
             width: timingFrequencyXStart - frequencyXStart,
           });
-
         doc
           .text(`${timings}`, timingFrequencyXStart, medicationYLevel)
           // .text(
@@ -1409,10 +1254,8 @@ function printCarePlanData({
           //   doc.y
           // )
           .text(`${duration} day(s)`, timingFrequencyXStart, doc.y);
-
         // if((medicationYLevel - doc.y) > NORMAL_FONT_SIZE) {
         //   // addPageAndNumber(doc);
-
         //   const {start, count} = doc.bufferedPageRange();
         //   console.log("183129837129 count, start", {count, start});
         //   doc.switchToPage(start);
@@ -1425,7 +1268,6 @@ function printCarePlanData({
         //   medicationYLevel + 250,
         //   doc.y
         // )
-
         // if((medicationYLevel - medicationYLevelEnd) > NORMAL_FONT_SIZE) {
         //   const {start, count} = doc.bufferedPageRange();
         //   console.log("183129837129 count, start", {count, start});
@@ -1434,11 +1276,8 @@ function printCarePlanData({
         const horizontalLineY =
           medicationYLevelEnd > doc.y ? medicationYLevelEnd : doc.y;
         generateHr(doc, horizontalLineY + 5);
-
         medicationYLevel = medicationYLevelEnd + NORMAL_FONT_SIZE + 12;
-
         // checkAndAddNewPage(doc);
-
         if (doc.y > PAGE_END_LIMIT) {
           if (pageCount === 1) {
             addPageFooter(doc, providerPrescriptionDetails);
@@ -1446,34 +1285,27 @@ function printCarePlanData({
           // addPageAndNumber(doc);
         }
       }
-
       // if(doc.y > PAGE_END_LIMIT) {
       //   addPageAndNumber(doc);
       // }
     }
-
     // checkAndAddNewPage(doc);
-
     if (!medicationsList.length > 0) {
       medicationYLevel = generalExaminationEndLevel + NORMAL_FONT_SIZE + 12;
     }
-
     let docYLevel =
       // workoutBlockLevelEnd
       // ? workoutBlockLevelEnd
       // : dietBlockLevelEnd ? dietBlockLevelEnd
       // :
       medicationYLevel;
-
     doc
       .font(BOLD_FONT)
       .fontSize(NORMAL_FONT_SIZE)
       .text("Suggested Investigation :", DOC_MARGIN, docYLevel + 10);
-
     for (let index = 0; index < suggestedInvestigations.length; index++) {
       const { type, type_description, radiology_type, start_date } =
         suggestedInvestigations[index] || {};
-
       doc
         .font(REGULAR_FONT)
         .text(
@@ -1483,7 +1315,6 @@ function printCarePlanData({
           DOC_MARGIN,
           doc.y + 5
         );
-
       if (doc.y > PAGE_END_LIMIT) {
         if (pageCount === 1) {
           addPageFooter(doc, providerPrescriptionDetails);
@@ -1491,57 +1322,44 @@ function printCarePlanData({
         addPageAndNumber(doc);
       }
     }
-
     const suggestedInvestigationXLevelEnd = doc.x;
     return suggestedInvestigationXLevelEnd;
   } catch (ex) {
     console.log(ex);
   }
 }
-
 function addPageAndNumber(doc) {
   //  const {page : { height = 0  }  = {}} = doc;
-
   //  doc
   //  .font(MEDIUM_FONT)
   //  .text(`${pageCount}`, DOC_MARGIN, height-45)
-
   //  printProviderPrescriptionDetails(doc);
-
   doc.addPage();
   // pageCount+=1;
 }
-
 function addPageFooter(doc, providerPrescriptionDetails = "") {
   let initialDocY = doc.y;
-
   doc
     .font(REGULAR_FONT)
     .fontSize(SHORT_FONT_SIZE)
     .text(`Page ${pageCount}`, DOC_WIDTH_MARGIN - 20, PAGE_END_LIMIT + 35);
   // pageCount+=1;
   printProviderPrescriptionDetails(doc, providerPrescriptionDetails);
-
   doc.y = initialDocY;
   pageCount += 1;
 }
-
 function printProviderPrescriptionDetails(doc, providerPrescriptionDetails) {
   // let textFontSize = NORMAL_FONT_SIZE;
   // const providerDetailsStart = DOC_MARGIN;
   // const providerDetailsEnd =DOC_MARGIN+500;
   // const providerDetailsHeight = 30;
-
   // const {page : { height = 0 , width = 0 }  = {}} = doc;
-
   // let prescription = "";
   // if(providerPrescriptionDetails.length) {
   //   prescription = providerPrescriptionDetails;
   // }
-
   let fontSize =
     SHORT_FONT_SIZE - 2 * Math.ceil(providerPrescriptionDetails.length / 150);
-
   doc
     .font(REGULAR_FONT)
     .fontSize(fontSize)
@@ -1549,19 +1367,14 @@ function printProviderPrescriptionDetails(doc, providerPrescriptionDetails) {
       width: 500 - DOC_MARGIN,
       height: 30,
     });
-
   //   let strHeight=doc.heightOfString(providerPrescriptionDetails, {lineGap: 0, width: providerDetailsEnd-providerDetailsStart});
-
   //   if(providerPrescriptionDetails){
-
   //    while(strHeight>providerDetailsHeight && textFontSize > 1){
   //      textFontSize = textFontSize-1;
   //      doc
   //      .fontSize(fontSize);
   //      strHeight=doc.heightOfString(providerPrescriptionDetails, {lineGap: 0, width: providerDetailsEnd-providerDetailsStart});
-
   //    }
-
   //    doc
   //    .fontSize(textFontSize)
   //    .fillColor("#212b36")
@@ -1571,7 +1384,6 @@ function printProviderPrescriptionDetails(doc, providerPrescriptionDetails) {
   //    })
   //  }
 }
-
 function printFooter(
   doc,
   imageUrl,
@@ -1580,7 +1392,6 @@ function printFooter(
   providerPrescriptionDetails
 ) {
   // checkAndAddNewPage(doc);
-
   if (doc.y > PAGE_END_LIMIT) {
     if (pageCount === 1) {
       addPageFooter(doc, providerPrescriptionDetails);
@@ -1588,7 +1399,6 @@ function printFooter(
     addPageAndNumber(doc);
     // medicationYLevel = DOC_MARGIN;
   }
-
   const footerStartLevel = doc.y + 10;
   doc
     .font(BOLD_FONT)
@@ -1602,16 +1412,13 @@ function printFooter(
       DOC_MARGIN + 10
       // footerStartLevel
     );
-
   const signaturePictureHeight = 40;
-
   if (doc.y > PAGE_END_LIMIT - signaturePictureHeight) {
     if (pageCount === 1) {
       addPageFooter(doc, providerPrescriptionDetails);
     }
     addPageAndNumber(doc);
   }
-
   try {
     doc.image(`${imageUrl}`, 400, doc.y + 10, {
       width: 120,
@@ -1620,25 +1427,20 @@ function printFooter(
   } catch (err) {
     console.log("ERROR in signature pic", err);
   }
-
   if (doc.y + 3 * SMALLEST_FONT_SIZE > PAGE_END_LIMIT) {
     if (pageCount === 1) {
       addPageFooter(doc);
     }
     addPageAndNumber(doc);
   }
-
   doc
     .fontSize(SMALLEST_FONT_SIZE - 2)
     .text(`${currentTime}`, 400, doc.y + 60)
     .fontSize(SMALLEST_FONT_SIZE)
     .text("RMPs Signature & Stamp", 400, doc.y + 5);
-
   // generateHr(doc, doc.y + NORMAL_FONT_SIZE);
-
   return doc.y + 10;
 }
-
 function formatCarePlanData(carePlans, conditions) {
   let condition = "",
     diagnosis = "",
@@ -1652,7 +1454,6 @@ function formatCarePlanData(carePlans, conditions) {
       conditions;
     condition = name;
   }
-
   const carePlanIds = Object.keys(carePlans);
   if (carePlanIds && carePlanIds.length) {
     carePlanId = carePlanIds[0];
@@ -1743,7 +1544,6 @@ function formatDoctorsData(
       degrees;
     degree = degreeName ? degree + `${degreeName}, ` : degree;
   }
-
   const registrationIds = Object.keys(registrations);
   for (const regId of registrationIds) {
     const {
@@ -1754,18 +1554,15 @@ function formatDoctorsData(
     } = registrations;
     registrationNumber = registrationNumber + `${number}, `;
   }
-
   if (degree) {
     degree = degree.substring(0, degree.length - 2);
   }
-
   if (registrationNumber) {
     registrationNumber = registrationNumber.substring(
       0,
       registrationNumber.length - 2
     );
   }
-
   return {
     name,
     email,
@@ -1780,12 +1577,9 @@ function formatDoctorsData(
     providerAddress,
   };
 }
-
 function formatPatientData(patients, users) {
   const patientIds = Object.keys(patients);
-
   const patientId = patientIds[0];
-
   const {
     [patientId]: {
       basic_info: {
@@ -1804,15 +1598,12 @@ function formatPatientData(patients, users) {
       details: { allergies = "", comorbidities = "" } = {},
     } = {},
   } = patients;
-
   let name = first_name;
   name = middle_name ? `${name} ${middle_name}` : name;
   name = last_name ? `${name} ${last_name}` : name;
-
   const {
     [user_id]: { basic_info: { mobile_number = "", prefix = "" } = {} } = {},
   } = users;
-
   return {
     name,
     age,
@@ -1827,7 +1618,6 @@ function formatPatientData(patients, users) {
     uid,
   };
 }
-
 function formatMedicationsData(medications, medicines) {
   // have to send the list of objects containing instruction medicine name, medicine type, strength, frequency, duration,
   let medicationsList = [];
@@ -1851,15 +1641,12 @@ function formatMedicationsData(medications, medicines) {
         organizer,
       },
     } = medications;
-
     let mainDetails = {};
-
     if (mobileDetails) {
       mainDetails = { ...mobileDetails };
     } else {
       mainDetails = { ...details };
     }
-
     const {
       medicine_id = null,
       when_to_take = [],
@@ -1878,24 +1665,18 @@ function formatMedicationsData(medications, medicines) {
       } = {},
     } = medicines || {};
     const { generic_name = "" } = medicineExtraDetails || {};
-
     const startDateObj = moment(start_date);
-
     // const duration = endDateObj.diff(startDateObj, "days");
-
     const startDate = `${startDateObj.format("LL")}`;
     let endDate = "";
-
     if (end_date) {
       const endDateObj = moment(end_date);
       endDate = `${endDateObj.get("year")}/${endDateObj.get(
         "month"
       )}/${endDateObj.get("date")}`;
     }
-
     const { [unit]: { text = "" } = {} } = DOSE_UNIT;
     const unitToShow = text ? text : unit;
-
     medicationDataObj = {
       description,
       medicineName: name ? name.toUpperCase() : name,
@@ -1914,16 +1695,13 @@ function formatMedicationsData(medications, medicines) {
         ? moment(end_date).diff(moment(start_date), "days")
         : "Long term", // todo: change text here after discussion
     };
-
     medicationsList.push(medicationDataObj);
   }
   console.log("1=2==3==5=6=7=8=8=9=8=6=5=4==43==2==2");
   console.log(medicationsList);
   console.log("1=2==3==5=6=7=8=8=9=8=6=5=4==43==2==2");
-
   return medicationsList;
 }
-
 const getWhenToTakeDosage = (when_to_take) => {
   switch (when_to_take.length) {
     case WHEN_TO_TAKE_ABBREVATIONS.OD:
@@ -1938,11 +1716,9 @@ const getWhenToTakeDosage = (when_to_take) => {
       return null;
   }
 };
-
 const getWhenToTakeTimings = (when_to_take = []) => {
   return when_to_take.map((id) => MEDICATION_TIMING[id].text).join(", ");
 };
-
 const getWhenToTakeText = (number) => {
   switch (number) {
     case 1:
@@ -1955,7 +1731,6 @@ const getWhenToTakeText = (number) => {
       return "";
   }
 };
-
 function generateHr(doc, y) {
   doc
     .strokeColor("#e7e7e7")
@@ -1964,20 +1739,16 @@ function generateHr(doc, y) {
     .lineTo(600, y)
     .stroke();
 }
-
 function generateVr(doc, x, yStart, yEnd) {
   const { onePageHeight, totalPagesToDrawLine } = getPageDetails(doc);
-
   for (let pageNumber = 0; pageNumber < totalPagesToDrawLine; pageNumber++) {
     const pageLimit = (pageNumber + 1) * onePageHeight;
-
     doc.switchToPage(pageNumber);
     const startPoint = pageNumber === 0 ? yStart : 0;
     const endPoint =
       pageNumber === totalPagesToDrawLine - 1
         ? yEnd + NORMAL_FONT_SIZE
         : pageLimit;
-
     doc
       .strokeColor("black")
       .lineWidth(1)

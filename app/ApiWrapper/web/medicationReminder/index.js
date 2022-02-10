@@ -7,13 +7,25 @@ import EventService from "../../../services/scheduleEvents/scheduleEvent.service
 import moment from "moment";
 import { EVENT_STATUS, EVENT_TYPE } from "../../../../constant";
 import EventWrapper from "../../common/scheduleEvents";
+import doctorService from "../../../services/doctor/doctor.service";
 
 class MReminderWrapper extends BaseMedicationReminder {
   constructor(data) {
     super(data);
   }
 
-  getBasicInfo = () => {
+  // Gauarav changes
+  getOrganizerDetailsFromId = async (organizer_id, organizer_type) => {
+    let organizer = {};
+    console.log("organizer_id", organizer_id);
+    console.log("organizer_type", organizer_type);
+    if (organizer_type === "doctor") {
+      organizer = await doctorService.getDoctorByDoctorId(organizer_id);
+    }
+    return organizer;
+  };
+
+  getBasicInfo = async () => {
     const { _data } = this;
     const {
       id,
@@ -26,6 +38,11 @@ class MReminderWrapper extends BaseMedicationReminder {
       details,
       rr_rule = "",
     } = _data || {};
+    // let organizerDetails = await this.getOrganizerDetailsFromId(
+    //   organizer_id,
+    //   organizer_type
+    // );
+    // console.log("organizerDetails", organizerDetails);
     return {
       basic_info: {
         id,
@@ -37,6 +54,7 @@ class MReminderWrapper extends BaseMedicationReminder {
       organizer: {
         id: organizer_id,
         category: organizer_type,
+        // name: `${organizerDetails.first_name} ${organizerDetails.last_name}`,
       },
       participant_id,
       rr_rule,
