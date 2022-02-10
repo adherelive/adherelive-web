@@ -19,8 +19,9 @@ class MReminderWrapper extends BaseMedicationReminder {
     let organizer = {};
     console.log("organizer_id", organizer_id);
     console.log("organizer_type", organizer_type);
-    if (organizer_type === "doctor") {
-      organizer = await doctorService.getDoctorByDoctorId(organizer_id);
+    if (organizer_type === "doctor" || organizer_type === "hsp") {
+      // organizer = await doctorService.getDoctorByDoctorId(organizer_id);
+      organizer = await doctorService.getDoctorByUserId(organizer_id);
     }
     return organizer;
   };
