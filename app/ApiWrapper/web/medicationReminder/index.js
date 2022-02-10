@@ -38,10 +38,10 @@ class MReminderWrapper extends BaseMedicationReminder {
       details,
       rr_rule = "",
     } = _data || {};
-    // let organizerDetails = await this.getOrganizerDetailsFromId(
-    //   organizer_id,
-    //   organizer_type
-    // );
+    let organizerDetails = await this.getOrganizerDetailsFromId(
+      organizer_id,
+      organizer_type
+    );
     // console.log("organizerDetails", organizerDetails);
     return {
       basic_info: {
@@ -54,7 +54,7 @@ class MReminderWrapper extends BaseMedicationReminder {
       organizer: {
         id: organizer_id,
         category: organizer_type,
-        // name: `${organizerDetails.first_name} ${organizerDetails.last_name}`,
+        //   // name: `${organizerDetails.first_name} ${organizerDetails.last_name}`,
       },
       participant_id,
       rr_rule,
@@ -89,11 +89,11 @@ class MReminderWrapper extends BaseMedicationReminder {
         remaining++;
       }
     }
-
+    const basicInfo = await getBasicInfo();
     return {
       medications: {
         [getMReminderId()]: {
-          ...getBasicInfo(),
+          ...basicInfo,
           remaining,
           total: scheduleEvents.length,
           upcoming_event_id: latestPendingEventId,

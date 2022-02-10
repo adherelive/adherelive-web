@@ -24,7 +24,7 @@ class AppointmentWrapper extends BaseAppointment {
     console.log("organizer_id", organizer_id);
     console.log("organizer_type", organizer_type);
     if (organizer_type === "doctor") {
-      organizer = await doctorService.getDoctorByUserId(organizer_id);
+      organizer = await doctorService.getDoctorByDoctorId(organizer_id);
     }
     return organizer;
   };
@@ -136,7 +136,7 @@ class AppointmentWrapper extends BaseAppointment {
       (await careplanAppointmentService.getCareplanByAppointment({
         appointment_id: id,
       })) || {};
-    let appointment = getBasicInfo();
+    let appointment = await getBasicInfo();
     let organizer = await this.getOrganizerDetailsFromId(
       appointment.organizer.id,
       appointment.organizer.category
