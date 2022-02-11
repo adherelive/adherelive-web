@@ -4,15 +4,15 @@ import doctorProviderMappingService from "../../../services/doctorProviderMappin
 
 import DoctorProviderMappingWrapper from "../../web/doctorProviderMapping";
 import UserWrapper from "../../web/user";
-import {completePath} from "../../../helper/filePath";
+import { completePath } from "../../../helper/filePath";
 
 class ProviderWrapper extends BaseProvider {
   constructor(data) {
     super(data);
   }
-  
+
   getBasicInfo = () => {
-    const {_data} = this;
+    const { _data } = this;
     const {
       id,
       name,
@@ -23,9 +23,9 @@ class ProviderWrapper extends BaseProvider {
       activated_on,
       details = {},
     } = _data || {};
-    
-    const {icon, banner} = details || {};
-    
+
+    const { icon, banner } = details || {};
+
     return {
       basic_info: {
         id,
@@ -43,9 +43,9 @@ class ProviderWrapper extends BaseProvider {
       activated_on,
     };
   };
-  
+
   getAllInfo = async () => {
-    const {_data} = this;
+    const { _data } = this;
     const {
       id,
       name,
@@ -56,20 +56,20 @@ class ProviderWrapper extends BaseProvider {
       activated_on,
       details = {},
     } = _data || {};
-    
-    const {icon, banner} = details || {};
-    
+
+    const { icon, banner } = details || {};
+
     const providerDoctors =
       await doctorProviderMappingService.getDoctorProviderMappingByData({
         provider_id: id,
       });
-    
+
     const doctor_ids = [];
     for (const doctor of providerDoctors) {
       const providerDoctorsWrapper = await DoctorProviderMappingWrapper(doctor);
       doctor_ids.push(providerDoctorsWrapper.getDoctorId());
     }
-    
+
     return {
       basic_info: {
         id,
@@ -88,14 +88,15 @@ class ProviderWrapper extends BaseProvider {
       doctor_ids,
     };
   };
-  
+
   getReferenceInfo = async () => {
     try {
-      const {_data, getBasicInfo, getProviderId} = this;
-      const {user} = _data;
-      
+      const { _data, getBasicInfo, getProviderId } = this;
+      // if (!_data) return;
+      const { user } = _data;
+
       const userData = await UserWrapper(user.get());
-      
+
       return {
         providers: {
           [getProviderId()]: getBasicInfo(),
@@ -116,7 +117,7 @@ export default async (data = null, id = null) => {
   if (data) {
     return new ProviderWrapper(data);
   }
-  
-  const provider = await providerService.getProviderByData({id});
+
+  const provider = await providerService.getProviderByData({ id });
   return new ProviderWrapper(provider);
 };

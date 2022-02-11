@@ -256,6 +256,8 @@ class PatientController extends Controller {
           medicineWrapper.getBasicInfo();
       }
 
+      console.log("testmed1", medicationApiData);
+
       Logger.debug("medicineData", medicineData);
 
       return raiseSuccess(

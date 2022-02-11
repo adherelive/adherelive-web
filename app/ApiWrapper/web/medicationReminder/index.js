@@ -43,7 +43,9 @@ class MReminderWrapper extends BaseMedicationReminder {
       organizer_id,
       organizer_type
     );
+
     console.log("organizerDetails", organizerDetails);
+
     return {
       basic_info: {
         id,
@@ -90,11 +92,11 @@ class MReminderWrapper extends BaseMedicationReminder {
         remaining++;
       }
     }
-
+    const basicInfo = await getBasicInfo();
     return {
       medications: {
         [getMReminderId()]: {
-          ...getBasicInfo(),
+          ...basicInfo,
           remaining,
           total: scheduleEvents.length,
           upcoming_event_id: latestPendingEventId,
