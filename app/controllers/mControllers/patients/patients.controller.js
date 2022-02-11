@@ -1926,6 +1926,7 @@ class MPatientController extends Controller {
       }
 
       // if (permissions.includes(PERMISSIONS.MEDICATIONS.ADD)) {
+      console.log("medication_ids", medication_ids);
       for (const medicationId of medication_ids) {
         const medication = await medicationReminderService.getMedication({
           id: medicationId,
@@ -1971,7 +1972,7 @@ class MPatientController extends Controller {
 
           const startDate = appointmentWrapper.getStartTime();
           const startDateObj = moment(startDate);
-
+          const { organizer } = await appointmentWrapper.getBasicInfo();
           const diff = startDateObj.diff(now);
 
           if (diff > 0) {
@@ -1990,6 +1991,7 @@ class MPatientController extends Controller {
               type_description,
               radiology_type,
               start_date: startDate,
+              organizer,
             });
           }
         }

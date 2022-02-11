@@ -110,11 +110,11 @@ class MobileMReminderWrapper extends BaseMedicationReminder {
         remaining++;
       }
     }
-
+    let basicInfo = await getBasicInfo();
     return {
       medications: {
         [getMReminderId()]: {
-          ...getBasicInfo(),
+          ...basicInfo,
           remaining,
           total: scheduleEvents.length,
           upcoming_event_id: latestPendingEventId,
