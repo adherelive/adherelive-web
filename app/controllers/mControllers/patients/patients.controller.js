@@ -1927,6 +1927,7 @@ class MPatientController extends Controller {
 
       // if (permissions.includes(PERMISSIONS.MEDICATIONS.ADD)) {
       console.log("medication_ids", medication_ids);
+
       for (const medicationId of medication_ids) {
         const medication = await medicationReminderService.getMedication({
           id: medicationId,
@@ -1951,9 +1952,10 @@ class MPatientController extends Controller {
               },
             };
           }
+          let newData = await medicationWrapper.getBasicInfo();
           medications = {
             ...medications,
-            ...{ [medicationId]: medicationWrapper.getBasicInfo() },
+            ...{ [medicationId]: newData },
           };
         }
       }

@@ -7,6 +7,7 @@ import moment from "moment";
 import { EVENT_STATUS, EVENT_TYPE } from "../../../../constant";
 import EventWrapper from "../../common/scheduleEvents";
 import MedicineWrapper from "../../mobile/medicine";
+import doctorService from "../../../services/doctor/doctor.service";
 
 class MobileMReminderWrapper extends BaseMedicationReminder {
   constructor(data) {
@@ -19,7 +20,8 @@ class MobileMReminderWrapper extends BaseMedicationReminder {
     console.log("organizer_id", organizer_id);
     console.log("organizer_type", organizer_type);
     if (organizer_type === "doctor") {
-      organizer = await doctorService.getDoctorByDoctorId(organizer_id);
+      // organizer = await doctorService.getDoctorByDoctorId(organizer_id);
+      organizer = await doctorService.getDoctorByUserId(organizer_id);
     }
     return organizer;
   };
@@ -193,6 +195,8 @@ class MobileMReminderWrapper extends BaseMedicationReminder {
     const { medications } = await getAllInfo();
     const medicationData = medications[getMReminderId()] || {};
 
+    let newData = await medicineData.getBasicInfo();
+
     return {
       medications: {
         [getMReminderId()]: {
@@ -204,7 +208,7 @@ class MobileMReminderWrapper extends BaseMedicationReminder {
         ...scheduleEventData,
       },
       medicines: {
-        [medicineData.getMedicineId()]: medicineData.getBasicInfo(),
+        [medicineData.getMedicineId()]: newData,
       },
     };
   };

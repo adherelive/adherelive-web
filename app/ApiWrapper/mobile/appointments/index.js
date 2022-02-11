@@ -9,6 +9,7 @@ import appointmentService from "../../../services/appointment/appointment.servic
 import carePlanAppointmentService from "../../../services/carePlanAppointment/carePlanAppointment.service";
 import ScheduleEventService from "../../../services/scheduleEvents/scheduleEvent.service";
 import documentService from "../../../services/uploadDocuments/uploadDocuments.service";
+import doctorService from "../../../services/doctor/doctor.service";
 
 import EventWrapper from "../../common/scheduleEvents";
 import UploadDocumentWrapper from "../../mobile/uploadDocument";
@@ -17,9 +18,21 @@ class MAppointmentWrapper extends BaseAppointment {
   constructor(data) {
     super(data);
   }
-  
-  getBasicInfo = () => {
-    const {_data} = this;
+
+  // Gauarav changes
+  getOrganizerDetailsFromId = async (organizer_id, organizer_type) => {
+    let organizer = {};
+    console.log("appointment organizer_id", organizer_id);
+    console.log("appointment organizer_type", organizer_type);
+    if (organizer_type === "doctor" || organizer_type === "hsp") {
+      organizer = await doctorService.getDoctorByDoctorId(organizer_id);
+      // organizer = await doctorService.getDoctorByUserId(organizer_id);
+    }
+    return organizer;
+  };
+
+  getBasicInfo = async () => {
+    const { _data } = this;
     const {
       id,
       participant_one_id,
@@ -43,6 +56,10 @@ class MAppointmentWrapper extends BaseAppointment {
       start_time,
       end_time,
     };
+    let organizerDetails = await this.getOrganizerDetailsFromId(
+      organizer_id,
+      organizer_type
+    );
     return {
       basic_info: {
         id,
@@ -62,45 +79,46 @@ class MAppointmentWrapper extends BaseAppointment {
       organizer: {
         id: organizer_id,
         category: organizer_type,
+        name: `${organizerDetails.first_name} ${organizerDetails.last_name}`,
       },
       rr_rule,
       provider_id,
       provider_name,
     };
   };
-  
+
   getAllInfo = async () => {
-    const {getBasicInfo, _data} = this;
-    const {id} = _data;
-    
+    const { getBasicInfo, _data } = this;
+    const { id } = _data;
+
     // get careplan attached to appointment
     const appointmentCareplan =
       (await carePlanAppointmentService.getCareplanByAppointment({
         appointment_id: id,
       })) || null;
-    const {care_plan_id = null} = appointmentCareplan || {};
-    
+    const { care_plan_id = null } = appointmentCareplan || {};
+
     const scheduleEventService = new ScheduleEventService();
     const scheduleEventData = await scheduleEventService.getAllEventByData({
       event_id: id,
       event_type: EVENT_TYPE.APPOINTMENT,
     });
-    
+
     let activeEventId = null;
     let scheduleData = {};
-    
+
     if (scheduleEventData.length > 0) {
       for (let i = 0; i < scheduleEventData.length; i++) {
         const scheduleEvent = await EventWrapper(scheduleEventData[i]);
         if (scheduleEvent.getStatus() === EVENT_STATUS.SCHEDULED) {
           activeEventId = scheduleEvent.getScheduleEventId();
         }
-        
+
         scheduleData[scheduleEvent.getScheduleEventId()] =
           scheduleEvent.getAllInfo();
       }
     }
-    
+
     let uploadDocumentsData = {};
     let uploadDocumentIds = [];
     const uploadDocuments =
@@ -108,18 +126,20 @@ class MAppointmentWrapper extends BaseAppointment {
         DOCUMENT_PARENT_TYPE.APPOINTMENT_DOC,
         id
       );
-    
+
     for (const uploadDocument of uploadDocuments) {
       const uploadDocumentData = await UploadDocumentWrapper(uploadDocument);
       uploadDocumentsData[uploadDocumentData.getUploadDocumentId()] =
         uploadDocumentData.getBasicInfo();
       uploadDocumentIds.push(uploadDocumentData.getUploadDocumentId());
     }
-    
+
+    let basicInfo = await getBasicInfo();
+
     return {
       appointments: {
         [`${id}`]: {
-          ...getBasicInfo(),
+          ...basicInfo,
           active_event_id: activeEventId,
           appointment_document_ids: uploadDocumentIds,
           care_plan_id,
@@ -134,10 +154,10 @@ class MAppointmentWrapper extends BaseAppointment {
       appointment_id: id,
     };
   };
-  
+
   getReferenceInfo = async () => {
-    const {getAllInfo} = this;
-    
+    const { getAllInfo } = this;
+
     return getAllInfo();
   };
 }
