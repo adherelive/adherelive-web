@@ -81,6 +81,7 @@ class WorkoutTable extends Component {
       care_plans = {},
       carePlanId = null,
     } = this.props;
+    console.log("datasource", workouts);
 
     const { workout_ids = [] } = this.state;
     // AKSHAY NEW CODE IMPLEMENTATIONS

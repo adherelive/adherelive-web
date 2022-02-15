@@ -256,6 +256,8 @@ class PatientController extends Controller {
           medicineWrapper.getBasicInfo();
       }
 
+      console.log("testmed1", medicationApiData);
+
       Logger.debug("medicineData", medicineData);
 
       return raiseSuccess(
@@ -1634,7 +1636,7 @@ class PatientController extends Controller {
 
           const startDate = appointmentWrapper.getStartTime();
           const startDateObj = moment(startDate);
-
+          const { organizer } = await appointmentWrapper.getBasicInfo();
           const diff = startDateObj.diff(now);
 
           if (diff > 0) {
@@ -1644,7 +1646,7 @@ class PatientController extends Controller {
           }
 
           const { type } = appointmentWrapper.getDetails() || {};
-
+          console.log("45454545==", appointmentWrapper.getDetails());
           if (type !== CONSULTATION) {
             const { type_description = "", radiology_type = "" } =
               appointmentWrapper.getDetails() || {};
@@ -1653,6 +1655,7 @@ class PatientController extends Controller {
               type_description,
               radiology_type,
               start_date: startDate,
+              organizer,
             });
           }
         }
