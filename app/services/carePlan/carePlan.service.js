@@ -167,6 +167,7 @@ class CarePlanService {
           }
         );
       }
+      console.log(rest);
 
       const carePlan = await Database.getModel(TABLE_NAME).findAll({
         where: {
@@ -174,7 +175,7 @@ class CarePlanService {
             {
               ...rest,
             },
-            ...secondaryDoctorQuery,
+            // ...secondaryDoctorQuery,
           ],
         },
         include: [

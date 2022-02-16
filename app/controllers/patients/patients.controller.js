@@ -355,6 +355,12 @@ class PatientController extends Controller {
 
       // get all careplans attached to patient
       // const { care_plans } = await careplan.getReferenceInfoWithImp();
+      console.log("==987654321234567898765432==");
+      console.log({
+        patient_id,
+        user_role_id: userRoleId,
+      });
+      console.log("==987654321234567898765432==");
       const carePlans =
         (await carePlanService.getMultipleCarePlanByData({
           patient_id,
