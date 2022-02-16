@@ -364,7 +364,7 @@ class PatientController extends Controller {
       const carePlans =
         (await carePlanService.getMultipleCarePlanByData({
           patient_id,
-          user_role_id: userRoleId,
+          // user_role_id: userRoleId,
         })) || [];
       console.log("get PatientCarePlanDetails Called - 6" + this.getTime());
       let treatmentIds = [];
