@@ -1,6 +1,6 @@
-import React, {Component} from "react";
-import {injectIntl} from "react-intl";
-import {Table, Icon, Empty} from "antd";
+import React, { Component } from "react";
+import { injectIntl } from "react-intl";
+import { Table, Icon, Empty } from "antd";
 import generateRow from "./datarow";
 // import { USER_PERMISSIONS } from '../../../constant'
 import getColumn from "./header";
@@ -12,26 +12,26 @@ class ConsultationFeeTable extends Component {
     super(props);
     this.state = {};
   }
-  
+
   componentDidMount() {
     this.handleGetDoctorPaymentProducts();
   }
-  
+
   async handleGetDoctorPaymentProducts() {
     try {
-      const {getDoctorPaymentProduct} = this.props;
+      const { getDoctorPaymentProduct } = this.props;
       let response = {};
-      const {doctor_id = null} = this.props;
+      const { doctor_id = null } = this.props;
       if (doctor_id) {
-        response = await getDoctorPaymentProduct({doctor_id: doctor_id});
+        response = await getDoctorPaymentProduct({ doctor_id: doctor_id });
       } else {
         response = await getDoctorPaymentProduct();
       }
-      
+
       const {
         status,
         statusCode,
-        payload: {data = {}, message: message_resp_msg = ""} = {},
+        payload: { data = {}, message: message_resp_msg = "" } = {},
       } = response || {};
       if (!status && statusCode !== 201) {
         message.warn(message_resp_msg);
@@ -40,35 +40,34 @@ class ConsultationFeeTable extends Component {
       console.log("326423646237 error ====>", error);
     }
   }
-  
-  componentDidUpdate(prevProps, prevState) {
-  }
-  
+
+  componentDidUpdate(prevProps, prevState) {}
+
   getLoadingComponent = () => {
-    const antIcon = <Icon type="loading" style={{fontSize: 24}} spin/>;
+    const antIcon = <Icon type="loading" style={{ fontSize: 24 }} spin />;
     return {
       indicator: antIcon,
     };
   };
-  
+
   formatMessage = (data) => this.props.intl.formatMessage(data);
-  
+
   getDataSource = () => {
     const {
       doctors = {},
       // doctorPaymentProducts={},
       deleteDoctorPaymentProduct,
       openConsultationFeeDrawer,
-      intl: {formatMessage} = {},
+      intl: { formatMessage } = {},
       payment_products = {},
     } = this.props;
-    
+
     // const {onRowClick} = this;
     let options = [];
-    
+
     for (let each in payment_products) {
-      const {creator_role_id = null, for_user_role_id = null} =
-      payment_products[each] || {};
+      const { creator_role_id = null, for_user_role_id = null } =
+        payment_products[each] || {};
       if (creator_role_id !== null) {
         options.push(
           generateRow({
@@ -82,10 +81,12 @@ class ConsultationFeeTable extends Component {
         );
       }
     }
-    
+
+    console.log(options);
+
     return options;
   };
-  
+
   render() {
     const {
       // onRow,
@@ -93,22 +94,22 @@ class ConsultationFeeTable extends Component {
       // getLoadingComponent,
       getDataSource,
     } = this;
-    
+
     const rowSelection = {
       onChange: onSelectChange,
     };
-    
+
     const {
       loading,
       pagination_bottom,
       authPermissions = [],
-      intl: {formatMessage} = {},
+      intl: { formatMessage } = {},
     } = this.props;
-    
+
     const locale = {
       emptyText: this.formatMessage(messages.emptyConsultationTable),
     };
-    
+
     return (
       <Table
         // onRow={authPermissions.includes(USER_PERMISSIONS.PATIENTS.VIEW) ? onRow : null}
@@ -119,10 +120,10 @@ class ConsultationFeeTable extends Component {
           className: "pointer",
         })}
         dataSource={getDataSource()}
-        scroll={{x: "100%"}}
+        scroll={{ x: "100%" }}
         pagination={{
           position: "top",
-          // pageSize: 6
+          pageSize: 3,
         }}
         locale={locale}
       />

@@ -1,4 +1,4 @@
-import {defineMessages} from "react-intl";
+import { defineMessages } from "react-intl";
 
 const messages = defineMessages({
   doctor_settings_header_text: {
@@ -127,6 +127,18 @@ const messages = defineMessages({
     description: "",
     defaultMessage: "This delete is irreversible",
   },
+  // AKSHAY NEW CODE FOR SUBSCRIPTION STARTED
+  menuTitleService: {
+    id: "app.admin.doctors.settings.menuTitleService",
+    description: "",
+    defaultMessage: "Service",
+  },
+  menuTitleSubscription: {
+    id: "app.admin.doctors.settings.menuTitleSubscription",
+    description: "",
+    defaultMessage: "Subscription",
+  },
+  // AKSHAY NEW CODE FOR SUBSCRIPTION ENDED
 });
 
 export default messages;
