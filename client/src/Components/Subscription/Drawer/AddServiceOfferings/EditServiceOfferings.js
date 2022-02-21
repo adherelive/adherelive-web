@@ -27,7 +27,7 @@ const RadioButton = Radio.Button;
 const RadioGroup = Radio.Group;
 const { Item: FormItem } = Form;
 
-class AddServiceOfferings extends Component {
+class EditServiceOfferings extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -181,7 +181,7 @@ class AddServiceOfferings extends Component {
     return (
       <Fragment>
         <Drawer
-          title={"Add Services Offerings"}
+          title={"Edit Services Offerings"}
           placement="right"
           maskClosable={false}
           headerStyle={{
@@ -221,4 +221,4 @@ class AddServiceOfferings extends Component {
   }
 }
 
-export default injectIntl(AddServiceOfferings);
+export default injectIntl(EditServiceOfferings);
