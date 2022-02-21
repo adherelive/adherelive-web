@@ -21,6 +21,8 @@ import throttle from "lodash-es/throttle";
 // import messages from "./message";
 import Footer from "../../../Drawer/footer";
 import AddServiceOfferings from "../AddServiceOfferings";
+import EditServiceOfferings from "../AddServiceOfferings/EditServiceOfferings";
+import CreateSubscriptionWarn from "./../../Modal/CreateSubscriptionWarn";
 
 const { Option } = Select;
 
@@ -37,21 +39,40 @@ class AddSubscription extends Component {
       planDescription: "",
       submitting: false,
       serviceOfferingsDrawer: false,
+      createSubscriptionWarn: false,
+      editServiceOfferingDrawer: false,
     };
   }
 
   componentDidMount() {}
 
   onSubmit = () => {
-    alert("submit");
+    console.log(this.state);
+    this.setState({
+      createSubscriptionWarn: true,
+    });
+  };
+
+  handleOk = () => {
+    this.setState({
+      createSubscriptionWarn: false,
+    });
+    this.props.onCloseDrawer();
+  };
+
+  handleCancel = () => {
+    this.setState({
+      createSubscriptionWarn: false,
+    });
+    this.props.onCloseDrawer();
   };
 
   formatMessage = (data) => this.props.intl.formatMessage(data);
 
   onClose = () => {};
 
-  setSubscriptionName = (e) => {
-    this.setState({ subscriptionName: e.target.value });
+  onChangeHandler = (e) => {
+    this.setState({ [e.target.name]: e.target.value });
   };
 
   setServiceOfferingDrawer = () => {
@@ -63,6 +84,13 @@ class AddSubscription extends Component {
   onCloseDrawer = () => {
     this.setState({
       serviceOfferingsDrawer: false,
+      editServiceOfferingDrawer: false,
+    });
+  };
+
+  editServiceOfferingHandler = () => {
+    this.setState({
+      editServiceOfferingDrawer: true,
     });
   };
 
@@ -72,7 +100,7 @@ class AddSubscription extends Component {
 
     return (
       <div className="form-block-ap">
-        <Form className="fw700 wp100 pb30 Form">
+        <Form className="fw700 wp100 Form">
           <div className="form-headings flex align-center justify-start">
             <span>
               {/* {this.formatMessage(messages.defaultConsultationOptions)} */}
@@ -90,7 +118,9 @@ class AddSubscription extends Component {
               className="mt4"
               //   placeholder={formatMessage(messages.genericName)}
               placeholder={"Health lite"}
+              name="subscriptionName"
               value={subscriptionName}
+              onChange={this.onChangeHandler}
             />
           </FormItem>
 
@@ -120,7 +150,7 @@ class AddSubscription extends Component {
                   className="ml20"
                   style={{ color: "#4a90e2" }}
                   theme="filled"
-                  // onClick={this.showInnerForm(EVENT_TYPE.APPOINTMENT, key)}
+                  onClick={this.editServiceOfferingHandler}
                 />
               </div>
               <div className="drawer-block-description">Digital</div>
@@ -168,9 +198,15 @@ class AddSubscription extends Component {
                 "This is recommended for patients with severe chronic illness"
               }
               rows={4}
+              name="planDescription"
               value={planDescription}
+              onChange={this.onChangeHandler}
             />
           </FormItem>
+          <h3>
+            Subscription period is always monthly please refer to T&C for
+            details
+          </h3>
         </Form>
       </div>
     );
@@ -178,7 +214,12 @@ class AddSubscription extends Component {
 
   render() {
     const { visible, onCloseDrawer } = this.props;
-    const { submitting, serviceOfferingsDrawer } = this.state;
+    const {
+      submitting,
+      serviceOfferingsDrawer,
+      createSubscriptionWarn,
+      editServiceOfferingDrawer,
+    } = this.state;
 
     return (
       <Fragment>
@@ -197,9 +238,15 @@ class AddSubscription extends Component {
           width={400}
         >
           {this.renderAddNewSubscription()}
-          {serviceOfferingsDrawer == true && (
+          {serviceOfferingsDrawer === true && (
             <AddServiceOfferings
               visible={serviceOfferingsDrawer}
+              onCloseDrawer={this.onCloseDrawer}
+            />
+          )}
+          {editServiceOfferingDrawer === true && (
+            <EditServiceOfferings
+              visible={editServiceOfferingDrawer}
               onCloseDrawer={this.onCloseDrawer}
             />
           )}
@@ -213,6 +260,11 @@ class AddSubscription extends Component {
             submitting={submitting}
           />
         </Drawer>
+        <CreateSubscriptionWarn
+          isModalVisible={createSubscriptionWarn}
+          handleOk={this.handleOk}
+          handleCancel={this.handleCancel}
+        />
       </Fragment>
     );
   }
