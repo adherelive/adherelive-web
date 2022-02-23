@@ -6,40 +6,17 @@ import generateRow from "./datarow";
 import getColumn from "./header";
 import messages from "./messages";
 import message from "antd/es/message";
+import EditService from "../Drawer/AddService/EditService";
 
 class DoctorServiceTable extends Component {
   constructor(props) {
     super(props);
-    this.state = {};
+    this.state = {
+      editServiceDrawer: false,
+    };
   }
 
-  componentDidMount() {
-    // this.handleGetDoctorPaymentProducts();
-  }
-
-  //   async handleGetDoctorPaymentProducts() {
-  //     try {
-  //       const { getDoctorPaymentProduct } = this.props;
-  //       let response = {};
-  //       const { doctor_id = null } = this.props;
-  //       if (doctor_id) {
-  //         response = await getDoctorPaymentProduct({ doctor_id: doctor_id });
-  //       } else {
-  //         response = await getDoctorPaymentProduct();
-  //       }
-
-  //       const {
-  //         status,
-  //         statusCode,
-  //         payload: { data = {}, message: message_resp_msg = "" } = {},
-  //       } = response || {};
-  //       if (!status && statusCode !== 201) {
-  //         message.warn(message_resp_msg);
-  //       }
-  //     } catch (error) {
-  //       console.log("326423646237 error ====>", error);
-  //     }
-  //   }
+  componentDidMount() {}
 
   componentDidUpdate(prevProps, prevState) {}
 
@@ -48,6 +25,14 @@ class DoctorServiceTable extends Component {
     return {
       indicator: antIcon,
     };
+  };
+
+  onCloseDrawer = () => {
+    this.setState({ editServiceDrawer: false });
+  };
+
+  onOpenEditServiceDrawer = () => {
+    this.setState({ editServiceDrawer: true });
   };
 
   //   formatMessage = (data) => this.props.intl.formatMessage(data);
@@ -108,6 +93,7 @@ class DoctorServiceTable extends Component {
             ...dummyProducts[each],
             deleteDoctorProduct: deleteDoctorPaymentProduct,
             openConsultationFeeDrawer,
+            onOpenEditServiceDrawer: this.onOpenEditServiceDrawer,
             formatMessage,
             doctors,
             editable: creator_role_id === for_user_role_id ? true : false,
@@ -122,6 +108,7 @@ class DoctorServiceTable extends Component {
   };
 
   render() {
+    const { editServiceDrawer } = this.state;
     const {
       // onRow,
       onSelectChange,
@@ -146,22 +133,30 @@ class DoctorServiceTable extends Component {
     };
 
     return (
-      <Table
-        // onRow={authPermissions.includes(USER_PERMISSIONS.PATIENTS.VIEW) ? onRow : null}
-        rowClassName={() => "pointer"}
-        // loading={loading === true ? getLoadingComponent() : false}
-        columns={getColumn({
-          //   formatMessage,
-          className: "pointer",
-        })}
-        dataSource={getDataSource()}
-        scroll={{ x: "100%" }}
-        pagination={{
-          position: "top",
-          pageSize: 3,
-        }}
-        locale={locale}
-      />
+      <>
+        <Table
+          // onRow={authPermissions.includes(USER_PERMISSIONS.PATIENTS.VIEW) ? onRow : null}
+          rowClassName={() => "pointer"}
+          // loading={loading === true ? getLoadingComponent() : false}
+          columns={getColumn({
+            //   formatMessage,
+            className: "pointer",
+          })}
+          dataSource={getDataSource()}
+          scroll={{ x: "100%" }}
+          pagination={{
+            position: "top",
+            pageSize: 3,
+          }}
+          locale={locale}
+        />
+        {editServiceDrawer === true && (
+          <EditService
+            visible={editServiceDrawer}
+            onCloseDrawer={this.onCloseDrawer}
+          />
+        )}
+      </>
     );
   }
 }

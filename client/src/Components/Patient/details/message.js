@@ -595,6 +595,17 @@ const messages = defineMessages({
     description: "",
     defaultMessage: "Additional Providers",
   },
+  // AKSHAY NEW CODE FOR SUBSCRIPTION
+  recommendSubscriptionTitle: {
+    id: "app.patientDetails.recommendSubscriptionTitle",
+    description: "",
+    defaultMessage: "Subscription plan",
+  },
+  recommendServiceTitle: {
+    id: "app.patientDetails.recommendServiceTitle",
+    description: "",
+    defaultMessage: "Once-on service",
+  },
 });
 
 export default messages;

@@ -26,12 +26,13 @@ export default (props) => {
   const handleEdit = (id) => (e) => {
     e.preventDefault();
     const { data = {} } = props;
-    const { openConsultationFeeDrawer } = data || {};
+    const { openConsultationFeeDrawer, onOpenEditServiceDrawer } = data || {};
     let paymentData = {};
     paymentData["basic_info"] = { ...basic_info, razorpay_link };
     console.log("9687w678687678", { paymentData });
     // openConsultationFeeDrawer(paymentData);
-    alert("edit drawer");
+
+    onOpenEditServiceDrawer();
   };
 
   if (provider_id || creator_type === USER_CATEGORY.PROVIDER) {

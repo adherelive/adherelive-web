@@ -147,6 +147,7 @@ class DietTable extends Component {
     if (
       (!isOtherCarePlan && user_role_id.toString() === auth_role.toString()) ||
       (!isEmpty(careplanData) &&
+        careplanData.secondary_doctor_user_role_ids !== undefined &&
         careplanData.secondary_doctor_user_role_ids.includes(auth_role) ===
           true)
     ) {
