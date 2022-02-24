@@ -95,6 +95,10 @@ import { getRoomId } from "../../../Helper/twilio";
 import { getFullName } from "../../../Helper/common";
 import Tooltip from "antd/es/tooltip";
 
+// AKSHAY NEW CODE FOR SUBSCRIPTION
+import RecommendSubscription from "../../Subscription/Drawer/RecommendSubscription";
+import RecommendService from "../../Subscription/Drawer/RecommendService";
+
 const BLANK_TEMPLATE = "Blank Template";
 const { TabPane } = Tabs;
 const APPOINTMENT = "appointment";
@@ -368,6 +372,7 @@ const columns_appointments_non_editable = [
 const PatientProfileHeader = ({
   formatMessage,
   getMenu,
+  getRecommendMenu,
   showAddButton,
   selectedCarePlanId,
   auth_role,
@@ -393,6 +398,20 @@ const PatientProfileHeader = ({
         </div>
       </div>
       <div className="flex-grow-1 tar">
+        {/* <Dropdown
+          overlay={getRecommendMenu()}
+          trigger={["click"]}
+          placement="bottomRight"
+        >
+          <Button
+            type="primary"
+            className="ml10 mr20 add-button "
+            icon={"plus"}
+            style={{ backgroundColor: "#98FB98", border: "none" }}
+          >
+            <span className="fs16">Recommend</span>
+          </Button>
+        </Dropdown> */}
         {(showAddButton ||
           user_role_id.toString() === auth_role.toString() ||
           secondary_doctor_user_role_ids.includes(auth_role) === true) && (
@@ -615,9 +634,11 @@ const PatientTreatmentCard = ({
   // AKSHY NEW CODE IMPLEMENTATIONS
   let carePlan = care_plans[selectedCarePlanId] || {};
 
+  console.log(carePlan.secondary_doctor_user_role_ids);
   const isPrescriptionOfCurrentDoc =
     (!isOtherCarePlan && user_role_id.toString() === auth_role.toString()) ||
     (!isEmpty(carePlan) &&
+      carePlan.secondary_doctor_user_role_ids !== undefined &&
       carePlan.secondary_doctor_user_role_ids.includes(auth_role) === true);
 
   let all_providers = "",
@@ -806,6 +827,8 @@ class PatientDetails extends Component {
       symptom_dates: [],
       report_ids: [],
       activeKey: "1",
+      recommendSubscription: false,
+      recommendService: false,
     };
   }
 
@@ -2318,6 +2341,44 @@ class PatientDetails extends Component {
     this.setState({ activeKey: value });
   };
 
+  // AKSHAY NEW CODE FOR SUBSRCIPTION
+
+  handleRecommendDrawer = (action) => {
+    // e.preventDefault();
+    if (action === "subscriptionPlan") {
+      this.setState({
+        recommendSubscription: true,
+      });
+    } else {
+      this.setState({
+        recommendService: true,
+      });
+    }
+  };
+
+  getRecommendMenu = () => {
+    return (
+      <Menu>
+        <Menu.Item
+          onClick={() => this.handleRecommendDrawer("subscriptionPlan")}
+        >
+          <div>{this.formatMessage(messages.recommendSubscriptionTitle)}</div>
+        </Menu.Item>
+
+        <Menu.Item onClick={() => this.handleRecommendDrawer("oneTimeService")}>
+          <div>{this.formatMessage(messages.recommendServiceTitle)}</div>
+        </Menu.Item>
+      </Menu>
+    );
+  };
+
+  onCloseDrawer = () => {
+    this.setState({
+      recommendSubscription: false,
+      recommendService: false,
+    });
+  };
+
   render() {
     let {
       patients,
@@ -2585,6 +2646,7 @@ class PatientDetails extends Component {
 
     // let defaultActiveKeyValue = "1";
     const { activeKey = "1" } = this.state;
+    const { recommendService, recommendSubscription } = this.state;
 
     return (
       <Fragment>
@@ -2592,6 +2654,7 @@ class PatientDetails extends Component {
           <PatientProfileHeader
             formatMessage={formatMessage}
             getMenu={getMenu}
+            getRecommendMenu={this.getRecommendMenu}
             showAddButton={showAddButton}
             selectedCarePlanId={selectedCarePlanId}
             auth_role={auth_role}
@@ -2959,6 +3022,20 @@ class PatientDetails extends Component {
             visible={uploadDocsModalVisible}
             appointmentId={uploadDocsAppointmentId}
             onCancel={this.closeAppointmentDocsModal}
+          />
+        )}
+
+        {/* AKSHAY NEW CODE IMPLEMENTATION */}
+        {recommendSubscription === true && (
+          <RecommendSubscription
+            visible={recommendSubscription}
+            onCloseDrawer={this.onCloseDrawer}
+          />
+        )}
+        {recommendService === true && (
+          <RecommendService
+            visible={recommendService}
+            onCloseDrawer={this.onCloseDrawer}
           />
         )}
       </Fragment>

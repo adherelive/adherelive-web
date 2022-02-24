@@ -24,7 +24,7 @@ const { Option } = Select;
 const RadioButton = Radio.Button;
 const RadioGroup = Radio.Group;
 
-class AddService extends Component {
+class EditService extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -167,17 +167,6 @@ class AddService extends Component {
         <div>
           {consultation !== "" ? (
             <div>
-              {/* <div className="form-headings flex align-center justify-start">
-                {this.formatMessage(messages.consultationFeeName)}
-                <div className="star-red">*</div>
-              </div>
-              
-              <Input
-                className={"form-inputs-ap"}
-                value={newConsultationName}
-                onChange={this.setConsultationName}
-              />
-               */}
               <div className="form-headings flex align-center justify-start">
                 {/* {this.formatMessage(messages.consultationFeeType)} */}
                 <span>Service Type</span>
@@ -226,18 +215,6 @@ class AddService extends Component {
               >
                 {this.getCurrencyOption()}
               </Select>
-
-              {/* <div className="form-headings flex align-center justify-start">
-                {this.formatMessage(messages.razorpayLink)}
-              </div>
-              
-              <Input
-                className={"form-inputs-ap"}
-                value={razorpay_link}
-                onChange={this.setRazorpayLink}
-                disabled={provider_id}
-                type="string"
-              /> */}
             </div>
           ) : null}
         </div>
@@ -251,7 +228,7 @@ class AddService extends Component {
     return (
       <Fragment>
         <Drawer
-          title={"Add New Service Offering"}
+          title={"Edit Service Offering"}
           placement="right"
           maskClosable={false}
           headerStyle={{
@@ -290,4 +267,4 @@ class AddService extends Component {
   }
 }
 
-export default injectIntl(AddService);
+export default injectIntl(EditService);

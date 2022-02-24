@@ -1285,13 +1285,13 @@ function printCarePlanData({
       const rXLabelEndLevelY = doc.y;
 
       const serialNoXStart = DOC_MARGIN;
-      const drXStart = DOC_MARGIN + 50;
+      const drXStart = DOC_MARGIN + 35;
       // const medicineXStart = DOC_MARGIN + 40;
-      const medicineXStart = DOC_MARGIN + 150;
-      const dosageXStart = DOC_MARGIN + 230;
-      const quantityXStart = DOC_MARGIN + 280;
-      const frequencyXStart = DOC_MARGIN + 340;
-      const timingFrequencyXStart = DOC_MARGIN + 430;
+      const medicineXStart = DOC_MARGIN + 130;
+      const dosageXStart = DOC_MARGIN + 260;
+      const quantityXStart = DOC_MARGIN + 310;
+      const frequencyXStart = DOC_MARGIN + 370;
+      const timingFrequencyXStart = DOC_MARGIN + 440;
 
       // generateHr(doc, doc.y);
       // medicine table header

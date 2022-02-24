@@ -82,8 +82,6 @@ class ConsultationFeeTable extends Component {
       }
     }
 
-    console.log(options);
-
     return options;
   };
 
