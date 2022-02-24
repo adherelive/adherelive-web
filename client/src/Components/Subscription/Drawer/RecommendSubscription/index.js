@@ -20,9 +20,7 @@ import throttle from "lodash-es/throttle";
 
 // import messages from "./message";
 import Footer from "../../../Drawer/footer";
-// import AddServiceOfferings from "../AddServiceOfferings";
-// import EditServiceOfferings from "../AddServiceOfferings/EditServiceOfferings";
-// import CreateSubscriptionWarn from "./../../Modal/CreateSubscriptionWarn";
+import InputNumber from "antd/es/input-number";
 
 const { Option } = Select;
 
@@ -35,36 +33,18 @@ class RecommendSubscription extends Component {
     super(props);
     this.state = {
       subscriptionName: "",
-      totalSubscriptionFees: "",
-      planDescription: "",
+      serviceFees: "",
       submitting: false,
-      serviceOfferingsDrawer: false,
-      createSubscriptionWarn: false,
-      editServiceOfferingDrawer: false,
+      duration: 1,
+      discount: 5,
+      notes: "",
     };
   }
 
   componentDidMount() {}
 
   onSubmit = () => {
-    this.props.onCloseDrawer();
-    console.log(this.state);
-    this.setState({
-      createSubscriptionWarn: true,
-    });
-  };
-
-  handleOk = () => {
-    this.setState({
-      createSubscriptionWarn: false,
-    });
-    this.props.onCloseDrawer();
-  };
-
-  handleCancel = () => {
-    this.setState({
-      createSubscriptionWarn: false,
-    });
+    console.log("state", this.state);
     this.props.onCloseDrawer();
   };
 
@@ -76,27 +56,43 @@ class RecommendSubscription extends Component {
     this.setState({ [e.target.name]: e.target.value });
   };
 
-  setServiceOfferingDrawer = () => {
+  setSubscriptionName = (value) => {
     this.setState({
-      serviceOfferingsDrawer: true,
+      subscriptionName: value,
+      serviceFees: 200,
     });
   };
 
-  onCloseDrawer = () => {
+  onRadioChange = (e) => {
+    e.preventDefault();
+    console.log(e.target.value);
     this.setState({
-      serviceOfferingsDrawer: false,
-      editServiceOfferingDrawer: false,
+      duration: this.state.duration + parseInt(e.target.value),
     });
   };
 
-  editServiceOfferingHandler = () => {
+  onDiscountChange = (e) => {
     this.setState({
-      editServiceOfferingDrawer: true,
+      discount: this.state.discount + parseInt(e.target.value),
     });
   };
 
-  renderAddNewSubscription = () => {
-    const { subscriptionName, totalSubscriptionFees, planDescription } =
+  getSubscriptionOption = () => {
+    let subscriptionOptions = [{ name: "Health lite", id: 1 }];
+    let options = [];
+    subscriptionOptions.forEach((service) => {
+      options.push(
+        <Option key={service.id} value={service.name}>
+          {service.name}
+        </Option>
+      );
+    });
+
+    return options;
+  };
+
+  renderRecommendSubscription = () => {
+    const { subscriptionName, serviceFees, duration, discount, notes } =
       this.state;
 
     return (
@@ -105,64 +101,61 @@ class RecommendSubscription extends Component {
           <div className="form-headings flex align-center justify-start">
             <span>
               {/* {this.formatMessage(messages.defaultConsultationOptions)} */}
-              Name of subscription plan
+              Subscription plans
             </span>
           </div>
 
-          <FormItem
-            className="full-width ant-date-custom"
-            //   label={formatMessage(messages.genericName)}
-            // label={"Name of subsacription plan"}
+          <Select
+            className="form-inputs-ap drawer-select"
+            placeholder="Select Consultation Type"
+            value={subscriptionName}
+            onChange={this.setSubscriptionName}
+            autoComplete="off"
+            optionFilterProp="children"
+            filterOption={(input, option) =>
+              option.props.children
+                .toLowerCase()
+                .indexOf(input.toLowerCase()) >= 0
+            }
           >
-            <Input
-              autoFocus
-              className="mt4"
-              //   placeholder={formatMessage(messages.genericName)}
-              placeholder={"Health lite"}
-              name="subscriptionName"
-              value={subscriptionName}
-              onChange={this.onChangeHandler}
-            />
-          </FormItem>
+            {this.getSubscriptionOption()}
+          </Select>
 
-          <div className="wp100 flex align-center justify-space-between">
-            <div className="form-headings flex align-center justify-start">
-              <span>
-                {/* {this.formatMessage(messages.defaultConsultationOptions)} */}
-                Service offerings
-              </span>
+          <div className="flex align-items-end justify-content-space-between">
+            <div className="flex direction-row flex-grow-1">
+              <label htmlFor="quantity" className="form-label" title="Quantity">
+                {/* {formatMessage(messages.quantity)} */}
+                Duration
+              </label>
+
+              {/* <div className="star-red">*</div> */}
             </div>
-
-            <div className="add-more" onClick={this.setServiceOfferingDrawer}>
-              {/* {this.formatMessage(messages.addMore)} */}
-              Add
-            </div>
-
-            {/* <div className="add-more" onClick={this.showAddVital}>
-              {this.formatMessage(messages.add)}
+            {/* <div className="label-color fontsize12 mb8">
+            
             </div> */}
-          </div>
-          <div className="flex wp100 flex-grow-1 align-center">
-            <div className="drawer-block">
-              <div className="flex direction-row justify-space-between align-center">
-                <div className="form-headings-ap">1 * Virtual consultation</div>
-                <Icon
-                  type="edit"
-                  className="ml20"
-                  style={{ color: "#4a90e2" }}
-                  theme="filled"
-                  onClick={this.editServiceOfferingHandler}
-                />
-              </div>
-              <div className="drawer-block-description">Digital</div>
-              <div className="drawer-block-description">{`Rs 200`}</div>
+            <div className="flex-grow-0">
+              <RadioGroup size="small" className="flex justify-content-end">
+                <RadioButton value={1} onClick={this.onRadioChange}>
+                  +1 month
+                </RadioButton>
+                <RadioButton value={2} onClick={this.onRadioChange}>
+                  +1 ongoing
+                </RadioButton>
+              </RadioGroup>
             </div>
           </div>
+          <FormItem
+            className="flex-1 align-self-end"
+            // validateStatus={error ? "error" : ""}
+            // help={error ? error[0] : ""}
+          >
+            <InputNumber min={1} style={{ width: "100%" }} value={duration} />
+          </FormItem>
 
           <div className="form-headings flex align-center justify-start">
             <span>
               {/* {this.formatMessage(messages.defaultConsultationOptions)} */}
-              Total subscription fees
+              Service fees
             </span>
           </div>
 
@@ -176,13 +169,40 @@ class RecommendSubscription extends Component {
               className="mt4"
               //   placeholder={formatMessage(messages.genericName)}
               placeholder={"Rs. 600"}
-              value={totalSubscriptionFees}
+              value={serviceFees}
               disabled
             />
           </FormItem>
+          <div className="flex align-items-end justify-content-space-between">
+            <div className="flex direction-row flex-grow-1">
+              <label htmlFor="quantity" className="form-label" title="Quantity">
+                {/* {formatMessage(messages.quantity)} */}
+                Do you want to offer discount ?
+              </label>
+
+              {/* <div className="star-red">*</div> */}
+            </div>
+            {/* <div className="label-color fontsize12 mb8">
+            
+            </div> */}
+            <div className="flex-grow-0">
+              <RadioGroup size="small" className="flex justify-content-end">
+                <RadioButton value={5} onClick={this.onDiscountChange}>
+                  +5%
+                </RadioButton>
+              </RadioGroup>
+            </div>
+          </div>
+          <FormItem
+            className="flex-1 align-self-end"
+            // validateStatus={error ? "error" : ""}
+            // help={error ? error[0] : ""}
+          >
+            <InputNumber min={1} style={{ width: "100%" }} value={discount} />
+          </FormItem>
           <div className="form-headings flex align-center justify-start">
             {/* {this.formatMessage(messages.razorpayLink)} */}
-            <span>Plan Description</span>
+            <span>Notes</span>
           </div>
 
           <FormItem
@@ -196,18 +216,14 @@ class RecommendSubscription extends Component {
               maxLength={1000}
               //   placeholder={formatMessage(messages.description_text_placeholder)}
               placeholder={
-                "This is recommended for patients with severe chronic illness"
+                "I suggest you take four month subscription until we drop some of your elevated vitals for LFT'S, CSR, etc..."
               }
               rows={4}
-              name="planDescription"
-              value={planDescription}
+              name="notes"
+              value={notes}
               onChange={this.onChangeHandler}
             />
           </FormItem>
-          <h3>
-            Subscription period is always monthly please refer to T&C for
-            details
-          </h3>
         </Form>
       </div>
     );
@@ -238,20 +254,8 @@ class RecommendSubscription extends Component {
           visible={visible} // todo: change as per state, -- WIP --
           width={400}
         >
-          test
-          {/* {this.renderAddNewSubscription()} */}
-          {/* {serviceOfferingsDrawer === true && (
-            <AddServiceOfferings
-              visible={serviceOfferingsDrawer}
-              onCloseDrawer={this.onCloseDrawer}
-            />
-          )} */}
-          {/* {editServiceOfferingDrawer === true && (
-            <EditServiceOfferings
-              visible={editServiceOfferingDrawer}
-              onCloseDrawer={this.onCloseDrawer}
-            />
-          )} */}
+          {this.renderRecommendSubscription()}
+
           <Footer
             onSubmit={this.onSubmit}
             onClose={this.onClose}
