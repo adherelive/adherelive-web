@@ -398,7 +398,7 @@ const PatientProfileHeader = ({
         </div>
       </div>
       <div className="flex-grow-1 tar">
-        <Dropdown
+        {/* <Dropdown
           overlay={getRecommendMenu()}
           trigger={["click"]}
           placement="bottomRight"
@@ -411,7 +411,7 @@ const PatientProfileHeader = ({
           >
             <span className="fs16">Recommend</span>
           </Button>
-        </Dropdown>
+        </Dropdown> */}
         {(showAddButton ||
           user_role_id.toString() === auth_role.toString() ||
           secondary_doctor_user_role_ids.includes(auth_role) === true) && (

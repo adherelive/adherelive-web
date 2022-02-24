@@ -11,6 +11,8 @@ import {
   Radio,
   DatePicker,
 } from "antd";
+import Form from "antd/es/form";
+import TextArea from "antd/es/input/TextArea";
 // import { CONSULTATION_FEE_TYPE_TEXT } from "../../../constant";
 
 import moment from "moment";
@@ -18,80 +20,55 @@ import throttle from "lodash-es/throttle";
 
 // import messages from "./message";
 import Footer from "../../../Drawer/footer";
+import InputNumber from "antd/es/input-number";
 
 const { Option } = Select;
 
 const RadioButton = Radio.Button;
 const RadioGroup = Radio.Group;
+const { Item: FormItem } = Form;
 
 class RecommendService extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      consultation: "",
-      serviceType: "Digital",
+      serviceOfferingName: "",
       serviceFees: "",
       submitting: false,
-      currency: "INR",
+      discount: 5,
+      notes: "",
     };
   }
 
   componentDidMount() {}
 
   onSubmit = () => {
-    const { consultation, serviceType, serviceFees, currency } = this.state;
-    // this.setState({
-    //   submitting: true,
-    // });
-    alert(
-      `Consultation: ${JSON.stringify(
-        consultation
-      )},ServiceType: ${JSON.stringify(
-        serviceType
-      )},ServiceFees: ${JSON.stringify(serviceFees)},Currency: ${JSON.stringify(
-        currency
-      )}`
-    );
-
+    console.log("state", this.state);
     this.props.onCloseDrawer();
-    this.setState({
-      consultation: "",
-      serviceType: "Digital",
-      serviceFees: "",
-      submitting: false,
-      currency: "INR",
-    });
   };
 
   formatMessage = (data) => this.props.intl.formatMessage(data);
 
   onClose = () => {};
 
-  setConsultation = (value) => {
+  onChangeHandler = (e) => {
+    this.setState({ [e.target.name]: e.target.value });
+  };
+
+  setServiceOfferingName = (value) => {
     this.setState({
-      consultation: value,
+      serviceOfferingName: value,
+      serviceFees: 200,
     });
   };
 
-  setCurrency = (value) => {
+  onDiscountChange = (e) => {
     this.setState({
-      currency: value,
+      discount: this.state.discount + parseInt(e.target.value),
     });
   };
 
-  onCurrencySearch = (value) => {
-    console.log(value);
-  };
-
-  setServiceFee = (e) => {
-    const { value } = e.target;
-    const reg = /^-?\d*(\.\d*)?$/;
-    if ((!isNaN(value) && reg.test(value)) || value === "") {
-      this.setState({ serviceFees: e.target.value });
-    }
-  };
-
-  getConsultationOption = () => {
+  getServiceOfferingOption = () => {
     let serviceOfferingOptions = [
       { name: "Virtual consultation", id: 1 },
       { name: "Remote monitoring", id: 2 },
@@ -110,148 +87,125 @@ class RecommendService extends Component {
     return options;
   };
 
-  getCurrencyOption = () => {
-    let currencyOptions = [
-      { name: "INR", id: 1 },
-      { name: "EUR", id: 2 },
-      { name: "USD", id: 3 },
-    ];
-    let options = [];
-    currencyOptions.forEach((currency) => {
-      options.push(
-        <Option key={currency.id} value={currency.name}>
-          {currency.name}
-        </Option>
-      );
-    });
-
-    return options;
-  };
-
-  renderAddNewConsultationFee = () => {
-    const {
-      consultation = "",
-      serviceType = "",
-      serviceFees = "",
-      currency,
-    } = this.state;
+  renderRecommendSubscription = () => {
+    const { serviceOfferingName, serviceFees, discount, notes } = this.state;
 
     return (
       <div className="form-block-ap">
-        <div
-          className="form-headings
-                //    flex align-center justify-start
-                   tac"
-        >
-          <span className="fwbolder fs18 ">
-            {/* {this.formatMessage(messages.defaultConsultationOptions)} */}
-            Service offering options
-          </span>
-        </div>
+        <Form className="fw700 wp100 Form">
+          <div className="form-headings flex align-center justify-start">
+            <span>
+              {/* {this.formatMessage(messages.defaultConsultationOptions)} */}
+              Service offerings
+            </span>
+          </div>
 
-        <Select
-          className="form-inputs-ap drawer-select"
-          placeholder="Select Consultation Type"
-          value={consultation}
-          onChange={this.setConsultation}
-          autoComplete="off"
-          optionFilterProp="children"
-          filterOption={(input, option) =>
-            option.props.children.toLowerCase().indexOf(input.toLowerCase()) >=
-            0
-          }
-        >
-          {this.getConsultationOption()}
-        </Select>
+          <Select
+            className="form-inputs-ap drawer-select"
+            placeholder="Select Consultation Type"
+            value={serviceOfferingName}
+            onChange={this.setServiceOfferingName}
+            autoComplete="off"
+            optionFilterProp="children"
+            filterOption={(input, option) =>
+              option.props.children
+                .toLowerCase()
+                .indexOf(input.toLowerCase()) >= 0
+            }
+          >
+            {this.getServiceOfferingOption()}
+          </Select>
 
-        <div>
-          {consultation !== "" ? (
-            <div>
-              {/* <div className="form-headings flex align-center justify-start">
-                {this.formatMessage(messages.consultationFeeName)}
-                <div className="star-red">*</div>
-              </div>
-              
-              <Input
-                className={"form-inputs-ap"}
-                value={newConsultationName}
-                onChange={this.setConsultationName}
-              />
-               */}
-              <div className="form-headings flex align-center justify-start">
-                {/* {this.formatMessage(messages.consultationFeeType)} */}
-                <span>Service Type</span>
-                <div className="star-red">*</div>
-              </div>
+          <div className="form-headings flex align-center justify-start">
+            <span>
+              {/* {this.formatMessage(messages.defaultConsultationOptions)} */}
+              Service fees
+            </span>
+          </div>
 
-              <Input
-                className={"form-inputs-ap"}
-                value={serviceType}
-                // onChange={this.setConsultationName}
-              />
+          <FormItem
+            className="full-width ant-date-custom"
+            //   label={formatMessage(messages.genericName)}
+            // label={"Name of subsacription plan"}
+          >
+            <Input
+              autoFocus
+              className="mt4"
+              //   placeholder={formatMessage(messages.genericName)}
+              placeholder={"Rs. 600"}
+              value={serviceFees}
+              disabled
+            />
+          </FormItem>
+          <div className="flex align-items-end justify-content-space-between">
+            <div className="flex direction-row flex-grow-1">
+              <label htmlFor="quantity" className="form-label" title="Quantity">
+                {/* {formatMessage(messages.quantity)} */}
+                Do you want to offer discount ?
+              </label>
 
-              <div className="form-headings flex align-center justify-start">
-                {/* {this.formatMessage(messages.consultationFee)} */}
-                <span>Service Fees</span>
-                <div className="star-red">*</div>
-              </div>
-
-              <Input
-                className={"form-inputs-ap"}
-                value={serviceFees}
-                onChange={this.setServiceFee}
-                // disabled={provider_id}
-              />
-
-              <div className="form-headings flex align-center justify-start">
-                {/* {this.formatMessage(messages.consultationFee)} */}
-                <span>Currency</span>
-                <div className="star-red">*</div>
-              </div>
-
-              <Select
-                className="form-inputs-ap drawer-select"
-                placeholder="Select Currency"
-                showSearch
-                onSearch={this.onCurrencySearch}
-                value={currency}
-                onChange={this.setCurrency}
-                autoComplete="off"
-                optionFilterProp="children"
-                filterOption={(input, option) =>
-                  option.props.children
-                    .toLowerCase()
-                    .indexOf(input.toLowerCase()) >= 0
-                }
-              >
-                {this.getCurrencyOption()}
-              </Select>
-
-              {/* <div className="form-headings flex align-center justify-start">
-                {this.formatMessage(messages.razorpayLink)}
-              </div>
-              
-              <Input
-                className={"form-inputs-ap"}
-                value={razorpay_link}
-                onChange={this.setRazorpayLink}
-                disabled={provider_id}
-                type="string"
-              /> */}
+              {/* <div className="star-red">*</div> */}
             </div>
-          ) : null}
-        </div>
+            {/* <div className="label-color fontsize12 mb8">
+            
+            </div> */}
+            <div className="flex-grow-0">
+              <RadioGroup size="small" className="flex justify-content-end">
+                <RadioButton value={5} onClick={this.onDiscountChange}>
+                  +5%
+                </RadioButton>
+              </RadioGroup>
+            </div>
+          </div>
+          <FormItem
+            className="flex-1 align-self-end"
+            // validateStatus={error ? "error" : ""}
+            // help={error ? error[0] : ""}
+          >
+            <InputNumber min={1} style={{ width: "100%" }} value={discount} />
+          </FormItem>
+          <div className="form-headings flex align-center justify-start">
+            {/* {this.formatMessage(messages.razorpayLink)} */}
+            <span>Notes</span>
+          </div>
+
+          <FormItem
+            // label={formatMessage(messages.description_text)}
+            className="full-width ant-date-custom"
+            // label={"Plan description"}
+          >
+            <TextArea
+              autoFocus
+              className="mt4"
+              maxLength={1000}
+              //   placeholder={formatMessage(messages.description_text_placeholder)}
+              placeholder={
+                "I suggest let meet virtually and see how you are going. Call the reception or me"
+              }
+              rows={4}
+              name="notes"
+              value={notes}
+              onChange={this.onChangeHandler}
+            />
+          </FormItem>
+        </Form>
       </div>
     );
   };
 
   render() {
     const { visible, onCloseDrawer } = this.props;
-    const { consultation, submitting } = this.state;
+    const {
+      submitting,
+      serviceOfferingsDrawer,
+      createSubscriptionWarn,
+      editServiceOfferingDrawer,
+    } = this.state;
+
     return (
       <Fragment>
         <Drawer
-          title={"Recommend Service Offerings"}
+          title={"Recommend services offerings"}
           placement="right"
           maskClosable={false}
           headerStyle={{
@@ -264,8 +218,8 @@ class RecommendService extends Component {
           visible={visible} // todo: change as per state, -- WIP --
           width={400}
         >
-          test
-          {/* {this.renderAddNewConsultationFee()} */}
+          {this.renderRecommendSubscription()}
+
           <Footer
             onSubmit={this.onSubmit}
             onClose={this.onClose}
@@ -276,6 +230,11 @@ class RecommendService extends Component {
             submitting={submitting}
           />
         </Drawer>
+        {/* <CreateSubscriptionWarn
+          isModalVisible={createSubscriptionWarn}
+          handleOk={this.handleOk}
+          handleCancel={this.handleCancel}
+        /> */}
       </Fragment>
     );
   }
