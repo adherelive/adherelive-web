@@ -1,21 +1,21 @@
-import {connect} from "react-redux";
-import {withRouter} from "react-router-dom";
+import { connect } from "react-redux";
+import { withRouter } from "react-router-dom";
 import AddExerciseGroupDrawer from "../../Components/Drawer/addExerciseGroup";
-import {close} from "../../modules/drawer";
+import { close } from "../../modules/drawer";
 import {
   addExercise,
   storeExerciseAndDetails,
   updateExercise,
   uploadExerciseContent,
 } from "../../modules/exercises";
-import {searchExercise} from "../../modules/searchedExercises";
-import {clearLatestCreatedExercise} from "../../modules/latestCreatedExercise";
+import { searchExercise } from "../../modules/searchedExercises";
+import { clearLatestCreatedExercise } from "../../modules/latestCreatedExercise";
 
 const mapStateToProps = (state) => {
-  const {auth} = state;
-  const {authenticated_user, authenticated_category} = auth;
+  const { auth } = state;
+  const { authenticated_user, authenticated_category } = auth;
   const {
-    drawer: {loading, data: {payload = {}} = {}},
+    drawer: { loading, data: { payload = {} } = {} },
     repetitions,
     care_plans,
     exercises,
@@ -26,7 +26,7 @@ const mapStateToProps = (state) => {
     latest_created_exercise,
     exercise_contents,
   } = state;
-  
+
   return {
     authenticated_user,
     authenticated_category,
@@ -48,8 +48,8 @@ const mapDispatchToProps = (dispatch) => {
   return {
     close: () => dispatch(close()),
     addExercise: (data) => dispatch(addExercise(data)),
-    updateExercise: ({exercise_id, data}) =>
-      dispatch(updateExercise({exercise_id, data})),
+    updateExercise: ({ exercise_id, data }) =>
+      dispatch(updateExercise({ exercise_id, data })),
     searchExercise: (value) => dispatch(searchExercise(value)),
     storeExerciseAndDetails: (data) => dispatch(storeExerciseAndDetails(data)),
     clearLatestCreatedExercise: () => dispatch(clearLatestCreatedExercise()),

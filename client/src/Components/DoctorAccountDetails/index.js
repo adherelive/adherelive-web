@@ -1,10 +1,10 @@
-import React, {Component, Fragment} from "react";
-import {injectIntl} from "react-intl";
+import React, { Component, Fragment } from "react";
+import { injectIntl } from "react-intl";
 import Button from "antd/es/button";
 import Tooltip from "antd/es/tooltip";
-import {DeleteTwoTone} from "@ant-design/icons";
+import { DeleteTwoTone } from "@ant-design/icons";
 import message from "antd/es/message";
-import {TABLE_DEFAULT_BLANK_FIELD} from "../../constant";
+import { TABLE_DEFAULT_BLANK_FIELD } from "../../constant";
 import messages from "./messages";
 import confirm from "antd/es/modal/confirm";
 import edit_image from "../../Assets/images/edit.svg";
@@ -18,42 +18,42 @@ class DoctorAccountDetails extends Component {
       loading: false,
     };
   }
-  
+
   componentDidUpdate(prevProps, prevState) {
-    const {account_details: prev_account_details = {}} = prevProps;
-    const {account_details = {}} = this.props;
+    const { account_details: prev_account_details = {} } = prevProps;
+    const { account_details = {} } = this.props;
     if (
       Object.keys(account_details).length &&
       !Object.keys(prev_account_details).length
     ) {
-      this.setState({noAccountDetails: false});
+      this.setState({ noAccountDetails: false });
     }
   }
-  
+
   componentDidMount() {
     this.handleGetAccountDetails();
   }
-  
+
   isDoctorRoleAssociatedWithProvider = () => {
-    const {auth: {auth_role} = {}, user_roles = {}} = this.props;
-    const {basic_info: {linked_with, linked_id} = {}} =
-    user_roles[auth_role] || {};
-    
+    const { auth: { auth_role } = {}, user_roles = {} } = this.props;
+    const { basic_info: { linked_with, linked_id } = {} } =
+      user_roles[auth_role] || {};
+
     if (linked_id) {
       return linked_id;
     }
     return false;
   };
-  
+
   formatMessage = (data) => this.props.intl.formatMessage(data);
-  
+
   async handleGetAccountDetails() {
     try {
-      const {getAccountDetails} = this.props;
-      this.setState({loading: true});
+      const { getAccountDetails } = this.props;
+      this.setState({ loading: true });
       const provider_id = this.isDoctorRoleAssociatedWithProvider() || null;
       let response = {};
-      
+
       if (provider_id) {
         response = await getAccountDetails(provider_id);
       } else {
@@ -61,30 +61,30 @@ class DoctorAccountDetails extends Component {
       }
       const {
         status,
-        payload: {data: {users = {}, account_details = {}} = {}} = {},
+        payload: { data: { users = {}, account_details = {} } = {} } = {},
         statusCode,
       } = response || {};
-      
+
       if (status && Object.keys(account_details).length > 0) {
         this.setState({
           noAccountDetails: false,
         });
       }
-      
-      this.setState({loading: false});
+
+      this.setState({ loading: false });
     } catch (err) {
       console.log("err ", err);
-      this.setState({loading: false});
+      this.setState({ loading: false });
       message.warn(this.formatMessage(messages.somethingWentWrong));
     }
   }
-  
+
   getAddedAccountDetails = () => {
-    const {account_details} = this.props;
+    const { account_details } = this.props;
     let details = [];
-    
+
     const providerid = this.isDoctorRoleAssociatedWithProvider() || null;
-    
+
     const accountDetails = Object.keys(account_details).map((account_id) => {
       const {
         basic_info: {
@@ -99,7 +99,7 @@ class DoctorAccountDetails extends Component {
           in_use = false,
         } = {},
       } = account_details[account_id] || {};
-      
+
       return (
         <div
           className={`relative br5 wp20 ml20 mt20 flex direction-column justify-center ${
@@ -112,20 +112,20 @@ class DoctorAccountDetails extends Component {
             <span className="fs14">
               {this.formatMessage(messages.linkedAccountName)}
             </span>
-            
+
             <span className="fs18 fw700">
               <span>
                 {customer_name ? customer_name : TABLE_DEFAULT_BLANK_FIELD}
               </span>
             </span>
           </div>
-          
+
           {/* mobile_number */}
           <div className="mt10 mb10 ml10 flex direction-column align-start wp90">
             <span className="fs14">
               {this.formatMessage(messages.contactNumber)}
             </span>
-            
+
             <span className="fs18 fw700">
               <span>
                 {`+${prefix ? prefix : TABLE_DEFAULT_BLANK_FIELD}-${
@@ -136,51 +136,51 @@ class DoctorAccountDetails extends Component {
               </span>
             </span>
           </div>
-          
+
           {/* account_number */}
           <div className="mt10 mb10 ml10 flex direction-column align-start wp90">
             <span className="fs14">
               {this.formatMessage(messages.accountNumber)}
             </span>
-            
+
             <span className="fs18 fw700">
               <span>
                 {account_number ? account_number : TABLE_DEFAULT_BLANK_FIELD}
               </span>
             </span>
           </div>
-          
+
           {/* ifsc_code */}
           <div className="mt10 mb10 ml10 flex direction-column align-start wp90">
             <span className="fs14">{this.formatMessage(messages.ifsc)}</span>
-            
+
             <span className="fs18 fw700">
               <span>{ifsc_code ? ifsc_code : TABLE_DEFAULT_BLANK_FIELD}</span>
             </span>
           </div>
-          
+
           {/* account_type */}
           <div className="mt10 mb10 ml10 flex direction-column align-start wp90">
             <span className="fs14">
               {this.formatMessage(messages.accountType)}
             </span>
-            
+
             <span className="fs18 fw700">
               <span>
                 {account_type ? account_type : TABLE_DEFAULT_BLANK_FIELD}
               </span>
             </span>
           </div>
-          
+
           {/* upi_id */}
           <div className="mt10 mb10 ml10 flex direction-column align-start wp90">
             <span className="fs14">{this.formatMessage(messages.upiId)}</span>
-            
+
             <span className="fs18 fw700">
               <span>{upi_id ? upi_id : TABLE_DEFAULT_BLANK_FIELD}</span>
             </span>
           </div>
-          
+
           {!providerid && (
             <div className="flex  align-center justify-space-evenly wp100 mb10">
               <Tooltip
@@ -214,7 +214,7 @@ class DoctorAccountDetails extends Component {
                   className={"pointer align-self-start "}
                   onClick={this.handleDelete(id)}
                   twoToneColor="#707070"
-                  style={{fontSize: "18px"}}
+                  style={{ fontSize: "18px" }}
                 />
               </Tooltip>
             </div>
@@ -222,43 +222,43 @@ class DoctorAccountDetails extends Component {
         </div>
       );
     });
-    
+
     return accountDetails;
   };
-  
+
   displayEditRazorpayAccountDetails = (account_detail_id) => (e) => {
     e.preventDefault();
-    console.log("328794682374672983042", {account_detail_id});
-    const {openEditRazorpayAccountDetailsDrawer} = this.props;
-    openEditRazorpayAccountDetailsDrawer({account_detail_id});
+    console.log("328794682374672983042", { account_detail_id });
+    const { openEditRazorpayAccountDetailsDrawer } = this.props;
+    openEditRazorpayAccountDetailsDrawer({ account_detail_id });
   };
-  
+
   handleDelete = (id) => (e) => {
     e.preventDefault();
-    const {warnNote} = this;
-    
+    const { warnNote } = this;
+
     confirm({
       title: `${this.formatMessage(messages.warnNote)}`,
       content: <div>{warnNote()}</div>,
       onOk: async () => {
         try {
-          const {deleteAccountDetails} = this.props;
+          const { deleteAccountDetails } = this.props;
           const response = await deleteAccountDetails(id);
-          
+
           const {
             status,
-            payload: {data: {users = {}, account_details = {}} = {}} = {},
+            payload: { data: { users = {}, account_details = {} } = {} } = {},
             statusCode,
           } = response || {};
-          
+
           if (status && Object.keys(account_details).length === 0) {
             this.setState({
               noAccountDetails: true,
             });
           }
-          
+
           if (status) {
-            this.setState({account_details});
+            this.setState({ account_details });
             message.success(
               this.formatMessage(messages.accountDetailsDeleteSuccess)
             );
@@ -268,11 +268,10 @@ class DoctorAccountDetails extends Component {
           message.warn(this.formatMessage(messages.somethingWentWrong));
         }
       },
-      onCancel() {
-      },
+      onCancel() {},
     });
   };
-  
+
   warnNote = () => {
     return (
       <div className="pt16">
@@ -283,17 +282,17 @@ class DoctorAccountDetails extends Component {
       </div>
     );
   };
-  
+
   displayRazorpayAccountDetails = () => {
-    const {openRazorpayAccountDetailsDrawer} = this.props;
+    const { openRazorpayAccountDetailsDrawer } = this.props;
     openRazorpayAccountDetailsDrawer();
   };
-  
+
   getAddAccountDetailsDisplay = () => {
     const providerid = this.isDoctorRoleAssociatedWithProvider();
-    
-    const {noAccountDetails = true} = this.state;
-    
+
+    const { noAccountDetails = true } = this.state;
+
     if (providerid) {
       if (noAccountDetails) {
         return (
@@ -305,7 +304,7 @@ class DoctorAccountDetails extends Component {
         return null;
       }
     }
-    
+
     return (
       <Button
         type="dashed"
@@ -322,10 +321,10 @@ class DoctorAccountDetails extends Component {
       </Button>
     );
   };
-  
+
   getPaymentDetails = () => {
-    const {noAccountDetails = true} = this.state;
-    
+    const { noAccountDetails = true } = this.state;
+
     return (
       <Fragment>
         <div className="flex align-center justify-center mt40">
@@ -339,12 +338,12 @@ class DoctorAccountDetails extends Component {
       </Fragment>
     );
   };
-  
+
   render() {
-    const {loading = false} = this.state;
-    
+    const { loading = false } = this.state;
+
     if (loading) {
-      return <Loading/>;
+      return <Loading />;
     }
     // console.log("38271638726137612736721",{props:this.props});
     return <div>{this.getPaymentDetails()}</div>;

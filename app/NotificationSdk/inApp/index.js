@@ -1,6 +1,5 @@
-import EventExecutor from "../executor";
 import Logger from "../../../libs/log";
-import { connect, stream } from "getstream";
+import { stream } from "getstream";
 
 const Log = new Logger("NOTIFICATION_SDK > IN_APP");
 

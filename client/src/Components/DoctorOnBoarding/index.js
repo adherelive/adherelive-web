@@ -3,17 +3,14 @@ import { injectIntl } from "react-intl";
 import { DeleteTwoTone } from "@ant-design/icons";
 import uuid from "react-uuid";
 import {
-  Tabs,
-  Button,
-  Steps,
-  Col,
-  Select,
-  Input,
-  Upload,
-  Modal,
-  TimePicker,
   Icon,
+  Input,
   message,
+  Modal,
+  Select,
+  Steps,
+  TimePicker,
+  Upload,
 } from "antd";
 import SideMenu from "./sidebar";
 import { REQUEST_TYPE } from "../../constant";

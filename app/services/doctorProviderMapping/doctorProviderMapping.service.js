@@ -1,5 +1,5 @@
 import Database from "../../../libs/mysql";
-import {TABLE_NAME} from "../../models/doctorProviderMapping";
+import { TABLE_NAME } from "../../models/doctorProviderMapping";
 
 class DoctorProviderMappingService {
   createDoctorProviderMapping = async (data) => {
@@ -12,7 +12,7 @@ class DoctorProviderMappingService {
       throw error;
     }
   };
-  
+
   getDoctorProviderMappingByData = async (data) => {
     try {
       const doctorProviderMapping = await Database.getModel(TABLE_NAME).findAll(
@@ -25,7 +25,7 @@ class DoctorProviderMappingService {
       throw error;
     }
   };
-  
+
   getProviderForDoctor = async (doctor_id) => {
     try {
       const doctorProviderMapping = await Database.getModel(TABLE_NAME).findOne(
@@ -40,7 +40,7 @@ class DoctorProviderMappingService {
       throw error;
     }
   };
-  
+
   getAllDoctorIds = async (provider_id) => {
     try {
       const doctorProviderMapping = await Database.getModel(TABLE_NAME).findAll(

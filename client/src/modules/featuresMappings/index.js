@@ -1,11 +1,11 @@
-import {doRequest} from "../../Helper/network";
-import {REQUEST_TYPE} from "../../constant";
+import { doRequest } from "../../Helper/network";
+import { REQUEST_TYPE } from "../../constant";
 import {
   fetchGetAllFeaturesUrl,
   fetchToggleChatPermissionUrl,
   fetchToggleVideoCallPermissionUrl,
 } from "../../Helper/urls/features";
-import {UPDATE_FEATURES} from "../features";
+import { UPDATE_FEATURES } from "../features";
 
 const initialState = {};
 
@@ -19,13 +19,13 @@ export const getAllFeatures = () => {
         method: REQUEST_TYPE.GET,
         url: fetchGetAllFeaturesUrl(),
       });
-      
-      const {payload = {}, status = false} = response || {};
+
+      const { payload = {}, status = false } = response || {};
       if (!status) {
-        const {message = {}} = payload;
-        return {status: false, error: message};
+        const { message = {} } = payload;
+        return { status: false, error: message };
       } else {
-        const {data: {features = {}, feature_mappings = {}} = {}} = payload;
+        const { data: { features = {}, feature_mappings = {} } = {} } = payload;
         dispatch({
           type: UPDATE_FEATURES,
           payload: features,
@@ -36,7 +36,7 @@ export const getAllFeatures = () => {
         });
       }
     } catch (err) {
-      return {status: false};
+      return { status: false };
     }
     return response;
   };
@@ -51,20 +51,20 @@ export const toggleChatPermission = (patientId, data) => {
         data: data,
         url: fetchToggleChatPermissionUrl(patientId),
       });
-      
-      const {payload = {}, status = false} = response || {};
+
+      const { payload = {}, status = false } = response || {};
       if (!status) {
-        const {message = {}} = payload;
-        return {status: false, error: message};
+        const { message = {} } = payload;
+        return { status: false, error: message };
       } else {
-        const {data: {feature_mappings = {}} = {}} = payload;
+        const { data: { feature_mappings = {} } = {} } = payload;
         dispatch({
           type: UPDATE_FEATURES_MAPPINGS,
           payload: feature_mappings,
         });
       }
     } catch (err) {
-      return {status: false, error: null};
+      return { status: false, error: null };
     }
     return response;
   };
@@ -79,28 +79,28 @@ export const toggleVideoPermission = (patientId, data) => {
         data: data,
         url: fetchToggleVideoCallPermissionUrl(patientId),
       });
-      
-      const {payload = {}, status = false} = response || {};
+
+      const { payload = {}, status = false } = response || {};
       if (!status) {
-        const {message = {}} = payload;
-        return {status: false, error: message};
+        const { message = {} } = payload;
+        return { status: false, error: message };
       } else {
-        const {data: {feature_mappings = {}} = {}} = payload;
+        const { data: { feature_mappings = {} } = {} } = payload;
         dispatch({
           type: UPDATE_FEATURES_MAPPINGS,
           payload: feature_mappings,
         });
       }
     } catch (err) {
-      return {status: false, error: null};
+      return { status: false, error: null };
     }
     return response;
   };
 };
 
 export default function (state = initialState, action) {
-  const {type, payload = {}} = action;
-  
+  const { type, payload = {} } = action;
+
   switch (type) {
     case UPDATE_FEATURES_MAPPINGS:
       return {

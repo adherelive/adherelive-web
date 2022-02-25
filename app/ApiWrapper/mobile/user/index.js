@@ -6,15 +6,13 @@ import DoctorWrapper from "../../mobile/doctor";
 import PatientWrapper from "../../mobile/patient";
 import isEmpty from "lodash/isEmpty";
 
-import * as PermissionHelper from "../../../helper/userCategoryPermisssions";
-
 class MUserWrapper extends BaseUser {
   constructor(data) {
     super(data);
   }
-  
+
   getBasicInfo = () => {
-    const {_data} = this;
+    const { _data } = this;
     const {
       id,
       user_name,
@@ -48,36 +46,36 @@ class MUserWrapper extends BaseUser {
       has_consent,
     };
   };
-  
+
   getPermissions = async () => {
-    const {getCategory} = this;
+    const { getCategory } = this;
     try {
       const permissionsData = await userPermissionService.getPermissionsByData({
         category: getCategory(),
       });
       let permission_ids = [];
       let permissionData = [];
-      
+
       for (const userPermission of permissionsData) {
-        const {permission_id} = userPermission || {};
+        const { permission_id } = userPermission || {};
         permission_ids.push(permission_id);
       }
-      
+
       const permissions = await permissionService.getPermissionsById(
         permission_ids
       );
-      
+
       for (const permission of permissions) {
-        const {type} = permission || {};
+        const { type } = permission || {};
         permissionData.push(type);
       }
-      
+
       return permissionData;
     } catch (error) {
       throw error;
     }
   };
-  
+
   /*
     getCategoryInfo = async () => {
       const { _data } = this;
@@ -99,9 +97,9 @@ class MUserWrapper extends BaseUser {
     };
     */
   getCategoryInfo = async () => {
-    const {_data} = this;
-    const {doctor = null, patient = null, provider = null} = _data || {};
-    
+    const { _data } = this;
+    const { doctor = null, patient = null, provider = null } = _data || {};
+
     if (doctor) {
       const doctorData = await DoctorWrapper(doctor);
       return {
@@ -122,33 +120,33 @@ class MUserWrapper extends BaseUser {
       };
     }
   };
-  
+
   getReferenceInfo = async () => {
     try {
-      const {getId, getBasicInfo, _data} = this;
-      
-      const {doctor, patient} = _data;
-      
+      const { getId, getBasicInfo, _data } = this;
+
+      const { doctor, patient } = _data;
+
       const doctors = {};
       const patients = {};
-      
+
       let doctor_id = null;
       let patient_id = null;
-      
+
       const patientData = await PatientWrapper(patient);
-      
+
       if (!isEmpty(doctor)) {
         const doctorData = await DoctorWrapper(doctor);
         doctors[doctorData.getDoctorId()] = doctorData.getBasicInfo();
         doctor_id = doctorData.getDoctorId();
       }
-      
+
       if (!isEmpty(patient)) {
         const patientData = await PatientWrapper(patient);
         patients[patientData.getPatientId()] = await patientData.getAllInfo();
         patient_id = patientData.getPatientId();
       }
-      
+
       return {
         users: {
           [getId()]: getBasicInfo(),

@@ -1,4 +1,4 @@
-import {validationError} from "../helper";
+import { validationError } from "../helper";
 import Joi from "@hapi/joi";
 
 const userDeviceSchema = Joi.object().keys({
@@ -8,7 +8,7 @@ const userDeviceSchema = Joi.object().keys({
 });
 
 export const addUserDeviceSchema = (req, res, next) => {
-  const {body: data = {}} = req;
+  const { body: data = {} } = req;
   const isValid = userDeviceSchema.validate(data);
   if (isValid && isValid.error != null) {
     return validationError(res, isValid);

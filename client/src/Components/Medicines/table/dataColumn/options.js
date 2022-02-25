@@ -5,7 +5,7 @@ import Tooltip from "antd/es/tooltip";
 import messages from "../messages";
 import confirm from "antd/es/modal/confirm";
 import moment from "moment";
-import {DeleteOutlined} from "@ant-design/icons";
+import { DeleteOutlined } from "@ant-design/icons";
 
 const ALL_TABS = {
   PUBLIC: "1",
@@ -23,12 +23,12 @@ export default (props) => {
     changeTab,
   } = props || {};
   const {
-    basic_info: {name = "", id: medicine_id = null, public_medicine = false},
+    basic_info: { name = "", id: medicine_id = null, public_medicine = false },
   } = medicineData || {};
-  
+
   const handleMakeMedicinePublic = (e) => {
     e.preventDefault();
-    
+
     confirm({
       title: `${formatMessage(
         messages.publicMessage
@@ -43,7 +43,7 @@ export default (props) => {
       ),
       // modalOptions={{ dismissible: false }}
       onOk: async () => {
-        const {changeLoading} = props;
+        const { changeLoading } = props;
         try {
           const offset = currentPage - 1;
           const {
@@ -52,51 +52,50 @@ export default (props) => {
             searchText = "",
           } = props;
           changeLoading(true);
-          const response = await makeMedicinePublic({medicine_id, offset});
+          const response = await makeMedicinePublic({ medicine_id, offset });
           const {
             payload: {
-              data: {medicines = {}} = {},
+              data: { medicines = {} } = {},
               message: resp_message,
             } = {},
             status,
           } = response;
           let medicine = {};
           const medicineKey = Object.keys(medicines)[0];
-          const {basic_info = {}} = Object.values(medicines)[0];
-          
+          const { basic_info = {} } = Object.values(medicines)[0];
+
           const medicineValue = {
             basic_info,
             ["updated_at"]: moment().toISOString(),
           };
-          
+
           medicine[medicineKey] = medicineValue;
           if (status) {
             let resp = {};
             if (searchText === "") {
-              resp = await getPrivateMedicines({offset});
+              resp = await getPrivateMedicines({ offset });
             } else {
-              resp = await getPrivateMedicines({value: searchText, offset});
+              resp = await getPrivateMedicines({ value: searchText, offset });
             }
             mapMedicineToPublic(medicine);
-            
+
             // change tab back to public
             changeTab(ALL_TABS.PUBLIC);
             message.success(resp_message);
             changeLoading(false);
-            console.log("382742849718654217836912837", {medicine});
+            console.log("382742849718654217836912837", { medicine });
           }
         } catch (error) {
           changeLoading(false);
           console.log("error", error);
         }
       },
-      onCancel() {
-      },
+      onCancel() {},
       maskClosable: false,
       keyboard: false,
     });
   };
-  
+
   const warnNote = () => {
     return (
       <div className="pt16  ">
@@ -107,21 +106,21 @@ export default (props) => {
       </div>
     );
   };
-  
+
   const handleDelete = (e) => {
     e.preventDefault();
-    
+
     confirm({
       title: `${formatMessage(messages.sureMessage)} '${name}' ? `,
       content: <div>{warnNote()}</div>,
       onOk: async () => {
         try {
-          const {deleteMedicine, getPrivateMedicines} = props;
-          const {currentPage = 1} = props;
+          const { deleteMedicine, getPrivateMedicines } = props;
+          const { currentPage = 1 } = props;
           const offset = currentPage - 1;
-          const response = await deleteMedicine({medicine_id, offset});
-          console.log("98327548237469238048230490", {response});
-          const {status, payload: {message: resp_msg = ""} = {}} = response;
+          const response = await deleteMedicine({ medicine_id, offset });
+          console.log("98327548237469238048230490", { response });
+          const { status, payload: { message: resp_msg = "" } = {} } = response;
           if (status) {
             message.success(resp_msg);
             // if(currentTab === ALL_TABS.PUBLIC){
@@ -133,16 +132,15 @@ export default (props) => {
             message.error(resp_msg);
           }
         } catch (error) {
-          console.log("Error ===>", {error});
+          console.log("Error ===>", { error });
         }
       },
-      onCancel() {
-      },
+      onCancel() {},
       maskClosable: false,
       keyboard: false,
     });
   };
-  
+
   return (
     <div className="wp100 flex justify-end align-center">
       <Tooltip

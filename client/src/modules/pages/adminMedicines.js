@@ -1,4 +1,4 @@
-import {combineReducers} from "redux";
+import { combineReducers } from "redux";
 import public_medicines from "./adminPublic";
 import private_medicines from "./adminPrivate";
 

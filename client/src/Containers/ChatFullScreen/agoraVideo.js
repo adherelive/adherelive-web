@@ -2,8 +2,8 @@ import { connect } from "react-redux";
 import AgoraVideo from "../../Components/ChatFullScreen/agoraVideo";
 import {
   fetchVideoAccessToken,
-  startCall,
   missedCall,
+  startCall,
 } from "../../modules/agora";
 
 const mapStateToProps = (state) => {

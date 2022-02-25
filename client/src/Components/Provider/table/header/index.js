@@ -1,6 +1,6 @@
 import React from "react";
 
-import {TABLE_COLUMN} from "../helper";
+import { TABLE_COLUMN } from "../helper";
 import messages from "../messages";
 import Name from "../dataColumn/name";
 import Address from "../dataColumn/address";
@@ -8,8 +8,8 @@ import ContactDetails from "../dataColumn/contactDetails";
 import Edit from "../dataColumn/edit";
 
 export default (props) => {
-  const {formatMessage} = props || {};
-  
+  const { formatMessage } = props || {};
+
   return [
     {
       title: formatMessage(messages.name),
@@ -30,7 +30,7 @@ export default (props) => {
       title: "",
       ...TABLE_COLUMN.EDIT,
       render: (data) => {
-        const {providerData, openEditProviderDrawer} = data;
+        const { providerData, openEditProviderDrawer } = data;
         return (
           <Edit
             {...providerData}

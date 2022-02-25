@@ -1,8 +1,8 @@
-import React, {Component} from "react";
-import {injectIntl} from "react-intl";
+import React, { Component } from "react";
+import { injectIntl } from "react-intl";
 import Modal from "antd/es/modal";
 import messages from "./messages";
-import {Button, Checkbox} from "antd";
+import { Checkbox } from "antd";
 import message from "antd/es/message";
 import ReactMarkdown from "react-markdown";
 
@@ -11,33 +11,33 @@ const TERMS_OF_SERVICE = "terms_of_service";
 class TOSConfirm extends Component {
   constructor(props) {
     super(props);
-    
+
     this.state = {
       value: "",
     };
   }
-  
+
   formatMessage = (message) => this.props.intl.formatMessage(message);
-  
+
   async componentDidMount() {
-    const {getTermsAndPolicy} = this.props;
+    const { getTermsAndPolicy } = this.props;
     try {
       const response = await getTermsAndPolicy(TERMS_OF_SERVICE);
-      const {status, payload: {data} = {}} = response;
+      const { status, payload: { data } = {} } = response;
       if (status === true) {
-        const {[TERMS_OF_SERVICE]: {content} = {}} = data || {};
-        this.setState({value: content});
+        const { [TERMS_OF_SERVICE]: { content } = {} } = data || {};
+        this.setState({ value: content });
       }
     } catch (error) {
       message.warn("Something went wrong");
     }
   }
-  
+
   render() {
-    const {visible, onAccept, onCancel, checked} = this.props;
-    const {value} = this.state;
-    const {formatMessage} = this;
-    
+    const { visible, onAccept, onCancel, checked } = this.props;
+    const { value } = this.state;
+    const { formatMessage } = this;
+
     return (
       <Modal
         className={"upload-appointment-docs-modal"}
@@ -47,12 +47,12 @@ class TOSConfirm extends Component {
         mask
         onCancel={onCancel}
         maskClosable
-        okButtonProps={{disabled: false}}
+        okButtonProps={{ disabled: false }}
         wrapClassName={"chat-media-modal-dialog"}
         width={`50%`}
         footer={null}
       >
-        <div className="p10 h400 mb20" style={{overflowY: "scroll"}}>
+        <div className="p10 h400 mb20" style={{ overflowY: "scroll" }}>
           <ReactMarkdown>{value}</ReactMarkdown>
         </div>
         <div className="flex justify-space-between mb20">

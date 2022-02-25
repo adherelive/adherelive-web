@@ -6,7 +6,6 @@ import Select from "antd/es/select";
 import Input from "antd/es/input";
 import TextArea from "antd/es/input/TextArea";
 // import messages from "./messages";
-import message from "antd/es/message";
 
 const { Item: FormItem } = Form;
 const { Option, OptGroup } = Select;
@@ -35,6 +34,7 @@ class AddSubscriptionForm extends Component {
   };
 
   formatMessage = (data) => this.props.intl.formatMessage(data);
+
   render() {
     const {
       form: { getFieldDecorator, isFieldTouched, getFieldError, getFieldValue },

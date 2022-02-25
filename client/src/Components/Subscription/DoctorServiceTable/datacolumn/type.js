@@ -1,5 +1,4 @@
 import React from "react";
-import { CONSULTATION_FEE_TYPE_TEXT } from "../../../../constant";
 
 export default (props) => {
   const {

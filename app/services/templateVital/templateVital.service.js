@@ -1,5 +1,5 @@
 import Database from "../../../libs/mysql";
-import {TABLE_NAME} from "../../models/templateVitals";
+import { TABLE_NAME } from "../../models/templateVitals";
 
 export default class TemplateVitalService {
   getByData = async (data) => {
@@ -12,7 +12,7 @@ export default class TemplateVitalService {
       throw error;
     }
   };
-  
+
   deleteVital = async (data) => {
     try {
       return await Database.getModel(TABLE_NAME).destroy({
@@ -23,7 +23,7 @@ export default class TemplateVitalService {
       throw error;
     }
   };
-  
+
   create = async (data) => {
     try {
       const templateVital = await Database.getModel(TABLE_NAME).create(data);
@@ -32,7 +32,7 @@ export default class TemplateVitalService {
       throw error;
     }
   };
-  
+
   update = async (data, id) => {
     const transaction = await Database.initTransaction();
     try {

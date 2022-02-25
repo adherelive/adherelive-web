@@ -1,6 +1,6 @@
 "use strict";
 
-import {TABLE_NAME} from "../models/templateAppointments";
+import { TABLE_NAME } from "../models/templateAppointments";
 
 module.exports = {
   up: (queryInterface, Sequelize) => {
@@ -35,7 +35,7 @@ module.exports = {
       },
     ]);
   },
-  
+
   down: (queryInterface, Sequelize) => {
     return queryInterface.bulkDelete(TABLE_NAME, null, {});
   },

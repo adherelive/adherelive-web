@@ -1,7 +1,6 @@
 import express from "express";
 import Authenticate from "../middlewares/auth";
 // import * as validator from "./validator";
-
 import CarePlanTemplate from "../../../app/controllers/mControllers/carePlanTemplate/carePlanTemplate.controller";
 import isAllowed from "../../middlewares/permissions";
 import PERMISSIONS from "../../../config/permissions";

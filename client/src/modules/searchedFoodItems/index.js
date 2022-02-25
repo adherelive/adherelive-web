@@ -1,6 +1,6 @@
-import {doRequest} from "../../Helper/network";
-import {REQUEST_TYPE} from "../../constant";
-import {searchFoodUrl} from "../../Helper/urls/foodItems";
+import { doRequest } from "../../Helper/network";
+import { REQUEST_TYPE } from "../../constant";
+import { searchFoodUrl } from "../../Helper/urls/foodItems";
 import {
   ADD_FOOD_ITEM_COMPLETED,
   EDIT_FOOD_ITEM_COMPLETED,
@@ -18,8 +18,8 @@ export const searchFood = (value) => {
         method: REQUEST_TYPE.GET,
         url: searchFoodUrl(value),
       });
-      
-      const {status, payload: {data, message = ""} = {}} = response || {};
+
+      const { status, payload: { data, message = "" } = {} } = response || {};
       if (status === true) {
         dispatch({
           type: SEARCH_FOOD_COMPLETED,
@@ -39,7 +39,7 @@ export const searchFood = (value) => {
 };
 
 function searchFoodItemReducer(state, data) {
-  let {food_items = {}} = data || {};
+  let { food_items = {} } = data || {};
   if (food_items) {
     return {
       ...food_items,
@@ -50,7 +50,7 @@ function searchFoodItemReducer(state, data) {
 }
 
 function addedNewItemDetailReducer(state, data) {
-  let {food_items = {}} = data || {};
+  let { food_items = {} } = data || {};
   if (food_items) {
     return {
       ...state,
@@ -62,7 +62,7 @@ function addedNewItemDetailReducer(state, data) {
 }
 
 export default (state = {}, action) => {
-  const {type, data} = action || {};
+  const { type, data } = action || {};
   switch (type) {
     case SEARCH_FOOD_COMPLETED:
       return searchFoodItemReducer(state, data);

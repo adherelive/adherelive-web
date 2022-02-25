@@ -1,12 +1,12 @@
 import {
   ADD_EXERCISE_COMPLETED,
-  STORE_EXERCISE_AND_DETAILS,
   EDIT_EXERCISE_COMPLETED,
+  STORE_EXERCISE_AND_DETAILS,
 } from "../exercises";
-import {GET_SINGLE_DIET_DETAILS_COMPLETED} from "../../modules/diets";
+import { GET_SINGLE_DIET_DETAILS_COMPLETED } from "../../modules/diets";
 
 function exerciseDetaisReducer(state, data) {
-  const {exercises, exercise_details} = data || {};
+  const { exercises, exercise_details } = data || {};
   if (exercises && exercise_details) {
     return {
       ...state,
@@ -18,7 +18,7 @@ function exerciseDetaisReducer(state, data) {
 }
 
 export default (state = {}, action) => {
-  const {type, data} = action || {};
+  const { type, data } = action || {};
   switch (type) {
     case ADD_EXERCISE_COMPLETED:
       return exerciseDetaisReducer(state, data);

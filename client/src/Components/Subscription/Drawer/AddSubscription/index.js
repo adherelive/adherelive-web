@@ -1,22 +1,9 @@
 import React, { Component, Fragment } from "react";
 import { injectIntl } from "react-intl";
-import {
-  Drawer,
-  Icon,
-  Select,
-  Input,
-  message,
-  Button,
-  Spin,
-  Radio,
-  DatePicker,
-} from "antd";
+import { Drawer, Icon, Input, Radio, Select } from "antd";
 import Form from "antd/es/form";
 import TextArea from "antd/es/input/TextArea";
 // import { CONSULTATION_FEE_TYPE_TEXT } from "../../../constant";
-
-import moment from "moment";
-import throttle from "lodash-es/throttle";
 
 // import messages from "./message";
 import Footer from "../../../Drawer/footer";

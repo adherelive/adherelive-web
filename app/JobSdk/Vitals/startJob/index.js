@@ -1,6 +1,6 @@
 import VitalJob from "../";
 import moment from "moment";
-import {DEFAULT_PROVIDER, EVENT_TYPE} from "../../../../constant";
+import { DEFAULT_PROVIDER, EVENT_TYPE } from "../../../../constant";
 
 import UserRoleService from "../../../services/userRoles/userRoles.service";
 import ProviderService from "../../../services/provider/provider.service";
@@ -13,49 +13,49 @@ class StartJob extends VitalJob {
   constructor(data) {
     super(data);
   }
-  
+
   getPushAppTemplate = async () => {
-    const {_data} = this;
+    const { _data } = this;
     const {
       details: {
         participants = [],
         actor: {
           id: actorId,
           user_role_id,
-          details: {name, category: actorCategory} = {},
+          details: { name, category: actorCategory } = {},
         } = {},
-        
+
         vital_templates,
-        vital_templates: {basic_info: {name: vitalName = ""} = {}} = {},
+        vital_templates: { basic_info: { name: vitalName = "" } = {} } = {},
       } = {},
       event_id,
       // eventId = null,
     } = _data || {};
-    
+
     const templateData = [];
     const playerIds = [];
     const userIds = [];
-    
-    const vitals = await VitalWrapper({id: event_id});
-    const {vitals: latestVital} = await vitals.getAllInfo();
-    
+
+    const vitals = await VitalWrapper({ id: event_id });
+    const { vitals: latestVital } = await vitals.getAllInfo();
+
     // participants.forEach(participant => {
     //   if (participant !== user_role_id) {
     //     userRoleIds.push(participant);
     //   }
     // });
-    
-    const {rows: userRoles = []} =
-    (await UserRoleService.findAndCountAll({
-      where: {
-        id: participants,
-      },
-    })) || {};
-    
+
+    const { rows: userRoles = [] } =
+      (await UserRoleService.findAndCountAll({
+        where: {
+          id: participants,
+        },
+      })) || {};
+
     let providerId = null;
-    
+
     for (const userRole of userRoles) {
-      const {id, user_identity, linked_id} = userRole || {};
+      const { id, user_identity, linked_id } = userRole || {};
       if (id !== user_role_id) {
         userIds.push(user_identity);
       } else {
@@ -64,32 +64,32 @@ class StartJob extends VitalJob {
         }
       }
     }
-    
+
     // provider
     let providerName = DEFAULT_PROVIDER;
     if (providerId) {
       const provider = await ProviderService.getProviderByData({
         id: providerId,
       });
-      const {name} = provider || {};
+      const { name } = provider || {};
       providerName = name;
     }
-    
+
     const userDevices = await UserDeviceService.getAllDeviceByData({
       user_id: userIds,
     });
-    
+
     if (userDevices.length > 0) {
       for (const device of userDevices) {
-        const userDevice = await UserDeviceWrapper({data: device});
+        const userDevice = await UserDeviceWrapper({ data: device });
         playerIds.push(userDevice.getOneSignalDeviceId());
       }
     }
-    
+
     templateData.push({
       small_icon: process.config.app.icon_android,
       app_id: process.config.one_signal.app_id, // TODO: add the same in pushNotification handler in notificationSdk
-      headings: {en: `${vitalName} Reminder`},
+      headings: { en: `${vitalName} Reminder` },
       contents: {
         en: `Tap here to update your ${vitalName}`,
       },
@@ -104,20 +104,20 @@ class StartJob extends VitalJob {
         type: "modal",
       },
     });
-    
+
     return templateData;
   };
-  
+
   getInAppTemplate = () => {
-    const {getData} = this;
+    const { getData } = this;
     const data = getData();
     const {
-      details: {participants = [], actor: {id: actorId, user_role_id} = {}},
+      details: { participants = [], actor: { id: actorId, user_role_id } = {} },
       id = null,
       start_time = null,
       event_id = null,
     } = data || {};
-    
+
     const templateData = [];
     const now = moment();
     const currentTimeStamp = now.unix();
@@ -135,7 +135,7 @@ class StartJob extends VitalJob {
         });
       }
     }
-    
+
     return templateData;
   };
 }

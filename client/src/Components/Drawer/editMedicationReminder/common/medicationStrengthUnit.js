@@ -1,36 +1,36 @@
-import React, {Component, Fragment} from "react";
-import {Select, Form} from "antd";
+import React, { Component, Fragment } from "react";
+import { Form, Select } from "antd";
 import dropDownIcon from "../../../../Assets/images/material-icons-black-arrow-drop-down.svg";
-import {injectIntl} from "react-intl";
+import { injectIntl } from "react-intl";
 
 const FIELD_NAME = "unit";
 
-const DropDownIcon = <img src={dropDownIcon} alt="d" className="w24 h24"/>;
+const DropDownIcon = <img src={dropDownIcon} alt="d" className="w24 h24" />;
 
 const units = [
-  {key: "mg", value: "mg"},
-  {key: "ml", value: "ml"},
+  { key: "mg", value: "mg" },
+  { key: "ml", value: "ml" },
 ];
-const {Option} = Select;
-const {Item: FormItem} = Form;
+const { Option } = Select;
+const { Item: FormItem } = Form;
 
 class MedicationStrengthUnit extends Component {
   componentDidMount() {
     const {
-      form: {validateFields},
+      form: { validateFields },
     } = this.props;
     validateFields();
   }
-  
+
   componentWillUnmount() {
     const {
-      form: {validateFields},
+      form: { validateFields },
     } = this.props;
     validateFields();
   }
-  
+
   getParentNode = (t) => t.parentNode;
-  
+
   getUnitOption = () => {
     return units.map((unit, index) => {
       return (
@@ -40,23 +40,23 @@ class MedicationStrengthUnit extends Component {
       );
     });
   };
-  
+
   getInitialValue = () => {
-    const {purpose, event: {data = {}} = {}} = this.props;
+    const { purpose, event: { data = {} } = {} } = this.props;
     let initialValue = "mg";
-    
+
     if (purpose) {
       initialValue = data[FIELD_NAME];
     }
-    
+
     return initialValue;
   };
-  
+
   render() {
     const {
       form,
       medications,
-      payload: {id: medication_id} = {},
+      payload: { id: medication_id } = {},
       medicationData = {},
     } = this.props;
     const {
@@ -65,18 +65,18 @@ class MedicationStrengthUnit extends Component {
       isFieldTouched,
       //getFieldValue
     } = form;
-    
-    let {basic_info: {details: {unit} = {}} = {}} =
-    medications[medication_id] || {};
-    let {schedule_data: {unit: Unit = ""} = {}} = medicationData;
-    
+
+    let { basic_info: { details: { unit } = {} } = {} } =
+      medications[medication_id] || {};
+    let { schedule_data: { unit: Unit = "" } = {} } = medicationData;
+
     if (Unit) {
       unit = Unit;
     }
     const error = isFieldTouched(FIELD_NAME) && getFieldError(FIELD_NAME);
-    
-    const {getInitialValue} = this;
-    
+
+    const { getInitialValue } = this;
+
     return (
       <Fragment>
         <FormItem
@@ -93,7 +93,7 @@ class MedicationStrengthUnit extends Component {
             ],
             initialValue: unit ? unit : "mg",
           })(
-            <div/>
+            <div />
             // <Select
             //   className="wp100"
             //   placeholder=""

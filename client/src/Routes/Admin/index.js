@@ -1,5 +1,5 @@
-import React, {lazy, Component} from "react";
-import {withRouter} from "react-router-dom";
+import React, { Component, lazy } from "react";
+import { withRouter } from "react-router-dom";
 
 const AdminDoctors = lazy(() =>
   import(/* webpackChunkName: "AdminDoctorRouter" */ "./doctor")
@@ -12,7 +12,7 @@ class Admin extends Component {
       redirecting: this.props.authRedirection,
     };
   }
-  
+
   componentDidMount() {
     this.setState(() => {
       return {
@@ -20,7 +20,7 @@ class Admin extends Component {
       };
     });
   }
-  
+
   render() {
     // const {authRedirection} = this.props;
     return <AdminDoctors {...this.props} />;

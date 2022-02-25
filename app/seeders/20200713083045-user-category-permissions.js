@@ -1,6 +1,6 @@
 "use strict";
-import {USER_CATEGORY} from "../../constant";
-import {TABLE_NAME} from "../models/userCategoryPermissions";
+import { USER_CATEGORY } from "../../constant";
+import { TABLE_NAME } from "../models/userCategoryPermissions";
 
 module.exports = {
   up: (queryInterface, Sequelize) => {
@@ -997,7 +997,7 @@ module.exports = {
       },
     ]);
   },
-  
+
   down: (queryInterface, Sequelize) => {
     return queryInterface.bulkDelete(TABLE_NAME, null, {});
   },

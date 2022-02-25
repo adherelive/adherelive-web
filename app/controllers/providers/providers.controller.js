@@ -26,7 +26,6 @@ import tacService from "../../services/termsAndConditions/termsAndConditions.ser
 import UserWrapper from "../../ApiWrapper/web/user";
 import DoctorWrapper from "../../ApiWrapper/web/doctor";
 import ProviderWrapper from "../../ApiWrapper/web/provider";
-import DoctorProviderMappingWrapper from "../../ApiWrapper/web/doctorProviderMapping";
 import QualificationWrapper from "../../ApiWrapper/web/doctorQualification";
 import RegistrationWrapper from "../../ApiWrapper/web/doctorRegistration";
 import ClinicWrapper from "../../ApiWrapper/web/doctorClinic";
@@ -42,15 +41,13 @@ import UserRoleWrapper from "../../ApiWrapper/web/userRoles";
 
 import TACWrapper from "../../ApiWrapper/web/termsAndConditions";
 // import * as PaymentHelper from "../payments/helper";
-
 // import bcrypt from "bcrypt";
-
 import {
   DOCUMENT_PARENT_TYPE,
   EVENT_TYPE,
   SIGN_IN_CATEGORY,
-  USER_CATEGORY,
   TERMS_AND_CONDITIONS_TYPES,
+  USER_CATEGORY,
 } from "../../../constant";
 import ScheduleEventService from "../../services/scheduleEvents/scheduleEvent.service";
 import { Sequelize } from "sequelize";

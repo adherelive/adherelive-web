@@ -1,10 +1,10 @@
 "use strict";
 
-import {TABLE_NAME} from "../app/models/dietResponses";
-import {TABLE_NAME as dietTableName} from "../app/models/diet";
-import {TABLE_NAME as scheduleEventsTable} from "../app/models/scheduleEvents";
+import { TABLE_NAME } from "../app/models/dietResponses";
+import { TABLE_NAME as dietTableName } from "../app/models/diet";
+import { TABLE_NAME as scheduleEventsTable } from "../app/models/scheduleEvents";
 
-import {DIET_RESPONSE_STATUS} from "../constant";
+import { DIET_RESPONSE_STATUS } from "../constant";
 
 module.exports = {
   up: (queryInterface, DataTypes) => {
@@ -68,7 +68,7 @@ module.exports = {
       },
     });
   },
-  
+
   down: (queryInterface, DataTypes) => {
     return queryInterface.dropTable(TABLE_NAME);
   },

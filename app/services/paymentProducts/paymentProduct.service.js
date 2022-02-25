@@ -1,6 +1,5 @@
 import Database from "../../../libs/mysql";
-import {TABLE_NAME} from "../../models/paymentProducts";
-import {USER_CATEGORY} from "../../../constant";
+import { TABLE_NAME } from "../../models/paymentProducts";
 import Log from "../../../libs/log";
 
 const Logger = new Log("WEB > PAYMENT_PRODUCTS > SERVICES");
@@ -17,7 +16,7 @@ export default class PaymentProductService {
       throw error;
     }
   };
-  
+
   getAllCreatorTypeProducts = async (data) => {
     try {
       const paymentProducts = await Database.getModel(TABLE_NAME).findAll({
@@ -29,7 +28,7 @@ export default class PaymentProductService {
       throw error;
     }
   };
-  
+
   addDoctorProduct = async (data) => {
     try {
       const paymentProduct = await Database.getModel(TABLE_NAME).create(data, {
@@ -40,7 +39,7 @@ export default class PaymentProductService {
       throw error;
     }
   };
-  
+
   updateDoctorProduct = async (data, id) => {
     const transaction = await Database.initTransaction();
     try {
@@ -57,8 +56,8 @@ export default class PaymentProductService {
       throw error;
     }
   };
-  
-  deleteDoctorProduct = async ({id = null}) => {
+
+  deleteDoctorProduct = async ({ id = null }) => {
     try {
       const deletedDoctorProduct = await Database.getModel(TABLE_NAME).destroy({
         where: {
@@ -72,7 +71,7 @@ export default class PaymentProductService {
     }
   };
   //   Logger.debug("7657890765",deletedDoctorProduct);
-  
+
   deleteDoctorProductById = async (id) => {
     try {
       const deletedDoctorProduct = await Database.getModel(TABLE_NAME).destroy({
@@ -85,7 +84,7 @@ export default class PaymentProductService {
       throw error;
     }
   };
-  
+
   getAll = async () => {
     try {
       return await Database.getModel(TABLE_NAME).findAll();

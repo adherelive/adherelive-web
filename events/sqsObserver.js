@@ -1,38 +1,37 @@
 import Logger from "../libs/log";
-import {EVENT_TYPE} from "../constant";
+import { EVENT_TYPE } from "../constant";
 import {
   handleAppointments,
+  handleAppointmentsTimeAssignment,
+  handleCarePlans,
+  handleDiet,
   handleMedications,
   handleVitals,
-  handleCarePlans,
-  handleAppointmentsTimeAssignment,
-  handleDiet,
   handleWorkout,
 } from "./helper";
 
 const Log = new Logger("EVENTS > SQS_OBSERVER");
 
 export default class SqsObserver {
-  constructor() {
-  }
-  
+  constructor() {}
+
   observe = async (service) => {
     try {
       const eventMessage = await service.receiveMessage();
       Log.debug("eventMessage", eventMessage);
-      
+
       if (eventMessage) {
         for (const message of eventMessage) {
           const data = JSON.parse(message.Body) || null;
-          
+
           Log.debug("observer message --> ", data);
-          
+
           if (Array.isArray(data)) {
             for (let index = 0; index < data.length; index++) {
-              await this.execute({data: data[index], service, message});
+              await this.execute({ data: data[index], service, message });
             }
           } else {
-            await this.execute({data, service, message});
+            await this.execute({ data, service, message });
           }
         }
       }
@@ -40,13 +39,13 @@ export default class SqsObserver {
       Log.debug("observe catch error", error);
     }
   };
-  
-  execute = async ({data, service, message}) => {
+
+  execute = async ({ data, service, message }) => {
     try {
-      const {type = ""} = data || {};
-      
+      const { type = "" } = data || {};
+
       let response = false;
-      
+
       switch (type) {
         case EVENT_TYPE.APPOINTMENT:
           response = await handleAppointments(data);
@@ -73,15 +72,15 @@ export default class SqsObserver {
           response = false;
           break;
       }
-      
+
       Log.info(`response ${response}`);
       Log.info(`message.ReceiptHandle ${message.ReceiptHandle}`);
-      
+
       if (response === true) {
         const deleteMessage = await service.deleteMessage(
           message.ReceiptHandle
         );
-        
+
         Log.debug("deleteMessage 81723912 ", deleteMessage);
       }
     } catch (error) {

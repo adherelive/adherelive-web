@@ -1,6 +1,6 @@
 "use strict";
 
-import {TABLE_NAME} from "../models/permissions";
+import { TABLE_NAME } from "../models/permissions";
 
 module.exports = {
   up: (queryInterface, Sequelize) => {
@@ -287,7 +287,7 @@ module.exports = {
       },
     ]);
   },
-  
+
   down: (queryInterface, Sequelize) => {
     return queryInterface.bulkDelete(TABLE_NAME, null, {});
   },

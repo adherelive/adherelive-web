@@ -2,9 +2,9 @@ import agoraService from "../../../services/agora/agora.service";
 
 import Controller from "../../";
 import {
-  USER_CATEGORY,
-  EVENT_STATUS,
   AGORA_CALL_NOTIFICATION_TYPES,
+  EVENT_STATUS,
+  USER_CATEGORY,
 } from "../../../../constant";
 
 import Log from "../../../../libs/log_new";
@@ -18,12 +18,12 @@ class AgoraController extends Controller {
   constructor() {
     super();
   }
-  
+
   generateVideoAccessToken = async (req, res) => {
     try {
       const {
-        params: {id = null} = {},
-        userDetails: {userRoleId, userData: {category} = {}} = {},
+        params: { id = null } = {},
+        userDetails: { userRoleId, userData: { category } = {} } = {},
       } = req;
       let doctorRoleId = null,
         patientRoleId = null;
@@ -35,16 +35,16 @@ class AgoraController extends Controller {
         patientRoleId = userRoleId;
       }
       const channelName = agoraService.getRoomId(doctorRoleId, patientRoleId);
-      
+
       const token = await agoraService.videoTokenGenerator(
         userRoleId,
         channelName
       );
-      
+
       return this.raiseSuccess(
         res,
         200,
-        {token: token},
+        { token: token },
         "Created new video token with userId"
       );
     } catch (error) {
@@ -52,19 +52,19 @@ class AgoraController extends Controller {
       return this.raiseServerError(res, 500, {}, "Error in video calling.");
     }
   };
-  
+
   missedCall = async (req, res) => {
     try {
       const {
-        params: {id = null} = {},
+        params: { id = null } = {},
         userDetails: {
           userId,
           userRoleId,
-          userData: {category} = {},
-          userCategoryData: {basic_info: {full_name} = {}} = {},
+          userData: { category } = {},
+          userCategoryData: { basic_info: { full_name } = {} } = {},
         } = {},
       } = req;
-      
+
       let doctorRoleId = null,
         patientRoleId = null;
       if (category === USER_CATEGORY.DOCTOR || category === USER_CATEGORY.HSP) {
@@ -79,7 +79,7 @@ class AgoraController extends Controller {
         category === USER_CATEGORY.DOCTOR || category === USER_CATEGORY.HSP
           ? patientRoleId
           : doctorRoleId;
-      
+
       const eventScheduleData = {
         type: AGORA_CALL_NOTIFICATION_TYPES.MISSED_CALL,
         event_id: roomId,
@@ -90,16 +90,16 @@ class AgoraController extends Controller {
         actor: {
           id: userId,
           user_role_id: userRoleId,
-          details: {name: full_name, category},
+          details: { name: full_name, category },
         },
       };
-      
+
       const agoraJob = AgoraJob.execute(
         EVENT_STATUS.EXPIRED,
         eventScheduleData
       );
       await NotificationSdk.execute(agoraJob);
-      
+
       return this.raiseSuccess(
         res,
         200,
@@ -116,30 +116,30 @@ class AgoraController extends Controller {
       );
     }
   };
-  
+
   startCall = async (req, res) => {
     try {
       const {
-        body: {roomId} = {},
+        body: { roomId } = {},
         userDetails: {
           userId,
           userRoleId,
-          userData: {category} = {},
-          userCategoryData: {basic_info: {full_name} = {}} = {},
+          userData: { category } = {},
+          userCategoryData: { basic_info: { full_name } = {} } = {},
         } = {},
       } = req;
-      
+
       const agoraJob = AgoraJob.execute(EVENT_STATUS.STARTED, {
         roomId,
         event_type: AGORA_CALL_NOTIFICATION_TYPES.START_CALL,
         actor: {
           id: userId,
           user_role_id: userRoleId,
-          details: {name: full_name, category},
+          details: { name: full_name, category },
         },
       });
       await NotificationSdk.execute(agoraJob);
-      
+
       return this.raiseSuccess(
         res,
         200,

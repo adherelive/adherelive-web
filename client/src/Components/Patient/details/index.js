@@ -14,26 +14,24 @@ import isEmpty from "../../../Helper/is-empty";
 import config from "../../../config";
 
 import {
-  REQUEST_TYPE,
-  GENDER,
-  USER_PERMISSIONS,
-  TABLET,
-  SYRUP,
-  PARTS,
-  PART_LIST_CODES,
   DIAGNOSIS_TYPE,
-  TABLE_DEFAULT_BLANK_FIELD,
   FEATURES,
-  USER_CATEGORY,
-  HOST,
-  PATH,
+  GENDER,
+  PART_LIST_CODES,
+  PARTS,
+  REQUEST_TYPE,
+  SYRUP,
+  TABLE_DEFAULT_BLANK_FIELD,
+  TABLET,
   TYPE_APPOINTMENTS,
+  TYPE_DIETS,
   TYPE_SYMPTOMS,
   TYPE_VITALS,
-  TYPE_DIETS,
   TYPE_WORKOUTS,
+  USER_CATEGORY,
+  USER_PERMISSIONS,
 } from "../../../constant";
-import { Tabs, Table, Dropdown, Spin, message, Button } from "antd";
+import { Button, Dropdown, message, Spin, Table, Tabs } from "antd";
 import Modal from "antd/es/modal";
 import Menu from "antd/es/menu";
 
@@ -72,10 +70,10 @@ import PatientAlerts from "../../../Containers/Patient/common/patientAlerts";
 import PatientCarePlans from "./common/patientProfileCarePlans";
 
 import {
-  PhoneOutlined,
-  MessageOutlined,
-  VideoCameraOutlined,
   CaretDownOutlined,
+  MessageOutlined,
+  PhoneOutlined,
+  VideoCameraOutlined,
 } from "@ant-design/icons";
 import moment from "moment";
 
@@ -89,7 +87,6 @@ import TabletIcon from "../../../Assets/images/tabletIcon3x.png";
 import InjectionIcon from "../../../Assets/images/injectionIcon3x.png";
 import SyrupIcon from "../../../Assets/images/pharmacy.png";
 import { getPatientConsultingVideoUrl } from "../../../Helper/url/patients";
-import { getPatientConsultingUrl } from "../../../Helper/url/patients";
 import SymptomTabs from "../../../Containers/Symptoms";
 import { getRoomId } from "../../../Helper/twilio";
 import { getFullName } from "../../../Helper/common";

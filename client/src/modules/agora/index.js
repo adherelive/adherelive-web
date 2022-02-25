@@ -1,6 +1,6 @@
-import {doRequest} from "../../Helper/network";
-import {REQUEST_TYPE} from "../../constant";
-import {Agora} from "../../Helper/urls";
+import { doRequest } from "../../Helper/network";
+import { REQUEST_TYPE } from "../../constant";
+import { Agora } from "../../Helper/urls";
 
 export const AGORA_VIDEO_TOKEN_START = "AGORA_VIDEO_TOKEN_START";
 export const AGORA_VIDEO_TOKEN_COMPLETE = "AGORA_VIDEO_TOKEN_COMPLETE";
@@ -20,16 +20,16 @@ export const fetchVideoAccessToken = (userId) => {
   console.log("198731237 userId", userId);
   return async (dispatch) => {
     try {
-      dispatch({type: AGORA_VIDEO_TOKEN_START});
-      
+      dispatch({ type: AGORA_VIDEO_TOKEN_START });
+
       const response = await doRequest({
         method: REQUEST_TYPE.GET,
         url: Agora.getVideoAccessToken(userId),
         // params: { userId: userId }
       });
-      
-      const {status, payload: {data} = {}} = response;
-      
+
+      const { status, payload: { data } = {} } = response;
+
       if (status === true) {
         dispatch({
           type: AGORA_VIDEO_TOKEN_COMPLETE,
@@ -50,8 +50,8 @@ export const startCall = (roomId) => {
   let response = {};
   return async (dispatch) => {
     try {
-      dispatch({type: VOIP_CALL_NOTIFY_START});
-      
+      dispatch({ type: VOIP_CALL_NOTIFY_START });
+
       response = await doRequest({
         method: REQUEST_TYPE.POST,
         url: Agora.startCall(),
@@ -59,9 +59,9 @@ export const startCall = (roomId) => {
           roomId,
         },
       });
-      
-      const {status, payload: {data = {}, error = {}} = {}} =
-      response || {};
+
+      const { status, payload: { data = {}, error = {} } = {} } =
+        response || {};
       if (status === true) {
         dispatch({
           type: VOIP_CALL_NOTIFY_START_COMPLETE,
@@ -84,8 +84,8 @@ export const missedCall = (roomId) => {
   let response = {};
   return async (dispatch) => {
     try {
-      dispatch({type: VOIP_CALL_MISSED_NOTIFY_START});
-      
+      dispatch({ type: VOIP_CALL_MISSED_NOTIFY_START });
+
       response = await doRequest({
         method: REQUEST_TYPE.POST,
         url: Agora.missedCall(),
@@ -93,9 +93,9 @@ export const missedCall = (roomId) => {
           roomId,
         },
       });
-      
-      const {status, payload: {data = {}, error = {}} = {}} =
-      response || {};
+
+      const { status, payload: { data = {}, error = {} } = {} } =
+        response || {};
       if (status === true) {
         dispatch({
           type: VOIP_CALL_MISSED_NOTIFY_COMPLETE,
@@ -115,7 +115,7 @@ export const missedCall = (roomId) => {
 };
 
 function videoTokenReducer(state, data) {
-  const {token} = data || {};
+  const { token } = data || {};
   if (token) {
     return {
       ...state,
@@ -127,7 +127,7 @@ function videoTokenReducer(state, data) {
 }
 
 export default (state = {}, action) => {
-  const {type, payload} = action || {};
+  const { type, payload } = action || {};
   switch (type) {
     case AGORA_VIDEO_TOKEN_COMPLETE:
       return videoTokenReducer(state, payload);

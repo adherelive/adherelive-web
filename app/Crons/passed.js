@@ -1,7 +1,7 @@
 import Logger from "../../libs/log";
 import moment from "moment";
 
-import {EVENT_STATUS, EVENT_TYPE, FEATURE_TYPE} from "../../constant";
+import { EVENT_STATUS, EVENT_TYPE, FEATURE_TYPE } from "../../constant";
 
 // SERVICES ---------------
 import ScheduleEventService from "../services/scheduleEvents/scheduleEvent.service";
@@ -18,10 +18,10 @@ class PassedCron {
     this.RESCHEDULE_INTERVAL = 10;
     this.RESCHEDULE_DURATION = 30;
   }
-  
+
   getScheduleData = async () => {
     const scheduleEventService = new ScheduleEventService();
-    
+
     const currentTime = moment().utc().toISOString();
     Log.info(`currentTime : ${currentTime}`);
     const scheduleEvents = await scheduleEventService.getPassedEventData(
@@ -29,19 +29,19 @@ class PassedCron {
     );
     return scheduleEvents;
   };
-  
+
   runObserver = async () => {
     try {
       Log.info("running passed cron");
-      const {getScheduleData} = this;
+      const { getScheduleData } = this;
       const scheduleEvents = await getScheduleData();
       let count = 0;
-      
+
       if (scheduleEvents.length > 0) {
         for (const scheduleEvent of scheduleEvents) {
           count++;
           const event = await ScheduleEventWrapper(scheduleEvent);
-          
+
           switch (event.getEventType()) {
             case EVENT_TYPE.VITALS:
               await this.handleVitalPassed(event);
@@ -71,12 +71,12 @@ class PassedCron {
       Log.debug("scheduleEvents 500 error ---->", error);
     }
   };
-  
+
   handleDietPassed = async (event) => {
     try {
       const scheduleEventService = new ScheduleEventService();
       const currentTime = moment().utc().toDate();
-      
+
       if (
         moment(currentTime).diff(event.getStartTime(), "minutes") >=
         this.RESCHEDULE_DURATION
@@ -92,12 +92,12 @@ class PassedCron {
       Log.debug("handleDietPassed 500 error ---->", error);
     }
   };
-  
+
   handleWorkoutPassed = async (event) => {
     try {
       const scheduleEventService = new ScheduleEventService();
       const currentTime = moment().utc().toDate();
-      
+
       if (
         moment(currentTime).diff(event.getStartTime(), "minutes") >=
         this.RESCHEDULE_DURATION
@@ -113,31 +113,31 @@ class PassedCron {
       Log.debug("handleWorkoutPassed 500 error ---->", error);
     }
   };
-  
+
   handleVitalPassed = async (event) => {
     try {
       const scheduleEventService = new ScheduleEventService();
       const currentTime = moment().utc().toDate();
       const eventId = event.getEventId();
-      const {details: {repeat_interval_id: repeatIntervalId = ""} = {}} =
+      const { details: { repeat_interval_id: repeatIntervalId = "" } = {} } =
         event.getDetails();
-      
+
       const vitalData = await FeatureDetailService.getDetailsByData({
         feature_type: FEATURE_TYPE.VITAL,
       });
-      
+
       const vital = await FeatureDetailWrapper(vitalData);
-      const {repeat_intervals} = vital.getFeatureDetails();
-      
-      const {value = 0} = repeat_intervals[repeatIntervalId] || {};
-      
+      const { repeat_intervals } = vital.getFeatureDetails();
+
+      const { value = 0 } = repeat_intervals[repeatIntervalId] || {};
+
       Log.info(
         `value: ${value} | difference -> ${moment(currentTime).diff(
           event.getStartTime(),
           "hours"
         )}`
       );
-      
+
       if (moment(currentTime).diff(event.getStartTime(), "hours") >= value) {
         const updateEventStatus = await scheduleEventService.update(
           {
@@ -150,12 +150,12 @@ class PassedCron {
       Log.debug("handleVitalPassed 500 error ---->", error);
     }
   };
-  
+
   handleMedicationPassed = async (event) => {
     try {
       const scheduleEventService = new ScheduleEventService();
       const currentTime = moment().utc().toDate();
-      
+
       console.log("937123873289 ", {
         condition:
           moment(currentTime).diff(event.updatedAt(), "minutes") ===
@@ -169,9 +169,9 @@ class PassedCron {
         ),
         type_INTERVAL: typeof this.RESCHEDULE_INTERVAL,
       });
-      
+
       const diff = moment(currentTime).diff(event.updatedAt(), "minutes");
-      
+
       if (diff === this.RESCHEDULE_INTERVAL) {
         const updateEventStatus = await scheduleEventService.update(
           {
@@ -180,14 +180,14 @@ class PassedCron {
           event.getScheduleEventId()
         );
       }
-      
+
       console.log("12738123 expired diff", {
         count: moment(currentTime).diff(event.getStartTime(), "minutes"),
         condition:
           moment(currentTime).diff(event.getStartTime(), "minutes") >
           this.RESCHEDULE_DURATION,
       });
-      
+
       if (
         moment(currentTime).diff(event.getStartTime(), "minutes") >
         this.RESCHEDULE_DURATION
@@ -203,12 +203,12 @@ class PassedCron {
       Log.debug("handleMedicationPassed 500 error ---->", error);
     }
   };
-  
+
   handleAppointmentPassed = async (event) => {
     try {
       const scheduleEventService = new ScheduleEventService();
       const currentTime = moment().utc().toDate();
-      
+
       if (
         moment(currentTime).diff(event.getEndTime(), "hours") >
         process.config.app.appointment_wait_time_hours
@@ -224,15 +224,15 @@ class PassedCron {
       Log.debug("handleMedicationPassed 500 error ---->", error);
     }
   };
-  
+
   handleCarePlanPassed = async (event) => {
     try {
       const scheduleEventService = new ScheduleEventService();
       const currentTime = moment().utc().toDate();
-      
+
       const carePlanStartTime = new moment.utc();
       const carePlanEndTime = new moment.utc(carePlanStartTime).add(2, "hours");
-      
+
       // console.log("8712368126316283 ", {currentTime, eventStart: event.getStartTime(), num: moment(currentTime).diff(event.getStartTime(), "hours"), condition: moment(currentTime).diff(event.getStartTime(), "hours") >= process.config.app.careplan_activation_reschedule_hours, diff: process.config.app.careplan_activation_reschedule_hours});
       if (
         moment(currentTime).diff(event.getStartTime(), "hours") >=

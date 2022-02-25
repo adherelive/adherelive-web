@@ -1,5 +1,5 @@
 import Database from "../../../libs/mysql";
-import {TABLE_NAME} from "../../models/mealTemplateFoodItemMapping";
+import { TABLE_NAME } from "../../models/mealTemplateFoodItemMapping";
 
 const DEFAULT_ORDER = [["created_at", "DESC"]];
 
@@ -22,7 +22,7 @@ class MealTemplateFoodItemMappingService {
       throw error;
     }
   };
-  
+
   update = async (data, id) => {
     const transaction = await Database.initTransaction();
     try {
@@ -44,7 +44,7 @@ class MealTemplateFoodItemMappingService {
       throw error;
     }
   };
-  
+
   getByData = async (data) => {
     try {
       return await Database.getModel(TABLE_NAME).findOne({
@@ -59,8 +59,8 @@ class MealTemplateFoodItemMappingService {
       throw error;
     }
   };
-  
-  findAndCountAll = async ({where, order = DEFAULT_ORDER, attributes}) => {
+
+  findAndCountAll = async ({ where, order = DEFAULT_ORDER, attributes }) => {
     try {
       return await Database.getModel(TABLE_NAME).findAndCountAll({
         where,
@@ -72,7 +72,7 @@ class MealTemplateFoodItemMappingService {
       throw error;
     }
   };
-  
+
   delete = async (id) => {
     try {
       const record = await Database.getModel(TABLE_NAME).destroy({

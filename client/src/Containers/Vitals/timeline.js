@@ -1,10 +1,10 @@
-import {connect} from "react-redux";
-import {withRouter} from "react-router-dom";
+import { connect } from "react-redux";
+import { withRouter } from "react-router-dom";
 import VitalTimeline from "../../Components/Vitals/timeline";
 import {
-  getVitalTimeline,
-  editVitalResponse,
   deleteVitalResponse,
+  editVitalResponse,
+  getVitalTimeline,
 } from "../../modules/vitals";
 
 const mapStateToProps = (state) => {
@@ -13,14 +13,14 @@ const mapStateToProps = (state) => {
       visible,
       data: {
         type,
-        payload: {id, loading, canViewDetails = false} = {},
+        payload: { id, loading, canViewDetails = false } = {},
       } = {},
     },
     vitals = {},
     vital_templates = {},
     schedule_events = {},
   } = state;
-  
+
   return {
     id,
     vitals,
@@ -39,9 +39,9 @@ const mapDispatchToProps = (dispatch) => {
 };
 
 const mergeProps = (stateProps, dispatchProps, ownProps) => {
-  const {id, loading, vitals, vital_templates, vital_ids, canViewDetails} =
+  const { id, loading, vitals, vital_templates, vital_ids, canViewDetails } =
     stateProps;
-  
+
   const {
     getVitalTimeline,
     vitalResponseDrawer,
@@ -49,7 +49,7 @@ const mergeProps = (stateProps, dispatchProps, ownProps) => {
     editVitalResponse,
     deleteVitalResponse,
   } = dispatchProps;
-  
+
   return {
     id,
     vitals,

@@ -1,15 +1,15 @@
 import React from "react";
 import {
-  TABLE_DEFAULT_BLANK_FIELD,
   CONSULTATION_FEE_TYPE_TEXT,
+  TABLE_DEFAULT_BLANK_FIELD,
 } from "../../../../constant";
 
 export default (props) => {
-  const {paymentProductData} = props || {};
-  const {basic_info: {name, type = ""} = {}} = paymentProductData || {};
-  
+  const { paymentProductData } = props || {};
+  const { basic_info: { name, type = "" } = {} } = paymentProductData || {};
+
   const feeType = CONSULTATION_FEE_TYPE_TEXT[type];
-  
+
   return (
     <div className="ellipsis wp100 flex direction-column  ">
       <div className="wp100 fs16 fw600">

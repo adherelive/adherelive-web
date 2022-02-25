@@ -1,7 +1,7 @@
 "use strict";
-import {DataTypes} from "sequelize";
-import {TABLE_NAME as conditionTableName} from "./conditions";
-import {TABLE_NAME as treatmentTableName} from "./treatments";
+import { DataTypes } from "sequelize";
+import { TABLE_NAME as conditionTableName } from "./conditions";
+import { TABLE_NAME as treatmentTableName } from "./treatments";
 
 export const TABLE_NAME = "treatment_condition_mappings";
 

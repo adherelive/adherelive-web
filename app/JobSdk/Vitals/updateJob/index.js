@@ -1,11 +1,7 @@
 import VitalJob from "../";
 import moment from "moment";
 import { getFullName } from "../../../helper/common";
-import {
-  DEFAULT_PROVIDER,
-  EVENT_TYPE,
-  USER_CATEGORY,
-} from "../../../../constant";
+import { DEFAULT_PROVIDER, EVENT_TYPE } from "../../../../constant";
 
 import UserRoleService from "../../../services/userRoles/userRoles.service";
 import ProviderService from "../../../services/provider/provider.service";
@@ -19,7 +15,7 @@ class UpdateJob extends VitalJob {
   }
 
   /**
-   * 
+   *
    *  const {
       participants = [],
       actor: { id: actorId, user_role_id } = {},

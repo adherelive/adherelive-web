@@ -12,7 +12,7 @@ export default (props) => {
     uploaderData,
     documentData,
   } = props || {};
-  
+
   return (
     <Tooltip placement="bottom" title={formatMessage(messages.edit)}>
       <div
@@ -26,7 +26,7 @@ export default (props) => {
         })}
       >
         <div className="flex align-center justify-center">
-          <img src={edit_image} alt="edit button"/>
+          <img src={edit_image} alt="edit button" />
         </div>
       </div>
     </Tooltip>

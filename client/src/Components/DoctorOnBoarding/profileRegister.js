@@ -1,32 +1,14 @@
 import React, { Component, Fragment } from "react";
 import { injectIntl } from "react-intl";
-import {
-  Tabs,
-  Button,
-  Steps,
-  Col,
-  Select,
-  Input,
-  InputNumber,
-  Upload,
-  Modal,
-  TimePicker,
-  Icon,
-  message,
-  Spin,
-} from "antd";
-import SideMenu from "./sidebar";
-import { REQUEST_TYPE, PATH, USER_CATEGORY } from "../../constant";
+import { Input, message, Select, Spin, Upload } from "antd";
+import { PATH, REQUEST_TYPE, USER_CATEGORY } from "../../constant";
 import UploadSteps from "./steps";
 import { getUploadURL } from "../../Helper/urls/user";
 import { doRequest } from "../../Helper/network";
 import plus from "../../Assets/images/plus.png";
 import { withRouter } from "react-router-dom";
 // import GooglePlacesAutocomplete from 'react-google-places-autocomplete';
-import PlacesAutocomplete, {
-  geocodeByAddress,
-  getLatLng,
-} from "react-places-autocomplete";
+import PlacesAutocomplete from "react-places-autocomplete";
 import india from "../../Assets/images/india.png";
 import australia from "../../Assets/images/australia.png";
 import us from "../../Assets/images/flag.png";

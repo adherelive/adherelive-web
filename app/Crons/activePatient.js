@@ -11,7 +11,7 @@ import ScheduleEventService from "../services/scheduleEvents/scheduleEvent.servi
 // wrappers
 import ProviderWrapper from "../ApiWrapper/web/provider";
 import CarePlanWrapper from "../ApiWrapper/web/carePlan";
-import {EVENT_STATUS, EVENT_TYPE} from "../../constant";
+import { EVENT_STATUS, EVENT_TYPE } from "../../constant";
 
 const Log = new Logger("CRON - ACTIVE_PATIENT");
 
@@ -27,32 +27,32 @@ class ActivePatient {
       throw error;
     }
   };
-  
+
   getAllDoctors = async () => {
     try {
       const providers = await this.getAllProviders();
       let doctorIds = [];
       for (let i = 0; i < providers.length; i++) {
         const provider = await ProviderWrapper(providers[i]);
-        
+
         const doctors =
           (await DoctorProviderMappingService.getAllDoctorIds(
             provider.getProviderId()
           )) || [];
         doctors.forEach((doctor) => {
-          const {doctor_id} = doctor || {};
+          const { doctor_id } = doctor || {};
           doctorIds = [...doctorIds, doctor_id];
         });
       }
       // Log.debug("doctor IDS", doctorIds);
-      
+
       return doctorIds;
     } catch (error) {
       Log.debug("getAllDoctors catch error", error);
       throw error;
     }
   };
-  
+
   getAllCareplans = async () => {
     try {
       const doctorIds = await this.getAllDoctors();
@@ -60,7 +60,7 @@ class ActivePatient {
         (await CarePlanService.getMultipleCarePlanByData({
           doctor_id: doctorIds,
         })) || [];
-      
+
       let carePlanData = {};
       let carePlanIds = [];
       for (let i = 0; i < careplans.length; i++) {
@@ -69,19 +69,19 @@ class ActivePatient {
         carePlanIds.push(carePlan.getCarePlanId());
       }
       // Log.debug("careplan IDS", carePlanIds);
-      return {carePlanData, carePlanIds};
+      return { carePlanData, carePlanIds };
     } catch (error) {
       Log.debug("getAllCareplans catch error", error);
       throw error;
     }
   };
-  
+
   getEvents = async () => {
     try {
-      const {carePlanData, carePlanIds} = await this.getAllCareplans();
-      
+      const { carePlanData, carePlanIds } = await this.getAllCareplans();
+
       const eventService = new ScheduleEventService();
-      
+
       for (let id of carePlanIds) {
         const {
           appointment_ids,
@@ -90,7 +90,7 @@ class ActivePatient {
           diet_ids,
           workout_ids,
         } = carePlanData[id] || {};
-        
+
         const events =
           (await eventService.getAllEventStatusByData({
             appointment: {
@@ -118,13 +118,13 @@ class ActivePatient {
           `Total events :: ${events.length} :: for careplan id :: ${id}`
         );
         Log.debug("events", events);
-        
+
         let passedEventCount = 0;
-        
+
         let pendingEventCount = 0;
-        
+
         events.forEach((event) => {
-          const {status} = event || {};
+          const { status } = event || {};
           /*
            *
            * checking if any event is either completed or expired to count as passed.
@@ -138,7 +138,7 @@ class ActivePatient {
           ) {
             passedEventCount++;
           }
-          
+
           if (
             status === EVENT_STATUS.PENDING ||
             status === EVENT_STATUS.SCHEDULED ||
@@ -147,7 +147,7 @@ class ActivePatient {
             pendingEventCount++;
           }
         });
-        
+
         // if all events are done, then marking the existing careplan as expired or inactive patient
         if (events.length > 0 && events.length === passedEventCount) {
           await CarePlanService.updateCarePlan(
@@ -158,7 +158,7 @@ class ActivePatient {
           );
         } else if (pendingEventCount > 0) {
           // mark active again if any pending events there
-          await CarePlanService.updateCarePlan({expired_on: null}, id);
+          await CarePlanService.updateCarePlan({ expired_on: null }, id);
         }
       }
     } catch (error) {
@@ -166,7 +166,7 @@ class ActivePatient {
       throw error;
     }
   };
-  
+
   runObserver = async () => {
     try {
       await this.getEvents();

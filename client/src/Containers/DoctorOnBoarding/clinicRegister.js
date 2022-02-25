@@ -1,20 +1,20 @@
-import {withRouter} from "react-router-dom";
+import { withRouter } from "react-router-dom";
 import ClinicRegister from "../../Components/DoctorOnBoarding/clinicRegister";
-import {signOut} from "../../modules/auth";
+import { signOut } from "../../modules/auth";
 import {
-  doctorClinicRegister,
   callNewDoctorAction,
+  doctorClinicRegister,
 } from "../../modules/onBoarding";
-import {connect} from "react-redux";
-import {showVerifyModal} from "../../modules/pages/features";
+import { connect } from "react-redux";
+import { showVerifyModal } from "../../modules/pages/features";
 import {
   getDoctorDetails,
   getDoctorProfileDetails,
 } from "../../modules/doctors";
 
 const mapStateToProps = (state) => {
-  const {auth, users, doctors, onBoarding, doctor_clinics} = state;
-  const {authenticated_user, authenticated_category} = auth;
+  const { auth, users, doctors, onBoarding, doctor_clinics } = state;
+  const { authenticated_user, authenticated_category } = auth;
   return {
     authenticated_user,
     users,

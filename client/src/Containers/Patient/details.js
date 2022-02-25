@@ -1,32 +1,37 @@
 import PatientDetails from "../../Components/Patient/details";
-import {connect} from "react-redux";
-import {withRouter} from "react-router-dom";
-import {open, close} from "../../modules/drawer";
-import {getMedications} from "../../modules/medications";
+import { connect } from "react-redux";
+import { withRouter } from "react-router-dom";
+import { close, open } from "../../modules/drawer";
+import { getMedications } from "../../modules/medications";
 import {
   getAppointments,
   getAppointmentsDetails,
 } from "../../modules/appointments";
-import {requestConsent, consentVerify} from "../../modules/patients";
-import {searchMedicine} from "../../modules/medicines";
-import {getPatientCarePlanDetails} from "../../modules/carePlans";
-import {addCarePlanMedicationsAndAppointments} from "../../modules/carePlans";
-import {DRAWER} from "../../constant";
-import {openPopUp, closePopUp} from "../../modules/chat";
-import {fetchChatAccessToken} from "../../modules/twilio";
+import {
+  addCareplanForPatient,
+  consentVerify,
+  requestConsent,
+} from "../../modules/patients";
+import { searchMedicine } from "../../modules/medicines";
+import {
+  addCarePlanMedicationsAndAppointments,
+  getPatientCarePlanDetails,
+} from "../../modules/carePlans";
+import { DRAWER } from "../../constant";
+import { closePopUp, openPopUp } from "../../modules/chat";
+import { fetchChatAccessToken } from "../../modules/twilio";
 import {
   getLastVisitAlerts,
   markAppointmentComplete,
 } from "../../modules/scheduleEvents/index";
-import {addCareplanForPatient} from "../../modules/patients";
-import {storeAppointmentDocuments} from "../../modules/uploadDocuments";
-import {getSymptomTimeLine} from "../../modules/symptoms";
-import {fetchReports} from "../../modules/reports";
-import {getVitalOccurence} from "../../modules/vital_occurence";
-import {searchVital} from "../../modules/vital_templates";
-import {setUnseenNotificationCount} from "../../modules/pages/NotificationCount";
-import {resetNotificationRedirect} from "../../modules/notificationRedirect";
-import {getAllTemplatesForDoctor} from "../../modules/carePlanTemplates";
+import { storeAppointmentDocuments } from "../../modules/uploadDocuments";
+import { getSymptomTimeLine } from "../../modules/symptoms";
+import { fetchReports } from "../../modules/reports";
+import { getVitalOccurence } from "../../modules/vital_occurence";
+import { searchVital } from "../../modules/vital_templates";
+import { setUnseenNotificationCount } from "../../modules/pages/NotificationCount";
+import { resetNotificationRedirect } from "../../modules/notificationRedirect";
+import { getAllTemplatesForDoctor } from "../../modules/carePlanTemplates";
 
 const mapStateToProps = (state, ownProps) => {
   const {
@@ -57,7 +62,7 @@ const mapStateToProps = (state, ownProps) => {
     } = {},
     chats,
     drawer,
-    pages: {care_plan_template_ids = []} = {},
+    pages: { care_plan_template_ids = [] } = {},
     twilio = {},
     symptoms = {},
     schedule_events = {},
@@ -72,7 +77,7 @@ const mapStateToProps = (state, ownProps) => {
     diets = {},
     exercise_contents = {},
   } = state;
-  
+
   // const { id } = ownprops;
   const user_details = users["3"] || {};
   const {
@@ -131,15 +136,15 @@ const mapStateToProps = (state, ownProps) => {
 const mapDispatchToProps = (dispatch) => {
   return {
     openAppointmentDrawer: (payload) =>
-      dispatch(open({type: DRAWER.ADD_APPOINTMENT, payload})),
+      dispatch(open({ type: DRAWER.ADD_APPOINTMENT, payload })),
     openMReminderDrawer: (payload) =>
-      dispatch(open({type: DRAWER.ADD_MEDICATION_REMINDER, payload})),
+      dispatch(open({ type: DRAWER.ADD_MEDICATION_REMINDER, payload })),
     openVitalsDrawer: (payload) =>
-      dispatch(open({type: DRAWER.ADD_VITALS, payload})),
+      dispatch(open({ type: DRAWER.ADD_VITALS, payload })),
     openEditVitalsDrawer: (payload) =>
-      dispatch(open({type: DRAWER.EDIT_VITALS, payload})),
+      dispatch(open({ type: DRAWER.EDIT_VITALS, payload })),
     openSymptomsDrawer: (payload) =>
-      dispatch(open({type: DRAWER.SYMPTOMS, payload})),
+      dispatch(open({ type: DRAWER.SYMPTOMS, payload })),
     getMedications: (id) => dispatch(getMedications(id)),
     close: () => dispatch(close()),
     getAppointments: (id) => dispatch(getAppointments(id)),
@@ -151,9 +156,9 @@ const mapDispatchToProps = (dispatch) => {
     addCarePlanMedicationsAndAppointments: (payload, carePlanId) =>
       dispatch(addCarePlanMedicationsAndAppointments(payload, carePlanId)),
     openEditAppointmentDrawer: (payload) =>
-      dispatch(open({type: DRAWER.EDIT_APPOINTMENT, payload})),
+      dispatch(open({ type: DRAWER.EDIT_APPOINTMENT, payload })),
     openEditMedicationDrawer: (payload) =>
-      dispatch(open({type: DRAWER.EDIT_MEDICATION, payload})),
+      dispatch(open({ type: DRAWER.EDIT_MEDICATION, payload })),
     openPopUp: () => dispatch(openPopUp()),
     closePopUp: () => dispatch(closePopUp()),
     fetchChatAccessToken: (userId) => dispatch(fetchChatAccessToken(userId)),
@@ -161,15 +166,15 @@ const mapDispatchToProps = (dispatch) => {
     consentVerify: (data) => dispatch(consentVerify(data)),
     markAppointmentComplete: (id) => dispatch(markAppointmentComplete(id)),
     openAddCareplanDrawer: (payload) =>
-      dispatch(open({type: DRAWER.ADD_CAREPLAN, payload})),
+      dispatch(open({ type: DRAWER.ADD_CAREPLAN, payload })),
     addCareplanForPatient: (patient_id, data) =>
       dispatch(addCareplanForPatient(patient_id, data)),
     openEditPatientDrawer: (payload) =>
-      dispatch(open({type: DRAWER.EDIT_PATIENT, payload})),
+      dispatch(open({ type: DRAWER.EDIT_PATIENT, payload })),
     storeAppointmentDocuments: (data) =>
       dispatch(storeAppointmentDocuments(data)),
     openAddReportsDrawer: (payload) =>
-      dispatch(open({type: DRAWER.ADD_REPORT, payload})),
+      dispatch(open({ type: DRAWER.ADD_REPORT, payload })),
     getSymptomTimeLine: (patientId) => dispatch(getSymptomTimeLine(patientId)),
     fetchPatientReports: (id) => dispatch(fetchReports(id)),
     getVitalOccurence: () => dispatch(getVitalOccurence()),
@@ -177,13 +182,13 @@ const mapDispatchToProps = (dispatch) => {
     setUnseenNotificationCount: (count) =>
       dispatch(setUnseenNotificationCount(count)),
     openAddDietDrawer: (payload) =>
-      dispatch(open({type: DRAWER.ADD_DIET, payload})),
+      dispatch(open({ type: DRAWER.ADD_DIET, payload })),
     openAddWorkoutDrawer: (payload) =>
-      dispatch(open({type: DRAWER.ADD_WORKOUT, payload})),
+      dispatch(open({ type: DRAWER.ADD_WORKOUT, payload })),
     resetNotificationRedirect: () => dispatch(resetNotificationRedirect()),
     getAllTemplatesForDoctor: () => dispatch(getAllTemplatesForDoctor()),
     openAddSecondaryDoctorDrawer: (payload) =>
-      dispatch(open({type: DRAWER.ADD_SECONDARY_DOCTOR, payload})),
+      dispatch(open({ type: DRAWER.ADD_SECONDARY_DOCTOR, payload })),
   };
 };
 

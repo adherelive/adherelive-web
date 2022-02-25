@@ -1,14 +1,14 @@
 import React, { Component, Fragment } from "react";
 import {
-  Form,
-  Input,
-  Button,
-  Spin,
   Avatar,
+  Button,
+  Form,
   Icon,
-  Upload,
-  Modal,
+  Input,
   message,
+  Modal,
+  Spin,
+  Upload,
 } from "antd";
 import moment from "moment";
 import Chat from "twilio-chat";
@@ -25,17 +25,17 @@ import CallIcon from "../../Assets/images/telephone.png";
 import CallDisabledIcon from "../../Assets/images/call-disabled.png";
 import ChatMessageDetails from "../ChatPopup/chatMessageDetails";
 import Tooltip from "antd/es/tooltip";
-import { SwapOutlined, MoreOutlined } from "@ant-design/icons";
+import { MoreOutlined, SwapOutlined } from "@ant-design/icons";
 import {
+  CHAT_MESSAGE_TYPE,
   CONSULTATION_FEE_TYPE_TEXT,
-  USER_CATEGORY,
   FEATURES,
+  USER_CATEGORY,
 } from "../../constant";
 
 // import Button from "antd/es/button";
 import Menu from "antd/es/menu";
 import Dropdown from "antd/es/dropdown";
-import { CHAT_MESSAGE_TYPE } from "../../constant";
 // import { USER_ADHERE_BOT, CHAT_MESSAGE_TYPE, PARTS, PART_LIST_BACK, PART_LIST_CODES, PART_LIST_FRONT, BODY,PARTS_GRAPH,BODY_VIEW,BODY_SIDE } from "../../constant";
 import isEmpty from "../../Helper/is-empty";
 

@@ -1,7 +1,6 @@
-import {DataTypes} from "sequelize";
-import Database from "../../libs/mysql";
+import { DataTypes } from "sequelize";
 
-import {TABLE_NAME as scheduleEventTableName} from "./scheduleEvents";
+import { TABLE_NAME as scheduleEventTableName } from "./scheduleEvents";
 
 export const TABLE_NAME = "event_history";
 

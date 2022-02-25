@@ -1,11 +1,10 @@
 import express from "express";
 import Authenticated from "../middleware/auth";
 import Report from "../../../app/controllers/reports/report.controller";
-import * as validate from "./validator";
 
 const multer = require("multer");
 const storage = multer.memoryStorage();
-const upload = multer({dest: "../../../app/public/", storage: storage});
+const upload = multer({ dest: "../../../app/public/", storage: storage });
 
 const router = express.Router();
 

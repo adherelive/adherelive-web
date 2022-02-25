@@ -3,10 +3,12 @@ import Controller from "../";
 // services
 import userService from "../../services/user/user.service";
 import userRolesService from "../../services/userRoles/userRoles.service";
-import carePanService from "../../services/carePlan/carePlan.service";
 import userRoleService from "../../services/userRoles/userRoles.service";
+import carePanService from "../../services/carePlan/carePlan.service";
+import carePlanService from "../../services/carePlan/carePlan.service";
 import PaymentProductService from "../../services/paymentProducts/paymentProduct.service";
 import watchlistService from "../../services/doctorPatientWatchlist/doctorPatientWatchlist.service";
+import doctorPatientWatchlistService from "../../services/doctorPatientWatchlist/doctorPatientWatchlist.service";
 
 // wrappers
 import UserWrapper from "../../ApiWrapper/web/user";
@@ -19,17 +21,15 @@ import WatchlistWrapper from "../../ApiWrapper/web/doctorPatientWatchlist";
 
 import permissions from "../../../config/permissions";
 import * as PermissionHelper from "../../helper/userCategoryPermisssions";
-import {getLinkDetails, getUserDetails} from "./adhoc.helper";
+import { getLinkDetails, getUserDetails } from "./adhoc.helper";
 import Logger from "../../../libs/log";
-import carePlanService from "../../services/carePlan/carePlan.service";
 import userPreferenceService from "../../services/userPreferences/userPreference.service";
-import doctorPatientWatchlistService from "../../services/doctorPatientWatchlist/doctorPatientWatchlist.service";
 import QueueService from "../../services/awsQueue/queue.service";
 import patientsService from "../../services/patients/patients.service";
-import {MID_MORNING, PATIENT_MEAL_TIMINGS} from "../../../constant";
+import { MID_MORNING, PATIENT_MEAL_TIMINGS } from "../../../constant";
 import permissionService from "../../services/permission/permission.service";
 import userPermissionService from "../../services/userPermission/userPermission.service";
-import {USER_CATEGORY_ARRAY} from "../../models/users";
+import { USER_CATEGORY_ARRAY } from "../../models/users";
 
 const Log = new Logger("WEB > ADHOC > CONTROLLER");
 
@@ -37,7 +37,7 @@ class AdhocController extends Controller {
   constructor() {
     super();
   }
-  
+
   migrateAllUsersToUserRoles = async (req, res) => {
     try {
       const users = await userService.getAll();
@@ -46,10 +46,10 @@ class AdhocController extends Controller {
           const user = await UserWrapper(users[i]);
           const userId = user.getId();
           const category = user.getCategory();
-          
+
           const linkData = await getLinkDetails(category, userId);
-          
-          const {linked_id = null, linked_with = null} = linkData || {};
+
+          const { linked_id = null, linked_with = null } = linkData || {};
           const userRole = await userRolesService.create({
             id: userId,
             user_identity: userId,
@@ -58,9 +58,9 @@ class AdhocController extends Controller {
           });
         }
       }
-      
+
       // -------- update careplans for user_role_id
-      
+
       const careplans = await carePanService.getAll();
       if (careplans && careplans.length) {
         for (let i = 0; i < careplans.length; i++) {
@@ -73,7 +73,7 @@ class AdhocController extends Controller {
           if (userRole) {
             const userRoleWrapper = await UserRoleWrapper(userRole);
             const userRoleId = userRoleWrapper.getId();
-            let carePlanData = {...careplan, user_role_id: userRoleId};
+            let carePlanData = { ...careplan, user_role_id: userRoleId };
             const careplan = await carePlanService.updateCarePlan(
               carePlanData,
               carePlanId
@@ -81,9 +81,9 @@ class AdhocController extends Controller {
           }
         }
       }
-      
+
       // user preferences
-      
+
       const userPreferences = (await userPreferenceService.getAll()) || [];
       let userPreferenceArr = [];
       for (let index = 0; index < userPreferences.length; index++) {
@@ -104,34 +104,34 @@ class AdhocController extends Controller {
           user_role_id: userRole.id,
         });
       }
-      
+
       const updateResponse = await userPreferenceService.bulkUpdate({
         data: userPreferenceArr,
       });
-      
+
       //-- add test-provider record to user-pref table
-      
+
       const user = await userService.getUserData({
         email: "test-provider@mail.com",
       });
-      
+
       if (user) {
         const userWrapper = await UserWrapper(user);
         const user_identity = await userWrapper.getId();
-        
+
         const existing = await userPreferenceService.findOne({
-          where: {user_id: user_identity},
+          where: { user_id: user_identity },
         });
-        
+
         if (!existing) {
           const userRole = await userRoleService.getFirstUserRole(
             user_identity
           );
-          
+
           if (userRole) {
             const userRoleData = await UserRoleWrapper(userRole);
             const userRoleId = userRoleData.getId();
-            
+
             const newRecord = await userPreferenceService.addUserPreference({
               user_id: "5",
               details: {
@@ -142,26 +142,26 @@ class AdhocController extends Controller {
           }
         }
       }
-      
+
       // --- payment products migration
-      
+
       const paymentProductService = new PaymentProductService();
       const paymentProducts = await paymentProductService.getAll();
-      
+
       for (let index = 0; index < paymentProducts.length; index++) {
         const paymentProduct = await PaymentProductsWrapper(
           paymentProducts[index]
         );
         // categoryid --> user_id --> roleid
-        
-        const {user_id: forUserId} =
-        (await getUserDetails(
-          paymentProduct.getForUserType(),
-          paymentProduct.getForUserRoleId()
-        )) || {};
-        
+
+        const { user_id: forUserId } =
+          (await getUserDetails(
+            paymentProduct.getForUserType(),
+            paymentProduct.getForUserRoleId()
+          )) || {};
+
         let forUserRoleId = null;
-        
+
         if (forUserId) {
           forUserRoleId =
             (await userRoleService.findOne({
@@ -171,15 +171,15 @@ class AdhocController extends Controller {
               attributes: ["id"],
             })) || null;
         }
-        
-        const {user_id: creatorUserId} =
-        (await getUserDetails(
-          paymentProduct.getCreatorType(),
-          paymentProduct.getCreatorRoleId()
-        )) || {};
-        
+
+        const { user_id: creatorUserId } =
+          (await getUserDetails(
+            paymentProduct.getCreatorType(),
+            paymentProduct.getCreatorRoleId()
+          )) || {};
+
         let creatorRoleId = null;
-        
+
         if (creatorUserId) {
           creatorRoleId =
             (await userRoleService.findOne({
@@ -189,11 +189,11 @@ class AdhocController extends Controller {
               attributes: ["id"],
             })) || null;
         }
-        
+
         if (forUserRoleId && creatorRoleId) {
-          const {id: for_user_role_id = 0} = forUserRoleId || {};
-          const {id: creator_role_id = null} = creatorRoleId || {};
-          
+          const { id: for_user_role_id = 0 } = forUserRoleId || {};
+          const { id: creator_role_id = null } = creatorRoleId || {};
+
           const paymentProductUpdateResponse =
             await paymentProductService.updateDoctorProduct(
               {
@@ -204,9 +204,9 @@ class AdhocController extends Controller {
             );
         }
       }
-      
+
       // -- doctor patient watchlist
-      
+
       const allWatchlistRecords = await watchlistService.getAll();
       if (allWatchlistRecords && allWatchlistRecords.length) {
         for (let i = 0; i < allWatchlistRecords.length; i++) {
@@ -221,7 +221,7 @@ class AdhocController extends Controller {
           if (userRole) {
             const userRoleWrapper = await UserRoleWrapper(userRole);
             const userRoleId = userRoleWrapper.getId();
-            let recordData = {...watchlistWrapper, user_role_id: userRoleId};
+            let recordData = { ...watchlistWrapper, user_role_id: userRoleId };
             const updatedRecord =
               await doctorPatientWatchlistService.updateRecord(
                 recordData,
@@ -230,7 +230,7 @@ class AdhocController extends Controller {
           }
         }
       }
-      
+
       return this.raiseSuccess(
         res,
         200,
@@ -250,7 +250,7 @@ class AdhocController extends Controller {
       );
     }
   };
-  
+
   testApi = async (req, res) => {
     try {
       const {
@@ -262,7 +262,7 @@ class AdhocController extends Controller {
           userCategoryData = {},
         } = {},
       } = req;
-      
+
       return this.raiseSuccess(
         res,
         200,
@@ -280,14 +280,14 @@ class AdhocController extends Controller {
       return this.raiseServerError(res, 500, {}, "Error in test api.");
     }
   };
-  
+
   purgeSqsQueue = async (req, res) => {
     try {
-      const {body: {queue_name} = {}} = req;
-      
+      const { body: { queue_name } = {} } = req;
+
       const queueService = new QueueService();
       const isDelete = await queueService.purgeQueue(queue_name);
-      
+
       if (isDelete) {
         return this.raiseSuccess(res, 200, {}, "queue cleared successfully");
       } else {
@@ -303,36 +303,36 @@ class AdhocController extends Controller {
       return this.raiseServerError(res);
     }
   };
-  
+
   updatePatientTimings = async (req, res) => {
     try {
       const allPatients = (await patientsService.getAll()) || [];
-      
+
       if (allPatients.length > 0) {
         for (let index = 0; index < allPatients.length; index++) {
-          const {user_id} = allPatients[index] || {};
-          
+          const { user_id } = allPatients[index] || {};
+
           const patientPreference = await userPreferenceService.findOne({
             where: {
               user_id,
             },
           });
-          
-          const {id: preferenceId, details: {timings} = {}} =
-          patientPreference || {};
-          
-          const {value} = PATIENT_MEAL_TIMINGS[MID_MORNING];
-          
-          const newTimings = {...timings, [MID_MORNING]: {value}};
-          
+
+          const { id: preferenceId, details: { timings } = {} } =
+            patientPreference || {};
+
+          const { value } = PATIENT_MEAL_TIMINGS[MID_MORNING];
+
+          const newTimings = { ...timings, [MID_MORNING]: { value } };
+
           await userPreferenceService.updateUserPreferenceData(
             {
-              details: {timings: newTimings},
+              details: { timings: newTimings },
             },
             preferenceId
           );
         }
-        
+
         return this.raiseSuccess(
           res,
           200,
@@ -352,49 +352,49 @@ class AdhocController extends Controller {
       return this.raiseServerError(res);
     }
   };
-  
+
   updatePermissions = async (req, res) => {
-    const {raiseSuccess, raiseServerError} = this;
+    const { raiseSuccess, raiseServerError } = this;
     try {
       let permissionsData = [];
-      
+
       let userPermissionsData = [];
-      
+
       for (const feature of Object.keys(permissions)) {
         const featurePermissions = permissions[feature];
-        
+
         for (const permission of Object.keys(featurePermissions)) {
           permissionsData.push({
             type: featurePermissions[permission],
           });
         }
       }
-      
+
       // delete previous user permissions
       const isPreviousUserPermissionsDeleted =
         await userPermissionService.deleteAll();
-      
+
       // delete previous permissions
       if (isPreviousUserPermissionsDeleted) {
         const isPreviousPermissionDeleted = await permissionService.deleteAll();
-        
+
         if (isPreviousPermissionDeleted) {
           // bulkCreate new permissions
           const createdPermissions =
             (await permissionService.bulkCreate(permissionsData)) || [];
-          
+
           if (createdPermissions.length > 0) {
             for (const category of USER_CATEGORY_ARRAY) {
               const categoryPermissions =
                 PermissionHelper.getPermissions(category) || [];
-              
+
               Log.debug("102398123 updatePermissions", {
                 category,
                 categoryPermissions,
               });
-              
+
               for (let createdPermission of createdPermissions) {
-                const {id, type} = createdPermission || {};
+                const { id, type } = createdPermission || {};
                 if (categoryPermissions.includes(type)) {
                   console.log("1293023 createdPermission", {
                     category,
@@ -408,12 +408,12 @@ class AdhocController extends Controller {
                 }
               }
             }
-            
+
             // bulkCreate new user permissions
             const createdUserPermissions =
               (await userPermissionService.bulkCreate(userPermissionsData)) ||
               [];
-            
+
             if (createdUserPermissions.length > 0) {
               return raiseSuccess(
                 res,
@@ -430,28 +430,28 @@ class AdhocController extends Controller {
       return raiseServerError(res);
     }
   };
-  
+
   updateChannels = async (req, res) => {
-    const {raiseSuccess, raiseServerError} = this;
+    const { raiseSuccess, raiseServerError } = this;
     try {
       const channelSeparator = process.config.twilio.CHANNEL_SERVER;
-      
+
       const careplans = (await carePlanService.getAll()) || [];
-      
+
       if (careplans.length) {
         for (let index = 0; index < careplans.length; index++) {
-          const {id, patient_id, user_role_id} = careplans[index] || {};
-          
+          const { id, patient_id, user_role_id } = careplans[index] || {};
+
           Log.debug(
             "1231023 ",
             `${user_role_id}-${channelSeparator}-${patient_id}`
           );
           await carePlanService.updateCarePlan(
-            {channel_id: `${user_role_id}-${channelSeparator}-${patient_id}`},
+            { channel_id: `${user_role_id}-${channelSeparator}-${patient_id}` },
             id
           );
         }
-        
+
         return raiseSuccess(res, 200, {}, "Channels updated successfully");
       }
     } catch (error) {

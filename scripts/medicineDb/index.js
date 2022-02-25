@@ -1,12 +1,11 @@
 import Papa from "papaparse";
 import fs from "fs";
 import path from "path";
+import medicineService from "../../app/services/medicine/medicine.service";
 
 const Config = require("../../config/config");
 
 Config();
-
-import medicineService from "../../app/services/medicine/medicine.service";
 
 console.log("process.config.db.name --> ", process.config.db.name);
 

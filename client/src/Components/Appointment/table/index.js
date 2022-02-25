@@ -1,6 +1,6 @@
-import React, {Component} from "react";
-import {injectIntl} from "react-intl";
-import {Table, Icon} from "antd";
+import React, { Component } from "react";
+import { injectIntl } from "react-intl";
+import { Icon, Table } from "antd";
 import generateRow from "./dataRow";
 import getColumn from "./header";
 // import { getAppointmentsForPatientUrl } from "../../../Helper/url/appointments";
@@ -11,7 +11,7 @@ class PatientTable extends Component {
     super(props);
     this.state = {};
   }
-  
+
   // onRow = (record, rowIndex) => {
   //   const { onRowClick } = this;
   //   const { key } = record;
@@ -19,21 +19,21 @@ class PatientTable extends Component {
   //     onClick: onRowClick(key)
   //   };
   // };
-  
+
   onSelectChange = (selectedRowKeys) => {
-    this.setState({selectedRows: selectedRowKeys});
+    this.setState({ selectedRows: selectedRowKeys });
   };
-  
+
   getLoadingComponent = () => {
-    const antIcon = <Icon type="loading" style={{fontSize: 24}} spin/>;
+    const antIcon = <Icon type="loading" style={{ fontSize: 24 }} spin />;
     return {
       indicator: antIcon,
     };
   };
-  
+
   getDataSource = () => {
-    const {appointments, users, doctors, patients} = this.props;
-    
+    const { appointments, users, doctors, patients } = this.props;
+
     return Object.keys(appointments).map((id) => {
       return generateRow({
         id,
@@ -44,22 +44,22 @@ class PatientTable extends Component {
       });
     });
   };
-  
+
   formatMessage = (data) => this.intl.formatMessage(data);
-  
+
   render() {
-    const {onRow, onSelectChange, getLoadingComponent, getDataSource} = this;
-    
+    const { onRow, onSelectChange, getLoadingComponent, getDataSource } = this;
+
     // const rowSelection = {
     //   onChange: onSelectChange
     // };
-    
-    const {loading, intl: {formatMessage} = {}} = this.props;
-    
+
+    const { loading, intl: { formatMessage } = {} } = this.props;
+
     const locale = {
       emptyText: this.formatMessage(messages.emptyAppointmentTable),
     };
-    
+
     return (
       <Table
         // onRow={onRow}
@@ -72,7 +72,7 @@ class PatientTable extends Component {
           className: "pointer",
         })}
         dataSource={getDataSource()}
-        scroll={{x: 1600}}
+        scroll={{ x: 1600 }}
         // pagination={{ position: pagination_bottom ? "bottom" : "top" }}
         // pagination={{
         //   position: "bottom"

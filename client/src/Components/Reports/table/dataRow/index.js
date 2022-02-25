@@ -1,10 +1,10 @@
-import {TABLE_COLUMN, formatReportData} from "../helper";
+import { formatReportData, TABLE_COLUMN } from "../helper";
 
 export default (data) => {
-  const {formatMessage, openEditDrawer, id, openModal} = data;
+  const { formatMessage, openEditDrawer, id, openModal } = data;
   const formattedData = formatReportData(data);
-  const {reportData, uploaderData, documentData} = formattedData || {};
-  
+  const { reportData, uploaderData, documentData } = formattedData || {};
+
   return {
     key: id,
     [TABLE_COLUMN.NAME.dataIndex]: {

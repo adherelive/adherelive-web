@@ -2,7 +2,7 @@ export default class ChatJob {
   constructor(data) {
     this._data = data;
   }
-  
+
   getData = () => {
     return this._data;
   };

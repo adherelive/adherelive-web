@@ -1,15 +1,13 @@
 import React from "react";
-import {Icon} from "antd";
 
 import {
-  MEDICATION_TIMING,
   DAYS_TEXT_NUM_SHORT,
-  EVENT_TYPE,
+  MEDICATION_TIMING,
   MEDICATION_TIMING_HOURS,
   MEDICATION_TIMING_MINUTES,
-  TABLET,
-  SYRUP,
   MEDICINE_FORM_TYPE,
+  SYRUP,
+  TABLET,
 } from "../../../../constant";
 import moment from "moment";
 import TabletIcon from "../../../../Assets/images/tabletIcon3x.png";
@@ -23,18 +21,18 @@ export default (props) => {
     medicines = {},
   } = props;
   //   const { medicationsData : { basic_info: { medicine_id  = '' } = {} } = {}  , template_medication_ids } = props || {};
-  
+
   let meds = [];
   let medCount = 0;
   let medMore = 0;
-  
+
   for (let key of template_medication_ids) {
     if (medCount === 1) {
       medMore = template_medication_ids.length - medCount;
       break;
     }
     let {
-      basic_info: {medicine_id = ""} = {},
+      basic_info: { medicine_id = "" } = {},
       schedule_data: {
         when_to_take = "",
         start_date = moment(),
@@ -43,8 +41,8 @@ export default (props) => {
       } = {},
     } = medicationsData[key];
     const medicineType = MEDICINE_FORM_TYPE[medicine_type] || "";
-    const {basic_info: {name: medicine = ""} = {}} =
-    medicines[medicine_id] || {};
+    const { basic_info: { name: medicine = "" } = {} } =
+      medicines[medicine_id] || {};
     when_to_take.sort();
     let nextDueTime = moment().format("HH:MM A");
     let closestWhenToTake = 0;
@@ -52,7 +50,7 @@ export default (props) => {
     const date = moment();
     const dow = date.day();
     let dayNum = dow;
-    
+
     if (
       typeof DAYS_TEXT_NUM_SHORT[dow] !== "undefined" &&
       !repeat_days.includes(DAYS_TEXT_NUM_SHORT[dow])
@@ -60,7 +58,7 @@ export default (props) => {
       while (
         typeof DAYS_TEXT_NUM_SHORT[dayNum] !== "undefined" &&
         !repeat_days.includes(DAYS_TEXT_NUM_SHORT[dayNum])
-        ) {
+      ) {
         if (dayNum > 7) {
           dayNum = 1;
         } else {
@@ -69,7 +67,7 @@ export default (props) => {
       }
       start_date = moment().isoWeekday(dayNum);
     }
-    
+
     if (moment(start_date).isSame(moment(), "D")) {
       for (let wtt of when_to_take) {
         let newMinDiff = moment()
@@ -82,8 +80,8 @@ export default (props) => {
           minDiff === 0 && newMinDiff > 0
             ? newMinDiff
             : newMinDiff > 0 && newMinDiff < minDiff
-              ? newMinDiff
-              : minDiff;
+            ? newMinDiff
+            : minDiff;
         closestWhenToTake = minDiff === newMinDiff ? wtt : closestWhenToTake;
       }
     }
@@ -102,9 +100,9 @@ export default (props) => {
       }`;
     }
     // nextDueTime = MEDICATION_TIMING[closestWhenToTake ? closestWhenToTake : '4'].time;
-    
+
     // let nextDue = moment(start_date).isSame(moment(), 'D') ? `Today at ${nextDueTime}` : `${moment(start_date).format('D MMM')} at ${MEDICATION_TIMING[when_to_take[0]].time}`;
-    
+
     meds.push(
       <div className="flex wp100 align-center " key={key}>
         <div className="flex direction-column mb10">
@@ -116,8 +114,8 @@ export default (props) => {
                   medicine_type === TABLET
                     ? TabletIcon
                     : medicine_type === SYRUP
-                      ? SyrupIcon
-                      : InjectionIcon
+                    ? SyrupIcon
+                    : InjectionIcon
                 }
                 className={"medication-image-tablet"}
               />
@@ -127,17 +125,17 @@ export default (props) => {
             {medTimingsToShow}
             {more > 0 ? `+${more} more` : ""}
           </div>
-          
+
           {/* <div className=''>{`Next due: ${nextDue}`}</div> */}
         </div>
       </div>
     );
     medCount += 1;
   }
-  
+
   if (medMore > 0) {
     meds.push(<div className="fs16 fw700">{`+ ${medMore} more`}</div>);
   }
-  
+
   return meds;
 };

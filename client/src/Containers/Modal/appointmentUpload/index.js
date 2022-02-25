@@ -1,8 +1,8 @@
-import {connect} from "react-redux";
-import {withRouter} from "react-router-dom";
+import { connect } from "react-redux";
+import { withRouter } from "react-router-dom";
 import {
-  uploadAppointmentDocs,
   deleteAppointmentDocs,
+  uploadAppointmentDocs,
 } from "../../../modules/uploadDocuments";
 import AppointmentUpload from "../../../Components/Modal/appointmentUpload";
 
@@ -12,7 +12,7 @@ const mapStateToProps = (state) => {
     upload_documents = {},
     schedule_events = {},
   } = state;
-  
+
   return {
     appointments,
     upload_documents,
@@ -34,11 +34,11 @@ const mergeProps = (stateProps, dispatchProps, ownProps) => {
     upload_documents = {},
     schedule_events = {},
   } = stateProps;
-  
-  const {uploadAppointmentDocs, deleteAppointmentDocs} = dispatchProps;
-  
-  const {appointmentId, visible, onCancel} = ownProps;
-  
+
+  const { uploadAppointmentDocs, deleteAppointmentDocs } = dispatchProps;
+
+  const { appointmentId, visible, onCancel } = ownProps;
+
   return {
     upload_documents,
     schedule_events,

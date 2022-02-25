@@ -1,7 +1,7 @@
 import {
-  USER_CATEGORY,
   ACTIVITY_TYPE,
   APPOINTMENT_TYPE,
+  USER_CATEGORY,
 } from "../../../constant";
 import messages from "./message";
 

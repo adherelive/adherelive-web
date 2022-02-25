@@ -6,28 +6,24 @@ import RazorpayService from "../../../services/razorpay/razorpay.service";
 import TransactionService from "../../../services/transactions/transaction.service";
 import SubscriptionService from "../../../services/subscriptions/subscription.service";
 import accountDetailService from "../../../services/accountDetails/accountDetails.service";
-import doctorProviderMappingService from "../../../services/doctorProviderMapping/doctorProviderMapping.service";
 import userRolesService from "../../../services/userRoles/userRoles.service";
 
 // WRAPPERS ...
 import PaymentProductWrapper from "../../../ApiWrapper/mobile/paymentProducts";
 import TransactionWrapper from "../../../ApiWrapper/mobile/transactions";
-import DoctorWrapper from "../../../ApiWrapper/mobile/doctor";
 import SubscriptionWrapper from "../../../ApiWrapper/mobile/subscriptions";
 import AccountDetailsWrapper from "../../../ApiWrapper/mobile/accountDetails";
-import DoctorProviderMappingWrapper from "../../../ApiWrapper/web/doctorProviderMapping";
 // used for web as no ui for provider on mobile
-import ProviderWrapper from "../../../ApiWrapper/web/provider";
 
 // MODELS ...
-import {CHECKOUT, STATUS, UPI} from "../../../models/transactions";
+import { CHECKOUT, STATUS, UPI } from "../../../models/transactions";
 
 // HELPERS ...
 import Logger from "../../../../libs/log";
-import {generateTransactionId} from "../../../helper/payment";
+import { generateTransactionId } from "../../../helper/payment";
 import * as TransactionHelper from "./helper";
-import {USER_CATEGORY} from "../../../../constant";
-import {PAYMENT_TYPE} from "../../../models/paymentProducts";
+import { USER_CATEGORY } from "../../../../constant";
+import { PAYMENT_TYPE } from "../../../models/paymentProducts";
 
 const Log = new Logger("TRANSACTIONS > MOBILE > CONTROLLER");
 
@@ -35,24 +31,24 @@ class TransactionController extends Controller {
   constructor() {
     super();
   }
-  
+
   createOrder = async (req, res) => {
-    const {raiseSuccess, raiseClientError, raiseServerError} = this;
+    const { raiseSuccess, raiseClientError, raiseServerError } = this;
     try {
       const {
-        body: {payment_product_id, currency, isUpi = false},
-        userDetails: {userRoleId, userData: {category} = {}} = {},
+        body: { payment_product_id, currency, isUpi = false },
+        userDetails: { userRoleId, userData: { category } = {} } = {},
       } = req;
-      
+
       const paymentProduct = await PaymentProductWrapper({
         id: payment_product_id,
       });
-      
+
       const transactionService = new TransactionService();
-      
+
       let requestorId = paymentProduct.getCreatorRoleId();
       let requestorType = paymentProduct.getCreatorType();
-      
+
       if (isUpi) {
         const generateTransaction = await transactionService.createTransaction({
           payment_product_id,
@@ -67,26 +63,26 @@ class TransactionController extends Controller {
           //     order_id
           // },
         });
-        
+
         const transactions = await TransactionWrapper({
           data: generateTransaction,
         });
-        
+
         const requestor_id = transactions.getRequestorId();
         const requestorRole =
           (await userRolesService.findOne({
-            where: {id: requestor_id},
+            where: { id: requestor_id },
             attributes: ["user_identity"],
           })) || null;
-        
-        const {user_identity = null} = requestorRole || {};
+
+        const { user_identity = null } = requestorRole || {};
         const accountDetails =
           await accountDetailService.getCurrentAccountByUserId(user_identity);
         const accountDetialsWrapper = await AccountDetailsWrapper(
           accountDetails
         );
         const upi_id = accountDetialsWrapper.getUpi();
-        
+
         return raiseSuccess(
           res,
           200,
@@ -104,17 +100,17 @@ class TransactionController extends Controller {
         );
       } else {
         // razorpay order create here
-        
+
         const razorpayService = new RazorpayService();
         const order = await razorpayService.createOrder({
           currency: process.config.app.default_currency,
           amount: paymentProduct.getAmount() * 100,
         });
-        
-        const {error = null, id} = order || {};
+
+        const { error = null, id } = order || {};
         if (!error) {
           // transaction create here
-          
+
           const generateTransaction =
             await transactionService.createTransaction({
               payment_product_id,
@@ -129,7 +125,7 @@ class TransactionController extends Controller {
                 order_id: id,
               },
             });
-          
+
           const transactions = await TransactionWrapper({
             data: generateTransaction,
           });
@@ -164,13 +160,13 @@ class TransactionController extends Controller {
       return raiseServerError(res);
     }
   };
-  
+
   processTransaction = async (req, res) => {
-    const {raiseSuccess, raiseClientError, raiseServerError} = this;
+    const { raiseSuccess, raiseClientError, raiseServerError } = this;
     try {
       Log.info(`PARAMS : id : ${req.params.id}`);
       const {
-        params: {id} = {},
+        params: { id } = {},
         body: {
           transaction_response,
           isUpi = false,
@@ -179,15 +175,15 @@ class TransactionController extends Controller {
         } = {},
         userDetails: {
           userId,
-          userData: {category} = {},
+          userData: { category } = {},
           userCategoryId,
           userRoleId,
         } = {},
       } = req;
-      const oldTransaction = await TransactionWrapper({id});
-      
+      const oldTransaction = await TransactionWrapper({ id });
+
       const transactionService = new TransactionService();
-      
+
       if (oldTransaction.getMode() === UPI) {
         const updateTransaction = await transactionService.updateTransaction(
           {
@@ -199,9 +195,9 @@ class TransactionController extends Controller {
           },
           id
         );
-        
-        const transaction = await TransactionWrapper({id});
-        
+
+        const transaction = await TransactionWrapper({ id });
+
         return raiseSuccess(
           res,
           200,
@@ -214,14 +210,14 @@ class TransactionController extends Controller {
           "UPI Payment completed successfully"
         );
       }
-      
+
       const isVerified = TransactionHelper.verifyTransaction(
         transaction_response,
         oldTransaction
       );
-      
+
       Log.info(`transaction verified : ${isVerified}`);
-      
+
       if (isVerified) {
         const updateTransaction = await transactionService.updateTransaction(
           {
@@ -233,32 +229,32 @@ class TransactionController extends Controller {
           },
           id
         );
-        
+
         // if subscription based payment made -> add subscription entry for patient with next due
         // transaction -> payment_product -> (type) == recurring -> check for subscription -> existing? -> Y (update next due) N (create new subscription)
-        
+
         Log.debug("After update transaction -->", updateTransaction);
-        
-        const transaction = await TransactionWrapper({id});
-        
-        const {payment_products, payment_product_id} =
+
+        const transaction = await TransactionWrapper({ id });
+
+        const { payment_products, payment_product_id } =
           await transaction.getReferenceInfo();
-        
-        const {basic_info: {type, amount: paymentAmount} = {}} =
-        payment_products[payment_product_id] || {};
-        
+
+        const { basic_info: { type, amount: paymentAmount } = {} } =
+          payment_products[payment_product_id] || {};
+
         let subscriptionData = {};
-        
+
         if (type === PAYMENT_TYPE.RECURRING) {
           const subscriptionService = new SubscriptionService();
-          
+
           // check if subscription already exists
           const subscriptionExists = await subscriptionService.getByData({
             payment_product_id,
             subscriber_id: userRoleId,
             subscriber_type: category,
           });
-          
+
           if (subscriptionExists) {
             // update subscription
             const updateSubscription =
@@ -269,9 +265,9 @@ class TransactionController extends Controller {
                   .add(1, "month")
                   .toISOString(),
               });
-            
+
             Log.debug("updateSubscription --> ", updateSubscription);
-            
+
             const subscriptions = await SubscriptionWrapper({
               id: subscriptionExists.id,
             });
@@ -291,7 +287,7 @@ class TransactionController extends Controller {
                   .add(1, "month")
                   .toISOString(),
               });
-            
+
             const subscriptions = await SubscriptionWrapper({
               data: addSubscription,
             });
@@ -299,9 +295,9 @@ class TransactionController extends Controller {
               subscriptions.getBasicInfo();
           }
         }
-        
+
         let accountUserId = null;
-        
+
         switch (transaction.getRequestorType()) {
           case USER_CATEGORY.DOCTOR:
           case USER_CATEGORY.HSP:
@@ -309,25 +305,25 @@ class TransactionController extends Controller {
             const requestor_id = transaction.getRequestorId();
             const requestorRole =
               (await userRolesService.findOne({
-                where: {id: requestor_id},
+                where: { id: requestor_id },
                 attributes: ["user_identity"],
               })) || null;
-            const {user_identity = null} = requestorRole || {};
+            const { user_identity = null } = requestorRole || {};
             accountUserId = user_identity;
             break;
           default:
             break;
         }
-        
+
         const accountDetails =
           await accountDetailService.getCurrentAccountByUserId(accountUserId);
         const account = await AccountDetailsWrapper(accountDetails);
         const accountId = account.getRazorpayAccountId();
-        
+
         if (accountId) {
           // TODO: make payment to doctor or provider account
           // direct transfer (https://razorpay.com/docs/api/route/#direct-transfers)
-          
+
           const razorpayService = new RazorpayService();
           const transfer = await razorpayService.directTransfer({
             account: accountId,
@@ -336,10 +332,10 @@ class TransactionController extends Controller {
           });
         } else {
           // todo: method to notify doctor about the same
-          
+
           return raiseSuccess(res, 200, {}, "Payment made successfully");
         }
-        
+
         return raiseSuccess(
           res,
           200,
@@ -362,29 +358,29 @@ class TransactionController extends Controller {
       return raiseServerError(res);
     }
   };
-  
+
   updateTransaction = async (req, res) => {
-    const {raiseSuccess, raiseClientError, raiseServerError} = this;
+    const { raiseSuccess, raiseClientError, raiseServerError } = this;
     try {
       Log.info(`PARAMS : id : ${req.params.id}`);
       const {
-        params: {id} = {},
-        body: {transaction_response} = {},
+        params: { id } = {},
+        body: { transaction_response } = {},
         userDetails: {
           userId,
-          userData: {category} = {},
+          userData: { category } = {},
           userCategoryId,
         } = {},
       } = req;
-      const oldTransaction = await TransactionWrapper({id});
-      
+      const oldTransaction = await TransactionWrapper({ id });
+
       const isVerified = TransactionHelper.verifyTransaction(
         transaction_response,
         oldTransaction
       );
-      
+
       Log.info(`transaction verified : ${isVerified}`);
-      
+
       if (isVerified) {
         const transactionService = new TransactionService();
         const updateTransaction = await transactionService.updateTransaction(
@@ -397,13 +393,13 @@ class TransactionController extends Controller {
           },
           id
         );
-        
+
         Log.debug("After update transaction -->", updateTransaction);
-        
+
         // TODO: make payment to doctor or provider account
         // direct transfer (https://razorpay.com/docs/api/route/#direct-transfers)
-        
-        const transaction = await TransactionWrapper({id});
+
+        const transaction = await TransactionWrapper({ id });
         return raiseSuccess(
           res,
           200,

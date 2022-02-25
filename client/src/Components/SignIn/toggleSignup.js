@@ -1,27 +1,27 @@
-import React, {Component} from "react";
-import {message} from "antd";
-import {Spring} from "react-spring/renderprops";
+import React, { Component } from "react";
+import { message } from "antd";
+import { Spring } from "react-spring/renderprops";
 import SignUpForm from "./signUp";
 
 import rightArrow from "../../Assets/images/next.png";
-import {PATH} from "../../constant";
+import { PATH } from "../../constant";
 
-import {injectIntl} from "react-intl";
+import { injectIntl } from "react-intl";
 import messages from "./message";
 
 class ToggleSignUp extends Component {
   constructor(props) {
     super(props);
   }
-  
+
   async componentDidMount() {
-    const {match: {params = {}} = {}, history} = this.props;
-    const {link = ""} = params;
-    const {formatMessage} = this;
+    const { match: { params = {} } = {}, history } = this.props;
+    const { link = "" } = params;
+    const { formatMessage } = this;
     if (link) {
-      const {verifyUser} = this.props;
+      const { verifyUser } = this.props;
       let response = await verifyUser(link);
-      const {status} = response;
+      const { status } = response;
       if (!status) {
         message.error(formatMessage(messages.linkExpired));
       } else {
@@ -29,24 +29,24 @@ class ToggleSignUp extends Component {
       }
     }
   }
-  
+
   formatMessage = (data) => this.props.intl.formatMessage(data);
-  
+
   redirectToForgotPassword = () => {
-    const {history} = this.props;
+    const { history } = this.props;
     history.push(PATH.FORGOT_PASSWORD);
   };
-  
+
   render() {
-    const {signUp} = this.props;
-    const {formatMessage} = this;
+    const { signUp } = this.props;
+    const { formatMessage } = this;
     return (
       <div className="center-container">
         <div className="form-background-box">
           <Spring
-            from={{opacity: 0}}
-            to={{opacity: 1}}
-            config={{delay: 200, duration: 500}}
+            from={{ opacity: 0 }}
+            to={{ opacity: 1 }}
+            config={{ delay: 200, duration: 500 }}
           >
             {(props) => (
               <div
@@ -62,16 +62,16 @@ class ToggleSignUp extends Component {
                             {formatMessage(messages.nowAvailable)}
                           </div>
                         </div>
-                        
+
                         <div className="fs18 medium text-white ">
                           {formatMessage(messages.customDashboard)}
                         </div>
-                        
+
                         <div className="fs12 text-white mt4 ">
                           {formatMessage(messages.metrics)}
                         </div>
                       </div>
-                      
+
                       <div className="wp100 ">
                         <div className="flex direction-row-reverse">
                           <div className="login-text">
@@ -82,12 +82,12 @@ class ToggleSignUp extends Component {
                                 Remote Care Enablement "For the Provider, by the
                                 Provider, to their Patients"{" "}
                               </b>{" "}
-                              <br/>
+                              <br />
                               <b>
                                 {" "}
                                 Subscription based health care service delivery.{" "}
                               </b>
-                              <br/> <br/>{" "}
+                              <br /> <br />{" "}
                             </div>
                           </div>
                         </div>
@@ -96,8 +96,8 @@ class ToggleSignUp extends Component {
                         <div className="dark-sky-blue fs18 medium mr4">
                           {formatMessage(messages.learnMore)}
                         </div>
-                        
-                        <img src={rightArrow} height={14} width={14}/>
+
+                        <img src={rightArrow} height={14} width={14} />
                       </div>
                     </div>
                   </div>
@@ -106,10 +106,10 @@ class ToggleSignUp extends Component {
             )}
           </Spring>
         </div>
-        
+
         <Spring
-          from={{right: "15%", opacity: 0}}
-          to={{right: "60%", opacity: 1}}
+          from={{ right: "15%", opacity: 0 }}
+          to={{ right: "60%", opacity: 1 }}
         >
           {(props) => (
             <div className="form-container" style={props}>
@@ -119,8 +119,8 @@ class ToggleSignUp extends Component {
               <div className="mb12 fs14  flex direction-column tal">
                 {formatMessage(messages.continue)}
               </div>
-              
-              <SignUpForm signUp={signUp}/>
+
+              <SignUpForm signUp={signUp} />
               <div className="flex direction-column justify-space-between align-center"></div>
             </div>
           )}

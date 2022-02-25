@@ -1,8 +1,8 @@
 "use strict";
-import {DataTypes} from "sequelize";
-import {TABLE_NAME as exerciseDetailTableName} from "./exerciseDetails";
-import {TABLE_NAME as workoutTemplateExerciseMappingTableName} from "./workoutTemplateExerciseMapping";
-import {USER_CATEGORY} from "../../constant";
+import { DataTypes } from "sequelize";
+import { TABLE_NAME as exerciseDetailTableName } from "./exerciseDetails";
+import { TABLE_NAME as workoutTemplateExerciseMappingTableName } from "./workoutTemplateExerciseMapping";
+import { USER_CATEGORY } from "../../constant";
 
 export const TABLE_NAME = "workout_templates";
 

@@ -1,4 +1,4 @@
-import {combineReducers} from "redux";
+import { combineReducers } from "redux";
 import paginated_all_patients from "./allPatients";
 import paginated_watchlist_patients from "./watchlistedPatients";
 

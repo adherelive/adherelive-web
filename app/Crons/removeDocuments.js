@@ -9,7 +9,6 @@ import {
 import * as UploadHelper from "./helper";
 
 // SERVICES ---------------
-
 import documentService from "../services/uploadDocuments/uploadDocuments.service";
 
 const AWS_FOLDER_NAME = {
@@ -28,14 +27,14 @@ class RemoveDocuments {
     } else {
       isFolderEmpty = await this.isDirEmpty(path);
     }
-    
+
     return !isFolderEmpty;
   };
-  
+
   isDirEmpty = async (dirname) => {
     return (await fs.readdirSync(dirname).length) === 0;
   };
-  
+
   getAWSFolderName = (path) => {
     switch (path) {
       case PRESCRIPTION_PDF_FOLDER:
@@ -44,10 +43,10 @@ class RemoveDocuments {
         return AWS_FOLDER_NAME.DANGLING;
     }
   };
-  
+
   readDirectory = (path) => {
     try {
-      const {readFiles, getAWSFolderName} = this;
+      const { readFiles, getAWSFolderName } = this;
       const upload = path === PRESCRIPTION_PDF_FOLDER ? true : false;
       const uploadFolderName = getAWSFolderName(path);
       fs.readdir(path, function (err, files) {
@@ -77,11 +76,11 @@ class RemoveDocuments {
       Log.debug("ERROR: in reading directory: ", error);
     }
   };
-  
+
   readFiles = (file, fileName, upload, awsFolder) => {
     try {
       Log.info(`File got to read is: file = ${file}, fileName = ${fileName}`);
-      const {deleteFile, uploadOnAWS} = this;
+      const { deleteFile, uploadOnAWS } = this;
       fs.readFile(file, function (err, data) {
         if (err) {
           throw err;
@@ -95,14 +94,14 @@ class RemoveDocuments {
           }
           uploadOnAWS(data, fileName, subfolderName, awsFolder);
         }
-        
+
         deleteFile(file);
       });
     } catch (error) {
       Log.debug("ERROR: in reading file: ", error);
     }
   };
-  
+
   uploadOnAWS = async (buffer, fileName, id, folder) => {
     try {
       const fileUrl = await UploadHelper.uploadDocument({
@@ -112,7 +111,7 @@ class RemoveDocuments {
         folder,
         doHashing: id !== AWS_FOLDER_NAME.OTHERS ? true : false,
       });
-      
+
       if (id !== AWS_FOLDER_NAME.OTHERS) {
         const prescriptionDoc = await documentService.addDocument({
           parent_type: DOCUMENT_PARENT_TYPE.PRESCRIPTION_PDF,
@@ -125,7 +124,7 @@ class RemoveDocuments {
       Log.debug("ERROR: in uploading file on aws: ", error);
     }
   };
-  
+
   deleteFile = (path) => {
     try {
       fs.unlink(path, function (err) {
@@ -135,27 +134,27 @@ class RemoveDocuments {
       Log.debug("ERROR: in deleting file: ", error);
     }
   };
-  
+
   runObserver = async () => {
     try {
       Log.info("running REMOVE_DOCUMENTS cron");
-      const {checkIfAnyLocalDocumentExists} = this;
-      
+      const { checkIfAnyLocalDocumentExists } = this;
+
       const prescriptionPdfsPresent = await checkIfAnyLocalDocumentExists(
         PRESCRIPTION_PDF_FOLDER
       );
       const s3ImagesPresent = await checkIfAnyLocalDocumentExists(
         S3_DOWNLOAD_FOLDER
       );
-      
+
       Log.info(
         `Check values are: prescriptionPdfsPresent = ${prescriptionPdfsPresent} s3ImagesPresent = ${s3ImagesPresent}`
       );
-      
+
       if (prescriptionPdfsPresent) {
         this.readDirectory(PRESCRIPTION_PDF_FOLDER);
       }
-      
+
       if (s3ImagesPresent) {
         this.readDirectory(S3_DOWNLOAD_FOLDER);
       }

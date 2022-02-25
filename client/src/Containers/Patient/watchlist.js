@@ -1,8 +1,8 @@
-import {connect} from "react-redux";
+import { connect } from "react-redux";
 import PatientTable from "../../Components/Patient/table";
-import {withRouter} from "react-router-dom";
-import {open} from "../../modules/drawer";
-import {DRAWER} from "../../constant";
+import { withRouter } from "react-router-dom";
+import { open } from "../../modules/drawer";
+import { DRAWER } from "../../constant";
 import {
   addToWatchlist,
   removePatientFromWatchlist,
@@ -16,15 +16,15 @@ const mapStateToProps = (state) => {
     treatments = {},
     conditions = {},
     severity = {},
-    pages: {patient_ids = [], chat_ids = []} = {},
+    pages: { patient_ids = [], chat_ids = [] } = {},
     chats = {},
     users,
-    auth: {authPermissions = [], authenticated_user} = {},
+    auth: { authPermissions = [], authenticated_user } = {},
     care_plans,
   } = state;
-  
-  const {watchlist_patient_ids = []} = Object.values(doctors)[0] || {};
-  
+
+  const { watchlist_patient_ids = [] } = Object.values(doctors)[0] || {};
+
   const patients = Object.keys(temp_patients)
     .filter((key) => watchlist_patient_ids.includes(parseInt(key)))
     .reduce((obj, key) => {
@@ -33,7 +33,7 @@ const mapStateToProps = (state) => {
         [key]: temp_patients[key],
       };
     }, {});
-  
+
   return {
     patient_ids,
     chat_ids,
@@ -54,7 +54,7 @@ const mapStateToProps = (state) => {
 const mapDispatchToProps = (dispatch) => {
   return {
     openPatientDetailsDrawer: (payload) =>
-      dispatch(open({type: DRAWER.PATIENT_DETAILS, payload})),
+      dispatch(open({ type: DRAWER.PATIENT_DETAILS, payload })),
     addToWatchlist: (patient_id) => dispatch(addToWatchlist(patient_id)),
     removePatientFromWatchlist: (patient_id) =>
       dispatch(removePatientFromWatchlist(patient_id)),

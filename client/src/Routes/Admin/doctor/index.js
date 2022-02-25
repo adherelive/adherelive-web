@@ -1,64 +1,64 @@
-import React, {lazy, Component, Fragment} from "react";
+import React, { Component, Fragment, lazy } from "react";
 import {
   BrowserRouter as Router,
   Route,
   Switch,
   withRouter,
 } from "react-router-dom";
-import {PATH} from "../../../constant";
+import { PATH } from "../../../constant";
 import SideMenu from "../../../Containers/Sidebar";
 // import BlankState from "../../../Components/Common/BlankState";
 
 const AdminDoctorPage = lazy(() =>
   import(
     /* webpackChunkName: "AdminDoctorTable" */ "../../../Containers/Pages/doctor"
-    )
+  )
 );
 
 const AdminProviderPage = lazy(() =>
   import(
     /* webpackChunkName: "AdminProviderPage" */ "../../../Containers/Pages/provider"
-    )
+  )
 );
 
 const AdminDoctorDetailsPage = lazy(() =>
   import(
     /* webpackChunkName: "AdminDoctorDetails" */ "../../../Containers/Pages/doctorDetails"
-    )
+  )
 );
 
 const TosPpEditorPage = lazy(() =>
   import(
     /* webpackChunkName: "TosPpEditorPage" */ "../../../Containers/Pages/TosPPEditorPage"
-    )
+  )
 );
 
 const TermsOfService = lazy(() =>
   import(
     /* webpackChunkName: "TermsOfServicePage" */ "../../../Containers/Pages/TermsOfService"
-    )
+  )
 );
 
 const TermsOfPayment = lazy(() =>
   import(
     /* webpackChunkName: "TermsOfPayment" */ "../../../Containers/Pages/termsOfPayment"
-    )
+  )
 );
 
 const PrivacyPolicy = lazy(() =>
   import(
     /* webpackChunkName: "PrivacyPolicyPage" */ "../../../Containers/Pages/PrivacyPolicy"
-    )
+  )
 );
 
 const AdminMedicines = lazy(() =>
   import(
     /* webpackChunkName: "AdminMedicinesPage" */ "../../../Containers/Pages/adminMedicines"
-    )
+  )
 );
 
 const SideMenuComp = (props) => {
-  const {location: {pathname = ""} = {}} = props;
+  const { location: { pathname = "" } = {} } = props;
   if (
     !(
       pathname.includes("patient-consulting") ||
@@ -74,8 +74,8 @@ const SideMenuComp = (props) => {
 };
 
 const AdminDoctorDetailsPageComp = (props) => {
-  const {match: {params: {id} = {}} = {}} = props;
-  return <AdminDoctorDetailsPage id={id}/>;
+  const { match: { params: { id } = {} } = {} } = props;
+  return <AdminDoctorDetailsPage id={id} />;
 };
 
 class AdminDoctor extends Component {
@@ -85,9 +85,9 @@ class AdminDoctor extends Component {
       redirecting: this.props.authRedirection,
     };
   }
-  
+
   render() {
-    const {location: {pathname = ""} = {}} = this.props;
+    const { location: { pathname = "" } = {} } = this.props;
     const isSideMenuVisible = !(
       pathname.includes("patient-consulting") ||
       pathname.includes("terms-of-service") ||
@@ -97,7 +97,7 @@ class AdminDoctor extends Component {
     return (
       <Fragment>
         <Router>
-          <div className="App flex" style={{overflow: "hidden"}}>
+          <div className="App flex" style={{ overflow: "hidden" }}>
             <SideMenuComp {...this.props} />
             <div className={isSideMenuVisible ? "container" : ""}>
               <Switch>
@@ -106,13 +106,13 @@ class AdminDoctor extends Component {
                   path={PATH.TERMS_OF_SERVICE}
                   component={TermsOfService}
                 />
-                
+
                 <Route
                   exact
                   path={PATH.TERMS_OF_PAYMENT}
                   component={TermsOfPayment}
                 />
-                
+
                 <Route
                   exact
                   path={PATH.PRIVACY_POLICY}
@@ -148,7 +148,7 @@ class AdminDoctor extends Component {
                   path={PATH.ADMIN.ALL_MEDICINES}
                   component={AdminMedicines}
                 />
-                <Route path={PATH.LANDING_PAGE} component={AdminDoctorPage}/>
+                <Route path={PATH.LANDING_PAGE} component={AdminDoctorPage} />
                 {/* <Route path={""} component={BlankState} /> */}
               </Switch>
             </div>

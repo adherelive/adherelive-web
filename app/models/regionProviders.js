@@ -1,7 +1,7 @@
 "use strict";
-import {DataTypes} from "sequelize";
-import {REGIONS} from "./regions";
-import {PROVIDERS} from "./providers";
+import { DataTypes } from "sequelize";
+import { REGIONS } from "./regions";
+import { PROVIDERS } from "./providers";
 
 export const REGION_PROVIDERS = "region_providers";
 
@@ -13,7 +13,7 @@ export const db = (database) => {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
-        type: DataTypes.INTEGER
+        type: DataTypes.INTEGER,
       },
       region_id: {
         type: DataTypes.INTEGER,
@@ -22,8 +22,8 @@ export const db = (database) => {
           model: {
             tableName: REGIONS,
           },
-          key: 'id'
-        }
+          key: "id",
+        },
       },
       provider_id: {
         type: DataTypes.INTEGER,
@@ -32,8 +32,8 @@ export const db = (database) => {
           model: {
             tableName: PROVIDERS,
           },
-          key: 'id'
-        }
+          key: "id",
+        },
       },
     },
     {
@@ -46,21 +46,21 @@ export const db = (database) => {
             region_id: this.region_id,
             provider_id: this.provider_id,
           };
-        }
-      }
+        },
+      },
     }
   );
 };
 
 export const associate = (database) => {
-  const {region_providers, regions, providers} = database.models || {};
-  
+  const { region_providers, regions, providers } = database.models || {};
+
   // associations here (if any) ...
   region_providers.hasOne(regions, {
     foreignKey: "region_id",
-    targetKey: "id"
+    targetKey: "id",
   });
-  
+
   // region_providers.hasOne(providers, {
   //     foreignKey: "provider_id",
   //     targetKey: "id"

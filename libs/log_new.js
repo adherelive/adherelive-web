@@ -6,19 +6,19 @@ class Log {
     this._dashString =
       "------------------------------------------------------------------------------------------------------";
   }
-  
+
   fileName = (filename) => {
     this.source = filename;
   };
-  
+
   getLogDate() {
     return moment().format(`D MMMM YYYY @ hh:mm A`);
   }
-  
+
   catchError = (message, error) => {
     console.log();
-  }
-  
+  };
+
   debug(msg, code) {
     // console.log(
     //   `\n ${chalk.yellow(this.getLogDate())}  ${chalk.yellow(
@@ -32,7 +32,7 @@ class Log {
       code
     );
   }
-  
+
   request(data) {
     console.log(
       `${this._dashString}\n${this.getLogDate()} [${chalk.yellow(
@@ -41,7 +41,7 @@ class Log {
       data
     );
   }
-  
+
   warn(msg) {
     console.log(
       `\n ${chalk.red(this.getLogDate())}  ${chalk.red(
@@ -49,7 +49,7 @@ class Log {
       )}  :  ${msg} \n`
     );
   }
-  
+
   info(msg) {
     console.log(
       `\n ${chalk.blue(this.getLogDate())} ${chalk.blue(
@@ -57,7 +57,7 @@ class Log {
       )}  :  ${msg}  \n`
     );
   }
-  
+
   success(msg) {
     console.log(
       `\n ${chalk.green(this.getLogDate())} ${chalk.green(
@@ -65,7 +65,7 @@ class Log {
       )} :  ${msg}  \n`
     );
   }
-  
+
   getErrorStatement(code) {
     let statement = {
       500: "Server Error",
@@ -77,11 +77,11 @@ class Log {
       4000: "",
       5000: "",
       6000: "",
-      7000: ""
+      7000: "",
     };
     return statement[code];
   }
-  
+
   errLog(errorCode, methodName, description) {
     var serverName = require("os").hostname(),
       logDate = this.getLogDate();
@@ -104,7 +104,7 @@ class Log {
     console.log(description);
     throw new Error(errLog);
   }
-  
+
   err(errorCode, methodName, description) {
     var serverName = require("os").hostname(),
       logDate = this.getLogDate();

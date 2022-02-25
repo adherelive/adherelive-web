@@ -1,18 +1,17 @@
-import {doRequest} from "../../Helper/network";
-import {REQUEST_TYPE, DELETE_TEMPLATE_RELATED_TYPE} from "../../constant";
+import { doRequest } from "../../Helper/network";
+import { DELETE_TEMPLATE_RELATED_TYPE, REQUEST_TYPE } from "../../constant";
 import {
   createCareplanTemplateUrl,
-  duplicateCareplanTemplateUrl,
   deleteCareplanTemplate,
-  deleteCareplanTemplateMedication,
   deleteCareplanTemplateAppointment,
-  deleteCareplanTemplateVital,
   deleteCareplanTemplateDiet,
-  updateCareplanTemplateUrl,
+  deleteCareplanTemplateMedication,
+  deleteCareplanTemplateVital,
   deleteCareplanTemplateWorkout,
+  duplicateCareplanTemplateUrl,
+  getAllTemplatesUrl,
+  updateCareplanTemplateUrl,
 } from "../../Helper/urls/carePlanTemplates";
-
-import {getAllTemplatesUrl} from "../../Helper/urls/carePlanTemplates";
 
 export const CREATE_CAREPLAN_TEMPLATE_START = "CREATE_CAREPLAN_TEMPLATE_START";
 export const CREATE_CAREPLAN_TEMPLATE_COMPLETED =
@@ -50,15 +49,15 @@ export const createCareplanTemplate = (payload) => {
   let response = {};
   return async (dispatch) => {
     try {
-      dispatch({type: CREATE_CAREPLAN_TEMPLATE_START});
-      
+      dispatch({ type: CREATE_CAREPLAN_TEMPLATE_START });
+
       response = await doRequest({
         method: REQUEST_TYPE.POST,
         url: createCareplanTemplateUrl(),
         data: payload,
       });
-      
-      const {status, payload: {data, message = ""} = {}} = response || {};
+
+      const { status, payload: { data, message = "" } = {} } = response || {};
       if (status === true) {
         dispatch({
           type: CREATE_CAREPLAN_TEMPLATE_COMPLETED,
@@ -82,13 +81,13 @@ export const getAllTemplatesForDoctor = () => {
   let response;
   return async (dispatch) => {
     try {
-      dispatch({type: GET_ALL_TEMPLATES_FOR_DOC});
+      dispatch({ type: GET_ALL_TEMPLATES_FOR_DOC });
       response = await doRequest({
         method: REQUEST_TYPE.GET,
         url: getAllTemplatesUrl(),
       });
-      
-      const {status, payload: {data, error} = {}} = response || {};
+
+      const { status, payload: { data, error } = {} } = response || {};
       if (status === true) {
         dispatch({
           type: GET_ALL_TEMPLATES_FOR_DOC_COMPLETE,
@@ -112,15 +111,15 @@ export const updateCareplanTemplate = (id, payload) => {
   let response = {};
   return async (dispatch) => {
     try {
-      dispatch({type: UPDATE_CAREPLAN_TEMPLATE_START});
-      
+      dispatch({ type: UPDATE_CAREPLAN_TEMPLATE_START });
+
       response = await doRequest({
         method: REQUEST_TYPE.POST,
         url: updateCareplanTemplateUrl(id),
         data: payload,
       });
-      
-      const {status, payload: {data, message = ""} = {}} = response || {};
+
+      const { status, payload: { data, message = "" } = {} } = response || {};
       if (status === true) {
         dispatch({
           type: UPDATE_CAREPLAN_TEMPLATE_COMPLETED,
@@ -144,13 +143,13 @@ export const duplicateCareplanTemplate = (careplan_template_id) => {
   let response = {};
   return async (dispatch) => {
     try {
-      dispatch({type: DUPLICATE_CAREPLAN_TEMPLATE_START});
+      dispatch({ type: DUPLICATE_CAREPLAN_TEMPLATE_START });
       response = await doRequest({
         method: REQUEST_TYPE.POST,
         url: duplicateCareplanTemplateUrl(careplan_template_id),
       });
-      
-      const {status, payload: {data, message = ""} = {}} = response || {};
+
+      const { status, payload: { data, message = "" } = {} } = response || {};
       if (status === true) {
         dispatch({
           type: DUPLICATE_CAREPLAN_TEMPLATE_COMPLETED,
@@ -171,15 +170,15 @@ export const duplicateCareplanTemplate = (careplan_template_id) => {
 };
 
 export const deleteCareplanTemplateRelated = ({
-                                                careplan_template_id,
-                                                other_id,
-                                                other_type,
-                                              }) => {
+  careplan_template_id,
+  other_id,
+  other_type,
+}) => {
   let response = {};
   return async (dispatch) => {
     try {
       let url = "/";
-      
+
       if (!other_type) {
         url = deleteCareplanTemplate(careplan_template_id);
       } else if (other_type === DELETE_TEMPLATE_RELATED_TYPE.MEDICATION) {
@@ -193,14 +192,14 @@ export const deleteCareplanTemplateRelated = ({
       } else if (other_type === DELETE_TEMPLATE_RELATED_TYPE.WORKOUT) {
         url = deleteCareplanTemplateWorkout(careplan_template_id, other_id);
       }
-      
-      dispatch({type: DELETE_CAREPLAN_TEMPLATE_RELATED_START});
+
+      dispatch({ type: DELETE_CAREPLAN_TEMPLATE_RELATED_START });
       response = await doRequest({
         method: REQUEST_TYPE.DELETE,
         url: url,
       });
-      
-      let {status, payload: {data, message = ""} = {}} = response || {};
+
+      let { status, payload: { data, message = "" } = {} } = response || {};
       if (status === true) {
         dispatch({
           type: DELETE_CAREPLAN_TEMPLATE_RELATED_COMPLETED,
@@ -221,7 +220,7 @@ export const deleteCareplanTemplateRelated = ({
 };
 
 function carePlanTemplatesReducer(state, data) {
-  const {care_plan_templates} = data || {};
+  const { care_plan_templates } = data || {};
   if (care_plan_templates) {
     return {
       ...state,
@@ -233,7 +232,7 @@ function carePlanTemplatesReducer(state, data) {
 }
 
 export default (state = {}, action) => {
-  const {type, data} = action;
+  const { type, data } = action;
   switch (type) {
     default:
       return carePlanTemplatesReducer(state, data);

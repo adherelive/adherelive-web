@@ -1,5 +1,5 @@
 function templateDietsReducer(state, data) {
-  const {template_diets} = data || {};
+  const { template_diets } = data || {};
   if (template_diets) {
     return {
       ...state,
@@ -11,7 +11,7 @@ function templateDietsReducer(state, data) {
 }
 
 export default (state = {}, action) => {
-  const {type, data} = action;
+  const { type, data } = action;
   switch (type) {
     default:
       return templateDietsReducer(state, data);

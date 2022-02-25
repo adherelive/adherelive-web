@@ -1,6 +1,6 @@
 "use strict";
 import { DataTypes } from "sequelize";
-import { GENDER, BLANK_STATE } from "../../constant";
+import { BLANK_STATE, GENDER } from "../../constant";
 import { TABLE_NAME as userTableName } from "./users";
 import { TABLE_NAME as reportTableName } from "./reports";
 import { TABLE_NAME as careplanTableName } from "./carePlan";

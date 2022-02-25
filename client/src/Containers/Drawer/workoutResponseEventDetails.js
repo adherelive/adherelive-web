@@ -1,16 +1,15 @@
-import {connect} from "react-redux";
-import {withRouter} from "react-router-dom";
+import { connect } from "react-redux";
+import { withRouter } from "react-router-dom";
 import WorkoutResponseEventDetails from "../../Components/Drawer/workoutResponseEventDetails";
-import {getWorkoutScheduleEventDetails} from "../../modules/workouts";
+import { getWorkoutScheduleEventDetails } from "../../modules/workouts";
 
-import {close} from "../../modules/drawer";
-import {DRAWER} from "../../constant";
+import { close } from "../../modules/drawer";
 
 const mapStateToProps = (state) => {
   const {
     workouts = {},
     schedule_events = {},
-    pages: {workout_response_ids = []} = {},
+    pages: { workout_response_ids = [] } = {},
     workout_responses = {},
     exercise_groups = {},
     exercises = {},
@@ -19,7 +18,7 @@ const mapStateToProps = (state) => {
     workout_exercise_groups = [],
     repetitions = {},
   } = state;
-  
+
   return {
     workouts,
     schedule_events,

@@ -1,7 +1,5 @@
-import {DataTypes} from "sequelize";
-import {TABLE_NAME as dietFoodGroupMappingTableName} from "./dietFoodGroupMapping";
-
-import {USER_CATEGORY_ARRAY} from "./users";
+import { DataTypes } from "sequelize";
+import { TABLE_NAME as dietFoodGroupMappingTableName } from "./dietFoodGroupMapping";
 
 export const TABLE_NAME = "similar_food_mappings";
 

@@ -1,15 +1,15 @@
 import AuthJob from "../";
-import {EMAIL_TEMPLATE_NAME} from "../../../../constant";
+import { EMAIL_TEMPLATE_NAME } from "../../../../constant";
 
 class PatientOtpJob extends AuthJob {
   constructor(data) {
     super(data);
   }
-  
+
   getEmailTemplate = () => {
-    const {getData} = this;
-    const {details: {otp} = {}} = getData() || {};
-    
+    const { getData } = this;
+    const { details: { otp } = {} } = getData() || {};
+
     const templateData = [
       {
         title: "OTP Verification for AdhereLive",
@@ -24,21 +24,21 @@ class PatientOtpJob extends AuthJob {
         },
       },
     ];
-    
+
     return templateData;
   };
-  
+
   getSmsTemplate = () => {
-    const {getData} = this;
-    const {details: {prefix, phoneNumber, otp} = {}} = getData() || {};
-    
+    const { getData } = this;
+    const { details: { prefix, phoneNumber, otp } = {} } = getData() || {};
+
     const templateData = [
       {
         phoneNumber: `+${prefix}${phoneNumber}`,
         message: `Hello from AdhereLive! Your One Time Password is ${otp}`,
       },
     ];
-    
+
     return templateData;
   };
 }

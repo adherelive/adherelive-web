@@ -3,7 +3,6 @@ const { OAuth2Client } = require("google-auth-library");
 const userService = require("../../../app/services/user/user.service");
 const errMessage = require("../../../config/messages.json").errMessages;
 const Response = require("../../../app/controllers/helper/responseFormat");
-import doRequest from "../../../app/controllers/helper/doRequest";
 
 export default async (req, res, next) => {
   try {

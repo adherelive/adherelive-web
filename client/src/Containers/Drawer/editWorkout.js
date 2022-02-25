@@ -1,23 +1,23 @@
-import {connect} from "react-redux";
-import {withRouter} from "react-router-dom";
+import { connect } from "react-redux";
+import { withRouter } from "react-router-dom";
 import EditWorkoutDrawer from "../../Components/Drawer/editWorkout";
-import {close} from "../../modules/drawer";
-import {DRAWER} from "../../constant";
-import {addExercise} from "../../modules/exercises";
+import { close } from "../../modules/drawer";
+import { DRAWER } from "../../constant";
+import { addExercise } from "../../modules/exercises";
 import {
-  updateWorkout,
-  getSingleWorkoutDetails,
   deleteWorkout,
+  getSingleWorkoutDetails,
   getWorkoutDetails,
+  updateWorkout,
   updateWorkoutTotalCalories,
 } from "../../modules/workouts";
-import {getPatientCarePlanDetails} from "../../modules/carePlans";
+import { getPatientCarePlanDetails } from "../../modules/carePlans";
 
 const mapStateToProps = (state) => {
-  const {auth} = state;
-  const {authenticated_user, authenticated_category, auth_role} = auth;
+  const { auth } = state;
+  const { authenticated_user, authenticated_category, auth_role } = auth;
   const {
-    drawer: {visible, loading, data: {type, payload = {}} = {}},
+    drawer: { visible, loading, data: { type, payload = {} } = {} },
     repetitions,
     care_plans,
     exercises,
@@ -26,7 +26,7 @@ const mapStateToProps = (state) => {
     searched_exercise_details,
     all_workout_details = {},
   } = state;
-  
+
   return {
     authenticated_user,
     authenticated_category,
@@ -54,7 +54,7 @@ const mapDispatchToProps = (dispatch) => {
     deleteWorkout: (id) => dispatch(deleteWorkout(id)),
     getPatientCarePlanDetails: (patientId) =>
       dispatch(getPatientCarePlanDetails(patientId)),
-    updateWorkoutTotalCalories: ({workout_id, total_calories}) =>
+    updateWorkoutTotalCalories: ({ workout_id, total_calories }) =>
       dispatch(
         updateWorkoutTotalCalories({
           workout_id,

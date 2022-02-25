@@ -2,10 +2,9 @@ import express from "express";
 import multer from "multer";
 import SymptomController from "../../../app/controllers/mControllers/symptoms/symptom.controller";
 import Authenticate from "../middlewares/auth";
-import * as validator from "./validator";
 
 const storage = multer.memoryStorage();
-const upload = multer({dest: "../../../app/public/", storage: storage});
+const upload = multer({ dest: "../../../app/public/", storage: storage });
 const router = express.Router();
 
 router.post("/", Authenticate, SymptomController.getSymptomDetails);

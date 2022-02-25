@@ -1,15 +1,15 @@
 import {
-  MAP_MEDICINE_TO_PUBLIC,
-  GET_PUBLIC_MEDICINES_COMPLETED,
   DELETE_MEDICINE_COMPLETED,
+  GET_PUBLIC_MEDICINES_COMPLETED,
+  MAP_MEDICINE_TO_PUBLIC,
 } from "../../medicines";
 
 const PUBLIC = "public";
 
 function getPublicAdminMedicinesReducer(state, data) {
-  const {offset = 0, medicines, type = ""} = data || {};
-  const public_medicines = {...state, [offset]: medicines};
-  
+  const { offset = 0, medicines, type = "" } = data || {};
+  const public_medicines = { ...state, [offset]: medicines };
+
   if (medicines && type === PUBLIC) {
     return {
       ...public_medicines,
@@ -20,10 +20,10 @@ function getPublicAdminMedicinesReducer(state, data) {
 }
 
 function mapMedicineToPublicReducer(state, data) {
-  const {medicine} = data || {};
+  const { medicine } = data || {};
   if (medicine) {
-    const {["0"]: existing, ...rest} = state;
-    const public_medicines = {["0"]: {...existing, ...medicine}};
+    const { ["0"]: existing, ...rest } = state;
+    const public_medicines = { ["0"]: { ...existing, ...medicine } };
     return {
       ...public_medicines,
     };
@@ -33,13 +33,13 @@ function mapMedicineToPublicReducer(state, data) {
 }
 
 function deleteMedicineReducer(state, data) {
-  const {medicine_id, offset = null} = data || {};
+  const { medicine_id, offset = null } = data || {};
   if (medicine_id) {
-    const {[medicine_id.toString()]: medicine, ...rest} = state[offset] || {};
-    
+    const { [medicine_id.toString()]: medicine, ...rest } = state[offset] || {};
+
     if (medicine) {
-      let updatedMed = {...state};
-      updatedMed[offset] = {...rest};
+      let updatedMed = { ...state };
+      updatedMed[offset] = { ...rest };
       return {
         ...updatedMed,
       };
@@ -52,8 +52,8 @@ function deleteMedicineReducer(state, data) {
 }
 
 export default (state = [], action) => {
-  const {type, data} = action;
-  
+  const { type, data } = action;
+
   switch (type) {
     case GET_PUBLIC_MEDICINES_COMPLETED:
       return getPublicAdminMedicinesReducer(state, data);

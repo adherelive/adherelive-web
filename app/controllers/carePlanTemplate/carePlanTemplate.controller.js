@@ -14,12 +14,7 @@ import ExerciseContentService from "../../services/exerciseContents/exerciseCont
 import ExerciseContentWrapper from "../../ApiWrapper/web/exerciseContents";
 import CarePlanTemplateWrapper from "../../ApiWrapper/web/carePlanTemplate";
 
-import {
-  TEMPLATE_DUPLICATE_TEXT,
-  USER_CATEGORY,
-  EVENT_LONG_TERM_VALUE,
-} from "../../../constant";
-import moment from "moment";
+import { TEMPLATE_DUPLICATE_TEXT } from "../../../constant";
 
 import PERMISSIONS from "../../../config/permissions";
 

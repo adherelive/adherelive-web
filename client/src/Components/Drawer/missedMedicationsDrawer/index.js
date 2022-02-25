@@ -1,8 +1,8 @@
-import React, {Component, Fragment} from "react";
-import {injectIntl} from "react-intl";
-import {Drawer, message, Spin} from "antd";
+import React, { Component, Fragment } from "react";
+import { injectIntl } from "react-intl";
+import { Drawer, Spin } from "antd";
 import MissedMedicationCard from "../../Cards/patient/missedMedication";
-import {USER_CATEGORY} from "../../../constant";
+import { USER_CATEGORY } from "../../../constant";
 
 import messages from "./message";
 
@@ -16,18 +16,18 @@ class MissedMedicationsDrawer extends Component {
       fetching: false,
     };
   }
-  
+
   componentDidMount() {
     // this.getMissedMedication();
   }
-  
+
   formatMessage = (data) => this.props.intl.formatMessage(data);
-  
+
   onClose = () => {
-    const {close} = this.props;
+    const { close } = this.props;
     close();
   };
-  
+
   // getMissedMedication = async () => {
   //   try {
   //     const { getAllMissedScheduleEvents, missed_medications, medication_ids: {critical, non_critical} = {} } = this.props;
@@ -61,38 +61,38 @@ class MissedMedicationsDrawer extends Component {
   //     this.setState({fetching:false});
   //   }
   // };
-  
+
   handlePatientDetailsRedirect = (patient_id) => (e) => {
-    const {authenticated_category} = this.props;
-    
+    const { authenticated_category } = this.props;
+
     if (authenticated_category === USER_CATEGORY.PROVIDER) {
       return;
     }
-    
-    const {history} = this.props;
+
+    const { history } = this.props;
     this.onClose();
     history.push(`/patients/${patient_id}`);
   };
-  
+
   getMedicationList = () => {
-    const {patients = {}, missed_medications = {}} = this.props;
-    const {handlePatientDetailsRedirect, formatMessage} = this;
-    
+    const { patients = {}, missed_medications = {} } = this.props;
+    const { handlePatientDetailsRedirect, formatMessage } = this;
+
     const medicationList = [];
     const criticalList = [];
     const nonCriticalList = [];
-    
+
     Object.keys(missed_medications).forEach((id) => {
       const {
         critical,
         participant_id,
-        medicines: {basic_info: {name: medicineName} = {}} = {},
+        medicines: { basic_info: { name: medicineName } = {} } = {},
         timings,
       } = missed_medications[id] || {};
-      
-      const {basic_info: {id: patientId, full_name} = {}} =
-      patients[participant_id] || {};
-      
+
+      const { basic_info: { id: patientId, full_name } = {} } =
+        patients[participant_id] || {};
+
       if (critical) {
         criticalList.push(
           <MissedMedicationCard
@@ -115,7 +115,7 @@ class MissedMedicationsDrawer extends Component {
         );
       }
     });
-    
+
     // for (let medication in missed_medications) {
     //   const eachMedicationEventArray = missed_medications[medication];
     //   for(let eachMedicationEvent of eachMedicationEventArray){
@@ -163,7 +163,7 @@ class MissedMedicationsDrawer extends Component {
     //   const isCritical=critical;
     //
     // }
-    
+
     medicationList.push(
       <div>
         <div>
@@ -194,11 +194,11 @@ class MissedMedicationsDrawer extends Component {
     );
     return medicationList;
   };
-  
+
   render() {
-    const {visible = false} = this.props;
-    const {fetching} = this.state;
-    
+    const { visible = false } = this.props;
+    const { fetching } = this.state;
+
     if (visible !== true) {
       return null;
     }
@@ -214,7 +214,7 @@ class MissedMedicationsDrawer extends Component {
         >
           <div className="mt20 black-85 wp100">
             {fetching ? (
-              <Spin size="small" className="flex align-center justify-center"/>
+              <Spin size="small" className="flex align-center justify-center" />
             ) : (
               this.getMedicationList()
             )}

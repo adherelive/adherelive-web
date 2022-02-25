@@ -6,23 +6,23 @@ export const setUnseenNotificationCount = (unseen_notification_count) => {
     try {
       dispatch({
         type: SET_UNSEEN_NOTIFICATION_COUNT,
-        payload: {unseen_notification_count},
+        payload: { unseen_notification_count },
       });
     } catch (error) {
       console.log("SET_UNSEEN_NOTIFICATION_COUNT error ---> ", error);
     }
-    
+
     return response;
   };
 };
 
 function setUnseenNotiCountReducer(state, data) {
-  const {count: unseen_notification_count = null} = data || {};
+  const { count: unseen_notification_count = null } = data || {};
   if (
     unseen_notification_count ||
     unseen_notification_count.toString() === "0"
   ) {
-    const countData = {unseen_notification_count: unseen_notification_count};
+    const countData = { unseen_notification_count: unseen_notification_count };
     return {
       ...state,
       ...countData,
@@ -33,7 +33,7 @@ function setUnseenNotiCountReducer(state, data) {
 }
 
 export default (state = {}, data) => {
-  const {type, payload} = data || {};
+  const { type, payload } = data || {};
   switch (type) {
     case SET_UNSEEN_NOTIFICATION_COUNT:
       return {

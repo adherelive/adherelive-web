@@ -7,7 +7,6 @@ import carePlanAppointmentService from "../../services/carePlanAppointment/careP
 // import templateMedicationService from "../../services/templateMedication/templateMedication.service";
 // import templateAppointmentService from "../../services/templateAppointment/templateAppointment.service";
 // import medicineService from "../../services/medicine/medicine.service";
-
 // services
 import vitalService from "../../services/vitals/vital.service";
 import DietService from "../../services/diet/diet.service";
@@ -25,10 +24,10 @@ import UserRoleWrapper from "../../ApiWrapper/web/userRoles";
 
 import Logger from "../../../libs/log";
 import {
-  EVENT_TYPE,
-  USER_CATEGORY,
   EVENT_LONG_TERM_VALUE,
   EVENT_STATUS,
+  EVENT_TYPE,
+  USER_CATEGORY,
 } from "../../../constant";
 import moment from "moment";
 
@@ -48,19 +47,19 @@ const Log = new Logger("CARE_PLAN > HELPER");
 function getTime() {
   let date_ob = new Date();
   let date = ("0" + date_ob.getDate()).slice(-2);
-  
+
   // current month
   let month = ("0" + (date_ob.getMonth() + 1)).slice(-2);
-  
+
   // current year
   let year = date_ob.getFullYear();
-  
+
   // current hours
   let hours = date_ob.getHours();
-  
+
   // current minutes
   let minutes = date_ob.getMinutes();
-  
+
   // current seconds
   let seconds = date_ob.getSeconds();
   return (
@@ -79,11 +78,11 @@ function getTime() {
 }
 
 export const getCareplanDataWithImp = async ({
-                                               carePlans = [],
-                                               userCategory,
-                                               doctorId,
-                                               userRoleId,
-                                             }) => {
+  carePlans = [],
+  userCategory,
+  doctorId,
+  userRoleId,
+}) => {
   console.log("get getCareplanDataWithImp Called - 1 " + getTime());
   try {
     let carePlanData = {};
@@ -96,20 +95,20 @@ export const getCareplanDataWithImp = async ({
     for (let index = 0; index < carePlans.length; index++) {
       const careplan = await CarePlanWrapper(carePlans[index]);
       console.log("get getCareplanDataWithImp Called - 3 " + getTime());
-      const {care_plans} = await careplan.getReferenceInfoWithImp();
+      const { care_plans } = await careplan.getReferenceInfoWithImp();
       console.log("get getCareplanDataWithImp Called - 4 " + getTime());
-      carePlanData = {...carePlanData, ...care_plans};
+      carePlanData = { ...carePlanData, ...care_plans };
       carePlanIds.push(careplan.getCarePlanId());
       console.log("get getCareplanDataWithImp Called - 5 " + getTime());
       const {
         medication_ids,
         appointment_ids,
-        basic_info: {user_role_id = null} = {},
+        basic_info: { user_role_id = null } = {},
       } = care_plans[careplan.getCarePlanId()] || {};
       console.log("get getCareplanDataWithImp Called - 6 " + getTime());
       // appointmentIds = [...appointmentIds, ...appointment_ids];
       // medicationIds = [...medicationIds, ...medication_ids];
-      
+
       const secondaryDoctorUserRoleIds =
         careplan.getCareplnSecondaryProfiles() || [];
       console.log("get getCareplanDataWithImp Called - 7 " + getTime());
@@ -135,7 +134,7 @@ export const getCareplanDataWithImp = async ({
           currentCareplanTime = careplan.getCreatedAt();
           currentCareplanId = careplan.getCarePlanId();
         }
-        
+
         if (currentCareplanTime === null) {
           currentCareplanTime = careplan.getCreatedAt();
           currentCareplanId = careplan.getCarePlanId();
@@ -157,53 +156,53 @@ export const getCareplanDataWithImp = async ({
 };
 
 export const getCareplanData = async ({
-                                        carePlans = [],
-                                        userCategory,
-                                        doctorId,
-                                        userRoleId,
-                                      }) => {
+  carePlans = [],
+  userCategory,
+  doctorId,
+  userRoleId,
+}) => {
   try {
     let carePlanData = {};
     let carePlanIds = [];
-    
+
     let appointmentData = {};
     let appointmentIds = [];
-    
+
     let medicationData = {};
     let medicationIds = [];
-    
+
     let medicineData = {};
-    
+
     let scheduleEventData = {};
-    
+
     let doctorData = {};
-    
+
     let providerData = {};
     let userRoleData = {};
-    
+
     let currentCareplanTime = null;
     let currentCareplanId = null;
-    
+
     for (let index = 0; index < carePlans.length; index++) {
       const careplan = await CarePlanWrapper(carePlans[index]);
-      const {care_plans, doctors, doctor_id} =
+      const { care_plans, doctors, doctor_id } =
         await careplan.getReferenceInfo();
-      carePlanData = {...carePlanData, ...care_plans};
+      carePlanData = { ...carePlanData, ...care_plans };
       carePlanIds.push(careplan.getCarePlanId());
-      
-      doctorData = {...doctorData, ...doctors};
-      
+
+      doctorData = { ...doctorData, ...doctors };
+
       const {
         medication_ids,
         appointment_ids,
-        basic_info: {user_role_id = null} = {},
+        basic_info: { user_role_id = null } = {},
       } = care_plans[careplan.getCarePlanId()] || {};
       appointmentIds = [...appointmentIds, ...appointment_ids];
       medicationIds = [...medicationIds, ...medication_ids];
-      
+
       const secondaryDoctorUserRoleIds =
         careplan.getCareplnSecondaryProfiles() || [];
-      
+
       const isUserRoleAllowed = [user_role_id, ...secondaryDoctorUserRoleIds]
         .map((id) => parseInt(id))
         .includes(userRoleId);
@@ -223,63 +222,63 @@ export const getCareplanData = async ({
           currentCareplanTime = careplan.getCreatedAt();
           currentCareplanId = careplan.getCarePlanId();
         }
-        
+
         if (currentCareplanTime === null) {
           currentCareplanTime = careplan.getCreatedAt();
           currentCareplanId = careplan.getCarePlanId();
         }
       }
-      
+
       for (let index = 0; index < secondaryDoctorUserRoleIds.length; index++) {
         const userRole = await UserRoleWrapper(
           null,
           secondaryDoctorUserRoleIds[index]
         );
-        
+
         const {
           user_roles: secondaryUserRoles,
           doctors: secondaryDoctors,
           providers: secondaryProviders,
         } = await userRole.getAllInfo();
-        
-        doctorData = {...doctorData, ...secondaryDoctors};
-        providerData = {...providerData, ...secondaryProviders};
-        userRoleData = {...userRoleData, ...secondaryUserRoles};
+
+        doctorData = { ...doctorData, ...secondaryDoctors };
+        providerData = { ...providerData, ...secondaryProviders };
+        userRoleData = { ...userRoleData, ...secondaryUserRoles };
       }
     }
-    
+
     // appointments
     const allAppointments =
       (await appointmentService.getAppointmentByData({
         id: appointmentIds,
       })) || [];
-    
+
     if (allAppointments.length > 0) {
       for (let index = 0; index < allAppointments.length; index++) {
         const appointment = await AppointmentWrapper(allAppointments[index]);
-        const {appointments, schedule_events} =
+        const { appointments, schedule_events } =
           await appointment.getAllInfo();
-        appointmentData = {...appointmentData, ...appointments};
-        scheduleEventData = {...scheduleEventData, ...schedule_events};
+        appointmentData = { ...appointmentData, ...appointments };
+        scheduleEventData = { ...scheduleEventData, ...schedule_events };
       }
     }
-    
+
     // medications
     const allMedications =
       (await medicationReminderService.getAllMedicationByData({
         id: medicationIds,
       })) || [];
-    
+
     if (allMedications.length > 0) {
       for (let index = 0; index < allMedications.length; index++) {
         const medication = await MedicationWrapper(allMedications[index]);
-        const {medications, medicines} = await medication.getReferenceInfo();
-        medicationData = {...medicationData, ...medications};
-        medicineData = {...medicineData, ...medicines};
+        const { medications, medicines } = await medication.getReferenceInfo();
+        medicationData = { ...medicationData, ...medications };
+        medicineData = { ...medicineData, ...medicines };
         // todo: add schedule data
       }
     }
-    
+
     return {
       care_plans: {
         ...carePlanData,
@@ -315,35 +314,35 @@ export const getCareplanData = async ({
 };
 
 export const createVitals = async ({
-                                     data = [],
-                                     carePlanId,
-                                     authUser,
-                                     patientId,
-                                   }) => {
+  data = [],
+  carePlanId,
+  authUser,
+  patientId,
+}) => {
   try {
     // vitals
     let vitalData = {};
     let vitalIds = [];
-    
+
     // vital templates
     let vitalTemplateData = {};
-    
+
     // template vital for careplan template
     let carePlanTemplateVitals = [];
-    
+
     // for sqs events
     let vitalEventsData = [];
-    
+
     const {
       userId: authUserId,
       category: authCategory,
       userCategoryData: authUserCategoryData,
       userRoleId: authUserRole,
     } = authUser || {};
-    
+
     // patient
     const patient = await PatientWrapper(null, patientId);
-    
+
     if (data.length > 0) {
       for (let index = 0; index < data.length; index++) {
         const {
@@ -354,7 +353,7 @@ export const createVitals = async ({
           repeat_days,
           description,
         } = data[index];
-        
+
         const addedVital = await vitalService.addVital({
           vital_template_id,
           start_date,
@@ -366,15 +365,15 @@ export const createVitals = async ({
           },
           care_plan_id: carePlanId,
         });
-        
-        const vital = await VitalWrapper({data: addedVital});
-        const {vitals, vital_templates} = await vital.getReferenceInfo();
-        
-        vitalData = {...vitalData, ...vitals};
+
+        const vital = await VitalWrapper({ data: addedVital });
+        const { vitals, vital_templates } = await vital.getReferenceInfo();
+
+        vitalData = { ...vitalData, ...vitals };
         vitalIds.push(vital.getVitalId());
-        
-        vitalTemplateData = {...vitalTemplateData, ...vital_templates};
-        
+
+        vitalTemplateData = { ...vitalTemplateData, ...vital_templates };
+
         carePlanTemplateVitals.push({
           vital_template_id,
           details: {
@@ -386,7 +385,7 @@ export const createVitals = async ({
               : EVENT_LONG_TERM_VALUE,
           },
         });
-        
+
         // update vitalEvents for sqs
         vitalEventsData.push({
           type: EVENT_TYPE.VITALS,
@@ -409,7 +408,7 @@ export const createVitals = async ({
         });
       }
     }
-    
+
     return {
       carePlanTemplateVitals,
       vitalEventsData,
@@ -424,11 +423,11 @@ export const createVitals = async ({
 };
 
 export const createDiet = async ({
-                                   data = [],
-                                   carePlanId,
-                                   authUser,
-                                   patientId,
-                                 }) => {
+  data = [],
+  carePlanId,
+  authUser,
+  patientId,
+}) => {
   try {
     // vitals
     let allDiets = {};
@@ -436,28 +435,28 @@ export const createDiet = async ({
     let allPortions = {};
     let allFoodItems = {};
     let allFoodItemDetails = {};
-    
+
     let dietIds = [];
-    
+
     // template vital for careplan template
     let carePlanTemplateDiets = [];
-    
+
     // for sqs events
     let dietEventData = [];
-    
+
     const {
       userId: authUserId,
       category: authCategory,
-      userCategoryData: {basic_info: {full_name} = {}},
+      userCategoryData: { basic_info: { full_name } = {} },
       userCategoryData: authUserCategoryData,
       userRoleId: authUserRole,
     } = authUser || {};
-    
+
     // patient
     const patient = await PatientWrapper(null, patientId);
-    
+
     const dietService = new DietService();
-    
+
     if (data.length > 0) {
       for (let index = 0; index < data.length; index++) {
         const {
@@ -471,29 +470,29 @@ export const createDiet = async ({
             diet_food_groups = {},
           } = {},
         } = data[index];
-        
+
         const dietId = await dietService.create({
           name,
           start_date,
           end_date,
           total_calories,
           diet_food_groups,
-          details: {not_to_do, repeat_days},
+          details: { not_to_do, repeat_days },
           care_plan_id: carePlanId,
         });
-        
-        const dietWrapper = await DietWrapper({id: dietId});
-        
-        const {diets, food_groups, portions, food_items, food_item_details} =
+
+        const dietWrapper = await DietWrapper({ id: dietId });
+
+        const { diets, food_groups, portions, food_items, food_item_details } =
           await dietWrapper.getReferenceInfo();
-        
-        allDiets = {...allDiets, ...diets};
-        allFoodGroups = {...allFoodGroups, ...food_groups};
-        allPortions = {...allPortions, ...portions};
-        allFoodItems = {...allFoodItems, ...food_items};
-        allFoodItemDetails = {...allFoodItemDetails, ...food_item_details};
+
+        allDiets = { ...allDiets, ...diets };
+        allFoodGroups = { ...allFoodGroups, ...food_groups };
+        allPortions = { ...allPortions, ...portions };
+        allFoodItems = { ...allFoodItems, ...food_items };
+        allFoodItemDetails = { ...allFoodItemDetails, ...food_item_details };
         dietIds.push(dietId);
-        
+
         carePlanTemplateDiets.push({
           name,
           total_calories,
@@ -506,7 +505,7 @@ export const createDiet = async ({
             diet_food_groups,
           },
         });
-        
+
         // update dietEvents for sqs
         dietEventData.push({
           type: EVENT_TYPE.DIET,
@@ -519,12 +518,12 @@ export const createDiet = async ({
           actor: {
             id: authUserId,
             user_role_id: authUserRole,
-            details: {name: full_name, category: authCategory},
+            details: { name: full_name, category: authCategory },
           },
         });
       }
     }
-    
+
     return {
       carePlanTemplateDiets,
       dietEventData,
@@ -542,39 +541,39 @@ export const createDiet = async ({
 };
 
 export const createWorkout = async ({
-                                      data = [],
-                                      carePlanId,
-                                      authUser,
-                                      patientId,
-                                    }) => {
+  data = [],
+  carePlanId,
+  authUser,
+  patientId,
+}) => {
   try {
     let allWorkouts = {};
     let allExerciseGroups = {};
     let allRepetitions = {};
     let allExercises = {};
     let allExerciseDetails = {};
-    
+
     let workoutIds = [];
-    
+
     // template workout for careplan template
     let carePlanTemplateWorkouts = [];
-    
+
     // for sqs events
     let workoutEventData = [];
-    
+
     const {
       userId: authUserId,
       category: authCategory,
-      userCategoryData: {basic_info: {full_name} = {}},
+      userCategoryData: { basic_info: { full_name } = {} },
       userCategoryData: authUserCategoryData,
       userRoleId: authUserRole,
     } = authUser || {};
-    
+
     // patient
     const patient = await PatientWrapper(null, patientId);
-    
+
     const workoutService = new WorkoutService();
-    
+
     if (data.length > 0) {
       for (let index = 0; index < data.length; index++) {
         const {
@@ -589,7 +588,7 @@ export const createWorkout = async ({
             workout_exercise_groups = [],
           } = {},
         } = data[index];
-        
+
         const workoutId = await workoutService.create({
           name,
           time,
@@ -597,12 +596,12 @@ export const createWorkout = async ({
           end_date,
           total_calories,
           workout_exercise_groups,
-          details: {not_to_do, repeat_days},
+          details: { not_to_do, repeat_days },
           care_plan_id: carePlanId,
         });
-        
-        const workoutWrapper = await WorkoutWrapper({id: workoutId});
-        
+
+        const workoutWrapper = await WorkoutWrapper({ id: workoutId });
+
         const {
           workouts,
           exercise_groups,
@@ -610,14 +609,14 @@ export const createWorkout = async ({
           exercise_details,
           repetitions,
         } = await workoutWrapper.getReferenceInfo();
-        
-        allWorkouts = {...allWorkouts, ...workouts};
-        allExerciseGroups = {...allExerciseGroups, ...exercise_groups};
-        allRepetitions = {...allRepetitions, ...repetitions};
-        allExercises = {...allExercises, ...exercises};
-        allExerciseDetails = {...allExerciseDetails, ...exercise_details};
+
+        allWorkouts = { ...allWorkouts, ...workouts };
+        allExerciseGroups = { ...allExerciseGroups, ...exercise_groups };
+        allRepetitions = { ...allRepetitions, ...repetitions };
+        allExercises = { ...allExercises, ...exercises };
+        allExerciseDetails = { ...allExerciseDetails, ...exercise_details };
         workoutIds.push(workoutId);
-        
+
         carePlanTemplateWorkouts.push({
           name,
           total_calories,
@@ -632,7 +631,7 @@ export const createWorkout = async ({
             exercise_detail_ids: Object.keys(allExerciseDetails) || [],
           },
         });
-        
+
         // update dietEvents for sqs
         workoutEventData.push({
           type: EVENT_TYPE.WORKOUT,
@@ -644,12 +643,12 @@ export const createWorkout = async ({
           actor: {
             id: authUserId,
             user_role_id: authUserRole,
-            details: {name: full_name, category: authCategory},
+            details: { name: full_name, category: authCategory },
           },
         });
       }
     }
-    
+
     return {
       carePlanTemplateWorkouts,
       workoutEventData,
@@ -674,7 +673,7 @@ export const getCarePlanAppointmentIds = async (carePlanId) => {
     let appointmentId = appointment.get("appointment_id");
     carePlanAppointmentIds.push(appointmentId);
   }
-  
+
   return carePlanAppointmentIds;
 };
 
@@ -682,25 +681,25 @@ export const getCarePlanMedicationIds = async (carePlanId) => {
   let carePlanMedications =
     await carePlanMedicationService.getMedicationsByCarePlanId(carePlanId);
   let carePlanMedicationIds = [];
-  
+
   for (let medication of carePlanMedications) {
     let medicationId = medication.get("medication_id");
     carePlanMedicationIds.push(medicationId);
   }
-  
+
   return carePlanMedicationIds;
 };
 
 export const getCarePlanSeverityDetails = async (carePlanId) => {
   let carePlan = await carePlanService.getCarePlanById(carePlanId);
-  
+
   const carePlanApiWrapper = await CarePlanWrapper(carePlan);
-  
+
   let treatment = "";
   let severity = "";
   let condition = "";
   let carePlanTemplate = {};
-  
+
   const templateId = carePlanApiWrapper.getCarePlanTemplateId();
   if (templateId) {
     carePlanTemplate = await carePlanTemplateService.getCarePlanTemplateById(
@@ -723,7 +722,7 @@ export const getCarePlanSeverityDetails = async (carePlanId) => {
     severity = details.severity_id;
     condition = details.condition_id;
   }
-  
+
   return {
     treatment_id: treatment,
     severity_id: severity,

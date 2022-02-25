@@ -5,7 +5,6 @@ import moment from "moment";
 import Sequelize, { QueryTypes } from "sequelize";
 // const Config = require("../config/config");
 // Config();
-
 import Log from "../libs/log";
 
 const Logger = new Log("MEDICINE SEQUELIZE QUERY");

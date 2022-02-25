@@ -1,6 +1,5 @@
 import Controller from "../";
 import treatmentService from "../../services/treatment/treatment.service";
-import treatmentConditionService from "../../services/treatmentConditionMapping/treatmentCondition.service";
 import TreatmentWrapper from "../../ApiWrapper/web/treatments";
 
 import Log from "../../../libs/log";

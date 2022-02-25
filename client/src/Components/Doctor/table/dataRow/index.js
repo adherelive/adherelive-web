@@ -1,9 +1,9 @@
-import {TABLE_COLUMN, formatDoctorTableData} from "../helper";
+import { formatDoctorTableData, TABLE_COLUMN } from "../helper";
 
 export default (data) => {
-  const {id, formatMessage} = data;
+  const { id, formatMessage } = data;
   const formattedData = formatDoctorTableData(data);
-  const {userData, doctorData, specialityData} = formattedData || {};
+  const { userData, doctorData, specialityData } = formattedData || {};
   return {
     key: id,
     [TABLE_COLUMN.NAME.dataIndex]: {

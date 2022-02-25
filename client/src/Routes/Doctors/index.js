@@ -1,9 +1,9 @@
-import React, { lazy, Component, Fragment } from "react";
+import React, { Component, Fragment, lazy } from "react";
 import {
   BrowserRouter as Router,
+  Redirect,
   Route,
   Switch,
-  Redirect,
   withRouter,
 } from "react-router-dom";
 import SideMenu from "../../Containers/Sidebar";

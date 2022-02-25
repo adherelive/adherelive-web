@@ -1,13 +1,12 @@
 import Controller from "../../";
 import Log from "../../../../libs/log";
 import {
-  NO_MEDICATION,
-  NO_APPOINTMENT,
-  NO_ACTION,
-  NO_DIET,
-  NO_WORKOUT,
-  USER_CATEGORY,
   CHART_DETAILS,
+  NO_ACTION,
+  NO_APPOINTMENT,
+  NO_DIET,
+  NO_MEDICATION,
+  NO_WORKOUT,
 } from "../../../../constant";
 
 import userPreferenceService from "../../../services/userPreferences/userPreference.service";
@@ -20,32 +19,32 @@ class GraphController extends Controller {
   constructor() {
     super();
   }
-  
+
   getAllGraphs = async (req, res) => {
-    const {raiseServerError, raiseClientError, raiseSuccess} = this;
+    const { raiseServerError, raiseClientError, raiseSuccess } = this;
     try {
       // const {userDetails: {userId} = {}} = req;
-      const {userDetails: {userRoleId} = {}} = req;
-      
+      const { userDetails: { userRoleId } = {} } = req;
+
       const userPreference =
         (await userPreferenceService.findOne({
           where: {
             user_role_id: userRoleId,
           },
         })) || null;
-      
+
       let chartData = {};
-      
+
       if (userPreference) {
         const userPreferenceWrapper = await UserPreferenceWrapper(
           userPreference
         );
         const charts = userPreferenceWrapper.getChartDetails() || [];
-        
+
         charts.forEach((chart) => {
-          chartData[chart] = {...CHART_DETAILS[chart]};
+          chartData[chart] = { ...CHART_DETAILS[chart] };
         });
-        
+
         return raiseSuccess(
           res,
           200,
@@ -67,15 +66,15 @@ class GraphController extends Controller {
           "Incorrect user for preference request"
         );
       }
-      
+
       // const userPreferenceData = await userPreferenceService.getPreferenceByData({user_id: userId});
       // Logger.debug("9182391283 userPreferenceData ---> ", userPreferenceData);
       // // const userPreference = await UserPreferenceWrapper(userPreferenceData);
-      
+
       // // const charts = userPreference.getChartDetails();
-      
+
       // let chartData = {};
-      
+
       // let  CHART_DETAILS = {
       //     [NO_MEDICATION]: {
       //       type: "no_medication",
@@ -90,7 +89,7 @@ class GraphController extends Controller {
       //       name: "Missed Action",
       //     }
       //   };
-      
+
       // charts.forEach(chart => {
       //     Logger.debug("324564322456432678786745643",CHART_DETAILS[chart]);
       //    chartData[chart] = CHART_DETAILS[chart];
@@ -100,18 +99,18 @@ class GraphController extends Controller {
       return raiseServerError(res);
     }
   };
-  
+
   addGraphType = async (req, res) => {
-    const {raiseServerError, raiseSuccess} = this;
+    const { raiseServerError, raiseSuccess } = this;
     try {
       // const {params: {id} = {}, userDetails: {userId} = {}} = req;
-      const {body: {chart_ids = []} = {}} = req;
-      const {body, userDetails} = req;
+      const { body: { chart_ids = [] } = {} } = req;
+      const { body, userDetails } = req;
       const {
         userId,
         userRoleId,
-        userData: {category} = {},
-        userCategoryData: {basic_info: {id: doctorId} = {}} = {},
+        userData: { category } = {},
+        userCategoryData: { basic_info: { id: doctorId } = {} } = {},
       } = userDetails || {};
       // console.log('CHART IDSSSSSSSSSSSSS==========================>',chart_ids);
       const userPreferenceData =
@@ -119,9 +118,9 @@ class GraphController extends Controller {
           user_role_id: userRoleId,
         });
       const userPreference = await UserPreferenceWrapper(userPreferenceData);
-      
+
       let chartData = {};
-      
+
       let CHART_DETAILS = {
         [NO_MEDICATION]: {
           type: "no_medication",
@@ -144,25 +143,25 @@ class GraphController extends Controller {
           name: "Missed Workout",
         },
       };
-      
+
       // Logger.debug("userPreference.getChartDetails().includes(id) ", userPreference.getChartDetails().includes(id));
-      
+
       // userPreference.getChartDetails().forEach(id => {
       //     if(chart_ids.includes(id)) {
       //         return this.raiseClientError(res, 422, {}, "Chart Type already added");
       //     }
       // });
-      
+
       const updatedChart = [
         // ...userPreference.getChartDetails(),
         ...chart_ids,
       ];
-      
+
       const updatedDetails = {
         ...userPreference.getAllDetails(),
         charts: updatedChart,
       };
-      
+
       const updateUserPreference =
         await userPreferenceService.updateUserPreferenceData(
           {
@@ -170,16 +169,16 @@ class GraphController extends Controller {
           },
           userPreference.getUserPreferenceId()
         );
-      
+
       const updatedUserPreference = await UserPreferenceWrapper(
         null,
         userPreference.getUserPreferenceId()
       );
-      
+
       updatedChart.forEach((chart) => {
         chartData[chart] = CHART_DETAILS[chart];
       });
-      
+
       return raiseSuccess(
         res,
         200,

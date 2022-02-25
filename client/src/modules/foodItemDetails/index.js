@@ -1,12 +1,12 @@
 import {
   ADD_FOOD_ITEM_COMPLETED,
-  STORE_FOOD_ITEM_AND_DETAILS,
   EDIT_FOOD_ITEM_COMPLETED,
+  STORE_FOOD_ITEM_AND_DETAILS,
 } from "../foodItems";
-import {GET_SINGLE_DIET_DETAILS_COMPLETED} from "../../modules/diets";
+import { GET_SINGLE_DIET_DETAILS_COMPLETED } from "../../modules/diets";
 
 function foodItemDetaisReducer(state, data) {
-  const {food_items, food_item_details} = data || {};
+  const { food_items, food_item_details } = data || {};
   if (food_items && food_item_details) {
     return {
       ...state,
@@ -18,7 +18,7 @@ function foodItemDetaisReducer(state, data) {
 }
 
 export default (state = {}, action) => {
-  const {type, data} = action || {};
+  const { type, data } = action || {};
   switch (type) {
     case ADD_FOOD_ITEM_COMPLETED:
       return foodItemDetaisReducer(state, data);

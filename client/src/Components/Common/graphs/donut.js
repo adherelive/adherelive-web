@@ -1,13 +1,13 @@
-import React, {Fragment} from "react";
+import React, { Fragment } from "react";
 
-import {Doughnut} from "react-chartjs-2";
-import {GRAPH_COLORS, CHART_TITLE} from "../../../constant";
+import { Doughnut } from "react-chartjs-2";
+import { GRAPH_COLORS } from "../../../constant";
 import messages from "./message";
 
 export default function donutGraph(props) {
-  const {id, data: graphContent, total, title, formatMessage} = props || {};
-  const {dark, light} = GRAPH_COLORS[id] || {};
-  const {className} = GRAPH_COLORS[id] || {};
+  const { id, data: graphContent, total, title, formatMessage } = props || {};
+  const { dark, light } = GRAPH_COLORS[id] || {};
+  const { className } = GRAPH_COLORS[id] || {};
   const labels = [
     formatMessage(messages.compliant_text),
     formatMessage(messages.critical_text),
@@ -15,7 +15,7 @@ export default function donutGraph(props) {
   // const labels = [CHART_TITLE[id] === "Adherence" ? formatMessage(messages.compliant_text) : formatMessage(messages.critical_text),
   // CHART_TITLE[id] === "Adherence" ? formatMessage(messages.non_compliant_text) : formatMessage(messages.non_critical_text)
   // ];
-  
+
   const donutData = {
     labels: labels,
     datasets: [
@@ -41,7 +41,7 @@ export default function donutGraph(props) {
           <div className="ml10 mt20 fs16 fw600">{title}</div>
         </div>
         <div className="w130 h130 mt20">
-          <Doughnut height={350} data={donutData} options={options}/>
+          <Doughnut height={350} data={donutData} options={options} />
         </div>
         <div className="wp90 flex align-center justify-space-between mt20">
           <div className="flex align-center fs10">

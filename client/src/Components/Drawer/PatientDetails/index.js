@@ -2,17 +2,15 @@ import React, { Component, Fragment } from "react";
 import { injectIntl } from "react-intl";
 import { Drawer } from "antd";
 import {
-  GENDER,
-  PATIENT_BOX_CONTENT,
-  MISSED_MEDICATION,
-  MISSED_ACTIONS,
   DIAGNOSIS_TYPE,
-  MISSED_MEDICATION_TEXT,
+  GENDER,
   MISSED_ACTION_TEXT,
+  MISSED_ACTIONS,
   MISSED_APPOINTMENT_TEXT,
+  MISSED_MEDICATION,
+  MISSED_MEDICATION_TEXT,
   MISSED_SYMPTOM_TEXT,
-  USER_PERMISSIONS,
-  MISSED_APPOINTMENTS,
+  PATIENT_BOX_CONTENT,
 } from "../../../constant";
 import messages from "./message";
 import moment from "moment";

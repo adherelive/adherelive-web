@@ -1,9 +1,9 @@
 import { doRequest } from "../../Helper/network";
 import { REQUEST_TYPE } from "../../constant";
 import {
-  getScheduleEventsUrl,
-  getAppointmentCompleteUrl,
   getAllMissedScheduleEventsUrl,
+  getAppointmentCompleteUrl,
+  getScheduleEventsUrl,
 } from "../../Helper/urls/event";
 import {
   getCalenderDataCountForDayUrl,

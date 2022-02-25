@@ -19,17 +19,14 @@ import {
 } from "./symptom.controller.helper";
 import Logger from "../../../../libs/log";
 import {
-  DOCUMENT_PARENT_TYPE,
-  USER_CATEGORY,
   ALLOWED_VIDEO_EXTENSIONS,
-  EVENT_TYPE,
+  DOCUMENT_PARENT_TYPE,
   EVENT_STATUS,
-  // MESSAGE_TYPES,
+  EVENT_TYPE,
+  USER_CATEGORY,
 } from "../../../../constant";
-import {getFilePath} from "../../../helper/filePath";
+import { getFilePath } from "../../../helper/filePath";
 import carePlanService from "../../../services/carePlan/carePlan.service";
-
-import ChatJob from "../../../JobSdk/Chat/observer";
 import SymptomsJob from "../../../JobSdk/Symptoms/observer";
 import NotificationSdk from "../../../NotificationSdk";
 
@@ -39,18 +36,18 @@ class SymptomController extends Controller {
   constructor() {
     super();
   }
-  
+
   create = async (req, res) => {
-    const {raiseSuccess, raiseServerError} = this;
+    const { raiseSuccess, raiseServerError } = this;
     try {
       Log.debug("req body---> ", req.body);
       Log.debug("req params---> ", req.params);
-      
+
       const {
         body,
-        params: {patient_id} = {},
+        params: { patient_id } = {},
         // userDetails: { userId, userRoleId } = {}
-        userDetails: {userId, userRoleId, userData: {category} = {}} = {},
+        userDetails: { userId, userRoleId, userData: { category } = {} } = {},
       } = req;
       const {
         care_plan_id,
@@ -62,9 +59,9 @@ class SymptomController extends Controller {
         photos = [],
         videos = [],
       } = body || {};
-      
+
       const patientData = await PatientWrapper(null, patient_id);
-      
+
       const symptomData = await SymptomService.create({
         patient_id,
         care_plan_id,
@@ -75,15 +72,15 @@ class SymptomController extends Controller {
         },
         text,
       });
-      
+
       const symptom = await SymptomWrapper(symptomData);
-      
+
       const audioDocumentIds = [];
       const imageDocumentIds = [];
       const uploadDocumentData = {};
-      
+
       for (const audio of audios) {
-        const {name, file} = audio || {};
+        const { name, file } = audio || {};
         const audioExists = await UploadDocumentService.getDocumentByName({
           name,
           parent_id: symptom.getSymptomId(),
@@ -101,9 +98,9 @@ class SymptomController extends Controller {
           audioDocumentIds.push(addDocument.get("id"));
         }
       }
-      
+
       for (const photo of photos) {
-        const {name, file} = photo || {};
+        const { name, file } = photo || {};
         const audioExists = await UploadDocumentService.getDocumentByName({
           name,
           parent_id: symptom.getSymptomId(),
@@ -121,9 +118,9 @@ class SymptomController extends Controller {
           imageDocumentIds.push(addDocument.get("id"));
         }
       }
-      
+
       for (const video of videos) {
-        const {name, file} = video || {};
+        const { name, file } = video || {};
         const videoExists = await UploadDocumentService.getDocumentByName({
           name,
           parent_id: symptom.getSymptomId(),
@@ -140,24 +137,24 @@ class SymptomController extends Controller {
             document.getBasicInfo();
         }
       }
-      
+
       const carePlans = await carePlanService.getMultipleCarePlanByData({
         expired_on: null,
         patient_id,
       });
-      
+
       let allUniqueDoctorsToNotifyData = {};
-      
+
       let alluniqueChatChannelData = {};
       let doctorLatestCareplanData = {};
-      
+
       for (const carePlanData of carePlans) {
         const carePlan = await CarePlanWrapper(carePlanData);
         // const doctorId = carePlan.getDoctorId();
         const doctorRoleId = carePlan.getUserRoleId();
         const secondaryDoctorRoleIds = carePlan.getCareplnSecondaryProfiles();
         // const doctorData = await DoctorWrapper(null, doctorId);
-        
+
         const chatJSON = JSON.stringify({
           ...(await symptom.getAllInfo()),
           upload_documents: {
@@ -166,13 +163,13 @@ class SymptomController extends Controller {
           symptom_id: symptom.getSymptomId(),
           type: EVENT_TYPE.SYMPTOMS,
         });
-        
+
         // const twilioMsg = await twilioService.addSymptomMessage(
         //   doctorData.getUserId(),
         //   patientData.getUserId(),
         //   chatJSON
         // );
-        
+
         // const eventData = {
         //   participants: [doctorData.getUserId(), patientData.getUserId()],
         //   actor: {
@@ -186,7 +183,7 @@ class SymptomController extends Controller {
         //     message: `A new symptom is added.`
         //   }
         // };
-        
+
         // for notifications
         for (let roleId of [doctorRoleId, ...secondaryDoctorRoleIds]) {
           if (
@@ -213,11 +210,11 @@ class SymptomController extends Controller {
                 content: chatJSON,
               },
             };
-            
+
             doctorLatestCareplanData[doctorRoleId] = carePlan.getCarePlanId();
           }
         }
-        
+
         // for chat message
         if (
           Object.keys(alluniqueChatChannelData).indexOf(
@@ -229,53 +226,53 @@ class SymptomController extends Controller {
             content: chatJSON,
           };
         }
-        
+
         // const chatJob = ChatJob.execute(
         //   MESSAGE_TYPES.USER_MESSAGE,
         //   eventData
         // );
         // await NotificationSdk.execute(chatJob);
       }
-      
+
       if (Object.keys(allUniqueDoctorsToNotifyData).length > 0) {
         const allDoctorIds = Object.keys(allUniqueDoctorsToNotifyData).map(
           (id) => {
             return parseInt(id, 10);
           }
         );
-        
+
         const symptomNotificationData = {
           participants: [userRoleId, ...allDoctorIds],
           actor: {
             id: userId,
             user_role_id: userRoleId,
-            details: {name: patientData.getFullName(), category},
+            details: { name: patientData.getFullName(), category },
           },
           patient_id,
           care_plan_id_data: doctorLatestCareplanData,
           event_id: symptom.getSymptomId(),
         };
-        
+
         const symptomJob = SymptomsJob.execute(
           EVENT_STATUS.SCHEDULED,
           symptomNotificationData
         );
         await NotificationSdk.execute(symptomJob);
-        
+
         for (const chatChannel in alluniqueChatChannelData) {
           // const chatJob = ChatJob.execute(
           //   MESSAGE_TYPES.USER_MESSAGE,
           //   allUniqueDoctorsToNotifyData[doctorId].eventData
           // );
           // await NotificationSdk.execute(chatJob);
-          
+
           // twilio
-          const {content} = alluniqueChatChannelData[chatChannel] || {};
-          
+          const { content } = alluniqueChatChannelData[chatChannel] || {};
+
           await twilioService.addSymptomMessage(chatChannel, content);
         }
       }
-      
+
       return raiseSuccess(
         res,
         200,
@@ -291,16 +288,16 @@ class SymptomController extends Controller {
       return raiseServerError(res);
     }
   };
-  
+
   uploadAudio = async (req, res) => {
-    const {raiseSuccess, raiseServerError} = this;
+    const { raiseSuccess, raiseServerError } = this;
     try {
       Log.debug("req.file ----> ", req.file);
-      
-      const {userDetails: {userId} = {}} = req;
-      
-      const {file, name} = await uploadAudio({userId, file: req.file});
-      
+
+      const { userDetails: { userId } = {} } = req;
+
+      const { file, name } = await uploadAudio({ userId, file: req.file });
+
       return raiseSuccess(
         res,
         200,
@@ -315,17 +312,17 @@ class SymptomController extends Controller {
       return raiseServerError(res);
     }
   };
-  
+
   uploadVideo = async (req, res) => {
-    const {raiseSuccess, raiseClientError, raiseServerError} = this;
+    const { raiseSuccess, raiseClientError, raiseServerError } = this;
     try {
       Log.debug("req.file ----> ", req.file);
-      
+
       const {
         file: videoFile,
-        userDetails: {userId, userData: {category} = {}} = {},
+        userDetails: { userId, userData: { category } = {} } = {},
       } = req;
-      
+
       if (category === USER_CATEGORY.PATIENT) {
         const fullFileName = videoFile.originalname.replace(/\s+/g, "");
         const fileExt = fullFileName.substring(
@@ -334,8 +331,8 @@ class SymptomController extends Controller {
         );
         Log.info(`fileExt : ${fileExt}`);
         if (ALLOWED_VIDEO_EXTENSIONS.includes(fileExt)) {
-          const {file, name} = await uploadVideo({userId, file: videoFile});
-          
+          const { file, name } = await uploadVideo({ userId, file: videoFile });
+
           return raiseSuccess(
             res,
             200,
@@ -366,18 +363,18 @@ class SymptomController extends Controller {
       return raiseServerError(res);
     }
   };
-  
+
   uploadPhotos = async (req, res) => {
-    const {raiseSuccess, raiseServerError} = this;
+    const { raiseSuccess, raiseServerError } = this;
     try {
       Log.debug("req.file ----> ", req.file);
-      
-      const {userDetails: {userId} = {}} = req;
-      
-      const {file, name} = await uploadImage({userId, file: req.file});
-      
+
+      const { userDetails: { userId } = {} } = req;
+
+      const { file, name } = await uploadImage({ userId, file: req.file });
+
       Log.info(`FILE_NAME: ${name} | FILE: ${file}`);
-      
+
       return raiseSuccess(
         res,
         200,
@@ -392,35 +389,35 @@ class SymptomController extends Controller {
       return raiseServerError(res);
     }
   };
-  
+
   getSymptomDetails = async (req, res) => {
-    const {raiseSuccess, raiseServerError} = this;
+    const { raiseSuccess, raiseServerError } = this;
     try {
       Log.debug("req.body ----> ", req.body);
-      const {body: {symptom_ids = []} = {}} = req;
-      
+      const { body: { symptom_ids = [] } = {} } = req;
+
       let documentData = {};
       let symptomData = {};
       let userData = {};
       let patientData = {};
       let doctorData = {};
-      
+
       for (const id of symptom_ids) {
-        const symptomExists = await SymptomService.getByData({id});
-        
+        const symptomExists = await SymptomService.getByData({ id });
+
         if (symptomExists) {
-          const symptom = await SymptomWrapper({data: symptomExists});
-          const {symptoms} = await symptom.getAllInfo();
-          const {users, upload_documents, patients, doctors} =
+          const symptom = await SymptomWrapper({ data: symptomExists });
+          const { symptoms } = await symptom.getAllInfo();
+          const { users, upload_documents, patients, doctors } =
             await symptom.getReferenceInfo();
-          symptomData = {...symptomData, ...symptoms};
-          userData = {...userData, ...users};
-          documentData = {...documentData, ...upload_documents};
-          patientData = {...patientData, ...patients};
-          doctorData = {...doctorData, ...doctors};
+          symptomData = { ...symptomData, ...symptoms };
+          userData = { ...userData, ...users };
+          documentData = { ...documentData, ...upload_documents };
+          patientData = { ...patientData, ...patients };
+          doctorData = { ...doctorData, ...doctors };
         }
       }
-      
+
       return raiseSuccess(
         res,
         200,

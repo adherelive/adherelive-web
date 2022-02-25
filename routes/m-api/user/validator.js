@@ -1,8 +1,8 @@
 import Joi from "@hapi/joi";
 import moment from "moment";
-import {PASSWORD_LENGTH, USER_CATEGORY} from "../../../constant";
+import { PASSWORD_LENGTH } from "../../../constant";
 import Response from "../../../app/helper/responseFormat";
-import {validationError} from "../../api/helper";
+import { validationError } from "../../api/helper";
 
 const credentialsFormSchema = Joi.object().keys({
   email: Joi.string().email().required(),
@@ -65,7 +65,7 @@ const forgotPasswordSchema = Joi.object().keys({
 
 const verifyLinkSchema = Joi.object().keys({
   link: Joi.string()
-    .guid({version: "uuidv4"})
+    .guid({ version: "uuidv4" })
     .required()
     .label("Verification link is not correct"),
 });
@@ -80,17 +80,17 @@ const validateTimeInterval = (startTime, endTime) => {
 };
 
 export const validateCredentialsData = (req, res, next) => {
-  const {body: data = {}} = req;
-  const {email, password} = data;
+  const { body: data = {} } = req;
+  const { email, password } = data;
   const isValid = credentialsFormSchema.validate(data);
   if (isValid && isValid.error != null) {
     console.log("00000000000000 isValid ---> ", isValid, isValid.error);
     let errorMessage = "Please check filled details";
-    const {error: {details} = {}} = isValid || {};
-    const {type} = details[0] || {};
+    const { error: { details } = {} } = isValid || {};
+    const { type } = details[0] || {};
     switch (type) {
       case "string.empty":
-        const {context: {label} = {}} = details[0] || {};
+        const { context: { label } = {} } = details[0] || {};
         if (label === "email") {
           errorMessage = "Email cannot be empty";
         } else {
@@ -98,15 +98,15 @@ export const validateCredentialsData = (req, res, next) => {
         }
         break;
       case "string.pattern.base":
-        const {context: {label: passwordLabel} = {}} = details[0] || {};
+        const { context: { label: passwordLabel } = {} } = details[0] || {};
         if (passwordLabel === "password") {
           errorMessage =
             "Password must contain at least 1 uppercase, lowercase, number & special character";
         }
         break;
       case "string.min":
-        const {context: {label: passwordLengthLabel} = {}} =
-        details[0] || {};
+        const { context: { label: passwordLengthLabel } = {} } =
+          details[0] || {};
         if (passwordLengthLabel === "password") {
           errorMessage = "Password must be at least 12 characters long";
         }
@@ -123,11 +123,11 @@ export const validateCredentialsData = (req, res, next) => {
 };
 
 export const validateSignInData = (req, res, next) => {
-  const {body: data = {}} = req;
+  const { body: data = {} } = req;
   const isValid = signInSchema.validate(data);
   if (isValid && isValid.error != null) {
-    const {error: {details} = {}} = isValid || {};
-    const {context: {label} = {}} = details[0] || {};
+    const { error: { details } = {} } = isValid || {};
+    const { context: { label } = {} } = details[0] || {};
     // return raiseClientError(res, 422, isValid.error, "please check filled details");
     const response = new Response(false, 422);
     response.setError(isValid.error);
@@ -138,11 +138,11 @@ export const validateSignInData = (req, res, next) => {
 };
 
 export const validateOtpData = (req, res, next) => {
-  const {body: data = {}} = req;
+  const { body: data = {} } = req;
   const isValid = otpSchema.validate(data);
   if (isValid && isValid.error != null) {
-    const {error: {details} = {}} = isValid || {};
-    const {type, context: {label} = {}} = details[0] || {};
+    const { error: { details } = {} } = isValid || {};
+    const { type, context: { label } = {} } = details[0] || {};
     // return raiseClientError(res, 422, isValid.error, "please check filled details");
     let errorMessage = label;
     switch (type) {
@@ -163,11 +163,11 @@ export const validateOtpData = (req, res, next) => {
 };
 
 export const validateDoctorSignInData = (req, res, next) => {
-  const {body: data = {}} = req;
+  const { body: data = {} } = req;
   const isValid = doctorSignInSchema.validate(data);
   if (isValid && isValid.error != null) {
-    const {error: {details} = {}} = isValid || {};
-    const {context: {label} = {}} = details[0] || {};
+    const { error: { details } = {} } = isValid || {};
+    const { context: { label } = {} } = details[0] || {};
     // return raiseClientError(res, 422, isValid.error, "please check filled details");
     const response = new Response(false, 422);
     response.setError(isValid.error);
@@ -178,7 +178,7 @@ export const validateDoctorSignInData = (req, res, next) => {
 };
 
 export const forgotPassword = (req, res, next) => {
-  const {body: data = {}} = req;
+  const { body: data = {} } = req;
   const isValid = forgotPasswordSchema.validate(data);
   if (isValid && isValid.error != null) {
     return validationError(res, isValid);
@@ -187,7 +187,7 @@ export const forgotPassword = (req, res, next) => {
 };
 
 export const verifyLink = (req, res, next) => {
-  const {params: data = {}} = req;
+  const { params: data = {} } = req;
   const isValid = verifyLinkSchema.validate(data);
   if (isValid && isValid.error != null) {
     return validationError(res, isValid);
@@ -196,7 +196,7 @@ export const verifyLink = (req, res, next) => {
 };
 
 export const updatePasswordForm = (req, res, next) => {
-  const {body: data = {}} = req;
+  const { body: data = {} } = req;
   const isValid = updatedPasswordSchema.validate(data);
   if (isValid && isValid.error != null) {
     return validationError(res, isValid);

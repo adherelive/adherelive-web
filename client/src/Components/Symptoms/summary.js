@@ -1,12 +1,12 @@
-import React, {Component} from "react";
-import {injectIntl} from "react-intl";
+import React, { Component } from "react";
+import { injectIntl } from "react-intl";
 import {
+  BODY,
   PART_LIST_BACK,
   PART_LIST_CODES,
   PART_LIST_FRONT,
-  BODY,
 } from "../../constant";
-import {Timeline, message, Switch, Modal, Slider, Spin} from "antd";
+import { message, Modal, Slider, Spin, Switch, Timeline } from "antd";
 
 import moment from "moment";
 import audio from "../../Assets/images/music.png";
@@ -36,10 +36,10 @@ class SummaryTab extends Component {
       imageToShow: "",
     };
   }
-  
+
   componentDidMount() {
-    const {getHistorySymptom, patientId} = this.props;
-    this.setState({loading: true});
+    const { getHistorySymptom, patientId } = this.props;
+    this.setState({ loading: true });
     // getHistorySymptom(patientId, 365).then(res => {
     //     const { status = false, payload: { data = {} } = {} } = res || {};
     //     if (status) {
@@ -48,36 +48,36 @@ class SummaryTab extends Component {
     //     }
     // });
     getHistorySymptom(patientId, 365).then((res) => {
-      const {status, payload: {data: {symptom_parts = {}} = {}} = {}} =
-      res || {};
+      const { status, payload: { data: { symptom_parts = {} } = {} } = {} } =
+        res || {};
       if (status) {
         let partsWithSymptoms = [
           ...Object.keys(symptom_parts[1]),
           ...Object.keys(symptom_parts[2]),
         ];
-        let symptomParts = {...symptom_parts[1], ...symptom_parts[2]};
-        this.setState({partsWithSymptoms, symptomParts, loading: false});
-        
+        let symptomParts = { ...symptom_parts[1], ...symptom_parts[2] };
+        this.setState({ partsWithSymptoms, symptomParts, loading: false });
+
         console.log(
           "Component did mount of add patient called========>",
-          
+
           partsWithSymptoms,
           symptomParts
         );
       } else {
-        this.setState({loading: false});
+        this.setState({ loading: false });
       }
     });
   }
-  
+
   onRowSymptoms = (record, rowIndex) => {
-    const {onRowClickSymptoms} = this;
+    const { onRowClickSymptoms } = this;
     // const { key } = record;
     return {
       onClick: onRowClickSymptoms(record),
     };
   };
-  
+
   handleSubmitTemplate = (data) => {
     const {
       addCarePlanMedicationsAndAppointments,
@@ -90,7 +90,7 @@ class SummaryTab extends Component {
     let carePlanId = 1;
     for (let carePlan of Object.values(care_plans)) {
       let {
-        basic_info: {id = 1, patient_id: patientId = 1},
+        basic_info: { id = 1, patient_id: patientId = 1 },
       } = carePlan;
       if (patient_id == patientId) {
         carePlanId = id;
@@ -101,13 +101,13 @@ class SummaryTab extends Component {
         status = false,
         statusCode,
         payload: {
-          error: {error_type = ""} = {},
+          error: { error_type = "" } = {},
           message: errorMessage = "",
         } = {},
       } = response;
       if (status) {
         this.onCloseTemplate();
-        
+
         message.success(this.formatMessage(messages.carePlanUpdated));
         getMedications(patient_id).then(() => {
           getAppointments(patient_id).then(() => {
@@ -125,17 +125,17 @@ class SummaryTab extends Component {
       }
     });
   };
-  
+
   openModal = () => {
-    this.setState({showModal: true});
+    this.setState({ showModal: true });
   };
-  
+
   closeModal = () => {
-    this.setState({showModal: false});
+    this.setState({ showModal: false });
   };
-  
+
   getBodyPartName = (selected_part) => {
-    const {formatMessage} = this;
+    const { formatMessage } = this;
     if (selected_part === PART_LIST_CODES.HEAD) {
       return formatMessage(messages.head);
     } else if (selected_part === PART_LIST_CODES.LEFT_EYE) {
@@ -248,11 +248,11 @@ class SummaryTab extends Component {
       return formatMessage(messages.rightCalf);
     }
   };
-  
+
   formatDataForTimeLine = () => {
-    let {upload_documents = {}} = this.props;
-    
-    const {timelineSymptoms = {}} = this.state;
+    let { upload_documents = {} } = this.props;
+
+    const { timelineSymptoms = {} } = this.state;
     let data = [];
     // createdAtDates.forEach(date => {
     for (let date of Object.keys(timelineSymptoms)) {
@@ -267,7 +267,7 @@ class SummaryTab extends Component {
             text = "",
             image_document_ids = [],
             audio_document_ids = [],
-            config: {parts = []} = {},
+            config: { parts = [] } = {},
           } = {},
           createdAt = "",
         } = activity || {};
@@ -281,12 +281,12 @@ class SummaryTab extends Component {
         data.push(temp);
       });
     }
-    
+
     return data;
   };
-  
+
   renderTimelineBody = (data) => {
-    const {upload_documents = {}} = this.props;
+    const { upload_documents = {} } = this.props;
     let dataTorender = [];
     for (let rowData of data) {
       const {
@@ -301,20 +301,20 @@ class SummaryTab extends Component {
       let audioUrl = "";
       let audioName = "";
       if (image_document_ids.length) {
-        const {basic_info: {document = ""} = {}} =
-        upload_documents[image_document_ids[0]] || {};
+        const { basic_info: { document = "" } = {} } =
+          upload_documents[image_document_ids[0]] || {};
         imageUrl = document;
       }
       if (audio_document_ids.length) {
-        const {basic_info: {document = "", name = ""} = {}} =
-        upload_documents[audio_document_ids[0]] || {};
+        const { basic_info: { document = "", name = "" } = {} } =
+          upload_documents[audio_document_ids[0]] || {};
         audioUrl = document;
         audioName = name;
       }
       // console.log('ROW DETAILSSSSSSSSS=======>', imageUrl, audioUrl);
       if (date) {
         dataTorender.push(
-          <Timeline.Item dot={<div className={"timelineDot"}/>}>
+          <Timeline.Item dot={<div className={"timelineDot"} />}>
             <div className={"fs16 medium w300"}>
               {moment(date).format("Do MMMM,YYYY")}
             </div>
@@ -322,7 +322,7 @@ class SummaryTab extends Component {
         );
       }
       dataTorender.push(
-        <Timeline.Item dot={<div className={"timelineDot"}/>}>
+        <Timeline.Item dot={<div className={"timelineDot"} />}>
           <div
             style={{
               flex: 1,
@@ -344,13 +344,13 @@ class SummaryTab extends Component {
             {imageUrl && imageUrl.length ? (
               <img
                 src={imageUrl}
-                style={{width: 300, height: 200, borderRadius: 2}}
+                style={{ width: 300, height: 200, borderRadius: 2 }}
               />
             ) : null}
-            
+
             {audioUrl && audioUrl.length ? (
               <div
-                style={{height: 40, width: 250, marginTop: 5}}
+                style={{ height: 40, width: 250, marginTop: 5 }}
                 // onPress={this.downloadDocument(audioUrl, audioName)}
               >
                 <div
@@ -373,7 +373,7 @@ class SummaryTab extends Component {
                       ? audioName
                       : `${audioName.substring(0, 13)}...`}
                   </div>
-                  <img src={audio} style={{height: 20, width: 20}}/>
+                  <img src={audio} style={{ height: 20, width: 20 }} />
                 </div>
               </div>
             ) : null}
@@ -388,7 +388,7 @@ class SummaryTab extends Component {
               }}
             >
               <div>{moment(createdAt).format("h a")}</div>
-              <div className={"seperator"}/>
+              <div className={"seperator"} />
               <div>{this.getBodyPartName(parts[0])}</div>
             </div>
           </div>
@@ -397,18 +397,18 @@ class SummaryTab extends Component {
     }
     return dataTorender;
   };
-  
+
   showSymptomsOfPart = (key) => () => {
-    this.setState({symptomsModalKey: key}, this.openModal);
+    this.setState({ symptomsModalKey: key }, this.openModal);
   };
-  
+
   formatMessage = (data) => this.props.intl.formatMessage(data);
-  
+
   toggleFront = () => {
-    const {showFront: prevShowFront = false} = this.state;
-    this.setState({showFront: !prevShowFront, selected_part: ""});
+    const { showFront: prevShowFront = false } = this.state;
+    this.setState({ showFront: !prevShowFront, selected_part: "" });
   };
-  
+
   onClickDownloader = (url, name) => () => {
     // e.preventDefault();
     // const { url, message } = this.state;
@@ -429,10 +429,10 @@ class SummaryTab extends Component {
         });
     }
   };
-  
+
   renderModalBody = () => {
-    const {symptomsModalKey, symptomParts} = this.state;
-    const {upload_documents = {}} = this.props;
+    const { symptomsModalKey, symptomParts } = this.state;
+    const { upload_documents = {} } = this.props;
     console.log(
       "weiutqweoiuiquwoerw===>",
       symptomsModalKey,
@@ -457,20 +457,20 @@ class SummaryTab extends Component {
         let audioUrl = "";
         let audioName = "";
         if (image_document_ids.length) {
-          const {basic_info: {document = ""} = {}} =
-          upload_documents[image_document_ids[0]] || {};
+          const { basic_info: { document = "" } = {} } =
+            upload_documents[image_document_ids[0]] || {};
           imageUrl = document;
         }
         if (audio_document_ids.length) {
-          const {basic_info: {document = "", name = ""} = {}} =
-          upload_documents[audio_document_ids[0]] || {};
+          const { basic_info: { document = "", name = "" } = {} } =
+            upload_documents[audio_document_ids[0]] || {};
           audioUrl = document;
           audioName = name;
         }
         // console.log('ROW DETAILSSSSSSSSS=======>', imageUrl, audioUrl);
         // if (createdAt) {
         //     dataTorender.push(
-        
+
         // }
         dataTorender.push(
           <div
@@ -507,11 +507,11 @@ class SummaryTab extends Component {
                 />
               </div>
             ) : null}
-            
+
             {audioUrl && audioUrl.length ? (
               <div
                 className={"pointer"}
-                style={{height: 40, width: 250, marginTop: 5}}
+                style={{ height: 40, width: 250, marginTop: 5 }}
                 // onPress={this.downloadDocument(audioUrl, audioName)}
                 onClick={this.onClickDownloader(audioUrl, audioName)}
               >
@@ -535,7 +535,7 @@ class SummaryTab extends Component {
                       ? audioName
                       : `${audioName.substring(0, 13)}...`}
                   </div>
-                  <img src={audio} style={{height: 20, width: 20}}/>
+                  <img src={audio} style={{ height: 20, width: 20 }} />
                 </div>
               </div>
             ) : null}
@@ -555,7 +555,7 @@ class SummaryTab extends Component {
     }
     return dataTorender;
   };
-  
+
   imageModal = () => {
     return (
       <Modal
@@ -579,30 +579,30 @@ class SummaryTab extends Component {
     );
   };
   closeModalImage = () => {
-    this.setState({imageModalVisible: false});
+    this.setState({ imageModalVisible: false });
   };
-  
+
   openModalImage = (url) => () => {
-    this.setState({imageToShow: url}, () =>
-      this.setState({imageModalVisible: true})
+    this.setState({ imageToShow: url }, () =>
+      this.setState({ imageModalVisible: true })
     );
   };
-  
+
   setSliderDays = (value) => {
-    const {getHistorySymptom, patientId} = this.props;
-    
+    const { getHistorySymptom, patientId } = this.props;
+
     let days = (365 / 10) * value;
     getHistorySymptom(patientId, days ? days : 1).then((res) => {
-      const {status, payload: {data: {symptom_parts = {}} = {}} = {}} =
-      res || {};
+      const { status, payload: { data: { symptom_parts = {} } = {} } = {} } =
+        res || {};
       if (status) {
         let partsWithSymptoms = [
           ...Object.keys(symptom_parts[1]),
           ...Object.keys(symptom_parts[2]),
         ];
-        let symptomParts = {...symptom_parts[1], ...symptom_parts[2]};
-        this.setState({partsWithSymptoms, symptomParts});
-        
+        let symptomParts = { ...symptom_parts[1], ...symptom_parts[2] };
+        this.setState({ partsWithSymptoms, symptomParts });
+
         console.log(
           "Component did mount of add patient called========>",
           days,
@@ -611,16 +611,16 @@ class SummaryTab extends Component {
         );
       }
     });
-    this.setState({sliderDays: value});
+    this.setState({ sliderDays: value });
   };
-  
+
   setDays = (value) => {
-    this.setState({sliderDays: value});
+    this.setState({ sliderDays: value });
   };
-  
+
   render() {
     const data = this.formatDataForTimeLine();
-    let {symptoms = {}} = this.props;
+    let { symptoms = {} } = this.props;
     const {
       carePlanTemplateIds = [],
       currentTab = TABS.TIMELINE,
@@ -633,7 +633,7 @@ class SummaryTab extends Component {
     if (loading) {
       return (
         <div className="wp100 hp100 flex justify-center align-center">
-          <Spin/>
+          <Spin />
         </div>
       );
     }
@@ -643,7 +643,7 @@ class SummaryTab extends Component {
           <div className="mr10 fs16 medium">
             {this.formatMessage(messages.back)}
           </div>
-          <Switch checked={this.state.showFront} onChange={this.toggleFront}/>
+          <Switch checked={this.state.showFront} onChange={this.toggleFront} />
           <div className="ml10 fs16 medium">
             {this.formatMessage(messages.front)}
           </div>
@@ -661,85 +661,85 @@ class SummaryTab extends Component {
             />
             {showFront
               ? PART_LIST_FRONT.map((part) => {
-                const {key, areaStyle = {}, dotStyle = {}} = BODY[part];
-                const {
-                  top: bpTop = 0,
-                  left: bpLeft = 0,
-                  height: bpHeight = 0,
-                  width: bpWidth = 0,
-                } = areaStyle || {};
-                const {top: dotTop = 0, left: dotLeft = 0} = dotStyle || {};
-                return (
-                  <div
-                    key={key}
-                    style={{
-                      position: "absolute",
-                      top: `${bpTop}px`,
-                      left: `${bpLeft}px`,
-                      height: `${bpHeight}px`,
-                      width: `${bpWidth}px`,
-                    }}
-                  >
+                  const { key, areaStyle = {}, dotStyle = {} } = BODY[part];
+                  const {
+                    top: bpTop = 0,
+                    left: bpLeft = 0,
+                    height: bpHeight = 0,
+                    width: bpWidth = 0,
+                  } = areaStyle || {};
+                  const { top: dotTop = 0, left: dotLeft = 0 } = dotStyle || {};
+                  return (
                     <div
+                      key={key}
                       style={{
-                        top: `${dotTop}px`,
-                        left: `${dotLeft}px`,
                         position: "absolute",
-                        height: partsWithSymptoms.includes(key) ? 12 : 0,
-                        width: partsWithSymptoms.includes(key) ? 12 : 0,
-                        backgroundColor: partsWithSymptoms.includes(key)
-                          ? "rgba(236,88,0,0.8)"
-                          : "rgba(0,0,0,0)",
-                        borderRadius: "50%",
+                        top: `${bpTop}px`,
+                        left: `${bpLeft}px`,
+                        height: `${bpHeight}px`,
+                        width: `${bpWidth}px`,
                       }}
-                      onClick={this.showSymptomsOfPart(key)}
-                    />
-                  </div>
-                );
-              })
+                    >
+                      <div
+                        style={{
+                          top: `${dotTop}px`,
+                          left: `${dotLeft}px`,
+                          position: "absolute",
+                          height: partsWithSymptoms.includes(key) ? 12 : 0,
+                          width: partsWithSymptoms.includes(key) ? 12 : 0,
+                          backgroundColor: partsWithSymptoms.includes(key)
+                            ? "rgba(236,88,0,0.8)"
+                            : "rgba(0,0,0,0)",
+                          borderRadius: "50%",
+                        }}
+                        onClick={this.showSymptomsOfPart(key)}
+                      />
+                    </div>
+                  );
+                })
               : PART_LIST_BACK.map((part) => {
-                const {key, areaStyle = {}, dotStyle = {}} = BODY[part];
-                const {
-                  top: bpTop = 0,
-                  left: bpLeft = 0,
-                  height: bpHeight = 0,
-                  width: bpWidth = 0,
-                } = areaStyle || {};
-                const {top: dotTop = 0, left: dotLeft = 0} = dotStyle || {};
-                return (
-                  <div
-                    key={key}
-                    style={{
-                      position: "absolute",
-                      top: `${bpTop}px`,
-                      left: `${bpLeft}px`,
-                      height: `${bpHeight}px`,
-                      width: `${bpWidth}px`,
-                    }}
-                  >
+                  const { key, areaStyle = {}, dotStyle = {} } = BODY[part];
+                  const {
+                    top: bpTop = 0,
+                    left: bpLeft = 0,
+                    height: bpHeight = 0,
+                    width: bpWidth = 0,
+                  } = areaStyle || {};
+                  const { top: dotTop = 0, left: dotLeft = 0 } = dotStyle || {};
+                  return (
                     <div
-                      className={
-                        partsWithSymptoms.includes(key) ? "pointer" : ""
-                      }
+                      key={key}
                       style={{
-                        top: `${dotTop}px`,
-                        left: `${dotLeft}px`,
                         position: "absolute",
-                        height: partsWithSymptoms.includes(key) ? 12 : 0,
-                        width: partsWithSymptoms.includes(key) ? 12 : 0,
-                        backgroundColor: partsWithSymptoms.includes(key)
-                          ? "rgba(236,88,0,0.8)"
-                          : "rgba(0,0,0,0)",
-                        // cursor: partsWithSymptoms.includes(key) ? "pointer" : '',
-                        borderRadius: "50%",
+                        top: `${bpTop}px`,
+                        left: `${bpLeft}px`,
+                        height: `${bpHeight}px`,
+                        width: `${bpWidth}px`,
                       }}
-                      onClick={this.showSymptomsOfPart(key)}
-                    />
-                  </div>
-                );
-              })}
+                    >
+                      <div
+                        className={
+                          partsWithSymptoms.includes(key) ? "pointer" : ""
+                        }
+                        style={{
+                          top: `${dotTop}px`,
+                          left: `${dotLeft}px`,
+                          position: "absolute",
+                          height: partsWithSymptoms.includes(key) ? 12 : 0,
+                          width: partsWithSymptoms.includes(key) ? 12 : 0,
+                          backgroundColor: partsWithSymptoms.includes(key)
+                            ? "rgba(236,88,0,0.8)"
+                            : "rgba(0,0,0,0)",
+                          // cursor: partsWithSymptoms.includes(key) ? "pointer" : '',
+                          borderRadius: "50%",
+                        }}
+                        onClick={this.showSymptomsOfPart(key)}
+                      />
+                    </div>
+                  );
+                })}
           </div>
-          
+
           <div className="mr10 fs16 medium">
             {showFront
               ? this.formatMessage(messages.left)
@@ -773,12 +773,12 @@ class SummaryTab extends Component {
         >
           <div
             className={"modalContainer pl10 pr10 pt10 pb10"}
-            style={{backgroundColor: "#f4f4f4"}}
+            style={{ backgroundColor: "#f4f4f4" }}
           >
             {this.renderModalBody()}
           </div>
         </Modal>
-        
+
         {this.imageModal()}
       </div>
     );

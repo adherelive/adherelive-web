@@ -1,8 +1,8 @@
 "use strict";
 
-import {TABLE_NAME, ACCOUNT_TYPES} from "../app/models/accountDetails";
-import {TABLE_NAME as userTableName} from "../app/models/users";
-import {DataTypes} from "sequelize";
+import { ACCOUNT_TYPES, TABLE_NAME } from "../app/models/accountDetails";
+import { TABLE_NAME as userTableName } from "../app/models/users";
+import { DataTypes } from "sequelize";
 
 module.exports = {
   up: (queryInterface, Sequelize) => {
@@ -77,7 +77,7 @@ module.exports = {
       },
     });
   },
-  
+
   down: (queryInterface, Sequelize) => {
     return queryInterface.dropTable(TABLE_NAME);
   },

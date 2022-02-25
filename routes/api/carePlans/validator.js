@@ -1,4 +1,4 @@
-import {validationError} from "../helper";
+import { validationError } from "../helper";
 import Joi from "@hapi/joi";
 
 const templateCreateCarePlanForm = Joi.object().keys({
@@ -29,7 +29,7 @@ const templateCreateCarePlanForm = Joi.object().keys({
 });
 
 export const validateCreateCarePlanFromTemplate = (req, res, next) => {
-  const {body: data = {}} = req;
+  const { body: data = {} } = req;
   const isValid = templateCreateCarePlanForm.validate(data);
   if (isValid && isValid.error != null) {
     return validationError(res, isValid);

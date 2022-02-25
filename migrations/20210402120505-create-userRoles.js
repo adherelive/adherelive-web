@@ -1,9 +1,9 @@
 "use strict";
 
-import {TABLE_NAME} from "../app/models/userRoles";
+import { TABLE_NAME } from "../app/models/userRoles";
 
-import {TABLE_NAME as userTableName} from "../app/models/users";
-import {USER_CATEGORY} from "../constant";
+import { TABLE_NAME as userTableName } from "../app/models/users";
+import { USER_CATEGORY } from "../constant";
 
 module.exports = {
   up: (queryInterface, Sequelize) => {

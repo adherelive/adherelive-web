@@ -1,6 +1,6 @@
 "use strict";
-import {DataTypes} from "sequelize";
-import {TABLE_NAME as userTableName} from "./users";
+import { DataTypes } from "sequelize";
+import { TABLE_NAME as userTableName } from "./users";
 
 export const TABLE_NAME = "user_devices";
 
@@ -11,7 +11,7 @@ export const db = (database) => {
       id: {
         type: DataTypes.INTEGER,
         primaryKey: true,
-        autoIncrement: true
+        autoIncrement: true,
       },
       user_id: {
         type: DataTypes.INTEGER,
@@ -20,8 +20,8 @@ export const db = (database) => {
           model: {
             tableName: userTableName,
           },
-          key: 'id'
-        }
+          key: "id",
+        },
       },
       platform: {
         type: DataTypes.STRING,
@@ -45,6 +45,5 @@ export const db = (database) => {
 
 export const associate = (database) => {
   // const {<TABLE_NAME>} = database.models || {};
-  
   // associations here (if any) ...
 };

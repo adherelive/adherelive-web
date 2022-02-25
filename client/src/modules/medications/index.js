@@ -1,12 +1,12 @@
-import {doRequest} from "../../Helper/network";
-import {REQUEST_TYPE} from "../../constant";
+import { doRequest } from "../../Helper/network";
+import { REQUEST_TYPE } from "../../constant";
 import {
-  getAddMedicationReminderURL,
-  getAddCarePlanMedicationReminderURL,
-  getMedicationForParticipantUrl,
-  updateMedicationUrl,
   deleteMedicationUrl,
+  getAddCarePlanMedicationReminderURL,
+  getAddMedicationReminderURL,
+  getMedicationForParticipantUrl,
   getMedicationTimelineURL,
+  updateMedicationUrl,
 } from "../../Helper/urls/mReminders";
 
 // const INITIAL_STATE = {
@@ -86,21 +86,21 @@ export const GET_MEDICATIONS_TIMELINE_FAILED =
 
 export const addCarePlanMedicationReminder = (payload, carePlanId) => {
   let response = {};
-  const {id, ...rest} = payload || {};
+  const { id, ...rest } = payload || {};
   return async (dispatch) => {
     try {
-      dispatch({type: ADD_CARE_PLAN_MEDICATION_REMINDER_START});
-      
+      dispatch({ type: ADD_CARE_PLAN_MEDICATION_REMINDER_START });
+
       response = await doRequest({
         method: REQUEST_TYPE.POST,
         url: getAddCarePlanMedicationReminderURL(id, carePlanId),
         data: rest,
       });
-      
-      const {status, payload: {data = {}, error = {}} = {}} =
-      response || {};
+
+      const { status, payload: { data = {}, error = {} } = {} } =
+        response || {};
       if (status === true) {
-        dispatch({type: ADD_CARE_PLAN_MEDICATION_REMINDER_COMPLETE, data});
+        dispatch({ type: ADD_CARE_PLAN_MEDICATION_REMINDER_COMPLETE, data });
       } else {
         dispatch({
           type: ADD_CARE_PLAN_MEDICATION_REMINDER_FAILED,
@@ -109,7 +109,7 @@ export const addCarePlanMedicationReminder = (payload, carePlanId) => {
       }
     } catch (error) {
       console.log("ADD medication reminder error ----> ", error);
-      dispatch({type: ADD_CARE_PLAN_MEDICATION_REMINDER_FAILED});
+      dispatch({ type: ADD_CARE_PLAN_MEDICATION_REMINDER_FAILED });
     }
     return response;
   };
@@ -117,27 +117,27 @@ export const addCarePlanMedicationReminder = (payload, carePlanId) => {
 
 export const addMedicationReminder = (payload) => {
   let response = {};
-  const {id, ...rest} = payload || {};
+  const { id, ...rest } = payload || {};
   return async (dispatch) => {
     try {
-      dispatch({type: ADD_MEDICATION_REMINDER_START});
-      
+      dispatch({ type: ADD_MEDICATION_REMINDER_START });
+
       response = await doRequest({
         method: REQUEST_TYPE.POST,
         url: getAddMedicationReminderURL(id),
         data: rest,
       });
-      
-      const {status, payload: {data = {}, error = {}} = {}} =
-      response || {};
+
+      const { status, payload: { data = {}, error = {} } = {} } =
+        response || {};
       if (status === true) {
-        dispatch({type: ADD_MEDICATION_REMINDER_COMPLETE, payload: data});
+        dispatch({ type: ADD_MEDICATION_REMINDER_COMPLETE, payload: data });
       } else {
-        dispatch({type: ADD_MEDICATION_REMINDER_FAILED, payload: error});
+        dispatch({ type: ADD_MEDICATION_REMINDER_FAILED, payload: error });
       }
     } catch (error) {
       console.log("ADD medication reminder error ----> ", error);
-      dispatch({type: ADD_MEDICATION_REMINDER_FAILED});
+      dispatch({ type: ADD_MEDICATION_REMINDER_FAILED });
     }
     return response;
   };
@@ -145,27 +145,27 @@ export const addMedicationReminder = (payload) => {
 
 export const updateMedication = (payload) => {
   let response = {};
-  const {id, ...rest} = payload || {};
+  const { id, ...rest } = payload || {};
   return async (dispatch) => {
     try {
-      dispatch({type: UPDATE_MEDICATION_START});
-      
+      dispatch({ type: UPDATE_MEDICATION_START });
+
       response = await doRequest({
         method: REQUEST_TYPE.POST,
         url: updateMedicationUrl(id),
         data: rest,
       });
-      
-      const {status, payload: {data = {}, error = {}} = {}} =
-      response || {};
+
+      const { status, payload: { data = {}, error = {} } = {} } =
+        response || {};
       if (status === true) {
-        dispatch({type: UPDATE_MEDICATION_COMPLETE, payload: data, data});
+        dispatch({ type: UPDATE_MEDICATION_COMPLETE, payload: data, data });
       } else {
-        dispatch({type: UPDATE_MEDICATION_FAILED, payload: error});
+        dispatch({ type: UPDATE_MEDICATION_FAILED, payload: error });
       }
     } catch (error) {
       console.log("ADD medication reminder error ----> ", error);
-      dispatch({type: UPDATE_MEDICATION_FAILED});
+      dispatch({ type: UPDATE_MEDICATION_FAILED });
     }
     return response;
   };
@@ -175,13 +175,13 @@ export const getMedications = (id) => {
   let response = {};
   return async (dispatch) => {
     try {
-      dispatch({type: GET_MEDICATION_START});
+      dispatch({ type: GET_MEDICATION_START });
       response = await doRequest({
         method: REQUEST_TYPE.GET,
         url: getMedicationForParticipantUrl(id),
       });
-      
-      const {status, payload: {data, error = {}} = {}} = response || {};
+
+      const { status, payload: { data, error = {} } = {} } = response || {};
       if (status === true) {
         dispatch({
           type: GET_MEDICATION_COMPLETE,
@@ -203,15 +203,15 @@ export const getMedicationTimeline = (medicationId) => {
   let response = {};
   return async (dispatch) => {
     try {
-      dispatch({type: GET_MEDICATIONS_TIMELINE_START});
-      
+      dispatch({ type: GET_MEDICATIONS_TIMELINE_START });
+
       response = await doRequest({
         method: REQUEST_TYPE.GET,
         url: getMedicationTimelineURL(medicationId),
       });
-      
-      const {status, payload: {data = {}, error = {}} = {}} =
-      response || {};
+
+      const { status, payload: { data = {}, error = {} } = {} } =
+        response || {};
       if (status === true) {
         dispatch({
           type: GET_MEDICATIONS_TIMELINE_COMPLETE,
@@ -219,11 +219,11 @@ export const getMedicationTimeline = (medicationId) => {
           data,
         });
       } else {
-        dispatch({type: GET_MEDICATIONS_TIMELINE_FAILED, payload: error});
+        dispatch({ type: GET_MEDICATIONS_TIMELINE_FAILED, payload: error });
       }
     } catch (error) {
       console.log("getMedicationTimeline error ----> ", error);
-      dispatch({type: GET_MEDICATIONS_TIMELINE_FAILED});
+      dispatch({ type: GET_MEDICATIONS_TIMELINE_FAILED });
     }
     return response;
   };
@@ -233,13 +233,13 @@ export const deleteMedication = (id) => {
   let response = {};
   return async (dispatch) => {
     try {
-      dispatch({type: DELETE_MEDICATION_START});
+      dispatch({ type: DELETE_MEDICATION_START });
       response = await doRequest({
         method: REQUEST_TYPE.DELETE,
         url: deleteMedicationUrl(id),
       });
-      
-      const {status, payload: {data, error} = {}} = response || {};
+
+      const { status, payload: { data, error } = {} } = response || {};
       if (status === true) {
         dispatch({
           type: DELETE_MEDICATION_COMPLETE,
@@ -259,7 +259,7 @@ export const deleteMedication = (id) => {
 };
 
 function medicationReducer(state, payload) {
-  const {medications = {}} = payload || {};
+  const { medications = {} } = payload || {};
   if (Object.keys(medications).length > 0) {
     return {
       ...state,
@@ -271,7 +271,7 @@ function medicationReducer(state, payload) {
 }
 
 export default (state = {}, action) => {
-  const {type, data} = action;
+  const { type, data } = action;
   switch (type) {
     default:
       return medicationReducer(state, data);

@@ -1,6 +1,6 @@
-import React, { Component, Fragment } from "react";
+import React, { Component } from "react";
 import { injectIntl } from "react-intl";
-import { Menu, Tooltip, message, Avatar, Icon, Dropdown } from "antd";
+import { Avatar, Dropdown, Icon, Menu, message, Tooltip } from "antd";
 import { PATH, USER_CATEGORY, USER_PERMISSIONS } from "../../constant";
 import confirm from "antd/es/modal/confirm";
 
@@ -11,7 +11,6 @@ import {
   CalendarTwoTone,
   FileOutlined,
   ProfileOutlined,
-  AccountBookOutlined,
   WalletOutlined,
 } from "@ant-design/icons";
 import messages from "./messages";

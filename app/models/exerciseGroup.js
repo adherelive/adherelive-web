@@ -1,7 +1,6 @@
 "use strict";
-import {DataTypes} from "sequelize";
-import {TABLE_NAME as exerciseDetailTableName} from "./exerciseDetails";
-import {TABLE_NAME as repetitionTableName} from "./exerciseRepetition";
+import { DataTypes } from "sequelize";
+import { TABLE_NAME as exerciseDetailTableName } from "./exerciseDetails";
 
 export const TABLE_NAME = "exercise_groups";
 
@@ -37,7 +36,7 @@ export const associate = (database) => {
     foreignKey: "id",
     sourceKey: "exercise_detail_id",
   });
-  
+
   // database.models[TABLE_NAME].hasOne(database.models[repetitionTableName], {
   //   foreignKey: "repetition_id",
   //   targetKey: "id",

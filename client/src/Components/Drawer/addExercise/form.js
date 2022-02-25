@@ -1,17 +1,16 @@
-import React, {Component} from "react";
-import {injectIntl} from "react-intl";
+import React, { Component } from "react";
+import { injectIntl } from "react-intl";
 
 import Form from "antd/es/form";
 import Select from "antd/es/select";
 import Input from "antd/es/input";
 import messages from "./messages";
-import {VIDEO_TYPES} from "../../../constant";
-import message from "antd/es/message";
+import { VIDEO_TYPES } from "../../../constant";
 import CameraOutlined from "@ant-design/icons/CameraOutlined";
 import Upload from "antd/es/upload";
 
-const {Item: FormItem} = Form;
-const {Option, OptGroup} = Select;
+const { Item: FormItem } = Form;
+const { Option, OptGroup } = Select;
 
 const NAME = "name";
 const REPETITION_VALUE = "repetition_value";
@@ -34,21 +33,21 @@ class AddExerciseForm extends Component {
       loading: false,
     };
   }
-  
+
   componentDidMount() {
-    const {exercise_name = ""} = this.props;
+    const { exercise_name = "" } = this.props;
     if (exercise_name.length) {
-      const {form: {setFieldsValue} = {}} = this.props;
-      
-      setFieldsValue({[NAME]: exercise_name});
+      const { form: { setFieldsValue } = {} } = this.props;
+
+      setFieldsValue({ [NAME]: exercise_name });
     }
   }
-  
+
   getRepetitionOptions = () => {
-    const {repetitions = {}} = this.props;
-    
+    const { repetitions = {} } = this.props;
+
     return Object.values(repetitions).map((each, index) => {
-      const {id = null, type = ""} = each || {};
+      const { id = null, type = "" } = each || {};
       return (
         <Option key={`${index}-${type}`} value={id}>
           {type}
@@ -56,69 +55,69 @@ class AddExerciseForm extends Component {
       );
     });
   };
-  
+
   handleRepetitionSelect = (value) => {
-    const {form: {setFieldsValue} = {}} = this.props;
-    
-    setFieldsValue({[REPETITION_ID]: value});
+    const { form: { setFieldsValue } = {} } = this.props;
+
+    setFieldsValue({ [REPETITION_ID]: value });
   };
-  
+
   formatMessage = (data) => this.props.intl.formatMessage(data);
-  
-  handleUpload = async ({file}) => {
+
+  handleUpload = async ({ file }) => {
     const {
       uploadExerciseContent,
-      form: {setFieldsValue} = {},
+      form: { setFieldsValue } = {},
       setUploadedVideoUrl,
       setVideoContentType,
     } = this.props;
     const data = new FormData();
     data.set("files", file);
     try {
-      this.setState({loading: true});
+      this.setState({ loading: true });
       const response = await uploadExerciseContent(data);
-      const {status, payload: {data: {documents = []} = {}} = {}} =
-      response || {};
-      
+      const { status, payload: { data: { documents = [] } = {} } = {} } =
+        response || {};
+
       if (status === true) {
         if (documents.length) {
-          const {name = "", file: resp_file = ""} = documents[0] || {};
+          const { name = "", file: resp_file = "" } = documents[0] || {};
           setVideoContentType(VIDEO_TYPES.UPLOAD);
-          setFieldsValue({[VIDEO_CONTENT]: name});
+          setFieldsValue({ [VIDEO_CONTENT]: name });
           setUploadedVideoUrl(resp_file);
         }
-        this.setState({loading: false});
+        this.setState({ loading: false });
       } else {
-        this.setState({loading: false});
+        this.setState({ loading: false });
       }
     } catch (error) {
-      this.setState({loading: false});
+      this.setState({ loading: false });
     }
   };
-  
+
   onChange = (e) => {
     const {
-      form: {setFieldsValue} = {},
+      form: { setFieldsValue } = {},
       setUploadedVideoUrl,
       setVideoContentType,
     } = this.props;
     setVideoContentType(VIDEO_TYPES.URL);
     setUploadedVideoUrl("");
   };
-  
+
   render() {
     const {
-      form: {getFieldDecorator, isFieldTouched, getFieldError},
+      form: { getFieldDecorator, isFieldTouched, getFieldError },
     } = this.props;
-    
-    const {formatMessage, handleUpload} = this;
-    
+
+    const { formatMessage, handleUpload } = this;
+
     let fieldsError = {};
     FIELDS.forEach((value) => {
       const error = isFieldTouched(value) && getFieldError(value);
-      fieldsError = {...fieldsError, [value]: error};
+      fieldsError = { ...fieldsError, [value]: error };
     });
-    
+
     return (
       <Form className="fw700 wp100 pb30 Form">
         {/* food item name */}
@@ -133,9 +132,9 @@ class AddExerciseForm extends Component {
                 message: formatMessage(messages.name_required_error),
               },
             ],
-          })(<Input type="string" max="500"/>)}
+          })(<Input type="string" max="500" />)}
         </FormItem>
-        
+
         <div className="flex align-center justify-space-between wp100">
           <div className="flex  wp40 ">
             {/* portion size */}
@@ -152,7 +151,7 @@ class AddExerciseForm extends Component {
                     ),
                   },
                 ],
-              })(<Input type="number" min="1"/>)}
+              })(<Input type="number" min="1" />)}
             </FormItem>
           </div>
           <div className="flex  wp40 ">
@@ -181,7 +180,7 @@ class AddExerciseForm extends Component {
             </FormItem>
           </div>
         </div>
-        
+
         {/* calories */}
         <FormItem
           label={formatMessage(messages.calories)}
@@ -190,9 +189,9 @@ class AddExerciseForm extends Component {
           {getFieldDecorator(
             CALORIFIC_VALUE,
             {}
-          )(<Input type="number" className="mb20"/>)}
+          )(<Input type="number" className="mb20" />)}
         </FormItem>
-        
+
         <FormItem
           label={formatMessage(messages.videoUrl)}
           className="flex-grow-1 mt-4 "
@@ -215,7 +214,7 @@ class AddExerciseForm extends Component {
                     customRequest={handleUpload}
                   >
                     <div className="chat-upload-btn">
-                      <CameraOutlined/>
+                      <CameraOutlined />
                     </div>
                   </Upload>
                 </div>

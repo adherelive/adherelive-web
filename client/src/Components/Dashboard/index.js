@@ -3,13 +3,13 @@ import { injectIntl } from "react-intl";
 import messages from "./message";
 import { connect } from "getstream";
 import {
-  TABLE_DEFAULT_BLANK_FIELD,
   FEATURES,
-  MISSED_MEDICATION,
-  MISSED_APPOINTMENTS,
   MISSED_ACTIONS,
+  MISSED_APPOINTMENTS,
   MISSED_DIET,
+  MISSED_MEDICATION,
   MISSED_WORKOUT,
+  TABLE_DEFAULT_BLANK_FIELD,
   USER_PERMISSIONS,
 } from "../../constant";
 import Tabs from "antd/es/tabs";
@@ -24,10 +24,12 @@ import Loading from "../Common/Loading";
 import { withRouter } from "react-router-dom";
 import Donut from "../Common/graphs/donut";
 import GraphsModal from "./graphsModal";
-import { getPatientConsultingVideoUrl } from "../../Helper/url/patients";
-import { getPatientConsultingUrl } from "../../Helper/url/patients";
+import {
+  getPatientConsultingUrl,
+  getPatientConsultingVideoUrl,
+} from "../../Helper/url/patients";
 import config from "../../config";
-import { message, Button, Spin, Menu, Dropdown, Modal } from "antd";
+import { Button, Dropdown, Menu, message, Modal, Spin } from "antd";
 import SearchPatient from "../../Containers/SearchPatient";
 import MissedAppointmentsDrawer from "../../Containers/Drawer/missedAppointment";
 import MissedVitalsDrawer from "../../Containers/Drawer/missedVital";
@@ -36,7 +38,6 @@ import MissedDietsDrawer from "../../Containers/Drawer/missedDiet";
 import MissedWorkoutsDrawer from "../../Containers/Drawer/missedWorkout";
 
 // helpers...
-import { getRoomId } from "../../Helper/twilio";
 
 const { GETSTREAM_API_KEY, GETSTREAM_APP_ID } = config;
 const { TabPane } = Tabs;

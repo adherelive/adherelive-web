@@ -1,5 +1,5 @@
-import React, { useState } from "react";
-import { Modal, Button } from "antd";
+import React from "react";
+import { Modal } from "antd";
 
 function CreateSubscriptionWarn({ isModalVisible, handleOk, handleCancel }) {
   return (

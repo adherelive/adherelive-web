@@ -1,28 +1,24 @@
 import Controller from "../../index";
 import {
+  APPOINTMENT_TYPE,
+  DOCUMENT_PARENT_TYPE,
   EVENT_STATUS,
   EVENT_TYPE,
+  FAVOURITE_TYPE,
   FEATURE_TYPE,
-  USER_CATEGORY,
-  DOCUMENT_PARENT_TYPE,
-  S3_DOWNLOAD_FOLDER,
   NOTIFICATION_STAGES,
   RADIOLOGY,
-  FAVOURITE_TYPE,
-  APPOINTMENT_TYPE,
+  S3_DOWNLOAD_FOLDER,
+  USER_CATEGORY,
 } from "../../../../constant";
 import moment from "moment";
 
 import Log from "../../../../libs/log";
 import AppointmentJob from "../../../JobSdk/Appointments/observer";
 import NotificationSdk from "../../../NotificationSdk";
-import {uploadImageS3} from "../user/userHelper";
-import {getFilePath} from "../../../helper/filePath";
-import {downloadFileFromS3} from "../user/userHelper";
-import {checkAndCreateDirectory} from "../../../helper/common";
-
-const path = require("path");
-
+import { downloadFileFromS3, uploadImageS3 } from "../user/userHelper";
+import { getFilePath } from "../../../helper/filePath";
+import { checkAndCreateDirectory } from "../../../helper/common";
 // SERVICES...
 import appointmentService from "../../../services/appointment/appointment.service";
 import queueService from "../../../services/awsQueue/queue.service";
@@ -46,18 +42,20 @@ import FeatureDetailsWrapper from "../../../ApiWrapper/mobile/featureDetails";
 
 import * as AppointmentHelper from "./helper";
 
+const path = require("path");
+
 const Logger = new Log("MOBILE APPOINTMENT CONTROLLER");
 
 class MobileAppointmentController extends Controller {
   constructor() {
     super();
   }
-  
+
   create = async (req, res) => {
-    const {raiseSuccess, raiseClientError, raiseServerError} = this;
+    const { raiseSuccess, raiseClientError, raiseServerError } = this;
     try {
       Logger.debug("REQUEST DATA ---> ", req.body);
-      const {body, userDetails} = req;
+      const { body, userDetails } = req;
       const {
         participant_two,
         description = "",
@@ -78,13 +76,13 @@ class MobileAppointmentController extends Controller {
       const {
         userId,
         userRoleId,
-        userData: {category} = {},
+        userData: { category } = {},
         userCategoryId,
-        userCategoryData: {basic_info: {full_name} = {}} = {},
+        userCategoryData: { basic_info: { full_name } = {} } = {},
       } = userDetails || {};
-      const {id: participant_two_id, category: participant_two_type} =
-      participant_two || {};
-      
+      const { id: participant_two_id, category: participant_two_type } =
+        participant_two || {};
+
       const previousAppointments = await appointmentService.checkTimeSlot(
         start_time,
         end_time,
@@ -97,7 +95,7 @@ class MobileAppointmentController extends Controller {
           participant_two_type,
         }
       );
-      
+
       if (previousAppointments.length > 0) {
         return raiseClientError(
           res,
@@ -108,7 +106,7 @@ class MobileAppointmentController extends Controller {
           `Appointment Slot already present between`
         );
       }
-      
+
       const appointment_data = {
         participant_one_type: category,
         participant_one_id: userCategoryId,
@@ -133,14 +131,14 @@ class MobileAppointmentController extends Controller {
           radiology_type,
         },
       };
-      
+
       const appointment = await appointmentService.addAppointment(
         appointment_data
       );
       const appointmentData = await MAppointmentWrapper(appointment);
-      
+
       let participantTwoId = null;
-      
+
       switch (participant_two_type) {
         // case USER_CATEGORY.DOCTOR:
         //   const doctor = await doctorService.getDoctorByData({
@@ -154,15 +152,15 @@ class MobileAppointmentController extends Controller {
             id: participant_two_id,
           });
           const patientData = await PatientWrapper(patient);
-          const {user_role_id} = await patientData.getAllInfo();
+          const { user_role_id } = await patientData.getAllInfo();
           participantTwoId = user_role_id;
           break;
         default:
           break;
       }
-      
+
       const carePlan = await CarePlanWrapper(null, care_plan_id);
-      
+
       const eventScheduleData = {
         type: EVENT_TYPE.APPOINTMENT,
         event_id: appointmentData.getAppointmentId(),
@@ -179,20 +177,20 @@ class MobileAppointmentController extends Controller {
         actor: {
           id: userId,
           user_role_id: userRoleId,
-          details: {name: full_name, category},
+          details: { name: full_name, category },
         },
       };
-      
+
       const QueueService = new queueService();
-      
+
       await QueueService.sendMessage(eventScheduleData);
-      
+
       const appointmentJob = AppointmentJob.execute(
         EVENT_STATUS.SCHEDULED,
         eventScheduleData
       );
       await NotificationSdk.execute(appointmentJob);
-      
+
       // ADD CARE_PLAN APPOINTMENT
       if (care_plan_id) {
         const carePlanAppointment =
@@ -200,11 +198,11 @@ class MobileAppointmentController extends Controller {
             care_plan_id,
             appointment_id: appointmentData.getAppointmentId(),
           });
-        
+
         const careplanAppointmentData = await CarePlanAppointmentWrapper(
           carePlanAppointment
         );
-        
+
         return raiseSuccess(
           res,
           200,
@@ -214,7 +212,7 @@ class MobileAppointmentController extends Controller {
           `appointment created for careplan id : ${care_plan_id}`
         );
       }
-      
+
       return raiseSuccess(
         res,
         200,
@@ -231,26 +229,26 @@ class MobileAppointmentController extends Controller {
       return raiseServerError(res);
     }
   };
-  
+
   getAppointmentForPatient = async (req, res) => {
-    const {raiseSuccess, raiseServerError} = this;
+    const { raiseSuccess, raiseServerError } = this;
     try {
-      const {params: {patient_id} = {}, userDetails: {userId} = {}} = req;
-      
+      const { params: { patient_id } = {}, userDetails: { userId } = {} } = req;
+
       const appointmentList = await appointmentService.getAppointmentForPatient(
         patient_id
       );
       // Logger.debug("appointmentList", appointmentList);
-      
+
       // if (appointmentList.length > 0) {
       let appointmentApiData = {};
-      
+
       for (const appointment of appointmentList) {
         const appointmentWrapper = await MAppointmentWrapper(appointment);
         appointmentApiData[appointmentWrapper.getAppointmentId()] =
           appointmentWrapper.getBasicInfo();
       }
-      
+
       return raiseSuccess(
         res,
         200,
@@ -268,13 +266,13 @@ class MobileAppointmentController extends Controller {
       return raiseServerError(res);
     }
   };
-  
+
   update = async (req, res) => {
-    const {raiseSuccess, raiseClientError, raiseServerError} = this;
+    const { raiseSuccess, raiseClientError, raiseServerError } = this;
     try {
       Logger.debug("REQUEST PARAM ---> ", req.params);
       Logger.debug("REQUEST DATA ---> ", req.body);
-      const {params: {id} = {}, body, userDetails} = req;
+      const { params: { id } = {}, body, userDetails } = req;
       const {
         participant_two,
         description = "",
@@ -294,32 +292,32 @@ class MobileAppointmentController extends Controller {
       const {
         userId,
         userRoleId,
-        userData: {category} = {},
+        userData: { category } = {},
         userCategoryId,
-        userCategoryData: {basic_info: {full_name} = {}} = {},
+        userCategoryData: { basic_info: { full_name } = {} } = {},
       } = userDetails || {};
-      const {id: participant_two_id, category: participant_two_type} =
-      participant_two || {};
-      
+      const { id: participant_two_id, category: participant_two_type } =
+        participant_two || {};
+
       // careplan id for appointment
-      const {care_plan_id = null} =
-      (await carePlanAppointmentService.getSingleCarePlanAppointmentByData({
-        appointment_id: id,
-      })) || {};
-      
+      const { care_plan_id = null } =
+        (await carePlanAppointmentService.getSingleCarePlanAppointmentByData({
+          appointment_id: id,
+        })) || {};
+
       const oldAppointment = await appointmentService.getAppointmentById(id);
-      
+
       const oldAppointmentData = await MAppointmentWrapper(oldAppointment);
-      
+
       if (
         moment(date).diff(moment(oldAppointmentData.getStartDate()), "d") !==
-        0 ||
+          0 ||
         moment(start_time).diff(
           moment(oldAppointmentData.getStartTime()),
           "m"
         ) !== 0 ||
         moment(end_time).diff(moment(oldAppointmentData.getEndTime()), "m") !==
-        0
+          0
       ) {
         const previousAppointments = await appointmentService.checkTimeSlot(
           start_time,
@@ -333,7 +331,7 @@ class MobileAppointmentController extends Controller {
             participant_two_type,
           }
         );
-        
+
         const filteredAppointments = previousAppointments.filter(
           (appointment) => {
             console.log(
@@ -344,7 +342,7 @@ class MobileAppointmentController extends Controller {
             return `${appointment.get("id")}` !== id;
           }
         );
-        
+
         if (filteredAppointments.length > 0) {
           return raiseClientError(
             res,
@@ -356,7 +354,7 @@ class MobileAppointmentController extends Controller {
           );
         }
       }
-      
+
       const appointment_data = {
         participant_one_type: category,
         participant_one_id: userCategoryId,
@@ -381,21 +379,21 @@ class MobileAppointmentController extends Controller {
           radiology_type,
         },
       };
-      
+
       const appointment = await appointmentService.updateAppointment(
         id,
         appointment_data
       );
-      
+
       const updatedAppointmentDetails =
         await appointmentService.getAppointmentById(id);
-      
+
       const appointmentApiData = await MAppointmentWrapper(
         updatedAppointmentDetails
       );
-      
+
       let participantTwoId = null;
-      
+
       switch (participant_two_type) {
         // case USER_CATEGORY.DOCTOR:
         //   const doctor = await doctorService.getDoctorByData({
@@ -409,22 +407,22 @@ class MobileAppointmentController extends Controller {
             id: participant_two_id,
           });
           const patientData = await PatientWrapper(patient);
-          const {user_role_id} = await patientData.getAllInfo();
+          const { user_role_id } = await patientData.getAllInfo();
           participantTwoId = user_role_id;
           break;
         default:
           break;
       }
-      
+
       // 1. delete
       const scheduleEventService = new ScheduleEventService();
       await scheduleEventService.deleteBatch({
         event_id: id,
         event_type: EVENT_TYPE.APPOINTMENT,
       });
-      
+
       const carePlan = await CarePlanWrapper(null, care_plan_id);
-      
+
       // 2. new sqs for updated appointment
       const eventScheduleData = {
         type: EVENT_TYPE.APPOINTMENT,
@@ -442,19 +440,19 @@ class MobileAppointmentController extends Controller {
         actor: {
           id: userId,
           user_role_id: userRoleId,
-          details: {name: full_name, category},
+          details: { name: full_name, category },
         },
       };
-      
+
       const QueueService = new queueService();
       await QueueService.sendMessage(eventScheduleData);
-      
+
       const appointmentJob = AppointmentJob.execute(
         NOTIFICATION_STAGES.UPDATE,
         eventScheduleData
       );
       await NotificationSdk.execute(appointmentJob);
-      
+
       return raiseSuccess(
         res,
         200,
@@ -472,16 +470,16 @@ class MobileAppointmentController extends Controller {
       return raiseServerError(res);
     }
   };
-  
+
   delete = async (req, res) => {
-    const {raiseSuccess, raiseServerError} = this;
+    const { raiseSuccess, raiseServerError } = this;
     try {
       Logger.debug("REQUEST DATA ----> ", req.params);
       const {
-        params: {id: appointment_id} = {},
-        userDetails: {userId} = {},
+        params: { id: appointment_id } = {},
+        userDetails: { userId } = {},
       } = req;
-      
+
       const carePlanAppointmentDetails =
         await carePlanAppointmentService.deleteCarePlanAppointmentByAppointmentId(
           appointment_id
@@ -489,46 +487,46 @@ class MobileAppointmentController extends Controller {
       const appointmentDetails = await appointmentService.deleteAppointment(
         appointment_id
       );
-      
+
       // 1. delete events
       const scheduleEventService = new ScheduleEventService();
       await scheduleEventService.deleteBatch({
         event_id: appointment_id,
         event_type: EVENT_TYPE.APPOINTMENT,
       });
-      
+
       return raiseSuccess(res, 200, {}, `Appointment deleted successfully`);
     } catch (error) {
       // Logger.debug("500 error", error);
       return raiseServerError(res);
     }
   };
-  
+
   getAppointmentDetails = async (req, res) => {
-    const {raiseSuccess, raiseServerError} = this;
+    const { raiseSuccess, raiseServerError } = this;
     try {
       const {
-        userDetails: {userData: {category}, userCategoryId} = {},
-        headers: {version = null} = {},
+        userDetails: { userData: { category }, userCategoryId } = {},
+        headers: { version = null } = {},
         headers = {},
       } = req;
-      
+
       let featureDetails = {};
-      
+
       if (version) {
         const appointmentDetails = await featureDetailService.getDetailsByData({
           feature_type: FEATURE_TYPE.APPOINTMENT,
         });
-        
+
         const appointmentData = await FeatureDetailsWrapper(appointmentDetails);
         featureDetails = appointmentData.getFeatureDetails();
-        const {type_description, radiology_type_data} = featureDetails || {};
-        
+        const { type_description, radiology_type_data } = featureDetails || {};
+
         const userTypeData = {
           id: userCategoryId,
           category,
         };
-        
+
         const updatedTypeDescriptionWithFavourites =
           await AppointmentHelper.getFavoriteInDetails(
             userTypeData,
@@ -537,7 +535,7 @@ class MobileAppointmentController extends Controller {
           );
         featureDetails = {
           ...featureDetails,
-          ...{type_description: updatedTypeDescriptionWithFavourites},
+          ...{ type_description: updatedTypeDescriptionWithFavourites },
         };
         const updatedRadiologyDataWithFavourites =
           await AppointmentHelper.getFavoriteInDetails(
@@ -547,40 +545,40 @@ class MobileAppointmentController extends Controller {
           );
         featureDetails = {
           ...featureDetails,
-          ...{radiology_type_data: updatedRadiologyDataWithFavourites},
+          ...{ radiology_type_data: updatedRadiologyDataWithFavourites },
         };
       } else {
         const prevVersionsAppointmentDetails =
           await featureDetailService.getDetailsByData({
             feature_type: FEATURE_TYPE.PREV_VERSION_APPOINTMENT,
           });
-        
+
         const prevVersionsAppointmentData = await FeatureDetailsWrapper(
           prevVersionsAppointmentDetails
         );
         featureDetails = prevVersionsAppointmentData.getFeatureDetails();
       }
-      
-      const {appointment_type = {}} = featureDetails;
+
+      const { appointment_type = {} } = featureDetails;
       if (category === USER_CATEGORY.HSP) {
         let hspAppointmentType = {};
         for (let each in appointment_type) {
-          const {title = ""} = appointment_type[each];
-          const {title: radiologyTitle} = APPOINTMENT_TYPE[RADIOLOGY];
+          const { title = "" } = appointment_type[each];
+          const { title: radiologyTitle } = APPOINTMENT_TYPE[RADIOLOGY];
           if (title === radiologyTitle) {
             continue;
           }
           hspAppointmentType[each] = appointment_type[each];
         }
-        featureDetails["appointment_type"] = {...hspAppointmentType};
+        featureDetails["appointment_type"] = { ...hspAppointmentType };
       }
-      
+
       return raiseSuccess(
         res,
         200,
         {
           static_templates: {
-            appointments: {...featureDetails},
+            appointments: { ...featureDetails },
           },
         },
         "Appointment details fetched successfully"
@@ -590,7 +588,7 @@ class MobileAppointmentController extends Controller {
       return raiseServerError(res);
     }
   };
-  
+
   // getTypeDescription = async (req, res) => {
   //   const {raiseSuccess, raiseServerError} = this;
   //   try {
@@ -609,28 +607,28 @@ class MobileAppointmentController extends Controller {
   //     return raiseServerError(res);
   //   }
   // };
-  
+
   uploadAppointmentDoc = async (req, res) => {
     try {
       const {
-        userDetails: {userId = null, userData: {category} = {}} = {},
+        userDetails: { userId = null, userData: { category } = {} } = {},
       } = req || {};
       const file = req.file;
-      const {params: {appointment_id = null} = {}} = req || {};
-      
-      const {originalname: file_name = ""} = file;
-      
+      const { params: { appointment_id = null } = {} } = req || {};
+
+      const { originalname: file_name = "" } = file;
+
       Logger.debug("file ----> ", file);
-      
+
       // const scheduleEventService = new ScheduleEventService();
-      
+
       // const eventForAppointment = await scheduleEventService.getEventByData({
       //   event_id: appointment_id,
       //   event_type: EVENT_TYPE.APPOINTMENT
       // });
-      
+
       // const scheduleData = await EventWrapper(eventForAppointment);
-      
+
       // if (scheduleData.getStatus() !== EVENT_STATUS.COMPLETED) {
       //   return this.raiseClientError(
       //     res,
@@ -644,16 +642,16 @@ class MobileAppointmentController extends Controller {
         appointment_id
       );
       let userIsParticipant = true;
-      
+
       if (appointmentDetails) {
         appointmentApiData = await MAppointmentWrapper(appointmentDetails);
-        
-        const {participant_one_id, participant_two_id} =
+
+        const { participant_one_id, participant_two_id } =
           appointmentApiData.getParticipants();
-        
+
         let userCategoryId = null;
         let userCategoryData = null;
-        
+
         switch (category) {
           case USER_CATEGORY.DOCTOR:
             const doctor = await doctorService.getDoctorByData({
@@ -677,14 +675,14 @@ class MobileAppointmentController extends Controller {
           default:
             break;
         }
-        
+
         userIsParticipant =
           participant_one_id === userCategoryId ||
           participant_two_id === userCategoryId
             ? true
             : false;
       }
-      
+
       if (!appointmentDetails || !userIsParticipant) {
         return this.raiseClientError(
           res,
@@ -693,18 +691,18 @@ class MobileAppointmentController extends Controller {
           `User is not authorized to upload document.`
         );
       }
-      
+
       try {
         let files = await uploadImageS3(userId, file);
-        
+
         const fileUrl = files && files.length ? getFilePath(files[0]) : files;
-        
+
         const docExist = await documentService.getDocumentByData(
           DOCUMENT_PARENT_TYPE.APPOINTMENT_DOC,
           appointment_id,
           fileUrl
         );
-        
+
         if (!docExist) {
           const appointmentDoc = await documentService.addDocument({
             parent_type: DOCUMENT_PARENT_TYPE.APPOINTMENT_DOC,
@@ -713,14 +711,14 @@ class MobileAppointmentController extends Controller {
             name: file_name,
           });
         }
-        
+
         let uploadDocumentsData = {};
         const uploadDocuments =
           await documentService.getDoctorQualificationDocuments(
             DOCUMENT_PARENT_TYPE.APPOINTMENT_DOC,
             appointment_id
           );
-        
+
         for (const uploadDocument of uploadDocuments) {
           const uploadDocumentData = await UploadDocumentWrapper(
             uploadDocument
@@ -728,7 +726,7 @@ class MobileAppointmentController extends Controller {
           uploadDocumentsData[uploadDocumentData.getUploadDocumentId()] =
             uploadDocumentData.getBasicInfo();
         }
-        
+
         return this.raiseSuccess(
           res,
           200,
@@ -746,18 +744,18 @@ class MobileAppointmentController extends Controller {
       return this.raiseServerError(res);
     }
   };
-  
+
   downloadAppointmentDoc = async (req, res) => {
     try {
       const {
-        userDetails: {userId = null, userData: {category} = {}} = {},
-        params: {document_id = null} = {},
+        userDetails: { userId = null, userData: { category } = {} } = {},
+        params: { document_id = null } = {},
       } = req || {};
-      
+
       const uploadDocuments = await documentService.getDocumentById(
         document_id
       );
-      
+
       if (!uploadDocuments) {
         return this.raiseClientError(
           res,
@@ -766,27 +764,27 @@ class MobileAppointmentController extends Controller {
           `No such document available.`
         );
       }
-      
+
       const uploadDocumentData = await UploadDocumentWrapper(uploadDocuments);
-      const {basic_info: {name, document, parent_id, parent_type} = {}} =
+      const { basic_info: { name, document, parent_id, parent_type } = {} } =
         uploadDocumentData.getBasicInfo();
-      
+
       const appointmentDetails = await appointmentService.getAppointmentById(
         parent_id
       );
       let userIsParticipant = true;
-      
+
       if (appointmentDetails) {
         const appointmentApiData = await MAppointmentWrapper(
           appointmentDetails
         );
-        
-        const {participant_one_id, participant_two_id} =
+
+        const { participant_one_id, participant_two_id } =
           appointmentApiData.getParticipants();
-        
+
         let userCategoryId = null;
         let userCategoryData = null;
-        
+
         switch (category) {
           case USER_CATEGORY.DOCTOR:
             const doctor = await doctorService.getDoctorByData({
@@ -810,16 +808,16 @@ class MobileAppointmentController extends Controller {
           default:
             break;
         }
-        
+
         userIsParticipant =
           participant_one_id === userCategoryId ||
           participant_two_id === userCategoryId
             ? true
             : false;
       }
-      
+
       console.log("values are: ", appointmentDetails, userIsParticipant);
-      
+
       if (!appointmentDetails || !userIsParticipant) {
         return this.raiseClientError(
           res,
@@ -828,16 +826,16 @@ class MobileAppointmentController extends Controller {
           `User is not authorized to download document.`
         );
       }
-      
+
       checkAndCreateDirectory(S3_DOWNLOAD_FOLDER);
-      
+
       const appointmentDocPath = `${S3_DOWNLOAD_FOLDER}/${name}`;
-      
+
       const downloadDoc = await downloadFileFromS3(
         getFilePath(document),
         appointmentDocPath
       );
-      
+
       const options = {
         root: path.join(__dirname, `../../../../${S3_DOWNLOAD_FOLDER}/`),
       };
@@ -847,16 +845,16 @@ class MobileAppointmentController extends Controller {
       return this.raiseServerError(res);
     }
   };
-  
+
   deleteAppointmentDoc = async (req, res) => {
     try {
       const {
-        userDetails: {userId = null, userData: {category} = {}} = {},
+        userDetails: { userId = null, userData: { category } = {} } = {},
       } = req || {};
-      const {params: {document_id = null} = {}} = req || {};
-      
+      const { params: { document_id = null } = {} } = req || {};
+
       const documentData = await documentService.getDocumentById(document_id);
-      
+
       if (!documentData) {
         return this.raiseClientError(
           res,
@@ -865,27 +863,27 @@ class MobileAppointmentController extends Controller {
           `No such document available.`
         );
       }
-      
+
       const uploadDocumentData = await UploadDocumentWrapper(documentData);
-      
-      const {basic_info: {parent_id} = {}} =
+
+      const { basic_info: { parent_id } = {} } =
         uploadDocumentData.getBasicInfo();
-      
+
       const appointmentDetails = await appointmentService.getAppointmentById(
         parent_id
       );
       let userIsParticipant = true;
-      
+
       if (appointmentDetails) {
         const appointmentApiData = await MAppointmentWrapper(
           appointmentDetails
         );
-        const {participant_one_id, participant_two_id} =
+        const { participant_one_id, participant_two_id } =
           appointmentApiData.getParticipants();
-        
+
         let userCategoryId = null;
         let userCategoryData = null;
-        
+
         switch (category) {
           case USER_CATEGORY.DOCTOR:
             const doctor = await doctorService.getDoctorByData({
@@ -909,14 +907,14 @@ class MobileAppointmentController extends Controller {
           default:
             break;
         }
-        
+
         userIsParticipant =
           participant_one_id === userCategoryId ||
           participant_two_id === userCategoryId
             ? true
             : false;
       }
-      
+
       if (!appointmentDetails || !userIsParticipant) {
         return this.raiseClientError(
           res,
@@ -925,13 +923,13 @@ class MobileAppointmentController extends Controller {
           `User is not authorized to delete document.`
         );
       }
-      
+
       const deleteDocs = await documentService.deleteDocumentsOfAppointment(
         document_id
       );
-      
+
       const appointment = await MAppointmentWrapper(appointmentDetails);
-      
+
       return this.raiseSuccess(
         res,
         200,

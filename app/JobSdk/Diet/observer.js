@@ -1,13 +1,12 @@
-import {EVENT_STATUS, NOTIFICATION_STAGES} from "../../../constant";
+import { EVENT_STATUS, NOTIFICATION_STAGES } from "../../../constant";
 import CreateJob from "./createJob";
 import StartJob from "./startJob";
 import PriorJob from "./priorJob";
 import ResponseJob from "./responseJob";
 
 class DietObserver {
-  constructor() {
-  }
-  
+  constructor() {}
+
   execute = (typeStatus, eventDetails) => {
     switch (typeStatus) {
       case EVENT_STATUS.SCHEDULED:

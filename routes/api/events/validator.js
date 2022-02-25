@@ -1,7 +1,6 @@
 import Joi from "@hapi/joi";
 import moment from "moment";
-import {USER_CATEGORY} from "../../../constant";
-import {raiseClientError} from "../../helper";
+import { raiseClientError } from "../../helper";
 
 const appointmentFormSchema = Joi.object().keys({
   participant_two: Joi.object()
@@ -51,8 +50,8 @@ const validateTimeInterval = (startTime, endTime) => {
 };
 
 export const validateMedicationReminderData = (req, res, next) => {
-  const {body: data = {}} = req;
-  const {start_date, end_date} = data;
+  const { body: data = {} } = req;
+  const { start_date, end_date } = data;
   const isValid = medicationReminderFormSchema.validate(data);
   if (isValid && isValid.error != null) {
     return raiseClientError(res, 422, isValid.error, "");
@@ -80,8 +79,8 @@ export const validateMedicationReminderData = (req, res, next) => {
 };
 
 export const validateAppointmentFormData = (req, res, next) => {
-  const {body: data = {}} = req;
-  const {startTime, endTime} = data;
+  const { body: data = {} } = req;
+  const { startTime, endTime } = data;
   // const isValid = Joi.validate(data, appointmentFormSchema);
   const isValid = appointmentFormSchema.validate(data);
   if (isValid && isValid.error != null) {

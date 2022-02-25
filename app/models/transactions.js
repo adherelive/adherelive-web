@@ -1,6 +1,6 @@
-import {DataTypes} from "sequelize";
-import {USER_CATEGORY_ARRAY} from "./users";
-import {TABLE_NAME as paymentProductTableName} from "./paymentProducts";
+import { DataTypes } from "sequelize";
+import { USER_CATEGORY_ARRAY } from "./users";
+import { TABLE_NAME as paymentProductTableName } from "./paymentProducts";
 
 export const TABLE_NAME = "transactions";
 

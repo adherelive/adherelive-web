@@ -1,7 +1,5 @@
 import Joi from "@hapi/joi";
-import moment from "moment";
-import {USER_CATEGORY, WHEN_TO_TAKE_ABBREVATIONS} from "../../../constant";
-import {raiseClientError} from "../../helper";
+import { WHEN_TO_TAKE_ABBREVATIONS } from "../../../constant";
 import Response from "../../../app/helper/responseFormat";
 
 const medicationReminderFormSchema = Joi.object().keys({
@@ -52,8 +50,8 @@ const medicationReminderFormSchema = Joi.object().keys({
 // };
 
 export const validateMedicationReminderData = (req, res, next) => {
-  const {body: data = {}} = req;
-  const {start_date, end_date} = data;
+  const { body: data = {} } = req;
+  const { start_date, end_date } = data;
   const isValid = medicationReminderFormSchema.validate(data);
   if (isValid && isValid.error != null) {
     // return raiseClientError(res, 422, isValid.error, "please check filled details");

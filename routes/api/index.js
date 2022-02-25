@@ -10,9 +10,6 @@ import UserWrapper from "../../app/ApiWrapper/web/user";
 import UserRoleWrapper from "../../app/ApiWrapper/mobile/userRoles";
 
 import Logger from "../../libs/log";
-
-const Log = new Logger("API > INDEX");
-
 import userRouter from "./user";
 import appointmentRouter from "./appointments";
 import eventRouter from "./events";
@@ -50,6 +47,8 @@ import dietRouter from "./diet";
 import portionRouter from "./portion";
 import exerciseRouter from "./exercises";
 import workoutRouter from "./workouts";
+
+const Log = new Logger("API > INDEX");
 
 router.use(async function (req, res, next) {
   try {

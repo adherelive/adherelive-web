@@ -1,5 +1,5 @@
-import React, {Component} from "react";
-import {injectIntl} from "react-intl";
+import React, { Component } from "react";
+import { injectIntl } from "react-intl";
 import Modal from "antd/es/modal";
 import message from "antd/es/message";
 import Upload from "antd/es/upload";
@@ -7,11 +7,10 @@ import Button from "antd/es/button";
 import messages from "./messages";
 import {
   DeleteTwoTone,
-  PlusOutlined,
-  EyeTwoTone,
   DownloadOutlined,
-  // CloudDownloadOutlined,
+  EyeTwoTone,
   LoadingOutlined,
+  PlusOutlined,
 } from "@ant-design/icons";
 import confirm from "antd/es/modal/confirm";
 
@@ -24,44 +23,44 @@ class AppointmentUploadModal extends Component {
       uploading: false,
     };
   }
-  
+
   formatMessage = (message) => this.props.intl.formatMessage(message);
-  
+
   customRequestUploadDocuments =
     (id) =>
-      async ({file, filename, onError, onProgress, onSuccess}) => {
-        const {uploadAppointmentDocs} = this.props;
-        
-        let data = new FormData();
-        data.append("files", file);
-        
-        this.setState({uploading: true});
-        
-        const response = await uploadAppointmentDocs(data);
-        
-        const {status = false, payload: {message: respMessage = ""} = {}} =
-          response;
-        
-        if (status) {
-          this.setState({uploading: false});
-          message.success(respMessage);
-        } else {
-          message.warn(respMessage);
-        }
-      };
-  
+    async ({ file, filename, onError, onProgress, onSuccess }) => {
+      const { uploadAppointmentDocs } = this.props;
+
+      let data = new FormData();
+      data.append("files", file);
+
+      this.setState({ uploading: true });
+
+      const response = await uploadAppointmentDocs(data);
+
+      const { status = false, payload: { message: respMessage = "" } = {} } =
+        response;
+
+      if (status) {
+        this.setState({ uploading: false });
+        message.success(respMessage);
+      } else {
+        message.warn(respMessage);
+      }
+    };
+
   handleDelete = (id, src) => (e) => {
     e.preventDefault();
-    const {warnNote} = this;
-    
+    const { warnNote } = this;
+
     confirm({
       title: `${this.formatMessage(messages.warnNote)}`,
       content: <div>{warnNote()}</div>,
       onOk: async () => {
         try {
-          const {deleteAppointmentDocs} = this.props;
+          const { deleteAppointmentDocs } = this.props;
           const response = await deleteAppointmentDocs(id);
-          const {status, payload: {data, message: respMessage} = {}} =
+          const { status, payload: { data, message: respMessage } = {} } =
             response;
           if (status) {
             message.success(respMessage);
@@ -73,11 +72,10 @@ class AppointmentUploadModal extends Component {
           message.warn(this.formatMessage(messages.somethingWentWrong));
         }
       },
-      onCancel() {
-      },
+      onCancel() {},
     });
   };
-  
+
   warnNote = () => {
     return (
       <div className="pt16">
@@ -88,11 +86,11 @@ class AppointmentUploadModal extends Component {
       </div>
     );
   };
-  
-  getImageView = ({src, id}) => {
+
+  getImageView = ({ src, id }) => {
     return (
       <div className={"qualification-avatar-uploader "}>
-        <img src={src} className="wp100 hp100 br4" alt="appointment-report"/>
+        <img src={src} className="wp100 hp100 br4" alt="appointment-report" />
         <div className="overlay"></div>
         <div className="absolute tp45 l0 wp100 flex justify-center align-space-evenly doc-container">
           <DeleteTwoTone
@@ -111,16 +109,16 @@ class AppointmentUploadModal extends Component {
             href={src}
             target={"_self"}
             className={"del doc-opt ml4"}
-            style={{color: "#fff"}}
+            style={{ color: "#fff" }}
           >
-            <DownloadOutlined className="fs18" twoToneColor="#fff"/>
+            <DownloadOutlined className="fs18" twoToneColor="#fff" />
           </a>
         </div>
       </div>
     );
   };
-  
-  getFileView = ({src, extension, id}) => {
+
+  getFileView = ({ src, extension, id }) => {
     return (
       <div className={"qualification-avatar-uploader "}>
         {/* <div className="wp100 mw100 flex direction-column align-center justify-center"> */}
@@ -145,62 +143,62 @@ class AppointmentUploadModal extends Component {
             href={src}
             target={"_self"}
             className={"del doc-opt ml4"}
-            style={{color: "#fff"}}
+            style={{ color: "#fff" }}
           >
-            <DownloadOutlined className="fs18 " twoToneColor="#fff"/>
+            <DownloadOutlined className="fs18 " twoToneColor="#fff" />
           </a>
         </div>
       </div>
     );
   };
-  
+
   handleDocumentViewOpen = (id, src) => () => {
     this.setState({
       viewModalVisible: true,
       viewModalSrc: src,
     });
   };
-  
+
   handleDocumentViewClose = () => {
     this.setState({
       viewModalVisible: false,
       viewModalSrc: "",
     });
   };
-  
+
   getUploadedDocuments = () => {
-    const {appointments, upload_documents} = this.props;
-    const {getImageView, getFileView} = this;
-    const {appointment_document_ids} = appointments || {};
-    
+    const { appointments, upload_documents } = this.props;
+    const { getImageView, getFileView } = this;
+    const { appointment_document_ids } = appointments || {};
+
     return appointment_document_ids.map((id) => {
-      const {basic_info: {document} = {}} = upload_documents[id] || {};
-      
+      const { basic_info: { document } = {} } = upload_documents[id] || {};
+
       const documentExtension = document.substring(
         document.length - 3,
         document.length
       );
-      
+
       return (
         <div key={`appointment-upload-${id}`}>
           {documentExtension === "png" ||
           documentExtension === "jpg" ||
           documentExtension === "peg" ||
           documentExtension === "jpeg"
-            ? getImageView({src: document, id})
-            : getFileView({src: document, extension: documentExtension, id})}
+            ? getImageView({ src: document, id })
+            : getFileView({ src: document, extension: documentExtension, id })}
         </div>
       );
     });
   };
-  
+
   getUploadButton = () => {
-    const {uploading} = this.state;
-    return uploading ? <LoadingOutlined/> : <PlusOutlined/>;
+    const { uploading } = this.state;
+    return uploading ? <LoadingOutlined /> : <PlusOutlined />;
   };
-  
+
   render() {
-    const {appointmentId, visible, onCancel} = this.props;
+    const { appointmentId, visible, onCancel } = this.props;
     const {
       formatMessage,
       customRequestUploadDocuments,
@@ -208,8 +206,8 @@ class AppointmentUploadModal extends Component {
       handleDocumentViewClose,
       getUploadButton,
     } = this;
-    
-    const {viewModalVisible = false, viewModalSrc = ""} = this.state;
+
+    const { viewModalVisible = false, viewModalSrc = "" } = this.state;
     return (
       <div>
         <Modal
@@ -229,7 +227,7 @@ class AppointmentUploadModal extends Component {
             <div className="flex">
               <Upload
                 multiple={true}
-                style={{width: 128, height: 128, margin: 6}}
+                style={{ width: 128, height: 128, margin: 6 }}
                 showUploadList={false}
                 customRequest={customRequestUploadDocuments(appointmentId)}
                 listType="picture-card"
@@ -243,7 +241,7 @@ class AppointmentUploadModal extends Component {
             </div>
           </div>
         </Modal>
-        
+
         <Modal
           visible={viewModalVisible}
           // title={`${formatMessage(messages.profile_pic_text)}`}

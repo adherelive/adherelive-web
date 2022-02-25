@@ -1,4 +1,4 @@
-import {TABLE_COLUMN, formatAppointmentTableData} from "../helper";
+import { formatAppointmentTableData, TABLE_COLUMN } from "../helper";
 
 export default (data) => {
   const {
@@ -9,7 +9,7 @@ export default (data) => {
     canViewDetails = false,
   } = data;
   const formattedData = formatAppointmentTableData(data);
-  const {vitalData, vitalTemplateData} = formattedData || {};
+  const { vitalData, vitalTemplateData } = formattedData || {};
   return {
     key: id,
     [TABLE_COLUMN.VITAL.dataIndex]: {

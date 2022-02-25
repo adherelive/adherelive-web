@@ -1,14 +1,14 @@
-import {connect} from "react-redux";
+import { connect } from "react-redux";
 import AdminDoctorDetails from "../../../Components/Pages/adminDoctorDetails";
-import {withRouter} from "react-router-dom";
+import { withRouter } from "react-router-dom";
 import {
-  getDoctorDetails,
-  verifyDoctor,
+  activateDoctor,
   addRazorpayId,
   deactivateDoctor,
-  activateDoctor,
+  getDoctorDetails,
+  verifyDoctor,
 } from "../../../modules/doctors";
-import {getDoctorAccountDetails} from "../../../modules/accountDetails";
+import { getDoctorAccountDetails } from "../../../modules/accountDetails";
 // import {verifyDoctor} from "../../../modules/doctors";
 // import {open} from "../../../modules/drawer";
 // import {DRAWER} from "../../../constant";
@@ -27,7 +27,7 @@ const mapStateToProps = (state) => {
     councils = {},
     specialities = {},
   } = state;
-  const {qualification_ids = [], clinic_ids = [], doctor_ids = []} = pages;
+  const { qualification_ids = [], clinic_ids = [], doctor_ids = [] } = pages;
   return {
     users,
     doctors,
@@ -80,11 +80,11 @@ const mergePropsToState = (stateProps, dispatchProps, ownProps) => {
     deactivateDoctor,
     activateDoctor,
   } = dispatchProps;
-  const {id} = ownProps;
-  
+  const { id } = ownProps;
+
   const getDoctorAllDetails = getDoctorDetails(id);
   const getCurrentDoctorAccountDetails = getDoctorAccountDetails(id);
-  
+
   return {
     users,
     doctors,

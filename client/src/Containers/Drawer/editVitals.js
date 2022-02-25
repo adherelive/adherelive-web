@@ -1,20 +1,20 @@
-import {connect} from "react-redux";
+import { connect } from "react-redux";
 import EditVitals from "../../Components/Drawer/editVital/vitalReminder";
-import {DRAWER} from "../../constant";
-import {close} from "../../modules/drawer";
-import {searchVital} from "../../modules/vital_templates";
-import {getVitalOccurence} from "../../modules/vital_occurence";
-import {updateVital, getVitals} from "../../modules/vitals";
+import { DRAWER } from "../../constant";
+import { close } from "../../modules/drawer";
+import { searchVital } from "../../modules/vital_templates";
+import { getVitalOccurence } from "../../modules/vital_occurence";
+import { getVitals, updateVital } from "../../modules/vitals";
 
 // import { createReminder, updateReminder } from "../../modules/reminder"; // write to add to database
 const mapStateToProps = (state) => {
   const {
-    drawer: {visible, loading, data: {type, payload = {}} = {}},
+    drawer: { visible, loading, data: { type, payload = {} } = {} },
     vital_templates,
     repeat_intervals,
     vitals,
   } = state;
-  
+
   return {
     visible: visible && type === DRAWER.EDIT_VITALS,
     loading,

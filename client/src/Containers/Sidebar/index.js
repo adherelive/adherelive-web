@@ -1,9 +1,9 @@
-import {connect} from "react-redux";
-import {withRouter} from "react-router-dom";
+import { connect } from "react-redux";
+import { withRouter } from "react-router-dom";
 
 import SideBar from "../../Components/Sidebar";
-import {switchUserRole} from "../../modules/userRoles";
-import {authCategorySelector} from "../../modules/doctors/selectors";
+import { switchUserRole } from "../../modules/userRoles";
+import { authCategorySelector } from "../../modules/doctors/selectors";
 
 const mapStateToProps = (state) => {
   const {
@@ -11,7 +11,7 @@ const mapStateToProps = (state) => {
     users,
     doctors,
     user_roles,
-    pages: {user_role_ids = []} = {},
+    pages: { user_role_ids = [] } = {},
     providers,
   } = state;
   const {
@@ -22,7 +22,7 @@ const mapStateToProps = (state) => {
     doctor_provider_id = null,
     auth_role = null,
   } = auth;
-  
+
   return {
     authenticated,
     authPermissions,

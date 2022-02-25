@@ -1,5 +1,5 @@
 import Database from "../../../libs/mysql";
-import {TABLE_NAME} from "../../models/workoutResponses";
+import { TABLE_NAME } from "../../models/workoutResponses";
 
 const DEFAULT_ORDER = [["created_at", "DESC"]];
 
@@ -18,7 +18,7 @@ class WorkoutResponsesService {
       throw error;
     }
   };
-  
+
   bulkCreate = async (data) => {
     const transaction = await Database.initTransaction();
     try {
@@ -32,7 +32,7 @@ class WorkoutResponsesService {
       throw error;
     }
   };
-  
+
   findOne = async (data) => {
     try {
       return await Database.getModel(TABLE_NAME).findOne({
@@ -43,8 +43,8 @@ class WorkoutResponsesService {
       throw error;
     }
   };
-  
-  update = async ({id, ...data}) => {
+
+  update = async ({ id, ...data }) => {
     const transaction = await Database.initTransaction();
     try {
       await Database.getModel(TABLE_NAME).update(data, {
@@ -60,8 +60,8 @@ class WorkoutResponsesService {
       throw error;
     }
   };
-  
-  findAndCountAll = async ({where, order = DEFAULT_ORDER, attributes}) => {
+
+  findAndCountAll = async ({ where, order = DEFAULT_ORDER, attributes }) => {
     try {
       return await Database.getModel(TABLE_NAME).findAndCountAll({
         where,
@@ -72,7 +72,7 @@ class WorkoutResponsesService {
       throw error;
     }
   };
-  
+
   findOne = async (data) => {
     try {
       const diet = await Database.getModel(TABLE_NAME).findOne({
@@ -84,7 +84,7 @@ class WorkoutResponsesService {
       throw error;
     }
   };
-  
+
   delete = async (id) => {
     try {
       const record = await Database.getModel(TABLE_NAME).destroy({

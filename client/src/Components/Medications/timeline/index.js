@@ -1,5 +1,5 @@
-import React, {Component, Fragment} from "react";
-import {injectIntl} from "react-intl";
+import React, { Component, Fragment } from "react";
+import { injectIntl } from "react-intl";
 import moment from "moment";
 import Loading from "../../Common/Loading";
 import messages from "./messages";
@@ -7,9 +7,8 @@ import Timeline from "antd/es/timeline";
 import ClockCircleOutlined from "@ant-design/icons/es/icons/ClockCircleOutlined";
 import CheckCircleOutlined from "@ant-design/icons/es/icons/CheckCircleOutlined";
 import StopOutlined from "@ant-design/icons/es/icons/StopOutlined";
-import RightCircleFilled from "@ant-design/icons/es/icons/RightCircleFilled";
 
-const {Item: TimelineItem} = Timeline;
+const { Item: TimelineItem } = Timeline;
 
 const COMPLETED = "completed";
 const EXPIRED = "expired";
@@ -24,17 +23,17 @@ const TIMELINE_STATUS = {
   },
   [COMPLETED]: {
     key: COMPLETED,
-    dot: <CheckCircleOutlined/>,
+    dot: <CheckCircleOutlined />,
     color: "green",
   },
   [EXPIRED]: {
     key: EXPIRED,
-    dot: <ClockCircleOutlined/>,
+    dot: <ClockCircleOutlined />,
     color: "red",
   },
   [CANCELLED]: {
     key: CANCELLED,
-    dot: <StopOutlined style={{color: "#FFCC00"}}/>,
+    dot: <StopOutlined style={{ color: "#FFCC00" }} />,
     color: "yellow",
   },
 };
@@ -46,29 +45,29 @@ class MedicationTimeline extends Component {
       loading: true,
     };
   }
-  
+
   componentDidMount() {
     this.getTimelineData();
   }
-  
+
   componentDidUpdate(prevProps, prevState, snapshot) {
-    const {id: prevId} = prevProps;
-    const {id} = this.props;
-    
+    const { id: prevId } = prevProps;
+    const { id } = this.props;
+
     if (id && id !== prevId) {
       this.getTimelineData();
     }
   }
-  
+
   getTimelineData = async () => {
-    const {getMedicationTimeline} = this.props;
+    const { getMedicationTimeline } = this.props;
     try {
-      this.setState({loading: true});
+      this.setState({ loading: true });
       const response = await getMedicationTimeline();
       const {
         status,
         payload: {
-          data: {medication_timeline = {}, medication_date_ids = []} = {},
+          data: { medication_timeline = {}, medication_date_ids = [] } = {},
           message: responseMessage,
         } = {},
       } = response || {};
@@ -79,47 +78,47 @@ class MedicationTimeline extends Component {
           loading: false,
         });
       } else {
-        this.setState({loading: false});
+        this.setState({ loading: false });
       }
     } catch (error) {
-      this.setState({loading: false});
+      this.setState({ loading: false });
     }
   };
-  
+
   getMedicationTemplate = (responseId, event) => {
-    const {id, status, end_time, details = {}} = event || {};
+    const { id, status, end_time, details = {} } = event || {};
     const {
-      response: {values, currentTime} = {},
-      medication_templates: {details: {template} = {}} = {},
+      response: { values, currentTime } = {},
+      medication_templates: { details: { template } = {} } = {},
     } = details;
-    
+
     let currentTemplate = {};
-    
+
     template.forEach((data) => {
-      const {id} = data || {};
+      const { id } = data || {};
       if (id === responseId) {
         currentTemplate = data;
       }
     });
     return currentTemplate;
   };
-  
+
   getEventsForDay = (events) => {
-    const {intl: {formatMessage} = {}} = this.props;
-    const {getMedicationTemplate} = this;
-    
+    const { intl: { formatMessage } = {} } = this.props;
+    const { getMedicationTemplate } = this;
+
     return events.map((event) => {
-      const {id, status, end_time, details = {}} = event || {};
+      const { id, status, end_time, details = {} } = event || {};
       // console.log("76546789765435678",event);
-      const {updated_at = ""} = event;
-      const {details: {unit = "mg", strength = "", quantity = ""} = {}} =
+      const { updated_at = "" } = event;
+      const { details: { unit = "mg", strength = "", quantity = "" } = {} } =
         event;
-      
+
       const {
-        response: {value = {}, currentTime} = {},
-        medicines: {basic_info: {name: medicine_name = ""} = {}} = {},
+        response: { value = {}, currentTime } = {},
+        medicines: { basic_info: { name: medicine_name = "" } = {} } = {},
       } = details;
-      
+
       switch (status) {
         case COMPLETED:
           return (
@@ -137,13 +136,13 @@ class MedicationTimeline extends Component {
               )} ( ${strength} ${unit} ${
                 quantity ? `x ${quantity}` : ""
               }  )`}</div>
-              
+
               {Object.keys(value).map((fieldId, index) => {
-                const {label, placeholder} = getMedicationTemplate(
+                const { label, placeholder } = getMedicationTemplate(
                   fieldId,
                   event
                 );
-                
+
                 return (
                   <div
                     key={`${id}-${fieldId}-${index}`}
@@ -184,11 +183,11 @@ class MedicationTimeline extends Component {
       }
     });
   };
-  
+
   getTimeline = () => {
-    const {medication_timeline, medication_date_ids} = this.state;
-    const {getEventsForDay} = this;
-    
+    const { medication_timeline, medication_date_ids } = this.state;
+    const { getEventsForDay } = this;
+
     return medication_date_ids.map((date) => {
       const eventsForDay = medication_timeline[date] || {};
       return (
@@ -205,16 +204,16 @@ class MedicationTimeline extends Component {
       );
     });
   };
-  
+
   render() {
-    const {id} = this.props;
-    const {loading} = this.state;
-    const {getTimeline} = this;
-    
+    const { id } = this.props;
+    const { loading } = this.state;
+    const { getTimeline } = this;
+
     if (loading === true) {
-      return <Loading/>;
+      return <Loading />;
     }
-    
+
     return (
       <div className="wp100 flex direction-column align-start">
         <Timeline>{getTimeline()}</Timeline>

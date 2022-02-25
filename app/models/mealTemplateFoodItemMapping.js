@@ -1,7 +1,4 @@
-import {DataTypes} from "sequelize";
-import {TABLE_NAME as mealTemplateTableName} from "./mealTemplates";
-import {TABLE_NAME as foodItemTableName} from "./foodItems";
-import {TABLE_NAME as foodItemDetailsTableName} from "./foodItemDetails";
+import { DataTypes } from "sequelize";
 
 export const TABLE_NAME = "meal_template_food_item_mappings";
 

@@ -1,13 +1,12 @@
-import {Op} from "sequelize";
 import Database from "../../../libs/mysql";
-import {TABLE_NAME} from "../../models/careplanSecondaryDoctorMappings";
-import {TABLE_NAME as careplanTableName} from "../../models/carePlan";
-import {TABLE_NAME as userRolesTableName} from "../../models/userRoles";
+import { TABLE_NAME } from "../../models/careplanSecondaryDoctorMappings";
+import { TABLE_NAME as careplanTableName } from "../../models/carePlan";
+import { TABLE_NAME as userRolesTableName } from "../../models/userRoles";
 
 const DEFAULT_ORDER = [["created_at", "DESC"]];
 
 class CareplanSecondaryDoctorMappingsService {
-  findAndCountAll = async ({where, order = DEFAULT_ORDER, attributes}) => {
+  findAndCountAll = async ({ where, order = DEFAULT_ORDER, attributes }) => {
     try {
       return await Database.getModel(TABLE_NAME).findAndCountAll({
         where,
@@ -23,7 +22,7 @@ class CareplanSecondaryDoctorMappingsService {
       throw error;
     }
   };
-  
+
   getAllByData = async (data) => {
     try {
       const record = await Database.getModel(TABLE_NAME).findAll({
@@ -34,7 +33,7 @@ class CareplanSecondaryDoctorMappingsService {
       throw error;
     }
   };
-  
+
   getByData = async (data) => {
     try {
       const record = await Database.getModel(TABLE_NAME).findOne({
@@ -45,14 +44,14 @@ class CareplanSecondaryDoctorMappingsService {
       throw error;
     }
   };
-  
+
   create = async (data) => {
     const transaction = await Database.initTransaction();
     try {
       const createMapping = await Database.getModel(TABLE_NAME).create(data, {
         transaction,
       });
-      
+
       await transaction.commit();
       return createMapping;
     } catch (error) {
@@ -60,7 +59,7 @@ class CareplanSecondaryDoctorMappingsService {
       throw error;
     }
   };
-  
+
   delete = async (data) => {
     const transaction = await Database.initTransaction();
     try {
@@ -68,9 +67,9 @@ class CareplanSecondaryDoctorMappingsService {
         {
           where: data,
         },
-        {transaction}
+        { transaction }
       );
-      
+
       await transaction.commit();
       return true;
     } catch (error) {

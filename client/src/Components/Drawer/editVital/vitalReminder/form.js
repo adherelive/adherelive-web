@@ -1,5 +1,5 @@
-import React, {Component, Fragment} from "react";
-import {Form, Button, Input, message, Radio} from "antd";
+import React, { Component, Fragment } from "react";
+import { Button, Form, message, Radio } from "antd";
 import moment from "moment";
 import startTimeField from "../common/startTime";
 import RepeatFields from "../common/repeatFields";
@@ -14,16 +14,10 @@ import vitalNameField from "../common/vitalName";
 import vitalOccurenceField from "../common/vitalOccurence";
 
 import messages from "../message";
-import {hasErrors, isNumber} from "../../../../Helper/validation";
-import {
-  REPEAT_TYPE,
-  USER_CATEGORY,
-  DAYS_NUMBER,
-  DAYS,
-  ALTERNATE_DAYS,
-} from "../../../../constant";
+import { hasErrors, isNumber } from "../../../../Helper/validation";
+import { DAYS_NUMBER, REPEAT_TYPE, USER_CATEGORY } from "../../../../constant";
 
-const {Item: FormItem} = Form;
+const { Item: FormItem } = Form;
 const UNIT_FIELD = "unit";
 const UNIT_ML = "ml";
 const UNIT_MG = "mg";
@@ -35,11 +29,11 @@ class EditVitalForm extends Component {
     super(props);
     this.state = {};
   }
-  
+
   componentDidMount() {
     this.scrollToTop();
     const {
-      form: {validateFields},
+      form: { validateFields },
       // currentUser: {
       //   basicInfo: { _id, category },
       //   programId = []
@@ -47,18 +41,18 @@ class EditVitalForm extends Component {
       fetchMedicationStages,
       fetchProgramProducts,
     } = this.props;
-    const {programId} = [];
-    const {_id} = "23";
-    const {category} = "PATIENT";
+    const { programId } = [];
+    const { _id } = "23";
+    const { category } = "PATIENT";
     validateFields();
-    
+
     if (category === USER_CATEGORY.PATIENT) {
       fetchProgramProducts(programId[0]);
       fetchMedicationStages(_id).then((response) => {
-        const {status, payload} = response;
+        const { status, payload } = response;
         if (status) {
           const {
-            data: {medicationStages = [], program_has_medication_stage} = {},
+            data: { medicationStages = [], program_has_medication_stage } = {},
           } = payload;
           if (medicationStages.length > 0) {
             this.setState({
@@ -75,7 +69,7 @@ class EditVitalForm extends Component {
       });
     }
   }
-  
+
   scrollToTop = () => {
     let antForm = document.getElementsByClassName("Form")[0];
     let antDrawerBody = antForm.parentNode;
@@ -83,43 +77,43 @@ class EditVitalForm extends Component {
     antDrawerBody.scrollIntoView(true);
     antDrawerWrapperBody.scrollTop -= 200;
   };
-  
+
   formatMessage = (data) => this.props.intl.formatMessage(data);
-  
+
   setUnit = (e) => {
     e.preventDefault();
     const {
-      form: {setFieldsValue},
+      form: { setFieldsValue },
     } = this.props;
-    setFieldsValue({[UNIT_FIELD]: e.target.value});
+    setFieldsValue({ [UNIT_FIELD]: e.target.value });
   };
-  
+
   handleCancel = (e) => {
     if (e) {
       e.preventDefault();
     }
-    const {close} = this.props;
+    const { close } = this.props;
     close();
   };
-  
+
   getNewEndDate = (repeatValue) => {
     const {
-      form: {getFieldValue},
+      form: { getFieldValue },
     } = this.props;
-    
+
     let repeat = getFieldValue(repeatField.field_name);
-    
+
     let selectedDays = getFieldValue(repeatDaysField.field_name);
     let repeatInterval = getFieldValue(repeatIntervalField.field_name);
-    
+
     if (repeatValue) {
       repeatInterval = repeatValue;
     }
-    
+
     // if(!repeat){
-    
+
     // }
-    
+
     const startDate = getFieldValue(startDateField.field_name);
     let startDateDay = startDate
       ? moment(startDate).format("ddd")
@@ -135,28 +129,28 @@ class EditVitalForm extends Component {
       for (let day of selectedDays) {
         let dayNo = DAYS_NUMBER[day];
         let dayDiff = dayNo - startDayNumber;
-        
+
         dayDiffPos =
           dayDiffPos === 0 && dayDiff > 0
             ? dayDiff
             : dayDiff > 0 && dayDiff < dayDiffPos
-              ? dayDiff
-              : dayDiffPos;
+            ? dayDiff
+            : dayDiffPos;
         dayDiffNeg =
           dayDiffNeg === 0 && dayDiff < 0
             ? dayDiff
             : dayDiff < 0 && Math.abs(dayDiff) > Math.abs(dayDiffNeg)
-              ? dayDiff
-              : dayDiffNeg;
+            ? dayDiff
+            : dayDiffNeg;
       }
-      
+
       daysToAdd = dayDiffPos ? dayDiffPos : 7 + dayDiffNeg;
     }
-    
+
     let newEndDate;
-    
+
     const startDateCopy = startDate.clone().endOf("day");
-    
+
     const res = isNumber(repeatInterval);
     if (repeat === REPEAT_TYPE.DAILY || res.valid === true) {
       switch (repeat) {
@@ -180,131 +174,127 @@ class EditVitalForm extends Component {
           break;
       }
     }
-    
+
     if (!newEndDate) {
       newEndDate = startDateCopy;
     }
-    
+
     return moment(newEndDate).add(daysToAdd, "days");
   };
-  
+
   adjustEndDate = (repeatValue) => {
     const {
-      form: {setFieldsValue},
+      form: { setFieldsValue },
     } = this.props;
     const endDate = this.getNewEndDate(repeatValue);
     if (endDate) {
-      setFieldsValue({[endDateField.field_name]: endDate});
+      setFieldsValue({ [endDateField.field_name]: endDate });
     }
   };
-  
+
   adjustEventOnStartDateChange = (prevDate) => {
     const {
-      form: {getFieldValue, setFieldsValue, validateFields},
+      form: { getFieldValue, setFieldsValue, validateFields },
     } = this.props;
-    
+
     const eventStartTime = getFieldValue(startTimeField.field_name);
-    
+
     if (prevDate.isSame(eventStartTime, "date")) {
       return;
     }
-    
+
     const startDate = getFieldValue(startDateField.field_name);
-    
+
     const newMonth = startDate.get("month");
     const newDate = startDate.get("date");
     const newYear = startDate.get("year");
-    
+
     let newEventStartTime;
-    
+
     if (eventStartTime) {
       newEventStartTime = eventStartTime
         .clone()
-        .set({month: newMonth, year: newYear, date: newDate});
+        .set({ month: newMonth, year: newYear, date: newDate });
     }
-    
+
     setFieldsValue({
       [startTimeField.field_name]: newEventStartTime,
     });
     // this.adjustEndDate();
     validateFields([startTimeField.field_name]);
   };
-  
-  onChangeEventStartTime = (startTime) => {
-  };
-  
+
+  onChangeEventStartTime = (startTime) => {};
+
   onStartDateChange = (currentDate) => {
     const {
-      form: {setFieldsValue},
+      form: { setFieldsValue },
     } = this.props;
-    
+
     if (currentDate && currentDate.isValid) {
-      setFieldsValue({[startDateField.field_name]: currentDate});
+      setFieldsValue({ [startDateField.field_name]: currentDate });
       this.adjustEventOnStartDateChange();
     }
   };
-  
+
   disabledStartDate = (current) => {
     // Can not select days before today
-    return current && current <= moment().subtract({day: 1});
+    return current && current <= moment().subtract({ day: 1 });
   };
-  
+
   disabledEndDate = (current) => {
     const endDate = this.getNewEndDate();
     if (endDate) {
       return current && current < endDate;
     }
   };
-  
-  onEndDateChange = () => {
-  };
-  
-  onStartTimeChange = () => {
-  };
-  
-  onEndTimeChange = () => {
-  };
-  
+
+  onEndDateChange = () => {};
+
+  onStartTimeChange = () => {};
+
+  onEndTimeChange = () => {};
+
   onEventDurationChange = (start, end) => {
     const {
-      form: {setFieldsValue, validateFields},
+      form: { setFieldsValue, validateFields },
     } = this.props;
     setFieldsValue({
       [startTimeField.field_name]: start,
     });
     validateFields([startTimeField.field_name]);
   };
-  
+
   onPrev = () => {
     const {
-      form: {getFieldValue, setFieldsValue},
+      form: { getFieldValue, setFieldsValue },
     } = this.props;
     const startDate = getFieldValue(startDateField.field_name);
     if (startDate !== null) {
       const newStartDate = startDate.clone().subtract(1, "days");
-      setFieldsValue({[startDateField.field_name]: newStartDate});
+      setFieldsValue({ [startDateField.field_name]: newStartDate });
       this.adjustEventOnStartDateChange();
     }
   };
-  
+
   onNext = () => {
     const {
-      form: {getFieldValue, setFieldsValue},
+      form: { getFieldValue, setFieldsValue },
     } = this.props;
     const startDate = getFieldValue(startDateField.field_name);
     if (startDate !== null) {
       const newStartDate = startDate.clone().add(1, "days");
-      setFieldsValue({[startDateField.field_name]: newStartDate});
+      setFieldsValue({ [startDateField.field_name]: newStartDate });
       this.adjustEventOnStartDateChange();
     }
   };
-  
+
   addMedicationReminder = (e) => {
     e.preventDefault();
     const {
-      form: {validateFields},
+      form: { validateFields },
       addMedicationReminder,
-      payload: {patient_id = "2"} = {},
+      payload: { patient_id = "2" } = {},
     } = this.props;
     validateFields(async (err, values) => {
       if (!err) {
@@ -316,9 +306,9 @@ class EditVitalForm extends Component {
         data_to_submit = {
           ...values,
           id: patient_id,
-          
+
           repeat: "weekly",
-          
+
           [startTimeField.field_name]:
             startTime && startTime !== null
               ? startTime.startOf("minute").toISOString()
@@ -332,7 +322,7 @@ class EditVitalForm extends Component {
               ? endDate.clone().endOf("day").toISOString()
               : endDate,
         };
-        
+
         if (repeatDays) {
           data_to_submit = {
             ...data_to_submit,
@@ -341,7 +331,7 @@ class EditVitalForm extends Component {
         }
         try {
           const response = await addMedicationReminder(data_to_submit);
-          const {status, payload: {message: msg} = {}} = response;
+          const { status, payload: { message: msg } = {} } = response;
           if (status === true) {
             message.success(msg);
           } else {
@@ -353,14 +343,14 @@ class EditVitalForm extends Component {
       }
     });
   };
-  
+
   setEndDateOneWeek = (e) => {
     e.preventDefault();
     const {
-      form: {setFieldsValue, getFieldValue},
+      form: { setFieldsValue, getFieldValue },
       enableSubmit,
     } = this.props;
-    
+
     const startDate = getFieldValue(startDateField.field_name);
     let newEndDate = moment(startDate).add(1, "week");
     setFieldsValue({
@@ -368,14 +358,14 @@ class EditVitalForm extends Component {
     });
     enableSubmit();
   };
-  
+
   setEndDateTwoWeek = (e) => {
     e.preventDefault();
     const {
-      form: {setFieldsValue, getFieldValue},
+      form: { setFieldsValue, getFieldValue },
       enableSubmit,
     } = this.props;
-    
+
     const startDate = getFieldValue(startDateField.field_name);
     let newEndDate = moment(startDate).add(2, "week");
     setFieldsValue({
@@ -383,20 +373,20 @@ class EditVitalForm extends Component {
     });
     enableSubmit();
   };
-  
+
   setEndDateLongTime = (e) => {
     e.preventDefault();
     const {
-      form: {setFieldsValue},
+      form: { setFieldsValue },
       enableSubmit,
     } = this.props;
-    
+
     setFieldsValue({
       [endDateField.field_name]: null,
     });
     enableSubmit();
   };
-  
+
   // setRepeatEveryDay = e => {
   //   e.preventDefault();
   //   const {
@@ -408,7 +398,7 @@ class EditVitalForm extends Component {
   //   });
   //   enableSubmit();
   // };
-  
+
   // setRepeatAlternateDay = e => {
   //   e.preventDefault();
   //   const {
@@ -420,14 +410,14 @@ class EditVitalForm extends Component {
   //   });
   //   enableSubmit();
   // };
-  
+
   getFooter = () => {
     const {
-      form: {getFieldsError},
+      form: { getFieldsError },
       requesting,
     } = this.props;
-    const {formatMessage, handleCancel} = this;
-    
+    const { formatMessage, handleCancel } = this;
+
     return (
       <div className="footer">
         <div className="flex fr h100">
@@ -446,7 +436,7 @@ class EditVitalForm extends Component {
       </div>
     );
   };
-  
+
   render() {
     const {
       adjustEventOnStartDateChange,
@@ -460,22 +450,22 @@ class EditVitalForm extends Component {
       setRepeatAlternateDay,
       formatMessage,
     } = this;
-    
+
     const {
-      form: {getFieldValue},
+      form: { getFieldValue },
     } = this.props;
-    
+
     const startTime = getFieldValue(startTimeField.field_name);
     let endTime;
-    
+
     if (startTime && startTime.isValid) {
       endTime = startTime.clone().add("minutes", 3);
     }
-    
+
     const startDate = getFieldValue(startDateField.field_name);
-    
+
     const temp_name = getFieldValue("vital_template_id");
-    
+
     return (
       <Fragment>
         <Form className="event-form pb80 wp100 Form">
@@ -487,10 +477,10 @@ class EditVitalForm extends Component {
             >
               {formatMessage(messages.vitals)}
             </label>
-            
+
             <div className="star-red">*</div>
           </div>
-          {vitalNameField.render({...this.props})}
+          {vitalNameField.render({ ...this.props })}
           <div className="flex direction-row flex-grow-1">
             <label
               htmlFor="vital_template"
@@ -499,10 +489,10 @@ class EditVitalForm extends Component {
             >
               {formatMessage(messages.occurence)}
             </label>
-            
+
             <div className="star-red">*</div>
           </div>
-          {vitalOccurenceField.render({...this.props})}
+          {vitalOccurenceField.render({ ...this.props })}
           <RepeatFields
             {...this.props}
             formatMessage={formatMessage}

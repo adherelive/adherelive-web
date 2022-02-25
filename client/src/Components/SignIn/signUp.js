@@ -1,15 +1,15 @@
-import React, {Component, Fragment} from "react";
+import React, { Component, Fragment } from "react";
 // import { injectIntl, FormattedMessage } from "react-intl";
-import {Button, Input, Form, message, Checkbox} from "antd";
+import { Button, Checkbox, Form, Input, message } from "antd";
 
 import PPModal from "../../Containers/Modal/PPConfirm";
-import {injectIntl} from "react-intl";
+import { injectIntl } from "react-intl";
 import messages from "./message";
-import {PATH} from "../../constant";
+import { PATH } from "../../constant";
 import config from "../../config";
 
-const {Item: FormItem} = Form;
-const {Password} = Input;
+const { Item: FormItem } = Form;
+const { Password } = Input;
 
 const EMAIL = "email";
 const PASSWORD = "password";
@@ -28,43 +28,42 @@ class SignUp extends Component {
       openTOSModal: false,
     };
   }
-  
-  componentDidMount() {
-  }
-  
+
+  componentDidMount() {}
+
   formatMessage = (data) => this.props.intl.formatMessage(data);
-  
+
   openTOSModalComp = (e) => {
     e.preventDefault();
-    
-    const {readTermsOfService} = this.state;
+
+    const { readTermsOfService } = this.state;
     if (!readTermsOfService) {
-      this.setState({openTOSModal: true});
+      this.setState({ openTOSModal: true });
       return;
     }
     this.handleSignUp();
   };
-  
+
   handleSignUp = () => {
     // e.preventDefault();
-    const {signUp} = this.props;
-    const {readTermsOfService} = this.state;
-    
+    const { signUp } = this.props;
+    const { readTermsOfService } = this.state;
+
     this.props.form.validateFields((err, values) => {
       if (!err) {
-        signUp({...values, readTermsOfService}).then((response) => {
-          const {status} = response;
+        signUp({ ...values, readTermsOfService }).then((response) => {
+          const { status } = response;
           if (status) {
             this.props.form.resetFields();
             message.success(this.formatMessage(messages.verifyEmail));
           } else {
             let {
-              payload: {error = {}, message: responseMessage = ""} = {},
+              payload: { error = {}, message: responseMessage = "" } = {},
               statusCode = "",
             } = response;
-            
+
             if (statusCode === 400 || statusCode === 422) {
-              const {message: errorMessage = ""} = error;
+              const { message: errorMessage = "" } = error;
               message.error(
                 statusCode === 400 ? errorMessage : responseMessage
               );
@@ -76,14 +75,14 @@ class SignUp extends Component {
       }
     });
   };
-  
+
   closeTOSModal = (e) => {
-    this.setState({openTOSModal: false});
+    this.setState({ openTOSModal: false });
   };
-  
+
   tosComponent = () => {
-    const {readTermsOfService} = this.state;
-    const {updateReadTermsOfService} = this;
+    const { readTermsOfService } = this.state;
+    const { updateReadTermsOfService } = this;
     return (
       <div className="flex mb20">
         {/* <div classname='fs12 medium dark-sky-blue mt4 tar'>Forgot Password?</div> */}
@@ -91,7 +90,7 @@ class SignUp extends Component {
           checked={readTermsOfService}
           onChange={updateReadTermsOfService}
         ></Checkbox>
-        
+
         <div className="slate-grey mt-10 fs12 p10 medium">
           <span>{this.formatMessage(messages.agreeSignupPPText)}</span>{" "}
           {/* <a href={TOS_PAGE_URL} target={"_blank"}>
@@ -105,10 +104,10 @@ class SignUp extends Component {
       </div>
     );
   };
-  
+
   updateReadTermsOfService = (e) => {
-    const {readTermsOfService, openTOSModal} = this.state;
-    
+    const { readTermsOfService, openTOSModal } = this.state;
+
     if (readTermsOfService) {
       // if true before
       this.setState({
@@ -122,25 +121,25 @@ class SignUp extends Component {
       });
     }
   };
-  
+
   modalAcceptTOS = (e) => {
-    const {readTermsOfService, openTOSModal} = this.state;
-    
+    const { readTermsOfService, openTOSModal } = this.state;
+
     this.setState({
       readTermsOfService: !readTermsOfService,
       openTOSModal: false,
     });
   };
-  
+
   render() {
     const {
-      form: {getFieldDecorator, isFieldTouched, getFieldError},
+      form: { getFieldDecorator, isFieldTouched, getFieldError },
     } = this.props;
-    const {readTermsOfService, openTOSModal} = this.state;
+    const { readTermsOfService, openTOSModal } = this.state;
     let fieldsError = {};
     FIELDS.forEach((value) => {
       const error = isFieldTouched(value) && getFieldError(value);
-      fieldsError = {...fieldsError, [value]: error};
+      fieldsError = { ...fieldsError, [value]: error };
     });
     const {
       handleSignUp,
@@ -170,9 +169,9 @@ class SignUp extends Component {
                   message: this.formatMessage(messages.enterValidEmail),
                 },
               ],
-            })(<Input type="text" placeholder="Email" className="h40"/>)}
+            })(<Input type="text" placeholder="Email" className="h40" />)}
           </FormItem>
-          
+
           <FormItem
             validateStatus={fieldsError[PASSWORD] ? "error" : ""}
             help={fieldsError[PASSWORD] || ""}
@@ -187,11 +186,11 @@ class SignUp extends Component {
                   message: this.formatMessage(messages.enterPassword),
                 },
               ],
-            })(<Password placeholder="Password" className="h40"/>)}
+            })(<Password placeholder="Password" className="h40" />)}
           </FormItem>
-          
+
           {tosComponent()}
-          
+
           <FormItem>
             <Button
               type="primary"
@@ -218,4 +217,4 @@ class SignUp extends Component {
   }
 }
 
-export default Form.create({name: "signup_form"})(injectIntl(SignUp));
+export default Form.create({ name: "signup_form" })(injectIntl(SignUp));

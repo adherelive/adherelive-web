@@ -1,9 +1,9 @@
 import agoraService from "../../services/agora/agora.service";
 import Controller from "../";
 import {
-  USER_CATEGORY,
   AGORA_CALL_NOTIFICATION_TYPES,
   EVENT_STATUS,
+  USER_CATEGORY,
 } from "../../../constant";
 
 import Logger from "../../../libs/log";

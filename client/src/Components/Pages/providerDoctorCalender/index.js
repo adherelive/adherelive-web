@@ -1,7 +1,7 @@
 import React, { Component, Fragment } from "react";
 import { injectIntl } from "react-intl";
 
-import { Calendar, message, Drawer, Icon } from "antd";
+import { Calendar, Drawer, message } from "antd";
 import moment from "moment";
 import {
   APPOINTMENT_TYPE_TITLE,
