@@ -2,25 +2,18 @@ import React, { Component, Fragment } from "react";
 import { injectIntl } from "react-intl";
 import message from "antd/es/message";
 import Button from "antd/es/button";
-import { Dropdown, Select } from "antd";
+import { Select, Dropdown } from "antd";
 import plus from "../../../Assets/images/plus.png";
 import edit_image from "../../../Assets/images/edit.svg";
-import {
-  BarChartOutlined,
-  CreditCardOutlined,
-  DeleteTwoTone,
-  WalletOutlined,
-} from "@ant-design/icons";
+import { DeleteTwoTone } from "@ant-design/icons";
 import confirm from "antd/es/modal/confirm";
 
 // todo: import any component from antd using this format
 import Tooltip from "antd/es/tooltip";
 
 import {
-  BILLING,
   CONSULTATION_FEE,
-  CONSULTATION_FEE_TYPE_TEXT,
-  PATH,
+  BILLING,
   PAYMENT_DETAILS,
   TABLE_DEFAULT_BLANK_FIELD,
 } from "../../../constant";
@@ -28,9 +21,18 @@ import {
 import AddConsultationFeeDrawer from "../../../Containers/Drawer/addConsultationFee";
 import AddAccountDetailsDrawer from "../../../Containers/Drawer/addAccountDetailsDrawer";
 import EditAccountDetailsDrawer from "../../../Containers/Drawer/editAccountDetailsDrawer";
+
+import DoctorConsultationFeeTable from "../../../Containers/DoctorConsultationFee";
 import DoctorAccountDetails from "../../../Containers/DoctorAccountDetails";
 
+import {
+  BarChartOutlined,
+  CreditCardOutlined,
+  WalletOutlined,
+} from "@ant-design/icons";
+
 import messages from "./messages";
+import { PATH, CONSULTATION_FEE_TYPE_TEXT } from "../../../constant";
 import { withRouter } from "react-router-dom";
 import Menu from "antd/es/menu";
 

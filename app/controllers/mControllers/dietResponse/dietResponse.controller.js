@@ -18,8 +18,8 @@ import Logger from "../../../../libs/log";
 import {
   DOCUMENT_PARENT_TYPE,
   NOTIFICATION_STAGES,
-  USER_CATEGORY,
 } from "../../../../constant";
+import { USER_CATEGORY } from "../../../../constant";
 
 const Log = new Logger("MOBILE > DIET_RESPONSE > CONTROLLER");
 

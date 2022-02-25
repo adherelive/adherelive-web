@@ -2,11 +2,11 @@ import { connect } from "react-redux";
 import DoctorProfilePage from "../../../Components/Pages/doctorProfilePage";
 import { withRouter } from "react-router-dom";
 import {
-  activateDoctor,
-  deactivateDoctor,
-  getDoctorProfileDetails,
   updateDoctor,
+  getDoctorProfileDetails,
   verifyDoctor,
+  deactivateDoctor,
+  activateDoctor,
 } from "../../../modules/doctors";
 import { searchSpecialties } from "../../../modules/specialities";
 import { searchCouncil } from "../../../modules/councils";

@@ -1,7 +1,7 @@
 import { withRouter } from "react-router-dom";
 import Dashboard from "../../Components/Dashboard";
-import { getInitialData, signOut } from "../../modules/auth";
-import { addPatient, searchPatientFromNum } from "../../modules/patients";
+import { signOut, getInitialData } from "../../modules/auth";
+import { addPatient } from "../../modules/patients";
 import { searchMedicine } from "../../modules/medicines";
 import { searchTreatment } from "../../modules/treatments";
 import { searchCondition } from "../../modules/conditions";
@@ -10,6 +10,7 @@ import { getGraphs, updateGraphs } from "../../modules/graphs";
 import { connect } from "react-redux";
 import { closePopUp } from "../../modules/chat";
 import { fetchChatAccessToken } from "../../modules/twilio";
+import { searchPatientFromNum } from "../../modules/patients";
 import {
   addToWatchlist,
   removePatientFromWatchlist,

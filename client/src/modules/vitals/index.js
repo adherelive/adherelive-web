@@ -2,13 +2,13 @@ import { doRequest } from "../../Helper/network";
 import { REQUEST_TYPE } from "../../constant";
 import {
   getAddVitalURL,
-  getUpdateVitalURL,
   getVitalTimelineURL,
+  getUpdateVitalURL,
 } from "../../Helper/urls/vitals";
 
 import {
-  getDeleteVitalResponseUrl,
   getEditVitalResponseUrl,
+  getDeleteVitalResponseUrl,
 } from "../../Helper/urls/event";
 
 import { getPatientVitalsURL } from "../../Helper/urls/patients";

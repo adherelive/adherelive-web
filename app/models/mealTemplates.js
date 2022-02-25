@@ -1,7 +1,10 @@
 import { DataTypes } from "sequelize";
-import { USER_CATEGORY_ARRAY } from "./users";
+import { TABLE_NAME as userTableName } from "./users";
 import { TABLE_NAME as foodItemDetailsTableName } from "./foodItemDetails";
+import { TABLE as foodItemTableName } from "./foodItems";
 import { TABLE_NAME as mealTemplateMappingTableName } from "./mealTemplateFoodItemMapping";
+
+import { USER_CATEGORY_ARRAY } from "./users";
 
 export const TABLE_NAME = "meal_templates";
 

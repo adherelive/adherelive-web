@@ -2,6 +2,14 @@ import { connect } from "react-redux";
 import SymptomsDrawer from "../../Components/Drawer/symptoms";
 import { DRAWER } from "../../constant";
 import { close } from "../../modules/drawer";
+import {
+  getMedications,
+  addMedicationReminder,
+  addCarePlanMedicationReminder,
+} from "../../modules/medications";
+import { getMedicationDetails } from "../../modules/otherDetails";
+import { getAppointments } from "../../modules/appointments";
+import { searchMedicine } from "../../modules/medicines";
 // import { createReminder, updateReminder } from "../../modules/reminder"; // write to add to database
 const mapStateToProps = (state) => {
   const {

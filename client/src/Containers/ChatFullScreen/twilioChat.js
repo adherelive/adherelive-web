@@ -11,9 +11,9 @@ import {
 } from "../../modules/chatMessages";
 
 import {
-  getAllFeatures,
   toggleChatPermission,
   toggleVideoPermission,
+  getAllFeatures,
 } from "../../modules/featuresMappings";
 
 const mapStateToProps = (state) => {

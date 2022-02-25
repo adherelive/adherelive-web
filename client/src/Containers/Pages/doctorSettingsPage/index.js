@@ -2,16 +2,16 @@ import { connect } from "react-redux";
 import DoctorSettingsPage from "../../../Components/Pages/doctorSettingsPage";
 import { withRouter } from "react-router-dom";
 import {
-  addDoctorPaymentProduct,
-  deleteDoctorPaymentProduct,
+  getDoctorProfileDetails,
   getAdminPaymentProduct,
   getDoctorPaymentProduct,
-  getDoctorProfileDetails,
+  addDoctorPaymentProduct,
+  deleteDoctorPaymentProduct,
 } from "../../../modules/doctors";
 import {
   addAccountDetails,
-  deleteAccountDetails,
   getAccountDetails,
+  deleteAccountDetails,
   updateAccountDetails,
 } from "../../../modules/accountDetails";
 import { open } from "../../../modules/drawer";

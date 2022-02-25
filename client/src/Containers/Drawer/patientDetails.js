@@ -4,7 +4,7 @@ import PatientDetailsDrawer from "../../Components/Drawer/PatientDetails";
 import { DRAWER } from "../../constant";
 import { close } from "../../modules/drawer";
 import { getMedications } from "../../modules/medications";
-import { setCareplanForChat, setPatientForChat } from "../../modules/twilio";
+import { setPatientForChat, setCareplanForChat } from "../../modules/twilio";
 import { openPopUp } from "../../modules/chat";
 import {
   getAppointments,

@@ -1,21 +1,25 @@
+import { SIGNING_COMPLETED } from "./modules/auth";
+import { SIGNING_COMPLETED_WITH_ERROR } from "./modules/auth";
+
 import {
-  GETTING_INITIAL_DATA,
-  GETTING_INITIAL_DATA_COMPLETED,
-  GETTING_INITIAL_DATA_COMPLETED_WITH_ERROR,
   GOOGLE_SIGNING_COMPLETED,
   GOOGLE_SIGNING_COMPLETED_WITH_ERROR,
-  RESET_ERROR,
-  RESET_PASSWORD_LINK_COMPLETED,
-  SIGNING,
-  SIGNING_COMPLETED,
-  SIGNING_COMPLETED_WITH_ERROR,
-  SIGNING_UP,
-  SIGNING_UP_COMPLETED,
-  SIGNING_UP_COMPLETED_WITH_ERROR,
-  VALIDATING_LINK,
-  VALIDATING_LINK_COMPLETED,
-  VALIDATING_LINK_COMPLETED_WITH_ERROR,
 } from "./modules/auth";
+
+import { SIGNING, SIGNING_UP } from "./modules/auth";
+import { SIGNING_UP_COMPLETED } from "./modules/auth";
+import { SIGNING_UP_COMPLETED_WITH_ERROR } from "./modules/auth";
+
+import { VALIDATING_LINK } from "./modules/auth";
+import { VALIDATING_LINK_COMPLETED } from "./modules/auth";
+import { VALIDATING_LINK_COMPLETED_WITH_ERROR } from "./modules/auth";
+
+import { GETTING_INITIAL_DATA } from "./modules/auth";
+import { GETTING_INITIAL_DATA_COMPLETED } from "./modules/auth";
+import { GETTING_INITIAL_DATA_COMPLETED_WITH_ERROR } from "./modules/auth";
+
+import { RESET_ERROR } from "./modules/auth";
+import { RESET_PASSWORD_LINK_COMPLETED } from "./modules/auth";
 // import { CLEAR_MSG } from "./modules/successMsg";
 
 // import {

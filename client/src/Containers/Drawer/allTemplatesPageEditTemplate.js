@@ -5,9 +5,9 @@ import { close } from "../../modules/drawer";
 import {
   createCareplanTemplate,
   deleteCareplanTemplateRelated,
-  getAllTemplatesForDoctor,
   updateCareplanTemplate,
 } from "../../modules/carePlanTemplates";
+import { getAllTemplatesForDoctor } from "../../modules/carePlanTemplates";
 
 // import { createReminder, updateReminder } from "../../modules/reminder"; // write to add to database
 const mapStateToProps = (state) => {

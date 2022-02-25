@@ -2,6 +2,9 @@
 import Authenticate from "../middlewares/auth";
 import * as validator from "./validator";
 
+import isAllowed from "../../middlewares/permissions";
+import PERMISSIONS from "../../../config/permissions";
+
 import mDoctorController from "../../../app/controllers/mControllers/doctors/doctor.controller";
 import { isDoctor } from "../middlewares/doctor";
 import PaymentController from "../../../app/controllers/mControllers/payments/payment.controller";

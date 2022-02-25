@@ -6,8 +6,8 @@ import UserDeviceService from "../../../services/userDevices/userDevice.service"
 import UserDeviceWrapper from "../../../ApiWrapper/mobile/userDevice";
 import {
   AGORA_CALL_NOTIFICATION_TYPES,
-  DEFAULT_PROVIDER,
   USER_CATEGORY,
+  DEFAULT_PROVIDER,
 } from "../../../../constant";
 
 import moment from "moment";

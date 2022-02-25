@@ -69,6 +69,7 @@ import ProviderWrapper from "../../../ApiWrapper/mobile/provider";
 import ProviderTermsMappingWrapper from "../../../ApiWrapper/mobile/providerTermsMappings";
 import PatientConsentMappingWrapper from "../../../ApiWrapper/mobile/patientPaymentConsentMapping";
 // import DoctorProviderMappingWrapper from "../../../ApiWrapper/web/doctorProviderMapping";
+
 // import templateMedicationService from "../../../services/templateMedication/templateMedication.service";
 // import templateAppointmentService from "../../../services/templateAppointment/templateAppointment.service";
 import carePlanTemplateService from "../../../services/carePlanTemplate/carePlanTemplate.service";
@@ -79,12 +80,12 @@ import moment from "moment";
 import {
   BODY_VIEW,
   CONSENT_TYPE,
-  CONSULTATION,
   EMAIL_TEMPLATE_NAME,
-  PRESCRIPTION_PDF_FOLDER,
-  S3_DOWNLOAD_FOLDER,
-  S3_DOWNLOAD_FOLDER_PROVIDER,
   USER_CATEGORY,
+  S3_DOWNLOAD_FOLDER,
+  PRESCRIPTION_PDF_FOLDER,
+  S3_DOWNLOAD_FOLDER_PROVIDER,
+  CONSULTATION,
 } from "../../../../constant";
 import generateOTP from "../../../helper/generateOtp";
 import otpVerificationService from "../../../services/otpVerification/otpVerification.service";
@@ -98,6 +99,7 @@ import {
 } from "../../../helper/common";
 import { getDoctorCurrentTime } from "../../../helper/getUserTime";
 import * as carePlanHelper from "../carePlans/carePlanHelper";
+import PERMISSIONS from "../../../../config/permissions";
 
 const path = require("path");
 

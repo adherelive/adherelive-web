@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React, { Component, Fragment } from "react";
 import { injectIntl } from "react-intl";
 
 import { Select } from "antd";

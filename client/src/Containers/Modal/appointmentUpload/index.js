@@ -1,8 +1,8 @@
 import { connect } from "react-redux";
 import { withRouter } from "react-router-dom";
 import {
-  deleteAppointmentDocs,
   uploadAppointmentDocs,
+  deleteAppointmentDocs,
 } from "../../../modules/uploadDocuments";
 import AppointmentUpload from "../../../Components/Modal/appointmentUpload";
 

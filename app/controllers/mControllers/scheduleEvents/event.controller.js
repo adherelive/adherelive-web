@@ -5,7 +5,6 @@ import moment from "moment";
 // SERVICES -------------------
 // import VitalService from "../../../services/vitals/vital.service";
 import EventService from "../../../services/scheduleEvents/scheduleEvent.service";
-import eventService from "../../../services/scheduleEvents/scheduleEvent.service";
 import CarePlanService from "../../../services/carePlan/carePlan.service";
 
 // WRAPPERS -------------------
@@ -17,6 +16,7 @@ import SymptomWrapper from "../../../ApiWrapper/mobile/symptoms";
 import { EVENT_STATUS, EVENT_TYPE, USER_CATEGORY } from "../../../../constant";
 import * as EventHelper from "../../scheduleEvents/eventHelper";
 import SymptomService from "../../../services/symptom/symptom.service";
+import eventService from "../../../services/scheduleEvents/scheduleEvent.service";
 
 const Log = new Logger("MOBILE > SCHEDULE_EVENTS > CONTROLLER");
 

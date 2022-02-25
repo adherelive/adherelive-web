@@ -3,9 +3,9 @@ import AddConsultationFee from "../../Components/Drawer/addConsultationFee";
 import { DRAWER } from "../../constant";
 import { close } from "../../modules/drawer";
 import {
-  addDoctorPaymentProduct,
   getAdminPaymentProduct,
   getDoctorPaymentProduct,
+  addDoctorPaymentProduct,
 } from "../../modules/doctors";
 import { authDoctorSelector } from "../../modules/doctors/selectors";
 

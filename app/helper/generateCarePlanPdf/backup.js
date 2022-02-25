@@ -1,10 +1,10 @@
 import {
-  APPOINTMENT_TYPE,
-  DOSE_UNIT,
   MEDICATION_TIMING,
-  PATIENT_MEAL_TIMINGS,
   PRESCRIPTION_PDF_FOLDER,
+  DOSE_UNIT,
   WHEN_TO_TAKE_ABBREVATIONS,
+  APPOINTMENT_TYPE,
+  PATIENT_MEAL_TIMINGS,
 } from "../../../constant";
 import moment from "moment";
 import PDFDocument from "pdfkit";

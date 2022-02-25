@@ -1,13 +1,13 @@
 import {
-  onCancel,
-  onComplete,
   onCreate,
-  onMarkInComplete,
-  onPassed,
   onPrior,
+  onComplete,
+  onCancel,
   onRescheduled,
   onStart,
   onUpdate,
+  onPassed,
+  onMarkInComplete,
 } from "../helper";
 import { ACTIVITIES } from "../activityType";
 

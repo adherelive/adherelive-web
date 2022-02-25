@@ -1,5 +1,6 @@
 import Database from "../../../libs/mysql";
-import { Op, QueryTypes } from "sequelize";
+import { QueryTypes } from "sequelize";
+import { Op } from "sequelize";
 
 import { TABLE_NAME } from "../../models/carePlan";
 import { TABLE_NAME as patientTableName } from "../../models/patients";
@@ -8,10 +9,12 @@ import { TABLE_NAME as carePlanAppointmentTableName } from "../../models/carePla
 import { TABLE_NAME as carePlanMedicationTableName } from "../../models/carePlanMedications";
 // import { TABLE_NAME as userRoleTableName } from "../../models/userRoles";
 // import {TABLE_NAME as carePlanVitalTableName} from "../../models/carePlanVitals";
+
 import { TABLE_NAME as medicationTableName } from "../../models/medicationReminders";
 import { TABLE_NAME as medicineTableName } from "../../models/medicines";
 import { TABLE_NAME as userRolesTableName } from "../../models/userRoles";
 import { TABLE_NAME as careplanSecondaryDoctorMappingsTableName } from "../../models/careplanSecondaryDoctorMappings";
+import { USER_CATEGORY } from "../../../constant";
 
 const DEFAULT_ORDER = [["created_at", "DESC"]];
 

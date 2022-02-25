@@ -1,6 +1,9 @@
 import UserWrapper from "../../app/ApiWrapper/mobile/user";
 // import UserWrapperWeb from "../../app/ApiWrapper/web/user";
 import UserRoleWrapper from "../../app/ApiWrapper/mobile/userRoles";
+
+const express = require("express");
+const router = express.Router();
 import mUserRouter from "./user";
 import mAppointmentRouter from "./appointments";
 import mEventRouter from "./events";
@@ -44,9 +47,6 @@ import portionRouter from "./portion";
 import exerciseRouter from "./exercises";
 import workoutRouter from "./workouts";
 import mProviderRouter from "./providers";
-
-const express = require("express");
-const router = express.Router();
 
 router.use(async (req, res, next) => {
   try {

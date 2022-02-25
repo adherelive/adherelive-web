@@ -16,14 +16,17 @@ import DietResponseWrapper from "../../ApiWrapper/web/dietResponse";
 
 import DietJob from "../../JobSdk/Diet/observer";
 import NotificationSdk from "../../NotificationSdk";
+
+import * as medicationHelper from "../medicationReminder/medicationHelper";
 import * as DietHelper from "./dietHelper";
 
 import Log from "../../../libs/log";
 
 import {
-  DAYS,
-  EVENT_STATUS,
   EVENT_TYPE,
+  EVENT_STATUS,
+  DAYS,
+  MEDICATION_TIMING,
   PATIENT_MEAL_TIMINGS,
 } from "../../../constant";
 import carePlanService from "../../services/carePlan/carePlan.service";

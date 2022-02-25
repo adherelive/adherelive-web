@@ -3,10 +3,10 @@ import { REQUEST_TYPE } from "../../constant";
 import {
   addAppointmentUrl,
   addCarePlanAppointmentUrl,
-  deleteAppointmentUrl,
   getAppointmentForParticipantUrl,
-  getAppointmentsDetailsUrl,
   updateAppointmentUrl,
+  deleteAppointmentUrl,
+  getAppointmentsDetailsUrl,
 } from "../../Helper/urls/appointments";
 
 export const ADD_APPOINTMENT_START = "ADD_APPOINTMENT_START";

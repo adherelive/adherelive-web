@@ -1,20 +1,20 @@
 import twilioController from "../../../app/controllers/twilio/twilio.controller";
+
+const express = require("express");
+const router = express.Router();
 import Authenticate from "../middleware/auth";
 import Response from "../../../app/helper/responseFormat";
 import { USER_CATEGORY } from "../../../constant";
 
 import Doctor from "../../../app/controllers/doctors/doctor.controller";
 import Admin from "../../../app/controllers/admin/admin.controller";
-import adminController from "../../../app/controllers/admin/admin.controller";
 import Provider from "../../../app/controllers/providers/providers.controller";
 import Algolia from "../../../app/controllers/algolia/algolia.controller";
 import AccountsController from "../../../app/controllers/accounts/accounts.controller";
 import Medicine from "../../../app/controllers/medicines/medicine.controller";
 import Graphs from "../../../app/controllers/graphs/graph.controller";
 import * as validator from "./validator";
-
-const express = require("express");
-const router = express.Router();
+import adminController from "../../../app/controllers/admin/admin.controller";
 
 router.get("/details/:type", Admin.getTermsAndPolicy);
 router.get("/terms_and_conditions/:id", Admin.getTermsAndConditions);

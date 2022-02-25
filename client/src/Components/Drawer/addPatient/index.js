@@ -1,10 +1,22 @@
 import React, { Component, Fragment } from "react";
 import { injectIntl } from "react-intl";
-import { Button, Drawer, Input, message, Radio, Select, Spin } from "antd";
+import {
+  Drawer,
+  Icon,
+  Select,
+  Input,
+  message,
+  Button,
+  Spin,
+  Radio,
+  DatePicker,
+} from "antd";
 import moment from "moment";
 import throttle from "lodash-es/throttle";
+import { getName } from "../../../Helper/validation";
 
 // antd components
+import InputNumber from "antd/es/input-number";
 
 import india from "../../../Assets/images/india.png";
 import australia from "../../../Assets/images/australia.png";
@@ -23,10 +35,10 @@ import messages from "./message";
 import "react-datepicker/dist/react-datepicker.css";
 import TextArea from "antd/lib/input/TextArea";
 import {
-  DIAGNOSIS_TYPE,
   FINAL,
-  PATIENT_CONSTANTS,
   PROBABLE,
+  DIAGNOSIS_TYPE,
+  PATIENT_CONSTANTS,
 } from "../../../constant";
 
 import { PoweroffOutlined } from "@ant-design/icons";

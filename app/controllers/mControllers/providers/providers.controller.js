@@ -12,19 +12,16 @@ import AppointmentWrapper from "../../../ApiWrapper/web/appointments";
 import PatientWrapper from "../../../ApiWrapper/web/patient";
 import UserRoleWrapper from "../../../ApiWrapper/web/userRoles";
 import { USER_CATEGORY } from "../../../../constant";
-
 const Logger = new Log("MOBILE > PROVIDERS > CONTROLLER");
 
 const APPOINTMENT_QUERY_TYPE = {
   DAY: "d",
   MONTH: "m",
 };
-
 class MobileProvidersController extends Controller {
   constructor() {
     super();
   }
-
   getAppointmentForDoctors = async (req, res) => {
     const { raiseSuccess, raiseServerError, raiseClientError } = this;
     try {

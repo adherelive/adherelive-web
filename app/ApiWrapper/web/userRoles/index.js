@@ -2,12 +2,19 @@ import BaseUserRole from "../../../services/userRoles";
 
 // --- SERVICES
 import userRoleService from "../../../services/userRoles/userRoles.service";
+import providerService from "../../../services/provider/provider.service";
+import doctorService from "../../../services/doctor/doctor.service";
+import patientService from "../../../services/patients/patients.service";
+import doctorProviderMappingService from "../../../services/doctorProviderMapping/doctorProviderMapping.service";
 
 // --- WRAPPERS
 import DoctorWrapper from "../../web/doctor";
 import ProviderWrapper from "../../web/provider";
+import DoctorProviderMappingWrapper from "../../web/doctorProviderMapping";
+import PatientWrapper from "../../web/patient";
 
 import { USER_CATEGORY } from "../../../../constant";
+import provider from "../../web/provider";
 
 class UserRoleWrapper extends BaseUserRole {
   constructor(data) {

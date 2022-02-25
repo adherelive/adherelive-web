@@ -1,4 +1,4 @@
-import { formatTemplateTableData, TABLE_COLUMN } from "../helper";
+import { TABLE_COLUMN, formatTemplateTableData } from "../helper";
 
 export default (data) => {
   const { id, duplicateCareplanTemplate, handleOpenEditDrawer } = data;

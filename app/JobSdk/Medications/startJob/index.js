@@ -1,9 +1,9 @@
 import MedicationJob from "../";
 import moment from "moment";
 import {
-  DEFAULT_PROVIDER,
   EVENT_TYPE,
   NOTIFICATION_VERB,
+  DEFAULT_PROVIDER,
 } from "../../../../constant";
 
 import ProviderService from "../../../services/provider/provider.service";

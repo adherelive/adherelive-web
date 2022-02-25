@@ -1,17 +1,18 @@
 import { doRequest } from "../../Helper/network";
-import { DELETE_TEMPLATE_RELATED_TYPE, REQUEST_TYPE } from "../../constant";
+import { REQUEST_TYPE, DELETE_TEMPLATE_RELATED_TYPE } from "../../constant";
 import {
   createCareplanTemplateUrl,
-  deleteCareplanTemplate,
-  deleteCareplanTemplateAppointment,
-  deleteCareplanTemplateDiet,
-  deleteCareplanTemplateMedication,
-  deleteCareplanTemplateVital,
-  deleteCareplanTemplateWorkout,
   duplicateCareplanTemplateUrl,
-  getAllTemplatesUrl,
+  deleteCareplanTemplate,
+  deleteCareplanTemplateMedication,
+  deleteCareplanTemplateAppointment,
+  deleteCareplanTemplateVital,
+  deleteCareplanTemplateDiet,
   updateCareplanTemplateUrl,
+  deleteCareplanTemplateWorkout,
 } from "../../Helper/urls/carePlanTemplates";
+
+import { getAllTemplatesUrl } from "../../Helper/urls/carePlanTemplates";
 
 export const CREATE_CAREPLAN_TEMPLATE_START = "CREATE_CAREPLAN_TEMPLATE_START";
 export const CREATE_CAREPLAN_TEMPLATE_COMPLETED =

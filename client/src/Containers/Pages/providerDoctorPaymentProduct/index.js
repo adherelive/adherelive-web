@@ -2,10 +2,10 @@ import { connect } from "react-redux";
 import ProviderDoctorPaymentProduct from "../../../Components/Pages/providerDoctorPaymentProduct";
 import { withRouter } from "react-router-dom";
 import {
-  addDoctorPaymentProduct,
-  deleteDoctorPaymentProduct,
   getAdminPaymentProduct,
   getDoctorPaymentProduct,
+  addDoctorPaymentProduct,
+  deleteDoctorPaymentProduct,
 } from "../../../modules/doctors";
 import { open } from "../../../modules/drawer";
 import { DRAWER } from "../../../constant";

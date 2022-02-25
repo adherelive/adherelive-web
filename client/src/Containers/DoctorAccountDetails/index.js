@@ -3,8 +3,8 @@ import DoctorAccountDetails from "../../Components/DoctorAccountDetails";
 import { withRouter } from "react-router-dom";
 import {
   addAccountDetails,
-  deleteAccountDetails,
   getAccountDetails,
+  deleteAccountDetails,
   updateAccountDetails,
 } from "../../modules/accountDetails";
 import { open } from "../../modules/drawer";

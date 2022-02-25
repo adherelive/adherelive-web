@@ -3,11 +3,11 @@ import editReportDrawer from "../../Components/Drawer/editReportDrawer";
 import { DRAWER } from "../../constant";
 import { close } from "../../modules/drawer";
 import {
-  addReport,
-  deleteReport,
-  fetchReports,
-  updateReport,
   uploadReport,
+  addReport,
+  fetchReports,
+  deleteReport,
+  updateReport,
 } from "../../modules/reports";
 
 const mapStateToProps = (state) => {

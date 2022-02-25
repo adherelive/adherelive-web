@@ -14,10 +14,10 @@ import DatePicker from "antd/es/date-picker";
 
 import {
   DeleteTwoTone,
-  DownloadOutlined,
-  EyeTwoTone,
-  LoadingOutlined,
   PlusOutlined,
+  EyeTwoTone,
+  DownloadOutlined,
+  LoadingOutlined,
 } from "@ant-design/icons";
 
 import messages from "./message";

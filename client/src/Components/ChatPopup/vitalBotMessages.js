@@ -1,7 +1,21 @@
 import React, { Component, Fragment } from "react";
+import {
+  USER_ADHERE_BOT,
+  CHAT_MESSAGE_TYPE,
+  PARTS,
+  PART_LIST_BACK,
+  PART_LIST_CODES,
+  PART_LIST_FRONT,
+  BODY,
+  PARTS_GRAPH,
+  BODY_VIEW,
+  BODY_SIDE,
+} from "../../constant";
+import messages from "./messages";
 import { injectIntl } from "react-intl";
-import { Avatar, Button } from "antd";
+import { Form, Input, Button, Spin, Avatar, Upload, Modal } from "antd";
 import moment from "moment";
+import { REPEAT_INTERVAL_VITALS } from "../../constant";
 
 class vitalBotMessage extends Component {
   constructor(props) {

@@ -2,13 +2,13 @@ import { doRequest } from "../../Helper/network";
 import { REQUEST_TYPE } from "../../constant";
 import {
   addDietUrl,
-  getAllDietsForDoctorUrl,
-  getDietDetailsByIdUrl,
   getDietsForCareplanUrl,
+  getDietDetailsByIdUrl,
+  updateDietUrl,
+  getAllDietsForDoctorUrl,
   getDietTimelineUrl,
   getPatientPreferenceDietDetailsUrl,
   updateDietTotalCaloriesUrl,
-  updateDietUrl,
 } from "../../Helper/urls/diet";
 
 export const ADD_DIET_START = "ADD_DIET_START";

@@ -4,7 +4,7 @@ import { DRAWER } from "../../constant";
 import { close } from "../../modules/drawer";
 import { searchVital } from "../../modules/vital_templates";
 import { getVitalOccurence } from "../../modules/vital_occurence";
-import { getVitals, updateVital } from "../../modules/vitals";
+import { updateVital, getVitals } from "../../modules/vitals";
 
 // import { createReminder, updateReminder } from "../../modules/reminder"; // write to add to database
 const mapStateToProps = (state) => {

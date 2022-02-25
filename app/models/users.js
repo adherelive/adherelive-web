@@ -2,7 +2,7 @@
 import { DataTypes } from "sequelize";
 import { TABLE_NAME as UserCategoryPermissionTableName } from "./userCategoryPermissions";
 import { TABLE_NAME as providerTableName } from "./providers";
-import { SIGN_IN_CATEGORY, USER_CATEGORY } from "../../constant";
+import { USER_CATEGORY, SIGN_IN_CATEGORY } from "../../constant";
 
 export const TABLE_NAME = "users";
 

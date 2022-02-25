@@ -1,9 +1,9 @@
 "use strict";
 import { DataTypes } from "sequelize";
 import {
+  TABLE_NAME,
   PAYMENT_PRODUCT_TYPES,
   PRODUCT_USER_TYPES,
-  TABLE_NAME,
 } from "../app/models/paymentProducts";
 import { USER_CATEGORY_ARRAY } from "../app/models/users";
 

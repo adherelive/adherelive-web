@@ -2,6 +2,7 @@ import React from "react";
 import { DeleteOutlined } from "@ant-design/icons";
 import messages from "../messages";
 import Tooltip from "antd/es/tooltip";
+import message from "antd/es/message";
 
 export default (props) => {
   const {

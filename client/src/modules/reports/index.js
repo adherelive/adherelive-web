@@ -2,12 +2,12 @@ import { doRequest } from "../../Helper/network";
 import { REQUEST_TYPE } from "../../constant";
 
 import {
-  addReportUrl,
-  deleteUploadUrl,
-  fetchReportsUrl,
-  getAllReportsUrl,
-  updateReportUrl,
   uploadReportUrl,
+  fetchReportsUrl,
+  addReportUrl,
+  getAllReportsUrl,
+  deleteUploadUrl,
+  updateReportUrl,
 } from "../../Helper/urls/report";
 
 export const ADD_REPORT_START = "ADD_REPORT_START";

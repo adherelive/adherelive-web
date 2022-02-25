@@ -1,6 +1,12 @@
 "use strict";
 
-import { CURRENCY, DB_TABLES, REPEAT_TYPE, USER_CATEGORY } from "../constant";
+import {
+  DB_TABLES,
+  USER_CATEGORY,
+  CURRENCY,
+  BILLING_CYCLE,
+  REPEAT_TYPE,
+} from "../constant";
 
 module.exports = {
   up: (queryInterface, Sequelize) => {

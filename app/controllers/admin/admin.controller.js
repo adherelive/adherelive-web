@@ -7,6 +7,8 @@ import doctorService from "../../services/doctor/doctor.service";
 import carePlanService from "../../services/carePlan/carePlan.service";
 import featureService from "../../services/features/features.service";
 import featuresMappingService from "../../services/doctorPatientFeatureMapping/doctorPatientFeatureMapping.service";
+import documentService from "../../services/uploadDocuments/uploadDocuments.service";
+import minioService from "../../services/minio/minio.service";
 import userRoleService from "../../services/userRoles/userRoles.service";
 import userService from "../../services/user/user.service";
 import providerService from "../../services/provider/provider.service";
@@ -16,12 +18,13 @@ import tacService from "../../services/termsAndConditions/termsAndConditions.ser
 import FeatureDetailsWrapper from "../../ApiWrapper/web/featureDetails";
 import DoctorWrapper from "../../ApiWrapper/web/doctor";
 import CarePlanWrapper from "../../ApiWrapper/web/carePlan";
+import DocumentWrapper from "../../ApiWrapper/web/uploadDocument";
 import UserRoleWrapper from "../../ApiWrapper/web/userRoles";
 import UserWrapper from "../../ApiWrapper/web/user";
 import ProviderWrapper from "../../ApiWrapper/web/provider";
 import TACWrapper from "../../ApiWrapper/web/termsAndConditions";
 
-import { TERMS_AND_CONDITIONS_TYPES, USER_CATEGORY } from "../../../constant";
+import { USER_CATEGORY, TERMS_AND_CONDITIONS_TYPES } from "../../../constant";
 
 const Log = new Logger("ADMIN > CONTROLLER");
 

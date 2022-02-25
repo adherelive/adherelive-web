@@ -1,11 +1,11 @@
 import {
-  onCancel,
-  onComplete,
   onCreate,
-  onPassed,
+  onComplete,
+  onCancel,
   onRescheduled,
   onStart,
   onUpdate,
+  onPassed,
 } from "../helper";
 import { ACTIVITIES } from "../activityType";
 

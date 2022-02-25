@@ -1,8 +1,8 @@
 import {
-  ONBOARDING_STATUS,
-  PATH,
   REQUEST_TYPE,
   USER_CATEGORY,
+  PATH,
+  ONBOARDING_STATUS,
 } from "../../constant";
 import { doRequest } from "../../Helper/network";
 import { Auth } from "../../Helper/urls";

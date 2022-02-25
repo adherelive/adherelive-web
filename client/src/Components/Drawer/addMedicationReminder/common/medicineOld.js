@@ -5,12 +5,23 @@ import Select from "antd/es/select";
 import Spin from "antd/es/spin";
 import Tooltip from "antd/es/tooltip";
 import Button from "antd/es/button";
+import { EditOutlined } from "@ant-design/icons";
 import messages from "../message";
 import algoliasearch from "algoliasearch";
 import config from "../../../../config";
-import { InstantSearch } from "react-instantsearch-dom";
+import {
+  InstantSearch,
+  Hits,
+  SearchBox,
+  Highlight,
+  connectSearchBox,
+  connectHighlight,
+} from "react-instantsearch-dom";
 
 import message from "antd/es/message";
+
+import { TABLET } from "../../../../constant";
+import { TagFilled, TagOutlined } from "@ant-design/icons";
 
 import StarOutlined from "@ant-design/icons/StarOutlined";
 import StarFilled from "@ant-design/icons/StarFilled";

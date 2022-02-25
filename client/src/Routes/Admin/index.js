@@ -1,4 +1,4 @@
-import React, { Component, lazy } from "react";
+import React, { lazy, Component } from "react";
 import { withRouter } from "react-router-dom";
 
 const AdminDoctors = lazy(() =>

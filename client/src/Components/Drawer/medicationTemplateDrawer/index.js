@@ -1,27 +1,28 @@
 import React, { Component, Fragment } from "react";
 import { injectIntl } from "react-intl";
 import {
-  Button,
   Drawer,
   Icon,
+  Select,
   Input,
   message,
-  Modal,
-  Select,
+  Button,
   TimePicker,
+  Modal,
 } from "antd";
 
 import {
+  WHEN_TO_TAKE_ABBR_TYPES,
+  MEDICATION_TIMING,
+  DAYS,
   DAYS_TEXT_NUM_SHORT,
   EVENT_TYPE,
-  MEDICATION_TIMING,
   MEDICATION_TIMING_HOURS,
   MEDICATION_TIMING_MINUTES,
-  RADIOLOGY,
-  SYRUP,
   TABLET,
+  SYRUP,
+  RADIOLOGY,
   USER_CATEGORY,
-  WHEN_TO_TAKE_ABBR_TYPES,
 } from "../../../constant";
 import moment from "moment";
 import EditMedicationReminder from "../../../Containers/Drawer/editMedicationReminder";
@@ -37,6 +38,11 @@ import SyrupIcon from "../../../Assets/images/pharmacy.png";
 import uuid from "react-uuid";
 import messages from "./message";
 import addDays from "date-fns/addDays";
+import getDay from "date-fns/getDay";
+import getYear from "date-fns/getYear";
+import getMonth from "date-fns/getMonth";
+import getHours from "date-fns/getHours";
+import getMinutes from "date-fns/getMinutes";
 
 const { Option } = Select;
 const BLANK_TEMPLATE = "Blank Template";

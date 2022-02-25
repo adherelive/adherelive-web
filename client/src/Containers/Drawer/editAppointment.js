@@ -6,14 +6,14 @@ import { DRAWER } from "../../constant";
 import { getMedications } from "../../modules/medications";
 import { getPatientCarePlanDetails } from "../../modules/carePlans";
 import {
-  deleteAppointment,
   getAppointments,
-  getAppointmentsDetails,
   updateAppointment,
+  deleteAppointment,
+  getAppointmentsDetails,
 } from "../../modules/appointments";
 import {
-  getFavourites,
   markFavourite,
+  getFavourites,
   removeFavourite,
   removeFavouriteByRecordId,
 } from "../../modules/favouritesData/index";

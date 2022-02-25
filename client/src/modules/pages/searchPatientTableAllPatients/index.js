@@ -1,6 +1,6 @@
 import {
-  GET_SEARCH_DIAGNOSIS_PATIENTS_COMPLETED,
   GET_SEARCH_TREATMENT_PATIENTS_COMPLETED,
+  GET_SEARCH_DIAGNOSIS_PATIENTS_COMPLETED,
 } from "../paginatedPatients";
 
 function getSearchAllPatientIdsReducer(state, data) {

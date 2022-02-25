@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import { injectIntl } from "react-intl";
-import { Avatar, Input } from "antd";
+import { Avatar, Input, message } from "antd";
 import messages from "./messages";
 
 const Header = ({ handleSearch, formatMessage }) => {

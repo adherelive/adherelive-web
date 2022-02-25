@@ -1,6 +1,6 @@
 "use strict";
 
-import { ARTICLE_TYPE, DB_TABLES } from "../constant";
+import { DB_TABLES, ARTICLE_TYPE } from "../constant";
 
 module.exports = {
   up: (queryInterface, Sequelize) => {

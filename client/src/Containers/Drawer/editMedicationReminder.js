@@ -3,17 +3,17 @@ import EditMedicationReminder from "../../Components/Drawer/editMedicationRemind
 import { DRAWER } from "../../constant";
 import { close } from "../../modules/drawer";
 import {
-  deleteMedication,
   getMedications,
   updateMedication,
+  deleteMedication,
 } from "../../modules/medications";
 import { getMedicationDetails } from "../../modules/otherDetails";
-import { addMedicine, searchMedicine } from "../../modules/medicines";
+import { searchMedicine, addMedicine } from "../../modules/medicines";
 import { getPatientCarePlanDetails } from "../../modules/carePlans";
 
 import {
-  getFavourites,
   markFavourite,
+  getFavourites,
   removeFavourite,
 } from "../../modules/favouritesData/index";
 

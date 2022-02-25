@@ -8,6 +8,9 @@ import PaymentController from "../../../app/controllers/payments/payment.control
 import CarePlanTemplate from "../../../app/controllers/carePlanTemplate/carePlanTemplate.controller";
 import * as validator from "./validator";
 
+import isAllowed from "../../middlewares/permissions";
+import PERMISSIONS from "../../../config/permissions";
+
 const router = express.Router();
 const multer = require("multer");
 const storage = multer.memoryStorage();

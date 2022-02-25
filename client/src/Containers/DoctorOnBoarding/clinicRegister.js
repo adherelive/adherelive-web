@@ -2,8 +2,8 @@ import { withRouter } from "react-router-dom";
 import ClinicRegister from "../../Components/DoctorOnBoarding/clinicRegister";
 import { signOut } from "../../modules/auth";
 import {
-  callNewDoctorAction,
   doctorClinicRegister,
+  callNewDoctorAction,
 } from "../../modules/onBoarding";
 import { connect } from "react-redux";
 import { showVerifyModal } from "../../modules/pages/features";

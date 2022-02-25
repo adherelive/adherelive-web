@@ -2,8 +2,8 @@ import { connect } from "react-redux";
 import { withRouter } from "react-router-dom";
 import FavouriteMedicines from "../../../Components/Favourites/medicine";
 import {
-  getFavourites,
   markFavourite,
+  getFavourites,
   removeFavourite,
 } from "../../../modules/favouritesData/index";
 

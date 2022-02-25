@@ -1,20 +1,21 @@
-import { Drawer, Switch } from "antd";
+import { Drawer } from "antd";
 import React, { Component, Fragment } from "react";
 import { injectIntl } from "react-intl";
 import {
+  MEDICATION_TIMING,
   DAYS_TEXT_NUM_SHORT,
   EVENT_TYPE,
-  MEDICATION_TIMING,
   MEDICATION_TIMING_HOURS,
   MEDICATION_TIMING_MINUTES,
-  MEDICINE_UNITS,
-  SYRUP,
   TABLET,
+  SYRUP,
+  MEDICINE_UNITS,
   USER_CATEGORY,
 } from "../../../constant";
 import moment from "moment";
 import message from "antd/es/message";
 import Icon from "antd/es/icon";
+import Button from "antd/es/button";
 import EditMedicationReminder from "../../../Containers/Drawer/editMedicationReminder";
 import EditAppointmentDrawer from "../../../Containers/Drawer/editAppointment";
 import EditVitalDrawer from "../../../Containers/Drawer/editVitals";
@@ -28,6 +29,7 @@ import SyrupIcon from "../../../Assets/images/pharmacy.png";
 import uuid from "react-uuid";
 import messages from "./message";
 import Input from "antd/es/input";
+import { Switch } from "antd";
 import Footer from "../footer";
 
 class TemplatePageCreateDrawer extends Component {

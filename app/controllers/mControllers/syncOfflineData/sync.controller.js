@@ -1,7 +1,12 @@
 import Controller from "../../index";
 import Logger from "../../../../libs/log";
 
-import { EVENT_TYPE, OFFLINE_SYNC_DATA_TASKS } from "../../../../constant";
+import {
+  EVENT_STATUS,
+  EVENT_TYPE,
+  USER_CATEGORY,
+  OFFLINE_SYNC_DATA_TASKS,
+} from "../../../../constant";
 import {
   syncMedicationReminderStatus,
   syncVitalsResponseData,

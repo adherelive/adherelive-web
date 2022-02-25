@@ -8,7 +8,6 @@ import VitalService from "../../services/vitals/vital.service";
 import FeatureDetailService from "../../services/featureDetails/featureDetails.service";
 import queueService from "../../services/awsQueue/queue.service";
 import ScheduleEventService from "../../services/scheduleEvents/scheduleEvent.service";
-import eventService from "../../services/scheduleEvents/scheduleEvent.service";
 import carePlanService from "../../services/carePlan/carePlan.service";
 
 // WRAPPERS
@@ -21,12 +20,15 @@ import PatientWrapper from "../../ApiWrapper/web/patient";
 
 import {
   DAYS,
-  EVENT_STATUS,
   EVENT_TYPE,
+  EVENT_STATUS,
   FEATURE_TYPE,
+  USER_CATEGORY,
   NOTIFICATION_STAGES,
 } from "../../../constant";
 import moment from "moment";
+
+import eventService from "../../services/scheduleEvents/scheduleEvent.service";
 import EventWrapper from "../../ApiWrapper/common/scheduleEvents";
 import JobSdk from "../../JobSdk";
 import NotificationSdk from "../../NotificationSdk";

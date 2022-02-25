@@ -3,12 +3,10 @@ import Controller from "../";
 // services
 import userService from "../../services/user/user.service";
 import userRolesService from "../../services/userRoles/userRoles.service";
-import userRoleService from "../../services/userRoles/userRoles.service";
 import carePanService from "../../services/carePlan/carePlan.service";
-import carePlanService from "../../services/carePlan/carePlan.service";
+import userRoleService from "../../services/userRoles/userRoles.service";
 import PaymentProductService from "../../services/paymentProducts/paymentProduct.service";
 import watchlistService from "../../services/doctorPatientWatchlist/doctorPatientWatchlist.service";
-import doctorPatientWatchlistService from "../../services/doctorPatientWatchlist/doctorPatientWatchlist.service";
 
 // wrappers
 import UserWrapper from "../../ApiWrapper/web/user";
@@ -23,7 +21,9 @@ import permissions from "../../../config/permissions";
 import * as PermissionHelper from "../../helper/userCategoryPermisssions";
 import { getLinkDetails, getUserDetails } from "./adhoc.helper";
 import Logger from "../../../libs/log";
+import carePlanService from "../../services/carePlan/carePlan.service";
 import userPreferenceService from "../../services/userPreferences/userPreference.service";
+import doctorPatientWatchlistService from "../../services/doctorPatientWatchlist/doctorPatientWatchlist.service";
 import QueueService from "../../services/awsQueue/queue.service";
 import patientsService from "../../services/patients/patients.service";
 import { MID_MORNING, PATIENT_MEAL_TIMINGS } from "../../../constant";

@@ -1,8 +1,26 @@
 import React, { Component, Fragment } from "react";
 import { injectIntl } from "react-intl";
-import { Button, Checkbox, Drawer, Input, Radio, Select } from "antd";
+import {
+  Drawer,
+  Icon,
+  Select,
+  Input,
+  Button,
+  Spin,
+  Radio,
+  DatePicker,
+  Checkbox,
+} from "antd";
 import message from "antd/es/message";
-import { ACCOUNT_TYPES, CURRENT, SAVINGS } from "../../../constant";
+import {
+  CONSULTATION_FEE_TYPE_TEXT,
+  SAVINGS,
+  CURRENT,
+  ACCOUNT_TYPES,
+} from "../../../constant";
+
+import moment from "moment";
+import throttle from "lodash-es/throttle";
 import india from "../../../Assets/images/india.png";
 import australia from "../../../Assets/images/australia.png";
 import us from "../../../Assets/images/flag.png";
@@ -16,6 +34,7 @@ import japan from "../../../Assets/images/japan.png";
 import china from "../../../Assets/images/china.png";
 import switzerland from "../../../Assets/images/switzerland.png";
 import france from "../../../Assets/images/france.png";
+import TextArea from "antd/lib/input/TextArea";
 
 import messages from "./message";
 import Footer from "../footer";

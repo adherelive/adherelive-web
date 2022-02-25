@@ -11,6 +11,9 @@ import permissionService from "../../../services/permission/permission.service";
 import DoctorWrapper from "../doctor";
 import PatientWrapper from "../patient";
 import ProviderWrapper from "../provider";
+import PermissionWrapper from "../permission";
+
+import * as PermissionHelper from "../../../helper/userCategoryPermisssions";
 
 class UserWrapper extends BaseUser {
   constructor(data) {

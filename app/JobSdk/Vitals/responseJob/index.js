@@ -1,11 +1,17 @@
 import VitalJob from "../";
 import moment from "moment";
-import { EVENT_TYPE, NOTIFICATION_VERB } from "../../../../constant";
+import {
+  DEFAULT_PROVIDER,
+  EVENT_TYPE,
+  NOTIFICATION_VERB,
+} from "../../../../constant";
 
 import UserRoleService from "../../../services/userRoles/userRoles.service";
+import ProviderService from "../../../services/provider/provider.service";
 import UserDeviceService from "../../../services/userDevices/userDevice.service";
 
 import UserDeviceWrapper from "../../../ApiWrapper/mobile/userDevice";
+import VitalWrapper from "../../../ApiWrapper/mobile/vitals";
 
 class ResponseJob extends VitalJob {
   constructor(data) {

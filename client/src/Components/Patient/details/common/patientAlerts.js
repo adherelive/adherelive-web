@@ -3,7 +3,7 @@ import { injectIntl } from "react-intl";
 import moment from "../../../../Helper/moment";
 import messages from "./messages";
 
-import { EVENT_STATUS, EVENT_TYPE } from "../../../../constant";
+import { EVENT_TYPE, EVENT_STATUS } from "../../../../constant";
 
 class PatientAlerts extends Component {
   constructor(props) {

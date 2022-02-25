@@ -10,7 +10,7 @@ import {
   addMessageOfChat,
   raiseChatNotification,
 } from "../../modules/chatMessages";
-import { closePopUp, maximizePopUp, minimizePopUp } from "../../modules/chat";
+import { closePopUp, minimizePopUp, maximizePopUp } from "../../modules/chat";
 import {
   getAllFeatures,
   toggleChatPermission,

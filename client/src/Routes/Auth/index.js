@@ -1,4 +1,4 @@
-import React, { Component, Fragment, lazy } from "react";
+import React, { lazy, Component, Fragment } from "react";
 import { USER_CATEGORY } from "../../constant";
 
 const Doctors = lazy(() =>

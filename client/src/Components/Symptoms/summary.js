@@ -1,12 +1,12 @@
 import React, { Component } from "react";
 import { injectIntl } from "react-intl";
 import {
-  BODY,
   PART_LIST_BACK,
   PART_LIST_CODES,
   PART_LIST_FRONT,
+  BODY,
 } from "../../constant";
-import { message, Modal, Slider, Spin, Switch, Timeline } from "antd";
+import { Timeline, message, Switch, Modal, Slider, Spin } from "antd";
 
 import moment from "moment";
 import audio from "../../Assets/images/music.png";

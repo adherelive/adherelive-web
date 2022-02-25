@@ -19,14 +19,17 @@ import {
 } from "./symptom.controller.helper";
 import Logger from "../../../../libs/log";
 import {
-  ALLOWED_VIDEO_EXTENSIONS,
   DOCUMENT_PARENT_TYPE,
-  EVENT_STATUS,
-  EVENT_TYPE,
   USER_CATEGORY,
+  ALLOWED_VIDEO_EXTENSIONS,
+  EVENT_TYPE,
+  EVENT_STATUS,
+  // MESSAGE_TYPES,
 } from "../../../../constant";
 import { getFilePath } from "../../../helper/filePath";
 import carePlanService from "../../../services/carePlan/carePlan.service";
+
+import ChatJob from "../../../JobSdk/Chat/observer";
 import SymptomsJob from "../../../JobSdk/Symptoms/observer";
 import NotificationSdk from "../../../NotificationSdk";
 

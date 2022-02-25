@@ -5,14 +5,14 @@ import { close } from "../../modules/drawer";
 import { DRAWER } from "../../constant";
 import { getMedications } from "../../modules/medications";
 import {
+  getAppointments,
   addAppointment,
   addCarePlanAppointment,
-  getAppointments,
   getAppointmentsDetails,
 } from "../../modules/appointments";
 import {
-  getFavourites,
   markFavourite,
+  getFavourites,
   removeFavourite,
   removeFavouriteByRecordId,
 } from "../../modules/favouritesData/index";

@@ -10,7 +10,7 @@ import confirm from "antd/es/modal/confirm";
 
 import prefixField from "../../Prefix";
 import Customization from "../addProvider/customization";
-import { ACCOUNT_TYPES, CURRENT, SAVINGS } from "../../../constant";
+import { SAVINGS, CURRENT, ACCOUNT_TYPES } from "../../../constant";
 
 const { Item: FormItem } = Form;
 const { TextArea } = Input;

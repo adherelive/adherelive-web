@@ -1,6 +1,6 @@
 import Joi from "@hapi/joi";
 import { validationError } from "../../api/helper";
-import { USER_FAV_ALL_TYPES } from "../../../constant";
+import { USER_FAV_ALL_TYPES, FAVOURITE_TYPE } from "../../../constant";
 
 const createFavourite = Joi.object().keys({
   type: Joi.string()

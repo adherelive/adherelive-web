@@ -4,9 +4,10 @@ import {
   CHART_TITLE,
   NO_ACTION,
   NO_APPOINTMENT,
-  NO_DIET,
   NO_MEDICATION,
+  NO_DIET,
   NO_WORKOUT,
+  USER_CATEGORY,
 } from "../../constant";
 
 import { Button, Checkbox, Modal } from "antd";

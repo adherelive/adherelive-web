@@ -1,6 +1,6 @@
 "use strict";
 
-import { PAYMENT_TYPE, TABLE_NAME } from "../models/paymentProducts";
+import { TABLE_NAME, PAYMENT_TYPE } from "../models/paymentProducts";
 import { USER_CATEGORY } from "../../constant";
 
 module.exports = {

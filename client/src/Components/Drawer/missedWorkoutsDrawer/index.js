@@ -1,6 +1,6 @@
 import React, { Component, Fragment } from "react";
 import { injectIntl } from "react-intl";
-import { Drawer, Spin } from "antd";
+import { Drawer, message, Spin } from "antd";
 import MissedWorkoutCard from "../../Cards/patient/missedWorkout";
 
 import messages from "./message";

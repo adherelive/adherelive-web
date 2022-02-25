@@ -2,6 +2,7 @@ import React from "react";
 import { Button } from "antd";
 import { PoweroffOutlined } from "@ant-design/icons";
 import { injectIntl } from "react-intl";
+import messages from "./message";
 
 export default injectIntl((props) => {
   const {

@@ -10,8 +10,8 @@ import {
 } from "../../modules/doctors";
 import {
   getPatientsPaginated,
-  searchDiagnosisPaginatedPatients,
   searchTreatmentPaginatedPatients,
+  searchDiagnosisPaginatedPatients,
 } from "../../modules/pages/paginatedPatients";
 
 const mapStateToProps = (state) => {

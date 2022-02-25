@@ -28,10 +28,13 @@ import userRolesService from "../../services/userRoles/userRoles.service";
 import DietService from "../../services/diet/diet.service";
 import PortionServiceService from "../../services/portions/portions.service";
 import RepetitionService from "../../services/exerciseRepetitions/repetition.service";
+import providerService from "../../services/provider/provider.service";
+import ExerciseContentService from "../../services/exerciseContents/exerciseContent.service";
 import WorkoutService from "../../services/workouts/workout.service";
 import userPreferenceService from "../../services/userPreferences/userPreference.service";
 import careplanSecondaryDoctorMappingService from "../../services/careplanSecondaryDoctorMappings/careplanSecondaryDoctorMappings.service";
 // WRAPPERS --------------------------------
+import ExerciseContentWrapper from "../../ApiWrapper/web/exerciseContents";
 import UserRolesWrapper from "../../ApiWrapper/web/userRoles";
 import VitalWrapper from "../../ApiWrapper/web/vitals";
 import UserWrapper from "../../ApiWrapper/web/user";
@@ -65,25 +68,23 @@ import moment from "moment";
 import {
   BODY_VIEW,
   CONSENT_TYPE,
-  CONSULTATION,
-  DIAGNOSIS_TYPE,
   EMAIL_TEMPLATE_NAME,
-  PRESCRIPTION_PDF_FOLDER,
-  S3_DOWNLOAD_FOLDER,
-  S3_DOWNLOAD_FOLDER_PROVIDER,
   USER_CATEGORY,
+  S3_DOWNLOAD_FOLDER,
+  PRESCRIPTION_PDF_FOLDER,
+  DIAGNOSIS_TYPE,
+  S3_DOWNLOAD_FOLDER_PROVIDER,
+  CONSULTATION,
 } from "../../../constant";
-import {
-  checkAndCreateDirectory,
-  getRoomId,
-  getSeparateName,
-} from "../../helper/common";
+import { getSeparateName, getRoomId } from "../../helper/common";
 import generateOTP from "../../helper/generateOtp";
 import { EVENTS, Proxy_Sdk } from "../../proxySdk";
 // import carePlan from "../../ApiWrapper/web/carePlan";
 import generatePDF from "../../helper/generateCarePlanPdf";
 import { downloadFileFromS3 } from "../user/userHelper";
 import { getFilePath } from "../../helper/filePath";
+import { checkAndCreateDirectory } from "../../helper/common";
+import PERMISSIONS from "../../../config/permissions";
 // helpers
 import * as carePlanHelper from "../carePlans/carePlanHelper";
 import { getDoctorCurrentTime } from "../../helper/getUserTime";
@@ -2096,15 +2097,15 @@ class PatientController extends Controller {
 
       /** TODO: Check if these are required now or not.
        userId (auth) [DOCTOR]
-
+       
        SORT
        created_at [asc, desc]
        name [asc, desc]
-
+       
        FILTER
        diagnosis [description, type]
        treatment
-
+       
        doctors -> careplans -> patients
        */
 

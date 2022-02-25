@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import { injectIntl } from "react-intl";
-import { Form, Input } from "antd";
+import { Input, Form } from "antd";
 import messages from "../message";
 
 const FIELD_NAME = "notes";

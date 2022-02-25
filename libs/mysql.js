@@ -1,5 +1,10 @@
 import { Sequelize } from "sequelize";
 import Logger from "./log";
+
+const Log = new Logger("SEQUELIZE QUERY");
+// const Config = require("../config/config");
+// Config();
+
 // MODELS
 import * as ActionDetails from "../app/models/actionDetails";
 import * as Actions from "../app/models/actions";
@@ -107,10 +112,6 @@ import * as WorkoutResponses from "../app/models/workoutResponses";
 import * as WorkoutExerciseGroupMapping from "../app/models/workoutExerciseGroupMapping";
 import * as WorkoutTemplates from "../app/models/workoutTemplate";
 import * as WorkoutTemplateExerciseMapping from "../app/models/workoutTemplateExerciseMapping";
-
-const Log = new Logger("SEQUELIZE QUERY");
-// const Config = require("../config/config");
-// Config();
 
 // Models List...
 const models = [

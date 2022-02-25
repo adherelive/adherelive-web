@@ -4,8 +4,8 @@ import {
   CHART_TITLE,
   NO_ACTION,
   NO_APPOINTMENT,
-  NO_DIET,
   NO_MEDICATION,
+  NO_DIET,
   NO_WORKOUT,
 } from "../../../constant";
 

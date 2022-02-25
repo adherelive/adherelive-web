@@ -3,16 +3,16 @@ import AddMedicationReminder from "../../Components/Drawer/addMedicationReminder
 import { DRAWER } from "../../constant";
 import { close } from "../../modules/drawer";
 import {
-  addCarePlanMedicationReminder,
-  addMedicationReminder,
   getMedications,
+  addMedicationReminder,
+  addCarePlanMedicationReminder,
 } from "../../modules/medications";
 import { getMedicationDetails } from "../../modules/otherDetails";
 import { getAppointments } from "../../modules/appointments";
-import { addMedicine, searchMedicine } from "../../modules/medicines";
+import { searchMedicine, addMedicine } from "../../modules/medicines";
 import {
-  getFavourites,
   markFavourite,
+  getFavourites,
   removeFavourite,
 } from "../../modules/favouritesData/index";
 

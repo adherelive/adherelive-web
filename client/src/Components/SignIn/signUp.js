@@ -1,6 +1,6 @@
 import React, { Component, Fragment } from "react";
 // import { injectIntl, FormattedMessage } from "react-intl";
-import { Button, Checkbox, Form, Input, message } from "antd";
+import { Button, Input, Form, message, Checkbox } from "antd";
 
 import PPModal from "../../Containers/Modal/PPConfirm";
 import { injectIntl } from "react-intl";

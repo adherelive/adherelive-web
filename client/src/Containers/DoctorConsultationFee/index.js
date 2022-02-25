@@ -3,8 +3,8 @@ import { withRouter } from "react-router-dom";
 import DoctorConsultationFeeTable from "../../Components/DoctorConsultationFee/table";
 import { authDoctorSelector } from "../../modules/doctors/selectors";
 import {
-  deleteDoctorPaymentProduct,
   getDoctorPaymentProduct,
+  deleteDoctorPaymentProduct,
 } from "../../modules/doctors";
 import { open } from "../../modules/drawer";
 import { DRAWER } from "../../constant";

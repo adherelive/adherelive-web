@@ -1,8 +1,17 @@
 import React, { Component } from "react";
 import { injectIntl } from "react-intl";
 import messages from "../message";
+import {
+  GENDER,
+  TABLET,
+  SYRUP,
+  PARTS,
+  PART_LIST_CODES,
+} from "../../../../constant";
 
 import { getName } from "../../../../Helper/validation";
+
+import { Tabs, Table, Menu, Dropdown, Spin, message, Button } from "antd";
 
 class patientCarePlans extends Component {
   constructor(props) {
