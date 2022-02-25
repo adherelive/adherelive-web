@@ -35,7 +35,9 @@
     "medicineDb": "./node_modules/.bin/babel-node scripts/testOne.js",
     "degreeDb": "./node_modules/.bin/babel-node scripts/degreeDb",
     "rollback": "./node_modules/.bin/babel-node ./scripts/dropTables.js",
-    "sqsCheck": "./node_modules/.bin/babel-node ./events/index.js"
+    "sqsCheck": "./node_modules/.bin/babel-node ./events/index.js",
+    "prepare": "npm run snyk-protect",
+    "snyk-protect": "snyk-protect"
   },
   "nodemonConfig": {
     "watch": [
@@ -126,6 +128,8 @@
     "sequelize": "^6.7.0",
     "sequelize-cli": "^6.1.0",
     "twilio": "^3.9.3",
-    "uuid": "^8.3.2"
-  }
+    "uuid": "^8.3.2",
+    "@snyk/protect": "latest"
+  },
+  "snyk": true
 }

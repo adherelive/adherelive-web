@@ -36,7 +36,7 @@
     "date-fns": "^2.24.0",
     "firebase": "^9.6.5",
     "fullcalendar-reactwrapper": "^1.0.7",
-    "getstream": "^5.0.5",
+    "getstream": "^6.1.2",
     "install": "^0.13.0",
     "js-base64": "^3.7.2",
     "js-cookie": "^3.0.1",
@@ -83,7 +83,7 @@
     "redux-devtools-extension": "^2.13.5",
     "redux-thunk": "^2.3.0",
     "reselect": "^4.0.0",
-    "showdown": "^1.9.1",
+    "showdown": "^2.0.0",
     "twilio-chat": "^5.0.2",
     "twilio-video": "2.17.1"
   },
