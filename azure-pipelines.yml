@@ -19,7 +19,7 @@ variables:
   azureSubscriptionEndpoint: 'adherelive-demo'
   azureSubscriptionId: 'AdhereLive'
   azureContainerRegistry: 'adherelivedemo.azurecr.io'
-  azureEnvironment: 'AdhereLive-Demo'
+  azureEnvironment: 'AdhereLive-NDemo'
 
 stages:
   - stage: Build
