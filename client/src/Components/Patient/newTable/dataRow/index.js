@@ -1,4 +1,4 @@
-import {TABLE_COLUMN, formatPatientTableData} from "../helper";
+import { TABLE_COLUMN, formatPatientTableData } from "../helper";
 
 export default (data) => {
   const {
@@ -13,11 +13,11 @@ export default (data) => {
     paginatedPatientData,
     auth_role,
   } = data;
-  
+
   const formattedData = formatPatientTableData(data);
-  const {patientData, treatmentData, doctorData, carePlanData} =
-  formattedData || {};
-  
+  const { patientData, treatmentData, doctorData, carePlanData } =
+    formattedData || {};
+
   return {
     key: id,
     [TABLE_COLUMN.PID.dataIndex]: {

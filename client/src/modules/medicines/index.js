@@ -1,5 +1,5 @@
-import {doRequest} from "../../Helper/network";
-import {REQUEST_TYPE} from "../../constant";
+import { doRequest } from "../../Helper/network";
+import { REQUEST_TYPE } from "../../constant";
 import {
   searchMedicines,
   addMedicineUrl,
@@ -55,8 +55,8 @@ export const searchMedicine = (value) => {
         method: REQUEST_TYPE.GET,
         url: searchMedicines(value),
       });
-      
-      const {status, payload: {data, message = ""} = {}} = response || {};
+
+      const { status, payload: { data, message = "" } = {} } = response || {};
       if (status === true) {
         dispatch({
           type: SEARCH_MEDICINE_COMPLETED,
@@ -84,8 +84,8 @@ export const addMedicine = (payload) => {
         url: addMedicineUrl(),
         data: payload,
       });
-      
-      const {status, payload: {data, message = ""} = {}} = response || {};
+
+      const { status, payload: { data, message = "" } = {} } = response || {};
       if (status === true) {
         dispatch({
           type: ADD_MEDICINE_COMPLETED,
@@ -109,14 +109,14 @@ export const addAdminMedicine = (payload) => {
   let response = {};
   return async (dispatch) => {
     try {
-      dispatch({type: ADD_ADMIN_MEDICINE_START});
+      dispatch({ type: ADD_ADMIN_MEDICINE_START });
       response = await doRequest({
         method: REQUEST_TYPE.POST,
         url: addAdminMedicineUrl(),
         data: payload,
       });
-      
-      const {status, payload: {data, message = ""} = {}} = response || {};
+
+      const { status, payload: { data, message = "" } = {} } = response || {};
       if (status === true) {
         dispatch({
           type: ADD_ADMIN_MEDICINE_COMPLETED,
@@ -136,22 +136,22 @@ export const addAdminMedicine = (payload) => {
   };
 };
 
-export const getPublicMedicines = ({value, offset = 0}) => {
+export const getPublicMedicines = ({ value, offset = 0 }) => {
   let response = {};
   return async (dispatch) => {
     try {
-      dispatch({type: GET_PUBLIC_MEDICINES});
+      dispatch({ type: GET_PUBLIC_MEDICINES });
       response = await doRequest({
         method: REQUEST_TYPE.GET,
-        url: getPublicMedicinesUrl({value, offset}),
+        url: getPublicMedicinesUrl({ value, offset }),
       });
-      
-      const {status, payload: {data, message = ""} = {}} = response || {};
-      
+
+      const { status, payload: { data, message = "" } = {} } = response || {};
+
       if (status === true) {
         data["offset"] = offset;
         data["type"] = PUBLIC;
-        
+
         if (value && value !== "") {
           data["searchText"] = value;
         }
@@ -189,24 +189,24 @@ export const mapMedicineToPublic = (medicine) => {
   };
 };
 
-export const deleteMedicine = ({medicine_id, offset}) => {
+export const deleteMedicine = ({ medicine_id, offset }) => {
   let response = {};
   return async (dispatch) => {
     try {
-      dispatch({type: DELETE_MEDICINE});
+      dispatch({ type: DELETE_MEDICINE });
       response = await doRequest({
         method: REQUEST_TYPE.DELETE,
         url: deleteMedicineUrl(medicine_id),
       });
-      
-      const {status, payload: {data, message = ""} = {}} = response || {};
-      
+
+      const { status, payload: { data, message = "" } = {} } = response || {};
+
       if (status === true) {
         if (medicine_id) {
           data["medicine_id"] = medicine_id;
           data["offset"] = offset;
         }
-        
+
         dispatch({
           type: "DELETE_MEDICINE_COMPLETED",
           data,
@@ -225,22 +225,22 @@ export const deleteMedicine = ({medicine_id, offset}) => {
   };
 };
 
-export const getPrivateMedicines = ({value, offset = 0}) => {
+export const getPrivateMedicines = ({ value, offset = 0 }) => {
   let response = {};
   return async (dispatch) => {
     try {
-      dispatch({type: GET_PRIVATE_MEDICINES});
+      dispatch({ type: GET_PRIVATE_MEDICINES });
       response = await doRequest({
         method: REQUEST_TYPE.GET,
-        url: getPrivateMedicinesUrl({value, offset}),
+        url: getPrivateMedicinesUrl({ value, offset }),
       });
-      
-      const {status, payload: {data, message = ""} = {}} = response || {};
-      
+
+      const { status, payload: { data, message = "" } = {} } = response || {};
+
       if (status === true) {
         data["offset"] = offset;
         data["type"] = PRIVATE;
-        
+
         if (value && value !== "") {
           data["searchText"] = value;
         }
@@ -265,7 +265,7 @@ export const getPrivateMedicines = ({value, offset = 0}) => {
 export const resetSearchPublic = () => {
   return async (dispatch) => {
     try {
-      dispatch({type: RESET_SEARCH_PUBLIC});
+      dispatch({ type: RESET_SEARCH_PUBLIC });
     } catch (error) {
       console.log("RESET_SEARCH_PUBLIC MODULE ERROR ", error);
     }
@@ -275,25 +275,25 @@ export const resetSearchPublic = () => {
 export const resetSearchPrivate = () => {
   return async (dispatch) => {
     try {
-      dispatch({type: RESET_SEARCH_PRIVATE});
+      dispatch({ type: RESET_SEARCH_PRIVATE });
     } catch (error) {
       console.log("RESET_SEARCH_PRIVATE MODULE ERROR ", error);
     }
   };
 };
 
-export const makeMedicinePublic = ({medicine_id, offset}) => {
+export const makeMedicinePublic = ({ medicine_id, offset }) => {
   let response = {};
   return async (dispatch) => {
     try {
-      dispatch({type: MAKE_MEDICINE_PUBLIC});
+      dispatch({ type: MAKE_MEDICINE_PUBLIC });
       response = await doRequest({
         method: REQUEST_TYPE.POST,
         url: makeMedicinePublicUrl(medicine_id),
       });
-      
-      const {status, payload: {data, message = ""} = {}} = response || {};
-      
+
+      const { status, payload: { data, message = "" } = {} } = response || {};
+
       if (status === true) {
         data["offset"] = offset;
         dispatch({
@@ -315,7 +315,7 @@ export const makeMedicinePublic = ({medicine_id, offset}) => {
 };
 
 function medicineReducer(state, data) {
-  const {medicines = {}} = data || {};
+  const { medicines = {} } = data || {};
   if (medicines) {
     return {
       ...state,
@@ -327,7 +327,7 @@ function medicineReducer(state, data) {
 }
 
 export default (state = {}, payload) => {
-  const {type, data} = payload || {};
+  const { type, data } = payload || {};
   switch (type) {
     case SEARCH_MEDICINE_COMPLETED:
       return medicineReducer(state, data);

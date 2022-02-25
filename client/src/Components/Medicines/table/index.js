@@ -1,6 +1,6 @@
-import React, {Component} from "react";
-import {injectIntl} from "react-intl";
-import {Table, Icon} from "antd";
+import React, { Component } from "react";
+import { injectIntl } from "react-intl";
+import { Table, Icon } from "antd";
 import Input from "antd/es/input";
 import Button from "antd/es/button";
 import moment from "moment";
@@ -10,7 +10,7 @@ import getColumn from "./header";
 import config from "../../../config";
 
 import message from "antd/es/message";
-import {TABLE_COLUMN} from "./helper";
+import { TABLE_COLUMN } from "./helper";
 
 import messages from "./messages";
 
@@ -31,30 +31,29 @@ class MedicineTable extends Component {
       searchPublicCount: null,
     };
   }
-  
-  componentDidMount() {
-  }
-  
+
+  componentDidMount() {}
+
   componentDidUpdate(prevProps, prevState) {
     console.log(
       "782657387923785623789233 CD UPDATEEEEEEEEEEEEEEEEEeeeeeeeeeeeeeee"
     );
-    const {searchPublicText: prev_searchPublicText = ""} = prevState;
-    const {searchPublicText = ""} = this.state;
-    const {searchPrivateText: prev_searchPrivateText = ""} = prevState;
-    const {searchPrivateText = ""} = this.state;
-    
-    const {currentTab = ALL_TABS.PUBLIC} = this.props;
-    const {currentPage = 1} = this.state;
-    
+    const { searchPublicText: prev_searchPublicText = "" } = prevState;
+    const { searchPublicText = "" } = this.state;
+    const { searchPrivateText: prev_searchPrivateText = "" } = prevState;
+    const { searchPrivateText = "" } = this.state;
+
+    const { currentTab = ALL_TABS.PUBLIC } = this.props;
+    const { currentPage = 1 } = this.state;
+
     const offset = parseInt(currentPage) - 1 || 0;
-    
+
     if (searchPublicText !== "" && searchPublicText !== prev_searchPublicText) {
       if (currentTab === ALL_TABS.PUBLIC) {
         this.handleSearchPublicMedicine(searchPublicText, offset);
       }
     }
-    
+
     if (
       searchPrivateText !== "" &&
       searchPrivateText !== prev_searchPrivateText
@@ -64,12 +63,12 @@ class MedicineTable extends Component {
       }
     }
   }
-  
+
   async handleSearchPublicMedicine(value, offset) {
     try {
-      const {getPublicMedicines} = this.props;
-      this.setState({loading: true});
-      const response = await getPublicMedicines({value, offset});
+      const { getPublicMedicines } = this.props;
+      this.setState({ loading: true });
+      const response = await getPublicMedicines({ value, offset });
       console.log("3275437847237845324625347879198371293712945216", {
         response,
         value,
@@ -77,72 +76,72 @@ class MedicineTable extends Component {
       });
       const {
         payload: {
-          data: {total_count = 0} = {},
+          data: { total_count = 0 } = {},
           response: resp_msg = "",
         } = {},
       } = response || {};
-      this.setState({searchPublicCount: total_count, loading: false});
+      this.setState({ searchPublicCount: total_count, loading: false });
     } catch (error) {
       console.log("error ===>", error);
     }
   }
-  
+
   async handleSearchPrivateMedicine(value, offset) {
     try {
-      const {getPrivateMedicines} = this.props;
-      this.setState({loading: true});
-      const response = await getPrivateMedicines({value, offset});
+      const { getPrivateMedicines } = this.props;
+      this.setState({ loading: true });
+      const response = await getPrivateMedicines({ value, offset });
       const {
         payload: {
-          data: {total_count = 0} = {},
+          data: { total_count = 0 } = {},
           response: resp_msg = "",
         } = {},
       } = response || {};
-      this.setState({searchPrivateCount: total_count, loading: false});
+      this.setState({ searchPrivateCount: total_count, loading: false });
     } catch (error) {
       console.log("error ===>", error);
     }
   }
-  
+
   async handleGetPublicMedicines(offset) {
     try {
-      const {getPublicMedicines} = this.props;
-      this.setState({loading: true});
-      const response = await getPublicMedicines({offset});
+      const { getPublicMedicines } = this.props;
+      this.setState({ loading: true });
+      const response = await getPublicMedicines({ offset });
       const {
         payload: {
-          data: {total_count = 0} = {},
+          data: { total_count = 0 } = {},
           response: resp_msg = "",
         } = {},
       } = response || {};
-      this.setState({loading: false});
+      this.setState({ loading: false });
     } catch (error) {
-      this.setState({loading: false});
+      this.setState({ loading: false });
       console.log("89368754234 error ===>", error);
     }
   }
-  
+
   formatMessage = (message, ...rest) =>
     this.props.intl.formatMessage(message, rest);
-  
+
   async handleGetPrivateMedicines(offset) {
     try {
-      const {getPrivateMedicines} = this.props;
-      this.setState({loading: true});
-      const response = await getPrivateMedicines({offset});
+      const { getPrivateMedicines } = this.props;
+      this.setState({ loading: true });
+      const response = await getPrivateMedicines({ offset });
       const {
         payload: {
-          data: {total_count = 0} = {},
+          data: { total_count = 0 } = {},
           response: resp_msg = "",
         } = {},
       } = response || {};
-      this.setState({loading: false});
+      this.setState({ loading: false });
     } catch (error) {
-      this.setState({loading: false});
+      this.setState({ loading: false });
       console.log("89368754234 error ===>", error);
     }
   }
-  
+
   getDataSource = () => {
     const {
       currentTab = ALL_TABS.PUBLIC,
@@ -155,7 +154,7 @@ class MedicineTable extends Component {
         search_public_medicines: props_search_public_medicines = {},
       } = {},
     } = this.props;
-    
+
     const {
       // admin_medicines = {},
       doctors = {},
@@ -165,15 +164,15 @@ class MedicineTable extends Component {
       deleteMedicine,
       getPublicMedicines,
     } = this.props;
-    
-    const {currentPage = 1} = this.state;
-    
+
+    const { currentPage = 1 } = this.state;
+
     let private_medicines = {};
     let public_medicines = {};
-    
+
     const key = parseInt(currentPage) - 1 || 0;
-    const {searchPrivateText = "", searchPublicText = ""} = this.state;
-    
+    const { searchPrivateText = "", searchPublicText = "" } = this.state;
+
     console.log("9817231287 currentPage", {
       currentPage,
       key,
@@ -181,7 +180,7 @@ class MedicineTable extends Component {
       props_search_public_medicines,
       searchPublicText,
     });
-    
+
     if (key >= 0) {
       if (currentTab === ALL_TABS.PUBLIC) {
         if (props_public_medicines[key] && searchPublicText === "") {
@@ -203,22 +202,22 @@ class MedicineTable extends Component {
         }
       }
     }
-    
-    const {loading = true} = this.state;
-    const {changeLoading} = this;
-    
+
+    const { loading = true } = this.state;
+    const { changeLoading } = this;
+
     console.log("272391872398 currentTab", {
       currentTab,
       public_medicines,
       private_medicines,
     });
-    
+
     if (currentTab === ALL_TABS.PUBLIC) {
       return Object.keys(public_medicines)
         .sort((medA, medB) => {
-          const {updated_at: aUpdatedAt} = public_medicines[medA] || {};
-          const {updated_at: bUpdatedAt} = public_medicines[medB] || {};
-          
+          const { updated_at: aUpdatedAt } = public_medicines[medA] || {};
+          const { updated_at: bUpdatedAt } = public_medicines[medB] || {};
+
           if (moment(aUpdatedAt).diff(moment(bUpdatedAt), "seconds") > 0) {
             return -1;
           } else {
@@ -227,7 +226,7 @@ class MedicineTable extends Component {
         })
         .map((id) => {
           const medicineData = public_medicines[id] || {};
-          const {basic_info: {creator_id = null} = {}} = medicineData || {};
+          const { basic_info: { creator_id = null } = {} } = medicineData || {};
           const doctorData = doctors[creator_id] || {};
           return generateRow({
             id,
@@ -242,7 +241,7 @@ class MedicineTable extends Component {
     } else {
       return Object.keys(private_medicines).map((id) => {
         const medicineData = private_medicines[id] || {};
-        const {basic_info: {creator_id} = {}} = medicineData || {};
+        const { basic_info: { creator_id } = {} } = medicineData || {};
         const doctorData = doctors[creator_id] || {};
         return generateRow({
           id,
@@ -261,13 +260,13 @@ class MedicineTable extends Component {
       });
     }
   };
-  
+
   changeLoading = (newLoading) => {
-    this.setState({loading: newLoading});
+    this.setState({ loading: newLoading });
   };
-  
+
   onPageChange = (page, pageSize) => {
-    this.setState({currentPage: page});
+    this.setState({ currentPage: page });
     const {
       currentTab = ALL_TABS.PUBLIC,
       admin_medicines: {
@@ -279,13 +278,13 @@ class MedicineTable extends Component {
         search_public_medicines: props_search_public_medicines = {},
       } = {},
     } = this.props;
-    
+
     let private_medicines = {};
     let public_medicines = {};
     const key = parseInt(page) - 1 || 0;
-    
-    const {searchPublicText = "", searchPrivateText = ""} = this.state;
-    
+
+    const { searchPublicText = "", searchPrivateText = "" } = this.state;
+
     if (currentTab === ALL_TABS.PUBLIC) {
       if (!props_public_medicines[key] && searchPublicText === "") {
         this.handleGetPublicMedicines(key);
@@ -306,7 +305,7 @@ class MedicineTable extends Component {
       }
     }
   };
-  
+
   getPlaceholderSearch = (key) => {
     switch (key) {
       case TABLE_COLUMN.MEDICINE_NAME.dataIndex:
@@ -315,10 +314,10 @@ class MedicineTable extends Component {
         return this.formatMessage(messages.creatorNameSearchText);
     }
   };
-  
+
   handleSearch = (selectedKeys, confirm) => {
-    const {currentTab = ALL_TABS.PUBLIC} = this.props;
-    const {currentPage = 1} = this.state;
+    const { currentTab = ALL_TABS.PUBLIC } = this.props;
+    const { currentPage = 1 } = this.state;
     const offset = parseInt(currentPage) - 1 || 0;
     confirm();
     // search api call
@@ -326,49 +325,49 @@ class MedicineTable extends Component {
     if (currentTab === ALL_TABS.PUBLIC) {
       if (typeof selectedKeys[0] === "undefined") {
         this.handleGetPublicMedicines(offset);
-        this.setState({searchPublicText: ""});
+        this.setState({ searchPublicText: "" });
       } else {
-        this.setState({searchPublicText: selectedKeys[0]});
+        this.setState({ searchPublicText: selectedKeys[0] });
       }
     } else {
       if (typeof selectedKeys[0] === "undefined") {
         this.handleGetPublicMedicines(offset);
-        this.setState({searchPrivateText: ""});
+        this.setState({ searchPrivateText: "" });
       } else {
-        this.setState({searchPrivateText: selectedKeys[0]});
+        this.setState({ searchPrivateText: selectedKeys[0] });
       }
     }
   };
-  
+
   handleReset = (clearFilters) => {
     clearFilters();
-    const {currentTab = ALL_TABS.PUBLIC} = this.props;
-    const {currentPage = 1} = this.state;
+    const { currentTab = ALL_TABS.PUBLIC } = this.props;
+    const { currentPage = 1 } = this.state;
     const offset = parseInt(currentPage) - 1 || 0;
     if (currentTab === ALL_TABS.PUBLIC) {
-      const {resetSearchPublic} = this.props;
+      const { resetSearchPublic } = this.props;
       resetSearchPublic();
       this.handleGetPublicMedicines(offset);
-      this.setState({searchPublicText: ""});
+      this.setState({ searchPublicText: "" });
     } else {
-      const {resetSearchPrivate} = this.props;
+      const { resetSearchPrivate } = this.props;
       resetSearchPrivate();
       this.handleGetPrivateMedicines(offset);
-      this.setState({searchPrivateText: ""});
+      this.setState({ searchPrivateText: "" });
     }
   };
-  
+
   getColumnSearchProps = (dataIndex) => {
     return {
       filterDropdown: ({
-                         setSelectedKeys,
-                         selectedKeys,
-                         confirm,
-                         clearFilters,
-                       }) => {
+        setSelectedKeys,
+        selectedKeys,
+        confirm,
+        clearFilters,
+      }) => {
         const data = TABLE_COLUMN[dataIndex];
         return (
-          <div style={{padding: 8}}>
+          <div style={{ padding: 8 }}>
             <Input
               ref={(node) => {
                 this.searchInput = node;
@@ -381,21 +380,21 @@ class MedicineTable extends Component {
                 setSelectedKeys(e.target.value ? [e.target.value] : [])
               }
               onPressEnter={() => this.handleSearch(selectedKeys, confirm)}
-              style={{width: 188, marginBottom: 8, display: "block"}}
+              style={{ width: 188, marginBottom: 8, display: "block" }}
             />
             <Button
               type="primary"
               onClick={() => this.handleSearch(selectedKeys, confirm)}
               icon="search"
               size="small"
-              style={{width: 90, marginRight: 8}}
+              style={{ width: 90, marginRight: 8 }}
             >
               {this.formatMessage(messages.searchText)}
             </Button>
             <Button
               onClick={() => this.handleReset(clearFilters)}
               size="small"
-              style={{width: 90}}
+              style={{ width: 90 }}
             >
               {this.formatMessage(messages.resetText)}
             </Button>
@@ -405,23 +404,23 @@ class MedicineTable extends Component {
       filterIcon: (filtered) => (
         <Icon
           type="search"
-          style={{color: filtered ? "#1890ff" : undefined}}
+          style={{ color: filtered ? "#1890ff" : undefined }}
         />
       ),
       onFilter: (value, record) => {
         if (dataIndex === TABLE_COLUMN.MEDICINE_NAME.dataIndex) {
-          console.log("09810912 records: ", {value, record});
+          console.log("09810912 records: ", { value, record });
           // const {searchResults} = this.state;
-          const {medicineData = {}} = record[dataIndex] || {};
+          const { medicineData = {} } = record[dataIndex] || {};
           let status = false;
-          
-          const {basic_info: {name} = {}} = medicineData || {};
-          
+
+          const { basic_info: { name } = {} } = medicineData || {};
+
           return name.toString().toLowerCase().includes(value.toLowerCase());
         } else if (dataIndex === TABLE_COLUMN.CREATOR_NAME.dataIndex) {
-          const {doctors: {basic_info: {full_name = ""} = {}} = {}} =
-          record[dataIndex] || {};
-          
+          const { doctors: { basic_info: { full_name = "" } = {} } = {} } =
+            record[dataIndex] || {};
+
           return full_name
             .toString()
             .toLowerCase()
@@ -435,18 +434,18 @@ class MedicineTable extends Component {
       },
     };
   };
-  
+
   getLoadingComponent = () => {
-    const antIcon = <Icon type="loading" style={{fontSize: 24}} spin/>;
+    const antIcon = <Icon type="loading" style={{ fontSize: 24 }} spin />;
     return {
       indicator: antIcon,
     };
   };
-  
+
   handleTableChange = (props) => {
-    console.log("1083791238172 props", {props});
+    console.log("1083791238172 props", { props });
   };
-  
+
   render() {
     const {
       getLoadingComponent,
@@ -454,16 +453,16 @@ class MedicineTable extends Component {
       onPageChange,
       handleTableChange,
     } = this;
-    
+
     const {
-      intl: {formatMessage} = {},
+      intl: { formatMessage } = {},
       currentTab = ALL_TABS.PUBLIC,
       totalPublicMedicinesCount = 0,
       totalPrivateMedicinesCount = 0,
-      admin_medicines: {public_medicines = {}} = {},
+      admin_medicines: { public_medicines = {} } = {},
       changeTab,
     } = this.props;
-    
+
     const {
       loading = true,
       searchPublicText = "",
@@ -472,26 +471,26 @@ class MedicineTable extends Component {
       searchPrivateCount = null,
       currentPage = 1,
     } = this.state;
-    
+
     const pageSize = config.REACT_APP_ADMIN_MEDICINE_ONE_PAGE_LIMIT;
-    
+
     const locale = {
       emptyText: "No Medicines Present",
     };
-    
+
     const obj = public_medicines["0"] || {};
-    
+
     const total =
       currentTab === ALL_TABS.PUBLIC
         ? searchPublicText === ""
           ? totalPublicMedicinesCount
           : searchPublicCount
         : searchPrivateText === ""
-          ? totalPrivateMedicinesCount
-          : searchPrivateCount;
-    
+        ? totalPrivateMedicinesCount
+        : searchPrivateCount;
+
     console.log("3785463254729847923864832");
-    
+
     return (
       <Table
         className="medicine-table"
@@ -506,7 +505,7 @@ class MedicineTable extends Component {
         })}
         dataSource={getDataSource()}
         onChange={handleTableChange}
-        scroll={{x: 1600}}
+        scroll={{ x: 1600 }}
         pagination={{
           position: "bottom",
           pageSize:
@@ -521,8 +520,8 @@ class MedicineTable extends Component {
                 ? totalPublicMedicinesCount
                 : searchPublicCount
               : searchPrivateText === ""
-                ? totalPrivateMedicinesCount
-                : searchPrivateCount,
+              ? totalPrivateMedicinesCount
+              : searchPrivateCount,
           onChange: (page, pageSize) => {
             onPageChange(page, pageSize);
           },

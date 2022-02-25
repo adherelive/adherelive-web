@@ -1,11 +1,11 @@
-import React, {Fragment} from "react";
-import {withRouter} from "react-router";
-import {injectIntl} from "react-intl";
+import React, { Fragment } from "react";
+import { withRouter } from "react-router";
+import { injectIntl } from "react-intl";
 
 import CompanyIcon from "../../../Assets/images/logo3x.png";
 import Button from "antd/es/button";
 import messages from "./messages";
-import {PATH} from "../../../constant";
+import { PATH } from "../../../constant";
 
 const ERROR_CODE = 404;
 
@@ -19,9 +19,9 @@ const ERROR_CODE = 404;
 //     );
 // };
 
-const getHeader = ({intl: {formatMessage} = {}}) => (
+const getHeader = ({ intl: { formatMessage } = {} }) => (
   <div className={"ml10 mt10 flex align-center"}>
-    <img alt="adherelive-logo" src={CompanyIcon} className="company-logo"/>
+    <img alt="adherelive-logo" src={CompanyIcon} className="company-logo" />
     <span className={"ml4 fs22 fw600"}>
       {formatMessage(messages.companyName)}
     </span>
@@ -34,7 +34,7 @@ const handleRedirect = (props) => (e) => {
 };
 
 const BlankState = (props) => {
-  const {intl: {formatMessage} = {}} = props;
+  const { intl: { formatMessage } = {} } = props;
   return (
     <Fragment>
       {/* HEADER */}
@@ -46,9 +46,9 @@ const BlankState = (props) => {
           }
         >
           <div className={"fs60 fw700 mb20"}>{ERROR_CODE}</div>
-          
+
           <div className={"tac mb20"}>{formatMessage(messages.message404)}</div>
-          
+
           {/* <div onClick={handleRedirect(props)}> redirect </div> */}
           <Button
             type={"primary"}

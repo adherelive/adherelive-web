@@ -1,5 +1,5 @@
-import {completePath} from "../../../helper/filePath";
-import {VIDEO_TYPES} from "../../../models/exerciseContents";
+import { completePath } from "../../../helper/filePath";
+import { VIDEO_TYPES } from "../../../models/exerciseContents";
 import BaseExerciseContent from "../../../services/exerciseContents";
 
 import ExerciseContentService from "../../../services/exerciseContents/exerciseContent.service";
@@ -8,9 +8,9 @@ class ExerciseContentWrapper extends BaseExerciseContent {
   constructor(data) {
     super(data);
   }
-  
+
   getBasicInfo = () => {
-    const {_data} = this;
+    const { _data } = this;
     const {
       id,
       exercise_id,
@@ -19,7 +19,7 @@ class ExerciseContentWrapper extends BaseExerciseContent {
       video_content_type,
       video_content,
     } = _data || {};
-    
+
     const videoContent =
       video_content_type === VIDEO_TYPES.UPLOAD
         ? completePath(video_content)
@@ -40,17 +40,17 @@ class ExerciseContentWrapper extends BaseExerciseContent {
 }
 
 export default async ({
-                        data = null,
-                        id = null,
-                        exercise_id = null,
-                        auth = null,
-                      }) => {
+  data = null,
+  id = null,
+  exercise_id = null,
+  auth = null,
+}) => {
   if (data) {
     return new ExerciseContentWrapper(data);
   }
   const exerciseContentService = new ExerciseContentService();
   if (id) {
-    const exerciseContent = await exerciseContentService.findOne({id});
+    const exerciseContent = await exerciseContentService.findOne({ id });
     return new ExerciseContentWrapper(exerciseContent);
   }
   const exerciseContent = await exerciseContentService.findOne({

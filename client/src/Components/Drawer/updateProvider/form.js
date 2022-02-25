@@ -1,5 +1,5 @@
-import React, {Component} from "react";
-import {injectIntl} from "react-intl";
+import React, { Component } from "react";
+import { injectIntl } from "react-intl";
 import Form from "antd/es/form";
 import Input from "antd/es/input";
 import messages from "./message";
@@ -10,10 +10,10 @@ import confirm from "antd/es/modal/confirm";
 
 import prefixField from "../../Prefix";
 import Customization from "../addProvider/customization";
-import {SAVINGS, CURRENT, ACCOUNT_TYPES} from "../../../constant";
+import { SAVINGS, CURRENT, ACCOUNT_TYPES } from "../../../constant";
 
-const {Item: FormItem} = Form;
-const {TextArea} = Input;
+const { Item: FormItem } = Form;
+const { TextArea } = Input;
 
 const NAME = "name";
 const EMAIL = "email";
@@ -52,37 +52,37 @@ class UpdateProviderForm extends Component {
       account_type_exists: false,
     };
   }
-  
+
   componentDidMount() {
-    const {form: {getFieldValue} = {}} = this.props;
+    const { form: { getFieldValue } = {} } = this.props;
     const account_type_obj = getFieldValue([ACCOUNT_TYPE]);
     let account_type_val = "";
     if (account_type_obj && Object.values(account_type_obj).length > 0) {
       account_type_val = Object.values(account_type_obj)[0];
     }
-    
+
     if (account_type_val) {
-      this.setState({account_type_exists: true});
+      this.setState({ account_type_exists: true });
     }
   }
-  
+
   getParentNode = (t) => t.parentNode;
-  
+
   formatMessage = (data) => this.props.intl.formatMessage(data);
-  
+
   setAccountType = (type) => (e) => {
     e.preventDefault();
     const {
-      form: {setFieldsValue},
+      form: { setFieldsValue },
     } = this.props;
-    
-    setFieldsValue({[ACCOUNT_TYPE]: type});
-    this.setState({account_type_exists: true});
+
+    setFieldsValue({ [ACCOUNT_TYPE]: type });
+    this.setState({ account_type_exists: true });
   };
-  
+
   resetAllAccount = () => {
-    const {form: {resetFields, getFieldValue} = {}} = this.props;
-    
+    const { form: { resetFields, getFieldValue } = {} } = this.props;
+
     resetFields([CUSTOMER_NAME]);
     resetFields([ACCOUNT_NUMBER]);
     resetFields([IFCS_CODE]);
@@ -90,20 +90,20 @@ class UpdateProviderForm extends Component {
     resetFields([ACCOUNT_TYPE]);
     resetFields([RAZORPAY_ACCOUNT_ID]);
     resetFields([RAZORPAY_ACCOUNT_NAME]);
-    
+
     const account_type_obj = getFieldValue([ACCOUNT_TYPE]);
     let account_type_val = "";
     if (account_type_obj && Object.values(account_type_obj).length > 0) {
       account_type_val = Object.values(account_type_obj)[0];
     }
-    
+
     if (account_type_val) {
-      this.setState({account_type_exists: true});
+      this.setState({ account_type_exists: true });
     } else {
-      this.setState({account_type_exists: false});
+      this.setState({ account_type_exists: false });
     }
   };
-  
+
   warnNote = () => {
     return (
       <div className="pt16">
@@ -114,47 +114,46 @@ class UpdateProviderForm extends Component {
       </div>
     );
   };
-  
+
   handleCloseWarning = (e) => {
     e.preventDefault();
-    const {warnNote} = this;
-    
-    const {account_type_exists} = this.state;
-    
+    const { warnNote } = this;
+
+    const { account_type_exists } = this.state;
+
     if (!account_type_exists) {
       return;
     }
-    
+
     confirm({
       title: `${this.formatMessage(messages.resetMessage)}`,
       content: <div>{warnNote()}</div>,
       onOk: async () => {
         this.resetAllAccount();
       },
-      onCancel() {
-      },
+      onCancel() {},
     });
   };
-  
+
   render() {
     const {
-      form: {getFieldDecorator, isFieldTouched, getFieldError, getFieldValue},
+      form: { getFieldDecorator, isFieldTouched, getFieldError, getFieldValue },
     } = this.props;
-    const {formatMessage} = this;
-    
+    const { formatMessage } = this;
+
     let fieldsError = {};
     FIELDS.forEach((value) => {
       const error = isFieldTouched(value) && getFieldError(value);
-      fieldsError = {...fieldsError, [value]: error};
+      fieldsError = { ...fieldsError, [value]: error };
     });
-    
+
     const {
       providers = {},
       users = {},
       provider_id = null,
       account_details = {},
     } = this.props;
-    
+
     const {
       basic_info: {
         address = "",
@@ -163,22 +162,22 @@ class UpdateProviderForm extends Component {
         state = "",
         user_id = null,
       } = {},
-      details: {prescription_details: initial_prescription_details = ""} = {},
+      details: { prescription_details: initial_prescription_details = "" } = {},
     } = providers[provider_id] || {};
-    
+
     let accountData = {};
-    
+
     for (let detail of Object.values(account_details)) {
-      const {basic_info: {user_id: account_user_id = ""} = {}} = detail;
-      const {basic_info = {}} = detail;
+      const { basic_info: { user_id: account_user_id = "" } = {} } = detail;
+      const { basic_info = {} } = detail;
       if (parseInt(account_user_id) === parseInt(user_id)) {
-        accountData = {basic_info};
+        accountData = { basic_info };
         break;
       }
     }
-    
-    const {basic_info: account_basic_info = {}} = accountData;
-    
+
+    const { basic_info: account_basic_info = {} } = accountData;
+
     const {
       account_number = "",
       account_type = "",
@@ -188,7 +187,7 @@ class UpdateProviderForm extends Component {
       razorpay_account_name = "",
       upi_id = null,
     } = account_basic_info || {};
-    
+
     const {
       basic_info: {
         email = "",
@@ -197,18 +196,18 @@ class UpdateProviderForm extends Component {
         user_name = "",
       } = {},
     } = users[user_id] || {};
-    
-    const {account_type_exists = false} = this.state;
+
+    const { account_type_exists = false } = this.state;
     const account_type_obj = getFieldValue([ACCOUNT_TYPE]);
     let account_type_val = "";
     if (account_type_obj && Object.values(account_type_obj).length > 0) {
       account_type_val = Object.values(account_type_obj)[0];
     }
-    
+
     const prefixSelector = (
-      <div>{prefixField.render({...this.props, prefix})}</div>
+      <div>{prefixField.render({ ...this.props, prefix })}</div>
     );
-    
+
     return (
       <Form className="fw700 wp100 pb30 Form">
         <FormItem
@@ -230,9 +229,9 @@ class UpdateProviderForm extends Component {
               },
             ],
             initialValue: email,
-          })(<Input type="string"/>)}
+          })(<Input type="string" />)}
         </FormItem>
-        
+
         <FormItem
           validateStatus={fieldsError[NAME] ? "error" : ""}
           help={fieldsError[NAME] || ""}
@@ -247,9 +246,9 @@ class UpdateProviderForm extends Component {
               },
             ],
             initialValue: name,
-          })(<Input type="string"/>)}
+          })(<Input type="string" />)}
         </FormItem>
-        
+
         <FormItem
           className="provider-number"
           validateStatus={fieldsError[MOBILE_NUMBER] ? "error" : ""}
@@ -265,11 +264,11 @@ class UpdateProviderForm extends Component {
               minLength={6}
               maxLength={20}
               type="number"
-              style={{borderColor: "red"}}
+              style={{ borderColor: "red" }}
             />
           )}
         </FormItem>
-        
+
         <FormItem
           validateStatus={fieldsError[ADDRESS] ? "error" : ""}
           help={fieldsError[ADDRESS] || ""}
@@ -278,13 +277,13 @@ class UpdateProviderForm extends Component {
         >
           {getFieldDecorator(ADDRESS, {
             initialValue: address,
-          })(<Input type="string"/>)}
+          })(<Input type="string" />)}
         </FormItem>
-        
+
         <Customization {...this.props} />
-        
+
         {/* <---------------------------------- ACCOUNT DETAILS ------------------------------------> */}
-        
+
         <div className="fwbolder fs18 mb20 mt20 flex align-center justify-space-between">
           <span>{formatMessage(messages.accountDetails)}</span>
           <Tooltip title={formatMessage(messages.resetAccountFields)}>
@@ -293,7 +292,7 @@ class UpdateProviderForm extends Component {
             </Button>
           </Tooltip>
         </div>
-        
+
         {/* account type */}
         <FormItem
           validateStatus={fieldsError[ACCOUNT_TYPE] ? "error" : ""}
@@ -324,7 +323,7 @@ class UpdateProviderForm extends Component {
                 >
                   {ACCOUNT_TYPES[SAVINGS]}
                 </Radio.Button>
-                
+
                 <Radio.Button
                   style={{
                     width: "50%",
@@ -338,7 +337,7 @@ class UpdateProviderForm extends Component {
             </div>
           )}
         </FormItem>
-        
+
         {/* customer name */}
         <FormItem
           validateStatus={fieldsError[CUSTOMER_NAME] ? "error" : ""}
@@ -354,9 +353,9 @@ class UpdateProviderForm extends Component {
               },
             ],
             initialValue: customer_name,
-          })(<Input type="string" disabled={!account_type_exists}/>)}
+          })(<Input type="string" disabled={!account_type_exists} />)}
         </FormItem>
-        
+
         {/* account num */}
         <FormItem
           validateStatus={fieldsError[ACCOUNT_NUMBER] ? "error" : ""}
@@ -372,9 +371,9 @@ class UpdateProviderForm extends Component {
               },
             ],
             initialValue: account_number,
-          })(<Input type="number" disabled={!account_type_exists}/>)}
+          })(<Input type="number" disabled={!account_type_exists} />)}
         </FormItem>
-        
+
         {/* ifsc */}
         <FormItem
           validateStatus={fieldsError[IFCS_CODE] ? "error" : ""}
@@ -390,9 +389,9 @@ class UpdateProviderForm extends Component {
               },
             ],
             initialValue: ifsc_code,
-          })(<Input type="string" disabled={!account_type_exists}/>)}
+          })(<Input type="string" disabled={!account_type_exists} />)}
         </FormItem>
-        
+
         {/* upi id */}
         <FormItem
           validateStatus={fieldsError[UPI_ID] ? "error" : ""}
@@ -402,9 +401,9 @@ class UpdateProviderForm extends Component {
         >
           {getFieldDecorator(UPI_ID, {
             initialValue: upi_id,
-          })(<Input type="string" disabled={!account_type_exists}/>)}
+          })(<Input type="string" disabled={!account_type_exists} />)}
         </FormItem>
-        
+
         {/* razorpay acc id */}
         <FormItem
           validateStatus={fieldsError[RAZORPAY_ACCOUNT_ID] ? "error" : ""}
@@ -414,9 +413,9 @@ class UpdateProviderForm extends Component {
         >
           {getFieldDecorator(RAZORPAY_ACCOUNT_ID, {
             initialValue: razorpay_account_id,
-          })(<Input type="string" disabled={!account_type_exists}/>)}
+          })(<Input type="string" disabled={!account_type_exists} />)}
         </FormItem>
-        
+
         {/* razorpay acc name */}
         <FormItem
           validateStatus={fieldsError[RAZORPAY_ACCOUNT_NAME] ? "error" : ""}
@@ -426,9 +425,9 @@ class UpdateProviderForm extends Component {
         >
           {getFieldDecorator(RAZORPAY_ACCOUNT_NAME, {
             initialValue: razorpay_account_name,
-          })(<Input type="string" disabled={!account_type_exists}/>)}
+          })(<Input type="string" disabled={!account_type_exists} />)}
         </FormItem>
-        
+
         {/* prescription details */}
         <FormItem
           validateStatus={fieldsError[PRESCRIPTION_DETAILS] ? "error" : ""}
@@ -437,7 +436,7 @@ class UpdateProviderForm extends Component {
         >
           {getFieldDecorator(PRESCRIPTION_DETAILS, {
             initialValue: initial_prescription_details,
-          })(<TextArea rows={3} className="mb40" maxLength={300}/>)}
+          })(<TextArea rows={3} className="mb40" maxLength={300} />)}
         </FormItem>
       </Form>
     );

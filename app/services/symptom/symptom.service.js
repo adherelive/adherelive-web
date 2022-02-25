@@ -1,11 +1,11 @@
-import {Op} from "sequelize";
+import { Op } from "sequelize";
 import Database from "../../../libs/mysql";
 import moment from "moment";
 
-import {TABLE_NAME} from "../../models/symptoms";
-import {TABLE_NAME as doctorTableName} from "../../models/doctors";
-import {TABLE_NAME as patientTableName} from "../../models/patients";
-import {TABLE_NAME as carePlanTableName} from "../../models/carePlan";
+import { TABLE_NAME } from "../../models/symptoms";
+import { TABLE_NAME as doctorTableName } from "../../models/doctors";
+import { TABLE_NAME as patientTableName } from "../../models/patients";
+import { TABLE_NAME as carePlanTableName } from "../../models/carePlan";
 
 class SymptomService {
   create = async (data) => {
@@ -16,7 +16,7 @@ class SymptomService {
       throw error;
     }
   };
-  
+
   getByData = async (data) => {
     try {
       const symptom = await Database.getModel(TABLE_NAME).findOne({
@@ -36,7 +36,7 @@ class SymptomService {
       throw error;
     }
   };
-  
+
   getCount = async (data) => {
     try {
       return await Database.getModel(TABLE_NAME).count({
@@ -54,7 +54,7 @@ class SymptomService {
       throw error;
     }
   };
-  
+
   getAllByData = async (data) => {
     try {
       const symptom = await Database.getModel(TABLE_NAME).findAll({
@@ -74,10 +74,10 @@ class SymptomService {
       throw error;
     }
   };
-  
+
   getFilteredData = async (data) => {
     try {
-      const {patient_id, start_time, end_time} = data || {};
+      const { patient_id, start_time, end_time } = data || {};
       const symptom = await Database.getModel(TABLE_NAME).findAll({
         where: {
           patient_id,
@@ -100,7 +100,7 @@ class SymptomService {
       throw error;
     }
   };
-  
+
   getLastUpdatedData = async (data) => {
     try {
       const symptom = await Database.getModel(TABLE_NAME).findAll({

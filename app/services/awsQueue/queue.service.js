@@ -13,7 +13,7 @@ export default class QueueService {
     });
     this.sqs = new AWS.SQS();
   }
-  
+
   createQueue = (name = "test_queue") => {
     const params = {
       QueueName: name,
@@ -22,7 +22,7 @@ export default class QueueService {
         MessageRetentionPeriod: "86400",
       },
     };
-    
+
     this.sqs.createQueue(params, (err, data) => {
       if (err) {
         Log.debug("createQueue err", err);
@@ -31,15 +31,15 @@ export default class QueueService {
       }
     });
   };
-  
+
   getQueueUrl = () => {
     return `${process.config.sqs.domain_url}/${process.config.sqs.account_id}/${process.config.sqs.queue_name}`;
   };
-  
+
   sendMessage = async (data) => {
     try {
       const stringData = JSON.stringify(data);
-      
+
       const params = {
         DelaySeconds: 30,
         MessageAttributes: {
@@ -61,7 +61,7 @@ export default class QueueService {
         // MessageGroupId: "Group1",  // Required for FIFO queues
         QueueUrl: this.getQueueUrl(),
       };
-      
+
       const response = await this.sqs.sendMessage(params).promise();
       Log.debug("sendMessage response", response);
       return response;
@@ -69,11 +69,11 @@ export default class QueueService {
       Log.debug("sendMessage catch error", error);
     }
   };
-  
+
   sendBatchMessage = async (dataArr) => {
     try {
       const formattedData = [];
-      
+
       console.log("18231873 data --> ", dataArr);
       dataArr.forEach((data, index) => {
         const stringData = JSON.stringify(data);
@@ -86,12 +86,12 @@ export default class QueueService {
         };
         formattedData.push(params);
       });
-      
+
       const params = {
         Entries: formattedData,
         QueueUrl: this.getQueueUrl(),
       };
-      
+
       const response = await this.sqs.sendMessageBatch(params).promise();
       Log.debug("sendMessage batch response", response);
       return response;
@@ -99,11 +99,11 @@ export default class QueueService {
       Log.debug("sendMessage batch catch error", error);
     }
   };
-  
+
   receiveMessage = async () => {
     try {
       Log.info(`queue url : ${this.getQueueUrl()}`);
-      
+
       const params = {
         AttributeNames: ["SentTimestamp"],
         MaxNumberOfMessages: 10,
@@ -111,37 +111,37 @@ export default class QueueService {
         MessageAttributeNames: ["All"],
         QueueUrl: this.getQueueUrl(),
       };
-      
+
       const response = await this.sqs.receiveMessage(params).promise();
       // Log.debug("receiveMessage response", response.Messages.length);
-      
+
       return response.Messages || [];
     } catch (error) {
       console.log("receiveMessage 500 error", error);
     }
   };
-  
+
   deleteMessage = async (ReceiptHandle) => {
     try {
       const params = {
         QueueUrl: await this.getQueueUrl(),
         ReceiptHandle,
       };
-      
+
       const response = await this.sqs.deleteMessage(params).promise();
-      
+
       return response;
     } catch (error) {
       console.log("receiveMessage 500 error", error);
     }
   };
-  
+
   purgeQueue = async (queueName) => {
     try {
       const params = {
         QueueUrl: await this.getQueueUrl(),
       };
-      
+
       if (process.config.sqs.queue_name === queueName) {
         const response = await this.sqs.purgeQueue(params).promise();
         return response;

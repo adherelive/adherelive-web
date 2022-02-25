@@ -1,5 +1,5 @@
-import React, {Component, Fragment} from "react";
-import {injectIntl} from "react-intl";
+import React, { Component, Fragment } from "react";
+import { injectIntl } from "react-intl";
 import message from "antd/es/message";
 import Button from "antd/es/button";
 
@@ -9,7 +9,7 @@ import ConsultationFeeTable from "../../../Containers/ConsultationFees";
 // import DoctorConsultationFeeTable from "../../../Containers/DoctorConsultationFee";
 
 import messages from "./messages";
-import {ArrowLeftOutlined} from "@ant-design/icons";
+import { ArrowLeftOutlined } from "@ant-design/icons";
 import Loading from "../../Common/Loading";
 
 class ProviderDoctorPaymentProduct extends Component {
@@ -24,21 +24,21 @@ class ProviderDoctorPaymentProduct extends Component {
       loading: false,
     };
   }
-  
+
   componentDidMount() {
-    const {match: {params: {id = null} = {}} = {}} = this.props;
+    const { match: { params: { id = null } = {} } = {} } = this.props;
     this.handleGetDoctorPaymentProduct(id);
     this.handleGetAdminPaymentProduct();
   }
-  
+
   async handleGetDoctorPaymentProduct(id) {
     try {
-      this.setState({fetchingDoctorPayments: true, loading: true});
-      const {getDoctorPaymentProduct} = this.props;
-      const response = await getDoctorPaymentProduct({doctor_id: id});
+      this.setState({ fetchingDoctorPayments: true, loading: true });
+      const { getDoctorPaymentProduct } = this.props;
+      const response = await getDoctorPaymentProduct({ doctor_id: id });
       const {
         status,
-        payload: {data: {payment_products = {}} = {}} = {},
+        payload: { data: { payment_products = {} } = {} } = {},
         statusCode,
       } = response || {};
       if (status && statusCode === 200) {
@@ -56,45 +56,45 @@ class ProviderDoctorPaymentProduct extends Component {
           loading: false,
         });
       } else {
-        this.setState({fetchingDoctorPayments: false});
+        this.setState({ fetchingDoctorPayments: false });
       }
     } catch (err) {
       console.log("err ", err);
       message.warn(this.formatMessage(messages.somethingWentWrong));
-      this.setState({fetchingDoctorPayments: false});
+      this.setState({ fetchingDoctorPayments: false });
     }
   }
-  
+
   async handleGetAdminPaymentProduct() {
     try {
-      this.setState({fetchingAdminPayments: true});
-      const {getAdminPaymentProduct} = this.props;
+      this.setState({ fetchingAdminPayments: true });
+      const { getAdminPaymentProduct } = this.props;
       const response = await getAdminPaymentProduct();
-      const {status, payload: {data: {payment_products = {}} = {}} = {}} =
-      response || {};
+      const { status, payload: { data: { payment_products = {} } = {} } = {} } =
+        response || {};
       if (status) {
         this.setState({
           fetchingAdminPayments: false,
           defaultPaymentsProducts: payment_products,
         });
       } else {
-        this.setState({fetchingAdminPayments: false});
+        this.setState({ fetchingAdminPayments: false });
       }
     } catch (err) {
       console.log("err ", err);
       message.warn(this.formatMessage(messages.somethingWentWrong));
-      this.setState({fetchingAdminPayments: false});
+      this.setState({ fetchingAdminPayments: false });
     }
   }
-  
+
   formatMessage = (data) => this.props.intl.formatMessage(data);
-  
+
   setIsUpdated = () => {
-    this.setState({isUpdated: true});
-    const {match: {params: {id = null} = {}} = {}} = this.props;
+    this.setState({ isUpdated: true });
+    const { match: { params: { id = null } = {} } = {} } = this.props;
     this.handleGetDoctorPaymentProduct(id);
   };
-  
+
   noConsultationFeeDisplay = () => {
     return (
       <div className="wp100 mb20 flex direction-column align-center justify-center">
@@ -105,7 +105,7 @@ class ProviderDoctorPaymentProduct extends Component {
         <div className="mt20 fs18 fw600 ">
           {this.formatMessage(messages.notAddedFeesYet)}
         </div>
-        
+
         <div className=" mt20">
           <Button type="primary" onClick={this.displayAddDoctorPaymentProduct}>
             <span className="w200 fs20">
@@ -116,20 +116,20 @@ class ProviderDoctorPaymentProduct extends Component {
       </div>
     );
   };
-  
+
   consultationFeeDisplay = () => {
     const {
       noDoctorPaymentProducts,
       doctorPaymentProducts,
       loading = false,
     } = this.state;
-    const {match: {params: {id: doctor_id = null} = {}} = {}} =
+    const { match: { params: { id: doctor_id = null } = {} } = {} } =
       this.props;
-    
+
     if (loading) {
-      return <Loading/>;
+      return <Loading />;
     }
-    
+
     return (
       <div className="wp100 flex p10 direction-column justify-space-between">
         <div className="wp100">
@@ -144,7 +144,7 @@ class ProviderDoctorPaymentProduct extends Component {
                 deleteDoctorProduct={this.deleteDoctorProduct}
                 editDoctorProduct={this.displayEditDoctorPaymentProduct}
               />
-              
+
               {/* <DoctorConsultationFeeTable
                 doctor_id={doctor_id}
               /> */}
@@ -154,34 +154,34 @@ class ProviderDoctorPaymentProduct extends Component {
       </div>
     );
   };
-  
+
   displayAddDoctorPaymentProduct = () => {
-    const {openConsultationFeeDrawer} = this.props;
+    const { openConsultationFeeDrawer } = this.props;
     openConsultationFeeDrawer();
   };
-  
+
   displayEditDoctorPaymentProduct = (id) => () => {
-    const {openConsultationFeeDrawer} = this.props;
-    const {doctorPaymentProducts} = this.state;
-    const {[id]: paymentData} = doctorPaymentProducts;
+    const { openConsultationFeeDrawer } = this.props;
+    const { doctorPaymentProducts } = this.state;
+    const { [id]: paymentData } = doctorPaymentProducts;
     openConsultationFeeDrawer(paymentData);
   };
-  
+
   deleteDoctorProduct = (id, name, type, amount) => () => {
     this.handleDeleteDoctorPaymentProduct(id, name, type, amount);
   };
-  
+
   async handleDeleteDoctorPaymentProduct(id, name, type, amount) {
     try {
-      const {deleteDoctorPaymentProduct} = this.props;
-      const payload = {id, name, type, amount};
+      const { deleteDoctorPaymentProduct } = this.props;
+      const payload = { id, name, type, amount };
       const response = await deleteDoctorPaymentProduct(payload);
       const {
         status,
-        payload: {data: {payment_products = {}} = {}} = {},
+        payload: { data: { payment_products = {} } = {} } = {},
         statusCode,
       } = response || {};
-      
+
       if (status) {
         this.setIsUpdated();
         message.success(
@@ -193,16 +193,16 @@ class ProviderDoctorPaymentProduct extends Component {
       message.warn(this.formatMessage(messages.somethingWentWrong));
     }
   }
-  
+
   renderHeader = () => {
-    const {noDoctorPaymentProducts} = this.state;
+    const { noDoctorPaymentProducts } = this.state;
     return (
       <div className="wp100 pt20  mb20 fs28 fw700 flex justify-space-between align-center">
         <div className="ml20 flex flex-start align-center">
-          <ArrowLeftOutlined onClick={this.handleBack} className="mr10"/>
+          <ArrowLeftOutlined onClick={this.handleBack} className="mr10" />
           {this.formatMessage(messages.consultation_fee_header_text)}
         </div>
-        
+
         {!noDoctorPaymentProducts && (
           <div className="flex flex-end align-center">
             <Button
@@ -220,16 +220,16 @@ class ProviderDoctorPaymentProduct extends Component {
       </div>
     );
   };
-  
+
   handleBack = (e) => {
     e.preventDefault();
-    const {history} = this.props;
+    const { history } = this.props;
     history.goBack();
   };
-  
+
   render() {
-    const {match: {params: {id = null} = {}} = {}} = this.props;
-    
+    const { match: { params: { id = null } = {} } = {} } = this.props;
+
     return (
       <Fragment>
         {this.renderHeader()}

@@ -39,16 +39,16 @@ class VitalController extends Controller {
   constructor() {
     super();
   }
-  
+
   create = async (req, res) => {
-    const {raiseSuccess, raiseClientError, raiseServerError} = this;
+    const { raiseSuccess, raiseClientError, raiseServerError } = this;
     Log.debug("req.body --->", req.body);
     try {
       const {
         userDetails: {
           userId,
           userRoleId,
-          userData: {category} = {},
+          userData: { category } = {},
           userCategoryData = {},
         } = {},
         body: {
@@ -61,14 +61,14 @@ class VitalController extends Controller {
           description,
         } = {},
       } = req;
-      
+
       const QueueService = new queueService();
-      
+
       const doesVitalExists = await VitalService.getByData({
         care_plan_id,
         vital_template_id,
       });
-      
+
       if (!doesVitalExists) {
         const vitalData = await VitalService.addVital({
           care_plan_id,
@@ -81,18 +81,18 @@ class VitalController extends Controller {
           },
           description,
         });
-        
-        const vitals = await VitalWrapper({id: vitalData.get("id")});
+
+        const vitals = await VitalWrapper({ id: vitalData.get("id") });
         const vitalTemplates = await VitalTemplateWrapper({
           id: vitals.getVitalTemplateId(),
         });
         const carePlan = await CarePlanWrapper(null, vitals.getCarePlanId());
-        
+
         const doctor = await DoctorWrapper(null, carePlan.getDoctorId());
         const patient = await PatientWrapper(null, carePlan.getPatientId());
-        
-        const {user_role_id: patientUserRoleId} = await patient.getAllInfo();
-        
+
+        const { user_role_id: patientUserRoleId } = await patient.getAllInfo();
+
         const eventScheduleData = {
           type: EVENT_TYPE.VITALS,
           patient_id: patient.getPatientId(),
@@ -116,20 +116,20 @@ class VitalController extends Controller {
           },
           vital_templates: vitalTemplates.getBasicInfo(),
         };
-        
+
         const sqsResponse = await QueueService.sendMessage(eventScheduleData);
-        
+
         const vitalJob = JobSdk.execute({
           eventType: EVENT_TYPE.VITALS,
           eventStage: NOTIFICATION_STAGES.CREATE,
           event: eventScheduleData,
         });
-        
+
         NotificationSdk.execute(vitalJob);
-        
+
         // RRule
         // await EventSchedule.create(eventScheduleData);
-        
+
         return raiseSuccess(
           res,
           200,
@@ -155,9 +155,9 @@ class VitalController extends Controller {
       return raiseServerError(res);
     }
   };
-  
+
   updateVital = async (req, res) => {
-    const {raiseSuccess, raiseClientError, raiseServerError} = this;
+    const { raiseSuccess, raiseClientError, raiseServerError } = this;
     Log.debug("req.body --->", req.body);
     Log.debug("req.params --->", req.params);
     try {
@@ -165,18 +165,18 @@ class VitalController extends Controller {
         userDetails: {
           userId,
           userRoleId,
-          userData: {category} = {},
+          userData: { category } = {},
           userCategoryData = {},
         } = {},
         body,
-        body: {start_date, end_date} = {},
-        params: {id} = {},
+        body: { start_date, end_date } = {},
+        params: { id } = {},
       } = req;
       const EventService = new eventService();
       const QueueService = new queueService();
-      
-      const doesVitalExists = await VitalService.getByData({id});
-      
+
+      const doesVitalExists = await VitalService.getByData({ id });
+
       if (!doesVitalExists) {
         return raiseClientError(
           res,
@@ -185,27 +185,27 @@ class VitalController extends Controller {
           "Vital does not exists for the mentioned id"
         );
       } else {
-        const previousVital = await VitalWrapper({data: doesVitalExists});
+        const previousVital = await VitalWrapper({ data: doesVitalExists });
         const dataToUpdate = vitalHelper.getVitalUpdateData({
           ...body,
           previousVital,
         });
-        
+
         const vitalData = await VitalService.update(dataToUpdate, id);
-        
+
         Log.debug("vitalData", vitalData);
-        
-        const vitals = await VitalWrapper({id});
+
+        const vitals = await VitalWrapper({ id });
         const vitalTemplates = await VitalTemplateWrapper({
           id: vitals.getVitalTemplateId(),
         });
         const carePlan = await CarePlanWrapper(null, vitals.getCarePlanId());
-        
+
         const doctor = await DoctorWrapper(null, carePlan.getDoctorId());
         const patient = await PatientWrapper(null, carePlan.getPatientId());
-        
-        const {user_role_id: patientUserRoleId} = await patient.getAllInfo();
-        
+
+        const { user_role_id: patientUserRoleId } = await patient.getAllInfo();
+
         const eventScheduleData = {
           type: EVENT_TYPE.VITALS,
           patient_id: patient.getUserId(),
@@ -229,27 +229,27 @@ class VitalController extends Controller {
           },
           vital_templates: vitalTemplates.getBasicInfo(),
         };
-        
+
         Log.debug("eventScheduleData", eventScheduleData);
-        
+
         // Delete previously scheduled events
         const deletedEvents = await EventService.deleteBatch({
           event_id: vitals.getVitalId(),
           event_type: EVENT_TYPE.VITALS,
         });
-        
+
         Log.debug("deletedEvents", deletedEvents);
-        
+
         const sqsResponse = await QueueService.sendMessage(eventScheduleData);
-        
+
         const vitalJob = JobSdk.execute({
           eventType: EVENT_TYPE.VITALS,
           eventStage: NOTIFICATION_STAGES.UPDATE,
           event: eventScheduleData,
         });
-        
+
         NotificationSdk.execute(vitalJob);
-        
+
         return raiseSuccess(
           res,
           200,
@@ -268,16 +268,16 @@ class VitalController extends Controller {
       return raiseServerError(res);
     }
   };
-  
+
   getVitalFormDetails = async (req, res) => {
-    const {raiseSuccess, raiseServerError} = this;
+    const { raiseSuccess, raiseServerError } = this;
     try {
       const vitalData = await FeatureDetailService.getDetailsByData({
         feature_type: FEATURE_TYPE.VITAL,
       });
-      
+
       const vitalDetails = await FeatureDetailWrapper(vitalData);
-      
+
       return raiseSuccess(
         res,
         200,
@@ -292,25 +292,25 @@ class VitalController extends Controller {
       return raiseServerError(res);
     }
   };
-  
+
   search = async (req, res) => {
-    const {raiseSuccess, raiseClientError, raiseServerError} = this;
+    const { raiseSuccess, raiseClientError, raiseServerError } = this;
     try {
       Log.debug("req.query --->", req.query);
-      const {query: {value} = {}} = req;
-      
+      const { query: { value } = {} } = req;
+
       const vitalTemplates = await VitalTemplateService.searchByData(value);
       const templateDetails = {};
       const templateIds = [];
-      
+
       if (vitalTemplates.length > 0) {
         for (const data of vitalTemplates) {
-          const vitalData = await VitalTemplateWrapper({data});
+          const vitalData = await VitalTemplateWrapper({ data });
           templateDetails[vitalData.getVitalTemplateId()] =
             vitalData.getBasicInfo();
           templateIds.push(vitalData.getVitalTemplateId());
         }
-        
+
         return raiseSuccess(
           res,
           200,
@@ -330,18 +330,18 @@ class VitalController extends Controller {
       return raiseServerError(res);
     }
   };
-  
+
   getVitalResponseTimeline = async (req, res) => {
-    const {raiseSuccess, raiseClientError, raiseServerError} = this;
+    const { raiseSuccess, raiseClientError, raiseServerError } = this;
     try {
       Log.debug("req.params vital id---->", req.params);
-      const {params: {id} = {}} = req;
+      const { params: { id } = {} } = req;
       const EventService = new eventService();
-      
+
       const today = moment().utc().toISOString();
-      
-      const vital = await VitalWrapper({id});
-      
+
+      const vital = await VitalWrapper({ id });
+
       const completeEvents =
         await EventService.getAllPassedAndCompletedEventsData({
           event_id: id,
@@ -349,11 +349,11 @@ class VitalController extends Controller {
           date: vital.getStartDate(),
           sort: "DESC",
         });
-      
+
       let dateWiseVitalData = {};
-      
+
       const timelineDates = [];
-      
+
       if (completeEvents.length > 0) {
         for (const scheduleEvent of completeEvents) {
           const event = await EventWrapper(scheduleEvent);
@@ -365,7 +365,7 @@ class VitalController extends Controller {
             timelineDates.push(event.getDate());
           }
         }
-        
+
         return raiseSuccess(
           res,
           200,
@@ -390,49 +390,49 @@ class VitalController extends Controller {
       return raiseServerError(res);
     }
   };
-  
+
   getAllMissedVitals = async (req, res) => {
-    const {raiseSuccess, raiseServerError} = this;
+    const { raiseSuccess, raiseServerError } = this;
     try {
-      const {body, userDetails} = req;
-      
+      const { body, userDetails } = req;
+
       const {
         userRoleId = null,
         userId,
-        userData: {category} = {},
-        userCategoryData: {basic_info: {id: doctorId} = {}} = {},
+        userData: { category } = {},
+        userCategoryData: { basic_info: { id: doctorId } = {} } = {},
       } = userDetails || {};
-      
+
       let docAllCareplanData = [];
       let vitalApiData = {};
       let flag = true;
       let criticalVitalEventIds = [];
       let nonCriticalVitalEventIds = [];
       const scheduleEventService = new ScheduleEventService();
-      
+
       docAllCareplanData = await carePlanService.getCarePlanByData({
         user_role_id: userRoleId,
       });
-      
+
       // Logger.debug("786756465789",docAllCareplanData);
-      
+
       for (let carePlan of docAllCareplanData) {
         const carePlanApiWrapper = await CarePlanWrapper(carePlan);
-        const {vital_ids} = await carePlanApiWrapper.getAllInfo();
-        
+        const { vital_ids } = await carePlanApiWrapper.getAllInfo();
+
         for (let vId of vital_ids) {
           // Logger.debug("87657898763545",vital_ids);
-          
+
           let expiredVitalsList = await scheduleEventService.getAllEventByData({
             event_type: EVENT_TYPE.VITALS,
             status: EVENT_STATUS.EXPIRED,
             event_id: vId,
           });
-          
+
           for (let vital of expiredVitalsList) {
             const vitalEventWrapper = await EventWrapper(vital);
             // Logger.debug("8976756576890",vitalEventWrapper);
-            
+
             if (vitalEventWrapper.getCriticalValue()) {
               if (
                 !criticalVitalEventIds.includes(vitalEventWrapper.getEventId())
@@ -448,20 +448,20 @@ class VitalController extends Controller {
                 nonCriticalVitalEventIds.push(vitalEventWrapper.getEventId());
               }
             }
-            
+
             vitalApiData[vitalEventWrapper.getEventId()] =
               vitalEventWrapper.getDetails();
           }
         }
       }
-      
+
       if (
         Object.keys(vitalApiData).length === 0 &&
         vitalApiData.constructor === Object
       ) {
         flag = false;
       }
-      
+
       if (flag === true) {
         return raiseSuccess(
           res,

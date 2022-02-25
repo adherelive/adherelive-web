@@ -1,9 +1,9 @@
 "use strict";
 
-import {TABLE_NAME} from "../app/models/doctorProviderMapping";
-import {TABLE_NAME as providerTableName} from "../app/models/providers";
-import {TABLE_NAME as doctorTableName} from "../app/models/doctors";
-import {DataTypes} from "sequelize";
+import { TABLE_NAME } from "../app/models/doctorProviderMapping";
+import { TABLE_NAME as providerTableName } from "../app/models/providers";
+import { TABLE_NAME as doctorTableName } from "../app/models/doctors";
+import { DataTypes } from "sequelize";
 
 module.exports = {
   up: (queryInterface, Sequelize) => {
@@ -48,7 +48,7 @@ module.exports = {
       },
     });
   },
-  
+
   down: (queryInterface, Sequelize) => {
     return queryInterface.dropTable(TABLE_NAME);
   },

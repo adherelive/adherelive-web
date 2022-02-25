@@ -15,9 +15,9 @@ class StartJob extends WorkoutJob {
   constructor(data) {
     super(data);
   }
-  
+
   getPushAppTemplate = async () => {
-    const {getWorkoutData} = this;
+    const { getWorkoutData } = this;
     const {
       details: {
         workouts = {},
@@ -26,27 +26,27 @@ class StartJob extends WorkoutJob {
         actor: {
           id: actorId,
           user_role_id,
-          details: {name, category: actorCategory} = {},
+          details: { name, category: actorCategory } = {},
         } = {},
       },
       id,
     } = getWorkoutData() || {};
-    
+
     const templateData = [];
     const playerIds = [];
     const userIds = [];
-    
-    const {rows: userRoles = []} =
-    (await UserRoleService.findAndCountAll({
-      where: {
-        id: participants,
-      },
-    })) || {};
-    
+
+    const { rows: userRoles = [] } =
+      (await UserRoleService.findAndCountAll({
+        where: {
+          id: participants,
+        },
+      })) || {};
+
     let providerId = null;
     for (const userRole of userRoles) {
-      const {id, user_identity, linked_id} = userRole || {};
-      
+      const { id, user_identity, linked_id } = userRole || {};
+
       if (id === user_role_id) {
         if (linked_id) {
           providerId = linked_id;
@@ -55,37 +55,37 @@ class StartJob extends WorkoutJob {
         userIds.push(user_identity);
       }
     }
-    
+
     let providerName = DEFAULT_PROVIDER;
     if (providerId) {
       const provider = await ProviderService.getProviderByData({
         id: providerId,
       });
-      const {name} = provider || {};
+      const { name } = provider || {};
       providerName = name;
     }
-    
+
     const userDevices = await UserDeviceService.getAllDeviceByData({
       user_id: userIds,
     });
-    
+
     if (userDevices.length > 0) {
       for (const device of userDevices) {
-        const userDevice = await UserDeviceWrapper({data: device});
+        const userDevice = await UserDeviceWrapper({ data: device });
         playerIds.push(userDevice.getOneSignalDeviceId());
       }
     }
-    
+
     let workoutName = "";
     if (workout_id) {
-      const {basic_info: {name} = {}} = workouts[workout_id] || {};
+      const { basic_info: { name } = {} } = workouts[workout_id] || {};
       workoutName = name;
     }
-    
+
     templateData.push({
       small_icon: process.config.app.icon_android,
       app_id: process.config.one_signal.app_id,
-      headings: {en: `Workout Reminder (${providerName})`},
+      headings: { en: `Workout Reminder (${providerName})` },
       contents: {
         en: `Time to do ${workoutName}. Tap here to know more!`,
       },
@@ -97,25 +97,25 @@ class StartJob extends WorkoutJob {
         params: getWorkoutData(),
       },
     });
-    
+
     return templateData;
   };
-  
+
   getInAppTemplate = () => {
-    const {getWorkoutData} = this;
+    const { getWorkoutData } = this;
     const {
       details: {
         participants = [],
         actor: {
           id: actorId,
           user_role_id,
-          details: {name, category: actorCategory} = {},
+          details: { name, category: actorCategory } = {},
         } = {},
       },
       id,
       start_time,
     } = getWorkoutData() || {};
-    
+
     const templateData = [];
     const now = moment();
     const currentTimeStamp = now.unix();

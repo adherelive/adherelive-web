@@ -1,7 +1,7 @@
-import {ADD_VITAL_COMPLETED} from "../vitals";
+import { ADD_VITAL_COMPLETED } from "../vitals";
 
 function newVitalReducer(state, data) {
-  const {vital_id = ""} = data || {};
+  const { vital_id = "" } = data || {};
   if (vital_id) {
     return [...state, vital_id];
   } else {
@@ -10,7 +10,7 @@ function newVitalReducer(state, data) {
 }
 
 function vitalPageReducer(state, data) {
-  const {vital_ids = []} = data || {};
+  const { vital_ids = [] } = data || {};
   if (vital_ids.length > 0) {
     return [...state, ...vital_ids];
   } else {
@@ -19,7 +19,7 @@ function vitalPageReducer(state, data) {
 }
 
 export default (state = [], action = {}) => {
-  const {type, payload} = action;
+  const { type, payload } = action;
   switch (type) {
     case ADD_VITAL_COMPLETED:
       return newVitalReducer(state, payload);

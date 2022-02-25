@@ -1,5 +1,5 @@
-import React, {Component} from "react";
-import {injectIntl} from "react-intl";
+import React, { Component } from "react";
+import { injectIntl } from "react-intl";
 import Drawer from "antd/es/drawer";
 
 import VitalTimeline from "../../../Containers/Vitals/timeline";
@@ -9,25 +9,25 @@ class VitalTimelineDrawer extends Component {
   constructor(props) {
     super(props);
   }
-  
+
   onClose = () => {
-    const {close} = this.props;
+    const { close } = this.props;
     close();
   };
-  
+
   drawerTitle = () => {
-    const {vitals, vital_templates, id} = this.props;
-    const {basic_info: {vital_template_id} = {}} = vitals[id] || {};
-    const {basic_info: {name} = {}} =
-    vital_templates[vital_template_id] || {};
-    
+    const { vitals, vital_templates, id } = this.props;
+    const { basic_info: { vital_template_id } = {} } = vitals[id] || {};
+    const { basic_info: { name } = {} } =
+      vital_templates[vital_template_id] || {};
+
     return name;
   };
-  
+
   render() {
-    const {visible, intl: {formatMessage} = {}} = this.props;
-    const {onClose, drawerTitle} = this;
-    
+    const { visible, intl: { formatMessage } = {} } = this.props;
+    const { onClose, drawerTitle } = this;
+
     return (
       <Drawer
         placement="right"
@@ -39,7 +39,7 @@ class VitalTimelineDrawer extends Component {
           {
             ...messages.vital_timeline,
           },
-          {name: drawerTitle()}
+          { name: drawerTitle() }
         )}
       >
         <VitalTimeline {...this.props} />

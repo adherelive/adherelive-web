@@ -1,10 +1,9 @@
-import {EVENT_STATUS} from "../../../constant";
+import { EVENT_STATUS } from "../../../constant";
 import CreateJob from "./createJob";
 
 class CarePlanObserver {
-  constructor() {
-  }
-  
+  constructor() {}
+
   execute = (typeStatus, eventDetails) => {
     switch (typeStatus) {
       case EVENT_STATUS.SCHEDULED:

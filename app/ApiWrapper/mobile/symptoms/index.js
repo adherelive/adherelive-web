@@ -11,7 +11,7 @@ import PatientWrapper from "../patient";
 import CarePlanWrapper from "../carePlan";
 import DocumentWrapper from "../uploadDocument";
 
-import {ACTIVITY_TYPE, DOCUMENT_PARENT_TYPE} from "../../../../constant";
+import { ACTIVITY_TYPE, DOCUMENT_PARENT_TYPE } from "../../../../constant";
 
 import Logger from "../../../../libs/log";
 
@@ -21,11 +21,11 @@ class SymptomWrapper extends BaseSymptom {
   constructor(data) {
     super(data);
   }
-  
+
   getBasicInfo = () => {
-    const {_data} = this;
-    const {id, patient_id, care_plan_id, config, text} = _data || {};
-    
+    const { _data } = this;
+    const { id, patient_id, care_plan_id, config, text } = _data || {};
+
     return {
       basic_info: {
         id,
@@ -36,19 +36,19 @@ class SymptomWrapper extends BaseSymptom {
       text,
     };
   };
-  
+
   getDateWiseInfo = async () => {
-    const {getSymptomId, getUnformattedCreateDate} = this;
-    
+    const { getSymptomId, getUnformattedCreateDate } = this;
+
     const symptomFiles =
       (await DocumentService.getAllByData({
         parent_id: getSymptomId(),
       })) || [];
-    
+
     const audioDocumentIds = [];
     const imageDocumentIds = [];
     const videoDocumentIds = [];
-    
+
     if (symptomFiles.length > 0) {
       for (const file of symptomFiles) {
         const document = await DocumentWrapper(file);
@@ -67,7 +67,7 @@ class SymptomWrapper extends BaseSymptom {
         }
       }
     }
-    
+
     return {
       data: {
         ...(await this.getBasicInfo()),
@@ -79,19 +79,19 @@ class SymptomWrapper extends BaseSymptom {
       createdAt: getUnformattedCreateDate(),
     };
   };
-  
+
   getAllInfo = async () => {
-    const {getBasicInfo, getSymptomId} = this;
-    
+    const { getBasicInfo, getSymptomId } = this;
+
     const symptomFiles =
       (await DocumentService.getAllByData({
         parent_id: getSymptomId(),
       })) || [];
-    
+
     const audioDocumentIds = [];
     const imageDocumentIds = [];
     const videoDocumentIds = [];
-    
+
     if (symptomFiles.length > 0) {
       for (const file of symptomFiles) {
         const document = await DocumentWrapper(file);
@@ -110,7 +110,7 @@ class SymptomWrapper extends BaseSymptom {
         }
       }
     }
-    
+
     return {
       symptoms: {
         [getSymptomId()]: {
@@ -123,38 +123,38 @@ class SymptomWrapper extends BaseSymptom {
       },
     };
   };
-  
+
   getReferenceInfo = async () => {
-    const {getSymptomId, _data} = this;
-    
+    const { getSymptomId, _data } = this;
+
     const documentData = {};
-    
-    const {patient = {}, care_plan = {}} = _data || {};
-    const {doctor} = care_plan || {};
-    
+
+    const { patient = {}, care_plan = {} } = _data || {};
+    const { doctor } = care_plan || {};
+
     const doctors = await DoctorWrapper(doctor);
     const patients = await PatientWrapper(patient);
     // const carePlans = await CarePlanWrapper(care_plan);
-    
+
     const userData = {};
     const doctorUser = await UserWrapper(null, doctors.getUserId());
     const patientUser = await UserWrapper(null, patients.getUserId());
-    
+
     userData[`${doctors.getUserId()}`] = doctorUser.getBasicInfo();
     userData[`${patients.getUserId()}`] = patientUser.getBasicInfo();
-    
+
     const symptomFiles =
       (await DocumentService.getAllByData({
         parent_id: getSymptomId(),
       })) || [];
-    
+
     if (symptomFiles.length > 0) {
       for (const docs of symptomFiles) {
         const doc = await DocumentWrapper(docs);
         documentData[doc.getUploadDocumentId()] = doc.getBasicInfo();
       }
     }
-    
+
     return {
       users: {
         ...userData,
@@ -172,17 +172,17 @@ class SymptomWrapper extends BaseSymptom {
       //     [carePlans.getCarePlanId()]: carePlans.getBasicInfo()
       // }
     };
-    
+
     // Log.debug("patient", patient);
     // Log.debug("care_plan", care_plan);
     // Log.debug("doctor", doctor);
   };
 }
 
-export default async ({data = null, id = null}) => {
+export default async ({ data = null, id = null }) => {
   if (data) {
     return new SymptomWrapper(data);
   }
-  const symptom = await SymptomService.getByData({id});
+  const symptom = await SymptomService.getByData({ id });
   return new SymptomWrapper(symptom);
 };

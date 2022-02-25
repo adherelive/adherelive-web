@@ -9,9 +9,9 @@ class TemplateDietWrapper extends BaseTemplateDiet {
   constructor(data) {
     super(data);
   }
-  
+
   getBasicInfo = () => {
-    const {_data} = this;
+    const { _data } = this;
     const {
       id,
       name,
@@ -31,32 +31,32 @@ class TemplateDietWrapper extends BaseTemplateDiet {
       details,
     };
   };
-  
+
   getAllInfo = () => {
-    const {getBasicInfo} = this;
-    
+    const { getBasicInfo } = this;
+
     return {
       ...getBasicInfo(),
     };
   };
-  
+
   getReferenceInfo = async () => {
-    const {getId, getAllInfo, getDetails} = this;
-    const {diet_food_groups = []} = getDetails() || {};
+    const { getId, getAllInfo, getDetails } = this;
+    const { diet_food_groups = [] } = getDetails() || {};
     let food_item_detail_ids = [];
-    
+
     if (Object.keys(diet_food_groups).length) {
       for (let time in diet_food_groups) {
         const timeGroups = diet_food_groups[time] || [];
         for (let each in timeGroups) {
           const eachGroup = timeGroups[each] || {};
-          
-          const {similar = [], food_item_detail_id = null} = eachGroup || {};
-          
+
+          const { similar = [], food_item_detail_id = null } = eachGroup || {};
+
           if (food_item_detail_id) {
             food_item_detail_ids.push(food_item_detail_id);
           }
-          
+
           if (similar.length) {
             for (let s in similar) {
               const eachSimilar = similar[s] || {};
@@ -71,22 +71,22 @@ class TemplateDietWrapper extends BaseTemplateDiet {
         }
       }
     }
-    
+
     const foodItemDetailService = new FoodItemDetailService();
-    
+
     let foodItemDetails = [];
-    
+
     if (food_item_detail_ids) {
-      const {rows = []} =
-      (await foodItemDetailService.findAndCountAll({
-        where: {
-          id: food_item_detail_ids,
-        },
-      })) || {};
-      
+      const { rows = [] } =
+        (await foodItemDetailService.findAndCountAll({
+          where: {
+            id: food_item_detail_ids,
+          },
+        })) || {};
+
       foodItemDetails = rows;
     }
-    
+
     let allFoodItemDetails = {};
     let allFoodItems = {};
     let allPortions = {};
@@ -95,14 +95,14 @@ class TemplateDietWrapper extends BaseTemplateDiet {
         const foodItemDetail = await FoodItemDetailWrapper({
           data: foodItemDetails[index],
         });
-        const {food_item_details, food_items, portions} =
+        const { food_item_details, food_items, portions } =
           await foodItemDetail.getReferenceInfo();
-        allFoodItemDetails = {...allFoodItemDetails, ...food_item_details};
-        allFoodItems = {...allFoodItems, ...food_items};
-        allPortions = {...allPortions, ...portions};
+        allFoodItemDetails = { ...allFoodItemDetails, ...food_item_details };
+        allFoodItems = { ...allFoodItems, ...food_items };
+        allPortions = { ...allPortions, ...portions };
       }
     }
-    
+
     return {
       template_diets: {
         [getId()]: {
@@ -116,11 +116,11 @@ class TemplateDietWrapper extends BaseTemplateDiet {
   };
 }
 
-export default async ({data = null, id = null}) => {
+export default async ({ data = null, id = null }) => {
   if (data !== null) {
     return new TemplateDietWrapper(data);
   }
   const templateDietService = new TemplateDietService();
-  const templateDiet = await templateDietService.findOne({id});
+  const templateDiet = await templateDietService.findOne({ id });
   return new TemplateDietWrapper(templateDiet);
 };

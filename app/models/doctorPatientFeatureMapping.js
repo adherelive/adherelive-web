@@ -1,9 +1,9 @@
 "use strict";
 
-import {DataTypes} from "sequelize";
-import {TABLE_NAME as doctorTableName} from "./doctors";
-import {TABLE_NAME as patientTableName} from "./patients";
-import {TABLE_NAME as featureTableName} from "./features";
+import { DataTypes } from "sequelize";
+import { TABLE_NAME as doctorTableName } from "./doctors";
+import { TABLE_NAME as patientTableName } from "./patients";
+import { TABLE_NAME as featureTableName } from "./features";
 
 export const TABLE_NAME = "doctor_patient_feature_mappings";
 
@@ -65,20 +65,20 @@ export const db = (database) => {
 };
 
 export const associate = (database) => {
-  const {doctor_patient_feature_mappings, features, doctors, patients} =
-  database.models || {};
-  
+  const { doctor_patient_feature_mappings, features, doctors, patients } =
+    database.models || {};
+
   // associations here (if any) ...
   doctor_patient_feature_mappings.belongsTo(features, {
     foreignKey: "feature_id",
     targetKey: "id",
   });
-  
+
   doctor_patient_feature_mappings.belongsTo(doctors, {
     foreignKey: "doctor_id",
     targetKey: "id",
   });
-  
+
   doctor_patient_feature_mappings.belongsTo(patients, {
     foreignKey: "patient_id",
     targetKey: "id",

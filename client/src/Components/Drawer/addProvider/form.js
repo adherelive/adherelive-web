@@ -1,5 +1,5 @@
-import React, {Component} from "react";
-import {injectIntl} from "react-intl";
+import React, { Component } from "react";
+import { injectIntl } from "react-intl";
 
 import Form from "antd/es/form";
 import Input from "antd/es/input";
@@ -11,12 +11,12 @@ import confirm from "antd/es/modal/confirm";
 import Customization from "./customization";
 import messages from "./message";
 
-import {EyeTwoTone, EyeInvisibleOutlined} from "@ant-design/icons";
+import { EyeTwoTone, EyeInvisibleOutlined } from "@ant-design/icons";
 import prefixField from "../../Prefix";
-import {SAVINGS, CURRENT, ACCOUNT_TYPES} from "../../../constant";
+import { SAVINGS, CURRENT, ACCOUNT_TYPES } from "../../../constant";
 
-const {Item: FormItem} = Form;
-const {Password, TextArea} = Input;
+const { Item: FormItem } = Form;
+const { Password, TextArea } = Input;
 
 const NAME = "name";
 const EMAIL = "email";
@@ -59,28 +59,28 @@ class AddProviderForm extends Component {
       account_type_exists: false,
     };
   }
-  
+
   componentDidMount() {
-    const {form: {validateFields} = {}} = this.props;
+    const { form: { validateFields } = {} } = this.props;
     validateFields();
   }
-  
+
   getParentNode = (t) => t.parentNode;
-  
+
   formatMessage = (data) => this.props.intl.formatMessage(data);
-  
+
   setAccountType = (type) => (e) => {
     e.preventDefault();
     const {
-      form: {setFieldsValue},
+      form: { setFieldsValue },
     } = this.props;
-    
-    setFieldsValue({[ACCOUNT_TYPE]: type});
-    this.setState({account_type_exists: true});
+
+    setFieldsValue({ [ACCOUNT_TYPE]: type });
+    this.setState({ account_type_exists: true });
   };
-  
+
   resetAllAccount = () => {
-    const {form: {resetFields, setFieldsValue} = {}} = this.props;
+    const { form: { resetFields, setFieldsValue } = {} } = this.props;
     resetFields([CUSTOMER_NAME]);
     resetFields([ACCOUNT_NUMBER]);
     resetFields([IFCS_CODE]);
@@ -88,10 +88,10 @@ class AddProviderForm extends Component {
     resetFields([ACCOUNT_TYPE]);
     resetFields([RAZORPAY_ACCOUNT_ID]);
     resetFields([RAZORPAY_ACCOUNT_NAME]);
-    
-    this.setState({account_type_exists: false});
+
+    this.setState({ account_type_exists: false });
   };
-  
+
   warnNote = () => {
     return (
       <div className="pt16">
@@ -102,50 +102,49 @@ class AddProviderForm extends Component {
       </div>
     );
   };
-  
+
   handleCloseWarning = (e) => {
     e.preventDefault();
-    const {warnNote} = this;
-    
-    const {account_type_exists} = this.state;
-    
+    const { warnNote } = this;
+
+    const { account_type_exists } = this.state;
+
     if (!account_type_exists) {
       return;
     }
-    
+
     confirm({
       title: `${this.formatMessage(messages.resetMessage)}`,
       content: <div>{warnNote()}</div>,
       onOk: async () => {
         this.resetAllAccount();
       },
-      onCancel() {
-      },
+      onCancel() {},
     });
   };
-  
+
   render() {
     const {
-      form: {getFieldDecorator, isFieldTouched, getFieldError, getFieldValue},
+      form: { getFieldDecorator, isFieldTouched, getFieldError, getFieldValue },
     } = this.props;
-    
-    const {formatMessage} = this;
-    
-    const {account_type_exists = false} = this.state;
+
+    const { formatMessage } = this;
+
+    const { account_type_exists = false } = this.state;
     const account_type_obj = getFieldValue([ACCOUNT_TYPE]);
     let account_type_val = "";
     if (account_type_obj && Object.values(account_type_obj).length > 0) {
       account_type_val = Object.values(account_type_obj)[0];
     }
-    
+
     let fieldsError = {};
     FIELDS.forEach((value) => {
       const error = isFieldTouched(value) && getFieldError(value);
-      fieldsError = {...fieldsError, [value]: error};
+      fieldsError = { ...fieldsError, [value]: error };
     });
-    
+
     const prefixSelector = <div>{prefixField.render(this.props)}</div>;
-    
+
     return (
       <Form className="wp100 pb30 Form" layout={"vertical"}>
         {/* email */}
@@ -167,9 +166,9 @@ class AddProviderForm extends Component {
                 message: formatMessage(messages.email_required_text),
               },
             ],
-          })(<Input type="string"/>)}
+          })(<Input type="string" />)}
         </FormItem>
-        
+
         {/* password */}
         <FormItem
           validateStatus={fieldsError[PASSWORD] ? "error" : ""}
@@ -189,12 +188,12 @@ class AddProviderForm extends Component {
               type="string"
               placeholder="Input password"
               iconRender={(visible) =>
-                visible ? <EyeTwoTone/> : <EyeInvisibleOutlined/>
+                visible ? <EyeTwoTone /> : <EyeInvisibleOutlined />
               }
             />
           )}
         </FormItem>
-        
+
         {/* confirm password */}
         <FormItem
           validateStatus={fieldsError[CONFIRM_PASSWORD] ? "error" : ""}
@@ -214,12 +213,12 @@ class AddProviderForm extends Component {
               type="string"
               placeholder="Input Confirm password"
               iconRender={(visible) =>
-                visible ? <EyeTwoTone/> : <EyeInvisibleOutlined/>
+                visible ? <EyeTwoTone /> : <EyeInvisibleOutlined />
               }
             />
           )}
         </FormItem>
-        
+
         {/* name */}
         <FormItem
           validateStatus={fieldsError[NAME] ? "error" : ""}
@@ -234,9 +233,9 @@ class AddProviderForm extends Component {
                 message: formatMessage(messages.name_error),
               },
             ],
-          })(<Input type="string"/>)}
+          })(<Input type="string" />)}
         </FormItem>
-        
+
         {/* mobile number */}
         <FormItem
           className="provider-number"
@@ -257,7 +256,7 @@ class AddProviderForm extends Component {
             />
           )}
         </FormItem>
-        
+
         {/* address */}
         <FormItem
           validateStatus={fieldsError[ADDRESS] ? "error" : ""}
@@ -272,12 +271,12 @@ class AddProviderForm extends Component {
                 message: formatMessage(messages.address_required_text),
               },
             ],
-          })(<Input type="string"/>)}
+          })(<Input type="string" />)}
         </FormItem>
-        
+
         <Customization {...this.props} />
         {/* <-------------------------- ACCOUNT DETAILS --------------------------------------->*/}
-        
+
         <div className="fwbolder fs18 mb20 mt20 flex align-center justify-space-between">
           <span>{formatMessage(messages.accountDetails)}</span>
           <Tooltip title={formatMessage(messages.resetAccountFields)}>
@@ -286,7 +285,7 @@ class AddProviderForm extends Component {
             </Button>
           </Tooltip>
         </div>
-        
+
         {/* account type */}
         <FormItem
           validateStatus={fieldsError[ACCOUNT_TYPE] ? "error" : ""}
@@ -318,7 +317,7 @@ class AddProviderForm extends Component {
                 >
                   {ACCOUNT_TYPES[SAVINGS]}
                 </Radio.Button>
-                
+
                 <Radio.Button
                   style={{
                     width: "50%",
@@ -332,7 +331,7 @@ class AddProviderForm extends Component {
             </div>
           )}
         </FormItem>
-        
+
         {/* customer name */}
         <FormItem
           validateStatus={fieldsError[CUSTOMER_NAME] ? "error" : ""}
@@ -347,9 +346,9 @@ class AddProviderForm extends Component {
                 message: formatMessage(messages.beneficiary_name_error),
               },
             ],
-          })(<Input type="string" disabled={!account_type_exists}/>)}
+          })(<Input type="string" disabled={!account_type_exists} />)}
         </FormItem>
-        
+
         {/* account num */}
         <FormItem
           validateStatus={fieldsError[ACCOUNT_NUMBER] ? "error" : ""}
@@ -364,9 +363,9 @@ class AddProviderForm extends Component {
                 message: formatMessage(messages.account_num_error),
               },
             ],
-          })(<Input type="number" disabled={!account_type_exists}/>)}
+          })(<Input type="number" disabled={!account_type_exists} />)}
         </FormItem>
-        
+
         {/* ifsc */}
         <FormItem
           validateStatus={fieldsError[IFCS_CODE] ? "error" : ""}
@@ -381,9 +380,9 @@ class AddProviderForm extends Component {
                 message: formatMessage(messages.ifsc_error),
               },
             ],
-          })(<Input type="string" disabled={!account_type_exists}/>)}
+          })(<Input type="string" disabled={!account_type_exists} />)}
         </FormItem>
-        
+
         {/* upi id */}
         <FormItem
           validateStatus={fieldsError[UPI_ID] ? "error" : ""}
@@ -394,9 +393,9 @@ class AddProviderForm extends Component {
           {getFieldDecorator(
             UPI_ID,
             {}
-          )(<Input type="string" disabled={!account_type_exists}/>)}
+          )(<Input type="string" disabled={!account_type_exists} />)}
         </FormItem>
-        
+
         {/* razorpay acc id */}
         <FormItem
           validateStatus={fieldsError[RAZORPAY_ACCOUNT_ID] ? "error" : ""}
@@ -407,9 +406,9 @@ class AddProviderForm extends Component {
           {getFieldDecorator(
             RAZORPAY_ACCOUNT_ID,
             {}
-          )(<Input type="string" disabled={!account_type_exists}/>)}
+          )(<Input type="string" disabled={!account_type_exists} />)}
         </FormItem>
-        
+
         {/* razorpay acc name */}
         <FormItem
           validateStatus={fieldsError[RAZORPAY_ACCOUNT_NAME] ? "error" : ""}
@@ -420,9 +419,9 @@ class AddProviderForm extends Component {
           {getFieldDecorator(
             RAZORPAY_ACCOUNT_NAME,
             {}
-          )(<Input type="string" disabled={!account_type_exists}/>)}
+          )(<Input type="string" disabled={!account_type_exists} />)}
         </FormItem>
-        
+
         {/* prescription details */}
         <FormItem
           validateStatus={fieldsError[PRESCRIPTION_DETAILS] ? "error" : ""}
@@ -432,7 +431,7 @@ class AddProviderForm extends Component {
           {getFieldDecorator(
             PRESCRIPTION_DETAILS,
             {}
-          )(<TextArea rows={3} className="mb40" maxLength={300}/>)}
+          )(<TextArea rows={3} className="mb40" maxLength={300} />)}
         </FormItem>
       </Form>
     );

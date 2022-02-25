@@ -1,7 +1,7 @@
 "use strict";
-import {DataTypes} from "sequelize";
-import {TABLE_NAME as carePlanTableName} from "./carePlan";
-import {TABLE_NAME as medicationTableName} from "./medicationReminders";
+import { DataTypes } from "sequelize";
+import { TABLE_NAME as carePlanTableName } from "./carePlan";
+import { TABLE_NAME as medicationTableName } from "./medicationReminders";
 
 export const TABLE_NAME = "care_plan_medications";
 
@@ -13,7 +13,7 @@ export const db = (database) => {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
-        type: DataTypes.INTEGER
+        type: DataTypes.INTEGER,
       },
       care_plan_id: {
         type: DataTypes.INTEGER,
@@ -22,8 +22,8 @@ export const db = (database) => {
           model: {
             tableName: carePlanTableName,
           },
-          key: 'id'
-        }
+          key: "id",
+        },
       },
       medication_id: {
         type: DataTypes.INTEGER,
@@ -32,8 +32,8 @@ export const db = (database) => {
           model: {
             tableName: medicationTableName,
           },
-          key: 'id'
-        }
+          key: "id",
+        },
       },
     },
     {
@@ -49,8 +49,8 @@ export const db = (database) => {
         },
         getId() {
           return this.id;
-        }
-      }
+        },
+      },
     }
   );
 };
@@ -59,6 +59,6 @@ export const associate = (database) => {
   // associations here (if any) ...
   database.models[TABLE_NAME].hasOne(database.models[medicationTableName], {
     foreignKey: "id",
-    targetKey: "medication_id"
+    targetKey: "medication_id",
   });
 };

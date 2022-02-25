@@ -1,5 +1,5 @@
 import Joi from "@hapi/joi";
-import {validationError} from "../helper";
+import { validationError } from "../helper";
 
 const accountFormSchema = Joi.object().keys({
   account_type: Joi.string().required(),
@@ -18,7 +18,7 @@ const accountFormSchema = Joi.object().keys({
 });
 
 export const validateAccountFormData = (req, res, next) => {
-  const {body: data = {}} = req;
+  const { body: data = {} } = req;
   const isValid = accountFormSchema.validate(data);
   if (isValid && isValid.error != null) {
     return validationError(res, isValid);

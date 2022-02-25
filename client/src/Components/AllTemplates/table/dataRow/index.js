@@ -1,10 +1,10 @@
-import {TABLE_COLUMN, formatTemplateTableData} from "../helper";
+import { TABLE_COLUMN, formatTemplateTableData } from "../helper";
 
 export default (data) => {
-  const {id, duplicateCareplanTemplate, handleOpenEditDrawer} = data;
+  const { id, duplicateCareplanTemplate, handleOpenEditDrawer } = data;
   const formattedData = formatTemplateTableData(data);
-  const {templateData} = formattedData || {};
-  
+  const { templateData } = formattedData || {};
+
   return {
     key: id,
     [TABLE_COLUMN.NAME.dataIndex]: {

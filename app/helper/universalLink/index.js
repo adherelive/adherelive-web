@@ -1,6 +1,6 @@
 import createLink from "../../../app/branch-io";
-import {EVENT_TYPE} from "../../../constant";
-import {VERIFICATION_TYPE} from "../../../constant";
+import { EVENT_TYPE } from "../../../constant";
+import { VERIFICATION_TYPE } from "../../../constant";
 
 //const temp_app_link = "http://localhost:3000";
 const temp_app_link = process.config.APP_URL;
@@ -8,12 +8,12 @@ const temp_app_link = process.config.APP_URL;
 export default async (payload = {}) => {
   let universalLink;
   try {
-    const {event_type} = payload;
-    
-    const {link} = payload;
+    const { event_type } = payload;
+
+    const { link } = payload;
     const data = {
       $desktop_url: `${temp_app_link}/verify/${link}`,
-      data: {type: EVENT_TYPE.INVITATION, link},
+      data: { type: EVENT_TYPE.INVITATION, link },
     };
     // console.log("=======================", event_type, payload);
     // switch (event_type) {

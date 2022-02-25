@@ -1,13 +1,13 @@
-import React, {Component} from "react";
-import {injectIntl} from "react-intl";
-import {Button, Input, Form, message} from "antd";
+import React, { Component } from "react";
+import { injectIntl } from "react-intl";
+import { Button, Input, Form, message } from "antd";
 import messages from "./message";
-import {withRouter} from "react-router-dom";
-import {PATH} from "../../constant";
+import { withRouter } from "react-router-dom";
+import { PATH } from "../../constant";
 import config from "../../config";
 
-const {Item: FormItem} = Form;
-const {Password} = Input;
+const { Item: FormItem } = Form;
+const { Password } = Input;
 
 const EMAIL = "email";
 const PASSWORD = "password";
@@ -24,29 +24,29 @@ class SignIn extends Component {
       login: true,
     };
   }
-  
+
   handleSignIn = async (e) => {
     e.preventDefault();
     const {
-      form: {validateFields},
+      form: { validateFields },
       signIn,
       getInitialData,
       getUserRoles,
       history,
     } = this.props;
-    
-    this.setState({loading: true});
-    validateFields(async (err, {email, password}) => {
+
+    this.setState({ loading: true });
+    validateFields(async (err, { email, password }) => {
       if (!err) {
         try {
-          const response = await signIn({email, password});
+          const response = await signIn({ email, password });
           const {
             status = false,
             statusCode,
-            payload: {data = {}, message: resp_msg} = {},
+            payload: { data = {}, message: resp_msg } = {},
           } = response;
-          const {users = {}, auth_user = "", hasConsent} = data || {};
-          
+          const { users = {}, auth_user = "", hasConsent } = data || {};
+
           if (status) {
             message.success(this.formatMessage(messages.loginSuccessfull), 4);
             if (hasConsent) {
@@ -59,24 +59,24 @@ class SignIn extends Component {
             if (statusCode === 422) {
               message.error(this.formatMessage(messages.emailDoesNotxist), 4);
             } else {
-              this.setState({loading: false});
+              this.setState({ loading: false });
               message.error(this.formatMessage(messages.invalidCredentials), 4);
             }
           }
         } catch (err) {
           console.log("298293 err ----> ", err);
-          this.setState({loading: false});
+          this.setState({ loading: false });
           message.error(this.formatMessage(messages.somethingWentWrong), 4);
         }
       } else {
-        this.setState({loading: false});
+        this.setState({ loading: false });
         message.error(this.formatMessage(messages.pleaseFillDetails), 4);
       }
     });
   };
-  
+
   formatMessage = (data) => this.props.intl.formatMessage(data);
-  
+
   tosComponent = () => {
     return (
       <div className="flex mb20">
@@ -89,18 +89,18 @@ class SignIn extends Component {
       </div>
     );
   };
-  
+
   render() {
     const {
-      form: {getFieldDecorator, isFieldTouched, getFieldError},
+      form: { getFieldDecorator, isFieldTouched, getFieldError },
       redirectToForgotPassword,
     } = this.props;
     let fieldsError = {};
     FIELDS.forEach((value) => {
       const error = isFieldTouched(value) && getFieldError(value);
-      fieldsError = {...fieldsError, [value]: error};
+      fieldsError = { ...fieldsError, [value]: error };
     });
-    const {handleSignIn, tosComponent} = this;
+    const { handleSignIn, tosComponent } = this;
     return (
       <Form onSubmit={handleSignIn} className="login-form">
         <FormItem
@@ -121,9 +121,9 @@ class SignIn extends Component {
                 message: this.formatMessage(messages.enterValidEmail),
               },
             ],
-          })(<Input type="text" placeholder="Email" className="h40"/>)}
+          })(<Input type="text" placeholder="Email" className="h40" />)}
         </FormItem>
-        
+
         <FormItem
           validateStatus={fieldsError[PASSWORD] ? "error" : ""}
           help={fieldsError[PASSWORD] || ""}
@@ -138,7 +138,7 @@ class SignIn extends Component {
                 message: this.formatMessage(messages.enterPassword),
               },
             ],
-          })(<Password placeholder="Password" className="h40"/>)}
+          })(<Password placeholder="Password" className="h40" />)}
         </FormItem>
         {tosComponent()}
         <div className="flex wp100 justify-end mt-20 mb16">
@@ -149,7 +149,7 @@ class SignIn extends Component {
             Forgot Password?
           </div>
         </div>
-        
+
         <FormItem className="mb53">
           <Button
             type="primary"
@@ -181,6 +181,6 @@ class SignIn extends Component {
 //const NormalLoginForm = ({ name: "signin_form" })(injectIntl(SignIn));
 
 export default withRouter(
-  Form.create({name: "signin_form"})(injectIntl(SignIn))
+  Form.create({ name: "signin_form" })(injectIntl(SignIn))
 );
 //export default withRouter(mapStateToProps, mapDispatchToProps)(NormalLoginForm);

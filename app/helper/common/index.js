@@ -3,11 +3,11 @@ const fs = require("fs");
 export const getSeparateName = (name) => {
   const nameArr = name.split(" ");
   const [first = null, middle = null, ...rest] = nameArr || [];
-  
+
   let first_name = first || null;
   let middle_name = middle || null;
   let last_name = rest.length > 1 ? rest.join(" ") : null;
-  
+
   return {
     first_name,
     middle_name,
@@ -38,7 +38,7 @@ export const getSeparateName = (name) => {
   // }
 };
 
-export const getFullName = ({first_name, middle_name, last_name}) => {
+export const getFullName = ({ first_name, middle_name, last_name }) => {
   return `${first_name}${middle_name ? ` ${middle_name}` : ""}${
     last_name ? ` ${last_name}` : ""
   }`;
@@ -66,7 +66,7 @@ export const separateNameForSearch = (value) => {
   let middleName = value;
   let lastName = value;
   const name = value.split(" ");
-  
+
   if (name.length > 1) {
     if (name.length === 2) {
       firstName = name[0];
@@ -79,6 +79,6 @@ export const separateNameForSearch = (value) => {
       lastName = rest.length > 1 ? rest.join(" ") : null;
     }
   }
-  
-  return {firstName, middleName, lastName};
+
+  return { firstName, middleName, lastName };
 };

@@ -1,6 +1,6 @@
 import Database from "../../../libs/mysql";
-import {TABLE_NAME} from "../../models/subscriptions";
-import {TABLE_NAME as paymentProductTableName} from "../../models/paymentProducts";
+import { TABLE_NAME } from "../../models/subscriptions";
+import { TABLE_NAME as paymentProductTableName } from "../../models/paymentProducts";
 
 import Op from "sequelize/lib/operators";
 import moment from "moment";
@@ -17,7 +17,7 @@ export default class SubscriptionService {
       throw error;
     }
   };
-  
+
   getAllTodayRenewingData = async () => {
     try {
       const subscriptions = Database.getModel(TABLE_NAME).findAll({
@@ -42,7 +42,7 @@ export default class SubscriptionService {
       throw error;
     }
   };
-  
+
   createSubscription = async (data) => {
     try {
       const subscriptions = Database.getModel(TABLE_NAME).create(data, {
@@ -53,7 +53,7 @@ export default class SubscriptionService {
       throw error;
     }
   };
-  
+
   updateSubscription = async (data, id) => {
     const transaction = Database.initTransaction();
     try {

@@ -1,6 +1,6 @@
 import Controller from "../../index";
 import Logger from "../../../../libs/log";
-import {USER_CATEGORY} from "../../../../constant";
+import { USER_CATEGORY } from "../../../../constant";
 
 // HELPERS
 import * as PaymentHelper from "./helper";
@@ -19,9 +19,9 @@ class PaymentController extends Controller {
   constructor() {
     super();
   }
-  
+
   addDoctorPaymentProduct = async (req, res) => {
-    const {raiseSuccess, raiseClientError, raiseServerError} = this;
+    const { raiseSuccess, raiseClientError, raiseServerError } = this;
     try {
       /*
        * Data needed as:
@@ -31,20 +31,20 @@ class PaymentController extends Controller {
        *
        *
        * */
-      const {body, userDetails: {userData: {category}, userRoleId} = {}} =
+      const { body, userDetails: { userData: { category }, userRoleId } = {} } =
         req;
-      const {for_user_type = USER_CATEGORY.DOCTOR} = body;
+      const { for_user_type = USER_CATEGORY.DOCTOR } = body;
       const dataToAdd = PaymentHelper.getFormattedData(body);
       const paymentProductService = new PaymentProductService();
-      
+
       let paymentProducts = {};
-      
+
       // for user type in provider
       let doctorUserRoleId = userRoleId;
-      
+
       for (let i = 0; i < dataToAdd.length; i++) {
-        const {id = null, ...rest} = dataToAdd[i] || {};
-        
+        const { id = null, ...rest } = dataToAdd[i] || {};
+
         if (id) {
           // update
           const paymentProductData =
@@ -54,7 +54,7 @@ class PaymentController extends Controller {
               },
               id
             );
-          
+
           const paymentProduct = await PaymentProductWrapper({
             id,
           });
@@ -71,7 +71,7 @@ class PaymentController extends Controller {
               for_user_type: category,
               product_user_type: "patient", // todo: change to constant in model
             });
-          
+
           const paymentProduct = await PaymentProductWrapper({
             data: paymentProductData,
           });
@@ -79,7 +79,7 @@ class PaymentController extends Controller {
             paymentProduct.getBasicInfo();
         }
       }
-      
+
       return raiseSuccess(
         res,
         200,
@@ -95,12 +95,12 @@ class PaymentController extends Controller {
       return raiseServerError(res);
     }
   };
-  
+
   getAllDoctorPaymentProduct = async (req, res) => {
-    const {raiseSuccess, raiseClientError, raiseServerError} = this;
+    const { raiseSuccess, raiseClientError, raiseServerError } = this;
     try {
-      const {userDetails: {userRoleId} = {}} = req;
-      
+      const { userDetails: { userRoleId } = {} } = req;
+
       const paymentProductService = new PaymentProductService();
       const doctorPaymentProductData =
         await paymentProductService.getAllCreatorTypeProducts({
@@ -108,12 +108,12 @@ class PaymentController extends Controller {
           for_user_role_id: userRoleId,
           product_user_type: "patient",
         });
-      
+
       let paymentProductData = [...doctorPaymentProductData];
-      
+
       if (paymentProductData.length > 0) {
         let paymentProducts = {};
-        
+
         for (let i = 0; i < paymentProductData.length; i++) {
           const paymentProduct = await PaymentProductWrapper({
             data: paymentProductData[i],
@@ -121,7 +121,7 @@ class PaymentController extends Controller {
           paymentProducts[paymentProduct.getId()] =
             paymentProduct.getBasicInfo();
         }
-        
+
         return raiseSuccess(
           res,
           200,
@@ -145,19 +145,19 @@ class PaymentController extends Controller {
       return raiseServerError(res);
     }
   };
-  
+
   getAllAdminPaymentProduct = async (req, res) => {
-    const {raiseSuccess, raiseClientError, raiseServerError} = this;
+    const { raiseSuccess, raiseClientError, raiseServerError } = this;
     try {
       const paymentProductService = new PaymentProductService();
       const paymentProductData =
         await paymentProductService.getAllCreatorTypeProducts({
           creator_type: USER_CATEGORY.ADMIN,
         });
-      
+
       if (paymentProductData.length > 0) {
         let paymentProducts = {};
-        
+
         for (let i = 0; i < paymentProductData.length; i++) {
           const paymentProduct = await PaymentProductWrapper({
             data: paymentProductData[i],
@@ -165,7 +165,7 @@ class PaymentController extends Controller {
           paymentProducts[paymentProduct.getId()] =
             paymentProduct.getBasicInfo();
         }
-        
+
         return raiseSuccess(
           res,
           200,
@@ -189,16 +189,16 @@ class PaymentController extends Controller {
       return raiseServerError(res);
     }
   };
-  
+
   deleteDoctorPaymentProduct = async (req, res) => {
-    const {raiseSuccess, raiseClientError, raiseServerError} = this;
+    const { raiseSuccess, raiseClientError, raiseServerError } = this;
     try {
-      const {params: {id = 0} = {}} = req;
-      
+      const { params: { id = 0 } = {} } = req;
+
       const paymentProductService = new PaymentProductService();
       const paymentProductData =
         await paymentProductService.deleteDoctorProductById(id);
-      
+
       return raiseSuccess(
         res,
         200,

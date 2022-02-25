@@ -1,4 +1,4 @@
-import {GET_ALL_MISSED_SCHEDULE_EVENTS_COMPLETED} from "../scheduleEvents";
+import { GET_ALL_MISSED_SCHEDULE_EVENTS_COMPLETED } from "../scheduleEvents";
 
 function missedEventReducer(state, data) {
   const {
@@ -25,7 +25,7 @@ function missedEventReducer(state, data) {
 }
 
 export default (state = {}, action) => {
-  const {type, data} = action;
+  const { type, data } = action;
   switch (type) {
     case GET_ALL_MISSED_SCHEDULE_EVENTS_COMPLETED:
       return missedEventReducer(state, data);

@@ -1,5 +1,5 @@
-import React, {Component} from "react";
-import {injectIntl} from "react-intl";
+import React, { Component } from "react";
+import { injectIntl } from "react-intl";
 import TransactionTable from "../../../Containers/Transaction/table/index";
 import messages from "./messages";
 
@@ -7,9 +7,9 @@ class doctorTransactionPage extends Component {
   constructor(props) {
     super(props);
   }
-  
+
   formatMessage = (data) => this.props.intl.formatMessage(data);
-  
+
   render() {
     return (
       <div className="wp100 flex direction-column">
@@ -17,7 +17,7 @@ class doctorTransactionPage extends Component {
           {this.formatMessage(messages.transaction_table_header)}
         </div>
         <div className="wp100 pl14 pr14 flex align-center justify-center">
-          <TransactionTable/>
+          <TransactionTable />
         </div>
       </div>
     );

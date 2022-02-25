@@ -1,13 +1,13 @@
-import React, {Component, Fragment} from "react";
-import {injectIntl} from "react-intl";
-import {hasErrors} from "../../../Helper/validation";
+import React, { Component, Fragment } from "react";
+import { injectIntl } from "react-intl";
+import { hasErrors } from "../../../Helper/validation";
 import Drawer from "antd/es/drawer";
 import Form from "antd/es/form";
 import message from "antd/es/message";
 import messages from "./messages";
 import AddExerciseForm from "./form";
 import Footer from "../footer";
-import {VIDEO_TYPES} from "../../../constant";
+import { VIDEO_TYPES } from "../../../constant";
 
 class AddExercise extends Component {
   constructor(props) {
@@ -19,46 +19,46 @@ class AddExercise extends Component {
       uploadedVideoUrl: "",
       videoContentType: null,
     };
-    
-    this.FormWrapper = Form.create({onFieldsChange: this.onFormFieldChanges})(
+
+    this.FormWrapper = Form.create({ onFieldsChange: this.onFormFieldChanges })(
       AddExerciseForm
     );
   }
-  
+
   setUploadedVideoUrl = (url) => {
-    this.setState({uploadedVideoUrl: url});
+    this.setState({ uploadedVideoUrl: url });
   };
-  
+
   setVideoContentType = (type) => {
-    this.setState({videoContentType: type});
+    this.setState({ videoContentType: type });
   };
-  
+
   onFormFieldChanges = (props) => {
     const {
-      form: {getFieldsError, isFieldsTouched},
+      form: { getFieldsError, isFieldsTouched },
     } = props;
     const isError = hasErrors(getFieldsError());
-    const {disabledSubmit} = this.state;
+    const { disabledSubmit } = this.state;
     if (disabledSubmit !== isError && isFieldsTouched()) {
-      this.setState({disabledSubmit: isError});
+      this.setState({ disabledSubmit: isError });
     }
   };
-  
+
   handleSubmit = (e) => {
     e.preventDefault();
-    const {addExercise} = this.props;
-    const {formRef = {}, formatMessage} = this;
+    const { addExercise } = this.props;
+    const { formRef = {}, formatMessage } = this;
     const {
       uploadedVideoUrl = "",
       videoContentType: video_content_type = null,
     } = this.state;
-    
+
     const {
       props: {
-        form: {validateFields, resetFields},
+        form: { validateFields, resetFields },
       },
     } = formRef;
-    
+
     validateFields(async (err, values) => {
       if (!err) {
         let {
@@ -68,10 +68,10 @@ class AddExercise extends Component {
           calorific_value = null,
           video_content = "",
         } = values;
-        
+
         const name = initail_name.trim();
         let video = {};
-        
+
         if (video_content.length) {
           if (video_content_type === VIDEO_TYPES.UPLOAD) {
             video_content = uploadedVideoUrl;
@@ -81,7 +81,7 @@ class AddExercise extends Component {
             content: video_content,
           };
         }
-        
+
         const data = {
           name,
           repetition_id: repetition_id ? parseInt(repetition_id) : null,
@@ -91,45 +91,45 @@ class AddExercise extends Component {
           calorific_value: calorific_value ? parseFloat(calorific_value) : null,
           video,
         };
-        
+
         try {
-          this.setState({submitting: true});
+          this.setState({ submitting: true });
           const response = await addExercise(data);
           const {
             status,
             statusCode: code,
             payload: {
               message: errorMessage = "",
-              error: {error_type = ""} = {},
+              error: { error_type = "" } = {},
             },
           } = response || {};
-          
+
           if (!status) {
             message.error(errorMessage);
           } else {
             message.success(errorMessage);
           }
-          this.setState({submitting: false});
-          
+          this.setState({ submitting: false });
+
           if (status) {
             this.onClose();
           }
         } catch (error) {
-          this.setState({submitting: false});
+          this.setState({ submitting: false });
         }
       }
     });
   };
-  
+
   formatMessage = (data) => this.props.intl.formatMessage(data);
-  
+
   onClose = () => {
-    const {closeAddExerciseDrawer} = this.props;
-    
-    const {formRef} = this;
+    const { closeAddExerciseDrawer } = this.props;
+
+    const { formRef } = this;
     const {
       props: {
-        form: {resetFields},
+        form: { resetFields },
       },
     } = formRef;
     this.setState({
@@ -140,25 +140,25 @@ class AddExercise extends Component {
     resetFields();
     closeAddExerciseDrawer();
   };
-  
+
   setFormRef = (formRef) => {
     this.formRef = formRef;
     if (formRef) {
-      this.setState({formRef: true});
+      this.setState({ formRef: true });
     }
   };
-  
+
   render() {
-    const {visible} = this.props;
-    const {disabledSubmit, submitting = false} = this.state;
-    
-    const {onClose, formatMessage, setFormRef, handleSubmit, FormWrapper} =
+    const { visible } = this.props;
+    const { disabledSubmit, submitting = false } = this.state;
+
+    const { onClose, formatMessage, setFormRef, handleSubmit, FormWrapper } =
       this;
-    
+
     const submitButtonProps = {
       disabled: disabledSubmit,
     };
-    
+
     return (
       <Fragment>
         <Drawer
@@ -181,7 +181,7 @@ class AddExercise extends Component {
             setVideoContentType={this.setVideoContentType}
             {...this.props}
           />
-          
+
           <Footer
             onSubmit={handleSubmit}
             onClose={onClose}

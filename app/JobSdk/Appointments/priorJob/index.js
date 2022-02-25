@@ -16,27 +16,26 @@ class PriorJob extends AppointmentJob {
   constructor(data) {
     super(data);
   }
-  
+
   getEmailTemplate = () => {
-    const {getAppointmentData} = this;
-    const {details: {} = {}} = getAppointmentData() || {};
-    
+    const { getAppointmentData } = this;
+    const { details: {} = {} } = getAppointmentData() || {};
+
     const templateData = [];
-    
+
     return templateData;
   };
-  
-  getSmsTemplate = () => {
-  };
-  
+
+  getSmsTemplate = () => {};
+
   getPushAppTemplate = async () => {
-    const {getAppointmentData} = this;
+    const { getAppointmentData } = this;
     const {
       details: {
         participants = [],
         actor: {
           id: actorId,
-          details: {name, category: actorCategory} = {},
+          details: { name, category: actorCategory } = {},
         } = {},
         basic_info: {
           details: {
@@ -47,60 +46,60 @@ class PriorJob extends AppointmentJob {
         } = {},
       } = {},
     } = getAppointmentData() || {};
-    
+
     const templateData = [];
     const playerIds = [];
     const userIds = [];
-    
+
     // participants.forEach(participant => {
     //   if (participant !== user_role_id) {
     //     userRoleIds.push(participant);
     //   }
     // });
-    
-    const {rows: userRoles = []} =
-    (await UserRoleService.findAndCountAll({
-      where: {
-        id: participants,
-      },
-    })) || {};
-    
+
+    const { rows: userRoles = [] } =
+      (await UserRoleService.findAndCountAll({
+        where: {
+          id: participants,
+        },
+      })) || {};
+
     let providerId = null;
-    
+
     for (const userRole of userRoles) {
-      const {user_identity, linked_id} = userRole || {};
+      const { user_identity, linked_id } = userRole || {};
       userIds.push(user_identity);
       if (linked_id) {
         providerId = linked_id;
       }
     }
-    
+
     // provider
     let providerName = DEFAULT_PROVIDER;
     if (providerId) {
       const provider = await ProviderService.getProviderByData({
         id: providerId,
       });
-      const {name} = provider || {};
+      const { name } = provider || {};
       providerName = name;
     }
     const userDevices = await UserDeviceService.getAllDeviceByData({
       user_id: participants,
     });
-    
+
     if (userDevices.length > 0) {
       for (const device of userDevices) {
-        const userDevice = await UserDeviceWrapper({data: device});
+        const userDevice = await UserDeviceWrapper({ data: device });
         playerIds.push(userDevice.getOneSignalDeviceId());
       }
     }
-    
-    const {title: appointmentType = ""} = APPOINTMENT_TYPE[type] || {};
-    
+
+    const { title: appointmentType = "" } = APPOINTMENT_TYPE[type] || {};
+
     templateData.push({
       small_icon: process.config.app.icon_android,
       app_id: process.config.one_signal.app_id,
-      headings: {en: `Upcoming Appointment Reminder (${providerName})`},
+      headings: { en: `Upcoming Appointment Reminder (${providerName})` },
       contents: {
         en: `An appointment ${appointmentType}-${type_description}${
           radiology_type ? `-${radiology_type}` : ""
@@ -109,26 +108,26 @@ class PriorJob extends AppointmentJob {
       include_player_ids: [...playerIds],
       priority: 10,
       android_channel_id: process.config.one_signal.urgent_channel_id,
-      data: {url: "/appointments", params: "", content: getAppointmentData()},
+      data: { url: "/appointments", params: "", content: getAppointmentData() },
     });
-    
+
     return templateData;
   };
-  
+
   getInAppTemplate = () => {
-    const {getAppointmentData} = this;
+    const { getAppointmentData } = this;
     const {
       details: {
         participants = [],
         actor: {
           id: actorId,
           user_role_id,
-          details: {name, category: actorCategory} = {},
+          details: { name, category: actorCategory } = {},
         } = {},
       } = {},
       id,
     } = getAppointmentData() || {};
-    
+
     const templateData = [];
     const currentTime = new moment().utc();
     for (const participant of participants) {
@@ -146,7 +145,7 @@ class PriorJob extends AppointmentJob {
       });
       // }
     }
-    
+
     return templateData;
   };
 }

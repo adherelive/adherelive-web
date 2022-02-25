@@ -1,9 +1,9 @@
-import React, {Component, Fragment} from "react";
-import {injectIntl} from "react-intl";
-import {Drawer, Select, Form, message} from "antd";
+import React, { Component, Fragment } from "react";
+import { injectIntl } from "react-intl";
+import { Drawer, Select, Form, message } from "antd";
 import config from "../../../config";
 import moment from "moment";
-import {connect} from "getstream";
+import { connect } from "getstream";
 import messages from "./message";
 import {
   NOTIFICATION_STAGES,
@@ -28,20 +28,20 @@ import ClockCircleFilled from "@ant-design/icons/ClockCircleFilled";
 import ClockCircleOutlined from "@ant-design/icons/ClockCircleOutlined";
 import CoffeeOutlined from "@ant-design/icons/CoffeeOutlined";
 import Loading from "../../Common/Loading";
-import {throttle} from "lodash";
-import {getPatientConsultingVideoUrl} from "../../../Helper/url/patients";
+import { throttle } from "lodash";
+import { getPatientConsultingVideoUrl } from "../../../Helper/url/patients";
 import workout_icon from "../../../Assets/images/workout_icon.png";
 import vital_icon from "../../../Assets/images/vital.png";
 
 // import { getNotifications } from "../../../Helper/urls/notifications";
-const {Option} = Select;
+const { Option } = Select;
 const APPOINTMENT = "appointment";
 // const MEDICATION = "medication";
 // const MEDICATION_REMINDER = "medication-reminder";
 const USER_MESSAGE = "USER_MESSAGE";
 const VITALS = "vitals";
 
-const {GETSTREAM_API_KEY, GETSTREAM_APP_ID} = config;
+const { GETSTREAM_API_KEY, GETSTREAM_APP_ID } = config;
 
 const CATEGORY = {
   ALL: "All",
@@ -61,7 +61,7 @@ const DURATION = {
   BEFORE_THREE_MONTHS: "Last Three Months", // excluding current month, past three
 };
 
-const {Item: FormItem} = Form;
+const { Item: FormItem } = Form;
 
 class NotificationDrawer extends Component {
   constructor(props) {
@@ -78,65 +78,64 @@ class NotificationDrawer extends Component {
     };
     this.client = null;
     this.clientFeed = null;
-    
+
     this.handleScroll = throttle(this.handleScroll.bind(this), 1000);
   }
-  
-  componentDidMount() {
-  }
-  
+
+  componentDidMount() {}
+
   componentWillUnmount() {
-    const {drawerNode = null} = this.state;
-    
+    const { drawerNode = null } = this.state;
+
     if (drawerNode) {
       drawerNode.removeEventListener("scroll", this.handleScroll);
     }
   }
-  
+
   getNotificationData = async ({
-                                 limit = config.NOTIFICATION_ONE_TIME_LIMIT,
-                                 loadMore = false,
-                               }) => {
+    limit = config.NOTIFICATION_ONE_TIME_LIMIT,
+    loadMore = false,
+  }) => {
     const {
-      auth: {notificationToken = "", feedId = ""} = {},
+      auth: { notificationToken = "", feedId = "" } = {},
       notifications = {},
       visible = false,
     } = this.props;
-    
+
     if (notificationToken || feedId) {
       this.client = connect(
         GETSTREAM_API_KEY,
         notificationToken,
         GETSTREAM_APP_ID
       );
-      
+
       this.clientFeed = this.client.feed("notification", feedId);
-      
+
       let offset = 0;
       if (loadMore) {
-        this.setState({loadMore});
+        this.setState({ loadMore });
         offset = Object.keys(notifications).length;
       } else {
-        this.setState({loading: true});
+        this.setState({ loading: true });
       }
-      
+
       await this.clientFeed.get().then(async (data) => {
-        const {results = []} = data || {};
-        console.log("8687263876128631321", {data, results});
+        const { results = [] } = data || {};
+        console.log("8687263876128631321", { data, results });
         if (results.length) {
           await this.getNotificationFromActivities(data);
           this.setMissedCallNoti();
-          
+
           if (visible) {
-            await this.clientFeed.get({mark_seen: true}).then((data) => {
-              this.clientFeed.get({limit}).then((data) => {
+            await this.clientFeed.get({ mark_seen: true }).then((data) => {
+              this.clientFeed.get({ limit }).then((data) => {
                 // this.getNotificationFromActivities(data);
               });
             });
-            
+
             // await this.markAllMissedCallRead();
           }
-          
+
           this.setState({
             loading: false,
             loadMore: false,
@@ -152,45 +151,45 @@ class NotificationDrawer extends Component {
       });
     }
   };
-  
+
   handleScroll = async (event) => {
     const target = event.target;
-    const {no_notification_remaining = false} = this.state;
-    const {notifications = {}} = this.props;
-    const {getNotificationData} = this;
-    
+    const { no_notification_remaining = false } = this.state;
+    const { notifications = {} } = this.props;
+    const { getNotificationData } = this;
+
     if (target.scrollHeight - target.scrollTop === target.clientHeight) {
       try {
         const currentNotificationsCount = Object.keys(notifications).length;
-        
+
         if (
           currentNotificationsCount %
-          parseInt(config.NOTIFICATION_ONE_TIME_LIMIT) ===
-          0 &&
+            parseInt(config.NOTIFICATION_ONE_TIME_LIMIT) ===
+            0 &&
           !no_notification_remaining
         ) {
-          await getNotificationData({loadMore: true});
+          await getNotificationData({ loadMore: true });
         } else {
-          this.setState({no_notification_remaining: true});
+          this.setState({ no_notification_remaining: true });
         }
       } catch (error) {
         console.log("handle load more on scroll catch error", error);
       }
     }
   };
-  
+
   async componentDidUpdate(prevProps, prevState) {
-    const {visible = false, notifications = {}} = this.props;
-    const {visible: prev_visible = false} = prevProps;
+    const { visible = false, notifications = {} } = this.props;
+    const { visible: prev_visible = false } = prevProps;
     let finalNode = null;
-    
+
     if (visible && visible !== prev_visible) {
       await this.getNotificationData({});
-      
+
       const pageLimit = config.NOTIFICATION_ONE_TIME_LIMIT || 0;
       const intPageLimit = parseInt(pageLimit) || 0;
-      this.setState({page_limit: intPageLimit});
-      
+      this.setState({ page_limit: intPageLimit });
+
       const drawerContainer = document.getElementsByClassName("Drawer");
       const drawer = drawerContainer[0] || null;
       const childNodes = drawer && drawer.childNodes;
@@ -201,14 +200,14 @@ class NotificationDrawer extends Component {
         drawerContentwrapperChildNodes && drawerContentwrapperChildNodes[0];
       const empChildNodes = emp && emp.childNodes;
       finalNode = empChildNodes && empChildNodes[0];
-      
+
       if (finalNode) {
-        this.setState({drawerNode: finalNode});
+        this.setState({ drawerNode: finalNode });
         finalNode.addEventListener("scroll", this.handleScroll);
       }
     }
   }
-  
+
   //   getNotificationData = () => {
   //     const {
   //       auth: { notificationToken = "", feedId = "" } = {},
@@ -217,21 +216,21 @@ class NotificationDrawer extends Component {
   //     const { page_limit = 0 } = this.state;
   //     if (notificationToken || feedId) {
   //       this.setState({ loading: true });
-  
+
   //       let client = connect(
   //         GETSTREAM_API_KEY,
   //         notificationToken,
   //         GETSTREAM_APP_ID
   //       );
-  
+
   //       let clientFeed = client.feed("notification", feedId);
-  
+
   //       this.setState({ clientFeed });
   //       clientFeed.get({ limit: page_limit }).then(async (data) => {
   //         await this.getNotificationFromActivities(data);
   //         this.setMissedCallNoti();
   //       });
-  
+
   //       if (visible) {
   //         clientFeed.get({ limit: page_limit, mark_seen: true }).then((res) => {
   //           // this.getNotificationFromActivities(res);
@@ -239,9 +238,9 @@ class NotificationDrawer extends Component {
   //       }
   //     }
   //   };
-  
+
   setMissedCallNoti = () => {
-    const {notifications = {}} = this.props;
+    const { notifications = {} } = this.props;
     let missedCallNotificationIds = [];
     for (let each in notifications) {
       const {
@@ -257,30 +256,30 @@ class NotificationDrawer extends Component {
         missedCallNotificationIds.push(notification_id);
       }
     }
-    this.setState({missedCallNotificationIds});
+    this.setState({ missedCallNotificationIds });
   };
-  
+
   getNotificationFromActivities = async (data) => {
     try {
-      const {getNotification, updateUnseenNotification} = this.props;
+      const { getNotification, updateUnseenNotification } = this.props;
       let activities = [];
       let activitiesId = [];
       let groupId = {};
-      const {results = [], unseen} = data;
-      
+      const { results = [], unseen } = data;
+
       results.forEach((result) => {
-        const {activities: response = [], is_read, is_seen, id} = result;
+        const { activities: response = [], is_read, is_seen, id } = result;
         let activityData = {};
         activityData.activity = response;
         activityData.is_read = is_read;
         activityData.is_seen = is_seen;
-        
+
         activities = activities.concat(activityData);
-        const {id: activity_id} = response[0] || {};
+        const { id: activity_id } = response[0] || {};
         activitiesId = activitiesId.concat(activity_id);
         groupId[activity_id] = id;
       });
-      
+
       activities.sort((a, b) => {
         if (a.time < b.time) {
           return -1;
@@ -291,30 +290,30 @@ class NotificationDrawer extends Component {
         notifications: activitiesId,
         activityGroupId: groupId,
       });
-      
-      const res = await getNotification({activities});
-      
-      this.setState({loading: false});
+
+      const res = await getNotification({ activities });
+
+      this.setState({ loading: false });
     } catch (error) {
-      this.setState({loading: false});
+      this.setState({ loading: false });
       message.warn(this.formatMessage(messages.somethingWentWrong));
     }
   };
-  
+
   readNotification = async (groupId, activity_id) => {
-    const {auth: {notificationToken = "", feedId = ""} = {}} = this.props;
-    const {page_limit = 0} = this.state;
+    const { auth: { notificationToken = "", feedId = "" } = {} } = this.props;
+    const { page_limit = 0 } = this.state;
     // if (notificationToken || feedId) {
     //   let client = connect(
     //     GETSTREAM_API_KEY,
     //     notificationToken,
     //     GETSTREAM_APP_ID
     //   );
-    
+
     //   let clientFeed = client.feed("notification", feedId);
-    
+
     this.clientFeed
-      .get({mark_read: [groupId], limit: page_limit})
+      .get({ mark_read: [groupId], limit: page_limit })
       .then((data) => {
         // this.clientFeed.get({ limit: page_limit }).then((data) => {
         //   // console.log("2934y98237498238423 data-=-=-=-=-=-=-=-=-=-=-==-=-=>", {activity_id,data});
@@ -323,43 +322,43 @@ class NotificationDrawer extends Component {
       });
     // }
   };
-  
+
   markAllSeen = (e) => {
-    const {auth: {notificationToken = "", feedId = ""} = {}} = this.props;
-    const {page_limit = 0} = this.state;
+    const { auth: { notificationToken = "", feedId = "" } = {} } = this.props;
+    const { page_limit = 0 } = this.state;
     // if (notificationToken || feedId) {
     //   let client = connect(
     //     GETSTREAM_API_KEY,
     //     notificationToken,
     //     GETSTREAM_APP_ID
     //   );
-    
+
     // this.clientFeed = this.client.feed("notification", feedId);
-    this.clientFeed.get({mark_seen: true}).then((data) => {
-      this.clientFeed.get({limit: page_limit}).then((data) => {
+    this.clientFeed.get({ mark_seen: true }).then((data) => {
+      this.clientFeed.get({ limit: page_limit }).then((data) => {
         // this.getNotificationFromActivities(data);
       });
     });
     // }
   };
-  
+
   // handlePatientDetailsRedirect = (patient_id) => () => {
   //   const { history, close } = this.props;
   //   history.push(`/patients/${patient_id}`);
   //   close();
   // };
-  
+
   handlePatientDetailsRedirectSymptoms =
     (patient_id, care_plan_id, notification_id) => async () => {
       const intCPId = parseInt(care_plan_id);
       const intPatientId = parseInt(patient_id);
-      const {history, close, doNotificationRedirect} = this.props;
+      const { history, close, doNotificationRedirect } = this.props;
       const resp = await doNotificationRedirect({
         type: TYPE_SYMPTOMS,
         patient_id: intPatientId,
         care_plan_id: intCPId,
       });
-      const {activityGroupId = {}} = this.state;
+      const { activityGroupId = {} } = this.state;
       const groupId = activityGroupId[notification_id] || null;
       if (patient_id) {
         this.readNotification(groupId, notification_id);
@@ -367,26 +366,26 @@ class NotificationDrawer extends Component {
         close();
       }
     };
-  
+
   // handleMissedCallClick = async (notification_id) => {
   //   // console.log("2934y98237498238423 ^^^^^^^^^^^^",{notification_id,state:this.state});
   //   const { activityGroupId = {} } = this.state;
   //   const groupId = activityGroupId[notification_id] || null;
   //   await this.readNotification(groupId, notification_id);
   // };
-  
+
   handlePatientDetailsRedirectAppointments =
     (patient_id, care_plan_id, notification_id) => async () => {
       const intCPId = parseInt(care_plan_id);
       const intPatientId = parseInt(patient_id);
-      const {history, close, doNotificationRedirect} = this.props;
+      const { history, close, doNotificationRedirect } = this.props;
       const resp = await doNotificationRedirect({
         type: TYPE_APPOINTMENTS,
         patient_id: intPatientId,
         care_plan_id: intCPId,
       });
-      
-      const {activityGroupId = {}} = this.state;
+
+      const { activityGroupId = {} } = this.state;
       const groupId = activityGroupId[notification_id] || null;
       if (patient_id) {
         this.readNotification(groupId, notification_id);
@@ -394,19 +393,19 @@ class NotificationDrawer extends Component {
         close();
       }
     };
-  
+
   handlePatientDetailsRedirectDiets =
     (patient_id, care_plan_id, notification_id) => async () => {
       const intCPId = parseInt(care_plan_id);
       const intPatientId = parseInt(patient_id);
-      const {history, close, doNotificationRedirect} = this.props;
+      const { history, close, doNotificationRedirect } = this.props;
       const resp = await doNotificationRedirect({
         type: TYPE_DIETS,
         patient_id: intPatientId,
         care_plan_id: intCPId,
       });
-      
-      const {activityGroupId = {}} = this.state;
+
+      const { activityGroupId = {} } = this.state;
       const groupId = activityGroupId[notification_id] || null;
       if (patient_id) {
         this.readNotification(groupId, notification_id);
@@ -414,19 +413,19 @@ class NotificationDrawer extends Component {
         close();
       }
     };
-  
+
   handlePatientDetailsRedirectWorkouts =
     (patient_id, care_plan_id, notification_id) => async () => {
       const intCPId = parseInt(care_plan_id);
       const intPatientId = parseInt(patient_id);
-      const {history, close, doNotificationRedirect} = this.props;
+      const { history, close, doNotificationRedirect } = this.props;
       const resp = await doNotificationRedirect({
         type: TYPE_WORKOUTS,
         patient_id: intPatientId,
         care_plan_id: intCPId,
       });
-      
-      const {activityGroupId = {}} = this.state;
+
+      const { activityGroupId = {} } = this.state;
       const groupId = activityGroupId[notification_id] || null;
       if (patient_id) {
         this.readNotification(groupId, notification_id);
@@ -434,15 +433,15 @@ class NotificationDrawer extends Component {
         close();
       }
     };
-  
+
   handlePatientChatFullScreen = (patient_id, notification_id) => async () => {
-    const {history, close, doNotificationRedirect} = this.props;
+    const { history, close, doNotificationRedirect } = this.props;
     const resp = await doNotificationRedirect({
       type: TYPE_USER_MESSAGE,
       patient_id,
       care_plan_id: null,
     });
-    const {activityGroupId = {}} = this.state;
+    const { activityGroupId = {} } = this.state;
     const groupId = activityGroupId[notification_id] || null;
     if (patient_id) {
       this.readNotification(groupId, notification_id);
@@ -450,12 +449,12 @@ class NotificationDrawer extends Component {
       close();
     }
   };
-  
+
   getDurationflag = (noti_time) => {
-    const {duration = DURATION.ALL} = this.state;
-    
+    const { duration = DURATION.ALL } = this.state;
+
     let flag = false;
-    
+
     switch (duration) {
       case DURATION.ALL:
         flag = true;
@@ -463,25 +462,25 @@ class NotificationDrawer extends Component {
       case DURATION.CURRENT_MONTH:
         const previousMonth = moment().subtract(1, "M");
         const previousMonthLastDate = moment(previousMonth).endOf("month");
-        
+
         flag = moment(previousMonthLastDate).isBefore(moment(noti_time), "day");
-        
+
         break;
       case DURATION.PREVIOUS_MONTH:
         const prevMonth = moment().subtract(1, "M");
         const prevMonthLastDate = moment(prevMonth).endOf("month");
         const prevMonthFirstDate = moment(prevMonth).startOf("month");
-        
+
         flag =
           moment(noti_time).isSameOrBefore(moment(prevMonthLastDate), "day") &&
           moment(noti_time).isSameOrAfter(moment(prevMonthFirstDate), "day");
-        
+
         //  console.log("7832486218321312312 === >>> ",{
         //      str:
         //      `${moment(noti_time)}.isSameOrBefore(${moment(prevMonthLastDate)},'day') && ${moment(noti_time)}.isSameOrAfter(${moment(prevMonthFirstDate)},'day')
         //      `,
         //      noti_time});
-        
+
         break;
       case DURATION.BEFORE_THREE_MONTHS:
         const pMonth = moment().subtract(1, "M");
@@ -491,7 +490,7 @@ class NotificationDrawer extends Component {
         flag =
           moment(noti_time).isSameOrBefore(moment(pMonthLastDate), "day") &&
           moment(noti_time).isSameOrAfter(moment(pThreeMonthFirstDate), "day");
-        
+
         // console.log("7832486218321312312 === >>> ",{
         //     str:
         //     `${moment(noti_time)}.isSameOrBefore(${moment(pMonthLastDate)},'day') && ${moment(noti_time)}.isSameOrAfter(${moment(pThreeMonthFirstDate)},'day')
@@ -501,16 +500,16 @@ class NotificationDrawer extends Component {
       default:
         flag = false;
     }
-    
+
     return flag;
   };
-  
+
   getNextKey = (currentKey) => {
-    const {notifications = {}} = this.props;
+    const { notifications = {} } = this.props;
     let keys = Object.keys(notifications);
     let idIndex = keys.indexOf(currentKey);
     let nextIndex = (idIndex += 1);
-    
+
     if (nextIndex >= keys.length) {
       //lI
       return;
@@ -518,19 +517,19 @@ class NotificationDrawer extends Component {
     let nextKey = keys[nextIndex];
     return nextKey;
   };
-  
+
   getAllNotification = () => {
-    const {notifications = {}} = this.props;
-    
+    const { notifications = {} } = this.props;
+
     let all = [],
       unread = [],
       read = [];
-    
+
     let notificationDates = [];
-    
+
     for (let each in notifications) {
       const notification = notifications[each] || {};
-      console.log("876876238682368762782782", {notification});
+      console.log("876876238682368762782782", { notification });
       const {
         time: date = "",
         is_read = false,
@@ -543,15 +542,15 @@ class NotificationDrawer extends Component {
       if (type === APPOINTMENT && stage === NOTIFICATION_STAGES.START) {
         eachDate = moment(start_time).format("Do MMM YYYY");
       }
-      
+
       // if (is_read) {
       //   dataTorender && read.push(dataTorender);
       // } else {
       //   dataTorender && unread.push(dataTorender);
       // }
-      
+
       // notificationComponents.push(dataTorender);
-      
+
       const displayDate = (
         <div className="ml8 mt10 mb10 fw800" key={`${eachDate}`}>
           {eachDate === moment().format("Do MMM YYYY")
@@ -559,14 +558,14 @@ class NotificationDrawer extends Component {
             : eachDate}
         </div>
       );
-      
+
       if (notificationDates.indexOf(eachDate) === -1 && dataTorender) {
         all.push(displayDate);
         notificationDates.push(eachDate);
       }
-      
+
       all.push(dataTorender);
-      
+
       // if (nextKey) {
       //   const {
       //     time: nextDateVal = "",
@@ -574,12 +573,12 @@ class NotificationDrawer extends Component {
       //     type = "",
       //     start_time = "",
       //   } = notifications[nextKey] || {};
-      
+
       //   let nextDate = moment(nextDateVal).format("Do MMM YYYY");
       //   if (type === APPOINTMENT && stage === NOTIFICATION_STAGES.START) {
       //     nextDate = moment(start_time).format("Do MMM YYYY");
       //   }
-      
+
       //   if (eachDate !== nextDate) {
       //     all.push(displayDate);
       //   }
@@ -589,41 +588,41 @@ class NotificationDrawer extends Component {
     }
     return all;
   };
-  
+
   handleRedirect =
-    ({type, path, patient_id, care_plan_id, notification_id, foreign_id}) =>
-      async (e) => {
-        e.preventDefault();
-        const {history, close, doNotificationRedirect} = this.props;
-        const {readNotification} = this;
-        await doNotificationRedirect({
-          type: type,
-          foreign_id,
-          patient_id,
-          care_plan_id,
-        });
-        
-        const {activityGroupId = {}} = this.state;
-        const groupId = activityGroupId[notification_id] || null;
-        readNotification(groupId, notification_id);
-        history.push(path);
-        close();
-      };
-  
+    ({ type, path, patient_id, care_plan_id, notification_id, foreign_id }) =>
+    async (e) => {
+      e.preventDefault();
+      const { history, close, doNotificationRedirect } = this.props;
+      const { readNotification } = this;
+      await doNotificationRedirect({
+        type: type,
+        foreign_id,
+        patient_id,
+        care_plan_id,
+      });
+
+      const { activityGroupId = {} } = this.state;
+      const groupId = activityGroupId[notification_id] || null;
+      readNotification(groupId, notification_id);
+      history.push(path);
+      close();
+    };
+
   handleVitalRedirect =
     (patient_id, care_plan_id, notification_id) => async (e) => {
       const intCPId = parseInt(care_plan_id);
       const intPatientId = parseInt(patient_id);
       e.preventDefault();
-      const {history, close, doNotificationRedirect} = this.props;
-      const {readNotification} = this;
+      const { history, close, doNotificationRedirect } = this.props;
+      const { readNotification } = this;
       const resp = await doNotificationRedirect({
         type: TYPE_VITALS,
         patient_id: intPatientId,
         care_plan_id: intCPId,
       });
-      
-      const {activityGroupId = {}} = this.state;
+
+      const { activityGroupId = {} } = this.state;
       const groupId = activityGroupId[notification_id] || null;
       if (patient_id) {
         readNotification(groupId, notification_id);
@@ -631,35 +630,35 @@ class NotificationDrawer extends Component {
         close();
       }
     };
-  
+
   handleMissedCallRedirect =
-    ({foreign_id, notification_id}) =>
-      async (e) => {
-        e.preventDefault();
-        const {close} = this.props;
-        const {activityGroupId = {}} = this.state;
-        const {readNotification} = this;
-        
-        const groupId = activityGroupId[notification_id] || null;
-        await readNotification(groupId, notification_id);
-        close();
-        
-        window.open(
-          `${config.WEB_URL}/test${getPatientConsultingVideoUrl(foreign_id)}`,
-          "_blank"
-        );
-      };
-  
+    ({ foreign_id, notification_id }) =>
+    async (e) => {
+      e.preventDefault();
+      const { close } = this.props;
+      const { activityGroupId = {} } = this.state;
+      const { readNotification } = this;
+
+      const groupId = activityGroupId[notification_id] || null;
+      await readNotification(groupId, notification_id);
+      close();
+
+      window.open(
+        `${config.WEB_URL}/test${getPatientConsultingVideoUrl(foreign_id)}`,
+        "_blank"
+      );
+    };
+
   getSingleNotification = (notification) => {
     const {
       appointments = {},
       patients = {},
       schedule_events = {},
     } = this.props;
-    const {category = CATEGORY.ALL} = this.state;
-    const {handleVitalRedirect, handleMissedCallRedirect, formatMessage} =
+    const { category = CATEGORY.ALL } = this.state;
+    const { handleVitalRedirect, handleMissedCallRedirect, formatMessage } =
       this;
-    
+
     let date = "";
     const today = moment().format("Do MMM YYYY");
     let title = "";
@@ -672,7 +671,7 @@ class NotificationDrawer extends Component {
     let msgFrom = "";
     let newDate = false,
       dataToRender = null;
-    
+
     const {
       is_read = false,
       notification_id = null,
@@ -684,54 +683,54 @@ class NotificationDrawer extends Component {
       start_time = "",
     } = notification || {};
     let currentNotiDate = moment(noti_time).format("Do MMM YYYY");
-    
+
     if (type === APPOINTMENT && stage === NOTIFICATION_STAGES.START) {
       currentNotiDate = moment(start_time).format("Do MMM YYYY");
     }
-    
+
     time =
       currentNotiDate !== today
         ? moment(create_time).format("h:mm a")
         : moment(create_time).fromNow();
-    
+
     if (currentNotiDate !== date) {
       date = currentNotiDate;
       newDate = true;
     }
-    
+
     let isDuration = true;
-    
+
     isDuration = this.getDurationflag(noti_time);
-    
+
     if (!isDuration) {
       return;
     }
-    
+
     // vital response
     if (
       type === VITALS &&
       stage === NOTIFICATION_STAGES.CREATE &&
       (category === CATEGORY.VITAL || category == CATEGORY.ALL)
     ) {
-      const {actor_role_id = null} = notification || {};
+      const { actor_role_id = null } = notification || {};
       const {
         details: {
-          basic_info: {care_plan_id} = {},
-          vital_templates: {basic_info: {name: vitalName} = {}} = {},
+          basic_info: { care_plan_id } = {},
+          vital_templates: { basic_info: { name: vitalName } = {} } = {},
         } = {},
       } = schedule_events[foreign_id] || {};
-      
+
       Object.keys(patients).forEach((id) => {
-        const {basic_info: {user_id} = {}, user_role_id = null} =
-        patients[id] || {};
+        const { basic_info: { user_id } = {}, user_role_id = null } =
+          patients[id] || {};
         if (`${user_role_id}` === `${actor_role_id}`) {
           patient_id = id;
         }
       });
-      
-      const {basic_info: {full_name: patientName} = {}} =
-      patients[patient_id] || {};
-      
+
+      const { basic_info: { full_name: patientName } = {} } =
+        patients[patient_id] || {};
+
       dataToRender = (
         <div
           className={`drawer-block pointer ${
@@ -745,21 +744,21 @@ class NotificationDrawer extends Component {
         >
           <div className="flex align-center justify-space-between">
             <div className="wp20 flex align-center justify-center">
-              <ClockCircleOutlined className="dark-sky-blue fs28"/>
+              <ClockCircleOutlined className="dark-sky-blue fs28" />
               {/* <img src={vital_icon}
               className="pointer h45 w45 " /> */}
             </div>
             <div className="wp75">
               <div className="fs16 medium">
                 {formatMessage(
-                  {...messages.vitalResponseTitle},
-                  {vitalName}
+                  { ...messages.vitalResponseTitle },
+                  { vitalName }
                 )}
               </div>
               <div className="fs14">
                 {formatMessage(
-                  {...messages.patientVitalResponse},
-                  {patientName, vitalName}
+                  { ...messages.patientVitalResponse },
+                  { patientName, vitalName }
                 )}
               </div>
               <div className="fs14">{time}</div>
@@ -775,32 +774,32 @@ class NotificationDrawer extends Component {
         stage === NOTIFICATION_STAGES.START ||
         stage === NOTIFICATION_STAGES.PRIOR
       ) {
-        const {event_id = null} = schedule_events[foreign_id] || {};
+        const { event_id = null } = schedule_events[foreign_id] || {};
         foreignId = event_id ? event_id.toString() : foreign_id;
       }
-      
+
       const {
         basic_info: {
           start_time = "",
-          details: {reason = "", type = "", type_description = ""} = {},
+          details: { reason = "", type = "", type_description = "" } = {},
         } = {},
-        participant_two: {id: patId = ""} = {},
+        participant_two: { id: patId = "" } = {},
         care_plan_id = null,
       } = appointments[foreignId] || {};
-      
-      const {title: appt_title = ""} =
-      APPOINTMENT_TYPE_TITLE[type.toString()] || {};
-      
-      const {basic_info: {full_name = ""} = {}} = patients[patId] || {};
-      
+
+      const { title: appt_title = "" } =
+        APPOINTMENT_TYPE_TITLE[type.toString()] || {};
+
+      const { basic_info: { full_name = "" } = {} } = patients[patId] || {};
+
       const startTime = moment(start_time).format("hh:mm a");
-      
+
       patient_id = patId;
-      
+
       const startTitle = `${this.formatMessage(
         messages.appointmentHeading
       )} ${" "} ${this.formatMessage(messages.started)}`;
-      
+
       title = `${
         stage === NOTIFICATION_STAGES.PRIOR
           ? this.formatMessage(messages.upcomingAppointment)
@@ -813,9 +812,9 @@ class NotificationDrawer extends Component {
             ? moment(start_time).format("h:mm a")
             : moment(start_time).fromNow();
       }
-      
+
       purpose = reason;
-      
+
       dataToRender = (
         <div
           className={`drawer-block pointer ${
@@ -830,9 +829,9 @@ class NotificationDrawer extends Component {
           <div className=" flex align-center justify-space-between">
             <div className="wp20 flex align-center justify-center">
               {stage === NOTIFICATION_STAGES.PRIOR ? (
-                <ClockCircleFilled className="dark-sky-blue fs28"/>
+                <ClockCircleFilled className="dark-sky-blue fs28" />
               ) : (
-                <MedicineBoxFilled className="dark-sky-blue fs28"/>
+                <MedicineBoxFilled className="dark-sky-blue fs28" />
               )}
             </div>
             <div className="wp75">
@@ -867,24 +866,24 @@ class NotificationDrawer extends Component {
       type === USER_MESSAGE &&
       (category === CATEGORY.USER_MESSAGES || category == CATEGORY.ALL)
     ) {
-      const {actor_role_id = null, message = ""} = notification || {};
+      const { actor_role_id = null, message = "" } = notification || {};
       // patient_id = actor_category_id;
-      
+
       Object.keys(patients).forEach((id) => {
-        const {basic_info: {user_id} = {}, user_role_id = null} =
-        patients[id] || {};
+        const { basic_info: { user_id } = {}, user_role_id = null } =
+          patients[id] || {};
         if (`${user_role_id}` === `${actor_role_id}`) {
           patient_id = id;
         }
       });
-      
-      const {basic_info: {full_name = ""} = {}} =
-      patients[patient_id] || {};
+
+      const { basic_info: { full_name = "" } = {} } =
+        patients[patient_id] || {};
       patientName = `${full_name}`;
-      
+
       title = `${this.formatMessage(messages.newChatMessage)}`;
       msgFrom = `${message ? `${message} ` : ""}`;
-      
+
       dataToRender = (
         <div
           className={`drawer-block pointer ${
@@ -897,7 +896,7 @@ class NotificationDrawer extends Component {
         >
           <div className=" flex align-center justify-space-between">
             <div className="wp20 flex align-center justify-center">
-              <MessageFilled className="dark-sky-blue fs28"/>
+              <MessageFilled className="dark-sky-blue fs28" />
             </div>
             <div className="wp75">
               <div className="fs16 medium">{title}</div>
@@ -916,27 +915,27 @@ class NotificationDrawer extends Component {
         stage = "",
         foreign_id = null,
       } = notification || {};
-      const {symptoms = {}} = this.props;
-      const {text: symptomText = "", basic_info: {care_plan_id} = {}} =
-      symptoms[foreign_id] || {};
-      
+      const { symptoms = {} } = this.props;
+      const { text: symptomText = "", basic_info: { care_plan_id } = {} } =
+        symptoms[foreign_id] || {};
+
       Object.keys(patients).forEach((id) => {
-        const {basic_info: {user_id} = {}, user_role_id = null} =
-        patients[id] || {};
+        const { basic_info: { user_id } = {}, user_role_id = null } =
+          patients[id] || {};
         if (`${user_role_id}` === `${actor_role_id}`) {
           patient_id = id;
         }
       });
-      
+
       // patient_id = actor_category_id;
-      
-      const {basic_info: {full_name = ""} = {}} =
-      patients[patient_id] || {};
-      
+
+      const { basic_info: { full_name = "" } = {} } =
+        patients[patient_id] || {};
+
       patientName = `${full_name}`;
-      
+
       let headingStage = "";
-      
+
       switch (stage) {
         case NOTIFICATION_STAGES.UPDATE:
           headingStage = this.formatMessage(messages.updated);
@@ -956,11 +955,11 @@ class NotificationDrawer extends Component {
         default:
           headingStage = stage;
       }
-      
+
       title = `${this.formatMessage(
         messages.symptomText
       )}${" "}${headingStage}`;
-      
+
       dataToRender = (
         <div
           className={`drawer-block pointer ${
@@ -974,7 +973,7 @@ class NotificationDrawer extends Component {
         >
           <div className=" flex align-center justify-space-between">
             <div className="wp20 flex align-center justify-center">
-              <AlertFilled className="dark-sky-blue fs28"/>
+              <AlertFilled className="dark-sky-blue fs28" />
             </div>
             <div className="wp75">
               <div className="fs16 medium">{title}</div>
@@ -999,26 +998,26 @@ class NotificationDrawer extends Component {
         participantData,
       } = notification || {};
       let patientId = null;
-      
+
       Object.keys(participantData).forEach((participantId) => {
         if (participantId !== actor_role_id) {
-          const {patient_id} = participantData[actor_role_id] || {};
+          const { patient_id } = participantData[actor_role_id] || {};
           patientId = patient_id;
         } else {
-          const {doctor_id, patient_id} =
-          participantData[participantId] || {};
+          const { doctor_id, patient_id } =
+            participantData[participantId] || {};
           patientId = patient_id;
         }
       });
-      
-      const {basic_info: {full_name = ""} = {}} = patients[patientId] || {};
-      
+
+      const { basic_info: { full_name = "" } = {} } = patients[patientId] || {};
+
       if (type === AGORA_CALL_NOTIFICATION_TYPES.MISSED_CALL) {
         title = `${this.formatMessage(messages.missedCallHeading)}`;
       } else {
         title = `${this.formatMessage(messages.startedCallHeading)}`;
       }
-      
+
       dataToRender = (
         <div
           className={`drawer-block pointer ${
@@ -1031,20 +1030,20 @@ class NotificationDrawer extends Component {
         >
           <div className=" flex align-center justify-space-between">
             <div className="wp20 flex align-center justify-center">
-              <VideoCameraFilled className="dark-sky-blue fs28"/>
+              <VideoCameraFilled className="dark-sky-blue fs28" />
             </div>
             <div className="wp75">
               <div className="fs16 medium">{title}</div>
               <div className="fs14">
                 {type === AGORA_CALL_NOTIFICATION_TYPES.MISSED_CALL
                   ? this.formatMessage(
-                    {...messages.missedCallMessage},
-                    {full_name}
-                  )
+                      { ...messages.missedCallMessage },
+                      { full_name }
+                    )
                   : this.formatMessage(
-                    {...messages.callStartedMessage},
-                    {full_name}
-                  )}
+                      { ...messages.callStartedMessage },
+                      { full_name }
+                    )}
               </div>
               <div className="fs14">{time}</div>
             </div>
@@ -1067,25 +1066,25 @@ class NotificationDrawer extends Component {
         foreign_id = null,
         diet_id = null,
       } = notification || {};
-      const {basic_info: {schedule_event_id = null} = {}} =
-      diet_responses[foreign_id] || {};
-      const {details: {time_text = []} = {}} =
-      schedule_events[schedule_event_id] || {};
-      const {basic_info: {name: diet_name = "", care_plan_id = null} = {}} =
-      diets[diet_id] || {};
-      
+      const { basic_info: { schedule_event_id = null } = {} } =
+        diet_responses[foreign_id] || {};
+      const { details: { time_text = [] } = {} } =
+        schedule_events[schedule_event_id] || {};
+      const { basic_info: { name: diet_name = "", care_plan_id = null } = {} } =
+        diets[diet_id] || {};
+
       Object.keys(patients).forEach((id) => {
-        const {basic_info: {user_id} = {}, user_role_id = null} =
-        patients[id] || {};
+        const { basic_info: { user_id } = {}, user_role_id = null } =
+          patients[id] || {};
         if (`${user_role_id}` === `${actor_role_id}`) {
           patient_id = id;
         }
       });
-      
-      const {basic_info: {full_name = ""} = {}} =
-      patients[patient_id] || {};
+
+      const { basic_info: { full_name = "" } = {} } =
+        patients[patient_id] || {};
       title = `${this.formatMessage(messages.dietHeading)}`;
-      
+
       dataToRender = (
         <div
           className={`drawer-block pointer ${
@@ -1099,14 +1098,14 @@ class NotificationDrawer extends Component {
         >
           <div className=" flex align-center justify-space-between">
             <div className="wp20 flex align-center justify-center">
-              <CoffeeOutlined className="dark-sky-blue fs28"/>
+              <CoffeeOutlined className="dark-sky-blue fs28" />
             </div>
             <div className="wp75">
               <div className="fs16 medium">{title}</div>
               <div className="fs14">
                 {formatMessage(
-                  {...messages.dietResponseAdded},
-                  {full_name, diet_name, time_text}
+                  { ...messages.dietResponseAdded },
+                  { full_name, diet_name, time_text }
                 )}
               </div>
               <div className="fs14">{time}</div>
@@ -1118,7 +1117,7 @@ class NotificationDrawer extends Component {
       type === EVENT_TYPE.WORKOUT &&
       (category === CATEGORY.WORKOUT || category == CATEGORY.ALL)
     ) {
-      const {workouts = {}} = this.props;
+      const { workouts = {} } = this.props;
       let patient_id = null;
       const {
         actor_role_id = "",
@@ -1127,21 +1126,21 @@ class NotificationDrawer extends Component {
         workout_id = null,
       } = notification || {};
       const {
-        basic_info: {name: workout_name = "", care_plan_id = null} = {},
+        basic_info: { name: workout_name = "", care_plan_id = null } = {},
       } = workouts[workout_id] || {};
-      
+
       Object.keys(patients).forEach((id) => {
-        const {basic_info: {user_id} = {}, user_role_id = null} =
-        patients[id] || {};
+        const { basic_info: { user_id } = {}, user_role_id = null } =
+          patients[id] || {};
         if (`${user_role_id}` === `${actor_role_id}`) {
           patient_id = id;
         }
       });
-      
-      const {basic_info: {full_name = ""} = {}} =
-      patients[patient_id] || {};
+
+      const { basic_info: { full_name = "" } = {} } =
+        patients[patient_id] || {};
       title = `${this.formatMessage(messages.workoutHeading)}`;
-      
+
       dataToRender = (
         <div
           className={`drawer-block pointer ${
@@ -1155,14 +1154,14 @@ class NotificationDrawer extends Component {
         >
           <div className=" flex align-center justify-space-between">
             <div className="wp20 flex align-center justify-center">
-              <img src={workout_icon} className="pointer h45 w45 "/>
+              <img src={workout_icon} className="pointer h45 w45 " />
             </div>
             <div className="wp75">
               <div className="fs16 medium">{title}</div>
               <div className="fs14">
                 {formatMessage(
-                  {...messages.workoutResponseAdded},
-                  {full_name, workout_name}
+                  { ...messages.workoutResponseAdded },
+                  { full_name, workout_name }
                 )}
               </div>
               <div className="fs14">{time}</div>
@@ -1171,14 +1170,14 @@ class NotificationDrawer extends Component {
         </div>
       );
     }
-    
+
     return dataToRender ? (
       <div id={notification_id} key={`notification-${notification_id}`}>
         {dataToRender}
       </div>
     ) : null;
   };
-  
+
   getCategoryOptions = () => {
     let options = [];
     options.push(
@@ -1190,10 +1189,10 @@ class NotificationDrawer extends Component {
         );
       })
     );
-    
+
     return options;
   };
-  
+
   getDurationOptions = () => {
     let options = [];
     options.push(
@@ -1205,29 +1204,29 @@ class NotificationDrawer extends Component {
         );
       })
     );
-    
+
     return options;
   };
-  
+
   formatMessage = (data, ...rest) =>
     this.props.intl.formatMessage(data, rest[0]);
-  
+
   setCategory = (value) => {
-    this.setState({category: value});
+    this.setState({ category: value });
   };
-  
+
   setDuration = (value) => {
-    this.setState({duration: value});
+    this.setState({ duration: value });
   };
-  
+
   markAllMissedCallRead = async () => {
     try {
-      const {missedCallNotificationIds = [], activityGroupId = {}} =
+      const { missedCallNotificationIds = [], activityGroupId = {} } =
         this.state;
-      const {readNotification} = this;
-      
+      const { readNotification } = this;
+
       let allGroupIds = [];
-      
+
       for (let index = 0; index < missedCallNotificationIds.length; index++) {
         const groupId =
           activityGroupId[missedCallNotificationIds[index]] || null;
@@ -1238,30 +1237,30 @@ class NotificationDrawer extends Component {
       console.log("error ==>", error);
     }
   };
-  
+
   onClose = async () => {
-    const {close, setUnseenNotificationCount} = this.props;
-    
+    const { close, setUnseenNotificationCount } = this.props;
+
     await this.markAllMissedCallRead();
-    
+
     this.setState({
       category: CATEGORY.ALL,
       duration: DURATION.ALL,
     });
-    
+
     setUnseenNotificationCount(0);
     close();
   };
-  
+
   getNotificationCards = () => {
-    const {getAllNotification} = this;
+    const { getAllNotification } = this;
     return (
       <div className="wp100 flex direction-column">{getAllNotification()}</div>
     );
   };
-  
+
   getNotificationFilters = () => {
-    const {category = CATEGORY.ALL, duration = DURATION.ALL} = this.state;
+    const { category = CATEGORY.ALL, duration = DURATION.ALL } = this.state;
     const {
       setCategory,
       getCategoryOptions,
@@ -1269,7 +1268,7 @@ class NotificationDrawer extends Component {
       getDurationOptions,
       formatMessage,
     } = this;
-    
+
     return (
       <Form className="wp100 flex align-center justify-space-between">
         <FormItem label={formatMessage(messages.category)} className="wp40">
@@ -1282,7 +1281,7 @@ class NotificationDrawer extends Component {
             {getCategoryOptions()}
           </Select>
         </FormItem>
-        
+
         <FormItem label={formatMessage(messages.month)} className="wp40">
           <Select
             className="form-inputs"
@@ -1296,15 +1295,15 @@ class NotificationDrawer extends Component {
       </Form>
     );
   };
-  
+
   getNotificationDrawerContent = () => {
-    const {loading, no_notification_remaining = false} = this.state;
-    const {getNotificationFilters, getNotificationCards} = this;
-    
+    const { loading, no_notification_remaining = false } = this.state;
+    const { getNotificationFilters, getNotificationCards } = this;
+
     if (loading) {
-      return <Loading className={"wp100"}/>;
+      return <Loading className={"wp100"} />;
     }
-    
+
     return (
       <Fragment>
         {getNotificationFilters()}
@@ -1317,16 +1316,16 @@ class NotificationDrawer extends Component {
       </Fragment>
     );
   };
-  
+
   render() {
-    const {visible} = this.props;
-    const {loadMore} = this.state;
-    const {getNotificationDrawerContent} = this;
-    
+    const { visible } = this.props;
+    const { loadMore } = this.state;
+    const { getNotificationDrawerContent } = this;
+
     if (visible !== true) {
       return null;
     }
-    
+
     return (
       <Drawer
         className="Drawer"
@@ -1343,7 +1342,7 @@ class NotificationDrawer extends Component {
         width={400}
       >
         {getNotificationDrawerContent()}
-        {loadMore && <Loading className={"wp100"}/>}
+        {loadMore && <Loading className={"wp100"} />}
       </Drawer>
     );
   }

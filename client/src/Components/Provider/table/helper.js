@@ -23,12 +23,12 @@ export const TABLE_COLUMN = {
 };
 
 export const formatProviderTableData = (data) => {
-  const {id, users, providers} = data || {};
-  
+  const { id, users, providers } = data || {};
+
   const providerData = providers[id] || {};
-  const {basic_info: {user_id} = {}} = providers[id] || {};
+  const { basic_info: { user_id } = {} } = providers[id] || {};
   const userData = users[user_id] || {};
-  
+
   return {
     userData,
     providerData,

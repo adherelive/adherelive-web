@@ -1,7 +1,7 @@
 import Controller from "../index";
 
 import Logger from "../../../libs/log";
-import {USER_CATEGORY} from "../../../constant";
+import { USER_CATEGORY } from "../../../constant";
 
 import * as TransactionHelper from "./helper";
 
@@ -11,13 +11,13 @@ class TransactionController extends Controller {
   constructor() {
     super();
   }
-  
+
   getAllTransactions = async (req, res) => {
-    const {raiseSuccess, raiseClientError, raiseServerError} = this;
+    const { raiseSuccess, raiseClientError, raiseServerError } = this;
     try {
-      const {userDetails: {userData: {category} = {}} = {}} = req;
+      const { userDetails: { userData: { category } = {} } = {} } = req;
       let responseData = {};
-      
+
       switch (category) {
         case USER_CATEGORY.PROVIDER:
           responseData =
@@ -34,12 +34,12 @@ class TransactionController extends Controller {
         default:
           break;
       }
-      
+
       if (Object.keys(responseData).length > 0) {
         return raiseSuccess(
           res,
           200,
-          {...responseData},
+          { ...responseData },
           "Transaction details fetched successfully"
         );
       } else {
@@ -50,7 +50,7 @@ class TransactionController extends Controller {
           "No transactions available at the moment"
         );
       }
-      
+
       // const transactionService = new TransactionService();
       //
       // const allTransactions = await transactionService.getAllByData({

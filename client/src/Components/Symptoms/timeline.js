@@ -1,7 +1,7 @@
-import React, {Component} from "react";
-import {injectIntl} from "react-intl";
-import {PART_LIST_CODES} from "../../constant";
-import {Timeline, message, Spin, Modal} from "antd";
+import React, { Component } from "react";
+import { injectIntl } from "react-intl";
+import { PART_LIST_CODES } from "../../constant";
+import { Timeline, message, Spin, Modal } from "antd";
 
 import moment from "moment";
 import audio from "../../Assets/images/music.png";
@@ -23,22 +23,22 @@ class TimelineTab extends Component {
       imageModalVisible: false,
     };
   }
-  
+
   componentDidMount() {
-    const {getSymptomTimeLine, patientId} = this.props;
-    
-    this.setState({loading: true});
+    const { getSymptomTimeLine, patientId } = this.props;
+
+    this.setState({ loading: true });
     getSymptomTimeLine(patientId).then((res) => {
-      const {status = false, payload: {data = {}} = {}} = res || {};
+      const { status = false, payload: { data = {} } = {} } = res || {};
       if (status) {
-        const {timeline_symptoms = {}, symptom_dates = []} = data || {};
-        this.setState({timelineSymptoms: timeline_symptoms, symptom_dates});
+        const { timeline_symptoms = {}, symptom_dates = [] } = data || {};
+        this.setState({ timelineSymptoms: timeline_symptoms, symptom_dates });
       }
-      
-      this.setState({loading: false});
+
+      this.setState({ loading: false });
     });
   }
-  
+
   imageModal = () => {
     return (
       <Modal
@@ -62,23 +62,23 @@ class TimelineTab extends Component {
     );
   };
   closeModal = () => {
-    this.setState({imageModalVisible: false});
+    this.setState({ imageModalVisible: false });
   };
-  
+
   openModal = (url) => () => {
-    this.setState({imageToShow: url}, () =>
-      this.setState({imageModalVisible: true})
+    this.setState({ imageToShow: url }, () =>
+      this.setState({ imageModalVisible: true })
     );
   };
-  
+
   onRowSymptoms = (record, rowIndex) => {
-    const {onRowClickSymptoms} = this;
+    const { onRowClickSymptoms } = this;
     // const { key } = record;
     return {
       onClick: onRowClickSymptoms(record),
     };
   };
-  
+
   handleSubmitTemplate = (data) => {
     const {
       addCarePlanMedicationsAndAppointments,
@@ -91,7 +91,7 @@ class TimelineTab extends Component {
     let carePlanId = 1;
     for (let carePlan of Object.values(care_plans)) {
       let {
-        basic_info: {id = 1, patient_id: patientId = 1},
+        basic_info: { id = 1, patient_id: patientId = 1 },
       } = carePlan;
       if (patient_id == patientId) {
         carePlanId = id;
@@ -102,13 +102,13 @@ class TimelineTab extends Component {
         status = false,
         statusCode,
         payload: {
-          error: {error_type = ""} = {},
+          error: { error_type = "" } = {},
           message: errorMessage = "",
         } = {},
       } = response;
       if (status) {
         this.onCloseTemplate();
-        
+
         message.success(this.formatMessage(messages.carePlanUpdated));
         getMedications(patient_id).then(() => {
           getAppointments(patient_id).then(() => {
@@ -126,9 +126,9 @@ class TimelineTab extends Component {
       }
     });
   };
-  
+
   getBodyPartName = (selected_part) => {
-    const {formatMessage} = this;
+    const { formatMessage } = this;
     if (selected_part === PART_LIST_CODES.HEAD) {
       return formatMessage(messages.head);
     } else if (selected_part === PART_LIST_CODES.LEFT_EYE) {
@@ -241,11 +241,11 @@ class TimelineTab extends Component {
       return formatMessage(messages.rightCalf);
     }
   };
-  
+
   formatDataForTimeLine = () => {
-    let {upload_documents = {}} = this.props;
-    
-    const {timelineSymptoms = {}, symptom_dates = []} = this.state;
+    let { upload_documents = {} } = this.props;
+
+    const { timelineSymptoms = {}, symptom_dates = [] } = this.state;
     let data = [];
     // createdAtDates.forEach(date => {
     for (let date of symptom_dates) {
@@ -260,7 +260,7 @@ class TimelineTab extends Component {
             text = "",
             image_document_ids = [],
             audio_document_ids = [],
-            config: {parts = []} = {},
+            config: { parts = [] } = {},
           } = {},
           createdAt = "",
         } = activity || {};
@@ -274,7 +274,7 @@ class TimelineTab extends Component {
         data.push(temp);
       });
     }
-    
+
     return data;
   };
   onClickDownloader = (url, filename) => () => {
@@ -296,7 +296,7 @@ class TimelineTab extends Component {
     }
   };
   renderTimelineBody = (data) => {
-    const {upload_documents = {}} = this.props;
+    const { upload_documents = {} } = this.props;
     let dataTorender = [];
     console.log("1298317382 data --> ", data);
     for (let rowData of data) {
@@ -312,19 +312,19 @@ class TimelineTab extends Component {
       let audioUrl = "";
       let audioName = "";
       if (image_document_ids.length) {
-        const {basic_info: {document = ""} = {}} =
-        upload_documents[image_document_ids[0]] || {};
+        const { basic_info: { document = "" } = {} } =
+          upload_documents[image_document_ids[0]] || {};
         imageUrl = document;
       }
       if (audio_document_ids.length) {
-        const {basic_info: {document = "", name = ""} = {}} =
-        upload_documents[audio_document_ids[0]] || {};
+        const { basic_info: { document = "", name = "" } = {} } =
+          upload_documents[audio_document_ids[0]] || {};
         audioUrl = document;
         audioName = name;
       }
       if (date) {
         dataTorender.push(
-          <Timeline.Item dot={<div className={"timelineDot"}/>}>
+          <Timeline.Item dot={<div className={"timelineDot"} />}>
             <div className={"fs16 medium w300"}>
               {moment(date).format("Do MMMM,YYYY")}
             </div>
@@ -332,7 +332,7 @@ class TimelineTab extends Component {
         );
       } else {
         dataTorender.push(
-          <Timeline.Item dot={<div className={"timelineDot"}/>}>
+          <Timeline.Item dot={<div className={"timelineDot"} />}>
             <div
               style={{
                 flex: 1,
@@ -355,15 +355,15 @@ class TimelineTab extends Component {
                 <div className="pointer" onClick={this.openModal(imageUrl)}>
                   <img
                     src={imageUrl}
-                    style={{width: 300, height: 200, borderRadius: 2}}
+                    style={{ width: 300, height: 200, borderRadius: 2 }}
                   />
                 </div>
               ) : null}
-              
+
               {audioUrl && audioUrl.length ? (
                 <div
                   className="pointer"
-                  style={{height: 40, width: 250, marginTop: 5}}
+                  style={{ height: 40, width: 250, marginTop: 5 }}
                   onClick={this.onClickDownloader(audioUrl, audioName)}
                 >
                   <div
@@ -386,7 +386,7 @@ class TimelineTab extends Component {
                         ? audioName
                         : `${audioName.substring(0, 13)}...`}
                     </div>
-                    <img src={audio} style={{height: 20, width: 20}}/>
+                    <img src={audio} style={{ height: 20, width: 20 }} />
                   </div>
                 </div>
               ) : null}
@@ -400,7 +400,7 @@ class TimelineTab extends Component {
                 }}
               >
                 <div>{moment(createdAt).format("hh:mm a")}</div>
-                <div className={"seperator"}/>
+                <div className={"seperator"} />
                 <div>{this.getBodyPartName(parts[0])}</div>
               </div>
             </div>
@@ -410,26 +410,26 @@ class TimelineTab extends Component {
     }
     return dataTorender;
   };
-  
+
   formatMessage = (data) => this.props.intl.formatMessage(data);
-  
+
   render() {
     const data = this.formatDataForTimeLine();
-    const {loading} = this.state;
+    const { loading } = this.state;
     if (loading) {
       return (
         <div className="wp100 hp100 flex justify-center align-center">
-          <Spin/>
+          <Spin />
         </div>
       );
     }
     return (
       <div
         className="pt10 pr10 pb10 pl10 timelineContainer flex direction-colmn align-center "
-        style={{backgroundColor: "#f4f4f4"}}
+        style={{ backgroundColor: "#f4f4f4" }}
       >
         <Timeline>{this.renderTimelineBody(data)}</Timeline>
-        
+
         {this.imageModal()}
       </div>
     );

@@ -1,8 +1,8 @@
-import {doRequest} from "../../Helper/network";
-import {REQUEST_TYPE} from "../../constant";
+import { doRequest } from "../../Helper/network";
+import { REQUEST_TYPE } from "../../constant";
 
 function transactionReducer(state, data) {
-  const {transactions} = data || {};
+  const { transactions } = data || {};
   if (transactions) {
     return {
       ...state,
@@ -14,7 +14,7 @@ function transactionReducer(state, data) {
 }
 
 export default (state = {}, action) => {
-  const {type, data} = action;
+  const { type, data } = action;
   switch (type) {
     default:
       return transactionReducer(state, data);

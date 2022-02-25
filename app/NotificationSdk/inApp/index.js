@@ -9,14 +9,14 @@ class AppNotification {
     Log.info(`key : ${process.config.getstream.key}`);
     Log.info(`secretKey : ${process.config.getstream.secretKey}`);
     Log.info(`appId : ${process.config.getstream.appId}`);
-    
+
     this.client = stream.connect(
       process.config.getstream.key,
       process.config.getstream.secretKey,
       process.config.getstream.appId
     );
   }
-  
+
   notify = (templates = []) => {
     for (const template of templates) {
       Log.debug("template data -->", template);
@@ -25,12 +25,12 @@ class AppNotification {
       });
     }
   };
-  
+
   getUserToken = (id) => {
     const userToken = this.client.createUserToken(`${id}`);
     return userToken;
   };
-  
+
   sendAppNotification = async (template) => {
     try {
       // TODO: add get stream rest api call code here
@@ -41,19 +41,19 @@ class AppNotification {
         process.config.getstream.appId
       );
       const userToken = client.createUserToken(template.actor.toString());
-      
+
       // Log.debug("client --> ", client);
-      
+
       let result = {};
       const feed = client.feed("notification", template.object);
-      
+
       Log.debug("feed --> ", template);
       const response = await feed.addActivity(template).catch((err) => {
         Log.debug("response err ------>", err);
       });
-      
+
       Log.debug("sendAppNotification Response", response);
-      
+
       return result;
     } catch (err) {
       Log.debug("inapp sendAppNotification 500 error", err);

@@ -7,9 +7,9 @@ class WorkoutResponseWrapper extends BaseWorkoutResponse {
   constructor(data) {
     super(data);
   }
-  
+
   getBasicInfo = () => {
-    const {_data} = this;
+    const { _data } = this;
     const {
       id,
       workout_id,
@@ -37,40 +37,40 @@ class WorkoutResponseWrapper extends BaseWorkoutResponse {
       updated_at: updatedAt,
     };
   };
-  
+
   getAllInfo = () => {
-    const {getBasicInfo} = this;
-    
+    const { getBasicInfo } = this;
+
     // let allDocumentIds = [];
     // if(isDocumentUploaded()) {
     //     const allDocuments = await uploadDocumentsService.getAllByData({
     //         parent_id: getId(),
     //         parent_type: DOCUMENT_PARENT_TYPE.DIET_RESPONSE
     //     }) || [];
-    
+
     //     for(let index = 0; index < allDocuments.length; index++) {
     //         const document = await DocumentWrapper(allDocuments[index]);
     //         allDocumentIds.push(document.getUploadDocumentId());
     //     }
     // }
-    
+
     return {
       ...getBasicInfo(),
       // upload_document_ids: allDocumentIds
     };
   };
-  
+
   getReferenceInfo = async () => {
-    const {getId, getScheduleEventId, getAllInfo} = this;
-    
+    const { getId, getScheduleEventId, getAllInfo } = this;
+
     // let scheduleEventData = {};
     // if(!getScheduleEventId()) {
     //   const scheduleEvent = await EventWrapper(null, getScheduleEventId());
     //   scheduleEventData[getScheduleEventId()] = scheduleEvent.getAllInfo();
     // }
-    
+
     const scheduleEventService = new ScheduleEventService();
-    
+
     let scheduleEventData = {};
     if (getScheduleEventId()) {
       const schduleEventRecord = await scheduleEventService.getEventByData({
@@ -82,20 +82,20 @@ class WorkoutResponseWrapper extends BaseWorkoutResponse {
         scheduleEventData[getScheduleEventId()] = scheduleEvent.getAllInfo();
       }
     }
-    
+
     // let allUploadDocuments = {};
     // if(isDocumentUploaded()) {
     //     const allDocuments = await uploadDocumentsService.getAllByData({
     //         parent_id: getId(),
     //         parent_type: DOCUMENT_PARENT_TYPE.DIET_RESPONSE
     //     }) || [];
-    
+
     //     for(let index = 0; index < allDocuments.length; index++) {
     //         const document = await DocumentWrapper(allDocuments[index]);
     //         allUploadDocuments[document.getUploadDocumentId()] = document.getBasicInfo();
     //     }
     // }
-    
+
     return {
       workout_responses: {
         [getId()]: getAllInfo(),
@@ -107,11 +107,11 @@ class WorkoutResponseWrapper extends BaseWorkoutResponse {
   };
 }
 
-export default async ({data = null, id = null}) => {
+export default async ({ data = null, id = null }) => {
   if (data) {
     return new WorkoutResponseWrapper(data);
   }
   const workoutResponseService = new WorkoutResponseService();
-  const workoutResponse = await workoutResponseService.findOne({id});
+  const workoutResponse = await workoutResponseService.findOne({ id });
   return new WorkoutResponseWrapper(workoutResponse);
 };

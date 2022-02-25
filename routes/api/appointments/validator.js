@@ -1,8 +1,8 @@
 import Joi from "@hapi/joi";
 import moment from "moment";
-import {USER_CATEGORY} from "../../../constant";
+import { USER_CATEGORY } from "../../../constant";
 import Response from "../../../app/helper/responseFormat";
-import {raiseClientError} from "../../helper";
+import { raiseClientError } from "../../helper";
 
 const appointmentFormSchema = Joi.object().keys({
   participant_two: Joi.object()
@@ -50,8 +50,8 @@ const validateTimeInterval = (startTime, endTime) => {
 
 export const validateAppointmentFormData = (req, res, next) => {
   console.log("========================8971613136713671 getting here 1");
-  const {body: data = {}} = req;
-  const {start_time, end_time} = data;
+  const { body: data = {} } = req;
+  const { start_time, end_time } = data;
   const isValid = appointmentFormSchema.validate(data);
   console.log(
     "START TIME TEST ----------- 2",

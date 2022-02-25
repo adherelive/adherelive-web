@@ -1,8 +1,8 @@
 "use strict";
-import {DataTypes} from "sequelize";
-import {TABLE_NAME as patientTableName} from "./patients";
-import {TABLE_NAME as providerTermsMapping} from "./providerTermsMappings";
-import {TABLE_NAME as doctorTableName} from "./doctors";
+import { DataTypes } from "sequelize";
+import { TABLE_NAME as patientTableName } from "./patients";
+import { TABLE_NAME as providerTermsMapping } from "./providerTermsMappings";
+import { TABLE_NAME as doctorTableName } from "./doctors";
 
 export const TABLE_NAME = "patient_payment_consent_mappings";
 
@@ -67,5 +67,4 @@ export const db = (database) => {
   );
 };
 
-export const associate = (database) => {
-};
+export const associate = (database) => {};

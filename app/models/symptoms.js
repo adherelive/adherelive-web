@@ -1,7 +1,7 @@
 "use strict";
-import {DataTypes} from "sequelize";
-import {TABLE_NAME as patientTableName} from "./patients";
-import {TABLE_NAME as carePlanTableName} from "./carePlan";
+import { DataTypes } from "sequelize";
+import { TABLE_NAME as patientTableName } from "./patients";
+import { TABLE_NAME as carePlanTableName } from "./carePlan";
 
 export const TABLE_NAME = "symptoms";
 
@@ -12,7 +12,7 @@ export const db = (database) => {
       id: {
         type: DataTypes.INTEGER,
         primaryKey: true,
-        autoIncrement: true
+        autoIncrement: true,
       },
       patient_id: {
         type: DataTypes.INTEGER,
@@ -21,8 +21,8 @@ export const db = (database) => {
           model: {
             tableName: patientTableName,
           },
-          key: 'id'
-        }
+          key: "id",
+        },
       },
       care_plan_id: {
         type: DataTypes.INTEGER,
@@ -31,21 +31,21 @@ export const db = (database) => {
           model: {
             tableName: carePlanTableName,
           },
-          key: 'id'
-        }
+          key: "id",
+        },
       },
       config: {
-        type: DataTypes.JSON
+        type: DataTypes.JSON,
       },
       text: {
-        type: DataTypes.STRING(1000)
+        type: DataTypes.STRING(1000),
       },
       created_at: {
         type: DataTypes.DATE,
       },
       updated_at: {
         type: DataTypes.DATE,
-      }
+      },
     },
     {
       underscored: true,
@@ -54,18 +54,17 @@ export const db = (database) => {
   );
 };
 
-
 export const associate = (database) => {
-  const {symptoms, patients, care_plans} = database.models || {};
-  
+  const { symptoms, patients, care_plans } = database.models || {};
+
   // associations here (if any) ...
   symptoms.hasOne(patients, {
     foreignKey: "id",
-    sourceKey: "patient_id"
+    sourceKey: "patient_id",
   });
-  
+
   symptoms.hasOne(care_plans, {
     foreignKey: "id",
-    sourceKey: "care_plan_id"
+    sourceKey: "care_plan_id",
   });
 };

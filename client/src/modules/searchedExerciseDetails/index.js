@@ -1,8 +1,8 @@
-import {SEARCH_EXERCISE_COMPLETED} from "../searchedExercises";
-import {ADD_EXERCISE_COMPLETED, EDIT_EXERCISE_COMPLETED} from "../exercises";
+import { SEARCH_EXERCISE_COMPLETED } from "../searchedExercises";
+import { ADD_EXERCISE_COMPLETED, EDIT_EXERCISE_COMPLETED } from "../exercises";
 
 function searchExerciseDetaisReducer(state, data) {
-  let {exercises = {}, exercise_details = {}} = data || {};
+  let { exercises = {}, exercise_details = {} } = data || {};
   if (exercises && exercise_details) {
     return {
       ...exercise_details,
@@ -13,7 +13,7 @@ function searchExerciseDetaisReducer(state, data) {
 }
 
 function addedNewExerciseReducer(state, data) {
-  let {exercises = {}, exercise_details = {}} = data || {};
+  let { exercises = {}, exercise_details = {} } = data || {};
   if (exercises && exercise_details) {
     return {
       ...state,
@@ -25,7 +25,7 @@ function addedNewExerciseReducer(state, data) {
 }
 
 export default (state = {}, action) => {
-  const {type, data} = action || {};
+  const { type, data } = action || {};
   switch (type) {
     case SEARCH_EXERCISE_COMPLETED:
       return searchExerciseDetaisReducer(state, data);

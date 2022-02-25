@@ -1,7 +1,7 @@
-import {Op} from "sequelize";
-import {TABLE_NAME} from "../../models/scheduleEvents";
+import { Op } from "sequelize";
+import { TABLE_NAME } from "../../models/scheduleEvents";
 // import {TABLE_NAME as eventHistoryTableName} from "../../models/eventHistory";
-import {EVENT_STATUS, EVENT_TYPE} from "../../../constant";
+import { EVENT_STATUS, EVENT_TYPE } from "../../../constant";
 import Database from "../../../libs/mysql";
 import moment from "moment";
 
@@ -14,7 +14,7 @@ class ScheduleEventService {
       throw error;
     }
   };
-  
+
   bulkCreate = async (data) => {
     try {
       const scheduleEvents = await Database.getModel(TABLE_NAME).bulkCreate(
@@ -25,7 +25,7 @@ class ScheduleEventService {
       throw error;
     }
   };
-  
+
   update = async (data, id) => {
     const transaction = await Database.initTransaction();
     try {
@@ -45,8 +45,8 @@ class ScheduleEventService {
       throw error;
     }
   };
-  
-  getEventByData = async ({paranoid = true, ...data}) => {
+
+  getEventByData = async ({ paranoid = true, ...data }) => {
     try {
       const scheduleEvent = await Database.getModel(TABLE_NAME).findOne({
         where: data,
@@ -57,7 +57,7 @@ class ScheduleEventService {
       throw error;
     }
   };
-  
+
   getAllEventByData = async (data) => {
     try {
       const scheduleEvent = await Database.getModel(TABLE_NAME).findAll({
@@ -68,10 +68,10 @@ class ScheduleEventService {
       throw error;
     }
   };
-  
+
   getAllPreviousByData = async (data = {}) => {
     try {
-      const {event_id, date, event_type = ""} = data;
+      const { event_id, date, event_type = "" } = data;
       const scheduleEvent = await Database.getModel(TABLE_NAME).findAll({
         where: {
           event_id,
@@ -87,10 +87,10 @@ class ScheduleEventService {
       throw error;
     }
   };
-  
+
   getLastVisitData = async (data = {}) => {
     try {
-      const {event_id, event_type, date, sort = "ASC"} = data;
+      const { event_id, event_type, date, sort = "ASC" } = data;
       const scheduleEvent = await Database.getModel(TABLE_NAME).findAll({
         limit: 3,
         where: {
@@ -113,7 +113,7 @@ class ScheduleEventService {
       throw error;
     }
   };
-  
+
   getAllPassedByData = async (data = {}) => {
     try {
       const {
@@ -149,10 +149,10 @@ class ScheduleEventService {
       throw error;
     }
   };
-  
+
   getAllPassedAndCompletedEventsData = async (data = {}) => {
     try {
-      const {event_id, event_type = "", date, sort = "ASC"} = data;
+      const { event_id, event_type = "", date, sort = "ASC" } = data;
       const scheduleEvent = await Database.getModel(TABLE_NAME).findAll({
         where: {
           event_id,
@@ -186,7 +186,7 @@ class ScheduleEventService {
       throw error;
     }
   };
-  
+
   getPriorEventByData = async (time, event_type = null) => {
     try {
       const scheduleEvent = await Database.getModel(TABLE_NAME).findAll({
@@ -203,7 +203,7 @@ class ScheduleEventService {
       throw error;
     }
   };
-  
+
   getStartEventByData = async (time) => {
     try {
       const scheduleEvent = await Database.getModel(TABLE_NAME).findAll({
@@ -219,7 +219,7 @@ class ScheduleEventService {
       throw error;
     }
   };
-  
+
   getPassedEventData = async (time) => {
     try {
       const scheduleEvent = await Database.getModel(TABLE_NAME).findAll({
@@ -239,7 +239,7 @@ class ScheduleEventService {
       throw error;
     }
   };
-  
+
   deleteBatch = async (data) => {
     try {
       const scheduleEvent = await Database.getModel(TABLE_NAME).destroy({
@@ -250,10 +250,10 @@ class ScheduleEventService {
       throw error;
     }
   };
-  
+
   getAllPastData = async (data) => {
     try {
-      const {event_id, startDate, date} = data;
+      const { event_id, startDate, date } = data;
       const scheduleEvent = await Database.getModel(TABLE_NAME).findAll({
         where: {
           event_id,
@@ -267,7 +267,7 @@ class ScheduleEventService {
       throw error;
     }
   };
-  
+
   getUpcomingByData = async (data) => {
     try {
       const {
@@ -316,7 +316,7 @@ class ScheduleEventService {
       throw error;
     }
   };
-  
+
   getMissedByData = async (data) => {
     try {
       const {
@@ -364,10 +364,10 @@ class ScheduleEventService {
       throw error;
     }
   };
-  
+
   getPageEventByData = async (data) => {
     try {
-      const {eventIds, startLimit, endLimit, event_type} = data;
+      const { eventIds, startLimit, endLimit, event_type } = data;
       const scheduleEvent = await Database.getModel(TABLE_NAME).findAll({
         offset: startLimit,
         limit: endLimit,
@@ -382,14 +382,14 @@ class ScheduleEventService {
       throw error;
     }
   };
-  
+
   getPendingEventsData = async ({
-                                  appointments,
-                                  medications,
-                                  vitals,
-                                  diets,
-                                  workouts,
-                                }) => {
+    appointments,
+    medications,
+    vitals,
+    diets,
+    workouts,
+  }) => {
     try {
       const scheduleEvent = await Database.getModel(TABLE_NAME).findAll({
         where: {
@@ -414,7 +414,7 @@ class ScheduleEventService {
             {
               ...diets,
             },
-            {...workouts},
+            { ...workouts },
           ],
         },
         order: [["start_time", "ASC"]],
@@ -424,14 +424,14 @@ class ScheduleEventService {
       throw error;
     }
   };
-  
+
   getAllEventStatusByData = async ({
-                                     appointment,
-                                     medication,
-                                     vital,
-                                     diet,
-                                     workout,
-                                   }) => {
+    appointment,
+    medication,
+    vital,
+    diet,
+    workout,
+  }) => {
     try {
       return await Database.getModel(TABLE_NAME).findAll({
         where: {

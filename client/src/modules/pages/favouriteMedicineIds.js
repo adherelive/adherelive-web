@@ -5,7 +5,7 @@ import {
 } from "../favouritesData";
 
 function favouriteMedicineIdsReducer(state, data) {
-  const {favourite_medicine_ids} = data || {};
+  const { favourite_medicine_ids } = data || {};
   if (favourite_medicine_ids) {
     return [...favourite_medicine_ids];
   } else {
@@ -14,8 +14,8 @@ function favouriteMedicineIdsReducer(state, data) {
 }
 
 function addedMedicineIdReducer(state, data) {
-  const {id} = data || {};
-  
+  const { id } = data || {};
+
   if (id) {
     return [...state, id];
   } else {
@@ -24,14 +24,14 @@ function addedMedicineIdReducer(state, data) {
 }
 
 function removeFavouriteMedicineId(state, data) {
-  const {removed_medicine_id} = data || {};
+  const { removed_medicine_id } = data || {};
   if (removed_medicine_id) {
     const allIds = state;
     const index = allIds.indexOf(removed_medicine_id);
     if (index > -1) {
       allIds.splice(index, 1);
       let updated_arr = [];
-      
+
       for (let each of allIds) {
         updated_arr.push(each);
       }
@@ -45,7 +45,7 @@ function removeFavouriteMedicineId(state, data) {
 }
 
 export default (state = [], action) => {
-  const {type, data} = action;
+  const { type, data } = action;
   switch (type) {
     case GET_FAVOURITES_COMPLETED:
       return favouriteMedicineIdsReducer(state, data);

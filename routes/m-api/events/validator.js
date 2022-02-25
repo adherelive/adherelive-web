@@ -1,7 +1,7 @@
 import Joi from "@hapi/joi";
 import moment from "moment";
-import {USER_CATEGORY, WHEN_TO_TAKE_ABBREVATIONS} from "../../../constant";
-import {raiseClientError} from "../../helper";
+import { USER_CATEGORY, WHEN_TO_TAKE_ABBREVATIONS } from "../../../constant";
+import { raiseClientError } from "../../helper";
 import Response from "../../../app/helper/responseFormat";
 
 const appointmentFormSchema = Joi.object().keys({
@@ -18,7 +18,7 @@ const appointmentFormSchema = Joi.object().keys({
     then: Joi.number().required(),
     otherwise: Joi.number().optional(),
   }),
-  date: Joi.date().options({convert: true}).required(),
+  date: Joi.date().options({ convert: true }).required(),
   start_time: Joi.date().required(),
   end_time: Joi.date().required(),
   description: Joi.string().optional().allow(""),
@@ -72,8 +72,8 @@ const validateTimeInterval = (startTime, endTime) => {
 };
 
 export const validateAppointmentFormData = (req, res, next) => {
-  const {body: data = {}} = req;
-  const {start_time, end_time} = data;
+  const { body: data = {} } = req;
+  const { start_time, end_time } = data;
   // const isValid = Joi.validate(data, appointmentFormSchema);
   const isValid = appointmentFormSchema.validate(data);
   if (isValid && isValid.error != null) {
@@ -97,8 +97,8 @@ export const validateAppointmentFormData = (req, res, next) => {
 };
 
 export const validateMedicationReminderData = (req, res, next) => {
-  const {body: data = {}} = req;
-  const {start_date, end_date} = data;
+  const { body: data = {} } = req;
+  const { start_date, end_date } = data;
   const isValid = medicationReminderFormSchema.validate(data);
   if (isValid && isValid.error != null) {
     // return raiseClientError(res, 422, isValid.error, "please check filled details");

@@ -1,5 +1,5 @@
 import Database from "../../../libs/mysql";
-import {TABLE_NAME} from "../../models/treatmentConditionMapping";
+import { TABLE_NAME } from "../../models/treatmentConditionMapping";
 
 class TreatmentConditionService {
   getAll = async (data) => {

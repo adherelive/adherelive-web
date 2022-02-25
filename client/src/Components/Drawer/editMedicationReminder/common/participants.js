@@ -1,6 +1,6 @@
-import React, {Component, Fragment} from "react";
-import {injectIntl} from "react-intl";
-import {Select, Radio, Form, Checkbox, Input} from "antd";
+import React, { Component, Fragment } from "react";
+import { injectIntl } from "react-intl";
+import { Select, Radio, Form, Checkbox, Input } from "antd";
 import moment from "moment";
 import {
   USER_CATEGORY,
@@ -17,11 +17,11 @@ import activityTypeField from "./appointmentType";
 import activityModeField from "./activityMode";
 
 // const DropDownIcon = <img src={dropDownIcon} alt="d" className="w24 h24" />;
-const SearchIcon = <img src={searchIcon} alt="s" className="w18 h18"/>;
+const SearchIcon = <img src={searchIcon} alt="s" className="w18 h18" />;
 
-const {Group: RadioGroup, Button: RadioButton} = Radio;
-const {Option, OptGroup} = Select;
-const {Item: FormItem} = Form;
+const { Group: RadioGroup, Button: RadioButton } = Radio;
+const { Option, OptGroup } = Select;
+const { Item: FormItem } = Form;
 
 const FIELD_NAME = "participantTwo";
 
@@ -91,43 +91,43 @@ const FIELD_NAME = "participantTwo";
 class Participants extends Component {
   componentDidMount() {
     const {
-      form: {validateFields},
+      form: { validateFields },
     } = this.props;
     validateFields();
   }
-  
+
   getParentNode = (t) => t.parentNode;
-  
+
   getInitialValue = () => {
     const {
-      currentUser: {basicInfo: {category}, programIds = []} = {},
+      currentUser: { basicInfo: { category }, programIds = [] } = {},
       purpose,
-      otherUser: {basicInfo: {_id} = {}} = {},
+      otherUser: { basicInfo: { _id } = {} } = {},
     } = this.props;
-    
+
     if (purpose) {
       return _id;
     }
-    
-    const {careCoach} = programIds[0] || {};
-    
+
+    const { careCoach } = programIds[0] || {};
+
     if (category === USER_CATEGORY.PATIENT) {
       return careCoach;
     }
   };
-  
+
   insertUserEntry = (users) => {
     const userOptions = [];
     users.forEach((user) => {
       const {
-        basicInfo: {_id, name, profilePicLink = userPlaceHolder},
-        personalInfo: {dob, gender} = {},
+        basicInfo: { _id, name, profilePicLink = userPlaceHolder },
+        personalInfo: { dob, gender } = {},
       } = user;
       const years = dob && moment().diff(dob, "years", false);
       userOptions.push(
         <Option key={_id} value={_id} name={name}>
           <div className="flex justify-content-start align-items-center">
-            <img alt={"user"} src={profilePicLink}/>
+            <img alt={"user"} src={profilePicLink} />
             <div className="deep-sea-blue fontsize12 mr8">{`${name}${
               years ? ` (${years} ${gender})` : ""
             }`}</div>
@@ -137,26 +137,26 @@ class Participants extends Component {
     });
     return userOptions;
   };
-  
+
   getParticipantOption = () => {
-    const {members = []} = this.props;
+    const { members = [] } = this.props;
     let options = [];
     const doctors = members.filter((member) => {
-      const {basicInfo: {category} = {}} = member || {};
+      const { basicInfo: { category } = {} } = member || {};
       return (
         category === USER_CATEGORY.DOCTOR || category === USER_CATEGORY.HSP
       );
     });
     const patients = members.filter((member) => {
-      const {basicInfo: {category} = {}, status} = member || {};
-      
+      const { basicInfo: { category } = {}, status } = member || {};
+
       return (
         category === USER_CATEGORY.PATIENT && status === USER_STATUS.ENROLLED
       );
     });
     const careCoach = members.filter((member) => {
-      const {basicInfo: {category} = {}} = member || {};
-      
+      const { basicInfo: { category } = {} } = member || {};
+
       return category === USER_CATEGORY.CARE_COACH;
     });
     if (doctors.length > 0) {
@@ -173,7 +173,7 @@ class Participants extends Component {
         </OptGroup>
       );
     }
-    
+
     if (careCoach.length > 0) {
       options.push(
         <OptGroup key={"careCoach"} label={`Carecoaches (${careCoach.length})`}>
@@ -183,19 +183,19 @@ class Participants extends Component {
     }
     return options;
   };
-  
+
   formatMessage = (data) => this.props.intl.formatMessage(data);
-  
+
   onChangeParticpantRadioGroup = (e) => {
     e.preventDefault();
     const {
       members = [],
-      form: {setFieldsValue},
+      form: { setFieldsValue },
     } = this.props;
     const value = e.target.value;
     let category;
     members.forEach((member) => {
-      const {basicInfo: {_id, category: memberCategory} = {}} = member;
+      const { basicInfo: { _id, category: memberCategory } = {} } = member;
       if (_id === value) {
         category = memberCategory;
       }
@@ -207,18 +207,18 @@ class Participants extends Component {
       });
     }
   };
-  
+
   onChangeParticipant = () => {
-    const {onPatientChange} = this.props;
+    const { onPatientChange } = this.props;
     if (onPatientChange) {
       onPatientChange();
     }
   };
-  
+
   render() {
     const {
-      form: {getFieldDecorator, isFieldTouched, getFieldError},
-      currentUser: {basicInfo: {category}, programIds = []} = {},
+      form: { getFieldDecorator, isFieldTouched, getFieldError },
+      currentUser: { basicInfo: { category }, programIds = [] } = {},
       eventMode = "appointment",
       purpose,
       setParticipantTwo,
@@ -230,26 +230,26 @@ class Participants extends Component {
       getInitialValue,
       onChangeParticipant,
     } = this;
-    
+
     const participantError =
       isFieldTouched(FIELD_NAME) && getFieldError(FIELD_NAME);
-    
-    const {careCoach, doctor} = programIds[0] || {};
-    
+
+    const { careCoach, doctor } = programIds[0] || {};
+
     // if (
     //   eventMode === EVENT_TYPE.REMINDER &&
     //   category === USER_CATEGORY.PATIENT
     // ) {
     //   return <RemindMyCareCoach {...this.props} />;
     // }
-    
+
     // if (
     //   eventMode === EVENT_TYPE.MEDICATION_REMINDER &&
     //   category === USER_CATEGORY.PATIENT
     // ) {
     //   return null;
     // }
-    
+
     return (
       <Fragment>
         <div>
@@ -278,8 +278,8 @@ class Participants extends Component {
                   placeholder={
                     eventMode === EVENT_TYPE.MEDICATION_REMINDER
                       ? formatMessage(
-                        messages.medicationReminderAlongWithPlaceHolder
-                      )
+                          messages.medicationReminderAlongWithPlaceHolder
+                        )
                       : formatMessage(messages.alongWithPlaceHolder)
                   }
                   showSearch

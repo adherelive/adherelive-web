@@ -1,5 +1,5 @@
 function dietResponseReducer(state, data) {
-  const {diet_responses} = data || {};
+  const { diet_responses } = data || {};
   if (diet_responses) {
     return {
       ...state,
@@ -11,7 +11,7 @@ function dietResponseReducer(state, data) {
 }
 
 export default (state = [], action) => {
-  const {type, data} = action;
+  const { type, data } = action;
   switch (type) {
     default:
       return dietResponseReducer(state, data);

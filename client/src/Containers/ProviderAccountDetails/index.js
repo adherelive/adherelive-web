@@ -1,7 +1,7 @@
-import {connect} from "react-redux";
+import { connect } from "react-redux";
 import ProviderAccountDetails from "../../Components/ProviderAccountDetails";
-import {withRouter} from "react-router-dom";
-import {getAccountDetails} from "../../modules/accountDetails";
+import { withRouter } from "react-router-dom";
+import { getAccountDetails } from "../../modules/accountDetails";
 
 const mapStateToProps = (state) => {
   const {
@@ -17,7 +17,7 @@ const mapStateToProps = (state) => {
     user_roles = {},
     providers = {},
   } = state;
-  
+
   return {
     payment_products,
     auth,

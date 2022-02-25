@@ -1,5 +1,5 @@
-import React, {Component} from "react";
-import {injectIntl} from "react-intl";
+import React, { Component } from "react";
+import { injectIntl } from "react-intl";
 
 import Form from "antd/es/form";
 import messages from "./messages";
@@ -8,10 +8,10 @@ import DatePicker from "antd/es/date-picker";
 import TextArea from "antd/es/input/TextArea";
 import Input from "antd/es/input";
 import Tag from "antd/es/tag";
-import {DAYS} from "../../../constant";
+import { DAYS } from "../../../constant";
 
-const {Item: FormItem} = Form;
-const {CheckableTag} = Tag;
+const { Item: FormItem } = Form;
+const { CheckableTag } = Tag;
 
 const NAME = "name";
 const REPEAT_DAYS = "repeat_days";
@@ -28,76 +28,76 @@ class DietFieldsFrom extends Component {
       selectedDays: [],
     };
   }
-  
+
   componentDidMount() {
-    const {payload = {}} = this.props;
-    const {repeat_days = []} = payload || {};
-    const {dietData = {}, editTemplateDiet = null} = this.props;
-    this.setState({selectedDays: repeat_days});
+    const { payload = {} } = this.props;
+    const { repeat_days = [] } = payload || {};
+    const { dietData = {}, editTemplateDiet = null } = this.props;
+    this.setState({ selectedDays: repeat_days });
     if (editTemplateDiet) {
-      const {details: {repeat_days: template_r_days = []} = {}} =
-      dietData || {};
-      this.setState({selectedDays: template_r_days});
+      const { details: { repeat_days: template_r_days = [] } = {} } =
+        dietData || {};
+      this.setState({ selectedDays: template_r_days });
     }
   }
-  
+
   getParentNode = (t) => t.parentNode;
-  
+
   formatMessage = (data) => this.props.intl.formatMessage(data);
-  
+
   disabledStartDate = (current) => {
-    return current && current <= moment().subtract({day: 1});
+    return current && current <= moment().subtract({ day: 1 });
   };
-  
+
   handleCheckDays = (tag, checked) => {
-    const {selectedDays} = this.state;
+    const { selectedDays } = this.state;
     const nextSelectedTags = checked
       ? [...selectedDays, tag]
       : selectedDays.filter((t) => t !== tag);
-    
+
     const newSelectedTags = checked
       ? [...selectedDays, tag]
       : selectedDays.filter((t) => t !== tag);
-    
-    this.setState({selectedDays: newSelectedTags});
+
+    this.setState({ selectedDays: newSelectedTags });
     const {
-      form: {setFieldsValue, validateFields},
+      form: { setFieldsValue, validateFields },
     } = this.props;
-    setFieldsValue({[REPEAT_DAYS]: newSelectedTags});
+    setFieldsValue({ [REPEAT_DAYS]: newSelectedTags });
     validateFields();
   };
-  
+
   setSameForAllDays = () => {
     const {
-      form: {setFieldsValue, validateFields},
+      form: { setFieldsValue, validateFields },
     } = this.props;
-    this.setState({selectedDays: DAYS});
-    setFieldsValue({[REPEAT_DAYS]: DAYS});
+    this.setState({ selectedDays: DAYS });
+    setFieldsValue({ [REPEAT_DAYS]: DAYS });
     validateFields();
   };
-  
+
   unSetSameForAllDays = () => {
     const {
-      form: {setFieldsValue, validateFields},
+      form: { setFieldsValue, validateFields },
     } = this.props;
-    this.setState({selectedDays: []});
-    setFieldsValue({[REPEAT_DAYS]: []});
+    this.setState({ selectedDays: [] });
+    setFieldsValue({ [REPEAT_DAYS]: [] });
     validateFields();
   };
-  
+
   render() {
     const {
-      form: {getFieldDecorator, isFieldTouched, getFieldError},
+      form: { getFieldDecorator, isFieldTouched, getFieldError },
       getDietComponent,
       dietData,
     } = this.props;
-    
-    const {selectedDays = []} = this.state;
-    
-    const {formatMessage, handleCheckDays} = this;
-    
+
+    const { selectedDays = [] } = this.state;
+
+    const { formatMessage, handleCheckDays } = this;
+
     let disabled = false;
-    
+
     const {
       initialFormData = {},
       editTemplateDiet = null,
@@ -111,13 +111,13 @@ class DietFieldsFrom extends Component {
     } = initialFormData || {};
     let start_date = str_start_date ? moment(str_start_date) : moment();
     let end_date = str_end_date ? moment(str_end_date) : null;
-    
+
     let fieldsError = {};
     FIELDS.forEach((value) => {
       const error = isFieldTouched(value) && getFieldError(value);
-      fieldsError = {...fieldsError, [value]: error};
+      fieldsError = { ...fieldsError, [value]: error };
     });
-    
+
     if (editTemplateDiet !== null) {
       const {
         name: template_name = "",
@@ -125,9 +125,9 @@ class DietFieldsFrom extends Component {
         duration = null,
         start_date: temp_start_date = null,
         end_date: temp_end_date = null,
-        details: {not_to_do: template_not_to_do = ""} = {},
+        details: { not_to_do: template_not_to_do = "" } = {},
       } = dietData || {};
-      
+
       name = template_name;
       start_date = moment();
       if (duration) {
@@ -138,11 +138,11 @@ class DietFieldsFrom extends Component {
       }
       not_to_do = template_not_to_do;
     }
-    
+
     if (canOnlyView) {
       disabled = true;
     }
-    
+
     return (
       <Form className="fw700 wp100 pb30 Form">
         <FormItem
@@ -165,7 +165,7 @@ class DietFieldsFrom extends Component {
             />
           )}
         </FormItem>
-        
+
         <div className="select-days-wrapper flex align-items-center justify-content-space-between wp100">
           <div className="repeats wp100">
             <div className="mb20 select-days-form-content">
@@ -191,7 +191,7 @@ class DietFieldsFrom extends Component {
                   Same for all days
                 </div>
               </div>
-              <FormItem style={{display: "none"}}>
+              <FormItem style={{ display: "none" }}>
                 {getFieldDecorator(REPEAT_DAYS, {
                   initialValue: selectedDays.length ? selectedDays : [],
                   rules: [
@@ -200,7 +200,7 @@ class DietFieldsFrom extends Component {
                       message: this.formatMessage(messages.requiredRepeatDays),
                     },
                   ],
-                })(<Input disabled={disabled}/>)}
+                })(<Input disabled={disabled} />)}
               </FormItem>
               <div className="flex-shrink-1 flex justify-space-evenly select-days mt10">
                 {DAYS.map((tag) => (
@@ -220,9 +220,9 @@ class DietFieldsFrom extends Component {
             </div>
           </div>
         </div>
-        
+
         {getDietComponent()}
-        
+
         <div className="flex justify-space-between align-center flex-1">
           <div className="wp45">
             <FormItem
@@ -249,7 +249,7 @@ class DietFieldsFrom extends Component {
               )}
             </FormItem>
           </div>
-          
+
           <div className="wp45">
             <FormItem
               label={formatMessage(messages.end_date)}
@@ -273,7 +273,7 @@ class DietFieldsFrom extends Component {
         >
           {getFieldDecorator(WHAT_NOT_TO_DO, {
             initialValue: not_to_do ? not_to_do : null,
-          })(<TextArea className="mb20" disabled={disabled}/>)}
+          })(<TextArea className="mb20" disabled={disabled} />)}
         </FormItem>
       </Form>
     );

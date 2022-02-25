@@ -1,7 +1,7 @@
 "use strict";
 
-import {TABLE_NAME, PAYMENT_TYPE} from "../models/paymentProducts";
-import {USER_CATEGORY} from "../../constant";
+import { TABLE_NAME, PAYMENT_TYPE } from "../models/paymentProducts";
+import { USER_CATEGORY } from "../../constant";
 
 module.exports = {
   up: (queryInterface) => {
@@ -35,7 +35,7 @@ module.exports = {
       },
     ]);
   },
-  
+
   down: (queryInterface) => {
     return queryInterface.bulkDelete(TABLE_NAME, null, {});
   },

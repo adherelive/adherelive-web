@@ -1,5 +1,5 @@
-import {connect} from "react-redux";
-import {withRouter} from "react-router-dom";
+import { connect } from "react-redux";
+import { withRouter } from "react-router-dom";
 import FavouriteMedicines from "../../../Components/Favourites/medicine";
 import {
   markFavourite,
@@ -11,7 +11,7 @@ const mapStateToProps = (state) => {
   const {
     medicine = {},
     favourites_data = {},
-    pages: {favourite_medicine_ids = []} = {},
+    pages: { favourite_medicine_ids = [] } = {},
   } = state;
   return {
     medicine,
@@ -23,9 +23,9 @@ const mapStateToProps = (state) => {
 const mapDispatchToProps = (dispatch) => {
   return {
     markFavourite: (payload) => dispatch(markFavourite(payload)),
-    getFavourites: ({type}) => dispatch(getFavourites({type})),
-    removeFavourite: ({typeId, type}) =>
-      dispatch(removeFavourite({typeId, type})),
+    getFavourites: ({ type }) => dispatch(getFavourites({ type })),
+    removeFavourite: ({ typeId, type }) =>
+      dispatch(removeFavourite({ typeId, type })),
   };
 };
 

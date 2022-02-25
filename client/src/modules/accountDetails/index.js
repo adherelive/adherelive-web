@@ -1,6 +1,6 @@
-import {doRequest} from "../../Helper/network";
-import {REQUEST_TYPE} from "../../constant";
-import {getDoctorAccountDetailsUrl} from "../../Helper/urls/doctor";
+import { doRequest } from "../../Helper/network";
+import { REQUEST_TYPE } from "../../constant";
+import { getDoctorAccountDetailsUrl } from "../../Helper/urls/doctor";
 import {
   accountDetailsUrl,
   updateAccountDetailsUrl,
@@ -36,15 +36,15 @@ export const getDoctorAccountDetails = (id) => {
   let response = {};
   return async (dispatch) => {
     try {
-      dispatch({type: GET_DOCTOR_ACCOUNT_DETAILS_START});
-      
+      dispatch({ type: GET_DOCTOR_ACCOUNT_DETAILS_START });
+
       response = await doRequest({
         method: REQUEST_TYPE.GET,
         url: getDoctorAccountDetailsUrl(id),
       });
-      
-      const {status, payload: {data = {}, error = {}} = {}} =
-      response || {};
+
+      const { status, payload: { data = {}, error = {} } = {} } =
+        response || {};
       if (status === true) {
         dispatch({
           type: GET_DOCTOR_ACCOUNT_DETAILS_COMPLETED,
@@ -52,11 +52,11 @@ export const getDoctorAccountDetails = (id) => {
           data,
         });
       } else {
-        dispatch({type: GET_DOCTOR_ACCOUNT_DETAILS_FAILED, payload: error});
+        dispatch({ type: GET_DOCTOR_ACCOUNT_DETAILS_FAILED, payload: error });
       }
     } catch (error) {
       console.log("getDoctorAccountDetails catch error ----> ", error);
-      dispatch({type: GET_DOCTOR_ACCOUNT_DETAILS_FAILED});
+      dispatch({ type: GET_DOCTOR_ACCOUNT_DETAILS_FAILED });
     }
     return response;
   };
@@ -66,7 +66,7 @@ export const getAccountDetails = (provider_id = null) => {
   let response = {};
   return async (dispatch) => {
     try {
-      dispatch({type: GET_ACCOUNT_DETAILS});
+      dispatch({ type: GET_ACCOUNT_DETAILS });
       if (!provider_id) {
         response = await doRequest({
           method: REQUEST_TYPE.GET,
@@ -78,8 +78,8 @@ export const getAccountDetails = (provider_id = null) => {
           url: accountDetailsForCreatedByProviderUrl(provider_id),
         });
       }
-      
-      const {status, payload: {data, error} = {}} = response || {};
+
+      const { status, payload: { data, error } = {} } = response || {};
       if (status === true) {
         dispatch({
           type: GET_ACCOUNT_DETAILS_COMPLETE,
@@ -103,14 +103,14 @@ export const addAccountDetails = (payload) => {
   let response = {};
   return async (dispatch) => {
     try {
-      dispatch({type: ADD_ACCOUNT_DETAILS});
+      dispatch({ type: ADD_ACCOUNT_DETAILS });
       response = await doRequest({
         method: REQUEST_TYPE.POST,
         url: accountDetailsUrl(),
         data: payload,
       });
-      
-      const {status, payload: {data, error} = {}} = response || {};
+
+      const { status, payload: { data, error } = {} } = response || {};
       if (status === true) {
         dispatch({
           type: ADD_ACCOUNT_DETAILS_COMPLETE,
@@ -134,14 +134,14 @@ export const deleteAccountDetails = (id) => {
   let response = {};
   return async (dispatch) => {
     try {
-      dispatch({type: DELETE_ACCOUNT_DETAILS});
+      dispatch({ type: DELETE_ACCOUNT_DETAILS });
       response = await doRequest({
         method: REQUEST_TYPE.DELETE,
         url: updateAccountDetailsUrl(id),
       });
-      
-      const {status, payload: {data, error} = {}} = response || {};
-      
+
+      const { status, payload: { data, error } = {} } = response || {};
+
       if (id) {
         data["id"] = id;
       }
@@ -168,14 +168,14 @@ export const updateAccountDetails = (id, payload) => {
   let response = {};
   return async (dispatch) => {
     try {
-      dispatch({type: UPDATE_ACCOUNT_DETAILS});
+      dispatch({ type: UPDATE_ACCOUNT_DETAILS });
       response = await doRequest({
         method: REQUEST_TYPE.POST,
         url: updateAccountDetailsUrl(id),
         data: payload,
       });
-      
-      const {status, payload: {data, error} = {}} = response || {};
+
+      const { status, payload: { data, error } = {} } = response || {};
       if (status === true) {
         dispatch({
           type: UPDATE_ACCOUNT_DETAILS_COMPLETE,
@@ -196,7 +196,7 @@ export const updateAccountDetails = (id, payload) => {
 };
 
 function accountDetailsReducer(state, data) {
-  const {account_details = {}} = data || {};
+  const { account_details = {} } = data || {};
   if (Object.keys(account_details).length > 0) {
     return {
       ...state,
@@ -208,9 +208,9 @@ function accountDetailsReducer(state, data) {
 }
 
 function deleteAccountDetailsComplete(state, data) {
-  const {id} = data || {};
+  const { id } = data || {};
   if (id) {
-    const {[id.toString()]: detail, ...rest} = state;
+    const { [id.toString()]: detail, ...rest } = state;
     return {
       ...rest,
     };
@@ -220,7 +220,7 @@ function deleteAccountDetailsComplete(state, data) {
 }
 
 export default (state = {}, action) => {
-  const {type, payload} = action || {};
+  const { type, payload } = action || {};
   switch (type) {
     case DELETE_ACCOUNT_DETAILS_COMPLETE:
       return deleteAccountDetailsComplete(state, payload);

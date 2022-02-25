@@ -6,7 +6,7 @@ import {
   RADIOLOGY_SUB_CATEGORY_DATA,
   RADIOLOGY_DATA,
 } from "../../constant";
-import {TABLE_NAME} from "../models/featureDetails";
+import { TABLE_NAME } from "../models/featureDetails";
 
 module.exports = {
   up: (queryInterface, Sequelize) => {
@@ -254,7 +254,7 @@ module.exports = {
       },
     ]);
   },
-  
+
   down: (queryInterface, Sequelize) => {
     return queryInterface.bulkDelete(TABLE_NAME, null, {});
   },

@@ -1,6 +1,6 @@
 //common functionality of all Activity
 // import activityService from "../../services/activityLog/activityLog.service";
-import {STAGES} from "../activityType";
+import { STAGES } from "../activityType";
 import schedulerService from "../../services/scheduleEvents/scheduleEvent.service";
 // import calendarService from "../../services/calendarService/calendar.service";
 import userService from "../../services/user/user.service";
@@ -17,7 +17,7 @@ const log = require("../../../libs/log")("ACTIVITY_SDK");
 const notify = (participants, payload) => {
   console.log("participants---------------------->", participants);
   // prepare notification data according to event category
-  const {participantOne, participantTwo} = participants;
+  const { participantOne, participantTwo } = participants;
   if (participantOne) {
     log.info(`going to notify: ${payload} to ${participantOne}`);
     NotificationSdk.execute(participantOne, payload);
@@ -29,12 +29,12 @@ const notify = (participants, payload) => {
 };
 
 const logActivity = async ({
-                             eventId,
-                             data,
-                             message,
-                             status = ACTIVITY_LOG_STATUS.PENDING,
-                             updatedBy = DEFAULT,
-                           }) => {
+  eventId,
+  data,
+  message,
+  status = ACTIVITY_LOG_STATUS.PENDING,
+  updatedBy = DEFAULT,
+}) => {
   await activityService.create({
     eventId: eventId,
     data: data,
@@ -48,11 +48,11 @@ export const onCreate = async (data) => {
   log.info(`onCreate activity:, ${data}`);
   //fetch all calendar event here if it is
   //and send it to cronofy,if this is calendar related event, but that should be goes into scheduler, because we are creating multiple schedule event from scheduler.
-  
+
   //add entry to the activity log
   const message = `New ${data.eventCategory} Scheduled`;
-  
-  const {participantOne, participantTwo, _id: eventId} = data;
+
+  const { participantOne, participantTwo, _id: eventId } = data;
   //add to activity log
   // const result = await logActivity({
   //   eventId: data._id,
@@ -85,7 +85,7 @@ export const onCancel = async (data) => {
   //   status: ACTIVITY_LOG_STATUS.CANCELLED,
   //   updatedBy: `${data.userId}`
   // });
-  const {isRepetitive = false} = data;
+  const { isRepetitive = false } = data;
   console.log("data onCacel ========================>", data);
   // if (isRepetitive) {
   //   let { participantOne, participantTwo } = data;
@@ -210,7 +210,7 @@ export const onPassed = async (data) => {
 
 export const onComplete = async (data) => {
   const message = `Following event is Completed.`;
-  
+
   //add to activity log
   // const result = await logActivity({
   //   eventId: data.eventId,
@@ -277,10 +277,10 @@ export const onAdverseEventCreate = async (data) => {
   log.info(`onAdverseEventCreate activity:, ${data}`);
   // fetch all calendar event here if it is
   // and send it to cronofy,if this is calendar related event, but that should be goes into scheduler, because we are creating multiple schedule event from scheduler.
-  
+
   // add entry to the activity log
   const message = `New ${data.eventCategory} Scheduled`;
-  
+
   // const { participantOne, participantTwo, _id: eventId } = data;
   // const user = await userService.getUser({ _id: participantOne });
   // const { category, programId } = user;

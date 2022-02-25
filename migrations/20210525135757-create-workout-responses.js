@@ -1,12 +1,12 @@
 "use strict";
 
-import {TABLE_NAME} from "../app/models/workoutResponses";
-import {TABLE_NAME as workoutTableName} from "../app/models/workout";
-import {TABLE_NAME as exerciseGroupTableName} from "../app/models/exerciseGroup";
-import {TABLE_NAME as repetitionTableName} from "../app/models/exerciseRepetition";
-import {TABLE_NAME as scheduleEventsTable} from "../app/models/scheduleEvents";
+import { TABLE_NAME } from "../app/models/workoutResponses";
+import { TABLE_NAME as workoutTableName } from "../app/models/workout";
+import { TABLE_NAME as exerciseGroupTableName } from "../app/models/exerciseGroup";
+import { TABLE_NAME as repetitionTableName } from "../app/models/exerciseRepetition";
+import { TABLE_NAME as scheduleEventsTable } from "../app/models/scheduleEvents";
 
-import {WORKOUT_RESPONSE_STATUS} from "../constant";
+import { WORKOUT_RESPONSE_STATUS } from "../constant";
 
 module.exports = {
   up: (queryInterface, DataTypes) => {
@@ -91,7 +91,7 @@ module.exports = {
       },
     });
   },
-  
+
   down: (queryInterface) => {
     return queryInterface.dropTable(TABLE_NAME);
   },

@@ -11,7 +11,7 @@ import doctorService from "../../services/doctor/doctor.service";
 
 // WRAPPERS...
 import PaymentProductWrapper from "../../ApiWrapper/web/paymentProducts";
-import {USER_CATEGORY} from "../../../constant";
+import { USER_CATEGORY } from "../../../constant";
 
 const Log = new Logger("WEB > CONTROLLER > PAYMENTS");
 
@@ -19,35 +19,35 @@ class PaymentController extends Controller {
   constructor() {
     super();
   }
-  
+
   addDoctorPaymentProduct = async (req, res) => {
-    const {raiseSuccess, raiseClientError, raiseServerError} = this;
+    const { raiseSuccess, raiseClientError, raiseServerError } = this;
     try {
       const {
         body,
         userDetails: {
           userCategoryId,
           userRoleId,
-          userData: {category = ""} = {},
+          userData: { category = "" } = {},
         } = {},
       } = req;
-      
+
       let doctorRoleId = userRoleId;
-      
-      const {doctor_id = null, for_user_type = USER_CATEGORY.DOCTOR} =
-      body || {};
-      
+
+      const { doctor_id = null, for_user_type = USER_CATEGORY.DOCTOR } =
+        body || {};
+
       if (doctor_id) {
         if (category !== USER_CATEGORY.PROVIDER) {
           return raiseClientError(res, 401, {}, "UNAUTHORIZED");
         }
-        
+
         const doctor =
           (await doctorService.findOne({
-            where: {id: doctor_id},
+            where: { id: doctor_id },
             attributes: ["user_id"],
           })) || null;
-        const {user_id: doctorUserId = null} = doctor || {};
+        const { user_id: doctorUserId = null } = doctor || {};
         const userRole =
           (await userRolesService.findOne({
             where: {
@@ -57,21 +57,21 @@ class PaymentController extends Controller {
             },
             attributes: ["id"],
           })) || null;
-        
+
         if (!userRole) {
           return raiseClientError(res, 401, {}, "UNAUTHORIZED");
         }
-        const {id: doctor_role_id = null} = userRole || {};
+        const { id: doctor_role_id = null } = userRole || {};
         doctorRoleId = doctor_role_id;
       }
-      
+
       const dataToAdd = PaymentHelper.getFormattedData(body);
       const paymentProductService = new PaymentProductService();
-      
-      const {id = null, ...rest} = dataToAdd || {};
-      
+
+      const { id = null, ...rest } = dataToAdd || {};
+
       let paymentProduct = null;
-      
+
       if (id) {
         // update
         const updatePaymentProductData =
@@ -81,7 +81,7 @@ class PaymentController extends Controller {
             },
             id
           );
-        
+
         paymentProduct = await PaymentProductWrapper({
           id,
         });
@@ -96,18 +96,18 @@ class PaymentController extends Controller {
             product_user_type: "patient", // todo: change to constant in model
           }
         );
-        
+
         if (paymentProductData) {
           paymentProduct = await PaymentProductWrapper({
             data: paymentProductData,
           });
         }
       }
-      
+
       if (paymentProduct) {
         let paymentProducts = {};
         paymentProducts[paymentProduct.getId()] = paymentProduct.getBasicInfo();
-        
+
         return raiseSuccess(
           res,
           200,
@@ -131,14 +131,14 @@ class PaymentController extends Controller {
       return raiseServerError(res);
     }
   };
-  
+
   removeDoctorPaymentProduct = async (req, res) => {
-    const {raiseSuccess, raiseClientError, raiseServerError} = this;
+    const { raiseSuccess, raiseClientError, raiseServerError } = this;
     try {
-      const {body} = req;
-      
-      const {id} = body || {};
-      
+      const { body } = req;
+
+      const { id } = body || {};
+
       const paymentProductService = new PaymentProductService();
       const deletedDoctorProduct =
         await paymentProductService.deleteDoctorProduct({
@@ -150,32 +150,32 @@ class PaymentController extends Controller {
       return raiseServerError(res);
     }
   };
-  
+
   getAllDoctorPaymentProduct = async (req, res) => {
-    const {raiseSuccess, raiseClientError, raiseServerError} = this;
+    const { raiseSuccess, raiseClientError, raiseServerError } = this;
     try {
       const {
         userDetails: {
           userCategoryId,
           userRoleId,
-          userData: {category = ""} = {},
+          userData: { category = "" } = {},
         } = {},
-        query: {doctor_id = null} = {},
+        query: { doctor_id = null } = {},
       } = req;
-      
+
       let doctorRoleId = userRoleId;
-      
+
       if (doctor_id) {
         if (category !== USER_CATEGORY.PROVIDER) {
           return raiseClientError(res, 401, {}, "UNAUTHORIZED");
         }
-        
+
         const doctor =
           (await doctorService.findOne({
-            where: {id: doctor_id},
+            where: { id: doctor_id },
             attributes: ["user_id"],
           })) || null;
-        const {user_id: doctorUserId = null} = doctor || {};
+        const { user_id: doctorUserId = null } = doctor || {};
         const userRole =
           (await userRolesService.findOne({
             where: {
@@ -185,18 +185,18 @@ class PaymentController extends Controller {
             },
             attributes: ["id"],
           })) || null;
-        
+
         if (!userRole) {
           return raiseClientError(res, 401, {}, "UNAUTHORIZED");
         }
-        const {id: doctor_role_id = null} = userRole || {};
+        const { id: doctor_role_id = null } = userRole || {};
         doctorRoleId = doctor_role_id;
       }
-      
+
       if (category === USER_CATEGORY.PROVIDER && !doctor_id) {
         return raiseClientError(res, 402, {}, "Invalid doctor");
       }
-      
+
       const paymentProductService = new PaymentProductService();
       const doctorPaymentProductData =
         (await paymentProductService.getAllCreatorTypeProducts({
@@ -204,12 +204,12 @@ class PaymentController extends Controller {
           for_user_role_id: doctorRoleId,
           product_user_type: "patient",
         })) || [];
-      
+
       let paymentProductData = [...doctorPaymentProductData];
-      
+
       if (paymentProductData.length > 0) {
         let paymentProducts = {};
-        
+
         for (let i = 0; i < paymentProductData.length; i++) {
           const paymentProduct = await PaymentProductWrapper({
             data: paymentProductData[i],
@@ -217,7 +217,7 @@ class PaymentController extends Controller {
           paymentProducts[paymentProduct.getId()] =
             paymentProduct.getBasicInfo();
         }
-        
+
         return raiseSuccess(
           res,
           200,
@@ -241,19 +241,19 @@ class PaymentController extends Controller {
       return raiseServerError(res);
     }
   };
-  
+
   getAllAdminPaymentProduct = async (req, res) => {
-    const {raiseSuccess, raiseClientError, raiseServerError} = this;
+    const { raiseSuccess, raiseClientError, raiseServerError } = this;
     try {
       const paymentProductService = new PaymentProductService();
       const paymentProductData =
         await paymentProductService.getAllCreatorTypeProducts({
           creator_type: USER_CATEGORY.ADMIN,
         });
-      
+
       if (paymentProductData.length > 0) {
         let paymentProducts = {};
-        
+
         for (let i = 0; i < paymentProductData.length; i++) {
           const paymentProduct = await PaymentProductWrapper({
             data: paymentProductData[i],
@@ -261,7 +261,7 @@ class PaymentController extends Controller {
           paymentProducts[paymentProduct.getId()] =
             paymentProduct.getBasicInfo();
         }
-        
+
         return raiseSuccess(
           res,
           200,

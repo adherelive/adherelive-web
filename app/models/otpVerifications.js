@@ -1,6 +1,6 @@
 "use strict";
-import {DataTypes} from "sequelize";
-import {TABLE_NAME as userTableName} from "./users";
+import { DataTypes } from "sequelize";
+import { TABLE_NAME as userTableName } from "./users";
 
 export const TABLE_NAME = "otp_verifications";
 
@@ -12,7 +12,7 @@ export const db = (database) => {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
-        type: DataTypes.INTEGER
+        type: DataTypes.INTEGER,
       },
       user_id: {
         type: DataTypes.INTEGER,
@@ -21,8 +21,8 @@ export const db = (database) => {
           model: {
             tableName: userTableName,
           },
-          key: 'id'
-        }
+          key: "id",
+        },
       },
       otp: {
         type: DataTypes.STRING(4),
@@ -38,6 +38,5 @@ export const db = (database) => {
 
 export const associate = (database) => {
   // const {TABLE_NAME} = database.models || {};
-  
   // associations here (if any) ...
 };

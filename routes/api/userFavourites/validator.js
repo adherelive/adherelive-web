@@ -1,6 +1,6 @@
 import Joi from "@hapi/joi";
-import {validationError} from "../helper";
-import {FAVOURITE_TYPE, USER_FAV_ALL_TYPES} from "../../../constant";
+import { validationError } from "../helper";
+import { FAVOURITE_TYPE, USER_FAV_ALL_TYPES } from "../../../constant";
 
 const createFavourite = Joi.object().keys({
   type: Joi.string()
@@ -23,7 +23,7 @@ const removeFavourites = Joi.object().keys({
 });
 
 export const validateCreateFavourite = (req, res, next) => {
-  const {body: data = {}} = req;
+  const { body: data = {} } = req;
   const isValid = createFavourite.validate(data);
   if (isValid && isValid.error != null) {
     return validationError(res, isValid);
@@ -32,8 +32,8 @@ export const validateCreateFavourite = (req, res, next) => {
 };
 
 export const validateGetFavourites = (req, res, next) => {
-  const {query: {type = ""} = {}} = req;
-  const data = {type};
+  const { query: { type = "" } = {} } = req;
+  const data = { type };
   const isValid = getFavourites.validate(data);
   if (isValid && isValid.error != null) {
     return validationError(res, isValid);
@@ -42,8 +42,8 @@ export const validateGetFavourites = (req, res, next) => {
 };
 
 export const validateRemoveFavourites = (req, res, next) => {
-  const {params: {id = null} = {}} = req;
-  const data = {id};
+  const { params: { id = null } = {} } = req;
+  const data = { id };
   const isValid = removeFavourites.validate(data);
   if (isValid && isValid.error != null) {
     return validationError(res, isValid);

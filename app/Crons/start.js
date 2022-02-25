@@ -1,7 +1,7 @@
 import Logger from "../../libs/log";
 import moment from "moment";
 
-import {EVENT_STATUS, EVENT_TYPE, NOTIFICATION_STAGES} from "../../constant";
+import { EVENT_STATUS, EVENT_TYPE, NOTIFICATION_STAGES } from "../../constant";
 
 // SERVICES ---------------
 import ScheduleEventService from "../services/scheduleEvents/scheduleEvent.service";
@@ -34,13 +34,13 @@ class StartCron {
     );
     return scheduleEvents;
   };
-  
+
   runObserver = async () => {
     try {
       Log.info("running START cron");
-      const {getScheduleData} = this;
+      const { getScheduleData } = this;
       const scheduleEvents = await getScheduleData();
-      
+
       let count = 0;
       if (scheduleEvents.length > 0) {
         for (const scheduleEvent of scheduleEvents) {
@@ -75,7 +75,7 @@ class StartCron {
       Log.debug("scheduleEvents 500 error ---->", error);
     }
   };
-  
+
   handleVitalStart = async (event) => {
     try {
       const eventId = event.getEventId();
@@ -87,20 +87,20 @@ class StartCron {
         },
         scheduleEventId
       );
-      
-      const {details} = event.getData();
-      
+
+      const { details } = event.getData();
+
       const participants = await CronHelper.getNotificationUsers(
         EVENT_TYPE.VITALS,
         eventId
       );
-      
+
       const job = JobSdk.execute({
         eventType: EVENT_TYPE.VITALS,
         eventStage: NOTIFICATION_STAGES.START,
         event: {
           ...event.getData(),
-          details: {...details, participants},
+          details: { ...details, participants },
         },
       });
       NotificationSdk.execute(job);
@@ -108,7 +108,7 @@ class StartCron {
       Log.debug("handleVitalStart 500 error ---->", error);
     }
   };
-  
+
   handleAppointmentStart = async (event) => {
     try {
       const eventId = event.getEventId();
@@ -120,19 +120,19 @@ class StartCron {
         },
         scheduleEventId
       );
-      
+
       const participants = await CronHelper.getNotificationUsers(
         EVENT_TYPE.APPOINTMENT,
         eventId
       );
-      
-      const {details} = event.getData() || {};
+
+      const { details } = event.getData() || {};
       const appointmentJob = AppointmentJob.execute(EVENT_STATUS.STARTED, {
         ...event.getData(),
-        details: {...details, participants},
+        details: { ...details, participants },
       });
       await NotificationSdk.execute(appointmentJob);
-      
+
       // const job = JobSdk.execute({
       //     eventType: EVENT_TYPE.APPOINTMENT,
       //     eventStage: NOTIFICATION_STAGES.START,
@@ -143,15 +143,15 @@ class StartCron {
       Log.debug("handleAppointmentStart 500 error ---->", error);
     }
   };
-  
+
   handleMedicationStart = async (event) => {
     try {
       const eventId = event.getEventId();
       const scheduleEventId = event.getScheduleEventId();
       const scheduleEventService = new ScheduleEventService();
-      
-      const medication = await medicationService.getMedication({id: eventId});
-      
+
+      const medication = await medicationService.getMedication({ id: eventId });
+
       if (medication) {
         const updateEventStatus = await scheduleEventService.update(
           {
@@ -159,16 +159,16 @@ class StartCron {
           },
           scheduleEventId
         );
-        
+
         const eventScheduleData = await scheduleEventService.getEventByData({
           id: scheduleEventId,
         });
-        
+
         const medicationJob = MedicationJob.execute(
           EVENT_STATUS.STARTED,
           eventScheduleData
         );
-        
+
         await NotificationSdk.execute(medicationJob);
       } else {
         const cancelledEvent = await scheduleEventService.update(
@@ -178,7 +178,7 @@ class StartCron {
           scheduleEventId
         );
       }
-      
+
       // const job = JobSdk.execute({
       //     eventType: EVENT_TYPE.MEDICATION_REMINDER,
       //     eventStage: NOTIFICATION_STAGES.START,
@@ -189,16 +189,16 @@ class StartCron {
       Log.debug("handleVitalStart 500 error ---->", error);
     }
   };
-  
+
   handleDietStart = async (event) => {
     try {
       const eventId = event.getEventId();
       const scheduleEventId = event.getScheduleEventId();
       const scheduleEventService = new ScheduleEventService();
       const dietService = new DietService();
-      
-      const dietExists = (await dietService.findOne({id: eventId})) || null;
-      
+
+      const dietExists = (await dietService.findOne({ id: eventId })) || null;
+
       if (dietExists) {
         await scheduleEventService.update(
           {
@@ -206,11 +206,11 @@ class StartCron {
           },
           scheduleEventId
         );
-        
+
         const eventScheduleData = await scheduleEventService.getEventByData({
           id: scheduleEventId,
         });
-        
+
         const dietJob = DietJob.execute(
           EVENT_STATUS.STARTED,
           eventScheduleData
@@ -228,17 +228,17 @@ class StartCron {
       Log.debug("handleDietStart 500 error", error);
     }
   };
-  
+
   handleWorkoutStart = async (event) => {
     try {
       const eventId = event.getEventId();
       const scheduleEventId = event.getScheduleEventId();
       const scheduleEventService = new ScheduleEventService();
       const workoutService = new WorkoutService();
-      
+
       const workoutExists =
-        (await workoutService.findOne({id: eventId})) || null;
-      
+        (await workoutService.findOne({ id: eventId })) || null;
+
       if (workoutExists) {
         await scheduleEventService.update(
           {
@@ -246,11 +246,11 @@ class StartCron {
           },
           scheduleEventId
         );
-        
+
         const eventScheduleData = await scheduleEventService.getEventByData({
           id: scheduleEventId,
         });
-        
+
         const workoutJob = WorkoutJob.execute(
           EVENT_STATUS.STARTED,
           eventScheduleData
@@ -268,7 +268,7 @@ class StartCron {
       Log.debug("handleWorkoutStart 500 error", error);
     }
   };
-  
+
   handleCarePlanStart = async (event) => {
     try {
       const eventId = event.getEventId();
@@ -280,16 +280,16 @@ class StartCron {
         },
         scheduleEventId
       );
-      
+
       const eventScheduleData = await scheduleEventService.getEventByData({
         id: scheduleEventId,
       });
-      
+
       const carePlanJob = CarePlanJob.execute(
         EVENT_STATUS.SCHEDULED,
         eventScheduleData
       );
-      
+
       await NotificationSdk.execute(carePlanJob);
     } catch (error) {
       Log.debug("handleCarePlanStart 500 error ---->", error);

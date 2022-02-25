@@ -1,10 +1,10 @@
-import React, {Component, Fragment} from "react";
-import {injectIntl} from "react-intl";
-import {Drawer, message, Spin} from "antd";
+import React, { Component, Fragment } from "react";
+import { injectIntl } from "react-intl";
+import { Drawer, message, Spin } from "antd";
 import MissedWorkoutCard from "../../Cards/patient/missedWorkout";
 
 import messages from "./message";
-import {USER_CATEGORY} from "../../../constant";
+import { USER_CATEGORY } from "../../../constant";
 
 class MissedWorkoutsDrawer extends Component {
   constructor(props) {
@@ -16,38 +16,38 @@ class MissedWorkoutsDrawer extends Component {
       fetching: false,
     };
   }
-  
+
   componentDidMount() {
     // this.getMissedWorkout();
   }
-  
+
   formatMessage = (data) => this.props.intl.formatMessage(data);
-  
+
   onClose = () => {
-    const {close} = this.props;
+    const { close } = this.props;
     close();
   };
-  
+
   handlePatientDetailsRedirect = (patient_id) => (e) => {
-    const {authenticated_category} = this.props;
-    
+    const { authenticated_category } = this.props;
+
     if (authenticated_category === USER_CATEGORY.PROVIDER) {
       return;
     }
-    
-    const {history} = this.props;
+
+    const { history } = this.props;
     this.onClose();
     history.push(`/patients/${patient_id}`);
   };
-  
+
   getWorkoutList = () => {
-    const {patients = {}, missed_workouts = {}} = this.props;
-    const {handlePatientDetailsRedirect, formatMessage} = this;
-    
+    const { patients = {}, missed_workouts = {} } = this.props;
+    const { handlePatientDetailsRedirect, formatMessage } = this;
+
     const workoutList = [];
     const criticalList = [];
     const nonCriticalList = [];
-    
+
     Object.keys(missed_workouts).forEach((id) => {
       const {
         critical,
@@ -55,10 +55,10 @@ class MissedWorkoutsDrawer extends Component {
         workout_name = "",
         timings,
       } = missed_workouts[id] || {};
-      
-      const {basic_info: {id: patientId, full_name} = {}} =
-      patients[participant_id] || {};
-      
+
+      const { basic_info: { id: patientId, full_name } = {} } =
+        patients[participant_id] || {};
+
       if (critical) {
         criticalList.push(
           <MissedWorkoutCard
@@ -81,7 +81,7 @@ class MissedWorkoutsDrawer extends Component {
         );
       }
     });
-    
+
     workoutList.push(
       <div>
         <div>
@@ -112,11 +112,11 @@ class MissedWorkoutsDrawer extends Component {
     );
     return workoutList;
   };
-  
+
   render() {
-    const {visible = false} = this.props;
-    const {fetching} = this.state;
-    
+    const { visible = false } = this.props;
+    const { fetching } = this.state;
+
     if (visible !== true) {
       return null;
     }
@@ -132,7 +132,7 @@ class MissedWorkoutsDrawer extends Component {
         >
           <div className="mt20 black-85 wp100">
             {fetching ? (
-              <Spin size="small" className="flex align-center justify-center"/>
+              <Spin size="small" className="flex align-center justify-center" />
             ) : (
               this.getWorkoutList()
             )}

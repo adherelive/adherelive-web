@@ -1,10 +1,10 @@
-import {connect} from "react-redux";
-import {withRouter} from "react-router-dom";
+import { connect } from "react-redux";
+import { withRouter } from "react-router-dom";
 import EditAppointmentDrawer from "../../Components/Drawer/editAppointment";
-import {close} from "../../modules/drawer";
-import {DRAWER} from "../../constant";
-import {getMedications} from "../../modules/medications";
-import {getPatientCarePlanDetails} from "../../modules/carePlans";
+import { close } from "../../modules/drawer";
+import { DRAWER } from "../../constant";
+import { getMedications } from "../../modules/medications";
+import { getPatientCarePlanDetails } from "../../modules/carePlans";
 import {
   getAppointments,
   updateAppointment,
@@ -20,14 +20,14 @@ import {
 
 const mapStateToProps = (state) => {
   const {
-    drawer: {visible, loading, data: {type, payload = {}} = {}},
+    drawer: { visible, loading, data: { type, payload = {} } = {} },
     patients,
     treatments,
     appointments,
     static_templates,
     providers,
     favourites_data = {},
-    pages: {favourite_medical_test_ids = []} = {},
+    pages: { favourite_medical_test_ids = [] } = {},
   } = state;
   return {
     visible: visible && type === DRAWER.EDIT_APPOINTMENT,
@@ -53,12 +53,12 @@ const mapDispatchToProps = (dispatch) => {
     getPatientCarePlanDetails: (patientId) =>
       dispatch(getPatientCarePlanDetails(patientId)),
     markFavourite: (payload) => dispatch(markFavourite(payload)),
-    getFavourites: ({type}) => dispatch(getFavourites({type})),
-    removeFavourite: ({typeId, type}) =>
-      dispatch(removeFavourite({typeId, type})),
+    getFavourites: ({ type }) => dispatch(getFavourites({ type })),
+    removeFavourite: ({ typeId, type }) =>
+      dispatch(removeFavourite({ typeId, type })),
     removeFavouriteRecord: (id) => dispatch(removeFavouriteByRecordId(id)),
     getAppointmentsDetails: () => dispatch(getAppointmentsDetails()),
-    
+
     // editAppointment: data => dispatch(editAppointment(data)),
   };
 };

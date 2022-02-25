@@ -1,13 +1,13 @@
-import {connect} from "react-redux";
-import {withRouter} from "react-router-dom";
+import { connect } from "react-redux";
+import { withRouter } from "react-router-dom";
 import DoctorConsultationFeeTable from "../../Components/DoctorConsultationFee/table";
-import {authDoctorSelector} from "../../modules/doctors/selectors";
+import { authDoctorSelector } from "../../modules/doctors/selectors";
 import {
   getDoctorPaymentProduct,
   deleteDoctorPaymentProduct,
 } from "../../modules/doctors";
-import {open} from "../../modules/drawer";
-import {DRAWER} from "../../constant";
+import { open } from "../../modules/drawer";
+import { DRAWER } from "../../constant";
 
 const mapStateToProps = (state) => {
   const {
@@ -21,9 +21,9 @@ const mapStateToProps = (state) => {
       authenticated_category,
     } = {},
   } = state;
-  
+
   const auth_doctor_id = authDoctorSelector(state);
-  
+
   return {
     doctors: doctors[auth_doctor_id],
     payment_products,
@@ -41,7 +41,7 @@ const mapDispatchToProps = (dispatch) => {
   return {
     getDoctorPaymentProduct: (data) => dispatch(getDoctorPaymentProduct(data)),
     openConsultationFeeDrawer: (payload) =>
-      dispatch(open({type: DRAWER.ADD_CONSULTATION_FEE, payload})),
+      dispatch(open({ type: DRAWER.ADD_CONSULTATION_FEE, payload })),
     deleteDoctorPaymentProduct: (data) =>
       dispatch(deleteDoctorPaymentProduct(data)),
   };

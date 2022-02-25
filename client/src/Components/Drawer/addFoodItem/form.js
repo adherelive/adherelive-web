@@ -1,5 +1,5 @@
-import React, {Component} from "react";
-import {injectIntl} from "react-intl";
+import React, { Component } from "react";
+import { injectIntl } from "react-intl";
 
 import Form from "antd/es/form";
 import Select from "antd/es/select";
@@ -7,8 +7,8 @@ import Input from "antd/es/input";
 import messages from "./message";
 import message from "antd/es/message";
 
-const {Item: FormItem} = Form;
-const {Option, OptGroup} = Select;
+const { Item: FormItem } = Form;
+const { Option, OptGroup } = Select;
 
 const NAME = "name";
 const PORTION_SIZE = "portion_size";
@@ -34,21 +34,21 @@ class AddFoodItemForm extends Component {
   constructor(props) {
     super(props);
   }
-  
+
   componentDidMount() {
-    const {food_item_name = ""} = this.props;
+    const { food_item_name = "" } = this.props;
     if (food_item_name.length) {
-      const {form: {setFieldsValue} = {}} = this.props;
-      
-      setFieldsValue({[NAME]: food_item_name});
+      const { form: { setFieldsValue } = {} } = this.props;
+
+      setFieldsValue({ [NAME]: food_item_name });
     }
   }
-  
+
   getPortionOptions = () => {
-    const {portions = {}} = this.props;
-    
+    const { portions = {} } = this.props;
+
     return Object.values(portions).map((each, index) => {
-      const {basic_info: {id = null, name = ""} = {}} = each || {};
+      const { basic_info: { id = null, name = "" } = {} } = each || {};
       return (
         <Option key={`${index}-${name}`} value={id}>
           {name}
@@ -56,28 +56,28 @@ class AddFoodItemForm extends Component {
       );
     });
   };
-  
+
   handlePortionSelect = (value) => {
-    const {form: {setFieldsValue} = {}} = this.props;
-    
-    setFieldsValue({[PORTION_ID]: value});
+    const { form: { setFieldsValue } = {} } = this.props;
+
+    setFieldsValue({ [PORTION_ID]: value });
   };
-  
+
   formatMessage = (data) => this.props.intl.formatMessage(data);
-  
+
   render() {
     const {
-      form: {getFieldDecorator, isFieldTouched, getFieldError},
+      form: { getFieldDecorator, isFieldTouched, getFieldError },
     } = this.props;
-    
-    const {formatMessage} = this;
-    
+
+    const { formatMessage } = this;
+
     let fieldsError = {};
     FIELDS.forEach((value) => {
       const error = isFieldTouched(value) && getFieldError(value);
-      fieldsError = {...fieldsError, [value]: error};
+      fieldsError = { ...fieldsError, [value]: error };
     });
-    
+
     return (
       <Form className="fw700 wp100 pb30 Form">
         {/* food item name */}
@@ -92,9 +92,9 @@ class AddFoodItemForm extends Component {
                 message: formatMessage(messages.name_required_error),
               },
             ],
-          })(<Input type="string" max="500"/>)}
+          })(<Input type="string" max="500" />)}
         </FormItem>
-        
+
         <div className="flex align-center justify-space-between wp100">
           <div className="flex  wp40 ">
             {/* portion size */}
@@ -111,7 +111,7 @@ class AddFoodItemForm extends Component {
                     ),
                   },
                 ],
-              })(<Input type="number" min="1"/>)}
+              })(<Input type="number" min="1" />)}
             </FormItem>
           </div>
           <div className="flex  wp40 ">
@@ -138,7 +138,7 @@ class AddFoodItemForm extends Component {
             </FormItem>
           </div>
         </div>
-        
+
         <div className="wp100 flex algin-center justify-space-between">
           {/* proteins */}
           <FormItem
@@ -148,31 +148,31 @@ class AddFoodItemForm extends Component {
             {getFieldDecorator(
               PROTEINS,
               {}
-            )(<Input type="number" suffix={"gm"}/>)}
+            )(<Input type="number" suffix={"gm"} />)}
           </FormItem>
-          
+
           {/* carbs */}
           <FormItem label={formatMessage(messages.carbs)} className="mt-4 wp30">
             {getFieldDecorator(
               CARBS,
               {}
-            )(<Input type="number" suffix={"gm"}/>)}
+            )(<Input type="number" suffix={"gm"} />)}
           </FormItem>
-          
+
           {/* fats */}
           <FormItem label={formatMessage(messages.fats)} className="mt-4 wp30">
-            {getFieldDecorator(FATS, {})(<Input type="number" suffix={"gm"}/>)}
+            {getFieldDecorator(FATS, {})(<Input type="number" suffix={"gm"} />)}
           </FormItem>
         </div>
-        
+
         {/* fibers */}
         <FormItem
           label={formatMessage(messages.fibers)}
           className="flex-grow-1 mt-4"
         >
-          {getFieldDecorator(FIBERS, {})(<Input type="number" suffix={"gm"}/>)}
+          {getFieldDecorator(FIBERS, {})(<Input type="number" suffix={"gm"} />)}
         </FormItem>
-        
+
         {/* calories */}
         <FormItem
           label={formatMessage(messages.calories)}
@@ -181,7 +181,7 @@ class AddFoodItemForm extends Component {
           {getFieldDecorator(
             CALORIFIC_VALUE,
             {}
-          )(<Input type="number" className="mb20"/>)}
+          )(<Input type="number" className="mb20" />)}
         </FormItem>
       </Form>
     );

@@ -1,10 +1,10 @@
 import Database from "../../../libs/mysql";
 
-import {TABLE_NAME} from "../../models/vitals";
-import {TABLE_NAME as vitalTemplatesTableName} from "../../models/vitalTemplates";
-import {TABLE_NAME as carePlanTableName} from "../../models/carePlan";
-import {TABLE_NAME as carePlanAppointmentTableName} from "../../models/carePlanAppointments";
-import {TABLE_NAME as carePlanMedicationTableName} from "../../models/carePlanMedications";
+import { TABLE_NAME } from "../../models/vitals";
+import { TABLE_NAME as vitalTemplatesTableName } from "../../models/vitalTemplates";
+import { TABLE_NAME as carePlanTableName } from "../../models/carePlan";
+import { TABLE_NAME as carePlanAppointmentTableName } from "../../models/carePlanAppointments";
+import { TABLE_NAME as carePlanMedicationTableName } from "../../models/carePlanMedications";
 
 class VitalService {
   addVital = async (data) => {
@@ -17,7 +17,7 @@ class VitalService {
       throw error;
     }
   };
-  
+
   update = async (data, id) => {
     const transaction = await Database.initTransaction();
     try {
@@ -33,7 +33,7 @@ class VitalService {
       throw error;
     }
   };
-  
+
   getByData = async (data) => {
     try {
       const vitals = await Database.getModel(TABLE_NAME).findOne({
@@ -56,7 +56,7 @@ class VitalService {
       throw error;
     }
   };
-  
+
   getAllByData = async (data) => {
     try {
       const vitals = await Database.getModel(TABLE_NAME).findAll({

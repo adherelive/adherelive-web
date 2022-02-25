@@ -5,11 +5,11 @@ class ProviderTermsMappingsWrapper extends BaseProviderTermsMapping {
   constructor(data) {
     super(data);
   }
-  
+
   getBasicInfo = () => {
-    const {_data} = this;
-    const {id, provider_id, terms_and_conditions_id} = _data || {};
-    
+    const { _data } = this;
+    const { id, provider_id, terms_and_conditions_id } = _data || {};
+
     return {
       basic_info: {
         id,

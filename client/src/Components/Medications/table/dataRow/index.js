@@ -1,4 +1,4 @@
-import {TABLE_COLUMN, formatMedicationTableData} from "../helper";
+import { TABLE_COLUMN, formatMedicationTableData } from "../helper";
 
 export default (data) => {
   const {
@@ -9,8 +9,8 @@ export default (data) => {
     canViewDetails = false,
   } = data;
   const formattedData = formatMedicationTableData(data);
-  const {medicationData, medicationTemplateData} = formattedData || {};
-  
+  const { medicationData, medicationTemplateData } = formattedData || {};
+
   return {
     key: id,
     [TABLE_COLUMN.MEDICINE.dataIndex]: {

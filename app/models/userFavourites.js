@@ -1,8 +1,8 @@
 "use strict";
-import {DataTypes} from "sequelize";
+import { DataTypes } from "sequelize";
 
 export const TABLE_NAME = "user_favourites";
-import {USER_FAV_USER_CATEGORY, USER_FAV_ALL_TYPES} from "../../constant";
+import { USER_FAV_USER_CATEGORY, USER_FAV_ALL_TYPES } from "../../constant";
 
 export const db = (database) => {
   database.define(

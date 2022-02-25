@@ -1,4 +1,4 @@
-import {USER_CATEGORY, TRANSACTION_STATUS} from "../../../constant";
+import { USER_CATEGORY, TRANSACTION_STATUS } from "../../../constant";
 
 export const getTransactionFilters = () => {
   return Object.keys(TRANSACTION_STATUS).map((key) => {
@@ -57,21 +57,21 @@ export const formatTransactionTableData = (data) => {
     transaction_ids,
     users,
   } = data || {};
-  
+
   const transactionData = transactions[id] || {};
   const {
     requestor = {},
     payee = {},
-    basic_info: {payment_product_id = null} = {},
+    basic_info: { payment_product_id = null } = {},
   } = transactions[id] || {};
   let doctorId = null;
-  
+
   let patientId = null,
     doctorData = {},
     patientData = {};
-  const {id: requestor_id = null, category: requestor_cat = ""} = requestor;
-  const {id: payee_id = null, category: payee_cat = ""} = payee;
-  
+  const { id: requestor_id = null, category: requestor_cat = "" } = requestor;
+  const { id: payee_id = null, category: payee_cat = "" } = payee;
+
   if (
     requestor_cat === USER_CATEGORY.DOCTOR ||
     requestor_cat === USER_CATEGORY.HSP
@@ -82,31 +82,31 @@ export const formatTransactionTableData = (data) => {
     doctorId = payee_id;
     patientId = requestor_id;
   }
-  
-  const {user_roles = {}} = data;
-  const {basic_info: {user_identity: request_user_id = null} = {}} =
+
+  const { user_roles = {} } = data;
+  const { basic_info: { user_identity: request_user_id = null } = {} } =
     user_roles[requestor_id];
-  const {basic_info: {user_identity: payee_user_id = null} = {}} =
+  const { basic_info: { user_identity: payee_user_id = null } = {} } =
     user_roles[payee_id];
-  
+
   for (let each in doctors) {
-    const {basic_info: {user_id} = {}} = doctors[each];
+    const { basic_info: { user_id } = {} } = doctors[each];
     if (user_id.toString() === request_user_id.toString()) {
       doctorData = doctors[each];
       break;
     }
   }
-  
+
   for (let each in patients) {
-    const {basic_info: {user_id} = {}} = patients[each];
+    const { basic_info: { user_id } = {} } = patients[each];
     if (user_id.toString() === payee_user_id.toString()) {
       patientData = patients[each];
       break;
     }
   }
-  
+
   const paymentProductData = payment_products[payment_product_id] || {};
-  
+
   return {
     transactionData,
     patientData,

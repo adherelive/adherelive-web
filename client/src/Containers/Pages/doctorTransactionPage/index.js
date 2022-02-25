@@ -1,8 +1,8 @@
-import {connect} from "react-redux";
+import { connect } from "react-redux";
 import DoctorTransactionPage from "../../../Components/Pages/doctorTransactionPage";
-import {withRouter} from "react-router-dom";
-import {open} from "../../../modules/drawer";
-import {DRAWER} from "../../../constant";
+import { withRouter } from "react-router-dom";
+import { open } from "../../../modules/drawer";
+import { DRAWER } from "../../../constant";
 
 const mapStateToProps = (state) => {
   return {};

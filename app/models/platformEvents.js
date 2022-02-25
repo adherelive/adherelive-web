@@ -1,9 +1,9 @@
 "use strict";
-import {DataTypes} from "sequelize";
+import { DataTypes } from "sequelize";
 
 export const PLATFORM_EVENTS = "platform_events";
 
-export const db = database => {
+export const db = (database) => {
   database.define(
     PLATFORM_EVENTS,
     {
@@ -11,7 +11,7 @@ export const db = database => {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
-        type: DataTypes.INTEGER
+        type: DataTypes.INTEGER,
       },
     },
     {
@@ -22,14 +22,13 @@ export const db = database => {
           return {
             id: this.id,
           };
-        }
-      }
+        },
+      },
     }
   );
 };
 
 export const associate = (database) => {
   // const {TABLE_NAME} = database.models || {};
-  
   // associations here (if any) ...
 };

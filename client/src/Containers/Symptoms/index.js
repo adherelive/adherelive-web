@@ -1,12 +1,12 @@
-import {connect} from "react-redux";
+import { connect } from "react-redux";
 import Symptoms from "../../Components/Symptoms";
-import {DRAWER} from "../../constant";
-import {getSymptomTimeLine, getHistorySymptom} from "../../modules/symptoms";
+import { DRAWER } from "../../constant";
+import { getSymptomTimeLine, getHistorySymptom } from "../../modules/symptoms";
 
 const mapStateToProps = (state) => {
   const {
-    drawer: {visible, loading, data: {type, payload = {}} = {}},
-    other_details: {medication_details = {}} = {},
+    drawer: { visible, loading, data: { type, payload = {} } = {} },
+    other_details: { medication_details = {} } = {},
     medicines,
     upload_documents = {},
   } = state;

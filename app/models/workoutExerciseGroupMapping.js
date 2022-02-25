@@ -1,7 +1,7 @@
 "use strict";
-import {DataTypes} from "sequelize";
-import {TABLE_NAME as exerciseGroupTableName} from "./exerciseGroup";
-import {TABLE_NAME as workoutTableName} from "./workout";
+import { DataTypes } from "sequelize";
+import { TABLE_NAME as exerciseGroupTableName } from "./exerciseGroup";
+import { TABLE_NAME as workoutTableName } from "./workout";
 
 export const TABLE_NAME = "workout_exercise_group_mappings";
 
@@ -46,5 +46,4 @@ export const db = (database) => {
   );
 };
 
-export const associate = (database) => {
-};
+export const associate = (database) => {};

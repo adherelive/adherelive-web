@@ -8,7 +8,7 @@ class AlgoliaController extends Controller {
   constructor() {
     super();
   }
-  
+
   updateMedicine = async (req, res) => {
     try {
       Log.info("starting medicine upload");

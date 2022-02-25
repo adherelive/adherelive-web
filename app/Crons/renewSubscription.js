@@ -5,7 +5,7 @@ import TwilioService from "../services/twilio/twilio.service";
 import SubscriptionWrapper from "../ApiWrapper/mobile/subscriptions";
 import DoctorWrapper from "../ApiWrapper/mobile/doctor";
 import PatientWrapper from "../ApiWrapper/mobile/patient";
-import {USER_CATEGORY} from "../../constant";
+import { USER_CATEGORY } from "../../constant";
 
 import Logger from "../../libs/log";
 
@@ -16,26 +16,26 @@ class RenewSubscription {
     try {
       const subscriptionService = new SubscriptionService();
       const subscriptions = await subscriptionService.getAllTodayRenewingData();
-      
+
       Log.info(`TOTAL SUBSCRIPTIONS DUE : ${subscriptions.length}`);
       if (subscriptions.length > 0) {
         for (let i = 0; i < subscriptions.length; i++) {
           const subscription = await SubscriptionWrapper({
             data: subscriptions[i],
           });
-          
+
           let patientUserRoleId = null;
           if (subscription.getSubscriberType() === USER_CATEGORY.PATIENT) {
             patientUserRoleId = subscription.getSubscriberId();
           }
-          
-          const {payment_products, payment_product_id} =
+
+          const { payment_products, payment_product_id } =
             await subscription.getReferenceInfo();
-          
+
           const {
-            basic_info: {amount, name, type, creator_id, creator_type} = {},
+            basic_info: { amount, name, type, creator_id, creator_type } = {},
           } = payment_products[payment_product_id] || {};
-          
+
           let doctorUserRoleId = null;
           if (
             creator_type === USER_CATEGORY.DOCTOR ||
@@ -43,7 +43,7 @@ class RenewSubscription {
           ) {
             doctorUserRoleId = creator_id;
           }
-          
+
           const message = JSON.stringify({
             meta: {
               name,
@@ -52,7 +52,7 @@ class RenewSubscription {
               productId: payment_product_id,
             },
           });
-          
+
           if (patientUserRoleId && doctorUserRoleId) {
             const twilioMessage = await TwilioService.addUserMessage(
               doctorUserRoleId,

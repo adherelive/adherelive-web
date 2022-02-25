@@ -5,8 +5,8 @@ import Tooltip from "antd/es/tooltip";
 import EyeFilled from "@ant-design/icons/EyeFilled";
 
 export default (props) => {
-  const {action, id, formatMessage, canViewDetails = false} = props || {};
-  
+  const { action, id, formatMessage, canViewDetails = false } = props || {};
+
   return (
     <Tooltip
       placement="bottom"
@@ -22,10 +22,10 @@ export default (props) => {
             <EyeFilled
               className="w20"
               className={"del doc-opt"}
-              style={{fontSize: "18px", color: "#1890ff"}}
+              style={{ fontSize: "18px", color: "#1890ff" }}
             />
           ) : (
-            <img src={edit_image} alt="edit button"/>
+            <img src={edit_image} alt="edit button" />
           )}
         </div>
       </div>

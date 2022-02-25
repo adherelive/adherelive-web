@@ -4,8 +4,8 @@ import {
   PATH,
   ONBOARDING_STATUS,
 } from "../../constant";
-import {doRequest} from "../../Helper/network";
-import {Auth} from "../../Helper/urls";
+import { doRequest } from "../../Helper/network";
+import { Auth } from "../../Helper/urls";
 
 export const SIGNING = "SIGNING";
 export const SIGNING_COMPLETED = "SIGNING_COMPLETED";
@@ -85,7 +85,7 @@ export const AUTH_INITIAL_STATE = {
 
 function setAuthRedirect(user, isInitial = false) {
   // let userData = Object.values(user).length ? Object.values(user)[0] : [];
-  
+
   const {
     onboarded = true,
     onboarding_status = "",
@@ -122,13 +122,13 @@ function setAuthRedirect(user, isInitial = false) {
 
 function setAuthRedirectSignIn(user, isInitial = false) {
   // let userData = Object.values(user).length ? Object.values(user)[0] : [];
-  
+
   const {
     onboarded = true,
     onboarding_status = "",
     category = USER_CATEGORY.DOCTOR,
   } = user;
-  
+
   let authRedirect = "/";
   if (
     !onboarded &&
@@ -159,21 +159,21 @@ export const signIn = (payload) => {
   let response = {};
   return async (dispatch) => {
     try {
-      dispatch({type: SIGNING});
-      
+      dispatch({ type: SIGNING });
+
       response = await doRequest({
         method: REQUEST_TYPE.POST,
         url: Auth.signInUrl(),
         data: payload,
       });
-      
-      const {status, payload: {error = "", data = {}} = {}} =
-      response || {};
-      
+
+      const { status, payload: { error = "", data = {} } = {} } =
+        response || {};
+
       if (status === false) {
         dispatch({
           type: SIGNING_COMPLETED_WITH_ERROR,
-          payload: {error},
+          payload: { error },
         });
       } else if (status === true) {
         const {
@@ -184,11 +184,11 @@ export const signIn = (payload) => {
           notificationToken = "",
           feedId = "",
         } = data;
-        
-        const {has_consent = false} = users[auth_user] || {};
+
+        const { has_consent = false } = users[auth_user] || {};
         // let authUser = Object.values(users).length ? Object.values(users)[0] : {};
         let authRedirection = setAuthRedirectSignIn(users[auth_user]);
-        
+
         dispatch({
           type: SIGNING_COMPLETED,
           payload: {
@@ -208,7 +208,7 @@ export const signIn = (payload) => {
       console.log("err signin", err);
       throw err;
     }
-    
+
     return response;
   };
 };
@@ -217,20 +217,20 @@ export const uploadDocument = (payload) => {
   let response = {};
   return async (dispatch) => {
     try {
-      dispatch({type: COMMON_UPLOAD_DOCUMENT});
-      
+      dispatch({ type: COMMON_UPLOAD_DOCUMENT });
+
       response = await doRequest({
         method: REQUEST_TYPE.POST,
         url: Auth.uploadDocument(),
         data: payload,
       });
-      
-      const {status, payload: {error = ""} = {}} = response || {};
-      
+
+      const { status, payload: { error = "" } = {} } = response || {};
+
       if (status === false) {
         dispatch({
           type: COMMON_UPLOAD_DOCUMENT_FAILED,
-          payload: {error},
+          payload: { error },
         });
       } else if (status === true) {
         dispatch({
@@ -249,21 +249,21 @@ export const forgotPassword = (payload) => {
   let response = {};
   return async (dispatch) => {
     try {
-      dispatch({type: FORGOT_PASSWORD});
-      
+      dispatch({ type: FORGOT_PASSWORD });
+
       response = await doRequest({
         method: REQUEST_TYPE.POST,
         url: Auth.forgotPasswordUrl(),
         data: payload,
       });
-      
-      const {status, payload: {error = "", data = {}} = {}} =
-      response || {};
-      
+
+      const { status, payload: { error = "", data = {} } = {} } =
+        response || {};
+
       if (status === false) {
         dispatch({
           type: FORGOT_PASSWORD_COMPLETED_WITH_ERROR,
-          payload: {error},
+          payload: { error },
         });
       } else if (status === true) {
         const {
@@ -272,7 +272,7 @@ export const forgotPassword = (payload) => {
           auth_category = "",
           permissions = [],
         } = data;
-        
+
         dispatch({
           type: FORGOT_PASSWORD_COMPLETED,
           payload: {},
@@ -282,7 +282,7 @@ export const forgotPassword = (payload) => {
       console.log("err signin", err);
       throw err;
     }
-    
+
     return response;
   };
 };
@@ -291,20 +291,20 @@ export const verifyForgotPasswordLink = (link) => {
   let response = {};
   return async (dispatch) => {
     try {
-      dispatch({type: VERIFY_FORGOT_PASSWORD_LINK});
-      
+      dispatch({ type: VERIFY_FORGOT_PASSWORD_LINK });
+
       response = await doRequest({
         method: REQUEST_TYPE.POST,
         url: Auth.verifyResetPasswordLinkUrl(link),
       });
-      
-      const {status, payload: {error = "", data = {}} = {}} =
-      response || {};
-      
+
+      const { status, payload: { error = "", data = {} } = {} } =
+        response || {};
+
       if (status === false) {
         dispatch({
           type: VERIFY_FORGOT_PASSWORD_LINK_COMPLETED_WITH_ERROR,
-          payload: {error},
+          payload: { error },
         });
       } else if (status === true) {
         dispatch({
@@ -316,7 +316,7 @@ export const verifyForgotPasswordLink = (link) => {
       console.log("err VALIDATE FORGOT PASSWORD LINK", err);
       throw err;
     }
-    
+
     return response;
   };
 };
@@ -325,21 +325,21 @@ export const resetPassword = (payload) => {
   let response = {};
   return async (dispatch) => {
     try {
-      dispatch({type: RESET_PASSWORD});
-      
+      dispatch({ type: RESET_PASSWORD });
+
       response = await doRequest({
         method: REQUEST_TYPE.POST,
         url: Auth.resetPasswordUrl(),
         data: payload,
       });
-      
-      const {status, payload: {error = "", data = {}} = {}} =
-      response || {};
-      
+
+      const { status, payload: { error = "", data = {} } = {} } =
+        response || {};
+
       if (status === false) {
         dispatch({
           type: RESET_PASSWORD_COMPLETED_WITH_ERROR,
-          payload: {error},
+          payload: { error },
         });
       } else if (status === true) {
         dispatch({
@@ -351,7 +351,7 @@ export const resetPassword = (payload) => {
       console.log("err RESET PASSWORD", err);
       throw err;
     }
-    
+
     return response;
   };
 };
@@ -360,20 +360,20 @@ export const verifyUser = (link) => {
   let response = {};
   return async (dispatch) => {
     try {
-      dispatch({type: VALIDATING_LINK});
-      
+      dispatch({ type: VALIDATING_LINK });
+
       response = await doRequest({
         method: REQUEST_TYPE.GET,
         url: Auth.getVerifyUserUrl(link),
       });
-      
-      const {status, payload: {error = "", data = {}} = {}} =
-      response || {};
-      
+
+      const { status, payload: { error = "", data = {} } = {} } =
+        response || {};
+
       if (status === false) {
         dispatch({
           type: VALIDATING_LINK_COMPLETED_WITH_ERROR,
-          payload: {error},
+          payload: { error },
         });
       } else if (status === true) {
         let {
@@ -383,9 +383,9 @@ export const verifyUser = (link) => {
           permissions = [],
         } = data;
         // let authUser = Object.values(users).length ? Object.values(users)[0] : {};
-        
+
         let authRedirection = setAuthRedirect(users[auth_user]);
-        const {has_consent = false} = users[auth_user] || {};
+        const { has_consent = false } = users[auth_user] || {};
         dispatch({
           type: VALIDATING_LINK_COMPLETED,
           payload: {
@@ -403,7 +403,7 @@ export const verifyUser = (link) => {
       console.log("err signin", err);
       throw err;
     }
-    
+
     return response;
   };
 };
@@ -412,24 +412,24 @@ export const signUp = (payload) => {
   let response = {};
   return async (dispatch) => {
     try {
-      dispatch({type: SIGNING_UP});
-      
+      dispatch({ type: SIGNING_UP });
+
       response = await doRequest({
         method: REQUEST_TYPE.POST,
         url: Auth.signUpUrl(),
         data: payload,
       });
-      
-      const {status, payload: {error = "", data = {}} = {}} =
-      response || {};
-      
+
+      const { status, payload: { error = "", data = {} } = {} } =
+        response || {};
+
       if (status === false) {
         dispatch({
           type: SIGNING_UP_COMPLETED_WITH_ERROR,
-          payload: {error},
+          payload: { error },
         });
       } else if (status === true) {
-        const {_id, users} = data;
+        const { _id, users } = data;
         dispatch({
           type: SIGNING_UP_COMPLETED,
           payload: {},
@@ -439,7 +439,7 @@ export const signUp = (payload) => {
       console.log("err signup", err);
       throw err;
     }
-    
+
     return response;
   };
 };
@@ -448,14 +448,14 @@ export const signOut = () => {
   let response = {};
   return async (dispatch) => {
     try {
-      dispatch({type: SIGNING_OUT});
-      
+      dispatch({ type: SIGNING_OUT });
+
       response = await doRequest({
         method: REQUEST_TYPE.POST,
         url: Auth.signOutUrl(),
       });
-      
-      const {status, payload: {error} = {}} = response || {};
+
+      const { status, payload: { error } = {} } = response || {};
       if (status === true) {
         dispatch({
           type: SIGNING_OUT_COMPLETED,
@@ -480,24 +480,24 @@ export const signOut = () => {
 export const googleSignIn = (data) => {
   return async (dispatch, getState) => {
     try {
-      const {auth = {}} = getState();
-      dispatch({type: GOOGLE_SIGNING});
+      const { auth = {} } = getState();
+      dispatch({ type: GOOGLE_SIGNING });
       const response = await doRequest({
         method: REQUEST_TYPE.POST,
         data: data,
         url: Auth.googleSignInUrl(),
       });
-      
+
       if (response.status === false) {
         dispatch({
           type: GOOGLE_SIGNING_COMPLETED_WITH_ERROR,
-          payload: {error: response.payload.error},
+          payload: { error: response.payload.error },
         });
       } else if (response.status === true) {
-        const {lastUrl = false} = data;
-        const {_id, users} = response.payload.data;
+        const { lastUrl = false } = data;
+        const { _id, users } = response.payload.data;
         let authRedirection = "/";
-        const {has_consent = false} = users[_id] || {};
+        const { has_consent = false } = users[_id] || {};
         dispatch({
           type: GOOGLE_SIGNING_COMPLETED,
           payload: {
@@ -518,24 +518,24 @@ export const googleSignIn = (data) => {
 export const facebookSignIn = (data) => {
   return async (dispatch) => {
     try {
-      dispatch({type: FACEBOOK_SIGNING});
-      
+      dispatch({ type: FACEBOOK_SIGNING });
+
       const response = await doRequest({
         method: REQUEST_TYPE.POST,
         data: data,
         url: Auth.facebookSignInUrl(),
       });
-      
+
       if (response.status === false) {
         dispatch({
           type: FACEBOOK_SIGNING_COMPLETED_WITH_ERROR,
-          payload: {error: response.payload.error},
+          payload: { error: response.payload.error },
         });
       } else if (response.status === true) {
-        const {lastUrl = false} = data || {};
-        const {_id, users = {}} = response.payload.data || {};
+        const { lastUrl = false } = data || {};
+        const { _id, users = {} } = response.payload.data || {};
         let authRedirection = "/";
-        const {has_consent = false} = users[_id] || {};
+        const { has_consent = false } = users[_id] || {};
         dispatch({
           type: FACEBOOK_SIGNING_COMPLETED,
           payload: {
@@ -557,20 +557,20 @@ export const getInitialData = () => {
   let response = {};
   return async (dispatch) => {
     try {
-      dispatch({type: GETTING_INITIAL_DATA});
-      
+      dispatch({ type: GETTING_INITIAL_DATA });
+
       response = await doRequest({
         method: REQUEST_TYPE.GET,
         url: Auth.getInitialData(),
       });
-      
-      const {status, payload: {error, data} = {}} = response || {};
+
+      const { status, payload: { error, data } = {} } = response || {};
       console.log("Status for the Initial data load: ", status);
-      
+
       if (status === false) {
         dispatch({
           type: GETTING_INITIAL_DATA_COMPLETED_WITH_ERROR,
-          payload: {error},
+          payload: { error },
         });
       } else if (status === true) {
         let {
@@ -585,12 +585,12 @@ export const getInitialData = () => {
           firebase_keys = {},
         } = data;
         // let authUser = Object.values(users).length ? Object.values(users)[0] : {};
-        
+
         let authRedirection = setAuthRedirect(users[auth_user], true);
-        const {has_consent = false} = users[auth_user] || {};
-        
+        const { has_consent = false } = users[auth_user] || {};
+
         console.log("Value of the FireBase keys: ", firebase_keys);
-        
+
         dispatch({
           type: GETTING_INITIAL_DATA_COMPLETED,
           payload: {
@@ -623,21 +623,21 @@ export const giveUserConsent = (payload) => {
   let response = {};
   return async (dispatch) => {
     try {
-      dispatch({type: GIVE_USER_CONSENT_START});
-      
+      dispatch({ type: GIVE_USER_CONSENT_START });
+
       response = await doRequest({
         method: REQUEST_TYPE.POST,
         url: Auth.giveUserConsentUrl(),
         data: payload,
       });
-      
-      const {status, payload: {error = "", data = {}} = {}} =
-      response || {};
-      
+
+      const { status, payload: { error = "", data = {} } = {} } =
+        response || {};
+
       if (status === false) {
         dispatch({
           type: GIVE_USER_CONSENT_COMPLETED_WITH_ERROR,
-          payload: {error},
+          payload: { error },
         });
       } else if (status === true) {
         const {
@@ -650,8 +650,8 @@ export const giveUserConsent = (payload) => {
         } = data;
         // let authUser = Object.values(users).length ? Object.values(users)[0] : {};
         let authRedirection = setAuthRedirectSignIn(users[auth_user]);
-        const {has_consent = false} = users[auth_user] || {};
-        
+        const { has_consent = false } = users[auth_user] || {};
+
         dispatch({
           type: GIVE_USER_CONSENT_COMPLETED,
           payload: {
@@ -682,7 +682,7 @@ export const giveUserConsent = (payload) => {
 // };
 
 export default (state = AUTH_INITIAL_STATE, action = {}) => {
-  const {type, payload} = action;
+  const { type, payload } = action;
   switch (type) {
     case GETTING_INITIAL_DATA_COMPLETED:
       return {
@@ -700,7 +700,7 @@ export default (state = AUTH_INITIAL_STATE, action = {}) => {
           ? payload.doctor_provider_id
           : null,
       };
-    
+
     case VALIDATING_LINK_COMPLETED:
       return {
         authenticated: true,
@@ -710,7 +710,7 @@ export default (state = AUTH_INITIAL_STATE, action = {}) => {
         authPermissions: payload.authPermissions,
         hasConsent: payload.hasConsent,
       };
-    
+
     case GETTING_INITIAL_DATA_COMPLETED_WITH_ERROR:
       return {
         authenticated: false,
@@ -740,7 +740,7 @@ export default (state = AUTH_INITIAL_STATE, action = {}) => {
         authenticated: false,
         error: payload.error,
       };
-    
+
     case SIGNING_OUT_COMPLETED:
       return {
         authenticated: false,

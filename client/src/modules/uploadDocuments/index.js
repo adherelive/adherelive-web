@@ -1,5 +1,5 @@
-import {doRequest} from "../../Helper/network";
-import {REQUEST_TYPE} from "../../constant";
+import { doRequest } from "../../Helper/network";
+import { REQUEST_TYPE } from "../../constant";
 import {
   getUploadAppointmentDocumentUrl,
   getDeleteAppointmentDocumentUrl,
@@ -31,7 +31,7 @@ export const storeAppointmentDocuments = (data) => {
         type: STORE_APPOINTMENT_DOCS,
         data: data,
       });
-      
+
       console.log("STORE_APPOINTMENT_DOCS");
     } catch (err) {
       console.log("New Doctor Error", err);
@@ -45,16 +45,16 @@ export const uploadAppointmentDocs = (payload, id) => {
   console.log("123098138239 data --> ", payload);
   return async (dispatch) => {
     try {
-      dispatch({type: UPLOAD_APPOINTMENT_DOCUMENT_START});
+      dispatch({ type: UPLOAD_APPOINTMENT_DOCUMENT_START });
       response = await doRequest({
         method: REQUEST_TYPE.POST,
         data: payload,
         url: getUploadAppointmentDocumentUrl(id),
       });
-      
-      const {status, payload: {data} = {}} = response || {};
+
+      const { status, payload: { data } = {} } = response || {};
       if (status === true) {
-        dispatch({type: UPLOAD_APPOINTMENT_DOCUMENT_COMPLETE, data});
+        dispatch({ type: UPLOAD_APPOINTMENT_DOCUMENT_COMPLETE, data });
       } else {
         dispatch({
           type: UPLOAD_APPOINTMENT_DOCUMENT_FAILED,
@@ -71,15 +71,15 @@ export const deleteAppointmentDocs = (doc_id) => {
   let response = {};
   return async (dispatch) => {
     try {
-      dispatch({type: DELETE_APPOINTMENT_DOCUMENT_START});
+      dispatch({ type: DELETE_APPOINTMENT_DOCUMENT_START });
       response = await doRequest({
         method: REQUEST_TYPE.DELETE,
         url: getDeleteAppointmentDocumentUrl(doc_id),
       });
-      
-      const {status, payload: {data} = {}} = response || {};
+
+      const { status, payload: { data } = {} } = response || {};
       if (status === true) {
-        dispatch({type: DELETE_APPOINTMENT_DOCUMENT_COMPLETE, data});
+        dispatch({ type: DELETE_APPOINTMENT_DOCUMENT_COMPLETE, data });
       } else {
         dispatch({
           type: DELETE_APPOINTMENT_DOCUMENT_FAILED,
@@ -93,7 +93,7 @@ export const deleteAppointmentDocs = (doc_id) => {
 };
 
 function uploadDocumentReducer(state, data) {
-  const {upload_documents} = data || {};
+  const { upload_documents } = data || {};
   if (upload_documents) {
     return {
       ...state,
@@ -105,7 +105,7 @@ function uploadDocumentReducer(state, data) {
 }
 
 export default (state = {}, action) => {
-  const {type, data} = action;
+  const { type, data } = action;
   switch (type) {
     default:
       return uploadDocumentReducer(state, data);

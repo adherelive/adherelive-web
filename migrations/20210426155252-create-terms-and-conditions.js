@@ -1,8 +1,8 @@
 "use strict";
 
-import {TERMS_AND_CONDITIONS_TYPES} from "../constant";
+import { TERMS_AND_CONDITIONS_TYPES } from "../constant";
 
-import {TABLE_NAME} from "../app/models/termsAndConditions";
+import { TABLE_NAME } from "../app/models/termsAndConditions";
 
 module.exports = {
   up: (queryInterface, Sequelize) => {
@@ -34,7 +34,7 @@ module.exports = {
       },
     });
   },
-  
+
   down: (queryInterface, Sequelize) => {
     return queryInterface.dropTable(TABLE_NAME);
   },

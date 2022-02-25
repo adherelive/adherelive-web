@@ -1,6 +1,6 @@
 "use strict";
-import {TABLE_NAME} from "../app/models/userFavourites";
-import {USER_FAV_USER_CATEGORY} from "../constant";
+import { TABLE_NAME } from "../app/models/userFavourites";
+import { USER_FAV_USER_CATEGORY } from "../constant";
 
 module.exports = {
   up: (queryInterface, Sequelize) => {
@@ -13,7 +13,7 @@ module.exports = {
       }),
     ]);
   },
-  
+
   down: (queryInterface, Sequelize) => {
     return Promise.all([
       queryInterface.changeColumn(TABLE_NAME, "user_category_type"),

@@ -1,6 +1,6 @@
-import {Op} from "sequelize";
+import { Op } from "sequelize";
 import Database from "../../../libs/mysql";
-import {TABLE_NAME} from "../../models/vitalTemplates";
+import { TABLE_NAME } from "../../models/vitalTemplates";
 
 class VitalTemplateService {
   searchByData = async (data) => {
@@ -17,7 +17,7 @@ class VitalTemplateService {
       throw error;
     }
   };
-  
+
   getByData = async (data) => {
     try {
       const vitalTemplates = await Database.getModel(TABLE_NAME).findOne({
@@ -28,7 +28,7 @@ class VitalTemplateService {
       throw error;
     }
   };
-  
+
   getAllByData = async (data) => {
     try {
       return await Database.getModel(TABLE_NAME).findAll({
