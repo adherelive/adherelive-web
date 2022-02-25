@@ -17,7 +17,7 @@ import messages from "./messages";
 import Loading from "../Common/Loading";
 import Tooltip from "antd/es/tooltip";
 import { Button } from "antd";
-import firebase from "firebase/app";
+import firebase from "firebase/compat/app";
 import "firebase/analytics";
 import * as FirebaseHelper from "../../Helper/firebase";
 
