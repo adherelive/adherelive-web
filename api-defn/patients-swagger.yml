@@ -19,7 +19,6 @@ info:
      |**429 Too Many Requests**      | The user has sent too many requests beyond the throttling limit. | 
      |**500 Internal Server Error**  | An unexpected internal error occurred.                           | 
      |**503 Service Unavailable**    | The service is temporarily unavailable.                          | 
-
   termsOfService: 'http://adhere.live/terms/'
   contact:
     email: info@adhere.live
