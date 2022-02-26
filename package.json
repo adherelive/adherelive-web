@@ -84,7 +84,7 @@
     "aws-sdk": "^2.706.0",
     "axios": "^0.22.0",
     "base64-img": "^1.0.4",
-    "bcrypt": "^4.0.1",
+    "bcrypt": "^5.0.0",
     "chalk": "^4.1.0",
     "concurrently": "^5.3.0",
     "cookie-parser": "^1.4.5",
@@ -99,7 +99,7 @@
     "express": "^4.17.3",
     "express-validator": "^6.6.0",
     "faker": "^5.5.3",
-    "getstream": "^5.0.5",
+    "getstream": "^7.1.1",
     "google-auth-library": "^7.10.0",
     "joi": "^17.4.2",
     "js-base64": "^3.7.2",
@@ -123,7 +123,7 @@
     "request": "^2.88.2",
     "rrule": "2.6.8",
     "sequelize": "^5.21.8",
-    "sequelize-cli": "^5.5.1",
+    "sequelize-cli": "^6.3.0",
     "twilio": "3.68.0",
     "uuid": "^8.3.2"
   }
