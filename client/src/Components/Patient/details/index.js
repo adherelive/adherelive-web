@@ -98,6 +98,7 @@ import Tooltip from "antd/es/tooltip";
 // AKSHAY NEW CODE FOR SUBSCRIPTION
 import RecommendSubscription from "../../Subscription/Drawer/RecommendSubscription";
 import RecommendService from "../../Subscription/Drawer/RecommendService";
+import SubscriptionTable from "../../Subscription/SubscriptionTable";
 
 const BLANK_TEMPLATE = "Blank Template";
 const { TabPane } = Tabs;
@@ -121,6 +122,10 @@ const PATIENT_TABS = {
   WORKOUTS: {
     name: "Workout",
     key: "7",
+  },
+  SUBSCRIPTIONS: {
+    name: "Subscriptions",
+    key: "8",
   },
 };
 
@@ -398,7 +403,7 @@ const PatientProfileHeader = ({
         </div>
       </div>
       <div className="flex-grow-1 tar">
-        {/* <Dropdown
+        <Dropdown
           overlay={getRecommendMenu()}
           trigger={["click"]}
           placement="bottomRight"
@@ -411,7 +416,7 @@ const PatientProfileHeader = ({
           >
             <span className="fs16">Recommend</span>
           </Button>
-        </Dropdown> */}
+        </Dropdown>
         {(showAddButton ||
           user_role_id.toString() === auth_role.toString() ||
           secondary_doctor_user_role_ids.includes(auth_role) === true) && (
@@ -2898,6 +2903,7 @@ class PatientDetails extends Component {
                           </div>
                         )}
                       </TabPane>
+
                       <TabPane
                         tab={PATIENT_TABS.WORKOUTS["name"]}
                         key={PATIENT_TABS.WORKOUTS["key"]}
@@ -2920,6 +2926,13 @@ class PatientDetails extends Component {
                             })}
                           </div>
                         )}
+                      </TabPane>
+                      {/* AKSHAY NEW CODE FOR SUBSCRIPTIONS */}
+                      <TabPane
+                        tab={PATIENT_TABS.SUBSCRIPTIONS["name"]}
+                        key={PATIENT_TABS.SUBSCRIPTIONS["key"]}
+                      >
+                        <SubscriptionTable />
                       </TabPane>
                     </Tabs>
                   </div>

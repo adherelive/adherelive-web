@@ -14,31 +14,31 @@ class TransactionTable extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      loading: true,
+      loading: false,
     };
   }
 
   componentDidMount() {
-    this.handleGetAllTransactions();
+    // this.handleGetAllTransactions();
   }
 
   formatMessage = (message) => this.props.intl.formatMessage(message);
 
-  async handleGetAllTransactions() {
-    try {
-      const { getAllTransactions } = this.props;
-      this.setState({ loading: true });
-      const response = await getAllTransactions();
-      const { status } = response || {};
-      if (status === true) {
-        this.setState({ loading: false });
-      } else {
-        this.setState({ loading: false });
-      }
-    } catch (error) {
-      console.log("handleGetAllTransactions error : ", error);
-    }
-  }
+  // async handleGetAllTransactions() {
+  //   try {
+  //     const { getAllTransactions } = this.props;
+  //     this.setState({ loading: true });
+  //     const response = await getAllTransactions();
+  //     const { status } = response || {};
+  //     if (status === true) {
+  //       this.setState({ loading: false });
+  //     } else {
+  //       this.setState({ loading: false });
+  //     }
+  //   } catch (error) {
+  //     console.log("handleGetAllTransactions error : ", error);
+  //   }
+  // }
 
   onSelectChange = (selectedRowKeys) => {
     this.setState({ selectedRows: selectedRowKeys });
@@ -51,7 +51,7 @@ class TransactionTable extends Component {
   getDataSource = () => {
     const {
       transactions,
-      transaction_ids,
+      // transaction_ids,
       payment_products,
       patients,
       doctors,
@@ -59,6 +59,8 @@ class TransactionTable extends Component {
       authenticated_category,
       user_roles,
     } = this.props;
+
+    let transaction_ids = ["1", "2", "3", "4"];
 
     return transaction_ids.map((id) => {
       return generateRow({

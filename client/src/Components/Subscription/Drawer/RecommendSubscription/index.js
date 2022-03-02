@@ -34,6 +34,7 @@ class RecommendSubscription extends Component {
     this.state = {
       subscriptionName: "",
       serviceFees: "",
+      netSubscriptionFees: "",
       submitting: false,
       duration: 1,
       discount: 5,
@@ -66,9 +67,18 @@ class RecommendSubscription extends Component {
   onRadioChange = (e) => {
     e.preventDefault();
     console.log(e.target.value);
-    this.setState({
-      duration: this.state.duration + parseInt(e.target.value),
-    });
+    if (e.target.value == 100) {
+      this.setState({
+        duration: e.target.value,
+      });
+    } else {
+      this.setState({
+        duration:
+          this.state.duration == 100
+            ? 1
+            : this.state.duration + parseInt(e.target.value),
+      });
+    }
   };
 
   onDiscountChange = (e) => {
@@ -92,8 +102,14 @@ class RecommendSubscription extends Component {
   };
 
   renderRecommendSubscription = () => {
-    const { subscriptionName, serviceFees, duration, discount, notes } =
-      this.state;
+    const {
+      subscriptionName,
+      serviceFees,
+      duration,
+      discount,
+      notes,
+      netSubscriptionFees,
+    } = this.state;
 
     return (
       <div className="form-block-ap">
@@ -138,8 +154,8 @@ class RecommendSubscription extends Component {
                 <RadioButton value={1} onClick={this.onRadioChange}>
                   +1 month
                 </RadioButton>
-                <RadioButton value={2} onClick={this.onRadioChange}>
-                  +1 ongoing
+                <RadioButton value={100} onClick={this.onRadioChange}>
+                  ongoing
                 </RadioButton>
               </RadioGroup>
             </div>
@@ -149,13 +165,24 @@ class RecommendSubscription extends Component {
             // validateStatus={error ? "error" : ""}
             // help={error ? error[0] : ""}
           >
-            <InputNumber min={1} style={{ width: "100%" }} value={duration} />
+            {duration == 100 ? (
+              <Input
+                autoFocus
+                className="mt4"
+                //   placeholder={formatMessage(messages.genericName)}
+                placeholder={"Rs. 600"}
+                value={"Ongoing"}
+                disabled
+              />
+            ) : (
+              <InputNumber min={1} style={{ width: "100%" }} value={duration} />
+            )}
           </FormItem>
 
           <div className="form-headings flex align-center justify-start">
             <span>
               {/* {this.formatMessage(messages.defaultConsultationOptions)} */}
-              Service fees
+              Subscription fees
             </span>
           </div>
 
@@ -173,6 +200,7 @@ class RecommendSubscription extends Component {
               disabled
             />
           </FormItem>
+
           <div className="flex align-items-end justify-content-space-between">
             <div className="flex direction-row flex-grow-1">
               <label htmlFor="quantity" className="form-label" title="Quantity">
@@ -193,12 +221,34 @@ class RecommendSubscription extends Component {
               </RadioGroup>
             </div>
           </div>
+
           <FormItem
             className="flex-1 align-self-end"
             // validateStatus={error ? "error" : ""}
             // help={error ? error[0] : ""}
           >
             <InputNumber min={1} style={{ width: "100%" }} value={discount} />
+          </FormItem>
+          <div className="form-headings flex align-center justify-start">
+            <span>
+              {/* {this.formatMessage(messages.defaultConsultationOptions)} */}
+              Net subscription fees after discount
+            </span>
+          </div>
+
+          <FormItem
+            className="full-width ant-date-custom"
+            //   label={formatMessage(messages.genericName)}
+            // label={"Name of subsacription plan"}
+          >
+            <Input
+              autoFocus
+              className="mt4"
+              //   placeholder={formatMessage(messages.genericName)}
+              placeholder={"Rs. 600"}
+              value={netSubscriptionFees}
+              disabled
+            />
           </FormItem>
           <div className="form-headings flex align-center justify-start">
             {/* {this.formatMessage(messages.razorpayLink)} */}
