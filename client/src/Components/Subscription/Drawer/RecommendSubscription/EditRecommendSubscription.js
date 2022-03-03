@@ -28,16 +28,18 @@ const RadioButton = Radio.Button;
 const RadioGroup = Radio.Group;
 const { Item: FormItem } = Form;
 
-class RecommendService extends Component {
+class EditRecommendSubscription extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      serviceOfferingName: "",
+      subscriptionName: "Health lite",
       serviceFees: "",
+      netSubscriptionFees: "",
       submitting: false,
+      duration: 1,
       discount: 5,
       notes: "",
-      netServiceFees: "",
+      status: "ACTIVE",
     };
   }
 
@@ -56,11 +58,27 @@ class RecommendService extends Component {
     this.setState({ [e.target.name]: e.target.value });
   };
 
-  setServiceOfferingName = (value) => {
+  setStatus = (value) => {
     this.setState({
-      serviceOfferingName: value,
-      serviceFees: 200,
+      status: value,
     });
+  };
+
+  onRadioChange = (e) => {
+    e.preventDefault();
+    console.log(e.target.value);
+    if (e.target.value == 100) {
+      this.setState({
+        duration: e.target.value,
+      });
+    } else {
+      this.setState({
+        duration:
+          this.state.duration == 100
+            ? 1
+            : this.state.duration + parseInt(e.target.value),
+      });
+    }
   };
 
   onDiscountChange = (e) => {
@@ -69,18 +87,16 @@ class RecommendService extends Component {
     });
   };
 
-  getServiceOfferingOption = () => {
-    let serviceOfferingOptions = [
-      { name: "Virtual consultation", id: 1 },
-      { name: "Remote monitoring", id: 2 },
-      { name: "At clinic physical consultation", id: 3 },
-      { name: "At home physical consultation", id: 4 },
+  getStatusOption = () => {
+    let statusOptions = [
+      { name: "ACTIVE", id: 1 },
+      { name: "IN-ACTIVE", id: 2 },
     ];
     let options = [];
-    serviceOfferingOptions.forEach((service) => {
+    statusOptions.forEach((status) => {
       options.push(
-        <Option key={service.id} value={service.name}>
-          {service.name}
+        <Option key={status.id} value={status.name}>
+          {status.name}
         </Option>
       );
     });
@@ -90,11 +106,13 @@ class RecommendService extends Component {
 
   renderRecommendSubscription = () => {
     const {
-      serviceOfferingName,
+      subscriptionName,
       serviceFees,
+      duration,
       discount,
       notes,
-      netServiceFees,
+      netSubscriptionFees,
+      status,
     } = this.state;
 
     return (
@@ -103,15 +121,36 @@ class RecommendService extends Component {
           <div className="form-headings flex align-center justify-start">
             <span>
               {/* {this.formatMessage(messages.defaultConsultationOptions)} */}
-              Service offerings
+              Subscription plan
+            </span>
+          </div>
+
+          <FormItem
+            className="full-width ant-date-custom"
+            //   label={formatMessage(messages.genericName)}
+            // label={"Name of subsacription plan"}
+          >
+            <Input
+              autoFocus
+              className="mt4"
+              //   placeholder={formatMessage(messages.genericName)}
+              placeholder={""}
+              value={subscriptionName}
+              disabled
+            />
+          </FormItem>
+          <div className="form-headings flex align-center justify-start">
+            <span>
+              {/* {this.formatMessage(messages.defaultConsultationOptions)} */}
+              Status
             </span>
           </div>
 
           <Select
             className="form-inputs-ap drawer-select"
             placeholder="Select Consultation Type"
-            value={serviceOfferingName}
-            onChange={this.setServiceOfferingName}
+            value={status}
+            onChange={this.setStatus}
             autoComplete="off"
             optionFilterProp="children"
             filterOption={(input, option) =>
@@ -120,13 +159,55 @@ class RecommendService extends Component {
                 .indexOf(input.toLowerCase()) >= 0
             }
           >
-            {this.getServiceOfferingOption()}
+            {this.getStatusOption()}
           </Select>
+
+          <div className="flex align-items-end justify-content-space-between">
+            <div className="flex direction-row flex-grow-1">
+              <label htmlFor="quantity" className="form-label" title="Quantity">
+                {/* {formatMessage(messages.quantity)} */}
+                Duration
+              </label>
+
+              {/* <div className="star-red">*</div> */}
+            </div>
+            {/* <div className="label-color fontsize12 mb8">
+            
+            </div> */}
+            <div className="flex-grow-0">
+              <RadioGroup size="small" className="flex justify-content-end">
+                <RadioButton value={1} onClick={this.onRadioChange}>
+                  +1 month
+                </RadioButton>
+                <RadioButton value={100} onClick={this.onRadioChange}>
+                  ongoing
+                </RadioButton>
+              </RadioGroup>
+            </div>
+          </div>
+          <FormItem
+            className="flex-1 align-self-end"
+            // validateStatus={error ? "error" : ""}
+            // help={error ? error[0] : ""}
+          >
+            {duration == 100 ? (
+              <Input
+                autoFocus
+                className="mt4"
+                //   placeholder={formatMessage(messages.genericName)}
+                placeholder={"Rs. 600"}
+                value={"Ongoing"}
+                disabled
+              />
+            ) : (
+              <InputNumber min={1} style={{ width: "100%" }} value={duration} />
+            )}
+          </FormItem>
 
           <div className="form-headings flex align-center justify-start">
             <span>
               {/* {this.formatMessage(messages.defaultConsultationOptions)} */}
-              Service fees
+              Subscription fees
             </span>
           </div>
 
@@ -144,6 +225,7 @@ class RecommendService extends Component {
               disabled
             />
           </FormItem>
+
           <div className="flex align-items-end justify-content-space-between">
             <div className="flex direction-row flex-grow-1">
               <label htmlFor="quantity" className="form-label" title="Quantity">
@@ -175,7 +257,7 @@ class RecommendService extends Component {
           <div className="form-headings flex align-center justify-start">
             <span>
               {/* {this.formatMessage(messages.defaultConsultationOptions)} */}
-              Net Service fees after discount
+              Net subscription fees after discount
             </span>
           </div>
 
@@ -189,7 +271,7 @@ class RecommendService extends Component {
               className="mt4"
               //   placeholder={formatMessage(messages.genericName)}
               placeholder={"Rs. 600"}
-              value={netServiceFees}
+              value={netSubscriptionFees}
               disabled
             />
           </FormItem>
@@ -209,7 +291,7 @@ class RecommendService extends Component {
               maxLength={1000}
               //   placeholder={formatMessage(messages.description_text_placeholder)}
               placeholder={
-                "I suggest let meet virtually and see how you are going. Call the reception or me"
+                "I suggest you take four month subscription until we drop some of your elevated vitals for LFT'S, CSR, etc..."
               }
               rows={4}
               name="notes"
@@ -234,7 +316,7 @@ class RecommendService extends Component {
     return (
       <Fragment>
         <Drawer
-          title={"Recommend services offerings"}
+          title={"Edit Recommend Subscription Plan"}
           placement="right"
           maskClosable={false}
           headerStyle={{
@@ -269,4 +351,4 @@ class RecommendService extends Component {
   }
 }
 
-export default injectIntl(RecommendService);
+export default injectIntl(EditRecommendSubscription);
