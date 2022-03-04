@@ -5,7 +5,8 @@ import {
   WHEN_TO_TAKE_ABBREVATIONS,
   APPOINTMENT_TYPE,
   PATIENT_MEAL_TIMINGS,
-  CATEGORY_ONE,
+  // CATEGORY_ONE,
+  categories,
 } from "../../../constant";
 import moment from "moment";
 import PDFDocument from "pdfkit";
@@ -1332,9 +1333,7 @@ function printCarePlanData({
           timings,
         } = medicationData;
         // TODO: need to add type here.
-        let medi_type = CATEGORY_ONE.items.find(
-          (x) => x.id == medicineType
-        ).name;
+        let medi_type = categories.items.find((x) => x.id == medicineType).name;
         const medicineData = `(${medi_type}) ${medicineName} `;
 
         // .fontSize(MEDICINE_FONT_SIZE)
