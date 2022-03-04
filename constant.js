@@ -706,6 +706,34 @@ export const MEDICINE_FORM_TYPE = {
 
 // MEDICINE FORMULATION ----------------------------------------------
 
+export const categories = {
+  index: "1",
+  name: "",
+  items: [
+    { name: "TABLET", defaultUnit: MG, id: 1 },
+    { name: "SYRUP", defaultUnit: ML, id: 2 },
+    { name: "CAPSULE", defaultUnit: MG, id: 3 },
+    { name: "SUSPENSION", defaultUnit: MG, id: 4 },
+    { name: "GELS", defaultUnit: ML, id: 5 },
+    { name: "LOTIONS", defaultUnit: ML, id: 6 },
+    { name: "LINIMENTS", defaultUnit: ML, id: 7 },
+    { name: "LOZENGES", defaultUnit: MG, id: 8 },
+    //new changes
+    { name: "SPRAY", defaultUnit: ML, id: 9 },
+    { name: "NEBULISER", defaultUnit: MG, id: 10 },
+    { name: "CREAM", defaultUnit: ML, id: 11 },
+    { name: "OINTMENT", defaultUnit: ML, id: 12 },
+    { name: "RECTAL SUPPOSITORY", defaultUnit: MG, id: 13 },
+    { name: "RECTAL ENEMA", defaultUnit: MG, id: 14 },
+    { name: "PESSARIES OF VAGINAL", defaultUnit: MG, id: 15 },
+    { name: "INHALER", defaultUnit: ML, id: 16 },
+    { name: "I/D INTRDERMAL", defaultUnit: ML, id: 17 },
+    { name: "S/C SUBCUTANEOUS", defaultUnit: ML, id: 18 },
+    { name: "I/M INTRAMUSCULAR", defaultUnit: ML, id: 19 },
+    { name: "I/V INTRAVENOUS", defaultUnit: ML, id: 20 },
+  ],
+};
+
 export const CATEGORY_ONE = {
   index: "1",
   name: "",
