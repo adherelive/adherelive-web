@@ -1,5 +1,5 @@
-import {doRequest} from "../../Helper/network";
-import {REQUEST_TYPE} from "../../constant";
+import { doRequest } from "../../Helper/network";
+import { REQUEST_TYPE } from "../../constant";
 import {
   addDietUrl,
   getDietsForCareplanUrl,
@@ -65,8 +65,8 @@ export const addDiet = (payload) => {
         url: addDietUrl(),
         data: payload,
       });
-      
-      const {status, payload: {data, message = ""} = {}} = response || {};
+
+      const { status, payload: { data, message = "" } = {} } = response || {};
       if (status === true) {
         dispatch({
           type: ADD_DIET_COMPLETED,
@@ -93,8 +93,8 @@ export const getPatientPreferenceDietDetails = (patient_id) => {
         method: REQUEST_TYPE.GET,
         url: getPatientPreferenceDietDetailsUrl(patient_id),
       });
-      
-      const {status, payload: {data, message = ""} = {}} = response || {};
+
+      const { status, payload: { data, message = "" } = {} } = response || {};
       if (status === true) {
         dispatch({
           type: GET_PATEINT_PREFERENCE_DIET_DETAILS_COMPLETED,
@@ -125,8 +125,8 @@ export const updateDiet = (payload, diet_id) => {
         url: updateDietUrl(diet_id),
         data: payload,
       });
-      
-      const {status, payload: {data, message = ""} = {}} = response || {};
+
+      const { status, payload: { data, message = "" } = {} } = response || {};
       if (status === true) {
         dispatch({
           type: UPDATE_DIET_COMPLETED,
@@ -145,7 +145,7 @@ export const updateDiet = (payload, diet_id) => {
   };
 };
 
-export const updateDietTotalCalories = ({total_calories, diet_id}) => {
+export const updateDietTotalCalories = ({ total_calories, diet_id }) => {
   let response = {};
   return async (dispatch) => {
     try {
@@ -153,8 +153,8 @@ export const updateDietTotalCalories = ({total_calories, diet_id}) => {
         method: REQUEST_TYPE.POST,
         url: updateDietTotalCaloriesUrl(diet_id, total_calories),
       });
-      
-      const {status, payload: {data, message = ""} = {}} = response || {};
+
+      const { status, payload: { data, message = "" } = {} } = response || {};
       if (status === true) {
         dispatch({
           type: UPDATE_DIET_TOTAL_CALORIES_COMPLETED,
@@ -181,8 +181,8 @@ export const getDietsForCareplan = (care_plan_id) => {
         method: REQUEST_TYPE.GET,
         url: getDietsForCareplanUrl(care_plan_id),
       });
-      
-      const {status, payload: {data, message = ""} = {}} = response || {};
+
+      const { status, payload: { data, message = "" } = {} } = response || {};
       if (status === true) {
         dispatch({
           type: GET_CAREPLAN_DIETS_COMPLETED,
@@ -209,8 +209,8 @@ export const getSingleDietData = (id) => {
         method: REQUEST_TYPE.GET,
         url: getDietDetailsByIdUrl(id),
       });
-      
-      const {status, payload: {data, message = ""} = {}} = response || {};
+
+      const { status, payload: { data, message = "" } = {} } = response || {};
       if (status === true) {
         dispatch({
           type: GET_SINGLE_DIET_DETAILS_COMPLETED,
@@ -237,15 +237,15 @@ export const deleteDiet = (id) => {
         method: REQUEST_TYPE.DELETE,
         url: getDietDetailsByIdUrl(id),
       });
-      
-      const {status, payload: {data: resp_data = {}, message = ""} = {}} =
-      response || {};
-      
+
+      const { status, payload: { data: resp_data = {}, message = "" } = {} } =
+        response || {};
+
       const data = {
         deleted_diet_id: id,
         ...resp_data,
       };
-      
+
       if (status === true) {
         dispatch({
           type: DELETE_DIET_COMPLETED,
@@ -272,8 +272,8 @@ export const getAllDietsForDoctor = () => {
         method: REQUEST_TYPE.GET,
         url: getAllDietsForDoctorUrl(),
       });
-      
-      const {status, payload: {data, message = ""} = {}} = response || {};
+
+      const { status, payload: { data, message = "" } = {} } = response || {};
       if (status === true) {
         dispatch({
           type: GET_ALL_DIETS_FOR_DOCTOR_COMPLETED,
@@ -296,19 +296,19 @@ export const getDietTimeline = (dietId) => {
   let response = {};
   return async (dispatch) => {
     try {
-      dispatch({type: GET_DIET_TIMELINE_START});
-      
+      dispatch({ type: GET_DIET_TIMELINE_START });
+
       response = await doRequest({
         method: REQUEST_TYPE.GET,
         url: getDietTimelineUrl(dietId),
       });
-      
-      const {status, payload: {data, message = ""} = {}} = response || {};
-      
+
+      const { status, payload: { data, message = "" } = {} } = response || {};
+
       if (status === true) {
-        dispatch({type: GET_DIET_TIMELINE_COMPLETED, data});
+        dispatch({ type: GET_DIET_TIMELINE_COMPLETED, data });
       } else {
-        dispatch({type: GET_DIET_TIMELINE_FAILED, message});
+        dispatch({ type: GET_DIET_TIMELINE_FAILED, message });
       }
     } catch (error) {
       console.log("UPDATE DIET MODULE catch error -> ", error);
@@ -318,13 +318,13 @@ export const getDietTimeline = (dietId) => {
 };
 
 function deleteDietReducer(state, data) {
-  const {deleted_diet_id} = data || {};
-  
+  const { deleted_diet_id } = data || {};
+
   if (deleted_diet_id) {
-    const {[deleted_diet_id.toString()]: diet, ...rest} = state || {};
-    
+    const { [deleted_diet_id.toString()]: diet, ...rest } = state || {};
+
     if (diet) {
-      let updatedDiet = {...rest};
+      let updatedDiet = { ...rest };
       return {
         ...updatedDiet,
       };
@@ -337,7 +337,7 @@ function deleteDietReducer(state, data) {
 }
 
 function dietReducer(state, data) {
-  const {diets = {}} = data || {};
+  const { diets = {} } = data || {};
   if (diets) {
     return {
       ...state,
@@ -349,7 +349,7 @@ function dietReducer(state, data) {
 }
 
 export default (state = {}, action) => {
-  const {type, data} = action || {};
+  const { type, data } = action || {};
   switch (type) {
     case ADD_DIET_COMPLETED:
       return dietReducer(state, data);

@@ -1,6 +1,6 @@
-import {doRequest} from "../../Helper/network";
-import {REQUEST_TYPE} from "../../constant";
-import {getVitalOccurenceUrl} from "../../Helper/urls/vitals";
+import { doRequest } from "../../Helper/network";
+import { REQUEST_TYPE } from "../../constant";
+import { getVitalOccurenceUrl } from "../../Helper/urls/vitals";
 
 export const GET_VITAL_OCCURENCE_START = "GET_VITAL_OCCURENCE_START";
 export const GET_VITAL_OCCURENCE_COMPLETED = "GET_VITAL_OCCURENCE_COMPLETED";
@@ -14,8 +14,8 @@ export const getVitalOccurence = () => {
         method: REQUEST_TYPE.GET,
         url: getVitalOccurenceUrl(),
       });
-      
-      const {status, payload: {data, message = ""} = {}} = response || {};
+
+      const { status, payload: { data, message = "" } = {} } = response || {};
       if (status === true) {
         dispatch({
           type: GET_VITAL_OCCURENCE_COMPLETED,
@@ -35,7 +35,7 @@ export const getVitalOccurence = () => {
 };
 
 function vitalOccurenceReducer(state, data) {
-  const {repeat_intervals = {}} = data || {};
+  const { repeat_intervals = {} } = data || {};
   if (repeat_intervals) {
     return {
       ...state,
@@ -49,7 +49,7 @@ function vitalOccurenceReducer(state, data) {
 }
 
 export default (state = {}, payload) => {
-  const {type, data} = payload || {};
+  const { type, data } = payload || {};
   switch (type) {
     case GET_VITAL_OCCURENCE_COMPLETED:
       return vitalOccurenceReducer(state, data);

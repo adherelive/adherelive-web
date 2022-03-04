@@ -11,15 +11,15 @@ class UserDeviceController extends Controller {
   constructor() {
     super();
   }
-  
+
   create = async (req, res) => {
-    const {raiseSuccess, raiseClientError, raiseServerError} = this;
+    const { raiseSuccess, raiseClientError, raiseServerError } = this;
     try {
       Log.debug("userDevice create req.body ---> ", req.body);
-      const {userId} = req.userDetails;
-      const {platform, one_signal_user_id, push_token} = req.body || {};
-      const userExists = await UserService.getUserData({id: userId});
-      
+      const { userId } = req.userDetails;
+      const { platform, one_signal_user_id, push_token } = req.body || {};
+      const userExists = await UserService.getUserData({ id: userId });
+
       if (userExists) {
         const deviceExists = await UserDeviceService.getDeviceByData({
           one_signal_user_id,
@@ -31,7 +31,7 @@ class UserDeviceController extends Controller {
             platform: platform,
             push_token: push_token,
           });
-          
+
           return raiseSuccess(res, 200, {}, "Device added successfully");
         } else {
           const userDeviceData = await UserDeviceService.updateDevice(
@@ -42,9 +42,9 @@ class UserDeviceController extends Controller {
             },
             deviceExists.get("id")
           );
-          
+
           Log.debug("userDeviceData", userDeviceData);
-          
+
           return raiseSuccess(res, 200, {}, "Device user updated successfully");
         }
       } else {
@@ -55,15 +55,15 @@ class UserDeviceController extends Controller {
       return raiseServerError(res);
     }
   };
-  
+
   delete = async (req, res) => {
-    const {raiseSuccess, raiseClientError, raiseServerError} = this;
+    const { raiseSuccess, raiseClientError, raiseServerError } = this;
     try {
-      const {userId: user_id} = req.userDetails;
-      const {device_id: one_signal_user_id} = req.body;
-      
-      await UserDeviceService.deleteDevice({user_id, one_signal_user_id});
-      
+      const { userId: user_id } = req.userDetails;
+      const { device_id: one_signal_user_id } = req.body;
+
+      await UserDeviceService.deleteDevice({ user_id, one_signal_user_id });
+
       return raiseSuccess(res, 200, {}, "Device deleted successfully");
     } catch (error) {
       Log.debug("userDevice delete 500 error", error);

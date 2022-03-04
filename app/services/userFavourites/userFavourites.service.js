@@ -1,16 +1,15 @@
 import Database from "../../../libs/mysql";
 
 // TABLES
-import {TABLE_NAME} from "../../models/userFavourites";
+import { TABLE_NAME } from "../../models/userFavourites";
 
 import Log from "../../../libs/log";
 
 const Logger = new Log("WEB > USER_FAVOURITES > SERVICE");
 
 class UserFavouritesService {
-  constructor() {
-  }
-  
+  constructor() {}
+
   markFavourite = async (data) => {
     const transaction = await Database.initTransaction();
     try {
@@ -25,7 +24,7 @@ class UserFavouritesService {
       throw error;
     }
   };
-  
+
   getAllFavourites = async (data) => {
     try {
       const favourite = await Database.getModel(TABLE_NAME).findAll({
@@ -37,7 +36,7 @@ class UserFavouritesService {
       throw error;
     }
   };
-  
+
   findExistingFavourite = async (data) => {
     try {
       const existing = await Database.getModel(TABLE_NAME).findOne({
@@ -49,7 +48,7 @@ class UserFavouritesService {
       throw error;
     }
   };
-  
+
   getByData = async (data) => {
     try {
       const favourite = await Database.getModel(TABLE_NAME).findOne({
@@ -61,7 +60,7 @@ class UserFavouritesService {
       throw error;
     }
   };
-  
+
   delete = async (id) => {
     try {
       const deleteFavourite = await Database.getModel(TABLE_NAME).destroy({

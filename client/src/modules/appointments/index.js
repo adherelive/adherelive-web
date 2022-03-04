@@ -1,5 +1,5 @@
-import {doRequest} from "../../Helper/network";
-import {REQUEST_TYPE} from "../../constant";
+import { doRequest } from "../../Helper/network";
+import { REQUEST_TYPE } from "../../constant";
 import {
   addAppointmentUrl,
   addCarePlanAppointmentUrl,
@@ -42,16 +42,16 @@ export const addAppointment = (payload) => {
   let response = {};
   return async (dispatch) => {
     try {
-      dispatch({type: ADD_APPOINTMENT_START});
-      
+      dispatch({ type: ADD_APPOINTMENT_START });
+
       response = await doRequest({
         method: REQUEST_TYPE.POST,
         url: addAppointmentUrl(),
         data: payload,
       });
-      
-      const {status, payload: {data = {}, error = {}} = {}} =
-      response || {};
+
+      const { status, payload: { data = {}, error = {} } = {} } =
+        response || {};
       if (status === true) {
         dispatch({
           type: ADD_APPOINTMENT_COMPLETE,
@@ -74,16 +74,16 @@ export const addCarePlanAppointment = (payload, carePlanId) => {
   let response = {};
   return async (dispatch) => {
     try {
-      dispatch({type: ADD_CARE_PLAN_APPOINTMENT_START});
-      
+      dispatch({ type: ADD_CARE_PLAN_APPOINTMENT_START });
+
       response = await doRequest({
         method: REQUEST_TYPE.POST,
         url: addCarePlanAppointmentUrl(carePlanId),
         data: payload,
       });
-      
-      const {status, payload: {data = {}, error = {}} = {}} =
-      response || {};
+
+      const { status, payload: { data = {}, error = {} } = {} } =
+        response || {};
       if (status === true) {
         dispatch({
           type: ADD_CARE_PLAN_APPOINTMENT_COMPLETE,
@@ -104,19 +104,19 @@ export const addCarePlanAppointment = (payload, carePlanId) => {
 
 export const updateAppointment = (payload) => {
   let response = {};
-  const {id, ...rest} = payload || {};
+  const { id, ...rest } = payload || {};
   return async (dispatch) => {
     try {
-      dispatch({type: UPDATE_APPOINTMENT_START});
-      
+      dispatch({ type: UPDATE_APPOINTMENT_START });
+
       response = await doRequest({
         method: REQUEST_TYPE.POST,
         url: updateAppointmentUrl(id),
         data: rest,
       });
-      
-      const {status, payload: {data = {}, error = {}} = {}} =
-      response || {};
+
+      const { status, payload: { data = {}, error = {} } = {} } =
+        response || {};
       if (status === true) {
         dispatch({
           type: UPDATE_APPOINTMENT_COMPLETE,
@@ -139,13 +139,13 @@ export const getAppointments = (id) => {
   let response = {};
   return async (dispatch) => {
     try {
-      dispatch({type: GET_APPOINTMENTS_START});
+      dispatch({ type: GET_APPOINTMENTS_START });
       response = await doRequest({
         method: REQUEST_TYPE.GET,
         url: getAppointmentForParticipantUrl(id),
       });
-      
-      const {status, payload: {data, error} = {}} = response || {};
+
+      const { status, payload: { data, error } = {} } = response || {};
       if (status === true) {
         dispatch({
           type: GET_APPOINTMENTS_COMPLETE,
@@ -168,13 +168,13 @@ export const getAppointmentsDetails = () => {
   let response = {};
   return async (dispatch) => {
     try {
-      dispatch({type: GET_APPOINTMENTS_DETAILS});
+      dispatch({ type: GET_APPOINTMENTS_DETAILS });
       response = await doRequest({
         method: REQUEST_TYPE.GET,
         url: getAppointmentsDetailsUrl(),
       });
-      
-      const {status, payload: {data, error} = {}} = response || {};
+
+      const { status, payload: { data, error } = {} } = response || {};
       if (status === true) {
         dispatch({
           type: GET_APPOINTMENTS_DETAILS_COMPLETE,
@@ -197,13 +197,13 @@ export const deleteAppointment = (id) => {
   let response = {};
   return async (dispatch) => {
     try {
-      dispatch({type: DELETE_APPOINTMENTS_START});
+      dispatch({ type: DELETE_APPOINTMENTS_START });
       response = await doRequest({
         method: REQUEST_TYPE.DELETE,
         url: deleteAppointmentUrl(id),
       });
-      
-      const {status, payload: {data, error} = {}} = response || {};
+
+      const { status, payload: { data, error } = {} } = response || {};
       if (status === true) {
         dispatch({
           type: DELETE_APPOINTMENTS_COMPLETE,
@@ -223,7 +223,7 @@ export const deleteAppointment = (id) => {
 };
 
 function appointmentReducer(state, data) {
-  const {appointments = {}} = data || {};
+  const { appointments = {} } = data || {};
   if (Object.keys(appointments).length > 0) {
     return {
       ...state,
@@ -235,7 +235,7 @@ function appointmentReducer(state, data) {
 }
 
 export default (state = {}, action = {}) => {
-  const {type, data} = action;
+  const { type, data } = action;
   switch (type) {
     case GET_APPOINTMENTS_COMPLETE:
       return appointmentReducer(state, data);

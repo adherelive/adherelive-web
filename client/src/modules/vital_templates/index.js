@@ -1,6 +1,6 @@
-import {doRequest} from "../../Helper/network";
-import {REQUEST_TYPE} from "../../constant";
-import {searchVitals} from "../../Helper/urls/vitals";
+import { doRequest } from "../../Helper/network";
+import { REQUEST_TYPE } from "../../constant";
+import { searchVitals } from "../../Helper/urls/vitals";
 
 export const SEARCH_VITAL_START = "SEARCH_VITAL_START";
 export const SEARCH_VITAL_COMPLETED = "SEARCH_VITAL_COMPLETED";
@@ -14,8 +14,8 @@ export const searchVital = (value) => {
         method: REQUEST_TYPE.GET,
         url: searchVitals(value),
       });
-      
-      const {status, payload: {data, message = ""} = {}} = response || {};
+
+      const { status, payload: { data, message = "" } = {} } = response || {};
       if (status === true) {
         dispatch({
           type: SEARCH_VITAL_COMPLETED,
@@ -35,7 +35,7 @@ export const searchVital = (value) => {
 };
 
 function vitalReducer(state, data) {
-  const {vital_templates = {}} = data || {};
+  const { vital_templates = {} } = data || {};
   if (vital_templates) {
     return {
       ...state,
@@ -47,7 +47,7 @@ function vitalReducer(state, data) {
 }
 
 export default (state = {}, action) => {
-  const {type, payload} = action || {};
+  const { type, payload } = action || {};
   switch (type) {
     case SEARCH_VITAL_COMPLETED:
       return vitalReducer(state, payload);

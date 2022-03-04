@@ -1,14 +1,13 @@
 import Database from "../../../libs/mysql";
 
 // TABLES
-import {TABLE_NAME} from "../../models/providerTermsMappings";
+import { TABLE_NAME } from "../../models/providerTermsMappings";
 
 const DEFAULT_ORDER = [["created_at", "DESC"]];
 
 class ProviderTermsMappingService {
-  constructor() {
-  }
-  
+  constructor() {}
+
   async create(data) {
     const transaction = await Database.initTransaction();
     try {
@@ -22,7 +21,7 @@ class ProviderTermsMappingService {
       throw err;
     }
   }
-  
+
   bulkCreate = async (data) => {
     try {
       const response = await Database.getModel(TABLE_NAME).bulkCreate(data);
@@ -31,7 +30,7 @@ class ProviderTermsMappingService {
       throw error;
     }
   };
-  
+
   getSingleEntityByData = async (data) => {
     try {
       const response = await Database.getModel(TABLE_NAME).findOne({
@@ -42,7 +41,7 @@ class ProviderTermsMappingService {
       throw error;
     }
   };
-  
+
   getAllByData = async (data) => {
     try {
       const response = await Database.getModel(TABLE_NAME).findAll({
@@ -55,8 +54,8 @@ class ProviderTermsMappingService {
       throw error;
     }
   };
-  
-  findAndCountAll = async ({where, order = DEFAULT_ORDER, attributes}) => {
+
+  findAndCountAll = async ({ where, order = DEFAULT_ORDER, attributes }) => {
     try {
       return await Database.getModel(TABLE_NAME).findAndCountAll({
         where,
@@ -68,8 +67,8 @@ class ProviderTermsMappingService {
       throw error;
     }
   };
-  
-  findOne = async ({where, order = DEFAULT_ORDER, attributes}) => {
+
+  findOne = async ({ where, order = DEFAULT_ORDER, attributes }) => {
     try {
       return await Database.getModel(TABLE_NAME).findOne({
         where,
@@ -81,7 +80,7 @@ class ProviderTermsMappingService {
       throw error;
     }
   };
-  
+
   update = async (data, id) => {
     const transaction = await Database.initTransaction();
     try {

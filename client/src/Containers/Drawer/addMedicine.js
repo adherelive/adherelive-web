@@ -1,17 +1,17 @@
-import {connect} from "react-redux";
-import {withRouter} from "react-router-dom";
+import { connect } from "react-redux";
+import { withRouter } from "react-router-dom";
 import AddMedicineDrawer from "../../Components/Drawer/addNewMedicine";
-import {addMedicine, addAdminMedicine} from "../../modules/medicines";
-import {DRAWER} from "../../constant";
-import {close} from "../../modules/drawer";
+import { addMedicine, addAdminMedicine } from "../../modules/medicines";
+import { DRAWER } from "../../constant";
+import { close } from "../../modules/drawer";
 
 const mapStateToProps = (state) => {
   const {
     auth = {},
-    drawer: {data: {type} = {}, visible} = {},
-    other_details: {medication_details = {}} = {},
+    drawer: { data: { type } = {}, visible } = {},
+    other_details: { medication_details = {} } = {},
   } = state;
-  
+
   return {
     auth,
     visible: visible && type === DRAWER.ADD_MEDICINES,
@@ -28,16 +28,16 @@ const mapDispatchToProps = (dispatch) => {
 };
 
 const mergeProps = (stateProps, dispatchProps, ownProps) => {
-  const {visible: drawerVisible, auth, medication_details} = stateProps;
-  
+  const { visible: drawerVisible, auth, medication_details } = stateProps;
+
   const {
     addNewMedicine,
     close: closeDrawer,
     addAdminMedicine,
   } = dispatchProps;
-  
-  const {visible = false, close, setNewMedicineId, input} = ownProps;
-  
+
+  const { visible = false, close, setNewMedicineId, input } = ownProps;
+
   return {
     visible: visible || drawerVisible,
     addNewMedicine,

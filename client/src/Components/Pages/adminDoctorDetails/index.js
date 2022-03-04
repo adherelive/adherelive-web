@@ -1,5 +1,5 @@
-import React, {Component, Fragment} from "react";
-import {injectIntl} from "react-intl";
+import React, { Component, Fragment } from "react";
+import { injectIntl } from "react-intl";
 import message from "antd/es/message";
 import Button from "antd/es/button";
 import Modal from "antd/es/modal";
@@ -14,7 +14,7 @@ import {
   EditOutlined,
 } from "@ant-design/icons";
 
-import {Input} from "antd";
+import { Input } from "antd";
 
 import moment from "moment";
 import messages from "./messages";
@@ -23,8 +23,8 @@ import {
   DAYS_TEXT_NUM,
   ACCOUNT_STATUS,
 } from "../../../constant";
-import {PageLoading} from "../../../Helper/loading/pageLoading";
-import {withRouter} from "react-router-dom";
+import { PageLoading } from "../../../Helper/loading/pageLoading";
+import { withRouter } from "react-router-dom";
 import Tooltip from "antd/es/tooltip";
 
 import Menu from "antd/es/menu";
@@ -44,55 +44,55 @@ class AdminDoctorDetails extends Component {
       user_id: null,
     };
   }
-  
+
   componentDidMount() {
-    const {doctors, id, users} = this.props;
-    const {getInitialData} = this;
-    
-    const {doctor_qualification_ids} = doctors[id] || {};
+    const { doctors, id, users } = this.props;
+    const { getInitialData } = this;
+
+    const { doctor_qualification_ids } = doctors[id] || {};
     // if (!doctor_qualification_ids) {
     getInitialData();
     // }
   }
-  
+
   formatMessage = (data) => this.props.intl.formatMessage(data);
-  
+
   getInitialData = async () => {
     try {
-      this.setState({loading: true});
-      const {getDoctorDetails, getDoctorAccountDetails, id} = this.props;
+      this.setState({ loading: true });
+      const { getDoctorDetails, getDoctorAccountDetails, id } = this.props;
       const response = await getDoctorDetails();
       const {
         status,
         payload: {
-          data: {doctors = {}, users = {}} = {},
-          message: {message: responseMessage} = {},
+          data: { doctors = {}, users = {} } = {},
+          message: { message: responseMessage } = {},
         } = {},
       } = response || {};
-      
+
       if (status === true) {
-        const {basic_info: {user_id = ""} = {}} = doctors[id] || {};
-        const {deleted_at = ""} = users[user_id] || {};
-        
+        const { basic_info: { user_id = "" } = {} } = doctors[id] || {};
+        const { deleted_at = "" } = users[user_id] || {};
+
         this.setState({
           user_id,
         });
-        
+
         if (deleted_at) {
           this.setState({
             active: false,
           });
         }
-        
+
         const response = await getDoctorAccountDetails();
         const {
           status,
           payload: {
-            data: {account_details} = {},
+            data: { account_details } = {},
             message: respMessage,
           } = {},
         } = response || {};
-        
+
         if (status === true) {
           this.setState({
             loading: false,
@@ -117,33 +117,33 @@ class AdminDoctorDetails extends Component {
       message.warn("Somthing wen't wrong, please try again later");
     }
   };
-  
+
   handleBack = (e) => {
     e.preventDefault();
-    const {history} = this.props;
+    const { history } = this.props;
     history.goBack();
   };
-  
+
   getDoctorDetailsHeader = () => {
-    const {formatMessage, handleBack, getFooter} = this;
-    
+    const { formatMessage, handleBack, getFooter } = this;
+
     return (
       <div className="wp100 mb20 fs28 fw700 flex justify-space-between align-center">
         <div className="flex flex-start align-center">
-          <ArrowLeftOutlined onClick={handleBack} className="mr10"/>
+          <ArrowLeftOutlined onClick={handleBack} className="mr10" />
           <div>{formatMessage(messages.profile_details)}</div>
         </div>
-        
+
         {getFooter()}
       </div>
     );
   };
-  
+
   openAddRazorpayIdModal = (e) => {
     e.preventDefault();
-    this.setState({razorpayModalVisible: true});
+    this.setState({ razorpayModalVisible: true });
   };
-  
+
   handleRazorpayModalClose = (e) => {
     e.preventDefault();
     this.setState({
@@ -151,19 +151,19 @@ class AdminDoctorDetails extends Component {
       razorpayId: "",
     });
   };
-  
+
   setRazorpayId = (e) => {
     e.preventDefault();
-    const {value} = e.target;
-    this.setState({razorpayId: value});
+    const { value } = e.target;
+    this.setState({ razorpayId: value });
   };
-  
+
   setRazorpayAccountName = (e) => {
     e.preventDefault();
-    const {value} = e.target;
-    this.setState({razorpayAccountName: value});
+    const { value } = e.target;
+    this.setState({ razorpayAccountName: value });
   };
-  
+
   warnNote = () => {
     return (
       <div className="pt16">
@@ -174,22 +174,22 @@ class AdminDoctorDetails extends Component {
       </div>
     );
   };
-  
+
   handleCloseWarning = () => {
-    const {warnNote} = this;
-    
+    const { warnNote } = this;
+
     confirm({
       title: `${this.formatMessage(messages.confirmMessage)}`,
       content: <div>{warnNote()}</div>,
       onOk: async () => {
-        const {deactivateDoctor, id} = this.props;
+        const { deactivateDoctor, id } = this.props;
         try {
           const response = await deactivateDoctor(id);
-          const {status, payload: {message: respMessage = ""} = {}} =
-          response || {};
+          const { status, payload: { message: respMessage = "" } = {} } =
+            response || {};
           if (status === true) {
             message.success(respMessage);
-            this.setState({active: false});
+            this.setState({ active: false });
           } else {
             message.warn(respMessage);
           }
@@ -197,31 +197,30 @@ class AdminDoctorDetails extends Component {
           console.log("doctorDeactivate UI error --> ", error);
         }
       },
-      onCancel() {
-      },
+      onCancel() {},
     });
   };
-  
+
   async handleRazorpayIdSubmit() {
     try {
-      const {addRazorpayId, id} = this.props;
-      const {razorpayId = "", razorpayAccountName = ""} = this.state;
+      const { addRazorpayId, id } = this.props;
+      const { razorpayId = "", razorpayAccountName = "" } = this.state;
       if (razorpayId) {
         const response = await addRazorpayId(id, {
           account_id: razorpayId,
           account_name: razorpayAccountName,
         });
-        const {status, payload: {data: {account_details} = {}} = {}} =
-        response || {};
+        const { status, payload: { data: { account_details } = {} } = {} } =
+          response || {};
         if (status) {
-          this.setState({account_details});
+          this.setState({ account_details });
           message.success(
             this.formatMessage(messages.addValidRazorpayIdSuccess)
           );
         } else {
           message.warn(this.formatMessage(messages.somethingWentWrong));
         }
-        
+
         this.setState({
           razorpayModalVisible: false,
           razorpayId: "",
@@ -234,17 +233,17 @@ class AdminDoctorDetails extends Component {
       message.warn(this.formatMessage(messages.somethingWentWrong));
     }
   }
-  
+
   getRazorpayModal = () => {
-    const {doctors, id} = this.props;
-    const {razorpayModalVisible} = this.state;
+    const { doctors, id } = this.props;
+    const { razorpayModalVisible } = this.state;
     const {
       formatMessage,
       // handleProfilePicModalClose
     } = this;
-    
+
     // const { basic_info: { profile_pic } = {} } = doctors[id] || {};
-    
+
     return (
       <Modal
         visible={razorpayModalVisible}
@@ -267,17 +266,17 @@ class AdminDoctorDetails extends Component {
         <div className="form-headings flex align-center justify-start">
           {this.formatMessage(messages.razorpay_account_id_text)}
         </div>
-        
+
         <Input
           className={"form-inputs-ap"}
           value={this.state.razorpayId}
           onChange={this.setRazorpayId}
         />
-        
+
         <div className="form-headings flex align-center justify-start">
           {this.formatMessage(messages.razorpay_account_name_text)}
         </div>
-        
+
         <Input
           className={"form-inputs-ap"}
           value={this.state.razorpayAccountName}
@@ -286,12 +285,12 @@ class AdminDoctorDetails extends Component {
       </Modal>
     );
   };
-  
+
   getDoctorBasicDetails = () => {
-    const {id, doctors, users, specialities} = this.props;
-    const {formatMessage, handleProfilePicModalOpen, handleCloseWarning} =
+    const { id, doctors, users, specialities } = this.props;
+    const { formatMessage, handleProfilePicModalOpen, handleCloseWarning } =
       this;
-    
+
     const {
       basic_info: {
         first_name,
@@ -305,23 +304,23 @@ class AdminDoctorDetails extends Component {
       } = {},
     } = doctors[id] || {};
     const {
-      basic_info: {email, mobile_number, prefix} = {},
+      basic_info: { email, mobile_number, prefix } = {},
       onboarded,
       onboarding_status,
       activated_on,
       deleted_at = null,
     } = users[user_id] || {};
-    
-    const {basic_info: {name: specialityName} = {}} =
-    specialities[speciality_id] || {};
-    
+
+    const { basic_info: { name: specialityName } = {} } =
+      specialities[speciality_id] || {};
+
     return (
       <div className="mt20 mb20 wp100 flex direction-column">
         {/*<div className="fs20 fw700 mb14 flex direction-row align-center justify-space-between">*/}
         <div className="fs20 fw700 mb14 ">
           {formatMessage(messages.basic_details_text)}
         </div>
-        
+
         {/*<div>*/}
         {/*  <Button*/}
         {/*  type="primary"*/}
@@ -329,7 +328,7 @@ class AdminDoctorDetails extends Component {
         {/*  onClick={this.openAddRazorpayIdModal}*/}
         {/*   >{this.formatMessage(messages.razorpayIdInput)}</Button>*/}
         {/*</div>*/}
-        
+
         {/*</div>*/}
         <div className="wp100 p20 flex direction-row justify-space-between align-center border-box">
           <div className="w200">
@@ -360,7 +359,7 @@ class AdminDoctorDetails extends Component {
                 middle_name ? `${middle_name} ` : ""
               }${last_name ? last_name : ""}`}</div>
             </div>
-            
+
             {/*gender*/}
             <div className="wp20 hp20 mt16 mb16 mr16">
               <div className="fs16 fw700">
@@ -370,7 +369,7 @@ class AdminDoctorDetails extends Component {
                 {gender ? gender.toUpperCase() : TABLE_DEFAULT_BLANK_FIELD}
               </div>
             </div>
-            
+
             {/*speciality*/}
             <div className="wp20 hp20 mt16 mb16 mr16">
               <div className="fs16 fw700">
@@ -380,7 +379,7 @@ class AdminDoctorDetails extends Component {
                 {speciality_id ? specialityName : TABLE_DEFAULT_BLANK_FIELD}
               </div>
             </div>
-            
+
             {/*mobile_number*/}
             <div className="wp20 mt16 mb16 mr16">
               <div className="fs16 fw700">
@@ -392,7 +391,7 @@ class AdminDoctorDetails extends Component {
                   : TABLE_DEFAULT_BLANK_FIELD}
               </div>
             </div>
-            
+
             {/*email*/}
             <div className="wp40 hp20 mt16 mb16 mr16">
               <div className="fs16 fw700">
@@ -402,7 +401,7 @@ class AdminDoctorDetails extends Component {
                 {email ? email : TABLE_DEFAULT_BLANK_FIELD}
               </div>
             </div>
-            
+
             {/*onboarding_status*/}
             {!onboarded && (
               <div className="wp40 mt16 mb16 mr16">
@@ -416,7 +415,7 @@ class AdminDoctorDetails extends Component {
                 </div>
               </div>
             )}
-            
+
             {/*address*/}
             <div className="wp40 mt16 mb16 mr16">
               <div className="fs16 fw700">
@@ -426,7 +425,7 @@ class AdminDoctorDetails extends Component {
                 {city ? city : TABLE_DEFAULT_BLANK_FIELD}
               </div>
             </div>
-            
+
             {/* verified */}
             <div className="wp40 mt16 mb16 mr16">
               <div className="fs16 fw700">
@@ -452,7 +451,7 @@ class AdminDoctorDetails extends Component {
                 )}
               </div>
             </div>
-            
+
             {/*account status*/}
             <div className="wp20 hp20 mt16 mb16 mr16">
               <div className="fs16 fw700">
@@ -471,12 +470,12 @@ class AdminDoctorDetails extends Component {
       </div>
     );
   };
-  
+
   handlePictureModal = (id) => (e) => {
     e.preventDefault();
-    this.setState({modalVisible: true, selectedDocumentId: id});
+    this.setState({ modalVisible: true, selectedDocumentId: id });
   };
-  
+
   getDoctorRegistrationDetails = () => {
     const {
       id,
@@ -485,20 +484,20 @@ class AdminDoctorDetails extends Component {
       upload_documents,
       councils = {},
     } = this.props;
-    const {formatMessage, handlePictureModal} = this;
-    
-    const {doctor_registration_ids = []} = doctors[id] || {};
-    
+    const { formatMessage, handlePictureModal } = this;
+
+    const { doctor_registration_ids = [] } = doctors[id] || {};
+
     return doctor_registration_ids.map((registration_id, index) => {
       const {
-        basic_info: {number, registration_council_id, year} = {},
+        basic_info: { number, registration_council_id, year } = {},
         expiry_date,
         upload_document_ids,
       } = doctor_registrations[registration_id] || {};
-      
-      const {basic_info: {name: registrationCouncilName} = {}} =
-      councils[registration_council_id] || {};
-      
+
+      const { basic_info: { name: registrationCouncilName } = {} } =
+        councils[registration_council_id] || {};
+
       return (
         <div className="wp100 p20 flex direction-column">
           {doctor_registration_ids.length > 1 && (
@@ -516,7 +515,7 @@ class AdminDoctorDetails extends Component {
                 {number ? number : TABLE_DEFAULT_BLANK_FIELD}
               </div>
             </div>
-            
+
             {/*council*/}
             <div className="wp20 mt16 mb16 mr16">
               <div className="fs16 fw700">
@@ -528,7 +527,7 @@ class AdminDoctorDetails extends Component {
                   : TABLE_DEFAULT_BLANK_FIELD}
               </div>
             </div>
-            
+
             {/*year*/}
             <div className="wp20 mt16 mb16 mr16">
               <div className="fs16 fw700">
@@ -538,7 +537,7 @@ class AdminDoctorDetails extends Component {
                 {year ? year : TABLE_DEFAULT_BLANK_FIELD}
               </div>
             </div>
-            
+
             {/*registration_expiry_date*/}
             <div className="wp20 mt16 mb16 mr16">
               <div className="fs16 fw700">
@@ -550,18 +549,18 @@ class AdminDoctorDetails extends Component {
                   : TABLE_DEFAULT_BLANK_FIELD}
               </div>
             </div>
-            
+
             {/*upload_documents*/}
             <div className="wp100 mt16 mb16 mr16">
               <div className="fs16 fw700">
                 {formatMessage(messages.upload_document_text)}
               </div>
-              
+
               <div className="flex align-center flex-wrap">
                 {upload_document_ids.map((id) => {
-                  const {basic_info: {document} = {}} =
-                  upload_documents[id] || {};
-                  
+                  const { basic_info: { document } = {} } =
+                    upload_documents[id] || {};
+
                   // const documentType =
                   //   document.substring(document.length - 3) || null;
                   const arr = document.split("?")[0];
@@ -580,7 +579,7 @@ class AdminDoctorDetails extends Component {
                           // onClick={handleDocumentDownload(id)}
                         >
                           <div className="w100 h100 br5 flex direction-column align-center justify-center br-black black-85">
-                            <FileTextOutlined/>
+                            <FileTextOutlined />
                             {documentType.toUpperCase()}
                           </div>
                         </a>
@@ -609,11 +608,11 @@ class AdminDoctorDetails extends Component {
       );
     });
   };
-  
+
   handleDocumentDownload = (id) => (e) => {
     e.preventDefault();
   };
-  
+
   getDoctorQualificationDetails = () => {
     const {
       id,
@@ -623,22 +622,22 @@ class AdminDoctorDetails extends Component {
       degrees = {},
       colleges = {},
     } = this.props;
-    const {formatMessage, handlePictureModal} = this;
-    
-    const {doctor_qualification_ids = []} = doctors[id] || {};
-    
+    const { formatMessage, handlePictureModal } = this;
+
+    const { doctor_qualification_ids = [] } = doctors[id] || {};
+
     return doctor_qualification_ids.map((qualification_id, index) => {
       const {
-        basic_info: {degree_id, college_id, year} = {},
+        basic_info: { degree_id, college_id, year } = {},
         upload_document_ids = [],
       } = doctor_qualifications[qualification_id] || {};
-      
-      const {basic_info: {name: collegeName} = {}} =
-      colleges[college_id] || {};
-      
-      const {basic_info: {name: degreeName} = {}} =
-      degrees[degree_id] || {};
-      
+
+      const { basic_info: { name: collegeName } = {} } =
+        colleges[college_id] || {};
+
+      const { basic_info: { name: degreeName } = {} } =
+        degrees[degree_id] || {};
+
       return (
         <div
           className="wp100 p20 flex direction-column"
@@ -659,7 +658,7 @@ class AdminDoctorDetails extends Component {
                 {degree_id ? degreeName : TABLE_DEFAULT_BLANK_FIELD}
               </div>
             </div>
-            
+
             {/*college*/}
             <div className="wp40 mt16 mb16 mr16">
               <div className="fs16 fw700">
@@ -669,7 +668,7 @@ class AdminDoctorDetails extends Component {
                 {collegeName ? collegeName : TABLE_DEFAULT_BLANK_FIELD}
               </div>
             </div>
-            
+
             {/*year*/}
             <div className="wp20 mt16 mb16 mr16">
               <div className="fs16 fw700">
@@ -679,19 +678,19 @@ class AdminDoctorDetails extends Component {
                 {year ? year : TABLE_DEFAULT_BLANK_FIELD}
               </div>
             </div>
-            
+
             {/*upload_documents*/}
             <div className="wp100 mt16 mb16 mr16">
               <div className="fs16 fw700">
                 {formatMessage(messages.upload_document_text)}
               </div>
-              
+
               {/*qualification_documents*/}
               <div className="flex align-center flex-wrap">
                 {upload_document_ids.map((id) => {
-                  const {basic_info: {document} = {}} =
-                  upload_documents[id] || {};
-                  
+                  const { basic_info: { document } = {} } =
+                    upload_documents[id] || {};
+
                   // const documentType =
                   //   document.substring(document.length - 3) || null;
                   const arr = document.split("?")[0];
@@ -738,27 +737,27 @@ class AdminDoctorDetails extends Component {
       );
     });
   };
-  
+
   getFullDayText = (day) => {
     if (day.length === 1) {
       return DAYS_TEXT_NUM[day].toLocaleUpperCase();
     }
     // return DAYS_TEXT[day].toLocaleUpperCase();
   };
-  
+
   getDoctorClinicDetails = () => {
-    const {id, doctors, doctor_clinics} = this.props;
-    const {formatMessage, getFullDayText} = this;
-    
-    const {doctor_clinic_ids = []} = doctors[id] || {};
-    
+    const { id, doctors, doctor_clinics } = this.props;
+    const { formatMessage, getFullDayText } = this;
+
+    const { doctor_clinic_ids = [] } = doctors[id] || {};
+
     return doctor_clinic_ids.map((clinic_id, index) => {
       const {
-        basic_info: {name} = {},
+        basic_info: { name } = {},
         location,
-        details: {time_slots = []} = {},
+        details: { time_slots = [] } = {},
       } = doctor_clinics[clinic_id] || {};
-      
+
       return (
         <div
           className="wp100 p20 flex direction-column"
@@ -779,7 +778,7 @@ class AdminDoctorDetails extends Component {
                 {name ? name : TABLE_DEFAULT_BLANK_FIELD}
               </div>
             </div>
-            
+
             {/*location*/}
             <div className="wp40 mt16 mb16 mr16">
               <div className="fs16 fw700">
@@ -789,7 +788,7 @@ class AdminDoctorDetails extends Component {
                 {location ? location : TABLE_DEFAULT_BLANK_FIELD}
               </div>
             </div>
-            
+
             {/*open_between*/}
             <div className="wp40 mt16 mb16 mr16">
               <div className="fs16 fw700">
@@ -797,7 +796,7 @@ class AdminDoctorDetails extends Component {
               </div>
               {Object.keys(time_slots).map((day, index) => {
                 // todo: add DAY[day] later from constants
-                
+
                 return (
                   <Fragment>
                     {time_slots[day].length > 0 && (
@@ -810,9 +809,9 @@ class AdminDoctorDetails extends Component {
                           key={`ts-${index}`}
                         >
                           {time_slots[day].map((time_slot, i) => {
-                            const {startTime: start_time, endTime: end_time} =
-                            time_slot || {};
-                            
+                            const { startTime: start_time, endTime: end_time } =
+                              time_slot || {};
+
                             return (
                               <div
                                 className="fs14 fw500 wp100"
@@ -820,8 +819,8 @@ class AdminDoctorDetails extends Component {
                               >
                                 {start_time
                                   ? `${moment(start_time).format(
-                                    "LT"
-                                  )} - ${moment(end_time).format("LT")}`
+                                      "LT"
+                                    )} - ${moment(end_time).format("LT")}`
                                   : "CLOSED"}
                               </div>
                             );
@@ -838,18 +837,18 @@ class AdminDoctorDetails extends Component {
       );
     });
   };
-  
+
   handleActivate = async (e) => {
     e.preventDefault();
-    const {activateDoctor, id} = this.props;
-    const {user_id = null} = this.state;
+    const { activateDoctor, id } = this.props;
+    const { user_id = null } = this.state;
     try {
       const response = await activateDoctor(user_id);
-      const {status, payload: {message: respMessage = ""} = {}} =
-      response || {};
+      const { status, payload: { message: respMessage = "" } = {} } =
+        response || {};
       if (status === true) {
         message.success(respMessage);
-        this.setState({active: true});
+        this.setState({ active: true });
       } else {
         message.warn(respMessage);
       }
@@ -857,21 +856,21 @@ class AdminDoctorDetails extends Component {
       console.log("doctorActivate UI error --> ", error);
     }
   };
-  
+
   getFooter = () => {
-    const {id, doctors, users, doctor_qualifications, doctor_registrations} =
+    const { id, doctors, users, doctor_qualifications, doctor_registrations } =
       this.props;
-    const {formatMessage, handleVerify, handleCloseWarning, handleActivate} =
+    const { formatMessage, handleVerify, handleCloseWarning, handleActivate } =
       this;
-    const {active = true} = this.state;
-    
+    const { active = true } = this.state;
+
     const {
       doctor_qualification_ids = [],
       doctor_registration_ids = [],
-      basic_info: {user_id} = {},
+      basic_info: { user_id } = {},
     } = doctors[id] || {};
-    
-    const {activated_on} = users[user_id] || {};
+
+    const { activated_on } = users[user_id] || {};
     const disabled =
       // doctor_clinic_ids.length === 0 ||
       doctor_qualification_ids.length === 0 ||
@@ -881,7 +880,7 @@ class AdminDoctorDetails extends Component {
     let no_registration_docs = 0;
     if (doctor_qualification_ids.length) {
       for (const i in doctor_qualification_ids) {
-        let {upload_document_ids} =
+        let { upload_document_ids } =
           doctor_qualifications[doctor_qualification_ids[i]];
         if (upload_document_ids.length == 0) {
           no_qualification_docs = 1;
@@ -890,7 +889,7 @@ class AdminDoctorDetails extends Component {
     }
     if (doctor_registration_ids.length) {
       for (const i in doctor_registration_ids) {
-        let {upload_document_ids} =
+        let { upload_document_ids } =
           doctor_registrations[doctor_registration_ids[i]];
         if (upload_document_ids.length == 0) {
           no_registration_docs = 1;
@@ -935,7 +934,7 @@ class AdminDoctorDetails extends Component {
       </div>
     );
   };
-  
+
   handleVerify = async (e) => {
     e.preventDefault();
     if (parseInt(e.target.dataset.q)) {
@@ -946,12 +945,12 @@ class AdminDoctorDetails extends Component {
       message.warn(this.formatMessage(messages.noUploadRegsitrationDocuments));
       return;
     }
-    
-    const {verifyDoctor, id} = this.props;
+
+    const { verifyDoctor, id } = this.props;
     try {
       const response = await verifyDoctor(id);
-      const {status, payload: {message: respMessage = ""} = {}} =
-      response || {};
+      const { status, payload: { message: respMessage = "" } = {} } =
+        response || {};
       if (status === true) {
         message.success(respMessage);
       } else {
@@ -961,20 +960,20 @@ class AdminDoctorDetails extends Component {
       console.log("handleVerify UI error --> ", error);
     }
   };
-  
+
   handlePictureModalClose = (e) => {
     e.preventDefault();
-    this.setState({modalVisible: false});
+    this.setState({ modalVisible: false });
   };
-  
+
   getModalDetails = () => {
-    const {upload_documents} = this.props;
-    const {modalVisible, selectedDocumentId} = this.state;
-    const {formatMessage, handlePictureModalClose} = this;
-    
-    const {basic_info: {document} = {}} =
-    upload_documents[selectedDocumentId] || {};
-    
+    const { upload_documents } = this.props;
+    const { modalVisible, selectedDocumentId } = this.state;
+    const { formatMessage, handlePictureModalClose } = this;
+
+    const { basic_info: { document } = {} } =
+      upload_documents[selectedDocumentId] || {};
+
     return (
       <Modal
         visible={modalVisible}
@@ -988,28 +987,28 @@ class AdminDoctorDetails extends Component {
         width={`60%`}
         footer={null}
       >
-        <img src={document} alt="qualification document" className="wp100"/>
+        <img src={document} alt="qualification document" className="wp100" />
       </Modal>
     );
   };
-  
+
   handleProfilePicModalOpen = (e) => {
     e.preventDefault();
-    this.setState({profilePicModalVisible: true});
+    this.setState({ profilePicModalVisible: true });
   };
-  
+
   handleProfilePicModalClose = (e) => {
     e.preventDefault();
-    this.setState({profilePicModalVisible: false});
+    this.setState({ profilePicModalVisible: false });
   };
-  
+
   getProfilePicModal = () => {
-    const {doctors, id} = this.props;
-    const {profilePicModalVisible} = this.state;
-    const {formatMessage, handleProfilePicModalClose} = this;
-    
-    const {basic_info: {profile_pic} = {}} = doctors[id] || {};
-    
+    const { doctors, id } = this.props;
+    const { profilePicModalVisible } = this.state;
+    const { formatMessage, handleProfilePicModalClose } = this;
+
+    const { basic_info: { profile_pic } = {} } = doctors[id] || {};
+
     return (
       <Modal
         visible={profilePicModalVisible}
@@ -1021,15 +1020,15 @@ class AdminDoctorDetails extends Component {
         width={`50%`}
         footer={null}
       >
-        <img src={profile_pic} alt="qualification document" className="wp100"/>
+        <img src={profile_pic} alt="qualification document" className="wp100" />
       </Modal>
     );
   };
-  
+
   getDoctorAccountDetails = () => {
-    const {account_details} = this.state;
-    const {formatMessage} = this;
-    
+    const { account_details } = this.state;
+    const { formatMessage } = this;
+
     return Object.keys(account_details).map((id) => {
       const {
         basic_info: {
@@ -1045,7 +1044,7 @@ class AdminDoctorDetails extends Component {
           razorpay_account_name,
         } = {},
       } = account_details[id] || {};
-      
+
       return (
         <div className="wp100 p20 flex direction-column">
           <div className="wp100 flex direction-row align-center flex-wrap">
@@ -1058,7 +1057,7 @@ class AdminDoctorDetails extends Component {
                 {customer_name ? customer_name : TABLE_DEFAULT_BLANK_FIELD}
               </div>
             </div>
-            
+
             {/*account_number*/}
             <div className="wp20 mt16 mb16 mr16">
               <div className="fs16 fw700">
@@ -1068,7 +1067,7 @@ class AdminDoctorDetails extends Component {
                 {account_number ? account_number : TABLE_DEFAULT_BLANK_FIELD}
               </div>
             </div>
-            
+
             {/*ifsc_code*/}
             <div className="wp20 mt16 mb16 mr16">
               <div className="fs16 fw700">
@@ -1078,7 +1077,7 @@ class AdminDoctorDetails extends Component {
                 {ifsc_code ? ifsc_code : TABLE_DEFAULT_BLANK_FIELD}
               </div>
             </div>
-            
+
             {/*account_type*/}
             <div className="wp20 mt16 mb16 mr16">
               <div className="fs16 fw700">
@@ -1088,7 +1087,7 @@ class AdminDoctorDetails extends Component {
                 {account_type ? account_type : TABLE_DEFAULT_BLANK_FIELD}
               </div>
             </div>
-            
+
             {/*account_mobile_number*/}
             <div className="wp20 mt16 mb16 mr16">
               <div className="fs16 fw700">
@@ -1100,7 +1099,7 @@ class AdminDoctorDetails extends Component {
                   : TABLE_DEFAULT_BLANK_FIELD}
               </div>
             </div>
-            
+
             {/*upi_id*/}
             <div className="wp20 mt16 mb16 mr16">
               <div className="fs16 fw700">
@@ -1110,7 +1109,7 @@ class AdminDoctorDetails extends Component {
                 {upi_id ? upi_id : TABLE_DEFAULT_BLANK_FIELD}
               </div>
             </div>
-            
+
             {/*razorpay_account_id*/}
             <div className="wp20 mt16 mb16 mr16">
               <div className="fs16 fw700">
@@ -1122,7 +1121,7 @@ class AdminDoctorDetails extends Component {
                   : TABLE_DEFAULT_BLANK_FIELD}
               </div>
             </div>
-            
+
             {/*razorpay_account_name*/}
             <div className="wp20 mt16 mb16 mr16">
               <div className="fs16 fw700">
@@ -1139,11 +1138,11 @@ class AdminDoctorDetails extends Component {
       );
     });
   };
-  
+
   render() {
     console.log("274354213749129837832674 ====>", this.props);
-    const {id, doctors} = this.props;
-    const {loading, account_details = {}} = this.state;
+    const { id, doctors } = this.props;
+    const { loading, account_details = {} } = this.state;
     const {
       formatMessage,
       getDoctorDetailsHeader,
@@ -1158,26 +1157,26 @@ class AdminDoctorDetails extends Component {
       getDoctorAccountDetails,
       openAddRazorpayIdModal,
     } = this;
-    
+
     const {
       doctor_clinic_ids = [],
       doctor_qualification_ids = [],
       doctor_registration_ids = [],
     } = doctors[id] || {};
-    
+
     if (loading) {
-      return <PageLoading/>;
+      return <PageLoading />;
     }
-    
+
     return (
       <Fragment>
         <div className="wp100 p20 flex direction-column">
           {/*header*/}
           {getDoctorDetailsHeader()}
-          
+
           {/*basic details*/}
           {getDoctorBasicDetails()}
-          
+
           {/* account details */}
           <div className="mt20 mb20 wp100 flex direction-column">
             <div className="flex align-center mb14">
@@ -1204,7 +1203,7 @@ class AdminDoctorDetails extends Component {
               </div>
             )}
           </div>
-          
+
           {/*qualifications*/}
           <div className="mt20 mb20 wp100 flex direction-column">
             <div className="fs20 fw700 mb14">
@@ -1220,7 +1219,7 @@ class AdminDoctorDetails extends Component {
               </div>
             )}
           </div>
-          
+
           {/*registration*/}
           <div className="mt20 mb20 wp100 flex direction-column">
             <div className="fs20 fw700 mb14">
@@ -1234,7 +1233,7 @@ class AdminDoctorDetails extends Component {
               </div>
             )}
           </div>
-          
+
           {/*clinics*/}
           <div className="mt20 mb36 wp100 flex direction-column">
             <div className="fs20 fw700 mb14">
@@ -1248,15 +1247,15 @@ class AdminDoctorDetails extends Component {
               </div>
             )}
           </div>
-          
+
           {/*footer*/}
           {/*{getFooter()}*/}
         </div>
-        
+
         {getModalDetails()}
-        
+
         {getProfilePicModal()}
-        
+
         {getRazorpayModal()}
       </Fragment>
     );

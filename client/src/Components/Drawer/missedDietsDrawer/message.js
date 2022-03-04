@@ -1,4 +1,4 @@
-import {defineMessages} from "react-intl";
+import { defineMessages } from "react-intl";
 
 const messages = defineMessages({
   somethingWentWrong: {
@@ -36,7 +36,7 @@ const messages = defineMessages({
     description: "",
     defaultMessage: "Critical",
   },
-  
+
   non_critical: {
     id: "app.missedDiet.not.critical",
     description: "",

@@ -1,5 +1,5 @@
 import Database from "../../../libs/mysql";
-import {TABLE_NAME} from "../../models/exerciseRepetition";
+import { TABLE_NAME } from "../../models/exerciseRepetition";
 
 export default class RepetitionService {
   findAndCountAll = async () => {
@@ -9,7 +9,7 @@ export default class RepetitionService {
       throw error;
     }
   };
-  
+
   getByData = async (data) => {
     try {
       const repetition = await Database.getModel(TABLE_NAME).findOne({
@@ -20,7 +20,7 @@ export default class RepetitionService {
       throw error;
     }
   };
-  
+
   getAll = async () => {
     try {
       const repetitions = await Database.getModel(TABLE_NAME).findAll();
@@ -29,7 +29,7 @@ export default class RepetitionService {
       throw error;
     }
   };
-  
+
   search = async (data) => {
     try {
       const repetitions = await Database.getModel(TABLE_NAME).findAll({

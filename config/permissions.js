@@ -1,6 +1,6 @@
 export default {
   /* [A] */
-  
+
   APPOINTMENTS: {
     ADD: "ADD_APPOINTMENT",
     UPDATE: "UPDATE_APPOINTMENT",
@@ -8,20 +8,20 @@ export default {
     DELETE: "DELETE_APPOINTMENT",
     TEMPLATE: "TEMPLATE_APPOINTMENT",
   },
-  
+
   ACCOUNT: {
     VERIFIED: "VERIFIED_ACCOUNT",
   },
-  
+
   /* [C] */
-  
+
   CARE_PLAN: {
     ADD: "ADD_CARE_PLAN",
     UPDATE: "UPDATE_CARE_PLAN",
     VIEW: "VIEW_CARE_PLAN",
     ADD_PROFILE: "ADD_PROFILE",
   },
-  
+
   CARE_PLAN_TEMPLATE: {
     ADD: "ADD_CARE_PLAN_TEMPLATE",
     UPDATE: "UPDATE_CARE_PLAN_TEMPLATE",
@@ -29,13 +29,13 @@ export default {
     DUPLICATE: "DUPLICATE_CARE_PLAN_TEMPLATE",
     DELETE: "DELETE_CARE_PLAN_TEMPLATE",
   },
-  
+
   CALENDER: {
     VIEW: "VIEW_CALENDER",
   },
-  
+
   /* [D] */
-  
+
   DIETS: {
     ADD: "ADD_DIET",
     UPDATE: "UPDATE_DIET",
@@ -43,22 +43,22 @@ export default {
     DELETE: "DELETE_DIET",
     TEMPLATE: "TEMPLATE_DIET",
   },
-  
+
   DOCTORS: {
     ADD: "ADD_DOCTOR",
     UPDATE: "UPDATE_DOCTOR",
     VIEW: "VIEW_DOCTOR",
   },
-  
+
   /* [G] */
-  
+
   GRAPHS: {
     ADD: "ADD_GRAPH",
     UPDATE: "UPDATE_GRAPH",
   },
-  
+
   /* [M] */
-  
+
   MEDICATIONS: {
     ADD: "ADD_MEDICATION",
     UPDATE: "UPDATE_MEDICATION",
@@ -67,31 +67,31 @@ export default {
     DELETE: "DELETE_MEDICATION",
     TEMPLATE: "TEMPLATE_MEDICATION",
   },
-  
+
   /* [P] */
-  
+
   PATIENTS: {
     ADD: "ADD_PATIENT",
     UPDATE: "UPDATE_PATIENT",
     VIEW: "VIEW_PATIENT",
   },
-  
+
   PAYMENT_PRODUCT: {
     ADD: "ADD_PAYMENT_PRODUCT",
     VIEW: "VIEW_PAYMENT_PRODUCT",
   },
-  
+
   /* [R] */
-  
+
   REPORTS: {
     ADD: "ADD_REPORT",
     UPDATE: "UPDATE_REPORT",
     VIEW: "VIEW_REPORT",
     DELETE: "DELETE_REPORT",
   },
-  
+
   /* [V] */
-  
+
   VITALS: {
     ADD: "ADD_VITAL",
     UPDATE: "UPDATE_VITAL",
@@ -99,9 +99,9 @@ export default {
     DELETE: "DELETE_VITAL",
     TEMPLATE: "TEMPLATE_VITAL",
   },
-  
+
   /* [W] */
-  
+
   WORKOUTS: {
     ADD: "ADD_WORKOUT",
     UPDATE: "UPDATE_WORKOUT",

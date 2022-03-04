@@ -1,5 +1,5 @@
-import React, {Component, Fragment} from "react";
-import {injectIntl} from "react-intl";
+import React, { Component, Fragment } from "react";
+import { injectIntl } from "react-intl";
 import Drawer from "antd/es/drawer";
 import Input from "antd/es/input";
 import Upload from "antd/es/upload";
@@ -37,69 +37,68 @@ class editReportDrawer extends Component {
       submitting: false,
     };
   }
-  
+
   formatMessage = (data) => this.props.intl.formatMessage(data);
-  
-  componentDidMount() {
-  }
-  
+
+  componentDidMount() {}
+
   componentDidUpdate(prevProps, prevState) {
-    const {visible: prev_visible} = prevProps;
-    const {visible} = this.props;
+    const { visible: prev_visible } = prevProps;
+    const { visible } = this.props;
     if (visible && visible !== prev_visible) {
       this.getAllReportsData();
     }
   }
-  
+
   getAllReportsData = () => {
-    const {payload = {}, patient_id} = this.props;
-    const {report_id = "", documentData = {}, reportData = {}} = payload;
+    const { payload = {}, patient_id } = this.props;
+    const { report_id = "", documentData = {}, reportData = {} } = payload;
     let exisiting_documents = [];
-    
-    const {test_date = "", basic_info: {name = ""} = {}} = reportData;
-    
+
+    const { test_date = "", basic_info: { name = "" } = {} } = reportData;
+
     for (let each in documentData) {
       let doc = documentData[each];
       exisiting_documents.push(doc);
     }
-    
+
     this.setState({
       name,
       exisiting_documents,
       test_date: moment(test_date),
     });
   };
-  
+
   getUploadButton = () => {
-    const {uploading} = this.state;
-    return uploading ? <LoadingOutlined/> : <PlusOutlined/>;
+    const { uploading } = this.state;
+    return uploading ? <LoadingOutlined /> : <PlusOutlined />;
   };
-  
+
   setName = (e) => {
     e.preventDefault();
-    const {value} = e.target;
-    this.setState({name: value});
+    const { value } = e.target;
+    this.setState({ name: value });
   };
-  
+
   handleDocumentViewOpen = (src) => () => {
     this.setState({
       viewModalVisible: true,
       viewModalSrc: src,
     });
   };
-  
+
   handleDocumentViewClose = () => {
     this.setState({
       viewModalVisible: false,
       viewModalSrc: "",
     });
   };
-  
+
   handleExistingDelete = (delete_id) => (e) => {
     e.preventDefault();
     this.confirmExisitngDelete(delete_id);
   };
-  
+
   exsitingDeleteWarnNote = () => {
     return (
       <div className="pt16">
@@ -110,38 +109,38 @@ class editReportDrawer extends Component {
       </div>
     );
   };
-  
+
   confirmExisitngDelete = (delete_id) => {
-    const {exsitingDeleteWarnNote} = this;
-    
+    const { exsitingDeleteWarnNote } = this;
+
     confirm({
       title: `${this.formatMessage(messages.deleteMessage)}`,
       content: <div>{exsitingDeleteWarnNote()}</div>,
       onOk: async () => {
-        const {deleteReport} = this.props;
-        const {exisiting_documents} = this.state;
-        
+        const { deleteReport } = this.props;
+        const { exisiting_documents } = this.state;
+
         deleteReport(delete_id).then((response) => {
           const {
             status,
-            payload: {message: msg = ""},
+            payload: { message: msg = "" },
           } = response;
-          
+
           if (status) {
-            const {exisiting_documents} = this.state;
+            const { exisiting_documents } = this.state;
             let indexToDelete = -1;
             for (let eachIndex in exisiting_documents) {
-              const {basic_info: {id = ""} = {}} =
+              const { basic_info: { id = "" } = {} } =
                 exisiting_documents[eachIndex];
               if (id === delete_id) {
                 indexToDelete = eachIndex;
                 break;
               }
             }
-            
+
             if (indexToDelete > -1) {
               exisiting_documents.splice(indexToDelete, 1);
-              this.setState({exisiting_documents});
+              this.setState({ exisiting_documents });
               message.success(this.formatMessage(messages.deleteSuccess));
             }
           } else {
@@ -149,23 +148,22 @@ class editReportDrawer extends Component {
           }
         });
       },
-      onCancel() {
-      },
+      onCancel() {},
     });
   };
-  
+
   handleDelete = (delete_src) => (e) => {
     e.preventDefault();
-    const {new_documents} = this.state;
+    const { new_documents } = this.state;
     let indexToDelete = -1;
     for (let eachIndex in new_documents) {
-      const {src = ""} = new_documents[eachIndex];
+      const { src = "" } = new_documents[eachIndex];
       if (src === delete_src) {
         indexToDelete = eachIndex;
         break;
       }
     }
-    
+
     if (indexToDelete > -1) {
       new_documents.splice(indexToDelete, 1);
       this.setState({
@@ -174,11 +172,11 @@ class editReportDrawer extends Component {
       message.success(this.formatMessage(messages.deleteSuccess));
     }
   };
-  
-  getImageView = ({src, index, name, id = null}) => {
+
+  getImageView = ({ src, index, name, id = null }) => {
     return (
       <div className={"qualification-avatar-uploader "}>
-        <img src={src} className="wp100 hp100 br4" alt="report"/>
+        <img src={src} className="wp100 hp100 br4" alt="report" />
         <div className="overlay"></div>
         <div className="absolute tp45 l0 wp100 flex justify-center align-space-evenly doc-container">
           {id ? (
@@ -207,21 +205,21 @@ class editReportDrawer extends Component {
             href={src}
             target={"_blank"}
             className={"del doc-opt ml4"}
-            style={{color: "#fff"}}
+            style={{ color: "#fff" }}
           >
-            <DownloadOutlined className="fs18" twoToneColor="#fff"/>
+            <DownloadOutlined className="fs18" twoToneColor="#fff" />
           </a>
         </div>
       </div>
     );
   };
-  
-  getFileView = ({src, extension, index, name, id = null}) => {
+
+  getFileView = ({ src, extension, index, name, id = null }) => {
     return (
       <div className={"qualification-avatar-uploader "}>
         <div className="absolute tp45 l0 wp100 flex justify-center align-space-evenly doc-container ">
           {/* {extension.toUpperCase()} */}
-          <Icon type="paper-clip"/>
+          <Icon type="paper-clip" />
         </div>
         <div className="overlay"></div>
         <div className="absolute tp45 l0 wp100 flex justify-center align-space-evenly doc-container ">
@@ -240,59 +238,59 @@ class editReportDrawer extends Component {
               twoToneColor="#fff"
             />
           )}
-          
+
           <a
             download={name}
             href={src}
             target={"_self"}
             className={"del doc-opt ml4 mb4"}
-            style={{color: "#fff"}}
+            style={{ color: "#fff" }}
           >
-            <DownloadOutlined className="fs18 " twoToneColor="#fff"/>
+            <DownloadOutlined className="fs18 " twoToneColor="#fff" />
           </a>
         </div>
       </div>
     );
   };
-  
+
   createMarkup = (content) => {
-    return {__html: content};
+    return { __html: content };
   };
-  
+
   getUploadedDocuments = () => {
-    const {getImageView, getFileView} = this;
-    const {payload: {patient_id} = {}} = this.props;
-    const {new_documents} = this.state;
-    
+    const { getImageView, getFileView } = this;
+    const { payload: { patient_id } = {} } = this.props;
+    const { new_documents } = this.state;
+
     return new_documents.map((each, index) => {
-      const {name = "", src} = each;
+      const { name = "", src } = each;
       const documentExtension = name.substring(name.length - 3, name.length);
-      
+
       return (
         <div key={`report-upload-${index}`}>
           {documentExtension === "png" ||
           documentExtension === "jpg" ||
           documentExtension === "peg" ||
           documentExtension === "jpeg"
-            ? getImageView({src, index, name})
-            : getFileView({src, extension: documentExtension, index, name})}
+            ? getImageView({ src, index, name })
+            : getFileView({ src, extension: documentExtension, index, name })}
         </div>
       );
     });
   };
-  
+
   getExistingDocuments = () => {
-    const {getImageView, getFileView} = this;
-    const {payload: {patient_id} = {}} = this.props;
-    const {exisiting_documents} = this.state;
-    
+    const { getImageView, getFileView } = this;
+    const { payload: { patient_id } = {} } = this.props;
+    const { exisiting_documents } = this.state;
+
     return exisiting_documents.map((each, index) => {
       // const {basic_info :{document  = '',id='',name='' } = {} } =each;
-      const {basic_info = {}} = each;
-      const {id = "", document: src = "", name = ""} = basic_info;
-      
+      const { basic_info = {} } = each;
+      const { id = "", document: src = "", name = "" } = basic_info;
+
       const documentExtension = name.substring(name.length - 3, name.length);
-      
+
       return (
         <div>
           <div key={`report-upload-${index}`}>
@@ -300,31 +298,31 @@ class editReportDrawer extends Component {
             documentExtension === "jpg" ||
             documentExtension === "peg" ||
             documentExtension === "jpeg"
-              ? getImageView({src, index, name, id})
+              ? getImageView({ src, index, name, id })
               : getFileView({
-                src,
-                extension: documentExtension,
-                index,
-                name,
-                id,
-              })}
+                  src,
+                  extension: documentExtension,
+                  index,
+                  name,
+                  id,
+                })}
           </div>
         </div>
       );
     });
   };
-  
-  handleUploadChange = ({file}) => {
-    const {new_documents = []} = this.state;
-    console.log("287423 file ---> ", {file});
-    
+
+  handleUploadChange = ({ file }) => {
+    const { new_documents = [] } = this.state;
+    console.log("287423 file ---> ", { file });
+
     let newDocuments = [];
-    
+
     const fileReader = new FileReader();
     const fileUrl = URL.createObjectURL(file.originFileObj);
-    
+
     const existing = new_documents.filter((document) => {
-      const {name} = document || {};
+      const { name } = document || {};
       return name === file.name;
     });
     console.log("287423 Existing --->", existing);
@@ -334,20 +332,20 @@ class editReportDrawer extends Component {
         src: fileUrl,
         file,
       });
-      
-      this.setState({enableModal: true});
+
+      this.setState({ enableModal: true });
     }
-    
-    console.log("287423 new_documents", {newDocuments});
+
+    console.log("287423 new_documents", { newDocuments });
     this.setState({
       new_documents: [...new_documents, ...newDocuments],
     });
   };
-  
+
   setTestDate = (value) => {
-    this.setState({test_date: moment(value).format("YYYY-MM-DD")});
+    this.setState({ test_date: moment(value).format("YYYY-MM-DD") });
   };
-  
+
   renderAddReport = () => {
     const {
       getUploadButton,
@@ -357,8 +355,8 @@ class editReportDrawer extends Component {
       getExistingDocuments,
       setTestDate,
     } = this;
-    
-    const {name = "", test_date} = this.state;
+
+    const { name = "", test_date } = this.state;
     console.log("786578326427348234762427394823 Render", test_date);
     return (
       <div className="form-block-ap ">
@@ -373,7 +371,7 @@ class editReportDrawer extends Component {
           onChange={this.setName}
           required={true}
         />
-        
+
         <div className="form-headings-ap flex align-center justify-start">
           {formatMessage(messages.testDate)}
           <div className="star-red">*</div>
@@ -384,23 +382,23 @@ class editReportDrawer extends Component {
             className="mb10"
             onChange={setTestDate}
             defaultValue={moment(test_date)}
-            style={{width: "100%"}}
+            style={{ width: "100%" }}
           />
         </div>
-        
+
         <div className="form-headings-ap flex align-center justify-start">
           {formatMessage(messages.files)}
-          
+
           <div className="star-red">*</div>
         </div>
-        
+
         <div className="wp100 flex flex-wrap align-center">
           {getExistingDocuments()}
           {getUploadedDocuments()}
           <div className="flex">
             <Upload
               multiple={true}
-              style={{width: 128, height: 128, margin: 6}}
+              style={{ width: 128, height: 128, margin: 6 }}
               showUploadList={false}
               listType="picture-card"
               onChange={handleUploadChange}
@@ -415,39 +413,39 @@ class editReportDrawer extends Component {
       </div>
     );
   };
-  
+
   async submitData() {
     try {
-      const {uploadReport, payload: {patient_id} = {}} = this.props;
-      
-      const {new_documents = []} = this.state;
+      const { uploadReport, payload: { patient_id } = {} } = this.props;
+
+      const { new_documents = [] } = this.state;
       let data = new FormData();
-      
+
       if (new_documents.length === 0) {
         this.handleAddReport(new_documents);
         return;
       }
-      
+
       let allResponseDocs = [];
-      
+
       for (let each of new_documents) {
-        const {file = {}} = each;
-        const {originFileObj = {}} = file;
+        const { file = {} } = each;
+        const { originFileObj = {} } = file;
         data.set("files", originFileObj);
-        
-        this.setState({uploading: true, submitting: true});
+
+        this.setState({ uploading: true, submitting: true });
         const response = await uploadReport(patient_id, data);
         const {
           status = false,
           payload: {
             message: respMessage = "",
-            data: {documents: response_documents = []} = {},
+            data: { documents: response_documents = [] } = {},
           } = {},
         } = response;
-        
+
         if (!status) {
           message.warn(this.formatMessage(messages.somethingWentWrong));
-          this.setState({uploading: false});
+          this.setState({ uploading: false });
           return;
         } else {
           if (response_documents.length > 0) {
@@ -455,47 +453,47 @@ class editReportDrawer extends Component {
           }
         }
       }
-      
+
       this.handleAddReport(allResponseDocs);
     } catch (error) {
       console.log("error", error);
       message.warn(this.formatMessage(messages.somethingWentWrong));
-      this.setState({uploading: false, submitting: false});
+      this.setState({ uploading: false, submitting: false });
     }
   }
-  
+
   async handleAddReport(new_documents) {
     try {
-      const {name, exisiting_documents, test_date} = this.state;
-      const {payload: {report_id} = {}} = this.props;
-      const {payload: {patient_id} = {}, updateReport, close} = this.props;
-      
+      const { name, exisiting_documents, test_date } = this.state;
+      const { payload: { report_id } = {} } = this.props;
+      const { payload: { patient_id } = {}, updateReport, close } = this.props;
+
       let documents = [];
-      
+
       for (let each of exisiting_documents) {
         let obj = {};
-        const {basic_info: {name = "", document = ""} = {}} = each;
+        const { basic_info: { name = "", document = "" } = {} } = each;
         obj["name"] = name;
         obj["file"] = document;
         documents.push(obj);
       }
-      
+
       for (let each of new_documents) {
         documents.push(each);
       }
-      
+
       const data = {
         name,
         patient_id,
         documents: documents,
         test_date,
       };
-      
+
       const response = await updateReport(report_id, data);
-      
-      const {status = false, payload: {message: respMessage = ""} = {}} =
+
+      const { status = false, payload: { message: respMessage = "" } = {} } =
         response;
-      
+
       if (status) {
         this.setState({
           uploading: false,
@@ -511,20 +509,20 @@ class editReportDrawer extends Component {
       } else {
         message.warn(respMessage);
       }
-      
-      this.setState({submitting: false});
+
+      this.setState({ submitting: false });
     } catch (error) {
       console.log("error", error);
       message.warn(this.formatMessage(messages.somethingWentWrong));
-      this.setState({uploading: false, submitting: false});
+      this.setState({ uploading: false, submitting: false });
     }
   }
-  
+
   handleSubmit = (e) => {
     e.preventDefault();
     this.submitData();
   };
-  
+
   warnNote = () => {
     return (
       <div className="pt16">
@@ -535,11 +533,11 @@ class editReportDrawer extends Component {
       </div>
     );
   };
-  
+
   handleCloseWarning = () => {
-    const {warnNote} = this;
-    const {close} = this.props;
-    
+    const { warnNote } = this;
+    const { close } = this.props;
+
     confirm({
       title: `${this.formatMessage(messages.exitMessage)}`,
       content: <div>{warnNote()}</div>,
@@ -555,16 +553,15 @@ class editReportDrawer extends Component {
         });
         close();
       },
-      onCancel() {
-      },
+      onCancel() {},
     });
   };
-  
+
   onClose = () => {
-    const {close} = this.props;
-    const {handleCloseWarning} = this;
-    
-    const {name, new_documents, enableModal} = this.state;
+    const { close } = this.props;
+    const { handleCloseWarning } = this;
+
+    const { name, new_documents, enableModal } = this.state;
     if ((name || Object.keys(new_documents).length > 0) && enableModal) {
       handleCloseWarning();
     } else {
@@ -577,19 +574,19 @@ class editReportDrawer extends Component {
         test_date: "",
         exisiting_documents: [],
       });
-      
+
       close();
     }
   };
-  
+
   render() {
-    const {visible} = this.props;
+    const { visible } = this.props;
     const {
       name = "",
       new_documents = [],
       exisiting_documents = [],
     } = this.state;
-    
+
     const {
       onClose,
       formatMessage,
@@ -597,7 +594,7 @@ class editReportDrawer extends Component {
       renderAddReport,
       handleSubmit,
     } = this;
-    
+
     const {
       viewModalVisible,
       viewModalSrc,
@@ -608,17 +605,17 @@ class editReportDrawer extends Component {
       "786578326427348234762427394823 enableModal  --->",
       viewModalVisible && enableModal
     );
-    
+
     if (visible !== true) {
       return null;
     }
-    
+
     const disabledSubmit =
       !name || (new_documents.length === 0 && exisiting_documents.length === 0);
     const submitButtonProps = {
       disabled: disabledSubmit,
     };
-    
+
     return (
       <Fragment>
         <Drawer

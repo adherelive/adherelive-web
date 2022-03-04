@@ -1,4 +1,4 @@
-import {defineMessages} from "react-intl";
+import { defineMessages } from "react-intl";
 
 const messages = defineMessages({
   addProvider: {
@@ -136,7 +136,7 @@ const messages = defineMessages({
     description: "",
     defaultMessage: "Banner",
   },
-  
+
   // errors
   valid_email_text: {
     id: "app.addProvider.error.email.valid.text",

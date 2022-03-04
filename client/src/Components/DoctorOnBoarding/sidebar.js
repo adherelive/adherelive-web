@@ -1,8 +1,8 @@
-import React, {Component} from "react";
-import {injectIntl} from "react-intl";
-import {Menu, Tooltip} from "antd";
-import {PATH} from "../../constant";
-import {withRouter} from "react-router-dom";
+import React, { Component } from "react";
+import { injectIntl } from "react-intl";
+import { Menu, Tooltip } from "antd";
+import { PATH } from "../../constant";
+import { withRouter } from "react-router-dom";
 
 // const { Item: MenuItem } = Menu || {};
 
@@ -18,9 +18,9 @@ class SideMenu extends Component {
       selectedKeys: "",
     };
   }
-  
-  handleItemSelect = ({selectedKeys}) => {
-    const {history} = this.props;
+
+  handleItemSelect = ({ selectedKeys }) => {
+    const { history } = this.props;
     switch (selectedKeys[0]) {
       case LOGO:
       case DASHBOARD:
@@ -30,12 +30,12 @@ class SideMenu extends Component {
         history.push(PATH.LANDING_PAGE);
         break;
     }
-    this.setState({selectedKeys: selectedKeys[0]});
+    this.setState({ selectedKeys: selectedKeys[0] });
   };
-  
+
   render() {
-    const {selectedKeys} = this.state;
-    const {handleItemSelect} = this;
+    const { selectedKeys } = this.state;
+    const { handleItemSelect } = this;
     return (
       <Menu
         selectedKeys={[selectedKeys]}

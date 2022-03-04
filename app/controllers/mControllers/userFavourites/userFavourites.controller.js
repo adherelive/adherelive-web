@@ -10,7 +10,7 @@ import UserFavouritesService from "../../../services/userFavourites/userFavourit
 import UserFavouritesWrapper from "../../../ApiWrapper/mobile/userFavourites";
 import UserWrapper from "../../../ApiWrapper/mobile/user";
 
-import {FAVOURITE_TYPE} from "../../../../constant";
+import { FAVOURITE_TYPE } from "../../../../constant";
 
 const Log = new Logger("MOBILE > CONTROLLER > USER_FAVOURITES");
 
@@ -18,21 +18,21 @@ class UserFavouritesController extends Controller {
   constructor() {
     super();
   }
-  
+
   create = async (req, res) => {
-    const {raiseSuccess, raiseClientError, raiseServerError} = this;
+    const { raiseSuccess, raiseClientError, raiseServerError } = this;
     try {
       const {
         body,
         userDetails: {
           userId,
           userCategoryId,
-          userData: {category = ""} = {},
+          userData: { category = "" } = {},
         } = {},
       } = req;
-      
-      const {type = "", id = "", details = {}} = body;
-      
+
+      const { type = "", id = "", details = {} } = body;
+
       const data = {
         user_category_id: userCategoryId,
         user_category_type: category,
@@ -40,9 +40,9 @@ class UserFavouritesController extends Controller {
         marked_favourite_type: type,
         details,
       };
-      
+
       // const existing = await UserFavouritesService.findExistingFavourite(data);
-      
+
       // if(existing){
       //   return this.raiseClientError(
       //     res,
@@ -51,21 +51,21 @@ class UserFavouritesController extends Controller {
       //     `Already Marked Favourite for user`
       //   );
       // }
-      
+
       const record = await UserFavouritesService.markFavourite(data);
-      
+
       let favourites_data = {};
-      
+
       const favourite = await UserFavouritesWrapper(record);
       const ref_info = await favourite.getReferenceInfo();
       const favourite_id = favourite.getId();
-      favourites_data[favourite_id] = {...ref_info};
-      
+      favourites_data[favourite_id] = { ...ref_info };
+
       const userData = {};
       const currentUser = await UserWrapper(null, userId);
-      
+
       userData[currentUser.getId()] = currentUser.getBasicInfo();
-      
+
       return raiseSuccess(
         res,
         200,
@@ -79,37 +79,37 @@ class UserFavouritesController extends Controller {
       return raiseServerError(res);
     }
   };
-  
+
   getUserTypeFavourites = async (req, res) => {
-    const {raiseSuccess, raiseClientError, raiseServerError} = this;
+    const { raiseSuccess, raiseClientError, raiseServerError } = this;
     try {
       const {
         userDetails: {
           userId,
           userCategoryId,
-          userData: {category = ""} = {},
+          userData: { category = "" } = {},
         } = {},
       } = req;
-      
-      const {query: {type = ""} = {}} = req;
-      
+
+      const { query: { type = "" } = {} } = req;
+
       const data = {
         user_category_id: userCategoryId,
         user_category_type: category,
         marked_favourite_type: type,
       };
-      
+
       const favourites = await UserFavouritesService.getAllFavourites(data);
-      
+
       let favourites_data = {};
-      
+
       const userData = {};
       const currentUser = await UserWrapper(null, userId);
       const favourite_medicine_ids = [];
       const favourite_medical_test_ids = [];
-      
+
       userData[currentUser.getId()] = currentUser.getBasicInfo();
-      
+
       if (favourites && favourites.length) {
         for (let index = 0; index < favourites.length; index++) {
           let each = favourites[index];
@@ -118,16 +118,16 @@ class UserFavouritesController extends Controller {
           const id = eachFavourite.getId();
           if (type === FAVOURITE_TYPE.MEDICINE) {
             const medicineId = await eachFavourite.getMarkedFavouriteId();
-            Log.debug("983246238747523746790283", {medicineId});
+            Log.debug("983246238747523746790283", { medicineId });
             await favourite_medicine_ids.push(medicineId.toString());
           } else if (type === FAVOURITE_TYPE.MEDICAL_TESTS) {
             const medicalTestId = await eachFavourite.getMarkedFavouriteId();
             await favourite_medical_test_ids.push(medicalTestId.toString());
           }
-          favourites_data[id] = {...ref_info};
+          favourites_data[id] = { ...ref_info };
         }
       }
-      
+
       return raiseSuccess(
         res,
         200,
@@ -148,21 +148,21 @@ class UserFavouritesController extends Controller {
       return raiseServerError(res);
     }
   };
-  
+
   removeFavourite = async (req, res) => {
-    const {raiseSuccess, raiseClientError, raiseServerError} = this;
+    const { raiseSuccess, raiseClientError, raiseServerError } = this;
     try {
       const {
         body,
         userDetails: {
           userId,
           userCategoryId,
-          userData: {category = ""} = {},
+          userData: { category = "" } = {},
         } = {},
       } = req;
-      
-      const {params: {id = null} = {}} = req;
-      
+
+      const { params: { id = null } = {} } = req;
+
       const favourite = await UserFavouritesWrapper(null, id);
       const type = await favourite.getMarkedFavouriteType();
       const existing = await UserFavouritesService.findExistingFavourite({
@@ -178,7 +178,7 @@ class UserFavouritesController extends Controller {
           `Not marked Favourite for user`
         );
       }
-      
+
       return raiseSuccess(
         res,
         200,
@@ -190,37 +190,37 @@ class UserFavouritesController extends Controller {
       return raiseServerError(res);
     }
   };
-  
+
   removeFavouriteMedicine = async (req, res) => {
-    const {raiseSuccess, raiseClientError, raiseServerError} = this;
+    const { raiseSuccess, raiseClientError, raiseServerError } = this;
     try {
       const {
         body,
         userDetails: {
           userId,
           userCategoryId,
-          userData: {category = ""} = {},
+          userData: { category = "" } = {},
         } = {},
       } = req;
-      
-      const {query: {typeId = null, type = ""} = {}} = req;
-      
+
+      const { query: { typeId = null, type = "" } = {} } = req;
+
       const record = await UserFavouritesService.getByData({
         marked_favourite_id: typeId,
         marked_favourite_type: type,
       });
-      
+
       let removed_favourites_data = {};
-      
+
       if (record) {
         const favourite = await UserFavouritesWrapper(record);
         const ref_info = await favourite.getReferenceInfo();
         const favourite_id = favourite.getId();
-        removed_favourites_data[favourite_id] = {...ref_info};
-        
+        removed_favourites_data[favourite_id] = { ...ref_info };
+
         const favouriteId = await favourite.getId();
-        
-        Log.debug("32784284576237463256948723", {favouriteId});
+
+        Log.debug("32784284576237463256948723", { favouriteId });
         const deleted = await UserFavouritesService.delete(favouriteId);
       } else {
         return this.raiseClientError(
@@ -230,11 +230,11 @@ class UserFavouritesController extends Controller {
           `Not marked Favourite for user`
         );
       }
-      
+
       return raiseSuccess(
         res,
         200,
-        {removed_favourites_data},
+        { removed_favourites_data },
         `Favourite ${type} unmarked successfully`
       );
     } catch (error) {

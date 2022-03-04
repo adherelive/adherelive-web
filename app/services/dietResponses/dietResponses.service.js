@@ -1,37 +1,37 @@
 import Database from "../../../libs/mysql";
-import {getFilePath} from "../../helper/filePath";
+import { getFilePath } from "../../helper/filePath";
 
-import {TABLE_NAME} from "../../models/dietResponses";
-import {TABLE_NAME as uploadDocumentTableName} from "../../models/uploadDocuments";
-import {TABLE_NAME as scheduleEventsTableName} from "../../models/scheduleEvents";
+import { TABLE_NAME } from "../../models/dietResponses";
+import { TABLE_NAME as uploadDocumentTableName } from "../../models/uploadDocuments";
+import { TABLE_NAME as scheduleEventsTableName } from "../../models/scheduleEvents";
 
-import {DOCUMENT_PARENT_TYPE, EVENT_STATUS} from "../../../constant";
+import { DOCUMENT_PARENT_TYPE, EVENT_STATUS } from "../../../constant";
 
 const DEFAULT_ORDER = [["created_at", "DESC"]];
 
 class DietResponsesService {
-  create = async ({documents = [], ...dietResponseData}) => {
+  create = async ({ documents = [], ...dietResponseData }) => {
     const transaction = await Database.initTransaction();
     try {
       let document_uploaded = false;
       if (documents.length > 0) {
         document_uploaded = true;
       }
-      
+
       const dietResponse =
         (await Database.getModel(TABLE_NAME).create(
-          {...dietResponseData, document_uploaded},
+          { ...dietResponseData, document_uploaded },
           {
             raw: true,
             transaction,
           }
         )) || null;
-      
-      const {id, schedule_event_id} = dietResponse || {};
-      
+
+      const { id, schedule_event_id } = dietResponse || {};
+
       if (documents.length > 0) {
         for (let index = 0; index < documents.length; index++) {
-          const {name, file} = documents[index] || {};
+          const { name, file } = documents[index] || {};
           // todo: change this to bulk create
           await Database.getModel(uploadDocumentTableName).create(
             {
@@ -46,7 +46,7 @@ class DietResponsesService {
           );
         }
       }
-      
+
       // update schedule event status
       await Database.getModel(scheduleEventsTableName).update(
         {
@@ -59,7 +59,7 @@ class DietResponsesService {
           transaction,
         }
       );
-      
+
       await transaction.commit();
       return id;
     } catch (error) {
@@ -67,7 +67,7 @@ class DietResponsesService {
       throw error;
     }
   };
-  
+
   getByData = async (data) => {
     try {
       return await Database.getModel(TABLE_NAME).findOne({
@@ -78,7 +78,7 @@ class DietResponsesService {
       throw error;
     }
   };
-  
+
   update = async (data, id) => {
     const transaction = await Database.initTransaction();
     try {
@@ -96,8 +96,8 @@ class DietResponsesService {
       throw error;
     }
   };
-  
-  findAndCountAll = async ({where, order = DEFAULT_ORDER, attributes}) => {
+
+  findAndCountAll = async ({ where, order = DEFAULT_ORDER, attributes }) => {
     try {
       return await Database.getModel(TABLE_NAME).findAndCountAll({
         where,
@@ -109,7 +109,7 @@ class DietResponsesService {
       throw error;
     }
   };
-  
+
   findOne = async (data) => {
     try {
       const diet = await Database.getModel(TABLE_NAME).findOne({
@@ -121,7 +121,7 @@ class DietResponsesService {
       throw error;
     }
   };
-  
+
   delete = async (id) => {
     try {
       const record = await Database.getModel(TABLE_NAME).destroy({

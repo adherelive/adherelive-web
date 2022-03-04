@@ -60,7 +60,7 @@ stages:
         environment:
           name: $(azureEnvironment)
           resourceType: VirtualMachine
-          tags: 'adherelive-demo'
+          tags: 'adherelive-ndemo'
         strategy:
           runOnce:
             deploy:

@@ -1,6 +1,6 @@
 "use strict";
 
-import {TABLE_NAME} from "../app/models/features";
+import { TABLE_NAME } from "../app/models/features";
 
 module.exports = {
   up: (queryInterface, Sequelize) => {
@@ -13,7 +13,7 @@ module.exports = {
             type: Sequelize.JSON,
             allowNull: true,
           },
-          {transaction: t}
+          { transaction: t }
         ),
         queryInterface.removeColumn(TABLE_NAME, "description", {
           transaction: t,
@@ -21,18 +21,18 @@ module.exports = {
       ]);
     });
   },
-  
+
   down: (queryInterface, Sequelize) => {
     return queryInterface.sequelize.transaction((t) => {
       return Promise.all([
-        queryInterface.removeColumn(TABLE_NAME, "details", {transaction: t}),
+        queryInterface.removeColumn(TABLE_NAME, "details", { transaction: t }),
         queryInterface.addColumn(
           TABLE_NAME,
           "description",
           {
             type: Sequelize.STRING(1000),
           },
-          {transaction: t}
+          { transaction: t }
         ),
       ]);
     });

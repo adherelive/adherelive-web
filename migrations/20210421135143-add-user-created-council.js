@@ -1,6 +1,6 @@
 "use strict";
 
-import {TABLE_NAME} from "../app/models/registrationCouncil";
+import { TABLE_NAME } from "../app/models/registrationCouncil";
 
 module.exports = {
   up: (queryInterface, Sequelize) => {
@@ -10,7 +10,7 @@ module.exports = {
       defaultValue: null,
     });
   },
-  
+
   down: (queryInterface, Sequelize) => {
     return queryInterface.removeColumn(TABLE_NAME, "user_created");
   },

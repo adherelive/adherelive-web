@@ -1,5 +1,5 @@
 import Joi from "joi";
-import {validationErrorMessage} from "../helper";
+import { validationErrorMessage } from "../helper";
 
 // schema
 const createFoodItemSchema = Joi.object({
@@ -91,11 +91,11 @@ const updateFoodItemSchema = Joi.object({
 });
 
 export const create = (req, res, next) => {
-  const {body: data = {}} = req;
-  const isValid = createFoodItemSchema.validate(data, {convert: false});
-  
-  const {error: {details = []} = {}} = isValid || {};
-  
+  const { body: data = {} } = req;
+  const isValid = createFoodItemSchema.validate(data, { convert: false });
+
+  const { error: { details = [] } = {} } = isValid || {};
+
   if (details.length > 0) {
     return validationErrorMessage(res, details[0].message);
   } else {
@@ -104,11 +104,11 @@ export const create = (req, res, next) => {
 };
 
 export const update = (req, res, next) => {
-  const {body: data = {}} = req;
-  const isValid = updateFoodItemSchema.validate(data, {convert: false});
-  
-  const {error: {details = []} = {}} = isValid || {};
-  
+  const { body: data = {} } = req;
+  const isValid = updateFoodItemSchema.validate(data, { convert: false });
+
+  const { error: { details = [] } = {} } = isValid || {};
+
   if (details.length > 0) {
     return validationErrorMessage(res, details[0].message);
   } else {

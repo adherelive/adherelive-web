@@ -1,5 +1,5 @@
-import React, {Component, Fragment} from "react";
-import {injectIntl} from "react-intl";
+import React, { Component, Fragment } from "react";
+import { injectIntl } from "react-intl";
 import Drawer from "antd/es/drawer";
 import Input from "antd/es/input";
 import Upload from "antd/es/upload";
@@ -35,60 +35,59 @@ class addReportDrawer extends Component {
       submitting: false,
     };
   }
-  
+
   formatMessage = (data) => this.props.intl.formatMessage(data);
-  
-  componentDidMount() {
-  }
-  
+
+  componentDidMount() {}
+
   getUploadButton = () => {
-    const {uploading} = this.state;
-    return uploading ? <LoadingOutlined/> : <PlusOutlined/>;
+    const { uploading } = this.state;
+    return uploading ? <LoadingOutlined /> : <PlusOutlined />;
   };
-  
+
   setName = (e) => {
     e.preventDefault();
-    const {value} = e.target;
-    this.setState({name: value});
+    const { value } = e.target;
+    this.setState({ name: value });
   };
-  
+
   handleDocumentViewOpen = (src) => () => {
     this.setState({
       viewModalVisible: true,
       viewModalSrc: src,
     });
   };
-  
+
   handleDocumentViewClose = () => {
     this.setState({
       viewModalVisible: false,
       viewModalSrc: "",
     });
   };
-  
+
   handleDelete = (delete_src) => (e) => {
     e.preventDefault();
-    const {documents} = this.state;
+    const { documents } = this.state;
     let indexToDelete = -1;
     for (let eachIndex in documents) {
-      const {src = ""} = documents[eachIndex];
+      const { src = "" } = documents[eachIndex];
       if (src === delete_src) {
         indexToDelete = eachIndex;
         break;
       }
     }
-    
+
     if (indexToDelete > -1) {
       documents.splice(indexToDelete, 1);
-      this.setState({documents});
+      this.setState({ documents });
       message.success(this.formatMessage(messages.deleteSuccess));
     }
   };
-  
-  getImageView = ({src = "", id, name}) => {
+
+  getImageView = ({ src = "", id, name }) => {
     return (
       <div className={"qualification-avatar-uploader "}>
-        <img src={src} className="wp100 hp100 br4" alt="report"/>
+        <img src={src} className="wp100 hp100 br4" alt="report" />
         <div className="overlay"></div>
         <div className="absolute tp45 l0 wp100 flex justify-center align-space-evenly doc-container">
           <DeleteTwoTone
@@ -108,21 +107,21 @@ class addReportDrawer extends Component {
             href={src}
             target={"_self"}
             className={"del doc-opt ml4"}
-            style={{color: "#fff"}}
+            style={{ color: "#fff" }}
           >
-            <DownloadOutlined className="fs18" twoToneColor="#fff"/>
+            <DownloadOutlined className="fs18" twoToneColor="#fff" />
           </a>
         </div>
       </div>
     );
   };
-  
-  getFileView = ({src, extension, id, name}) => {
+
+  getFileView = ({ src, extension, id, name }) => {
     return (
       <div className={"qualification-avatar-uploader "}>
         <div className="absolute tp45 l0 wp100 flex justify-center align-space-evenly doc-container ">
           {/* {extension.toUpperCase()} */}
-          <Icon type="paper-clip"/>
+          <Icon type="paper-clip" />
         </div>
         <div className="overlay"></div>
         <div className="absolute tp45 l0 wp100 flex justify-center align-space-evenly doc-container ">
@@ -136,47 +135,47 @@ class addReportDrawer extends Component {
             href={src}
             target={"_self"}
             className={"del doc-opt ml4 mb4"}
-            style={{color: "#fff"}}
+            style={{ color: "#fff" }}
           >
-            <DownloadOutlined className="fs18 " twoToneColor="#fff"/>
+            <DownloadOutlined className="fs18 " twoToneColor="#fff" />
           </a>
         </div>
       </div>
     );
   };
-  
+
   getUploadedDocuments = () => {
-    const {getImageView, getFileView} = this;
-    const {payload: {patient_id} = {}} = this.props;
-    const {documents} = this.state;
-    
+    const { getImageView, getFileView } = this;
+    const { payload: { patient_id } = {} } = this.props;
+    const { documents } = this.state;
+
     return documents.map((each, index) => {
-      const {name = "", src} = each;
+      const { name = "", src } = each;
       const documentExtension = name.substring(name.length - 3, name.length);
-      
+
       return (
         <div key={`report-upload-${index}`}>
           {documentExtension === "png" ||
           documentExtension === "jpg" ||
           documentExtension === "peg" ||
           documentExtension === "jpeg"
-            ? getImageView({src, index, name})
-            : getFileView({src, extension: documentExtension, index, name})}
+            ? getImageView({ src, index, name })
+            : getFileView({ src, extension: documentExtension, index, name })}
         </div>
       );
     });
   };
-  
-  handleUploadChange = ({file}) => {
-    const {documents = []} = this.state;
-    
+
+  handleUploadChange = ({ file }) => {
+    const { documents = [] } = this.state;
+
     let newDocuments = [];
-    
+
     const fileReader = new FileReader();
     const fileUrl = URL.createObjectURL(file.originFileObj);
-    
+
     const existing = documents.filter((document) => {
-      const {name} = document || {};
+      const { name } = document || {};
       return name === file.name;
     });
     if (existing.length === 0) {
@@ -186,14 +185,14 @@ class addReportDrawer extends Component {
         file,
       });
     }
-    
-    this.setState({documents: [...documents, ...newDocuments]});
+
+    this.setState({ documents: [...documents, ...newDocuments] });
   };
-  
+
   setTestDate = (value) => {
-    this.setState({test_date: moment(value)});
+    this.setState({ test_date: moment(value) });
   };
-  
+
   renderAddReport = () => {
     const {
       getUploadButton,
@@ -202,8 +201,8 @@ class addReportDrawer extends Component {
       handleUploadChange,
       setTestDate,
     } = this;
-    
-    const {name = "", test_date} = this.state;
+
+    const { name = "", test_date } = this.state;
     return (
       <div className="form-block-ap ">
         <div className="form-headings-ap flex align-center justify-start">
@@ -217,7 +216,7 @@ class addReportDrawer extends Component {
           onChange={this.setName}
           required={true}
         />
-        
+
         <div className="form-headings-ap flex align-center justify-start">
           {formatMessage(messages.testDate)}
           <div className="star-red">*</div>
@@ -228,22 +227,22 @@ class addReportDrawer extends Component {
             className="mb10"
             onChange={setTestDate}
             value={test_date}
-            style={{width: "100%"}}
+            style={{ width: "100%" }}
           />
         </div>
-        
+
         <div className="form-headings-ap flex align-center justify-start">
           {formatMessage(messages.files)}
-          
+
           <div className="star-red">*</div>
         </div>
-        
+
         <div className="wp100 flex flex-wrap align-center">
           {getUploadedDocuments()}
           <div className="flex">
             <Upload
               multiple={true}
-              style={{width: 128, height: 128, margin: 6}}
+              style={{ width: 128, height: 128, margin: 6 }}
               showUploadList={false}
               listType="picture-card"
               onChange={handleUploadChange}
@@ -258,20 +257,20 @@ class addReportDrawer extends Component {
       </div>
     );
   };
-  
+
   async submitData() {
     try {
-      const {uploadReport, payload: {patient_id} = {}} = this.props;
-      
-      const {documents = {}} = this.state;
+      const { uploadReport, payload: { patient_id } = {} } = this.props;
+
+      const { documents = {} } = this.state;
       let data = new FormData();
       let allResponseDocs = [];
-      
+
       for (let each of documents) {
-        const {file = {}} = each;
-        const {originFileObj = {}} = file;
+        const { file = {} } = each;
+        const { originFileObj = {} } = file;
         data.set("files", originFileObj);
-        
+
         this.setState({
           uploading: true,
           submitting: true,
@@ -281,13 +280,13 @@ class addReportDrawer extends Component {
           status = false,
           payload: {
             message: respMessage = "",
-            data: {documents: response_documents = []} = {},
+            data: { documents: response_documents = [] } = {},
           } = {},
         } = response;
-        
+
         if (!status) {
           message.warn(this.formatMessage(messages.somethingWentWrong));
-          this.setState({uploading: false});
+          this.setState({ uploading: false });
           return;
         } else {
           if (response_documents.length > 0) {
@@ -295,32 +294,32 @@ class addReportDrawer extends Component {
           }
         }
       }
-      
+
       this.handleAddReport(allResponseDocs);
     } catch (error) {
       console.log("error", error);
       message.warn(this.formatMessage(messages.somethingWentWrong));
-      this.setState({uploading: false, submitting: false});
+      this.setState({ uploading: false, submitting: false });
     }
   }
-  
+
   async handleAddReport(documents) {
     try {
-      const {name, test_date} = this.state;
-      const {payload: {patient_id} = {}, addReport, close} = this.props;
-      
+      const { name, test_date } = this.state;
+      const { payload: { patient_id } = {}, addReport, close } = this.props;
+
       const data = {
         name,
         patient_id,
         documents,
         test_date,
       };
-      
+
       const response = await addReport(data);
-      
-      const {status = false, payload: {message: respMessage = ""} = {}} =
+
+      const { status = false, payload: { message: respMessage = "" } = {} } =
         response;
-      
+
       if (status) {
         this.setState({
           viewModalVisible: false,
@@ -334,21 +333,21 @@ class addReportDrawer extends Component {
         close();
         message.success(respMessage);
       } else {
-        this.setState({submitting: false});
+        this.setState({ submitting: false });
         message.warn(respMessage);
       }
     } catch (error) {
       console.log("error", error);
       message.warn(this.formatMessage(messages.somethingWentWrong));
-      this.setState({uploading: false, submitting: false});
+      this.setState({ uploading: false, submitting: false });
     }
   }
-  
+
   handleSubmit = (e) => {
     e.preventDefault();
     this.submitData();
   };
-  
+
   warnNote = () => {
     return (
       <div className="pt16">
@@ -359,11 +358,11 @@ class addReportDrawer extends Component {
       </div>
     );
   };
-  
+
   handleCloseWarning = () => {
-    const {warnNote} = this;
-    const {close} = this.props;
-    
+    const { warnNote } = this;
+    const { close } = this.props;
+
     confirm({
       title: `${this.formatMessage(messages.exitMessage)}`,
       content: <div>{warnNote()}</div>,
@@ -378,16 +377,15 @@ class addReportDrawer extends Component {
         });
         close();
       },
-      onCancel() {
-      },
+      onCancel() {},
     });
   };
-  
+
   onClose = () => {
-    const {close} = this.props;
-    const {handleCloseWarning} = this;
-    
-    const {name, documents} = this.state;
+    const { close } = this.props;
+    const { handleCloseWarning } = this;
+
+    const { name, documents } = this.state;
     if (name || Object.keys(documents).length > 0) {
       handleCloseWarning();
     } else {
@@ -399,15 +397,15 @@ class addReportDrawer extends Component {
         name: "",
         test_date: "",
       });
-      
+
       close();
     }
   };
-  
+
   render() {
-    const {visible} = this.props;
-    const {name, documents, test_date, submitting = false} = this.state;
-    
+    const { visible } = this.props;
+    const { name, documents, test_date, submitting = false } = this.state;
+
     const {
       onClose,
       formatMessage,
@@ -415,19 +413,19 @@ class addReportDrawer extends Component {
       renderAddReport,
       handleSubmit,
     } = this;
-    
-    const {viewModalVisible, viewModalSrc} = this.state;
-    
+
+    const { viewModalVisible, viewModalSrc } = this.state;
+
     if (visible !== true) {
       return null;
     }
-    
+
     const disabledSubmit =
       !name || Object.keys(documents).length === 0 || !test_date;
     const submitButtonProps = {
       disabled: disabledSubmit,
     };
-    
+
     return (
       <Fragment>
         <Drawer

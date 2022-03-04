@@ -1,6 +1,6 @@
 "use strict";
-import {DataTypes} from "sequelize";
-import {TERMS_AND_CONDITIONS_TYPES} from "../../constant";
+import { DataTypes } from "sequelize";
+import { TERMS_AND_CONDITIONS_TYPES } from "../../constant";
 
 export const TABLE_NAME = "terms_and_conditions";
 
@@ -12,11 +12,11 @@ export const db = (database) => {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
-        type: DataTypes.INTEGER
+        type: DataTypes.INTEGER,
       },
       terms_type: {
         type: DataTypes.ENUM,
-        values: [...Object.values(TERMS_AND_CONDITIONS_TYPES)]
+        values: [...Object.values(TERMS_AND_CONDITIONS_TYPES)],
       },
       details: {
         type: DataTypes.JSON,
@@ -29,5 +29,4 @@ export const db = (database) => {
   );
 };
 
-export const associate = (database) => {
-};
+export const associate = (database) => {};

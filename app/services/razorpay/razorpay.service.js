@@ -7,7 +7,7 @@ class RazorpayService {
       key_secret: process.config.razorpay.secret,
     });
   }
-  
+
   createOrder = async (data = {}) => {
     try {
       const order = await this.razorpay.orders.create(data);
@@ -16,7 +16,7 @@ class RazorpayService {
       throw error;
     }
   };
-  
+
   directTransfer = async (data = {}) => {
     try {
       const transfer = await this.razorpay.transfers.create(data);

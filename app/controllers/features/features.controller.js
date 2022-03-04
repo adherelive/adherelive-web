@@ -8,7 +8,7 @@ import doctorPatientFeatureMappingService from "../../services/doctorPatientFeat
 import CarePlanWrapper from "../../ApiWrapper/web/carePlan";
 import FeatureMappingWrapper from "../../ApiWrapper/web/doctorPatientFeatureMapping";
 
-import {USER_CATEGORY} from "../../../constant";
+import { USER_CATEGORY } from "../../../constant";
 
 const FILE_NAME = "WEB FEATURE CONTROLLER";
 
@@ -18,30 +18,30 @@ class FeatureController extends Controller {
   constructor() {
     super();
   }
-  
+
   getAllFeaturesMappingForUser = async (req, res) => {
-    const {raiseServerError, raiseSuccess} = this;
+    const { raiseServerError, raiseSuccess } = this;
     try {
       const {
         userDetails: {
           userRoleId = null,
-          userData: {category} = {},
+          userData: { category } = {},
           userCategoryId,
         } = {},
       } = req;
-      
+
       let featureMappings = {};
       let features = {};
       let careplanData = [];
       let otherUserCategoryIds = [];
-      
+
       switch (category) {
         case USER_CATEGORY.PATIENT:
           careplanData =
             (await carePlanService.getCarePlanByData({
               patient_id: userCategoryId,
             })) || [];
-          
+
           for (let index = 0; index < careplanData.length; index++) {
             const carePlanApiWrapper = await CarePlanWrapper(
               careplanData[index]
@@ -54,7 +54,7 @@ class FeatureController extends Controller {
             (await carePlanService.getCarePlanByData({
               user_role_id: userRoleId,
             })) || [];
-          
+
           for (let index = 0; index < careplanData.length; index++) {
             const carePlanApiWrapper = await CarePlanWrapper(
               careplanData[index]
@@ -67,7 +67,7 @@ class FeatureController extends Controller {
             (await carePlanService.getCarePlanByData({
               user_role_id: userRoleId,
             })) || [];
-          
+
           for (let index = 0; index < careplanData.length; index++) {
             const carePlanApiWrapper = await CarePlanWrapper(
               careplanData[index]
@@ -76,7 +76,7 @@ class FeatureController extends Controller {
           }
           break;
       }
-      
+
       for (const otherUserCategoryId of otherUserCategoryIds) {
         const patientId =
           category === USER_CATEGORY.PATIENT
@@ -91,9 +91,9 @@ class FeatureController extends Controller {
             patient_id: patientId,
             doctor_id: doctorId,
           });
-        
+
         let doctorFeatureIds = [];
-        
+
         for (const feature of patientFeatures) {
           const featureWrapper = await FeatureMappingWrapper(feature);
           const feature_id = featureWrapper.getFeatureId();
@@ -101,17 +101,17 @@ class FeatureController extends Controller {
         }
         featureMappings = {
           ...featureMappings,
-          ...{[otherUserCategoryId]: doctorFeatureIds},
+          ...{ [otherUserCategoryId]: doctorFeatureIds },
         };
       }
-      
+
       const featuresTypesData = await featuresService.getAllFeatures();
-      
+
       for (const featureData of featuresTypesData) {
-        const {id, name, details} = featureData;
-        features = {...features, [id]: {id, name, details}};
+        const { id, name, details } = featureData;
+        features = { ...features, [id]: { id, name, details } };
       }
-      
+
       const dataToSend = {
         feature_mappings: {
           ...featureMappings,
@@ -120,11 +120,11 @@ class FeatureController extends Controller {
           ...features,
         },
       };
-      
+
       return raiseSuccess(
         res,
         200,
-        {...dataToSend},
+        { ...dataToSend },
         "Features mapping fetched successfully."
       );
     } catch (error) {

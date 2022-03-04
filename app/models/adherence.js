@@ -1,5 +1,5 @@
 "use strict";
-import {DataTypes} from "sequelize";
+import { DataTypes } from "sequelize";
 import * as ActionDetails from "./actionDetails";
 
 export const TABLE_NAME = "adherence";
@@ -12,7 +12,7 @@ export const db = (database) => {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
-        type: DataTypes.INTEGER
+        type: DataTypes.INTEGER,
       },
       action_details_id: {
         type: DataTypes.INTEGER,
@@ -21,11 +21,11 @@ export const db = (database) => {
           model: {
             tableName: ActionDetails.TABLE_NAME,
           },
-          key: 'id'
-        }
+          key: "id",
+        },
       },
       adherence: {
-        type: DataTypes.STRING(1)
+        type: DataTypes.STRING(1),
       },
     },
     {
@@ -36,11 +36,11 @@ export const db = (database) => {
 };
 
 export const associate = (database) => {
-  const {adherence, action_details} = database.models || {};
-  
+  const { adherence, action_details } = database.models || {};
+
   // associations here (if any) ...
   adherence.belongsTo(action_details, {
     foreignKey: "action_details_id",
-    targetKey: "id"
+    targetKey: "id",
   });
 };

@@ -5,19 +5,19 @@ class UserDeviceWrapper extends BaseUserDevice {
   constructor(data) {
     super(data);
   }
-  
+
   getAllInfo = () => {
-    const {_data} = this;
+    const { _data } = this;
     return {
       ..._data,
     };
   };
 }
 
-export default async ({data = null, id = null, user_id = null}) => {
+export default async ({ data = null, id = null, user_id = null }) => {
   if (data) {
     return new UserDeviceWrapper(data);
   }
-  const userDevice = await UserDeviceService.getByData({user_id});
+  const userDevice = await UserDeviceService.getByData({ user_id });
   return new UserDeviceWrapper(userDevice);
 };

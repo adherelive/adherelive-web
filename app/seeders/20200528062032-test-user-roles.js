@@ -1,6 +1,6 @@
 "use strict";
 
-import {TABLE_NAME} from "../models/userRoles";
+import { TABLE_NAME } from "../models/userRoles";
 
 module.exports = {
   up: (queryInterface, Sequelize) => {
@@ -70,7 +70,7 @@ module.exports = {
       },
     ]);
   },
-  
+
   down: (queryInterface, Sequelize) => {
     return queryInterface.bulkDelete(TABLE_NAME, null, {});
   },

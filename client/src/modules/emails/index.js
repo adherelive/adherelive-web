@@ -1,7 +1,7 @@
-import {SEARCH_DOCTOR_COMPLETE} from "../doctors";
+import { SEARCH_DOCTOR_COMPLETE } from "../doctors";
 
 function emailsReducer(state, data) {
-  const {emails = {}} = data || {};
+  const { emails = {} } = data || {};
   if (emails) {
     return {
       ...state,
@@ -13,7 +13,7 @@ function emailsReducer(state, data) {
 }
 
 export default (state = {}, payload) => {
-  const {type, data} = payload || {};
+  const { type, data } = payload || {};
   switch (type) {
     case SEARCH_DOCTOR_COMPLETE:
       return emailsReducer(state, data);

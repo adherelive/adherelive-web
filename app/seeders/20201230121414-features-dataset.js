@@ -1,6 +1,6 @@
 "use strict";
 
-import {TABLE_NAME} from "../models/features";
+import { TABLE_NAME } from "../models/features";
 
 module.exports = {
   up: (queryInterface) => {
@@ -22,7 +22,7 @@ module.exports = {
       },
     ]);
   },
-  
+
   down: (queryInterface) => {
     return queryInterface.bulkDelete(TABLE_NAME, null, {});
   },

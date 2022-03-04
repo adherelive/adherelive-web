@@ -1,4 +1,4 @@
-import {ADD_EXERCISE_COMPLETED} from "../exercises";
+import { ADD_EXERCISE_COMPLETED } from "../exercises";
 
 const CLEAR_LATEST_CREATED_EXERCISE = "CLEAR_LATEST_CREATED_EXERCISE";
 
@@ -11,7 +11,7 @@ export const clearLatestCreatedExercise = () => {
         exercise_contents: {},
         created: false,
       };
-      
+
       dispatch({
         type: CLEAR_LATEST_CREATED_EXERCISE,
         data,
@@ -34,13 +34,13 @@ function latestExerciseCreatedReducer(state, data) {
     createdExerciseDetaildData = {};
   const exercise = payloadExercises[exercise_id];
   const exercise_detail = payloadExerciseDetails[exercise_detail_id];
-  createdExerciseData[exercise_id] = {...exercise};
-  createdExerciseDetaildData[exercise_detail_id] = {...exercise_detail};
-  
+  createdExerciseData[exercise_id] = { ...exercise };
+  createdExerciseDetaildData[exercise_detail_id] = { ...exercise_detail };
+
   if (exercise) {
     return {
-      exercises: {...createdExerciseData},
-      exercise_details: {...createdExerciseDetaildData},
+      exercises: { ...createdExerciseData },
+      exercise_details: { ...createdExerciseDetaildData },
       exercise_contents,
       created: true,
     };
@@ -59,7 +59,7 @@ function clearDataReducer(state, data) {
 }
 
 export default (state = {}, action) => {
-  const {type, data} = action;
+  const { type, data } = action;
   switch (type) {
     case ADD_EXERCISE_COMPLETED:
       return latestExerciseCreatedReducer(state, data);

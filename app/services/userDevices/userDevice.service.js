@@ -1,6 +1,6 @@
 import Database from "../../../libs/mysql";
-import {TABLE_NAME} from "../../models/userDevices";
-import {Op} from "sequelize";
+import { TABLE_NAME } from "../../models/userDevices";
+import { Op } from "sequelize";
 import moment from "moment";
 
 class UserDeviceService {
@@ -12,7 +12,7 @@ class UserDeviceService {
       throw error;
     }
   };
-  
+
   getDeviceByData = async (data) => {
     try {
       const userDevice = await Database.getModel(TABLE_NAME).findOne({
@@ -23,7 +23,7 @@ class UserDeviceService {
       throw error;
     }
   };
-  
+
   getAllDeviceByData = async (data) => {
     const inactivityDaysLimit = process.config.app.inactivity_days_no;
     const dateFrom = moment().subtract(parseInt(inactivityDaysLimit, 10), "d");
@@ -41,7 +41,7 @@ class UserDeviceService {
       throw error;
     }
   };
-  
+
   deleteDevice = async (data) => {
     try {
       const userDevice = await Database.getModel(TABLE_NAME).destroy({
@@ -53,7 +53,7 @@ class UserDeviceService {
       throw error;
     }
   };
-  
+
   updateDevice = async (data, id) => {
     const transaction = await Database.initTransaction();
     try {

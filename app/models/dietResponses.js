@@ -1,9 +1,9 @@
 "use strict";
-import {DataTypes} from "sequelize";
-import {TABLE_NAME as dietTableName} from "./diet";
-import {TABLE_NAME as scheduleEventsTable} from "./scheduleEvents";
+import { DataTypes } from "sequelize";
+import { TABLE_NAME as dietTableName } from "./diet";
+import { TABLE_NAME as scheduleEventsTable } from "./scheduleEvents";
 
-import {DIET_RESPONSE_STATUS} from "../../constant";
+import { DIET_RESPONSE_STATUS } from "../../constant";
 
 export const TABLE_NAME = "diet_responses";
 
@@ -65,5 +65,4 @@ export const db = (database) => {
   );
 };
 
-export const associate = (database) => {
-};
+export const associate = (database) => {};

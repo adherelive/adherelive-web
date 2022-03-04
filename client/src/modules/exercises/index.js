@@ -1,5 +1,5 @@
-import {doRequest} from "../../Helper/network";
-import {REQUEST_TYPE} from "../../constant";
+import { doRequest } from "../../Helper/network";
+import { REQUEST_TYPE } from "../../constant";
 import {
   addExerciseUrl,
   updateExerciseUrl,
@@ -32,8 +32,8 @@ export const addExercise = (payload) => {
         url: addExerciseUrl(),
         data: payload,
       });
-      
-      const {status, payload: {data, message = ""} = {}} = response || {};
+
+      const { status, payload: { data, message = "" } = {} } = response || {};
       if (status === true) {
         dispatch({
           type: ADD_EXERCISE_COMPLETED,
@@ -52,7 +52,7 @@ export const addExercise = (payload) => {
   };
 };
 
-export const updateExercise = ({exercise_id, data: payload}) => {
+export const updateExercise = ({ exercise_id, data: payload }) => {
   let response = {};
   return async (dispatch) => {
     try {
@@ -61,8 +61,8 @@ export const updateExercise = ({exercise_id, data: payload}) => {
         url: updateExerciseUrl(exercise_id),
         data: payload,
       });
-      
-      const {status, payload: {data, message = ""} = {}} = response || {};
+
+      const { status, payload: { data, message = "" } = {} } = response || {};
       if (status === true) {
         dispatch({
           type: EDIT_EXERCISE_COMPLETED,
@@ -84,7 +84,7 @@ export const updateExercise = ({exercise_id, data: payload}) => {
 export const storeExerciseAndDetails = (data) => {
   return async (dispatch) => {
     try {
-      const {exercises, exercise_details} = data;
+      const { exercises, exercise_details } = data;
       if (exercises && exercise_details) {
         dispatch({
           type: STORE_EXERCISE_AND_DETAILS,
@@ -106,8 +106,8 @@ export const uploadExerciseContent = (payload) => {
         url: uploadExerciseContentUrl(),
         data: payload,
       });
-      
-      const {status, payload: {data, message = ""} = {}} = response || {};
+
+      const { status, payload: { data, message = "" } = {} } = response || {};
       if (status === true) {
         dispatch({
           type: UPLOAD_EXERCISE_CONTENT_COMPLETED,
@@ -127,7 +127,7 @@ export const uploadExerciseContent = (payload) => {
 };
 
 function exerciseReducer(state, data) {
-  const {exercises} = data || {};
+  const { exercises } = data || {};
   if (exercises) {
     return {
       ...state,
@@ -139,7 +139,7 @@ function exerciseReducer(state, data) {
 }
 
 export default (state = {}, action) => {
-  const {type, data} = action || {};
+  const { type, data } = action || {};
   switch (type) {
     case ADD_EXERCISE_COMPLETED:
       return exerciseReducer(state, data);

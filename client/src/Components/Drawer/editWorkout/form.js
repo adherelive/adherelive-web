@@ -1,5 +1,5 @@
-import React, {Component} from "react";
-import {injectIntl} from "react-intl";
+import React, { Component } from "react";
+import { injectIntl } from "react-intl";
 
 import Form from "antd/es/form";
 import messages from "./messages";
@@ -11,8 +11,8 @@ import Tag from "antd/es/tag";
 import TimeKeeper from "react-timekeeper";
 import edit_image from "../../../Assets/images/edit.svg";
 
-const {Item: FormItem} = Form;
-const {CheckableTag} = Tag;
+const { Item: FormItem } = Form;
+const { CheckableTag } = Tag;
 
 const NAME = "name";
 const REPEAT_DAYS = "repeat_days";
@@ -30,25 +30,25 @@ class WorkoutFieldsFrom extends Component {
       showTimeKeeper: false,
     };
   }
-  
+
   componentDidMount() {
-    const {payload = {}} = this.props;
-    const {repeat_days = []} = payload || {};
-    const {workoutData = {}, editTemplateWorkout = null} = this.props;
-    this.setState({selectedDays: repeat_days});
+    const { payload = {} } = this.props;
+    const { repeat_days = [] } = payload || {};
+    const { workoutData = {}, editTemplateWorkout = null } = this.props;
+    this.setState({ selectedDays: repeat_days });
     if (editTemplateWorkout) {
-      const {details: {repeat_days: template_r_days = []} = {}} =
-      workoutData || {};
-      this.setState({selectedDays: template_r_days});
+      const { details: { repeat_days: template_r_days = [] } = {} } =
+        workoutData || {};
+      this.setState({ selectedDays: template_r_days });
     }
-    
+
     document.addEventListener("mousedown", this.handleClickOutside);
   }
-  
+
   componentWillUnmount() {
     document.removeEventListener("mousedown", this.handleClickOutside);
   }
-  
+
   handleClickOutside = (event) => {
     const timekeeperDiv =
       document.getElementsByClassName("react-timekeeper")[0];
@@ -56,69 +56,69 @@ class WorkoutFieldsFrom extends Component {
       const flag = timekeeperDiv.contains(event.target);
       event.stopPropagation();
       if (!flag) {
-        this.setState({showTimeKeeper: false});
+        this.setState({ showTimeKeeper: false });
       }
     }
   };
-  
+
   onDoneClick = (value) => {
-    const {setTime} = this.props;
-    const {formatted24 = null} = value;
+    const { setTime } = this.props;
+    const { formatted24 = null } = value;
     const time = moment(`${formatted24}`, "HH:mm A").toISOString();
     setTime(time);
   };
-  
+
   viewTimeKeeper = () => {
-    this.setState({showTimeKeeper: true});
+    this.setState({ showTimeKeeper: true });
   };
-  
+
   getParentNode = (t) => t.parentNode;
-  
+
   formatMessage = (data) => this.props.intl.formatMessage(data);
-  
+
   disabledStartDate = (current) => {
-    return current && current <= moment().subtract({day: 1});
+    return current && current <= moment().subtract({ day: 1 });
   };
-  
+
   handleCheckDays = (tag, checked) => {
-    const {selectedDays} = this.state;
+    const { selectedDays } = this.state;
     const nextSelectedTags = checked
       ? [...selectedDays, tag]
       : selectedDays.filter((t) => t !== tag);
-    
+
     const newSelectedTags = checked
       ? [...selectedDays, tag]
       : selectedDays.filter((t) => t !== tag);
-    
-    this.setState({selectedDays: newSelectedTags});
+
+    this.setState({ selectedDays: newSelectedTags });
     const {
-      form: {setFieldsValue, validateFields},
+      form: { setFieldsValue, validateFields },
     } = this.props;
-    setFieldsValue({[REPEAT_DAYS]: newSelectedTags});
+    setFieldsValue({ [REPEAT_DAYS]: newSelectedTags });
     validateFields();
   };
-  
+
   setSameForAllDays = () => {
     const {
-      form: {setFieldsValue, validateFields},
+      form: { setFieldsValue, validateFields },
       days = [],
     } = this.props;
-    this.setState({selectedDays: days});
-    setFieldsValue({[REPEAT_DAYS]: days});
+    this.setState({ selectedDays: days });
+    setFieldsValue({ [REPEAT_DAYS]: days });
     validateFields();
   };
-  
+
   unSetSameForAllDays = () => {
     const {
-      form: {setFieldsValue, validateFields},
+      form: { setFieldsValue, validateFields },
     } = this.props;
-    this.setState({selectedDays: []});
-    setFieldsValue({[REPEAT_DAYS]: []});
+    this.setState({ selectedDays: [] });
+    setFieldsValue({ [REPEAT_DAYS]: [] });
     validateFields();
   };
-  
+
   getTimePicker = () => {
-    const {time: state_time = ""} = this.props;
+    const { time: state_time = "" } = this.props;
     return (
       <TimeKeeper
         time={moment(state_time).format("hh:mm A")}
@@ -130,14 +130,14 @@ class WorkoutFieldsFrom extends Component {
       />
     );
   };
-  
+
   getTimeOption = () => {
-    const {showTimeKeeper = false} = this.state;
-    const {time = moment(), canOnlyView = false} = this.props;
+    const { showTimeKeeper = false } = this.state;
+    const { time = moment(), canOnlyView = false } = this.props;
     const formattedTime = time
       ? moment(time).format("hh:mm A")
       : moment().format("hh:mm A");
-    
+
     return (
       <div className="fs14 fw700 mb20 ">
         {!showTimeKeeper ? (
@@ -161,18 +161,18 @@ class WorkoutFieldsFrom extends Component {
       </div>
     );
   };
-  
+
   render() {
     const {
-      form: {getFieldDecorator, isFieldTouched, getFieldError},
+      form: { getFieldDecorator, isFieldTouched, getFieldError },
       getWorkoutComponent,
       workoutData,
     } = this.props;
-    
-    const {selectedDays = []} = this.state;
+
+    const { selectedDays = [] } = this.state;
     let disabled = false;
-    const {formatMessage, handleCheckDays, getTimeOption} = this;
-    
+    const { formatMessage, handleCheckDays, getTimeOption } = this;
+
     const {
       initialFormData = {},
       editTemplateWorkout = null,
@@ -187,13 +187,13 @@ class WorkoutFieldsFrom extends Component {
     } = initialFormData || {};
     let start_date = str_start_date ? moment(str_start_date) : moment();
     let end_date = str_end_date ? moment(str_end_date) : null;
-    
+
     let fieldsError = {};
     FIELDS.forEach((value) => {
       const error = isFieldTouched(value) && getFieldError(value);
-      fieldsError = {...fieldsError, [value]: error};
+      fieldsError = { ...fieldsError, [value]: error };
     });
-    
+
     if (editTemplateWorkout !== null) {
       const {
         name: template_name = "",
@@ -201,9 +201,9 @@ class WorkoutFieldsFrom extends Component {
         start_date: temp_start_date = null,
         end_date: temp_end_date = null,
         duration = null,
-        details: {not_to_do: template_not_to_do = ""} = {},
+        details: { not_to_do: template_not_to_do = "" } = {},
       } = workoutData || {};
-      
+
       name = template_name;
       start_date = moment();
       if (duration) {
@@ -214,11 +214,11 @@ class WorkoutFieldsFrom extends Component {
       }
       not_to_do = template_not_to_do;
     }
-    
+
     if (canOnlyView) {
       disabled = true;
     }
-    
+
     return (
       <Form className="fw700 wp100 pb30 Form">
         <FormItem
@@ -241,7 +241,7 @@ class WorkoutFieldsFrom extends Component {
             />
           )}
         </FormItem>
-        
+
         <div className="select-days-wrapper flex align-items-center justify-content-space-between wp100">
           <div className="repeats wp100">
             <div className="mb20 select-days-form-content">
@@ -267,7 +267,7 @@ class WorkoutFieldsFrom extends Component {
                   Same for all days
                 </div>
               </div>
-              <FormItem style={{display: "none"}}>
+              <FormItem style={{ display: "none" }}>
                 {getFieldDecorator(REPEAT_DAYS, {
                   initialValue: selectedDays.length ? selectedDays : [],
                   rules: [
@@ -276,7 +276,7 @@ class WorkoutFieldsFrom extends Component {
                       message: this.formatMessage(messages.requiredRepeatDays),
                     },
                   ],
-                })(<Input disabled={disabled}/>)}
+                })(<Input disabled={disabled} />)}
               </FormItem>
               <div className="flex-shrink-1 flex justify-space-evenly select-days mt10">
                 {days.map((tag) => (
@@ -296,14 +296,14 @@ class WorkoutFieldsFrom extends Component {
             </div>
           </div>
         </div>
-        
+
         <div className="flex">
           <div className="star-red">*</div>
           <span className="fs14">{formatMessage(messages.workoutTime)}</span>
         </div>
         {getTimeOption()}
         {getWorkoutComponent()}
-        
+
         <div className="flex justify-space-between align-center flex-1">
           <div className="wp45">
             <FormItem
@@ -330,7 +330,7 @@ class WorkoutFieldsFrom extends Component {
               )}
             </FormItem>
           </div>
-          
+
           <div className="wp45">
             <FormItem
               label={formatMessage(messages.end_date)}
@@ -354,7 +354,7 @@ class WorkoutFieldsFrom extends Component {
         >
           {getFieldDecorator(WHAT_NOT_TO_DO, {
             initialValue: not_to_do ? not_to_do : null,
-          })(<TextArea className="mb20" disabled={disabled}/>)}
+          })(<TextArea className="mb20" disabled={disabled} />)}
         </FormItem>
       </Form>
     );

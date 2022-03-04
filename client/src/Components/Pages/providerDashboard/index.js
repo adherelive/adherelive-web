@@ -1,5 +1,5 @@
-import React, {Component, Fragment} from "react";
-import {injectIntl} from "react-intl";
+import React, { Component, Fragment } from "react";
+import { injectIntl } from "react-intl";
 import {
   USER_PERMISSIONS,
   MISSED_MEDICATION,
@@ -42,50 +42,50 @@ class ProviderDoctorPage extends Component {
       graphLoading: false,
     };
   }
-  
+
   componentDidMount() {
-    const {getGraphs, getAllMissedScheduleEvents} = this.props;
+    const { getGraphs, getAllMissedScheduleEvents } = this.props;
     getAllMissedScheduleEvents();
     getGraphs().then((response) => {
       const {
         status,
-        payload: {data: {user_preferences: {charts = []} = {}} = {}} = {},
+        payload: { data: { user_preferences: { charts = [] } = {} } = {} } = {},
       } = response;
       if (status) {
-        this.setState({graphsToShow: [...charts], graphLoading: false});
+        this.setState({ graphsToShow: [...charts], graphLoading: false });
       }
     });
   }
-  
+
   addDoctor = () => {
     this.props.history.push("/register-profile");
   };
   formatMessage = (data) => this.props.intl.formatMessage(data);
-  
+
   showEditGraphModal = () => {
-    this.setState({visibleModal: true});
+    this.setState({ visibleModal: true });
   };
-  
+
   hideEditGraphModal = () => {
-    this.setState({visibleModal: false});
+    this.setState({ visibleModal: false });
   };
-  
+
   editDisplayGraphs = (data) => {
     let dataToUpdate = {};
     dataToUpdate.chart_ids = data;
-    let {updateGraphs} = this.props;
+    let { updateGraphs } = this.props;
     updateGraphs(dataToUpdate).then((response) => {
-      const {status} = response;
+      const { status } = response;
       if (status) {
-        this.setState({graphsToShow: data, visibleModal: false});
+        this.setState({ graphsToShow: data, visibleModal: false });
       } else {
         message.error(this.formatMessage(messages.somethingWentWrongError));
       }
     });
   };
-  
+
   getMenu = () => {
-    const {authPermissions = []} = this.props;
+    const { authPermissions = [] } = this.props;
     return (
       <Menu>
         {authPermissions.includes(USER_PERMISSIONS.DOCTORS.ADD) && (
@@ -103,29 +103,29 @@ class ProviderDoctorPage extends Component {
       </Menu>
     );
   };
-  
+
   chartClicked = (name) => {
     if (name === CHART_MISSED_APPOINTMENT) {
-      const {openMissedAppointmentDrawer} = this.props;
+      const { openMissedAppointmentDrawer } = this.props;
       openMissedAppointmentDrawer();
     } else if (name === CHART_MISSED_ACTION) {
-      const {openMissedVitalDrawer} = this.props;
+      const { openMissedVitalDrawer } = this.props;
       openMissedVitalDrawer();
     } else if (name === CHART_MISSED_MEDICATION) {
-      const {openMissedMedicationDrawer} = this.props;
+      const { openMissedMedicationDrawer } = this.props;
       openMissedMedicationDrawer();
     } else if (name === CHART_MISSED_DIET) {
-      const {openMissedDietDrawer} = this.props;
+      const { openMissedDietDrawer } = this.props;
       openMissedDietDrawer();
     } else if (name === CHART_MISSED_WORKOUT) {
-      const {openMissedWorkoutDrawer} = this.props;
+      const { openMissedWorkoutDrawer } = this.props;
       openMissedWorkoutDrawer();
     }
   };
-  
+
   renderChartTabs = () => {
-    const {graphs, dashboard = {}} = this.props;
-    
+    const { graphs, dashboard = {} } = this.props;
+
     const {
       medication_ids = {},
       appointment_ids = {},
@@ -133,7 +133,7 @@ class ProviderDoctorPage extends Component {
       diet_ids = {},
       workout_ids = {},
     } = dashboard;
-    
+
     const {
       critical: medication_critical = [],
       non_critical: medication_non_critical = [],
@@ -154,7 +154,7 @@ class ProviderDoctorPage extends Component {
       critical: workout_critical = [],
       non_critical: workout_non_critical = [],
     } = workout_ids;
-    
+
     const medication_total =
       medication_critical.length + medication_non_critical.length;
     const vital_total = vital_critical.length + vital_non_critical.length;
@@ -162,23 +162,23 @@ class ProviderDoctorPage extends Component {
       appointment_critical.length + appointment_non_critical.length;
     const diet_total = diet_critical.length + diet_non_critical.length;
     const workout_total = workout_critical.length + workout_non_critical.length;
-    
-    const {graphsToShow, graphLoading} = this.state;
-    
+
+    const { graphsToShow, graphLoading } = this.state;
+
     // initial loading phase
     if (graphLoading) {
       return (
         <div className="flex flex-grow-1 wp100 align-center justify-center">
-          <Spin/>
+          <Spin />
         </div>
       );
     }
-    
+
     const chartBlocks = graphsToShow.map((id) => {
-      const {name, type = ""} = graphs[id] || {};
+      const { name, type = "" } = graphs[id] || {};
       let total = 0;
       let critical = 0;
-      
+
       if (type === MISSED_MEDICATION) {
         total = medication_total;
         critical = medication_critical.length;
@@ -195,7 +195,7 @@ class ProviderDoctorPage extends Component {
         total = workout_total;
         critical = workout_critical.length;
       }
-      
+
       return (
         <div onClick={() => this.chartClicked(name)}>
           <Donut
@@ -220,7 +220,7 @@ class ProviderDoctorPage extends Component {
       return chartBlocks;
     }
   };
-  
+
   render() {
     const {
       authenticated_user = "",
@@ -228,22 +228,22 @@ class ProviderDoctorPage extends Component {
       providers = {},
       authPermissions = [],
     } = this.props;
-    const {visibleModal = false, graphsToShow = []} = this.state;
-    const {basic_info: {user_name = ""} = {}} =
-    users[authenticated_user] || {};
+    const { visibleModal = false, graphsToShow = [] } = this.state;
+    const { basic_info: { user_name = "" } = {} } =
+      users[authenticated_user] || {};
     let providerID = null;
     let providerName = "";
-    const {renderChartTabs} = this;
+    const { renderChartTabs } = this;
     Object.keys(providers).forEach((id) => {
-      const {basic_info: {user_id} = {}} = providers[id] || {};
-      
+      const { basic_info: { user_id } = {} } = providers[id] || {};
+
       if (user_id === authenticated_user) {
         providerID = id;
       }
     });
-    
-    const {basic_info: {name: p_name = ""} = {}} =
-    providers[providerID] || {};
+
+    const { basic_info: { name: p_name = "" } = {} } =
+      providers[providerID] || {};
     providerName = p_name;
     return (
       <Fragment>
@@ -281,16 +281,16 @@ class ProviderDoctorPage extends Component {
               </div>
             )}
           </div>
-          
+
           <section className="horizontal-scroll-wrapper pr10 mt10">
             {renderChartTabs()}
           </section>
-          
+
           {/* <div className="mt0 wp100 flex align-center justify-center provider-doctor-table">
                     <DoctorTable />
             </div> */}
           <div className="wp100 flex align-center justify-center provider-doctor-table">
-            <DoctorTable/>
+            <DoctorTable />
           </div>
           {visibleModal && (
             <GraphsModal
@@ -300,16 +300,16 @@ class ProviderDoctorPage extends Component {
               selectedGraphs={graphsToShow}
             />
           )}
-          
-          <MissedAppointmentsDrawer/>
-          
-          <MissedVitalsDrawer/>
-          
-          <MissedMedicationsDrawer/>
-          
-          <MissedDietsDrawer/>
-          
-          <MissedWorkoutsDrawer/>
+
+          <MissedAppointmentsDrawer />
+
+          <MissedVitalsDrawer />
+
+          <MissedMedicationsDrawer />
+
+          <MissedDietsDrawer />
+
+          <MissedWorkoutsDrawer />
         </div>
       </Fragment>
     );

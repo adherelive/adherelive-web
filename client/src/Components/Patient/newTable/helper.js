@@ -56,25 +56,25 @@ export const formatPatientTableData = (data) => {
     openEditPatientDrawer,
     paginatedPatientData,
   } = data || {};
-  
-  const {care_plans: data_care_plans = {}, patients = {}} =
-  paginatedPatientData || {};
-  
+
+  const { care_plans: data_care_plans = {}, patients = {} } =
+    paginatedPatientData || {};
+
   let doctor_id = null;
   Object.keys(doctors).forEach((id) => {
-    const {basic_info: {user_id = null} = {}} = doctors[id] || {};
-    
+    const { basic_info: { user_id = null } = {} } = doctors[id] || {};
+
     if (user_id === authenticated_user) {
       doctor_id = id;
     }
   });
-  
+
   let treatment = "";
   let condition = "";
   let severity = "";
-  
+
   let carePlanData = {};
-  
+
   const {
     details: {
       treatment_id: cTreatment = "",
@@ -83,35 +83,35 @@ export const formatPatientTableData = (data) => {
     } = {},
     id: carePlanId = "",
   } = data_care_plans || {};
-  
-  let {basic_info: {name: treatmentName = ""} = {}} =
-  treatments[cTreatment] || {};
-  
-  let {basic_info: {name: severityName = ""} = {}} =
-  severities[cSeverity] || {};
-  
-  let {basic_info: {name: conditionName = ""} = {}} =
-  conditions[cCondition] || {};
-  
+
+  let { basic_info: { name: treatmentName = "" } = {} } =
+    treatments[cTreatment] || {};
+
+  let { basic_info: { name: severityName = "" } = {} } =
+    severities[cSeverity] || {};
+
+  let { basic_info: { name: conditionName = "" } = {} } =
+    conditions[cCondition] || {};
+
   treatment = treatmentName;
   condition = conditionName;
   severity = severityName;
-  
+
   carePlanData = {
     ...data_care_plans,
     treatment,
     condition,
     severity,
   };
-  
-  const patientData = {...patients};
-  
+
+  const patientData = { ...patients };
+
   // const { basic_info: { name: carePlanName } = {}, activated_on } =
   // care_plans["1"] || {}; // todo: constant for now as careplan runs from seeder as design is not finalized
-  
+
   const treatmentData = treatments[cTreatment] || {};
   const doctorData = doctors[doctor_id] || {};
-  
+
   return {
     patientData,
     doctorData,

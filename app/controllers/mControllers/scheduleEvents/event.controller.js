@@ -13,7 +13,7 @@ import VitalWrapper from "../../../ApiWrapper/mobile/vitals";
 import CarePlanWrapper from "../../../ApiWrapper/mobile/carePlan";
 import SymptomWrapper from "../../../ApiWrapper/mobile/symptoms";
 
-import {EVENT_STATUS, EVENT_TYPE, USER_CATEGORY} from "../../../../constant";
+import { EVENT_STATUS, EVENT_TYPE, USER_CATEGORY } from "../../../../constant";
 import * as EventHelper from "../../scheduleEvents/eventHelper";
 import SymptomService from "../../../services/symptom/symptom.service";
 import eventService from "../../../services/scheduleEvents/scheduleEvent.service";
@@ -24,24 +24,24 @@ class EventController extends Controller {
   constructor() {
     super();
   }
-  
+
   getVitalEvent = async (req, res) => {
-    const {raiseSuccess, raiseClientError, raiseServerError} = this;
+    const { raiseSuccess, raiseClientError, raiseServerError } = this;
     try {
       Log.debug("req.params", req.params);
-      const {params: {id} = {}} = req;
+      const { params: { id } = {} } = req;
       const eventService = new EventService();
-      
+
       const events = await eventService.getEventByData({
         id,
       });
-      
+
       if (events) {
         const event = await EventWrapper(events);
         if (event.getEventType() === EVENT_TYPE.VITALS) {
-          const vitals = await VitalWrapper({id: event.getEventId()});
-          const {vital_templates} = await vitals.getReferenceInfo();
-          
+          const vitals = await VitalWrapper({ id: event.getEventId() });
+          const { vital_templates } = await vitals.getReferenceInfo();
+
           return raiseSuccess(
             res,
             200,
@@ -69,20 +69,20 @@ class EventController extends Controller {
       return raiseServerError(res);
     }
   };
-  
+
   getAllEvents = async (req, res) => {
-    const {raiseSuccess, raiseClientError, raiseServerError} = this;
+    const { raiseSuccess, raiseClientError, raiseServerError } = this;
     try {
       const {
-        query: {type = EVENT_TYPE.ALL, key = null} = {},
+        query: { type = EVENT_TYPE.ALL, key = null } = {},
         userDetails: {
           userRoleId = null,
-          userData: {category},
+          userData: { category },
           userCategoryId,
         } = {},
       } = req;
       Log.info(`query : key = ${key} | type = ${type}`);
-      
+
       if (category !== USER_CATEGORY.PATIENT) {
         return raiseClientError(
           res,
@@ -91,25 +91,25 @@ class EventController extends Controller {
           "Please login as patient to continue"
         );
       }
-      
+
       const eventService = new EventService();
-      
+
       const allCarePlanData =
         (await CarePlanService.getMultipleCarePlanByData({
           patient_id: userCategoryId,
         })) || [];
-      
+
       let scheduleEvents = [];
-      
+
       let vitalIds = [];
       let appointmentIds = [];
       let medicationIds = [];
       let dietIds = [];
       let workoutIds = [];
-      
+
       for (let i = 0; i < allCarePlanData.length; i++) {
         const carePlanData = allCarePlanData[i] || {};
-        
+
         const carePlanWrapper = await CarePlanWrapper(carePlanData);
         const {
           appointment_ids = [],
@@ -118,19 +118,19 @@ class EventController extends Controller {
           diet_ids = [],
           workout_ids = [],
         } = await carePlanWrapper.getAllInfo();
-        
+
         vitalIds = [...vitalIds, ...vital_ids];
         appointmentIds = [...appointmentIds, ...appointment_ids];
         medicationIds = [...medicationIds, ...medication_ids];
         dietIds = [...dietIds, ...diet_ids];
         workoutIds = [...workoutIds, ...workout_ids];
       }
-      
+
       if (key) {
         const startLimit =
           parseInt(process.config.event.count) * (parseInt(key) - 1);
         const endLimit = parseInt(process.config.event.count);
-        
+
         switch (type) {
           case EVENT_TYPE.ALL:
             scheduleEvents =
@@ -185,11 +185,11 @@ class EventController extends Controller {
               })) || [];
             break;
         }
-        
+
         // scheduleEvents = [...scheduleEvents, ...carePlanScheduleEvents];
-        
+
         // Log.debug("21237193721 events --> ", scheduleEvents.length);
-        
+
         // const vitalEvents = await eventService.getPageEventByData({
         //   startLimit,
         //   endLimit,
@@ -246,7 +246,7 @@ class EventController extends Controller {
       //     eventIds: [...appointment_ids, ...medication_ids, ...vital_ids]
       //   });
       // }
-      
+
       if (scheduleEvents.length > 0) {
         const dateWiseEventData = {};
         const scheduleEventData = {};
@@ -263,7 +263,7 @@ class EventController extends Controller {
               diets: prevDiets,
               workouts: prevWorkouts,
             } = dateWiseEventData[event.getDate()] || {};
-            const {all, appointments, vitals, medications, diets, workouts} =
+            const { all, appointments, vitals, medications, diets, workouts } =
               event.getDateWiseInfo();
             dateWiseEventData[event.getDate()] = {
               all: [...prevAll, ...all],
@@ -274,7 +274,7 @@ class EventController extends Controller {
               workouts: [...prevWorkouts, ...workouts],
             };
           } else {
-            const {all, appointments, vitals, medications, diets, workouts} =
+            const { all, appointments, vitals, medications, diets, workouts } =
               event.getDateWiseInfo();
             dateWiseEventData[event.getDate()] = {
               all,
@@ -287,7 +287,7 @@ class EventController extends Controller {
             dates.push(event.getDate());
           }
         }
-        
+
         return raiseSuccess(
           res,
           200,
@@ -315,14 +315,14 @@ class EventController extends Controller {
       return raiseServerError(res);
     }
   };
-  
+
   updateMedicationStatus = async (req, res) => {
-    const {raiseSuccess, raiseClientError, raiseServerError} = this;
+    const { raiseSuccess, raiseClientError, raiseServerError } = this;
     try {
-      const {body: {status = null} = {}} = req || {};
+      const { body: { status = null } = {} } = req || {};
       const eventService = new EventService();
-      const {params: {eventId: event_id = null} = {}} = req || {};
-      
+      const { params: { eventId: event_id = null } = {} } = req || {};
+
       if (!event_id) {
         return raiseClientError(
           res,
@@ -331,21 +331,21 @@ class EventController extends Controller {
           "Please give a proper event value."
         );
       }
-      
-      let eventDetails = await eventService.getEventByData({id: event_id});
-      let {details = {}} = eventDetails;
-      
-      details = {...details, ...{status}};
-      eventDetails = {...eventDetails, ...{details}};
-      
+
+      let eventDetails = await eventService.getEventByData({ id: event_id });
+      let { details = {} } = eventDetails;
+
+      details = { ...details, ...{ status } };
+      eventDetails = { ...eventDetails, ...{ details } };
+
       const mEventDetails = await eventService.update(eventDetails, event_id);
-      
+
       const updatedEventDetails = await eventService.getEventByData({
         id: event_id,
       });
-      
+
       const eventApiDetails = await EventWrapper(updatedEventDetails);
-      
+
       return raiseSuccess(
         res,
         200,
@@ -363,24 +363,24 @@ class EventController extends Controller {
       return raiseServerError(res);
     }
   };
-  
+
   markEventComplete = async (req, res) => {
-    const {raiseSuccess, raiseServerError} = this;
+    const { raiseSuccess, raiseServerError } = this;
     try {
-      const {params: {id} = {}, body: {event_data = {}} = {}} = req;
+      const { params: { id } = {}, body: { event_data = {} } = {} } = req;
       const eventService = new EventService();
-      
-      const eventDetails = await eventService.getEventByData({id});
-      const {details = {}} = eventDetails;
-      
-      const updatedDetails = {...details, ...event_data};
+
+      const eventDetails = await eventService.getEventByData({ id });
+      const { details = {} } = eventDetails;
+
+      const updatedDetails = { ...details, ...event_data };
       const markEventComplete = await eventService.update(
-        {status: EVENT_STATUS.COMPLETED, details: updatedDetails},
+        { status: EVENT_STATUS.COMPLETED, details: updatedDetails },
         id
       );
-      
+
       Log.debug("1982732178 markEventComplete ---> ", markEventComplete);
-      
+
       const event = await EventWrapper(null, id);
       const {
         medications = {},
@@ -388,7 +388,7 @@ class EventController extends Controller {
         medicines = {},
         schedule_events = {},
       } = await event.getReferenceInfo();
-      
+
       return raiseSuccess(
         res,
         200,
@@ -405,24 +405,24 @@ class EventController extends Controller {
       return raiseServerError(res);
     }
   };
-  
+
   markEventCancelled = async (req, res) => {
-    const {raiseSuccess, raiseServerError} = this;
+    const { raiseSuccess, raiseServerError } = this;
     try {
-      const {params: {id} = {}, body: {event_data = {}} = {}} = req;
+      const { params: { id } = {}, body: { event_data = {} } = {} } = req;
       const eventService = new EventService();
-      
-      const eventDetails = await eventService.getEventByData({id});
-      const {details = {}} = eventDetails;
-      
-      const updatedDetails = {...details, ...event_data};
+
+      const eventDetails = await eventService.getEventByData({ id });
+      const { details = {} } = eventDetails;
+
+      const updatedDetails = { ...details, ...event_data };
       const markEventCancelled = await eventService.update(
-        {status: EVENT_STATUS.CANCELLED, details: updatedDetails},
+        { status: EVENT_STATUS.CANCELLED, details: updatedDetails },
         id
       );
-      
+
       Log.debug("1982732178 markEventComplete ---> ", markEventCancelled);
-      
+
       const event = await EventWrapper(null, id);
       const {
         medications = {},
@@ -430,7 +430,7 @@ class EventController extends Controller {
         medicines = {},
         schedule_events = {},
       } = await event.getReferenceInfo();
-      
+
       return raiseSuccess(
         res,
         200,
@@ -447,16 +447,16 @@ class EventController extends Controller {
       return raiseServerError(res);
     }
   };
-  
+
   getAllMissedEvents = async (req, res) => {
-    const {raiseSuccess, raiseServerError} = this;
+    const { raiseSuccess, raiseServerError } = this;
     try {
-      const {userDetails: {userData: {category} = {}} = {}} = req;
+      const { userDetails: { userData: { category } = {} } = {} } = req;
       Log.info(`CHARTS FOR AUTH: ${category}`);
-      
+
       let response = {};
       let responseMessage = "No event data exists at the moment";
-      
+
       switch (category) {
         case USER_CATEGORY.DOCTOR:
           [response, responseMessage] = await EventHelper.doctorChart(req);
@@ -470,27 +470,27 @@ class EventController extends Controller {
         //   );
         //   break;
       }
-      
-      return raiseSuccess(res, 200, {...response}, responseMessage);
+
+      return raiseSuccess(res, 200, { ...response }, responseMessage);
     } catch (error) {
       Log.debug("getAllMissedEvents 500 error", error);
       return raiseServerError(res);
     }
   };
-  
+
   getPatientMissedEvents = async (req, res) => {
-    const {raiseSuccess, raiseServerError} = this;
+    const { raiseSuccess, raiseServerError } = this;
     try {
       const {
-        params: {patient_id} = {},
+        params: { patient_id } = {},
         userDetails: {
           userRoleId,
-          userData: {category},
+          userData: { category },
           userCategoryId,
         } = {},
       } = req;
       Log.info(`params : patient_id = ${patient_id}`);
-      
+
       // considering api to be only accessible for doctors
       const carePlans =
         (await CarePlanService.getMultipleCarePlanByData({
@@ -502,24 +502,24 @@ class EventController extends Controller {
               : null,
           // doctor_id: category === USER_CATEGORY.DOCTOR ? userCategoryId : "", (revious before conflict resolve)
         })) || [];
-      
+
       const EventService = new eventService();
-      
+
       let appointmentCritical = [];
       let appointmentNonCritical = [];
-      
+
       let medicationCritical = [];
       let medicationNonCritical = [];
-      
+
       let vitalCritical = [];
       let vitalNonCritical = [];
-      
+
       let dietCritical = [];
       let dietNonCritical = [];
-      
+
       let workoutCritical = [];
       let workoutNonCritical = [];
-      
+
       for (let index = 0; index < carePlans.length; index++) {
         const carePlan = await CarePlanWrapper(carePlans[index]);
         const {
@@ -529,7 +529,7 @@ class EventController extends Controller {
           diet_ids,
           workout_ids,
         } = await carePlan.getAllInfo();
-        
+
         // get appointment count
         for (let id of appointment_ids) {
           const criticalAppointment =
@@ -539,7 +539,7 @@ class EventController extends Controller {
               status: EVENT_STATUS.EXPIRED,
               critical: true,
             })) || 0;
-          
+
           const nonCriticalAppointment =
             (await EventService.getCount({
               event_type: EVENT_TYPE.APPOINTMENT,
@@ -547,7 +547,7 @@ class EventController extends Controller {
               status: EVENT_STATUS.EXPIRED,
               critical: false,
             })) || 0;
-          
+
           if (criticalAppointment > 0) {
             appointmentCritical.push(id);
           }
@@ -555,7 +555,7 @@ class EventController extends Controller {
             appointmentNonCritical.push(id);
           }
         }
-        
+
         // get medication count
         for (let id of medication_ids) {
           const criticalMedication =
@@ -565,7 +565,7 @@ class EventController extends Controller {
               status: EVENT_STATUS.EXPIRED,
               critical: true,
             })) || 0;
-          
+
           const nonCriticalMedication =
             (await EventService.getCount({
               event_type: EVENT_TYPE.MEDICATION_REMINDER,
@@ -573,7 +573,7 @@ class EventController extends Controller {
               status: EVENT_STATUS.EXPIRED,
               critical: false,
             })) || 0;
-          
+
           if (criticalMedication > 0) {
             medicationCritical.push(id);
           }
@@ -581,7 +581,7 @@ class EventController extends Controller {
             medicationNonCritical.push(id);
           }
         }
-        
+
         // get vitals count (action)
         for (let id of vital_ids) {
           const criticalVital =
@@ -591,7 +591,7 @@ class EventController extends Controller {
               status: EVENT_STATUS.EXPIRED,
               critical: true,
             })) || 0;
-          
+
           const nonCriticalVital =
             (await EventService.getCount({
               event_type: EVENT_TYPE.VITALS,
@@ -599,7 +599,7 @@ class EventController extends Controller {
               status: EVENT_STATUS.EXPIRED,
               critical: false,
             })) || 0;
-          
+
           if (criticalVital > 0) {
             vitalCritical.push(id);
           }
@@ -607,7 +607,7 @@ class EventController extends Controller {
             vitalNonCritical.push(id);
           }
         }
-        
+
         // get diets count
         for (let id of diet_ids) {
           const criticalDiet =
@@ -617,7 +617,7 @@ class EventController extends Controller {
               status: EVENT_STATUS.EXPIRED,
               critical: true,
             })) || 0;
-          
+
           const nonCriticalDiet =
             (await EventService.getCount({
               event_type: EVENT_TYPE.DIET,
@@ -625,7 +625,7 @@ class EventController extends Controller {
               status: EVENT_STATUS.EXPIRED,
               critical: false,
             })) || 0;
-          
+
           if (criticalDiet > 0) {
             dietCritical.push(id);
           }
@@ -633,7 +633,7 @@ class EventController extends Controller {
             dietNonCritical.push(id);
           }
         }
-        
+
         // get workouts count
         for (let id of workout_ids) {
           const criticalWorkout =
@@ -643,7 +643,7 @@ class EventController extends Controller {
               status: EVENT_STATUS.EXPIRED,
               critical: true,
             })) || 0;
-          
+
           const nonCriticalWorkout =
             (await EventService.getCount({
               event_type: EVENT_TYPE.WORKOUT,
@@ -651,7 +651,7 @@ class EventController extends Controller {
               status: EVENT_STATUS.EXPIRED,
               critical: false,
             })) || 0;
-          
+
           if (criticalWorkout > 0) {
             workoutCritical.push(id);
           }
@@ -660,12 +660,12 @@ class EventController extends Controller {
           }
         }
       }
-      
+
       // symptoms
       const symptomsCount = await SymptomService.getCount({
         patient_id,
       });
-      
+
       return raiseSuccess(
         res,
         200,
@@ -702,14 +702,14 @@ class EventController extends Controller {
       return raiseServerError(res);
     }
   };
-  
+
   getLastVisitEvents = async (req, res) => {
-    const {raiseSuccess, raiseServerError} = this;
+    const { raiseSuccess, raiseServerError } = this;
     try {
       Log.debug("req.params", req.params);
       const {
-        params: {patient_id} = {},
-        userDetails: {userData: {category} = {}, userRoleId = null} = {},
+        params: { patient_id } = {},
+        userDetails: { userData: { category } = {}, userRoleId = null } = {},
       } = req;
       const EventService = new eventService();
       let carePlan = null,
@@ -718,13 +718,13 @@ class EventController extends Controller {
         medication_ids = [],
         diet_ids = [],
         workout_ids = [];
-      
+
       const carePlanData = await CarePlanService.getSingleCarePlanByData({
         patient_id,
         ...((category === USER_CATEGORY.DOCTOR ||
-          category === USER_CATEGORY.HSP) && {user_role_id: userRoleId}),
+          category === USER_CATEGORY.HSP) && { user_role_id: userRoleId }),
       });
-      
+
       if (carePlanData) {
         carePlan = await CarePlanWrapper(carePlanData);
         const {
@@ -734,68 +734,68 @@ class EventController extends Controller {
           diet_ids: cPdiet_ids = [],
           workout_ids: cPworkout_ids = [],
         } = (await carePlan.getAllInfo()) || {};
-        
+
         vital_ids = cPvital_ids;
         appointment_ids = cPappointment_ids;
         medication_ids = cPmedication_ids;
         diet_ids = cPdiet_ids;
         workout_ids = cPworkout_ids;
       }
-      
+
       let symptomData = {};
       let documentData = {};
       const lastVisitData = [];
-      
+
       const latestSymptom = await SymptomService.getLastUpdatedData({
         patient_id,
       });
       if (latestSymptom.length > 0) {
         for (const symptoms of latestSymptom) {
-          const symptom = await SymptomWrapper({data: symptoms});
-          const {symptoms: latestSymptom} = await symptom.getAllInfo();
-          symptomData = {...symptomData, ...latestSymptom};
-          const {upload_documents} = await symptom.getReferenceInfo();
-          documentData = {...documentData, ...upload_documents};
+          const symptom = await SymptomWrapper({ data: symptoms });
+          const { symptoms: latestSymptom } = await symptom.getAllInfo();
+          symptomData = { ...symptomData, ...latestSymptom };
+          const { upload_documents } = await symptom.getReferenceInfo();
+          documentData = { ...documentData, ...upload_documents };
         }
       }
-      
+
       // TODO: need to rethink logic for latest events from last visit to include all types
-      
+
       const vitalEvents = await EventService.getLastVisitData({
         event_id: vital_ids,
         event_type: EVENT_TYPE.VITALS,
         date: moment().subtract(7, "days").utc().toISOString(),
         sort: "DESC",
       });
-      
+
       const appointmentEvents = await EventService.getLastVisitData({
         event_id: appointment_ids,
         event_type: EVENT_TYPE.APPOINTMENT,
         date: moment().subtract(7, "days").utc().toISOString(),
         sort: "DESC",
       });
-      
+
       const medicationEvents = await EventService.getLastVisitData({
         event_id: medication_ids,
         event_type: EVENT_TYPE.MEDICATION_REMINDER,
         date: moment().subtract(7, "days").utc().toISOString(),
         sort: "DESC",
       });
-      
+
       const dietEvents = await EventService.getLastVisitData({
         event_id: diet_ids,
         event_type: EVENT_TYPE.DIET,
         date: moment().subtract(7, "days").utc().toISOString(),
         sort: "DESC",
       });
-      
+
       const workoutEvents = await EventService.getLastVisitData({
         event_id: workout_ids,
         event_type: EVENT_TYPE.WORKOUT,
         date: moment().subtract(7, "days").utc().toISOString(),
         sort: "DESC",
       });
-      
+
       let scheduleEvents = [
         ...vitalEvents,
         ...appointmentEvents,
@@ -803,25 +803,25 @@ class EventController extends Controller {
         ...dietEvents,
         ...workoutEvents,
       ];
-      
+
       if (scheduleEvents.length > 0) {
         scheduleEvents.sort((activityA, activityB) => {
-          const {updatedAt: a} = activityA || {};
-          const {updatedAt: b} = activityB || {};
+          const { updatedAt: a } = activityA || {};
+          const { updatedAt: b } = activityB || {};
           if (moment(a).isBefore(moment(b))) return 1;
           if (moment(a).isAfter(moment(b))) return -1;
           return 0;
         });
-        
+
         const allIds = [];
         let scheduleEventData = {};
-        
+
         // for (const scheduleEvent of scheduleEvents) {
         //   const event = await EventWrapper(scheduleEvent);
         //   scheduleEventData[event.getScheduleEventId()] = event.getAllInfo();
         //   allIds.push(event.getScheduleEventId());
         // }
-        
+
         for (const [key, event] of [
           ...latestSymptom,
           ...scheduleEvents,
@@ -835,24 +835,24 @@ class EventController extends Controller {
               ? event.get("start_time")
               : event.get("created_at"),
           });
-          
+
           const eventWrapper = await EventWrapper(event);
           scheduleEventData[eventWrapper.getScheduleEventId()] =
             eventWrapper.getAllInfo();
-          
+
           if (key === 3) {
             break;
           }
         }
-        
+
         lastVisitData.sort((activityA, activityB) => {
-          const {updatedAt: a} = activityA || {};
-          const {updatedAt: b} = activityB || {};
+          const { updatedAt: a } = activityA || {};
+          const { updatedAt: b } = activityB || {};
           if (moment(a).isBefore(moment(b))) return 1;
           if (moment(a).isAfter(moment(b))) return -1;
           return 0;
         });
-        
+
         return raiseSuccess(
           res,
           200,
@@ -878,16 +878,16 @@ class EventController extends Controller {
       return raiseServerError(res);
     }
   };
-  
+
   deleteVitalResponse = async (req, res) => {
-    const {raiseSuccess, raiseClientError, raiseServerError} = this;
+    const { raiseSuccess, raiseClientError, raiseServerError } = this;
     try {
       const {
-        params: {id},
-        query: {index} = {},
+        params: { id },
+        query: { index } = {},
       } = req;
       Log.info(`params: event_id: ${id} | query : index : ${index}`);
-      
+
       if (!id || !index) {
         return raiseClientError(
           res,
@@ -896,21 +896,21 @@ class EventController extends Controller {
           "Please enter valid event id and index for the response"
         );
       }
-      
+
       const EventService = new eventService();
-      
+
       const eventData = await EventService.getEventByData({
         id,
       });
-      
+
       let eventId = null;
-      
+
       if (eventData) {
         const event = await EventWrapper(eventData);
-        let {response: prevResponse = []} = event.getDetails() || {};
+        let { response: prevResponse = [] } = event.getDetails() || {};
         eventId = event.getEventId();
         const afterDeleteResponse = prevResponse.splice(index, 1);
-        
+
         await EventService.update(
           {
             details: {
@@ -920,20 +920,20 @@ class EventController extends Controller {
           },
           id
         );
-        
+
         if (eventId) {
-          const vital = await VitalWrapper({id: eventId});
+          const vital = await VitalWrapper({ id: eventId });
           const completeEvents = await EventService.getAllPassedByData({
             event_id: vital.getVitalId(),
             event_type: EVENT_TYPE.VITALS,
             date: vital.getStartDate(),
             sort: "DESC",
           });
-          
+
           let dateWiseVitalData = {};
-          
+
           const timelineDates = [];
-          
+
           if (completeEvents.length > 0) {
             for (const scheduleEvent of completeEvents) {
               const event = await EventWrapper(scheduleEvent);
@@ -945,7 +945,7 @@ class EventController extends Controller {
                 timelineDates.push(event.getDate());
               }
             }
-            
+
             return raiseSuccess(
               res,
               200,
@@ -979,18 +979,18 @@ class EventController extends Controller {
       return raiseServerError(res);
     }
   };
-  
+
   updateVitalResponse = async (req, res) => {
-    const {raiseSuccess, raiseClientError, raiseServerError} = this;
+    const { raiseSuccess, raiseClientError, raiseServerError } = this;
     try {
       const {
-        params: {id},
-        query: {index} = {},
-        body: {value = {}} = {},
+        params: { id },
+        query: { index } = {},
+        body: { value = {} } = {},
       } = req;
       Log.info(`params: event_id: ${id} | query : index : ${index}`);
       Log.debug("body : value ", value);
-      
+
       if (!id || !index) {
         return raiseClientError(
           res,
@@ -999,27 +999,27 @@ class EventController extends Controller {
           "Please enter valid event id and index for the response"
         );
       }
-      
+
       const EventService = new eventService();
-      
+
       const eventData = await EventService.getEventByData({
         id,
       });
-      
+
       let eventId = null;
-      
+
       if (eventData) {
         const event = await EventWrapper(eventData);
-        let {response: prevResponse = []} = event.getDetails() || {};
+        let { response: prevResponse = [] } = event.getDetails() || {};
         eventId = event.getEventId();
-        
+
         const response = prevResponse[index];
-        
+
         prevResponse.splice(index, 1, {
           value,
           createdTime: response.createdTime,
         });
-        
+
         await EventService.update(
           {
             details: {
@@ -1030,7 +1030,7 @@ class EventController extends Controller {
           id
         );
         if (eventId) {
-          const vital = await VitalWrapper({id: eventId});
+          const vital = await VitalWrapper({ id: eventId });
           const completeEvents =
             (await EventService.getAllPassedByData({
               event_id: vital.getVitalId(),
@@ -1038,11 +1038,11 @@ class EventController extends Controller {
               date: vital.getStartDate(),
               sort: "DESC",
             })) || [];
-          
+
           let dateWiseVitalData = {};
-          
+
           const timelineDates = [];
-          
+
           if (completeEvents.length > 0) {
             for (const scheduleEvent of completeEvents) {
               const event = await EventWrapper(scheduleEvent);
@@ -1054,7 +1054,7 @@ class EventController extends Controller {
                 timelineDates.push(event.getDate());
               }
             }
-            
+
             return raiseSuccess(
               res,
               200,
@@ -1088,13 +1088,13 @@ class EventController extends Controller {
       return raiseServerError(res);
     }
   };
-  
+
   reschedule = async (req, res) => {
-    const {raiseSuccess, raiseClientError, raiseServerError} = this;
+    const { raiseSuccess, raiseClientError, raiseServerError } = this;
     try {
       // only specific to diet at this point
-      const {params: {id} = {}} = req;
-      
+      const { params: { id } = {} } = req;
+
       if (!id) {
         return raiseClientError(
           res,
@@ -1103,14 +1103,14 @@ class EventController extends Controller {
           "Please enter valid event id to reschedule"
         );
       }
-      
+
       const EventService = new eventService();
-      
+
       const existingEvent =
         (await EventService.getEventByData({
           id,
         })) || null;
-      
+
       if (!existingEvent) {
         return raiseClientError(
           res,
@@ -1119,9 +1119,9 @@ class EventController extends Controller {
           "No event present for the event id mentioned"
         );
       }
-      
-      const {status: eventStatus} = existingEvent || {};
-      
+
+      const { status: eventStatus } = existingEvent || {};
+
       if (eventStatus !== EVENT_STATUS.SCHEDULED) {
         return raiseClientError(
           res,
@@ -1130,9 +1130,9 @@ class EventController extends Controller {
           "Event is not scheduled. Cannot place a reshedule request before event is scheduled"
         );
       }
-      
+
       const event = await EventWrapper(existingEvent);
-      
+
       const {
         id: event_id,
         start_time,
@@ -1140,7 +1140,7 @@ class EventController extends Controller {
         status,
         ...allEventInfo
       } = event.getAllInfo();
-      
+
       if (status === EVENT_STATUS.COMPLETED) {
         return raiseClientError(
           res,
@@ -1149,14 +1149,14 @@ class EventController extends Controller {
           "The event is already completed and cannot be rescheduled"
         );
       }
-      
+
       // todo: change to switch case if added more reschedule feature for events in future
       if (
         event.getEventType() === EVENT_TYPE.DIET ||
         event.getEventType() === EVENT_TYPE.WORKOUT
       ) {
         // todo: discuss and add day end check to rescheule for next day or something else
-        
+
         const newStartTime = moment(start_time)
           .add(process.config.app.event_reschedule_time, "minutes")
           .toISOString();
@@ -1167,7 +1167,7 @@ class EventController extends Controller {
             start_time: newStartTime,
             end_time: newStartTime,
           })) || null;
-        
+
         if (newScheduledEvent) {
           return raiseSuccess(
             res,

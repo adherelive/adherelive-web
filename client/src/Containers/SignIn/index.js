@@ -1,4 +1,4 @@
-import {withRouter} from "react-router-dom";
+import { withRouter } from "react-router-dom";
 import SignIn from "../../Components/SignIn";
 import {
   signOut,
@@ -7,12 +7,12 @@ import {
   verifyUser,
   getInitialData,
 } from "../../modules/auth";
-import {connect} from "react-redux";
-import {getUserRoles} from "../../modules/userRoles";
+import { connect } from "react-redux";
+import { getUserRoles } from "../../modules/userRoles";
 
 const mapStateToProps = (state) => {
-  const {graphs, auth} = state;
-  return {graphs, auth};
+  const { graphs, auth } = state;
+  return { graphs, auth };
 };
 
 const mapDispatchToProps = (dispatch) => {

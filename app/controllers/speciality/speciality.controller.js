@@ -10,24 +10,24 @@ class SpecialityController extends Controller {
   constructor() {
     super();
   }
-  
+
   search = async (req, res) => {
-    const {raiseServerError, raiseSuccess, raiseClientError} = this;
+    const { raiseServerError, raiseSuccess, raiseClientError } = this;
     try {
-      const {query: {value} = {}} = req || {};
-      
+      const { query: { value } = {} } = req || {};
+
       const specialities = await specialityService.search(value);
-      
+
       let specialityDetails = {};
-      
+
       if (specialities.length > 0) {
         for (const speciality of specialities) {
           const specialityData = await SpecialityWrapper(speciality);
-          
+
           specialityDetails[specialityData.getSpecialityId()] =
             specialityData.getBasicInfo();
         }
-        
+
         return raiseSuccess(
           res,
           200,

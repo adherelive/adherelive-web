@@ -1,26 +1,26 @@
-import {Op} from "sequelize";
+import { Op } from "sequelize";
 
 import Database from "../../../libs/mysql";
-import {USER_CATEGORY} from "../../../constant";
+import { USER_CATEGORY } from "../../../constant";
 
-import {TABLE_NAME} from "../../models/exercise";
+import { TABLE_NAME } from "../../models/exercise";
 // import { TABLE_NAME as exerciseUserCreatedMappingTableName } from "../../models/exerciseUserCreatedMapping";
-import {TABLE_NAME as exerciseDetailsTableName} from "../../models/exerciseDetails";
+import { TABLE_NAME as exerciseDetailsTableName } from "../../models/exerciseDetails";
 import {
   TABLE_NAME as exerciseContentTableName,
   VIDEO_TYPES,
 } from "../../models/exerciseContents";
-import {TABLE_NAME as repetitionTableName} from "../../models/exerciseRepetition";
-import {getFilePath} from "../../helper/filePath";
+import { TABLE_NAME as repetitionTableName } from "../../models/exerciseRepetition";
+import { getFilePath } from "../../helper/filePath";
 
 export default class ExerciseService {
   create = async ({
-                    exercise,
-                    exercise_details,
-                    exercise_content,
-                    auth,
-                    transaction: continuedTransaction = null,
-                  }) => {
+    exercise,
+    exercise_details,
+    exercise_content,
+    auth,
+    transaction: continuedTransaction = null,
+  }) => {
     const transaction = continuedTransaction
       ? continuedTransaction
       : await Database.initTransaction();
@@ -29,27 +29,27 @@ export default class ExerciseService {
       const createdExercise =
         (
           await Database.getModel(TABLE_NAME).create(
-            {...exercise, ...auth},
+            { ...exercise, ...auth },
             {
               transaction,
             }
           )
-        ).get({plain: true}) || null;
-      
-      const {id} = createdExercise || null;
-      
+        ).get({ plain: true }) || null;
+
+      const { id } = createdExercise || null;
+
       // create exercise details
-      
+
       const createdExerciseDetail = await Database.getModel(
         exerciseDetailsTableName
       ).create(
-        {exercise_id: id, ...exercise_details, ...auth},
+        { exercise_id: id, ...exercise_details, ...auth },
         {
           transaction,
         }
       );
-      const {id: detail_id = null} = createdExerciseDetail || {};
-      
+      const { id: detail_id = null } = createdExerciseDetail || {};
+
       // create exercise content
       const {
         video: {
@@ -57,7 +57,7 @@ export default class ExerciseService {
           content: video_content,
         } = {},
       } = exercise_content || {};
-      
+
       if (video_content_type !== VIDEO_TYPES.NONE) {
         const videoContent =
           video_content_type === VIDEO_TYPES.UPLOAD
@@ -75,23 +75,23 @@ export default class ExerciseService {
           }
         );
       }
-      
+
       await transaction.commit();
-      return {id, detail_id};
+      return { id, detail_id };
     } catch (error) {
       await transaction.rollback();
       throw error;
     }
   };
-  
+
   update = async ({
-                    exercise = null,
-                    id,
-                    exerciseDetails,
-                    exercise_content,
-                    auth,
-                    transaction: continuedTransaction = null,
-                  }) => {
+    exercise = null,
+    id,
+    exerciseDetails,
+    exercise_content,
+    auth,
+    transaction: continuedTransaction = null,
+  }) => {
     const transaction = continuedTransaction
       ? continuedTransaction
       : await Database.initTransaction();
@@ -100,38 +100,38 @@ export default class ExerciseService {
         // To prevent the admin and user created exercise update, following check was added
         const exerciseExists =
           (await Database.getModel(TABLE_NAME).findOne({
-            where: {id},
+            where: { id },
           })) || null;
-        
+
         if (exerciseExists) {
-          const {creator_type} = exerciseExists || {};
+          const { creator_type } = exerciseExists || {};
           if (creator_type !== USER_CATEGORY.ADMIN) {
             await Database.getModel(TABLE_NAME).update(exercise, {
-              where: {id},
+              where: { id },
               transaction,
             });
           }
         }
       }
-      
-      const {data, exercise_detail_id} = exerciseDetails || {};
-      
-      const {repetition_id} = data || {};
-      
+
+      const { data, exercise_detail_id } = exerciseDetails || {};
+
+      const { repetition_id } = data || {};
+
       // check for exercise detail already exists
       const exerciseDetailExists =
         (await Database.getModel(exerciseDetailsTableName).findOne({
           where: {
             repetition_id,
-            [Op.or]: [auth, {creator_type: USER_CATEGORY.ADMIN}],
+            [Op.or]: [auth, { creator_type: USER_CATEGORY.ADMIN }],
           },
         })) || null;
-      
+
       let detail_id = null;
-      
+
       if (exercise_detail_id && exerciseDetailExists) {
         // update
-        const {creator_type} = exerciseDetailExists || {};
+        const { creator_type } = exerciseDetailExists || {};
         // To prevent the admin and user created exercise update, following check was added
         if (creator_type !== USER_CATEGORY.ADMIN) {
           await Database.getModel(exerciseDetailsTableName).update(data, {
@@ -147,16 +147,16 @@ export default class ExerciseService {
         const detailRecord = await Database.getModel(
           exerciseDetailsTableName
         ).create(
-          {...data, exercise_id: id, ...auth},
+          { ...data, exercise_id: id, ...auth },
           {
             transaction,
           }
         );
-        
-        const {id: record_id = null} = detailRecord || {};
+
+        const { id: record_id = null } = detailRecord || {};
         detail_id = record_id;
       }
-      
+
       // exercise_content
       const {
         video: {
@@ -164,12 +164,12 @@ export default class ExerciseService {
           content: video_content,
         } = {},
       } = exercise_content || {};
-      
+
       const videoContent =
         video_content_type === VIDEO_TYPES.UPLOAD
           ? getFilePath(video_content)
           : video_content;
-      
+
       // check for existing
       const exerciseContentExists = await Database.getModel(
         exerciseContentTableName
@@ -179,10 +179,10 @@ export default class ExerciseService {
           ...auth,
         },
       });
-      
+
       if (exerciseContentExists) {
         await Database.getModel(exerciseContentTableName).update(
-          {video_content_type, video_content: videoContent},
+          { video_content_type, video_content: videoContent },
           {
             where: {
               exercise_id: id,
@@ -206,20 +206,19 @@ export default class ExerciseService {
           );
         }
       }
-      
+
       await transaction.commit();
-      
-      return {isUpdated: true, exercise_id: id, detail_id};
+
+      return { isUpdated: true, exercise_id: id, detail_id };
     } catch (error) {
       await transaction.rollback();
       throw error;
     }
   };
-  
-  delete = async () => {
-  };
-  
-  findOne = async ({auth = {}, id = null, ...data}) => {
+
+  delete = async () => {};
+
+  findOne = async ({ auth = {}, id = null, ...data }) => {
     try {
       let whereQuery = {};
       if (id) {
@@ -237,7 +236,7 @@ export default class ExerciseService {
           ],
         };
       }
-      
+
       return await Database.getModel(TABLE_NAME).findOne({
         where: whereQuery,
         include: [
@@ -251,8 +250,8 @@ export default class ExerciseService {
       throw error;
     }
   };
-  
-  findAndCountAll = async ({query = {}, auth = {}, limit, offset}) => {
+
+  findAndCountAll = async ({ query = {}, auth = {}, limit, offset }) => {
     try {
       return (
         (await Database.getModel(TABLE_NAME).findAndCountAll({
@@ -279,9 +278,9 @@ export default class ExerciseService {
       throw error;
     }
   };
-  
+
   // query builders
-  queryBuilder = ({search = null}) => {
+  queryBuilder = ({ search = null }) => {
     if (search) {
       return {
         [Op.or]: [

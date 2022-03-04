@@ -1,8 +1,8 @@
-import React, {Component} from "react";
-import {injectIntl} from "react-intl";
+import React, { Component } from "react";
+import { injectIntl } from "react-intl";
 import message from "antd/es/message";
-import {getFullName} from "../../../../Helper/common";
-import {Icon} from "antd";
+import { getFullName } from "../../../../Helper/common";
+import { Icon } from "antd";
 import messages from "../messages";
 
 class Watchlist extends Component {
@@ -12,31 +12,31 @@ class Watchlist extends Component {
       isAdded: false,
     };
   }
-  
+
   componentDidMount() {
     const {
-      patientData: {basic_info: {id} = {}} = {},
-      doctorData: {watchlist_patient_ids = []} = {},
+      patientData: { basic_info: { id } = {} } = {},
+      doctorData: { watchlist_patient_ids = [] } = {},
     } = this.props || {};
-    
+
     if (watchlist_patient_ids.includes(id)) {
-      this.setState({isAdded: true});
+      this.setState({ isAdded: true });
     }
   }
-  
+
   componentDidUpdate(prevProps, prevState) {
     const {
-      patientData: {basic_info: {id: prev_id} = {}} = {},
+      patientData: { basic_info: { id: prev_id } = {} } = {},
       doctorData: {
         watchlist_patient_ids: prev_watchlist_patient_ids = [],
       } = {},
     } = prevProps || {};
-    
+
     const {
-      patientData: {basic_info: {id} = {}} = {},
-      doctorData: {watchlist_patient_ids = []} = {},
+      patientData: { basic_info: { id } = {} } = {},
+      doctorData: { watchlist_patient_ids = [] } = {},
     } = this.props || {};
-    
+
     if (
       prev_watchlist_patient_ids.length !== watchlist_patient_ids.length &&
       !watchlist_patient_ids.includes(id)
@@ -46,20 +46,20 @@ class Watchlist extends Component {
       });
     }
   }
-  
+
   formatMessage = (data) => this.props.intl.formatMessage(data);
-  
+
   addThisToWatchlist = (e) => {
     e.preventDefault();
     const {
       patientData: {
-        basic_info: {id, first_name, middle_name, last_name} = {},
+        basic_info: { id, first_name, middle_name, last_name } = {},
       } = {},
       addToWatchlist,
     } = this.props || {};
-    
+
     addToWatchlist(id).then((response) => {
-      const {status, message: errMessage} = response || {};
+      const { status, message: errMessage } = response || {};
       if (status === true) {
         message.success(
           `${getFullName({
@@ -72,23 +72,23 @@ class Watchlist extends Component {
         message.warn(errMessage);
       }
     });
-    
+
     this.setState({
       isAdded: true,
     });
   };
-  
+
   removeFromWatchlist = (e) => {
     e.preventDefault();
     const {
       patientData: {
-        basic_info: {id, first_name, middle_name, last_name} = {},
+        basic_info: { id, first_name, middle_name, last_name } = {},
       } = {},
       removePatientFromWatchlist,
     } = this.props || {};
-    
+
     removePatientFromWatchlist(id).then((response) => {
-      const {status, message: errMessage} = response || {};
+      const { status, message: errMessage } = response || {};
       if (status === true) {
         message.success(
           `${getFullName({
@@ -101,18 +101,18 @@ class Watchlist extends Component {
         message.warn(errMessage);
       }
     });
-    
+
     this.setState({
       isAdded: false,
     });
   };
-  
+
   stopEventBubbling = (e) => {
     e.stopPropagation();
   };
-  
+
   render() {
-    const {isAdded} = this.state;
+    const { isAdded } = this.state;
     return (
       <div
         className=" flex align-center justify-space-between"

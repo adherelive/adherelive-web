@@ -1,6 +1,6 @@
 "use strict";
 
-import {TABLE_NAME} from "../app/models/patients";
+import { TABLE_NAME } from "../app/models/patients";
 
 module.exports = {
   up: (queryInterface, Sequelize) => {
@@ -11,7 +11,7 @@ module.exports = {
       }),
     ]);
   },
-  
+
   down: (queryInterface, Sequelize) => {
     return Promise.all([
       queryInterface.removeColumn(TABLE_NAME, "payment_terms_accepted"),

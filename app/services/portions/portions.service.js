@@ -1,11 +1,10 @@
 import Database from "../../../libs/mysql";
-import {Op} from "sequelize";
-import {TABLE_NAME} from "../../models/portions";
+import { Op } from "sequelize";
+import { TABLE_NAME } from "../../models/portions";
 
 class PortionServiceService {
-  constructor() {
-  }
-  
+  constructor() {}
+
   getByData = async (data) => {
     try {
       const portion = await Database.getModel(TABLE_NAME).findOne({
@@ -16,7 +15,7 @@ class PortionServiceService {
       throw error;
     }
   };
-  
+
   getAll = async () => {
     try {
       const portions = await Database.getModel(TABLE_NAME).findAll();
@@ -25,7 +24,7 @@ class PortionServiceService {
       throw error;
     }
   };
-  
+
   search = async (data) => {
     try {
       const portions = await Database.getModel(TABLE_NAME).findAll({

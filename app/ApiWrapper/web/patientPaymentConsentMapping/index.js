@@ -5,9 +5,9 @@ class PatientPaymentConsentMappingWrapper extends BasePatientConsentMapping {
   constructor(data) {
     super(data);
   }
-  
+
   getBasicInfo = () => {
-    const {_data} = this;
+    const { _data } = this;
     const {
       id,
       patient_id,
@@ -15,7 +15,7 @@ class PatientPaymentConsentMappingWrapper extends BasePatientConsentMapping {
       provider_terms_mapping_id,
       payment_terms_accepted,
     } = _data || {};
-    
+
     return {
       basic_info: {
         id,
@@ -33,6 +33,6 @@ export default async (data = null, id = null) => {
     return new PatientPaymentConsentMappingWrapper(data);
   }
   const response =
-    await patientPaymentConsentMappingService.getSingleEntityByData({id});
+    await patientPaymentConsentMappingService.getSingleEntityByData({ id });
   return new PatientPaymentConsentMappingWrapper(response);
 };

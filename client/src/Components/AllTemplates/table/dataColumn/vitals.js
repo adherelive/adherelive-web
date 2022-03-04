@@ -7,11 +7,11 @@ export default (props) => {
     vital_templates = {},
     repeat_intervals = {},
   } = props;
-  
+
   let vitals = [];
   let vitalCount = 0;
   let vitalMore = 0;
-  
+
   for (let key of template_vital_ids) {
     if (vitalCount === 1) {
       vitalMore = template_vital_ids.length - vitalCount;
@@ -30,12 +30,12 @@ export default (props) => {
         vital_template_id = "",
       } = {},
     } = vitalsData[key];
-    
-    const {basic_info: {name: vital_name = ""} = {}} =
-    vital_templates[vital_template_id] || {};
+
+    const { basic_info: { name: vital_name = "" } = {} } =
+      vital_templates[vital_template_id] || {};
     const repeatObj = repeat_intervals[repeat_interval_id];
     const vital_repeat = repeatObj["text"];
-    
+
     vitals.push(
       <div className="flex wp100 align-center " key={key}>
         <div className="flex direction-column mb10">
@@ -47,13 +47,13 @@ export default (props) => {
         </div>
       </div>
     );
-    
+
     vitalCount += 1;
   }
-  
+
   if (vitalMore > 0) {
     vitals.push(<div className="fs16 fw700">{`+ ${vitalMore} more`}</div>);
   }
-  
+
   return vitals;
 };

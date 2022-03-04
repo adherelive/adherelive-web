@@ -1,6 +1,6 @@
 import Database from "../../../libs/mysql";
-import {TABLE_NAME} from "../../models/foodGroups";
-import {TABLE_NAME as portionTableName} from "../../models/portions";
+import { TABLE_NAME } from "../../models/foodGroups";
+import { TABLE_NAME as portionTableName } from "../../models/portions";
 
 const DEFAULT_ORDER = [["created_at", "DESC"]];
 
@@ -22,7 +22,7 @@ class FoodGroupService {
       throw error;
     }
   };
-  
+
   getByData = async (data) => {
     try {
       return await Database.getModel(TABLE_NAME).findOne({
@@ -36,7 +36,7 @@ class FoodGroupService {
       throw error;
     }
   };
-  
+
   update = async (data, id) => {
     const transaction = await Database.initTransaction();
     try {
@@ -57,8 +57,8 @@ class FoodGroupService {
       throw error;
     }
   };
-  
-  findAndCountAll = async ({where, order = DEFAULT_ORDER, attributes}) => {
+
+  findAndCountAll = async ({ where, order = DEFAULT_ORDER, attributes }) => {
     try {
       return await Database.getModel(TABLE_NAME).findAndCountAll({
         where,
@@ -70,7 +70,7 @@ class FoodGroupService {
       throw error;
     }
   };
-  
+
   delete = async (id) => {
     try {
       const record = await Database.getModel(TABLE_NAME).destroy({

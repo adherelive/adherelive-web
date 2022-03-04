@@ -1,6 +1,6 @@
 "use strict";
-import {DataTypes} from "sequelize";
-import {CONSENTS} from "./consents";
+import { DataTypes } from "sequelize";
+import { CONSENTS } from "./consents";
 
 export const CLINICS = "clinics";
 
@@ -12,7 +12,7 @@ export const db = (database) => {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
-        type: DataTypes.INTEGER
+        type: DataTypes.INTEGER,
       },
       name: {
         type: DataTypes.STRING,
@@ -25,15 +25,15 @@ export const db = (database) => {
           model: {
             tableName: CONSENTS,
           },
-          key: 'id'
-        }
+          key: "id",
+        },
       },
       activated_on: {
-        type: DataTypes.DATE
+        type: DataTypes.DATE,
       },
       expired_on: {
         type: DataTypes.DATE,
-        allowNull: false
+        allowNull: false,
       },
     },
     {
@@ -46,17 +46,17 @@ export const db = (database) => {
             name: this.name,
             consent_id: this.consent_id,
             activated_on: this.activated_on,
-            expired_on: this.expired_on
+            expired_on: this.expired_on,
           };
-        }
-      }
+        },
+      },
     }
   );
 };
 
 export const associate = (database) => {
-  const {clinics, consents} = database.models || {};
-  
+  const { clinics, consents } = database.models || {};
+
   // associations here (if any) ...
   // clinics.hasOne(consents, {
   //     foreignKey: "consent_id",

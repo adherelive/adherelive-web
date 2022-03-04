@@ -24,7 +24,7 @@ services:
 
   node:
     image: gagneet/adherelive:portal
-    command: [ "npm", "run", "start" ]
+    command: ["npm","run","start"]
     ports:
       - "5000:5000"
       #- "3000:3000"

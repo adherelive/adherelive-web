@@ -1,13 +1,13 @@
-import React, {Component} from "react";
+import React, { Component } from "react";
 // import {withRouter} from "react-router-dom";
-import {injectIntl} from "react-intl";
+import { injectIntl } from "react-intl";
 import Button from "antd/es/button";
 import Checkbox from "antd/es/checkbox";
 import message from "antd/es/message";
 import CompanyIcon from "../../../Assets/images/logo3x.png";
 import messages from "./message";
 import ReactMarkdown from "react-markdown";
-import {PATH} from "../../../constant";
+import { PATH } from "../../../constant";
 
 const TERMS_OF_SERVICE = "terms_of_service";
 
@@ -19,41 +19,41 @@ class UserConsent extends Component {
       checked: false,
     };
   }
-  
+
   async componentDidMount() {
-    const {getTermsAndPolicy} = this.props;
+    const { getTermsAndPolicy } = this.props;
     try {
       const response = await getTermsAndPolicy(TERMS_OF_SERVICE);
       // console.log("37825412761907858734 RESPONSE --->",response);
-      const {status, payload: {data} = {}} = response;
+      const { status, payload: { data } = {} } = response;
       if (status === true) {
-        const {[TERMS_OF_SERVICE]: {content} = {}} = data || {};
-        this.setState({value: content});
+        const { [TERMS_OF_SERVICE]: { content } = {} } = data || {};
+        this.setState({ value: content });
       }
     } catch (error) {
       console.log("37825412761907858734 ===> error", error);
       message.warn("Something went wrong");
     }
   }
-  
+
   formatMessage = (data) => this.props.intl.formatMessage(data);
-  
+
   markChecked = (e) => {
     e.preventDefault();
-    const {checked} = this.state;
-    this.setState({checked: !checked});
+    const { checked } = this.state;
+    this.setState({ checked: !checked });
   };
-  
+
   handleGiveConsent = async (e) => {
     e.preventDefault();
     try {
-      const {giveUserConsent, history, getInitialData} = this.props;
-      
-      const response = await giveUserConsent({agreeConsent: true});
+      const { giveUserConsent, history, getInitialData } = this.props;
+
+      const response = await giveUserConsent({ agreeConsent: true });
       const {
         status,
         statusCode,
-        payload: {data = {}, message: resp_msg = ""} = {},
+        payload: { data = {}, message: resp_msg = "" } = {},
       } = response || {};
       // console.log("37825412761907858734 CONSENT RES",{response});
       if (status) {
@@ -68,9 +68,9 @@ class UserConsent extends Component {
       console.log("err --->", error);
     }
   };
-  
+
   render() {
-    const {checked = false, value = ""} = this.state;
+    const { checked = false, value = "" } = this.state;
     return (
       <div className="wp100 landing-background flex direction-column justify-center align-center">
         <div className="hp100 wp75">
@@ -92,11 +92,11 @@ class UserConsent extends Component {
                 {this.formatMessage(messages.tos)}
               </div>
             </div>
-            
-            <div className="p10 h400 mb20" style={{overflowY: "scroll"}}>
+
+            <div className="p10 h400 mb20" style={{ overflowY: "scroll" }}>
               <ReactMarkdown>{value}</ReactMarkdown>
             </div>
-            
+
             <div className="mt20 flex align-center justify-space-between">
               <div className="flex direction-column align-center justify-center">
                 <Checkbox
@@ -109,7 +109,7 @@ class UserConsent extends Component {
                   </span>
                 </Checkbox>
               </div>
-              
+
               <Button
                 disabled={!checked}
                 type={"primary"}

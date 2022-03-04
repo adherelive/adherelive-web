@@ -10,9 +10,9 @@ class TransactionWrapper extends BaseTransaction {
   constructor(data) {
     super(data);
   }
-  
+
   getBasicInfo = () => {
-    const {_data} = this;
+    const { _data } = this;
     const {
       id,
       transaction_id,
@@ -27,7 +27,7 @@ class TransactionWrapper extends BaseTransaction {
       transaction_response,
       updated_at,
     } = _data;
-    
+
     return {
       basic_info: {
         id,
@@ -49,9 +49,9 @@ class TransactionWrapper extends BaseTransaction {
       updated_at,
     };
   };
-  
+
   getAllInfo = async () => {
-    const {getBasicInfo, getId} = this;
+    const { getBasicInfo, getId } = this;
     return {
       transactions: {
         [getId()]: getBasicInfo(),
@@ -59,16 +59,16 @@ class TransactionWrapper extends BaseTransaction {
       transaction_id: getId(),
     };
   };
-  
+
   getReferenceInfo = async () => {
     try {
-      const {getAllInfo, _data} = this;
-      const {payment_product} = _data || {};
-      
+      const { getAllInfo, _data } = this;
+      const { payment_product } = _data || {};
+
       const paymentProducts = await PaymentProductWrapper({
         data: payment_product,
       });
-      
+
       return {
         ...(await getAllInfo()),
         payment_products: {
@@ -82,13 +82,13 @@ class TransactionWrapper extends BaseTransaction {
   };
 }
 
-export default async ({data = null, id = null}) => {
+export default async ({ data = null, id = null }) => {
   try {
     if (data) {
       return new TransactionWrapper(data);
     }
     const transactionService = new TransactionService();
-    const transaction = await transactionService.getByData({id});
+    const transaction = await transactionService.getByData({ id });
     return new TransactionWrapper(transaction);
   } catch (error) {
     throw error;

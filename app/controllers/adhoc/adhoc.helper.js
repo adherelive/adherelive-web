@@ -8,34 +8,34 @@ import DoctorWrapper from "../../ApiWrapper/web/doctor";
 import PatientWrapper from "../../ApiWrapper/web/patient";
 import ProviderWrapper from "../../ApiWrapper/web/provider";
 
-import {USER_CATEGORY} from "../../../constant";
+import { USER_CATEGORY } from "../../../constant";
 
 const Log = new Logger("ADHOC > HELPER");
 
 export const getLinkDetails = async (category, userId) => {
   try {
     let response = {};
-    
+
     switch (category) {
       case USER_CATEGORY.DOCTOR:
         const doctor = await doctorService.getDoctorByUserId(userId);
         if (doctor) {
           const doctorWrapper = await DoctorWrapper(doctor);
-          const {provider_id} = await doctorWrapper.getAllInfo();
+          const { provider_id } = await doctorWrapper.getAllInfo();
           if (provider_id) {
             response = {
               linked_id: provider_id,
               linked_with: USER_CATEGORY.PROVIDER,
             };
           } else {
-            response = {linked_id: null, linked_with: null};
+            response = { linked_id: null, linked_with: null };
           }
         }
         break;
       default:
-        response = {linked_id: null, linked_with: null};
+        response = { linked_id: null, linked_with: null };
     }
-    
+
     return response;
   } catch (error) {
     Log.debug("getLinkDetails error", error);
@@ -46,23 +46,23 @@ export const getLinkDetails = async (category, userId) => {
 export const getUserDetails = async (category, categoryId) => {
   try {
     let response = {};
-    
+
     switch (category) {
       case USER_CATEGORY.DOCTOR:
         const doctor =
           (await doctorService.findOne({
-            where: {id: categoryId},
+            where: { id: categoryId },
             attributes: ["user_id"],
           })) || null;
-        
-        const {user_id: doctorUserId} = doctor || {};
-        response = {user_id: doctorUserId};
+
+        const { user_id: doctorUserId } = doctor || {};
+        response = { user_id: doctorUserId };
         break;
       case USER_CATEGORY.PATIENT:
         const patient = await patientService.getPatientById(categoryId);
         const patientWrapper = await PatientWrapper(patient);
         const patientUserId = patientWrapper.getUserId();
-        response = {user_id: patientUserId};
+        response = { user_id: patientUserId };
         break;
       case USER_CATEGORY.PROVIDER:
         const providers = await providerService.getProviderByData({
@@ -71,13 +71,13 @@ export const getUserDetails = async (category, categoryId) => {
         if (providers && providers.length) {
           const providerWrapper = await ProviderWrapper(providers[0]);
           const providerUserId = providerWrapper.getUserId();
-          response = {user_id: providerUserId};
+          response = { user_id: providerUserId };
         }
         break;
       default:
-        response = {user_id: null};
+        response = { user_id: null };
     }
-    
+
     return response;
   } catch (error) {
     Log.debug("getLinkDetails error", error);

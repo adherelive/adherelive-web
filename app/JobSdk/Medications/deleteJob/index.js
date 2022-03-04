@@ -5,39 +5,39 @@ import ProviderService from "../../../services/provider/provider.service";
 import UserRoleService from "../../../services/userRoles/userRoles.service";
 import UserDeviceService from "../../../services/userDevices/userDevice.service";
 import UserDeviceWrapper from "../../../ApiWrapper/mobile/userDevice";
-import {EVENT_TYPE, DEFAULT_PROVIDER} from "../../../../constant";
+import { EVENT_TYPE, DEFAULT_PROVIDER } from "../../../../constant";
 
 class DeleteJob extends MedicationJob {
   constructor(data) {
     super(data);
   }
-  
+
   getPushAppTemplate = async () => {
-    const {getMedicationData} = this;
+    const { getMedicationData } = this;
     const {
       participants = [],
       actor: {
         id: actorId,
         user_role_id,
-        details: {name, category: actorCategory} = {},
+        details: { name, category: actorCategory } = {},
       } = {},
     } = getMedicationData() || {};
-    
+
     const templateData = [];
     const playerIds = [];
     const userIds = [];
-    
-    const {rows: userRoles = []} =
-    (await UserRoleService.findAndCountAll({
-      where: {
-        id: participants,
-      },
-    })) || {};
-    
+
+    const { rows: userRoles = [] } =
+      (await UserRoleService.findAndCountAll({
+        where: {
+          id: participants,
+        },
+      })) || {};
+
     let providerId = null;
     for (const userRole of userRoles) {
-      const {id, user_identity, linked_id} = userRole || {};
-      
+      const { id, user_identity, linked_id } = userRole || {};
+
       if (id === user_role_id) {
         if (linked_id) {
           providerId = linked_id;
@@ -46,51 +46,51 @@ class DeleteJob extends MedicationJob {
         userIds.push(user_identity);
       }
     }
-    
+
     let providerName = DEFAULT_PROVIDER;
     if (providerId) {
       const provider = await ProviderService.getProviderByData({
         id: providerId,
       });
-      const {name} = provider || {};
+      const { name } = provider || {};
       providerName = name;
     }
-    
+
     const userDevices = await UserDeviceService.getAllDeviceByData({
       user_id: userIds,
     });
-    
+
     if (userDevices.length > 0) {
       for (const device of userDevices) {
-        const userDevice = await UserDeviceWrapper({data: device});
+        const userDevice = await UserDeviceWrapper({ data: device });
         playerIds.push(userDevice.getOneSignalDeviceId());
       }
     }
-    
+
     templateData.push({
       small_icon: process.config.app.icon_android,
       app_id: process.config.one_signal.app_id, // TODO: add the same in pushNotification handler in notificationSdk
-      headings: {en: `Medication Delete (${providerName})`},
+      headings: { en: `Medication Delete (${providerName})` },
       contents: {
         en: `${name}(${actorCategory}) has deleted a medication. Tap here to know more!`,
       },
       include_player_ids: [...playerIds],
       priority: 10,
       android_channel_id: process.config.one_signal.urgent_channel_id,
-      data: {url: "/medications", params: getMedicationData()},
+      data: { url: "/medications", params: getMedicationData() },
     });
-    
+
     return templateData;
   };
-  
+
   getInAppTemplate = () => {
-    const {getMedicationData} = this;
+    const { getMedicationData } = this;
     const {
       participants = [],
-      actor: {id: actorId, user_role_id} = {},
+      actor: { id: actorId, user_role_id } = {},
       event_id,
     } = getMedicationData() || {};
-    
+
     const templateData = [];
     const currentTime = new moment().utc().toISOString();
     const now = moment();
@@ -110,7 +110,7 @@ class DeleteJob extends MedicationJob {
         });
       }
     }
-    
+
     return templateData;
   };
 }

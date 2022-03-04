@@ -7,9 +7,9 @@ import {
 const PUBLIC = "public";
 
 function getPublicSearchMedicinesReducer(state, data) {
-  const {offset = 0, medicines, type = "", searchText = ""} = data || {};
-  const search_public_medicines = {...state, [offset]: medicines};
-  
+  const { offset = 0, medicines, type = "", searchText = "" } = data || {};
+  const search_public_medicines = { ...state, [offset]: medicines };
+
   if (medicines && type === PUBLIC && searchText !== "") {
     return {
       ...search_public_medicines,
@@ -24,14 +24,14 @@ function resetPublicReducer(state, data) {
 }
 
 function getRemainingPublicSearchedAfterDelete(state, data) {
-  const {medicine_id, offset = null} = data || {};
-  
+  const { medicine_id, offset = null } = data || {};
+
   if (medicine_id) {
-    const {[medicine_id.toString()]: medicine, ...rest} = state[offset] || {};
-    
+    const { [medicine_id.toString()]: medicine, ...rest } = state[offset] || {};
+
     if (medicine) {
-      let updatedMed = {...state};
-      updatedMed[offset] = {...rest};
+      let updatedMed = { ...state };
+      updatedMed[offset] = { ...rest };
       return {
         ...updatedMed,
       };
@@ -44,7 +44,7 @@ function getRemainingPublicSearchedAfterDelete(state, data) {
 }
 
 export default (state = [], action) => {
-  const {type, data} = action;
+  const { type, data } = action;
   switch (type) {
     case DELETE_MEDICINE_COMPLETED:
       return getRemainingPublicSearchedAfterDelete(state, data);
@@ -52,7 +52,7 @@ export default (state = [], action) => {
       return getPublicSearchMedicinesReducer(state, data);
     case RESET_SEARCH_PUBLIC:
       return resetPublicReducer(state, data);
-    
+
     default:
       return getPublicSearchMedicinesReducer(state, data);
   }

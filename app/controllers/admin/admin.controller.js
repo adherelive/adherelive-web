@@ -24,7 +24,7 @@ import UserWrapper from "../../ApiWrapper/web/user";
 import ProviderWrapper from "../../ApiWrapper/web/provider";
 import TACWrapper from "../../ApiWrapper/web/termsAndConditions";
 
-import {USER_CATEGORY, TERMS_AND_CONDITIONS_TYPES} from "../../../constant";
+import { USER_CATEGORY, TERMS_AND_CONDITIONS_TYPES } from "../../../constant";
 
 const Log = new Logger("ADMIN > CONTROLLER");
 
@@ -32,60 +32,60 @@ class AdminController extends Controller {
   constructor() {
     super();
   }
-  
+
   updateTermsAndPolicy = async (req, res) => {
-    const {raiseSuccess, raiseClientError, raiseServerError} = this;
+    const { raiseSuccess, raiseClientError, raiseServerError } = this;
     try {
-      const {body: {type: feature_type, content} = {}} = req;
+      const { body: { type: feature_type, content } = {} } = req;
       const previousTermsOrPolicy = await FeatureDetailService.getDetailsByData(
         {
           feature_type,
         }
       );
-      
+
       if (previousTermsOrPolicy) {
         const previousDetails = await FeatureDetailsWrapper(
           previousTermsOrPolicy
         );
-        
+
         const updatedDetails = {
           ...previousDetails.getFeatureDetails(),
           content,
         };
         const updateFeatureDetails = await FeatureDetailService.update(
-          {details: updatedDetails},
+          { details: updatedDetails },
           feature_type
         );
-        
+
         Log.debug("updateFeatureDetails --> ", updateFeatureDetails);
       } else {
         const addFeatureDetails = await FeatureDetailService.add({
           feature_type,
-          details: {content},
+          details: { content },
         });
-        
+
         Log.debug("updateFeatureDetails --> ", addFeatureDetails);
       }
-      
+
       return raiseSuccess(res, 200, {}, "Details updated successfully");
     } catch (error) {
       Log.debug("updateTermsAndPolicy 500 error", error);
       return raiseServerError(res);
     }
   };
-  
+
   getTermsAndPolicy = async (req, res) => {
-    const {raiseSuccess, raiseServerError} = this;
+    const { raiseSuccess, raiseServerError } = this;
     try {
-      const {params: {type: feature_type} = {}} = req;
+      const { params: { type: feature_type } = {} } = req;
       const termsOrPolicy = await FeatureDetailService.getDetailsByData({
         feature_type,
       });
-      
+
       const featureDetails = await FeatureDetailsWrapper(termsOrPolicy);
-      
+
       Log.debug("featureDetails.getBasicInfo", featureDetails.getBasicInfo());
-      
+
       return raiseSuccess(
         res,
         200,
@@ -99,12 +99,12 @@ class AdminController extends Controller {
       return raiseServerError(res);
     }
   };
-  
+
   enableAllFeatures = async (req, res) => {
-    const {raiseSuccess, raiseServerError} = this;
+    const { raiseSuccess, raiseServerError } = this;
     try {
       const doctors = await doctorService.getAllDoctorsOnly();
-      
+
       if (doctors) {
         for (const doctor of doctors) {
           const doctorWrapper = await DoctorWrapper(doctor);
@@ -118,19 +118,19 @@ class AdminController extends Controller {
             const userRoleWrapper = UserRoleWrapper(userRoleDataForUserId);
             userRoleId = (await userRoleWrapper).getId() || null;
           }
-          
+
           const careplanData = await carePlanService.getCarePlanByData({
             user_role_id: userRoleId,
           });
-          
+
           for (const carePlan of careplanData) {
             const carePlanApiWrapper = await CarePlanWrapper(carePlan);
             const patientId = carePlanApiWrapper.getPatientId();
-            
+
             const features = await featureService.getAllFeatures();
-            
+
             for (const feature of features) {
-              const {id: featureId} = feature;
+              const { id: featureId } = feature;
               const mappingResponse = await featuresMappingService.create({
                 doctor_id: doctorId,
                 patient_id: patientId,
@@ -142,22 +142,22 @@ class AdminController extends Controller {
           }
         }
       }
-      
+
       return raiseSuccess(res, 200, {}, "Features updated successfully");
     } catch (error) {
       Log.debug("enableAllFeatures 500 error", error);
       return raiseServerError(res);
     }
   };
-  
+
   updateProviderTermsMappingForExistingUsers = async (req, res) => {
-    const {raiseSuccess, raiseServerError} = this;
+    const { raiseSuccess, raiseServerError } = this;
     try {
       let mappingData = [];
       const users = await userService.getUserByData({
         category: [USER_CATEGORY.PROVIDER],
       });
-      
+
       if (users && users.length) {
         for (const user of users) {
           const userWrapper = await UserWrapper(user);
@@ -176,7 +176,7 @@ class AdminController extends Controller {
           mappingData
         );
       }
-      
+
       return raiseSuccess(
         res,
         200,
@@ -188,25 +188,25 @@ class AdminController extends Controller {
       return raiseServerError(res);
     }
   };
-  
+
   getTermsAndConditions = async (req, res) => {
-    const {raiseSuccess, raiseServerError, raiseClientError} = this;
+    const { raiseSuccess, raiseServerError, raiseClientError } = this;
     try {
-      const {params: {id = null} = {}} = req;
+      const { params: { id = null } = {} } = req;
       let record = null;
-      
+
       if (id.toString() === "0") {
         record = await tacService.getByData({
           terms_type: TERMS_AND_CONDITIONS_TYPES.DEFAULT_TERMS_OF_PAYMENT,
         });
       } else {
-        record = await tacService.getByData({id});
+        record = await tacService.getByData({ id });
       }
-      
+
       if (!record) {
         return raiseClientError(res, 422, {}, "No Matching record Found");
       }
-      
+
       const tacDetails = await TACWrapper(record);
       let tacApidata = {};
       if (id.toString() === "0") {
@@ -214,7 +214,7 @@ class AdminController extends Controller {
       } else {
         tacApidata[tacDetails.getId()] = tacDetails.getBasicInfo();
       }
-      
+
       return raiseSuccess(
         res,
         200,
