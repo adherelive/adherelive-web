@@ -99,7 +99,7 @@
     "express": "^4.17.3",
     "express-validator": "^6.6.0",
     "faker": "^5.5.3",
-    "getstream": "5.0.5",
+    "getstream": "7.1.1",
     "google-auth-library": "^7.10.0",
     "joi": "^17.4.2",
     "js-base64": "^3.7.2",
