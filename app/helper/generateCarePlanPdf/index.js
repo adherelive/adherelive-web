@@ -295,7 +295,7 @@ function printDiet(
   // AKSHAY NEW CODE IMPLEMENTATIONS END
   const dietNameXStart = DOC_MARGIN + 40;
   const dietDetailsTimeXStart = DOC_MARGIN + 120;
-  const dietDetailsDataXStart = DOC_MARGIN + 200;
+  const dietDetailsDataXStart = DOC_MARGIN + 300;
   const startDateXStart = DOC_MARGIN + 430;
   const endDateXStart = DOC_MARGIN + 560;
 
