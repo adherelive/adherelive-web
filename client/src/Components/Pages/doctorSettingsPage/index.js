@@ -212,6 +212,7 @@ class DoctorSettingsPage extends Component {
 
   noConsultationFeeDisplay = () => {
     const provider_id = this.isDoctorRoleAssociatedWithProvider() || null;
+    console.log("provider_id", provider_id);
 
     return (
       <div className="w700 mb20 flex direction-column align-center justify-center">
@@ -438,9 +439,7 @@ class DoctorSettingsPage extends Component {
             <div className="flex direction-column align-center justify-center">
               {/* {this.displayDoctorPaymentProducts()} */}
 
-              {/* <DoctorConsultationFeeTable /> */}
-              {/* AKSHAY NEW CODE FOR SUBSCRIPTION */}
-              <DoctorServiceTable />
+              <DoctorConsultationFeeTable />
             </div>
           )}
         </div>
@@ -789,7 +788,7 @@ class DoctorSettingsPage extends Component {
             selectedKey === CONSULTATION_FEE &&
             !provider_id && (
               <div className="flex flex-end align-center">
-                {/* <Button
+                <Button
                   type="primary"
                   className="ml10 mr20 add-button "
                   icon={"plus"}
@@ -798,21 +797,7 @@ class DoctorSettingsPage extends Component {
                   <span className="fs16">
                     {this.formatMessage(messages.addMore)}
                   </span>
-                </Button> */}
-                {/* AKSHAY NEW CODE FOR SUBSCRIPTION */}
-                <Dropdown
-                  overlay={this.getMenu()}
-                  trigger={["click"]}
-                  placement="bottomRight"
-                >
-                  <Button
-                    type="primary"
-                    className="ml10 mr20 add-button "
-                    icon={"plus"}
-                  >
-                    <span className="fs16">Add More</span>
-                  </Button>
-                </Dropdown>
+                </Button>
               </div>
             )}
         </div>
@@ -824,209 +809,6 @@ class DoctorSettingsPage extends Component {
 
           {/************************* SIDEBAR RELATED CONTENTS *************************/}
           <div className="wp70">{this.sidebarRelatedContent()}</div>
-        </div>
-        <div className="wp100 ml20">
-          <h3 className="mb20 fs20"> My Subscription Plans</h3>
-          <div
-            style={{ display: "flex", flexWrap: "wrap" }}
-            className="flex  wp100"
-          >
-            <div
-              style={{
-                border: "1px solid darkgray",
-                // marginRight: "30px",
-                height: "300px",
-                marginBottom: "20px",
-                backgroundColor: "#f0f0f0",
-              }}
-              className="wp30 p20 mr28"
-            >
-              <div className="flex wp100">
-                <div className="wp50">
-                  {" "}
-                  <div
-                    style={{ border: "1px solid darkgray" }}
-                    className="wp70 p10"
-                  >
-                    <span>Health lite</span>
-                  </div>
-                </div>
-                <div className="wp50">
-                  <p>
-                    This is recommended for patients with severe chronic illness
-                  </p>
-                </div>
-              </div>
-              <div className="service-section mb10">
-                <div
-                  style={{ border: "1px solid darkgray" }}
-                  className="p10 wp70 mb10"
-                >
-                  1 * Virtual consultation
-                </div>
-                <div
-                  style={{ border: "1px solid darkgray" }}
-                  className="p10 wp70 mb10"
-                >
-                  2 * Remote monitoring
-                </div>
-              </div>
-              <div className="fees-section">
-                <div
-                  style={{ border: "1px solid darkgray" }}
-                  className="p10 wp30 mb10"
-                >
-                  Rs. 600
-                </div>
-              </div>
-            </div>
-            <div
-              style={{
-                border: "1px solid darkgray",
-                // marginRight: "30px",
-                height: "300px",
-                marginBottom: "20px",
-                backgroundColor: "#f0f0f0",
-              }}
-              className="wp30 p20 mr28"
-            >
-              <div className="flex wp100">
-                <div className="wp50">
-                  <div
-                    style={{ border: "1px solid darkgray" }}
-                    className="wp70 p10"
-                  >
-                    <span>Health lite</span>
-                  </div>
-                </div>
-                <div className="wp50">
-                  <p>
-                    This is recommended for patients with severe chronic illness
-                  </p>
-                </div>
-              </div>
-              <div className="service-section mb10">
-                <div
-                  style={{ border: "1px solid darkgray" }}
-                  className="p10 wp70 mb10"
-                >
-                  1 * Virtual consultation
-                </div>
-                <div
-                  style={{ border: "1px solid darkgray" }}
-                  className="p10 wp70 mb10"
-                >
-                  2 * Remote monitoring
-                </div>
-              </div>
-              <div className="fees-section">
-                <div
-                  style={{ border: "1px solid darkgray" }}
-                  className="p10 wp30 mb10"
-                >
-                  Rs. 600
-                </div>
-              </div>
-            </div>
-            <div
-              style={{
-                border: "1px solid darkgray",
-                // marginRight: "30px",
-                height: "300px",
-                marginBottom: "20px",
-                backgroundColor: "#f0f0f0",
-              }}
-              className="wp30 p20 mr28"
-            >
-              <div className="flex wp100">
-                <div className="wp50">
-                  {" "}
-                  <div
-                    style={{ border: "1px solid darkgray" }}
-                    className="wp70 .br-black p10"
-                  >
-                    <span>Health lite</span>
-                  </div>
-                </div>
-                <div className="wp50">
-                  <p>
-                    This is recommended for patients with severe chronic illness
-                  </p>
-                </div>
-              </div>
-              <div className="service-section mb10">
-                <div
-                  style={{ border: "1px solid darkgray" }}
-                  className="p10 wp70 mb10"
-                >
-                  1 * Virtual consultation
-                </div>
-                <div
-                  style={{ border: "1px solid darkgray" }}
-                  className="p10 wp70 mb10"
-                >
-                  2 * Remote monitoring
-                </div>
-              </div>
-              <div className="fees-section">
-                <div
-                  style={{ border: "1px solid darkgray" }}
-                  className="p10 wp30 mb10"
-                >
-                  Rs. 600
-                </div>
-              </div>
-            </div>
-            <div
-              style={{
-                border: "1px solid darkgray",
-                // marginRight: "30px",
-                height: "300px",
-                marginBottom: "20px",
-                backgroundColor: "#f0f0f0",
-              }}
-              className="wp30 p20 mr28"
-            >
-              <div className="flex wp100">
-                <div className="wp50">
-                  {" "}
-                  <div
-                    style={{ border: "1px solid darkgray" }}
-                    className="wp70 .br-black p10"
-                  >
-                    <span>Health lite</span>
-                  </div>
-                </div>
-                <div className="wp50">
-                  <p>
-                    This is recommended for patients with severe chronic illness
-                  </p>
-                </div>
-              </div>
-              <div className="service-section mb10">
-                <div
-                  style={{ border: "1px solid darkgray" }}
-                  className="p10 wp70 mb10"
-                >
-                  1 * Virtual consultation
-                </div>
-                <div
-                  style={{ border: "1px solid darkgray" }}
-                  className="p10 wp70 mb10"
-                >
-                  2 * Remote monitoring
-                </div>
-              </div>
-              <div className="fees-section">
-                <div
-                  style={{ border: "1px solid darkgray" }}
-                  className="p10 wp30 mb10"
-                >
-                  Rs. 600
-                </div>
-              </div>
-            </div>
-          </div>
         </div>
 
         <AddConsultationFeeDrawer
