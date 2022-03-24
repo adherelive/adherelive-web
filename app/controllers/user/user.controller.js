@@ -565,7 +565,7 @@ class UserController extends Controller {
         let providerApiData = {};
 
         let userCategoryApiWrapper = null;
-        // let userCategoryId = null;
+        let userCategoryId = null;
         // let patientIds = [];
         // let userIds = [userId];
         // let careplanData = [];
