@@ -188,6 +188,33 @@ const newPatients = {
     care_plan_id: 5,
     user_role_id: 8,
   },
+  8: {
+    basic_info: {
+      id: 8,
+      user_id: 13,
+      gender: "m",
+      height: "172",
+      weight: "63",
+      age: "0 d",
+      first_name: "Akshay",
+      middle_name: "Bhagat",
+      last_name: null,
+      full_name: "Akshay Bhagat",
+      address: "karve nagar",
+      uid: "ADH/2022/0008",
+    },
+    payment_terms_accepted: false,
+    activated_on: null,
+    details: {
+      allergies: "allergies",
+      comorbidities: "comorbidities",
+      profile_pic: null,
+    },
+    dob: "2022-03-23T18:30:00.000Z",
+    created_at: "2022-03-24T09:40:57.000Z",
+    care_plan_id: 8,
+    user_role_id: 14,
+  },
 };
 
 const PATIENT_TABS = {
