@@ -2371,6 +2371,32 @@ class PatientController extends Controller {
       return this.raiseServerError(res);
     }
   };
+
+  getPatientById = async (req, res) => {
+    const { raiseSuccess, raiseClientError, raiseServerError } = this;
+    const {
+      params: { patient_id } = {},
+      userDetails: { userCategoryId } = {},
+    } = req;
+    Logger.info(`params: patient_id = ${patient_id}`);
+
+    if (!patient_id) {
+      return raiseClientError(res, 422, {}, "Please select correct patient");
+    }
+
+    try {
+      const patient = await patientService.getPatientById({ id: patient_id });
+      return this.raiseSuccess(
+        res,
+        200,
+        { patient },
+        "Payment terms changed successfully."
+      );
+    } catch (error) {
+      Logger.debug("getPatientReports 500 error", error);
+      return raiseServerError(res);
+    }
+  };
 }
 
 export default new PatientController();

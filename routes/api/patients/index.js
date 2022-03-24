@@ -35,6 +35,8 @@ router.post(
 
 router.get("/", Authenticated, PatientController.searchPatient);
 
+router.get("/:patient_id", Authenticated, PatientController.getPatientById);
+
 router.get(
   "/:id/appointments",
   Authenticated,
