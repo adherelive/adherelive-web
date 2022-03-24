@@ -560,14 +560,14 @@ class UserController extends Controller {
 
         let userCategoryData = {};
         // let carePlanApiData = {};
-        // let userApiData = {};
+        let userApiData = {};
         let userCaregoryApiData = {};
         let providerApiData = {};
 
         let userCategoryApiWrapper = null;
         let userCategoryId = null;
         // let patientIds = [];
-        // let userIds = [userId];
+        let userIds = [userId];
         // let careplanData = [];
 
         let treatmentIds = [];
@@ -776,19 +776,19 @@ class UserController extends Controller {
         // }
         // Logger.debug("userIds --> ", userIds);
 
-        // let apiUserDetails = {};
+        let apiUserDetails = {};
 
-        // if (userIds.length > 1) {
-        //   const allUserData = await userService.getUserByData({ id: userIds });
-        //   await allUserData.forEach(async (user) => {
-        //     apiUserDetails = await UserWrapper(user.get());
-        //     userApiData[apiUserDetails.getId()] = apiUserDetails.getBasicInfo();
-        //   });
-        // } else {
-        //   apiUserDetails = await UserWrapper(userData);
-        //   userApiData[apiUserDetails.getUserId()] =
-        //     apiUserDetails.getBasicInfo();
-        // }
+        if (userIds.length > 1) {
+          const allUserData = await userService.getUserByData({ id: userIds });
+          await allUserData.forEach(async (user) => {
+            apiUserDetails = await UserWrapper(user.get());
+            userApiData[apiUserDetails.getId()] = apiUserDetails.getBasicInfo();
+          });
+        } else {
+          apiUserDetails = await UserWrapper(userData);
+          userApiData[apiUserDetails.getUserId()] =
+            apiUserDetails.getBasicInfo();
+        }
 
         // treatments
         let treatmentApiDetails = {};
@@ -857,9 +857,9 @@ class UserController extends Controller {
 
         let response = {
           ...referenceData,
-          // users: {
-          //   ...userApiData,
-          // },
+          users: {
+            ...userApiData,
+          },
           [`${category}s`]: {
             ...userCaregoryApiData,
           },
