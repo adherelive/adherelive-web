@@ -24,6 +24,153 @@ import { getName } from "../../../Helper/validation";
 
 // const { WEB_URL } = config;
 
+const newPatients = {
+  1: {
+    basic_info: {
+      id: 1,
+      user_id: 2,
+      gender: "m",
+      height: null,
+      weight: null,
+      age: "40 y",
+      first_name: "Gagneet",
+      middle_name: null,
+      last_name: "Singh",
+      full_name: "Gagneet Singh",
+      address: "NOIDA",
+      uid: "ADH/2022/0005",
+    },
+    payment_terms_accepted: false,
+    activated_on: null,
+    details: {
+      allergies: "Pollen Allergies",
+      comorbidities: "Thyroid",
+      profile_pic: null,
+    },
+    dob: "1980-07-23T05:20:23.000Z",
+    created_at: "2022-03-22T07:37:00.000Z",
+    care_plan_id: 1,
+    user_role_id: 2,
+  },
+  2: {
+    basic_info: {
+      id: 2,
+      user_id: 6,
+      gender: "m",
+      height: null,
+      weight: null,
+      age: "35 y",
+      first_name: "Ankur",
+      middle_name: null,
+      last_name: "Agrawal",
+      full_name: "Ankur Agrawal",
+      address: "New Delhi",
+      uid: "ADH/2022/0001",
+    },
+    payment_terms_accepted: false,
+    activated_on: null,
+    details: {
+      allergies: "No Allergies",
+      comorbidities: "Comorbidities A",
+      profile_pic: null,
+    },
+    dob: "1986-10-01T10:25:01.000Z",
+    created_at: "2022-03-22T07:37:00.000Z",
+    care_plan_id: 2,
+    user_role_id: 6,
+  },
+  4: {
+    basic_info: {
+      id: 4,
+      user_id: 8,
+      gender: "m",
+      height: null,
+      weight: null,
+      age: "45 y",
+      first_name: "Vasudevan Srinivasan",
+      middle_name: null,
+      last_name: "Four",
+      full_name: "Vasudevan Srinivasan Four",
+      address: "Chennai",
+      uid: "ADH/2022/0003",
+    },
+    payment_terms_accepted: false,
+    activated_on: null,
+    details: {
+      allergies: "No Allergies",
+      comorbidities: "Comorbidities C",
+      profile_pic: null,
+    },
+    dob: "1976-02-10T14:35:15.000Z",
+    created_at: "2022-03-22T07:37:00.000Z",
+    care_plan_id: 5,
+    user_role_id: 8,
+  },
+};
+
+const newUsers = {
+  1: {
+    basic_info: {
+      user_name: "Sparsh Jaiswal",
+      email: "test-doctor@mail.com",
+      mobile_number: "8710087100",
+      prefix: "91",
+    },
+    sign_in_type: "basic",
+    onboarded: true,
+    onboarding_status: "CLINIC_registered",
+    category: "doctor",
+    activated_on: "2022-03-22T07:36:59.000Z",
+    deleted_at: null,
+    has_consent: true,
+  },
+  2: {
+    basic_info: {
+      user_name: "Gagneet Singh",
+      email: "gagneet.singh@gmail.com",
+      mobile_number: "9810739699",
+      prefix: "91",
+    },
+    sign_in_type: "basic",
+    onboarded: true,
+    onboarding_status: null,
+    category: "patient",
+    activated_on: "2022-03-22T07:36:59.000Z",
+    deleted_at: null,
+    has_consent: false,
+  },
+  6: {
+    basic_info: {
+      user_name: "Ankur Agrawal",
+      email: "test-patient2@mail.com",
+      mobile_number: "9876543211",
+      prefix: "91",
+    },
+    sign_in_type: "basic",
+    onboarded: true,
+    onboarding_status: null,
+    category: "patient",
+    activated_on: "2022-03-22T07:36:59.000Z",
+    deleted_at: null,
+    has_consent: false,
+  },
+  8: {
+    basic_info: {
+      user_name: "Vasudevan Srinivasan",
+      email: "test-patient4@mail.com",
+      mobile_number: "9876543213",
+      prefix: "91",
+    },
+    sign_in_type: "basic",
+    onboarded: true,
+    onboarding_status: null,
+    category: "patient",
+    activated_on: "2022-03-22T07:36:59.000Z",
+    deleted_at: null,
+    has_consent: false,
+  },
+};
+
 class PatientDetailsDrawer extends Component {
   constructor(props) {
     super(props);
@@ -370,9 +517,9 @@ class PatientDetailsDrawer extends Component {
         } = {},
         reports = [],
         provider_id,
-      } = patients[id] || {};
+      } = newPatients[id] || {};
       const { basic_info: { prefix = "91", mobile_number = "" } = {} } =
-        users[user_id] || {};
+        newUsers[user_id] || {};
 
       const {
         basic_info: {

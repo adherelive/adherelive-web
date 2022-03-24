@@ -106,6 +106,90 @@ const APPOINTMENT = "appointment";
 
 const { confirm } = Modal;
 
+const newPatients = {
+  1: {
+    basic_info: {
+      id: 1,
+      user_id: 2,
+      gender: "m",
+      height: null,
+      weight: null,
+      age: "40 y",
+      first_name: "Gagneet",
+      middle_name: null,
+      last_name: "Singh",
+      full_name: "Gagneet Singh",
+      address: "NOIDA",
+      uid: "ADH/2022/0005",
+    },
+    payment_terms_accepted: false,
+    activated_on: null,
+    details: {
+      allergies: "Pollen Allergies",
+      comorbidities: "Thyroid",
+      profile_pic: null,
+    },
+    dob: "1980-07-23T05:20:23.000Z",
+    created_at: "2022-03-22T07:37:00.000Z",
+    care_plan_id: 1,
+    user_role_id: 2,
+  },
+  2: {
+    basic_info: {
+      id: 2,
+      user_id: 6,
+      gender: "m",
+      height: null,
+      weight: null,
+      age: "35 y",
+      first_name: "Ankur",
+      middle_name: null,
+      last_name: "Agrawal",
+      full_name: "Ankur Agrawal",
+      address: "New Delhi",
+      uid: "ADH/2022/0001",
+    },
+    payment_terms_accepted: false,
+    activated_on: null,
+    details: {
+      allergies: "No Allergies",
+      comorbidities: "Comorbidities A",
+      profile_pic: null,
+    },
+    dob: "1986-10-01T10:25:01.000Z",
+    created_at: "2022-03-22T07:37:00.000Z",
+    care_plan_id: 2,
+    user_role_id: 6,
+  },
+  4: {
+    basic_info: {
+      id: 4,
+      user_id: 8,
+      gender: "m",
+      height: null,
+      weight: null,
+      age: "45 y",
+      first_name: "Vasudevan Srinivasan",
+      middle_name: null,
+      last_name: "Four",
+      full_name: "Vasudevan Srinivasan Four",
+      address: "Chennai",
+      uid: "ADH/2022/0003",
+    },
+    payment_terms_accepted: false,
+    activated_on: null,
+    details: {
+      allergies: "No Allergies",
+      comorbidities: "Comorbidities C",
+      profile_pic: null,
+    },
+    dob: "1976-02-10T14:35:15.000Z",
+    created_at: "2022-03-22T07:37:00.000Z",
+    care_plan_id: 5,
+    user_role_id: 8,
+  },
+};
+
 const PATIENT_TABS = {
   ACTIONS: {
     name: "Actions",
@@ -455,7 +539,7 @@ const PatientCard = ({
   openVideoScreen,
 }) => {
   const { details: { comorbidities, allergies } = {} } =
-    patients[patient_id] || {};
+    newPatients[patient_id] || {};
 
   const menu = (
     <Menu>
@@ -934,11 +1018,11 @@ class PatientDetails extends Component {
         patientCarePlanIds: care_plan_ids,
         current_careplan_id,
         isOtherCarePlan: false,
-        // selectedCarePlanId: current_careplan_id,
+        selectedCarePlanId: current_careplan_id,
         // AKSHAY NEW CODE IMPLEMENTATION END
-        selectedCarePlanId: !isEmpty(patientCarePlans)
-          ? patientCarePlans[0]
-          : "",
+        // selectedCarePlanId: !isEmpty(patientCarePlans)
+        //   ? patientCarePlans[0]
+        //   : "",
       });
     }
 
@@ -1885,7 +1969,7 @@ class PatientDetails extends Component {
     const { requestConsent, patient_id, patients } = this.props;
     const { handleOtpModal } = this;
 
-    const { basic_info: { full_name } = {} } = patients[patient_id] || {};
+    const { basic_info: { full_name } = {} } = newPatients[patient_id] || {};
 
     this.setState({ consentLoading: true });
     const response = await requestConsent(patient_id);
@@ -2068,7 +2152,7 @@ class PatientDetails extends Component {
       }
     });
 
-    let patientData = patients[id] || {};
+    let patientData = newPatients[id] || {};
     let treatment = "";
     let condition = "";
     let severity = "";
@@ -2111,7 +2195,7 @@ class PatientDetails extends Component {
     };
 
     patientData = {
-      ...patients[id],
+      ...newPatients[id],
       treatment,
       condition,
       severity,
@@ -2332,7 +2416,7 @@ class PatientDetails extends Component {
     const {
       basic_info: { user_id: patientUserID } = {},
       user_role_id: patientRoleId = null,
-    } = patients[patient_id] || {};
+    } = newPatients[patient_id] || {};
 
     const roomId = getRoomId(doctorRoleId, patientRoleId);
 
@@ -2607,7 +2691,7 @@ class PatientDetails extends Component {
         user_id: patientUserId = "",
       } = {},
       user_role_id: patientRoleId = null,
-    } = patients[patient_id] || {};
+    } = newPatients[patient_id] || {};
 
     const doctorRoleId = auth_role;
 
