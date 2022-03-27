@@ -7,7 +7,11 @@ import {
   getAppointments,
   getAppointmentsDetails,
 } from "../../modules/appointments";
-import { requestConsent, consentVerify } from "../../modules/patients";
+import {
+  requestConsent,
+  consentVerify,
+  getPatientDetailsById,
+} from "../../modules/patients";
 import { searchMedicine } from "../../modules/medicines";
 import { getPatientCarePlanDetails } from "../../modules/carePlans";
 import { addCarePlanMedicationsAndAppointments } from "../../modules/carePlans";
@@ -146,6 +150,8 @@ const mapDispatchToProps = (dispatch) => {
     getAppointmentsDetails: () => dispatch(getAppointmentsDetails()),
     getPatientCarePlanDetails: (patientId) =>
       dispatch(getPatientCarePlanDetails(patientId)),
+    getPatientDetailsById: (patientId) =>
+      dispatch(getPatientDetailsById(patientId)),
     getLastVisitAlerts: (patientId) => dispatch(getLastVisitAlerts(patientId)),
     searchMedicine: (value) => dispatch(searchMedicine(value)),
     addCarePlanMedicationsAndAppointments: (payload, carePlanId) =>

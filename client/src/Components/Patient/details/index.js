@@ -953,6 +953,8 @@ class PatientDetails extends Component {
       getMedications,
       getAppointments,
       getPatientCarePlanDetails,
+      //AKSHAY NEW CODE IMPLEMENTATIONS
+      getPatientDetailsById,
       getAppointmentsDetails,
       patient_id,
       care_plans,
@@ -984,6 +986,10 @@ class PatientDetails extends Component {
     this.fetchSymptomsData();
     this.fetchReportData();
     this.fetchVitalDetails();
+
+    //AKSHAY NEW CODE IMPLEMENTATIONS START
+    const responsePatientDetails = await getPatientDetailsById(patient_id);
+    //AKSHAY NEW CODE IMPLEMENTATIONS END
 
     // if (showTd) {
     const response = await getPatientCarePlanDetails(patient_id);
