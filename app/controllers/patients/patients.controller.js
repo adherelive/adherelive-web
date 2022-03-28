@@ -2387,13 +2387,9 @@ class PatientController extends Controller {
     try {
       const patient = await patientService.getPatientById({ id: patient_id });
       let response = {};
+
       response[patient_id] = patient;
-      return this.raiseSuccess(
-        res,
-        200,
-        response,
-        "Payment terms changed successfully."
-      );
+      return this.raiseSuccess(res, 200, response, "Success.");
     } catch (error) {
       Logger.debug("getPatientReports 500 error", error);
       return raiseServerError(res);

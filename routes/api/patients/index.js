@@ -34,7 +34,11 @@ router.post(
 );
 
 router.get("/", Authenticated, PatientController.searchPatient);
-
+router.get(
+  "/pagination",
+  Authenticated,
+  PatientController.getAllPatientsPagination
+);
 router.get("/:patient_id", Authenticated, PatientController.getPatientById);
 
 router.get(
@@ -95,12 +99,6 @@ router.get(
   "/generate_prescription/:care_plan_id",
   Authenticated,
   PatientController.generatePrescription
-);
-
-router.get(
-  "/pagination",
-  Authenticated,
-  PatientController.getAllPatientsPagination
 );
 
 module.exports = router;
