@@ -41,12 +41,12 @@ class EditPatientDrawer extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      mobile_number: "",
+      // mobile_number: "",
       name: "",
       gender: "",
       date_of_birth: "",
       condition: null,
-      prefix: "91",
+      // prefix: "91",
       fetchingCondition: false,
       fetchingTreatment: false,
       fetchingSeverity: false,
@@ -81,6 +81,29 @@ class EditPatientDrawer extends Component {
   componentDidMount() {
     this.handleConditionSearch(" ");
   }
+
+  //AKSHAY NEW CODE IMPLEMENTATIONS START
+  async handleGetPatientDetails(patient_id) {
+    try {
+      const { getPatientDetailsById } = this.props;
+      const response = await getPatientDetailsById(patient_id);
+
+      const { payload: { data = {} } = {}, status } = response || {};
+      const { patients = {}, users = {} } = data || {};
+      let patientData = patients[patient_id];
+      let useerData = users[patientData.basic_info.user_id];
+      if (status) {
+        this.setState({
+          mobile_number: useerData.basic_info.mobile_number,
+          prefix: useerData.basic_info.prefix,
+        });
+      }
+    } catch (error) {
+      // console.log("error -->", error);
+      // message.warn(this.formatMessage(messages.somethingWentWrong));
+    }
+  }
+  //AKSHAY NEW CODE IMPLEMENTATIONS END
 
   componentDidUpdate(prevProps, prevState) {
     const { visible: prev_visible } = prevProps;
@@ -124,6 +147,7 @@ class EditPatientDrawer extends Component {
     const formattedDate = this.getFormattedDate(dob);
 
     if (prev_visible !== visible) {
+      this.handleGetPatientDetails(patient_id);
       this.setState({
         mobile_number,
         name: full_name,

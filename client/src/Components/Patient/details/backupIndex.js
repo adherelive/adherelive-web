@@ -453,10 +453,9 @@ const PatientCard = ({
   editPatient,
   // editPatientOption,
   openVideoScreen,
-  patientDetailsData,
 }) => {
   const { details: { comorbidities, allergies } = {} } =
-    patientDetailsData[patient_id] || {};
+    patients[patient_id] || {};
 
   const menu = (
     <Menu>
@@ -546,7 +545,6 @@ const PatientCard = ({
               <Tooltip placement={"bottom"} title={formatMessage(messages.video_icon_text)}>
               <div className="text-white fs18" >
                       {editPatientOption()}
-
               </div>
               </Tooltip>
             </div> */}
@@ -666,15 +664,12 @@ const PatientTreatmentCard = ({
 
     const { basic_info: { name: provider_name = "" } = {} } =
       providers[linked_id] || {};
-
     const {
       basic_info: { first_name = "", middle_name = "", last_name = "" } = {},
     } = doctors[doctor_id] || {};
-
     let doctor_name = `${getName(first_name)}  ${getName(
       middle_name
     )} ${getName(last_name)}`;
-
     all_providers = `${all_providers}${
       count > 1 ? "," : ""
     }${" "}${doctor_name}${
@@ -682,7 +677,6 @@ const PatientTreatmentCard = ({
     }`;
     count++;
   }
-
   return (
     <div className="treatment mt20 tal bg-faint-grey">
       <div className="header-div flex align-center justify-space-between">
@@ -713,37 +707,31 @@ const PatientTreatmentCard = ({
           </a>
         ) : null}
       </div>
-
       <div className="treatment-details pl16 pr16 ">
         <div className="flex direction-column mb14 mt20">
           <div className="fs14">{formatMessage(messages.treatment_header)}</div>
           <div className="fs14 fw700">{treatment_name}</div>
         </div>
-
         <div className="flex direction-column mb14">
           <div className="fs14">
             {formatMessage(messages.treatment_severity)}
           </div>
           <div className="fs16 fw700">{treatment_severity_status}</div>
         </div>
-
         <div className="flex direction-column mb14">
           <div className="fs14">
             {formatMessage(messages.treatment_condition)}
           </div>
           <div className="fs16 fw700">{treatment_condition}</div>
         </div>
-
         <div className="flex direction-column mb14">
           <div className="fs14">{formatMessage(messages.treatment_doctor)}</div>
           <div className="fs16 fw700">{treatment_doctor}</div>
         </div>
-
         <div className="flex direction-column mb14">
           <div className="fs14">{formatMessage(messages.clinical_notes)}</div>
           <div className="fs16 fw700">{treatment_clinical_notes}</div>
         </div>
-
         <div className="flex direction-column mb14">
           <div className="fs14">{formatMessage(messages.diagnosis_text)}</div>
           <div>
@@ -751,24 +739,20 @@ const PatientTreatmentCard = ({
             <span className="fs12 fw600">{`(${treatment_diagnosis_type})`}</span>
           </div>
         </div>
-
         <div className="flex direction-column mb14">
           <div className="fs14">{formatMessage(messages.symptoms_text)}</div>
           <div className="fs16 fw700">{treatment_symptoms}</div>
         </div>
-
         <div className="flex direction-column mb14">
           <div className="fs14">
             {formatMessage(messages.treatment_start_date)}
           </div>
           <div className="fs16 fw700">{treatment_start_date}</div>
         </div>
-
         <div className="flex direction-column mb14">
           <div className="fs14">{formatMessage(messages.hospital)}</div>
           <div className="fs16 fw700">{treatment_provider}</div>
         </div>
-
         <div className="flex direction-column mb14">
           <div className="fs14">{formatMessage(messages.providers)}</div>
           <div className="fs16 fw700">{all_providers}</div>
@@ -777,7 +761,6 @@ const PatientTreatmentCard = ({
     </div>
   );
 };
-
 const PatientAlertCard = ({
   formatMessage,
   count,
@@ -809,11 +792,9 @@ const PatientAlertCard = ({
     </div>
   );
 };
-
 class PatientDetails extends Component {
   constructor(props) {
     super(props);
-
     this.state = {
       loading: true,
       templateDrawerVisible: false,
@@ -835,19 +816,13 @@ class PatientDetails extends Component {
       activeKey: "1",
       recommendSubscription: false,
       recommendService: false,
-      // AKSHAY NEW CODE IMPLEMENTATIONS
-      patientDetailsData: {},
-      patientUserDetails: {},
     };
   }
-
   handleInititalData = async (redirect_patient_id = null) => {
     let {
       getMedications,
       getAppointments,
       getPatientCarePlanDetails,
-      //AKSHAY NEW CODE IMPLEMENTATIONS
-      getPatientDetailsById,
       getAppointmentsDetails,
       patient_id,
       care_plans,
@@ -862,37 +837,21 @@ class PatientDetails extends Component {
       notification_redirect = {},
       authenticated_category,
     } = this.props;
-
     if (redirect_patient_id) {
       patient_id = redirect_patient_id;
     }
-
     const { isOtherCarePlan = false } = this.state;
-
     const { show: showTd = false } = show_template_drawer;
     // let isCarePlanDataPresent = currentCarePlanId ? true : false;
     if (showTd) {
       this.setState({ templateDrawerVisible: true });
     }
-
     fetchChatAccessToken(authenticated_user);
     this.fetchSymptomsData();
     this.fetchReportData();
     this.fetchVitalDetails();
-
-    //AKSHAY NEW CODE IMPLEMENTATIONS START
-    const responsePatientDetails = await getPatientDetailsById(patient_id);
-    if (responsePatientDetails.status) {
-      this.setState({
-        patientDetailsData: responsePatientDetails.payload.data.patients,
-        patientUserDetails: responsePatientDetails.payload.data.users,
-      });
-    }
-    //AKSHAY NEW CODE IMPLEMENTATIONS END
-
     // if (showTd) {
     const response = await getPatientCarePlanDetails(patient_id);
-
     let { status = false, payload = {} } = response;
     if (status) {
       let {
@@ -904,45 +863,35 @@ class PatientDetails extends Component {
           current_careplan_id = null,
         } = {},
       } = payload;
-
       // AKSHAY NEW CODE IMPLEMENTATION START
-
       const patientCarePlans =
         !isEmpty(care_plan_ids) &&
         care_plan_ids.filter((id) => {
           const { basic_info: { patient_id: carePlanPatientId = "0" } = {} } =
             care_plans[id] || {};
-
           if (carePlanPatientId.toString() === patient_id) {
             return id;
           }
         });
-
       // AKSHAY NEW CODE IMPLEMENTATION END
-
       console.log(
         "AKSHAY NEW CODE CHNAGES ====================>",
         patientCarePlans
       );
-
       const { notification_redirect: { care_plan_id = null } = {} } =
         this.props;
       console.log("32486238476283746823648236487236", {
         care_plan_id,
         current_careplan_id,
       });
-
       if (care_plan_id) {
         current_careplan_id = care_plan_id;
       }
-
       // const { basic_info: { id: carePlanTemplateId = 0 } } = care_plan_templates[Object.keys(care_plan_templates)[0]];
-
       let carePlanTemplateExists =
         care_plan_templates && Object.values(care_plan_templates).length
           ? true
           : false;
-
       this.setState({
         carePlanTemplateId,
         carePlanTemplateExists,
@@ -950,18 +899,16 @@ class PatientDetails extends Component {
         patientCarePlanIds: care_plan_ids,
         current_careplan_id,
         isOtherCarePlan: false,
-        selectedCarePlanId: current_careplan_id,
+        // selectedCarePlanId: current_careplan_id,
         // AKSHAY NEW CODE IMPLEMENTATION END
-        // selectedCarePlanId: !isEmpty(patientCarePlans)
-        //   ? patientCarePlans[0]
-        //   : "",
+        selectedCarePlanId: !isEmpty(patientCarePlans)
+          ? patientCarePlans[0]
+          : "",
       });
     }
-
     getMedications(patient_id);
     getAppointmentsDetails();
     getAppointments(patient_id);
-
     // }
     searchMedicine("");
     let carePlanTemplateId = 0;
@@ -969,20 +916,16 @@ class PatientDetails extends Component {
       let {
         basic_info: { patient_id: patientId = 1 },
       } = carePlan;
-
       if (parseInt(patient_id) === parseInt(patientId)) {
         let { basic_info: { care_plan_template_id = 0 } = {} } = carePlan;
         carePlanTemplateId = care_plan_template_id;
       }
     }
-
     const { notification_redirect: { type: tab = "" } = {} } = this.props;
     let activeKey = "1";
-
     if (authenticated_category === USER_CATEGORY.HSP) {
       activeKey = "2";
     }
-
     if (tab && tab === TYPE_SYMPTOMS) {
       activeKey = "3";
     } else if (tab && tab === TYPE_APPOINTMENTS) {
@@ -994,13 +937,10 @@ class PatientDetails extends Component {
     } else if (tab && tab === TYPE_WORKOUTS) {
       activeKey = "7";
     }
-
     this.setState({ carePlanTemplateId, activeKey });
-
     // in app notification seen count
     this.initiateInAppNotificationObj();
   };
-
   async componentDidMount() {
     const {
       resetNotificationRedirect,
@@ -1013,7 +953,6 @@ class PatientDetails extends Component {
       resetNotificationRedirect();
     }
   }
-
   componentDidUpdate = async (prevProps, prevState) => {
     const {
       notification_redirect = {},
@@ -1026,7 +965,6 @@ class PatientDetails extends Component {
       resetNotificationRedirect,
       authenticated_category,
     } = this.props;
-
     const {
       notification_redirect: {
         care_plan_id: prev_care_plan_id = null,
@@ -1034,7 +972,6 @@ class PatientDetails extends Component {
         patient_id: prev_redirected_p_id = null,
       } = {},
     } = prevProps;
-
     if (
       (redirected_p_id && redirected_p_id !== prev_redirected_p_id) ||
       (care_plan_id && care_plan_id !== prev_care_plan_id) ||
@@ -1045,7 +982,6 @@ class PatientDetails extends Component {
         resetNotificationRedirect();
       }
     }
-
     const { activeKey = "1", isOtherCarePlan = false } = this.state;
     if (
       activeKey === "1" &&
@@ -1055,40 +991,32 @@ class PatientDetails extends Component {
       this.setState({ activeKey: "2" });
     }
   };
-
   initiateInAppNotificationObj = () => {
     const { notificationToken, feedId } = this.props;
     const { updateUnseenNotificationData } = this;
-
     if (notificationToken || feedId) {
       let clientFeed = connect(
         config.GETSTREAM_API_KEY,
         notificationToken,
         config.GETSTREAM_APP_ID
       );
-
       this.client = clientFeed;
     }
-
     updateUnseenNotificationData();
   };
-
   getFeedData = async () => {
     const { feedId } = this.props;
     const limit = config.REACT_APP_NOTIFICATION_ONE_TIME_LIMIT;
     let clientFeed = this.client.feed("notification", feedId);
-
     const data = await clientFeed.get({ limit });
     return data;
   };
-
   updateUnseenNotificationData = async () => {
     const { setUnseenNotificationCount } = this.props;
     const data = await this.getFeedData();
     const { unseen = 0 } = data || {};
     setUnseenNotificationCount(unseen);
   };
-
   fetchSymptomsData = async () => {
     try {
       const { getSymptomTimeLine, patient_id } = this.props;
@@ -1104,18 +1032,15 @@ class PatientDetails extends Component {
       message.warn(error);
     }
   };
-
   fetchVitalDetails = () => {
     const { getVitalOccurence, searchVital } = this.props;
     getVitalOccurence().then((res) => {
       const { status = false } = res;
     });
-
     searchVital("").then((res) => {
       const { status = false } = res;
     });
   };
-
   fetchReportData = async () => {
     try {
       const { fetchPatientReports, patient_id } = this.props;
@@ -1131,22 +1056,18 @@ class PatientDetails extends Component {
       this.setState({ loading: false });
     }
   };
-
   markAppointmentComplete = (id) => async (e) => {
     e.stopPropagation();
     const { markAppointmentComplete } = this.props;
     const response = await markAppointmentComplete(id);
-
     const { status, payload: { data, error, message: responseMessage } = {} } =
       response || {};
-
     if (status === true) {
       message.success(responseMessage);
     } else {
       message.warn(responseMessage);
     }
   };
-
   uploadAppointmentDocs = (id) => async (e) => {
     e.stopPropagation();
     this.setState({
@@ -1154,7 +1075,6 @@ class PatientDetails extends Component {
       uploadDocsAppointmentId: id,
     });
   };
-
   getAppointmentsData = (carePlan = {}, docName = "--") => {
     const {
       appointments,
@@ -1164,16 +1084,13 @@ class PatientDetails extends Component {
       schedule_events = {},
       auth_role = null,
     } = this.props;
-
     const {
       markAppointmentComplete,
       formatMessage,
       uploadAppointmentDocs,
       onRowAppointment,
     } = this;
-
     const { isOtherCarePlan = false } = this.state;
-
     let { appointment_ids = [] } = carePlan;
     let formattedAppointments = appointment_ids.map((id) => {
       // todo: changes based on care-plan || appointment-repeat-type,  etc.,
@@ -1189,7 +1106,6 @@ class PatientDetails extends Component {
         active_event_id = null,
       } = appointments[id] || {};
       // const { basic_info: { user_name = "", full_name } = {} } = users[organizer_id] || {};
-
       // console.log("1230990830912 users", {organizer_id, users, full_name});
       return {
         // organizer: organizer_type === "doctor" ? doctors[organizer_id] : patients[organizer_id].
@@ -1230,7 +1146,6 @@ class PatientDetails extends Component {
     });
     return formattedAppointments;
   };
-
   getSymptomsData = (symptoms = {}) => {
     const {
       appointments,
@@ -1238,7 +1153,6 @@ class PatientDetails extends Component {
       // doctors = {},
       // patients = {},
     } = this.props;
-
     let formattedSymptoms = Object.values(symptoms).map((symptom, index) => {
       // todo: changes based on care-plan || appointment-repeat-type,  etc.,
       const {
@@ -1899,11 +1813,9 @@ class PatientDetails extends Component {
       e.preventDefault();
     }
     const { requestConsent, patient_id, patients } = this.props;
-    const { patientDetailsData } = this.state;
     const { handleOtpModal } = this;
 
-    const { basic_info: { full_name } = {} } =
-      patientDetailsData[patient_id] || {};
+    const { basic_info: { full_name } = {} } = patients[patient_id] || {};
 
     this.setState({ consentLoading: true });
     const response = await requestConsent(patient_id);
@@ -2075,7 +1987,6 @@ class PatientDetails extends Component {
       authenticated_user,
       openEditPatientDrawer,
     } = this.props;
-    const { patientDetailsData } = this.state;
 
     let doctor_id = null;
 
@@ -2087,7 +1998,7 @@ class PatientDetails extends Component {
       }
     });
 
-    let patientData = patientDetailsData[id] || {};
+    let patientData = patients[id] || {};
     let treatment = "";
     let condition = "";
     let severity = "";
@@ -2110,39 +2021,32 @@ class PatientDetails extends Component {
         severity_id: cSeverity = "",
       } = {},
     } = carePlan || {};
-
     let { basic_info: { name: treatmentName = "" } = {} } =
       treatments[cTreatment] || {};
     let { basic_info: { name: severityName = "" } = {} } =
       severities[cSeverity] || {};
     let { basic_info: { name: conditionName = "" } = {} } =
       conditions[cCondition] || {};
-
     treatment = treatmentName;
     condition = conditionName;
     severity = severityName;
-
     carePlanData = {
       ...care_plans[carePlanId],
       treatment,
       condition,
       severity,
     };
-
     patientData = {
-      ...patientDetailsData[id],
+      ...patients[id],
       treatment,
       condition,
       severity,
       carePlanData,
     };
-
     openEditPatientDrawer({ patientData, carePlanData });
   };
-
   handleBeforeUploadRegistration = (key) => (file) => {
     const { allAppointmentDocs = {} } = this.state;
-
     console.log("6756467897865678777", this.state);
     // if(allAppointmentDocs[key]){
     //   const {upload_documents = {}} = allAppointmentDocs[key];
@@ -2342,7 +2246,7 @@ class PatientDetails extends Component {
       patients,
       auth_role: doctorRoleId = null,
     } = this.props;
-    const { selectedCarePlanId, patientDetailsData } = this.state;
+    const { selectedCarePlanId } = this.state;
 
     const { basic_info: { doctor_id, patient_id } = {} } =
       care_plans[selectedCarePlanId] || {};
@@ -2351,7 +2255,7 @@ class PatientDetails extends Component {
     const {
       basic_info: { user_id: patientUserID } = {},
       user_role_id: patientRoleId = null,
-    } = patientDetailsData[patient_id] || {};
+    } = patients[patient_id] || {};
 
     const roomId = getRoomId(doctorRoleId, patientRoleId);
 
@@ -2443,8 +2347,6 @@ class PatientDetails extends Component {
       isOtherCarePlan,
       symptom_dates = [],
       report_ids = [],
-      patientDetailsData,
-      patientUserDetails,
     } = this.state;
 
     const {
@@ -2503,7 +2405,6 @@ class PatientDetails extends Component {
 
     let { basic_info: { name: firstTemplateName = "" } = {} } =
       care_plan_templates[care_plan_template_ids[0]] || {};
-
     // todo: dummy careplan
     let carePlanId = selectedCarePlanId;
     let cPAppointmentIds = [];
@@ -2511,7 +2412,6 @@ class PatientDetails extends Component {
     let vitalIds = [];
     let dietIds = [];
     let workoutIds = [];
-
     for (let carePlan of Object.values(care_plans)) {
       let {
         basic_info: { id = 1, doctor_id },
@@ -2521,7 +2421,6 @@ class PatientDetails extends Component {
           carePlanId = id;
         }
       }
-
       if (id === selectedCarePlanId) {
         let {
           appointment_ids = [],
@@ -2530,7 +2429,6 @@ class PatientDetails extends Component {
           diet_ids = [],
           workout_ids = [],
         } = carePlan;
-
         cPAppointmentIds = appointment_ids;
         cPMedicationIds = medication_ids;
         vitalIds = vital_ids;
@@ -2539,7 +2437,6 @@ class PatientDetails extends Component {
         carePlanId = selectedCarePlanId;
       }
     }
-
     const {
       basic_info: { doctor_id = 1 } = {},
       activated_on: treatment_start_date,
@@ -2561,10 +2458,8 @@ class PatientDetails extends Component {
       conditions[condition_id] || {};
     const { basic_info: { name: severity = "" } = {} } =
       severities[severity_id] || {};
-
     const diagnosis_type_obj = DIAGNOSIS_TYPE[d_type] || {};
     const diagnosis_type = diagnosis_type_obj["value"] || "";
-
     let carePlan = care_plans[carePlanId] || {};
     let {
       details: {
@@ -2597,12 +2492,10 @@ class PatientDetails extends Component {
         user_id: doctorUserId = 1,
       } = {},
     } = doctors[doctor_id] || {};
-
     let showUseTemplate = true;
     if (cPAppointmentIds.length || cPMedicationIds.length) {
       showUseTemplate = false;
     }
-
     let showTabs =
       cPAppointmentIds.length ||
       cPMedicationIds.length ||
@@ -2614,7 +2507,6 @@ class PatientDetails extends Component {
       reportsExist
         ? true
         : false;
-
     const {
       basic_info: {
         first_name,
@@ -2628,52 +2520,40 @@ class PatientDetails extends Component {
         user_id: patientUserId = "",
       } = {},
       user_role_id: patientRoleId = null,
-    } = patientDetailsData[patient_id] || {};
-
+    } = patients[patient_id] || {};
     const doctorRoleId = auth_role;
-
     // const roomId = getRoomId(doctorUserId, patientUserId);
     const roomId = getRoomId(doctorRoleId, patientRoleId);
-
     const { basic_info: { mobile_number = "", email, prefix = "" } = {} } =
-      patientUserDetails[user_id] || {};
-
+      users[user_id] || {};
     const {
       close,
       openPopUp,
       user_details: { profile_picture: patient_display_picture } = {},
     } = this.props;
-
     const { treatment_details: { treatment_provider } = {} } =
       this.props.user_details;
-
     console.log("2347632645327453287648273648723", { props: this.props });
-
     let showAddButton =
       (authPermissions.includes(USER_PERMISSIONS.APPOINTMENTS.ADD) ||
         authPermissions.includes(USER_PERMISSIONS.MEDICATIONS.ADD) ||
         authPermissions.includes(USER_PERMISSIONS.VITALS.ADD) ||
         authPermissions.includes(USER_PERMISSIONS.CARE_PLAN.ADD)) &&
       !isOtherCarePlan;
-
     let docName = doctor_first_name
       ? `${doctor_first_name} ${
           doctor_middle_name ? `${doctor_middle_name} ` : ""
         }${doctor_last_name ? `${doctor_last_name}` : ""}`
       : "--";
-
     const { uploadDocsModalVisible = false, uploadDocsAppointmentId = null } =
       this.state;
-
     const {
       basic_info: { user_role_id = null } = {},
       secondary_doctor_user_role_ids = [],
     } = care_plans[selectedCarePlanId];
-
     // let defaultActiveKeyValue = "1";
     const { activeKey = "1" } = this.state;
     const { recommendService, recommendSubscription } = this.state;
-
     return (
       <Fragment>
         <div className="pt10 pr10 pb10 pl10">
@@ -2687,7 +2567,6 @@ class PatientDetails extends Component {
             user_role_id={user_role_id}
             secondary_doctor_user_role_ids={secondary_doctor_user_role_ids}
           />
-
           <div className="flex wp100">
             <div className=" w350 pt10 pr24 pb20 pl24">
               <PatientCard
@@ -2707,14 +2586,11 @@ class PatientDetails extends Component {
                 openChat={openPopUp}
                 patients={patients}
                 patient_id={patient_id}
-                patientDetailsData={patientDetailsData}
                 editPatient={this.handleEditPatientDrawer}
                 editPatientOption={this.editPatientOption}
                 openVideoScreen={openVideoScreen}
               />
-
               {/* {this.editPatientOption()} */}
-
               {/*<PatientCarePlans {...this.props}  />*/}
               <PatientCarePlans
                 {...this.props}
@@ -2727,7 +2603,6 @@ class PatientDetails extends Component {
                   treatment_provider ? treatment_provider : "--"
                 }
               />
-
               <PatientTreatmentCard
                 isOtherCarePlan={isOtherCarePlan}
                 selectedCarePlanId={selectedCarePlanId}
@@ -2773,13 +2648,11 @@ class PatientDetails extends Component {
                 care_plans={care_plans}
               />
             </div>
-
             <div className="wp80 direction-column align-center pt10 pr24 pb20 pl24 ">
               {!isOtherCarePlan &&
                 user_role_id.toString() === auth_role.toString() && (
                   <PatientAlerts patientId={patient_id} />
                 )}
-
               {/* <div className="last-visit-alerts" >*/}
               {/*   <div className="last-visit-h-container" >*/}
               {/*     <span >Alerts from last visit</span>  */}
@@ -2790,7 +2663,6 @@ class PatientDetails extends Component {
               {/*   </div>*/}
               {/*       */}
               {/*</div>*/}
-
               <div className="mt40">
                 {!showTabs &&
                   getUseTemplateComponent({
@@ -2839,7 +2711,6 @@ class PatientDetails extends Component {
                           )}
                         </TabPane>
                       )}
-
                       <TabPane tab="Appointments" key="2">
                         {cPAppointmentIds.length > 0 ? (
                           <Table
@@ -2869,7 +2740,6 @@ class PatientDetails extends Component {
                           </div>
                         )}
                       </TabPane>
-
                       <TabPane tab="Symptoms" key="3">
                         <SymptomTabs patientId={patient_id} />
                       </TabPane>
@@ -2925,7 +2795,6 @@ class PatientDetails extends Component {
                           </div>
                         )}
                       </TabPane>
-
                       <TabPane
                         tab={PATIENT_TABS.WORKOUTS["name"]}
                         key={PATIENT_TABS.WORKOUTS["key"]}
@@ -2969,7 +2838,6 @@ class PatientDetails extends Component {
               patientId={patient_id}
               carePlanId={carePlanId}
             />
-
             <AddVitals carePlanId={carePlanId} />
             <AddAppointmentDrawer carePlanId={carePlanId} />
             <AddCareplanDrawer patientId={patient_id} />
@@ -2977,7 +2845,6 @@ class PatientDetails extends Component {
             <AddFoodItem />
             <AddDietDrawer carePlanId={carePlanId} />
             <AddWorkoutDrawer carePlanId={carePlanId} patientId={patient_id} />
-
             {templateDrawerVisible && (
               <TemplateDrawer
                 visible={templateDrawerVisible}
@@ -2992,7 +2859,6 @@ class PatientDetails extends Component {
             )}
           </Fragment>
           {/* )} */}
-
           {popUpVisible && (
             <div
               className={
