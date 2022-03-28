@@ -24,195 +24,6 @@ import { getName } from "../../../Helper/validation";
 
 // const { WEB_URL } = config;
 
-const newPatients = {
-  1: {
-    basic_info: {
-      id: 1,
-      user_id: 2,
-      gender: "m",
-      height: null,
-      weight: null,
-      age: "40 y",
-      first_name: "Gagneet",
-      middle_name: null,
-      last_name: "Singh",
-      full_name: "Gagneet Singh",
-      address: "NOIDA",
-      uid: "ADH/2022/0005",
-    },
-    payment_terms_accepted: false,
-    activated_on: null,
-    details: {
-      allergies: "Pollen Allergies",
-      comorbidities: "Thyroid",
-      profile_pic: null,
-    },
-    dob: "1980-07-23T05:20:23.000Z",
-    created_at: "2022-03-22T07:37:00.000Z",
-    care_plan_id: 1,
-    user_role_id: 2,
-  },
-  2: {
-    basic_info: {
-      id: 2,
-      user_id: 6,
-      gender: "m",
-      height: null,
-      weight: null,
-      age: "35 y",
-      first_name: "Ankur",
-      middle_name: null,
-      last_name: "Agrawal",
-      full_name: "Ankur Agrawal",
-      address: "New Delhi",
-      uid: "ADH/2022/0001",
-    },
-    payment_terms_accepted: false,
-    activated_on: null,
-    details: {
-      allergies: "No Allergies",
-      comorbidities: "Comorbidities A",
-      profile_pic: null,
-    },
-    dob: "1986-10-01T10:25:01.000Z",
-    created_at: "2022-03-22T07:37:00.000Z",
-    care_plan_id: 2,
-    user_role_id: 6,
-  },
-  4: {
-    basic_info: {
-      id: 4,
-      user_id: 8,
-      gender: "m",
-      height: null,
-      weight: null,
-      age: "45 y",
-      first_name: "Vasudevan Srinivasan",
-      middle_name: null,
-      last_name: "Four",
-      full_name: "Vasudevan Srinivasan Four",
-      address: "Chennai",
-      uid: "ADH/2022/0003",
-    },
-    payment_terms_accepted: false,
-    activated_on: null,
-    details: {
-      allergies: "No Allergies",
-      comorbidities: "Comorbidities C",
-      profile_pic: null,
-    },
-    dob: "1976-02-10T14:35:15.000Z",
-    created_at: "2022-03-22T07:37:00.000Z",
-    care_plan_id: 5,
-    user_role_id: 8,
-  },
-  8: {
-    basic_info: {
-      id: 8,
-      user_id: 13,
-      gender: "m",
-      height: "172",
-      weight: "63",
-      age: "0 d",
-      first_name: "Akshay",
-      middle_name: "Bhagat",
-      last_name: null,
-      full_name: "Akshay Bhagat",
-      address: "karve nagar",
-      uid: "ADH/2022/0008",
-    },
-    payment_terms_accepted: false,
-    activated_on: null,
-    details: {
-      allergies: "allergies",
-      comorbidities: "comorbidities",
-      profile_pic: null,
-    },
-    dob: "2022-03-23T18:30:00.000Z",
-    created_at: "2022-03-24T09:40:57.000Z",
-    care_plan_id: 8,
-    user_role_id: 14,
-  },
-};
-
-const newUsers = {
-  1: {
-    basic_info: {
-      user_name: "Sparsh Jaiswal",
-      email: "test-doctor@mail.com",
-      mobile_number: "8710087100",
-      prefix: "91",
-    },
-    sign_in_type: "basic",
-    onboarded: true,
-    onboarding_status: "CLINIC_registered",
-    category: "doctor",
-    activated_on: "2022-03-22T07:36:59.000Z",
-    deleted_at: null,
-    has_consent: true,
-  },
-  2: {
-    basic_info: {
-      user_name: "Gagneet Singh",
-      email: "gagneet.singh@gmail.com",
-      mobile_number: "9810739699",
-      prefix: "91",
-    },
-    sign_in_type: "basic",
-    onboarded: true,
-    onboarding_status: null,
-    category: "patient",
-    activated_on: "2022-03-22T07:36:59.000Z",
-    deleted_at: null,
-    has_consent: false,
-  },
-  6: {
-    basic_info: {
-      user_name: "Ankur Agrawal",
-      email: "test-patient2@mail.com",
-      mobile_number: "9876543211",
-      prefix: "91",
-    },
-    sign_in_type: "basic",
-    onboarded: true,
-    onboarding_status: null,
-    category: "patient",
-    activated_on: "2022-03-22T07:36:59.000Z",
-    deleted_at: null,
-    has_consent: false,
-  },
-  8: {
-    basic_info: {
-      user_name: "Vasudevan Srinivasan",
-      email: "test-patient4@mail.com",
-      mobile_number: "9876543213",
-      prefix: "91",
-    },
-    sign_in_type: "basic",
-    onboarded: true,
-    onboarding_status: null,
-    category: "patient",
-    activated_on: "2022-03-22T07:36:59.000Z",
-    deleted_at: null,
-    has_consent: false,
-  },
-  13: {
-    basic_info: {
-      user_name: null,
-      email: null,
-      mobile_number: "7798447672",
-      prefix: "91",
-    },
-    sign_in_type: "basic",
-    onboarded: false,
-    onboarding_status: "profile_registration",
-    category: "patient",
-    activated_on: "2022-03-24T09:40:57.000Z",
-    deleted_at: null,
-    has_consent: false,
-  },
-};
-
 class PatientDetailsDrawer extends Component {
   constructor(props) {
     super(props);
@@ -224,6 +35,9 @@ class PatientDetailsDrawer extends Component {
       missed_vitals: {},
       missed_medications: {},
       missed_symptoms: {},
+      // AKSHAY NEW CODE IMPLEMENTATIONS
+      patientDetailsData: {},
+      patientUserDetails: {},
     };
   }
 
@@ -235,6 +49,7 @@ class PatientDetailsDrawer extends Component {
       getAppointments,
       appointments = {},
       patients = {},
+      getPatientDetailsById,
     } = this.props;
     let carePlanId = 1;
     let carePlanMedicationIds = [];
@@ -265,6 +80,7 @@ class PatientDetailsDrawer extends Component {
     this.setState({ carePlanId, carePlanMedicationIds, appointmentsListIds });
 
     if (patient_id) {
+      this.handleGetPatientDetails(patient_id);
       getMedications(patient_id);
       getAppointments(patient_id);
     }
@@ -280,6 +96,7 @@ class PatientDetailsDrawer extends Component {
       getPatientMissedEvents,
       auth: { authenticated_user = null } = {},
       doctors = {},
+      getPatientDetailsById,
     } = this.props;
     // console.log("67182736812368761283761287",{props:this.props});
     const { payload: { patient_id: prev_patient_id } = {} } = prevProps;
@@ -314,9 +131,11 @@ class PatientDetailsDrawer extends Component {
     }
 
     if (patient_id !== prev_patient_id) {
+      this.handleGetPatientDetails(patient_id);
       this.handleGetMissedEvents(patient_id);
       getMedications(patient_id);
       getAppointments(patient_id);
+
       this.setState({ carePlanId, carePlanMedicationIds, appointmentsListIds });
     }
   }
@@ -347,6 +166,27 @@ class PatientDetailsDrawer extends Component {
       message.warn(this.formatMessage(messages.somethingWentWrong));
     }
   }
+  //AKSHAY NEW CODE IMPLEMENTATIONS START
+  async handleGetPatientDetails(patient_id) {
+    try {
+      const { getPatientDetailsById } = this.props;
+      const response = await getPatientDetailsById(patient_id);
+
+      const { payload: { data = {} } = {}, status } = response || {};
+      const { patients = {}, users = {} } = data || {};
+
+      if (status) {
+        this.setState({
+          patientDetailsData: patients,
+          patientUserDetails: users,
+        });
+      }
+    } catch (error) {
+      console.log("error -->", error);
+      message.warn(this.formatMessage(messages.somethingWentWrong));
+    }
+  }
+  //AKSHAY NEW CODE IMPLEMENTATIONS END
 
   getFormattedDays = (dates) => {
     let dayString = [];
@@ -489,6 +329,7 @@ class PatientDetailsDrawer extends Component {
       care_plans,
       users = {},
     } = this.props;
+    const { patientDetailsData, patientUserDetails } = this.state;
 
     const {
       formatMessage,
@@ -559,9 +400,9 @@ class PatientDetailsDrawer extends Component {
         } = {},
         reports = [],
         provider_id,
-      } = newPatients[id] || {};
+      } = patientDetailsData[id] || {};
       const { basic_info: { prefix = "91", mobile_number = "" } = {} } =
-        newUsers[user_id] || {};
+        patientUserDetails[user_id] || {};
 
       const {
         basic_info: {

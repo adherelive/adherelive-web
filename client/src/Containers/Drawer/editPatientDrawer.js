@@ -7,6 +7,7 @@ import { searchCondition } from "../../modules/conditions";
 import { searchSeverity } from "../../modules/severity";
 import { searchMedicine } from "../../modules/medicines";
 import { updatePatientAndCareplan } from "../../modules/doctors";
+import { getPatientDetailsById } from "../../modules/patients";
 
 const mapStateToProps = (state) => {
   const { auth } = state;
@@ -44,6 +45,8 @@ const mapDispatchToProps = (dispatch) => {
     searchSeverity: (value) => dispatch(searchSeverity(value)),
     updatePatientAndCareplan: (careplan_id, payload) =>
       dispatch(updatePatientAndCareplan(careplan_id, payload)),
+    getPatientDetailsById: (patientId) =>
+      dispatch(getPatientDetailsById(patientId)),
   };
 };
 

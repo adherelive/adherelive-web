@@ -2399,7 +2399,9 @@ class PatientController extends Controller {
       let userApiData = {};
       let apiUserDetails = {};
 
-      const allUserData = await userService.getUserByData({ id: 2 });
+      const allUserData = await userService.getUserByData({
+        id: patientWrapper.getUserId(),
+      });
 
       await allUserData.forEach(async (user) => {
         apiUserDetails = await UserWrapper(user.get());
