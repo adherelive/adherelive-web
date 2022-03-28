@@ -2385,11 +2385,28 @@ class PatientController extends Controller {
     }
 
     try {
-      const patient = await patientService.getPatientById({ id: patient_id });
-      let response = {};
+      let patient = await patientService.getPatientById({ id: patient_id });
+      let patientApiDetails = {};
+      const patientWrapper = await PatientWrapper(patient);
+      patientApiDetails[patientWrapper.getPatientId()] =
+        await patientWrapper.getAllInfo();
+      let userApiData = {};
+      let apiUserDetails = {};
 
-      response[patient_id] = patient;
-      return this.raiseSuccess(res, 200, response, "Success.");
+      const allUserData = await userService.getUserByData({ id: 2 });
+
+      await allUserData.forEach(async (user) => {
+        apiUserDetails = await UserWrapper(user.get());
+
+        userApiData[apiUserDetails.getId()] = apiUserDetails.getBasicInfo();
+      });
+
+      return this.raiseSuccess(
+        res,
+        200,
+        { patients: { ...patientApiDetails }, users: { ...userApiData } },
+        "Success."
+      );
     } catch (error) {
       Logger.debug("getPatientReports 500 error", error);
       return raiseServerError(res);
