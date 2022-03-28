@@ -91,11 +91,7 @@ class EditPatientDrawer extends Component {
       const { payload: { data = {} } = {}, status } = response || {};
       const { patients = {}, users = {} } = data || {};
       let patientData = patients[patient_id];
-      console.log("patientData", patientData);
-
       let useerData = users[patientData.basic_info.user_id];
-      console.log("useerData", useerData);
-
       if (status) {
         this.setState({
           mobile_number: useerData.basic_info.mobile_number,
