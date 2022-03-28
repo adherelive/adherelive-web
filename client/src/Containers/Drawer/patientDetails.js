@@ -4,6 +4,7 @@ import PatientDetailsDrawer from "../../Components/Drawer/PatientDetails";
 import { DRAWER } from "../../constant";
 import { close } from "../../modules/drawer";
 import { getMedications } from "../../modules/medications";
+import { getPatientDetailsById } from "../../modules/patients";
 import { setPatientForChat, setCareplanForChat } from "../../modules/twilio";
 import { openPopUp } from "../../modules/chat";
 import {
@@ -53,6 +54,8 @@ const mapDispatchToProps = (dispatch) => {
     close: () => dispatch(close()),
     getMedications: (id) => dispatch(getMedications(id)),
     setPatientForChat: (patient_id) => dispatch(setPatientForChat(patient_id)),
+    getPatientDetailsById: (patientId) =>
+      dispatch(getPatientDetailsById(patientId)),
     setCareplanForChat: (care_plan_id) =>
       dispatch(setCareplanForChat(care_plan_id)),
     openPopUp: () => dispatch(openPopUp()),

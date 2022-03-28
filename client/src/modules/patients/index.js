@@ -7,6 +7,8 @@ import {
   getConsentVerifyUrl,
   searchPatientForDoctorUrl,
   addCareplanForPatientUrl,
+  // AKSHAY NEW CODE IMPLEMENTATIONS
+  getPatientDetailsUrl,
 } from "../../Helper/urls/patients";
 import { getInitialData } from "./../auth/index";
 
@@ -281,6 +283,46 @@ export const getPatientMissedEvents = (patient_id) => {
       }
     } catch (err) {
       console.log("GET_PATIENT_MISSED_EVENTS_START err consentVerify", err);
+      throw err;
+    }
+
+    return response;
+  };
+};
+
+// AKSHAY NEW CODE IMPLEMENTATIONS
+
+export const getPatientDetailsById = (patientId) => {
+  let response = {};
+  return async (dispatch) => {
+    try {
+      // dispatch({ type: ADD_PATIENT });
+
+      response = await doRequest({
+        method: REQUEST_TYPE.GET,
+        url: getPatientDetailsUrl(patientId),
+      });
+
+      const { status, payload: { error = "", data = {} } = {} } =
+        response || {};
+
+      console.log("response", response);
+
+      if (status === false) {
+        // dispatch({
+        //   type: ADD_PATIENT_COMPLETED_WITH_ERROR,
+        //   payload: { error },
+        // });
+      } else if (status === true) {
+        // const { patients = {} } = data;
+        // dispatch({
+        //   type: ADD_PATIENT_COMPLETED,
+        //   data: data,
+        // });
+        // dispatch(getInitialData());
+      }
+    } catch (err) {
+      console.log("err in get patient details", err);
       throw err;
     }
 

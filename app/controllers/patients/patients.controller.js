@@ -2377,6 +2377,49 @@ class PatientController extends Controller {
       return this.raiseServerError(res);
     }
   };
+
+  getPatientById = async (req, res) => {
+    const { raiseSuccess, raiseClientError, raiseServerError } = this;
+    const {
+      params: { patient_id } = {},
+      userDetails: { userCategoryId } = {},
+    } = req;
+    Logger.info(`params: patient_id = ${patient_id}`);
+
+    if (!patient_id) {
+      return raiseClientError(res, 422, {}, "Please select correct patient");
+    }
+
+    try {
+      let patient = await patientService.getPatientById({ id: patient_id });
+      let patientApiDetails = {};
+      const patientWrapper = await PatientWrapper(patient);
+      patientApiDetails[patientWrapper.getPatientId()] =
+        await patientWrapper.getAllInfo();
+      let userApiData = {};
+      let apiUserDetails = {};
+
+      const allUserData = await userService.getUserByData({
+        id: patientWrapper.getUserId(),
+      });
+
+      await allUserData.forEach(async (user) => {
+        apiUserDetails = await UserWrapper(user.get());
+
+        userApiData[apiUserDetails.getId()] = apiUserDetails.getBasicInfo();
+      });
+
+      return this.raiseSuccess(
+        res,
+        200,
+        { patients: { ...patientApiDetails }, users: { ...userApiData } },
+        "Success."
+      );
+    } catch (error) {
+      Logger.debug("getPatientReports 500 error", error);
+      return raiseServerError(res);
+    }
+  };
 }
 
 export default new PatientController();

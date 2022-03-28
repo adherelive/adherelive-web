@@ -5,7 +5,8 @@ import {
   WHEN_TO_TAKE_ABBREVATIONS,
   APPOINTMENT_TYPE,
   PATIENT_MEAL_TIMINGS,
-  CATEGORY_ONE,
+  // CATEGORY_ONE,
+  categories,
 } from "../../../constant";
 import moment from "moment";
 import PDFDocument from "pdfkit";
@@ -294,7 +295,7 @@ function printDiet(
   // AKSHAY NEW CODE IMPLEMENTATIONS END
   const dietNameXStart = DOC_MARGIN + 40;
   const dietDetailsTimeXStart = DOC_MARGIN + 120;
-  const dietDetailsDataXStart = DOC_MARGIN + 200;
+  const dietDetailsDataXStart = DOC_MARGIN + 300;
   const startDateXStart = DOC_MARGIN + 430;
   const endDateXStart = DOC_MARGIN + 560;
 
@@ -1332,9 +1333,7 @@ function printCarePlanData({
           timings,
         } = medicationData;
         // TODO: need to add type here.
-        let medi_type = CATEGORY_ONE.items.find(
-          (x) => x.id == medicineType
-        ).name;
+        let medi_type = categories.items.find((x) => x.id == medicineType).name;
         const medicineData = `(${medi_type}) ${medicineName} `;
 
         // .fontSize(MEDICINE_FONT_SIZE)

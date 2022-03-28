@@ -35,9 +35,6 @@ class PatientDetailsDrawer extends Component {
       missed_vitals: {},
       missed_medications: {},
       missed_symptoms: {},
-      // AKSHAY NEW CODE IMPLEMENTATIONS
-      patientDetailsData: {},
-      patientUserDetails: {},
     };
   }
 
@@ -49,7 +46,6 @@ class PatientDetailsDrawer extends Component {
       getAppointments,
       appointments = {},
       patients = {},
-      getPatientDetailsById,
     } = this.props;
     let carePlanId = 1;
     let carePlanMedicationIds = [];
@@ -80,7 +76,6 @@ class PatientDetailsDrawer extends Component {
     this.setState({ carePlanId, carePlanMedicationIds, appointmentsListIds });
 
     if (patient_id) {
-      this.handleGetPatientDetails(patient_id);
       getMedications(patient_id);
       getAppointments(patient_id);
     }
@@ -96,7 +91,6 @@ class PatientDetailsDrawer extends Component {
       getPatientMissedEvents,
       auth: { authenticated_user = null } = {},
       doctors = {},
-      getPatientDetailsById,
     } = this.props;
     // console.log("67182736812368761283761287",{props:this.props});
     const { payload: { patient_id: prev_patient_id } = {} } = prevProps;
@@ -131,11 +125,9 @@ class PatientDetailsDrawer extends Component {
     }
 
     if (patient_id !== prev_patient_id) {
-      this.handleGetPatientDetails(patient_id);
       this.handleGetMissedEvents(patient_id);
       getMedications(patient_id);
       getAppointments(patient_id);
-
       this.setState({ carePlanId, carePlanMedicationIds, appointmentsListIds });
     }
   }
@@ -166,27 +158,6 @@ class PatientDetailsDrawer extends Component {
       message.warn(this.formatMessage(messages.somethingWentWrong));
     }
   }
-  //AKSHAY NEW CODE IMPLEMENTATIONS START
-  async handleGetPatientDetails(patient_id) {
-    try {
-      const { getPatientDetailsById } = this.props;
-      const response = await getPatientDetailsById(patient_id);
-
-      const { payload: { data = {} } = {}, status } = response || {};
-      const { patients = {}, users = {} } = data || {};
-
-      if (status) {
-        this.setState({
-          patientDetailsData: patients,
-          patientUserDetails: users,
-        });
-      }
-    } catch (error) {
-      console.log("error -->", error);
-      message.warn(this.formatMessage(messages.somethingWentWrong));
-    }
-  }
-  //AKSHAY NEW CODE IMPLEMENTATIONS END
 
   getFormattedDays = (dates) => {
     let dayString = [];
@@ -329,7 +300,6 @@ class PatientDetailsDrawer extends Component {
       care_plans,
       users = {},
     } = this.props;
-    const { patientDetailsData, patientUserDetails } = this.state;
 
     const {
       formatMessage,
@@ -400,10 +370,9 @@ class PatientDetailsDrawer extends Component {
         } = {},
         reports = [],
         provider_id,
-      } = patientDetailsData[id] || {};
+      } = patients[id] || {};
       const { basic_info: { prefix = "91", mobile_number = "" } = {} } =
-        patientUserDetails[user_id] || {};
-
+        users[user_id] || {};
       const {
         basic_info: {
           first_name: doctor_first_name,
@@ -421,13 +390,10 @@ class PatientDetailsDrawer extends Component {
         missed_medications = {},
         missed_symptoms = {},
       } = this.state;
-
       return (
         <Fragment>
           {/*<img src={CloseIcon} alt="close icon" onClick={}/>*/}
-
           {/*header*/}
-
           <div className="wp100 flex justify-space-between align-center mt20">
             <div className="flex justify-space-around align-center">
               <div className="pr10 fs24 fw600">{`${getName(
@@ -456,9 +422,7 @@ class PatientDetailsDrawer extends Component {
           <div className="fw700 wp100">{`${formatMessage(
             messages.mobile
           )}: +${prefix} ${mobile_number}`}</div>
-
           {/*boxes*/}
-
           <div className=" mt20 flex flex-wrap wp100">
             {Object.keys(PATIENT_BOX_CONTENT).map((id) => {
               let critical = 0;
@@ -503,7 +467,6 @@ class PatientDetailsDrawer extends Component {
                 non_critical = medication_non_critical;
                 total = medication_critical + medication_non_critical;
               }
-
               return (
                 <div
                   key={id}
@@ -516,7 +479,6 @@ class PatientDetailsDrawer extends Component {
                   } br-${
                     PATIENT_BOX_CONTENT[id]["border_color"]
                   } float-l flex flex-1 direction-column justify-space-between`}
-
                   // className={`mt10 ${id === MISSED_MEDICATION ||
                   //   id === MISSED_ACTIONS
                   //   ?
@@ -544,11 +506,8 @@ class PatientDetailsDrawer extends Component {
               );
             })}
           </div>
-
           {/*details*/}
-
           <div className="clearfix"></div>
-
           <div className="mt20 wp100">
             <div className="mt10 mb10 fs18 fw600">
               {formatMessage(messages.patient_details)}
@@ -588,12 +547,10 @@ class PatientDetailsDrawer extends Component {
                   {clinical_notes ? clinical_notes : "--"}
                 </div>
               </div>
-
               <div className="flex justify-space-between align-center">
                 <div className="flex-1">
                   {formatMessage(messages.diagnosisDesc)}
                 </div>
-
                 <div className="flex-2">
                   {description
                     ? `${description} (${diagnosis})`
@@ -618,43 +575,33 @@ class PatientDetailsDrawer extends Component {
               </div>
             </div>
           </div>
-
           {/*medications*/}
-
           <div className="mt20 black-85 wp100">
             <div className="mt10 mb10 fs18 fw600">
               {formatMessage(messages.medications)}
             </div>
-
             {getMedicationList()}
           </div>
-
           {/*appointments*/}
-
           <div className="mt20 black-85 wp100">
             <div className="mt10 mb10 fs18 fw600">
               {formatMessage(messages.appointments)}
             </div>
-
             {getAppointmentList()}
           </div>
         </Fragment>
       );
     }
   };
-
   formatMessage = (data, other = {}) =>
     this.props.intl.formatMessage(data, other);
-
   onClose = () => {
     const { close } = this.props;
     close();
   };
-
   render() {
     const { visible } = this.props;
     const { onClose, getPatientDetailContent } = this;
-
     if (visible !== true) {
       return null;
     }
