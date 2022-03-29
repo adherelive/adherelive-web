@@ -995,6 +995,7 @@ class PatientController extends Controller {
       const userIdsForForPatientForDoc = [];
       const doctor = await doctorService.getDoctorByUserId(parseInt(userId));
       const doctorDetails = await DoctorWrapper(doctor);
+      console.log("1");
       doctorData[doctorDetails.getDoctorId()] =
         await doctorDetails.getAllInfo();
       const { care_plan_ids: all_care_plan_ids = [] } =
@@ -1002,7 +1003,7 @@ class PatientController extends Controller {
       const care_plan_ids = all_care_plan_ids[userRoleId.toString()] || [];
 
       // console.log("32894723648723648726348762387462837462873462783",{care_plan_ids});
-
+      console.log("2");
       for (const each_id of care_plan_ids) {
         let thisCarePlanData = await userService.getCarePlanData(each_id);
         const { dataValues: { patient_id = null } = {} } = thisCarePlanData;
@@ -1011,17 +1012,18 @@ class PatientController extends Controller {
           await patientService.getPatientByIdForPatientSearch(patient_id);
         userIdsForForPatientForDoc.push(user_id);
       }
-
+      console.log("3");
       if (!isNumber) {
         const allPatients = await patientService.getPatientForDoctor(
           value,
           patientIdsForThisDoc
         );
+        console.log("4");
         if (allPatients.length > 0) {
           let userDetails = {};
           let patientDetails = {};
           const patientIds = [];
-
+          console.log("5");
           for (const patientData of allPatients) {
             const patient = await PatientWrapper(patientData, null);
             const { patients, users } = await patient.getReferenceInfo();
@@ -1031,7 +1033,7 @@ class PatientController extends Controller {
             userDetails = { ...userDetails, ...users };
             patientDetails = { ...patientDetails, ...patients };
           }
-
+          console.log("6");
           return raiseSuccess(
             res,
             200,
@@ -1059,7 +1061,7 @@ class PatientController extends Controller {
           value,
           userIdsForForPatientForDoc
         );
-
+        console.log("7");
         if (users.length > 0) {
           let userDetails = {};
           let patientDetails = {};
@@ -1073,7 +1075,7 @@ class PatientController extends Controller {
             userDetails = { ...userDetails, ...users };
             patientDetails = { ...patientDetails, ...patients };
           }
-
+          console.log("8");
           return raiseSuccess(
             res,
             200,

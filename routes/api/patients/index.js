@@ -39,6 +39,13 @@ router.get(
   Authenticated,
   PatientController.getAllPatientsPagination
 );
+
+router.get(
+  "/searchpatient",
+  Authenticated,
+  PatientController.searchPatientForDoctor
+);
+
 router.get("/:patient_id", Authenticated, PatientController.getPatientById);
 
 router.get(
@@ -81,12 +88,6 @@ router.get(
   "/:patient_id/parts/symptoms",
   Authenticated,
   PatientController.getPatientPartSymptoms
-);
-
-router.get(
-  "/searchpatient",
-  Authenticated,
-  PatientController.searchPatientForDoctor
 );
 
 router.post(
