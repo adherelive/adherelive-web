@@ -34,6 +34,7 @@ router.post(
 );
 
 router.get("/", Authenticated, PatientController.searchPatient);
+
 router.get(
   "/pagination",
   Authenticated,
