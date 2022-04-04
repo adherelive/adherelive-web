@@ -2,7 +2,10 @@ import { withRouter } from "react-router-dom";
 import SearchPatient from "../../Components/SearchPatient/index";
 import { getInitialData } from "../../modules/auth";
 import { connect } from "react-redux";
-import { searchPatientForDoctor } from "../../modules/patients";
+import {
+  searchPatientForDoctor,
+  searchPatientFromNum,
+} from "../../modules/patients";
 
 const mapStateToProps = (state) => {
   const {
@@ -23,6 +26,7 @@ const mapStateToProps = (state) => {
 const mapDispatchToProps = (dispatch) => {
   return {
     searchPatientForDoctor: (value) => dispatch(searchPatientForDoctor(value)),
+    searchPatientFromNum: (value) => dispatch(searchPatientFromNum(value)),
   };
 };
 
