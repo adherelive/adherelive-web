@@ -37,7 +37,7 @@ class SearchPatient extends Component {
 
     this.handlePatientSearch = debounce(
       this.handlePatientSearch.bind(this),
-      200
+      2000
     );
   }
 
@@ -56,8 +56,15 @@ class SearchPatient extends Component {
 
     this.setState({ searchInput: value });
 
-    {
-      this.handlePatientSearch(value);
+    if (value.length === 10) {
+      {
+        // this.handlePatientSearch(value);
+        this.handlePatientSearch(value);
+      }
+    } else {
+      this.setState({
+        patient_ids: [],
+      });
     }
   };
 
@@ -65,11 +72,11 @@ class SearchPatient extends Component {
     first_name,
     middle_name,
     last_name,
-    email,
+    // email,
     profile_pic,
-    patient_id,
-    user_mobile_numer,
-    user_prefix
+    patient_id
+    // user_mobile_numer,
+    // user_prefix
   ) => {
     let initials = `${first_name ? first_name[0] : ""}${
       last_name ? last_name[0] : ""
@@ -94,51 +101,102 @@ class SearchPatient extends Component {
             {" "}
             {`${first_name}  ${getName(middle_name)} ${getName(last_name)}`}
           </span>
-          <span className="flex direction-row justify-space-between">
+          {/* <span className="flex direction-row justify-space-between">
             <span>
               +{user_prefix}-{user_mobile_numer}
             </span>
             <span className="mr16 text-center ">{email ? email : "--"}</span>
-          </span>
+          </span> */}
         </div>
       </div>
     );
   };
 
   getPatientOptions = () => {
-    const { patients } = this.props;
+    // const { patients } = this.props;
+    // AKSHAY NEW CODE IMPLEMENTATIONS
+    const { patients } = this.state;
     const { patient_ids, users, searchInput = "" } = this.state;
     let options = [];
     const { fetchingPatients } = this.state;
 
+    // for (let id of patient_ids) {
+    //   const {
+    //     basic_info: { first_name, middle_name, last_name, user_id = null } = {},
+    //     details: { profile_pic = null } = {},
+    //   } = patients[id] || {};
+    //   const {
+    //     basic_info: {
+    //       email = "",
+    //       mobile_number: user_mobile_numer = "",
+    //       prefix: user_prefix = "",
+    //     } = {},
+    //   } = users[user_id] || {};
+    //   options.push(
+    //     <Option
+    //       key={id}
+    //       value={id}
+    //       name={`${first_name}  ${getName(middle_name)} ${getName(last_name)}`}
+    //       className="w400"
+    //     >
+    //       {this.getMenuItem(
+    //         first_name,
+    //         middle_name,
+    //         last_name,
+    //         email,
+    //         profile_pic,
+    //         id,
+    //         user_mobile_numer,
+    //         user_prefix
+    //       )}
+    //     </Option>
+    //   );
+    // }
+
+    // AKSHAY NEW CODE IMPLEMENTATIONS
+
     for (let id of patient_ids) {
       const {
-        basic_info: { first_name, middle_name, last_name, user_id = null } = {},
+        basic_info: {
+          first_name,
+          middle_name,
+          last_name,
+          full_name: patient_full_name,
+        } = {},
+
         details: { profile_pic = null } = {},
       } = patients[id] || {};
-      const {
-        basic_info: {
-          email = "",
-          mobile_number: user_mobile_numer = "",
-          prefix: user_prefix = "",
-        } = {},
-      } = users[user_id] || {};
+
+      let full_name = patient_full_name;
+      if (
+        !patient_full_name ||
+        patient_full_name === "" ||
+        patient_full_name === null
+      ) {
+        full_name = `AdhereLive Patient: ${id}`;
+      }
       options.push(
         <Option
           key={id}
           value={id}
-          name={`${first_name}  ${getName(middle_name)} ${getName(last_name)}`}
-          className="w400"
+          name={full_name}
+          className={`${
+            !patient_full_name ||
+            patient_full_name === "" ||
+            patient_full_name === null
+              ? "italic fw600"
+              : ""
+          }`}
         >
           {this.getMenuItem(
             first_name,
             middle_name,
             last_name,
-            email,
+            // email,
             profile_pic,
-            id,
-            user_mobile_numer,
-            user_prefix
+            id
+            // user_mobile_numer,
+            // user_prefix
           )}
         </Option>
       );
@@ -159,30 +217,77 @@ class SearchPatient extends Component {
     return options;
   };
 
+  // async handlePatientSearch(data) {
+  //   try {
+  //     if (data) {
+  //       this.setState({ fetchingPatients: true });
+
+  //       const { searchPatientForDoctor, patients } = this.props;
+  //       const response = await searchPatientForDoctor(data);
+  //       const {
+  //         status,
+  //         payload: {
+  //           data: {
+  //             patient_ids: response_patient_ids = [],
+  //             users = {},
+  //             patients: response_patients = {},
+  //           },
+  //         } = {},
+  //       } = response || {};
+
+  //       if (status) {
+  //         if (response_patient_ids.length > 0) {
+  //           this.setState({
+  //             patient_ids: response_patient_ids,
+  //             users,
+  //             fetchingPatients: false,
+  //           });
+  //         } else {
+  //           this.setState({
+  //             patient_ids: [],
+  //             fetchingPatients: false,
+  //           });
+  //         }
+  //       } else {
+  //         this.setState({
+  //           patient_ids: [],
+  //           fetchingPatients: false,
+  //         });
+  //       }
+  //     } else {
+  //       this.setState({
+  //         patient_ids: [],
+  //         fetchingPatients: false,
+  //       });
+  //     }
+  //   } catch (err) {
+  //     console.log("err23423423423423432432432", err);
+  //     this.setState({ patient_ids: [], fetchingPatients: false });
+  //     message.warn(this.formatMessage(messages.somethingWentWrongError));
+  //   }
+  // }
+
+  // AKSHAY NEW CODE IMPLEMENTATIONS
+
   async handlePatientSearch(data) {
     try {
       if (data) {
         this.setState({ fetchingPatients: true });
-
-        const { searchPatientForDoctor, patients } = this.props;
-        const response = await searchPatientForDoctor(data);
+        const { searchPatientFromNum } = this.props;
+        const response = await searchPatientFromNum(data);
         const {
           status,
           payload: {
-            data: {
-              patient_ids: response_patient_ids = [],
-              users = {},
-              patients: response_patients = {},
-            },
+            data: { patient_ids: response_patient_ids = [], patients },
           } = {},
         } = response || {};
-
+        // console.log("Patient search Response =====>",response);
         if (status) {
           if (response_patient_ids.length > 0) {
             this.setState({
               patient_ids: response_patient_ids,
-              users,
               fetchingPatients: false,
+              patients,
             });
           } else {
             this.setState({
@@ -191,21 +296,15 @@ class SearchPatient extends Component {
             });
           }
         } else {
-          this.setState({
-            patient_ids: [],
-            fetchingPatients: false,
-          });
+          this.setState({ fetchingPatients: false });
         }
       } else {
-        this.setState({
-          patient_ids: [],
-          fetchingPatients: false,
-        });
+        this.setState({ fetchingPatients: false });
       }
     } catch (err) {
-      console.log("err23423423423423432432432", err);
-      this.setState({ patient_ids: [], fetchingPatients: false });
-      message.warn(this.formatMessage(messages.somethingWentWrongError));
+      console.log("err", err);
+      message.warn(this.formatMessage(messages.somethingWentWrong));
+      this.setState({ fetchingPatients: false });
     }
   }
 
