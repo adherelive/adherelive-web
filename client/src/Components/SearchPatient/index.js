@@ -49,6 +49,9 @@ class SearchPatient extends Component {
     // e.preventDefault();
     const { history } = this.props;
     history.push(`/patients/${patient_id}`);
+
+    // let patientSearchAllData = this.state;
+    // this.props.setAddPatientAfterSearch(patient_id, patientSearchAllData);
   };
 
   setInput = (value) => {
@@ -74,8 +77,8 @@ class SearchPatient extends Component {
     last_name,
     // email,
     profile_pic,
-    patient_id
-    // user_mobile_numer,
+    patient_id,
+    user_mobile_numer
     // user_prefix
   ) => {
     let initials = `${first_name ? first_name[0] : ""}${
@@ -101,6 +104,16 @@ class SearchPatient extends Component {
             {" "}
             {`${first_name}  ${getName(middle_name)} ${getName(last_name)}`}
           </span>
+          {/* <span className="flex direction-row justify-space-between">
+          
+            <span style={{ color: "red" }} className="mr16 text-center ">
+              {" "}
+              {`${first_name}  ${getName(middle_name)} ${getName(
+                last_name
+              )}`}{" "}
+              is not added as a patient to this doctor
+            </span>
+          </span> */}
           {/* <span className="flex direction-row justify-space-between">
             <span>
               +{user_prefix}-{user_mobile_numer}
@@ -162,10 +175,18 @@ class SearchPatient extends Component {
           middle_name,
           last_name,
           full_name: patient_full_name,
+          user_id = null,
         } = {},
 
         details: { profile_pic = null } = {},
       } = patients[id] || {};
+      const {
+        basic_info: {
+          email = "",
+          mobile_number: user_mobile_numer = "",
+          prefix: user_prefix = "",
+        } = {},
+      } = users[user_id] || {};
 
       let full_name = patient_full_name;
       if (
@@ -194,8 +215,8 @@ class SearchPatient extends Component {
             last_name,
             // email,
             profile_pic,
-            id
-            // user_mobile_numer,
+            id,
+            user_mobile_numer
             // user_prefix
           )}
         </Option>
@@ -278,7 +299,11 @@ class SearchPatient extends Component {
         const {
           status,
           payload: {
-            data: { patient_ids: response_patient_ids = [], patients },
+            data: {
+              patient_ids: response_patient_ids = [],
+              patients,
+              users = {},
+            },
           } = {},
         } = response || {};
         // console.log("Patient search Response =====>",response);
@@ -288,6 +313,7 @@ class SearchPatient extends Component {
               patient_ids: response_patient_ids,
               fetchingPatients: false,
               patients,
+              users,
             });
           } else {
             this.setState({
@@ -308,9 +334,9 @@ class SearchPatient extends Component {
     }
   }
 
-  patientChanged = (patient_id) => {
-    this.handlePatientDetailsRedirect(patient_id);
-  };
+  // patientChanged = (patient_id) => {
+  //   this.handlePatientDetailsRedirect(patient_id);
+  // };
 
   render() {
     const { searchInput = "" } = this.state;
