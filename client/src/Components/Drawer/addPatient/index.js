@@ -107,6 +107,63 @@ class PatientDetailsDrawer extends Component {
 
   componentDidMount() {}
 
+  // AKSHAY NEW CODE IMPLEMENTATIONS
+  static getDerivedStateFromProps(nextProps, nextState) {
+    if (nextProps.patientSearchData !== nextState.patientSearchData) {
+      const {
+        basic_info: {
+          first_name = "",
+          middle_name = "",
+          last_name = "",
+          gender = "",
+          height = "",
+          weight = "",
+          address = "",
+          full_name,
+          user_id = null,
+        } = {},
+        dob,
+        details: { allergies = "", comorbidities = "" } = {},
+      } = nextProps.patientSearchData.patients[
+        nextProps.patientSearchData.patientId
+      ] || {};
+      const {
+        basic_info: {
+          email = "",
+          mobile_number: user_mobile_numer = "",
+          prefix: user_prefix = "",
+        } = {},
+      } = nextProps.patientSearchData.users[user_id] || {};
+
+      let date = new Date(dob);
+      let year = date.getFullYear();
+      let month = date.getMonth() + 1;
+      let dt = date.getDate();
+
+      if (dt < 10) {
+        dt = "0" + dt;
+      }
+      if (month < 10) {
+        month = "0" + month;
+      }
+
+      return {
+        mobile_number: user_mobile_numer,
+        gender,
+        date_of_birth: moment(year + "-" + month + "-" + dt),
+        height,
+        weight,
+        name: full_name,
+        addNewPatient: false,
+        isdisabled: true,
+        allergies,
+        comorbidities,
+        address,
+        patientSearchData: nextProps.patientSearchData,
+      };
+    }
+  }
+
   componentDidUpdate(prevProps, prevState) {
     // const { patients } = this.state;
     const {
