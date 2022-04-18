@@ -960,16 +960,26 @@ class PatientController extends Controller {
           const { users, patients, patient_id } = await user.getReferenceInfo();
           patientIds.push(patient_id);
           userDetails = { ...userDetails, ...users };
-          patientDetails = { ...patientDetails, ...patients };
-        }
-        // Going to Change below = GS
-        if (patientIds.length > 0) {
+
           let careplanData = await carePlanService.getCarePlanByData({
             doctor_id: authDoctor.get("id"),
-            patient_id: patientIds[0],
+            patient_id,
           });
           isPatientAvailableForDoctor = careplanData.length > 0;
+          patientDetails = {
+            ...patientDetails,
+            ...patients,
+            isPatientAvailableForDoctor,
+          };
+          console.log("===========================");
+          console.log({
+            doctor_id: authDoctor.get("id"),
+            patient_id,
+            isPatientAvailableForDoctor,
+          });
+          console.log("===========================");
         }
+
         return raiseSuccess(
           res,
           200,
@@ -977,7 +987,6 @@ class PatientController extends Controller {
             users: {
               ...userDetails,
             },
-            isPatientAvailableForDoctor,
             patients: {
               ...patientDetails,
             },
