@@ -47,11 +47,15 @@ class SearchPatient extends Component {
 
   handlePatientDetailsRedirect = (patient_id) => {
     // e.preventDefault();
-    // const { history } = this.props;
-    // history.push(`/patients/${patient_id}`);
+    const { patients } = this.state;
 
-    let patientSearchAllData = this.state;
-    this.props.setAddPatientAfterSearch(patient_id, patientSearchAllData);
+    if (patients.isPatientAvailableForDoctor === true) {
+      const { history } = this.props;
+      history.push(`/patients/${patient_id}`);
+    } else {
+      let patientSearchAllData = this.state;
+      this.props.setAddPatientAfterSearch(patient_id, patientSearchAllData);
+    }
   };
 
   setInput = (value) => {
@@ -85,6 +89,8 @@ class SearchPatient extends Component {
       last_name ? last_name[0] : ""
     }`;
 
+    const { patients } = this.state;
+
     return (
       <div
         className="flex direction-row  justify-space-between"
@@ -104,18 +110,17 @@ class SearchPatient extends Component {
             {" "}
             {`${first_name}  ${getName(middle_name)} ${getName(last_name)}`}
           </span>
-          <span className="flex direction-row justify-space-between">
-            {/* <span>
-              +{user_prefix}-{user_mobile_numer}
-            </span> */}
-            <span style={{ color: "red" }} className="mr16 text-center ">
-              {" "}
-              {`${first_name}  ${getName(middle_name)} ${getName(
-                last_name
-              )}`}{" "}
-              is not added as a patient to this doctor
+          {patients.isPatientAvailableForDoctor !== true && (
+            <span className="flex direction-row justify-space-between">
+              {/* <span>
+             +{user_prefix}-{user_mobile_numer}
+           </span> */}
+              <span style={{ color: "red" }} className="mr16 text-center ">
+                This patient is not added to the doctor
+              </span>
             </span>
-          </span>
+          )}
+
           {/* <span className="flex direction-row justify-space-between">
             <span>
               +{user_prefix}-{user_mobile_numer}
