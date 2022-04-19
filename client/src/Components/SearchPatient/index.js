@@ -55,6 +55,11 @@ class SearchPatient extends Component {
     } else {
       let patientSearchAllData = this.state;
       this.props.setAddPatientAfterSearch(patient_id, patientSearchAllData);
+      this.setState({
+        patient_ids: [],
+        users: {},
+        patients: {},
+      });
     }
   };
 
@@ -115,8 +120,12 @@ class SearchPatient extends Component {
               {/* <span>
              +{user_prefix}-{user_mobile_numer}
            </span> */}
-              <span style={{ color: "red" }} className="mr16 text-center ">
-                This patient is not added to the doctor
+              <span
+                style={{ color: "red", textAlign: "justify" }}
+                className="mr16 text-center "
+              >
+                This is not your patient , please add this patient <br /> to
+                your profile
               </span>
             </span>
           )}
