@@ -47,9 +47,10 @@ class SearchPatient extends Component {
 
   handlePatientDetailsRedirect = (patient_id) => {
     // e.preventDefault();
-    const { patients } = this.state;
+    const { patients, isPatientAvailable } = this.state;
+    let isPatientAvailableForDoctor = isPatientAvailable[patient_id];
 
-    if (patients.isPatientAvailableForDoctor === true) {
+    if (isPatientAvailableForDoctor === true) {
       const { history } = this.props;
       history.push(`/patients/${patient_id}`);
     } else {
@@ -59,6 +60,7 @@ class SearchPatient extends Component {
         patient_ids: [],
         users: {},
         patients: {},
+        isPatientAvailable: {},
       });
     }
   };
@@ -94,7 +96,10 @@ class SearchPatient extends Component {
       last_name ? last_name[0] : ""
     }`;
 
-    const { patients } = this.state;
+    const { isPatientAvailable } = this.state;
+
+    // AKSHAY NEW CODE IMPLEMENTATIONS
+    let isPatientAvailableForDoctor = isPatientAvailable[patient_id];
 
     return (
       <div
@@ -115,7 +120,7 @@ class SearchPatient extends Component {
             {" "}
             {`${first_name}  ${getName(middle_name)} ${getName(last_name)}`}
           </span>
-          {patients.isPatientAvailableForDoctor !== true && (
+          {isPatientAvailableForDoctor !== true && (
             <span className="flex direction-row justify-space-between">
               {/* <span>
              +{user_prefix}-{user_mobile_numer}
@@ -319,6 +324,7 @@ class SearchPatient extends Component {
               patient_ids: response_patient_ids = [],
               patients,
               users = {},
+              isPatientAvailable = {},
             },
           } = {},
         } = response || {};
@@ -330,6 +336,7 @@ class SearchPatient extends Component {
               fetchingPatients: false,
               patients,
               users,
+              isPatientAvailable,
             });
           } else {
             this.setState({

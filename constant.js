@@ -731,6 +731,7 @@ export const categories = {
     { name: "S/C SUBCUTANEOUS", defaultUnit: ML, id: 18 },
     { name: "I/M INTRAMUSCULAR", defaultUnit: ML, id: 19 },
     { name: "I/V INTRAVENOUS", defaultUnit: ML, id: 20 },
+    { name: "OTHER", defaultUnit: null, id: 21 },
   ],
 };
 
@@ -787,6 +788,12 @@ export const CATEGORY_FIVE = {
   ],
 };
 
+export const CATEGORY_SIX = {
+  index: "6",
+  name: "OTHER",
+  items: [{ name: "OTHER", defaultUnit: null, id: 21 }],
+};
+
 export const MEDICINE_FORMULATION = {
   [CATEGORY_ONE.index]: {
     ...CATEGORY_ONE,
@@ -802,6 +809,9 @@ export const MEDICINE_FORMULATION = {
   },
   [CATEGORY_FIVE.index]: {
     ...CATEGORY_FIVE,
+  },
+  [CATEGORY_SIX.index]: {
+    ...CATEGORY_SIX,
   },
 };
 
