@@ -940,7 +940,7 @@ class PatientController extends Controller {
 
   searchPatient = async (req, res) => {
     const { raiseSuccess, raiseServerError } = this;
-    let isPatientAvailableForDoctor = false;
+
     try {
       Logger.info(`searchPatient request query : ${req.query.value}`);
       const { query: { value = "" } = {} } = req;
@@ -956,6 +956,7 @@ class PatientController extends Controller {
         let patientDetails = {};
         const patientIds = [];
         for (const userData of users) {
+          let isPatientAvailableForDoctor = false;
           const user = await UserWrapper(userData.get());
           const { users, patients, patient_id } = await user.getReferenceInfo();
           patientIds.push(patient_id);

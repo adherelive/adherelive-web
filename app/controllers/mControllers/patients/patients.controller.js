@@ -1496,16 +1496,40 @@ class MPatientController extends Controller {
       Logger.info(`searchPatient request query : ${req.query.value}`);
       const { query: { value = "" } = {} } = req;
 
+      const { userDetails: { userId, userData: { category } = {} } = {} } = req;
+      let authDoctor = null;
+      if (category === USER_CATEGORY.DOCTOR || category === USER_CATEGORY.HSP) {
+        authDoctor = await DoctorService.getDoctorByData({ user_id: userId });
+      }
+
       const users = await userService.getPatientByMobile(value);
       if (users.length > 0) {
         let userDetails = {};
         let patientDetails = {};
         const patientIds = [];
         for (const userData of users) {
+          let isPatientAvailableForDoctor = false;
           const user = await UserWrapper(userData.get());
           const { users, patients, patient_id } = await user.getReferenceInfo();
           patientIds.push(patient_id);
           userDetails = { ...userDetails, ...users };
+          let careplanData = await carePlanService.getCarePlanByData({
+            doctor_id: authDoctor.get("id"),
+            patient_id,
+          });
+          isPatientAvailableForDoctor = careplanData.length > 0;
+          patientDetails = {
+            ...patientDetails,
+            ...patients,
+            isPatientAvailableForDoctor,
+          };
+          console.log("===========================");
+          console.log({
+            doctor_id: authDoctor.get("id"),
+            patient_id,
+            isPatientAvailableForDoctor,
+          });
+          console.log("===========================");
           patientDetails = { ...patientDetails, ...patients };
         }
 
