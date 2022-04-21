@@ -940,7 +940,7 @@ class PatientController extends Controller {
 
   searchPatient = async (req, res) => {
     const { raiseSuccess, raiseServerError } = this;
-    let isPatientAvailableForDoctor = false;
+
     try {
       Logger.info(`searchPatient request query : ${req.query.value}`);
       const { query: { value = "" } = {} } = req;
@@ -955,21 +955,30 @@ class PatientController extends Controller {
         let userDetails = {};
         let patientDetails = {};
         const patientIds = [];
+        let isPatientAvailable = {};
         for (const userData of users) {
+          let isPatientAvailableForDoctor = false;
           const user = await UserWrapper(userData.get());
           const { users, patients, patient_id } = await user.getReferenceInfo();
           patientIds.push(patient_id);
-          userDetails = { ...userDetails, ...users };
 
           let careplanData = await carePlanService.getCarePlanByData({
             doctor_id: authDoctor.get("id"),
             patient_id,
           });
           isPatientAvailableForDoctor = careplanData.length > 0;
+          isPatientAvailable[patient_id] = isPatientAvailableForDoctor;
+
+          userDetails = {
+            ...userDetails,
+            ...users,
+            // isPatientAvailableForDoctor,
+          };
+
           patientDetails = {
             ...patientDetails,
             ...patients,
-            isPatientAvailableForDoctor,
+            // isPatientAvailableForDoctor,
           };
           console.log("===========================");
           console.log({
@@ -991,6 +1000,7 @@ class PatientController extends Controller {
               ...patientDetails,
             },
             patient_ids: patientIds,
+            isPatientAvailable,
           },
           "Patients fetched successfully"
         );
