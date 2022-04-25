@@ -1038,7 +1038,7 @@ function printPatientBlockData(
   creationDate,
   doctorBlockEndRowLevel
 ) {
-  const creationDateObj = new moment(creationDate);
+  const creationDateObj = new moment(new Date());
   const month = creationDateObj.get("month") + 1;
   const date = creationDateObj.get("date");
   const year = creationDateObj.get("year");
