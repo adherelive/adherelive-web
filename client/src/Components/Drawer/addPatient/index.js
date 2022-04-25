@@ -723,6 +723,12 @@ class PatientDetailsDrawer extends Component {
     }
   };
 
+  generateRandomMobileNumber = (e) => {
+    this.setState({
+      mobile_number: parseInt(Math.random() * 1000000000, 11),
+    });
+  };
+
   renderAddPatient = () => {
     let dtToday = new Date();
 
@@ -871,9 +877,20 @@ class PatientDetailsDrawer extends Component {
 
     return (
       <div className="form-block-ap ">
-        <div className="form-headings flex align-center justify-start">
-          {this.formatMessage(messages.phoneNo)}
-          <div className="star-red">*</div>
+        <div className="form-headings flex align-center ">
+          <div className="wp100 flex justify-space-between">
+            <div>
+              {this.formatMessage(messages.phoneNo)}
+              <span className="star-red">*</span>
+            </div>
+            <Button
+              onClick={this.generateRandomMobileNumber}
+              type="ghost"
+              // className="ml140"
+            >
+              Random
+            </Button>
+          </div>
         </div>
 
         <Input
