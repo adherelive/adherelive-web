@@ -904,7 +904,7 @@ class PatientDetailsDrawer extends Component {
               type="ghost"
               // className="ml140"
             >
-              Random
+              Don't have number ?
             </Button>
           </div>
         </div>
