@@ -42,6 +42,7 @@ import {
 } from "../../../constant";
 
 import { PoweroffOutlined } from "@ant-design/icons";
+import isEmpty from "../../../Helper/is-empty";
 
 const { Option } = Select;
 const RadioButton = Radio.Button;
@@ -723,10 +724,25 @@ class PatientDetailsDrawer extends Component {
     }
   };
 
-  generateRandomMobileNumber = (e) => {
-    this.setState({
-      mobile_number: parseInt(Math.random() * 1000000000, 11),
-    });
+  generateRandomMobileNumber = async (e) => {
+    const { searchPatientFromNum } = this.props;
+    let randomNumber = `00${parseInt(
+      Math.floor(Math.random() * (19999999 - 10000000 + 1)) + 10000000
+    )}`;
+    const response = await searchPatientFromNum(randomNumber);
+    const { status, payload: { data: { patients } } = {} } = response || {};
+
+    if (isEmpty(patients)) {
+      this.setState({
+        mobile_number: randomNumber,
+      });
+    } else {
+      this.setState({
+        mobile_number: `00${parseInt(
+          Math.floor(Math.random() * (19999999 - 10000000 + 1)) + 10000000
+        )}`,
+      });
+    }
   };
 
   renderAddPatient = () => {
