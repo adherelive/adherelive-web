@@ -944,12 +944,13 @@ class PatientController extends Controller {
     try {
       Logger.info(`searchPatient request query : ${req.query.value}`);
       const { query: { value = "" } = {} } = req;
-      const { userDetails: { userId, userData: { category } = {} } = {} } = req;
+      const {
+        userDetails: { userId, userRoleId, userData: { category } = {} } = {},
+      } = req;
       let authDoctor = null;
       if (category === USER_CATEGORY.DOCTOR || category === USER_CATEGORY.HSP) {
         authDoctor = await doctorService.getDoctorByData({ user_id: userId });
       }
-
       const users = await userService.getPatientByMobile(value);
       if (users.length > 0) {
         let userDetails = {};
@@ -967,7 +968,6 @@ class PatientController extends Controller {
             patient_id,
           });
           isPatientAvailableForDoctor = careplanData.length > 0;
-          isPatientAvailable[patient_id] = isPatientAvailableForDoctor;
 
           userDetails = {
             ...userDetails,
@@ -975,18 +975,34 @@ class PatientController extends Controller {
             // isPatientAvailableForDoctor,
           };
 
+          if (!isPatientAvailableForDoctor) {
+            let careplanData = await carePlanService.getCarePlanByData({
+              patient_id,
+            });
+            for (let i = 0; i < careplanData.length; i++) {
+              // getsecondary careplan mapping
+              const carePlan = await CarePlanWrapper(careplanData[i]);
+              let secondayDoctorMapping =
+                await careplanSecondaryDoctorMappingService.findAndCountAll({
+                  where: {
+                    secondary_doctor_role_id: userRoleId,
+                    care_plan_id: carePlan.getCarePlanId(),
+                  },
+                });
+
+              if (secondayDoctorMapping.count > 0) {
+                isPatientAvailableForDoctor = true;
+                break;
+              }
+            }
+          }
+
+          isPatientAvailable[patient_id] = isPatientAvailableForDoctor;
           patientDetails = {
             ...patientDetails,
             ...patients,
             // isPatientAvailableForDoctor,
           };
-          console.log("===========================");
-          console.log({
-            doctor_id: authDoctor.get("id"),
-            patient_id,
-            isPatientAvailableForDoctor,
-          });
-          console.log("===========================");
         }
 
         return raiseSuccess(
