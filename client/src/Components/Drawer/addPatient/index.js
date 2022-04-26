@@ -42,6 +42,7 @@ import {
 } from "../../../constant";
 
 import { PoweroffOutlined } from "@ant-design/icons";
+import isEmpty from "../../../Helper/is-empty";
 
 const { Option } = Select;
 const RadioButton = Radio.Button;
@@ -723,6 +724,27 @@ class PatientDetailsDrawer extends Component {
     }
   };
 
+  generateRandomMobileNumber = async (e) => {
+    const { searchPatientFromNum } = this.props;
+    let randomNumber = `00${parseInt(
+      Math.floor(Math.random() * (19999999 - 10000000 + 1)) + 10000000
+    )}`;
+    const response = await searchPatientFromNum(randomNumber);
+    const { status, payload: { data: { patients } } = {} } = response || {};
+
+    if (isEmpty(patients)) {
+      this.setState({
+        mobile_number: randomNumber,
+      });
+    } else {
+      this.setState({
+        mobile_number: `00${parseInt(
+          Math.floor(Math.random() * (19999999 - 10000000 + 1)) + 10000000
+        )}`,
+      });
+    }
+  };
+
   renderAddPatient = () => {
     let dtToday = new Date();
 
@@ -871,9 +893,20 @@ class PatientDetailsDrawer extends Component {
 
     return (
       <div className="form-block-ap ">
-        <div className="form-headings flex align-center justify-start">
-          {this.formatMessage(messages.phoneNo)}
-          <div className="star-red">*</div>
+        <div className="form-headings flex align-center ">
+          <div className="wp100 flex justify-space-between">
+            <div>
+              {this.formatMessage(messages.phoneNo)}
+              <span className="star-red">*</span>
+            </div>
+            <Button
+              onClick={this.generateRandomMobileNumber}
+              type="ghost"
+              // className="ml140"
+            >
+              Random
+            </Button>
+          </div>
         </div>
 
         <Input
