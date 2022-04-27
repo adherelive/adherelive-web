@@ -903,6 +903,7 @@ class PatientDetailsDrawer extends Component {
               onClick={this.generateRandomMobileNumber}
               type="ghost"
               // className="ml140"
+              //
             >
               Don't have number ?
             </Button>
