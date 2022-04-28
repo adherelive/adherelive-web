@@ -1312,11 +1312,8 @@ function printCarePlanData({
 
       const medicationTableHeaderEndYLevel = doc.y;
       medicationYLevel = doc.y + 10;
-
+      let srNumber = 1;
       for (const [index, medicationData] of medicationsList.entries()) {
-        console.log("popopopopopopopopopo");
-        console.log(medicationData);
-        console.log("popopopopopopopopopo");
         const {
           description,
           medicineName,
@@ -1327,20 +1324,28 @@ function printCarePlanData({
           frequency,
           startDate,
           quantity,
-          // endDate,
+          endDate,
           duration,
           dosage,
           timings,
         } = medicationData;
         // TODO: need to add type here.
+        let today = new Date();
+        let endDateobj = new Date(endDate);
+        console.log({
+          status: "EndDateHere",
+          endDate,
+          status: endDateobj.getTime() > today.getTime(),
+          today,
+          endDateobj,
+        });
         let medi_type = categories.items.find((x) => x.id == medicineType).name;
         const medicineData = `(${medi_type}) ${medicineName} `;
 
-        // .fontSize(MEDICINE_FONT_SIZE)
-        // .text(`${index + 1}.`, currentMedicationXLevel, medicationYLevel)
-        // .fontSize(SHORT_FONT_SIZE)
-        // .text("Rx", doc.x + 20, doc.y - (MEDICINE_FONT_SIZE + 5))
-
+        let medicationStatus = endDateobj.getTime() > today.getTime();
+        // gaurav new changes - start
+        if (!medicationStatus) continue;
+        // gaurav new changes - start
         if (doc.y + 3 * SHORT_FONT_SIZE > PAGE_END_LIMIT) {
           if (pageCount === 1) {
             addPageFooter(doc, providerPrescriptionDetails);
@@ -1348,12 +1353,13 @@ function printCarePlanData({
           addPageAndNumber(doc);
           medicationYLevel = DOC_MARGIN;
         }
-
+        // gaurav new changes - start
         doc
           .fillColor("#212b36")
           .fontSize(SHORT_FONT_SIZE)
           .font(MEDIUM_FONT)
-          .text(`${index + 1}.`, serialNoXStart, medicationYLevel)
+          .text(`${srNumber}.`, serialNoXStart, medicationYLevel)
+          // gaurav new changes - end
 
           // .text(`${organizer.name}`, drXStart, medicationYLevel, {
           //   width: medicineXStart - drXStart,
@@ -1379,20 +1385,6 @@ function printCarePlanData({
 
         const medicationYLevelEnd = doc.y;
 
-        // console.log("30183012093 medicationYLevelEnd, medicationYLevel",{medicationYLevelEnd, medicationYLevel, condition: (medicationYLevel - medicationYLevelEnd) > NORMAL_FONT_SIZE});
-
-        // if((medicationYLevel - medicationYLevelEnd) > NORMAL_FONT_SIZE) {
-        //   // addPageAndNumber(doc);
-
-        //   const {start, count} = doc.bufferedPageRange();
-        //   console.log("183129837129 count, start", {count, start});
-        //   doc.switchToPage(0);
-        // }
-
-        // console.log("1936129387 doc.x, doc.y", {x: doc.x, y: doc.y});
-        // const {start, count} = doc.bufferedPageRange();
-        //   console.log("1833129837129 count, start", {count, start});
-
         doc
           .text(`${strength}`, dosageXStart, medicationYLevel)
           .text(
@@ -1406,56 +1398,22 @@ function printCarePlanData({
 
         doc
           .text(`${timings}`, timingFrequencyXStart, medicationYLevel)
-          // .text(
-          //   `${frequency}`,
-          //   timingFrequencyXStart,
-          //   doc.y
-          // )
           .text(`${duration} day(s)`, timingFrequencyXStart, doc.y);
 
-        // if((medicationYLevel - doc.y) > NORMAL_FONT_SIZE) {
-        //   // addPageAndNumber(doc);
-
-        //   const {start, count} = doc.bufferedPageRange();
-        //   console.log("183129837129 count, start", {count, start});
-        //   doc.switchToPage(start);
-        // }
-        // .fontSize(NORMAL_FONT_SIZE - 1)
-        // .text(
-        //   `${strength}, ${
-        //     frequency ? frequency : ""
-        //   }, For ${duration} day(s) starting ${startDate}`,
-        //   medicationYLevel + 250,
-        //   doc.y
-        // )
-
-        // if((medicationYLevel - medicationYLevelEnd) > NORMAL_FONT_SIZE) {
-        //   const {start, count} = doc.bufferedPageRange();
-        //   console.log("183129837129 count, start", {count, start});
-        //   doc.switchToPage(start);
-        // }
         const horizontalLineY =
           medicationYLevelEnd > doc.y ? medicationYLevelEnd : doc.y;
         generateHr(doc, horizontalLineY + 5);
 
         medicationYLevel = medicationYLevelEnd + NORMAL_FONT_SIZE + 12;
 
-        // checkAndAddNewPage(doc);
-
         if (doc.y > PAGE_END_LIMIT) {
           if (pageCount === 1) {
             addPageFooter(doc, providerPrescriptionDetails);
           }
-          // addPageAndNumber(doc);
         }
+        srNumber++;
       }
-
-      // if(doc.y > PAGE_END_LIMIT) {
-      //   addPageAndNumber(doc);
-      // }
     }
-
-    // checkAndAddNewPage(doc);
 
     if (!medicationsList.length > 0) {
       medicationYLevel = generalExaminationEndLevel + NORMAL_FONT_SIZE + 12;
@@ -1893,9 +1851,12 @@ function formatMedicationsData(medications, medicines) {
 
     if (end_date) {
       const endDateObj = moment(end_date);
-      endDate = `${endDateObj.get("year")}/${endDateObj.get(
-        "month"
-      )}/${endDateObj.get("date")}`;
+      // Gaurav New Changes - start
+      endDate = end_date;
+      // Gaurav New Changes - End
+      // endDate = `${endDateObj.get("year")}/${endDateObj.get(
+      //   "month"
+      // )}/${endDateObj.get("date")}`;
     }
 
     const { [unit]: { text = "" } = {} } = DOSE_UNIT;
