@@ -17,7 +17,7 @@ import WorkoutService from "../../../services/workouts/workout.service";
 import RepetitionService from "../../../services/exerciseRepetitions/repetition.service";
 import PortionServiceService from "../../../services/portions/portions.service";
 import DietService from "../../../services/diet/diet.service";
-
+import careplanSecondaryDoctorMappingService from "../../../services/careplanSecondaryDoctorMappings/careplanSecondaryDoctorMappings.service";
 // WRAPPERS ------------
 import ExerciseContentWrapper from "../../../ApiWrapper/mobile/exerciseContents";
 import VitalWrapper from "../../../ApiWrapper/mobile/vitals";
@@ -1496,16 +1496,68 @@ class MPatientController extends Controller {
       Logger.info(`searchPatient request query : ${req.query.value}`);
       const { query: { value = "" } = {} } = req;
 
+      const {
+        userDetails: { userId, userRoleId, userData: { category } = {} } = {},
+      } = req;
+      let authDoctor = null;
+      if (category === USER_CATEGORY.DOCTOR || category === USER_CATEGORY.HSP) {
+        authDoctor = await DoctorService.getDoctorByData({ user_id: userId });
+      }
+
       const users = await userService.getPatientByMobile(value);
       if (users.length > 0) {
         let userDetails = {};
         let patientDetails = {};
         const patientIds = [];
+        let isPatientAvailable = {};
         for (const userData of users) {
+          let isPatientAvailableForDoctor = false;
           const user = await UserWrapper(userData.get());
           const { users, patients, patient_id } = await user.getReferenceInfo();
           patientIds.push(patient_id);
           userDetails = { ...userDetails, ...users };
+          let careplanData = await carePlanService.getCarePlanByData({
+            doctor_id: authDoctor.get("id"),
+            patient_id,
+          });
+          isPatientAvailableForDoctor = careplanData.length > 0;
+
+          patientDetails = {
+            ...patientDetails,
+            ...patients,
+            // isPatientAvailableForDoctor,
+          };
+          if (!isPatientAvailableForDoctor) {
+            let careplanData = await carePlanService.getCarePlanByData({
+              patient_id,
+            });
+            for (let i = 0; i < careplanData.length; i++) {
+              // getsecondary careplan mapping
+              const carePlan = await CarePlanWrapper(careplanData[i]);
+              let secondayDoctorMapping =
+                await careplanSecondaryDoctorMappingService.findAndCountAll({
+                  where: {
+                    secondary_doctor_role_id: userRoleId,
+                    care_plan_id: carePlan.getCarePlanId(),
+                  },
+                });
+
+              if (secondayDoctorMapping.count > 0) {
+                isPatientAvailableForDoctor = true;
+                break;
+              }
+            }
+          }
+
+          isPatientAvailable[patient_id] = isPatientAvailableForDoctor;
+
+          console.log("===========================");
+          console.log({
+            doctor_id: authDoctor.get("id"),
+            patient_id,
+            // isPatientAvailableForDoctor,
+          });
+          console.log("===========================");
           patientDetails = { ...patientDetails, ...patients };
         }
 
@@ -1520,6 +1572,7 @@ class MPatientController extends Controller {
               ...patientDetails,
             },
             patient_ids: patientIds,
+            isPatientAvailable,
           },
           "Patients fetched successfully"
         );

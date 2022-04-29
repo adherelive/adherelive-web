@@ -42,6 +42,7 @@ import {
 } from "../../../constant";
 
 import { PoweroffOutlined } from "@ant-design/icons";
+import isEmpty from "../../../Helper/is-empty";
 
 const { Option } = Select;
 const RadioButton = Radio.Button;
@@ -106,6 +107,63 @@ class PatientDetailsDrawer extends Component {
   }
 
   componentDidMount() {}
+
+  // AKSHAY NEW CODE IMPLEMENTATIONS
+  static getDerivedStateFromProps(nextProps, nextState) {
+    if (nextProps.patientSearchData !== nextState.patientSearchData) {
+      const {
+        basic_info: {
+          first_name = "",
+          middle_name = "",
+          last_name = "",
+          gender = "",
+          height = "",
+          weight = "",
+          address = "",
+          full_name,
+          user_id = null,
+        } = {},
+        dob,
+        details: { allergies = "", comorbidities = "" } = {},
+      } = nextProps.patientSearchData.patients[
+        nextProps.patientSearchData.patientId
+      ] || {};
+      const {
+        basic_info: {
+          email = "",
+          mobile_number: user_mobile_numer = "",
+          prefix: user_prefix = "",
+        } = {},
+      } = nextProps.patientSearchData.users[user_id] || {};
+
+      let date = new Date(dob);
+      let year = date.getFullYear();
+      let month = date.getMonth() + 1;
+      let dt = date.getDate();
+
+      if (dt < 10) {
+        dt = "0" + dt;
+      }
+      if (month < 10) {
+        month = "0" + month;
+      }
+
+      return {
+        mobile_number: user_mobile_numer,
+        gender,
+        date_of_birth: moment(year + "-" + month + "-" + dt),
+        height,
+        weight,
+        name: full_name,
+        addNewPatient: false,
+        isdisabled: true,
+        allergies,
+        comorbidities,
+        address,
+        patientSearchData: nextProps.patientSearchData,
+      };
+    }
+  }
 
   componentDidUpdate(prevProps, prevState) {
     // const { patients } = this.state;
@@ -666,6 +724,27 @@ class PatientDetailsDrawer extends Component {
     }
   };
 
+  generateRandomMobileNumber = async (e) => {
+    const { searchPatientFromNum } = this.props;
+    let randomNumber = `00${parseInt(
+      Math.floor(Math.random() * (19999999 - 10000000 + 1)) + 10000000
+    )}`;
+    const response = await searchPatientFromNum(randomNumber);
+    const { status, payload: { data: { patients } } = {} } = response || {};
+
+    if (isEmpty(patients)) {
+      this.setState({
+        mobile_number: randomNumber,
+      });
+    } else {
+      this.setState({
+        mobile_number: `00${parseInt(
+          Math.floor(Math.random() * (19999999 - 10000000 + 1)) + 10000000
+        )}`,
+      });
+    }
+  };
+
   renderAddPatient = () => {
     let dtToday = new Date();
 
@@ -814,9 +893,21 @@ class PatientDetailsDrawer extends Component {
 
     return (
       <div className="form-block-ap ">
-        <div className="form-headings flex align-center justify-start">
-          {this.formatMessage(messages.phoneNo)}
-          <div className="star-red">*</div>
+        <div className="form-headings flex align-center ">
+          <div className="wp100 flex justify-space-between">
+            <div>
+              {this.formatMessage(messages.phoneNo)}
+              <span className="star-red">*</span>
+            </div>
+            <Button
+              onClick={this.generateRandomMobileNumber}
+              type="ghost"
+              // className="ml140"
+              //
+            >
+              Don't have number ?
+            </Button>
+          </div>
         </div>
 
         <Input

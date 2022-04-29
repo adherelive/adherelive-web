@@ -622,6 +622,17 @@ class Dashboard extends Component {
     );
   };
 
+  // AKSHAY NEW CODE IMPLEMENTATIONS
+
+  setAddPatientAfterSearch = (patient_id, patientSearchAllData) => {
+    let patientSearchData = patientSearchAllData;
+    patientSearchData.patientId = patient_id;
+    this.setState({
+      visible: true,
+      patientSearchData,
+    });
+  };
+
   render() {
     const {
       doctors = {},
@@ -736,7 +747,9 @@ class Dashboard extends Component {
             {(authPermissions.includes(USER_PERMISSIONS.PATIENTS.ADD) ||
               authPermissions.includes(USER_PERMISSIONS.GRAPHS.UPDATE)) && (
               <div className="flex direction-row justify-space-between align-center w500">
-                <SearchPatient />
+                <SearchPatient
+                  setAddPatientAfterSearch={this.setAddPatientAfterSearch}
+                />
 
                 <Dropdown
                   className={"mr10 "}
@@ -871,6 +884,8 @@ class Dashboard extends Component {
           submit={this.addPatient}
           patients={patients}
           submitting={submitting}
+          // AKSHAY NEW CODE IMPLEMENTATIONS
+          patientSearchData={this.state.patientSearchData}
         />
 
         {visibleModal && (
