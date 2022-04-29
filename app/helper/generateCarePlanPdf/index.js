@@ -76,6 +76,8 @@ export default async (pdfData, signatureImage) => {
         bufferPages: true,
       });
 
+      let { date: prescriptionDate } = getLatestUpdateDate(medications);
+
       let providerPrescriptionDetails = pdfproviderPrescriptionDetails.length
         ? pdfproviderPrescriptionDetails
         : "";
@@ -113,7 +115,8 @@ export default async (pdfData, signatureImage) => {
         doc,
         patients,
         users,
-        creationDate,
+        // creationDate,
+        prescriptionDate,
         doctorBlockEndRowLevel
       );
 
@@ -949,13 +952,6 @@ function printDoctorBlockData(
     .text(`Dr. ${doctorName}`, doctorBlockStartX, doc.y);
 
   const doctorNameEndsY = doc.y;
-  // const providerDetailsStart = doc.x + 250;
-  // const providerDetailsEnd = doc.x + 380;
-
-  // temp | remove after provider logo
-  // doc.rect(400, doctorBlockStartX, 100, 100).fill("#ecf0f1");
-  // doc.image(`${imageUrl}`, 400, doctorBlockStartX, { width: 120, height: 40 });
-  // .text("\n");
   const fullDegree = degree ? `${degree}, MBBS` : "MBBS";
 
   doc
@@ -971,16 +967,6 @@ function printDoctorBlockData(
 
   let doctorDetailsEnd = doc.y;
 
-  // const providerDetailsHeight = doctorDetailsEnd - doctorNameEndsY;
-  // let textFontSize = NORMAL_FONT_SIZE;
-
-  // doc.fontSize(textFontSize);
-
-  // let height = doc.heightOfString(providerPrescriptionDetails, {
-  //   lineGap: 0,
-  //   width: providerDetailsEnd - providerDetailsStart,
-  // });
-
   if (providerPrescriptionDetails) {
     let fontSize =
       NORMAL_FONT_SIZE -
@@ -995,28 +981,6 @@ function printDoctorBlockData(
       });
 
     doctorDetailsEnd = doc.y;
-
-    // while (height > providerDetailsHeight && textFontSize > 1) {
-    //   textFontSize = textFontSize - 1;
-    //   doc.fontSize(textFontSize);
-    //   height = doc.heightOfString(providerPrescriptionDetails, {
-    //     lineGap: 0,
-    //     width: providerDetailsEnd - providerDetailsStart,
-    //   });
-    // }
-
-    // doc
-    //   .fontSize(textFontSize)
-    //   .fillColor("#212b36")
-    //   .text(
-    //     `${providerPrescriptionDetails}`,
-    //     providerDetailsStart,
-    //     doctorNameEndsY,
-    //     {
-    //       width: providerDetailsEnd - providerDetailsStart,
-    //       height: providerDetailsHeight,
-    //     }
-    //   );
   }
 
   // generateHr(doc, doc.y + 10);
@@ -1038,7 +1002,7 @@ function printPatientBlockData(
   creationDate,
   doctorBlockEndRowLevel
 ) {
-  const creationDateObj = new moment(new Date());
+  const creationDateObj = new moment(creationDate);
   const month = creationDateObj.get("month") + 1;
   const date = creationDateObj.get("date");
   const year = creationDateObj.get("year");
@@ -1190,6 +1154,29 @@ function printPatientBlockData(
   return doc.y + 10;
 }
 
+function isMedicationsUpdatedInExistingMedicin(medications) {
+  const medicationIds = Object.keys(medications);
+  let date = null;
+  let isMedicinsUpdate = false;
+  for (const medicationId of medicationIds) {
+    const {
+      [medicationId]: {
+        basic_info: { updated_at, created_at } = {},
+        details: mobileDetails = null,
+      },
+    } = medications;
+    let updated_date = `${moment(new Date(updated_at)).format("DD MM YY")}`;
+    let created_date = `${moment(new Date(created_at)).format("DD MM YY")}`;
+
+    if (created_date !== updated_date) {
+      // all medicin written in same days an there is no update on medicins
+      isMedicinsUpdate = true;
+    }
+    return isMedicinsUpdate;
+  }
+  return date;
+}
+
 function printCarePlanData({
   doc,
   horizontalLineLevel,
@@ -1313,6 +1300,17 @@ function printCarePlanData({
       const medicationTableHeaderEndYLevel = doc.y;
       medicationYLevel = doc.y + 10;
       let srNumber = 1;
+
+      // Gaurav New Chnages - start
+      let { date: latestUpdateDate, isPrescriptionUpdated } =
+        getLatestUpdateDate(medications);
+      let isMedicationsUpdate =
+        isMedicationsUpdatedInExistingMedicin(medications);
+      let wantToShow = true;
+      console.log({ isPrescriptionUpdated, isMedicationsUpdate });
+      if (isPrescriptionUpdated || isMedicationsUpdate) wantToShow = false;
+      // Gaurav New Chnages - end
+
       for (const [index, medicationData] of medicationsList.entries()) {
         const {
           description,
@@ -1342,9 +1340,18 @@ function printCarePlanData({
         let medi_type = categories.items.find((x) => x.id == medicineType).name;
         const medicineData = `(${medi_type}) ${medicineName} `;
 
-        let medicationStatus = endDateobj.getTime() > today.getTime();
+        let medicationStatus = endDateobj > today; // 30>29
         // gaurav new changes - start
-        if (!medicationStatus) continue;
+        console.log("==========");
+        console.log({
+          medicationStatus,
+          wantToShow,
+        });
+        console.log("==========");
+        // if (medicationStatus && !showInactive ) continue;
+
+        if (!wantToShow && !medicationStatus) continue;
+
         // gaurav new changes - start
         if (doc.y + 3 * SHORT_FONT_SIZE > PAGE_END_LIMIT) {
           if (pageCount === 1) {
@@ -1369,7 +1376,11 @@ function printCarePlanData({
           })
           .text(`${genericName}`, medicineXStart, doc.y, {
             width: dosageXStart - medicineXStart,
+            // strike:true
           })
+          // .underline(medicineXStart, doc.y,  dosageXStart - medicineXStart)
+          // .underline(medicineXStart, medicationYLevel, dosageXStart - medicineXStart, undefined, { color: 'blue' })
+          // .link(medicineXStart, medicationYLevel, dosageXStart - medicineXStart, undefined, `${genericName}`)
           // AKSHAY NEW CODE IMPLEMENTATIONS
           .text(`Prescribed by ${organizer.name}`, medicineXStart, doc.y, {
             width: dosageXStart - medicineXStart,
@@ -1791,6 +1802,29 @@ function formatPatientData(patients, users) {
   };
 }
 
+function getLatestUpdateDate(medications) {
+  const medicationIds = Object.keys(medications);
+  let date = null;
+  let isPrescriptionUpdated = false;
+  for (const medicationId of medicationIds) {
+    const {
+      [medicationId]: {
+        basic_info: { updated_at } = {},
+        details: mobileDetails = null,
+      },
+    } = medications;
+    let newdate = new Date(updated_at);
+
+    if (date == null) {
+      date = newdate;
+    } else if (newdate > date) {
+      date = newdate;
+      isPrescriptionUpdated = true;
+    }
+  }
+  return { date, isPrescriptionUpdated };
+}
+
 function formatMedicationsData(medications, medicines) {
   // have to send the list of objects containing instruction medicine name, medicine type, strength, frequency, duration,
   let medicationsList = [];
@@ -1800,6 +1834,7 @@ function formatMedicationsData(medications, medicines) {
   console.log(medicines);
   console.log("===========================================================");
   const medicationIds = Object.keys(medications);
+  let date = null;
   for (const medicationId of medicationIds) {
     let medicationDataObj = {};
     const {
@@ -1809,6 +1844,7 @@ function formatMedicationsData(medications, medicines) {
           end_date = "",
           description = "",
           details = null,
+          updated_at,
         } = {},
         details: mobileDetails = null,
         organizer,

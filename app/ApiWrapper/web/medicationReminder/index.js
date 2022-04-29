@@ -37,6 +37,8 @@ class MReminderWrapper extends BaseMedicationReminder {
       start_date,
       end_date,
       details,
+      updatedAt,
+      createdAt,
       rr_rule = "",
     } = _data || {};
     let organizerDetails = await this.getOrganizerDetailsFromId(
@@ -45,7 +47,12 @@ class MReminderWrapper extends BaseMedicationReminder {
     );
 
     console.log("organizerDetails", organizerDetails);
-
+    console.log("\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n");
+    console.log({
+      updated_at: updatedAt,
+      created_at: createdAt,
+    });
+    console.log("\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n");
     return {
       basic_info: {
         id,
@@ -53,6 +60,8 @@ class MReminderWrapper extends BaseMedicationReminder {
         details,
         start_date,
         end_date,
+        updated_at: updatedAt,
+        created_at: createdAt,
       },
       organizer: {
         id: organizer_id,
