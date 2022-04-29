@@ -1289,10 +1289,10 @@ function printCarePlanData({
       // const drXStart = DOC_MARGIN + 35;
       // const medicineXStart = DOC_MARGIN + 40;
       const medicineXStart = DOC_MARGIN + 40;
-      const dosageXStart = DOC_MARGIN + 260;
-      const quantityXStart = DOC_MARGIN + 310;
-      const frequencyXStart = DOC_MARGIN + 370;
-      const timingFrequencyXStart = DOC_MARGIN + 440;
+      const dosageXStart = DOC_MARGIN + 220;
+      const quantityXStart = DOC_MARGIN + 280;
+      const frequencyXStart = DOC_MARGIN + 340;
+      const timingFrequencyXStart = DOC_MARGIN + 410;
 
       // generateHr(doc, doc.y);
       // medicine table header
@@ -1306,7 +1306,13 @@ function printCarePlanData({
         .text("Dosage", dosageXStart, rXLabelEndLevelY + 10)
         .text("Quantity", quantityXStart, rXLabelEndLevelY + 10)
         .text("Frequency", frequencyXStart, rXLabelEndLevelY + 10)
-        .text("Time-Duration", timingFrequencyXStart, rXLabelEndLevelY + 10);
+        // .text("Time-Duration", timingFrequencyXStart, rXLabelEndLevelY + 10);
+        //AKSHAY NEW CODE IMPLEMENTATIONS
+        .text(
+          "Start Date / Duration",
+          timingFrequencyXStart,
+          rXLabelEndLevelY + 10
+        );
 
       // generateHr(doc, doc.y);
 
@@ -1411,7 +1417,11 @@ function printCarePlanData({
           //   timingFrequencyXStart,
           //   doc.y
           // )
-          .text(`${duration} day(s)`, timingFrequencyXStart, doc.y);
+          .text(
+            `${moment(startDate).format("DD MMM 'YY")} /${duration} day(s)`,
+            timingFrequencyXStart,
+            doc.y
+          );
 
         // if((medicationYLevel - doc.y) > NORMAL_FONT_SIZE) {
         //   // addPageAndNumber(doc);
