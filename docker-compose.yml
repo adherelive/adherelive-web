@@ -13,6 +13,7 @@ services:
     build: .
     #image: gagneet/adherelive:portal
     command: ["npm","run","dev"]
+    restart: always
     ports:
       - "${WEB_SERVER_PORT}:5000"
       - "${REACT_SERVER_PORT}:3000"
@@ -29,6 +30,7 @@ services:
 
   mysql:
     image: mysql:latest
+    restart: always
     ports:
       - "3306:3306"
     expose:
@@ -43,6 +45,7 @@ services:
 
   minio1:
     image: minio/minio
+    restart: always
     volumes:
       - adhere_storage_stack1:/export
     ports:
@@ -54,6 +57,7 @@ services:
 
   minio2:
     image: minio/minio
+    restart: always
     volumes:
       - adhere_storage_stack2:/export
     ports:
@@ -65,6 +69,7 @@ services:
 
   minio3:
     image: minio/minio
+    restart: always
     volumes:
       - adhere_storage_stack3:/export
     ports:
@@ -76,6 +81,7 @@ services:
 
   minio4:
     image: minio/minio
+    restart: always
     volumes:
       - adhere_storage_stack4:/export
     ports:
