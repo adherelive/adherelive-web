@@ -1,5 +1,5 @@
 import React, { Fragment } from "react";
-import { withRouter } from "react-router";
+import { withRouter } from "react-router-dom";
 import { injectIntl } from "react-intl";
 
 import CompanyIcon from "../../../Assets/images/logo3x.png";
