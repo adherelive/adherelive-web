@@ -163,6 +163,7 @@ class PatientDetailsDrawer extends Component {
         patientSearchData: nextProps.patientSearchData,
       };
     }
+    return null;
   }
 
   componentDidUpdate(prevProps, prevState) {
