@@ -43,6 +43,9 @@ import {
 
 import { PoweroffOutlined } from "@ant-design/icons";
 import isEmpty from "../../../Helper/is-empty";
+import CustomSelect from "./CustomSelect";
+import { PlusCircleOutlined } from "@ant-design/icons";
+import { MinusCircleOutlined } from "@ant-design/icons";
 
 const { Option } = Select;
 const RadioButton = Radio.Button;
@@ -83,6 +86,7 @@ class PatientDetailsDrawer extends Component {
       symptoms: "",
       address: "",
       patients: {},
+      isCollapse: false,
     };
     this.handleConditionSearch = throttle(
       this.handleConditionSearch.bind(this),
@@ -746,6 +750,12 @@ class PatientDetailsDrawer extends Component {
     }
   };
 
+  collpaseHanlder = () => {
+    this.setState({
+      isCollapse: !this.state.isCollapse,
+    });
+  };
+
   renderAddPatient = () => {
     let dtToday = new Date();
 
@@ -1177,10 +1187,29 @@ class PatientDetailsDrawer extends Component {
           style={{ resize: "none" }}
         />
 
-        <div className="form-headings-ap flex align-center justify-start">
+        <div
+          style={
+            !this.state.isCollapse
+              ? {
+                  border: "1px solid",
+                  padding: "10px",
+                  marginBottom: "10px",
+                  borderRadius: "10px",
+                }
+              : {}
+          }
+          className="form-headings-ap flex align-center justify-space-between"
+        >
           {this.formatMessage(messages.condition)}
+          {/* <div onClick={this.collpaseHanlder}>
+            {this.state.isCollapse ? (
+              <MinusCircleOutlined />
+            ) : (
+              <PlusCircleOutlined />
+            )}
+          </div> */}
         </div>
-
+        {/* {this.state.isCollapse && ( */}
         <Select
           className="form-inputs-ap drawer-select"
           placeholder="Select Condition"
@@ -1204,6 +1233,7 @@ class PatientDetailsDrawer extends Component {
         >
           {this.getConditionOption()}
         </Select>
+        {/* )} */}
 
         <div className="form-headings-ap  flex align-center justify-start">
           {this.formatMessage(messages.severity)}
@@ -1261,6 +1291,7 @@ class PatientDetailsDrawer extends Component {
         >
           {this.getTreatmentOption()}
         </Select>
+        {/* <CustomSelect /> */}
       </div>
     );
   };
