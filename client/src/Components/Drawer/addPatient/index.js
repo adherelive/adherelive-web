@@ -969,6 +969,52 @@ class PatientDetailsDrawer extends Component {
           // disabled={isdisabled}
         />
 
+        <div className="form-headings-ap">
+          {this.formatMessage(messages.gender)}
+        </div>
+        <div className="add-patient-radio wp100 mt6 mb18 flex">
+          <Radio.Group buttonStyle="solid" value={gender}>
+            {" "}
+            {/*disabled = {isdisabled}*/}
+            <Radio.Button value={MALE} onClick={this.setGender(MALE)}>
+              M
+            </Radio.Button>
+            <Radio.Button value={FEMALE} onClick={this.setGender(FEMALE)}>
+              F
+            </Radio.Button>
+            <Radio.Button value={OTHER} onClick={this.setGender(OTHER)}>
+              O
+            </Radio.Button>
+          </Radio.Group>
+        </div>
+
+        <div className="form-headings-ap flex align-center justify-start">
+          {this.formatMessage(messages.dob)}
+          <div className="star-red">*</div>
+        </div>
+
+        {/*{isdisabled ? (*/}
+        {/*  <Input*/}
+        {/*    className={"form-inputs-ap"}*/}
+        {/*    placeholder={`${date_of_birth ? existingDOB : "dd/mm/yyyy"}`}*/}
+        {/*    max={`${year}-${month}-${day}`}*/}
+        {/*    // disabled={true}*/}
+        {/*    type="date"*/}
+        {/*  />*/}
+        {/*) : (*/}
+
+        {/*todo: need to check bug with value and defaultValue*/}
+        <Input
+          className={"form-inputs-ap"}
+          type="date"
+          value={existingDOB}
+          // defaultValue={existingDOB}
+          max={`${year}-${month}-${day}`}
+          onChange={this.setDOB}
+          // disabled={isdisabled}
+        />
+        {/*)}*/}
+
         <div className="form-headings-ap flex align-center justify-space-between mt10 mb10">
           {this.formatMessage(messages.pid)}
           <div>
@@ -1011,25 +1057,6 @@ class PatientDetailsDrawer extends Component {
             style={{ resize: "none" }}
           />
         )}
-
-        <div className="form-headings-ap">
-          {this.formatMessage(messages.gender)}
-        </div>
-        <div className="add-patient-radio wp100 mt6 mb18 flex">
-          <Radio.Group buttonStyle="solid" value={gender}>
-            {" "}
-            {/*disabled = {isdisabled}*/}
-            <Radio.Button value={MALE} onClick={this.setGender(MALE)}>
-              M
-            </Radio.Button>
-            <Radio.Button value={FEMALE} onClick={this.setGender(FEMALE)}>
-              F
-            </Radio.Button>
-            <Radio.Button value={OTHER} onClick={this.setGender(OTHER)}>
-              O
-            </Radio.Button>
-          </Radio.Group>
-        </div>
 
         <div className="form-headings-ap  flex align-center justify-space-between mt10 mb10">
           {this.formatMessage(messages.height)}
@@ -1078,33 +1105,6 @@ class PatientDetailsDrawer extends Component {
             suffix={"kg"}
           />
         )}
-
-        <div className="form-headings-ap flex align-center justify-start">
-          {this.formatMessage(messages.dob)}
-          <div className="star-red">*</div>
-        </div>
-
-        {/*{isdisabled ? (*/}
-        {/*  <Input*/}
-        {/*    className={"form-inputs-ap"}*/}
-        {/*    placeholder={`${date_of_birth ? existingDOB : "dd/mm/yyyy"}`}*/}
-        {/*    max={`${year}-${month}-${day}`}*/}
-        {/*    // disabled={true}*/}
-        {/*    type="date"*/}
-        {/*  />*/}
-        {/*) : (*/}
-
-        {/*todo: need to check bug with value and defaultValue*/}
-        <Input
-          className={"form-inputs-ap"}
-          type="date"
-          value={existingDOB}
-          // defaultValue={existingDOB}
-          max={`${year}-${month}-${day}`}
-          onChange={this.setDOB}
-          // disabled={isdisabled}
-        />
-        {/*)}*/}
 
         <div className="form-headings-ap flex align-center justify-space-between mt10 mb10">
           <div className="flex direction-row flex-grow-1">
@@ -1189,6 +1189,74 @@ class PatientDetailsDrawer extends Component {
           {this.formatMessage(messages.treatmentPlan)}
         </div>
 
+        <div className="form-headings-ap flex  justify-space-between">
+          <div className="flex direction-column align-center justify-center">
+            <div className="flex direction-row " key="diagnosis-h">
+              {this.formatMessage(messages.diagnosis)}
+              <div className="star-red">*</div>
+            </div>
+          </div>
+          <div>
+            <Select
+              key={`diagnonsis-${diagnosis_type}`}
+              value={diagnosis_type}
+              onChange={this.setDiagnosisType}
+            >
+              <Option
+                value={DIAGNOSIS_TYPE[FINAL].diagnosis_type}
+                key={`final-${DIAGNOSIS_TYPE[FINAL].diagnosis_type}`}
+              >
+                {DIAGNOSIS_TYPE[FINAL].value}
+              </Option>
+
+              <Option
+                value={DIAGNOSIS_TYPE[PROBABLE].diagnosis_type}
+                key={`probable-${DIAGNOSIS_TYPE[PROBABLE].diagnosis_type}`}
+              >
+                {DIAGNOSIS_TYPE[PROBABLE].value}
+              </Option>
+            </Select>
+          </div>
+        </div>
+
+        <TextArea
+          placeholder={this.formatMessage(messages.writeHere)}
+          value={diagnosis_description}
+          className={"form-textarea-ap form-inputs-ap"}
+          onChange={this.setDiagnosis}
+          onPaste={this.setPastedDiagnosis}
+          style={{ resize: "none" }}
+        />
+
+        <div className="form-headings-ap flex align-center justify-start">
+          {this.formatMessage(messages.treatment)}
+          <div className="star-red">*</div>
+        </div>
+
+        <Select
+          className="form-inputs-ap drawer-select"
+          placeholder="Select Treatment"
+          value={treatment}
+          onChange={this.setTreatment}
+          notFoundContent={
+            this.state.fetchingTreatment ? (
+              <Spin size="small" />
+            ) : (
+              "No match found"
+            )
+          }
+          showSearch
+          // onSearch={this.handleTreatmentSearch}
+          autoComplete="off"
+          optionFilterProp="children"
+          filterOption={(input, option) =>
+            option.props.children.toLowerCase().indexOf(input.toLowerCase()) >=
+            0
+          }
+        >
+          {this.getTreatmentOption()}
+        </Select>
+
         <div className="form-headings-ap flex align-center justify-space-between mt10 mb10">
           {this.formatMessage(messages.clinicalNotes)}
           <div>
@@ -1234,45 +1302,6 @@ class PatientDetailsDrawer extends Component {
             style={{ resize: "none" }}
           />
         )}
-
-        <div className="form-headings-ap flex  justify-space-between">
-          <div className="flex direction-column align-center justify-center">
-            <div className="flex direction-row " key="diagnosis-h">
-              {this.formatMessage(messages.diagnosis)}
-              <div className="star-red">*</div>
-            </div>
-          </div>
-          <div>
-            <Select
-              key={`diagnonsis-${diagnosis_type}`}
-              value={diagnosis_type}
-              onChange={this.setDiagnosisType}
-            >
-              <Option
-                value={DIAGNOSIS_TYPE[FINAL].diagnosis_type}
-                key={`final-${DIAGNOSIS_TYPE[FINAL].diagnosis_type}`}
-              >
-                {DIAGNOSIS_TYPE[FINAL].value}
-              </Option>
-
-              <Option
-                value={DIAGNOSIS_TYPE[PROBABLE].diagnosis_type}
-                key={`probable-${DIAGNOSIS_TYPE[PROBABLE].diagnosis_type}`}
-              >
-                {DIAGNOSIS_TYPE[PROBABLE].value}
-              </Option>
-            </Select>
-          </div>
-        </div>
-
-        <TextArea
-          placeholder={this.formatMessage(messages.writeHere)}
-          value={diagnosis_description}
-          className={"form-textarea-ap form-inputs-ap"}
-          onChange={this.setDiagnosis}
-          onPaste={this.setPastedDiagnosis}
-          style={{ resize: "none" }}
-        />
 
         <div className="form-headings-ap flex align-center justify-space-between mt10 mb10">
           {this.formatMessage(messages.condition)}
@@ -1353,35 +1382,6 @@ class PatientDetailsDrawer extends Component {
             {this.getSeverityOption()}
           </Select>
         )}
-
-        <div className="form-headings-ap flex align-center justify-start">
-          {this.formatMessage(messages.treatment)}
-          <div className="star-red">*</div>
-        </div>
-
-        <Select
-          className="form-inputs-ap drawer-select"
-          placeholder="Select Treatment"
-          value={treatment}
-          onChange={this.setTreatment}
-          notFoundContent={
-            this.state.fetchingTreatment ? (
-              <Spin size="small" />
-            ) : (
-              "No match found"
-            )
-          }
-          showSearch
-          // onSearch={this.handleTreatmentSearch}
-          autoComplete="off"
-          optionFilterProp="children"
-          filterOption={(input, option) =>
-            option.props.children.toLowerCase().indexOf(input.toLowerCase()) >=
-            0
-          }
-        >
-          {this.getTreatmentOption()}
-        </Select>
       </div>
     );
   };
