@@ -44,6 +44,8 @@ import getMonth from "date-fns/getMonth";
 import getHours from "date-fns/getHours";
 import getMinutes from "date-fns/getMinutes";
 
+import { PoweroffOutlined } from "@ant-design/icons";
+
 const { Option } = Select;
 const BLANK_TEMPLATE = "Blank Template";
 
@@ -128,6 +130,7 @@ class TemplateDrawer extends Component {
       isDietVisible: false,
       isWorkoutVisible: false,
       disable: false,
+      loading: false,
     };
   }
 
@@ -1556,7 +1559,22 @@ class TemplateDrawer extends Component {
         if (templateEdited) {
           this.setState({ showTemplateNameModal: true });
         } else {
-          this.onSubmit();
+          // AKSHAY NEW CODE IMPLEMENTATION
+          this.setState(
+            {
+              loading: true,
+              disable: true,
+              name: "",
+              createTemplate: false,
+              // showTemplateNameModal: false,
+            },
+            () =>
+              setTimeout(() => {
+                this.onSubmit();
+              }, 200)
+          );
+          // AKSHAY NEW CODE IMPLEMENTATION END
+          // this.onSubmit();
         }
       } else {
         this.setState({ showTemplateNameModal: true });
@@ -2593,7 +2611,12 @@ class TemplateDrawer extends Component {
             <Button onClick={this.onClose} style={{ marginRight: 8 }}>
               {this.formatMessage(messages.cancel)}
             </Button>
-            <Button onClick={this.onPreSubmit} type="primary">
+            <Button
+              icon={this.state.loading ? <PoweroffOutlined /> : null}
+              loading={this.state.loading}
+              onClick={!this.state.disable ? this.onPreSubmit : ""}
+              type="primary"
+            >
               {this.formatMessage(messages.submit)}
             </Button>
           </div>
