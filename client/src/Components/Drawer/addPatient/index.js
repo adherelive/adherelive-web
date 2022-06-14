@@ -1189,7 +1189,15 @@ class PatientDetailsDrawer extends Component {
           {this.formatMessage(messages.treatmentPlan)}
         </div>
 
-        <div className="form-headings-ap flex  justify-space-between">
+        {/* AKSHAY NEW CODE IMPLEMENTATION */}
+
+        <div className="form-headings-ap flex align-center justify-space-between mt10 mb10">
+          {this.formatMessage(messages.symptoms)}
+        </div>
+
+        <CustomSelect />
+
+        <div className="form-headings-ap flex  justify-space-between mt10">
           <div className="flex direction-column align-center justify-center">
             <div className="flex direction-row " key="diagnosis-h">
               {this.formatMessage(messages.diagnosis)}
@@ -1341,8 +1349,6 @@ class PatientDetailsDrawer extends Component {
             {this.getConditionOption()}
           </Select>
         )}
-        {/* AKSHAY NEW CODE IMPLEMENTATION */}
-        {/* <CustomSelect /> */}
 
         <div className="form-headings-ap  flex align-center justify-space-between mt10 mb10">
           {this.formatMessage(messages.severity)}
