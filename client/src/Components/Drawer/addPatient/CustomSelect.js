@@ -1,15 +1,24 @@
 import React from "react";
 import { Select } from "antd";
+import { symptoms } from "./symptomList.json";
 
 const { Option } = Select;
 
 const children = [];
-for (let i = 10; i < 36; i++) {
-  children.push(<Option key={i.toString(36) + i}>{i.toString(36) + i}</Option>);
+
+for (let each in symptoms) {
+  children.push(
+    <Option key={symptoms[each].name}>{symptoms[each].name}</Option>
+  );
 }
 
+console.log("children", children);
 function CustomSelect() {
   const handleChange = (value) => {
+    console.log(`selected ${value}`);
+  };
+
+  const handleSelect = (value) => {
     console.log(`selected ${value}`);
   };
   return (
@@ -18,8 +27,9 @@ function CustomSelect() {
         mode="tags"
         style={{ width: "100%" }}
         onChange={handleChange}
-        tokenSeparators={[","]}
+        tokenSeparators={[]}
         placeholder="Search for symptoms"
+        onSelect={handleSelect}
       >
         {children}
       </Select>
