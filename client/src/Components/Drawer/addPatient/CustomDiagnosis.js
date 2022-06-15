@@ -12,8 +12,7 @@ for (let each in symptoms) {
   );
 }
 
-console.log("children", children);
-function CustomSelect() {
+function CustomDiagnosis({ handleDiagnosisChanges }) {
   const handleChange = (value) => {
     console.log(`selected ${value}`);
   };
@@ -22,12 +21,12 @@ function CustomSelect() {
     console.log(`selected ${value}`);
   };
   return (
-    <div>
+    <div className="mt10 mb10">
       <Select
         mode="tags"
         style={{ width: "100%" }}
-        onChange={handleChange}
-        tokenSeparators={[]}
+        onChange={handleDiagnosisChanges}
+        tokenSeparators={[","]}
         placeholder="Search for symptoms"
         onSelect={handleSelect}
       >
@@ -37,4 +36,4 @@ function CustomSelect() {
   );
 }
 
-export default CustomSelect;
+export default CustomDiagnosis;

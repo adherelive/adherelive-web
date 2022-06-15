@@ -43,9 +43,13 @@ import {
 
 import { PoweroffOutlined } from "@ant-design/icons";
 import isEmpty from "../../../Helper/is-empty";
-import CustomSelect from "./CustomSelect";
 import { PlusCircleOutlined } from "@ant-design/icons";
 import { MinusCircleOutlined } from "@ant-design/icons";
+
+// AKSHAY NEW CODE IMPLEMENTATIONS
+
+import CustomSymptoms from "./CustomSymptoms";
+import CustomDiagnosis from "./CustomDiagnosis";
 
 const { Option } = Select;
 const RadioButton = Radio.Button;
@@ -544,6 +548,20 @@ class PatientDetailsDrawer extends Component {
     if (pastedValue.length > 0 || pastedValue === "") {
       this.setState({ diagnosis_description: pastedValue });
     }
+  };
+
+  // AKSHAY NEW CODE IMPLEMENTATIONS
+
+  handleDiagnosisChanges = (value) => {
+    console.log(`selected ${value}`);
+
+    this.setState({ diagnosis_description: value });
+  };
+
+  handleSymptomsChanges = (value) => {
+    console.log(`selected ${value}`);
+
+    this.setState({ symptoms: value });
   };
 
   setDiagnosisType = (value) => {
@@ -1191,13 +1209,13 @@ class PatientDetailsDrawer extends Component {
 
         {/* AKSHAY NEW CODE IMPLEMENTATION */}
 
-        <div className="form-headings-ap flex align-center justify-space-between mt10 mb10">
+        <div className="form-headings-ap flex align-center justify-space-between">
           {this.formatMessage(messages.symptoms)}
         </div>
 
-        <CustomSelect />
+        <CustomSymptoms handleSymptomsChanges={this.handleSymptomsChanges} />
 
-        <div className="form-headings-ap flex  justify-space-between mt10">
+        <div className="form-headings-ap flex  justify-space-between ">
           <div className="flex direction-column align-center justify-center">
             <div className="flex direction-row " key="diagnosis-h">
               {this.formatMessage(messages.diagnosis)}
@@ -1226,15 +1244,15 @@ class PatientDetailsDrawer extends Component {
             </Select>
           </div>
         </div>
-
-        <TextArea
+        <CustomDiagnosis handleDiagnosisChanges={this.handleDiagnosisChanges} />
+        {/* <TextArea
           placeholder={this.formatMessage(messages.writeHere)}
           value={diagnosis_description}
           className={"form-textarea-ap form-inputs-ap"}
           onChange={this.setDiagnosis}
           onPaste={this.setPastedDiagnosis}
           style={{ resize: "none" }}
-        />
+        /> */}
 
         <div className="form-headings-ap flex align-center justify-start">
           {this.formatMessage(messages.treatment)}
@@ -1288,7 +1306,7 @@ class PatientDetailsDrawer extends Component {
           />
         )}
 
-        <div className="form-headings-ap flex align-center justify-space-between mt10 mb10">
+        {/* <div className="form-headings-ap flex align-center justify-space-between mt10 mb10">
           {this.formatMessage(messages.symptoms)}
           <div>
             {isCollapse === "symptoms" ? (
@@ -1309,7 +1327,7 @@ class PatientDetailsDrawer extends Component {
             onPaste={this.setPastedSymptoms}
             style={{ resize: "none" }}
           />
-        )}
+        )} */}
 
         <div className="form-headings-ap flex align-center justify-space-between mt10 mb10">
           {this.formatMessage(messages.condition)}
@@ -1477,13 +1495,13 @@ class PatientDetailsDrawer extends Component {
         condition_id: condition,
         prefix,
         allergies,
-        diagnosis_description,
+        diagnosis_description: String(diagnosis_description),
         diagnosis_type,
         comorbidities,
         clinical_notes,
         height,
         weight,
-        symptoms,
+        symptoms: String(symptoms),
         address,
       });
     }

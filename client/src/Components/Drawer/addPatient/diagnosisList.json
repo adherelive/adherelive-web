@@ -1,0 +1,44 @@
+{
+  "diagnosis": [
+    {
+      "id": 1,
+      "name": "Heart Pain"
+    },
+    {
+      "id": 2,
+      "name": "Body Pain"
+    },
+    {
+      "id": 3,
+      "name": "Sickness"
+    },
+    {
+      "id": 4,
+      "name": "Fever"
+    },
+    {
+      "id": 5,
+      "name": "Cold"
+    },
+    {
+      "id": 6,
+      "name": "Dry cough"
+    },
+    {
+      "id": 7,
+      "name": "Back Pain"
+    },
+    {
+      "id": 8,
+      "name": "Head Ache"
+    },
+    {
+      "id": 9,
+      "name": "Acene"
+    },
+    {
+      "id": 10,
+      "name": "Body Rash"
+    }
+  ]
+}
