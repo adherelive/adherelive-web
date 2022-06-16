@@ -50,6 +50,7 @@ import { MinusCircleOutlined } from "@ant-design/icons";
 
 import CustomSymptoms from "./CustomSymptoms";
 import CustomDiagnosis from "./CustomDiagnosis";
+import MultipleTreatmentAlert from "./MultipleTreatmentAlert";
 
 const { Option } = Select;
 const RadioButton = Radio.Button;
@@ -1578,6 +1579,9 @@ class PatientDetailsDrawer extends Component {
             </Button>
           </div>
         </Drawer>
+        <MultipleTreatmentAlert
+          diagnosis_description={this.state.diagnosis_description}
+        />
       </Fragment>
     );
   }

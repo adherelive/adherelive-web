@@ -2,43 +2,383 @@
   "diagnosis": [
     {
       "id": 1,
-      "name": "Heart Pain"
+      "name": "Acanthosis nigricans"
     },
     {
       "id": 2,
-      "name": "Body Pain"
+      "name": "Acne"
     },
     {
       "id": 3,
-      "name": "Sickness"
+      "name": "Acne scars"
     },
     {
       "id": 4,
-      "name": "Fever"
+      "name": "Actinic keratosis"
     },
     {
       "id": 5,
-      "name": "Cold"
+      "name": "Alopecia areata"
     },
     {
       "id": 6,
-      "name": "Dry cough"
+      "name": "Athlete's foot"
     },
     {
       "id": 7,
-      "name": "Back Pain"
+      "name": "Atopic dermatitis"
     },
     {
       "id": 8,
-      "name": "Head Ache"
+      "name": "Basal cell carcinoma"
     },
     {
       "id": 9,
-      "name": "Acene"
+      "name": "Bed bugs"
     },
     {
       "id": 10,
-      "name": "Body Rash"
+      "name": "Birthmarks"
+    },
+    {
+      "id": 11,
+      "name": "Boils and styes"
+    },
+    {
+      "id": 12,
+      "name": "Botulinum toxin"
+    },
+    {
+      "id": 13,
+      "name": "Bullous pemphigoid"
+    },
+    {
+      "id": 14,
+      "name": "Cellulitis"
+    },
+    {
+      "id": 15,
+      "name": "Central centrifugal cicatricial alopecia (CCCA)"
+    },
+    {
+      "id": 16,
+      "name": "Chemical peels"
+    },
+    {
+      "id": 17,
+      "name": "Chickenpox"
+    },
+    {
+      "id": 18,
+      "name": "Cold sores"
+    },
+    {
+      "id": 19,
+      "name": "Contact dermatitis"
+    },
+    {
+      "id": 20,
+      "name": "Cutaneous T-cell lymphoma"
+    },
+    {
+      "id": 21,
+      "name": "Dandruff"
+    },
+    {
+      "id": 22,
+      "name": "Dermatofibrosarcoma protuberan (DFSP)"
+    },
+    {
+      "id": 23,
+      "name": "Diabetes: Dermatologist-recommended skin care for people with diabetes"
+    },
+    {
+      "id": 24,
+      "name": "Diabetes: Warning signs on your skin"
+    },
+    {
+      "id": 25,
+      "name": "﻿Diaper rash"
+    },
+    {
+      "id": 26,
+      "name": "Dry skin"
+    },
+    {
+      "id": 27,
+      "name": "Dyshidrotic eczema"
+    },
+    {
+      "id": 28,
+      "name": "Eczema"
+    },
+    {
+      "id": 29,
+      "name": "Epidermolysis bullosa"
+    },
+    {
+      "id": 30,
+      "name": "Female pattern hair loss"
+    },
+    {
+      "id": 31,
+      "name": "Folliculitis"
+    },
+    {
+      "id": 32,
+      "name": "Frontal fibrosing alopecia"
+    },
+    {
+      "id": 33,
+      "name": "Genital herpes"
+    },
+    {
+      "id": 34,
+      "name": "Genital warts"
+    },
+    {
+      "id": 35,
+      "name": "Granuloma annulare"
+    },
+    {
+      "id": 36,
+      "name": "Hair loss﻿"
+    },
+    {
+      "id": 37,
+      "name": "Hand-foot-and-mouth disease"
+    },
+    {
+      "id": 38,
+      "name": "﻿Head lice﻿"
+    },
+    {
+      "id": 39,
+      "name": "Heart disease: Warning signs on your skin"
+    },
+    {
+      "id": 40,
+      "name": "Herpes simplex"
+    },
+    {
+      "id": 41,
+      "name": "Hidradenitis suppurativa"
+    },
+    {
+      "id": 43,
+      "name": "Hyperhidrosis"
+    },
+    {
+      "id": 44,
+      "name": "Ichthyosis vulgaris"
+    },
+    {
+      "id": 45,
+      "name": "Imiquimod"
+    },
+    {
+      "id": 46,
+      "name": "Impetigo"
+    },
+    {
+      "id": 47,
+      "name": "Isotretinoin"
+    },
+    {
+      "id": 48,
+      "name": "Keloids"
+    },
+    {
+      "id": 49,
+      "name": "Keratosis pilaris"
+    },
+    {
+      "id": 50,
+      "name": "Kidney disease: How it can affect your skin"
+    },
+    {
+      "id": 51,
+      "name": "Lasers"
+    },
+    {
+      "id": 52,
+      "name": " Leprosy"
+    },
+    {
+      "id": 53,
+      "name": "Lichen planus"
+    },
+    {
+      "id": 54,
+      "name": "Lupus"
+    },
+    {
+      "id": 55,
+      "name": "Lyme disease"
+    },
+    {
+      "id": 56,
+      "name": "Melanoma"
+    },
+    {
+      "id": 57,
+      "name": "Melasma"
+    },
+    {
+      "id": 58,
+      "name": "Merkel cell carcinoma"
+    },
+    {
+      "id": 59,
+      "name": " Moles"
+    },
+    {
+      "id": 60,
+      "name": "Molluscum contagiosum﻿"
+    },
+    {
+      "id": 61,
+      "name": "Nail fungus"
+    },
+    {
+      "id": 62,
+      "name": "Neurodermatitis"
+    },
+    {
+      "id": 63,
+      "name": "Nickel allergy"
+    },
+    {
+      "id": 64,
+      "name": " Nummular dermatitis"
+    },
+    {
+      "id": 65,
+      "name": "Ocular rosacea"
+    },
+    {
+      "id": 66,
+      "name": "Pemphigus"
+    },
+    {
+      "id": 67,
+      "name": "Perioral dermatitis"
+    },
+    {
+      "id": 69,
+      "name": "Poison ivy and oak and sumac"
+    },
+    {
+      "id": 70,
+      "name": "Prurigo nodularis"
+    },
+    {
+      "id": 71,
+      "name": "Psoriasis"
+    },
+    {
+      "id": 72,
+      "name": "Psoriatic arthritis"
+    },
+    {
+      "id": 73,
+      "name": "Rashes"
+    },
+    {
+      "id": 74,
+      "name": " Ringworm"
+    },
+    {
+      "id": 75,
+      "name": "Rosacea"
+    },
+    {
+      "id": 76,
+      "name": "Sarcoidosis"
+    },
+    {
+      "id": 77,
+      "name": "Scabies"
+    },
+    {
+      "id": 78,
+      "name": "Scalp psoriasis"
+    },
+    {
+      "id": 79,
+      "name": "Scars"
+    },
+    {
+      "id": 80,
+      "name": "Scleroderma"
+    },
+    {
+      "id": 81,
+      "name": "Sebaceous carcinoma"
+    },
+    {
+      "id": 82,
+      "name": "Seborrheic dermatitis"
+    },
+    {
+      "id": 83,
+      "name": "Seborrheic keratoses"
+    },
+    {
+      "id": 84,
+      "name": "Shingles﻿"
+    },
+    {
+      "id": 85,
+      "name": "Skin biopsy"
+    },
+    {
+      "id": 86,
+      "name": "Skin biopsy: Dermatologist-recommended wound care"
+    },
+    {
+      "id": 87,
+      "name": "Skin cancer"
+    },
+    {
+      "id": 88,
+      "name": "Squamous cell carcinoma"
+    },
+    {
+      "id": 89,
+      "name": "Stasis dermatitis"
+    },
+    {
+      "id": 90,
+      "name": "Stretch marks"
+    },
+    {
+      "id": 91,
+      "name": "Syphilis"
+    },
+    {
+      "id": 92,
+      "name": "Thyroid disease and your skin"
+    },
+    {
+      "id": 93,
+      "name": "Squamous cell carcinoma"
+    },
+    {
+      "id": 94,
+      "name": "Tinea versicolor﻿"
+    },
+    {
+      "id": 95,
+      "name": "Vitiligo"
+    },
+    {
+      "id": 96,
+      "name": " Warts﻿"
+    },
+    {
+      "id": 97,
+      "name": " Xeroderma pigmentosum﻿"
     }
   ]
 }

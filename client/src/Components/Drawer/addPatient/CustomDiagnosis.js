@@ -1,14 +1,14 @@
 import React from "react";
 import { Select } from "antd";
-import { symptoms } from "./symptomList.json";
+import { diagnosis } from "./diagnosisList.json";
 
 const { Option } = Select;
 
 const children = [];
 
-for (let each in symptoms) {
+for (let each in diagnosis) {
   children.push(
-    <Option key={symptoms[each].name}>{symptoms[each].name}</Option>
+    <Option key={diagnosis[each].name}>{diagnosis[each].name}</Option>
   );
 }
 

@@ -2,43 +2,39 @@
   "symptoms": [
     {
       "id": 1,
-      "name": "Heart Pain"
+      "name": "Discolored skin patches (abnormal pigmentation)."
     },
     {
       "id": 2,
-      "name": "Body Pain"
+      "name": "Dry skin."
     },
     {
       "id": 3,
-      "name": "Sickness"
+      "name": "Open sores"
     },
     {
       "id": 4,
-      "name": "Fever"
+      "name": "Peeling skin."
     },
     {
       "id": 5,
-      "name": "Cold"
+      "name": "Rashes, possibly with itchiness or pain."
     },
     {
       "id": 6,
-      "name": "Dry cough"
+      "name": "Red, white or pus-filled bumps."
     },
     {
       "id": 7,
-      "name": "Back Pain"
+      "name": "Scaly or rough skin."
     },
     {
       "id": 8,
-      "name": "Head Ache"
+      "name": "Lesions"
     },
     {
       "id": 9,
-      "name": "Acene"
-    },
-    {
-      "id": 10,
-      "name": "Body Rash"
+      "name": "Ulcers"
     }
   ]
 }
