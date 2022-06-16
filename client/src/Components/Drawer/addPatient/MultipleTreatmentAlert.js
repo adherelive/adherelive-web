@@ -33,7 +33,7 @@ function MultipleTreatmentAlert({ diagnosis_description }) {
         onCancel={handleCancel}
       >
         <p>
-          You added multiple treatment in diagnosis, later on you cn add form
+          You added multiple treatment in diagnosis, later on you can add from
           patient details page
         </p>
       </Modal>
