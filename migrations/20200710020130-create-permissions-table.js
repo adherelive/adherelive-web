@@ -1,6 +1,6 @@
-'use strict';
+"use strict";
 
-import {TABLE_NAME} from "../app/models/permissions";
+import { TABLE_NAME } from "../app/models/permissions";
 
 module.exports = {
   up: (queryInterface, Sequelize) => {
@@ -12,7 +12,7 @@ module.exports = {
         type: Sequelize.INTEGER
       },
       type: {
-        type: Sequelize.STRING(100),
+        type: Sequelize.STRING(100)
       },
       created_at: {
         allowNull: false,

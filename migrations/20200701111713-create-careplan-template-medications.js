@@ -1,8 +1,8 @@
-'use strict';
+"use strict";
 
-import {TABLE_NAME} from "../app/models/templateMedications";
-import {TABLE_NAME as medicineTableName} from "../app/models/medicines";
-import {TABLE_NAME as carePlanTemplateTableName} from "../app/models/careplanTemplate";
+import { TABLE_NAME } from "../app/models/templateMedications";
+import { TABLE_NAME as medicineTableName } from "../app/models/medicines";
+import { TABLE_NAME as carePlanTemplateTableName } from "../app/models/careplanTemplate";
 
 module.exports = {
   up: (queryInterface, Sequelize) => {
@@ -18,9 +18,9 @@ module.exports = {
         allowNull: false,
         references: {
           model: {
-            tableName: carePlanTemplateTableName,
+            tableName: carePlanTemplateTableName
           },
-          key: 'id'
+          key: "id"
         }
       },
       medicine_id: {
@@ -28,9 +28,9 @@ module.exports = {
         allowNull: false,
         references: {
           model: {
-            tableName: medicineTableName,
+            tableName: medicineTableName
           },
-          key: 'id'
+          key: "id"
         }
       },
       schedule_data: {

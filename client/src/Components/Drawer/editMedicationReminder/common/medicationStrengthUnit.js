@@ -21,6 +21,7 @@ class MedicationStrengthUnit extends Component {
     } = this.props;
     validateFields();
   }
+
   componentWillUnmount() {
     const {
       form: { validateFields }
@@ -44,7 +45,6 @@ class MedicationStrengthUnit extends Component {
     const { purpose, event: { data = {} } = {} } = this.props;
     let initialValue = "mg";
 
-
     if (purpose) {
       initialValue = data[FIELD_NAME];
     }
@@ -53,7 +53,12 @@ class MedicationStrengthUnit extends Component {
   };
 
   render() {
-    const { form, medications, payload: { id: medication_id } = {}, medicationData = {} } = this.props;
+    const {
+      form,
+      medications,
+      payload: { id: medication_id } = {},
+      medicationData = {}
+    } = this.props;
     const {
       getFieldDecorator,
       getFieldError,
@@ -61,7 +66,8 @@ class MedicationStrengthUnit extends Component {
       //getFieldValue
     } = form;
 
-    let { basic_info: { details: { unit } = {} } = {} } = medications[medication_id] || {};
+    let { basic_info: { details: { unit } = {} } = {} } =
+      medications[medication_id] || {};
     let { schedule_data: { unit: Unit = "" } = {} } = medicationData;
 
     if (Unit) {
@@ -85,7 +91,7 @@ class MedicationStrengthUnit extends Component {
                 // message: "Select Strength Unit"
               }
             ],
-            initialValue: unit ? unit : "mg",
+            initialValue: unit ? unit : "mg"
           })(
             <div />
             // <Select

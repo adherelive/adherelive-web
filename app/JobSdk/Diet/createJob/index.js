@@ -5,7 +5,11 @@ import UserRoleService from "../../../services/userRoles/userRoles.service";
 import ProviderService from "../../../services/provider/provider.service";
 import UserDeviceService from "../../../services/userDevices/userDevice.service";
 import UserDeviceWrapper from "../../../ApiWrapper/mobile/userDevice";
-import { EVENT_TYPE, NOTIFICATION_VERB, DEFAULT_PROVIDER } from "../../../../constant";
+import {
+  EVENT_TYPE,
+  NOTIFICATION_VERB,
+  DEFAULT_PROVIDER
+} from "../../../../constant";
 
 class CreateJob extends DietJob {
   constructor(data) {
@@ -27,17 +31,18 @@ class CreateJob extends DietJob {
     const playerIds = [];
     const userIds = [];
 
-    const {rows: userRoles = []} = await UserRoleService.findAndCountAll({
-      where: {
-        id: participants
-      }
-    }) || {};
+    const { rows: userRoles = [] } =
+      (await UserRoleService.findAndCountAll({
+        where: {
+          id: participants
+        }
+      })) || {};
 
     let providerId = null;
-    for(const userRole of userRoles) {
-      const {id, user_identity, linked_id} = userRole || {};
-      if(id === user_role_id) {
-        if(linked_id) {
+    for (const userRole of userRoles) {
+      const { id, user_identity, linked_id } = userRole || {};
+      if (id === user_role_id) {
+        if (linked_id) {
           providerId = linked_id;
         }
       } else {
@@ -46,9 +51,11 @@ class CreateJob extends DietJob {
     }
 
     let providerName = DEFAULT_PROVIDER;
-    if(providerId) {
-      const provider = await ProviderService.getProviderByData({id: providerId});
-      const {name} = provider || {};
+    if (providerId) {
+      const provider = await ProviderService.getProviderByData({
+        id: providerId
+      });
+      const { name } = provider || {};
       providerName = name;
     }
 
@@ -73,7 +80,10 @@ class CreateJob extends DietJob {
       include_player_ids: [...playerIds],
       priority: 10,
       android_channel_id: process.config.one_signal.urgent_channel_id,
-      data: { url: `/${NOTIFICATION_VERB.DIET_CREATION}`, params: getDietData() }
+      data: {
+        url: `/${NOTIFICATION_VERB.DIET_CREATION}`,
+        params: getDietData()
+      }
     });
 
     return templateData;
@@ -83,10 +93,7 @@ class CreateJob extends DietJob {
     const { getDietData } = this;
     const {
       participants = [],
-      actor: {
-        id: actorId,
-        user_role_id
-      } = {},
+      actor: { id: actorId, user_role_id } = {},
       event_id
     } = getDietData() || {};
 

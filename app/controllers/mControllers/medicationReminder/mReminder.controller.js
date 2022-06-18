@@ -12,7 +12,9 @@ import {
   CUSTOM_REPEAT_OPTIONS,
   // MEDICINE_FORM_TYPE,
   USER_CATEGORY,
-  NOTIFICATION_STAGES, DAYS, MEDICINE_FORMULATION,
+  NOTIFICATION_STAGES,
+  DAYS,
+  MEDICINE_FORMULATION,
   WHEN_TO_TAKE_ABBREVATIONS
 } from "../../../../constant";
 import Log from "../../../../libs/log";
@@ -156,7 +158,7 @@ class MobileMReminderController extends Controller {
         categoryData = await DoctorWrapper(doctor);
       }
 
-      const {user_role_id: patientRoleId} = await patient.getAllInfo();
+      const { user_role_id: patientRoleId } = await patient.getAllInfo();
 
       const eventData = {
         participants: [userRoleId, patientRoleId],
@@ -183,16 +185,14 @@ class MobileMReminderController extends Controller {
         status: EVENT_STATUS.SCHEDULED,
         start_date,
         end_date,
-        when_to_take,
+        when_to_take
         // participant_one: patient.getUserId(),
         // participant_two: userId
       };
 
       const QueueService = new queueService();
 
-      const sqsResponse = await QueueService.sendMessage(
-        eventScheduleData
-      );
+      const sqsResponse = await QueueService.sendMessage(eventScheduleData);
 
       Logger.debug("sqsResponse ---> ", sqsResponse);
 
@@ -247,7 +247,7 @@ class MobileMReminderController extends Controller {
         start_time,
         critical = false,
         care_plan_id = 0,
-        when_to_take_abbr= null,
+        when_to_take_abbr = null,
         patient_id
       } = body;
       const {
@@ -262,7 +262,7 @@ class MobileMReminderController extends Controller {
       );
 
       const medicineApiWrapper = await MedicineApiWrapper(medicineDetails);
-      
+
       const dataToSave = {
         participant_id: patient_id, // todo: patient_id
         organizer_type: category,
@@ -288,7 +288,7 @@ class MobileMReminderController extends Controller {
           critical
         }
       };
-      
+
       const mReminderDetails = await medicationReminderService.addMReminder(
         dataToSave
       );
@@ -334,7 +334,7 @@ class MobileMReminderController extends Controller {
         categoryData = await DoctorWrapper(doctor);
       }
 
-      const {user_role_id: patientRoleId} = await patient.getAllInfo();
+      const { user_role_id: patientRoleId } = await patient.getAllInfo();
 
       const eventData = {
         participants: [userRoleId, patientRoleId],
@@ -347,14 +347,16 @@ class MobileMReminderController extends Controller {
           }
         },
         medicationId: mReminderDetails.get("id"),
-        event_id: mReminderDetails.get("id"),
+        event_id: mReminderDetails.get("id")
       };
 
       let details = mReminderDetails.getBasicInfo.details;
       details = { ...details, ...eventData };
 
-      const when_to_take_abbr_int = when_to_take_abbr? parseInt(when_to_take_abbr, 10): when_to_take_abbr;
-      if(when_to_take_abbr_int !== WHEN_TO_TAKE_ABBREVATIONS.SOS) {
+      const when_to_take_abbr_int = when_to_take_abbr
+        ? parseInt(when_to_take_abbr, 10)
+        : when_to_take_abbr;
+      if (when_to_take_abbr_int !== WHEN_TO_TAKE_ABBREVATIONS.SOS) {
         const eventScheduleData = {
           patient_id: patient.getUserId(),
           type: EVENT_TYPE.MEDICATION_REMINDER,
@@ -369,11 +371,11 @@ class MobileMReminderController extends Controller {
             id: userId,
             user_role_id: userRoleId,
             details: { name: full_name, category }
-          },
+          }
           // participant_one: patient.getUserId(),
           // participant_two: userId
         };
-  
+
         const QueueService = new queueService();
         const sqsResponse = await QueueService.sendMessage(eventScheduleData);
       }
@@ -408,9 +410,7 @@ class MobileMReminderController extends Controller {
       // await Proxy_Sdk.scheduleEvent({data: eventScheduleData});
     } catch (error) {
       Logger.debug("Add medication error", error);
-      return this.raiseServerError(
-        res,
-      );
+      return this.raiseServerError(res);
     }
   };
 
@@ -430,12 +430,13 @@ class MobileMReminderController extends Controller {
       // }
       let timings = {};
 
-
-      if(parseInt(patient_id) !== 0) {
+      if (parseInt(patient_id) !== 0) {
         const patient = await PatientWrapper(null, patient_id);
-        const timingPreference = await userPreferenceService.getPreferenceByData({
-          user_id: patient.getUserId()
-        });
+        const timingPreference = await userPreferenceService.getPreferenceByData(
+          {
+            user_id: patient.getUserId()
+          }
+        );
         const options = await UserPreferenceWrapper(timingPreference);
         const { timings: userTimings = {} } = options.getAllDetails();
 
@@ -622,7 +623,7 @@ class MobileMReminderController extends Controller {
       });
 
       const patient = await PatientWrapper(null, participant_id);
-      const {user_role_id: patientRoleId} = await patient.getAllInfo();
+      const { user_role_id: patientRoleId } = await patient.getAllInfo();
 
       // 2. update new sqs message
       const eventScheduleData = {
@@ -639,17 +640,18 @@ class MobileMReminderController extends Controller {
           id: userId,
           user_role_id: userRoleId,
           details: { name: full_name, category }
-        },
+        }
         // participant_one: patient.getUserId(),
         // participant_two: userId
       };
 
-      const when_to_take_abbr_int = when_to_take_abbr? parseInt(when_to_take_abbr, 10): when_to_take_abbr;
-      if(when_to_take_abbr_int !== WHEN_TO_TAKE_ABBREVATIONS.SOS) {
+      const when_to_take_abbr_int = when_to_take_abbr
+        ? parseInt(when_to_take_abbr, 10)
+        : when_to_take_abbr;
+      if (when_to_take_abbr_int !== WHEN_TO_TAKE_ABBREVATIONS.SOS) {
         const QueueService = new queueService();
         await QueueService.sendMessage(eventScheduleData);
       }
-
 
       const medicationJob = MedicationJob.execute(
         NOTIFICATION_STAGES.UPDATE,
@@ -699,8 +701,7 @@ class MobileMReminderController extends Controller {
       });
 
       const patient = await PatientWrapper(null, medication.getParticipant());
-      const {user_role_id: patientRoleId} = await patient.getAllInfo();
-
+      const { user_role_id: patientRoleId } = await patient.getAllInfo();
 
       const eventScheduleData = {
         type: EVENT_TYPE.MEDICATION_REMINDER,
@@ -711,7 +712,7 @@ class MobileMReminderController extends Controller {
           id: userId,
           user_role_id: userRoleId,
           details: { name: full_name, category }
-        },
+        }
       };
 
       const medicationJob = MedicationJob.execute(

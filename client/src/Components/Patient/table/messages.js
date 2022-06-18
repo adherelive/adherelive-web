@@ -92,10 +92,10 @@ const messages = defineMessages({
     defaultMessage: "Search"
   },
   resetText: {
-      id: "app.patient.table.resetText",
-      description: "",
-      defaultMessage: "Reset"
-  },
+    id: "app.patient.table.resetText",
+    description: "",
+    defaultMessage: "Reset"
+  }
 });
 
 export default messages;

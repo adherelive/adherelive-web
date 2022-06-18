@@ -6,7 +6,10 @@ import { getSymptomDetails } from "../../modules/symptoms";
 
 import { getVitalOccurence } from "../../modules/vital_occurence";
 
-import { addMessageOfChat, raiseChatNotification } from "../../modules/chatMessages";
+import {
+  addMessageOfChat,
+  raiseChatNotification
+} from "../../modules/chatMessages";
 import { closePopUp, minimizePopUp, maximizePopUp } from "../../modules/chat";
 import {
   getAllFeatures,
@@ -60,7 +63,7 @@ const mapDispatchToProps = dispatch => {
       dispatch(toggleChatPermission(patientId, data)),
     toggleVideoPermission: (patientId, data) =>
       dispatch(toggleVideoPermission(patientId, data)),
-    raiseChatNotification: (data) => dispatch(raiseChatNotification(data))
+    raiseChatNotification: data => dispatch(raiseChatNotification(data))
   };
 };
 

@@ -1,7 +1,11 @@
 import VitalJob from "../";
 import moment from "moment";
 import { getFullName } from "../../../helper/common";
-import { DEFAULT_PROVIDER, EVENT_TYPE, USER_CATEGORY } from "../../../../constant";
+import {
+  DEFAULT_PROVIDER,
+  EVENT_TYPE,
+  USER_CATEGORY
+} from "../../../../constant";
 
 import UserRoleService from "../../../services/userRoles/userRoles.service";
 import ProviderService from "../../../services/provider/provider.service";
@@ -21,12 +25,12 @@ class UpdateJob extends VitalJob {
       actor: {
         id: actorId,
         userCategoryData: {
-          basic_info: { first_name, middle_name, last_name } = {},
+          basic_info: { first_name, middle_name, last_name } = {}
         } = {},
-        category,
+        category
       } = {},
       vital_templates: { basic_info: { name: vitalName = "" } = {} } = {},
-      eventId = null,
+      eventId = null
     } = getData() || {};
 
     const templateData = [];
@@ -39,21 +43,21 @@ class UpdateJob extends VitalJob {
     //   }
     // });
 
-    const {rows: userRoles = []} = await UserRoleService.findAndCountAll({
-      where: {
-        id: participants
-      }
-    }) || {};
+    const { rows: userRoles = [] } =
+      (await UserRoleService.findAndCountAll({
+        where: {
+          id: participants
+        }
+      })) || {};
 
     let providerId = null;
 
-    for(const userRole of userRoles) {
-      const {id, user_identity, linked_id} = userRole || {};
-      if(id !== user_role_id) {
+    for (const userRole of userRoles) {
+      const { id, user_identity, linked_id } = userRole || {};
+      if (id !== user_role_id) {
         userIds.push(user_identity);
-      } 
-      else {
-        if(linked_id) {
+      } else {
+        if (linked_id) {
           providerId = linked_id;
         }
       }
@@ -61,14 +65,16 @@ class UpdateJob extends VitalJob {
 
     // provider
     let providerName = DEFAULT_PROVIDER;
-    if(providerId) {
-      const provider = await ProviderService.getProviderByData({id: providerId});
-      const {name} = provider || {};
+    if (providerId) {
+      const provider = await ProviderService.getProviderByData({
+        id: providerId
+      });
+      const { name } = provider || {};
       providerName = name;
     }
 
     const userDevices = await UserDeviceService.getAllDeviceByData({
-      user_id: userIds,
+      user_id: userIds
     });
 
     if (userDevices.length > 0) {
@@ -81,19 +87,19 @@ class UpdateJob extends VitalJob {
     templateData.push({
       small_icon: process.config.app.icon_android,
       app_id: process.config.one_signal.app_id, // TODO: add the same in pushNotification handler in notificationSdk
-      headings: { en: `Vital update (${providerName})` },
+      headings: { en: `Vital Update (${providerName})` },
       contents: {
         en: `${getFullName({
           first_name,
           middle_name,
-          last_name,
-        })}(${category}) has updated ${vitalName} vital for you. Tap here to know more!`,
+          last_name
+        })}(${category}) has updated ${vitalName} vital for you. Tap here to know more!`
       },
       // buttons: [{ id: "yes", text: "Yes" }, { id: "no", text: "No" }],
       include_player_ids: [...playerIds],
       priority: 10,
       android_channel_id: process.config.one_signal.urgent_channel_id,
-      data: { url: "/vitals", params: getData() },
+      data: { url: "/vitals", params: getData() }
     });
 
     return templateData;
@@ -104,7 +110,7 @@ class UpdateJob extends VitalJob {
     const {
       participants = [],
       actor: { id: actorId, user_role_id } = {},
-      event_id: eventId = null,
+      event_id: eventId = null
     } = getData() || {};
 
     const templateData = [];
@@ -122,7 +128,7 @@ class UpdateJob extends VitalJob {
           verb: `vital_update:${currentTimeStamp}`,
           event: EVENT_TYPE.VITALS,
           time: currentTime,
-          create_time: `${currentTime}`,
+          create_time: `${currentTime}`
         });
       }
     }

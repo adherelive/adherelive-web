@@ -26,7 +26,7 @@ class UserRoleController extends Controller {
     try {
       const { userDetails: { userId = null } = {} } = req;
 
-      if(!userId) {
+      if (!userId) {
         return raiseClientError(res, 422, {}, "UNAUTHORIZED");
       }
 
@@ -52,14 +52,13 @@ class UserRoleController extends Controller {
           providers: userRoleProviders = {},
           admins: userRoleAdmins = {},
           patients: userRolePatients = {},
-          user_roles: userRoleData = {},
+          user_roles: userRoleData = {}
         } = userRoleAllInfo || {};
 
-
-        if(userRoleDoctors && Object.keys(userRoleDoctors).length){
-          for(let i in userRoleDoctors){
+        if (userRoleDoctors && Object.keys(userRoleDoctors).length) {
+          for (let i in userRoleDoctors) {
             const each = userRoleDoctors[i] || {};
-            const {watchlist_ids = []} = each ; 
+            const { watchlist_ids = [] } = each;
           }
         }
 
@@ -67,12 +66,12 @@ class UserRoleController extends Controller {
         providers = { ...providers, ...userRoleProviders };
         admins = { ...admins, ...userRoleAdmins };
         patients = { ...patients, ...userRolePatients };
-        user_roles = {...user_roles, ...userRoleData};
+        user_roles = { ...user_roles, ...userRoleData };
       }
 
-        const user = await userService.getUserById(userId);
-        const userDataWrapper = await UserWrapper(user);
-        const userData = userDataWrapper.getBasicInfo();
+      const user = await userService.getUserById(userId);
+      const userDataWrapper = await UserWrapper(user);
+      const userData = userDataWrapper.getBasicInfo();
 
       return raiseSuccess(
         res,
@@ -84,7 +83,7 @@ class UserRoleController extends Controller {
           doctors,
           providers,
           patients,
-          admins,
+          admins
         },
         "User role data fetched successfully"
       );
@@ -99,18 +98,18 @@ class UserRoleController extends Controller {
     try {
       const {
         userDetails: { userId } = {},
-        body: { userRoleId = null } = {},
+        body: { userRoleId = null } = {}
       } = req;
 
       const { count, rows } =
         (await userRoleService.findAndCountAll({
           where: {
-            user_identity: userId,
+            user_identity: userId
           },
-          attributes: ["id"],
+          attributes: ["id"]
         })) || [];
 
-      const allRoleIds = rows.map((row) => row.id);
+      const allRoleIds = rows.map(row => row.id);
 
       if (allRoleIds.indexOf(parseInt(userRoleId)) === -1) {
         return raiseClientError(res, 422, {}, "UNAUTHORIZED");
@@ -127,11 +126,11 @@ class UserRoleController extends Controller {
       const secret = process.config.TOKEN_SECRET_KEY;
       const accessToken = await jwt.sign(
         {
-          userRoleId,
+          userRoleId
         },
         secret,
         {
-          expiresIn,
+          expiresIn
         }
       );
 
@@ -159,7 +158,7 @@ class UserRoleController extends Controller {
         notificationToken: notificationToken,
         feedId,
         auth_category: apiUserDetails.getCategory(),
-        hasConsent: apiUserDetails.getConsent(),
+        hasConsent: apiUserDetails.getConsent()
       };
 
       res.clearCookie("accessToken");
@@ -168,7 +167,7 @@ class UserRoleController extends Controller {
         expires: new Date(
           Date.now() + process.config.INVITE_EXPIRE_TIME * 86400000
         ),
-        httpOnly: true,
+        httpOnly: true
       });
 
       return raiseSuccess(

@@ -10,6 +10,7 @@ import UserWrapper from "../../app/ApiWrapper/web/user";
 import UserRoleWrapper from "../../app/ApiWrapper/mobile/userRoles";
 
 import Logger from "../../libs/log";
+
 const Log = new Logger("API > INDEX");
 
 import userRouter from "./user";
@@ -122,12 +123,14 @@ router.use(async function(req, res, next) {
       };
     }
     next();
+    return;
   } catch (err) {
     Log.debug("API INDEX CATCH ERROR ", err);
     req.userDetails = {
       exists: false
     };
     next();
+    return;
   }
 });
 

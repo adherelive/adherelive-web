@@ -16,9 +16,9 @@ import {
   updatePatientAndCareplanUrl,
   deactivateDoctorURL,
   activateDoctorURL,
-  searchDoctorEmailUrl
+  searchDoctorEmailUrl,
+  searchDoctorNameUrl
 } from "../../Helper/urls/doctor";
-
 
 import { getAllDoctorsForProviderUrl } from "../../Helper/urls/provider";
 
@@ -27,6 +27,10 @@ import { accountDetailsUrl } from "../../Helper/urls/accounts";
 export const SEARCH_DOCTOR_START = "SEARCH_DOCTOR_START";
 export const SEARCH_DOCTOR_COMPLETE = "SEARCH_DOCTOR_COMPLETE";
 export const SEARCH_DOCTOR_FAILED = "SEARCH_DOCTOR_FAILED";
+
+export const SEARCH_DOCTOR_NAME_START = "SEARCH_DOCTOR_NAME_START";
+export const SEARCH_DOCTOR_NAME_COMPLETE = "SEARCH_DOCTOR_NAME_COMPLETE";
+export const SEARCH_DOCTOR_NAME_FAILED = "SEARCH_DOCTOR_NAME_FAILED";
 
 export const GET_DOCTOR_DETAILS_START = "GET_DOCTOR_DETAILS_START";
 export const GET_DOCTOR_DETAILS_COMPLETE = "GET_DOCTOR_DETAILS_COMPLETE";
@@ -112,7 +116,7 @@ export const ACTIVATE_DOCTOR_START = "ACTIVATE_DOCTOR_START";
 export const ACTIVATE_DOCTOR_COMPLETE = "ACTIVATE_DOCTOR_COMPLETE";
 export const ACTIVATE_DOCTOR_FAILED = "ACTIVATE_DOCTOR_FAILED";
 
-export const searchDoctorEmail = (email) => {
+export const searchDoctorEmail = email => {
   let response = {};
   return async dispatch => {
     try {
@@ -141,7 +145,38 @@ export const searchDoctorEmail = (email) => {
     }
     return response;
   };
-}
+};
+
+export const searchDoctorName = name => {
+  let response = {};
+  return async dispatch => {
+    try {
+      dispatch({ type: SEARCH_DOCTOR_NAME_START });
+      response = await doRequest({
+        method: REQUEST_TYPE.GET,
+        url: searchDoctorNameUrl(name)
+      });
+
+      const { status, payload: { data, error } = {} } = response || {};
+
+      if (status === true) {
+        dispatch({
+          type: SEARCH_DOCTOR_NAME_COMPLETE,
+          data: data,
+          payload: data
+        });
+      } else {
+        dispatch({
+          type: SEARCH_DOCTOR_NAME_FAILED,
+          error
+        });
+      }
+    } catch (error) {
+      console.log("SEARCH_DOCTOR_NAME ERROR --> ", error);
+    }
+    return response;
+  };
+};
 
 export const updateDoctor = (user_id, updateData) => {
   let response = {};
@@ -346,9 +381,9 @@ export const deleteDoctorPaymentProduct = payload => {
       });
 
       const { status, payload: { data, error } = {} } = response || {};
-      const {id = null} = payload;
+      const { id = null } = payload;
       if (status === true) {
-        if(id){
+        if (id) {
           data["id"] = id;
         }
         dispatch({
@@ -526,7 +561,7 @@ export const getDoctorDetails = id => {
   };
 };
 
-export const getDoctorProfileDetails = (id=null) => {
+export const getDoctorProfileDetails = (id = null) => {
   let response = {};
   return async dispatch => {
     try {
@@ -617,7 +652,7 @@ export const addRazorpayId = (id, payload) => {
   };
 };
 
-export const deactivateDoctor = (doctor_id) => {
+export const deactivateDoctor = doctor_id => {
   let response = {};
   return async dispatch => {
     try {
@@ -646,8 +681,7 @@ export const deactivateDoctor = (doctor_id) => {
   };
 };
 
-
-export const activateDoctor = (user_id) => {
+export const activateDoctor = user_id => {
   let response = {};
   return async dispatch => {
     try {
@@ -675,8 +709,6 @@ export const activateDoctor = (user_id) => {
     return response;
   };
 };
-
-
 
 // export const getAccountDetails = () => {
 //   let response = {};

@@ -1,7 +1,7 @@
-'use strict';
+"use strict";
 
-import {TABLE_NAME} from "../app/models/doctorClinics";
-import {TABLE_NAME as doctorTableName} from "../app/models/doctors";
+import { TABLE_NAME } from "../app/models/doctorClinics";
+import { TABLE_NAME as doctorTableName } from "../app/models/doctors";
 
 module.exports = {
   up: (queryInterface, Sequelize) => {
@@ -17,18 +17,18 @@ module.exports = {
         allowNull: false,
         references: {
           model: {
-            tableName: doctorTableName,
+            tableName: doctorTableName
           },
-          key: 'id'
+          key: "id"
         }
       },
       name: {
         type: Sequelize.STRING(200),
-        allowNull: false,
+        allowNull: false
       },
       location: {
         type: Sequelize.STRING(400),
-        allowNull: false,
+        allowNull: false
       },
       details: {
         type: Sequelize.JSON,
@@ -47,7 +47,7 @@ module.exports = {
         type: Sequelize.DATE
       }
     });
-    },
+  },
 
   down: (queryInterface, Sequelize) => {
     return queryInterface.dropTable(TABLE_NAME);

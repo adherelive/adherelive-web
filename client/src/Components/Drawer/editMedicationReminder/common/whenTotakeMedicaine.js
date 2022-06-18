@@ -5,7 +5,7 @@ import messages from "../message";
 import moment from "moment";
 
 import { WHEN_TO_TAKE_BUTTONS } from "../../addMedicationReminder/common/whenTotakeMedicaine";
-import {WHEN_TO_TAKE_ABBR_TYPES} from "../../../../constant";
+import { WHEN_TO_TAKE_ABBR_TYPES } from "../../../../constant";
 
 const RadioButton = Radio.Button;
 const RadioGroup = Radio.Group;
@@ -154,7 +154,7 @@ class WhenToTakeMedication extends Component {
       payload: { id: medication_id } = {},
       addMedication,
       // editMedication,
-        form: {getFieldDecorator} = {},
+      form: { getFieldDecorator } = {}
     } = this.props;
     let { basic_info: { details: { when_to_take = [] } = {} } = {} } =
       medications[medication_id] || {};
@@ -215,7 +215,7 @@ class WhenToTakeMedication extends Component {
       getFieldDecorator(FIELD_NAME_ABBR, {
         initialValue: WHEN_TO_TAKE_BUTTONS.TDS.id
       });
-    } else if(when_to_take.length === 0) {
+    } else if (when_to_take.length === 0) {
       getFieldDecorator(FIELD_NAME_ABBR, {
         initialValue: WHEN_TO_TAKE_BUTTONS.SOS.id
       });
@@ -406,7 +406,7 @@ class WhenToTakeMedication extends Component {
     const {
       form,
       medications,
-      payload: { id: medication_id ,canViewDetails=false } = {},
+      payload: { id: medication_id, canViewDetails = false } = {},
       medicationData = {},
       addMedication,
       editMedication
@@ -473,9 +473,9 @@ class WhenToTakeMedication extends Component {
 
     if (keys.length === 0) {
       return (
-          <div className="pt10 pb10 fs16 fw600">
-            {formatMessage(messages.sosMessage)}
-          </div>
+        <div className="pt10 pb10 fs16 fw600">
+          {formatMessage(messages.sosMessage)}
+        </div>
       );
     }
 
@@ -539,11 +539,14 @@ class WhenToTakeMedication extends Component {
     setFieldsValue({
       keys: [0]
     });
-    setFieldsValue({ [FIELD_NAME]: AFTER_MEALS_ARRAY_OD, [FIELD_NAME_ABBR]: WHEN_TO_TAKE_BUTTONS.OD.id });
+    setFieldsValue({
+      [FIELD_NAME]: AFTER_MEALS_ARRAY_OD,
+      [FIELD_NAME_ABBR]: WHEN_TO_TAKE_BUTTONS.OD.id
+    });
     enableSubmit();
   };
   onClickBd = () => {
-    const { form , enableSubmit} = this.props;
+    const { form, enableSubmit } = this.props;
     const { setFieldsValue } = form;
 
     // const { selected_timing } = this.state;
@@ -560,14 +563,17 @@ class WhenToTakeMedication extends Component {
     setFieldsValue({
       keys: [0, 1]
     });
-    setFieldsValue({ [FIELD_NAME]: AFTER_MEALS_ARRAY_BD, [FIELD_NAME_ABBR]: WHEN_TO_TAKE_BUTTONS.BD.id });
+    setFieldsValue({
+      [FIELD_NAME]: AFTER_MEALS_ARRAY_BD,
+      [FIELD_NAME_ABBR]: WHEN_TO_TAKE_BUTTONS.BD.id
+    });
     enableSubmit();
   };
 
   onClickTds = () => {
     const { form, enableSubmit } = this.props;
     const { setFieldsValue } = form;
-    const {WHEN_TO_TAKE_BUTTONS, getKeys} = this;
+    const { WHEN_TO_TAKE_BUTTONS, getKeys } = this;
     const keys = getKeys();
     // const keys = form.getFieldValue("keys");
     if (keys.length === 2) {
@@ -586,10 +592,8 @@ class WhenToTakeMedication extends Component {
   };
 
   onCLickSos = () => {
-    const { form: { setFieldsValue } = {},
-    enableSubmit
-    } = this.props;
-    const {WHEN_TO_TAKE_BUTTONS} = this;
+    const { form: { setFieldsValue } = {}, enableSubmit } = this.props;
+    const { WHEN_TO_TAKE_BUTTONS } = this;
     // const {getKeys} = this;
 
     // const keys = getKeys();
@@ -733,14 +737,23 @@ class WhenToTakeMedication extends Component {
   };
 
   getWhenToTakeButtons = () => {
-    const { form: { getFieldDecorator } = {} ,  payload = {},medications, medicationData : templateMedication = null } = this.props;
+    const {
+      form: { getFieldDecorator } = {},
+      payload = {},
+      medications,
+      medicationData: templateMedication = null
+    } = this.props;
     const { WHEN_TO_TAKE_BUTTONS = {}, getRadioOptions } = this;
-    const {id :medication_id= null ,canViewDetails = false }=payload || {};
-    const {basic_info:{details:{when_to_take_abbr : existingWhenToTake=null}={}}={}} = medications[medication_id] || {};
+    const { id: medication_id = null, canViewDetails = false } = payload || {};
+    const {
+      basic_info: {
+        details: { when_to_take_abbr: existingWhenToTake = null } = {}
+      } = {}
+    } = medications[medication_id] || {};
 
     let whenToTake = null;
 
-    if(templateMedication) {
+    if (templateMedication) {
       // console.log("327546235423786479812742376 templateMedication",{templateMedication,props:this.props});
 
       // const {
@@ -748,7 +761,8 @@ class WhenToTakeMedication extends Component {
       //   details
       // } = templateMedication || {};
 
-      const {schedule_data: {when_to_take_abbr} = {}} = templateMedication || {};
+      const { schedule_data: { when_to_take_abbr } = {} } =
+        templateMedication || {};
 
       whenToTake = when_to_take_abbr;
 
@@ -756,7 +770,7 @@ class WhenToTakeMedication extends Component {
       //   schedule_data: {when_to_take:schedule_data_when_to_take=[], when_to_take_abbr : schedule_data_when_to_take_abbr='' } = {},
       //   details: {when_to_take:details_when_to_take=[], when_to_take_abbr : details_when_to_take_abbr='' } = {}
       // } = templateMedication;
-      
+
       // when_to_take_abbr=schedule_data_when_to_take_abbr ? schedule_data_when_to_take_abbr : details_when_to_take_abbr ;
       // schedule_data_when_to_take = schedule_data_when_to_take ? schedule_data_when_to_take : details_when_to_take;
 
@@ -776,13 +790,13 @@ class WhenToTakeMedication extends Component {
       // }
     }
 
-    if(!existingWhenToTake) {
-      if(!whenToTake) {
+    if (!existingWhenToTake) {
+      if (!whenToTake) {
         const keys = this.getKeys() || [];
-        if(keys.length) {
+        if (keys.length) {
           whenToTake = `${keys.length}`;
         } else {
-          whenToTake = WHEN_TO_TAKE_ABBR_TYPES.SOS
+          whenToTake = WHEN_TO_TAKE_ABBR_TYPES.SOS;
         }
       }
     } else {
@@ -802,12 +816,9 @@ class WhenToTakeMedication extends Component {
     if (Object.keys(WHEN_TO_TAKE_BUTTONS).length > 0) {
       return (
         <Fragment>
-          {getFieldDecorator(
-            FIELD_NAME_ABBR,
-            {
-              initialValue:whenToTake
-            }
-          )(
+          {getFieldDecorator(FIELD_NAME_ABBR, {
+            initialValue: whenToTake
+          })(
             <RadioGroup
               className="flex justify-content-end radio-formulation flex-wrap"
               buttonStyle="solid"

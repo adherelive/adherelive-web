@@ -1,5 +1,6 @@
 import * as constants from "../../../../config/constants";
 import Controller from "../../";
+
 const moment = require("moment");
 const jwt = require("jsonwebtoken");
 const request = require("request");
@@ -43,6 +44,7 @@ import {
   VERIFICATION_TYPE
 } from "../../../../constant";
 import { Proxy_Sdk, EVENTS } from "../../../proxySdk";
+
 const errMessage = require("../../../../config/messages.json").errMessages;
 import treatmentService from "../../../services/treatment/treatment.service";
 import MTreatmentWrapper from "../../../ApiWrapper/mobile/treatments";
@@ -156,7 +158,7 @@ class MobileUserController extends Controller {
       }
 
       // const emailPayload = {
-      //   title: "OTP Verification for patient",
+      //   title: "AdhereLive: OTP verification for Patient",
       //   toAddress: process.config.app.developer_email,
       //   templateName: EMAIL_TEMPLATE_NAME.OTP_VERIFICATION,
       //   templateData: {
@@ -577,7 +579,7 @@ class MobileUserController extends Controller {
     }
   }
 
-  onAppStart = async (req, res, next) => {
+  onAppStart = async (req, res) => {
     let response;
     try {
       if (req.userDetails.exists) {
@@ -627,7 +629,7 @@ class MobileUserController extends Controller {
                 doctorIds.push(carePlanApiWrapper.getDoctorId());
                 carePlanApiData[
                   carePlanApiWrapper.getCarePlanId()
-                ] = carePlanApiWrapper.getBasicInfo();
+                ] = await carePlanApiWrapper.getAllInfo();
 
                 const {
                   severity_id,
@@ -680,7 +682,7 @@ class MobileUserController extends Controller {
                 patientIds.push(carePlanApiWrapper.getPatientId());
                 carePlanApiData[
                   carePlanApiWrapper.getCarePlanId()
-                ] = carePlanApiWrapper.getBasicInfo();
+                ] = await carePlanApiWrapper.getAllInfo();
 
                 const {
                   severity_id,
@@ -1284,6 +1286,7 @@ class MobileUserController extends Controller {
         let qId = qualification.get("id");
         if (newQualifications.includes(qId)) {
           console.log("QUALIFICATIONS IFFFF", newQualifications);
+          continue;
         } else {
           console.log("QUALIFICATIONS ELSEEEE", newQualifications);
           let deleteDocs = await documentService.deleteDocumentsOfQualification(
@@ -1326,6 +1329,7 @@ class MobileUserController extends Controller {
         let rId = registration.get("id");
         if (newRegistrations.includes(rId)) {
           console.log("REGISTRATION IFFFF", newRegistrations);
+          continue;
         } else {
           console.log("REGISTRATION ELSEEEE", newRegistrations);
           let deleteDocs = await documentService.deleteDocumentsOfQualification(

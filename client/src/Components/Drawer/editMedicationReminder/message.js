@@ -6,7 +6,7 @@ export default defineMessages({
     description: "",
     defaultMessage: "Schedule New"
   },
-  viewHeader:{
+  viewHeader: {
     id: "app.event.viewHeader",
     description: "",
     defaultMessage: "Medication Details"
@@ -320,117 +320,117 @@ export default defineMessages({
   select_timing: {
     id: "medication_reminder.drawer.select.timing",
     description: "",
-    defaultMessage: "Select Timing",
+    defaultMessage: "Select Timing"
   },
   delete_text: {
     id: "medication_reminder.drawer.delete.text",
     description: "",
-    defaultMessage: "Delete",
+    defaultMessage: "Delete"
   },
   dose: {
     id: "medication_reminder.drawer.Dose",
     description: "",
-    defaultMessage: "Dose",
+    defaultMessage: "Dose"
   },
   tablet: {
     id: "medication_reminder.drawer.tablet",
     description: "",
-    defaultMessage: "Tablet",
+    defaultMessage: "Tablet"
   },
   syringe: {
     id: "medication_reminder.drawer.syringe",
     description: "",
-    defaultMessage: "Syringe",
+    defaultMessage: "Syringe"
   },
   syrup: {
     id: "medication_reminder.drawer.syrup",
     description: "",
-    defaultMessage: "Syrup",
+    defaultMessage: "Syrup"
   },
   formulation: {
     id: "medication_reminder.drawer.formulation",
     description: "",
-    defaultMessage: "Formulation",
+    defaultMessage: "Formulation"
   },
   od: {
     id: "medication_reminder.drawer.od",
     description: "",
-    defaultMessage: "OD",
+    defaultMessage: "OD"
   },
   bd: {
     id: "medication_reminder.drawer.bd",
     description: "",
-    defaultMessage: "BD",
+    defaultMessage: "BD"
   },
   tds: {
     id: "medication_reminder.drawer.tds",
     description: "",
-    defaultMessage: "TDS",
+    defaultMessage: "TDS"
   },
   sos: {
     id: "medication_reminder.drawer.sos",
     description: "",
-    defaultMessage: "SOS",
+    defaultMessage: "SOS"
   },
   oneWeek: {
     id: "medication_reminder.drawer.oneWeek",
     description: "",
-    defaultMessage: "1 week",
+    defaultMessage: "1 week"
   },
   twoWeeks: {
     id: "medication_reminder.drawer.twoWeeks",
     description: "",
-    defaultMessage: "2 weeks",
+    defaultMessage: "2 weeks"
   },
   longterm: {
     id: "medication_reminder.drawer.longterm",
     description: "",
-    defaultMessage: "Longterm",
+    defaultMessage: "Longterm"
   },
   specialInstruction: {
     id: "medication_reminder.drawer.specialInstruction",
     description: "",
-    defaultMessage: "Special Instruction",
+    defaultMessage: "Special Instruction"
   },
   enterInstruction: {
     id: "medication_reminder.drawer.enterInstruction",
     description: "",
-    defaultMessage: "Enter instructions",
+    defaultMessage: "Enter instructions"
   },
   everyday: {
     id: "medication_reminder.drawer.everyday",
     description: "",
-    defaultMessage: "Everyday",
+    defaultMessage: "Everyday"
   },
   alternate: {
     id: "medication_reminder.drawer.alternate",
     description: "",
-    defaultMessage: "Alternate",
+    defaultMessage: "Alternate"
   },
-  addMedicine:{
+  addMedicine: {
     id: "medication_reminder.add.drawer.add.med",
     description: "",
-    defaultMessage: "Add Medicine",
+    defaultMessage: "Add Medicine"
   },
-  name:{
+  name: {
     id: "medication_reminder.add.drawer.name",
     description: "",
-    defaultMessage: "Name",
+    defaultMessage: "Name"
   },
   unMark: {
     id: "medication_reminder.edit.drawer.unMark.favourite",
     description: "",
-    defaultMessage: "Un-check",
+    defaultMessage: "Un-check"
   },
   mark: {
     id: "medication_reminder.edit.drawer.mark.favourite",
     description: "",
-    defaultMessage: "Mark favourite",
+    defaultMessage: "Mark favourite"
   },
   sosMessage: {
     id: "medication_reminder.edit.drawer.sos.message",
     description: "",
-    defaultMessage: "Take Whenever Required",
+    defaultMessage: "Take Whenever Required"
   },
   markFav: {
     id: "medication_reminder.edit.drawer.markFav",
@@ -441,5 +441,5 @@ export default defineMessages({
     id: "medication_reminder.edit.drawer.unMarkFav",
     description: "",
     defaultMessage: "Un-check"
-  },
+  }
 });

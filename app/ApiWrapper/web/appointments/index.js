@@ -11,7 +11,7 @@ import UploadDocumentWrapper from "../../web/uploadDocument";
 import {
   EVENT_STATUS,
   EVENT_TYPE,
-  DOCUMENT_PARENT_TYPE,
+  DOCUMENT_PARENT_TYPE
 } from "../../../../constant";
 
 class AppointmentWrapper extends BaseAppointment {
@@ -37,7 +37,7 @@ class AppointmentWrapper extends BaseAppointment {
       end_date,
       rr_rule = "",
       start_time,
-      end_time,
+      end_time
     } = _data || {};
     return {
       basic_info: {
@@ -47,23 +47,23 @@ class AppointmentWrapper extends BaseAppointment {
         start_date,
         end_date,
         start_time,
-        end_time,
+        end_time
       },
       participant_one: {
         id: participant_one_id,
-        category: participant_one_type,
+        category: participant_one_type
       },
       participant_two: {
         id: participant_two_id,
-        category: participant_two_type,
+        category: participant_two_type
       },
       organizer: {
         id: organizer_id,
-        category: organizer_type,
+        category: organizer_type
       },
       rr_rule,
       provider_id,
-      provider_name,
+      provider_name
     };
   };
 
@@ -74,7 +74,7 @@ class AppointmentWrapper extends BaseAppointment {
     const scheduleEventService = new ScheduleEventService();
     const scheduleEventData = await scheduleEventService.getAllEventByData({
       event_id: id,
-      event_type: EVENT_TYPE.APPOINTMENT,
+      event_type: EVENT_TYPE.APPOINTMENT
     });
 
     let activeEventId = null;
@@ -110,7 +110,7 @@ class AppointmentWrapper extends BaseAppointment {
     // care_plan_id
     const { care_plan_id = null } =
       (await careplanAppointmentService.getCareplanByAppointment({
-        appointment_id: id,
+        appointment_id: id
       })) || {};
 
     return {
@@ -119,16 +119,16 @@ class AppointmentWrapper extends BaseAppointment {
           ...getBasicInfo(),
           active_event_id: activeEventId,
           appointment_document_ids: uploadDocumentIds,
-          care_plan_id,
-        },
+          care_plan_id
+        }
       },
       schedule_events: {
-        ...scheduleData,
+        ...scheduleData
       },
       upload_documents: {
-        ...uploadDocumentsData,
+        ...uploadDocumentsData
       },
-      appointment_id: id,
+      appointment_id: id
     };
   };
 

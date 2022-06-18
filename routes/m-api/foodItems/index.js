@@ -16,19 +16,13 @@ router.post(
 );
 
 router.post(
-    "/:id",
-    Authenticate,
-    isDoctor,
-    Validator.update,
-    FoodItemController.update
-  );
+  "/:id",
+  Authenticate,
+  isDoctor,
+  Validator.update,
+  FoodItemController.update
+);
 
-
-  router.get(
-    "/",
-    Authenticate,
-    isDoctor,
-    FoodItemController.search
-  );
+router.get("/", Authenticate, isDoctor, FoodItemController.search);
 
 module.exports = router;

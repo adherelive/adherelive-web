@@ -4,20 +4,20 @@ import { getInitialData } from "../../modules/auth";
 import { open } from "../../modules/drawer";
 import { DRAWER } from "../../constant";
 
-const mapStateToProps = (state) => {
+const mapStateToProps = state => {
   const {
     auth,
     users,
     doctors,
     providers = {},
-    pages: { notification_count = {} } = {},
+    pages: { notification_count = {} } = {}
   } = state;
   const {
     authenticated,
     authenticated_user,
     authRedirection,
     authPermissions = [],
-    doctor_provider_id = null,
+    doctor_provider_id = null
   } = auth;
 
   return {
@@ -29,7 +29,7 @@ const mapStateToProps = (state) => {
     doctors,
     doctor_provider_id,
     providers,
-    notification_count,
+    notification_count
   };
   // const { auth, users, doctors , pages : { notification_count = {} } = {} } = state;
   // const { authenticated, authenticated_user, authRedirection, authPermissions = [] , doctor_provider_id  = null } = auth;
@@ -37,11 +37,11 @@ const mapStateToProps = (state) => {
   //   return { authenticated, authPermissions, authRedirection, authenticated_user, users, doctors , doctor_provider_id ,notification_count  };
 };
 
-const mapDispatchToProps = (dispatch) => {
+const mapDispatchToProps = dispatch => {
   return {
-    openAppointmentDrawer: (payload) =>
+    openAppointmentDrawer: payload =>
       dispatch(open({ type: DRAWER.NOTIFICATIONS, payload })),
-    getInitialData: () => dispatch(getInitialData()),
+    getInitialData: () => dispatch(getInitialData())
   };
 };
 

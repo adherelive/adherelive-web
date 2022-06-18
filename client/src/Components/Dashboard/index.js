@@ -39,7 +39,6 @@ import MissedWorkoutsDrawer from "../../Containers/Drawer/missedWorkout";
 import { getRoomId } from "../../Helper/twilio";
 
 const { GETSTREAM_API_KEY, GETSTREAM_APP_ID } = config;
-
 const { TabPane } = Tabs;
 
 const CHART_MISSED_MEDICATION = "Missed Medication";
@@ -194,9 +193,9 @@ class Dashboard extends Component {
 
     if (notificationToken || feedId) {
       let clientFeed = connect(
-        GETSTREAM_API_KEY,
+        config.GETSTREAM_API_KEY,
         notificationToken,
-        GETSTREAM_APP_ID
+        config.GETSTREAM_APP_ID
       );
 
       this.client = clientFeed;
@@ -499,16 +498,19 @@ class Dashboard extends Component {
     }
     const {
       patients,
-      twilio: { patientId: chatPatientId = 1 } = {},
-      auth_role: doctorRoleId = null
+      twilio: { care_plan_id: currentCareplanId = 1 } = {},
+      auth_role: doctorRoleId = null,
+      care_plans
     } = this.props;
     const { doctorUserId } = this.state;
-    let {
-      basic_info: { user_id: patientUserId = "" } = {},
-      user_role_id: patientRoleId = null
-    } = patients[chatPatientId];
+    // let { basic_info: { user_id: patientUserId = "" } = {} , user_role_id : patientRoleId = null  } = patients[
+    //   chatPatientId
+    // ];
 
-    const roomId = getRoomId(doctorRoleId, patientRoleId);
+    // const roomId = getRoomId(doctorRoleId, patientRoleId);
+    const { channel_id: roomId } = care_plans[currentCareplanId] || {};
+
+    console.log("123921083 roomId", roomId);
 
     window.open(
       `${config.WEB_URL}/test${getPatientConsultingVideoUrl(roomId)}`,
@@ -621,7 +623,24 @@ class Dashboard extends Component {
   };
 
   render() {
-    const { doctors = {}, authenticated_user } = this.props;
+    const {
+      doctors = {},
+      authenticated_user,
+      graphs,
+      treatments,
+      conditions,
+      severity,
+      patients,
+      authPermissions = [],
+      chats: { minimized = false, visible: popUpVisible = false },
+      drawer: { visible: drawerVisible = false } = {},
+      ui_features: { showVerifyModal = false } = {},
+      twilio: { patientId: chatPatientId = 1, care_plan_id },
+      auth_role: doctorRoleId = null,
+      authenticated_category,
+      care_plans
+    } = this.props;
+
     let doctorID = null;
     let docName = "";
     Object.keys(doctors).forEach(id => {
@@ -635,21 +654,6 @@ class Dashboard extends Component {
     docName = full_name ? `Dr. ${full_name}` : TABLE_DEFAULT_BLANK_FIELD;
 
     // console.log("198237837128 getCookie", this.getCookie("accessToken"));
-
-    const {
-      graphs,
-      treatments,
-      conditions,
-      severity,
-      patients,
-      authPermissions = [],
-      chats: { minimized = false, visible: popUpVisible = false },
-      drawer: { visible: drawerVisible = false } = {},
-      ui_features: { showVerifyModal = false } = {},
-      twilio: { patientId: chatPatientId = 1 },
-      auth_role: doctorRoleId = null,
-      authenticated_category
-    } = this.props;
 
     const {
       formatMessage,
@@ -682,7 +686,9 @@ class Dashboard extends Component {
       watchlistTab
     } = this.state;
 
-    const roomId = getRoomId(doctorRoleId, patientRoleId);
+    // const roomId = getRoomId(doctorRoleId, patientRoleId);
+
+    const { channel_id: roomId } = care_plans[care_plan_id] || {};
 
     let bannerFlag = true;
     const { providers = {}, doctor_provider_id = null } = this.props;
@@ -748,6 +754,8 @@ class Dashboard extends Component {
               </div>
             )}
           </div>
+
+          {/* }   */}
 
           {/* }   */}
 

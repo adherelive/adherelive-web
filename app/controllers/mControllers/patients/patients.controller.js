@@ -418,6 +418,9 @@ class MPatientController extends Controller {
 
       let doctorData = {};
 
+      let allProvidersData = {};
+      let allUserRoleData = {};
+
       let carePlanApiDetails = {};
       let templateMedicationData = {};
       let template_medication_ids = [];
@@ -465,7 +468,8 @@ class MPatientController extends Controller {
       // get all careplans attached to patient
       const carePlans =
         (await carePlanService.getMultipleCarePlanByData({
-          patient_id
+          patient_id,
+          user_role_id: userRoleId
         })) || [];
 
       if (carePlans.length > 0) {
@@ -476,6 +480,8 @@ class MPatientController extends Controller {
           medications,
           schedule_events,
           doctors,
+          providers = {},
+          user_roles = {},
           care_plan_ids,
           current_careplan_id
         } = await carePlanHelper.getCareplanData({
@@ -508,6 +514,10 @@ class MPatientController extends Controller {
 
         // medicines
         medicineApiData = { ...medicineApiData, ...medicines };
+
+        allProvidersData = { ...allProvidersData, ...providers };
+
+        allUserRoleData = { ...allUserRoleData, ...user_roles };
 
         // get all treatment ids from careplan for templates
         Object.keys(care_plans).forEach(id => {
@@ -904,6 +914,12 @@ class MPatientController extends Controller {
           },
           portions: {
             ...portionsApiData
+          },
+          providers: {
+            ...allProvidersData
+          },
+          user_roles: {
+            ...allUserRoleData
           },
 
           template_workouts: templateWorkoutData,
@@ -2045,13 +2061,15 @@ class MPatientController extends Controller {
       let providerData = {};
 
       let providerIcon = "";
+      let providerPrescriptionDetails = "";
       if (provider_id) {
         const providerWrapper = await ProviderWrapper(null, provider_id);
         const { providers, users } = await providerWrapper.getReferenceInfo();
 
-        const { details: { icon = null } = {} } = providers[provider_id] || {};
+        const { details: { icon = null, prescription_details = "" } = {} } =
+          providers[provider_id] || {};
         checkAndCreateDirectory(S3_DOWNLOAD_FOLDER_PROVIDER);
-
+        providerPrescriptionDetails = prescription_details;
         if (icon) {
           providerIcon = `${S3_DOWNLOAD_FOLDER_PROVIDER}/provider-${provider_id}-icon.jpeg`;
 
@@ -2105,6 +2123,7 @@ class MPatientController extends Controller {
         portions: { ...portionApiData },
         repetitions: { ...repetitionApiData },
         providerIcon,
+        providerPrescriptionDetails,
         conditions,
         registrations: registrationsData,
         creationDate: carePlanCreatedDate,

@@ -3,17 +3,24 @@ import { withRouter } from "react-router-dom";
 
 import SideBar from "../../Components/Sidebar";
 import { switchUserRole } from "../../modules/userRoles";
-import {authCategorySelector} from "../../modules/doctors/selectors";
+import { authCategorySelector } from "../../modules/doctors/selectors";
 
-const mapStateToProps = (state) => {
-  const { auth, users, doctors, user_roles, pages: {user_role_ids = []} = {}, providers } = state;
+const mapStateToProps = state => {
+  const {
+    auth,
+    users,
+    doctors,
+    user_roles,
+    pages: { user_role_ids = [] } = {},
+    providers
+  } = state;
   const {
     authenticated,
     authenticated_user,
     authRedirection,
     authPermissions = [],
     doctor_provider_id = null,
-    auth_role = null,
+    auth_role = null
   } = auth;
 
   return {
@@ -32,9 +39,9 @@ const mapStateToProps = (state) => {
   };
 };
 
-const mapDispatchToProps = (dispatch) => {
+const mapDispatchToProps = dispatch => {
   return {
-    switchUserRole: (data) => dispatch(switchUserRole(data))
+    switchUserRole: data => dispatch(switchUserRole(data))
   };
 };
 

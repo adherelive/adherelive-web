@@ -3,7 +3,7 @@ import moment from "moment";
 import {
   DEFAULT_PROVIDER,
   APPOINTMENT_TYPE,
-  EVENT_TYPE,
+  EVENT_TYPE
 } from "../../../../constant";
 
 import UserRoleService from "../../../services/userRoles/userRoles.service";
@@ -35,16 +35,16 @@ class PriorJob extends AppointmentJob {
         participants = [],
         actor: {
           id: actorId,
-          details: { name, category: actorCategory } = {},
+          details: { name, category: actorCategory } = {}
         } = {},
         basic_info: {
           details: {
             type = "",
             type_description = "",
-            radiology_type = "",
-          } = {},
-        } = {},
-      } = {},
+            radiology_type = ""
+          } = {}
+        } = {}
+      } = {}
     } = getAppointmentData() || {};
 
     const templateData = [];
@@ -60,8 +60,8 @@ class PriorJob extends AppointmentJob {
     const { rows: userRoles = [] } =
       (await UserRoleService.findAndCountAll({
         where: {
-          id: participants,
-        },
+          id: participants
+        }
       })) || {};
 
     let providerId = null;
@@ -78,13 +78,13 @@ class PriorJob extends AppointmentJob {
     let providerName = DEFAULT_PROVIDER;
     if (providerId) {
       const provider = await ProviderService.getProviderByData({
-        id: providerId,
+        id: providerId
       });
       const { name } = provider || {};
       providerName = name;
     }
     const userDevices = await UserDeviceService.getAllDeviceByData({
-      user_id: participants,
+      user_id: participants
     });
 
     if (userDevices.length > 0) {
@@ -99,16 +99,16 @@ class PriorJob extends AppointmentJob {
     templateData.push({
       small_icon: process.config.app.icon_android,
       app_id: process.config.one_signal.app_id,
-      headings: { en: `Upcoming appointment reminder (${providerName})` },
+      headings: { en: `Upcoming Appointment Reminder (${providerName})` },
       contents: {
         en: `An appointment ${appointmentType}-${type_description}${
           radiology_type ? `-${radiology_type}` : ""
-        } is about to start soon. Tap here to know more!`,
+        } is about to start soon. Tap here to know more!`
       },
       include_player_ids: [...playerIds],
       priority: 10,
       android_channel_id: process.config.one_signal.urgent_channel_id,
-      data: { url: "/appointments", params: "", content: getAppointmentData() },
+      data: { url: "/appointments", params: "", content: getAppointmentData() }
     });
 
     return templateData;
@@ -117,13 +117,15 @@ class PriorJob extends AppointmentJob {
   getInAppTemplate = () => {
     const { getAppointmentData } = this;
     const {
-      participants = [],
-      actor: {
-        id: actorId,
-        user_role_id,
-        details: { name, category: actorCategory } = {},
+      details: {
+        participants = [],
+        actor: {
+          id: actorId,
+          user_role_id,
+          details: { name, category: actorCategory } = {}
+        } = {}
       } = {},
-      id,
+      id
     } = getAppointmentData() || {};
 
     const templateData = [];
@@ -139,7 +141,7 @@ class PriorJob extends AppointmentJob {
         // message: `${name}(${actorCategory}) has created an appointment with you`,
         event: EVENT_TYPE.APPOINTMENT,
         time: currentTime,
-        create_time: `${currentTime}`,
+        create_time: `${currentTime}`
       });
       // }
     }

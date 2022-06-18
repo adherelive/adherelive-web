@@ -24,17 +24,17 @@ router.get(
 );
 
 router.get(
-    "/patients",
-    Authenticate,
-    isProvider,
-    ProvidersController.getPatientEvents
+  "/patients",
+  Authenticate,
+  isProvider,
+  ProvidersController.getPatientEvents
 );
 
 router.post(
-    "/mail-password",
-    Authenticate,
-    isProvider,
-    ProvidersController.mailPassword
+  "/mail-password",
+  Authenticate,
+  isProvider,
+  ProvidersController.mailPassword
 );
 
 // router.post(

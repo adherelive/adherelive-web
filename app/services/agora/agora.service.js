@@ -1,5 +1,6 @@
 import Log from "../../../libs/log";
-const {RtcTokenBuilder, RtcRole} = require('agora-access-token')
+
+const { RtcTokenBuilder, RtcRole } = require("agora-access-token");
 
 const appID = process.config.agora.app_id;
 const appCertificate = process.config.agora.app_certificate;
@@ -15,10 +16,17 @@ class AgoraService {
 
   async videoTokenGenerator(userId, channelName) {
     const role = RtcRole.PUBLISHER;
-    const expirationTimeInSeconds = 86400
-    const currentTimestamp = Math.floor(Date.now() / 1000)
-    const privilegeExpiredTs = currentTimestamp + expirationTimeInSeconds
-    const accessToken = RtcTokenBuilder.buildTokenWithUid(appID, appCertificate, channelName, userId, role, privilegeExpiredTs);
+    const expirationTimeInSeconds = 86400;
+    const currentTimestamp = Math.floor(Date.now() / 1000);
+    const privilegeExpiredTs = currentTimestamp + expirationTimeInSeconds;
+    const accessToken = RtcTokenBuilder.buildTokenWithUid(
+      appID,
+      appCertificate,
+      channelName,
+      userId,
+      role,
+      privilegeExpiredTs
+    );
     // console.log("Token With Integer Number Uid: " + accessToken);
 
     return accessToken;

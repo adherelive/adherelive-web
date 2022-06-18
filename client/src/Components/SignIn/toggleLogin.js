@@ -88,7 +88,8 @@ class ToggleLogin extends Component {
                             {" "}
                             Subscription based health care service delivery.{" "}
                           </b>{" "}
-                          <br /> <br />{" "}
+                          <br />
+                          <br />{" "}
                         </div>
                       </div>
                       <div className="learn-more-text">

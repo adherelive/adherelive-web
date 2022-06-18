@@ -8,7 +8,7 @@ import { TABLE_NAME } from "../../models/exercise";
 import { TABLE_NAME as exerciseDetailsTableName } from "../../models/exerciseDetails";
 import {
   TABLE_NAME as exerciseContentTableName,
-  VIDEO_TYPES,
+  VIDEO_TYPES
 } from "../../models/exerciseContents";
 import { TABLE_NAME as repetitionTableName } from "../../models/exerciseRepetition";
 import { getFilePath } from "../../helper/filePath";
@@ -19,7 +19,7 @@ export default class ExerciseService {
     exercise_details,
     exercise_content,
     auth,
-    transaction: continuedTransaction = null,
+    transaction: continuedTransaction = null
   }) => {
     const transaction = continuedTransaction
       ? continuedTransaction
@@ -31,7 +31,7 @@ export default class ExerciseService {
           await Database.getModel(TABLE_NAME).create(
             { ...exercise, ...auth },
             {
-              transaction,
+              transaction
             }
           )
         ).get({ plain: true }) || null;
@@ -45,7 +45,7 @@ export default class ExerciseService {
       ).create(
         { exercise_id: id, ...exercise_details, ...auth },
         {
-          transaction,
+          transaction
         }
       );
       const { id: detail_id = null } = createdExerciseDetail || {};
@@ -54,8 +54,8 @@ export default class ExerciseService {
       const {
         video: {
           content_type: video_content_type = VIDEO_TYPES.NONE,
-          content: video_content,
-        } = {},
+          content: video_content
+        } = {}
       } = exercise_content || {};
 
       if (video_content_type !== VIDEO_TYPES.NONE) {
@@ -68,10 +68,10 @@ export default class ExerciseService {
             exercise_id: id,
             video_content_type,
             video_content: videoContent,
-            ...auth,
+            ...auth
           },
           {
-            transaction,
+            transaction
           }
         );
       }
@@ -90,19 +90,19 @@ export default class ExerciseService {
     exerciseDetails,
     exercise_content,
     auth,
-    transaction: continuedTransaction = null,
+    transaction: continuedTransaction = null
   }) => {
     const transaction = continuedTransaction
       ? continuedTransaction
       : await Database.initTransaction();
     try {
       if (exercise) {
-        /* 
-        to prevent the admin and user created exercise update, following check was added
-        */
+        /*
+                  to prevent the admin and user created exercise update, following check was added
+                */
         const exerciseExists =
           (await Database.getModel(TABLE_NAME).findOne({
-            where: { id },
+            where: { id }
           })) || null;
 
         if (exerciseExists) {
@@ -110,7 +110,7 @@ export default class ExerciseService {
           if (creator_type !== USER_CATEGORY.ADMIN) {
             await Database.getModel(TABLE_NAME).update(exercise, {
               where: { id },
-              transaction,
+              transaction
             });
           }
         }
@@ -125,8 +125,8 @@ export default class ExerciseService {
         (await Database.getModel(exerciseDetailsTableName).findOne({
           where: {
             repetition_id,
-            [Op.or]: [auth, { creator_type: USER_CATEGORY.ADMIN }],
-          },
+            [Op.or]: [auth, { creator_type: USER_CATEGORY.ADMIN }]
+          }
         })) || null;
 
       let detail_id = null;
@@ -134,15 +134,15 @@ export default class ExerciseService {
       if (exercise_detail_id && exerciseDetailExists) {
         // update
         const { creator_type } = exerciseDetailExists || {};
-        /* 
-        to prevent the admin and user created exercise update, following check was added
-        */
+        /*
+                  to prevent the admin and user created exercise update, following check was added
+                */
         if (creator_type !== USER_CATEGORY.ADMIN) {
           await Database.getModel(exerciseDetailsTableName).update(data, {
             where: {
-              id: exercise_detail_id,
+              id: exercise_detail_id
             },
-            transaction,
+            transaction
           });
         }
         detail_id = exercise_detail_id;
@@ -153,7 +153,7 @@ export default class ExerciseService {
         ).create(
           { ...data, exercise_id: id, ...auth },
           {
-            transaction,
+            transaction
           }
         );
 
@@ -165,8 +165,8 @@ export default class ExerciseService {
       const {
         video: {
           content_type: video_content_type = VIDEO_TYPES.NONE,
-          content: video_content,
-        } = {},
+          content: video_content
+        } = {}
       } = exercise_content || {};
 
       const videoContent =
@@ -180,8 +180,8 @@ export default class ExerciseService {
       ).findOne({
         where: {
           exercise_id: id,
-          ...auth,
-        },
+          ...auth
+        }
       });
 
       if (exerciseContentExists) {
@@ -190,9 +190,9 @@ export default class ExerciseService {
           {
             where: {
               exercise_id: id,
-              ...auth,
+              ...auth
             },
-            transaction,
+            transaction
           }
         );
       } else {
@@ -202,10 +202,10 @@ export default class ExerciseService {
               exercise_id: id,
               video_content_type,
               video_content: videoContent,
-              ...auth,
+              ...auth
             },
             {
-              transaction,
+              transaction
             }
           );
         }
@@ -227,7 +227,7 @@ export default class ExerciseService {
       let whereQuery = {};
       if (id) {
         whereQuery = {
-          id,
+          id
         };
       } else {
         whereQuery = {
@@ -235,9 +235,9 @@ export default class ExerciseService {
           [Op.or]: [
             auth,
             {
-              creator_type: USER_CATEGORY.ADMIN,
-            },
-          ],
+              creator_type: USER_CATEGORY.ADMIN
+            }
+          ]
         };
       }
 
@@ -246,9 +246,9 @@ export default class ExerciseService {
         include: [
           {
             model: Database.getModel(exerciseDetailsTableName),
-            include: [Database.getModel(repetitionTableName)],
-          },
-        ],
+            include: [Database.getModel(repetitionTableName)]
+          }
+        ]
       });
     } catch (error) {
       throw error;
@@ -266,14 +266,14 @@ export default class ExerciseService {
               where: {
                 [Op.or]: [
                   {
-                    creator_type: USER_CATEGORY.ADMIN,
+                    creator_type: USER_CATEGORY.ADMIN
                   },
-                  auth,
-                ],
+                  auth
+                ]
               },
-              include: [Database.getModel(repetitionTableName)],
-            },
-          ],
+              include: [Database.getModel(repetitionTableName)]
+            }
+          ]
           // limit,
           // offset
         })) || {}
@@ -290,15 +290,15 @@ export default class ExerciseService {
         [Op.or]: [
           {
             name: {
-              [Op.startsWith]: `%${search}`,
-            },
+              [Op.startsWith]: `%${search}`
+            }
           },
           {
             name: {
-              [Op.like]: `%${search}%`,
-            },
-          },
-        ],
+              [Op.like]: `%${search}%`
+            }
+          }
+        ]
       };
     }
     return {};
@@ -308,9 +308,9 @@ export default class ExerciseService {
 /*
 
 Executing (default): SELECT `exercises`.`id`, `exercises`.`name`, `exercises`.`created_at` AS `createdAt`, `exercises`.`updated_at` AS `updatedAt`, `exercises`.`deleted_at` AS `deletedAt`, `exercise_details`.`id` AS `exercise_details.id`, `exercise_details`.`exercise_id` AS `exercise_details.exercise_id`, `exercise_details`.`repetition_id` AS `exercise_details.repetition_id`, `exercise_details`.`calorific_value` AS `exercise_details.calorific_value`, `exercise_details`.`created_at` AS `exercise_details.createdAt`, `exercise_details`.`updated_at` AS `exercise_details.updatedAt`, `exercise_details`.`deleted_at` AS `exercise_details.deletedAt` 
-FROM `exercises` AS `exercises` LEFT OUTER JOIN `exercise_details` AS `exercise_details` ON `exercises`.`id` = `exercise_details`.`exercise_id` AND (`exercise_details`.`deleted_at` IS NULL) LEFT OUTER JOIN `exercise_user_created_mappings` AS `exercise_user_created_mapping` ON `exercises`.`id` = `exercise_user_created_mapping`.`exercise_id` AND (`exercise_user_created_mapping`.`deleted_at` IS NULL) WHERE (`exercises`.`deleted_at` IS NULL AND (`exercises`.`name` = 'exercise 1' AND `exercise_user_created_mapping`.`exercise_id` IS NULL)) LIMIT 1;
+  FROM `exercises` AS `exercises` LEFT OUTER JOIN `exercise_details` AS `exercise_details` ON `exercises`.`id` = `exercise_details`.`exercise_id` AND (`exercise_details`.`deleted_at` IS NULL) LEFT OUTER JOIN `exercise_user_created_mappings` AS `exercise_user_created_mapping` ON `exercises`.`id` = `exercise_user_created_mapping`.`exercise_id` AND (`exercise_user_created_mapping`.`deleted_at` IS NULL) WHERE (`exercises`.`deleted_at` IS NULL AND (`exercises`.`name` = 'exercise 1' AND `exercise_user_created_mapping`.`exercise_id` IS NULL)) LIMIT 1;
 
 Executing (default): SELECT `exercises`.*, `exercise_details`.`id` AS `exercise_details.id`, `exercise_details`.`exercise_id` AS `exercise_details.exercise_id`, `exercise_details`.`repetition_id` AS `exercise_details.repetition_id`, `exercise_details`.`calorific_value` AS `exercise_details.calorific_value`, `exercise_details`.`created_at` AS `exercise_details.createdAt`, `exercise_details`.`updated_at` AS `exercise_details.updatedAt`, `exercise_details`.`deleted_at` AS `exercise_details.deletedAt`
- FROM (SELECT `exercises`.`id`, `exercises`.`name`, `exercises`.`created_at` AS `createdAt`, `exercises`.`updated_at` AS `updatedAt`, `exercises`.`deleted_at` AS `deletedAt` FROM `exercises` AS `exercises` WHERE (`exercises`.`deleted_at` IS NULL AND (`exercises`.`name` = 'exercise 1' AND `exercise_user_created_mapping`.`exercise_id` IS NULL)) LIMIT 1) AS `exercises` LEFT OUTER JOIN `exercise_details` AS `exercise_details` ON `exercises`.`id` = `exercise_details`.`exercise_id` AND (`exercise_details`.`deleted_at` IS NULL) LEFT OUTER JOIN `exercise_user_created_mappings` AS `exercise_user_created_mapping` ON `exercises`.`id` = `exercise_user_created_mapping`.`exercise_id` AND (`exercise_user_created_mapping`.`deleted_at` IS NULL);
+  FROM (SELECT `exercises`.`id`, `exercises`.`name`, `exercises`.`created_at` AS `createdAt`, `exercises`.`updated_at` AS `updatedAt`, `exercises`.`deleted_at` AS `deletedAt` FROM `exercises` AS `exercises` WHERE (`exercises`.`deleted_at` IS NULL AND (`exercises`.`name` = 'exercise 1' AND `exercise_user_created_mapping`.`exercise_id` IS NULL)) LIMIT 1) AS `exercises` LEFT OUTER JOIN `exercise_details` AS `exercise_details` ON `exercises`.`id` = `exercise_details`.`exercise_id` AND (`exercise_details`.`deleted_at` IS NULL) LEFT OUTER JOIN `exercise_user_created_mappings` AS `exercise_user_created_mapping` ON `exercises`.`id` = `exercise_user_created_mapping`.`exercise_id` AND (`exercise_user_created_mapping`.`deleted_at` IS NULL);
 
 */

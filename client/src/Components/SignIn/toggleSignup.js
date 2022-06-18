@@ -86,7 +86,7 @@ class ToggleSignUp extends Component {
                               <b>
                                 {" "}
                                 Subscription based health care service delivery.{" "}
-                              </b>{" "}
+                              </b>
                               <br /> <br />{" "}
                             </div>
                           </div>

@@ -198,6 +198,7 @@ class ClinicRegister extends Component {
         await callNewDoctorAction(doctor_id);
         this.setState({ doctor_id });
       } else {
+        return;
       }
     } catch (error) {
       console.log("443534543535 -->", error);
@@ -523,6 +524,7 @@ class ClinicRegister extends Component {
             window.location.href.includes(PATH.REGISTER_FROM_MY_PROFILE)
           ) {
             history.replace(PATH.PROFILE);
+            return;
           } else {
             history.replace(PATH.LANDING_PAGE);
           }
@@ -564,6 +566,7 @@ class ClinicRegister extends Component {
       window.location.href.includes(PATH.REGISTER_FROM_MY_PROFILE)
     ) {
       history.replace(PATH.PROFILE);
+      return;
     } else {
       history.replace(PATH.REGISTER_QUALIFICATIONS);
     }
@@ -675,4 +678,5 @@ class ClinicRegister extends Component {
     );
   }
 }
+
 export default withRouter(injectIntl(ClinicRegister));

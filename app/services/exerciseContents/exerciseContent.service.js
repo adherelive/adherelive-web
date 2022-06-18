@@ -3,11 +3,11 @@ import Database from "../../../libs/mysql";
 import { TABLE_NAME } from "../../models/exerciseContents";
 
 export default class ExerciseContentService {
-  create = async (data) => {
+  create = async data => {
     const transaction = await Database.initTransaction();
     try {
       const exerciseContent = await Database.getModel(TABLE_NAME).create(data, {
-        transaction,
+        transaction
       });
 
       await transaction.commit();
@@ -18,20 +18,20 @@ export default class ExerciseContentService {
     }
   };
 
-  findOne = async (data) => {
+  findOne = async data => {
     try {
       return await Database.getModel(TABLE_NAME).findOne({
-        where: data,
+        where: data
       });
     } catch (error) {
       throw error;
     }
   };
 
-  findAndCountAll= async (data) => {
+  findAndCountAll = async data => {
     try {
       return await Database.getModel(TABLE_NAME).findAndCountAll({
-        where: data,
+        where: data
       });
     } catch (error) {
       throw error;

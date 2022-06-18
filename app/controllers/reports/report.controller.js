@@ -38,7 +38,7 @@ class ReportController extends Controller {
         uploader_type: category
       });
 
-      const report = await ReportWrapper({data: addReport});
+      const report = await ReportWrapper({ data: addReport });
 
       // add documents
       for (let index = 0; index < documents.length; index++) {
@@ -88,15 +88,15 @@ class ReportController extends Controller {
       let documents = [];
 
       // for (let index = 0; index < files.length; index++) {
-        const { originalname } = file || {};
-        const fileUrl = await ReportHelper.uploadReport({
-          file,
-          id: patient_id
-        });
-        documents.push({
-          name: originalname,
-          file: fileUrl
-        });
+      const { originalname } = file || {};
+      const fileUrl = await ReportHelper.uploadReport({
+        file,
+        id: patient_id
+      });
+      documents.push({
+        name: originalname,
+        file: fileUrl
+      });
       // }
 
       return raiseSuccess(
@@ -116,11 +116,10 @@ class ReportController extends Controller {
   updateReports = async (req, res) => {
     const { raiseSuccess, raiseClientError, raiseServerError } = this;
     try {
-      const { params: { id } = {}, body: {
-        name,
-          test_date,
-          documents = [],
-      } = {} } = req;
+      const {
+        params: { id } = {},
+        body: { name, test_date, documents = [] } = {}
+      } = req;
       Log.info(`Report : id = ${id}`);
 
       if (!id) {
@@ -134,36 +133,37 @@ class ReportController extends Controller {
 
       const reportService = new ReportService();
 
-      const existingReport = await ReportWrapper({id});
+      const existingReport = await ReportWrapper({ id });
 
       let data = {};
 
-      if(name !== existingReport.getName()) {
-        data = {...data, name};
+      if (name !== existingReport.getName()) {
+        data = { ...data, name };
       }
 
-      if(!moment(test_date).isSame(moment(existingReport.getTestDate()))) {
-        data = {...data, test_date};
+      if (!moment(test_date).isSame(moment(existingReport.getTestDate()))) {
+        data = { ...data, test_date };
       }
 
       // update only if name is changed
-      if(Object.keys(data).length > 0) {
-        await reportService.updateReport({data, id});
+      if (Object.keys(data).length > 0) {
+        await reportService.updateReport({ data, id });
       }
 
       // update new documents (if any)
-      for(let index = 0; index < documents.length; index++) {
-        const {name, file} = documents[index] || {};
+      for (let index = 0; index < documents.length; index++) {
+        const { name, file } = documents[index] || {};
 
         // check for exists
-        const documentExists = await uploadDocumentService.getDocumentByName({
-          name,
-          document: getFilePath(file),
-          parent_id: existingReport.getId(),
-          parent_type: DOCUMENT_PARENT_TYPE.REPORT
-        }) || null;
+        const documentExists =
+          (await uploadDocumentService.getDocumentByName({
+            name,
+            document: getFilePath(file),
+            parent_id: existingReport.getId(),
+            parent_type: DOCUMENT_PARENT_TYPE.REPORT
+          })) || null;
 
-        if(!documentExists) {
+        if (!documentExists) {
           await uploadDocumentService.addDocument({
             name,
             document: getFilePath(file),
@@ -173,17 +173,16 @@ class ReportController extends Controller {
         }
       }
 
-      const updatedReport = await ReportWrapper({id: existingReport.getId()});
+      const updatedReport = await ReportWrapper({ id: existingReport.getId() });
 
       return raiseSuccess(
-          res,
-          200,
-          {
-            ...await updatedReport.getReferenceInfo()
-          },
-          "Report updated successfully"
+        res,
+        200,
+        {
+          ...(await updatedReport.getReferenceInfo())
+        },
+        "Report updated successfully"
       );
-      
     } catch (error) {
       Log.debug("updateReports 500 error", error);
       return raiseServerError(res);
@@ -193,24 +192,23 @@ class ReportController extends Controller {
   deleteReportDocument = async (req, res) => {
     const { raiseSuccess, raiseClientError, raiseServerError } = this;
     try {
-      const {params: {document_id} = {}} = req;
+      const { params: { document_id } = {} } = req;
       Log.info(`params: document_id = ${document_id}`);
 
-      if(!document_id) {
-        return raiseClientError(res, 422, {}, "Please select correct document to delete");
-      }
-
-      const response = await uploadDocumentService.deleteDocumentByData({id: document_id});
-      Log.debug("response", response);
-
-      return raiseSuccess(
+      if (!document_id) {
+        return raiseClientError(
           res,
-          200,
+          422,
           {},
-          "Document deleted successfully"
-      );
-
-    } catch(error) {
+          "Please select correct document to delete"
+        );
+      }
+      const response = await uploadDocumentService.deleteDocumentByData({
+        id: document_id
+      });
+      Log.debug("response", response);
+      return raiseSuccess(res, 200, {}, "Document deleted successfully");
+    } catch (error) {
       Log.debug("deleteReportDocument 500 error", error);
       return raiseServerError(res);
     }

@@ -41,16 +41,16 @@ class DoctorProviderMappingService {
     }
   };
 
-  getAllDoctorIds = async (provider_id) => {
+  getAllDoctorIds = async provider_id => {
     try {
       const doctorProviderMapping = await Database.getModel(TABLE_NAME).findAll(
-          {
-            where: {
-              provider_id
-            },
-            attributes: ["doctor_id"],
-            raw: true
-          }
+        {
+          where: {
+            provider_id
+          },
+          attributes: ["doctor_id"],
+          raw: true
+        }
       );
       return doctorProviderMapping;
     } catch (error) {

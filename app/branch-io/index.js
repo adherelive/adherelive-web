@@ -20,4 +20,6 @@ export default async function createLink(data = {}) {
   } catch (err) {
     console.log("err creating universal deep-link", err);
   }
+
+  return;
 }

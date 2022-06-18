@@ -17,22 +17,26 @@ class StartJob extends VitalJob {
   getPushAppTemplate = async () => {
     const { _data } = this;
     const {
-      participants = [],
-      actor: {
-        id: actorId,
-        user_role_id,
-        details: { name, category: actorCategory } = {},
+      details: {
+        participants = [],
+        actor: {
+          id: actorId,
+          user_role_id,
+          details: { name, category: actorCategory } = {}
+        } = {},
+
+        vital_templates,
+        vital_templates: { basic_info: { name: vitalName = "" } = {} } = {}
       } = {},
-      vital_templates,
-      vital_templates: { basic_info: { name: vitalName = "" } = {} } = {},
-      eventId = null,
-    } = _data.getDetails() || {};
+      event_id
+      // eventId = null,
+    } = _data || {};
 
     const templateData = [];
     const playerIds = [];
     const userIds = [];
 
-    const vitals = await VitalWrapper({ id: _data.getEventId() });
+    const vitals = await VitalWrapper({ id: event_id });
     const { vitals: latestVital } = await vitals.getAllInfo();
 
     // participants.forEach(participant => {
@@ -41,21 +45,21 @@ class StartJob extends VitalJob {
     //   }
     // });
 
-    const {rows: userRoles = []} = await UserRoleService.findAndCountAll({
-      where: {
-        id: participants
-      }
-    }) || {};
+    const { rows: userRoles = [] } =
+      (await UserRoleService.findAndCountAll({
+        where: {
+          id: participants
+        }
+      })) || {};
 
     let providerId = null;
 
-    for(const userRole of userRoles) {
-      const {id, user_identity, linked_id} = userRole || {};
-      if(id !== user_role_id) {
+    for (const userRole of userRoles) {
+      const { id, user_identity, linked_id } = userRole || {};
+      if (id !== user_role_id) {
         userIds.push(user_identity);
-      } 
-      else {
-        if(linked_id) {
+      } else {
+        if (linked_id) {
           providerId = linked_id;
         }
       }
@@ -63,14 +67,16 @@ class StartJob extends VitalJob {
 
     // provider
     let providerName = DEFAULT_PROVIDER;
-    if(providerId) {
-      const provider = await ProviderService.getProviderByData({id: providerId});
-      const {name} = provider || {};
+    if (providerId) {
+      const provider = await ProviderService.getProviderByData({
+        id: providerId
+      });
+      const { name } = provider || {};
       providerName = name;
     }
 
     const userDevices = await UserDeviceService.getAllDeviceByData({
-      user_id: userIds,
+      user_id: userIds
     });
 
     if (userDevices.length > 0) {
@@ -85,7 +91,7 @@ class StartJob extends VitalJob {
       app_id: process.config.one_signal.app_id, // TODO: add the same in pushNotification handler in notificationSdk
       headings: { en: `${vitalName} Reminder` },
       contents: {
-        en: `Tap here to update your ${vitalName}`,
+        en: `Tap here to update your ${vitalName}`
       },
       // buttons: [{ id: "yes", text: "Yes" }, { id: "no", text: "No" }],
       include_player_ids: [...playerIds],
@@ -93,10 +99,10 @@ class StartJob extends VitalJob {
       android_channel_id: process.config.one_signal.urgent_channel_id,
       data: {
         url: "/vitals",
-        vital: latestVital[_data.getEventId()],
+        vital: latestVital[event_id],
         vital_template: vital_templates,
-        type: "modal",
-      },
+        type: "modal"
+      }
     });
 
     return templateData;
@@ -109,8 +115,8 @@ class StartJob extends VitalJob {
       details: { participants = [], actor: { id: actorId, user_role_id } = {} },
       id = null,
       start_time = null,
-      event_id = null,
-    } = data.getAllInfo() || {};
+      event_id = null
+    } = data || {};
 
     const templateData = [];
     const now = moment();
@@ -125,7 +131,7 @@ class StartJob extends VitalJob {
           verb: `vital_start:${currentTimeStamp}`,
           event: EVENT_TYPE.VITALS,
           time: start_time,
-          start_time: start_time,
+          start_time: start_time
         });
       }
     }
