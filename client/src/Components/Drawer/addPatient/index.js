@@ -51,6 +51,7 @@ import { MinusCircleOutlined } from "@ant-design/icons";
 import CustomSymptoms from "./CustomSymptoms";
 import CustomDiagnosis from "./CustomDiagnosis";
 import MultipleTreatmentAlert from "./MultipleTreatmentAlert";
+import WidgetDrawer from "./WidgetDrawer";
 
 const { Option } = Select;
 const RadioButton = Radio.Button;
@@ -92,6 +93,7 @@ class PatientDetailsDrawer extends Component {
       address: "",
       patients: {},
       isCollapse: false,
+      widgetDrawerOpen: false,
     };
     this.handleConditionSearch = throttle(
       this.handleConditionSearch.bind(this),
@@ -563,6 +565,11 @@ class PatientDetailsDrawer extends Component {
     console.log(`selected ${value}`);
 
     this.setState({ symptoms: value });
+  };
+
+  handleSymptomSelect = (value) => {
+    console.log(`selected ${value}`);
+    this.setState({ widgetDrawerOpen: true });
   };
 
   setDiagnosisType = (value) => {
@@ -1214,7 +1221,10 @@ class PatientDetailsDrawer extends Component {
           {this.formatMessage(messages.symptoms)}
         </div>
 
-        <CustomSymptoms handleSymptomsChanges={this.handleSymptomsChanges} />
+        <CustomSymptoms
+          handleSymptomsChanges={this.handleSymptomsChanges}
+          handleSymptomSelect={this.handleSymptomSelect}
+        />
 
         <div className="form-headings-ap flex  justify-space-between ">
           <div className="flex direction-column align-center justify-center">
@@ -1542,9 +1552,16 @@ class PatientDetailsDrawer extends Component {
     close();
   };
 
+  onCloseWidgetDrawer = () => {
+    this.setState({
+      widgetDrawerOpen: false,
+    });
+  };
+
   render() {
     const { visible, submitting = false } = this.props;
     const { onClose, renderAddPatient } = this;
+    const { widgetDrawerOpen } = this.state;
 
     if (visible !== true) {
       return null;
@@ -1565,6 +1582,10 @@ class PatientDetailsDrawer extends Component {
           width={"30%"}
         >
           {renderAddPatient()}
+          <WidgetDrawer
+            visible={widgetDrawerOpen}
+            onCloseDrawer={this.onCloseWidgetDrawer}
+          />
           <div className="add-patient-footer">
             <Button onClick={this.onClose} style={{ marginRight: 8 }}>
               {this.formatMessage(messages.cancel)}
@@ -1579,6 +1600,7 @@ class PatientDetailsDrawer extends Component {
             </Button>
           </div>
         </Drawer>
+
         <MultipleTreatmentAlert
           diagnosis_description={this.state.diagnosis_description}
         />
