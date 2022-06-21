@@ -11,6 +11,8 @@ import {
   Radio,
   DatePicker,
 } from "antd";
+import { Checkbox, Row, Col } from "antd";
+
 // import { CONSULTATION_FEE_TYPE_TEXT } from "../../../constant";
 
 import moment from "moment";
@@ -24,6 +26,22 @@ const { Option } = Select;
 
 const RadioButton = Radio.Button;
 const RadioGroup = Radio.Group;
+
+const bodyPartsOptions = [
+  { label: "Head", value: "Head" },
+  { label: "Left Eye", value: "Left Eye" },
+  { label: "Right Eye", value: "Right Eye" },
+  { label: "Right Ear", value: "Right Ear" },
+  { label: "Left Ear", value: "Left Ear" },
+  { label: "Nose", value: "Nose" },
+  { label: "Mouth", value: "Mouth" },
+  { label: "Neck", value: "Neck" },
+  { label: "Right Shoulder", value: "Right Shoulder" },
+  { label: "Left Shoulder", value: "Left Shoulder" },
+  { label: "Chest", value: "Chest" },
+  { label: "Right Arm", value: "Right Arm" },
+  { label: "Left Arm", value: "Left Arm" },
+];
 
 class WidgetDrawer extends Component {
   constructor(props) {
@@ -67,11 +85,49 @@ class WidgetDrawer extends Component {
     return options;
   };
 
+  onChangeCheckbox = (checkedValues) => {
+    console.log("checked = ", checkedValues);
+  };
+
   renderWidgetForm = () => {
     const { consultation = "" } = this.state;
 
     return (
       <div className="form-block-ap">
+        <div
+          className="form-headings
+                //    flex align-center justify-start
+                   tac"
+        >
+          <span className="fwbolder fs18 mb10">
+            {/* {this.formatMessage(messages.defaultConsultationOptions)} */}
+            Body Parts
+          </span>
+        </div>
+        <div className="mb10">
+          {/* <Checkbox.Group
+            options={bodyPartsOptions}
+            // disabled
+            defaultValue={["Head"]}
+            onChange={this.onChangeCheckbox}
+          /> */}
+          <Checkbox.Group
+            style={{ width: "100%" }}
+            onChange={this.onChangeCheckbox}
+            defaultValue={["Head"]}
+          >
+            <Row>
+              {bodyPartsOptions.map((part, index) => {
+                return (
+                  <Col key={index} span={8}>
+                    <Checkbox value={part.value}>{part.value}</Checkbox>
+                  </Col>
+                );
+              })}
+            </Row>
+          </Checkbox.Group>
+        </div>
+
         <div
           className="form-headings
                 //    flex align-center justify-start
