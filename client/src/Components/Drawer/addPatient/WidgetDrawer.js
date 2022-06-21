@@ -176,7 +176,7 @@ class WidgetDrawer extends Component {
           destroyOnClose={true}
           onClose={onCloseDrawer}
           visible={visible} // todo: change as per state, -- WIP --
-          width={400}
+          width={450}
         >
           {this.renderWidgetForm()}
 
