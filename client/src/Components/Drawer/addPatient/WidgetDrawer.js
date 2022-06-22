@@ -1,4 +1,4 @@
-import React, { Component, Fragment } from "react";
+import React, { Component, Fragment, useState } from "react";
 import { injectIntl } from "react-intl";
 import {
   Drawer,
@@ -43,36 +43,48 @@ const bodyPartsOptions = [
   { label: "Left Arm", value: "Left Arm" },
 ];
 
-class WidgetDrawer extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      consultation: "",
-    };
-  }
+function WidgetDrawer({
+  visible,
+  onCloseDrawer,
+  finalSymptomData,
+  generateFinalSymptomData,
+  selectedSymptom,
+}) {
+  const [values, setValues] = useState({
+    duration: "",
+    submitting: false,
+    bodyParts: [],
+  });
 
-  componentDidMount() {}
+  const onSubmit = () => {
+    const { duration, bodyParts } = values;
+    // console.log(finalSymptomData);
+    let data = finalSymptomData;
 
-  onSubmit = () => {
-    const { consultation, serviceType, serviceFees, currency } = this.state;
+    data.forEach((symptom) => {
+      if (symptom.symptomName === selectedSymptom) {
+        symptom.duration = values.duration;
+        symptom.bodyParts = values.bodyParts;
+      }
+    });
 
-    this.props.onCloseDrawer();
-    this.setState({
-      consultation: "",
+    generateFinalSymptomData(data);
+
+    onCloseDrawer();
+  };
+
+  // formatMessage = (data) => this.props.intl.formatMessage(data);
+
+  const onClose = () => {};
+
+  const setDuration = (value) => {
+    setValues({
+      ...values,
+      duration: value,
     });
   };
 
-  formatMessage = (data) => this.props.intl.formatMessage(data);
-
-  onClose = () => {};
-
-  setConsultation = (value) => {
-    this.setState({
-      consultation: value,
-    });
-  };
-
-  getDurationOptions = () => {
+  const getDurationOptions = () => {
     let options = [];
     durations.forEach((service) => {
       options.push(
@@ -85,12 +97,16 @@ class WidgetDrawer extends Component {
     return options;
   };
 
-  onChangeCheckbox = (checkedValues) => {
-    console.log("checked = ", checkedValues);
+  const onChangeCheckbox = (checkedValues) => {
+    // console.log("checked = ", checkedValues);
+    setValues({
+      ...values,
+      bodyParts: checkedValues,
+    });
   };
 
-  renderWidgetForm = () => {
-    const { consultation = "" } = this.state;
+  const renderWidgetForm = () => {
+    const { duration = "" } = values;
 
     return (
       <div className="form-block-ap">
@@ -105,15 +121,9 @@ class WidgetDrawer extends Component {
           </span>
         </div>
         <div className="mb10">
-          {/* <Checkbox.Group
-            options={bodyPartsOptions}
-            // disabled
-            defaultValue={["Head"]}
-            onChange={this.onChangeCheckbox}
-          /> */}
           <Checkbox.Group
             style={{ width: "100%" }}
-            onChange={this.onChangeCheckbox}
+            onChange={onChangeCheckbox}
             defaultValue={["Head"]}
           >
             <Row>
@@ -143,8 +153,8 @@ class WidgetDrawer extends Component {
           showSearch
           placeholder="Select Duration"
           className="form-inputs-ap drawer-select"
-          value={consultation}
-          onChange={this.setConsultation}
+          value={duration}
+          onChange={setDuration}
           autoComplete="off"
           optionFilterProp="children"
           filterOption={(input, option) =>
@@ -153,46 +163,44 @@ class WidgetDrawer extends Component {
               .indexOf(input.trim().toLowerCase()) >= 0
           }
         >
-          {this.getDurationOptions()}
+          {getDurationOptions()}
         </Select>
       </div>
     );
   };
 
-  render() {
-    const { visible, onCloseDrawer } = this.props;
-    const { consultation, submitting } = this.state;
-    return (
-      <Fragment>
-        <Drawer
-          title={"Widget Form"}
-          placement="right"
-          maskClosable={false}
-          headerStyle={{
-            position: "sticky",
-            zIndex: "9999",
-            top: "0px",
-          }}
-          destroyOnClose={true}
-          onClose={onCloseDrawer}
-          visible={visible} // todo: change as per state, -- WIP --
-          width={450}
-        >
-          {this.renderWidgetForm()}
+  return (
+    // const { consultation, submitting } = this.state;
 
-          <Footer
-            onSubmit={this.onSubmit}
-            onClose={this.onClose}
-            // submitText={this.formatMessage(messages.submit)}
-            submitText={"Submit"}
-            submitButtonProps={{}}
-            cancelComponent={null}
-            submitting={submitting}
-          />
-        </Drawer>
-      </Fragment>
-    );
-  }
+    <Fragment>
+      <Drawer
+        title={"Widget Form"}
+        placement="right"
+        maskClosable={false}
+        headerStyle={{
+          position: "sticky",
+          zIndex: "9999",
+          top: "0px",
+        }}
+        destroyOnClose={true}
+        onClose={onCloseDrawer}
+        visible={visible} // todo: change as per state, -- WIP --
+        width={450}
+      >
+        {renderWidgetForm()}
+
+        <Footer
+          onSubmit={onSubmit}
+          onClose={onClose}
+          // submitText={this.formatMessage(messages.submit)}
+          submitText={"Submit"}
+          submitButtonProps={{}}
+          cancelComponent={null}
+          submitting={values.submitting}
+        />
+      </Drawer>
+    </Fragment>
+  );
 }
 
-export default injectIntl(WidgetDrawer);
+export default WidgetDrawer;

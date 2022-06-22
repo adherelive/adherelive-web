@@ -12,7 +12,11 @@ for (let each in symptoms) {
   );
 }
 
-function CustomSelect({ handleSymptomsChanges, handleSymptomSelect }) {
+function CustomSelect({
+  handleSymptomsChanges,
+  handleSymptomSelect,
+  hendleSymptomDeselect,
+}) {
   // const handleChange = (value) => {
   //   console.log(`selected ${value}`);
   // };
@@ -29,6 +33,7 @@ function CustomSelect({ handleSymptomsChanges, handleSymptomSelect }) {
         tokenSeparators={[","]}
         placeholder="Search for symptoms"
         onSelect={handleSymptomSelect}
+        onDeselect={hendleSymptomDeselect}
       >
         {children}
       </Select>

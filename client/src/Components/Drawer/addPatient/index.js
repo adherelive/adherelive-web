@@ -93,7 +93,9 @@ class PatientDetailsDrawer extends Component {
       address: "",
       patients: {},
       isCollapse: false,
+      // AKSHAY NEW CODE IMPLEMENTATIONS
       widgetDrawerOpen: false,
+      finalSymptomData: [],
     };
     this.handleConditionSearch = throttle(
       this.handleConditionSearch.bind(this),
@@ -569,7 +571,38 @@ class PatientDetailsDrawer extends Component {
 
   handleSymptomSelect = (value) => {
     console.log(`selected ${value}`);
-    this.setState({ widgetDrawerOpen: true });
+    if (!isEmpty(value)) {
+      let data = this.state.finalSymptomData;
+      let symptomObject = {
+        symptomName: value,
+        bodyParts: [],
+        duration: "",
+      };
+      data.push(symptomObject);
+
+      this.setState({
+        widgetDrawerOpen: true,
+        finalSymptomData: data,
+        selectedSymptom: value,
+      });
+    }
+  };
+
+  hendleSymptomDeselect = (value) => {
+    console.log(`deselected ${value}`);
+    let data = this.state.finalSymptomData;
+    var filteredArray = data.filter((ele) => ele.symptomName !== value);
+
+    this.setState({
+      finalSymptomData: filteredArray,
+    });
+  };
+
+  generateFinalSymptomData = (data) => {
+    console.log("finalSymptomData", data);
+    this.setState({
+      finalSymptomData: data,
+    });
   };
 
   setDiagnosisType = (value) => {
@@ -1224,6 +1257,7 @@ class PatientDetailsDrawer extends Component {
         <CustomSymptoms
           handleSymptomsChanges={this.handleSymptomsChanges}
           handleSymptomSelect={this.handleSymptomSelect}
+          hendleSymptomDeselect={this.hendleSymptomDeselect}
         />
 
         <div className="form-headings-ap flex  justify-space-between ">
@@ -1472,6 +1506,7 @@ class PatientDetailsDrawer extends Component {
   };
 
   onSubmit = () => {
+    console.log("finalSymptomData", this.state.finalSymptomData);
     const {
       mobile_number = "",
       name = "",
@@ -1548,6 +1583,7 @@ class PatientDetailsDrawer extends Component {
       weight: "",
       symptoms: "",
       address: "",
+      finalSymptomData: [],
     });
     close();
   };
@@ -1582,9 +1618,13 @@ class PatientDetailsDrawer extends Component {
           width={"30%"}
         >
           {renderAddPatient()}
+          {/* AKSHAY NEW CODE IMPLEMENTATIONS */}
           <WidgetDrawer
             visible={widgetDrawerOpen}
             onCloseDrawer={this.onCloseWidgetDrawer}
+            finalSymptomData={this.state.finalSymptomData}
+            generateFinalSymptomData={this.generateFinalSymptomData}
+            selectedSymptom={this.state.selectedSymptom}
           />
           <div className="add-patient-footer">
             <Button onClick={this.onClose} style={{ marginRight: 8 }}>
