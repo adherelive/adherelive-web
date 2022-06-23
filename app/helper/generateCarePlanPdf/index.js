@@ -1177,6 +1177,30 @@ function isMedicationsUpdatedInExistingMedicin(medications) {
   return date;
 }
 
+// AKSHAY NEW CODE IMPLEMETATIONS
+
+function renderChiefComplaints({ symptoms }) {
+  try {
+    let stringSymptomArray = [];
+    if (symptoms) {
+      let object = JSON.parse(symptoms);
+      object.forEach((element) => {
+        stringSymptomArray.push(
+          `${element.symptomName}(${String(element.bodyParts)} - ${
+            element.duration
+          })`
+        );
+      });
+      console.log("symtoms object", object);
+      console.log("stringSymptomArray", stringSymptomArray);
+    }
+
+    return "";
+  } catch (err) {
+    console.log();
+  }
+}
+
 function printCarePlanData({
   doc,
   horizontalLineLevel,
@@ -1223,7 +1247,11 @@ function printCarePlanData({
       })
 
       .font(REGULAR_FONT)
-      .text(`${symptoms}`, DOC_MARGIN + 10, relevantHistoryEndLevel + 10);
+      .text(
+        `${renderChiefComplaints({ symptoms })}`,
+        DOC_MARGIN + 10,
+        relevantHistoryEndLevel + 10
+      );
 
     const chiefComplaintsEndLevel = doc.y + 20;
 

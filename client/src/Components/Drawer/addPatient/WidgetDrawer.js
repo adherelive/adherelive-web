@@ -51,7 +51,7 @@ function WidgetDrawer({
   selectedSymptom,
 }) {
   const [values, setValues] = useState({
-    duration: "",
+    duration: "1 Day",
     submitting: false,
     bodyParts: [],
   });
