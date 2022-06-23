@@ -1195,7 +1195,7 @@ function renderChiefComplaints({ symptoms }) {
       console.log("stringSymptomArray", stringSymptomArray);
     }
 
-    return "";
+    return String(stringSymptomArray);
   } catch (err) {
     console.log();
   }
