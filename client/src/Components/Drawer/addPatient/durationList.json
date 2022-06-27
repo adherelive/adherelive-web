@@ -1,0 +1,184 @@
+{
+  "durations": [
+    {
+      "id": 1,
+      "name": "1 Day"
+    },
+    {
+      "id": 2,
+      "name": "2 Days."
+    },
+    {
+      "id": 3,
+      "name": "3 Days"
+    },
+    {
+      "id": 4,
+      "name": "4 Days"
+    },
+    {
+      "id": 5,
+      "name": "5 Days"
+    },
+    {
+      "id": 6,
+      "name": "6 Days"
+    },
+    {
+      "id": 7,
+      "name": "7 Days"
+    },
+    {
+      "id": 8,
+      "name": "8 Days"
+    },
+    {
+      "id": 9,
+      "name": "9 Days"
+    },
+    {
+      "id": 10,
+      "name": "10 Days"
+    },
+    {
+      "id": 11,
+      "name": "11 Days"
+    },
+    {
+      "id": 12,
+      "name": "12 Days."
+    },
+    {
+      "id": 13,
+      "name": "13 Days"
+    },
+    {
+      "id": 14,
+      "name": "14 Days"
+    },
+    {
+      "id": 15,
+      "name": "15 Days"
+    },
+    {
+      "id": 16,
+      "name": "16 Days"
+    },
+    {
+      "id": 17,
+      "name": "17 Days"
+    },
+    {
+      "id": 18,
+      "name": "18 Days"
+    },
+    {
+      "id": 19,
+      "name": "19 Days"
+    },
+    {
+      "id": 20,
+      "name": "20 Days"
+    },
+    {
+      "id": 21,
+      "name": "21 Days"
+    },
+    {
+      "id": 22,
+      "name": "22 Days"
+    },
+    {
+      "id": 23,
+      "name": "23 Days"
+    },
+    {
+      "id": 24,
+      "name": "24 Days"
+    },
+    {
+      "id": 25,
+      "name": "25 Days"
+    },
+    {
+      "id": 26,
+      "name": "26 Days"
+    },
+    {
+      "id": 27,
+      "name": "27 Days"
+    },
+    {
+      "id": 28,
+      "name": "28 Days"
+    },
+    {
+      "id": 29,
+      "name": "29 Days"
+    },
+    {
+      "id": 30,
+      "name": "30 Days"
+    },
+    {
+      "id": 31,
+      "name": "31 Days"
+    },
+    {
+      "id": 32,
+      "name": "1 Month"
+    },
+    {
+      "id": 33,
+      "name": "2 Months"
+    },
+    {
+      "id": 34,
+      "name": "3 Months"
+    },
+    {
+      "id": 35,
+      "name": "4 Months"
+    },
+    {
+      "id": 36,
+      "name": "5 Months"
+    },
+    {
+      "id": 37,
+      "name": "6 Months"
+    },
+    {
+      "id": 38,
+      "name": "7 Months"
+    },
+    {
+      "id": 39,
+      "name": "8 Months"
+    },
+    {
+      "id": 40,
+      "name": "9 Months"
+    },
+    {
+      "id": 41,
+      "name": "10 Months"
+    },
+    {
+      "id": 42,
+      "name": "11 Months"
+    },
+    {
+      "id": 43,
+      "name": "12 Months"
+    },
+    {
+      "id": 44,
+      "name": "1 Year"
+    },
+    {
+      "id": 45,
+      "name": "2 Years"
+    }
+  ]
+}

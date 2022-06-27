@@ -683,6 +683,12 @@ const PatientTreatmentCard = ({
     count++;
   }
 
+  let symptomsArray = JSON.parse(treatment_symptoms);
+  let finalArray = [];
+  symptomsArray.forEach((ele) => {
+    finalArray.push(ele.symptomName);
+  });
+
   return (
     <div className="treatment mt20 tal bg-faint-grey">
       <div className="header-div flex align-center justify-space-between">
@@ -754,7 +760,7 @@ const PatientTreatmentCard = ({
 
         <div className="flex direction-column mb14">
           <div className="fs14">{formatMessage(messages.symptoms_text)}</div>
-          <div className="fs16 fw700">{treatment_symptoms}</div>
+          <div className="fs16 fw700">{String(finalArray)}</div>
         </div>
 
         <div className="flex direction-column mb14">
