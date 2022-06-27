@@ -41,6 +41,41 @@ const bodyPartsOptions = [
   { label: "Chest", value: "Chest" },
   { label: "Right Arm", value: "Right Arm" },
   { label: "Left Arm", value: "Left Arm" },
+  { label: "Right Elbow", value: "Right Elbow" },
+  { label: "Left Elbow", value: "Left Elbow" },
+  { label: "Stomach", value: "Stomach" },
+  { label: "Abdomen", value: "Abdomen" },
+  { label: "Right Forearm", value: "Right Forearm" },
+  { label: "Left Forearm", value: "Left Forearm" },
+  { label: "Right Wrist", value: "Right Wrist" },
+  { label: "Left Wrist", value: "Left Wrist" },
+  { label: "Right Hand", value: "Right Hand" },
+  { label: "Left Hand", value: "Left Hand" },
+  { label: "Right Hand Finger", value: "Right Hand Finger" },
+  { label: "Left Hand Finger", value: "Left Hand Finger" },
+  { label: "Right Hip", value: "Right Hip" },
+  { label: "Left Hip", value: "Left Hip" },
+  { label: "Right Thigh", value: "Right Thigh" },
+  { label: "Left Thigh", value: "Left Thigh" },
+  { label: "Right Knee", value: "Right Knee" },
+  { label: "Left Knee", value: "Left Knee" },
+  { label: "Right Shin", value: "Right Shin" },
+  { label: "Left Shin", value: "Left Shin" },
+  { label: "Right Ankle", value: "Right Ankle" },
+  { label: "Left Ankle", value: "Left Ankle" },
+  { label: "Right Foot", value: "Right Foot" },
+  { label: "Left Foot", value: "Left Foot" },
+  { label: "Right Toe", value: "Right Toe" },
+  { label: "Left Toe", value: "Left Toe" },
+  { label: "Urinary Bladder", value: "Urinary Bladder" },
+  { label: "Back", value: "Back" },
+  { label: "Lower Back", value: "Lower Back" },
+  { label: "Left Tricep", value: "Left Tricep" },
+  { label: "Right Tricep", value: "Right Tricep" },
+  { label: "Left Hamstring", value: "Left Hamstring" },
+  { label: "Right Hamstring", value: "Right Hamstring" },
+  { label: "Left Calf", value: "Left Calf" },
+  { label: "Right Calf", value: "Right Calf" },
 ];
 
 function WidgetDrawer({
@@ -185,7 +220,7 @@ function WidgetDrawer({
         destroyOnClose={true}
         onClose={onCloseDrawer}
         visible={visible} // todo: change as per state, -- WIP --
-        width={450}
+        width={480}
       >
         {renderWidgetForm()}
 
