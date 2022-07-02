@@ -1107,12 +1107,12 @@ class DoctorProfilePage extends Component {
       );
     } else {
       return (
-        <>
+        <Fragment>
           <span>{name}</span>
           <span style={{ marginLeft: "5px" }}>
             <EditOutlined onClick={this.editName} title={"Edit Name"} />
           </span>
-        </>
+        </Fragment>
       );
     }
   };
@@ -1157,7 +1157,7 @@ class DoctorProfilePage extends Component {
       );
     } else {
       return (
-        <>
+        <Fragment>
           <span>{regNumber}</span>
           {!verified_doctor ? (
             <span style={{ marginLeft: "5px" }}>
@@ -1167,7 +1167,7 @@ class DoctorProfilePage extends Component {
               />
             </span>
           ) : null}
-        </>
+        </Fragment>
       );
     }
   };
@@ -1204,7 +1204,7 @@ class DoctorProfilePage extends Component {
       );
     } else {
       return (
-        <>
+        <Fragment>
           <span>{name}</span>
           {!verified_doctor ? (
             <span style={{ marginLeft: "5px" }}>
@@ -1214,7 +1214,7 @@ class DoctorProfilePage extends Component {
               />
             </span>
           ) : null}
-        </>
+        </Fragment>
       );
     }
   };
@@ -1413,7 +1413,7 @@ class DoctorProfilePage extends Component {
       );
     } else {
       return (
-        <>
+        <Fragment>
           <span>{render_location}</span>
           {!verified_doctor ? (
             <span style={{ marginLeft: "5px" }}>
@@ -1423,7 +1423,7 @@ class DoctorProfilePage extends Component {
               />
             </span>
           ) : null}
-        </>
+        </Fragment>
       );
     }
   };
@@ -1453,7 +1453,7 @@ class DoctorProfilePage extends Component {
       );
     } else {
       return (
-        <>
+        <Fragment>
           <span>{doctor_qualifications[qualification_id].basic_info.year}</span>
           {!verified_doctor ? (
             <span style={{ marginLeft: "5px" }}>
@@ -1463,7 +1463,7 @@ class DoctorProfilePage extends Component {
               />
             </span>
           ) : null}
-        </>
+        </Fragment>
       );
     }
   };
@@ -1493,7 +1493,7 @@ class DoctorProfilePage extends Component {
       );
     } else {
       return (
-        <>
+        <Fragment>
           <span>{doctor_registrations[registration_id].basic_info.year}</span>
           {!verified_doctor ? (
             <span style={{ marginLeft: "5px" }}>
@@ -1503,7 +1503,7 @@ class DoctorProfilePage extends Component {
               />
             </span>
           ) : null}
-        </>
+        </Fragment>
       );
     }
   };
@@ -1530,7 +1530,7 @@ class DoctorProfilePage extends Component {
       );
     } else {
       return (
-        <>
+        <Fragment>
           <span>{expiryDate}</span>
           {!verified_doctor ? (
             <span style={{ marginLeft: "5px" }}>
@@ -1540,7 +1540,7 @@ class DoctorProfilePage extends Component {
               />
             </span>
           ) : null}
-        </>
+        </Fragment>
       );
     }
   };
@@ -1578,7 +1578,7 @@ class DoctorProfilePage extends Component {
       );
     } else {
       return (
-        <>
+        <Fragment>
           <span>{collegeName ? collegeName : TABLE_DEFAULT_BLANK_FIELD}</span>
           {!verified_doctor ? (
             <span style={{ marginLeft: "5px" }}>
@@ -1588,7 +1588,7 @@ class DoctorProfilePage extends Component {
               />
             </span>
           ) : null}
-        </>
+        </Fragment>
       );
     }
   };
@@ -1623,7 +1623,7 @@ class DoctorProfilePage extends Component {
       );
     } else {
       return (
-        <>
+        <Fragment>
           <span>
             {degree_id
               ? degrees[degree_id].basic_info.name
@@ -1637,7 +1637,7 @@ class DoctorProfilePage extends Component {
               />
             </span>
           ) : null}
-        </>
+        </Fragment>
       );
     }
   };
@@ -1679,7 +1679,7 @@ class DoctorProfilePage extends Component {
       );
     } else {
       return (
-        <>
+        <Fragment>
           <span>
             {registration_council_id
               ? councils[registration_council_id].basic_info.name
@@ -1693,7 +1693,7 @@ class DoctorProfilePage extends Component {
               />
             </span>
           ) : null}
-        </>
+        </Fragment>
       );
     }
   };
@@ -1765,12 +1765,12 @@ class DoctorProfilePage extends Component {
       );
     } else {
       return (
-        <>
+        <Fragment>
           <span>{city ? city : TABLE_DEFAULT_BLANK_FIELD}</span>
           <span style={{ marginLeft: "5px" }}>
             <EditOutlined onClick={this.editCity} title={"Edit City"} />
           </span>
-        </>
+        </Fragment>
       );
     }
   };
@@ -1894,7 +1894,7 @@ class DoctorProfilePage extends Component {
       );
     } else {
       return (
-        <>
+        <Fragment>
           <span>
             {speciality_id ? specialityName : TABLE_DEFAULT_BLANK_FIELD}
           </span>
@@ -1904,7 +1904,7 @@ class DoctorProfilePage extends Component {
               title={"Edit Specialities"}
             />
           </span>
-        </>
+        </Fragment>
       );
     }
   };
@@ -1938,14 +1938,14 @@ class DoctorProfilePage extends Component {
       );
     } else {
       return (
-        <>
+        <Fragment>
           <span>
             {gender ? GENDER[gender].label : TABLE_DEFAULT_BLANK_FIELD}
           </span>
           <span style={{ marginLeft: "5px" }}>
             <EditOutlined onClick={this.editGender} title={"Edit Gender"} />
           </span>
-        </>
+        </Fragment>
       );
     }
   };

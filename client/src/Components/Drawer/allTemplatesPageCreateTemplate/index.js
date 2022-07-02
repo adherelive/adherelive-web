@@ -962,7 +962,7 @@ class TemplatePageCreateDrawer extends Component {
         })}
         {/* AKSHAY NEW CODE IMPLEMENTATION */}
         {doctor_provider_id !== null && (
-          <>
+          <Fragment>
             {" "}
             <div className="template-share-swicth">
               <p
@@ -998,7 +998,7 @@ class TemplatePageCreateDrawer extends Component {
                 </p>
               )}
             </div>
-          </>
+          </Fragment>
         )}
       </div>
     );

@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React, { Component, Fragment } from "react";
 import { injectIntl } from "react-intl";
 import { Table, Icon, Empty } from "antd";
 import generateRow from "./datarow";
@@ -139,7 +139,7 @@ class SubscriptionTable extends Component {
     };
 
     return (
-      <>
+      <Fragment>
         <Table
           // onRow={authPermissions.includes(USER_PERMISSIONS.PATIENTS.VIEW) ? onRow : null}
           rowClassName={() => "pointer"}
@@ -165,7 +165,7 @@ class SubscriptionTable extends Component {
         {myTasksDrawer === true && (
           <MyTasks visible={myTasksDrawer} onCloseDrawer={this.onCloseDrawer} />
         )}
-      </>
+      </Fragment>
     );
   }
 }

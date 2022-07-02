@@ -682,12 +682,16 @@ const PatientTreatmentCard = ({
     }`;
     count++;
   }
-
-  let symptomsArray = JSON.parse(treatment_symptoms);
   let finalArray = [];
-  symptomsArray.forEach((ele) => {
-    finalArray.push(ele.symptomName);
-  });
+
+  try {
+    let symptomsArray = JSON.parse(treatment_symptoms);
+    symptomsArray.forEach((ele) => {
+      finalArray.push(ele.symptomName);
+    });
+  } catch (e) {
+    finalArray = treatment_symptoms;
+  }
 
   return (
     <div className="treatment mt20 tal bg-faint-grey">
@@ -760,7 +764,9 @@ const PatientTreatmentCard = ({
 
         <div className="flex direction-column mb14">
           <div className="fs14">{formatMessage(messages.symptoms_text)}</div>
-          <div className="fs16 fw700">{String(finalArray)}</div>
+          <div className="fs16 fw700">
+            {typeof finalArray === "string" ? finalArray : String(finalArray)}
+          </div>
         </div>
 
         <div className="flex direction-column mb14">
