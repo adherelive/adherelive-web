@@ -578,7 +578,7 @@ class Medicine extends Component {
             {/*  !searching_medicine*/}
             {/*  ?*/}
             {/*  (*/}
-            {/*    <>*/}
+            {/*    <Fragment>*/}
             {/*        <div className="med-defaul-container" onClick = {this.isSearchingMedicine}>*/}
             {/*            <span className="fs20 ml20" >{med_name}</span>*/}
             {/*        </div>*/}

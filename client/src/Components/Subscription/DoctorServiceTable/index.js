@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React, { Component, Fragment } from "react";
 import { injectIntl } from "react-intl";
 import { Table, Icon, Empty } from "antd";
 import generateRow from "./datarow";
@@ -133,7 +133,7 @@ class DoctorServiceTable extends Component {
     };
 
     return (
-      <>
+      <Fragment>
         <Table
           // onRow={authPermissions.includes(USER_PERMISSIONS.PATIENTS.VIEW) ? onRow : null}
           rowClassName={() => "pointer"}
@@ -156,7 +156,7 @@ class DoctorServiceTable extends Component {
             onCloseDrawer={this.onCloseDrawer}
           />
         )}
-      </>
+      </Fragment>
     );
   }
 }
