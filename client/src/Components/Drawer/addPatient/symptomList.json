@@ -1,0 +1,40 @@
+{
+  "symptoms": [
+    {
+      "id": 1,
+      "name": "Discolored skin patches (abnormal pigmentation)."
+    },
+    {
+      "id": 2,
+      "name": "Dry skin."
+    },
+    {
+      "id": 3,
+      "name": "Open sores"
+    },
+    {
+      "id": 4,
+      "name": "Peeling skin."
+    },
+    {
+      "id": 5,
+      "name": "Rashes, possibly with itchiness or pain."
+    },
+    {
+      "id": 6,
+      "name": "Red, white or pus-filled bumps."
+    },
+    {
+      "id": 7,
+      "name": "Scaly or rough skin."
+    },
+    {
+      "id": 8,
+      "name": "Lesions"
+    },
+    {
+      "id": 9,
+      "name": "Ulcers"
+    }
+  ]
+}
