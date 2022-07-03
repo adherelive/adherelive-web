@@ -1,6 +1,6 @@
 {
   "name": "adherelive-client",
-  "version": "2.6.0",
+  "version": "2.7.0",
   "scripts": {
     "start": "react-app-rewired start",
     "build": "react-app-rewired build && cp -R build/* ../public/",
