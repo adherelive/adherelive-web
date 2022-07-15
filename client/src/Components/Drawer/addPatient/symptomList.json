@@ -2,39 +2,111 @@
   "symptoms": [
     {
       "id": 1,
-      "name": "Discolored skin patches (abnormal pigmentation)."
+      "name": "Abdominal distension"
     },
     {
       "id": 2,
-      "name": "Dry skin."
+      "name": "Abdominal Pain"
     },
     {
       "id": 3,
-      "name": "Open sores"
+      "name": "Abnormal Behaviour"
     },
     {
       "id": 4,
-      "name": "Peeling skin."
+      "name": "Abnormal body movement"
     },
     {
       "id": 5,
-      "name": "Rashes, possibly with itchiness or pain."
+      "name": "Abnormal Posture / GAIT"
     },
     {
       "id": 6,
-      "name": "Red, white or pus-filled bumps."
+      "name": "Absent cry at birth"
     },
     {
       "id": 7,
-      "name": "Scaly or rough skin."
+      "name": "Acne"
     },
     {
       "id": 8,
-      "name": "Lesions"
+      "name": "Allergen"
     },
     {
       "id": 9,
-      "name": "Ulcers"
+      "name": "Altered sensorium"
+    },
+    {
+      "id": 10,
+      "name": "Anxiety"
+    },
+    {
+      "id": 11,
+      "name": "Asthenopic Symptom"
+    },
+    {
+      "id": 12,
+      "name": "Atopy"
+    },
+    {
+      "id": 13,
+      "name": "Back or flank pain"
+    },
+    {
+      "id": 14,
+      "name": "Back pain"
+    },
+    {
+      "id": 15,
+      "name": "Backache"
+    },
+    {
+      "id": 16,
+      "name": "Bleeding PV"
+    },
+    {
+      "id": 17,
+      "name": "Blepharospasm"
+    },
+    {
+      "id": 18,
+      "name": "Blindness"
+    },
+    {
+      "id": 19,
+      "name": "Blister"
+    },
+    {
+      "id": 20,
+      "name": "Blood from ear"
+    },
+    {
+      "id": 21,
+      "name": "Blood from mouth"
+    },
+    {
+      "id": 22,
+      "name": "Blood from nose"
+    },
+    {
+      "id": 23,
+      "name": "Blood in urine"
+    },
+    {
+      "id": 24,
+      "name": "Bloody diarrhea"
+    },
+    {
+      "id": 25,
+      "name": "bluish discoloration"
+    },
+    {
+      "id": 26,
+      "name": "Blurred vision"
+    },
+    {
+      "id": 27,
+      "name": "Bradycardia"
     }
   ]
 }
