@@ -2,383 +2,755 @@
   "diagnosis": [
     {
       "id": 1,
-      "name": "Acanthosis nigricans"
+      "name": "Congenital Heart Disease"
     },
     {
       "id": 2,
-      "name": "Acne"
+      "name": "Congestive Heart Failure"
     },
     {
       "id": 3,
-      "name": "Acne scars"
+      "name": "Acute Rheumatic Fever"
     },
     {
       "id": 4,
-      "name": "Actinic keratosis"
+      "name": "Anemia"
     },
     {
       "id": 5,
-      "name": "Alopecia areata"
+      "name": "Arrhythmia"
     },
     {
       "id": 6,
-      "name": "Athlete's foot"
+      "name": "Autism Spectrum Disorder"
     },
     {
       "id": 7,
-      "name": "Atopic dermatitis"
+      "name": "Cerebral Palsy"
     },
     {
       "id": 8,
-      "name": "Basal cell carcinoma"
+      "name": "Epilepsy"
     },
     {
       "id": 9,
-      "name": "Bed bugs"
+      "name": "Febrile Seizure"
     },
     {
       "id": 10,
-      "name": "Birthmarks"
+      "name": "Hydrocephalus"
     },
     {
       "id": 11,
-      "name": "Boils and styes"
+      "name": "ITP"
     },
     {
       "id": 12,
-      "name": "Botulinum toxin"
+      "name": "Meningitis"
     },
     {
       "id": 13,
-      "name": "Bullous pemphigoid"
+      "name": "Muscular Dystrophy"
     },
     {
       "id": 14,
-      "name": "Cellulitis"
+      "name": "Spartan Hypertention"
     },
     {
       "id": 15,
-      "name": "Central centrifugal cicatricial alopecia (CCCA)"
+      "name": "Chicken pox"
     },
     {
       "id": 16,
-      "name": "Chemical peels"
+      "name": "Dengue"
     },
     {
       "id": 17,
-      "name": "Chickenpox"
+      "name": "Diphtheria"
     },
     {
       "id": 18,
-      "name": "Cold sores"
+      "name": "Enteric fever"
     },
     {
       "id": 19,
-      "name": "Contact dermatitis"
+      "name": "Hepatitis"
     },
     {
       "id": 20,
-      "name": "Cutaneous T-cell lymphoma"
+      "name": "Influenze"
     },
     {
       "id": 21,
-      "name": "Dandruff"
+      "name": "Malaria"
     },
     {
       "id": 22,
-      "name": "Dermatofibrosarcoma protuberan (DFSP)"
+      "name": "Measles"
     },
     {
       "id": 23,
-      "name": "Diabetes: Dermatologist-recommended skin care for people with diabetes"
+      "name": "Mumps"
     },
     {
       "id": 24,
-      "name": "Diabetes: Warning signs on your skin"
+      "name": "Necrotizing Enterocolitis"
     },
     {
       "id": 25,
-      "name": "﻿Diaper rash"
+      "name": "Neonatal Sepsis "
     },
     {
       "id": 26,
-      "name": "Dry skin"
+      "name": "Perinatal Asphyxia"
     },
     {
       "id": 27,
-      "name": "Dyshidrotic eczema"
+      "name": "Respiratory Distress Syndrome"
     },
     {
       "id": 28,
-      "name": "Eczema"
+      "name": "Transient Tachypnea of new born"
     },
     {
       "id": 29,
-      "name": "Epidermolysis bullosa"
+      "name": "Acute Gastroenteritis - AGE"
     },
     {
       "id": 30,
-      "name": "Female pattern hair loss"
+      "name": "Constipation"
     },
     {
       "id": 31,
-      "name": "Folliculitis"
+      "name": "Gastritis"
     },
     {
       "id": 32,
-      "name": "Frontal fibrosing alopecia"
+      "name": "Hyperactive Airway Disease"
     },
     {
       "id": 33,
-      "name": "Genital herpes"
+      "name": "Pneumonia"
     },
     {
       "id": 34,
-      "name": "Genital warts"
+      "name": "Pulmonary TB"
     },
     {
       "id": 35,
-      "name": "Granuloma annulare"
+      "name": "Upper Respiratory Tract Infection"
     },
     {
       "id": 36,
-      "name": "Hair loss﻿"
+      "name": "ARMD"
     },
     {
       "id": 37,
-      "name": "Hand-foot-and-mouth disease"
+      "name": "Blunt Trauma"
     },
     {
       "id": 38,
-      "name": "﻿Head lice﻿"
+      "name": "Cataract"
     },
     {
       "id": 39,
-      "name": "Heart disease: Warning signs on your skin"
+      "name": "Congenital Nasal Obstruction"
     },
     {
       "id": 40,
-      "name": "Herpes simplex"
+      "name": "Corneal Foreign body"
     },
     {
       "id": 41,
-      "name": "Hidradenitis suppurativa"
+      "name": "Corneal Ulcer"
+    },
+    {
+      "id": 42,
+      "name": "CRVO"
     },
     {
       "id": 43,
-      "name": "Hyperhidrosis"
+      "name": "CSR"
     },
     {
       "id": 44,
-      "name": "Ichthyosis vulgaris"
+      "name": "Diabetic Retinopathy"
     },
     {
       "id": 45,
-      "name": "Imiquimod"
-    },
-    {
-      "id": 46,
-      "name": "Impetigo"
+      "name": "Dry eye"
     },
     {
       "id": 47,
       "name": "Isotretinoin"
     },
     {
+      "id": 46,
+      "name": "Glaucoma"
+    },
+    {
+      "id": 47,
+      "name": "Hypertensive Retinopathy"
+    },
+    {
       "id": 48,
-      "name": "Keloids"
+      "name": "Orbital Cellulitis"
     },
     {
       "id": 49,
-      "name": "Keratosis pilaris"
+      "name": "Preseptal Cellulitis"
     },
     {
       "id": 50,
-      "name": "Kidney disease: How it can affect your skin"
+      "name": " Refractive error "
     },
     {
       "id": 51,
-      "name": "Lasers"
+      "name": "Retinal detachment"
     },
     {
       "id": 52,
-      "name": " Leprosy"
+      "name": "Thyroid eye disease"
     },
     {
       "id": 53,
-      "name": "Lichen planus"
+      "name": "Uveitis"
     },
     {
       "id": 54,
-      "name": "Lupus"
+      "name": "Bells palsy"
     },
     {
       "id": 55,
-      "name": "Lyme disease"
+      "name": "Blepharitis"
     },
     {
       "id": 56,
-      "name": "Melanoma"
+      "name": "Chalazion"
     },
     {
       "id": 57,
-      "name": "Melasma"
+      "name": " Conjuctivitis"
     },
     {
       "id": 58,
-      "name": "Merkel cell carcinoma"
+      "name": "Episcleritis / Scleritis"
     },
     {
       "id": 59,
-      "name": " Moles"
+      "name": "Nerve palsy"
     },
     {
       "id": 60,
-      "name": "Molluscum contagiosum﻿"
+      "name": "Optic Neuritis"
     },
     {
       "id": 61,
-      "name": "Nail fungus"
+      "name": "Pinguecula"
     },
     {
       "id": 62,
-      "name": "Neurodermatitis"
+      "name": "Pterygium"
     },
     {
       "id": 63,
-      "name": "Nickel allergy"
+      "name": "Ptosis"
     },
     {
       "id": 64,
-      "name": " Nummular dermatitis"
+      "name": "Squint"
     },
     {
       "id": 65,
-      "name": "Ocular rosacea"
+      "name": "Staphyloma"
     },
     {
       "id": 66,
-      "name": "Pemphigus"
+      "name": "STYE - hordeolum internum"
     },
     {
       "id": 67,
-      "name": "Perioral dermatitis"
+      "name": "VKS- spring catarrh"
+    },
+    {
+      "id": 68,
+      "name": "Abortion"
     },
     {
       "id": 69,
-      "name": "Poison ivy and oak and sumac"
+      "name": "ANC - pregnancy"
     },
     {
       "id": 70,
-      "name": "Prurigo nodularis"
+      "name": "Anemia of pregnancy"
     },
     {
       "id": 71,
-      "name": "Psoriasis"
+      "name": " APH"
     },
     {
       "id": 72,
-      "name": "Psoriatic arthritis"
+      "name": "AVB"
     },
     {
       "id": 73,
-      "name": "Rashes"
+      "name": " Ectopic pregnancy"
     },
     {
       "id": 74,
-      "name": " Ringworm"
+      "name": "Endometriosis"
     },
     {
       "id": 75,
-      "name": "Rosacea"
+      "name": "GDM"
     },
     {
       "id": 76,
-      "name": "Sarcoidosis"
+      "name": "Hyperemesis gravidarum"
     },
     {
       "id": 77,
-      "name": "Scabies"
+      "name": "Infertility"
     },
     {
       "id": 78,
-      "name": "Scalp psoriasis"
+      "name": "Obstetric cholestasis"
     },
     {
       "id": 79,
-      "name": "Scars"
+      "name": "PID"
     },
     {
       "id": 80,
-      "name": "Scleroderma"
+      "name": "PLOS"
     },
     {
       "id": 81,
-      "name": "Sebaceous carcinoma"
+      "name": "Preeclampsia / Eclampsia "
     },
     {
       "id": 82,
-      "name": "Seborrheic dermatitis"
-    },
-    {
-      "id": 83,
-      "name": "Seborrheic keratoses"
+      "name": "Prolapse"
     },
     {
       "id": 84,
-      "name": "Shingles﻿"
+      "name": "Acne"
     },
     {
       "id": 85,
-      "name": "Skin biopsy"
+      "name": "AGA - Androgenetic alopecia "
     },
     {
       "id": 86,
-      "name": "Skin biopsy: Dermatologist-recommended wound care"
+      "name": "Balanoposthitis"
     },
     {
       "id": 87,
-      "name": "Skin cancer"
+      "name": "Hansen's Disease"
     },
     {
       "id": 88,
-      "name": "Squamous cell carcinoma"
+      "name": "Herpes zoster"
     },
     {
       "id": 89,
-      "name": "Stasis dermatitis"
+      "name": "Immunobullous disease"
     },
     {
       "id": 90,
-      "name": "Stretch marks"
+      "name": "Melasma"
     },
     {
       "id": 91,
-      "name": "Syphilis"
+      "name": "Pityriasis versicolor"
     },
     {
       "id": 92,
-      "name": "Thyroid disease and your skin"
+      "name": "Psoriasis"
     },
     {
       "id": 93,
-      "name": "Squamous cell carcinoma"
+      "name": "Scabies"
     },
     {
       "id": 94,
-      "name": "Tinea versicolor﻿"
+      "name": "Tinea"
     },
     {
       "id": 95,
-      "name": "Vitiligo"
+      "name": "Urticaria"
     },
     {
       "id": 96,
-      "name": " Warts﻿"
+      "name": "Varicella"
     },
     {
       "id": 97,
-      "name": " Xeroderma pigmentosum﻿"
+      "name": "Vitiligo"
+    },
+    {
+      "id": 98,
+      "name": "VVC"
+    },
+    {
+      "id": 99,
+      "name": "Warts disease"
+    },
+    {
+      "id": 100,
+      "name": "Asthma "
+    },
+    {
+      "id": 101,
+      "name": "Ca lung"
+    },
+    {
+      "id": 102,
+      "name": "COPD"
+    },
+    {
+      "id": 103,
+      "name": "COVID - 19"
+    },
+    {
+      "id": 104,
+      "name": "LRTI"
+    },
+    {
+      "id": 105,
+      "name": "Pleural effusion"
+    },
+    {
+      "id": 106,
+      "name": "Pneumonia"
+    },
+    {
+      "id": 107,
+      "name": "Pneumothorax"
+    },
+    {
+      "id": 108,
+      "name": "Tuberculosis"
+    },
+    {
+      "id": 109,
+      "name": "URTI- upper respiratory infection"
+    },
+    {
+      "id": 110,
+      "name": "Allergic rhinitis"
+    },
+    {
+      "id": 111,
+      "name": "ASOM"
+    },
+    {
+      "id": 112,
+      "name": "BPPV"
+    },
+    {
+      "id": 113,
+      "name": "CSOM"
+    },
+    {
+      "id": 114,
+      "name": "Deviated nasal septum"
+    },
+    {
+      "id": 115,
+      "name": "Ear wax"
+    },
+    {
+      "id": 116,
+      "name": "Epistaxis"
+    },
+    {
+      "id": 117,
+      "name": "ETD"
+    },
+    {
+      "id": 118,
+      "name": "F.B. Ear"
+    },
+    {
+      "id": 119,
+      "name": "F.B. Nose"
+    },
+    {
+      "id": 120,
+      "name": "LPRD"
+    },
+    {
+      "id": 121,
+      "name": "Nasal polyposis"
+    },
+    {
+      "id": 122,
+      "name": "OME"
+    },
+    {
+      "id": 123,
+      "name": "Otitis externa"
+    },
+    {
+      "id": 124,
+      "name": "Otomycosis"
+    },
+    {
+      "id": 125,
+      "name": "Pharyngitis"
+    },
+    {
+      "id": 126,
+      "name": "Presbycusis"
+    },
+    {
+      "id": 127,
+      "name": "Rhinosinusitis"
+    },
+    {
+      "id": 128,
+      "name": "Tonsillitis"
+    },
+    {
+      "id": 129,
+      "name": "Vocal cord nodule"
+    },
+    {
+      "id": 130,
+      "name": "Vocal cord polyp"
+    },
+    {
+      "id": 131,
+      "name": "IHD/CAD"
+    },
+    {
+      "id": 132,
+      "name": "ACS"
+    },
+    {
+      "id": 133,
+      "name": "ADHF"
+    },
+    {
+      "id": 134,
+      "name": "HFrEF"
+    },
+    {
+      "id": 135,
+      "name": "HFpEF"
+    },
+    {
+      "id": 136,
+      "name": "RHD"
+    },
+    {
+      "id": 137,
+      "name": "Valvular heart disease "
+    },
+    {
+      "id": 138,
+      "name": "Acute kidney injury "
+    },
+    {
+      "id": 139,
+      "name": "Chronic kidney injury"
+    },
+    {
+      "id": 140,
+      "name": "Nephrotic syndrome"
+    },
+    {
+      "id": 141,
+      "name": "Nephritic syndrome"
+    },
+    {
+      "id": 142,
+      "name": "Polycystic kidney disease"
+    },
+    {
+      "id": 143,
+      "name": "Cushings"
+    },
+    {
+      "id": 144,
+      "name": "Diabetes - type 1"
+    },
+    {
+      "id": 145,
+      "name": "Diabetes - type 2"
+    },
+    {
+      "id": 146,
+      "name": "hyperthyroidism"
+    },
+    {
+      "id": 147,
+      "name": "hypothyroidism"
+    },
+    {
+      "id": 148,
+      "name": "Metabolic syndrome"
+    },
+    {
+      "id": 149,
+      "name": "Rheumatoid arthritis"
+    },
+    {
+      "id": 150,
+      "name": "Osteoarthritis"
+    },
+    {
+      "id": 151,
+      "name": "Ankylosing spondylitis"
+    },
+    {
+      "id": 152,
+      "name": "Psoriatic arthritis"
+    },
+    {
+      "id": 153,
+      "name": "Gout"
+    },
+    {
+      "id": 154,
+      "name": "Sjogren's syndrome"
+    },
+    {
+      "id": 156,
+      "name": "Infection arthritis"
+    },
+    {
+      "id": 157,
+      "name": "Cervical spondylosis"
+    },
+    {
+      "id": 158,
+      "name": "Pott's spene"
+    },
+    {
+      "id": 159,
+      "name": "COPD"
+    },
+    {
+      "id": 160,
+      "name": "LRTI"
+    },
+    {
+      "id": 161,
+      "name": "Asthma"
+    },
+    {
+      "id": 162,
+      "name": "Tuberculosis"
+    },
+    {
+      "id": 163,
+      "name": "Pleural effusion"
+    },
+    {
+      "id": 164,
+      "name": "Acid peptic disease"
+    },
+    {
+      "id": 165,
+      "name": "Acute gastritis"
+    },
+    {
+      "id": 166,
+      "name": "Acute gastroenteritis"
+    },
+    {
+      "id": 167,
+      "name": "Acute hepatitis"
+    },
+    {
+      "id": 168,
+      "name": " Cholecystitis"
+    },
+    {
+      "id": 169,
+      "name": "Inflammatory bowel disease"
+    },
+    {
+      "id": 170,
+      "name": "Irritable bowel syndrome"
+    },
+    {
+      "id": 171,
+      "name": "NASH"
+    },
+    {
+      "id": 172,
+      "name": "Pancreatitis"
+    },
+    {
+      "id": 173,
+      "name": "UTI"
+    },
+    {
+      "id": 174,
+      "name": "Typhoid"
+    },
+    {
+      "id": 175,
+      "name": "Malaria"
+    },
+    {
+      "id": 176,
+      "name": "Dengue"
+    },
+    {
+      "id": 177,
+      "name": "COVID "
+    },
+    {
+      "id": 179,
+      "name": "Acute spinal cord injury"
+    },
+    {
+      "id": 180,
+      "name": "Alzheimer's disease"
+    },
+    {
+      "id": 181,
+      "name": "Amyotrophic lateral sclerosis"
+    },
+    {
+      "id": 182,
+      "name": "Bell's palsy"
+    },
+    {
+      "id": 183,
+      "name": "Cerebral aneurysm"
+    },
+    {
+      "id": 184,
+      "name": "CVA infarct"
+    },
+    {
+      "id": 185,
+      "name": "Epilepsy and seizure"
+    },
+    {
+      "id": 186,
+      "name": "Hydrocephalus"
+    },
+    {
+      "id": 187,
+      "name": "Meningitis"
+    },
+    {
+      "id": 188,
+      "name": "Migraine"
+    },
+    {
+      "id": 189,
+      "name": "Parkinson's disease"
+    },
+    {
+      "id": 190,
+      "name": "Stroke"
     }
   ]
 }
