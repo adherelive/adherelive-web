@@ -21,6 +21,17 @@ import TextArea from "antd/lib/input/TextArea";
 import { FINAL, PROBABLE, DIAGNOSIS_TYPE } from "../../../constant";
 import Footer from "../footer";
 
+import { PlusCircleOutlined } from "@ant-design/icons";
+import { MinusCircleOutlined } from "@ant-design/icons";
+import isEmpty from "../../../Helper/is-empty";
+
+// AKSHAY NEW CODE IMPLEMENTATIONS
+
+import CustomSymptoms from "../addPatient/CustomSymptoms";
+import CustomDiagnosis from "../addPatient/CustomDiagnosis";
+import MultipleTreatmentAlert from "../addPatient/MultipleTreatmentAlert";
+import WidgetDrawer from "../addPatient/WidgetDrawer";
+
 const { Option } = Select;
 
 class AddCareplanDrawer extends Component {
@@ -38,6 +49,10 @@ class AddCareplanDrawer extends Component {
       diagnosis_type: "2",
       symptoms: "",
       submitting: false,
+      isCollapse: false,
+      // AKSHAY NEW CODE IMPLEMENTATIONS
+      widgetDrawerOpen: false,
+      finalSymptomData: [],
     };
     this.handleConditionSearch = throttle(
       this.handleConditionSearch.bind(this),
@@ -257,6 +272,68 @@ class AddCareplanDrawer extends Component {
     }
   }
 
+  // AKSHAY NEW CODE IMPLEMENTATIONS
+
+  handleDiagnosisChanges = (value) => {
+    console.log(`selected ${value}`);
+
+    this.setState({ diagnosis_description: value });
+  };
+
+  handleSymptomsChanges = (value) => {
+    console.log(`selected ${value}`);
+
+    this.setState({ symptoms: value });
+  };
+
+  handleSymptomSelect = (value) => {
+    console.log(`selected ${value}`);
+    if (!isEmpty(value)) {
+      let data = this.state.finalSymptomData;
+      let symptomObject = {
+        symptomName: value,
+        bodyParts: [],
+        duration: "",
+      };
+      data.push(symptomObject);
+
+      this.setState({
+        widgetDrawerOpen: true,
+        finalSymptomData: data,
+        selectedSymptom: value,
+      });
+    }
+  };
+
+  hendleSymptomDeselect = (value) => {
+    console.log(`deselected ${value}`);
+    let data = this.state.finalSymptomData;
+    var filteredArray = data.filter((ele) => ele.symptomName !== value);
+
+    this.setState({
+      finalSymptomData: filteredArray,
+    });
+  };
+
+  generateFinalSymptomData = (data) => {
+    console.log("finalSymptomData", data);
+    this.setState({
+      finalSymptomData: data,
+    });
+  };
+
+  collpaseHanlder = (label) => {
+    this.setState({
+      isCollapse: label,
+    });
+  };
+
+  onCloseWidgetDrawer = () => {
+    this.setState({
+      widgetDrawerOpen: false,
+    });
+  };
+
   renderAddCareplan = () => {
     let dtToday = new Date();
 
@@ -278,33 +355,30 @@ class AddCareplanDrawer extends Component {
       severity = "",
       treatment = "",
       symptoms = "",
+      isCollapse = false,
     } = this.state;
 
     return (
       <div className="form-block-ap ">
-        <div className="form-headings-ap flex align-center justify-start">
-          {this.formatMessage(messages.clinicalNotes)}
-        </div>
-
-        <TextArea
-          placeholder={this.formatMessage(messages.writeHere)}
-          value={clinical_notes}
-          className={"form-textarea-ap "}
-          onChange={this.setClinicalNotes}
-          onPaste={this.setPastedClinicalNotes}
-        />
+        {/* AKSHAY NEW CODE IMPLEMENTATION */}
 
         <div className="form-headings-ap flex align-center justify-start">
           {this.formatMessage(messages.symptoms)}
         </div>
 
-        <TextArea
+        <CustomSymptoms
+          handleSymptomsChanges={this.handleSymptomsChanges}
+          handleSymptomSelect={this.handleSymptomSelect}
+          hendleSymptomDeselect={this.hendleSymptomDeselect}
+        />
+
+        {/* <TextArea
           placeholder={this.formatMessage(messages.writeHere)}
           value={symptoms}
           className={"form-textarea-ap "}
           onChange={this.setSymptoms}
           onPaste={this.setPastedSymptoms}
-        />
+        /> */}
 
         <div className="form-headings-ap flex  justify-space-between">
           <div className="flex direction-column align-center justify-center">
@@ -335,70 +409,14 @@ class AddCareplanDrawer extends Component {
             </Select>
           </div>
         </div>
-
-        <TextArea
+        <CustomDiagnosis handleDiagnosisChanges={this.handleDiagnosisChanges} />
+        {/* <TextArea
           placeholder={this.formatMessage(messages.writeHere)}
           value={diagnosis_description}
           className={"form-textarea-ap"}
           onChange={this.setDiagnosis}
           onPaste={this.setPastedDiagnosis}
-        />
-
-        <div className="form-headings-ap flex align-center justify-start">
-          {this.formatMessage(messages.condition)}
-        </div>
-
-        <Select
-          className="form-inputs-ap drawer-select"
-          placeholder="Select Condition"
-          value={this.state.condition}
-          onChange={this.setCondition}
-          onSearch={this.handleConditionSearch}
-          notFoundContent={
-            this.state.fetchingCondition ? (
-              <Spin size="small" />
-            ) : (
-              "No match found"
-            )
-          }
-          showSearch
-          autoComplete="off"
-          optionFilterProp="children"
-          filterOption={(input, option) =>
-            option.props.children.toLowerCase().indexOf(input.toLowerCase()) >=
-            0
-          }
-        >
-          {this.getConditionOption()}
-        </Select>
-
-        <div className="form-headings-ap  flex align-center justify-start">
-          {this.formatMessage(messages.severity)}
-        </div>
-
-        <Select
-          className="form-inputs-ap drawer-select"
-          placeholder="Select Severity"
-          value={severity}
-          onChange={this.setSeverity}
-          onSearch={this.handleSeveritySearch}
-          notFoundContent={
-            this.state.fetchingSeverity ? (
-              <Spin size="small" />
-            ) : (
-              "No match found"
-            )
-          }
-          showSearch
-          autoComplete="off"
-          optionFilterProp="children"
-          filterOption={(input, option) =>
-            option.props.children.toLowerCase().indexOf(input.toLowerCase()) >=
-            0
-          }
-        >
-          {this.getSeverityOption()}
-        </Select>
+        /> */}
 
         <div className="form-headings-ap flex align-center justify-start">
           {this.formatMessage(messages.treatment)}
@@ -428,6 +446,109 @@ class AddCareplanDrawer extends Component {
         >
           {this.getTreatmentOption()}
         </Select>
+
+        <div className="form-headings-ap flex align-center justify-space-between mt10 mb10">
+          {this.formatMessage(messages.clinicalNotes)}
+          <div>
+            {isCollapse === "clinicalNotes" ? (
+              <MinusCircleOutlined onClick={() => this.collpaseHanlder("")} />
+            ) : (
+              <PlusCircleOutlined
+                onClick={() => this.collpaseHanlder("clinicalNotes")}
+              />
+            )}
+          </div>
+        </div>
+
+        {isCollapse === "clinicalNotes" && (
+          <TextArea
+            placeholder={this.formatMessage(messages.writeHere)}
+            value={clinical_notes}
+            className={"form-textarea-ap "}
+            onChange={this.setClinicalNotes}
+            onPaste={this.setPastedClinicalNotes}
+          />
+        )}
+
+        <div className="form-headings-ap flex align-center justify-space-between mt10 mb10">
+          {this.formatMessage(messages.condition)}
+          <div>
+            {isCollapse === "condition" ? (
+              <MinusCircleOutlined onClick={() => this.collpaseHanlder("")} />
+            ) : (
+              <PlusCircleOutlined
+                onClick={() => this.collpaseHanlder("condition")}
+              />
+            )}
+          </div>
+        </div>
+
+        {isCollapse === "condition" && (
+          <Select
+            className="form-inputs-ap drawer-select"
+            placeholder="Select Condition"
+            value={this.state.condition}
+            onChange={this.setCondition}
+            onSearch={this.handleConditionSearch}
+            notFoundContent={
+              this.state.fetchingCondition ? (
+                <Spin size="small" />
+              ) : (
+                "No match found"
+              )
+            }
+            showSearch
+            autoComplete="off"
+            optionFilterProp="children"
+            filterOption={(input, option) =>
+              option.props.children
+                .toLowerCase()
+                .indexOf(input.toLowerCase()) >= 0
+            }
+          >
+            {this.getConditionOption()}
+          </Select>
+        )}
+
+        <div className="form-headings-ap  flex align-center justify-space-between mt10 mb10">
+          {this.formatMessage(messages.severity)}
+          <div>
+            {isCollapse === "severity" ? (
+              <MinusCircleOutlined onClick={() => this.collpaseHanlder("")} />
+            ) : (
+              <PlusCircleOutlined
+                onClick={() => this.collpaseHanlder("severity")}
+              />
+            )}
+          </div>
+        </div>
+
+        {isCollapse === "severity" && (
+          <Select
+            className="form-inputs-ap drawer-select"
+            placeholder="Select Severity"
+            value={severity}
+            onChange={this.setSeverity}
+            onSearch={this.handleSeveritySearch}
+            notFoundContent={
+              this.state.fetchingSeverity ? (
+                <Spin size="small" />
+              ) : (
+                "No match found"
+              )
+            }
+            showSearch
+            autoComplete="off"
+            optionFilterProp="children"
+            filterOption={(input, option) =>
+              option.props.children
+                .toLowerCase()
+                .indexOf(input.toLowerCase()) >= 0
+            }
+          >
+            {this.getSeverityOption()}
+          </Select>
+        )}
       </div>
     );
   };
@@ -535,7 +656,7 @@ class AddCareplanDrawer extends Component {
     const { visible } = this.props;
     const { onClose, renderAddCareplan } = this;
     const { submitting = false } = this.state;
-
+    const { widgetDrawerOpen } = this.state;
     if (visible !== true) {
       return null;
     }
@@ -555,7 +676,14 @@ class AddCareplanDrawer extends Component {
           width={"35%"}
         >
           {renderAddCareplan()}
-
+          {/* AKSHAY NEW CODE IMPLEMENTATIONS */}
+          <WidgetDrawer
+            visible={widgetDrawerOpen}
+            onCloseDrawer={this.onCloseWidgetDrawer}
+            finalSymptomData={this.state.finalSymptomData}
+            generateFinalSymptomData={this.generateFinalSymptomData}
+            selectedSymptom={this.state.selectedSymptom}
+          />
           <Footer
             onSubmit={this.onSubmit}
             onClose={this.onClose}
@@ -578,6 +706,9 @@ class AddCareplanDrawer extends Component {
                         </Button>
                     </div> */}
         </Drawer>
+        <MultipleTreatmentAlert
+          diagnosis_description={this.state.diagnosis_description}
+        />
       </Fragment>
     );
   }

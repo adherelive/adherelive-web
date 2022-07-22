@@ -29,6 +29,17 @@ import {
 } from "../../../constant";
 import Footer from "../footer";
 
+import isEmpty from "../../../Helper/is-empty";
+import { PlusCircleOutlined } from "@ant-design/icons";
+import { MinusCircleOutlined } from "@ant-design/icons";
+
+// AKSHAY NEW CODE IMPLEMENTATIONS
+
+import CustomSymptoms from "../addPatient/CustomSymptoms";
+import CustomDiagnosis from "../addPatient/CustomDiagnosis";
+import MultipleTreatmentAlert from "../addPatient/MultipleTreatmentAlert";
+import WidgetDrawer from "../addPatient/WidgetDrawer";
+
 const { Option } = Select;
 const RadioButton = Radio.Button;
 const RadioGroup = Radio.Group;
@@ -63,6 +74,10 @@ class EditPatientDrawer extends Component {
       severity: null,
       careplan_id: null,
       submitting: false,
+      isCollapse: false,
+      // AKSHAY NEW CODE IMPLEMENTATIONS
+      widgetDrawerOpen: false,
+      finalSymptomData: [],
     };
     this.handleConditionSearch = throttle(
       this.handleConditionSearch.bind(this),
@@ -322,6 +337,56 @@ class EditPatientDrawer extends Component {
     }
   };
 
+  // AKSHAY NEW CODE IMPLEMENTATIONS
+
+  handleDiagnosisChanges = (value) => {
+    console.log(`selected ${value}`);
+
+    this.setState({ diagnosis_description: value });
+  };
+
+  handleSymptomsChanges = (value) => {
+    console.log(`selected ${value}`);
+
+    this.setState({ symptoms: value });
+  };
+
+  handleSymptomSelect = (value) => {
+    console.log(`selected ${value}`);
+    if (!isEmpty(value)) {
+      let data = this.state.finalSymptomData;
+      let symptomObject = {
+        symptomName: value,
+        bodyParts: [],
+        duration: "",
+      };
+      data.push(symptomObject);
+
+      this.setState({
+        widgetDrawerOpen: true,
+        finalSymptomData: data,
+        selectedSymptom: value,
+      });
+    }
+  };
+
+  hendleSymptomDeselect = (value) => {
+    console.log(`deselected ${value}`);
+    let data = this.state.finalSymptomData;
+    var filteredArray = data.filter((ele) => ele.symptomName !== value);
+
+    this.setState({
+      finalSymptomData: filteredArray,
+    });
+  };
+
+  generateFinalSymptomData = (data) => {
+    console.log("finalSymptomData", data);
+    this.setState({
+      finalSymptomData: data,
+    });
+  };
+
   setDiagnosisType = (value) => {
     this.setState({ diagnosis_type: value });
   };
@@ -527,6 +592,18 @@ class EditPatientDrawer extends Component {
     }
   };
 
+  collpaseHanlder = (label) => {
+    this.setState({
+      isCollapse: label,
+    });
+  };
+
+  onCloseWidgetDrawer = () => {
+    this.setState({
+      widgetDrawerOpen: false,
+    });
+  };
+
   renderEditPatient = () => {
     const {
       payload = {},
@@ -573,6 +650,7 @@ class EditPatientDrawer extends Component {
       weight = "",
       symptoms = "",
       address = "",
+      isCollapse = false,
     } = this.state;
 
     let setDOB = moment(date_of_birth).format("YYYY-MM-DD");
@@ -705,30 +783,6 @@ class EditPatientDrawer extends Component {
           onChange={this.setName}
         />
 
-        <div className="form-headings-ap ">
-          {this.formatMessage(messages.pid)}
-        </div>
-        <Input
-          placeholder={this.formatMessage(messages.pid)}
-          value={patient_uid}
-          className={"form-inputs-ap"}
-          onChange={this.setPid}
-          // disabled={isdisabled}
-        />
-
-        <div className="form-headings-ap flex align-center justify-start">
-          {this.formatMessage(messages.address)}
-        </div>
-
-        <TextArea
-          placeholder={this.formatMessage(messages.writeHere)}
-          value={address}
-          className={"form-textarea-ap form-inputs-ap"}
-          // disabled={true}
-          onChange={this.setAddress}
-          style={{ resize: "none" }}
-        />
-
         <div className="form-headings-ap">
           {this.formatMessage(messages.gender)}
         </div>
@@ -763,32 +817,6 @@ class EditPatientDrawer extends Component {
           </Radio.Group>
         </div>
 
-        <div className="form-headings-ap">
-          {this.formatMessage(messages.height)}
-        </div>
-        <Input
-          className={"form-inputs-ap"}
-          type={"number"}
-          placeholder={this.formatMessage(messages.height_placeholder)}
-          value={height}
-          onChange={this.setHeight}
-          max={PATIENT_CONSTANTS.MAX_HEIGHT_ALLOWED}
-          suffix={"cm"}
-        />
-
-        <div className="form-headings-ap">
-          {this.formatMessage(messages.weight)}
-        </div>
-        <Input
-          type={"number"}
-          className={"form-inputs-ap"}
-          placeholder={this.formatMessage(messages.weight_placeholder)}
-          value={weight}
-          onChange={this.setWeight}
-          max={PATIENT_CONSTANTS.MAX_WEIGHT_ALLOWED}
-          suffix={"kg"}
-        />
-
         <div className="form-headings-ap flex align-center justify-start">
           {this.formatMessage(messages.dob)}
           <div className="star-red">*</div>
@@ -803,81 +831,194 @@ class EditPatientDrawer extends Component {
           // disabled={isdisabled}
         />
 
-        <div className="form-headings-ap flex align-items-end justify-space-between">
+        <div className="form-headings-ap flex align-center justify-space-between mt10 mb10">
+          {this.formatMessage(messages.pid)}
+          <div>
+            {isCollapse === "pid" ? (
+              <MinusCircleOutlined onClick={() => this.collpaseHanlder("")} />
+            ) : (
+              <PlusCircleOutlined onClick={() => this.collpaseHanlder("pid")} />
+            )}
+          </div>
+        </div>
+        {isCollapse === "pid" && (
+          <Input
+            placeholder={this.formatMessage(messages.pid)}
+            value={patient_uid}
+            className={"form-inputs-ap"}
+            onChange={this.setPid}
+            // disabled={isdisabled}
+          />
+        )}
+
+        <div className="form-headings-ap flex align-center justify-space-between mt10 mb10">
+          {this.formatMessage(messages.address)}
+          <div>
+            {isCollapse === "address" ? (
+              <MinusCircleOutlined onClick={() => this.collpaseHanlder("")} />
+            ) : (
+              <PlusCircleOutlined
+                onClick={() => this.collpaseHanlder("address")}
+              />
+            )}
+          </div>
+        </div>
+
+        {isCollapse === "address" && (
+          <TextArea
+            placeholder={this.formatMessage(messages.writeHere)}
+            value={address}
+            className={"form-textarea-ap form-inputs-ap"}
+            // disabled={true}
+            onChange={this.setAddress}
+            style={{ resize: "none" }}
+          />
+        )}
+
+        <div className="form-headings-ap flex align-center justify-space-between mt10 mb10">
+          {this.formatMessage(messages.height)}
+          <div>
+            {isCollapse === "height" ? (
+              <MinusCircleOutlined onClick={() => this.collpaseHanlder("")} />
+            ) : (
+              <PlusCircleOutlined
+                onClick={() => this.collpaseHanlder("height")}
+              />
+            )}
+          </div>
+        </div>
+        {isCollapse === "height" && (
+          <Input
+            className={"form-inputs-ap"}
+            type={"number"}
+            placeholder={this.formatMessage(messages.height_placeholder)}
+            value={height}
+            onChange={this.setHeight}
+            max={PATIENT_CONSTANTS.MAX_HEIGHT_ALLOWED}
+            suffix={"cm"}
+          />
+        )}
+
+        <div className="form-headings-ap flex align-center justify-space-between mt10 mb10">
+          {this.formatMessage(messages.weight)}
+          <div>
+            {isCollapse === "weight" ? (
+              <MinusCircleOutlined onClick={() => this.collpaseHanlder("")} />
+            ) : (
+              <PlusCircleOutlined
+                onClick={() => this.collpaseHanlder("weight")}
+              />
+            )}
+          </div>
+        </div>
+        {isCollapse === "weight" && (
+          <Input
+            type={"number"}
+            className={"form-inputs-ap"}
+            placeholder={this.formatMessage(messages.weight_placeholder)}
+            value={weight}
+            onChange={this.setWeight}
+            max={PATIENT_CONSTANTS.MAX_WEIGHT_ALLOWED}
+            suffix={"kg"}
+          />
+        )}
+
+        <div className="form-headings-ap flex align-center justify-space-between mt10 mb10">
           <div className="flex direction-row flex-grow-1">
             {this.formatMessage(messages.comorbidities)}
           </div>
-          <div className="flex-grow-0">
-            <RadioGroup
-              className="flex justify-content-end "
-              buttonStyle="solid"
-              value={comorbidities}
-            >
-              <RadioButton value={"none"} onClick={this.setComorbiditiesNone}>
-                {this.formatMessage(messages.none)}
-              </RadioButton>
-            </RadioGroup>
+          {isCollapse === "comorbidities" && (
+            <div className="flex-grow-0">
+              <RadioGroup
+                className="flex justify-content-end "
+                buttonStyle="solid"
+                value={comorbidities}
+              >
+                <RadioButton value={"none"} onClick={this.setComorbiditiesNone}>
+                  {this.formatMessage(messages.none)}
+                </RadioButton>
+              </RadioGroup>
+            </div>
+          )}
+
+          <div>
+            {isCollapse === "comorbidities" ? (
+              <MinusCircleOutlined onClick={() => this.collpaseHanlder("")} />
+            ) : (
+              <PlusCircleOutlined
+                onClick={() => this.collpaseHanlder("comorbidities")}
+              />
+            )}
           </div>
         </div>
+        {isCollapse === "comorbidities" && (
+          <TextArea
+            placeholder={this.formatMessage(messages.writeHere)}
+            value={comorbidities}
+            className={"form-textarea-ap form-inputs-ap"}
+            onChange={this.setComorbidities}
+            onPaste={this.setPastedComorbidities}
+            style={{ resize: "none" }}
+          />
+        )}
 
-        <TextArea
-          placeholder={this.formatMessage(messages.writeHere)}
-          value={comorbidities}
-          className={"form-textarea-ap form-inputs-ap"}
-          onChange={this.setComorbidities}
-          onPaste={this.setPastedComorbidities}
-          style={{ resize: "none" }}
-        />
-
-        <div className="form-headings-ap flex align-items-end justify-space-between">
+        <div className="form-headings-ap flex align-center justify-space-between mt10 mb10">
           <div className="flex direction-row flex-grow-1">
             {this.formatMessage(messages.allergies)}
           </div>
-          <div className="flex-grow-0">
-            <RadioGroup
-              className="flex justify-content-end "
-              buttonStyle="solid"
-              value={allergies}
-            >
-              <RadioButton value={"none"} onClick={this.setAllergiesNone}>
-                {this.formatMessage(messages.none)}
-              </RadioButton>
-            </RadioGroup>
+          {isCollapse === "allergies" && (
+            <div className="flex-grow-0">
+              <RadioGroup
+                className="flex justify-content-end "
+                buttonStyle="solid"
+                value={allergies}
+              >
+                <RadioButton value={"none"} onClick={this.setAllergiesNone}>
+                  {this.formatMessage(messages.none)}
+                </RadioButton>
+              </RadioGroup>
+            </div>
+          )}
+
+          <div>
+            {isCollapse === "allergies" ? (
+              <MinusCircleOutlined onClick={() => this.collpaseHanlder("")} />
+            ) : (
+              <PlusCircleOutlined
+                onClick={() => this.collpaseHanlder("allergies")}
+              />
+            )}
           </div>
         </div>
 
-        <TextArea
-          placeholder={this.formatMessage(messages.writeHere)}
-          value={allergies}
-          className={"form-textarea-ap form-inputs-ap"}
-          onChange={this.setAllergies}
-          onPaste={this.setPastedAllergies}
-          style={{ resize: "none" }}
-        />
+        {isCollapse === "allergies" && (
+          <TextArea
+            placeholder={this.formatMessage(messages.writeHere)}
+            value={allergies}
+            className={"form-textarea-ap form-inputs-ap"}
+            onChange={this.setAllergies}
+            onPaste={this.setPastedAllergies}
+            style={{ resize: "none" }}
+          />
+        )}
 
         <div className="form-category-headings-ap">
           {this.formatMessage(messages.treatmentPlan)}
         </div>
 
-        <div className="form-headings-ap flex align-center justify-start">
-          {this.formatMessage(messages.clinicalNotes)}
-        </div>
-
-        <TextArea
-          placeholder={this.formatMessage(messages.writeHere)}
-          value={clinical_notes}
-          className={"form-textarea-ap form-inputs-ap"}
-          onChange={this.setClinicalNotes}
-          onPaste={this.setPastedClinicalNotes}
-          style={{ resize: "none" }}
-          // disabled={!isTreatmentDisabled}
-        />
+        {/* AKSHAY NEW CODE IMPLEMENTATION */}
 
         <div className="form-headings-ap flex align-center justify-start">
           {this.formatMessage(messages.symptoms)}
         </div>
 
-        <TextArea
+        <CustomSymptoms
+          handleSymptomsChanges={this.handleSymptomsChanges}
+          handleSymptomSelect={this.handleSymptomSelect}
+          hendleSymptomDeselect={this.hendleSymptomDeselect}
+        />
+
+        {/* <TextArea
           placeholder={this.formatMessage(messages.writeHere)}
           value={symptoms}
           className={"form-textarea-ap form-inputs-ap"}
@@ -885,7 +1026,7 @@ class EditPatientDrawer extends Component {
           onPaste={this.setPastedSymptoms}
           style={{ resize: "none" }}
           // disabled={!isTreatmentDisabled}
-        />
+        /> */}
 
         <div className="form-headings-ap flex  justify-space-between">
           <div className="flex direction-column align-center justify-center">
@@ -918,7 +1059,9 @@ class EditPatientDrawer extends Component {
           </div>
         </div>
 
-        <TextArea
+        <CustomDiagnosis handleDiagnosisChanges={this.handleDiagnosisChanges} />
+
+        {/* <TextArea
           placeholder={this.formatMessage(messages.writeHere)}
           value={diagnosis_description}
           className={"form-textarea-ap form-inputs-ap"}
@@ -926,65 +1069,7 @@ class EditPatientDrawer extends Component {
           onPaste={this.setPastedDiagnosis}
           style={{ resize: "none" }}
           // disabled={!isTreatmentDisabled}
-        />
-
-        <div className="form-headings-ap flex align-center justify-start">
-          {this.formatMessage(messages.condition)}
-        </div>
-
-        <Select
-          className="form-inputs-ap drawer-select"
-          placeholder="Select Condition"
-          value={condition}
-          onChange={this.setCondition}
-          onSearch={this.handleConditionSearch}
-          notFoundContent={
-            this.state.fetchingCondition ? (
-              <Spin size="small" />
-            ) : (
-              "No match found"
-            )
-          }
-          showSearch
-          autoComplete="off"
-          optionFilterProp="children"
-          filterOption={(input, option) =>
-            option.props.children.toLowerCase().indexOf(input.toLowerCase()) >=
-            0
-          }
-          // disabled={!isTreatmentDisabled}
-        >
-          {this.getConditionOption()}
-        </Select>
-
-        <div className="form-headings-ap  flex align-center justify-start">
-          {this.formatMessage(messages.severity)}
-        </div>
-
-        <Select
-          className="form-inputs-ap drawer-select"
-          placeholder="Select Severity"
-          value={severity}
-          onChange={this.setSeverity}
-          onSearch={this.handleSeveritySearch}
-          notFoundContent={
-            this.state.fetchingSeverity ? (
-              <Spin size="small" />
-            ) : (
-              "No match found"
-            )
-          }
-          showSearch
-          autoComplete="off"
-          optionFilterProp="children"
-          filterOption={(input, option) =>
-            option.props.children.toLowerCase().indexOf(input.toLowerCase()) >=
-            0
-          }
-          // disabled={!isTreatmentDisabled}
-        >
-          {this.getSeverityOption()}
-        </Select>
+        /> */}
 
         <div className="form-headings-ap flex align-center justify-start">
           {this.formatMessage(messages.treatment)}
@@ -1016,6 +1101,112 @@ class EditPatientDrawer extends Component {
         >
           {this.getTreatmentOption()}
         </Select>
+
+        <div className="form-headings-ap flex align-center justify-space-between mt10 mb10">
+          {this.formatMessage(messages.clinicalNotes)}
+          <div>
+            {isCollapse === "clinicalNotes" ? (
+              <MinusCircleOutlined onClick={() => this.collpaseHanlder("")} />
+            ) : (
+              <PlusCircleOutlined
+                onClick={() => this.collpaseHanlder("clinicalNotes")}
+              />
+            )}
+          </div>
+        </div>
+        {isCollapse === "clinicalNotes" && (
+          <TextArea
+            placeholder={this.formatMessage(messages.writeHere)}
+            value={clinical_notes}
+            className={"form-textarea-ap form-inputs-ap"}
+            onChange={this.setClinicalNotes}
+            onPaste={this.setPastedClinicalNotes}
+            style={{ resize: "none" }}
+            // disabled={!isTreatmentDisabled}
+          />
+        )}
+
+        <div className="form-headings-ap  flex align-center justify-space-between mt10 mb10">
+          {this.formatMessage(messages.condition)}
+          <div>
+            {isCollapse === "condition" ? (
+              <MinusCircleOutlined onClick={() => this.collpaseHanlder("")} />
+            ) : (
+              <PlusCircleOutlined
+                onClick={() => this.collpaseHanlder("condition")}
+              />
+            )}
+          </div>
+        </div>
+
+        {isCollapse === "condition" && (
+          <Select
+            className="form-inputs-ap drawer-select"
+            placeholder="Select Condition"
+            value={condition}
+            onChange={this.setCondition}
+            onSearch={this.handleConditionSearch}
+            notFoundContent={
+              this.state.fetchingCondition ? (
+                <Spin size="small" />
+              ) : (
+                "No match found"
+              )
+            }
+            showSearch
+            autoComplete="off"
+            optionFilterProp="children"
+            filterOption={(input, option) =>
+              option.props.children
+                .toLowerCase()
+                .indexOf(input.toLowerCase()) >= 0
+            }
+            // disabled={!isTreatmentDisabled}
+          >
+            {this.getConditionOption()}
+          </Select>
+        )}
+
+        <div className="form-headings-ap   flex align-center justify-space-between mt10 mb10">
+          {this.formatMessage(messages.severity)}
+          <div>
+            {isCollapse === "severity" ? (
+              <MinusCircleOutlined onClick={() => this.collpaseHanlder("")} />
+            ) : (
+              <PlusCircleOutlined
+                onClick={() => this.collpaseHanlder("severity")}
+              />
+            )}
+          </div>
+        </div>
+
+        {isCollapse === "severity" && (
+          <Select
+            className="form-inputs-ap drawer-select"
+            placeholder="Select Severity"
+            value={severity}
+            onChange={this.setSeverity}
+            onSearch={this.handleSeveritySearch}
+            notFoundContent={
+              this.state.fetchingSeverity ? (
+                <Spin size="small" />
+              ) : (
+                "No match found"
+              )
+            }
+            showSearch
+            autoComplete="off"
+            optionFilterProp="children"
+            filterOption={(input, option) =>
+              option.props.children
+                .toLowerCase()
+                .indexOf(input.toLowerCase()) >= 0
+            }
+            // disabled={!isTreatmentDisabled}
+          >
+            {this.getSeverityOption()}
+          </Select>
+        )}
       </div>
     );
   };
@@ -1206,6 +1397,7 @@ class EditPatientDrawer extends Component {
       treatment: null,
       severity: null,
       careplan_id: null,
+      finalSymptomData: [],
     });
     close();
   };
@@ -1214,6 +1406,7 @@ class EditPatientDrawer extends Component {
     const { visible } = this.props;
     const { onClose, renderEditPatient } = this;
     const { submitting = false } = this.state;
+    const { widgetDrawerOpen } = this.state;
 
     if (visible !== true) {
       return null;
@@ -1237,7 +1430,14 @@ class EditPatientDrawer extends Component {
           width={"30%"}
         >
           {renderEditPatient()}
-
+          {/* AKSHAY NEW CODE IMPLEMENTATIONS */}
+          <WidgetDrawer
+            visible={widgetDrawerOpen}
+            onCloseDrawer={this.onCloseWidgetDrawer}
+            finalSymptomData={this.state.finalSymptomData}
+            generateFinalSymptomData={this.generateFinalSymptomData}
+            selectedSymptom={this.state.selectedSymptom}
+          />
           <Footer
             onSubmit={this.onSubmit}
             onClose={this.onClose}
@@ -1256,6 +1456,9 @@ class EditPatientDrawer extends Component {
                         </Button>
                     </div> */}
         </Drawer>
+        <MultipleTreatmentAlert
+          diagnosis_description={this.state.diagnosis_description}
+        />
       </Fragment>
     );
   }
