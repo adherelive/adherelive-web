@@ -1456,9 +1456,9 @@ class EditPatientDrawer extends Component {
                         </Button>
                     </div> */}
         </Drawer>
-        <MultipleTreatmentAlert
+        {/* <MultipleTreatmentAlert
           diagnosis_description={this.state.diagnosis_description}
-        />
+        /> */}
       </Fragment>
     );
   }

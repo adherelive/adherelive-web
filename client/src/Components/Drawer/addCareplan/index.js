@@ -618,12 +618,11 @@ class AddCareplanDrawer extends Component {
         treatment_id: treatment,
         severity_id: severity,
         condition_id: condition,
-        diagnosis_description,
+        diagnosis_description: String(diagnosis_description),
         diagnosis_type,
         clinical_notes,
-        symptoms,
+        symptoms: JSON.stringify(this.state.finalSymptomData),
       };
-
       try {
         this.handleDataSubmit(patient_id, data);
       } catch (error) {
@@ -648,6 +647,7 @@ class AddCareplanDrawer extends Component {
       diagnosis_description: "",
       diagnosis_type: "2",
       symptoms: "",
+      finalSymptomData: [],
     });
     close();
   };
