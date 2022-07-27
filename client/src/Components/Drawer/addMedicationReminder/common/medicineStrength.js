@@ -64,14 +64,15 @@ class MedicationStrength extends Component {
                 required: true,
                 message: "Enter Medicine Strength.",
               },
+
               {
-                type: "string",
+                type: "number",
                 max: MAXIMUM_LENGTH,
                 message: "Please enter valid strength",
               },
             ],
             initialValue: getInitialValue(),
-          })(<Input style={{ width: "100%" }} />)}
+          })(<InputNumber min={0.01} style={{ width: "100%" }} />)}
         </FormItem>
       </Fragment>
     );
