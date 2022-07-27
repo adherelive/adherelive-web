@@ -25,7 +25,7 @@ const appointmentFormSchema = Joi.object().keys({
 
 const medicationReminderFormSchema = Joi.object().keys({
   // medicine_id: Joi.number().required(),
-  strength: Joi.number().required(),
+  strength: Joi.string().required(),
   unit: Joi.string().required(),
   quantity: Joi.number().optional(),
   when_to_take_abbr: Joi.number().optional(),

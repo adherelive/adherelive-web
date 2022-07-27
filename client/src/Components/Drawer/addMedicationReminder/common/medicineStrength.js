@@ -3,6 +3,7 @@ import { injectIntl } from "react-intl";
 
 // antd models
 import InputNumber from "antd/es/input-number";
+import Input from "antd/es/input";
 import Form from "antd/es/form";
 
 const { Item: FormItem } = Form;
@@ -63,6 +64,7 @@ class MedicationStrength extends Component {
                 required: true,
                 message: "Enter Medicine Strength.",
               },
+
               {
                 type: "number",
                 max: MAXIMUM_LENGTH,
@@ -70,7 +72,7 @@ class MedicationStrength extends Component {
               },
             ],
             initialValue: getInitialValue(),
-          })(<InputNumber min={1} style={{ width: "100%" }} />)}
+          })(<InputNumber min={0.01} style={{ width: "100%" }} />)}
         </FormItem>
       </Fragment>
     );
