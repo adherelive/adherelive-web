@@ -1381,6 +1381,7 @@ function printCarePlanData({
           medicationStatus,
           wantToShow,
         });
+        console.log("strength", strength);
         console.log("==========");
         // if (medicationStatus && !showInactive ) continue;
 
@@ -1431,7 +1432,11 @@ function printCarePlanData({
         const medicationYLevelEnd = doc.y;
 
         doc
-          .text(`${strength}`, dosageXStart, medicationYLevel)
+          .text(
+            `${strength == "1 MG" || strength == "1 ML" ? "One" : strength}`,
+            dosageXStart,
+            medicationYLevel
+          )
           .text(
             `${quantity ? quantity : "-"}`,
             quantityXStart,
