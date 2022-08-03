@@ -952,7 +952,7 @@ function printDoctorBlockData(
     .text(`Dr. ${doctorName}`, doctorBlockStartX, doc.y);
 
   const doctorNameEndsY = doc.y;
-  const fullDegree = degree ? `${degree}, MBBS` : "MBBS";
+  const fullDegree = degree ? `${degree}` : degree;
 
   doc
     .fontSize(NORMAL_FONT_SIZE)
@@ -1248,7 +1248,8 @@ function printCarePlanData({
 
       .font(REGULAR_FONT)
       .text(
-        `${renderChiefComplaints({ symptoms })}`,
+        // `${renderChiefComplaints({ symptoms })}`,
+        `${symptoms}`,
         DOC_MARGIN + 10,
         relevantHistoryEndLevel + 10
       );
