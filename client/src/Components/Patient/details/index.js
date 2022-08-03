@@ -961,7 +961,7 @@ class PatientDetails extends Component {
         loading: false,
         patientCarePlanIds: care_plan_ids,
         current_careplan_id,
-        isOtherCarePlan: false,
+        isOtherCarePlan: true,
         selectedCarePlanId: current_careplan_id,
         // AKSHAY NEW CODE IMPLEMENTATION END
         // selectedCarePlanId: !isEmpty(patientCarePlans)
