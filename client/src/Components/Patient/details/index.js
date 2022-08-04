@@ -961,7 +961,7 @@ class PatientDetails extends Component {
         loading: false,
         patientCarePlanIds: care_plan_ids,
         current_careplan_id,
-        isOtherCarePlan: true,
+        isOtherCarePlan: false,
         selectedCarePlanId: current_careplan_id,
         // AKSHAY NEW CODE IMPLEMENTATION END
         // selectedCarePlanId: !isEmpty(patientCarePlans)
@@ -1059,13 +1059,15 @@ class PatientDetails extends Component {
     }
 
     const { activeKey = "1", isOtherCarePlan = false } = this.state;
-    if (
-      activeKey === "1" &&
-      authenticated_category === USER_CATEGORY.HSP &&
-      !isOtherCarePlan
-    ) {
-      this.setState({ activeKey: "2" });
-    }
+    // AKSHAY NEW CODE IMPLEMENTATION
+    // BELOW CODE COMMENTED
+    // if (
+    //   activeKey === "1" &&
+    //   authenticated_category === USER_CATEGORY.HSP &&
+    //   !isOtherCarePlan
+    // ) {
+    //   this.setState({ activeKey: "2" });
+    // }
   };
 
   initiateInAppNotificationObj = () => {
@@ -2823,8 +2825,11 @@ class PatientDetails extends Component {
                       activeKey={activeKey}
                     >
                       {(authenticated_category === USER_CATEGORY.DOCTOR ||
-                        (authenticated_category === USER_CATEGORY.HSP &&
-                          isOtherCarePlan)) && (
+                        authenticated_category === USER_CATEGORY.HSP) && (
+                        //AKSHAY NEW CODE IMPLEMENTATION
+                        // BELOW CODE COMMENTED BY AKSHAY
+                        // &&
+                        // isOtherCarePlan
                         <TabPane tab="Medication" key="1">
                           {cPMedicationIds.length > 0 ? (
                             <MedicationTable
