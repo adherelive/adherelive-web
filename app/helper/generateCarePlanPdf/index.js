@@ -156,7 +156,9 @@ export default async (pdfData, signatureImage) => {
         signatureImage,
         nextAppointmentDuration,
         currentTime,
-        providerPrescriptionDetails
+        providerPrescriptionDetails,
+        // AKSHAY NEW CODE IMPLEMENTATION
+        suggestedInvestigations
       );
 
       if (pageCount === 1) {
@@ -1418,7 +1420,7 @@ function printCarePlanData({
           // .underline(medicineXStart, medicationYLevel, dosageXStart - medicineXStart, undefined, { color: 'blue' })
           // .link(medicineXStart, medicationYLevel, dosageXStart - medicineXStart, undefined, `${genericName}`)
           // AKSHAY NEW CODE IMPLEMENTATIONS
-          .text(`Prescribed by ${organizer.name}`, medicineXStart, doc.y, {
+          .text(`Prescribed by Dr. ${organizer.name}`, medicineXStart, doc.y, {
             width: dosageXStart - medicineXStart,
           })
           .text(
@@ -1490,6 +1492,55 @@ function printCarePlanData({
       .font(BOLD_FONT)
       .fontSize(NORMAL_FONT_SIZE)
       .text("Suggested Investigation :", DOC_MARGIN, docYLevel + 10);
+
+    for (let index = 0; index < suggestedInvestigations.length; index++) {
+      const { type, type_description, radiology_type, start_date, organizer } =
+        suggestedInvestigations[index] || {};
+
+      doc
+        .font(REGULAR_FONT)
+        .text(
+          `${type_description}${radiology_type ? `-${radiology_type}` : ""}(${
+            APPOINTMENT_TYPE[type].title
+          }) on ${moment(start_date).format("DD/MM/YYYY")} by ${
+            organizer.name
+          }`,
+          DOC_MARGIN,
+          doc.y + 5
+        );
+
+      if (doc.y > PAGE_END_LIMIT) {
+        if (pageCount === 1) {
+          addPageFooter(doc, providerPrescriptionDetails);
+        }
+        addPageAndNumber(doc);
+      }
+    }
+
+    const suggestedInvestigationXLevelEnd = doc.x;
+    return suggestedInvestigationXLevelEnd;
+  } catch (ex) {
+    console.log(ex);
+  }
+}
+
+function printConsultationAppointment({
+  doc,
+  suggestedInvestigations,
+  providerPrescriptionDetails,
+}) {
+  try {
+    let docYLevel =
+      // workoutBlockLevelEnd
+      // ? workoutBlockLevelEnd
+      // : dietBlockLevelEnd ? dietBlockLevelEnd
+      // :
+      doc.y + 20;
+
+    doc
+      .font(BOLD_FONT)
+      .fontSize(NORMAL_FONT_SIZE)
+      .text("Consultation:", DOC_MARGIN, docYLevel + 10);
 
     for (let index = 0; index < suggestedInvestigations.length; index++) {
       const { type, type_description, radiology_type, start_date, organizer } =
@@ -1600,7 +1651,9 @@ function printFooter(
   imageUrl,
   nextAppointmentDuration,
   currentTime,
-  providerPrescriptionDetails
+  providerPrescriptionDetails,
+  // AKSHAY NEW CODE IMPLEMENTATIONS
+  suggestedInvestigations
 ) {
   // checkAndAddNewPage(doc);
 
@@ -1625,6 +1678,14 @@ function printFooter(
       DOC_MARGIN + 10
       // footerStartLevel
     );
+
+  // AKSHAY NEW CODE IMPLEMENTATIONS
+
+  const consultationAppointment = printConsultationAppointment({
+    doc,
+    suggestedInvestigations,
+    providerPrescriptionDetails,
+  });
 
   const signaturePictureHeight = 40;
 
