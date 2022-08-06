@@ -40,7 +40,6 @@
   "nodemonConfig": {
     "watch": [
       "app/*",
-      "client/*",
       "server/*",
       "routes/*",
       "helper/*",

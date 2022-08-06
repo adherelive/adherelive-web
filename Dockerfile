@@ -1,4 +1,4 @@
-FROM node:lts-buster
+FROM node:16.15.1
 RUN useradd -d /home/azureuser -m -s /bin/bash azureuser
 RUN mkdir -p /usr/src/app/client && mkdir -p /usr/src/app/public
 WORKDIR /usr/src/app
