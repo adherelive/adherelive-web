@@ -578,11 +578,11 @@ class Medicine extends Component {
             {/*  !searching_medicine*/}
             {/*  ?*/}
             {/*  (*/}
-            {/*    <>*/}
+            {/*    <React.Fragment>*/}
             {/*        <div className="med-defaul-container" onClick = {this.isSearchingMedicine}>*/}
             {/*            <span className="fs20 ml20" >{med_name}</span>*/}
             {/*        </div>*/}
-            {/*    </>*/}
+            {/*    </React.Fragment>*/}
             {/*)*/}
             {/*  :*/}
 

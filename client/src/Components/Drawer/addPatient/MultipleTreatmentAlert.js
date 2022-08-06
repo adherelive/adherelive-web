@@ -25,7 +25,7 @@ function MultipleTreatmentAlert({ diagnosis_description }) {
   };
 
   return (
-    <>
+    <React.Fragment>
       <Modal
         title="Multiple treatment info"
         visible={isModalVisible}
@@ -37,7 +37,7 @@ function MultipleTreatmentAlert({ diagnosis_description }) {
           patient details page
         </p>
       </Modal>
-    </>
+    </React.Fragment>
   );
 }
 
