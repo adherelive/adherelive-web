@@ -64,7 +64,6 @@ class MedicationStrength extends Component {
                 required: true,
                 message: "Enter Medicine Strength.",
               },
-
               {
                 type: "number",
                 max: MAXIMUM_LENGTH,
