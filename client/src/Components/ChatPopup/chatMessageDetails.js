@@ -975,7 +975,9 @@ class ChatMessageDetails extends Component {
       //           // {/* <div className="chat-text">
       //           // </div> */}
       //           // </React.Fragment>
-      //           // </Fragment>
+      //           // </div>
+      //           // <div className="chat-time start">
+      //           // {moment(message.state.timestamp).format("H:mm")}
       //           // </div>
       //           // {/* </div> */}
       //           // </div>
