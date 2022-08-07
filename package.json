@@ -117,6 +117,7 @@
     "nodemailer-sendgrid-transport": "^0.2.0",
     "papaparse": "^5.3.2",
     "pdfkit": "^0.13.0",
+    "querystring-es3": "^0.2.1",
     "razorpay": "^2.8.3",
     "react-chartjs-2": "^4.3.1",
     "react-markdown": "^5.0.3",

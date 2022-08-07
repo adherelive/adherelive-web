@@ -1,4 +1,4 @@
-import querystring from "querystring";
+import querystring from "querystring-es3";
 
 export const makeQueryString = (data) => {
   if (data) {
