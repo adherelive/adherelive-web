@@ -42,7 +42,3 @@ services:
 volumes:
   mysql:
     driver: local
-  adhere_storage_stack1:
-  adhere_storage_stack2:
-  adhere_storage_stack3:
-  adhere_storage_stack4:
