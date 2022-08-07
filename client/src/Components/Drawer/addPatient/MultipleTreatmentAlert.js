@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, Fragment } from "react";
 import { Modal, Button } from "antd";
 import message from "antd/es/message";
 import isEmpty from "../../../Helper/is-empty";
@@ -25,7 +25,7 @@ function MultipleTreatmentAlert({ diagnosis_description }) {
   };
 
   return (
-    <>
+    <React.Fragment>
       <Modal
         title="Multiple treatment info"
         visible={isModalVisible}
@@ -37,7 +37,7 @@ function MultipleTreatmentAlert({ diagnosis_description }) {
           patient details page
         </p>
       </Modal>
-    </>
+    </React.Fragment>
   );
 }
 

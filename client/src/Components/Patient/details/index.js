@@ -682,12 +682,16 @@ const PatientTreatmentCard = ({
     }`;
     count++;
   }
-
-  let symptomsArray = JSON.parse(treatment_symptoms);
   let finalArray = [];
-  symptomsArray.forEach((ele) => {
-    finalArray.push(ele.symptomName);
-  });
+
+  try {
+    let symptomsArray = JSON.parse(treatment_symptoms);
+    symptomsArray.forEach((ele) => {
+      finalArray.push(ele.symptomName);
+    });
+  } catch (e) {
+    finalArray = treatment_symptoms;
+  }
 
   return (
     <div className="treatment mt20 tal bg-faint-grey">
@@ -760,7 +764,9 @@ const PatientTreatmentCard = ({
 
         <div className="flex direction-column mb14">
           <div className="fs14">{formatMessage(messages.symptoms_text)}</div>
-          <div className="fs16 fw700">{String(finalArray)}</div>
+          <div className="fs16 fw700">
+            {typeof finalArray === "string" ? finalArray : String(finalArray)}
+          </div>
         </div>
 
         <div className="flex direction-column mb14">
@@ -1053,13 +1059,15 @@ class PatientDetails extends Component {
     }
 
     const { activeKey = "1", isOtherCarePlan = false } = this.state;
-    if (
-      activeKey === "1" &&
-      authenticated_category === USER_CATEGORY.HSP &&
-      !isOtherCarePlan
-    ) {
-      this.setState({ activeKey: "2" });
-    }
+    // AKSHAY NEW CODE IMPLEMENTATION
+    // BELOW CODE COMMENTED
+    // if (
+    //   activeKey === "1" &&
+    //   authenticated_category === USER_CATEGORY.HSP &&
+    //   !isOtherCarePlan
+    // ) {
+    //   this.setState({ activeKey: "2" });
+    // }
   };
 
   initiateInAppNotificationObj = () => {
@@ -2817,8 +2825,11 @@ class PatientDetails extends Component {
                       activeKey={activeKey}
                     >
                       {(authenticated_category === USER_CATEGORY.DOCTOR ||
-                        (authenticated_category === USER_CATEGORY.HSP &&
-                          isOtherCarePlan)) && (
+                        authenticated_category === USER_CATEGORY.HSP) && (
+                        //AKSHAY NEW CODE IMPLEMENTATION
+                        // BELOW CODE COMMENTED BY AKSHAY
+                        // &&
+                        // isOtherCarePlan
                         <TabPane tab="Medication" key="1">
                           {cPMedicationIds.length > 0 ? (
                             <MedicationTable

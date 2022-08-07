@@ -514,10 +514,21 @@ class AddMedicationReminderForm extends Component {
       enableSubmit,
     } = this.props;
     const currentValue = getFieldValue(medicineStrengthField.field_name) || 0.0;
-    setFieldsValue({
-      [medicineStrengthField.field_name]:
-        parseFloat(currentValue) + parseFloat(e.target.value),
-    });
+    console.log("currentValue", currentValue);
+
+    console.log("e.target.value", e.target.value);
+
+    if (e.target.value == 1) {
+      setFieldsValue({
+        [medicineStrengthField.field_name]: 1,
+      });
+    } else if (e.target.value != 1) {
+      setFieldsValue({
+        [medicineStrengthField.field_name]:
+          parseFloat(currentValue) + parseFloat(e.target.value),
+      });
+    }
+
     validateFields([medicineStrengthField.field_name]);
   };
 
@@ -604,6 +615,19 @@ class AddMedicationReminderForm extends Component {
                 size="small"
                 className="mg-ml flex justify-content-end"
               >
+                <RadioButton
+                  value={1}
+                  className={
+                    medicineUnit !== MEDICINE_UNITS.MG
+                      ? `unselected-text no-shadow`
+                      : "no-shadow"
+                  }
+                  onClick={setStrength}
+                  checked={medicineUnit === MEDICINE_UNITS.MG}
+                  disabled={medicineUnit !== MEDICINE_UNITS.MG}
+                >
+                  One
+                </RadioButton>
                 <RadioButton
                   value={MEDICINE_UNITS.ML}
                   className={

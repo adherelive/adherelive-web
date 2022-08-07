@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React, { Component, Fragment } from "react";
 import { injectIntl } from "react-intl";
 
 import throttle from "lodash-es/throttle";
@@ -305,7 +305,7 @@ class MedicationStage extends Component {
             >
               <div className="right-panel">
                 {medicine_name && !searching_medicine ? (
-                  <>
+                  <React.Fragment>
                     <span className="fs20 ml20">{medicine_name}</span>
                     <span style={{ marginLeft: "5px" }}>
                       <EditOutlined
@@ -313,7 +313,7 @@ class MedicationStage extends Component {
                         title={"Edit Medicine"}
                       />
                     </span>
-                  </>
+                  </React.Fragment>
                 ) : (
                   <CustomSearchBox />
                 )}
