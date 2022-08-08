@@ -14,7 +14,11 @@ class CdssController extends Controller {
   addDyanosis = async (req, res) => {
     console.log("add Dyagonsis - called");
     let data = req.body;
-    console.log({ data });
+
+    if (!data.dia) {
+      return res.status(201).send({ error: "Please add Dia in Body" });
+    }
+
     let cdss = new Cdss(data);
     console.log({ cdss });
     cdss = await cdss.save();
