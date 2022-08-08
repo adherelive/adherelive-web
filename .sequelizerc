@@ -1,8 +1,8 @@
-const path = require('path');
+import { resolve, join } from 'path';
 
-module.exports = {
-  'config': path.resolve("./config", "database.js"),
-  'migrations-path': path.join(__dirname, 'migrations'),
-  'seeders-path': path.join(__dirname, 'app/seeders'),
-  'models-path': path.join(__dirname, 'app/models'),
+export default {
+  'config': resolve("./config", "database.js"),
+  'migrations-path': join(__dirname, 'migrations'),
+  'seeders-path': join(__dirname, 'app/seeders'),
+  'models-path': join(__dirname, 'app/models'),
 };

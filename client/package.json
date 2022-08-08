@@ -21,7 +21,8 @@
     "@babel/preset-env": "^7.18.10",
     "babel-plugin-react-intl": "^2.4.0",
     "babel-preset-react-app": "^10.0.1",
-    "prettier": "^2.7.1"
+    "prettier": "^2.7.1",
+    "workbox-build": "^6.5.4"
   },
   "dependencies": {
     "@ant-design/icons": "^4.7.0",

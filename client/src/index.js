@@ -16,6 +16,22 @@ import * as serviceWorker from "./serviceWorker";
 
 import "./Styles/index.less";
 
+/* 
+The web-vitals library is a tiny (~1K), modular library for measuring 
+all the Web Vitals metrics on real users, in a way that accurately matches 
+how they're measured by Chrome and reported to other Google tools 
+(e.g. Chrome User Experience Report, Page Speed Insights, Search Console's Speed Report).
+- Core Web Vitals
+  - Cumulative Layout Shift (CLS)
+  - First Input Delay (FID)
+  - Largest Contentful Paint (LCP)
+*/
+import { getLCP, getFID, getCLS } from "web-vitals";
+
+getCLS(console.log);
+getFID(console.log);
+getLCP(console.log);
+
 const Desktop = lazy(() =>
   import(/* webpackChunkName: "DesktopWrapper" */ "./Containers/Routes")
 );
@@ -56,4 +72,4 @@ ReactDOM.render(
 // If you want your app to work offline and load faster, you can change
 // unregister() to register() below. Note this comes with some pitfalls.
 // Learn more about service workers: https://bit.ly/CRA-PWA
-serviceWorker.unregister();
+serviceWorker.register();
