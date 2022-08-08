@@ -682,6 +682,7 @@ const PatientTreatmentCard = ({
     }`;
     count++;
   }
+
   let finalArray = [];
 
   try {

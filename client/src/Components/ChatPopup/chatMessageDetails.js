@@ -843,7 +843,7 @@ class ChatMessageDetails extends Component {
       //           // <span className="twilio-avatar">
       //           // <Avatar src={patientDp} />
       //           // </span>
-      //           // <React.Fragment>
+      //           // <Fragment>
       //           // <div className="chat-text" style={{ display: "inline-block" }}>
       //           // { (side && parts[0]) ?
       //           // (<div className='humanBodyWrapper'>
@@ -974,7 +974,7 @@ class ChatMessageDetails extends Component {
       //           // </div>
       //           // {/* <div className="chat-text">
       //           // </div> */}
-      //           // </React.Fragment>
+      //           // </Fragment>
       //           // </div>
       //           // <div className="chat-time start">
       //           // {moment(message.state.timestamp).format("H:mm")}

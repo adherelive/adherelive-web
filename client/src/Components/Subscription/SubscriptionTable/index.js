@@ -139,7 +139,7 @@ class SubscriptionTable extends Component {
     };
 
     return (
-      <React.Fragment>
+      <Fragment>
         <Table
           // onRow={authPermissions.includes(USER_PERMISSIONS.PATIENTS.VIEW) ? onRow : null}
           rowClassName={() => "pointer"}
@@ -165,7 +165,7 @@ class SubscriptionTable extends Component {
         {myTasksDrawer === true && (
           <MyTasks visible={myTasksDrawer} onCloseDrawer={this.onCloseDrawer} />
         )}
-      </React.Fragment>
+      </Fragment>
     );
   }
 }
