@@ -43,6 +43,14 @@ services:
       - MYSQL_USER=user
       - MYSQL_PASSWORD=password
 
+  mongo:
+    image: mongo:latest
+    restart: always
+    ports:
+      - "27017:27017"
+    volumes:
+      - adhere_mongo:/data/db
+    
   minio1:
     image: minio/minio
     restart: always
@@ -100,3 +108,4 @@ volumes:
   adhere_storage_stack2:
   adhere_storage_stack3:
   adhere_storage_stack4:
+  adhere_mongo:

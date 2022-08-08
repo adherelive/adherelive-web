@@ -1,0 +1,66 @@
+import Log from "../../../libs/log";
+// import fs from "fs";
+const Response = require("../helper/responseFormat");
+import Controller from "../index";
+const Cdss = require("../../models/mongoModel/cdss");
+
+const Logger = new Log("WEB USER CONTROLLER");
+
+class CdssController extends Controller {
+  constructor() {
+    super();
+  }
+
+  addDyanosis = async (req, res) => {
+    console.log("add Dyagonsis - called");
+    let data = req.body;
+    console.log({ data });
+    let cdss = new Cdss(data);
+    console.log({ cdss });
+    cdss = await cdss.save();
+    console.log(cdss);
+    return res.status(201).send(cdss);
+  };
+
+  getDyanosis = async (req, res) => {
+    console.log("get Dyagonsis - called");
+    let data = req.body;
+    console.log({ data });
+    let searchObject = [];
+    for (let i in data) {
+      let symp = {};
+      symp[data[i]] = true;
+      searchObject.push(symp);
+    }
+    console.log({ searchObject });
+    let cdss = await Cdss.find({
+      $or: searchObject,
+    });
+
+    let dict = {};
+
+    for (let i = 0; i < cdss.length; i++) {
+      let count = 0;
+      for (let k in data) if (cdss[i][data[k]]) count += 1;
+      dict[cdss[i]["dia"]] = count;
+    }
+
+    let keysSorted = Object.keys(dict).sort((a, b) => dict[b] - dict[a]);
+    return res.status(200).send([...keysSorted]);
+  };
+
+  listDyanosis = async (req, res) => {
+    console.log("list Dyagonsis - called-one");
+    try {
+      let cdss = await Cdss.find({});
+      console.log("=========");
+      console.log({ cdss });
+      console.log("=========");
+      return res.status(200).send(cdss);
+    } catch (ex) {
+      console.log(ex);
+    }
+  };
+}
+
+export default new CdssController();
