@@ -116,21 +116,20 @@ If you're running the project first time. Run the following command
 4. `docker-compose run node npm run migrate`
 5. `docker-compose run node npm run seed`
 
-
 ## Packages for Server and Client with versions
 
 ### Server Dependencies
 
-  npm install @hapi/joi, agora-access-token, algoliasearch, atob, aws-sdk, axios, base64-img, bcrypt, chalk, concurrently, cookie-parser, cookie-session, cors, crypto-js, date-fns, db-migrate, db-migrate-mysql, dotenv, ejs, express, express-validator, faker, getstream, google-auth-library, joi, js-base64, js-md5, jsonwebtoken, lodash, minio, moment, multer, mysql2, node-fetch, node-schedule, node-xlsx, nodemailer, nodemailer-sendgrid-transport, papaparse, pdfkit, razorpay, react-chartjs-2, react-markdown, request, rrule, sequelize, sequelize-cli, twilio, uuid
+npm install @hapi/joi, agora-access-token, algoliasearch, atob, aws-sdk, axios, base64-img, bcrypt, chalk, concurrently, cookie-parser, cookie-session, cors, crypto-js, date-fns, db-migrate, db-migrate-mysql, dotenv, ejs, express, express-validator, faker, getstream, google-auth-library, joi, js-base64, js-md5, jsonwebtoken, lodash, minio, moment, multer, mysql2, node-fetch, node-schedule, node-xlsx, nodemailer, nodemailer-sendgrid-transport, papaparse, pdfkit, razorpay, react-chartjs-2, react-markdown, request, rrule, sequelize, sequelize-cli, twilio, uuid
 
 ### Server Dev Dependencies
 
-  npm install --save-dev @babel/cli, @babel/core, @babel/node, @babel/plugin-proposal-class-properties, @babel/plugin-transform-arrow-functions, @babel/preset-env, css-loader, husky, jest, less, less-loader, lint-staged, nodemon, prettier, react-intl-translations-manager, style-loader
+npm install --save-dev @babel/cli, @babel/core, @babel/node, @babel/plugin-proposal-class-properties, @babel/plugin-transform-arrow-functions, @babel/preset-env, css-loader, husky, jest, less, less-loader, lint-staged, nodemon, prettier, react-intl-translations-manager, style-loader
 
 ### Client Dependencies
 
-  npm install @ant-design/icons@4.7.0,agora-rtc-sdk,agora-rtc-sdk-ng,algoliasearch,antd@3.26.20,axios,babel-plugin-import,chart.js,classnames,date-fns,firebase,fullcalendar-reactwrapper,getstream,install,js-base64,js-cookie,less,less-loader,lodash-es,moment,moment-timezone,nodemailer,nodemailer-sendgrid-transport,npm,prop-types,rc-slider@9.5.3,react@16.13.1,react-app-rewire-less,react-app-rewire-react-intl,react-app-rewired,react-audio-player,react-chartjs-2@2.11.1,react-chat-widget@2.1.5,react-datepicker@2.8.0,react-dom@16.13.1,react-facebook-login,react-google-login,react-google-places-autocomplete@2.3.2,react-highlight-words,react-instantsearch-dom,react-intl@5.25.1,react-markdown,react-mde@11.4.0,react-onclickoutside,react-otp-input,react-places-autocomplete,react-popper@1.3.7,react-redux@5.1.2,react-router-dom@5.3.3,react-scripts@1.0.4,react-slider,react-spring,react-timekeeper@1.1.0,react-uuid,react-year-picker,redux,redux-devtools-extension,redux-thunk,reselect,showdown,twilio-chat,twilio-video
+npm install @ant-design/icons@4.7.0,agora-rtc-sdk,agora-rtc-sdk-ng,algoliasearch,antd@3.26.20,axios,babel-plugin-import,chart.js,classnames,date-fns,firebase,fullcalendar-reactwrapper,getstream,install,js-base64,js-cookie,less,less-loader,lodash-es,moment,moment-timezone,nodemailer,nodemailer-sendgrid-transport,npm,prop-types,rc-slider@9.5.3,react@16.13.1,react-app-rewire-less,react-app-rewire-react-intl,react-app-rewired,react-audio-player,react-chartjs-2@2.11.1,react-chat-widget@2.1.5,react-datepicker@2.8.0,react-dom@16.13.1,react-facebook-login,react-google-login,react-google-places-autocomplete@2.3.2,react-highlight-words,react-instantsearch-dom,react-intl@5.25.1,react-markdown,react-mde@11.4.0,react-onclickoutside,react-otp-input,react-places-autocomplete,react-popper@1.3.7,react-redux@5.1.2,react-router-dom@5.3.3,react-scripts@1.0.4,react-slider,react-spring,react-timekeeper@1.1.0,react-uuid,react-year-picker,redux,redux-devtools-extension,redux-thunk,reselect,showdown,twilio-chat,twilio-video
 
 ### Client Dev Dependencies
 
-  npm install --save-dev @babel/cli, @babel/core, @babel/plugin-transform-arrow-functions, @babel/preset-env, babel-plugin-react-intl, babel-preset-react-app, prettier
+npm install --save-dev @babel/cli, @babel/core, @babel/plugin-transform-arrow-functions, @babel/preset-env, babel-plugin-react-intl, babel-preset-react-app, prettier

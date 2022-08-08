@@ -133,7 +133,7 @@ class DoctorServiceTable extends Component {
     };
 
     return (
-      <React.Fragment>
+      <Fragment>
         <Table
           // onRow={authPermissions.includes(USER_PERMISSIONS.PATIENTS.VIEW) ? onRow : null}
           rowClassName={() => "pointer"}
@@ -156,7 +156,7 @@ class DoctorServiceTable extends Component {
             onCloseDrawer={this.onCloseDrawer}
           />
         )}
-      </React.Fragment>
+      </Fragment>
     );
   }
 }

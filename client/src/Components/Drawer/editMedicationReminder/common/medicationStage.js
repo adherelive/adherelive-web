@@ -302,7 +302,7 @@ class MedicationStage extends Component {
             >
               <div className="right-panel">
                 {medicine_name && !searching_medicine ? (
-                  <React.Fragment>
+                  <Fragment>
                     <span className="fs20 ml20">{medicine_name}</span>
                     <span style={{ marginLeft: "5px" }}>
                       <EditOutlined
@@ -310,7 +310,7 @@ class MedicationStage extends Component {
                         title={"Edit Medicine"}
                       />
                     </span>
-                  </React.Fragment>
+                  </Fragment>
                 ) : (
                   <CustomSearchBox />
                 )}

@@ -462,6 +462,7 @@ class AddCareplanDrawer extends Component {
       statusCode: code,
       payload: { message: errorMessage = "", error: { error_type = "" } = {} },
     } = response || {};
+
     if (status === true) {
       message.success(this.formatMessage(messages.add_careplan_success));
       this.onClose();
@@ -472,8 +473,10 @@ class AddCareplanDrawer extends Component {
         message.warn(errorMessage);
       }
     }
+
     this.setState({ submitting: false });
   }
+
   onSubmit = () => {
     const { addCareplanForPatient, patientId: patient_id } = this.props;
     const {
