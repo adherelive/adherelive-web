@@ -1,5 +1,6 @@
 import express from "express";
 import Database from "../libs/mysql";
+import MongoDatabase from "../libs/mongo";
 import path from "path";
 import schedule from "node-schedule";
 
@@ -14,12 +15,11 @@ import LongTerm from "../app/Crons/longTerm";
 
 import ApiRouter from "../routes/api";
 import mApiRouter from "../routes/m-api";
-
 import EventObserver from "../app/proxySdk/eventObserver";
 import Activity from "../app/activitySdk/activityObserver";
 
 Database.init();
-
+require("../libs/mongo")();
 const Events = import("../events")
   .then((module) => {})
   .catch((err) => {

@@ -1250,8 +1250,8 @@ function printCarePlanData({
 
       .font(REGULAR_FONT)
       .text(
-        // `${renderChiefComplaints({ symptoms })}`,
-        `${symptoms}`,
+        `${renderChiefComplaints({ symptoms })}`,
+        // `${symptoms}`,
         DOC_MARGIN + 10,
         relevantHistoryEndLevel + 10
       );

@@ -15,6 +15,8 @@ import { searchTreatment } from "../../modules/treatments";
 import { searchCondition } from "../../modules/conditions";
 import { searchSeverity } from "../../modules/severity";
 import { addCareplanForPatient } from "../../modules/patients";
+// AKSHAY NEW CODE IMPLEMENTATIONS FOR CDSS
+import { getDiagnosisList } from "../../modules/cdss";
 
 const mapStateToProps = (state) => {
   const {
@@ -52,6 +54,8 @@ const mapDispatchToProps = (dispatch) => {
     searchSeverity: (value) => dispatch(searchSeverity(value)),
     addCareplanForPatient: (patient_id, data) =>
       dispatch(addCareplanForPatient(patient_id, data)),
+    // AKSHAY NEW CODE IMPLEMENTATIONS FOR CDSS
+    getDiagnosisList: (payload) => dispatch(getDiagnosisList(payload)),
   };
 };
 

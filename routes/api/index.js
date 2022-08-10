@@ -50,6 +50,7 @@ import dietRouter from "./diet";
 import portionRouter from "./portion";
 import exerciseRouter from "./exercises";
 import workoutRouter from "./workouts";
+import CdssRouter from "./cdss";
 
 router.use(async function (req, res, next) {
   try {
@@ -171,5 +172,5 @@ router.use("/diet", dietRouter);
 router.use("/portions", portionRouter);
 router.use("/exercises", exerciseRouter);
 router.use("/workout", workoutRouter);
-
+router.use("/cdss", CdssRouter);
 module.exports = router;

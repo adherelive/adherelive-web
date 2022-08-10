@@ -1,18 +1,13 @@
 import React from "react";
 import { Select } from "antd";
-import { diagnosis } from "./diagnosisList.json";
+// import { diagnosisList } from "./diagnosisList.json";
+import { useSelector } from "react-redux";
 
 const { Option } = Select;
 
-const children = [];
-
-for (let each in diagnosis) {
-  children.push(
-    <Option key={diagnosis[each].name}>{diagnosis[each].name}</Option>
-  );
-}
-
 function CustomDiagnosis({ handleDiagnosisChanges }) {
+  const { diagnosisList = [] } = useSelector((state) => state.cdss);
+
   const handleChange = (value) => {
     console.log(`selected ${value}`);
   };
@@ -20,6 +15,15 @@ function CustomDiagnosis({ handleDiagnosisChanges }) {
   const handleSelect = (value) => {
     console.log(`selected ${value}`);
   };
+
+  const children = [];
+
+  for (let each in diagnosisList) {
+    children.push(
+      <Option key={diagnosisList[each]}>{diagnosisList[each]}</Option>
+    );
+  }
+
   return (
     <div className="mt10 mb10">
       <Select
