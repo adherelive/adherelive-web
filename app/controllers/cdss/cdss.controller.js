@@ -30,6 +30,9 @@ class CdssController extends Controller {
     console.log("get Dyagonsis - called");
     let data = req.body;
     console.log({ data });
+    if (!(data.length > 0)) {
+      return res.status(200).send([]);
+    }
     let searchObject = [];
     for (let i in data) {
       let symp = {};
