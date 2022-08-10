@@ -866,7 +866,7 @@ class AddCareplanDrawer extends Component {
 
   handleSymptomsChanges = (value) => {
     console.log(`selected ${value}`);
-    // this.props.getDiagnosisList(value);
+    this.props.getDiagnosisList(value);
 
     this.setState({ symptoms: value });
   };
