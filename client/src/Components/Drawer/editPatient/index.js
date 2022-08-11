@@ -1436,7 +1436,7 @@ class EditPatientDrawer extends Component {
       }
     } catch (e) {
       symptomNames = symptoms;
-      symptomData = symptoms;
+      symptomData = [symptoms];
     }
 
     const formattedDate = this.getFormattedDate(dob);
