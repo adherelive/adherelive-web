@@ -866,7 +866,7 @@ class AddCareplanDrawer extends Component {
 
   handleSymptomsChanges = (value) => {
     console.log(`selected ${value}`);
-    // this.props.getDiagnosisList(value);
+    this.props.getDiagnosisList(value);
 
     this.setState({ symptoms: value });
   };
@@ -1209,6 +1209,23 @@ class AddCareplanDrawer extends Component {
         symptoms: JSON.stringify(this.state.finalSymptomData),
       };
       try {
+        // AKSHAY NEW CODE IMPLEMENTATION FOR CDS
+        let cdssPost = {};
+        let symptomData = JSON.parse(data.symptoms);
+
+        if (symptomData.length > 0) {
+          symptomData.forEach((ele) => {
+            cdssPost[ele.symptomName] = true;
+          });
+        }
+
+        if (!isEmpty(cdssPost)) {
+          cdssPost["dia"] = diagnosis_description;
+        }
+        if (!isEmpty(cdssPost["dia"])) {
+          this.props.addDiagnosis(cdssPost);
+        }
+
         this.handleDataSubmit(patient_id, data);
       } catch (error) {
         this.setState({ submitting: false });

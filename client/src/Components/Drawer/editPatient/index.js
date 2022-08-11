@@ -1300,8 +1300,8 @@ import { MinusCircleOutlined } from "@ant-design/icons";
 
 // AKSHAY NEW CODE IMPLEMENTATIONS
 
-import CustomSymptoms from "../addPatient/CustomSymptoms";
-import CustomDiagnosis from "../addPatient/CustomDiagnosis";
+import CustomSymptomsEdit from "./CustomSymptomsEdit";
+import CustomDiagnosisEdit from "./CustomDiagnosisEdit";
 import MultipleTreatmentAlert from "../addPatient/MultipleTreatmentAlert";
 import WidgetDrawer from "../addPatient/WidgetDrawer";
 
@@ -1424,6 +1424,10 @@ class EditPatientDrawer extends Component {
       } = {},
     } = carePlanData || {};
 
+    let symptomData = JSON.parse(symptoms);
+    console.log("symptomData", symptomData);
+    console.log("description", description);
+
     const formattedDate = this.getFormattedDate(dob);
 
     if (prev_visible !== visible) {
@@ -1445,9 +1449,10 @@ class EditPatientDrawer extends Component {
         diagnosis_type: type,
         height,
         weight,
-        symptoms,
+        symptoms: !isEmpty(symptomData) && symptomData[0].symptomName,
         careplan_id,
         address,
+        finalSymptomData: symptomData,
       });
     }
   }
@@ -1612,6 +1617,7 @@ class EditPatientDrawer extends Component {
 
   handleSymptomsChanges = (value) => {
     console.log(`selected ${value}`);
+    this.props.getDiagnosisList(value);
 
     this.setState({ symptoms: value });
   };
@@ -2277,7 +2283,8 @@ class EditPatientDrawer extends Component {
           {this.formatMessage(messages.symptoms)}
         </div>
 
-        <CustomSymptoms
+        <CustomSymptomsEdit
+          symptoms={this.state.symptoms}
           handleSymptomsChanges={this.handleSymptomsChanges}
           handleSymptomSelect={this.handleSymptomSelect}
           hendleSymptomDeselect={this.hendleSymptomDeselect}
@@ -2324,7 +2331,10 @@ class EditPatientDrawer extends Component {
           </div>
         </div>
 
-        <CustomDiagnosis handleDiagnosisChanges={this.handleDiagnosisChanges} />
+        <CustomDiagnosisEdit
+          diagnosis={this.state.diagnosis_description}
+          handleDiagnosisChanges={this.handleDiagnosisChanges}
+        />
 
         {/* <TextArea
           placeholder={this.formatMessage(messages.writeHere)}
@@ -2552,6 +2562,7 @@ class EditPatientDrawer extends Component {
     } = this.state;
     const validate = this.validateData();
     const { submit } = this.props;
+
     if (validate) {
       this.handleSubmit({
         mobile_number,
@@ -2564,13 +2575,13 @@ class EditPatientDrawer extends Component {
         condition_id: condition,
         prefix,
         allergies,
-        diagnosis_description,
+        diagnosis_description: String(diagnosis_description),
         diagnosis_type,
         comorbidities,
         clinical_notes,
         height,
         weight,
-        symptoms,
+        symptoms: JSON.stringify(this.state.finalSymptomData),
         address,
       });
       // submit({ mobile_number, name, gender, date_of_birth, treatment_id: treatment, severity_id: severity, condition_id: condition, prefix ,allergies,diagnosis_description,diagnosis_type,comorbidities,clinical_notes,height,weight, symptoms})

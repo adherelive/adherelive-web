@@ -2021,7 +2021,7 @@ class PatientDetailsDrawer extends Component {
   };
 
   handleSymptomsChanges = (value) => {
-    // this.props.getDiagnosisList(value);
+    this.props.getDiagnosisList(value);
     console.log(`selected ${value}`);
 
     this.setState({ symptoms: value });

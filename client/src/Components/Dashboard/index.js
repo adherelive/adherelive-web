@@ -34,6 +34,7 @@ import MissedVitalsDrawer from "../../Containers/Drawer/missedVital";
 import MissedMedicationsDrawer from "../../Containers/Drawer/missedMedication";
 import MissedDietsDrawer from "../../Containers/Drawer/missedDiet";
 import MissedWorkoutsDrawer from "../../Containers/Drawer/missedWorkout";
+import isEmpty from "../../Helper/is-empty";
 
 // helpers...
 import { getRoomId } from "../../Helper/twilio";
@@ -429,6 +430,25 @@ class Dashboard extends Component {
 
     const { basic_info: { id = 1 } = {} } = authenticated_user || {};
     this.setState({ submitting: true });
+
+    // AKSHAY NEW CODE IMPLEMENTATION FOR CDS
+    let cdssPost = {};
+    let symptomData = JSON.parse(data.symptoms);
+
+    if (symptomData.length > 0) {
+      symptomData.forEach((ele) => {
+        cdssPost[ele.symptomName] = true;
+      });
+    }
+
+    if (!isEmpty(cdssPost)) {
+      cdssPost["dia"] = data.diagnosis_description;
+    }
+
+    if (!isEmpty(cdssPost["dia"])) {
+      this.props.addDiagnosis(cdssPost);
+    }
+
     addPatient(data).then((response) => {
       let {
         status = false,

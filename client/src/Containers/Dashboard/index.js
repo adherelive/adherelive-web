@@ -23,7 +23,7 @@ import { getAllMissedScheduleEvents } from "../../modules/scheduleEvents";
 import { setUnseenNotificationCount } from "../../modules/pages/NotificationCount";
 import { getAllDietsForDoctor } from "../../modules/diets";
 // AKSHAY NEW CODE IMPLEMENTATIONS FOR CDSS
-import { getDiagnosisList } from "../../modules/cdss";
+import { getDiagnosisList, addDiagnosis } from "../../modules/cdss";
 
 const mapStateToProps = (state) => {
   const {
@@ -112,6 +112,7 @@ const mapDispatchToProps = (dispatch) => {
       dispatch(open({ type: DRAWER.MISSED_WORKOUT })),
     // AKSHAY NEW CODE IMPLEMENTATIONS FOR CDSS
     getDiagnosisList: (payload) => dispatch(getDiagnosisList(payload)),
+    addDiagnosis: (payload) => dispatch(addDiagnosis(payload)),
   };
 };
 
