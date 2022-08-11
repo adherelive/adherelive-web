@@ -2,6 +2,7 @@ import React from "react";
 import { Select } from "antd";
 // import { diagnosisList } from "./diagnosisList.json";
 import { useSelector } from "react-redux";
+import isEmpty from "../../../Helper/is-empty";
 
 const { Option } = Select;
 
@@ -35,7 +36,7 @@ function CustomDiagnosisEdit({ diagnosis, handleDiagnosisChanges }) {
         tokenSeparators={[","]}
         placeholder="Search for symptoms"
         onSelect={handleSelect}
-        defaultValue={diagnosis.split(",")}
+        defaultValue={diagnosis}
       >
         {children}
       </Select>

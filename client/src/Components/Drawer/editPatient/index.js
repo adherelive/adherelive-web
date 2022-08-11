@@ -1424,12 +1424,19 @@ class EditPatientDrawer extends Component {
       } = {},
     } = carePlanData || {};
 
-    let symptomData = JSON.parse(symptoms);
     let symptomNames = [];
-    if (!isEmpty(symptomData)) {
-      symptomData.forEach((ele) => {
-        symptomNames.push(ele.symptomName);
-      });
+    let symptomData = [];
+    try {
+      symptomData = JSON.parse(symptoms);
+
+      if (!isEmpty(symptomData)) {
+        symptomData.forEach((ele) => {
+          symptomNames.push(ele.symptomName);
+        });
+      }
+    } catch (e) {
+      symptomNames = symptoms;
+      symptomData = symptoms;
     }
 
     const formattedDate = this.getFormattedDate(dob);
