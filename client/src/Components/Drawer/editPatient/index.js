@@ -1436,7 +1436,14 @@ class EditPatientDrawer extends Component {
       }
     } catch (e) {
       symptomNames = symptoms;
-      symptomData = [symptoms];
+      let data = [];
+      let symptomObject = {
+        symptomName: symptoms,
+        bodyParts: [],
+        duration: "",
+      };
+      data.push(symptomObject);
+      symptomData = data;
     }
 
     const formattedDate = this.getFormattedDate(dob);
@@ -2343,7 +2350,7 @@ class EditPatientDrawer extends Component {
         </div>
 
         <CustomDiagnosisEdit
-          diagnosis={this.state.diagnosis_description}
+          diagnosis={String(this.state.diagnosis_description)}
           handleDiagnosisChanges={this.handleDiagnosisChanges}
         />
 
@@ -2573,7 +2580,9 @@ class EditPatientDrawer extends Component {
     } = this.state;
     const validate = this.validateData();
     const { submit } = this.props;
-
+    console.log("diagnosis_description", diagnosis_description);
+    console.log("symptoms", symptoms);
+    console.log("this.state.finalSymptomData", this.state.finalSymptomData);
     if (validate) {
       this.handleSubmit({
         mobile_number,
