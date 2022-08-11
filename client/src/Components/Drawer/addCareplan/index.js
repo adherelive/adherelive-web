@@ -1223,7 +1223,7 @@ class AddCareplanDrawer extends Component {
           cdssPost["dia"] = diagnosis_description;
         }
         if (!isEmpty(cdssPost["dia"])) {
-          this.props.addDiagnosis(cdssPost);
+          // this.props.addDiagnosis(cdssPost);
         }
 
         this.handleDataSubmit(patient_id, data);
