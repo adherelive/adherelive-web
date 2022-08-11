@@ -446,7 +446,7 @@ class Dashboard extends Component {
     }
 
     if (!isEmpty(cdssPost["dia"])) {
-      // this.props.addDiagnosis(cdssPost);
+      this.props.addDiagnosis(cdssPost);
     }
 
     addPatient(data).then((response) => {

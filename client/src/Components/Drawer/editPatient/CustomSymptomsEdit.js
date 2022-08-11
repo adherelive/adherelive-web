@@ -27,6 +27,8 @@ function CustomSymptomsEdit({
   //   console.log(`selected ${value}`);
   // };
 
+  console.log("symptoms", symptoms);
+
   return (
     <div className="mt10 mb10">
       <Select
