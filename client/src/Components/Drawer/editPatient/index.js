@@ -1425,8 +1425,12 @@ class EditPatientDrawer extends Component {
     } = carePlanData || {};
 
     let symptomData = JSON.parse(symptoms);
-    console.log("symptomData", symptomData);
-    console.log("description", description);
+    let symptomNames = [];
+    if (!isEmpty(symptomData)) {
+      symptomData.forEach((ele) => {
+        symptomNames.push(ele.symptomName);
+      });
+    }
 
     const formattedDate = this.getFormattedDate(dob);
 
@@ -1449,7 +1453,7 @@ class EditPatientDrawer extends Component {
         diagnosis_type: type,
         height,
         weight,
-        symptoms: !isEmpty(symptomData) && symptomData[0].symptomName,
+        symptoms: symptomNames,
         careplan_id,
         address,
         finalSymptomData: symptomData,

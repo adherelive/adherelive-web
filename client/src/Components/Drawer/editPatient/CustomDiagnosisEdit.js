@@ -24,6 +24,8 @@ function CustomDiagnosisEdit({ diagnosis, handleDiagnosisChanges }) {
     );
   }
 
+  console.log("diagnosis", diagnosis);
+
   return (
     <div className="mt10 mb10">
       <Select
@@ -33,7 +35,7 @@ function CustomDiagnosisEdit({ diagnosis, handleDiagnosisChanges }) {
         tokenSeparators={[","]}
         placeholder="Search for symptoms"
         onSelect={handleSelect}
-        defaultValue={diagnosis}
+        defaultValue={diagnosis.split(",")}
       >
         {children}
       </Select>
