@@ -1,11 +1,11 @@
-import React from "react";
+import React, { useState } from "react";
 import { Select } from "antd";
 // import { diagnosisList } from "./diagnosisList.json";
 import { useSelector } from "react-redux";
 
 const { Option } = Select;
 
-function CustomDiagnosis({ handleDiagnosisChanges }) {
+function CustomDiagnosis({ handleDiagnosisChanges, onDiagnosisSearchHanlder }) {
   const { diagnosisList = [] } = useSelector((state) => state.cdss);
 
   const handleChange = (value) => {
@@ -33,6 +33,7 @@ function CustomDiagnosis({ handleDiagnosisChanges }) {
         tokenSeparators={[","]}
         placeholder="Search for symptoms"
         onSelect={handleSelect}
+        onSearch={onDiagnosisSearchHanlder}
       >
         {children}
       </Select>

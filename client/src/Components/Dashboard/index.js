@@ -907,6 +907,7 @@ class Dashboard extends Component {
           // AKSHAY NEW CODE IMPLEMENTATIONS
           patientSearchData={this.state.patientSearchData}
           getDiagnosisList={this.props.getDiagnosisList}
+          diagnosisSearch={this.props.diagnosisSearch}
         />
 
         {visibleModal && (

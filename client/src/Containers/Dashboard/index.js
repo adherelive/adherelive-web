@@ -23,7 +23,11 @@ import { getAllMissedScheduleEvents } from "../../modules/scheduleEvents";
 import { setUnseenNotificationCount } from "../../modules/pages/NotificationCount";
 import { getAllDietsForDoctor } from "../../modules/diets";
 // AKSHAY NEW CODE IMPLEMENTATIONS FOR CDSS
-import { getDiagnosisList, addDiagnosis } from "../../modules/cdss";
+import {
+  getDiagnosisList,
+  addDiagnosis,
+  diagnosisSearch,
+} from "../../modules/cdss";
 
 const mapStateToProps = (state) => {
   const {
@@ -113,6 +117,7 @@ const mapDispatchToProps = (dispatch) => {
     // AKSHAY NEW CODE IMPLEMENTATIONS FOR CDSS
     getDiagnosisList: (payload) => dispatch(getDiagnosisList(payload)),
     addDiagnosis: (payload) => dispatch(addDiagnosis(payload)),
+    diagnosisSearch: (payload) => dispatch(diagnosisSearch(payload)),
   };
 };
 

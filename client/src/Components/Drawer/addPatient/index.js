@@ -2014,6 +2014,10 @@ class PatientDetailsDrawer extends Component {
 
   // AKSHAY NEW CODE IMPLEMENTATIONS FOR CDSS
 
+  onDiagnosisSearchHanlder = (value) => {
+    this.props.diagnosisSearch(value);
+  };
+
   handleDiagnosisChanges = (value) => {
     console.log(`selected ${value}`);
 
@@ -2747,7 +2751,10 @@ class PatientDetailsDrawer extends Component {
             </Select>
           </div>
         </div>
-        <CustomDiagnosis handleDiagnosisChanges={this.handleDiagnosisChanges} />
+        <CustomDiagnosis
+          handleDiagnosisChanges={this.handleDiagnosisChanges}
+          onDiagnosisSearchHanlder={this.onDiagnosisSearchHanlder}
+        />
         {/* <TextArea
           placeholder={this.formatMessage(messages.writeHere)}
           value={diagnosis_description}

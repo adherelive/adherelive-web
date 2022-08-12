@@ -16,7 +16,11 @@ import { searchCondition } from "../../modules/conditions";
 import { searchSeverity } from "../../modules/severity";
 import { addCareplanForPatient } from "../../modules/patients";
 // AKSHAY NEW CODE IMPLEMENTATIONS FOR CDSS
-import { getDiagnosisList, addDiagnosis } from "../../modules/cdss";
+import {
+  getDiagnosisList,
+  addDiagnosis,
+  diagnosisSearch,
+} from "../../modules/cdss";
 
 const mapStateToProps = (state) => {
   const {
@@ -57,6 +61,7 @@ const mapDispatchToProps = (dispatch) => {
     // AKSHAY NEW CODE IMPLEMENTATIONS FOR CDSS
     getDiagnosisList: (payload) => dispatch(getDiagnosisList(payload)),
     addDiagnosis: (payload) => dispatch(addDiagnosis(payload)),
+    diagnosisSearch: (payload) => dispatch(diagnosisSearch(payload)),
   };
 };
 

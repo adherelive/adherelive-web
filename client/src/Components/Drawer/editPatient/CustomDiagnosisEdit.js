@@ -6,7 +6,11 @@ import isEmpty from "../../../Helper/is-empty";
 
 const { Option } = Select;
 
-function CustomDiagnosisEdit({ diagnosis, handleDiagnosisChanges }) {
+function CustomDiagnosisEdit({
+  diagnosis,
+  handleDiagnosisChanges,
+  onDiagnosisSearchHanlder,
+}) {
   const { diagnosisList = [] } = useSelector((state) => state.cdss);
 
   const handleChange = (value) => {
@@ -46,6 +50,7 @@ function CustomDiagnosisEdit({ diagnosis, handleDiagnosisChanges }) {
         placeholder="Search for symptoms"
         onSelect={handleSelect}
         defaultValue={finalDaignosis}
+        onSearch={onDiagnosisSearchHanlder}
       >
         {children}
       </Select>

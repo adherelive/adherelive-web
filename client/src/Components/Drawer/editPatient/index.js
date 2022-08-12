@@ -1627,6 +1627,10 @@ class EditPatientDrawer extends Component {
 
   // AKSHAY NEW CODE IMPLEMENTATIONS
 
+  onDiagnosisSearchHanlder = (value) => {
+    this.props.diagnosisSearch(value);
+  };
+
   handleDiagnosisChanges = (value) => {
     console.log(`selected ${value}`);
 
@@ -2352,6 +2356,7 @@ class EditPatientDrawer extends Component {
         <CustomDiagnosisEdit
           diagnosis={String(this.state.diagnosis_description)}
           handleDiagnosisChanges={this.handleDiagnosisChanges}
+          onDiagnosisSearchHanlder={this.onDiagnosisSearchHanlder}
         />
 
         {/* <TextArea
