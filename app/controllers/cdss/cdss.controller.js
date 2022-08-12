@@ -19,6 +19,15 @@ class CdssController extends Controller {
       return res.status(201).send({ error: "Please add Dia in Body" });
     }
 
+    // check if it is alread exist or not.
+    let dbcdss = await Cdss.find(data);
+    if(dbcdss) return res.status(400).send({error: true, message: 'Already Added'});
+
+    /*
+    dbcdss = await Cdss.find({dia:data.dia});
+    if(dbcdss) return res.status(400).send({error: true, message: 'Dia Already Added'});
+    */
+
     let cdss = new Cdss(data);
     console.log({ cdss });
     cdss = await cdss.save();
@@ -55,11 +64,16 @@ class CdssController extends Controller {
 
   listDyanosis = async (req, res) => {
     console.log("list Dyagonsis - called-one");
+    let keyword = '';
+    if(req.query.dia)
+      keyword = req.query.dia 
     try {
-      let cdss = await Cdss.find({});
-      console.log("=========");
-      console.log({ cdss });
-      console.log("=========");
+      let data = {
+        $or: [
+          { dia: { $regex: keyword, $options: 'i' } },
+        ],
+      };
+      let cdss = await Cdss.find(data);
       return res.status(200).send(cdss);
     } catch (ex) {
       console.log(ex);
