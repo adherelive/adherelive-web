@@ -1751,17 +1751,17 @@ class PatientController extends Controller {
 
           const { type } = appointmentWrapper.getDetails() || {};
           console.log("45454545==", appointmentWrapper.getDetails());
-          if (type !== CONSULTATION) {
-            const { type_description = "", radiology_type = "" } =
-              appointmentWrapper.getDetails() || {};
-            suggestedInvestigations.push({
-              type,
-              type_description,
-              radiology_type,
-              start_date: startDate,
-              organizer,
-            });
-          }
+          // if (type !== CONSULTATION) {
+          const { type_description = "", radiology_type = "" } =
+            appointmentWrapper.getDetails() || {};
+          suggestedInvestigations.push({
+            type,
+            type_description,
+            radiology_type,
+            start_date: startDate,
+            organizer,
+          });
+          // }
         }
       }
       console.log(1);

@@ -514,10 +514,8 @@ class AddMedicationReminderForm extends Component {
       enableSubmit,
     } = this.props;
     const currentValue = getFieldValue(medicineStrengthField.field_name) || 0.0;
-    console.log("currentValue", currentValue);
 
-    console.log("e.target.value", e.target.value);
-
+    //AKSAHY NEW CODE IMPLEMENTATION FOR ONE
     if (e.target.value == 1) {
       setFieldsValue({
         [medicineStrengthField.field_name]: 1,
@@ -615,16 +613,18 @@ class AddMedicationReminderForm extends Component {
                 size="small"
                 className="mg-ml flex justify-content-end"
               >
+                {/* AKSHAY NEW CODE IMPLEMENTATION FOR ONE */}
                 <RadioButton
                   value={1}
                   className={
-                    medicineUnit !== MEDICINE_UNITS.MG
-                      ? `unselected-text no-shadow`
-                      : "no-shadow"
+                    // medicineUnit !== MEDICINE_UNITS.MG
+                    //   ? `unselected-text no-shadow`
+                    //   : "no-shadow"
+                    "no-shadow"
                   }
                   onClick={setStrength}
-                  checked={medicineUnit === MEDICINE_UNITS.MG}
-                  disabled={medicineUnit !== MEDICINE_UNITS.MG}
+                  // checked={medicineUnit === MEDICINE_UNITS.MG}
+                  // disabled={medicineUnit !== MEDICINE_UNITS.MG}
                 >
                   One
                 </RadioButton>

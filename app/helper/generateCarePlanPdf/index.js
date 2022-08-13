@@ -1681,11 +1681,11 @@ function printFooter(
 
   // AKSHAY NEW CODE IMPLEMENTATIONS
 
-  // const consultationAppointment = printConsultationAppointment({
-  //   doc,
-  //   suggestedInvestigations,
-  //   providerPrescriptionDetails,
-  // });
+  const consultationAppointment = printConsultationAppointment({
+    doc,
+    suggestedInvestigations,
+    providerPrescriptionDetails,
+  });
 
   const signaturePictureHeight = 40;
 
