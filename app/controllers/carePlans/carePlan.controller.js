@@ -770,6 +770,168 @@ class CarePlanController extends Controller {
       return raiseServerError(res);
     }
   };
+
+  // GAURAV NEW CHNAGES
+
+  getCarePlanDetails = async (req, res) => {
+    const { carePlanId: care_plan_id } = req.params;
+    // const { patientId: patient_id = 1 } = req.params;
+    try {
+      const { userDetails, body, file, permissions = [] } = req;
+      const { pid, profile_pic, name, email } = body || {};
+      const {
+        userId = "3",
+        userRoleId = null,
+        userData: { category } = {},
+      } = userDetails || {};
+
+      let show = false;
+
+      let carePlan = await carePlanService.getCarePlanById(care_plan_id);
+
+      console.log("carePlan", carePlan);
+
+      let newCarePlan = await CarePlanWrapper(carePlan);
+
+      // let cPdetails = carePlan.get("details") ? carePlan.get("details") : {};
+
+      // let { shown = false } = cPdetails;
+      // let carePlanId = carePlan.get("id");
+      // let carePlanTemplateId = carePlan.get("care_plan_template_id");
+      // let carePlanMedications =
+      //   await carePlanMedicationService.getMedicationsByCarePlanId(carePlanId);
+      // let carePlanAppointments =
+      //   await carePlanAppointmentService.getAppointmentsByCarePlanId(
+      //     carePlanId
+      //   );
+
+      // let carePlanAppointmentIds = await getCarePlanAppointmentIds(carePlanId);
+      // let carePlanMedicationIds = await getCarePlanMedicationIds(carePlanId);
+      // let carePlanSeverityDetails = await getCarePlanSeverityDetails(
+      //   carePlanId
+      // );
+      // const carePlanApiWrapper = await CarePlanWrapper(carePlan);
+
+      // let carePlanApiData = {};
+
+      // const { vital_ids } = await carePlanApiWrapper.getAllInfo();
+
+      // carePlanApiData[carePlanApiWrapper.getCarePlanId()] = {
+      //   ...carePlanApiWrapper.getBasicInfo(),
+      //   ...carePlanSeverityDetails,
+      //   carePlanMedicationIds,
+      //   carePlanAppointmentIds,
+      //   vital_ids,
+      // };
+
+      // Log.debug("87937198123 careplan", carePlanApiData);
+
+      // let templateMedications = {};
+      // let templateAppointments = {};
+      // let formattedTemplateMedications = [];
+      // let formattedTemplateAppointments = [];
+      // if (carePlanTemplateId) {
+      //   templateMedications =
+      //     await templateMedicationService.getMedicationsByCarePlanTemplateId(
+      //       carePlanTemplateId
+      //     );
+      //   templateAppointments =
+      //     await templateAppointmentService.getAppointmentsByCarePlanTemplateId(
+      //       carePlanTemplateId
+      //     );
+      //   if (
+      //     permissions.includes(PERMISSIONS.MEDICATIONS.VIEW) &&
+      //     templateMedications.length
+      //   ) {
+      //     for (let medication of templateMedications) {
+      //       let newMedication = {};
+      //       newMedication.id = medication.get("id");
+      //       newMedication.schedule_data = medication.get("schedule_data");
+      //       newMedication.care_plan_template_id = medication.get(
+      //         "care_plan_template_id"
+      //       );
+      //       let medicineId = medication.get("medicine_id");
+      //       newMedication.medicine_id = medicineId;
+      //       let medicine = await medicineService.getMedicineById(medicineId);
+      //       // console.log("CARE PLAN OF PATIENTTTT===========>>>>>>>", medicine);
+      //       let medName = medicine.get("name");
+      //       let medType = medicine.get("type");
+      //       newMedication.medicine = medName;
+      //       newMedication.medicineType = medType;
+      //       formattedTemplateMedications.push(newMedication);
+      //     }
+      //   }
+
+      //   if (templateAppointments.length) {
+      //     for (let appointment of templateAppointments) {
+      //       let newAppointment = {};
+      //       newAppointment.id = appointment.get("id");
+      //       newAppointment.schedule_data = appointment.get("details");
+      //       newAppointment.reason = appointment.get("reason");
+      //       newAppointment.time_gap = appointment.get("time_gap");
+      //       newAppointment.care_plan_template_id = appointment.get(
+      //         "care_plan_template_id"
+      //       );
+      //       formattedTemplateAppointments.push(newAppointment);
+      //     }
+      //   }
+      // }
+
+      // let medicationsOfTemplate = [];
+
+      // if (permissions.includes(PERMISSIONS.MEDICATIONS.VIEW)) {
+      //   medicationsOfTemplate = formattedTemplateMedications;
+      // }
+
+      // let appointmentsOfTemplate = formattedTemplateAppointments;
+
+      // let carePlanMedicationsExists = carePlanMedications
+      //   ? !carePlanMedications.length
+      //   : !carePlanMedications; //true if doesnot exist
+      // let carePlanAppointmentsExists = carePlanAppointments
+      //   ? !carePlanAppointments.length
+      //   : !carePlanAppointments; //true if doesnot exist
+      // if (
+      //   carePlanTemplateId &&
+      //   carePlanMedicationsExists &&
+      //   carePlanAppointmentsExists &&
+      //   !shown
+      // ) {
+      //   show = true;
+      // }
+
+      // if (shown == false) {
+      //   let details = cPdetails;
+      //   details.shown = true;
+      //   let updatedCarePlan = await carePlanService.updateCarePlan(
+      //     { details },
+      //     carePlanId
+      //   );
+      // }
+
+      return this.raiseSuccess(
+        res,
+        200,
+        {
+          carePlan,
+          newCarePlan,
+          // care_plans: { ...carePlanApiData },
+          // show,
+          // ...(permissions.includes(PERMISSIONS.MEDICATIONS.VIEW) && {
+          //   medicationsOfTemplate,
+          // }),
+          // appointmentsOfTemplate,
+          // carePlanMedications,
+          // carePlanAppointments,
+          // carePlanTemplateId,
+        },
+        "patient care plan details fetched successfully"
+      );
+    } catch (error) {
+      console.log("GET PATIENT DETAILS ERROR --> ", error);
+      return this.raiseServerError(res, 500, error);
+    }
+  };
 }
 
 export default new CarePlanController();

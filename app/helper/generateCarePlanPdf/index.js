@@ -1496,6 +1496,8 @@ function printCarePlanData({
     for (let index = 0; index < suggestedInvestigations.length; index++) {
       const { type, type_description, radiology_type, start_date, organizer } =
         suggestedInvestigations[index] || {};
+      // GAURAV NEW CHNAGES
+      if (APPOINTMENT_TYPE[type].title === "Consultation") continue;
 
       doc
         .font(REGULAR_FONT)
@@ -1545,6 +1547,9 @@ function printConsultationAppointment({
     for (let index = 0; index < suggestedInvestigations.length; index++) {
       const { type, type_description, radiology_type, start_date, organizer } =
         suggestedInvestigations[index] || {};
+
+      // GAURAV NEW CHNAGES
+      if (APPOINTMENT_TYPE[type].title !== "Consultation") continue;
 
       doc
         .font(REGULAR_FONT)

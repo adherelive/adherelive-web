@@ -1397,6 +1397,8 @@ class DoctorController extends Controller {
         const features = await featuresService.getAllFeatures();
 
         for (const feature of features) {
+          if (feature.name === "Chat") continue;
+
           const { id: featureId } = feature;
           const featureMappingData =
             await doctorPatientFeatureMappingService.create({

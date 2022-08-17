@@ -21,7 +21,8 @@ class CdssController extends Controller {
 
     // check if it is alread exist or not.
     let dbcdss = await Cdss.find(data);
-    if(dbcdss) return res.status(400).send({error: true, message: 'Already Added'});
+    if (!dbcdss)
+      return res.status(400).send({ error: true, message: "Already Added" });
 
     /*
     dbcdss = await Cdss.find({dia:data.dia});
@@ -67,14 +68,11 @@ class CdssController extends Controller {
 
   listDyanosis = async (req, res) => {
     console.log("list Dyagonsis - called-one");
-    let keyword = '';
-    if(req.query.dia)
-      keyword = req.query.dia 
+    let keyword = "";
+    if (req.query.dia) keyword = req.query.dia;
     try {
       let data = {
-        $or: [
-          { dia: { $regex: keyword, $options: 'i' } },
-        ],
+        $or: [{ dia: { $regex: keyword, $options: "i" } }],
       };
       let cdss = await Cdss.find(data);
       return res.status(200).send(cdss);

@@ -28,6 +28,16 @@ router.post(
   CarePlanController.createFromTemplate
 );
 
+// GAURAV NEW CHANGES
+router.get(
+  "/:carePlanId",
+  Authenticated,
+  // Authorize(USER_CATEGORY.DOCTOR),
+  isAllowed(PERMISSIONS.CARE_PLAN_TEMPLATE.ADD),
+  // validator.validateCreateCarePlanFromTemplate,
+  CarePlanController.getCarePlanDetails
+);
+
 // router.get('/patient-care-plan-details/:patientId',
 // router.get('/:patientId',
 //     CarePlanController.getPatientCarePlanDetails
