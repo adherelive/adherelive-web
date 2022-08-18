@@ -1650,8 +1650,8 @@ class EditPatientDrawer extends Component {
       let data = this.state.finalSymptomData;
       let symptomObject = {
         symptomName: value,
-        bodyParts: [],
-        duration: "",
+        bodyParts: ["Generalised"],
+        duration: "1 Day",
       };
       data.push(symptomObject);
 
@@ -1677,6 +1677,19 @@ class EditPatientDrawer extends Component {
     console.log("finalSymptomData", data);
     this.setState({
       finalSymptomData: data,
+    });
+  };
+
+  handleSelectSymptom = (selectedSymptom) => {
+    this.setState({
+      selectedSymptom: selectedSymptom,
+    });
+  };
+
+  openEditWidgetHandler = () => {
+    this.setState({
+      widgetDrawerOpen: true,
+      EditWidget: true,
     });
   };
 
@@ -1894,6 +1907,7 @@ class EditPatientDrawer extends Component {
   onCloseWidgetDrawer = () => {
     this.setState({
       widgetDrawerOpen: false,
+      EditWidget: false,
     });
   };
 
@@ -2301,8 +2315,12 @@ class EditPatientDrawer extends Component {
 
         {/* AKSHAY NEW CODE IMPLEMENTATION */}
 
-        <div className="form-headings-ap flex align-center justify-start">
+        <div className="form-headings-ap flex align-center justify-space-between">
           {this.formatMessage(messages.symptoms)}
+          <div className="add-more" onClick={this.openEditWidgetHandler}>
+            {/* {this.formatMessage(messages.addMore)} */}
+            Edit
+          </div>
         </div>
 
         <CustomSymptomsEdit
@@ -2738,6 +2756,8 @@ class EditPatientDrawer extends Component {
             finalSymptomData={this.state.finalSymptomData}
             generateFinalSymptomData={this.generateFinalSymptomData}
             selectedSymptom={this.state.selectedSymptom}
+            handleSelectSymptom={this.handleSelectSymptom}
+            EditWidget={this.state.EditWidget}
           />
           <Footer
             onSubmit={this.onSubmit}

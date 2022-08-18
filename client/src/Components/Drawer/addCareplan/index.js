@@ -911,6 +911,19 @@ class AddCareplanDrawer extends Component {
     });
   };
 
+  handleSelectSymptom = (selectedSymptom) => {
+    this.setState({
+      selectedSymptom: selectedSymptom,
+    });
+  };
+
+  openEditWidgetHandler = () => {
+    this.setState({
+      widgetDrawerOpen: true,
+      EditWidget: true,
+    });
+  };
+
   collpaseHanlder = (label) => {
     this.setState({
       isCollapse: label,
@@ -920,6 +933,7 @@ class AddCareplanDrawer extends Component {
   onCloseWidgetDrawer = () => {
     this.setState({
       widgetDrawerOpen: false,
+      EditWidget: false,
     });
   };
 
@@ -951,8 +965,12 @@ class AddCareplanDrawer extends Component {
       <div className="form-block-ap ">
         {/* AKSHAY NEW CODE IMPLEMENTATION */}
 
-        <div className="form-headings-ap flex align-center justify-start">
+        <div className="form-headings-ap flex align-center justify-space-between">
           {this.formatMessage(messages.symptoms)}
+          <div className="add-more" onClick={this.openEditWidgetHandler}>
+            {/* {this.formatMessage(messages.addMore)} */}
+            Edit
+          </div>
         </div>
 
         <CustomSymptoms
@@ -1292,6 +1310,8 @@ class AddCareplanDrawer extends Component {
             finalSymptomData={this.state.finalSymptomData}
             generateFinalSymptomData={this.generateFinalSymptomData}
             selectedSymptom={this.state.selectedSymptom}
+            handleSelectSymptom={this.handleSelectSymptom}
+            EditWidget={this.state.EditWidget}
           />
           <Footer
             onSubmit={this.onSubmit}

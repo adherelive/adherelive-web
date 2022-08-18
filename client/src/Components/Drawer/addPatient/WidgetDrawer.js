@@ -1,4 +1,4 @@
-import React, { Component, Fragment, useState } from "react";
+import React, { Component, Fragment, useState, useEffect } from "react";
 import { injectIntl } from "react-intl";
 import {
   Drawer,
@@ -86,14 +86,35 @@ function WidgetDrawer({
   finalSymptomData,
   generateFinalSymptomData,
   selectedSymptom,
+  handleSelectSymptom,
+  EditWidget,
 }) {
   const [values, setValues] = useState({
     duration: "1 Day",
     submitting: false,
-    selectedSymptom: selectedSymptom,
   });
 
   const [bodyParts, setBodyParts] = useState(bodyPartsOptions);
+
+  useEffect(() => {
+    if (EditWidget === true) {
+      let copy = [...bodyParts];
+      copy.forEach((symptom) => {
+        if (finalSymptomData[0].bodyParts.includes(symptom.value)) {
+          symptom.checked = true;
+        } else {
+          symptom.checked = false;
+        }
+      });
+      setBodyParts(copy);
+      setValues({
+        ...values,
+        // selectedSymptom: symptomData.symptomName,
+        duration: finalSymptomData[0].duration,
+      });
+      handleSelectSymptom(finalSymptomData[0].symptomName);
+    }
+  }, [EditWidget]);
 
   const onSubmit = () => {
     let copy = [...bodyParts];
@@ -104,6 +125,8 @@ function WidgetDrawer({
         ele.checked = false;
       }
     });
+
+    console.log("final symptom data", finalSymptomData);
 
     setBodyParts(copy);
     setValues({
@@ -191,9 +214,10 @@ function WidgetDrawer({
     setBodyParts(copy);
     setValues({
       ...values,
-      selectedSymptom: symptomData.symptomName,
+      // selectedSymptom: symptomData.symptomName,
       duration: symptomData.duration,
     });
+    handleSelectSymptom(symptomData.symptomName);
   };
 
   const renderSymptomName = () => {
@@ -314,7 +338,7 @@ function WidgetDrawer({
           top: "0px",
         }}
         destroyOnClose={true}
-        onClose={onCloseDrawer}
+        onClose={onSubmit}
         visible={visible} // todo: change as per state, -- WIP --
         width={480}
       >
