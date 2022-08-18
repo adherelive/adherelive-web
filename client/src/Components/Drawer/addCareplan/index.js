@@ -881,8 +881,8 @@ class AddCareplanDrawer extends Component {
       let data = this.state.finalSymptomData;
       let symptomObject = {
         symptomName: value,
-        bodyParts: [],
-        duration: "",
+        bodyParts: ["Generalised"],
+        duration: "1 Day",
       };
       data.push(symptomObject);
 

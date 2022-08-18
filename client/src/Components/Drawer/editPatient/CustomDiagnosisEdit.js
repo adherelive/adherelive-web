@@ -33,13 +33,13 @@ function CustomDiagnosisEdit({
 
   console.log(typeof diagnosis);
 
-  let finalDaignosis = diagnosis.split(",");
-  console.log(finalDaignosis.length);
-  if (finalDaignosis.length > 1) {
-    finalDaignosis = diagnosis.split(",");
-  } else {
-    finalDaignosis = diagnosis;
-  }
+  // let finalDaignosis = diagnosis.split(",");
+  // console.log(finalDaignosis.length);
+  // if (finalDaignosis.length > 1) {
+  //   finalDaignosis = diagnosis.split(",");
+  // } else {
+  //   finalDaignosis = diagnosis;
+  // }
   return (
     <div className="mt10 mb10">
       <Select
@@ -49,7 +49,7 @@ function CustomDiagnosisEdit({
         tokenSeparators={[","]}
         placeholder="Search for symptoms"
         onSelect={handleSelect}
-        defaultValue={finalDaignosis}
+        defaultValue={diagnosis}
         onSearch={onDiagnosisSearchHanlder}
       >
         {children}

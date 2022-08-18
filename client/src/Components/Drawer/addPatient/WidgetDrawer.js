@@ -21,6 +21,7 @@ import throttle from "lodash-es/throttle";
 // import messages from "./message";
 import Footer from "../footer";
 import { durations } from "./durationList.json";
+import isEmpty from "../../../Helper/is-empty";
 
 const { Option } = Select;
 
@@ -28,54 +29,55 @@ const RadioButton = Radio.Button;
 const RadioGroup = Radio.Group;
 
 const bodyPartsOptions = [
-  { label: "Head", value: "Head" },
-  { label: "Left Eye", value: "Left Eye" },
-  { label: "Right Eye", value: "Right Eye" },
-  { label: "Right Ear", value: "Right Ear" },
-  { label: "Left Ear", value: "Left Ear" },
-  { label: "Nose", value: "Nose" },
-  { label: "Mouth", value: "Mouth" },
-  { label: "Neck", value: "Neck" },
-  { label: "Right Shoulder", value: "Right Shoulder" },
-  { label: "Left Shoulder", value: "Left Shoulder" },
-  { label: "Chest", value: "Chest" },
-  { label: "Right Arm", value: "Right Arm" },
-  { label: "Left Arm", value: "Left Arm" },
-  { label: "Right Elbow", value: "Right Elbow" },
-  { label: "Left Elbow", value: "Left Elbow" },
-  { label: "Stomach", value: "Stomach" },
-  { label: "Abdomen", value: "Abdomen" },
-  { label: "Right Forearm", value: "Right Forearm" },
-  { label: "Left Forearm", value: "Left Forearm" },
-  { label: "Right Wrist", value: "Right Wrist" },
-  { label: "Left Wrist", value: "Left Wrist" },
-  { label: "Right Hand", value: "Right Hand" },
-  { label: "Left Hand", value: "Left Hand" },
-  { label: "Right Hand Finger", value: "Right Hand Finger" },
-  { label: "Left Hand Finger", value: "Left Hand Finger" },
-  { label: "Right Hip", value: "Right Hip" },
-  { label: "Left Hip", value: "Left Hip" },
-  { label: "Right Thigh", value: "Right Thigh" },
-  { label: "Left Thigh", value: "Left Thigh" },
-  { label: "Right Knee", value: "Right Knee" },
-  { label: "Left Knee", value: "Left Knee" },
-  { label: "Right Shin", value: "Right Shin" },
-  { label: "Left Shin", value: "Left Shin" },
-  { label: "Right Ankle", value: "Right Ankle" },
-  { label: "Left Ankle", value: "Left Ankle" },
-  { label: "Right Foot", value: "Right Foot" },
-  { label: "Left Foot", value: "Left Foot" },
-  { label: "Right Toe", value: "Right Toe" },
-  { label: "Left Toe", value: "Left Toe" },
-  { label: "Urinary Bladder", value: "Urinary Bladder" },
-  { label: "Back", value: "Back" },
-  { label: "Lower Back", value: "Lower Back" },
-  { label: "Left Tricep", value: "Left Tricep" },
-  { label: "Right Tricep", value: "Right Tricep" },
-  { label: "Left Hamstring", value: "Left Hamstring" },
-  { label: "Right Hamstring", value: "Right Hamstring" },
-  { label: "Left Calf", value: "Left Calf" },
-  { label: "Right Calf", value: "Right Calf" },
+  { label: "Generalised", value: "Generalised", checked: true },
+  { label: "Head", value: "Head", checked: false },
+  { label: "Left Eye", value: "Left Eye", checked: false },
+  { label: "Right Eye", value: "Right Eye", checked: false },
+  { label: "Right Ear", value: "Right Ear", checked: false },
+  { label: "Left Ear", value: "Left Ear", checked: false },
+  { label: "Nose", value: "Nose", checked: false },
+  { label: "Mouth", value: "Mouth", checked: false },
+  { label: "Neck", value: "Neck", checked: false },
+  { label: "Right Shoulder", value: "Right Shoulder", checked: false },
+  { label: "Left Shoulder", value: "Left Shoulder", checked: false },
+  { label: "Chest", value: "Chest", checked: false },
+  { label: "Right Arm", value: "Right Arm", checked: false },
+  { label: "Left Arm", value: "Left Arm", checked: false },
+  { label: "Right Elbow", value: "Right Elbow", checked: false },
+  { label: "Left Elbow", value: "Left Elbow", checked: false },
+  { label: "Stomach", value: "Stomach", checked: false },
+  { label: "Abdomen", value: "Abdomen", checked: false },
+  { label: "Right Forearm", value: "Right Forearm", checked: false },
+  { label: "Left Forearm", value: "Left Forearm", checked: false },
+  { label: "Right Wrist", value: "Right Wrist", checked: false },
+  { label: "Left Wrist", value: "Left Wrist", checked: false },
+  { label: "Right Hand", value: "Right Hand", checked: false },
+  { label: "Left Hand", value: "Left Hand", checked: false },
+  { label: "Right Hand Finger", value: "Right Hand Finger", checked: false },
+  { label: "Left Hand Finger", value: "Left Hand Finger", checked: false },
+  { label: "Right Hip", value: "Right Hip", checked: false },
+  { label: "Left Hip", value: "Left Hip", checked: false },
+  { label: "Right Thigh", value: "Right Thigh", checked: false },
+  { label: "Left Thigh", value: "Left Thigh", checked: false },
+  { label: "Right Knee", value: "Right Knee", checked: false },
+  { label: "Left Knee", value: "Left Knee", checked: false },
+  { label: "Right Shin", value: "Right Shin", checked: false },
+  { label: "Left Shin", value: "Left Shin", checked: false },
+  { label: "Right Ankle", value: "Right Ankle", checked: false },
+  { label: "Left Ankle", value: "Left Ankle", checked: false },
+  { label: "Right Foot", value: "Right Foot", checked: false },
+  { label: "Left Foot", value: "Left Foot", checked: false },
+  { label: "Right Toe", value: "Right Toe", checked: false },
+  { label: "Left Toe", value: "Left Toe", checked: false },
+  { label: "Urinary Bladder", value: "Urinary Bladder", checked: false },
+  { label: "Back", value: "Back", checked: false },
+  { label: "Lower Back", value: "Lower Back", checked: false },
+  { label: "Left Tricep", value: "Left Tricep", checked: false },
+  { label: "Right Tricep", value: "Right Tricep", checked: false },
+  { label: "Left Hamstring", value: "Left Hamstring", checked: false },
+  { label: "Right Hamstring", value: "Right Hamstring", checked: false },
+  { label: "Left Calf", value: "Left Calf", checked: false },
+  { label: "Right Calf", value: "Right Calf", checked: false },
 ];
 
 function WidgetDrawer({
@@ -88,31 +90,43 @@ function WidgetDrawer({
   const [values, setValues] = useState({
     duration: "1 Day",
     submitting: false,
-    bodyParts: [],
+    selectedSymptom: selectedSymptom,
   });
 
-  const onSubmit = () => {
-    const { duration, bodyParts } = values;
-    // console.log(finalSymptomData);
-    let data = finalSymptomData;
+  const [bodyParts, setBodyParts] = useState(bodyPartsOptions);
 
+  const onSubmit = () => {
+    let copy = [...bodyParts];
+    copy.forEach((ele) => {
+      if (ele.value === "Generalised") {
+        ele.checked = true;
+      } else {
+        ele.checked = false;
+      }
+    });
+
+    setBodyParts(copy);
+    setValues({
+      ...values,
+      duration: "1 Day",
+    });
+    onCloseDrawer();
+  };
+
+  const onClose = () => {};
+
+  const setDuration = (value) => {
+    console.log("finalSymptomData", finalSymptomData);
+    console.log("selectedSymptom", selectedSymptom);
+    let data = finalSymptomData;
     data.forEach((symptom) => {
       if (symptom.symptomName === selectedSymptom) {
-        symptom.duration = values.duration;
-        symptom.bodyParts = values.bodyParts;
+        symptom.duration = value;
       }
     });
 
     generateFinalSymptomData(data);
 
-    onCloseDrawer();
-  };
-
-  // formatMessage = (data) => this.props.intl.formatMessage(data);
-
-  const onClose = () => {};
-
-  const setDuration = (value) => {
     setValues({
       ...values,
       duration: value,
@@ -133,10 +147,74 @@ function WidgetDrawer({
   };
 
   const onChangeCheckbox = (checkedValues) => {
-    // console.log("checked = ", checkedValues);
+    console.log("selectedSymptom", selectedSymptom);
+    console.log("checked = ", checkedValues);
+
+    let checked = checkedValues.target.checked;
+    let value = checkedValues.target.value;
+    let bodyPartsCopy = [...bodyParts];
+    bodyPartsCopy.forEach((ele) => {
+      if (ele.value === value) {
+        ele.checked = checked;
+      }
+    });
+    setBodyParts(bodyPartsCopy);
+
+    let finalBodyPart = [];
+    let bodyPartFilter = bodyPartsCopy.filter((ele) => ele.checked === true);
+    if (!isEmpty(bodyPartFilter)) {
+      bodyPartFilter.forEach((ele) => {
+        finalBodyPart.push(ele.value);
+      });
+    }
+    let data = finalSymptomData;
+    data.forEach((symptom) => {
+      if (symptom.symptomName === selectedSymptom) {
+        symptom.bodyParts = finalBodyPart;
+      }
+    });
+    generateFinalSymptomData(data);
+  };
+
+  const onSelectSymptom = (symptomData) => {
+    console.log("symptomData", symptomData);
+    let copy = [...bodyParts];
+
+    copy.forEach((symptom) => {
+      if (symptomData.bodyParts.includes(symptom.value)) {
+        symptom.checked = true;
+      } else {
+        symptom.checked = false;
+      }
+    });
+
+    setBodyParts(copy);
     setValues({
       ...values,
-      bodyParts: checkedValues,
+      selectedSymptom: symptomData.symptomName,
+      duration: symptomData.duration,
+    });
+  };
+
+  const renderSymptomName = () => {
+    console.log("finalSymptomData", finalSymptomData);
+    return finalSymptomData.map((ele, index) => {
+      return (
+        <div
+          key={index}
+          className="form-headings
+          //    flex align-center justify-start
+             tac"
+        >
+          <span
+            onClick={() => onSelectSymptom(ele)}
+            className="fwbolder fs18 mb10"
+          >
+            {/* {this.formatMessage(messages.defaultConsultationOptions)} */}
+            {ele.symptomName}
+          </span>
+        </div>
+      );
     });
   };
 
@@ -145,6 +223,7 @@ function WidgetDrawer({
 
     return (
       <div className="form-block-ap">
+        {renderSymptomName()}
         <div
           className="form-headings
                 //    flex align-center justify-start
@@ -156,21 +235,38 @@ function WidgetDrawer({
           </span>
         </div>
         <div className="mb10">
-          <Checkbox.Group
+          {/* <Checkbox.Group
             style={{ width: "100%" }}
             onChange={onChangeCheckbox}
-            defaultValue={["Head"]}
-          >
-            <Row>
-              {bodyPartsOptions.map((part, index) => {
-                return (
-                  <Col key={index} span={8}>
-                    <Checkbox value={part.value}>{part.value}</Checkbox>
-                  </Col>
-                );
-              })}
-            </Row>
-          </Checkbox.Group>
+            defaultValue={["Generalised"]}
+          > */}
+          <Row>
+            {bodyParts.map((part, index) => {
+              return (
+                <Col
+                  style={
+                    part.value === "Generalised"
+                      ? { position: "absolute", top: "-35px", left: "143px" }
+                      : {}
+                  }
+                  key={index}
+                  span={8}
+                >
+                  <Checkbox
+                    checked={part.checked}
+                    // disabled={disabled}
+                    onChange={onChangeCheckbox}
+                    value={part.value}
+                  >
+                    {part.label}
+                  </Checkbox>
+
+                  {/* <Checkbox value={part.value}>{part.value}</Checkbox> */}
+                </Col>
+              );
+            })}
+          </Row>
+          {/* </Checkbox.Group> */}
         </div>
 
         <div
