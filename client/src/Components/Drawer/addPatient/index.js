@@ -2727,10 +2727,12 @@ class PatientDetailsDrawer extends Component {
 
         <div className="form-headings-ap flex align-center justify-space-between">
           {this.formatMessage(messages.symptoms)}
-          <div className="add-more" onClick={this.openEditWidgetHandler}>
-            {/* {this.formatMessage(messages.addMore)} */}
-            Edit
-          </div>
+          {!isEmpty(this.state.finalSymptomData) && (
+            <div className="add-more" onClick={this.openEditWidgetHandler}>
+              {/* {this.formatMessage(messages.addMore)} */}
+              Edit
+            </div>
+          )}
         </div>
 
         <CustomSymptoms
