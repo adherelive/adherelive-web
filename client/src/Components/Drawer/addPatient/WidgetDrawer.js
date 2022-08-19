@@ -222,6 +222,7 @@ function WidgetDrawer({
 
   const renderSymptomName = () => {
     console.log("finalSymptomData", finalSymptomData);
+    console.log("selectedSymptom", selectedSymptom);
     return finalSymptomData.map((ele, index) => {
       return (
         <div
@@ -232,7 +233,11 @@ function WidgetDrawer({
         >
           <span
             onClick={() => onSelectSymptom(ele)}
-            className="fwbolder fs18 mb10"
+            className={
+              selectedSymptom == ele.symptomName
+                ? "fwbolder fs18 mb10 mr10 cdss-active-symptom-names pointer"
+                : "fwbolder fs18  mb10 mr10 cdss-symptom-names pointer"
+            }
           >
             {/* {this.formatMessage(messages.defaultConsultationOptions)} */}
             {ele.symptomName}
@@ -247,7 +252,8 @@ function WidgetDrawer({
 
     return (
       <div className="form-block-ap">
-        {renderSymptomName()}
+        <div className="flex cdss-container">{renderSymptomName()}</div>
+
         <div
           className="form-headings
                 //    flex align-center justify-start
