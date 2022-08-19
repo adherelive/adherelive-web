@@ -1188,9 +1188,9 @@ function renderChiefComplaints({ symptoms }) {
       let object = JSON.parse(symptoms);
       object.forEach((element) => {
         stringSymptomArray.push(
-          `${element.symptomName}(${String(element.bodyParts)} - ${
+          `${element.symptomName}(${String(element.bodyParts)}) for ${
             element.duration
-          })`
+          }`
         );
       });
       console.log("symtoms object", object);
