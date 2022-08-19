@@ -335,7 +335,7 @@ function WidgetDrawer({
 
     <Fragment>
       <Drawer
-        title={"Widget Form"}
+        title={"Symptoms"}
         placement="right"
         maskClosable={false}
         headerStyle={{
