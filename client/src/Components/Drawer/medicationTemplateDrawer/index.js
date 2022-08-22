@@ -9,6 +9,7 @@ import {
   Button,
   TimePicker,
   Modal,
+  Spin,
 } from "antd";
 
 import {
@@ -695,18 +696,29 @@ class TemplateDrawer extends Component {
   // AKSHAY NEW CODE CHNAGES FOR TEMPLATE SEARCH
 
   onTemplateSearch = async (value) => {
-    const { getAllTemplatesForDoctor } = this.props;
-
-    const response = await getAllTemplatesForDoctor(value);
-    const { status, payload: { data, error } = {} } = response || {};
-
-    if (status == true) {
-      this.setState({
-        carePlanTemplateIds: data.care_plan_template_ids,
-        care_plan_templates: data.care_plan_templates,
-      });
-    } else {
-      alert("something wen wrong");
+    try {
+      if (value) {
+        const { getAllTemplatesForDoctor } = this.props;
+        this.setState({ fetchingTemplate: true });
+        const response = await getAllTemplatesForDoctor(value);
+        const { status, payload: { data: responseData, message } = {} } =
+          response;
+        if (status) {
+          this.setState({
+            carePlanTemplateIds: responseData.care_plan_template_ids,
+            care_plan_templates: responseData.care_plan_templates,
+            fetchingTemplate: false,
+          });
+        } else {
+          this.setState({ fetchingTemplate: false });
+        }
+      } else {
+        this.setState({ fetchingTemplate: false });
+      }
+    } catch (err) {
+      console.log("err", err);
+      message.warn("Something Went Wrong");
+      this.setState({ fetchingTemplate: false });
     }
   };
 
@@ -1020,6 +1032,13 @@ class TemplateDrawer extends Component {
           filterOption={(input, option) =>
             option.props.children.toLowerCase().indexOf(input.toLowerCase()) >=
             0
+          }
+          notFoundContent={
+            this.state.fetchingTemplate ? (
+              <Spin size="small" />
+            ) : (
+              "No match found"
+            )
           }
         >
           {this.getCarePlanTemplateOptions()}
