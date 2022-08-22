@@ -205,7 +205,7 @@ class CarePlanTemplateService {
 
   getAllTemplatesForDoctor = async (data) => {
     try {
-      const { user_id, doctor_id, provider_id, ...rest } = data;
+      const { user_id, doctor_id, provider_id, keyword, ...rest } = data;
       console.log("=1=1=1==1=1=1=1==1=1=1=1==1=1=1=1=1");
       console.log({ user_id, doctor_id, provider_id, rest });
       console.log("=1=1=1==1=1=1=1==1=1=1=1==1=1=1=1=1");
@@ -215,12 +215,20 @@ class CarePlanTemplateService {
             {
               user_id: { [Op.eq]: null },
             },
+
             {
               user_id: { [Op.eq]: user_id },
             },
             {
               provider_id: { [Op.eq]: provider_id },
               is_public_in_provider: { [Op.eq]: true },
+            },
+          ],
+          [Op.and]: [
+            {
+              name: {
+                [Op.like]: `${keyword}%`,
+              },
             },
           ],
           ...rest,

@@ -82,15 +82,15 @@ export const diagnosisSearch = (diagnosisName) => {
 
       if (response) {
         if (!isEmpty(response)) {
-          let diagnosisArray = [];
+          // let diagnosisArray = [];
 
-          response.forEach((element) => {
-            diagnosisArray.push(element.dia);
-          });
+          // response.forEach((element) => {
+          //   diagnosisArray.push(element.dia);
+          // });
 
           dispatch({
             type: GET_CDSS_DIAGNOSIS_LIST,
-            payload: diagnosisArray,
+            payload: response,
           });
         } else {
           dispatch({

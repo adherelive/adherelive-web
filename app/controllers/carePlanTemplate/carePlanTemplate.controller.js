@@ -181,6 +181,8 @@ class CarePlanTemplateController extends Controller {
         } = {},
         permissions = [],
       } = req;
+      let keyword = "";
+      if (req.query.keyword) keyword = req.query.keyword;
 
       let doctor_id = null;
       let provider_id = null;
@@ -199,6 +201,7 @@ class CarePlanTemplateController extends Controller {
           user_id: userId,
           provider_id,
           doctor_id,
+          keyword,
         })) || [];
 
       let carePlanTemplate = {};

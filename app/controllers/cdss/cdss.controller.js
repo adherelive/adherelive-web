@@ -28,12 +28,21 @@ class CdssController extends Controller {
     dbcdss = await Cdss.find({dia:data.dia});
     if(dbcdss) return res.status(400).send({error: true, message: 'Dia Already Added'});
     */
-
-    let cdss = new Cdss(data);
-    console.log({ cdss });
-    cdss = await cdss.save();
-    console.log(cdss);
-    return res.status(201).send(cdss);
+    let cdssResponse = [];
+    if (data.dia.length > 0) {
+      for (let i in data.dia) {
+        let newDia = data.dia[i];
+        let newData = { ...data, dia: newDia };
+        let cdss = new Cdss(newData);
+        cdss = await cdss.save();
+        cdssResponse.push(cdss);
+      }
+    } else {
+      let cdss = new Cdss(data);
+      cdss = await cdss.save();
+      cdssResponse.push(cdss);
+    }
+    return res.status(201).send(cdssResponse);
   };
 
   getDyanosis = async (req, res) => {
@@ -75,7 +84,11 @@ class CdssController extends Controller {
         $or: [{ dia: { $regex: keyword, $options: "i" } }],
       };
       let cdss = await Cdss.find(data);
-      return res.status(200).send(cdss);
+      let filterDia = [];
+      for (let i in cdss) {
+        filterDia.push(cdss[i].dia);
+      }
+      return res.status(200).send(filterDia);
     } catch (ex) {
       console.log(ex);
     }
