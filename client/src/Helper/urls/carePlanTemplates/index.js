@@ -9,9 +9,13 @@ export const updateCareplanTemplateUrl = (id) => {
 export const duplicateCareplanTemplateUrl = (careplan_template_id) => {
   return `/care-plan-templates/duplicate/${careplan_template_id}`;
 };
+// AKSHAY NEW CODE IMPLEMENTATIONS
+// export const getAllTemplatesUrl = () => {
+//   return `/care-plan-templates/`;
+// };
 
-export const getAllTemplatesUrl = () => {
-  return `/care-plan-templates/`;
+export const getAllTemplatesUrl = (text) => {
+  return `/care-plan-templates?keyword=${text}`;
 };
 
 export const deleteCareplanTemplate = (careplan_template_id) => {

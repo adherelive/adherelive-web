@@ -375,6 +375,7 @@ class TemplateDrawer extends Component {
       }
     }
     this.setState({
+      care_plan_templates,
       carePlanTemplateIds,
       carePlanTemplateId,
       medications: newMedics,
@@ -651,7 +652,9 @@ class TemplateDrawer extends Component {
 
   getCarePlanTemplateOptions = () => {
     const { carePlanTemplateIds = [] } = this.state;
-    const { care_plan_templates = {} } = this.props;
+    const { care_plan_templates = {} } = this.state;
+    console.log("care_plan_templates", care_plan_templates);
+    console.log("carePlanTemplateIds", carePlanTemplateIds);
     const templates = Object.values(carePlanTemplateIds).map((templateId) => {
       const { basic_info: { name = "" } = {} } =
         care_plan_templates[templateId];
@@ -686,6 +689,24 @@ class TemplateDrawer extends Component {
       });
     } else {
       this.setState({ carePlanTemplateId: parseInt(value) });
+    }
+  };
+
+  // AKSHAY NEW CODE CHNAGES FOR TEMPLATE SEARCH
+
+  onTemplateSearch = async (value) => {
+    const { getAllTemplatesForDoctor } = this.props;
+
+    const response = await getAllTemplatesForDoctor(value);
+    const { status, payload: { data, error } = {} } = response || {};
+
+    if (status == true) {
+      this.setState({
+        carePlanTemplateIds: data.care_plan_template_ids,
+        care_plan_templates: data.care_plan_templates,
+      });
+    } else {
+      alert("something wen wrong");
     }
   };
 
@@ -987,15 +1008,23 @@ class TemplateDrawer extends Component {
     // console.log("32786428457523476834234532847",{l:Object.keys(carePlanTemplateIds).length,showDropDown,care_plan_templates,firstTemplateId,carePlanTemplateIds});
     return (
       <div className="template-block">
-        {Object.keys(carePlanTemplateIds).length && showDropDown ? (
-          <Select
-            value={carePlanTemplateId}
-            className={"template-drawer-select wp100"}
-            onChange={this.setTemplateId}
-          >
-            {this.getCarePlanTemplateOptions()}
-          </Select>
-        ) : null}
+        {/* {Object.keys(carePlanTemplateIds).length && showDropDown ? ( */}
+        <Select
+          showSearch
+          value={carePlanTemplateId}
+          className={"template-drawer-select wp100"}
+          onChange={this.setTemplateId}
+          onSearch={this.onTemplateSearch}
+          autoComplete="off"
+          optionFilterProp="children"
+          filterOption={(input, option) =>
+            option.props.children.toLowerCase().indexOf(input.toLowerCase()) >=
+            0
+          }
+        >
+          {this.getCarePlanTemplateOptions()}
+        </Select>
+        {/* ) : null} */}
         <div className="wp100 flex align-center justify-space-between">
           <div className="form-category-headings-ap ">
             {this.formatMessage(messages.medications)}

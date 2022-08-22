@@ -78,14 +78,14 @@ export const createCareplanTemplate = (payload) => {
   };
 };
 
-export const getAllTemplatesForDoctor = () => {
+export const getAllTemplatesForDoctor = (text) => {
   let response;
   return async (dispatch) => {
     try {
       dispatch({ type: GET_ALL_TEMPLATES_FOR_DOC });
       response = await doRequest({
         method: REQUEST_TYPE.GET,
-        url: getAllTemplatesUrl(),
+        url: getAllTemplatesUrl(text),
       });
 
       const { status, payload: { data, error } = {} } = response || {};
