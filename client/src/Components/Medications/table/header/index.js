@@ -27,7 +27,8 @@ export default (props) => {
       },
     },
     {
-      title: formatMessage(messages.taken_vs_total),
+      // title: formatMessage(messages.taken_vs_total),
+      title: "Dosage | Quantity | Frequency",
       ...TABLE_COLUMN.TAKEN,
 
       render: ({ medicationData }) => <Taken medicationData={medicationData} />,
@@ -48,7 +49,8 @@ export default (props) => {
       ),
     },
     {
-      title: "Adherence",
+      // title: "Adherence",
+      title: "Taken/Total (Adherence)",
       ...TABLE_COLUMN.TIMELINE,
 
       render: ({ openResponseDrawer, formatMessage, id }) => (

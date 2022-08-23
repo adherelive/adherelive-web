@@ -10,11 +10,11 @@ export const duplicateCareplanTemplateUrl = (careplan_template_id) => {
   return `/care-plan-templates/duplicate/${careplan_template_id}`;
 };
 // AKSHAY NEW CODE IMPLEMENTATIONS
-// export const getAllTemplatesUrl = () => {
-//   return `/care-plan-templates/`;
-// };
+export const getAllTemplatesUrl = () => {
+  return `/care-plan-templates/`;
+};
 
-export const getAllTemplatesUrl = (text) => {
+export const getAllTemplatesUrlSearch = (text) => {
   return `/care-plan-templates?keyword=${text}`;
 };
 

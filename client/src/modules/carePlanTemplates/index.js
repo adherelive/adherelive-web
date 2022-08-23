@@ -12,7 +12,10 @@ import {
   deleteCareplanTemplateWorkout,
 } from "../../Helper/urls/carePlanTemplates";
 
-import { getAllTemplatesUrl } from "../../Helper/urls/carePlanTemplates";
+import {
+  getAllTemplatesUrl,
+  getAllTemplatesUrlSearch,
+} from "../../Helper/urls/carePlanTemplates";
 
 export const CREATE_CAREPLAN_TEMPLATE_START = "CREATE_CAREPLAN_TEMPLATE_START";
 export const CREATE_CAREPLAN_TEMPLATE_COMPLETED =
@@ -78,14 +81,46 @@ export const createCareplanTemplate = (payload) => {
   };
 };
 
-export const getAllTemplatesForDoctor = (text) => {
+export const getAllTemplatesForDoctor = () => {
   let response;
   return async (dispatch) => {
     try {
       dispatch({ type: GET_ALL_TEMPLATES_FOR_DOC });
       response = await doRequest({
         method: REQUEST_TYPE.GET,
-        url: getAllTemplatesUrl(text),
+        url: getAllTemplatesUrl(),
+      });
+
+      const { status, payload: { data, error } = {} } = response || {};
+      if (status === true) {
+        dispatch({
+          type: GET_ALL_TEMPLATES_FOR_DOC_COMPLETE,
+          data: data,
+          payload: data,
+        });
+      } else {
+        dispatch({
+          type: GET_ALL_TEMPLATES_FOR_DOC_FAILED,
+          error,
+        });
+      }
+    } catch (error) {
+      console.log("GET ALL TEMPLATES FOR DOC error --->", error);
+    }
+    return response;
+  };
+};
+
+// AKSHAY NEW CODE IMPLEMETATIONS
+
+export const getAllTemplatesForDoctorUsingQuery = (text) => {
+  let response;
+  return async (dispatch) => {
+    try {
+      dispatch({ type: GET_ALL_TEMPLATES_FOR_DOC });
+      response = await doRequest({
+        method: REQUEST_TYPE.GET,
+        url: getAllTemplatesUrlSearch(text),
       });
 
       const { status, payload: { data, error } = {} } = response || {};

@@ -14,6 +14,7 @@ import {
 
 import {
   WHEN_TO_TAKE_ABBR_TYPES,
+  WHEN_TO_TAKE_ABBR_LABELS,
   MEDICATION_TIMING,
   DAYS,
   DAYS_TEXT_NUM_SHORT,
@@ -697,24 +698,24 @@ class TemplateDrawer extends Component {
 
   onTemplateSearch = async (value) => {
     try {
-      if (value) {
-        const { getAllTemplatesForDoctor } = this.props;
-        this.setState({ fetchingTemplate: true });
-        const response = await getAllTemplatesForDoctor(value);
-        const { status, payload: { data: responseData, message } = {} } =
-          response;
-        if (status) {
-          this.setState({
-            carePlanTemplateIds: responseData.care_plan_template_ids,
-            care_plan_templates: responseData.care_plan_templates,
-            fetchingTemplate: false,
-          });
-        } else {
-          this.setState({ fetchingTemplate: false });
-        }
+      // if (value) {
+      const { getAllTemplatesForDoctorUsingQuery } = this.props;
+      this.setState({ fetchingTemplate: true });
+      const response = await getAllTemplatesForDoctorUsingQuery(value);
+      const { status, payload: { data: responseData, message } = {} } =
+        response;
+      if (status) {
+        this.setState({
+          carePlanTemplateIds: responseData.care_plan_template_ids,
+          care_plan_templates: responseData.care_plan_templates,
+          fetchingTemplate: false,
+        });
       } else {
         this.setState({ fetchingTemplate: false });
       }
+      // } else {
+      //   this.setState({ fetchingTemplate: false });
+      // }
     } catch (err) {
       console.log("err", err);
       message.warn("Something Went Wrong");
@@ -1061,8 +1062,14 @@ class TemplateDrawer extends Component {
               start_date = moment(),
               medicine_type = "1",
               repeat_days = [],
+              strength = "",
+              unit = "",
+              quantity = "",
+              when_to_take_abbr = "",
             } = {},
           } = medications[key];
+          console.log("medications data for template", medications[key]);
+
           when_to_take.sort();
           let nextDueTime = moment().format("HH:MM A");
           let closestWhenToTake = 0;
@@ -1138,7 +1145,9 @@ class TemplateDrawer extends Component {
                 <div className="flex direction-row justify-space-between align-center">
                   <div className="flex align-center">
                     <div className="form-headings-ap">
-                      {medicine ? medicine : "MEDICINE"}
+                      {medicine ? medicine : "MEDICINE"} (
+                      {strength === 1 ? "One" : strength}
+                      {strength !== 1 && unit})
                     </div>
                     {medicineType && (
                       <img
@@ -1181,12 +1190,14 @@ class TemplateDrawer extends Component {
                                     return ( */}
 
                 <div className="drawer-block-description">
-                  {medTimingsToShow}
+                  {medTimingsToShow} ({" "}
+                  {WHEN_TO_TAKE_ABBR_LABELS[when_to_take_abbr]})
                 </div>
                 {/* );
                                 }) */}
                 {/* } */}
                 <div className="drawer-block-description">{`Next due: ${nextDue}`}</div>
+                <div className="drawer-block-description">{`Quantity: ${quantity}`}</div>
               </div>
               {/* <DeleteTwoTone
                                 className={"mr8"}

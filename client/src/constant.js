@@ -1958,6 +1958,14 @@ export const WHEN_TO_TAKE_ABBR_TYPES = {
   SOS: "4",
 };
 
+export const WHEN_TO_TAKE_ABBR_LABELS = {
+  1: "OD",
+  2: "BD",
+  3: "TDS",
+  4: "SOS",
+  0: "SOS",
+};
+
 export const LOCAL_STORAGE = {
   LOCAL_IS_AUDIO_ON: "localIsAudioOn",
   LOCAL_IS_VIDEO_ON: "localIsVideoOn",
