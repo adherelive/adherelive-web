@@ -224,10 +224,57 @@ class CarePlanTemplateService {
               is_public_in_provider: { [Op.eq]: true },
             },
           ],
+          ...rest,
+        },
+        include: [
+          Database.getModel(conditionTableName),
+          Database.getModel(severityTableName),
+          Database.getModel(treatmentTableName),
+          Database.getModel(appointmentTemplateTableName),
+          {
+            model: Database.getModel(medicationTemplateTableName),
+            include: {
+              model: Database.getModel(medicineTableName),
+              required: true,
+            },
+          },
+          Database.getModel(vitalTemplateTableName),
+          Database.getModel(dietTemplateTableName),
+          Database.getModel(workoutTemplateTableName),
+        ],
+        order: [["updated_at", "DESC"]],
+      });
+      return carePlanTemplate;
+    } catch (error) {
+      throw error;
+    }
+  };
+
+  searchAllTemplatesForDoctor = async (data) => {
+    try {
+      const { user_id, doctor_id, provider_id, keyword, ...rest } = data;
+      console.log("=1=1=1==1=1=1=1==1=1=1=1==1=1=1=1=1");
+      console.log({ user_id, doctor_id, provider_id, rest });
+      console.log("=1=1=1==1=1=1=1==1=1=1=1==1=1=1=1=1");
+      const carePlanTemplate = await Database.getModel(TABLE_NAME).findAll({
+        where: {
+          [Op.or]: [
+            {
+              user_id: { [Op.eq]: null },
+            },
+
+            {
+              user_id: { [Op.eq]: user_id },
+            },
+            {
+              provider_id: { [Op.eq]: provider_id },
+              is_public_in_provider: { [Op.eq]: true },
+            },
+          ],
           [Op.and]: [
             {
               name: {
-                [Op.like]: `${keyword}%`,
+                [Op.like]: `%${keyword}%`,
               },
             },
           ],

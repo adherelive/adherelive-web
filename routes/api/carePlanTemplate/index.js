@@ -15,6 +15,14 @@ router.get(
   CarePlanTemplate.getAllForDoctor
 );
 
+// gaurav chnages
+router.get(
+  "/search",
+  Authenticate,
+  isAllowed(PERMISSIONS.CARE_PLAN_TEMPLATE.VIEW),
+  CarePlanTemplate.searchAllTemplatesForDoctor
+);
+
 router.post(
   "/",
   Authenticate,

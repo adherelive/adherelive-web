@@ -1030,10 +1030,10 @@ class TemplateDrawer extends Component {
           onSearch={this.onTemplateSearch}
           autoComplete="off"
           optionFilterProp="children"
-          filterOption={(input, option) =>
-            option.props.children.toLowerCase().indexOf(input.toLowerCase()) >=
-            0
-          }
+          // filterOption={(input, option) =>
+          //   option.props.children.toLowerCase().indexOf(input.toLowerCase()) >=
+          //   0
+          // }
           notFoundContent={
             this.state.fetchingTemplate ? (
               <Spin size="small" />

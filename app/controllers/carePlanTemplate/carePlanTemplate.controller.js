@@ -358,6 +358,196 @@ class CarePlanTemplateController extends Controller {
     }
   };
 
+  // gaurav new chnages
+
+  searchAllTemplatesForDoctor = async (req, res) => {
+    const { raiseSuccess, raiseServerError } = this;
+    try {
+      const {
+        userDetails: {
+          userId,
+          userData: { category } = {},
+          userCategoryId,
+        } = {},
+        permissions = [],
+      } = req;
+      let keyword = "";
+      if (req.query.keyword) keyword = req.query.keyword;
+
+      let doctor_id = null;
+      let provider_id = null;
+
+      if (req.userDetails.userRoleData.basic_info.linked_with === "doctor") {
+        doctor_id = req.userDetails.userCategoryData.basic_info.id;
+      }
+
+      if (req.userDetails.userRoleData.basic_info.linked_with === "provider") {
+        provider_id = req.userDetails.userRoleData.basic_info.linked_id;
+        doctor_id = req.userDetails.userCategoryData.basic_info.id;
+      }
+
+      const allCareplanTemplates =
+        (await carePlanTemplateService.searchAllTemplatesForDoctor({
+          user_id: userId,
+          provider_id,
+          doctor_id,
+          keyword,
+        })) || [];
+
+      let carePlanTemplate = {};
+      let templateAppointment = {};
+      let templateMedication = {};
+      let templateVital = {};
+      let vitalTemplates = {};
+      let medicineData = {};
+
+      let allTemplateDiets = {};
+      let allFoodItems = {};
+      let allFoodItemDetails = {};
+      let allPortions = {};
+
+      let allTemplateWorkouts = {};
+      let allExercises = {};
+      let allExerciseDetails = {};
+      let allRepetitions = {};
+      let allExerciseContents = {};
+
+      let carePlanTemplateIds = [];
+
+      if (allCareplanTemplates.length > 0) {
+        for (let index = 0; index < allCareplanTemplates.length; index++) {
+          const template = await CarePlanTemplateWrapper(
+            allCareplanTemplates[index]
+          );
+          const {
+            care_plan_templates,
+            template_appointments,
+            template_medications,
+            template_vitals,
+            vital_templates,
+            medicines,
+            template_diets,
+            food_item_details,
+            food_items,
+            portions,
+            template_workouts,
+            exercise_details,
+            exercises,
+            repetitions,
+          } = await template.getReferenceInfo();
+
+          carePlanTemplate = { ...carePlanTemplate, ...care_plan_templates };
+          carePlanTemplateIds.push(template.getCarePlanTemplateId());
+
+          templateAppointment = {
+            ...templateAppointment,
+            ...template_appointments,
+          };
+
+          if (permissions.includes(PERMISSIONS.MEDICATIONS.TEMPLATE)) {
+            templateMedication = {
+              ...templateMedication,
+              ...template_medications,
+            };
+          }
+
+          templateVital = { ...templateVital, ...template_vitals };
+
+          vitalTemplates = { ...vitalTemplates, ...vital_templates };
+
+          if (permissions.includes(PERMISSIONS.MEDICATIONS.TEMPLATE)) {
+            medicineData = { ...medicineData, ...medicines };
+          }
+
+          allTemplateDiets = { ...allTemplateDiets, ...template_diets };
+          allFoodItems = { ...allFoodItems, ...food_items };
+          allFoodItemDetails = { ...allFoodItemDetails, ...food_item_details };
+          allPortions = { ...allPortions, ...portions };
+
+          allTemplateWorkouts = {
+            ...allTemplateWorkouts,
+            ...template_workouts,
+          };
+          allExercises = { ...allExercises, ...exercises };
+          allExerciseDetails = { ...allExerciseDetails, ...exercise_details };
+          allRepetitions = { ...allRepetitions, ...repetitions };
+        }
+
+        let exerciseContentData = {};
+        const exerciseContentService = new ExerciseContentService();
+
+        for (let each in allExercises) {
+          const exercise = allExercises[each] || {};
+          const { basic_info: { id = null } = {} } = exercise || {};
+          const exerciseContentExists =
+            (await exerciseContentService.findOne({
+              exercise_id: id,
+              creator_id: userCategoryId,
+              creator_type: category,
+            })) || null;
+
+          if (exerciseContentExists) {
+            const exerciseContentWrapper = await ExerciseContentWrapper({
+              exercise_id: id,
+              auth: { creator_id: userCategoryId, creator_type: category },
+            });
+            exerciseContentData[exerciseContentWrapper.getId()] =
+              exerciseContentWrapper.getBasicInfo();
+          }
+        }
+
+        return raiseSuccess(
+          res,
+          200,
+          {
+            care_plan_templates: {
+              ...carePlanTemplate,
+            },
+            template_appointments: {
+              ...templateAppointment,
+            },
+            ...(permissions.includes(PERMISSIONS.MEDICATIONS.TEMPLATE) && {
+              template_medications: {
+                ...templateMedication,
+              },
+            }),
+            template_vitals: {
+              ...templateVital,
+            },
+            template_diets: allTemplateDiets,
+            food_items: allFoodItems,
+            food_item_details: allFoodItemDetails,
+            portions: allPortions,
+
+            template_workouts: allTemplateWorkouts,
+            exercise_details: allExerciseDetails,
+            exercises: allExercises,
+            // TODO: Need to check which declaration is correct
+            // exercise_contents: exerciseContentData,
+            repetitions: allRepetitions,
+            exercise_contents: allExerciseContents,
+
+            vital_templates: {
+              ...vitalTemplates,
+            },
+            ...(permissions.includes(PERMISSIONS.MEDICATIONS.TEMPLATE) && {
+              medicines: {
+                ...medicineData,
+              },
+            }),
+            care_plan_template_ids: carePlanTemplateIds,
+          },
+          "Templates fetched successfully"
+        );
+      } else {
+        return raiseSuccess(res, 200, {}, "No templates created at the moment");
+      }
+    } catch (error) {
+      Log.debug("getAllForDoctor 500 error", error);
+      return raiseServerError(res);
+    }
+  };
+
   duplicate = async (req, res) => {
     const { raiseSuccess, raiseClientError, raiseServerError } = this;
     try {

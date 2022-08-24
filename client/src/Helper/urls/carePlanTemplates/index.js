@@ -15,7 +15,7 @@ export const getAllTemplatesUrl = () => {
 };
 
 export const getAllTemplatesUrlSearch = (text) => {
-  return `/care-plan-templates?keyword=${text}`;
+  return `/care-plan-templates/search?keyword=${text}`;
 };
 
 export const deleteCareplanTemplate = (careplan_template_id) => {
