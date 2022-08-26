@@ -1068,6 +1068,25 @@ class TemplateDrawer extends Component {
               when_to_take_abbr = "",
             } = {},
           } = medications[key];
+
+          // AKSHAY NEW CODE IMPLEMETATIONS
+
+          let newStrength = "";
+          let newUnit = "";
+
+          if (strength !== 1) {
+            if (unit === "1") {
+              newStrength = strength;
+              newUnit = "mg";
+            } else if (unit === "2") {
+              newUnit = "ml";
+              newStrength = strength;
+            }
+          } else {
+            newStrength = "";
+            newUnit = "One";
+          }
+
           console.log("medications data for template", medications[key]);
 
           when_to_take.sort();
@@ -1145,9 +1164,7 @@ class TemplateDrawer extends Component {
                 <div className="flex direction-row justify-space-between align-center">
                   <div className="flex align-center">
                     <div className="form-headings-ap">
-                      {medicine ? medicine : "MEDICINE"} (
-                      {strength === 1 ? "One" : strength}
-                      {strength !== 1 && unit})
+                      {medicine ? medicine : "MEDICINE"}
                     </div>
                     {medicineType && (
                       <img
@@ -1161,6 +1178,7 @@ class TemplateDrawer extends Component {
                         className={"medication-image-tablet"}
                       />
                     )}
+                    {`(${newStrength} ${newUnit})`}
                   </div>
 
                   <div>

@@ -83,7 +83,7 @@ class MedicationStrength extends Component {
             initialValue: strength ? strength : null,
           })(
             <InputNumber
-              min={1}
+              min={0.01}
               style={{ width: "100%" }}
               disabled={canViewDetails}
             />

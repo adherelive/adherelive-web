@@ -1635,11 +1635,11 @@ class PatientController extends Controller {
       }
       console.log(1);
       const carePlan = await carePlanService.getCarePlanById(care_plan_id);
-      console.log(1);
+      console.log(2);
       const carePlanData = await CarePlanWrapper(carePlan);
-      console.log(1);
+      console.log(3);
       const curr_patient_id = carePlanData.getPatientId();
-      console.log(1);
+      console.log(4);
       const doctorUserRoleId = carePlanData.getUserRoleId();
       /*
       if (
@@ -1653,23 +1653,23 @@ class PatientController extends Controller {
           "You don't have the rights to access this prescription."
         );
       }*/
-      console.log(1);
+      console.log(5);
       const userRoles = await userRolesService.getSingleUserRoleByData({
         id: doctorUserRoleId,
       });
-      console.log(1);
+      console.log(6);
       if (userRoles) {
-        console.log(1);
+        console.log(7);
         const userRolesWrapper = await UserRolesWrapper(userRoles);
-        console.log(1);
+        console.log(8);
         userRolesData = {
           ...userRolesData,
           [doctorUserRoleId]: userRolesWrapper.getBasicInfo(),
         };
       }
-      console.log(1);
+      console.log(9);
       const carePlanCreatedDate = carePlanData.getCreatedAt();
-      console.log(1);
+      console.log(10);
       const {
         details: { condition_id = null } = {},
         medication_ids = [],
@@ -1677,17 +1677,17 @@ class PatientController extends Controller {
         diet_ids = [],
         workout_ids = [],
       } = await carePlanData.getAllInfo();
-      console.log(1);
+      console.log(11);
       const conditionData = await conditionService.getByData({
         id: condition_id,
       });
-      console.log(1);
+      console.log(12);
       if (conditionData) {
-        console.log(1);
+        console.log(13);
         const condition = await ConditionWrapper(conditionData);
         conditions[condition_id] = condition.getBasicInfo();
       }
-      console.log(1);
+      console.log(14);
 
       // if (permissions.includes(PERMISSIONS.MEDICATIONS.ADD)) {
       console.log("===09876543212345678===");
@@ -1725,10 +1725,10 @@ class PatientController extends Controller {
         }
       }
       // }
-      console.log(1);
+      console.log(15);
       const now = moment();
       let nextAppointment = null;
-      console.log(1);
+      console.log(16);
       let suggestedInvestigations = [];
       for (const appointmentId of appointment_ids) {
         const appointment = await appointmentService.getAppointmentById(
@@ -1764,7 +1764,7 @@ class PatientController extends Controller {
           // }
         }
       }
-      console.log(1);
+      console.log(17);
       let dietApiData = {},
         dietIds = [],
         workoutApiData = {},
@@ -1914,7 +1914,7 @@ class PatientController extends Controller {
           dietIds.push(id);
         }
       }
-      console.log(1);
+      console.log(18);
       for (const id of workout_ids) {
         const workout = await workoutService.findOne({ id });
 
@@ -1955,7 +1955,7 @@ class PatientController extends Controller {
           workoutIds.push(workoutWrapper.getId());
         }
       }
-      console.log(1);
+      console.log(19);
       // sort suggested investigations
       const sortedInvestigations = suggestedInvestigations.sort((a, b) => {
         const { start_date: aStartDate } = a || {};
@@ -1981,7 +1981,7 @@ class PatientController extends Controller {
       }
 
       let patient = null;
-      console.log(1);
+      console.log(20);
       if (category === USER_CATEGORY.DOCTOR) {
         patient = await patientService.getPatientById({ id: curr_patient_id });
         doctor_id = req.userDetails.userCategoryData.basic_info.id;
@@ -1992,7 +1992,7 @@ class PatientController extends Controller {
         patient = await patientService.getPatientByUserId(userId);
         ({ doctor_id } = await carePlanData.getReferenceInfo());
       }
-      console.log(1);
+      console.log(21);
       const patientData = await PatientWrapper(patient);
 
       const timingPreference = await userPreferenceService.getPreferenceByData({
@@ -2001,7 +2001,7 @@ class PatientController extends Controller {
       const userPrefOptions = await UserPreferenceWrapper(timingPreference);
       const { timings: userTimings = {} } = userPrefOptions.getAllDetails();
       const timings = DietHelper.getTimings(userTimings);
-      console.log(1);
+      console.log(22);
       // const { doctors, doctor_id } = await carePlanData.getReferenceInfo();
       const { doctors } = await carePlanData.getReferenceInfo();
 
@@ -2010,7 +2010,7 @@ class PatientController extends Controller {
           basic_info: { signature_pic = "", full_name = "", profile_pic } = {},
         } = {},
       } = doctors;
-      console.log(1);
+      console.log(23);
       checkAndCreateDirectory(S3_DOWNLOAD_FOLDER);
 
       const doctorSignImage = `${S3_DOWNLOAD_FOLDER}/${full_name}.jpeg`;
@@ -2019,10 +2019,10 @@ class PatientController extends Controller {
         getFilePath(signature_pic),
         doctorSignImage
       );
-      console.log(1);
+      console.log(24);
       const doctorQualifications =
         await qualificationService.getQualificationsByDoctorId(doctor_id);
-      console.log(1);
+      console.log(25);
       await doctorQualifications.forEach(async (doctorQualification) => {
         const doctorQualificationWrapper = await QualificationWrapper(
           doctorQualification
@@ -2031,10 +2031,10 @@ class PatientController extends Controller {
         const degreeWrapper = await DegreeWrapper(null, degreeId);
         degrees[degreeId] = degreeWrapper.getBasicInfo();
       });
-      console.log(1);
+      console.log(26);
       const doctorRegistrations =
         await doctorRegistrationService.getRegistrationByDoctorId(doctor_id);
-      console.log(1);
+      console.log(27);
       for (const doctorRegistration of doctorRegistrations) {
         const registrationData = await RegistrationWrapper(doctorRegistration);
         const council_id = registrationData.getCouncilId();
@@ -2047,7 +2047,7 @@ class PatientController extends Controller {
           council: councilWrapper.getBasicInfo(),
         };
       }
-      console.log(1);
+      console.log(28);
       const {
         [`${doctor_id}`]: { basic_info: { user_id: doctorUserId = null } = {} },
       } = doctors;
@@ -2059,7 +2059,7 @@ class PatientController extends Controller {
           curr_data || {};
         user_ids = [doctorUserId, curr_p_user_id];
       }
-      console.log(1);
+      console.log(29);
       for (const id of user_ids) {
         const intId = parseInt(id);
         const user = await userService.getUserById(intId);
@@ -2069,7 +2069,7 @@ class PatientController extends Controller {
           usersData = { ...usersData, ...{ [id]: userWrapper.getBasicInfo() } };
         }
       }
-      console.log(1);
+      console.log(30);
       // provider data
       const {
         [doctorUserRoleId]: {
@@ -2105,16 +2105,16 @@ class PatientController extends Controller {
       const portionServiceService = new PortionServiceService();
       const allPortions = await portionServiceService.getAll();
       let portionApiData = {};
-      console.log(1);
+      console.log(31);
       for (let each in allPortions) {
         const portion = allPortions[each] || {};
         const portionWrapper = await PortionWrapper({ data: portion });
         portionApiData[portionWrapper.getId()] = portionWrapper.getBasicInfo();
       }
-      console.log(1);
+      console.log(32);
       const repetitionService = new RepetitionService();
       let repetitionApiData = {};
-      console.log(1);
+      console.log(33);
       const { count, rows: repetitions = [] } =
         (await repetitionService.findAndCountAll()) || {};
       if (count) {
@@ -2123,7 +2123,7 @@ class PatientController extends Controller {
           repetitionApiData[id] = { id, type };
         }
       }
-      console.log(1);
+      console.log(34);
       dataForPdf = {
         users: { ...usersData },
         // ...(permissions.includes(PERMISSIONS.MEDICATIONS.VIEW) && {
@@ -2164,11 +2164,13 @@ class PatientController extends Controller {
           "Do MMMM YYYY, hh:mm a"
         ),
       };
-      console.log(1);
+      console.log(35);
       checkAndCreateDirectory(PRESCRIPTION_PDF_FOLDER);
+      console.log(351);
       const pdfFileName = await generatePDF(dataForPdf, doctorSignImage);
+      console.log(352);
       const pdfFile = `${pdfFileName}.pdf`;
-      console.log(1);
+      console.log(36);
       const options = {
         root: path.join(__dirname, `../../../${PRESCRIPTION_PDF_FOLDER}/`),
       };

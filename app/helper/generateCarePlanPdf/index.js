@@ -1199,7 +1199,7 @@ function renderChiefComplaints({ symptoms }) {
 
     return String(stringSymptomArray);
   } catch (err) {
-    console.log();
+    console.log("error in chief complience", err);
   }
 }
 

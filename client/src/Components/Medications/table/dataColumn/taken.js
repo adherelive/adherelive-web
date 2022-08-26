@@ -17,11 +17,27 @@ export default (props) => {
   //   {`${total - remaining}/${total}`}
   //   </div>;
 
+  let newStrength = "";
+  let newUnit = "";
+
+  if (strength !== 1) {
+    if (unit === "1") {
+      newStrength = strength;
+      newUnit = "mg";
+    } else if (unit === "2") {
+      newUnit = "ml";
+      newStrength = strength;
+    }
+  } else {
+    newStrength = "";
+    newUnit = "One";
+  }
+
   return (
     <div className="ml10">
       {" "}
-      {strength === 1 ? "One" : strength} {strength !== 1 && unit} | {quantity}{" "}
-      | {WHEN_TO_TAKE_ABBR_LABELS[when_to_take.length]}{" "}
+      {`${newStrength} ${newUnit}`} | {quantity} |{" "}
+      {WHEN_TO_TAKE_ABBR_LABELS[when_to_take.length]}{" "}
     </div>
   );
 };
