@@ -1178,7 +1178,7 @@ class TemplateDrawer extends Component {
                         className={"medication-image-tablet"}
                       />
                     )}
-                    {`(${newStrength} ${newUnit})`}
+                    <div className="ml10">{`(${newStrength} ${newUnit})`}</div>
                   </div>
 
                   <div>
