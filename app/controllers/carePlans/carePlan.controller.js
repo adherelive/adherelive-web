@@ -174,8 +174,8 @@ class CarePlanController extends Controller {
             description,
             start_date: date,
             end_date: date,
-            start_time: null,
-            end_time: null,
+            start_time: start_time,
+            end_time: end_time,
             details: {
               treatment_id,
               reason,
