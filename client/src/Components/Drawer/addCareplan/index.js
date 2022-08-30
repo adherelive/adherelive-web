@@ -703,8 +703,8 @@ class AddCareplanDrawer extends Component {
         if (!isEmpty(cdssPost["dia"])) {
           this.props.addDiagnosis(cdssPost);
         }
-        console.log("data", data);
-        // this.handleDataSubmit(patient_id, data);
+
+        this.handleDataSubmit(patient_id, data);
       } catch (error) {
         this.setState({ submitting: false });
         console.log("error", error);
