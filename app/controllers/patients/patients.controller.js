@@ -1718,6 +1718,12 @@ class PatientController extends Controller {
               },
             };
           }
+
+          let mediactionNewData = await medicationWrapper.getBasicInfo();
+          console.log(
+            "mediactionNewData =========================== ",
+            mediactionNewData
+          );
           medications = {
             ...medications,
             ...{ [medicationId]: await medicationWrapper.getBasicInfo() },
@@ -1725,6 +1731,7 @@ class PatientController extends Controller {
         }
       }
       // }
+
       console.log(15);
       const now = moment();
       let nextAppointment = null;

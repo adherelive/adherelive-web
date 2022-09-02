@@ -366,7 +366,7 @@ function printDiet(
     let duration = null;
     let durationText = "";
     if (end_date) {
-      duration = formattedEndDate.diff(formattedStartDate, "days") + 1;
+      duration = formattedEndDate.diff(formattedStartDate, "days");
       durationText = `${duration}${" "}days`;
       if (duration >= 7) {
         const weeks = Math.floor(duration / 7) || 0;
@@ -693,7 +693,7 @@ function printWorkout(
     let duration = null;
     let durationText = "";
     if (end_date) {
-      duration = formattedEndDate.diff(formattedStartDate, "days") + 1;
+      duration = formattedEndDate.diff(formattedStartDate, "days");
       durationText = `${duration}${" "}days`;
       if (duration >= 7) {
         const weeks = Math.floor(duration / 7) || 0;
@@ -1323,7 +1323,7 @@ function printCarePlanData({
         .text("Medicines", medicineXStart, rXLabelEndLevelY + 10)
         .text("Dosage", dosageXStart, rXLabelEndLevelY + 10)
         .text("Quantity", quantityXStart, rXLabelEndLevelY + 10)
-        .text("Frequency", frequencyXStart, rXLabelEndLevelY + 10)
+        .text("Days", frequencyXStart, rXLabelEndLevelY + 10)
         // .text("Time-Duration", timingFrequencyXStart, rXLabelEndLevelY + 10);
         //AKSHAY NEW CODE IMPLEMENTATIONS
         .text(
@@ -1363,6 +1363,7 @@ function printCarePlanData({
           duration,
           dosage,
           timings,
+          repeat_days,
         } = medicationData;
         // TODO: need to add type here.
         let today = new Date();
@@ -1379,13 +1380,14 @@ function printCarePlanData({
 
         let medicationStatus = endDateobj > today; // 30>29
         // gaurav new changes - start
-        console.log("==========");
+        console.log("========== AKSHAY MESSAGE ========== ");
         console.log({
           medicationStatus,
           wantToShow,
+          repeat_days,
         });
         console.log("strength", strength);
-        console.log("==========");
+        console.log("========== AKSHAY MESSAGE ==========");
         // if (medicationStatus && !showInactive ) continue;
 
         if (!wantToShow && !medicationStatus) continue;
@@ -1445,12 +1447,13 @@ function printCarePlanData({
             quantityXStart,
             medicationYLevel
           )
-          .text(`${dosage}`, frequencyXStart, medicationYLevel, {
+          .text(`${String(repeat_days)} `, frequencyXStart, medicationYLevel, {
             width: timingFrequencyXStart - frequencyXStart,
           });
 
         doc
-          .text(`${timings}`, timingFrequencyXStart, medicationYLevel)
+          .text(`${dosage}`, timingFrequencyXStart, medicationYLevel)
+          .text(`${timings}`, timingFrequencyXStart, doc.y)
           // .text(
           //   `${frequency}`,
           //   timingFrequencyXStart,
@@ -1965,7 +1968,7 @@ function formatMedicationsData(medications, medicines) {
         organizer,
       },
     } = medications;
-
+    let repeat_days = medications[medicationId].basic_info.details.repeat_days;
     let mainDetails = {};
 
     if (mobileDetails) {
@@ -2028,8 +2031,9 @@ function formatMedicationsData(medications, medicines) {
       timings: getWhenToTakeTimings(when_to_take),
       dosage: getWhenToTakeDosage(when_to_take),
       duration: end_date
-        ? moment(end_date).diff(moment(start_date), "days")
+        ? moment(end_date).diff(moment(start_date), "days") + 1
         : "Long term", // todo: change text here after discussion
+      repeat_days,
     };
 
     medicationsList.push(medicationDataObj);
