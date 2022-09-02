@@ -2,6 +2,7 @@ import { Drawer } from "antd";
 import React, { Component, Fragment } from "react";
 import { injectIntl } from "react-intl";
 import {
+  WHEN_TO_TAKE_ABBR_LABELS,
   MEDICATION_TIMING,
   DAYS_TEXT_NUM_SHORT,
   EVENT_TYPE,
@@ -644,6 +645,24 @@ class TemplatePageCreateDrawer extends Component {
             } = {},
           } = medications[key];
 
+          // AKSHAY NEW CODE IMPLEMETATIONS
+
+          let newStrength = "";
+          let newUnit = "";
+
+          if (strength !== 1) {
+            if (unit === "1") {
+              newStrength = strength;
+              newUnit = "mg";
+            } else if (unit === "2") {
+              newUnit = "ml";
+              newStrength = strength;
+            }
+          } else {
+            newStrength = "";
+            newUnit = "One";
+          }
+
           const { basic_info: { name: medicine = "" } = {} } =
             medicines[medicine_id] || {};
 
@@ -749,6 +768,7 @@ class TemplatePageCreateDrawer extends Component {
                         className={"medication-image-tablet"}
                       />
                     )}
+                    <div className="ml10">{`(${newStrength} ${newUnit})`}</div>
                   </div>
 
                   <Icon
@@ -764,9 +784,14 @@ class TemplatePageCreateDrawer extends Component {
                 </div>
 
                 <div className="drawer-block-description">
-                  {medTimingsToShow}
+                  {/* {medTimingsToShow} */}
+                  When to take: ({WHEN_TO_TAKE_ABBR_LABELS[when_to_take_abbr]})
                 </div>
-                <div className="drawer-block-description">{`Next due: ${nextDue}`}</div>
+                {/* <div className="drawer-block-description">{`Next due: ${nextDue}`}</div> */}
+                <div className="drawer-block-description">{`Duration : ${
+                  duration + 1
+                } Days`}</div>
+                <div className="drawer-block-description">{`Quantity: ${quantity}`}</div>
               </div>
             </div>
           );

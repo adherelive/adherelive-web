@@ -1066,6 +1066,7 @@ class TemplateDrawer extends Component {
               unit = "",
               quantity = "",
               when_to_take_abbr = "",
+              duration = "",
             } = {},
           } = medications[key];
 
@@ -1208,13 +1209,16 @@ class TemplateDrawer extends Component {
                                     return ( */}
 
                 <div className="drawer-block-description">
-                  {medTimingsToShow} ({" "}
-                  {WHEN_TO_TAKE_ABBR_LABELS[when_to_take_abbr]})
+                  {/* {medTimingsToShow}  */}
+                  When to take: ({WHEN_TO_TAKE_ABBR_LABELS[when_to_take_abbr]})
                 </div>
                 {/* );
                                 }) */}
                 {/* } */}
-                <div className="drawer-block-description">{`Next due: ${nextDue}`}</div>
+                {/* <div className="drawer-block-description">{`Next due: ${nextDue}`}</div> */}
+                <div className="drawer-block-description">{`Duration : ${
+                  duration + 1
+                } Days`}</div>
                 <div className="drawer-block-description">{`Quantity: ${quantity}`}</div>
               </div>
               {/* <DeleteTwoTone

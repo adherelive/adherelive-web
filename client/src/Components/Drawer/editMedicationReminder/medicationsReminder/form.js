@@ -453,12 +453,14 @@ class EditMedicationReminderForm extends Component {
   setEndDateLongTime = (e) => {
     e.preventDefault();
     const {
-      form: { setFieldsValue },
+      form: { setFieldsValue, getFieldValue },
       enableSubmit,
     } = this.props;
+    // AKSHAY NEW CODE IMPLEMENTATIONS
+    const startDate = getFieldValue(startDateField.field_name);
 
     setFieldsValue({
-      [endDateField.field_name]: null,
+      [endDateField.field_name]: moment(startDate).add(6, "week"),
     });
     enableSubmit();
   };

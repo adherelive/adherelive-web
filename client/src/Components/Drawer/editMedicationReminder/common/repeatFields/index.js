@@ -27,6 +27,9 @@ export default (props) => {
     selectedRadio = 1;
   } else if (diff == 14) {
     selectedRadio = 2;
+  } else if (diff == 42) {
+    // AKSHAY NEW CODE IMPLEMENTATIONS
+    selectedRadio = 3;
   }
   return (
     <Fragment>
