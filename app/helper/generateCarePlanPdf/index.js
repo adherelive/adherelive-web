@@ -366,7 +366,7 @@ function printDiet(
     let duration = null;
     let durationText = "";
     if (end_date) {
-      duration = formattedEndDate.diff(formattedStartDate, "days");
+      duration = formattedEndDate.diff(formattedStartDate, "days") + 1;
       durationText = `${duration}${" "}days`;
       if (duration >= 7) {
         const weeks = Math.floor(duration / 7) || 0;
@@ -693,7 +693,7 @@ function printWorkout(
     let duration = null;
     let durationText = "";
     if (end_date) {
-      duration = formattedEndDate.diff(formattedStartDate, "days");
+      duration = formattedEndDate.diff(formattedStartDate, "days") + 1;
       durationText = `${duration}${" "}days`;
       if (duration >= 7) {
         const weeks = Math.floor(duration / 7) || 0;
