@@ -1307,9 +1307,9 @@ function printCarePlanData({
       // const drXStart = DOC_MARGIN + 35;
       // const medicineXStart = DOC_MARGIN + 40;
       const medicineXStart = DOC_MARGIN + 40;
-      const dosageXStart = DOC_MARGIN + 220;
+      const dosageXStart = DOC_MARGIN + 200;
       const quantityXStart = DOC_MARGIN + 280;
-      const frequencyXStart = DOC_MARGIN + 340;
+      const frequencyXStart = DOC_MARGIN + 320;
       const timingFrequencyXStart = DOC_MARGIN + 410;
 
       // generateHr(doc, doc.y);
@@ -1318,11 +1318,11 @@ function printCarePlanData({
         .fillColor("#4a90e2")
         .fontSize(NORMAL_FONT_SIZE)
         .font(BOLD_FONT)
-        .text("S.No.", serialNoXStart, rXLabelEndLevelY + 10)
+        .text("SNo", serialNoXStart, rXLabelEndLevelY + 10)
         // .text("Provider Name", drXStart, rXLabelEndLevelY + 10)
         .text("Medicines", medicineXStart, rXLabelEndLevelY + 10)
         .text("Dosage", dosageXStart, rXLabelEndLevelY + 10)
-        .text("Quantity", quantityXStart, rXLabelEndLevelY + 10)
+        .text("Qty", quantityXStart, rXLabelEndLevelY + 10)
         .text("Days", frequencyXStart, rXLabelEndLevelY + 10)
         // .text("Time-Duration", timingFrequencyXStart, rXLabelEndLevelY + 10);
         //AKSHAY NEW CODE IMPLEMENTATIONS
@@ -1448,7 +1448,7 @@ function printCarePlanData({
             medicationYLevel
           )
           .text(`${String(repeat_days)} `, frequencyXStart, medicationYLevel, {
-            width: timingFrequencyXStart - frequencyXStart,
+            width: timingFrequencyXStart - frequencyXStart - 25,
           });
 
         doc

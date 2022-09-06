@@ -88,7 +88,9 @@ class EndDate extends Component {
 
     // AKSHAY NEW CODE IMPLEMENTATIONS
     if (initialValue === undefined) {
-      initialValue = moment(new moment()).add(6, "week");
+      let newEndDate = moment(new moment()).add(6, "week");
+      newEndDate = newEndDate.subtract(1, "days");
+      initialValue = newEndDate;
     }
     return initialValue;
   };
