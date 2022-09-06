@@ -23,11 +23,11 @@ export default (props) => {
   let diff = end ? moment(end).diff(moment(start), "days") : 1;
   let selectedRadio = end ? null : 3;
 
-  if (diff == 7) {
+  if (diff == 6) {
     selectedRadio = 1;
-  } else if (diff == 14) {
+  } else if (diff == 13) {
     selectedRadio = 2;
-  } else if (diff == 42) {
+  } else if (diff == 41) {
     // AKSHAY NEW CODE IMPLEMENTATIONS
     selectedRadio = 3;
   }
