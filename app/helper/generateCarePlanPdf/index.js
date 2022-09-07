@@ -1218,8 +1218,24 @@ function printCarePlanData({
   try {
     const { diagnosis, condition, symptoms, clinicalNotes } =
       formatCarePlanData(care_plans, conditions);
-
     const medicationsList = formatMedicationsData(medications, medicines);
+
+    // AKSHAY NEW CODE IMPLEMENTATIONS
+
+    let stringSymptomArray = [];
+    let newArray = ["1", "2", "3", "4"];
+    if (symptoms) {
+      let object = JSON.parse(symptoms);
+      object.forEach((element) => {
+        stringSymptomArray.push(
+          `${element.symptomName}(${String(element.bodyParts)}) for ${
+            element.duration
+          }`
+        );
+      });
+      console.log("symtoms object", object);
+      console.log("stringSymptomArray", stringSymptomArray);
+    }
 
     doc
       .fillColor("#4a90e2")
@@ -1245,16 +1261,22 @@ function printCarePlanData({
       .fillColor("#212b36")
       .font(BOLD_FONT)
       .text("Chief Complaints: ", DOC_MARGIN, relevantHistoryEndLevel + 10, {
-        continued: true,
-      })
+        // continued: true,
+      });
+    doc.moveDown();
 
-      .font(REGULAR_FONT)
-      .text(
-        `${renderChiefComplaints({ symptoms })}`,
-        // `${symptoms}`,
-        DOC_MARGIN + 10,
-        relevantHistoryEndLevel + 10
-      );
+    for (let i = 0; i < stringSymptomArray.length; i++) {
+      doc
+        .font(REGULAR_FONT)
+        .text(
+          `${stringSymptomArray[i]}`,
+          // `${symptoms}`,
+          DOC_MARGIN + 10,
+          // relevantHistoryEndLevel + 10
+          doc.y - 10
+        )
+        .moveDown();
+    }
 
     const chiefComplaintsEndLevel = doc.y + 20;
 
