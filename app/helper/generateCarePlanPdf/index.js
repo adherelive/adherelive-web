@@ -1225,16 +1225,20 @@ function printCarePlanData({
     let stringSymptomArray = [];
     let newArray = ["1", "2", "3", "4"];
     if (symptoms) {
-      let object = JSON.parse(symptoms);
-      object.forEach((element) => {
-        stringSymptomArray.push(
-          `${element.symptomName}(${String(element.bodyParts)}) for ${
-            element.duration
-          }`
-        );
-      });
-      console.log("symtoms object", object);
-      console.log("stringSymptomArray", stringSymptomArray);
+      try {
+        let object = JSON.parse(symptoms);
+        object.forEach((element) => {
+          stringSymptomArray.push(
+            `${element.symptomName}(${String(element.bodyParts)}) for ${
+              element.duration
+            }`
+          );
+        });
+        console.log("symtoms object", object);
+        console.log("stringSymptomArray", stringSymptomArray);
+      } catch (e) {
+        console.log(e);
+      }
     }
 
     doc
@@ -1264,18 +1268,21 @@ function printCarePlanData({
         // continued: true,
       });
     doc.moveDown();
-
-    for (let i = 0; i < stringSymptomArray.length; i++) {
-      doc
-        .font(REGULAR_FONT)
-        .text(
-          `${stringSymptomArray[i]}`,
-          // `${symptoms}`,
-          DOC_MARGIN + 10,
-          // relevantHistoryEndLevel + 10
-          doc.y - 10
-        )
-        .moveDown();
+    if (stringSymptomArray.length < 1) {
+      doc.font(REGULAR_FONT).text(`${symptoms}`, DOC_MARGIN + 10, doc.y);
+    } else {
+      for (let i = 0; i < stringSymptomArray.length; i++) {
+        doc
+          .font(REGULAR_FONT)
+          .text(
+            `${stringSymptomArray[i]}`,
+            // `${symptoms}`,
+            DOC_MARGIN + 10,
+            // relevantHistoryEndLevel + 10
+            doc.y - 10
+          )
+          .moveDown();
+      }
     }
 
     const chiefComplaintsEndLevel = doc.y + 20;
