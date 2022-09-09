@@ -223,28 +223,31 @@ function WidgetDrawer({
   const renderSymptomName = () => {
     console.log("finalSymptomData", finalSymptomData);
     console.log("selectedSymptom", selectedSymptom);
-    return finalSymptomData.map((ele, index) => {
-      return (
-        <div
-          key={index}
-          className="form-headings
+    return (
+      !isEmpty(finalSymptomData) &&
+      finalSymptomData.map((ele, index) => {
+        return (
+          <div
+            key={index}
+            className="form-headings
           //    flex align-center justify-start
              tac"
-        >
-          <span
-            onClick={() => onSelectSymptom(ele)}
-            className={
-              selectedSymptom == ele.symptomName
-                ? "fwbolder fs18 mb10 mr10 cdss-active-symptom-names pointer"
-                : "fwbolder fs18  mb10 mr10 cdss-symptom-names pointer"
-            }
           >
-            {/* {this.formatMessage(messages.defaultConsultationOptions)} */}
-            {ele.symptomName}
-          </span>
-        </div>
-      );
-    });
+            <span
+              onClick={() => onSelectSymptom(ele)}
+              className={
+                selectedSymptom == ele.symptomName
+                  ? "fwbolder fs18 mb10 mr10 cdss-active-symptom-names pointer"
+                  : "fwbolder fs18  mb10 mr10 cdss-symptom-names pointer"
+              }
+            >
+              {/* {this.formatMessage(messages.defaultConsultationOptions)} */}
+              {ele.symptomName}
+            </span>
+          </div>
+        );
+      })
+    );
   };
 
   const renderWidgetForm = () => {
