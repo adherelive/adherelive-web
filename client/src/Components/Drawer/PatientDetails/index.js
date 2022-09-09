@@ -422,6 +422,17 @@ class PatientDetailsDrawer extends Component {
         missed_symptoms = {},
       } = this.state;
 
+      let finalArray = [];
+
+      try {
+        let symptomsArray = JSON.parse(symptoms);
+        symptomsArray.forEach((ele) => {
+          finalArray.push(ele.symptomName);
+        });
+      } catch (e) {
+        finalArray = symptoms;
+      }
+
       return (
         <Fragment>
           {/*<img src={CloseIcon} alt="close icon" onClick={}/>*/}
@@ -602,7 +613,12 @@ class PatientDetailsDrawer extends Component {
               </div>
               <div className="flex justify-space-between align-center">
                 <div className="flex-1">{formatMessage(messages.symptoms)}</div>
-                <div className="flex-2">{symptoms ? symptoms : "--"}</div>
+                <div className="flex-2">
+                  {/* {symptoms ? symptoms : "--"} */}
+                  {typeof finalArray === "string"
+                    ? finalArray
+                    : String(finalArray)}
+                </div>
               </div>
               <div className="flex justify-space-between align-center">
                 <div className="flex-1">
