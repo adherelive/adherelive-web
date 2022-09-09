@@ -1183,21 +1183,22 @@ function isMedicationsUpdatedInExistingMedicin(medications) {
 
 function renderChiefComplaints({ symptoms }) {
   try {
-    let stringSymptomArray = [];
-    if (symptoms) {
-      let object = JSON.parse(symptoms);
-      object.forEach((element) => {
-        stringSymptomArray.push(
-          `${element.symptomName}(${String(element.bodyParts)}) for ${
-            element.duration
-          }`
-        );
-      });
-      console.log("symtoms object", object);
-      console.log("stringSymptomArray", stringSymptomArray);
+    let finalSymptom = "";
+    console.log("symptoms", symptoms);
+    if (
+      symptoms === undefined ||
+      symptoms === null ||
+      (typeof symptoms === "object" && Object.keys(symptoms).length === 0) ||
+      (typeof symptoms === "string" && symptoms.trim().length === 0)
+    ) {
+      finalSymptom = "";
+    } else {
+      finalSymptom = symptoms;
     }
 
-    return String(stringSymptomArray);
+    console.log("finalSymptom", finalSymptom);
+
+    return finalSymptom;
   } catch (err) {
     console.log("error in chief complience", err);
   }
@@ -1223,7 +1224,8 @@ function printCarePlanData({
     // AKSHAY NEW CODE IMPLEMENTATIONS
 
     let stringSymptomArray = [];
-    let newArray = ["1", "2", "3", "4"];
+    let stringSymptom = "";
+    console.log("symptoms at fisrt", symptoms);
     if (symptoms) {
       try {
         let object = JSON.parse(symptoms);
@@ -1237,6 +1239,7 @@ function printCarePlanData({
         console.log("symtoms object", object);
         console.log("stringSymptomArray", stringSymptomArray);
       } catch (e) {
+        stringSymptom = symptoms;
         console.log(e);
       }
     }
@@ -1268,8 +1271,19 @@ function printCarePlanData({
         // continued: true,
       });
     doc.moveDown();
+    console.log(
+      "stringSymptomArray",
+      stringSymptomArray,
+      stringSymptomArray.length < 1
+    );
     if (stringSymptomArray.length < 1) {
-      doc.font(REGULAR_FONT).text(`${symptoms}`, DOC_MARGIN + 10, doc.y);
+      doc
+        .font(REGULAR_FONT)
+        .text(
+          `${renderChiefComplaints({ symptoms: stringSymptom })}`,
+          DOC_MARGIN + 10,
+          doc.y
+        );
     } else {
       for (let i = 0; i < stringSymptomArray.length; i++) {
         doc

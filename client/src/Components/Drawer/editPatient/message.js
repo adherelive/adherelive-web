@@ -136,6 +136,11 @@ const messages = defineMessages({
     description: "",
     defaultMessage: "Please enter Diagnosis",
   },
+  symptomTypeError: {
+    id: "app.addPatient.symptomTypeError",
+    description: "",
+    defaultMessage: "Please enter Symptom Type",
+  },
   diagnosisTypeError: {
     id: "app.editPatient.diagnosisTypeError",
     description: "",
