@@ -1608,7 +1608,7 @@ class PatientDetailsDrawer extends Component {
         clinical_notes,
         height,
         weight,
-        symptoms: "test symptom",
+        symptoms: JSON.stringify(this.state.finalSymptomData),
         address,
       });
     }
