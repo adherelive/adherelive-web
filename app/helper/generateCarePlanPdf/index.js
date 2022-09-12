@@ -1004,7 +1004,10 @@ function printPatientBlockData(
   creationDate,
   doctorBlockEndRowLevel
 ) {
-  const creationDateObj = new moment(creationDate);
+  // const creationDateObj = new moment(creationDate);
+
+  const creationDateObj =
+    (creationDate && new moment(creationDate)) || new moment();
   const month = creationDateObj.get("month") + 1;
   const date = creationDateObj.get("date");
   const year = creationDateObj.get("year");
@@ -1230,11 +1233,13 @@ function printCarePlanData({
       try {
         let object = JSON.parse(symptoms);
         object.forEach((element) => {
-          stringSymptomArray.push(
-            `${element.symptomName}(${String(element.bodyParts)}) for ${
-              element.duration
-            }`
-          );
+          let symName = element.symptomName;
+          let bodyPart =
+            element.bodyParts.length > 0
+              ? `(${String(element.bodyParts)})`
+              : "";
+          let duration = element.duration;
+          stringSymptomArray.push(`${symName} ${bodyPart} for ${duration}`);
         });
         console.log("symtoms object", object);
         console.log("stringSymptomArray", stringSymptomArray);
@@ -1350,7 +1355,7 @@ function printCarePlanData({
       // const drXStart = DOC_MARGIN + 35;
       // const medicineXStart = DOC_MARGIN + 40;
       const medicineXStart = DOC_MARGIN + 40;
-      const dosageXStart = DOC_MARGIN + 200;
+      const dosageXStart = DOC_MARGIN + 210;
       const quantityXStart = DOC_MARGIN + 280;
       const frequencyXStart = DOC_MARGIN + 320;
       const timingFrequencyXStart = DOC_MARGIN + 410;
@@ -1444,6 +1449,37 @@ function printCarePlanData({
           medicationYLevel = DOC_MARGIN;
         }
         // gaurav new changes - start
+        // doc
+        //   .fillColor("#212b36")
+        //   .fontSize(SHORT_FONT_SIZE)
+        //   .font(MEDIUM_FONT)
+        //   .text(
+        //     `${strength == "1 MG" || strength == "1 ML" ? "One" : strength}`,
+        //     dosageXStart,
+        //     medicationYLevel
+        //   )
+        //   .text(
+        //     `${quantity ? quantity : "-"}`,
+        //     quantityXStart,
+        //     medicationYLevel
+        //   )
+        //   .text(`${String(repeat_days)} `, frequencyXStart, medicationYLevel, {
+        //     width: timingFrequencyXStart - frequencyXStart - 25,
+        //   });
+
+        // doc
+        //   .text(`${dosage}`, timingFrequencyXStart, medicationYLevel)
+        //   .text(`${timings}`, timingFrequencyXStart, doc.y)
+        //   // .text(
+        //   //   `${frequency}`,
+        //   //   timingFrequencyXStart,
+        //   //   doc.y
+        //   // )
+        //   .text(
+        //     `${moment(startDate).format("DD MMM 'YY")} /${duration} day(s)`,
+        //     timingFrequencyXStart,
+        //     doc.y
+        //   );
         doc
           .fillColor("#212b36")
           .fontSize(SHORT_FONT_SIZE)
@@ -1480,6 +1516,9 @@ function printCarePlanData({
         const medicationYLevelEnd = doc.y;
 
         doc
+          .fillColor("#212b36")
+          .fontSize(SHORT_FONT_SIZE)
+          .font(MEDIUM_FONT)
           .text(
             `${strength == "1 MG" || strength == "1 ML" ? "One" : strength}`,
             dosageXStart,
@@ -1544,18 +1583,23 @@ function printCarePlanData({
         suggestedInvestigations[index] || {};
       // GAURAV NEW CHNAGES
       if (APPOINTMENT_TYPE[type].title === "Consultation") continue;
-
-      doc
-        .font(REGULAR_FONT)
-        .text(
-          `${type_description}${radiology_type ? `-${radiology_type}` : ""}(${
-            APPOINTMENT_TYPE[type].title
-          }) on ${moment(start_date).format("DD/MM/YYYY")} by ${
-            organizer.name
-          }`,
-          DOC_MARGIN,
-          doc.y + 5
-        );
+      // IF STARTDATE LESSTHAN TODAY THEN WE WILL NOT PRINT THIS
+      // let today = moment().add(25, "days");
+      let today = new moment();
+      let start = moment(start_date);
+      if (start.isSameOrAfter(today)) {
+        doc
+          .font(REGULAR_FONT)
+          .text(
+            `${type_description}${radiology_type ? `-${radiology_type}` : ""}(${
+              APPOINTMENT_TYPE[type].title
+            }) on ${moment(start_date).format("DD/MM/YYYY")} by Dr. ${
+              organizer.name
+            }`,
+            DOC_MARGIN,
+            doc.y + 5
+          );
+      }
 
       if (doc.y > PAGE_END_LIMIT) {
         if (pageCount === 1) {
@@ -1596,18 +1640,21 @@ function printConsultationAppointment({
 
       // GAURAV NEW CHNAGES
       if (APPOINTMENT_TYPE[type].title !== "Consultation") continue;
-
-      doc
-        .font(REGULAR_FONT)
-        .text(
-          `${type_description}${radiology_type ? `-${radiology_type}` : ""}(${
-            APPOINTMENT_TYPE[type].title
-          }) on ${moment(start_date).format("DD/MM/YYYY")} by ${
-            organizer.name
-          }`,
-          DOC_MARGIN,
-          doc.y + 5
-        );
+      let today = new moment();
+      let start = moment(start_date);
+      if (start.isSameOrAfter(today)) {
+        doc
+          .font(REGULAR_FONT)
+          .text(
+            `${type_description}${radiology_type ? `-${radiology_type}` : ""}(${
+              APPOINTMENT_TYPE[type].title
+            }) on ${moment(start_date).format("DD/MM/YYYY")} by Dr. ${
+              organizer.name
+            }`,
+            DOC_MARGIN,
+            doc.y + 5
+          );
+      }
 
       if (doc.y > PAGE_END_LIMIT) {
         if (pageCount === 1) {
@@ -1717,18 +1764,18 @@ function printFooter(
   }
 
   const footerStartLevel = doc.y + 10;
-  doc
-    .font(BOLD_FONT)
-    .fontSize(NORMAL_FONT_SIZE)
-    .text("Review After: ", DOC_MARGIN, footerStartLevel, { continued: true })
-    .font(REGULAR_FONT)
-    .text(
-      `${
-        nextAppointmentDuration ? nextAppointmentDuration : DEFAULT_REVIEW_AFTER
-      }`,
-      DOC_MARGIN + 10
-      // footerStartLevel
-    );
+  // doc
+  //   .font(BOLD_FONT)
+  //   .fontSize(NORMAL_FONT_SIZE)
+  //   .text("Review After: ", DOC_MARGIN, footerStartLevel, { continued: true })
+  //   .font(REGULAR_FONT)
+  //   .text(
+  //     `${
+  //       nextAppointmentDuration ? nextAppointmentDuration : DEFAULT_REVIEW_AFTER
+  //     }`,
+  //     DOC_MARGIN + 10
+  //     // footerStartLevel
+  //   );
 
   // AKSHAY NEW CODE IMPLEMENTATIONS
 
