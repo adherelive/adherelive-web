@@ -1510,7 +1510,7 @@ function printCarePlanData({
             medicineXStart,
             doc.y,
             {
-              width: dosageXStart - medicineXStart,
+              width: dosageXStart - medicineXStart - 20,
             }
           );
 
