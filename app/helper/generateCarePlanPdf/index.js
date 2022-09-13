@@ -110,7 +110,7 @@ export default async (pdfData, signatureImage) => {
         providerIcon,
         providerPrescriptionDetails
       );
-
+      prescriptionDate = prescriptionDate || creationDate;
       const addressEndRowLevel = printPatientBlockData(
         doc,
         patients,
@@ -155,7 +155,9 @@ export default async (pdfData, signatureImage) => {
         doc,
         signatureImage,
         nextAppointmentDuration,
-        currentTime,
+        // currentTime,
+
+        moment(prescriptionDate).format("Do MMMM YYYY, h:mm a"),
         providerPrescriptionDetails,
         // AKSHAY NEW CODE IMPLEMENTATION
         suggestedInvestigations
