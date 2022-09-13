@@ -47,7 +47,7 @@ function CustomDiagnosisEdit({
         style={{ width: "100%" }}
         onChange={handleDiagnosisChanges}
         tokenSeparators={[","]}
-        placeholder="Search for symptoms"
+        placeholder="Search for diagnosis"
         onSelect={handleSelect}
         defaultValue={finalDaignosis}
         onSearch={onDiagnosisSearchHanlder}

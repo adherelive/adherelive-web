@@ -20,15 +20,13 @@ export default (props) => {
   let newStrength = "";
   let newUnit = "";
 
-  if (strength !== 1) {
-    if (unit === "1") {
-      newStrength = strength;
-      newUnit = "mg";
-    } else if (unit === "2") {
-      newUnit = "ml";
-      newStrength = strength;
-    }
-  } else {
+  if (unit === "1") {
+    newStrength = strength;
+    newUnit = "mg";
+  } else if (unit === "2") {
+    newUnit = "ml";
+    newStrength = strength;
+  } else if (unit === "3") {
     newStrength = "";
     newUnit = "One";
   }

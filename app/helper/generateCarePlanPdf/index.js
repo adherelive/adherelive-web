@@ -1355,7 +1355,7 @@ function printCarePlanData({
       // const drXStart = DOC_MARGIN + 35;
       // const medicineXStart = DOC_MARGIN + 40;
       const medicineXStart = DOC_MARGIN + 40;
-      const dosageXStart = DOC_MARGIN + 210;
+      const dosageXStart = DOC_MARGIN + 220;
       const quantityXStart = DOC_MARGIN + 280;
       const frequencyXStart = DOC_MARGIN + 320;
       const timingFrequencyXStart = DOC_MARGIN + 410;
@@ -1412,6 +1412,7 @@ function printCarePlanData({
           dosage,
           timings,
           repeat_days,
+          unit,
         } = medicationData;
         // TODO: need to add type here.
         let today = new Date();
@@ -1434,7 +1435,7 @@ function printCarePlanData({
           wantToShow,
           repeat_days,
         });
-        console.log("strength", strength);
+        console.log("strength", strength, unit);
         console.log("========== AKSHAY MESSAGE ==========");
         // if (medicationStatus && !showInactive ) continue;
 
@@ -1449,37 +1450,37 @@ function printCarePlanData({
           medicationYLevel = DOC_MARGIN;
         }
         // gaurav new changes - start
-        // doc
-        //   .fillColor("#212b36")
-        //   .fontSize(SHORT_FONT_SIZE)
-        //   .font(MEDIUM_FONT)
-        //   .text(
-        //     `${strength == "1 MG" || strength == "1 ML" ? "One" : strength}`,
-        //     dosageXStart,
-        //     medicationYLevel
-        //   )
-        //   .text(
-        //     `${quantity ? quantity : "-"}`,
-        //     quantityXStart,
-        //     medicationYLevel
-        //   )
-        //   .text(`${String(repeat_days)} `, frequencyXStart, medicationYLevel, {
-        //     width: timingFrequencyXStart - frequencyXStart - 25,
-        //   });
+        doc
+          .fillColor("#212b36")
+          .fontSize(SHORT_FONT_SIZE)
+          .font(MEDIUM_FONT)
+          .text(
+            `${unit === "3" ? "One" : strength}`,
+            dosageXStart,
+            medicationYLevel
+          )
+          .text(
+            `${quantity ? quantity : "-"}`,
+            quantityXStart,
+            medicationYLevel
+          )
+          .text(`${String(repeat_days)} `, frequencyXStart, medicationYLevel, {
+            width: timingFrequencyXStart - frequencyXStart - 25,
+          });
 
-        // doc
-        //   .text(`${dosage}`, timingFrequencyXStart, medicationYLevel)
-        //   .text(`${timings}`, timingFrequencyXStart, doc.y)
-        //   // .text(
-        //   //   `${frequency}`,
-        //   //   timingFrequencyXStart,
-        //   //   doc.y
-        //   // )
-        //   .text(
-        //     `${moment(startDate).format("DD MMM 'YY")} /${duration} day(s)`,
-        //     timingFrequencyXStart,
-        //     doc.y
-        //   );
+        doc
+          .text(`${dosage}`, timingFrequencyXStart, medicationYLevel)
+          .text(`${timings}`, timingFrequencyXStart, doc.y)
+          // .text(
+          //   `${frequency}`,
+          //   timingFrequencyXStart,
+          //   doc.y
+          // )
+          .text(
+            `${moment(startDate).format("DD MMM 'YY")} /${duration} day(s)`,
+            timingFrequencyXStart,
+            doc.y
+          );
         doc
           .fillColor("#212b36")
           .fontSize(SHORT_FONT_SIZE)
@@ -1515,37 +1516,37 @@ function printCarePlanData({
 
         const medicationYLevelEnd = doc.y;
 
-        doc
-          .fillColor("#212b36")
-          .fontSize(SHORT_FONT_SIZE)
-          .font(MEDIUM_FONT)
-          .text(
-            `${strength == "1 MG" || strength == "1 ML" ? "One" : strength}`,
-            dosageXStart,
-            medicationYLevel
-          )
-          .text(
-            `${quantity ? quantity : "-"}`,
-            quantityXStart,
-            medicationYLevel
-          )
-          .text(`${String(repeat_days)} `, frequencyXStart, medicationYLevel, {
-            width: timingFrequencyXStart - frequencyXStart - 25,
-          });
+        // doc
+        //   .fillColor("#212b36")
+        //   .fontSize(SHORT_FONT_SIZE)
+        //   .font(MEDIUM_FONT)
+        //   .text(
+        //     `${strength == "1 MG" || strength == "1 ML" ? "One" : strength}`,
+        //     dosageXStart,
+        //     medicationYLevel
+        //   )
+        //   .text(
+        //     `${quantity ? quantity : "-"}`,
+        //     quantityXStart,
+        //     medicationYLevel
+        //   )
+        //   .text(`${String(repeat_days)} `, frequencyXStart, medicationYLevel, {
+        //     width: timingFrequencyXStart - frequencyXStart - 25,
+        //   });
 
-        doc
-          .text(`${dosage}`, timingFrequencyXStart, medicationYLevel)
-          .text(`${timings}`, timingFrequencyXStart, doc.y)
-          // .text(
-          //   `${frequency}`,
-          //   timingFrequencyXStart,
-          //   doc.y
-          // )
-          .text(
-            `${moment(startDate).format("DD MMM 'YY")} /${duration} day(s)`,
-            timingFrequencyXStart,
-            doc.y
-          );
+        // doc
+        //   .text(`${dosage}`, timingFrequencyXStart, medicationYLevel)
+        //   .text(`${timings}`, timingFrequencyXStart, doc.y)
+        //   // .text(
+        //   //   `${frequency}`,
+        //   //   timingFrequencyXStart,
+        //   //   doc.y
+        //   // )
+        //   .text(
+        //     `${moment(startDate).format("DD MMM 'YY")} /${duration} day(s)`,
+        //     timingFrequencyXStart,
+        //     doc.y
+        //   );
 
         const horizontalLineY =
           medicationYLevelEnd > doc.y ? medicationYLevelEnd : doc.y;
@@ -2124,6 +2125,7 @@ function formatMedicationsData(medications, medicines) {
         ? moment(end_date).diff(moment(start_date), "days") + 1
         : "Long term", // todo: change text here after discussion
       repeat_days,
+      unit: unitToShow.toUpperCase(),
     };
 
     medicationsList.push(medicationDataObj);

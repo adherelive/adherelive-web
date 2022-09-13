@@ -448,7 +448,14 @@ class AddMedicationReminderForm extends Component {
       form: { setFieldsValue },
     } = this.props;
 
-    setFieldsValue({ [UNIT_FIELD]: e.target.value });
+    if (e.target.value === "3") {
+      setFieldsValue({ [UNIT_FIELD]: e.target.value });
+      setFieldsValue({
+        [medicineStrengthField.field_name]: 1,
+      });
+    } else {
+      setFieldsValue({ [UNIT_FIELD]: e.target.value });
+    }
   };
 
   setEndDateOneWeek = (e) => {
@@ -522,16 +529,17 @@ class AddMedicationReminderForm extends Component {
     const currentValue = getFieldValue(medicineStrengthField.field_name) || 0.0;
 
     //AKSAHY NEW CODE IMPLEMENTATION FOR ONE
-    if (e.target.value == 1) {
-      setFieldsValue({
-        [medicineStrengthField.field_name]: 1,
-      });
-    } else if (e.target.value != 1) {
-      setFieldsValue({
-        [medicineStrengthField.field_name]:
-          parseFloat(currentValue) + parseFloat(e.target.value),
-      });
-    }
+    // if (e.target.value == 1) {
+    //   setFieldsValue({
+    //     [medicineStrengthField.field_name]: 1,
+    //   });
+    //   setFieldsValue({ [UNIT_FIELD]: "3" });
+    // } else if (e.target.value != 1) {
+    setFieldsValue({
+      [medicineStrengthField.field_name]:
+        parseFloat(currentValue) + parseFloat(e.target.value),
+    });
+    // }
 
     validateFields([medicineStrengthField.field_name]);
   };
@@ -621,16 +629,16 @@ class AddMedicationReminderForm extends Component {
               >
                 {/* AKSHAY NEW CODE IMPLEMENTATION FOR ONE */}
                 <RadioButton
-                  value={1}
+                  value={MEDICINE_UNITS.ONE}
                   className={
-                    // medicineUnit !== MEDICINE_UNITS.MG
+                    // medicineUnit !== MEDICINE_UNITS.ONE
                     //   ? `unselected-text no-shadow`
                     //   : "no-shadow"
                     "no-shadow"
                   }
-                  onClick={setStrength}
-                  // checked={medicineUnit === MEDICINE_UNITS.MG}
-                  // disabled={medicineUnit !== MEDICINE_UNITS.MG}
+                  onClick={setUnit}
+                  checked={medicineUnit === MEDICINE_UNITS.ONE}
+                  // disabled={medicineUnit !== MEDICINE_UNITS.ONE}
                 >
                   One
                 </RadioButton>
@@ -650,49 +658,55 @@ class AddMedicationReminderForm extends Component {
                 <RadioButton
                   value={MEDICINE_UNITS.MG}
                   className={
-                    medicineUnit !== MEDICINE_UNITS.MG
+                    medicineUnit !== MEDICINE_UNITS.MG &&
+                    medicineUnit !== MEDICINE_UNITS.ONE
                       ? `unselected-text no-shadow`
                       : "no-shadow"
                   }
                   onClick={setUnit}
                   checked={medicineUnit === MEDICINE_UNITS.MG}
-                  disabled={medicineUnit !== MEDICINE_UNITS.MG}
+                  disabled={
+                    medicineUnit !== MEDICINE_UNITS.MG &&
+                    medicineUnit !== MEDICINE_UNITS.ONE
+                  }
                 >
                   mg
                 </RadioButton>
-                {medicineUnit !== MEDICINE_UNITS.MG && (
-                  <RadioButton
-                    value={5}
-                    className={
-                      medicineUnit !== MEDICINE_UNITS.ML
-                        ? `unselected-text no-shadow`
-                        : "no-shadow"
-                    }
-                    onClick={setStrength}
-                    checked={medicineUnit === MEDICINE_UNITS.ML}
-                    disabled={medicineUnit !== MEDICINE_UNITS.ML}
-                  >
-                    +5
-                  </RadioButton>
-                )}
-                {medicineUnit !== MEDICINE_UNITS.MG && (
-                  <RadioButton
-                    value={-5}
-                    className={
-                      medicineUnit !== MEDICINE_UNITS.ML
-                        ? `unselected-text no-shadow`
-                        : "no-shadow"
-                    }
-                    onClick={setStrength}
-                    checked={medicineUnit === MEDICINE_UNITS.ML}
-                    disabled={
-                      medicineUnit !== MEDICINE_UNITS.ML ||
-                      currentMLCalibValue <= 5
-                    }
-                  >
-                    -5
-                  </RadioButton>
-                )}
+                {medicineUnit !== MEDICINE_UNITS.MG &&
+                  medicineUnit !== MEDICINE_UNITS.ONE && (
+                    <RadioButton
+                      value={5}
+                      className={
+                        medicineUnit !== MEDICINE_UNITS.ML
+                          ? `unselected-text no-shadow`
+                          : "no-shadow"
+                      }
+                      onClick={setStrength}
+                      checked={medicineUnit === MEDICINE_UNITS.ML}
+                      disabled={medicineUnit !== MEDICINE_UNITS.ML}
+                    >
+                      +5
+                    </RadioButton>
+                  )}
+                {medicineUnit !== MEDICINE_UNITS.MG &&
+                  medicineUnit !== MEDICINE_UNITS.ONE && (
+                    <RadioButton
+                      value={-5}
+                      className={
+                        medicineUnit !== MEDICINE_UNITS.ML
+                          ? `unselected-text no-shadow`
+                          : "no-shadow"
+                      }
+                      onClick={setStrength}
+                      checked={medicineUnit === MEDICINE_UNITS.ML}
+                      disabled={
+                        medicineUnit !== MEDICINE_UNITS.ML ||
+                        currentMLCalibValue <= 5
+                      }
+                    >
+                      -5
+                    </RadioButton>
+                  )}
                 {medicineUnit !== MEDICINE_UNITS.ML && (
                   <RadioButton
                     value={50}

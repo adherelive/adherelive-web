@@ -688,6 +688,7 @@ export const MEDICINE_TYPE = {
 export const MEDICINE_UNITS = {
   MG: "1",
   ML: "2",
+  ONE: "3",
 };
 
 export const FULL_DAYS = {

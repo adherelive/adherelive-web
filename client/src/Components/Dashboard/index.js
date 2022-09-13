@@ -105,6 +105,7 @@ class Dashboard extends Component {
       fetchChatAccessToken,
       getAllFeatures,
       getAllMissedScheduleEvents,
+      searchCondition,
     } = this.props;
 
     this.setState({ loading: true });
@@ -141,6 +142,7 @@ class Dashboard extends Component {
     searchMedicine("");
     getAllFeatures();
     getAllMissedScheduleEvents();
+    searchCondition("");
     this.initiateInAppNotificationObj();
   }
 

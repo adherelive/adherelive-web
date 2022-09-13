@@ -73,7 +73,7 @@ class PatientDetailsDrawer extends Component {
       date_of_birth: "",
       treatment: "",
       severity: null,
-      condition: null,
+      condition: 1,
       prefix: "91",
       fetchingCondition: false,
       fetchingTreatment: false,
@@ -240,7 +240,7 @@ class PatientDetailsDrawer extends Component {
         date_of_birth: "",
         treatment: "",
         severity: null,
-        condition: null,
+        condition: 1,
         prefix: "91",
         fetchingCondition: false,
         fetchingTreatment: false,
@@ -646,6 +646,7 @@ class PatientDetailsDrawer extends Component {
   setCondition = async (value) => {
     const { searchTreatment } = this.props;
     this.setState({ condition: value });
+    console.log("value", value);
 
     const response = await searchTreatment(value);
 
@@ -1625,7 +1626,7 @@ class PatientDetailsDrawer extends Component {
       date_of_birth: "",
       treatment: "",
       severity: null,
-      condition: null,
+      condition: 1,
       prefix: "91",
       fetchingCondition: false,
       fetchingTreatment: false,
