@@ -156,8 +156,10 @@ export default async (pdfData, signatureImage) => {
         signatureImage,
         nextAppointmentDuration,
         // currentTime,
-
-        moment(prescriptionDate).format("Do MMMM YYYY, h:mm a"),
+        moment(prescriptionDate)
+          .add(330, "minutes")
+          .format("Do MMMM YYYY, h:mm a"),
+        // moment(prescriptionDate).format("Do MMMM YYYY, h:mm a"),
         providerPrescriptionDetails,
         // AKSHAY NEW CODE IMPLEMENTATION
         suggestedInvestigations

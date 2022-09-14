@@ -2,7 +2,7 @@ const mongoose = require("mongoose");
 module.exports = async () => {
   try {
     await mongoose.connect(
-      "mongodb+srv://adherelive:<password>@adherelive.aqaaqxe.mongodb.net/?retryWrites=true&w=majority",
+      "mongodb+srv://adherelive:Q3xbZbp5f7O0AqR4@adherelive.aqaaqxe.mongodb.net/?retryWrites=true&w=majority",
       // "mongodb://mongo/adhere",
       {
         useNewUrlParser: true,
