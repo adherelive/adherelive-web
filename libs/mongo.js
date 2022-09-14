@@ -2,8 +2,8 @@ const mongoose = require("mongoose");
 module.exports = async () => {
   try {
     await mongoose.connect(
-      // "mongodb+srv://adherelive:<password>@adherelive.aqaaqxe.mongodb.net/?retryWrites=true&w=majority",
-      "mongodb://mongo/adhere",
+      "mongodb+srv://adherelive:<password>@adherelive.aqaaqxe.mongodb.net/?retryWrites=true&w=majority",
+      // "mongodb://mongo/adhere",
       {
         useNewUrlParser: true,
         useUnifiedTopology: true,
