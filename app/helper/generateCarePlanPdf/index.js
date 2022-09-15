@@ -1447,13 +1447,13 @@ function printCarePlanData({
         if (!wantToShow && !medicationStatus) continue;
 
         // gaurav new changes - start
-        // if (doc.y + 3 * SHORT_FONT_SIZE > PAGE_END_LIMIT) {
-        //   if (pageCount === 1) {
-        //     addPageFooter(doc, providerPrescriptionDetails);
-        //   }
-        //   addPageAndNumber(doc);
-        //   medicationYLevel = DOC_MARGIN;
-        // }
+        if (doc.y + 3 * SHORT_FONT_SIZE > PAGE_END_LIMIT) {
+          if (pageCount === 1) {
+            addPageFooter(doc, providerPrescriptionDetails);
+          }
+          addPageAndNumber(doc);
+          medicationYLevel = DOC_MARGIN;
+        }
         // gaurav new changes - start
         doc
           .fillColor("#212b36")
@@ -1559,11 +1559,11 @@ function printCarePlanData({
 
         medicationYLevel = medicationYLevelEnd + NORMAL_FONT_SIZE + 12;
 
-        // if (doc.y > PAGE_END_LIMIT) {
-        //   if (pageCount === 1) {
-        //     addPageFooter(doc, providerPrescriptionDetails);
-        //   }
-        // }
+        if (doc.y > PAGE_END_LIMIT) {
+          if (pageCount === 1) {
+            addPageFooter(doc, providerPrescriptionDetails);
+          }
+        }
         srNumber++;
       }
     }
