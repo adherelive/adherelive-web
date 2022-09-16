@@ -30,6 +30,7 @@ import {
   TABLET,
   MEDICINE_UNITS,
 } from "../../../../constant";
+import isEmpty from "../../../../Helper/is-empty";
 
 const InputGroup = Input.Group;
 const { Item: FormItem } = Form;
@@ -133,7 +134,7 @@ class AddMedicationReminderForm extends Component {
     let dayDiffPos = 0;
     let dayDiffNeg = 0;
     let daysToAdd = 0;
-    if (selectedDays.length) {
+    if (!isEmpty(selectedDays) && selectedDays.length) {
       // if (selectedDays.length === 1) {
       //   selectedDays = [selectedDays];
       // }
