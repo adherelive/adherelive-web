@@ -4,7 +4,7 @@ RUN mkdir -p /usr/src/app
 WORKDIR /usr/src/app
 COPY package.json /usr/src/app
 COPY package-lock.json /usr/src/app
-COPY .env_prod_new /usr/src/app/.env
+COPY .env_demo_new /usr/src/app/.env
 RUN npm install && npm cache clean --force --loglevel=error
 COPY . /usr/src/app
 EXPOSE 5000
