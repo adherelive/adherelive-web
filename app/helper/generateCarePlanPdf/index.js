@@ -1011,7 +1011,8 @@ function printPatientBlockData(
   // const creationDateObj = new moment(creationDate);
 
   const creationDateObj =
-    (creationDate && new moment(creationDate)) || new moment();
+    (creationDate && new moment(creationDate)).add(330, "minutes") ||
+    new moment();
   const month = creationDateObj.get("month") + 1;
   const date = creationDateObj.get("date");
   const year = creationDateObj.get("year");
