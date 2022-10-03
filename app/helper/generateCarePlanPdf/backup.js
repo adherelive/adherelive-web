@@ -241,7 +241,6 @@ export default async (pdfData, signatureImage) => {
       pageCount = 1;
       doc.end();
     } catch (err) {
-      console.log("Error in the generation of the prescription: ", err);
       resolve(null);
     }
   });
@@ -1338,20 +1337,6 @@ function printCarePlanData({
 
       const medicationYLevelEnd = doc.y;
 
-      // console.log("30183012093 medicationYLevelEnd, medicationYLevel",{medicationYLevelEnd, medicationYLevel, condition: (medicationYLevel - medicationYLevelEnd) > NORMAL_FONT_SIZE});
-
-      // if((medicationYLevel - medicationYLevelEnd) > NORMAL_FONT_SIZE) {
-      //   // addPageAndNumber(doc);
-
-      //   const {start, count} = doc.bufferedPageRange();
-      //   console.log("183129837129 count, start", {count, start});
-      //   doc.switchToPage(0);
-      // }
-
-      // console.log("1936129387 doc.x, doc.y", {x: doc.x, y: doc.y});
-      // const {start, count} = doc.bufferedPageRange();
-      //   console.log("1833129837129 count, start", {count, start});
-
       doc
         .text(`${strength}`, dosageXStart, medicationYLevel)
         .text(`${quantity ? quantity : "-"}`, quantityXStart, medicationYLevel)
@@ -1372,7 +1357,7 @@ function printCarePlanData({
       //   // addPageAndNumber(doc);
 
       //   const {start, count} = doc.bufferedPageRange();
-      //   console.log("183129837129 count, start", {count, start});
+
       //   doc.switchToPage(start);
       // }
       // .fontSize(NORMAL_FONT_SIZE - 1)
@@ -1386,7 +1371,7 @@ function printCarePlanData({
 
       // if((medicationYLevel - medicationYLevelEnd) > NORMAL_FONT_SIZE) {
       //   const {start, count} = doc.bufferedPageRange();
-      //   console.log("183129837129 count, start", {count, start});
+
       //   doc.switchToPage(start);
       // }
       const horizontalLineY =
@@ -1670,8 +1655,6 @@ function formatDoctorsData(
 
   let mobileNumber = mobile_number;
   let prefixToShow = prefix;
-
-  console.log("19823871237 providers", providers);
 
   if (Object.keys(providers).length > 0) {
     const {

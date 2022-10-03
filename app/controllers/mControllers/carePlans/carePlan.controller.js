@@ -533,10 +533,6 @@ class CarePlanController extends Controller {
         "Care plan medications, appointments, actions, diets and exercises added successfully"
       );
     } catch (error) {
-      console.log(
-        "Create Care Plan Medications And Appointments Error --> ",
-        error
-      );
       return this.raiseServerError(res, 500, error);
     }
   };
@@ -688,109 +684,6 @@ class CarePlanController extends Controller {
 
       const QueueService = new queueService();
       await QueueService.sendBatchMessage(eventScheduleData);
-      // for (const medication of medicationsData) {
-      //   console.log(
-      //     "medication value for current medication data is: ",
-      //     medication
-      //   );
-      //   const {
-      //     schedule_data: {
-      //       end_date = "",
-      //       description = "",
-      //       start_date = "",
-      //       unit = "",
-      //       when_to_take = "",
-      //       repeat = "",
-      //       quantity = "",
-      //       repeat_days = [],
-      //       strength = "",
-      //       start_time = "",
-      //       repeat_interval = "",
-      //       medication_stage = ""
-      //     } = {},
-      //     medicine_id = "",
-      //     medicine_type = "1"
-      //   } = medication;
-      //
-      //   const duration = moment(start_date).diff(moment(end_date), "days");
-      //   console.log(
-      //     "difference in milliseconds is: ",
-      //     duration,
-      //     start_date,
-      //     end_date
-      //   );
-      //
-      //   const updatedStartDate = new moment().utc();
-      //   const updatedEndDate = new moment.utc(updatedStartDate).add(
-      //     duration,
-      //     "days"
-      //   );
-      //
-      //   console.log("updated times are: ", updatedStartDate, updatedEndDate);
-      //
-      //   const dataToSave = {
-      //     participant_id: patient_id,
-      //     organizer_type: category,
-      //     organizer_id,
-      //     description,
-      //     start_date: updatedStartDate,
-      //     end_date: updatedEndDate,
-      //     medicine_id,
-      //     details: {
-      //       medicine_id,
-      //       medicine_type,
-      //       start_time: start_time ? start_time : moment(),
-      //       end_time: start_time ? start_time : moment(),
-      //       repeat,
-      //       repeat_days,
-      //       repeat_interval,
-      //       quantity,
-      //       strength,
-      //       unit,
-      //       when_to_take,
-      //       medication_stage
-      //     }
-      //   };
-      //
-      //   const mReminderDetails = await medicationReminderService.addMReminder(
-      //     dataToSave
-      //   );
-      //
-      //   const data_to_create = {
-      //     care_plan_id,
-      //     medication_id: mReminderDetails.get("id")
-      //   };
-      //
-      //   const newMedication = await carePlanMedicationService.addCarePlanMedication(
-      //     data_to_create
-      //   );
-      //   console.log("MEDICATIONNNNNNN=======>", medication);
-      //
-      //   const medicationData = await MedicationWrapper(mReminderDetails);
-      //   medicationApiDetails[
-      //     medicationData.getMReminderId()
-      //   ] = medicationData.getBasicInfo();
-      //   medication_ids.push(medicationData.getMReminderId());
-      //
-      //   const patient = await PatientWrapper(null, patient_id);
-      //
-      //   const eventScheduleData = {
-      //     patient_id: patient.getUserId(),
-      //     type: EVENT_TYPE.MEDICATION_REMINDER,
-      //     event_id: mReminderDetails.getId,
-      //     details: mReminderDetails.getBasicInfo.details,
-      //     status: EVENT_STATUS.SCHEDULED,
-      //     start_date,
-      //     end_date,
-      //     when_to_take,
-      //     participant_one: patient.getUserId(),
-      //     participant_two: organizer_id
-      //   };
-      //
-      //   const QueueService = new queueService();
-      //   const sqsResponse = await QueueService.sendMessage(eventScheduleData);
-      //   Log.debug("sqsResponse ---> ", sqsResponse);
-      // }
 
       await scheduleEventService.update(
         {
@@ -903,7 +796,7 @@ class CarePlanController extends Controller {
             let medicineId = medication.get("medicine_id");
             newMedication.medicine_id = medicineId;
             let medicine = await medicineService.getMedicineById(medicineId);
-            // console.log("CARE PLAN OF PATIENTTTT===========>>>>>>>", medicine);
+
             let medName = medicine.get("name");
             let medType = medicine.get("type");
             newMedication.medicine = medName;
@@ -949,18 +842,6 @@ class CarePlanController extends Controller {
         show = true;
       }
 
-      console.log(
-        "CARE PLAN OF PATIENTTTT===========>>>>>>>",
-        patient_id,
-        carePlanId,
-        shown,
-        carePlanMedications,
-        carePlanAppointments,
-        show,
-        carePlanTemplateId,
-        carePlanMedicationsExists,
-        carePlanAppointmentsExists
-      );
       if (shown == false) {
         let details = cPdetails;
         details.shown = true;
@@ -987,7 +868,6 @@ class CarePlanController extends Controller {
         "patient care plan details fetched successfully"
       );
     } catch (error) {
-      console.log("GET PATIENT DETAILS ERROR --> ", error);
       return this.raiseServerError(res, 500, error);
     }
   };

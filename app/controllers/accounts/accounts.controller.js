@@ -156,7 +156,6 @@ class MobileAccountsController extends Controller {
           }
         }
       } else {
-        console.log("going to get only current account");
         accountDetails = await accountDetailsService.getCurrentAccountByUserId(
           userId
         );
@@ -213,7 +212,6 @@ class MobileAccountsController extends Controller {
           }
         }
       } else {
-        console.log("going to get only current account");
         const doctor = await DoctorWrapper(null, id);
         accountDetails = await accountDetailsService.getCurrentAccountByUserId(
           doctor.getUserId()

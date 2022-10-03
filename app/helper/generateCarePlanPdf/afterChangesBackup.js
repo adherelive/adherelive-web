@@ -246,7 +246,7 @@
 //         pageCount = 1;
 //         doc.end();
 //       } catch (err) {
-//         console.log("Error in the generation of the prescription: ", err);
+//
 //         resolve(null);
 //       }
 //     });
@@ -1191,13 +1191,13 @@
 //             })`
 //           );
 //         });
-//         console.log("symtoms object", object);
-//         console.log("stringSymptomArray", stringSymptomArray);
+//
+//
 //       }
 
 //       return String(stringSymptomArray);
 //     } catch (err) {
-//       console.log();
+
 //     }
 //   }
 
@@ -1342,7 +1342,7 @@
 //         let isMedicationsUpdate =
 //           isMedicationsUpdatedInExistingMedicin(medications);
 //         let wantToShow = true;
-//         console.log({ isPrescriptionUpdated, isMedicationsUpdate });
+
 //         if (isPrescriptionUpdated || isMedicationsUpdate) wantToShow = false;
 //         // Gaurav New Chnages - end
 
@@ -1365,25 +1365,13 @@
 //           // TODO: need to add type here.
 //           let today = new Date();
 //           let endDateobj = new Date(endDate);
-//           console.log({
-//             status: "EndDateHere",
-//             endDate,
-//             status: endDateobj.getTime() > today.getTime(),
-//             today,
-//             endDateobj,
-//           });
+//
 //           let medi_type = categories.items.find((x) => x.id == medicineType).name;
 //           const medicineData = `(${medi_type}) ${medicineName} `;
 
 //           let medicationStatus = endDateobj > today; // 30>29
 //           // gaurav new changes - start
-//           console.log("==========");
-//           console.log({
-//             medicationStatus,
-//             wantToShow,
-//           });
-//           console.log("strength", strength);
-//           console.log("==========");
+//
 //           // if (medicationStatus && !showInactive ) continue;
 
 //           if (!wantToShow && !medicationStatus) continue;
@@ -1518,7 +1506,7 @@
 //       const suggestedInvestigationXLevelEnd = doc.x;
 //       return suggestedInvestigationXLevelEnd;
 //     } catch (ex) {
-//       console.log(ex);
+
 //     }
 //   }
 
@@ -1641,7 +1629,7 @@
 //         height: signaturePictureHeight,
 //       });
 //     } catch (err) {
-//       console.log("ERROR in signature pic", err);
+
 //     }
 
 //     if (doc.y + 3 * SMALLEST_FONT_SIZE > PAGE_END_LIMIT) {
@@ -1738,8 +1726,6 @@
 
 //     let mobileNumber = mobile_number;
 //     let prefixToShow = prefix;
-
-//     console.log("19823871237 providers", providers);
 
 //     if (Object.keys(providers).length > 0) {
 //       const {
@@ -1877,11 +1863,7 @@
 //   function formatMedicationsData(medications, medicines) {
 //     // have to send the list of objects containing instruction medicine name, medicine type, strength, frequency, duration,
 //     let medicationsList = [];
-//     console.log("===============================1============================");
-//     console.log(medications);
-//     console.log("===============================2============================");
-//     console.log(medicines);
-//     console.log("===========================================================");
+
 //     const medicationIds = Object.keys(medications);
 //     let date = null;
 //     for (const medicationId of medicationIds) {
@@ -1916,9 +1898,7 @@
 //         unit = "",
 //         quantity = null,
 //       } = mainDetails || {};
-//       console.log("-98765434567-8987654-5678");
-//       console.log(medicine_type);
-//       console.log("-98765434567-8987654-5678");
+
 //       const {
 //         [medicine_id]: {
 //           basic_info: { name = "", type = "" } = {},
@@ -1968,9 +1948,6 @@
 
 //       medicationsList.push(medicationDataObj);
 //     }
-//     console.log("1=2==3==5=6=7=8=8=9=8=6=5=4==43==2==2");
-//     console.log(medicationsList);
-//     console.log("1=2==3==5=6=7=8=8=9=8=6=5=4==43==2==2");
 
 //     return medicationsList;
 //   }

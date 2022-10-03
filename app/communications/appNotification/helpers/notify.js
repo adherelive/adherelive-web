@@ -10,19 +10,11 @@ class Notifier {
 
   connect() {
     try {
-      // console.log("payload at connect", this.payload);
       this.client = this.stream.connect(this.key, this.secretKey);
       this.userToken = this.client.createUserToken(
         this.payload.actor.toString()
       );
-      // console.log("Key1111: ", this.key, " Secret1111: ", this.secretKey);
-      // console.log(
-      //   "TESTTTTTTT11111: ",
-      //   this.client,
-      //   "USer token1111: ",
-      //   this.userToken
-      // );
-      // console.log("token", this.userToken);
+
       return this;
     } catch (err) {
       console.log("err", err.message);
@@ -33,13 +25,7 @@ class Notifier {
     try {
       this.client = this.stream.connect(this.key, this.secretKey);
       const userToken = this.client.createUserToken(userId);
-      // console.log("Key2222: ", this.key, " Secret2222: ", this.secretKey);
-      // console.log(
-      //   "TESTTTTTTT222222: ",
-      //   this.client,
-      //   "USer token22222: ",
-      //   userToken
-      // );
+
       return userToken;
     } catch (err) {
       throw err;

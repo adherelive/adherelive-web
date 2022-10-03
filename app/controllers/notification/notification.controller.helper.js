@@ -287,8 +287,6 @@ const appointmentNotification = async (data, category) => {
       //     const event = await ScheduleEventWrapper(events);
       //     eventData = event.getData();
       //     participants = event.getParticipants();
-
-      //     console.log("------- event data is: ", eventData);
     }
 
     if (eventData && eventData === null) {
@@ -1017,8 +1015,6 @@ export const getDataForNotification = async (data) => {
     const { category, data: { event } = {} } = data;
 
     Log.debug("event", event);
-
-    // console.log("989387482748723487239847238 ===>>>>>>>>>>> ",{event});
 
     if (category === USER_CATEGORY.DOCTOR || category === USER_CATEGORY.HSP) {
       switch (event) {

@@ -84,7 +84,7 @@ class Validator {
       let appointmentData = await eventServices.getEventById(
         this.notificatonID
       );
-      // console.log("appointment data", appointmentData);
+
       if (isEmpty(appointmentData))
         throw new Error("no such appointment created");
 
@@ -166,7 +166,7 @@ class Validator {
           sendTo: sendTo,
         },
       };
-      // console.log("result at validator app", result);
+
       return result;
     } catch (err) {
       throw err;

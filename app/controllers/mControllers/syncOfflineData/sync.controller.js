@@ -78,7 +78,7 @@ class SyncController extends Controller {
             res,
             userRoleId
           );
-        console.log("Got data in the sync controller: ");
+
         return raiseSuccess(
           res,
           200,

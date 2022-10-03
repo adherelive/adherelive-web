@@ -191,12 +191,6 @@ export const providerChart = async (req) => {
           },
           patients: { ...patients, ...p_patients },
         };
-
-        console.log("32462374627427423", {
-          user_role_id,
-          allDoctorsData,
-          response,
-        });
       }
     }
 

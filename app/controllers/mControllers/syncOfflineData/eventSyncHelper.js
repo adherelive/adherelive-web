@@ -42,7 +42,7 @@ export const syncMedicationReminderStatus = async (
 
     return eventApiDetails;
   } catch (error) {
-    console.log("ERROR in syncing medication reminder status: ", error);
+    console.log("ERROR in syncing medication reminder status: ");
   }
 };
 
@@ -58,19 +58,13 @@ export const syncVitalsResponseData = async (
 
     const { event_id, ...rest } = data || {};
 
-    console.log(`event_id ${event_id}`);
-
     const event = await EventWrapper(null, event_id);
 
     const vital = await VitalWrapper({ id: vital_id });
 
-    console.log(`vital ${vital.getVitalId()} ${vital.getVitalTemplateId()}`);
-
     const vitalTemplate = await VitalTemplateWrapper({
       id: vital.getVitalTemplateId(),
     });
-
-    console.log(`event.getStatus() ${event.getStatus()}`);
 
     let { response: prevResponse = [] } = event.getDetails() || {};
 
@@ -121,6 +115,6 @@ export const syncVitalsResponseData = async (
       vitalTemplate,
     };
   } catch (error) {
-    console.log("$$$$$$$$$$$$ error: ", error);
+    console.log("error: ", error);
   }
 };

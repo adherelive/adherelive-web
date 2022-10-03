@@ -243,10 +243,6 @@ class DoctorService {
           ],
         },
       });
-      console.log("329847562389462364872384122 ===============>", {
-        doctor,
-        value,
-      });
 
       return doctor;
     } catch (error) {

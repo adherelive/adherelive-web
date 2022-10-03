@@ -105,17 +105,14 @@ class CarePlanWrapper extends BaseCarePlan {
 
     // get care plan basci info
     const basic_info = getBasicInfo();
-    //doctor.
-    console.log();
+
     if (basic_info["basic_info"]["doctor_id"])
       basic_info["basic_info"]["doctor"] =
         await DoctorService.getDoctorByDoctorId(
           basic_info["basic_info"]["doctor_id"]
         );
     // get doctor by doctoriD.
-    console.log("mytest====");
-    console.log(basic_info);
-    console.log("mytest====");
+
     return {
       ...basic_info,
       appointment_ids: care_plan_appointments.map((appointment) =>

@@ -15,7 +15,7 @@ export default async (payload = {}) => {
       $desktop_url: `${temp_app_link}/verify/${link}`,
       data: { type: EVENT_TYPE.INVITATION, link },
     };
-    // console.log("=======================", event_type, payload);
+
     // switch (event_type) {
     //     case EVENT_TYPE.APPOINTMENT: {
     //         break;
@@ -55,7 +55,6 @@ export default async (payload = {}) => {
     //         break;
     // }
     universalLink = await createLink(data);
-    console.log("==============link", universalLink);
   } catch (err) {
     console.log("formatting universal link broke: ", err);
   }

@@ -214,7 +214,6 @@ class MobileMReminderController extends Controller {
 
       // await Proxy_Sdk.scheduleEvent({data: eventScheduleData});
     } catch (error) {
-      console.log("Add m-reminder error ----> ", error);
       return this.raiseServerError(
         res,
         500,
@@ -472,7 +471,6 @@ class MobileMReminderController extends Controller {
         "create medication basic details"
       );
     } catch (error) {
-      console.log("Get m-reminder details error ----> ", error);
       return raiseServerError(res, 500, error.message, "something went wrong");
     }
   };
@@ -486,9 +484,6 @@ class MobileMReminderController extends Controller {
         await medicationReminderService.getMedicationsForParticipant({
           participant_id: id,
         });
-
-      // console.log("712367132 medicationDetails --> ", medicationDetails);
-      // Logger.debug("medication details", medicationDetails);
 
       let medicationApiData = {};
       let scheduleEventApiData = {};

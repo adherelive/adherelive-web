@@ -38,16 +38,10 @@ class AppNotification {
   async notify() {
     try {
       var data = Object.assign({}, this.payload);
-      // console.log("came in appNootification ==========>", data);
 
       const { buildPayload = {} } = data;
       if (!isEmpty(buildPayload)) {
         NOTIFIER(buildPayload).connect().sendNotification();
-
-        // notificationLogger.success(
-        //   "notification send successfully with payload",
-        //   buildPayload
-        // );
       } else {
         notificationLogger.error("invalid payload:", validData);
       }

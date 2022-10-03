@@ -35,12 +35,7 @@ const appointmentFormSchema = Joi.object().keys({
 
 const validateStartTime = (startTime) => {
   const now = moment().subtract(3, "minutes");
-  console.log(
-    "START TIME TEST ----------- ",
-    moment(startTime),
-    now,
-    moment(startTime).isAfter(now)
-  );
+
   return moment(startTime).isAfter(now);
 };
 
@@ -49,15 +44,10 @@ const validateTimeInterval = (startTime, endTime) => {
 };
 
 export const validateAppointmentFormData = (req, res, next) => {
-  console.log("========================8971613136713671 getting here 1");
   const { body: data = {} } = req;
   const { start_time, end_time } = data;
   const isValid = appointmentFormSchema.validate(data);
-  console.log(
-    "START TIME TEST ----------- 2",
-    moment(start_time),
-    moment(end_time)
-  );
+
   if (isValid && isValid.error != null) {
     // return raiseClientError(res, 422, isValid.error, "please check filled details");
     const response = new Response(false, 422);
@@ -75,6 +65,6 @@ export const validateAppointmentFormData = (req, res, next) => {
     response.setMessage("start time should be less than end time");
     return res.status(422).json(response.getResponse());
   }
-  console.log("========================8971613136713671 getting here 2");
+
   next();
 };

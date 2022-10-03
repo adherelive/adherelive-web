@@ -13,9 +13,6 @@ class DietWrapper extends BaseDiet {
 
   getBasicInfo = () => {
     const { _data } = this;
-    console.log("567-567-567-567-567-567-567-567-567-567");
-    console.log(_data);
-    console.log("567-567-567-567-567-567-567-567-567-567");
 
     const {
       id,

@@ -99,12 +99,6 @@ class DietController extends Controller {
         diet_food_group_mappings,
       });
 
-      // for(let each in timeWise){
-      //   const eachTime = timeWise[each] || {};
-      //   const { mappingIds = [] } = eachTime;
-      //   console.log("864872342476823764826437",{mappingIds});
-      // }
-
       for (let eachTime in timeWise) {
         const { mappingIds = [] } = timeWise[eachTime] || {};
         // console.log("864872342476823764826437",{mappingIds});

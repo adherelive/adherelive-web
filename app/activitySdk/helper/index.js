@@ -15,7 +15,6 @@ import {
 const log = require("../../../libs/log")("ACTIVITY_SDK");
 
 const notify = (participants, payload) => {
-  console.log("participants---------------------->", participants);
   // prepare notification data according to event category
   const { participantOne, participantTwo } = participants;
   if (participantOne) {
@@ -86,7 +85,6 @@ export const onCancel = async (data) => {
   //   updatedBy: `${data.userId}`
   // });
   const { isRepetitive = false } = data;
-  console.log("data onCacel ========================>", data);
   // if (isRepetitive) {
   //   let { participantOne, participantTwo } = data;
   //   notify(
@@ -303,7 +301,7 @@ export const onAdverseEventCreate = async (data) => {
   //   updatedBy: participantOne
   // });
   //
-  // console.log("participant_two=================>", participant_two);
+
   // notify(
   //   { participantOne, participantTwo: participant_two },
   //   { message: message, data: data, eventIs: EVENT_IS.CREATED }

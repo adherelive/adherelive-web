@@ -187,7 +187,6 @@ class MReminderController extends Controller {
         "Medication Reminder added successfully"
       );
     } catch (error) {
-      console.log("Add m-reminder error ----> ", error);
       return this.raiseServerError(res);
     }
   };
@@ -514,7 +513,6 @@ class MReminderController extends Controller {
 
       // await Proxy_Sdk.scheduleEvent({data: eventScheduleData});
     } catch (error) {
-      console.log("update m-reminder error ----> ", error);
       return this.raiseServerError(res);
     }
   };
@@ -597,7 +595,6 @@ class MReminderController extends Controller {
           participant_id: id,
         });
 
-      // console.log("712367132 medicationDetails --> ", medicationDetails);
       // Logger.debug("medication details", medicationDetails);
 
       let medicationApiData = {};

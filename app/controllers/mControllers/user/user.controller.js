@@ -76,8 +76,6 @@ class MobileUserController extends Controller {
       Logger.info(`Password hash :: ${hash}`);
       const user = await userService.getUserByNumber({ mobile_number, prefix });
 
-      // const userDetails = user[0];
-      // console.log("userDetails --> ", userDetails);
       if (!user) {
         return this.raiseClientError(
           res,
@@ -195,8 +193,6 @@ class MobileUserController extends Controller {
       //   return this.raiseClientError(res, 422, {}, "Invalid Credentials");
       // }
     } catch (error) {
-      console.log("error sign in with OTP  --> ", error);
-
       // notification
       const crashJob = await AdhocJob.execute("crash", {
         apiName: "signIn(patient)",
@@ -298,7 +294,7 @@ class MobileUserController extends Controller {
       const user = await userService.getUserByEmail({ email });
 
       // const userDetails = user[0];
-      // console.log("userDetails --> ", userDetails);
+
       if (!user) {
         return this.raiseClientError(res, 422, {}, "Email doesn't exists");
       }
@@ -395,8 +391,6 @@ class MobileUserController extends Controller {
         return this.raiseClientError(res, 422, {}, "Invalid Credentials");
       }
     } catch (error) {
-      console.log("error sign in  --> ", error);
-
       // notification
       const crashJob = await AdhocJob.execute("crash", {
         apiName: "signIn(doctor)",
@@ -548,7 +542,6 @@ class MobileUserController extends Controller {
       );
     } catch (err) {
       Logger.debug("signup 500 error", err);
-      console.log("signup err,", err);
       return raiseServerError(res);
     }
   };
@@ -564,8 +557,6 @@ class MobileUserController extends Controller {
           if (err) {
             return console.log(err);
           }
-          console.log("body ======== ", res.body.access_token);
-          console.log(res.body.access_token);
         }
       );
       let response = new Response(true, 200);
@@ -575,7 +566,6 @@ class MobileUserController extends Controller {
       });
       return res.status(response.getStatusCode()).send(response.getResponse());
     } catch (err) {
-      console.log(err);
       useruser;
       throw err;
     }
@@ -923,8 +913,6 @@ class MobileUserController extends Controller {
         throw new Error(constants.COOKIES_NOT_SET);
       }
     } catch (err) {
-      console.log("ON APP START API ERROR ", err);
-
       response = new Response(false, 500);
       response.setError(err.getMessage);
       return res.status(500).json(response.getResponse());
@@ -934,7 +922,6 @@ class MobileUserController extends Controller {
   signOut = async (req, res) => {
     try {
     } catch (error) {
-      console.log("MOBILE SIGN OUT CATCH ERROR ", error);
       return this.raiseServerError(res, 500, {}, `${error.message}`);
     }
   };
@@ -942,36 +929,10 @@ class MobileUserController extends Controller {
   uploadImage = async (req, res) => {
     const { userDetails, body } = req;
     const { userId = "3" } = userDetails || {};
-    console.log("BODYYYYYYYYYYYYYYYY", req.file);
+
     const file = req.file;
     // const fileExt= file.originalname.replace(/\s+/g, '');
     try {
-      //   await minioService.createBucket();
-
-      //   const imageName = md5(`${userId}-education-pics`);
-
-      //   let hash = md5.create();
-
-      //   hash.hex();
-      //   hash = String(hash);
-
-      //   const folder = "adhere";
-      //   // const file_name = hash.substring(4) + "_Education_"+fileExt;
-      //   const file_name = hash.substring(4) + "/" + imageName + "." + fileExt;
-
-      //   const metaData = {
-      //     "Content-Type":
-      //         "application/	application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
-      // };
-      // const fileUrl = folder+ "/" +file_name;
-      // await minioService.saveBufferObject(file.buffer, file_name, metaData);
-
-      // // console.log("file urlll: ", process.config.minio.MINI);
-      // const file_link = process.config.minio.MINIO_S3_HOST +"/" + fileUrl;
-      // let files = [file_link];
-      // console.log("Uplaoded File Url ---------------------->  ", file_link);
-      // console.log("User Controllers =------------------->   ", files);
-      //const resume_link = process.config.BASE_DOC_URL + files[0]
       let files = await uploadImageS3(userId, file);
       return this.raiseSuccess(
         res,
@@ -982,7 +943,6 @@ class MobileUserController extends Controller {
         "files uploaded successfully"
       );
     } catch (error) {
-      console.log("FILE UPLOAD CATCH ERROR ", error);
       return this.raiseServerError(res, 500, {}, `${error.message}`);
     }
   };
@@ -1000,13 +960,10 @@ class MobileUserController extends Controller {
         prefix,
         onboarding_status: ONBOARDING_STATUS.PROFILE_REGISTERED,
       };
-      console.log("USERRRRRRRR1111111", user_data_to_update);
-      console.log("REQUESTTTTTTTT BODYYYYYY", req.body);
 
       let doctor = {};
-      console.log("USERRRRRRRR", updatedUser);
+
       let doctorExist = await doctorService.getDoctorByUserId(user_id);
-      // console.log('DOCTORRRRR EXISTTT',doctorExist.get('id'),doctorExist.getBasicInfo);
       let first_name = doctorName[0];
       let middle_name = doctorName.length == 3 ? doctorName[1] : "";
       let last_name =
@@ -1027,7 +984,6 @@ class MobileUserController extends Controller {
         };
         let doctor_id = doctorExist.get("id");
         doctor = await doctorService.updateDoctor(doctor_data, doctor_id);
-        console.log("DOCTORRRRRIFFFFFF", doctor, doctor.getBasicInfo);
       } else {
         let doctor_data = {
           user_id,
@@ -1039,7 +995,6 @@ class MobileUserController extends Controller {
           address: city,
         };
         doctor = await doctorService.addDoctor(doctor_data);
-        console.log("DOCTORRRRRELSEEEEE", doctor, doctor.getBasicInfo);
       }
       let updatedUser = await userService.updateUser(
         user_data_to_update,
@@ -1054,7 +1009,6 @@ class MobileUserController extends Controller {
         "doctor profile updated successfully"
       );
     } catch (error) {
-      console.log("DOCTOR REGISTER CATCH ERROR ", error);
       return this.raiseServerError(res, 500, {}, `${error.message}`);
     }
   };
@@ -1072,7 +1026,7 @@ class MobileUserController extends Controller {
       let profile_pic = "";
 
       let user = await userService.getUserById(userId);
-      // console.log("GET PROFILE DATA USERRRRRRR",user.getBasicInfo);
+
       let userInfo = user.getBasicInfo;
       const {
         email: eMail = "",
@@ -1087,7 +1041,6 @@ class MobileUserController extends Controller {
       mobile_number = mobNo;
 
       let doctor = await doctorService.getDoctorByUserId(userId);
-      // console.log('GET PROFILE DATA USERRRRRRR',doctor.get('id'),doctor.getBasicInfo);
 
       if (doctor) {
         let docInfo = doctor.getBasicInfo;
@@ -1125,8 +1078,6 @@ class MobileUserController extends Controller {
         email,
       };
 
-      // console.log('FINAL+++================>',profileData);
-
       return this.raiseSuccess(
         res,
         200,
@@ -1136,7 +1087,6 @@ class MobileUserController extends Controller {
         " get doctor profile successfull"
       );
     } catch (error) {
-      console.log("DOCTOR REGISTER CATCH ERROR ", error);
       return this.raiseServerError(res, 500, {}, `${error.message}`);
     }
   };
@@ -1183,7 +1133,7 @@ class MobileUserController extends Controller {
           photos = [],
           id = 0,
         } = item;
-        console.log("QUALIFICATIONS ITEMMMMMMMMMMMMMMMM", item, id);
+
         if (id && id != "0") {
           let qualification = await qualificationService.updateQualification(
             { doctor_id, degree, year, college },
@@ -1197,18 +1147,14 @@ class MobileUserController extends Controller {
             year,
             college,
           });
-          console.log("QUALIFICATIONS ITEMMMMMMMMMMMMMMMM", qualification);
         }
       }
-
-      console.log("QUALIFICATIONS NEWWWWWWWWWWWW", newQualifications);
 
       for (let qualification of qualificationsOfDoctor) {
         let qId = qualification.get("id");
         if (newQualifications.includes(qId)) {
-          console.log("QUALIFICATIONS IFFFF", newQualifications);
+          console.log("QUALIFICATIONS IFFFF");
         } else {
-          console.log("QUALIFICATIONS ELSEEEE", newQualifications);
           let deleteDocs = await documentService.deleteDocumentsOfQualification(
             DOCUMENT_PARENT_TYPE.DOCTOR_QUALIFICATION,
             qId
@@ -1225,7 +1171,7 @@ class MobileUserController extends Controller {
       let newRegistrations = [];
       for (const item of registration_details) {
         const { number, council, year, expiry_date, id = 0 } = item;
-        console.log("REGISTRATION ITEMMMMMMMMMMMMMMMM", item, id);
+
         if (id && id !== "0") {
           let registration = await registrationService.updateRegistration(
             { doctor_id, number, year, council, expiry_date },
@@ -1240,16 +1186,14 @@ class MobileUserController extends Controller {
             council,
             expiry_date,
           });
-          console.log("REGISTRATION ITEMMMMMMMMMMMMMMMM", registration);
         }
       }
 
       for (let registration of registrationsOfDoctor) {
         let rId = registration.get("id");
         if (newRegistrations.includes(rId)) {
-          console.log("REGISTRATION IFFFF", newRegistrations);
+          console.log("REGISTRATION IFFFF");
         } else {
-          console.log("REGISTRATION ELSEEEE", newRegistrations);
           let deleteDocs = await documentService.deleteDocumentsOfQualification(
             DOCUMENT_PARENT_TYPE.DOCTOR_REGISTRATION,
             rId
@@ -1272,7 +1216,6 @@ class MobileUserController extends Controller {
         "qualifications updated successfully"
       );
     } catch (error) {
-      console.log("DOCTOR QUALIFICATION CATCH ERROR ", error);
       return this.raiseServerError(res, 500, {}, `${error.message}`);
     }
   };
@@ -1282,7 +1225,6 @@ class MobileUserController extends Controller {
     try {
       const { userDetails: { userId } = {} } = req || {};
       const qualificationData = await doctorQualificationData(userId);
-      console.log("FINAL+++================>", qualificationData);
 
       const doctor = await doctorService.getDoctorByUserId(userId);
       // let doctor_id = doctor.get("id");
@@ -1349,44 +1291,20 @@ class MobileUserController extends Controller {
         " get doctor qualification successfull"
       );
     } catch (error) {
-      console.log("DOCTOR QUALIFICATION REGISTER CATCH ERROR ", error);
       return this.raiseServerError(res, 500, {}, `${error.message}`);
     }
   };
 
   uploadDoctorQualificationDocument = async (req, res) => {
-    console.log("FILEEEEEEEEEEEEEEEE=================>", req.file);
-
     const file = req.file;
     const { userId = 1 } = req.params;
     let { qualification = {} } = req.body;
-    console.log(
-      "BODYYYYYYYYYYYYYYYY=================>",
-      qualification,
-      typeof qualification
-    );
+
     try {
       let files = await uploadImageS3(userId, file);
       let qualification_id = 0;
       let doctor = await doctorService.getDoctorByUserId(userId);
-      // let doctor_id = doctor.get("id");
-      // let{ degree = '', year = '', college = '' } =JSON.parse(qualification);
-      // console.log('BODYYYYYYYYYYYYYYYY1111111=================>', degree, year, college);
-      // let qualificationOfDoctor = await qualificationService.getQualificationByData(doctor_id,degree,year,college);
-      // console.log(' QUALIFICATIONNNN OF DOCTORRRR',qualificationOfDoctor);
-      // // let qualificationOfDoctorExist=qualificationOfDoctor?qualificationOfDoctor.length:false;
-      // if (!qualification_id && !qualificationOfDoctor) {
-      //   let docQualification = await qualificationService.addQualification({ doctor_id, degree, year, college });
-      //  console.log('DOCTORRRR QUALIFICATIONNNN',docQualification);
-      //   qualification_id = docQualification.get('id');
-      //   let document = await documentService.addDocument({ parent_type: DOCUMENT_PARENT_TYPE.DOCTOR_QUALIFICATION, parent_id: qualification_id, document: files[0] });
-      // } else if(!qualification_id) {
-      //   qualification_id = qualificationOfDoctor.get('id');
-      //   let document = await documentService.addDocument({ parent_type: DOCUMENT_PARENT_TYPE.DOCTOR_QUALIFICATION, parent_id: qualification_id, document: files[0] });
-      // }else{
-      // qualification_id=qualificationId;
-      // let document = await documentService.addDocument({ parent_type: DOCUMENT_PARENT_TYPE.DOCTOR_QUALIFICATION, parent_id: qualification_id, document: files[0] });
-      // }
+
       return this.raiseSuccess(
         res,
         200,
@@ -1397,7 +1315,6 @@ class MobileUserController extends Controller {
         "doctor qualification updated successfully"
       );
     } catch (error) {
-      console.log("doctor qualification upload CATCH ERROR ", error);
       return this.raiseServerError(res, 500, {}, `${error.message}`);
     }
   };
@@ -1427,7 +1344,6 @@ class MobileUserController extends Controller {
         "doctor qualification doc deleted successfully"
       );
     } catch (error) {
-      console.log("doctor qualification upload CATCH ERROR ", error);
       return this.raiseServerError(res, 500, {}, `${error.message}`);
     }
   };
@@ -1457,7 +1373,7 @@ class MobileUserController extends Controller {
       let qualification_id = id;
       let parent_type = DOCUMENT_PARENT_TYPE.DOCTOR_QUALIFICATION;
       let parent_id = qualification_id;
-      // console.log("REGISTER QUALIFICATIONNNNNNNNN1111111", id,qualification_id);
+
       if (!qualification_id) {
         let docQualification = await qualificationService.addQualification({
           doctor_id,
@@ -1475,7 +1391,6 @@ class MobileUserController extends Controller {
             document
           );
 
-          // console.log("DOCUMENT EXISTTTTTTTTTTTT", id,qualification_id,docExist);
           if (!docExist) {
             let qualificationDoc = await documentService.addDocument({
               doctor_id,
@@ -1495,13 +1410,6 @@ class MobileUserController extends Controller {
             parent_id,
             document
           );
-
-          console.log(
-            "DOCUMENT EXISTTTTTTTTTTTT",
-            id,
-            qualification_id,
-            docExist
-          );
           if (!docExist) {
             let qualificationDoc = await documentService.addDocument({
               doctor_id,
@@ -1516,7 +1424,6 @@ class MobileUserController extends Controller {
         }
       }
 
-      // console.log("QUALIFICATIONNNNNNNNN IDDDDDDDD", qualification_id);
       return this.raiseSuccess(
         res,
         200,
@@ -1526,7 +1433,6 @@ class MobileUserController extends Controller {
         "qualifications updated successfully"
       );
     } catch (error) {
-      console.log("DOCTOR QUALIFICATION CATCH ERROR ", error);
       return this.raiseServerError(res, 500, {}, `${error.message}`);
     }
   };
@@ -1539,14 +1445,6 @@ class MobileUserController extends Controller {
       // let user= await userService.getUserById(user_id);
       let doctor = await doctorService.getDoctorByUserId(user_id);
       let doctor_id = doctor.get("id");
-
-      console.log(
-        "DOCTORRRR UUSER",
-        doctor_id,
-        "    HDJDH 9088      ",
-        "    DEJIDJ*(*)    ",
-        doctor
-      );
 
       clinics.forEach(async (item) => {
         let { name = "", location = "", time_slots = [] } = item;
@@ -1573,7 +1471,6 @@ class MobileUserController extends Controller {
 
       return this.raiseSuccess(res, 200, {}, "clinics added successfully");
     } catch (error) {
-      console.log("DOCTOR QUALIFICATION CATCH ERROR ", error);
       return this.raiseServerError(res, 500, {}, `${error.message}`);
     }
   };
@@ -1670,7 +1567,6 @@ class MobileUserController extends Controller {
         "doctor's patient added successfully"
       );
     } catch (error) {
-      console.log("ADD DOCTOR PATIENT ERROR ", error);
       return this.raiseServerError(res, 500, {}, `${error.message}`);
     }
   };
@@ -1743,7 +1639,7 @@ class MobileUserController extends Controller {
           let qualification_id = id;
           parent_type = DOCUMENT_PARENT_TYPE.DOCTOR_QUALIFICATION;
           parent_id = qualification_id;
-          // console.log("REGISTER QUALIFICATIONNNNNNNNN1111111", id,qualification_id);
+
           if (!qualification_id) {
             let docQualification = await qualificationService.addQualification({
               doctor_id,
@@ -1765,7 +1661,6 @@ class MobileUserController extends Controller {
                 document
               );
 
-              // console.log("DOCUMENT EXISTTTTTTTTTTTT", id,qualification_id,docExist);
               if (!docExist) {
                 let qualificationDoc = await documentService.addDocument({
                   doctor_id,
@@ -1786,13 +1681,6 @@ class MobileUserController extends Controller {
                 parent_type,
                 parent_id,
                 document
-              );
-
-              console.log(
-                "DOCUMENT EXISTTTTTTTTTTTT",
-                id,
-                qualification_id,
-                docExist
               );
               if (!docExist) {
                 let qualificationDoc = await documentService.addDocument({
@@ -2053,7 +1941,6 @@ class MobileUserController extends Controller {
           templateName: EMAIL_TEMPLATE_NAME.FORGOT_PASSWORD,
         };
 
-        console.log("emailPayload for reset password--->", emailPayload);
         const emailResponse = await Proxy_Sdk.execute(
           EVENTS.SEND_EMAIL,
           emailPayload

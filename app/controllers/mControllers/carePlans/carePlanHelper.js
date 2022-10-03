@@ -350,8 +350,6 @@ export const createVitals = async ({
     // patient
     const patient = await PatientWrapper(null, patientId);
 
-    console.log("198187238 data ---> ", data);
-
     if (data.length > 0) {
       for (let index = 0; index < data.length; index++) {
         const {

@@ -10,7 +10,6 @@ class DoctorPatientWatchlistService {
       const watchlistRecords = await Database.getModel(TABLE_NAME).findAll();
       return watchlistRecords;
     } catch (err) {
-      console.log(err);
       throw err;
     }
   }

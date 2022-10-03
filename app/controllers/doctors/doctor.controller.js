@@ -851,7 +851,7 @@ class DoctorController extends Controller {
 
   updateDoctorDetails = async (req, res) => {
     //todoJ
-    // console.log("add patient controller ---> ");
+
     const { raiseSuccess, raiseClientError, raiseServerError } = this;
     try {
       const { id = 0 } = req.params;
@@ -1602,10 +1602,6 @@ class DoctorController extends Controller {
         doctor_id = null,
       } = req.body;
 
-      console.log("4867236812937127362187312 ======>>>>>>>>>", {
-        specialityId,
-      });
-
       let degreeData = {},
         specialityData = {},
         councilData = {};
@@ -2130,7 +2126,6 @@ class DoctorController extends Controller {
       // -- add speciality
       const isNotANumber = isNaN(specialityId);
       if (isNotANumber) {
-        console.log("72354671523786213162371283", { isNotANumber });
         const speciality = await specialityService.getSpecialityByData({
           name: specialityId,
         });
@@ -3209,32 +3204,6 @@ class DoctorController extends Controller {
         doctorUserId = doctorData.getUserId();
       }
 
-      //   await minioService.createBucket();
-
-      //   const imageName = md5(`${userId}-education-pics`);
-
-      //   let hash = md5.create();
-
-      //   hash.hex();
-      //   hash = String(hash);
-
-      //   const folder = "adhere";
-      //   // const file_name = hash.substring(4) + "_Education_"+fileExt;
-      //   const file_name = hash.substring(4) + "/" + imageName + "." + fileExt;
-
-      //   const metaData = {
-      //     "Content-Type":
-      //         "application/	application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
-      // };
-      // const fileUrl = folder+ "/" +file_name;
-      // await minioService.saveBufferObject(file.buffer, file_name, metaData);
-
-      // // console.log("file urlll: ", process.config.minio.MINI);
-      // const file_link = process.config.minio.MINIO_S3_HOST +"/" + fileUrl;
-      // let files = [file_link];
-      // console.log("Uplaoded File Url ---------------------->  ", file_link);
-      // console.log("User Controllers =------------------->   ", files);
-      //const resume_link = process.config.BASE_DOC_URL + files[0]
       let files = await uploadImageS3(doctorUserId, file);
       return this.raiseSuccess(
         res,
@@ -3245,7 +3214,6 @@ class DoctorController extends Controller {
         "Profile pic uploaded successfully"
       );
     } catch (error) {
-      console.log("FILE UPLOAD CATCH ERROR ", error);
       return this.raiseServerError(res, 500, {}, `${error.message}`);
     }
   };
@@ -3827,11 +3795,6 @@ class DoctorController extends Controller {
           secondary_careplan_ids,
         });
 
-        console.log("35732432542730078783246722223 ======>>>>> ", {
-          allPatients,
-          crIdsForMatchingTreatmentType,
-        });
-
         for (const patient of allPatients) {
           const formattedPatientData = patient;
 
@@ -4109,20 +4072,13 @@ class DoctorController extends Controller {
       const doctorData = await doctorService.getDoctorByData({
         user_id: userId,
       });
-      console.log("===doctorData Start====");
-      console.log(doctorData);
-      console.log("===doctorData End====");
 
       const doctorWrap = await DoctorWrapper(doctorData);
       // const provider = await ProviderWrapper(providerData);
       // const providerId = provider.getProviderId();
-      console.log("=====doctorWrap Start======");
-      console.log(doctorWrap);
-      console.log("=====doctorWrap Start======");
+
       const doctorId = doctorWrap.getDoctorId();
-      console.log("=====Doctor Id Start=====");
-      console.log(doctorId);
-      console.log("=====Doctor Id End======");
+
       let userApiDetails = {};
       let doctorApiDetails = {};
       let patientsApiDetails = {};
@@ -4136,10 +4092,6 @@ class DoctorController extends Controller {
         linked_id: doctorId,
         linked_with: USER_CATEGORY.DOCTOR,
       });
-
-      console.log("=====UserRole Start=====");
-      console.log(UserRoles);
-      console.log("=====UserRole End=====");
 
       if (UserRoles && UserRoles.length) {
         for (let i = 0; i < UserRoles.length; i++) {

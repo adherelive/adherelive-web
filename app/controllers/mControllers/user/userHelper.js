@@ -24,11 +24,6 @@ export const doctorQualificationData = async (userId) => {
     let qualification_details = [];
 
     let doctor = await doctorService.getDoctorByUserId(userId);
-    console.log(
-      "GET PROFILE DATA USERRRRRRR",
-      doctor.get("id"),
-      doctor.getBasicInfo
-    );
 
     if (doctor) {
       let docInfo = doctor.getBasicInfo;
@@ -51,7 +46,6 @@ export const doctorQualificationData = async (userId) => {
         await qualificationService.getQualificationsByDoctorId(docId);
 
       for (let qualification of docQualifications) {
-        console.log("QUALIFICATIONSSSSSSS=============>", qualification);
         let qualificationData = {};
         let qualificationId = qualification.get("id");
         qualificationData.degree = qualification.get("degree");
@@ -75,7 +69,7 @@ export const doctorQualificationData = async (userId) => {
         }
 
         qualificationData.photos = photos;
-        console.log("DOCUMENTSSSSSSS=============>", qualificationData);
+
         qualification_details.push(qualificationData);
       }
     }
@@ -119,8 +113,6 @@ export const uploadImageS3 = async (userId, file) => {
         "application/	application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
     };
 
-    console.log("816575641 ---------------> ", file_name);
-
     // const file_link =
     //   process.config.minio.MINIO_S3_HOST +
     //   "/" +
@@ -132,7 +124,6 @@ export const uploadImageS3 = async (userId, file) => {
     const fileUrl = "/" + file_name;
     await minioService.saveBufferObject(file.buffer, file_name, metaData);
 
-    // console.log("file urlll: ", process.config.minio.MINI);
     let files = [completePath(fileUrl)];
     return files;
   } catch (error) {
@@ -147,10 +138,9 @@ export const downloadFileFromS3 = async (objectName, filePath) => {
       objectName,
       filePath
     );
-    console.log("Response got for the download is: ", response);
+
     return true;
   } catch (err) {
-    console.log("Error got in downloading file from s3: ", err);
     return false;
   }
 };

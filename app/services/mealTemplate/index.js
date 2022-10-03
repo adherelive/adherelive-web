@@ -20,7 +20,6 @@ export default class MealTemplate {
   };
 
   getFoodItemDetails = () => {
-    console.log("1230998213 this._data.food_items", this._data);
     return this._data.food_item_details || [];
   };
 }

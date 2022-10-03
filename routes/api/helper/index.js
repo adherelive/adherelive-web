@@ -33,7 +33,7 @@ export const raiseClientError = (res, code = 422, error, message) => {
 
 export const validationError = (res, isValid) => {
   const { error: { details } = {} } = isValid || {};
-  console.log("18971893 details --> ", details);
+
   if (details) {
     const { context: { label } = {}, message } = details[0] || {};
     const response = new Response(false, 422);

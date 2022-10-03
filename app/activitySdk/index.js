@@ -21,7 +21,6 @@ class Activity extends EventEmitter {
 
   execute(args) {
     const { eventType, activityType, stage, data } = args;
-    // console.log('data=============================>', data)
     log.info(`initial ${eventType}, ${stage}, ${activityType}, ${data}`);
     //add validation for parameter here
     switch (eventType) {

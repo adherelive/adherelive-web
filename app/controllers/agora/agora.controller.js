@@ -44,7 +44,6 @@ class AgoraController extends Controller {
         userRoleId,
         channelName
       );
-      console.log("userRoleId", userRoleId);
 
       return this.raiseSuccess(
         res,

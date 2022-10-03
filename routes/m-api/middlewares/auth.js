@@ -21,8 +21,6 @@ export default async (req, res, next) => {
       }
     }
 
-    console.log("ACCESS TOKEN AUTH ---> ", accessToken);
-
     if (accessToken) {
       const secret = process.config.TOKEN_SECRET_KEY;
       const decodedAccessToken = await jwt.verify(accessToken, secret);
@@ -34,7 +32,6 @@ export default async (req, res, next) => {
     }
     next();
   } catch (err) {
-    console.log("errr ===== ", err);
     let payload = {};
     if (err.name === "TokenExpiredError") {
       payload = {

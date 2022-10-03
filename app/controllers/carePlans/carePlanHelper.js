@@ -84,7 +84,6 @@ export const getCareplanDataWithImp = async ({
   doctorId,
   userRoleId,
 }) => {
-  console.log("get getCareplanDataWithImp Called - 1 " + getTime());
   try {
     let carePlanData = {};
     let carePlanIds = [];
@@ -92,38 +91,31 @@ export const getCareplanDataWithImp = async ({
     let medicationIds = [];
     let currentCareplanTime = null;
     let currentCareplanId = null;
-    console.log("get getCareplanDataWithImp Called - 2 " + getTime());
     for (let index = 0; index < carePlans.length; index++) {
       const careplan = await CarePlanWrapper(carePlans[index]);
-      console.log("get getCareplanDataWithImp Called - 3 " + getTime());
+
       const { care_plans } = await careplan.getReferenceInfoWithImp();
-      console.log("get getCareplanDataWithImp Called - 4 " + getTime());
       carePlanData = { ...carePlanData, ...care_plans };
       carePlanIds.push(careplan.getCarePlanId());
-      console.log("get getCareplanDataWithImp Called - 5 " + getTime());
       const {
         medication_ids,
         appointment_ids,
         basic_info: { user_role_id = null } = {},
       } = care_plans[careplan.getCarePlanId()] || {};
-      console.log("get getCareplanDataWithImp Called - 6 " + getTime());
       // appointmentIds = [...appointmentIds, ...appointment_ids];
       // medicationIds = [...medicationIds, ...medication_ids];
 
       const secondaryDoctorUserRoleIds =
         careplan.getCareplnSecondaryProfiles() || [];
-      console.log("get getCareplanDataWithImp Called - 7 " + getTime());
       const isUserRoleAllowed = [user_role_id, ...secondaryDoctorUserRoleIds]
         .map((id) => parseInt(id))
         .includes(userRoleId);
       // get latest careplan id
-      console.log("get getCareplanDataWithImp Called - 8 " + getTime());
       if (
         (userCategory === USER_CATEGORY.DOCTOR ||
           userCategory === USER_CATEGORY.HSP) &&
         isUserRoleAllowed
       ) {
-        console.log("get getCareplanDataWithImp Called - 9 " + getTime());
         // if(userCategory === USER_CATEGORY.DOCTOR && doctorId === doctor_id) {
         if (
           moment(careplan.getCreatedAt()).diff(
@@ -131,7 +123,6 @@ export const getCareplanDataWithImp = async ({
             "minutes"
           ) > 0
         ) {
-          console.log("get getCareplanDataWithImp Called - 10 " + getTime());
           currentCareplanTime = careplan.getCreatedAt();
           currentCareplanId = careplan.getCarePlanId();
         }
@@ -142,7 +133,6 @@ export const getCareplanDataWithImp = async ({
         }
       }
     }
-    console.log("get getCareplanDataWithImp Called - 11 " + getTime());
     return {
       care_plans: {
         ...carePlanData,

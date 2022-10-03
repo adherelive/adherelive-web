@@ -64,12 +64,7 @@ const updatePasswordSchema = Joi.object().keys({
 
 const validateStartTime = (startTime) => {
   const now = moment().subtract(3, "minutes");
-  console.log(
-    "START TIME TEST ----------- ",
-    moment(startTime),
-    now,
-    moment(startTime).isAfter(now)
-  );
+
   return moment(startTime).isAfter(now);
 };
 
@@ -80,7 +75,7 @@ const validateTimeInterval = (startTime, endTime) => {
 export const validateCredentialsData = (req, res, next) => {
   const { body: data = {} } = req;
   const isValid = credentialsFormSchema.validate(data);
-  console.log("18923718923 isValid ---> ", isValid);
+
   if (isValid && isValid.error != null) {
     const { error: { details } = {} } = isValid || {};
     const { context: { label } = {} } = details[0] || {};
@@ -123,7 +118,7 @@ export const verifyLinkValidation = (req, res, next) => {
 export const validateSignInData = (req, res, next) => {
   const { body: data = {} } = req;
   const isValid = signInSchema.validate(data);
-  console.log("18923718923 isValid ---> ", isValid);
+
   if (isValid && isValid.error != null) {
     return validationError(res, isValid);
   }

@@ -31,8 +31,6 @@ class DoctorClinicService {
       await transaction.commit();
       return doctorClinic;
     } catch (error) {
-      console.log("76578976546786546789 error --->", error);
-
       await transaction.rollback();
       throw error;
     }

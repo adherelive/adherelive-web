@@ -38,43 +38,6 @@ class SmsManager {
 
       log.info(`Sending SMS...!!`);
 
-      // let options = {
-      //   method: "POST",
-      //   url: process.config.MSG91_SMS_URL,
-      //   headers: {
-      //     authkey: process.config.MSG91_AUTH_KEY,
-      //     "content-type": "application/json"
-      //   },
-      //   data: {
-      //     sender: process.config.MSG91_SENDER,
-      //     route: "4",
-      //     country: smsData.countryCode,
-      //     sms: [
-      //       {
-      //         message: smsData.Message,
-      //         to: [smsData.PhoneNumber]
-      //       }
-      //     ]
-      //   }
-      // };
-      // let response = await axios(options);
-      // log.info("sms sent manager...........!!", response);
-      // return response.data;
-
-      // let smsPublishResponse = await this.sns
-      //   .publish(smsData, (err, data) => {
-      //     if (err) {
-      //       log.info("sending sms error ------->>>>", err);
-      //     }
-      //     if (data) {
-      //       log.info("sms sent manager...........!!", data);
-      //     }
-      //   })
-      //   .promise(response => {
-      //     console.log("response ----", response);
-      //   });
-      // console.log("smsPublishResponse ----", smsPublishResponse);
-
       let smsSent = false;
 
       await this.sns
@@ -93,8 +56,8 @@ class SmsManager {
 
       // return await this.sns
       //   .publish(smsData, (err, data) => {
-      //     console.log("88127313 sendSms : smsData inside ", smsData);
-      //     console.log("88127313 sendSms : data inside ", data);
+      //
+      //
       //     if (err) {
       //       log.info("sending sms error ------->>>>", err);
       //     }
@@ -105,7 +68,6 @@ class SmsManager {
       //   .promise();
       // return smsPublishResponse;
     } catch (err) {
-      console.log("err ----", err);
       log.info("sending sms error ------->>>>", err);
       return err.data;
     }

@@ -17,8 +17,7 @@ class MobileMReminderWrapper extends BaseMedicationReminder {
   // Gauarav changes
   getOrganizerDetailsFromId = async (organizer_id, organizer_type) => {
     let organizer = {};
-    console.log("organizer_id", organizer_id);
-    console.log("organizer_type", organizer_type);
+
     if (organizer_type === "doctor") {
       // organizer = await doctorService.getDoctorByDoctorId(organizer_id);
       organizer = await doctorService.getDoctorByUserId(organizer_id);
@@ -28,9 +27,7 @@ class MobileMReminderWrapper extends BaseMedicationReminder {
 
   getBasicInfo = async () => {
     const { _data } = this;
-    console.log("==1=1=1=1=1= MedicationReminder 1=1==1=1=1=1=1=1=1");
-    console.log(_data);
-    console.log("==1=1=1=1=1=1=1==1=1=1=1=1=1=1");
+
     const {
       id,
       participant_id,
@@ -46,7 +43,7 @@ class MobileMReminderWrapper extends BaseMedicationReminder {
       organizer_id,
       organizer_type
     );
-    console.log("organizerDetails", organizerDetails);
+
     return {
       basic_info: {
         id,

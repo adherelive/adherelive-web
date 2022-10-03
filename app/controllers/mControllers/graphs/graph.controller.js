@@ -104,7 +104,6 @@ class GraphController extends Controller {
   addGraphType = async (req, res) => {
     const { raiseServerError, raiseSuccess } = this;
     try {
-      // const {params: {id} = {}, userDetails: {userId} = {}} = req;
       const { body: { chart_ids = [] } = {} } = req;
       const { body, userDetails } = req;
       const {
@@ -113,7 +112,6 @@ class GraphController extends Controller {
         userData: { category } = {},
         userCategoryData: { basic_info: { id: doctorId } = {} } = {},
       } = userDetails || {};
-      // console.log('CHART IDSSSSSSSSSSSSS==========================>',chart_ids);
       const userPreferenceData =
         await userPreferenceService.getPreferenceByData({
           user_role_id: userRoleId,

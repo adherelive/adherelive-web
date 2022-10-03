@@ -214,8 +214,6 @@ class MedicineController extends Controller {
         });
       }
 
-      console.log("81731289213 doctorIds", doctorIds);
-
       const limit = process.config.ADMIN_MEDICINE_ONE_PAGE_LIMIT;
 
       const offsetLimit = parseInt(limit, 10) * parseInt(offset, 10);

@@ -20,7 +20,6 @@ class SmsManager {
     try {
       const smsPayload = this.payload;
       //log.info("validating sms payload!!");
-      console.log("smsPayload --MANGER--", smsPayload);
 
       let isSmsDataValid = this.smsDataValidator(smsPayload);
       if (isSmsDataValid.error && isSmsDataValid.error == 1)
@@ -33,7 +32,6 @@ class SmsManager {
       log.info("Sms payload successfully transformed!!");
 
       log.info(`Sending SMS...!!`);
-      console.log("smspayload: ", smsData);
 
       let options = {
         method: "POST",
@@ -69,13 +67,12 @@ class SmsManager {
       //   })
       //   .promise();
       // .promise(response => {
-      //   console.log("response ----", response);
+
       // });
-      //console.log("smsPublishResponse ----", smsPublishResponse);
 
       // let smsPublishResponse = await this.sns
       //   .publish(smsData, (err, data) => {
-      //     console.log("smsData ----", smsData);
+
       //     if (err) {
       //       log.info("sending sms error ------->>>>", err);
       //     }
@@ -86,7 +83,6 @@ class SmsManager {
       //   .promise();
       //return smsPublishResponse;
     } catch (err) {
-      console.log("err ----", err);
       log.info("sending sms error ------->>>>", err);
       return err.data;
     }

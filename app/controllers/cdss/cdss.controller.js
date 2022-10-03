@@ -12,7 +12,6 @@ class CdssController extends Controller {
   }
 
   addDyanosis = async (req, res) => {
-    console.log("add Dyagonsis - called");
     let data = req.body;
 
     if (!data.dia) {
@@ -46,9 +45,8 @@ class CdssController extends Controller {
   };
 
   getDyanosis = async (req, res) => {
-    console.log("get Dyagonsis - called");
     let data = req.body;
-    console.log({ data });
+
     if (!(data.length > 0)) {
       return res.status(200).send([]);
     }
@@ -58,7 +56,7 @@ class CdssController extends Controller {
       symp[data[i]] = true;
       searchObject.push(symp);
     }
-    console.log({ searchObject });
+
     let cdss = await Cdss.find({
       $or: searchObject,
     });
@@ -76,7 +74,6 @@ class CdssController extends Controller {
   };
 
   listDyanosis = async (req, res) => {
-    console.log("list Dyagonsis - called-one");
     let keyword = "";
     if (req.query.dia) keyword = req.query.dia;
     try {

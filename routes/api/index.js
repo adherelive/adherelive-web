@@ -63,9 +63,6 @@ router.use(async function (req, res, next) {
       accessToken = cookies.accessToken;
     }
 
-    //  ----- FOR API TEST POSTMAN ------
-
-    // console.log("------------ ACCESS TOKEN ---------> ", req.headers);
     const { accesstoken: aT = "" } = req.headers || {};
     if (aT) {
       accessToken = aT;

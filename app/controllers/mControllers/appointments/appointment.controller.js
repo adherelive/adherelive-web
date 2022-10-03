@@ -336,11 +336,6 @@ class MobileAppointmentController extends Controller {
 
         const filteredAppointments = previousAppointments.filter(
           (appointment) => {
-            console.log(
-              "appointment id",
-              typeof id,
-              typeof appointment.get("id")
-            );
             return `${appointment.get("id")}` !== id;
           }
         );
@@ -817,8 +812,6 @@ class MobileAppointmentController extends Controller {
             ? true
             : false;
       }
-
-      console.log("values are: ", appointmentDetails, userIsParticipant);
 
       if (!appointmentDetails || !userIsParticipant) {
         return this.raiseClientError(

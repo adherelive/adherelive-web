@@ -74,7 +74,6 @@ function onError(error) {
       process.exit(1);
       break;
     default:
-      console.log("ERROR: ", error.getMessage());
       throw error;
   }
 }

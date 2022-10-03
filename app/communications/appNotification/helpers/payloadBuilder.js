@@ -99,7 +99,7 @@ class PayloadBuilder {
     let payload = !isEmpty(arguments)
       ? { ...{}, ...arguments[0] }
       : { ...{}, ...this.data };
-    // console.log("app payload========>", this.activityType);
+
     let newPayload = {
       actor: payload.participantOne,
       object: `${payload.participantTwo}`,
@@ -268,7 +268,6 @@ class PayloadBuilder {
   getBuild() {
     try {
       let payload = { ...{}, ...this.data };
-      // console.log("payload @ getBuild", payload);
 
       switch (this.notificationType) {
         case APPOINTMENT:

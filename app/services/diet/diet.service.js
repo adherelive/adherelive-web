@@ -829,7 +829,7 @@ class DietService {
       return true;
     } catch (error) {
       await transaction.rollback();
-      console.log("732452365462354623642783 >>>>>>>>>> >>>. ", { error });
+
       throw error;
     }
   };
@@ -850,8 +850,6 @@ class DietService {
         food_item_detail_id = null,
         notes = "",
       } = food_group || {};
-
-      console.log("9867826816812631243684 =====>>> ", { food_group_id });
 
       if (food_group_id) {
         const updateFoodGroupData = {
@@ -880,11 +878,6 @@ class DietService {
 
         const { id: mappings_id = null } = getMappingRespo;
         mappingId = mappings_id;
-
-        console.log("9867826816812631243684 ############ ", {
-          getMappingRespo,
-          mappingId,
-        });
       } else {
         const newFoodGroup =
           (await Database.getModel(foodGroupTableName).create(
@@ -916,11 +909,6 @@ class DietService {
         const { id: new_mapping_id } = newMapping;
         mappingId = new_mapping_id;
       }
-
-      console.log("9867826816812631243684 @@@@@@@@@@@@@@@ ", {
-        food_group_id,
-        mappingId,
-      });
 
       return { food_group_id, mappingId };
     } catch (error) {
@@ -978,7 +966,7 @@ class DietService {
       return true;
     } catch (error) {
       await transaction.rollback();
-      console.log("732452365462354623642783 >>>>>>>>>> >>>. ", { error });
+
       throw error;
     }
   };

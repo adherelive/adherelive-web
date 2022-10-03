@@ -83,12 +83,11 @@ class EventExecutor {
       Log.debug("client --> ", client);
 
       let result = {};
-      // console.log("notification payload=>>>>>>>>>>>>>>>>>", data);
+
       const feed = client.feed("notification", template);
 
       Log.debug("feed --> ", feed);
-      // console.log("Data....OBBBjeeeect: ", data.object);
-      // console.log("FFFFFEeeeeeedddddd: ", feed);
+
       const response = await feed.addActivity(template).catch((err) => {
         Log.debug("response err ------>", err);
       });

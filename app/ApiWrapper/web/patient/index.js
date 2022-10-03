@@ -35,7 +35,7 @@ class PatientWrapper extends BasePatient {
       payment_terms_accepted,
       createdAt: created_at,
     } = _data || {};
-    // console.log("346236542783642534623548723648",{created_at,_data});
+
     const { profile_pic = "" } = details || {};
 
     const updatedDetails = {

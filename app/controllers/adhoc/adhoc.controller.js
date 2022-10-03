@@ -396,11 +396,6 @@ class AdhocController extends Controller {
               for (let createdPermission of createdPermissions) {
                 const { id, type } = createdPermission || {};
                 if (categoryPermissions.includes(type)) {
-                  console.log("1293023 createdPermission", {
-                    category,
-                    id,
-                    type,
-                  });
                   userPermissionsData.push({
                     category,
                     permission_id: id,

@@ -30,28 +30,8 @@ export default async (req, res, next) => {
     if (accessToken) {
       const secret = process.config.TOKEN_SECRET_KEY;
       const decodedAccessToken = await jwt.verify(accessToken, secret);
-      // const access_token = decodedAccessToken.accessToken;
-
       const { userId = "", accessToken: access_token = "" } =
         decodedAccessToken || {};
-
-      // // const CLIENT_ID = process.config.GOOGLE_KEYS.CLIENT_ID;
-      // // const CLIENT_SECRET = process.config.GOOGLE_KEYS.CLIENT_SECRET;
-      // // const REDIRECT_URI = process.config.GOOGLE_KEYS.REDIRECT_URI;
-      // // const client = new OAuth2Client(CLIENT_ID, CLIENT_SECRET, REDIRECT_URI);
-      // // const userInfo =  await client.getTokenInfo(access_token);
-      // // console.log(userInfo);
-
-      // // now check the accessToken for facebook login
-      // const appToken = process.config.FACEBOOK_KEYS.APP_TOKEN;
-      // const link = `https://graph.facebook.com/debug_token?input_token=${access_token}&access_token=${appToken}`;
-
-      // const res = await doRequest({
-      //     url:link,
-      //     json:true
-      // });
-
-      // console.log("test --->>> ", res);
     } else {
       const response = new Response(false, 401);
       response.setError({ message: errMessage.COOKIES_NOT_SET });
@@ -59,7 +39,6 @@ export default async (req, res, next) => {
     }
     next();
   } catch (err) {
-    console.log("errr ===== ", err.name);
     let payload = {};
     if (err.name === "TokenExpiredError") {
       payload = {

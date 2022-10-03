@@ -131,10 +131,8 @@ export const getTimings = (userTimings) => {
       }
     });
 
-    console.log("12098128 allDietTimings", allDietTimings);
-
     return allDietTimings;
   } catch (error) {
-    console.log("120982189 error", error);
+    console.log("error", error);
   }
 };

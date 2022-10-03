@@ -27,18 +27,16 @@ class MinioService {
   callback = (error, data) => {
     if (error) {
       // throw error;
-      console.log("0983128930218 error", error);
+      console.log("error", error);
     } else {
-      console.log("093818932 response data", data);
+      console.log("response data", data);
     }
   };
 
   async createBucket() {
     try {
       let result;
-      // let doesBucketExists = await this.s3Client.bucketExists(
-      //   process.config.minio.MINIO_BUCKET_NAME
-      // );
+
       let doesBucketExists = true;
       Log.debug("doesBucketExists", doesBucketExists);
       const bucket_name = process.config.minio.MINIO_BUCKET_NAME;

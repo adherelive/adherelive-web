@@ -44,10 +44,6 @@ class EmailManger {
   }
 
   emailPayloadValidator(emailPayload) {
-    console.log(
-      "Email Payloader Validator -------------------->   ",
-      emailPayload
-    );
     if (!emailPayload.toAddress)
       return {
         error: 1,
@@ -80,10 +76,6 @@ class EmailManger {
 
   async emailPayloadTransformer(payload) {
     try {
-      console.log(
-        "Email Payloader Transformet =================>    ",
-        payload
-      );
       let payloadBuilder = new emailPayloadBuilder(payload);
       let templateString = "";
       switch (payload.templateName) {
@@ -281,11 +273,9 @@ class EmailManger {
         .createSourceName(process.config.email.FROM_NAME)
         .createReplyToAddress(process.config.email.FROM)
         .build();
-      console.log("Transformer Returning ====================>    ", content);
+
       return content;
-    } catch (err) {
-      console.log("in payload transform", err);
-    }
+    } catch (err) {}
   }
 
   async sendEmail(emailPayload) {
@@ -300,7 +290,7 @@ class EmailManger {
       if (isValid && isValid.error == 1) return isValid;
       Log.success("email payload is valid!!");
       Log.info("Transforming email payload to aws payload!!");
-      console.log("payload ===>", payload);
+
       if (payload.error && payload.error == 1) return payload;
 
       Log.info("Email payload transformed successfully!!");
@@ -323,7 +313,6 @@ class EmailManger {
 
       return publishResponse;
     } catch (err) {
-      console.log(err);
       Log.info("sending mail error.........!!");
     }
   }

@@ -22,8 +22,7 @@ class MAppointmentWrapper extends BaseAppointment {
   // Gauarav changes
   getOrganizerDetailsFromId = async (organizer_id, organizer_type) => {
     let organizer = {};
-    console.log("appointment organizer_id", organizer_id);
-    console.log("appointment organizer_type", organizer_type);
+
     if (organizer_type === "doctor" || organizer_type === "hsp") {
       organizer = await doctorService.getDoctorByDoctorId(organizer_id);
       // organizer = await doctorService.getDoctorByUserId(organizer_id);

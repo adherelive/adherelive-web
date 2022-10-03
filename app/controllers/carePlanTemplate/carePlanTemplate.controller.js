@@ -66,9 +66,6 @@ class CarePlanTemplateController extends Controller {
         is_public_in_provider,
       } = body || {};
 
-      console.log(body);
-      console.log("is_public_in_provier", is_public_in_provider);
-
       Log.info(`name : ${name}`);
 
       const existingTemplate =
@@ -118,7 +115,6 @@ class CarePlanTemplateController extends Controller {
 
           const { exercises: allExercises = {} } =
             await template.getReferenceInfo();
-          console.log("8163812638162837612873618273712381", { allExercises });
 
           let exerciseContentData = {};
           const exerciseContentService = new ExerciseContentService();

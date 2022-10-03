@@ -160,7 +160,7 @@ class EventController extends Controller {
               ? event.get("start_time")
               : event.get("created_at"),
           });
-          // console.log("328742347234723847234823")
+
           const eventWrapper = await EventWrapper(event);
           scheduleEventData[eventWrapper.getScheduleEventId()] =
             eventWrapper.getAllInfo();
@@ -498,12 +498,6 @@ class EventController extends Controller {
               status: EVENT_STATUS.EXPIRED,
               critical: false,
             })) || 0;
-
-          console.log("864283648276487264872647862", {
-            id,
-            criticalDiet,
-            nonCriticalDiet,
-          });
 
           if (criticalDiet > 0) {
             dietCritical.push(id);

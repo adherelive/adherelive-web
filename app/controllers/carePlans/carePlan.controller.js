@@ -594,7 +594,7 @@ class CarePlanController extends Controller {
             let medicineId = medication.get("medicine_id");
             newMedication.medicine_id = medicineId;
             let medicine = await medicineService.getMedicineById(medicineId);
-            // console.log("CARE PLAN OF PATIENTTTT===========>>>>>>>", medicine);
+
             let medName = medicine.get("name");
             let medType = medicine.get("type");
             newMedication.medicine = medName;
@@ -667,7 +667,6 @@ class CarePlanController extends Controller {
         "patient care plan details fetched successfully"
       );
     } catch (error) {
-      console.log("GET PATIENT DETAILS ERROR --> ", error);
       return this.raiseServerError(res, 500, error);
     }
   };
@@ -789,8 +788,6 @@ class CarePlanController extends Controller {
 
       let carePlan = await carePlanService.getCarePlanById(care_plan_id);
 
-      console.log("carePlan", carePlan);
-
       let newCarePlan = await CarePlanWrapper(carePlan);
 
       // let cPdetails = carePlan.get("details") ? carePlan.get("details") : {};
@@ -853,7 +850,7 @@ class CarePlanController extends Controller {
       //       let medicineId = medication.get("medicine_id");
       //       newMedication.medicine_id = medicineId;
       //       let medicine = await medicineService.getMedicineById(medicineId);
-      //       // console.log("CARE PLAN OF PATIENTTTT===========>>>>>>>", medicine);
+
       //       let medName = medicine.get("name");
       //       let medType = medicine.get("type");
       //       newMedication.medicine = medName;
@@ -928,7 +925,6 @@ class CarePlanController extends Controller {
         "patient care plan details fetched successfully"
       );
     } catch (error) {
-      console.log("GET PATIENT DETAILS ERROR --> ", error);
       return this.raiseServerError(res, 500, error);
     }
   };

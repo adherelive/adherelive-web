@@ -119,16 +119,6 @@ class ProvidersController extends Controller {
         }
       }
 
-      // console.log("938479287498237948723984738472 ==================>>>>>>>",{doctorIds});
-
-      // for (const mappingData of doctorProviderMapping) {
-      //   const mappingWrapper = await DoctorProviderMappingWrapper(mappingData);
-      //   const doctorId = mappingWrapper.getDoctorId();
-      //   doctorIds.push(doctorId);
-      // }
-
-      console.log("doctor ids got are: ", doctorIds);
-
       let doctorApiDetails = {};
       let userApiDetails = {};
       // let userIds = [];

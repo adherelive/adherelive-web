@@ -35,10 +35,9 @@ class FeatureDetailsService {
         returning: true,
       });
       transaction.commit();
-      console.log("FeatureDetails --> ", featureDetails);
+
       return featureDetails;
     } catch (err) {
-      console.log("err --> ", err);
       transaction.rollback();
       throw err;
     }

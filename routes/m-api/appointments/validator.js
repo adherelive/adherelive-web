@@ -34,7 +34,7 @@ const appointmentFormSchema = Joi.object().keys({
 
 const validateStartTime = (startTime) => {
   const now = moment().subtract(3, "minutes");
-  console.log("validateStartTime --> ", moment(startTime), now);
+
   return moment(startTime).isAfter(now);
 };
 

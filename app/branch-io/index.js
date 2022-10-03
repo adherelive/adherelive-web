@@ -10,8 +10,6 @@ export default async function createLink(data = {}) {
       data,
     });
 
-    console.log("dara====", res);
-
     const { status } = res;
     if (status === 200) {
       const { data: { url } = {} } = res;

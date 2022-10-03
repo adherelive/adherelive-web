@@ -224,9 +224,6 @@ class MobileDoctorController extends Controller {
   };
 
   addPatient = async (req, res) => {
-    console.log("=========================");
-    console.log(req.body);
-    console.log("=========================");
     try {
       Logger.request(req.body);
       const {
@@ -249,7 +246,6 @@ class MobileDoctorController extends Controller {
         symptoms = "",
         address = "",
       } = req.body;
-      console.log(req.body);
       const {
         userDetails: {
           userRoleId = null,
@@ -259,29 +255,24 @@ class MobileDoctorController extends Controller {
       } = req;
 
       const userExists = await userService.getPatientByMobile(mobile_number);
-      console.log("=======1");
+
       let userData = null;
       let patientData = null;
       let patientOtherDetails = {};
       let carePlanOtherDetails = {};
       let patientFeatureIds = [];
-      console.log("=======2");
       if (comorbidities) {
         patientOtherDetails["comorbidities"] = comorbidities;
       }
-      console.log("=======3");
       if (allergies) {
         patientOtherDetails["allergies"] = allergies;
       }
-      console.log("=======4");
       if (clinical_notes) {
         carePlanOtherDetails["clinical_notes"] = clinical_notes;
       }
-      console.log("=======5");
       if (symptoms) {
         carePlanOtherDetails["symptoms"] = symptoms;
       }
-      console.log("=======6");
       const doctor = await doctorService.getDoctorByData({ user_id: userId });
 
       // name split
@@ -301,7 +292,6 @@ class MobileDoctorController extends Controller {
         userData = await UserWrapper(userExists[0].get());
         const { patient_id } = await userData.getReferenceInfo();
         patientData = await PatientWrapper(null, patient_id);
-        console.log("=======7");
         const previousDetails = patientData.getDetails();
         const updateResponse = await patientsService.update(
           {
@@ -318,7 +308,6 @@ class MobileDoctorController extends Controller {
           },
           patient_id
         );
-        console.log("=======7");
         Logger.debug("Patient updateResponse ", updateResponse);
 
         patientData = await PatientWrapper(null, patient_id);
@@ -338,7 +327,6 @@ class MobileDoctorController extends Controller {
           activated_on: moment().format(),
         });
         userData = await UserWrapper(user.get());
-        console.log("=======8");
         if (clinical_notes) {
           carePlanOtherDetails["clinical_notes"] = clinical_notes;
         }
@@ -348,7 +336,6 @@ class MobileDoctorController extends Controller {
         }
 
         let newUserId = userData.getId();
-        console.log("=======9");
         // const uid = uuidv4();
         const birth_date = moment(date_of_birth);
         const age = getAge(date_of_birth);
@@ -370,7 +357,6 @@ class MobileDoctorController extends Controller {
         });
         // const userRoleWrapper = await UserRoleWrapper(userRole);
         // const newUserRoleId = await userRoleWrapper.getId();
-        console.log("=======10");
         const patientWrapper = await PatientWrapper(patient);
         const patientUserId = await patientWrapper.getUserId();
         const userRole = await userRolesService.create({
@@ -378,7 +364,6 @@ class MobileDoctorController extends Controller {
         });
         const userRoleWrapper = await UserRoleWrapper(userRole);
         const newUserRoleId = await userRoleWrapper.getId();
-        console.log("=======11");
         await UserPreferenceService.addUserPreference({
           user_id: newUserId,
           details: {
@@ -386,7 +371,6 @@ class MobileDoctorController extends Controller {
           },
           user_role_id: newUserRoleId,
         });
-        console.log("=======12");
         const uid = patient_uid
           ? patient_uid
           : getReferenceId(patient.get("id"));
@@ -395,7 +379,6 @@ class MobileDoctorController extends Controller {
         patientData = await PatientWrapper(null, patient.get("id"));
 
         const features = await featuresService.getAllFeatures();
-        console.log("=======13");
         for (const feature of features) {
           const { id: featureId } = feature;
           const featureMappingData =
@@ -409,7 +392,6 @@ class MobileDoctorController extends Controller {
           }
         }
       }
-      console.log("=======14");
       const carePlanTemplate =
         await carePlanTemplateService.getCarePlanTemplateData({
           treatment_id,
@@ -417,7 +399,6 @@ class MobileDoctorController extends Controller {
           condition_id,
           user_id: userId,
         });
-      console.log("=======15");
       const patient_id = patientData.getPatientId();
       const care_plan_template_id = null;
 
@@ -431,7 +412,6 @@ class MobileDoctorController extends Controller {
         },
         ...carePlanOtherDetails,
       };
-      console.log("=======16");
       const carePlan = await carePlanService.addCarePlan({
         patient_id,
         doctor_id: doctor.get("id"),
@@ -441,7 +421,6 @@ class MobileDoctorController extends Controller {
         // channel_id: getRoomId(userRoleId, patient_id),
         created_at: moment(),
       });
-      console.log("=======17");
       const { id: carePlanId } = carePlan || {};
       const { user_role_id: patientRoleId } = await patientData.getAllInfo();
 
@@ -451,7 +430,6 @@ class MobileDoctorController extends Controller {
         },
         carePlanId
       );
-      console.log("=======18");
       const carePlanData = await CarePlanWrapper(carePlan);
 
       let templateMedicationData = {};
@@ -469,7 +447,6 @@ class MobileDoctorController extends Controller {
         status: "pending",
         type: VERIFICATION_TYPE.PATIENT_SIGN_UP,
       });
-      console.log("=======19");
       const universalLink = await getUniversalLink({
         event_type: VERIFICATION_TYPE.PATIENT_SIGN_UP,
         link,
@@ -482,7 +459,6 @@ class MobileDoctorController extends Controller {
         phoneNumber: `+${prefix}${mobile_number}`, // mobile_number
         message: `Hello from AdhereLive! Please click the link to verify your number. ${universalLink}`,
       };
-      console.log("=======20");
       // if(process.config.app.env === "development") {
       const emailPayload = {
         title: "Mobile Patient Verification mail",
@@ -503,7 +479,6 @@ class MobileDoctorController extends Controller {
       // } else {
       //   Proxy_Sdk.execute(EVENTS.SEND_SMS, smsPayload);
       // }
-      console.log("=======21");
       let otherCarePlanTemplates = {};
 
       let carePlanTemplateIds = [];
@@ -541,7 +516,6 @@ class MobileDoctorController extends Controller {
           },
         };
       }
-      console.log("=======21");
       return this.raiseSuccess(
         res,
         200,
@@ -2009,32 +1983,6 @@ class MobileDoctorController extends Controller {
     Logger.debug("file ----> ", file);
     // const fileExt= file.originalname.replace(/\s+/g, '');
     try {
-      //   await minioService.createBucket();
-
-      //   const imageName = md5(`${userId}-education-pics`);
-
-      //   let hash = md5.create();
-
-      //   hash.hex();
-      //   hash = String(hash);
-
-      //   const folder = "adhere";
-      //   // const file_name = hash.substring(4) + "_Education_"+fileExt;
-      //   const file_name = hash.substring(4) + "/" + imageName + "." + fileExt;
-
-      //   const metaData = {
-      //     "Content-Type":
-      //         "application/	application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
-      // };
-      // const fileUrl = folder+ "/" +file_name;
-      // await minioService.saveBufferObject(file.buffer, file_name, metaData);
-
-      // // console.log("file urlll: ", process.config.minio.MINI);
-      // const file_link = process.config.minio.MINIO_S3_HOST +"/" + fileUrl;
-      // let files = [file_link];
-      // console.log("Uplaoded File Url ---------------------->  ", file_link);
-      // console.log("User Controllers =------------------->   ", files);
-      //const resume_link = process.config.BASE_DOC_URL + files[0]
       let files = await uploadImageS3(userId, file);
       return this.raiseSuccess(
         res,
@@ -2045,7 +1993,6 @@ class MobileDoctorController extends Controller {
         "Image uploaded successfully"
       );
     } catch (error) {
-      console.log("FILE UPLOAD CATCH ERROR ", error);
       return this.raiseServerError(res, 500, {}, `${error.message}`);
     }
   };
@@ -2173,15 +2120,6 @@ class MobileDoctorController extends Controller {
         initialPatientData.getBasicInfo() || {};
 
       const { first_name, middle_name, last_name } = getSeparateName(name);
-      // let patientName = name.trim().split(" ");
-      // let first_name = patientName[0];
-      // let middle_name = patientName.length == 3 ? patientName[1] : "";
-      // let last_name =
-      //   patientName.length == 3
-      //     ? patientName[2]
-      //     : patientName.length == 2
-      //     ? patientName[1]
-      //     : "";
 
       const birth_date = moment(date_of_birth);
       const age = getAge(date_of_birth);
@@ -2695,20 +2633,11 @@ class MobileDoctorController extends Controller {
       const doctorData = await doctorService.getDoctorByData({
         user_id: userId,
       });
-      console.log("===doctorData Start====");
-      console.log(doctorData);
-      console.log("===doctorData End====");
 
       const doctorWrap = await DoctorWrapper(doctorData);
       // const provider = await ProviderWrapper(providerData);
       // const providerId = provider.getProviderId();
-      console.log("=====doctorWrap Start======");
-      console.log(doctorWrap);
-      console.log("=====doctorWrap Start======");
       const doctorId = doctorWrap.getDoctorId();
-      console.log("=====Doctor Id Start=====");
-      console.log(doctorId);
-      console.log("=====Doctor Id End======");
       let userApiDetails = {};
       let doctorApiDetails = {};
       let patientsApiDetails = {};
@@ -2722,10 +2651,6 @@ class MobileDoctorController extends Controller {
         linked_id: doctorId,
         linked_with: USER_CATEGORY.DOCTOR,
       });
-
-      console.log("=====UserRole Start=====");
-      console.log(UserRoles);
-      console.log("=====UserRole End=====");
 
       if (UserRoles && UserRoles.length) {
         for (let i = 0; i < UserRoles.length; i++) {
@@ -2829,32 +2754,6 @@ class MobileDoctorController extends Controller {
       return raiseServerError(res);
     }
   };
-
-  // addProfile = async (req, res) => {
-  //   const { raiseSuccess, raiseClientError, raiseServerError } = this;
-  //   try {
-  //       const {body: {user_role_id, care_plan_id} = {}} = req;
-
-  //       const dataToAdd = {
-  //         care_plan_id,
-  //         secondary_doctor_role_id: user_role_id
-  //       };
-  //       const existingMapping = await carePlanSecondaryDoctorMappingService.getByData(dataToAdd) || null;
-
-  //       if(!existingMapping) {
-  //         const createdMapping = await carePlanSecondaryDoctorMappingService.create(dataToAdd) || null;
-
-  //         if(createdMapping) {
-  //           return raiseSuccess(res, 200, {}, "Profile added successfully");
-  //         }
-  //       } else {
-  //         return raiseClientError(res, 422, {}, "Profile already added in the treatment");
-  //       }
-  //   } catch(error) {
-  //     Logger.debug("addProfile 500 ERROR", error);
-  //     return raiseServerError(res);
-  //   }
-  // };
 }
 
 export default new MobileDoctorController();

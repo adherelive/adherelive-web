@@ -112,11 +112,6 @@ class MPatientController extends Controller {
 
   mUpdatePatient = async (req, res) => {
     try {
-      // console.log("-------------- req.body ------------", req.body);
-      console.log("=============IN Mobile Controller 1=================");
-      console.log(userDetails);
-      console.log(body);
-      console.log("==================================================");
       const { userDetails, body } = req;
       const { profile_pic, name, email, timings = {} } = body || {};
       const { userId = "3" } = userDetails || {};
@@ -184,8 +179,6 @@ class MPatientController extends Controller {
 
         const file_path = imgSync(profile_pic, "/tmp", file_name);
         const file = fs.readFileSync(file_path);
-
-        // console.log("file ------> ", file);
 
         if (userId) {
           if (profile_pic) {
@@ -272,7 +265,6 @@ class MPatientController extends Controller {
         "Patient details updated successfully"
       );
     } catch (error) {
-      console.log("UPDATE PATIENT ERROR --> ", error);
       return this.raiseServerError(res, 500, error, error.message);
     }
   };
@@ -338,9 +330,6 @@ class MPatientController extends Controller {
         await medicationReminderService.getMedicationsForParticipant({
           participant_id: id,
         });
-
-      // console.log("712367132 medicationDetails --> ", medicationDetails);
-      // Logger.debug("medication details", medicationDetails);
 
       let medicationApiData = {};
       let scheduleEventApiData = {};
@@ -594,12 +583,9 @@ class MPatientController extends Controller {
   };
 
   getPatientCarePlanDetailsWithImp = async (req, res) => {
-    console.log("get PatientCarePlanDetails Called - 1" + this.getTime());
     const { raiseSuccess, raiseClientError, raiseServerError } = this;
     try {
-      console.log("get PatientCarePlanDetails Called - 2" + this.getTime());
       const { id: patient_id = 1 } = req.params;
-      console.log("get PatientCarePlanDetails Called - 3" + this.getTime());
       Logger.info(`params: patient_id = ${patient_id}`);
       const {
         userDetails: {
@@ -609,7 +595,6 @@ class MPatientController extends Controller {
           userData: { category } = {},
         } = {},
       } = req;
-      console.log("get PatientCarePlanDetails Called - 4" + this.getTime());
       if (!patient_id) {
         return raiseClientError(
           res,
@@ -618,7 +603,6 @@ class MPatientController extends Controller {
           "Please select correct patient to continue"
         );
       }
-      console.log("get PatientCarePlanDetails Called - 5" + this.getTime());
 
       // get all careplans attached to patient
       const carePlans =
@@ -626,7 +610,6 @@ class MPatientController extends Controller {
           patient_id,
           user_role_id: userRoleId,
         })) || [];
-      console.log("get PatientCarePlanDetails Called - 6" + this.getTime());
       let treatmentIds = [];
       let carePlanIds = [];
       let latestCarePlanId = null;
@@ -640,7 +623,6 @@ class MPatientController extends Controller {
       let templateWorkoutData = {};
       let carePlanApiDetails = {};
 
-      console.log("get PatientCarePlanDetails Called - 7" + this.getTime());
       // for vitals
       let vitalTemplateData = {};
 
@@ -656,13 +638,10 @@ class MPatientController extends Controller {
         // care plans
         carePlanApiDetails = { ...carePlanApiDetails, ...care_plans };
 
-        console.log("get PatientCarePlanDetails Called - 8" + this.getTime());
         // care plan ids
         carePlanIds = [...care_plan_ids];
 
         // latest care plan id
-
-        console.log("get PatientCarePlanDetails Called - 9" + this.getTime());
         // get all treatment ids from careplan for templates
         Object.keys(care_plans).forEach((id) => {
           const { details: { treatment_id } = {} } = care_plans[id] || {};
@@ -685,35 +664,20 @@ class MPatientController extends Controller {
                                   "condition_id": 1,
                                   "treatment_id": 1
                               },*/
-          console.log("===========test=========");
-          console.log(patient_id);
-          console.log(id["basic_info"]["patient_id"]);
 
-          console.log("===========testEnd=========");
-          console.log(id);
           if (id["basic_info"]["patient_id"] === patient_id) {
-            console.log("===========test=========");
-            console.log(patient_id);
-            console.log(id["basic_info"]["patient_id"]);
             latestCarePlanId = id["basic_info"]["id"];
-            console.log("===========testEnd=========");
-            console.log(id);
           }
         });
-
-        console.log("get PatientCarePlanDetails Called - 10" + this.getTime());
       }
 
-      console.log("get PatientCarePlanDetails Called - 11" + this.getTime());
       // get all careplan templates for user(doctor)
       const carePlanTemplates =
         (await carePlanTemplateService.getCarePlanTemplateData({
           user_id: userId,
           treatment_id: treatmentIds,
         })) || [];
-      console.log("get PatientCarePlanDetails Called - 12" + this.getTime());
       if (carePlanTemplates.length > 0) {
-        console.log("get PatientCarePlanDetails Called - 13" + this.getTime());
         for (let index = 0; index < carePlanTemplates.length; index++) {
           const carePlanTemplate = await CarePlanTemplateWrapper(
             carePlanTemplates[index]
@@ -765,9 +729,7 @@ class MPatientController extends Controller {
             ...vital_templates,
           };
         }
-        console.log("get PatientCarePlanDetails Called - 14" + this.getTime());
       } else {
-        console.log("get PatientCarePlanDetails Called - 15" + this.getTime());
         carePlanTemplateIds.push("1");
         otherCarePlanTemplates["1"] = {
           basic_info: {
@@ -775,7 +737,6 @@ class MPatientController extends Controller {
             name: "Blank Template",
           },
         };
-        console.log("get PatientCarePlanDetails Called - 16" + this.getTime());
       }
       return raiseSuccess(
         res,
@@ -817,7 +778,6 @@ class MPatientController extends Controller {
       );
     } catch (error) {
       // Logger.debug("get careplan 500 error ---> ", error);
-      console.log("GET PATIENT DETAILS ERROR careplan --> ", error);
       return raiseServerError(res);
     }
   };
@@ -1551,13 +1511,6 @@ class MPatientController extends Controller {
 
           isPatientAvailable[patient_id] = isPatientAvailableForDoctor;
 
-          console.log("===========================");
-          console.log({
-            doctor_id: authDoctor.get("id"),
-            patient_id,
-            // isPatientAvailableForDoctor,
-          });
-          console.log("===========================");
           patientDetails = { ...patientDetails, ...patients };
         }
 
@@ -1930,8 +1883,6 @@ class MPatientController extends Controller {
         return raiseClientError(res, 422, {}, "Invalid Care plan.");
       }
 
-      console.log("genpre called");
-
       const carePlan = await carePlanService.getCarePlanById(carePlanId);
       const carePlanData = await CarePlanWrapper(carePlan);
 
@@ -1978,9 +1929,6 @@ class MPatientController extends Controller {
         conditions[condition_id] = condition.getBasicInfo();
       }
 
-      // if (permissions.includes(PERMISSIONS.MEDICATIONS.ADD)) {
-      console.log("medication_ids", medication_ids);
-
       for (const medicationId of medication_ids) {
         const medication = await medicationReminderService.getMedication({
           id: medicationId,
@@ -1993,10 +1941,7 @@ class MPatientController extends Controller {
             id: medicineId,
           });
 
-          console.log("genpre-2-called", medicineData);
-
           for (const medicine of medicineData) {
-            console.log("genpre-3-called");
             const medicineWrapper = await MedicineApiWrapper(medicine);
             medicines = {
               ...medicines,

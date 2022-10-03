@@ -18,22 +18,9 @@ let notificationModel = mongoose.model("NotificationLog", notificationSchema);
 
 const notificationLogger = {
   success: function (message, data = null) {
-    // console.log(
-    //   chalk.blue(`Notifications [ ${moment().format("DD-MM-YY HH:MM:SS")}]:`),
-    //   message,
-    //   data
-    // );
     notificationModel
       .insertMany({ data, status: "success" })
-      .then((result) => {
-        // console.log(
-        //   chalk.blue(
-        //     `Notifications [ ${moment().format("DD-MM-YY HH:MM:SS")}]:`
-        //   ),
-        //   "Notification logged to db",
-        //   result
-        // );
-      })
+      .then((result) => {})
       .catch((err) => {
         console.log(
           chalk.red(

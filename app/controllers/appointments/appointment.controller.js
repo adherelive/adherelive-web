@@ -197,7 +197,6 @@ class AppointmentController extends Controller {
       const appointmentApiData = await new AppointmentWrapper(appointment);
 
       // const scheduleEvent = await scheduleService.addNewJob(eventScheduleData);
-      // console.log("[ APPOINTMENTS ] scheduleEvent ", scheduleEvent);
 
       const eventScheduleData = {
         type: EVENT_TYPE.APPOINTMENT,
@@ -245,7 +244,6 @@ class AppointmentController extends Controller {
         "appointment created successfully"
       );
     } catch (error) {
-      console.log("[ APPOINTMENTS ] create error ---> ", error);
       return this.raiseServerError(res);
     }
   };
@@ -443,7 +441,6 @@ class AppointmentController extends Controller {
         "appointment created successfully"
       );
     } catch (error) {
-      console.log("[ APPOINTMENTS ] create error ---> ", error);
       return this.raiseServerError(res);
     }
   };

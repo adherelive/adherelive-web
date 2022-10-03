@@ -64,10 +64,6 @@ const validateStartTime = (startTime) => {
 };
 
 const validateTimeInterval = (startTime, endTime) => {
-  console.log(
-    "397913717239 moment(startTime) < moment(endTime) --> ",
-    moment(startTime) < moment(endTime)
-  );
   return moment(startTime) < moment(endTime);
 };
 

@@ -69,10 +69,9 @@ class MPatientWrapper extends BasePatient {
 
     const order = [["created_at", "DESC"]];
     const data = { patient_id: getPatientId() };
-    console.log(data);
+
     let carePlan = await carePlanService.getSingleCarePlanByData(data, order);
-    console.log("we are at mobile wrapper.");
-    console.log(carePlan);
+
     let carePlanId = null;
     if (carePlan != null) carePlanId = carePlan.get("id") || null;
 
