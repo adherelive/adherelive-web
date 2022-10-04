@@ -278,6 +278,87 @@ class DoctorWrapper extends BaseDoctor {
     };
   };
 }
+// Gaurav New Changes
+getAllInfoNew = async () => {
+  const { _data } = this;
+  const {
+    id,
+    user_id,
+    gender,
+    first_name,
+    middle_name,
+    last_name,
+    full_name,
+    qualifications,
+    activated_on,
+    profile_pic,
+    city,
+    speciality_id,
+    razorpay_account_id,
+    signature_pic,
+  } = _data || {};
+
+  const consentService = new ConsentService();
+
+  const doctorUserId = this.getUserId();
+  const UserRole = await userRoleService.getFirstUserRole(doctorUserId);
+  let userRoleId = null;
+  if (UserRole) {
+    const userRoleWrapper = await UserRoleWrapper(UserRole);
+    userRoleId = await userRoleWrapper.getId();
+  }
+
+  // get all user roles
+  const { rows: userRoles } =
+    (await userRoleService.findAndCountAll({
+      where: {
+        user_identity: this.getUserId(),
+      },
+      attributes: ["id"],
+    })) || [];
+
+  const userRoleIds = userRoles.map((userRole) => userRole.id);
+
+  let carePlanIds = {};
+  let watchlistPatientIds = {};
+
+  for (let index = 0; index < userRoleIds.length; index++) {
+    let patientIds = [];
+
+    const consents = await consentService.getAllByData({
+      user_role_id: userRoleIds[index],
+    });
+
+    if (consents.length > 0) {
+      for (const consentData of consents) {
+        const consent = await ConsentWrapper({ data: consentData });
+        patientIds.push(consent.getPatientId());
+      }
+    }
+  }
+
+  return {
+    basic_info: {
+      id,
+      user_id,
+      gender,
+      first_name,
+      middle_name,
+      last_name,
+      full_name,
+      speciality_id,
+      profile_pic: completePath(profile_pic),
+      signature_pic: completePath(signature_pic),
+    },
+    city,
+    qualifications,
+    activated_on,
+    care_plan_ids: carePlanIds,
+
+    razorpay_account_id,
+    watchlist_ids: watchlistPatientIds,
+  };
+};
 
 export default async (data = null, id = null) => {
   if (data) {
