@@ -532,8 +532,42 @@ class UserController extends Controller {
     }
   }
 
+  getTime() {
+    let date_ob = new Date();
+    let date = ("0" + date_ob.getDate()).slice(-2);
+
+    // current month
+    let month = ("0" + (date_ob.getMonth() + 1)).slice(-2);
+
+    // current year
+    let year = date_ob.getFullYear();
+
+    // current hours
+    let hours = date_ob.getHours();
+
+    // current minutes
+    let minutes = date_ob.getMinutes();
+
+    // current seconds
+    let seconds = date_ob.getSeconds();
+    return (
+      year +
+      "-" +
+      month +
+      "-" +
+      date +
+      " " +
+      hours +
+      ":" +
+      minutes +
+      ":" +
+      seconds
+    );
+  }
+
   onAppStart = async (req, res) => {
     try {
+      console.log("1");
       if (req.userDetails.exists) {
         const {
           userId,
@@ -548,7 +582,7 @@ class UserController extends Controller {
         // Logger.debug("user data in request", userData);
 
         // const userDetails = user[0];
-
+        console.log("2");
         const authUserDetails = await UserWrapper(userData);
 
         let userCategoryData = {};
@@ -556,44 +590,52 @@ class UserController extends Controller {
         let userApiData = {};
         let userCaregoryApiData = {};
         let providerApiData = {};
-
+        console.log("3");
         let userCategoryApiWrapper = null;
         let userCategoryId = null;
         // let patientIds = [];
         let userIds = [userId];
         // let careplanData = [];
-
+        console.log("4");
         let treatmentIds = [];
         let doctorProviderId = null;
-
+        console.log("5");
         switch (category) {
           case USER_CATEGORY.PATIENT:
             userCategoryData = await patientService.getPatientByUserId(userId);
             break;
           case USER_CATEGORY.DOCTOR:
+            console.log("6");
             userCategoryData = await doctorService.getDoctorByUserId(userId);
+            console.log("7");
             if (userCategoryData) {
+              console.log("8");
               userCategoryApiWrapper = await DoctorWrapper(userCategoryData);
-
+              console.log("9");
               let watchlist_patient_ids = [];
-              const watchlistRecords =
-                await doctorPatientWatchlistService.getAllByData({
-                  user_role_id: userRoleId,
-                });
-              if (watchlistRecords && watchlistRecords.length) {
-                for (let i = 0; i < watchlistRecords.length; i++) {
-                  const watchlistWrapper = await DoctorPatientWatchlistWrapper(
-                    watchlistRecords[i]
-                  );
-                  const patientId = await watchlistWrapper.getPatientId();
-                  watchlist_patient_ids.push(patientId);
-                }
-              }
+              console.log("10");
+
+              // gaurav new changes
+              // const watchlistRecords =
+              //   await doctorPatientWatchlistService.getAllByData({
+              //     user_role_id: userRoleId,
+              //   });
+              //   console.log("11")
+              // if (watchlistRecords && watchlistRecords.length) {
+              //   for (let i = 0; i < watchlistRecords.length; i++) {
+              //     const watchlistWrapper = await DoctorPatientWatchlistWrapper(
+              //       watchlistRecords[i]
+              //     );
+              //     const patientId = await watchlistWrapper.getPatientId();
+              //     watchlist_patient_ids.push(patientId);
+              //   }
+              // }
 
               let allInfo = {};
               allInfo = await userCategoryApiWrapper.getAllInfo();
-              delete allInfo.watchlist_patient_ids;
-              allInfo["watchlist_patient_ids"] = watchlist_patient_ids;
+              // gaurav new changes
+              // delete allInfo.watchlist_patient_ids;
+              // allInfo["watchlist_patient_ids"] = watchlist_patient_ids;
 
               userCategoryId = userCategoryApiWrapper.getDoctorId();
               userCaregoryApiData[userCategoryApiWrapper.getDoctorId()] =
