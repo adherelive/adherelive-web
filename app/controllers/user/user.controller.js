@@ -632,19 +632,22 @@ class UserController extends Controller {
               // }
 
               let allInfo = {};
+              console.log("11");
               allInfo = await userCategoryApiWrapper.getAllInfo();
               // gaurav new changes
               // delete allInfo.watchlist_patient_ids;
               // allInfo["watchlist_patient_ids"] = watchlist_patient_ids;
-
+              console.log("12");
               userCategoryId = userCategoryApiWrapper.getDoctorId();
               userCaregoryApiData[userCategoryApiWrapper.getDoctorId()] =
                 allInfo;
-
+              console.log("13");
               const record = await userRolesService.getSingleUserRoleByData({
                 id: userRoleId,
               });
+
               const { linked_with = "", linked_id = null } = record || {};
+              console.log("14");
               if (linked_with === USER_CATEGORY.PROVIDER) {
                 const providerId = linked_id;
                 doctorProviderId = providerId;
@@ -656,40 +659,45 @@ class UserController extends Controller {
                   await providerWrapper.getAllInfo();
               }
             }
+            console.log("15");
             break;
           case USER_CATEGORY.HSP:
+            console.log("16");
             userCategoryData = await doctorService.getDoctorByUserId(userId);
             if (userCategoryData) {
               userCategoryApiWrapper = await DoctorWrapper(userCategoryData);
-
-              let watchlist_patient_ids = [];
-              const watchlistRecords =
-                await doctorPatientWatchlistService.getAllByData({
-                  user_role_id: userRoleId,
-                });
-              if (watchlistRecords && watchlistRecords.length) {
-                for (let i = 0; i < watchlistRecords.length; i++) {
-                  const watchlistWrapper = await DoctorPatientWatchlistWrapper(
-                    watchlistRecords[i]
-                  );
-                  const patientId = await watchlistWrapper.getPatientId();
-                  watchlist_patient_ids.push(patientId);
-                }
-              }
+              // Gaurav new Changes
+              // let watchlist_patient_ids = [];
+              // const watchlistRecords =
+              //   await doctorPatientWatchlistService.getAllByData({
+              //     user_role_id: userRoleId,
+              //   });
+              // if (watchlistRecords && watchlistRecords.length) {
+              //   for (let i = 0; i < watchlistRecords.length; i++) {
+              //     const watchlistWrapper = await DoctorPatientWatchlistWrapper(
+              //       watchlistRecords[i]
+              //     );
+              //     const patientId = await watchlistWrapper.getPatientId();
+              //     watchlist_patient_ids.push(patientId);
+              //   }
+              // }
 
               let allInfo = {};
               allInfo = await userCategoryApiWrapper.getAllInfo();
-              delete allInfo.watchlist_patient_ids;
-              allInfo["watchlist_patient_ids"] = watchlist_patient_ids;
+              console.log("17");
+              // Gaurav new Changes
+              // delete allInfo.watchlist_patient_ids;
+              // allInfo["watchlist_patient_ids"] = watchlist_patient_ids;
 
               userCategoryId = userCategoryApiWrapper.getDoctorId();
               userCaregoryApiData[userCategoryApiWrapper.getDoctorId()] =
                 allInfo;
-
-              const record = await userRolesService.getSingleUserRoleByData({
-                id: userRoleId,
-              });
-              const { linked_with = "", linked_id = null } = record || {};
+              console.log("18");
+                const record = await userRolesService.getSingleUserRoleByData({
+                  id: userRoleId,
+                });
+                const { linked_with = "", linked_id = null } = record || {};
+                console.log("19");
               if (linked_with === USER_CATEGORY.PROVIDER) {
                 const providerId = linked_id;
                 doctorProviderId = providerId;
@@ -700,6 +708,7 @@ class UserController extends Controller {
                 providerApiData[providerId] =
                   await providerWrapper.getAllInfo();
               }
+              console.log("20");
             }
             break;
           case USER_CATEGORY.PROVIDER:
