@@ -743,9 +743,7 @@ class UserController extends Controller {
           treatments: {
             ...treatmentApiDetails,
           },
-          conditions: {
-            ...conditionApiDetails,
-          },
+
           permissions,
           auth_user: userId,
           auth_category: category,
