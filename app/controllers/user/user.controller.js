@@ -663,8 +663,11 @@ class UserController extends Controller {
             break;
           case USER_CATEGORY.HSP:
             console.log("16");
+            console.log("userid is ", userId);
             userCategoryData = await doctorService.getDoctorByUserId(userId);
+            console.log("16-1");
             if (userCategoryData) {
+              console.log("16-2");
               userCategoryApiWrapper = await DoctorWrapper(userCategoryData);
               // Gaurav new Changes
               // let watchlist_patient_ids = [];
@@ -683,6 +686,7 @@ class UserController extends Controller {
               // }
 
               let allInfo = {};
+              console.log("16-3");
               allInfo = await userCategoryApiWrapper.getAllInfo();
               console.log("17");
               // Gaurav new Changes
@@ -693,11 +697,11 @@ class UserController extends Controller {
               userCaregoryApiData[userCategoryApiWrapper.getDoctorId()] =
                 allInfo;
               console.log("18");
-                const record = await userRolesService.getSingleUserRoleByData({
-                  id: userRoleId,
-                });
-                const { linked_with = "", linked_id = null } = record || {};
-                console.log("19");
+              const record = await userRolesService.getSingleUserRoleByData({
+                id: userRoleId,
+              });
+              const { linked_with = "", linked_id = null } = record || {};
+              console.log("19");
               if (linked_with === USER_CATEGORY.PROVIDER) {
                 const providerId = linked_id;
                 doctorProviderId = providerId;
