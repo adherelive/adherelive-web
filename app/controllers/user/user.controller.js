@@ -564,6 +564,247 @@ class UserController extends Controller {
         // let careplanData = [];
 
         let treatmentIds = [];
+        let doctorProviderId = null;
+
+        switch (category) {
+          case USER_CATEGORY.PATIENT:
+            userCategoryData = await patientService.getPatientByUserId(userId);
+            break;
+          case USER_CATEGORY.DOCTOR:
+            userCategoryData = await doctorService.getDoctorByUserId(userId);
+            if (userCategoryData) {
+              userCategoryApiWrapper = await DoctorWrapper(userCategoryData);
+
+              let watchlist_patient_ids = [];
+              const watchlistRecords =
+                await doctorPatientWatchlistService.getAllByData({
+                  user_role_id: userRoleId,
+                });
+              if (watchlistRecords && watchlistRecords.length) {
+                for (let i = 0; i < watchlistRecords.length; i++) {
+                  const watchlistWrapper = await DoctorPatientWatchlistWrapper(
+                    watchlistRecords[i]
+                  );
+                  const patientId = await watchlistWrapper.getPatientId();
+                  watchlist_patient_ids.push(patientId);
+                }
+              }
+
+              let allInfo = {};
+              allInfo = await userCategoryApiWrapper.getAllInfo();
+              delete allInfo.watchlist_patient_ids;
+              allInfo["watchlist_patient_ids"] = watchlist_patient_ids;
+
+              userCategoryId = userCategoryApiWrapper.getDoctorId();
+              userCaregoryApiData[userCategoryApiWrapper.getDoctorId()] =
+                allInfo;
+
+              const record = await userRolesService.getSingleUserRoleByData({
+                id: userRoleId,
+              });
+              const { linked_with = "", linked_id = null } = record || {};
+              if (linked_with === USER_CATEGORY.PROVIDER) {
+                const providerId = linked_id;
+                doctorProviderId = providerId;
+                const providerWrapper = await ProvidersWrapper(
+                  null,
+                  providerId
+                );
+                providerApiData[providerId] =
+                  await providerWrapper.getAllInfo();
+              }
+            }
+            break;
+          case USER_CATEGORY.HSP:
+            userCategoryData = await doctorService.getDoctorByUserId(userId);
+            if (userCategoryData) {
+              userCategoryApiWrapper = await DoctorWrapper(userCategoryData);
+
+              let watchlist_patient_ids = [];
+              const watchlistRecords =
+                await doctorPatientWatchlistService.getAllByData({
+                  user_role_id: userRoleId,
+                });
+              if (watchlistRecords && watchlistRecords.length) {
+                for (let i = 0; i < watchlistRecords.length; i++) {
+                  const watchlistWrapper = await DoctorPatientWatchlistWrapper(
+                    watchlistRecords[i]
+                  );
+                  const patientId = await watchlistWrapper.getPatientId();
+                  watchlist_patient_ids.push(patientId);
+                }
+              }
+
+              let allInfo = {};
+              allInfo = await userCategoryApiWrapper.getAllInfo();
+              delete allInfo.watchlist_patient_ids;
+              allInfo["watchlist_patient_ids"] = watchlist_patient_ids;
+
+              userCategoryId = userCategoryApiWrapper.getDoctorId();
+              userCaregoryApiData[userCategoryApiWrapper.getDoctorId()] =
+                allInfo;
+
+              const record = await userRolesService.getSingleUserRoleByData({
+                id: userRoleId,
+              });
+              const { linked_with = "", linked_id = null } = record || {};
+              if (linked_with === USER_CATEGORY.PROVIDER) {
+                const providerId = linked_id;
+                doctorProviderId = providerId;
+                const providerWrapper = await ProvidersWrapper(
+                  null,
+                  providerId
+                );
+                providerApiData[providerId] =
+                  await providerWrapper.getAllInfo();
+              }
+            }
+            break;
+          case USER_CATEGORY.PROVIDER:
+            userCategoryData = await providerService.getProviderByData({
+              user_id: userId,
+            });
+            if (userCategoryData) {
+              userCategoryApiWrapper = await ProvidersWrapper(userCategoryData);
+              userCaregoryApiData[userCategoryApiWrapper.getProviderId()] =
+                await userCategoryApiWrapper.getAllInfo();
+            }
+            break;
+          default:
+            userCategoryData = await doctorService.getDoctorByData({
+              user_id: userId,
+            });
+        }
+
+        let apiUserDetails = {};
+
+        if (userIds.length > 1) {
+          const allUserData = await userService.getUserByData({ id: userIds });
+          await allUserData.forEach(async (user) => {
+            apiUserDetails = await UserWrapper(user.get());
+            userApiData[apiUserDetails.getId()] = apiUserDetails.getBasicInfo();
+          });
+        } else {
+          apiUserDetails = await UserWrapper(userData);
+          userApiData[apiUserDetails.getUserId()] =
+            apiUserDetails.getBasicInfo();
+        }
+
+        // treatments
+        let treatmentApiDetails = {};
+        const treatmentDetails = await treatmentService.getAll();
+        treatmentIds = [];
+        for (const treatment of treatmentDetails) {
+          const treatmentWrapper = await TreatmentWrapper(treatment);
+          treatmentIds.push(treatmentWrapper.getTreatmentId());
+          treatmentApiDetails[treatmentWrapper.getTreatmentId()] =
+            treatmentWrapper.getBasicInfo();
+        }
+
+        let permissions = [];
+
+        if (authUserDetails.isActivated()) {
+          permissions = await authUserDetails.getPermissions();
+        }
+        // Logger.debug("permissions --> ", permissions);
+
+        // speciality temp todo
+        let referenceData = {};
+        if (
+          (category === USER_CATEGORY.DOCTOR ||
+            category === USER_CATEGORY.HSP) &&
+          userCategoryApiWrapper
+        ) {
+          referenceData = await userCategoryApiWrapper.getReferenceInfo();
+        }
+
+        const appNotification = new AppNotification();
+
+        const notificationToken = appNotification.getUserToken(`${userRoleId}`);
+
+        // firebase keys
+        const firebase_keys = {
+          apiKey: process.config.firebase.api_key,
+          appId: process.config.firebase.app_id,
+          measurementId: process.config.firebase.measurement_id,
+          projectId: process.config.firebase.project_id,
+        };
+        let response = {
+          ...referenceData,
+          users: {
+            ...userApiData,
+          },
+          [`${category}s`]: {
+            ...userCaregoryApiData,
+          },
+          notificationToken: notificationToken,
+          feedId: `${userRoleId}`,
+          firebase_keys,
+          treatments: {
+            ...treatmentApiDetails,
+          },
+          conditions: {
+            ...conditionApiDetails,
+          },
+          permissions,
+          auth_user: userId,
+          auth_category: category,
+          auth_role: userRoleId,
+          [category === USER_CATEGORY.DOCTOR || category === USER_CATEGORY.HSP
+            ? "doctor_provider_id"
+            : ""]:
+            category === USER_CATEGORY.DOCTOR || category === USER_CATEGORY.HSP
+              ? doctorProviderId
+              : "",
+        };
+
+        if (category !== USER_CATEGORY.PROVIDER) {
+          response = { ...response, ...{ providers: { ...providerApiData } } };
+        }
+
+        return this.raiseSuccess(res, 200, response, "basic info");
+      } else {
+        console.log("userExists ");
+        // throw new Error(constants.COOKIES_NOT_SET);
+      }
+    } catch (err) {
+      Logger.debug("onAppStart 500 error", err);
+      return this.raiseServerError(res);
+    }
+  };
+
+  onAppStartBackup = async (req, res) => {
+    try {
+      if (req.userDetails.exists) {
+        const {
+          userId,
+          userRoleId,
+          userData,
+          userData: { category } = {},
+          userCategoryData: uC = {},
+        } = req.userDetails;
+
+        // const user = await userService.getUserById(userId);
+
+        // Logger.debug("user data in request", userData);
+
+        // const userDetails = user[0];
+
+        const authUserDetails = await UserWrapper(userData);
+
+        let userCategoryData = {};
+        // let carePlanApiData = {};
+        let userApiData = {};
+        let userCaregoryApiData = {};
+        let providerApiData = {};
+
+        let userCategoryApiWrapper = null;
+        let userCategoryId = null;
+        // let patientIds = [];
+        let userIds = [userId];
+        // let careplanData = [];
+
+        let treatmentIds = [];
         let conditionIds = [];
         let doctorProviderId = null;
 
@@ -804,378 +1045,6 @@ class UserController extends Controller {
         return this.raiseSuccess(res, 200, response, "basic info");
       } else {
         console.log("userExists ");
-        // throw new Error(constants.COOKIES_NOT_SET);
-      }
-    } catch (err) {
-      Logger.debug("onAppStart 500 error", err);
-      return this.raiseServerError(res);
-    }
-  };
-
-  onAppStartBackUp = async (req, res) => {
-    try {
-      if (req.userDetails.exists) {
-        const {
-          userId,
-          userRoleId,
-          userData,
-          userData: { category } = {},
-          userCategoryData: uC = {},
-        } = req.userDetails;
-
-        // const user = await userService.getUserById(userId);
-
-        // Logger.debug("user data in request", userData);
-
-        // const userDetails = user[0];
-
-        const authUserDetails = await UserWrapper(userData);
-
-        let userCategoryData = {};
-        let carePlanApiData = {};
-        let userApiData = {};
-        let userCaregoryApiData = {};
-        let providerApiData = {};
-
-        let userCategoryApiWrapper = null;
-        let userCategoryId = null;
-        let patientIds = [];
-        let userIds = [userId];
-        let careplanData = [];
-
-        let treatmentIds = [];
-        let conditionIds = [];
-        let doctorProviderId = null;
-
-        switch (category) {
-          case USER_CATEGORY.PATIENT:
-            userCategoryData = await patientService.getPatientByUserId(userId);
-            break;
-          case USER_CATEGORY.DOCTOR:
-            userCategoryData = await doctorService.getDoctorByUserId(userId);
-            if (userCategoryData) {
-              userCategoryApiWrapper = await DoctorWrapper(userCategoryData);
-
-              let watchlist_patient_ids = [];
-              const watchlistRecords =
-                await doctorPatientWatchlistService.getAllByData({
-                  user_role_id: userRoleId,
-                });
-              if (watchlistRecords && watchlistRecords.length) {
-                for (let i = 0; i < watchlistRecords.length; i++) {
-                  const watchlistWrapper = await DoctorPatientWatchlistWrapper(
-                    watchlistRecords[i]
-                  );
-                  const patientId = await watchlistWrapper.getPatientId();
-                  watchlist_patient_ids.push(patientId);
-                }
-              }
-
-              let allInfo = {};
-              allInfo = await userCategoryApiWrapper.getAllInfo();
-              delete allInfo.watchlist_patient_ids;
-              allInfo["watchlist_patient_ids"] = watchlist_patient_ids;
-
-              userCategoryId = userCategoryApiWrapper.getDoctorId();
-              userCaregoryApiData[userCategoryApiWrapper.getDoctorId()] =
-                allInfo;
-
-              const record = await userRolesService.getSingleUserRoleByData({
-                id: userRoleId,
-              });
-              const { linked_with = "", linked_id = null } = record || {};
-              if (linked_with === USER_CATEGORY.PROVIDER) {
-                const providerId = linked_id;
-                doctorProviderId = providerId;
-                const providerWrapper = await ProvidersWrapper(
-                  null,
-                  providerId
-                );
-                providerApiData[providerId] =
-                  await providerWrapper.getAllInfo();
-              }
-
-              careplanData = await carePlanService.getCarePlanByData({
-                user_role_id: userRoleId,
-              });
-
-              for (const carePlan of careplanData) {
-                const carePlanApiWrapper = await CarePlanWrapper(carePlan);
-                patientIds.push(carePlanApiWrapper.getPatientId());
-                const carePlanId = carePlanApiWrapper.getCarePlanId();
-
-                const {
-                  appointment_ids = [],
-                  medication_ids = [],
-                  vital_ids = [],
-                  diet_ids = [],
-                } = await carePlanApiWrapper.getAllInfo();
-
-                let carePlanSeverityDetails = await getCarePlanSeverityDetails(
-                  carePlanId
-                );
-
-                const { treatment_id, severity_id, condition_id } =
-                  carePlanApiWrapper.getCarePlanDetails();
-                treatmentIds.push(treatment_id);
-                conditionIds.push(condition_id);
-                carePlanApiData[carePlanApiWrapper.getCarePlanId()] =
-                  // carePlanApiWrapper.getBasicInfo();
-                  {
-                    ...carePlanApiWrapper.getBasicInfo(),
-                    ...carePlanSeverityDetails,
-                    medication_ids,
-                    appointment_ids,
-                    vital_ids,
-                    diet_ids,
-                  };
-              }
-            }
-            break;
-          case USER_CATEGORY.HSP:
-            userCategoryData = await doctorService.getDoctorByUserId(userId);
-            if (userCategoryData) {
-              userCategoryApiWrapper = await DoctorWrapper(userCategoryData);
-
-              let watchlist_patient_ids = [];
-              const watchlistRecords =
-                await doctorPatientWatchlistService.getAllByData({
-                  user_role_id: userRoleId,
-                });
-              if (watchlistRecords && watchlistRecords.length) {
-                for (let i = 0; i < watchlistRecords.length; i++) {
-                  const watchlistWrapper = await DoctorPatientWatchlistWrapper(
-                    watchlistRecords[i]
-                  );
-                  const patientId = await watchlistWrapper.getPatientId();
-                  watchlist_patient_ids.push(patientId);
-                }
-              }
-
-              let allInfo = {};
-              allInfo = await userCategoryApiWrapper.getAllInfo();
-              delete allInfo.watchlist_patient_ids;
-              allInfo["watchlist_patient_ids"] = watchlist_patient_ids;
-
-              userCategoryId = userCategoryApiWrapper.getDoctorId();
-              userCaregoryApiData[userCategoryApiWrapper.getDoctorId()] =
-                allInfo;
-
-              const record = await userRolesService.getSingleUserRoleByData({
-                id: userRoleId,
-              });
-              const { linked_with = "", linked_id = null } = record || {};
-              if (linked_with === USER_CATEGORY.PROVIDER) {
-                const providerId = linked_id;
-                doctorProviderId = providerId;
-                const providerWrapper = await ProvidersWrapper(
-                  null,
-                  providerId
-                );
-                providerApiData[providerId] =
-                  await providerWrapper.getAllInfo();
-              }
-
-              careplanData = await carePlanService.getCarePlanByData({
-                user_role_id: userRoleId,
-              });
-
-              for (const carePlan of careplanData) {
-                const carePlanApiWrapper = await CarePlanWrapper(carePlan);
-                patientIds.push(carePlanApiWrapper.getPatientId());
-                const carePlanId = carePlanApiWrapper.getCarePlanId();
-
-                const {
-                  appointment_ids = [],
-                  vital_ids = [],
-                  diet_ids = [],
-                } = await carePlanApiWrapper.getAllInfo();
-
-                let carePlanSeverityDetails = await getCarePlanSeverityDetails(
-                  carePlanId
-                );
-
-                const { treatment_id, severity_id, condition_id } =
-                  carePlanApiWrapper.getCarePlanDetails();
-                treatmentIds.push(treatment_id);
-                conditionIds.push(condition_id);
-                carePlanApiData[carePlanApiWrapper.getCarePlanId()] =
-                  // carePlanApiWrapper.getBasicInfo();
-                  {
-                    ...carePlanApiWrapper.getBasicInfo(),
-                    ...carePlanSeverityDetails,
-                    appointment_ids,
-                    vital_ids,
-                    diet_ids,
-                  };
-              }
-            }
-            break;
-          case USER_CATEGORY.PROVIDER:
-            userCategoryData = await providerService.getProviderByData({
-              user_id: userId,
-            });
-            if (userCategoryData) {
-              userCategoryApiWrapper = await ProvidersWrapper(userCategoryData);
-              userCaregoryApiData[userCategoryApiWrapper.getProviderId()] =
-                await userCategoryApiWrapper.getAllInfo();
-            }
-            break;
-          default:
-            userCategoryData = await doctorService.getDoctorByData({
-              user_id: userId,
-            });
-        }
-
-        // await careplanData.forEach(async carePlan => {
-        //   const carePlanApiWrapper = await CarePlanWrapper(carePlan);
-        //   carePlanApiData[carePlanApiWrapper.getCarePlanId()] = carePlanApiWrapper.getBasicInfo();
-        // });
-
-        // todo: as of now, get all patients
-        const patientsData = await patientService.getPatientByData({
-          id: patientIds,
-        });
-
-        let patientApiDetails = {};
-
-        if (patientsData) {
-          for (const patient of patientsData) {
-            const patientWrapper = await PatientWrapper(patient);
-            patientApiDetails[patientWrapper.getPatientId()] =
-              await patientWrapper.getAllInfo();
-            userIds.push(patientWrapper.getUserId());
-          }
-        }
-        // Logger.debug("userIds --> ", userIds);
-
-        let apiUserDetails = {};
-
-        if (userIds.length > 1) {
-          const allUserData = await userService.getUserByData({ id: userIds });
-          await allUserData.forEach(async (user) => {
-            apiUserDetails = await UserWrapper(user.get());
-            userApiData[apiUserDetails.getId()] = apiUserDetails.getBasicInfo();
-          });
-        } else {
-          apiUserDetails = await UserWrapper(userData);
-          userApiData[apiUserDetails.getUserId()] =
-            apiUserDetails.getBasicInfo();
-        }
-
-        // treatments
-        let treatmentApiDetails = {};
-        const treatmentDetails = await treatmentService.getAll();
-        treatmentIds = [];
-        for (const treatment of treatmentDetails) {
-          const treatmentWrapper = await TreatmentWrapper(treatment);
-          treatmentIds.push(treatmentWrapper.getTreatmentId());
-          treatmentApiDetails[treatmentWrapper.getTreatmentId()] =
-            treatmentWrapper.getBasicInfo();
-        }
-
-        // severity
-        let severityApiDetails = {};
-        let severityIds = [];
-        const severityDetails = await severityService.getAll();
-
-        for (const severity of severityDetails) {
-          const severityWrapper = await SeverityWrapper(severity);
-          severityIds.push(severityWrapper.getSeverityId());
-          severityApiDetails[severityWrapper.getSeverityId()] =
-            severityWrapper.getBasicInfo();
-        }
-
-        // conditions
-        let conditionApiDetails = {};
-        const conditionDetails = await conditionService.getAllByData({
-          id: conditionIds,
-        });
-        conditionIds = [];
-        for (const condition of conditionDetails) {
-          const conditionWrapper = await ConditionWrapper(condition);
-          conditionIds.push(conditionWrapper.getConditionId());
-          conditionApiDetails[conditionWrapper.getConditionId()] =
-            conditionWrapper.getBasicInfo();
-        }
-
-        let permissions = [];
-
-        if (authUserDetails.isActivated()) {
-          permissions = await authUserDetails.getPermissions();
-        }
-        // Logger.debug("permissions --> ", permissions);
-
-        // speciality temp todo
-        let referenceData = {};
-        if (
-          (category === USER_CATEGORY.DOCTOR ||
-            category === USER_CATEGORY.HSP) &&
-          userCategoryApiWrapper
-        ) {
-          referenceData = await userCategoryApiWrapper.getReferenceInfo();
-        }
-
-        const appNotification = new AppNotification();
-
-        const notificationToken = appNotification.getUserToken(`${userRoleId}`);
-
-        // firebase keys
-        const firebase_keys = {
-          apiKey: process.config.firebase.api_key,
-          appId: process.config.firebase.app_id,
-          measurementId: process.config.firebase.measurement_id,
-          projectId: process.config.firebase.project_id,
-        };
-
-        let response = {
-          ...referenceData,
-          users: {
-            ...userApiData,
-          },
-          [`${category}s`]: {
-            ...userCaregoryApiData,
-          },
-          patients: {
-            ...patientApiDetails,
-          },
-          care_plans: {
-            ...carePlanApiData,
-          },
-          notificationToken: notificationToken,
-          feedId: `${userRoleId}`,
-          firebase_keys,
-          severity: {
-            ...severityApiDetails,
-          },
-          treatments: {
-            ...treatmentApiDetails,
-          },
-          conditions: {
-            ...conditionApiDetails,
-          },
-          permissions,
-          severity_ids: severityIds,
-          treatment_ids: treatmentIds,
-          condition_ids: conditionIds,
-          auth_user: userId,
-          auth_category: category,
-          auth_role: userRoleId,
-          [category === USER_CATEGORY.DOCTOR || category === USER_CATEGORY.HSP
-            ? "doctor_provider_id"
-            : ""]:
-            category === USER_CATEGORY.DOCTOR || category === USER_CATEGORY.HSP
-              ? doctorProviderId
-              : "",
-        };
-
-        if (category !== USER_CATEGORY.PROVIDER) {
-          response = { ...response, ...{ providers: { ...providerApiData } } };
-        }
-
-        return this.raiseSuccess(res, 200, response, "basic info");
-      } else {
-        console.log("userExists --->>> ");
         // throw new Error(constants.COOKIES_NOT_SET);
       }
     } catch (err) {
