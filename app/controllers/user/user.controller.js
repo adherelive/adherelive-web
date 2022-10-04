@@ -687,7 +687,7 @@ class UserController extends Controller {
 
               let allInfo = {};
               console.log("16-3");
-              allInfo = await userCategoryApiWrapper.getAllInfo();
+              allInfo = await userCategoryApiWrapper.getAllInfoNew();
               console.log("17");
               // Gaurav new Changes
               // delete allInfo.watchlist_patient_ids;
