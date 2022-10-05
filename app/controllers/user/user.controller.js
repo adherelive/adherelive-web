@@ -837,12 +837,6 @@ class UserController extends Controller {
           userCategoryData: uC = {},
         } = req.userDetails;
 
-        // const user = await userService.getUserById(userId);
-
-        // Logger.debug("user data in request", userData);
-
-        // const userDetails = user[0];
-
         const authUserDetails = await UserWrapper(userData);
 
         let userCategoryData = {};
