@@ -46,7 +46,6 @@ class UserRoleWrapper extends BaseUserRole {
       user_roles: {
         [id]: getBasicInfo(),
       },
-      admins,
     };
   };
 
