@@ -39,7 +39,8 @@ class UserRoleController extends Controller {
       let providers = {};
       let admins = {};
       let user_roles = {};
-
+      console.log(1);
+      console.log({ userRolelength: userRoles.length });
       for (let i = 0; i < userRoles.length; i++) {
         const userRole = userRoles[i];
         const userRoleWrapper = await UserRoleWrapper(userRole);
@@ -57,6 +58,7 @@ class UserRoleController extends Controller {
 
         if (userRoleDoctors && Object.keys(userRoleDoctors).length) {
           for (let i in userRoleDoctors) {
+            console.log("running second loop");
             const each = userRoleDoctors[i] || {};
             const { watchlist_ids = [] } = each;
           }
@@ -68,22 +70,24 @@ class UserRoleController extends Controller {
         patients = { ...patients, ...userRolePatients };
         user_roles = { ...user_roles, ...userRoleData };
       }
-
+      console.log(3);
       const user = await userService.getUserById(userId);
       const userDataWrapper = await UserWrapper(user);
       const userData = userDataWrapper.getBasicInfo();
-
+      console.log(4);
       return raiseSuccess(
         res,
         200,
         {
-          users: { [userId]: userData },
+          // users: { [userId]: userData },
+          // users: {},
           user_roles,
           user_role_ids,
-          doctors,
-          providers,
-          patients,
-          admins,
+          // doctors,
+          // providers,
+          // providers: {},
+          // patients,
+          // admins,
         },
         "User role data fetched successfully"
       );

@@ -2208,9 +2208,7 @@ class PatientController extends Controller {
             patient["care_plan_id"] = care_plan_id;
             const { id = null } = { ...patient };
 
-            if (allPatientIds.includes(id)) {
-              continue;
-            }
+            if (allPatientIds.includes(id)) continue;
 
             allPatientIds.push(id);
             const patientData = await PatientWrapper(null, id);
