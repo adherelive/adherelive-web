@@ -44,6 +44,62 @@ class UserRoleController extends Controller {
       for (let i = 0; i < userRoles.length; i++) {
         const userRole = userRoles[i];
         const userRoleWrapper = await UserRoleWrapper(userRole);
+        const userRoleAllInfo = await userRoleWrapper.getAllInfoNew();
+        const userRoleId = userRoleWrapper.getId();
+        user_role_ids.push(userRoleId);
+
+        const { user_roles: userRoleData = {} } = userRoleAllInfo || {};
+
+        user_roles = { ...user_roles, ...userRoleData };
+      }
+      console.log(3);
+
+      console.log(4);
+      return raiseSuccess(
+        res,
+        200,
+        {
+          // users: { [userId]: userData },
+          // users: {},
+          user_roles,
+          user_role_ids,
+          // doctors,
+          // providers,
+          // providers: {},
+          // patients,
+          // admins,
+        },
+        "User role data fetched successfully"
+      );
+    } catch (error) {
+      Log.debug("get UserRole Data 500 error", error);
+      return raiseServerError(res);
+    }
+  };
+
+  getUserRolesBackup = async (req, res) => {
+    const { raiseSuccess, raiseClientError, raiseServerError } = this;
+    try {
+      const { userDetails: { userId = null } = {} } = req;
+
+      if (!userId) {
+        return raiseClientError(res, 422, {}, "UNAUTHORIZED");
+      }
+
+      const userRoles =
+        (await userRoleService.getAllByData({ user_identity: userId })) || [];
+      // let userRoleApiData = {};
+      let user_role_ids = [];
+      let doctors = {};
+      let patients = {};
+      let providers = {};
+      let admins = {};
+      let user_roles = {};
+      console.log(1);
+      console.log({ userRolelength: userRoles.length });
+      for (let i = 0; i < userRoles.length; i++) {
+        const userRole = userRoles[i];
+        const userRoleWrapper = await UserRoleWrapper(userRole);
         const userRoleAllInfo = await userRoleWrapper.getAllInfo();
         const userRoleId = userRoleWrapper.getId();
         user_role_ids.push(userRoleId);

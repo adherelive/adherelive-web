@@ -35,6 +35,21 @@ class UserRoleWrapper extends BaseUserRole {
     };
   };
 
+  getAllInfoNew = async () => {
+    const { _data: { id } = {}, getBasicInfo, getUser } = this;
+    const { doctor, provider } = getUser() || {};
+    if (doctor && doctor.id) {
+      let provider_id = null;
+    } else if (provider && provider.id) {
+    }
+    return {
+      user_roles: {
+        [id]: getBasicInfo(),
+      },
+      admins,
+    };
+  };
+
   getAllInfo = async () => {
     const {
       _data: { id, linked_id, linked_with } = {},
