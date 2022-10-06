@@ -2,6 +2,7 @@ import express from "express";
 import Authenticated from "../middleware/auth";
 import PatientController from "../../../app/controllers/patients/patients.controller";
 import multer from "multer";
+import { getTime } from "../../../app/helper/timer";
 
 var storage = multer.memoryStorage();
 var upload = multer({ dest: "../app/public/", storage: storage });
@@ -38,12 +39,12 @@ router.get("/", Authenticated, PatientController.searchPatient);
 router.get(
   "/pagination",
   (req, res, next) => {
-    console.log("request recevide at router -start");
+    console.log("request recevide at router -start ", getTime());
     next();
   },
   Authenticated,
   (req, res, next) => {
-    console.log("request recevide at router -after middleware");
+    console.log("request recevide at router -after middleware", getTime());
     next();
   },
   PatientController.getAllPatientsPagination
