@@ -51,7 +51,7 @@ import portionRouter from "./portion";
 import exerciseRouter from "./exercises";
 import workoutRouter from "./workouts";
 import CdssRouter from "./cdss";
-import { getTime } from "./helper";
+import { getTime } from "../../app/helper/timer";
 
 router.use(async function (req, res, next) {
   console.log("api-index-1" + getTime());
