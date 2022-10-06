@@ -316,10 +316,10 @@ class PatientController extends Controller {
         } = {},
       } = req;
 
-      let newData = [];
-      if (req.userDetails.userCategoryData.care_plan_ids) {
-        newData = req.userDetails.userCategoryData.care_plan_ids[userRoleId];
-      }
+      // let newData = [];
+      // if (req.userDetails.userCategoryData.care_plan_ids) {
+      //   newData = req.userDetails.userCategoryData.care_plan_ids[userRoleId];
+      // }
       if (!patient_id) {
         return raiseClientError(
           res,
@@ -443,26 +443,26 @@ class PatientController extends Controller {
         };
       }
 
-      const patientCarePlans =
-        newData.length > 0 &&
-        newData.filter((id) => {
-          const { basic_info: { patient_id: carePlanPatientId = "0" } = {} } =
-            care_planss[id] || {};
+      // const patientCarePlans =
+      //   newData.length > 0 &&
+      //   newData.filter((id) => {
+      //     const { basic_info: { patient_id: carePlanPatientId = "0" } = {} } =
+      //       care_planss[id] || {};
 
-          if (carePlanPatientId == patient_id) {
-            return id;
-          }
-        });
+      //     if (carePlanPatientId == patient_id) {
+      //       return id;
+      //     }
+      //   });
 
-      if (patientCarePlans.length > 0) {
-        latestCarePlanId = patientCarePlans[0];
-      }
+      // if (patientCarePlans.length > 0) {
+      //   latestCarePlanId = patientCarePlans[0];
+      // }
       return raiseSuccess(
         res,
         200,
         {
           care_plans: care_planss,
-          current_careplan_id: latestCarePlanId,
+          current_careplan_id: 12426,
           care_plan_ids: carePlanIds,
           care_plan_template_ids: [...carePlanTemplateIds],
           care_plan_templates: {
