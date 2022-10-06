@@ -111,9 +111,12 @@ router.use(async function (req, res, next) {
     console.log("api-index-11" + getTime());
     if (userData) {
       console.log("api-index-12" + getTime());
+      console.log("api-index-12-1" + getTime());
       const user = await UserWrapper(userData);
+      console.log("api-index-12-2" + getTime());
       const { userCategoryData, userCategoryId } =
         (await user.getCategoryInfo()) || {};
+      console.log("api-index-12-3" + getTime());
       req.userDetails = {
         exists: true,
         userRoleId,
@@ -124,8 +127,10 @@ router.use(async function (req, res, next) {
         userCategoryId,
       };
 
+      console.log("api-index-12-4" + getTime());
       req.permissions = await user.getPermissions();
-      console.log("api-index-13");
+      console.log("api-index-12-5" + getTime());
+      console.log("api-index-13" + getTime());
       console.log("api-index-14" + getTime());
     } else {
       req.userDetails = {
