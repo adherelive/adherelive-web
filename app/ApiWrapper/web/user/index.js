@@ -68,7 +68,7 @@ class UserWrapper extends BaseUser {
       console.log("get category info - 4 ", getTime());
       console.log("get category info - 5 ", getTime());
       return {
-        userCategoryData: await doctorData.getAllInfo(),
+        userCategoryData: await doctorData.getAllInfoNew(),
         userCategoryId: doctorData.getDoctorId(),
       };
     } else if (patient) {
