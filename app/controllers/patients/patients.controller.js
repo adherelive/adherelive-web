@@ -462,7 +462,7 @@ class PatientController extends Controller {
         200,
         {
           care_plans: care_planss,
-          current_careplan_id: 12426,
+          current_careplan_id: carePlanIds[0],
           care_plan_ids: carePlanIds,
           care_plan_template_ids: [...carePlanTemplateIds],
           care_plan_templates: {
