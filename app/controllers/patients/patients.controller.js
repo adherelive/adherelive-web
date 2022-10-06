@@ -457,14 +457,12 @@ class PatientController extends Controller {
       // if (patientCarePlans.length > 0) {
       //   latestCarePlanId = patientCarePlans[0];
       // }
-      current_careplan_id = carePlanIds.length > 0 ? carePlanIds[0] : "";
-
       return raiseSuccess(
         res,
         200,
         {
           care_plans: care_planss,
-          current_careplan_id,
+          current_careplan_id: 12426,
           care_plan_ids: carePlanIds,
           care_plan_template_ids: [...carePlanTemplateIds],
           care_plan_templates: {
