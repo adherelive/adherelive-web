@@ -16,6 +16,7 @@ exports.getTime = () => {
 
   // current seconds
   let seconds = date_ob.getSeconds();
+  let milisecond = date_ob.getMilliseconds();
   return (
     year +
     "-" +
@@ -27,6 +28,8 @@ exports.getTime = () => {
     ":" +
     minutes +
     ":" +
-    seconds
+    seconds +
+    ":" +
+    milisecond
   );
 };

@@ -54,27 +54,27 @@ import CdssRouter from "./cdss";
 import { getTime } from "../../app/helper/timer";
 
 router.use(async function (req, res, next) {
-  console.log("api-index-1" + getTime());
+  console.log("api-index-1" + getTime() + getTime());
   try {
     let accessToken,
       userId = null,
       userRoleId,
       userRoleData;
     const { cookies = {} } = req;
-    console.log("api-index-2");
+    console.log("api-index-2" + getTime());
     if (cookies.accessToken) {
       accessToken = cookies.accessToken;
     }
-    console.log("api-index-3");
+    console.log("api-index-3" + getTime());
     const { accesstoken: aT = "" } = req.headers || {};
     if (aT) {
       accessToken = aT;
     }
 
     const secret = process.config.TOKEN_SECRET_KEY;
-    console.log("api-index-4");
+    console.log("api-index-4" + getTime());
     if (accessToken) {
-      console.log("api-index-5");
+      console.log("api-index-5" + getTime());
       const decodedAccessToken = await jwt.verify(accessToken, secret);
       const {
         userRoleId: decodedUserRoleId = null,
@@ -83,7 +83,7 @@ router.use(async function (req, res, next) {
       const userRoleDetails = await userRolesService.getSingleUserRoleByData({
         id: decodedUserRoleId,
       });
-      console.log("api-index-6");
+      console.log("api-index-6" + getTime());
       if (userRoleDetails) {
         const userRole = await UserRoleWrapper(userRoleDetails);
         userId = userRole.getUserId();
@@ -96,21 +96,21 @@ router.use(async function (req, res, next) {
         next();
         return;
       }
-      console.log("api-index-7");
+      console.log("api-index-7" + getTime());
     } else {
-      console.log("api-index-8");
+      console.log("api-index-8" + getTime());
       req.userDetails = {
         exists: false,
       };
       next();
-      console.log("api-index-9");
+      console.log("api-index-9" + getTime());
       return;
     }
-    console.log("api-index-10");
+    console.log("api-index-10" + getTime());
     const userData = await userService.getUser(userId);
-    console.log("api-index-11");
+    console.log("api-index-11" + getTime());
     if (userData) {
-      console.log("api-index-12");
+      console.log("api-index-12" + getTime());
       const user = await UserWrapper(userData);
       const { userCategoryData, userCategoryId } =
         (await user.getCategoryInfo()) || {};
