@@ -67,8 +67,11 @@ class UserWrapper extends BaseUser {
       const doctorData = await DoctorWrapper(doctor);
       console.log("get category info - 4 ", getTime());
       console.log("get category info - 5 ", getTime());
+      let userCategoryData = await doctorData.getAllInfo();
+      console.log({ userCategoryData });
+      console.log(userCategoryData.care_plan_ids);
       return {
-        userCategoryData: await doctorData.getAllInfoNew(),
+        userCategoryData,
         userCategoryId: doctorData.getDoctorId(),
       };
     } else if (patient) {
