@@ -53,24 +53,27 @@ import workoutRouter from "./workouts";
 import CdssRouter from "./cdss";
 
 router.use(async function (req, res, next) {
+  console.log("api-index-1");
   try {
     let accessToken,
       userId = null,
       userRoleId,
       userRoleData;
     const { cookies = {} } = req;
+    console.log("api-index-2");
     if (cookies.accessToken) {
       accessToken = cookies.accessToken;
     }
-
+    console.log("api-index-3");
     const { accesstoken: aT = "" } = req.headers || {};
     if (aT) {
       accessToken = aT;
     }
 
     const secret = process.config.TOKEN_SECRET_KEY;
-
+    console.log("api-index-4");
     if (accessToken) {
+      console.log("api-index-5");
       const decodedAccessToken = await jwt.verify(accessToken, secret);
       const {
         userRoleId: decodedUserRoleId = null,
@@ -79,6 +82,7 @@ router.use(async function (req, res, next) {
       const userRoleDetails = await userRolesService.getSingleUserRoleByData({
         id: decodedUserRoleId,
       });
+      console.log("api-index-6");
       if (userRoleDetails) {
         const userRole = await UserRoleWrapper(userRoleDetails);
         userId = userRole.getUserId();
@@ -91,16 +95,21 @@ router.use(async function (req, res, next) {
         next();
         return;
       }
+      console.log("api-index-7");
     } else {
+      console.log("api-index-8");
       req.userDetails = {
         exists: false,
       };
       next();
+      console.log("api-index-9");
       return;
     }
-
+    console.log("api-index-10");
     const userData = await userService.getUser(userId);
+    console.log("api-index-11");
     if (userData) {
+      console.log("api-index-12");
       const user = await UserWrapper(userData);
       const { userCategoryData, userCategoryId } =
         (await user.getCategoryInfo()) || {};
@@ -115,6 +124,7 @@ router.use(async function (req, res, next) {
       };
 
       req.permissions = await user.getPermissions();
+      console.log("api-index-13");
     } else {
       req.userDetails = {
         exists: false,

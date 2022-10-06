@@ -37,7 +37,15 @@ router.get("/", Authenticated, PatientController.searchPatient);
 
 router.get(
   "/pagination",
+  (req, res, next) => {
+    console.log("request recevide at router -start");
+    next();
+  },
   Authenticated,
+  (req, res, next) => {
+    console.log("request recevide at router -after middleware");
+    next();
+  },
   PatientController.getAllPatientsPagination
 );
 
