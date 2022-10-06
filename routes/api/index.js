@@ -51,9 +51,10 @@ import portionRouter from "./portion";
 import exerciseRouter from "./exercises";
 import workoutRouter from "./workouts";
 import CdssRouter from "./cdss";
+import { getTime } from "./helper";
 
 router.use(async function (req, res, next) {
-  console.log("api-index-1");
+  console.log("api-index-1" + getTime());
   try {
     let accessToken,
       userId = null,
@@ -125,6 +126,7 @@ router.use(async function (req, res, next) {
 
       req.permissions = await user.getPermissions();
       console.log("api-index-13");
+      console.log("api-index-14" + getTime());
     } else {
       req.userDetails = {
         exists: false,
