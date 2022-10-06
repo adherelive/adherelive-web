@@ -487,6 +487,7 @@ class PatientController extends Controller {
       );
     } catch (error) {
       // Logger.debug("get careplan 500 error ---> ", error);
+      console.log(error);
       return raiseServerError(res);
     }
   };
