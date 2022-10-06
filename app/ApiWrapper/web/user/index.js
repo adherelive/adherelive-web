@@ -12,6 +12,7 @@ import DoctorWrapper from "../doctor";
 import PatientWrapper from "../patient";
 import ProviderWrapper from "../provider";
 import PermissionWrapper from "../permission";
+import { getTime } from "../../../helper/timer";
 
 import * as PermissionHelper from "../../../helper/userCategoryPermisssions";
 
@@ -58,22 +59,30 @@ class UserWrapper extends BaseUser {
 
   getCategoryInfo = async () => {
     const { _data } = this;
+    console.log("get category info - 1 ", getTime());
     const { doctor = null, patient = null, provider = null } = _data || {};
-
+    console.log("get category info - 2 ", getTime());
     if (doctor) {
+      console.log("get category info - 3 ", getTime());
       const doctorData = await DoctorWrapper(doctor);
+      console.log("get category info - 4 ", getTime());
+      console.log("get category info - 5 ", getTime());
       return {
         userCategoryData: await doctorData.getAllInfo(),
         userCategoryId: doctorData.getDoctorId(),
       };
     } else if (patient) {
+      console.log("get category info - 6 ", getTime());
       const patientData = await PatientWrapper(patient);
+      console.log("get category info - 7 ", getTime());
       return {
         userCategoryData: patientData.getBasicInfo(),
         userCategoryId: patientData.getPatientId(),
       };
     } else if (provider) {
+      console.log("get category info - 8 ", getTime());
       const providerData = await ProviderWrapper(provider);
+      console.log("get category info - 9 ", getTime());
       return {
         userCategoryData: providerData.getBasicInfo(),
         userCategoryId: providerData.getProviderId(),
