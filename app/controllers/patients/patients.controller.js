@@ -446,17 +446,29 @@ class PatientController extends Controller {
       const patientCarePlans =
         care_planss.length > 0 &&
         care_planss.filter((id) => {
-          const { basic_info: { patient_id: carePlanPatientId = "0" } = {} } =
-            care_planss[id] || {};
+          const {
+            basic_info: {
+              patient_id: carePlanPatientId = "0",
+              doctor_id: carePlanDoctorId,
+            } = {},
+          } = care_planss[id] || {};
+          console.log("In Filter Method", {
+            carePlanPatientId,
+            patient_id,
+            carePlanDoctorId,
+            userCategoryId,
+          });
+          if (
+            carePlanPatientId == patient_id &&
+            carePlanDoctorId == userCategoryId
+          ) {
+            latestCarePlanId = id;
+          }
 
           if (carePlanPatientId == patient_id) {
             return id;
           }
         });
-
-      if (patientCarePlans.length > 0) {
-        latestCarePlanId = patientCarePlans[patientCarePlans.length - 1];
-      }
 
       return raiseSuccess(
         res,
