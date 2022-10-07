@@ -13,7 +13,7 @@ import UserWrapper from "../../ApiWrapper/web/user";
 
 import { USER_CATEGORY } from "../../../constant";
 import AppNotification from "../../NotificationSdk/inApp";
-
+import { getTime } from "../../../app/helper/timer";
 const Log = new Logger("WEB > CONTROLLER > PAYMENTS");
 
 class UserRoleController extends Controller {
@@ -21,7 +21,7 @@ class UserRoleController extends Controller {
     super();
   }
 
-  getUserRoles = async (req, res) => {
+  getUserRolesNew = async (req, res) => {
     const { raiseSuccess, raiseClientError, raiseServerError } = this;
     try {
       const { userDetails: { userId = null } = {} } = req;
@@ -77,9 +77,10 @@ class UserRoleController extends Controller {
     }
   };
 
-  getUserRolesBackup = async (req, res) => {
+  getUserRoles = async (req, res) => {
     const { raiseSuccess, raiseClientError, raiseServerError } = this;
     try {
+      console.log("get userRole Start ", getTime());
       const { userDetails: { userId = null } = {} } = req;
 
       if (!userId) {
@@ -131,6 +132,7 @@ class UserRoleController extends Controller {
       const userDataWrapper = await UserWrapper(user);
       const userData = userDataWrapper.getBasicInfo();
       console.log(4);
+      console.log("get userRole End ", getTime());
       return raiseSuccess(
         res,
         200,
