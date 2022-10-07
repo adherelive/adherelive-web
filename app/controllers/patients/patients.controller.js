@@ -443,26 +443,26 @@ class PatientController extends Controller {
         };
       }
 
-      // const patientCarePlans =
-      //   newData.length > 0 &&
-      //   newData.filter((id) => {
-      //     const { basic_info: { patient_id: carePlanPatientId = "0" } = {} } =
-      //       care_planss[id] || {};
+      const patientCarePlans =
+        care_planss.length > 0 &&
+        care_planss.filter((id) => {
+          const { basic_info: { patient_id: carePlanPatientId = "0" } = {} } =
+            care_planss[id] || {};
 
-      //     if (carePlanPatientId == patient_id) {
-      //       return id;
-      //     }
-      //   });
+          if (carePlanPatientId == patient_id) {
+            return id;
+          }
+        });
 
-      // if (patientCarePlans.length > 0) {
-      //   latestCarePlanId = patientCarePlans[0];
-      // }
+      if (patientCarePlans.length > 0) {
+        latestCarePlanId = patientCarePlans[0];
+      }
       return raiseSuccess(
         res,
         200,
         {
           care_plans: care_planss,
-          current_careplan_id: carePlanIds.length > 0 ? carePlanIds[0] : "",
+          current_careplan_id: latestCarePlanId,
           care_plan_ids: carePlanIds,
           care_plan_template_ids: [...carePlanTemplateIds],
           care_plan_templates: {
