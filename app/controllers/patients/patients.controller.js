@@ -316,7 +316,7 @@ class PatientController extends Controller {
         } = {},
       } = req;
 
-      console.log({ userId, userCategoryId, userData, patient_id });
+      console.log({ userId, userCategoryId, patient_id });
 
       // let newData = [];
       // if (req.userDetails.userCategoryData.care_plan_ids) {
