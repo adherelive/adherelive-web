@@ -315,9 +315,8 @@ class PatientController extends Controller {
           userData: { category } = {},
         } = {},
       } = req;
-      let doctor_idsss = req.userDetails.userCategoryData.basic_info.id;
 
-      console.log({ userId, userCategoryId, patient_id, doctor_idsss });
+      console.log({ userId, userCategoryId, patient_id });
 
       // let newData = [];
       // if (req.userDetails.userCategoryData.care_plan_ids) {
@@ -374,8 +373,12 @@ class PatientController extends Controller {
           treatmentIds.push(treatment_id);
           let careplan = care_plans[id];
           if (
-            careplan["basic_info"]["patient_id"] == patient_id &&
-            careplan["basic_info"]["doctor_id"] == userCategoryId
+            (careplan["basic_info"]["patient_id"] == patient_id &&
+              careplan["basic_info"]["doctor_id"] == userCategoryId) ||
+            (careplan["basic_info"]["patient_id"] == patient_id &&
+              careplan["secondary_doctor_user_role_ids"].includes(
+                userCategoryId
+              ))
           ) {
             latestCarePlanId = id;
           }
