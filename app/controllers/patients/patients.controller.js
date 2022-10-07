@@ -316,6 +316,8 @@ class PatientController extends Controller {
         } = {},
       } = req;
 
+      console.log({ userId, userCategoryId, userData, patient_id });
+
       // let newData = [];
       // if (req.userDetails.userCategoryData.care_plan_ids) {
       //   newData = req.userDetails.userCategoryData.care_plan_ids[userRoleId];
@@ -370,11 +372,15 @@ class PatientController extends Controller {
           const { details: { treatment_id } = {} } = care_plans[id] || {};
           treatmentIds.push(treatment_id);
           let careplan = care_plans[id];
-          if (careplan["basic_info"]["patient_id"] == patient_id) {
+          if (
+            careplan["basic_info"]["patient_id"] == patient_id &&
+            careplan["basic_info"]["doctor_id"] == userCategoryId
+          ) {
             latestCarePlanId = id;
           }
         });
       }
+      console.log({ latestCarePlanId });
       // get all careplan templates for user(doctor)
       const carePlanTemplates =
         (await carePlanTemplateService.getCarePlanTemplateData({
@@ -442,33 +448,6 @@ class PatientController extends Controller {
           },
         };
       }
-
-      const patientCarePlans =
-        care_planss.length > 0 &&
-        care_planss.filter((id) => {
-          const {
-            basic_info: {
-              patient_id: carePlanPatientId = "0",
-              doctor_id: carePlanDoctorId,
-            } = {},
-          } = care_planss[id] || {};
-          console.log("In Filter Method", {
-            carePlanPatientId,
-            patient_id,
-            carePlanDoctorId,
-            userCategoryId,
-          });
-          if (
-            carePlanPatientId == patient_id &&
-            carePlanDoctorId == userCategoryId
-          ) {
-            latestCarePlanId = id;
-          }
-
-          if (carePlanPatientId == patient_id) {
-            return id;
-          }
-        });
 
       return raiseSuccess(
         res,
