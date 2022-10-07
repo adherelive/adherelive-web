@@ -455,8 +455,9 @@ class PatientController extends Controller {
         });
 
       if (patientCarePlans.length > 0) {
-        latestCarePlanId = patientCarePlans[0];
+        latestCarePlanId = patientCarePlans[patientCarePlans.length - 1];
       }
+
       return raiseSuccess(
         res,
         200,
