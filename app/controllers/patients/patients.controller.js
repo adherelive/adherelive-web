@@ -376,9 +376,7 @@ class PatientController extends Controller {
             (careplan["basic_info"]["patient_id"] == patient_id &&
               careplan["basic_info"]["doctor_id"] == userCategoryId) ||
             (careplan["basic_info"]["patient_id"] == patient_id &&
-              careplan["secondary_doctor_user_role_ids"].includes(
-                userCategoryId
-              ))
+              careplan["secondary_doctor_user_role_ids"].includes(userRoleId))
           ) {
             latestCarePlanId = id;
           }
