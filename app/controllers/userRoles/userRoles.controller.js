@@ -137,15 +137,15 @@ class UserRoleController extends Controller {
         res,
         200,
         {
-          // users: { [userId]: userData },
+          users: { [userId]: userData },
           // users: {},
           user_roles,
           user_role_ids,
-          // doctors,
-          // providers,
-          // providers: {},
-          // patients,
-          // admins,
+          doctors,
+          providers,
+          providers: {},
+          patients,
+          admins,
         },
         "User role data fetched successfully"
       );
