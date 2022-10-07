@@ -456,7 +456,7 @@ class PatientController extends Controller {
         200,
         {
           care_plans: care_planss,
-          current_careplan_id: latestCarePlanId,
+          current_careplan_id: parseInt(latestCarePlanId),
           care_plan_ids: carePlanIds,
           care_plan_template_ids: [...carePlanTemplateIds],
           care_plan_templates: {
