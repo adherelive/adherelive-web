@@ -809,7 +809,14 @@ class MReminderController extends Controller {
       const today = moment().utc().toISOString();
 
       const medication = await MedicationWrapper(null, id);
-
+      console.log({
+        data: {
+          event_id: id,
+          event_type: EVENT_TYPE.MEDICATION_REMINDER,
+          date: medication.getStartDate(),
+          sort: "DESC",
+        },
+      });
       const completeEvents = await EventService.getAllPassedByData({
         event_id: id,
         event_type: EVENT_TYPE.MEDICATION_REMINDER,
