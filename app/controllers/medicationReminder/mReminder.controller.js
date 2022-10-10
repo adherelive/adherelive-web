@@ -603,7 +603,8 @@ class MReminderController extends Controller {
       for (let medication of medicationDetails) {
         console.log("get Medication for loop start  ", getTime());
         medicationWrapper = await MedicationWrapper(medication);
-        newMedication.push(medicationWrapper.getBasicInfo());
+        medication = await medicationWrapper.getBasicInfo();
+        newMedication.push(medication);
         console.log("get Medication for loop start-1  ", getTime());
         console.log("get Medication for loop end  ", getTime());
       }
