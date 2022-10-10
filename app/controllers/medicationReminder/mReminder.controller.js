@@ -611,7 +611,7 @@ class MReminderController extends Controller {
       }
 
       let eventScheduleservice = new ScheduleEventService();
-      let scheduleEvents = eventScheduleservice.getAllPreviousByDataNew({
+      let scheduleEvents = await eventScheduleservice.getAllPreviousByDataNew({
         event_id: event_ids,
         date: currentDate,
         event_type: EVENT_TYPE.MEDICATION_REMINDER,
@@ -631,6 +631,7 @@ class MReminderController extends Controller {
         "medications fetched successfully"
       );
     } catch (error) {
+      console.log(error);
       return raiseServerError(res);
     }
   };
