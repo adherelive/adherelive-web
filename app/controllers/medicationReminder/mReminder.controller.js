@@ -22,6 +22,7 @@ import UserPreferenceWrapper from "../../ApiWrapper/web/userPreference";
 import EventWrapper from "../../ApiWrapper/common/scheduleEvents";
 
 import * as medicationHelper from "./medicationHelper";
+import { getTime } from "../../helper/timer";
 
 import {
   CUSTOM_REPEAT_OPTIONS,
@@ -589,23 +590,24 @@ class MReminderController extends Controller {
     const { raiseSuccess, raiseServerError } = this;
     try {
       const { params: { id } = {} } = req;
-
+      console.log("get Medication for id -1 ", getTime());
       const medicationDetails =
         await medicationReminderService.getMedicationsForParticipant({
           participant_id: id,
         });
-
-      // Logger.debug("medication details", medicationDetails);
-
+      console.log("get Medication for id -2 ", getTime());
       let medicationApiData = {};
-
-      // await medicationDetails.forEach(async medication => {
+      console.log("get Medication for id -3 ", getTime());
       for (let medication of medicationDetails) {
+        console.log("get Medication for loop start  ", getTime());
         const medicationWrapper = await MedicationWrapper(medication);
+        console.log("get Medication for loop start-1  ", getTime());
         const { medications } = await medicationWrapper.getAllInfo();
+        console.log("get Medication for loop start-2  ", getTime());
         medicationApiData = { ...medicationApiData, ...medications };
-        // });
+        console.log("get Medication for loop end  ", getTime());
       }
+      console.log("get Medication for id -4 ", getTime());
 
       return raiseSuccess(
         res,
