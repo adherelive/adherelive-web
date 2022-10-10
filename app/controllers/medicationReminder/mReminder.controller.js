@@ -609,7 +609,7 @@ class MReminderController extends Controller {
         console.log("get Medication for loop end  ", getTime());
         event_ids.push(medicationWrapper.getMReminderId());
       }
-
+      const currentDate = moment().endOf("day").utc().toDate();
       let eventScheduleservice = new ScheduleEventService();
       let scheduleEvents = await eventScheduleservice.getAllPreviousByDataNew({
         event_id: event_ids,
