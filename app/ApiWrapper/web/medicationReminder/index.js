@@ -120,6 +120,65 @@ class MReminderWrapper extends BaseMedicationReminder {
       },
     };
   };
+
+  getAllInfoNew = async () => {
+    console.log("get all info - 1 ", getTime());
+    const { getBasicInfo, getMReminderId } = this;
+    console.log("get all info - 2 ", getTime());
+    const eventService = new EventService();
+    console.log("get all info - 3 ", getTime());
+    const currentDate = moment().endOf("day").utc().toDate();
+    console.log("get all info - 4 ", getTime());
+    const scheduleEvents = await eventService.getAllPreviousByData({
+      event_id: [
+        14881, 14882, 14883, 14884, 17849, 17850, 17851, 17852, 17853, 18032,
+      ],
+      date: currentDate,
+      event_type: EVENT_TYPE.MEDICATION_REMINDER,
+    });
+    console.log({
+      data: {
+        event_id: getMReminderId(),
+        date: currentDate,
+        event_type: EVENT_TYPE.MEDICATION_REMINDER,
+      },
+    });
+
+    console.log("get all info - 5 ", getTime());
+
+    let medicationEvents = {};
+    let remaining = 0;
+    let latestPendingEventId;
+    console.log("get all info - 6 ", getTime());
+    const scheduleEventIds = [];
+    for (const events of scheduleEvents) {
+      console.log("scheduleevent loop - 1 ", getTime());
+      const scheduleEvent = await EventWrapper(events);
+      console.log("scheduleevent loop - 2 ", getTime());
+      scheduleEventIds.push(scheduleEvent.getScheduleEventId());
+      console.log("scheduleevent loop - 3 ", getTime());
+      if (scheduleEvent.getStatus() !== EVENT_STATUS.COMPLETED) {
+        if (!latestPendingEventId) {
+          latestPendingEventId = scheduleEvent.getScheduleEventId();
+        }
+        remaining++;
+      }
+    }
+    console.log("get all info - 7 ", getTime());
+    const basicInfo = await getBasicInfo();
+    console.log("get all info - 8 ", getTime());
+    return {
+      medications: {
+        [getMReminderId()]: {
+          ...basicInfo,
+          remaining,
+          total: scheduleEvents.length,
+          upcoming_event_id: latestPendingEventId,
+        },
+      },
+    };
+  };
+
   getReferenceInfo = async () => {
     const { getAllInfo, getMedicineId, _data } = this;
     const { medicine } = _data || {};
