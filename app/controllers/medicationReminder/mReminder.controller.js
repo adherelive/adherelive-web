@@ -630,7 +630,7 @@ class MReminderController extends Controller {
           medications: {
             ...medicationApiData,
           },
-          scheduleEvents,
+
           scheduleeventdatanew,
         },
         "medications fetched successfully"
