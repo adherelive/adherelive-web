@@ -137,7 +137,7 @@ class MReminderWrapper extends BaseMedicationReminder {
       event_type: EVENT_TYPE.MEDICATION_REMINDER,
     });
     console.log({ scheduleEvents });
-    console.log(typeof console.scheduleEvents);
+    console.log(typeof scheduleEvents);
 
     console.log("get all info - 5 ", getTime());
 
@@ -146,7 +146,9 @@ class MReminderWrapper extends BaseMedicationReminder {
     let latestPendingEventId;
     console.log("get all info - 6 ", getTime());
     const scheduleEventIds = [];
+
     for (const events of scheduleEvents) {
+      console.log(events);
       console.log("scheduleevent loop - 1 ", getTime());
       const scheduleEvent = await EventWrapper(events);
       console.log("scheduleevent loop - 2 ", getTime());
