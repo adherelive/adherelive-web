@@ -599,10 +599,11 @@ class MReminderController extends Controller {
       let medicationApiData = {};
       console.log("get Medication for id -3 ", getTime());
       let medicationWrapper = undefined;
+      let newMedication = [];
       for (let medication of medicationDetails) {
         console.log("get Medication for loop start  ", getTime());
         medicationWrapper = await MedicationWrapper(medication);
-        break;
+        newMedication.push(medicationWrapper.getBasicInfo());
         console.log("get Medication for loop start-1  ", getTime());
         console.log("get Medication for loop end  ", getTime());
       }
