@@ -610,12 +610,16 @@ class MReminderController extends Controller {
         event_ids.push(medicationWrapper.getMReminderId());
       }
       const currentDate = moment().endOf("day").utc().toDate();
+      let scheduleeventdatanew = [];
       let eventScheduleservice = new ScheduleEventService();
-      let scheduleEvents = await eventScheduleservice.getAllPreviousByDataNew({
-        event_id: event_ids,
-        date: currentDate,
-        event_type: EVENT_TYPE.MEDICATION_REMINDER,
-      });
+      for (const event_id of event_ids) {
+        let scheduleEvents = await eventScheduleservice.getAllPreviousByData({
+          event_id,
+          date: currentDate,
+          event_type: EVENT_TYPE.MEDICATION_REMINDER,
+        });
+        scheduleeventdatanew.push(scheduleEvents);
+      }
 
       console.log("get Medication for id -4 ", getTime());
 
@@ -627,6 +631,7 @@ class MReminderController extends Controller {
             ...medicationApiData,
           },
           scheduleEvents,
+          scheduleeventdatanew,
         },
         "medications fetched successfully"
       );
