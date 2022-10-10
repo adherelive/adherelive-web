@@ -88,6 +88,27 @@ class ScheduleEventService {
     }
   };
 
+  getAllPreviousByDataNew = async (data = {}) => {
+    try {
+      const { event_id = [], date, event_type = "" } = data;
+      const scheduleEvent = await Database.getModel(TABLE_NAME).findAll({
+        where: {
+          event_id: {
+            [Op.in]: event_id,
+          },
+          date: {
+            [Op.lte]: date,
+          },
+          event_type,
+        },
+        order: [["date", "ASC"]],
+      });
+      return scheduleEvent;
+    } catch (error) {
+      throw error;
+    }
+  };
+
   getLastVisitData = async (data = {}) => {
     try {
       const { event_id, event_type, date, sort = "ASC" } = data;
