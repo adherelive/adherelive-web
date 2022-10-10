@@ -598,30 +598,35 @@ class MReminderController extends Controller {
       console.log("get Medication for id -2 ", getTime());
       let medicationApiData = {};
       console.log("get Medication for id -3 ", getTime());
-      let medicationWrapper = undefined;
-      let newMedication = [];
+      let event_ids = [];
       for (let medication of medicationDetails) {
         console.log("get Medication for loop start  ", getTime());
-        medicationWrapper = await MedicationWrapper(medication);
-        medication = await medicationWrapper.getBasicInfo();
-        newMedication.push(medication);
+        const medicationWrapper = await MedicationWrapper(medication);
         console.log("get Medication for loop start-1  ", getTime());
+        const { medications } = await medicationWrapper.getAllInfoNew();
+        console.log("get Medication for loop start-2  ", getTime());
+        medicationApiData = { ...medicationApiData, ...medications };
         console.log("get Medication for loop end  ", getTime());
+        event_ids.push(medicationWrapper.getMReminderId());
       }
 
-      const { medications } = await medicationWrapper.getAllInfoNew();
-      console.log("get Medication for loop start-2  ", getTime());
-      medicationApiData = { ...medicationApiData, ...medications };
+      let eventScheduleservice = new ScheduleEventService();
+      let scheduleEvents = eventScheduleservice.getAllPreviousByDataNew({
+        event_id: event_ids,
+        date: currentDate,
+        event_type: EVENT_TYPE.MEDICATION_REMINDER,
+      });
+
       console.log("get Medication for id -4 ", getTime());
 
       return raiseSuccess(
         res,
         200,
         {
-          newMedication,
           medications: {
             ...medicationApiData,
           },
+          scheduleEvents,
         },
         "medications fetched successfully"
       );
