@@ -136,13 +136,8 @@ class MReminderWrapper extends BaseMedicationReminder {
       date: currentDate,
       event_type: EVENT_TYPE.MEDICATION_REMINDER,
     });
-    console.log({
-      data: {
-        event_id: getMReminderId(),
-        date: currentDate,
-        event_type: EVENT_TYPE.MEDICATION_REMINDER,
-      },
-    });
+    console.log({ scheduleEvents });
+    console.log(typeof console.scheduleEvents);
 
     console.log("get all info - 5 ", getTime());
 

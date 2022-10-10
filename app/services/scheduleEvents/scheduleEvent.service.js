@@ -90,7 +90,11 @@ class ScheduleEventService {
 
   getAllPreviousByDataNew = async (data = {}) => {
     try {
+      console.log("getAllPreviousByDataNew called - 1");
       const { event_id = [], date, event_type = "" } = data;
+      console.log({ event_id });
+      console.log(typeof event_id);
+
       const scheduleEvent = await Database.getModel(TABLE_NAME).findAll({
         where: {
           event_id: {
