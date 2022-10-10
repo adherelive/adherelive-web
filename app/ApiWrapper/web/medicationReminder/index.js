@@ -73,11 +73,19 @@ class MReminderWrapper extends BaseMedicationReminder {
     console.log("get all info - 3 ", getTime());
     const currentDate = moment().endOf("day").utc().toDate();
     console.log("get all info - 4 ", getTime());
-    const scheduleEvents = await eventService.getAllPreviousByData({
-      event_id: getMReminderId(),
-      date: currentDate,
-      event_type: EVENT_TYPE.MEDICATION_REMINDER,
+    // const scheduleEvents = await eventService.getAllPreviousByData({
+    //   event_id: getMReminderId(),
+    //   date: currentDate,
+    //   event_type: EVENT_TYPE.MEDICATION_REMINDER,
+    // });
+    console.log({
+      data: {
+        event_id: getMReminderId(),
+        date: currentDate,
+        event_type: EVENT_TYPE.MEDICATION_REMINDER,
+      },
     });
+    const scheduleEvents = [];
     console.log("get all info - 5 ", getTime());
 
     let medicationEvents = {};
