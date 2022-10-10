@@ -617,6 +617,7 @@ class MReminderController extends Controller {
         res,
         200,
         {
+          newMedication,
           medications: {
             ...medicationApiData,
           },
