@@ -620,6 +620,7 @@ class MReminderController extends Controller {
       });
       let scheduleEventIds = [];
       let latestPendingEventId;
+      let remaining = 0;
       for (const events of scheduleEvents) {
         console.log("scheduleevent loop - 1 ", getTime());
         const scheduleEvent = await EventWrapper(events);
