@@ -599,6 +599,7 @@ class MReminderController extends Controller {
       let medicationApiData = {};
       console.log("get Medication for id -3 ", getTime());
       let event_ids = [];
+      let medicine_ids = [];
       for (let medication of medicationDetails) {
         console.log("get Medication for loop start  ", getTime());
         const medicationWrapper = await MedicationWrapper(medication);
@@ -608,6 +609,8 @@ class MReminderController extends Controller {
         medicationApiData = { ...medicationApiData, ...medications };
         console.log("get Medication for loop end  ", getTime());
         event_ids.push(medicationWrapper.getMReminderId());
+        console.log(medicationWrapper.getMedicineId());
+        medicine_ids.push(medicationWrapper.getMedicineId());
       }
       const currentDate = moment().endOf("day").utc().toDate();
 
@@ -651,7 +654,7 @@ class MReminderController extends Controller {
       }
 
       console.log("get Medication for loop starttttting  ", getTime());
-      let medicins = await medicineService.getMedicineByIds(event_ids);
+      let medicins = await medicineService.getMedicineByIds(medicine_ids);
       console.log("get Medication for loop starttttting  ", getTime());
       return raiseSuccess(
         res,
