@@ -633,13 +633,12 @@ class MReminderController extends Controller {
           }
           remaining++;
         }
-
-        medicationApiData[scheduleEvent[0]["event_id"]]["remaining"] =
-          remaining;
-        medicationApiData[scheduleEvent[0]["event_id"]]["total"] =
-          events.length;
-        medicationApiData[scheduleEvent[0]["event_id"]]["upcoming_event_id"] =
-          latestPendingEventId;
+        if (events.length > 0) {
+          medicationApiData[events[0]["event_id"]]["remaining"] = remaining;
+          medicationApiData[events[0]["event_id"]]["total"] = events.length;
+          medicationApiData[events[0]["event_id"]]["upcoming_event_id"] =
+            latestPendingEventId;
+        }
       }
 
       console.log("get Medication for id -4 ", getTime());
