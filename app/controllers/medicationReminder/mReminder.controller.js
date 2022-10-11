@@ -621,6 +621,7 @@ class MReminderController extends Controller {
       let scheduleEventIds = [];
       let latestPendingEventId;
       let remaining = 0;
+
       for (const events of scheduleEvents) {
         console.log("scheduleevent loop - 1 ", getTime());
         const scheduleEvent = await EventWrapper(events);
@@ -633,11 +634,14 @@ class MReminderController extends Controller {
           }
           remaining++;
         }
-        console.log(events.length);
-        console.log(events[0]["event_id"]);
-        console.log(medicationApiData[events[0]["event_id"]]);
-        console.log(medicationApiData);
-
+        console.log(typeof events);
+        console.log({ events });
+        if (events.length > 0) {
+          console.log(events.length);
+          console.log(events[0]["event_id"]);
+          console.log(medicationApiData[events[0]["event_id"]]);
+          console.log(medicationApiData);
+        }
         if (events.length > 0) {
           medicationApiData[events[0]["event_id"]]["remaining"] = remaining;
           medicationApiData[events[0]["event_id"]]["total"] = events.length;
