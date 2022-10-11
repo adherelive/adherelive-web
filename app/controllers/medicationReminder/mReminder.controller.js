@@ -619,10 +619,14 @@ class MReminderController extends Controller {
         event_type: EVENT_TYPE.MEDICATION_REMINDER,
       });
       let scheduleEventIds = [];
-      let latestPendingEventId;
-      let remaining = 0;
-
+      let latestPendingEventId = {};
+      // let remaining = 0;
+      let total_count = {};
+      let remaining = {};
       for (const events of scheduleEvents) {
+        if (total_count[events["event_id"]])
+          total_count[events["event_id"]] += 1;
+        else total_count[events["event_id"]] = 1;
         console.log("scheduleevent loop - 1 ", getTime());
         const scheduleEvent = await EventWrapper(events);
         console.log("scheduleevent loop - 2 ", getTime());
@@ -632,7 +636,8 @@ class MReminderController extends Controller {
           if (!latestPendingEventId) {
             latestPendingEventId = scheduleEvent.getScheduleEventId();
           }
-          remaining++;
+          if (remaining[events["event_id"]]) remaining[events["event_id"]] += 1;
+          else remaining[events["event_id"]] = 1;
         }
         console.log(typeof events);
         console.log({ events });
@@ -643,8 +648,10 @@ class MReminderController extends Controller {
           console.log(medicationApiData);
         }
         if (events["event_id"]) {
-          medicationApiData[events["event_id"]]["remaining"] = remaining;
-          medicationApiData[events["event_id"]]["total"] = events.length;
+          medicationApiData[events["event_id"]]["remaining"] =
+            remaining[events["event_id"]];
+          medicationApiData[events["event_id"]]["total"] =
+            total_count[events["event_id"]];
           medicationApiData[events["event_id"]]["upcoming_event_id"] =
             latestPendingEventId;
         }
