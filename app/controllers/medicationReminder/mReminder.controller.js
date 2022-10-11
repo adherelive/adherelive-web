@@ -650,8 +650,9 @@ class MReminderController extends Controller {
         }
       }
       let medicins = new medicineService();
+      console.log("get Medication for loop starttttting  ", getTime());
       let medicainsData = await medicins.getMedicineByIds(event_ids);
-
+      console.log("get Medication for loop starttttting  ", getTime());
       return raiseSuccess(
         res,
         200,
