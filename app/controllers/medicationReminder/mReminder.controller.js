@@ -54,7 +54,6 @@ import {
 import { RRule } from "rrule";
 import MedicationJob from "../../JobSdk/Medications/observer";
 import NotificationSdk from "../../NotificationSdk";
-import ReactMarkdown from "react-markdown";
 
 const FILE_NAME = "WEB - MEDICATION REMINDER CONTROLLER";
 const Logger = new Log(FILE_NAME);
