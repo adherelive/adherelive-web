@@ -633,6 +633,11 @@ class MReminderController extends Controller {
           }
           remaining++;
         }
+        console.log(events.length);
+        console.log(events[0]["event_id"]);
+        console.log(medicationApiData[events[0]["event_id"]]);
+        console.log(medicationApiData);
+
         if (events.length > 0) {
           medicationApiData[events[0]["event_id"]]["remaining"] = remaining;
           medicationApiData[events[0]["event_id"]]["total"] = events.length;
