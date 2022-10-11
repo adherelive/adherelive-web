@@ -649,9 +649,9 @@ class MReminderController extends Controller {
             latestPendingEventId;
         }
       }
-      let medicins = new medicineService();
+
       console.log("get Medication for loop starttttting  ", getTime());
-      let medicainsData = await medicins.getMedicineByIds(event_ids);
+      let medicins = await medicineService.getMedicineByIds(event_ids);
       console.log("get Medication for loop starttttting  ", getTime());
       return raiseSuccess(
         res,
@@ -660,7 +660,7 @@ class MReminderController extends Controller {
           medications: {
             ...medicationApiData,
           },
-          medicainsData,
+          medicins,
         },
         "medications fetched successfully"
       );
