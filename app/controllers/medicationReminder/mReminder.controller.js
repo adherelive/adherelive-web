@@ -619,6 +619,7 @@ class MReminderController extends Controller {
         event_type: EVENT_TYPE.MEDICATION_REMINDER,
       });
       let scheduleEventIds = [];
+      let latestPendingEventId;
       for (const events of scheduleEvents) {
         console.log("scheduleevent loop - 1 ", getTime());
         const scheduleEvent = await EventWrapper(events);
