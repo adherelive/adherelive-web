@@ -171,6 +171,25 @@ class MedicineService {
       throw err;
     }
   };
+
+  getMedicineByIds = async (ids) => {
+    try {
+      let medicine = null;
+      medicine = await Database.getModel(TABLE_NAME).findAll({
+        offset,
+        limit,
+        where: {
+          id: {
+            [Op.in]: ids,
+          },
+        },
+        order: [["updated_at", "DESC"]],
+      });
+      return medicine;
+    } catch (error) {
+      throw error;
+    }
+  };
 }
 
 export default new MedicineService();

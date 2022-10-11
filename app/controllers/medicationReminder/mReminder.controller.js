@@ -627,11 +627,11 @@ class MReminderController extends Controller {
         if (total_count[events["event_id"]])
           total_count[events["event_id"]] += 1;
         else total_count[events["event_id"]] = 1;
-        console.log("scheduleevent loop - 1 ", getTime());
+
         const scheduleEvent = await EventWrapper(events);
-        console.log("scheduleevent loop - 2 ", getTime());
+
         scheduleEventIds.push(scheduleEvent.getScheduleEventId());
-        console.log("scheduleevent loop - 3 ", getTime());
+
         if (scheduleEvent.getStatus() !== EVENT_STATUS.COMPLETED) {
           if (!latestPendingEventId) {
             latestPendingEventId = scheduleEvent.getScheduleEventId();
@@ -639,14 +639,7 @@ class MReminderController extends Controller {
           if (remaining[events["event_id"]]) remaining[events["event_id"]] += 1;
           else remaining[events["event_id"]] = 1;
         }
-        console.log(typeof events);
-        console.log({ events });
-        if (events["event_id"]) {
-          console.log(events.length);
-          console.log(events["event_id"]);
-          console.log(medicationApiData[events["event_id"]]);
-          console.log(medicationApiData);
-        }
+
         if (events["event_id"]) {
           medicationApiData[events["event_id"]]["remaining"] =
             remaining[events["event_id"]];
@@ -656,8 +649,8 @@ class MReminderController extends Controller {
             latestPendingEventId;
         }
       }
-
-      console.log("get Medication for id -4 ", getTime());
+      let medicins = new medicineService();
+      let medicainsData = await medicins.getMedicineByIds(event_ids);
 
       return raiseSuccess(
         res,
@@ -666,8 +659,7 @@ class MReminderController extends Controller {
           medications: {
             ...medicationApiData,
           },
-
-          scheduleEvents,
+          medicainsData,
         },
         "medications fetched successfully"
       );
