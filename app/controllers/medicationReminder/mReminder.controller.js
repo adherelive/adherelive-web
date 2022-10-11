@@ -54,6 +54,7 @@ import {
 import { RRule } from "rrule";
 import MedicationJob from "../../JobSdk/Medications/observer";
 import NotificationSdk from "../../NotificationSdk";
+import ReactMarkdown from "react-markdown";
 
 const FILE_NAME = "WEB - MEDICATION REMINDER CONTROLLER";
 const Logger = new Log(FILE_NAME);
@@ -610,15 +611,34 @@ class MReminderController extends Controller {
         event_ids.push(medicationWrapper.getMReminderId());
       }
       const currentDate = moment().endOf("day").utc().toDate();
-      let scheduleeventdatanew = [];
+
       let eventScheduleservice = new ScheduleEventService();
-      for (const event_id of event_ids) {
-        let scheduleEvents = await eventScheduleservice.getAllPreviousByData({
-          event_id,
-          date: currentDate,
-          event_type: EVENT_TYPE.MEDICATION_REMINDER,
-        });
-        scheduleeventdatanew.push(scheduleEvents);
+
+      let scheduleEvents = await eventScheduleservice.getAllPreviousByDataNew({
+        event_id: event_ids,
+        date: currentDate,
+        event_type: EVENT_TYPE.MEDICATION_REMINDER,
+      });
+      let scheduleEventIds = [];
+      for (const events of scheduleEvents) {
+        console.log("scheduleevent loop - 1 ", getTime());
+        const scheduleEvent = await EventWrapper(events);
+        console.log("scheduleevent loop - 2 ", getTime());
+        scheduleEventIds.push(scheduleEvent.getScheduleEventId());
+        console.log("scheduleevent loop - 3 ", getTime());
+        if (scheduleEvent.getStatus() !== EVENT_STATUS.COMPLETED) {
+          if (!latestPendingEventId) {
+            latestPendingEventId = scheduleEvent.getScheduleEventId();
+          }
+          remaining++;
+        }
+
+        medicationApiData[scheduleEvent[0]["event_id"]]["remaining"] =
+          remaining;
+        medicationApiData[scheduleEvent[0]["event_id"]]["total"] =
+          events.length;
+        medicationApiData[scheduleEvent[0]["event_id"]]["upcoming_event_id"] =
+          latestPendingEventId;
       }
 
       console.log("get Medication for id -4 ", getTime());
@@ -631,7 +651,7 @@ class MReminderController extends Controller {
             ...medicationApiData,
           },
 
-          scheduleeventdatanew,
+          scheduleEvents,
         },
         "medications fetched successfully"
       );
