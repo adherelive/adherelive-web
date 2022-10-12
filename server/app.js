@@ -35,7 +35,7 @@ const app = express();
 /****************************  CRONS  *********************************/
 
 // CRONS RUNNING EVERY 1 MINUTE
-const cron = schedule.scheduleJob("*/1 * * * *", async () => {
+const cron = schedule.scheduleJob("*/10 * * * *", async () => {
   await Prior.runObserver();
   await Passed.runObserver();
   await Start.runObserver();
