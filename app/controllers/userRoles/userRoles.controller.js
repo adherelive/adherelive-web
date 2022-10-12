@@ -143,7 +143,6 @@ class UserRoleController extends Controller {
           user_role_ids,
           doctors,
           providers,
-          providers: {},
           patients,
           admins,
         },
