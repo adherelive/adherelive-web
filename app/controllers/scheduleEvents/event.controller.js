@@ -96,6 +96,13 @@ class EventController extends Controller {
 
       // TODO: need to rethink logic for latest events from last visit to include all types
       console.log("get All Events - 12 ", getTime());
+      console.log({
+        vital_ids,
+        medication_ids,
+        diet_ids,
+        workout_ids,
+        appointment_ids,
+      });
       const vitalEvents = await EventService.getLastVisitData({
         event_id: vital_ids,
         event_type: EVENT_TYPE.VITALS,
