@@ -16,6 +16,9 @@ import EventController from "../../../app/controllers/scheduleEvents/event.contr
 
 router.get("/missed", Authenticate, EventController.getAllMissedEvents);
 
+// will sending the query like missed apppointment and all...
+router.get("/details", Authenticate, EventController.getEventsDetails);
+
 router.get("/count", Authenticate, EventController.getAllMissedEventsCount);
 
 router.get(

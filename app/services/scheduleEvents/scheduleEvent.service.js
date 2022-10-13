@@ -343,6 +343,44 @@ class ScheduleEventService {
     }
   };
 
+  getMissedByDataEventType = async (data) => {
+    try {
+      console.log("getMissedByData Start - ", getTime());
+      const {
+        vital_ids,
+        event_type,
+        appointment_ids,
+        medication_ids,
+        diet_ids,
+        workout_ids,
+      } = data;
+      let ids = [];
+      if (event_type === EVENT_TYPE.APPOINTMENT) ids = [...appointment_ids];
+      if (event_type === EVENT_TYPE.APPOINTMENT) ids = [...medication_ids];
+      if (event_type === EVENT_TYPE.APPOINTMENT) ids = [...diet_ids];
+      if (event_type === EVENT_TYPE.APPOINTMENT) ids = [...vital_ids];
+      if (event_type === EVENT_TYPE.APPOINTMENT) ids = [...workout_ids];
+
+      return await Database.getModel(TABLE_NAME).findAll({
+        where: {
+          status: EVENT_STATUS.EXPIRED,
+          event_id: ids,
+          event_type: [event_type],
+
+          date: {
+            [Op.between]: [
+              moment().utc().subtract(7, "days").toDate(),
+              moment().utc().toDate(),
+            ],
+          },
+        },
+        order: [["start_time", "DESC"]],
+      });
+    } catch (error) {
+      throw error;
+    }
+  };
+
   getMissedByDataNew = async (data) => {
     try {
       console.log("getMissedByData Start - ", getTime());

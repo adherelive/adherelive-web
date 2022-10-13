@@ -581,6 +581,37 @@ class EventController extends Controller {
     }
   };
 
+  getEventsDetails = async (req, res) => {
+    const { raiseSuccess, raiseServerError } = this;
+    try {
+      const { userDetails: { userData: { category } = {} } = {} } = req;
+      Log.info(`CHARTS FOR AUTH: ${category}`);
+
+      let response = {};
+      let responseMessage = "No event data exists at the moment";
+
+      switch (category) {
+        case USER_CATEGORY.DOCTOR:
+          [response, responseMessage] =
+            await EventHelper.doctorChartEventDetails(req);
+          break;
+        case USER_CATEGORY.HSP:
+          [response, responseMessage] = await EventHelper.hspChartEventDetails(
+            req
+          );
+          break;
+        case USER_CATEGORY.PROVIDER:
+          [response, responseMessage] = await EventHelper.providerChart(req);
+          break;
+      }
+
+      return raiseSuccess(res, 200, { ...response }, responseMessage);
+    } catch (error) {
+      Log.debug("getAllMissedEvents 500 error", error);
+      return raiseServerError(res);
+    }
+  };
+
   getAllMissedEvents = async (req, res) => {
     const { raiseSuccess, raiseServerError } = this;
     try {

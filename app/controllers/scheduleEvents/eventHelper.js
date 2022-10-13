@@ -46,12 +46,52 @@ export const doctorChartCount = async (req) => {
   }
 };
 
+export const doctorChartEventDetails = async (req) => {
+  try {
+    const {
+      query: { event_type: event_type = null } = {},
+      userDetails: { userRoleId, userCategoryId: doctor_id } = {},
+    } = req;
+
+    Log.info(`DOCTOR ID (doctor_id) : ${doctor_id}`);
+
+    return await getAllDataForDoctorsByEventType({
+      event_type,
+      doctor_id,
+      user_role_id: userRoleId,
+    });
+  } catch (error) {
+    Log.debug("doctorChart catch error", error);
+    throw error;
+  }
+};
+
 export const hspChart = async (req) => {
   try {
     const { userDetails: { userRoleId, userCategoryId: doctor_id } = {} } = req;
     Log.info(`DOCTOR ID (doctor_id) : ${doctor_id}`);
 
     return await getAllDataForDoctorsCount({
+      doctor_id,
+      user_role_id: userRoleId,
+      category: USER_CATEGORY.HSP,
+    });
+  } catch (error) {
+    Log.debug("doctorChart catch error", error);
+    throw error;
+  }
+};
+
+export const hspChartEventDetails = async (req) => {
+  try {
+    const {
+      query: { event_type: event_type = null } = {},
+      userDetails: { userRoleId, userCategoryId: doctor_id } = {},
+    } = req;
+    Log.info(`DOCTOR ID (doctor_id) : ${doctor_id}`);
+
+    return await getAllDataForDoctorsByEventType({
+      event_type,
       doctor_id,
       user_role_id: userRoleId,
       category: USER_CATEGORY.HSP,
@@ -233,6 +273,66 @@ export const providerChart = async (req) => {
 };
 
 // HELPERS
+const getAllDataForDoctorsByEventType = async ({
+  doctor_id,
+  event_type,
+  category = USER_CATEGORY.PROVIDER,
+  user_role_id,
+}) => {
+  try {
+    Log.debug("user_role_id", user_role_id);
+    const eventService = new EventService();
+
+    const carePlans =
+      (await CarePlanService.getCarePlanByData({
+        user_role_id,
+      })) || [];
+
+    let appointmentIds = [];
+    let medicationIds = [];
+    let vitalIds = [];
+    let dietIds = [];
+    let workoutIds = [];
+
+    for (let i = 0; i < carePlans.length; i++) {
+      const carePlan = await CarePlanWrapper(carePlans[i]);
+      const {
+        appointment_ids = [],
+        medication_ids = [],
+        vital_ids = [],
+        diet_ids = [],
+        workout_ids = [],
+      } = await carePlan.getAllInfo();
+
+      appointmentIds = [...appointmentIds, ...appointment_ids];
+      medicationIds = [...medicationIds, ...medication_ids];
+      vitalIds = [...vitalIds, ...vital_ids];
+      dietIds = [...dietIds, ...diet_ids];
+      workoutIds = [...workoutIds, ...workout_ids];
+    }
+
+    const scheduleEvents =
+      (await eventService.getMissedByDataEventType({
+        appointment_ids: appointmentIds,
+        event_type,
+        medication_ids: medicationIds,
+        vital_ids: vitalIds,
+        diet_ids: dietIds,
+        workout_ids: workoutIds,
+      })) || [];
+
+    let response = [
+      { ...(await getFormattedData(scheduleEvents, category)) },
+      "Missed events fetched successfully",
+    ];
+
+    return response;
+  } catch (error) {
+    Log.debug("getAllDataForDoctors catch error", error);
+    throw error;
+  }
+};
+
 const getAllDataForDoctors = async ({
   doctor_id,
   category = USER_CATEGORY.PROVIDER,
