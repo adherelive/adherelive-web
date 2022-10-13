@@ -268,7 +268,7 @@ const getAllDataForDoctors = async ({
     console.log("beforeResponse start - Helper ", getTime());
 
     let response = [
-      { ...(await getFormattedData(scheduleEvents, category)) },
+      { ...(await getFormattedDataNew(scheduleEvents, category)) },
       "Missed events fetched successfully",
     ];
     console.log("beforeResponse end - Helper ", getTime());
@@ -623,6 +623,113 @@ const getFormattedData = async (
     // for provider related api call
     patients: {
       ...patientData,
+    },
+  };
+};
+
+const getFormattedDataNew = async (
+  events = [],
+  category = USER_CATEGORY.DOCTOR
+) => {
+  let medication_critical_ids = [];
+  let medication_non_critical_ids = [];
+  let appointment_critical_ids = [];
+  let appointment_non_critical_ids = [];
+  let vital_critical_ids = [];
+  let vital_non_critical_ids = [];
+  let diet_critical_ids = [];
+  let diet_non_critical_ids = [];
+  let workout_critical_ids = [];
+  let workout_non_critical_ids = [];
+
+  for (let i = 0; i < events.length; i++) {
+    const event = await EventWrapper(events[i]);
+    switch (event.getEventType()) {
+      case EVENT_TYPE.MEDICATION_REMINDER:
+        if (category === USER_CATEGORY.HSP) {
+          continue;
+        }
+
+        if (event.getCriticalValue()) {
+          medication_critical_ids.indexOf(event.getEventId()) === -1
+            ? medication_critical_ids.push(event.getEventId())
+            : null;
+        } else {
+          medication_non_critical_ids.indexOf(event.getEventId()) === -1
+            ? medication_non_critical_ids.push(event.getEventId())
+            : null;
+        }
+        break;
+
+      case EVENT_TYPE.APPOINTMENT:
+        if (event.getCriticalValue()) {
+          appointment_critical_ids.indexOf(event.getEventId()) === -1
+            ? appointment_critical_ids.push(event.getEventId())
+            : null;
+        } else {
+          appointment_non_critical_ids.indexOf(event.getEventId()) === -1
+            ? appointment_non_critical_ids.push(event.getEventId())
+            : null;
+        }
+        break;
+      case EVENT_TYPE.VITALS:
+        if (event.getCriticalValue()) {
+          vital_critical_ids.indexOf(event.getEventId()) === -1
+            ? vital_critical_ids.push(event.getEventId())
+            : null;
+        } else {
+          vital_non_critical_ids.indexOf(event.getEventId()) === -1
+            ? vital_non_critical_ids.push(event.getEventId())
+            : null;
+        }
+        break;
+
+      case EVENT_TYPE.DIET:
+        if (event.getCriticalValue()) {
+          diet_critical_ids.indexOf(event.getEventId()) === -1
+            ? diet_critical_ids.push(event.getEventId())
+            : null;
+        } else {
+          diet_non_critical_ids.indexOf(event.getEventId()) === -1
+            ? diet_non_critical_ids.push(event.getEventId())
+            : null;
+        }
+        break;
+
+      case EVENT_TYPE.WORKOUT:
+        if (event.getCriticalValue()) {
+          workout_critical_ids.indexOf(event.getEventId()) === -1
+            ? workout_critical_ids.push(event.getEventId())
+            : null;
+        } else {
+          workout_non_critical_ids.indexOf(event.getEventId()) === -1
+            ? workout_non_critical_ids.push(event.getEventId())
+            : null;
+        }
+        break;
+    }
+  }
+
+  return {
+    medication_ids: {
+      critical: medication_critical_ids,
+      non_critical: medication_non_critical_ids,
+    },
+    appointment_ids: {
+      critical: appointment_critical_ids,
+      non_critical: appointment_non_critical_ids,
+    },
+    vital_ids: {
+      critical: vital_critical_ids,
+      non_critical: vital_non_critical_ids,
+    },
+    diet_ids: {
+      critical: diet_critical_ids,
+      non_critical: diet_non_critical_ids,
+    },
+    workout_ids: {
+      critical: workout_critical_ids,
+      non_critical: workout_non_critical_ids,
     },
   };
 };
