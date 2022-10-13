@@ -265,11 +265,14 @@ const getAllDataForDoctors = async ({
         workout_ids: workoutIds,
       })) || [];
     console.log("getMissedByData End - Helper ", getTime());
+    console.log("beforeResponse start - Helper ", getTime());
 
-    return [
+    let response = [
       { ...(await getFormattedData(scheduleEvents, category)) },
       "Missed events fetched successfully",
     ];
+    console.log("beforeResponse end - Helper ", getTime());
+    return response;
   } catch (error) {
     Log.debug("getAllDataForDoctors catch error", error);
     throw error;
