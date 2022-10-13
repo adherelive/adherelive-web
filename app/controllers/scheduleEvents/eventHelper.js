@@ -18,7 +18,7 @@ import DoctorWrapper from "../../ApiWrapper/web/doctor";
 import UserRoleWrapper from "../../ApiWrapper/web/userRoles";
 import DietWrapper from "../../ApiWrapper/web/diet";
 import WorkoutWrppaer from "../../ApiWrapper/web/workouts";
-
+import { getTime } from "../../helper/timer";
 export const doctorChart = async (req) => {
   try {
     const { userDetails: { userRoleId, userCategoryId: doctor_id } = {} } = req;
@@ -220,11 +220,12 @@ const getAllDataForDoctors = async ({
     //     const userRoleWrapper = await UserRoleWrapper(UserRoleDataForUserId);
     //     userRoleId = userRoleWrapper.getId();
     // }
+    console.log("getAllDataForDoctors Start - Helper -12 ", getTime());
     const carePlans =
       (await CarePlanService.getCarePlanByData({
         user_role_id,
       })) || [];
-
+    console.log("getAllDataForDoctors end - Helper -12 ", getTime());
     // Log.debug("ALL CARE_PLANS", carePlans);
 
     let appointmentIds = [];
@@ -232,7 +233,7 @@ const getAllDataForDoctors = async ({
     let vitalIds = [];
     let dietIds = [];
     let workoutIds = [];
-
+    console.log("getAllDataForDoctors Start - Helper ", getTime());
     // extract all event_ids from careplan attached to doctor
     for (let i = 0; i < carePlans.length; i++) {
       const carePlan = await CarePlanWrapper(carePlans[i]);
@@ -251,16 +252,19 @@ const getAllDataForDoctors = async ({
       workoutIds = [...workoutIds, ...workout_ids];
     }
 
+    console.log("getAllDataForDoctors end - Helper ", getTime());
     // fetch all schedule events in latest -> last order for each event_ids collected
     // missed range : 1 WEEK
+    console.log("getMissedByData Start - Helper ", getTime());
     const scheduleEvents =
-      (await eventService.getMissedByData({
+      (await eventService.getMissedByDataNew({
         appointment_ids: appointmentIds,
         medication_ids: medicationIds,
         vital_ids: vitalIds,
         diet_ids: dietIds,
         workout_ids: workoutIds,
       })) || [];
+    console.log("getMissedByData End - Helper ", getTime());
 
     return [
       { ...(await getFormattedData(scheduleEvents, category)) },

@@ -4,6 +4,7 @@ import { TABLE_NAME } from "../../models/scheduleEvents";
 import { EVENT_STATUS, EVENT_TYPE } from "../../../constant";
 import Database from "../../../libs/mysql";
 import moment from "moment";
+import { getTime } from "../../helper/timer";
 
 class ScheduleEventService {
   create = async (data) => {
@@ -117,7 +118,7 @@ class ScheduleEventService {
     try {
       const { event_id, event_type, date, sort = "ASC" } = data;
       const scheduleEvent = await Database.getModel(TABLE_NAME).findAll({
-        limit: 3,
+        limit: 4,
         where: {
           event_id,
           event_type,
@@ -337,6 +338,48 @@ class ScheduleEventService {
         order: [["start_time", "ASC"]],
       });
       return scheduleEvent;
+    } catch (error) {
+      throw error;
+    }
+  };
+
+  getMissedByDataNew = async (data) => {
+    try {
+      console.log("getMissedByData Start - ", getTime());
+      const {
+        vital_ids,
+        appointment_ids,
+        medication_ids,
+        diet_ids,
+        workout_ids,
+      } = data;
+
+      return await Database.getModel(TABLE_NAME).findAll({
+        where: {
+          status: EVENT_STATUS.EXPIRED,
+          event_id: [
+            ...vital_ids,
+            ...appointment_ids,
+            ...medication_ids,
+            ...diet_ids,
+            ...workout_ids,
+          ],
+          event_type: [
+            EVENT_TYPE.APPOINTMENT,
+            EVENT_TYPE.WORKOUT,
+            EVENT_TYPE.MEDICATION_REMINDER,
+            EVENT_TYPE.DIET,
+            EVENT_TYPE.VITALS,
+          ],
+          date: {
+            [Op.between]: [
+              moment().utc().subtract(7, "days").toDate(),
+              moment().utc().toDate(),
+            ],
+          },
+        },
+        order: [["start_time", "DESC"]],
+      });
     } catch (error) {
       throw error;
     }
