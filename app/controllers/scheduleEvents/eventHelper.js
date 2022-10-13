@@ -31,12 +31,43 @@ export const doctorChart = async (req) => {
   }
 };
 
+export const doctorChartCount = async (req) => {
+  try {
+    const { userDetails: { userRoleId, userCategoryId: doctor_id } = {} } = req;
+    Log.info(`DOCTOR ID (doctor_id) : ${doctor_id}`);
+
+    return await getAllDataForDoctorsCount({
+      doctor_id,
+      user_role_id: userRoleId,
+    });
+  } catch (error) {
+    Log.debug("doctorChart catch error", error);
+    throw error;
+  }
+};
+
 export const hspChart = async (req) => {
   try {
     const { userDetails: { userRoleId, userCategoryId: doctor_id } = {} } = req;
     Log.info(`DOCTOR ID (doctor_id) : ${doctor_id}`);
 
-    return await getAllDataForDoctors({
+    return await getAllDataForDoctorsCount({
+      doctor_id,
+      user_role_id: userRoleId,
+      category: USER_CATEGORY.HSP,
+    });
+  } catch (error) {
+    Log.debug("doctorChart catch error", error);
+    throw error;
+  }
+};
+
+export const hspChartCount = async (req) => {
+  try {
+    const { userDetails: { userRoleId, userCategoryId: doctor_id } = {} } = req;
+    Log.info(`DOCTOR ID (doctor_id) : ${doctor_id}`);
+
+    return await getAllDataForDoctorsCount({
       doctor_id,
       user_role_id: userRoleId,
       category: USER_CATEGORY.HSP,
@@ -208,33 +239,20 @@ const getAllDataForDoctors = async ({
   user_role_id,
 }) => {
   try {
-    // Log.debug("doctor_id", doctor_id);
     Log.debug("user_role_id", user_role_id);
     const eventService = new EventService();
-    // get all careplans(treatments) attached to doctor
-    // const doctor = DoctorWrapper(null , doctor_id);
-    // let userRoleId = null ;
-    // const docorUserId = (await doctor).getUserId();
-    // const UserRoleDataForUserId = await userRoleService.getFirstUserRole(docorUserId);
-    // if(UserRoleDataForUserId){
-    //     const userRoleWrapper = await UserRoleWrapper(UserRoleDataForUserId);
-    //     userRoleId = userRoleWrapper.getId();
-    // }
-    console.log("getAllDataForDoctors Start - Helper -12 ", getTime());
+
     const carePlans =
       (await CarePlanService.getCarePlanByData({
         user_role_id,
       })) || [];
-    console.log("getAllDataForDoctors end - Helper -12 ", getTime());
-    // Log.debug("ALL CARE_PLANS", carePlans);
 
     let appointmentIds = [];
     let medicationIds = [];
     let vitalIds = [];
     let dietIds = [];
     let workoutIds = [];
-    console.log("getAllDataForDoctors Start - Helper ", getTime());
-    // extract all event_ids from careplan attached to doctor
+
     for (let i = 0; i < carePlans.length; i++) {
       const carePlan = await CarePlanWrapper(carePlans[i]);
       const {
@@ -252,10 +270,6 @@ const getAllDataForDoctors = async ({
       workoutIds = [...workoutIds, ...workout_ids];
     }
 
-    console.log("getAllDataForDoctors end - Helper ", getTime());
-    // fetch all schedule events in latest -> last order for each event_ids collected
-    // missed range : 1 WEEK
-    console.log("getMissedByData Start - Helper ", getTime());
     const scheduleEvents =
       (await eventService.getMissedByDataNew({
         appointment_ids: appointmentIds,
@@ -264,14 +278,71 @@ const getAllDataForDoctors = async ({
         diet_ids: dietIds,
         workout_ids: workoutIds,
       })) || [];
-    console.log("getMissedByData End - Helper ", getTime());
-    console.log("beforeResponse start - Helper ", getTime());
+
+    let response = [
+      { ...(await getFormattedData(scheduleEvents, category)) },
+      "Missed events fetched successfully",
+    ];
+
+    return response;
+  } catch (error) {
+    Log.debug("getAllDataForDoctors catch error", error);
+    throw error;
+  }
+};
+
+// HELPERS
+const getAllDataForDoctorsCount = async ({
+  doctor_id,
+  category = USER_CATEGORY.PROVIDER,
+  user_role_id,
+}) => {
+  try {
+    Log.debug("user_role_id", user_role_id);
+    const eventService = new EventService();
+
+    const carePlans =
+      (await CarePlanService.getCarePlanByData({
+        user_role_id,
+      })) || [];
+
+    let appointmentIds = [];
+    let medicationIds = [];
+    let vitalIds = [];
+    let dietIds = [];
+    let workoutIds = [];
+
+    for (let i = 0; i < carePlans.length; i++) {
+      const carePlan = await CarePlanWrapper(carePlans[i]);
+      const {
+        appointment_ids = [],
+        medication_ids = [],
+        vital_ids = [],
+        diet_ids = [],
+        workout_ids = [],
+      } = await carePlan.getAllInfo();
+
+      appointmentIds = [...appointmentIds, ...appointment_ids];
+      medicationIds = [...medicationIds, ...medication_ids];
+      vitalIds = [...vitalIds, ...vital_ids];
+      dietIds = [...dietIds, ...diet_ids];
+      workoutIds = [...workoutIds, ...workout_ids];
+    }
+
+    const scheduleEvents =
+      (await eventService.getMissedByDataNew({
+        appointment_ids: appointmentIds,
+        medication_ids: medicationIds,
+        vital_ids: vitalIds,
+        diet_ids: dietIds,
+        workout_ids: workoutIds,
+      })) || [];
 
     let response = [
       { ...(await getFormattedDataNew(scheduleEvents, category)) },
       "Missed events fetched successfully",
     ];
-    console.log("beforeResponse end - Helper ", getTime());
+
     return response;
   } catch (error) {
     Log.debug("getAllDataForDoctors catch error", error);
