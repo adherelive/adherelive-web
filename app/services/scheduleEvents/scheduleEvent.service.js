@@ -371,7 +371,7 @@ class ScheduleEventService {
             EVENT_TYPE.DIET,
             EVENT_TYPE.VITALS,
           ],
-          group: ["event_type"],
+
           date: {
             [Op.between]: [
               moment().utc().subtract(7, "days").toDate(),
