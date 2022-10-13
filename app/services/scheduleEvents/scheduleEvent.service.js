@@ -356,10 +356,11 @@ class ScheduleEventService {
       } = data;
       let ids = [];
       if (event_type === EVENT_TYPE.APPOINTMENT) ids = [...appointment_ids];
-      if (event_type === EVENT_TYPE.APPOINTMENT) ids = [...medication_ids];
-      if (event_type === EVENT_TYPE.APPOINTMENT) ids = [...diet_ids];
-      if (event_type === EVENT_TYPE.APPOINTMENT) ids = [...vital_ids];
-      if (event_type === EVENT_TYPE.APPOINTMENT) ids = [...workout_ids];
+      if (event_type === EVENT_TYPE.MEDICATION_REMINDER)
+        ids = [...medication_ids];
+      if (event_type === EVENT_TYPE.DIET) ids = [...diet_ids];
+      if (event_type === EVENT_TYPE.VITALS) ids = [...vital_ids];
+      if (event_type === EVENT_TYPE.WORKOUT) ids = [...workout_ids];
 
       return await Database.getModel(TABLE_NAME).findAll({
         where: {
