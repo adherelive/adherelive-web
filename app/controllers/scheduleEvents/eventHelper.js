@@ -322,7 +322,7 @@ const getAllDataForDoctorsByEventType = async ({
       })) || [];
 
     let response = [
-      { ...(await getFormattedData(scheduleEvents, category)) },
+      { ...(await getFormattedDataWithoutIds(scheduleEvents, category)) },
       "Missed events fetched successfully",
     ];
 
@@ -791,6 +791,224 @@ const getFormattedData = async (
       non_critical: workout_non_critical_ids,
     },
 
+    // for provider related api call
+    patients: {
+      ...patientData,
+    },
+  };
+};
+
+const getFormattedDataWithoutIds = async (
+  events = [],
+  category = USER_CATEGORY.DOCTOR
+) => {
+  let medications = {};
+  let appointments = {};
+  let vitals = {};
+  let diets = {};
+  let workouts = {};
+  let patientIds = [];
+
+  for (let i = 0; i < events.length; i++) {
+    const event = await EventWrapper(events[i]);
+    const {
+      start_time,
+      end_time,
+      details,
+      details: {
+        medicines,
+        patient_id,
+        medications: { participant_id } = {},
+        vital_templates: { basic_info: { name: vital_name } = {} } = {},
+        participant_one = {},
+        participant_two = {},
+        diets: event_diets = {},
+        workouts: event_workouts = {},
+        workout_id = null,
+        diet_id = null,
+      } = {},
+      critical,
+    } = event.getAllInfo();
+
+    switch (event.getEventType()) {
+      case EVENT_TYPE.MEDICATION_REMINDER:
+        if (category === USER_CATEGORY.HSP) {
+          continue;
+        }
+
+        if (!(event.getEventId() in medications)) {
+          if (category === USER_CATEGORY.PROVIDER) {
+            patientIds.push(participant_id);
+          }
+          const timings = {};
+          timings[event.getDate()] = [];
+          timings[event.getDate()].push({ start_time, end_time });
+          medications[event.getEventId()] = {
+            medicines,
+            critical,
+            participant_id,
+            timings,
+          };
+        } else {
+          const { timings } = medications[event.getEventId()] || {};
+          if (!Object.keys(timings).includes(event.getDate())) {
+            timings[event.getDate()] = [];
+          }
+          timings[event.getDate()].push({ start_time, end_time });
+          medications[event.getEventId()] = {
+            ...medications[event.getEventId()],
+            timings,
+          };
+        }
+
+        break;
+
+      case EVENT_TYPE.APPOINTMENT:
+        if (category === USER_CATEGORY.PROVIDER) {
+          if (participant_one.category === USER_CATEGORY.PATIENT) {
+            patientIds.push(participant_one.id);
+          } else {
+            patientIds.push(participant_two.id);
+          }
+        }
+        if (!(event.getEventId() in appointments)) {
+          appointments[event.getEventId()] = [];
+          appointments[event.getEventId()].push(event.getAllInfo());
+        } else {
+          appointments[event.getEventId()].push(event.getAllInfo());
+        }
+        break;
+      case EVENT_TYPE.VITALS:
+        if (category === USER_CATEGORY.PROVIDER) {
+          patientIds.push(patient_id);
+        }
+
+        if (!(event.getEventId() in vitals)) {
+          const timings = {};
+          timings[event.getDate()] = [];
+          timings[event.getDate()].push({ start_time, end_time });
+          vitals[event.getEventId()] = {
+            patient_id,
+            critical,
+            vital_name,
+            timings,
+          };
+        } else {
+          const { timings = {} } = vitals[event.getEventId()] || {};
+          if (!Object.keys(timings).includes(event.getDate())) {
+            timings[event.getDate()] = [];
+          }
+          timings[event.getDate()].push({ start_time, end_time });
+          vitals[event.getEventId()] = {
+            ...vitals[event.getEventId()],
+            timings,
+          };
+        }
+        break;
+
+      case EVENT_TYPE.DIET:
+        const dietWrapper = await DietWrapper({ id: diet_id });
+        const careplan_id = await dietWrapper.getCareplanId();
+        const careplanWrapper = await CarePlanWrapper(null, careplan_id);
+        const patientId = await careplanWrapper.getPatientId();
+
+        const { basic_info: { name: diet_name = "" } = {} } =
+          event_diets[diet_id] || {};
+        if (!(event.getEventId() in diets)) {
+          if (category === USER_CATEGORY.PROVIDER) {
+            patientIds.push(patientId);
+          }
+          const timings = {};
+          timings[event.getDate()] = [];
+          timings[event.getDate()].push({ start_time, end_time });
+          diets[event.getEventId()] = {
+            diet_name,
+            participant_id: patientId,
+            timings,
+            critical,
+          };
+        } else {
+          const { timings } = diets[event.getEventId()] || {};
+          if (!Object.keys(timings).includes(event.getDate())) {
+            timings[event.getDate()] = [];
+          }
+          timings[event.getDate()].push({ start_time, end_time });
+          diets[event.getEventId()] = { ...diets[event.getEventId()], timings };
+        }
+
+        break;
+
+      case EVENT_TYPE.WORKOUT:
+        const workoutWrapper = await WorkoutWrppaer({ id: workout_id });
+        const workout_careplan_id = await workoutWrapper.getCareplanId();
+        const workoutCareplanWrapper = await CarePlanWrapper(
+          null,
+          workout_careplan_id
+        );
+        const workoutPatientId = await workoutCareplanWrapper.getPatientId();
+
+        const { basic_info: { name: workout_name = "" } = {} } =
+          event_workouts[workout_id] || {};
+        if (!(event.getEventId() in workouts)) {
+          if (category === USER_CATEGORY.PROVIDER) {
+            patientIds.push(workoutPatientId);
+          }
+          const timings = {};
+          timings[event.getDate()] = [];
+          timings[event.getDate()].push({ start_time, end_time });
+          workouts[event.getEventId()] = {
+            workout_name,
+            participant_id: workoutPatientId,
+            timings,
+            critical,
+          };
+        } else {
+          const { timings } = workouts[event.getEventId()] || {};
+          if (!Object.keys(timings).includes(event.getDate())) {
+            timings[event.getDate()] = [];
+          }
+          timings[event.getDate()].push({ start_time, end_time });
+          workouts[event.getEventId()] = {
+            ...workouts[event.getEventId()],
+            timings,
+          };
+        }
+
+        break;
+    }
+  }
+
+  let patientData = {};
+
+  if (patientIds.length > 0) {
+    const allPatients =
+      (await patientService.getPatientByData({
+        id: patientIds,
+      })) || [];
+
+    for (let index = 0; index < allPatients.length; index++) {
+      const patient = await PatientWrapper(allPatients[index]);
+      const { user_role_id = null, care_plan_id = null } =
+        await patient.getAllInfo();
+      patientData[patient.getPatientId()] = {
+        ...patient.getBasicInfo(),
+        user_role_id,
+        care_plan_id,
+      };
+    }
+  }
+
+  return {
+    // medications
+    missed_medications: medications,
+    // appointments
+    missed_appointments: appointments,
+    // actions (vitals)
+    missed_vitals: vitals,
+    // diets
+    missed_diets: diets,
+    // actions (vitals)
+    missed_workouts: workouts,
     // for provider related api call
     patients: {
       ...patientData,
