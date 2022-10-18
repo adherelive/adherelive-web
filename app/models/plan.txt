@@ -1,0 +1,97 @@
+product plans (Service Offering)
+---------------------+-------------------------------------------+------+-----+---------+-----------------+
+| Field               | Type                                      | Null | Key | Default | Extra          |
++---------------------+-------------------------------------------+------+-----+---------+----------------+
+| id                  | int                                       | NO   | PRI | NULL    | auto_increment |
+| service_name	      | varchar()                                 | NO   |     | NULL    |                | -> need to add (service_offering_name, service type)
+| provider_type       | enum('doctor','provider','hsp')           | YES  |     | NULL    |                |
+| provider_id         | int                                       | NO   |     | NULL    |                |
+| description         | varchar(1000)                             | NO   |     | NULL    |                |
+| service_charge      | varchar(255)                              | NO   |     | NULL    |                |
+| currency            | enum('INR','AUD','USD','EUR',)            | NO   |     | NULL    |                |
+| created_at          | datetime                                  | NO   |     | NULL    |                |
+| updated_at          | datetime                                  | NO   |     | NULL    |                |
+| deleted_at          | datetime                                  | YES  |     | NULL    |                |
++---------------------+-------------------------------------------+------+-----+---------+----------------+
+
+
+// 100 (monthly)
+
+(a doctor  can not create more then 5 plans. )
+# subscribption plan table
+id
+provider_id
+provider_type('doctor','provider','hsp')
+description - donw
+Notes
+currency
+isActiveForDoctor
+subscription_charge_permonth - 100 
+created_at
+updated_at
+deleted_at
+services-> [1,2,43,54,6,7]
+
+
+# subscribePlan and serviceplanMapping
+subscribePlanId
+serviceID (service Id )
+1,2,3,4,5,6
+100->3,4,6 (600)
+
+
+
+#userAndSubscribePlanMapping
+userId
+SubscribePlanId
+durations: like(2 months.)
+start_date - 5-1-2022
+next_recharge_date - 5-2-22
+expire_date - 5-3-2022
+isActive
+
+
+
+#userAndServiceIdMapping
+userId
+ServicePlanId
+durations: like(2 months.)
+service_date - 5-1-2022
+next_recharge_date - 5-2-22
+expire_date - 5-3-2022
+
+
+payment_service Table
+Id
+txId
+tx_date
+paymentService: (service,plan)
+serviceId
+
+
+payment_subscribePlan Table
+Id
+txId
+tx_date
+subscribe_serviceId
+
+
+
+
+
+
+# subscribe plan
++--------------------+----------------------------------------------------------------+------+-----+---------+----------------+
+| Field              | Type                                                           | Null | Key | Default | Extra          |
++--------------------+----------------------------------------------------------------+------+-----+---------+----------------+
+| id                 | int                                                            | NO   | PRI | NULL    | auto_increment |
+| payment_product_id | int                                                            | NO   | MUL | NULL    |                |
+| subscriber_type    | enum('doctor','patient','care_taker','hsp','provider','admin') | NO   |     | NULL    |                |
+| subscriber_id      | int                                                            | NO   |     | NULL    |                |
+| activated_on       | datetime                                                       | YES  |     | NULL    |                |
+| renew_on           | datetime                                                       | YES  |     | NULL    |                |
+| expired_on         | datetime                                                       | NO   |     | NULL    |                |
+| created_at         | datetime                                                       | NO   |     | NULL    |                |
+| updated_at         | datetime                                                       | NO   |     | NULL    |                |
+| deleted_at         | datetime                                                       | YES  |     | NULL    |                |
++--------------------+----------------------------------------------------------------+------+-----+---------+----------------+

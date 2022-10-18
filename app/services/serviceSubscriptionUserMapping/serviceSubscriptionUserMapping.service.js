@@ -1,0 +1,58 @@
+import Database from "../../../libs/mysql";
+import { TABLE_NAME } from "../../models/serviceSubscriptionUserMapping";
+
+export default class ServiceUserMapping {
+  constructor() {}
+
+  addServiceSubscriptionUserMapping = async (data) => {
+    const transaction = await Database.initTransaction();
+    try {
+      const serviceSubscriptionUserMapping = await Database.getModel(
+        TABLE_NAME
+      ).create(data, {
+        raw: true,
+        transaction,
+      });
+      await transaction.commit();
+      return serviceSubscriptionUserMapping;
+    } catch (error) {
+      console.log(error);
+      await transaction.rollback();
+      throw error;
+    }
+  };
+
+  getAllServiceSubscriptionUserMappingByData = async (data) => {
+    try {
+      console.log(TABLE_NAME);
+      return await Database.getModel(TABLE_NAME).findAll({
+        where: data,
+        raw: true,
+      });
+    } catch (error) {
+      throw error;
+    }
+  };
+
+  updateServiceSubscriptionUserMapping = async (data, id) => {
+    const transaction = await Database.initTransaction();
+    try {
+      console.log(data, id);
+      const serviceSubscriptionUserMapping = await Database.getModel(
+        TABLE_NAME
+      ).update(data, {
+        where: {
+          id,
+        },
+        raw: true,
+        returning: true,
+        transaction,
+      });
+      await transaction.commit();
+      return serviceSubscriptionUserMapping;
+    } catch (error) {
+      await transaction.rollback();
+      throw error;
+    }
+  };
+}

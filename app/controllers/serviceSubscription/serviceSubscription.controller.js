@@ -1,0 +1,317 @@
+import Controller from "../index";
+import Logger from "../../../libs/log";
+// services
+import ServiceSubscriptionService from "../../services/serviceSubscription/serviceSubscription.service";
+import ServiceSubscriptionMapping from "../../services/serviceSubscriptionMapping/serviceSubscritpionMapping.service";
+const Log = new Logger("WEB > CONTROLLER > Service Offering");
+
+class ServiceSubscriptionController extends Controller {
+  constructor() {
+    super();
+  }
+
+  create = async (req, res) => {
+    const { raiseSuccess, raiseServerError } = this;
+    const {
+      userDetails: { userId, userData: { category } = {}, userCategoryId } = {},
+      permissions = [],
+    } = req;
+    let doctor_id,
+      provider_id = null;
+    let data = null;
+
+    if (req.userDetails.userRoleData.basic_info.linked_with === "doctor") {
+      doctor_id = req.userDetails.userCategoryData.basic_info.id;
+      data = {
+        doctor_id,
+        provider_id: null,
+        provider_type: req.userDetails.userRoleData.basic_info.linked_with,
+      };
+    }
+
+    if (req.userDetails.userRoleData.basic_info.linked_with === "provider") {
+      provider_id = req.userDetails.userRoleData.basic_info.linked_id;
+      doctor_id = req.userDetails.userCategoryData.basic_info.id;
+      data = {
+        doctor_id,
+        provider_id,
+        provider_type: req.userDetails.userRoleData.basic_info.linked_with,
+      };
+    }
+    if (category === "provider" && req.body.doctor_id) {
+      provider_id = req.userDetails.userCategoryData.basic_info.id;
+      doctor_id = req.body.doctor_id;
+      data = {
+        doctor_id,
+        provider_id,
+        provider_type: req.userDetails.userRoleData.basic_info.linked_with,
+      };
+    }
+
+    try {
+      let serviceSubecription = req.body;
+      const serviceSubscriptionService = new ServiceSubscriptionService();
+      serviceSubecription =
+        await serviceSubscriptionService.addServiceSubscription({
+          ...serviceSubecription,
+          ...data,
+        });
+      console.log("services", serviceSubecription);
+
+      return raiseSuccess(
+        res,
+        200,
+        {
+          serviceSubecription,
+        },
+        "Subscription added successfully"
+      );
+    } catch (error) {
+      Log.debug("addService 500 error", error);
+      return raiseServerError(res);
+    }
+  };
+
+  updateServiceSubscription = async (req, res) => {
+    const { raiseSuccess, raiseClientError, raiseServerError } = this;
+    try {
+      let { params: { id } = {}, body } = req;
+      Log.info(`Report : id = ${id}`);
+      if (!id) {
+        return raiseClientError(
+          res,
+          422,
+          {},
+          "Please select correct ServiceOffer to update"
+        );
+      }
+      const serviceSubscriptionService = new ServiceSubscriptionService();
+      let serviceSubecription =
+        await serviceSubscriptionService.updateServiceSubscription(body, id);
+      return raiseSuccess(
+        res,
+        200,
+        {
+          ...serviceSubecription,
+        },
+        "Service updated successfully"
+      );
+    } catch (error) {
+      Log.debug("updateService 500 error", error);
+      return raiseServerError(res);
+    }
+  };
+
+  getServiceOfferingById = async (req, res) => {
+    const { raiseSuccess, raiseClientError, raiseServerError } = this;
+    try {
+      let { params: { id } = {} } = req;
+      Log.info(`Report : id = ${id}`);
+
+      if (!id) {
+        return raiseClientError(
+          res,
+          422,
+          {},
+          "Please select correct ServiceOffer to update"
+        );
+      }
+      let data = { id };
+      const serviceSubscriptionService = new ServiceSubscriptionService();
+      let serviceSubecription =
+        await serviceSubscriptionService.getServiceSubscriptionByData(data);
+
+      const serviceSubscriptionMapping = new ServiceSubscriptionMapping();
+      let servicedata = { subscription_plan_id: id };
+      let services =
+        await serviceSubscriptionMapping.getAllServiceSubscriptionMappingByData(
+          servicedata
+        );
+      serviceSubecription.services = services;
+
+      return raiseSuccess(
+        res,
+        200,
+        {
+          ...serviceSubecription,
+        },
+        "success"
+      );
+    } catch (error) {
+      Log.debug("updateService 500 error", error);
+      return raiseServerError(res);
+    }
+  };
+
+  getServiceOfferingByData = async (req, res) => {
+    const { raiseSuccess, raiseClientError, raiseServerError } = this;
+    try {
+      const { query } = req;
+      console.log(query);
+      const serviceSubscriptionService = new ServiceSubscriptionService();
+      let serviceSubscriptions =
+        await serviceSubscriptionService.getAllServiceSubscriptionByData(query);
+
+      console.log({ serviceSubscriptions });
+      let serviceSubscriptionsData = [];
+      for (let serviceSubscription in serviceSubscriptions) {
+        let serviceSubData = serviceSubscriptions[serviceSubscription];
+        const serviceSubscriptionMapping = new ServiceSubscriptionMapping();
+        let servicedata = { subscription_plan_id: serviceSubData.id };
+        let services =
+          await serviceSubscriptionMapping.getAllServiceSubscriptionMappingByData(
+            servicedata
+          );
+        serviceSubData.services = services;
+        serviceSubscriptionsData.push(serviceSubData);
+      }
+
+      return raiseSuccess(
+        res,
+        200,
+        {
+          ...serviceSubscriptionsData,
+        },
+        "Service updated successfully"
+      );
+    } catch (ex) {
+      Log.debug("getServiceByData 500 error", ex);
+      return raiseServerError(res);
+    }
+  };
+
+  getServiceSubscriptionForAdmin = async (req, res) => {
+    const { raiseSuccess, raiseServerError } = this;
+    const {
+      userDetails: { userId, userData: { category } = {}, userCategoryId } = {},
+      permissions = [],
+    } = req;
+    let provider_id = null;
+    let data = null;
+    let { params: { doctor_id } = {}, body } = req;
+
+    if (req.userDetails.userRoleData.basic_info.linked_with === "doctor") {
+      data = {
+        doctor_id,
+        provider_id: null,
+        provider_type: req.userDetails.userRoleData.basic_info.linked_with,
+      };
+    }
+
+    if (category === "provider" && doctor_id) {
+      provider_id = req.userDetails.userCategoryData.basic_info.id;
+      data = {
+        doctor_id,
+        provider_id,
+        provider_type: req.userDetails.userRoleData.basic_info.linked_with,
+      };
+    }
+
+    if (category === "admin" && doctor_id) {
+      provider_id = req.userDetails.userRoleData.basic_info.linked_id;
+      doctor_id = doctor_id;
+      data = {
+        // doctor_id,
+        provider_id,
+        // provider_type: req.userDetails.userRoleData.basic_info.linked_with,
+      };
+    }
+
+    try {
+      console.log("=========================");
+      console.log(data);
+      console.log("userDetails", req.userDetails);
+      console.log("=========================");
+
+      const serviceSubscriptionService = new ServiceSubscriptionService();
+      let serviceSubscriptions =
+        await serviceSubscriptionService.getAllServiceSubscriptionByData(data);
+
+      let serviceSubscriptionsData = [];
+      for (let serviceSubscription in serviceSubscriptions) {
+        let serviceSubData = serviceSubscriptions[serviceSubscription];
+        const serviceSubscriptionMapping = new ServiceSubscriptionMapping();
+        let servicedata = { subscription_plan_id: serviceSubData.id };
+        let services =
+          await serviceSubscriptionMapping.getAllServiceSubscriptionMappingByData(
+            servicedata
+          );
+        serviceSubData.services = services;
+        serviceSubscriptionsData.push(serviceSubData);
+      }
+      return raiseSuccess(
+        res,
+        200,
+        {
+          ...serviceSubscriptionsData,
+        },
+        "Service updated successfully"
+      );
+    } catch (ex) {
+      Log.debug("getServiceByData 500 error", ex);
+      return raiseServerError(res);
+    }
+  };
+
+  getServiceOfferingForUser = async (req, res) => {
+    const { raiseSuccess, raiseClientError, raiseServerError } = this;
+    const {
+      userDetails: { userId, userData: { category } = {}, userCategoryId } = {},
+      permissions = [],
+    } = req;
+    let doctor_id,
+      provider_id = null;
+    let data = null;
+
+    if (req.userDetails.userRoleData.basic_info.linked_with === "doctor") {
+      doctor_id = req.userDetails.userCategoryData.basic_info.id;
+      data = {
+        doctor_id,
+        provider_type: req.userDetails.userRoleData.basic_info.linked_with,
+      };
+    }
+
+    if (req.userDetails.userRoleData.basic_info.linked_with === "provider") {
+      provider_id = req.userDetails.userRoleData.basic_info.linked_id;
+      doctor_id = req.userDetails.userCategoryData.basic_info.id;
+      data = {
+        doctor_id,
+        provider_id,
+        provider_type: req.userDetails.userRoleData.basic_info.linked_with,
+      };
+    }
+
+    try {
+      const serviceSubscriptionService = new ServiceSubscriptionService();
+      let serviceSubscriptions =
+        await serviceSubscriptionService.getAllServiceSubscriptionByData(data);
+
+      let serviceSubscriptionsData = [];
+      for (let serviceSubscription in serviceSubscriptions) {
+        let serviceSubData = serviceSubscriptions[serviceSubscription];
+        const serviceSubscriptionMapping = new ServiceSubscriptionMapping();
+        let servicedata = { subscription_plan_id: serviceSubData.id };
+        let services =
+          await serviceSubscriptionMapping.getAllServiceSubscriptionMappingByData(
+            servicedata
+          );
+        serviceSubData.services = services;
+        serviceSubscriptionsData.push(serviceSubData);
+      }
+
+      return raiseSuccess(
+        res,
+        200,
+        {
+          ...serviceSubscriptionsData,
+        },
+        "Service updated successfully"
+      );
+    } catch (ex) {
+      Log.debug("getServiceByData 500 error", ex);
+      return raiseServerError(res);
+    }
+  };
+}
+
+export default new ServiceSubscriptionController();

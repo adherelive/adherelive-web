@@ -19,6 +19,7 @@ import UserRoleWrapper from "../../ApiWrapper/web/userRoles";
 import DietWrapper from "../../ApiWrapper/web/diet";
 import WorkoutWrppaer from "../../ApiWrapper/web/workouts";
 import { getTime } from "../../helper/timer";
+
 export const doctorChart = async (req) => {
   try {
     const { userDetails: { userRoleId, userCategoryId: doctor_id } = {} } = req;
