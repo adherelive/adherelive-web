@@ -105,6 +105,16 @@ export const USER_CATEGORY = {
   HSP: "hsp",
 };
 
+export const USER_STATUS = {
+  ACTIVE: "active",
+  INACTIVE: "inactive",
+};
+
+export const BILLING_FREQUENCY = {
+  MONTHLY: "monthly",
+  ONCES: "onces",
+};
+
 export const REQUEST_TYPE = {
   POST: "post",
   GET: "get",
@@ -375,6 +385,12 @@ export const DB_TABLES = {
   PORTIONS: "portions",
   FOOD_GROUPS: "food_groups",
   DIET_FOOD_GROUP_MAPPINGS: "diet_food_group_mappings",
+  SERVICE_OFFERING: "service_offerings",
+  SERVICE_SUBSCRIPTION: "service_subscriptions",
+  SERVICE_SUBSCRIPTION_MAPPING: "service_subscribe_plan_mappings",
+  SERVICE_USER_MAPPING: "service_user_mappings",
+  SERVICE_SUBSCRIPTION_USER_MAPPING: "service_subscription_user_mappings",
+  SERVICE_SUBSCRIPTION_TRANACTIONS: "service_subscription_tranactions",
 };
 
 export const ARTICLE_TYPE = {
