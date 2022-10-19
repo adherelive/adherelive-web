@@ -51,6 +51,14 @@ import portionRouter from "./portion";
 import exerciseRouter from "./exercises";
 import workoutRouter from "./workouts";
 import CdssRouter from "./cdss";
+import serviceOfferingRouter from "./serviceOffering";
+import serviceSubscriptionRouter from "./serviceSubscription";
+import serviceUserMappingRouter from "./serviceUserMapping";
+import serviceSubscriptionUserMapping from "./serviceSubscriptionUserMapping";
+import serviceSubscribeTxRouter from "./serviceSubscribeTranaction";
+import TxActivitiesRouter from "./transactionActivity";
+import FlashCardRouter from "./flashCard";
+import NotesRouter from "./notes";
 import { getTime } from "../../app/helper/timer";
 
 router.use(async function (req, res, next) {
@@ -186,5 +194,13 @@ router.use("/diet", dietRouter);
 router.use("/portions", portionRouter);
 router.use("/exercises", exerciseRouter);
 router.use("/workout", workoutRouter);
+router.use("/serviceoffering", serviceOfferingRouter);
+router.use("/servicesubscription", serviceSubscriptionRouter);
+router.use("/serviceusermapping", serviceUserMappingRouter);
+router.use("/servicesubscriptionusermapping", serviceSubscriptionUserMapping);
+router.use("/servicesubtx", serviceSubscribeTxRouter);
+router.use("/txactivities", TxActivitiesRouter);
+router.use("/flashcard", FlashCardRouter);
+router.use("/notes", NotesRouter);
 router.use("/cdss", CdssRouter);
 module.exports = router;
