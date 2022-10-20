@@ -73,14 +73,16 @@ class FlashCardController extends Controller {
         let file = fs.readFileSync("myfashcord.pdf");
         const { originalname } = file || {};
         console.log({ file });
-        const fileUrl = await ReportHelper.uploadToS3({
-          filepath: "myfashcord.pdf",
-          id: data.patient_id,
-        });
-        console.log(fileUrl);
+        let fileUrl = "";
+        try {
+          fileUrl = await ReportHelper.uploadToS3({
+            filepath: "myfashcord.pdf",
+            id: data.patient_id,
+          });
+        } catch (ex) {
+          fileUrl = "https://www.africau.edu/images/default/sample.pdf";
+        }
 
-        console.log({ fileUrl });
-        console.log("==============================");
         const reportService = new ReportService();
         const addReport = await reportService.addReport(reportBody);
         const report = await ReportWrapper({ data: addReport });
