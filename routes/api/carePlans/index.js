@@ -39,6 +39,13 @@ router.get(
 );
 
 // router.get('/patient-care-plan-details/:patientId',
+router.get(
+  "/patient-care-plan-details/:patientId",
+  Authenticated,
+  CarePlanController.getPatientCarePlanDetails
+);
+
+// router.get('/patient-care-plan-details/:patientId',
 // router.get('/:patientId',
 //     CarePlanController.getPatientCarePlanDetails
 // );
