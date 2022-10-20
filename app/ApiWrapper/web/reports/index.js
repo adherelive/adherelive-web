@@ -16,8 +16,15 @@ class ReportWrapper extends BaseReport {
 
   getBasicInfo = () => {
     const { _data } = this;
-    const { id, patient_id, uploader_id, uploader_type, name, test_date } =
-      _data || {};
+    const {
+      id,
+      patient_id,
+      uploader_id,
+      uploader_type,
+      name,
+      test_date,
+      flas_card_id,
+    } = _data || {};
 
     return {
       basic_info: {
@@ -26,6 +33,7 @@ class ReportWrapper extends BaseReport {
         name,
       },
       test_date,
+      flas_card_id,
       uploader: {
         id: uploader_id,
         category: uploader_type,
