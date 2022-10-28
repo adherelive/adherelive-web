@@ -4158,7 +4158,16 @@ class DoctorController extends Controller {
                 appointmentData.getFormattedStartDate()
               ] = [appointmentData.getAppointmentId()];
             }
-
+            console.log(
+              "=============1 appointment getbasicinfo=============="
+            );
+            console.log(appointmentData.getBasicInfo());
+            console.log(
+              "=============2 appointment data details=============="
+            );
+            console.log(appointmentData);
+            console.log({ appointment });
+            console.log("=============final==============");
             appointmentApiDetails[appointmentData.getAppointmentId()] =
               appointmentData.getBasicInfo();
 
