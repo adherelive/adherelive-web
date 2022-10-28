@@ -4160,7 +4160,7 @@ class DoctorController extends Controller {
             }
 
             appointmentApiDetails[appointmentData.getAppointmentId()] =
-              appointmentData.getBasicInfo();
+              await appointmentData.getBasicInfo();
 
             if (participant_one_id !== doctorId) {
               patientIds.push(participant_one_id);
