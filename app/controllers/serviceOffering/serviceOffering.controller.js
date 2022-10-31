@@ -53,7 +53,7 @@ class ReportController extends Controller {
       provider_type = req.userDetails.userRoleData.basic_info.linked_with;
 
       console.log({ doctor_id, provider_id, provider_type });
-
+      console.log(req);
       const serviceOfferingService = new ServiceOfferingService();
       ({
         id,
