@@ -39,6 +39,14 @@ class ReportController extends Controller {
       doctor_id = userId;
 
       console.log(req);
+      console.log(
+        "===================UserRoleDataBasicInfo-Start=============================="
+      );
+      console.log(req.userDetails.userRoleData.basic_info);
+
+      console.log(
+        "===================UserRoleDataBasicInfo-End=============================="
+      );
 
       if (req.userDetails.userRoleData.basic_info.linked_with === "provider")
         provider_id = req.userDetails.userRoleData.basic_info.linked_id;
