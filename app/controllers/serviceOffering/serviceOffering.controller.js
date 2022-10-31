@@ -35,18 +35,13 @@ class ReportController extends Controller {
         } = {},
         permissions = [],
       } = req;
-      /// docker se login hai and koi b provider add ni hai .. in short single docker clinic.
-      if (req.userDetails.userRoleData.basic_info.linked_with === "doctor") {
-        doctor_id = userId;
-      }
 
-      // when docker docker login and he linked with a provider also.
-      // provider_id = req.userDetails.userRoleData.basic_info.linked_id;
-      // doctor_id = req.userDetails.userCategoryData.basic_info.id;
-      if (req.userDetails.userRoleData.basic_info.linked_with === "provider") {
-        provider_id = userId;
-        doctor_id = userId;
-      }
+      doctor_id = userId;
+
+      console.log(req);
+
+      if (req.userDetails.userRoleData.basic_info.linked_with === "provider")
+        provider_id = req.userDetails.userRoleData.basic_info.linked_id;
 
       // when docker login with provider and added service to that doctor.
 
@@ -57,7 +52,7 @@ class ReportController extends Controller {
 
       provider_type = req.userDetails.userRoleData.basic_info.linked_with;
       console.log("====================================");
-      console.log({ userDetails });
+
       console.log({ doctor_id, provider_id, provider_type });
       console.log(req);
       console.log("====================================");
