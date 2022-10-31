@@ -8,6 +8,7 @@ import ServiceUserMapping from "../../services/serviceUserMapping/serviceUserMap
 import ServiceOffering from "../../services/serviceOffering/serviceOffering.service";
 import DoctorService from "../../services/doctor/doctor.service";
 import PatientService from "../../services/patients/patients.service";
+import PatientWrapper from "../../ApiWrapper/web/patient";
 
 const Log = new Logger("WEB > CONTROLLER > Service Offering");
 
@@ -58,12 +59,13 @@ class ServiceSubscriptionTxController extends Controller {
       let users = await PatientService.getPatientById({
         id: txActivities[i].patient_id,
       });
+      const patientData = await PatientWrapper(patient);
       console.log({
         myuserdetails: users.user.getBasicInfo,
         patoemtdo: txActivities[i].patient_id,
       });
       console.log("users", users);
-      txActivities[i].patient = users.user.getBasicInfo;
+      txActivities[i].patient = patientData;
       let serviceSubscription = new ServiceSubscription();
 
       let serviceSubscriptionDetails =

@@ -36,6 +36,12 @@ class ReportController extends Controller {
         permissions = [],
       } = req;
 
+      //===========================
+
+      console.log(req);
+
+      //==========================
+
       if (req.userDetails.userRoleData.basic_info.linked_with === "doctor") {
         doctor_id = req.userDetails.userCategoryData.basic_info.id;
       }
