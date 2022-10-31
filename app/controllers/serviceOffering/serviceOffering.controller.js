@@ -31,6 +31,7 @@ class ReportController extends Controller {
       const {
         userDetails: {
           userId,
+          userRoleId,
           userData: { category } = {},
           userCategoryId,
         } = {},
@@ -39,32 +40,23 @@ class ReportController extends Controller {
 
       doctor_id = userId;
 
-      console.log(req);
-      console.log(
-        "===================UserRoleDataBasicInfo-Start=============================="
-      );
-      console.log(req.userDetails.userRoleData.basic_info);
+      const record = await userRolesService.getSingleUserRoleByData({
+        id: userRoleId,
+      });
 
-      console.log(
-        "===================UserRoleDataBasicInfo-End=============================="
-      );
+      const { linked_with = "", linked_id = null } = record || {};
 
-      if (req.userDetails.userRoleData.basic_info.linked_with === "provider")
-        provider_id = req.userDetails.userRoleData.basic_info.linked_id;
-
-      // when docker login with provider and added service to that doctor.
+      if (linked_with === "doctor") {
+        doctor_id = doctor_id;
+        provider_type = linked_with;
+      }
+      if (linked_with === "provider") provider_id = linked_id;
 
       if (category === "provider" && req.body.doctor_id) {
         provider_id = req.userDetails.userCategoryData.basic_info.id;
         doctor_id = req.body.doctor_id;
       }
 
-      provider_type = req.userDetails.userRoleData.basic_info.linked_with;
-      console.log("====================================");
-
-      console.log({ doctor_id, provider_id, provider_type });
-      console.log(req);
-      console.log("====================================");
       const serviceOfferingService = new ServiceOfferingService();
       ({
         id,
@@ -252,7 +244,7 @@ class ReportController extends Controller {
     }
 
     if (linked_with === "provider") {
-      provider_id = req.userDetails.userRoleData.basic_info.linked_id;
+      provider_id = linked_id;
       // doctor_id = req.userDetails.userCategoryData.basic_info.id;
       data = {
         doctor_id,
@@ -286,21 +278,27 @@ class ReportController extends Controller {
       provider_id = null;
     let data = null;
 
-    if (req.userDetails.userRoleData.basic_info.linked_with === "doctor") {
-      doctor_id = req.userDetails.userCategoryData.basic_info.id;
+    //================
+    doctor_id = userId;
+
+    const record = await userRolesService.getSingleUserRoleByData({
+      id: userRoleId,
+    });
+
+    const { linked_with = "", linked_id = null } = record || {};
+
+    if (linked_with === "doctor") {
       data = {
         doctor_id,
-        provider_type: req.userDetails.userRoleData.basic_info.linked_with,
+        provider_type: linked_with,
       };
     }
 
-    if (req.userDetails.userRoleData.basic_info.linked_with === "provider") {
-      provider_id = req.userDetails.userRoleData.basic_info.linked_id;
-      doctor_id = req.userDetails.userCategoryData.basic_info.id;
+    if (linked_with === "provider") {
       data = {
         doctor_id,
-        provider_id,
-        provider_type: req.userDetails.userRoleData.basic_info.linked_with,
+        provider_id: linked_id,
+        provider_type: linked_with,
       };
     }
 
