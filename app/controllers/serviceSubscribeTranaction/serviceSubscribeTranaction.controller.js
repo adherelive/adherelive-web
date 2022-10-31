@@ -97,18 +97,27 @@ class ServiceSubscriptionTxController extends Controller {
         provider_type: req.userDetails.userRoleData.basic_info.linked_with,
       };
     }
-
+    console.log("=============================");
+    console.log(data);
+    console.log("=============================");
     // const serviceSubscribeTx = new ServiceSubscribeTx();
     let tranactions = await ServiceSubscribeTx.getAllServiceSubscriptionTx(
       data
     );
+
     for (let i = 0; i < tranactions.length; i++) {
+      console.log("=============================");
+      console.log({ new: tranactions[0] });
+      console.log("=============================");
       tranactions[i].doctor = await DoctorService.getDoctorByDoctorId(
         tranactions[i].doctor_id
       );
-      let users = await PatientService.getPatientById(
-        tranactions[i].patient_id
-      );
+      let users = await PatientService.getPatientById({
+        id: tranactions[i].patient_id,
+      });
+      console.log("=============================");
+      console.log({ users });
+      console.log("=============================");
       tranactions[i].patient = users.user.getBasicInfo;
       if (tranactions[i].subscription_user_plan_id) {
         const serviceSubscriptionUserMappingService =
