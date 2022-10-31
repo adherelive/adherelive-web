@@ -50,11 +50,18 @@ class ReportController extends Controller {
         doctor_id = doctor_id;
         provider_type = linked_with;
       }
-      if (linked_with === "provider") provider_id = linked_id;
+
+      console.log({ linked_with, linked_id });
+
+      if (linked_with === "provider") {
+        provider_id = linked_id;
+        provider_type = linked_with;
+      }
 
       if (category === "provider" && req.body.doctor_id) {
         provider_id = req.userDetails.userCategoryData.basic_info.id;
         doctor_id = req.body.doctor_id;
+        provider_type = linked_with;
       }
 
       const serviceOfferingService = new ServiceOfferingService();
@@ -271,7 +278,12 @@ class ReportController extends Controller {
   getServiceOfferingForUser = async (req, res) => {
     const { raiseSuccess, raiseClientError, raiseServerError } = this;
     const {
-      userDetails: { userId, userData: { category } = {}, userCategoryId } = {},
+      userDetails: {
+        userRoleId,
+        userId,
+        userData: { category } = {},
+        userCategoryId,
+      } = {},
       permissions = [],
     } = req;
     let doctor_id,
