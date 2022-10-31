@@ -118,7 +118,7 @@ class ServiceSubscriptionTxController extends Controller {
       console.log("=============================");
       console.log({ users });
       console.log("=============================");
-      tranactions[i].patient = users.user.getBasicInfo;
+      tranactions[i].patient = users.patients.dataValues;
       if (tranactions[i].subscription_user_plan_id) {
         const serviceSubscriptionUserMappingService =
           new ServiceSubscriptionUserMappingService();
