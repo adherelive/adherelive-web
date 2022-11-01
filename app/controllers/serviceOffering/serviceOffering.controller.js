@@ -2,6 +2,8 @@ import Controller from "../index";
 import Logger from "../../../libs/log";
 // services
 import ServiceOfferingService from "../../services/serviceOffering/serviceOffering.service";
+import { USER_CATEGORY } from "../../../constant";
+
 const Log = new Logger("WEB > CONTROLLER > Service Offering");
 
 class ReportController extends Controller {
@@ -46,8 +48,11 @@ class ReportController extends Controller {
       });
       console.log("==============================");
       console.log({ req });
-      if (req.userDetails.userRoleData.basic_info.linked_with === "doctor") {
+
+      provider_type = req.userDetails.userRoleData.basic_info.linked_with;
+      if (category === USER_CATEGORY.DOCTOR) {
         doctor_id = req.userDetails.userCategoryData.basic_info.id;
+        provider_type = USER_CATEGORY.DOCTOR;
       }
 
       if (req.userDetails.userRoleData.basic_info.linked_with === "provider") {
@@ -59,8 +64,6 @@ class ReportController extends Controller {
         provider_id = req.userDetails.userCategoryData.basic_info.id;
         doctor_id = req.body.doctor_id;
       }
-
-      provider_type = req.userDetails.userRoleData.basic_info.linked_with;
 
       console.log({ doctor_id, provider_id, provider_type });
 
@@ -231,11 +234,11 @@ class ReportController extends Controller {
     let provider_id = null;
     let data = null;
 
-    if (req.userDetails.userRoleData.basic_info.linked_with === "doctor") {
+    if (category === USER_CATEGORY.DOCTOR) {
       // doctor_id = req.userDetails.userCategoryData.basic_info.id;
       data = {
         doctor_id,
-        provider_type: req.userDetails.userRoleData.basic_info.linked_with,
+        provider_type: USER_CATEGORY.DOCTOR,
       };
     }
 
@@ -274,11 +277,11 @@ class ReportController extends Controller {
       provider_id = null;
     let data = null;
 
-    if (req.userDetails.userRoleData.basic_info.linked_with === "doctor") {
+    if (category === USER_CATEGORY.DOCTOR) {
       doctor_id = req.userDetails.userCategoryData.basic_info.id;
       data = {
         doctor_id,
-        provider_type: req.userDetails.userRoleData.basic_info.linked_with,
+        provider_type: USER_CATEGORY.DOCTOR,
       };
     }
 
