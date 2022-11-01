@@ -7,7 +7,8 @@ import ServiceSubscriptionService from "../../services/serviceSubscription/servi
 import ServiceSubscriptionMapping from "../../services/serviceSubscriptionMapping/serviceSubscritpionMapping.service";
 import ServiceOffering from "../../services/serviceOffering/serviceOffering.service";
 import TxService from "../../services/serviceSubscribeTranaction/serviceSubscribeTranaction";
-import { USER_STATUS } from "../../../constant";
+import { USER_CATEGORY, USER_STATUS } from "../../../constant";
+
 const Log = new Logger("WEB > CONTROLLER > Service Offering");
 
 class ServiceSubscriptionUserMappingController extends Controller {
@@ -27,9 +28,9 @@ class ServiceSubscriptionUserMappingController extends Controller {
       provider_id = null;
     let data = null;
 
-    if (req.userDetails.userRoleData.basic_info.linked_with === "doctor") {
+    if (category === USER_CATEGORY.DOCTOR) {
       doctor_id = req.userDetails.userCategoryData.basic_info.id;
-      provider_type = req.userDetails.userRoleData.basic_info.linked_with;
+      provider_type = USER_CATEGORY.DOCTOR;
     }
 
     if (req.userDetails.userRoleData.basic_info.linked_with === "provider") {

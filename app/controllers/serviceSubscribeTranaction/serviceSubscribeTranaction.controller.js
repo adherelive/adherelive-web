@@ -11,6 +11,7 @@ import DoctorService from "../../services/doctor/doctor.service";
 import PatientService from "../../services/patients/patients.service";
 import ServiceSubscriptionMapping from "../../services/serviceSubscriptionMapping/serviceSubscritpionMapping.service";
 import TransactionActivite from "../../services/transactionActivity/transactionActivity.service";
+import { USER_CATEGORY } from "../../../constant";
 const Log = new Logger("WEB > CONTROLLER > Service Offering");
 
 class ServiceSubscriptionTxController extends Controller {
@@ -32,11 +33,17 @@ class ServiceSubscriptionTxController extends Controller {
       let doctor_id,
         provider_id,
         provider_type = null;
-      if (req.userDetails.userRoleData.basic_info.linked_with === "doctor") {
+
+      provider_type = req.userDetails.userRoleData.basic_info.linked_with;
+      if (category === USER_CATEGORY.DOCTOR) {
         doctor_id = req.userDetails.userCategoryData.basic_info.id;
+        provider_type = USER_CATEGORY.DOCTOR;
       }
 
-      if (req.userDetails.userRoleData.basic_info.linked_with === "provider") {
+      if (
+        req.userDetails.userRoleData.basic_info.linked_with ===
+        USER_CATEGORY.PROVIDER
+      ) {
         provider_id = req.userDetails.userRoleData.basic_info.linked_id;
         doctor_id = req.userDetails.userCategoryData.basic_info.id;
       }
@@ -45,8 +52,6 @@ class ServiceSubscriptionTxController extends Controller {
         provider_id = req.userDetails.userCategoryData.basic_info.id;
         doctor_id = req.body.doctor_id;
       }
-
-      provider_type = req.userDetails.userRoleData.basic_info.linked_with;
 
       const serviceSubscribeTx = new ServiceSubscribeTx();
       let tranaction = serviceSubscribeTx.addServiceSubscriptionTx({
@@ -80,11 +85,11 @@ class ServiceSubscriptionTxController extends Controller {
       provider_id = null;
     let data = null;
 
-    if (req.userDetails.userRoleData.basic_info.linked_with === "doctor") {
+    if (category === USER_CATEGORY.DOCTOR) {
       doctor_id = req.userDetails.userCategoryData.basic_info.id;
       data = {
         doctor_id,
-        provider_type: req.userDetails.userRoleData.basic_info.linked_with,
+        provider_type: USER_CATEGORY.DOCTOR,
       };
     }
 
@@ -97,27 +102,20 @@ class ServiceSubscriptionTxController extends Controller {
         provider_type: req.userDetails.userRoleData.basic_info.linked_with,
       };
     }
-    console.log("=============================");
-    console.log(data);
-    console.log("=============================");
+
     // const serviceSubscribeTx = new ServiceSubscribeTx();
     let tranactions = await ServiceSubscribeTx.getAllServiceSubscriptionTx(
       data
     );
 
     for (let i = 0; i < tranactions.length; i++) {
-      console.log("=============================");
-      console.log({ new: tranactions[0] });
-      console.log("=============================");
       tranactions[i].doctor = await DoctorService.getDoctorByDoctorId(
         tranactions[i].doctor_id
       );
       let users = await PatientService.getPatientById({
         id: tranactions[i].patient_id,
       });
-      console.log("=============================");
-      console.log({ users });
-      console.log("=============================");
+
       tranactions[i].patient = users.dataValues;
       if (tranactions[i].subscription_user_plan_id) {
         const serviceSubscriptionUserMappingService =

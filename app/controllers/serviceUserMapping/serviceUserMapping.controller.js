@@ -3,7 +3,7 @@ import Logger from "../../../libs/log";
 // services
 import ServiceUserMappingService from "../../services/serviceUserMapping/serviceUserMapping.service";
 import ServiceOffering from "../../services/serviceOffering/serviceOffering.service";
-import { USER_STATUS } from "../../../constant";
+import { USER_STATUS, USER_CATEGORY } from "../../../constant";
 import TxService from "../../services/serviceSubscribeTranaction/serviceSubscribeTranaction";
 const Log = new Logger("WEB > CONTROLLER > Service Offering");
 
@@ -24,15 +24,16 @@ class ServiceUserMappingController extends Controller {
       provider_id = null;
     let data = null;
 
-    if (req.userDetails.userRoleData.basic_info.linked_with === "doctor") {
+    provider_type = req.userDetails.userRoleData.basic_info.linked_with;
+    if (category === USER_CATEGORY.DOCTOR) {
       doctor_id = req.userDetails.userCategoryData.basic_info.id;
+      provider_type = USER_CATEGORY.DOCTOR;
     }
 
     if (req.userDetails.userRoleData.basic_info.linked_with === "provider") {
       provider_id = req.userDetails.userRoleData.basic_info.linked_id;
       doctor_id = req.userDetails.userCategoryData.basic_info.id;
     }
-    provider_type = req.userDetails.userRoleData.basic_info.linked_with;
 
     try {
       let date = new Date();

@@ -2,6 +2,7 @@ import Controller from "../index";
 import Logger from "../../../libs/log";
 // services
 import NotesService from "../../services/notes/notes.service";
+import { USER_CATEGORY } from "../../../constant";
 const Log = new Logger("WEB > CONTROLLER > Service Offering");
 
 class NotesController extends Controller {
@@ -21,9 +22,9 @@ class NotesController extends Controller {
       provider_id = null;
     let data = null;
 
-    if (req.userDetails.userRoleData.basic_info.linked_with === "doctor") {
+    if (category === USER_CATEGORY.DOCTOR) {
       doctor_id = req.userDetails.userCategoryData.basic_info.id;
-      provider_type = req.userDetails.userRoleData.basic_info.linked_with;
+      provider_type = USER_CATEGORY.DOCTOR;
     }
 
     if (req.userDetails.userRoleData.basic_info.linked_with === "provider") {

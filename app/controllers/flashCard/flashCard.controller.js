@@ -10,6 +10,7 @@ import { DOCUMENT_PARENT_TYPE } from "../../../constant";
 import uploadDocumentService from "../../services/uploadDocuments/uploadDocuments.service";
 import * as ReportHelper from "../reports/reportHelper"; // wrappers
 import ReportWrapper from "../../ApiWrapper/web/reports";
+import { USER_CATEGORY } from "../../../constant";
 const fs = require("fs");
 const Log = new Logger("WEB > CONTROLLER > Service Offering");
 
@@ -30,9 +31,9 @@ class FlashCardController extends Controller {
       provider_id = null;
     let data = null;
 
-    if (req.userDetails.userRoleData.basic_info.linked_with === "doctor") {
+    if (category === USER_CATEGORY.DOCTOR) {
       doctor_id = req.userDetails.userCategoryData.basic_info.id;
-      provider_type = req.userDetails.userRoleData.basic_info.linked_with;
+      provider_type = USER_CATEGORY.DOCTOR;
     }
 
     if (req.userDetails.userRoleData.basic_info.linked_with === "provider") {

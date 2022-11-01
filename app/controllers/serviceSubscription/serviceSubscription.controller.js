@@ -4,7 +4,7 @@ import Logger from "../../../libs/log";
 import ServiceSubscriptionService from "../../services/serviceSubscription/serviceSubscription.service";
 import ServiceSubscriptionMapping from "../../services/serviceSubscriptionMapping/serviceSubscritpionMapping.service";
 const Log = new Logger("WEB > CONTROLLER > Service Offering");
-
+import { USER_CATEGORY } from "../../../constant";
 class ServiceSubscriptionController extends Controller {
   constructor() {
     super();
@@ -20,12 +20,12 @@ class ServiceSubscriptionController extends Controller {
       provider_id = null;
     let data = null;
 
-    if (req.userDetails.userRoleData.basic_info.linked_with === "doctor") {
+    if (category === USER_CATEGORY.DOCTOR) {
       doctor_id = req.userDetails.userCategoryData.basic_info.id;
       data = {
         doctor_id,
         provider_id: null,
-        provider_type: req.userDetails.userRoleData.basic_info.linked_with,
+        provider_type: USER_CATEGORY.DOCTOR,
       };
     }
 
@@ -190,11 +190,11 @@ class ServiceSubscriptionController extends Controller {
     let data = null;
     let { params: { doctor_id } = {}, body } = req;
 
-    if (req.userDetails.userRoleData.basic_info.linked_with === "doctor") {
+    if (category === USER_CATEGORY.DOCTOR) {
       data = {
         doctor_id,
         provider_id: null,
-        provider_type: req.userDetails.userRoleData.basic_info.linked_with,
+        provider_type: USER_CATEGORY.DOCTOR,
       };
     }
 
@@ -263,11 +263,11 @@ class ServiceSubscriptionController extends Controller {
       provider_id = null;
     let data = null;
 
-    if (req.userDetails.userRoleData.basic_info.linked_with === "doctor") {
+    if (category === USER_CATEGORY.DOCTOR) {
       doctor_id = req.userDetails.userCategoryData.basic_info.id;
       data = {
         doctor_id,
-        provider_type: req.userDetails.userRoleData.basic_info.linked_with,
+        provider_type: USER_CATEGORY.DOCTOR,
       };
     }
 
