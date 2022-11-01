@@ -40,6 +40,10 @@ class ReportController extends Controller {
       console.log({ category });
       console.log({ userData: req.userDetails.userData });
       console.log({ userDetails: req.userDetails });
+      console.log({ userRoleData: req.userDetails.userRoleData.basic_info });
+      console.log({
+        userCategoryData: req.userDetails.userCategoryData.basic_info,
+      });
       console.log("==============================");
       console.log({ req });
       if (req.userDetails.userRoleData.basic_info.linked_with === "doctor") {
