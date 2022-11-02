@@ -9,6 +9,7 @@ import ServiceUserMapping from "../../services/serviceUserMapping/serviceUserMap
 import ServiceOffering from "../../services/serviceOffering/serviceOffering.service";
 import DoctorService from "../../services/doctor/doctor.service";
 import PatientService from "../../services/patients/patients.service";
+import ABC from "../../services/provider/provider.service";
 import ServiceSubscriptionMapping from "../../services/serviceSubscriptionMapping/serviceSubscritpionMapping.service";
 import TransactionActivite from "../../services/transactionActivity/transactionActivity.service";
 import { USER_CATEGORY } from "../../../constant";
@@ -103,7 +104,7 @@ class ServiceSubscriptionTxController extends Controller {
       };
     }
     if (category === "provider") {
-      provider_id = req.userDetails.userRoleData.basic_info.linked_id;
+      provider_id = req.userDetails.userCategoryData.basic_info.id;
       data = {
         provider_id,
         provider_type: req.userDetails.userRoleData.basic_info.linked_with,
@@ -111,6 +112,7 @@ class ServiceSubscriptionTxController extends Controller {
     }
     console.log("=================================");
     console.log({ data });
+
     console.log("=================================");
 
     // const serviceSubscribeTx = new ServiceSubscribeTx();
